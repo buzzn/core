@@ -20,11 +20,14 @@ module Buzzn
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    # Configure sensitive parameters which will be filtered from the log file.
+    config.filter_parameters += [:password, :password_confirmation]
+
     config.generators do |g|
-        g.test_framework :rspec, :spec => true, :fixture => false
-        g.stylesheets = false
-        g.javascripts = false
-        g.helper      = false
+      g.test_framework :rspec, :spec => true, :fixture => false
+      g.stylesheets = false
+      g.javascripts = false
+      g.helper      = false
     end
 
   end
