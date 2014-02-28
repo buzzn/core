@@ -17,11 +17,11 @@ gem 'responders'
 gem 'simple_form'
 gem 'turbolinks'
 gem 'devise'
+gem 'pundit'
 
 group :development do
   gem 'quiet_assets'
 end
-
 
 group :doc do
   gem 'sdoc', require: false
