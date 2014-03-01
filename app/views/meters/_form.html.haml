@@ -1,0 +1,6 @@
+= simple_form_for(@meter, :html => { :multipart => true, :class => 'form-horizontal'}) do |f|
+  = f.input :name
+  = f.input :uid
+  = f.input :private
+  .form-actions
+    = f.button :submit, id: 'submit', class: 'btn btn-success'

@@ -1,0 +1,22 @@
+.container
+  %p#notice= notice
+
+  %p
+    %b Name:
+    = @meter.name
+  %p
+    %b Uid:
+    = @meter.uid
+  %p
+    %b Private:
+    = @meter.private
+  %p
+    %b Type:
+    = @meter.type
+  %p
+    %b User:
+    = @meter.user_id
+
+  = link_to 'Edit', edit_meter_path(@meter)
+  \|
+  = link_to 'Back', meters_path

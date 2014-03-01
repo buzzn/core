@@ -1,0 +1,29 @@
+.container
+
+  %h1 Listing meters
+
+  %table
+    %tr
+      %th Name
+      %th Uid
+      %th Private
+      %th Type
+      %th User
+      %th
+      %th
+      %th
+
+    - @meters.each do |meter|
+      %tr
+        %td= meter.name
+        %td= meter.uid
+        %td= meter.private
+        %td= meter.type
+        %td= meter.user_id
+        %td= link_to 'Show', meter
+        %td= link_to 'Edit', edit_meter_path(meter)
+        %td= link_to 'Destroy', meter, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+  %br
+
+  = link_to 'New Meter', new_meter_path
