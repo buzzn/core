@@ -12,6 +12,9 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.sparkline
+//= require paloma
 //= require turbolinks
 //= require bootstrap
+//= require highcharts
 //= require_tree .
