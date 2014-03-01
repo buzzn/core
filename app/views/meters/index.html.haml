@@ -14,6 +14,7 @@
       %th
 
     - @meters.each do |meter|
+      %span.inlinebar 1,2,3,0,4,5,3,2,1,6,5,6,1
       %tr
         %td= meter.name
         %td= meter.uid
@@ -23,6 +24,8 @@
         %td= link_to 'Show', meter
         %td= link_to 'Edit', edit_meter_path(meter)
         %td= link_to 'Destroy', meter, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      
+
 
   %br
 

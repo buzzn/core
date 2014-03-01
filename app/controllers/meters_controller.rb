@@ -1,11 +1,11 @@
 class MetersController < InheritedResources::Base
   respond_to :html
 
-  def create
-    @meter = Meter.new(params[:meter])
-    authorize(@meter)
-    create!
-  end
+  # def create
+  #   @meter = Meter.new(params[:meter])
+  #   authorize(@meter)
+  #   create!
+  # end
 
 
 
