@@ -11,10 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140227155824) do
+ActiveRecord::Schema.define(version: 20140228140847) do
+
+  create_table "groups", force: true do |t|
+    t.string   "name"
+    t.boolean  "private"
+    t.string   "type"
+    t.integer  "meter_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "meters", force: true do |t|
     t.string   "name"
+    t.integer  "uid"
+    t.boolean  "private"
+    t.string   "type"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
