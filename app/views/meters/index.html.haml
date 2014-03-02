@@ -1,31 +1,13 @@
 .container
-
   %h1 Listing meters
-
-  %table
-    %tr
-      %th Name
-      %th Uid
-      %th Private
-      %th Type
-      %th User
-      %th
-      %th
-      %th
-
-    - @meters.each do |meter|
-      %span.inlinebar 1,2,3,0,4,5,3,2,1,6,5,6,1
-      %tr
-        %td= meter.name
-        %td= meter.uid
-        %td= meter.private
-        %td= meter.type
-        %td= meter.user_id
-        %td= link_to 'Show', meter
-        %td= link_to 'Edit', edit_meter_path(meter)
-        %td= link_to 'Destroy', meter, :method => :delete, :data => { :confirm => 'Are you sure?' }
-      
-
+  - @meters.each do |meter|
+    .row
+      .col-md-1= link_to meter.name, meter
+      .col-md-6
+        %span.inlinebar 1,2,3,0,4,5,3,2,1,6,5,6,1,1,2,3,0,4,5,3,2,1,6,5,6,1,1,2,3,0,4,5,3,2,1,6,5,6,1,0,4,5,3,2,1,6,5,6,1
+      .col-md-5
+        = link_to 'Edit', edit_meter_path(meter)
+        = link_to 'Destroy', meter, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
   %br
 
