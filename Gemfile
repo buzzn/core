@@ -20,7 +20,4 @@ gem 'devise'
 gem 'pundit'
 gem 'highcharts-rails'
 gem 'paloma'
-
-group :doc do
-  gem 'sdoc', require: false
-end
+gem 'mongoid'
