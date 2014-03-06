@@ -20,6 +20,7 @@ gem 'responders'
 gem 'simple_form'
 gem 'turbolinks'
 gem 'awesome_print'
+gem 'mail_view'
 gem 'devise'
 gem 'authority'
 gem 'rolify'
@@ -33,9 +34,22 @@ gem 'immigrant'
 gem 'mini_magick'
 gem 'carrierwave'
 gem 'fog'
+gem 'aws-sdk'
 gem 'therubyracer'
 gem 'draper'
 
+group :development do
+  gem 'rack-mini-profiler'
+  gem 'mailcatcher'
+  gem 'brakeman', :require => false
+  gem 'pry-rails'
+  gem 'bullet', github: 'flyerhzm/bullet'
+  gem 'rack-livereload'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'meta_request'
+  gem 'table_print'
+end
 
 group :development, :test do
   gem 'lol_dba'
