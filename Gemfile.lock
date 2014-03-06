@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/flyerhzm/bullet.git
-  revision: a1580137d675ef07fc045ebb49f7e9c382e0d884
-  specs:
-    bullet (4.8.0)
-      activesupport
-      uniform_notifier (>= 1.4.0)
-
-GIT
   remote: git://github.com/vcr/vcr.git
   revision: 0d2c1c3b108a1287d21a72f9b67fd3c4305b9df0
   specs:
@@ -394,7 +386,6 @@ GEM
     unicorn-rails (1.1.0)
       rack
       unicorn
-    uniform_notifier (1.4.0)
     uuidtools (2.1.4)
     warden (1.2.3)
       rack (>= 1.0)
@@ -417,7 +408,6 @@ DEPENDENCIES
   bootstrap-sass
   brakeman
   bson_ext
-  bullet!
   capybara
   carrierwave
   coffee-rails (~> 4.0.0)
