@@ -24,7 +24,8 @@ module Buzzn
     config.filter_parameters += [:password, :password_confirmation]
 
     config.generators do |g|
-      g.test_framework :rspec, :spec => true, :fixture => false
+      g.orm :active_record
+      g.test_framework :rspec, spec: true, fixture: false
       g.stylesheets = false
       g.javascripts = false
       g.helper      = false
