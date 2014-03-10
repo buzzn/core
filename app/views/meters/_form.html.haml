@@ -1,6 +1,8 @@
 = simple_form_for @meter do |f|
-  = f.input :name
+  = f.input :address
+  = f.input :brand
   = f.input :uid
-  = f.input :private
+  = f.input :public
+
   .form-actions
     = f.button :submit, id: 'submit', class: 'btn btn-success'
