@@ -1,7 +1,19 @@
 class User < ActiveRecord::Base
+  rolify
   include Authority::UserAbilities
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
+
+  extend FriendlyId
+  friendly_id :name, use: :slugged
+
+  has_many :meters
+
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable,
+         :validatable, :confirmable, :lockable, :timeoutable #, :omniauthable
+
+
+  def name
+    "#{self.first_name} #{self.last_name}"
+  end
+
 end
