@@ -24,10 +24,14 @@ ActiveRecord::Schema.define(version: 20140305164111) do
   end
 
   create_table "meters", force: true do |t|
-    t.string   "name"
-    t.integer  "uid"
-    t.boolean  "private"
-    t.string   "type"
+    t.string   "address"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.decimal  "uid",        precision: 15, scale: 0
+    t.boolean  "public"
+    t.string   "brand"
+    t.string   "username"
+    t.string   "password"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"

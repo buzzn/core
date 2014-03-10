@@ -1,13 +1,16 @@
 class CreateMeters < ActiveRecord::Migration
   def change
     create_table :meters do |t|
-      t.string  :name
-      t.integer :uid
-      t.boolean :private
-      t.string  :type
+      t.string  :address
+      t.float   :latitude
+      t.float   :longitude
+      t.decimal :uid, precision: 15
+      t.boolean :public
+      t.string  :brand
+      t.string  :username
+      t.string  :password
 
       t.integer :user_id
-
       t.timestamps
     end
   end
