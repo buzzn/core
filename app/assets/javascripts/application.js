@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.sparkline
+//= require jquery.ui.all
 //= require paloma
 //= require turbolinks
 //= require bootstrap
