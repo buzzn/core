@@ -13,6 +13,12 @@ Buzzn::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
+
+  config.middleware.use MailView::Mapper, [MailPreview]
+  config.action_mailer.default_url_options  = { :host => 'localhost:3000' }
+  config.action_mailer.delivery_method      = :smtp
+  config.action_mailer.smtp_settings        = { :address => "localhost", :port => 1025 }
+
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
@@ -26,4 +32,23 @@ Buzzn::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+
+
+  # # Bullet
+  # config.after_initialize do
+  #   Bullet.enable = true
+  #   # Bullet.alert = true
+  #   # Bullet.bullet_logger = true
+  #   Bullet.console = true
+  #   # Bullet.growl = true
+  #   # Bullet.xmpp = { :account => 'bullets_account@jabber.org',
+  #   #                 :password => 'bullets_password_for_jabber',
+  #   #                 :receiver => 'your_account@jabber.org',
+  #   #                 :show_online_status => true }
+  #   Bullet.rails_logger = true
+  #   # Bullet.airbrake = true
+  #   # Bullet.disable_browser_cache = true
+  # end
+
+
 end
