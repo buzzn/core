@@ -17,3 +17,11 @@ end
 Fabricator :admin, from: :user do
   email       'admin@buzzn.net'
 end
+
+Fabricator :stefan, from: :user do
+  email       'stefan@buzzn.net'
+end
+
+Fabricator :jan, from: :user do
+  email       'jan@buzzn.net'
+end
