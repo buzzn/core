@@ -1,8 +1,8 @@
 MetersController = Paloma.controller("Meters")
 
 MetersController.prototype.index = () ->
-  $('.inlinebar').sparkline 'html', 
-    type: 'bar', 
-    barColor: '#f00',
-    height: 30,
-    barWidth: 10
+  $('.inlinebar').sparkline 'html',
+    type: 'bar',
+    barColor: '#00e',
+    height: 50,
+    barWidth: 8
