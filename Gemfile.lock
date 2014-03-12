@@ -436,7 +436,7 @@ DEPENDENCIES
   guard-rspec
   haml-rails
   has_scope
-  highcharts-rails
+  highcharts-rails (~> 3.0.0)
   immigrant
   inherited_resources
   jbuilder (~> 1.2)
