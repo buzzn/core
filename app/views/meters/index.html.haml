@@ -4,7 +4,7 @@
     .row
       .col-md-1= link_to meter.address, meter
       .col-md-6
-        %span.inlinebar 1,2,3,0,4,5,3,2,1,6,5,6,1,1,2,3,0,4,5,3,2,1,6,5,6,1,1,2,3,0,4,5,3,2,1,6,5,6,1,0,4,5,3,2,1,6,5,6,1
+        %span.inlinebar= meter.day_to_hours
       .col-md-5
         = link_to 'Edit', edit_meter_path(meter)
         = link_to 'Destroy', meter, :method => :delete, :data => { :confirm => 'Are you sure?' }
