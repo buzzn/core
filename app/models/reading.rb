@@ -1,4 +1,4 @@
-class Measurement
+class Reading
   include Mongoid::Document
 
   field :meter_id,  type: Integer
@@ -43,7 +43,7 @@ class Measurement
         }
       }
     ]
-    return Measurement.collection.aggregate(pipe)
+    return Reading.collection.aggregate(pipe)
   end
 
 

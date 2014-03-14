@@ -8,7 +8,7 @@ class Meter < ActiveRecord::Base
 
   def day_to_hours
     hours = []
-    Measurement.this_day_to_hours_by_meter_id(self.id).each do |hour|
+    Reading.this_day_to_hours_by_meter_id(self.id).each do |hour|
       hours << hour['hourReading']
     end
 
