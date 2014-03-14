@@ -39,6 +39,9 @@ gem 'fog'
 gem 'aws-sdk'
 gem 'therubyracer'
 gem 'draper'
+gem 'whenever', :require => false
+gem 'sidekiq'
+
 
 group :development do
   gem 'rack-mini-profiler'
