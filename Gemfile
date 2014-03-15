@@ -41,6 +41,7 @@ gem 'therubyracer'
 gem 'draper'
 gem 'whenever', :require => false
 gem 'sidekiq'
+gem 'faraday'
 
 
 group :development do

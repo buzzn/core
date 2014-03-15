@@ -1,34 +1,32 @@
-require "net/https"
-require "uri"
-
 class Discovergy
 
-  def initialize(meter_uid, username, password, datetime)
-    @meter_uid = meter_uid
-    @username  = user
+  # test
+  # api = Discovergy.new('stefan@buzzn.net', '19200buzzn', 'EASYMETER_1024000034')
+  # api.call(1394288813000, 1394288816000)
+
+  def initialize(username, password, meter_uid)
+    @username  = username
     @password  = password
-    @datetime  = datetime
+    @meter_uid = meter_uid
+
+    @conn = Faraday.new(:url => 'https://my.discovergy.com') do |faraday|
+      faraday.request  :url_encoded             # form-encode POST params
+      #faraday.response :logger                  # log requests to STDOUT
+      faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+    end
   end
 
-  def readings_for_all_meters(date)
-
-    params = URI.encode_www_form([
-      ['user', @username],
-      ['password', @password],
-      ['day', @datetime.day],
-      ['month', @datetime.month],
-      ['year', @datetime.year]
-      ])
-
-    uri               = URI.join("https://my.discovergy.com/json/Api.getReadingsForAllMeters", params)
-    http              = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl      = true
-    http.verify_mode  = OpenSSL::SSL::VERIFY_NONE
-    request           = Net::HTTP::Get.new(uri.request_uri)
-    response          = http.request(request)
-
-    return response.body
+  def call(datetime_from, datetime_to)
+    response = @conn.get do |req|
+      req.url '/json/Api.getRaw'
+      req.headers['Content-Type'] = 'application/json'
+      req.params['user'] = @username
+      req.params['password'] = @password
+      req.params['meterId'] = @meter_uid
+      req.params['from'] = datetime_from
+      req.params['to'] = datetime_to
+    end
+    return JSON.parse(response.body)
   end
-
 
 end
