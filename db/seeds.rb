@@ -27,7 +27,7 @@ meters.each do |meter|
   File.foreach("#{Rails.root}/db/seeds/meter#{meter.id}.txt").with_index { |line, line_num|
     Reading.create(
       meter_id:  meter.id,
-      timestamp: DateTime.now.in_time_zone(Time.zone).beginning_of_day + line_num.minute,
+      timestamp: DateTime.now.beginning_of_day + line_num.minute,
       wh:        line.to_i
     )
   }

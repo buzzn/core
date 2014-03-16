@@ -15,8 +15,8 @@ class Reading
     pipe = [
       { "$match" => {
           timestamp: {
-            "$gte" => Time.at(DateTime.now.utc.beginning_of_day),
-            "$lt"  => Time.at(DateTime.now.utc.end_of_day)
+            "$gte" => Time.at(DateTime.now.beginning_of_day),
+            "$lt"  => Time.at(DateTime.now.end_of_day)
           },
           meter_id: {
             "$in" => [meter_id]

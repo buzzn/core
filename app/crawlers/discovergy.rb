@@ -9,14 +9,19 @@ class Discovergy
     @password  = password
     @meter_uid = meter_uid
 
-    @conn = Faraday.new(:url => 'https://my.discovergy.com') do |faraday|
-      faraday.request  :url_encoded             # form-encode POST params
-      #faraday.response :logger                  # log requests to STDOUT
-      faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+    @conn = Faraday.new(:url => 'https://my.discovergy.com', ssl: {verify: false}) do |faraday|
+      faraday.request  :url_encoded
+      faraday.response :logger 
+      faraday.adapter :net_http
     end
   end
 
   def call(datetime_from, datetime_to)
+
+    datetime_from = DateTime.now.beginning_of_minute.to_i * 1000
+    datetime_to   = DateTime.now.end_of_minute.to_i * 1000
+
+
     response = @conn.get do |req|
       req.url '/json/Api.getRaw'
       req.headers['Content-Type'] = 'application/json'
