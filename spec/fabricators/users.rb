@@ -15,13 +15,17 @@ Fabricator :user do
 end
 
 Fabricator :admin, from: :user do
-  email       'admin@buzzn.net'
+  email 'admin@buzzn.net'
+end
+
+Fabricator :justus, from: :user do
+  email 'justus@buzzn.net'
 end
 
 Fabricator :stefan, from: :user do
-  email       'stefan@buzzn.net'
+  email 'stefan@buzzn.net'
 end
 
 Fabricator :jan, from: :user do
-  email       'jan@buzzn.net'
+  email 'jan@buzzn.net'
 end

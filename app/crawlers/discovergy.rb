@@ -16,11 +16,8 @@ class Discovergy
     end
   end
 
-  def call(datetime_from, datetime_to)
-
-    datetime_from = DateTime.now.beginning_of_minute.to_i * 1000
-    datetime_to   = DateTime.now.end_of_minute.to_i * 1000
-
+  def call( datetime_from = DateTime.now.beginning_of_minute.to_i * 1000, 
+            datetime_to = DateTime.now.end_of_minute.to_i * 1000)
 
     response = @conn.get do |req|
       req.url '/json/Api.getRaw'

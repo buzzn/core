@@ -12,17 +12,22 @@ puts 'create admin'
 admin = Fabricate(:admin)
 admin.add_role 'admin'
 
+puts 'create justus'
+meters << meter_justus = Fabricate(:meter_justus)
+jan = Fabricate(:justus)
+jan.add_role :manager, meter_justus
+
 puts 'create stefan'
-meters << meter_stefan = Fabricate(:meter_stefan)
+meters << meter_stefan = Fabricate(:meter)
 stefan = Fabricate(:stefan)
 stefan.add_role :manager, meter_stefan
 
 puts 'create jan'
-meters << meter_jan = Fabricate(:meter_jan)
+meters << meter_jan = Fabricate(:meter)
 jan = Fabricate(:jan)
 jan.add_role :manager, meter_jan
 
-puts 'chreate meter data'
+puts 'create meter data'
 meters.each do |meter|
   File.foreach("#{Rails.root}/db/seeds/meter#{meter.id}.txt").with_index { |line, line_num|
     Reading.create(
