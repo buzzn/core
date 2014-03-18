@@ -58,6 +58,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'spring'
   gem 'lol_dba'
   gem 'listen'
   gem 'launchy'
@@ -70,6 +71,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'spring-commands-rspec'
   gem 'guard-rspec'
   gem 'rspec-rails'
   gem 'capybara'
