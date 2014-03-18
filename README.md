@@ -26,6 +26,9 @@
     bundle exec rake db:test:prepare
     bundle exec guard
 
+## Start Background Jobs
+    bundle exec sidekiq -q high, 5 default
+
 ## Mail Views
     http://localhost:3000/de/mail_view
 
