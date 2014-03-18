@@ -1,3 +1,7 @@
+every 1.minute do
+  rake "meter:reading_update"
+end
+
 # every 3.hours do
 #   runner "MyModel.some_process"
 #   rake "my:rake:task"
