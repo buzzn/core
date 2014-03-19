@@ -4,8 +4,8 @@ MetersController.prototype.index = () ->
   $('.inlinebar').sparkline 'html',
     type: 'bar',
     barColor: '#00e',
-    height: 50,
-    barWidth: 8
+    height: 80,
+    barWidth: 15
 
 
 MetersController.prototype.show = () ->
