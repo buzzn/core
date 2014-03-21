@@ -4,6 +4,10 @@ class MetersController < InheritedResources::Base
   respond_to :html
 
 
+  def index
+    @meters = Meter.with_role(:manager, current_user)
+    index!
+  end
 
   def permitted_params
     params.permit(:meter => [:address, :brand, :uid, :public])
