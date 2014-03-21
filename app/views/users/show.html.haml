@@ -1,0 +1,13 @@
+.container
+  %h1= @user.name
+  %h3 Friends
+  %ul
+    - for friendship in @user.friendships
+      %li
+        = friendship.friend.name
+        (#{link_to "remove", friendship, :method => :delete})
+  %p= link_to "Find Friends", users_path
+  %h3 Friended by Users
+  %ul
+    - for user in @user.inverse_friends
+      %li= h user.name

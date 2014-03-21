@@ -3,11 +3,12 @@ Buzzn::Application.routes.draw do
 
   mount Sidekiq::Web, at: '/sidekiq'
 
+  resources :meters
+  devise_for :users
+  resources :users
+  resources :friendships
   resources :groups
 
-  devise_for :users
-
-  resources :meters
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

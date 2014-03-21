@@ -19,13 +19,19 @@ Fabricator :admin, from: :user do
 end
 
 Fabricator :justus, from: :user do
-  email 'justus@buzzn.net'
+  email       'justus@buzzn.net'
+  first_name  'Justus'
+  last_name   'Schütze'
 end
 
 Fabricator :stefan, from: :user do
-  email 'stefan@buzzn.net'
+  email       'stefan@buzzn.net'
+  first_name  'Stefan'
+  last_name   'Musterman'
 end
 
 Fabricator :jan, from: :user do
-  email 'jan@buzzn.net'
+  email       'jan@buzzn.net'
+  first_name  'Jan'
+  last_name   'Müller'
 end
