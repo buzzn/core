@@ -29,6 +29,9 @@
 ## Start Background Jobs
     bundle exec sidekiq -q high, 5 default
 
+## update meters
+    bundle exec rake meter:reading_update
+
 ## Mail Views
     http://localhost:3000/de/mail_view
 

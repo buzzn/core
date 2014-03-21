@@ -5,7 +5,7 @@ class MetersController < InheritedResources::Base
 
 
   def permitted_params
-    params.permit(:meter => [:name, :uid, :public])
+    params.permit(:meter => [:address, :brand, :uid, :public])
   end
 
 end

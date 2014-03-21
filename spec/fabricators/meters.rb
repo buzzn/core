@@ -9,7 +9,7 @@ end
 
 Fabricator :meter_justus, from: :meter do
   address   'Fichtenweg 10 Wolfratshausen'
-  uid       1024000034
+  uid       1124001747
   username  'justus@buzzn.net'
   password  'PPf93TcR'
 end

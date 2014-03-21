@@ -3,7 +3,7 @@ require_relative '../../app/workers/meter_reading_update_worker'
 namespace :meter do
 
   task :reading_update => :environment do
-    Meter.all.each do |meter|
+    Meter.all.select(:id).each do |meter|
       last = Reading.where(meter_id: meter.id).last.timestamp
       now  = DateTime.now.utc
       (last.to_i .. now.to_i).step(1.minutes) do |time|
