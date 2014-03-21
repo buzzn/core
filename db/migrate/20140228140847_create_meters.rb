@@ -1,6 +1,7 @@
 class CreateMeters < ActiveRecord::Migration
   def change
     create_table :meters do |t|
+      t.string  :slug
       t.string  :address
       t.float   :latitude
       t.float   :longitude
