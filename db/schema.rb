@@ -32,7 +32,6 @@ ActiveRecord::Schema.define(version: 20140305164111) do
     t.string   "brand"
     t.string   "username"
     t.string   "password"
-    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
