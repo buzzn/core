@@ -10,12 +10,6 @@ class User < ActiveRecord::Base
   has_many :inverse_friendships, :class_name => "Friendship", :foreign_key => "friend_id"
   has_many :inverse_friends, :through => :inverse_friendships, :source => :user
 
-  has_many :pending_friends,
-           :through => :friendships,
-           :source => :friend,
-           :conditions => "status = 0"
-
-
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable,
          :validatable, :confirmable, :lockable, :timeoutable #, :omniauthable
