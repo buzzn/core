@@ -54,6 +54,7 @@ group :development do
   gem 'binding_of_caller'
   gem 'meta_request'
   gem 'table_print'
+  gem 'quiet_assets'
 end
 
 group :development, :test do
