@@ -34,6 +34,10 @@ ActiveRecord::Schema.define(version: 20140321112525) do
     t.datetime "updated_at"
   end
 
+  add_index "friendships", ["friend_id", "user_id"], name: "index_friendships_on_friend_id_and_user_id", using: :btree
+  add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id", using: :btree
+  add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
+
   create_table "groups", force: true do |t|
     t.string   "slug"
     t.string   "name"
