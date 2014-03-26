@@ -11,31 +11,25 @@
 
   %body
     .page-container
+      / top navbar
+      .navbar.navbar-default.navbar-fixed-top{role: "navigation"}
+        .container
+          .navbar-header
+            %button.navbar-toggle{"data-target" => ".sidebar-nav", "data-toggle" => "offcanvas", type: "button"}
+              %span.icon-bar
+              %span.icon-bar
+              %span.icon-bar
+            %a.navbar-brand{href: "#"} Buzzn
+      .container.main-container
+        / sidebar
+        .row.row-offcanvas.row-offcanvas-left
+          #sidebar.col-xs-6.col-sm-3.sidebar-offcanvas{role: "navigation"}
+            %ul.nav
+              %li= link_to t('meters'), meters_path
+              %li= link_to t('users'), users_path
+              %li= link_to t('groups'), groups_path
+          .col-xs-12.col-sm-9
+            = render 'layouts/messages'
+            = yield
 
-    / top navbar
-    .navbar.navbar-default.navbar-fixed-top{role: "navigation"}
-      .container
-        .navbar-header
-          %button.navbar-toggle{"data-target" => ".sidebar-nav", "data-toggle" => "offcanvas", type: "button"}
-            %span.icon-bar
-            %span.icon-bar
-            %span.icon-bar
-          %a.navbar-brand{href: "#"} Buzzn
 
-    .container
-      / sidebar
-      .row.row-offcanvas.row-offcanvas-left
-        #sidebar.col-xs-6.col-sm-3.sidebar-offcanvas{role: "navigation"}
-          %ul.nav
-            %li.active
-              %a{href: "#"} Home
-            %li
-              %a{href: "#"} Link 12
-            %li
-              %a{href: "#"} Link 2
-            %li
-              %a{href: "#"} Link 3
-
-        .col-xs-12.col-sm-9
-          = render 'layouts/messages'
-          = yield

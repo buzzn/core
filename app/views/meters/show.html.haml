@@ -1,25 +1,24 @@
-.container
-  %p#notice= notice
-  .row
-    .col-md-6
-      #container{style: "min-width: 310px; height: 400px; margin: 0 auto"}
+%p#notice= notice
+.row
+  .col-md-6
+    #container{style: "min-width: 310px; height: 400px; margin: 0 auto"}
 
-  %p
-    %b Addresse:
-    = @meter.address
-  %p
-    %b Uid:
-    = @meter.uid
-  %p
-    %b Private:
-    = @meter.public
-  %p
-    %b brand:
-    = @meter.brand
-  %p
-    %b User:
-    = @meter.user_id
+%p
+  %b Addresse:
+  = @meter.address
+%p
+  %b Uid:
+  = @meter.uid
+%p
+  %b Private:
+  = @meter.public
+%p
+  %b brand:
+  = @meter.brand
+%p
+  %b User:
+  = @meter.user_id
 
-  = link_to 'Edit', edit_meter_path(@meter)
-  \|
-  = link_to 'Back', meters_path
+= link_to 'Edit', edit_meter_path(@meter)
+\|
+= link_to 'Back', meters_path
