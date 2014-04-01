@@ -41,8 +41,8 @@ ActiveRecord::Schema.define(version: 20140321112525) do
   create_table "groups", force: true do |t|
     t.string   "slug"
     t.string   "name"
-    t.boolean  "private"
-    t.string   "type"
+    t.boolean  "public"
+    t.string   "mode"
     t.integer  "meter_id"
     t.integer  "user_id"
     t.datetime "created_at"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20140321112525) do
     t.float    "longitude"
     t.decimal  "uid",        precision: 15, scale: 0
     t.boolean  "public"
-    t.string   "brand"
+    t.string   "api_type"
     t.string   "username"
     t.string   "password"
     t.datetime "created_at"

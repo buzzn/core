@@ -1,8 +1,10 @@
 class Group < ActiveRecord::Base
-  rolify
-  include Authority::UserAbilities
+  resourcify
+  include Authority::Abilities
 
   extend FriendlyId
   friendly_id :name, use: :slugged
+
+  validates :name, presence: true, uniqueness: true
 
 end

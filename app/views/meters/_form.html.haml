@@ -1,8 +1,7 @@
 = simple_form_for @meter do |f|
   = f.input :address
-  = f.input :brand
+  = f.input :api_type, collection: ['simple_group','localpool'], include_blank: false
   = f.input :uid
   = f.input :public
-
   .form-actions
     = f.button :submit, id: 'submit', class: 'btn btn-success'

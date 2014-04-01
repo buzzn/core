@@ -1,7 +1,13 @@
 
 @import url("http://fonts.googleapis.com/css?family=Ruda:400,700,900");
 
+$navbar-inverse-bg: #22242a;
+
 @import "bootstrap";
+
+
+
+
 
 
 
@@ -10,9 +16,11 @@ body, html, .container {
 }
 
 
+
+
 body {
   color: #797979;
-  background: #eaeaea;
+  background:white;
   font-family: 'Ruda', sans-serif;
   font-size:13px;
   padding-top: 51px;
@@ -29,7 +37,7 @@ img {
 }
 
 .main-container{
-  background:white;
+  background: #eaeaea;
 }
 
 

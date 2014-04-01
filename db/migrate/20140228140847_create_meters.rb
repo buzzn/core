@@ -7,7 +7,7 @@ class CreateMeters < ActiveRecord::Migration
       t.float   :longitude
       t.decimal :uid, precision: 15
       t.boolean :public
-      t.string  :brand
+      t.string  :api_type
       t.string  :username
       t.string  :password
 

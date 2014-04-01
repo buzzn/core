@@ -5,10 +5,10 @@
   = @group.name
 %p
   %b Private:
-  = @group.private
+  = @group.public
 %p
   %b Type:
-  = @group.type
+  = @group.mode
 
 = link_to 'Edit', edit_group_path(@group)
 \|
