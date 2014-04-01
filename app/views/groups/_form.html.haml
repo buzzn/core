@@ -1,19 +1,36 @@
-= form_for @group do |f|
-  - if @group.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@group.errors.count, "error")} prohibited this group from being saved:"
-      %ul
-        - @group.errors.full_messages.each do |msg|
-          %li= msg
+%section.wrapper
+  %h3
+    %i.fa.fa-angle-right
+    Form Components
+  .row.mt
+    .col-lg-12
+      .form-panel
+        %h4.mb
+          %i.fa.fa-angle-right
+          Form Elements
 
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :private
-    = f.check_box :private
-  .field
-    = f.label :type
-    = f.text_field :type
-  .actions
-    = f.submit 'Save'
+        %form.form-horizontal.style-form{method: "get"}
+          .form-group
+            %label.col-sm-2.col-sm-2.control-label Default
+            .col-sm-10
+              %input.form-control{type: "text"}
+
+        = simple_form_for(@group, html: {class: 'form-horizontal' }) do |f|
+          = f.input :name
+          = f.input :type
+          = f.input :private
+          = f.submit 'Save'
+
+
+/ %section.wrapper
+/   %h3
+/     %i.fa.fa-angle-right
+/     Form Components
+/   .row.mt
+/     .col-lg-12
+/       .form-panel
+/         = simple_form_for @group do |f|
+/           = f.input :name
+/           = f.input :type
+/           = f.input :private
+/           = f.submit 'Save'
