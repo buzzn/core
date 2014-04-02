@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include Authority::UserAbilities
 
   extend FriendlyId
-  friendly_id :name, use: :slugged
+  friendly_id :name, use: [:slugged, :finders]
 
   validates :first_name, presence: true
   validates :last_name, presence: true

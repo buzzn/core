@@ -3,7 +3,7 @@ class Meter < ActiveRecord::Base
   include Authority::Abilities
 
   extend FriendlyId
-  friendly_id :address, use: :slugged
+  friendly_id :address, use: [:slugged, :finders]
 
   validates :address, presence: true, uniqueness: true
   validates :uid,     presence: true, uniqueness: true
