@@ -75,6 +75,8 @@ GEM
       activesupport (= 4.1.0.rc2)
       builder (~> 3.1)
       erubis (~> 2.7.0)
+    active_link_to (1.0.2)
+      actionpack
     activemodel (4.1.0.rc2)
       activesupport (= 4.1.0.rc2)
       builder (~> 3.1)
@@ -201,6 +203,7 @@ GEM
     formatador (0.2.4)
     friendly_id (5.0.3)
       activerecord (>= 4.0.0)
+    google-analytics-rails (0.0.5)
     growl (1.0.3)
     guard (2.6.0)
       formatador (>= 0.2.4)
@@ -480,6 +483,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_link_to
   address_picker-rails!
   attribute_normalizer!
   authority!
@@ -504,6 +508,7 @@ DEPENDENCIES
   font-awesome-rails
   foreigner
   friendly_id
+  google-analytics-rails
   growl
   guard
   guard-bundler
