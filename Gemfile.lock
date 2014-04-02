@@ -46,6 +46,17 @@ GIT
       rake (>= 0.8.7)
 
 GIT
+  remote: git://github.com/plataformatec/devise.git
+  revision: d019e1ed1aa58e4ecbcc62930ef95a8175f92188
+  specs:
+    devise (3.2.4)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 3.2.6, < 5)
+      thread_safe (~> 0.1)
+      warden (~> 1.2.3)
+
+GIT
   remote: git://github.com/plataformatec/simple_form.git
   revision: c17a9c0c0b4c6ec4368ed7abdb7dce39f03626dd
   specs:
@@ -138,6 +149,7 @@ GEM
       nio4r (>= 0.5.0)
     chronic (0.10.2)
     cliver (0.3.2)
+    cocoon (1.2.6)
     coderay (1.1.0)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
@@ -152,12 +164,6 @@ GEM
     daemons (1.1.9)
     database_cleaner (1.2.0)
     debug_inspector (0.0.2)
-    devise (3.2.4)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 3.2.6, < 5)
-      thread_safe (~> 0.1)
-      warden (~> 1.2.3)
     diff-lcs (1.2.5)
     draper (1.3.0)
       actionpack (>= 3.0)
@@ -496,9 +502,10 @@ DEPENDENCIES
   bullet!
   capybara
   carrierwave
+  cocoon
   coffee-rails (~> 4.0.0)
   database_cleaner
-  devise
+  devise!
   draper
   fabrication
   faraday

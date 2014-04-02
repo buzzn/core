@@ -8,6 +8,9 @@ class User < ActiveRecord::Base
   validates :first_name, presence: true
   validates :last_name, presence: true
 
+  has_many :bank_accounts, dependent: :destroy 
+  accepts_nested_attributes_for :bank_accounts, reject_if: :all_blank, allow_destroy: true
+
   has_many :friendships
   has_many :friends, :through => :friendships
   has_many :inverse_friendships, :class_name => "Friendship", :foreign_key => "friend_id"

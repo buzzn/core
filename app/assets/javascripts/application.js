@@ -16,6 +16,7 @@
 //= require jquery.ui.all
 //= require address_picker-rails
 //= require select2
+//= require cocoon
 //= require paloma
 //= require turbolinks
 //= require bootstrap

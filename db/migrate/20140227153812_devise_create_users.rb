@@ -24,6 +24,11 @@ class DeviseCreateUsers < ActiveRecord::Migration
       # phone
       t.string :phone
 
+      # notifications
+      t.boolean :newsletter_notifications,  :default => true
+      t.boolean :meter_notifications,       :default => true
+      t.boolean :group_notifications,       :default => true
+
 
       t.boolean :terms,   :default => false
 

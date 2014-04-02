@@ -4,7 +4,7 @@ Buzzn::Application.routes.draw do
   mount Sidekiq::Web, at: '/sidekiq'
 
   resources :meters
-  devise_for :users
+  devise_for :users, controllers: {registrations: 'users/registrations'}
   resources :users
   resources :friendships
   resources :groups
