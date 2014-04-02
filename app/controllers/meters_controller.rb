@@ -17,13 +17,19 @@ class MetersController < InheritedResources::Base
   end
 
   def edit
-    @meter = Meter.find(params[:id])
+    @meter = Meter.friendly.find(params[:id])
     authorize_action_for(@meter)
     edit!
   end
 
+  def update
+    @meter = Meter.friendly.find(params[:id])
+    authorize_action_for(@meter)
+    update!
+  end
+
   def show
-    @meter = Meter.find(params[:id])
+    @meter = Meter.friendly.find(params[:id])
     authorize_action_for(@meter)
     show!
   end

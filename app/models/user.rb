@@ -5,6 +5,9 @@ class User < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: :slugged
 
+  validates :first_name, presence: true
+  validates :last_name, presence: true
+
   has_many :friendships
   has_many :friends, :through => :friendships
   has_many :inverse_friendships, :class_name => "Friendship", :foreign_key => "friend_id"

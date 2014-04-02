@@ -2,8 +2,12 @@ class Meter < ActiveRecord::Base
   resourcify
   include Authority::Abilities
 
-  # extend FriendlyId
-  # friendly_id :address, use: :slugged
+  extend FriendlyId
+  friendly_id :address, use: :slugged
+
+  validates :address, presence: true, uniqueness: true
+  validates :uid,     presence: true, uniqueness: true
+
 
   def day_to_hours
     hours = []

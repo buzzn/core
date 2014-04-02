@@ -2,7 +2,8 @@ Fabricator :meter do
   address   { Faker::AddressDE.street_address }
   public    true
   api_type  'discovergy'
-  uid       1024000034
+  i = 1
+  uid       {1024000034 + (i += 1)}
   username  'stefan@buzzn.net'
   password  '19200buzzn'
 end
