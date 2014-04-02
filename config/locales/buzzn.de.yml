@@ -1,0 +1,140 @@
+de:
+  mister: Herr
+  miss: Fräulein
+  mistress: Frau
+  hello: Hallo
+  edit: Bearbeiten
+  delete: Löschen
+  new: Neu
+  save: Speichern
+  back: Zurück
+  how_it_works: So geht's
+  press: Presse
+  add_project: Projekt Einstellen
+  my_account: Mein Konto
+  edit_account: Mein Konto Bearbeiten
+  forgot_password: Passwort vergessen?
+  sign_in: Anmelden
+  sign_up: Registrieren
+  logout: Abmelden
+  details: Details
+  published: veröffentlicht
+  solarstarters_specs: solarstarters in Zahlen
+  about_us: Über uns
+  for_who: Für wen
+  prices: Preise
+  updated: aktualisiert
+  users: Benutzer
+  meters: Zähler
+  groups: Gruppen
+  registered_users: Registrierte Nutzer
+  registered_organizations: Registrierte Organisationen
+  accumulated_capital: Bis heute gesammeltes Kapital
+  completed_projects: Abgeschlossene Projekte
+  open_projects: Offene Projekte
+  contact_us: 'Kontakt & Impressum'
+  faq: Häufige Fragen
+  news: Aktuelles
+  sheet: Datenblatt
+  members: Mitglieder
+  add_user: Benutzer suchen und hinzufuegen
+  glossary: Glossar
+  email_notifications: E-Mail Benachrichtigung
+  terms_and_conditions: Nutzungsbedingung
+  investor_relations: Investor Relations
+  imprint: Impressum
+  privacy_statement: Datenschutz
+  privacy: Privatsphäre
+  return_on_investment: Ertrag
+  performance: Leistung
+  organization: Organisation
+  new_organization: Neue Organisation
+  project: Projekt
+  project_stage: Projektphase
+  projects: Projekte
+  messages: Nachrichten
+  message: Nachricht
+  financed: Finanziert
+  financing_costs: Finanzierungskosten
+  funding_project: Projekt Finanzieren
+  end_of_funding: endet die Finanzierung
+  comments: Kommentare
+  edit_message: Nachricht Bearbeiten
+  new_message: Neue Nachricht
+  add_new_message: Neue Nachricht hinzufügen
+  supporters: Unterstützer
+  price: Preis
+  until: Noch
+  are_you_sure: Sind Sie sich sicher?
+  new_project: Neues Projekt
+  add_new_project: Neues Projekt hinzufügen
+  public: Öffentlich
+  private: Privat
+  edit_organization: Organisation Bearbeiten
+  photovoltaic: Photovoltaik
+  search_project: Projekt Suchen
+  place: Ort
+  general_information: Allgemeine Informationen
+  address: Addresse
+  area: Fläche
+  performance_and_yield: Leistung und Ertrag
+  performance_in_kilowatts_peak: Leistung in Kilowatt peak
+  commissioning: Inbetriebnahme
+  yield_per_year: Ertrag pro Jahr
+  watt_peak: Watt Peak
+  yield_report: Ertragsgutachten
+  lease: Pacht
+  subsidy: Förderung
+  leaseing: Pacht
+  lease_square_meter: Pacht pro quadratmeter cents
+  runtime: Laufzeit
+  search: Suchen
+  finance: Finanzen
+  admin: Admin
+  investors: Investoren
+  edit_project: Projekt Bearbeiten
+  new_investment: Neues Investment
+  new_investment_request: Neue Investment Anfrage
+  send: senden
+  investment_request_was_successfully_sends: Investitionens Anfrage wurde erfolgreich versandt
+  delete_selected_shape: ausgewählten umriss löschen.
+  map: Karte
+  continue: weiter
+  confirm_mail_txt: "Sie können Ihre E-Mail-Konto über den Link unten bestätigen:"
+  confirm_my_account: 'Mein Konto Bestätigen'
+  requested_password_link_txt: "Jemand hat einen Link, um Ihr Passwort zu ändern angefordert, und Sie können dies über den Link unten tun."
+  not_request_this_txt: "Sollten Sie die E-Mail nicht angefordert haben, entschuldigen Sie bitte dies. Dann hat sich wahrscheinlich jemand vertippt. Ignorieren Sie einfach die Mail und löschen Sie diese."
+  search_users: Person Suchen
+  can_edit: kann bearbeiten
+  can_not_edit: kann nicht bearbeiten
+  cancel_my_account: Mein Konto Löschen
+  project_editable: Projekt Editierbarkeit
+  profile: Profil
+  day: Tag
+  days: Tage
+  days_to: Tage noch
+  years: Jahre
+  no_map_outline: Kein%20Anlagen%20Umriss%20vorhanden
+  de: Deutsch
+  en: Englisch
+  project_was_successfully_updated: "Projekt wurde erfolgreich aktualisiert"
+  project_not_found: "Projekt nicht gefunden"
+  funding_complete: Finanzierung abgeschlossen
+  message_was_successfully_updated: Nachricht wurde erfolgreich aktualisiert
+  add_picture: Bild hinzufügen
+  remove_picture: Bild entfernen
+  supported_projects: Unterstützte Projekte
+  create_message: Nachricht Erstellen
+  message_was_successfully_created: Nachricht wurde erfolgreich erstellt
+  message_was_successfully_updated: Nachricht wurde erfolgreich aktualisiert
+  accept_investment: investition akzeptieren
+  accept: akzeptieren
+  reject: ablehnen
+  investments: Investitionen
+  contact_person: Ansprechpartner
+  pending_investments: Investitions-Anfragen
+  sold_investments: Verkaufte Anteile
+  acquired_shares: Erworbene Anteile
+  create_project: Projekt Erstellen
+  delete_organization: Organisation Löschen
+  delete_project: Projekt Löschen

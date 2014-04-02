@@ -27,8 +27,7 @@
               %li= link_to t('my_account'), current_user
               %li= link_to t('edit_account'), edit_user_registration_path
               %li.divider
-              %li= link_to 'Logout', destroy_user_session_path, :method=>'delete'
-
+              %li= link_to t('logout'), destroy_user_session_path, :method => 'delete'
         - else
-          %li= link_to 'Login', new_user_session_path
-          %li= link_to 'Sign up', new_user_registration_path
+          %li= link_to t('sign_in'), new_user_session_path
+          %li= link_to t('sign_up'), new_user_registration_path

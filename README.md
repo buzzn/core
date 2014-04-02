@@ -45,6 +45,10 @@
 ## Analysis security vulnerability in this app
     bundle exec brakeman
 
+## update locales
+    bundle exec rails g devise:views:locale de
+    bundle exec rails g devise:views:locale en
+    
 ## add Sublime Settings to Preferences -> File Settings - User:
     "draw_white_space": "selection",
     "trim_trailing_white_space_on_save": true,

@@ -4,7 +4,7 @@
     %span.inlinebar= meter.day_to_hours
   .col-md-5
     - if current_user.can_update?(meter)
-      = link_to 'Edit', edit_meter_path(meter)
+      = link_to t('edit'), edit_meter_path(meter)
 
     - if current_user.can_delete?(meter)
-      = link_to 'Destroy', meter, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      = link_to t('destroy'), meter, :method => :delete, :data => { :confirm => 'Are you sure?' }
