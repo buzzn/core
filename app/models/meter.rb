@@ -8,6 +8,9 @@ class Meter < ActiveRecord::Base
   validates :address, presence: true, uniqueness: true
   validates :uid,     presence: true, uniqueness: true
 
+  normalize_attribute :address, with: [:strip]
+  normalize_attribute :uid,     with: [:strip]
+
 
   def day_to_hours
     hours = []

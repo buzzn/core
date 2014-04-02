@@ -22,6 +22,12 @@ GIT
       responders (~> 1.0.0.rc)
 
 GIT
+  remote: git://github.com/mdeering/attribute_normalizer.git
+  revision: 0b3e8fcdb79eddaf6bece056097309a18b0ebaf5
+  specs:
+    attribute_normalizer (1.2.0.b)
+
+GIT
   remote: git://github.com/mongoid/mongoid.git
   revision: 026e32109178eef2a50b31924f45eee2b7e05c82
   specs:
@@ -475,6 +481,7 @@ PLATFORMS
 
 DEPENDENCIES
   address_picker-rails!
+  attribute_normalizer!
   authority!
   awesome_print
   aws-sdk

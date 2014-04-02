@@ -7,4 +7,6 @@ class Group < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
 
+  normalize_attribute :name, with: [:strip]
+
 end
