@@ -72,7 +72,7 @@ group :development, :test do
   gem 'guard'
   gem 'guard-livereload'
   gem 'guard-bundler'
-  gem 'guard-delayed'
+  gem 'guard-sidekiq'
 end
 
 group :test do

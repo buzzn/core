@@ -152,8 +152,6 @@ GEM
     daemons (1.1.9)
     database_cleaner (1.2.0)
     debug_inspector (0.0.2)
-    delayed_job (4.0.0)
-      activesupport (>= 3.0, < 4.1)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -214,10 +212,6 @@ GEM
     guard-bundler (2.0.0)
       bundler (~> 1.0)
       guard (~> 2.2)
-    guard-delayed (0.2.1)
-      daemons
-      delayed_job
-      guard (> 0.3)
     guard-livereload (2.1.2)
       em-websocket (~> 0.5)
       guard (~> 2.0)
@@ -225,6 +219,9 @@ GEM
     guard-rspec (4.2.8)
       guard (~> 2.1)
       rspec (>= 2.14, < 4.0)
+    guard-sidekiq (0.0.11)
+      guard (>= 1.1)
+      sidekiq
     haml (4.0.5)
       tilt
     haml-rails (0.5.3)
@@ -514,9 +511,9 @@ DEPENDENCIES
   growl
   guard
   guard-bundler
-  guard-delayed
   guard-livereload
   guard-rspec
+  guard-sidekiq
   haml-rails
   has_scope
   highcharts-rails (~> 3.0.0)
