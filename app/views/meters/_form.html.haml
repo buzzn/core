@@ -1,6 +1,6 @@
 = simple_form_for @meter do |f|
-  = f.input :address
-  = f.input :api_type, collection: ['simple_group','localpool'], include_blank: false, input_html: { class: 'select2' }
+  = f.input :address, input_html: { class: 'address-picker-input' } 
+  = f.input :api_type,label: 'type', collection: ['static_meter', 'discovergy'], include_blank: false, input_html: { class: 'select2' }
   = f.input :uid
   = f.input :public
   .form-actions

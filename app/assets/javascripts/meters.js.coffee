@@ -8,6 +8,15 @@ MetersController.prototype.index = () ->
     barWidth: 15
 
 
+
+MetersController.prototype.edit = () ->
+  AddressPickerRails.Pickers.applyOnReady()
+      
+MetersController.prototype.new = () ->
+  AddressPickerRails.Pickers.applyOnReady()
+
+
+
 MetersController.prototype.show = () ->
   $('.inlinebar').sparkline 'html',
     type: 'bar',

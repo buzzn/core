@@ -7,6 +7,13 @@ GIT
       uniform_notifier (>= 1.4.0)
 
 GIT
+  remote: git://github.com/iainsmith/address_picker-rails.git
+  revision: 43009d96888a9c76e6a8dc0e2f3da48e979fcb4e
+  specs:
+    address_picker-rails (0.3.1)
+      rails (>= 3.2.0)
+
+GIT
   remote: git://github.com/josevalim/inherited_resources.git
   revision: 5b61f8a58ab39ea8be11435e750ea90c6a5925af
   specs:
@@ -467,6 +474,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  address_picker-rails!
   authority!
   awesome_print
   aws-sdk
