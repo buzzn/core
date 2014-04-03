@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
+  mount_uploader :image, UserPictureUploader
+
   validates :first_name, presence: true
   validates :last_name, presence: true
 
