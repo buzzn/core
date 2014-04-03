@@ -14,3 +14,12 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+
+# Ignore OSX Metadata
+.DS_Store
+
+# Ignore compiled CSS
+/public/assets/*
+
+# Ignore uploads
+/public/uploads
