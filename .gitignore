@@ -23,3 +23,6 @@
 
 # Ignore uploads
 /public/uploads
+
+# Ignore secrets
+/config/secrets.yml
