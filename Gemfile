@@ -21,6 +21,7 @@ gem 'inherited_resources',      github: 'josevalim/inherited_resources'
 gem 'has_scope'
 gem 'responders'
 gem 'simple_form',              github: 'plataformatec/simple_form'
+gem 'country_select'
 gem 'cocoon'
 gem 'turbolinks'
 gem 'active_link_to'
@@ -51,6 +52,9 @@ gem 'whenever', :require => false
 gem 'sidekiq'
 gem 'faraday'
 gem 'attribute_normalizer',       github: 'mdeering/attribute_normalizer'
+
+
+
 
 group :development do
   gem 'rack-mini-profiler'
