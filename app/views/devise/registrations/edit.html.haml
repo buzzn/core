@@ -3,7 +3,7 @@
 
   %fieldset
     %legend= t'profile'
-    = f.error_notification
+    = devise_error_messages!
     = f.input :image
     = f.input :email, required: true
     = f.input :first_name
