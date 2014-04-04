@@ -24,7 +24,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
                 :password, 
                 :password_confirmation, 
                 :current_password,
-                bank_accounts_attributes: [:id, :holder, :iban, :bic, :_destroy]
               )
     end
 

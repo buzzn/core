@@ -4,31 +4,32 @@
 #
 require 'rubygems' #so it can load gems
 
-puts '  seed development database'
+puts '-- seed development database --'
 
 meters = []
+smart_meters = []
 
-puts 'create admin'
 admin = Fabricate(:admin)
 admin.add_role 'admin'
 
-puts 'create justus'
-meters << meter_justus = Fabricate(:meter_justus)
-jan = Fabricate(:justus)
-jan.add_role :manager, meter_justus
+# puts 'create smart meter '
+# puts '  justus'
+# smart_meters << meter_justus = Fabricate(:meter_justus)
+# justus = Fabricate(:justus)
+# justus.add_role :manager, meter_justus
 
-puts 'create stefan'
-meters << meter_stefan = Fabricate(:meter)
-stefan = Fabricate(:stefan)
-stefan.add_role :manager, meter_stefan
 
-puts 'create jan'
-meters << meter_jan = Fabricate(:meter)
-jan = Fabricate(:jan)
-jan.add_role :manager, meter_jan
+puts 'static meters for:'
+%w[ felix danusch thomas martina stefan ole philipp christian ].each do |user_name|
+  puts "  #{user_name}"
+  meters << meter_user = Fabricate(:meter)
+  user = Fabricate(user_name)
+  user.add_role :manager, meter_user
+end
 
-puts 'create meter data'
-meters.each do |meter|
+
+puts 'add smart meter readings'
+smart_meters.each do |meter|
   File.foreach("#{Rails.root}/db/seeds/meter#{meter.id}.txt").with_index { |line, line_num|
     Reading.create(
       meter_id:  meter.id,

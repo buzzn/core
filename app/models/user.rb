@@ -7,20 +7,18 @@ class User < ActiveRecord::Base
 
   mount_uploader :image, UserPictureUploader
 
-  validates :first_name, presence: true
-  validates :last_name, presence: true
-
-  has_many :bank_accounts, dependent: :destroy 
-  accepts_nested_attributes_for :bank_accounts, reject_if: :all_blank, allow_destroy: true
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable,
+         :validatable, :confirmable, :lockable, :timeoutable #, :omniauthable
 
   has_many :friendships
   has_many :friends, :through => :friendships
   has_many :inverse_friendships, :class_name => "Friendship", :foreign_key => "friend_id"
   has_many :inverse_friends, :through => :inverse_friendships, :source => :user
+  has_one :contracting_party
 
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable,
-         :validatable, :confirmable, :lockable, :timeoutable #, :omniauthable
+  validates :first_name, presence: true
+  validates :last_name, presence: true
 
 
   def name

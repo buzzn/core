@@ -4,11 +4,6 @@ Fabricator :user do
   email       { Faker::Internet.email }
   first_name  { Faker::Name.first_name }
   last_name   { Faker::Name.last_name }
-  street      { Faker::AddressDE.street_address }
-  zip         { Faker::AddressDE.zip_code }
-  city        { Faker::AddressDE.city }
-  state       { Faker::AddressDE.state }
-  country     { Faker::AddressDE.country }
   phone       { Faker::PhoneNumber.phone_number }
   terms       true
   password    'testtest'
@@ -20,7 +15,7 @@ Fabricator :admin, from: :user do
 end
 
 Fabricator :felix, from: :user do
-  email       'mail@ffaerber.com'
+  email       'felix@buzzn.net'
   first_name  'Felix'
   last_name   'Faerber'
   image       { File.new(Rails.root.join('db', 'seed_assets', 'users', 'felix.jpg')) }

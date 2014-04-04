@@ -1,14 +1,13 @@
 class Reading
   include Mongoid::Document
 
-  field :meter_id,  type: Integer
-  field :timestamp, type: DateTime
-  field :wh,        type: Integer
+  field :contract_id,   type: Integer
+  field :meter_id,      type: Integer
+  field :timestamp,     type: DateTime
+  field :wh,            type: Integer
 
   index({ meter_id: 1 })
   index({ timestamp: 1 })
-
-
 
 
   def self.this_day_to_hours_by_meter_id(meter_id)

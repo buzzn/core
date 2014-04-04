@@ -12,13 +12,6 @@
     = f.input :phone
 
   %fieldset
-    %legend= t'bank_accounts'
-    = f.simple_fields_for :bank_accounts do |ba|
-      = render 'bank_account_fields', :f => ba
-    .links
-      = link_to_add_association 'add_bank_account', f, :bank_accounts
-
-  %fieldset
     %legend= t'email_notifications'
     = f.input :newsletter_notifications
     = f.input :meter_notifications

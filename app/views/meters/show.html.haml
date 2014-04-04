@@ -4,17 +4,9 @@
     #container{style: "min-width: 310px; height: 400px; margin: 0 auto"}
 
 %p
-  %b Addresse:
-  = @meter.address
-%p
   %b Uid:
   = @meter.uid
-%p
-  %b Private:
-  = @meter.public
-%p
-  %b brand:
-  = @meter.api_type
+
 
 = link_to 'Edit', edit_meter_path(@meter)
 \|

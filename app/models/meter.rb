@@ -3,14 +3,16 @@ class Meter < ActiveRecord::Base
   include Authority::Abilities
 
   extend FriendlyId
-  friendly_id :address, use: [:slugged, :finders]
+  friendly_id :uid, use: [:slugged, :finders]
 
-  validates :address, presence: true, uniqueness: true
   validates :uid,     presence: true, uniqueness: true
 
-  normalize_attribute :address, with: [:strip]
-  normalize_attribute :uid,     with: [:strip]
+  normalize_attribute :uid, with: [:strip]
 
+
+  has_one :meter_electricity_supplier
+  has_one :power_generator
+  has_one :address, as: :addressable
 
   def day_to_hours
     hours = []
