@@ -9,7 +9,7 @@ class Meter < ActiveRecord::Base
 
   normalize_attribute :uid, with: [:strip]
 
-
+  belongs_to :contract
   has_one :meter_electricity_supplier
   has_one :power_generator
   has_one :address, as: :addressable

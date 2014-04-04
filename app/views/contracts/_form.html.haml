@@ -1,0 +1,20 @@
+= simple_form_for @contract do |f|
+
+  = f.input :metering_point
+  = f.input :signing_user
+  = f.input :terms
+  = f.input :confirm_pricing_model
+  = f.input :power_of_attorney
+
+  %fieldset
+    %legend= t'address'
+    = f.simple_fields_for :address do |a|
+      = render 'addresses/form_fields', f: a
+
+  %fieldset
+    %legend= t'bank_account'
+    = f.simple_fields_for :bank_account do |ba|
+      = render 'bank_accounts/form_fields', f: ba
+
+  .form-actions
+    = f.button :submit, class: 'btn btn-success'

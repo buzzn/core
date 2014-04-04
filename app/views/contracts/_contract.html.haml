@@ -1,0 +1,9 @@
+.row
+  .col-md-1= link_to contract.id, edit_contract_path(contract)
+
+  .col-md-5
+    - if current_user.can_update?(contract)
+      = link_to t('edit'), edit_meter_path(contract)
+
+    - if current_user.can_delete?(contract)
+      = link_to t('destroy'), contract, :method => :delete, :data => { :confirm => 'Are you sure?' }

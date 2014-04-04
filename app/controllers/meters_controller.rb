@@ -38,7 +38,7 @@ class MetersController < InheritedResources::Base
 
 
   def permitted_params
-    params.permit(:meter => [:address, :api_type, :uid, :public])
+    params.permit(:meter => [:contract_id, :name, :uid])
   end
 
 
