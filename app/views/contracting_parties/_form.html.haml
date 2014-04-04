@@ -5,25 +5,17 @@
   %fieldset
     %legend= t'organization'
     = f.simple_fields_for :organization do |o|
-      = o.input :image
-      = o.input :name
-      = o.input :email
-      = o.input :phone
+      = render 'organizations/form_fields', f: o
 
   %fieldset
     %legend= t'address'
     = f.simple_fields_for :address do |a|
-      = a.input :street
-      = a.input :city
-      = a.input :state
-      = a.input :zip
+      = render 'addresses/form_fields', f: a
 
   %fieldset
     %legend= t'bank_account'
     = f.simple_fields_for :bank_account do |ba|
-      = ba.input :holder
-      = ba.input :iban
-      = ba.input :bic
+      = render 'bank_accounts/form_fields', f: ba
 
   .form-actions
     = f.button :submit, class: 'btn btn-success'

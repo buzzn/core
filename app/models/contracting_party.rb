@@ -14,4 +14,8 @@ class ContractingParty < ActiveRecord::Base
   has_one :organization, as: :organizationable
   accepts_nested_attributes_for :organization, :reject_if => :all_blank
 
+  def name
+    self.id
+  end
+
 end
