@@ -14,6 +14,7 @@
 ## Setup Rails Project
     git clone git@github.com:ffaerber/buzzn.git
     cd buzzn
+    add /config/secrets.yml (ask the Lead Developer) 
     bundle install
     bundle exec rake db:create
 
