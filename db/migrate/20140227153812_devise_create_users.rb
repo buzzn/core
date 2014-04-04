@@ -3,26 +3,14 @@ class DeviseCreateUsers < ActiveRecord::Migration
     create_table(:users) do |t|
 
       t.string :slug
-
       t.string :image
-
       t.string :first_name
       t.string :last_name
-
-      # address
-      t.string  :address
-      t.string  :street
-      t.string  :city
-      t.string  :state
-      t.integer :zip
-      t.string  :country
-      t.float   :longitude
-      t.float   :latitude
-
       t.string :gender
-
-      # phone
       t.string :phone
+
+      t.boolean :terms,                   :default => false
+      t.boolean :confirm_pricing_model,   :default => false
 
       # notifications
       t.boolean :newsletter_notifications,  :default => true
@@ -30,7 +18,8 @@ class DeviseCreateUsers < ActiveRecord::Migration
       t.boolean :group_notifications,       :default => true
 
 
-      t.boolean :terms,   :default => false
+
+
 
       t.string :email,              :null => false, :default => ""
       t.string :encrypted_password, :null => false, :default => ""

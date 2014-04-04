@@ -11,13 +11,67 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140402111832) do
+ActiveRecord::Schema.define(version: 20140404131708) do
+
+  create_table "addresses", force: true do |t|
+    t.string   "address"
+    t.string   "street"
+    t.string   "city"
+    t.string   "state"
+    t.integer  "zip"
+    t.string   "country"
+    t.float    "longitude"
+    t.float    "latitude"
+    t.integer  "addressable_id"
+    t.string   "addressable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "bank_accounts", force: true do |t|
     t.string   "holder"
     t.string   "iban"
     t.string   "bic"
-    t.string   "user_id"
+    t.string   "bank_name"
+    t.boolean  "direct_debit"
+    t.integer  "bank_accountable_id"
+    t.string   "bank_accountable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "contracting_parties", force: true do |t|
+    t.string   "legal_entity"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "contracts", force: true do |t|
+    t.string   "metering_point"
+    t.string   "signing_user"
+    t.boolean  "terms"
+    t.boolean  "confirm_pricing_model"
+    t.boolean  "power_of_attorney"
+    t.integer  "contracting_party_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "distribution_system_operator_contracts", force: true do |t|
+    t.string   "customer_number"
+    t.string   "contract_number"
+    t.integer  "distribution_system_operator_id"
+    t.integer  "contract_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "electricity_supplier_contracts", force: true do |t|
+    t.string   "customer_number"
+    t.string   "contract_number"
+    t.integer  "electricity_supplier_id"
+    t.integer  "meter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -50,7 +104,7 @@ ActiveRecord::Schema.define(version: 20140402111832) do
   create_table "groups", force: true do |t|
     t.string   "slug"
     t.string   "name"
-    t.boolean  "public"
+    t.boolean  "private"
     t.string   "mode"
     t.integer  "meter_id"
     t.integer  "user_id"
@@ -58,16 +112,44 @@ ActiveRecord::Schema.define(version: 20140402111832) do
     t.datetime "updated_at"
   end
 
+  create_table "metering_service_provider_contracts", force: true do |t|
+    t.string   "customer_number"
+    t.string   "contract_number"
+    t.integer  "metering_service_provider_id"
+    t.integer  "meter_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "meters", force: true do |t|
     t.string   "slug"
-    t.string   "address"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.decimal  "uid",        precision: 15, scale: 0
-    t.boolean  "public"
-    t.string   "api_type"
-    t.string   "username"
-    t.string   "password"
+    t.string   "name"
+    t.decimal  "uid",          precision: 10, scale: 0
+    t.string   "manufacturer"
+    t.integer  "contract_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "organizations", force: true do |t|
+    t.string   "name"
+    t.string   "image"
+    t.string   "email"
+    t.string   "phone"
+    t.integer  "organizationable_id"
+    t.string   "organizationable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "power_generators", force: true do |t|
+    t.string   "name"
+    t.string   "law"
+    t.string   "brand"
+    t.string   "primary_energy"
+    t.decimal  "watt_peak",      precision: 10, scale: 0
+    t.date     "commissioning"
+    t.integer  "meter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -83,25 +165,27 @@ ActiveRecord::Schema.define(version: 20140402111832) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
+  create_table "suppliers", force: true do |t|
+    t.string   "name"
+    t.string   "customer_number"
+    t.string   "contract_number"
+    t.integer  "meter_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", force: true do |t|
     t.string   "slug"
     t.string   "image"
     t.string   "first_name"
     t.string   "last_name"
-    t.string   "address"
-    t.string   "street"
-    t.string   "city"
-    t.string   "state"
-    t.integer  "zip"
-    t.string   "country"
-    t.float    "longitude"
-    t.float    "latitude"
     t.string   "gender"
     t.string   "phone"
+    t.boolean  "terms",                    default: false
+    t.boolean  "confirm_pricing_model",    default: false
     t.boolean  "newsletter_notifications", default: true
     t.boolean  "meter_notifications",      default: true
     t.boolean  "group_notifications",      default: true
-    t.boolean  "terms",                    default: false
     t.string   "email",                    default: "",    null: false
     t.string   "encrypted_password",       default: "",    null: false
     t.string   "reset_password_token"
