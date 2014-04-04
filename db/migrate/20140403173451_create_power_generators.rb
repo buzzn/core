@@ -1,7 +1,7 @@
 class CreatePowerGenerators < ActiveRecord::Migration
   def change
     create_table :power_generators do |t|
-      
+
       t.string :name
       t.string :law
       t.string :brand
@@ -10,8 +10,9 @@ class CreatePowerGenerators < ActiveRecord::Migration
       t.date :commissioning
 
       t.integer :meter_id
-      
+
       t.timestamps
     end
+    add_index :power_generators, :meter_id
   end
 end

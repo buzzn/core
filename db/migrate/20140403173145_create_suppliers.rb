@@ -8,5 +8,6 @@ class CreateSuppliers < ActiveRecord::Migration
       t.integer :meter_id
       t.timestamps
     end
+    add_index :suppliers, :meter_id
   end
 end

@@ -5,8 +5,9 @@ class CreateContractingParties < ActiveRecord::Migration
       t.string :legal_entity
 
       t.integer :user_id
-      
+
       t.timestamps
     end
+    add_index :contracting_parties, :user_id
   end
 end

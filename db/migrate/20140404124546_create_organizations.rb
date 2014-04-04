@@ -13,5 +13,6 @@ class CreateOrganizations < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :organizations, [:organizationable_id, :organizationable_type], name: 'index_organizationable'
   end
 end

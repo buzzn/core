@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(version: 20140404131708) do
     t.datetime "updated_at"
   end
 
+  add_index "addresses", ["addressable_id", "addressable_type"], name: "index_addressable", using: :btree
+
   create_table "bank_accounts", force: true do |t|
     t.string   "holder"
     t.string   "iban"
@@ -40,12 +42,16 @@ ActiveRecord::Schema.define(version: 20140404131708) do
     t.datetime "updated_at"
   end
 
+  add_index "bank_accounts", ["bank_accountable_id", "bank_accountable_type"], name: "index_accountable", using: :btree
+
   create_table "contracting_parties", force: true do |t|
     t.string   "legal_entity"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "contracting_parties", ["user_id"], name: "index_contracting_parties_on_user_id", using: :btree
 
   create_table "contracts", force: true do |t|
     t.string   "metering_point"
@@ -57,6 +63,8 @@ ActiveRecord::Schema.define(version: 20140404131708) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "contracts", ["contracting_party_id"], name: "index_contracts_on_contracting_party_id", using: :btree
 
   create_table "distribution_system_operator_contracts", force: true do |t|
     t.string   "customer_number"
@@ -131,6 +139,8 @@ ActiveRecord::Schema.define(version: 20140404131708) do
     t.datetime "updated_at"
   end
 
+  add_index "meters", ["contract_id"], name: "index_meters_on_contract_id", using: :btree
+
   create_table "organizations", force: true do |t|
     t.string   "name"
     t.string   "image"
@@ -141,6 +151,8 @@ ActiveRecord::Schema.define(version: 20140404131708) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "organizations", ["organizationable_id", "organizationable_type"], name: "index_organizationable", using: :btree
 
   create_table "power_generators", force: true do |t|
     t.string   "name"
@@ -153,6 +165,8 @@ ActiveRecord::Schema.define(version: 20140404131708) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "power_generators", ["meter_id"], name: "index_power_generators_on_meter_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"
@@ -173,6 +187,8 @@ ActiveRecord::Schema.define(version: 20140404131708) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "suppliers", ["meter_id"], name: "index_suppliers_on_meter_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "slug"

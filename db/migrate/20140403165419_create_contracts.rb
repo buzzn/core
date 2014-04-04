@@ -12,5 +12,6 @@ class CreateContracts < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :contracts, :contracting_party_id
   end
 end

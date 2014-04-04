@@ -9,11 +9,12 @@ class CreateAddresses < ActiveRecord::Migration
       t.string  :country
       t.float   :longitude
       t.float   :latitude
-      
+
       t.integer :addressable_id
       t.string  :addressable_type
 
       t.timestamps
     end
+    add_index :addresses, [:addressable_id, :addressable_type], name: 'index_addressable'
   end
 end
