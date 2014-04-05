@@ -115,7 +115,7 @@ ActiveRecord::Schema.define(version: 20140405002111) do
   create_table "meters", force: true do |t|
     t.string   "slug"
     t.string   "name"
-    t.decimal  "uid",          precision: 10, scale: 0
+    t.string   "uid"
     t.string   "manufacturer"
     t.integer  "contract_id"
     t.datetime "created_at"
