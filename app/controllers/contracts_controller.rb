@@ -2,9 +2,10 @@ class ContractsController < InheritedResources::Base
   before_filter :authenticate_user!
 
   def new
-    @contract               = Contract.new
-    @contract.bank_account  = BankAccount.new
-    @contract.address       = Address.new
+    @contract                   = Contract.new
+    @contract.bank_account      = BankAccount.new
+    @contract.address           = Address.new
+    @contract.external_contract = ExternalContract.new(mode: 'distribution_system_operator')
     new!
   end
 
@@ -28,7 +29,8 @@ private
       :confirm_pricing_model,
       :power_of_attorney,
       address_attributes: [:id, :street, :city, :state, :zip, :country, :_destroy],
-      bank_account_attributes: [:id, :holder, :iban, :bic, :_destroy]
+      bank_account_attributes: [:id, :holder, :iban, :bic, :_destroy],
+      external_contract_attributes: [:id, :mode, :customer_number, :contract_number, :_destroy]
     ]
   end
 

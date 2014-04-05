@@ -10,9 +10,18 @@ class Meter < ActiveRecord::Base
   normalize_attribute :uid, with: [:strip]
 
   belongs_to :contract
-  has_one :meter_electricity_supplier
+  
+  has_many :external_contracts, as: :external_contractable
+  accepts_nested_attributes_for :external_contracts, reject_if: :reject_external_contracts
+
   has_one :power_generator
+
   has_one :address, as: :addressable
+  accepts_nested_attributes_for :address, :reject_if => :all_blank
+
+  def reject_external_contracts(attributed)
+    attributed['customer_number'].blank? && attributed['contract_number'].blank?
+  end
 
   def day_to_hours
     hours = []

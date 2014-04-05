@@ -4,7 +4,7 @@ class CreateMeters < ActiveRecord::Migration
       t.string  :slug
 
       t.string  :name
-      t.decimal :uid
+      t.string  :uid
       t.string  :manufacturer
 
       t.integer :contract_id

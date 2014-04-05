@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140404131708) do
+ActiveRecord::Schema.define(version: 20140405002111) do
 
   create_table "addresses", force: true do |t|
     t.string   "address"
@@ -66,20 +66,12 @@ ActiveRecord::Schema.define(version: 20140404131708) do
 
   add_index "contracts", ["contracting_party_id"], name: "index_contracts_on_contracting_party_id", using: :btree
 
-  create_table "distribution_system_operator_contracts", force: true do |t|
+  create_table "external_contracts", force: true do |t|
+    t.string   "mode"
     t.string   "customer_number"
     t.string   "contract_number"
-    t.integer  "distribution_system_operator_id"
-    t.integer  "contract_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "electricity_supplier_contracts", force: true do |t|
-    t.string   "customer_number"
-    t.string   "contract_number"
-    t.integer  "electricity_supplier_id"
-    t.integer  "meter_id"
+    t.integer  "external_contractable_id"
+    t.string   "external_contractable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -116,15 +108,6 @@ ActiveRecord::Schema.define(version: 20140404131708) do
     t.string   "mode"
     t.integer  "meter_id"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "metering_service_provider_contracts", force: true do |t|
-    t.string   "customer_number"
-    t.string   "contract_number"
-    t.integer  "metering_service_provider_id"
-    t.integer  "meter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

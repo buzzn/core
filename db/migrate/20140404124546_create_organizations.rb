@@ -8,8 +8,7 @@ class CreateOrganizations < ActiveRecord::Migration
       t.string :email
       t.string :phone
 
-      t.integer :organizationable_id
-      t.string  :organizationable_type
+      t.references :organizationable, polymorphic: true
 
       t.timestamps
     end

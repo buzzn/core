@@ -8,43 +8,33 @@ class MetersController < InheritedResources::Base
     index!
   end
 
-  def create
-    @meter = Meter.new(meter_params)
-    if @meter.save
-      current_user.add_role :manager, @meter
-    end
-    create!
-  end
-
-  def edit
-    @meter = Meter.friendly.find(params[:id])
-    authorize_action_for(@meter)
-    edit!
-  end
-
-  def update
-    @meter = Meter.friendly.find(params[:id])
-    authorize_action_for(@meter)
-    update!
-  end
-
-  def show
-    @meter = Meter.friendly.find(params[:id])
-    authorize_action_for(@meter)
-    show!
+  def new
+    @meter = Meter.new
+    @meter.external_contracts << ExternalContract.new(mode: 'metering_service_provider')
+    @meter.external_contracts << ExternalContract.new(mode: 'electricity_supplier')
+    new!
   end
 
 
-
-
+protected
   def permitted_params
-    params.permit(:meter => [:contract_id, :name, :uid])
+    params.permit(:meter => init_permitted_params)
   end
-
 
 private
   def meter_params
-    params.require(:meter).permit(:address, :api_type, :uid, :public)
+    params.require(:meter).permit(init_permitted_params)
   end
+
+  def init_permitted_params
+    [
+      :contract_id, 
+      :name, 
+      :uid,
+      external_contracts_attributes: [:id, :mode, :customer_number, :contract_number, :_destroy]
+    ]
+  end
+
+
 
 end
