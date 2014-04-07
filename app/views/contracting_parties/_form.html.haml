@@ -1,4 +1,4 @@
-= simple_form_for @contracting_party do |f|
+= horizontal_form_for @contracting_party do |f|
 
   = f.input :legal_entity, collection: ['ich', 'gmbh'], include_blank: false, input_html: { class: 'select2' }
 

@@ -1,4 +1,4 @@
-= simple_form_for @metering_point do |f|
+= horizontal_form_for @metering_point do |f|
 
   = f.input :uid
 
@@ -13,5 +13,7 @@
       = render 'meters/form_fields', f: m
 
 
+
   .form-actions
     = f.button :submit, id: 'submit', class: 'btn btn-success'
+
