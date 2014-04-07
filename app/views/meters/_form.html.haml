@@ -1,12 +1,5 @@
 = simple_form_for @meter do |f|
-  = f.association :contract, include_blank: false, input_html: { class: 'select2' }
-  = f.input :name
-  = f.input :uid
-
-  %fieldset
-    %legend= t'external_contracts'
-    = f.simple_fields_for :external_contracts do |ec|
-      = render 'external_contracts/form_fields', f: ec
+  = render 'meters/form_fields', f: f
 
   .form-actions
     = f.button :submit, id: 'submit', class: 'btn btn-success'

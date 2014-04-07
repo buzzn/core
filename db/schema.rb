@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140405002111) do
+ActiveRecord::Schema.define(version: 20140407122119) do
 
   create_table "addresses", force: true do |t|
     t.string   "address"
@@ -46,12 +46,12 @@ ActiveRecord::Schema.define(version: 20140405002111) do
 
   create_table "contracting_parties", force: true do |t|
     t.string   "legal_entity"
-    t.integer  "user_id"
+    t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "contracting_parties", ["user_id"], name: "index_contracting_parties_on_user_id", using: :btree
+  add_index "contracting_parties", ["metering_point_id"], name: "index_contracting_parties_on_metering_point_id", using: :btree
 
   create_table "contracts", force: true do |t|
     t.string   "metering_point"
@@ -112,17 +112,23 @@ ActiveRecord::Schema.define(version: 20140405002111) do
     t.datetime "updated_at"
   end
 
+  create_table "metering_points", force: true do |t|
+    t.string   "uid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "meters", force: true do |t|
     t.string   "slug"
     t.string   "name"
     t.string   "uid"
     t.string   "manufacturer"
-    t.integer  "contract_id"
+    t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "meters", ["contract_id"], name: "index_meters_on_contract_id", using: :btree
+  add_index "meters", ["metering_point_id"], name: "index_meters_on_metering_point_id", using: :btree
 
   create_table "organizations", force: true do |t|
     t.string   "name"

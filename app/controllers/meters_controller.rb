@@ -10,8 +10,7 @@ class MetersController < InheritedResources::Base
 
   def new
     @meter = Meter.new
-    @meter.external_contracts << ExternalContract.new(mode: 'metering_service_provider')
-    @meter.external_contracts << ExternalContract.new(mode: 'electricity_supplier')
+    @meter.address = Address.new
     new!
   end
 
@@ -28,8 +27,7 @@ private
 
   def init_permitted_params
     [
-      :contract_id, 
-      :name, 
+      :name,
       :uid,
       external_contracts_attributes: [:id, :mode, :customer_number, :contract_number, :_destroy]
     ]

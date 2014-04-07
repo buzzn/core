@@ -3,6 +3,7 @@ Buzzn::Application.routes.draw do
 
   mount Sidekiq::Web, at: '/sidekiq'
 
+  resources :metering_points
   resources :meters
   devise_for :users, controllers: {registrations: 'users/registrations'}
   resources :users
@@ -16,7 +17,7 @@ Buzzn::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'meters#index'
+  root 'metering_points#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

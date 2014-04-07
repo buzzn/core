@@ -4,10 +4,10 @@ class CreateContractingParties < ActiveRecord::Migration
 
       t.string :legal_entity
 
-      t.integer :user_id
+      t.integer :metering_point_id
 
       t.timestamps
     end
-    add_index :contracting_parties, :user_id
+    add_index :contracting_parties, :metering_point_id
   end
 end

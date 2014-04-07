@@ -5,7 +5,9 @@ class ContractsController < InheritedResources::Base
     @contract                   = Contract.new
     @contract.bank_account      = BankAccount.new
     @contract.address           = Address.new
-    @contract.external_contract = ExternalContract.new(mode: 'distribution_system_operator')
+    @contract.external_contracts << ExternalContract.new(mode: 'distribution_system_operator')
+    @contract.external_contracts << ExternalContract.new(mode: 'metering_service_provider')
+    @contract.external_contracts << ExternalContract.new(mode: 'electricity_supplier')
     new!
   end
 

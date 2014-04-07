@@ -1,11 +1,7 @@
 %p#notice= notice
-.row
-  .col-md-6
-    #container{style: "min-width: 310px; height: 400px; margin: 0 auto"}
 
-%p
-  %b Uid:
-  = @meter.uid
+%b Uid:
+= @meter.uid
 
 
 = link_to 'Edit', edit_meter_path(@meter)

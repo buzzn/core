@@ -1,7 +1,8 @@
 namespace :db do
-  desc 'This rebuilds development and test db'
+  desc 'This rebuilds development db'
   task :init => [
                   'log:clear',
+                  'carrierwave:delete_uploads',
                   'db:mongoid:drop',
                   'db:mongoid:remove_indexes',
                   'db:mongoid:create_indexes',
