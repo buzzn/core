@@ -6,7 +6,11 @@ Buzzn::Application.routes.draw do
   resources :metering_points
   resources :meters
   devise_for :users, controllers: {registrations: 'users/registrations'}
-  resources :users
+  resources :users do
+    member do
+      get :redirect_to_current_user
+    end
+  end
   resources :friendships
   resources :groups
   resources :contracting_parties
@@ -17,7 +21,8 @@ Buzzn::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'metering_points#index'
+
+  root controller: 'users', action: 'redirect_to_current_user'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

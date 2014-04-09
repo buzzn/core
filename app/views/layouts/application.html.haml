@@ -8,13 +8,13 @@
     = metamagic :title => "Buzzn"
     %meta{:name => "viewport", :content => "width=device-width, initial-scale=1.0"}
     = analytics_init if Rails.env.production?
-    
+
   %body
     %section#container
       %header
         = render 'layouts/navigation'
 
-      %main{:role => "main"}
+      %main#main
         .container
           = render 'layouts/messages'
           = yield

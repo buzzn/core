@@ -1,4 +1,14 @@
-.container
+.col-sm-2
+  = image_tag @user.image
+  %h3= @user.name
+  %ul#sidebar.nav.nav-pill
+    = active_link_to t('metering_points'), metering_points_path, wrap_tag: :li
+    = active_link_to t('groups'), groups_path, wrap_tag: :li
+    = active_link_to t('contracting_parties'), contracting_parties_path, wrap_tag: :li
+    = active_link_to t('contracts'), contracts_path, wrap_tag: :li
+
+
+.col-sm-7
   %h1= @user.name
   %h3 Friends
   %ul
@@ -11,3 +21,5 @@
   %ul
     - for user in @user.inverse_friends
       %li= h user.name
+
+.col-sm-3

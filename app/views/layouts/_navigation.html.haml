@@ -1,22 +1,22 @@
 -# navigation styled for Bootstrap 3.0
 %nav.navbar.navbar-default.navbar-fixed-top
   .container
+
     .navbar-header
       %button.navbar-toggle{"data-target" => ".navbar-collapse", "data-toggle" => "collapse", :type => "button"}
         %span.sr-only Toggle navigation
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      = link_to 'Buzzn', root_path, class: 'navbar-brand'
+
+      = link_to 'buzzn', root_path, class: 'navbar-brand'
+
     .collapse.navbar-collapse
 
       %ul.nav.navbar-nav
         - if user_signed_in?
-          %li= link_to t('metering_points'), metering_points_path
-          %li= link_to t('users'), users_path
-          %li= link_to t('groups'), groups_path
-          %li= link_to t('contracting_parties'), contracting_parties_path
-          %li= link_to t('contracts'), contracts_path
+          = active_link_to t('users'), users_path, wrap_tag: :li
+
 
 
       %ul.nav.navbar-nav.navbar-right

@@ -1,13 +1,14 @@
 - meta title: t('sign_in')
 
 %h1= t('sign_in')
-= simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
+= horizontal_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
   = devise_error_messages!
   = f.input :email, autofocus: true
   = f.input :password
   = f.input :remember_me, as: :boolean, input_html: { checked: true } if devise_mapping.rememberable?
   .form-actions
-    = f.button :submit, t('sign_in'), id: 'submit', class: 'btn btn-success'
-    = link_to t('forgot_password'), new_password_path(resource_name)
+    .col-lg-offset-2.col-lg-10
+      = f.button :submit, t('sign_in'), id: 'submit', class: 'btn btn-success'
+      = link_to t('forgot_password'), new_password_path(resource_name)
 
 
