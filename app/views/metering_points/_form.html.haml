@@ -1,18 +1,5 @@
 = horizontal_form_for @metering_point do |f|
-
-  = f.input :uid
-
-  %fieldset
-    %legend= t'address'
-    = f.simple_fields_for :address do |a|
-      = render 'addresses/form_fields', f: a
-
-  %fieldset
-    %legend= t'meter'
-    = f.simple_fields_for :meter do |m|
-      = render 'meters/form_fields', f: m
-
-
+  = render 'metering_points/form_fields', f: f
 
   .form-actions
     = f.button :submit, id: 'submit', class: 'btn btn-success'

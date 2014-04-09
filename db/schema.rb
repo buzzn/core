@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140407122119) do
+ActiveRecord::Schema.define(version: 20140409093855) do
 
   create_table "addresses", force: true do |t|
     t.string   "address"
@@ -112,15 +112,22 @@ ActiveRecord::Schema.define(version: 20140407122119) do
     t.datetime "updated_at"
   end
 
+  create_table "locations", force: true do |t|
+    t.string   "name"
+    t.integer  "private_grid_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "metering_points", force: true do |t|
     t.string   "uid"
+    t.string   "address_addition"
+    t.integer  "location_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "meters", force: true do |t|
-    t.string   "slug"
-    t.string   "name"
     t.string   "uid"
     t.string   "manufacturer"
     t.integer  "metering_point_id"
@@ -156,6 +163,19 @@ ActiveRecord::Schema.define(version: 20140407122119) do
   end
 
   add_index "power_generators", ["meter_id"], name: "index_power_generators_on_meter_id", using: :btree
+
+  create_table "private_grids", force: true do |t|
+    t.string   "name"
+    t.integer  "zoom",           default: 16
+    t.string   "address"
+    t.text     "polygons"
+    t.string   "polygon_encode"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.boolean  "gmaps"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "roles", force: true do |t|
     t.string   "name"

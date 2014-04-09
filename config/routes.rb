@@ -3,20 +3,23 @@ Buzzn::Application.routes.draw do
 
   mount Sidekiq::Web, at: '/sidekiq'
 
-  resources :metering_points
-  resources :meters
   devise_for :users, controllers: {registrations: 'users/registrations'}
   resources :users do
+    resources :locations
+    resources :private_grids
     member do
       get :redirect_to_current_user
     end
   end
+
+  resources :metering_points
+  resources :meters
   resources :friendships
   resources :groups
   resources :contracting_parties
   resources :contracts
-
-
+  resources :private_grids
+  resources :locations
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
