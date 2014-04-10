@@ -5,8 +5,6 @@ Buzzn::Application.routes.draw do
 
   devise_for :users, controllers: {registrations: 'users/registrations'}
   resources :users do
-    resources :locations
-    resources :private_grids
     member do
       get :redirect_to_current_user
     end

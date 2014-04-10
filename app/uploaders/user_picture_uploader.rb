@@ -31,7 +31,6 @@ class UserPictureUploader < CarrierWave::Uploader::Base
 
   def self.sizes
     {
-      :extra_big   => [500, 500],
       :big         => [150, 150],
       :thumb       => [40, 40]
     }

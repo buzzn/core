@@ -7,6 +7,14 @@ class Address < ActiveRecord::Base
   validates :state,   presence: true
   validates :zip,     presence: true
 
+  after_validation :geocode
+
+  geocoded_by :full_address
+
+  def full_address
+    [street, city, zip, state, country].compact.join(', ')
+  end
+
   def name
     "#{street} #{zip} #{city}"
   end

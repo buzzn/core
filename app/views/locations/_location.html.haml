@@ -1,0 +1,8 @@
+.row.offer
+  .col-md-4= link_to location.address.name, location
+  .col-md-2
+    - if current_user.can_update?(location)
+      = link_to t('edit'), edit_metering_point_path(location)
+
+    - if current_user.can_delete?(location)
+      = link_to t('destroy'), location, :method => :delete, :data => { :confirm => 'Are you sure?' }

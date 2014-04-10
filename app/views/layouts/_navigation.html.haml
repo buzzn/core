@@ -16,7 +16,10 @@
       %ul.nav.navbar-nav
         - if user_signed_in?
           = active_link_to t('users'), users_path, wrap_tag: :li
-
+          = active_link_to t('locations'), locations_path, wrap_tag: :li
+          = active_link_to t('groups'), groups_path, wrap_tag: :li
+          = active_link_to t('contracting_parties'), contracting_parties_path, wrap_tag: :li
+          = active_link_to t('contracts'), contracts_path, wrap_tag: :li
 
 
       %ul.nav.navbar-nav.navbar-right

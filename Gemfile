@@ -53,7 +53,7 @@ gem 'whenever', :require => false
 gem 'sidekiq'
 gem 'faraday'
 gem 'attribute_normalizer',       github: 'mdeering/attribute_normalizer'
-
+gem 'geocoder'
 
 
 

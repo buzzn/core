@@ -8,6 +8,15 @@ class LocationsController < InheritedResources::Base
   end
 
 
+  def create
+    @location = Location.new(location_params)
+    if @location.save
+      current_user.add_role :manager, @location
+      redirect_to current_user
+    else
+      render 'new'
+    end
+  end
 
 
 protected
@@ -16,7 +25,7 @@ protected
   end
 
 private
-  def meter_params
+  def location_params
     params.require(:location).permit(init_permitted_params)
   end
 

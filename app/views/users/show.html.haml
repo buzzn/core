@@ -1,25 +1,22 @@
 .col-sm-2
-  = image_tag @user.image
+  = image_tag @user.image.big
   %h3= @user.name
-  %ul#sidebar.nav.nav-pill
-    = active_link_to t('metering_points'), metering_points_path, wrap_tag: :li
-    = active_link_to t('groups'), groups_path, wrap_tag: :li
-    = active_link_to t('contracting_parties'), contracting_parties_path, wrap_tag: :li
-    = active_link_to t('contracts'), contracts_path, wrap_tag: :li
-
 
 .col-sm-7
-  %h1= @user.name
-  %h3 Friends
-  %ul
-    - for friendship in @user.friendships
-      %li
-        = friendship.friend.name
-        (#{link_to "remove", friendship, :method => :delete})
-  %p= link_to "Find Friends", users_path
-  %h3 Friended by Users
-  %ul
-    - for user in @user.inverse_friends
-      %li= h user.name
+  - for location in @locations
+    .panel.panel-default.location_panel
+      .panel-body
+        = location.address.gmap_location_header_image_tag
+      %ul.list-group
+        - for metering_point in location.metering_points
+          %li.list-group-item
+            %h5= metering_point.address_addition
+            %span.inlinebar= metering_point.meter.day_to_hours
 
 .col-sm-3
+  %h5.page-header=t('friends')
+  %ul#sidebar.nav.nav-pill
+    - for friendship in @user.friendships
+      %li= link_to friendship.friend.name, friendship.friend
+
+  %h5.page-header=t('groups')
