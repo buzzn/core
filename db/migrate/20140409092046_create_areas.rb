@@ -1,6 +1,6 @@
-class CreatePrivateGrids < ActiveRecord::Migration
+class CreateAreas < ActiveRecord::Migration
   def change
-    create_table :private_grids do |t|
+    create_table :areas do |t|
 
       t.string  :name
 
@@ -12,6 +12,8 @@ class CreatePrivateGrids < ActiveRecord::Migration
       t.float   :latitude
       t.float   :longitude
       t.boolean :gmaps
+
+      t.integer :group_id
 
       t.timestamps
     end

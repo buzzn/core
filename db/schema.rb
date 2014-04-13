@@ -30,6 +30,19 @@ ActiveRecord::Schema.define(version: 20140409093855) do
 
   add_index "addresses", ["addressable_id", "addressable_type"], name: "index_addressable", using: :btree
 
+  create_table "areas", force: true do |t|
+    t.string   "name"
+    t.integer  "zoom",           default: 16
+    t.string   "address"
+    t.text     "polygons"
+    t.string   "polygon_encode"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.boolean  "gmaps"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "bank_accounts", force: true do |t|
     t.string   "holder"
     t.string   "iban"
@@ -123,6 +136,7 @@ ActiveRecord::Schema.define(version: 20140409093855) do
     t.string   "uid"
     t.string   "address_addition"
     t.integer  "location_id"
+    t.integer  "contract_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -163,19 +177,6 @@ ActiveRecord::Schema.define(version: 20140409093855) do
   end
 
   add_index "power_generators", ["meter_id"], name: "index_power_generators_on_meter_id", using: :btree
-
-  create_table "private_grids", force: true do |t|
-    t.string   "name"
-    t.integer  "zoom",           default: 16
-    t.string   "address"
-    t.text     "polygons"
-    t.string   "polygon_encode"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.boolean  "gmaps"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "roles", force: true do |t|
     t.string   "name"

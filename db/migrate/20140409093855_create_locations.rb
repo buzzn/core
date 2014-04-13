@@ -1,9 +1,10 @@
 class CreateLocations < ActiveRecord::Migration
   def change
     create_table :locations do |t|
+      t.string :slug
+      t.string :image
       t.string :name
-
-      t.integer :private_grid_id
+      t.boolean :active, default: true
 
       t.timestamps
     end
