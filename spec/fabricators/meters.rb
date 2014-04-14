@@ -2,7 +2,7 @@ Fabricator :meter do
   i = 1
   manufacturer              'Elster'
   manufacturer_product_type 'AS 1440'
-  manufacturer_meter_id     {03353984 + (i += 1)}
+  manufacturer_meter_id     {3353984 + (i += 1)}
   virtual                   false
 end
 

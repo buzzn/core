@@ -5,9 +5,6 @@ class ContractsController < InheritedResources::Base
     @contract                   = Contract.new
     @contract.bank_account      = BankAccount.new
     @contract.address           = Address.new
-    @contract.external_contracts << ExternalContract.new(mode: 'distribution_system_operator')
-    @contract.external_contracts << ExternalContract.new(mode: 'metering_service_provider')
-    @contract.external_contracts << ExternalContract.new(mode: 'electricity_supplier')
     new!
   end
 
@@ -31,8 +28,7 @@ private
       :confirm_pricing_model,
       :power_of_attorney,
       address_attributes: [:id, :street, :city, :state, :zip, :country, :_destroy],
-      bank_account_attributes: [:id, :holder, :iban, :bic, :_destroy],
-      external_contract_attributes: [:id, :mode, :customer_number, :contract_number, :_destroy]
+      bank_account_attributes: [:id, :holder, :iban, :bic, :_destroy]
     ]
   end
 

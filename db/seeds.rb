@@ -6,14 +6,17 @@ require 'rubygems' #so it can load gems
 
 puts '-- seed development database --'
 
+puts '  organizations'
+Fabricate(:discovergy)
+
 admin = Fabricate(:admin)
 admin.add_role 'admin'
 
-# puts 'create smart meter '
-# puts '  justus'
-# smart_meters << meter_justus = Fabricate(:meter_justus)
-# justus = Fabricate(:justus)
-# justus.add_role :manager, meter_justus
+
+puts '  justus'
+justus = Fabricate(:justus)
+location_fichtenweg = Fabricate(:location_fichtenweg)
+justus.add_role :manager, location_fichtenweg
 
 
 puts 'static meters for:'
@@ -25,20 +28,20 @@ puts 'static meters for:'
 end
 
 
-puts 'add smart meter readings'
-User.all.each do |user|
-  i=1
-  Location.with_role(:manager, user).each do |location|
-    location.metering_points.each do |metering_point|
-      File.foreach("#{Rails.root}/db/seeds/meter#{i}.txt").with_index { |line, line_num|
-        Reading.create(
-          meter_id:  metering_point.meter.id,
-          timestamp: DateTime.now.beginning_of_day + line_num.minute,
-          wh:        line.to_i
-        )
-      }
-      i+1
-    end
-  end
-end
+# puts 'add smart meter readings'
+# User.all.each do |user|
+#   i=1
+#   Location.with_role(:manager, user).each do |location|
+#     location.metering_points.each do |metering_point|
+#       File.foreach("#{Rails.root}/db/seeds/meter#{i}.txt").with_index { |line, line_num|
+#         Reading.create(
+#           meter_id:  metering_point.meter.id,
+#           timestamp: DateTime.now.beginning_of_day + line_num.minute,
+#           wh:        line.to_i
+#         )
+#       }
+#       i+1
+#     end
+#   end
+# end
 

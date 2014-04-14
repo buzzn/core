@@ -12,7 +12,7 @@ class ContractingParty < ActiveRecord::Base
   has_one :bank_account, as: :bank_accountable
   accepts_nested_attributes_for :bank_account, :reject_if => :all_blank
 
-  has_one :organization, as: :organizationable
+  has_one :organization
   accepts_nested_attributes_for :organization, :reject_if => :all_blank
 
   def name

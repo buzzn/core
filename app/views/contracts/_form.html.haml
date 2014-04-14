@@ -17,10 +17,5 @@
     = f.simple_fields_for :bank_account do |ba|
       = render 'bank_accounts/form_fields', f: ba
 
-  %fieldset
-    %legend= t'external_contract'
-    = f.simple_fields_for :external_contract do |ec|
-      = render 'external_contracts/form_fields', f: ec
-
   .form-actions
     = f.button :submit, class: 'btn btn-success'

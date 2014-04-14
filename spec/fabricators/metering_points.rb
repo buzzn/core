@@ -1,9 +1,11 @@
 Fabricator :metering_point do
   address_addition  'Keller'
-  uid               'DE0010688251510000000000002677114'
+  uid               ''
   mode              'down'
   meter             { Fabricate(:meter) }
 end
+
+
 
 
 
@@ -21,7 +23,7 @@ end
 
 Fabricator :mp_z2, from: :metering_point do
   address_addition  'Dach'
-  mode              'diff'
+  mode              'up'
   uid               ''
   meter             { Fabricate(:meter,
                                 manufacturer:               'Kamstrup',
@@ -29,11 +31,12 @@ Fabricator :mp_z2, from: :metering_point do
                                 manufacturer_meter_id:      '15028648',
                                 virtual:                    false
                                 )}
+  devices           {[Fabricate(:dach_pv_justus)]}
 end
 
 Fabricator :mp_z3, from: :metering_point do
   address_addition  'Carport'
-  mode              'up'
+  mode              'diff'
   uid               ''
   meter             { Fabricate(:meter,
                                 manufacturer:               'Kamstrup',
@@ -45,7 +48,7 @@ end
 
 Fabricator :mp_z4, from: :metering_point do
   address_addition  'Carport'
-  mode              'diff'
+  mode              'up'
   uid               ''
   meter             { Fabricate(:meter,
                                 manufacturer:               'Kamstrup',
@@ -53,6 +56,7 @@ Fabricator :mp_z4, from: :metering_point do
                                 manufacturer_meter_id:      '15028641',
                                 virtual:                    false
                                 )}
+  devices           {[Fabricate(:carport_pv_justus)]}
 end
 
 Fabricator :mp_z5, from: :metering_point do
@@ -101,4 +105,5 @@ Fabricator :mp_z8, from: :metering_point do
                                 manufacturer_meter_id:      '15028644',
                                 virtual:                    false
                                 )}
+  devices           {[Fabricate(:bhkw_justus)]}
 end

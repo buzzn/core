@@ -8,7 +8,9 @@ class MeteringPoint < ActiveRecord::Base
   has_one :meter
   accepts_nested_attributes_for :meter, reject_if: :all_blank
 
-  has_many :external_contracts, as: :external_contractable
-  accepts_nested_attributes_for :external_contracts
+  has_many :distribution_system_operators
+  has_many :electricity_suppliers
+  has_many :metering_service_providers
 
+  has_and_belongs_to_many :devices
 end

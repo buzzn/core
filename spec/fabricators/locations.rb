@@ -6,12 +6,12 @@ Fabricator :location do
 end
 
 Fabricator :location_muehlenkamp, from: :location do
-  address  { Fabricate(:address, street: 'mühlenkamp 12d', zip: 22303, city: 'hamburg', state: 'Hamburg') }
+  address  { Fabricate(:address, street: 'mühlenkamp 12d', zip: 22303, city: 'Hamburg', state: 'Hamburg') }
 end
 
 Fabricator :location_fichtenweg, from: :location do
   address           { Fabricate(:address, street: 'Fichtenweg 8', zip: 82515, city: 'Wolfratshausen', state: 'Bayern') }
-  metering_points   {
+  metering_points   {[
     Fabricate(:mp_z1),
     Fabricate(:mp_z2),
     Fabricate(:mp_z3),
@@ -20,5 +20,5 @@ Fabricator :location_fichtenweg, from: :location do
     Fabricate(:mp_z6),
     Fabricate(:mp_z7),
     Fabricate(:mp_z8)
-  }
+  ]}
 end
