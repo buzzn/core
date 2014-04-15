@@ -54,7 +54,7 @@ gem 'sidekiq'
 gem 'faraday'
 gem 'attribute_normalizer',       github: 'mdeering/attribute_normalizer'
 gem 'geocoder'
-
+gem 'acts_as_list',               github: 'swanandp/acts_as_list'
 
 
 group :development do

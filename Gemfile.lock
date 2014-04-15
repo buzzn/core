@@ -72,6 +72,13 @@ GIT
       activemodel (~> 4.0)
 
 GIT
+  remote: git://github.com/swanandp/acts_as_list.git
+  revision: fc5f8380729f6ee79cd52006c09893fbb1466783
+  specs:
+    acts_as_list (0.4.0)
+      activerecord (>= 3.0)
+
+GIT
   remote: git://github.com/vcr/vcr.git
   revision: 8f1e5b34e2707edfc818aca0208de8937dc61f32
   specs:
@@ -503,6 +510,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_link_to
+  acts_as_list!
   address_picker-rails!
   attribute_normalizer!
   authority!

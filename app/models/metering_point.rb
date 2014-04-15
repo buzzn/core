@@ -3,6 +3,8 @@ class MeteringPoint < ActiveRecord::Base
   include Authority::Abilities
 
   belongs_to :location
+  acts_as_list scope: :location
+
   belongs_to :contract
 
   has_one :meter
