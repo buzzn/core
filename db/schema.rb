@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140414134503) do
+ActiveRecord::Schema.define(version: 20140416193045) do
 
   create_table "addresses", force: true do |t|
     t.string   "address"
@@ -60,6 +60,9 @@ ActiveRecord::Schema.define(version: 20140414134503) do
 
   create_table "contracting_parties", force: true do |t|
     t.string   "legal_entity"
+    t.integer  "sales_tax_number"
+    t.float    "tax_rate"
+    t.integer  "tax_number"
     t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -68,11 +71,16 @@ ActiveRecord::Schema.define(version: 20140414134503) do
   add_index "contracting_parties", ["metering_point_id"], name: "index_contracting_parties_on_metering_point_id", using: :btree
 
   create_table "contracts", force: true do |t|
-    t.string   "metering_point"
+    t.string   "status"
+    t.decimal  "price_cents",           precision: 16, scale: 0, default: 0
     t.string   "signing_user"
     t.boolean  "terms"
     t.boolean  "confirm_pricing_model"
     t.boolean  "power_of_attorney"
+    t.date     "commissioning"
+    t.date     "termination"
+    t.decimal  "forecast_wa_pa",        precision: 10, scale: 0
+    t.string   "mode"
     t.integer  "contracting_party_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -90,13 +98,9 @@ ActiveRecord::Schema.define(version: 20140414134503) do
     t.string   "primary_energy"
     t.decimal  "watt_peak",                   precision: 10, scale: 0
     t.date     "commissioning"
+    t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "devices_metering_points", force: true do |t|
-    t.integer "metering_point_id"
-    t.integer "device_id"
   end
 
   create_table "distribution_system_operators", force: true do |t|
@@ -111,6 +115,9 @@ ActiveRecord::Schema.define(version: 20140414134503) do
     t.datetime "updated_at"
   end
 
+  add_index "distribution_system_operators", ["metering_point_id"], name: "index_distribution_system_operators_on_metering_point_id", using: :btree
+  add_index "distribution_system_operators", ["organization_id"], name: "index_distribution_system_operators_on_organization_id", using: :btree
+
   create_table "electricity_suppliers", force: true do |t|
     t.string   "name"
     t.string   "customer_number"
@@ -120,6 +127,9 @@ ActiveRecord::Schema.define(version: 20140414134503) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "electricity_suppliers", ["metering_point_id"], name: "index_electricity_suppliers_on_metering_point_id", using: :btree
+  add_index "electricity_suppliers", ["organization_id"], name: "index_electricity_suppliers_on_organization_id", using: :btree
 
   create_table "friendly_id_slugs", force: true do |t|
     t.string   "slug",                      null: false
@@ -177,6 +187,9 @@ ActiveRecord::Schema.define(version: 20140414134503) do
     t.datetime "updated_at"
   end
 
+  add_index "metering_points", ["contract_id"], name: "index_metering_points_on_contract_id", using: :btree
+  add_index "metering_points", ["location_id"], name: "index_metering_points_on_location_id", using: :btree
+
   create_table "metering_service_providers", force: true do |t|
     t.string   "customer_number"
     t.string   "contract_number"
@@ -187,6 +200,9 @@ ActiveRecord::Schema.define(version: 20140414134503) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "metering_service_providers", ["metering_point_id"], name: "index_metering_service_providers_on_metering_point_id", using: :btree
+  add_index "metering_service_providers", ["organization_id"], name: "index_metering_service_providers_on_organization_id", using: :btree
 
   create_table "meters", force: true do |t|
     t.string   "manufacturer"
@@ -268,5 +284,16 @@ ActiveRecord::Schema.define(version: 20140414134503) do
   end
 
   add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
+
+  create_table "versions", force: true do |t|
+    t.string   "item_type",  null: false
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
 end

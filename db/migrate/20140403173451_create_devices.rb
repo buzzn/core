@@ -12,6 +12,8 @@ class CreateDevices < ActiveRecord::Migration
       t.decimal :watt_peak
       t.date    :commissioning
 
+      t.integer :metering_point_id
+
       t.timestamps
     end
   end

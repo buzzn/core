@@ -4,7 +4,7 @@ gem 'rails', '4.1.0'
 gem 'mysql2'
 gem 'mongoid', '~> 4.0.0.beta1', github: 'mongoid/mongoid'
 gem 'bson'
-gem 'unicorn-rails'
+gem 'puma'
 gem 'haml-rails'
 gem 'sass-rails'
 gem 'coffee-rails'
@@ -55,6 +55,8 @@ gem 'faraday'
 gem 'attribute_normalizer',       github: 'mdeering/attribute_normalizer'
 gem 'geocoder'
 gem 'acts_as_list',               github: 'swanandp/acts_as_list'
+gem 'paper_trail'
+gem 'money-rails'
 
 
 group :development do

@@ -13,5 +13,7 @@ class CreateDistributionSystemOperators < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :distribution_system_operators, :organization_id
+    add_index :distribution_system_operators, :metering_point_id
   end
 end

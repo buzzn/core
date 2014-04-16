@@ -14,5 +14,5 @@ class MeteringPoint < ActiveRecord::Base
   has_many :electricity_suppliers
   has_many :metering_service_providers
 
-  has_and_belongs_to_many :devices
+  has_many :devices
 end

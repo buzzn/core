@@ -2,6 +2,8 @@ class Contract < ActiveRecord::Base
   resourcify
   include Authority::Abilities
 
+  has_paper_trail
+
   belongs_to :contracting_party
 
   has_one :meter

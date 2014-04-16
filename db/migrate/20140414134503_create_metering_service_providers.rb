@@ -12,5 +12,7 @@ class CreateMeteringServiceProviders < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :metering_service_providers, :organization_id
+    add_index :metering_service_providers, :metering_point_id
   end
 end

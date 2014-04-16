@@ -11,5 +11,7 @@ class CreateMeteringPoints < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :metering_points, :location_id
+    add_index :metering_points, :contract_id
   end
 end
