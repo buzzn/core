@@ -1,4 +1,9 @@
 de:
+  diff: Abgrenzungszähler
+  up: Generatorzähler
+  down: Verbrauchszähler
+  up_down: Einspeisezähler
+
   mister: Herr
   miss: Fräulein
   mistress: Frau

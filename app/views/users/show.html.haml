@@ -11,6 +11,7 @@
         - for metering_point in location.metering_points
           %li.list-group-item
             %h5= metering_point.address_addition
+            %h5= t metering_point.mode
             %h5= metering_point.position
             %span.inlinebar= metering_point.meter.day_to_hours
 

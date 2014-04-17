@@ -10,9 +10,9 @@ class MeteringPoint < ActiveRecord::Base
   has_one :meter
   accepts_nested_attributes_for :meter, reject_if: :all_blank
 
-  has_many :distribution_system_operators
-  has_many :electricity_suppliers
-  has_many :metering_service_providers
+  has_many :distribution_system_operator_contracts
+  has_many :electricity_supplier_contracts
+  has_many :metering_service_provider_contracts
 
   has_many :devices
 end

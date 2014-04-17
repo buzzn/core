@@ -10,7 +10,7 @@ class CreateContracts < ActiveRecord::Migration
       t.boolean :power_of_attorney
       t.date    :commissioning
       t.date    :termination
-      t.decimal :forecast_wa_pa
+      t.decimal :forecast_wh_pa
       t.string  :mode
 
       t.integer :contracting_party_id

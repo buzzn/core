@@ -5,6 +5,8 @@ class Reading
   field :meter_id,      type: Integer
   field :timestamp,     type: DateTime
   field :wh,            type: Integer
+  field :reason
+  field :source
 
   index({ meter_id: 1 })
   index({ timestamp: 1 })

@@ -2,9 +2,9 @@ class CreateMeters < ActiveRecord::Migration
   def change
     create_table :meters do |t|
 
-      t.string  :manufacturer
-      t.string  :manufacturer_product_type
-      t.string  :manufacturer_meter_id
+      t.string  :manufacturer_name
+      t.string  :manufacturer_product_number
+      t.string  :manufacturer_meter_number
       t.boolean :virtual, default: false
 
       t.integer :metering_point_id

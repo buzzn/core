@@ -1,4 +1,4 @@
-class ElectricitySupplier < ActiveRecord::Base
+class ElectricitySupplierContract < ActiveRecord::Base
   belongs_to :organization
   belongs_to :metering_point
   has_paper_trail
