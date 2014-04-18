@@ -9,4 +9,6 @@ class Group < ActiveRecord::Base
 
   normalize_attribute :name, with: [:strip]
 
+  has_one :area
+
 end
