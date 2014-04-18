@@ -37,12 +37,10 @@ private
         :uid,
         :address_addition,
         :_destroy,
-        meter_attributes: [:id, :manufacturer, :uid, :_destroy]
+        meter_attributes: [:id, :manufacturer_name, :manufacturer_product_number, :manufacturer_meter_number, :virtual, :_destroy]
       ]
     ]
   end
-
-
 
 
 

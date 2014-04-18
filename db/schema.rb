@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(version: 20140417171422) do
     t.string   "image"
     t.string   "name"
     t.string   "law"
+    t.string   "generator_type"
     t.string   "manufacturer"
     t.string   "manufacturer_product_number"
     t.string   "shop_link"

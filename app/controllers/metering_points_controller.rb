@@ -1,5 +1,6 @@
 class MeteringPointsController < InheritedResources::Base
   before_filter :authenticate_user!
+  respond_to :html, :js
 
   def index
     @metering_points = MeteringPoint.with_role(:manager, current_user)

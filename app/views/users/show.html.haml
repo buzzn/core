@@ -1,3 +1,5 @@
+#myModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+
 .col-sm-2
   = image_tag @user.image.big
   %h3= @user.name
@@ -10,11 +12,10 @@
       %ul.list-group
         - for metering_point in location.metering_points
           %li.list-group-item
-            %h5= metering_point.address_addition
-            %h5= t metering_point.mode
-            %h5= metering_point.position
+            %h5= metering_point.name
             %span.inlinebar= metering_point.meter.day_to_hours
 
+      = link_to 'add_metering_point', new_metering_point_path,  {:remote => true, 'data-toggle' =>  "modal", 'data-target' => '#myModal'}
 .col-sm-3
   %h5.page-header=t('friends')
   %ul#sidebar.nav.nav-pill

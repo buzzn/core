@@ -8,7 +8,7 @@ end
 
 
 Fabricator :meter_justus, from: :meter do
-  uid       1124001747
+  manufacturer_meter_number   1124001747
   operator  'discovergy'
   username  'justus@buzzn.net'
   password  'PPf93TcR'

@@ -1,0 +1,10 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+      %h4.modal-title=t'new_petering_point'
+    .modal-body
+      = horizontal_form_for @metering_point do |f|
+        = f.input :location_id
+        = render 'metering_points/form_fields', f: f
+        = f.button :submit, id: 'submit', class: 'btn btn-primary'

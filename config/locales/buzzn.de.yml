@@ -4,6 +4,13 @@ de:
   down: Verbrauchszähler
   up_down: Einspeisezähler
 
+  wind: Windkraftanlage
+  wind_short: Wind
+  chp: Blockheizkraftwerk
+  chp_short: BHKW
+  pv: Photovoltaik
+  pv_short: PV
+
   mister: Herr
   miss: Fräulein
   mistress: Frau
@@ -26,6 +33,7 @@ de:
   published: veröffentlicht
   solarstarters_specs: solarstarters in Zahlen
   about_us: Über uns
+  for: Für
   for_who: Für wen
   prices: Preise
   updated: aktualisiert
