@@ -36,9 +36,11 @@ private
 
   def init_permitted_params
     [
+      :location_id,
       :uid,
-      address_attributes: [:id, :street, :city, :state, :zip, :country, :_destroy],
-      meter_attributes: [:id, :name, :uid, :_destroy]
+      :mode,
+      :address_addition,
+      meter_attributes: [:id, :manufacturer_name, :manufacturer_product_number, :manufacturer_meter_number, :virtual, :_destroy]
     ]
   end
 

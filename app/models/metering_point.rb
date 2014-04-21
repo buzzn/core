@@ -15,4 +15,9 @@ class MeteringPoint < ActiveRecord::Base
   has_many :metering_service_provider_contracts
 
   has_many :devices
+
+  
+  validates :location_id, presence: true
+  validates :mode, presence: true
+
 end

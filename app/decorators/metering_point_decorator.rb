@@ -16,7 +16,7 @@ class MeteringPointDecorator < Draper::Decorator
     when 'diff'
       "#{model.position} / #{t(model.mode)}"
     else
-      puts "You gave me #{a} -- I have no idea what to do with that."
+      "no mode"
     end
   end
 

@@ -1,4 +1,4 @@
-#myModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+#myModal.modal.fade{"data-location_id" => nil, "data-metering_point_mode" => "down", "aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
 
 .col-sm-2
   = image_tag @user.image.big
@@ -14,8 +14,9 @@
           %li.list-group-item
             %h5= metering_point.name
             %span.inlinebar= metering_point.meter.day_to_hours
+      = link_to 'add_metering_point', new_metering_point_path,  {class: 'start_modal', :remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal', "data-location_id" => location.id}
 
-      = link_to 'add_metering_point', new_metering_point_path,  {:remote => true, 'data-toggle' =>  "modal", 'data-target' => '#myModal'}
+
 .col-sm-3
   %h5.page-header=t('friends')
   %ul#sidebar.nav.nav-pill
