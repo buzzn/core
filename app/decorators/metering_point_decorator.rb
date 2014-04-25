@@ -5,6 +5,20 @@ class MeteringPointDecorator < Draper::Decorator
   #decorates_association :meter
   decorates_association :devices
 
+
+  def link_to_edit
+    h.link_to(
+      name,
+      edit_metering_point_path(model),
+      {
+        remote: true,
+        class: 'start_modal',
+        'data-toggle' => "modal",
+        'data-target' => '#myModal'
+      })
+  end
+
+
   def name
     case model.mode
     when 'up'

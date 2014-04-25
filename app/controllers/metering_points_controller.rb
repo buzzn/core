@@ -2,25 +2,11 @@ class MeteringPointsController < InheritedResources::Base
   before_filter :authenticate_user!
   respond_to :html, :js
 
-  def index
-    @metering_points = MeteringPoint.with_role(:manager, current_user)
-    index!
-  end
 
   def new
     @metering_point         = MeteringPoint.new
     @metering_point.meter   = Meter.new
     new!
-  end
-
-  def create
-    @metering_point         = MeteringPoint.new(meter_params)
-    if @metering_point.save
-      current_user.add_role :manager, @metering_point
-      redirect_to @metering_point
-    else
-      render 'new'
-    end
   end
 
 
