@@ -1,6 +1,5 @@
 - metering_point = @metering_point if @metering_point
 
-%li.list-group-item
-  %h5= metering_point.id
-  %h5= #metering_point.link_to_edit
+%li.list-group-item{id: "metering_point_#{metering_point.id}" }
+  %h5= metering_point.link_to_edit
   %span.inlinebar= metering_point.meter.day_to_hours

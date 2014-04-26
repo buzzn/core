@@ -10,6 +10,18 @@ class MeteringPointsController < InheritedResources::Base
   end
 
 
+  def update
+    update! do |format|
+      @metering_point = MeteringPointDecorator.new(@metering_point)
+    end
+  end
+
+  def create
+    create! do |format|
+      @metering_point = MeteringPointDecorator.new(@metering_point)
+    end
+  end
+
 protected
   def permitted_params
     params.permit(:metering_point => init_permitted_params)

@@ -1,1 +1,1 @@
-$("#myModal").html("#{escape_javascript(render @metering_point )}");
+$("#metering_point_#{@metering_point.id}").replaceWith("#{escape_javascript(render @metering_point )}");
