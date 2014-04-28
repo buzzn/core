@@ -1,8 +1,8 @@
 de:
-  diff: Abgrenzungszähler
-  up: Generatorzähler
-  down: Verbrauchszähler
-  up_down: Einspeisezähler
+  diff_meter: Abgrenzungszähler
+  up_meter: Generatorzähler
+  down_meter: Verbrauchszähler
+  up_down_meter: Einspeisezähler
 
   wind: Windkraftanlage
   wind_short: Wind

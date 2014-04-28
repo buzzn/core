@@ -1,7 +1,7 @@
 Fabricator :metering_point do
   address_addition  'Keller'
   uid               ''
-  mode              'down'
+  mode              'down_meter'
   meter             { Fabricate(:meter) }
 end
 
@@ -11,7 +11,7 @@ end
 
 Fabricator :mp_z1, from: :metering_point do
   address_addition  'Übergabe'
-  mode              'up_down'
+  mode              'up_down_meter'
   uid               'DE0010688251510000000000002677114'
   meter             { Fabricate(:meter,
                                 manufacturer_name:           'Elster',
@@ -23,7 +23,7 @@ end
 
 Fabricator :mp_z2, from: :metering_point do
   address_addition  'Dach'
-  mode              'up'
+  mode              'up_meter'
   uid               ''
   meter             { Fabricate(:meter,
                                 manufacturer_name:           'Kamstrup',
@@ -36,7 +36,7 @@ end
 
 Fabricator :mp_z3, from: :metering_point do
   address_addition  'Carport'
-  mode              'diff'
+  mode              'diff_meter'
   uid               ''
   meter             { Fabricate(:meter,
                                 manufacturer_name:            'Kamstrup',
@@ -48,7 +48,7 @@ end
 
 Fabricator :mp_z4, from: :metering_point do
   address_addition  'Carport'
-  mode              'up'
+  mode              'up_meter'
   uid               ''
   meter             { Fabricate(:meter,
                                 manufacturer_name:            'Kamstrup',
@@ -61,7 +61,7 @@ end
 
 Fabricator :mp_z5, from: :metering_point do
   address_addition  'Garten'
-  mode              'up'
+  mode              'up_meter'
   uid               ''
   meter             { Fabricate(:meter,
                                 manufacturer_name:            'Kamstrup',
@@ -73,7 +73,7 @@ end
 
 Fabricator :mp_z6, from: :metering_point do
   address_addition  'Garten'
-  mode              'diff'
+  mode              'diff_meter'
   uid               ''
   meter             { Fabricate(:meter,
                                 manufacturer_name:            'Kamstrup',
@@ -85,7 +85,7 @@ end
 
 Fabricator :mp_z7, from: :metering_point do
   address_addition  'Keller'
-  mode              'up'
+  mode              'up_meter'
   uid               ''
   meter             { Fabricate(:meter,
                                 manufacturer_name:            'Elster',
@@ -97,7 +97,7 @@ end
 
 Fabricator :mp_z8, from: :metering_point do
   address_addition  'Keller'
-  mode              'up'
+  mode              'up_meter'
   uid               ''
   meter             { Fabricate(:meter,
                                 manufacturer_name:            'Kamstrup',

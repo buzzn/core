@@ -21,13 +21,13 @@ class MeteringPointDecorator < Draper::Decorator
 
   def name
     case model.mode
-    when 'up'
+    when 'up_meter'
       "#{model.position} / #{t(model.mode)} #{t('for')} #{generator_type_names} #{model.address_addition}"
-    when 'down'
+    when 'down_meter'
       "#{model.position} / #{t(model.mode)} | #{model.address_addition}"
-    when 'up_down'
+    when 'up_down_meter'
       "#{model.position} / #{t(model.mode)}"
-    when 'diff'
+    when 'diff_meter'
       "#{model.position} / #{t(model.mode)}"
     else
       "no mode"
