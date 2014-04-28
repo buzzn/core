@@ -4,7 +4,10 @@ class UsersController < InheritedResources::Base
 
   def show
     @user      = User.find(params[:id])
-    @locations = Location.with_role(:manager, @user).decorate
+    @locations = Location
+      .with_role(:manager, @user)
+      .includes([metering_points: [:meter, :devices]])
+      .decorate
     show!
   end
 
