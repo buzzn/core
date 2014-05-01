@@ -1,0 +1,16 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+      %h4.modal-title= t'new_down_metering_point'
+    .modal-body
+      = horizontal_form_for @metering_point, remote: true do |f|
+        = f.input :location_id, input_html: { value: params[:location_id] }, as: :hidden
+        = f.input :mode, as: :hidden
+        = f.input :uid
+        = f.input :address_addition
+        = f.simple_fields_for :meter do |m|
+          = m.input :manufacturer_name, collection: Meter.manufacturers
+          = m.input :manufacturer_product_number
+          = m.input :manufacturer_meter_number
+        = f.button :submit, id: 'submit', class: 'btn btn-primary'

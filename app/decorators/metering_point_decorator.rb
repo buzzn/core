@@ -2,11 +2,24 @@ class MeteringPointDecorator < Draper::Decorator
   include Draper::LazyHelpers
 
   delegate_all
-  #decorates_association :meter
+  decorates_association :meter
   decorates_association :devices
 
 
-  def link_to_edit
+  def new_meter
+    h.link_to(
+      t("add_meter"),
+      new_meter_path(metering_point_id: model.id),
+      {
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => 'modal',
+        'data-target' => '#myModal'
+      })
+  end
+
+
+  def edit
     h.link_to(
       name,
       edit_metering_point_path(model),
@@ -21,14 +34,14 @@ class MeteringPointDecorator < Draper::Decorator
 
   def name
     case model.mode
-    when 'up_meter'
-      "#{model.position} / #{t(model.mode)} #{t('for')} #{generator_type_names} #{model.address_addition}"
-    when 'down_meter'
-      "#{model.position} / #{t(model.mode)} | #{model.address_addition}"
-    when 'up_down_meter'
-      "#{model.position} / #{t(model.mode)}"
-    when 'diff_meter'
-      "#{model.position} / #{t(model.mode)}"
+    when 'up_metering'
+      "#{model.position}. #{t(model.mode)} #{t('for')} #{generator_type_names}-#{model.address_addition}"
+    when 'down_metering'
+      "#{model.position}. #{t(model.mode)} - #{model.address_addition}"
+    when 'up_down_metering'
+      "#{model.position}. #{t(model.mode)}"
+    when 'diff_metering'
+      "#{model.position}. #{t(model.mode)}"
     else
       "no mode"
     end

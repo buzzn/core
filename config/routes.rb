@@ -10,7 +10,17 @@ Buzzn::Application.routes.draw do
     end
   end
 
-  resources :metering_points
+  resources :metering_points do
+    member do
+      get 'new_down'
+      get 'new_up'
+      get 'new_up_down'
+      get 'new_diff'
+    end
+  end
+
+
+
   resources :meters
   resources :friendships
   resources :groups

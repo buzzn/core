@@ -9,8 +9,8 @@ UsersController.prototype.show = () ->
 
   $(document).on "click", ".start_modal", (e) ->
     e.preventDefault();
-    location_id = $(this).data("location_id")
-    $("#myModal").attr("data-location_id", location_id)
+    $("#myModal").attr("data-location_id", $(this).data("location_id"))
+    $("#myModal").attr("data-metering_point_mode", $(this).data("metering_point_mode"))
 
   $("#myModal").bind 'ajax:complete', (e, data, status, xhr) ->
     $("#myModal").modal('hide')

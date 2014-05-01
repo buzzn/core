@@ -3,11 +3,28 @@ class MeteringPointsController < InheritedResources::Base
   respond_to :html, :js
 
 
-  def new
-    @metering_point         = MeteringPoint.new
-    @metering_point.meter   = Meter.new
+
+  def new_down
+    @metering_point = MeteringPoint.new(mode: 'down_metering')
     new!
   end
+
+  def new_up
+    @metering_point = MeteringPoint.new(mode: 'up_metering')
+    new!
+  end
+
+  def new_up_down
+    @metering_point = MeteringPoint.new(mode: 'up_down_metering')
+    new!
+  end
+
+  def new_diff
+    @metering_point = MeteringPoint.new(mode: 'diff_metering')
+    new!
+  end
+
+
 
 
   def update
@@ -21,6 +38,8 @@ class MeteringPointsController < InheritedResources::Base
       @metering_point = MeteringPointDecorator.new(@metering_point)
     end
   end
+
+
 
 protected
   def permitted_params

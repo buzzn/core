@@ -8,7 +8,6 @@ class MeteringPoint < ActiveRecord::Base
   belongs_to :contract
 
   has_one :meter
-  accepts_nested_attributes_for :meter, reject_if: :all_blank
 
   has_many :distribution_system_operator_contracts
   has_many :electricity_supplier_contracts
