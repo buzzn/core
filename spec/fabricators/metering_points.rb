@@ -1,7 +1,7 @@
 Fabricator :metering_point do
   address_addition  'Keller'
   uid               ''
-  mode              'down_meter'
+  mode              'down_metering'
   meter             { Fabricate(:meter) }
 end
 
