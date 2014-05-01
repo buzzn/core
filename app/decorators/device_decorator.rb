@@ -1,8 +1,18 @@
-class DiviceDecorator < Draper::Decorator
+class DeviceDecorator < Draper::Decorator
+  include Draper::LazyHelpers
   delegate_all
 
-  def gmap_location_header_image_tag
-    h.image_tag static_gmap_url([700,100]), class: 'staticMap'
+
+  def edit
+    link_to(
+      t('edit_devise'),
+      edit_device_path(model),
+      {
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => "modal",
+        'data-target' => '#myModal'
+      })
   end
 
 end

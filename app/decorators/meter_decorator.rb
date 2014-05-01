@@ -3,7 +3,7 @@ class MeterDecorator < Draper::Decorator
   delegate_all
 
   def edit
-    h.link_to(
+    link_to(
       t('edit_meter'),
       edit_meter_path(model),
       {

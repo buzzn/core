@@ -1,0 +1,9 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+      %h4.modal-title= t'edit_device'
+    .modal-body
+      = simple_form_for @device, remote: true do |f|
+        = render 'devices/form_fields', f: f
+        = f.button :submit, id: 'submit', class: 'btn btn-primary'

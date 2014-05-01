@@ -6,7 +6,7 @@ class LocationDecorator < Draper::Decorator
 
 
   def new_down_metering_point
-    h.link_to(
+    link_to(
       t("add_down_metering"),
       new_down_metering_point_path(location_id: model.id),
       {
@@ -18,7 +18,7 @@ class LocationDecorator < Draper::Decorator
   end
 
   def new_up_metering_point
-    h.link_to(
+    link_to(
       t("add_up_metering"),
       new_up_metering_point_path(location_id: model.id),
       {

@@ -17,4 +17,10 @@ class MeteringPoint < ActiveRecord::Base
 
   validates :mode, presence: true
 
+
+
+  def up_metering?
+    self.mode == 'up_metering'
+  end
+
 end

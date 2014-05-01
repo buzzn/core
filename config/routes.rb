@@ -13,21 +13,31 @@ Buzzn::Application.routes.draw do
   resources :metering_points do
     member do
       get 'new_down'
+      get 'edit_down'
+      
       get 'new_up'
+      get 'edit_up'
+
       get 'new_up_down'
+      get 'edit_up_down'
+
       get 'new_diff'
+      get 'edit_diff'
     end
   end
 
 
 
   resources :meters
+  resources :devices
   resources :friendships
   resources :groups
   resources :contracting_parties
   resources :contracts
   resources :private_grids
   resources :locations
+
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

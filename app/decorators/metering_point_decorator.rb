@@ -7,7 +7,7 @@ class MeteringPointDecorator < Draper::Decorator
 
 
   def new_meter
-    h.link_to(
+    link_to(
       t("add_meter"),
       new_meter_path(metering_point_id: model.id),
       {
@@ -19,13 +19,26 @@ class MeteringPointDecorator < Draper::Decorator
   end
 
 
-  def edit
-    h.link_to(
-      name,
-      edit_metering_point_path(model),
+  def new_device
+    link_to(
+      t("add_device"),
+      new_device_path(metering_point_id: model.id),
       {
-        remote: true,
-        class: 'start_modal',
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => 'modal',
+        'data-target' => '#myModal'
+      })
+  end
+
+
+  def edit
+    link_to(
+      name,
+      send("edit_#{model.mode}_point_path", model),
+      {
+        :remote       => true,
+        :class        => 'start_modal',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })

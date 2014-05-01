@@ -1,7 +1,7 @@
 - meta title: t('sign_in')
 
 %h1= t('sign_in')
-= horizontal_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
+= simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
   = devise_error_messages!
   = f.input :email, autofocus: true
   = f.input :password

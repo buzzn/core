@@ -1,4 +1,4 @@
-= horizontal_form_for @group do |f|
+= simple_form_for @group do |f|
   = f.input :name
   = f.input :mode, collection: ['simple_group','localpool'], include_blank: false, input_html: { class: 'select2' }
   = f.input :public

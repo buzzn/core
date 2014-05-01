@@ -1,8 +1,0 @@
-%fieldset
-  %legend= t'metering_point'
-  = f.input :address_addition
-  = f.input :uid
-  %fieldset
-    %legend= t'meter'
-    = f.simple_fields_for :meter do |m|
-      = render 'meters/form_fields', f: m

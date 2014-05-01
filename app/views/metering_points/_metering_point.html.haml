@@ -1,8 +1,14 @@
-- metering_point = @metering_point if @metering_point
-
 %li.list-group-item{id: "metering_point_#{metering_point.id}" }
+
   %h5= metering_point.edit
   - if metering_point.meter
     = metering_point.meter.edit
   - else
     = metering_point.new_meter
+
+  - if metering_point.up_metering?
+    - if metering_point.devices.empty?
+      = metering_point.new_device
+    - else
+      - metering_point.devices.each do |device|
+        = device.edit

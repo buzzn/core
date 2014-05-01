@@ -8,22 +8,47 @@ class MeteringPointsController < InheritedResources::Base
     @metering_point = MeteringPoint.new(mode: 'down_metering')
     new!
   end
+  
+  def edit_down
+    @metering_point = MeteringPoint.find(params[:id])
+    edit!
+  end
+
+
 
   def new_up
     @metering_point = MeteringPoint.new(mode: 'up_metering')
     new!
   end
 
+  def edit_up
+    @metering_point = MeteringPoint.find(params[:id])
+    edit!
+  end
+
+
+
   def new_up_down
     @metering_point = MeteringPoint.new(mode: 'up_down_metering')
     new!
   end
+
+  def edit_up_down
+    @metering_point = MeteringPoint.find(params[:id])
+    edit!
+  end
+
+
 
   def new_diff
     @metering_point = MeteringPoint.new(mode: 'diff_metering')
     new!
   end
 
+  def edit_diff
+    @metering_point = MeteringPoint.find(params[:id])
+    edit!
+  end
 
 
 
@@ -56,8 +81,7 @@ private
       :location_id,
       :uid,
       :mode,
-      :address_addition,
-      meter_attributes: [:id, :manufacturer_name, :manufacturer_product_number, :manufacturer_meter_number, :virtual, :_destroy]
+      :address_addition
     ]
   end
 

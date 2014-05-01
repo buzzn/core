@@ -1,4 +1,4 @@
-= horizontal_form_for @location do |f|
+= simple_form_for @location do |f|
 
   = f.simple_fields_for :address do |a|
     = render 'addresses/form_fields', f: a
