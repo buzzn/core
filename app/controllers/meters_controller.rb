@@ -14,7 +14,6 @@ class MetersController < InheritedResources::Base
     edit!
   end
 
-
 protected
   def permitted_params
     params.permit(:meter => init_permitted_params)

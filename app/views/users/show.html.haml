@@ -5,19 +5,18 @@
   %h3= @user.name
 
 .col-sm-7
-  - if @locations.empty?
-    = new_location_path
-  - else
-    - for location in @locations
-      .panel.panel-default.location_panel
-        .panel-body
-          = location.address.gmap_location_header_image_tag
-        %ul.list-group
-          = location.new_up_metering_point if !location.metering_points.empty?
-          = render location.metering_points
+  - if @user == current_user && current_user.can_create?(Location)
+    = new_location
 
-        - if location.metering_points.empty?
-          = location.new_down_metering_point
+  - for location in @locations
+    .panel.panel-default.location_panel
+      .panel-body
+        = location.address.gmap_location_header_image_tag
+      %ul.list-group
+        = location.new_up_metering_point if !location.metering_points.empty?
+        = render location.metering_points
+      - if location.metering_points.empty?
+        = location.new_down_metering_point
 
 
 .col-sm-3

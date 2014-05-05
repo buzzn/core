@@ -3,14 +3,14 @@ class MeteringPointsController < InheritedResources::Base
   respond_to :html, :js
 
 
-
   def new_down
     @metering_point = MeteringPoint.new(mode: 'down_metering')
     new!
   end
-  
+
   def edit_down
     @metering_point = MeteringPoint.find(params[:id])
+    authorize_action_for(@metering_point)
     edit!
   end
 
@@ -18,11 +18,14 @@ class MeteringPointsController < InheritedResources::Base
 
   def new_up
     @metering_point = MeteringPoint.new(mode: 'up_metering')
+    authorize_action_for Location.find(params[:location_id])
     new!
   end
+  authority_actions :new_up => 'create'
 
   def edit_up
     @metering_point = MeteringPoint.find(params[:id])
+    authorize_action_for(@metering_point)
     edit!
   end
 
@@ -35,6 +38,7 @@ class MeteringPointsController < InheritedResources::Base
 
   def edit_up_down
     @metering_point = MeteringPoint.find(params[:id])
+    authorize_action_for(@metering_point)
     edit!
   end
 
@@ -47,6 +51,7 @@ class MeteringPointsController < InheritedResources::Base
 
   def edit_diff
     @metering_point = MeteringPoint.find(params[:id])
+    authorize_action_for(@metering_point)
     edit!
   end
 

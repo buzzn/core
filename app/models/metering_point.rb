@@ -7,11 +7,9 @@ class MeteringPoint < ActiveRecord::Base
   belongs_to :contract
 
   has_one :meter
-
-  has_many :distribution_system_operator_contracts
-  has_many :electricity_supplier_contracts
-  has_many :metering_service_provider_contracts
-
+  has_one :distribution_system_operator_contract
+  has_one :electricity_supplier_contract
+  has_one :metering_service_provider_contract
   has_many :devices
 
   validates :mode, presence: true

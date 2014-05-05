@@ -1,14 +1,19 @@
 %li.list-group-item{id: "metering_point_#{metering_point.id}" }
 
-  %h5= metering_point.edit
-  - if metering_point.meter
-    = metering_point.meter.edit
+  - if current_user.can_update?(metering_point)
+    %h5= metering_point.edit
   - else
-    = metering_point.new_meter
+    %h5= metering_point.name
 
-  - if metering_point.up_metering?
-    - if metering_point.devices.empty?
-      = metering_point.new_device
+  - if current_user.can_update?(metering_point)
+    - if metering_point.meter
+      = metering_point.meter.edit
     - else
-      - metering_point.devices.each do |device|
-        = device.edit
+      = metering_point.new_meter
+
+    - if metering_point.up_metering?
+      - if metering_point.devices.empty?
+        = metering_point.new_device
+      - else
+        - metering_point.devices.each do |device|
+          = device.edit

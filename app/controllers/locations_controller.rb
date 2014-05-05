@@ -1,12 +1,11 @@
 class LocationsController < InheritedResources::Base
   before_filter :authenticate_user!
-
+  respond_to :html, :js
 
 
   def new
-    @location                 = Location.new
-    @location.address         = Address.new
-    @location.metering_points << MeteringPoint.new(meter: Meter.new)
+    @location         = Location.new
+    @location.address = Address.new
     authorize_action_for(@location)
     new!
   end
@@ -36,14 +35,7 @@ private
 
   def init_permitted_params
     [
-      address_attributes: [:id, :street, :city, :state, :zip, :country, :_destroy],
-      metering_points_attributes: [
-        :id,
-        :uid,
-        :address_addition,
-        :_destroy,
-        meter_attributes: [:id, :manufacturer_name, :manufacturer_product_number, :manufacturer_meter_number, :virtual, :_destroy]
-      ]
+      address_attributes: [:id, :street, :city, :state, :zip, :country, :_destroy]
     ]
   end
 

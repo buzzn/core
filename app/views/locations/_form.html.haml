@@ -3,11 +3,6 @@
   = f.simple_fields_for :address do |a|
     = render 'addresses/form_fields', f: a
 
-  = f.simple_fields_for :metering_points do |mp|
-    = render 'metering_point_fields', f: mp
-  .links
-    = link_to_add_association t('add_metering_point'), f, :metering_points, :wrap_object => Proc.new {|mp| mp.build_meter; mp }
-
   .form-actions
     = f.button :submit, id: 'submit', class: 'btn btn-success'
 
