@@ -13,15 +13,15 @@ class ApplicationAuthorizer < Authority::Authorizer
     user.has_role? :admin
   end
 
-  # To update a specific resource instance, you must either own it or be an admin
-  def updatable_by?(user)
-    user.has_role? :manager, resource
-  end
+  # # To update a specific resource instance, you must either own it or be an admin
+  # def updatable_by?(user)
+  #   user.has_role? :manager, resource
+  # end
 
-  # Instance method: can this user delete this particular meter?
-  def deletable_by?(user)
-    user.has_role? :manager, resource
-  end
+  # # Instance method: can this user delete this particular meter?
+  # def deletable_by?(user)
+  #   user.has_role? :manager, resource
+  # end
 
 
 end

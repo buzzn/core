@@ -1,4 +1,5 @@
 class Meter < ActiveRecord::Base
+  include Authority::Abilities
 
   belongs_to :metering_point
 

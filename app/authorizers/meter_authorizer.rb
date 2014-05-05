@@ -1,7 +1,12 @@
 class MeterAuthorizer < ApplicationAuthorizer
 
-  def self.readable_by?(user)
-    true
+  def updatable_by?(user)
+    user.has_role? :manager, resource.metering_point.location
   end
+
+  def deletable_by?(user)
+    user.has_role? :manager, resource.metering_point.location
+  end
+
 
 end

@@ -1,15 +1,20 @@
 class LocationsController < InheritedResources::Base
   before_filter :authenticate_user!
 
+
+
   def new
     @location                 = Location.new
     @location.address         = Address.new
     @location.metering_points << MeteringPoint.new(meter: Meter.new)
+    authorize_action_for(@location)
+    new!
   end
 
 
   def create
     @location = Location.new(location_params)
+    authorize_action_for(@location)
     if @location.save
       current_user.add_role :manager, @location
       redirect_to current_user
