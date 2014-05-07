@@ -1,0 +1,10 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+      %h4.modal-title= t'edit_location'
+    .modal-body
+      = simple_form_for @location, remote: true do |f|
+        = f.simple_fields_for :address do |a|
+          = render 'addresses/form_fields', f: a
+        = f.button :submit, id: 'submit', class: 'btn btn-primary'

@@ -2,24 +2,10 @@
   .modal-content
     .modal-header
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'new_up_metering_point'
+      %h4.modal-title= t'new_diff_metering_point'
     .modal-body
       = simple_form_for @metering_point, remote: true do |f|
         = f.input :location_id, input_html: { value: params[:location_id] }, as: :hidden
         = f.input :mode, as: :hidden
-        = f.input :uid
-        = f.input :address_addition
-
-        = f.simple_fields_for :devices do |d|
-          = d.input :image
-          = d.input :name
-          = d.input :law
-          = d.input :generator_type, collection: Device.generator_types
-          = d.input :manufacturer
-          = d.input :manufacturer_product_number
-          = d.input :primary_energy
-          = d.input :watt_peak
-          = d.input :commissioning
-
-
+        = render 'metering_points/diff_form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-primary'

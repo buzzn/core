@@ -5,9 +5,21 @@ class LocationDecorator < Draper::Decorator
   decorates_association :metering_points
 
 
+  def edit
+    link_to(
+      model.address.name,
+      edit_location_path(model),
+      {
+        remote: true,
+        class: 'start_modal',
+        'data-toggle' => "modal",
+        'data-target' => '#myModal'
+      })
+  end
+
   def new_down_metering_point
     link_to(
-      t("add_down_metering"),
+      t('down_metering'),
       new_down_metering_point_path(location_id: model.id),
       {
         :remote                     => true,
@@ -19,8 +31,34 @@ class LocationDecorator < Draper::Decorator
 
   def new_up_metering_point
     link_to(
-      t("add_up_metering"),
+      t('up_metering'),
       new_up_metering_point_path(location_id: model.id),
+      {
+        :remote                     => true,
+        :class                      => 'start_modal',
+        'data-toggle'               => 'modal',
+        'data-target'               => '#myModal'
+      })
+  end
+
+
+  def new_up_down_metering_point
+    link_to(
+      t('up_down_metering'),
+      new_up_down_metering_point_path(location_id: model.id),
+      {
+        :remote                     => true,
+        :class                      => 'start_modal',
+        'data-toggle'               => 'modal',
+        'data-target'               => '#myModal'
+      })
+  end
+
+
+  def new_diff_metering_point
+    link_to(
+      t('diff_metering'),
+      new_diff_metering_point_path(location_id: model.id),
       {
         :remote                     => true,
         :class                      => 'start_modal',

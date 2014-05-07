@@ -1,5 +1,5 @@
 
-@import url("http://fonts.googleapis.com/css?family=Ruda:400,700,900");
+//@import url("http://fonts.googleapis.com/css?family=Ruda:400,700,900");
 
 $navbar-inverse-bg: #22242a;
 
@@ -7,7 +7,9 @@ $navbar-inverse-bg: #22242a;
 
 
 
-
+.centered{
+    text-align:center;
+}
 
 
 
@@ -23,8 +25,8 @@ body, html, .container {
 body {
   color: #797979;
   background:white;
-  font-family: 'Ruda', sans-serif;
-  font-size:13px;
+  // font-family: 'Ruda', sans-serif;
+  // font-size:13px;
   padding-top: 51px;
 }
 
