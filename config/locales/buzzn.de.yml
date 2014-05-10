@@ -9,9 +9,17 @@ de:
   add_up_down_metering: Einspeisezähler hinzufügen
   add_diff_metering: Abgrenzungszähler hinzufügen
 
+  add_up_metering_point: Messpunkt für Generatorzähler hinzufügen
+  add_down_metering_point: Messpunkt für Verbrauchszähler hinzufügen
+  add_up_down_metering_point: Messpunkt für Einspeisezähler hinzufügen
+  add_diff_metering_point: Messpunkt für Abgrenzungszähler hinzufügen
+
   add_metering_point: Messpunkt hinzufügen
 
   add_new_location: Neuen Standort hinzufügen.
+
+  edit_location: Standort bearbeiten.
+
 
   find_a_friend: Freund Finden
   wind: Windkraftanlage

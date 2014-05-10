@@ -11,7 +11,7 @@ class MeteringPointsController < InheritedResources::Base
   authority_actions :new_down => 'create'
 
   def edit_down
-    @metering_point = MeteringPoint.find(params[:id])
+    @metering_point = MeteringPoint.find(params[:id]).decorate
     authorize_action_for(@metering_point)
     edit!
   end
@@ -28,7 +28,7 @@ class MeteringPointsController < InheritedResources::Base
   authority_actions :new_up => 'create'
 
   def edit_up
-    @metering_point = MeteringPoint.find(params[:id])
+    @metering_point = MeteringPoint.find(params[:id]).decorate
     authorize_action_for(@metering_point)
     edit!
   end
@@ -44,7 +44,7 @@ class MeteringPointsController < InheritedResources::Base
   authority_actions :new_up_down => 'create'
 
   def edit_up_down
-    @metering_point = MeteringPoint.find(params[:id])
+    @metering_point = MeteringPoint.find(params[:id]).decorate
     authorize_action_for(@metering_point)
     edit!
   end
@@ -60,11 +60,13 @@ class MeteringPointsController < InheritedResources::Base
   authority_actions :new_diff => 'create'
 
   def edit_diff
-    @metering_point = MeteringPoint.find(params[:id])
+    @metering_point = MeteringPoint.find(params[:id]).decorate
     authorize_action_for(@metering_point)
     edit!
   end
   authority_actions :edit_diff => 'update'
+
+
 
 
   def update

@@ -6,19 +6,26 @@ class LocationsController < InheritedResources::Base
   def new
     @location         = Location.new
     @location.address = Address.new
-    authorize_action_for(@location)
     new!
   end
 
-
   def create
-    @location = Location.new(location_params)
-    authorize_action_for(@location)
-    if @location.save
+    create! do |format|
       current_user.add_role :manager, @location
-      redirect_to current_user
-    else
-      render 'new'
+      @location = LocationDecorator.new(@location)
+    end
+  end
+
+  def edit
+    edit! do |format|
+      @location = LocationDecorator.new(@location)
+    end
+  end
+
+
+  def update
+    update! do |format|
+      @location = LocationDecorator.new(@location)
     end
   end
 

@@ -7,3 +7,4 @@
       = simple_form_for @metering_point, remote: true do |f|
         = render 'metering_points/up_down_form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-primary'
+        = @metering_point.link_to_delete

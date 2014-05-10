@@ -2,35 +2,21 @@
 
 .col-sm-2
   = image_tag @user.image.big
-  %h3= @user.name
+  %h4= @user.name
 
 .col-sm-7
-
-  - @locations.each do |location|
-    .panel.panel-default.location_panel
-      .panel-heading
-        = location.edit
-        .btn-group.pull-right
-          %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
-            = t'add_metering_point'
-            %span.caret
-          %ul.dropdown-menu.pull-right
-            %li= location.new_up_metering_point
-            %li= location.new_down_metering_point
-            %li= location.new_up_down_metering_point
-            %li= location.new_diff_metering_point
-
-      %ul.list-group
-        = render location.metering_points
+  - if @locations.empty?
+    = render 'no_location'
+  - else
+    = render @locations
 
   - if @user == current_user && current_user.can_create?(Location)
     .centered= new_location
 
-
 .col-sm-3
   %h5.page-header=t('friends')
   %ul#sidebar.nav.nav-pill
-    - for friendship in @user.friendships
+    - @user.friendships.each do |friendship|
       %li= link_to friendship.friend.name, friendship.friend
     %li= active_link_to t('find_a_friend'), users_path, wrap_tag: :li
 

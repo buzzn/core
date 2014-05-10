@@ -2,7 +2,7 @@
   .modal-content
     .modal-header
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'new_down_metering_point'
+      %h4.modal-title= t'add_down_metering_point'
     .modal-body
       = simple_form_for @metering_point, remote: true do |f|
         = f.input :location_id, input_html: { value: params[:location_id] }, as: :hidden

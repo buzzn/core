@@ -6,6 +6,32 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :devices
 
 
+  def link_to_delete
+    link_to(
+      t('delete'),
+      model,
+      remote: true,
+      class: 'btn btn-danger',
+      :method => :delete,
+      :data => {
+        :confirm => t('are_you_sure')
+      })
+  end
+
+
+  def link_to_edit
+    link_to(
+      name,
+      send("edit_#{model.mode}_point_path", model),
+      {
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => "modal",
+        'data-target' => '#myModal'
+      })
+  end
+
+
   def new_meter
     link_to(
       t("add_meter"),
@@ -32,17 +58,6 @@ class MeteringPointDecorator < Draper::Decorator
   end
 
 
-  def edit
-    link_to(
-      name,
-      send("edit_#{model.mode}_point_path", model),
-      {
-        :remote       => true,
-        :class        => 'start_modal',
-        'data-toggle' => "modal",
-        'data-target' => '#myModal'
-      })
-  end
 
 
   def name

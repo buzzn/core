@@ -1,8 +1,14 @@
-.row.offer
-  .col-md-4= link_to location.address.name, location
-  .col-md-2
-    - if current_user.can_update?(location)
-      = link_to t('edit'), edit_location_path(location)
-
-    - if current_user.can_delete?(location)
-      = link_to t('destroy'), location, :method => :delete, :data => { :confirm => 'Are you sure?' }
+.panel.panel-default.location_panel{id: "location_#{location.id}" }
+  .panel-heading
+    = location.link_to_edit
+    .btn-group.pull-right
+      %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
+        = t'add_metering_point'
+        %span.caret
+      %ul.dropdown-menu.pull-right
+        %li= location.new_up_metering_point
+        %li= location.new_down_metering_point
+        %li= location.new_up_down_metering_point
+        %li= location.new_diff_metering_point
+  %ul.list-group
+    = render location.metering_points

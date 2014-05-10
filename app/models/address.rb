@@ -7,7 +7,7 @@ class Address < ActiveRecord::Base
   validates :state,   presence: true
   validates :zip,     presence: true
 
-  after_validation :geocode
+  #after_validation :geocode
 
   geocoded_by :full_address
 
@@ -16,7 +16,7 @@ class Address < ActiveRecord::Base
   end
 
   def name
-    "#{street} #{zip} #{city}"
+    "#{street}, #{city}"
   end
 
 end

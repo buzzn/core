@@ -1,1 +1,1 @@
-$(".list-group").prepend("#{escape_javascript(render @metering_point )}");
+$("#location_#{@metering_point.location.id} ul.list-group").prepend("#{escape_javascript(render @metering_point )}");

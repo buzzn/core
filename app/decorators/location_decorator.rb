@@ -5,13 +5,26 @@ class LocationDecorator < Draper::Decorator
   decorates_association :metering_points
 
 
-  def edit
+
+  def link_to_delete
+    link_to(
+      t('delete'),
+      model,
+      remote: true,
+      class: 'btn btn-danger',
+      :method => :delete,
+      :data => {
+        :confirm => t('are_you_sure')
+      })
+  end
+
+  def link_to_edit
     link_to(
       model.address.name,
       edit_location_path(model),
       {
         remote: true,
-        class: 'start_modal',
+        class: 'start_modal location_title',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })

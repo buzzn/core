@@ -8,3 +8,4 @@
         = f.simple_fields_for :address do |a|
           = render 'addresses/form_fields', f: a
         = f.button :submit, id: 'submit', class: 'btn btn-primary'
+        = @location.link_to_delete
