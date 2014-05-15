@@ -17,9 +17,6 @@
     = f.input :meter_notifications
     = f.input :group_notifications
 
-  %fieldset
-    = f.input :current_password, :required => true
-
     .form-actions
       = f.button :submit, class: 'btn btn-success', id: 'submit'
     %p= link_to t('cancel_my_account'), registration_path(resource_name), :data => { :confirm => t("are_you_sure") }, :method => :delete

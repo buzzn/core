@@ -9,19 +9,23 @@ class User < ActiveRecord::Base
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable,
-         :validatable, :confirmable, :lockable, :timeoutable #, :omniauthable
+         :validatable, :lockable, :timeoutable #,:confirmable, :omniauthable
 
   has_many :friendships
   has_many :friends, :through => :friendships
   has_many :inverse_friendships, :class_name => "Friendship", :foreign_key => "friend_id"
   has_many :inverse_friends, :through => :inverse_friendships, :source => :user
 
-  validates :first_name, presence: true
-  validates :last_name, presence: true
+  # validates :first_name, presence: true
+  # validates :last_name, presence: true
 
 
   def name
-    "#{self.first_name} #{self.last_name}"
+    if self.first_name && self.last_name
+      "#{self.first_name} #{self.last_name}"
+    else
+      self.email
+    end
   end
 
 end
