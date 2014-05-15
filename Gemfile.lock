@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/flyerhzm/bullet.git
-  revision: 29554c668e161078ec3de3127ab9f6179bab0474
+  revision: a74bdc74861dc61c3f9c5e9019dbf1f132148177
   specs:
     bullet (4.9.0)
       activesupport
@@ -15,11 +15,11 @@ GIT
 
 GIT
   remote: git://github.com/josevalim/inherited_resources.git
-  revision: c30230765db3377ea05610e69fba7b251dda2b50
+  revision: 559161287cd705def4868d3c0de6ddc2d8a8564c
   specs:
     inherited_resources (1.4.1)
       has_scope (~> 0.6.0.rc)
-      responders (~> 1.0.0.rc)
+      responders (~> 1.0.0)
 
 GIT
   remote: git://github.com/lassebunk/metamagic.git
@@ -36,7 +36,7 @@ GIT
 
 GIT
   remote: git://github.com/mongoid/mongoid.git
-  revision: e93a4837b0266db46c24aae172e184f57c847b04
+  revision: 9be37a9266d8b703e8f549af7bb6977e7a3a8352
   specs:
     mongoid (4.0.0.beta1)
       activemodel (>= 4.0.0)
@@ -53,19 +53,8 @@ GIT
       rake (>= 0.8.7)
 
 GIT
-  remote: git://github.com/plataformatec/devise.git
-  revision: 873e57e97d4cdd9e24ffb92c7ac785558d3f1eee
-  specs:
-    devise (3.2.4)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 3.2.6, < 5)
-      thread_safe (~> 0.1)
-      warden (~> 1.2.3)
-
-GIT
   remote: git://github.com/plataformatec/simple_form.git
-  revision: d7306558665d38fe3a0c277ce263e99f635958de
+  revision: 9196efd2562573aa08037034051fc8c924083e10
   specs:
     simple_form (3.1.0.rc1)
       actionpack (~> 4.0)
@@ -80,7 +69,7 @@ GIT
 
 GIT
   remote: git://github.com/vcr/vcr.git
-  revision: 8f1e5b34e2707edfc818aca0208de8937dc61f32
+  revision: a8c9c556f5bf8d01d9a84f2266f3c8ce448905bd
   specs:
     vcr (2.9.0)
 
@@ -118,7 +107,7 @@ GEM
     addressable (2.3.6)
     arel (5.0.1.20140414130214)
     awesome_print (1.2.0)
-    aws-sdk (1.39.0)
+    aws-sdk (1.40.2)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
     bcrypt (3.1.7)
@@ -140,7 +129,7 @@ GEM
       sass (~> 3.0)
       slim (>= 1.3.6, < 3.0)
       terminal-table (~> 1.4)
-    bson (2.2.2)
+    bson (2.2.3)
     builder (3.2.2)
     callsite (0.0.11)
     capybara (2.2.1)
@@ -181,6 +170,12 @@ GEM
     daemons (1.1.9)
     database_cleaner (1.2.0)
     debug_inspector (0.0.2)
+    devise (3.2.4)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 3.2.6, < 5)
+      thread_safe (~> 0.1)
+      warden (~> 1.2.3)
     devise-i18n (0.10.3)
     devise-i18n-views (0.2.8)
     diff-lcs (1.2.5)
@@ -226,10 +221,10 @@ GEM
     formatador (0.2.4)
     friendly_id (5.0.3)
       activerecord (>= 4.0.0)
-    geocoder (1.2.0)
+    geocoder (1.2.1)
     google-analytics-rails (0.0.5)
     growl (1.0.3)
-    guard (2.6.0)
+    guard (2.6.1)
       formatador (>= 0.2.4)
       listen (~> 2.7)
       lumberjack (~> 1.0)
@@ -242,7 +237,7 @@ GEM
       em-websocket (~> 0.5)
       guard (~> 2.0)
       multi_json (~> 1.8)
-    guard-rspec (4.2.8)
+    guard-rspec (4.2.9)
       guard (~> 2.1)
       rspec (>= 2.14, < 4.0)
     guard-sidekiq (0.0.11)
@@ -276,7 +271,7 @@ GEM
     launchy (2.4.2)
       addressable (~> 2.3)
     libv8 (3.16.14.3)
-    listen (2.7.3)
+    listen (2.7.4)
       celluloid (>= 0.15.2)
       celluloid-io (>= 0.15.0)
       rb-fsevent (>= 0.9.3)
@@ -310,9 +305,9 @@ GEM
     mime-types (1.25.1)
     mini_magick (3.7.0)
       subexec (~> 0.2.1)
-    mini_portile (0.5.3)
+    mini_portile (0.6.0)
     minitest (5.3.3)
-    mocha (1.0.0)
+    mocha (1.1.0)
       metaclass (~> 0.0.1)
     monetize (0.3.0)
       money (~> 6.1.0.beta1)
@@ -332,16 +327,16 @@ GEM
     mysql2 (0.3.15)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
-    net-ssh (2.9.0)
+    net-ssh (2.9.1)
     nio4r (1.0.0)
-    nokogiri (1.6.1)
-      mini_portile (~> 0.5.0)
+    nokogiri (1.6.2.1)
+      mini_portile (= 0.6.0)
     optionable (0.2.0)
     origin (2.1.1)
     orm_adapter (0.5.0)
     paloma (4.0.0)
       jquery-rails
-    paper_trail (3.0.1)
+    paper_trail (3.0.2)
       activerecord (>= 3.0, < 5.0)
       activesupport (>= 3.0, < 5.0)
     phantomjs (1.9.7.0)
@@ -385,7 +380,7 @@ GEM
     rails-i18n (4.0.2)
       i18n (~> 0.6)
       rails (>= 4.0)
-    rails_layout (1.0.14)
+    rails_layout (1.0.16)
     railties (4.1.0)
       actionpack (= 4.1.0)
       activesupport (= 4.1.0)
@@ -426,16 +421,11 @@ GEM
     ruby_parser (3.4.1)
       sexp_processor (~> 4.1)
     safe_yaml (1.0.3)
-    sass (3.2.19)
-    sass-rails (4.0.3)
-      railties (>= 4.0.0, < 5.0)
-      sass (~> 3.2.0)
-      sprockets (~> 2.8, <= 2.11.0)
-      sprockets-rails (~> 2.0)
-    select2-rails (3.5.4)
+    sass (3.3.7)
+    select2-rails (3.5.7)
       thor (~> 0.14)
     sexp_processor (4.4.3)
-    sidekiq (3.0.0)
+    sidekiq (3.0.2)
       celluloid (>= 0.15.2)
       connection_pool (>= 2.0.0)
       json
@@ -452,10 +442,10 @@ GEM
       temple (~> 0.6.6)
       tilt (>= 1.3.3, < 2.1)
     slop (3.5.0)
-    spring (1.1.2)
+    spring (1.1.3)
     spring-commands-rspec (1.0.2)
       spring (>= 0.9.1)
-    sprockets (2.11.0)
+    sprockets (2.12.1)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
@@ -492,11 +482,11 @@ GEM
     uglifier (2.5.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    uniform_notifier (1.6.0)
+    uniform_notifier (1.6.1)
     warden (1.2.3)
       rack (>= 1.0)
-    webmock (1.17.4)
-      addressable (>= 2.2.7)
+    webmock (1.18.0)
+      addressable (>= 2.3.6)
       crack (>= 0.3.2)
     websocket-driver (0.3.3)
     whenever (0.9.2)
@@ -530,7 +520,7 @@ DEPENDENCIES
   coffee-rails
   country_select
   database_cleaner
-  devise!
+  devise
   devise-i18n
   devise-i18n-views
   draper
@@ -584,13 +574,11 @@ DEPENDENCIES
   rolify
   rspec-rails
   ruby_gntp
-  sass-rails
   select2-rails
   sidekiq
   simple_form!
   spring
   spring-commands-rspec
-  sprockets-rails
   table_print
   therubyracer
   turbolinks
