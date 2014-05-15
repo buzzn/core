@@ -89,7 +89,7 @@ protected
   end
 
 private
-  def meter_params
+  def metering_point_params
     params.require(:metering_point).permit(init_permitted_params)
   end
 

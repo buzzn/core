@@ -4,7 +4,7 @@ Buzzn::Application.routes.draw do
   mount Sidekiq::Web, at: '/sidekiq'
 
   devise_for :users, controllers: {registrations: 'users/registrations'}
-  resources :users do
+  resources :profiles do
     resources :locations
     member do
       get :redirect_to_current_user
@@ -15,7 +15,7 @@ Buzzn::Application.routes.draw do
     member do
       get 'new_down'
       get 'edit_down'
-      
+
       get 'new_up'
       get 'edit_up'
 
@@ -38,13 +38,15 @@ Buzzn::Application.routes.draw do
   resources :private_grids
   resources :locations
 
-  
+  resources :after_signup
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
 
-  root controller: 'users', action: 'redirect_to_current_user'
+  root controller: 'profiles', action: 'redirect_to_current_user'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

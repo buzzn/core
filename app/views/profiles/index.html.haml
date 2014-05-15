@@ -1,0 +1,8 @@
+%h1 Listing Profiles
+#users
+  - for profiles in @profiles
+    .user
+      %p
+        %strong= link_to profile.name, profile
+        = link_to "Add Friend", friendships_path( friend_id: profile.user), method: :post
+      .clear

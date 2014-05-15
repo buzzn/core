@@ -2,25 +2,7 @@ class DeviseCreateUsers < ActiveRecord::Migration
   def change
     create_table(:users) do |t|
 
-      t.string :slug
-      t.string :image
-      t.string :first_name
-      t.string :last_name
-      t.string :gender
-      t.string :phone
-
-      t.text :know_buzzn_from
-
-      t.boolean :terms,                   :default => false
-      t.boolean :confirm_pricing_model,   :default => false
-
-
-      # notifications
-      t.boolean :newsletter_notifications,  :default => true
-      t.boolean :meter_notifications,       :default => true
-      t.boolean :group_notifications,       :default => true
-
-
+      t.boolean :terms,             :default => false
 
       t.string :email,              :null => false, :default => ""
       t.string :encrypted_password, :null => false, :default => ""
@@ -53,7 +35,6 @@ class DeviseCreateUsers < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :users, :slug,                 unique: true
     add_index :users, :email,                unique: true
     add_index :users, :reset_password_token, unique: true
     add_index :users, :confirmation_token,   unique: true

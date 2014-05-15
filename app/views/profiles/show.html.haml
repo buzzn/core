@@ -1,8 +1,8 @@
 #myModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
 
 .col-sm-2
-  = image_tag @user.image.big
-  %h4= @user.name
+  = image_tag @profile.image.big
+  %h4= @profile.name
 
 .col-sm-7
   - if @locations.empty?
@@ -10,14 +10,14 @@
   - else
     = render @locations
 
-  - if @user == current_user && current_user.can_create?(Location)
-    .centered= new_location
+    - if @profile.user == current_user && current_user.can_create?(Location)
+      .centered= new_location
 
 .col-sm-3
   %h5.page-header=t('friends')
   %ul#sidebar.nav.nav-pill
-    - @user.friendships.each do |friendship|
+    - @profile.user.friendships.each do |friendship|
       %li= link_to friendship.friend.name, friendship.friend
-    %li= active_link_to t('find_a_friend'), users_path, wrap_tag: :li
+    %li= active_link_to t('find_a_friend'), profiles_path, wrap_tag: :li
 
   %h5.page-header=t('groups')

@@ -20,7 +20,7 @@
               = current_user.name
               %b.caret
             %ul.dropdown-menu
-              %li= link_to t('my_account'), current_user
+              %li= link_to t('my_account'), current_user.profile
               %li= link_to t('edit_account'), edit_user_registration_path
               %li= link_to t('contracting_parties'), contracting_parties_path, wrap_tag: :li
 

@@ -4,18 +4,10 @@
   %fieldset
     %legend= t'profile'
     = devise_error_messages!
-    = f.input :image
     = f.input :email, required: true
-    = f.input :first_name
-    = f.input :last_name
-    = f.input :gender, include_blank: false, collection: [:male, :female], input_html: { class: 'select2' }
-    = f.input :phone
 
-  %fieldset
-    %legend= t'email_notifications'
-    = f.input :newsletter_notifications
-    = f.input :meter_notifications
-    = f.input :group_notifications
+    = f.simple_fields_for :profile do |a|
+      = render 'profiles/form_fields', f: a
 
     .form-actions
       = f.button :submit, class: 'btn btn-success', id: 'submit'
