@@ -9,15 +9,16 @@ class DeviseCreateUsers < ActiveRecord::Migration
       t.string :gender
       t.string :phone
 
+      t.text :know_buzzn_from
+
       t.boolean :terms,                   :default => false
       t.boolean :confirm_pricing_model,   :default => false
+
 
       # notifications
       t.boolean :newsletter_notifications,  :default => true
       t.boolean :meter_notifications,       :default => true
       t.boolean :group_notifications,       :default => true
-
-
 
 
 

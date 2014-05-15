@@ -256,6 +256,7 @@ ActiveRecord::Schema.define(version: 20140417171422) do
     t.string   "last_name"
     t.string   "gender"
     t.string   "phone"
+    t.text     "know_buzzn_from"
     t.boolean  "terms",                    default: false
     t.boolean  "confirm_pricing_model",    default: false
     t.boolean  "newsletter_notifications", default: true
