@@ -63,7 +63,9 @@ ActiveRecord::Schema.define(version: 20140515074138) do
     t.integer  "sales_tax_number"
     t.float    "tax_rate"
     t.integer  "tax_number"
+    t.integer  "organization_id"
     t.integer  "metering_point_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -120,9 +122,9 @@ ActiveRecord::Schema.define(version: 20140515074138) do
   add_index "distribution_system_operator_contracts", ["organization_id"], name: "index_distribution_system_operator_contracts_on_organization_id", using: :btree
 
   create_table "electricity_supplier_contracts", force: true do |t|
-    t.string   "name"
     t.string   "customer_number"
     t.string   "contract_number"
+    t.decimal  "forecast_wh_pa",    precision: 10, scale: 0
     t.integer  "metering_point_id"
     t.integer  "organization_id"
     t.datetime "created_at"
@@ -172,7 +174,9 @@ ActiveRecord::Schema.define(version: 20140515074138) do
     t.string   "slug"
     t.string   "image"
     t.string   "name"
-    t.boolean  "active",     default: true
+    t.boolean  "new_habitation",  default: false
+    t.date     "inhabited_since"
+    t.boolean  "active",          default: true
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -225,6 +229,7 @@ ActiveRecord::Schema.define(version: 20140515074138) do
     t.string   "fax"
     t.string   "description"
     t.string   "website"
+    t.string   "mode"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

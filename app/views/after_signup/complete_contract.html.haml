@@ -1,0 +1,9 @@
+#content
+  .forminput.box
+    %h1= t'complete_contract'
+
+    = simple_form_for @contract, url: wizard_path, method: 'put' do |f|
+      = f.input :terms
+      = f.input :confirm_pricing_model
+      = f.input :power_of_attorney
+      = f.submit t("continue"), class: 'btn btn-success', id: 'submit'

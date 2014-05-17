@@ -1,5 +1,6 @@
 class Profile < ActiveRecord::Base
-  include Authority::UserAbilities
+  resourcify
+  include Authority::Abilities
 
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]

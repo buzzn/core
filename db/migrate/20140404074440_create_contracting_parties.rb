@@ -7,7 +7,10 @@ class CreateContractingParties < ActiveRecord::Migration
       t.integer :sales_tax_number
       t.float   :tax_rate
       t.integer :tax_number
+
+      t.integer :organization_id
       t.integer :metering_point_id
+      t.integer :user_id
 
       t.timestamps
     end

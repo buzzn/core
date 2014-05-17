@@ -4,6 +4,10 @@ class CreateLocations < ActiveRecord::Migration
       t.string :slug
       t.string :image
       t.string :name
+
+      t.boolean :new_habitation, default: false
+      t.date    :inhabited_since
+
       t.boolean :active, default: true
 
       t.timestamps

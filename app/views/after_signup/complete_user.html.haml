@@ -2,12 +2,10 @@
   .forminput.box
     %h1= t'complete_user'
 
-    = simple_form_for @user, url: wizard_path do |f|
-
+    = simple_form_for @profile, url: wizard_path do |f|
       = f.input :image
       = f.input :first_name
       = f.input :last_name
       = f.input :gender, include_blank: false, collection: [:male, :female], input_html: { class: 'select2' }
       = f.input :phone
-
       = f.submit t("continue"), class: 'btn btn-success', id: 'submit'

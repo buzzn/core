@@ -14,6 +14,13 @@ de:
   add_up_down_metering_point: Messpunkt für Einspeisezähler hinzufügen
   add_diff_metering_point: Messpunkt für Abgrenzungszähler hinzufügen
 
+
+  up: Produktionzähler
+  down: Bezugszahler
+  up_down: zweirichtungszahler
+  diff: Abgrenzungszähler
+
+
   add_metering_point: Messpunkt hinzufügen
 
   add_new_location: Neuen Standort hinzufügen.

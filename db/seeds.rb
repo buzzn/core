@@ -7,7 +7,12 @@ require 'rubygems' #so it can load gems
 puts '-- seed development database --'
 
 puts '  organizations'
-Fabricate(:discovergy)
+Fabricate(:electricity_supplier, name: 'E.ON')
+Fabricate(:electricity_supplier, name: 'RWE')
+Fabricate(:electricity_supplier, name: 'EnBW')
+Fabricate(:electricity_supplier, name: 'Vattenfall')
+Fabricate(:metering_service_provider, name: 'Discovergy')
+
 
 admin = Fabricate(:admin)
 admin.add_role 'admin'

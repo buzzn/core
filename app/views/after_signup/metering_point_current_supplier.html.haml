@@ -1,0 +1,10 @@
+#content
+  .forminput.box
+    %h1= t'metering_point_current_supplier'
+
+    = simple_form_for @electricity_supplier_contract, url: wizard_path, method: 'put' do |f|
+      = f.association :organization, collection: Organization.electricity_suppliers
+      = f.input :customer_number
+      = f.input :contract_number
+      = f.input :forecast_wh_pa
+      = f.submit t("continue"), class: 'btn btn-success', id: 'submit'

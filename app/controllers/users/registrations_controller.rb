@@ -43,7 +43,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def configure_permitted_parameters
 
     devise_parameter_sanitizer.for(:sign_up) do |u|
-      u.permit(:email, :password, :password_confirmation)
+      u.permit(
+                :email,
+                :password,
+                :password_confirmation,
+                :current_password,
+                :terms,
+                profile_attributes: [:id, :image, :first_name, :last_name, :gender, :phone, :newsletter_notifications, :meter_notifications, :group_notifications, :_destroy]
+              )
     end
 
     devise_parameter_sanitizer.for(:account_update) do |u|
@@ -52,8 +59,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
                 :password,
                 :password_confirmation,
                 :current_password,
+                :terms,
                 profile_attributes: [:id, :image, :first_name, :last_name, :gender, :phone, :newsletter_notifications, :meter_notifications, :group_notifications, :_destroy]
-
               )
     end
 

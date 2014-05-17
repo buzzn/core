@@ -8,6 +8,15 @@ Fabricator :organization do
   address     { Fabricate(:address) }
 end
 
-Fabricator :discovergy, from: :organization do
-  name    'Discovergy'
+
+Fabricator :distribution_system_operator, from: :organization do
+  mode 'distribution_system_operator'
+end
+
+Fabricator :electricity_supplier, from: :organization do
+  mode 'electricity_supplier'
+end
+
+Fabricator :metering_service_provider, from: :organization do
+  mode 'metering_service_provider'
 end

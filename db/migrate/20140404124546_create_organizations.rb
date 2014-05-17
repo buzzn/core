@@ -9,6 +9,7 @@ class CreateOrganizations < ActiveRecord::Migration
       t.string :fax
       t.string :description
       t.string :website
+      t.string :mode
 
       t.timestamps
     end

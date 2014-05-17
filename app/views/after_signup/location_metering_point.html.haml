@@ -1,0 +1,7 @@
+#content
+  .forminput.box
+    %h1= t'metering_point'
+
+    = simple_form_for @metering_point, url: wizard_path, method: 'put' do |f|
+      = f.input :uid
+      = f.submit t("continue"), class: 'btn btn-success', id: 'submit'

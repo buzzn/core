@@ -17,13 +17,6 @@ class ProfilesController < InheritedResources::Base
   end
 
 
-  def edit
-    @profile = Profile.find(params[:id])
-    authorize_action_for(@profile)
-    edit!
-  end
-
-
 protected
   def permitted_params
     params.permit(:profile => init_permitted_params)
