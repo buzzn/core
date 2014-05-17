@@ -14,7 +14,9 @@ class MeteringPoint < ActiveRecord::Base
 
   validates :mode, presence: true
 
-
+  def name
+    "#{location.address.name}_#{address_addition}"
+  end
 
   def up_metering?
     self.mode == 'up_metering'

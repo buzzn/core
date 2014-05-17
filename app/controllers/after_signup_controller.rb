@@ -5,6 +5,7 @@ class AfterSignupController < ApplicationController
 
   steps :complete_user,
         :contracting_party_legal_entity,
+        :contracting_party_address,
         :contracting_party_organization,
         :contracting_party_organization_address,
         :location_address,
@@ -21,12 +22,22 @@ class AfterSignupController < ApplicationController
     when :complete_user
       @profile = current_user.profile
 
+
     when :contracting_party_legal_entity
       if current_user.contracting_party
         @contracting_party = current_user.contracting_party
       else
         @contracting_party = ContractingParty.new
       end
+
+
+    when :contracting_party_address
+      if current_user.contracting_party.address
+        @address = current_user.contracting_party.address
+      else
+        @address = Address.new
+      end
+
 
     when :contracting_party_organization
       if current_user.contracting_party && current_user.contracting_party.organization
@@ -35,6 +46,7 @@ class AfterSignupController < ApplicationController
         @organization = Organization.new
       end
 
+
     when :contracting_party_organization_address
       if current_user.contracting_party && current_user.contracting_party.organization.address
         @address = current_user.contracting_party.organization.address
@@ -42,19 +54,20 @@ class AfterSignupController < ApplicationController
         @address = Address.new
       end
 
-    when :location_address
-      @locations = Location.with_role(:manager, current_user)
 
-      if @locations.size == 0    # TODO works with .to_a way ????
+    when :location_address
+      if Location.with_role(:manager, current_user).to_a.count == 0    # TODO works with .to_a way ????
         @location = Location.new
         @location.build_address
       else
-        @location = @locations.last
+        @location = Location.with_role(:manager, current_user).last
       end
+
 
     when :location_habitation
       @locations = Location.with_role(:manager, current_user)
       @location = @locations.last
+
 
     when :location_metering_point
       @locations = Location.with_role(:manager, current_user)
@@ -64,6 +77,7 @@ class AfterSignupController < ApplicationController
       else
         @metering_point = @location.metering_points.last
       end
+
 
     when :metering_point_current_supplier
       @locations = Location.with_role(:manager, current_user)
@@ -75,6 +89,7 @@ class AfterSignupController < ApplicationController
         @electricity_supplier_contract = ElectricitySupplierContract.new
       end
 
+
     when :contract_forecast
       @locations = Location.with_role(:manager, current_user)
       @location = @locations.last
@@ -85,12 +100,14 @@ class AfterSignupController < ApplicationController
         @contract = Contract.new
       end
 
+
     when :contracting_party_bank_account
       if current_user.contracting_party.bank_account
         @bank_account = current_user.contracting_party.bank_account
       else
         @bank_account = BankAccount.new(holder: current_user.name)
       end
+
 
     when :complete_contract
       @locations = Location.with_role(:manager, current_user)
@@ -124,9 +141,19 @@ class AfterSignupController < ApplicationController
       else
         @contracting_party = current_user.contracting_party = ContractingParty.new(contracting_party_params)
       end
-      if @contracting_party.legal_entity == 'me'
-        skip_step
+      if @contracting_party.legal_entity != 'me'
+        jump_to(:contracting_party_organization)
       end
+
+
+    when :contracting_party_address
+      if current_user.contracting_party.address
+        current_user.contracting_party.address.update!(address_params)
+      else
+        current_user.contracting_party.address = Address.new(address_params)
+        current_user.contracting_party.save
+      end
+      jump_to(:location_address)
 
 
     when :contracting_party_organization
@@ -149,12 +176,12 @@ class AfterSignupController < ApplicationController
 
 
     when :location_address
-      @locations = Location.with_role(:manager, current_user)
-      if @locations.to_a.size == 0    # TODO works with .to_a way ????
+      if Location.with_role(:manager, current_user).to_a.count == 0    # TODO works with .to_a way ????
         @location = Location.new(location_params)
+        @location.save
         current_user.add_role :manager, @location
       else
-        @location = @locations.last
+        @location = Location.with_role(:manager, current_user).last
         @location.update!(location_params)
       end
 
@@ -166,11 +193,12 @@ class AfterSignupController < ApplicationController
 
 
     when :location_metering_point
-      @locations = Location.with_role(:manager, current_user)
-      @location = @locations.last
+      @location = Location.with_role(:manager, current_user).last
       if @location.metering_points.empty?
-        @location.metering_points << MeteringPoint.new(metering_point_params)
-        @location.save
+        @metering_point = MeteringPoint.new(metering_point_params)
+        @metering_point.mode = 'down_metering'
+        @location.metering_points << @metering_point
+        @location.save!
       else
         @metering_point = @location.metering_points.last
         @metering_point.update!(metering_point_params)
@@ -190,6 +218,7 @@ class AfterSignupController < ApplicationController
         @metering_point.electricity_supplier_contract = ElectricitySupplierContract.new(electricity_supplier_contract_params)
         @metering_point.electricity_supplier_contract.save
       end
+      jump_to(:contracting_party_bank_account)
 
 
     when :contract_forecast
@@ -218,9 +247,16 @@ class AfterSignupController < ApplicationController
       @location = @locations.last
       @metering_point = @location.metering_points.last
       if @metering_point.contract
-        @contract = @metering_point.contract.update!(contract_params)
+        @contract                   = @metering_point.contract
+        @contract.update!(contract_params)
+        @metering_point.contract    = @contract
+        @contract.contracting_party = current_user.contracting_party
+        @contract.save
       else
-        @contract = Contract.new(contract_params)
+        @contract                   = Contract.new(contract_params)
+        @metering_point.contract    = @contract
+        @contract.contracting_party = current_user.contracting_party
+        @contract.save
       end
 
 
@@ -262,7 +298,7 @@ private
   end
 
   def contract_params
-    params.require(:contract).permit( :forecast_wh_pa )
+    params.require(:contract).permit( :forecast_wh_pa, :terms, :confirm_pricing_model, :power_of_attorney )
   end
 
   def bank_account_params

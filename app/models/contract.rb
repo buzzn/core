@@ -6,7 +6,7 @@ class Contract < ActiveRecord::Base
 
   belongs_to :contracting_party
 
-  has_one :meter
+  has_one :metering_point
 
   has_one :address, as: :addressable
   accepts_nested_attributes_for :address, :reject_if => :all_blank
@@ -19,7 +19,7 @@ class Contract < ActiveRecord::Base
 
 
   def name
-    self.id
+    self.metering_point.name
   end
 
 end

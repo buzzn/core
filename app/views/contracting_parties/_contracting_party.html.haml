@@ -1,5 +1,5 @@
 .row
-  .col-md-1= link_to contracting_party.id, edit_contracting_party_path(contracting_party)
+  .col-md-3= link_to contracting_party.name, edit_contracting_party_path(contracting_party)
 
   .col-md-5
     - if current_user.can_update?(contracting_party)

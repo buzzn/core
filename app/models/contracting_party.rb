@@ -16,4 +16,12 @@ class ContractingParty < ActiveRecord::Base
   belongs_to :organization
   accepts_nested_attributes_for :organization, :reject_if => :all_blank
 
+  def name
+    if legal_entity == 'me'
+      user.name
+    else
+      "#{user.name} for #{organization.name}"
+    end
+  end
+
 end

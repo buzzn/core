@@ -10,8 +10,6 @@
   - else
     = render @locations
 
-    - if @profile.user == current_user && current_user.can_create?(Location)
-      .centered= new_location
 
 .col-sm-3
   %h5.page-header=t('friends')

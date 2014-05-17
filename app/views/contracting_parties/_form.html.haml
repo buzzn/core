@@ -1,16 +1,20 @@
 = simple_form_for @contracting_party do |f|
-
-  = f.input :legal_entity, collection: ['ich', 'gmbh'], include_blank: false, input_html: { class: 'select2' }
+  = f.input :legal_entity, collection: ['ich', 'gmbh'], include_blank: false, input_html: { class: 'select2' }, disabled: true
+  = f.association :contracts, disabled: true
 
   %fieldset
     %legend= t'organization'
     = f.simple_fields_for :organization do |o|
       = render 'organizations/form_fields', f: o
 
-  %fieldset
-    %legend= t'address'
+      %fieldset
+        %legend= t'address'
+        = o.simple_fields_for :address do |a|
+          = render 'addresses/form_fields', f: a
+
     = f.simple_fields_for :address do |a|
       = render 'addresses/form_fields', f: a
+
 
   %fieldset
     %legend= t'bank_account'
