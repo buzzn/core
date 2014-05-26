@@ -1,8 +1,0 @@
-#content
-  .forminput.box
-    %h1= t'new_project'
-    = simple_form_for @project, url: wizard_path, :html => { :class => "form-horizontal" } do |f|
-      = yield f
-      .form-inputs
-        .form-actions
-          = f.submit t("continue"), class: 'btn btn-success', id: 'submit'

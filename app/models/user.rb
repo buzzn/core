@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable,
          :validatable, :lockable, :timeoutable #,:confirmable, :omniauthable
 
-  has_one :contracting_party
+  has_one :contracting_party, inverse_of: :user
 
   has_one :profile, :dependent => :destroy
   accepts_nested_attributes_for :profile

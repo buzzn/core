@@ -1,7 +1,0 @@
-#content
-  .forminput.box
-    %h1= t'contracting_party_organizations_address'
-
-    = simple_form_for @address, url: wizard_path, method: 'put' do |f|
-      = render 'addresses/form_fields', f: f
-      = f.submit t("continue"), class: 'btn btn-success', id: 'submit'

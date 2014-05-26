@@ -2,7 +2,7 @@ class ContractingParty < ActiveRecord::Base
   resourcify
   include Authority::Abilities
 
-  belongs_to :user
+  belongs_to :user, inverse_of: :contracting_party
   belongs_to :metering_point
 
   has_many :contracts
@@ -15,6 +15,19 @@ class ContractingParty < ActiveRecord::Base
 
   belongs_to :organization
   accepts_nested_attributes_for :organization, :reject_if => :all_blank
+
+
+
+  validates :legal_entity, presence: true
+
+
+  def private?
+    if legal_entity == 'me'
+      true
+    else
+      false
+    end
+  end
 
   def name
     if legal_entity == 'me'

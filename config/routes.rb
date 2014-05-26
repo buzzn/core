@@ -13,17 +13,17 @@ Buzzn::Application.routes.draw do
 
   resources :metering_points do
     member do
-      get 'new_down'
-      get 'edit_down'
+      get :new_down
+      get :edit_down
 
-      get 'new_up'
-      get 'edit_up'
+      get :new_up
+      get :edit_up
 
-      get 'new_up_down'
-      get 'edit_up_down'
+      get :new_up_down
+      get :edit_up_down
 
-      get 'new_diff'
-      get 'edit_diff'
+      get :new_diff
+      get :edit_diff
     end
   end
 
@@ -38,7 +38,47 @@ Buzzn::Application.routes.draw do
   resources :private_grids
   resources :locations
 
-  resources :after_signup
+  resources :wizard_consumers do
+    collection do
+      get :complete_user
+      put :complete_user_update
+
+      get :contracting_party_legal_entity
+      put :contracting_party_legal_entity_update
+
+      get :contracting_party_address
+      put :contracting_party_address_update
+
+      get :contracting_party_organization
+      put :contracting_party_organization_update
+
+      get :contracting_party_organization_address
+      put :contracting_party_organization_address_update
+
+      get :location_address
+      put :location_address_update
+
+      get :location_habitation
+      put :location_habitation_update
+
+      get :location_metering_point
+      put :location_metering_point_update
+
+      get :metering_point_current_supplier
+      put :metering_point_current_supplier_update
+
+      get :contract_forecast
+      put :contract_forecast_update
+
+      get :contracting_party_bank_account
+      put :contracting_party_bank_account_update
+
+      get :complete_contract
+      put :complete_contract_update
+    end
+  end
+
+
 
 
   # The priority is based upon order of creation: first created -> highest priority.

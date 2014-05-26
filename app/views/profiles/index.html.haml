@@ -1,6 +1,6 @@
 %h1 Listing Profiles
 #users
-  - for profiles in @profiles
+  - @profiles.each do |profile|
     .user
       %p
         %strong= link_to profile.name, profile

@@ -16,6 +16,6 @@
   %ul#sidebar.nav.nav-pill
     - @profile.user.friendships.each do |friendship|
       %li= link_to friendship.friend.name, friendship.friend
-    %li= active_link_to t('find_a_friend'), profiles_path, wrap_tag: :li
+    %li= link_to t('find_a_friend'), profiles_path
 
   %h5.page-header=t('groups')

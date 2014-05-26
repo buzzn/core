@@ -12,6 +12,7 @@ class MeteringPoint < ActiveRecord::Base
   has_one :metering_service_provider_contract
   has_many :devices
 
+  validates :uid, presence: true, uniqueness: true
   validates :mode, presence: true
 
   def name

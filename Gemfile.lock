@@ -35,16 +35,6 @@ GIT
     attribute_normalizer (1.2.0.b)
 
 GIT
-  remote: git://github.com/mongoid/mongoid.git
-  revision: 9be37a9266d8b703e8f549af7bb6977e7a3a8352
-  specs:
-    mongoid (4.0.0.beta1)
-      activemodel (>= 4.0.0)
-      moped (~> 2.0.beta6)
-      origin (~> 2.1)
-      tzinfo (>= 0.3.37)
-
-GIT
   remote: git://github.com/nathanl/authority.git
   revision: 478787d13a1007164b062a5e183411905b8eb44f
   specs:
@@ -314,6 +304,11 @@ GEM
       monetize (~> 0.3.0)
       money (~> 6.1.1)
       railties (>= 3.0)
+    mongoid (4.0.0.beta1)
+      activemodel (>= 4.0.0)
+      moped (~> 2.0.beta6)
+      origin (~> 2.1)
+      tzinfo (>= 0.3.37)
     moped (2.0.0.rc1)
       bson (~> 2.2)
       connection_pool (~> 2.0)
@@ -551,7 +546,7 @@ DEPENDENCIES
   mini_magick
   mocha
   money-rails
-  mongoid (~> 4.0.0.beta1)!
+  mongoid (~> 4.0.0.beta1)
   mysql2
   paloma
   paper_trail

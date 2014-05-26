@@ -3,15 +3,13 @@
 %h1= t('sign_up')
 = simple_form_for resource, as: resource_name, url: registration_path(resource_name) do |f|
   = devise_error_messages!
-
   = f.input :email,                 required: true
 
   // make a new profile in memory
-  - resource.build_profile
-  = f.simple_fields_for :profile do |a|
+  = f.simple_fields_for :profile, resource.build_profile do |a|
     = render 'profiles/form_fields', f: a
 
   = f.input :password,              required: true
   = f.input :password_confirmation, required: true
-  = f.input :terms#, hint: "#{link_to t('terms_and_conditions'), terms_and_conditions_path } #{t('simple_form.hints.user.terms_for_link')}".html_safe
+  = f.input :terms
   = f.button :submit, t('sign_up'), class: 'btn btn-success', id: 'submit'
