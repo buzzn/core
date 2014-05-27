@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.1'
+gem 'rails'
 gem 'mysql2'
-gem 'mongoid', '~> 4.0.0.beta1'#, github: 'mongoid/mongoid'
+gem 'mongoid', '4.0.0.beta2'
 gem 'bson'
 gem 'puma'
 gem 'haml-rails'
