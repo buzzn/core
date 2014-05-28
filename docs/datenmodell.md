@@ -34,7 +34,7 @@ Eine Location ist eine Ansammlung von "Metering Points"
 
 ## Metering Point
 
-Der Metering Point ist ein Messpunkt in einer Messtelle, also Z.B. der Messpunkt des Einspeisezählers, der des Bezugzählers oder der des Übergabezählers. 
+Der Metering Point ist ein Messpunkt in einer Messtelle, also z.B. der Messpunkt des Einspeisezählers, der des Bezugzählers oder der des Übergabezählers. 
 
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
