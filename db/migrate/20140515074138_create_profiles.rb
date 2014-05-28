@@ -2,8 +2,6 @@ class CreateProfiles < ActiveRecord::Migration
   def change
     create_table :profiles do |t|
 
-      t.integer  :user_id
-
       t.string :slug
       t.string :image
       t.string :first_name
@@ -20,8 +18,12 @@ class CreateProfiles < ActiveRecord::Migration
       t.boolean :meter_notifications,       :default => true
       t.boolean :group_notifications,       :default => true
 
+
+      t.integer  :user_id
+
       t.timestamps
     end
     add_index :profiles, :slug,                 unique: true
+    add_index :profiles, :user_id
   end
 end

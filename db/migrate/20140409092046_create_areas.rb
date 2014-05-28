@@ -17,5 +17,6 @@ class CreateAreas < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :areas, :group_id
   end
 end

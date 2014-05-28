@@ -9,5 +9,7 @@ class CreateMeteringPointUsers < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :metering_point_users, :metering_point_id
+    add_index :metering_point_users, :user_id
   end
 end

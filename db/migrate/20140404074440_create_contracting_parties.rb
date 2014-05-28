@@ -15,5 +15,7 @@ class CreateContractingParties < ActiveRecord::Migration
       t.timestamps
     end
     add_index :contracting_parties, :metering_point_id
+    add_index :contracting_parties, :user_id
+    add_index :contracting_parties, :organization_id
   end
 end

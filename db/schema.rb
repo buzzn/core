@@ -44,6 +44,8 @@ ActiveRecord::Schema.define(version: 20140528181340) do
     t.datetime "updated_at"
   end
 
+  add_index "areas", ["group_id"], name: "index_areas_on_group_id", using: :btree
+
   create_table "bank_accounts", force: true do |t|
     t.string   "holder"
     t.string   "iban"
@@ -86,6 +88,8 @@ ActiveRecord::Schema.define(version: 20140528181340) do
   end
 
   add_index "contracting_parties", ["metering_point_id"], name: "index_contracting_parties_on_metering_point_id", using: :btree
+  add_index "contracting_parties", ["organization_id"], name: "index_contracting_parties_on_organization_id", using: :btree
+  add_index "contracting_parties", ["user_id"], name: "index_contracting_parties_on_user_id", using: :btree
 
   create_table "contracts", force: true do |t|
     t.string   "status"
@@ -208,6 +212,9 @@ ActiveRecord::Schema.define(version: 20140528181340) do
     t.datetime "updated_at"
   end
 
+  add_index "metering_point_operator_contracts", ["metering_point_id"], name: "index_metering_point_operator_contracts_on_metering_point_id", using: :btree
+  add_index "metering_point_operator_contracts", ["organization_id"], name: "index_metering_point_operator_contracts_on_organization_id", using: :btree
+
   create_table "metering_point_users", force: true do |t|
     t.integer  "usage",             default: 100
     t.integer  "user_id"
@@ -215,6 +222,9 @@ ActiveRecord::Schema.define(version: 20140528181340) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "metering_point_users", ["metering_point_id"], name: "index_metering_point_users_on_metering_point_id", using: :btree
+  add_index "metering_point_users", ["user_id"], name: "index_metering_point_users_on_user_id", using: :btree
 
   create_table "metering_points", force: true do |t|
     t.string   "uid"
@@ -270,7 +280,6 @@ ActiveRecord::Schema.define(version: 20140528181340) do
   end
 
   create_table "profiles", force: true do |t|
-    t.integer  "user_id"
     t.string   "slug"
     t.string   "image"
     t.string   "first_name"
@@ -283,11 +292,13 @@ ActiveRecord::Schema.define(version: 20140528181340) do
     t.boolean  "newsletter_notifications", default: true
     t.boolean  "meter_notifications",      default: true
     t.boolean  "group_notifications",      default: true
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "profiles", ["slug"], name: "index_profiles_on_slug", unique: true, using: :btree
+  add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"
@@ -336,6 +347,7 @@ ActiveRecord::Schema.define(version: 20140528181340) do
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["group_id"], name: "index_users_on_group_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
