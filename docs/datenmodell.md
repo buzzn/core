@@ -27,3 +27,16 @@ im Profil werden die eigentlichen Benutzer Daten gespeichert.
 |newsletter_notifications|Boolean|
 |meter_notifications|Boolean|
 |group_notifications|Boolean|
+
+## Location
+
+Eine Location ist eine Ansammlung von "Metering Points"
+
+## Metering Point
+
+Der Metering Point ist ein Messpunkt in einer Messtelle, also Z.B. der Messpunkt des Einspeisezählers, der des Bezugzählers oder der des Übergabezählers. 
+
+|Value|Type|Example|Explanation
+|:----|:---|:------|:----------
+|Mode|String|Up|
+|Voltage|Int|230|230 V
