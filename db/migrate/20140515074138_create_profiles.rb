@@ -10,12 +10,10 @@ class CreateProfiles < ActiveRecord::Migration
       t.string :last_name
       t.string :gender
       t.string :phone
-
+      t.string :title
       t.text :know_buzzn_from
 
-
       t.boolean :confirm_pricing_model,   :default => false
-
 
       # notifications
       t.boolean :newsletter_notifications,  :default => true
