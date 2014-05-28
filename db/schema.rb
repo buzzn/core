@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140515074138) do
+ActiveRecord::Schema.define(version: 20140528121619) do
 
   create_table "addresses", force: true do |t|
     t.string   "address"
@@ -57,6 +57,21 @@ ActiveRecord::Schema.define(version: 20140515074138) do
   end
 
   add_index "bank_accounts", ["bank_accountable_id", "bank_accountable_type"], name: "index_accountable", using: :btree
+
+  create_table "comments", force: true do |t|
+    t.string   "title",            limit: 50, default: ""
+    t.text     "comment"
+    t.integer  "commentable_id"
+    t.string   "commentable_type"
+    t.integer  "user_id"
+    t.string   "role",                        default: "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "comments", ["commentable_id"], name: "index_comments_on_commentable_id", using: :btree
+  add_index "comments", ["commentable_type"], name: "index_comments_on_commentable_type", using: :btree
+  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
   create_table "contracting_parties", force: true do |t|
     t.string   "legal_entity"
@@ -177,6 +192,17 @@ ActiveRecord::Schema.define(version: 20140515074138) do
     t.boolean  "new_habitation",  default: false
     t.date     "inhabited_since"
     t.boolean  "active",          default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "metering_point_operator_contracts", force: true do |t|
+    t.string   "customer_number"
+    t.string   "contract_number"
+    t.string   "username"
+    t.string   "password"
+    t.integer  "metering_point_id"
+    t.integer  "organization_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -57,6 +57,7 @@ gem 'acts_as_list',               github: 'swanandp/acts_as_list'
 gem 'paper_trail'
 gem 'money-rails'
 gem 'wicked'
+gem 'acts_as_commentable'
 
 group :development do
   gem 'rack-mini-profiler'

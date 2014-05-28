@@ -94,6 +94,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    acts_as_commentable (4.0.1)
     addressable (2.3.6)
     annotate (2.6.3)
       activerecord (>= 2.3.0)
@@ -502,6 +503,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_link_to
+  acts_as_commentable
   acts_as_list!
   address_picker-rails!
   annotate
