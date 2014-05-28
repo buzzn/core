@@ -30,6 +30,18 @@ class LocationDecorator < Draper::Decorator
       })
   end
 
+  def new_metering_point
+    link_to(
+      '',
+      new_metering_point_path(location_id: model.id),
+      {
+        :remote                     => true,
+        :class                      => 'start_modal glyphicon glyphicon-plus-sign',
+        'data-toggle'               => 'modal',
+        'data-target'               => '#myModal'
+      })
+  end
+
   def new_down_metering_point
     link_to(
       t('down_metering'),

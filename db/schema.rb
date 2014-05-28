@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140528121619) do
+ActiveRecord::Schema.define(version: 20140528181340) do
 
   create_table "addresses", force: true do |t|
     t.string   "address"
@@ -96,7 +96,7 @@ ActiveRecord::Schema.define(version: 20140528121619) do
     t.boolean  "power_of_attorney"
     t.date     "commissioning"
     t.date     "termination"
-    t.decimal  "forecast_wh_pa",        precision: 10, scale: 0
+    t.decimal  "forecast_watt_hour_pa", precision: 10, scale: 0
     t.string   "mode"
     t.integer  "contracting_party_id"
     t.datetime "created_at"
@@ -115,6 +115,7 @@ ActiveRecord::Schema.define(version: 20140528121619) do
     t.string   "shop_link"
     t.string   "primary_energy"
     t.decimal  "watt_peak",                   precision: 10, scale: 0
+    t.decimal  "watt_hour_pa",                precision: 10, scale: 0
     t.date     "commissioning"
     t.integer  "metering_point_id"
     t.datetime "created_at"
@@ -139,7 +140,7 @@ ActiveRecord::Schema.define(version: 20140528121619) do
   create_table "electricity_supplier_contracts", force: true do |t|
     t.string   "customer_number"
     t.string   "contract_number"
-    t.decimal  "forecast_wh_pa",    precision: 10, scale: 0
+    t.decimal  "forecast_watt_hour_pa", precision: 10, scale: 0
     t.integer  "metering_point_id"
     t.integer  "organization_id"
     t.datetime "created_at"
@@ -207,6 +208,14 @@ ActiveRecord::Schema.define(version: 20140528121619) do
     t.datetime "updated_at"
   end
 
+  create_table "metering_point_users", force: true do |t|
+    t.integer  "usage",             default: 100
+    t.integer  "user_id"
+    t.integer  "metering_point_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "metering_points", force: true do |t|
     t.string   "uid"
     t.integer  "position"
@@ -268,6 +277,7 @@ ActiveRecord::Schema.define(version: 20140528121619) do
     t.string   "last_name"
     t.string   "gender"
     t.string   "phone"
+    t.string   "title"
     t.text     "know_buzzn_from"
     t.boolean  "confirm_pricing_model",    default: false
     t.boolean  "newsletter_notifications", default: true
@@ -318,6 +328,8 @@ ActiveRecord::Schema.define(version: 20140528121619) do
     t.integer  "failed_attempts",        default: 0,     null: false
     t.string   "unlock_token"
     t.datetime "locked_at"
+    t.integer  "group_id"
+    t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

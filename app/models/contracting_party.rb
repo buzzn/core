@@ -2,7 +2,7 @@ class ContractingParty < ActiveRecord::Base
   resourcify
   include Authority::Abilities
 
-  belongs_to :user, inverse_of: :contracting_party
+  belongs_to :user
   belongs_to :metering_point
 
   has_many :contracts

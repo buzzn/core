@@ -15,10 +15,6 @@ Fabricator :location_fichtenweg, from: :location do
     Fabricate(:mp_z1),
     Fabricate(:mp_z2),
     Fabricate(:mp_z3),
-    Fabricate(:mp_z4),
-    # Fabricate(:mp_z5),
-    # Fabricate(:mp_z6),
-    Fabricate(:mp_z7),
-    Fabricate(:mp_z8)
+    Fabricate(:mp_z4)
   ]}
 end

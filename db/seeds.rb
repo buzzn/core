@@ -33,6 +33,18 @@ puts 'static meters for:'
 end
 
 
+puts '  20 more users'
+20.times do
+  location                = Fabricate(:location)
+  contracting_party       = Fabricate(:contracting_party)
+  user                    = Fabricate(:user)
+  user.contracting_party  = contracting_party
+  contracting_party.contracts << location.metering_points.first.contract
+  user.add_role :manager, location
+end
+
+
+
 # puts 'add smart meter readings'
 # User.all.each do |user|
 #   i=1

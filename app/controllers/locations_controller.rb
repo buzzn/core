@@ -3,6 +3,11 @@ class LocationsController < InheritedResources::Base
   respond_to :html, :js
 
 
+  def show
+    @location   = Location.find(params[:id]).decorate
+    show!
+  end
+
   def new
     @location         = Location.new
     @location.address = Address.new

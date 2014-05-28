@@ -11,8 +11,10 @@ class MeteringPoint < ActiveRecord::Base
   has_one :electricity_supplier_contract
   has_one :metering_service_provider_contract
   has_many :devices
+  has_many :user_metering_points
+  has_many :users, :through => :user_metering_points
 
-  validates :uid, presence: true, uniqueness: true
+  #validates :uid, uniqueness: true
   validates :mode, presence: true
 
   def name
@@ -21,6 +23,14 @@ class MeteringPoint < ActiveRecord::Base
 
   def up_metering?
     self.mode == 'up_metering'
+  end
+
+  def down_metering?
+    self.mode == 'down_metering'
+  end
+
+  def up_down_metering?
+    self.mode == 'up_down_metering'
   end
 
 end

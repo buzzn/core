@@ -1,2 +1,15 @@
-= @location.address.longitude
-= @location.address.latitude
+.col-sm-2
+  .detail_icon
+    %span.glyphicon.glyphicon-home
+  %h4= @location.name
+
+.col-sm-7
+  = render @location.metering_points
+
+  = @location.new_metering_point
+
+.col-sm-3
+  %h5.page-header=t('news')
+
+
+

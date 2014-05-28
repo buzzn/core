@@ -1,15 +1,15 @@
 # encoding: utf-8
 
 Fabricator :user do
-  email       { Faker::Internet.email }
-  password    'testtest'
-  terms       true
+  email             { Faker::Internet.email }
+  password          'testtest'
+  terms             true
+  profile           { Fabricate(:profile) }
   #after_create { |user | user.confirm! }
 end
 
 Fabricator :admin, from: :user do
   email       'admin@buzzn.net'
-  profile     { Fabricate(:profile) }
 end
 
 Fabricator :felix, from: :user do
