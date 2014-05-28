@@ -70,6 +70,8 @@ group :development do
   gem 'meta_request'
   gem 'table_print'
   gem 'quiet_assets'
+  gem 'rails-erd'
+  gem 'annotate'
 end
 
 group :development, :test do
