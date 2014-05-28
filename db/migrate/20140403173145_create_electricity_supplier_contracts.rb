@@ -3,7 +3,7 @@ class CreateElectricitySupplierContracts < ActiveRecord::Migration
     create_table :electricity_supplier_contracts do |t|
       t.string :customer_number
       t.string :contract_number
-      t.decimal :forecast_wh_pa
+      t.decimal :forecast_watt_hour_pa
 
       t.integer :metering_point_id
       t.integer :organization_id

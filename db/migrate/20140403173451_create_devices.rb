@@ -11,7 +11,10 @@ class CreateDevices < ActiveRecord::Migration
       t.string  :shop_link
       t.string  :primary_energy
       t.decimal :watt_peak
+      t.decimal :watt_hour_pa
       t.date    :commissioning
+
+
 
       t.integer :metering_point_id
 
