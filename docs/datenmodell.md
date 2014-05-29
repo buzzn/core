@@ -39,4 +39,6 @@ Der Metering Point ist ein Messpunkt in einer Messtelle, also z.B. der Messpunkt
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
 |Mode|String|Up|
+|Adress addition|String|2. Stock links
 |Voltage|Int|230|230 V
+
