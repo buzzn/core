@@ -4,7 +4,8 @@
   %h4= @location.title
 
 .col-sm-7
-  = render @location.metering_points
+  .metering_points
+    = render @location.metering_points
 
   - if current_user.can_update?(@location)
     = @location.new_metering_point

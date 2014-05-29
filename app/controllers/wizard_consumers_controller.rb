@@ -30,7 +30,7 @@ class WizardConsumersController  < ApplicationController
     if current_user.contracting_party
       @contracting_party = current_user.contracting_party
       if @contracting_party.update_attributes(contracting_party_params)
-        if @contracting_party.private?
+        if @contracting_party.natural_person?
           redirect_to action: 'location_address'
         else
           redirect_to action: 'contracting_party_organization'
@@ -39,10 +39,10 @@ class WizardConsumersController  < ApplicationController
         render action: 'contracting_party_legal_entity'
       end
     else
-      @contracting_party = ContractingParty.new(contracting_party_params)
-      @contracting_party = current_user.contracting_party
+      @contracting_party      = ContractingParty.new(contracting_party_params)
+      @contracting_party.user = current_user
       if @contracting_party.save
-        if @contracting_party.private?
+        if @contracting_party.natural_person?
           redirect_to action: 'location_address'
         else
           redirect_to action: 'contracting_party_organization'
@@ -207,8 +207,8 @@ class WizardConsumersController  < ApplicationController
   def location_metering_point_update
     @location = Location.with_role(:manager, current_user).last
     if @location.metering_points.empty?
-      @metering_point = MeteringPoint.new(metering_point_params)
-      @metering_point.mode = 'down_metering'
+      @metering_point           = MeteringPoint.new(metering_point_params)
+      @metering_point.mode      = 'down_metering'
       @location.metering_points << @metering_point
       if @location.save
         if @location.new_habitation
@@ -356,11 +356,11 @@ private
   end
 
   def address_params
-    params.require(:address).permit(:street, :city, :state, :zip, :country)
+    params.require(:address).permit(:street_name, :street_number, :city, :state, :zip, :country)
   end
 
   def location_params
-    params.require(:location).permit(:new_habitation, :inhabited_since, address_attributes: [:id, :street, :city, :state, :zip, :country])
+    params.require(:location).permit(:new_habitation, :inhabited_since, address_attributes: [:id, :street_name, :street_number, :city, :state, :zip, :country])
   end
 
   def metering_point_params

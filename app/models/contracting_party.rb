@@ -17,20 +17,27 @@ class ContractingParty < ActiveRecord::Base
   accepts_nested_attributes_for :organization, :reject_if => :all_blank
 
 
-
   validates :legal_entity, presence: true
 
 
-  def private?
-    if legal_entity == 'me'
-      true
-    else
-      false
-    end
+
+  def self.legal_entities
+    %w{
+      natural_person
+      company
+      cooperative
+      corporation
+    }
+  end
+
+
+
+  def natural_person?
+    legal_entity == 'natural_person'
   end
 
   def name
-    if legal_entity == 'me'
+    if legal_entity == 'natural_person'
       user.name
     else
       "#{user.name} for #{organization.name}"

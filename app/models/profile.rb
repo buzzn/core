@@ -14,6 +14,15 @@ class Profile < ActiveRecord::Base
   validates :last_name, presence: true
 
 
+  def self.genders
+    %w{
+      male
+      female
+      intersex
+    }
+  end
+
+
   def name
     if self.first_name && self.last_name
       "#{self.first_name} #{self.last_name}"

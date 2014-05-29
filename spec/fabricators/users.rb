@@ -5,7 +5,7 @@ Fabricator :user do
   password          'testtest'
   terms             true
   profile           { Fabricate(:profile) }
-  #after_create { |user | user.confirm! }
+  after_create { |user | user.confirm! }
 end
 
 Fabricator :admin, from: :user do

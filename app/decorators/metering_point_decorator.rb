@@ -22,7 +22,7 @@ class MeteringPointDecorator < Draper::Decorator
   def link_to_edit
     link_to(
       name,
-      send("edit_#{model.mode}_point_path", model),
+      edit_metering_point_path(model),
       {
         :remote       => true,
         :class        => 'start_modal',
@@ -43,6 +43,8 @@ class MeteringPointDecorator < Draper::Decorator
         'data-target' => '#myModal'
       })
   end
+
+
 
 
   def new_device

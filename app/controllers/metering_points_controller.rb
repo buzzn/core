@@ -4,69 +4,12 @@ class MeteringPointsController < InheritedResources::Base
 
 
 
-  def new_down
-    @metering_point = MeteringPoint.new(mode: 'down_metering')
-    new!
-  end
-  authority_actions :new_down => 'create'
 
-  def edit_down
+  def edit
     @metering_point = MeteringPoint.find(params[:id]).decorate
     authorize_action_for(@metering_point)
     edit!
   end
-  authority_actions :edit_down => 'update'
-
-
-
-
-  def new_up
-    @metering_point = MeteringPoint.new(mode: 'up_metering')
-    authorize_action_for Location.find(params[:location_id])
-    new!
-  end
-  authority_actions :new_up => 'create'
-
-  def edit_up
-    @metering_point = MeteringPoint.find(params[:id]).decorate
-    authorize_action_for(@metering_point)
-    edit!
-  end
-  authority_actions :edit_up => 'update'
-
-
-
-
-  def new_up_down
-    @metering_point = MeteringPoint.new(mode: 'up_down_metering')
-    new!
-  end
-  authority_actions :new_up_down => 'create'
-
-  def edit_up_down
-    @metering_point = MeteringPoint.find(params[:id]).decorate
-    authorize_action_for(@metering_point)
-    edit!
-  end
-  authority_actions :edit_up_down => 'update'
-
-
-
-
-  def new_diff
-    @metering_point = MeteringPoint.new(mode: 'diff_metering')
-    new!
-  end
-  authority_actions :new_diff => 'create'
-
-  def edit_diff
-    @metering_point = MeteringPoint.find(params[:id]).decorate
-    authorize_action_for(@metering_point)
-    edit!
-  end
-  authority_actions :edit_diff => 'update'
-
-
 
 
   def update

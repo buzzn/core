@@ -1,1 +1,2 @@
-$("#location_#{@metering_point.location.id} ul.list-group").prepend("#{escape_javascript(render @metering_point )}");
+$(".metering_points").prepend("#{escape_javascript(render @metering_point )}");
+$("#myModal").modal('hide');

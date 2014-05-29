@@ -17,6 +17,18 @@ class MeteringPoint < ActiveRecord::Base
   #validates :uid, uniqueness: true
   validates :mode, presence: true
 
+
+  def self.modes
+    %w{
+      up_metering
+      down_metering
+      up_down_metering
+    }
+  end
+
+
+
+
   def name
     "#{location.address.name}_#{address_addition}"
   end
