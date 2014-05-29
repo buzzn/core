@@ -1,8 +1,9 @@
 Fabricator :address do
-  address     { Faker::AddressDE.street_address }
-  street      { Faker::AddressDE.street_address }
-  zip         { Faker::AddressDE.zip_code }
-  city        { Faker::AddressDE.city }
-  state       { Faker::AddressDE.state }
-  country     { Faker::AddressDE.country }
+  i = 1
+  street_name   { Faker::AddressDE.street_name }
+  street_number { i += 1 }
+  zip           { Faker::AddressDE.zip_code }
+  city          { Faker::AddressDE.city }
+  state         { Faker::AddressDE.state }
+  country       { Faker::AddressDE.country }
 end

@@ -4,7 +4,11 @@ class LocationDecorator < Draper::Decorator
   decorates_association :address
   decorates_association :metering_points
 
-
+  def title
+    if name == nil
+      address.name
+    end
+  end
 
   def link_to_delete
     link_to(
