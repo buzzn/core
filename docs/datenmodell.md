@@ -123,7 +123,7 @@ Reading sind aus den regiustern ausgelesene Werte die in einer Zeitreihe gespeic
 |datetime|datetime|01.01.2012-23:15:01|Ablesezeitpunkt, Sekundengenau
 |reason|string|Turnusablesung|Ablesegrund. Kann folgende Werte annehmen: Turnusablesung, Zwischenablesung, Gerätewechsel, Geräteeinbau, Geräteausbau, Geräteparameteränderung, Vertragswechsel, Bilanzierungsgebietswechsel
 |quality|string|220|Qualität der Ablesung. Kann folgende Werte annehmen: Telefon, Email, Fax, Internetformular, Netzbetreiber, elektronisch, andere
-|Wh|int|26543,6|Messwert
+|Wh|int|265436|Messwert
 |load_course_time_series|real|0,00236|Lastgang
 |state|string|Z86|Status
 
