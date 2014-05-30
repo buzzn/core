@@ -57,9 +57,10 @@ Das Device ist ein Gerät, das Strom benötigt oder Strom herstellt. Die meisten
 |:----|:---|:------|:----------
 |image|image|Bild von Herd|Bild
 |name|string|Herd|
+|type|string|up|Erzeuger oder Verbraucher. Mögliche Werte: up, down, up/down
 |law|string|EEG|Nur für Stromerzeuger. Mögliche Werte: EEG, KWKG, frei, "leer"
 |generator_type|string|XRGI 15|Nur für Stromerzeuger. Modell
-|Manufacturer_product_number|string|12364585|Herstellernummer
+|Manufacturer_product_number|string|12364ABC585|Herstellernummer
 |primary_energy|string|Erdgas|Primärenergie. Mögliche Werte: Erdgas, Heizöl, Flüssiggas, Sonne, Wind, Wasser, Biogas, Holz, Pflanzenöl, Biomasse, sonstige
 |watt_peak|int|2000|Ganze Zahl, Einheit Wp
 |watt_hour_pa|int|380000|Ganze Zahl, Einheit Wh
