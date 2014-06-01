@@ -5,6 +5,8 @@ class CreateGroups < ActiveRecord::Migration
       t.string  :name
       t.boolean :private
       t.string  :mode
+      t.text    :description
+
 
       t.integer :meter_id
       t.integer :user_id

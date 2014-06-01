@@ -185,6 +185,7 @@ ActiveRecord::Schema.define(version: 20140528181340) do
     t.string   "name"
     t.boolean  "private"
     t.string   "mode"
+    t.text     "description"
     t.integer  "meter_id"
     t.integer  "user_id"
     t.datetime "created_at"
