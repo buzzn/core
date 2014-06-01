@@ -368,11 +368,11 @@ private
   end
 
   def electricity_supplier_contract_params
-    params.require(:electricity_supplier_contract).permit( :customer_number, :contract_number, :forecast_wh_pa, :organization_id )
+    params.require(:electricity_supplier_contract).permit( :customer_number, :contract_number, :forecast_watt_hour_pa, :organization_id )
   end
 
   def contract_params
-    params.require(:contract).permit( :forecast_wh_pa, :terms, :confirm_pricing_model, :power_of_attorney )
+    params.require(:contract).permit( :forecast_watt_hour_pa, :terms, :confirm_pricing_model, :power_of_attorney )
   end
 
   def bank_account_params
@@ -399,7 +399,7 @@ private
 
       # Contract new
         # connect with current_user.contracting_party
-        # forecast_wh_pa
+        # forecast_watt_hour_pa
 
     # current_user.contracting_party.back_account.new
     # wenn nötig auch contract.bank_account.new

@@ -3,7 +3,7 @@
     %h1= t'contract_estimated_forecast'
 
     = simple_form_for @contract, url: wizard_path, method: 'put' do |f|
-      = f.input :forecast_wh_pa
+      = f.input :forecast_watt_hour_pa
       = f.submit t("continue"), class: 'btn btn-success', id: 'submit'
 
 
