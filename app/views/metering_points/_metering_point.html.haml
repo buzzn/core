@@ -1,4 +1,4 @@
-.item{id: "metering_point_#{metering_point.id}" }
+.item{id: "metering_point_#{metering_point.id}", class: metering_point.mode }
   - if current_user.can_update?(metering_point)
     %h5= metering_point.link_to_edit
   - else
