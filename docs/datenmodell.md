@@ -1,5 +1,7 @@
 # Datenmodell
 
+[ER Diagramt (lucidchart)](http://www.lucidchart.com/invitations/accept/63ba51e0-d86f-40c3-960c-3920d931eba3)
+
 ## User
 Jeder Benutzer muss sich bevor er mit der buzzn app interagieren kann anmelden.
 benötigt wird dabei seine email addresse, password und das akzeptieren der nutzungsbedingungen(terms)
@@ -34,11 +36,11 @@ Eine Location ist eine Ansammlung von "Metering Points"
 
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
-|slug||| 
+|slug|||
 
 ## Metering Point
 
-Der Metering Point ist ein Messpunkt in einer Messtelle, also z.B. der Messpunkt des Einspeisezählers, der des Bezugzählers oder der des Übergabezählers. 
+Der Metering Point ist ein Messpunkt in einer Messtelle, also z.B. der Messpunkt des Einspeisezählers, der des Bezugzählers oder der des Übergabezählers.
 
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
