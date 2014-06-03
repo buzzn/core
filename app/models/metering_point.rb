@@ -26,6 +26,23 @@ class MeteringPoint < ActiveRecord::Base
     }
   end
 
+  def self.voltages
+    %w{
+      low
+      medium
+      high
+      highest
+    }
+  end
+
+  def self.regular_intervals
+    %w{
+      monthly
+      annually
+      quarterly
+      half_yearly
+    }
+  end
 
 
 

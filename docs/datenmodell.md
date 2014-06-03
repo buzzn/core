@@ -2,7 +2,8 @@
 
 [ER Diagramt (lucidchart)](http://www.lucidchart.com/invitations/accept/63ba51e0-d86f-40c3-960c-3920d931eba3)
 
-Examples die in einem array zusammengefasst sind. sind die einzigen werte die gesetzt werden können.
+Examples die in [eckige klammern] zusammengefasst sind.
+sind die einzigen werte die gesetzt werden können.
 
 ## User
 Jeder Benutzer muss sich bevor er mit der buzzn app interagieren kann anmelden.
@@ -18,7 +19,6 @@ benötigt wird dabei seine email addresse, password und das akzeptieren der nutz
 
 im Profil werden die eigentlichen Benutzer Daten gespeichert.
 
-
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
 |image|String|
@@ -28,7 +28,7 @@ im Profil werden die eigentlichen Benutzer Daten gespeichert.
 |phone|String|+49 173 893 43 43
 |gender|String| [male, female, other]|
 |know_buzzn_from|Text| Habe euch im Fernsehen bei quer gesehen.
-|newsletter_notifications|Boolean| ob user generelle buzzn email news bekommen möchte
+|newsletter_notifications|Boolean| ob user generelle buzzn email newsletter bekommen möchte.
 |location_notifications|Boolean| ob user über veränderungen und nachrichten in einer location informiert werden möchte
 |group_notifications|Boolean| ob user über veränderungen und nachrichten in einer group informiert werden möchte
 
@@ -38,7 +38,13 @@ Eine Location ist eine Ansammlung von "Metering Points"
 
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
-|slug|||
+|name|String|Urbanstrasse 88|
+|slug|String|urbanstrasse-88| http://www.buzzn.net/locations/urbanstrasse-88
+|image|String|| ein bild von der location. zumbeispiel haus oder wohnung
+|new_habitation|Boolean|| ob der user dort neu einziehen wird.
+|inhabited_since|Date|1.5.2014| Seit wann der user die location bewohnt
+|active|Boolean|| ob die location aktiv ist
+
 
 ## Metering Point
 
@@ -47,11 +53,11 @@ Der Metering Point ist ein Messpunkt in einer Messtelle, also z.B. der Messpunkt
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
 |uid|string|DE12356458478STROM236874565231459|Zählpunkt-iD mi 33 Stellen
-|Mode|String|Up|
-|Adress addition|String|2. Stock links
-|Voltage|string|low_voltage|4 mögliche Werte: low_voltage, medium_voltage, high_voltage, highest_voltage
+|Mode|String|[up,down,up_down,diff]| beschreibt die stromrichtung die gemessen wird
+|Adress addition|String|2. Stock links| Die genaue location des Metering Point
+|Voltage|string|[low, medium, high, highest]| ???
 |regular_reeding|date|0115|geplante Turnusablesung, Format MMDD
-|regular_interval|string|anually|4 mögliche werte: monthly, annually, quarterly, half-yearly
+|regular_interval|string|[monthly, annually, quarterly, half_yearly]|
 
 ## Device
 
@@ -59,13 +65,13 @@ Das Device ist ein Gerät, das Strom benötigt oder Strom herstellt. Die meisten
 
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
-|image|image|Bild von Herd|Bild
-|name|string|Herd|
-|type|string|up|Erzeuger oder Verbraucher. Mögliche Werte: up, down, up/down
-|law|string|EEG|Nur für Stromerzeuger. Mögliche Werte: EEG, KWKG, frei, "leer"
+|image|String|path_to_image|Bild von Herd
+|name|String|Herd|
+|type|string|[up, down]| Erzeuger oder Verbraucher
+|law|string|[eeg, kwkg]|Nur für Stromerzeuger.
 |generator_type|string|XRGI 15|Nur für Stromerzeuger. Modell
-|Manufacturer_product_number|string|12364ABC585|Herstellernummer
-|primary_energy|string|Erdgas|Primärenergie. Mögliche Werte: Erdgas, Heizöl, Flüssiggas, Sonne, Wind, Wasser, Biogas, Holz, Pflanzenöl, Biomasse, sonstige
+|manufacturer_product_number|string|12364ABC585|Herstellernummer
+|primary_energy|string|[gas, oil, lpg, sun, wind, water, bio]|Primärenergie.
 |watt_peak|int|2000|Ganze Zahl, Einheit Wp
 |watt_hour_pa|int|380000|Ganze Zahl, Einheit Wh
 |commisioning_date|date|23.05.2010|Inbetriebnahmedatum
