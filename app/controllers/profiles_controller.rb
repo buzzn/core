@@ -35,7 +35,7 @@ private
       :gender,
       :phone,
       :newsletter_notifications,
-      :meter_notifications,
+      :location_notifications,
       :group_notifications
     ]
   end

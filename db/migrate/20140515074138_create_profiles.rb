@@ -3,19 +3,18 @@ class CreateProfiles < ActiveRecord::Migration
     create_table :profiles do |t|
 
       t.string :slug
+      t.string :title
       t.string :image
       t.string :first_name
       t.string :last_name
       t.string :gender
       t.string :phone
-      t.string :title
-      t.text :know_buzzn_from
-
+      t.text   :know_buzzn_from
       t.boolean :confirm_pricing_model,   :default => false
 
       # notifications
       t.boolean :newsletter_notifications,  :default => true
-      t.boolean :meter_notifications,       :default => true
+      t.boolean :location_notifications,    :default => true
       t.boolean :group_notifications,       :default => true
 
 

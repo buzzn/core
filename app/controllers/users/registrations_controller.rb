@@ -49,7 +49,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
                 :password_confirmation,
                 :current_password,
                 :terms,
-                profile_attributes: [:id, :image, :first_name, :last_name, :gender, :phone, :newsletter_notifications, :meter_notifications, :group_notifications, :_destroy]
+                profile_attributes: [:id, :image, :first_name, :last_name, :gender, :phone, :newsletter_notifications, :location_notifications, :group_notifications, :_destroy]
               )
     end
 
@@ -60,7 +60,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
                 :password_confirmation,
                 :current_password,
                 :terms,
-                profile_attributes: [:id, :image, :first_name, :last_name, :gender, :phone, :newsletter_notifications, :meter_notifications, :group_notifications, :_destroy]
+                profile_attributes: [:id, :image, :first_name, :last_name, :gender, :phone, :newsletter_notifications, :location_notifications, :group_notifications, :_destroy]
               )
     end
 
