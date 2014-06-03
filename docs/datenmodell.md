@@ -2,6 +2,8 @@
 
 [ER Diagramt (lucidchart)](http://www.lucidchart.com/invitations/accept/63ba51e0-d86f-40c3-960c-3920d931eba3)
 
+Examples die in einem array zusammengefasst sind. sind die einzigen werte die gesetzt werden können.
+
 ## User
 Jeder Benutzer muss sich bevor er mit der buzzn app interagieren kann anmelden.
 benötigt wird dabei seine email addresse, password und das akzeptieren der nutzungsbedingungen(terms)
@@ -20,15 +22,15 @@ im Profil werden die eigentlichen Benutzer Daten gespeichert.
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
 |image|String|
-|title|String|Miss, Ms, Mr, Sir, Mrs, Dr| Anrede
-|first_name|String|
-|last_name|String|
-|phone|String|
-|gender|String| male, female, other
-|know_buzzn_from|Text|
-|newsletter_notifications|Boolean|
-|meter_notifications|Boolean|
-|group_notifications|Boolean|
+|title|String|[miss, dr]| Anreden
+|first_name|String|Felix
+|last_name|String|Faerber
+|phone|String|+49 173 893 43 43
+|gender|String| [male, female, other]|
+|know_buzzn_from|Text| Habe euch im Fernsehen bei quer gesehen.
+|newsletter_notifications|Boolean| ob user generelle buzzn email news bekommen möchte
+|location_notifications|Boolean| ob user über veränderungen und nachrichten in einer location informiert werden möchte
+|group_notifications|Boolean| ob user über veränderungen und nachrichten in einer group informiert werden möchte
 
 ## Location
 
