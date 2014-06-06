@@ -171,6 +171,8 @@ ActiveRecord::Schema.define(version: 20140606121348) do
     t.datetime "updated_at"
   end
 
+  add_index "equipment", ["meter_id"], name: "index_equipment_on_meter_id", using: :btree
+
   create_table "friendly_id_slugs", force: true do |t|
     t.string   "slug",                      null: false
     t.integer  "sluggable_id",              null: false
@@ -218,6 +220,8 @@ ActiveRecord::Schema.define(version: 20140606121348) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "ilns", ["organization_id"], name: "index_ilns_on_organization_id", using: :btree
 
   create_table "locations", force: true do |t|
     t.string   "slug"
@@ -351,6 +355,8 @@ ActiveRecord::Schema.define(version: 20140606121348) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "registers", ["meter_id"], name: "index_registers_on_meter_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"
