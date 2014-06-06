@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/flyerhzm/bullet.git
-  revision: b0198884508ebc92e44dc33a0181d07553f4efad
+  revision: 458e1c55c122411344a7b4d336894c810f1661fe
   specs:
-    bullet (4.9.0)
+    bullet (4.10.0)
       activesupport
       uniform_notifier (~> 1.6.0)
 
@@ -15,11 +15,11 @@ GIT
 
 GIT
   remote: git://github.com/josevalim/inherited_resources.git
-  revision: 559161287cd705def4868d3c0de6ddc2d8a8564c
+  revision: 38009de075d4c7e5170a582af9c09002ff6fc4b5
   specs:
-    inherited_resources (1.4.1)
+    inherited_resources (1.5.0)
       has_scope (~> 0.6.0.rc)
-      responders (~> 1.0.0)
+      responders (~> 1.0)
 
 GIT
   remote: git://github.com/lassebunk/metamagic.git
@@ -44,7 +44,7 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/simple_form.git
-  revision: f02216793a045a614e5c0ef7e7c2fb25fea7584b
+  revision: 122ac3b252f6d953c5e4e4856b95a63e6fd83f5a
   specs:
     simple_form (3.1.0.rc1)
       actionpack (~> 4.0)
@@ -101,7 +101,7 @@ GEM
       rake (>= 0.8.7)
     arel (5.0.1.20140414130214)
     awesome_print (1.2.0)
-    aws-sdk (1.41.0)
+    aws-sdk (1.42.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
     bcrypt (3.1.7)
@@ -123,10 +123,10 @@ GEM
       sass (~> 3.0)
       slim (>= 1.3.6, < 3.0)
       terminal-table (~> 1.4)
-    bson (2.2.4)
+    bson (2.3.0)
     builder (3.2.2)
     callsite (0.0.11)
-    capybara (2.2.1)
+    capybara (2.3.0)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
@@ -181,7 +181,7 @@ GEM
       http_parser.rb (~> 0.6.0)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    excon (0.33.0)
+    excon (0.36.0)
     execjs (2.1.0)
     fabrication (2.11.2)
     faraday (0.9.0)
@@ -189,10 +189,11 @@ GEM
     fastercsv (1.5.5)
     ffaker (1.24.0)
     ffi (1.9.3)
-    fog (1.22.0)
+    fog (1.22.1)
       fog-brightbox
-      fog-core (~> 1.21, >= 1.21.1)
+      fog-core (~> 1.22)
       fog-json
+      ipaddress (~> 0.5)
       nokogiri (~> 1.5, >= 1.5.11)
     fog-brightbox (0.0.2)
       fog-core
@@ -211,10 +212,10 @@ GEM
     foreigner (1.6.1)
       activerecord (>= 3.0.0)
     formatador (0.2.5)
-    friendly_id (5.0.3)
+    friendly_id (5.0.4)
       activerecord (>= 4.0.0)
     geocoder (1.2.1)
-    google-analytics-rails (0.0.5)
+    google-analytics-rails (0.0.6)
     growl (1.0.3)
     guard (2.6.1)
       formatador (>= 0.2.4)
@@ -254,6 +255,7 @@ GEM
     immigrant (0.1.8)
       activerecord (>= 3.0)
       foreigner (>= 1.2.1)
+    ipaddress (0.8.0)
     jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
@@ -263,7 +265,7 @@ GEM
     launchy (2.4.2)
       addressable (~> 2.3)
     libv8 (3.16.14.3)
-    listen (2.7.5)
+    listen (2.7.7)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -271,7 +273,7 @@ GEM
       actionpack (>= 3.0)
       activerecord (>= 3.0)
       railties (>= 3.0)
-    lumberjack (1.0.5)
+    lumberjack (1.0.6)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -335,12 +337,12 @@ GEM
       activerecord (>= 3.0, < 5.0)
       activesupport (>= 3.0, < 5.0)
     phantomjs (1.9.7.1)
-    poltergeist (1.5.0)
+    poltergeist (1.5.1)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
       multi_json (~> 1.0)
       websocket-driver (>= 0.2.0)
-    polyglot (0.3.4)
+    polyglot (0.3.5)
     pry (0.9.12.6)
       coderay (~> 1.0)
       method_source (~> 0.8)
@@ -380,7 +382,7 @@ GEM
     rails-i18n (4.0.2)
       i18n (~> 0.6)
       rails (>= 4.0)
-    rails_layout (1.0.16)
+    rails_layout (1.0.19)
     railties (4.1.1)
       actionpack (= 4.1.1)
       activesupport (= 4.1.1)
@@ -395,25 +397,29 @@ GEM
       redis (~> 3.0.4)
     ref (1.0.5)
     request_store (1.0.5)
-    responders (1.0.0)
+    responders (1.1.0)
       railties (>= 3.2, < 5)
     rolify (3.4.0)
-    rspec (2.14.1)
-      rspec-core (~> 2.14.0)
-      rspec-expectations (~> 2.14.0)
-      rspec-mocks (~> 2.14.0)
-    rspec-core (2.14.8)
-    rspec-expectations (2.14.5)
-      diff-lcs (>= 1.1.3, < 2.0)
-    rspec-mocks (2.14.6)
-    rspec-rails (2.14.2)
+    rspec (3.0.0)
+      rspec-core (~> 3.0.0)
+      rspec-expectations (~> 3.0.0)
+      rspec-mocks (~> 3.0.0)
+    rspec-core (3.0.0)
+      rspec-support (~> 3.0.0)
+    rspec-expectations (3.0.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.0.0)
+    rspec-mocks (3.0.0)
+      rspec-support (~> 3.0.0)
+    rspec-rails (3.0.1)
       actionpack (>= 3.0)
-      activemodel (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
-      rspec-core (~> 2.14.0)
-      rspec-expectations (~> 2.14.0)
-      rspec-mocks (~> 2.14.0)
+      rspec-core (~> 3.0.0)
+      rspec-expectations (~> 3.0.0)
+      rspec-mocks (~> 3.0.0)
+      rspec-support (~> 3.0.0)
+    rspec-support (3.0.0)
     ruby-graphviz (1.0.9)
     ruby2ruby (2.0.8)
       ruby_parser (~> 3.1)
@@ -422,11 +428,11 @@ GEM
     ruby_parser (3.4.1)
       sexp_processor (~> 4.1)
     safe_yaml (1.0.3)
-    sass (3.3.7)
+    sass (3.3.8)
     select2-rails (3.5.7)
       thor (~> 0.14)
     sexp_processor (4.4.3)
-    sidekiq (3.1.2)
+    sidekiq (3.1.3)
       celluloid (>= 0.15.2)
       connection_pool (>= 2.0.0)
       json
@@ -478,7 +484,7 @@ GEM
       polyglot (>= 0.3.1)
     turbolinks (2.2.2)
       coffee-rails
-    tzinfo (1.2.0)
+    tzinfo (1.2.1)
       thread_safe (~> 0.1)
     uglifier (2.5.0)
       execjs (>= 0.3.0)
