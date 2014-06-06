@@ -13,7 +13,7 @@ class CreateDevices < ActiveRecord::Migration
       t.decimal :watt_peak
       t.decimal :watt_hour_pa
       t.date    :commissioning
-
+      t.boolean :mobile
 
 
       t.integer :metering_point_id

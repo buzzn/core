@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140528181340) do
+ActiveRecord::Schema.define(version: 20140606121348) do
 
   create_table "addresses", force: true do |t|
     t.string   "address"
@@ -122,6 +122,7 @@ ActiveRecord::Schema.define(version: 20140528181340) do
     t.decimal  "watt_peak",                   precision: 10, scale: 0
     t.decimal  "watt_hour_pa",                precision: 10, scale: 0
     t.date     "commissioning"
+    t.boolean  "mobile"
     t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -154,6 +155,21 @@ ActiveRecord::Schema.define(version: 20140528181340) do
 
   add_index "electricity_supplier_contracts", ["metering_point_id"], name: "index_electricity_supplier_contracts_on_metering_point_id", using: :btree
   add_index "electricity_supplier_contracts", ["organization_id"], name: "index_electricity_supplier_contracts_on_organization_id", using: :btree
+
+  create_table "equipment", force: true do |t|
+    t.string   "device_kind"
+    t.string   "device_type"
+    t.string   "ownership"
+    t.date     "build"
+    t.date     "calibrated_till"
+    t.string   "manufacturer_name"
+    t.string   "manufacturer_product_number"
+    t.string   "manufacturer_device_number"
+    t.integer  "converter_constant"
+    t.integer  "meter_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "friendly_id_slugs", force: true do |t|
     t.string   "slug",                      null: false
@@ -188,6 +204,17 @@ ActiveRecord::Schema.define(version: 20140528181340) do
     t.text     "description"
     t.integer  "meter_id"
     t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ilns", force: true do |t|
+    t.integer  "bdew"
+    t.string   "eic"
+    t.string   "vnb"
+    t.date     "valid_begin"
+    t.date     "valid_end"
+    t.integer  "organization_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -233,6 +260,9 @@ ActiveRecord::Schema.define(version: 20140528181340) do
     t.integer  "position"
     t.string   "address_addition"
     t.string   "mode"
+    t.string   "voltage_level"
+    t.date     "regular_reeding"
+    t.string   "regular_interval"
     t.integer  "location_id"
     t.integer  "contract_id"
     t.datetime "created_at"
@@ -259,7 +289,16 @@ ActiveRecord::Schema.define(version: 20140528181340) do
   create_table "meters", force: true do |t|
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_number"
-    t.string   "manufacturer_meter_number"
+    t.string   "manufacturer_device_number"
+    t.string   "owner"
+    t.string   "metering_type"
+    t.string   "meter_size"
+    t.string   "rate"
+    t.string   "mode"
+    t.string   "measurement_capture"
+    t.string   "mounting_method"
+    t.date     "build_year"
+    t.date     "calibrated_till"
     t.boolean  "virtual",                     default: false
     t.integer  "metering_point_id"
     t.datetime "created_at"
@@ -301,6 +340,17 @@ ActiveRecord::Schema.define(version: 20140528181340) do
 
   add_index "profiles", ["slug"], name: "index_profiles_on_slug", unique: true, using: :btree
   add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
+
+  create_table "registers", force: true do |t|
+    t.string   "obis_index"
+    t.boolean  "low_loadable"
+    t.string   "mode"
+    t.integer  "predecimal_places", default: 8
+    t.integer  "decimal_places",    default: 2
+    t.integer  "meter_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "roles", force: true do |t|
     t.string   "name"

@@ -2,25 +2,30 @@ class Reading
   include Mongoid::Document
 
   field :contract_id,   type: Integer
-  field :meter_id,      type: Integer
+  field :register_id,   type: Integer
   field :timestamp,     type: DateTime
-  field :wh,            type: Integer
+  field :watt_hour,     type: Integer
   field :reason
   field :source
+  field :quality
+  field :load_course_time_series, type: Float
+  field :state
 
-  index({ meter_id: 1 })
+  index({ register_id: 1 })
   index({ timestamp: 1 })
 
 
-  def self.this_day_to_hours_by_meter_id(meter_id)
+
+
+  def self.this_day_to_hours_by_register_id(register_id)
     pipe = [
       { "$match" => {
           timestamp: {
             "$gte" => Time.at(DateTime.now.beginning_of_day),
             "$lt"  => Time.at(DateTime.now.end_of_day)
           },
-          meter_id: {
-            "$in" => [meter_id]
+          register_id: {
+            "$in" => [register_id]
           }
         }
       },

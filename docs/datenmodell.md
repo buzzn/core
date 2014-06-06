@@ -5,6 +5,10 @@
 Examples die in [eckige klammern] zusammengefasst sind.
 sind die einzigen werte die gesetzt werden können.
 
+
+
+
+
 ## User
 Jeder Benutzer muss sich bevor er mit der buzzn app interagieren kann anmelden.
 benötigt wird dabei seine email addresse, password und das akzeptieren der nutzungsbedingungen(terms)
@@ -15,13 +19,16 @@ benötigt wird dabei seine email addresse, password und das akzeptieren der nutz
 |terms|Boolean||nutzungsbedingungen
 
 
+
+
+
 ## Profile
 
 im Profil werden die eigentlichen Benutzer Daten gespeichert.
 
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
-|image|String|
+|image|String||der link zum bild
 |title|String|[miss, dr]| Anreden
 |first_name|String|Felix
 |last_name|String|Faerber
@@ -32,6 +39,9 @@ im Profil werden die eigentlichen Benutzer Daten gespeichert.
 |location_notifications|Boolean| ob user über veränderungen und nachrichten in einer location informiert werden möchte
 |group_notifications|Boolean| ob user über veränderungen und nachrichten in einer group informiert werden möchte
 
+
+
+
 ## Location
 
 Eine Location ist eine Ansammlung von "Metering Points"
@@ -40,10 +50,13 @@ Eine Location ist eine Ansammlung von "Metering Points"
 |:----|:---|:------|:----------
 |name|String|Urbanstrasse 88|
 |slug|String|urbanstrasse-88| http://www.buzzn.net/locations/urbanstrasse-88
-|image|String|| ein bild von der location. zumbeispiel haus oder wohnung
-|new_habitation|Boolean|| ob der user dort neu einziehen wird.
+|image|String|/locations/images/13132.jpg| ein bild von der location. zumbeispiel haus oder wohnung
+|new_habitation|Boolean|[true,false]| ob der user dort neu einziehen wird.
 |inhabited_since|Date|1.5.2014| Seit wann der user die location bewohnt
-|active|Boolean|| ob die location aktiv ist
+|active|Boolean|[true,false]| ob die location aktiv ist
+
+
+
 
 
 ## Metering Point
@@ -53,11 +66,16 @@ Der Metering Point ist ein Messpunkt in einer Messtelle, also z.B. der Messpunkt
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
 |uid|string|DE12356458478STROM236874565231459|Zählpunkt-iD mi 33 Stellen
-|Mode|String|[up,down,up_down,diff]| beschreibt die stromrichtung die gemessen wird
+|mode|String|[up,down,up_down,diff]| beschreibt die stromrichtung die gemessen wird
 |Adress addition|String|2. Stock links| Die genaue location des Metering Point
-|Voltage|string|[low, medium, high, highest]| ???
-|regular_reeding|date|0115|geplante Turnusablesung, Format MMDD
-|regular_interval|string|[monthly, annually, quarterly, half_yearly]|
+|voltage_level|string|[low, medium, high, highest]| spannung ebende. meistens low
+|regular_reeding|date|15.4.2014|geplante Turnusablesung
+|regular_interval|string|[monthly, annually, quarterly, half_yearly]| in welchem interwall abgelesen wird
+
+
+
+
+
 
 ## Device
 
@@ -67,7 +85,7 @@ Das Device ist ein Gerät, das Strom benötigt oder Strom herstellt. Die meisten
 |:----|:---|:------|:----------
 |image|String|path_to_image|Bild von Herd
 |name|String|Herd|
-|type|string|[up, down]| Erzeuger oder Verbraucher
+|mode|string|[up, down, up_down]| Erzeuger oder Verbraucher oder beides(electrospeicher)
 |law|string|[eeg, kwkg]|Nur für Stromerzeuger.
 |generator_type|string|XRGI 15|Nur für Stromerzeuger. Modell
 |manufacturer_product_number|string|12364ABC585|Herstellernummer
@@ -76,6 +94,12 @@ Das Device ist ein Gerät, das Strom benötigt oder Strom herstellt. Die meisten
 |watt_hour_pa|int|380000|Ganze Zahl, Einheit Wh
 |commisioning_date|date|23.05.2010|Inbetriebnahmedatum
 |comments|text|Lampe von meiner Oma|Kommentar
+|mobile|Boolean|[true,false]| ob das gerät mobil verwendet werden kann. wie Elektroauto.
+
+
+
+
+
 
 ## Meter
 
@@ -84,17 +108,21 @@ Das Meter ist ein Messgerät, dass Menge und Leistung eines Mediums erfasst. Bei
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
 |manufacturer_name|string|Hager 0815|Hersteller
-|manufacturer_product_number|string|12345DAS789| Herstellernummer
-|manufacturer_meter_number|string|12345DAS789| Zählernummer
-|ownership|string|Eigentum|Besitzstatus: Kann folgende 4 Werte annehmen: Eigentum, Fremdbesitz, verpachtet, verkauft
-|meter_type|string|AHZ|Zählertyp. Kann folgende Werte annehmen: AHZ, VSZ, LAZ, EHZ, MAZ, IVA
-|meter_size|string|Z03-sonstiger EHZ|Kann folgende Werte annehmen: Z01-EDL40, Z02-EDL21, Z03-sonstiger EHZ
-|rate|string|ETZ|Tarif. Kann folgende Werte annehmen: ETZ - Eintarif, ZTZ - Zweitarif, NTZ - Mehrtarif
-|direction|string|ERZ|Richtung. Kann folgende Werte annehmen: ERZ - Einrichtungszähler, ZRZ - Zweirichtungszähler
-|measurement_capture|string|AMR - fernauslesbare Zähler|Messwerterfassung. Kann folgende Werte annehmen: AMR - fernauslesbare Zähler, MMR - manuell ausgelesene Zähler
-|mounting_method|string|BKW - Stecktechnik|Befestigungsart. BKW - Stecktechnik, DPA - 3-Punktaufhängung
-|build_year|int|2012|Baujahr
-|calibrated_till|int|2018|Geeicht bis
+|manufacturer_product_number|string|AS 1440| Herstellernummer
+|manufacturer_device_number|string|12345DAS789| Zählernummer
+|owner|string|[ownership, foreign_ownership, leased, sold]|Besitzstatus
+|metering_type|string|[ahz, vsz, laz, ehz, edl40, edl21, maz, iva]|Zählertyp gruppen. meistens ahz
+|rate|string|[etz, ztz, ntz]|Tarif. Kann folgende Werte annehmen: ETZ - Eintarif, ZTZ - Zweitarif, NTZ - Mehrtarif
+|mode|string|[up,down,up_down]| Richtung
+|measurement_capture|string|[amr,mmr]|Messwerterfassung. Kann folgende Werte annehmen: AMR - fernauslesbare Zähler, MMR - manuell ausgelesene Zähler
+|mounting_method|string|[bkw, dpa]|Befestigungsart. BKW - Stecktechnik, DPA - 3-Punktaufhängung
+|build_year|Date|1.1.2012|Baujahr
+|calibrated_till|Date|1.1.2018|Geeicht bis
+|virtual|Boolean||ob der Zähler errechnet wird.
+
+
+
+
 
 ## Equipment
 
@@ -102,15 +130,18 @@ Das Equipment sind Zusatzgeräte die den Zähler in iregnd einer Weise unterstü
 
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
-|device_number|string|1234DAS789|Gerätenummer
-|ownership|string|Eigentum|Besitzstatus: Kann folgende 4 Werte annehmen: Eigentum, Fremdbesitz, verpachtet, verkauft
-|device_kind|string|Z25 - Wandler / Mengenumwandler|Geräteart. Kann folgende Werte annehmen: Z25 - Wandler / Mengenumwandler, Z26 - Kommunikationseinrichtung, Z27 - techn. Steuereinrichtung
-|device_type|string|WIW - Messwandlersatz Strom|Gerätetyp.
-|build_year|stringint|2012|Baujahr
-|calibrated_till|int|2018|Geeicht bis
-|manufacturer_product_number|string|12345DAS789| Herstellernummer
-|device_number|string|1234DAS789|Gerätenummer
-|converter_constant|int|40|Wandlerkonstante
+|device_kind|string|[z25,z26,z27]|Geräteart. Z25 - Wandler / Mengenumwandler, Z26 - Kommunikationseinrichtung, Z27 - techn. Steuereinrichtung
+|device_type|string|wiw| Gerätetyp.
+|owner|string|[ownership, foreign_ownership, leased, sold]|Besitzstatus
+|build|Date|31.12.2012|Baujahr
+|calibrated_till|Date|31.12.2017|Geeicht bis
+|manufacturer_name|string|Bosch| Herstellername
+|manufacturer_product_number|string|X3000| Herstellernummer
+|manufacturer_device_number|string|1234DAS789345345345|Geräte Seriennummer
+|converter_constant|integer|40| Wandlerkonstante
+
+
+
 
 ## Register
 
@@ -119,10 +150,13 @@ Das Register ist ein Zählwerk. Ein Zähler kann mehrere Zählwerke besitzen, di
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
 |obis_index|string|1-1:8.0|Obiskennzahl
-|low_load_able|string|ZNS - nicht schwachlastfähig|Schwachlastfähig. Kann folgende Werte annehmen: ZNS - nicht schwachlastfähig, ZSF - Scwachlastfähig
-|tagging|string|Bezug|Gerätenummer
-|pre_decimal_point_position|int|8|Vorkommastellen
-|decimal_place|int|2|Nachkommastellen
+|low_loadable|Boolean|[true,false]| ob schwachlastfähig
+|mode|string|[up,down]| Richtung
+|predecimal_places|int|8| Vorkommastellen
+|decimal_places|int|2| Nachkommastellen
+
+
+
 
 ## Reading
 
@@ -132,9 +166,44 @@ Reading sind aus den regiustern ausgelesene Werte die in einer Zeitreihe gespeic
 |:----|:---|:------|:----------
 |datetime|datetime|01.01.2012-23:15:01|Ablesezeitpunkt, Sekundengenau
 |reason|string|Turnusablesung|Ablesegrund. Kann folgende Werte annehmen: Turnusablesung, Zwischenablesung, Gerätewechsel, Geräteeinbau, Geräteausbau, Geräteparameteränderung, Vertragswechsel, Bilanzierungsgebietswechsel
-|quality|string|220|Qualität der Ablesung. Kann folgende Werte annehmen: Telefon, Email, Fax, Internetformular, Netzbetreiber, elektronisch, andere
-|Wh|int|265436|Messwert
-|load_course_time_series|real|0,00236|Lastgang
-|state|string|Z86|Status
+|quality|string|[phone, email, fax, webform, electic, dso, other]|Qualität der Ablesung.
+|state|string|Z86|Status (z86 abgelseneer und kontrolierterwert)
+|watt_hour|int|265436|Messwert
+|load_course_time_series|Decimal|0,00236|Lastgang
+
+
+## iln
+
+marktpartner information
+
+|Value|Type|Example|Explanation
+|:----|:---|:------|:----------
+|bdew|integer|9910435673000|13 stellen
+|eic|string|9sd8fg9sdfg98dfg|
+|vnb|string|sg9ds8fg9sdfg89|
+|valid_begin|date|1.1.2013|
+|valid_end|date|31.12.2017|
+
+
+
+## Organization
+
+Organizationen jeder art werden in einem Organization objekt gespeichert.
+einige mögliche Organizationen typen sind, electricity_supplier metering_service_provider, distribution_system_operator und mehr
+
+|Value|Type|Example|Explanation
+|:----|:---|:------|:----------
+|image|string|/organization/312/logo.jpg|
+|name|string|E.ON|
+|email|string|info@eon.com|
+|phone|string|0800 12345678|
+|fax|string|0800 12345679|
+|description|string|E.ON mit Sitz in Düsseldorf ist weltweit eines der größten privaten Strom- und Gasunternehmen.|
+|website|string|www.eon.com|
+|mode|string|[electricity_supplier, metering_point_operator, ...]|
+
+
+
+
 
 

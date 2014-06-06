@@ -3,20 +3,16 @@ class Meter < ActiveRecord::Base
 
   belongs_to :metering_point
 
+  has_many :registers
+  has_many :equipments
+
   # normalize_attribute :uid, with: [:strip]
 
   def self.manufacturers
-    %w{ ferraris smart_meter }
+    %w{
+      ferraris
+      smart_meter
+    }
   end
-
-  def day_to_hours
-    hours = []
-    Reading.this_day_to_hours_by_meter_id(self.id).each do |hour|
-      hours << hour['hourReading']
-    end
-
-    return hours.join(', ')
-  end
-
 
 end

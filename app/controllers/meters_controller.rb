@@ -29,7 +29,7 @@ private
       :metering_point_id,
       :manufacturer_name,
       :manufacturer_product_number,
-      :manufacturer_meter_number,
+      :manufacturer_device_number,
       :virtual
     ]
   end
