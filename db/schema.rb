@@ -113,6 +113,7 @@ ActiveRecord::Schema.define(version: 20140606121348) do
   create_table "devices", force: true do |t|
     t.string   "image"
     t.string   "name"
+    t.string   "mode"
     t.string   "law"
     t.string   "generator_type"
     t.string   "manufacturer"
@@ -122,7 +123,7 @@ ActiveRecord::Schema.define(version: 20140606121348) do
     t.decimal  "watt_peak",                   precision: 10, scale: 0
     t.decimal  "watt_hour_pa",                precision: 10, scale: 0
     t.date     "commissioning"
-    t.boolean  "mobile"
+    t.boolean  "mobile",                                               default: false
     t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -201,17 +202,14 @@ ActiveRecord::Schema.define(version: 20140606121348) do
   create_table "groups", force: true do |t|
     t.string   "slug"
     t.string   "name"
-    t.boolean  "private"
-    t.string   "mode"
+    t.boolean  "private",     default: false
     t.text     "description"
-    t.integer  "meter_id"
-    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "ilns", force: true do |t|
-    t.integer  "bdew"
+    t.string   "bdew"
     t.string   "eic"
     t.string   "vnb"
     t.date     "valid_begin"
@@ -269,6 +267,7 @@ ActiveRecord::Schema.define(version: 20140606121348) do
     t.string   "regular_interval"
     t.integer  "location_id"
     t.integer  "contract_id"
+    t.integer  "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -333,7 +332,8 @@ ActiveRecord::Schema.define(version: 20140606121348) do
     t.string   "gender"
     t.string   "phone"
     t.text     "know_buzzn_from"
-    t.boolean  "confirm_pricing_model",    default: false
+    t.boolean  "confirm_pricing_model"
+    t.boolean  "terms"
     t.boolean  "newsletter_notifications", default: true
     t.boolean  "location_notifications",   default: true
     t.boolean  "group_notifications",      default: true
@@ -347,7 +347,7 @@ ActiveRecord::Schema.define(version: 20140606121348) do
 
   create_table "registers", force: true do |t|
     t.string   "obis_index"
-    t.boolean  "low_loadable"
+    t.boolean  "low_loadable",      default: false
     t.string   "mode"
     t.integer  "predecimal_places", default: 8
     t.integer  "decimal_places",    default: 2
@@ -373,19 +373,18 @@ ActiveRecord::Schema.define(version: 20140606121348) do
     t.string   "mode"
     t.string   "category"
     t.datetime "date"
-    t.decimal  "wh",         precision: 10, scale: 0
+    t.decimal  "watt_hour",  precision: 10, scale: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "users", force: true do |t|
-    t.boolean  "terms",                  default: false
-    t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,     null: false
+    t.integer  "sign_in_count",          default: 0,  null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -394,7 +393,7 @@ ActiveRecord::Schema.define(version: 20140606121348) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.integer  "failed_attempts",        default: 0,     null: false
+    t.integer  "failed_attempts",        default: 0,  null: false
     t.string   "unlock_token"
     t.datetime "locked_at"
     t.integer  "group_id"

@@ -48,9 +48,14 @@ class MeteringPointDecorator < Draper::Decorator
 
 
   def new_device
+    if model.up_metering?
+      path = new_up_device_path(metering_point_id: model.id)
+    else
+      path = new_down_device_path(metering_point_id: model.id)
+    end
     link_to(
       t("add_device"),
-      new_device_path(metering_point_id: model.id),
+      path,
       {
         :remote       => true,
         :class        => 'start_modal',

@@ -12,6 +12,8 @@ Fabricate(:electricity_supplier, name: 'RWE')
 Fabricate(:electricity_supplier, name: 'EnBW')
 Fabricate(:electricity_supplier, name: 'Vattenfall')
 Fabricate(:metering_service_provider, name: 'Discovergy')
+Fabricate(:transmission_system_operator, name: '50Herz')
+
 
 
 admin = Fabricate(:admin)

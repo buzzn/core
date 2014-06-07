@@ -3,7 +3,6 @@
 Fabricator :user do
   email             { Faker::Internet.email }
   password          'testtest'
-  terms             true
   profile           { Fabricate(:profile) }
   after_create { |user | user.confirm! }
 end

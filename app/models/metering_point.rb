@@ -6,6 +6,8 @@ class MeteringPoint < ActiveRecord::Base
 
   belongs_to :contract
 
+  belongs_to :group
+
   has_one :meter
   has_one :distribution_system_operator_contract
   has_one :electricity_supplier_contract

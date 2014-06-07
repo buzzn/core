@@ -2,7 +2,7 @@ class CreateRegisters < ActiveRecord::Migration
   def change
     create_table :registers do |t|
       t.string :obis_index
-      t.boolean :low_loadable
+      t.boolean :low_loadable, default: false
       t.string :mode
       t.integer :predecimal_places, default: 8
       t.integer :decimal_places, default: 2

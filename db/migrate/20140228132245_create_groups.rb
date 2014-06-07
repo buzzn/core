@@ -3,13 +3,8 @@ class CreateGroups < ActiveRecord::Migration
     create_table :groups do |t|
       t.string  :slug
       t.string  :name
-      t.boolean :private
-      t.string  :mode
+      t.boolean :private, default: false
       t.text    :description
-
-
-      t.integer :meter_id
-      t.integer :user_id
 
       t.timestamps
     end

@@ -12,5 +12,4 @@ class Location < ActiveRecord::Base
 
   has_many :metering_points, -> { order("position DESC") }, dependent: :destroy
   accepts_nested_attributes_for :metering_points, reject_if: :all_blank, allow_destroy: true
-
 end

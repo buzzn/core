@@ -30,4 +30,18 @@ class Device < ActiveRecord::Base
     }
   end
 
+
+  def up?
+    self.mode == 'up'
+  end
+
+  def down?
+    self.mode == 'down'
+  end
+
+  def up_down?
+    self.mode == 'up_down'
+  end
+
+
 end

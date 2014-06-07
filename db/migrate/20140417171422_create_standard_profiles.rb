@@ -4,7 +4,7 @@ class CreateStandardProfiles < ActiveRecord::Migration
       t.string   :mode
       t.string   :category
       t.datetime :date
-      t.decimal  :wh
+      t.decimal  :watt_hour
 
       t.timestamps
     end

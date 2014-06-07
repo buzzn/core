@@ -1,8 +1,8 @@
 = f.input :name
-= f.input :law
-= f.input :generator_type
+= f.input :law, collection: Device.laws
+= f.input :generator_type, collection: Device.generator_types
 = f.input :manufacturer
 = f.input :manufacturer_product_number
-= f.input :primary_energy
+= f.input :primary_energy, collection: Device.primary_energies
 = f.input :watt_peak
 = f.input :commissioning

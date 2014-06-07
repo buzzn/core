@@ -268,9 +268,31 @@ class WizardConsumersController  < ApplicationController
 
 
   def contract_forecast
+    @location = Location.with_role(:manager, current_user).last
+    @metering_point = @location.metering_points.last
+    if @metering_point.contract
+      @contract = @metering_point.contract
+    else
+      @contract = Contract.new
+    end
   end
 
   def contract_forecast_update
+    @location = Location.with_role(:manager, current_user).last
+    @metering_point = @location.metering_points.last
+    if @metering_point.contract
+      @contract                = @metering_point.contract
+      @contract.update_attributes(contract_params)
+    else
+      @contract                 = Contract.new(contract_params)
+    end
+    @metering_point.contract    = @contract
+    @contract.contracting_party = current_user.contracting_party
+    if @contract.save
+      redirect_to action: 'contracting_party_bank_account'
+    else
+      render action: 'contract_forecast'
+    end
   end
 
 

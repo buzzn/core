@@ -13,7 +13,17 @@ Buzzn::Application.routes.draw do
 
   resources :metering_points
   resources :meters
-  resources :devices
+  resources :devices do
+    member do
+      get :new_up
+      get :edit_up
+      get :new_down
+      get :edit_down
+
+    end
+  end
+
+
   resources :friendships
   resources :groups
   resources :contracting_parties

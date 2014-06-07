@@ -1,8 +1,8 @@
 #content
   .forminput.box
-    %h1= t'contract_estimated_forecast'
+    %h1= t'contract_forecast'
 
-    = simple_form_for @contract, url: wizard_path, method: 'put' do |f|
+    = simple_form_for @contract, url: url_for( action: 'contract_forecast_update', controller: 'wizard_consumers'), method: 'put'  do |f|
       = f.input :forecast_watt_hour_pa
       = f.submit t("continue"), class: 'btn btn-success', id: 'submit'
 

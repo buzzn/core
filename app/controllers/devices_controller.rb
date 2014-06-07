@@ -2,13 +2,27 @@ class DevicesController < InheritedResources::Base
   before_filter :authenticate_user!
   respond_to :html, :js
 
-  def new
+  def new_up
     @device = Device.new
     authorize_action_for(@device)
     new!
   end
 
-  def edit
+  def new_down
+    @device = Device.new
+    authorize_action_for(@device)
+    new!
+  end
+
+
+
+  def edit_up
+    @device = Device.find(params[:id])
+    authorize_action_for(@device)
+    edit!
+  end
+
+  def edit_down
     @device = Device.find(params[:id])
     authorize_action_for(@device)
     edit!

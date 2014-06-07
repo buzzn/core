@@ -4,9 +4,16 @@ class DeviceDecorator < Draper::Decorator
 
 
   def edit
+
+    if model.up?
+      path = edit_up_device_path(model)
+    else
+      path = edit_down_device_path(model)
+    end
+
     link_to(
-      t('edit_devise'),
-      edit_device_path(model),
+      model.name,
+      path,
       {
         :remote       => true,
         :class        => 'start_modal',

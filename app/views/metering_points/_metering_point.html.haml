@@ -10,9 +10,6 @@
     - else
       = metering_point.new_meter
 
-    - if metering_point.up_metering?
-      - if metering_point.devices.empty?
-        = metering_point.new_device
-      - else
-        - metering_point.devices.each do |device|
-          = device.edit
+    - metering_point.devices.each do |device|
+      = device.edit
+    = metering_point.new_device

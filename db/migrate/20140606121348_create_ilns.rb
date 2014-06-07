@@ -1,7 +1,7 @@
 class CreateIlns < ActiveRecord::Migration
   def change
     create_table :ilns do |t|
-      t.integer :bdew
+      t.string :bdew
       t.string :eic
       t.string :vnb
       t.date :valid_begin

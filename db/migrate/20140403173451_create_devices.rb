@@ -4,6 +4,7 @@ class CreateDevices < ActiveRecord::Migration
 
       t.string  :image
       t.string  :name
+      t.string  :mode
       t.string  :law
       t.string  :generator_type
       t.string  :manufacturer
@@ -13,7 +14,7 @@ class CreateDevices < ActiveRecord::Migration
       t.decimal :watt_peak
       t.decimal :watt_hour_pa
       t.date    :commissioning
-      t.boolean :mobile
+      t.boolean :mobile, default: false
 
 
       t.integer :metering_point_id

@@ -11,6 +11,7 @@ class CreateMeteringPoints < ActiveRecord::Migration
 
       t.integer :location_id
       t.integer :contract_id
+      t.integer :group_id
 
       t.timestamps
     end

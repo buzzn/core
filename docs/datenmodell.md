@@ -75,6 +75,19 @@ Der Metering Point ist ein Messpunkt in einer Messtelle, also z.B. der Messpunkt
 
 
 
+## Group
+
+eine group ist eine ansamlung von down_metering_points die von einem up_metering_point strom beziehen.
+User können um aufname ihres down_metering_point in die grupe bitten. der group admin kann diese dann hinzufügen oder ablehnen(wenn der geografische abstand zu gross ist von up zu down_metering_point).  
+
+|Value|Type|Example|Explanation
+|:----|:---|:------|:----------
+|slug|String|vegan-buchenhain| slug vom namen
+|name|String|Vegan Buchenhain|name der Gruppe
+|private|String|false|ob die gruppe privat ist oder öffenlich einsehbar
+|description|String|Strom von Veganer für veganer|kleine strory zur gruppe
+
+
 
 
 ## Device
@@ -150,7 +163,7 @@ Das Register ist ein Zählwerk. Ein Zähler kann mehrere Zählwerke besitzen, di
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
 |obis_index|string|1-1:8.0|Obiskennzahl
-|low_loadable|Boolean|[true,false]| ob schwachlastfähig
+|low_loadable|Boolean|[true,false]| ob schwachlastfähig, default: false
 |mode|string|[up,down]| Richtung
 |predecimal_places|int|8| Vorkommastellen
 |decimal_places|int|2| Nachkommastellen
@@ -167,7 +180,7 @@ Reading sind aus den regiustern ausgelesene Werte die in einer Zeitreihe gespeic
 |datetime|datetime|01.01.2012-23:15:01|Ablesezeitpunkt, Sekundengenau
 |reason|string|Turnusablesung|Ablesegrund. Kann folgende Werte annehmen: Turnusablesung, Zwischenablesung, Gerätewechsel, Geräteeinbau, Geräteausbau, Geräteparameteränderung, Vertragswechsel, Bilanzierungsgebietswechsel
 |quality|string|[phone, email, fax, webform, electic, dso, other]|Qualität der Ablesung.
-|state|string|Z86|Status (z86 abgelseneer und kontrolierterwert)
+|state|string|Z86|Status (z86 abgelesener und kontrolierter wert)
 |watt_hour|int|265436|Messwert
 |load_course_time_series|Decimal|0,00236|Lastgang
 
