@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class UserPictureUploader < CarrierWave::Uploader::Base
+class PictureUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
@@ -29,29 +29,23 @@ class UserPictureUploader < CarrierWave::Uploader::Base
   # end
 
 
-  def self.sizes
-    {
-      :big         => [150, 150],
-      :thumb       => [40, 40]
-    }
+
+
+  version :xl do
+    process :resize_to_fill  => [1500, 1500]
   end
 
-
-  version :big do
-    process :resize_to_fill   => sizes[:big].each.map{|i| i*2}
-    version :normal do
-      process :resize_to_fill  => sizes[:big]
-    end
+  version :l do
+    process :resize_to_fill  => [500, 500]
   end
 
-
-  version :thumb do
-    process :resize_to_fill    => sizes[:thumb].each.map{|i| i*2}
-    version :normal do
-      process :resize_to_fill  => sizes[:thumb]
-    end
+  version :m do
+    process :resize_to_fill  => [150, 150]
   end
 
+  version :s do
+    process :resize_to_fill  => [50, 50]
+  end
 
   # Process files as they are uploaded:
   # process :scale => [200, 300]

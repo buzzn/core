@@ -1,15 +1,27 @@
 .item{id: "metering_point_#{metering_point.id}", class: metering_point.mode }
-  - if current_user.can_update?(metering_point)
-    %h5= metering_point.link_to_edit
-  - else
-    %h5= metering_point.name
 
-  - if current_user.can_update?(metering_point)
-    - if metering_point.meter
-      = metering_point.meter.edit
-    - else
-      = metering_point.new_meter
+  .row
+    .col-md-8
+      - if current_user.can_update?(metering_point)
+        %h5= metering_point.link_to_edit
+      - else
+        %h5= metering_point.name
 
-    - metering_point.devices.each do |device|
-      = device.edit
-    = metering_point.new_device
+      - if current_user.can_update?(metering_point)
+        - if metering_point.meter
+          = metering_point.meter.edit
+        - else
+          = metering_point.new_meter
+
+
+  .row
+    .col-md-6
+      .users
+        - metering_point.users.each do |user|
+          = render user.profile
+        = metering_point.edit_users
+    .col-md-6
+      .devices
+        - metering_point.devices.each do |device|
+          = device.edit
+        = metering_point.new_device

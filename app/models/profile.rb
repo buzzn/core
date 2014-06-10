@@ -5,7 +5,7 @@ class Profile < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
-  mount_uploader :image, UserPictureUploader
+  mount_uploader :image, PictureUploader
 
   belongs_to :user
 

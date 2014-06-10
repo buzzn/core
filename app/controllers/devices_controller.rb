@@ -7,26 +7,33 @@ class DevicesController < InheritedResources::Base
     authorize_action_for(@device)
     new!
   end
-
-  def new_down
-    @device = Device.new
-    authorize_action_for(@device)
-    new!
-  end
-
-
+  authority_actions :new_up => 'create'
 
   def edit_up
     @device = Device.find(params[:id])
     authorize_action_for(@device)
     edit!
   end
+  authority_actions :edit_up => 'update'
+
+
+
+
+  def new_down
+    @device = Device.new
+    authorize_action_for(@device)
+    new!
+  end
+  authority_actions :new_down => 'create'
+
 
   def edit_down
     @device = Device.find(params[:id])
     authorize_action_for(@device)
     edit!
   end
+  authority_actions :edit_down => 'update'
+
 
 protected
   def permitted_params
@@ -45,7 +52,7 @@ private
       :law,
       :generator_type,
       :manufacturer,
-      :manufacturer_product_number,
+      :manufacturer_product_name,
       :shop_link,
       :primary_energy,
       :watt_peak,

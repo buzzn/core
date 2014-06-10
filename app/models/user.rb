@@ -16,8 +16,8 @@ class User < ActiveRecord::Base
   has_many :inverse_friendships, :class_name => "Friendship", :foreign_key => "friend_id"
   has_many :inverse_friends, :through => :inverse_friendships, :source => :user
 
-  has_many :user_metering_points
-  has_many :metering_points, :through => :user_metering_points
+  has_many :metering_point_users
+  has_many :metering_points, :through => :metering_point_users
 
   belongs_to :group
 

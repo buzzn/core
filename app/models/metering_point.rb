@@ -13,8 +13,9 @@ class MeteringPoint < ActiveRecord::Base
   has_one :electricity_supplier_contract
   has_one :metering_service_provider_contract
   has_many :devices
-  has_many :user_metering_points
-  has_many :users, :through => :user_metering_points
+
+  has_many :metering_point_users
+  has_many :users, :through => :metering_point_users
 
   #validates :uid, uniqueness: true
   validates :mode, presence: true

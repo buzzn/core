@@ -2,8 +2,9 @@ class MeteringPointDecorator < Draper::Decorator
   include Draper::LazyHelpers
 
   delegate_all
-  decorates_association :meter
   decorates_association :devices
+  decorates_association :meter
+
 
 
   def link_to_delete
@@ -64,6 +65,19 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
+
+
+  def edit_users
+    link_to(
+      t('edit_users'),
+      edit_users_metering_point_path(model),
+      {
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => "modal",
+        'data-target' => '#myModal'
+      })
+  end
 
 
 

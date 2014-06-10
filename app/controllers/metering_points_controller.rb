@@ -12,6 +12,14 @@ class MeteringPointsController < InheritedResources::Base
   end
 
 
+  def edit_users
+    @metering_point = MeteringPoint.find(params[:id]).decorate
+    authorize_action_for(@metering_point)
+    edit!
+  end
+  authority_actions :edit_users => 'update'
+
+
   def update
     update! do |format|
       @metering_point = MeteringPointDecorator.new(@metering_point)
@@ -41,7 +49,8 @@ private
       :location_id,
       :uid,
       :mode,
-      :address_addition
+      :address_addition,
+      :user_ids => []
     ]
   end
 

@@ -11,7 +11,12 @@ Buzzn::Application.routes.draw do
     end
   end
 
-  resources :metering_points
+  resources :metering_points do
+    member do
+      get :edit_users
+    end
+  end
+
   resources :meters
   resources :devices do
     member do
@@ -19,7 +24,6 @@ Buzzn::Application.routes.draw do
       get :edit_up
       get :new_down
       get :edit_down
-
     end
   end
 

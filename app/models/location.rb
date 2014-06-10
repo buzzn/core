@@ -5,7 +5,7 @@ class Location < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
-  mount_uploader :image, UserPictureUploader
+  mount_uploader :image, PictureUploader
 
   has_one :address, as: :addressable, dependent: :destroy
   accepts_nested_attributes_for :address, reject_if: :all_blank

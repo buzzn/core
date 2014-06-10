@@ -106,8 +106,8 @@ Das Device ist ein Gerät, das Strom benötigt oder Strom herstellt. Die meisten
 |watt_peak|int|2000|Ganze Zahl, Einheit Wp
 |watt_hour_pa|int|380000|Ganze Zahl, Einheit Wh
 |commisioning_date|date|23.05.2010|Inbetriebnahmedatum
-|comments|text|Lampe von meiner Oma|Kommentar
 |mobile|Boolean|[true,false]| ob das gerät mobil verwendet werden kann. wie Elektroauto.
+|comments|text|Lampe von meiner Oma|Kommentar
 
 
 
