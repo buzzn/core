@@ -31,6 +31,7 @@ puts 'static meters for:'
   puts "  #{user_name}"
   user          = Fabricate(user_name)
   user_location = Fabricate(:location_muehlenkamp)
+  user_location.metering_points.first.users << user
   user.add_role :manager, user_location
 end
 
@@ -41,7 +42,9 @@ puts '  20 more users'
   contracting_party       = Fabricate(:contracting_party)
   user                    = Fabricate(:user)
   user.contracting_party  = contracting_party
-  contracting_party.contracts << location.metering_points.first.contract
+  metering_point          = location.metering_points.first
+  metering_point.users    << user
+  contracting_party.contracts << metering_point.contract
   user.add_role :manager, location
 end
 

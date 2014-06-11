@@ -3,7 +3,7 @@ class ProfilesController < InheritedResources::Base
 
 
   def show
-    @profile   = Profile.find(params[:id])
+    @profile   = Profile.find(params[:id]).decorate
     @locations = Location
       .with_role(:manager, @profile.user)
       .includes([metering_points: [:meter, :devices]])

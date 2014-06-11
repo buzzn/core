@@ -31,19 +31,19 @@ class PictureUploader < CarrierWave::Uploader::Base
 
 
 
-  version :xl do
+  version :extra_large do
     process :resize_to_fill  => [1500, 1500]
   end
 
-  version :l do
+  version :large do
     process :resize_to_fill  => [500, 500]
   end
 
-  version :m do
+  version :medium do
     process :resize_to_fill  => [150, 150]
   end
 
-  version :s do
+  version :small do
     process :resize_to_fill  => [50, 50]
   end
 

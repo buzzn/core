@@ -1,8 +1,14 @@
 .metering_points{
   .users{
-
+    .glyphicon-plus-sign{
+      font-size: 30px;
+    }
     .user_thumb{
       float: left;
+      margin-right: 3px;
+    }
+    a{
+      text-decoration: none;
     }
   }
   .item{

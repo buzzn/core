@@ -4,7 +4,7 @@ class MeteringPointDecorator < Draper::Decorator
   delegate_all
   decorates_association :devices
   decorates_association :meter
-
+  decorates_association :users
 
 
   def link_to_delete
@@ -69,15 +69,18 @@ class MeteringPointDecorator < Draper::Decorator
 
   def edit_users
     link_to(
-      t('edit_users'),
+      '',
       edit_users_metering_point_path(model),
       {
         :remote       => true,
-        :class        => 'start_modal',
+        :class        => 'start_modal glyphicon glyphicon-plus-sign',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })
   end
+
+
+
 
 
 
