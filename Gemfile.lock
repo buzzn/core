@@ -396,6 +396,7 @@ GEM
     redis-namespace (1.4.1)
       redis (~> 3.0.4)
     ref (1.0.5)
+    remotipart (1.2.1)
     request_store (1.0.5)
     responders (1.1.0)
       railties (>= 3.2, < 5)
@@ -580,6 +581,7 @@ DEPENDENCIES
   rails-erd
   rails-i18n
   rails_layout
+  remotipart
   responders
   rolify
   rspec-rails

@@ -22,5 +22,5 @@
     .col-md-6
       .devices
         - metering_point.devices.each do |device|
-          = device.edit
+          = render device
         = metering_point.new_device

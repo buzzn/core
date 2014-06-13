@@ -3,6 +3,22 @@ class DeviceDecorator < Draper::Decorator
   delegate_all
 
 
+  def thumb
+    link_to image_tag_small, model
+  end
+
+
+  def image_tag_small
+    size = '30x30'
+    if model.image?
+      image_tag model.image.small, size: size, class: 'img-circle'
+    else
+      image_tag 'male.png', size: size
+    end
+  end
+
+
+
   def edit
 
     if model.up?

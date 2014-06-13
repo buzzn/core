@@ -1,7 +1,9 @@
 class Device < ActiveRecord::Base
   include Authority::Abilities
 
-  has_and_belongs_to_many :metering_points
+  belongs_to :metering_point
+
+  mount_uploader :image, PictureUploader
 
   def self.generator_types
     %w{

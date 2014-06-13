@@ -58,6 +58,7 @@ gem 'paper_trail'
 gem 'money-rails'
 gem 'wicked'
 gem 'acts_as_commentable'
+gem 'remotipart'
 
 group :development do
   gem 'rack-mini-profiler'

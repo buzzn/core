@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require jquery.sparkline
 //= require jquery.ui.all
+//= require jquery.remotipart
 //= require address_picker-rails
 //= require select2
 //= require cocoon

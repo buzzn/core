@@ -35,6 +35,8 @@ class DevicesController < InheritedResources::Base
   authority_actions :edit_down => 'update'
 
 
+
+
 protected
   def permitted_params
     params.permit(:device => init_permitted_params)
@@ -52,7 +54,7 @@ private
       :law,
       :generator_type,
       :manufacturer,
-      :manufacturer_product_name,
+      :manufacturer_product_number,
       :shop_link,
       :primary_energy,
       :watt_peak,
