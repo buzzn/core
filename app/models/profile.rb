@@ -9,9 +9,8 @@ class Profile < ActiveRecord::Base
 
   belongs_to :user
 
-
-  # validates :first_name, presence: true, on: :create
-  # validates :last_name,  presence: true, on: :create
+  validates :first_name, presence: true
+  validates :last_name,  presence: true
   validates_acceptance_of :terms, accept: true
 
 
@@ -27,8 +26,10 @@ class Profile < ActiveRecord::Base
   def name
     if self.first_name && self.last_name
       "#{self.first_name} #{self.last_name}"
-    else
+    elsif self.user
       self.user.email
+    else
+      false
     end
   end
 

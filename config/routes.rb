@@ -3,7 +3,8 @@ Buzzn::Application.routes.draw do
 
   mount Sidekiq::Web, at: '/sidekiq'
 
-  devise_for :users, controllers: {registrations: 'users/registrations'}
+  devise_for :users, controllers: { registrations: 'users/registrations' }
+
   resources :profiles do
     resources :locations
     member do
@@ -34,6 +35,8 @@ Buzzn::Application.routes.draw do
   resources :contracts
   resources :private_grids
   resources :locations
+
+  resources :startpage
 
   resources :wizard_consumers do
     collection do
@@ -83,7 +86,8 @@ Buzzn::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
 
-  root controller: 'profiles', action: 'redirect_to_current_user'
+  #root controller: 'profiles', action: 'redirect_to_current_user'
+  root to: "startpage#index"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

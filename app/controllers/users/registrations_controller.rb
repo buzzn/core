@@ -28,40 +28,47 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   private
 
-  # check if we need password to update user data
-  # ie if password or email was changed
-  # extend this as needed
-  def needs_password?(user, params)
-    user.email != params[:user][:email] || params[:user][:password].present?
-  end
+    # check if we need password to update user data
+    # ie if password or email was changed
+    # extend this as needed
+    def needs_password?(user, params)
+      user.email != params[:user][:email] || params[:user][:password].present?
+    end
 
 
 
 
   protected
 
-  def configure_permitted_parameters
-
-    devise_parameter_sanitizer.for(:sign_up) do |u|
-      u.permit(
-                :email,
-                :password,
-                :password_confirmation,
-                :current_password,
-                profile_attributes: [:id, :terms]
-              )
+    def after_sign_up_path_for(resource)
+      signed_in_root_path(resource)
     end
 
-    devise_parameter_sanitizer.for(:account_update) do |u|
-      u.permit(
-                :email,
-                :password,
-                :password_confirmation,
-                :current_password,
-                profile_attributes: [:id, :image, :first_name, :last_name, :gender, :phone, :terms, :newsletter_notifications, :location_notifications, :group_notifications, :_destroy]
-              )
+    def after_update_path_for(resource)
+      signed_in_root_path(resource)
     end
 
-  end
+    def configure_permitted_parameters
+
+      devise_parameter_sanitizer.for(:sign_up) do |u|
+        u.permit(
+                  :email,
+                  :password,
+                  :password_confirmation,
+                  profile_attributes: [:id, :first_name, :last_name, :terms]
+                )
+      end
+
+      devise_parameter_sanitizer.for(:account_update) do |u|
+        u.permit(
+                  :email,
+                  :password,
+                  :password_confirmation,
+                  :current_password,
+                  profile_attributes: [:id, :image, :first_name, :last_name, :gender, :phone, :terms, :newsletter_notifications, :location_notifications, :group_notifications, :_destroy]
+                )
+      end
+
+    end
 
 end
