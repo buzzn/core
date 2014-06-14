@@ -1,15 +1,13 @@
 .metering_points{
-  .users{
-    .glyphicon-plus-sign{
-      font-size: 30px;
-    }
-    .thumb{
-      float: left;
-      margin-right: 3px;
-    }
-    a{
-      text-decoration: none;
-    }
+  .thumb{
+    float: left;
+    margin-right: 3px;
+    height: 25px;
+    width: 25px;
+    font-size: 25px;
+  }
+  a{
+    text-decoration: none;
   }
   .item{
     padding: 9px 14px;

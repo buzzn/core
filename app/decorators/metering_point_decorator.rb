@@ -55,11 +55,11 @@ class MeteringPointDecorator < Draper::Decorator
       path = new_down_device_path(metering_point_id: model.id)
     end
     link_to(
-      t("add_device"),
+      '',
       path,
       {
         :remote       => true,
-        :class        => 'start_modal',
+        :class        => 'start_modal glyphicon glyphicon-plus-sign',
         'data-toggle' => 'modal',
         'data-target' => '#myModal'
       })

@@ -1,6 +1,2 @@
 .thumb{id: "device_#{device.id}"}
-- if current_user.can_update?(device)
   = link_to device.image_tag_small, device
-- else
-  = device.image_tag_small
-

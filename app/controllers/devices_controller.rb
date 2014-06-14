@@ -35,6 +35,19 @@ class DevicesController < InheritedResources::Base
   authority_actions :edit_down => 'update'
 
 
+  def update
+    update! do |format|
+      @device = DeviceDecorator.new(@device)
+    end
+  end
+
+  def create
+    create! do |format|
+      @device = DeviceDecorator.new(@device)
+    end
+  end
+
+
 
 
 protected

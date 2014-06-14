@@ -8,11 +8,10 @@ class ProfileDecorator < Draper::Decorator
 
 
   def image_tag_small
-    size = '30x30'
     if model.image?
-      image_tag model.image.small, size: size, class: 'img-circle'
+      image_tag model.image.small, class: 'img-circle'
     else
-      image_tag 'male.png', size: size
+      image_tag 'male.png'
     end
   end
 

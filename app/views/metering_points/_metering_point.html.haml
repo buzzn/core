@@ -18,9 +18,11 @@
       .users
         - metering_point.users.each do |user|
           = render user.profile
-        = metering_point.edit_users if current_user.can_update?(metering_point)
+        .thumb
+          = metering_point.edit_users if current_user.can_update?(metering_point)
     .col-md-6
       .devices
         - metering_point.devices.each do |device|
           = render device
-        = metering_point.new_device if current_user.can_update?(metering_point)
+        .thumb
+          = metering_point.new_device if current_user.can_update?(metering_point)
