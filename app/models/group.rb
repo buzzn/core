@@ -11,4 +11,8 @@ class Group < ActiveRecord::Base
 
   has_one :area
   has_many :metering_points
+
+  has_many :group_users
+  has_many :users, :through => :group_users
+
 end

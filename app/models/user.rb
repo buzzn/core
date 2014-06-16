@@ -19,7 +19,9 @@ class User < ActiveRecord::Base
   has_many :metering_point_users
   has_many :metering_points, :through => :metering_point_users
 
-  belongs_to :group
+  has_many :group_users
+  has_many :groups, :through => :group_users
+
 
   def name
     if profile.persisted?

@@ -1,20 +1,25 @@
-
 .col-sm-2
   = @profile.image_tag_medium
   %h4= @profile.name
 
+
 .col-sm-7
   - if @locations.empty?
     = render 'no_location'
-  - else
-    = render @locations
 
 
 .col-sm-3
+
+  %h5.page-header=t('locations')
+  - if !@locations.empty?
+    = render @locations
+
   %h5.page-header=t('friends')
   %ul#sidebar.nav.nav-pill
     - @profile.user.friendships.each do |friendship|
       %li= link_to friendship.friend.name, friendship.friend
     %li= link_to t('find_a_friend'), profiles_path
 
-  %h5.page-header=t('groups')
+  %h5.page-header
+    = t('groups')
+    = render @profile.user.groups
