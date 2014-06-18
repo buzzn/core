@@ -3,8 +3,9 @@ class ProfilesController < InheritedResources::Base
 
 
   def show
-    @profile   = Profile.find(params[:id]).decorate
-    @locations = Location
+    @activities = PublicActivity::Activity.order("created_at DESC").limit(10)
+    @profile    = Profile.find(params[:id]).decorate
+    @locations  = Location
       .with_role(:manager, @profile.user)
       .includes([metering_points: [:meter, :devices]])
       .decorate

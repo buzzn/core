@@ -1,15 +1,16 @@
-.col-sm-2
+.col-sm-3
   = @profile.image_tag_medium
   %h4= @profile.name
 
 
-.col-sm-7
+.col-sm-6
   - if @locations.empty?
     = render 'no_location'
 
+  - @activities.each do |activity|
+    = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
 
 .col-sm-3
-
   %h5.page-header=t('locations')
   - if !@locations.empty?
     = render @locations

@@ -2,6 +2,9 @@ class Group < ActiveRecord::Base
   resourcify
   include Authority::Abilities
 
+  include PublicActivity::Model
+  tracked
+
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
