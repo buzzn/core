@@ -25,11 +25,11 @@ justus = Fabricate(:justus)
 location_fichtenweg = Fabricate(:location_fichtenweg)
 justus.add_role :manager, location_fichtenweg
 
-
-puts 'static meters for:'
+@buzzn_team = []
+puts 'single meters for:'
 %w[ felix danusch thomas martina stefan ole philipp christian ].each do |user_name|
   puts "  #{user_name}"
-  user          = Fabricate(user_name)
+  @buzzn_team << user = Fabricate(user_name)
   user_location = Fabricate(:location_muehlenkamp)
   user_location.metering_points.first.users << user
   user.add_role :manager, user_location
@@ -50,20 +50,22 @@ end
 
 
 
-# puts 'add smart meter readings'
-# User.all.each do |user|
-#   i=1
-#   Location.with_role(:manager, user).each do |location|
-#     location.metering_points.each do |metering_point|
-#       File.foreach("#{Rails.root}/db/seeds/meter#{i}.txt").with_index { |line, line_num|
-#         Reading.create(
-#           meter_id:  metering_point.meter.id,
-#           timestamp: DateTime.now.beginning_of_day + line_num.minute,
-#           wh:        line.to_i
-#         )
-#       }
-#       i+1
-#     end
-#   end
-# end
+puts 'add smart meter readings'
+@buzzn_team.each do |user|
+  i=1
+  Location.with_role(:manager, user).each do |location|
+    location.metering_points.each do |metering_point|
+      metering_point.meter.registers.each do |register|
+        File.foreach("#{Rails.root}/db/seeds/meter#{i}.txt").with_index { |line, line_num|
+          Reading.create(
+            register_id:  register.id,
+            timestamp:    DateTime.now.beginning_of_day + line_num.minute,
+            watt_hour:    line.to_i
+          )
+        }
+        i+1
+      end
+    end
+  end
+end
 

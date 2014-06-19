@@ -8,9 +8,11 @@
         %h5= metering_point.name
 
   .row
-    .col-md-12
-      .chart
-        the nice chart
+    .col-md-3
+      %i.fa.fa-refresh.fa-spin.fa-4x
+    .col-md-9
+      - metering_point.meter.registers.each do |register|
+        .inlinebar.bar= register.day_to_hours
 
   .row
     .col-md-6

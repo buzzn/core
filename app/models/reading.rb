@@ -30,14 +30,14 @@ class Reading
         }
       },
       { "$project" => {
-          wh: 1,
+          watt_hour: 1,
           hourly: { "$hour" => "$timestamp" }
         }
       },
       { "$group" => {
           _id: "$hourly",
-          firstReading: { "$last"  => "$wh" },
-          lastReading: { "$first" => "$wh" }
+          firstReading: { "$last"  => "$watt_hour" },
+          lastReading: { "$first" => "$watt_hour" }
         }
       },
       { "$project" => {
