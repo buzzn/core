@@ -1,5 +1,3 @@
-/ - single_content_for :action do
-/   = a.owner
-/   = link_to t('metering_point'), a.trackable
-
-/ = p[:summary]
+- single_content_for :action do
+  = t'has_deleted'
+  = link_to t('metering_point'), a.trackable
