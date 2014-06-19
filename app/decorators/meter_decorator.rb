@@ -4,11 +4,11 @@ class MeterDecorator < Draper::Decorator
 
   def edit
     link_to(
-      t('edit_meter'),
+      '',
       edit_meter_path(model),
       {
         remote: true,
-        class: 'start_modal',
+        class: 'start_modal fa fa-tachometer fa-lg',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })

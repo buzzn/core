@@ -1,4 +1,11 @@
+%h3= t('meter')
+
 = f.input :manufacturer_name, collection: Meter.manufacturers
 = f.input :manufacturer_product_number
 = f.input :manufacturer_device_number
 = f.input :virtual
+
+= f.simple_fields_for :registers do |r|
+  = render 'register_fields', f: r
+.links
+  = link_to_add_association t('add_register'), f, :registers

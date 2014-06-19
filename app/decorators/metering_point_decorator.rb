@@ -49,7 +49,7 @@ class MeteringPointDecorator < Draper::Decorator
 
 
   def new_device
-    if model.up_metering?
+    if model.up?
       path = new_up_device_path(metering_point_id: model.id)
     else
       path = new_down_device_path(metering_point_id: model.id)
@@ -86,13 +86,13 @@ class MeteringPointDecorator < Draper::Decorator
 
   def name
     case model.mode
-    when 'up_metering'
+    when 'up'
       "#{model.position}. #{t(model.mode)} #{t('for')} #{generator_type_names}-#{model.address_addition}"
-    when 'down_metering'
+    when 'down'
       "#{model.position}. #{t(model.mode)} - #{model.address_addition}"
-    when 'up_down_metering'
+    when 'up_down'
       "#{model.position}. #{t(model.mode)}"
-    when 'diff_metering'
+    when 'diff'
       "#{model.position}. #{t(model.mode)}"
     else
       "no mode"

@@ -2,20 +2,22 @@ class MeteringPoint < ActiveRecord::Base
   include Authority::Abilities
 
   include PublicActivity::Model
-  tracked owner: Proc.new{ |controller, model| controller.current_user }
+  tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
 
   belongs_to :location
   acts_as_list scope: :location
 
-  belongs_to :contract
+  belongs_to :contract, dependent: :destroy
 
   belongs_to :group
 
-  has_one :meter
-  has_one :distribution_system_operator_contract
-  has_one :electricity_supplier_contract
-  has_one :metering_service_provider_contract
-  has_many :devices
+  has_one :meter, dependent: :destroy
+  accepts_nested_attributes_for :meter, :reject_if => :all_blank
+
+  has_one :distribution_system_operator_contract, dependent: :destroy
+  has_one :electricity_supplier_contract, dependent: :destroy
+  has_one :metering_service_provider_contract, dependent: :destroy
+  has_many :devices, dependent: :destroy
 
   has_many :metering_point_users
   has_many :users, :through => :metering_point_users
@@ -26,9 +28,9 @@ class MeteringPoint < ActiveRecord::Base
 
   def self.modes
     %w{
-      up_metering
-      down_metering
-      up_down_metering
+      up
+      down
+      up_down
     }
   end
 
@@ -56,16 +58,16 @@ class MeteringPoint < ActiveRecord::Base
     "#{location.address.name}_#{address_addition}"
   end
 
-  def up_metering?
-    self.mode == 'up_metering'
+  def up?
+    self.mode == 'up'
   end
 
-  def down_metering?
-    self.mode == 'down_metering'
+  def down?
+    self.mode == 'down'
   end
 
-  def up_down_metering?
-    self.mode == 'up_down_metering'
+  def up_down?
+    self.mode == 'up_down'
   end
 
 end

@@ -3,7 +3,9 @@ class Meter < ActiveRecord::Base
 
   belongs_to :metering_point
 
-  has_many :registers
+  has_many :registers, dependent: :destroy
+  accepts_nested_attributes_for :registers, :reject_if => :all_blank, :allow_destroy => true
+
   has_many :equipments
 
   # normalize_attribute :uid, with: [:strip]

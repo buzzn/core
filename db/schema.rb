@@ -374,7 +374,7 @@ ActiveRecord::Schema.define(version: 20140616100740) do
 
   create_table "registers", force: true do |t|
     t.string   "obis_index"
-    t.boolean  "low_loadable",      default: false
+    t.boolean  "variable_tariff",   default: false
     t.string   "mode"
     t.integer  "predecimal_places", default: 8
     t.integer  "decimal_places",    default: 2

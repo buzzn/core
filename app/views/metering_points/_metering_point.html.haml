@@ -7,22 +7,23 @@
       - else
         %h5= metering_point.name
 
-      - if current_user.can_update?(metering_point)
-        - if metering_point.meter
-          = metering_point.meter.edit
-        - else
-          = metering_point.new_meter if current_user.can_update?(metering_point)
+  .row
+    .col-md-12
+      .chart
+        the nice chart
 
   .row
-    .col-md-6
-      .users
-        - metering_point.users.each do |user|
-          = render user.profile
-        .thumb
-          = metering_point.edit_users if current_user.can_update?(metering_point)
     .col-md-6
       .devices
         - metering_point.devices.each do |device|
           = render device
         .thumb
-          = metering_point.new_device if current_user.can_update?(metering_point)
+          - if current_user.can_update?(metering_point)
+            = metering_point.new_device
+    .col-md-6
+      .users
+        - metering_point.users.each do |user|
+          = render user.profile
+        .thumb
+          - if !metering_point.up? && current_user.can_update?(metering_point)
+            = metering_point.edit_users

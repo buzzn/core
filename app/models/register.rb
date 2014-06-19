@@ -2,6 +2,14 @@ class Register < ActiveRecord::Base
 
   belongs_to :meter
 
+  def self.modes
+    %w{
+      up
+      down
+      up_down
+    }
+  end
+
   def day_to_hours
     hours = []
     Reading.this_day_to_hours_by_meter_id(self.id).each do |hour|

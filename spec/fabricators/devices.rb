@@ -4,6 +4,7 @@ end
 Fabricator :bhkw_justus, from: :device do
   image                         { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'ecopower1.jpg')) }
   law                           ''
+  mode                          'up'
   manufacturer                  'Honda'
   manufacturer_product_number   'EcoPower 1.0'
   shop_link                     'http://www.amazon.com'
@@ -15,6 +16,7 @@ end
 
 Fabricator :dach_pv_justus, from: :device do
   law                           'EEG'
+  mode                          'up'
   manufacturer                  'solarwatt'
   manufacturer_product_number   'PV 8,51'
   generator_type                'pv'
@@ -25,6 +27,7 @@ end
 
 Fabricator :carport_pv_justus, from: :device do
   law                           'EEG'
+  mode                          'up'
   manufacturer                  'solarwatt'
   manufacturer_product_number   'PV 5,3'
   generator_type                'pv'

@@ -4,6 +4,12 @@ class MeteringPointsController < InheritedResources::Base
 
 
 
+  def new
+    @metering_point = MeteringPoint.new
+    @metering_point.meter = Meter.new(registers:[Register.new()])
+    new!
+  end
+
 
   def edit
     @metering_point = MeteringPoint.find(params[:id]).decorate
@@ -27,9 +33,11 @@ class MeteringPointsController < InheritedResources::Base
   end
 
   def create
-    create! do |format|
-      @metering_point = MeteringPointDecorator.new(@metering_point)
-    end
+    # TODO create.js is not working. remote:false on create
+    # create! do |format|
+    #   @metering_point = MeteringPointDecorator.new(@metering_point)
+    # end
+    create! { location_path(@metering_point.location) }
   end
 
 
@@ -50,9 +58,19 @@ private
       :uid,
       :mode,
       :address_addition,
-      :user_ids => []
+      :user_ids => [],
+      meter_attributes: [ :id,
+                          :metering_point_id,
+                          :manufacturer_name,
+                          :manufacturer_product_number,
+                          :manufacturer_device_number,
+                          :virtual,
+                          :_destroy,
+                          registers_attributes: [:id, :mode, :obis_index, :variable_tariff, :_destroy]
+                          ]
     ]
   end
+
 
 
 

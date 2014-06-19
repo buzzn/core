@@ -19,6 +19,7 @@ Buzzn::Application.routes.draw do
   end
 
   resources :meters
+
   resources :devices do
     member do
       get :new_up

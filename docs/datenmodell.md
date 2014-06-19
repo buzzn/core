@@ -78,7 +78,7 @@ Der Metering Point ist ein Messpunkt in einer Messtelle, also z.B. der Messpunkt
 ## Group
 
 eine group ist eine ansamlung von down_metering_points die von einem up_metering_point strom beziehen.
-User können um aufname ihres down_metering_point in die grupe bitten. der group admin kann diese dann hinzufügen oder ablehnen(wenn der geografische abstand zu gross ist von up zu down_metering_point).  
+User können um aufname ihres down_metering_point in die grupe bitten. der group admin kann diese dann hinzufügen oder ablehnen(wenn der geografische abstand zu gross ist von up zu down_metering_point).
 
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
@@ -163,7 +163,7 @@ Das Register ist ein Zählwerk. Ein Zähler kann mehrere Zählwerke besitzen, di
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
 |obis_index|string|1-1:8.0|Obiskennzahl
-|low_loadable|Boolean|[true,false]| ob schwachlastfähig, default: false
+|variable_tariff|Boolean|[true,false]| ob Pauschaltarif oder variablertarif(schwachlastfähig), default: false
 |mode|string|[up,down]| Richtung
 |predecimal_places|int|8| Vorkommastellen
 |decimal_places|int|2| Nachkommastellen
