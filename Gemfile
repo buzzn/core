@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails'
 gem 'mysql2'
-gem 'mongoid', '4.0.0.beta2'
+gem 'mongoid', '4.0.0.rc2'
 gem 'bson'
 gem 'puma'
 gem 'haml-rails'
