@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140616100740) do
+ActiveRecord::Schema.define(version: 20140622154815) do
 
   create_table "activities", force: true do |t|
     t.integer  "trackable_id"
@@ -203,6 +203,18 @@ ActiveRecord::Schema.define(version: 20140616100740) do
   add_index "friendly_id_slugs", ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
+
+  create_table "friendship_requests", force: true do |t|
+    t.integer  "sender_id"
+    t.integer  "receiver_id"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "friendship_requests", ["receiver_id", "sender_id"], name: "index_friendship_requests_on_receiver_id_and_sender_id", using: :btree
+  add_index "friendship_requests", ["receiver_id"], name: "index_friendship_requests_on_receiver_id", using: :btree
+  add_index "friendship_requests", ["sender_id"], name: "index_friendship_requests_on_sender_id", using: :btree
 
   create_table "friendships", force: true do |t|
     t.integer  "user_id"

@@ -5,7 +5,7 @@ class MeteringPoint < ActiveRecord::Base
   tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
 
   extend FriendlyId
-  friendly_id :name, use: [:slugged, :finders]
+  friendly_id :uid, use: [:slugged, :finders]
 
   belongs_to :location
   acts_as_list scope: :location

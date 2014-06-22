@@ -12,9 +12,8 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :profile
 
   has_many :friendships
-  has_many :friends, :through => :friendships
-  has_many :inverse_friendships, :class_name => "Friendship", :foreign_key => "friend_id"
-  has_many :inverse_friends, :through => :inverse_friendships, :source => :user
+  has_many :friends, :through => :friendships, after_add:    :create_complement_friendship,
+                                               after_remove: :remove_complement_friendship
 
   has_many :metering_point_users
   has_many :metering_points, :through => :metering_point_users
@@ -23,12 +22,31 @@ class User < ActiveRecord::Base
   has_many :groups, :through => :group_users
 
 
+  def send_friendship_request
+
+  end
+
+  def received_friendship_request
+    FriendshipRequest.where(self)
+  end
+
+
   def name
     if profile.persisted?
       profile.name
     else
       email
     end
+  end
+
+
+private
+  def create_complement_friendship(friend)
+    friend.friends << self unless friend.friends.include?(self)
+  end
+
+  def remove_complement_friendship(friend)
+    friend.friends.delete(self)
   end
 
 end

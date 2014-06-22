@@ -2,6 +2,11 @@
   = @profile.image_tag_medium
   %h4= @profile.name
 
+  - if @profile.user != current_user
+    - if FriendshipRequest.where(sender: current_user, receiver: @profile.user).empty?
+      = link_to t('send_friend_request'), friendship_requests_path( receiver_id: @profile.user), method: :post
+    - else
+      = t'waiting_for_exept'
 
 .col-sm-6
   - if @locations.empty?
@@ -16,11 +21,23 @@
   - if !@locations.empty?
     = render @locations
 
-  %h5.page-header=t('friends')
+
+
+  %h5.page-header
+    = t('received_friendship_requests')
   %ul#sidebar.nav.nav-pill
-    - @profile.user.friendships.each do |friendship|
-      %li= link_to friendship.friend.name, friendship.friend
-    %li= link_to t('find_a_friend'), profiles_path
+    - FriendshipRequest.where(receiver: @profile.user).each do |friendship_request|
+      %li= link_to friendship_request.sender.name, accept_friendship_request_path(friendship_request)
+
+
+  %h5.page-header
+    = t('friends')
+    = link_to t('find_a_friend'), profiles_path
+  %ul#sidebar.nav.nav-pill
+    - @profile.user.friends.each do |user|
+      %li= link_to user.name, user.profile
+
+
 
   %h5.page-header
     = t('groups')

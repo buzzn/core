@@ -31,11 +31,16 @@ Buzzn::Application.routes.draw do
 
 
   resources :friendships
+  resources :friendship_requests do
+    member do
+      get :accept
+      get :reject
+    end
+  end
   resources :groups
   resources :contracting_parties
   resources :contracts
   resources :private_grids
-
   resources :locations
 
   resources :locations, only: :show do
