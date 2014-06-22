@@ -35,7 +35,12 @@ Buzzn::Application.routes.draw do
   resources :contracting_parties
   resources :contracts
   resources :private_grids
+
   resources :locations
+
+  resources :locations, only: :show do
+    resources :metering_points, only: :show, path: ''
+  end
 
   resources :startpage
 

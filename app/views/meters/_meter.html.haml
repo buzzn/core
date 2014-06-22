@@ -1,10 +1,1 @@
-.row.offer
-  .col-md-1= link_to meter.id, meter
-  .col-md-6
-    %span.inlinebar= meter.day_to_hours
-  .col-md-5
-    - if current_user.can_update?(meter)
-      = link_to t('edit'), edit_meter_path(meter)
-
-    - if current_user.can_delete?(meter)
-      = link_to t('destroy'), meter, :method => :delete, :data => { :confirm => 'Are you sure?' }
+= meter.link_to_edit

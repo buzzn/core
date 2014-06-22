@@ -3,7 +3,7 @@
   .row
     .col-md-8
       - if current_user.can_update?(metering_point)
-        %h5= metering_point.link_to_edit
+        %h5= metering_point.link_to_show
       - else
         %h5= metering_point.name
 
@@ -11,21 +11,15 @@
     .col-md-3
       %i.fa.fa-refresh.fa-spin.fa-4x
     .col-md-9
-      - metering_point.meter.registers.each do |register|
-        .inlinebar.bar= register.day_to_hours
+      - if metering_point.meter
+        - metering_point.meter.registers.each do |register|
+          .inlinebar.bar= register.day_to_hours
 
   .row
     .col-md-6
       .devices
-        - metering_point.devices.each do |device|
-          = render device
-        .thumb
-          - if current_user.can_update?(metering_point)
-            = metering_point.new_device
+        = render metering_point.devices
     .col-md-6
       .users
         - metering_point.users.each do |user|
           = render user.profile
-        .thumb
-          - if !metering_point.up? && current_user.can_update?(metering_point)
-            = metering_point.edit_users

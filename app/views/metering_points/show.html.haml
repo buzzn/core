@@ -1,9 +1,60 @@
-%p#notice= notice
+.col-sm-3
+  .detail_icon
+    %i.fa.fa-bolt
+  %h4= @metering_point.link_to_edit
+.col-sm-6
 
-%b Uid:
-= @metering_point.uid
+  %ul.nav.nav-tabs#mytab
+
+    %li.active
+      %a{"data-toggle" => "tab", href: "#users"}
+        = t'user'
+
+    %li
+      %a{"data-toggle" => "tab", href: "#devices"}
+        = t'devices'
+
+    %li
+      %a{"data-toggle" => "tab", href: "#meter"}
+        = t'meter'
+
+    %li
+      %a{"data-toggle" => "tab", href: "#contracts"}
+        = t'contracts'
+
+  .tab-content
+
+    #users.tab-pane.active
+      - if current_user.can_update?(@metering_point)
+        = @metering_point.edit_users
+      - @metering_point.users.each do |user|
+        .media
+          .pull-left
+            = link_to image_tag(user.profile.image.small), user.profile
+          .media-body
+            %h4.media-heading= user.profile.name
+
+    #devices.tab-pane
+      - if current_user.can_update?(@metering_point)
+        = @metering_point.new_device
+      - @metering_point.devices.each do |device|
+        .media
+          .pull-left
+            = image_tag device.image.small
+          .media-body
+            %h4.media-heading= device.name
+
+    #contracts.tab-pane
+      - if @metering_point.contract
+        = render @metering_point.contract
+      - else
+        .alert.alert-danger= t'no_contract_for_metering_point'
+
+    #meter.tab-pane
+      - if @metering_point.meter
+        = render @metering_point.meter
+      - else
+        = @metering_point.new_meter
 
 
-= link_to 'Edit', edit_metering_point_path(@metering_point)
-\|
-= link_to 'Back', metering_points_path
+

@@ -1,10 +1,14 @@
 class CreateMeteringPoints < ActiveRecord::Migration
   def change
     create_table :metering_points do |t|
+
+      t.string  :slug
+      t.string  :name
       t.string  :uid
       t.integer :position
       t.string  :address_addition
       t.string  :mode
+
       t.string  :voltage_level
       t.date    :regular_reeding
       t.string  :regular_interval

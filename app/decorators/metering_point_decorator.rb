@@ -6,6 +6,13 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :meter
   decorates_association :users
 
+  def title
+    if name && name != ''
+      name
+    else
+      long_name
+    end
+  end
 
   def link_to_delete
     link_to(
@@ -19,10 +26,13 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
+  def link_to_show
+    link_to title, metering_point_path(model)
+  end
 
   def link_to_edit
     link_to(
-      name,
+      title,
       edit_metering_point_path(model),
       {
         :remote       => true,
@@ -31,6 +41,8 @@ class MeteringPointDecorator < Draper::Decorator
         'data-target' => '#myModal'
       })
   end
+
+
 
 
   def new_meter
@@ -84,7 +96,7 @@ class MeteringPointDecorator < Draper::Decorator
 
 
 
-  def name
+  def long_name
     case model.mode
     when 'up'
       "#{model.position}. #{t(model.mode)} #{t('for')} #{generator_type_names}-#{model.address_addition}"

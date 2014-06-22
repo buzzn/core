@@ -2,6 +2,10 @@ class MeteringPointsController < InheritedResources::Base
   before_filter :authenticate_user!
   respond_to :html, :js
 
+  def show
+    @metering_point = MeteringPoint.find(params[:id]).decorate
+    show!
+  end
 
 
   def new
@@ -55,19 +59,11 @@ private
   def init_permitted_params
     [
       :location_id,
+      :name,
       :uid,
       :mode,
       :address_addition,
-      :user_ids => [],
-      meter_attributes: [ :id,
-                          :metering_point_id,
-                          :manufacturer_name,
-                          :manufacturer_product_number,
-                          :manufacturer_device_number,
-                          :virtual,
-                          :_destroy,
-                          registers_attributes: [:id, :mode, :obis_index, :variable_tariff, :_destroy]
-                          ]
+      :user_ids => []
     ]
   end
 

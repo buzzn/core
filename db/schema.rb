@@ -285,6 +285,8 @@ ActiveRecord::Schema.define(version: 20140616100740) do
   add_index "metering_point_users", ["user_id"], name: "index_metering_point_users_on_user_id", using: :btree
 
   create_table "metering_points", force: true do |t|
+    t.string   "slug"
+    t.string   "name"
     t.string   "uid"
     t.integer  "position"
     t.string   "address_addition"

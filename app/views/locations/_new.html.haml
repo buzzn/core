@@ -5,6 +5,5 @@
       %h4.modal-title= t'new_location'
     .modal-body
       = simple_form_for @location, remote: true do |f|
-        = f.simple_fields_for :address do |a|
-          = render 'addresses/form_fields', f: a
+        = render 'locations/form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-primary'

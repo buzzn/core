@@ -6,7 +6,7 @@ module ApplicationHelper
       new_location_path,
       {
         :remote       => true,
-        :class        => 'start_modal btn btn-default btn-sm',
+        :class        => 'start_modal',
         'data-toggle' => 'modal',
         'data-target' => '#myModal'
       })

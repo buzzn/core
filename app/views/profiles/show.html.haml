@@ -11,7 +11,8 @@
     = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
 
 .col-sm-3
-  %h5.page-header=t('locations')
+  %h5.page-header= t('locations')
+  = new_location
   - if !@locations.empty?
     = render @locations
 
