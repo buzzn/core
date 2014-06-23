@@ -30,6 +30,16 @@ class DeviseCreateUsers < ActiveRecord::Migration
       t.string   :unlock_token # Only if unlock strategy is :email or :both
       t.datetime :locked_at
 
+      ## Invitable
+      t.string     :invitation_token
+      t.datetime   :invitation_created_at
+      t.datetime   :invitation_sent_at
+      t.datetime   :invitation_accepted_at
+      t.integer    :invitation_limit
+      t.references :invited_by, :polymorphic => true
+      t.integer    :invitations_count, default: 0
+
+      # belongs_to
       t.integer  :group_id
       t.integer  :metering_point_id
 
@@ -40,5 +50,8 @@ class DeviseCreateUsers < ActiveRecord::Migration
     add_index :users, :confirmation_token,   unique: true
     add_index :users, :unlock_token,         unique: true
     add_index :users, :group_id
+    add_index :users, :invitations_count
+    add_index :users, :invitation_token, unique: true
+    add_index :users, :invited_by_id
   end
 end
