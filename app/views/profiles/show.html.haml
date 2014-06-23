@@ -22,12 +22,12 @@
     = render @locations
 
 
-
-  %h5.page-header
-    = t('received_friendship_requests')
-  %ul#sidebar.nav.nav-pill
-    - FriendshipRequest.where(receiver: @profile.user).each do |friendship_request|
-      %li= link_to friendship_request.sender.name, accept_friendship_request_path(friendship_request)
+  - if !@profile.user.received_friendship_requests.empty?
+    %h5.page-header
+      = t('new_friendship_requests')
+    %ul#sidebar.nav.nav-pill
+      - @profile.user.received_friendship_requests.each do |friendship_request|
+        %li= link_to friendship_request.sender.name, accept_friendship_request_path(friendship_request)
 
 
   %h5.page-header

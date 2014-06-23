@@ -21,15 +21,17 @@ class User < ActiveRecord::Base
   has_many :group_users
   has_many :groups, :through => :group_users
 
-
-  def send_friendship_request
-
+  def friend?(user)
+    self.friendships.where(friend: user).empty? ? false : true
   end
 
-  def received_friendship_request
-    FriendshipRequest.where(self)
+  def received_friendship_requests
+    FriendshipRequest.where(receiver: self)
   end
 
+  def sent_friendship_requests
+    FriendshipRequest.where(send: self)
+  end
 
   def name
     if profile.persisted?

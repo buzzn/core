@@ -4,7 +4,6 @@ class FriendshipRequest < ActiveRecord::Base
 
   after_save :created_friendship
 
-
   def accept
     update_attributes(:status  => 'accepted')
   end
