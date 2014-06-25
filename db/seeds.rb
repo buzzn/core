@@ -19,31 +19,39 @@ Fabricate(:transmission_system_operator, name: '50Herz')
 admin = Fabricate(:admin)
 admin.add_role 'admin'
 
-
-puts '  justus'
-justus = Fabricate(:justus)
-location_fichtenweg = Fabricate(:location_fichtenweg)
-justus.add_role :manager, location_fichtenweg
-
-@buzzn_team = []
+buzzn_team_names = %w[ felix justus danusch thomas martina stefan ole philipp christian ]
+buzzn_team = []
 puts 'single meters for:'
-%w[ felix danusch thomas martina stefan ole philipp christian ].each do |user_name|
+buzzn_team_names.each do |user_name|
   puts "  #{user_name}"
-  @buzzn_team << user = Fabricate(user_name)
-  user_location = Fabricate(:location_muehlenkamp)
+  buzzn_team << user = Fabricate(user_name)
+  case user_name
+  when 'justus'
+    user_location = Fabricate(:location_fichtenweg)
+  when 'felix'
+    user_location = Fabricate(:location_muehlenkamp)
+  else
+    user_location = Fabricate(:location)
+  end
   user_location.metering_points.first.users << user
   user.add_role :manager, user_location
 end
 
+puts 'friendships for buzzn team ...'
+buzzn_team.each do |user|
+  buzzn_team.each do |friend|
+    user.friendships.create(friend: friend) if user != friend
+  end
+end
 
-puts '  20 more users'
+puts '20 more users'
 20.times do
-  location                = Fabricate(:location)
-  contracting_party       = Fabricate(:contracting_party)
-  user                    = Fabricate(:user)
-  user.contracting_party  = contracting_party
-  metering_point          = location.metering_points.first
-  metering_point.users    << user
+  location                    = Fabricate(:location)
+  contracting_party           = Fabricate(:contracting_party)
+  user                        = Fabricate(:user)
+  user.contracting_party      = contracting_party
+  metering_point              = location.metering_points.first
+  metering_point.users        << user
   contracting_party.contracts << metering_point.contract
   user.add_role :manager, location
 end
@@ -51,7 +59,7 @@ end
 
 
 puts 'add smart meter readings'
-@buzzn_team.each do |user|
+buzzn_team.each do |user|
   i=1
   Location.with_role(:manager, user).each do |location|
     location.metering_points.each do |metering_point|
