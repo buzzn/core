@@ -38,8 +38,8 @@ ActiveRecord::Schema.define(version: 20140622154815) do
     t.string   "state"
     t.integer  "zip"
     t.string   "country"
-    t.float    "longitude"
-    t.float    "latitude"
+    t.float    "longitude",        limit: 24
+    t.float    "latitude",         limit: 24
     t.integer  "addressable_id"
     t.string   "addressable_type"
     t.datetime "created_at"
@@ -50,12 +50,12 @@ ActiveRecord::Schema.define(version: 20140622154815) do
 
   create_table "areas", force: true do |t|
     t.string   "name"
-    t.integer  "zoom",           default: 16
+    t.integer  "zoom",                      default: 16
     t.string   "address"
     t.text     "polygons"
     t.string   "polygon_encode"
-    t.float    "latitude"
-    t.float    "longitude"
+    t.float    "latitude",       limit: 24
+    t.float    "longitude",      limit: 24
     t.boolean  "gmaps"
     t.integer  "group_id"
     t.datetime "created_at"
@@ -96,7 +96,7 @@ ActiveRecord::Schema.define(version: 20140622154815) do
   create_table "contracting_parties", force: true do |t|
     t.string   "legal_entity"
     t.integer  "sales_tax_number"
-    t.float    "tax_rate"
+    t.float    "tax_rate",          limit: 24
     t.integer  "tax_number"
     t.integer  "organization_id"
     t.integer  "metering_point_id"
