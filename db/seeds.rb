@@ -27,7 +27,7 @@ buzzn_team_names.each do |user_name|
   buzzn_team << user = Fabricate(user_name)
   case user_name
   when 'justus'
-    user_location = Fabricate(:location_fichtenweg)
+    user_location = Fabricate(:location)#Fabricate(:location_fichtenweg)
   when 'felix'
     user_location = Fabricate(:location_muehlenkamp)
   else
@@ -63,16 +63,14 @@ buzzn_team.each do |user|
   i=1
   Location.with_role(:manager, user).each do |location|
     location.metering_points.each do |metering_point|
-      metering_point.meter.registers.each do |register|
-        File.foreach("#{Rails.root}/db/seeds/meter#{i}.txt").with_index { |line, line_num|
-          Reading.create(
-            register_id:  register.id,
-            timestamp:    DateTime.now.beginning_of_day + line_num.minute,
-            watt_hour:    line.to_i
-          )
-        }
-        i+1
-      end
+      File.foreach("#{Rails.root}/db/seeds/meter#{i}.txt").with_index { |line, line_num|
+        Reading.create(
+          register_id:  metering_point.register.id,
+          timestamp:    DateTime.now.beginning_of_day + line_num.minute,
+          watt_hour:    line.to_i
+        )
+      }
+      i+1
     end
   end
 end

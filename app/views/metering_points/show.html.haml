@@ -15,8 +15,8 @@
         = t'devices'
 
     %li
-      %a{"data-toggle" => "tab", href: "#meter"}
-        = t'meter'
+      %a{"data-toggle" => "tab", href: "#register"}
+        = t'register'
 
     %li
       %a{"data-toggle" => "tab", href: "#contracts"}
@@ -50,11 +50,11 @@
       - else
         .alert.alert-danger= t'no_contract_for_metering_point'
 
-    #meter.tab-pane
-      - if @metering_point.meter
-        = render @metering_point.meter
+    #register.tab-pane
+      - if @metering_point.register
+        = render @metering_point.register
       - else
-        = @metering_point.new_meter
+        = @metering_point.new_register
 
 
 

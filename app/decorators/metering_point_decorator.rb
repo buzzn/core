@@ -45,10 +45,10 @@ class MeteringPointDecorator < Draper::Decorator
 
 
 
-  def new_meter
+  def new_register
     link_to(
-      t("add_meter"),
-      new_meter_path(metering_point_id: model.id),
+      t("add_register"),
+      new_register_path(metering_point_id: model.id),
       {
         :remote       => true,
         :class        => 'start_modal',

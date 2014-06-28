@@ -393,11 +393,13 @@ ActiveRecord::Schema.define(version: 20140622154815) do
     t.integer  "predecimal_places", default: 8
     t.integer  "decimal_places",    default: 2
     t.integer  "meter_id"
+    t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "registers", ["meter_id"], name: "index_registers_on_meter_id", using: :btree
+  add_index "registers", ["metering_point_id"], name: "index_registers_on_metering_point_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"

@@ -1,8 +1,6 @@
 class Meter < ActiveRecord::Base
   include Authority::Abilities
 
-  belongs_to :metering_point
-
   has_many :registers, dependent: :destroy
   accepts_nested_attributes_for :registers, :reject_if => :all_blank, :allow_destroy => true
 

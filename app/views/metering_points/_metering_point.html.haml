@@ -11,9 +11,8 @@
     .col-md-3
       %i.fa.fa-refresh.fa-spin.fa-4x
     .col-md-9
-      - if metering_point.meter
-        - metering_point.meter.registers.each do |register|
-          .inlinebar.bar= register.day_to_hours
+      - if metering_point.register
+        .inlinebar.bar= metering_point.register.day_to_hours
 
   .row
     .col-md-6

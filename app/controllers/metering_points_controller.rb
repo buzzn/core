@@ -8,11 +8,11 @@ class MeteringPointsController < InheritedResources::Base
   end
 
 
-  def new
-    @metering_point = MeteringPoint.new
-    @metering_point.meter = Meter.new(registers:[Register.new()])
-    new!
-  end
+  # def new
+  #   @metering_point = MeteringPoint.new
+  #   @metering_point.register = Meter.new(registers:[Register.new()])
+  #   new!
+  # end
 
 
   def edit

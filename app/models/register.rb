@@ -1,6 +1,7 @@
 class Register < ActiveRecord::Base
 
   belongs_to :meter
+  belongs_to :metering_point
 
   def self.modes
     %w{

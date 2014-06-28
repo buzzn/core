@@ -1,7 +1,8 @@
 Fabricator :metering_point do
   address_addition  'Keller'
   mode              'down'
-  meter             { Fabricate(:meter) }
+  uid               'DE0010688251510000000000002677114'
+  register          { Fabricate(:meter).registers.first }
   contract          { Fabricate(:contract) }
 end
 
@@ -13,12 +14,16 @@ Fabricator :mp_z1, from: :metering_point do
   address_addition  'Übergabe'
   mode              'up_down'
   uid               'DE0010688251510000000000002677114'
-  meter             { Fabricate(:meter,
-                                manufacturer_name:           'Elster',
-                                manufacturer_product_number: 'AS 1440',
-                                manufacturer_device_number:   '03353984',
-                                virtual:                     false
-                                )}
+
+  @meter = Fabricate( :meter,
+                      manufacturer_name:           'Elster',
+                      manufacturer_product_number: 'AS 1440',
+                      manufacturer_device_number:   '03353984',
+                      virtual:                     false
+                      )
+
+  register             { @meter.registers.first }
+
 end
 
 Fabricator :mp_z2, from: :metering_point do
