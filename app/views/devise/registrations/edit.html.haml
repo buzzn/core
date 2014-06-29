@@ -1,28 +1,24 @@
 %h2= t('edit_account')
-= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
-  = f.error_notification
+= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+  = devise_error_messages!
   .form-inputs
     = f.input :email, required: true, autofocus: true
     = f.simple_fields_for :profile do |p|
-      = p.input :image
-      = p.input :first_name
-      = p.input :last_name
-      = p.input :gender
-      = p.input :phone
-      = p.input :newsletter_notifications
-      = p.input :location_notifications
-      = p.input :group_notifications
+
+      = render 'profiles/form_fields', f:p
 
     - if devise_mapping.confirmable? && resource.pending_reconfirmation?
       %p
         Currently waiting confirmation for: #{resource.unconfirmed_email}
 
-    = f.input :password, autocomplete: "off", required: false
-    = f.input :password_confirmation, required: false
+    %fieldset
+      %legend= t'change_password'
+      = f.input :current_password, autocomplete: "off", required: false
+      = f.input :password, autocomplete: "off", required: false
+      = f.input :password_confirmation, required: false
   .form-actions
     = f.button :submit, class: 'btn btn-success'
-%h3= t'cancel_my_account'
-%p
-  unhappy? #{link_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete}
+/ %h3= t'cancel_my_account'
+/ %p= link_to t('delete_account'), registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete
 
 
