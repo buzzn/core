@@ -1,7 +1,33 @@
 .col-sm-3
   .detail_icon
     %i.fa.fa-home
-  %h4= @location.link_to_edit
+  %h4= @location.name
+  = @location.link_to_edit
+
+  %h5.page-header= t('residents')
+  %article.sidebar_module.residents
+    %ul
+      - @residents.each do |resident|
+        = render resident.profile
+    .clearfix
+
+
+  %h5.page-header= t('devices')
+  %article.sidebar_module.devices
+    %ul
+      - @devices.each do |device|
+        = render device
+    .clearfix
+
+
+  %h5.page-header= t('address')
+  %address
+    = "#{@location.address.street_name} #{@location.address.street_number}"
+    %br
+    = "#{@location.address.zip} #{@location.address.city}"
+    %br
+    = @location.address.state
+
 
 .col-sm-6
   .metering_points
@@ -10,8 +36,9 @@
   - if current_user.can_update?(@location)
     = @location.new_metering_point
 
+
 .col-sm-3
-  %h5.page-header=t('news')
+  %h5.page-header= t('explore')
 
 
 

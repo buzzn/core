@@ -6,13 +6,13 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :meter
   decorates_association :users
 
-  def title
-    if name && name != ''
-      name
-    else
-      long_name
-    end
-  end
+  # def title
+  #   if name && name != ''
+  #     name
+  #   else
+  #     long_name
+  #   end
+  # end
 
   def link_to_delete
     link_to(
@@ -27,12 +27,12 @@ class MeteringPointDecorator < Draper::Decorator
   end
 
   def link_to_show
-    link_to title, metering_point_path(model)
+    link_to "title", metering_point_path(model)
   end
 
   def link_to_edit
     link_to(
-      title,
+      "title",
       edit_metering_point_path(model),
       {
         :remote       => true,
@@ -92,32 +92,5 @@ class MeteringPointDecorator < Draper::Decorator
   end
 
 
-
-
-
-
-  def long_name
-    case model.mode
-    when 'up'
-      "#{model.position}. #{t(model.mode)} #{t('for')} #{generator_type_names}-#{model.address_addition}"
-    when 'down'
-      "#{model.position}. #{t(model.mode)} - #{model.address_addition}"
-    when 'up_down'
-      "#{model.position}. #{t(model.mode)}"
-    when 'diff'
-      "#{model.position}. #{t(model.mode)}"
-    else
-      "no mode"
-    end
-  end
-
-  def generator_type_names
-    names = []
-    generator_types = model.devices.map {|i| i.generator_type }.uniq
-    generator_types.each do |type|
-      names << t("#{type}_short")
-    end
-    return names.join(', ')
-  end
 
 end

@@ -17,7 +17,7 @@ class Address < ActiveRecord::Base
   end
 
   def name
-    "#{street_name}, #{city}"
+    "#{street_name} #{street_number}, #{city}"
   end
 
 end

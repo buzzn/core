@@ -298,7 +298,6 @@ ActiveRecord::Schema.define(version: 20140622154815) do
 
   create_table "metering_points", force: true do |t|
     t.string   "slug"
-    t.string   "name"
     t.string   "uid"
     t.integer  "position"
     t.string   "address_addition"
@@ -314,6 +313,7 @@ ActiveRecord::Schema.define(version: 20140622154815) do
   end
 
   add_index "metering_points", ["contract_id"], name: "index_metering_points_on_contract_id", using: :btree
+  add_index "metering_points", ["group_id"], name: "index_metering_points_on_group_id", using: :btree
   add_index "metering_points", ["location_id"], name: "index_metering_points_on_location_id", using: :btree
 
   create_table "metering_service_provider_contracts", force: true do |t|

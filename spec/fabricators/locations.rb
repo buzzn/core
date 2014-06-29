@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 Fabricator :location do
+  name            { Faker::Company.name }
   address         { Fabricate(:address) }
   metering_points { 1.times.map { Fabricate(:metering_point) } }
 end
@@ -10,6 +11,7 @@ Fabricator :location_muehlenkamp, from: :location do
 end
 
 Fabricator :location_fichtenweg, from: :location do
+  name              'Home of the Brave'
   address           { Fabricate(:address, street_name: 'Fichtenweg', street_number: '8', zip: 82515, city: 'Wolfratshausen', state: 'Bayern') }
   metering_points   {[
     Fabricate(:mp_z1),

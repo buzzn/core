@@ -8,6 +8,7 @@ class Location < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
+
   mount_uploader :image, PictureUploader
 
   has_one :address, as: :addressable, dependent: :destroy
@@ -16,6 +17,5 @@ class Location < ActiveRecord::Base
   has_many :metering_points, -> { order("position DESC") }, dependent: :destroy
   accepts_nested_attributes_for :metering_points, reject_if: :all_blank, allow_destroy: true
 
-  #validates :name, uniqueness: true
-
+  validates :name, presence: true, uniqueness: true
 end

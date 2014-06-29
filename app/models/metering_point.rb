@@ -5,7 +5,14 @@ class MeteringPoint < ActiveRecord::Base
   tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
 
   extend FriendlyId
-  friendly_id :uid, use: [:slugged, :finders]
+  friendly_id :slug_candidates, use: [:slugged, :finders]#, :use => :scoped, :scope => :location
+  def slug_candidates
+    [
+      name,
+      :uid
+    ]
+  end
+
 
   belongs_to :location
   acts_as_list scope: :location
@@ -27,6 +34,28 @@ class MeteringPoint < ActiveRecord::Base
 
   #validates :uid, uniqueness: true
   validates :mode, presence: true
+
+
+  def name
+    case mode
+    when 'up'
+      "#{t(mode)} #{generator_type_names}-#{model.address_addition}"
+    when 'down'
+      address_addition
+    end
+  end
+
+
+  def generator_type_names
+    names = []
+    generator_types = devices.map {|i| i.generator_type }.uniq
+    generator_types.each do |type|
+      names << t("#{type}_short")
+    end
+    return names.join(', ')
+  end
+
+
 
 
   def self.modes
@@ -55,11 +84,6 @@ class MeteringPoint < ActiveRecord::Base
     }
   end
 
-
-
-  def name
-    "#{location.address.name}_#{address_addition}"
-  end
 
   def up?
     self.mode == 'up'

@@ -1,3 +1,3 @@
-.panel.panel-default.location_panel{id: "location_#{location.id}" }
-  .panel-body
-    = link_to location.address.name, location
+%li.floating
+  = link_to image_tag('house.png', size: '60x60'), location, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => location.name }, rel: 'tooltip'
+
