@@ -1,2 +1,3 @@
-.thumb
-  = profile.thumb
+%li.floating
+  = link_to profile.image_tag_small, profile, :data => { 'toggle' => 'tooltip', delay: { show: 300, hide: 100 }, container: 'body', 'original-title' => profile.name }, rel: 'tooltip'
+

@@ -4,6 +4,9 @@ class ProfilesController < InheritedResources::Base
 
   def show
     @profile    = Profile.find(params[:id]).decorate
+
+    @friends    = @profile.user.friends.decorate
+
     @activities = PublicActivity::Activity.order("created_at desc").where(owner_id: @profile.user.friend_ids << @profile.user.id, owner_type: "User").limit(10)
     @locations  = Location
       .with_role(:manager, @profile.user)

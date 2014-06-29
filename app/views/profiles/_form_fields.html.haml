@@ -1,7 +1,7 @@
 = f.input :image
 = f.input :first_name
 = f.input :last_name
-= f.input :gender, include_blank: false, collection: [:male, :female], input_html: { class: 'select2' }
+= f.input :gender, include_blank: false, collection: Profile.genders, input_html: { class: 'select2' }
 = f.input :phone
 
 %fieldset

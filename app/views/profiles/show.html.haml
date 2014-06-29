@@ -3,25 +3,42 @@
   %h4= @profile.name
 
   - if @profile.user != current_user
-    - if FriendshipRequest.where(sender: current_user, receiver: @profile.user).empty?
-      = link_to t('send_friend_request'), friendship_requests_path( receiver_id: @profile.user), method: :post
+    - if current_user.friend?(@profile.user)
+      = link_to t('cancel_friendship')
     - else
-      = t'waiting_for_exept'
+      - if FriendshipRequest.where(sender: current_user, receiver: @profile.user).empty?
+        = link_to t('send_friend_request'), friendship_requests_path( receiver_id: @profile.user), method: :post
+      - else
+        = t'waiting_for_exept'
+
+  // friends
+  %h5.page-header
+    = t('friends')
+    - if @profile.user == current_user
+      = link_to t('find_a_friend'), profiles_path
+
+  %article.sidebar_module
+    %ul
+      - @friends.each do |user|
+        = render user.profile
+    .clearfix
+
+  // groups
+  %h5.page-header
+    = t('groups')
+    = render @profile.user.groups
+
+  // locations
+  - if @profile.readable_by? current_user
+    %h5.page-header= t('locations')
+    = new_location
+    - if !@locations.empty?
+      = render @locations
+
+
+
 
 .col-sm-6
-  - if @locations.empty?
-    = render 'no_location'
-
-  - @activities.each do |activity|
-    = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
-
-.col-sm-3
-  %h5.page-header= t('locations')
-  = new_location
-  - if !@locations.empty?
-    = render @locations
-
-
   - if !@profile.user.received_friendship_requests.empty?
     %h5.page-header
       = t('new_friendship_requests')
@@ -29,16 +46,13 @@
       - @profile.user.received_friendship_requests.each do |friendship_request|
         %li= link_to friendship_request.sender.name, accept_friendship_request_path(friendship_request)
 
+  - if @locations.empty?
+    = render 'no_location'
 
+  - @activities.each do |activity|
+    = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+
+.col-sm-3
   %h5.page-header
-    = t('friends')
-    = link_to t('find_a_friend'), profiles_path
-  %ul#sidebar.nav.nav-pill
-    - @profile.user.friends.each do |user|
-      %li= link_to user.name, user.profile
-
-
-
-  %h5.page-header
-    = t('groups')
-    = render @profile.user.groups
+    // explore
+    = t('explore_buzzn')

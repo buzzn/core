@@ -8,11 +8,19 @@
 }
 
 
-.centered{
-    text-align:center;
+.floating{
+  float: left;
 }
 
 
+.centered{
+  text-align:center;
+}
+
+
+.simple_form{
+  margin-bottom: 50px;
+}
 
 body, html, .container {
   height: 100%;
