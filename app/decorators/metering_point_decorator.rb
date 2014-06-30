@@ -6,13 +6,6 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :meter
   decorates_association :users
 
-  # def title
-  #   if name && name != ''
-  #     name
-  #   else
-  #     long_name
-  #   end
-  # end
 
   def link_to_delete
     link_to(
@@ -27,12 +20,12 @@ class MeteringPointDecorator < Draper::Decorator
   end
 
   def link_to_show
-    link_to "title", metering_point_path(model)
+    link_to model.name, metering_point_path(model)
   end
 
   def link_to_edit
     link_to(
-      "title",
+      t('edit'),
       edit_metering_point_path(model),
       {
         :remote       => true,

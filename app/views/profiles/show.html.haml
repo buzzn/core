@@ -19,11 +19,9 @@
         = render @locations
       .clearfix
 
-
   %h5.page-header
     = t('groups')
     = render @profile.user.groups
-
 
   %h5.page-header
     = t('friends')
@@ -36,19 +34,25 @@
         = render user.profile
     .clearfix
 
+
+
 .col-sm-6
   - if !@profile.user.received_friendship_requests.empty?
-    %h5.page-header
-      = t('new_friendship_requests')
-    %ul#sidebar.nav.nav-pill
-      - @profile.user.received_friendship_requests.each do |friendship_request|
-        %li= link_to friendship_request.sender.name, accept_friendship_request_path(friendship_request)
+    %h5.page-header= t('new_friendship_requests')
+    = render @friendship_requests
+
+
 
   - if @locations.empty?
     = render 'no_location'
 
   - @activities.each do |activity|
     = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+
+
+
+
+
 
 .col-sm-3
   %h5.page-header

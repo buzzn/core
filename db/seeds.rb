@@ -44,6 +44,8 @@ buzzn_team.each do |user|
   end
 end
 
+
+
 puts '20 more users'
 20.times do
   location                    = Fabricate(:location)
@@ -54,6 +56,9 @@ puts '20 more users'
   metering_point.users        << user
   contracting_party.contracts << metering_point.contract
   user.add_role :manager, location
+  FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
+  FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
+  FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
 end
 
 

@@ -2,6 +2,8 @@ class MeteringPointsController < InheritedResources::Base
   before_filter :authenticate_user!
   respond_to :html, :js
 
+  belongs_to :location
+
   def show
     @metering_point = MeteringPoint.find(params[:id]).decorate
     show!

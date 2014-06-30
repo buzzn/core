@@ -7,6 +7,8 @@ class ProfilesController < InheritedResources::Base
 
     @friends    = @profile.user.friends.decorate
 
+    @friendship_requests = @profile.user.received_friendship_requests.decorate
+
     @activities = PublicActivity::Activity.order("created_at desc").where(owner_id: @profile.user.friend_ids << @profile.user.id, owner_type: "User").limit(10)
     @locations  = Location
       .with_role(:manager, @profile.user)

@@ -1,0 +1,9 @@
+.bs-callout.bs-callout-info
+  .col-sm-3
+    = image_tag friendship_request.sender.profile.image.medium, class: 'img-circle'
+  .col-sm-8
+    %h4= t'new_friendship_request'
+    %p= friendship_request.sender.profile.name
+
+    = link_to t('accept'), accept_friendship_request_path(friendship_request), class: 'btn btn-success'
+    = link_to t('reject'), accept_friendship_request_path(friendship_request), class: 'btn btn-danger'
