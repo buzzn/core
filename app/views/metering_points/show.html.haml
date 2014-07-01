@@ -3,19 +3,40 @@
     %i.fa.fa-bolt
   %h4= @metering_point.name
   = @metering_point.link_to_edit
+
+
+  %h5.page-header= t('belongs_to_location')
+  %article.sidebar_module.residents
+    %ul
+      = render @metering_point.location
+    .clearfix
+
+
+  %h5.page-header= t('users')
+  %article.sidebar_module.residents
+    %ul
+      - @users.each do |user|
+        = render user.profile
+      - if current_user.can_update?(@metering_point)
+        = @metering_point.edit_users
+    .clearfix
+
+
+  %h5.page-header= t('devices')
+  %article.sidebar_module.devices
+    %ul
+      - @devices.each do |device|
+        = render device
+      - if current_user.can_update?(@metering_point)
+        = @metering_point.new_device
+    .clearfix
+
+
 .col-sm-6
 
   %ul.nav.nav-tabs#mytab
 
     %li.active
-      %a{"data-toggle" => "tab", href: "#users"}
-        = t'user'
-
-    %li
-      %a{"data-toggle" => "tab", href: "#devices"}
-        = t'devices'
-
-    %li
       %a{"data-toggle" => "tab", href: "#register"}
         = t'register'
 
@@ -25,27 +46,7 @@
 
   .tab-content
 
-    #users.tab-pane.active
-      - if current_user.can_update?(@metering_point)
-        = @metering_point.edit_users
-      - @metering_point.users.each do |user|
-        .media
-          .pull-left
-            = link_to image_tag(user.profile.image.small), user.profile
-          .media-body
-            %h4.media-heading= user.profile.name
-
-    #devices.tab-pane
-      - if current_user.can_update?(@metering_point)
-        = @metering_point.new_device
-      - @metering_point.devices.each do |device|
-        .media
-          .pull-left
-            = image_tag device.image.small
-          .media-body
-            %h4.media-heading= device.name
-
-    #contracts.tab-pane
+    #contracts.tab-pane.active
       - if @metering_point.contract
         = render @metering_point.contract
       - else

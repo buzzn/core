@@ -10,9 +10,9 @@ class DeviceDecorator < Draper::Decorator
 
   def image_tag_small
     if model.image?
-      image_tag model.image.small, class: 'img-circle'
+      image_tag model.image.small, class: 'img-circle', size: '45x45'
     else
-      image_tag 'male.png'
+      image_tag 'male.png', size: '45x45'
     end
   end
 

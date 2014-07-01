@@ -6,17 +6,19 @@ Buzzn::Application.routes.draw do
   devise_for :users, controllers: { registrations: 'users/registrations' }
 
   resources :profiles do
-    resources :locations
     member do
       get :redirect_to_current_user
     end
   end
+
+  resources :locations
 
   resources :metering_points do
     member do
       get :edit_users
     end
   end
+
 
   resources :meters
   resources :registers
@@ -42,11 +44,8 @@ Buzzn::Application.routes.draw do
   resources :contracting_parties
   resources :contracts
   resources :private_grids
-  resources :locations
 
-  resources :locations, only: :show do
-    resources :metering_points, only: :show, path: ''
-  end
+
 
   resources :startpage
 

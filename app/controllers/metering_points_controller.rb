@@ -2,10 +2,10 @@ class MeteringPointsController < InheritedResources::Base
   before_filter :authenticate_user!
   respond_to :html, :js
 
-  belongs_to :location
-
   def show
     @metering_point = MeteringPoint.find(params[:id]).decorate
+    @users          = @metering_point.users
+    @devices        = @metering_point.devices
     show!
   end
 
@@ -34,7 +34,7 @@ class MeteringPointsController < InheritedResources::Base
 
   def update
     update! do |format|
-      @metering_point = MeteringPointDecorator.new(@metering_point)
+      @metering_point = MeteringPoint.new(@metering_point).decorate
     end
   end
 

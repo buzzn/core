@@ -8,6 +8,8 @@ class Location < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
+  has_many :users, -> { uniq }, :through => :metering_points
+  has_many :devices, -> { uniq }, :through => :metering_points
 
   mount_uploader :image, PictureUploader
 

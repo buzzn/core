@@ -34,12 +34,12 @@ class MeteringPoint < ActiveRecord::Base
 
   #validates :uid, uniqueness: true
   validates :mode, presence: true
-
+  validates :address_addition, presence: true
 
   def name
     case mode
     when 'up'
-      "#{t(mode)} #{generator_type_names}-#{model.address_addition}"
+      "#{mode} #{generator_type_names}-#{self.address_addition}"
     when 'down'
       address_addition
     end

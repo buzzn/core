@@ -26,11 +26,11 @@ class LocationDecorator < Draper::Decorator
 
   def link_to_edit
     link_to(
-      title,
+      raw(content_tag(:i, '', class: 'fa fa-cog') + t('edit')),
       edit_location_path(model),
       {
-        remote: true,
-        class: 'start_modal',
+        :remote       => true,
+        :class        => 'start_modal btn btn-icon btn-danger btn-xs',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })

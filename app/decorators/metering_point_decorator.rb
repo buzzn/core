@@ -19,23 +19,23 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
+
   def link_to_show
     link_to model.name, metering_point_path(model)
   end
 
+
   def link_to_edit
     link_to(
-      t('edit'),
+      raw(content_tag(:i, '', class: 'fa fa-cog') + t('edit')),
       edit_metering_point_path(model),
       {
         :remote       => true,
-        :class        => 'start_modal',
+        :class        => 'start_modal btn btn-icon btn-danger btn-xs',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })
   end
-
-
 
 
   def new_register
