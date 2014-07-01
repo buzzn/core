@@ -21,5 +21,6 @@
 //= require paloma
 //= require turbolinks
 //= require bootstrap
-//= require highcharts
+//= require jquery.flot
+//= require jquery.flot.resize
 //= require_tree .

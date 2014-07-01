@@ -6,6 +6,9 @@ class MeteringPointsController < InheritedResources::Base
     @metering_point = MeteringPoint.find(params[:id]).decorate
     @users          = @metering_point.users
     @devices        = @metering_point.devices
+    gon.push({
+                day_to_hours: @metering_point.register.day_to_hours
+              })
     show!
   end
 

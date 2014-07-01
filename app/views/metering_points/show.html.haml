@@ -34,29 +34,33 @@
 
 .col-sm-6
 
-  %ul.nav.nav-tabs#mytab
+  .raw
+    #bar_chart{style: "height:300px"}
 
-    %li.active
-      %a{"data-toggle" => "tab", href: "#register"}
-        = t'register'
+  .raw
+    %ul.nav.nav-tabs#mytab
 
-    %li
-      %a{"data-toggle" => "tab", href: "#contracts"}
-        = t'contracts'
+      %li.active
+        %a{"data-toggle" => "tab", href: "#register"}
+          = t'register'
 
-  .tab-content
+      %li
+        %a{"data-toggle" => "tab", href: "#contracts"}
+          = t'contracts'
 
-    #contracts.tab-pane.active
-      - if @metering_point.contract
-        = render @metering_point.contract
-      - else
-        .alert.alert-danger= t'no_contract_for_metering_point'
+    .tab-content
 
-    #register.tab-pane
-      - if @metering_point.register
-        = render @metering_point.register
-      - else
-        = @metering_point.new_register
+      #contracts.tab-pane.active
+        - if @metering_point.contract
+          = render @metering_point.contract
+        - else
+          .alert.alert-danger= t'no_contract_for_metering_point'
+
+      #register.tab-pane
+        - if @metering_point.register
+          = render @metering_point.register
+        - else
+          = @metering_point.new_register
 
 
 

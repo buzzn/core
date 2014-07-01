@@ -35,7 +35,7 @@ gem 'authority'
 gem 'sprockets-rails'
 gem 'rolify'
 gem 'ffaker'
-gem 'highcharts-rails'
+gem 'flot-rails'
 gem 'paloma',                 '4.0.0'# 4.0.1 not working
 gem 'fabrication'
 gem 'friendly_id'
@@ -61,7 +61,8 @@ gem 'wicked'
 gem 'acts_as_commentable'
 gem 'remotipart'
 gem 'public_activity'
-
+gem 'jbuilder'
+gem 'gon'
 
 group :development do
   gem 'rack-mini-profiler'

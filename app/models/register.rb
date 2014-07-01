@@ -16,7 +16,7 @@ class Register < ActiveRecord::Base
     Reading.this_day_to_hours_by_register_id(self.id).each do |hour|
       hours << hour['hourReading']
     end
-    return hours.join(', ')
+    return hours
   end
 
 end
