@@ -12,11 +12,20 @@ de:
       default_message: "Es wurden Validierungsfehler bei Ihren Eingaben gefunden."
 
     labels:
-      password: 'Password'
+      password: 'Passwort'
       user:
         email: E-Mail Addresse
-        password: Password
+        password: Passwort
         remember_me: Eingeloggt bleiben
+      location:
+        image: Bild
+        name: Name
+      address:
+        zip: PLZ
+        street_name: Straße
+        street_number: Hausnummer
+        city: Stadt
+        state: Bundesland
 
     hints:
       username: 'User name to sign in.'
