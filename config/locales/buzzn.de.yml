@@ -190,3 +190,4 @@ de:
   contracts: Verträge
   belongs_to_location: Gehört zum Standort
   register: Zähler
+  locations: Standorte
