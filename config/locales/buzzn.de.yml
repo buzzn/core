@@ -180,6 +180,7 @@ de:
   create_project: Projekt Erstellen
   delete_organization: Organisation Löschen
   delete_project: Projekt Löschen
+  
   residents: Bewohner
   friends: Freunde
   explore_buzzn: Buzzn entdecken
@@ -187,5 +188,5 @@ de:
   devices: Geräte
   explore: Entdecken
   contracts: Verträge
-  belongs_to_location: Gehört zur Location
+  belongs_to_location: Gehört zum Standort
   register: Zähler
