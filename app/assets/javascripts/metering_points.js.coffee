@@ -6,7 +6,8 @@ MeteringPointsController.prototype.show = () ->
     e.preventDefault()
     $(this).tab "show"
 
-  $.plot $("#bar_chart"), [
+
+  $.plot $("#day_to_hours"), [
     data: gon.day_to_hours
     color: "rgba(230, 40, 40, 0.94)"
     bars:
@@ -17,3 +18,14 @@ MeteringPointsController.prototype.show = () ->
       fillColor: "rgba(220, 80, 80, 0.80)"
   ]
 
+
+  $.plot $("#fake_day_to_hours"), [
+    data: gon.fake_day_to_hours
+    bars:
+      show: true
+      lineWidth: 4,
+      fill: true,
+      barWidth: 0.66,
+      color: "rgba(255, 85, 80, 0.94)",
+      fillColor: "rgba(255, 85, 80, 0.94)"
+  ]
