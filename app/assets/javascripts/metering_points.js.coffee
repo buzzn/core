@@ -16,7 +16,7 @@ MeteringPointsController.prototype.show = () ->
     lineWidth: 4,
     fill: true,
     barWidth: 0.66,
-    color: "rgba(255, 85, 80, 0.94)",
+    Color: "rgba(255, 85, 80, 0.94)",
     fillColor: "rgba(255, 85, 80, 0.94)"
     }
   ]
