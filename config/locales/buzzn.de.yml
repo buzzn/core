@@ -15,9 +15,9 @@ de:
   add_diff_metering_point: Messpunkt für Abgrenzungszähler hinzufügen
 
 
-  up: Produktionzähler
-  down: Bezugszahler
-  up_down: zweirichtungszahler
+  up: Produktionszähler
+  down: Bezugszähler
+  up_down: Zweirichtungszähler
   diff: Abgrenzungszähler
 
 
