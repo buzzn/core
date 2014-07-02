@@ -26,6 +26,21 @@ de:
         street_number: Hausnummer
         city: Stadt
         state: Bundesland
+      profile:
+        first_name: Vorname
+        last_name: Nachname
+        gender: Geschlecht
+        phone: Telefon
+      metering_point:
+        uid: Zählpunkt-ID
+        address_addition: Addresszusatz
+        mode: Richtung
+      device:
+        name: Name
+        manufacturer: Hersteller
+        manufacturer_product_number: Produktbezeichnung
+        watt_peak: Watt (max.)
+        commissioning: Kaufdatum
 
     hints:
       username: 'User name to sign in.'
