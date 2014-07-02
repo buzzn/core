@@ -9,7 +9,7 @@ MeteringPointsController.prototype.show = () ->
 
   $.plot $("#day_to_hours"), [
     data: gon.day_to_hours
-    color: "rgba(230, 40, 40, 0.94)"
+    color: "rgba(230, 40, 40, 0.95)"
     bars:
       show: true,
       lineWidth: 2,
