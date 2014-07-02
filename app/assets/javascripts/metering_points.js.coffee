@@ -10,9 +10,9 @@ MeteringPointsController.prototype.show = () ->
     data: gon.day_to_hours
     bars:
       show: true
-      lineWidth: 4,
+      lineWidth: 2,
       fill: true,
       barWidth: 0.66,
-      fillColor: "rgba(255, 50, 50, 0.90)"
+      fillColor: "rgba(220, 80, 80, 0.90)"
   ]
 
