@@ -46,7 +46,7 @@ end
 
 
 
-puts '20 more users'
+puts '20 more users with location'
 20.times do
   location                    = Fabricate(:location)
   contracting_party           = Fabricate(:contracting_party)
@@ -59,8 +59,15 @@ puts '20 more users'
   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
+  puts "  #{user.email}"
 end
 
+
+puts '    5 users without location'
+5.times do
+  user = Fabricate(:user)
+  puts "  #{user.email}"
+end
 
 
 puts 'add smart meter readings'
