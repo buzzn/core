@@ -160,7 +160,7 @@ class WizardConsumersController  < ApplicationController
   def location_address_update
     if Location.with_role(:manager, current_user).to_a.count == 0    # TODO works with .to_a way ????
       @location = Location.new(location_params)
-      if @location.save
+      if @location.save!
         current_user.add_role :manager, @location
         redirect_to action: 'location_habitation'
       else
@@ -168,7 +168,7 @@ class WizardConsumersController  < ApplicationController
       end
     else
       @location = Location.with_role(:manager, current_user).last
-      if @location.update_attributes(location_params)
+      if @location.update_attributes!(location_params)
         redirect_to action: 'location_habitation'
       else
         render action: 'location_address'
@@ -352,7 +352,7 @@ class WizardConsumersController  < ApplicationController
     @metering_point.contract    = @contract
     @contract.contracting_party = current_user.contracting_party
     if @contract.save
-      redirect_to root_path
+      redirect_to profile_path(current_user.profile)
     else
       render action: 'complete_contract'
     end
@@ -382,7 +382,7 @@ private
   end
 
   def location_params
-    params.require(:location).permit(:new_habitation, :inhabited_since, address_attributes: [:id, :street_name, :street_number, :city, :state, :zip, :country])
+    params.require(:location).permit(:name, :new_habitation, :inhabited_since, address_attributes: [:id, :street_name, :street_number, :city, :state, :zip, :country])
   end
 
   def metering_point_params

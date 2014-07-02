@@ -63,7 +63,7 @@ puts '20 more users with location'
 end
 
 
-puts '    5 users without location'
+puts '5 users without location'
 5.times do
   user = Fabricate(:user)
   puts "  #{user.email}"
