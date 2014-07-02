@@ -191,3 +191,11 @@ de:
   belongs_to_location: Gehört zum Standort
   register: Zähler
   locations: Standorte
+  new_location: Neuer Standort
+  listing_profiles: Liste aller Profile
+  send_friend_request: Freundschaftsanfrage senden
+  complete_user: Daten vervollständigen
+  edit_metering_point: Zählpunkt bearbeiten
+  edit_users: User bearbeiten
+  new_down_device: Neues Bezugsgerät
+  new_metering_point: Neuer Zählpunkt
