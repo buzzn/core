@@ -201,3 +201,7 @@ de:
   activerecord:
     errors:
       <<: *errors
+    models:
+      location: Standort
+      metering_point: Zählpunkt
+      device: Gerät
