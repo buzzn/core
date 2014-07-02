@@ -13,10 +13,11 @@ class Register < ActiveRecord::Base
 
   def day_to_hours
     hours = []
-    Reading.this_day_to_hours_by_register_id(self.id).each do |hour|
-      hours << hour['hourReading']
+    Reading.this_day_to_hours_by_register_id(self.id).each_with_index do |hour, index|
+      hours << [index, hour['hourReading']]
     end
     return hours
   end
+
 
 end

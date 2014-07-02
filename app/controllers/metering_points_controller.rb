@@ -13,13 +13,6 @@ class MeteringPointsController < InheritedResources::Base
   end
 
 
-  # def new
-  #   @metering_point = MeteringPoint.new
-  #   @metering_point.register = Meter.new(registers:[Register.new()])
-  #   new!
-  # end
-
-
   def edit
     @metering_point = MeteringPoint.find(params[:id]).decorate
     authorize_action_for(@metering_point)
