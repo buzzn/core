@@ -63,6 +63,7 @@ gem 'remotipart'
 gem 'public_activity'
 gem 'jbuilder'
 gem 'gon'
+gem 'rack-dev-mark'
 
 group :development do
   gem 'rack-mini-profiler'

@@ -351,6 +351,8 @@ GEM
     rack (1.5.2)
     rack-contrib (1.1.0)
       rack (>= 0.9.1)
+    rack-dev-mark (0.5.1)
+      rack (>= 1.1)
     rack-livereload (0.3.15)
       rack
     rack-mini-profiler (0.9.2)
@@ -578,6 +580,7 @@ DEPENDENCIES
   public_activity
   puma
   quiet_assets
+  rack-dev-mark
   rack-livereload
   rack-mini-profiler
   rails
