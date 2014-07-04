@@ -19,7 +19,9 @@ de:
         remember_me: Eingeloggt bleiben
       location:
         image: Bild
-        name: Name
+        name: Name des Standorts
+        new_habitation: Neueinzug
+        inhabited_since: Datum des Ersteinzugs
       address:
         zip: PLZ
         street_name: Straße
@@ -41,7 +43,44 @@ de:
         manufacturer_product_number: Produktbezeichnung
         watt_peak: Watt (max.)
         commissioning: Kaufdatum
+<<<<<<< HEAD
 
     hints:
       username: 'User name to sign in.'
       password: 'No special characters, please.'
+=======
+      contracting_party:
+        legal_entity: Rechtsform
+        contracts: Verträge
+      electricity_supplier_contract:
+        organization: Firmenname
+        customer_number: Kundennummer
+        contract_number: Vertragskontonummer
+        forecast_watt_hour_pa: Geschätzter Stromverbrauch pro Jahr (kWh)
+      bank_account:
+        holder: Kontoinhaber
+        iban: IBAN
+        bic: BIC 
+        bank_name: Kreditinstitut
+        direct_debit: Umsatzsteuerpflicht
+      contract:
+        terms: Ich akzeptiere die AGB
+        confirm_pricing_model: Ich akzeptiere das Preismodell
+        power_of_attorney: Ich erteile euch Vollmacht
+        forecast_watt_hour_pa: Geschätzter Stromverbrauch pro Jahr (kWh)
+      organization:
+        name: Name
+        email: Email
+        phone: Telefon
+
+
+    hints:
+      defaults:
+        username: 'Benutzername, mit dem Du dich einloggen kannst.'
+        password: 'Keine außergewöhnlichen Zeichen bitte.'
+      location:
+        name: 'Frei wählbarer Name des Standorts'
+
+
+
+>>>>>>> Wizard gestyled, Übersetzungen vervollständigt
