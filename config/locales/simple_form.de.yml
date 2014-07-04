@@ -43,12 +43,8 @@ de:
         manufacturer_product_number: Produktbezeichnung
         watt_peak: Watt (max.)
         commissioning: Kaufdatum
-<<<<<<< HEAD
 
     hints:
-      username: 'User name to sign in.'
-      password: 'No special characters, please.'
-=======
       contracting_party:
         legal_entity: Rechtsform
         contracts: Verträge
@@ -72,9 +68,6 @@ de:
         name: Name
         email: Email
         phone: Telefon
-
-
-    hints:
       defaults:
         username: 'Benutzername, mit dem Du dich einloggen kannst.'
         password: 'Keine außergewöhnlichen Zeichen bitte.'
@@ -83,4 +76,3 @@ de:
 
 
 
->>>>>>> Wizard gestyled, Übersetzungen vervollständigt
