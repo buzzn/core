@@ -43,8 +43,6 @@ de:
         manufacturer_product_number: Produktbezeichnung
         watt_peak: Watt (max.)
         commissioning: Kaufdatum
-
-    hints:
       contracting_party:
         legal_entity: Rechtsform
         contracts: Verträge
@@ -68,6 +66,7 @@ de:
         name: Name
         email: Email
         phone: Telefon
+    hints:
       defaults:
         username: 'Benutzername, mit dem Du dich einloggen kannst.'
         password: 'Keine außergewöhnlichen Zeichen bitte.'
