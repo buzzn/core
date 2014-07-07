@@ -266,10 +266,10 @@ db.measurements.aggregate([
 
 
 
-date        = Time.zone.now
+date        = Time.now
 start_time  = date.beginning_of_day
-end_time    = start_time+24.hours
-
+end_time    = date.end_of_day
+Reading.test( start_time, end_time)
 
 hour = start_time
 watt_hours = []
@@ -280,7 +280,7 @@ end
 
 puts watt_hours
 
-Reading.test( start_time.to_time.iso8601, end_time.to_time.iso8601)
+Reading.test( start_time, end_time)
 
 
 Reading.where(:register_id => 1, :timestamp.gte => start_time, :timestamp.lte => end_time).size

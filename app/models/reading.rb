@@ -16,60 +16,15 @@ class Reading
 
 
 
-
-
-  def self.test(start, enddate)
-
-    pipe = [
-      { "$match" => {
-          timestamp: {
-            "$gte" => start,
-            "$lt"  => enddate
-          },
-          register_id: {
-            "$in" => [1]
-          }
-        }
-      },
-      { "$project" => {
-          watt_hour: 1,
-          hourly: { "$hour" => "$timestamp" }
-        }
-      },
-      { "$group" => {
-          _id: "$hourly",
-          firstReading: { "$last"  => "$watt_hour" },
-          lastReading: { "$first" => "$watt_hour" }
-        }
-      },
-      { "$project" => {
-          hourReading: { "$subtract" => [ "$firstReading", "$lastReading" ] }
-        }
-      },
-      { "$sort" => {
-          _id: 1
-        }
-      }
-    ]
-    return Reading.collection.aggregate(pipe)
-  end
-
-
-
-
-
-
-
-
-
   def self.this_day_to_hours_by_register_id(register_id)
 
+    date = Time.now
 
     pipe = [
       { "$match" => {
           timestamp: {
-            "$gte" => DateTime.now.beginning_of_day,
-            "$lt"  => DateTime.now.end_of_day
+            "$gte" => date.beginning_of_day,
+            "$lt"  => date.end_of_day
           },
           register_id: {
             "$in" => [register_id]
@@ -78,11 +33,12 @@ class Reading
       },
       { "$project" => {
           watt_hour: 1,
+          dayly:  { "$dayOfMonth" => "$timestamp" },
           hourly: { "$hour" => "$timestamp" }
         }
       },
       { "$group" => {
-          _id: "$hourly",
+          _id: { dayly: "$dayly", hourly: "$hourly"},
           firstReading: { "$last"  => "$watt_hour" },
           lastReading: { "$first" => "$watt_hour" }
         }
