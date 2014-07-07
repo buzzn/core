@@ -6,6 +6,7 @@ MeteringPointsController.prototype.show = () ->
     e.preventDefault()
     $(this).tab "show"
 
+  console.log gon.day_to_hours
 
   $.plot $("#day_to_hours"), [
     data: gon.day_to_hours
