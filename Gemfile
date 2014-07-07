@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails'
 gem 'mysql2'
 gem 'mongoid'
+gem 'moped'
 gem 'bson'
 gem 'puma'
 gem 'haml-rails'
@@ -64,6 +65,9 @@ gem 'public_activity'
 gem 'jbuilder'
 gem 'gon'
 gem 'rack-dev-mark'
+gem 'tzinfo'
+
+
 
 group :development do
   gem 'rack-mini-profiler'

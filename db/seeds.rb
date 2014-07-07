@@ -2,6 +2,10 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
+
+Time.zone = 'Berlin'
+
+
 require 'rubygems' #so it can load gems
 
 puts '-- seed development database --'
@@ -70,20 +74,44 @@ puts '5 users without location'
 end
 
 
+
+date            = Time.zone.now
+start_date      = (date-1.day).beginning_of_day
+end_date        = (date+1.day).end_of_day
+minute          = start_date
+watt_hour       = 0
+fake_readings   = []
+
+while minute < end_date
+
+  if (date.beginning_of_day..date.end_of_day).cover?(minute) # from 12:00 to 12:30 is cooking time
+    watt_hour += 1
+  end
+
+  if (date.beginning_of_day+12.hours..date.beginning_of_day+13.hours).cover?(minute) # from 12:00 to 12:30 is cooking time
+    watt_hour += 4000/60
+  end
+  puts "#{minute}: #{watt_hour}"
+  fake_readings << [(minute.utc.to_i*1000).to_s, watt_hour] # create time like discovergy
+
+  #fake_readings << [minute, watt_hour]
+  minute += 1.minute
+end
+
+
 puts 'add smart meter readings'
 buzzn_team.each do |user|
-  i=1
   Location.with_role(:manager, user).each do |location|
     location.metering_points.each do |metering_point|
-      File.foreach("#{Rails.root}/db/seeds/meter#{i}.txt").with_index { |line, line_num|
+      fake_readings.each do |fake_reading|
         Reading.create(
           register_id:  metering_point.register.id,
-          timestamp:    DateTime.now.beginning_of_day + line_num.minute,
-          watt_hour:    line.to_i
+          timestamp:    DateTime.strptime(fake_reading.first,'%Q'),
+          watt_hour:    fake_reading.last
         )
-      }
-      i+1
+      end
     end
   end
 end
+
 

@@ -9,6 +9,7 @@ class CreateProfiles < ActiveRecord::Migration
       t.string :last_name
       t.string :gender
       t.string :phone
+      t.string :time_zone
       t.text   :know_buzzn_from
       t.boolean :confirm_pricing_model
       t.boolean :terms

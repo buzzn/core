@@ -256,3 +256,72 @@ db.measurements.aggregate([
     { "$sort": { "_id": 1 } },
 ])
 
+
+
+
+
+
+
+
+
+
+
+date        = Time.zone.now
+start_time  = date.beginning_of_day
+end_time    = start_time+24.hours
+
+
+hour = start_time
+watt_hours = []
+while hour < end_time
+  watt_hours << Reading.where(:register_id => 1, :timestamp.gte => hour, :timestamp.lt => hour.end_of_hour).last.watt_hour
+  hour += 1.hour
+end
+
+puts watt_hours
+
+Reading.test( start_time, end_time)
+
+
+Reading.where(:register_id => 1, :timestamp.gte => start_time, :timestamp.lte => end_time).size
+
+Reading.where(:register_id => 1, :timestamp.gte => date.middle_of_day-3.minutes, :timestamp.lt => date.middle_of_day+30.minutes).size
+
+
+
+
+
+
+mongo
+use readings
+
+db.readings.aggregate([
+    { "$match" : { "timestamp": { "$gte": ISODate('2014-07-07 00:00:00'), "$lt": ISODate('2014-07-07 23:59:59') } } },
+    { "$project": {
+        "watt_hour": 1,
+        "hourly": { "$hour": "$timestamp" }
+    }},
+    { "$group": {
+       "_id": "$hourly",
+       "firstReading": { "$last": "$watt_hour" },
+       "lastReading": { "$first": "$watt_hour" }
+    }},
+    { "$project": {
+       "hourReading": { "$subtract": [ "$lastReading", "$firstReading" ] }
+    }},
+    { "$sort": { "_id": 1 } },
+])
+
+
+
+
+
+
+
+
+
+
+
+
+
+

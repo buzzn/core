@@ -17,12 +17,59 @@ class Reading
 
 
 
-  def self.this_day_to_hours_by_register_id(register_id)
+
+  def self.test(start, enddate)
+
     pipe = [
       { "$match" => {
           timestamp: {
-            "$gte" => Time.at(DateTime.now.beginning_of_day),
-            "$lt"  => Time.at(DateTime.now.end_of_day)
+            "$gte" => start,
+            "$lt"  => enddate
+          },
+          register_id: {
+            "$in" => [1]
+          }
+        }
+      },
+      { "$project" => {
+          watt_hour: 1,
+          hourly: { "$hour" => "$timestamp" }
+        }
+      },
+      { "$group" => {
+          _id: "$hourly",
+          firstReading: { "$last"  => "$watt_hour" },
+          lastReading: { "$first" => "$watt_hour" }
+        }
+      },
+      { "$project" => {
+          hourReading: { "$subtract" => [ "$firstReading", "$lastReading" ] }
+        }
+      },
+      { "$sort" => {
+          _id: 1
+        }
+      }
+    ]
+    return Reading.collection.aggregate(pipe)
+  end
+
+
+
+
+
+
+
+
+
+  def self.this_day_to_hours_by_register_id(register_id)
+
+
+    pipe = [
+      { "$match" => {
+          timestamp: {
+            "$gte" => DateTime.now.beginning_of_day,
+            "$lt"  => DateTime.now.end_of_day
           },
           register_id: {
             "$in" => [register_id]
