@@ -266,10 +266,10 @@ db.measurements.aggregate([
 
 
 
-date        = Time.zone.now
+date        = Time.now
 start_time  = date.beginning_of_day
-end_time    = start_time+24.hours
-
+end_time    = date.end_of_day
+Reading.test( start_time, end_time)
 
 hour = start_time
 watt_hours = []
@@ -293,33 +293,80 @@ Reading.where(:register_id => 1, :timestamp.gte => date.middle_of_day-3.minutes,
 
 
 mongo
-use readings
+use buzzn_development
 
 db.readings.aggregate([
-    { "$match" : { "timestamp": { "$gte": ISODate('2014-07-07 00:00:00'), "$lt": ISODate('2014-07-07 23:59:59') } } },
+    { "$match" : {
+        "timestamp": { "$gte": ISODate('2014-07-07T00:00:00+02:00'), "$lt": ISODate('2014-07-07T23:59:59+02:00') },
+        "register_id": { "$in": [1] }
+    }},
     { "$project": {
         "watt_hour": 1,
+        "dayly": {"$dayOfMonth": "$timestamp" },
         "hourly": { "$hour": "$timestamp" }
     }},
     { "$group": {
-       "_id": "$hourly",
+       "_id": { "dayly": "$dayly", "hourly": "$hourly"},
        "firstReading": { "$last": "$watt_hour" },
        "lastReading": { "$first": "$watt_hour" }
     }},
     { "$project": {
-       "hourReading": { "$subtract": [ "$lastReading", "$firstReading" ] }
+      "hourReading": { "$subtract": [ "$firstReading", "$lastReading" ] }
     }},
     { "$sort": { "_id": 1 } },
 ])
 
+# "_id": { "hourly": "$hourly", "dayly": "$dayly"},
+
+
+db.readings.aggregate([
+  { "$match" : {
+      "timestamp": { "$gte": ISODate('2014-07-07T00:00:00+02:00'), "$lt": ISODate('2014-07-07T23:59:59+02:00')  },
+      "register_id": { "$in": [1] }
+  }},
+  { "$project": {
+      "watt_hour": 1,
+      "year": { "$year": "$timestamp" },
+      "month":  {"$month": "$timestamp" },
+      "day":    {"$dayOfMonth": "$timestamp" },
+      "hour": { "$hour": "$timestamp" },
+      "time": "$timestamp"
+  }}
+])
+
+
+
+db.readings.aggregate([
+  { "$match" : {
+      "timestamp": { "$gte": ISODate('2014-07-07T00:00:00+02:00'), "$lt": ISODate('2014-07-07T23:59:59+02:00')  },
+      "register_id": { "$in": [1] }
+  }},
+  { "$project": {
+      "watt_hour": 1,
+      "hourly": { "$hour": "$timestamp" }
+      "year":   {"$year": "$timestamp" },
+      "month":  {"$month": "$timestamp" },
+      "day":    {"$day": "$timestamp" }
+  }}
+])
+
+
+
+db.readings.aggregate([{ "$match" : { "timestamp": { "$gte": ISODate('2014-07-07T11:55:00+02:00'), "$lt": ISODate('2014-07-07T23:59:59+02:00')  },"register_id": { "$in": [1] } } }])
 
 
 
 
-
-
-
-
+db.readings.aggregate(
+    {"$project": {
+         "year": { "$year": "$timestamp"},
+         "month": { "$month": "$timestamp"}
+    }},
+    {"$group": {
+         "_id": {"year" : "$year", "month": "$month"},
+         "count": {"$sum": 1}
+    }}
+)
 
 
 
