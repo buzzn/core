@@ -23,4 +23,6 @@
 //= require bootstrap
 //= require jquery.flot
 //= require jquery.flot.resize
+//= require jquery.flot.tooltip
+//= require jquery.flot.axislabels
 //= require_tree .
