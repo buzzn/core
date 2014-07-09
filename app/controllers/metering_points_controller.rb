@@ -8,10 +8,12 @@ class MeteringPointsController < InheritedResources::Base
     @devices        = @metering_point.devices
     gon.push({
                 day_to_hours:       @metering_point.register.day_to_hours,
-                fake_day_to_hours:  [[0, 3], [1, 3], [2, 5], [3, 7], [4, 8], [5, 10], [6, 11], [7, 9], [8, 5], [9, 13]],
-                fake_day_to_hours2: [[0, 1], [1, 5], [2, 3], [3, 4], [4, 10], [5, 12], [6, 9], [7, 8], [8, 5], [9, 10]],
+                fake_day_to_hours:  [[Time.now.to_i * 1000 - 9*3600 * 1000, 3], [Time.now.to_i * 1000 - 8*3600 * 1000, 3], [Time.now.to_i * 1000 - 7*3600 * 1000, 5], [Time.now.to_i * 1000 - 6*3600 * 1000, 7], [Time.now.to_i * 1000 - 5*3600 * 1000, 8], [Time.now.to_i * 1000 - 4*3600 * 1000, 10], [Time.now.to_i * 1000 - 3*3600 * 1000, 11], [Time.now.to_i * 1000 - 2*3600 * 1000, 9], [Time.now.to_i * 1000 - 3600 * 1000, 5], [Time.now.to_i * 1000, 13]],
+                fake_day_to_hours2: [[Time.now.to_i * 1000 - 9*3600 * 1000, 1], [Time.now.to_i * 1000 - 8*3600 * 1000, 5], [Time.now.to_i * 1000 - 7*3600 * 1000, 3], [Time.now.to_i * 1000 - 6*3600 * 1000, 4], [Time.now.to_i * 1000 - 5*3600 * 1000, 10], [Time.now.to_i * 1000 - 4*3600 * 1000, 12], [Time.now.to_i * 1000 - 3*3600 * 1000, 9], [Time.now.to_i * 1000 - 2*3600 * 1000, 8], [Time.now.to_i * 1000 - 3600 * 1000, 5], [Time.now.to_i * 1000, 10]],
                 fake_week_to_days:  [[1, 12], [2, 10], [3, 13], [4, 9], [5, 11], [6, 14], [7, 15]],
-                fake_month_to_days:  [[1, 12], [2, 10], [3, 13], [4, 9], [5, 11], [6, 14], [7, 15], [8, 12], [9, 10], [10, 13], [11, 9], [12, 11], [13, 14], [14, 15], [15, 12], [16, 10], [17, 13], [18, 9], [19, 11], [20, 14], [21, 15]]
+                fake_month_to_days:  [[1, 12], [2, 10], [3, 13], [4, 9], [5, 11], [6, 14], [7, 15], [8, 12], [9, 10], [10, 13], [11, 9], [12, 11], [13, 14], [14, 15], [15, 12], [16, 10], [17, 13], [18, 9], [19, 11], [20, 14], [21, 15]],
+                fake_month_to_days2: [[Time.now.to_i * 1000, 12], [Time.now.to_i * 1000 + 86400*1000, 10], [Time.now.to_i * 1000 + 2*86400*1000, 13], [Time.now.to_i * 1000 + 3*86400*1000, 9], [Time.now.to_i * 1000 + 4*86400*1000, 15], [Time.now.to_i * 1000 + 5*86400*1000, 11], [Time.now.to_i * 1000 + 6*86400*1000, 7]],
+                fake_real_time_data: [[Time.now.to_i*1000-10*1000, 300], [Time.now.to_i*1000-9*1000, 350], [Time.now.to_i*1000-8*1000, 325], [Time.now.to_i*1000-7*1000, 300], [Time.now.to_i*1000-6*1000, 240], [Time.now.to_i*1000-5*1000, 250], [Time.now.to_i*1000-4*1000, 230], [Time.now.to_i*1000-3*1000, 510], [Time.now.to_i*1000-2*1000, 500], [Time.now.to_i*1000-1*1000, 490], [Time.now.to_i*1000, 470]]
               })
     show!
   end

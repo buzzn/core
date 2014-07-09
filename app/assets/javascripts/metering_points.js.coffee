@@ -5,6 +5,42 @@ MeteringPointsController.prototype.show = () ->
     e.preventDefault()
     $(this).tab "show"
 
+  $.plot $("#fake_real_time_data"), [gon.fake_real_time_data], { 
+      series:
+        color: "white"
+        points:
+          show: true
+        lines:
+          show: true
+          fill: true
+          fillColor: "rgba(255,255,255, 0.1)"
+        hoverable: true
+        highlightColor: "white"
+      grid: 
+        show: true
+        color: "white"
+        borderWidth: 0
+        hoverable: true
+      xaxis:
+        mode: "time"
+        timeformat: "%H:%M:%S"
+        tickSize: [2, "second"]
+        tickDecimals: 0
+
+      tooltip: true
+      tooltipOpts:
+        content: 'Uhrzeit: %x, Bezug: %y kW'
+
+      axisLabels:
+        show: true
+      xaxes:[
+        axisLabel: 'Uhrzeit'
+      ]
+      yaxes:[
+        axisLabel: 'Bezug (kW)'
+      ]
+    }
+
   console.log gon.day_to_hours
 
   $.plot $("#day_to_hours"), [
@@ -27,7 +63,7 @@ MeteringPointsController.prototype.show = () ->
         show: true
         fill: true
         fillColor: "rgba(255,255,204, 0.8)"
-        barWidth: 0.8
+        barWidth: 0.8*3600*1000
       color: "rgb(255,255,204)"
       highlightColor: "rgba(255,255,255,0.9)" 
     }, 
@@ -38,7 +74,7 @@ MeteringPointsController.prototype.show = () ->
         show: true
         fill: true
         fillColor: "rgba(0,102,102,0.6)"
-        barWidth: 0.66
+        barWidth: 0.66*3600*1000
       color: "rgb(0,102,102)" 
       highlightColor: "rgba(0,0,0, 0.9)"
     }
@@ -53,19 +89,19 @@ MeteringPointsController.prototype.show = () ->
     grid:
       show: true
       color: "white"
-      backgroundColor:
-        colors: ["rgb(255, 102, 102)", "rgb(255, 51, 102)"]
       hoverable: true
+      borderWidth: 0
     tooltip: true
     tooltipOpts:
-      content: 'Stunde: %x.0, Bezug: %y kWh'
+      content: 'Uhrzeit: %x, Bezug: %y kWh'
     xaxis:
-      min: -0.5
-      max: 9.5
+      mode: "time"
+      timeformat: "%H:00"
+      tickSize: [1, "hour"]
     axisLabels:
       show: true
     xaxes:[
-      axisLabel: 'Stunde'
+      axisLabel: 'Uhrzeit'
     ]
     yaxes:[
       axisLabel: 'Bezug (kWh)'
@@ -75,36 +111,33 @@ MeteringPointsController.prototype.show = () ->
 
 
 
-
-  $.plot $("#fake_week_to_days"), [gon.fake_month_to_days], { 
+  $.plot $("#fake_month_to_days2"), [gon.fake_month_to_days2], { 
       series:
-        color: "white"
-        points:
-          show: true
-        lines:
+        color: "rgb(202,255,112)"
+        hoverable: true
+        highlightColor: "rgb(202,255,112)"
+      bars:
           show: true
           fill: true
-          fillColor: "rgba(255,255,255, 0.2)"
-        hoverable: true
-        highlightColor: "white"
+          fillColor: "rgba(202,255,112, 0.8)"
+          align: "center"
+          barWidth: 60*60*1000*20
       grid: 
         show: true
         color: "white"
-        backgroundColor: 
-          colors: ["rgb(52,153,255)", "rgb(51,102,255)"]
         hoverable: true
-      xaxis:
-        minTickSize: 1
-        tickDecimals: 0
-
+        borderWidth: 0
       tooltip: true
       tooltipOpts:
-        content: 'Tag: %x.0, Bezug: %y kWh'
-
+        content: 'Datum: %x, Bezug: %y kWh'
+      xaxis:
+        mode: "time"
+        timeformat: "%d.%m.%y"
+        tickSize: [1, "day"]
       axisLabels:
         show: true
       xaxes:[
-        axisLabel: 'Tag'
+        axisLabel: 'Datum'
       ]
       yaxes:[
         axisLabel: 'Bezug (kWh)'
