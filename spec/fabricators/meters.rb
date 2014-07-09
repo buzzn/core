@@ -7,10 +7,11 @@ Fabricator :meter do
   registers                    { [Fabricate(:register)] }
 end
 
-
-Fabricator :meter_justus, from: :meter do
-  manufacturer_device_number  1124001747
-  operator                    'discovergy'
-  username                    'justus@buzzn.net'
-  password                    'PPf93TcR'
+# Justus easymeter 1024000034
+Fabricator :easymeter_1024000034, from: :meter do
+  manufacturer_name           'Easymeter'
+  manufacturer_product_number 'Q3D'
+  manufacturer_device_number  '1024000034'
+  registers                    { [Fabricate(:register)] }
+  #equipments                   { [Fabricate(:equipment)] }
 end

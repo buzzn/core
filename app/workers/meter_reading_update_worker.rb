@@ -3,23 +3,19 @@ class MeterReadingUpdateWorker
   sidekiq_options queue: "high"
   # sidekiq_options retry: false
 
-  def perform(meter_id, start_time, end_time)
-    meter = Meter.find(meter_id)
-    
-    
+  def perform(register_id, manufacturer_device_number, msp_name, msp_login_username, msp_login_password, start_time, end_time)
 
-    case meter.brand
+    case msp_name
     when 'discovergy'
-      discovergy = Discovergy.new(meter.username, meter.password, "EASYMETER_#{meter.uid}")
+      discovergy = Discovergy.new(msp_login_username, msp_login_password, "EASYMETER_#{manufacturer_device_number}")
       result     = discovergy.call(start_time, end_time)
       time       = result['result'].first['time']
       energy     = result['result'].first['energy']
 
-
       Reading.create(
-        meter_id:  meter.id,
-        timestamp: DateTime.strptime(time.to_s,'%Q'),
-        wh:        energy
+        register_id:  register_id,
+        timestamp:    DateTime.strptime(time.to_s,'%Q'),
+        watt_hour:    energy
       )
 
     when 'fluxo'

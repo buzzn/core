@@ -8,13 +8,14 @@ class MeteringPointsController < InheritedResources::Base
     @devices        = @metering_point.devices
     gon.push({
                 day_to_hours:       @metering_point.register.day_to_hours,
-                fake_day_to_hours:  [[0, 3], [1, 3], [2, 5], [3, 7], [4, 8], [5, 10], [6, 11], [7, 9], [8, 5], [9, 13]],
+                fake_day_to_hours:  Register.standart_profile_day_to_hours,
                 fake_day_to_hours2: [[0, 1], [1, 5], [2, 3], [3, 4], [4, 10], [5, 12], [6, 9], [7, 8], [8, 5], [9, 10]],
                 fake_week_to_days:  [[1, 12], [2, 10], [3, 13], [4, 9], [5, 11], [6, 14], [7, 15]],
                 fake_month_to_days:  [[1, 12], [2, 10], [3, 13], [4, 9], [5, 11], [6, 14], [7, 15], [8, 12], [9, 10], [10, 13], [11, 9], [12, 11], [13, 14], [14, 15], [15, 12], [16, 10], [17, 13], [18, 9], [19, 11], [20, 14], [21, 15]]
               })
     show!
   end
+
 
 
   def edit
