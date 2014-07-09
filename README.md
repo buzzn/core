@@ -33,7 +33,7 @@
     http://localhost:3000/sidekiq
 
 ## update meters
-    bundle exec rake smartmeter:reading_update
+    bundle exec rake smartmeter:register_update
 
 ## Mail Views
     http://localhost:3000/de/mail_view
