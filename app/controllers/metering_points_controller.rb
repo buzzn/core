@@ -10,6 +10,7 @@ class MeteringPointsController < InheritedResources::Base
                 day_to_hours:       @metering_point.register.day_to_hours,
                 fake_day_to_hours:  [[Time.now.to_i * 1000 - 9*3600 * 1000, 3], [Time.now.to_i * 1000 - 8*3600 * 1000, 3], [Time.now.to_i * 1000 - 7*3600 * 1000, 5], [Time.now.to_i * 1000 - 6*3600 * 1000, 7], [Time.now.to_i * 1000 - 5*3600 * 1000, 8], [Time.now.to_i * 1000 - 4*3600 * 1000, 10], [Time.now.to_i * 1000 - 3*3600 * 1000, 11], [Time.now.to_i * 1000 - 2*3600 * 1000, 9], [Time.now.to_i * 1000 - 3600 * 1000, 5], [Time.now.to_i * 1000, 13]],
                 fake_day_to_hours2: [[Time.now.to_i * 1000 - 9*3600 * 1000, 1], [Time.now.to_i * 1000 - 8*3600 * 1000, 5], [Time.now.to_i * 1000 - 7*3600 * 1000, 3], [Time.now.to_i * 1000 - 6*3600 * 1000, 4], [Time.now.to_i * 1000 - 5*3600 * 1000, 10], [Time.now.to_i * 1000 - 4*3600 * 1000, 12], [Time.now.to_i * 1000 - 3*3600 * 1000, 9], [Time.now.to_i * 1000 - 2*3600 * 1000, 8], [Time.now.to_i * 1000 - 3600 * 1000, 5], [Time.now.to_i * 1000, 10]],
+                fake_day_to_hours3:  Register.standart_profile_day_to_hours,
                 fake_week_to_days:  [[1, 12], [2, 10], [3, 13], [4, 9], [5, 11], [6, 14], [7, 15]],
                 fake_month_to_days:  [[1, 12], [2, 10], [3, 13], [4, 9], [5, 11], [6, 14], [7, 15], [8, 12], [9, 10], [10, 13], [11, 9], [12, 11], [13, 14], [14, 15], [15, 12], [16, 10], [17, 13], [18, 9], [19, 11], [20, 14], [21, 15]],
                 fake_month_to_days2: [[Time.now.to_i * 1000, 12], [Time.now.to_i * 1000 + 86400*1000, 10], [Time.now.to_i * 1000 + 2*86400*1000, 13], [Time.now.to_i * 1000 + 3*86400*1000, 9], [Time.now.to_i * 1000 + 4*86400*1000, 15], [Time.now.to_i * 1000 + 5*86400*1000, 11], [Time.now.to_i * 1000 + 6*86400*1000, 7]],
@@ -17,6 +18,7 @@ class MeteringPointsController < InheritedResources::Base
               })
     show!
   end
+
 
 
   def edit

@@ -14,7 +14,7 @@
 ## Setup Rails Project
     git clone git@github.com:ffaerber/buzzn.git
     cd buzzn
-    add /config/secrets.yml (ask the Lead Developer) 
+    add /config/secrets.yml (ask the Lead Developer)
     bundle install
     bundle exec rake db:create
 
@@ -28,10 +28,12 @@
     bundle exec guard
 
 ## Start Background Jobs
+    redis-server
     bundle exec sidekiq -q high, 5 default
+    http://localhost:3000/sidekiq
 
 ## update meters
-    bundle exec rake meter:reading_update
+    bundle exec rake smartmeter:reading_update
 
 ## Mail Views
     http://localhost:3000/de/mail_view
@@ -49,7 +51,7 @@
 ## update locales
     bundle exec rails g devise:views:locale de
     bundle exec rails g devise:views:locale en
-    
+
 ## add Sublime Settings to Preferences -> File Settings - User:
     "draw_white_space": "selection",
     "trim_trailing_white_space_on_save": true,

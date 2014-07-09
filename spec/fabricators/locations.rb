@@ -14,9 +14,10 @@ Fabricator :location_fichtenweg, from: :location do
   name              'Home of the Brave'
   address           { Fabricate(:address, street_name: 'Fichtenweg', street_number: '8', zip: 82515, city: 'Wolfratshausen', state: 'Bayern') }
   metering_points   {[
-    Fabricate(:mp_z1),
-    Fabricate(:mp_z2),
-    Fabricate(:mp_z3),
-    Fabricate(:mp_z4)
+    # Fabricate(:mp_z1),
+    # Fabricate(:mp_z2),
+    # Fabricate(:mp_z3),
+    # Fabricate(:mp_z4),
+    Fabricate(:mp_z5)
   ]}
 end

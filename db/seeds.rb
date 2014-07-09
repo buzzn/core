@@ -16,7 +16,6 @@ Fabricate(:metering_service_provider, name: 'Discovergy')
 Fabricate(:transmission_system_operator, name: '50Herz')
 
 
-
 admin = Fabricate(:admin)
 admin.add_role 'admin'
 
@@ -28,7 +27,7 @@ buzzn_team_names.each do |user_name|
   buzzn_team << user = Fabricate(user_name)
   case user_name
   when 'justus'
-    user_location = Fabricate(:location)#Fabricate(:location_fichtenweg)
+    user_location = Fabricate(:location_fichtenweg)
   when 'felix'
     user_location = Fabricate(:location_muehlenkamp)
   else
@@ -82,8 +81,6 @@ while minute < end_date
   if (date.middle_of_day..date.middle_of_day+90.minutes).cover?(minute) # from 12:00 to 12:30 is cooking time
     watt_hour += 4000/60
   end
-  puts "#{minute}: #{watt_hour}"
-  #fake_readings << [(minute.utc.to_i*1000).to_s, watt_hour] # create time like discovergy
   fake_readings << [minute, watt_hour]
   minute += 1.minute
 end
@@ -96,7 +93,7 @@ buzzn_team.each do |user|
       fake_readings.each do |fake_reading|
         Reading.create(
           register_id:  metering_point.register.id,
-          timestamp:    fake_reading.first, #DateTime.strptime(fake_reading.first,'%Q'),
+          timestamp:    fake_reading.first,
           watt_hour:    fake_reading.last
         )
       end
