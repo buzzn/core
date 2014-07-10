@@ -96,7 +96,7 @@ MeteringPointsController.prototype.show = () ->
       borderWidth: 0
     tooltip: true
     tooltipOpts:
-      content: 'Uhrzeit: %x, Bezug: %y kWh'
+      content: '%s:   Uhrzeit: %x, Bezug: %y kWh'
     xaxis:
       mode: "time"
       timeformat: "%H:00"

@@ -1,17 +1,15 @@
 .item{id: "metering_point_#{metering_point.id}", class: metering_point.mode }
 
   .row
-    .col-md-8
-      %h5= link_to metering_point.name, metering_point
-
-  .row
-    .col-md-3
-      %i.fa.fa-refresh.fa-spin.fa-4x
-    .col-md-9
-      - if metering_point.register
-        //.inlinebar.bar= metering_point.register.day_to_hours
+    .col-md-12
+      .block
+        .header.no-border= link_to metering_point.name, metering_point
         .chart.blue_container
           #fake_location_display{style: "height: 200px"}
+        .content.no-padding{style: "height: 50px"}
+
+        //- if metering_point.register
+        //.inlinebar.bar= metering_point.register.day_to_hours
 
   .row
     .col-md-6
