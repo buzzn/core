@@ -5,7 +5,7 @@ MeteringPointsController.prototype.show = () ->
     e.preventDefault()
     $(this).tab "show"
 
-  $.plot $("#fake_real_time_data"), [gon.fake_real_time_data], { 
+  $.plot $("#fake_real_time_data"), [gon.fake_real_time_data], {
       series:
         color: "white"
         points:
@@ -15,8 +15,8 @@ MeteringPointsController.prototype.show = () ->
           fill: true
           fillColor: "rgba(255,255,255, 0.1)"
         hoverable: true
-        highlightColor: "white"
-      grid: 
+        highlightColor: "rgba(255, 255, 255, 0.5)"
+      grid:
         show: true
         color: "white"
         borderWidth: 0
@@ -24,12 +24,11 @@ MeteringPointsController.prototype.show = () ->
       xaxis:
         mode: "time"
         timeformat: "%H:%M:%S"
-        tickSize: [2, "second"]
         tickDecimals: 0
 
       tooltip: true
       tooltipOpts:
-        content: 'Uhrzeit: %x, Bezug: %y kW'
+        content: '%x Uhr, Bezug: %y Watt'
 
       axisLabels:
         show: true
@@ -37,11 +36,12 @@ MeteringPointsController.prototype.show = () ->
         axisLabel: 'Uhrzeit'
       ]
       yaxes:[
-        axisLabel: 'Bezug (kW)'
+        axisLabel: 'Bezug (Watt)'
       ]
     }
 
   console.log gon.day_to_hours
+  console.log gon.fake_day_to_hours
 
   $.plot $("#day_to_hours"), [
     data: gon.day_to_hours
@@ -52,31 +52,35 @@ MeteringPointsController.prototype.show = () ->
       fill: true,
       barWidth: 0.66,
       fillColor: "rgba(220, 80, 80, 0.80)"
-  ]
+  ], {
+    grid:
+      color: "white"
+      borderWidth: 0
+    }
 
 
 
   $.plot $("#fake_day_to_hours"), [{
-      data: gon.fake_day_to_hours
-      label: "Heute"
-      bars:
-        show: true
-        fill: true
-        fillColor: "rgba(255,255,204, 0.8)"
-        barWidth: 0.8*3600*1000
-      color: "rgb(255,255,204)"
-      highlightColor: "rgba(255,255,255,0.9)" 
-    }, 
-    {
       data: gon.fake_day_to_hours2
       label: "Gestern"
       bars:
         show: true
         fill: true
-        fillColor: "rgba(0,102,102,0.6)"
+        fillColor: "rgba(226,106,69,0.94)"
         barWidth: 0.66*3600*1000
-      color: "rgb(0,102,102)" 
-      highlightColor: "rgba(0,0,0, 0.9)"
+        lineWidth: 0
+      highlightColor: "rgba(226,106,69,0.5)"
+    },
+    {
+      data: gon.fake_day_to_hours
+      label: "Heute"
+      bars:
+        show: true
+        fill: true
+        fillColor: "rgba(255,255,255,0.94)"
+        barWidth: 0.66*3600*1000
+        lineWidth: 0
+      highlightColor: "rgb(255,255,255)"
     }
   ], {
     series:
@@ -84,8 +88,7 @@ MeteringPointsController.prototype.show = () ->
     bars:
       align: "center"
     legend:
-      position: "nw"
-      backgroundColor: "rgba(255, 102, 102, 0.8)"
+      show: false
     grid:
       show: true
       color: "white"
@@ -97,7 +100,7 @@ MeteringPointsController.prototype.show = () ->
     xaxis:
       mode: "time"
       timeformat: "%H:00"
-      tickSize: [1, "hour"]
+      minTickSize: [1, "hour"]
     axisLabels:
       show: true
     xaxes:[
@@ -111,18 +114,18 @@ MeteringPointsController.prototype.show = () ->
 
 
 
-  $.plot $("#fake_month_to_days2"), [gon.fake_month_to_days2], { 
+  $.plot $("#fake_week_to_days"), [gon.fake_week_to_days], {
       series:
-        color: "rgb(202,255,112)"
         hoverable: true
-        highlightColor: "rgb(202,255,112)"
+        highlightColor: "rgb(255, 255, 255)"
       bars:
           show: true
           fill: true
-          fillColor: "rgba(202,255,112, 0.8)"
+          fillColor: "rgba(255, 255, 255, 0.94)"
           align: "center"
           barWidth: 60*60*1000*20
-      grid: 
+          lineWidth: 0
+      grid:
         show: true
         color: "white"
         hoverable: true
@@ -133,11 +136,114 @@ MeteringPointsController.prototype.show = () ->
       xaxis:
         mode: "time"
         timeformat: "%d.%m.%y"
-        tickSize: [1, "day"]
+        minTickSize: [1, "day"]
       axisLabels:
         show: true
       xaxes:[
         axisLabel: 'Datum'
+      ]
+      yaxes:[
+        axisLabel: 'Bezug (kWh)'
+      ]
+    }
+
+
+  $.plot $("#fake_month_to_days"), [gon.fake_month_to_days], {
+      series:
+        hoverable: true
+        highlightColor: "rgb(255, 255, 255)"
+      bars:
+          show: true
+          fill: true
+          fillColor: "rgba(255, 255, 255, 0.94)"
+          align: "center"
+          barWidth: 60*60*1000*20
+          lineWidth: 0
+      grid:
+        show: true
+        color: "white"
+        hoverable: true
+        borderWidth: 0
+      tooltip: true
+      tooltipOpts:
+        content: 'Datum: %x, Bezug: %y kWh'
+      xaxis:
+        mode: "time"
+        timeformat: "%d.%m.%y"
+        tickSize: [5, "day"]
+      axisLabels:
+        show: true
+      xaxes:[
+        axisLabel: 'Datum'
+      ]
+      yaxes:[
+        axisLabel: 'Bezug (kWh)'
+      ]
+    }
+
+
+
+  $.plot $("#fake_year_to_months"), [gon.fake_year_to_months], {
+      series:
+        hoverable: true
+        highlightColor: "rgb(255, 255, 255)"
+      bars:
+          show: true
+          fill: true
+          fillColor: "rgba(255, 255, 255, 0.94)"
+          align: "center"
+          barWidth: 60*60*1000*24*25
+          lineWidth: 0
+      grid:
+        show: true
+        color: "white"
+        hoverable: true
+        borderWidth: 0
+      tooltip: true
+      tooltipOpts:
+        content: 'Monat: %x, Bezug: %y kWh'
+      xaxis:
+        mode: "time"
+        timeformat: "%b %Y"
+      axisLabels:
+        show: true
+      xaxes:[
+        axisLabel: 'Monat'
+      ]
+      yaxes:[
+        axisLabel: 'Bezug (kWh)'
+      ]
+    }
+
+
+
+  $.plot $("#fake_years_to_year"), [gon.fake_years_to_year], {
+      series:
+        hoverable: true
+        highlightColor: "rgb(255, 255, 255)"
+      bars:
+          show: true
+          fill: true
+          fillColor: "rgba(255, 255, 255, 0.94)"
+          align: "center"
+          barWidth: 60*60*1000*24*25*8
+          lineWidth: 0
+      grid:
+        show: true
+        color: "white"
+        hoverable: true
+        borderWidth: 0
+      tooltip: true
+      tooltipOpts:
+        content: 'Jahr: %x, Bezug: %y kWh'
+      xaxis:
+        mode: "time"
+        timeformat: "%Y"
+        tickSize: [1, "year"]
+      axisLabels:
+        show: true
+      xaxes:[
+        axisLabel: 'Jahr'
       ]
       yaxes:[
         axisLabel: 'Bezug (kWh)'
