@@ -9,7 +9,9 @@
       %i.fa.fa-refresh.fa-spin.fa-4x
     .col-md-9
       - if metering_point.register
-        .inlinebar.bar= metering_point.register.day_to_hours
+        //.inlinebar.bar= metering_point.register.day_to_hours
+        .chart.blue_container
+          #fake_location_display{style: "height: 200px"}
 
   .row
     .col-md-6

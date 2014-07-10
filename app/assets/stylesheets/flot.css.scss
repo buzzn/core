@@ -1,14 +1,22 @@
 .chart{
   padding: 20px;
-  margin-bottom: 50px
+  margin-bottom: 50px;
 }
 
-
 .blue_container{
-  background-image: linear-gradient(to bottom, #52AEFF, #2180D3)
+  background-image: linear-gradient(to bottom, #52AEFF, #2180D3);
+  background-color: #3290E2;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #499DE5 #258FEC #1E73BD;
+
 }
 .red_container{
   background-image: linear-gradient(to bottom, #FF8A65 45%, #E26A45 102%);
+  background-color: #3290E2;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #EE815E #F27B56 #D66543;
 }
 
 
@@ -27,6 +35,24 @@
 .flot-y-axis{
 	color:#FFF
 }
+
+.block{
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.13);
+  border: 0px none;
+  margin-bottom: 30px;
+  background: none repeat scroll 0% 0% #FFF;
+  border-radius: 3px;
+}
+
+.block .header{
+  padding: 10px;
+  border-radius: 3px 3px 0px 0px;
+}
+
+.block .no-border{
+  border-bottom: 0px none;
+}
+
 
 
 

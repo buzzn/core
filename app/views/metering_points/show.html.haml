@@ -46,39 +46,46 @@
           = t'contracts'
 
   .raw
-    %h5= t('actual_down_readings')
-    .chart.blue_container
-      #fake_real_time_data{style: "height: 200px"}
+    .block
+      .header.no-border= t('actual_down_readings')
+      .chart.blue_container
+        #fake_real_time_data{style: "height: 200px"}
 
   .raw
-    %h5= t('actual_smart_meter_readings')
-    .chart.red_container
-      #day_to_hours{style: "height: 200px"}
+    .block
+      .header.no-border= t('actual_smart_meter_readings')
+      .chart.red_container
+        #day_to_hours{style: "height: 200px"}
 
   .raw
-    %h5= t('day_by_hour_readings')
-    .chart.red_container
-      #fake_day_to_hours{style: "height:200px"}
+    .block
+      .header.no-border= t('day_by_hour_readings')
+      .chart.red_container
+        #fake_day_to_hours{style: "height:200px"}
 
   .raw
-    %h5= t('week_by_day_readings')
-    .chart.red_container
-      #fake_week_to_days{style: "height: 200px"}
+    .block
+      .header.no-border= t('week_by_day_readings')
+      .chart.red_container
+        #fake_week_to_days{style: "height: 200px"}
 
   .raw
-    %h5= t('month_by_day_readings')
-    .chart.red_container
-      #fake_month_to_days{style: "height: 200px"}
+    .block
+      .header.no-border= t('month_by_day_readings')
+      .chart.red_container
+        #fake_month_to_days{style: "height: 200px"}
 
   .raw
-    %h5= t('year_by_month_readings')
-    .chart.blue_container
-      #fake_year_to_months{style: "height: 200px"}
+    .block
+      .header.no-border= t('year_by_month_readings')
+      .chart.blue_container
+        #fake_year_to_months{style: "height: 200px"}
 
   .raw
-    %h5= t('years_by_year_readings')
-    .chart.red_container
-      #fake_years_to_year{style: "height: 200px"}
+    .block
+      .header.no-border= t('years_by_year_readings')
+      .chart.red_container
+        #fake_years_to_year{style: "height: 200px"}
 
 
 
