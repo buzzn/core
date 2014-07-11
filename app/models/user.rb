@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
   has_many :groups, :through => :group_users
 
 
+
   def friend?(user)
     self.friendships.where(friend: user).empty? ? false : true
   end

@@ -9,6 +9,11 @@ end
 
 
 
+
+
+
+
+
 Fabricator :mp_z1, from: :metering_point do
   address_addition  'Übergabe'
   uid               'DE0010688251510000000000002677114'
@@ -71,4 +76,27 @@ Fabricator :mp_z5, from: :metering_point do
   }
   metering_service_provider_contract {Fabricate(:mspc_justus)}
 end
+
+
+
+
+
+
+
+# karins pv anlage
+Fabricator :mp_z6, from: :metering_point do
+  address_addition  'Scheune'
+  uid                'DE0010688206510000000000003007532'
+  register {
+    Fabricate(:easymeter_60051431).registers.first
+  }
+  metering_service_provider_contract {Fabricate(:mspc_karin)}
+end
+
+
+
+
+
+
+
 

@@ -15,3 +15,13 @@ Fabricator :easymeter_1024000034, from: :meter do
   registers                    { [Fabricate(:register)] }
   #equipments                   { [Fabricate(:equipment)] }
 end
+
+
+# karins meter fur die pv anlange
+Fabricator :easymeter_60051431, from: :meter do
+  manufacturer_name           'Easymeter'
+  manufacturer_product_number 'Q3D'
+  manufacturer_device_number  '60051431'
+  registers                    { [Fabricate(:register_out)] }
+  #equipments                   { [Fabricate(:equipment)] }
+end

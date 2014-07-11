@@ -27,9 +27,11 @@ buzzn_team_names.each do |user_name|
   buzzn_team << user = Fabricate(user_name)
   case user_name
   when 'justus'
-    user_location = Fabricate(:location_fichtenweg)
+    user_location = Fabricate(:fichtenweg)
   when 'felix'
-    user_location = Fabricate(:location_muehlenkamp)
+    user_location = Fabricate(:muehlenkamp)
+  when 'stefan'
+    @forstenrieder_weg = user_location = Fabricate(:forstenrieder_weg)
   else
     user_location = Fabricate(:location)
   end
@@ -43,6 +45,24 @@ buzzn_team.each do |user|
     user.friendships.create(friend: friend) if user != friend
   end
 end
+
+
+# karin
+karin = Fabricate(:karin)
+gautinger_weg = Fabricate(:gautinger_weg)
+gautinger_weg.metering_points.first.users << karin
+karin.add_role :manager, gautinger_weg
+@forstenrieder_weg.metering_points.first.users << karin
+buzzn_team.each do |buzzn_user|
+  karin.friendships.create(friend: buzzn_user) # alle von buzzn sind freund von karin
+  buzzn_user.friendships.create(friend: karin)
+end
+
+
+# felix
+felix = User.where(email: 'felix@buzzn.net').first
+@forstenrieder_weg.metering_points.first.users << felix
+
 
 
 
