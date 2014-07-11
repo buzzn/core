@@ -36,11 +36,17 @@ class MeteringPoint < ActiveRecord::Base
   validates :mode, presence: true
   validates :address_addition, presence: true
 
+
+
+  delegate :mode, to: :register
+
+
+
   def name
     case mode
-    when 'up'
-      "#{mode} #{generator_type_names}-#{self.address_addition}"
-    when 'down'
+    when 'out'
+      "#{mode} #{generator_type_names}-#{address_addition}"
+    when 'in'
       address_addition
     end
   end
@@ -56,15 +62,6 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
-
-
-  def self.modes
-    %w{
-      up
-      down
-      up_down
-    }
-  end
 
   def self.voltages
     %w{
@@ -85,16 +82,13 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
-  def up?
-    self.mode == 'up'
+  def out?
+    mode == 'out'
   end
 
-  def down?
-    self.mode == 'down'
+  def in?
+    mode == 'in'
   end
 
-  def up_down?
-    self.mode == 'up_down'
-  end
 
 end

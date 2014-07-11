@@ -5,5 +5,5 @@
       %h4.modal-title= t'edit_device'
     .modal-body
       = simple_form_for @device, remote: true, html: {multipart: true} do |f|
-        = render 'devices/down_form_fields', f: f
+        = render 'devices/in_form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-primary'

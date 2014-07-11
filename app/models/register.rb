@@ -5,9 +5,8 @@ class Register < ActiveRecord::Base
 
   def self.modes
     %w{
-      up
-      down
-      up_down
+      out
+      in
     }
   end
 

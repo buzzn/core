@@ -1,6 +1,6 @@
 Fabricator :contract do
   status                'running'
-  mode                  'down'
+  mode                  'in'
   terms                 true
   power_of_attorney     true
   commissioning         Date.new(2013,9,1)

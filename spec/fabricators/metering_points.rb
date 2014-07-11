@@ -1,6 +1,5 @@
 Fabricator :metering_point do
   address_addition  'Keller'
-  mode              'down'
   uid               'DE0010688251510000000000002677114'
   register          { Fabricate(:meter).registers.first }
   contract          { Fabricate(:contract) }
@@ -12,7 +11,6 @@ end
 
 Fabricator :mp_z1, from: :metering_point do
   address_addition  'Übergabe'
-  mode              'up_down'
   uid               'DE0010688251510000000000002677114'
 
   register {
@@ -27,8 +25,6 @@ end
 
 Fabricator :mp_z2, from: :metering_point do
   address_addition  'Dach'
-  mode              'up'
-
 
   register {
      Fabricate(:meter,
@@ -44,7 +40,6 @@ end
 
 Fabricator :mp_z3, from: :metering_point do
   address_addition  'Carport'
-  mode              'up'
   register {
     Fabricate(:meter,
               manufacturer_name:            'Kamstrup',
@@ -58,7 +53,6 @@ end
 
 Fabricator :mp_z4, from: :metering_point do
   address_addition  'Keller'
-  mode              'up'
   register {
     Fabricate(:meter,
               manufacturer_name:            'Kamstrup',
@@ -72,7 +66,6 @@ end
 
 Fabricator :mp_z5, from: :metering_point do
   address_addition  'Keller'
-  mode              'up'
   register {
     Fabricate(:easymeter_1024000034).registers.first
   }

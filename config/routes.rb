@@ -25,10 +25,10 @@ Buzzn::Application.routes.draw do
 
   resources :devices do
     member do
-      get :new_up
-      get :edit_up
-      get :new_down
-      get :edit_down
+      get :new_out
+      get :edit_out
+      get :new_in
+      get :edit_in
     end
   end
 
