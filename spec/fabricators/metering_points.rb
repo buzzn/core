@@ -90,6 +90,7 @@ Fabricator :mp_z6, from: :metering_point do
   register {
     Fabricate(:easymeter_60051431).registers.first
   }
+  devices           {[Fabricate(:pv_karin)]}
   metering_service_provider_contract {Fabricate(:mspc_karin)}
 end
 

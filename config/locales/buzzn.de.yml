@@ -1,23 +1,23 @@
 de:
-  up_metering: Generatorzähler
-  down_metering: Verbrauchszähler
-  up_down_metering: Einspeisezähler
+  out_metering: Generatorzähler
+  in_metering: Verbrauchszähler
+  in_out_metering: Einspeisezähler
   diff_metering: Abgrenzungszähler
 
-  add_up_metering: Generatorzähler hinzufügen
-  add_down_metering: Verbrauchszähler hinzufügen
-  add_up_down_metering: Einspeisezähler hinzufügen
+  add_out_metering: Generatorzähler hinzufügen
+  add_in_metering: Verbrauchszähler hinzufügen
+  add_in_out_metering: Einspeisezähler hinzufügen
   add_diff_metering: Abgrenzungszähler hinzufügen
 
-  add_up_metering_point: Messpunkt für Generatorzähler hinzufügen
-  add_down_metering_point: Messpunkt für Verbrauchszähler hinzufügen
-  add_up_down_metering_point: Messpunkt für Einspeisezähler hinzufügen
+  add_out_metering_point: Messpunkt für Generatorzähler hinzufügen
+  add_in_metering_point: Messpunkt für Verbrauchszähler hinzufügen
+  add_in_out_metering_point: Messpunkt für Einspeisezähler hinzufügen
   add_diff_metering_point: Messpunkt für Abgrenzungszähler hinzufügen
 
 
-  up: Produktionszähler
-  down: Bezugszähler
-  up_down: Zweirichtungszähler
+  out: Produktionszähler
+  in: Bezugszähler
+  in_out: Zweirichtungszähler
   diff: Abgrenzungszähler
 
 
@@ -180,7 +180,7 @@ de:
   create_project: Projekt Erstellen
   delete_organization: Organisation Löschen
   delete_project: Projekt Löschen
-  
+
   residents: Bewohner
   friends: Freunde
   explore_buzzn: Buzzn entdecken

@@ -36,6 +36,8 @@ end
 
 
 Fabricator :pv_karin, from: :device do
+  image                         { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'pv_karin.jpg')) }
+
   law                           'EEG'
   mode                          'up'
   manufacturer                  'Solarex'

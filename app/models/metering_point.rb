@@ -55,7 +55,7 @@ class MeteringPoint < ActiveRecord::Base
     names = []
     generator_types = devices.map {|i| i.generator_type }.uniq
     generator_types.each do |type|
-      names << t("#{type}_short")
+      names << "#{type}_short"
     end
     return names.join(', ')
   end
