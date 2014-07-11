@@ -66,7 +66,6 @@ Der Metering Point ist ein Messpunkt in einer Messtelle, also z.B. der Messpunkt
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
 |uid|string|DE12356458478STROM236874565231459|Zählpunkt-iD mi 33 Stellen
-|mode|String|[up,down,up_down,diff]| beschreibt die stromrichtung die gemessen wird
 |Adress addition|String|2. Stock links| Die genaue location des Metering Point
 |voltage_level|string|[low, medium, high, highest]| spannung ebende. meistens low
 |regular_reeding|date|15.4.2014|geplante Turnusablesung
@@ -98,7 +97,7 @@ Das Device ist ein Gerät, das Strom benötigt oder Strom herstellt. Die meisten
 |:----|:---|:------|:----------
 |image|String|path_to_image|Bild von Herd
 |name|String|Herd|
-|mode|string|[up, down, up_down]| Erzeuger oder Verbraucher oder beides(electrospeicher)
+|mode|string|[in, out, in_out]| Erzeuger oder Verbraucher oder beides(electrospeicher)
 |law|string|[eeg, kwkg]|Nur für Stromerzeuger.
 |generator_type|string|XRGI 15|Nur für Stromerzeuger. Modell
 |manufacturer_product_number|string|12364ABC585|Herstellernummer
@@ -126,7 +125,7 @@ Das Meter ist ein Messgerät, dass Menge und Leistung eines Mediums erfasst. Bei
 |owner|string|[ownership, foreign_ownership, leased, sold]|Besitzstatus
 |metering_type|string|[ahz, vsz, laz, ehz, edl40, edl21, maz, iva]|Zählertyp gruppen. meistens ahz
 |rate|string|[etz, ztz, ntz]|Tarif. Kann folgende Werte annehmen: ETZ - Eintarif, ZTZ - Zweitarif, NTZ - Mehrtarif
-|mode|string|[up,down,up_down]| Richtung
+|mode|string|[in, out, in_out]| Richtung
 |measurement_capture|string|[amr,mmr]|Messwerterfassung. Kann folgende Werte annehmen: AMR - fernauslesbare Zähler, MMR - manuell ausgelesene Zähler
 |mounting_method|string|[bkw, dpa]|Befestigungsart. BKW - Stecktechnik, DPA - 3-Punktaufhängung
 |build_year|Date|1.1.2012|Baujahr
@@ -164,7 +163,7 @@ Das Register ist ein Zählwerk. Ein Zähler kann mehrere Zählwerke besitzen, di
 |:----|:---|:------|:----------
 |obis_index|string|1-1:8.0|Obiskennzahl
 |variable_tariff|Boolean|[true,false]| ob Pauschaltarif oder variablertarif(schwachlastfähig), default: false
-|mode|string|[up,down]| Richtung
+|mode|string|[in, out]| Richtung
 |predecimal_places|int|8| Vorkommastellen
 |decimal_places|int|2| Nachkommastellen
 
