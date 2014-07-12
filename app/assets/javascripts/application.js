@@ -13,7 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.sparkline
-//= require jquery.ui.all
+//= require jquery-ui
 //= require jquery.remotipart
 //= require address_picker-rails
 //= require select2
