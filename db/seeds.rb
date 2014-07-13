@@ -5,6 +5,22 @@
 
 require 'rubygems' #so it can load gems
 
+
+
+def user_with_location
+  location                    = Fabricate(:location)
+  contracting_party           = Fabricate(:contracting_party)
+  user                        = Fabricate(:user)
+  user.contracting_party      = contracting_party
+  metering_point              = location.metering_points.first
+  metering_point.users        << user
+  contracting_party.contracts << metering_point.contract
+  user.add_role :manager, location
+  return user, location, metering_point
+end
+
+
+
 puts '-- seed development database --'
 
 puts '  organizations'
@@ -68,7 +84,7 @@ felix = User.where(email: 'felix@buzzn.net').first
 
 puts '20 more users with location'
 20.times do
-  user = user_with_location
+  user, location, metering_point = user_with_location
   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
@@ -77,22 +93,17 @@ end
 
 
 
+puts 'Groups'
+karins_pv_group = Fabricate(:group, name: 'karins pv strom')
+karin_strom.metering_points << gautinger_weg.metering_points.first
 
-
-puts '5 users with location in karins strom'
 5.times do
-  user = user_with_location
-  puts "  #{user. email}"
+  user, location, metering_point = user_with_location
+  karin_strom.metering_points << metering_point
+  puts "  #{user.email}"
 end
 
 
-
-puts 'Groups'
-karin_strom = Fabricate(:group, name: 'Karin Strom')
-karin_strom.metering_points = [ 
-                                gautinger_weg.metering_points.first,
-
-                              ]
 
 
 # hof_butenland = Fabricate(:group, name: 'Hof Butenland')
@@ -101,7 +112,7 @@ karin_strom.metering_points = [
 
 
 
-puts '5 users without location'
+puts '5 users'
 5.times do
   user = Fabricate(:user)
   puts "  #{user.email}"
@@ -137,20 +148,6 @@ buzzn_team.each do |user|
   end
 end
 
-
-
-
-def user_with_location
-  location                    = Fabricate(:location)
-  contracting_party           = Fabricate(:contracting_party)
-  user                        = Fabricate(:user)
-  user.contracting_party      = contracting_party
-  metering_point              = location.metering_points.first
-  metering_point.users        << user
-  contracting_party.contracts << metering_point.contract
-  user.add_role :manager, location
-  return user
-end
 
 
 

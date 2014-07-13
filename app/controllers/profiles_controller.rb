@@ -17,6 +17,8 @@ class ProfilesController < InheritedResources::Base
 
     @locations = @profile.user.metering_points.collect(&:location)
 
+    @groups = @profile.user.groups
+
     show!
   end
 

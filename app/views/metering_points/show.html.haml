@@ -11,6 +11,11 @@
       = render @metering_point.location
     .clearfix
 
+  %h5.page-header= t('belongs_to_group')
+  %article.sidebar_module.residents
+    %ul
+      = render @metering_point.group
+    .clearfix
 
   %h5.page-header= t('users')
   %article.sidebar_module.residents
