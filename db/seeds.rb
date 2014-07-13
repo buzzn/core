@@ -95,11 +95,11 @@ end
 
 puts 'Groups'
 karins_pv_group = Fabricate(:group, name: 'karins pv strom')
-karin_strom.metering_points << gautinger_weg.metering_points.first
+karins_pv_group.metering_points << gautinger_weg.metering_points.first
 
 5.times do
   user, location, metering_point = user_with_location
-  karin_strom.metering_points << metering_point
+  karins_pv_group.metering_points << metering_point
   puts "  #{user.email}"
 end
 

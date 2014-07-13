@@ -11,11 +11,12 @@
       = render @metering_point.location
     .clearfix
 
-  %h5.page-header= t('belongs_to_group')
-  %article.sidebar_module.residents
-    %ul
-      = render @metering_point.group
-    .clearfix
+  - if @group
+    %h5.page-header= t('belongs_to_group')
+    %article.sidebar_module.residents
+      %ul
+        = render @group
+      .clearfix
 
   %h5.page-header= t('users')
   %article.sidebar_module.residents
@@ -40,9 +41,13 @@
 .col-sm-6
 
   .raw
-    %ul.nav.nav-tabs#mytab
+    %ul.nav.nav-pills#mytab
 
       %li.active
+        %a{"data-toggle" => "tab", href: "#charts"}
+          = t'charts'
+
+      %li
         %a{"data-toggle" => "tab", href: "#register"}
           = t'register'
 
@@ -50,53 +55,51 @@
         %a{"data-toggle" => "tab", href: "#contracts"}
           = t'contracts'
 
-  .raw
-    .block
-      .header.no-border= t('actual_in_readings')
-      .chart.blue_container
-        #fake_real_time_data{style: "height: 200px"}
-
-  .raw
-    .block
-      .header.no-border= t('actual_smart_meter_readings')
-      .chart.red_container
-        #day_to_hours{style: "height: 200px"}
-
-  .raw
-    .block
-      .header.no-border= t('day_by_hour_readings')
-      .chart.red_container
-        #fake_day_to_hours{style: "height:200px"}
-
-  .raw
-    .block
-      .header.no-border= t('week_by_day_readings')
-      .chart.red_container
-        #fake_week_to_days{style: "height: 200px"}
-
-  .raw
-    .block
-      .header.no-border= t('month_by_day_readings')
-      .chart.red_container
-        #fake_month_to_days{style: "height: 200px"}
-
-  .raw
-    .block
-      .header.no-border= t('year_by_month_readings')
-      .chart.blue_container
-        #fake_year_to_months{style: "height: 200px"}
-
-  .raw
-    .block
-      .header.no-border= t('years_by_year_readings')
-      .chart.red_container
-        #fake_years_to_year{style: "height: 200px"}
-
-
-
     .tab-content
+      #charts.tab-pane.active
+        .raw
+          .block
+            .header.no-border= t('actual_in_readings')
+            .chart.blue_container
+              #fake_real_time_data{style: "height: 200px"}
 
-      #contracts.tab-pane.active
+        .raw
+          .block
+            .header.no-border= t('actual_smart_meter_readings')
+            .chart.red_container
+              #day_to_hours{style: "height: 200px"}
+
+        .raw
+          .block
+            .header.no-border= t('day_by_hour_readings')
+            .chart.red_container
+              #fake_day_to_hours{style: "height:200px"}
+
+        .raw
+          .block
+            .header.no-border= t('week_by_day_readings')
+            .chart.red_container
+              #fake_week_to_days{style: "height: 200px"}
+
+        .raw
+          .block
+            .header.no-border= t('month_by_day_readings')
+            .chart.red_container
+              #fake_month_to_days{style: "height: 200px"}
+
+        .raw
+          .block
+            .header.no-border= t('year_by_month_readings')
+            .chart.blue_container
+              #fake_year_to_months{style: "height: 200px"}
+
+        .raw
+          .block
+            .header.no-border= t('years_by_year_readings')
+            .chart.red_container
+              #fake_years_to_year{style: "height: 200px"}
+
+      #contracts.tab-pane
         - if @metering_point.contract
           = render @metering_point.contract
         - else
@@ -107,6 +110,11 @@
           = render @metering_point.register
         - else
           = @metering_point.new_register
+
+
+
+  
+
 
 
 
