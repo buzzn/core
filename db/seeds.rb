@@ -68,19 +68,37 @@ felix = User.where(email: 'felix@buzzn.net').first
 
 puts '20 more users with location'
 20.times do
-  location                    = Fabricate(:location)
-  contracting_party           = Fabricate(:contracting_party)
-  user                        = Fabricate(:user)
-  user.contracting_party      = contracting_party
-  metering_point              = location.metering_points.first
-  metering_point.users        << user
-  contracting_party.contracts << metering_point.contract
-  user.add_role :manager, location
+  user = user_with_location
   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
   puts "  #{user.email}"
 end
+
+
+
+
+
+puts '5 users with location in karins strom'
+5.times do
+  user = user_with_location
+  puts "  #{user. email}"
+end
+
+
+
+puts 'Groups'
+karin_strom = Fabricate(:group, name: 'Karin Strom')
+karin_strom.metering_points = [ 
+                                gautinger_weg.metering_points.first,
+
+                              ]
+
+
+# hof_butenland = Fabricate(:group, name: 'Hof Butenland')
+# hof_butenland.metering_points
+
+
 
 
 puts '5 users without location'
@@ -89,13 +107,14 @@ puts '5 users without location'
   puts "  #{user.email}"
 end
 
+
+puts 'add smart meter readings'
 date            = Time.now
 start_date      = date.beginning_of_day
 end_date        = date.end_of_day
 minute          = start_date
 watt_hour       = 0
 fake_readings   = []
-
 while minute < end_date
   watt_hour += 1
   if (date.middle_of_day..date.middle_of_day+90.minutes).cover?(minute) # from 12:00 to 12:30 is cooking time
@@ -104,9 +123,6 @@ while minute < end_date
   fake_readings << [minute, watt_hour]
   minute += 1.minute
 end
-
-
-puts 'add smart meter readings'
 buzzn_team.each do |user|
   Location.with_role(:manager, user).each do |location|
     location.metering_points.each do |metering_point|
@@ -120,5 +136,27 @@ buzzn_team.each do |user|
     end
   end
 end
+
+
+
+
+def user_with_location
+  location                    = Fabricate(:location)
+  contracting_party           = Fabricate(:contracting_party)
+  user                        = Fabricate(:user)
+  user.contracting_party      = contracting_party
+  metering_point              = location.metering_points.first
+  metering_point.users        << user
+  contracting_party.contracts << metering_point.contract
+  user.add_role :manager, location
+  return user
+end
+
+
+
+
+
+
+
 
 
