@@ -69,10 +69,11 @@ Fabricator :mp_z4, from: :metering_point do
 end
 
 
+
 Fabricator :mp_z5, from: :metering_point do
   address_addition  'Keller'
   register {
-    Fabricate(:easymeter_1024000034).registers.first
+    Fabricate(:easymeter_1124001747).registers.first
   }
   metering_service_provider_contract {Fabricate(:mspc_justus)}
 end
@@ -96,6 +97,19 @@ end
 
 
 
+
+
+
+# stefans verbrauch anlage
+Fabricator :mp_z7, from: :metering_point do
+  address_addition  'Scheune'
+  uid                'DE0010688206510000000000003007532'
+  register {
+    Fabricate(:easymeter_1024000034).registers.first
+  }
+  devices           {[Fabricate(:pv_karin)]}
+  metering_service_provider_contract {Fabricate(:mspc_karin)}
+end
 
 
 
