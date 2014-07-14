@@ -2,7 +2,7 @@
   .modal-content
     .modal-header
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'edit_device'
+      %h4.modal-title= t'edit_in_device'
     .modal-body
       = simple_form_for @device, remote: true, html: {multipart: true} do |f|
         = render 'devices/in_form_fields', f: f

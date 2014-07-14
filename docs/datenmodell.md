@@ -76,8 +76,8 @@ Der Metering Point ist ein Messpunkt in einer Messtelle, also z.B. der Messpunkt
 
 ## Group
 
-eine group ist eine ansamlung von down_metering_points die von einem up_metering_point strom beziehen.
-User können um aufname ihres down_metering_point in die grupe bitten. der group admin kann diese dann hinzufügen oder ablehnen(wenn der geografische abstand zu gross ist von up zu down_metering_point).
+eine group ist eine ansamlung von in_metering_points die von einem out_metering_point strom beziehen.
+User können um aufname ihres in_metering_point in die grupe bitten. der group admin kann diese dann hinzufügen oder ablehnen(wenn der geografische abstand zu gross ist von up zu in_metering_point).
 
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------

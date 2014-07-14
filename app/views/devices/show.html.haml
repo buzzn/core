@@ -4,8 +4,26 @@
   %h4= @device.name
   //= @device.link_to_edit
 
+  %h5.page-header= t('users')
+  %article.sidebar_module.residents
+    %ul
+      - @users.each do |user|
+        = render user.profile
+      - if current_user.can_update?(@device)
+        = @device.edit_users
+    .clearfix
 
+  %h5.page-header= t('belongs_to_metering_point')
+  %article.sidebar_module.residents
+    %ul
+      .header.no-border= link_to @metering_point.name, @metering_point
+    .clearfix
 
+  %h5.page-header= t('belongs_to_location')
+  %article.sidebar_module.residents
+    %ul
+      = render @metering_point.location
+    .clearfix
 
   - if @group
     %h5.page-header= t('belongs_to_group')
@@ -14,11 +32,19 @@
         = render @group
       .clearfix
 
-  %h5.page-header= t('users')
-  %article.sidebar_module.residents
-    %ul
-      - @users.each do |user|
-        = render user.profile
-    .clearfix
+.col-md-6
+  .row= "#{@device.image}"
+  .row= "#{@device.name}"
+  .row= "#{@device.mode}"
+  .row= "#{@device.law}"
+  .row= "#{@device.generator_type}"
+  .row= "#{@device.manufacturer}"
+  .row= "#{@device.manufacturer_product_number}"
+  .row= "#{@device.primary_energy}"
+  .row= "#{@device.watt_peak}"
+  .row= "#{@device.watt_hour_pa}"
+  .row= "#{@device.commissioning}"
+  .row= "#{@device.mobile}"
+
 
 
