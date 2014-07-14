@@ -32,15 +32,20 @@ class MeteringPoint < ActiveRecord::Base
   has_many :metering_point_users
   has_many :users, :through => :metering_point_users
 
-  #validates :uid, uniqueness: true
-  validates :mode, presence: true
+  #validates :uid, presence: true, uniqueness: true
   validates :address_addition, presence: true
+
+
+
+  delegate :mode, to: :register
+
+
 
   def name
     case mode
-    when 'up'
-      "#{mode} #{generator_type_names}-#{self.address_addition}"
-    when 'down'
+    when 'out'
+      "#{mode} #{generator_type_names}-#{address_addition}"
+    when 'in'
       address_addition
     end
   end
@@ -50,21 +55,12 @@ class MeteringPoint < ActiveRecord::Base
     names = []
     generator_types = devices.map {|i| i.generator_type }.uniq
     generator_types.each do |type|
-      names << t("#{type}_short")
+      names << "#{type}_short"
     end
     return names.join(', ')
   end
 
 
-
-
-  def self.modes
-    %w{
-      up
-      down
-      up_down
-    }
-  end
 
   def self.voltages
     %w{
@@ -85,16 +81,13 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
-  def up?
-    self.mode == 'up'
+  def out?
+    mode == 'out'
   end
 
-  def down?
-    self.mode == 'down'
+  def in?
+    mode == 'in'
   end
 
-  def up_down?
-    self.mode == 'up_down'
-  end
 
 end

@@ -11,6 +11,12 @@
       = render @metering_point.location
     .clearfix
 
+  - if @group
+    %h5.page-header= t('belongs_to_group')
+    %article.sidebar_module.residents
+      %ul
+        = render @group
+      .clearfix
 
   %h5.page-header= t('users')
   %article.sidebar_module.residents
@@ -35,9 +41,13 @@
 .col-sm-6
 
   .raw
-    %ul.nav.nav-tabs#mytab
+    %ul.nav.nav-pills#mytab
 
       %li.active
+        %a{"data-toggle" => "tab", href: "#charts"}
+          = t'charts'
+
+      %li
         %a{"data-toggle" => "tab", href: "#register"}
           = t'register'
 
@@ -88,10 +98,7 @@
         .chart_container#fake_years_to_year
 
 
-
-    .tab-content
-
-      #contracts.tab-pane.active
+      #contracts.tab-pane
         - if @metering_point.contract
           = render @metering_point.contract
         - else
@@ -102,6 +109,11 @@
           = render @metering_point.register
         - else
           = @metering_point.new_register
+
+
+
+
+
 
 
 

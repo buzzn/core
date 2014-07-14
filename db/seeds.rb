@@ -5,6 +5,22 @@
 
 require 'rubygems' #so it can load gems
 
+
+
+def user_with_location
+  location                    = Fabricate(:location)
+  contracting_party           = Fabricate(:contracting_party)
+  user                        = Fabricate(:user)
+  user.contracting_party      = contracting_party
+  metering_point              = location.metering_points.first
+  metering_point.users        << user
+  contracting_party.contracts << metering_point.contract
+  user.add_role :manager, location
+  return user, location, metering_point
+end
+
+
+
 puts '-- seed development database --'
 
 puts '  organizations'
@@ -27,9 +43,11 @@ buzzn_team_names.each do |user_name|
   buzzn_team << user = Fabricate(user_name)
   case user_name
   when 'justus'
-    user_location = Fabricate(:location_fichtenweg)
+    user_location = Fabricate(:fichtenweg)
   when 'felix'
-    user_location = Fabricate(:location_muehlenkamp)
+    user_location = Fabricate(:muehlenkamp)
+  when 'stefan'
+    @forstenrieder_weg = user_location = Fabricate(:forstenrieder_weg)
   else
     user_location = Fabricate(:location)
   end
@@ -45,17 +63,28 @@ buzzn_team.each do |user|
 end
 
 
+# karin
+karin = Fabricate(:karin)
+gautinger_weg = Fabricate(:gautinger_weg)
+gautinger_weg.metering_points.first.users << karin
+karin.add_role :manager, gautinger_weg
+@forstenrieder_weg.metering_points.first.users << karin
+buzzn_team.each do |buzzn_user|
+  karin.friendships.create(friend: buzzn_user) # alle von buzzn sind freund von karin
+  buzzn_user.friendships.create(friend: karin)
+end
+
+
+# felix
+felix = User.where(email: 'felix@buzzn.net').first
+@forstenrieder_weg.metering_points.first.users << felix
+
+
+
 
 puts '20 more users with location'
 20.times do
-  location                    = Fabricate(:location)
-  contracting_party           = Fabricate(:contracting_party)
-  user                        = Fabricate(:user)
-  user.contracting_party      = contracting_party
-  metering_point              = location.metering_points.first
-  metering_point.users        << user
-  contracting_party.contracts << metering_point.contract
-  user.add_role :manager, location
+  user, location, metering_point = user_with_location
   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
@@ -63,19 +92,40 @@ puts '20 more users with location'
 end
 
 
-puts '5 users without location'
+
+puts 'Groups'
+karins_pv_group = Fabricate(:group, name: 'karins pv strom')
+karins_pv_group.metering_points << gautinger_weg.metering_points.first
+
+5.times do
+  user, location, metering_point = user_with_location
+  karins_pv_group.metering_points << metering_point
+  puts "  #{user.email}"
+end
+
+
+
+
+# hof_butenland = Fabricate(:group, name: 'Hof Butenland')
+# hof_butenland.metering_points
+
+
+
+
+puts '5 users'
 5.times do
   user = Fabricate(:user)
   puts "  #{user.email}"
 end
 
+
+puts 'add smart meter readings'
 date            = Time.now
 start_date      = date.beginning_of_day
 end_date        = date.end_of_day
 minute          = start_date
 watt_hour       = 0
 fake_readings   = []
-
 while minute < end_date
   watt_hour += 1
   if (date.middle_of_day..date.middle_of_day+90.minutes).cover?(minute) # from 12:00 to 12:30 is cooking time
@@ -84,9 +134,6 @@ while minute < end_date
   fake_readings << [minute, watt_hour]
   minute += 1.minute
 end
-
-
-puts 'add smart meter readings'
 buzzn_team.each do |user|
   Location.with_role(:manager, user).each do |location|
     location.metering_points.each do |metering_point|
@@ -100,5 +147,13 @@ buzzn_team.each do |user|
     end
   end
 end
+
+
+
+
+
+
+
+
 
 

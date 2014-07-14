@@ -33,16 +33,16 @@ class Device < ActiveRecord::Base
   end
 
 
-  def up?
-    self.mode == 'up'
+  def out?
+    self.mode == 'out'
   end
 
-  def down?
-    self.mode == 'down'
+  def in?
+    self.mode == 'in'
   end
 
-  def up_down?
-    self.mode == 'up_down'
+  def in_out?
+    self.mode == 'in_out'
   end
 
 

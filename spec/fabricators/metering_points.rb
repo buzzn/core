@@ -1,6 +1,5 @@
 Fabricator :metering_point do
   address_addition  'Keller'
-  mode              'down'
   uid               'DE0010688251510000000000002677114'
   register          { Fabricate(:meter).registers.first }
   contract          { Fabricate(:contract) }
@@ -10,9 +9,13 @@ end
 
 
 
+
+
+
+
+
 Fabricator :mp_z1, from: :metering_point do
   address_addition  'Übergabe'
-  mode              'up_down'
   uid               'DE0010688251510000000000002677114'
 
   register {
@@ -27,8 +30,6 @@ end
 
 Fabricator :mp_z2, from: :metering_point do
   address_addition  'Dach'
-  mode              'up'
-
 
   register {
      Fabricate(:meter,
@@ -44,7 +45,6 @@ end
 
 Fabricator :mp_z3, from: :metering_point do
   address_addition  'Carport'
-  mode              'up'
   register {
     Fabricate(:meter,
               manufacturer_name:            'Kamstrup',
@@ -58,7 +58,6 @@ end
 
 Fabricator :mp_z4, from: :metering_point do
   address_addition  'Keller'
-  mode              'up'
   register {
     Fabricate(:meter,
               manufacturer_name:            'Kamstrup',
@@ -70,12 +69,49 @@ Fabricator :mp_z4, from: :metering_point do
 end
 
 
+
 Fabricator :mp_z5, from: :metering_point do
   address_addition  'Keller'
-  mode              'up'
   register {
-    Fabricate(:easymeter_1024000034).registers.first
+    Fabricate(:easymeter_1124001747).registers.first
   }
   metering_service_provider_contract {Fabricate(:mspc_justus)}
 end
+
+
+
+
+
+
+
+# karins pv anlage
+Fabricator :mp_z6, from: :metering_point do
+  address_addition  'Scheune'
+  uid                'DE0010688206510000000000003007532'
+  register {
+    Fabricate(:easymeter_60051431).registers.first
+  }
+  devices           {[Fabricate(:pv_karin)]}
+  metering_service_provider_contract {Fabricate(:mspc_karin)}
+end
+
+
+
+
+
+
+# stefans verbrauch anlage
+Fabricator :mp_z7, from: :metering_point do
+  address_addition  'Scheune'
+  uid                'DE0010688206510000000000003007532'
+  register {
+    Fabricate(:easymeter_1024000034).registers.first
+  }
+  devices           {[Fabricate(:pv_karin)]}
+  metering_service_provider_contract {Fabricate(:mspc_karin)}
+end
+
+
+
+
 

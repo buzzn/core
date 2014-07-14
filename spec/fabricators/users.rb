@@ -40,6 +40,10 @@ Fabricator :stefan, from: :user do
   email       'stefan@buzzn.net'
   profile     { Fabricate(:profile_stefan) }
 end
+Fabricator :karin, from: :user do
+  email       'karin.smith@solfux.de'
+  profile     { Fabricate(:profile_karin) }
+end
 
 Fabricator :ole, from: :user do
   email       'ole@buzzn.net'

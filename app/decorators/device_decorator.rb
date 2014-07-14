@@ -20,10 +20,10 @@ class DeviceDecorator < Draper::Decorator
 
   def edit
 
-    if model.up?
-      path = edit_up_device_path(model)
+    if model.out?
+      path = edit_out_device_path(model)
     else
-      path = edit_down_device_path(model)
+      path = edit_in_device_path(model)
     end
 
     link_to(

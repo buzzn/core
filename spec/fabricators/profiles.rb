@@ -44,6 +44,13 @@ Fabricator :profile_stefan, from: :profile do
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'stefan.jpg')) }
 end
 
+Fabricator :profile_karin, from: :profile do
+  first_name  'Karin'
+  last_name   'Smith'
+  #image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'stefan.jpg')) }
+end
+
+
 Fabricator :profile_ole, from: :profile do
   first_name  'Ole'
   last_name   'Vörsmann'

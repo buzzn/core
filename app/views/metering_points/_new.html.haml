@@ -6,6 +6,5 @@
     .modal-body
       = simple_form_for @metering_point do |f|
         = f.input :location_id, input_html: { value: params[:location_id] }, as: :hidden
-        = f.input :mode, include_blank: false, collection: [:up, :down, :up_down], input_html: { class: 'select2' }
         = render 'metering_points/form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-primary'

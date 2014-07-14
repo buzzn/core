@@ -45,6 +45,9 @@
 ## Find missing Indexes
     bundle exec lol_dba db:find_indexes
 
+## Find missing foreign keys
+    bundle exec rails generate immigration AddKeys
+    
 ## Analysis security vulnerability in this app
     bundle exec brakeman
 

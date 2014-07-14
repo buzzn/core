@@ -1,15 +1,37 @@
-%p#notice= notice
+.col-sm-3
+  .detail_icon
+    %i.fa.fa-users
+  %h4= @group.name
+  = @group.link_to_edit
 
-%p
-  %b Name:
-  = @group.name
-%p
-  %b Private:
-  = @group.public
-%p
-  %b Type:
-  = @group.mode
+  %h5.page-header= t('residents')
+  %article.sidebar_module.residents
+    %ul
+      - @residents.each do |resident|
+        = render resident.profile
+    .clearfix
 
-= link_to 'Edit', edit_group_path(@group)
-\|
-= link_to 'Back', groups_path
+
+  %h5.page-header= t('devices')
+  %article.sidebar_module.devices
+    %ul
+      - @devices.each do |device|
+        = render device
+    .clearfix
+
+
+
+
+.col-sm-6
+  .metering_points
+    = render @group.metering_points
+
+  - if current_user.can_update?(@location)
+    = @location.new_metering_point
+
+
+.col-sm-3
+  %h5.page-header= t('explore')
+
+
+
