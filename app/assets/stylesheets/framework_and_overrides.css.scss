@@ -1,11 +1,34 @@
 @import "bootstrap";
 
+
 @font-face {
-  font-family: 'Ruda';
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 100;
+  src: local('Raleway Light'), url(font-path('raleway_thin.woff')) format('woff');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Raleway Light'), url(font-path('raleway_light.woff')) format('woff');
+}
+@font-face {
+  font-family: 'Raleway';
   font-style: normal;
   font-weight: 400;
-  src: local('Ruda'), url(font-path('ruda.woff')) format('woff');
+  src: local('Ruda'), url(font-path('raleway.woff')) format('woff');
 }
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), url(font-path('opensans.woff')) format('woff');
+}
+
+
+
 
 
 .floating{
@@ -51,7 +74,7 @@ body, html, .container {
 
 
 body {
-  font-family: 'Ruda', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   padding-top: 51px;
   background-color: #F6F6F6;
 }
