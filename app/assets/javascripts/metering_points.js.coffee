@@ -5,7 +5,7 @@ MeteringPointsController.prototype.show = () ->
     e.preventDefault()
     $(this).tab "show"
 
-  $.plot $("#fake_real_time_data"), [gon.fake_real_time_data], {
+  $.plot $(".chart_container#fake_real_time_data"), [gon.fake_real_time_data], {
       series:
         color: "white"
         points:
@@ -43,7 +43,7 @@ MeteringPointsController.prototype.show = () ->
   console.log gon.day_to_hours
   console.log gon.fake_day_to_hours
 
-  $.plot $("#day_to_hours"), [
+  $.plot $(".chart_container#day_to_hours"), [
     data: gon.day_to_hours
     color: "rgba(0, 40, 40, 0.95)"
     bars:
@@ -60,16 +60,18 @@ MeteringPointsController.prototype.show = () ->
 
 
 
-  $.plot $("#fake_day_to_hours"), [{
+  $.plot $(".chart_container#fake_day_to_hours"), [{
       data: gon.fake_day_to_hours2
       label: "Gestern"
       bars:
         show: true
         fill: true
-        fillColor: "rgba(226,106,69,0.94)"
+        #fillColor: "rgba(226,106,69,0.94)"
+        fillColor: "rgba(30,115,189, 0.94)"
         barWidth: 0.66*3600*1000
         lineWidth: 0
-      highlightColor: "rgba(226,106,69,0.5)"
+      #highlightColor: "rgba(226,106,69,0.5)"
+      highlightColor: "rgba(30,115,189, 0.5)"
     },
     {
       data: gon.fake_day_to_hours
@@ -114,7 +116,7 @@ MeteringPointsController.prototype.show = () ->
 
 
 
-  $.plot $("#fake_week_to_days"), [gon.fake_week_to_days], {
+  $.plot $(".chart_container#fake_week_to_days"), [gon.fake_week_to_days], {
       series:
         hoverable: true
         highlightColor: "rgb(255, 255, 255)"
@@ -148,7 +150,7 @@ MeteringPointsController.prototype.show = () ->
     }
 
 
-  $.plot $("#fake_month_to_days"), [gon.fake_month_to_days], {
+  $.plot $(".chart_container#fake_month_to_days"), [gon.fake_month_to_days], {
       series:
         hoverable: true
         highlightColor: "rgb(255, 255, 255)"
@@ -183,7 +185,7 @@ MeteringPointsController.prototype.show = () ->
 
 
 
-  $.plot $("#fake_year_to_months"), [gon.fake_year_to_months], {
+  $.plot $(".chart_container#fake_year_to_months"), [gon.fake_year_to_months], {
       series:
         hoverable: true
         highlightColor: "rgb(255, 255, 255)"
@@ -217,7 +219,7 @@ MeteringPointsController.prototype.show = () ->
 
 
 
-  $.plot $("#fake_years_to_year"), [gon.fake_years_to_year], {
+  $.plot $(".chart_container#fake_years_to_year"), [gon.fake_years_to_year], {
       series:
         hoverable: true
         highlightColor: "rgb(255, 255, 255)"

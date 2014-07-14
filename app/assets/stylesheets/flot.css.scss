@@ -1,17 +1,16 @@
 .chart{
   padding: 20px;
-  margin-bottom: 50px;
 }
 
-.blue_container{
+.chart#in{
   background-image: linear-gradient(to bottom, #52AEFF, #2180D3);
   background-color: #3290E2;
   border-width: 1px;
   border-style: solid;
   border-color: #499DE5 #258FEC #1E73BD;
-
 }
-.red_container{
+
+.chart#out{
   background-image: linear-gradient(to bottom, #FF8A65 45%, #E26A45 102%);
   background-color: #3290E2;
   border-width: 1px;
@@ -19,6 +18,25 @@
   border-color: #EE815E #F27B56 #D66543;
 }
 
+.chart#down{
+  background-image: linear-gradient(to bottom, #52AEFF, #2180D3);
+  background-color: #3290E2;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #499DE5 #258FEC #1E73BD;
+}
+
+.chart#up{
+  background-image: linear-gradient(to bottom, #FF8A65 45%, #E26A45 102%);
+  background-color: #3290E2;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #EE815E #F27B56 #D66543;
+}
+
+.chart_container{
+  height: 200px;
+}
 
 .flot-text{
 	color: #FFF
@@ -37,7 +55,6 @@
 }
 
 .block{
-  margin-top: 10px;
   margin-bottom: 20px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.13);
   border: 0px none;
@@ -52,6 +69,18 @@
 
 .block .no-border{
   border-bottom: 0px none;
+}
+
+.no-padding{
+  padding: 0px !important;
+}
+
+table{
+  width: 100%;
+}
+
+#flotTip{
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 

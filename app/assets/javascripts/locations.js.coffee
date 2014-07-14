@@ -6,7 +6,7 @@ LocationsController.prototype.show = () ->
     #height: 60,
     #width: 300
 
-  $.plot $("#fake_location_display"), [gon.fake_real_time_data], {
+  $.plot $(".chart_container#fake_location_display"), [gon.fake_real_time_data], {
       series:
         color: "white"
         points:

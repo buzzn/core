@@ -1,14 +1,14 @@
 /*
  * jquery.flot.tooltip
- * 
+ *
  * description: easy-to-use tooltips for Flot charts
  * version: 0.7.1
  * author: Krzysztof Urbas @krzysu [myviews.pl]
  * website: https://github.com/krzysu/flot.tooltip
- * 
+ *
  * build on 2014-06-22
  * released under MIT License, 2012
-*/ 
+*/
 // IE8 polyfill for Array.indexOf
 if (!Array.prototype.indexOf) {
     Array.prototype.indexOf = function (searchElement, fromIndex) {
@@ -163,14 +163,14 @@ if (!Array.prototype.indexOf) {
 
             if(this.tooltipOptions.defaultTheme) {
                 $tip.css({
-                    'background': '#fff',
+                    'background': '#000',
                     'z-index': '1040',
                     'padding': '0.4em 0.6em',
-                    'border-radius': '0.5em',
                     'font-size': '0.8em',
                     'border': '1px solid #111',
                     'display': 'none',
-                    'white-space': 'nowrap'
+                    'white-space': 'nowrap',
+                    'color': '#fff'
                 });
             }
         }
