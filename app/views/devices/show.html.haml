@@ -33,18 +33,18 @@
       .clearfix
 
 .col-md-6
-  .row= "#{@device.image}"
-  .row= "#{@device.name}"
-  .row= "#{@device.mode}"
-  .row= "#{@device.law}"
-  .row= "#{@device.generator_type}"
-  .row= "#{@device.manufacturer}"
-  .row= "#{@device.manufacturer_product_number}"
-  .row= "#{@device.primary_energy}"
-  .row= "#{@device.watt_peak}"
-  .row= "#{@device.watt_hour_pa}"
-  .row= "#{@device.commissioning}"
-  .row= "#{@device.mobile}"
+  .row= @device.thumb
+  .row= @device.name
+  .row= @device.mode
+  .row= @device.law
+  .row= @device.generator_type
+  .row= @device.manufacturer
+  .row= @device.manufacturer_product_number
+  .row= @device.primary_energy
+  .row= @device.watt_peak
+  .row= @device.watt_hour_pa
+  .row= @device.commissioning
+  .row= @device.mobile
 
 
 

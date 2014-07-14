@@ -2,6 +2,14 @@ class DevicesController < InheritedResources::Base
   before_filter :authenticate_user!
   respond_to :html, :js
 
+  def show
+    @device         = Device.find(params[:id]).decorate
+    @metering_point = @device.metering_point
+    @location       = @metering_point.location
+    @users          = @metering_point.users
+  end
+
+
   def new_out
     @device = Device.new
     authorize_action_for(@device)
@@ -15,13 +23,6 @@ class DevicesController < InheritedResources::Base
     edit!
   end
   authority_actions :edit_out => 'update'
-
-  def show
-    @device = Device.find(params[:id])
-    @metering_point = @device.metering_point
-    @location = @device.metering_point.location
-    @users = @device.metering_point.users
-  end
 
 
 
