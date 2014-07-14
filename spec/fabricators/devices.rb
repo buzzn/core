@@ -5,7 +5,7 @@ end
 Fabricator :bhkw_justus, from: :device do
   image                         { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'ecopower1.jpg')) }
   law                           ''
-  mode                          'up'
+  mode                          'out'
   manufacturer                  'Honda'
   manufacturer_product_number   'EcoPower 1.0'
   generator_type                'chp'
@@ -16,7 +16,7 @@ end
 
 Fabricator :dach_pv_justus, from: :device do
   law                           'EEG'
-  mode                          'up'
+  mode                          'out'
   manufacturer                  'solarwatt'
   manufacturer_product_number   'PV 8,51'
   generator_type                'pv'
@@ -26,7 +26,7 @@ end
 
 Fabricator :carport_pv_justus, from: :device do
   law                           'EEG'
-  mode                          'up'
+  mode                          'out'
   manufacturer                  'solarwatt'
   manufacturer_product_number   'PV 5,3'
   generator_type                'pv'
@@ -39,7 +39,7 @@ Fabricator :pv_karin, from: :device do
   image                         { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'pv_karin.jpg')) }
 
   law                           'EEG'
-  mode                          'up'
+  mode                          'out'
   manufacturer                  'Solarex'
   manufacturer_product_number   'MX-64'
   generator_type                'pv'
