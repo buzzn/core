@@ -2,36 +2,36 @@
   .detail_icon
     %i.fa.fa-users
   %h4= @group.name
-  = @group.link_to_edit
 
-  %h5.page-header= t('out_users')
-  %article.sidebar_module.residents
-    %ul
-      - @out_users.each do |user|
-        = render user.profile
-    .clearfix
+  - if user_signed_in?
+    - if current_user.can_update?(@group)
+      = @group.link_to_edit
 
-
-  %h5.page-header= t('out_devices')
-  %article.sidebar_module.devices
-    %ul
-      - @out_devices.each do |device|
-        = render device
-    .clearfix
-
-
+  %p= @group.description
 
 
 .col-sm-6
-  .metering_points
-    = render @group.metering_points
+  %ul.nav.nav-pills#mytab
+    %li.active
+      %a{"data-toggle" => "tab", href: "#metering_points"}
+        = t'metering_points'
+    %li
+      %a{"data-toggle" => "tab", href: "#users"}
+        = t'users'
 
-  - if current_user.can_update?(@location)
-    = @location.new_metering_point
+  .tab-content
+    #metering_points.tab-pane.active
+      = render @metering_points
+    #users.tab-pane
+      = render @users
 
 
 .col-sm-3
-  %h5.page-header= t('explore')
+  %h5.page-header= t('more_groups')
+  %article.sidebar_module.groups
+    %ul
+      = render @groups
+    .clearfix
 
 
 

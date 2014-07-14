@@ -1,6 +1,10 @@
 .col-sm-3
-  = @profile.image_tag_medium
+  .detail_icon
+    %i.fa.fa-user
   %h4= @profile.name
+  = #@profile.image_tag_medium
+  = @profile.link_to_edit
+
 
   - if @profile.user != current_user
     - if current_user.friend?(@profile.user)
@@ -11,52 +15,52 @@
       - else
         = t'waiting_for_exept'
 
+
   - if @profile.readable_by? current_user
-    %h5.page-header= t('locations')
-    = new_location
-    %article.sidebar_module.locations
+    %article.sidebar_module
+      %h5.page-header= t('inhabited')
       %ul
         = render @locations
       .clearfix
 
-  %h5.page-header
-    = t('groups')
-    = render @groups
 
-
-
-
-  %h5.page-header
-    = t('friends')
-    - if @profile.user == current_user
-      = link_to t('find_a_friend'), profiles_path
-
-  %article.sidebar_module.friends
+  %article.sidebar_module
+    %h5.page-header= t('groups')
     %ul
-      - @friends.each do |user|
-        = render user.profile
+      = render @groups
     .clearfix
 
 
+  %article.sidebar_module
+    %h5.page-header= t('friends')
+    %ul
+      = render @friends.collect(&:profile)
+    .clearfix
+
 
 .col-sm-6
-  - if !@profile.user.received_friendship_requests.empty?
-    %h5.page-header= t('new_friendship_requests')
-    = render @friendship_requests
+  = render 'no_location' if @locations.empty?
 
-
-
-  - if @locations.empty?
-    = render 'no_location'
+  = render @friendship_requests if @profile.user == current_user
 
   - @activities.each do |activity|
     = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
 
 
 
-
-
-
 .col-sm-3
-  %h5.page-header
-    = t('explore_buzzn')
+
+  %article.sidebar_module
+    %h5.page-header= t('buzzn_groups')
+    %ul
+      = render Group.all.decorate
+    .clearfix
+
+  %article.sidebar_module
+    %h5.page-header= t('buzzn_users')
+    %ul
+      = render Profile.all.decorate
+    .clearfix
+
+
+

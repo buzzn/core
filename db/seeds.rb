@@ -66,7 +66,7 @@ end
 # karin
 karin = Fabricate(:karin)
 gautinger_weg = Fabricate(:gautinger_weg)
-gautinger_weg.metering_points.first.users << karin
+#gautinger_weg.metering_points.first.users << karin
 karin.add_role :manager, gautinger_weg
 @forstenrieder_weg.metering_points.first.users << karin
 buzzn_team.each do |buzzn_user|
@@ -96,6 +96,8 @@ end
 puts 'Groups'
 karins_pv_group = Fabricate(:group, name: 'karins pv strom')
 karins_pv_group.metering_points << gautinger_weg.metering_points.first
+karin.add_role :manager, karins_pv_group
+
 
 5.times do
   user, location, metering_point = user_with_location

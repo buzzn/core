@@ -2,6 +2,22 @@ class ProfileDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
 
+
+
+  def link_to_edit
+    link_to(
+      t('edit_profile'),
+      edit_profile_path(model),
+      {
+        remote: true,
+        class: 'start_modal',
+        'data-toggle' => "modal",
+        'data-target' => '#myModal'
+      })
+  end
+
+
+
   def thumb
     link_to image_tag_small, model
   end
@@ -23,6 +39,8 @@ class ProfileDecorator < Draper::Decorator
       image_tag 'male.png', size: '150x150'
     end
   end
+
+
 
 
 end

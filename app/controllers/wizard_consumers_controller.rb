@@ -208,7 +208,6 @@ class WizardConsumersController  < ApplicationController
     @location = Location.with_role(:manager, current_user).last
     if @location.metering_points.empty?
       @metering_point           = MeteringPoint.new(metering_point_params)
-      @metering_point.mode      = 'down_metering'
       @location.metering_points << @metering_point
       if @location.save
         if @location.new_habitation

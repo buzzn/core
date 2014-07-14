@@ -25,7 +25,6 @@ class DevicesController < InheritedResources::Base
 
 
 
-
   def new_in
     @device = Device.new
     authorize_action_for(@device)

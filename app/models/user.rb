@@ -44,6 +44,16 @@ class User < ActiveRecord::Base
     end
   end
 
+  def editable_locations
+    Location.with_role(:manager, self)
+            .includes([metering_points: [:register, :devices]])
+            .decorate
+  end
+
+
+  def editable_groups
+    Group.with_role(:manager, self).decorate
+  end
 
 private
   def create_complement_friendship(friend)

@@ -8,8 +8,8 @@ class MeteringPoint < ActiveRecord::Base
   friendly_id :slug_candidates, use: [:slugged, :finders]#, :use => :scoped, :scope => :location
   def slug_candidates
     [
-      name,
-      :uid
+      :uid,
+      :id
     ]
   end
 
@@ -36,9 +36,15 @@ class MeteringPoint < ActiveRecord::Base
   validates :address_addition, presence: true
 
 
+  delegate :mode, to: :register, allow_nil: true
 
-  delegate :mode, to: :register
 
+
+  #scope :output, self.joins(:register).where("mode = 'out'")
+
+  scope :by_group_id_and_mode_eq, lambda { |group_id, mode|
+    MeteringPoint.joins(:register).where("mode = '#{mode}'").where(group_id: group_id).uniq
+  }
 
 
   def name
