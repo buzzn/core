@@ -28,8 +28,25 @@
 }
 
 
+.block .content h2 {
+  font-family: 'Open Sans', sans-serif;
+}
 
+.block .header h2 {
+  margin: 0;
+  font-family: "Raleway", Helvetica, sans-serif;
+  font-weight: 100;
+  font-size: 29px;
+  line-height: 38px;
+}
 
+.block .header h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 200;
+  line-height: 21px;
+  color: #666;
+}
 
 .floating{
   float: left;
