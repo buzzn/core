@@ -18,22 +18,6 @@
   border-color: #EE815E #F27B56 #D66543;
 }
 
-.chart#down{
-  background-image: linear-gradient(to bottom, #52AEFF, #2180D3);
-  background-color: #3290E2;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #499DE5 #258FEC #1E73BD;
-}
-
-.chart#up{
-  background-image: linear-gradient(to bottom, #FF8A65 45%, #E26A45 102%);
-  background-color: #3290E2;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #EE815E #F27B56 #D66543;
-}
-
 .chart_container{
   height: 200px;
 }
@@ -79,8 +63,8 @@ table{
   width: 100%;
 }
 
-#flotTip{
-  background-color: rgba(0, 0, 0, 0.5);
+.nav > .tab-content{
+  margin-top: 50px;
 }
 
 

@@ -16,6 +16,10 @@ class DevicesController < InheritedResources::Base
   end
   authority_actions :edit_up => 'update'
 
+  def show
+
+  end
+
 
 
 

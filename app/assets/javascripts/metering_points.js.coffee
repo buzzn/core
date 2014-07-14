@@ -41,7 +41,7 @@ MeteringPointsController.prototype.show = () ->
     }
 
   console.log gon.day_to_hours
-  console.log gon.fake_day_to_hours
+  console.log gon.metering_point_mode
 
   $.plot $(".chart_container#day_to_hours"), [
     data: gon.day_to_hours
@@ -60,18 +60,24 @@ MeteringPointsController.prototype.show = () ->
 
 
 
+  unless gon.metering_point_mode is "out"
+    secondFillColor = "rgba(30,115,189, 0.94)"
+    secondHighlightColor = "rgba(30,115,189, 0.5)"
+  else
+    secondFillColor = "rgba(226,106,69,0.94)"
+    secondHighlightColor = "rgba(226,106,69,0.5)"
+
+
   $.plot $(".chart_container#fake_day_to_hours"), [{
       data: gon.fake_day_to_hours2
       label: "Gestern"
       bars:
         show: true
         fill: true
-        #fillColor: "rgba(226,106,69,0.94)"
-        fillColor: "rgba(30,115,189, 0.94)"
+        fillColor: secondFillColor
         barWidth: 0.66*3600*1000
         lineWidth: 0
-      #highlightColor: "rgba(226,106,69,0.5)"
-      highlightColor: "rgba(30,115,189, 0.5)"
+      highlightColor: secondHighlightColor
     },
     {
       data: gon.fake_day_to_hours

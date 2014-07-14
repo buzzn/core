@@ -2,8 +2,8 @@
   .modal-content
     .modal-header
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'edit_up_device'
+      %h4.modal-title= t'edit_out_device'
     .modal-body
       = simple_form_for @device, remote: true, html: {multipart: true} do |f|
-        = render 'devices/up_form_fields', f: f
+        = render 'devices/out_form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-primary'
