@@ -4,18 +4,18 @@
   %h4= @group.name
   = @group.link_to_edit
 
-  %h5.page-header= t('residents')
+  %h5.page-header= t('out_users')
   %article.sidebar_module.residents
     %ul
-      - @residents.each do |resident|
-        = render resident.profile
+      - @out_users.each do |user|
+        = render user.profile
     .clearfix
 
 
-  %h5.page-header= t('devices')
+  %h5.page-header= t('out_devices')
   %article.sidebar_module.devices
     %ul
-      - @devices.each do |device|
+      - @out_devices.each do |device|
         = render device
     .clearfix
 
