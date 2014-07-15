@@ -2,9 +2,9 @@
   .modal-content
     .modal-header
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'new_up_device'
+      %h4.modal-title= t'new_out_device'
     .modal-body
       = simple_form_for @device, remote: true, html: {multipart: true} do |f|
         = f.input :metering_point_id, input_html: { value: params[:metering_point_id] }, as: :hidden
-        = render 'devices/up_form_fields', f: f
+        = render 'devices/out_form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-primary'

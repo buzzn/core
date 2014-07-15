@@ -7,6 +7,7 @@ class DevicesController < InheritedResources::Base
     @metering_point = @device.metering_point
     @location       = @metering_point.location
     @users          = @metering_point.users
+    show!
   end
 
 
@@ -18,7 +19,7 @@ class DevicesController < InheritedResources::Base
   authority_actions :new_out => 'create'
 
   def edit_out
-    @device = Device.find(params[:id])
+    @device = Device.find(params[:id]).decorate
     authorize_action_for(@device)
     edit!
   end
@@ -35,7 +36,7 @@ class DevicesController < InheritedResources::Base
 
 
   def edit_in
-    @device = Device.find(params[:id])
+    @device = Device.find(params[:id]).decorate
     authorize_action_for(@device)
     edit!
   end

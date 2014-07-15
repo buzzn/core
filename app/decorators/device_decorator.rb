@@ -16,10 +16,21 @@ class DeviceDecorator < Draper::Decorator
     end
   end
 
+  def link_to_delete
+    link_to(
+      t('delete'),
+      model,
+      remote: true,
+      class: 'btn btn-danger',
+      :method => :delete,
+      :data => {
+        :confirm => t('are_you_sure')
+      })
+  end
 
 
-  def edit
 
+  def link_to_edit
     if model.out?
       path = edit_out_device_path(model)
     else
@@ -27,11 +38,11 @@ class DeviceDecorator < Draper::Decorator
     end
 
     link_to(
-      model.name,
+      raw(content_tag(:i, '', class: 'fa fa-cog') + t('edit')),
       path,
       {
         :remote       => true,
-        :class        => 'start_modal',
+        :class        => 'start_modal btn btn-icon btn-danger btn-xs',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })

@@ -2,7 +2,7 @@
   .detail_icon
     %i= @device.thumb
   %h4= @device.name
-  //= @device.link_to_edit
+  = @device.link_to_edit
 
   %h5.page-header= t('belongs_to_metering_point')
   %article.sidebar_module.residents
