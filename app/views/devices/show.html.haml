@@ -1,17 +1,8 @@
-.col-sm-3
+.col-md-3
   .detail_icon
-    %i.fa.fa-bolt
+    %i= @device.thumb
   %h4= @device.name
   //= @device.link_to_edit
-
-  %h5.page-header= t('users')
-  %article.sidebar_module.residents
-    %ul
-      - @users.each do |user|
-        = render user.profile
-      - if current_user.can_update?(@device)
-        = @device.edit_users
-    .clearfix
 
   %h5.page-header= t('belongs_to_metering_point')
   %article.sidebar_module.residents
@@ -33,18 +24,40 @@
       .clearfix
 
 .col-md-6
-  .row= @device.thumb
-  .row= @device.name
-  .row= @device.mode
-  .row= @device.law
-  .row= @device.generator_type
-  .row= @device.manufacturer
-  .row= @device.manufacturer_product_number
-  .row= @device.primary_energy
-  .row= @device.watt_peak
-  .row= @device.watt_hour_pa
-  .row= @device.commissioning
-  .row= @device.mobile
+  .block
+    .header.no-border
+      %h2= t('device_properties')
+    .content.no-padding
+      %table.table
+        %tbody
+          %tr
+            %td= t('device_mode')
+            %td= @device.mode
+          %tr
+            %td= t('device_law')
+            %td= @device.generator_type
+          %tr
+            %td= t('device_manufacturer')
+            %td= @device.manufacturer
+          %tr
+            %td= t('device_manufacturer_product_number')
+            %td= @device.manufacturer_product_number
+          %tr
+            %td= t('device_primary_energy')
+            %td= @device.primary_energy
+          %tr
+            %td= t('device_watt_peak')
+            %td= @device.watt_peak
+          %tr
+            %td= t('device_watt_hour_pa')
+            %td= @device.watt_hour_pa
+          %tr
+            %td= t('device_commissioning')
+            %td= @device.commissioning
+          %tr
+            %td= t('device_mobile')
+            %td= @device.mobile
+
 
 
 
