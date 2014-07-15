@@ -64,7 +64,7 @@ protected
   end
 
 private
-  def meter_params
+  def device_params
     params.require(:device).permit(init_permitted_params)
   end
 
