@@ -53,54 +53,19 @@
 
   .tab-content
     #charts.tab-pane.active
-      .raw
-        .block
-          .header.no-border
-            %h2= t('actual_readings')
-          .chart{id: @metering_point.mode}
-            .chart_container#fake_real_time_data
 
-      .raw
-        .block
-          .header.no-border
-            %h2= t('actual_smart_meter_readings')
-          .chart{id: @metering_point.mode}
-            .chart_container#day_to_hours
+      .block
+        .header.no-border
+          %h2= t('day_to_hours')
+        .chart{id: @metering_point.mode}
+          .chart_container#day_to_hours
 
-      .raw
-        .block
-          .header.no-border
-            %h2= t('day_by_hour_readings')
-          .chart{id: @metering_point.mode}
-            .chart_container#fake_day_to_hours
 
-      .raw
-        .block
-          .header.no-border
-            %h2= t('week_by_day_readings')
-          .chart{id: @metering_point.mode}
-            .chart_container#fake_week_to_days
-
-      .raw
-        .block
-          .header.no-border
-            %h2= t('month_by_day_readings')
-          .chart{id: @metering_point.mode}
-            .chart_container#fake_month_to_days
-
-      .raw
-        .block
-          .header.no-border
-            %h2= t('year_by_month_readings')
-          .chart{id: @metering_point.mode}
-            .chart_container#fake_year_to_months
-
-      .raw
-        .block
-          .header.no-border
-            %h2= t('years_by_year_readings')
-          .chart{id: @metering_point.mode}
-            .chart_container#fake_years_to_year
+      .block
+        .header.no-border
+          %h2= t('week_to_dayes')
+        .chart{id: @metering_point.mode}
+          .chart_container#week_to_dayes
 
 
     #contracts.tab-pane
