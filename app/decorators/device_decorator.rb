@@ -22,7 +22,7 @@ class DeviceDecorator < Draper::Decorator
     if model.image?
       image_tag model.image.small, class: 'img-circle', size: '45x45'
     else
-      image_tag 'male.png', size: '45x45'
+      image_tag '%i.fa.fa-user', class: 'fa fa-user', size: '45x45'
     end
   end
 
