@@ -5,7 +5,8 @@ MeteringPointsController.prototype.show = () ->
   $("#mytab a").click (e) ->
     e.preventDefault()
     $(this).tab "show"
-
+  console.log gon.day_to_hours_current
+  console.log gon.month_to_days_current
 
   unless gon.metering_point_mode is "out"
     secondFillColor = "rgba(30,115,189, 0.94)"
@@ -14,7 +15,7 @@ MeteringPointsController.prototype.show = () ->
     secondFillColor = "rgba(226,106,69,0.94)"
     secondHighlightColor = "rgba(226,106,69,0.5)"
 
-  for chart_type in ['day_to_hours','week_to_days']
+  for chart_type in ['day_to_hours', 'month_to_days']
 
     $.plot $("##{chart_type}"), [{
         data: gon["#{chart_type}_past"]

@@ -10,10 +10,15 @@ class MeteringPointsController < InheritedResources::Base
     gon.push({
                 metering_point_id:      @metering_point.id,
                 metering_point_mode:    @metering_point.mode,
+
                 day_to_hours_current:   @metering_point.day_to_hours[:current],
                 day_to_hours_past:      @metering_point.day_to_hours[:past],
-                week_to_days_current:  @metering_point.week_to_days[:current],
-                week_to_days_past:     @metering_point.week_to_days[:past]
+
+                month_to_days_current:  @metering_point.month_to_days[:current],
+                month_to_days_past:     @metering_point.month_to_days[:past],
+
+                year_to_months_current: @metering_point.year_to_months[:current],
+                year_to_months_past:    @metering_point.year_to_months[:past]
               })
     show!
   end

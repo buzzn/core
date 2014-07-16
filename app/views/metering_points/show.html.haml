@@ -63,9 +63,16 @@
 
       .block
         .header.no-border
-          %h2= t('week_to_days')
+          %h2= t('month_to_days')
         .chart{id: @metering_point.mode}
-          .chart_container#week_to_days
+          .chart_container#month_to_days
+
+
+      .block
+        .header.no-border
+          %h2= t('year_to_months')
+        .chart{id: @metering_point.mode}
+          .chart_container#year_to_months
 
 
     #contracts.tab-pane
