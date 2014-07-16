@@ -16,6 +16,9 @@ class Reading
 
 
 
+
+
+
   def self.this_day_to_hours_by_register_id(register_id)
 
     date = Time.now
@@ -55,6 +58,13 @@ class Reading
     return Reading.collection.aggregate(pipe)
   end
 
+
+
+
+
+
+
+
   def self.this_day_to_hours_by_slp
     date = Time.now
 
@@ -86,7 +96,7 @@ class Reading
         }
       },
       { "$sort" => {
-          timestamp: 1
+          _id: 1
         }
       }
     ]
