@@ -7,6 +7,16 @@ class DeviceDecorator < Draper::Decorator
     link_to image_tag_small, model
   end
 
+  def thumb_medium
+    link_to image_tag_medium, model
+  end
+
+  def image_tag_medium
+    if model.image?
+      image_tag model.image.medium, class: 'img-circle', size: '135x135'
+    end
+  end
+
 
   def image_tag_small
     if model.image?
