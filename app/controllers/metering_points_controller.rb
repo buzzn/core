@@ -12,8 +12,8 @@ class MeteringPointsController < InheritedResources::Base
                 metering_point_mode:    @metering_point.mode,
                 day_to_hours_current:   @metering_point.day_to_hours[:current],
                 day_to_hours_past:      @metering_point.day_to_hours[:past],
-                week_to_dayes_current:  @metering_point.week_to_dayes[:current],
-                week_to_dayes_past:     @metering_point.week_to_dayes[:past]
+                week_to_days_current:  @metering_point.week_to_days[:current],
+                week_to_days_past:     @metering_point.week_to_days[:past]
               })
     show!
   end

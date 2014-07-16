@@ -55,6 +55,44 @@ class Reading
     return Reading.collection.aggregate(pipe)
   end
 
+  def self.this_day_to_hours_by_slp
+    date = Time.now
+
+    pipe = [
+      { "$match" => {
+          timestamp: {
+            "$gte" => date.beginning_of_day,
+            "$lt"  => date.end_of_day
+          },
+          source: {
+            "$in" => ['slp']
+          }
+        }
+      },
+      { "$project" => {
+          watt_hour: 1,
+          dayly:  { "$dayOfMonth" => "$timestamp" },
+          hourly: { "$hour" => "$timestamp" }
+        }
+      },
+      { "$group" => {
+          _id: { dayly: "$dayly", hourly: "$hourly"},
+          firstReading: { "$last"  => "$watt_hour" },
+          lastReading: { "$first" => "$watt_hour" }
+        }
+      },
+      { "$project" => {
+          hourReading: { "$subtract" => [ "$firstReading", "$lastReading" ] }
+        }
+      },
+      { "$sort" => {
+          timestamp: 1
+        }
+      }
+    ]
+    return Reading.collection.aggregate(pipe)
+  end
+
 
 
 

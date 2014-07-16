@@ -14,7 +14,7 @@ MeteringPointsController.prototype.show = () ->
     secondFillColor = "rgba(226,106,69,0.94)"
     secondHighlightColor = "rgba(226,106,69,0.5)"
 
-  for chart_type in ['day_to_hours','week_to_dayes']
+  for chart_type in ['day_to_hours','week_to_days']
 
     $.plot $("##{chart_type}"), [{
         data: gon["#{chart_type}_past"]

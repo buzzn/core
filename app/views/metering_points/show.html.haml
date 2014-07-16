@@ -1,6 +1,7 @@
 .col-sm-3
   .detail_icon
-    %i.fa.fa-bolt
+    %i.fa.fa-bar-chart-o
+    //%i.fa.fa-tachometer
   %h4= @metering_point.name
   = @metering_point.link_to_edit
 
@@ -62,9 +63,9 @@
 
       .block
         .header.no-border
-          %h2= t('week_to_dayes')
+          %h2= t('week_to_days')
         .chart{id: @metering_point.mode}
-          .chart_container#week_to_dayes
+          .chart_container#week_to_days
 
 
     #contracts.tab-pane
