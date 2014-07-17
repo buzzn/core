@@ -94,7 +94,13 @@ class Reading
         }
       },
       { "$project" => {
-          consumption: { "$subtract" => [ "$lastReading", "$firstReading" ] },
+          consumption_watt: { "$subtract" => [ "$lastReading", "$firstReading" ] },
+          firstTimestamp: "$firstTimestamp",
+          lastTimestamp:  "$lastTimestamp"
+        }
+      },
+      { "$project" => {
+          consumption: { "$divide" => ["$consumption_watt", 1000]},
           firstTimestamp: "$firstTimestamp",
           lastTimestamp:  "$lastTimestamp"
         }
@@ -141,7 +147,13 @@ class Reading
         }
       },
       { "$project" => {
-          consumption: { "$subtract" => [ "$lastReading", "$firstReading" ] },
+          consumption_watt: { "$subtract" => [ "$lastReading", "$firstReading" ] },
+          firstTimestamp: "$firstTimestamp",
+          lastTimestamp:  "$lastTimestamp"
+        }
+      },
+      { "$project" => {
+          consumption: { "$divide" => ["$consumption_watt", 1000]},
           firstTimestamp: "$firstTimestamp",
           lastTimestamp:  "$lastTimestamp"
         }
@@ -162,8 +174,8 @@ class Reading
     pipe = [
       { "$match" => {
           timestamp: {
-            "$gte" => date.beginning_of_month,
-            "$lt"  => date.end_of_month
+            "$gte" => date.beginning_of_year,
+            "$lt"  => date.end_of_year
           },
           source: {
             "$in" => ['slp']
@@ -174,11 +186,11 @@ class Reading
           watt_hour: 1,
           timestamp: 1,
           monthly:  { "$month" => "$timestamp" },
-          dayly:    { "$dayOfMonth" => "$timestamp" },
+          yearly:    { "$year" => "$timestamp" },
         }
       },
       { "$group" => {
-          _id: { monthly: "$monthly", dayly: "$dayly"},
+          _id: { monthly: "$monthly", yearly: "$yearly"},
           firstReading:   { "$first"  => "$watt_hour" },
           lastReading:    { "$last"   => "$watt_hour" },
           firstTimestamp: { "$first"   => "$timestamp" },
@@ -186,7 +198,13 @@ class Reading
         }
       },
       { "$project" => {
-          consumption: { "$subtract" => [ "$lastReading", "$firstReading" ] },
+          consumption_watt: { "$subtract" => [ "$lastReading", "$firstReading" ]},
+          firstTimestamp: "$firstTimestamp",
+          lastTimestamp:  "$lastTimestamp"
+        }
+      },
+      { "$project" => {
+          consumption: { "$divide" => ["$consumption_watt", 1000]},
           firstTimestamp: "$firstTimestamp",
           lastTimestamp:  "$lastTimestamp"
         }
