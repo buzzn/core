@@ -65,7 +65,7 @@ class Reading
 
 
   def self.day_to_hours_by_slp
-    date = Time.now.in_time_zone
+    date = Time.now
 
     pipe = [
       { "$match" => {
@@ -94,13 +94,7 @@ class Reading
         }
       },
       { "$project" => {
-          consumption_watt: { "$subtract" => [ "$lastReading", "$firstReading" ] },
-          firstTimestamp: "$firstTimestamp",
-          lastTimestamp:  "$lastTimestamp"
-        }
-      },
-      { "$project" => {
-          consumption: { "$divide" => ["$consumption_watt", 1000]},
+          consumption: { "$subtract" => [ "$lastReading", "$firstReading" ] },
           firstTimestamp: "$firstTimestamp",
           lastTimestamp:  "$lastTimestamp"
         }
@@ -118,7 +112,7 @@ class Reading
 
 
   def self.month_to_days_by_slp
-    date = Time.now.in_time_zone
+    date = Time.now
 
     pipe = [
       { "$match" => {
@@ -147,13 +141,7 @@ class Reading
         }
       },
       { "$project" => {
-          consumption_watt: { "$subtract" => [ "$lastReading", "$firstReading" ] },
-          firstTimestamp: "$firstTimestamp",
-          lastTimestamp:  "$lastTimestamp"
-        }
-      },
-      { "$project" => {
-          consumption: { "$divide" => ["$consumption_watt", 1000]},
+          consumption: { "$subtract" => [ "$lastReading", "$firstReading" ] },
           firstTimestamp: "$firstTimestamp",
           lastTimestamp:  "$lastTimestamp"
         }
@@ -169,7 +157,7 @@ class Reading
 
 
   def self.year_to_months_by_slp
-    date = Time.now.in_time_zone
+    date = Time.now
 
     pipe = [
       { "$match" => {
@@ -198,13 +186,7 @@ class Reading
         }
       },
       { "$project" => {
-          consumption_watt: { "$subtract" => [ "$lastReading", "$firstReading" ]},
-          firstTimestamp: "$firstTimestamp",
-          lastTimestamp:  "$lastTimestamp"
-        }
-      },
-      { "$project" => {
-          consumption: { "$divide" => ["$consumption_watt", 1000]},
+          consumption: { "$subtract" => [ "$lastReading", "$firstReading" ]},
           firstTimestamp: "$firstTimestamp",
           lastTimestamp:  "$lastTimestamp"
         }

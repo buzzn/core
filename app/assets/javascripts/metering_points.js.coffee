@@ -7,6 +7,7 @@ MeteringPointsController.prototype.show = () ->
     $(this).tab "show"
   console.log gon.day_to_hours_current
   console.log gon.month_to_days_current
+  console.log gon["month_to_days_current"][0][0]
 
   unless gon.metering_point_mode is "out"
     secondFillColor = "rgba(30,115,189, 0.94)"
@@ -21,18 +22,23 @@ MeteringPointsController.prototype.show = () ->
       actualBarWidth = 0.66*3600*1000
       actualTimeFormat = "%H:00"
       actualXLabel = "Uhrzeit"
+      actualToolTipOpts = (label, xval, yval, flotItem) ->
+          "%s: " + new Date(xval).getHours() + ":00 bis " + new Date(xval + 3600*1000).getHours() + ":00 Uhr, Bezug: " + yval + " kWh"
     else if chart_type is 'month_to_days'
       actualBarWidth = 0.66*3600*1000*24
       actualTimeFormat = "%d.%m"
       actualXLabel = "Tag"
+      actualToolTipOpts = "%s   Tag: %x, Bezug: %y kWh"
     else if chart_type is 'year_to_months'
       actualBarWidth = 0.66*3600*1000*24*30
       actualTimeFormat = "%b %Y"
       actualXLabel = "Monat"
+      actualToolTipOpts = "%s   Monat: %x, Bezug: %y kWh"
+    actualLabel = "Aktuell"
 
     $.plot $("##{chart_type}"), [{
         data: gon["#{chart_type}_past"]
-        label: "Gestern"
+        label: "Prognose"
         bars:
           show: true
           fill: true
@@ -43,7 +49,7 @@ MeteringPointsController.prototype.show = () ->
       },
       {
         data: gon["#{chart_type}_current"]
-        label: "Heute"
+        label: "Aktuell"
         bars:
           show: true
           fill: true
@@ -66,10 +72,11 @@ MeteringPointsController.prototype.show = () ->
         borderWidth: 0
       tooltip: true
       tooltipOpts:
-        content: '%s:   Uhrzeit: %x, Bezug: %y kWh'
+        content: actualToolTipOpts
       xaxis:
         mode: "time"
         timeformat: actualTimeFormat
+        timezone: "browser"
         minTickSize: [1, "hour"]
       axisLabels:
         show: true

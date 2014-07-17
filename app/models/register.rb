@@ -9,7 +9,7 @@ class Register < ActiveRecord::Base
     data.each do |hour|
       hours << [
         hour['firstTimestamp'].to_i*1000,
-        hour['consumption']
+        hour['consumption']/1000.0
       ]
     end
     return hours
