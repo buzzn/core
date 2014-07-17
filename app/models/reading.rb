@@ -34,19 +34,24 @@ class Reading
       },
       { "$project" => {
           watt_hour: 1,
+          timestamp: 1,
           dayly:  { "$dayOfMonth" => "$timestamp" },
           hourly: { "$hour" => "$timestamp" }
         }
       },
       { "$group" => {
           _id: { dayly: "$dayly", hourly: "$hourly"},
-          firstReading: { "$first"  => "$watt_hour" },
-          lastReading: { "$last" => "$watt_hour" },
-          lastReading: { "$last" => "$watt_hour" }
+          firstReading:  { "$first"  => "$watt_hour" },
+          lastReading:   { "$last" => "$watt_hour" },
+          firstTimestamp: { "$first"   => "$timestamp" },
+          lastTimestamp:  { "$last"   => "$timestamp" },
+
         }
       },
       { "$project" => {
-          consumption: { "$subtract" => [ "$lastReading", "$firstReading" ] }
+          consumption: { "$subtract" => [ "$lastReading", "$firstReading" ] },
+          firstTimestamp: "$firstTimestamp",
+          lastTimestamp:  "$lastTimestamp"
         }
       },
       { "$sort" => {
