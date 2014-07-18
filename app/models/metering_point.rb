@@ -67,8 +67,11 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
+  def day_to_hours_sm
+    return { current: Register.find(1).day_to_hours, past: Register.find(1).day_to_hours }
+  end
+
   def day_to_hours
-    #return { current: Register.find(1).day_to_hours, past: Register.find(1).day_to_hours }
     return  { current: Register.day_to_hours, past: Register.day_to_hours }
   end
 

@@ -11,6 +11,9 @@ class MeteringPointsController < InheritedResources::Base
                 metering_point_id:      @metering_point.id,
                 metering_point_mode:    @metering_point.mode,
 
+                actual_readings_current: @metering_point.day_to_hours_sm[:current],
+                actual_readings_past:    @metering_point.day_to_hours_sm[:past],
+
                 day_to_hours_current:   @metering_point.day_to_hours[:current],
                 day_to_hours_past:      @metering_point.day_to_hours[:past],
 

@@ -56,6 +56,12 @@
 
       .block
         .header.no-border
+          %h2= t('actual_readings')
+        .chart{id: @metering_point.mode}
+          .chart_container#actual_readings
+
+      .block
+        .header.no-border
           %h2= t('day_to_hours')
         .chart{id: @metering_point.mode}
           .chart_container#day_to_hours

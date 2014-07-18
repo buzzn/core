@@ -69,8 +69,9 @@
 .bs-callout {
   padding: 20px;
   margin: 20px 0;
-  border: 1px solid #eee;
-  border-left-width: 5px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.13);
+  border: 0px none;
+  background: none repeat scroll 0% 0% #FFF;
   border-radius: 3px;
   overflow: auto;
   background: #FCFCFC;
@@ -121,4 +122,5 @@ li{
   list-style: none;
   padding: 3px;
 }
+
 
