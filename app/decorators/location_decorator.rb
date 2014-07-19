@@ -12,30 +12,6 @@ class LocationDecorator < Draper::Decorator
     end
   end
 
-  def thumb_small
-    link_to image_tag_small, model
-  end
-
-  def thumb_medium
-    link_to image_tag_medium, model
-  end
-
-  def image_tag_small
-    if model.image?
-      image_tag model.image.small, class: 'img-circle', size: '45x45'
-    else
-      content_tag(:i, '', class: 'fa fa-home')
-    end
-  end
-
-  def image_tag_medium
-    if model.image?
-      image_tag model.image.small, class: 'img-circle', size: '135x135'
-    else
-      content_tag(:i, '', class: 'fa fa-home')
-    end
-  end
-
   def link_to_delete
     link_to(
       t('delete'),

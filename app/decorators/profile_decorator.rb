@@ -27,7 +27,7 @@ class ProfileDecorator < Draper::Decorator
     if model.image?
       image_tag model.image.small, class: 'img-circle', size: '45x45'
     else
-      content_tag(:i, '', class: 'fa fa-user')
+      image_tag 'male.png', size: '45x45'
     end
   end
 

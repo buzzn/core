@@ -1,6 +1,9 @@
 .col-md-3
-  .detail_ico
-    %i= @device.thumb_medium
+  .detail_icon
+    - if @device.image?
+      %i= @device.thumb_medium
+    - else
+      %i.fa.fa-flash
 
   %h4= @device.name
   = @device.link_to_edit
