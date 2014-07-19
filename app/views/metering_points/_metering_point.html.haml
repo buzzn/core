@@ -1,6 +1,24 @@
 .item{id: "metering_point_#{metering_point.id}", class: metering_point.mode }
   .block
     .header.no-border
+<<<<<<< HEAD
       = link_to 'details', metering_point, class: 'btn btn-default pull-right'
       %h2= metering_point.name
       .chart_container#chart{id: metering_point.mode}
+=======
+      %h2= link_to metering_point.name, metering_point
+    .chart{id: metering_point.mode}
+      .chart_container#chart{id: metering_point.id }
+    .content.no-padding
+      %table.table
+        %tbody
+          %tr
+            %td= t('devices')
+            %td.devices
+              = render metering_point.devices
+          %tr
+            %td= t('users')
+            %td.users
+              - metering_point.users.each do |user|
+                = render user.profile
+>>>>>>> chart
