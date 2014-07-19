@@ -68,19 +68,19 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def day_to_hours_sm
-    return { current: Register.find(1).day_to_hours, past: Register.find(1).day_to_hours }
+    return { id: self.id, current: Register.find(1).day_to_hours, past: Register.find(1).day_to_hours }
   end
 
   def day_to_hours
-    return  { current: Register.day_to_hours, past: Register.day_to_hours }
+    return  { id: self.id, current: Register.day_to_hours, past: Register.day_to_hours }
   end
 
   def month_to_days
-    return  { current: Register.month_to_days, past: Register.month_to_days }
+    return  { id: self.id, current: Register.month_to_days, past: Register.month_to_days }
   end
 
   def year_to_months
-    return  { current: Register.year_to_months, past: Register.year_to_months }
+    return  { id: self.id, current: Register.year_to_months, past: Register.year_to_months }
   end
 
 

@@ -1,42 +1,43 @@
-LocationsController = Paloma.controller("Locations")
+$(".locations.show").ready ->
 
-LocationsController.prototype.show = () ->
-  #$('.inlinebar').sparkline 'html',
-    #type: 'bar',
-    #height: 60,
-    #width: 300
+  for metering_point in gon.metering_points
 
-  $.plot $(".chart_container#fake_location_display"), [gon.fake_real_time_data], {
-      series:
-        color: "white"
-        points:
-          show: true
-        lines:
-          show: true
-          fill: true
-          fillColor: "rgba(255,255,255, 0.1)"
-        hoverable: true
-        highlightColor: "rgba(255, 255, 255, 0.5)"
-      grid:
-        show: true
-        color: "white"
-        borderWidth: 0
-        hoverable: true
-      xaxis:
-        mode: "time"
-        timeformat: "%H:%M:%S"
-        tickDecimals: 0
+    console.log metering_point
 
-      tooltip: true
-      tooltipOpts:
-        content: '%x Uhr, Bezug: %y Watt'
+    $.plot $("#chart_#{metering_point.id}"), [metering_point['current']]
 
-      axisLabels:
-        show: true
-      xaxes:[
-        axisLabel: 'Uhrzeit'
-      ]
-      yaxes:[
-        axisLabel: 'Bezug (Watt)'
-      ]
-    }
+
+    # $.plot $("#metering_point_#{metering_point.id} .chart"), metering_point['current'], {
+    #     series:
+    #       color: "white"
+    #       points:
+    #         show: true
+    #       lines:
+    #         show: true
+    #         fill: true
+    #         fillColor: "rgba(255,255,255, 0.1)"
+    #       hoverable: true
+    #       highlightColor: "rgba(255, 255, 255, 0.5)"
+    #     grid:
+    #       show: true
+    #       color: "white"
+    #       borderWidth: 0
+    #       hoverable: true
+    #     xaxis:
+    #       mode: "time"
+    #       timeformat: "%H:%M:%S"
+    #       tickDecimals: 0
+
+    #     tooltip: true
+    #     tooltipOpts:
+    #       content: '%x Uhr, Bezug: %y Watt'
+
+    #     axisLabels:
+    #       show: true
+    #     xaxes:[
+    #       axisLabel: 'Uhrzeit'
+    #     ]
+    #     yaxes:[
+    #       axisLabel: 'Bezug (Watt)'
+    #     ]
+    #   }

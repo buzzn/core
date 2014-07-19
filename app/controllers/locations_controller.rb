@@ -4,9 +4,11 @@ class LocationsController < InheritedResources::Base
 
 
   def show
-    @location   = Location.find(params[:id]).decorate
+    location    = Location.find(params[:id])
+    @location   = location.decorate
     @residents  = @location.users
     @devices    = @location.devices
+    gon.push({ metering_point_ids: location.metering_points.ids })
     show!
   end
 

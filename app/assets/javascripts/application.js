@@ -11,19 +11,24 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
-//= require jquery.sparkline
 //= require jquery-ui
 //= require jquery.remotipart
-//= require address_picker-rails
-//= require select2
-//= require cocoon
-//= require paloma
-//= require turbolinks
-//= require bootstrap
 //= require jquery.flot
 //= require jquery.flot.resize
 //= require jquery.flot.time
 //= require jquery.flot.tooltip
 //= require jquery.flot.axislabels
-//= require_tree .
+//= require jquery.readyselector
+//= require address_picker-rails
+//= require select2
+//= require cocoon
+//= require bootstrap
+
+//= require global
+//= require metering_points
+//= require locations
+//= require groups
+
+//= require turbolinks

@@ -3,6 +3,4 @@
     .header.no-border
       = link_to 'details', metering_point, class: 'btn btn-default pull-right'
       %h2= metering_point.name
-    .chart{id: metering_point.mode}
-      .chart_container#fake_location_display
-
+      .chart_container#chart{id: metering_point.mode}
