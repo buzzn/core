@@ -3,7 +3,7 @@ class DeviceDecorator < Draper::Decorator
   delegate_all
 
   decorates_association :location
-  decorates_association :metering_points
+  decorates_association :metering_point
 
   def thumb_small
     link_to image_tag_small, model
