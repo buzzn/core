@@ -1,6 +1,5 @@
-GroupsController = Paloma.controller("Groups")
+$(".groups.show").ready ->
 
-GroupsController.prototype.show = () ->
   $("#mytab a").click (e) ->
     e.preventDefault()
     $(this).tab "show"

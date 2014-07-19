@@ -38,7 +38,7 @@ gem 'sprockets-rails'
 gem 'rolify'
 gem 'ffaker'
 gem 'flot-rails'
-gem 'paloma',                 '4.0.0'# 4.0.1 not working
+gem 'jquery-turbolinks'
 gem 'fabrication'
 gem 'friendly_id'
 gem 'google-analytics-rails'

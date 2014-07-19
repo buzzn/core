@@ -1,13 +1,8 @@
-MeteringPointsController = Paloma.controller("MeteringPoints")
-
-MeteringPointsController.prototype.show = () ->
+$(".metering_points.show").ready ->
 
   $("#mytab a").click (e) ->
     e.preventDefault()
     $(this).tab "show"
-  console.log gon.day_to_hours_current
-  console.log gon.month_to_days_current
-  console.log gon["month_to_days_current"][0][0]
 
   unless gon.metering_point_mode is "out"
     secondFillColor = "rgba(30,115,189, 0.94)"
