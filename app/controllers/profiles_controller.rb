@@ -4,18 +4,16 @@ class ProfilesController < InheritedResources::Base
 
   def show
     @profile    = Profile.find(params[:id]).decorate
-
-    @profiles  = Profile.all.decorate
-
     @friends    = @profile.user.friends
-
+    @groups     = @profile.user.groups
     @friendship_requests = @profile.user.received_friendship_requests
 
     @activities = PublicActivity::Activity.order("created_at desc").where(owner_id: @profile.user.friend_ids << @profile.user.id, owner_type: "User").limit(10)
 
     @locations = @profile.user.metering_points.collect(&:location)
 
-    @groups = @profile.user.groups
+    @explore_groups    = Group.all.decorate
+    @explore_profiles  = Profile.all.decorate
 
     show!
   end
