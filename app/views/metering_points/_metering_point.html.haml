@@ -1,6 +1,7 @@
 .item{id: "metering_point_#{metering_point.id}", class: metering_point.mode }
   .block
     .header.no-border
-      = link_to 'details', metering_point, class: 'btn btn-default pull-right'
+      = link_to t('details'), metering_point, class: 'btn btn-default pull-right'
       %h2= metering_point.name
-      .chart_container#chart{id: metering_point.mode}
+    .chart{id: metering_point.mode}
+      .chart_container#chart{id: metering_point.id}

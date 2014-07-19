@@ -8,7 +8,7 @@ class LocationsController < InheritedResources::Base
     @location   = location.decorate
     @residents  = @location.users
     @devices    = @location.devices
-    gon.push({ metering_point_ids: location.metering_points.ids })
+    gon.push({ metering_points: location.metering_points.collect(&:day_to_hours) })
     show!
   end
 
