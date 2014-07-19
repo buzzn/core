@@ -8,6 +8,7 @@ class ProfileDecorator < Draper::Decorator
   decorates_association :users
   decorates_association :metering_points
   decorates_association :groups
+  decorates_association :residents
 
 
   def link_to_edit
