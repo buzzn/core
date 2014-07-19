@@ -1,8 +1,5 @@
 $(".locations.show").ready ->
-
   for metering_point in gon.metering_points
-
-    console.log metering_point
 
     $.plot $("#chart_#{metering_point.id}"), [metering_point['current']], {
       series:
