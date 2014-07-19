@@ -3,7 +3,7 @@ class DeviceDecorator < Draper::Decorator
   delegate_all
 
 
-  def thumb
+  def thumb_small
     link_to image_tag_small, model
   end
 
@@ -14,15 +14,16 @@ class DeviceDecorator < Draper::Decorator
   def image_tag_medium
     if model.image?
       image_tag model.image.medium, class: 'img-circle', size: '135x135'
+    else
+      content_tag(:i, '', class: 'fa fa-flash')
     end
   end
-
 
   def image_tag_small
     if model.image?
       image_tag model.image.small, class: 'img-circle', size: '45x45'
     else
-      image_tag '', class: 'fa fa-user', size: '45x45'
+      content_tag(:i, '', class: 'fa fa-flash')
     end
   end
 

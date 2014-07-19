@@ -1,2 +1,3 @@
 %li.floating{id: "device_#{device.id}"}
-  = link_to device.image_tag_small, device, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => device.name }, rel: 'tooltip'
+  .small_icon
+    = link_to device.image_tag_small, device, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => device.name }, rel: 'tooltip'
