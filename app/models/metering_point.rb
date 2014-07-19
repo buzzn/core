@@ -32,7 +32,7 @@ class MeteringPoint < ActiveRecord::Base
   has_many :metering_point_users
   has_many :users, :through => :metering_point_users
 
-  #validates :uid, presence: true, uniqueness: true
+  validates :uid, uniqueness: true #presence: true
   validates :address_addition, presence: true
 
 
