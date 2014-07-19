@@ -6,15 +6,9 @@ class LocationsController < InheritedResources::Base
   def show
     location    = Location.find(params[:id])
     @location   = location.decorate
-<<<<<<< HEAD
     @residents  = @location.users
     @devices    = @location.devices
     gon.push({ metering_point_ids: location.metering_points.ids })
-=======
-    @residents  = @location.users.decorate
-    @devices    = @location.devices.decorate
-    gon.push({ metering_points: location.metering_points.collect(&:day_to_hours) })
->>>>>>> chart
     show!
   end
 
