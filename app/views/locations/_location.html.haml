@@ -1,3 +1,3 @@
-%li.floating
-  = link_to image_tag('house.png', size: '60x60'), location, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => location.name }, rel: 'tooltip'
+%li.thumb_icon.floating
+  = link_to location.image_tag_small, location, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => location.name }, rel: 'tooltip'
 

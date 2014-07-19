@@ -1,9 +1,10 @@
 .col-sm-3
   .detail_icon
-    %i.fa.fa-bar-chart-o
-    //%i.fa.fa-tachometer
+    //%i.fa.fa-bar-chart-o
+    %i.fa.fa-map-marker
   %h4= @metering_point.name
-  = @metering_point.link_to_edit
+  - if current_user.can_update?(@metering_point)
+    = @metering_point.link_to_edit
 
 
   %h5.page-header= t('belongs_to_location')

@@ -3,12 +3,39 @@ class LocationDecorator < Draper::Decorator
   delegate_all
   decorates_association :address
   decorates_association :metering_points
+  decorates_association :user
+  decorates_association :devices
+
 
   def title
     if name
       name
     else
       address.name
+    end
+  end
+
+  def thumb_small
+    link_to image_tag_small, model
+  end
+
+  def thumb_medium
+    link_to image_tag_medium, model
+  end
+
+  def image_tag_medium
+    if model.image?
+      image_tag model.image.medium, class: 'img-circle', size: '150x150'
+    else
+      content_tag(:i, '', class: 'fa fa-home')
+    end
+  end
+
+  def image_tag_small
+    if model.image?
+      image_tag model.image.small, class: 'img-home', size: '45x45'
+    else
+      content_tag(:i, '', class: 'fa fa-home')
     end
   end
 

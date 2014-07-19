@@ -5,8 +5,8 @@ class LocationsController < InheritedResources::Base
 
   def show
     @location   = Location.find(params[:id]).decorate
-    @residents  = @location.users.decorate
-    @devices    = @location.devices.decorate
+    @residents  = @location.users
+    @devices    = @location.devices
     show!
   end
 

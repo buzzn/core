@@ -2,6 +2,12 @@ class ProfileDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
 
+  decorates_association :friends
+  decorates_association :received_friendship_requests
+  decorates_association :user
+  decorates_association :users
+  decorates_association :metering_points
+  decorates_association :groups
 
 
   def link_to_edit
@@ -27,7 +33,7 @@ class ProfileDecorator < Draper::Decorator
     if model.image?
       image_tag model.image.small, class: 'img-circle', size: '45x45'
     else
-      image_tag 'male.png', size: '45x45'
+      content_tag(:i, '', class: 'fa fa-user')
     end
   end
 
@@ -36,7 +42,7 @@ class ProfileDecorator < Draper::Decorator
     if model.image?
       image_tag model.image.medium, class: 'img-circle', size: '150x150'
     else
-      image_tag 'male.png', size: '150x150'
+      content_tag(:i, '', class: 'fa fa-user')
     end
   end
 

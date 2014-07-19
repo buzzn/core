@@ -5,7 +5,16 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :devices
   decorates_association :meter
   decorates_association :users
+  decorates_association :location
+  decorates_association :group
 
+  def thumb_small
+    link_to image_tag_small, model
+  end
+
+  def image_tag_small
+    content_tag(:i, '', class: 'fa fa-map-marker')
+  end
 
   def link_to_delete
     link_to(

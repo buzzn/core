@@ -1,17 +1,15 @@
 .col-md-3
   .detail_icon
-    - if @device.image?
-      %i= @device.thumb_medium
-    - else
-      %i.fa.fa-flash
+    %i= @device.image_tag_medium
 
   %h4= @device.name
-  = @device.link_to_edit
+  - if current_user.can_update?(@device)
+    = @device.link_to_edit
 
   %h5.page-header= t('belongs_to_metering_point')
   %article.sidebar_module.residents
     %ul
-      .header.no-border= link_to @metering_point.name, @metering_point
+      .thumb_icon=@metering_point.thumb_small
     .clearfix
 
   %h5.page-header= t('belongs_to_location')

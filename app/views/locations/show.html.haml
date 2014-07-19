@@ -2,7 +2,8 @@
   .detail_icon
     %i.fa.fa-home
   %h4= @location.name
-  = @location.link_to_edit
+  - if current_user.can_update?(@location)
+    = @location.link_to_edit
 
   %h5.page-header= t('residents')
   %article.sidebar_module.residents

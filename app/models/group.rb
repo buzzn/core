@@ -5,6 +5,8 @@ class Group < ActiveRecord::Base
   include PublicActivity::Model
   tracked
 
+  mount_uploader :image, PictureUploader
+
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 

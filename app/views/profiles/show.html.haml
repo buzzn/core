@@ -1,9 +1,9 @@
 .col-sm-3
   .detail_icon
-    %i.fa.fa-user
+    %i= @profile.image_tag_medium
   %h4= @profile.name
-  = #@profile.image_tag_medium
-  = @profile.link_to_edit
+  - if current_user.can_update?(@profile)
+    = @profile.link_to_edit
 
 
   - if @profile.user != current_user
@@ -34,7 +34,7 @@
   %article.sidebar_module
     %h5.page-header= t('friends')
     %ul
-      = render @friends.collect(&:profile)
+      = render @friends.decorate.collect(&:profile)
     .clearfix
 
 
@@ -53,13 +53,13 @@
   %article.sidebar_module
     %h5.page-header= t('buzzn_groups')
     %ul
-      = render Group.all.decorate
+      = render @groups
     .clearfix
 
   %article.sidebar_module
     %h5.page-header= t('buzzn_users')
     %ul
-      = render Profile.all.decorate
+      = render @profiles
     .clearfix
 
 

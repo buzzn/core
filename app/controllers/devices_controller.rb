@@ -2,6 +2,8 @@ class DevicesController < InheritedResources::Base
   before_filter :authenticate_user!
   respond_to :html, :js
 
+
+
   def show
     @device         = Device.find(params[:id]).decorate
     @metering_point = @device.metering_point
