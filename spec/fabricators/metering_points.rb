@@ -1,6 +1,7 @@
 Fabricator :metering_point do
   address_addition  'Keller'
-  uid               'DE0010688251510000000000002677114'
+  i = 1
+  uid               {"DE001068825151000000000000#{2677114 + (i += 1)}"}
   register          { Fabricate(:meter).registers.first }
   contract          { Fabricate(:contract) }
 end
@@ -8,15 +9,8 @@ end
 
 
 
-
-
-
-
-
-
 Fabricator :mp_z1, from: :metering_point do
   address_addition  'Übergabe'
-  uid               'DE0010688251510000000000002677114'
 
   register {
     Fabricate( :meter,
@@ -87,7 +81,6 @@ end
 # karins pv anlage
 Fabricator :mp_z6, from: :metering_point do
   address_addition  'Scheune'
-  uid                'DE0010688206510000000000003007532'
   register {
     Fabricate(:easymeter_60051431).registers.first
   }
@@ -103,7 +96,6 @@ end
 # stefans verbrauch anlage
 Fabricator :mp_z7, from: :metering_point do
   address_addition  'Scheune'
-  uid                'DE0010688206510000000000003007532'
   register {
     Fabricate(:easymeter_1024000034).registers.first
   }

@@ -1,12 +1,14 @@
 LocationsController = Paloma.controller("Locations")
 
 LocationsController.prototype.show = () ->
-  #$('.inlinebar').sparkline 'html',
-    #type: 'bar',
-    #height: 60,
-    #width: 300
 
-  $.plot $(".chart_container#fake_location_display"), [gon.fake_real_time_data], {
+  for metering_point_id in gon.metering_point_ids
+
+    $.getJSON "/metering_points/#{metering_point_id}.json", (json) ->
+      #chart = $("#metering_point_#{metering_point_id} .chart")
+      console.log json.data
+
+  $.plot $("#metering_point_#{metering_point_id} .chart"), [json.data], {
       series:
         color: "white"
         points:
