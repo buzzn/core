@@ -1,5 +1,5 @@
 class GroupsController < InheritedResources::Base
-  respond_to :html
+  respond_to :html, :js
 
 
   def show
@@ -17,6 +17,12 @@ class GroupsController < InheritedResources::Base
 
     #@out_devices          = Device.all.decorate
     @groups               = Group.all.decorate
+  end
+
+  def edit
+    edit! do |format|
+      @group = GroupDecorator.new(@group)
+    end
   end
 
   def permitted_params

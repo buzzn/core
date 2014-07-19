@@ -1,0 +1,10 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+      %h4.modal-title= t'edit_group'
+    .modal-body
+      = simple_form_for @group, remote: true do |f|
+        = render 'groups/form_fields', f: f
+        = f.button :submit, id: 'submit', class: 'btn btn-primary'
+        = @group.link_to_delete

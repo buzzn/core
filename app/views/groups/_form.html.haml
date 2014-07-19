@@ -1,8 +1,0 @@
-= simple_form_for @group do |f|
-  = f.file_field :image
-  = f.input :name
-  = f.input :mode, collection: ['simple_group','localpool'], include_blank: false, input_html: { class: 'select2' }
-  = f.input :public
-  .form-actions
-    = f.button :submit, id: 'submit', class: 'btn btn-success'
-    = link_to 'cancel', groups_path, class: 'btn btn-danger'

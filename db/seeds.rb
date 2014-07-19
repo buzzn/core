@@ -167,7 +167,7 @@ while true do
       remString = parseString[8..parseString.length]
       dateString = remString[0..3] + "-" + remString[4..5] + "-" + remString[6..7] + " " + remString[8..9] + ":" + remString[10..11]
       Reading.create(
-        timestamp: DateTime.parse(dateString),
+        timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
         watt_hour: watt_hour,
         source: "slp"
       )
