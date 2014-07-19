@@ -2,7 +2,7 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
-
+Time.zone = "Berlin"
 require 'rubygems' #so it can load gems
 
 
@@ -122,7 +122,7 @@ end
 
 
 puts 'add smart meter readings'
-date            = Time.now
+date            = Time.now.in_time_zone
 start_date      = date.beginning_of_day
 end_date        = date.end_of_day
 minute          = start_date
@@ -142,7 +142,7 @@ buzzn_team.each do |user|
       fake_readings.each do |fake_reading|
         Reading.create(
           register_id:  metering_point.register.id,
-          timestamp:    fake_reading.first,
+          timestamp:    ActiveSupport::TimeZone["Berlin"].parse(fake_reading.first.to_s),
           watt_hour:    fake_reading.last
         )
       end
