@@ -1,17 +1,16 @@
 class GroupAuthorizer < ApplicationAuthorizer
 
 
-  def self.readable_by?(user)
-    true
-  end
-
-  # Class method: can this user at least sometimes create a Group?
   def self.creatable_by?(user)
-    true #user.manager?
+    true
   end
 
-  def self.updatable_by?(user)
-    true
+  def updatable_by?(user)
+    user.has_role? :manager, resource
+  end
+
+  def deletable_by?(user)
+    user.has_role? :manager, resource
   end
 
 

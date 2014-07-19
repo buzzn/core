@@ -11,9 +11,9 @@ class GroupsController < InheritedResources::Base
   end
 
   def edit
-    edit! do |format|
-      @group = GroupDecorator.new(@group)
-    end
+    @group = Group.find(params[:id]).decorate
+    authorize_action_for(@group)
+    edit!
   end
 
   def permitted_params

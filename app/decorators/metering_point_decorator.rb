@@ -73,7 +73,7 @@ class MeteringPointDecorator < Draper::Decorator
       path,
       {
         :remote       => true,
-        :class        => 'start_modal glyphicon glyphicon-plus-sign',
+        :class        => 'sidebar-plus start_modal glyphicon glyphicon-plus-sign',
         'data-toggle' => 'modal',
         'data-target' => '#myModal'
       })
@@ -87,7 +87,7 @@ class MeteringPointDecorator < Draper::Decorator
       edit_users_metering_point_path(model),
       {
         :remote       => true,
-        :class        => 'start_modal glyphicon glyphicon-plus-sign',
+        :class        => 'sidebar-plus start_modal glyphicon glyphicon-plus-sign',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })
