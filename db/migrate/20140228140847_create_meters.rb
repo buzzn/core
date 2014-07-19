@@ -3,8 +3,10 @@ class CreateMeters < ActiveRecord::Migration
     create_table :meters do |t|
 
       t.string :manufacturer_name
-      t.string :manufacturer_product_number
-      t.string :manufacturer_device_number
+      t.string :manufacturer_product_name
+      t.string :manufacturer_product_serialnumber
+
+      t.string :image
       t.string :owner
       t.string :metering_type
       t.string :meter_size
@@ -15,8 +17,6 @@ class CreateMeters < ActiveRecord::Migration
       t.date :build_year
       t.date :calibrated_till
       t.boolean :virtual, default: false
-
-
 
       t.integer :metering_point_id
 

@@ -15,8 +15,8 @@ Fabricator :mp_z1, from: :metering_point do
   register {
     Fabricate( :meter,
                 manufacturer_name:           'Elster',
-                manufacturer_product_number: 'AS 1440',
-                manufacturer_device_number:   '03353984',
+                manufacturer_product_name: 'AS 1440',
+                manufacturer_product_serialnumber:   '03353984',
                 ).registers.first
   }
 
@@ -28,8 +28,8 @@ Fabricator :mp_z2, from: :metering_point do
   register {
      Fabricate(:meter,
                 manufacturer_name:           'Kamstrup',
-                manufacturer_product_number: '382J',
-                manufacturer_device_number:   '15028648',
+                manufacturer_product_name: '382J',
+                manufacturer_product_serialnumber:   '15028648',
                 ).registers.first
   }
   devices           {[Fabricate(:dach_pv_justus)]}
@@ -42,8 +42,8 @@ Fabricator :mp_z3, from: :metering_point do
   register {
     Fabricate(:meter,
               manufacturer_name:            'Kamstrup',
-              manufacturer_product_number:  '382J',
-              manufacturer_device_number:    '15028641',
+              manufacturer_product_name:  '382J',
+              manufacturer_product_serialnumber:    '15028641',
               ).registers.first
   }
   devices           {[Fabricate(:carport_pv_justus)]}
@@ -55,8 +55,8 @@ Fabricator :mp_z4, from: :metering_point do
   register {
     Fabricate(:meter,
               manufacturer_name:            'Kamstrup',
-              manufacturer_product_number:  '382J',
-              manufacturer_device_number:   '15028644',
+              manufacturer_product_name:  '382J',
+              manufacturer_product_serialnumber:   '15028644',
               ).registers.first
   }
   devices           {[Fabricate(:bhkw_justus)]}

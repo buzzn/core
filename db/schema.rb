@@ -128,19 +128,20 @@ ActiveRecord::Schema.define(version: 20140622154815) do
   add_index "contracts", ["contracting_party_id"], name: "index_contracts_on_contracting_party_id", using: :btree
 
   create_table "devices", force: true do |t|
+    t.string   "manufacturer_name"
+    t.string   "manufacturer_product_name"
+    t.string   "manufacturer_product_serialnumber"
     t.string   "image"
     t.string   "name"
     t.string   "mode"
     t.string   "law"
     t.string   "generator_type"
-    t.string   "manufacturer"
-    t.string   "manufacturer_product_number"
     t.string   "shop_link"
     t.string   "primary_energy"
-    t.decimal  "watt_peak",                   precision: 10, scale: 0
-    t.decimal  "watt_hour_pa",                precision: 10, scale: 0
+    t.decimal  "watt_peak",                         precision: 10, scale: 0
+    t.decimal  "watt_hour_pa",                      precision: 10, scale: 0
     t.date     "commissioning"
-    t.boolean  "mobile",                                               default: false
+    t.boolean  "mobile",                                                     default: false
     t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -175,14 +176,15 @@ ActiveRecord::Schema.define(version: 20140622154815) do
   add_index "electricity_supplier_contracts", ["organization_id"], name: "index_electricity_supplier_contracts_on_organization_id", using: :btree
 
   create_table "equipment", force: true do |t|
+    t.string   "manufacturer_name"
+    t.string   "manufacturer_product_name"
+    t.string   "manufacturer_product_serialnumber"
+    t.string   "image"
     t.string   "device_kind"
     t.string   "device_type"
     t.string   "ownership"
     t.date     "build"
     t.date     "calibrated_till"
-    t.string   "manufacturer_name"
-    t.string   "manufacturer_product_number"
-    t.string   "manufacturer_device_number"
     t.integer  "converter_constant"
     t.integer  "meter_id"
     t.datetime "created_at"
@@ -331,8 +333,9 @@ ActiveRecord::Schema.define(version: 20140622154815) do
 
   create_table "meters", force: true do |t|
     t.string   "manufacturer_name"
-    t.string   "manufacturer_product_number"
-    t.string   "manufacturer_device_number"
+    t.string   "manufacturer_product_name"
+    t.string   "manufacturer_product_serialnumber"
+    t.string   "image"
     t.string   "owner"
     t.string   "metering_type"
     t.string   "meter_size"
@@ -342,7 +345,7 @@ ActiveRecord::Schema.define(version: 20140622154815) do
     t.string   "mounting_method"
     t.date     "build_year"
     t.date     "calibrated_till"
-    t.boolean  "virtual",                     default: false
+    t.boolean  "virtual",                           default: false
     t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -387,9 +390,9 @@ ActiveRecord::Schema.define(version: 20140622154815) do
   add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
 
   create_table "registers", force: true do |t|
+    t.string   "mode"
     t.string   "obis_index"
     t.boolean  "variable_tariff",   default: false
-    t.string   "mode"
     t.integer  "predecimal_places", default: 8
     t.integer  "decimal_places",    default: 2
     t.integer  "meter_id"
