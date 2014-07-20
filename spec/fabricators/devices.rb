@@ -4,7 +4,7 @@ end
 
 Fabricator :bhkw_justus, from: :device do
   image                         { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'ecopower1.jpg')) }
-  law                           ''
+  law                           'kwkg'
   mode                          'out'
   manufacturer_name             'Honda'
   manufacturer_product_name     'EcoPower 1.0'
@@ -15,7 +15,7 @@ Fabricator :bhkw_justus, from: :device do
 end
 
 Fabricator :dach_pv_justus, from: :device do
-  law                           'EEG'
+  law                           'eeg'
   mode                          'out'
   manufacturer_name             'solarwatt'
   manufacturer_product_name     'PV 8,51'
@@ -25,7 +25,7 @@ Fabricator :dach_pv_justus, from: :device do
 end
 
 Fabricator :carport_pv_justus, from: :device do
-  law                           'EEG'
+  law                           'eeg'
   mode                          'out'
   manufacturer_name             'solarwatt'
   manufacturer_product_name     'PV 5,3'
@@ -37,8 +37,7 @@ end
 
 Fabricator :pv_karin, from: :device do
   image                         { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'pv_karin.jpg')) }
-
-  law                           'EEG'
+  law                           'eeg'
   mode                          'out'
   manufacturer_name             'Solarex'
   manufacturer_product_name     'MX-64'
@@ -46,3 +45,19 @@ Fabricator :pv_karin, from: :device do
   watt_peak                     2.16*1000
   commissioning                 Date.new(2002,11,1)
 end
+
+
+Fabricator :bhkw_stefan, from: :device do
+  image                         { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'bhkw_stefan.jpg')) }
+  law                           'kwkg'
+  mode                          'out'
+  manufacturer_name             'Senertec'
+  manufacturer_product_name     'Dachs'
+  generator_type                'chp'
+  primary_energy                'gas'
+  watt_peak                     5.5*1000
+  commissioning                 Date.new(1995,11,1)
+end
+
+
+

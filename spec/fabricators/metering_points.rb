@@ -2,7 +2,7 @@ Fabricator :metering_point do
   address_addition  'Keller'
   i = 1
   uid               {"DE001068825151000000000000#{2677114 + (i += 1)}"}
-  register          { Fabricate(:meter).registers.first }
+  registers          { Fabricate(:meter).registers }
   contract          { Fabricate(:contract) }
 end
 
@@ -12,12 +12,12 @@ end
 Fabricator :mp_z1, from: :metering_point do
   address_addition  'Übergabe'
 
-  register {
+  registers {
     Fabricate( :meter,
                 manufacturer_name:           'Elster',
                 manufacturer_product_name: 'AS 1440',
                 manufacturer_product_serialnumber:   '03353984',
-                ).registers.first
+                ).registers
   }
 
 end
@@ -25,12 +25,12 @@ end
 Fabricator :mp_z2, from: :metering_point do
   address_addition  'Dach'
 
-  register {
+  registers {
      Fabricate(:meter,
                 manufacturer_name:           'Kamstrup',
                 manufacturer_product_name: '382J',
                 manufacturer_product_serialnumber:   '15028648',
-                ).registers.first
+                ).registers
   }
   devices           {[Fabricate(:dach_pv_justus)]}
 end
@@ -39,12 +39,12 @@ end
 
 Fabricator :mp_z3, from: :metering_point do
   address_addition  'Carport'
-  register {
+  registers {
     Fabricate(:meter,
               manufacturer_name:            'Kamstrup',
               manufacturer_product_name:  '382J',
               manufacturer_product_serialnumber:    '15028641',
-              ).registers.first
+              ).registers
   }
   devices           {[Fabricate(:carport_pv_justus)]}
 end
@@ -52,12 +52,12 @@ end
 
 Fabricator :mp_z4, from: :metering_point do
   address_addition  'Keller'
-  register {
+  registers {
     Fabricate(:meter,
               manufacturer_name:            'Kamstrup',
               manufacturer_product_name:  '382J',
               manufacturer_product_serialnumber:   '15028644',
-              ).registers.first
+              ).registers
   }
   devices           {[Fabricate(:bhkw_justus)]}
 end
@@ -66,8 +66,8 @@ end
 
 Fabricator :mp_z5, from: :metering_point do
   address_addition  'Keller'
-  register {
-    Fabricate(:easymeter_1124001747).registers.first
+  registers {
+    Fabricate(:easymeter_1124001747).registers
   }
   metering_service_provider_contract {Fabricate(:mspc_justus)}
 end
@@ -76,31 +76,23 @@ end
 
 
 
-
-
 # karins pv anlage
-Fabricator :mp_z6, from: :metering_point do
+Fabricator :mp_pv_karin, from: :metering_point do
   address_addition  'Scheune'
-  register {
-    Fabricate(:easymeter_60051431).registers.first
-  }
-  devices           {[Fabricate(:pv_karin)]}
+  registers { Fabricate(:easymeter_60051431).registers }
+  devices   {[Fabricate(:pv_karin)]}
   metering_service_provider_contract {Fabricate(:mspc_karin)}
 end
 
 
 
 
-
-
-# stefans verbrauch anlage
-Fabricator :mp_z7, from: :metering_point do
-  address_addition  'Scheune'
-  register {
-    Fabricate(:easymeter_1024000034).registers.first
-  }
-  devices           {[Fabricate(:pv_karin)]}
-  metering_service_provider_contract {Fabricate(:mspc_karin)}
+# stefans bhkw anlage
+Fabricator :mp_stefans_bhkw, from: :metering_point do
+  address_addition  'keller'
+  registers { Fabricate(:in_out_meter).registers }
+  devices   { [Fabricate(:bhkw_stefan)] }
+  metering_service_provider_contract {Fabricate(:mspc_stefan)}
 end
 
 

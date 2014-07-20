@@ -8,6 +8,19 @@ Fabricator :meter do
 end
 
 
+Fabricator :in_meter, from: :meter do
+  registers { [Fabricate(:register_in)] }
+end
+
+Fabricator :out_meter, from: :meter do
+  registers { [Fabricate(:register_out)] }
+end
+
+Fabricator :in_out_meter, from: :meter do
+  registers { [Fabricate(:register_in), Fabricate(:register_out)] }
+end
+
+
 
 # Justus easymeter fur verbrauch
 Fabricator :easymeter_1124001747, from: :meter do
@@ -15,7 +28,7 @@ Fabricator :easymeter_1124001747, from: :meter do
   manufacturer_product_name   'Q3D'
   manufacturer_product_serialnumber  '1124001747'
   registers                    { [Fabricate(:register_in)] }
-  #equipments                   { [Fabricate(:equipment)] }
+  equipments                   { [Fabricate(:equipment)] }
 end
 
 # Stefan easymeter fur verbrauch
