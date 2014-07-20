@@ -2,7 +2,7 @@
   padding: 20px;
 }
 
-.chart#in{
+.chart.in{
   background-image: linear-gradient(to bottom, #52AEFF, #2180D3);
   background-color: #3290E2;
   border-width: 1px;
@@ -10,7 +10,7 @@
   border-color: #499DE5 #258FEC #1E73BD;
 }
 
-.chart#out{
+.chart.out{
   background-image: linear-gradient(to bottom, #FF8A65 45%, #E26A45 102%);
   background-color: #3290E2;
   border-width: 1px;

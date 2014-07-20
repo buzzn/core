@@ -1,7 +1,8 @@
 $(".locations.show").ready ->
-  for metering_point in gon.metering_points
 
-    $.plot $("#chart_#{metering_point.id}"), [metering_point['current']], {
+  for register in gon.registers
+
+    $.plot $("#register_#{register.id} #chart"), [register['current']], {
       series:
         color: "white"
         points:
@@ -24,12 +25,10 @@ $(".locations.show").ready ->
         timeformat: "%H:%M"
         tickDecimals: 0
         timezone: "browser"
-
       tooltip: true
       tooltipOpts:
         content: (label, xval, yval, flotItem) ->
           new Date(xval).getHours() + ":00 bis " + new Date(xval + 3600*1000).getHours() + ":00 Uhr, Bezug: " + yval + " kWh"
-
       axisLabels:
         show: true
       xaxes:[

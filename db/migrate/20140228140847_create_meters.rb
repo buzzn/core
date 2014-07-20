@@ -8,6 +8,7 @@ class CreateMeters < ActiveRecord::Migration
 
       t.string :image
       t.string :owner
+      t.boolean :smart, default: false
       t.string :metering_type
       t.string :meter_size
       t.string :rate

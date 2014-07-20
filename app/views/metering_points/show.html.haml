@@ -61,31 +61,35 @@
   .tab-content
     #charts.tab-pane.active
 
-      .block
-        .header.no-border
-          %h2= t('actual_readings')
-        .chart{id: @metering_point.mode}
-          .chart_container#actual_readings
 
-      .block
+      .block{id: 'day_to_hours' }
         .header.no-border
           %h2= t('day_to_hours')
-        .chart{id: @metering_point.mode}
-          .chart_container#day_to_hours
+        = render @metering_point.registers
 
-
-      .block
+      .block{id: 'month_to_days' }
         .header.no-border
           %h2= t('month_to_days')
-        .chart{id: @metering_point.mode}
-          .chart_container#month_to_days
+        = render @metering_point.registers
 
-
-      .block
+      .block{id: 'year_to_months' }
         .header.no-border
           %h2= t('year_to_months')
-        .chart{id: @metering_point.mode}
-          .chart_container#year_to_months
+        = render @metering_point.registers
+
+
+      / .block
+      /   .header.no-border
+      /     %h2= t('month_to_days')
+      /   .chart{id: @metering_point.mode}
+      /     .chart_container#month_to_days
+
+
+      / .block
+      /   .header.no-border
+      /     %h2= t('year_to_months')
+      /   .chart{id: @metering_point.mode}
+      /     .chart_container#year_to_months
 
 
     #contracts.tab-pane
@@ -99,7 +103,7 @@
 
 
       - if @metering_point.registers
-        = render @metering_point.registers
+        = @metering_point.registers.ids
       - else
         = @metering_point.new_register
 

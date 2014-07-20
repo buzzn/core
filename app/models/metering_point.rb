@@ -37,7 +37,7 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def mode
-    'in'
+    self.registers.select(:mode).map(&:mode).join('_')
   end
 
   #scope :output, self.joins(:registers).where("mode = 'out'")
@@ -49,10 +49,12 @@ class MeteringPoint < ActiveRecord::Base
 
   def name
     case mode
-    when 'out'
-      "#{mode} #{generator_type_names}-#{address_addition}"
     when 'in'
       address_addition
+    when 'in_out'
+      "#{mode} #{generator_type_names}-#{address_addition}"
+    when 'out'
+      "#{mode} #{generator_type_names}-#{address_addition}"
     end
   end
 
@@ -66,22 +68,6 @@ class MeteringPoint < ActiveRecord::Base
     return names.join(', ')
   end
 
-
-  def day_to_hours_sm
-    return { id: self.id, current: Register.find(1).day_to_hours, past: Register.find(1).day_to_hours }
-  end
-
-  def day_to_hours
-    return  { id: self.id, current: Register.day_to_hours, past: Register.day_to_hours }
-  end
-
-  def month_to_days
-    return  { id: self.id, current: Register.month_to_days, past: Register.month_to_days }
-  end
-
-  def year_to_months
-    return  { id: self.id, current: Register.year_to_months, past: Register.year_to_months }
-  end
 
 
   def self.voltages
@@ -102,6 +88,10 @@ class MeteringPoint < ActiveRecord::Base
     }
   end
 
+
+  def in_out?
+    mode == 'in_out'
+  end
 
   def out?
     mode == 'out'

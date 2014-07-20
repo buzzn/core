@@ -337,6 +337,7 @@ ActiveRecord::Schema.define(version: 20140622154815) do
     t.string   "manufacturer_product_serialnumber"
     t.string   "image"
     t.string   "owner"
+    t.boolean  "smart",                             default: false
     t.string   "metering_type"
     t.string   "meter_size"
     t.string   "rate"

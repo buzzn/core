@@ -7,22 +7,27 @@ class MeteringPointsController < InheritedResources::Base
     @users          = @metering_point.users
     @devices        = @metering_point.devices
     @group          = @metering_point.group
+    @registers      = @metering_point.registers
+
+
+    register_data = []
+    @registers.each do |register|
+      register_data << {
+        id:             register.id,
+        day_to_hours:   register.day_to_hours,
+        month_to_days:  register.month_to_days,
+        year_to_months: register.year_to_months
+      }
+    end
+
+
     gon.push({
-                metering_point_id:      @metering_point.id,
-                metering_point_mode:    @metering_point.mode,
 
-                actual_readings_current: @metering_point.day_to_hours_sm[:current],
-                actual_readings_past:    @metering_point.day_to_hours_sm[:past],
-
-                day_to_hours_current:   @metering_point.day_to_hours[:current],
-                day_to_hours_past:      @metering_point.day_to_hours[:past],
-
-                month_to_days_current:  @metering_point.month_to_days[:current],
-                month_to_days_past:     @metering_point.month_to_days[:past],
-
-                year_to_months_current: @metering_point.year_to_months[:current],
-                year_to_months_past:    @metering_point.year_to_months[:past]
-              })
+                metering_point_id:    @metering_point.id,
+                metering_point_mode:  @metering_point.mode,
+                chart_types:          ['day_to_hours', 'month_to_days', 'year_to_months'],
+                charts_data:          register_data
+            })
     show!
   end
 

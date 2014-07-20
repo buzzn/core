@@ -1,20 +1,4 @@
-module FlotConverter
-  def self.to_array(data)
-    hours = []
-    data.each do |hour|
-      hours << [
-        hour['firstTimestamp'].to_i*1000,
-        hour['consumption']/1000.0
-      ]
-    end
-    return hours
-  end
-end
-
-
 class Register < ActiveRecord::Base
-  include FlotConverter
-
 
   belongs_to :meter
   belongs_to :metering_point
@@ -24,12 +8,94 @@ class Register < ActiveRecord::Base
 
 
 
-
-
   def day_to_hours
-    FlotConverter.to_array Reading.day_to_hours_by_register_id(self.id)
+    if meter.smart
+      {
+        id:       self.id,
+        time_range: 'day_to_hours',
+        current:  convert_to_flot_array(Reading.day_to_hours_by_register_id(self.id)),
+        past:     convert_to_flot_array(Reading.day_to_hours_by_register_id(self.id))
+      }
+    else
+      {
+        id:       self.id,
+        time_range: 'day_to_hours',
+        current:  convert_to_flot_array(Reading.day_to_hours_by_slp),
+        past:     convert_to_flot_array(Reading.day_to_hours_by_slp)
+      }
+    end
   end
 
+
+
+  def month_to_days
+    if meter.smart
+      {
+        id:       self.id,
+        time_range: 'month_to_days',
+        current:  convert_to_flot_array(Reading.day_to_hours_by_register_id(self.id)),
+        past:     convert_to_flot_array(Reading.day_to_hours_by_register_id(self.id))
+      }
+    else
+      {
+        id:       self.id,
+        time_range: 'month_to_days',
+        current:  convert_to_flot_array(Reading.day_to_hours_by_slp),
+        past:     convert_to_flot_array(Reading.day_to_hours_by_slp)
+      }
+    end
+  end
+
+
+
+  def year_to_months
+    if meter.smart
+      {
+        id:       self.id,
+        time_range: 'year_to_months',
+        current:  convert_to_flot_array(Reading.day_to_hours_by_register_id(self.id)),
+        past:     convert_to_flot_array(Reading.day_to_hours_by_register_id(self.id))
+      }
+    else
+      {
+        id:       self.id,
+        time_range: 'year_to_months',
+        current:  convert_to_flot_array(Reading.day_to_hours_by_slp),
+        past:     convert_to_flot_array(Reading.day_to_hours_by_slp)
+      }
+    end
+  end
+
+  # def month_to_days
+  #   return  {
+  #     id:       self.id,
+  #     current:  Register.month_to_days,
+  #     past:     Register.month_to_days
+  #   }
+  # end
+
+  # def year_to_months
+  #   return  {
+  #     id:       self.id,
+  #     current:  Register.year_to_months,
+  #     past:     Register.year_to_months
+  #   }
+  # end
+
+
+
+private
+
+  def convert_to_flot_array(data)
+    hours = []
+    data.each do |hour|
+      hours << [
+        hour['firstTimestamp'].to_i*1000,
+        hour['consumption']/1000.0
+      ]
+    end
+    return hours
+  end
 
 
   def self.modes
@@ -39,19 +105,6 @@ class Register < ActiveRecord::Base
     }
   end
 
-  def self.day_to_hours
-    FlotConverter.to_array Reading.day_to_hours_by_slp
-  end
-
-
-  def self.month_to_days
-    FlotConverter.to_array Reading.month_to_days_by_slp
-  end
-
-
-  def self.year_to_months
-    FlotConverter.to_array Reading.year_to_months_by_slp
-  end
 
 
 end
