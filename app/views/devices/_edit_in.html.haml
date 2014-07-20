@@ -4,7 +4,7 @@
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'edit_in_device'
     .modal-body
-      = simple_form_for @device, remote: true, html: {multipart: true} do |f|
+      = simple_form_for @device, remote: false, html: {multipart: true} do |f|
         = render 'devices/in_form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-primary'
         = @device.link_to_delete

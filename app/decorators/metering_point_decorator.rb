@@ -9,11 +9,23 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :group
 
   def thumb_small
-    link_to image_tag_small, model
+    link_to image_tag_small, model, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => model.name }, rel: 'tooltip'
   end
 
   def image_tag_small
     content_tag(:i, '', class: 'fa fa-map-marker')
+  end
+
+  def thumb_medium
+    link_to image_tag_medium, model
+  end
+
+  def image_tag_medium
+    if model.image?
+      image_tag model.image.medium, class: 'img-circle', size: '150x150'
+    else
+      content_tag(:i, '', class: 'fa fa-map-marker')
+    end
   end
 
   def link_to_delete

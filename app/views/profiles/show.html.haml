@@ -7,13 +7,19 @@
 
 
   - if @profile.user != current_user
-    - if current_user.friend?(@profile.user)
-      = link_to t('cancel_friendship')
-    - else
-      - if FriendshipRequest.where(sender: current_user, receiver: @profile.user).empty?
-        = link_to t('send_friend_request'), friendship_requests_path( receiver_id: @profile.user), method: :post
-      - else
-        = t'waiting_for_exept'
+    .btn-group
+      %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
+        =t('friendship')
+        %span.caret
+      %ul.dropdown-menu{role: "menu"}
+        %li
+          - if current_user.friend?(@profile.user)
+            = link_to t('cancel_friendship')
+          - else
+            - if FriendshipRequest.where(sender: current_user, receiver: @profile.user).empty?
+              = link_to t('send_friend_request'), friendship_requests_path( receiver_id: @profile.user), method: :post
+            - else
+              = t'waiting_for_accepting'
 
 
   - if @profile.readable_by? current_user

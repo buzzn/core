@@ -23,8 +23,11 @@
   %h5.page-header= t('users')
   %article.sidebar_module.residents
     %ul
-      - @users.each do |user|
-        = render user.profile
+      - if @users.any?
+        - @users.each do |user|
+          = render user.profile
+      - else
+        = t('no_users_available')
       - if current_user.can_update?(@metering_point)
         = @metering_point.edit_users
     .clearfix
@@ -33,8 +36,11 @@
   %h5.page-header= t('devices')
   %article.sidebar_module.devices
     %ul
-      - @devices.each do |device|
-        = render device
+      - if @devices.any?
+        - @devices.each do |device|
+          = render device
+      - else
+        = t('no_devices_available')
       - if current_user.can_update?(@metering_point)
         = @metering_point.new_device
     .clearfix

@@ -1,6 +1,6 @@
 .col-sm-3
   .detail_icon
-    %i.fa.fa-home
+    %i= @location.image_tag_medium
   %h4= @location.name
   - if current_user.can_update?(@location)
     = @location.link_to_edit
@@ -8,16 +8,22 @@
   %h5.page-header= t('residents')
   %article.sidebar_module.residents
     %ul
-      - @residents.each do |resident|
-        = render resident.profile
+      - if @residents.any?
+        - @residents.each do |resident|
+          = render resident.profile
+      - else
+        = t('no_residents_available')
     .clearfix
 
 
   %h5.page-header= t('devices')
   %article.sidebar_module.devices
     %ul
-      - @devices.each do |device|
-        = render device
+      - if @devices.any?
+        - @devices.each do |device|
+          = render device
+      - else
+        = t('no_devices_available')
     .clearfix
 
 
