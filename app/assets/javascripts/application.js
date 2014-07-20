@@ -25,6 +25,8 @@
 //= require select2
 //= require cocoon
 //= require bootstrap
+//= require rails-timeago
+//= require rails-timeago-all
 
 //= require global
 //= require metering_points

@@ -1,8 +1,10 @@
 
 .activity {
-  margin-bottom: 1em;
-  padding-left: 45px;
   position: relative;
+  padding: 0px 0px 1em 5px;
+  overflow: hidden;
+  border-top: 1px solid #D1D1D1;
+
 
   .mega-icon{
     position: absolute;
@@ -10,16 +12,21 @@
     left: 0;
     width: 32px;
     height: 32px;
-    padding: 3px;
     color: #BBB;
     background-position: center center;
     background-size: 32px auto;
     background-repeat: no-repeat;
+
   }
 
   .body{
     overflow: hidden;
-    padding: 0 0 1em 0;
+    padding: 1em 0 0;
+    padding-left: 45px;
+
+    .time {
+      font-size: 12px;
+    }
 
     .title {
       padding: 0 0 .25em 0;
@@ -29,11 +36,9 @@
 
     .details{
       .avatar {
-        padding: 2px;
-        background-color: white;
+        background-color: none;
         float: left;
-        line-height: 0;
-        margin-right: .7em;
+        padding: 0;
       }
       .message{
         display: inline;

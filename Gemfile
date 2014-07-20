@@ -67,7 +67,7 @@ gem 'jbuilder'
 gem 'gon'
 gem 'rack-dev-mark'
 gem 'tzinfo'
-
+gem 'rails-timeago'
 
 
 group :development do

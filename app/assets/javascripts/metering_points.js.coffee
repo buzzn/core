@@ -71,7 +71,7 @@ $(".metering_points.show").ready ->
       xaxis:
         mode: "time"
         timeformat: actualTimeFormat
-        timezone: "browser"
+        #timezone: "browser"
         minTickSize: [1, "hour"]
       axisLabels:
         show: true

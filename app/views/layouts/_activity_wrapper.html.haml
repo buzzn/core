@@ -4,13 +4,15 @@
   .body
     .mega-icon
       = @a.key_icon
+    .time
+      = timeago_tag @a.created_at, :nojs => true, :lang => locale, :limit => 10.days.ago
     .title
       - if a.owner
         = link_to a.owner.name, a.owner.profile
       - else
       = content_for :action
     .details
-      .avatar
+      .avatar.thumb_icon
         - if a.owner
           = @a.owner.profile.thumb
       = yield
