@@ -19,6 +19,13 @@ class Register < ActiveRecord::Base
   belongs_to :meter
   belongs_to :metering_point
 
+  scope :in, -> { where(mode: :in) }
+  scope :out, -> { where(mode: :out) }
+
+
+
+
+
   def day_to_hours
     FlotConverter.to_array Reading.day_to_hours_by_register_id(self.id)
   end

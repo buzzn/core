@@ -21,8 +21,8 @@ class MeteringPoint < ActiveRecord::Base
 
   belongs_to :group
 
-  has_one :register, dependent: :destroy
-  accepts_nested_attributes_for :register, reject_if: :all_blank
+  has_many :registers, dependent: :destroy
+  accepts_nested_attributes_for :registers, reject_if: :all_blank
 
   has_one :distribution_system_operator_contract, dependent: :destroy
   has_one :electricity_supplier_contract, dependent: :destroy
@@ -36,14 +36,14 @@ class MeteringPoint < ActiveRecord::Base
   validates :address_addition, presence: true
 
 
-  delegate :mode, to: :register, allow_nil: true
+  def mode
+    'in'
+  end
 
-
-
-  #scope :output, self.joins(:register).where("mode = 'out'")
+  #scope :output, self.joins(:registers).where("mode = 'out'")
 
   scope :by_group_id_and_mode_eq, lambda { |group_id, mode|
-    MeteringPoint.joins(:register).where("mode = '#{mode}'").where(group_id: group_id).uniq
+    MeteringPoint.joins(:registers).where("mode = '#{mode}'").where(group_id: group_id).uniq
   }
 
 

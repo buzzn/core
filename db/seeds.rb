@@ -141,7 +141,7 @@ buzzn_team.each do |user|
     location.metering_points.each do |metering_point|
       fake_readings.each do |fake_reading|
         Reading.create(
-          register_id:  metering_point.register.id,
+          register_id:  metering_point.registers.in.first.id,
           timestamp:    ActiveSupport::TimeZone["Berlin"].parse(fake_reading.first.to_s),
           watt_hour:    fake_reading.last
         )

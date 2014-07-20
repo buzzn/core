@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
 
   def editable_locations
     Location.with_role(:manager, self)
-            .includes([metering_points: [:register, :devices]])
+            .includes([metering_points: [:registers, :devices]])
             .decorate
   end
 
