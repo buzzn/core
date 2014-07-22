@@ -33,15 +33,15 @@ class Register < ActiveRecord::Base
       {
         id:       self.id,
         time_range: 'month_to_days',
-        current:  convert_to_flot_array(Reading.day_to_hours_by_register_id(self.id)),
-        past:     convert_to_flot_array(Reading.day_to_hours_by_register_id(self.id))
+        current:  convert_to_flot_array(Reading.month_to_days_by_register_id(self.id)),
+        past:     convert_to_flot_array(Reading.month_to_days_by_register_id(self.id))
       }
     else
       {
         id:       self.id,
         time_range: 'month_to_days',
-        current:  convert_to_flot_array(Reading.day_to_hours_by_slp),
-        past:     convert_to_flot_array(Reading.day_to_hours_by_slp)
+        current:  convert_to_flot_array(Reading.month_to_days_by_slp),
+        past:     convert_to_flot_array(Reading.month_to_days_by_slp)
       }
     end
   end
@@ -53,15 +53,15 @@ class Register < ActiveRecord::Base
       {
         id:       self.id,
         time_range: 'year_to_months',
-        current:  convert_to_flot_array(Reading.day_to_hours_by_register_id(self.id)),
-        past:     convert_to_flot_array(Reading.day_to_hours_by_register_id(self.id))
+        current:  convert_to_flot_array(Reading.year_to_months_by_register_id(self.id)),
+        past:     convert_to_flot_array(Reading.year_to_months_by_register_id(self.id))
       }
     else
       {
         id:       self.id,
         time_range: 'year_to_months',
-        current:  convert_to_flot_array(Reading.day_to_hours_by_slp),
-        past:     convert_to_flot_array(Reading.day_to_hours_by_slp)
+        current:  convert_to_flot_array(Reading.year_to_months_by_slp),
+        past:     convert_to_flot_array(Reading.year_to_months_by_slp)
       }
     end
   end
