@@ -8,13 +8,21 @@ class FriendshipRequest < ActiveRecord::Base
     update_attributes(:status  => 'accepted')
   end
 
+  def reject
+    update_attributes(:status => 'rejected')
+  end
+
 
   private
     def created_friendship
       if status_changed? && status == 'accepted'
         sender.friends << receiver
         self.delete
+      elsif status_changed? && status == 'rejected'
+        self.delete
       end
     end
+
+
 
 end

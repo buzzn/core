@@ -4,5 +4,6 @@ class FriendshipRequestDecorator < Draper::Decorator
 
   decorates_association :sender
   decorates_association :receiver
+  decorates_association :profile
 
 end

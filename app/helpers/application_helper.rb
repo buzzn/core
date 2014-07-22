@@ -12,4 +12,16 @@ module ApplicationHelper
       })
   end
 
+  def new_group
+    link_to(
+      t("add_new_group"),
+      new_group_path,
+      {
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => 'modal',
+        'data-target' => '#myModal'
+      })
+  end
+
 end

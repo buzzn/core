@@ -23,12 +23,9 @@ class ProfileDecorator < Draper::Decorator
       })
   end
 
-
-
   def thumb
     link_to image_tag_small, model
   end
-
 
   def image_tag_small
     if model.image?

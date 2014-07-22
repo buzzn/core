@@ -1,6 +1,6 @@
 .col-sm-3
   .detail_icon
-    %i.fa.fa-users
+    %i= @group.image_tag_medium
   %h4= @group.name
 
   - if user_signed_in?
