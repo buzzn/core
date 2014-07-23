@@ -41,7 +41,7 @@ class FriendshipRequestsController < InheritedResources::Base
         redirect_to profile_path(current_user.profile)
       end
     else
-      flash[:error] = t('unable_to_accepted_friendship_request')
+      flash[:error] = t('unable_to_rejected_friendship_request')
       redirect_to profile_path(@friendship_request.receiver)
     end
   end

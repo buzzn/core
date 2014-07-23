@@ -23,7 +23,6 @@ class ProfilesController < InheritedResources::Base
     redirect_to @profile
   end
 
-
 protected
   def permitted_params
     params.permit(:profile => init_permitted_params)

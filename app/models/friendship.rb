@@ -4,5 +4,4 @@ class Friendship < ActiveRecord::Base
 
   #scope :send_by_user, ->(user) { where(sender: user) }
 
-
 end

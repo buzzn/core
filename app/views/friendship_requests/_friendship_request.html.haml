@@ -1,8 +1,9 @@
 .bs-callout.bs-callout-info
-  .col-sm-3
+  .col-md-3
     .thumb_icon.friendship_req
-      = link_to friendship_request.sender.profile.decorate.image_tag_small, friendship_request.sender.profile, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => friendship_request.sender.profile.name }, rel: 'tooltip'
-  .col-sm-9
+      = link_to friendship_request.sender.profile.decorate.image_tag_sm, friendship_request.sender.profile, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => friendship_request.sender.profile.name }, rel: 'tooltip'
+  .col-md-1
+  .col-md-8
     %h4= t'new_friendship_request'
     %p= friendship_request.sender.profile.name
 

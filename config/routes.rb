@@ -33,7 +33,12 @@ Buzzn::Application.routes.draw do
   end
 
 
-  resources :friendships
+  resources :friendships do
+    member do
+      get :cancel
+    end
+  end
+
   resources :friendship_requests do
     member do
       get :accept

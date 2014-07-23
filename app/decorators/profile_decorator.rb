@@ -44,6 +44,13 @@ class ProfileDecorator < Draper::Decorator
     end
   end
 
+  def image_tag_sm
+    if model.image?
+      image_tag model.image.medium, class: 'img-circle', size: '100x100'
+    else
+      content_tag(:i, '', class: 'fa fa-user')
+    end
+  end
 
 
 
