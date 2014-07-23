@@ -13,8 +13,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :profile
 
   has_many :friendships
-  has_many :friends, :through => :friendships, after_add:    :create_complement_friendship,
-                                               after_remove: :remove_complement_friendship
+  has_many :friends, :through => :friendships, after_add: :create_complement_friendship
 
   has_many :metering_point_users
   has_many :metering_points, :through => :metering_point_users
@@ -58,10 +57,6 @@ class User < ActiveRecord::Base
 private
   def create_complement_friendship(friend)
     friend.friends << self unless friend.friends.include?(self)
-  end
-
-  def remove_complement_friendship(friend)
-    friend.friends.delete(self)
   end
 
 end

@@ -14,7 +14,7 @@
       %ul.dropdown-menu{role: "menu"}
         %li
           - if current_user.friend?(@profile.user)
-            = link_to(t('cancel_friendship'),cancel_friendship_path(@profile.user),remote: true,:data => {:confirm => t('are_you_sure')})
+            = link_to(t('cancel_friendship'),cancel_friendship_path(@profile.user),:data => {:confirm => t('are_you_sure')})
           - else
             - if FriendshipRequest.where(sender: current_user, receiver: @profile.user).empty?
               = link_to t('send_friend_request'), friendship_requests_path( receiver_id: @profile.user), method: :post

@@ -5,6 +5,8 @@ class FriendshipsController < InheritedResources::Base
   def cancel
     @user = User.find(params[:id])
     @user.friends.delete(current_user)
+    current_user.friends.delete(@user)
+    redirect_to current_user.profile
   end
 
 end
