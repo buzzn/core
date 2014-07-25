@@ -243,6 +243,7 @@ ActiveRecord::Schema.define(version: 20140622154815) do
   create_table "groups", force: true do |t|
     t.string   "slug"
     t.string   "name"
+    t.string   "image"
     t.boolean  "private",     default: false
     t.text     "description"
     t.datetime "created_at"

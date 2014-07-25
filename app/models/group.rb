@@ -3,7 +3,7 @@ class Group < ActiveRecord::Base
   include Authority::Abilities
 
   include PublicActivity::Model
-  tracked
+  tracked  owner: Proc.new{ |controller, model| controller && controller.current_user }
 
   mount_uploader :image, PictureUploader
 

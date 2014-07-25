@@ -26,6 +26,15 @@ class PublicActivity::ActivityDecorator < Draper::Decorator
     when 'metering_point.destroy'
       h.content_tag(:i, '', :class => "fa fa-minus-square fa-2x")
 
+    when 'group.create'
+      h.content_tag(:i, '', :class => "fa fa-plus-square fa-2x")
+
+    when 'group.update'
+      h.content_tag(:i, '', :class => "fa fa-refresh fa-2x")
+
+    when 'group.destroy'
+      h.content_tag(:i, '', :class => "fa fa-minus-square fa-2x")
+
     end
   end
 
