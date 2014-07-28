@@ -18,7 +18,7 @@
     .col-md-4
       .forminput.box
         %h1= t'complete_contract'
-        = simple_form_for @contract, url: url_for(action: 'complete_contract_update', controller: 'wizard_consumers'), method: 'put'  do |f|
+        = simple_form_for @contract, url: url_for(action: 'complete_contract_update', controller: 'wizard_producers'), method: 'put'  do |f|
           = f.input :terms
           = f.input :confirm_pricing_model
           = f.input :power_of_attorney

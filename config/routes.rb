@@ -95,6 +95,51 @@ Buzzn::Application.routes.draw do
   end
 
 
+  resources :wizard_producers do
+    collection do
+      get :complete_user
+      put :complete_user_update
+
+      get :contracting_party_legal_entity
+      put :contracting_party_legal_entity_update
+
+      get :contracting_party_address
+      put :contracting_party_address_update
+
+      get :contracting_party_organization
+      put :contracting_party_organization_update
+
+      get :contracting_party_organization_address
+      put :contracting_party_organization_address_update
+
+      get :location_address
+      put :location_address_update
+
+      get :location_habitation
+      put :location_habitation_update
+
+      get :location_metering_point
+      put :location_metering_point_update
+
+      get :metering_point_current_supplier
+      put :metering_point_current_supplier_update
+
+      get :contract_forecast
+      put :contract_forecast_update
+
+      get :contracting_party_bank_account
+      put :contracting_party_bank_account_update
+
+      get :complete_contract
+      put :complete_contract_update
+
+      get :power_generator
+      put :power_generator_update
+
+      get :contracting_party_taxation
+      put :contracting_party_taxation_update
+    end
+  end
 
 
   # The priority is based upon order of creation: first created -> highest priority.

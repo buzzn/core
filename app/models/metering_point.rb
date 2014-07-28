@@ -88,6 +88,14 @@ class MeteringPoint < ActiveRecord::Base
     }
   end
 
+  def self.types
+    %w{
+      2_way_meter
+      one_of_two_meter
+      virtual_meter
+      demarcation_meter
+    }
+  end
 
   def in_out?
     mode == 'in_out'

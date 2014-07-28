@@ -10,6 +10,7 @@ class CreateMeteringPoints < ActiveRecord::Migration
       t.string  :voltage_level
       t.date    :regular_reeding
       t.string  :regular_interval
+      t.string  :meter_type
 
       t.integer :location_id
       t.integer :contract_id

@@ -17,7 +17,9 @@
     .col-md-4
     .col-md-4
       .forminput.box
-        %h1= t'contracting_party_bank_account'
-        = simple_form_for @bank_account, url: url_for( action: 'contracting_party_bank_account_update', controller: 'wizard_producers'), method: 'put'  do |f|
-          = render 'bank_accounts/form_fields', f: f
+        %h1= t'contracting_party_taxation'
+        = simple_form_for @contracting_party, url: url_for( action: 'contracting_party_taxation_update', controller: 'wizard_producers'), method: 'put'  do |f|
+          = f.input :sales_tax_number
+          = f.input :tax_rate
+          = f.input :tax_number
           = f.submit t("continue"), class: 'btn btn-success', id: 'submit'

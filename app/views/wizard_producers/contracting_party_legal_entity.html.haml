@@ -14,6 +14,6 @@
     .col-md-4
       .forminput.box
         %h1= t'contracting_party_legal_entity'
-      = simple_form_for @contracting_party, url: url_for( action: 'contracting_party_legal_entity_update', controller: 'wizard_consumers'), method: 'put'  do |f|
+      = simple_form_for @contracting_party, url: url_for( action: 'contracting_party_legal_entity_update', controller: 'wizard_producers'), method: 'put'  do |f|
         = f.input :legal_entity, include_blank: false, collection: ContractingParty.legal_entities, input_html: { class: 'select2' }
         = f.submit t("continue"), class: 'btn btn-success', id: 'submit'
