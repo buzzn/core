@@ -24,7 +24,7 @@ class GroupsController < InheritedResources::Base
   end
 
   def permitted_params
-    params.permit(:group => [:name, :mode, :public])
+    params.permit(:group => [:image, :name, :mode, :public])
   end
 
 end

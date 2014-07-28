@@ -80,6 +80,7 @@ private
       :name,
       :uid,
       :mode,
+      :registers
       :address_addition,
       :user_ids => []
     ]

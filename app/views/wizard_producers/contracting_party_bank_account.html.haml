@@ -1,0 +1,23 @@
+.container
+  .row
+    .col-md-4
+    .col-md-4
+      %h5= t'progress'
+  .row
+    .col-md-4
+    .col-md-4
+      .progress
+        -if current_user.contracting_party.legal_entity == 'natural_person'
+          .progress-bar{"aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => "68", role: "progressbar", style: "width: 68%;"}
+            68%
+        -else
+          .progress-bar{"aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => "77", role: "progressbar", style: "width: 77%;"}
+            77%
+  .row
+    .col-md-4
+    .col-md-4
+      .forminput.box
+        %h1= t'contracting_party_bank_account'
+        = simple_form_for @bank_account, url: url_for( action: 'contracting_party_bank_account_update', controller: 'wizard_consumers'), method: 'put'  do |f|
+          = render 'bank_accounts/form_fields', f: f
+          = f.submit t("continue"), class: 'btn btn-success', id: 'submit'
