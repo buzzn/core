@@ -21,7 +21,7 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/devise.git
-  revision: 66db52ce31b5d8629f5813a1d7f03a8bc17e5d52
+  revision: 8a4fd044364166a15103756a7443f287304bc553
   specs:
     devise (3.2.4)
       bcrypt (~> 3.0)
@@ -78,7 +78,7 @@ GEM
       activesupport (>= 3.0.0)
       rake (>= 0.8.7)
     awesome_print (1.2.0)
-    aws-sdk (1.46.0)
+    aws-sdk (1.49.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
     bcrypt (3.1.7)
@@ -529,7 +529,7 @@ DEPENDENCIES
   attribute_normalizer!
   authority
   awesome_print
-  aws-sdk (= 1.46.0)
+  aws-sdk
   better_errors
   binding_of_caller
   bootstrap-sass
