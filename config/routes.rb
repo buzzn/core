@@ -1,7 +1,7 @@
 Buzzn::Application.routes.draw do
-  require 'sidekiq/web'
+  # require 'sidekiq/web'
 
-  mount Sidekiq::Web, at: '/sidekiq'
+  # mount Sidekiq::Web, at: '/sidekiq'
 
   devise_for :users, controllers: { registrations: 'users/registrations' }
 

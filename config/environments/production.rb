@@ -1,7 +1,7 @@
 Buzzn::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  GA.tracker = "UA-43704543-1"
+  #GA.tracker = "UA-43704543-1"
 
   # Code is not reloaded between requests.
   config.cache_classes = true
@@ -66,6 +66,10 @@ Buzzn::Application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.default_url_options = { :host => "www.buzzn.net" }
+  config.action_mailer.delivery_method = :amazon_ses
+
+
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found).

@@ -8,13 +8,15 @@ nice nested URL
 
 seed data fur newsstream
 
-
-metering_point update
+metering_point update not working
 
 
 # Christian
 
-%article sitemodel momentan nur in profile/show richtig.
-andere sites bitte anpassen.
 
+google analytics gem
+
+seo mit metamagic.gem
+
+wizard validation
 
