@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/aws/aws-sdk-ruby.git
+  revision: 81fb7b6080ca93c4363be9668f751cd8c9433334
+  specs:
+    aws-sdk (1.49.0)
+      json (~> 1.4)
+      nokogiri (>= 1.4.4)
+
+GIT
   remote: git://github.com/iainsmith/address_picker-rails.git
   revision: 43009d96888a9c76e6a8dc0e2f3da48e979fcb4e
   specs:
@@ -78,9 +86,6 @@ GEM
       activesupport (>= 3.0.0)
       rake (>= 0.8.7)
     awesome_print (1.2.0)
-    aws-sdk (1.49.0)
-      json (~> 1.4)
-      nokogiri (>= 1.4.4)
     bcrypt (3.1.7)
     better_errors (1.1.0)
       coderay (>= 1.0.0)
@@ -529,7 +534,7 @@ DEPENDENCIES
   attribute_normalizer!
   authority
   awesome_print
-  aws-sdk
+  aws-sdk!
   better_errors
   binding_of_caller
   bootstrap-sass

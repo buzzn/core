@@ -1,5 +1,5 @@
 class Notifier < ActionMailer::Base
-  default from: "mail@buzzn.net"
+  default from: "system@buzzn.net"
 
   def welcome(user)
     mail(to: user.email, subject: "subject")

@@ -48,7 +48,7 @@ gem 'immigrant'
 gem 'mini_magick'
 gem 'carrierwave'
 gem 'fog'
-gem 'aws-sdk'
+gem 'aws-sdk',                    github: 'aws/aws-sdk-ruby'
 gem 'therubyracer'
 gem 'draper'
 gem 'whenever', :require => false
