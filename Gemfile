@@ -48,7 +48,7 @@ gem 'immigrant'
 gem 'mini_magick'
 gem 'carrierwave'
 gem 'fog'
-gem 'aws-ses', '~> 0.5.0', :require => 'aws/ses'
+gem 'aws-sdk'
 gem 'therubyracer'
 gem 'draper'
 gem 'whenever', :require => false
