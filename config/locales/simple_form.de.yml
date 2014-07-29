@@ -37,15 +37,22 @@ de:
         uid: Zählpunkt-ID
         address_addition: Addresszusatz
         mode: Richtung
+        meter_type: Zählertyp
       device:
+        law: Gesetz
+        manufacturer_name: Herstellername
+        manufacturer_product_name: Produktname
+        primary_energy: Primärenergie
         name: Name
-        manufacturer: Hersteller
-        manufacturer_product_number: Produktbezeichnung
         watt_peak: Watt (max.)
         commissioning: Kaufdatum
+        watt_hour_pa: Jahresenergieeinspeisung
       contracting_party:
         legal_entity: Rechtsform
         contracts: Verträge
+        salex_tax_number: Steuer-ID
+        tax_rate: Steuersatz
+        tax_number: Steuernummer
       electricity_supplier_contract:
         organization: Firmenname
         customer_number: Kundennummer
@@ -54,7 +61,7 @@ de:
       bank_account:
         holder: Kontoinhaber
         iban: IBAN
-        bic: BIC 
+        bic: BIC
         bank_name: Kreditinstitut
         direct_debit: Umsatzsteuerpflicht
       contract:
@@ -66,6 +73,8 @@ de:
         name: Name
         email: Email
         phone: Telefon
+
+
     hints:
       defaults:
         username: 'Benutzername, mit dem Du dich einloggen kannst.'
