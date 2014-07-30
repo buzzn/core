@@ -64,6 +64,14 @@ production:
       hosts:
         - localhost:27017
 
+staging:
+  sessions:
+    default:
+      database: buzzn_staging
+      hosts:
+        - localhost:27017
+
+
 
 test:
   sessions:
