@@ -32,7 +32,11 @@ class User < ActiveRecord::Base
   end
 
   def sent_friendship_requests
-    FriendshipRequest.where(send: self)
+    FriendshipRequest.where(sender: self)
+  end
+
+  def sent_group_metering_point_requests
+    GroupMeteringPointRequest.where(user: self)
   end
 
   def name

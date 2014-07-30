@@ -6,11 +6,28 @@
   - if user_signed_in?
     - if current_user.can_update?(@group)
       = @group.link_to_edit
+    - else
+      .btn-group
+        %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
+          =t('membership')
+          %span.caret
+        %ul.dropdown-menu{role: "menu"}
+          %li
+            - if @group.member?(current_user.metering_points.first)
+              = link_to(t('cancel_membership'),cancel_membership_group_path(current_user.metering_points.first),:data => {:confirm => t('are_you_sure')})
+            - else
+              - if GroupMeteringPointRequest.where(user: current_user, group: @group, metering_point: current_user.metering_points.first).empty?
+                = link_to t('send_group_metering_point_request'), group_metering_point_requests_path( group_id: @group), method: :post
+              - else
+                = t'waiting_for_accepting'
 
   %p= @group.description
 
 
 .col-sm-6
+  - if current_user.can_update?(@group) && @group.received_group_metering_point_requests.any?
+    %h5.page-header= t('group_requests')
+    = render @group_metering_point_requests
   %ul.nav.nav-pills#mytab.nav-spacer
     %li.active
       %a{"data-toggle" => "tab", href: "#metering_points"}

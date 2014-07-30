@@ -21,11 +21,11 @@ class MeteringPointDecorator < Draper::Decorator
   end
 
   def image_tag_medium
-    if model.image?
-      image_tag model.image.medium, class: 'img-circle', size: '150x150'
-    else
-      content_tag(:i, '', class: 'fa fa-map-marker')
-    end
+    content_tag(:i, '', class: 'fa fa-map-marker')
+  end
+
+  def image_tag_sm
+    content_tag(:i, '', class: 'fa fa-map-marker')
   end
 
   def link_to_delete

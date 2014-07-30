@@ -20,4 +20,12 @@ class Group < ActiveRecord::Base
   has_many :group_users
   has_many :users, :through => :group_users
 
+  def member?(metering_point)
+    self.metering_points.include?(metering_point) ? true : false
+  end
+
+  def received_group_metering_point_requests
+    GroupMeteringPointRequest.where(group: self)
+  end
+
 end

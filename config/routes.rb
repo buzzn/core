@@ -1,4 +1,6 @@
 Buzzn::Application.routes.draw do
+  resources :group_metering_point_requests
+
   # require 'sidekiq/web'
 
   # mount Sidekiq::Web, at: '/sidekiq'
@@ -45,7 +47,19 @@ Buzzn::Application.routes.draw do
       get :reject
     end
   end
-  resources :groups
+
+  resources :group_metering_point_requests do
+    member do
+      get :accept
+      get :reject
+    end
+  end
+  resources :groups do
+    member do
+      get :cancel_membership
+    end
+  end
+
   resources :contracting_parties
   resources :contracts
   resources :private_grids

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140622154815) do
+ActiveRecord::Schema.define(version: 20140730084558) do
 
   create_table "activities", force: true do |t|
     t.integer  "trackable_id"
@@ -229,6 +229,20 @@ ActiveRecord::Schema.define(version: 20140622154815) do
   add_index "friendships", ["friend_id", "user_id"], name: "index_friendships_on_friend_id_and_user_id", using: :btree
   add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id", using: :btree
   add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
+
+  create_table "group_metering_point_requests", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.integer  "metering_point_id"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "group_metering_point_requests", ["group_id", "user_id"], name: "index_group_metering_point_requests_on_group_id_and_user_id", using: :btree
+  add_index "group_metering_point_requests", ["group_id"], name: "index_group_metering_point_requests_on_group_id", using: :btree
+  add_index "group_metering_point_requests", ["metering_point_id"], name: "index_group_metering_point_requests_on_metering_point_id", using: :btree
+  add_index "group_metering_point_requests", ["user_id"], name: "index_group_metering_point_requests_on_user_id", using: :btree
 
   create_table "group_users", force: true do |t|
     t.integer  "user_id"
