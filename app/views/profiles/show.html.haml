@@ -49,7 +49,6 @@
 
   = render @friendship_requests if @profile.user == current_user
   %h5= t('activities')
-  = link_to 'ich möchte meinen strom bei buzzn einspeisen.', complete_user_wizard_producers_path, class: 'btn btn-primary btn-lg'
   - @activities.each do |activity|
     = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
 
