@@ -5,7 +5,7 @@ CarrierWave.configure do |config|
       provider:               'AWS',
       aws_access_key_id:      Rails.application.secrets.aws_access_key,
       aws_secret_access_key:  Rails.application.secrets.aws_secret_access_key,
-      region:                 "eu-west-1"
+      region:                 Rails.application.secrets.aws_region
     }
     config.fog_directory    = "buzzn_production"
     config.asset_host       = '//cdn.buzzn.net'

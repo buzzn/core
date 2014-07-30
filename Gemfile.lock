@@ -74,6 +74,9 @@ GEM
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
     arel (5.0.1.20140414130214)
+    asset_sync (1.0.0)
+      activemodel
+      fog (>= 1.8.0)
     authority (3.0.0)
       activesupport (>= 3.0.0)
       rake (>= 0.8.7)
@@ -526,6 +529,7 @@ DEPENDENCIES
   acts_as_list!
   address_picker-rails!
   annotate
+  asset_sync
   attribute_normalizer!
   authority
   awesome_print
