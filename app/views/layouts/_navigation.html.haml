@@ -46,7 +46,6 @@
             %ul.dropdown-menu
               %li= link_to t('my_profile'), current_user.profile
               %li= link_to t('edit_account'), edit_user_registration_path
-              %li= link_to t('supply_with_current'), complete_user_wizard_producers_path
               - if current_user.contracting_party
                 %li= link_to t('contracting_party'), edit_contracting_party_path(current_user.contracting_party)
               %li.divider
