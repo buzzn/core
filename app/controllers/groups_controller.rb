@@ -26,7 +26,7 @@ class GroupsController < InheritedResources::Base
 
   def cancel_membership
     @group = Group.find(params[:id])
-    @group.metering_points.delete(current_user.metering_point.first)
+    @group.metering_points.delete(current_user.metering_points.first)
     current_user.metering_points.first.group = nil
     redirect_to group_path(@group)
   end

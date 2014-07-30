@@ -236,3 +236,9 @@ de:
   group: Gruppe
   more_groups: Weitere Gruppen
   add_new_group: Neue Gruppe hinzufügen
+  membership: Mitgliedschaft
+  send_group_metering_point_request: Mitgliedschaftsanfrage senden
+  description: Beschreibung
+  sent_group_metering_point_request: Mitgliedschaftsanfrage gesendet
+  waiting_for_accepting: Warten auf Annahme
+  cancel_membership: Mitgliedschaft beenden

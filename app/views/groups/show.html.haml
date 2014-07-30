@@ -14,13 +14,13 @@
         %ul.dropdown-menu{role: "menu"}
           %li
             - if @group.member?(current_user.metering_points.first)
-              = link_to(t('cancel_membership'),cancel_membership_group_path(current_user.metering_points.first),:data => {:confirm => t('are_you_sure')})
+              = link_to(t('cancel_membership'),cancel_membership_group_path,:data => {:confirm => t('are_you_sure')})
             - else
               - if GroupMeteringPointRequest.where(user: current_user, group: @group, metering_point: current_user.metering_points.first).empty?
                 = link_to t('send_group_metering_point_request'), group_metering_point_requests_path( group_id: @group), method: :post
               - else
                 = t'waiting_for_accepting'
-
+  %h5.page-header= t('description')
   %p= @group.description
 
 
