@@ -8,7 +8,7 @@ CarrierWave.configure do |config|
       region:                 Rails.application.secrets.aws_region
     }
     config.fog_directory    = "buzzn-production"
-    config.asset_host       = '//cdn.buzzn.net'
+    config.asset_host       = '//d682lv2c2abix.cloudfront.net'
     #config.fog_attributes   = { 'Cache-Control' => 'max-age=31556926' }  # 1 year to seconds
   else
     config.storage            = :file

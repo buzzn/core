@@ -1,8 +1,6 @@
 Buzzn::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  #GA.tracker = "UA-43704543-1"
-
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -57,7 +55,7 @@ Buzzn::Application.configure do
   # config.cache_store = :mem_cache_store
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = '//d682lv2c2abix.cloudfront.net'
+  # config.action_controller.asset_host = "http://assets.example.com"
 
   # Precompile additional assets.
   # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
@@ -67,7 +65,9 @@ Buzzn::Application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   #config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { :host => "www.buzzn.net" }
-  config.action_mailer.delivery_method = :amazon_ses
+  config.middleware.use MailView::Mapper, [MailPreview]
+  config.action_mailer.delivery_method      = :smtp
+  config.action_mailer.smtp_settings        = { :address => "localhost", :port => 1025 }
 
 
 
