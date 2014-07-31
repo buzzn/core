@@ -78,7 +78,6 @@ de:
     hints:
       defaults:
         username: 'Benutzername, mit dem Du dich einloggen kannst.'
-        password: 'Keine außergewöhnlichen Zeichen bitte.'
       location:
         name: 'Frei wählbarer Name des Standorts'
 

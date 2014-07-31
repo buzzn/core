@@ -242,3 +242,9 @@ de:
   sent_group_metering_point_request: Mitgliedschaftsanfrage gesendet
   waiting_for_accepting: Warten auf Annahme
   cancel_membership: Mitgliedschaft beenden
+  forgot_your_password: Passwort vergessen
+  didnt_receive_confirmation_instructions: Bestätigungs-Email nicht erhalten
+  didnt_receive_unlock_instructions: Entsperrungs-Email nicht erhalten
+  no_devices_available: Keine Geräte vorhanden
+  no_locations_available: Kein Standort vorhanden
+  no_metering_points_available: Kein Zählpunkt vorhanden

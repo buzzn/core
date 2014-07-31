@@ -6,7 +6,7 @@ $(".groups.show").ready ->
 
   for metering_point in gon.metering_points
 
-    $.plot $("#chart_#{metering_point.id}"), [metering_point['current']], {
+    $.plot $("#chart_#{metering_point.id} #chart"), [metering_point['current']], {
       series:
         color: "white"
         points:

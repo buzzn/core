@@ -6,3 +6,17 @@
       = link_to t('details'), metering_point, class: 'btn btn-default pull-right'
       %h2= metering_point.name
     = render metering_point.registers
+    .content
+      .stat-data
+        - if metering_point.mode == "in"
+          .stat-blue
+            %h2= metering_point.metering_point_users.length
+            %p= t('users')
+        - else
+          .stat-red
+            %h2= metering_point.metering_point_users.length
+            %p= t('users')
+      .stat-data
+        - metering_point.metering_point_users.each do |m|
+          = render m.user.profile.decorate
+      .clear

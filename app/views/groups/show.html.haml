@@ -40,7 +40,9 @@
     #metering_points.tab-pane.active
       = render @metering_points
     #users.tab-pane
-      = render @users
+      - @metering_points.each do |m|
+        - m.metering_point_users.each do |u|
+          = render u.user.profile.decorate
 
 
 .col-sm-3

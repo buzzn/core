@@ -75,6 +75,38 @@ table{
   margin-bottom: 0px;
 }
 
+.block .stat-data{
+  padding: 5px;
+  width: 50%;
+  float: left;
+}
+
+.stat-blue{
+  background-color: #43A0F2;
+  text-align: center;
+  color: white;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.stat-red {
+  background-color: #F27B56;
+  text-align: center;
+  color: white;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.block .content{
+  padding: 20px;
+  display: inline-block;
+  width: 100%;
+}
+
+.claer{
+  clear: both;
+}
+
 
 
 

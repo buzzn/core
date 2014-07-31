@@ -3,6 +3,8 @@ class GroupDecorator < Draper::Decorator
   delegate_all
 
   decorates_association :metering_points
+  decorates_association :profile
+  decorates_association :user
 
   def link_to_edit
     link_to(
