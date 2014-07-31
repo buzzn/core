@@ -81,11 +81,11 @@ class MeteringPointDecorator < Draper::Decorator
       path = new_in_device_path(metering_point_id: model.id)
     end
     link_to(
-      '',
+      content_tag(:i, '', class: 'fa fa-plus-circle'),
       path,
       {
         :remote       => true,
-        :class        => 'sidebar-plus start_modal glyphicon glyphicon-plus-sign',
+        :class        => 'sidebar-plus',
         'data-toggle' => 'modal',
         'data-target' => '#myModal',
       })
@@ -95,11 +95,11 @@ class MeteringPointDecorator < Draper::Decorator
 
   def edit_users
     link_to(
-      '',
+      content_tag(:i, '', class: 'fa fa-plus-circle'),
       edit_users_metering_point_path(model),
       {
         :remote       => true,
-        :class        => 'sidebar-plus start_modal glyphicon glyphicon-plus-sign',
+        :class        => 'sidebar-plus',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })

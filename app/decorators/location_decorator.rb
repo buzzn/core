@@ -66,11 +66,11 @@ class LocationDecorator < Draper::Decorator
 
   def new_metering_point
     link_to(
-      '',
+      content_tag(:i, '', class: 'fa fa-plus-circle'),
       new_metering_point_path(location_id: model.id),
       {
         :remote                     => true,
-        :class                      => 'content-plus start_modal glyphicon glyphicon-plus-sign',
+        :class                      => 'content-plus',
         'data-toggle'               => 'modal',
         'data-target'               => '#myModal'
       })
