@@ -4,9 +4,8 @@ $(".groups.show").ready ->
     e.preventDefault()
     $(this).tab "show"
 
-  for metering_point in gon.metering_points
-
-    $.plot $("#chart_#{metering_point.id} #chart"), [metering_point['current']], {
+  for register_chart in gon.register_charts
+    $.plot $("#register_#{register_chart.id} #chart"), [register_chart['current']], {
       series:
         color: "white"
         points:

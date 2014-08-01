@@ -2,13 +2,21 @@ class GroupsController < InheritedResources::Base
   respond_to :html, :js
 
   def show
-    @group                = Group.find(params[:id]).decorate
-    @metering_points      = @group.metering_points
-    @users                = @group.users
-    @out_users            = @metering_points.collect(&:users).first
-    @groups               = Group.all.decorate
-    @group_metering_point_requests = @group.received_group_metering_point_requests
-    gon.push({ metering_points: @group.metering_points.collect(&:registers['day_to_hours']) })
+    @group                          = Group.find(params[:id]).decorate
+    @metering_points                = @group.metering_points
+    @users                          = @group.users
+    @out_users                      = @metering_points.collect(&:users).first
+    @groups                         = Group.all.decorate
+    @group_metering_point_requests  = @group.received_group_metering_point_requests
+    @registers                      = @group.metering_points.collect(&:registers)
+
+    # TODO change to AJAX
+    @register_charts = []
+    @registers.each do |register|
+      @register_charts << register.first.day_to_hours
+    end
+    gon.push({ register_charts: @register_charts })
+    #
   end
 
   def edit
