@@ -47,3 +47,15 @@ end
 
 
 
+
+# hof_butenland
+Fabricator :niensweg, from: :location do
+  name    'Hof Butenland'
+  address  { Fabricate(:address, street_name: 'Niensweg', street_number: '1', zip: 26969, city: 'Butjadingen', state: 'Niedersachsen') }
+  metering_points {[
+    Fabricate(:mp_hof_butenland_wind)
+  ]}
+end
+
+
+

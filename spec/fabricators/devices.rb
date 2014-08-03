@@ -61,3 +61,17 @@ end
 
 
 
+Fabricator :hof_butenland_wind, from: :device do
+  image                         { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'hof_butenland_wind.jpg')) }
+  law                           'eeg'
+  mode                          'out'
+  manufacturer_name             'Enercon'
+  manufacturer_product_name     '16'
+  generator_type                'wind'
+  primary_energy                'wind'
+  watt_peak                     55*1000
+  commissioning                 Date.new(1989,12,1)
+end
+
+
+

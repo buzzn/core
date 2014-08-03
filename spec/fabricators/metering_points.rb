@@ -98,4 +98,17 @@ end
 
 
 
+# hof butenland windanlage
+Fabricator :mp_hof_butenland_wind, from: :metering_point do
+  address_addition  'Acker2'
+  registers { Fabricate(:out_meter).registers }
+  devices   { [Fabricate(:hof_butenland_wind)] }
+  metering_service_provider_contract { Fabricate(:metering_service_provider_contract) }
+end
+
+
+
+
+
+
 

@@ -5,6 +5,8 @@ Fabricator :profile do
   last_name   { Faker::Name.last_name }
   phone       { Faker::PhoneNumber.phone_number }
   terms       true
+  i = 1
+  image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', "#{i+=1}.jpg")) }
 end
 
 
@@ -68,4 +70,15 @@ Fabricator :profile_christian, from: :profile do
   last_name   'Widmann'
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'christian.jpg')) }
 end
+
+
+
+Fabricator :profile_jangerdes, from: :profile do
+  first_name  'Jan'
+  last_name   'Gerdes'
+  #image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'christian.jpg')) }
+end
+
+
+
 

@@ -60,3 +60,12 @@ Fabricator :christian, from: :user do
   profile     { Fabricate(:profile_christian) }
 end
 
+
+Fabricator :jan_gerdes, from: :user do
+  email     'jangerdes@stiftung-fuer-tierschutz.de'
+  profile   { Fabricate(:profile_jangerdes) }
+end
+
+
+
+
