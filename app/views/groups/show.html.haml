@@ -25,7 +25,7 @@
 
 
 .col-sm-6
-  - if current_user.can_update?(@group) && @group.received_group_metering_point_requests.any?
+  - if @group.received_group_metering_point_requests.any?
     %h5.page-header= t('group_requests')
     = render @group_metering_point_requests
   %ul.nav.nav-pills#mytab.nav-spacer

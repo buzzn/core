@@ -32,6 +32,12 @@ Fabricate(:metering_service_provider, name: 'Discovergy')
 Fabricate(:transmission_system_operator, name: '50Herz')
 
 
+
+
+
+
+
+
 admin = Fabricate(:admin)
 admin.add_role 'admin'
 
@@ -61,6 +67,14 @@ buzzn_team.each do |user|
     user.friendships.create(friend: friend) if user != friend
   end
 end
+
+
+
+# hof_butenland
+jan_gerdes = Fabricate(:jan_gerdes)
+niensweg   = Fabricate(:niensweg)
+jan_gerdes.add_role :manager, niensweg
+
 
 
 # karin
@@ -93,12 +107,10 @@ end
 
 
 
-puts 'Groups'
+puts 'group karin strom'
 karins_pv_group = Fabricate(:group, name: 'karins pv strom')
 karins_pv_group.metering_points << gautinger_weg.metering_points.first
 karin.add_role :manager, karins_pv_group
-
-
 5.times do
   user, location, metering_point = user_with_location
   karins_pv_group.metering_points << metering_point
@@ -107,48 +119,59 @@ end
 
 
 
+puts 'group hof_butenland'
+group_hof_butenland = Fabricate(:group_hof_butenland)
+group_hof_butenland.metering_points << niensweg.metering_points.first
+jan_gerdes.add_role :manager, group_hof_butenland
+15.times do
+  user, location, metering_point = user_with_location
+  group_hof_butenland.metering_points << metering_point
+  puts "  #{user.email}"
+end
 
-# hof_butenland = Fabricate(:group, name: 'Hof Butenland')
-# hof_butenland.metering_points
 
 
 
-
-puts '5 users'
+puts '5 simple users'
 5.times do
   user = Fabricate(:user)
   puts "  #{user.email}"
 end
 
 
-# puts 'add smart meter readings'
-# date            = Time.now.in_time_zone
-# start_date      = date.beginning_of_day
-# end_date        = date.end_of_day
-# minute          = start_date
-# watt_hour       = 0
-# fake_readings   = []
-# while minute < end_date
-#   watt_hour += 1
-#   if (date.middle_of_day..date.middle_of_day+90.minutes).cover?(minute) # from 12:00 to 12:30 is cooking time
-#     watt_hour += 4000/60
-#   end
-#   fake_readings << [minute, watt_hour]
-#   minute += 1.minute
-# end
-# buzzn_team.each do |user|
-#   Location.with_role(:manager, user).each do |location|
-#     location.metering_points.each do |metering_point|
-#       fake_readings.each do |fake_reading|
-#         Reading.create(
-#           register_id:  metering_point.registers.in.first.id,
-#           timestamp:    ActiveSupport::TimeZone["Berlin"].parse(fake_reading.first.to_s),
-#           watt_hour:    fake_reading.last
-#         )
-#       end
-#     end
-#   end
-# end
+
+puts 'add smart meter readings'
+date            = Time.now.in_time_zone
+start_date      = date.beginning_of_day
+end_date        = date.end_of_day
+minute          = start_date
+watt_hour       = 0
+fake_readings   = []
+while minute < end_date
+  watt_hour += 1
+  if (date.middle_of_day..date.middle_of_day+90.minutes).cover?(minute) # from 12:00 to 12:30 is cooking time
+    watt_hour += 4000/60
+  end
+  fake_readings << [minute, watt_hour]
+  minute += 1.minute
+end
+buzzn_team.each do |user|
+  Location.with_role(:manager, user).each do |location|
+    location.metering_points.each do |metering_point|
+      fake_readings.each do |fake_reading|
+        Reading.create(
+          register_id:  metering_point.registers.in.first.id,
+          timestamp:    ActiveSupport::TimeZone["Berlin"].parse(fake_reading.first.to_s),
+          watt_hour:    fake_reading.last
+        )
+      end
+    end
+  end
+end
+
+
+
+
 
 
 puts "Creating SLP"

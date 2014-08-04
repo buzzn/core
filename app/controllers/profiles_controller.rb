@@ -12,8 +12,8 @@ class ProfilesController < InheritedResources::Base
 
     @locations = @profile.user.metering_points.collect(&:location)
 
-    @explore_groups    = Group.all.decorate
-    @explore_profiles  = Profile.all.decorate
+    @explore_groups    = Group.all.limit(10).decorate
+    @explore_profiles  = Profile.all.limit(10).decorate
 
     show!
   end
