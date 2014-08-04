@@ -351,9 +351,15 @@ db.readings.aggregate([
 ])
 
 
+# smartmeter tester
+db.readings.aggregate([{ "$match" : { "timestamp": { "$gte": ISODate('2014-08-04T21:59:00'), "$lt": ISODate('2014-08-04T23:59:59')  },"register_id": { "$in": [1] } } }])
+# { "_id" : ObjectId("53deb1056666618cae9f0500"), "register_id" : 1, "timestamp" : ISODate("2014-08-04T21:59:00Z"), "watt_hour" : 7446 }
+# lezter 22 uhr
 
-db.readings.aggregate([{ "$match" : { "timestamp": { "$gte": ISODate('2014-07-07T11:55:00+02:00'), "$lt": ISODate('2014-07-07T23:59:59+02:00')  },"register_id": { "$in": [1] } } }])
-
+# slp
+db.readings.aggregate([{ "$match" : { "timestamp": { "$gte": ISODate('2014-12-31T21:59:59'), "$lt": ISODate('2014-12-31T23:59:59')  },"source": { "$in": ['slp'] } } }])
+# { "_id" : ObjectId("53deb17e6666618caeffd100"), "timestamp" : ISODate("2014-12-31T22:45:00Z"), "watt_hour" : 999999, "source" : "slp" }
+# lezter 23 uhr
 
 
 

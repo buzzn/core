@@ -140,6 +140,40 @@ end
 
 
 
+puts 'add smart meter readings'
+date            = Time.now.in_time_zone
+start_date      = date.beginning_of_day
+end_date        = date.end_of_day
+minute          = start_date
+watt_hour       = 0
+fake_readings   = []
+while minute < end_date
+  watt_hour += 1
+  if (date.middle_of_day..date.middle_of_day+90.minutes).cover?(minute) # from 12:00 to 12:30 is cooking time
+    watt_hour += 4000/60
+  end
+  fake_readings << [minute, watt_hour]
+  minute += 1.minute
+end
+buzzn_team.each do |user|
+  Location.with_role(:manager, user).each do |location|
+    location.metering_points.each do |metering_point|
+      fake_readings.each do |fake_reading|
+        Reading.create(
+          register_id:  metering_point.registers.in.first.id,
+          timestamp:    ActiveSupport::TimeZone["Berlin"].parse(fake_reading.first.to_s),
+          watt_hour:    fake_reading.last
+        )
+      end
+    end
+  end
+end
+
+
+
+
+
+
 puts "Creating SLP"
 infile = File.new("#{Rails.root}/db/MSCONS_TL_9907399000009_9905229000008_20130920_40010113207322_RH0.txt", "r")
 all_lines = infile.readline

@@ -20,7 +20,7 @@ class Reading
 
 
   def self.day_to_hours_by_register_id(register_id)
-    date = Time.now.in_time_zone
+    date = Time.now
     pipe = [
       { "$match" => {
           timestamp: {
@@ -70,7 +70,7 @@ class Reading
 
 
   def self.day_to_hours_by_slp
-    date = Time.now.in_time_zone
+    date = Time.now
 
     pipe = [
       { "$match" => {
@@ -117,7 +117,7 @@ class Reading
 
 
   def self.month_to_days_by_slp
-    date = Time.now.in_time_zone
+    date = Time.now
 
     pipe = [
       { "$match" => {
@@ -162,7 +162,7 @@ class Reading
 
 
   def self.year_to_months_by_slp
-    date = Time.now.in_time_zone
+    date = Time.now
 
     pipe = [
       { "$match" => {
