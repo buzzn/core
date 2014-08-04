@@ -35,6 +35,8 @@ class PublicActivity::ActivityDecorator < Draper::Decorator
     when 'group.destroy'
       h.content_tag(:i, '', :class => "fa fa-minus-square fa-2x")
 
+    when 'group.joined'
+      h.content_tag(:i, '', :class => "fa fa-group fa-2x")
     end
   end
 
