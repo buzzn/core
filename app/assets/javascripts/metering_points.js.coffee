@@ -22,7 +22,7 @@ $(".metering_points.show").ready ->
         actualTimeFormat = "%H:00"
         actualXLabel = "Uhrzeit"
         actualToolTipOpts = (label, xval, yval, flotItem) ->
-            "%s: " + new Date(xval).getHours() + ":00 bis " + new Date(xval + 3600*1000).getHours() + ":00 Uhr, Bezug: " + yval + " kWh"
+            "%s: " + new Date(xval).getHours() + ":00 bis " + new Date(xval).getHours() + ":59 Uhr, Bezug: " + yval + " kWh"
       else if chart_type is 'month_to_days'
         actualBarWidth = 0.66*3600*1000*24
         actualTimeFormat = "%d.%m"
@@ -76,7 +76,7 @@ $(".metering_points.show").ready ->
         xaxis:
           mode: "time"
           timeformat: actualTimeFormat
-          #timezone: "browser"
+          timezone: "browser"
           minTickSize: [1, "hour"]
         axisLabels:
           show: true

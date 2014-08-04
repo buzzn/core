@@ -6,4 +6,4 @@
     .modal-body
       = simple_form_for @device, remote: false, html: {multipart: true} do |f|
         = render 'devices/out_form_fields', f: f
-        = f.button :submit, id: 'submit', class: 'btn btn-primary'
+        = f.button :submit, id: 'submit', class: 'btn btn-success'

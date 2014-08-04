@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140730084558) do
+ActiveRecord::Schema.define(version: 20140801134446) do
 
   create_table "activities", force: true do |t|
     t.integer  "trackable_id"
@@ -63,6 +63,13 @@ ActiveRecord::Schema.define(version: 20140730084558) do
   end
 
   add_index "areas", ["group_id"], name: "index_areas_on_group_id", using: :btree
+
+  create_table "assets", force: true do |t|
+    t.string   "image"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "bank_accounts", force: true do |t|
     t.string   "holder"

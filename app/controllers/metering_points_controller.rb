@@ -50,7 +50,7 @@ class MeteringPointsController < InheritedResources::Base
 
   def update
     update! do |format|
-      @metering_point = MeteringPoint.new(@metering_point).decorate
+      @metering_point = MeteringPointDecorator.new(@metering_point).decorate
     end
   end
 

@@ -4,6 +4,7 @@ class Group < ActiveRecord::Base
 
   include PublicActivity::Model
   tracked  owner: Proc.new{ |controller, model| controller && controller.current_user }
+  tracked  recipient: Proc.new{ |controller, model| controller && model }
 
   mount_uploader :image, PictureUploader
 

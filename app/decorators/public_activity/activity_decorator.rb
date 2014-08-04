@@ -4,6 +4,10 @@ class PublicActivity::ActivityDecorator < Draper::Decorator
   delegate_all
 
   decorates_association :owner
+  decorates_association :group
+  decorates_association :profile
+  decorates_association :metering_point
+  decorates_association :location
 
   def key_icon
     case model.key

@@ -7,4 +7,4 @@
       = simple_form_for @metering_point do |f|
         = f.input :location_id, input_html: { value: params[:location_id] }, as: :hidden
         = render 'metering_points/form_fields', f: f
-        = f.button :submit, id: 'submit', class: 'btn btn-primary'
+        = f.button :submit, id: 'submit', class: 'btn btn-success'

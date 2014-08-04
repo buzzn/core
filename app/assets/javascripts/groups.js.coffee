@@ -30,7 +30,7 @@ $(".groups.show").ready ->
       tooltip: true
       tooltipOpts:
         content: (label, xval, yval, flotItem) ->
-          new Date(xval).getHours() + ":00 bis " + new Date(xval + 3600*1000).getHours() + ":00 Uhr, Bezug: " + yval + " kWh"
+          new Date(xval).getHours() + ":00 bis " + new Date(xval).getHours() + ":59 Uhr, Bezug: " + yval + " kWh"
 
       axisLabels:
         show: true
