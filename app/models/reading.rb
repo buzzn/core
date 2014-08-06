@@ -117,7 +117,7 @@ class Reading
 
 
   def self.month_to_days_by_slp
-    date = Time.now
+    date = Time.now.in_time_zone
 
     pipe = [
       { "$match" => {

@@ -67,9 +67,13 @@ ActiveRecord::Schema.define(version: 20140801134446) do
   create_table "assets", force: true do |t|
     t.string   "image"
     t.text     "description"
+    t.integer  "assetable_id"
+    t.string   "assetable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "assets", ["assetable_id", "assetable_type"], name: "index_assetable", using: :btree
 
   create_table "bank_accounts", force: true do |t|
     t.string   "holder"

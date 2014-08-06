@@ -45,12 +45,17 @@
 
 
 .col-sm-6
-  = render 'no_location' if @locations.empty?
+  = render 'no_location' if @locations.empty? && @profile.user == current_user
 
   = render @friendship_requests if @profile.user == current_user
   %h5= t('activities')
-  - @activities.each do |activity|
-    = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+  - if @profile.user == current_user
+    - @activities.each do |activity|
+      = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+  - else
+    - if @profile.user.friend?(current_user)
+      - @activities.each do |activity|
+        = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper" if activity.owner_id == @profile.user.id
 
 
 

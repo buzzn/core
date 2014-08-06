@@ -22,7 +22,4 @@ class FriendshipRequest < ActiveRecord::Base
         self.delete
       end
     end
-
-
-
 end

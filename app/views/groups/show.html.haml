@@ -40,9 +40,17 @@
     #metering_points.tab-pane.active
       = render @metering_points
     #users.tab-pane
-      - @metering_points.each do |m|
-        - m.metering_point_users.each do |u|
-          = render u.user.profile.decorate
+      .active-members
+        %h5.page-header= t('active_members')
+        - @metering_points.each do |m|
+          - m.metering_point_users.each do |u|
+            = render u.user.profile.decorate
+      .clear
+      .inactive-members
+        %h5.page-header= t('inactive_members')
+        - @group.users.each do |u|
+          =render u.profile.decorate
+
 
 
 .col-sm-3

@@ -9,11 +9,13 @@ $(".groups.show").ready ->
       series:
         color: "white"
         points:
-          show: true
-        lines:
+          show: false
+        bars:
           show: true
           fill: true
-          fillColor: "rgba(255,255,255, 0.1)"
+          fillColor: "rgba(255,255,255,0.94)"
+          barWidth: 0.66*3600*1000
+          lineWidth: 0
         hoverable: true
         highlightColor: "rgba(255, 255, 255, 0.5)"
       grid:
@@ -38,6 +40,6 @@ $(".groups.show").ready ->
         axisLabel: 'Uhrzeit'
       ]
       yaxes:[
-        axisLabel: 'Bezug (Watt)'
+        axisLabel: 'Bezug (kWh)'
       ]
     }

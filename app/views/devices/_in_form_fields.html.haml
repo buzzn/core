@@ -1,7 +1,8 @@
-= f.file_field :image
 = f.input :name
 = f.input :manufacturer_name
 = f.input :manufacturer_product_name
 = f.input :manufacturer_product_serialnumber
 = f.input :watt_peak
 = f.input :commissioning
+= f.simple_fields_for :assets do |a|
+  = render 'assets/form_fields', f: a
