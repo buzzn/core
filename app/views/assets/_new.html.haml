@@ -1,0 +1,11 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+      %h4.modal-title= t'new_asset'
+    .modal-body
+      = simple_form_for @asset, remote: false, html: {multipart: true} do |f|
+        = f.input :assetable_id, input_html: { value: params[:model_id] }, as: :hidden
+        = f.input :assetable_type, input_html: { value: params[:model_type] }, as: :hidden
+        = render 'assets/form_fields', f: f
+        = f.button :submit, id: 'submit', class: 'btn btn-success'

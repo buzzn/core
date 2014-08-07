@@ -41,15 +41,15 @@
     #metering_points.tab-pane.active
       = render @metering_points
     #users.tab-pane
-      .current-suppliers-members
-        %h5.page-header= t('current_suppliers')
+      .energy_producers
+        %h5.page-header= t('energy_producers')
         - @metering_points.each do |m|
           -if m.mode == 'out'
             - @all_users.each do |u|
               = render u.profile.decorate if u.can_update?(m)
       .clear
-      .current-purchasers-members
-        %h5.page-header= t('current_purchasers')
+      .energy_consumers
+        %h5.page-header= t('energy_consumers')
         - @metering_points.each do |m|
           -if m.mode == 'in'
             - m.metering_point_users.each do |u|

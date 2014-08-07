@@ -4,6 +4,8 @@ class DeviceDecorator < Draper::Decorator
 
   decorates_association :location
   decorates_association :metering_point
+  decorates_association :asset
+
 
   def thumb_small
     link_to image_tag_small, model
@@ -59,6 +61,18 @@ class DeviceDecorator < Draper::Decorator
         :class        => 'start_modal btn btn-icon btn-danger btn-xs',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
+      })
+  end
+
+  def new_asset
+    link_to(
+      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      new_asset_path(device_id: model.id),
+      {
+        :remote                     => true,
+        :class                      => 'content-plus',
+        'data-toggle'               => 'modal',
+        'data-target'               => '#myModal'
       })
   end
 

@@ -5,6 +5,8 @@ class Device < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
+  has_many :assets, as: :assetable, dependent: :destroy
+
   def self.generator_types
     %w{
       pv

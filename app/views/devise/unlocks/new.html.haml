@@ -2,13 +2,13 @@
   .row
     .col-md-4
     .col-md-4
-      %h2 Resend unlock instructions
+      %h2= t('resend_unlock_instructions')
       = simple_form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f|
         = f.error_notification
         = f.full_error :unlock_token
         .form-inputs
           = f.input :email, required: true, autofocus: true
         .form-actions
-          = f.button :submit, "Resend unlock instructions"
+          = f.button :submit, t('resend_unlock_instructions')
       = render "devise/shared/links"
     .col-md-4

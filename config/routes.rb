@@ -60,9 +60,12 @@ Buzzn::Application.routes.draw do
     end
   end
 
+
+
   resources :contracting_parties
   resources :contracts
   resources :private_grids
+  resources :assets
 
 
 
