@@ -25,9 +25,10 @@
 
 
 .col-sm-6
-  - if @group.received_group_metering_point_requests.any?
-    %h5.page-header= t('group_requests')
-    = render @group_metering_point_requests
+  - if current_user.can_update?(@group)
+    - if @group.received_group_metering_point_requests.any?
+      %h5.page-header= t('group_requests')
+      = render @group_metering_point_requests
   %ul.nav.nav-pills#mytab.nav-spacer
     %li.active
       %a{"data-toggle" => "tab", href: "#metering_points"}
@@ -40,16 +41,25 @@
     #metering_points.tab-pane.active
       = render @metering_points
     #users.tab-pane
-      .active-members
-        %h5.page-header= t('active_members')
+      .current-suppliers-members
+        %h5.page-header= t('current_suppliers')
         - @metering_points.each do |m|
-          - m.metering_point_users.each do |u|
-            = render u.user.profile.decorate
+          -if m.mode == 'out'
+            - @all_users.each do |u|
+              = render u.profile.decorate if u.can_update?(m)
       .clear
-      .inactive-members
-        %h5.page-header= t('inactive_members')
+      .current-purchasers-members
+        %h5.page-header= t('current_purchasers')
+        - @metering_points.each do |m|
+          -if m.mode == 'in'
+            - m.metering_point_users.each do |u|
+              = render u.user.profile.decorate
+      .clear
+      .interested-members
+        %h5.page-header= t('interested_members')
         - @group.users.each do |u|
           =render u.profile.decorate
+      .clear
 
 
 

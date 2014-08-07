@@ -6,6 +6,7 @@ class GroupsController < InheritedResources::Base
     @metering_points                = @group.metering_points
     @users                          = @group.users
     @out_users                      = @metering_points.collect(&:users).first
+    @all_users                      = User.all.decorate
     @groups                         = Group.all.decorate
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @registers                      = @group.metering_points.collect(&:registers)

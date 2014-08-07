@@ -1,24 +1,33 @@
 class FriendshipRequest < ActiveRecord::Base
+  include PublicActivity::Model
+  tracked
+
   belongs_to :sender, class_name: 'User'
   belongs_to :receiver, class_name: 'User'
 
-  after_save :created_friendship
+  after_save :created_friendship, :unless => :skip_callbacks
+
+  cattr_accessor :skip_callbacks
 
   def accept
+    FriendshipRequest.skip_callbacks = true
     update_attributes(:status  => 'accepted')
+    FriendshipRequest.skip_callbacks = false
   end
 
   def reject
+    FriendshipRequest.skip_callbacks = true
     update_attributes(:status => 'rejected')
+    FriendshipRequest.skip_callbacks = false
   end
 
 
   private
     def created_friendship
-      if status_changed? && status == 'accepted'
+      if status == 'accepted'
         sender.friends << receiver
         self.delete
-      elsif status_changed? && status == 'rejected'
+      elsif status == 'rejected'
         self.delete
       end
     end
