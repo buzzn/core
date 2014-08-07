@@ -17,7 +17,6 @@ class CreateMeters < ActiveRecord::Migration
       t.string :mounting_method
       t.date :build_year
       t.date :calibrated_till
-      t.boolean :virtual, default: false
 
       t.integer :metering_point_id
 

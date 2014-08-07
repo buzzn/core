@@ -1,1 +1,64 @@
-= meter.link_to_edit
+.block
+  .header.no-border
+    %h2= t('meter')
+  .content.no-padding
+    %table.table
+      %tbody
+        %tr
+          %td= t('manufacturer_name')
+          %td= @meter.manufacturer_name
+        %tr
+          %td= t('manufacturer_product_name')
+          %td= @meter.manufacturer_product_name
+        %tr
+          %td= t('manufacturer_product_serialnumber')
+          %td= @meter.manufacturer_product_serialnumber
+        %tr
+          %td= t('image')
+          %td= @meter.image
+        %tr
+          %td= t('owner')
+          %td= @meter.owner
+        %tr
+          %td= t('mode')
+          %td= @meter.mode
+        %tr
+          %td= t('meter_size')
+          %td= @meter.meter_size
+        %tr
+          %td= t('rate')
+          %td= @meter.rate
+        %tr
+          %td= t('measurement_capture')
+          %td= @meter.measurement_capture
+        %tr
+          %td= t('mounting_method')
+          %td= @meter.mounting_method
+        %tr
+          %td= t('build_year')
+          %td= @meter.build_year
+        %tr
+          %td= t('calibrated_till')
+          %td= @meter.calibrated_till
+        %tr
+          %td= t('smart')
+          %td= @meter.smart
+        %tr
+          %td= t('virtual')
+          %td= @meter.virtual
+
+    %table.table
+      %thead
+        %tr
+          %th #
+          %th First Name
+          %th Last Name
+          %th Username
+      %tbody
+        - @meter.registers.each do |register|
+          %tr
+            %td= register.id
+            %td= register.id
+
+
+

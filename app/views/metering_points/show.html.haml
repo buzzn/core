@@ -78,20 +78,6 @@
         = render @metering_point.registers
 
 
-      / .block
-      /   .header.no-border
-      /     %h2= t('month_to_days')
-      /   .chart{id: @metering_point.mode}
-      /     .chart_container#month_to_days
-
-
-      / .block
-      /   .header.no-border
-      /     %h2= t('year_to_months')
-      /   .chart{id: @metering_point.mode}
-      /     .chart_container#year_to_months
-
-
     #contracts.tab-pane
       - if @metering_point.contract
         = render @metering_point.contract
@@ -100,12 +86,7 @@
 
 
     #meter.tab-pane
-
-
-      - if @metering_point.registers
-        = @metering_point.registers.ids
-      - else
-        = @metering_point.new_register
+      = render @meter
 
 
 
