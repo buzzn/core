@@ -36,6 +36,9 @@ class MeteringPoint < ActiveRecord::Base
   validates :uid, uniqueness: true #presence: true
   validates :address_addition, presence: true
 
+  def meter
+    self.registers.collect(&:meter).first
+  end
 
   def mode
     self.registers.select(:mode).map(&:mode).join('_')
@@ -68,6 +71,23 @@ class MeteringPoint < ActiveRecord::Base
     end
     return names.join(', ')
   end
+
+
+
+  def validates_smartmeter
+    @mspc = metering_service_provider_contract
+    @meter = meter
+
+    discovergy = Discovergy.new(@mspc.username, @mspc.password, "EASYMETER_#{@meter.manufacturer_product_serialnumber}")
+    result     = discovergy.call()
+    if result['status'] == 'ok'
+      @meter.smart = true
+      @meter.save
+      first_day_init
+    end
+
+  end
+
 
 
 
@@ -109,6 +129,37 @@ class MeteringPoint < ActiveRecord::Base
   def in?
     mode == 'in'
   end
+
+
+
+  private
+
+
+    def first_day_init
+      metering_point = self
+      register       = registers.first # TODO not compatible with in_out smartmeter
+      mspc           = metering_point.metering_service_provider_contract
+
+      date            = Time.now.in_time_zone
+      beginning       = date.beginning_of_day
+      ending          = date
+
+      (beginning.to_i .. ending.to_i).step(1.minutes) do |time|
+        start_time = time * 1000
+        end_time   = Time.at(time).end_of_minute.to_i * 1000
+        MeterReadingUpdateWorker.perform_async(
+                                                register.id,
+                                                meter.manufacturer_product_serialnumber,
+                                                mspc.organization.name.downcase,
+                                                mspc.username,
+                                                mspc.password,
+                                                start_time,
+                                                end_time
+                                              )
+      end
+
+    end
+
 
 
 end

@@ -37,4 +37,5 @@ class Discovergy
     return JSON.parse(response.body)
   end
 
+
 end

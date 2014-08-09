@@ -3,23 +3,23 @@ require_relative '../../app/workers/meter_reading_update_worker'
 namespace :smartmeter do
 
   task :register_update => :environment do
-    ['discovergy'].each do |msp_name|
-      mspc                = MeteringServiceProviderContract.where(organization: Organization.where(name: msp_name) ).first
-      register            = mspc.metering_point.register
-      msp_login_username  = mspc.username
-      msp_login_password  = mspc.password
-      meter               = register.meter
-      last                = Reading.where(register_id: register.id).last.timestamp
-      now                 = Time.now
+
+    Meter.where(smart: true).each do |meter|
+      registers       = meter.registers
+      register        = registers.first # TODO not compatible with in_out smartmeter
+      metering_point  = meter.registers.collect(&:metering_point).first
+      mspc            = metering_point.metering_service_provider_contract
+      last            = Reading.latest_by_register_id(register.id)[:timestamp]
+      now             = Time.now.in_time_zone.utc
       (last.to_i .. now.to_i).step(1.minutes) do |time|
         start_time = time * 1000
         end_time   = Time.at(time).end_of_minute.to_i * 1000
         MeterReadingUpdateWorker.perform_async(
                                                 register.id,
-                                                meter.manufacturer_device_number,
-                                                msp_name,
-                                                msp_login_username,
-                                                msp_login_password,
+                                                meter.manufacturer_product_serialnumber,
+                                                mspc.organization.name.downcase,
+                                                mspc.username,
+                                                mspc.password,
                                                 start_time,
                                                 end_time
                                               )

@@ -8,7 +8,7 @@ class MeteringPointsController < InheritedResources::Base
     @devices        = @metering_point.devices
     @group          = @metering_point.group
     @registers      = @metering_point.registers
-    @meter          = @metering_point.registers.collect(&:meter).first
+    @meter          = @metering_point.meter
 
     register_data = []
     @registers.each do |register|

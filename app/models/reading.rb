@@ -16,6 +16,23 @@ class Reading
 
 
 
+  def self.latest_by_register_id(register_id)
+    pipe = [
+      { "$match" => {
+          register_id: {
+            "$in" => [register_id]
+          }
+        }
+      },
+      { "$sort" => {
+          timestamp: -1
+        }
+      },
+      { "$limit" => 1 }
+    ]
+    return Reading.collection.aggregate(pipe).first
+  end
+
 
 
 
@@ -64,10 +81,104 @@ class Reading
 
 
 
+  def self.month_to_days_by_register_id(register_id)
+    date = Time.now.in_time_zone
+
+    pipe = [
+      { "$match" => {
+          timestamp: {
+            "$gte" => date.beginning_of_month,
+            "$lt"  => date.end_of_month
+          },
+          register_id: {
+            "$in" => [register_id]
+          }
+        }
+      },
+      { "$project" => {
+          watt_hour: 1,
+          timestamp: 1,
+          monthly:  { "$month" => "$timestamp" },
+          dayly:    { "$dayOfMonth" => "$timestamp" },
+        }
+      },
+      { "$group" => {
+          _id: { monthly: "$monthly", dayly: "$dayly"},
+          firstReading:   { "$first"  => "$watt_hour" },
+          lastReading:    { "$last"   => "$watt_hour" },
+          firstTimestamp: { "$first"   => "$timestamp" },
+          lastTimestamp:  { "$last"   => "$timestamp" },
+        }
+      },
+      { "$project" => {
+          consumption: { "$subtract" => [ "$lastReading", "$firstReading" ] },
+          firstTimestamp: "$firstTimestamp",
+          lastTimestamp:  "$lastTimestamp"
+        }
+      },
+      { "$sort" => {
+          _id: 1
+        }
+      }
+    ]
+    return Reading.collection.aggregate(pipe)
+  end
 
 
 
 
+
+  def self.year_to_months_by_register_id(register_id)
+    date = Time.now.in_time_zone
+
+    pipe = [
+      { "$match" => {
+          timestamp: {
+            "$gte" => date.beginning_of_year,
+            "$lt"  => date.end_of_year
+          },
+          register_id: {
+            "$in" => [register_id]
+          }
+        }
+      },
+      { "$project" => {
+          watt_hour: 1,
+          timestamp: 1,
+          monthly:  { "$month" => "$timestamp" },
+          yearly:    { "$year" => "$timestamp" },
+        }
+      },
+      { "$group" => {
+          _id: { monthly: "$monthly", yearly: "$yearly"},
+          firstReading:   { "$first"  => "$watt_hour" },
+          lastReading:    { "$last"   => "$watt_hour" },
+          firstTimestamp: { "$first"   => "$timestamp" },
+          lastTimestamp:  { "$last"   => "$timestamp" },
+        }
+      },
+      { "$project" => {
+          consumption: { "$subtract" => [ "$lastReading", "$firstReading" ]},
+          firstTimestamp: "$firstTimestamp",
+          lastTimestamp:  "$lastTimestamp"
+        }
+      },
+      { "$sort" => {
+          _id: 1
+        }
+      }
+    ]
+    return Reading.collection.aggregate(pipe)
+  end
+
+
+
+
+
+
+
+
+#### SLP ###############################################
 
   def self.day_to_hours_by_slp
     date = Time.now
@@ -162,7 +273,7 @@ class Reading
 
 
   def self.year_to_months_by_slp
-    date = Time.now
+    date = Time.now.in_time_zone
 
     pipe = [
       { "$match" => {
@@ -203,6 +314,7 @@ class Reading
     ]
     return Reading.collection.aggregate(pipe)
   end
+
 
 
 

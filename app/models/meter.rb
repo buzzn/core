@@ -6,8 +6,6 @@ class Meter < ActiveRecord::Base
 
   has_many :equipments
 
-  # normalize_attribute :uid, with: [:strip]
-
   def self.manufacturers
     %w{
       ferraris

@@ -372,9 +372,9 @@ ActiveRecord::Schema.define(version: 20140801134446) do
     t.string   "mode"
     t.string   "measurement_capture"
     t.string   "mounting_method"
+    t.boolean  "virtual"
     t.date     "build_year"
     t.date     "calibrated_till"
-    t.boolean  "virtual",                           default: false
     t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
