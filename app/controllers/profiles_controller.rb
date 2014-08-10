@@ -9,7 +9,7 @@ class ProfilesController < InheritedResources::Base
     @locations            = @metering_points.collect(&:location)
     @friendship_requests  = @profile.user.received_friendship_requests
 
-    @groups               = @metering_points.collect(&:group).first # TODO also include group interested
+    @groups               = @metering_points.collect(&:group).compact # TODO also include group interested
 
     @activities           = PublicActivity::Activity
                               .order("created_at desc")
