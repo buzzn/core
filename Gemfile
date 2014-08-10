@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails'
+gem 'sinatra'
 gem 'mysql2'
 gem 'mongoid'
 gem 'moped'

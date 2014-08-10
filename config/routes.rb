@@ -1,8 +1,6 @@
 Buzzn::Application.routes.draw do
-  resources :group_metering_point_requests
 
   require 'sidekiq/web'
-
   mount Sidekiq::Web, at: '/sidekiq'
 
   devise_for :users, controllers: { registrations: 'users/registrations' }
