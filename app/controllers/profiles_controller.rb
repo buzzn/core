@@ -3,17 +3,22 @@ class ProfilesController < InheritedResources::Base
 
 
   def show
-    @profile    = Profile.find(params[:id]).decorate
-    @friends    = @profile.user.friends
-    @groups     = @profile.user.groups
-    @friendship_requests = @profile.user.received_friendship_requests
+    @profile              = Profile.find(params[:id]).decorate
+    @friends              = @profile.user.friends
+    @metering_points      = @profile.user.metering_points
+    @locations            = @metering_points.collect(&:location)
+    @friendship_requests  = @profile.user.received_friendship_requests
 
-    @activities = PublicActivity::Activity.order("created_at desc").where(owner_id: @profile.user.friend_ids << @profile.user.id, owner_type: "User").limit(10)
+    @groups               = @metering_points.collect(&:group).first # TODO also include group interested
 
-    @locations = @profile.user.metering_points.collect(&:location)
+    @activities           = PublicActivity::Activity
+                              .order("created_at desc")
+                              .where(owner_id: @profile.user.friend_ids << @profile.user.id, owner_type: "User")
+                              .limit(10)
 
-    @explore_groups    = Group.all.limit(10).decorate
-    @explore_profiles  = Profile.all.limit(10).decorate
+
+    @explore_groups       = Group.all.limit(10).decorate
+    @explore_profiles     = Profile.all.limit(10).decorate
 
     show!
   end

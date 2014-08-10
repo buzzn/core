@@ -66,10 +66,6 @@ end
 
 Fabricator :mp_z5, from: :metering_point do
   address_addition  'Keller'
-  registers {
-    Fabricate(:easymeter_1124001747).registers
-  }
-  metering_service_provider_contract {Fabricate(:mspc_justus)}
 end
 
 
@@ -105,6 +101,25 @@ Fabricator :mp_hof_butenland_wind, from: :metering_point do
   devices   { [Fabricate(:hof_butenland_wind)] }
   metering_service_provider_contract { Fabricate(:metering_service_provider_contract) }
 end
+
+
+
+# christian_schuetze verbrauch
+Fabricator :mp_cs_1, from: :metering_point do
+  address_addition  'wochnung'
+  registers { Fabricate(:easymeter_1124001747).registers }
+  metering_service_provider_contract {Fabricate(:mspc_justus)}
+end
+
+
+
+
+
+
+
+
+
+
 
 
 

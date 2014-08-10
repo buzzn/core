@@ -49,7 +49,7 @@ buzzn_team_names.each do |user_name|
   buzzn_team << user = Fabricate(user_name)
   case user_name
   when 'justus'
-    user_location = Fabricate(:fichtenweg)
+    @fichtenweg8 = user_location = Fabricate(:fichtenweg8)
   when 'felix'
     user_location = Fabricate(:muehlenkamp)
   when 'stefan'
@@ -87,6 +87,15 @@ buzzn_team.each do |buzzn_user|
   karin.friendships.create(friend: buzzn_user) # alle von buzzn sind freund von karin
   buzzn_user.friendships.create(friend: karin)
 end
+
+
+
+# christian_schuetze
+christian_schuetze = Fabricate(:christian_schuetze)
+fichtenweg10       = Fabricate(:fichtenweg10)
+christian_schuetze.add_role :manager, fichtenweg10
+fichtenweg10.metering_points.first.users << christian_schuetze
+
 
 
 # felix
@@ -128,6 +137,15 @@ jan_gerdes.add_role :manager, group_hof_butenland
   group_hof_butenland.metering_points << metering_point
   puts "  #{user.email}"
 end
+
+
+puts 'group home_of_the_brave'
+group_home_of_the_brave = Fabricate(:group_home_of_the_brave)
+group_home_of_the_brave.metering_points << @fichtenweg8.metering_points
+group_home_of_the_brave.metering_points << fichtenweg10.metering_points
+justus = User.where(email: 'justus@buzzn.net').first
+justus.add_role :manager, group_home_of_the_brave
+
 
 
 

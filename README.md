@@ -29,7 +29,6 @@
 
 ## Start Background Jobs
     redis-server
-    bundle exec guard
     bundle exec sidekiq -q high, 5 default
     http://localhost:3000/sidekiq
 

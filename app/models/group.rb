@@ -21,6 +21,11 @@ class Group < ActiveRecord::Base
   has_many :group_users
   has_many :users, :through => :group_users
 
+  scope :by_group_id_and_mode_eq, lambda { |group_id, mode|
+    MeteringPoint.joins(:registers).where("mode = '#{mode}'").where(group_id: group_id).uniq
+  }
+
+
   def member?(metering_point)
     self.metering_points.include?(metering_point) ? true : false
   end

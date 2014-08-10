@@ -66,6 +66,12 @@ Fabricator :jan_gerdes, from: :user do
   profile   { Fabricate(:profile_jangerdes) }
 end
 
+Fabricator :christian_schuetze, from: :user do
+  email     'christian@schuetze.de'
+  profile   { Fabricate(:profile_christian_schuetze) }
+end
+
+
 
 
 

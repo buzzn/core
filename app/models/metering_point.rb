@@ -6,7 +6,7 @@ class MeteringPoint < ActiveRecord::Base
   tracked recipient: Proc.new{ |controller, model| controller && model }
 
   extend FriendlyId
-  friendly_id :slug_candidates, use: [:slugged, :finders]#, :use => :scoped, :scope => :location
+  friendly_id :slug_candidates, use: [:slugged, :finders]
   def slug_candidates
     [
       :uid,
