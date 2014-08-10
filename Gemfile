@@ -69,8 +69,10 @@ gem 'gon'
 gem 'rack-dev-mark'
 gem 'tzinfo'
 gem 'rails-timeago'
-gem 'asset_sync'
 
+group :production do
+  gem 'asset_sync'
+end
 
 
 group :development do
