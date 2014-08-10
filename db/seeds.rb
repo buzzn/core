@@ -80,7 +80,7 @@ jan_gerdes.add_role :manager, niensweg
 # karin
 karin = Fabricate(:karin)
 gautinger_weg = Fabricate(:gautinger_weg)
-#gautinger_weg.metering_points.first.users << karin
+gautinger_weg.metering_points.first.users << karin
 karin.add_role :manager, gautinger_weg
 @forstenrieder_weg.metering_points.first.users << karin
 buzzn_team.each do |buzzn_user|
