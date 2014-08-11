@@ -8,7 +8,7 @@
         = simple_form_for @asset, remote: false, html: {multipart: true} do |f|
           = render 'assets/form_fields', f: f
           = f.button :submit, id: 'submit', class: 'btn btn-success'
-          = link_to_delete
+          = @asset.decorate.link_to_delete
       - else
         = @asset.decorate.image_tag_large if @asset.image?
         %p= @asset.description

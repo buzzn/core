@@ -18,7 +18,7 @@ class AssetsController < InheritedResources::Base
   end
 
   def permitted_params
-    params.permit(:asset => [:image, :description])
+    params.permit(:asset => [:image, :description, :assetable_id, :assetable_type])
   end
 
 end

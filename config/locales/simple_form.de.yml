@@ -34,6 +34,10 @@ de:
         last_name: Nachname
         gender: Geschlecht
         phone: Telefon
+        image: Bild
+        newsletter_notifications: Newsletter Benachrichtigungen
+        location_notifications: Standort Benachrichtigungen
+        group_notifications: Gruppen Benachrichtigungen
       metering_point:
         uid: Zählpunkt-ID
         address_addition: Addresszusatz

@@ -1,2 +1,2 @@
 %li.thumb_icon.floating{id: "asset#{asset.id}"}
-  = link_to asset.image_tag_small, asset, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => asset.description }, rel: 'tooltip'
+  = link_to asset.image_tag_small, asset, :data => { 'toggle' => 'modal', 'original-title' => asset.description, 'target' => '#myModal' }, rel: 'tooltip'
