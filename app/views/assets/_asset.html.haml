@@ -1,5 +1,5 @@
 %li.asset-thumb.floating{id: "asset#{asset.id}"}
-  - if current_user.can_update?(asset.device)
+  - if current_user.can_update?(asset)
     = asset.link_to_edit
   - else
     = link_to asset.image_tag_small, asset

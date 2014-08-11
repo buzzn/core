@@ -8,6 +8,7 @@ class AssetsController < InheritedResources::Base
 
   def create
     create! do |format|
+      current_user.add_role :manager, @asset
       @asset = AssetDecorator.new(@asset)
     end
   end
