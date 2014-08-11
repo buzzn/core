@@ -60,8 +60,8 @@
             %td= t('mobile')
             %td= @device.mobile
     .assets
-      - @device.assets.each do |a|
-        = render a
+      - @device.assets.each do |asset|
+        = render asset
       - if current_user.can_update?(@device)
         = @device.new_asset
     .clear

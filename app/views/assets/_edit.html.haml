@@ -1,0 +1,14 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+      %h4.modal-title= t'asset'
+    .modal-body
+      - if current_user.can_update?(@device)
+        = simple_form_for @asset, remote: false, html: {multipart: true} do |f|
+          = render 'assets/form_fields', f: f
+          = f.button :submit, id: 'submit', class: 'btn btn-success'
+          = @asset.decorate.link_to_delete
+      - else
+        = @asset.decorate.image_tag_large if @asset.image?
+        %p= @asset.description

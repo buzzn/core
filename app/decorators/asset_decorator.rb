@@ -9,7 +9,7 @@ class AssetDecorator < Draper::Decorator
 
   def image_tag_small
     if model.image?
-      image_tag model.image.small, class: 'img-circle', size: '45x45'
+      image_tag model.image.small, class: 'img-thumbnail', size: '140x140'
     else
       content_tag(:i, '', class: 'fa fa-bolt')
     end
