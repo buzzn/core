@@ -1,2 +1,5 @@
 %li.thumb_icon.floating{id: "asset#{asset.id}"}
-  = link_to asset.image_tag_small, asset, :data => { 'toggle' => 'modal', 'original-title' => asset.description, 'target' => '#myModal' }, rel: 'tooltip'
+  - if current_user.can_update?(asset.device)
+    = asset.link_to_edit
+  - else
+    = link_to asset.image_tag_small, asset

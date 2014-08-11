@@ -13,8 +13,9 @@ class AssetsController < InheritedResources::Base
   end
 
   def edit
-    @asset = Asset.find(params[:id]).decorate
-    edit!
+    edit! do |format|
+      @asset = AssetDecorator.new(@asset)
+    end
   end
 
   def permitted_params
