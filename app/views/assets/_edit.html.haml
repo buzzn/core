@@ -9,6 +9,3 @@
           = render 'assets/form_fields', f: f
           = f.button :submit, id: 'submit', class: 'btn btn-success'
           = @asset.decorate.link_to_delete
-      - else
-        = @asset.decorate.image_tag_large if @asset.image?
-        %p= @asset.description

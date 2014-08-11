@@ -78,6 +78,9 @@ de:
         name: Name
         email: Email
         phone: Telefon
+      asset:
+        description: Beschreibung
+
 
 
     hints:
