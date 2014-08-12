@@ -25,11 +25,11 @@ class GroupMeteringPointRequest < ActiveRecord::Base
 
   private
     def created_membership
-      if status_changed? && status == 'accepted'
+      if status == 'accepted'
         metering_point.group = group
         group.metering_points << metering_point
         self.delete
-      elsif status_changed? && status == 'rejected'
+      elsif status == 'rejected'
         self.delete
       end
     end

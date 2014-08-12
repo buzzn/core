@@ -53,6 +53,7 @@ class DevicesController < InheritedResources::Base
 
   def create
     create! do |format|
+      current_user.add_role :manager, @device
       @device = DeviceDecorator.new(@device)
     end
   end

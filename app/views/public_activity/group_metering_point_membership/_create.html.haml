@@ -1,0 +1,2 @@
+- single_content_for :action do
+  = t("has_joined_the_group_with_metering_point_html", group_name: link_to(a.recipient.name, a.recipient), metering_point_name: link_to(a.owner.profile.user.metering_points.first.name, a.owner.profile.user.metering_points.first))

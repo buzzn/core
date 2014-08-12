@@ -47,6 +47,9 @@ class PublicActivity::ActivityDecorator < Draper::Decorator
 
     when 'friendship.create'
       h.content_tag(:i, '', :class => "fa fa-chain fa-2x" )
+
+    when 'group_metering_point_membership.create'
+      h.content_tag(:i, '', :class => "fa fa-group fa-2x")
     end
   end
 

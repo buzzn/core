@@ -9,7 +9,7 @@ class Asset < ActiveRecord::Base
 
   # TODO reverse polymorphic  nicer
   def device
-    Devise.find(self.assetable_id)
+    Device.find(self.assetable_id)
   end
 
 

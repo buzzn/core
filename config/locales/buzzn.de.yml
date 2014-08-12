@@ -259,3 +259,5 @@ de:
   resend_unlock_instructions: Entsperrungs-Email erneut zusenden
   friendship: Freundschaft
   change_password: Passwort ändern
+  belongs_to_group: Gehört zur Gruppe
+  has_joined_the_group_with_metering_point_html: "ist der Gruppe %{group_name} mit dem Zählpunkt %{metering_point_name} beigetreten"

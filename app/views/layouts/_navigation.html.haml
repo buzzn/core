@@ -26,6 +26,18 @@
               %li.divider
               %li= new_group
 
+          %li.dropdown
+            %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+              %i.fa.fa-bolt.fa-fw
+              = t'devices'
+              %b.caret
+            %ul.dropdown-menu
+              - if !current_user.editable_devices.empty?
+                - current_user.editable_devices.each do |device|
+                  %li= link_to device.name, device
+              %li.divider
+              %li= new_in_device
+
 
           %li.dropdown
             %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
