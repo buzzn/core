@@ -22,6 +22,7 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
     @group_metering_point_request = GroupMeteringPointRequest.find(params[:id])
     if current_user.can_update?(@group_metering_point_request.group)
       @group_metering_point_request.accept
+      @group_metering_point_request.create_activity key: 'group_metering_point_membership.create', owner: current_user, recipient: @group_metering_point_request.group
       if @group_metering_point_request.save
         flash[:notice] = t('accepted_group_metering_point_request')
         redirect_to group_path(@group_metering_point_request.group)
