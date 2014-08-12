@@ -3,7 +3,6 @@ class AssetsController < InheritedResources::Base
 
   def show
     @asset = Asset.find(params[:id])
-    @device = Device.find(params[:id])
   end
 
   def create

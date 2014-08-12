@@ -23,6 +23,17 @@ class AssetDecorator < Draper::Decorator
     end
   end
 
+  def link_to_show
+    link_to(
+      image_tag_small,
+      asset_path(model),
+      {
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => "modal",
+        'data-target' => '#myModal'
+      })
+  end
 
   def link_to_edit
     link_to(

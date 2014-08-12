@@ -6,4 +6,6 @@ class Asset < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
+  default_scope -> { order('created_at ASC') }
+
 end
