@@ -7,7 +7,7 @@ class Asset < ActiveRecord::Base
   default_scope -> { order('created_at ASC') }
 
 
-  # TODO reverse polymorphic  nicer
+  # TODO make reverse polymorphic nicer
   def device
     Device.find(self.assetable_id)
   end
