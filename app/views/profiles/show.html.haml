@@ -43,6 +43,13 @@
       = render @friends.decorate.collect(&:profile)
     .clearfix
 
+  %article.sidebar_module
+    %h5.page-header= t('devices')
+    %ul
+      - @profile.user.editable_devices.each do |device|
+        = render device
+    .clearfix
+
 
 .col-sm-6
   = render 'no_location' if @locations.empty? && @profile.user == current_user

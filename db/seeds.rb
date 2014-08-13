@@ -50,10 +50,17 @@ buzzn_team_names.each do |user_name|
   case user_name
   when 'justus'
     @fichtenweg8 = user_location = Fabricate(:fichtenweg8)
+    device = Fabricate(:dach_pv_justus)
+    user.add_role :manager, device
+    device = Fabricate(:carport_pv_justus)
+    user.add_role :manager, device
+    device = Fabricate(:bhkw_justus)
+    user.add_role :manager, device
   when 'felix'
     user_location = Fabricate(:muehlenkamp)
   when 'stefan'
     @forstenrieder_weg = user_location = Fabricate(:forstenrieder_weg)
+    user.add_role :manager, Fabricate(:bhkw_stefan)
   else
     user_location = Fabricate(:location)
   end
@@ -74,6 +81,9 @@ end
 jan_gerdes = Fabricate(:jan_gerdes)
 niensweg   = Fabricate(:niensweg)
 jan_gerdes.add_role :manager, niensweg
+device = Fabricate(:hof_butenland_wind)
+niensweg.metering_points.first.devices << device
+jan_gerdes.add_role :manager, device
 
 
 
@@ -82,6 +92,8 @@ karin = Fabricate(:karin)
 gautinger_weg = Fabricate(:gautinger_weg)
 gautinger_weg.metering_points.first.users << karin
 karin.add_role :manager, gautinger_weg
+device = Fabricate(:pv_karin)
+karin.add_role :manager, device
 @forstenrieder_weg.metering_points.first.users << karin
 buzzn_team.each do |buzzn_user|
   karin.friendships.create(friend: buzzn_user) # alle von buzzn sind freund von karin

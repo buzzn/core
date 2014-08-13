@@ -156,6 +156,16 @@ Buzzn::Application.routes.draw do
     end
   end
 
+  resources :wizard_locations do
+    collection do
+      get :new_location
+      put :new_location
+
+      get :new_metering_point
+      put :new_metering_point
+    end
+  end
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

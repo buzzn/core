@@ -43,22 +43,22 @@
     #users.tab-pane
       .energy_producers
         %h5.page-header= t('energy_producers')
-        - @metering_points.each do |m|
-          -if m.mode == 'out'
-            - @all_users.each do |u|
-              = render u.profile.decorate if u.can_update?(m)
+        - @metering_points.each do |metering_point|
+          -if metering_point.mode == 'out'
+            - @all_users.each do |user|
+              = render user.profile.decorate if user.can_update?(metering_point)
       .clear
       .energy_consumers
         %h5.page-header= t('energy_consumers')
-        - @metering_points.each do |m|
-          -if m.mode == 'in'
-            - m.metering_point_users.each do |u|
-              = render u.user.profile.decorate
+        - @metering_points.each do |metering_point|
+          -if metering_point.mode == 'in'
+            - metering_point.metering_point_users.each do |user|
+              = render user.user.profile.decorate
       .clear
       .interested-members
         %h5.page-header= t('interested_members')
-        - @group.users.each do |u|
-          =render u.profile.decorate
+        - @group.users.each do |user|
+          =render user.profile.decorate
       .clear
 
 

@@ -6,17 +6,26 @@
   - if current_user.can_update?(@device)
     = @device.link_to_edit
 
-  %h5.page-header= t('belongs_to_metering_point')
+  %h5.page-header= t('belongs_to_user')
   %article.sidebar_module.residents
     %ul
-      .thumb_icon=@metering_point.thumb_small
+      - @users_all.each do |user|
+        = render user.profile if user.can_update?(@device)
     .clearfix
 
-  %h5.page-header= t('belongs_to_location')
-  %article.sidebar_module.residents
-    %ul
-      = render @metering_point.location
-    .clearfix
+  - if @metering_point
+    %h5.page-header= t('belongs_to_metering_point')
+    %article.sidebar_module.residents
+      %ul
+        .thumb_icon=@metering_point.thumb_small
+      .clearfix
+
+  - if @location
+    %h5.page-header= t('belongs_to_location')
+    %article.sidebar_module.residents
+      %ul
+        = render @metering_point.location
+      .clearfix
 
   - if @group
     %h5.page-header= t('belongs_to_group')

@@ -3,6 +3,7 @@ class Device < ActiveRecord::Base
   include Authority::Abilities
 
   belongs_to :metering_point
+  belongs_to :user
 
   mount_uploader :image, PictureUploader
 

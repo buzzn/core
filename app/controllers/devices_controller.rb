@@ -6,9 +6,10 @@ class DevicesController < InheritedResources::Base
 
   def show
     @device         = Device.find(params[:id]).decorate
-    @metering_point = @device.metering_point
-    @location       = @metering_point.location
-    @users          = @metering_point.users
+    @metering_point = @device.metering_point if @device.metering_point
+    @location       = @metering_point.location if @metering_point
+    @users          = @metering_point.users if @metering_point
+    @users_all      = User.all.decorate
     show!
   end
 

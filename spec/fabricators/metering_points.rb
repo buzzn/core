@@ -32,7 +32,6 @@ Fabricator :mp_z2, from: :metering_point do
                 manufacturer_product_serialnumber:   '15028648',
                 ).registers
   }
-  devices           {[Fabricate(:dach_pv_justus)]}
 end
 
 
@@ -46,7 +45,6 @@ Fabricator :mp_z3, from: :metering_point do
               manufacturer_product_serialnumber:    '15028641',
               ).registers
   }
-  devices           {[Fabricate(:carport_pv_justus)]}
 end
 
 
@@ -59,7 +57,6 @@ Fabricator :mp_z4, from: :metering_point do
               manufacturer_product_serialnumber:   '15028644',
               ).registers
   }
-  devices           {[Fabricate(:bhkw_justus)]}
 end
 
 
@@ -76,7 +73,6 @@ end
 Fabricator :mp_pv_karin, from: :metering_point do
   address_addition  'Scheune'
   registers { Fabricate(:easymeter_60051431).registers }
-  devices   {[Fabricate(:pv_karin)]}
   metering_service_provider_contract {Fabricate(:mspc_karin)}
 end
 
@@ -87,7 +83,6 @@ end
 Fabricator :mp_stefans_bhkw, from: :metering_point do
   address_addition  'keller'
   registers { Fabricate(:in_out_meter).registers }
-  devices   { [Fabricate(:bhkw_stefan)] }
   metering_service_provider_contract {Fabricate(:mspc_stefan)}
 end
 
@@ -98,7 +93,6 @@ end
 Fabricator :mp_hof_butenland_wind, from: :metering_point do
   address_addition  'Acker2'
   registers { Fabricate(:out_meter).registers }
-  devices   { [Fabricate(:hof_butenland_wind)] }
   metering_service_provider_contract { Fabricate(:metering_service_provider_contract) }
 end
 
