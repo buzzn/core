@@ -45,6 +45,6 @@ end
 #  - :concurrency (defaults to 1)
 #  - :timeout
 #  - :environment (corresponds to RAILS_ENV for the Sidekiq worker)
-guard 'sidekiq', :environment => 'development' do
-  watch(%r{^workers/(.+)\.rb$})
-end
+# guard 'sidekiq', :environment => 'development' do
+#   watch(%r{^workers/(.+)\.rb$})
+# end
