@@ -10,6 +10,7 @@
     imagemagick
     graphviz
     gem install bundler
+    gem install mailcatcher
 
 ## Setup Rails Project
     git clone git@github.com:ffaerber/buzzn.git
@@ -39,7 +40,7 @@
     http://localhost:3000/de/mail_view
 
 ## Mail Catcher
-    bundle exec mailcatcher
+    mailcatcher
     http://127.0.0.1:1080
 
 ## Find missing Indexes

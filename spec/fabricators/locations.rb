@@ -40,7 +40,10 @@ end
 
 Fabricator :forstenrieder_weg, from: :location do
   name    'Buchenhain'
-  image   { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'forstenrieder_weg.jpg')) }
+  assets                         { [
+                                    Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'forstenrieder_weg.jpg')))
+                                    ] }
+
   address { Fabricate(:address, street_name: 'Forstenrieder Weg', street_number: '51', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   metering_points {[
     Fabricate(:mp_stefans_bhkw)

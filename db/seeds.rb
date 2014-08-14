@@ -57,6 +57,8 @@ buzzn_team_names.each do |user_name|
     device = Fabricate(:bhkw_justus)
     user.add_role :manager, device
   when 'felix'
+    gocycle       = Fabricate(:gocycle)
+    user.add_role :manager, gocycle
     user_location = Fabricate(:muehlenkamp)
   when 'stefan'
     @forstenrieder_weg = user_location = Fabricate(:forstenrieder_weg)

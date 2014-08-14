@@ -77,7 +77,6 @@ end
 
 group :development do
   gem 'rack-mini-profiler'
-  gem 'mailcatcher'
   gem 'brakeman', :require => false
   gem 'pry-rails'
   gem 'bullet'
