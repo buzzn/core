@@ -1,0 +1,2 @@
+Fabricator :asset do
+end

@@ -14,6 +14,8 @@ class Location < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
+  has_many :assets, as: :assetable, dependent: :destroy
+
   has_one :address, as: :addressable, dependent: :destroy
   accepts_nested_attributes_for :address, reject_if: :all_blank
 

@@ -17,7 +17,7 @@ feature 'UserSignUpTest' do
 
       click_button 'submit'
 
-      find('.noty_text').should have_content('A message with a confirmation link has been sent to your email address.')
+      find('.alert').should have_content('Erfolgreich angemeldet.')
     end
 
 
