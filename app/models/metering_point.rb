@@ -58,7 +58,7 @@ class MeteringPoint < ActiveRecord::Base
     when 'in_out'
       "#{mode} #{generator_type_names}-#{address_addition}"
     when 'out'
-      "#{mode} #{generator_type_names}-#{address_addition}"
+      "#{generator_type_names} #{address_addition}"
     end
   end
 

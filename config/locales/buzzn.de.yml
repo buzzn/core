@@ -274,3 +274,8 @@ de:
   watt_hour_pa: Jahresstrommenge
   mobile: mobil
   belongs_to_user: Gehört
+  producing: Erzeugung
+  interested_members: Interessierte Mitglieder
+  day_to_hours: Tag in Stunden
+  month_to_days: Monat in Tagen
+  year_to_months: Jahr in Monaten

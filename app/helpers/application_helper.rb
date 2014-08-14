@@ -27,7 +27,7 @@ module ApplicationHelper
   def new_in_device
     link_to(
       t("add_new_device"),
-      new_in_device_path,
+      new_in_device_path(:id),
       {
         :remote       => true,
         :class        => 'start_modal',

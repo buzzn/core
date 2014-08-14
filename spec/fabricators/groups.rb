@@ -15,4 +15,10 @@ Fabricator :group_home_of_the_brave, from: :group do
   image       { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'home_of_the_brave.jpg')) }
 end
 
+Fabricator :group_karins_pv_strom, from: :group do
+  name        'Karins PV Strom'
+  image       { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'pv_karin.jpg')) }
+  description { "Diese Gruppe ist offen für alle, die gerne meinen selbstgemachten PV-Strom von meiner Scheune beziehen möchten." }
+end
+
 

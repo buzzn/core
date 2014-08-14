@@ -129,14 +129,20 @@ end
 
 
 puts 'group karin strom'
-karins_pv_group = Fabricate(:group, name: 'karins pv strom')
+karins_pv_group = Fabricate(:group_karins_pv_strom)
 karins_pv_group.metering_points << gautinger_weg.metering_points.first
 karin.add_role :manager, karins_pv_group
-5.times do
-  user, location, metering_point = user_with_location
-  karins_pv_group.metering_points << metering_point
-  puts "  #{user.email}"
-end
+karins_pv_group.metering_points << User.where(email: 'christian@buzzn.net').first.metering_points.first
+karins_pv_group.metering_points << User.where(email: 'felix@buzzn.net').first.metering_points.first
+karins_pv_group.metering_points << User.where(email: 'thomas@buzzn.net').first.metering_points.first
+
+
+
+#5.times do
+#  user, location, metering_point = user_with_location
+#  karins_pv_group.metering_points << metering_point
+#  puts "  #{user.email}"
+#end
 
 
 

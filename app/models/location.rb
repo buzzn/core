@@ -21,4 +21,6 @@ class Location < ActiveRecord::Base
   accepts_nested_attributes_for :metering_points, reject_if: :all_blank, allow_destroy: true
 
   validates :name, presence: true, uniqueness: true
+
+
 end

@@ -1,5 +1,5 @@
 Fabricator :metering_point do
-  address_addition  'Keller'
+  address_addition  'Bezug'
   i = 1
   uid               {"DE001068825151000000000000#{2677114 + (i += 1)}"}
   registers          { Fabricate(:meter).registers }
@@ -81,7 +81,7 @@ end
 
 # stefans bhkw anlage
 Fabricator :mp_stefans_bhkw, from: :metering_point do
-  address_addition  'keller'
+  address_addition  'BHKW Keller'
   registers { Fabricate(:in_out_meter).registers }
   metering_service_provider_contract {Fabricate(:mspc_stefan)}
 end
@@ -91,7 +91,7 @@ end
 
 # hof butenland windanlage
 Fabricator :mp_hof_butenland_wind, from: :metering_point do
-  address_addition  'Acker2'
+  address_addition  'Acker'
   registers { Fabricate(:out_meter).registers }
   metering_service_provider_contract { Fabricate(:metering_service_provider_contract) }
 end
