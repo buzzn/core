@@ -4,6 +4,7 @@ class Discovergy
   # Discovergy.new('stefan@buzzn.net', '19200buzzn', 'EASYMETER_1024000034').call
   # Discovergy.new('karin.smith@solfux.de', '19200buzzn', 'EASYMETER_60051431').call
   # Discovergy.new('justus@buzzn.net', 'PPf93TcR', 'EASYMETER_1124001747').call
+  # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn', 'EASYMETER_60009269').call
 
 
 
