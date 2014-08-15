@@ -29,6 +29,21 @@ class PictureUploader < CarrierWave::Uploader::Base
   # end
 
 
+  version :col6 do
+    process :resize_to_fit  => [97*6, -1]
+  end
+
+  version :col3 do
+    process :resize_to_fit  => [97*3, -1]
+  end
+
+  version :col2 do
+    process :resize_to_fit  => [97*2, -1]
+  end
+
+  version :modal do
+    process :resize_to_fit  => [1200, -1]
+  end
 
 
   version :extra_large do

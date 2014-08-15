@@ -25,11 +25,11 @@ class AssetDecorator < Draper::Decorator
 
   def link_to_show
     link_to(
-      image_tag_small,
+      t('show'),
       asset_path(model),
       {
         :remote       => true,
-        :class        => 'start_modal',
+        :class        => 'start_modal btn btn-default btn-xs',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })
@@ -37,11 +37,11 @@ class AssetDecorator < Draper::Decorator
 
   def link_to_edit
     link_to(
-      image_tag_small,
+      t('edit'),
       edit_asset_path(model),
       {
         :remote       => true,
-        :class        => 'start_modal',
+        :class        => 'start_modal btn btn-danger btn-xs',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })
