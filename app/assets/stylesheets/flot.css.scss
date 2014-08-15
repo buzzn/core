@@ -18,6 +18,14 @@
   border-color: #EE815E #F27B56 #D66543;
 }
 
+.chart.display{
+  background-image: linear-gradient(to bottom, #B0B0B0 45%, #919191 102%);
+  background-color: #3290E2;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #999999 #B8B8B8 #C2C2C2;
+}
+
 .chart_container{
   height: 200px;
 }

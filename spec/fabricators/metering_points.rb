@@ -71,7 +71,7 @@ end
 
 # karins pv anlage
 Fabricator :mp_pv_karin, from: :metering_point do
-  address_addition  'Scheune'
+  address_addition  'Produktion'
   registers { Fabricate(:easymeter_60051431).registers }
   metering_service_provider_contract {Fabricate(:mspc_karin)}
 end
@@ -100,7 +100,7 @@ end
 
 # christian_schuetze verbrauch
 Fabricator :mp_cs_1, from: :metering_point do
-  address_addition  'wochnung'
+  address_addition  'Wohnung'
   registers { Fabricate(:easymeter_1124001747).registers }
   metering_service_provider_contract {Fabricate(:mspc_justus)}
 end
