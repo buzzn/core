@@ -34,45 +34,59 @@
         = render @group
       .clearfix
 
-.col-md-6
-  .block
-    .header.no-border
-      %h2= t('device_properties')
-    .content.no-padding
-      %table.table
-        %tbody
-          %tr
-            %td= t('mode')
-            %td= @device.mode
-          %tr
-            %td= t('law')
-            %td= @device.generator_type
-          %tr
-            %td= t('manufacturer')
-            %td= @device.manufacturer_name
-          %tr
-            %td= t('manufacturer_product_name')
-            %td= @device.manufacturer_product_name
-          %tr
-            %td= t('primary_energy')
-            %td= @device.primary_energy
-          %tr
-            %td= t('watt_peak')
-            %td= @device.watt_peak
-          %tr
-            %td= t('watt_hour_pa')
-            %td= @device.watt_hour_pa
-          %tr
-            %td= t('commissioning')
-            %td= @device.commissioning
-          %tr
-            %td= t('mobile')
-            %td= @device.mobile
-  .assets
-    - @device.assets.each do |asset|
-      = render asset
-    - if current_user.can_update?(@device)
-      = @device.new_asset
+
+
+
+.col-sm-6
+
+  %ul.nav.nav-pills#mytab.nav-spacer
+    %li.active
+      %a{"data-toggle" => "tab", href: "#properties"}
+        = t'properties'
+    %li
+      %a{"data-toggle" => "tab", href: "#assets"}
+        = t'assets'
+
+  .tab-content
+    #properties.tab-pane.active
+
+      .header.no-border
+        %h2= t('device_properties')
+      .content.no-padding
+        %table.table
+          %tbody
+            %tr
+              %td= t('mode')
+              %td= @device.mode
+            %tr
+              %td= t('law')
+              %td= @device.generator_type
+            %tr
+              %td= t('manufacturer')
+              %td= @device.manufacturer_name
+            %tr
+              %td= t('manufacturer_product_name')
+              %td= @device.manufacturer_product_name
+            %tr
+              %td= t('primary_energy')
+              %td= @device.primary_energy
+            %tr
+              %td= t('watt_peak')
+              %td= @device.watt_peak
+            %tr
+              %td= t('watt_hour_pa')
+              %td= @device.watt_hour_pa
+            %tr
+              %td= t('commissioning')
+              %td= @device.commissioning
+            %tr
+              %td= t('mobile')
+              %td= @device.mobile
+
+    #assets.tab-pane
+      = render @device.assets
+      - if current_user.can_update?(@device)
+        = @device.new_asset
 
 
 
