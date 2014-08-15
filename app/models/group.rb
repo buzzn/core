@@ -8,6 +8,9 @@ class Group < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
+  has_many :assets, as: :assetable, dependent: :destroy
+
+
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
