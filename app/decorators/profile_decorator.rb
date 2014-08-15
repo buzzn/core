@@ -29,7 +29,7 @@ class ProfileDecorator < Draper::Decorator
 
   def image_tag_small
     if model.image?
-      image_tag model.image.small, class: 'img-circle', size: '45x45'
+      image_tag model.image.small, class: 'img-circle', size: '45x45', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-user')
     end
@@ -38,7 +38,7 @@ class ProfileDecorator < Draper::Decorator
 
   def image_tag_medium
     if model.image?
-      image_tag model.image.medium, class: 'img-circle', size: '150x150'
+      image_tag model.image.medium, class: 'img-circle', size: '150x150', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-user')
     end
@@ -46,7 +46,7 @@ class ProfileDecorator < Draper::Decorator
 
   def image_tag_sm
     if model.image?
-      image_tag model.image.medium, class: 'img-circle', size: '100x100'
+      image_tag model.image.medium, class: 'img-circle', size: '100x100', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-user')
     end

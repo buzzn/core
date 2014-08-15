@@ -18,7 +18,7 @@ class DeviceDecorator < Draper::Decorator
 
   def image_tag_medium
     if model.image?
-      image_tag model.image.medium, class: 'img-circle', size: '150x150'
+      image_tag model.image.medium, class: 'img-circle', size: '150x150', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-flash')
     end
@@ -27,7 +27,7 @@ class DeviceDecorator < Draper::Decorator
 
   def image_tag_small
     if model.image?
-      image_tag model.image.small, class: 'img-circle', size: '45x45'
+      image_tag model.image.small, class: 'img-circle', size: '45x45', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-flash')
     end

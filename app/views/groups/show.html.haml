@@ -29,6 +29,15 @@
     - if @group.received_group_metering_point_requests.any?
       %h5.page-header= t('group_requests')
       = render @group_metering_point_requests
+  .item{id: "display" }
+    .block
+      .header.no-border
+        .marker-box.pull-left
+        %h2= t('display')
+      .chart#register{ id: 100, class: "display"}
+        .chart_container#chart
+      .content
+        .stat-data
   %ul.nav.nav-pills#mytab.nav-spacer
     %li.active
       %a{"data-toggle" => "tab", href: "#metering_points"}
@@ -39,15 +48,6 @@
 
   .tab-content
     #metering_points.tab-pane.active
-      .item{id: "display" }
-        .block
-          .header.no-border
-            .marker-box.pull-left
-            %h2= t('Display')
-          .chart#register{ id: 100, class: "display"}
-            .chart_container#chart
-          .content
-            .stat-data
       = render @metering_points
     #users.tab-pane
       .energy_producers

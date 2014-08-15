@@ -4,19 +4,39 @@ $(".groups.show").ready ->
     e.preventDefault()
     $(this).tab "show"
 
+  dataOut = []
+  containerDisplay = $("#register_#{100} #chart")
+  maximum = 61
 
+  getRandomDataOut = ->
+    dataOut = dataOut.slice(1)  if dataOut.length
+    while dataOut.length < maximum
+      previous = (if dataOut.length then dataOut[dataOut.length - 1] else 500)
+      y = previous + Math.random()*100 - 50
+      dataOut.push (if y < 0 then 0 else (if y > 500 then 500 else y))
+
+    res = []
+    i = 0
+
+    while i < dataOut.length
+      res.push [
+        i
+        dataOut[i]
+      ]
+      ++i
+    res
 
   $ ->
+
     data = []
-    container = $("#register_#{100} #chart")
     maximum = 61
 
     getRandomData = ->
       data = data.slice(1)  if data.length
       while data.length < maximum
         previous = (if data.length then data[data.length - 1] else 500)
-        y = previous + Math.random()*50 - 25
-        data.push (if y < 0 then 0 else (if y > 500 then 500 else y))
+        y = previous + Math.random()*100 - 48
+        data.push (if y < 0 then 0 else (if y > 1000 then 1000 else y))
 
       res = []
       i = 0
@@ -28,11 +48,22 @@ $(".groups.show").ready ->
         ]
         ++i
       res
-
     #
-    series = [
+    series = [[
+      data: getRandomDataOut()
+      color: "#FF8A65"
+      points:
+        show: false
+      lines:
+        show: true
+        fill: true
+        fillColor: "rgba(255,255,255,0.1)"
+        lineWidth: 3
+      hoverable: true
+      highlightColor: "rgba(255, 255, 255, 0.5)"
+    ], [
       data: getRandomData()
-      color: "white"
+      color: "#52AEFF"
       points:
         show: false
       lines:
@@ -43,9 +74,10 @@ $(".groups.show").ready ->
       hoverable: true
       highlightColor: "rgba(255, 255, 255, 0.5)"
     ]
+    ]
 
     #
-    plot = $.plot(container, series,
+    plot = $.plot(containerDisplay, series,
       grid:
         show: true
         color: "white"
@@ -62,7 +94,7 @@ $(".groups.show").ready ->
 
       yaxis:
         min: 0
-        max: 600
+        max: 1100
 
       legend:
         show: false
@@ -73,12 +105,13 @@ $(".groups.show").ready ->
         axisLabel: 'Zeit (Sekunden)'
       ]
       yaxes:[
-        axisLabel: 'Bezug (Watt)'
+        axisLabel: 'Leistung (Watt)'
       ]
       )
 
     setInterval (updateRandom = ->
-      series[0].data = getRandomData()
+      series[0].data = getRandomDataOut()
+      series[1].data = getRandomData()
       plot.setData series
       plot.draw()
       return
@@ -100,9 +133,9 @@ $(".groups.show").ready ->
         getRandomData = ->
           data = data.slice(1)  if data.length
           while data.length < maximum
-            previous = (if data.length then data[data.length - 1] else 250)
-            y = previous + Math.random()*50 - 25
-            data.push (if y < 0 then 0 else (if y > 500 then 500 else y))
+            previous = (if data.length then data[data.length - 1] else 200)
+            y = previous + Math.random()*40 - 21
+            data.push (if y < 0 then 0 else (if y > 400 then 400 else y))
 
           res = []
           i = 0
@@ -148,7 +181,7 @@ $(".groups.show").ready ->
 
           yaxis:
             min: 0
-            max: 600
+            max: 500
 
           legend:
             show: false
@@ -172,31 +205,12 @@ $(".groups.show").ready ->
         return
     else
       $ ->
-        data = []
         container = $("#register_#{register_chart.id} #chart")
         maximum = 61
 
-        getRandomData = ->
-          data = data.slice(1)  if data.length
-          while data.length < maximum
-            previous = (if data.length then data[data.length - 1] else 500)
-            y = previous + Math.random()*100 - 50
-            data.push (if y < 0 then 0 else (if y > 1000 then 1000 else y))
-
-          res = []
-          i = 0
-
-          while i < data.length
-            res.push [
-              i
-              data[i]
-            ]
-            ++i
-          res
-
         #
         series = [
-          data: getRandomData()
+          data: getRandomDataOut()
           color: "white"
           points:
             show: false
@@ -243,7 +257,7 @@ $(".groups.show").ready ->
           )
 
         setInterval (updateRandom = ->
-          series[0].data = getRandomData()
+          series[0].data = getRandomDataOut()
           plot.setData series
           plot.draw()
           return
