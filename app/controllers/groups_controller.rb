@@ -3,7 +3,7 @@ class GroupsController < InheritedResources::Base
 
   def show
     @group                          = Group.find(params[:id]).decorate
-    @metering_points                = Group.by_id_and_modes(@group.id, ['out','in']).decorate
+    @metering_points                = MeteringPoint.by_group_id_and_modes(@group.id, ['out','in']).decorate
 
     @users                          = @group.users
     @out_users                      = @metering_points.collect(&:users).first

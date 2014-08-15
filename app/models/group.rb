@@ -24,10 +24,6 @@ class Group < ActiveRecord::Base
   has_many :group_users
   has_many :users, :through => :group_users
 
-  scope :by_id_and_modes, lambda { |group_id, modes|
-    MeteringPoint.joins(:registers).where("mode in (?)", modes).where(group_id: group_id).uniq.order('mode DESC')
-  }
-
 
   def member?(metering_point)
     self.metering_points.include?(metering_point) ? true : false
