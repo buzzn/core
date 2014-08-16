@@ -1,3 +1,9 @@
-%li.asset-thumb.floating{id: "asset#{asset.id}"}
-  = image_tag asset.image.extra_large
-
+.col-md-6
+  .thumbnail
+    = image_tag asset.image.col3, alt: asset.description
+    .caption
+      %p= asset.description
+      %p
+        = asset.link_to_show
+        - if current_user.can_update?(asset.device)
+          = asset.link_to_edit

@@ -24,20 +24,23 @@
   %p= @group.description
 
 
+
+
+
+
+
 .col-sm-6
   - if current_user.can_update?(@group)
     - if @group.received_group_metering_point_requests.any?
       %h5.page-header= t('group_requests')
       = render @group_metering_point_requests
-  .item{id: "display" }
-    .block
-      .header.no-border
-        .marker-box.pull-left
-        %h2= t('display')
-      .chart#register{ id: 100, class: "display"}
-        .chart_container#chart
-      .content
-        .stat-data
+
+  - content_for :energy_display do
+    .item{id: "display" }
+      .block
+        .chart#register{ id: 100, class: "display"}
+          .chart_container#chart
+
   %ul.nav.nav-pills#mytab.nav-spacer
     %li.active
       %a{"data-toggle" => "tab", href: "#metering_points"}
@@ -45,10 +48,14 @@
     %li
       %a{"data-toggle" => "tab", href: "#users"}
         = t'users'
+    %li
+      %a{"data-toggle" => "tab", href: "#assets"}
+        = t'assets'
 
   .tab-content
     #metering_points.tab-pane.active
       = render @metering_points
+
     #users.tab-pane
       .energy_producers
         %h5.page-header= t('energy_producers')
@@ -69,6 +76,11 @@
         - @group.users.each do |user|
           =render user.profile.decorate
       .clear
+    #assets.tab-pane
+      .assets
+        = render @group.assets
+
+
 
 
 
