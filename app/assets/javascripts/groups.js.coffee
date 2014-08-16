@@ -13,7 +13,7 @@ $(".groups.show").ready ->
     while dataOut.length < maximum
       previous = (if dataOut.length then dataOut[dataOut.length - 1] else 500)
       y = previous + Math.random()*100 - 50
-      dataOut.push (if y < 0 then 0 else (if y > 500 then 500 else y))
+      dataOut.push (if y < 0 then 0 else (if y > 1000 then 1000 else y))
 
     res = []
     i = 0
@@ -76,8 +76,17 @@ $(".groups.show").ready ->
     ]
     ]
 
+    series[0].label = "Produktion"
+    series[1].label = "Verbrauch"
     #
     plot = $.plot(containerDisplay, series,
+      lines:
+        show: true
+        fill: true
+        fillColor: "rgba(255,255,255,0.05)"
+        lineWidth: 3
+      legend:
+        show: false
       grid:
         show: true
         color: "white"
@@ -86,7 +95,7 @@ $(".groups.show").ready ->
       tooltip: true
       tooltipOpts:
         content: (label, xval, yval, flotItem) ->
-          "Bezug: " + yval + " Watt"
+          label + ": " + yval.toFixed(0) + " Watt"
       xaxis:
         tickDecimals: 0
         tickFormatter: (xval) ->
@@ -95,9 +104,6 @@ $(".groups.show").ready ->
       yaxis:
         min: 0
         max: 1100
-
-      legend:
-        show: false
 
       axisLabels:
         show: true
@@ -173,7 +179,7 @@ $(".groups.show").ready ->
           tooltip: true
           tooltipOpts:
             content: (label, xval, yval, flotItem) ->
-              "Bezug: " + yval + " Watt"
+              "Verbrauch: " + yval.toFixed(0) + " Watt"
           xaxis:
             tickDecimals: 0
             tickFormatter: (xval) ->
@@ -217,7 +223,7 @@ $(".groups.show").ready ->
           lines:
             show: true
             fill: true
-            fillColor: "rgba(255,255,255,0.1)"
+            fillColor: "rgba(255,255,255,0.07)"
             lineWidth: 3
           hoverable: true
           highlightColor: "rgba(255, 255, 255, 0.5)"
@@ -233,7 +239,7 @@ $(".groups.show").ready ->
           tooltip: true
           tooltipOpts:
             content: (label, xval, yval, flotItem) ->
-              "Einspeisung: " + yval + " Watt"
+              "Produktion: " + yval.toFixed(0) + " Watt"
           xaxis:
             tickDecimals: 0
             tickFormatter: (xval) ->

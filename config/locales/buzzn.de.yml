@@ -280,3 +280,10 @@ de:
   month_to_days: Monat in Tagen
   year_to_months: Jahr in Monaten
   display: Übersicht
+  asset: Bild
+  assets: Bilder
+  metering_points: Zählpunkte
+  show: Anzeigen
+  new_group: Neue Gruppe
+  belongs_to_metering_point: Gehört zum Zählpunkt
+  new_asset: Neues Bild

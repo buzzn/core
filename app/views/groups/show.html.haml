@@ -35,11 +35,12 @@
       %h5.page-header= t('group_requests')
       = render @group_metering_point_requests
 
-  - content_for :energy_display do
-    .item{id: "display" }
-      .block
-        .chart#register{ id: 100, class: "display"}
-          .chart_container#chart
+  .item{id: "display" }
+    .block
+      .header.no-border
+        %h2= t('display')
+      .chart#register{ id: 100, class: "display"}
+        .chart_container#chart
 
   %ul.nav.nav-pills#mytab.nav-spacer
     %li.active
@@ -47,7 +48,7 @@
         = t'metering_points'
     %li
       %a{"data-toggle" => "tab", href: "#users"}
-        = t'users'
+        = t'members'
     %li
       %a{"data-toggle" => "tab", href: "#assets"}
         = t'assets'
@@ -71,10 +72,11 @@
             - metering_point.metering_point_users.each do |user|
               = render user.user.profile.decorate
       .clear
-      .interested-members
-        %h5.page-header= t('interested_members')
-        - @group.users.each do |user|
-          =render user.profile.decorate
+      - if @group.users.any?
+        .interested-members
+          %h5.page-header= t('interested_members')
+          - @group.users.each do |user|
+            =render user.profile.decorate
       .clear
     #assets.tab-pane
       .assets

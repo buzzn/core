@@ -105,6 +105,18 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
+  def edit_devices
+    link_to(
+      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      edit_devices_metering_point_path(model),
+      {
+        :remote       => true,
+        :class        => 'sidebar-plus',
+        'data-toggle' => "modal",
+        'data-target' => '#myModal'
+      })
+  end
+
 
 
 end

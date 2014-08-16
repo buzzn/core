@@ -16,6 +16,7 @@ Buzzn::Application.routes.draw do
   resources :metering_points do
     member do
       get :edit_users
+      get :edit_devices
     end
   end
 

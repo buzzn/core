@@ -79,7 +79,10 @@ de:
         email: Email
         phone: Telefon
       asset:
+        image: Bild
         description: Beschreibung
+      group:
+        private: Privat
 
 
 
