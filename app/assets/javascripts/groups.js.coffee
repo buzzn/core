@@ -192,7 +192,7 @@ $(".groups.show").ready ->
             axisLabel: 'Zeit (Sekunden)'
           ]
           yaxes:[
-            axisLabel: 'Bezug (Watt)'
+            axisLabel: 'Verbrauch (Watt)'
           ]
           )
 
@@ -252,7 +252,7 @@ $(".groups.show").ready ->
             axisLabel: 'Zeit (Sekunden)'
           ]
           yaxes:[
-            axisLabel: 'Einspeisung (Watt)'
+            axisLabel: 'Produktion (Watt)'
           ]
           )
 

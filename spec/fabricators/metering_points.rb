@@ -1,5 +1,5 @@
 Fabricator :metering_point do
-  address_addition  'Bezug'
+  address_addition  'Verbrauch'
   i = 1
   uid               {"DE001068825151000000000000#{2677114 + (i += 1)}"}
   registers          { Fabricate(:meter).registers }
@@ -71,7 +71,7 @@ end
 
 # karins pv anlage
 Fabricator :mp_pv_karin, from: :metering_point do
-  address_addition  'Produktion'
+  address_addition  'Photovoltaik'
   registers { Fabricate(:easymeter_60051431).registers }
   metering_service_provider_contract {Fabricate(:mspc_karin)}
 end
