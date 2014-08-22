@@ -8,7 +8,6 @@ class CreateDevices < ActiveRecord::Migration
       t.string  :manufacturer_product_serialnumber
 
       t.string  :image
-      t.string  :name
       t.string  :mode
       t.string  :law
       t.string  :generator_type

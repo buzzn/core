@@ -9,6 +9,11 @@ class Device < ActiveRecord::Base
 
   has_many :assets, as: :assetable, dependent: :destroy
 
+
+  def name
+    "#{self.manufacturer_name} #{self.manufacturer_product_name}"
+  end
+
   def self.generator_types
     %w{
       pv
