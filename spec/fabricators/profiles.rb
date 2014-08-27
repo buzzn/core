@@ -49,7 +49,7 @@ end
 Fabricator :profile_karin, from: :profile do
   first_name  'Karin'
   last_name   'Smith'
-  #image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'stefan.jpg')) }
+  image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'karin.jpg')) }
 end
 
 

@@ -7,13 +7,15 @@ $(".groups.show").ready ->
   dataOut = []
   containerDisplay = $("#register_#{100} #chart")
   maximum = 61
+  refresh = true
 
   getRandomDataOut = ->
-    dataOut = dataOut.slice(1)  if dataOut.length
-    while dataOut.length < maximum
-      previous = (if dataOut.length then dataOut[dataOut.length - 1] else 500)
-      y = previous + Math.random()*100 - 50
-      dataOut.push (if y < 0 then 0 else (if y > 1000 then 1000 else y))
+    if refresh
+      dataOut = dataOut.slice(1)  if dataOut.length
+      while dataOut.length < maximum
+        previous = (if dataOut.length then dataOut[dataOut.length - 1] else 500)
+        y = previous + Math.random()*100 - 50
+        dataOut.push (if y < 0 then 0 else (if y > 1000 then 1000 else y))
 
     res = []
     i = 0
@@ -116,6 +118,7 @@ $(".groups.show").ready ->
       )
 
     setInterval (updateRandom = ->
+      refresh = true
       series[0].data = getRandomDataOut()
       series[1].data = getRandomData()
       plot.setData series
@@ -216,7 +219,7 @@ $(".groups.show").ready ->
 
         #
         series = [
-          data: getRandomDataOut()
+          data: getRandomDataOut(false)
           color: "white"
           points:
             show: false
@@ -263,6 +266,7 @@ $(".groups.show").ready ->
           )
 
         setInterval (updateRandom = ->
+          refresh = false
           series[0].data = getRandomDataOut()
           plot.setData series
           plot.draw()
