@@ -1,6 +1,6 @@
 .col-md-3
   .detail_icon
-    %i= @device.image_tag_medium
+    %i.fa.fa-flash
 
   %h4= @device.name
   - if current_user.can_update?(@device)
