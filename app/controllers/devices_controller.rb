@@ -75,7 +75,6 @@ private
   def init_permitted_params
     [
       :image,
-      :name,
       :law,
       :generator_type,
       :manufacturer_name,
