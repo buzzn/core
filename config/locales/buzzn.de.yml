@@ -250,7 +250,6 @@ de:
   no_metering_points_available: Kein Zählpunkt vorhanden
   the_metering_point: den Zählpunkt
   the_group: die Gruppe
-  the_location: den Standort
   and: und
   are_now_friends: sind jetzt befreundet
   forgot_your_password: Passwort vergessen
@@ -288,3 +287,6 @@ de:
   belongs_to_metering_point: Gehört zum Zählpunkt
   new_asset: Neues Bild
   a_metering_point: einen Zählpunkt
+  has_created_the_location: erzeugte den Standort
+  has_created_a_location_which_has_been_removed: "erzeugte einen Standort, der bereits gelöscht wurde"
+  has_deleted_a_location: löschte einen Standort

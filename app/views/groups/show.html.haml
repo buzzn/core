@@ -35,13 +35,6 @@
       %h5.page-header= t('group_requests')
       = render @group_metering_point_requests
 
-  .item{id: "display" }
-    .block
-      .header.no-border
-        %h2= t('display')
-      .chart#register{ id: 100, class: "display"}
-        .chart_container#chart
-
   %ul.nav.nav-pills#mytab.nav-spacer
     %li.active
       %a{"data-toggle" => "tab", href: "#metering_points"}

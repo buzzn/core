@@ -1,3 +1,6 @@
 - single_content_for :action do
-  = t('has_created') + ' ' + t('the_location')
-  = link_to a.recipient.name, a.trackable
+  - if a.trackable
+    = t('has_created_the_location')
+    = link_to a.recipient.name, a.trackable
+  - else
+    = t('has_created_a_location_which_has_been_removed')
