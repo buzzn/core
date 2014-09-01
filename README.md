@@ -33,6 +33,10 @@
     bundle exec sidekiq -q high, 5 default
     http://localhost:3000/sidekiq
 
+## validate smartmeter
+    bundle exec rails c
+    MeteringPoint.find('de0010688251510000000000002677130').validates_smartmeter
+
 ## update meters
     bundle exec rake smartmeter:register_update
 

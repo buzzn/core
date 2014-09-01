@@ -1,6 +1,13 @@
+env :PATH, '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/opt/aws/bin'
+
+set :output, 'log/cron.log'
+
+
 every 1.minute do
-  rake "meter:reading_update"
+  rake "smartmeter:register_update"
 end
+
+
 
 # every 3.hours do
 #   runner "MyModel.some_process"
