@@ -52,15 +52,19 @@ class WizardMeteringPointsController  < ApplicationController
         @meter = Meter.new(meter_params)
         @metering_point.meter = @meter
         redirect_to current_user.profile
+      end
+
       if @meter.update_attributes(meter_params)
         redirect_to current_user.profile
       else
         render action: 'location_metering_point'
       end
+
     end
   end
 
-private
+
+  private
 
   def metering_point_params
     params.require(:metering_point).permit( :uid, :mode, :address_addition )
