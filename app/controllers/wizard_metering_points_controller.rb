@@ -59,12 +59,16 @@ class WizardMeteringPointsController  < ApplicationController
       end
     end
   end
+
+private
+
+  def metering_point_params
+    params.require(:metering_point).permit( :uid, :mode, :address_addition )
+  end
+
+  def meter_params
+    params.require(:meter).permit(:manufacturer_name, :manufacturer_product_name, :manufacturer_product_serial_number, :owner, :mode, :meter_size, :rate, :measurement_capture, :mounting_method, :build_year, :calibrated_till, :smart, :virtual)
+  end
+
 end
 
-def metering_point_params
-  params.require(:metering_point).permit( :uid, :mode, :address_addition )
-end
-
-def meter_params
-  params.require(:meter).permit(:manufacturer_name, :manufacturer_product_name, :manufacturer_product_serial_number, :owner, :mode, :meter_size, :rate, :measurement_capture, :mounting_method, :build_year, :calibrated_till, :smart, :virtual)
-end
