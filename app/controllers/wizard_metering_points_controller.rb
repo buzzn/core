@@ -11,7 +11,7 @@ class WizardMeteringPointsController  < ApplicationController
     @metering_point           = MeteringPoint.new(metering_point_params)
     @location.metering_points << @metering_point
     if @location.save
-      redirect_to action: 'new_meter'
+      redirect_to new_meter_wizard_metering_points_path(metering_point_id: @metering_point.id)
     else
       render action: 'new_metering_point'
     end
@@ -35,7 +35,7 @@ class WizardMeteringPointsController  < ApplicationController
       redirect_to action: 'new_metering_point'
     else
       @metering_point = @location.metering_points.last
-      @meter = Meter.new(meter_params, metering_point_id: @metering_point.id)
+      @meter = Meter.new(meter_params)
       if @meter.save
         redirect_to current_user.profile
       else
@@ -51,7 +51,7 @@ class WizardMeteringPointsController  < ApplicationController
   end
 
   def meter_params
-    params.require(:meter).permit(:id, :metering_point_id, :meter_id, :manufacturer_name, :manufacturer_product_name, :manufacturer_product_serialnumber, :owner, :mode, :meter_size, :rate, :measurement_capture, :mounting_method, :build_year, :calibrated_till, :smart, :virtual, registers_attributes: [:id, :mode, :obis_index, :variable_tariff, :_destroy])
+    params.require(:meter).permit(:id, :metering_point_id, :meter_id, :manufacturer_name, :manufacturer_product_name, :manufacturer_product_serialnumber, :owner, :mode, :meter_size, :rate, :measurement_capture, :mounting_method, :build_year, :calibrated_till, :smart, :virtual, registers_attributes: [:id, :metering_point_id, :mode, :obis_index, :variable_tariff, :_destroy])
   end
 
 end
