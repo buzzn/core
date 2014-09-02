@@ -41,7 +41,7 @@
     = render @location.metering_points
 
   - if current_user.can_update?(@location)
-    = @location.new_metering_point
+    %li= link_to t('new_metering_point'), new_metering_point_wizard_metering_points_path
 
 
 .col-sm-3

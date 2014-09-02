@@ -160,7 +160,10 @@ Buzzn::Application.routes.draw do
   resources :wizard_metering_points do
     collection do
       get :new_metering_point
-      put :new_metering_point
+      put :new_metering_point_update
+
+      get :new_meter
+      put :new_meter_update
     end
   end
 
