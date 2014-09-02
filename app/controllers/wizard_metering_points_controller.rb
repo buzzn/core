@@ -3,30 +3,17 @@ class WizardMeteringPointsController  < ApplicationController
 
   def new_metering_point
     @location = Location.with_role(:manager, current_user).last
-    if @location.metering_points.empty?
-      @metering_point = MeteringPoint.new
-    else
-      @metering_point = @location.metering_points.last
-    end
+    @metering_point = MeteringPoint.new
   end
 
   def new_metering_point_update
     @location = Location.with_role(:manager, current_user).last
-    if @location.metering_points.empty?
-      @metering_point           = MeteringPoint.new(metering_point_params)
-      @location.metering_points << @metering_point
-      if @location.save
-        redirect_to action: 'new_meter'
-      else
-        render action: 'new_metering_point'
-      end
+    @metering_point           = MeteringPoint.new(metering_point_params)
+    @location.metering_points << @metering_point
+    if @location.save
+      redirect_to action: 'new_meter'
     else
-      @metering_point = @location.metering_points.last
-      if @metering_point.update_attributes(metering_point_params)
-        redirect_to action: 'new_meter'
-      else
-        render action: 'new_metering_point'
-      end
+      render action: 'new_metering_point'
     end
   end
 
@@ -37,16 +24,8 @@ class WizardMeteringPointsController  < ApplicationController
       redirect_to action: 'new_metering_point'
     else
       @metering_point = @location.metering_points.last
-      if @metering_point.meter
-        @meter = @metering_point.meter
-      else
-        @meter = Meter.new
-      end
-      if !@metering_point.registers.empty?
-        @register = @metering_point.registers.last
-      else
-        @register = Register.new
-      end
+      @meter = Meter.new
+      @meter.registers << Register.new
     end
   end
 
@@ -56,25 +35,8 @@ class WizardMeteringPointsController  < ApplicationController
       redirect_to action: 'new_metering_point'
     else
       @metering_point = @location.metering_points.last
-      if @metering_point.meter
-        @meter = @metering_point.meter
-        if !@meter.update_attributes(meter_params)
-          render action: 'new_meter'
-        end
-      else
-        @meter = Meter.new(meter_params)
-      end
-      if !@metering_point.registers.empty?
-        @register = @metering_point.registers.last
-        if !@register.update_attributes(register_params)
-          render action: 'new meter'
-        end
-      else
-        @register = Register.new(register_params)
-      end
-      @meter.registers << @register
-      @metering_point.registers << @register
-      if @meter.save and @register.save and @metering_point.save
+      @meter = Meter.new(meter_params, metering_point_id: @metering_point.id)
+      if @meter.save
         redirect_to current_user.profile
       else
         render action: 'new_metering_point'
@@ -89,11 +51,7 @@ class WizardMeteringPointsController  < ApplicationController
   end
 
   def meter_params
-    params.require(:meter).permit(:manufacturer_name, :manufacturer_product_name, :manufacturer_product_serialnumber, :owner, :mode, :meter_size, :rate, :measurement_capture, :mounting_method, :build_year, :calibrated_till, :smart, :virtual)
-  end
-
-  def register_params
-    params.require(:register).permit(:mode, :obis_index, :variable_tariff, :predecimal_places, :decimal_places)
+    params.require(:meter).permit(:id, :metering_point_id, :meter_id, :manufacturer_name, :manufacturer_product_name, :manufacturer_product_serialnumber, :owner, :mode, :meter_size, :rate, :measurement_capture, :mounting_method, :build_year, :calibrated_till, :smart, :virtual, registers_attributes: [:id, :mode, :obis_index, :variable_tariff, :_destroy])
   end
 
 end
