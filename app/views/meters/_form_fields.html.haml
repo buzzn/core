@@ -3,6 +3,6 @@
 = f.input :manufacturer_product_serialnumber
 = f.input :virtual
 
-= f.simple_fields_for :register do |r|
+= f.simple_fields_for :registers do |r|
   = render 'registers/form_fields', f: r
-//.links//= link_to_add_association t('add_register'), f, :register
+  = link_to_add_association t('add_register'), f, :registers, :partial => 'registers/form_fields'
