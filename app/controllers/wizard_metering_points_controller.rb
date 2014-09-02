@@ -53,21 +53,26 @@ class WizardMeteringPointsController  < ApplicationController
       else
         @meter = Meter.new(meter_params)
         @meter.metering_point_id = @metering_point
-        redirect_to current_user.profile
       end
       if @meter.update_attributes(meter_params)
         redirect_to current_user.profile
       else
         render action: 'location_metering_point'
       end
+
     end
   end
+
+  private
 
   def metering_point_params
     params.require(:metering_point).permit( :uid, :mode, :address_addition )
   end
 
   def meter_params
-    params.require(:meter).permit(:manufacturer_name, :manufacturer_product_name, :manufacturer_product_serial_number, :owner, :mode, :meter_size, :rate, :measurement_capture, :mounting_method, :build_year, :calibrated_till, :smart, :virtual)
+    params.require(:meter).permit(:manufacturer_name, :manufacturer_product_name, :manufacturer_product_serialnumber, :owner, :mode, :meter_size, :rate, :measurement_capture, :mounting_method, :build_year, :calibrated_till, :smart, :virtual)
   end
+
 end
+
+
