@@ -73,17 +73,21 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def validates_smartmeter
-    @mspc = metering_service_provider_contract
-    @meter = meter
+    if meter && metering_service_provider_contract
+      @mspc = metering_service_provider_contract
+      @meter = meter
 
-    discovergy = Discovergy.new(@mspc.username, @mspc.password, "EASYMETER_#{@meter.manufacturer_product_serialnumber}")
-    result     = discovergy.call()
-    if result['status'] == 'ok'
-      @meter.smart = true
-      @meter.save
-      first_day_init
+      discovergy = Discovergy.new(@mspc.username, @mspc.password, "EASYMETER_#{@meter.manufacturer_product_serialnumber}")
+      result     = discovergy.call()
+      if result['status'] == 'ok'
+        @meter.update_columns(smart: true)
+        first_day_init
+      else
+        @meter.update_columns(smart: false)
+      end
+    else
+      @meter.update_columns(smart: false)
     end
-
   end
 
 
