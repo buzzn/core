@@ -29,7 +29,7 @@ class WizardMeteringPointsController  < ApplicationController
     end
   end
 
-  def new_meter_update
+  def meter_update
     @location = Location.with_role(:manager, current_user).last
     if @location.metering_points.empty?
       redirect_to action: 'metering_point'
