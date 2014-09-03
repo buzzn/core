@@ -15,7 +15,7 @@
       .forminput.box
         %h1= t'meter'
 
-        = simple_form_for @meter, url: url_for( action: 'meter_update', controller: 'wizard_metering_points'), method: 'put'  do |f|
+        = simple_form_for @meter, url: meter_update_wizard_metering_points_path(id: params[:id]), method: 'put'  do |f|
           = f.input :metering_point_id, input_html: { value: params[:metering_point_id] }, as: :hidden
           = render 'meters/form_fields', f: f
           = f.submit t("continue"), class: 'btn btn-success', id: 'submit'
