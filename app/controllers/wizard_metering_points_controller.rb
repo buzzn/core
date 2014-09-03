@@ -1,27 +1,27 @@
 class WizardMeteringPointsController  < ApplicationController
   before_filter :authenticate_user!
 
-  def new_metering_point
+  def metering_point
     @location = Location.with_role(:manager, current_user).last
     @metering_point = MeteringPoint.new
   end
 
-  def new_metering_point_update
+  def metering_point_update
     @location = Location.with_role(:manager, current_user).last
     @metering_point           = MeteringPoint.new(metering_point_params)
     @location.metering_points << @metering_point
     if @location.save
-      redirect_to new_meter_wizard_metering_points_path(metering_point_id: @metering_point.id)
+      redirect_to meter_wizard_metering_points_path(metering_point_id: @metering_point.id)
     else
-      render action: 'new_metering_point'
+      render action: 'metering_point'
     end
   end
 
 
-  def new_meter
+  def meter
     @location = Location.with_role(:manager, current_user).last
     if @location.metering_points.empty?
-      redirect_to action: 'new_metering_point'
+      redirect_to action: 'metering_point'
     else
       @metering_point = @location.metering_points.last
       @meter = Meter.new
@@ -32,14 +32,14 @@ class WizardMeteringPointsController  < ApplicationController
   def new_meter_update
     @location = Location.with_role(:manager, current_user).last
     if @location.metering_points.empty?
-      redirect_to action: 'new_metering_point'
+      redirect_to action: 'metering_point'
     else
       @metering_point = @location.metering_points.last
       @meter = Meter.new(meter_params)
       if @meter.save
-        redirect_to current_user.profile
+        redirect_to @location
       else
-        render action: 'new_metering_point'
+        render action: 'metering_point'
       end
     end
   end

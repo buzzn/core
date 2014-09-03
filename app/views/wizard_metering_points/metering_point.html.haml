@@ -15,7 +15,7 @@
       .forminput.box
         %h1= t'new_metering_point'
 
-        = simple_form_for @metering_point, url: url_for( action: 'new_metering_point_update', controller: 'wizard_metering_points'), method: 'put'  do |f|
+        = simple_form_for @metering_point, url: url_for( action: 'metering_point_update', controller: 'wizard_metering_points'), method: 'put'  do |f|
           = f.input :address_addition
           = f.input :uid
           = f.submit t("continue"), class: 'btn btn-success', id: 'submit'
