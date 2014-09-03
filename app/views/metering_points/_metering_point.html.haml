@@ -16,7 +16,24 @@
           .stat-red
             %h2= metering_point.metering_point_users.length
             %p= t('users')
+      .user-data
+        - metering_point.metering_point_users.each do |user|
+          = render user.user.profile.decorate
+        - if current_user.can_update?(metering_point)
+          = metering_point.edit_users
+      .clear
       .stat-data
-        - metering_point.metering_point_users.each do |m|
-          = render m.user.profile.decorate
+        - if metering_point.mode == "in"
+          .stat-blue
+            %h2= metering_point.devices.length
+            %p= t('devices')
+        - else
+          .stat-red
+            %h2= metering_point.devices.length
+            %p= t('devices')
+      .devices-data
+        - metering_point.devices.each do |device|
+          = render device.decorate
+        - if current_user.can_update?(metering_point)
+          = metering_point.edit_devices
       .clear
