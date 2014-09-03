@@ -83,6 +83,15 @@ de:
         description: Beschreibung
       group:
         private: Privat
+      meter:
+        manufacturer_name: Herstellername
+        manufacturer_product_name: Produktname
+        manufacturer_product_serialnumber: Seriennummer
+        virtual: Virtuell
+      registers:
+        mode: Richtung
+        obis_index: OBIS Kennzahlen
+        variable_tariff: Variabler Tarif
 
 
 

@@ -189,7 +189,6 @@ de:
   explore: Entdecken
   contracts: Verträge
   belongs_to_location: Gehört zum Standort
-  register: Zähler
   locations: Standorte
   new_location: Neuer Standort
   listing_profiles: Liste aller Profile
@@ -266,8 +265,10 @@ de:
   device_properties: Geräteeigenschaften
   mode: Richtung
   law: Gesetz
-  manufacturer: Hersteller
+  manufacturer_name: Hersteller
   manufacturer_product_name: Produktbezeichnung
+  manufacturer_product_serialnumber: Seriennummer
+
   primary_energy: Primärenergie
   watt_peak: Leistung in Watt (max.)
   watt_hour_pa: Jahresstrommenge
@@ -291,3 +292,8 @@ de:
   has_created_a_location_which_has_been_removed: "erzeugte einen Standort, der bereits gelöscht wurde"
   has_deleted_a_location: löschte einen Standort
   the_location: den Standort
+  meter: Zähler
+  register: Zählwerk
+  registers: Zählwerke
+  add_register: Zählwerk hinzufügen
+  remove_register: Zählwerk löschen

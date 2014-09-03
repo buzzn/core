@@ -67,12 +67,9 @@ class LocationDecorator < Draper::Decorator
   def new_metering_point
     link_to(
       content_tag(:i, '', class: 'fa fa-plus-circle'),
-      new_metering_point_path(location_id: model.id),
+      metering_point_wizard_metering_points_path(id: model.id),
       {
-        :remote                     => true,
         :class                      => 'content-plus',
-        'data-toggle'               => 'modal',
-        'data-target'               => '#myModal'
       })
   end
 
