@@ -48,7 +48,8 @@
 
   .tab-content
     #metering_points.tab-pane.active
-      = render @metering_points
+      - @metering_points.each do |metering_point|
+        = render metering_point #if metering_point.readable_by?(current_user)
 
     #users.tab-pane
       .energy_producers

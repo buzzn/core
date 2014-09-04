@@ -69,6 +69,7 @@ gem 'gon'
 gem 'rack-dev-mark'
 gem 'tzinfo'
 gem 'rails-timeago'
+gem 'turbolinks_transitions'
 
 group :production do
   gem 'asset_sync'

@@ -52,6 +52,7 @@ class MeteringPointsController < InheritedResources::Base
     # TODO: insert added device directly
     @metering_point = MeteringPoint.find(params[:id]).decorate
     authorize_action_for(@metering_point)
+    edit!
   end
   authority_actions :edit_devices => 'update'
 
@@ -59,6 +60,7 @@ class MeteringPointsController < InheritedResources::Base
   def update
     update! do |format|
       @metering_point = MeteringPointDecorator.new(@metering_point).decorate
+      format.js {render inline: "location.reload();" }
     end
   end
 
