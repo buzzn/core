@@ -297,3 +297,4 @@ de:
   registers: Zählwerke
   add_register: Zählwerk hinzufügen
   remove_register: Zählwerk löschen
+  device: Gerät

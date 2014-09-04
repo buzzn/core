@@ -26,11 +26,17 @@
         - if metering_point.mode == "in"
           .stat-blue
             %h2= metering_point.devices.length
-            %p= t('devices')
+            - if metering_point.devices.length == 1
+              %p= t('device')
+            - else
+              %p= t('devices')
         - else
           .stat-red
             %h2= metering_point.devices.length
-            %p= t('devices')
+            - if metering_point.devices.length == 1
+              %p= t('device')
+            - else
+              %p= t('devices')
       .devices-data
         - metering_point.devices.each do |device|
           = render device.decorate

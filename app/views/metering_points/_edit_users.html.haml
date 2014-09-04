@@ -5,5 +5,5 @@
       %h4.modal-title= t'edit_users'
     .modal-body
       = simple_form_for @metering_point, remote: true do |f|
-        = f.association :users, collection: current_user.friends << current_user, input_html: { class: 'select2'}
+        = f.association :users, collection: [current_user] + current_user.friends, input_html: { class: 'select2'}
         = f.button :submit, id: 'submit', class: 'btn btn-success'
