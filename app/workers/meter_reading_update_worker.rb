@@ -1,7 +1,5 @@
 class MeterReadingUpdateWorker
   include Sidekiq::Worker
-  # sidekiq_options queue: "high"
-  # sidekiq_options retry: false
 
   def perform(register_id, manufacturer_device_number, msp_name, msp_login_username, msp_login_password, start_time, end_time)
 
