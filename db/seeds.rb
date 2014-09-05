@@ -68,6 +68,7 @@ buzzn_team_names.each do |user_name|
   end
   user_location.metering_points.first.users << user
   user.add_role :manager, user_location
+  user_location.create_activity key: 'location.create', owner: user, recipient: user_location
 end
 
 puts 'friendships for buzzn team ...'
@@ -137,6 +138,7 @@ karin.add_role :manager, karins_pv_group
 karins_pv_group.metering_points << User.where(email: 'christian@buzzn.net').first.metering_points.first
 karins_pv_group.metering_points << User.where(email: 'felix@buzzn.net').first.metering_points.first
 karins_pv_group.metering_points << User.where(email: 'thomas@buzzn.net').first.metering_points.first
+karins_pv_group.create_activity key: 'group.create', owner: karin, recipient: karins_pv_group
 
 
 
@@ -157,6 +159,7 @@ jan_gerdes.add_role :manager, group_hof_butenland
   group_hof_butenland.metering_points << metering_point
   puts "  #{user.email}"
 end
+group_hof_butenland.create_activity key: 'group.create', owner: jan_gerdes, recipient: group_hof_butenland
 
 
 puts 'group home_of_the_brave'
@@ -165,6 +168,8 @@ group_home_of_the_brave.metering_points << @fichtenweg8.metering_points
 group_home_of_the_brave.metering_points << fichtenweg10.metering_points
 justus = User.where(email: 'justus@buzzn.net').first
 justus.add_role :manager, group_home_of_the_brave
+group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
+
 
 
 
@@ -238,6 +243,7 @@ while true do
     end
   end
 end
+
 
 
 
