@@ -298,3 +298,7 @@ de:
   add_register: Zählwerk hinzufügen
   remove_register: Zählwerk löschen
   device: Gerät
+  you_have_no_location: Sie haben noch keinen Standort erstellt
+  create_new_location: Neuen Standort hinzufügen
+  you_have_no_metering_point: Dieser Standort hat noch keinen Zählpunkt
+  create_new_metering_point: Neuen Zählpunkt hinzufügen

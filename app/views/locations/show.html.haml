@@ -37,6 +37,7 @@
 
 
 .col-sm-6
+  = render 'no_metering_point' if @location.metering_points.empty?
   .metering_points
     = render @location.metering_points
 

@@ -60,7 +60,6 @@ class MeteringPointsController < InheritedResources::Base
   def update
     update! do |format|
       @metering_point = MeteringPointDecorator.new(@metering_point).decorate
-      format.js {render inline: "location.reload();" }
     end
   end
 

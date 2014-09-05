@@ -1,0 +1,4 @@
+.jumbotron
+  %h2= t('you_have_no_metering_point')
+
+  = link_to t('create_new_metering_point'), metering_point_wizard_metering_points_path(id: @location.id), class: 'btn btn-success btn-lg'

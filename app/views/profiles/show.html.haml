@@ -54,7 +54,7 @@
 
 .col-sm-6
   - if @locations.empty? && @profile.user == current_user
-    = new_location
+    = render 'no_location'
 
   = render @friendship_requests if @profile.user == current_user
   %h5= t('activities')
