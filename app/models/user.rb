@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
   end
 
   def editable_metering_points
-    MeteringPoints.with_role(:manager, self).decorate
+    MeteringPoint.with_role(:manager, self).decorate
   end
 
 private

@@ -16,6 +16,7 @@ def user_with_location
   metering_point.users        << user
   contracting_party.contracts << metering_point.contract
   user.add_role :manager, location
+  user.add_role :manager, metering_point
   return user, location, metering_point
 end
 
@@ -87,6 +88,7 @@ jan_gerdes.add_role :manager, niensweg
 device = Fabricate(:hof_butenland_wind)
 niensweg.metering_points.first.devices << device
 jan_gerdes.add_role :manager, device
+jan_gerdes.add_role :manager, niensweg.metering_points.first
 
 
 
@@ -97,6 +99,7 @@ gautinger_weg.metering_points.first.users << karin
 karin.add_role :manager, gautinger_weg
 device = Fabricate(:pv_karin)
 karin.add_role :manager, device
+karin.add_role :manager, gautinger_weg.metering_points.first
 @forstenrieder_weg.metering_points.first.users << karin
 buzzn_team.each do |buzzn_user|
   karin.friendships.create(friend: buzzn_user) # alle von buzzn sind freund von karin

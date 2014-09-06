@@ -1,4 +1,5 @@
 class MeteringPoint < ActiveRecord::Base
+  resourcify
   include Authority::Abilities
 
   include PublicActivity::Model

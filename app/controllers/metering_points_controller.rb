@@ -69,6 +69,7 @@ class MeteringPointsController < InheritedResources::Base
     #   @metering_point = MeteringPointDecorator.new(@metering_point)
     # end
     create! { location_path(@metering_point.location) }
+    current_user.add_role :manager, @metering_point
   end
 
 
