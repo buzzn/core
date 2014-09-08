@@ -35,10 +35,11 @@
                 - current_user.editable_groups.each do |group|
                   %li= link_to group.name, group
               %li.divider
-              - current_user.editable_metering_points.each do |metering_point|
-                - if metering_point.mode == 'out' && metering_point.group == nil
-                  %li= new_group
-                  - break # what if somebody has > 1 out-metering_points or if the out-metering_point is already in a group?
+              - current_user.editable_locations.each do |location|
+                - location.metering_points.each do |metering_point|
+                  - if metering_point.mode == 'out' && metering_point.group == nil
+                    %li= new_group
+                    - break # what if somebody has > 1 out-metering_points or if the out-metering_point is already in a group?
 
           %li.dropdown
             %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}

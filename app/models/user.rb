@@ -62,9 +62,6 @@ class User < ActiveRecord::Base
     Device.with_role(:manager, self).decorate
   end
 
-  def editable_metering_points
-    MeteringPoint.with_role(:manager, self).decorate
-  end
 
 private
   def create_complement_friendship(friend)
