@@ -16,11 +16,13 @@
           .stat-red
             %h2= metering_point.metering_point_users.length
             %p= t('users')
-      .user-data
-        - metering_point.metering_point_users.each do |user|
-          = render user.user.profile.decorate
-        - if current_user.can_update?(metering_point)
-          = metering_point.edit_users
+      %article.sidebar_module.user-data.residents
+        %ul
+          - metering_point.metering_point_users.each do |user|
+            = render user.user.profile.decorate
+          - if current_user.can_update?(metering_point)
+            = metering_point.edit_users
+        .clearfix
       .clear
       .stat-data
         - if metering_point.mode == "in"
