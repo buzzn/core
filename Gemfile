@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'rails'
 gem 'sinatra'
-gem 'mysql2'
 gem 'mongoid'
 gem 'moped'
 gem 'bson'
@@ -75,6 +74,23 @@ group :production do
   gem 'asset_sync'
 end
 
+group :production, :staging do
+  gem 'pg'
+end
+
+group :development, :test do
+  gem 'mysql2'
+  gem 'spring'
+  gem 'lol_dba'
+  gem 'listen'
+  gem 'launchy'
+  gem 'growl'
+  gem 'ruby_gntp'
+  gem 'guard'
+  gem 'guard-livereload'
+  gem 'guard-bundler'
+  gem 'guard-sidekiq'
+end
 
 group :development do
   gem 'rack-mini-profiler'
@@ -89,19 +105,6 @@ group :development do
   gem 'quiet_assets'
   gem 'rails-erd'
   gem 'annotate'
-end
-
-group :development, :test do
-  gem 'spring'
-  gem 'lol_dba'
-  gem 'listen'
-  gem 'launchy'
-  gem 'growl'
-  gem 'ruby_gntp'
-  gem 'guard'
-  gem 'guard-livereload'
-  gem 'guard-bundler'
-  gem 'guard-sidekiq'
 end
 
 group :test do

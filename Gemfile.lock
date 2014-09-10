@@ -328,6 +328,7 @@ GEM
     paper_trail (3.0.5)
       activerecord (>= 3.0, < 5.0)
       activesupport (>= 3.0, < 5.0)
+    pg (0.17.1)
     phantomjs (1.9.7.1)
     poltergeist (1.5.1)
       capybara (~> 2.1)
@@ -579,6 +580,7 @@ DEPENDENCIES
   moped
   mysql2
   paper_trail
+  pg
   phantomjs
   poltergeist
   pry-rails
