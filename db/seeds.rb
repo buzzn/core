@@ -29,6 +29,9 @@ Fabricate(:electricity_supplier, name: 'RWE')
 Fabricate(:electricity_supplier, name: 'EnBW')
 Fabricate(:electricity_supplier, name: 'Vattenfall')
 Fabricate(:metering_service_provider, name: 'Discovergy')
+Fabricate(:metering_service_provider, name: 'buzzn_metering')
+Fabricate(:metering_service_provider, name: 'Stadtwerke Augsburg')
+Fabricate(:metering_service_provider, name: 'Stadtwerke München')
 Fabricate(:transmission_system_operator, name: '50Herz')
 
 

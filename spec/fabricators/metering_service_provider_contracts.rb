@@ -18,3 +18,9 @@ Fabricator :mspc_karin, from: :metering_service_provider_contract do
   username 'karin.smith@solfux.de'
   password '19200buzzn'
 end
+
+Fabricator :mspc_buzzn_metering, from: :metering_service_provider_contract do
+  organization  { Organization.where(name: 'buzzn_metering').first }
+  username 'team@buzzn.net'
+  password '19200buzzn'
+end

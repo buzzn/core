@@ -1,0 +1,18 @@
+.block
+  .header.no-border
+    %h2= t('metering_point_service_provider_contract')
+  .content.no-padding
+    %table.table
+      %tbody
+        %tr
+          %td= t('customer_number')
+          %td= @metering_point_service_provider_contract.customer_number
+        %tr
+          %td= t('contract_number')
+          %td= @metering_point_service_provider_contract.contract_number
+        %tr
+          %td= t('username')
+          %td= @metering_point_service_provider_contract.username
+        %tr
+          %td= t('password')
+          %td= @metering_point_service_provider_contract.password
