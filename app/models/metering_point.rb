@@ -28,7 +28,7 @@ class MeteringPoint < ActiveRecord::Base
   has_one :distribution_system_operator_contract, dependent: :destroy
   has_one :electricity_supplier_contract, dependent: :destroy
   has_one :metering_service_provider_contract, dependent: :destroy
-  has_many :devices, dependent: :destroy
+  has_many :devices
 
   has_many :metering_point_users
   has_many :users, :through => :metering_point_users
