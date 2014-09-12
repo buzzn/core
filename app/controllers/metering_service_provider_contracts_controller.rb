@@ -4,13 +4,13 @@ class MeteringServiceProviderContractsController < InheritedResources::Base
 
   def new
     @metering_service_provider_contract = MeteringServiceProviderContract.new
-    authorize_action_for @metering_service_provider_contract
+    #authorize_action_for @metering_service_provider_contract
     new!
   end
 
   def edit
     @metering_service_provider_contract = MeteringServiceProviderContract.find(params[:id])
-    authorize_action_for @metering_service_provider_contract
+    #authorize_action_for @metering_service_provider_contract
     edit!
   end
 
@@ -29,7 +29,9 @@ private
       :customer_number,
       :contract_number,
       :username,
-      :password
+      :password,
+      :metering_point_id,
+      :organisation_id
     ]
   end
 end

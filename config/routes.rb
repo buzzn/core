@@ -59,8 +59,7 @@ Buzzn::Application.routes.draw do
     end
   end
 
-
-
+  resources :metering_service_provider_contracts
   resources :contracting_parties
   resources :contracts
   resources :private_grids

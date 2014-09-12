@@ -2,10 +2,10 @@
   .modal-content
     .modal-header
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'new_metering_point_service_provider_contract'
+      %h4.modal-title= t'new_metering_service_provider_contract'
     .modal-body
-      = simple_form_for @metering_point_service_provider_contract, remote: false do |f|
-        =f.input :metering_point_id, input_html: { value: params[:metering_point_id] }, as: :hidden
-        =f.association :organisation_id, collection: Organisation.where(mode: 'metering_service_provider'), input_html: { class: 'select2'}
-        = render 'metering_point_service_provider_contract/form_fields', f: f
+      = simple_form_for @metering_service_provider_contract, remote: false do |f|
+        = f.input :metering_point_id, input_html: { value: params[:metering_point_id] }, as: :hidden
+        = f.association :organisation_id, collection: Organisation.where(mode: 'metering_service_provider'), input_html: { class: 'select2'}
+        = render 'metering_service_provider_contract/form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-success'
