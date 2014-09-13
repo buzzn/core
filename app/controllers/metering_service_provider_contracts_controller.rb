@@ -8,6 +8,12 @@ class MeteringServiceProviderContractsController < InheritedResources::Base
     new!
   end
 
+  def create
+    create! do |format|
+      @metering_service_provider_contract = MeteringServiceProviderContract.new(@metering_service_provider_contract)
+    end
+  end
+
   def edit
     @metering_service_provider_contract = MeteringServiceProviderContract.find(params[:id])
     #authorize_action_for @metering_service_provider_contract
