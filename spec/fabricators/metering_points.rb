@@ -13,7 +13,7 @@ Fabricator :mp_z1, from: :metering_point do
   address_addition  'Übergabe'
 
   registers {
-    Fabricate( :meter,
+    Fabricate( :in_out_meter,
                 manufacturer_name:           'Elster',
                 manufacturer_product_name: 'AS 1440',
                 manufacturer_product_serialnumber:   '03353984',
@@ -26,7 +26,7 @@ Fabricator :mp_z2, from: :metering_point do
   address_addition  'Dach'
 
   registers {
-     Fabricate(:meter,
+     Fabricate(:out_meter,
                 manufacturer_name:           'Kamstrup',
                 manufacturer_product_name: '382J',
                 manufacturer_product_serialnumber:   '15028648',
@@ -39,7 +39,7 @@ end
 Fabricator :mp_z3, from: :metering_point do
   address_addition  'Carport'
   registers {
-    Fabricate(:meter,
+    Fabricate(:out_meter,
               manufacturer_name:            'Kamstrup',
               manufacturer_product_name:  '382J',
               manufacturer_product_serialnumber:    '15028641',
@@ -51,7 +51,7 @@ end
 Fabricator :mp_z4, from: :metering_point do
   address_addition  'Keller'
   registers {
-    Fabricate(:meter,
+    Fabricate(:out_meter,
               manufacturer_name:            'Kamstrup',
               manufacturer_product_name:  '382J',
               manufacturer_product_serialnumber:   '15028644',
