@@ -45,7 +45,7 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   scope :by_group_id_and_modes, lambda { |group_id, modes|
-    MeteringPoint.joins(:registers).where("mode in (?)", modes).where(group_id: group_id).uniq.order('mode DESC')
+    MeteringPoint.joins(:registers).where("mode in (?)", modes).where(group_id: group_id).order('mode DESC')
   }
 
 

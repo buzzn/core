@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20140801134446) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "activities", force: true do |t|
     t.integer  "trackable_id"
     t.string   "trackable_type"
@@ -38,8 +41,8 @@ ActiveRecord::Schema.define(version: 20140801134446) do
     t.string   "state"
     t.integer  "zip"
     t.string   "country"
-    t.float    "longitude",        limit: 24
-    t.float    "latitude",         limit: 24
+    t.float    "longitude"
+    t.float    "latitude"
     t.integer  "addressable_id"
     t.string   "addressable_type"
     t.datetime "created_at"
@@ -50,12 +53,12 @@ ActiveRecord::Schema.define(version: 20140801134446) do
 
   create_table "areas", force: true do |t|
     t.string   "name"
-    t.integer  "zoom",                      default: 16
+    t.integer  "zoom",           default: 16
     t.string   "address"
     t.text     "polygons"
     t.string   "polygon_encode"
-    t.float    "latitude",       limit: 24
-    t.float    "longitude",      limit: 24
+    t.float    "latitude"
+    t.float    "longitude"
     t.boolean  "gmaps"
     t.integer  "group_id"
     t.datetime "created_at"
@@ -108,7 +111,7 @@ ActiveRecord::Schema.define(version: 20140801134446) do
   create_table "contracting_parties", force: true do |t|
     t.string   "legal_entity"
     t.integer  "sales_tax_number"
-    t.float    "tax_rate",          limit: 24
+    t.float    "tax_rate"
     t.integer  "tax_number"
     t.integer  "organization_id"
     t.integer  "metering_point_id"
@@ -130,7 +133,7 @@ ActiveRecord::Schema.define(version: 20140801134446) do
     t.boolean  "power_of_attorney"
     t.date     "commissioning"
     t.date     "termination"
-    t.decimal  "forecast_watt_hour_pa", precision: 10, scale: 0
+    t.decimal  "forecast_watt_hour_pa"
     t.string   "mode"
     t.integer  "contracting_party_id"
     t.datetime "created_at"
@@ -149,10 +152,10 @@ ActiveRecord::Schema.define(version: 20140801134446) do
     t.string   "generator_type"
     t.string   "shop_link"
     t.string   "primary_energy"
-    t.decimal  "watt_peak",                         precision: 10, scale: 0
-    t.decimal  "watt_hour_pa",                      precision: 10, scale: 0
+    t.decimal  "watt_peak"
+    t.decimal  "watt_hour_pa"
     t.date     "commissioning"
-    t.boolean  "mobile",                                                     default: false
+    t.boolean  "mobile",                            default: false
     t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -176,7 +179,7 @@ ActiveRecord::Schema.define(version: 20140801134446) do
   create_table "electricity_supplier_contracts", force: true do |t|
     t.string   "customer_number"
     t.string   "contract_number"
-    t.decimal  "forecast_watt_hour_pa", precision: 10, scale: 0
+    t.decimal  "forecast_watt_hour_pa"
     t.integer  "metering_point_id"
     t.integer  "organization_id"
     t.datetime "created_at"
@@ -447,7 +450,7 @@ ActiveRecord::Schema.define(version: 20140801134446) do
     t.string   "mode"
     t.string   "category"
     t.datetime "date"
-    t.decimal  "watt_hour",  precision: 10, scale: 0
+    t.decimal  "watt_hour"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
