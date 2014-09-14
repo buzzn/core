@@ -22,7 +22,7 @@ private
 
   def init_permitted_params
     [
-      :legal_entity, 
+      :legal_entity,
       bank_account_attributes: [:id, :holder, :iban, :bic, :_destroy],
       address_attributes: [:id, :street, :city, :state, :zip, :country, :_destroy],
       organization_attributes: [:id, :image, :name, :email, :phone, :_destroy]

@@ -1,9 +1,67 @@
-.row
-  .col-md-1= link_to contract.id, edit_contract_path(contract)
 
-  .col-md-5
-    - if current_user.can_update?(contract)
-      = link_to t('edit'), edit_meter_path(contract)
+.block{id: "contract_#{@contract.id}"}
+  .header.no-border
+    = @contract.link_to_edit
+    %h2= t("#{@contract.mode}_contract")
+  .content.no-padding
+    %table.table
+      %tbody
+        %tr
+          %td= t('contracting_party')
+          %td= link_to @contract.contracting_party.user.name, @contract.contracting_party.user.profile
+        %tr
+          %td= t('status')
+          %td= @contract.status
+        %tr
+          %td= t('forecast_watt_hour_pa')
+          %td= @contract.forecast_watt_hour_pa
+        %tr
+          %td= t('price_cents')
+          %td= @contract.price_cents
+        %tr
+          %td= t('commissioning')
+          %td= @contract.commissioning
+        %tr
+          %td= t('termination')
+          %td= @contract.termination
+        %tr
+          %td= t('signing_user')
+          %td= @contract.signing_user
+        %tr
+          %td= t('terms')
+          %td= @contract.terms
+        %tr
+          %td= t('confirm_pricing_model')
+          %td= @contract.confirm_pricing_model
+        %tr
+          %td= t('power_of_attorney')
+          %td= @contract.power_of_attorney
 
-    - if current_user.can_delete?(contract)
-      = link_to t('destroy'), contract, :method => :delete, :data => { :confirm => 'Are you sure?' }
+  .header.no-border
+    - if @contract.address
+      - @address = @contract.address
+      %h2= t("contract_address")
+    - elsif @contract.contracting_party
+      - @address = @contract.contracting_party.address
+      %h2= t("contracting_party_address")
+
+
+  .content.no-padding
+    %table.table
+      %tbody
+        %tr
+          %td= t('street')
+          %td= "#{@address.street_name} #{@address.street_number}"
+        %tr
+          %td= t('city')
+          %td= "#{@address.zip} #{@address.city}"
+        %tr
+          %td= t('state')
+          %td= @address.state
+
+
+
+
+
+
+

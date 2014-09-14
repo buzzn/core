@@ -44,9 +44,12 @@
           %tr
             %td= t('mode')
             %td= @device.mode
-          %tr
-            %td= t('law')
-            %td= @device.generator_type
+
+          - if @device.output?
+            %tr
+              %td= t('law')
+              %td= @device.generator_type
+
           %tr
             %td= t('manufacturer')
             %td= @device.manufacturer_name
@@ -67,7 +70,7 @@
             %td= @device.commissioning
           %tr
             %td= t('mobile')
-            %td= @device.mobile
+            %td= t @device.mobile
   .assets
     = render @device.assets
     - if current_user.can_update?(@device)

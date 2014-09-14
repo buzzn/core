@@ -52,6 +52,9 @@
     .clearfix
 
 
+
+
+
 .col-sm-6
   %ul.nav.nav-pills#mytab.nav-spacer
     %li.active
@@ -65,9 +68,8 @@
         = t'contracts'
 
   .tab-content
+
     #charts.tab-pane.active
-
-
       .block{id: 'day_to_hours' }
         .header.no-border
           %h2= t('day_to_hours')
@@ -84,16 +86,15 @@
         = render @metering_point.registers
 
 
+    #meter.tab-pane
+      = render @meter
+
+
     #contracts.tab-pane
-      - if @metering_point.contract
-        = render @metering_point.contract
+      - if @contract
+        = render @contract
       - else
         .alert.alert-danger= t'no_contract_for_metering_point'
-
-
-    #meter.tab-pane
-      = render @meter if @meter
-
 
 
 

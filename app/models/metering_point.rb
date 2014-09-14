@@ -120,16 +120,18 @@ class MeteringPoint < ActiveRecord::Base
     }
   end
 
-  def in_out?
-    mode == 'in_out'
+
+
+  def output?
+    self.mode == 'out'
   end
 
-  def out?
-    mode == 'out'
+  def input?
+    self.mode == 'in'
   end
 
-  def in?
-    mode == 'in'
+  def in_and_output?
+    self.mode == 'in_out'
   end
 
 

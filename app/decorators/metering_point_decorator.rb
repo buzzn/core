@@ -7,6 +7,7 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :users
   decorates_association :location
   decorates_association :group
+  decorates_association :contract
 
   def thumb_small
     link_to image_tag_small, model, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => model.name }, rel: 'tooltip'
@@ -75,7 +76,7 @@ class MeteringPointDecorator < Draper::Decorator
 
 
   def new_device
-    if model.out?
+    if model.output?
       path = new_out_device_path(metering_point_id: model.id)
     else
       path = new_in_device_path(metering_point_id: model.id)
