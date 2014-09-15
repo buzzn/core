@@ -103,6 +103,7 @@ group :development do
   gem 'quiet_assets'
   gem 'rails-erd'
   gem 'annotate'
+  gem 'mysql2'
 end
 
 group :test do
