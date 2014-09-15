@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails'
+gem 'mysql2'
 gem 'sinatra'
 gem 'mongoid'
 gem 'moped'
@@ -72,7 +73,6 @@ gem 'turbolinks_transitions'
 
 group :production do
   gem 'asset_sync'
-  gem 'pg'
 end
 
 
@@ -88,7 +88,6 @@ group :development, :test do
   gem 'guard-livereload'
   gem 'guard-bundler'
   gem 'guard-sidekiq'
-  gem 'mysql2'
 end
 
 group :development do
