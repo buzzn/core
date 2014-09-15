@@ -42,15 +42,15 @@ class Device < ActiveRecord::Base
   end
 
 
-  def out?
+  def output?
     self.mode == 'out'
   end
 
-  def in?
+  def input?
     self.mode == 'in'
   end
 
-  def in_out?
+  def in_and_output?
     self.mode == 'in_out'
   end
 

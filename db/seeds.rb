@@ -71,6 +71,13 @@ buzzn_team_names.each do |user_name|
   end
   user_location.metering_points.first.users << user
   user.add_role :manager, user_location
+
+  # add user.contracting_party to all metering_point.contracts
+  user_location.metering_points.each do |metering_point|
+    metering_point.contract.contracting_party = user.contracting_party
+    metering_point.contract.save
+  end
+
   user_location.create_activity key: 'location.create', owner: user, recipient: user_location
 end
 

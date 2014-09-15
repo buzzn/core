@@ -9,6 +9,7 @@ class MeteringPointsController < InheritedResources::Base
     @group          = @metering_point.group
     @registers      = @metering_point.registers
     @meter          = @metering_point.meter
+    @contract       = @metering_point.contract
 
     register_data = []
     @registers.each do |register|

@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails'
+gem 'pg'
 gem 'sinatra'
 gem 'mongoid'
 gem 'moped'
@@ -74,12 +75,9 @@ group :production do
   gem 'asset_sync'
 end
 
-group :production, :staging do
-  gem 'pg'
-end
+
 
 group :development, :test do
-  gem 'mysql2'
   gem 'spring'
   gem 'lol_dba'
   gem 'listen'

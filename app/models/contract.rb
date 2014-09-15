@@ -18,6 +18,7 @@ class Contract < ActiveRecord::Base
   accepts_nested_attributes_for :external_contract, :reject_if => :all_blank
 
 
+
   def name
     self.metering_point.name
   end

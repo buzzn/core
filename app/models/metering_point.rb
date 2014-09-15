@@ -45,7 +45,7 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   scope :by_group_id_and_modes, lambda { |group_id, modes|
-    MeteringPoint.joins(:registers).where("mode in (?)", modes).where(group_id: group_id).uniq.order('mode DESC')
+    MeteringPoint.joins(:registers).where("mode in (?)", modes).where(group_id: group_id).order('mode DESC')
   }
 
 
@@ -120,16 +120,18 @@ class MeteringPoint < ActiveRecord::Base
     }
   end
 
-  def in_out?
-    mode == 'in_out'
+
+
+  def output?
+    self.mode == 'out'
   end
 
-  def out?
-    mode == 'out'
+  def input?
+    self.mode == 'in'
   end
 
-  def in?
-    mode == 'in'
+  def in_and_output?
+    self.mode == 'in_out'
   end
 
 
