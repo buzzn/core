@@ -1,15 +1,11 @@
 development:
-  adapter: mysql2
-  host: localhost
-  port: 8889
+  adapter: postgresql
+  encoding: unicode
   database: buzzn_development
-  username: root
-  encoding: utf8
+  pool: 5
 
 test:
-  adapter: mysql2
-  host: localhost
-  port: 8889
+  adapter: postgresql
+  encoding: unicode
   database: buzzn_test
-  username: root
-  encoding: utf8
+  pool: 5
