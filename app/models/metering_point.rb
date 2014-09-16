@@ -138,16 +138,13 @@ class MeteringPoint < ActiveRecord::Base
 
   private
 
-
     def first_day_init
       metering_point = self
       register       = registers.first # TODO not compatible with in_out smartmeter
       mspc           = metering_point.metering_service_provider_contract
-
-      date            = Time.now.in_time_zone
-      beginning       = date.beginning_of_day
-      ending          = date
-
+      date           = Time.now.in_time_zone
+      beginning      = date.beginning_of_day
+      ending         = date
       (beginning.to_i .. ending.to_i).step(1.minutes) do |time|
         start_time = time * 1000
         end_time   = Time.at(time).end_of_minute.to_i * 1000
@@ -161,7 +158,6 @@ class MeteringPoint < ActiveRecord::Base
                                                 end_time
                                               )
       end
-
     end
 
 

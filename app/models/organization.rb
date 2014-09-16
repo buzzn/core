@@ -1,4 +1,7 @@
 class Organization < ActiveRecord::Base
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :finders]
+
   has_many :distribution_system_operator_contracts
   has_many :electricity_supplier_contracts
   has_many :metering_service_provider_contracts

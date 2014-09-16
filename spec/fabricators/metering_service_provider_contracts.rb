@@ -1,5 +1,5 @@
 Fabricator :metering_service_provider_contract do
-  organization  { Organization.where(name: 'discovergy').first }
+  organization  { Organization.find('discovergy') }
   username      'test@buzzn.net'
   password      'xxxxxx'
 end
@@ -20,7 +20,7 @@ Fabricator :mspc_karin, from: :metering_service_provider_contract do
 end
 
 Fabricator :mspc_buzzn_metering, from: :metering_service_provider_contract do
-  organization  { Organization.where(name: 'buzzn_metering').first }
+  organization  { Organization.finde('buzzn-metering') }
   username 'team@buzzn.net'
   password '19200buzzn'
 end
