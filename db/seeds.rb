@@ -98,6 +98,10 @@ device = Fabricate(:hof_butenland_wind)
 niensweg.metering_points.first.devices << device
 jan_gerdes.add_role :manager, device
 
+niensweg.metering_points.each do |metering_point|
+  metering_point.contract.contracting_party = jan_gerdes.contracting_party
+  metering_point.contract.save
+end
 
 
 # karin
@@ -107,7 +111,14 @@ gautinger_weg.metering_points.first.users << karin
 karin.add_role :manager, gautinger_weg
 device = Fabricate(:pv_karin)
 karin.add_role :manager, device
+gautinger_weg.metering_points.each do |metering_point|
+  metering_point.contract.contracting_party = karin.contracting_party
+  metering_point.contract.save
+end
+
 @forstenrieder_weg.metering_points.first.users << karin
+
+
 buzzn_team.each do |buzzn_user|
   karin.friendships.create(friend: buzzn_user) # alle von buzzn sind freund von karin
   buzzn_user.friendships.create(friend: karin)
@@ -121,6 +132,10 @@ fichtenweg10       = Fabricate(:fichtenweg10)
 christian_schuetze.add_role :manager, fichtenweg10
 fichtenweg10.metering_points.first.users << christian_schuetze
 
+fichtenweg10.metering_points.each do |metering_point|
+  metering_point.contract.contracting_party = christian_schuetze.contracting_party
+  metering_point.contract.save
+end
 
 
 # felix
