@@ -24,20 +24,21 @@ end
 puts '-- seed development database --'
 
 puts '  organizations'
+Fabricate(:electricity_supplier, name: 'buzzn Energy')
 Fabricate(:electricity_supplier, name: 'E.ON')
 Fabricate(:electricity_supplier, name: 'RWE')
 Fabricate(:electricity_supplier, name: 'EnBW')
 Fabricate(:electricity_supplier, name: 'Vattenfall')
+
+Fabricate(:metering_service_provider, name: 'buzzn Metering')
 Fabricate(:metering_service_provider, name: 'Discovergy')
-Fabricate(:metering_service_provider, name: 'buzzn_metering')
 Fabricate(:metering_service_provider, name: 'Stadtwerke Augsburg')
 Fabricate(:metering_service_provider, name: 'Stadtwerke München')
+
 Fabricate(:transmission_system_operator, name: '50Herz')
 
 
-
-
-
+# electricity_supplier_contract
 
 
 
