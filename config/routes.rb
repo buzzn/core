@@ -63,6 +63,7 @@ Buzzn::Application.routes.draw do
   end
 
   resources :metering_service_provider_contracts
+  resources :metering_point_operator_contracts
   resources :electricity_supplier_contracts
   resources :contracting_parties
   resources :assets

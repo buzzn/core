@@ -5,6 +5,6 @@
       %h4.modal-title= t'edit_metering_point_operator_contract'
     .modal-body
       = simple_form_for @metering_point_operator_contract, remote: true do |f|
-        = render 'metering_point_operator_contract/form_fields', f: f
+        = render 'metering_point_operator_contracts/form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-success'
         = @metering_point_operator_contract.link_to_delete

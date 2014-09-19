@@ -93,6 +93,8 @@
         = render @metering_point.electricity_supplier_contracts
       - else
         .alert.alert-danger= t'no_contract_for_metering_point'
+      - if @metering_point.metering_point_operator_contracts.empty?
+        = link_to 'new', new_metering_point_operator_contract_path
 
 
 
