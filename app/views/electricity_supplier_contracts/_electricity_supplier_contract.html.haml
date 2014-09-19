@@ -1,0 +1,66 @@
+.block{id: "electricity_supplier_contract_#{electricity_supplier_contract.id}"}
+  .header.no-border
+    = electricity_supplier_contract.link_to_edit
+    %h2= electricity_supplier_contract.tariff
+  .content.no-padding
+    %table.table
+      %tbody
+        %tr
+          %td= t('contracting_party')
+          %td= link_to electricity_supplier_contract.contracting_party.user.name, electricity_supplier_contract.contracting_party.user.profile
+        %tr
+          %td= t('status')
+          %td= electricity_supplier_contract.status
+        %tr
+          %td= t('forecast_watt_hour_pa')
+          %td= electricity_supplier_contract.forecast_watt_hour_pa
+        %tr
+          %td= t('price_cents')
+          %td= electricity_supplier_contract.price_cents
+        %tr
+          %td= t('commissioning')
+          %td= electricity_supplier_contract.commissioning
+        %tr
+          %td= t('termination')
+          %td= electricity_supplier_contract.termination
+        %tr
+          %td= t('signing_user')
+          %td= electricity_supplier_contract.signing_user
+        %tr
+          %td= t('terms')
+          %td= electricity_supplier_contract.terms
+        %tr
+          %td= t('confirm_pricing_model')
+          %td= electricity_supplier_contract.confirm_pricing_model
+        %tr
+          %td= t('power_of_attorney')
+          %td= electricity_supplier_contract.power_of_attorney
+
+  .header.no-border
+    - if electricity_supplier_contract.address
+      - @address = electricity_supplier_contract.address
+      %h2= t("contract_address")
+    - elsif electricity_supplier_contract.contracting_party
+      - @address = electricity_supplier_contract.contracting_party.address
+      %h2= t("contracting_party_address")
+
+
+  .content.no-padding
+    %table.table
+      %tbody
+        %tr
+          %td= t('street')
+          %td= "#{@address.street_name} #{@address.street_number}"
+        %tr
+          %td= t('city')
+          %td= "#{@address.zip} #{@address.city}"
+        %tr
+          %td= t('state')
+          %td= @address.state
+
+
+
+
+
+
+

@@ -1,11 +1,11 @@
-class ContractDecorator < Draper::Decorator
+class ElectricitySupplierContractDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
 
   def link_to_edit
     link_to(
       t('edit'),
-      edit_contract_path(model),
+      edit_electricity_supplier_contract_path(model),
       {
         remote: true,
         class: 'start_modal btn btn-danger pull-right',

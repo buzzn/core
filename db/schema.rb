@@ -124,24 +124,6 @@ ActiveRecord::Schema.define(version: 20140916162550) do
   add_index "contracting_parties", ["organization_id"], name: "index_contracting_parties_on_organization_id", using: :btree
   add_index "contracting_parties", ["user_id"], name: "index_contracting_parties_on_user_id", using: :btree
 
-  create_table "contracts", force: true do |t|
-    t.string   "status"
-    t.decimal  "price_cents",           precision: 16, scale: 0, default: 0
-    t.string   "signing_user"
-    t.boolean  "terms"
-    t.boolean  "confirm_pricing_model"
-    t.boolean  "power_of_attorney"
-    t.date     "commissioning"
-    t.date     "termination"
-    t.decimal  "forecast_watt_hour_pa"
-    t.string   "mode"
-    t.integer  "contracting_party_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "contracts", ["contracting_party_id"], name: "index_contracts_on_contracting_party_id", using: :btree
-
   create_table "devices", force: true do |t|
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
@@ -177,15 +159,26 @@ ActiveRecord::Schema.define(version: 20140916162550) do
   add_index "distribution_system_operator_contracts", ["organization_id"], name: "index_distribution_system_operator_contracts_on_organization_id", using: :btree
 
   create_table "electricity_supplier_contracts", force: true do |t|
+    t.string   "tariff"
+    t.decimal  "price_cents",           precision: 16, scale: 0, default: 0
+    t.string   "status"
+    t.decimal  "forecast_watt_hour_pa"
+    t.date     "commissioning"
+    t.date     "termination"
+    t.boolean  "terms"
+    t.boolean  "confirm_pricing_model"
+    t.boolean  "power_of_attorney"
+    t.string   "signing_user"
     t.string   "customer_number"
     t.string   "contract_number"
-    t.decimal  "forecast_watt_hour_pa"
+    t.integer  "contracting_party_id"
     t.integer  "metering_point_id"
     t.integer  "organization_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "electricity_supplier_contracts", ["contracting_party_id"], name: "index_electricity_supplier_contracts_on_contracting_party_id", using: :btree
   add_index "electricity_supplier_contracts", ["metering_point_id"], name: "index_electricity_supplier_contracts_on_metering_point_id", using: :btree
   add_index "electricity_supplier_contracts", ["organization_id"], name: "index_electricity_supplier_contracts_on_organization_id", using: :btree
 

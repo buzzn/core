@@ -1,9 +1,9 @@
 Fabricator :metering_point do
   address_addition  'Verbrauch'
   i = 1
-  uid               {"DE001068825151000000000000#{2677114 + (i += 1)}"}
-  registers          { Fabricate(:meter).registers }
-  contract          { Fabricate(:contract) }
+  uid                                    {"DE001068825151000000000000#{2677114 + (i += 1)}"}
+  registers                              { Fabricate(:meter).registers }
+  electricity_supplier_contracts         { [Fabricate(:electricity_supplier_contract)] }
 end
 
 
@@ -40,9 +40,9 @@ Fabricator :mp_z3, from: :metering_point do
   address_addition  'Carport'
   registers {
     Fabricate(:out_meter,
-              manufacturer_name:            'Kamstrup',
-              manufacturer_product_name:  '382J',
-              manufacturer_product_serialnumber:    '15028641',
+              manufacturer_name: 'Kamstrup',
+              manufacturer_product_name: '382J',
+              manufacturer_product_serialnumber: '15028641',
               ).registers
   }
 end
@@ -73,7 +73,7 @@ end
 Fabricator :mp_pv_karin, from: :metering_point do
   address_addition  'Photovoltaik'
   registers { Fabricate(:easymeter_60051431).registers }
-  metering_service_provider_contract {Fabricate(:mspc_karin)}
+  metering_service_provider_contracts {[Fabricate(:mspc_karin)]}
 end
 
 
@@ -83,7 +83,7 @@ end
 Fabricator :mp_stefans_bhkw, from: :metering_point do
   address_addition  'BHKW Keller'
   registers { Fabricate(:in_out_meter).registers }
-  metering_service_provider_contract {Fabricate(:mspc_stefan)}
+  metering_service_provider_contracts {[Fabricate(:mspc_stefan)]}
 end
 
 
@@ -93,7 +93,7 @@ end
 Fabricator :mp_hof_butenland_wind, from: :metering_point do
   address_addition  'Acker'
   registers { Fabricate(:out_meter).registers }
-  metering_service_provider_contract { Fabricate(:metering_service_provider_contract) }
+  metering_service_provider_contracts { [Fabricate(:metering_service_provider_contract)] }
 end
 
 
@@ -102,7 +102,7 @@ end
 Fabricator :mp_cs_1, from: :metering_point do
   address_addition  'Wohnung'
   registers { Fabricate(:easymeter_1124001747).registers }
-  metering_service_provider_contract {Fabricate(:mspc_justus)}
+  metering_service_provider_contracts {[Fabricate(:mspc_justus)]}
 end
 
 
