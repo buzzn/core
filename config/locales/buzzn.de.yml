@@ -303,3 +303,13 @@ de:
   you_have_no_metering_point: Dieser Standort hat noch keinen Zählpunkt
   create_new_metering_point: Neuen Zählpunkt hinzufügen
   take_current: Strom nehmen
+  electricity_supplier: Stromlieferant
+  metering_service_provider: Messdienstleister
+  metering_point_operator: Messstellenbetreiber
+  distribution_system_operator: Verteilnetzbetreiber
+  transmission_system_operator: Übertragungsnetzbetreiber
+  electricity_supplier_contract: Stromlieferantenvertrag
+  metering_service_provider_contract: Messdienstleistungsvertrag
+  metering_point_operator_contract: Messstellenbetreiber Vertrag
+  distribution_system_operator_contract: Verteilnetzbetreiber Vertrag
+  transmission_system_operator_contract: Übertragungsnetzbetreiber Vertrag
