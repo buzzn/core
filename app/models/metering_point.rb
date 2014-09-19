@@ -18,20 +18,21 @@ class MeteringPoint < ActiveRecord::Base
   belongs_to :location
   acts_as_list scope: :location
 
-  belongs_to :contract, dependent: :destroy
-
   belongs_to :group
 
   has_many :registers, dependent: :destroy
   accepts_nested_attributes_for :registers, reject_if: :all_blank
 
-  has_one :distribution_system_operator_contract, dependent: :destroy
-  has_one :electricity_supplier_contract, dependent: :destroy
-  has_one :metering_service_provider_contract, dependent: :destroy
+  has_many :electricity_supplier_contracts,         dependent: :destroy
+  has_many :metering_service_provider_contracts,    dependent: :destroy
+  has_many :metering_point_operator_contracts,      dependent: :destroy
+  has_many :distribution_system_operator_contracts, dependent: :destroy
+  has_many :transmission_system_operator_contracts, dependent: :destroy
+
   has_many :devices
 
   has_many :metering_point_users
-  has_many :users, :through => :metering_point_users
+  has_many :users, through: :metering_point_users, dependent: :destroy
 
   validates :uid, uniqueness: true #presence: true
   validates :address_addition, presence: true

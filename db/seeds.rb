@@ -14,7 +14,8 @@ def user_with_location
   user.contracting_party      = contracting_party
   metering_point              = location.metering_points.first
   metering_point.users        << user
-  contracting_party.contracts << metering_point.contract
+  contracting_party.electricity_supplier_contracts << metering_point.electricity_supplier_contracts.first
+
   user.add_role :manager, location
   return user, location, metering_point
 end
@@ -36,9 +37,6 @@ Fabricate(:metering_service_provider, name: 'Stadtwerke Augsburg')
 Fabricate(:metering_service_provider, name: 'Stadtwerke München')
 
 Fabricate(:transmission_system_operator, name: '50Herz')
-
-
-# electricity_supplier_contract
 
 
 
@@ -75,8 +73,8 @@ buzzn_team_names.each do |user_name|
 
   # add user.contracting_party to all metering_point.contracts
   user_location.metering_points.each do |metering_point|
-    metering_point.contract.contracting_party = user.contracting_party
-    metering_point.contract.save
+    metering_point.electricity_supplier_contracts.first.contracting_party = user.contracting_party
+    metering_point.electricity_supplier_contracts.first.save
   end
 
   user_location.create_activity key: 'location.create', owner: user, recipient: user_location
@@ -100,8 +98,8 @@ niensweg.metering_points.first.devices << device
 jan_gerdes.add_role :manager, device
 
 niensweg.metering_points.each do |metering_point|
-  metering_point.contract.contracting_party = jan_gerdes.contracting_party
-  metering_point.contract.save
+  metering_point.electricity_supplier_contracts.first.contracting_party = jan_gerdes.contracting_party
+  metering_point.electricity_supplier_contracts.first.save
 end
 
 
@@ -113,8 +111,8 @@ karin.add_role :manager, gautinger_weg
 device = Fabricate(:pv_karin)
 karin.add_role :manager, device
 gautinger_weg.metering_points.each do |metering_point|
-  metering_point.contract.contracting_party = karin.contracting_party
-  metering_point.contract.save
+  metering_point.electricity_supplier_contracts.first.contracting_party = karin.contracting_party
+  metering_point.electricity_supplier_contracts.first.save
 end
 
 @forstenrieder_weg.metering_points.first.users << karin
@@ -134,8 +132,8 @@ christian_schuetze.add_role :manager, fichtenweg10
 fichtenweg10.metering_points.first.users << christian_schuetze
 
 fichtenweg10.metering_points.each do |metering_point|
-  metering_point.contract.contracting_party = christian_schuetze.contracting_party
-  metering_point.contract.save
+  metering_point.electricity_supplier_contracts.first.contracting_party = christian_schuetze.contracting_party
+  metering_point.electricity_supplier_contracts.first.save
 end
 
 

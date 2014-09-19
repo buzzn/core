@@ -5,8 +5,6 @@
   %h4= @metering_point.name
   - if current_user.can_update?(@metering_point)
     = @metering_point.link_to_edit
-    - if !@metering_point.metering_service_provider_contract
-      = link_to t('new_mspc'), new_metering_service_provider_contract_path(@metering_point.id)
 
 
   %h5.page-header= t('belongs_to_location')
@@ -91,8 +89,8 @@
 
 
     #contracts.tab-pane
-      - if @contract
-        = render @contract
+      - if @metering_point.electricity_supplier_contracts
+        = render @metering_point.electricity_supplier_contracts
       - else
         .alert.alert-danger= t'no_contract_for_metering_point'
 

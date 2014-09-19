@@ -3,13 +3,12 @@ class MeteringPointsController < InheritedResources::Base
   respond_to :html, :json, :js
 
   def show
-    @metering_point = MeteringPoint.find(params[:id]).decorate
-    @users          = @metering_point.users
-    @devices        = @metering_point.devices
-    @group          = @metering_point.group
-    @registers      = @metering_point.registers
-    @meter          = @metering_point.meter
-    @contract       = @metering_point.contract
+    @metering_point                   = MeteringPoint.find(params[:id]).decorate
+    @users                            = @metering_point.users
+    @devices                          = @metering_point.devices
+    @group                            = @metering_point.group
+    @registers                        = @metering_point.registers
+    @meter                            = @metering_point.meter
 
     register_data = []
     @registers.each do |register|

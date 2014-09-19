@@ -7,7 +7,12 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :users
   decorates_association :location
   decorates_association :group
-  decorates_association :contract
+  decorates_association :electricity_supplier_contracts
+  decorates_association :metering_service_provider_contracts
+  decorates_association :metering_point_operator_contracts
+  decorates_association :distribution_system_operator_contracts
+  decorates_association :transmission_system_operator_contracts
+
 
   def thumb_small
     link_to image_tag_small, model, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => model.name }, rel: 'tooltip'

@@ -24,6 +24,9 @@ Buzzn::Application.routes.draw do
   resources :meters
   resources :registers
 
+
+
+
   resources :devices do
     member do
       get :new_out
@@ -60,14 +63,13 @@ Buzzn::Application.routes.draw do
   end
 
   resources :metering_service_provider_contracts
+  resources :electricity_supplier_contracts
   resources :contracting_parties
-  resources :contracts
-  resources :private_grids
   resources :assets
 
 
-
   resources :startpage
+
 
   resources :wizard_consumers do
     collection do
