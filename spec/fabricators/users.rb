@@ -79,6 +79,12 @@ Fabricator :christian_schuetze, from: :user do
   contracting_party   { Fabricate(:contracting_party) }
 end
 
+Fabricator :hans_dieter_hopf, from: :user do
+  email               'hans.dieter.hopf@gmail.de'
+  profile             { Fabricate(:profile_hans_dieter_hopf) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
 
 
 

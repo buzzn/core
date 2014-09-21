@@ -8,14 +8,6 @@ class LocationDecorator < Draper::Decorator
   decorates_association :users
 
 
-  def title
-    if name
-      name
-    else
-      address.name
-    end
-  end
-
   def thumb_small
     link_to image_tag_small, model
   end

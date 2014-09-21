@@ -7,7 +7,22 @@ class Location < ActiveRecord::Base
   tracked recipient: Proc.new{ |controller, model| controller && model }
 
   extend FriendlyId
-  friendly_id :name, use: [:slugged, :finders]
+  friendly_id :slug_candidates, use: [:slugged, :finders]
+  def slug_candidates
+    [
+      :short_name,
+      :id
+    ]
+  end
+
+
+  def name
+    short_name
+  end
+
+  delegate :short_name, to: :address, allow_nil: true
+  delegate :long_name, to: :address, allow_nil: true
+
 
   has_many :users, -> { uniq }, :through => :metering_points
   has_many :devices, -> { uniq }, :through => :metering_points
@@ -21,8 +36,5 @@ class Location < ActiveRecord::Base
 
   has_many :metering_points, dependent: :destroy
   accepts_nested_attributes_for :metering_points, reject_if: :all_blank, allow_destroy: true
-
-  validates :name, presence: true, uniqueness: true
-
 
 end

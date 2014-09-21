@@ -50,26 +50,6 @@ class MeteringPoint < ActiveRecord::Base
   }
 
 
-  def name
-    case mode
-    when 'in'
-      address_addition
-    when 'in_out'
-      "#{mode} #{generator_type_names}-#{address_addition}"
-    when 'out'
-      "#{generator_type_names} #{address_addition}"
-    end
-  end
-
-
-  def generator_type_names
-    names = []
-    generator_types = devices.map {|i| i.generator_type }.uniq
-    generator_types.each do |type|
-      names << "#{type}_short"
-    end
-    return names.join(', ')
-  end
 
 
 

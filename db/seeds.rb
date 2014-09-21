@@ -67,12 +67,14 @@ buzzn_team_names.each do |user_name|
     device        = Fabricate(:bhkw_justus)
     user.add_role :manager, device
   when 'felix'
-    gocycle       = Fabricate(:gocycle)
-    user.add_role :manager, gocycle
+    @gocycle       = Fabricate(:gocycle)
+    user.add_role :manager, @gocycle
     user_location = Fabricate(:muehlenkamp)
   when 'stefan'
+    @bhkw_stefan       = Fabricate(:bhkw_stefan)
     @forstenrieder_weg = user_location = Fabricate(:forstenrieder_weg)
-    user.add_role :manager, Fabricate(:bhkw_stefan)
+    @forstenrieder_weg.metering_points.first.devices << @bhkw_stefan
+    user.add_role :manager, @bhkw_stefan
   else
     user_location = Fabricate(:location)
   end
@@ -116,8 +118,9 @@ karin = Fabricate(:karin)
 gautinger_weg = Fabricate(:gautinger_weg)
 gautinger_weg.metering_points.first.users << karin
 karin.add_role :manager, gautinger_weg
-device = Fabricate(:pv_karin)
-karin.add_role :manager, device
+pv_karin = Fabricate(:pv_karin)
+karin.add_role :manager, pv_karin
+gautinger_weg.metering_points.first.devices << pv_karin
 gautinger_weg.metering_points.each do |metering_point|
   metering_point.electricity_supplier_contracts.first.contracting_party = karin.contracting_party
   metering_point.electricity_supplier_contracts.first.save
@@ -145,11 +148,10 @@ fichtenweg10.metering_points.each do |metering_point|
 end
 
 
-# felix
+# felix zieht in forstenrieder_weg ein
 felix = User.where(email: 'felix@buzzn.net').first
 @forstenrieder_weg.metering_points.first.users << felix
-
-
+@forstenrieder_weg.metering_points.first.devices << @gocycle
 
 
 puts '20 more users with location'
@@ -175,8 +177,11 @@ karins_pv_group.create_activity key: 'group.create', owner: karin, recipient: ka
 
 
 puts 'Group Hopf(localpool)'
-group_hof_butenland = Fabricate(:group_hopf)
+hans_dieter_hopf  = Fabricate(:hans_dieter_hopf)
+location_hopf     = Fabricate(:location_hopf)
+group_hopf     = Fabricate(:group, name: 'Hopf Strom')
 
+group_hopf.metering_points << location_hopf.metering_points
 
 
 

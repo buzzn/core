@@ -85,6 +85,12 @@ Fabricator :profile_christian_schuetze, from: :profile do
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'christian_schuetze.jpg')) }
 end
 
+Fabricator :profile_hans_dieter_hopf, from: :profile do
+  first_name  'Hans Dieter'
+  last_name   'Hopf'
+end
+
+
 
 
 

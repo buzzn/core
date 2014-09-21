@@ -285,7 +285,6 @@ ActiveRecord::Schema.define(version: 20140916162550) do
   add_index "ilns", ["organization_id"], name: "index_ilns_on_organization_id", using: :btree
 
   create_table "locations", force: true do |t|
-    t.string   "name"
     t.string   "slug"
     t.boolean  "new_habitation",  default: false
     t.date     "inhabited_since"
@@ -330,6 +329,7 @@ ActiveRecord::Schema.define(version: 20140916162550) do
     t.date     "regular_reeding"
     t.string   "regular_interval"
     t.string   "meter_type"
+    t.boolean  "virtual",          default: false
     t.integer  "location_id"
     t.integer  "contract_id"
     t.integer  "group_id"
@@ -367,6 +367,7 @@ ActiveRecord::Schema.define(version: 20140916162550) do
     t.string   "meter_size"
     t.string   "rate"
     t.string   "mode"
+    t.string   "image"
     t.string   "measurement_capture"
     t.string   "mounting_method"
     t.boolean  "virtual"

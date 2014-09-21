@@ -12,6 +12,7 @@ class CreateMeters < ActiveRecord::Migration
       t.string :meter_size
       t.string :rate
       t.string :mode
+      t.string :image
       t.string :measurement_capture
       t.string :mounting_method
       t.boolean :virtual

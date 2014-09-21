@@ -10,7 +10,7 @@ end
 
 
 Fabricator :mp_z1, from: :metering_point do
-  address_addition  'Übergabe'
+  address_addition  'Keller'
 
   registers {
     Fabricate( :in_out_meter,
@@ -71,7 +71,7 @@ end
 
 # karins pv anlage
 Fabricator :mp_pv_karin, from: :metering_point do
-  address_addition  'Photovoltaik'
+  address_addition  'Dach'
   registers { Fabricate(:easymeter_60051431).registers }
   metering_service_provider_contracts {[Fabricate(:mspc_karin)]}
 end
@@ -81,7 +81,7 @@ end
 
 # stefans bhkw anlage
 Fabricator :mp_stefans_bhkw, from: :metering_point do
-  address_addition  'BHKW Keller'
+  address_addition  'Keller'
   registers { Fabricate(:in_out_meter).registers }
   metering_service_provider_contracts {[Fabricate(:mspc_stefan)]}
 end
@@ -111,8 +111,40 @@ end
 
 
 
+# Z1  Nr. 60118470 für Hans-Dieter Hopf übergame  (Zweirichtungszähler)
+Fabricator :mp_60118470, from: :metering_point do
+  address_addition  'Keller'
+  registers { Fabricate(:easymeter_60118470).registers }
+  electricity_supplier_contracts         { [] }
+end
 
+# Z2  Nr. 60009316 für BHKW Erzeugung (Einrichtungszähler Einspeisung)
+Fabricator :mp_60009316, from: :metering_point do
+  address_addition  'Keller'
+  registers { Fabricate(:easymeter_60009316).registers }
+  electricity_supplier_contracts         { [] }
+end
 
+# ZN1 Nr. 60009272 für Thomas Hopf  (Einrichtungszähler Bezug)
+Fabricator :mp_60009272, from: :metering_point do
+  address_addition  'Wohnung'
+  registers { Fabricate(:easymeter_60009272).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+# ZN2 Nr. 60009348 für Mauela Beier (Einrichtungszähler Bezug)
+Fabricator :mp_60009348, from: :metering_point do
+  address_addition  'Restaurant Beier'
+  registers { Fabricate(:easymeter_60009348).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+# Wohnung Hr. Hopf ("ZN3") ist ungezählt kann aber berechnet werden
+Fabricator :mp_hans_dieter_hopf, from: :metering_point do
+  address_addition  'Wohnung'
+  virtual true
+  electricity_supplier_contracts         { [] }
+end
 
 
 

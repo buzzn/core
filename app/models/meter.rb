@@ -6,6 +6,8 @@ class Meter < ActiveRecord::Base
 
   has_many :equipments
 
+  mount_uploader :image, PictureUploader
+
   def self.manufacturers
     %w{
       ferraris

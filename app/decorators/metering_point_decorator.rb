@@ -15,7 +15,7 @@ class MeteringPointDecorator < Draper::Decorator
 
 
   def thumb_small
-    link_to image_tag_small, model, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => model.name }, rel: 'tooltip'
+    link_to image_tag_small, model, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => name }, rel: 'tooltip'
   end
 
   def image_tag_small
@@ -45,6 +45,32 @@ class MeteringPointDecorator < Draper::Decorator
         :confirm => t('are_you_sure')
       })
   end
+
+
+
+  def name
+    case mode
+    when 'in'
+      address_addition
+    when 'in_out'
+      "#{t(mode)} #{generator_type_names}-#{address_addition}"
+    when 'out'
+      "#{t(mode)} #{generator_type_names} #{address_addition}"
+    end
+  end
+
+
+  def generator_type_names
+    names = []
+    generator_types = devices.map {|i| i.generator_type }.uniq
+    generator_types.each do |type|
+      names << t("#{type}_short") if type
+    end
+    return names.join(', ')
+  end
+
+
+
 
 
   def link_to_show
