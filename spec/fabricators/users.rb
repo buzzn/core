@@ -7,9 +7,6 @@ Fabricator :user do
   after_create { |user | user.confirm! }
 end
 
-Fabricator :admin, from: :user do
-  email       'admin@buzzn.net'
-end
 
 Fabricator :felix, from: :user do
   email               'felix@buzzn.net'

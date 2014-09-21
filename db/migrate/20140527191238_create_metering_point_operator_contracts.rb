@@ -2,6 +2,8 @@ class CreateMeteringPointOperatorContracts < ActiveRecord::Migration
   def change
     create_table :metering_point_operator_contracts do |t|
 
+      t.string :status
+      t.decimal :price_cents, precision: 16, default: 0
       t.string :customer_number
       t.string :contract_number
       t.string :username

@@ -31,32 +31,40 @@ Fabricate(:electricity_supplier, name: 'RWE')
 Fabricate(:electricity_supplier, name: 'EnBW')
 Fabricate(:electricity_supplier, name: 'Vattenfall')
 
+Fabricate(:transmission_system_operator, name: '50Hertz Transmission')
+Fabricate(:transmission_system_operator, name: 'Tennet TSO')
+Fabricate(:transmission_system_operator, name: 'Amprion')
+Fabricate(:transmission_system_operator, name: 'TransnetBW')
+
+# Verteilnetzbetreiber (Verteilung an private Haushalte und Kleinverbraucher)
+Fabricate(:distribution_system_operator, name: 'Vattenfall Distribution Berlin GmbH')
+Fabricate(:distribution_system_operator, name: 'E.ON Bayern AG')
+Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
+
+# Messdienstleistung (Ablesung und Messung)
 Fabricate(:metering_service_provider, name: 'buzzn Metering')
-Fabricate(:metering_service_provider, name: 'Discovergy')
 Fabricate(:metering_service_provider, name: 'Stadtwerke Augsburg')
 Fabricate(:metering_service_provider, name: 'Stadtwerke München')
 
-Fabricate(:transmission_system_operator, name: '50Herz')
+# Messstellenbetreiber (Einbau, Betrieb und Wartung)
+Fabricate(:metering_point_operator, name: 'Discovergy')
 
 
 
-admin = Fabricate(:admin)
-admin.add_role 'admin'
 
 buzzn_team_names = %w[ felix justus danusch thomas martina stefan ole philipp christian ]
 buzzn_team = []
-puts 'single meters for:'
 buzzn_team_names.each do |user_name|
   puts "  #{user_name}"
   buzzn_team << user = Fabricate(user_name)
   case user_name
   when 'justus'
-    @fichtenweg8 = user_location = Fabricate(:fichtenweg8)
-    device = Fabricate(:dach_pv_justus)
+    @fichtenweg8  = user_location = Fabricate(:fichtenweg8)
+    device        = Fabricate(:dach_pv_justus)
     user.add_role :manager, device
-    device = Fabricate(:carport_pv_justus)
+    device        = Fabricate(:carport_pv_justus)
     user.add_role :manager, device
-    device = Fabricate(:bhkw_justus)
+    device        = Fabricate(:bhkw_justus)
     user.add_role :manager, device
   when 'felix'
     gocycle       = Fabricate(:gocycle)
@@ -163,6 +171,12 @@ karins_pv_group.metering_points << User.where(email: 'christian@buzzn.net').firs
 karins_pv_group.metering_points << User.where(email: 'felix@buzzn.net').first.metering_points.first
 karins_pv_group.metering_points << User.where(email: 'thomas@buzzn.net').first.metering_points.first
 karins_pv_group.create_activity key: 'group.create', owner: karin, recipient: karins_pv_group
+
+
+
+puts 'Group Hopf(localpool)'
+group_hof_butenland = Fabricate(:group_hopf)
+
 
 
 

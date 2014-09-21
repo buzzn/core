@@ -12,6 +12,16 @@ Fabricator :group_hof_butenland, from: :group do
 end
 
 
+
+Fabricator :group_hopf, from: :group do
+  name        'Hopf'
+
+  assets      { [
+                 Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'hof_butenland.jpg')))
+                 ] }
+end
+
+
 Fabricator :group_home_of_the_brave, from: :group do
   name        'Home of the Brave'
   assets      { [
