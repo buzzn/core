@@ -4,7 +4,7 @@
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'new_metering_point_operator_contract'
     .modal-body
-      = simple_form_for @metering_point_operator_contract, remote: false do |f|
+      = simple_form_for @metering_point_operator_contract, remote: false, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
         = f.input :metering_point_id, input_html: { value: params[:metering_point_id] }, as: :hidden
         = f.association :organization, collection: Organization.metering_point_operators, input_html: { class: 'select2'}
         = render 'metering_point_operator_contracts/form_fields', f: f

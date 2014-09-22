@@ -4,5 +4,7 @@ ready = ->
 
 $(document).ready(ready)
 $(document).on('page:load', ready)
-DependentFields.bind()
+$(document).ready = ->
+  DependentFields.bind()
+  return
 

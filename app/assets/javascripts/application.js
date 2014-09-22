@@ -36,5 +36,6 @@
 
 //= require turbolinks
 
-//= require dependent-fields
 //= require underscore
+//= require dependent-fields
+

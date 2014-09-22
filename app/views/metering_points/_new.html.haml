@@ -4,7 +4,7 @@
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'new_metering_point'
     .modal-body
-      = simple_form_for @metering_point do |f|
+      = simple_form_for @metering_point, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
         = f.input :location_id, input_html: { value: params[:location_id] }, as: :hidden
         = render 'metering_points/form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-success'

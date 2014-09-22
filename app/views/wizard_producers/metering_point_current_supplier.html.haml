@@ -19,7 +19,7 @@
       .forminput.box
         %h1= t'metering_point_current_supplier'
 
-        = simple_form_for @electricity_supplier_contract, url: url_for( action: 'metering_point_current_supplier_update', controller: 'wizard_producers'), method: 'put'  do |f|
+        = simple_form_for @electricity_supplier_contract, url: url_for( action: 'metering_point_current_supplier_update', controller: 'wizard_producers'), method: 'put', html: {class: 'form-horizontal' }, wrapper: :horizontal_form  do |f|
           = f.association :organization, collection: Organization.electricity_suppliers
           = f.input :customer_number
           = f.input :contract_number

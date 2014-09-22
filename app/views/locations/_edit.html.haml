@@ -4,7 +4,7 @@
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'edit_location'
     .modal-body
-      = simple_form_for @location, remote: true do |f|
+      = simple_form_for @location, remote: true, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
         = render 'locations/form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-success'
         = @location.link_to_delete

@@ -4,6 +4,6 @@
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'new_location'
     .modal-body
-      = simple_form_for @location, remote: false do |f|
+      = simple_form_for @location, remote: false, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
         = render 'locations/form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-success'

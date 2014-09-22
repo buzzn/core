@@ -1,4 +1,4 @@
-= simple_form_for @contracting_party do |f|
+= simple_form_for @contracting_party do, html: {class: 'form-horizontal' }, wrapper: :horizontal_form |f|
   = f.input :legal_entity, collection: ['ich', 'gmbh'], include_blank: false, input_html: { class: 'select2' }, disabled: true
   = f.association :contracts, disabled: true
 

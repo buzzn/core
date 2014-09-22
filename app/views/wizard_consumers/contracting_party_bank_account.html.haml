@@ -18,6 +18,6 @@
     .col-md-4
       .forminput.box
         %h1= t'contracting_party_bank_account'
-        = simple_form_for @bank_account, url: url_for( action: 'contracting_party_bank_account_update', controller: 'wizard_consumers'), method: 'put'  do |f|
+        = simple_form_for @bank_account, url: url_for( action: 'contracting_party_bank_account_update', controller: 'wizard_consumers'), method: 'put', html: {class: 'form-horizontal' }, wrapper: :horizontal_form  do |f|
           = render 'bank_accounts/form_fields', f: f
           = f.submit t("continue"), class: 'btn btn-success', id: 'submit'
