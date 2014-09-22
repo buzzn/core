@@ -36,47 +36,47 @@
         %h5.page-header= t('group_requests')
         = render @group_metering_point_requests
 
-    %ul.nav.nav-pills#mytab.nav-spacer
-      %li.active
-        %a{"data-toggle" => "tab", href: "#metering_points"}
-          = t'metering_points'
-      %li
-        %a{"data-toggle" => "tab", href: "#users"}
-          = t'members'
-      %li
-        %a{"data-toggle" => "tab", href: "#assets"}
-          = t'assets'
+  %ul.nav.nav-pills#mytab.nav-spacer
+    %li.active
+      %a{"data-toggle" => "tab", href: "#metering_points"}
+        = t'metering_points'
+    %li
+      %a{"data-toggle" => "tab", href: "#users"}
+        = t'members'
+    %li
+      %a{"data-toggle" => "tab", href: "#assets"}
+        = t'assets'
 
-    .tab-content
-      #metering_points.tab-pane.active
-        - @metering_points.each do |metering_point|
-          = render metering_point.decorate
+  .tab-content
+    #metering_points.tab-pane.active
+      - @metering_points.each do |metering_point|
+        = render metering_point.decorate
 
-      #users.tab-pane
-        %article.sidebar_module.energy_producers.residents
-          %h5.page-header= t('energy_producers')
-          %ul
-            - @energy_producers.each do |user|
-              = render user.profile
-        .clear
+    #users.tab-pane
+      %article.sidebar_module.energy_producers.residents
+        %h5.page-header= t('energy_producers')
+        %ul
+          - @energy_producers.each do |user|
+            = render user.profile
+      .clear
 
-        %article.sidebar_module.energy_consumers.residents
-          %h5.page-header= t('energy_consumers')
-          %ul
-            - @energy_consumers.each do |user|
-              = render user.profile
-        .clear
+      %article.sidebar_module.energy_consumers.residents
+        %h5.page-header= t('energy_consumers')
+        %ul
+          - @energy_consumers.each do |user|
+            = render user.profile
+      .clear
 
-        %article.sidebar_module.interested-members.residents
-          %h5.page-header= t('interested_members')
-          %ul
-            - @interested_members.each do |user|
-              =render user.profile
-        .clear
+      %article.sidebar_module.interested-members.residents
+        %h5.page-header= t('interested_members')
+        %ul
+          - @interested_members.each do |user|
+            =render user.profile
+      .clear
 
-      #assets.tab-pane
-        .assets
-          = render @group.assets
+    #assets.tab-pane
+      .assets
+        = render @group.assets
 
 
 

@@ -3,8 +3,9 @@
     .header.no-border
       .marker-box.pull-left
         = metering_point.image_tag_small
-      - if current_user.can_update?(metering_point)
-        = link_to t('details'), metering_point, class: 'btn btn-default pull-right'
+      - if user_signed_in?
+        - if current_user.can_update?(metering_point)
+          = link_to t('details'), metering_point, class: 'btn btn-default pull-right'
       %h2= metering_point.name
 
     = render metering_point.registers
@@ -23,8 +24,9 @@
         %ul
           - metering_point.metering_point_users.each do |user|
             = render user.user.profile.decorate
-          - if current_user.can_update?(metering_point)
-            = metering_point.edit_users
+          - if user_signed_in?
+            - if current_user.can_update?(metering_point)
+              = metering_point.edit_users
         .clearfix
       .clear
       .stat-data
@@ -45,6 +47,7 @@
       .devices-data
         - metering_point.devices.each do |device|
           = render device.decorate
-        - if current_user.can_update?(metering_point)
-          = metering_point.edit_devices
+        - if user_signed_in?
+          - if current_user.can_update?(metering_point)
+            = metering_point.edit_devices
       .clear
