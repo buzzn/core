@@ -266,7 +266,7 @@ puts "Creating SLP"
 infile = File.new("#{Rails.root}/db/MSCONS_TL_9907399000009_9905229000008_20130920_40010113207322_RH0.txt", "r")
 all_lines = infile.readline
 infile.close
-watt_hour = 0.0
+watt_hour = 0.0 #note: slp is in (kWh)
 while true do
   posOfSeperator = all_lines.index("'")
   if posOfSeperator == nil
@@ -279,7 +279,7 @@ while true do
       dateString = remString[0..3] + "-" + remString[4..5] + "-" + remString[6..7] + " " + remString[8..9] + ":" + remString[10..11]
       Reading.create(
         timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
-        watt_hour: watt_hour,
+        watt_hour: watt_hour * 1000, #convert from kWh to Wh
         source: "slp"
       )
     elsif parseString.include? "QTY"

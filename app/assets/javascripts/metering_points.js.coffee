@@ -36,6 +36,7 @@ $(".metering_points.show").ready ->
       actualLabel = "Aktuell"
 
 
+
       $.plot $("##{chart_type} #register_#{register.id} #chart"), [{
           data: register[chart_type]['past']
           label: "Prognose"

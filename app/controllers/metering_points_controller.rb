@@ -2,6 +2,7 @@ class MeteringPointsController < InheritedResources::Base
   before_filter :authenticate_user!
   respond_to :html, :json, :js
 
+
   def show
     @metering_point                   = MeteringPoint.find(params[:id]).decorate
     @users                            = @metering_point.users
@@ -28,8 +29,10 @@ class MeteringPointsController < InheritedResources::Base
                 chart_types:          ['day_to_hours', 'month_to_days', 'year_to_months'],
                 charts_data:          register_data
             })
+    authorize_action_for(@metering_point)
     show!
   end
+  authority_actions :show => 'update'
 
 
 

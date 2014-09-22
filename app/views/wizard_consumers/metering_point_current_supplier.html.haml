@@ -1,11 +1,11 @@
 .container
   .row
-    .col-md-4
-    .col-md-4
+    .col-md-3
+    .col-md-6
       %h5= t'progress'
   .row
-    .col-md-4
-    .col-md-4
+    .col-md-3
+    .col-md-6
       .progress
         -if current_user.contracting_party.legal_entity == 'natural_person'
           .progress-bar{"aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => "60", role: "progressbar", style: "width: 60%;"}
@@ -14,8 +14,8 @@
           .progress-bar{"aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => "70", role: "progressbar", style: "width: 70%;"}
             70%
   .row
-    .col-md-4
-    .col-md-4
+    .col-md-3
+    .col-md-6
       .forminput.box
         %h1= t'metering_point_current_supplier'
 
@@ -24,4 +24,4 @@
           = f.input :customer_number
           = f.input :contract_number
           = f.input :forecast_watt_hour_pa
-          = f.submit t("continue"), class: 'btn btn-success', id: 'submit'
+          = f.submit t("continue"), class: 'btn btn-success pull-right', id: 'submit'
