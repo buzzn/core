@@ -49,31 +49,27 @@
   .tab-content
     #metering_points.tab-pane.active
       - @metering_points.each do |metering_point|
-        = render metering_point #if metering_point.readable_by?(current_user)
+        = render metering_point.decorate
 
     #users.tab-pane
-      // TODO this is ugly---------
       .energy_producers
         %h5.page-header= t('energy_producers')
-        - @metering_points.each do |metering_point|
-          -if metering_point.mode == 'out'
-            - @all_users.each do |user|
-              = render user.profile.decorate if user.can_update?(metering_point)
+        - @energy_producers.each do |user|
+          = render user.profile
       .clear
+
       .energy_consumers
         %h5.page-header= t('energy_consumers')
-        - @metering_points.each do |metering_point|
-          -if metering_point.mode == 'in'
-            - metering_point.metering_point_users.each do |user|
-              = render user.user.profile.decorate
+        - @energy_consumers.each do |user|
+          = render user.profile
       .clear
-      //-----------------------------
-      - if @group.users.any?
-        .interested-members
-          %h5.page-header= t('interested_members')
-          - @group.users.each do |user|
-            =render user.profile.decorate
+
+      .interested-members
+        %h5.page-header= t('interested_members')
+        - @interested_members.each do |user|
+          =render user.profile
       .clear
+
     #assets.tab-pane
       .assets
         = render @group.assets
@@ -86,7 +82,7 @@
   %h5.page-header= t('more_groups')
   %article.sidebar_module.groups
     %ul
-      = render @groups
+      = render @all_groups
     .clearfix
 
 
