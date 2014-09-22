@@ -92,6 +92,12 @@ de:
         mode: Richtung
         obis_index: OBIS Kennzahlen
         variable_tariff: Variabler Tarif
+      metering_point_operator_contract:
+        organization: Firma
+        customer_number: Kundennummer
+        contract_number: Vertragsnummer
+        username: Login
+        password: Passwort
 
 
 

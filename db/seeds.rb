@@ -48,6 +48,8 @@ Fabricate(:metering_service_provider, name: 'Stadtwerke München')
 
 # Messstellenbetreiber (Einbau, Betrieb und Wartung)
 Fabricate(:metering_point_operator, name: 'Discovergy')
+Fabricate(:metering_point_operator, name: 'buzzn Metering')
+Fabricate(:metering_point_operator, name: 'Andere')
 
 
 

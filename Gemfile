@@ -71,6 +71,8 @@ gem 'rack-dev-mark'
 gem 'tzinfo'
 gem 'rails-timeago'
 gem 'turbolinks_transitions'
+gem 'dependent-fields-rails'
+gem 'underscore-rails'
 
 group :production do
   gem 'asset_sync'

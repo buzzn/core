@@ -151,7 +151,7 @@ class MeteringPointDecorator < Draper::Decorator
 
   def new_metering_point_operator_contract
     link_to(
-      t("add_register"),
+      t("add_metering_point_operator_contract"),
       new_metering_point_operator_contract_path(metering_point_id: model.id),
       {
         :remote       => true,

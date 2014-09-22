@@ -35,3 +35,6 @@
 //= require groups
 
 //= require turbolinks
+
+//= require dependent-fields
+//= require underscore

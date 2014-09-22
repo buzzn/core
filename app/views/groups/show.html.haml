@@ -53,26 +53,29 @@
 
     #users.tab-pane
       // TODO this is ugly---------
-      .energy_producers
+      %article.sidebar_module.energy_producers.residents
         %h5.page-header= t('energy_producers')
-        - @metering_points.each do |metering_point|
-          -if metering_point.mode == 'out'
-            - @all_users.each do |user|
-              = render user.profile.decorate if user.can_update?(metering_point)
+        %ul
+          - @metering_points.each do |metering_point|
+            -if metering_point.mode == 'out'
+              - @all_users.each do |user|
+                = render user.profile.decorate if user.can_update?(metering_point)
       .clear
-      .energy_consumers
+      %article.sidebar_module.energy_consumers.residents
         %h5.page-header= t('energy_consumers')
-        - @metering_points.each do |metering_point|
-          -if metering_point.mode == 'in'
-            - metering_point.metering_point_users.each do |user|
-              = render user.user.profile.decorate
+        %ul
+          - @metering_points.each do |metering_point|
+            -if metering_point.mode == 'in'
+              - metering_point.metering_point_users.each do |user|
+                = render user.user.profile.decorate
       .clear
       //-----------------------------
       - if @group.users.any?
-        .interested-members
+        %article.sidebar_module.interested-members.residents
           %h5.page-header= t('interested_members')
-          - @group.users.each do |user|
-            =render user.profile.decorate
+          %ul
+            - @group.users.each do |user|
+              =render user.profile.decorate
       .clear
     #assets.tab-pane
       .assets
