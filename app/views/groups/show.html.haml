@@ -52,22 +52,25 @@
         = render metering_point.decorate
 
     #users.tab-pane
-      .energy_producers
+      %article.sidebar_module.energy_producers.residents
         %h5.page-header= t('energy_producers')
-        - @energy_producers.each do |user|
-          = render user.profile
+        %ul
+          - @energy_producers.each do |user|
+            = render user.profile
       .clear
 
-      .energy_consumers
+      %article.sidebar_module.energy_consumers.residents
         %h5.page-header= t('energy_consumers')
-        - @energy_consumers.each do |user|
-          = render user.profile
+        %ul
+          - @energy_consumers.each do |user|
+            = render user.profile
       .clear
 
-      .interested-members
+      %article.sidebar_module.interested-members.residents
         %h5.page-header= t('interested_members')
-        - @interested_members.each do |user|
-          =render user.profile
+        %ul
+          - @interested_members.each do |user|
+            =render user.profile
       .clear
 
     #assets.tab-pane
