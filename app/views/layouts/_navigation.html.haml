@@ -21,7 +21,7 @@
               %b.caret
             %ul.dropdown-menu
               - current_user.editable_locations.each do |location|
-                %li= link_to location.address.name, location
+                %li= link_to location.long_name, location
               %li.divider
               %li= new_location
 

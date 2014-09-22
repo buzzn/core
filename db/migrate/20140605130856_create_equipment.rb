@@ -7,7 +7,6 @@ class CreateEquipment < ActiveRecord::Migration
       t.string  :manufacturer_product_name
       t.string  :manufacturer_product_serialnumber
 
-      t.string  :image
       t.string  :device_kind
       t.string  :device_type
       t.string  :ownership

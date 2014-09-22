@@ -7,9 +7,6 @@ Fabricator :user do
   after_create { |user | user.confirm! }
 end
 
-Fabricator :admin, from: :user do
-  email       'admin@buzzn.net'
-end
 
 Fabricator :felix, from: :user do
   email               'felix@buzzn.net'
@@ -79,6 +76,12 @@ end
 Fabricator :christian_schuetze, from: :user do
   email     'christian@schuetze.de'
   profile   { Fabricate(:profile_christian_schuetze) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :hans_dieter_hopf, from: :user do
+  email               'hans.dieter.hopf@gmail.de'
+  profile             { Fabricate(:profile_hans_dieter_hopf) }
   contracting_party   { Fabricate(:contracting_party) }
 end
 

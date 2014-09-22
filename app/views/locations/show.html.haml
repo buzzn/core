@@ -1,7 +1,7 @@
 .col-sm-3
   .detail_icon
     %i= @location.image_tag_medium
-  %h4= @location.name
+  %h4= @location.long_name
   - if current_user.can_update?(@location)
     = @location.link_to_edit
 

@@ -11,6 +11,7 @@ class CreateMeteringPoints < ActiveRecord::Migration
       t.date    :regular_reeding
       t.string  :regular_interval
       t.string  :meter_type
+      t.boolean :virtual, default: false
 
       t.integer :location_id
       t.integer :contract_id

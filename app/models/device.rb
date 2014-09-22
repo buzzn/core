@@ -5,8 +5,6 @@ class Device < ActiveRecord::Base
   belongs_to :metering_point
   belongs_to :user
 
-  mount_uploader :image, PictureUploader
-
   has_many :assets, as: :assetable, dependent: :destroy
 
 

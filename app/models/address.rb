@@ -10,14 +10,18 @@ class Address < ActiveRecord::Base
 
   #after_validation :geocode
 
-  geocoded_by :full_address
+  geocoded_by :full_name
 
-  def full_address
+  def full_name
     [ street_name, street_number, city, zip, state, country].compact.join(', ')
   end
 
-  def name
+  def long_name
     "#{street_name} #{street_number}, #{city}"
+  end
+
+  def short_name
+    "#{street_name} #{city}"
   end
 
 end

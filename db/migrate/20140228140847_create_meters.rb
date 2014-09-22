@@ -6,13 +6,13 @@ class CreateMeters < ActiveRecord::Migration
       t.string :manufacturer_product_name
       t.string :manufacturer_product_serialnumber
 
-      t.string :image
       t.string :owner
       t.boolean :smart, default: false
       t.string :metering_type
       t.string :meter_size
       t.string :rate
       t.string :mode
+      t.string :image
       t.string :measurement_capture
       t.string :mounting_method
       t.boolean :virtual

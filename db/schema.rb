@@ -128,7 +128,6 @@ ActiveRecord::Schema.define(version: 20140916162550) do
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
     t.string   "manufacturer_product_serialnumber"
-    t.string   "image"
     t.string   "mode"
     t.string   "law"
     t.string   "generator_type"
@@ -145,6 +144,8 @@ ActiveRecord::Schema.define(version: 20140916162550) do
 
   create_table "distribution_system_operator_contracts", force: true do |t|
     t.string   "name"
+    t.string   "status"
+    t.decimal  "price_cents",       precision: 16, scale: 0, default: 0
     t.string   "bdew_code"
     t.string   "edifact_email"
     t.string   "contact_name"
@@ -186,7 +187,6 @@ ActiveRecord::Schema.define(version: 20140916162550) do
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
     t.string   "manufacturer_product_serialnumber"
-    t.string   "image"
     t.string   "device_kind"
     t.string   "device_type"
     t.string   "ownership"
@@ -264,7 +264,7 @@ ActiveRecord::Schema.define(version: 20140916162550) do
   create_table "groups", force: true do |t|
     t.string   "slug"
     t.string   "name"
-    t.string   "image"
+    t.string   "mode",        default: ""
     t.boolean  "private",     default: false
     t.text     "description"
     t.datetime "created_at"
@@ -286,8 +286,6 @@ ActiveRecord::Schema.define(version: 20140916162550) do
 
   create_table "locations", force: true do |t|
     t.string   "slug"
-    t.string   "image"
-    t.string   "name"
     t.boolean  "new_habitation",  default: false
     t.date     "inhabited_since"
     t.boolean  "active",          default: true
@@ -296,6 +294,8 @@ ActiveRecord::Schema.define(version: 20140916162550) do
   end
 
   create_table "metering_point_operator_contracts", force: true do |t|
+    t.string   "status"
+    t.decimal  "price_cents",       precision: 16, scale: 0, default: 0
     t.string   "customer_number"
     t.string   "contract_number"
     t.string   "username"
@@ -329,6 +329,7 @@ ActiveRecord::Schema.define(version: 20140916162550) do
     t.date     "regular_reeding"
     t.string   "regular_interval"
     t.string   "meter_type"
+    t.boolean  "virtual",          default: false
     t.integer  "location_id"
     t.integer  "contract_id"
     t.integer  "group_id"
@@ -341,6 +342,8 @@ ActiveRecord::Schema.define(version: 20140916162550) do
   add_index "metering_points", ["location_id"], name: "index_metering_points_on_location_id", using: :btree
 
   create_table "metering_service_provider_contracts", force: true do |t|
+    t.string   "status"
+    t.decimal  "price_cents",       precision: 16, scale: 0, default: 0
     t.string   "customer_number"
     t.string   "contract_number"
     t.string   "username"
@@ -358,13 +361,13 @@ ActiveRecord::Schema.define(version: 20140916162550) do
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
     t.string   "manufacturer_product_serialnumber"
-    t.string   "image"
     t.string   "owner"
     t.boolean  "smart",                             default: false
     t.string   "metering_type"
     t.string   "meter_size"
     t.string   "rate"
     t.string   "mode"
+    t.string   "image"
     t.string   "measurement_capture"
     t.string   "mounting_method"
     t.boolean  "virtual"

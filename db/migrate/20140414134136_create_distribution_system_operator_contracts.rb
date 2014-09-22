@@ -3,6 +3,8 @@ class CreateDistributionSystemOperatorContracts < ActiveRecord::Migration
     create_table :distribution_system_operator_contracts do |t|
 
       t.string :name
+      t.string :status
+      t.decimal :price_cents, precision: 16, default: 0
       t.string :bdew_code
       t.string :edifact_email
       t.string :contact_name

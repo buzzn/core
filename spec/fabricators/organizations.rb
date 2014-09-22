@@ -21,6 +21,10 @@ Fabricator :metering_service_provider, from: :organization do
   mode 'metering_service_provider'
 end
 
+Fabricator :metering_point_operator, from: :organization do
+  mode 'metering_point_operator'
+end
+
 Fabricator :transmission_system_operator, from: :organization do
   mode 'transmission_system_operator'
   iln  { Fabricate(:iln) }
