@@ -123,6 +123,18 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
+  def new_metering_point_operator_contract
+    link_to(
+      t("add_register"),
+      new_metering_point_operator_contract_path(metering_point_id: model.id),
+      {
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => 'modal',
+        'data-target' => '#myModal'
+      })
+  end
+
 
 
 end
