@@ -3,14 +3,16 @@ class GroupsController < InheritedResources::Base
 
   def show
     @group                          = Group.find(params[:id]).decorate
-    @metering_points                = MeteringPoint.by_group_id_and_modes(@group.id, ['out','in']).decorate
+    @metering_points                = MeteringPoint.by_group_id_and_modes(@group.id, ['out','in']).flatten.uniq
+    @energy_producers               = MeteringPoint.by_group_id_and_modes(@group.id, ['out']).decorate.collect(&:users).flatten
+    @energy_consumers               = MeteringPoint.by_group_id_and_modes(@group.id, ['in']).decorate.collect(&:users).flatten
+    @interested_members             = @group.users
 
-    @users                          = @group.users
-    @out_users                      = @metering_points.collect(&:users).first
-    @all_users                      = User.all.decorate
-    @groups                         = Group.all.decorate
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @registers                      = @group.metering_points.collect(&:registers)
+
+    @all_users                      = User.all.decorate
+    @all_groups                     = Group.all.decorate
 
     # TODO change to AJAX
     @register_charts = []
@@ -18,7 +20,6 @@ class GroupsController < InheritedResources::Base
       @register_charts << register.first.day_to_hours
     end
     gon.push({ register_charts: @register_charts })
-    #
   end
 
   def edit
