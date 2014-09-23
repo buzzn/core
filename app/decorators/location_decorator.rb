@@ -12,21 +12,9 @@ class LocationDecorator < Draper::Decorator
     link_to image_tag_small, model
   end
 
-  def thumb_medium
-    link_to image_tag_medium, model
-  end
-
-  def image_tag_medium
-    if model.image?
-      image_tag model.image.medium, class: 'img-circle', size: '150x150', alt: ""
-    else
-      content_tag(:i, '', class: 'fa fa-home')
-    end
-  end
-
   def image_tag_small
-    if model.image?
-      image_tag model.image.small, class: 'img-circle', size: '45x45', alt: ""
+    if model.assets.any?
+      image_tag model.assets.first.image.small, class: 'img-circle', size: '45x45', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-home')
     end
@@ -61,7 +49,7 @@ class LocationDecorator < Draper::Decorator
       content_tag(:i, '', class: 'fa fa-plus-circle'),
       metering_point_wizard_metering_points_path(id: model.id),
       {
-        :class                      => 'content-plus',
+        :class => 'content-plus',
       })
   end
 

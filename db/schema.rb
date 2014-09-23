@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140916162550) do
+ActiveRecord::Schema.define(version: 20140922152304) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -302,6 +302,7 @@ ActiveRecord::Schema.define(version: 20140916162550) do
     t.string   "password"
     t.integer  "metering_point_id"
     t.integer  "organization_id"
+    t.integer  "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -442,6 +443,22 @@ ActiveRecord::Schema.define(version: 20140916162550) do
 
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
+
+  create_table "servicing_contracts", force: true do |t|
+    t.string   "tariff"
+    t.string   "status"
+    t.string   "signing_user"
+    t.boolean  "terms"
+    t.boolean  "confirm_pricing_model"
+    t.boolean  "power_of_attorney"
+    t.date     "commissioning"
+    t.date     "termination"
+    t.integer  "organization_id"
+    t.integer  "contracting_party_id"
+    t.integer  "group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "standard_profiles", force: true do |t|
     t.string   "mode"

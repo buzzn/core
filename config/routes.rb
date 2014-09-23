@@ -1,5 +1,7 @@
 Buzzn::Application.routes.draw do
 
+  resources :servicing_contracts
+
   require 'sidekiq/web'
   mount Sidekiq::Web, at: '/sidekiq'
 

@@ -1,7 +1,7 @@
 class ProfileAuthorizer < ApplicationAuthorizer
 
   def readable_by?(user)
-    resource.user.friend?(user) || resource.user == user
+    user.has_role?(:admin) || resource.user.friend?(user) || resource.user == user
   end
 
 

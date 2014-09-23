@@ -6,11 +6,6 @@ class Group < ActiveRecord::Base
   tracked  owner: Proc.new{ |controller, model| controller && controller.current_user }
   tracked  recipient: Proc.new{ |controller, model| controller && model }
 
-  mount_uploader :image, PictureUploader
-
-  has_many :assets, as: :assetable, dependent: :destroy
-
-
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
@@ -18,9 +13,12 @@ class Group < ActiveRecord::Base
 
   normalize_attribute :name, with: [:strip]
 
-  has_one :area
-  has_many :metering_points
 
+  has_many :assets, as: :assetable, dependent: :destroy
+  has_one  :metering_point_operator_contract, dependent: :destroy
+  has_one  :servicing_contract, dependent: :destroy
+  has_one  :area
+  has_many :metering_points
   has_many :group_users
   has_many :users, :through => :group_users
 

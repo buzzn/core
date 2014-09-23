@@ -51,8 +51,6 @@ private
 
   def init_permitted_params
     [
-      :name,
-      :image,
       address_attributes: [:id, :street_name, :street_number, :city, :state, :zip, :country, :_destroy]
     ]
   end

@@ -42,16 +42,11 @@ Fabricate(:distribution_system_operator, name: 'E.ON Bayern AG')
 Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
 
 # Messdienstleistung (Ablesung und Messung)
-Fabricate(:metering_service_provider, name: 'buzzn Metering')
-Fabricate(:metering_service_provider, name: 'Stadtwerke Augsburg')
-Fabricate(:metering_service_provider, name: 'Stadtwerke München')
-
-# Messstellenbetreiber (Einbau, Betrieb und Wartung)
-Fabricate(:metering_point_operator, name: 'Discovergy')
 Fabricate(:metering_point_operator, name: 'buzzn Metering')
+Fabricate(:metering_point_operator, name: 'Discovergy')
+Fabricate(:metering_point_operator, name: 'Stadtwerke Augsburg')
+Fabricate(:metering_point_operator, name: 'Stadtwerke München')
 Fabricate(:metering_point_operator, name: 'Andere')
-
-
 
 
 buzzn_team_names = %w[ felix justus danusch thomas martina stefan ole philipp christian ]
@@ -71,7 +66,11 @@ buzzn_team_names.each do |user_name|
   when 'felix'
     @gocycle       = Fabricate(:gocycle)
     user.add_role :manager, @gocycle
+    user.add_role :admin # felix is admin
     user_location = Fabricate(:muehlenkamp)
+  when 'christian'
+    user_location = Fabricate(:location)
+    user.add_role :admin # christian is admin
   when 'stefan'
     @bhkw_stefan       = Fabricate(:bhkw_stefan)
     @forstenrieder_weg = user_location = Fabricate(:forstenrieder_weg)

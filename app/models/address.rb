@@ -8,8 +8,7 @@ class Address < ActiveRecord::Base
   validates :state,           presence: true
   validates :zip,             presence: true
 
-  #after_validation :geocode
-
+  after_validation :geocode if Rails.env == 'production'
   geocoded_by :full_name
 
   def full_name
