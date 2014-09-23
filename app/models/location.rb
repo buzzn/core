@@ -27,8 +27,6 @@ class Location < ActiveRecord::Base
   has_many :users, -> { uniq }, :through => :metering_points
   has_many :devices, -> { uniq }, :through => :metering_points
 
-  mount_uploader :image, PictureUploader
-
   has_many :assets, as: :assetable, dependent: :destroy
 
   has_one :address, as: :addressable, dependent: :destroy
