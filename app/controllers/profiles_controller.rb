@@ -28,6 +28,12 @@ class ProfilesController < InheritedResources::Base
     redirect_to @profile
   end
 
+  def edit
+    edit! do |format|
+      @profile = ProfileDecorator.new(@profile)
+    end
+  end
+
 protected
   def permitted_params
     params.permit(:profile => init_permitted_params)

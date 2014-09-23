@@ -13,7 +13,7 @@ class ProfileDecorator < Draper::Decorator
 
   def link_to_edit
     link_to(
-      t('edit_profile'),
+      raw(content_tag(:i, '', class: 'fa fa-cog') + t('edit')),
       edit_profile_path(model),
       {
         remote: true,

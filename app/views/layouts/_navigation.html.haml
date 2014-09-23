@@ -7,8 +7,10 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-
-      = link_to image_tag('bz_logo_green.png'), root_path, class: 'navbar-logo', alt: APP_VERSION
+      - if user_signed_in?
+        = link_to image_tag('bz_logo_green.png'), profile_path(current_user.profile), class: 'navbar-logo', alt: APP_VERSION
+      - else
+        = link_to image_tag('bz_logo_green.png'), user_session_path, class: 'navbar-logo', alt: APP_VERSION
 
     .collapse.navbar-collapse
 
