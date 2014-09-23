@@ -68,7 +68,7 @@ class DeviceDecorator < Draper::Decorator
   def new_asset
     link_to(
       content_tag(:i, '', class: 'fa fa-plus-circle'),
-      new_asset_path(model_id: model.id, model_type: 'device'),
+      new_asset_path(model_id: model.id, model_type: 'Device'),
       {
         :remote                     => true,
         :class                      => 'sidebar-plus',

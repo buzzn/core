@@ -44,10 +44,11 @@
               %p= t('device')
             - else
               %p= t('devices')
-      .devices-data
-        - metering_point.devices.each do |device|
-          = render device.decorate
-        - if user_signed_in?
-          - if current_user.can_update?(metering_point)
-            = metering_point.edit_devices
+      %article.sidebar_module.devices-data.residents
+        %ul
+          - metering_point.devices.each do |device|
+            = render device.decorate
+          - if user_signed_in?
+            - if current_user.can_update?(metering_point)
+              = metering_point.edit_devices
       .clear

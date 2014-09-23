@@ -13,7 +13,7 @@
         = render user.profile if user.can_update?(@device)
     .clearfix
 
-  - if @metering_point
+  - if @metering_point && current_user.can_update?(@device)
     %h5.page-header= t('belongs_to_metering_point')
     %article.sidebar_module.residents
       %ul
@@ -73,8 +73,8 @@
             %td= t @device.mobile
   .assets
     = render @device.assets
-    - if current_user.can_update?(@device)
-      = @device.new_asset
+  - if current_user.can_update?(@device)
+    = @device.new_asset
 
 
 

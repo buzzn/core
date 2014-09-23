@@ -55,4 +55,16 @@ class GroupDecorator < Draper::Decorator
     end
   end
 
+  def new_asset
+    link_to(
+      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      new_asset_path(model_id: model.id, model_type: 'Group'),
+      {
+        :remote                     => true,
+        :class                      => 'sidebar-plus',
+        'data-toggle'               => 'modal',
+        'data-target'               => '#myModal'
+      })
+  end
+
 end

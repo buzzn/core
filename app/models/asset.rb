@@ -9,8 +9,13 @@ class Asset < ActiveRecord::Base
 
   # TODO make reverse polymorphic nicer
   def device
-    Device.find(self.assetable_id)
+    Device.find(self.assetable_id) if self.assetable_type == "Device"
   end
+
+  def group
+    Group.find(self.assetable_id) if self.assetable_type == "Group"
+  end
+
 
 
 end

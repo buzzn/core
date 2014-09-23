@@ -1,10 +1,13 @@
-.col-md-6
-  .thumbnail
-    = image_tag asset.image.col3, alt: asset.description
-    .caption
-      %p= asset.description
-      %p
-        = asset.link_to_show
-        - if user_signed_in?
-          - if current_user.can_update?(asset.device)
-            = asset.link_to_edit
+.asset{id: "asset#{asset.id}"}
+  .col-md-6
+    .thumbnail
+      = image_tag asset.image.col3, alt: asset.description
+      .caption
+        %p= asset.description
+        %p
+          = asset.link_to_show
+          - if user_signed_in?
+            - if asset.device && current_user.can_update?(asset.device)
+              = asset.link_to_edit
+            - if asset.group && current_user.can_update?(asset.group)
+              = asset.link_to_edit

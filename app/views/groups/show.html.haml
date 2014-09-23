@@ -77,6 +77,8 @@
     #assets.tab-pane
       .assets
         = render @group.assets
+      - if current_user.can_update?(@group)
+        = @group.new_asset
 
 
 
