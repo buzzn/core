@@ -1,0 +1,36 @@
+%p#notice= notice
+
+%p
+  %b Tariff:
+  = @servicing_contract.tariff
+%p
+  %b Status:
+  = @servicing_contract.status
+%p
+  %b Signing user:
+  = @servicing_contract.signing_user
+%p
+  %b Terms:
+  = @servicing_contract.terms
+%p
+  %b Confirm pricing model:
+  = @servicing_contract.confirm_pricing_model
+%p
+  %b Power of attorney:
+  = @servicing_contract.power_of_attorney
+%p
+  %b Commissioning:
+  = @servicing_contract.commissioning
+%p
+  %b Termination:
+  = @servicing_contract.termination
+%p
+  %b Forecast watt hour pa:
+  = @servicing_contract.forecast_watt_hour_pa
+%p
+  %b Price cents:
+  = @servicing_contract.price_cents
+
+= link_to 'Edit', edit_servicing_contract_path(@servicing_contract)
+\|
+= link_to 'Back', servicing_contracts_path

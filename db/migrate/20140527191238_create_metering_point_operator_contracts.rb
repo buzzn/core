@@ -11,6 +11,7 @@ class CreateMeteringPointOperatorContracts < ActiveRecord::Migration
 
       t.integer :metering_point_id
       t.integer :organization_id
+      t.integer :group_id
 
       t.timestamps
     end

@@ -21,6 +21,6 @@ end
 
 Fabricator :mspc_buzzn_metering, from: :metering_service_provider_contract do
   organization  { Organization.find('buzzn-metering') }
-  username 'team@buzzn.net'
-  password '19200buzzn'
+  username 'team@buzzn-metering.de'
+  password 'Zebulon_4711'
 end

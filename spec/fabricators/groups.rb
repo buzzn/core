@@ -14,11 +14,10 @@ end
 
 
 Fabricator :group_hopf, from: :group do
-  name        'Hopf'
-
-  assets      { [
-                 Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'hof_butenland.jpg')))
-                 ] }
+  name                              'Hopf'
+  assets                            { [ Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'hof_butenland.jpg')))] }
+  metering_point_operator_contract  { Fabricate(:mspc_buzzn_metering) }
+  servicing_contract                { Fabricate(:servicing_contract) }
 end
 
 
