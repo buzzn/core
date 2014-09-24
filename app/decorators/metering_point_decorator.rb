@@ -104,8 +104,6 @@ class MeteringPointDecorator < Draper::Decorator
   end
 
 
-
-
   def new_device
     if model.output?
       path = new_out_device_path(metering_point_id: model.id)
@@ -156,6 +154,19 @@ class MeteringPointDecorator < Draper::Decorator
       {
         :remote       => true,
         :class        => 'start_modal',
+        'data-toggle' => 'modal',
+        'data-target' => '#myModal'
+      })
+  end
+
+
+  def new_meter
+    link_to(
+      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      new_meter_path(metering_point_id: model.id),
+      {
+        :remote       => true,
+        :class        => 'content-plus',
         'data-toggle' => 'modal',
         'data-target' => '#myModal'
       })

@@ -61,7 +61,7 @@ class GroupDecorator < Draper::Decorator
       new_asset_path(model_id: model.id, model_type: 'Group'),
       {
         :remote                     => true,
-        :class                      => 'sidebar-plus',
+        :class                      => 'content-plus',
         'data-toggle'               => 'modal',
         'data-target'               => '#myModal'
       })

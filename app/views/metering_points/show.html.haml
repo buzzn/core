@@ -84,7 +84,10 @@
 
 
     #meter.tab-pane
-      = render @meter
+      - if @meter
+        = render @meter
+      - else
+        = @metering_point.new_meter
 
 
     #contracts.tab-pane
