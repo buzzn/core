@@ -44,7 +44,7 @@ private
       :manufacturer_product_name,
       :manufacturer_product_serialnumber,
       :virtual,
-      registers_attributes: [:id, :mode, :obis_index, :variable_tariff, :_destroy],
+      registers_attributes: [:id, :mode, :obis_index, :variable_tariff, :_destroy, :metering_point_id],
       equipments_attributes: [:id, :manufacturer_name, :manufacturer_product_name, :manufacturer_product_serialnumber, :device_kind, :device_type, :ownership, :build, :calibrated_till, :converter_constant, :_destroy, :meter_id]
     ]
   end
