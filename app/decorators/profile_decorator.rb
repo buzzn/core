@@ -17,7 +17,7 @@ class ProfileDecorator < Draper::Decorator
       edit_profile_path(model),
       {
         remote: true,
-        class: 'start_modal',
+        class: 'start_modal btn btn-icon btn-danger btn-xs',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })

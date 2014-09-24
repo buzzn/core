@@ -37,7 +37,7 @@ private
       :username,
       :password,
       :metering_point_id,
-      :organisation_id
+      :organization_id
     ]
   end
 end
