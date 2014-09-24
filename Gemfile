@@ -109,6 +109,9 @@ group :development do
 end
 
 group :test do
+  gem 'capybara-screenshot'
+  gem 'capybara-email'
+  gem 'email_spec'
   gem 'spring-commands-rspec'
   gem 'guard-rspec'
   gem 'rspec-rails'

@@ -6,6 +6,7 @@ require 'rspec/rails'
 require 'capybara'
 require 'capybara/dsl'
 require 'capybara/rspec'
+require 'capybara/email/rspec'
 require 'capybara/poltergeist'
 require 'capybara/rspec/matchers'
 require 'capybara/rspec/features'
@@ -13,11 +14,15 @@ require 'database_cleaner'
 require 'webmock/rspec'
 require 'vcr'
 
+# you should require 'capybara/rspec' first
+require 'capybara-screenshot'
+require 'capybara-screenshot/rspec'
+
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
-
+I18n.default_locale = :en
 
 RSpec.configure do |config|
   # ## Mock Framework
@@ -57,7 +62,9 @@ RSpec.configure do |config|
   end
 
 
-
+  def last_email
+    ActionMailer::Base.deliveries.last
+  end
 
 
 
@@ -65,23 +72,11 @@ RSpec.configure do |config|
 
   # Register slightly larger than default window size...
   Capybara.register_driver :poltergeist do |app|
-    Capybara::Poltergeist::Driver.new(app, { debug: true, # change this to true to troubleshoot
+    Capybara::Poltergeist::Driver.new(app, { debug: false, # change this to true to troubleshoot
                                              window_size: [1440, 900] # this can affect dynamic layout
     })
   end
   Capybara.javascript_driver = :poltergeist
-
-  def render_page(name)
-    png_name = name.strip.gsub(/\W+/, '-')
-    path = File.join(Rails.application.config.integration_test_render_dir, "#{png_name}.png")
-    page.driver.render(path)
-  end
-
-  # shortcut for typing save_and_open_page
-  def page!
-    save_and_open_page
-  end
-
 
 
 
