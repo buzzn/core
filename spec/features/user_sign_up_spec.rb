@@ -3,21 +3,22 @@ require 'spec_helper'
 
 feature 'UserSignUpTest' do
 
-  # before(:each) do
-  #   load "#{Rails.root}/db/seeds.rb"
-  # end
 
   describe 'try_to_sign_up', :js do
 
-    it 'visit /users/sign_up' do
+    it 'sign_up' do
       visit '/users/sign_up'
-      fill_in :user_email,                  :with => 'user_sign_up@test.de'
-      fill_in :user_password,               :with => 'testtest'
-      fill_in :user_password_confirmation,  :with => 'testtest'
-
+      fill_in :user_profile_attributes_first_name,  :with => 'felix'
+      fill_in :user_profile_attributes_last_name,   :with => 'faerber'
+      fill_in :user_email,                          :with => 'ffaerber@gmail.de'
+      fill_in :user_password,                       :with => 'testtest'
+      fill_in :user_password_confirmation,          :with => 'testtest'
       click_button 'submit'
+      find('.alert').should have_content('A message with a confirmation link has been sent to your email address. Please open the link to activate your account.')
 
-      find('.alert').should have_content('Erfolgreich angemeldet.')
+      ctoken = last_email.body.match('confirmation_token=(.*)"')[1]
+      visit "/users/confirmation?confirmation_token=#{ctoken}"
+      page.should have_content('Your account was successfully confirmed.')
     end
 
 
