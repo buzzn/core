@@ -97,6 +97,9 @@
         .alert.alert-danger= t'no_contract_for_metering_point'
       - if @metering_point.metering_point_operator_contracts.empty?
         = @metering_point.new_metering_point_operator_contract
+      - else
+        - @metering_point.metering_point_operator_contracts.each do |metering_point_operator_contract|
+          = render metering_point_operator_contract
 
 
 

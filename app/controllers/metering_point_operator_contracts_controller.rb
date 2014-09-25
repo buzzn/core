@@ -10,15 +10,17 @@ class MeteringPointOperatorContractsController < InheritedResources::Base
 
   def create
     create! do |format|
-      @metering_point_operator_contract = MeteringPointOperatorContract.new(@metering_point_operator_contract)
+      @metering_point_operator_contract = MeteringPointOperatorContractDecorator.new(@metering_point_operator_contract)
     end
   end
 
   def edit
-    @metering_point_operator_contract = MeteringPointOperatorContract.find(params[:id])
-    #authorize_action_for @metering_point_operator_contract
-    edit!
+    edit! do |format|
+      @metering_point_operator_contract = MeteringPointOperatorContractDecorator.new(@metering_point_operator_contract)
+    end
   end
+
+
 
 protected
   def permitted_params
@@ -26,7 +28,7 @@ protected
   end
 
 private
-  def meter_params
+  def metering_point_operator_contract_params
     params.require(:metering_point_operator_contract).permit(init_permitted_params)
   end
 
