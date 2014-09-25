@@ -26,7 +26,7 @@ protected
   end
 
 private
-  def meter_params
+  def metering_point_operator_contract_params
     params.require(:metering_point_operator_contract).permit(init_permitted_params)
   end
 
