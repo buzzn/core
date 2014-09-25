@@ -331,6 +331,7 @@ ActiveRecord::Schema.define(version: 20140922152304) do
     t.string   "regular_interval"
     t.string   "meter_type"
     t.boolean  "virtual",          default: false
+    t.string   "ancestry"
     t.integer  "location_id"
     t.integer  "contract_id"
     t.integer  "group_id"
@@ -338,6 +339,7 @@ ActiveRecord::Schema.define(version: 20140922152304) do
     t.datetime "updated_at"
   end
 
+  add_index "metering_points", ["ancestry"], name: "index_metering_points_on_ancestry", using: :btree
   add_index "metering_points", ["contract_id"], name: "index_metering_points_on_contract_id", using: :btree
   add_index "metering_points", ["group_id"], name: "index_metering_points_on_group_id", using: :btree
   add_index "metering_points", ["location_id"], name: "index_metering_points_on_location_id", using: :btree

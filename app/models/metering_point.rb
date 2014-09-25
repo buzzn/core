@@ -1,9 +1,8 @@
 class MeteringPoint < ActiveRecord::Base
   include Authority::Abilities
-
   include PublicActivity::Model
-  tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
-  tracked recipient: Proc.new{ |controller, model| controller && model }
+
+  has_ancestry
 
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :finders]
@@ -13,6 +12,12 @@ class MeteringPoint < ActiveRecord::Base
       :id
     ]
   end
+
+
+  tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
+  tracked recipient: Proc.new{ |controller, model| controller && model }
+
+
 
 
   belongs_to :location

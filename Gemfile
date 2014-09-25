@@ -8,8 +8,6 @@ gem 'moped'
 gem 'bson'
 gem 'unicorn'
 gem 'haml-rails'
-# gem 'haml2slim'
-# gem 'slim-rails'
 gem 'coffee-rails'
 gem 'uglifier'
 gem 'rails_layout'
@@ -73,6 +71,10 @@ gem 'rails-timeago'
 gem 'turbolinks_transitions'
 gem 'dependent-fields-rails'
 gem 'underscore-rails'
+gem 'ancestry'
+
+
+
 
 group :production do
   gem 'asset_sync'
