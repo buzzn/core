@@ -1,11 +1,11 @@
 class MeterReadingUpdateWorker
   include Sidekiq::Worker
 
-  def perform(register_id, manufacturer_device_number, msp_name, msp_login_username, msp_login_password, start_time, end_time)
+  def perform(register_id, manufacturer_device_number, mpo_name, mpo_login_username, mpo_login_password, start_time, end_time)
 
-    case msp_name
+    case mpo_name
     when 'discovergy'
-      discovergy = Discovergy.new(msp_login_username, msp_login_password, "EASYMETER_#{manufacturer_device_number}")
+      discovergy = Discovergy.new(mpo_login_username, mpo_login_password, "EASYMETER_#{manufacturer_device_number}")
       request     = discovergy.call(start_time, end_time)
 
       if request['status'] == "ok"

@@ -34,6 +34,7 @@ private
 
   def init_permitted_params
     [
+      :id,
       :customer_number,
       :contract_number,
       :username,
