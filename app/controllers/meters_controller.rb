@@ -39,6 +39,7 @@ private
 
   def init_permitted_params
     [
+      :id,
       :metering_point_id,
       :manufacturer_name,
       :manufacturer_product_name,

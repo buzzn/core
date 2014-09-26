@@ -50,6 +50,10 @@ class MeteringPoint < ActiveRecord::Base
     self.registers.select(:mode).map(&:mode).join('_')
   end
 
+  def metering_point_operator_contract
+    self.metering_point_operator_contracts.first
+  end
+
   scope :by_group_id_and_modes, lambda { |group_id, modes|
     MeteringPoint.joins(:registers).where("mode in (?)", modes).where(group_id: group_id).order('mode DESC')
   }
