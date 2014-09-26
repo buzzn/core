@@ -14,13 +14,11 @@ class ProfileDecorator < Draper::Decorator
   def link_to_edit
     link_to(
       raw(content_tag(:i, '', class: 'fa fa-cog') + t('edit')),
-      edit_profile_path(model),
+      edit_user_registration_path,
       {
-        remote: true,
-        class: 'start_modal btn btn-icon btn-danger btn-xs',
-        'data-toggle' => "modal",
-        'data-target' => '#myModal'
-      })
+        class: 'btn btn-icon btn-danger btn-xs'
+      }
+    )
   end
 
   def thumb
