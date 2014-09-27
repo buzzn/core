@@ -16,6 +16,7 @@
         %h1= t'meter'
 
         = simple_form_for @meter, url: meter_update_wizard_metering_points_path(id: params[:id]), method: 'put', html: {class: 'form-horizontal' }, wrapper: :horizontal_form  do |f|
-          = f.input :metering_point_id, input_html: { value: params[:metering_point_id] }, as: :hidden
+          - value = params[:metering_point_id].nil? ? {} : { value: params[:metering_point_id]}
+          = f.input :metering_point_id, input_html: {}.merge(value), as: :hidden
           = render 'meters/form_fields', f: f
           = f.submit t("continue"), class: 'btn btn-success pull-right', id: 'submit'

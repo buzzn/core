@@ -1,4 +1,5 @@
 = f.input :mode, collection: Register.modes
 = f.input :obis_index
 = f.input :variable_tariff
-= f.input :metering_point_id, input_html: { value: params[:metering_point_id] }, as: :hidden
+- value = params[:metering_point_id].nil? ? {} : { value: params[:metering_point_id]}
+= f.input :metering_point_id, input_html: {}.merge(value), as: :hidden
