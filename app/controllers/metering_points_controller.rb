@@ -61,8 +61,10 @@ class MeteringPointsController < InheritedResources::Base
 
 
   def update
-    update! do |format|
+    update! do |format, success, failure|
       @metering_point = MeteringPointDecorator.new(@metering_point).decorate
+      success.js { @metering_point }
+      failure.js { render :edit }
     end
   end
 
@@ -71,7 +73,9 @@ class MeteringPointsController < InheritedResources::Base
     # create! do |format|
     #   @metering_point = MeteringPointDecorator.new(@metering_point)
     # end
-    create! { location_path(@metering_point.location) }
+    create! do |success, failure|
+      success.js { location_path(@metering_point.location) }
+      failure.js { render :new }
   end
 
 

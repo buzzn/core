@@ -29,9 +29,11 @@ class GroupsController < InheritedResources::Base
   end
 
   def create
-    create! do |format|
+    create! do |format, success, failure|
       current_user.add_role :manager, @group
       @group = GroupDecorator.new(@group)
+      success.js { @group }
+      failure.js { render :new }
     end
   end
 

@@ -6,8 +6,18 @@ class AssetsController < InheritedResources::Base
   end
 
   def create
-    create! do |format|
+    create! do |format, success, failure|
       @asset = AssetDecorator.new(@asset)
+      success.js { @asset }
+      failure.js { render :new }
+    end
+  end
+
+  def update
+    update! do |success, failure|
+      @asset = AssetDecorator.new(@asset)
+      success.js { @asset }
+      failure.js { render :edit }
     end
   end
 

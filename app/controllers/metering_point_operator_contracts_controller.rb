@@ -9,8 +9,10 @@ class MeteringPointOperatorContractsController < InheritedResources::Base
   end
 
   def create
-    create! do |format|
+    create! do |format, success, failure|
       @metering_point_operator_contract = MeteringPointOperatorContractDecorator.new(@metering_point_operator_contract)
+      success.js { @metering_point_operator_contract }
+      failure.js { render :new }
     end
   end
 

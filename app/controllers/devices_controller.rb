@@ -47,15 +47,19 @@ class DevicesController < InheritedResources::Base
 
 
   def update
-    update! do |format|
+    update! do |format, success, failure|
       @device = DeviceDecorator.new(@device)
+      success.js { @device }
+      failure.js { render :edit }
     end
   end
 
   def create
-    create! do |format|
+    create! do |format, success, failure|
       current_user.add_role :manager, @device
       @device = DeviceDecorator.new(@device)
+      success.js { @device }
+      failure.js { render :new }
     end
   end
 

@@ -9,8 +9,10 @@ class MeteringServiceProviderContractsController < InheritedResources::Base
   end
 
   def create
-    create! do |format|
+    create! do |format, success, failure|
       @metering_service_provider_contract = MeteringServiceProviderContract.new(@metering_service_provider_contract)
+      success.js { @metering_service_provider_contract }
+      failure.js { render :new }
     end
   end
 
