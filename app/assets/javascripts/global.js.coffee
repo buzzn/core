@@ -1,10 +1,10 @@
 ready = ->
   $(".select2").select2()
-  $('a[rel~="tooltip"]').tooltip();
+  $('a[rel~="tooltip"]').tooltip()
+  DependentFields.bind()
+
+
 
 $(document).ready(ready)
 $(document).on('page:load', ready)
-$(document).ready = ->
-  DependentFields.bind()
-  return
-
+$(document).on('show.bs.modal', ready)

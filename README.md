@@ -30,7 +30,7 @@
 
 ## Start Background Jobs
     redis-server
-    bundle exec sidekiq -q high, 5 default
+    bundle exec sidekiq
     http://localhost:3000/sidekiq
 
 ## validate smartmeter

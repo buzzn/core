@@ -28,8 +28,6 @@ Buzzn::Application.routes.draw do
   resources :equipments
 
 
-
-
   resources :devices do
     member do
       get :new_out
