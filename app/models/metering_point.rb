@@ -19,9 +19,7 @@ class MeteringPoint < ActiveRecord::Base
 
 
 
-
   belongs_to :location
-  acts_as_list scope: :location
 
   belongs_to :group
 
@@ -32,7 +30,6 @@ class MeteringPoint < ActiveRecord::Base
   has_many :metering_service_provider_contracts,    dependent: :destroy
   has_many :metering_point_operator_contracts,      dependent: :destroy
   has_many :distribution_system_operator_contracts, dependent: :destroy
-  has_many :transmission_system_operator_contracts, dependent: :destroy
 
   has_many :devices
 

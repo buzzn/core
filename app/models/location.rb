@@ -24,15 +24,13 @@ class Location < ActiveRecord::Base
   delegate :long_name, to: :address, allow_nil: true
 
 
-  has_many :users, -> { uniq }, :through => :metering_points
-  has_many :devices, -> { uniq }, :through => :metering_points
+  has_many :users, -> { uniq }, :through => :metering_point
+  has_many :devices, -> { uniq }, :through => :metering_point
 
   has_many :assets, as: :assetable, dependent: :destroy
 
   has_one :address, as: :addressable, dependent: :destroy
   accepts_nested_attributes_for :address, reject_if: :all_blank
 
-  has_many :metering_points, dependent: :destroy
-  accepts_nested_attributes_for :metering_points, reject_if: :all_blank, allow_destroy: true
-
+  has_one :metering_point, dependent: :destroy
 end

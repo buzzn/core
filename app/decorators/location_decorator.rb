@@ -2,7 +2,7 @@ class LocationDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
   decorates_association :address
-  decorates_association :metering_points
+  decorates_association :metering_point
   decorates_association :user
   decorates_association :devices
   decorates_association :users

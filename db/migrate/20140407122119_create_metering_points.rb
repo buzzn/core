@@ -4,9 +4,7 @@ class CreateMeteringPoints < ActiveRecord::Migration
 
       t.string  :slug
       t.string  :uid
-      t.integer :position
       t.string  :address_addition
-
       t.string  :voltage_level
       t.date    :regular_reeding
       t.string  :regular_interval

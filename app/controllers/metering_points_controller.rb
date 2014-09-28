@@ -61,7 +61,7 @@ class MeteringPointsController < InheritedResources::Base
 
 
   def update
-    update! do |format, success, failure|
+    update! do |success, failure|
       @metering_point = MeteringPointDecorator.new(@metering_point).decorate
       success.js { @metering_point }
       failure.js { render :edit }
@@ -69,13 +69,10 @@ class MeteringPointsController < InheritedResources::Base
   end
 
   def create
-    # TODO create.js is not working. remote:false on create
-    # create! do |format|
-    #   @metering_point = MeteringPointDecorator.new(@metering_point)
-    # end
     create! do |success, failure|
       success.js { location_path(@metering_point.location) }
       failure.js { render :new }
+    end
   end
 
 
