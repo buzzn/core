@@ -86,8 +86,16 @@ de:
       meter:
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname
-        manufacturer_product_serialnumber: Seriennummer
+        manufacturer_product_serialnumber: Zählernummer
         virtual: Virtuell
+        image: Bild
+        owner: Eigentümer
+        meter_size: Zählergröße
+        rate: Rate
+        measurement_capture: Messkapazität
+        mounting_method: Befestigungsmethode
+        build_year: Herstellungsjahr
+        calibrated_till: Geeicht bis
       registers:
         mode: Richtung
         obis_index: OBIS Kennzahlen
@@ -98,6 +106,16 @@ de:
         contract_number: Vertragsnummer
         username: Login
         password: Passwort
+      equipments:
+        manufacturer_name: Herstellername
+        manufacturer_product_name: Produktname
+        manufacturer_product_serialnumber: Seriennummer
+        device_kind: Geräteart
+        device_type: Gerätetyp
+        ownership: Eigentümer
+        build: Herstellungsjahr
+        calibrated_till: Geeicht bis
+        converter_constant: Wandlerfaktor
 
 
 
@@ -106,6 +124,8 @@ de:
         username: 'Benutzername, mit dem Du dich einloggen kannst.'
       location:
         name: 'Frei wählbarer Name des Standorts'
+      metering_point:
+        address_addition: 'Frei wählbarer Name des Zählpunkts, z.B. "3. OG links" oder "Dachboden"'
 
 
 

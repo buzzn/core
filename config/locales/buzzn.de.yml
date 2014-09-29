@@ -304,6 +304,7 @@ de:
   create_new_metering_point: Neuen Zählpunkt hinzufügen
   take_current: Strom nehmen
   add_metering_point_operator_contract: Vertrag mit Messstellenbetreiber hinzufügen
+  sent_friendship_request: Freundschaftsanfrage gesendet
 
   electricity_supplier: Stromlieferant
   metering_service_provider: Messdienstleister
@@ -317,6 +318,39 @@ de:
   distribution_system_operator_contract: Verteilnetzbetreiber Vertrag
   transmission_system_operator_contract: Übertragungsnetzbetreiber Vertrag
 
+  virtual: Virtuell
+  image: Bild
+  owner: Eigentümer
+  meter_size: Zählergröße
+  rate: Rate
+  measurement_capture: Messkapazität
+  mounting_method: Befestigungsmethode
+  build_year: Herstellungsjahr
+  calibrated_till: Geeicht bis
+
+  obis_index: OBIS Kennzahlen
+  variable_tariff: Variabler Tarif
+  edit_meter: Zähler bearbeiten
+  equipments: Zubehör
+  add_equipment: Zubehör hinzufügen
+  remove_equipment: Zubehör entfernen
+  destroy: löschen
+  forecast_watt_hour_pa: Jahresstrommenge (Prognose)
+  price_cents: Preis (Cent)
+  termination: Vertragsende
+  signing_user: Unterzeichnet von
+  terms: AGB bestätigt
+  confirm_pricing_model: Preismodell bestätigt
+  power_of_attorney: Bevollmächtigung
+  contract_address: Adresse des Vertragspartners
+  street: Straße
+  city: Stadt
+  state: Bundesland
+  customer_number: Kundennummer
+  contract_number: Vertragsnummer
+  password: Passwort
+  username: Login
+  edit_metering_point_operator_contract: Vertrag mit Messstellenbetreiber bearbeiten
 
 
 
