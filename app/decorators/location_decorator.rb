@@ -50,6 +50,9 @@ class LocationDecorator < Draper::Decorator
       metering_point_wizard_metering_points_path(id: model.id),
       {
         :class => 'content-plus',
+        :remote       => true,
+        'data-toggle' => "modal",
+        'data-target' => '#myModal'
       })
   end
 

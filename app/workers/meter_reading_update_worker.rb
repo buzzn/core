@@ -15,7 +15,7 @@ class MeterReadingUpdateWorker
           Reading.create(
             register_id:  register_id,
             timestamp:    DateTime.strptime(time.to_s,'%Q'),
-            watt_hour:    energy / 1000
+            watt_hour:    energy / 10000000.0 #energy is in 10^-10 kWh; convert to Wh
           )
         else
           logger.warn "MeterReadingUpdateWorker: No result form request. starttime: #{start_time}, endtime: #{end_time}"

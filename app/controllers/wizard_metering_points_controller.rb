@@ -9,7 +9,7 @@ class WizardMeteringPointsController  < ApplicationController
   def metering_point_update
     @location = Location.find(location_params[:id])
     @metering_point           = MeteringPoint.new(metering_point_params)
-    @location.metering_points << @metering_point
+    @location.metering_point = @metering_point
     if @location.save
       redirect_to meter_wizard_metering_points_path(metering_point_id: @metering_point.id, id: @location.id)
     else
@@ -20,10 +20,10 @@ class WizardMeteringPointsController  < ApplicationController
 
   def meter
     @location = Location.find(location_params[:id])
-    if @location.metering_points.empty?
+    if @location.metering_point.nil?
       redirect_to metering_point_wizard_metering_points_path(id: @location.id)
     else
-      @metering_point = @location.metering_points.last
+      @metering_point = @location.metering_point
       @meter = Meter.new
       @meter.registers << Register.new
     end
@@ -31,10 +31,10 @@ class WizardMeteringPointsController  < ApplicationController
 
   def meter_update
     @location = Location.find(location_params[:id])
-    if @location.metering_points.empty?
+    if @location.metering_point.nil?
       redirect_to metering_point_wizard_metering_points_path(id: @location.id)
     else
-      @metering_point = @location.metering_points.last
+      @metering_point = @location.metering_point
       @meter = Meter.new(meter_params)
       if @meter.save
         redirect_to @location

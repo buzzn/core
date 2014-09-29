@@ -24,6 +24,7 @@ class FriendshipRequest < ActiveRecord::Base
 
   private
     def created_friendship
+      puts 'jo'
       if status == 'accepted'
         sender.friends << receiver
         self.delete

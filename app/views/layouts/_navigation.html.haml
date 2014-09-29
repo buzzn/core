@@ -38,8 +38,9 @@
                   %li= link_to group.name, group
               %li.divider
               - current_user.editable_locations.each do |location|
-                - if location.metering_point.mode == 'out' && location.metering_point.group == nil
-                  %li= new_group
+                - if location.metering_point
+                  - if location.metering_point.mode == 'out' && location.metering_point.group == nil
+                    %li= new_group
 
           %li.dropdown
             %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}

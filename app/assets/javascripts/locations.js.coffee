@@ -36,6 +36,6 @@ $(".locations.show").ready ->
         axisLabel: 'Uhrzeit'
       ]
       yaxes:[
-        axisLabel: 'Bezug (Watt)'
+        axisLabel: 'Bezug (kWh)'
       ]
     }

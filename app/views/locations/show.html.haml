@@ -38,9 +38,11 @@
 
 
 .col-sm-6
-  = render 'no_metering_point' if @location.metering_point == nil
-  .metering_points
-    = render @location.metering_point
+  - if @location.metering_point == nil
+    = render 'no_metering_point'
+  - else
+    .metering_points
+      = render @location.metering_point
 
   - if current_user.can_update?(@location)
     = @location.new_metering_point
