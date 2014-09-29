@@ -71,8 +71,8 @@ gem 'turbolinks_transitions'
 gem 'dependent-fields-rails'
 gem 'underscore-rails'
 gem 'ancestry'
-
-
+gem 'rack-mini-profiler', require: false
+gem 'goldiloader'
 
 
 group :production do
@@ -95,7 +95,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'rack-mini-profiler'
   gem 'brakeman', :require => false
   gem 'pry-rails'
   gem 'bullet'
