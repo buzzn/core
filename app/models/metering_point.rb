@@ -128,7 +128,7 @@ class MeteringPoint < ActiveRecord::Base
     def first_day_init
       metering_point = self
       register       = registers.first # TODO not compatible with in_out smartmeter
-      mspc           = metering_point.metering_service_provider_contract
+      mpoc           = metering_point.metering_point_operator_contract
       date           = Time.now.in_time_zone
       beginning      = date.beginning_of_day
       ending         = date
@@ -138,9 +138,9 @@ class MeteringPoint < ActiveRecord::Base
         MeterReadingUpdateWorker.perform_async(
                                                 register.id,
                                                 meter.manufacturer_product_serialnumber,
-                                                mspc.organization.name.downcase,
-                                                mspc.username,
-                                                mspc.password,
+                                                mpoc.organization.name.downcase,
+                                                mpoc.username,
+                                                mpoc.password,
                                                 start_time,
                                                 end_time
                                               )

@@ -19,7 +19,7 @@ class LocationsController < InheritedResources::Base
   end
 
   def create
-    create! do |format, success, failure|
+    create! do |success, failure|
       current_user.add_role :manager, @location
       @location = LocationDecorator.new(@location)
       success.js { @location }
@@ -35,7 +35,7 @@ class LocationsController < InheritedResources::Base
 
 
   def update
-    update! do |format, success, failure|
+    update! do |success, failure|
       @location = LocationDecorator.new(@location)
       success.js { @location }
       failure.js { render :edit }

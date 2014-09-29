@@ -15,7 +15,7 @@ class MetersController < InheritedResources::Base
   end
 
   def update
-    update! do |format, success, failure|
+    update! do |success, failure|
       @meter = MeterDecorator.new(@meter)
       success.js { @meter }
       failure.js { render :edit }
@@ -23,7 +23,7 @@ class MetersController < InheritedResources::Base
   end
 
   def create
-    create! do |format, success, failure|
+    create! do |success, failure|
       @meter = MeterDecorator.new(@meter)
       success.js { @meter }
       failure.js { render :new }
