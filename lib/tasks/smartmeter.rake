@@ -8,7 +8,7 @@ namespace :smartmeter do
       registers       = meter.registers
       register        = registers.first # TODO not compatible with in_out smartmeter
       metering_point  = meter.registers.collect(&:metering_point).first
-      mspc            = metering_point.metering_service_provider_contract
+      mpoc            = metering_point.metering_point_operator_contract
       last            = Reading.latest_by_register_id(register.id)[:timestamp].beginning_of_minute
       now             = Time.now.in_time_zone.utc
       (last.to_i .. now.to_i).step(1.minutes) do |time|
@@ -17,9 +17,9 @@ namespace :smartmeter do
         MeterReadingUpdateWorker.perform_async(
                                                 register.id,
                                                 meter.manufacturer_product_serialnumber,
-                                                mspc.organization.name.downcase,
-                                                mspc.username,
-                                                mspc.password,
+                                                mpoc.organization.name.downcase,
+                                                mpoc.username,
+                                                mpoc.password,
                                                 start_time,
                                                 end_time
                                               )

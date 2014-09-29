@@ -23,6 +23,16 @@ $(".metering_points.show").ready ->
         actualXLabel = "Uhrzeit"
         actualToolTipOpts = (label, xval, yval, flotItem) ->
             "%s: " + new Date(xval).getHours() + ":00 bis " + new Date(xval).getHours() + ":59 Uhr, Bezug: " + yval + " kWh"
+        actualMax = ->
+            oldDate = 1411945200*1000
+            console.log oldDate
+            curDate = (new Date()).getTime()
+            console.log curDate
+            dayDiff = (curDate-oldDate)/(3600*24*1000)
+            console.log dayDiff
+            newDate = oldDate + dayDiff * 3600 * 24 * 1000
+            console.log newDate
+            return newDate
       else if chart_type is 'month_to_days'
         actualBarWidth = 0.66*3600*1000*24
         actualTimeFormat = "%d.%m"
@@ -79,6 +89,7 @@ $(".metering_points.show").ready ->
           timeformat: actualTimeFormat
           timezone: "browser"
           minTickSize: [1, "hour"]
+          max: actualMax
         axisLabels:
           show: true
         xaxes:[
