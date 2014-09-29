@@ -23,26 +23,24 @@ $(".metering_points.show").ready ->
         actualXLabel = "Uhrzeit"
         actualToolTipOpts = (label, xval, yval, flotItem) ->
             "%s: " + new Date(xval).getHours() + ":00 bis " + new Date(xval).getHours() + ":59 Uhr, Bezug: " + yval + " kWh"
-        actualMax = ->
-            oldDate = 1411945200*1000
-            console.log oldDate
-            curDate = (new Date()).getTime()
-            console.log curDate
-            dayDiff = (curDate-oldDate)/(3600*24*1000)
-            console.log dayDiff
-            newDate = oldDate + dayDiff * 3600 * 24 * 1000
-            console.log newDate
-            return newDate
+        actualMax = gon.end_of_day
+        actualMinTickSize = [1, "hour"]
       else if chart_type is 'month_to_days'
         actualBarWidth = 0.66*3600*1000*24
         actualTimeFormat = "%d.%m"
         actualXLabel = "Tag"
         actualToolTipOpts = "%s   Tag: %x, Bezug: %y kWh"
+        actualMin = gon.beginning_of_month
+        actualMax = gon.end_of_month
+        actualMinTickSize = [1, "day"]
       else if chart_type is 'year_to_months'
         actualBarWidth = 0.66*3600*1000*24*30
         actualTimeFormat = "%b %Y"
         actualXLabel = "Monat"
         actualToolTipOpts = "%s   Monat: %x, Bezug: %y kWh"
+        actualMin = gon.beginning_of_year
+        actualMax = gon.end_of_year
+        actualMinTickSize = [1, "month"]
       actualLabel = "Aktuell"
 
 
@@ -88,7 +86,8 @@ $(".metering_points.show").ready ->
           mode: "time"
           timeformat: actualTimeFormat
           timezone: "browser"
-          minTickSize: [1, "hour"]
+          minTickSize: actualMinTickSize
+          min: actualMin
           max: actualMax
         axisLabels:
           show: true

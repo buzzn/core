@@ -23,7 +23,11 @@ class MeteringPointsController < InheritedResources::Base
 
 
     gon.push({
-
+                end_of_day:           Time.now.end_of_day.to_i * 1000 - 59 * 1000 - 29 * 60 * 1000,
+                beginning_of_month:   Time.now.in_time_zone.beginning_of_month.to_i * 1000 - 12 * 3600 * 1000,
+                end_of_month:         Time.now.in_time_zone.end_of_month.to_i * 1000 - 59 * 1000 - 59 * 60 * 1000 - 12 * 3600 * 1000,
+                beginning_of_year:    Time.now.in_time_zone.beginning_of_year.to_i * 1000 - 15 * 24 * 3600 * 1000,
+                end_of_year:          Time.now.in_time_zone.end_of_year.to_i * 1000 - 59 * 1000 - 59 * 60 * 1000 - 23 * 3600 * 1000 - 15 * 24 * 3600 * 1000,
                 metering_point_id:    @metering_point.id,
                 metering_point_mode:  @metering_point.mode,
                 chart_types:          ['day_to_hours', 'month_to_days', 'year_to_months'],
