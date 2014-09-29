@@ -8,7 +8,9 @@ class LocationsController < InheritedResources::Base
     @location   = location.decorate
     @residents  = @location.users
     @devices    = @location.devices
-    gon.push({ registers: Register.where(metering_point: location.metering_point.id).collect(&:day_to_hours) })
+    gon.push({ registers: Register.where(metering_point: location.metering_point.id).collect(&:day_to_hours),
+               end_of_day: Time.now.end_of_day.to_i * 1000
+            })
     show!
   end
 

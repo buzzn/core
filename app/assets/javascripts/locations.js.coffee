@@ -25,6 +25,7 @@ $(".locations.show").ready ->
         timeformat: "%H:%M"
         tickDecimals: 0
         timezone: "browser"
+        max: gon.end_of_day
       tooltip: true
       tooltipOpts:
         content: (label, xval, yval, flotItem) ->

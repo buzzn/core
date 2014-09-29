@@ -19,7 +19,9 @@ class GroupsController < InheritedResources::Base
     @registers.each do |register|
       @register_charts << register.first.day_to_hours
     end
-    gon.push({ register_charts: @register_charts })
+    gon.push({ register_charts: @register_charts,
+               end_of_day: Time.now.end_of_day.to_i * 1000
+            })
   end
 
   def edit
