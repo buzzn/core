@@ -6,6 +6,8 @@ class GroupDecorator < Draper::Decorator
   decorates_association :profile
   decorates_association :user
   decorates_association :assets
+  decorates_association :metering_point_operator_contract
+  decorates_association :servicing_contract
 
   def link_to_edit
     link_to(
@@ -64,6 +66,30 @@ class GroupDecorator < Draper::Decorator
         :class                      => 'content-plus',
         'data-toggle'               => 'modal',
         'data-target'               => '#myModal'
+      })
+  end
+
+  def new_metering_point_operator_contract
+    link_to(
+      content_tag(:i, '', class: 'fa fa-plus-circle') + '  ' + t("add_metering_point_operator_contract"),
+      new_metering_point_operator_contract_path(group_id: model.id),
+      {
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => 'modal',
+        'data-target' => '#myModal'
+      })
+  end
+
+  def new_servicing_contract
+    link_to(
+      content_tag(:i, '', class: 'fa fa-plus-circle') + '  ' + t("add_servicing_contract"),
+      new_servicing_contract_path(group_id: model.id),
+      {
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => 'modal',
+        'data-target' => '#myModal'
       })
   end
 

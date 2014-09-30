@@ -46,6 +46,10 @@
     %li
       %a{"data-toggle" => "tab", href: "#assets"}
         = t'assets'
+    - if user_signed_in? && current_user.can_update?(@group)
+      %li
+        %a{"data-toggle" => "tab", href: "#contracts"}
+          = t('contracts')
 
   .tab-content
     #metering_points.tab-pane.active
@@ -77,8 +81,23 @@
     #assets.tab-pane
       .assets
         = render @group.assets
-      - if current_user.can_update?(@group)
+      - if user_signed_in? && current_user.can_update?(@group)
         = @group.new_asset
+
+    #contracts.tab-pane
+      .contracts
+        .servicing_contracts
+          - if @group.servicing_contract
+            = render @group.servicing_contract
+        .new_servicing_contract_group
+          - if @group.servicing_contract.nil?
+            = @group.new_servicing_contract
+        .metering_point_operator_contracts
+          - if @group.metering_point_operator_contract
+            = render @group.metering_point_operator_contract
+        .new_metering_point_operator_contract_group
+          - if @group.metering_point_operator_contract.nil?
+            = @group.new_metering_point_operator_contract
 
 
 

@@ -7,6 +7,7 @@
       = simple_form_for @metering_point_operator_contract, remote: true, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
         - value = params[:metering_point_id].nil? ? {} : { value: params[:metering_point_id] }
         = f.input :metering_point_id, input_html: {}.merge(value), as: :hidden
-        = f.association :organization, collection: Organization.metering_point_operators, input_html: { class: 'select2'}
+        - value2 = params[:group_id].nil? ? {} : { value: params[:group_id] }
+        = f.input :group_id, input_html: {}.merge(value2), as: :hidden
         = render 'metering_point_operator_contracts/form_fields', f: f
         = f.button :submit, id: 'submit', class: 'btn btn-success'

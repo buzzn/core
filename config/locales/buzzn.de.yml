@@ -351,6 +351,11 @@ de:
   password: Passwort
   username: Login
   edit_metering_point_operator_contract: Vertrag mit Messstellenbetreiber bearbeiten
+  tariff: Tarif
+  edit_servicing_contract: Abwicklungsvertrag bearbeiten
+  servicing_contract: Abwicklungsvertrag
+  new_servicing_contract: Neuer Abwicklungsvertrag
+
 
 
 

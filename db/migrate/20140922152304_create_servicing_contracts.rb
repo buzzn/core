@@ -9,6 +9,8 @@ class CreateServicingContracts < ActiveRecord::Migration
       t.boolean :power_of_attorney
       t.date    :commissioning
       t.date    :termination
+      t.decimal :forecast_watt_hour_pa
+      t.decimal :price_cents
 
       t.integer :organization_id
       t.integer :contracting_party_id

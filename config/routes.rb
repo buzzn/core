@@ -1,7 +1,5 @@
 Buzzn::Application.routes.draw do
 
-  resources :servicing_contracts
-
   require 'sidekiq/web'
   mount Sidekiq::Web, at: '/sidekiq'
 
@@ -66,7 +64,9 @@ Buzzn::Application.routes.draw do
   resources :metering_service_provider_contracts
   resources :metering_point_operator_contracts
   resources :electricity_supplier_contracts
+  resources :servicing_contracts
   resources :contracting_parties
+
   resources :assets
 
 

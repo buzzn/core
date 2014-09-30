@@ -116,6 +116,17 @@ de:
         build: Herstellungsjahr
         calibrated_till: Geeicht bis
         converter_constant: Wandlerfaktor
+      servicing_contract:
+        tariff: Tarif
+        status: Status
+        signing_user: Unterzeichnet von
+        terms: AGB
+        confirm_pricing_model: Preismodell bestätigt
+        power_of_attorney: Vollmacht
+        commissioning: Vertragsbeginn
+        termination: Vertragsende
+        forecast_watt_hour_pa: Jahresverbrauch (Prognose) in kWh
+        price_cents: Preis (Cent)
 
 
 
@@ -126,6 +137,8 @@ de:
         name: 'Frei wählbarer Name des Standorts'
       metering_point:
         address_addition: 'Frei wählbarer Name des Zählpunkts, z.B. "3. OG links" oder "Dachboden"'
+      metering_point_operator_contract:
+        username: 'Benutzername, mit dem du dich beim Messstellenbetreiber einloggen kannst.'
 
 
 
