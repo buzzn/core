@@ -12,6 +12,7 @@ gem 'coffee-rails'
 gem 'uglifier'
 gem 'rails_layout'
 gem 'bootstrap-sass'
+gem 'autoprefixer-rails'
 gem 'font-awesome-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
@@ -58,7 +59,8 @@ gem 'geocoder'
 gem 'paper_trail'
 gem 'money-rails'
 gem 'wicked'
-gem 'acts_as_commentable'
+gem 'acts_as_commentable_with_threading'
+gem 'awesome_nested_set'
 gem 'acts-as-taggable-on'
 gem 'remotipart'
 gem 'public_activity'
@@ -78,8 +80,6 @@ gem 'goldiloader'
 group :production do
   gem 'asset_sync'
 end
-
-
 
 group :development, :test do
   gem 'spring'

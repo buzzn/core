@@ -63,7 +63,10 @@ GEM
       tzinfo (~> 1.1)
     acts-as-taggable-on (3.4.2)
       activerecord (>= 3.2, < 5)
-    acts_as_commentable (4.0.1)
+    acts_as_commentable_with_threading (1.2.0)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      awesome_nested_set (>= 2.0)
     addressable (2.3.6)
     ancestry (2.1.0)
       activerecord (>= 3.0.0)
@@ -78,6 +81,10 @@ GEM
     authority (3.0.0)
       activesupport (>= 3.0.0)
       rake (>= 0.8.7)
+    autoprefixer-rails (3.1.0.20140911)
+      execjs
+    awesome_nested_set (3.0.1)
+      activerecord (>= 4.0.0, < 5)
     awesome_print (1.2.0)
     aws-sdk (1.54.0)
       aws-sdk-v1 (= 1.54.0)
@@ -527,13 +534,15 @@ PLATFORMS
 DEPENDENCIES
   active_link_to
   acts-as-taggable-on
-  acts_as_commentable
+  acts_as_commentable_with_threading
   address_picker-rails!
   ancestry
   annotate
   asset_sync
   attribute_normalizer!
   authority
+  autoprefixer-rails
+  awesome_nested_set
   awesome_print
   aws-sdk
   better_errors

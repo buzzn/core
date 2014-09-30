@@ -25,9 +25,11 @@
 //= require address_picker-rails
 //= require select2
 //= require cocoon
-//= require bootstrap
+//= require bootstrap-sprockets
 //= require rails-timeago
 //= require rails-timeago-all
+//= require underscore
+//= require dependent-fields
 
 //= require global
 //= require metering_points
@@ -36,6 +38,5 @@
 
 //= require turbolinks
 
-//= require underscore
-//= require dependent-fields
+
 
