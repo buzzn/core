@@ -26,6 +26,7 @@
 //= require select2
 //= require cocoon
 //= require bootstrap
+//= require bootstrap-sprockets
 //= require rails-timeago
 //= require rails-timeago-all
 
