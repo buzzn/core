@@ -69,7 +69,7 @@ Buzzn::Application.routes.draw do
 
   resources :assets
 
-  resources :comments, path_prefix: '/:commentable_type/:commentable_id'
+  resources :comments
 
   resources :startpage
 
