@@ -50,6 +50,9 @@
       %li
         %a{"data-toggle" => "tab", href: "#contracts"}
           = t('contracts')
+    %li
+      %a{"data-toggle" => "tab", href: "#comments"}
+        = t('comments')
 
   .tab-content
     #metering_points.tab-pane.active
@@ -99,7 +102,8 @@
           - if @group.metering_point_operator_contract.nil?
             = @group.new_metering_point_operator_contract
 
-
+    #comments.tab-pane
+      = render :partial => 'comments/comment', :locals => {:commentable => @group}
 
 
 

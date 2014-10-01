@@ -1,5 +1,6 @@
 class Group < ActiveRecord::Base
   resourcify
+  acts_as_commentable
   include Authority::Abilities
 
   include PublicActivity::Model

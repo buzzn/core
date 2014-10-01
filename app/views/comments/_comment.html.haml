@@ -1,0 +1,2 @@
+= form_for(:comment, :url => comments_path(commentable.class.to_s.underscore, commentable.id)) do |f|
+  = render 'comments/form_fields', f: f
