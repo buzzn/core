@@ -20,7 +20,7 @@ class CommentsController < InheritedResources::Base
 
   def destroy
     @comment = Comment.find(params[:id])
-    if current_user == @comment.user
+    if current_user == @comment.user || current_user.can_update?(@group)
       if @comment.destroy
         render :json => @comment, :status => :ok
       else

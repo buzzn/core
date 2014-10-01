@@ -107,7 +107,7 @@
         %h2 Comments
         = render :partial => 'comments/form', :locals => { :comment => @new_comment }
         .comments-all
-        = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
+          = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
 
 
 

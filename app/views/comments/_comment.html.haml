@@ -1,7 +1,9 @@
 %div.comment{ :id => "comment_#{comment.id}" }
   %hr
-  = link_to "×", comment_path(comment), :method => :delete, :remote => true, :confirm => "Are you sure you want to remove this comment?", :disable_with => "×", :class => 'close'
-  %h4
+  - if user_signed_in? && (current_user == comment.user || current_user.can_update?(@group))
+    = link_to "×", comment_path(comment), :method => :delete, :remote => true, :confirm => "Are you sure you want to remove this comment?", :disable_with => "×", :class => 'close'
+  .user
     = render comment.user.profile.decorate
-    %small= comment.updated_at
+  .time
+    = timeago_tag comment.updated_at, :nojs => true, :lang => locale, :limit => 10.days.ago
   %p= comment.body

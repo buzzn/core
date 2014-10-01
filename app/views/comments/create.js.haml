@@ -1,2 +1,1 @@
-alert('create');
-$(".comments-all").append("#{escape_javascript( render @comment )}");
+$(".comments-all").prepend("#{escape_javascript( render @comment )}").hide().show('slow');
