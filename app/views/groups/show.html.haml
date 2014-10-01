@@ -105,7 +105,8 @@
     #comments.tab-pane
       .comments
         %h2 Comments
-        = render :partial => 'comments/form', :locals => { :comment => @new_comment }
+        - if user_signed_in? && (@energy_producers.include?(current_user) || @energy_consumers.include?(current_user) || @interested_members.include?(current_user))
+          = render :partial => 'comments/form', :locals => { :comment => @new_comment }
         .comments-all
           = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
 
