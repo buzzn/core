@@ -144,6 +144,8 @@ ActiveRecord::Schema.define(version: 20140930083931) do
     t.datetime "updated_at"
   end
 
+  add_index "devices", ["metering_point_id"], name: "index_devices_on_metering_point_id", using: :btree
+
   create_table "distribution_system_operator_contracts", force: true do |t|
     t.string   "name"
     t.string   "status"
@@ -309,6 +311,7 @@ ActiveRecord::Schema.define(version: 20140930083931) do
     t.datetime "updated_at"
   end
 
+  add_index "metering_point_operator_contracts", ["group_id"], name: "index_metering_point_operator_contracts_on_group_id", using: :btree
   add_index "metering_point_operator_contracts", ["metering_point_id"], name: "index_metering_point_operator_contracts_on_metering_point_id", using: :btree
   add_index "metering_point_operator_contracts", ["organization_id"], name: "index_metering_point_operator_contracts_on_organization_id", using: :btree
 
@@ -465,6 +468,10 @@ ActiveRecord::Schema.define(version: 20140930083931) do
     t.datetime "updated_at"
   end
 
+  add_index "servicing_contracts", ["contracting_party_id"], name: "index_servicing_contracts_on_contracting_party_id", using: :btree
+  add_index "servicing_contracts", ["group_id"], name: "index_servicing_contracts_on_group_id", using: :btree
+  add_index "servicing_contracts", ["organization_id"], name: "index_servicing_contracts_on_organization_id", using: :btree
+
   create_table "standard_profiles", force: true do |t|
     t.string   "mode"
     t.string   "category"
@@ -512,6 +519,7 @@ ActiveRecord::Schema.define(version: 20140930083931) do
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
   add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
+  add_index "users", ["invited_by_type"], name: "index_users_on_invited_by_type", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 

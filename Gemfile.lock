@@ -21,7 +21,7 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/devise.git
-  revision: 64b49054104c007374f3628075262df2b169f3e4
+  revision: 6f8a383ff6456cefd863905669e695b1eb548628
   specs:
     devise (3.3.0)
       bcrypt (~> 3.0)
@@ -426,7 +426,7 @@ GEM
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
       rspec-mocks (~> 3.1.0)
-    rspec-core (3.1.4)
+    rspec-core (3.1.5)
       rspec-support (~> 3.1.0)
     rspec-expectations (3.1.2)
       diff-lcs (>= 1.2.0, < 2.0)

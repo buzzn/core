@@ -18,5 +18,8 @@ class CreateServicingContracts < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :servicing_contracts, :organization_id
+    add_index :servicing_contracts, :contracting_party_id
+    add_index :servicing_contracts, :group_id
   end
 end

@@ -53,5 +53,6 @@ class DeviseCreateUsers < ActiveRecord::Migration
     add_index :users, :invitations_count
     add_index :users, :invitation_token, unique: true
     add_index :users, :invited_by_id
+    add_index :users, :invited_by_type
   end
 end
