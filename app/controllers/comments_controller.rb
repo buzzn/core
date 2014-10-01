@@ -1,22 +1,29 @@
 class CommentsController < InheritedResources::Base
-  before_filter :load_commentable
+  before_filter :authenticate_user!
+  respond_to :html, :js
 
   def create
-    @comment = @commentable.comments.build(params[:comment])
-    @comment.user = current_user
-    respond_to do |format|
-      if @comment.save
-        format.html { redirect_to @commentable }
-      else
-        format.html { render :action => 'new' }
-      end
+    @comment_hash = params[:comment]
+    @obj = @comment_hash[:commentable_type].constantize.find(@comment_hash[:commentable_id])
+    # Not implemented: check to see whether the user has permission to create a comment on this object
+    @comment = Comment.build_from(@obj, current_user.id, @comment_hash[:body])
+    if @comment.save
+      render :partial => "comments/comment", :locals => { :comment => @comment }, :layout => false, :status => :created
+    else
+      render :js => "alert('error saving comment');"
     end
+    create!
   end
 
-  protected
-
-  def load_commentable
-    @commentable = params[:commentable_type].camelize.constantize.find(params[:commentable_id])
+  def destroy
+    @comment = Comment.find(params[:id])
+    if current_user == @comment.user
+      if @comment.destroy
+        render :json => @comment, :status => :ok
+      else
+        render :js => "alert('error deleting comment');"
+      end
+    end
   end
 
   def permitted_params

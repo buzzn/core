@@ -69,7 +69,7 @@ Buzzn::Application.routes.draw do
 
   resources :assets
 
-  resources :comments
+  resources :comments, :only => [:create, :destroy]
 
   resources :startpage
 
