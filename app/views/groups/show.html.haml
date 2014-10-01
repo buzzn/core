@@ -103,7 +103,9 @@
             = @group.new_metering_point_operator_contract
 
     #comments.tab-pane
-      = render :partial => 'comments/comment', :locals => {:commentable => @group}
+      - @all_comments.each do |comment|
+        = render comment
+      = render :partial => 'comments/new', :locals => {:commentable => @group}
 
 
 

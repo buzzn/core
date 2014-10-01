@@ -18,4 +18,8 @@ class CommentsController < InheritedResources::Base
   def load_commentable
     @commentable = params[:commentable_type].camelize.constantize.find(params[:commentable_id])
   end
+
+  def permitted_params
+    params.permit(:comment => [:title, :body, :subject, :user_id, :commentable_id, :commentably_type, :parent_id])
+  end
 end

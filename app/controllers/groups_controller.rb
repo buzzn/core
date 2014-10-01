@@ -14,6 +14,8 @@ class GroupsController < InheritedResources::Base
     @all_users                      = User.all.decorate
     @all_groups                     = Group.all.decorate
 
+    @all_comments                   = @group.comment_threads
+
     # TODO change to AJAX
     @register_charts = []
     @registers.each do |register|
