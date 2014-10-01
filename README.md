@@ -24,6 +24,10 @@
     bundle exec rails s
 
 ## Reset end Start Test Environment
+    bundle exec rake db:test:prepare
+    bundle exec guard
+
+## Reset end Start Test Environment
     bundle exec rake db:init
     bundle exec rake db:test:prepare
     bundle exec guard
