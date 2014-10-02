@@ -9,4 +9,5 @@
         = f.input :metering_point_id, input_html: {}.merge(value), as: :hidden
         = f.association :organisation_id, collection: Organisation.where(mode: 'metering_service_provider'), input_html: { class: 'select2'}
         = render 'metering_service_provider_contract/form_fields', f: f
-        = f.button :submit, id: 'submit', class: 'btn btn-success'
+        .modal-footer
+          = f.button :submit, id: 'submit', class: 'btn btn-success'

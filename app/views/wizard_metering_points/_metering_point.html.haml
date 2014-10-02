@@ -12,4 +12,5 @@
         = simple_form_for @metering_point, url: metering_point_update_wizard_metering_points_path(id: params[:id]), method: 'put', html: {class: 'form-horizontal' }, wrapper: :horizontal_form  do |f|
           = f.input :address_addition
           = f.input :uid
-          = f.submit t("continue"), class: 'btn btn-success', id: 'submit'
+          .modal-footer
+            = f.submit t("continue"), class: 'btn btn-success', id: 'submit'

@@ -6,4 +6,5 @@
     .modal-body
       = simple_form_for @device, remote: true, html: {multipart: true, class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
         = render 'devices/out_form_fields', f: f
-        = f.button :submit, id: 'submit', class: 'btn btn-success'
+        .modal-footer
+          = f.button :submit, id: 'submit', class: 'btn btn-success'

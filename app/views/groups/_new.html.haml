@@ -6,6 +6,7 @@
     .modal-body
       = simple_form_for @group, remote: true, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
         = render 'groups/form_fields', f: f
-        = f.button :submit, id: 'submit', class: 'btn btn-success'
+        .modal-footer
+          = f.button :submit, id: 'submit', class: 'btn btn-success'
 
 

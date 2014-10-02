@@ -8,4 +8,5 @@
         - value = params[:location_id].nil? ? {} : { value: params[:location_id] }
         = f.input :location_id, input_html: {}.merge(value), as: :hidden
         = render 'metering_points/form_fields', f: f
-        = f.button :submit, id: 'submit', class: 'btn btn-success'
+        .modal-footer
+          = f.button :submit, id: 'submit', class: 'btn btn-success'

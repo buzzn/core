@@ -6,5 +6,6 @@
     .modal-body
       = simple_form_for @location, remote: true, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
         = render 'locations/form_fields', f: f
-        = f.button :submit, id: 'submit', class: 'btn btn-success'
-        = @location.link_to_delete
+        .modal-footer
+          = f.button :submit, id: 'submit', class: 'btn btn-success'
+          = @location.link_to_delete

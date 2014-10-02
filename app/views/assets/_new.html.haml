@@ -10,4 +10,5 @@
         - value2 = params[:assetable_type].nil? ? {} : { value: params[:assetable_type] }
         = f.input :assetable_type, input_html: {}.merge(value2), as: :hidden
         = render 'assets/form_fields', f: f
-        = f.button :submit, id: 'submit', class: 'btn btn-success'
+        .modal-footer
+          = f.button :submit, id: 'submit', class: 'btn btn-success'

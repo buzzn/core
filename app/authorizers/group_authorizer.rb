@@ -14,7 +14,7 @@ class GroupAuthorizer < ApplicationAuthorizer
   end
 
   def commentable_by?(user)
-    user_signed_in?
+    user_signed_in? #TODO: undefined mehtod user_signed_in? for GroupAuthorizer
   end
 
 

@@ -5,9 +5,8 @@ class CommentsController < InheritedResources::Base
   def create
     @comment_hash = params[:comment]
     @obj = @comment_hash[:commentable_type].constantize.find(@comment_hash[:commentable_id])
-    if @obj.commentable_by?(current_user)
+    if user_signed_in? #TODO: bring commentable_by? to work
       @comment = Comment.build_from(@obj, current_user.id, @comment_hash[:body])
-
       respond_to do |format|
         if @comment.save
           format.js { @user }

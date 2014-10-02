@@ -105,7 +105,7 @@
     #comments.tab-pane
       .comments
         %h2= t('comments')
-        - if can_comment?
+        - if user_signed_in? #TODO: bring commentable_by? to work
           = render :partial => 'comments/form', :locals => { :comment => @new_comment }
         .comments-all
           = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
