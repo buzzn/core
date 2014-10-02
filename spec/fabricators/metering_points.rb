@@ -73,7 +73,6 @@ end
 Fabricator :mp_pv_karin, from: :metering_point do
   address_addition  'Dach'
   registers { Fabricate(:easymeter_60051431).registers }
-  metering_service_provider_contracts {[Fabricate(:mspc_karin)]}
 end
 
 
@@ -83,7 +82,6 @@ end
 Fabricator :mp_stefans_bhkw, from: :metering_point do
   address_addition  'Keller'
   registers { Fabricate(:in_out_meter).registers }
-  metering_service_provider_contracts {[Fabricate(:mspc_stefan)]}
 end
 
 
@@ -93,7 +91,6 @@ end
 Fabricator :mp_hof_butenland_wind, from: :metering_point do
   address_addition  'Acker'
   registers { Fabricate(:out_meter).registers }
-  metering_service_provider_contracts { [Fabricate(:metering_service_provider_contract)] }
 end
 
 
@@ -102,9 +99,15 @@ end
 Fabricator :mp_cs_1, from: :metering_point do
   address_addition  'Wohnung'
   registers { Fabricate(:easymeter_1124001747).registers }
-  metering_service_provider_contracts {[Fabricate(:mspc_justus)]}
 end
 
+
+
+# Nr. 60009348 für Christian Widmann (Einrichtungszähler Bezug)
+Fabricator :mp_60138988, from: :metering_point do
+  address_addition  'Bezug'
+  registers { Fabricate(:easymeter_60138988).registers }
+end
 
 
 
@@ -145,6 +148,11 @@ Fabricator :mp_hans_dieter_hopf, from: :metering_point do
   virtual true
   electricity_supplier_contracts         { [] }
 end
+
+
+
+
+
 
 
 

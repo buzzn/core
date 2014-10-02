@@ -83,11 +83,13 @@ buzzn_team_names.each do |user_name|
     user.add_role :admin # felix is admin
     user_location = Fabricate(:muehlenkamp)
   when 'christian'
-    user_location = Fabricate(:location)
+    user_location = Fabricate(:roentgenstrasse11)
+    user_location.metering_point.metering_point_operator_contracts << Fabricate(:mpoc_christian, metering_point: user_location.metering_point)
     user.add_role :admin # christian is admin
   when 'stefan'
     @bhkw_stefan       = Fabricate(:bhkw_stefan)
     @forstenrieder_weg = user_location = Fabricate(:forstenrieder_weg)
+    @forstenrieder_weg.metering_point.metering_point_operator_contracts << Fabricate(:mpoc_stefan, metering_point: @forstenrieder_weg.metering_point)
     @forstenrieder_weg.metering_point.devices << @bhkw_stefan
     user.add_role :manager, @bhkw_stefan
   else
@@ -116,6 +118,7 @@ end
 # hof_butenland
 jan_gerdes = Fabricate(:jan_gerdes)
 niensweg   = Fabricate(:niensweg)
+niensweg.metering_point.metering_point_operator_contracts << Fabricate(:metering_point_operator_contract, metering_point: niensweg.metering_point)
 jan_gerdes.add_role :manager, niensweg
 device = Fabricate(:hof_butenland_wind)
 niensweg.metering_point.devices << device
@@ -128,6 +131,7 @@ niensweg.metering_point.electricity_supplier_contracts.first.save
 # karin
 karin = Fabricate(:karin)
 gautinger_weg = Fabricate(:gautinger_weg)
+gautinger_weg.metering_point.metering_point_operator_contracts << Fabricate(:mpoc_karin, metering_point: gautinger_weg.metering_point)
 gautinger_weg.metering_point.users << karin
 karin.add_role :manager, gautinger_weg
 pv_karin = Fabricate(:pv_karin)
@@ -150,6 +154,7 @@ end
 christian_schuetze = Fabricate(:christian_schuetze)
 fichtenweg10       = Fabricate(:fichtenweg10)
 christian_schuetze.add_role :manager, fichtenweg10
+fichtenweg10.metering_point.metering_point_operator_contracts << Fabricate(:mpoc_justus, metering_point: fichtenweg10.metering_point)
 fichtenweg10.metering_point.users << christian_schuetze
 fichtenweg10.metering_point.electricity_supplier_contracts.first.contracting_party = christian_schuetze.contracting_party
 fichtenweg10.metering_point.electricity_supplier_contracts.first.save

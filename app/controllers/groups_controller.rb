@@ -15,7 +15,7 @@ class GroupsController < InheritedResources::Base
     @all_groups                     = Group.all.decorate
 
     @all_comments                   = @group.comment_threads.order('created_at desc')
-    @new_comment                    = Comment.build_from(@group, current_user.id, "")
+    @new_comment                    = Comment.build_from(@group, current_user.id, "") if user_signed_in?
 
     # TODO change to AJAX
     @register_charts = []
