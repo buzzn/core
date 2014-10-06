@@ -20,7 +20,12 @@ class GroupsController < InheritedResources::Base
     # TODO change to AJAX
     @register_charts = []
     @registers.each do |register|
-      @register_charts << register.first.day_to_hours
+      if register.first == register.last
+        @register_charts << register.first.day_to_hours
+      else
+        @register_charts << register.first.day_to_hours
+        @register_charts << register.last.day_to_hours
+      end
     end
     gon.push({ register_charts: @register_charts,
                end_of_day: Time.now.end_of_day.to_i * 1000
