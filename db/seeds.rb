@@ -204,6 +204,7 @@ mp_hans_dieter_hopf.update_attribute :parent, mp_60118470
 
 location_hopf = Fabricate(:location_hopf)
 location_hopf.metering_point = mp_60118470
+location_hopf.metering_point.metering_point_operator_contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_60118470)
 
 group_hopf = Fabricate(:group, name: 'Hopf Strom')
 group_hopf.metering_points << mp_60118470

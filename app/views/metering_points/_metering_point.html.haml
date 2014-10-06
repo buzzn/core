@@ -52,3 +52,5 @@
             - if current_user.can_update?(metering_point)
               = metering_point.edit_devices
       .clear
+        = 'smart?' + metering_point.meter.smart?.to_s
+

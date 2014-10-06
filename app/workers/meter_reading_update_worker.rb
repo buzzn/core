@@ -3,8 +3,7 @@ class MeterReadingUpdateWorker
 
   def perform(register_id, manufacturer_device_number, mpo_name, mpo_login_username, mpo_login_password, start_time, end_time)
 
-    case mpo_name
-    when 'discovergy'
+    if mpo_name == 'discovergy' or mpo_name == 'buzzn-metering'
       discovergy = Discovergy.new(mpo_login_username, mpo_login_password, "EASYMETER_#{manufacturer_device_number}")
       request     = discovergy.call(start_time, end_time)
 
@@ -28,10 +27,10 @@ class MeterReadingUpdateWorker
         logger.error request
       end
 
-    when 'fluxo'
+    elsif mpo_name == 'fluxo'
       puts "It's fluxo"
     else
-      puts "You gave me #{@meter.brand} -- I have no idea what to do with that."
+      puts "You gave me #{mpo_name} -- I have no idea what to do with that."
     end
 
   end

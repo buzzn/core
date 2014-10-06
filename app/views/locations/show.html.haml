@@ -43,6 +43,8 @@
   - else
     .metering_points
       = render @location.metering_point
+      - @location.metering_point.children.each do |children|
+        = render children.decorate
 
   - if current_user.can_update?(@location)
     = @location.new_metering_point
