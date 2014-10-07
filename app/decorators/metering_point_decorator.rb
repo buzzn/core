@@ -172,6 +172,16 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
-
+  def new_sub_metering_point
+    link_to(
+      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      metering_point_wizard_metering_points_path(parent_metering_point_id: model.id),
+      {
+        :remote       => true,
+        :class        => 'content-plus',
+        'data-toggle' => 'modal',
+        'data-target' => '#myModal'
+      })
+  end
 
 end
