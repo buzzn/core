@@ -38,5 +38,11 @@
 
 //= require turbolinks
 
+//= require d3
+//= require dagre-d3
+//= require dagre-d3.min
+
+
+
 
 

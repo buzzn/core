@@ -1,19 +1,22 @@
 class LocationsController < InheritedResources::Base
   before_filter :authenticate_user!
-  respond_to :html, :js
+  respond_to :html, :js, :json
 
 
   def show
     location    = Location.find(params[:id])
-    @location   = location.decorate
-    @residents  = @location.users
-    @devices    = @location.devices
-    if @location.metering_point
-      gon.push({ registers: Register.where("metering_point_id = :root_id OR metering_point_id IN (:children_ids)", {root_id: location.metering_point.id, children_ids: location.metering_point.child_ids }).collect(&:day_to_hours),
-                 end_of_day: Time.now.end_of_day.to_i * 1000
-              })
+    respond_to do |format|
+      format.html { @location = location.decorate
+                    @residents  = @location.users
+                    @devices    = @location.devices
+                    if @location.metering_point
+                      gon.push({ registers: Register.where("metering_point_id = :root_id OR metering_point_id IN (:children_ids)", {root_id: location.metering_point.id, children_ids: location.metering_point.child_ids }).collect(&:day_to_hours),
+                                 end_of_day: Time.now.end_of_day.to_i * 1000
+                      })
+                    end
+      }
+      format.json{ @location = location }
     end
-    show!
   end
 
   def new
