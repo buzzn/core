@@ -38,8 +38,58 @@
 
 
 .col-sm-6
-  %svg{:height => "680", :width => "650"}
-    %g{:transform => "translate(20,20)"}
+  %ul.nav.nav-pills#mytab.nav-spacer
+    %li.active
+      %a{"data-toggle" => "tab", href: "#metering_points"}
+        = t'metering_points'
+    %li
+      %a{"data-toggle" => "tab", href: "#treeview"}
+        = t'treeview'
+
+  .tab-content
+    #metering_points.tab-pane
+
+  .tab-content
+    #treeview.tab-pane.active
+      #center-container
+        #infovis
+      #right-container
+        %h4 Tree Orientation
+        %table
+          %tr
+            %td
+              %label{:for => "r-left"} Left
+            %td
+              %input#r-left{:checked => "checked", :name => "orientation", :type => "radio", :value => "left"}/
+          %tr
+            %td
+              %label{:for => "r-top"} Top
+            %td
+              %input#r-top{:name => "orientation", :type => "radio", :value => "top"}/
+          %tr
+            %td
+              %label{:for => "r-bottom"} Bottom
+            %td
+              %input#r-bottom{:name => "orientation", :type => "radio", :value => "bottom"}/
+          %tr
+            %td
+              %label{:for => "r-right"} Right
+            %td
+              %input#r-right{:name => "orientation", :type => "radio", :value => "right"}/
+        %h4 Selection Mode
+        %table
+          %tr
+            %td
+              %label{:for => "s-normal"} Normal
+            %td
+              %input#s-normal{:checked => "checked", :name => "selection", :type => "radio", :value => "normal"}/
+          %tr
+            %td
+              %label{:for => "s-root"} Set as Root
+            %td
+              %input#s-root{:name => "selection", :type => "radio", :value => "root"}/
+      #log
+
   - if @location.metering_point == nil
     = render 'no_metering_point'
   - else

@@ -40,8 +40,7 @@
 
 //= require d3
 //= require dagre-d3
-//= require jit
-//= require jit-yc
+//= require my_own_jit_copy
 
 
 
