@@ -47,13 +47,10 @@
         = t'treeview'
 
   .tab-content
-    #metering_points.tab-pane
-
-  .tab-content
     #treeview.tab-pane.active
       #center-container
         #infovis
-      #right-container
+      #right-container.pull-right
         %h4 Tree Orientation
         %table
           %tr
@@ -90,16 +87,19 @@
               %input#s-root{:name => "selection", :type => "radio", :value => "root"}/
       #log
 
-  - if @location.metering_point == nil
-    = render 'no_metering_point'
-  - else
-    .metering_points
-      = render @location.metering_point
-      - @location.metering_point.children.each do |children|
-        = render children.decorate
+    #metering_points.tab-pane
+      - if @location.metering_point == nil
+        = render 'no_metering_point'
+      - else
+        .metering_points
+          = render @location.metering_point
+          - @location.metering_point.children.each do |children|
+            = render children.decorate
 
-  - if current_user.can_update?(@location) && @location.metering_point.nil?
-    = @location.new_metering_point
+      - if current_user.can_update?(@location) && @location.metering_point.nil?
+        = @location.new_metering_point
+
+
 
 
 
