@@ -40,7 +40,8 @@
 
 //= require d3
 //= require dagre-d3
-//= require dagre-d3.min
+//= require jit
+//= require jit-yc
 
 
 

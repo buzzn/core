@@ -17,6 +17,7 @@ class LocationsController < InheritedResources::Base
       }
       format.json{ @location = location }
     end
+    gon.push({ location_id: @location.id })
   end
 
   def new

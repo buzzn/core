@@ -1,55 +1,99 @@
 $(".locations.show").ready ->
 
-  # Create the input graph
+  # Create a new directed graph
   g = new dagreD3.Digraph()
 
-  # Fill node 'A' with the color green
-  g.addNode "A",
-    label: "A"
-    style: "fill: #afa;"
+  # States and transitions from RFC 793
+  states = [
+    "Einsp/Bezug"
+    "Wind_Einsp"
+    "PV_1_Einsp"
+    "KWK_Einsp"
+    "PV_0_Erzeug"
+    "KWK_Erzeug"
+    "Bezug_1"
+    "Bezug_2"
+    "Bezug_3"
+    "Bezug_4"
+    "PV_1_Erzeug"
+    "PV_2_Erzeug"
+    "Wind_Erzeug"
+  ]
 
+  # Automatically label each of the nodes
+  states.forEach (state) ->
+    g.addNode state,
+      label: state
 
-  # Make the label for node 'B' bold
-  g.addNode "B",
-    label: "B"
-    labelStyle: "font-weight: bold;"
+    return
 
+  # Add some custom colors based on state
+  g.node("Einsp/Bezug").style = "fill: #06b"
+  g.node("Wind_Einsp").style = "fill: #f77"
+  g.node("PV_1_Einsp").style = "fill: #f77"
+  g.node("KWK_Einsp").style = "fill: #f77"
+  g.node("PV_0_Erzeug").style = "fill: #f77"
+  g.node("PV_1_Erzeug").style = "fill: #f77"
+  g.node("PV_2_Erzeug").style = "fill: #f77"
+  g.node("Wind_Erzeug").style = "fill: #f77"
+  g.node("KWK_Erzeug").style = "fill: #f77"
+  g.node("Bezug_1").style = "fill: #0df"
+  g.node("Bezug_2").style = "fill: #0df"
+  g.node("Bezug_3").style = "fill: #0df"
+  g.node("Bezug_4").style = "fill: #0df"
 
-  # Double the size of the font for node 'C'
-  g.addNode "C",
-    label: "C"
-    labelStyle: "font-size: 2em;"
+  # Set up the edges
+  g.addEdge null, "Einsp/Bezug", "PV_2_Erzeug"
 
+  g.addEdge null, "Einsp/Bezug", "Wind_Einsp"
 
-  # Make the edge from 'A' to 'B' red and thick
-  g.addEdge null, "A", "B",
-    style: "stroke: #f66; stroke-width: 3px;"
+  g.addEdge null, "Wind_Einsp", "Wind_Erzeug"
 
+  g.addEdge null, "Wind_Einsp", "PV_1_Einsp"
 
-  # Make the label for the edge from 'C' to 'B' italic and underlined
-  g.addEdge null, "C", "B",
-    label: "A to C"
-    style: "stroke-width: 1.5px"
-    labelStyle: "font-style: italic; text-decoration: underline;"
+  g.addEdge null, "PV_1_Einsp", "KWK_Einsp"
+
+  g.addEdge null, "PV_1_Einsp", "PV_0_Erzeug"
+
+  g.addEdge null, "PV_1_Einsp", "PV_1_Erzeug"
+
+  g.addEdge null, "KWK_Einsp", "KWK_Erzeug"
+
+  g.addEdge null, "KWK_Einsp", "Bezug_1"
+
+  g.addEdge null, "KWK_Einsp", "Bezug_2"
+
+  g.addEdge null, "KWK_Einsp", "Bezug_3"
+
+  g.addEdge null, "KWK_Einsp", "Bezug_4"
 
 
   # Create the renderer
   renderer = new dagreD3.Renderer()
 
-  # Disable pan / zoom for this demo
-  renderer.zoom false
-
   # Set up an SVG group so that we can translate the final graph.
   svg = d3.select("svg")
   svgGroup = svg.append("g")
+
+  # Set initial zoom to 75%
+  initialScale = 0.75
+  oldZoom = renderer.zoom()
+  renderer.zoom (graph, svg) ->
+    zoom = oldZoom(graph, svg)
+
+    # We must set the zoom and then trigger the zoom event to synchronize
+    # D3 and the DOM.
+    zoom.scale(initialScale).event svg
+    zoom
+
 
   # Run the renderer. This is what draws the final graph.
   layout = renderer.run(g, svgGroup)
 
   # Center the graph
-  xCenterOffset = (svg.attr("width") - layout.graph().width) / 2
+  xCenterOffset = (svg.attr("width") - layout.graph().width * initialScale) / 2
   svgGroup.attr "transform", "translate(" + xCenterOffset + ", 20)"
-  svg.attr "height", layout.graph().height + 40
+  svg.attr "height", layout.graph().height * initialScale + 40
 
 
 
