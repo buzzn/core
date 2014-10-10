@@ -48,7 +48,11 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def metering_point_operator_contract
-    self.metering_point_operator_contracts.first
+    if self.metering_point_operator_contracts.any?
+      self.metering_point_operator_contracts.first
+    elsif self.group
+      self.group.metering_point_operator_contract
+    end
   end
 
   scope :by_group_id_and_modes, lambda { |group_id, modes|
@@ -60,7 +64,7 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def validates_smartmeter
-    if meter && metering_point_operator_contract
+    if meter && (metering_point_operator_contract || self.group.metering_point_operator_contract)
       @mpoc = metering_point_operator_contract
       @meter = meter
 
@@ -73,7 +77,7 @@ class MeteringPoint < ActiveRecord::Base
         @meter.update_columns(smart: false)
       end
     else
-      @meter.update_columns(smart: false)
+      meter.update_columns(smart: false)
     end
   end
 

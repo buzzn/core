@@ -208,7 +208,11 @@ location_hopf.metering_point.metering_point_operator_contracts << Fabricate(:mpo
 
 group_hopf = Fabricate(:group, name: 'Hopf Strom')
 group_hopf.metering_points << mp_60118470
-
+group_hopf.metering_points << mp_60009316
+group_hopf.metering_points << mp_60009272
+group_hopf.metering_points << mp_60009348
+group_hopf.metering_points << mp_hans_dieter_hopf
+group_hopf.metering_point_operator_contract = Fabricate(:mpoc_buzzn_metering, group: group_hopf)
 
 puts 'group hof_butenland'
 group_hof_butenland = Fabricate(:group_hof_butenland)
