@@ -123,6 +123,15 @@ class MeteringPoint < ActiveRecord::Base
 
 
 
+
+  def self.json_tree(nodes)
+    nodes.map do |node, sub_nodes|
+      {:name => node.address_addition, :id => node.slug, :data => {:mode => node.mode}, :children => json_tree(sub_nodes).compact}
+    end
+  end
+
+
+
   private
 
     def first_day_init

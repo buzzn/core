@@ -5,6 +5,7 @@ class LocationsController < InheritedResources::Base
 
   def show
     location    = Location.find(params[:id])
+    @metering_points = location.metering_point.subtree.arrange
     respond_to do |format|
       format.html { @location = location.decorate
                     @residents  = @location.users
@@ -15,7 +16,9 @@ class LocationsController < InheritedResources::Base
                       })
                     end
       }
-      format.json{ @location = location }
+      format.json{ @location = location
+                    render :json =>  MeteringPoint.json_tree(@metering_points)
+      }
     end
     gon.push({ location_id: @location.id })
   end
