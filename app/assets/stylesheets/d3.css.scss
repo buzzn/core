@@ -89,9 +89,8 @@ table {
     margin-left:7px;
 }
 
-#right-container,
 #center-container {
-    height:600px;
+    height:400px;
     position:relative;
     top:0;
 }
@@ -110,6 +109,7 @@ table {
     right:0;
     background-position:center left;
     border-right:1px solid #ddd;
+    visibility: hidden;
 }
 
 #right-container h4{
@@ -144,7 +144,7 @@ table {
 #infovis {
     position:relative;
     width:100%;
-    height:600px;
+    height:400px;
     margin:auto;
     overflow:hidden;
 }

@@ -221,14 +221,6 @@ $(".locations.show").ready ->
         type: "bezier"
         overridable: true
 
-      onBeforeCompute: (node) ->
-        Log.write "loading " + node.name
-        return
-
-      onAfterCompute: ->
-        Log.write "done"
-        return
-
       onCreateLabel: (label, node) ->
         label.id = node.id
         label.innerHTML = node.name
@@ -288,17 +280,6 @@ $(".locations.show").ready ->
         return
     )
     st.loadJSON json
-    st.graph.eachNode (n) ->
-      #set random canvas specific styles
-      if n.data.mode == "in"
-        n.setCanvasStyle("fillStyle", "#09f", "end")
-        n.setCanvasStyle("strokeStyle", "#09f", "end")
-      else if n.data.mode == "out"
-        n.setCanvasStyle("fillStyle", "#090", "end")
-        n.setCanvasStyle("strokeStyle", "#090", "end")
-      else if n.data.mode == "in_out"
-        n.setCanvasStyle("fillStyle", "#03b", "end")
-        n.setCanvasStyle("strokeStyle", "#03b", "end")
     st.compute()
     st.geom.translate new $jit.Complex(-200, 0), "current"
     st.onClick st.root
@@ -326,17 +307,19 @@ $(".locations.show").ready ->
     animate = not (iStuff or not nativeCanvasSupport)
     return
   )()
-  Log =
-    elem: false
-    write: (text) ->
-      @elem = document.getElementById("log")  unless @elem
-      @elem.innerHTML = text
-      @elem.style.left = (500 - @elem.offsetWidth / 2) + "px"
-      return
 
   #end
 
-  init()
+
+
+
+
+  $("a[data-toggle=\"tab\"]").on "shown.bs.tab", (e) ->
+    if e.target.href = "#metering_point_tree"
+      init()
+      top = $jit.id("r-top")
+      top.checked = true
+
 
 
 
@@ -379,3 +362,7 @@ $(".locations.show").ready ->
         axisLabel: 'Bezug (kWh)'
       ]
     }
+
+
+
+  return
