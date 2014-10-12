@@ -298,7 +298,6 @@ GEM
     jquery-ui-rails (5.0.0)
       railties (>= 3.2.16)
     json (1.8.1)
-    kgio (2.9.2)
     launchy (2.4.2)
       addressable (~> 2.3)
     libv8 (3.16.14.7)
@@ -379,6 +378,8 @@ GEM
       activerecord (>= 3.0)
       i18n (>= 0.5.0)
       railties (>= 3.0.0)
+    puma (2.9.0)
+      rack (>= 1.1, < 2.0)
     quiet_assets (1.0.3)
       railties (>= 3.1, < 5.0)
     rack (1.5.2)
@@ -421,7 +422,6 @@ GEM
       activesupport (= 4.1.6)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    raindrops (0.13.0)
     rake (10.3.2)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.5)
@@ -521,10 +521,6 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.6)
-    unicorn (4.8.3)
-      kgio (~> 2.6)
-      rack
-      raindrops (~> 0.7)
     uniform_notifier (1.6.2)
     vcr (2.9.3)
     warden (1.2.3)
@@ -621,6 +617,7 @@ DEPENDENCIES
   poltergeist
   pry-rails
   public_activity
+  puma
   quiet_assets
   rack-dev-mark
   rack-livereload
@@ -649,7 +646,6 @@ DEPENDENCIES
   tzinfo
   uglifier
   underscore-rails
-  unicorn
   vcr
   webmock
   whenever
