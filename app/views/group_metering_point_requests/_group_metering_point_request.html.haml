@@ -1,11 +1,11 @@
 .bs-callout.bs-callout-info
   .col-md-3
     .thumb_icon.friendship_req
-      = link_to group_metering_point_request.metering_point.decorate.image_tag_sm, group_metering_point_request.metering_point, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => group_metering_point_request.metering_point.name }, rel: 'tooltip'
+      = link_to group_metering_point_request.metering_point.decorate.image_tag_sm, group_metering_point_request.metering_point, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => group_metering_point_request.metering_point.address_addition }, rel: 'tooltip'
   .col-md-1
   .col-md-8
     %h4= t'new_group_metering_point_request'
-    %p= group_metering_point_request.metering_point.name
+    %p= group_metering_point_request.metering_point.address_addition
 
     = link_to t('accept'), accept_group_metering_point_request_path(group_metering_point_request), class: 'btn btn-success'
     = link_to t('reject'), reject_group_metering_point_request_path(group_metering_point_request), class: 'btn btn-danger'
