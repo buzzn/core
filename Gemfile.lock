@@ -7,10 +7,12 @@ GIT
 
 GIT
   remote: git://github.com/josevalim/inherited_resources.git
-  revision: 38009de075d4c7e5170a582af9c09002ff6fc4b5
+  revision: cc93af4584c0671c57beebd9b2abd275f09beff8
   specs:
     inherited_resources (1.5.0)
+      actionpack (>= 3.2, < 4.2)
       has_scope (~> 0.6.0.rc)
+      railties (>= 3.2, < 4.2)
       responders (~> 1.0)
 
 GIT
@@ -295,10 +297,9 @@ GEM
     jquery-turbolinks (2.1.0)
       railties (>= 3.1.0)
       turbolinks
-    jquery-ui-rails (5.0.0)
+    jquery-ui-rails (5.0.1)
       railties (>= 3.2.16)
     json (1.8.1)
-    kgio (2.9.2)
     launchy (2.4.2)
       addressable (~> 2.3)
     libv8 (3.16.14.7)
@@ -379,6 +380,8 @@ GEM
       activerecord (>= 3.0)
       i18n (>= 0.5.0)
       railties (>= 3.0.0)
+    puma (2.9.1)
+      rack (>= 1.1, < 2.0)
     quiet_assets (1.0.3)
       railties (>= 3.1, < 5.0)
     rack (1.5.2)
@@ -421,7 +424,6 @@ GEM
       activesupport (= 4.1.6)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    raindrops (0.13.0)
     rake (10.3.2)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.5)
@@ -439,7 +441,7 @@ GEM
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
       rspec-mocks (~> 3.1.0)
-    rspec-core (3.1.6)
+    rspec-core (3.1.7)
       rspec-support (~> 3.1.0)
     rspec-expectations (3.1.2)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -492,10 +494,10 @@ GEM
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
-    sprockets-rails (2.1.4)
+    sprockets-rails (2.2.0)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
-      sprockets (~> 2.8)
+      sprockets (>= 2.8, < 4.0)
     subexec (0.2.3)
     table_print (1.5.3)
     temple (0.6.8)
@@ -521,10 +523,6 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.6)
-    unicorn (4.8.3)
-      kgio (~> 2.6)
-      rack
-      raindrops (~> 0.7)
     uniform_notifier (1.6.2)
     vcr (2.9.3)
     warden (1.2.3)
@@ -621,6 +619,7 @@ DEPENDENCIES
   poltergeist
   pry-rails
   public_activity
+  puma
   quiet_assets
   rack-dev-mark
   rack-livereload
@@ -649,7 +648,6 @@ DEPENDENCIES
   tzinfo
   uglifier
   underscore-rails
-  unicorn
   vcr
   webmock
   whenever

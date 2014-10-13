@@ -23,6 +23,7 @@ namespace :smartmeter do
                                                 start_time,
                                                 end_time
                                               )
+        puts "register_id: #{register.id},  start_time: #{start_time},  end_time: #{end_time}"
       end
     end
   end
