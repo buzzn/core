@@ -59,6 +59,13 @@ class MeteringPoint < ActiveRecord::Base
     MeteringPoint.joins(:registers).where("mode in (?)", modes).where(group_id: group_id).order('mode DESC')
   }
 
+  scope :by_modes_and_user, lambda {|modes, user|
+    location_ids = user.editable_locations.collect{|location| location.id}
+    root_metering_points = location_ids.collect{|location_id| Location.find(location_id).metering_point.id}.join('|')
+    MeteringPoint.joins(:registers).where("mode in (?)", modes).where(group_id: nil).where("location_id in (?) OR ancestry SIMILAR TO ?", location_ids, root_metering_points).collect(&:id)
+  }
+
+
 
 
 

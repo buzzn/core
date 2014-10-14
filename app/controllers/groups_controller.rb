@@ -55,7 +55,20 @@ class GroupsController < InheritedResources::Base
   end
 
   def permitted_params
-    params.permit(:group => [:image, :name, :mode, :public])
+    params.permit(:group => init_permitted_params)
   end
 
+  private
+
+  def init_permitted_params
+    [
+      :id,
+      :name,
+      :mode,
+      :private,
+      :description,
+      :metering_point_ids => [],
+      assets_attributes: [:id, :image, :description, :assetable_id, :assetable_type],
+    ]
+  end
 end

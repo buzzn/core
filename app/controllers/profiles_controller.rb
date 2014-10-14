@@ -6,7 +6,7 @@ class ProfilesController < InheritedResources::Base
     @profile              = Profile.find(params[:id]).decorate
     @friends              = @profile.user.friends
     @metering_points      = @profile.user.metering_points
-    @locations            = @metering_points.collect(&:location)
+    @locations            = @metering_points.collect(&:location).compact
     @friendship_requests  = @profile.user.received_friendship_requests
 
     @groups               = @metering_points.collect(&:group).compact # TODO also include group interested

@@ -37,10 +37,9 @@
                 - current_user.editable_groups.each do |group|
                   %li= link_to group.name, group
               %li.divider
-              - current_user.editable_locations.each do |location|
-                - if location.metering_point
-                  - if (location.metering_point.subtree.all.collect(&:mode).include?('out') || location.metering_point.subtree.all.collect(&:mode).include?('in_out')) && location.metering_point.group == nil
-                    %li= new_group
+              - if MeteringPoint.by_modes_and_user(["out", "in_out"], current_user).any?
+                %li= new_group
+
 
           %li.dropdown
             %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
