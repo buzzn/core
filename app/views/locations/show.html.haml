@@ -42,10 +42,11 @@
     %li.active
       %a{"data-toggle" => "tab", href: "#metering_points"}
         = t'metering_points'
-    - if @location.metering_point.has_children?
-      %li
-        %a{"data-toggle" => "tab", href: "#metering_point_tree"}
-          = t'metering_point_tree'
+    - if @location.metering_point
+      - if @location.metering_point.has_children?
+        %li
+          %a{"data-toggle" => "tab", href: "#metering_point_tree"}
+            = t'metering_point_tree'
 
   .tab-content
     #metering_points.tab-pane.active

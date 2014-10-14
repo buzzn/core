@@ -60,7 +60,10 @@ class User < ActiveRecord::Base
   end
 
   def editable_devices_by_mode(mode)
-    Device.with_role(:manager, self).where(mode: mode)
+    if mode == "in_out"
+      mode = ["in", "out", "in_out"]
+    end
+    Device.with_role(:manager, self).where("mode in (?)", mode)
   end
 
 

@@ -5,7 +5,11 @@ class LocationsController < InheritedResources::Base
 
   def show
     location    = Location.find(params[:id])
-    @metering_points = location.metering_point.subtree.arrange
+    if location.metering_point
+      @metering_points = location.metering_point.subtree.arrange
+    else
+      @metering_points = location.metering_point #nil if location was just created
+    end
     respond_to do |format|
       format.html { @location = location.decorate
                     @residents  = @location.users
