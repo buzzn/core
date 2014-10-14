@@ -75,7 +75,7 @@ gem 'underscore-rails'
 gem 'ancestry'
 gem 'rack-mini-profiler', require: false
 gem 'goldiloader'
-
+gem 'newrelic_rpm'
 
 group :production do
   gem 'asset_sync'
