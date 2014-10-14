@@ -39,7 +39,7 @@
               %li.divider
               - current_user.editable_locations.each do |location|
                 - if location.metering_point
-                  - if location.metering_point.mode == 'out' && location.metering_point.group == nil
+                  - if (location.metering_point.subtree.all.collect(&:mode).include?('out') || location.metering_point.subtree.all.collect(&:mode).include?('in_out')) && location.metering_point.group == nil
                     %li= new_group
 
           %li.dropdown
@@ -53,6 +53,7 @@
                   %li= link_to device.name, device
               %li.divider
               %li= new_in_device
+              %li= new_out_device
 
 
 

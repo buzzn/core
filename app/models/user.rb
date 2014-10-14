@@ -59,6 +59,10 @@ class User < ActiveRecord::Base
     Device.with_role(:manager, self).decorate
   end
 
+  def editable_devices_by_mode(mode)
+    Device.with_role(:manager, self).where(mode: mode)
+  end
+
 
 private
   def create_complement_friendship(friend)

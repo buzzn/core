@@ -9,7 +9,7 @@ class DevicesController < InheritedResources::Base
     @metering_point = @device.metering_point if @device.metering_point
     @location       = @metering_point.location if @metering_point
     @users          = @metering_point.users if @metering_point
-    @users_all      = User.all.decorate
+    @manager        = @device.editable_users
     show!
   end
 
@@ -88,7 +88,8 @@ private
       :primary_energy,
       :watt_peak,
       :commissioning,
-      :metering_point_id
+      :metering_point_id,
+      :mode
     ]
   end
 end

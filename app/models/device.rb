@@ -3,7 +3,6 @@ class Device < ActiveRecord::Base
   include Authority::Abilities
 
   belongs_to :metering_point
-  belongs_to :user
 
   has_many :assets, as: :assetable, dependent: :destroy
 
@@ -50,6 +49,10 @@ class Device < ActiveRecord::Base
 
   def in_and_output?
     self.mode == 'in_out'
+  end
+
+  def editable_users
+    User.with_role(:manager, self).to_a
   end
 
 

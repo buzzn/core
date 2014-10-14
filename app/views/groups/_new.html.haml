@@ -6,6 +6,7 @@
     .modal-body
       = simple_form_for @group, remote: true, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
         = render 'groups/form_fields', f: f
+        = f.association :metering_points, collection: current_user.editable_devices_by_mode(@metering_point.mode), input_html: { class: 'select2'}
         .modal-footer
           = f.button :submit, id: 'submit', class: 'btn btn-success'
 

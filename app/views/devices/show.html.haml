@@ -9,8 +9,8 @@
   %h5.page-header= t('belongs_to_user')
   %article.sidebar_module.residents
     %ul
-      - @users_all.each do |user|
-        = render user.profile if user.can_update?(@device)
+      - @manager.each do |user|
+        = render user.profile.decorate
     .clearfix
 
   - if @metering_point && current_user.can_update?(@device)

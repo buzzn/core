@@ -26,8 +26,20 @@ module ApplicationHelper
 
   def new_in_device
     link_to(
-      t("add_new_device"),
+      t("add_new_in_device"),
       new_in_device_path(:id),
+      {
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => 'modal',
+        'data-target' => '#myModal'
+      })
+  end
+
+  def new_out_device
+    link_to(
+      t("add_new_out_device"),
+      new_out_device_path(:id),
       {
         :remote       => true,
         :class        => 'start_modal',
