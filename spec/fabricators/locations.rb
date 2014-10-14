@@ -59,6 +59,11 @@ Fabricator :roentgenstrasse11, from: :location do
   metering_point { Fabricate(:mp_60138988) }
 end
 
+Fabricator :location_philipp, from: :location do
+  address         { Fabricate(:address) } #TODO real address
+  metering_point  { Fabricate(:mp_60009269) }
+end
+
 
 
 

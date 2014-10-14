@@ -103,10 +103,17 @@ end
 
 
 
-# Nr. 60009348 für Christian Widmann (Einrichtungszähler Bezug)
+# Nr. 60138988 für Christian Widmann (Einrichtungszähler Bezug)
 Fabricator :mp_60138988, from: :metering_point do
   address_addition  'Bezug'
   registers { Fabricate(:easymeter_60138988).registers }
+end
+
+
+# Nr. 60009269 für Philipp Oßwald (Einrichtungszähler Bezug)
+Fabricator :mp_60009269, from: :metering_point do
+  address_addition  'Bezug'
+  registers { Fabricate(:easymeter_60009269).registers }
 end
 
 

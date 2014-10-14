@@ -86,6 +86,9 @@ buzzn_team_names.each do |user_name|
     user_location = Fabricate(:roentgenstrasse11)
     user_location.metering_point.metering_point_operator_contracts << Fabricate(:mpoc_christian, metering_point: user_location.metering_point)
     user.add_role :admin # christian is admin
+  when 'philipp'
+    user_location = Fabricate(:location_philipp)
+    user_location.metering_point.metering_point_operator_contracts << Fabricate(:mpoc_philipp, metering_point: user_location.metering_point)
   when 'stefan'
     @bhkw_stefan       = Fabricate(:bhkw_stefan)
     @forstenrieder_weg = user_location = Fabricate(:forstenrieder_weg)

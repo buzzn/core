@@ -101,7 +101,7 @@ end
 
 
 
-# Nr. 60009348 für Christian Widmann (Einrichtungszähler Bezug)
+# Nr. 60138988 für Christian Widmann (Einrichtungszähler Bezug)
 Fabricator :easymeter_60138988, from: :meter do
   manufacturer_name                   'Easymeter'
   manufacturer_product_name           'Q3D'
@@ -110,6 +110,15 @@ Fabricator :easymeter_60138988, from: :meter do
   equipments                          { [Fabricate(:equipment)] }
 end
 
+
+# Nr. 60009269 für Philipp Oßwald (Einrichtungszähler Bezug)
+Fabricator :easymeter_60009269, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009269'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
 
 
 

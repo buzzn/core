@@ -29,3 +29,10 @@ Fabricator :mpoc_christian, from: :metering_point_operator_contract do
   username 'christian@buzzn.net'
   password 'Roentgen11smartmeter'
 end
+
+Fabricator :mpoc_philipp, from: :metering_point_operator_contract do
+  username 'info@philipp-osswald.de'
+  password 'Null8fünfzehn'
+end
+
+
