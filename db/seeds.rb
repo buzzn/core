@@ -42,7 +42,7 @@ Fabricate(:distribution_system_operator, name: 'E.ON Bayern AG')
 Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
 
 # Messdienstleistung (Ablesung und Messung)
-Fabricate(:metering_point_operator, name: 'buzzn-metering')
+Fabricate(:metering_point_operator, name: 'buzzn Metering')
 Fabricate(:metering_point_operator, name: 'Discovergy')
 Fabricate(:metering_point_operator, name: 'Stadtwerke Augsburg')
 Fabricate(:metering_point_operator, name: 'Stadtwerke München')

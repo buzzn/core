@@ -3,7 +3,7 @@ class MeterReadingUpdateWorker
 
   def perform(register_id, manufacturer_device_number, mpo_name, mpo_login_username, mpo_login_password, start_time, end_time)
 
-    if mpo_name == 'discovergy' or mpo_name == 'buzzn-metering'
+    if mpo_name == 'discovergy' or mpo_name == 'buzzn metering'
       discovergy = Discovergy.new(mpo_login_username, mpo_login_password, "EASYMETER_#{manufacturer_device_number}")
       request     = discovergy.call(start_time, end_time)
 
