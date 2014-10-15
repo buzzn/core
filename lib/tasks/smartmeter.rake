@@ -21,7 +21,7 @@ namespace :smartmeter do
         MeterReadingUpdateWorker.perform_async(
                                                 register.id,
                                                 meter.manufacturer_product_serialnumber,
-                                                mpoc.organization.name.downcase,
+                                                mpoc.organization.slug,
                                                 mpoc.username,
                                                 mpoc.password,
                                                 start_time,

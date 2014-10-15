@@ -1,9 +1,9 @@
 class MeterReadingUpdateWorker
   include Sidekiq::Worker
 
-  def perform(register_id, manufacturer_device_number, mpo_name, mpo_login_username, mpo_login_password, start_time, end_time)
+  def perform(register_id, manufacturer_device_number, mpo_slug, mpo_login_username, mpo_login_password, start_time, end_time)
 
-    if mpo_name == 'discovergy' or mpo_name == 'buzzn metering'
+    if mpo_slug == 'discovergy' or mpo_slug == 'buzzn-metering'
       discovergy = Discovergy.new(mpo_login_username, mpo_login_password, "EASYMETER_#{manufacturer_device_number}")
       request     = discovergy.call(start_time, end_time)
 
@@ -27,10 +27,10 @@ class MeterReadingUpdateWorker
         logger.error request
       end
 
-    elsif mpo_name == 'fluxo'
+    elsif mpo_slug == 'fluxo'
       puts "It's fluxo"
     else
-      puts "You gave me #{mpo_name} -- I have no idea what to do with that."
+      puts "You gave me #{mpo_slug} -- I have no idea what to do with that."
     end
 
   end
