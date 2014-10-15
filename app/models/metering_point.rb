@@ -74,21 +74,7 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def validates_smartmeter
-    if meter && (metering_point_operator_contract || self.group.metering_point_operator_contract)
-      @mpoc = metering_point_operator_contract
-      @meter = meter
-
-      discovergy = Discovergy.new(@mpoc.username, @mpoc.password, "EASYMETER_#{@meter.manufacturer_product_serialnumber}")
-      result     = discovergy.call()
-      if result['status'] == 'ok'
-        @meter.update_columns(smart: true)
-        first_day_init
-      else
-        @meter.update_columns(smart: false)
-      end
-    else
-      meter.update_columns(smart: false)
-    end
+    MeteringPointValidationWorker.perform_async(self.id)
   end
 
 
@@ -145,30 +131,6 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
-
-  private
-
-    def first_day_init
-      metering_point = self
-      register       = registers.first # TODO not compatible with in_out smartmeter
-      mpoc           = metering_point.metering_point_operator_contract
-      date           = Time.now.in_time_zone
-      beginning      = date.beginning_of_day
-      ending         = date
-      (beginning.to_i .. ending.to_i).step(1.minutes) do |time|
-        start_time = time * 1000
-        end_time   = Time.at(time).end_of_minute.to_i * 1000
-        MeterReadingUpdateWorker.perform_async(
-                                                register.id,
-                                                meter.manufacturer_product_serialnumber,
-                                                mpoc.organization.slug,
-                                                mpoc.username,
-                                                mpoc.password,
-                                                start_time,
-                                                end_time
-                                              )
-      end
-    end
 
 
 
