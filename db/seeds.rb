@@ -42,7 +42,7 @@ Fabricate(:distribution_system_operator, name: 'E.ON Bayern AG')
 Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
 
 # Messdienstleistung (Ablesung und Messung)
-Fabricate(:metering_point_operator, name: 'buzzn Metering')
+Fabricate(:metering_point_operator, name: 'buzzn-metering')
 Fabricate(:metering_point_operator, name: 'Discovergy')
 Fabricate(:metering_point_operator, name: 'Stadtwerke Augsburg')
 Fabricate(:metering_point_operator, name: 'Stadtwerke München')
@@ -207,7 +207,6 @@ mp_hans_dieter_hopf.update_attribute :parent, mp_60118470
 
 location_hopf = Fabricate(:location_hopf)
 location_hopf.metering_point = mp_60118470
-location_hopf.metering_point.metering_point_operator_contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_60118470)
 
 group_hopf = Fabricate(:group, name: 'Hopf Strom')
 group_hopf.metering_points << mp_60118470

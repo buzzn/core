@@ -9,7 +9,11 @@ namespace :smartmeter do
       register        = registers.first # TODO not compatible with in_out smartmeter
       metering_point  = meter.registers.collect(&:metering_point).first
       mpoc            = metering_point.metering_point_operator_contract
-      last            = Reading.latest_by_register_id(register.id)[:timestamp].beginning_of_minute
+      if Reading.latest_by_register_id(register.id)
+        last            = Reading.latest_by_register_id(register.id)[:timestamp].beginning_of_minute
+      else
+        last            = Time.now.in_time_zone.utc.beginning_of_day
+      end
       now             = Time.now.in_time_zone.utc
       (last.to_i .. now.to_i).step(1.minutes) do |time|
         start_time = time * 1000
