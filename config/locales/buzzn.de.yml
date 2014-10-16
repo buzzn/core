@@ -360,8 +360,8 @@ de:
   a_group_which_has_been_removed: 'eine Gruppe, die bereits gelöscht wurde'
   a_group: eine Gruppe
   join_this_group_with_metering_point: "Beitreten mit Zählpunkt %{metering_point_name}"
-
-
+  join_this_group_with_metering_point_and_leave_group: "Beitreten mit Zählpunkt %{metering_point_name} und Gruppe %{group_name} verlassen"
+  leave_this_group_with_metering_point: "Verlassen mit Zählpunkt %{metering_point_name}"
 
 
 
