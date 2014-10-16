@@ -59,6 +59,10 @@ class User < ActiveRecord::Base
     Device.with_role(:manager, self).decorate
   end
 
+  def editable_metering_points
+    self.editable_locations.collect(&:metering_point).collect(&:subtree)
+  end
+
   def editable_devices_by_mode(mode)
     if mode == "in_out"
       mode = ["in", "out", "in_out"]

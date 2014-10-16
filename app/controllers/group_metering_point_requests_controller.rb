@@ -8,7 +8,8 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
 
   def create
     group = Group.find(params[:group_id])
-    @group_metering_point_request = GroupMeteringPointRequest.new(user: current_user, metering_point: current_user.metering_points.first, group: group)
+    metering_point = MeteringPoint.find(params[:metering_point_id])
+    @group_metering_point_request = GroupMeteringPointRequest.new(user: current_user, metering_point: metering_point, group: group)
     if @group_metering_point_request.save
       flash[:notice] = t('sent_group_metering_point_request')
       redirect_to group_path(group)

@@ -4,7 +4,7 @@
   %h4= @group.name
 
   - if user_signed_in?
-    - if current_user.can_update?(@group)
+    - if current_user.can_update?(@group) && !current_user.has_role(:admin)
       = @group.link_to_edit
     - else
       .btn-group
@@ -12,14 +12,14 @@
           =t('membership')
           %span.caret
         %ul.dropdown-menu{role: "menu"}
-          %li
-            - if @group.member?(current_user.metering_points.first)
-              = link_to(t('cancel_membership'),cancel_membership_group_path,:data => {:confirm => t('are_you_sure')})
+          - if current_user.editable_metering_points.flatten.collect(&:group).include?(@group)
+            %li= link_to(t('cancel_membership'),cancel_membership_group_path,:data => {:confirm => t('are_you_sure')})
+          - else
+            - if GroupMeteringPointRequest.where(user: current_user, group: @group).where("metering_point_id in (?)", current_user.metering_points.collect(&:id)).empty?
+              - MeteringPoint.by_modes_and_user(["in_out", "in", "out"], current_user).each do |metering_point|
+                %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post
             - else
-              - if GroupMeteringPointRequest.where(user: current_user, group: @group, metering_point: current_user.metering_points.first).empty?
-                = link_to t('send_group_metering_point_request'), group_metering_point_requests_path( group_id: @group), method: :post
-              - else
-                = t'waiting_for_accepting'
+              = t'sent_request'
   %h5.page-header= t('description')
   %p= @group.description
 

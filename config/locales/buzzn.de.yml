@@ -359,6 +359,7 @@ de:
   add_servicing_contract: Abwicklungsvertrag hinzufügen
   a_group_which_has_been_removed: 'eine Gruppe, die bereits gelöscht wurde'
   a_group: eine Gruppe
+  join_this_group_with_metering_point: "Beitreten mit Zählpunkt %{metering_point_name}"
 
 
 
