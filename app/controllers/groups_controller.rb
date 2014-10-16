@@ -51,7 +51,6 @@ class GroupsController < InheritedResources::Base
     @group = Group.find(params[:id])
     @metering_point = MeteringPoint.find(params[:metering_point_id])
     @group.metering_points.delete(@metering_point)
-    #@metering_point.group = nil
     redirect_to group_path(@group)
   end
 

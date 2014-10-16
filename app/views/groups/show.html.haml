@@ -4,7 +4,7 @@
   %h4= @group.name
 
   - if user_signed_in?
-    - if current_user.can_update?(@group) && !current_user.has_role(:admin)
+    - if current_user.can_update?(@group)
       = @group.link_to_edit
     - else
       .btn-group

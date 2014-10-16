@@ -362,8 +362,11 @@ de:
   join_this_group_with_metering_point: "Beitreten mit Zählpunkt %{metering_point_name}"
   join_this_group_with_metering_point_and_leave_group: "Beitreten mit Zählpunkt %{metering_point_name} und Gruppe %{group_name} verlassen"
   leave_this_group_with_metering_point: "Verlassen mit Zählpunkt %{metering_point_name}"
-
-
+  new_group_metering_point_request: "Neue Mitgliedschaftsanfrage"
+  group_requests: Gruppenanfragen
+  accepted_group_metering_point_request: Gruppenanfrage akzeptiert
+  add_new_in_device: Neues Bezugsgerät hinzufügen
+  add_new_out_device: Neue Stromerzeugungsanlage hinzufügen
 
 
 
