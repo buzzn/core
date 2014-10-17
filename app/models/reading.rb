@@ -15,7 +15,6 @@ class Reading
   index({ timestamp: 1 })
 
 
-
   def self.latest_by_register_id(register_id)
     pipe = [
       { "$match" => {
@@ -37,12 +36,16 @@ class Reading
 
 
   def self.day_to_hours_by_register_id(register_id)
-    date = Time.now
+    @time_zone  = Register.find(register_id).metering_point.root.location.address.time_zone
+    date        = Time.now
+    @start_time = ActiveSupport::TimeZone[@time_zone].local(date.year, date.month, date.day)
+    @end_time   = ActiveSupport::TimeZone[@time_zone].local(date.year, date.month, date.day, 23, 59, 59)
+
     pipe = [
       { "$match" => {
           timestamp: {
-            "$gte" => date.beginning_of_day,
-            "$lt"  => date.end_of_day
+            "$gte" => @start_time.utc,
+            "$lt"  => @end_time.utc
           },
           register_id: {
             "$in" => [register_id]
@@ -82,13 +85,17 @@ class Reading
 
 
   def self.month_to_days_by_register_id(register_id)
-    date = Time.now.in_time_zone
+    @time_zone  = Register.find(register_id).metering_point.root.location.address.time_zone
+    date        = Time.now
+    @start_time = ActiveSupport::TimeZone[@time_zone].local(date.year, date.month, date.day)
+    @end_time   = ActiveSupport::TimeZone[@time_zone].local(date.year, date.month, date.day, 23, 59, 59)
+
 
     pipe = [
       { "$match" => {
           timestamp: {
-            "$gte" => date.beginning_of_month,
-            "$lt"  => date.end_of_month
+            "$gte" => @start_time,
+            "$lt"  => @end_time
           },
           register_id: {
             "$in" => [register_id]

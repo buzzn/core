@@ -10,6 +10,7 @@ class CreateAddresses < ActiveRecord::Migration
       t.string  :country
       t.float   :longitude
       t.float   :latitude
+      t.string  :time_zone
 
       t.integer :addressable_id
       t.string  :addressable_type

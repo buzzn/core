@@ -430,7 +430,7 @@ private
   end
 
   def address_params
-    params.require(:address).permit(:street_name, :street_number, :city, :state, :zip, :country)
+    params.require(:address).permit(:street_name, :street_number, :city, :state, :zip, :country, :time_zone)
   end
 
   def location_params

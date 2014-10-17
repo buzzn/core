@@ -3,3 +3,4 @@
 = f.input :zip
 = f.input :city
 = f.input :state
+= f.input :time_zone, collection: ActiveSupport::TimeZone.zones_map(&:name).keys

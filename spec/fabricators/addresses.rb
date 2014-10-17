@@ -6,4 +6,5 @@ Fabricator :address do
   city          { Faker::AddressDE.city }
   state         { Faker::AddressDE.state }
   country       { Faker::AddressDE.country }
+  time_zone     'Berlin'
 end

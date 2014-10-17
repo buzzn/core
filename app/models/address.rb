@@ -7,9 +7,13 @@ class Address < ActiveRecord::Base
   validates :city,            presence: true
   validates :state,           presence: true
   validates :zip,             presence: true
+  validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name).keys
+
 
   after_validation :geocode if Rails.env == 'production'
   geocoded_by :full_name
+
+
 
   def full_name
     [ street_name, street_number, city, zip, state, country].compact.join(', ')
