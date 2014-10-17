@@ -17,7 +17,6 @@
 ## Setup Rails Project
     git clone git@github.com:ffaerber/buzzn.git
     cd buzzn
-    add /config/secrets.yml
     bundle install
     bundle exec rake db:create
 
@@ -26,7 +25,7 @@
     bundle exec rails s
 
 ## Reset end Start Test Environment
-    bundle exec rake db:test:prepare
+    bundle exec rake test:prepare
     bundle exec guard
 
 ## Reset end Start Test Environment
@@ -39,11 +38,7 @@
     bundle exec sidekiq
     http://localhost:3000/sidekiq
 
-## validate smartmeter
-    bundle exec rails c
-    MeteringPoint.find('de0010688251510000000000002677130').validates_smartmeter
-
-## update meters
+## update smartmeters
     bundle exec rake smartmeter:register_update
 
 ## Mail Views
