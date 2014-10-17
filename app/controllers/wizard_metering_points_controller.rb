@@ -30,7 +30,7 @@ class WizardMeteringPointsController  < ApplicationController
       if @location.save
         redirect_to meter_wizard_metering_points_path(metering_point_id: @metering_point.id, location_id: @location.id)
       else
-        redirect_to metering_point_wizard_metering_points_path(location_id: @location.id)
+        render action: 'metering_point'
       end
     end
   end
@@ -53,9 +53,10 @@ class WizardMeteringPointsController  < ApplicationController
     if @metering_point
       @meter = Meter.new(meter_params)
       if @meter.save
-        redirect_to metering_point_path(@metering_point.id)
+        render action: 'update'
       else
-        redirect_to meter_wizard_metering_points_path(metering_point_id: @metering_point.id, location_id: @location.id)
+        render action: 'meter'
+        #redirect_to meter_wizard_metering_points_path(metering_point_id: @metering_point.id, location_id: @location.id)
       end
     end
   end

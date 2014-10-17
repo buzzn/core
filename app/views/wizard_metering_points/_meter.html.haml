@@ -9,7 +9,7 @@
         .progress-bar{"aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => "33", role: "progressbar", style: "width: 33%;"}
           33%
       .forminput.box
-        = simple_form_for @meter, remote: false, url: meter_update_wizard_metering_points_path(location_id: params[:location_id], metering_point_id: params[:metering_point_id]), method: 'put', html: {class: 'form-horizontal' }, wrapper: :horizontal_form  do |f|
+        = simple_form_for @meter, remote: true, url: meter_update_wizard_metering_points_path(location_id: params[:location_id], metering_point_id: params[:metering_point_id]), method: 'put', html: {class: 'form-horizontal' }, wrapper: :horizontal_form  do |f|
           - value = params[:metering_point_id].nil? ? {} : { value: params[:metering_point_id]}
           = f.input :metering_point_id, input_html: {}.merge(value), as: :hidden
           = render 'meters/form_fields', f: f

@@ -3,6 +3,8 @@ class Register < ActiveRecord::Base
   belongs_to :meter
   belongs_to :metering_point
 
+  validates :mode, presence: true
+
   scope :in, -> { where(mode: :in) }
   scope :out, -> { where(mode: :out) }
 

@@ -1,6 +1,8 @@
 class Meter < ActiveRecord::Base
   include Authority::Abilities
 
+  validates :manufacturer_product_serialnumber, :registers, presence: true
+
   has_many :registers, dependent: :destroy
   accepts_nested_attributes_for :registers, :reject_if => :all_blank, :allow_destroy => true
 
