@@ -13,6 +13,9 @@
           %span.caret
         %ul.dropdown-menu{role: "menu"}
           - current_user.editable_metering_points.flatten.each do |metering_point|
+            - if @group.received_group_metering_point_requests.any? && @group.received_group_metering_point_requests.collect(&:metering_point).include?(metering_point)
+              %li= t('sent_request_with_metering_point', metering_point_name: metering_point.decorate.name)
+              - next
             - if metering_point.group == @group
               %li= link_to(t('leave_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), cancel_membership_group_path(metering_point_id: metering_point.id), :data => {:confirm => t('are_you_sure')})
             - elsif metering_point.group

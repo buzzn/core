@@ -367,6 +367,7 @@ de:
   accepted_group_metering_point_request: Gruppenanfrage akzeptiert
   add_new_in_device: Neues Bezugsgerät hinzufügen
   add_new_out_device: Neue Stromerzeugungsanlage hinzufügen
+  sent_request_with_metering_point: "Anfrage mit Zählpunkt %{metering_point_name} gesendet"
 
 
 
