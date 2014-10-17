@@ -15,15 +15,15 @@ class Register < ActiveRecord::Base
       {
         id:       self.id,
         time_range: 'day_to_hours',
-        current:  convert_to_flot_array(Reading.day_to_hours_by_register_id(self.id)),
-        past:     convert_to_flot_array(Reading.day_to_hours_by_register_id(self.id))
+        current:  convert_to_flot_array(Reading.aggregate(:day_to_hours, self.id)),
+        past:     convert_to_flot_array(Reading.aggregate(:day_to_hours, self.id))
       }
     else
       {
         id:       self.id,
         time_range: 'day_to_hours',
-        current:  convert_to_flot_array(Reading.day_to_hours_by_slp),
-        past:     convert_to_flot_array(Reading.day_to_hours_by_slp)
+        current:  convert_to_flot_array(Reading.aggregate(:day_to_hours)),
+        past:     convert_to_flot_array(Reading.aggregate(:day_to_hours))
       }
     end
   end
@@ -35,15 +35,15 @@ class Register < ActiveRecord::Base
       {
         id:       self.id,
         time_range: 'month_to_days',
-        current:  convert_to_flot_array(Reading.month_to_days_by_register_id(self.id)),
-        past:     convert_to_flot_array(Reading.month_to_days_by_register_id(self.id))
+        current:  convert_to_flot_array(Reading.aggregate(:month_to_days, self.id)),
+        past:     convert_to_flot_array(Reading.aggregate(:month_to_days, self.id))
       }
     else
       {
         id:       self.id,
         time_range: 'month_to_days',
-        current:  convert_to_flot_array(Reading.month_to_days_by_slp),
-        past:     convert_to_flot_array(Reading.month_to_days_by_slp)
+        current:  convert_to_flot_array(Reading.aggregate(:month_to_days)),
+        past:     convert_to_flot_array(Reading.aggregate(:month_to_days))
       }
     end
   end
@@ -55,34 +55,18 @@ class Register < ActiveRecord::Base
       {
         id:       self.id,
         time_range: 'year_to_months',
-        current:  convert_to_flot_array(Reading.year_to_months_by_register_id(self.id)),
-        past:     convert_to_flot_array(Reading.year_to_months_by_register_id(self.id))
+        current:  convert_to_flot_array(Reading.aggregate(:year_to_months, self.id)),
+        past:     convert_to_flot_array(Reading.aggregate(:year_to_months, self.id))
       }
     else
       {
         id:       self.id,
         time_range: 'year_to_months',
-        current:  convert_to_flot_array(Reading.year_to_months_by_slp),
-        past:     convert_to_flot_array(Reading.year_to_months_by_slp)
+        current:  convert_to_flot_array(Reading.aggregate(:year_to_months)),
+        past:     convert_to_flot_array(Reading.aggregate(:year_to_months))
       }
     end
   end
-
-  # def month_to_days
-  #   return  {
-  #     id:       self.id,
-  #     current:  Register.month_to_days,
-  #     past:     Register.month_to_days
-  #   }
-  # end
-
-  # def year_to_months
-  #   return  {
-  #     id:       self.id,
-  #     current:  Register.year_to_months,
-  #     past:     Register.year_to_months
-  #   }
-  # end
 
 
 
