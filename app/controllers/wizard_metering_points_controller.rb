@@ -22,8 +22,8 @@ class WizardMeteringPointsController  < ApplicationController
       if @metering_point.save
         redirect_to meter_wizard_metering_points_path(metering_point_id: @metering_point.id, location_id: location_params[:location_id])
       else
-        redirect_to metering_point_wizard_metering_points_path(location_id: location_params[:location_id], parent_metering_point_id: permitted_params[:parent_metering_point_id])
-
+        #redirect_to metering_point_wizard_metering_points_path(location_id: location_params[:location_id], parent_metering_point_id: permitted_params[:parent_metering_point_id])
+        respond_with(@metering_point)
       end
     else
       @location.metering_point = @metering_point
