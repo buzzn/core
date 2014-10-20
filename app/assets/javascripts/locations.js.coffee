@@ -213,56 +213,80 @@ $(".locations.show").ready ->
 
 
 
+  # Javascript to enable link to tab
+  hash = document.location.hash
+  prefix = "tab_"
+  $(".nav-pills a[href=" + hash.replace(prefix, "") + "]").tab "show"  if hash
+
+  # Change hash for page-reload
+  $(".nav-pills a").on "shown.bs.tab", (e) ->
+    window.location.hash = e.target.hash.replace("#", "#" + prefix)
+    return
+
 
   $("a[data-toggle=\"tab\"]").on "shown.bs.tab", (e) ->
-    if e.target.href = "#metering_point_tree"
+    target_click = e.target.toString().slice(e.target.toString().lastIndexOf("#"), e.target.length)
+    if target_click == "#metering_point_tree"
       init_tree()
       top = $jit.id("r-top")
       top.checked = true
+    if target_click == "#metering_points"
+      init_charts()
 
 
 
 
-  for register in gon.registers
 
-    $.plot $("#register_#{register.id} #chart"), [register['current']], {
-      series:
-        color: "white"
-        points:
-          show: false
-        bars:
+
+  init_charts = ->
+    for register in gon.registers
+
+      $.plot $("#register_#{register.id} #chart"), [register['current']], {
+        series:
+          color: "white"
+          points:
+            show: false
+          bars:
+            show: true
+            fill: true
+            fillColor: "rgba(255,255,255, 0.94)"
+            barWidth: 0.66 * 3600 * 1000
+            lineWidth: 0
+          hoverable: true
+          highlightColor: "rgba(255, 255, 255, 0.5)"
+        grid:
           show: true
-          fill: true
-          fillColor: "rgba(255,255,255, 0.94)"
-          barWidth: 0.66 * 3600 * 1000
-          lineWidth: 0
-        hoverable: true
-        highlightColor: "rgba(255, 255, 255, 0.5)"
-      grid:
-        show: true
-        color: "white"
-        borderWidth: 0
-        hoverable: true
-      xaxis:
-        mode: "time"
-        timeformat: "%H:%M"
-        tickDecimals: 0
-        timezone: "browser"
-        max: gon.end_of_day
-      tooltip: true
-      tooltipOpts:
-        content: (label, xval, yval, flotItem) ->
-          new Date(xval).getHours() + ":00 bis " + new Date(xval).getHours() + ":59 Uhr, Bezug: " + yval + " kWh"
-      axisLabels:
-        show: true
-      xaxes:[
-        axisLabel: 'Uhrzeit'
-      ]
-      yaxes:[
-        axisLabel: 'Bezug (kWh)'
-      ]
-    }
+          color: "white"
+          borderWidth: 0
+          hoverable: true
+        xaxis:
+          mode: "time"
+          timeformat: "%H:%M"
+          tickDecimals: 0
+          timezone: "browser"
+          max: gon.end_of_day
+        tooltip: true
+        tooltipOpts:
+          content: (label, xval, yval, flotItem) ->
+            new Date(xval).getHours() + ":00 bis " + new Date(xval).getHours() + ":59 Uhr, Bezug: " + yval + " kWh"
+        axisLabels:
+          show: true
+        xaxes:[
+          axisLabel: 'Uhrzeit'
+        ]
+        yaxes:[
+          axisLabel: 'Bezug (kWh)'
+        ]
+      }
 
+
+
+
+
+  if hash == "#tab_metering_point_tree" || hash == "#metering_point_tree"
+    init_tree()
+  else
+    init_charts()
 
 
   return
