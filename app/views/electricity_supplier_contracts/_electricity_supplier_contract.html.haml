@@ -15,8 +15,8 @@
           %td= t('forecast_watt_hour_pa')
           %td= electricity_supplier_contract.forecast_watt_hour_pa
         %tr
-          %td= t('price_cents')
-          %td= electricity_supplier_contract.price_cents
+          %td= t('price')
+          %td= humanized_money_with_symbol electricity_supplier_contract.price
         %tr
           %td= t('commissioning')
           %td= electricity_supplier_contract.commissioning

@@ -3,7 +3,7 @@ class CreateElectricitySupplierContracts < ActiveRecord::Migration
     create_table :electricity_supplier_contracts do |t|
 
       t.string  :tariff
-      t.decimal :price_cents, precision: 16, default: 0
+      t.money   :price
       t.string  :status
       t.decimal :forecast_watt_hour_pa
 

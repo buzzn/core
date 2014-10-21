@@ -3,6 +3,8 @@ class ElectricitySupplierContract < ActiveRecord::Base
   include Authority::Abilities
   has_paper_trail
 
+  monetize :price_cents
+
   belongs_to :contracting_party
   belongs_to :organization
   belongs_to :metering_point
