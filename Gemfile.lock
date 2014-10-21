@@ -23,7 +23,7 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/devise.git
-  revision: f246f62b106e14e0e123d823f5ad5496d8641c83
+  revision: dae49f836ace1210bbcb433ee0c68626fd507d37
   specs:
     devise (3.4.0)
       bcrypt (~> 3.0)
@@ -84,14 +84,14 @@ GEM
     authority (3.0.0)
       activesupport (>= 3.0.0)
       rake (>= 0.8.7)
-    autoprefixer-rails (3.1.1.20141001)
+    autoprefixer-rails (3.1.2.20141016)
       execjs
     awesome_nested_set (3.0.1)
       activerecord (>= 4.0.0, < 5)
     awesome_print (1.2.0)
-    aws-sdk (1.55.0)
-      aws-sdk-v1 (= 1.55.0)
-    aws-sdk-v1 (1.55.0)
+    aws-sdk (1.56.0)
+      aws-sdk-v1 (= 1.56.0)
+    aws-sdk-v1 (1.56.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
     bcrypt (3.1.7)
@@ -169,7 +169,7 @@ GEM
       railties (>= 3.1)
     devise-i18n (0.11.2)
     devise-i18n-views (0.3.1)
-    devise_invitable (1.3.6)
+    devise_invitable (1.4.0)
       actionmailer (>= 3.2.6, < 5)
       devise (>= 3.2.0)
     diff-lcs (1.2.5)
@@ -205,7 +205,7 @@ GEM
       fog-softlayer
       ipaddress (~> 0.5)
       nokogiri (~> 1.5, >= 1.5.11)
-    fog-brightbox (0.5.1)
+    fog-brightbox (0.6.0)
       fog-core (~> 1.22)
       fog-json
       inflecto
@@ -225,7 +225,7 @@ GEM
     fog-sakuracloud (0.1.1)
       fog-core
       fog-json
-    fog-softlayer (0.3.20)
+    fog-softlayer (0.3.21)
       fog-core
       fog-json
     fog-xml (0.1.0)
@@ -288,7 +288,7 @@ GEM
       foreigner (>= 1.2.1)
     inflecto (0.0.2)
     ipaddress (0.8.0)
-    jbuilder (2.2.2)
+    jbuilder (2.2.3)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
     jquery-rails (3.1.2)
@@ -297,7 +297,7 @@ GEM
     jquery-turbolinks (2.1.0)
       railties (>= 3.1.0)
       turbolinks
-    jquery-ui-rails (5.0.1)
+    jquery-ui-rails (5.0.2)
       railties (>= 3.2.16)
     json (1.8.1)
     launchy (2.4.2)
@@ -324,7 +324,7 @@ GEM
     metamagic (3.1.6)
       rails (>= 3.0.0)
     method_source (0.8.2)
-    mime-types (2.4.1)
+    mime-types (2.4.3)
     mini_magick (3.8.1)
       subexec (~> 0.2.1)
     mini_portile (0.6.0)
@@ -345,7 +345,7 @@ GEM
       moped (~> 2.0.0)
       origin (~> 2.1)
       tzinfo (>= 0.3.37)
-    moped (2.0.0)
+    moped (2.0.1)
       bson (~> 2.2)
       connection_pool (~> 2.0)
       optionable (~> 0.2.0)
@@ -354,7 +354,7 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
-    newrelic_rpm (3.9.5.251)
+    newrelic_rpm (3.9.6.257)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
     optionable (0.2.0)
@@ -466,7 +466,7 @@ GEM
     ruby_parser (3.5.0)
       sexp_processor (~> 4.1)
     safe_yaml (1.0.4)
-    sass (3.4.5)
+    sass (3.4.6)
     select2-rails (3.5.9.1)
       thor (~> 0.14)
     sexp_processor (4.4.4)
