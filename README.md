@@ -75,6 +75,10 @@
     bundle install
     gem update rake
 
-## Monitoring
+## SaaS
     https://rpm.newrelic.com/accounts/791323/servers
+    https://trello.com/b/SuonZHEd/buzzn-kanban
+    https://codeship.io/projects/41893
+
+
 
