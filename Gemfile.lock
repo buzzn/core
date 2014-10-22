@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/goodwill/capybara-select2.git
-  revision: c0826f33707b85fd39a838c6909ee12d0bff64a1
-  specs:
-    capybara-select2 (1.0.1)
-      capybara
-      rspec
-
-GIT
   remote: git://github.com/iainsmith/address_picker-rails.git
   revision: 43009d96888a9c76e6a8dc0e2f3da48e979fcb4e
   specs:
@@ -575,7 +567,6 @@ DEPENDENCIES
   capybara
   capybara-email
   capybara-screenshot
-  capybara-select2!
   carrierwave
   cocoon
   coffee-rails

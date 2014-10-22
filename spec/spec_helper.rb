@@ -13,7 +13,6 @@ require 'capybara/rspec/features'
 require 'database_cleaner'
 require 'webmock/rspec'
 require 'vcr'
-require 'capybara-select2'
 
 # you should require 'capybara/rspec' first
 require 'capybara-screenshot'
@@ -24,6 +23,8 @@ require 'capybara-screenshot/rspec'
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
 I18n.default_locale = :en
+
+
 
 RSpec.configure do |config|
   # ## Mock Framework
@@ -67,6 +68,14 @@ RSpec.configure do |config|
     ActionMailer::Base.deliveries.last
   end
 
+
+  def select2(value, attrs)
+    first("#s2id_#{attrs[:from]}").click
+    find(".select2-input").set(value)
+    within ".select2-result" do
+      find("span", text: value).click
+    end
+  end
 
 
   Capybara.default_wait_time = 8 # Seconds to wait before timeout error. Default is 2
