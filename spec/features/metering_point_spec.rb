@@ -20,7 +20,6 @@ feature 'MeteringPoint' do
     end
 
     it 'try to create metering_point' do
-      visit "/profiles/#{@user.profile.slug}"
       visit "/locations/#{@location.slug}"
       page.should have_content('You Have No Metering Point')
       click_on 'Create New Metering Point'
@@ -28,21 +27,16 @@ feature 'MeteringPoint' do
       fill_in :metering_point_address_addition,       with: 'Wohnung'
       fill_in :metering_point_uid,                    with: 'DE123456789012345678901'
 
-      click_on 'Continue'
-      page.should have_content('new_meter')
+      click_on 'continue'
+      page.should have_content('New Meter')
 
       select 'smart_meter',                           from: 'meter_manufacturer_name'
-      fill_in :manufacturer_product_name,             with: 'Easymeter'
-      fill_in :manufacturer_product_serialnumber,     with: '123456'
+      fill_in :meter_manufacturer_product_name,             with: 'Easymeter'
+      fill_in :meter_manufacturer_product_serialnumber,     with: '123456'
       select  'in',                                   from: 'meter_registers_attributes_0_mode'
 
-      click_on 'Continue'
+      click_on 'continue'
       page.should have_content('metering_point_created_successfully')
-
-
-
-      # find("Add New Device", match: :first).click
-
     end
 
 

@@ -73,7 +73,8 @@ RSpec.configure do |config|
   # Register slightly larger than default window size...
   Capybara.register_driver :poltergeist do |app|
     Capybara::Poltergeist::Driver.new(app, { debug: false, # change this to true to troubleshoot
-                                             window_size: [1440, 900] # this can affect dynamic layout
+                                             window_size: [1440, 900], # this can affect dynamic layout
+                                             js_errors: false
     })
   end
   Capybara.javascript_driver = :poltergeist
