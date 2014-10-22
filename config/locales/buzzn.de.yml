@@ -369,7 +369,7 @@ de:
   add_new_out_device: Neue Stromerzeugungsanlage hinzufügen
   sent_request_with_metering_point: "Anfrage mit Zählpunkt %{metering_point_name} gesendet"
   metering_point_tree: Zählpunktanordnung
-
+  location_created_successfully: Der Standort wurde erfolgreich erstellt
 
 
 

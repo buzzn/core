@@ -53,6 +53,7 @@ class WizardMeteringPointsController  < ApplicationController
     if @metering_point
       @meter = Meter.new(meter_params)
       if @meter.save
+        flash[:notice] = t('metering_point_created_successfully')
         render action: 'update'
       else
         render action: 'meter'

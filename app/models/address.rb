@@ -6,7 +6,7 @@ class Address < ActiveRecord::Base
   validates :street_number,   presence: true
   validates :city,            presence: true
   validates :state,           presence: true
-  validates :zip,             presence: true
+  validates :zip,             presence: true, numericality: { only_integer: true }, length: { is: 5 }
   validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name).keys
 
 

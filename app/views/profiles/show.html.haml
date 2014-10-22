@@ -53,7 +53,7 @@
 
 
 .col-sm-6
-  - if @locations.empty? && @profile.user == current_user
+  - if @profile.user.editable_locations.empty? && @profile.user == current_user
     = render 'no_location'
 
   = render @friendship_requests if @profile.user == current_user

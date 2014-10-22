@@ -16,7 +16,7 @@ feature 'Location' do
       page.should have_content('Signed in successfully.')
     end
 
-    it 'will fail to create location' do
+    it 'try to create location' do
       visit "/profiles/#{@user.profile.slug}"
       click_link 'Create New Location'
 
@@ -24,11 +24,13 @@ feature 'Location' do
       fill_in :location_address_attributes_street_number, with: 88
       fill_in :location_address_attributes_zip,           with: 10967
       fill_in :location_address_attributes_city,          with: 'Berlin'
+      fill_in :location_address_attributes_state,         with: 'Berlin'
+      select  'Berlin',                                   from: 'location_address_attributes_time_zone'
+
 
       click_button 'Create Location'
-      page.should have_content('Your ')
+      page.should have_content('location_created_successfully')
 
-      #fill_in :location_address_attributes_state, with: 'Berlin'
 
 
       # find("Add New Device", match: :first).click

@@ -37,7 +37,10 @@ class LocationsController < InheritedResources::Base
     create! do |success, failure|
       current_user.add_role :manager, @location
       @location = LocationDecorator.new(@location)
-      success.js { @location }
+      success.js {
+        flash[:notice] = t('location_created_successfully')
+        @location
+      }
       failure.js { render :new }
     end
   end
@@ -70,7 +73,7 @@ private
 
   def init_permitted_params
     [
-      address_attributes: [:id, :street_name, :street_number, :city, :state, :zip, :country, :_destroy]
+      address_attributes: [:id, :street_name, :street_number, :city, :state, :zip, :country, :time_zone, :_destroy]
     ]
   end
 

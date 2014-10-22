@@ -6,10 +6,11 @@ class ProfilesController < InheritedResources::Base
     @profile              = Profile.find(params[:id]).decorate
     @friends              = @profile.user.friends
     @metering_points      = @profile.user.metering_points
+
     @locations            = @metering_points.collect(&:location).compact
     @friendship_requests  = @profile.user.received_friendship_requests
 
-    @groups               = @metering_points.collect(&:group).compact # TODO also include group interested
+    @groups               = @metering_points.collect(&:group).compact.uniq{|group| group.id} # TODO also include group interested
 
     @activities           = PublicActivity::Activity
                               .order("created_at desc")
