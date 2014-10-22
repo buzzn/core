@@ -3,9 +3,6 @@ class WizardMeteringPointsController  < ApplicationController
   respond_to :html, :js
 
   def metering_point
-    if location_params[:location_id]
-      @location = Location.find(location_params[:location_id])
-    end
     @metering_point = MeteringPoint.new
   end
 
@@ -17,6 +14,10 @@ class WizardMeteringPointsController  < ApplicationController
       @parent_metering_point = MeteringPoint.find(permitted_params[:parent_metering_point_id])
     end
     @metering_point           = MeteringPoint.new(metering_point_params)
+    if !@metering_point.save       #save already here for preventing raise of errors when assigning @metering_point to @location
+      render action: 'metering_point'
+      return
+    end
     if @parent_metering_point
       @metering_point.parent = @parent_metering_point
       if @metering_point.save
@@ -28,7 +29,7 @@ class WizardMeteringPointsController  < ApplicationController
     else
       @location.metering_point = @metering_point
       if @location.save
-        redirect_to meter_wizard_metering_points_path(metering_point_id: @metering_point.id, location_id: @location.id)
+        redirect_to meter_wizard_metering_points_path(metering_point_id: @metering_point.id, location_id: location_params[:location_id])
       else
         render action: 'metering_point'
       end

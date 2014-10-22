@@ -13,6 +13,7 @@ require 'capybara/rspec/features'
 require 'database_cleaner'
 require 'webmock/rspec'
 require 'vcr'
+require 'capybara-select2'
 
 # you should require 'capybara/rspec' first
 require 'capybara-screenshot'

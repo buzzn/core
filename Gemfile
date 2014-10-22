@@ -111,6 +111,7 @@ end
 group :test do
   gem 'capybara-screenshot'
   gem 'capybara-email'
+  gem 'capybara-select2', github: 'goodwill/capybara-select2'
   gem 'email_spec'
   gem 'spring-commands-rspec'
   gem 'guard-rspec'

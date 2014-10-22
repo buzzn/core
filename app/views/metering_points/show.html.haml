@@ -91,10 +91,10 @@
 
 
     #contracts.tab-pane
-      - if @metering_point.electricity_supplier_contracts
+      - if @metering_point.electricity_supplier_contracts.any?
         = render @metering_point.electricity_supplier_contracts
       - else
-        .alert.alert-danger= t'no_contract_for_metering_point'
+        .alert.alert-danger= t'no_electricity_supplier_contract_for_metering_point'
       .metering_point_operator_contracts
         - if !@metering_point.metering_point_operator_contracts.empty?
           - @metering_point.metering_point_operator_contracts.each do |metering_point_operator_contract|

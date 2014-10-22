@@ -13,7 +13,7 @@ feature 'Location' do
     end
 
     it 'will be signed in' do
-      page.should have_content('Signed in successfully.')
+      expect(page).to have_content('Signed in successfully.')
     end
 
     it 'try to create location' do
@@ -29,12 +29,7 @@ feature 'Location' do
 
 
       click_button 'Create Location'
-      page.should have_content('location_created_successfully')
-
-
-
-      # find("Add New Device", match: :first).click
-
+      expect(page).to have_content('location_created_successfully')
     end
 
 

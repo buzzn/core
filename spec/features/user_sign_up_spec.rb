@@ -14,11 +14,11 @@ feature 'UserSignUpTest' do
       fill_in :user_password,                       :with => 'testtest'
       fill_in :user_password_confirmation,          :with => 'testtest'
       click_button 'submit'
-      find('.alert').should have_content('A message with a confirmation link has been sent to your email address. Please open the link to activate your account.')
+      expect(find('.alert')).to have_content('A message with a confirmation link has been sent to your email address. Please open the link to activate your account.')
 
       ctoken = last_email.body.match('confirmation_token=(.*)"')[1]
       visit "/users/confirmation?confirmation_token=#{ctoken}"
-      page.should have_content('Your account was successfully confirmed.')
+      expect(page).to have_content('Your account was successfully confirmed.')
     end
 
 
