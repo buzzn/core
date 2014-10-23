@@ -80,6 +80,7 @@ gem 'newrelic_rpm'
 
 group :production do
   gem 'asset_sync'
+  gem 'lograge'
 end
 
 group :development, :test do
