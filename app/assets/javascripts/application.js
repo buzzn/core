@@ -16,12 +16,16 @@
 //= require jquery_ujs
 //= require jquery-ui
 //= require jquery.remotipart
-//= require jquery.flot
-//= require jquery.flot.resize
-//= require jquery.flot.time
+
+//= require flot
+//= require flot/jquery.flot.time
+//= require flot/jquery.flot.resize
+
 //= require jquery.flot.tooltip
 //= require jquery.flot.axislabels
-//= require jquery.readyselector
+
+
+//= require jquery-readyselector
 //= require address_picker-rails
 //= require select2
 //= require cocoon
@@ -30,6 +34,8 @@
 //= require rails-timeago-all
 //= require underscore
 //= require dependent-fields
+//= require d3
+//= require my_own_jit_copy
 
 //= require global
 //= require metering_points
@@ -37,12 +43,4 @@
 //= require groups
 
 //= require turbolinks
-
-//= require d3
-//= require dagre-d3
-//= require my_own_jit_copy
-
-
-
-
-
+// don't require libs below this command

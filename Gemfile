@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+source 'https://rails-assets.org'
 
 gem 'rails'
 gem 'pg'
@@ -37,7 +38,6 @@ gem 'authority'
 gem 'sprockets-rails'
 gem 'rolify'
 gem 'ffaker'
-gem 'flot-rails'
 gem 'jquery-turbolinks'
 gem 'fabrication'
 gem 'friendly_id'
@@ -72,11 +72,16 @@ gem 'tzinfo'
 gem 'rails-timeago'
 gem 'turbolinks_transitions'
 gem 'dependent-fields-rails'
-gem 'underscore-rails'
 gem 'ancestry'
 gem 'rack-mini-profiler', require: false
 gem 'goldiloader'
 gem 'newrelic_rpm'
+
+gem 'rails-assets-d3'
+gem 'rails-assets-underscore'
+gem 'rails-assets-flot'
+gem 'rails-assets-flot.tooltip'
+gem 'rails-assets-jquery-readyselector'
 
 group :production do
   gem 'asset_sync'
