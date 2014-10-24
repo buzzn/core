@@ -20,9 +20,10 @@
         %tr
           %td= t('password')
           %td= metering_point_operator_contract.password
-        %tr
-          %td= t('connection_established')
-          - if metering_point_operator_contract.metering_point
-            %td= metering_point_operator_contract.metering_point.meter.smart
-          - elsif metering_point_operator_contract.group
-            %td= metering_point_operator_contract.group.metering_points.first.root.meter.smart
+        - if (metering_point_operator_contract.metering_point && metering_point_operator_contract.metering_point.meter.smart) || (metering_point_operator_contract.group && metering_point_operator_contract.group.metering_points.first.root.meter.smart)
+          %tr
+            %td= t('connection_established')
+            - if metering_point_operator_contract.metering_point
+              %td= metering_point_operator_contract.metering_point.meter.smart
+            - elsif metering_point_operator_contract.group
+              %td= metering_point_operator_contract.group.metering_points.first.root.meter.smart

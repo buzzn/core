@@ -1,0 +1,44 @@
+require 'spec_helper'
+
+
+feature 'Group' do
+  describe 'try to manage groups', :js do
+
+    before do
+      Fabricate(:metering_point_operator, name: 'Discovergy')
+      @user = Fabricate(:karin)
+      @location = Fabricate(:gautinger_weg)
+      @location.metering_point.users << @user
+      @user.add_role :manager, @location
+      @pv_karin = Fabricate(:pv_karin)
+      @user.add_role :manager, @pv_karin
+      @location.metering_point.devices << @pv_karin
+      @location.metering_point.electricity_supplier_contracts.first.contracting_party = @user.contracting_party
+      @location.metering_point.electricity_supplier_contracts.first.save
+
+      visit '/users/sign_in'
+      fill_in :user_email,    :with => @user.email
+      fill_in :user_password, :with => 'testtest'
+      click_button 'Sign in'
+    end
+
+    it 'will be signed in' do
+      expect(page).to have_content('Signed in successfully.')
+    end
+
+    it 'try to create group' do
+      visit "/profiles/#{@user.profile.slug}"
+      click_on 'Groups'
+      expect(page).to have_content('Add New Group')
+      click_on 'Add New Group'
+      expect(page).to have_content('Description')
+
+      select2 "#{@location.metering_point.address_addition}", from: 'group_metering_point_ids'
+      fill_in :group_name,    with: 'Testgruppe'
+      fill_in :group_description,    with: 'So eine tolle Testgruppe haben wir hier.'
+
+      click_button 'submit'
+      expect(page).to have_content('Assets')
+    end
+  end
+end
