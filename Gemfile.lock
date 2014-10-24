@@ -23,7 +23,7 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/devise.git
-  revision: dae49f836ace1210bbcb433ee0c68626fd507d37
+  revision: 11060fb8da7b34d177e6528a171b44c61f5768f2
   specs:
     devise (3.4.0)
       bcrypt (~> 3.0)
@@ -35,6 +35,7 @@ GIT
 
 GEM
   remote: https://rubygems.org/
+  remote: https://rails-assets.org/
   specs:
     actionmailer (4.1.6)
       actionpack (= 4.1.6)
@@ -194,8 +195,6 @@ GEM
     fastercsv (1.5.5)
     ffaker (1.25.0)
     ffi (1.9.6)
-    flot-rails (0.0.6)
-      jquery-rails
     fog (1.24.0)
       fog-brightbox
       fog-core (~> 1.23)
@@ -205,7 +204,7 @@ GEM
       fog-softlayer
       ipaddress (~> 0.5)
       nokogiri (~> 1.5, >= 1.5.11)
-    fog-brightbox (0.6.0)
+    fog-brightbox (0.6.1)
       fog-core (~> 1.22)
       fog-json
       inflecto
@@ -225,7 +224,7 @@ GEM
     fog-sakuracloud (0.1.1)
       fog-core
       fog-json
-    fog-softlayer (0.3.21)
+    fog-softlayer (0.3.22)
       fog-core
       fog-json
     fog-xml (0.1.0)
@@ -307,6 +306,10 @@ GEM
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
+    lograge (0.3.0)
+      actionpack (>= 3)
+      activesupport (>= 3)
+      railties (>= 3)
     lol_dba (1.6.4)
       actionpack (>= 3.0)
       activerecord (>= 3.0)
@@ -408,6 +411,13 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.1.6)
       sprockets-rails (~> 2.0)
+    rails-assets-d3 (3.4.13)
+    rails-assets-flot (0.8.3)
+      rails-assets-jquery (>= 1.2.6)
+    rails-assets-flot.tooltip (0.8.4)
+    rails-assets-jquery (2.1.1)
+    rails-assets-jquery-readyselector (0.1.0)
+    rails-assets-underscore (1.7.0)
     rails-erd (1.1.0)
       activerecord (>= 3.0)
       activesupport (>= 3.0)
@@ -522,7 +532,6 @@ GEM
     uglifier (2.5.3)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    underscore-rails (1.7.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.6)
@@ -530,7 +539,7 @@ GEM
     vcr (2.9.3)
     warden (1.2.3)
       rack (>= 1.0)
-    webmock (1.19.0)
+    webmock (1.20.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
     websocket-driver (0.3.5)
@@ -582,7 +591,6 @@ DEPENDENCIES
   fabrication
   faraday
   ffaker
-  flot-rails
   fog
   font-awesome-rails
   foreigner
@@ -607,6 +615,7 @@ DEPENDENCIES
   jquery-ui-rails
   launchy
   listen
+  lograge
   lol_dba
   mail_view
   meta_request
@@ -629,6 +638,11 @@ DEPENDENCIES
   rack-livereload
   rack-mini-profiler
   rails
+  rails-assets-d3
+  rails-assets-flot
+  rails-assets-flot.tooltip
+  rails-assets-jquery-readyselector
+  rails-assets-underscore
   rails-erd
   rails-i18n
   rails-timeago
@@ -652,7 +666,6 @@ DEPENDENCIES
   turbolinks_transitions
   tzinfo
   uglifier
-  underscore-rails
   vcr
   webmock
   whenever

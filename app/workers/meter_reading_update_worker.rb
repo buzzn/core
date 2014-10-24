@@ -1,5 +1,6 @@
 class MeterReadingUpdateWorker
   include Sidekiq::Worker
+  sidekiq_options :queue => :low
 
   def perform(register_id, manufacturer_device_number, mpo_slug, mpo_login_username, mpo_login_password, start_time, end_time)
 
