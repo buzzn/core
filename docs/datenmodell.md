@@ -172,7 +172,7 @@ Das Register ist ein Zählwerk. Ein Zähler kann mehrere Zählwerke besitzen, di
 
 ## Reading
 
-Reading sind aus den regiustern ausgelesene Werte die in einer Zeitreihe gespeichert werden
+Reading sind aus den registern ausgelesene Werte die in einer Zeitreihe gespeichert werden
 
 |Value|Type|Example|Explanation
 |:----|:---|:------|:----------
