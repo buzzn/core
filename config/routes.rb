@@ -1,7 +1,8 @@
 Buzzn::Application.routes.draw do
+  mount API::Base, at: "/"
+  mount GrapeSwaggerRails::Engine, at: "/api"
 
   require 'sidekiq/web'
-
   authenticate :user, lambda { |user| user.has_role?(:admin) } do
     mount Sidekiq::Web => '/sidekiq'
   end
@@ -58,7 +59,10 @@ Buzzn::Application.routes.draw do
       get :reject
     end
   end
+
+
   resources :groups do
+    resources :metering_points, only: [:index]
     member do
       get :cancel_membership
     end
