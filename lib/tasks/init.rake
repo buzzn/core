@@ -2,7 +2,7 @@ namespace :db do
   desc 'This rebuilds development db'
   task :init => [
                   'log:clear',
-                  'tmp:cache:clear',
+                  'tmp:clear',
                   'assets:clean',
                   'carrierwave:delete_uploads',
                   'db:mongoid:drop',
