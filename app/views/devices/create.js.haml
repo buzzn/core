@@ -1,2 +1,2 @@
-$("#metering_point_#{@device.metering_point.id} .devices").prepend("#{ escape_javascript( render @device )}");
+window.location = '/devices/#{@device.id}'
 $("#myModal").modal('hide');

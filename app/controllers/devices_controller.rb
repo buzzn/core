@@ -50,7 +50,10 @@ class DevicesController < InheritedResources::Base
     update! do |success, failure|
       @device = DeviceDecorator.new(@device)
       success.js { @device }
-      failure.js { render :edit }
+      failure.js {
+        render :edit_in if @device.mode == "in"
+        render :edit_out if @device.mode == "out"
+      }
     end
   end
 
@@ -59,7 +62,10 @@ class DevicesController < InheritedResources::Base
       current_user.add_role :manager, @device
       @device = DeviceDecorator.new(@device)
       success.js { @device }
-      failure.js { render :new }
+      failure.js {
+        render :new_in if @device.mode == "in"
+        render :new_out if @device.mode == "out"
+      }
     end
   end
 

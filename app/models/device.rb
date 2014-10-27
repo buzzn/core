@@ -6,6 +6,11 @@ class Device < ActiveRecord::Base
 
   has_many :assets, as: :assetable, dependent: :destroy
 
+  validates :watt_peak, numericality: { only_integer: true }, presence: true
+  validates :manufacturer_product_name, presence: true
+
+  validates :law, :generator_type, :primary_energy, presence: true, if: :output?
+
 
   def name
     "#{self.manufacturer_name} #{self.manufacturer_product_name}"

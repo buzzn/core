@@ -4,7 +4,7 @@
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'edit_out_device'
     .modal-body
-      = simple_form_for @device, remote: false, html: {multipart: true, class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
+      = simple_form_for @device, remote: true, html: {multipart: true, class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
         = render 'devices/out_form_fields', f: f
         .modal-footer
           = f.button :submit, id: 'submit', class: 'btn btn-success'

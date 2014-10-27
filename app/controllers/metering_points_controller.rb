@@ -1,7 +1,7 @@
 class MeteringPointsController < InheritedResources::Base
   before_filter :authenticate_user!
   respond_to :html, :json, :js
-  belongs_to :group
+  #belongs_to :group
 
 
   def show
