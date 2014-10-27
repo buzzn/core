@@ -6,6 +6,8 @@ class Asset < ActiveRecord::Base
 
   default_scope -> { order('created_at ASC') }
 
+  validates :image, presence: true
+
 
   # TODO make reverse polymorphic nicer
   def device

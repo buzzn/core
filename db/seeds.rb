@@ -180,8 +180,7 @@ end
 
 
 puts 'group karin strom'
-karins_pv_group = Fabricate(:group_karins_pv_strom)
-karins_pv_group.metering_points << gautinger_weg.metering_point
+karins_pv_group = Fabricate(:group_karins_pv_strom, metering_points: [gautinger_weg.metering_point])
 karin.add_role :manager, karins_pv_group
 karins_pv_group.metering_points << User.where(email: 'christian@buzzn.net').first.metering_points.first
 karins_pv_group.metering_points << User.where(email: 'felix@buzzn.net').first.metering_points.first
@@ -207,8 +206,7 @@ mp_hans_dieter_hopf.update_attribute :parent, mp_60118470
 location_hopf = Fabricate(:location_hopf)
 location_hopf.metering_point = mp_60118470
 
-group_hopf = Fabricate(:group, name: 'Hopf Strom')
-group_hopf.metering_points << mp_60118470
+group_hopf = Fabricate(:group, name: 'Hopf Strom', metering_points: [mp_60118470])
 group_hopf.metering_points << mp_60009316
 group_hopf.metering_points << mp_60009272
 group_hopf.metering_points << mp_60009348
@@ -216,8 +214,7 @@ group_hopf.metering_points << mp_hans_dieter_hopf
 group_hopf.metering_point_operator_contract = Fabricate(:mpoc_buzzn_metering, group: group_hopf)
 
 puts 'group hof_butenland'
-group_hof_butenland = Fabricate(:group_hof_butenland)
-group_hof_butenland.metering_points << niensweg.metering_point
+group_hof_butenland = Fabricate(:group_hof_butenland, metering_points: [niensweg.metering_point])
 jan_gerdes.add_role :manager, group_hof_butenland
 15.times do
   user, location, metering_point = user_with_location
@@ -228,8 +225,7 @@ group_hof_butenland.create_activity key: 'group.create', owner: jan_gerdes, reci
 
 
 puts 'group home_of_the_brave'
-group_home_of_the_brave = Fabricate(:group_home_of_the_brave)
-group_home_of_the_brave.metering_points << @fichtenweg8.metering_point
+group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [@fichtenweg8.metering_point])
 group_home_of_the_brave.metering_points << fichtenweg10.metering_point
 justus = User.where(email: 'justus@buzzn.net').first
 justus.add_role :manager, group_home_of_the_brave
