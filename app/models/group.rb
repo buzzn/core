@@ -21,6 +21,9 @@ class Group < ActiveRecord::Base
   has_one  :servicing_contract, dependent: :destroy
   has_one  :area
   has_many :metering_points
+
+  validates :metering_points, presence: true
+
   has_many :group_users
   has_many :users, :through => :group_users
 

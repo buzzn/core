@@ -4,7 +4,7 @@
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'new_group'
     .modal-body
-      = simple_form_for @group, remote: false, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
+      = simple_form_for @group, remote: true, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
         = render 'groups/form_fields', f: f
         = f.association :metering_points, collection: MeteringPoint.by_modes_and_user(["in_out", "out"], current_user).collect(&:decorate), input_html: { class: 'select2'}
         .modal-footer

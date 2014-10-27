@@ -1,4 +1,6 @@
 en:
+  out: Out
+  pv_short: PV
   date:
     abbr_day_names:
     - Sun
