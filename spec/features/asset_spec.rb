@@ -43,7 +43,7 @@ feature 'Asset' do
       expect(page).to have_content('solarwatt')
       find("i.fa-plus-circle").click
 
-      attach_file :asset_image,           '/Users/christian/Programmieren/buzzn/db/seed_assets/assets/pv_karin.jpg'
+      attach_file :asset_image,           Rails.root.join('db', 'seed_assets', 'assets', 'pv_karin.jpg')
       fill_in :asset_description,         with: 'Tolles Bild'
 
       click_on 'Create Asset'
@@ -60,7 +60,7 @@ feature 'Asset' do
       click_on 'Create Asset'
       expect(page).not_to have_content('Show')
 
-      attach_file :asset_image,           '/Users/christian/Programmieren/buzzn/db/seed_assets/assets/pv_karin.jpg'
+      attach_file :asset_image,           Rails.root.join('db', 'seed_assets', 'assets', 'pv_karin.jpg')
       fill_in :asset_description,         with: 'Tolles Bild'
 
       click_on 'Create Asset'
@@ -73,7 +73,7 @@ feature 'Asset' do
       click_on 'Assets'
       find("i.fa-plus-circle").click
 
-      attach_file :asset_image,           '/Users/christian/Programmieren/buzzn/db/seed_assets/assets/pv_karin.jpg'
+      attach_file :asset_image,           Rails.root.join('db', 'seed_assets', 'assets', 'pv_karin.jpg')
       fill_in :asset_description,         with: 'Tolles Bild'
 
       click_on 'Create Asset'
@@ -91,7 +91,7 @@ feature 'Asset' do
       click_on 'Create Asset'
       expect(page).not_to have_content('Show')
 
-      attach_file :asset_image,           '/Users/christian/Programmieren/buzzn/db/seed_assets/assets/pv_karin.jpg'
+      attach_file :asset_image,           Rails.root.join('db', 'seed_assets', 'assets', 'pv_karin.jpg')
       fill_in :asset_description,         with: 'Tolles Bild'
 
       click_on 'Create Asset'

@@ -75,6 +75,10 @@ jQuery ->
         .removeClass('uneditable-input')
         .removeAttr('disabled', 'disabled')
         .val('');
+    .on "ajax:error", (evt, data, status, xhr) ->
+      $(this).find('textarea')
+        .removeClass('uneditable-input')
+        .removeAttr('disabled', 'disabled');
 
   # Delete a comment
   $(document)

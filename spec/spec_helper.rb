@@ -81,7 +81,7 @@ RSpec.configure do |config|
   end
 
 
-  Capybara.default_wait_time = 8 # Seconds to wait before timeout error. Default is 2
+  Capybara.default_wait_time = 10 # Seconds to wait before timeout error. Default is 2
 
   # Register slightly larger than default window size...
   Capybara.register_driver :poltergeist do |app|
