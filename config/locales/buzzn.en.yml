@@ -1,3 +1,6 @@
 en:
   out: Out
   pv_short: PV
+  sent_friendship_request: Sent Friendship Request
+  accepted_friendship_request: Accepted Friendship Request
+  rejected_friendship_request: Rejected Friendship Request
