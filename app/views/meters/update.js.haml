@@ -1,3 +1,5 @@
 
 $("#myModal").modal('hide');
-$("#meter").replaceWith("#{escape_javascript(render @meter)}");
+$(".meter").remove();
+$("#meter").append("#{escape_javascript( render @meter )}");
+$("#meter").wrapInner("<div class='meter'></div>");
