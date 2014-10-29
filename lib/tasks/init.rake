@@ -5,6 +5,7 @@ namespace :db do
                   'tmp:clear',
                   'assets:clean',
                   'carrierwave:delete_uploads',
+                  'capybara:delete_screenshots',
                   'db:mongoid:drop',
                   'db:mongoid:remove_indexes',
                   'db:mongoid:create_indexes',
