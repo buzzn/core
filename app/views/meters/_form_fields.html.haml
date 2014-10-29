@@ -6,13 +6,13 @@
 %h3=t('registers')
 #registers
   = f.simple_fields_for :registers do |r|
-    = render 'registers/form_fields', f: r
+    = render 'register_fields', f: r
   .links
     = link_to_add_association t('add_register'), f, :registers
 
 %h3=t('equipments')
 #equipments
   = f.simple_fields_for :equipments do |r|
-    = render 'equipments/form_fields', f: r
+    = render 'equipment_fields', f: r
   .links
     = link_to_add_association t('add_equipment'), f, :equipments

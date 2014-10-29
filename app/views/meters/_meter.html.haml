@@ -47,66 +47,66 @@
         %tr
           %td= t('virtual')
           %td= @meter.virtual
-
-  - if @meter.registers.empty?
-    .header.no-border
-      = @meter.link_to_edit
-      %h2= t('registers')
-  - else
-    .header.no-border
-      %h2= t('registers')
-    - @meter.registers.each do |register|
-      .content.no-padding{id: "register_#{register.id}"}
-        %table.table
-          %thead
-            %tr
-              %td= t('mode')
-              %td= register.mode
-            %tr
-              %td= t('obis_index')
-              %td= register.obis_index
-            %tr
-              %td= t('variable_tariff')
-              %td= register.variable_tariff
-
-  - if @meter.equipments.empty?
-    .header.no-border
-      = @meter.link_to_edit
-      %h2= t('equipments')
-  - else
-    .header.no-border
-      %h2= t('equipments')
-    - @meter.equipments.each do |equipment|
-      .content.no-padding{id: "equipment_#{equipment.id}"}
-        %table.table
-          %thead
-            %tr
-              %td= t('manufacturer_name')
-              %td= equipment.manufacturer_name
-            %tr
-              %td= t('manufacturer_product_name')
-              %td= equipment.manufacturer_product_name
-            %tr
-              %td= t('manufacturer_product_serialnumber')
-              %td= equipment.manufacturer_product_serialnumber
-            %tr
-              %td= t('device_kind')
-              %td= equipment.device_kind
-            %tr
-              %td= t('device_type')
-              %td= equipment.device_type
-            %tr
-              %td= t('ownership')
-              %td= equipment.ownership
-            %tr
-              %td= t('build')
-              %td= equipment.build
-            %tr
-              %td= t('calibrated_till')
-              %td= equipment.calibrated_till
-            %tr
-              %td= t('converter_constant')
-              %td= equipment.converter_constant
+  .registers.content.no-padding
+    - if @meter.registers.empty?
+      .header.no-border
+        = @meter.link_to_edit
+        %h2= t('registers')
+    - else
+      .header.no-border
+        %h2= t('registers')
+      - @meter.registers.each do |register|
+        .content.no-padding{id: "register_#{register.id}"}
+          %table.table
+            %thead
+              %tr
+                %td= t('mode')
+                %td= register.mode
+              %tr
+                %td= t('obis_index')
+                %td= register.obis_index
+              %tr
+                %td= t('variable_tariff')
+                %td= register.variable_tariff
+  .equipments.content.no-padding
+    - if @meter.equipments.empty?
+      .header.no-border
+        = @meter.link_to_edit
+        %h2= t('equipments')
+    - else
+      .header.no-border
+        %h2= t('equipments')
+      - @meter.equipments.each do |equipment|
+        .content.no-padding{id: "equipment_#{equipment.id}"}
+          %table.table
+            %thead
+              %tr
+                %td= t('manufacturer_name')
+                %td= equipment.manufacturer_name
+              %tr
+                %td= t('manufacturer_product_name')
+                %td= equipment.manufacturer_product_name
+              %tr
+                %td= t('manufacturer_product_serialnumber')
+                %td= equipment.manufacturer_product_serialnumber
+              %tr
+                %td= t('device_kind')
+                %td= equipment.device_kind
+              %tr
+                %td= t('device_type')
+                %td= equipment.device_type
+              %tr
+                %td= t('ownership')
+                %td= equipment.ownership
+              %tr
+                %td= t('build')
+                %td= equipment.build
+              %tr
+                %td= t('calibrated_till')
+                %td= equipment.calibrated_till
+              %tr
+                %td= t('converter_constant')
+                %td= equipment.converter_constant
 
 
 
