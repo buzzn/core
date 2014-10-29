@@ -59,11 +59,12 @@ RSpec.configure do |config|
 
 
   # Discussion of retry
-# https://github.com/rspec/rspec-core/issues/456
+  # https://github.com/rspec/rspec-core/issues/456
   config.verbose_retry       = true # show retry status in spec process
   retry_count                = ENV['RSPEC_RETRY_COUNT']
   config.default_retry_count = retry_count.try(:to_i) || 1
   puts "RSpec retry count is #{config.default_retry_count}"
+
 
   # VCR
   VCR.configure do |config|
