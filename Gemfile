@@ -121,12 +121,13 @@ group :development do
 end
 
 group :test do
+  gem 'rspec-retry'
+  gem 'rspec-rails'
   gem 'capybara-screenshot'
   gem 'capybara-email'
   gem 'email_spec'
   gem 'spring-commands-rspec'
   gem 'guard-rspec'
-  gem 'rspec-rails'
   gem 'capybara', github: 'jnicklas/capybara'
   gem 'mocha'
   gem 'vcr'

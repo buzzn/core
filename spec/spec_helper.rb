@@ -2,7 +2,7 @@
 ENV["RAILS_ENV"] = 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-
+require 'rspec/retry'
 require 'capybara'
 require 'capybara/dsl'
 require 'capybara/rspec'
@@ -56,6 +56,8 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = "random"
+
+  config.verbose_retry = true # show retry status in spec process
 
 
   # VCR
