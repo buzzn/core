@@ -55,7 +55,10 @@ feature 'Register' do
       #visit "/metering_points/#{@location.metering_point.slug}/#tab_meter" #reload to make css selector visible
 
       find(".meter").find(".block").first(".header").find(".btn").click
-      find("#registers").all(".nested-fields").first.click_on 'Remove Register'
+
+      within find("#registers").all(".nested-fields").first do
+        click_on 'Remove Register'
+      end
 
       click_on 'Update Meter'
 

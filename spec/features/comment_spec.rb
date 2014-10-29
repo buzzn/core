@@ -51,11 +51,11 @@ feature 'Comment' do
 
       click_button 'Create Comment'
 
-      expect(find(".comments-all")).to have_content('Test Comment')
+      expect(find(".comment")).to have_content('Test Comment')
 
-      find(".comments-all").find(".close").click
+      find(".comment").find(".close").click
 
-      expect(find(".comments-all")).not_to have_content('Test Comment')
+      expect(page.has_css?(".comment", visible: false))
     end
 
     it 'will fail to create comment' do
