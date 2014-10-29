@@ -23,9 +23,9 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/devise.git
-  revision: 11060fb8da7b34d177e6528a171b44c61f5768f2
+  revision: e3f794f369e6c63c4f42f75dfcc187d3bf987bd0
   specs:
-    devise (3.4.0)
+    devise (3.4.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 3.2.6, < 5)
@@ -92,16 +92,16 @@ GEM
     awesome_nested_set (3.0.1)
       activerecord (>= 4.0.0, < 5)
     awesome_print (1.2.0)
-    aws-sdk (1.56.0)
-      aws-sdk-v1 (= 1.56.0)
-    aws-sdk-v1 (1.56.0)
+    aws-sdk (1.57.0)
+      aws-sdk-v1 (= 1.57.0)
+    aws-sdk-v1 (1.57.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
-    bcrypt (3.1.7)
+    bcrypt (3.1.9)
     better_errors (2.0.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
@@ -235,7 +235,7 @@ GEM
     fog-sakuracloud (0.1.1)
       fog-core
       fog-json
-    fog-softlayer (0.3.22)
+    fog-softlayer (0.3.23)
       fog-core
       fog-json
     fog-xml (0.1.0)
@@ -249,10 +249,10 @@ GEM
     friendly_id (5.0.4)
       activerecord (>= 4.0.0)
     geocoder (1.2.5)
-    goldiloader (0.0.6)
-      activerecord (>= 3.2, < 4.2)
-      activesupport (>= 3.2, < 4.2)
-    gon (5.2.0)
+    goldiloader (0.0.7)
+      activerecord (>= 3.2, < 4.3)
+      activesupport (>= 3.2, < 4.3)
+    gon (5.2.1)
       actionpack (>= 2.3.0)
       json
       multi_json
@@ -282,7 +282,7 @@ GEM
       grape-swagger (~> 0.7.2)
       railties (>= 3.2.12)
     growl (1.0.3)
-    guard (2.6.1)
+    guard (2.7.0)
       formatador (>= 0.2.4)
       listen (~> 2.7)
       lumberjack (~> 1.0)
@@ -323,7 +323,7 @@ GEM
       foreigner (>= 1.2.1)
     inflecto (0.0.2)
     ipaddress (0.8.0)
-    jbuilder (2.2.3)
+    jbuilder (2.2.4)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
     jquery-rails (3.1.2)
@@ -335,7 +335,7 @@ GEM
     jquery-ui-rails (5.0.2)
       railties (>= 3.2.16)
     json (1.8.1)
-    kramdown (1.4.2)
+    kramdown (1.5.0)
     launchy (2.4.2)
       addressable (~> 2.3)
     libv8 (3.16.14.7)
@@ -556,7 +556,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
     subexec (0.2.3)
     table_print (1.5.3)
-    temple (0.6.9)
+    temple (0.6.10)
     terminal-table (1.4.5)
     therubyracer (0.12.1)
       libv8 (~> 3.16.14.0)
@@ -566,7 +566,7 @@ GEM
     tilt (1.4.1)
     timers (4.0.1)
       hitimes
-    turbolinks (2.4.0)
+    turbolinks (2.5.1)
       coffee-rails
     turbolinks_transitions (0.0.5)
       coffee-rails
@@ -591,7 +591,7 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
     websocket-driver (0.3.5)
-    whenever (0.9.3)
+    whenever (0.9.4)
       chronic (>= 0.6.3)
     wicked (1.1.0)
       rails (>= 3.0.7)
