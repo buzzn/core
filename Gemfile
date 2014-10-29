@@ -131,7 +131,7 @@ group :test do
   gem 'mocha'
   gem 'vcr'
   gem 'webmock'
-  gem 'poltergeist'
-  gem 'phantomjs'
+  gem 'poltergeist', github: 'teampoltergeist/poltergeist'
+  #gem 'phantomjs'
   gem 'database_cleaner'
 end

@@ -44,6 +44,16 @@ GIT
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
 
+GIT
+  remote: git://github.com/teampoltergeist/poltergeist.git
+  revision: df101eb04d6af3869274d81d21ad45531e5a33c8
+  specs:
+    poltergeist (1.5.1)
+      capybara (~> 2.4)
+      cliver (~> 0.3.1)
+      multi_json (~> 1.0)
+      websocket-driver (>= 0.2.0)
+
 GEM
   remote: https://rubygems.org/
   remote: https://rails-assets.org/
@@ -410,12 +420,6 @@ GEM
       activerecord (>= 3.0, < 5.0)
       activesupport (>= 3.0, < 5.0)
     pg (0.17.1)
-    phantomjs (1.9.7.1)
-    poltergeist (1.5.1)
-      capybara (~> 2.1)
-      cliver (~> 0.3.1)
-      multi_json (~> 1.0)
-      websocket-driver (>= 0.2.0)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -685,8 +689,7 @@ DEPENDENCIES
   newrelic_rpm
   paper_trail
   pg
-  phantomjs
-  poltergeist
+  poltergeist!
   pry-rails
   public_activity
   puma
