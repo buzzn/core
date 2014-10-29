@@ -6,6 +6,17 @@ GIT
       rails (>= 3.2.0)
 
 GIT
+  remote: git://github.com/jnicklas/capybara.git
+  revision: 4161bbc560631e61e611d59bf797eeb59a6b1021
+  specs:
+    capybara (2.4.1)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      xpath (~> 2.0)
+
+GIT
   remote: git://github.com/josevalim/inherited_resources.git
   revision: eec2cc6307eb54bc764e21897397fa79ca75bbf9
   specs:
@@ -127,12 +138,6 @@ GEM
       activesupport (>= 3.0.0)
       uniform_notifier (>= 1.6.0)
     callsite (0.0.11)
-    capybara (2.4.4)
-      mime-types (>= 1.16)
-      nokogiri (>= 1.3.3)
-      rack (>= 1.0.0)
-      rack-test (>= 0.5.4)
-      xpath (~> 2.0)
     capybara-email (2.4.0)
       capybara (~> 2.4)
       mail
@@ -622,7 +627,7 @@ DEPENDENCIES
   brakeman
   bson
   bullet
-  capybara
+  capybara!
   capybara-email
   capybara-screenshot
   carrierwave

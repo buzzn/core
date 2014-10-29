@@ -35,6 +35,5 @@ Buzzn::Application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
-  config.allow_concurrency = false
-
+  config.allow_concurrency = false # TODO https://github.com/rails/rails/issues/15089
 end

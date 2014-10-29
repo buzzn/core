@@ -127,7 +127,7 @@ group :test do
   gem 'spring-commands-rspec'
   gem 'guard-rspec'
   gem 'rspec-rails'
-  gem 'capybara'
+  gem 'capybara', github: 'jnicklas/capybara'
   gem 'mocha'
   gem 'vcr'
   gem 'webmock'
