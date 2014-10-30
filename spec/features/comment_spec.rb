@@ -43,7 +43,7 @@ feature 'Comment' do
       expect(page).to have_content('Signed in successfully.')
     end
 
-    it 'try to create and remove comment' do
+    it 'try to create and remove comment', :retry => 3 do
       visit "/groups/#{@group_home_of_the_brave.slug}"
       click_on 'Comments'
 
@@ -58,7 +58,7 @@ feature 'Comment' do
       expect(page.has_css?(".comment", visible: false))
     end
 
-    it 'will fail to create comment' do
+    it 'will fail to create comment', :retry => 3 do
       visit "/groups/#{@group_home_of_the_brave.slug}"
       click_on 'Comments'
 
@@ -67,7 +67,7 @@ feature 'Comment' do
       expect(find(".comments-all")).not_to have_selector('comment')
     end
 
-    it 'will not be allowed to remove comment' do
+    it 'will not be allowed to remove comment', :retry => 3 do
       visit "/groups/#{@group_home_of_the_brave.slug}"
       click_on 'Comments'
 

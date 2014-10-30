@@ -19,7 +19,7 @@ feature 'MeteringPoint' do
       expect(page).to have_content('Signed in successfully.')
     end
 
-    it 'try to create metering_point' do
+    it 'try to create metering_point', :retry => 3 do
       visit "/locations/#{@location.slug}"
       expect(page).to have_content('You Have No Metering Point')
       click_on 'Create New Metering Point'
@@ -51,7 +51,7 @@ feature 'MeteringPoint' do
       expect(page).to have_content('Add Metering Point Operator Contract')
     end
 
-    it 'will fail to create metering_point' do
+    it 'will fail to create metering_point', :retry => 3 do
       visit "/locations/#{@location.slug}"
       click_on 'Create New Metering Point'
 

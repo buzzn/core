@@ -38,7 +38,7 @@ feature 'Asset' do
       expect(page).to have_content('Signed in successfully.')
     end
 
-    it 'try to create asset (device)' do
+    it 'try to create asset (device)', :retry => 3 do
       visit "/devices/#{@device.id}"
       expect(page).to have_content('solarwatt')
       find("i.fa-plus-circle").click
@@ -50,7 +50,7 @@ feature 'Asset' do
       expect(find(".caption")).to have_content('Tolles Bild')
     end
 
-    it 'will fail to create asset (device)' do
+    it 'will fail to create asset (device)', :retry => 3 do
       visit "/devices/#{@device.id}"
       expect(page).to have_content('solarwatt')
       find("i.fa-plus-circle").click
@@ -67,7 +67,7 @@ feature 'Asset' do
       expect(find(".caption")).to have_content('Tolles Bild')
     end
 
-    it 'try to create asset (group)' do
+    it 'try to create asset (group)', :retry => 3 do
       visit "/groups/#{@group_home_of_the_brave.slug}"
       expect(page).to have_content('Assets')
       click_on 'Assets'
@@ -80,7 +80,7 @@ feature 'Asset' do
       expect(find(".caption")).to have_content('Tolles Bild')
     end
 
-    it 'will fail to create asset (group)' do
+    it 'will fail to create asset (group)', :retry => 3 do
       visit "/groups/#{@group_home_of_the_brave.slug}"
       expect(page).to have_content('Assets')
       click_on 'Assets'

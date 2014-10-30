@@ -26,7 +26,7 @@ feature 'Group' do
       expect(page).to have_content('Signed in successfully.')
     end
 
-    it 'try to create group' do
+    it 'try to create group', :retry => 3 do
       visit "/profiles/#{@user.profile.slug}"
       click_on 'Groups'
       expect(page).to have_content('Add New Group')
@@ -54,7 +54,7 @@ feature 'Group' do
       expect(find(".comment")).to have_content('Testcomment?!')
     end
 
-    it 'will fail to create group' do
+    it 'will fail to create group', :retry => 3 do
       visit "/profiles/#{@user.profile.slug}"
       click_on 'Groups'
       expect(page).to have_content('Add New Group')

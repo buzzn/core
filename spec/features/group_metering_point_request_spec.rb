@@ -44,7 +44,7 @@ feature 'GroupMeteringPointRequest' do
       expect(page).to have_content('Signed in successfully.')
     end
 
-    it 'try to create membership' do
+    it 'try to create membership', :retry => 3 do
       visit "/groups/#{@group_home_of_the_brave.slug}"
       click_on 'Membership'
       click_on "Join This Group With Metering Point"          #translation 'en' doesnt accept attributes
@@ -70,7 +70,7 @@ feature 'GroupMeteringPointRequest' do
       expect(find("#metering_points")).to have_content("#{@location2.metering_point.decorate.name}")
     end
 
-    it 'will fail to create membership' do
+    it 'will fail to create membership', :retry => 3 do
       visit "/groups/#{@group_home_of_the_brave.slug}"
       click_on 'Membership'
       click_on "Join This Group With Metering Point"          #translation 'en' doesnt accept attributes yet
@@ -96,7 +96,7 @@ feature 'GroupMeteringPointRequest' do
       expect(find("#metering_points")).not_to have_content("#{@location2.metering_point.decorate.name}")
     end
 
-    it 'try to cancel membership' do
+    it 'try to cancel membership', :retry => 3 do
       @location2.metering_point.group = @group_home_of_the_brave
       @location2.metering_point.save
 

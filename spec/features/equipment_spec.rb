@@ -22,7 +22,7 @@ feature 'Equipment' do
       expect(page).to have_content('Signed in successfully.')
     end
 
-    it 'try to create equipment' do
+    it 'try to create equipment', :retry => 3  do
       @location.metering_point.registers.first.meter.equipments = []
       @location.metering_point.registers.first.meter.save
 
@@ -47,7 +47,7 @@ feature 'Equipment' do
       expect(find(".equipments")).to have_content('Discovergy')
     end
 
-    it 'try to delete equipment' do
+    it 'try to delete equipment', :retry => 3 do
       visit "/metering_points/#{@location.metering_point.slug}/#tab_meter"
 
       expect(page).to have_content('Easymeter')

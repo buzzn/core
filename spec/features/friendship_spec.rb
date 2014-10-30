@@ -20,7 +20,7 @@ feature 'Friendship' do
       expect(page).to have_content('Signed in successfully.')
     end
 
-    it 'try to create friendship' do
+    it 'try to create friendship', :retry => 3 do
       visit "/profiles/#{@user2.profile.slug}"
       click_on 'Friendship'
       click_on 'Send Friend Request'
@@ -41,7 +41,7 @@ feature 'Friendship' do
       expect(page).to have_content('Accepted Friendship Request')
     end
 
-    it 'will fail to create friendship' do
+    it 'will fail to create friendship', :retry => 3 do
       visit "/profiles/#{@user2.profile.slug}"
       click_on 'Friendship'
       click_on 'Send Friend Request'
@@ -62,7 +62,7 @@ feature 'Friendship' do
       expect(page).to have_content('Rejected Friendship Request')
     end
 
-    it 'try to cancel friendship' do
+    it 'try to cancel friendship', :retry => 3 do
       visit "/profiles/#{@user3.profile.slug}"
       click_on 'Friendship'
       visit '/friendships/3/cancel' #click doesn't work here due to confirmation

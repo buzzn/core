@@ -23,7 +23,7 @@ feature 'MeteringPointOperatorContract' do
       expect(page).to have_content('Signed in successfully.')
     end
 
-    it 'try to create metering_point_operator_contract without smart meter' do
+    it 'try to create metering_point_operator_contract without smart meter', :retry => 3 do
       visit "/metering_points/#{@metering_point.slug}/#tab_contracts"
       click_on 'Add Metering Point Operator Contract'
 
@@ -77,7 +77,7 @@ feature 'MeteringPointOperatorContract' do
     #   expect(find('.metering_point_operator_contracts')).to have_content('true')
     # end
 
-    it 'will fail to create metering_point_operator_contract with smart meter' do
+    it 'will fail to create metering_point_operator_contract with smart meter', :retry => 3 do
       visit "/metering_points/#{@metering_point.slug}/#tab_contracts"
       click_on 'Add Metering Point Operator Contract'
 

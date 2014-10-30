@@ -22,7 +22,7 @@ feature 'Register' do
       expect(page).to have_content('Signed in successfully.')
     end
 
-    it 'try to edit register' do
+    it 'try to edit register', :retry => 3 do
       visit "/metering_points/#{@location.metering_point.slug}/#tab_meter"
 
       expect(page).to have_content('Easymeter')
@@ -36,7 +36,7 @@ feature 'Register' do
       expect(find(".registers")).to have_content('12345')
     end
 
-    it 'try to add and remove register' do
+    it 'try to add and remove register', :retry => 3  do
       visit "/metering_points/#{@location.metering_point.slug}/#tab_meter"
 
       expect(page).to have_content('Easymeter')
@@ -56,13 +56,13 @@ feature 'Register' do
 
       find(".meter").find(".block").first(".header").find(".btn").click
 
-      within find("#registers").all(".nested-fields").first do
+      within find("#registers").all(".nested-fields").last do
         click_on 'Remove Register'
       end
 
       click_on 'Update Meter'
 
-      expect(find(".registers")).not_to have_content('12345678')
+      expect(page).to have_content("Mode", count: 2)
     end
   end
 end
