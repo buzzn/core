@@ -18,9 +18,9 @@ GIT
 
 GIT
   remote: git://github.com/josevalim/inherited_resources.git
-  revision: eec2cc6307eb54bc764e21897397fa79ca75bbf9
+  revision: cb178c22f9573d92e79a4c97bc77f92843fd3ca3
   specs:
-    inherited_resources (1.5.0)
+    inherited_resources (1.5.1)
       actionpack (>= 3.2, < 4.2)
       has_scope (~> 0.6.0.rc)
       railties (>= 3.2, < 4.2)
@@ -129,7 +129,7 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
-    bootstrap-sass (3.2.0.2)
+    bootstrap-sass (3.3.0.1)
       sass (~> 3.2)
     brakeman (2.6.3)
       erubis (~> 2.6)
@@ -430,7 +430,7 @@ GEM
       activerecord (>= 3.0)
       i18n (>= 0.5.0)
       railties (>= 3.0.0)
-    puma (2.9.1)
+    puma (2.9.2)
       rack (>= 1.1, < 2.0)
     quiet_assets (1.0.3)
       railties (>= 3.1, < 5.0)
