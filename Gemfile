@@ -98,8 +98,6 @@ group :development, :test do
   gem 'lol_dba'
   gem 'listen'
   gem 'launchy'
-  gem 'growl'
-  gem 'ruby_gntp'
   gem 'guard'
   gem 'guard-livereload'
   gem 'guard-bundler'
