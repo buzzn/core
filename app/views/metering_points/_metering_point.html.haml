@@ -25,7 +25,7 @@
           - metering_point.metering_point_users.each do |user|
             = render user.user.profile.decorate
           - if user_signed_in?
-            - if current_user.can_update?(metering_point)
+            - if current_user.can_update?(metering_point) || metering_point.users.include?(current_user)
               = metering_point.edit_users
         .clearfix
       .clear
@@ -49,7 +49,7 @@
           - metering_point.devices.each do |device|
             = render device.decorate
           - if user_signed_in?
-            - if current_user.can_update?(metering_point)
+            - if current_user.can_update?(metering_point) || metering_point.users.include?(current_user)
               = metering_point.edit_devices
       .clear
       - if user_signed_in? && current_user.can_update?(metering_point)

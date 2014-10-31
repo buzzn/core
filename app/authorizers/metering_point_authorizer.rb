@@ -1,7 +1,13 @@
 class MeteringPointAuthorizer < ApplicationAuthorizer
 
-  def updatable_by?(user)
-    user.has_role?(:admin) || user.has_role?(:manager, resource.location) || user.has_role?(:manager, resource.root.location)
+  def updatable_by?(user, options = {})
+    if options.empty?
+      user.has_role?(:admin) || user.has_role?(:manager, resource.location) || user.has_role?(:manager, resource.root.location)
+    else
+      if options[:action] == 'edit_devices' || options[:action] == 'edit_users'
+        user.has_role?(:admin) || user.has_role?(:manager, resource.location) || user.has_role?(:manager, resource.root.location) || resource.users.include?(user)
+      end
+    end
   end
 
   def deletable_by?(user)

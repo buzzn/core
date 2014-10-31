@@ -31,7 +31,7 @@
           = render user.profile
       - else
         = t('no_users_available')
-      - if current_user.can_update?(@metering_point)
+      - if current_user.can_update?(@metering_point) || @metering_point.users.include?(current_user)
         = @metering_point.edit_users
     .clearfix
 
@@ -44,7 +44,7 @@
           = render device
       - else
         = t('no_devices_available')
-      - if current_user.can_update?(@metering_point)
+      - if current_user.can_update?(@metering_point) || @metering_point.users.include?(current_user)
         = @metering_point.edit_devices
     .clearfix
 

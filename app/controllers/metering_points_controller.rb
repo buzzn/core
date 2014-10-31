@@ -51,7 +51,7 @@ class MeteringPointsController < InheritedResources::Base
   def edit_users
     # TODO: insert added user directly
     @metering_point = MeteringPoint.find(params[:id]).decorate
-    authorize_action_for(@metering_point)
+    authorize_action_for(@metering_point, action: 'edit_users')
     edit!
   end
   authority_actions :edit_users => 'update'
@@ -59,7 +59,7 @@ class MeteringPointsController < InheritedResources::Base
   def edit_devices
     # TODO: insert added device directly
     @metering_point = MeteringPoint.find(params[:id]).decorate
-    authorize_action_for(@metering_point)
+    authorize_action_for(@metering_point, action: 'edit_devices')
     edit!
   end
   authority_actions :edit_devices => 'update'
