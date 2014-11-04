@@ -53,7 +53,7 @@ gem 'therubyracer'
 gem 'draper'
 gem 'whenever', :require => false
 gem 'sidekiq'
-gem 'sidekiq-status'
+gem 'sidekiq-limit_fetch'
 gem 'faraday'
 gem 'attribute_normalizer',       github: 'mdeering/attribute_normalizer'
 gem 'geocoder'

@@ -1,8 +1,10 @@
 class MeterReadingUpdateWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :low
+  sidekiq_options queue: 'default'
 
   def perform(register_id, manufacturer_device_number, mpo_slug, mpo_login_username, mpo_login_password, start_time, end_time)
+
+    Sidekiq::Queue['default'].limit = 2
 
     if mpo_slug == 'discovergy' or mpo_slug == 'buzzn-metering'
       discovergy = Discovergy.new(mpo_login_username, mpo_login_password, "EASYMETER_#{manufacturer_device_number}")

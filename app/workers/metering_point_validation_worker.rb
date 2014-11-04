@@ -1,5 +1,6 @@
 class MeteringPointValidationWorker
   include Sidekiq::Worker
+  sidekiq_options queue: "high"
 
   def perform(metering_point_id)
     @metering_point = MeteringPoint.find(metering_point_id)
