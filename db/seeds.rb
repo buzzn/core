@@ -58,10 +58,20 @@ buzzn_team_names.each do |user_name|
     @fichtenweg8  = user_location = Fabricate(:fichtenweg8)
 
     mp_z1 = Fabricate(:mp_z1)
+    mp_z1.metering_point_operator_contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z1)
+    user.contracting_party.electricity_supplier_contracts << mp_z1.electricity_supplier_contracts.first
     mp_z2 = Fabricate(:mp_z2)
+    mp_z2.metering_point_operator_contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z2)
+    user.contracting_party.electricity_supplier_contracts << mp_z2.electricity_supplier_contracts.first
     mp_z3 = Fabricate(:mp_z3)
+    mp_z3.metering_point_operator_contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z3)
+    user.contracting_party.electricity_supplier_contracts << mp_z3.electricity_supplier_contracts.first
     mp_z4 = Fabricate(:mp_z4)
+    mp_z4.metering_point_operator_contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z4)
+    user.contracting_party.electricity_supplier_contracts << mp_z4.electricity_supplier_contracts.first
     mp_z5 = Fabricate(:mp_z5)
+    mp_z5.metering_point_operator_contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z5)
+    user.contracting_party.electricity_supplier_contracts << mp_z5.electricity_supplier_contracts.first
 
     mp_z2.update_attribute :parent, mp_z1
     mp_z3.update_attribute :parent, mp_z5

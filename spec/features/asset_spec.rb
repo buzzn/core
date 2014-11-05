@@ -67,6 +67,42 @@ feature 'Asset' do
       expect(find(".caption")).to have_content('Tolles Bild')
     end
 
+    it 'try to edit asset (device)', :retry => 3 do
+      @device.assets << Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'ecopower1.jpg')), description: 'ecopower')
+
+      visit "/devices/#{@device.id}"
+      expect(page).to have_content('solarwatt')
+      find(".assets").find(".thumbnail").click_on('Edit')
+
+      fill_in 'asset_description', with: 'Nice picture'
+
+      click_on 'Update Asset'
+
+      expect(find(".assets").find(".thumbnail")).to have_content('Nice picture')
+    end
+
+    it 'will fail to edit asset (device)', :retry => 3 do
+      @device.assets << Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'ecopower1.jpg')), description: 'ecopower')
+      @user2 = Fabricate(:user)
+      @user.friends << @user2
+
+      find(".nav").click_link "#{@user.name}"
+      click_on 'Logout'
+
+      visit '/users/sign_in'
+      fill_in :user_email,    :with => @user2.email
+      fill_in :user_password, :with => 'testtest'
+      click_button 'Sign in'
+
+      visit "/devices/#{@device.id}"
+      expect(page).to have_content('solarwatt')
+      expect(find(".assets").find(".thumbnail")).not_to have_content('Edit')
+
+      click_on 'Show'
+
+      expect(find(".modal-body")).to have_content('ecopower')
+    end
+
     it 'try to create asset (group)', :retry => 3 do
       visit "/groups/#{@group_home_of_the_brave.slug}"
       expect(page).to have_content('Assets')
@@ -98,7 +134,61 @@ feature 'Asset' do
       expect(find(".caption")).to have_content('Tolles Bild')
     end
 
+    it 'try to edit asset (group)', :retry => 3 do
+      @group_home_of_the_brave.assets << Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'ecopower1.jpg')), description: 'ecopower')
 
+      visit "/groups/#{@group_home_of_the_brave.slug}#tab_assets"
+      expect(page).to have_content('ecopower')
+      find(".assets").find(".thumbnail").click_on('Edit')
+
+      fill_in 'asset_description', with: 'Nice picture'
+
+      click_on 'Update Asset'
+
+      expect(find(".assets").find(".thumbnail")).to have_content('Nice picture')
+    end
+
+    it 'will fail to edit asset (group)', :retry => 3 do
+      @group_home_of_the_brave.assets << Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'ecopower1.jpg')), description: 'ecopower')
+      @user2 = Fabricate(:user)
+
+      find(".nav").click_link "#{@user.name}"
+      click_on 'Logout'
+
+      visit '/users/sign_in'
+      fill_in :user_email,    :with => @user2.email
+      fill_in :user_password, :with => 'testtest'
+      click_button 'Sign in'
+
+      visit "/groups/#{@group_home_of_the_brave.slug}#tab_assets"
+      expect(page).to have_content('ecopower')
+      expect(find(".assets").find(".thumbnail")).not_to have_content('Edit')
+
+      click_on 'Show'
+
+      expect(find(".modal-body")).to have_content('ecopower')
+
+      @location2 = Fabricate(:location)
+      @user2.add_role :manager, @location2
+      @group_home_of_the_brave.metering_points << @location2.metering_point
+
+      visit "/profiles/#{@user2.profile.slug}"
+      find(".nav").click_link "#{@user2.name}"
+      click_on 'Logout'
+
+      visit '/users/sign_in'
+      fill_in :user_email,    :with => @user2.email
+      fill_in :user_password, :with => 'testtest'
+      click_button 'Sign in'
+
+      visit "/groups/#{@group_home_of_the_brave.slug}#tab_assets"
+      expect(page).to have_content('ecopower')
+      expect(find(".assets").find(".thumbnail")).not_to have_content('Edit')
+
+      click_on 'Show'
+
+      expect(find(".modal-body")).to have_content('ecopower')
+    end
   end
 
 end
