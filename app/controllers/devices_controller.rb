@@ -10,8 +10,10 @@ class DevicesController < InheritedResources::Base
     @location       = @metering_point.location if @metering_point
     @users          = @metering_point.users if @metering_point
     @manager        = @device.editable_users
+    authorize_action_for(@device)
     show!
   end
+  authority_actions :show => 'read'
 
 
   def new_out

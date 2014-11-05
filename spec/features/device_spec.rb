@@ -133,5 +133,34 @@ feature 'Device' do
       click_button 'submit'
       expect(page).to have_content("Belongs To")
     end
+
+    it 'will not be allowed to edit device', :retry => 3 do
+      @user2 = Fabricate(:user)
+      @device = Fabricate(:dach_pv_justus)
+      @user2.add_role :manager, @device
+      @user.friends << @user2
+      @user.save
+
+      visit "/profiles/#{@user2.profile.slug}"
+
+      find("li#device_#{@device.id}").click
+      expect(page).to have_content('solarwatt')
+
+      expect(page).not_to have_link('Edit', :href => edit_out_device_path(@device))
+    end
+
+    it 'will not be allowed to view device', :retry => 3 do
+      @user2 = Fabricate(:user)
+      @device = Fabricate(:dach_pv_justus)
+      @user2.add_role :manager, @device
+
+      visit "/profiles/#{@user2.profile.slug}"
+
+      expect(page).not_to have_selector("li#device_#{@device.id}")
+
+      visit "/devices/#{@device.id}"
+
+      expect(page).to have_content('Access Denied')
+    end
   end
 end

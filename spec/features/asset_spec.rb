@@ -81,7 +81,7 @@ feature 'Asset' do
       expect(find(".assets").find(".thumbnail")).to have_content('Nice picture')
     end
 
-    it 'will fail to edit asset (device)', :retry => 3 do
+    it 'will not be allowed to edit asset (device)', :retry => 3 do
       @device.assets << Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'ecopower1.jpg')), description: 'ecopower')
       @user2 = Fabricate(:user)
       @user.friends << @user2
@@ -148,7 +148,7 @@ feature 'Asset' do
       expect(find(".assets").find(".thumbnail")).to have_content('Nice picture')
     end
 
-    it 'will fail to edit asset (group)', :retry => 3 do
+    it 'will not be allowed to edit asset (group)', :retry => 3 do
       @group_home_of_the_brave.assets << Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'ecopower1.jpg')), description: 'ecopower')
       @user2 = Fabricate(:user)
 
