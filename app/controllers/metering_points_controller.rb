@@ -3,7 +3,6 @@ class MeteringPointsController < InheritedResources::Base
   respond_to :html, :json, :js
   #belongs_to :group
 
-
   def show
     @metering_point                   = MeteringPoint.find(params[:id]).decorate
     @users                            = @metering_point.users

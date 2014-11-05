@@ -136,7 +136,7 @@ ActiveRecord::Schema.define(version: 20140930083931) do
     t.string   "generator_type"
     t.string   "shop_link"
     t.string   "primary_energy"
-    t.decimal  "watt_peak"
+    t.integer  "watt_peak"
     t.decimal  "watt_hour_pa"
     t.date     "commissioning"
     t.boolean  "mobile",                            default: false

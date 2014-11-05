@@ -10,26 +10,25 @@ end
 
 
 Fabricator :mp_z1, from: :metering_point do
-  address_addition  'Keller'
+  address_addition  'Übergabe'
 
   registers {
     Fabricate( :in_out_meter,
-                manufacturer_name:           'Elster',
-                manufacturer_product_name: 'AS 1440',
-                manufacturer_product_serialnumber:   '03353984',
+                manufacturer_name:                    'Easymeter',
+                manufacturer_product_name:            'Q3D',
+                manufacturer_product_serialnumber:    '60139082',
                 ).registers
   }
 
 end
 
 Fabricator :mp_z2, from: :metering_point do
-  address_addition  'Dach'
-
+  address_addition  'PV'
   registers {
      Fabricate(:out_meter,
-                manufacturer_name:           'Kamstrup',
-                manufacturer_product_name: '382J',
-                manufacturer_product_serialnumber:   '15028648',
+                manufacturer_name:                    'Easymeter',
+                manufacturer_product_name:            'Q3D',
+                manufacturer_product_serialnumber:    '60051599',
                 ).registers
   }
 end
@@ -37,24 +36,24 @@ end
 
 
 Fabricator :mp_z3, from: :metering_point do
-  address_addition  'Carport'
+  address_addition  'Ladestation'
   registers {
-    Fabricate(:out_meter,
-              manufacturer_name: 'Kamstrup',
-              manufacturer_product_name: '382J',
-              manufacturer_product_serialnumber: '15028641',
+    Fabricate(:in_meter,
+              manufacturer_name:                  'Easymeter',
+              manufacturer_product_name:          'Q3D',
+              manufacturer_product_serialnumber:  '60051559',
               ).registers
   }
 end
 
 
 Fabricator :mp_z4, from: :metering_point do
-  address_addition  'Keller'
+  address_addition  'BHKW'
   registers {
     Fabricate(:out_meter,
-              manufacturer_name:            'Kamstrup',
-              manufacturer_product_name:  '382J',
-              manufacturer_product_serialnumber:   '15028644',
+              manufacturer_name:                    'Easymeter',
+              manufacturer_product_name:            'Q3D',
+              manufacturer_product_serialnumber:    '60051560',
               ).registers
   }
 end
@@ -62,7 +61,14 @@ end
 
 
 Fabricator :mp_z5, from: :metering_point do
-  address_addition  'Keller'
+  address_addition  'Abgrenzung'
+  registers {
+    Fabricate(:out_meter,
+              manufacturer_name:                    'Easymeter',
+              manufacturer_product_name:            'Q3D',
+              manufacturer_product_serialnumber:    '60051600',
+              ).registers
+  }
 end
 
 

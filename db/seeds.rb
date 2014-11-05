@@ -64,9 +64,9 @@ buzzn_team_names.each do |user_name|
     mp_z5 = Fabricate(:mp_z5)
 
     mp_z2.update_attribute :parent, mp_z1
-    mp_z3.update_attribute :parent, mp_z1
-    mp_z4.update_attribute :parent, mp_z1
-    mp_z5.update_attribute :parent, mp_z1
+    mp_z3.update_attribute :parent, mp_z5
+    mp_z4.update_attribute :parent, mp_z5
+    mp_z5.update_attribute :parent, mp_z2
 
     user_location.metering_point = mp_z1
 
