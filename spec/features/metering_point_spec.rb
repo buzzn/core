@@ -89,6 +89,21 @@ feature 'MeteringPoint' do
       expect(page).not_to have_content('metering_point_created_successfully')
     end
 
+    it 'will not be allowed to view metering_point', :retry => 3 do
+      @location2 = Fabricate(:location)
+      @user2 = Fabricate(:user)
+      @user2.add_role :manager, @location2
+      @user.friends << @user2
+      @user.save
+
+      visit "/locations/#{@location2.slug}"
+
+      expect(find("#metering_point_#{@location2.metering_point.id}")).not_to have_link('Details', :href => "/metering_points/#{@location2.metering_point.slug}" )
+
+      visit "/metering_points/#{@location2.metering_point.slug}"
+
+      expect(page).to have_content "Access Denied"
+    end
 
   end
 

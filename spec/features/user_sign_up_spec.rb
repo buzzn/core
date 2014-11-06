@@ -3,7 +3,6 @@ require 'spec_helper'
 
 feature 'UserSignUpTest' do
 
-
   describe 'try_to_sign_up', :js do
 
     it 'sign_up' do

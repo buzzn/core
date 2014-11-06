@@ -103,8 +103,6 @@ feature 'MeteringPointOperatorContract' do
     end
 
 
-
-
   end
 
 end
