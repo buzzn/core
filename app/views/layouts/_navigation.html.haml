@@ -26,20 +26,20 @@
                 %li= link_to location.long_name, location
               %li.divider
               %li= new_location
-
-          %li.dropdown
-            %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
-              %i.fa.fa-users.fa-fw
-              = t'groups'
-              %b.caret
-            %ul.dropdown-menu
-              - if !current_user.editable_groups.empty?
-                - current_user.editable_groups.each do |group|
-                  %li= link_to group.name, group
-              %li.divider
-              - if !current_user.editable_locations.collect(&:metering_point).include?(nil)
-                - if MeteringPoint.by_modes_and_user(["out", "in_out"], current_user).any?
-                  %li= new_group
+          - if current_user.editable_metering_points.any? && MeteringPoint.by_modes_and_user(["out", "in_out"], current_user).any?
+            %li.dropdown
+              %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+                %i.fa.fa-users.fa-fw
+                = t'groups'
+                %b.caret
+              %ul.dropdown-menu
+                - if !current_user.editable_groups.empty?
+                  - current_user.editable_groups.each do |group|
+                    %li= link_to group.name, group
+                %li.divider
+                - if !current_user.editable_locations.collect(&:metering_point).include?(nil)
+                  - if MeteringPoint.by_modes_and_user_without_group(["out", "in_out"], current_user).any?
+                    %li= new_group
 
 
           %li.dropdown

@@ -12,6 +12,7 @@ class LocationsController < InheritedResources::Base
     end
     respond_to do |format|
       format.html { @location = location.decorate
+                    authorize_action_for(@location)
                     @residents  = @location.users
                     @devices    = @location.devices
                     if @location.metering_point
@@ -21,11 +22,13 @@ class LocationsController < InheritedResources::Base
                     end
       }
       format.json{ @location = location
+                    authorize_action_for(@location)
                     render :json =>  MeteringPoint.json_tree(@metering_points)
       }
     end
     gon.push({ location_id: @location.id })
   end
+  authority_actions :show => 'read'
 
   def new
     @location         = Location.new

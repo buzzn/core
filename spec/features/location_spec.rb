@@ -124,5 +124,41 @@ feature 'Location' do
 
       expect(page).to have_content("You Have No Location")
     end
+
+    it 'will not be allowed to view location', :retry => 3 do
+      @location = Fabricate(:location)
+      @user2 = Fabricate(:user)
+      @user2.add_role :manager, @location
+
+      visit "/locations/#{@location.slug}"
+
+      expect(page).to have_content("Access Denied")
+    end
+
+    it 'will be allowed to view location', :retry => 3 do
+      @location = Fabricate(:location)
+      @user2 = Fabricate(:user)
+      @user2.add_role :manager, @location
+      @user.friends << @user2
+      @user.save
+
+      visit "/locations/#{@location.slug}"
+
+      expect(page).not_to have_content("Access Denied")
+    end
+
+    it 'will not be allowed to edit location', :retry => 3 do
+      @location = Fabricate(:location)
+      @user2 = Fabricate(:user)
+      @user2.add_role :manager, @location
+      @user.friends << @user2
+      @user.save
+
+      visit "/locations/#{@location.slug}"
+
+      expect(page).not_to have_content("Access Denied")
+
+      expect(page).not_to have_link('Edit', :href => edit_location_path(@location))
+    end
   end
 end

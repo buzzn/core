@@ -80,5 +80,32 @@ feature 'Group' do
       click_button 'submit'
       expect(page).to have_content('Assets')
     end
+
+    it 'will not be allowed to create group', :retry => 3 do
+      @user2 = Fabricate(:user)
+      @location2 = Fabricate(:location)
+
+      find(".nav").click_link "#{@user.name}"
+      click_on 'Logout'
+
+      visit '/users/sign_in'
+      fill_in :user_email,    :with => @user2.email
+      fill_in :user_password, :with => 'testtest'
+      click_button 'Sign in'
+
+      expect(find(".nav")).not_to have_link "Groups"
+    end
+
+    it 'will not be allowed to edit group', :retry => 3 do
+      @user2 = Fabricate(:user)
+      @location2 = Fabricate(:location)
+      @group = Fabricate(:group, metering_points: [ @location2.metering_point ])
+      @user2.add_role :manager, @group
+      @group.metering_points << @location.metering_point
+
+      visit "/groups/#{@group.slug}"
+
+      expect(page).not_to have_link('Edit', :href => edit_group_path(@group))
+    end
   end
 end
