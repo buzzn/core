@@ -124,6 +124,35 @@ table{
   padding: 5px;
 }
 
+.left{
+  width: 50%;
+  float: left;
+}
+
+.right{
+  width: 49%;
+  float: right;
+  padding-left: 6px;
+}
+
+.metering_point_user{
+  float: right;
+}
+
+.blue-divider{
+  width: 2px;
+  height: 55px;
+  background-color: #43A0F2;
+  float: right;
+}
+
+.red-divider{
+  width: 2px;
+  height: 55px;
+  background-color: #F27B56;
+  float: right;
+}
+
 
 
 
