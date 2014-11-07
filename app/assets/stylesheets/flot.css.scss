@@ -153,6 +153,14 @@ table{
   float: right;
 }
 
+.metering_point_name{
+  width: 60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float: left;
+}
+
 
 
 
