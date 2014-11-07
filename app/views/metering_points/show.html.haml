@@ -55,18 +55,31 @@
 .col-sm-6
   %ul.nav.nav-pills#mytab.nav-spacer
     %li.active
+      %a{"data-toggle" => "tab", href: "#contracts"}
+        = t'contracts'
+    %li
       %a{"data-toggle" => "tab", href: "#charts"}
         = t'charts'
     %li
       %a{"data-toggle" => "tab", href: "#meter"}
         = t'meter'
-    %li
-      %a{"data-toggle" => "tab", href: "#contracts"}
-        = t'contracts'
+
 
   .tab-content
 
-    #charts.tab-pane.active
+    #contracts.tab-pane.active
+      - if @metering_point.electricity_supplier_contracts.any?
+        = render @metering_point.electricity_supplier_contracts
+      - else
+        .alert.alert-danger= t'no_electricity_supplier_contract_for_metering_point'
+      .metering_point_operator_contracts
+        - if !@metering_point.metering_point_operator_contracts.empty?
+          - @metering_point.metering_point_operator_contracts.each do |metering_point_operator_contract|
+            = render metering_point_operator_contract
+      - if !(@metering_point.group && @metering_point.group.metering_point_operator_contract)
+        = @metering_point.new_metering_point_operator_contract
+
+    #charts.tab-pane
       .block{id: 'day_to_hours' }
         .header.no-border
           %h2= t('day_to_hours')
@@ -91,17 +104,7 @@
           = @metering_point.new_meter
 
 
-    #contracts.tab-pane
-      - if @metering_point.electricity_supplier_contracts.any?
-        = render @metering_point.electricity_supplier_contracts
-      - else
-        .alert.alert-danger= t'no_electricity_supplier_contract_for_metering_point'
-      .metering_point_operator_contracts
-        - if !@metering_point.metering_point_operator_contracts.empty?
-          - @metering_point.metering_point_operator_contracts.each do |metering_point_operator_contract|
-            = render metering_point_operator_contract
-      - if !(@metering_point.group && @metering_point.group.metering_point_operator_contract)
-        = @metering_point.new_metering_point_operator_contract
+
 
 
 

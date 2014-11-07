@@ -19,7 +19,11 @@ class ProfilesController < InheritedResources::Base
 
 
     @explore_groups       = Group.all.limit(10).decorate
-    @explore_profiles     = Profile.all.limit(10).decorate
+    if user_signed_in?
+      @explore_profiles     = User.all.where("id NOT IN (?)", current_user.friend_ids + [current_user.id]).limit(10).collect{|u| u.profile.decorate}
+    else
+      @explore_profiles     = Profile.all.limit(10).decorate
+    end
 
     show!
   end

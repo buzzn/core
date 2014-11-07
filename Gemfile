@@ -81,6 +81,7 @@ gem 'active_model_serializers'
 gem 'grape-active_model_serializers'
 gem 'grape-swagger-rails'
 gem 'rack-cors', require: 'rack/cors'
+gem 'obfuscatable'
 
 gem 'rails-assets-d3'
 gem 'rails-assets-underscore'
