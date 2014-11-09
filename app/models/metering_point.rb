@@ -81,18 +81,6 @@ class MeteringPoint < ActiveRecord::Base
 
 
 
-
-
-
-
-
-  def validates_smartmeter
-    MeteringPointValidationWorker.perform_async(self.id)
-  end
-
-
-
-
   def self.voltages
     %w{
       low

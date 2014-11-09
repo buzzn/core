@@ -35,11 +35,14 @@
 
 ## Start Background Jobs
     redis-server
-    bundle exec sidekiq
+    bundle exec rake sidekiq:start
     http://localhost:3000/sidekiq
 
-## update smartmeters
-    bundle exec rake smartmeter:register_update
+## Stop Background Jobs
+    bundle exec rake sidekiq:stop
+
+## update meters
+    bundle exec rake meter:update
 
 ## Mail Views
     http://localhost:3000/de/mail_view
@@ -71,6 +74,7 @@
     "highlight_line": true
 
 ## Troubleshooting
+    bundle exec rake sidekiq:stop
     delete folder vendor/bundle
     bundle install
     gem update rake

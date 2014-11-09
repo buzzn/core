@@ -1,6 +1,6 @@
 class MeteringPointValidationWorker
   include Sidekiq::Worker
-  sidekiq_options queue: "high"
+  sidekiq_options queue: 'high'
 
   def perform(metering_point_id)
     @metering_point = MeteringPoint.find(metering_point_id)
@@ -8,10 +8,18 @@ class MeteringPointValidationWorker
     if @metering_point && @meter && (@metering_point.metering_point_operator_contract || @metering_point.group.metering_point_operator_contract)
       @mpoc = @metering_point.metering_point_operator_contract
 
-      discovergy = Discovergy.new(@mpoc.username, @mpoc.password, "EASYMETER_#{@meter.manufacturer_product_serialnumber}")
-      result     = discovergy.call()
+      discovergy = Discovergy.new(@mpoc.username, @mpoc.password)
+      result     = discovergy.raw(@meter.manufacturer_product_serialnumber)
       if result['status'] == 'ok'
         @meter.update_columns(smart: true)
+
+        register = Register.find(register_id)
+        if request['result'].any?
+          register.meter.update_columns(online: true)
+        else
+          register.meter.update_columns(online: false)
+        end
+
         first_day_init(metering_point_id)
       else
         @meter.update_columns(smart: false)

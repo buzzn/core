@@ -4,7 +4,7 @@ set :output, 'log/cron.log'
 
 
 every 1.minute do
-  rake "smartmeter:register_update"
+  rake "meter:update"
 end
 
 

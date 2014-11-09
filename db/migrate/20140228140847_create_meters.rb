@@ -5,9 +5,7 @@ class CreateMeters < ActiveRecord::Migration
       t.string :manufacturer_name
       t.string :manufacturer_product_name
       t.string :manufacturer_product_serialnumber
-
       t.string :owner
-      t.boolean :smart, default: false
       t.string :metering_type
       t.string :meter_size
       t.string :rate
@@ -18,9 +16,11 @@ class CreateMeters < ActiveRecord::Migration
       t.boolean :virtual
       t.date :build_year
       t.date :calibrated_till
+      t.boolean :smart, default: false
+      t.boolean :online, default: false
+      t.boolean :init_reading, default: false
 
       t.integer :metering_point_id
-
       t.timestamps
     end
     add_index :meters, :metering_point_id

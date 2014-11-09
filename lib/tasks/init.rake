@@ -4,6 +4,7 @@ namespace :db do
                   'log:clear',
                   'tmp:clear',
                   'assets:clean',
+                  'sidekiq:delete_queues',
                   'carrierwave:delete_uploads',
                   'capybara:delete_screenshots',
                   'db:mongoid:drop',

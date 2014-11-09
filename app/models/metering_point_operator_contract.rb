@@ -1,6 +1,4 @@
 class MeteringPointOperatorContract < ActiveRecord::Base
-  after_save :validates_smartmeter
-
   belongs_to :organization
   belongs_to :metering_point
   belongs_to :group
@@ -8,6 +6,10 @@ class MeteringPointOperatorContract < ActiveRecord::Base
   validates :organization, presence: true
   validates :username, presence: true, if: :login_required?
   validates :password, presence: true, if: :login_required?
+
+  scope :running, -> { where(running: :true) }
+
+  after_save :validates_credentials
 
   def login_required?
     if self.organization.nil?
@@ -17,17 +19,16 @@ class MeteringPointOperatorContract < ActiveRecord::Base
     end
   end
 
-  def validates_smartmeter
-    if self.metering_point
-      if self.organization.slug == 'discovergy' || self.organization.slug == 'buzzn-metering'
-        self.metering_point.validates_smartmeter
-      end
-    elsif self.group
-      if self.organization.slug == 'discovergy' || self.organization.slug == 'buzzn-metering'
-        self.group.metering_points.each do |metering_point|
-          metering_point.validates_smartmeter
-        end
+
+  def validates_credentials
+    if self.organization.slug == 'discovergy' || self.organization.slug == 'buzzn-metering'
+      api_call = Discovergy.new(self.username, self.password).meters
+      if api_call['status'] == 'ok'
+        self.update_columns(valid_credentials: true)
+      else
+        self.update_columns(valid_credentials: false)
       end
     end
   end
+
 end

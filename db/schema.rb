@@ -306,6 +306,8 @@ ActiveRecord::Schema.define(version: 20140930083931) do
     t.string   "contract_number"
     t.string   "username"
     t.string   "password"
+    t.boolean  "valid_credentials",                          default: false
+    t.boolean  "running",                                    default: true
     t.integer  "metering_point_id"
     t.integer  "organization_id"
     t.integer  "group_id"
@@ -371,7 +373,6 @@ ActiveRecord::Schema.define(version: 20140930083931) do
     t.string   "manufacturer_product_name"
     t.string   "manufacturer_product_serialnumber"
     t.string   "owner"
-    t.boolean  "smart",                             default: false
     t.string   "metering_type"
     t.string   "meter_size"
     t.string   "rate"
@@ -382,6 +383,9 @@ ActiveRecord::Schema.define(version: 20140930083931) do
     t.boolean  "virtual"
     t.date     "build_year"
     t.date     "calibrated_till"
+    t.boolean  "smart",                             default: false
+    t.boolean  "online",                            default: false
+    t.boolean  "init_reading",                      default: false
     t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
