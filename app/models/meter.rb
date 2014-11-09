@@ -11,7 +11,8 @@ class Meter < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
-  after_save :validates_smartmeter
+  after_save :validates_smartmeter_job
+
 
   def validates_smartmeter
     @metering_point = metering_point
@@ -22,6 +23,7 @@ class Meter < ActiveRecord::Base
         if api_call['status'] == 'ok'
           self.update_columns(smart: true)
           self.update_columns(online: api_call['result'].any?)
+          init_reading
         else
           self.update_columns(smart: false)
           self.update_columns(online: false)
@@ -84,5 +86,13 @@ class Meter < ActiveRecord::Base
       smart_meter
     }
   end
+
+
+private 
+
+  def validates_smartmeter_job
+    self.delay.validates_smartmeter
+  end
+
 
 end

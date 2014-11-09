@@ -11,9 +11,6 @@ class CommentsController < InheritedResources::Base
         success.js { @comment }
         failure.js { render nothing: true, status: :ok } #TODO: show validation errors
       end
-    # else
-    #   format.js { "alert('no permission');" }
-
     end
 
   end

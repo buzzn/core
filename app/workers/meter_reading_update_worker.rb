@@ -1,11 +1,8 @@
 class MeterReadingUpdateWorker
   include Sidekiq::Worker
-  sidekiq_options queue: 'default'
 
   def perform(register_id, manufacturer_device_number, mpo_slug, mpo_login_username, mpo_login_password, start_time, end_time, init_reading=false)
-    Sidekiq::Queue['default'].limit = 2
-
-    Sidekiq::Queue['default_low'].limit = 1
+    Sidekiq::Queue['low'].limit = 2
 
     if mpo_slug == 'discovergy' or mpo_slug == 'buzzn-metering'
 
