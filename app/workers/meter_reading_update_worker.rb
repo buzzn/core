@@ -32,7 +32,17 @@ class MeterReadingUpdateWorker
           register = Register.find(register_id)
           register.meter.update_columns(online: false)
         end
+      elsif request['status'] == "error"
+        logger.error request
+      else
+        logger.error request
       end
+
+
+
+
+
+
 
     elsif mpo_slug == 'fluxo'
       puts "It's fluxo"
