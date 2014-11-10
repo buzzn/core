@@ -25,6 +25,7 @@ class MeteringPointOperatorContract < ActiveRecord::Base
       api_call = Discovergy.new(self.username, self.password).meters
       if api_call['status'] == 'ok'
         self.update_columns(valid_credentials: true)
+        self.delay.validates_meters
       else
         self.update_columns(valid_credentials: false)
       end
@@ -36,11 +37,11 @@ private
   def validates_meters
     if group
       group.metering_points.each do |metering_point|
-        metering_point.meter.save
+        metering_point.meter.validates_smartmeter
       end
     end
     if metering_point
-      metering_point.meter.save
+      metering_point.meter.validates_smartmeter
     end
   end
 
