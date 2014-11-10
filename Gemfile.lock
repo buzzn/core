@@ -34,7 +34,7 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/devise.git
-  revision: 910868785cb1f0c9eebcd638f9c6b6a53c752cfa
+  revision: c7a135d6baec671f5d739225db6f5393b55a8eac
   specs:
     devise (3.4.1)
       bcrypt (~> 3.0)
@@ -263,7 +263,7 @@ GEM
     formatador (0.2.5)
     friendly_id (5.0.4)
       activerecord (>= 4.0.0)
-    geocoder (1.2.5)
+    geocoder (1.2.6)
     goldiloader (0.0.8)
       activerecord (>= 3.2, < 4.3)
       activesupport (>= 3.2, < 4.3)
@@ -296,7 +296,7 @@ GEM
     grape-swagger-rails (0.0.10)
       grape-swagger (~> 0.7.2)
       railties (>= 3.2.12)
-    guard (2.8.1)
+    guard (2.8.2)
       formatador (>= 0.2.4)
       listen (~> 2.7)
       lumberjack (~> 1.0)
@@ -579,7 +579,7 @@ GEM
     tilt (1.4.1)
     timers (4.0.1)
       hitimes
-    turbolinks (2.5.1)
+    turbolinks (2.5.2)
       coffee-rails
     turbolinks_transitions (0.0.5)
       coffee-rails
@@ -600,10 +600,10 @@ GEM
       equalizer (~> 0.0, >= 0.0.9)
     warden (1.2.3)
       rack (>= 1.0)
-    webmock (1.20.3)
+    webmock (1.20.4)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
-    websocket-driver (0.3.5)
+    websocket-driver (0.4.0)
     whenever (0.9.4)
       chronic (>= 0.6.3)
     wicked (1.1.0)

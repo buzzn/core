@@ -1,3 +1,7 @@
+# Sample configuration file for Sidekiq.
+# Options here can still be overridden by cmd line args.
+#   sidekiq -C config.yml
+---
 :verbose: false
 :concurrency: 10
 :timeout: 30
@@ -6,3 +10,9 @@
   - ['high', 7]
   - ['default', 5]
   - ['low', 1]
+
+staging:
+  pidfile: ../shared/pids/sidekiq.pid
+
+production:
+  pidfile: ../shared/pids/sidekiq.pid

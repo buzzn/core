@@ -31,4 +31,16 @@ class MeteringPointOperatorContract < ActiveRecord::Base
     end
   end
 
+
+private
+  def validates_meters
+    if group
+      group.metering_points.each do |metering_point|
+        metering_point.meter.save
+      end
+    end
+
+  end
+
+
 end

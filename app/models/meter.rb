@@ -16,8 +16,8 @@ class Meter < ActiveRecord::Base
 
   def validates_smartmeter
     @metering_point = metering_point
-    if @metering_point && @metering_point.metering_point_operator_contracts.running.any?
-      @mpoc = @metering_point.metering_point_operator_contracts.running.first
+    if @metering_point && @metering_point.metering_point_operator_contract
+      @mpoc = @metering_point.metering_point_operator_contract
       if @mpoc.organization.slug == 'discovergy' || @mpoc.organization.slug == 'buzzn-metering'
         api_call = Discovergy.new(@mpoc.username, @mpoc.password).raw(manufacturer_product_serialnumber)
         if api_call['status'] == 'ok'
@@ -55,11 +55,11 @@ class Meter < ActiveRecord::Base
           end_time      = nil
 
           self.registers.each do |register|
-            
+
             Sidekiq::Client.push({
              'class' => MeterReadingUpdateWorker,
              'queue' => :high,
-             'args' => [ 
+             'args' => [
                         register.id,
                         self.manufacturer_product_serialnumber,
                         mpoc.organization.slug,
@@ -88,7 +88,7 @@ class Meter < ActiveRecord::Base
   end
 
 
-private 
+private
 
   def validates_smartmeter_job
     self.delay.validates_smartmeter
