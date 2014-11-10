@@ -23,6 +23,7 @@
 
 //= require jquery.flot.tooltip
 //= require jquery.flot.axislabels
+//= require tree.jquery
 
 
 //= require jquery-readyselector

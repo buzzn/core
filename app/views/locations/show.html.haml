@@ -63,43 +63,8 @@
 
     #metering_point_tree.tab-pane
       .block
-        #center-container
-          #infovis
-        #right-container.pull-right
-          %h4 Tree Orientation
-          %table
-            %tr
-              %td
-                %label{:for => "r-left"} Left
-              %td
-                %input#r-left{:checked => "checked", :name => "orientation", :type => "radio", :value => "left"}/
-            %tr
-              %td
-                %label{:for => "r-top"} Top
-              %td
-                %input#r-top{:name => "orientation", :type => "radio", :value => "top"}/
-            %tr
-              %td
-                %label{:for => "r-bottom"} Bottom
-              %td
-                %input#r-bottom{:name => "orientation", :type => "radio", :value => "bottom"}/
-            %tr
-              %td
-                %label{:for => "r-right"} Right
-              %td
-                %input#r-right{:name => "orientation", :type => "radio", :value => "right"}/
-          %h4 Selection Mode
-          %table
-            %tr
-              %td
-                %label{:for => "s-normal"} Normal
-              %td
-                %input#s-normal{:checked => "checked", :name => "selection", :type => "radio", :value => "normal"}/
-            %tr
-              %td
-                %label{:for => "s-root"} Set as Root
-              %td
-                %input#s-root{:name => "selection", :type => "radio", :value => "root"}/
+        #tree1
+
 
 
 
