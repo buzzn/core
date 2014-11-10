@@ -39,7 +39,9 @@ private
         metering_point.meter.save
       end
     end
-
+    if metering_point
+      metering_point.meter.save
+    end
   end
 
 
