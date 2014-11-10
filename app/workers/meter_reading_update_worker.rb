@@ -7,7 +7,7 @@ class MeterReadingUpdateWorker
     if mpo_slug == 'discovergy' or mpo_slug == 'buzzn-metering'
 
       api_call = Discovergy.new(mpo_login_username, mpo_login_password)
-      
+
       if start_time && end_time
         request = api_call.raw(manufacturer_device_number, start_time, end_time)
       else
