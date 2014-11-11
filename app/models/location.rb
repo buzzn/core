@@ -20,6 +20,10 @@ class Location < ActiveRecord::Base
     short_name
   end
 
+  def to_param
+    "#{id}"
+  end
+
   delegate :short_name, to: :address, allow_nil: true
   delegate :long_name, to: :address, allow_nil: true
 

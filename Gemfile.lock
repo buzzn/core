@@ -33,6 +33,15 @@ GIT
     attribute_normalizer (1.2.0)
 
 GIT
+  remote: git://github.com/namick/obfuscate_id.git
+  revision: eea535dfc98c81d208f805e0318dd19f1ee1e499
+  ref: eea535dfc98c81d208f805e0318dd19f1ee1e499
+  specs:
+    obfuscate_id (0.0.4)
+      rails (>= 3.2.15)
+      scatter_swap (~> 0.0.3)
+
+GIT
   remote: git://github.com/plataformatec/devise.git
   revision: c7a135d6baec671f5d739225db6f5393b55a8eac
   specs:
@@ -412,9 +421,6 @@ GEM
     newrelic_rpm (3.9.6.257)
     nokogiri (1.6.4.1)
       mini_portile (~> 0.6.0)
-    obfuscatable (0.1.0)
-      rails (>= 3.2)
-      scatter_swap (~> 0.0.3)
     optionable (0.2.0)
     origin (2.1.1)
     orm_adapter (0.5.0)
@@ -690,7 +696,7 @@ DEPENDENCIES
   mongoid
   moped
   newrelic_rpm
-  obfuscatable
+  obfuscate_id!
   paper_trail
   pg
   poltergeist!
