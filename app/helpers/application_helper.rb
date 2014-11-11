@@ -67,4 +67,16 @@ module ApplicationHelper
       })
   end
 
+    def new_organization
+    link_to(
+      t("add_new_organization"),
+      new_organization_path,
+      {
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => 'modal',
+        'data-target' => '#myModal'
+      })
+  end
+
 end

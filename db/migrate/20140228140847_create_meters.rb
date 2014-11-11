@@ -13,7 +13,6 @@ class CreateMeters < ActiveRecord::Migration
       t.string :image
       t.string :measurement_capture
       t.string :mounting_method
-      t.boolean :virtual
       t.date :build_year
       t.date :calibrated_till
       t.boolean :smart, default: false

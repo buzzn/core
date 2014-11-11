@@ -1,0 +1,40 @@
+.col-md-3
+  .detail_icon
+    %i.fa.fa-flash
+
+  %h4= @organization.name
+  - if current_user.has_role?(:admin)
+    = @organization.decorate.link_to_edit
+
+  - if @organization.contracting_party
+    %h5.page-header= t('contracting_party')
+    %article.sidebar_module.residents
+      %ul
+        = render @organization.contracting_party
+      .clearfix
+  %h5.page-header= t('address')
+  %address
+    = "#{@organization.address.street_name} #{@organization.address.street_number}"
+    %br
+    = "#{@organization.address.zip} #{@organization.address.city}"
+    %br
+    = @organization.address.state
+
+.col-md-6
+  .block
+    .header.no-border
+      %h2= t('organization_properties')
+    .content.no-padding
+      %table.table
+        %tbody
+          %tr
+            %td= t('name')
+            %td= @organization.name
+          %tr
+            %td= t('contracting_party')
+            %td= @organization.contracting_party
+
+
+
+
+

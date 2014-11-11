@@ -16,6 +16,17 @@
 
       %ul.nav.navbar-nav.navbar-right
         - if user_signed_in?
+          -if current_user.has_role?(:admin)
+            %li.dropdown
+              %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+                %i.fa.fa-home.fa-fw
+                = t'organizations'
+                %b.caret
+              %ul.dropdown-menu.scrollable-menu
+                - Organization.all.each do |organization|
+                  %li= link_to organization.name, organization
+                %li.divider
+                %li= new_organization
           %li.dropdown
             %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
               %i.fa.fa-home.fa-fw

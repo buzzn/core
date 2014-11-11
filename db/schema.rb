@@ -380,7 +380,6 @@ ActiveRecord::Schema.define(version: 20140930083931) do
     t.string   "image"
     t.string   "measurement_capture"
     t.string   "mounting_method"
-    t.boolean  "virtual"
     t.date     "build_year"
     t.date     "calibrated_till"
     t.boolean  "smart",                             default: false

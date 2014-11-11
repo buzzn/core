@@ -3,7 +3,6 @@ Fabricator :meter do
   manufacturer_name           'Elster'
   manufacturer_product_name    'AS 1440'
   manufacturer_product_serialnumber   {3353984 + (i += 1)}
-  virtual                      false
   registers                    { [Fabricate(:register_in)] }
 end
 

@@ -1,0 +1,14 @@
+.organization{id: "organization#{organization.id}"}
+  .block
+  .header.no-border
+    = @organization.decorate.link_to_edit
+    %h2= t('organization')
+  .content.no-padding
+    %table.table
+      %tbody
+        %tr
+          %td= t('name')
+          %td= @organization.name
+        %tr
+          %td= t('contracting_party')
+          %td= @organization.contracting_party
