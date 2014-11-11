@@ -80,7 +80,6 @@ gem 'active_model_serializers'
 gem 'grape-active_model_serializers'
 gem 'grape-swagger-rails'
 gem 'rack-cors', require: 'rack/cors'
-gem 'obfuscate_id', github: 'namick/obfuscate_id', ref: 'eea535dfc98c81d208f805e0318dd19f1ee1e499'
 
 gem 'rails-assets-d3'
 gem 'rails-assets-underscore'
