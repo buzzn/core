@@ -94,6 +94,7 @@ private
       :manufacturer_product_serialnumber,
       :shop_link,
       :primary_energy,
+      :watt_hour_pa,
       :watt_peak,
       :commissioning,
       :metering_point_id,

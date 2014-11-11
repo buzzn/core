@@ -128,7 +128,11 @@ class MeteringPoint < ActiveRecord::Base
 
   def self.json_tree(nodes)
     nodes.map do |node, sub_nodes|
-      {:label => node.address_addition, :name => node.address_addition, :id => node.id, :data => {:mode => node.mode}, :children => json_tree(sub_nodes).compact}
+      label = node.decorate.name
+      if node.mode == "out" && node.devices.any?
+        label = label + " | " + node.devices.first.name
+      end
+      {:label => label, :mode => node.mode, :children => json_tree(sub_nodes).compact}
     end
   end
 

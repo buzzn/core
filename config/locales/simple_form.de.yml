@@ -47,11 +47,12 @@ de:
         law: Gesetz
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname
+        manufacturer_product_serialnumber: Seriennummer
         primary_energy: Primärenergie
         name: Name
         watt_peak: Watt (max.)
         commissioning: Kaufdatum
-        watt_hour_pa: Jahresenergieeinspeisung
+        watt_hour_pa: Jahresenergiemenge
       contracting_party:
         legal_entity: Rechtsform
         contracts: Verträge

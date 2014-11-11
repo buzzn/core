@@ -56,9 +56,10 @@
           %tr
             %td= t('manufacturer_product_name')
             %td= @device.manufacturer_product_name
-          %tr
-            %td= t('primary_energy')
-            %td= @device.primary_energy
+          - if @device.output?
+            %tr
+              %td= t('primary_energy')
+              %td= @device.primary_energy
           %tr
             %td= t('watt_peak')
             %td= @device.watt_peak
