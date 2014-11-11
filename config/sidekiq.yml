@@ -7,8 +7,8 @@
 :timeout: 30
 :logfile: ./log/sidekiq.log
 :queues:
-  - ['high', 7]
-  - ['default', 5]
+  - ['high', 3]
+  - ['default', 2]
   - ['low', 1]
 
 staging:

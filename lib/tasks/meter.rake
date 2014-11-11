@@ -6,8 +6,8 @@ namespace :meter do
     Meter.where(init_reading: true, smart: true, online: true).each do |meter|
       meter.registers.each do |register|
         mpoc            = meter.metering_point.metering_point_operator_contract
-        last            = (Reading.latest_by_register_id(register.id)[:timestamp] + 1.minute).beginning_of_minute
-        now             = Time.now.in_time_zone.utc.end_of_minute - 1.minute # current minute is not complete. but last minute is.
+        last            = Reading.latest_by_register_id(register.id)[:timestamp]
+        now             = Time.now.in_time_zone.utc.end_of_minute
         range           = (last.to_i .. now.to_i)
 
         puts "register_id: #{register.id} | #{range.count/60} minutes"

@@ -48,10 +48,12 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def metering_point_operator_contract
-    if self.metering_point_operator_contracts.any?
-      self.metering_point_operator_contracts.first
+    if self.metering_point_operator_contracts.running.any?
+      return self.metering_point_operator_contracts.running.first
     elsif self.group
-      self.group.metering_point_operator_contract
+      if self.group.metering_point_operator_contract
+        return self.group.metering_point_operator_contract
+      end
     end
   end
 
