@@ -39,7 +39,7 @@ feature 'MeteringPoint' do
       expect(page).to have_content('metering_point_created_successfully')
 
       click_on 'Details'
-      expect(page).to have_content('Day To Hours')
+      expect(page).to have_content('Contracts')
       expect(page).to have_content('Wohnung')
 
       click_on 'Meter'
