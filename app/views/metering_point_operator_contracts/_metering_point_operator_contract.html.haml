@@ -14,12 +14,13 @@
         %tr
           %td= t('contract_number')
           %td= metering_point_operator_contract.contract_number
-        %tr
-          %td= t('username')
-          %td= metering_point_operator_contract.username
-        %tr
-          %td= t('password')
-          %td= metering_point_operator_contract.password
+        - if metering_point_operator_contract.organization.slug == 'discovergy'
+          %tr
+            %td= t('username')
+            %td= metering_point_operator_contract.username
+          %tr
+            %td= t('password')
+            %td= '***********'
         %tr
           %td= t('valid_credentials')
           %td= metering_point_operator_contract.valid_credentials
