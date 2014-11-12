@@ -6,6 +6,7 @@ class LocationDecorator < Draper::Decorator
   decorates_association :user
   decorates_association :devices
   decorates_association :users
+  decorates_association :assets
 
 
   def thumb_small
@@ -53,6 +54,18 @@ class LocationDecorator < Draper::Decorator
         :remote       => true,
         'data-toggle' => "modal",
         'data-target' => '#myModal'
+      })
+  end
+
+  def new_asset
+    link_to(
+      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      new_asset_path(assetable_id: model.id, assetable_type: 'Location'),
+      {
+        :remote                     => true,
+        :class                      => 'content-plus',
+        'data-toggle'               => 'modal',
+        'data-target'               => '#myModal'
       })
   end
 

@@ -42,11 +42,15 @@
     %li.active
       %a{"data-toggle" => "tab", href: "#metering_points"}
         = t'metering_points'
+    %li
+      %a{"data-toggle" => "tab", href: "#assets"}
+        = t'assets'
     - if @location.metering_point
       - if @location.metering_point.has_children?
         %li
           %a{"data-toggle" => "tab", href: "#metering_point_tree"}
             = t'metering_point_tree'
+
 
   .tab-content
     #metering_points.tab-pane.active
@@ -60,6 +64,12 @@
 
       - if current_user.can_update?(@location) && @location.metering_point.nil?
         = @location.new_metering_point
+
+    #assets.tab-pane
+      .assets
+        = render @location.assets
+      - if user_signed_in? && current_user.can_update?(@location)
+        = @location.new_asset
 
     #metering_point_tree.tab-pane
       .block

@@ -62,7 +62,7 @@ class MeteringPointDecorator < Draper::Decorator
 
   def generator_type_names
     names = []
-    generator_types = devices.map {|i| i.generator_type }.uniq
+    generator_types = devices.map {|i| i.device_type }.uniq
     generator_types.each do |type|
       names << t("#{type}_short") if type
     end

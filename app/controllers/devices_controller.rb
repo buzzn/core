@@ -88,7 +88,7 @@ private
     [
       :image,
       :law,
-      :generator_type,
+      :device_type,
       :manufacturer_name,
       :manufacturer_product_name,
       :manufacturer_product_serialnumber,

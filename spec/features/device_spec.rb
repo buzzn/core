@@ -71,8 +71,8 @@ feature 'Device' do
       expect(page).to have_content('Manufacturer')
 
       select 'eeg',   from: 'device_law'
-      select 'pv',    from: 'device_generator_type'
       select 'sun',   from: 'device_primary_energy'
+      fill_in :device_device_type,                        with: 'pv'
       fill_in :device_manufacturer_name,                  with: 'Testgerät'
       fill_in :device_manufacturer_product_name,          with: 'Testname'
       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
@@ -89,9 +89,9 @@ feature 'Device' do
       click_on 'Add New Out Device'
       expect(page).to have_content('Manufacturer')
 
-      select 'pv',    from: 'device_generator_type'
-      select 'sun',   from: 'device_primary_energy'
       select '',      from: 'device_law'
+      select 'sun',   from: 'device_primary_energy'
+      fill_in :device_device_type,                        with: 'pv'
       fill_in :device_manufacturer_name,                  with: 'Testgerät'
       fill_in :device_manufacturer_product_name,          with: 'Testname'
       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
@@ -100,9 +100,9 @@ feature 'Device' do
       click_button 'submit'
       expect(page).to have_content("can't be blank")
 
-      select '',      from: 'device_generator_type'
       select 'eeg',   from: 'device_law'
       select 'sun',   from: 'device_primary_energy'
+      fill_in :device_device_type,                        with: ''
       fill_in :device_manufacturer_name,                  with: 'Testgerät'
       fill_in :device_manufacturer_product_name,          with: 'Testname'
       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
@@ -112,8 +112,8 @@ feature 'Device' do
       expect(page).to have_content("can't be blank")
 
       select 'eeg',   from: 'device_law'
-      select 'pv',    from: 'device_generator_type'
       select '',      from: 'device_primary_energy'
+      fill_in :device_device_type,                        with: 'pv'
       fill_in :device_manufacturer_name,                  with: 'Testgerät'
       fill_in :device_manufacturer_product_name,          with: 'Testname'
       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
@@ -123,8 +123,8 @@ feature 'Device' do
       expect(page).to have_content("can't be blank")
 
       select 'eeg',   from: 'device_law'
-      select 'pv',    from: 'device_generator_type'
       select 'sun',      from: 'device_primary_energy'
+      fill_in :device_device_type,                        with: 'pv'
       fill_in :device_manufacturer_name,                  with: 'Testgerät'
       fill_in :device_manufacturer_product_name,          with: 'Testname'
       fill_in :device_manufacturer_product_serialnumber,  with: '12345'

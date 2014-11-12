@@ -76,7 +76,8 @@ private
 
   def init_permitted_params
     [
-      address_attributes: [:id, :street_name, :street_number, :city, :state, :zip, :country, :time_zone, :_destroy]
+      address_attributes: [:id, :street_name, :street_number, :city, :state, :zip, :country, :time_zone, :_destroy],
+      assets_attributes: [:id, :image, :description, :assetable_id, :assetable_type]
     ]
   end
 

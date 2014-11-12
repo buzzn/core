@@ -1,6 +1,7 @@
 class Location < ActiveRecord::Base
   resourcify
   include Authority::Abilities
+  include Tokenable
 
   include PublicActivity::Model
   tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
@@ -11,17 +12,13 @@ class Location < ActiveRecord::Base
 
   def slug_candidates
     [
-      :short_name,
+      :generate_token,
       :id
     ]
   end
 
   def name
     short_name
-  end
-
-  def to_param
-    "#{id}"
   end
 
   delegate :short_name, to: :address, allow_nil: true

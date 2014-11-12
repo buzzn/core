@@ -18,6 +18,10 @@ class Asset < ActiveRecord::Base
     Group.find(self.assetable_id) if self.assetable_type == "Group"
   end
 
+  def location
+    Location.find(self.assetable_id) if self.assetable_type == "Location"
+  end
+
 
 
 end

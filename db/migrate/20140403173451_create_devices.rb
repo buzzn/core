@@ -7,7 +7,7 @@ class CreateDevices < ActiveRecord::Migration
       t.string  :manufacturer_product_serialnumber
       t.string  :mode
       t.string  :law
-      t.string  :generator_type
+      t.string  :device_type
       t.string  :shop_link
       t.string  :primary_energy
       t.integer :watt_peak

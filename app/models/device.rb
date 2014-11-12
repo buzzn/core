@@ -9,19 +9,11 @@ class Device < ActiveRecord::Base
   validates :watt_peak, numericality: { only_integer: true }, presence: true
   validates :manufacturer_product_name, presence: true
 
-  validates :law, :generator_type, :primary_energy, presence: true, if: :output?
+  validates :law, :device_type, :primary_energy, presence: true, if: :output?
 
 
   def name
     "#{self.manufacturer_name} #{self.manufacturer_product_name}"
-  end
-
-  def self.generator_types
-    %w{
-      pv
-      chp
-      wind
-    }
   end
 
   def self.laws

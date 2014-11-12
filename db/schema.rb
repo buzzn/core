@@ -133,7 +133,7 @@ ActiveRecord::Schema.define(version: 20141112082240) do
     t.string   "manufacturer_product_serialnumber"
     t.string   "mode"
     t.string   "law"
-    t.string   "generator_type"
+    t.string   "device_type"
     t.string   "shop_link"
     t.string   "primary_energy"
     t.integer  "watt_peak"
@@ -291,6 +291,7 @@ ActiveRecord::Schema.define(version: 20141112082240) do
   add_index "ilns", ["organization_id"], name: "index_ilns_on_organization_id", using: :btree
 
   create_table "locations", force: true do |t|
+    t.string   "token"
     t.string   "slug"
     t.boolean  "new_habitation",  default: false
     t.date     "inhabited_since"
