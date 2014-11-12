@@ -4,7 +4,7 @@ namespace :sidekiq do
     system "bundle exec sidekiq -C config/sidekiq.yml"
   end
 
-  task stop: :environment do
+  task kill: :environment do
     system "ps -ef | grep sidekiq | grep -v grep | awk '{print $2}' | xargs kill -9"
   end
 

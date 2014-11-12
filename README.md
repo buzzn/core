@@ -33,13 +33,16 @@
     bundle exec rake db:test:prepare
     bundle exec guard
 
-## Start Background Jobs
+## Sidekiq Start
     redis-server
     bundle exec rake sidekiq:start
     http://localhost:3000/sidekiq
 
-## Stop Background Jobs
-    bundle exec rake sidekiq:stop
+## Sidekiq Kill
+    bundle exec rake sidekiq:kill
+
+## Sidekiq Delete Queues
+    bundle exec rake sidekiq:delete_queues
 
 ## update meters
     bundle exec rake meter:update

@@ -58,29 +58,26 @@ class Meter < ActiveRecord::Base
         @metering_point = metering_point
         @mpoc           = metering_point.metering_point_operator_contract
         if @metering_point && @mpoc
-          @mpoc         = metering_point.metering_point_operator_contract
-          init_reading  = true
+          init_meter_id = self.id
 
-          # nil means current time
-          start_time    = nil
-          end_time      = nil
+          start_time    = Time.now.in_time_zone.utc - 5.minutes # some meters are very slow to update
+          end_time      = Time.now.in_time_zone.utc
 
-          self.registers.each do |register|
-            Sidekiq::Client.push({
-             'class' => MeterReadingUpdateWorker,
-             'queue' => :default,
-             'args' => [
-                        register.id,
-                        self.manufacturer_product_serialnumber,
-                        @mpoc.organization.slug,
-                        @mpoc.username,
-                        @mpoc.password,
-                        start_time,
-                        end_time,
-                        init_reading
-                       ]
-            })
-          end
+          Sidekiq::Client.push({
+           'class' => MeterReadingUpdateWorker,
+           'queue' => :default,
+           'args' => [
+                      registers_modes_and_ids,
+                      self.manufacturer_product_serialnumber,
+                      @mpoc.organization.slug,
+                      @mpoc.username,
+                      @mpoc.password,
+                      start_time.to_i * 1000,
+                      end_time.to_i * 1000,
+                      init_meter_id
+                     ]
+          })
+
         end
       end
     else
@@ -88,6 +85,14 @@ class Meter < ActiveRecord::Base
     end
   end
 
+
+  def registers_modes_and_ids
+    register_mode_and_ids = {}
+    self.registers.each do |register|
+      register_mode_and_ids.merge!({"#{register.mode}" => register.id})
+    end
+    return register_mode_and_ids
+  end
 
   def self.manufacturers
     %w{
