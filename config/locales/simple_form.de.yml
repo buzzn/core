@@ -53,6 +53,7 @@ de:
         watt_peak: Watt (max.)
         commissioning: Kaufdatum
         watt_hour_pa: Jahresenergiemenge
+        device_type: Geräteart
       contracting_party:
         legal_entity: Rechtsform
         contracts: Verträge
