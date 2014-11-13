@@ -5,10 +5,19 @@ class Profile < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
+  def slug_candidates
+    [
+      :username,
+      [:first_name, :last_name],
+      self.user.email
+    ]
+  end
+
   mount_uploader :image, PictureUploader
 
   belongs_to :user
 
+  validates :username, uniqueness: true
   validates :first_name, presence: true
   validates :last_name,  presence: true
   validates_acceptance_of :terms, accept: true
@@ -24,12 +33,16 @@ class Profile < ActiveRecord::Base
 
 
   def name
-    if self.first_name && self.last_name
-      "#{self.first_name} #{self.last_name}"
-    elsif self.user
-      self.user.email
+    if self.username
+      "#{self.username}"
     else
-      false
+      if self.first_name && self.last_name
+        "#{self.first_name} #{self.last_name}"
+      elsif self.user
+        self.user.email
+      else
+        false
+      end
     end
   end
 

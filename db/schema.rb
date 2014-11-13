@@ -408,6 +408,7 @@ ActiveRecord::Schema.define(version: 20141112082240) do
   end
 
   create_table "profiles", force: true do |t|
+    t.string   "username"
     t.string   "slug"
     t.string   "title"
     t.string   "image"

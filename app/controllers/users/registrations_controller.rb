@@ -65,7 +65,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
                   :password,
                   :password_confirmation,
                   :current_password,
-                  profile_attributes: [:id, :image, :first_name, :last_name, :gender, :phone, :terms, :newsletter_notifications, :location_notifications, :group_notifications, :_destroy]
+                  profile_attributes: [:id, :username, :image, :first_name, :last_name, :gender, :phone, :terms, :newsletter_notifications, :location_notifications, :group_notifications, :_destroy]
                 )
       end
 

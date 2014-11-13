@@ -51,6 +51,7 @@ private
 
   def init_permitted_params
     [
+      :username,
       :image,
       :first_name,
       :last_name,

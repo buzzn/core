@@ -55,19 +55,27 @@
 .col-sm-6
   %ul.nav.nav-pills#mytab.nav-spacer
     %li.active
+      %a{"data-toggle" => "tab", href: "#meter"}
+        = t'meter'
+    %li
       %a{"data-toggle" => "tab", href: "#contracts"}
         = t'contracts'
     %li
       %a{"data-toggle" => "tab", href: "#charts"}
         = t'charts'
-    %li
-      %a{"data-toggle" => "tab", href: "#meter"}
-        = t'meter'
+
 
 
   .tab-content
 
-    #contracts.tab-pane.active
+    #meter.tab-pane.active
+      .meter
+        - if @meter
+          = render @meter
+        - else
+          = @metering_point.new_meter
+
+    #contracts.tab-pane
       - if @metering_point.electricity_supplier_contracts.any?
         = render @metering_point.electricity_supplier_contracts
       - else
@@ -96,12 +104,7 @@
         = render @metering_point.registers
 
 
-    #meter.tab-pane
-      .meter
-        - if @meter
-          = render @meter
-        - else
-          = @metering_point.new_meter
+
 
 
 
