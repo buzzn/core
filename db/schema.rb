@@ -133,7 +133,7 @@ ActiveRecord::Schema.define(version: 20141112082240) do
     t.string   "manufacturer_product_serialnumber"
     t.string   "mode"
     t.string   "law"
-    t.string   "device_type"
+    t.string   "category"
     t.string   "shop_link"
     t.string   "primary_energy"
     t.integer  "watt_peak"
@@ -430,6 +430,7 @@ ActiveRecord::Schema.define(version: 20141112082240) do
 
   add_index "profiles", ["slug"], name: "index_profiles_on_slug", unique: true, using: :btree
   add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
+  add_index "profiles", ["username"], name: "index_profiles_on_username", unique: true, using: :btree
 
   create_table "registers", force: true do |t|
     t.string   "mode"

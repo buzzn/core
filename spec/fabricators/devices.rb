@@ -10,7 +10,7 @@ Fabricator :bhkw_justus, from: :device do
   mode                          'out'
   manufacturer_name             'Honda'
   manufacturer_product_name     'EcoPower 1.0'
-  device_type                   'chp'
+  category                      'chp'
   primary_energy                'gas'
   watt_peak                     1000
   commissioning                 Date.new(2012,10,1)
@@ -21,7 +21,7 @@ Fabricator :dach_pv_justus, from: :device do
   mode                          'out'
   manufacturer_name             'solarwatt'
   manufacturer_product_name     'PV 8,51'
-  device_type                   'pv'
+  category                      'pv'
   primary_energy                'sun'
   watt_peak                     8510
   commissioning                 Date.new(2012,3,31)
@@ -32,7 +32,7 @@ Fabricator :carport_pv_justus, from: :device do
   mode                          'out'
   manufacturer_name             'solarwatt'
   manufacturer_product_name     'PV 5,3'
-  device_type                   'pv'
+  category                      'pv'
   primary_energy                'sun'
   watt_peak                     5300
   commissioning                 Date.new(2012,1,1)
@@ -47,7 +47,7 @@ Fabricator :pv_karin, from: :device do
   mode                          'out'
   manufacturer_name             'Solarex'
   manufacturer_product_name     'MX-64'
-  device_type                   'pv'
+  category                      'pv'
   primary_energy                'sun'
   watt_peak                     2160
   commissioning                 Date.new(2002,11,1)
@@ -62,7 +62,7 @@ Fabricator :bhkw_stefan, from: :device do
   mode                          'out'
   manufacturer_name             'Senertec'
   manufacturer_product_name     'Dachs'
-  device_type                   'chp'
+  category                      'chp'
   primary_energy                'gas'
   watt_peak                     5500
   commissioning                 Date.new(1995,11,1)
@@ -78,7 +78,7 @@ Fabricator :hof_butenland_wind, from: :device do
   mode                          'out'
   manufacturer_name             'Enercon'
   manufacturer_product_name     '16'
-  device_type                   'wind'
+  category                      'wind'
   primary_energy                'wind'
   watt_peak                     55000
   commissioning                 Date.new(1989,12,1)
@@ -96,7 +96,7 @@ Fabricator :gocycle, from: :device do
   mode                          'in'
   manufacturer_name             'Gocycle'
   manufacturer_product_name     'GR2'
-  device_type                   'E-Bike'
+  category                      'E-Bike'
   watt_peak                     250
   commissioning                 Date.new(2014,6,1)
 end

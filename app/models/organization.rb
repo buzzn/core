@@ -17,7 +17,7 @@ class Organization < ActiveRecord::Base
 
   has_one :iln
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { in: 3..40 }
   validates :email, presence: true
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
   validates :phone, presence: true

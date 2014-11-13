@@ -36,8 +36,8 @@ class MeteringPoint < ActiveRecord::Base
   has_many :metering_point_users
   has_many :users, through: :metering_point_users, dependent: :destroy
 
-  validates :uid, uniqueness: true, length: { maximum: 33 } #presence: true
-  validates :address_addition, presence: true
+  validates :uid, uniqueness: true, length: { in: 4..34 } #presence: true
+  validates :address_addition, presence: true, length: { in: 2..30 }
 
   def meter
     self.registers.collect(&:meter).first

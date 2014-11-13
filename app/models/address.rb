@@ -2,7 +2,7 @@ class Address < ActiveRecord::Base
 
   belongs_to :addressable, polymorphic: true
 
-  validates :street_name,     presence: true
+  validates :street_name,     presence: true, length: { in: 4..30 }
   validates :street_number,   presence: true
   validates :city,            presence: true
   validates :state,           presence: true

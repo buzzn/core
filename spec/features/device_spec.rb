@@ -72,7 +72,7 @@ feature 'Device' do
 
       select 'eeg',   from: 'device_law'
       select 'sun',   from: 'device_primary_energy'
-      fill_in :device_device_type,                        with: 'pv'
+      fill_in :device_category,                        with: 'pv'
       fill_in :device_manufacturer_name,                  with: 'Testgerät'
       fill_in :device_manufacturer_product_name,          with: 'Testname'
       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
@@ -91,7 +91,7 @@ feature 'Device' do
 
       select '',      from: 'device_law'
       select 'sun',   from: 'device_primary_energy'
-      fill_in :device_device_type,                        with: 'pv'
+      fill_in :device_category,                        with: 'pv'
       fill_in :device_manufacturer_name,                  with: 'Testgerät'
       fill_in :device_manufacturer_product_name,          with: 'Testname'
       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
@@ -102,7 +102,7 @@ feature 'Device' do
 
       select 'eeg',   from: 'device_law'
       select 'sun',   from: 'device_primary_energy'
-      fill_in :device_device_type,                        with: ''
+      fill_in :device_category,                        with: ''
       fill_in :device_manufacturer_name,                  with: 'Testgerät'
       fill_in :device_manufacturer_product_name,          with: 'Testname'
       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
@@ -113,7 +113,7 @@ feature 'Device' do
 
       select 'eeg',   from: 'device_law'
       select '',      from: 'device_primary_energy'
-      fill_in :device_device_type,                        with: 'pv'
+      fill_in :device_category,                        with: 'pv'
       fill_in :device_manufacturer_name,                  with: 'Testgerät'
       fill_in :device_manufacturer_product_name,          with: 'Testname'
       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
@@ -124,7 +124,7 @@ feature 'Device' do
 
       select 'eeg',   from: 'device_law'
       select 'sun',      from: 'device_primary_energy'
-      fill_in :device_device_type,                        with: 'pv'
+      fill_in :device_category,                        with: 'pv'
       fill_in :device_manufacturer_name,                  with: 'Testgerät'
       fill_in :device_manufacturer_product_name,          with: 'Testname'
       fill_in :device_manufacturer_product_serialnumber,  with: '12345'

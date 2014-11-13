@@ -99,7 +99,7 @@ Das Device ist ein Gerät, das Strom benötigt oder Strom herstellt. Die meisten
 |name|String|Herd|
 |mode|string|[in, out, in_out]| Erzeuger oder Verbraucher oder beides(electrospeicher)
 |law|string|[eeg, kwkg]|Nur für Stromerzeuger.
-|device_type|string|XRGI 15|Typ, z.B. PV oder Ebike
+|category|string|XRGI 15|Typ, z.B. PV oder Ebike
 |manufacturer_product_number|string|12364ABC585|Herstellernummer
 |primary_energy|string|[gas, oil, lpg, sun, wind, water, bio]|Primärenergie.
 |watt_peak|int|2000|Ganze Zahl, Einheit Wp
