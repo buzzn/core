@@ -17,25 +17,36 @@ class MeterReadingUpdateWorker
 
       if request['status'] == "ok"
         if request['result'].any?
-
           request['result'].each do |item|
             timestamp = DateTime.strptime(item['time'].to_s,'%Q')
 
-            registers_modes_and_ids.each do |register_mode_and_id|
-              register_mode = register_mode_and_id.first
-              register_id   = register_mode_and_id.last
-
-              if register_mode == 'in'
-                watt_hour = item['energy']
-              elsif register_mode == 'out'
-                watt_hour = item['energyOut']
-              end
-
+            if registers_modes_and_ids.size == 1
+              register_mode_and_id  = registers_modes_and_ids.first
+              register_mode         = register_mode_and_id.first
+              register_id           = register_mode_and_id.last
+              watt_hour             = item['energy']
               Reading.create( register_id:  register_id,
                               timestamp:    timestamp,
                               watt_hour:    watt_hour / 10000000.0 #energy is in 10^-10 kWh; convert to Wh
                             )
+            else
+              registers_modes_and_ids.each do |register_mode_and_id|
+                register_mode = register_mode_and_id.first
+                register_id   = register_mode_and_id.last
+                if register_mode == 'in'
+                  watt_hour = item['energy']
+                elsif register_mode == 'out'
+                  watt_hour = item['energyOut']
+                end
+                Reading.create( register_id:  register_id,
+                                timestamp:    timestamp,
+                                watt_hour:    watt_hour / 10000000.0 #energy is in 10^-10 kWh; convert to Wh
+                              )
+              end
             end
+
+
+
           end
           if init_meter_id
             meter = Meter.find(init_meter_id)
