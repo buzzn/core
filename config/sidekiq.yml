@@ -8,11 +8,9 @@
 :logfile: ./log/sidekiq.log
 :queues:
   - ['high', 3]
-  - ['default', 2]
-  - ['low', 1]
+  - ['default', 1]
 :limits:
   default: 1
-  low: 1
 
 staging:
   pidfile: ../shared/pids/sidekiq.pid

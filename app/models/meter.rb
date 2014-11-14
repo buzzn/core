@@ -23,7 +23,7 @@ class Meter < ActiveRecord::Base
           if request['status'] == 'ok'
             self.update_columns(smart: true)
             self.update_columns(online: request['result'].any?)
-            self.delay.init_reading
+            init_reading
           elsif request['status'] == "error"
             logger.error request
             self.update_columns(smart: false)
