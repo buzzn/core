@@ -281,7 +281,6 @@ GEM
       json
       multi_json
       request_store (>= 1.0.5)
-    google-analytics-rails (0.0.6)
     grape (0.9.0)
       activesupport
       builder
@@ -671,7 +670,6 @@ DEPENDENCIES
   geocoder
   goldiloader
   gon
-  google-analytics-rails
   grape
   grape-active_model_serializers
   grape-swagger-rails

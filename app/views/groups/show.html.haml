@@ -1,5 +1,6 @@
-- meta description: "buzzn app energy people power #{@group.description}"
-- meta keywords: %w(buzzn app energy people power) << "#{@group.name}"
+- meta title: "#{@group.name}"
+- meta description: "#{@group.description}"
+- meta keywords: %w(buzzn people power) << "#{@group.name}" << "#{@group.metering_points.first.location.address.city}"
 
 .col-sm-3
   .detail_icon
