@@ -83,6 +83,7 @@ gem 'grape-swagger-rails'
 gem 'rack-cors', require: 'rack/cors'
 gem 'attr_encrypted', :git => 'git@github.com:hron/attr_encrypted.git', :branch => 'issue-2-ruby19-compatibility'
 gem 'sitemap_generator'
+gem 'rack-google-analytics'
 
 gem 'rails-assets-d3'
 gem 'rails-assets-underscore'

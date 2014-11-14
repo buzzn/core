@@ -41,5 +41,7 @@ module Buzzn
       g.helper      = false
     end
 
+    config.middleware.use Rack::GoogleAnalytics, :tracker => 'UA-xxxxxx-x'
+
   end
 end
