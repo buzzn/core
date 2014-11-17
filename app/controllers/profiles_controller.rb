@@ -59,7 +59,8 @@ private
       :phone,
       :newsletter_notifications,
       :location_notifications,
-      :group_notifications
+      :group_notifications,
+      :description
     ]
   end
 end

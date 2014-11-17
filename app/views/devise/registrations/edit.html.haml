@@ -9,7 +9,7 @@
           = f.input :email, required: true, autofocus: true
           = f.simple_fields_for :profile do |p|
 
-            = render 'profiles/form_fields', f:p
+            = render 'profiles/form_fields', f: p
 
           - if devise_mapping.confirmable? && resource.pending_reconfirmation?
             %p

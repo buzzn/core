@@ -33,7 +33,7 @@ class Profile < ActiveRecord::Base
 
 
   def name
-    if self.username
+    if self.username && self.username != ""
       "#{self.username}"
     else
       if self.first_name && self.last_name
