@@ -3,7 +3,7 @@ class OrganizationsController < InheritedResources::Base
   respond_to :html, :js
 
   def show
-    @organization = Organization.find(params[:id])
+    @organization = Organization.find(params[:id]).decorate
     authorize_action_for(@organization)
     show!
   end
@@ -63,7 +63,8 @@ private
       :website,
       :mode,
       :contracting_party,
-      address_attributes: [:id, :street_name, :street_number, :city, :state, :zip, :country, :time_zone, :_destroy]
+      address_attributes: [:id, :street_name, :street_number, :city, :state, :zip, :country, :time_zone, :_destroy],
+      assets_attributes: [:id, :image, :description, :assetable_id, :assetable_type]
     ]
   end
 end

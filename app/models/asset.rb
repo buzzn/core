@@ -22,6 +22,10 @@ class Asset < ActiveRecord::Base
     Location.find(self.assetable_id) if self.assetable_type == "Location"
   end
 
+  def organization
+    Organization.find(self.assetable_id) if self.assetable_type == "Organization"
+  end
+
 
 
 end

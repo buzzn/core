@@ -97,7 +97,7 @@ feature 'Comment' do
     it 'will not be allowed to create comment', :retry => 3 do
       find(".nav").click_link "#{@user2.name}"
       click_on 'Logout'
-      visit "/groups/#{@group_home_of_the_brave.slug}#tab_comments"
+      visit "/groups/#{@group_home_of_the_brave.slug}#comments"
 
       expect(find(".comments")).not_to have_selector(".comment-form")
     end

@@ -23,18 +23,35 @@
     = @organization.address.state
 
 .col-md-6
-  .block
-    .header.no-border
-      %h2= t('organization_properties')
-    .content.no-padding
-      %table.table
-        %tbody
-          %tr
-            %td= t('name')
-            %td= @organization.name
-          %tr
-            %td= t('contracting_party')
-            %td= @organization.contracting_party
+  %ul.nav.nav-pills#mytab.nav-spacer
+    %li.active
+      %a{"data-toggle" => "tab", href: "#organization_properties"}
+        = t'organization_properties'
+    %li
+      %a{"data-toggle" => "tab", href: "#assets"}
+        = t'assets'
+
+  .tab-content
+    #organization_properties.tab-pane.active
+      .block
+        .header.no-border
+          %h2= t('organization_properties')
+        .content.no-padding
+          %table.table
+            %tbody
+              %tr
+                %td= t('name')
+                %td= @organization.name
+              %tr
+                %td= t('contracting_party')
+                %td= @organization.contracting_party
+
+    #assets.tab-pane
+      .assets
+        = render @organization.assets
+      - if user_signed_in? && current_user.can_update?(@organization)
+        = @organization.new_asset
+
 
 
 

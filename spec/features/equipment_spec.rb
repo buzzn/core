@@ -26,11 +26,11 @@ feature 'Equipment' do
       @location.metering_point.registers.first.meter.equipments = []
       @location.metering_point.registers.first.meter.save
 
-      visit "/metering_points/#{@location.metering_point.slug}/#tab_meter"
+      visit "/metering_points/#{@location.metering_point.slug}/#meter"
 
       expect(page).to have_content('Easymeter')
 
-      find("#meter").find(".block").first(".header").find(".btn").click
+      find(".meter").find(".block").first(".header").first(".btn").trigger('click')
 
       click_on 'Add Equipment'
 
@@ -48,11 +48,11 @@ feature 'Equipment' do
     end
 
     it 'try to delete equipment', :retry => 3 do
-      visit "/metering_points/#{@location.metering_point.slug}/#tab_meter"
+      visit "/metering_points/#{@location.metering_point.slug}/#meter"
 
       expect(page).to have_content('Easymeter')
 
-      find("#meter").find(".block").first(".header").find(".btn").click
+      find(".meter").find(".block").first(".header").first(".btn").trigger('click')
 
       click_on 'Remove Equipment'
 

@@ -41,6 +41,7 @@ feature 'Asset' do
     it 'try to create asset (device)', :retry => 3 do
       visit "/devices/#{@device.id}"
       expect(page).to have_content('solarwatt')
+      click_on 'Assets'
       find("i.fa-plus-circle").click
 
       attach_file :asset_image,           Rails.root.join('db', 'seed_assets', 'assets', 'pv_karin.jpg')
@@ -53,6 +54,7 @@ feature 'Asset' do
     it 'will fail to create asset (device)', :retry => 3 do
       visit "/devices/#{@device.id}"
       expect(page).to have_content('solarwatt')
+      click_on 'Assets'
       find("i.fa-plus-circle").click
 
       fill_in :asset_description,         with: 'Tolles Bild'
@@ -72,6 +74,7 @@ feature 'Asset' do
 
       visit "/devices/#{@device.id}"
       expect(page).to have_content('solarwatt')
+      click_on 'Assets'
       find(".assets").find(".thumbnail").click_on('Edit')
 
       fill_in 'asset_description', with: 'Nice picture'
@@ -96,6 +99,7 @@ feature 'Asset' do
 
       visit "/devices/#{@device.id}"
       expect(page).to have_content('solarwatt')
+      click_on 'Assets'
       expect(find(".assets").find(".thumbnail")).not_to have_content('Edit')
 
       click_on 'Show'
@@ -137,7 +141,7 @@ feature 'Asset' do
     it 'try to edit asset (group)', :retry => 3 do
       @group_home_of_the_brave.assets << Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'ecopower1.jpg')), description: 'ecopower')
 
-      visit "/groups/#{@group_home_of_the_brave.slug}#tab_assets"
+      visit "/groups/#{@group_home_of_the_brave.slug}#assets"
       expect(page).to have_content('ecopower')
       find(".assets").find(".thumbnail").click_on('Edit')
 
@@ -160,7 +164,7 @@ feature 'Asset' do
       fill_in :user_password, :with => 'testtest'
       click_button 'Sign in'
 
-      visit "/groups/#{@group_home_of_the_brave.slug}#tab_assets"
+      visit "/groups/#{@group_home_of_the_brave.slug}#assets"
       expect(page).to have_content('ecopower')
       expect(find(".assets").find(".thumbnail")).not_to have_content('Edit')
 
@@ -181,7 +185,7 @@ feature 'Asset' do
       fill_in :user_password, :with => 'testtest'
       click_button 'Sign in'
 
-      visit "/groups/#{@group_home_of_the_brave.slug}#tab_assets"
+      visit "/groups/#{@group_home_of_the_brave.slug}#assets"
       expect(page).to have_content('ecopower')
       expect(find(".assets").find(".thumbnail")).not_to have_content('Edit')
 

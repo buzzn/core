@@ -2,6 +2,8 @@ class OrganizationDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
 
+  decorates_association :assets
+
   def link_to_edit
     link_to(
       raw(content_tag(:i, '', class: 'fa fa-cog') + t('edit')),
@@ -23,6 +25,18 @@ class OrganizationDecorator < Draper::Decorator
       :method => :delete,
       :data => {
         :confirm => t('are_you_sure')
+      })
+  end
+
+  def new_asset
+    link_to(
+      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      new_asset_path(assetable_id: model.id, assetable_type: 'Organization'),
+      {
+        :remote                     => true,
+        :class                      => 'content-plus',
+        'data-toggle'               => 'modal',
+        'data-target'               => '#myModal'
       })
   end
 end

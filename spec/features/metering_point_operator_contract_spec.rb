@@ -24,7 +24,7 @@ feature 'MeteringPointOperatorContract' do
     end
 
     it 'try to create metering_point_operator_contract without smart meter', :retry => 3 do
-      visit "/metering_points/#{@metering_point.slug}/#tab_contracts"
+      visit "/metering_points/#{@metering_point.slug}/#contracts"
       click_on 'Add Metering Point Operator Contract'
 
       expect(page).to have_content('New Metering Point Operator Contract')
@@ -40,7 +40,7 @@ feature 'MeteringPointOperatorContract' do
     end
 
     it 'will fail to create metering_point_operator_contract without smart meter', :retry => 3 do
-      visit "/metering_points/#{@metering_point.slug}/#tab_contracts"
+      visit "/metering_points/#{@metering_point.slug}/#contracts"
       click_on 'Add Metering Point Operator Contract'
 
       expect(page).to have_content('New Metering Point Operator Contract')
@@ -55,7 +55,7 @@ feature 'MeteringPointOperatorContract' do
     end
 
     # it 'try to create metering_point_operator_contract with smart meter' do
-    #   visit "/metering_points/#{@metering_point.slug}/#tab_contracts"
+    #   visit "/metering_points/#{@metering_point.slug}/#contracts"
     #   click_on 'Add Metering Point Operator Contract'
 
     #   expect(page).to have_content('New Metering Point Operator Contract')
@@ -68,7 +68,7 @@ feature 'MeteringPointOperatorContract' do
 
     #   expect(find('.metering_point_operator_contracts')).to have_content('Discovergy')
 
-    #   visit "/metering_points/#{@metering_point.slug}/#tab_contracts" #reload to check meter.smart?
+    #   visit "/metering_points/#{@metering_point.slug}/#contracts" #reload to check meter.smart?
     #   VCR.use_cassette('bla') do
     #     worker = MeteringPointValidationWorker.new
     #     worker.perform(@metering_point.id)
@@ -78,7 +78,7 @@ feature 'MeteringPointOperatorContract' do
     # end
 
     it 'will fail to create metering_point_operator_contract with smart meter', :retry => 3 do
-      visit "/metering_points/#{@metering_point.slug}/#tab_contracts"
+      visit "/metering_points/#{@metering_point.slug}/#contracts"
       click_on 'Add Metering Point Operator Contract'
 
       expect(page).to have_content('New Metering Point Operator Contract')

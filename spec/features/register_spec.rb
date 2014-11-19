@@ -23,11 +23,11 @@ feature 'Register' do
     end
 
     it 'try to edit register', :retry => 3 do
-      visit "/metering_points/#{@location.metering_point.slug}/#tab_meter"
+      visit "/metering_points/#{@location.metering_point.slug}/#meter"
 
       expect(page).to have_content('Easymeter')
 
-      find(".meter").find(".block").first(".header").find(".btn").click
+      find(".meter").find(".block").first(".header").find(".btn").trigger('click')
 
       find(:css, "input[id^='meter_registers_attributes_'][id$='_obis_index']").set("12345")
 
@@ -37,11 +37,11 @@ feature 'Register' do
     end
 
     it 'try to add and remove register', :retry => 3  do
-      visit "/metering_points/#{@location.metering_point.slug}/#tab_meter"
+      visit "/metering_points/#{@location.metering_point.slug}/#meter"
 
       expect(page).to have_content('Easymeter')
 
-      find(".meter").find(".block").first(".header").find(".btn").click
+      find(".meter").find(".block").first(".header").find(".btn").trigger('click')
 
       click_on 'Add Register'
 
@@ -52,9 +52,9 @@ feature 'Register' do
 
       expect(find(".registers")).to have_content('12345678')
 
-      #visit "/metering_points/#{@location.metering_point.slug}/#tab_meter" #reload to make css selector visible
+      #visit "/metering_points/#{@location.metering_point.slug}/#meter" #reload to make css selector visible
 
-      find(".meter").find(".block").first(".header").find(".btn").click
+      find(".meter").find(".block").first(".header").find(".btn").trigger('click')
 
       within find("#registers").all(".nested-fields").last do
         click_on 'Remove Register'
