@@ -65,7 +65,10 @@ gem 'awesome_nested_set'
 gem 'acts-as-taggable-on'
 gem 'remotipart'
 gem 'public_activity'
+
 gem 'gon'
+gem 'chartkick'
+
 gem 'rack-dev-mark'
 gem 'tzinfo'
 gem 'rails-timeago'
@@ -86,6 +89,7 @@ gem 'rack-google-analytics'
 
 gem 'rails-assets-d3'
 gem 'rails-assets-underscore'
+gem 'rails-assets-highcharts'
 gem 'rails-assets-flot'
 gem 'rails-assets-flot.tooltip'
 gem 'rails-assets-jquery-readyselector'

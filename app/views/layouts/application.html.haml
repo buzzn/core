@@ -4,6 +4,7 @@
   %head
     = stylesheet_link_tag    "application", "data-turbolinks-track" => true, media: "all"
     = javascript_include_tag "application", "data-turbolinks-track" => true
+    = javascript_include_tag "highcharts", "chartkick"
     = csrf_meta_tags
     = metamagic :title => "buzzn"
 
@@ -21,7 +22,5 @@
       %main#main
         .container#content
           = render 'layouts/messages'
-
-          = yield :energy_display
 
           = yield
