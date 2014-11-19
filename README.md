@@ -7,7 +7,6 @@
     version number found in file .ruby-version
 
 ## install software
-    mysql
     phantomjs
     imagemagick
     graphviz

@@ -13,7 +13,7 @@
           %td= electricity_supplier_contract.status
         %tr
           %td= t('forecast_watt_hour_pa')
-          %td= electricity_supplier_contract.forecast_watt_hour_pa
+          %td= "#{human_readable_watt(electricity_supplier_contract.forecast_watt_hour_pa)}/h"
         %tr
           %td= t('price')
           %td= humanized_money_with_symbol electricity_supplier_contract.price

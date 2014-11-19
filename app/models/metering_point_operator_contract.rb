@@ -11,7 +11,7 @@ class MeteringPointOperatorContract < ActiveRecord::Base
 
   scope :running, -> { where(running: :true) }
 
-  after_save :validates_credentials
+  after_save :validates_credentials_job
 
   def login_required?
     if self.organization.nil?
@@ -22,29 +22,15 @@ class MeteringPointOperatorContract < ActiveRecord::Base
   end
 
 
-  def validates_credentials
-    if self.organization.slug == 'discovergy' || self.organization.slug == 'buzzn-metering'
-      api_call = Discovergy.new(self.username, self.password).meters
-      if api_call['status'] == 'ok'
-        self.update_columns(valid_credentials: true)
-        validates_meters
-      else
-        self.update_columns(valid_credentials: false)
-      end
-    end
-  end
-
 
 private
-  def validates_meters
-    if group
-      group.metering_points.each do |metering_point|
-        metering_point.meter.save
-      end
-    end
-    if metering_point
-      metering_point.meter.save
-    end
+
+  def validates_credentials_job
+    Sidekiq::Client.push({
+     'class' => ValidatesCredentialsWorker,
+     'queue' => :low,
+     'args' => [ 'MeteringPointOperatorContract', self.id ]
+    })
   end
 
 

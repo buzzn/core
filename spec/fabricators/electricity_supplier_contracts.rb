@@ -11,6 +11,9 @@ Fabricator :electricity_supplier_contract do
   forecast_watt_hour_pa 1700
   price_cents           2995
   organization          { Fabricate(:electricity_supplier) }
-  address               { Fabricate(:address) }
   bank_account          { Fabricate(:bank_account) }
+end
+
+Fabricator :electricity_supplier_contract_with_address, from: :electricity_supplier_contract do
+  address               { Fabricate(:address) }
 end
