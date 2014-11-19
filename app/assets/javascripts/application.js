@@ -42,6 +42,7 @@
 //= require metering_points
 //= require locations
 //= require groups
+//= require devices
 
 //= require turbolinks
 // don't require libs below this command

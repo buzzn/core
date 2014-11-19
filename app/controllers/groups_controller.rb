@@ -12,7 +12,7 @@ class GroupsController < InheritedResources::Base
     @registers                      = @group.metering_points.collect(&:registers)
 
     @all_users                      = User.all.decorate
-    @all_groups                     = Group.all.decorate
+    @all_groups                     = Group.includes(:assets).all.decorate
 
     @all_comments                   = @group.comment_threads.order('created_at desc')
     @new_comment                    = Comment.build_from(@group, current_user.id, "") if user_signed_in?

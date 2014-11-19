@@ -65,6 +65,15 @@ de:
         customer_number: Kundennummer
         contract_number: Vertragskontonummer
         forecast_watt_hour_pa: Geschätzter Stromverbrauch pro Jahr (kWh)
+        contracting_party: Vertragspartner
+        status: Status
+        price_cents: Preis (cent)
+        signing_user: Unterzeichnet von
+        terms: AGB bestätigt
+        confirm_pricing_model: Preismodell bestätigt
+        power_of_attorney: Bevollmächtigung
+        commissioning: Vertragsbeginn
+        termination: Vertragsende
       bank_account:
         holder: Kontoinhaber
         iban: IBAN

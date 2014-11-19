@@ -38,47 +38,60 @@
       .clearfix
 
 .col-md-6
-  .block
-    .header.no-border
-      %h2= t('device_properties')
-    .content.no-padding
-      %table.table
-        %tbody
-          %tr
-            %td= t('mode')
-            %td= @device.mode
+  %ul.nav.nav-pills#mytab.nav-spacer
+    %li.active
+      %a{"data-toggle" => "tab", href: "#device_properties"}
+        = t'device_properties'
+    %li
+      %a{"data-toggle" => "tab", href: "#assets"}
+        = t'assets'
 
-          - if @device.output?
-            %tr
-              %td= t('category')
-              %td= @device.category
 
-          %tr
-            %td= t('manufacturer')
-            %td= @device.manufacturer_name
-          %tr
-            %td= t('manufacturer_product_name')
-            %td= @device.manufacturer_product_name
-          - if @device.output?
-            %tr
-              %td= t('primary_energy')
-              %td= @device.primary_energy
-          %tr
-            %td= t('watt_peak')
-            %td= @device.watt_peak
-          %tr
-            %td= t('watt_hour_pa')
-            %td= @device.watt_hour_pa
-          %tr
-            %td= t('commissioning')
-            %td= @device.commissioning
-          %tr
-            %td= t('mobile')
-            %td= t @device.mobile
-  .assets
-    = render @device.assets
-  - if current_user.can_update?(@device)
-    = @device.new_asset
+  .tab-content
+    #device_properties.tab-pane.active
+      .block
+        .header.no-border
+          %h2= t('device_properties')
+        .content.no-padding
+          %table.table
+            %tbody
+              %tr
+                %td= t('mode')
+                %td= @device.mode
+
+              - if @device.output?
+                %tr
+                  %td= t('category')
+                  %td= @device.category
+
+              %tr
+                %td= t('manufacturer')
+                %td= @device.manufacturer_name
+              %tr
+                %td= t('manufacturer_product_name')
+                %td= @device.manufacturer_product_name
+              - if @device.output?
+                %tr
+                  %td= t('primary_energy')
+                  %td= @device.primary_energy
+              %tr
+                %td= t('watt_peak')
+                %td= @device.watt_peak
+              %tr
+                %td= t('watt_hour_pa')
+                %td= @device.watt_hour_pa
+              %tr
+                %td= t('commissioning')
+                %td= @device.commissioning
+              %tr
+                %td= t('mobile')
+                %td= t @device.mobile
+
+    #assets.tab-pane
+      .assets
+        = render @device.assets
+      - if user_signed_in? && current_user.can_update?(@device)
+        = @device.new_asset
 
 
 

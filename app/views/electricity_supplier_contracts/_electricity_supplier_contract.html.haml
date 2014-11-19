@@ -1,10 +1,19 @@
 .block{id: "electricity_supplier_contract_#{electricity_supplier_contract.id}"}
   .header.no-border
     = electricity_supplier_contract.link_to_edit
-    %h2= electricity_supplier_contract.tariff
+    %h2= t('electricity_supplier')
   .content.no-padding
     %table.table
       %tbody
+        %tr
+          %td= t('organization_name')
+          - if user_signed_in? && current_user.has_role?(:admin)
+            %td= link_to electricity_supplier_contract.organization.name, electricity_supplier_contract.organization
+          -else
+            %td= electricity_supplier_contract.organization.name
+        %tr
+          %td= t('tariff')
+          %td= electricity_supplier_contract.tariff
         %tr
           %td= t('contracting_party')
           %td= link_to electricity_supplier_contract.contracting_party.user.name, electricity_supplier_contract.contracting_party.user.profile
