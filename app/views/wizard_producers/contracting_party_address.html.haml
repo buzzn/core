@@ -2,7 +2,7 @@
   .forminput.box
     %h1= t'contracting_party_address'
 
-    = simple_form_for @address, url: url_for(action: 'contracting_party_address_update', controller: 'wizard_producers'), method: 'put', html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
+    = simple_form_for @address, url: url_for(action: 'contracting_party_address_update', controller: 'wizard_producers'), method: 'put' do |f|
       = render 'addresses/form_fields', f: f
       = f.submit t("continue"), class: 'btn btn-success pull-right', id: 'submit'
 

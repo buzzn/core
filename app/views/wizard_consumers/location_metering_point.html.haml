@@ -19,7 +19,7 @@
       .forminput.box
         %h1= t'location_metering_point'
 
-        = simple_form_for @metering_point, url: url_for( action: 'location_metering_point_update', controller: 'wizard_consumers'), method: 'put', html: {class: 'form-horizontal' }, wrapper: :horizontal_form  do |f|
+        = simple_form_for @metering_point, url: url_for( action: 'location_metering_point_update', controller: 'wizard_consumers'), method: 'put'  do |f|
           = f.input :address_addition
           = f.input :uid
           = f.submit t("continue"), class: 'btn btn-success pull-right', id: 'submit'

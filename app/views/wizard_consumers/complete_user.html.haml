@@ -14,7 +14,7 @@
     .col-md-6
       .forminput.box
         %h1= t'complete_user'
-        = simple_form_for @profile, url: url_for(action: 'complete_user_update', controller: 'wizard_consumers'), method: 'put', html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
+        = simple_form_for @profile, url: url_for(action: 'complete_user_update', controller: 'wizard_consumers'), method: 'put' do |f|
           = f.input :first_name
           = f.input :last_name
           = f.input :gender, include_blank: false, collection: Profile.genders, input_html: { class: 'select2' }

@@ -19,7 +19,7 @@
       .forminput.box
         %h1= t'location_habitation'
 
-        = simple_form_for @location, url: url_for( action: 'location_habitation_update', controller: 'wizard_consumers'), method: 'put', html: {class: 'form-horizontal' }, wrapper: :horizontal_form  do |f|
+        = simple_form_for @location, url: url_for( action: 'location_habitation_update', controller: 'wizard_consumers'), method: 'put' do |f|
           = f.input :new_habitation
           = f.input :inhabited_since
           = f.submit t("continue"), class: 'btn btn-success pull-right', id: 'submit'

@@ -4,7 +4,7 @@
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'edit_meter'
     .modal-body
-      = simple_form_for @meter, remote: true, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
+      = simple_form_for @meter, remote: true do |f|
         = render 'meters/form_fields', f: f
         .modal-footer
           = f.button :submit, id: 'submit', class: 'btn btn-success'

@@ -5,7 +5,7 @@
     .col-md-4
     .col-md-4
       %h1= t('.sign_in')
-      = simple_form_for resource, as: resource_name, url: session_path(resource_name), html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
+      = simple_form_for resource, as: resource_name, url: session_path(resource_name) do |f|
         = f.input :email, required: false, autofocus: true#, label: false, placeholder: t('email')
         = f.input :password, required: false#, label: false, placeholder: t('password')
         = f.input :remember_me, as: :boolean, input_html: {checked: true}

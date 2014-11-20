@@ -4,7 +4,7 @@
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'edit_devices'
     .modal-body
-      = simple_form_for @metering_point, remote: true, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
+      = simple_form_for @metering_point, remote: true do |f|
         = f.association :devices, collection: (@metering_point.users + [User.with_role(:manager, @metering_point.root.location)]).flatten.uniq.collect{|u| u.editable_devices_by_mode(@metering_point.mode)}.flatten, input_html: { class: 'select2'}
         .modal-footer
           = f.button :submit, id: 'submit', class: 'btn btn-success'

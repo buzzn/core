@@ -4,7 +4,7 @@
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'new_metering_point_operator_contract'
     .modal-body
-      = simple_form_for @metering_point_operator_contract, remote: true, html: {class: 'form-horizontal' }, wrapper: :horizontal_form do |f|
+      = simple_form_for @metering_point_operator_contract, remote: true do |f|
         - value = params[:metering_point_id].nil? ? {} : { value: params[:metering_point_id] }
         = f.input :metering_point_id, input_html: {}.merge(value), as: :hidden
         - value2 = params[:group_id].nil? ? {} : { value: params[:group_id] }
