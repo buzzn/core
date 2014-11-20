@@ -27,7 +27,7 @@ feature 'Register' do
 
       expect(page).to have_content('Easymeter')
 
-      find(".meter").find(".block").first(".header").find(".btn").trigger('click')
+      find(".meter").find(".block").first(".header").first(".btn").trigger('click')
 
       find(:css, "input[id^='meter_registers_attributes_'][id$='_obis_index']").set("12345")
 
@@ -41,7 +41,7 @@ feature 'Register' do
 
       expect(page).to have_content('Easymeter')
 
-      find(".meter").find(".block").first(".header").find(".btn").trigger('click')
+      find(".meter").find(".block").first(".header").first(".btn").trigger('click')
 
       click_on 'Add Register'
 
@@ -54,11 +54,9 @@ feature 'Register' do
 
       #visit "/metering_points/#{@location.metering_point.slug}/#meter" #reload to make css selector visible
 
-      find(".meter").find(".block").first(".header").find(".btn").trigger('click')
+      find(".meter").find(".block").first(".header").first(".btn").trigger('click')
 
-      within find("#registers").all(".nested-fields").last do
-        click_on 'Remove Register'
-      end
+      find("#registers").all(".nested-fields").last.find("a.remove_fields.existing").click
 
       click_on 'Update Meter'
 
