@@ -12,19 +12,9 @@ class Register < ActiveRecord::Base
 
   def day_to_hours
     if meter.smart
-      {
-        id:       self.id,
-        time_range: 'day_to_hours',
-        current:  convert_to_array(Reading.aggregate(:day_to_hours, self.id)),
-        past:     convert_to_array(Reading.aggregate(:day_to_hours, self.id))
-      }
+      convert_to_array(Reading.aggregate(:day_to_hours, self.id))
     else
-      {
-        id:       self.id,
-        time_range: 'day_to_hours',
-        current:  convert_to_array(Reading.aggregate(:day_to_hours)),
-        past:     convert_to_array(Reading.aggregate(:day_to_hours))
-      }
+      convert_to_array(Reading.aggregate(:day_to_hours))
     end
   end
 
@@ -32,19 +22,9 @@ class Register < ActiveRecord::Base
 
   def month_to_days
     if meter.smart
-      {
-        id:       self.id,
-        time_range: 'month_to_days',
-        current:  convert_to_array(Reading.aggregate(:month_to_days, self.id)),
-        past:     convert_to_array(Reading.aggregate(:month_to_days, self.id))
-      }
+      convert_to_array(Reading.aggregate(:month_to_days, self.id))
     else
-      {
-        id:       self.id,
-        time_range: 'month_to_days',
-        current:  convert_to_array(Reading.aggregate(:month_to_days)),
-        past:     convert_to_array(Reading.aggregate(:month_to_days))
-      }
+      convert_to_array(Reading.aggregate(:month_to_days))
     end
   end
 
@@ -52,19 +32,9 @@ class Register < ActiveRecord::Base
 
   def year_to_months
     if meter.smart
-      {
-        id:       self.id,
-        time_range: 'year_to_months',
-        current:  convert_to_array(Reading.aggregate(:year_to_months, self.id)),
-        past:     convert_to_array(Reading.aggregate(:year_to_months, self.id))
-      }
+      convert_to_array(Reading.aggregate(:year_to_months, self.id))
     else
-      {
-        id:       self.id,
-        time_range: 'year_to_months',
-        current:  convert_to_array(Reading.aggregate(:year_to_months)),
-        past:     convert_to_array(Reading.aggregate(:year_to_months))
-      }
+      convert_to_array(Reading.aggregate(:year_to_months))
     end
   end
 

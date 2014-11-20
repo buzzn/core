@@ -14,9 +14,23 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :transmission_system_operator_contracts
 
 
-  def chart
+  def chart(resolution='day_to_hours')
+
+    colors = []
+    model.registers.map(&:mode).each do |mode|
+      case mode
+      when 'in'
+        colors << '#00f'
+      when 'out'
+        colors << '#f00'
+      else
+        colors << '#0f0'
+      end
+    end
+
     column_chart(
-      chart_metering_point_path(model),
+      chart_metering_point_path(model, resolution: resolution),
+      colors: colors,
       library: {
         tooltip:{
           dateTimeLabelFormats: "%A, %b %e, %Y",

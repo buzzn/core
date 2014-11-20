@@ -93,17 +93,17 @@
       .block{id: 'day_to_hours' }
         .header.no-border
           %h2= t('day_to_hours')
-        = render @metering_point.registers
+        = @metering_point.chart('day_to_hours')
 
       .block{id: 'month_to_days' }
         .header.no-border
           %h2= t('month_to_days')
-        = render @metering_point.registers
+        = @metering_point.chart('month_to_days')
 
       .block{id: 'year_to_months' }
         .header.no-border
           %h2= t('year_to_months')
-        = render @metering_point.registers
+        = @metering_point.chart('year_to_months')
 
 
 

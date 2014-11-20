@@ -18,7 +18,11 @@ class MeteringPointsController < InheritedResources::Base
 
   def chart
     @metering_point = MeteringPoint.find(params[:id])
-    render json: @metering_point.registers.first.day_to_hours[:current].to_json
+    @chart_data = []
+    @metering_point.registers.each do |register|
+      @chart_data << {name: register.mode, data: register.send(params[:resolution])}
+    end
+    render json: @chart_data.to_json
   end
 
 

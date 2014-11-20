@@ -65,11 +65,8 @@ gem 'awesome_nested_set'
 gem 'acts-as-taggable-on'
 gem 'remotipart'
 gem 'public_activity'
-
 gem 'gon'
 gem 'chartkick'
-gem 'highcharts-rails'
-
 gem 'rack-dev-mark'
 gem 'tzinfo'
 gem 'rails-timeago'
@@ -88,6 +85,8 @@ gem 'attr_encrypted', :git => 'git@github.com:hron/attr_encrypted.git', :branch 
 gem 'sitemap_generator'
 gem 'rack-google-analytics'
 
+
+gem 'rails-assets-highcharts'
 gem 'rails-assets-underscore'
 gem 'rails-assets-jquery-readyselector'
 
