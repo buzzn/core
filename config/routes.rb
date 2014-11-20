@@ -82,6 +82,8 @@ Buzzn::Application.routes.draw do
 
   resources :startpage
 
+  resources :stream
+
 
   resources :wizard_consumers do
     collection do

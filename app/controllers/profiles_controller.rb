@@ -14,16 +14,8 @@ class ProfilesController < InheritedResources::Base
 
     @activities           = PublicActivity::Activity
                               .order("created_at desc")
-                              .where(owner_id: @profile.user.friend_ids << @profile.user.id, owner_type: "User")
+                              .where(owner_id: @profile.user.id, owner_type: "User")
                               .limit(10)
-
-
-    @explore_groups       = Group.includes(:assets).all.limit(10).decorate
-    if user_signed_in?
-      @explore_profiles     = User.all.where("id NOT IN (?)", current_user.friend_ids + [current_user.id]).limit(10).collect{|u| u.profile.decorate}
-    else
-      @explore_profiles     = Profile.all.limit(10).decorate
-    end
 
     show!
   end

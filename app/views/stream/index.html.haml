@@ -1,0 +1,22 @@
+- meta title: "#{current_user.name}"
+- meta description: "stream"
+
+.col-sm-9
+  .activities
+    %h5= t('activities')
+    - @activities.each do |activity|
+      = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+
+.col-sm-3
+
+  %article.sidebar_module
+    %h5.page-header= t('buzzn_groups')
+    %ul
+      = render @explore_groups
+    .clearfix
+
+  %article.sidebar_module
+    %h5.page-header= t('buzzn_users')
+    %ul
+      = render @explore_profiles
+    .clearfix
