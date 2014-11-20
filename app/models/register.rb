@@ -15,15 +15,15 @@ class Register < ActiveRecord::Base
       {
         id:       self.id,
         time_range: 'day_to_hours',
-        current:  convert_to_flot_array(Reading.aggregate(:day_to_hours, self.id)),
-        past:     convert_to_flot_array(Reading.aggregate(:day_to_hours, self.id))
+        current:  convert_to_array(Reading.aggregate(:day_to_hours, self.id)),
+        past:     convert_to_array(Reading.aggregate(:day_to_hours, self.id))
       }
     else
       {
         id:       self.id,
         time_range: 'day_to_hours',
-        current:  convert_to_flot_array(Reading.aggregate(:day_to_hours)),
-        past:     convert_to_flot_array(Reading.aggregate(:day_to_hours))
+        current:  convert_to_array(Reading.aggregate(:day_to_hours)),
+        past:     convert_to_array(Reading.aggregate(:day_to_hours))
       }
     end
   end
@@ -35,15 +35,15 @@ class Register < ActiveRecord::Base
       {
         id:       self.id,
         time_range: 'month_to_days',
-        current:  convert_to_flot_array(Reading.aggregate(:month_to_days, self.id)),
-        past:     convert_to_flot_array(Reading.aggregate(:month_to_days, self.id))
+        current:  convert_to_array(Reading.aggregate(:month_to_days, self.id)),
+        past:     convert_to_array(Reading.aggregate(:month_to_days, self.id))
       }
     else
       {
         id:       self.id,
         time_range: 'month_to_days',
-        current:  convert_to_flot_array(Reading.aggregate(:month_to_days)),
-        past:     convert_to_flot_array(Reading.aggregate(:month_to_days))
+        current:  convert_to_array(Reading.aggregate(:month_to_days)),
+        past:     convert_to_array(Reading.aggregate(:month_to_days))
       }
     end
   end
@@ -55,15 +55,15 @@ class Register < ActiveRecord::Base
       {
         id:       self.id,
         time_range: 'year_to_months',
-        current:  convert_to_flot_array(Reading.aggregate(:year_to_months, self.id)),
-        past:     convert_to_flot_array(Reading.aggregate(:year_to_months, self.id))
+        current:  convert_to_array(Reading.aggregate(:year_to_months, self.id)),
+        past:     convert_to_array(Reading.aggregate(:year_to_months, self.id))
       }
     else
       {
         id:       self.id,
         time_range: 'year_to_months',
-        current:  convert_to_flot_array(Reading.aggregate(:year_to_months)),
-        past:     convert_to_flot_array(Reading.aggregate(:year_to_months))
+        current:  convert_to_array(Reading.aggregate(:year_to_months)),
+        past:     convert_to_array(Reading.aggregate(:year_to_months))
       }
     end
   end
@@ -72,11 +72,11 @@ class Register < ActiveRecord::Base
 
 private
 
-  def convert_to_flot_array(data)
+  def convert_to_array(data)
     hours = []
     data.each do |hour|
       hours << [
-        hour['firstTimestamp'].to_i*1000,
+        hour['firstTimestamp'],
         hour['consumption']/1000.0
       ]
     end

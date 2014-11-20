@@ -4,10 +4,8 @@
   %head
     = stylesheet_link_tag    "application", "data-turbolinks-track" => true, media: "all"
     = javascript_include_tag "application", "data-turbolinks-track" => true
-    = javascript_include_tag "highcharts", "chartkick"
     = csrf_meta_tags
     = metamagic :title => "buzzn"
-
     %meta{:name => "viewport", :content => "width=device-width, initial-scale=1.0"}
     = analytics_init if Rails.env.production?
 
@@ -18,9 +16,7 @@
     %section#container
       %header
         = render 'layouts/navigation'
-
       %main#main
         .container#content
           = render 'layouts/messages'
-
           = yield

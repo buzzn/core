@@ -357,6 +357,8 @@ GEM
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
     hashie (3.3.1)
+    highcharts-rails (4.0.1)
+      railties (>= 3.1)
     highline (1.6.21)
     hike (1.2.3)
     hitimes (1.2.2)
@@ -498,12 +500,6 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.1.8)
       sprockets-rails (~> 2.0)
-    rails-assets-d3 (3.4.13)
-    rails-assets-flot (0.8.3)
-      rails-assets-jquery (>= 1.2.6)
-    rails-assets-flot.tooltip (0.8.4)
-    rails-assets-highcharts (4.0.4)
-    rails-assets-jquery (2.1.1)
     rails-assets-jquery-readyselector (0.1.0)
     rails-assets-underscore (1.7.0)
     rails-erd (1.1.0)
@@ -706,6 +702,7 @@ DEPENDENCIES
   guard-sidekiq
   haml-rails
   has_scope
+  highcharts-rails
   immigrant
   inherited_resources!
   jbuilder
@@ -738,10 +735,6 @@ DEPENDENCIES
   rack-livereload
   rack-mini-profiler
   rails
-  rails-assets-d3
-  rails-assets-flot
-  rails-assets-flot.tooltip
-  rails-assets-highcharts
   rails-assets-jquery-readyselector
   rails-assets-underscore
   rails-erd

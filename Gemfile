@@ -68,6 +68,7 @@ gem 'public_activity'
 
 gem 'gon'
 gem 'chartkick'
+gem 'highcharts-rails'
 
 gem 'rack-dev-mark'
 gem 'tzinfo'
@@ -87,11 +88,7 @@ gem 'attr_encrypted', :git => 'git@github.com:hron/attr_encrypted.git', :branch 
 gem 'sitemap_generator'
 gem 'rack-google-analytics'
 
-gem 'rails-assets-d3'
 gem 'rails-assets-underscore'
-gem 'rails-assets-highcharts'
-gem 'rails-assets-flot'
-gem 'rails-assets-flot.tooltip'
 gem 'rails-assets-jquery-readyselector'
 
 group :production do

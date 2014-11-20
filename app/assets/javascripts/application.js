@@ -17,15 +17,9 @@
 //= require jquery-ui
 //= require jquery.remotipart
 
-//= require flot
-//= require flot/jquery.flot.time
-//= require flot/jquery.flot.resize
-
-//= require jquery.flot.tooltip
-//= require jquery.flot.axislabels
+//= require highcharts
+//= require chartkick
 //= require tree.jquery
-
-
 //= require jquery-readyselector
 //= require address_picker-rails
 //= require select2
@@ -35,8 +29,6 @@
 //= require rails-timeago-all
 //= require underscore
 //= require dependent-fields
-//= require d3
-//= require my_own_jit_copy
 
 //= require global
 //= require metering_points

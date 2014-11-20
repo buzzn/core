@@ -8,36 +8,18 @@ class MeteringPointsController < InheritedResources::Base
     @users                            = @metering_point.users
     @devices                          = @metering_point.devices
     @group                            = @metering_point.group
-    @registers                        = @metering_point.registers
     @meter                            = @metering_point.meter
-
-    register_data = []
-    @registers.each do |register|
-      register_data << {
-        id:             register.id,
-        day_to_hours:   register.day_to_hours,
-        month_to_days:  register.month_to_days,
-        year_to_months: register.year_to_months
-      }
-    end
-
-
-    gon.push({
-                end_of_day:           Time.now.end_of_day.to_i * 1000 - 59 * 1000 - 29 * 60 * 1000,
-                beginning_of_month:   Time.now.in_time_zone.beginning_of_month.to_i * 1000 - 12 * 3600 * 1000,
-                end_of_month:         Time.now.in_time_zone.end_of_month.to_i * 1000 - 59 * 1000 - 59 * 60 * 1000 - 12 * 3600 * 1000,
-                beginning_of_year:    Time.now.in_time_zone.beginning_of_year.to_i * 1000 - 15 * 24 * 3600 * 1000,
-                end_of_year:          Time.now.in_time_zone.end_of_year.to_i * 1000 - 59 * 1000 - 59 * 60 * 1000 - 23 * 3600 * 1000 - 15 * 24 * 3600 * 1000,
-                metering_point_id:    @metering_point.id,
-                metering_point_mode:  @metering_point.mode,
-                chart_types:          ['day_to_hours', 'month_to_days', 'year_to_months'],
-                charts_data:          register_data
-            })
     authorize_action_for(@metering_point)
     show!
   end
   authority_actions :show => 'update'
 
+
+
+  def chart
+    @metering_point = MeteringPoint.find(params[:id])
+    render json: @metering_point.registers.first.day_to_hours[:current].to_json
+  end
 
 
   def edit

@@ -14,6 +14,29 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :transmission_system_operator_contracts
 
 
+  def chart
+    column_chart(
+      chart_metering_point_path(model),
+      library: {
+        tooltip:{
+          dateTimeLabelFormats: "%A, %b %e, %Y",
+          pointFormat: "{point.y:,.1f} kw/h"
+        },
+        xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                month: '%e. %b',
+                year: '%b'
+            },
+
+            labels: {
+              enabled: false
+            }
+        }
+      }
+    )
+  end
+
   def thumb_small
     link_to image_tag_small, model, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => name }, rel: 'tooltip'
   end
