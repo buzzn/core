@@ -90,6 +90,11 @@
         = @metering_point.new_metering_point_operator_contract
 
     #charts.tab-pane
+      .block{id: 'hour_to_minutes' }
+        .header.no-border
+          %h2= t('hour_to_minutes')
+        = @metering_point.chart('hour_to_minutes')
+
       .block{id: 'day_to_hours' }
         .header.no-border
           %h2= t('day_to_hours')

@@ -8,7 +8,13 @@ class Register < ActiveRecord::Base
   scope :in, -> { where(mode: :in) }
   scope :out, -> { where(mode: :out) }
 
-
+  def hour_to_minutes
+    if meter.smart
+      convert_to_array(Reading.aggregate(:hour_to_minutes, self.id))
+    else
+      convert_to_array(Reading.aggregate(:hour_to_minutes))
+    end
+  end
 
   def day_to_hours
     if meter.smart
