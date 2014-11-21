@@ -256,7 +256,7 @@ end
 
 
 puts "Creating SLP"
-infile = File.new("#{Rails.root}/db/MSCONS_TL_9907399000009_9905229000008_20130920_40010113207322_RH0.txt", "r")
+infile = File.new("#{Rails.root}/db/slp/MSCONS_TL_9907399000009_9905229000008_20130920_40010113207322_RH0.txt", "r")
 all_lines = infile.readline
 infile.close
 watt_hour = 0.0
