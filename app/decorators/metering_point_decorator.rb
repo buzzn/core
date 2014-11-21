@@ -28,13 +28,16 @@ class MeteringPointDecorator < Draper::Decorator
       end
     end
 
-    column_chart(
+    line_chart(
       chart_metering_point_path(model, resolution: resolution),
       colors: colors,
       library: {
         tooltip:{
           dateTimeLabelFormats: "%A, %b %e, %Y",
           pointFormat: "{point.y:,.1f} kw/h"
+        },
+        exporting: {
+          enabled: false
         },
         xAxis: {
             type: 'datetime',
