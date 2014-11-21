@@ -251,9 +251,6 @@ puts '5 simple users'
 end
 
 
-Rake::Task['slp:import_h0'].invoke(Time.now.year)
-
-
 
 
 

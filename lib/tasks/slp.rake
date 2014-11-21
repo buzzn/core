@@ -2,13 +2,18 @@ namespace :slp do
   desc 'This adds slp values to the db'
   task :import_h0, [:year] => :environment do |t, args|
     puts "Creating SLP"
+    if args[:year].nil?
+      year = Time.now.year.to_s
+    else
+      year = args[:year].to_s
+    end
     lastReading = Reading.where(source: "slp").last
     if !lastReading.nil?
-      if lastReading.timestamp.year.to_s == args[:year].to_s
-        puts "SLP for " + args[:year] + " already available."
+      if lastReading.timestamp.year.to_s == year
+        puts "SLP for " + year + " already available."
       end
     else
-      infile = File.new("#{Rails.root}/db/slp/" + args[:year].to_s + "/h0.txt", "r")
+      infile = File.new("#{Rails.root}/db/slp/" + year + "/h0.txt", "r")
       all_lines = infile.readline
       infile.close
       watt_hour = 0.0
