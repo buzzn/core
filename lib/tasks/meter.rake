@@ -12,7 +12,7 @@ namespace :meter do
         if range.count < 60*60
           Sidekiq::Client.push({
            'class' => MeterReadingUpdateWorker,
-           'queue' => :default,
+           'queue' => :low,
            'args' => [
                       meter.registers_modes_and_ids,
                       meter.manufacturer_product_serialnumber,
