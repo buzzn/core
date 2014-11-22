@@ -7,6 +7,10 @@ every 1.minute do
   rake "meter:update"
 end
 
+every 1.hour do
+  rake "meter:reactivate"
+end
+
 
 
 

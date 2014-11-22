@@ -11,9 +11,10 @@ class MeterInitWorker
           request = Discovergy.new(@mpoc.username, @mpoc.password).raw(@meter.manufacturer_product_serialnumber)
           if request['status'] == 'ok'
             @meter.update_columns(smart: true)
-            @meter.update_columns(online: request['result'].any?)
+            
+            if request['result'].any? && @meter.registers.any? && @meter.smart && @meter.online
+              @meter.update_columns(online: true)
 
-            if @meter.registers.any? && @meter.smart && @meter.online
               if Reading.latest_by_register_id(@meter.registers.first.id)
                 logger.warn "Meter:#{@meter.id} init reading already written"
               else

@@ -46,8 +46,8 @@ class Discovergy
 
 
   def raw( meter_uid,
-           datetime_from = DateTime.now.beginning_of_minute.to_i * 1000,
-           datetime_to   = DateTime.now.end_of_minute.to_i * 1000 )
+           datetime_from = Time.now.in_time_zone.utc.beginning_of_minute.to_i * 1000,
+           datetime_to   = Time.now.in_time_zone.utc.end_of_minute.to_i * 1000 )
     @datetime_from  = datetime_from
     @datetime_to    = datetime_to
     response = @conn.get do |req|

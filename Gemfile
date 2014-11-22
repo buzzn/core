@@ -1,5 +1,4 @@
 source 'https://rubygems.org'
-source 'https://rails-assets.org'
 
 gem 'rails'
 gem 'pg'
@@ -12,7 +11,7 @@ gem 'haml-rails'
 gem 'coffee-rails'
 gem 'uglifier'
 gem 'rails_layout'
-gem 'bootstrap-sass', '3.2.0.2'
+gem 'bootstrap-sass',           '3.2.0.2'
 gem 'autoprefixer-rails'
 gem 'font-awesome-rails'
 gem 'jquery-rails'
@@ -22,7 +21,7 @@ gem 'select2-rails'
 gem 'inherited_resources',      github: 'josevalim/inherited_resources'
 gem 'has_scope'
 gem 'responders'
-gem 'simple_form',              '~> 3.1.0.rc2'
+gem 'simple_form',              '3.1.0.rc2'
 gem 'country_select'
 gem 'cocoon'
 gem 'turbolinks'
@@ -86,9 +85,13 @@ gem 'sitemap_generator'
 gem 'rack-google-analytics'
 
 
-gem 'rails-assets-highcharts'
-gem 'rails-assets-underscore'
-gem 'rails-assets-jquery-readyselector'
+source 'http://rails-assets.org' do
+  gem 'rails-assets-highcharts'
+  gem 'rails-assets-underscore'
+  gem 'rails-assets-jquery-readyselector'
+end
+
+
 
 group :production do
   gem 'asset_sync'
