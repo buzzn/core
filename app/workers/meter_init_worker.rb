@@ -12,7 +12,7 @@ class MeterInitWorker
           if request['status'] == 'ok'
             @meter.update_columns(smart: true)
             
-            if request['result'].any? && @meter.registers.any? && @meter.smart && @meter.online
+            if request['result'].any? && @meter.registers.any? && @meter.smart
               @meter.update_columns(online: true)
 
               if Reading.latest_by_register_id(@meter.registers.first.id)

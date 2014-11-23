@@ -9,7 +9,9 @@ namespace :sidekiq do
   end
 
   task delete_queues: :environment do
+    Sidekiq::Queue.new("high").clear
     Sidekiq::Queue.new("default").clear
+    Sidekiq::Queue.new("low").clear
     Sidekiq::RetrySet.new.clear
     Sidekiq::ScheduledSet.new.clear
     Sidekiq::Stats.new.reset

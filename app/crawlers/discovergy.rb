@@ -5,9 +5,6 @@ class Discovergy
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').live(60009269)
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').raw(60009269)
 
-
-
-
   def initialize(username, password)
     @username  = username
     @password  = password
@@ -46,8 +43,8 @@ class Discovergy
 
 
   def raw( meter_uid,
-           datetime_from = Time.now.in_time_zone.utc.beginning_of_minute.to_i * 1000,
-           datetime_to   = Time.now.in_time_zone.utc.end_of_minute.to_i * 1000 )
+           datetime_from = (Time.now.in_time_zone.utc- 1.minute).to_i * 1000,
+           datetime_to   = Time.now.in_time_zone.utc.to_i * 1000 )
     @datetime_from  = datetime_from
     @datetime_to    = datetime_to
     response = @conn.get do |req|

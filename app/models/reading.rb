@@ -25,9 +25,9 @@ class Reading
     resolution = resolution_formats[resolution_format]
 
 
-    @time_zone  = 'Berlin'
-    date        = Time.now
-    @location_time_now = ActiveSupport::TimeZone[@time_zone].local(date.year, date.month, date.day, date.hour, date.min, date.sec)
+    @time_zone          = 'Berlin'
+    date                = Time.now
+    @location_time_now  = ActiveSupport::TimeZone[@time_zone].local(date.year, date.month, date.day, date.hour, date.min, date.sec)
 
 
     case resolution_format
@@ -51,8 +51,8 @@ class Reading
 
     match = { "$match" => {
                 timestamp: {
-                  "$gte" => @start_time,
-                  "$lt"  => @end_time
+                  "$gte" => @start_time.utc,
+                  "$lt"  => @end_time.utc
                 }
               }
             }

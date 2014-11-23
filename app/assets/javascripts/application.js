@@ -18,6 +18,7 @@
 //= require jquery.remotipart
 
 //= require highcharts
+//= require highcharts_no_utc
 //= require chartkick
 //= require tree.jquery
 //= require jquery-readyselector
@@ -38,3 +39,6 @@
 
 //= require turbolinks
 // don't require libs below this command
+
+
+
