@@ -28,6 +28,9 @@ class PictureUploader < CarrierWave::Uploader::Base
   #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
   # end
 
+  version :col9 do
+    process :resize_to_fit  => [97*9, -1]
+  end
 
   version :col6 do
     process :resize_to_fit  => [97*6, -1]

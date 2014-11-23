@@ -72,9 +72,9 @@ buzzn_team_names.each do |user_name|
     user.contracting_party.electricity_supplier_contracts << mp_z5.electricity_supplier_contracts.first
 
     mp_z2.update_attribute :parent, mp_z1
-    mp_z3.update_attribute :parent, mp_z5
-    mp_z4.update_attribute :parent, mp_z5
-    mp_z5.update_attribute :parent, mp_z2
+    mp_z3.update_attribute :parent, mp_z1
+    mp_z4.update_attribute :parent, mp_z1
+    mp_z5.update_attribute :parent, mp_z1
 
     user_location.metering_point = mp_z1
 
@@ -88,7 +88,7 @@ buzzn_team_names.each do |user_name|
     @gocycle       = Fabricate(:gocycle)
     user.add_role :manager, @gocycle
     user.add_role :admin # felix is admin
-    user_location = Fabricate(:muehlenkamp)
+    user_location = Fabricate(:urbanstr88)
   when 'christian'
     user_location = Fabricate(:roentgenstrasse11)
     user_location.metering_point.metering_point_operator_contracts << Fabricate(:mpoc_christian, metering_point: user_location.metering_point)
@@ -111,7 +111,6 @@ buzzn_team_names.each do |user_name|
   # add user.contracting_party location.metering_point.contracts
   user_location.metering_point.electricity_supplier_contracts.first.contracting_party = user.contracting_party
   user_location.metering_point.electricity_supplier_contracts.first.save
-
 
   user_location.create_activity key: 'location.create', owner: user, recipient: user_location
 end

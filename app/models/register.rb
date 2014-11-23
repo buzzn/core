@@ -16,6 +16,7 @@ class Register < ActiveRecord::Base
     end
   end
 
+
   def day_to_hours
     if meter.smart
       convert_to_array(Reading.aggregate(:day_to_hours, self.id))
@@ -52,8 +53,8 @@ private
     hours = []
     data.each do |hour|
       hours << [
-        hour['firstTimestamp'],
-        hour['consumption']/1000.0
+        hour['firstTimestamp'].to_i/1000,
+        hour['consumption']
       ]
     end
     return hours

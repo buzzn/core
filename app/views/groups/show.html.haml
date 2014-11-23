@@ -1,6 +1,6 @@
-- meta title: "#{@group.name}"
-- meta description: "#{@group.description}"
-- meta keywords: %w(buzzn people power) << "#{@group.name}" << "#{@group.metering_points.first.location.address.city}"
+- meta title: @group.name
+- meta description: @group.description
+- meta keywords: @group.keywords
 
 .col-sm-3
   .detail_icon
@@ -30,8 +30,13 @@
   %p= @group.description
 
 
+  %h5.page-header= t('more_groups')
+  %article.sidebar_module.groups
+    %ul
+      = render @all_groups
+    .clearfix
 
-.col-sm-6
+.col-sm-9
   - if user_signed_in?
     - if current_user.can_update?(@group)
       - if @group.received_group_metering_point_requests.any?
@@ -114,12 +119,7 @@
 
 
 
-.col-sm-3
-  %h5.page-header= t('more_groups')
-  %article.sidebar_module.groups
-    %ul
-      = render @all_groups
-    .clearfix
+
 
 
 

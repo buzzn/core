@@ -1,5 +1,5 @@
-- meta title: "#{@profile.name}"
-- meta description: "#{@profile.description}"
+- meta title: @profile.name
+- meta description: @profile.description
 
 .col-sm-3
   .detail_icon
@@ -29,18 +29,6 @@
       %h5.page-header= t('description')
       = @profile.description
 
-
-
-
-
-.col-sm-6
-  - if @profile.user.editable_locations.empty? && @profile.user == current_user
-    = render 'no_location'
-
-  = render @locations
-
-.col-sm-3
-
   %article.sidebar_module
     %h5.page-header= t('groups')
     %ul
@@ -61,6 +49,15 @@
         - @profile.user.editable_devices.each do |device|
           = render device
       .clearfix
+
+
+
+
+.col-sm-9
+  - if @profile.user.editable_locations.empty? && @profile.user == current_user
+    = render 'no_location'
+
+  = render @locations
 
 
 

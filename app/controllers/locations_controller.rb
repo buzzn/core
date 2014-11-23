@@ -11,22 +11,19 @@ class LocationsController < InheritedResources::Base
       @metering_points = location.metering_point #nil if location was just created
     end
     respond_to do |format|
-      format.html { @location = location.decorate
-                    authorize_action_for(@location)
-                    @residents  = @location.users
-                    @devices    = @location.devices
-                    if @location.metering_point
-                      gon.push({ registers: Register.where("metering_point_id = :root_id OR metering_point_id IN (:children_ids)", {root_id: location.metering_point.id, children_ids: location.metering_point.child_ids }).collect(&:day_to_hours),
-                                 end_of_day: Time.now.end_of_day.to_i * 1000
-                      })
-                    end
+      format.html { 
+        @location   = location.decorate
+        @residents  = @location.users
+        @devices    = @location.devices
+        authorize_action_for(@location)
       }
-      format.json{ @location = location
-                    authorize_action_for(@location)
-                    render :json =>  MeteringPoint.json_tree(@metering_points)
+
+      format.json{ 
+        @location = location
+        authorize_action_for(@location)
+        render :json =>  MeteringPoint.json_tree(@metering_points)
       }
     end
-    gon.push({ location_id: @location.id })
   end
   authority_actions :show => 'read'
 

@@ -3,9 +3,6 @@ Fabricator :device do
 end
 
 Fabricator :bhkw_justus, from: :device do
-  assets                         { [
-                                    Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'ecopower1.jpg')), description: 'ecopower')
-                                    ] }
   law                           'kwkg'
   mode                          'out'
   manufacturer_name             'Honda'
@@ -40,9 +37,6 @@ end
 
 
 Fabricator :pv_karin, from: :device do
-  assets                         { [
-                                    Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'pv_karin.jpg')))
-                                    ] }
   law                           'eeg'
   mode                          'out'
   manufacturer_name             'Solarex'
@@ -55,9 +49,6 @@ end
 
 
 Fabricator :bhkw_stefan, from: :device do
-  assets                         { [
-                                    Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'bhkw_stefan.jpg')))
-                                    ] }
   law                           'kwkg'
   mode                          'out'
   manufacturer_name             'Senertec'
@@ -71,9 +62,6 @@ end
 
 
 Fabricator :hof_butenland_wind, from: :device do
-  assets                         { [
-                                    Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'hof_butenland_wind.jpg')))
-                                    ] }
   law                           'eeg'
   mode                          'out'
   manufacturer_name             'Enercon'
@@ -90,8 +78,8 @@ end
 
 Fabricator :gocycle, from: :device do
   assets                         { [
-                                    Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'gocycle1.jpg')), description: 'Ich freue mich wie ein Schneekönig.'),
-                                    Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'gocycle2.jpg')), description: 'Mit der App kann ich das Bike tunen.')
+                                    Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'devices', 'gocycle1.jpg')), description: 'Ich freue mich wie ein Schneekönig.'),
+                                    Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'devices', 'gocycle2.jpg')), description: 'Mit der App kann ich das Bike tunen.')
                                     ] }
   mode                          'in'
   manufacturer_name             'Gocycle'

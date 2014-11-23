@@ -31,6 +31,8 @@ class MeteringPoint < ActiveRecord::Base
   has_many :metering_point_operator_contracts,      dependent: :destroy
   has_many :distribution_system_operator_contracts, dependent: :destroy
 
+  has_many :assets, as: :assetable, dependent: :destroy
+
   has_many :devices
 
   has_many :metering_point_users

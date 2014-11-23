@@ -1,4 +1,4 @@
-- meta title: "#{@location.name}"
+- meta title: @location.name
 
 .col-sm-3
   .detail_icon
@@ -39,19 +39,19 @@
     = @location.address.state
 
 
-.col-sm-6
+.col-sm-9
   %ul.nav.nav-pills#mytab.nav-spacer
     %li.active
       %a{"data-toggle" => "tab", href: "#metering_points"}
         = t'metering_points'
-    %li
-      %a{"data-toggle" => "tab", href: "#assets"}
-        = t'assets'
-    - if @location.metering_point
-      - if @location.metering_point.has_children?
-        %li
-          %a{"data-toggle" => "tab", href: "#metering_point_tree"}
-            = t'metering_point_tree'
+    / %li
+    /   %a{"data-toggle" => "tab", href: "#assets"}
+    /     = t'assets'
+    / - if @location.metering_point
+    /   - if @location.metering_point.has_children?
+    /     %li
+    /       %a{"data-toggle" => "tab", href: "#metering_point_tree"}
+    /         = t'metering_point_tree'
 
 
   .tab-content
@@ -76,16 +76,6 @@
     #metering_point_tree.tab-pane
       .block
         #tree1
-
-
-
-
-
-
-
-
-.col-sm-3
-  %h5.page-header= t('explore')
 
 
 

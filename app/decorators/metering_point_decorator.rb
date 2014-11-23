@@ -7,6 +7,7 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :users
   decorates_association :location
   decorates_association :group
+  decorates_association :assets
   decorates_association :electricity_supplier_contracts
   decorates_association :metering_service_provider_contracts
   decorates_association :metering_point_operator_contracts
@@ -15,7 +16,6 @@ class MeteringPointDecorator < Draper::Decorator
 
 
   def chart(resolution='day_to_hours')
-
     colors = []
     model.registers.map(&:mode).each do |mode|
       case mode
@@ -27,29 +27,49 @@ class MeteringPointDecorator < Draper::Decorator
         colors << '#0f0'
       end
     end
-
     line_chart(
       chart_metering_point_path(model, resolution: resolution),
       colors: colors,
       library: {
+        chart: {
+          backgroundColor: {
+              linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 },
+              stops: [
+                  [0, "rgba(0, 0, 0, 0)"],
+                  [1, "rgba(0, 0, 0, 0.8)"]
+              ]
+          }
+        },
         tooltip:{
-          dateTimeLabelFormats: "%A, %b %e, %Y",
-          pointFormat: "{point.y:,.1f} kw/h"
+          pointFormat: "{point.y:,.2f} kwh"
         },
         exporting: {
           enabled: false
         },
-        xAxis: {
-            type: 'datetime',
-            dateTimeLabelFormats: {
-                month: '%e. %b',
-                year: '%b'
-            },
 
-            labels: {
-              enabled: false
+        xAxis: {
+          type: 'datetime',
+          dateTimeLabelFormats: {
+              month: '%e. %b',
+              year: '%b'
+          },
+          labels: {
+            enabled: true,
+            style: {
+              color: '#FFF'
             }
+          }
+        },
+        yAxis: {
+          gridLineWidth: 0,
+          labels: {
+            enabled: true,
+            style: {
+              color: '#FFF'
+            }
+          }
         }
+
       }
     )
   end
@@ -222,6 +242,27 @@ class MeteringPointDecorator < Draper::Decorator
         'data-toggle' => 'modal',
         'data-target' => '#myModal'
       })
+  end
+
+
+  def new_asset
+    link_to(
+      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      new_asset_path(assetable_id: model.id, assetable_type: 'MeteringPoint'),
+      {
+        :remote                     => true,
+        :class                      => 'content-plus',
+        'data-toggle'               => 'modal',
+        'data-target'               => '#myModal'
+      })
+  end
+
+  def background_image_url
+    if model.assets.any?
+      model.assets.first.image.col9.url
+    else
+      'http://placehold.it/830x480&text=bitte lade ein bild hoch.'
+    end
   end
 
 end

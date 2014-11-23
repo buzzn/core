@@ -36,6 +36,10 @@ class Group < ActiveRecord::Base
     GroupMeteringPointRequest.where(group: self)
   end
 
+  def keywords
+    %w(buzzn people power) << self.name << self.metering_points.first.location.address.city
+  end
+
   private
 
     def release_metering_points

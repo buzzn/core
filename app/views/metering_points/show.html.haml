@@ -1,4 +1,4 @@
-- meta title: "#{@metering_point.name}"
+- meta title: @metering_point.name
 
 .col-sm-3
   .detail_icon
@@ -54,7 +54,7 @@
 
 
 
-.col-sm-6
+.col-sm-9
   %ul.nav.nav-pills#mytab.nav-spacer
     %li.active
       %a{"data-toggle" => "tab", href: "#meter"}
@@ -65,8 +65,9 @@
     %li
       %a{"data-toggle" => "tab", href: "#charts"}
         = t'charts'
-
-
+    %li
+      %a{"data-toggle" => "tab", href: "#assets"}
+        = t'assets'
 
   .tab-content
 
@@ -110,6 +111,11 @@
           %h2= t('year_to_months')
         = @metering_point.chart('year_to_months')
 
+    #assets.tab-pane
+      .assets
+        = render @metering_point.assets
+      - if user_signed_in? && current_user.can_update?(@metering_point)
+        = @metering_point.new_asset
 
 
 

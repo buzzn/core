@@ -5,19 +5,26 @@ Fabricator :location do
   metering_point  { Fabricate(:metering_point) }
 end
 
-Fabricator :muehlenkamp, from: :location do
-  address  { Fabricate(:address, street_name: 'mühlenkamp', street_number: '12d', zip: 22303, city: 'Hamburg', state: 'Hamburg') }
+# felix
+Fabricator :belfortstr10, from: :location do
+  address  { Fabricate(:address, street_name: 'Belfortstraße', street_number: '10', zip: 81667, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_belfortstr10) }
+end
+Fabricator :urbanstr88, from: :location do
+  address  { Fabricate(:address, street_name: 'Urbanstr', street_number: '88', zip: 81667, city: 'Berlin', state: 'Berlin') }
+  metering_point { Fabricate(:mp_urbanstr88) }
 end
 
 
-
+# justus
 Fabricator :fichtenweg8, from: :location do
-  address           { Fabricate(:address, street_name: 'Fichtenweg', street_number: '8', zip: 82515, city: 'Wolfratshausen', state: 'Bayern') }
+  address  { Fabricate(:address, street_name: 'Fichtenweg', street_number: '8', zip: 82515, city: 'Wolfratshausen', state: 'Bayern') }
+  metering_point { }
 end
 
-
+# christian
 Fabricator :fichtenweg10, from: :location do
-  address         { Fabricate(:address, street_name: 'Fichtenweg', street_number: '10', zip: 82515, city: 'Wolfratshausen', state: 'Bayern') }
+  address  { Fabricate(:address, street_name: 'Fichtenweg', street_number: '10', zip: 82515, city: 'Wolfratshausen', state: 'Bayern') }
   metering_point { Fabricate(:mp_cs_1) }
 end
 
@@ -26,7 +33,6 @@ end
 
 
 Fabricator :forstenrieder_weg, from: :location do
-  assets { [  Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'assets', 'forstenrieder_weg.jpg'))) ] }
   address { Fabricate(:address, street_name: 'Forstenrieder Weg', street_number: '51', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   metering_point { Fabricate(:mp_stefans_bhkw) }
 end
@@ -55,7 +61,7 @@ Fabricator :location_hopf, from: :location do
 end
 
 Fabricator :roentgenstrasse11, from: :location do
-  address         { Fabricate(:address, street_name: 'Röntgenstrasse', street_number: '11', zip: 86199, city: 'Augsburg', state: 'Bayern') }
+  address        { Fabricate(:address, street_name: 'Röntgenstrasse', street_number: '11', zip: 86199, city: 'Augsburg', state: 'Bayern') }
   metering_point { Fabricate(:mp_60138988) }
 end
 

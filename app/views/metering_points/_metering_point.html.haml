@@ -1,5 +1,5 @@
 .item{id: "metering_point_#{metering_point.id}" }
-  .block
+  .block{:style => "background-image: url('#{metering_point.background_image_url}');background-repeat:no-repeat; background-position:50% 50%;"}
     .header.no-border
       .marker-box.pull-left
         = metering_point.image_tag_small
@@ -13,33 +13,33 @@
         .ribbon-green
           = t('slp')
     = metering_point.chart('day_to_hours')
-    .content
-      .left
-        %article.sidebar_module.user-data.residents
-          %ul
-            - metering_point.metering_point_users.each do |user|
-              .metering_point_user
-                = render user.user.profile.decorate
-            - if user_signed_in?
-              - if current_user.can_update?(metering_point) || metering_point.users.include?(current_user)
-                .metering_point_user
-                  = metering_point.edit_users
-          .clearfix
-        .clear
-      .right
-        %article.sidebar_module.devices-data.residents
-          %ul
-            - metering_point.devices.each do |device|
-              .metering_point_device
-                = render device.decorate
-            - if user_signed_in?
-              - if current_user.can_update?(metering_point) || metering_point.users.include?(current_user)
-                = metering_point.edit_devices
-      - if metering_point.mode == "in"
-        .blue-divider
-      - else
-        .red-divider
-      .clear
-      - if user_signed_in? && current_user.can_update?(metering_point)
-        = metering_point.new_sub_metering_point
+    / .content
+    /   .left
+    /     %article.sidebar_module.user-data.residents
+    /       %ul
+    /         - metering_point.metering_point_users.each do |user|
+    /           .metering_point_user
+    /             = render user.user.profile.decorate
+    /         - if user_signed_in?
+    /           - if current_user.can_update?(metering_point) || metering_point.users.include?(current_user)
+    /             .metering_point_user
+    /               = metering_point.edit_users
+    /       .clearfix
+    /     .clear
+    /   .right
+    /     %article.sidebar_module.devices-data.residents
+    /       %ul
+    /         - metering_point.devices.each do |device|
+    /           .metering_point_device
+    /             = render device.decorate
+    /         - if user_signed_in?
+    /           - if current_user.can_update?(metering_point) || metering_point.users.include?(current_user)
+    /             = metering_point.edit_devices
+    /   - if metering_point.mode == "in"
+    /     .blue-divider
+    /   - else
+    /     .red-divider
+    /   .clear
+    /   - if user_signed_in? && current_user.can_update?(metering_point)
+    /     = metering_point.new_sub_metering_point
 
