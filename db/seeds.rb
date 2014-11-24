@@ -211,9 +211,10 @@ mp_60009272 = location_thomas_hopf.metering_point
 mp_60009348 = location_manuela_baier.metering_point
 mp_hans_dieter_hopf = Fabricate(:mp_hans_dieter_hopf)
 
-mp_60009272.users << thomas_hopf
-mp_60009348.users << manuela_baier
-mp_60009316.users << hans_dieter_hopf
+mp_60009272.users         << thomas_hopf
+mp_60009348.users         << manuela_baier
+mp_60009316.users         << hans_dieter_hopf
+mp_hans_dieter_hopf.users << hans_dieter_hopf
 
 mp_60009316.update_attribute :parent, mp_60118470
 mp_60009272.update_attribute :parent, mp_60118470
