@@ -302,13 +302,15 @@ ActiveRecord::Schema.define(version: 20141112082240) do
 
   create_table "metering_point_operator_contracts", force: true do |t|
     t.string   "status"
-    t.decimal  "price_cents",        precision: 16, scale: 0, default: 0
+    t.decimal  "price_cents",             precision: 16, scale: 0, default: 0
     t.string   "customer_number"
     t.string   "contract_number"
     t.string   "username"
     t.string   "encrypted_password"
-    t.boolean  "valid_credentials",                           default: false
-    t.boolean  "running",                                     default: true
+    t.string   "encrypted_password_salt"
+    t.string   "encrypted_password_iv"
+    t.boolean  "valid_credentials",                                default: false
+    t.boolean  "running",                                          default: true
     t.integer  "metering_point_id"
     t.integer  "organization_id"
     t.integer  "group_id"

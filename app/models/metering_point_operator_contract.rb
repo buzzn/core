@@ -1,5 +1,5 @@
 class MeteringPointOperatorContract < ActiveRecord::Base
-  attr_encrypted :password, :key => 'This is a salt for your soup'
+  attr_encrypted :password, :charset => 'UTF-8', :key => 'This is a salt for your soup'
 
   belongs_to :organization
   belongs_to :metering_point

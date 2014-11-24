@@ -8,6 +8,8 @@ class CreateMeteringPointOperatorContracts < ActiveRecord::Migration
       t.string :contract_number
       t.string :username
       t.string :encrypted_password
+      t.string :encrypted_password_salt
+      t.string :encrypted_password_iv
       t.boolean :valid_credentials, default: false
       t.boolean :running, default: true
       t.integer :metering_point_id
