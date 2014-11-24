@@ -72,9 +72,9 @@ buzzn_team_names.each do |user_name|
     user.contracting_party.electricity_supplier_contracts << mp_z5.electricity_supplier_contracts.first
 
     mp_z2.update_attribute :parent, mp_z1
-    mp_z3.update_attribute :parent, mp_z1
-    mp_z4.update_attribute :parent, mp_z1
-    mp_z5.update_attribute :parent, mp_z1
+    mp_z3.update_attribute :parent, mp_z5
+    mp_z4.update_attribute :parent, mp_z5
+    mp_z5.update_attribute :parent, mp_z2
 
     user_location.metering_point = mp_z1
 
@@ -198,20 +198,23 @@ karins_pv_group.create_activity key: 'group.create', owner: karin, recipient: ka
 
 puts 'Group Hopf(localpool)'
 hans_dieter_hopf  = Fabricate(:hans_dieter_hopf)
+manuela_baier     = Fabricate(:manuela_baier)
+thomas_hopf       = Fabricate(:thomas_hopf)
+
+location_manuela_baier = Fabricate(:location_manuela_baier)
+location_thomas_hopf   = Fabricate(:location_thomas_hopf)
+location_hopf = Fabricate(:location_hopf)
 
 mp_60118470 = Fabricate(:mp_60118470)
 mp_60009316 = Fabricate(:mp_60009316)
-mp_60009272 = Fabricate(:mp_60009272)
-mp_60009348 = Fabricate(:mp_60009348)
+mp_60009272 = location_thomas_hopf.metering_point
+mp_60009348 = location_manuela_baier.metering_point
 mp_hans_dieter_hopf = Fabricate(:mp_hans_dieter_hopf)
 
 mp_60009316.update_attribute :parent, mp_60118470
 mp_60009272.update_attribute :parent, mp_60118470
 mp_60009348.update_attribute :parent, mp_60118470
 mp_hans_dieter_hopf.update_attribute :parent, mp_60118470
-
-location_hopf = Fabricate(:location_hopf)
-location_hopf.metering_point = mp_60118470
 
 group_hopf = Fabricate(:group, name: 'Hopf Strom', metering_points: [mp_60118470])
 group_hopf.metering_points << mp_60009316

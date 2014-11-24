@@ -90,6 +90,16 @@ Fabricator :profile_hans_dieter_hopf, from: :profile do
   last_name   'Hopf'
 end
 
+Fabricator :profile_thomas_hopf, from: :profile do
+  first_name  'Thomas'
+  last_name   'Hopf'
+end
+
+Fabricator :profile_manuela_baier, from: :profile do
+  first_name  'Manuela'
+  last_name   'Baier'
+end
+
 
 
 

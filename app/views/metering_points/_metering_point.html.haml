@@ -1,5 +1,5 @@
 .item{id: "metering_point_#{metering_point.id}" }
-  .block{:style => "background-image: url('#{metering_point.background_image_url}');background-repeat:no-repeat; background-position:50% 50%;"}
+  .block
     .header.no-border
       .marker-box.pull-left
         = metering_point.image_tag_small
@@ -12,7 +12,8 @@
       .ribbon-wrapper-green
         .ribbon-green
           = t('slp')
-    = metering_point.chart('day_to_hours')
+    .chart-background{:style => "background-image: url('#{metering_point.background_image_url}');background-repeat:no-repeat; background-position:50% 50%;"}
+      = metering_point.chart('day_to_hours')
     / .content
     /   .left
     /     %article.sidebar_module.user-data.residents

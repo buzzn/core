@@ -60,9 +60,8 @@
         = render 'no_metering_point'
       - else
         .metering_points
-          = render @location.metering_point
-          - @location.metering_point.children.each do |children|
-            = render children.decorate
+          - @location.metering_point.subtree.each do |metering_point|
+            = render metering_point.decorate if metering_point != @location.metering_point
 
       - if current_user.can_update?(@location) && @location.metering_point.nil?
         = @location.new_metering_point

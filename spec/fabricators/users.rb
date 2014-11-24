@@ -85,6 +85,18 @@ Fabricator :hans_dieter_hopf, from: :user do
   contracting_party   { Fabricate(:contracting_party) }
 end
 
+Fabricator :thomas_hopf, from: :user do
+  email               'thomas.hopf@gmail.de'
+  profile             { Fabricate(:profile_thomas_hopf) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :manuela_baier, from: :user do
+  email               'manuela.baier@gmail.de'
+  profile             { Fabricate(:profile_manuela_baier) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
 
 
 

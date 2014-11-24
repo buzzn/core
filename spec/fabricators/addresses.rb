@@ -8,3 +8,13 @@ Fabricator :address do
   country       { Faker::AddressDE.country }
   time_zone     'Berlin'
 end
+
+Fabricator :address_hopf, from: :address do
+  street_name   { "Hopfstraße" }
+  street_number { 24 }
+  zip           { 66666 }
+  city          { "Hopfstadt" }
+  state         { "Bayern" }
+  country       { "Deutschland" }
+  time_zone     'Berlin'
+end

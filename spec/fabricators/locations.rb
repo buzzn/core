@@ -57,8 +57,21 @@ end
 
 
 Fabricator :location_hopf, from: :location do
-  address  { Fabricate(:address) } # TODO no real address
+  address  { Fabricate(:address_hopf) } # TODO no real address
+  metering_point { Fabricate(:mp_60118470) }
 end
+
+Fabricator :location_thomas_hopf, from: :location do
+  address  { Fabricate(:address_hopf) } # TODO no real address
+  metering_point { Fabricate(:mp_60009272) }
+end
+
+Fabricator :location_manuela_baier, from: :location do
+  address  { Fabricate(:address_hopf) } # TODO no real address
+  metering_point { Fabricate(:mp_60009348) }
+end
+
+
 
 Fabricator :roentgenstrasse11, from: :location do
   address        { Fabricate(:address, street_name: 'Röntgenstrasse', street_number: '11', zip: 86199, city: 'Augsburg', state: 'Bayern') }
