@@ -1,6 +1,14 @@
-%h1= t'listing_profiles'
-#users
+/ %h1= t'listing_profiles'
+/ #users
+/   %ul
+/   - @profiles.each do |profile|
+/     .user
+/       %strong= link_to profile.name, profile
+
+%h1.page-header= t('listing_profiles')
+%ul
   - @profiles.each do |profile|
     .user
-      %p
-        %strong= link_to profile.name, profile
+      = render profile.decorate
+      = link_to profile.name, profile
+
