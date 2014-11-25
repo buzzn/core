@@ -15,7 +15,7 @@ class Reading
   index({ timestamp: 1 })
 
 
-  def self.aggregate(resolution_format, register_id='slp')
+  def self.aggregate(resolution_format, register_ids=nil)
     resolution_formats = {
       year_to_months: ['year', 'month'],
       month_to_days:  ['month', 'dayOfMonth'],
@@ -56,10 +56,10 @@ class Reading
                 }
               }
             }
-    if register_id == 'slp'
-      register_or_slp = { source: { "$in" => ['slp'] } }
+    if register_ids
+      register_or_slp = { register_id: { "$in" => register_ids } }
     else
-      register_or_slp = { register_id: { "$in" => [register_id] } }
+      register_or_slp = { source: { "$in" => ['slp'] } }
     end
     match["$match"].merge!(register_or_slp)
     pipe << match

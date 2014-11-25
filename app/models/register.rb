@@ -10,7 +10,7 @@ class Register < ActiveRecord::Base
 
   def hour_to_minutes
     if meter.smart
-      convert_to_array(Reading.aggregate(:hour_to_minutes, self.id))
+      convert_to_array(Reading.aggregate(:hour_to_minutes, [self.id]))
     else
       convert_to_array(Reading.aggregate(:hour_to_minutes))
     end
@@ -19,7 +19,7 @@ class Register < ActiveRecord::Base
 
   def day_to_hours
     if meter.smart
-      convert_to_array(Reading.aggregate(:day_to_hours, self.id))
+      convert_to_array(Reading.aggregate(:day_to_hours, [self.id]))
     else
       convert_to_array(Reading.aggregate(:day_to_hours))
     end
@@ -29,7 +29,7 @@ class Register < ActiveRecord::Base
 
   def month_to_days
     if meter.smart
-      convert_to_array(Reading.aggregate(:month_to_days, self.id))
+      convert_to_array(Reading.aggregate(:month_to_days, [self.id]))
     else
       convert_to_array(Reading.aggregate(:month_to_days))
     end
@@ -39,7 +39,7 @@ class Register < ActiveRecord::Base
 
   def year_to_months
     if meter.smart
-      convert_to_array(Reading.aggregate(:year_to_months, self.id))
+      convert_to_array(Reading.aggregate(:year_to_months, [self.id]))
     else
       convert_to_array(Reading.aggregate(:year_to_months))
     end
