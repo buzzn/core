@@ -11,14 +11,14 @@ class LocationsController < InheritedResources::Base
       @metering_points = location.metering_point #nil if location was just created
     end
     respond_to do |format|
-      format.html { 
+      format.html {
         @location   = location.decorate
         @residents  = @location.users
         @devices    = @location.devices
         authorize_action_for(@location)
       }
 
-      format.json{ 
+      format.json{
         @location = location
         authorize_action_for(@location)
         render :json =>  MeteringPoint.json_tree(@metering_points)
@@ -74,7 +74,6 @@ private
   def init_permitted_params
     [
       address_attributes: [:id, :street_name, :street_number, :city, :state, :zip, :country, :time_zone, :_destroy],
-      assets_attributes: [:id, :image, :description, :assetable_id, :assetable_type]
     ]
   end
 

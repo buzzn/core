@@ -14,11 +14,7 @@ class LocationDecorator < Draper::Decorator
   end
 
   def image_tag_small
-    if model.assets.any?
-      image_tag model.assets.first.image.small, class: 'img-circle', size: '45x45', alt: ""
-    else
-      content_tag(:i, '', class: 'fa fa-home')
-    end
+    content_tag(:i, '', class: 'fa fa-home')
   end
 
   def link_to_delete
@@ -54,18 +50,6 @@ class LocationDecorator < Draper::Decorator
         :remote       => true,
         'data-toggle' => "modal",
         'data-target' => '#myModal'
-      })
-  end
-
-  def new_asset
-    link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle'),
-      new_asset_path(assetable_id: model.id, assetable_type: 'Location'),
-      {
-        :remote                     => true,
-        :class                      => 'content-plus',
-        'data-toggle'               => 'modal',
-        'data-target'               => '#myModal'
       })
   end
 
