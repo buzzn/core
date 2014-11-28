@@ -10,7 +10,7 @@ class Organization < ActiveRecord::Base
   has_many :metering_service_provider_contracts
   has_many :metering_point_operator_contract
 
-  has_many :assets, as: :assetable, dependent: :destroy
+  has_many :assets, -> { order("position ASC") }, as: :assetable, dependent: :destroy
 
   has_one  :contracting_party
 

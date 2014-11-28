@@ -11,7 +11,5 @@
               = asset.link_to_edit
             - if asset.group && current_user.can_update?(asset.group)
               = asset.link_to_edit
-            - if asset.location && current_user.can_update?(asset.location)
-              = asset.link_to_edit
             - if asset.organization && current_user.can_update?(asset.organization)
               = asset.link_to_edit

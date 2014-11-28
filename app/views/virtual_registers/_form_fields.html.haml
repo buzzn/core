@@ -1,0 +1,5 @@
+= f.input :mode, collection: VirtualRegister.modes
+= f.input :register_ids
+= f.input :operator
+- value = params[:metering_point_id].nil? ? {} : { value: params[:metering_point_id]}
+= f.input :metering_point_id, input_html: {}.merge(value), as: :hidden

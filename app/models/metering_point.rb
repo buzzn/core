@@ -26,12 +26,15 @@ class MeteringPoint < ActiveRecord::Base
   has_many :registers, dependent: :destroy
   accepts_nested_attributes_for :registers, reject_if: :all_blank
 
+  has_many :virtual_registers, dependent: :destroy
+  accepts_nested_attributes_for :virtual_registers, :reject_if => :all_blank, :allow_destroy => true
+
   has_many :electricity_supplier_contracts,         dependent: :destroy
   has_many :metering_service_provider_contracts,    dependent: :destroy
   has_many :metering_point_operator_contracts,      dependent: :destroy
   has_many :distribution_system_operator_contracts, dependent: :destroy
 
-  has_many :assets, as: :assetable, dependent: :destroy
+  has_many :assets, -> { order("position ASC") }, as: :assetable, dependent: :destroy
 
   has_many :devices
 

@@ -64,7 +64,7 @@ class WizardMeteringPointsController  < ApplicationController
   private
 
     def metering_point_params
-      params.require(:metering_point).permit( :uid, :mode, :address_addition, :metering_point_id, :parent_metering_point_id )
+      params.require(:metering_point).permit( :uid, :mode, :address_addition, :virtual, :metering_point_id, :parent_metering_point_id )
     end
 
     def meter_params

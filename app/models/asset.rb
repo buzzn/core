@@ -1,10 +1,12 @@
 class Asset < ActiveRecord::Base
 
+  acts_as_list
+
   belongs_to :assetable, polymorphic: true
 
   mount_uploader :image, PictureUploader
 
-  default_scope -> { order('created_at ASC') }
+  default_scope -> { order('position ASC') }
 
   validates :image, presence: true
 

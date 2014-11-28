@@ -83,6 +83,7 @@ gem 'rack-cors', require: 'rack/cors'
 gem 'attr_encrypted', :git => 'git@github.com:hron/attr_encrypted.git', :branch => 'issue-2-ruby19-compatibility'
 gem 'sitemap_generator'
 gem 'rack-google-analytics'
+gem 'acts_as_list'
 
 
 source 'http://rails-assets.org' do

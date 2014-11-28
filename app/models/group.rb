@@ -16,7 +16,7 @@ class Group < ActiveRecord::Base
   normalize_attribute :name, with: [:strip]
 
 
-  has_many :assets, as: :assetable, dependent: :destroy
+  has_many :assets, -> { order("position ASC") }, as: :assetable, dependent: :destroy
   has_one  :metering_point_operator_contract, dependent: :destroy
   has_one  :servicing_contract, dependent: :destroy
   has_one  :area

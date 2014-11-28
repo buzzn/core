@@ -4,7 +4,7 @@ class Device < ActiveRecord::Base
 
   belongs_to :metering_point
 
-  has_many :assets, as: :assetable, dependent: :destroy
+  has_many :assets, -> { order("position ASC") }, as: :assetable, dependent: :destroy
 
   validates :watt_peak, numericality: { only_integer: true }, presence: true
   validates :manufacturer_product_name, presence: true, length: { in: 2..30 }
