@@ -1,7 +1,7 @@
 class Meter < ActiveRecord::Base
   include Authority::Abilities
 
-  validates :manufacturer_product_serialnumber, :registers, presence: true   #, unless: "self.virtual"
+  validates :manufacturer_product_serialnumber, presence: true    #, unless: "self.virtual"
 
   has_many :registers, dependent: :destroy
   accepts_nested_attributes_for :registers, :reject_if => :all_blank, :allow_destroy => true
@@ -18,11 +18,15 @@ class Meter < ActiveRecord::Base
 
 
   def metering_point
-    self.registers.collect(&:metering_point).first
+    if virtual_registers.any?
+      virtual_registers.collect(&:metering_point).first
+    else
+      registers.collect(&:metering_point).first
+    end
   end
 
-  def self.virtual
-    self.registers.collect(&:metering_point).first.virtual
+  def virtual
+    virtual_registers.any?
   end
 
   def registers_modes_and_ids

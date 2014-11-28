@@ -1,5 +1,6 @@
 class VirtualRegister < ActiveRecord::Base
 
+  belongs_to :meter
   belongs_to :metering_point
 
   validates :mode, presence: true

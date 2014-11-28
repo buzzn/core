@@ -5,10 +5,12 @@ class CreateVirtualRegisters < ActiveRecord::Migration
       t.string  :operator
       t.string  :mode
       t.integer :metering_point_id
+      t.integer :meter_id
 
       t.timestamps
     end
     add_index :virtual_registers, :register_ids
     add_index :virtual_registers, :metering_point_id
+    add_index :virtual_registers, :meter_id
   end
 end

@@ -25,6 +25,7 @@ class WizardMeteringPointsController  < ApplicationController
       else
         render action: 'metering_point'
       end
+      Rails.logger.info(@parent_metering_point.errors.inspect)
     else
       @location.metering_point = @metering_point
       if @location.save
@@ -32,7 +33,9 @@ class WizardMeteringPointsController  < ApplicationController
       else
         render action: 'metering_point'
       end
+      Rails.logger.info(@location.errors.inspect)
     end
+    Rails.logger.info(@metering_point.errors.inspect)
   end
 
 
@@ -42,7 +45,11 @@ class WizardMeteringPointsController  < ApplicationController
     end
     if @metering_point
       @meter = Meter.new
-      @meter.registers << Register.new
+      if @metering_point.virtual
+        @meter.virtual_registers << VirtualRegister.new
+      else
+        @meter.registers << Register.new
+      end
     end
   end
 
@@ -64,11 +71,11 @@ class WizardMeteringPointsController  < ApplicationController
   private
 
     def metering_point_params
-      params.require(:metering_point).permit( :uid, :mode, :address_addition, :virtual, :metering_point_id, :parent_metering_point_id )
+      params.require(:metering_point).permit( :uid, :mode, :address_addition, :virtual, :metering_point_id, :parent_metering_point_id, :metering_point )
     end
 
     def meter_params
-      params.require(:meter).permit(:id, :metering_point_id, :meter_id, :manufacturer_name, :manufacturer_product_name, :manufacturer_product_serialnumber, :owner, :mode, :meter_size, :rate, :measurement_capture, :mounting_method, :build_year, :calibrated_till, :smart, :virtual, registers_attributes: [:id, :metering_point_id, :mode, :obis_index, :variable_tariff, :_destroy])
+      params.require(:meter).permit(:id, :metering_point_id, :meter_id, :manufacturer_name, :manufacturer_product_name, :manufacturer_product_serialnumber, :owner, :mode, :meter_size, :rate, :measurement_capture, :mounting_method, :build_year, :calibrated_till, :smart, :virtual, registers_attributes: [:id, :metering_point_id, :mode, :obis_index, :variable_tariff, :_destroy], virtual_registers_attributes: [:id, :metering_point_id, :mode, :operator, {register_ids: []}, :_destroy])
     end
 
     def location_params
@@ -76,7 +83,7 @@ class WizardMeteringPointsController  < ApplicationController
     end
 
     def permitted_params
-      params.permit(:metering_point_id, :parent_metering_point_id)
+      params.permit(:metering_point, :metering_point_id, :parent_metering_point_id)
     end
 
 

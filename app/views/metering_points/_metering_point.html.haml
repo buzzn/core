@@ -8,7 +8,7 @@
           = link_to t('details'), metering_point, class: 'btn btn-default pull-right'
       .metering_point_name
         %h2= metering_point.name
-    - if !metering_point.registers.first.meter.smart?
+    - if !metering_point.meter.smart?
       .ribbon-wrapper-green
         .ribbon-green
           = t('slp')

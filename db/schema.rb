@@ -577,10 +577,12 @@ ActiveRecord::Schema.define(version: 20141126161902) do
     t.string   "operator"
     t.string   "mode"
     t.integer  "metering_point_id"
+    t.integer  "meter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "virtual_registers", ["meter_id"], name: "index_virtual_registers_on_meter_id", using: :btree
   add_index "virtual_registers", ["metering_point_id"], name: "index_virtual_registers_on_metering_point_id", using: :btree
   add_index "virtual_registers", ["register_ids"], name: "index_virtual_registers_on_register_ids", using: :btree
 

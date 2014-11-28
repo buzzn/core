@@ -41,15 +41,23 @@ class MeteringPoint < ActiveRecord::Base
   has_many :metering_point_users
   has_many :users, through: :metering_point_users, dependent: :destroy
 
-  validates :uid, uniqueness: true, length: { in: 4..34 } #presence: true
+  validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
   validates :address_addition, presence: true, length: { in: 2..30 }
 
   def meter
-    self.registers.collect(&:meter).first
+    if virtual
+      virtual_registers.collect(&:meter).first
+    else
+      registers.collect(&:meter).first
+    end
   end
 
   def mode
-    self.registers.select(:mode).map(&:mode).join('_')
+    if virtual
+      virtual_registers.select(:mode).map(&:mode).join('_')
+    else
+      registers.select(:mode).map(&:mode).join('_')
+    end
   end
 
   def metering_point_operator_contract
