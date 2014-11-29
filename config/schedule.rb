@@ -11,7 +11,9 @@ every 30.minutes do
   rake "meter:reactivate"
 end
 
-
+# every 1.day, :at => '10:00 am' do
+#   runner "stream::previous_day_consumption"
+# end
 
 
 # every 3.hours do

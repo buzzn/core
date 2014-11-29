@@ -5,6 +5,15 @@ class Discovergy
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').live(60009269)
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').raw(60009269)
 
+
+  # discovergy  = Discovergy.new('team@buzzn-metering.de', 'Zebulon_4711')
+  # date        = Time.now.in_time_zone
+  # start       = date.beginning_of_hour
+  # ending      = start + 1.minute
+  # request     = discovergy.raw('60009316', start.to_i*1000, ending.to_i*1000)
+
+
+
   def initialize(username, password)
     @username  = username
     @password  = password

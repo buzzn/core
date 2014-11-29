@@ -69,7 +69,6 @@ class MeteringPointDecorator < Draper::Decorator
             }
           }
         }
-
       }
     )
   end

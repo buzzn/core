@@ -1,17 +1,18 @@
-require_relative '../../app/workers/meter_reading_update_worker'
+require_relative '../../app/workers/get_reading_worker'
 
 namespace :meter do
+
 
   task :update => :environment do
     Meter.where(init_reading: true, smart: true, online: true).each do |meter|
       meter.registers.each do |register|
         mpoc  = register.metering_point.metering_point_operator_contract
-        last  = Reading.latest_by_register_id(register.id)[:timestamp]
+        last  = Reading.last_by_register_id(register.id)[:timestamp]
         now   = Time.now.in_time_zone.utc
         range = (last.to_i .. now.to_i)
-        if range.count < 60*60
+        if range.count < 1.hour
           Sidekiq::Client.push({
-           'class' => MeterReadingUpdateWorker,
+           'class' => GetReadingWorker,
            'queue' => :low,
            'args' => [
                       meter.registers_modes_and_ids,
@@ -32,7 +33,6 @@ namespace :meter do
   end
 
 
-
   task :reactivate => :environment do
     Meter.where(init_reading: true, smart: true, online: false).select(:id).each do |meter|
       Sidekiq::Client.push({
@@ -42,7 +42,6 @@ namespace :meter do
       })
     end
   end
-
 
 
 end

@@ -117,7 +117,7 @@ class Reading
 
 
 
-  def self.latest_by_register_id(register_id)
+  def self.last_by_register_id(register_id)
     pipe = [
       { "$match" => {
           register_id: {
@@ -127,6 +127,25 @@ class Reading
       },
       { "$sort" => {
           timestamp: -1
+        }
+      },
+      { "$limit" => 1 }
+    ]
+    return Reading.collection.aggregate(pipe).first
+  end
+
+
+
+  def self.first_by_register_id(register_id)
+    pipe = [
+      { "$match" => {
+          register_id: {
+            "$in" => [register_id]
+          }
+        }
+      },
+      { "$sort" => {
+          timestamp: 1
         }
       },
       { "$limit" => 1 }

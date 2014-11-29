@@ -5,7 +5,7 @@ class MeterUpdateWorker
     puts "#{Time.at(start)} - #{Time.at(ending)}"
 
     Sidekiq::Client.push({
-     'class' => MeterReadingUpdateWorker,
+     'class' => GetReadingWorker,
      'queue' => :low,
      'args' => [
                 @registers_modes_and_ids,
@@ -20,11 +20,11 @@ class MeterUpdateWorker
   end
 
   def perform(registers_modes_and_ids, manufacturer_product_serialnumber, mpo_slug, mpo_login_username, mpo_login_password, start_time, end_time)
-    @registers_modes_and_ids = registers_modes_and_ids
-    @manufacturer_product_serialnumber = manufacturer_product_serialnumber
-    @mpo_slug = mpo_slug
-    @mpo_login_username = mpo_login_username
-    @mpo_login_password = mpo_login_password
+    @registers_modes_and_ids            = registers_modes_and_ids
+    @manufacturer_product_serialnumber  = manufacturer_product_serialnumber
+    @mpo_slug                           = mpo_slug
+    @mpo_login_username                 = mpo_login_username
+    @mpo_login_password                 = mpo_login_password
 
     if mpo_slug == 'discovergy' or mpo_slug == 'buzzn-metering'
       puts "get history for register: #{registers_modes_and_ids}"

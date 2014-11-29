@@ -1,19 +1,11 @@
-class MeterReadingUpdateWorker
+class GetReadingWorker
   include Sidekiq::Worker
 
-  def perform(registers_modes_and_ids, manufacturer_device_number, mpo_slug, mpo_login_username, mpo_login_password, start_time, end_time, init_meter_id=nil)
+  def perform(registers_modes_and_ids, manufacturer_device_number, mpo_slug, mpo_login_username, mpo_login_password, start_time, end_time)
 
     if mpo_slug == 'discovergy' or mpo_slug == 'buzzn-metering'
-
-
-      discovergy = Discovergy.new(mpo_login_username, mpo_login_password)
-
-      if start_time && end_time
-        request = discovergy.raw(manufacturer_device_number, start_time, end_time)
-      else
-        request = discovergy.raw(manufacturer_device_number) # use current time
-      end
-
+      discovergy  = Discovergy.new(mpo_login_username, mpo_login_password)
+      request     = discovergy.raw(manufacturer_device_number, start_time, end_time)
 
       if request['status'] == "ok"
         if request['result'].any?
@@ -46,14 +38,10 @@ class MeterReadingUpdateWorker
             end
 
 
+          end
 
-          end
-          if init_meter_id
-            meter = Meter.find(init_meter_id)
-            meter.update_columns(init_reading: true)
-          end
         else
-          logger.warn "MeterReadingUpdateWorker: No result form request. starttime: #{start_time}, endtime: #{end_time}"
+          logger.warn "GetReadingWorker: No result form request. starttime: #{start_time}, endtime: #{end_time}"
         end
       elsif request['status'] == "error"
         logger.error request

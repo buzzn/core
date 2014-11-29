@@ -17,6 +17,8 @@ class CreateMeters < ActiveRecord::Migration
       t.date :calibrated_till
       t.boolean :smart, default: false
       t.boolean :online, default: false
+
+      t.boolean :init_first_reading, default: false
       t.boolean :init_reading, default: false
 
       t.integer :metering_point_id

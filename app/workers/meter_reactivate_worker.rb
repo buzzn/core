@@ -5,11 +5,11 @@ class MeterReactivateWorker
     @meter = Meter.find(meter_id)
     @mpoc  = @meter.metering_point.metering_point_operator_contract
     request = Discovergy.new(@mpoc.username, @mpoc.password).raw(@meter.manufacturer_product_serialnumber)
-    
+
     if request['status'] == 'ok'
       if request['result'].any? && @meter.registers.any? && @meter.smart
-        
-        last  = Reading.latest_by_register_id(@meter.registers.first.id)['timestamp']
+
+        last  = Reading.last_by_register_id(@meter.registers.first.id)['timestamp']
         now   = Time.now.in_time_zone.utc
 
         if (last.to_i .. now.to_i).size < 1.hour
