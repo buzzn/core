@@ -1,0 +1,17 @@
+- @locations.each do |location|
+  .item{id: "location_#{location.id}" }
+    .block
+      .header.no-border
+        .marker-box.pull-left
+          = location.image_tag_small
+        - if user_signed_in?
+          - if current_user.can_update?(location)
+            = link_to t('details'), location, class: 'btn btn-default pull-right'
+        .location_name
+          %h2= location.name
+      - if !location.metering_point.meter.smart?
+        .ribbon-wrapper-green
+          .ribbon-green
+            = t('slp')
+      .chart-background{:style => "background-image: url('#{location.metering_point.background_image_url}');background-repeat:no-repeat; background-position:50% 50%;"}
+        = location.metering_point.chart('day_to_hours')
