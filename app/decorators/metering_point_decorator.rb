@@ -15,7 +15,7 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :transmission_system_operator_contracts
 
 
-  def chart(resolution='day_to_hours')
+  def chart(resolution='day_to_hours', chart_type='column_chart')
     colors = []
     model.registers.map(&:mode).each do |mode|
       case mode
@@ -27,7 +27,8 @@ class MeteringPointDecorator < Draper::Decorator
         colors << '#0f0'
       end
     end
-    line_chart(
+    h.send(
+      chart_type,
       chart_metering_point_path(model, resolution: resolution),
       colors: colors,
       library: {
