@@ -84,6 +84,7 @@ gem 'attr_encrypted', github: 'hron/attr_encrypted', branch: 'issue-2-ruby19-com
 gem 'sitemap_generator'
 gem 'rack-google-analytics'
 gem 'acts_as_list'
+gem 'websocket-rails'
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-highcharts'

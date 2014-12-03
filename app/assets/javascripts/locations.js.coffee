@@ -18,3 +18,14 @@ $(".locations.show").ready ->
   $(".nav-pills a").on "shown.bs.tab", (e) ->
     window.location.hash = e.target.hash
     return
+
+  dispatcher = new WebSocketRails('localhost:3000/websocket')
+
+  dispatcher.on_open = (data) ->
+    console.log "Connection established: #{data}"
+
+  $("#rsvp").bind 'click', (message) =>
+    dispatcher.trigger 'rsvp.new', true
+
+  dispatcher.bind 'new_rsvp', (controller_store) =>
+    $("#rsvp_count").html controller_store

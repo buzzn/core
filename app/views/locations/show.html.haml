@@ -62,6 +62,8 @@
 
       - if current_user.can_update?(@location) && @location.metering_point.nil?
         = @location.new_metering_point
+      #rsvp.btn.btn-default
+      #rsvp_count
 
     #metering_point_tree.tab-pane
       .block
