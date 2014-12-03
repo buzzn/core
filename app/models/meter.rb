@@ -6,9 +6,6 @@ class Meter < ActiveRecord::Base
   has_many :registers, dependent: :destroy
   accepts_nested_attributes_for :registers, :reject_if => :all_blank, :allow_destroy => true
 
-  has_many :virtual_registers, dependent: :destroy
-  accepts_nested_attributes_for :virtual_registers, :reject_if => :all_blank, :allow_destroy => true
-
   has_many :equipments
   accepts_nested_attributes_for :equipments, :reject_if => :all_blank, :allow_destroy => true
 
@@ -18,15 +15,7 @@ class Meter < ActiveRecord::Base
 
 
   def metering_point
-    if virtual_registers.any?
-      virtual_registers.collect(&:metering_point).first
-    else
-      registers.collect(&:metering_point).first
-    end
-  end
-
-  def virtual
-    virtual_registers.any?
+    registers.collect(&:metering_point).first
   end
 
   def registers_modes_and_ids

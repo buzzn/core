@@ -26,9 +26,6 @@ class MeteringPoint < ActiveRecord::Base
   has_many :registers, dependent: :destroy
   accepts_nested_attributes_for :registers, reject_if: :all_blank
 
-  has_many :virtual_registers, dependent: :destroy
-  accepts_nested_attributes_for :virtual_registers, :reject_if => :all_blank, :allow_destroy => true
-
   has_many :electricity_supplier_contracts,         dependent: :destroy
   has_many :metering_service_provider_contracts,    dependent: :destroy
   has_many :metering_point_operator_contracts,      dependent: :destroy
@@ -45,19 +42,12 @@ class MeteringPoint < ActiveRecord::Base
   validates :address_addition, presence: true, length: { in: 2..30 }
 
   def meter
-    if virtual
-      virtual_registers.collect(&:meter).first
-    else
-      registers.collect(&:meter).first
-    end
+    registers.collect(&:meter).first
   end
 
   def mode
-    if virtual
-      virtual_registers.select(:mode).map(&:mode).join('_')
-    else
-      registers.select(:mode).map(&:mode).join('_')
-    end
+    registers.select(:mode).map(&:mode).join('_')
+
   end
 
   def metering_point_operator_contract

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141126161902) do
+ActiveRecord::Schema.define(version: 20141112082240) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -572,19 +572,5 @@ ActiveRecord::Schema.define(version: 20141126161902) do
   end
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
-
-  create_table "virtual_registers", force: true do |t|
-    t.integer  "register_ids",      array: true
-    t.string   "operator"
-    t.string   "mode"
-    t.integer  "metering_point_id"
-    t.integer  "meter_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "virtual_registers", ["meter_id"], name: "index_virtual_registers_on_meter_id", using: :btree
-  add_index "virtual_registers", ["metering_point_id"], name: "index_virtual_registers_on_metering_point_id", using: :btree
-  add_index "virtual_registers", ["register_ids"], name: "index_virtual_registers_on_register_ids", using: :btree
 
 end
