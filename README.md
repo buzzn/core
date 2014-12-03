@@ -40,11 +40,11 @@
 ## Sidekiq Kill
     bundle exec rake sidekiq:kill
 
-## Sidekiq Delete Queues
-    bundle exec rake sidekiq:delete_queues
+## pull_readings meters
+    bundle exec rake meter:pull_readings
 
-## update meters
-    bundle exec rake meter:update
+## reactivate meters
+    bundle exec rake meter:reactivate
 
 ## Mail Views
     http://localhost:3000/de/mail_view

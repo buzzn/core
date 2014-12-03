@@ -387,6 +387,7 @@ ActiveRecord::Schema.define(version: 20141126161902) do
     t.date     "calibrated_till"
     t.boolean  "smart",                             default: false
     t.boolean  "online",                            default: false
+    t.boolean  "init_first_reading",                default: false
     t.boolean  "init_reading",                      default: false
     t.integer  "metering_point_id"
     t.datetime "created_at"

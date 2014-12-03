@@ -80,11 +80,11 @@ gem 'active_model_serializers'
 gem 'grape-active_model_serializers'
 gem 'grape-swagger-rails'
 gem 'rack-cors', require: 'rack/cors'
-gem 'attr_encrypted', :git => 'git@github.com:hron/attr_encrypted.git', :branch => 'issue-2-ruby19-compatibility'
+gem 'attr_encrypted', github: 'hron/attr_encrypted', branch: 'issue-2-ruby19-compatibility'
 gem 'sitemap_generator'
 gem 'rack-google-analytics'
 gem 'acts_as_list'
-
+gem 'websocket-rails', github: 'wuboy0307/websocket-rails', branch: 'puma'
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-highcharts'
@@ -100,7 +100,7 @@ group :production do
 end
 
 group :development, :test do
-  gem 'spring'
+  #gem 'spring'
   gem 'lol_dba'
   gem 'listen'
   gem 'launchy'

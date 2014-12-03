@@ -1,7 +1,6 @@
 class MeteringPointsController < InheritedResources::Base
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, except: [:chart]
   respond_to :html, :json, :js
-  #belongs_to :group
 
   def show
     @metering_point                   = MeteringPoint.find(params[:id]).decorate
