@@ -31,7 +31,6 @@ class Register < ActiveRecord::Base
 private
 
   def chart_data(resolution_format)
-
     if self.virtual && self.formula
       operands = get_operands_from_formula
       operators = get_operators_from_formula
@@ -43,9 +42,7 @@ private
     else
       convert_to_array(Reading.aggregate(resolution_format, meter.smart ? [self.id] : nil))
     end
-
   end
-
 
 
   def convert_to_array(data)
