@@ -18,10 +18,24 @@ class Register < ActiveRecord::Base
 
 
   def day_to_hours
-    if meter.smart
-      convert_to_array(Reading.aggregate(:day_to_hours, [self.id]))
+    if self.virtual && self.formula
+      operands = get_operands_from_formula
+      operators = get_operators_from_formula
+      data = []
+      operands.each do |register_id|
+        if meter.smart
+          data << convert_to_array(Reading.aggregate(:day_to_hours, [register_id]))
+        else
+          data << convert_to_array(Reading.aggregate(:day_to_hours))
+        end
+      end
+      return calculate_virtual_register(data, operators)
     else
-      convert_to_array(Reading.aggregate(:day_to_hours))
+      if meter.smart
+        convert_to_array(Reading.aggregate(:day_to_hours, [self.id]))
+      else
+        convert_to_array(Reading.aggregate(:day_to_hours))
+      end
     end
   end
 
@@ -45,8 +59,6 @@ class Register < ActiveRecord::Base
     end
   end
 
-
-
 private
 
   def convert_to_array(data)
@@ -68,7 +80,64 @@ private
     }
   end
 
+  def get_operands_from_formula
+    operands = []
+    operand = ""
+    self.formula.gsub(/\s+/, "").each_char do |char|
+      if ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].include?(char)
+        operand += char
+      elsif ['+', '-', '*'].include?(char)
+        operands << operand.to_i
+        operand = ""
+      end
+    end
+    operands << operand.to_i
+    return operands
+  end
 
+  def get_operators_from_formula
+    operators = []
+    self.formula.gsub(/\s+/, "").each_char do |char|
+      if ['+', '-', '*'].include?(char)
+        operators << char
+      end
+    end
+    return operators
+  end
+
+  def calculate_virtual_register(data, operators)
+    hours = []
+    timestamps = []
+    i = 0
+    data.each do |register|
+      j = 0
+      register.each do |reading|
+        if i == 0
+          timestamps << reading[0]
+          hours << reading[1]
+        else
+          timestamps[j] = reading[0]
+          if operators[i - 1] == "+"
+            hours[j] += reading[1]
+          elsif operators[i - 1] == "-"
+            hours[j] -= reading[1]
+          elsif operators[i - 1] == "*"
+            hours[j] *= reading[1]
+          end
+        end
+        j += 1
+      end
+      i += 1
+    end
+    result = []
+    for i in 0...hours.length
+      result << [
+        timestamps[i],
+        hours[i]
+      ]
+    end
+    return result
+  end
 
 end
 

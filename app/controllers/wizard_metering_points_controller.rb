@@ -25,7 +25,6 @@ class WizardMeteringPointsController  < ApplicationController
       else
         render action: 'metering_point'
       end
-      Rails.logger.info(@parent_metering_point.errors.inspect)
     else
       @location.metering_point = @metering_point
       if @location.save
@@ -33,9 +32,7 @@ class WizardMeteringPointsController  < ApplicationController
       else
         render action: 'metering_point'
       end
-      Rails.logger.info(@location.errors.inspect)
     end
-    Rails.logger.info(@metering_point.errors.inspect)
   end
 
 
@@ -75,7 +72,7 @@ class WizardMeteringPointsController  < ApplicationController
     end
 
     def meter_params
-      params.require(:meter).permit(:id, :metering_point_id, :meter_id, :manufacturer_name, :manufacturer_product_name, :manufacturer_product_serialnumber, :owner, :mode, :meter_size, :rate, :measurement_capture, :mounting_method, :build_year, :calibrated_till, :smart, :virtual, registers_attributes: [:id, :metering_point_id, :mode, :obis_index, :variable_tariff, :_destroy], virtual_registers_attributes: [:id, :metering_point_id, :mode, :operator, {register_ids: []}, :_destroy])
+      params.require(:meter).permit(:id, :metering_point_id, :meter_id, :manufacturer_name, :manufacturer_product_name, :manufacturer_product_serialnumber, :owner, :mode, :meter_size, :rate, :measurement_capture, :mounting_method, :build_year, :calibrated_till, :smart, :virtual, registers_attributes: [:id, :metering_point_id, :mode, :obis_index, :variable_tariff, :virtual, :formula, :_destroy])
     end
 
     def location_params

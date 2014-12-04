@@ -442,6 +442,8 @@ ActiveRecord::Schema.define(version: 20141112082240) do
     t.boolean  "variable_tariff",   default: false
     t.integer  "predecimal_places", default: 8
     t.integer  "decimal_places",    default: 2
+    t.boolean  "virtual",           default: false
+    t.string   "formula"
     t.integer  "meter_id"
     t.integer  "metering_point_id"
     t.datetime "created_at"
