@@ -8,58 +8,45 @@ class Register < ActiveRecord::Base
   scope :in, -> { where(mode: :in) }
   scope :out, -> { where(mode: :out) }
 
+
+
   def hour_to_minutes
-    if meter.smart
-      convert_to_array(Reading.aggregate(:hour_to_minutes, [self.id]))
-    else
-      convert_to_array(Reading.aggregate(:hour_to_minutes))
-    end
+    chart_data(:hour_to_minutes)
+  end
+
+  def day_to_hours
+    chart_data(:day_to_hours)
+  end
+
+  def month_to_days
+    chart_data(:month_to_days)
+  end
+
+  def year_to_months
+    chart_data(:year_to_months)
   end
 
 
-  def day_to_hours
+
+private
+
+  def chart_data(resolution_format)
+
     if self.virtual && self.formula
       operands = get_operands_from_formula
       operators = get_operators_from_formula
       data = []
       operands.each do |register_id|
-        if meter.smart
-          data << convert_to_array(Reading.aggregate(:day_to_hours, [register_id]))
-        else
-          data << convert_to_array(Reading.aggregate(:day_to_hours))
-        end
+        data << convert_to_array(Reading.aggregate(resolution_format, meter.smart ? [register_id] : nil))
       end
       return calculate_virtual_register(data, operators)
     else
-      if meter.smart
-        convert_to_array(Reading.aggregate(:day_to_hours, [self.id]))
-      else
-        convert_to_array(Reading.aggregate(:day_to_hours))
-      end
+      convert_to_array(Reading.aggregate(resolution_format, meter.smart ? [self.id] : nil))
     end
+
   end
 
 
-
-  def month_to_days
-    if meter.smart
-      convert_to_array(Reading.aggregate(:month_to_days, [self.id]))
-    else
-      convert_to_array(Reading.aggregate(:month_to_days))
-    end
-  end
-
-
-
-  def year_to_months
-    if meter.smart
-      convert_to_array(Reading.aggregate(:year_to_months, [self.id]))
-    else
-      convert_to_array(Reading.aggregate(:year_to_months))
-    end
-  end
-
-private
 
   def convert_to_array(data)
     hours = []
