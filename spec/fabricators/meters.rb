@@ -124,7 +124,7 @@ Fabricator :virtual_meter_hopf, from: :meter do
   manufacturer_name                   ''
   manufacturer_product_name           ''
   manufacturer_product_serialnumber   '123456'
-  registers                           { [Fabricate(:register_in, virtual: true, formula: "")] }
+  registers                           { [Fabricate(:register_in, virtual: true, formula: "44-43+42-39-38")] }
 end
 
 

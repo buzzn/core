@@ -26,6 +26,21 @@ class Register < ActiveRecord::Base
     chart_data(:year_to_months)
   end
 
+  def get_operands_from_formula
+    operands = []
+    operand = ""
+    self.formula.gsub(/\s+/, "").each_char do |char|
+      if ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].include?(char)
+        operand += char
+      elsif ['+', '-', '*'].include?(char)
+        operands << operand.to_i
+        operand = ""
+      end
+    end
+    operands << operand.to_i
+    return operands
+  end
+
 
 
 private
@@ -36,7 +51,8 @@ private
       operators = get_operators_from_formula
       data = []
       operands.each do |register_id|
-        data << convert_to_array(Reading.aggregate(resolution_format, meter.smart ? [register_id] : nil))
+        register = Register.find(register_id)
+        data << convert_to_array(Reading.aggregate(resolution_format, register.meter.smart ? [register_id] : nil))
       end
       return calculate_virtual_register(data, operators)
     else
@@ -64,20 +80,6 @@ private
     }
   end
 
-  def get_operands_from_formula
-    operands = []
-    operand = ""
-    self.formula.gsub(/\s+/, "").each_char do |char|
-      if ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].include?(char)
-        operand += char
-      elsif ['+', '-', '*'].include?(char)
-        operands << operand.to_i
-        operand = ""
-      end
-    end
-    operands << operand.to_i
-    return operands
-  end
 
   def get_operators_from_formula
     operators = []
