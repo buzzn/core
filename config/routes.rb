@@ -22,6 +22,7 @@ Buzzn::Application.routes.draw do
       get :chart
       get :edit_users
       get :edit_devices
+      get :update_parent
     end
   end
 
