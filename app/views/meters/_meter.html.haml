@@ -68,6 +68,16 @@
               %tr
                 %td= t('variable_tariff')
                 %td= register.variable_tariff
+              %tr
+                %td= t('virtual')
+                %td= register.virtual
+              - if register.virtual
+                %tr
+                  %td= t('formula')
+                  %td= register.formula
+              %tr
+                %td= t('id')
+                %td= register.id
   .equipments.content.no-padding
     - if @meter.equipments.empty?
       .header.no-border

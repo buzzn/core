@@ -18,3 +18,10 @@ $(".locations.show").ready ->
   $(".nav-pills a").on "shown.bs.tab", (e) ->
     window.location.hash = e.target.hash
     return
+
+  $("a[data-toggle=\"tab\"]").on "shown.bs.tab", (e) ->
+    target_click = e.target.toString().slice(e.target.toString().lastIndexOf("#"), e.target.length)
+    if target_click == "#metering_point_tree"
+      init_tree()
+
+  init_tree()

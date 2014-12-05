@@ -42,11 +42,7 @@ class WizardMeteringPointsController  < ApplicationController
     end
     if @metering_point
       @meter = Meter.new
-      if @metering_point.virtual
-        @meter.virtual_registers << VirtualRegister.new
-      else
-        @meter.registers << Register.new
-      end
+      @meter.registers << Register.new
     end
   end
 
