@@ -1,5 +1,5 @@
 class MeteringPointsController < InheritedResources::Base
-  before_filter :authenticate_user!, except: [:chart, :update_parent]
+  before_filter :authenticate_user!, except: [:chart]
   respond_to :html, :json, :js
 
   def show
@@ -68,9 +68,10 @@ class MeteringPointsController < InheritedResources::Base
     @metering_point = MeteringPoint.find(params[:id])
     @parent = MeteringPoint.find(params[:parent_id])
     @metering_point.parent = @parent
+    authorize_action_for(@metering_point)
     @metering_point.save!
   end
-
+  authority_actions :update_parent => 'update'
 
 
 protected
