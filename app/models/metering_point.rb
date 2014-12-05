@@ -137,7 +137,7 @@ class MeteringPoint < ActiveRecord::Base
       if node.mode == "out" && node.devices.any?
         label = label + " | " + node.devices.first.name
       end
-      {:label => label, :mode => node.mode, :children => json_tree(sub_nodes).compact}
+      {:label => label, :mode => node.mode, :id => node.id, :children => json_tree(sub_nodes).compact}
     end
   end
 
