@@ -184,8 +184,8 @@ end
 Fabricator :mp_hans_dieter_hopf, from: :metering_point do
   address_addition  'Wohnung'
   assets { [  Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'locations', 'hopfstr', 'wohnung_hans.jpg' ))) ] }
-  virtual true
   electricity_supplier_contracts         { [] }
+  registers { Fabricate(:virtual_meter_hopf).registers }
 end
 
 

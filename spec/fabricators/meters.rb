@@ -119,6 +119,15 @@ Fabricator :easymeter_60009269, from: :meter do
   equipments                          { [Fabricate(:equipment)] }
 end
 
+# Meter für virtuellen MP für Hopf
+Fabricator :virtual_meter_hopf, from: :meter do
+  manufacturer_name                   ''
+  manufacturer_product_name           ''
+  manufacturer_product_serialnumber   '123456'
+  registers                           { [Fabricate(:register_in, virtual: true, formula: "")] }
+end
+
+
 
 
 

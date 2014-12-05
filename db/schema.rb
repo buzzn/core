@@ -341,7 +341,6 @@ ActiveRecord::Schema.define(version: 20141112082240) do
     t.date     "regular_reeding"
     t.string   "regular_interval"
     t.string   "meter_type"
-    t.boolean  "virtual",          default: false
     t.string   "ancestry"
     t.integer  "location_id"
     t.integer  "contract_id"
