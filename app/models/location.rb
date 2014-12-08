@@ -38,7 +38,6 @@ class Location < ActiveRecord::Base
 
   def check_for_metering_point
     unless metering_point.nil?
-      self.errors[:base] << "Cannot delete location while its metering_point exists."
       return false
     end
   end

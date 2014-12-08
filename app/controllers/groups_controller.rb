@@ -34,6 +34,16 @@ class GroupsController < InheritedResources::Base
     end
   end
 
+  def destroy
+    destroy! do |failure|
+      failure.js {
+        @group = LocationDecorator.new(@group)
+        flash[:error] = t('cannot_delete_group_while_running_contracts_exists')
+        @group
+      }
+    end
+  end
+
   def cancel_membership
     @group = Group.find(params[:id])
     @metering_point = MeteringPoint.find(params[:metering_point_id])

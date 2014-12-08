@@ -22,15 +22,24 @@ class GroupDecorator < Draper::Decorator
   end
 
   def link_to_delete
-    link_to(
-      t('delete'),
-      model,
-      remote: true,
-      class: 'btn btn-danger',
-      :method => :delete,
-      :data => {
-        :confirm => t('are_you_sure')
-      })
+    if model.metering_point_operator_contract && model.metering_point_operator_contract.running
+      link_to(
+        t('delete'),
+        model,
+        class: 'btn btn-danger disabled',
+        :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => t('cannot_delete_group_while_running_contracts_exists') },
+        rel: 'tooltip')
+    else
+      link_to(
+        t('delete'),
+        model,
+        remote: true,
+        class: 'btn btn-danger',
+        :method => :delete,
+        :data => {
+          :confirm => t('are_you_sure')
+        })
+    end
   end
 
   def thumb_small
