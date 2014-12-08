@@ -18,15 +18,24 @@ class LocationDecorator < Draper::Decorator
   end
 
   def link_to_delete
-    link_to(
-      t('delete'),
-      model,
-      remote: true,
-      class: 'btn btn-danger',
-      :method => :delete,
-      :data => {
-        :confirm => t('are_you_sure')
-      })
+    if model.metering_point
+      link_to(
+        t('delete'),
+        model,
+        class: 'btn btn-danger disabled',
+        :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => t('cannot_delete_location_while_metering_point_exists') },
+        rel: 'tooltip')
+    else
+      link_to(
+        t('delete'),
+        model,
+        remote: true,
+        class: 'btn btn-danger',
+        :method => :delete,
+        :data => {
+          :confirm => t('are_you_sure')
+        })
+    end
   end
 
   def link_to_edit

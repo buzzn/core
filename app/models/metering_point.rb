@@ -4,6 +4,8 @@ class MeteringPoint < ActiveRecord::Base
 
   has_ancestry
 
+  before_destroy :check_for_active_contracts
+
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :finders]
   def slug_candidates
@@ -138,6 +140,13 @@ class MeteringPoint < ActiveRecord::Base
         label = label + " | " + node.devices.first.name
       end
       {:label => label, :mode => node.mode, :id => node.id, :children => json_tree(sub_nodes).compact}
+    end
+  end
+
+  private
+
+  def check_for_active_contracts
+    if electricity_supplier_contracts.collect(&:status).compact.include?("running")
     end
   end
 

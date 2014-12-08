@@ -60,6 +60,16 @@ class LocationsController < InheritedResources::Base
     end
   end
 
+  def destroy
+    destroy! do |failure|
+      failure.js {
+        @location = LocationDecorator.new(@location)
+        flash[:error] = t('cannot_delete_location_while_metering_point_exists')
+        @location
+      }
+    end
+  end
+
 
 protected
   def permitted_params

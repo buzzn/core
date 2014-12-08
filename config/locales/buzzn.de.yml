@@ -376,6 +376,7 @@ de:
   slp: SLP
   edit_contract: Vertrag bearbeiten
   hour_to_minutes: Stunde in Minuten
+  cannot_delete_location_while_metering_point_exists: "Der Standort kann nicht gelöscht werden, solange er noch einen Zählpunkt besitzt."
 
 
 

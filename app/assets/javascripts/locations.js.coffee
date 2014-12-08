@@ -30,3 +30,5 @@ $(".locations.show").ready ->
     return
 
   init_tree()
+
+

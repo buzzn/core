@@ -59,13 +59,10 @@
           - @location.metering_point.subtree.each do |metering_point|
             = render metering_point.decorate unless metering_point == @location.metering_point && metering_point.mode == "in_out"
 
-      - if current_user.can_update?(@location) && @location.metering_point.nil?
-        = @location.new_metering_point
-
     #metering_point_tree.tab-pane
       .block
         #tree1
-        - if user_signed_in? && current_user.can_update?(@location.metering_point)
+        - if user_signed_in? && @location.metering_point && current_user.can_update?(@location.metering_point)
           = @location.metering_point.new_sub_metering_point
 
 
