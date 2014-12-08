@@ -100,8 +100,9 @@ class MeteringPointDecorator < Draper::Decorator
         t('delete'),
         model,
         class: 'btn btn-danger disabled',
-        :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => t('cannot_delete_metering_point_while_running_contract_exists') },
-        rel: 'tooltip')
+        :data => {
+          :confirm => t('cannot_delete_metering_point_while_running_contract_exists')
+        })
     else
       link_to(
         t('delete'),

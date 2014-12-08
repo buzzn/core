@@ -23,8 +23,9 @@ class LocationDecorator < Draper::Decorator
         t('delete'),
         model,
         class: 'btn btn-danger disabled',
-        :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => t('cannot_delete_location_while_metering_point_exists') },
-        rel: 'tooltip')
+        :data => {
+          :confirm => t('cannot_delete_location_while_metering_point_exists')
+        })
     else
       link_to(
         t('delete'),

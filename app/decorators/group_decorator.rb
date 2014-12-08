@@ -26,9 +26,10 @@ class GroupDecorator < Draper::Decorator
       link_to(
         t('delete'),
         model,
-        class: 'btn btn-danger disabled',
-        :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => t('cannot_delete_group_while_running_contracts_exists') },
-        rel: 'tooltip')
+        class: 'btn btn-danger',
+        :data => {
+          :confirm => t('cannot_delete_group_while_running_contracts_exists')
+        })
     else
       link_to(
         t('delete'),
