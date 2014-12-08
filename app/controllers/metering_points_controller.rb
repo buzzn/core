@@ -73,6 +73,16 @@ class MeteringPointsController < InheritedResources::Base
   end
   authority_actions :update_parent => 'update'
 
+  def destroy
+    destroy! do |failure|
+      failure.js {
+        @metering_point = MeteringPointDecorator.new(@metering_point)
+        flash[:error] = t('cannot_delete_metering_point_while_running_contract_exists')
+        @metering_point
+      }
+    end
+  end
+
 
 protected
   def permitted_params

@@ -95,15 +95,24 @@ class MeteringPointDecorator < Draper::Decorator
   end
 
   def link_to_delete
-    link_to(
-      t('delete'),
-      model,
-      remote: true,
-      class: 'btn btn-danger',
-      :method => :delete,
-      :data => {
-        :confirm => t('are_you_sure')
-      })
+    if model.electricity_supplier_contracts.collect(&:status).compact.include?("running") || metering_point_operator_contracts.collect(&:running).compact.include?(true)
+      link_to(
+        t('delete'),
+        model,
+        class: 'btn btn-danger disabled',
+        :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => t('cannot_delete_metering_point_while_running_contract_exists') },
+        rel: 'tooltip')
+    else
+      link_to(
+        t('delete'),
+        model,
+        remote: true,
+        class: 'btn btn-danger',
+        :method => :delete,
+        :data => {
+          :confirm => t('are_you_sure')
+        })
+    end
   end
 
 

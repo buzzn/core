@@ -146,7 +146,8 @@ class MeteringPoint < ActiveRecord::Base
   private
 
   def check_for_active_contracts
-    if electricity_supplier_contracts.collect(&:status).compact.include?("running")
+    if electricity_supplier_contracts.collect(&:status).compact.include?("running") || metering_point_operator_contracts.collect(&:running).compact.include?(true)
+      return false
     end
   end
 

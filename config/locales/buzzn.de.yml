@@ -377,7 +377,7 @@ de:
   edit_contract: Vertrag bearbeiten
   hour_to_minutes: Stunde in Minuten
   cannot_delete_location_while_metering_point_exists: "Der Standort kann nicht gelöscht werden, solange er noch einen Zählpunkt besitzt."
-
+  cannot_delete_metering_point_while_running_contract_exists: "Der Zählpunkt kann nicht gelöscht werden, solange er noch laufende Verträge besitzt."
 
 
 
