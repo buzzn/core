@@ -3,6 +3,7 @@ class CommentsController < InheritedResources::Base
   respond_to :html, :js
 
   def create
+    #PushReadingWorker.perform_async()
     @comment_hash = params[:comment]
     @obj = @comment_hash[:commentable_type].constantize.find(@comment_hash[:commentable_id])
     if user_signed_in? #TODO: bring commentable_by? to work

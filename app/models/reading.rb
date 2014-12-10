@@ -1,6 +1,8 @@
 class Reading
   include Mongoid::Document
 
+  after_create :push_reading
+
   field :contract_id,   type: Integer
   field :register_id,   type: Integer
   field :timestamp,     type: DateTime
@@ -10,6 +12,7 @@ class Reading
   field :quality
   field :load_course_time_series, type: Float
   field :state
+  field :metering_point_id,   type: Integer
 
   index({ register_id: 1 })
   index({ timestamp: 1 })
@@ -151,6 +154,14 @@ class Reading
       { "$limit" => 1 }
     ]
     return Reading.collection.aggregate(pipe).first
+  end
+
+
+
+  def push_reading
+    logger.warn "------pushing now-------"
+    reading = Reading.last
+    WebsocketRails[:readings_13].trigger 'new', reading
   end
 
 

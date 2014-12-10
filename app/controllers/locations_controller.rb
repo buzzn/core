@@ -6,7 +6,7 @@ class LocationsController < InheritedResources::Base
   def show
     location    = Location.find(params[:id])
     if location.metering_point
-      @metering_points = location.metering_point.subtree.arrange
+      @metering_points = location.metering_point.subtree
     else
       @metering_points = location.metering_point #nil if location was just created
     end
@@ -23,6 +23,11 @@ class LocationsController < InheritedResources::Base
         authorize_action_for(@location)
         render :json =>  MeteringPoint.json_tree(@metering_points)
       }
+    end
+    if @metering_points
+      gon.push({ metering_point_ids: @metering_points.collect(&:id) })
+    else
+      gon.push({ metering_point_ids: [] })
     end
   end
   authority_actions :show => 'read'
