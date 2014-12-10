@@ -29,6 +29,21 @@ $(".locations.show").ready ->
     $.ajax(url)
     return
 
+  dispatcher = new WebSocketRails(document.URL.split("/")[2] + "/websocket")
+
+  dispatcher.on_open = (data) ->
+    console.log "Connection has been established: ", data
+
+  channel = dispatcher.subscribe("readings")
+
+  channel.bind "new", (reading) =>
+    console.log "a new reading arrived!"
+
+  #dispatcher.bind 'new_ticker_value', (metering_point_id, value) =>
+    #$("#ticker_#{metering_point_id}").html value
+
   init_tree()
+
+
 
 

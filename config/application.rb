@@ -43,5 +43,7 @@ module Buzzn
 
     config.middleware.use Rack::GoogleAnalytics, :tracker => 'UA-xxxxxx-x'
 
+    config.middleware.delete Rack::Lock
+
   end
 end
