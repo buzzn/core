@@ -159,10 +159,9 @@ class Reading
 
 
   def push_reading
-    logger.warn "----------pushing now-----------#{register_id}, #{metering_point_id}, #{watt_hour}"
     Sidekiq::Client.push({
      'class' => PushReadingWorker,
-     'queue' => :low,
+     'queue' => :default,
      'args' => [
                 register_id,
                 metering_point_id,

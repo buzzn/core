@@ -37,7 +37,7 @@ $(".locations.show").ready ->
     console.log "subscribed to channel reading_#{metering_point_id}"
 
     channel.bind "new_reading", (reading) ->
-      console.log "new reading arrived!" + reading.watt_hour
+      $("#ticker_#{reading.metering_point_id}").html reading.watt_hour
 
   init_tree()
 
