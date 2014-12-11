@@ -1,7 +1,10 @@
 $(".locations.show").ready ->
 
   init_tree = ->
-    url = document.URL.substring(0, document.URL.lastIndexOf('#'))
+    if document.URL.lastIndexOf('#') == -1
+      url = document.URL
+    else
+      url = document.URL.substring(0, document.URL.lastIndexOf('#'))
     $.getJSON url + ".json", (data) ->
       json = JSON.stringify(data).substring(13, JSON.stringify(data).length - 1)
       $("#tree1").tree

@@ -21,7 +21,11 @@ class ProfilesController < InheritedResources::Base
                               .order("created_at desc")
                               .where(owner_id: @profile.user.id, owner_type: "User")
                               .limit(10)
-
+    if @metering_points
+      gon.push({ metering_point_ids: @metering_points.collect(&:id) })
+    else
+      gon.push({ metering_point_ids: [] })
+    end
     show!
   end
 

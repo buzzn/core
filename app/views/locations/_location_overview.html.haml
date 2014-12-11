@@ -15,3 +15,4 @@
             = t('slp')
       .chart-background{:style => "background-image: url('#{location.metering_point.background_image_url}');background-repeat:no-repeat; background-position:50% 50%;"}
         = location.metering_point.chart('day_to_hours')
+      .ticker{id: "ticker_#{location.metering_point.id}" }

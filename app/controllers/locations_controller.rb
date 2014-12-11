@@ -21,7 +21,7 @@ class LocationsController < InheritedResources::Base
       format.json{
         @location = location
         authorize_action_for(@location)
-        render :json =>  MeteringPoint.json_tree(@metering_points)
+        render :json =>  MeteringPoint.json_tree(@location.metering_point.subtree.arrange)
       }
     end
     if @metering_points

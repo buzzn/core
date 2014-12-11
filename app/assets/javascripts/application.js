@@ -36,6 +36,7 @@
 //= require locations
 //= require groups
 //= require devices
+//= require profiles
 
 //= require pusher.min
 
