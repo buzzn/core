@@ -29,19 +29,15 @@ $(".locations.show").ready ->
     $.ajax(url)
     return
 
-  dispatcher = new WebSocketRails(document.URL.split("/")[2] + "/websocket")
+  pusher = new Pusher("83f4f88842ce2dc76b7b")
 
-  dispatcher.on_open = (data) ->
-    console.log "Connection has been established: ", data
+  for metering_point_id in gon.metering_point_ids
 
-  #for metering_point_id in gon.metering_point_ids
+    channel = pusher.subscribe("reading_#{metering_point_id}")
+    console.log "subscribed to channel reading_#{metering_point_id}"
 
-  console.log "subscribed to readings_13"
-  channel = dispatcher.subscribe("readings_13")
-
-  channel.bind "new", (reading) =>
-    console.log "a new reading arrived!"
-    $("#ticker_13").html reading.watt_hour
+    channel.bind "new_reading", (reading) ->
+      console.log "new reading arrived!" + reading.watt_hour
 
   init_tree()
 

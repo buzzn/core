@@ -37,10 +37,8 @@
 //= require groups
 //= require devices
 
+//= require pusher.min
+
 //= require turbolinks
 // don't require libs below this command
-
-
-
-//= require websocket_rails/main
 

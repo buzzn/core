@@ -159,9 +159,16 @@ class Reading
 
 
   def push_reading
-    logger.warn "------pushing now-------"
-    reading = Reading.last
-    WebsocketRails[:readings_13].trigger 'new', reading
+    logger.warn "----------pushing now-----------#{register_id}, #{metering_point_id}, #{watt_hour}"
+    Sidekiq::Client.push({
+     'class' => PushReadingWorker,
+     'queue' => :low,
+     'args' => [
+                register_id,
+                metering_point_id,
+                watt_hour
+               ]
+    })
   end
 
 

@@ -1,9 +1,7 @@
 class PushReadingWorker
   include Sidekiq::Worker
 
-  def perform()
-    reading = Reading.last
-    logger.warn "pushing readings_13"
-    WebsocketRails[:readings_13].trigger 'new', reading
+  def perform(register_id, metering_point_id, watt_hour)
+    Pusher.trigger("reading_#{metering_point_id}", 'new_reading', {:watt_hour => "#{watt_hour}"})
   end
 end
