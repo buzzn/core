@@ -15,6 +15,12 @@ class GroupsController < InheritedResources::Base
 
     @all_comments                   = @group.comment_threads.order('created_at desc')
     @new_comment                    = Comment.build_from(@group, current_user.id, "") if user_signed_in?
+
+    if @metering_points
+      gon.push({ metering_point_ids: @metering_points.collect(&:id) })
+    else
+      gon.push({ metering_point_ids: [] })
+    end
   end
 
   def edit
