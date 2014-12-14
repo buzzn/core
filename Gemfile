@@ -107,7 +107,6 @@ group :development, :test do
   gem 'guard'
   gem 'guard-livereload'
   gem 'guard-bundler'
-  gem 'guard-sidekiq'
 end
 
 group :development do

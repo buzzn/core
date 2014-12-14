@@ -12,6 +12,8 @@
     graphviz
     gem install bundler
     gem install mailcatcher
+    gem install specific_install
+    gem specific_install jiren/slanger
 
 ## Setup Rails Project
     git clone git@github.com:ffaerber/buzzn.git
@@ -31,6 +33,10 @@
     bundle exec rake db:init
     bundle exec rake db:test:prepare
     bundle exec guard
+
+## Start Slanger(OpenSource Pusher.com)
+    from outside the rails project folder
+    slanger --app_key 83f4f88842ce2dc76b7b --secret 7c4cfa157cd37a4b35bb
 
 ## Sidekiq Start
     redis-server

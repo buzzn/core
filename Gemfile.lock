@@ -42,7 +42,7 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/devise.git
-  revision: a9d90503e903dae8773236b8f413d725b2002f3b
+  revision: bf30ddddc0d210e96fde364a8614d2171c557344
   specs:
     devise (3.4.1)
       bcrypt (~> 3.0)
@@ -66,32 +66,31 @@ GEM
   remote: https://rubygems.org/
   remote: http://rails-assets.org/
   specs:
-    CFPropertyList (2.2.8)
-    actionmailer (4.1.8)
-      actionpack (= 4.1.8)
-      actionview (= 4.1.8)
+    actionmailer (4.1.7)
+      actionpack (= 4.1.7)
+      actionview (= 4.1.7)
       mail (~> 2.5, >= 2.5.4)
-    actionpack (4.1.8)
-      actionview (= 4.1.8)
-      activesupport (= 4.1.8)
+    actionpack (4.1.7)
+      actionview (= 4.1.7)
+      activesupport (= 4.1.7)
       rack (~> 1.5.2)
       rack-test (~> 0.6.2)
-    actionview (4.1.8)
-      activesupport (= 4.1.8)
+    actionview (4.1.7)
+      activesupport (= 4.1.7)
       builder (~> 3.1)
       erubis (~> 2.7.0)
     active_link_to (1.0.2)
       actionpack
     active_model_serializers (0.9.0)
       activemodel (>= 3.2)
-    activemodel (4.1.8)
-      activesupport (= 4.1.8)
+    activemodel (4.1.7)
+      activesupport (= 4.1.7)
       builder (~> 3.1)
-    activerecord (4.1.8)
-      activemodel (= 4.1.8)
-      activesupport (= 4.1.8)
+    activerecord (4.1.7)
+      activemodel (= 4.1.7)
+      activesupport (= 4.1.7)
       arel (~> 5.0.0)
-    activesupport (4.1.8)
+    activesupport (4.1.7)
       i18n (~> 0.6, >= 0.6.9)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
@@ -119,14 +118,14 @@ GEM
     authority (3.0.0)
       activesupport (>= 3.0.0)
       rake (>= 0.8.7)
-    autoprefixer-rails (4.0.0.1)
+    autoprefixer-rails (3.1.2.20141016)
       execjs
     awesome_nested_set (3.0.1)
       activerecord (>= 4.0.0, < 5)
     awesome_print (1.2.0)
-    aws-sdk (1.59.0)
-      aws-sdk-v1 (= 1.59.0)
-    aws-sdk-v1 (1.59.0)
+    aws-sdk (1.58.0)
+      aws-sdk-v1 (= 1.58.0)
+    aws-sdk-v1 (1.58.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
     axiom-types (0.1.1)
@@ -189,7 +188,7 @@ GEM
       execjs
     coffee-script-source (1.8.0)
     colored (1.2)
-    connection_pool (2.1.0)
+    connection_pool (2.0.0)
     countries (0.9.3)
       currencies (~> 0.4.2)
     country_select (2.1.0)
@@ -234,28 +233,20 @@ GEM
     fastercsv (1.5.5)
     ffaker (1.25.0)
     ffi (1.9.6)
-    fission (0.5.0)
-      CFPropertyList (~> 2.2)
-    fog (1.25.0)
-      fog-brightbox (~> 0.4)
-      fog-core (~> 1.25)
+    fog (1.24.0)
+      fog-brightbox
+      fog-core (~> 1.23)
       fog-json
-      fog-profitbricks
       fog-radosgw (>= 0.0.2)
       fog-sakuracloud (>= 0.0.4)
       fog-softlayer
-      fog-terremark
-      fog-vmfusion
-      fog-voxel
-      fog-xml (~> 0.1.1)
       ipaddress (~> 0.5)
       nokogiri (~> 1.5, >= 1.5.11)
-      opennebula
     fog-brightbox (0.6.1)
       fog-core (~> 1.22)
       fog-json
       inflecto
-    fog-core (1.25.0)
+    fog-core (1.24.0)
       builder
       excon (~> 0.38)
       formatador (~> 0.2)
@@ -264,10 +255,6 @@ GEM
       net-ssh (>= 2.1.3)
     fog-json (1.0.0)
       multi_json (~> 1.0)
-    fog-profitbricks (0.0.1)
-      fog-core
-      fog-xml
-      nokogiri
     fog-radosgw (0.0.3)
       fog-core (>= 1.21.0)
       fog-json
@@ -278,15 +265,6 @@ GEM
     fog-softlayer (0.3.24)
       fog-core
       fog-json
-    fog-terremark (0.0.3)
-      fog-core
-      fog-xml
-    fog-vmfusion (0.0.1)
-      fission
-      fog-core
-    fog-voxel (0.0.1)
-      fog-core
-      fog-xml
     fog-xml (0.1.1)
       fog-core
       nokogiri (~> 1.5, >= 1.5.11)
@@ -329,7 +307,7 @@ GEM
     grape-swagger-rails (0.0.10)
       grape-swagger (~> 0.7.2)
       railties (>= 3.2.12)
-    guard (2.10.1)
+    guard (2.10.2)
       formatador (>= 0.2.4)
       listen (~> 2.7)
       lumberjack (~> 1.0)
@@ -338,16 +316,13 @@ GEM
     guard-bundler (2.0.0)
       bundler (~> 1.0)
       guard (~> 2.2)
-    guard-livereload (2.4.0)
+    guard-livereload (2.3.1)
       em-websocket (~> 0.5)
-      guard (~> 2.8)
+      guard (~> 2.0)
       multi_json (~> 1.8)
     guard-rspec (4.3.1)
       guard (~> 2.1)
       rspec (>= 2.14, < 4.0)
-    guard-sidekiq (0.1.0)
-      guard (>= 2)
-      sidekiq
     haml (4.0.5)
       tilt
     haml-rails (0.5.3)
@@ -371,7 +346,7 @@ GEM
       foreigner (>= 1.2.1)
     inflecto (0.0.2)
     ipaddress (0.8.0)
-    jbuilder (2.2.5)
+    jbuilder (2.2.4)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
     jquery-rails (3.1.2)
@@ -413,9 +388,10 @@ GEM
       rails (>= 3.0.0)
     method_source (0.8.2)
     mime-types (2.4.3)
-    mini_magick (4.0.0)
+    mini_magick (3.8.1)
+      subexec (~> 0.2.1)
     mini_portile (0.6.1)
-    minitest (5.4.3)
+    minitest (5.5.0)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     monetize (1.0.0)
@@ -432,7 +408,7 @@ GEM
       moped (~> 2.0.0)
       origin (~> 2.1)
       tzinfo (>= 0.3.37)
-    moped (2.0.2)
+    moped (2.0.1)
       bson (~> 2.2)
       connection_pool (~> 2.0)
       optionable (~> 0.2.0)
@@ -442,12 +418,9 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
-    newrelic_rpm (3.9.7.266)
+    newrelic_rpm (3.9.6.257)
     nokogiri (1.6.5)
       mini_portile (~> 0.6.0)
-    opennebula (4.10.0)
-      json
-      nokogiri
     optionable (0.2.0)
     origin (2.1.1)
     orm_adapter (0.5.0)
@@ -495,15 +468,15 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
-    rails (4.1.8)
-      actionmailer (= 4.1.8)
-      actionpack (= 4.1.8)
-      actionview (= 4.1.8)
-      activemodel (= 4.1.8)
-      activerecord (= 4.1.8)
-      activesupport (= 4.1.8)
+    rails (4.1.7)
+      actionmailer (= 4.1.7)
+      actionpack (= 4.1.7)
+      actionview (= 4.1.7)
+      activemodel (= 4.1.7)
+      activerecord (= 4.1.7)
+      activesupport (= 4.1.7)
       bundler (>= 1.3.0, < 2.0)
-      railties (= 4.1.8)
+      railties (= 4.1.7)
       sprockets-rails (~> 2.0)
     rails-assets-highcharts (4.0.4)
     rails-assets-jquery-readyselector (0.1.0)
@@ -519,13 +492,13 @@ GEM
     rails-timeago (2.11.1)
       actionpack (>= 3.1)
       activesupport (>= 3.1)
-    rails_layout (1.0.24)
-    railties (4.1.8)
-      actionpack (= 4.1.8)
-      activesupport (= 4.1.8)
+    rails_layout (1.0.23)
+    railties (4.1.7)
+      actionpack (= 4.1.7)
+      activesupport (= 4.1.7)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rake (10.4.1)
+    rake (10.4.2)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
@@ -567,7 +540,7 @@ GEM
     ruby_parser (3.5.0)
       sexp_processor (~> 4.1)
     safe_yaml (1.0.4)
-    sass (3.4.8)
+    sass (3.4.7)
     select2-rails (3.5.9.1)
       thor (~> 0.14)
     sexp_processor (4.4.4)
@@ -605,6 +578,7 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    subexec (0.2.3)
     table_print (1.5.3)
     temple (0.6.10)
     terminal-table (1.4.5)
@@ -707,7 +681,6 @@ DEPENDENCIES
   guard-bundler
   guard-livereload
   guard-rspec
-  guard-sidekiq
   haml-rails
   has_scope
   immigrant
