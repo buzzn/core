@@ -5,6 +5,8 @@ class Discovergy
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').live(60009269)
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').raw(60009269)
 
+  # Discovergy.new('karin.smith@solfux.de', '19200buzzn').raw(60051431)
+
 
   # discovergy  = Discovergy.new('team@buzzn-metering.de', 'Zebulon_4711')
   # date        = Time.now.in_time_zone
