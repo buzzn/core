@@ -17,13 +17,9 @@ class GroupsController < InheritedResources::Base
     @new_comment                    = Comment.build_from(@group, current_user.id, "") if user_signed_in?
 
     if @metering_points
-      gon.push({  register_ids: @metering_points.collect(&:registers).flatten.collect(&:id),
-                  pusher_key: Rails.application.secrets.pusher_key,
-                  pusher_host: Rails.application.secrets.pusher_host })
+      gon.push({ register_ids: @metering_points.collect(&:registers).flatten.collect(&:id) })
     else
-      gon.push({  register_ids: [],
-                  pusher_key: Rails.application.secrets.pusher_key,
-                  pusher_host: Rails.application.secrets.pusher_host })
+      gon.push({ register_ids: [] })
     end
   end
 

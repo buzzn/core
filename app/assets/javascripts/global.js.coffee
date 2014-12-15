@@ -22,6 +22,19 @@ ready = ->
 
   calculateNameWidth()
 
+  # pusher test -----------------------------
+  Pusher.host    = 'localhost'
+  Pusher.ws_port = 8080
+  Pusher.wss_port = 8080
+  pusher = new Pusher("83f4f88842ce2dc76b7b")
+
+  channel = pusher.subscribe("register_0")
+  console.log "subscribed to channel register_0"
+
+  channel.bind "update", (reading) ->
+    console.log reading
+  #-------------------------------------------
+
 
 $(document).ready(ready)
 $(document).on('page:load', ready)
