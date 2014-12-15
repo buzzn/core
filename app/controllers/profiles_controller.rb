@@ -22,9 +22,9 @@ class ProfilesController < InheritedResources::Base
                               .where(owner_id: @profile.user.id, owner_type: "User")
                               .limit(10)
     if @metering_points
-      gon.push({ metering_point_ids: @metering_points.collect(&:id) })
+      gon.push({ register_ids: @metering_points.collect(&:registers).flatten.collect(&:id) })
     else
-      gon.push({ metering_point_ids: [] })
+      gon.push({ register_ids: [] })
     end
     show!
   end

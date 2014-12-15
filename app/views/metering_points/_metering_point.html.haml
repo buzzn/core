@@ -14,7 +14,8 @@
           = t('slp')
     .chart-background{:style => "background-image: url('#{metering_point.background_image_url}');background-repeat:no-repeat; background-position:50% 50%;"}
       = metering_point.chart('day_to_hours')
-    .ticker{id: "ticker_#{metering_point.id}" }
+    - metering_point.registers.each do |register|
+      .ticker{id: "ticker_#{register.id}" }
 
     /  - if user_signed_in? && current_user.can_update?(metering_point)
     /    = metering_point.new_sub_metering_point

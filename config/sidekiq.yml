@@ -3,7 +3,7 @@
 #   sidekiq -C config.yml
 ---
 :verbose: false
-:concurrency: 10
+:concurrency: 25
 :timeout: 30
 :logfile: ./log/sidekiq.log
 :queues:

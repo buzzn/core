@@ -17,9 +17,9 @@ class GroupsController < InheritedResources::Base
     @new_comment                    = Comment.build_from(@group, current_user.id, "") if user_signed_in?
 
     if @metering_points
-      gon.push({ metering_point_ids: @metering_points.collect(&:id) })
+      gon.push({ register_ids: @metering_points.collect(&:registers).flatten.collect(&:id) })
     else
-      gon.push({ metering_point_ids: [] })
+      gon.push({ register_ids: [] })
     end
   end
 

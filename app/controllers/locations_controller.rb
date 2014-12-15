@@ -25,9 +25,9 @@ class LocationsController < InheritedResources::Base
       }
     end
     if @metering_points
-      gon.push({ metering_point_ids: @metering_points.collect(&:id) })
+      gon.push({ register_ids: @metering_points.collect(&:registers).flatten.collect(&:id) })
     else
-      gon.push({ metering_point_ids: [] })
+      gon.push({ register_ids: [] })
     end
   end
   authority_actions :show => 'read'

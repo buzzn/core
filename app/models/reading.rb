@@ -164,7 +164,6 @@ class Reading
      'queue' => :default,
      'args' => [
                 register_id,
-                metering_point_id,
                 watt_hour
                ]
     })
