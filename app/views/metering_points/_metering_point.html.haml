@@ -15,7 +15,12 @@
     .chart-background{:style => "background-image: url('#{metering_point.background_image_url}');background-repeat:no-repeat; background-position:50% 50%;"}
       = metering_point.chart('day_to_hours')
     - metering_point.registers.each do |register|
-      .ticker{id: "ticker_#{register.id}" }
+      - if register.meter.smart?
+        .ticker{id: "ticker_#{register.id}" }
+          - if Reading.where(register_id: register.id).last
+            = "Aktueller Zählerstand: " + (Reading.where(register_id: register.id).last.watt_hour/1000.0).to_s + " kWh"
+          - else
+            = "Kein aktueller Zählerstand vorhanden"
 
     /  - if user_signed_in? && current_user.can_update?(metering_point)
     /    = metering_point.new_sub_metering_point
