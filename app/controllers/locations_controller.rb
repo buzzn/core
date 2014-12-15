@@ -25,12 +25,12 @@ class LocationsController < InheritedResources::Base
       }
     end
     if @metering_points
-      gon.push({ register_ids: @metering_points.collect(&:registers).flatten.collect(&:id),
-                  pusher_host: Rails.application.secrets.pusher_host,
-                  pusher_key: Rails.application.secrets.pusher_key })
+      gon.push({ register_ids: @metering_points.collect(&:registers).flatten.collect(&:id) })
     else
       gon.push({ register_ids: [] })
     end
+    gon.push({  pusher_host: Rails.application.secrets.pusher_host,
+                pusher_key: Rails.application.secrets.pusher_key })
   end
   authority_actions :show => 'read'
 

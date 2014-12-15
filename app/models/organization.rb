@@ -30,6 +30,8 @@ class Organization < ActiveRecord::Base
   scope :distribution_system_operators, -> { where(mode: 'distribution_system_operator') }
   scope :transmission_system_operators, -> { where(mode: 'transmission_system_operator') }
 
+  default_scope -> { order(:created_at => :desc) }
+
 
   def self.modes
     %w{

@@ -15,6 +15,8 @@ class ElectricitySupplierContract < ActiveRecord::Base
   has_one :bank_account, as: :bank_accountable
   accepts_nested_attributes_for :bank_account, :reject_if => :all_blank
 
+  default_scope -> { order(:created_at => :desc) }
+
 
   def name
     metering_point.name if metering_point

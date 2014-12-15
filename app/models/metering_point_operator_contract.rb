@@ -13,6 +13,8 @@ class MeteringPointOperatorContract < ActiveRecord::Base
 
   after_save :validates_credentials_job
 
+  default_scope -> { order(:created_at => :desc) }
+
   def login_required?
     if self.organization.nil?
       false

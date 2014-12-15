@@ -9,6 +9,8 @@ class FriendshipRequest < ActiveRecord::Base
 
   cattr_accessor :skip_callbacks
 
+  default_scope -> { order(:created_at => :desc) }
+
   def accept
     FriendshipRequest.skip_callbacks = true
     update_attributes(:status  => 'accepted')

@@ -12,6 +12,8 @@ class Device < ActiveRecord::Base
 
   validates :law, :category, :primary_energy, presence: true, if: :output?
 
+  default_scope -> { order(:created_at => :desc) }
+
 
   def name
     "#{self.manufacturer_name} #{self.manufacturer_product_name}"

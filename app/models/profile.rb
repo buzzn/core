@@ -21,6 +21,8 @@ class Profile < ActiveRecord::Base
   validates :last_name,  presence: true, length: { in: 3..30 }
   validates_acceptance_of :terms, accept: true
 
+  default_scope -> { order(:created_at => :desc) }
+
 
   def self.genders
     %w{

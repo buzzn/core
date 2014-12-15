@@ -17,6 +17,8 @@ class Reading
   index({ register_id: 1 })
   index({ timestamp: 1 })
 
+  default_scope -> { order(:created_at => :desc) }
+
 
   def self.aggregate(resolution_format, register_ids=nil)
     resolution_formats = {

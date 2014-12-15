@@ -28,6 +28,8 @@ class Group < ActiveRecord::Base
   has_many :group_users
   has_many :users, :through => :group_users
 
+  default_scope -> { order(:created_at => :desc) }
+
 
   def member?(metering_point)
     self.metering_points.include?(metering_point) ? true : false
