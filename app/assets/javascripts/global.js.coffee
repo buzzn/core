@@ -22,9 +22,7 @@ ready = ->
 
   calculateNameWidth()
 
-  Pusher.host    = 'localhost'
-  Pusher.ws_port = 8080
-  Pusher.wss_port = 8080
+
 
 
 

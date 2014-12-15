@@ -12,7 +12,10 @@ $(".groups.show").ready ->
     window.location.hash = e.target.hash
     return
 
-  pusher = new Pusher("83f4f88842ce2dc76b7b")
+  Pusher.host    = gon.pusher_host
+  Pusher.ws_port = 8080
+  Pusher.wss_port = 8080
+  pusher = new Pusher(gon.pusher_key)
 
   for register_id in gon.register_ids
 
