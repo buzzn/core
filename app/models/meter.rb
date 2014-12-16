@@ -13,8 +13,6 @@ class Meter < ActiveRecord::Base
 
   after_save :validates_smartmeter_job
 
-  default_scope -> { order(:created_at => :desc) }
-
 
   def metering_point
     registers.collect(&:metering_point).first

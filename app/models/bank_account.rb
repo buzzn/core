@@ -6,7 +6,4 @@ class BankAccount < ActiveRecord::Base
   validates :bic,           presence: true, length: { in: 4..30 }
   validates :direct_debit,  presence: true
 
-  default_scope -> { order(:created_at => :desc) }
-
-
 end

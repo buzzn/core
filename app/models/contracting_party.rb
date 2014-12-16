@@ -19,8 +19,6 @@ class ContractingParty < ActiveRecord::Base
 
   validates :legal_entity, presence: true
 
-  default_scope -> { order(:created_at => :desc) }
-
 
 
   def self.legal_entities

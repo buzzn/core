@@ -43,8 +43,6 @@ class MeteringPoint < ActiveRecord::Base
   validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
   validates :address_addition, presence: true, length: { in: 2..30 }
 
-  default_scope -> { order(:created_at => :desc) }
-
   def meter
     registers.collect(&:meter).first
   end

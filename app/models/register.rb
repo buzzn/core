@@ -8,7 +8,6 @@ class Register < ActiveRecord::Base
   scope :in, -> { where(mode: :in) }
   scope :out, -> { where(mode: :out) }
 
-  default_scope -> { order(:created_at => :desc) }
 
 
 

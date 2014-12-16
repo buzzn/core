@@ -3,6 +3,4 @@ class Role < ActiveRecord::Base
   belongs_to :resource, :polymorphic => true
 
   scopify
-
-  default_scope -> { order(:created_at => :desc) }
 end

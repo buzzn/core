@@ -13,7 +13,7 @@ class Address < ActiveRecord::Base
   after_validation :geocode if Rails.env == 'production'
   geocoded_by :full_name
 
-  default_scope -> { order(:created_at => :desc) }
+  default_scope -> { order(:created_at => :asc) }
 
 
 
