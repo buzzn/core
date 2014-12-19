@@ -100,7 +100,7 @@ group :production do
 end
 
 group :development, :test do
-  #gem 'spring'
+  gem 'spring'
   gem 'lol_dba'
   gem 'listen'
   gem 'launchy'
@@ -136,6 +136,5 @@ group :test do
   gem 'vcr'
   gem 'webmock'
   gem 'poltergeist', github: 'teampoltergeist/poltergeist'
-  #gem 'phantomjs'
   gem 'database_cleaner'
 end

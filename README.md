@@ -82,10 +82,9 @@
     "highlight_line": true
 
 ## Troubleshooting
-    bundle exec rake sidekiq:stop
+    bin/spring stop
     delete folder vendor/bundle
     bundle install
-    gem update rake
 
 ## SaaS
     https://rpm.newrelic.com/accounts/791323/servers
