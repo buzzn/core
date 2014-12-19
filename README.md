@@ -12,8 +12,7 @@
     graphviz
     gem install bundler
     gem install mailcatcher
-    gem install specific_install
-    gem specific_install jiren/slanger
+    gem install slanger
 
 ## Setup Rails Project
     git clone git@github.com:ffaerber/buzzn.git
