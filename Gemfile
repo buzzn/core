@@ -72,7 +72,6 @@ gem 'rails-timeago'
 gem 'turbolinks_transitions'
 gem 'dependent-fields-rails'
 gem 'ancestry'
-gem 'rack-mini-profiler', require: false
 gem 'goldiloader'
 gem 'newrelic_rpm'
 gem 'grape'
