@@ -1,4 +1,6 @@
 $(".profiles.show").ready ->
+  timers = []
+
   Pusher.host    = gon.pusher_host
   Pusher.ws_port = 8080
   Pusher.wss_port = 8080
@@ -11,3 +13,32 @@ $(".profiles.show").ready ->
 
     channel.bind "new_reading", (reading) ->
       $("#ticker_#{reading.register_id}").html reading.watt_hour
+
+  minuteTimer = ->
+    $(".location_metering_points").children().each(->
+      metering_point_id = $(this).attr('id').split('_')[2]
+      $.getJSON "/metering_points/" + metering_point_id + "/chart?resolution=day_to_hours", (data) ->
+        $("#metering_point_#{metering_point_id}").find("[id^=chart-]").highcharts().series[0].setData(data[0].data)
+        console.log "chart-#{metering_point_id} updated"
+    )
+
+  timers.push(
+    window.setInterval(->
+      minuteTimer()
+      return
+    , 1000*60)
+    )
+
+
+window.beforeunload = ->
+  i = 0
+  alert "verlassen "
+  while i < timers.length
+    window.clearInterval timers[i]
+    alert "cleared " + i
+    i++
+  timers = []
+
+
+
+

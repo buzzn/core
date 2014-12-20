@@ -1,4 +1,6 @@
 $(".groups.show").ready ->
+  timers = []
+
   $("#mytab a").click (e) ->
     e.preventDefault()
     $(this).tab "show"
@@ -24,6 +26,31 @@ $(".groups.show").ready ->
 
     channel.bind "new_reading", (reading) ->
       $("#ticker_#{reading.register_id}").html reading.watt_hour
+
+  minuteTimer = ->
+    $("#metering_points").children().each(->
+      metering_point_id = $(this).attr('id').split('_')[2]
+      $.getJSON "/metering_points/" + metering_point_id + "/chart?resolution=day_to_hours", (data) ->
+        $("#metering_point_#{metering_point_id}").find("[id^=chart-]").highcharts().series[0].setData(data[0].data)
+        console.log "chart-#{metering_point_id} updated"
+    )
+
+  timers.push(
+    window.setInterval(->
+      minuteTimer()
+      return
+    , 1000*60)
+    )
+
+window.beforeunload = ->
+  i = 0
+  while i < timers.length
+    window.clearInterval timers[i]
+    i++
+  timers = []
+
+
+
 
 
 jQuery ->
@@ -51,3 +78,4 @@ jQuery ->
       $(this).hide('fast')
     .on "ajax:error", ".comment", ->
       $(this).fadeTo('fast', 1)
+

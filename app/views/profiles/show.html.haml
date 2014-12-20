@@ -57,7 +57,8 @@
   - if @profile.user.editable_locations.empty? && @profile.user == current_user
     = render 'no_location'
 
-  = render 'locations/location_overview'
+  .location_metering_points
+    = render 'locations/location_overview'
 
 
 

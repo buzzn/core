@@ -1,5 +1,7 @@
 $(".locations.show").ready ->
 
+  timers = []
+
   init_tree = ->
     if document.URL.lastIndexOf('#') == -1
       url = document.URL
@@ -46,6 +48,32 @@ $(".locations.show").ready ->
       $("#ticker_#{reading.register_id}").html reading.watt_hour
 
   init_tree()
+
+  minuteTimer = ->
+    $(".metering_points").children().each(->
+      metering_point_id = $(this).attr('id').split('_')[2]
+      $.getJSON "/metering_points/" + metering_point_id + "/chart?resolution=day_to_hours", (data) ->
+        $("#metering_point_#{metering_point_id}").find("[id^=chart-]").highcharts().series[0].setData(data[0].data)
+        console.log "chart-#{metering_point_id} updated"
+    )
+
+  timers.push(
+    window.setInterval(->
+      minuteTimer()
+      return
+    , 1000*60)
+    )
+
+window.beforeunload = ->
+  i = 0
+  alert "verlassen " + timers.length
+  while i < timers.length
+    window.clearInterval timers[i]
+    alert "cleared " + i
+    i++
+  timers = []
+
+
 
 
 

@@ -22,6 +22,8 @@ ready = ->
 
   calculateNameWidth()
 
+  timer = []
+
 
 
 

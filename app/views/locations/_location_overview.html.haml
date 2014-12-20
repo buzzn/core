@@ -1,9 +1,9 @@
 - @locations.each do |location|
-  .item{id: "location_#{location.id}" }
+  .item{id: "metering_point_#{location.metering_point.id}" }
     .block
       .header.no-border
         .marker-box.pull-left
-          = location.image_tag_small
+          = location.icon_tag_small
         - if user_signed_in?
           - if current_user.can_update?(location)
             = link_to t('details'), location, class: 'btn btn-default pull-right'

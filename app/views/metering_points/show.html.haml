@@ -11,7 +11,7 @@
   %h5.page-header= t('belongs_to_location')
   %article.sidebar_module.residents
     %ul
-      =# render @metering_point.root.location.decorate
+      = render @metering_point.root.location.decorate
     .clearfix
 
   - if @group

@@ -14,6 +14,14 @@ class LocationDecorator < Draper::Decorator
   end
 
   def image_tag_small
+    if model.metering_point && model.metering_point.assets.any?
+      image_tag model.metering_point.assets.first.image.small, class: 'img-circle', size: '45x45', alt: ""
+    else
+      icon_tag_small
+    end
+  end
+
+  def icon_tag_small
     content_tag(:i, '', class: 'fa fa-home')
   end
 
