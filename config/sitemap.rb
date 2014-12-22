@@ -1,5 +1,5 @@
 # Set the host name for URL creation
-SitemapGenerator::Sitemap.default_host = "http://www.example.com"
+SitemapGenerator::Sitemap.default_host = "http://www.buzzn.net"
 
 SitemapGenerator::Sitemap.create do
   # Put links creation logic here.
@@ -24,12 +24,12 @@ SitemapGenerator::Sitemap.create do
   #   Article.find_each do |article|
   #     add article_path(article), :lastmod => article.updated_at
   #   end
-  group :development do
-    SitemapGenerator::Sitemap.default_host = 'http://54.76.173.156'
+  group :staging do
+    SitemapGenerator::Sitemap.default_host = 'http://staging.buzzn.net'
   end
 
   group :production do
-    SitemapGenerator::Sitemap.default_host = 'http://app.buzzn.net'
+    SitemapGenerator::Sitemap.default_host = 'http://www.buzzn.net'
   end
 
   SitemapGenerator::Sitemap.create do
