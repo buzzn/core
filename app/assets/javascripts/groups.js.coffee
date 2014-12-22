@@ -1,5 +1,13 @@
-$(".groups.show").ready ->
+timers = []
+
+clearTimers = ->
+  i = 0
+  while i < timers.length
+    window.clearInterval timers[i]
+    i++
   timers = []
+
+$(".groups.show").ready ->
 
   $("#mytab a").click (e) ->
     e.preventDefault()
@@ -42,12 +50,9 @@ $(".groups.show").ready ->
     , 1000*60)
     )
 
-window.beforeunload = ->
-  i = 0
-  while i < timers.length
-    window.clearInterval timers[i]
-    i++
-  timers = []
+
+
+$(document).on('page:before-change', clearTimers)
 
 
 

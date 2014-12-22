@@ -20,6 +20,7 @@ Buzzn::Application.routes.draw do
   resources :metering_points do
     member do
       get :chart
+      get :latest_slp
       get :edit_users
       get :edit_devices
       get :update_parent

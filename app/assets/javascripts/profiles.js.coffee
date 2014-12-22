@@ -1,5 +1,13 @@
-$(".profiles.show").ready ->
+timers = []
+
+clearTimers = ->
+  i = 0
+  while i < timers.length
+    window.clearInterval timers[i]
+    i++
   timers = []
+
+$(".profiles.show").ready ->
 
   Pusher.host    = gon.pusher_host
   Pusher.ws_port = 8080
@@ -30,14 +38,9 @@ $(".profiles.show").ready ->
     )
 
 
-window.beforeunload = ->
-  i = 0
-  alert "verlassen "
-  while i < timers.length
-    window.clearInterval timers[i]
-    alert "cleared " + i
-    i++
-  timers = []
+
+
+$(document).on('page:before-change', clearTimers)
 
 
 

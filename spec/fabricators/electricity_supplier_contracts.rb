@@ -8,7 +8,7 @@ Fabricator :electricity_supplier_contract do
   power_of_attorney     true
   confirm_pricing_model true
   commissioning         Date.new(2013,9,1)
-  forecast_watt_hour_pa 1700
+  forecast_watt_hour_pa 1700000
   price_cents           2995
   organization          { Fabricate(:electricity_supplier) }
   bank_account          { Fabricate(:bank_account) }

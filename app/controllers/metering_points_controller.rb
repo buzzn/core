@@ -1,5 +1,5 @@
 class MeteringPointsController < InheritedResources::Base
-  before_filter :authenticate_user!, except: [:chart]
+  before_filter :authenticate_user!, except: [:chart, :latest_slp]
   respond_to :html, :json, :js
 
   def show
@@ -22,6 +22,10 @@ class MeteringPointsController < InheritedResources::Base
       @chart_data << {name: register.mode, data: register.send(params[:resolution])}
     end
     render json: @chart_data.to_json
+  end
+
+  def latest_slp
+    render json: Reading.latest_slp.to_json
   end
 
 

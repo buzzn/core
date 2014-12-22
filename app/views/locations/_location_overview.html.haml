@@ -22,3 +22,9 @@
               = "Aktueller Zählerstand: " + (Reading.where(register_id: register.id).last.watt_hour/1000.0).to_s + " kWh"
             - else
               = "Kein aktueller Zählerstand vorhanden"
+        - else
+          .ticker.slp_ticker
+            - if Reading.latest_slp && location.metering_point.electricity_supplier_contracts.any? && location.metering_point.electricity_supplier_contracts.first.forecast_watt_hour_pa
+              = "Aktueller Zählerstand: "
+            - else
+              = "Zur Berechnung des aktuellen Zählerstandes muss die Prognose im Stromvertrag hinzugefügt werden."

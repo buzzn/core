@@ -1,6 +1,13 @@
-$(".locations.show").ready ->
+timers = []
 
+clearTimers = ->
+  i = 0
+  while i < timers.length
+    window.clearInterval timers[i]
+    i++
   timers = []
+
+$(".locations.show").ready ->
 
   init_tree = ->
     if document.URL.lastIndexOf('#') == -1
@@ -64,14 +71,9 @@ $(".locations.show").ready ->
     , 1000*60)
     )
 
-window.beforeunload = ->
-  i = 0
-  alert "verlassen " + timers.length
-  while i < timers.length
-    window.clearInterval timers[i]
-    alert "cleared " + i
-    i++
-  timers = []
+
+
+$(document).on('page:before-change', clearTimers)
 
 
 

@@ -157,6 +157,18 @@ class Reading
     return Reading.collection.aggregate(pipe).first
   end
 
+  def self.latest_slp
+    values = []
+    readings = Reading.where(:timestamp.gte => (Time.now - 15.minutes), :timestamp.lt => (Time.now + 15.minutes), source: "slp")
+    firstTimestamp = readings.first.timestamp
+    firstValue = readings.first.watt_hour/1000.0
+    lastTimestamp = readings.last.timestamp
+    lastValue = readings.last.watt_hour/1000.0
+    values << [firstTimestamp, firstValue]
+    values << [lastTimestamp, lastValue]
+    return values
+  end
+
 
 
   def push_reading
