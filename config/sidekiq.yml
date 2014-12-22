@@ -7,10 +7,10 @@
 :timeout: 30
 
 staging:
-  :pidfile: ../shared/pids/sidekiq.pid
+  :pidfile: ../../shared/pids/sidekiq.pid
 
 production:
-  :pidfile: ../shared/pids/sidekiq.pid
+  :pidfile: ../../shared/pids/sidekiq.pid
 
 :logfile: log/sidekiq.log
 :queues:
