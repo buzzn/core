@@ -12,9 +12,9 @@
   - ['low', 1]
 :limits:
   low: 1
-
+development:
+  :pidfile: tmp/pids/sidekiq.pid
 staging:
-  pidfile: ../shared/pids/sidekiq.pid
-
+  :pidfile: ../shared/pids/sidekiq.pid
 production:
-  pidfile: ../shared/pids/sidekiq.pid
+  :pidfile: ../shared/pids/sidekiq.pid
