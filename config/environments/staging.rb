@@ -1,6 +1,8 @@
 Buzzn::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  #GA.tracker = "UA-43704543-1"
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -23,7 +25,8 @@ Buzzn::Application.configure do
   config.serve_static_assets = false
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = :uglifier
+  config.assets.compress = true
+  config.assets.js_compressor  = :uglifier
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
@@ -64,7 +67,7 @@ Buzzn::Application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   #config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options = { :host => "www.buzzn.net" }
+  config.action_mailer.default_url_options  = { :host => "staging.buzzn.net" }
   config.action_mailer.delivery_method      = :test
 
 
