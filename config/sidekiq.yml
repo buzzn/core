@@ -5,17 +5,19 @@
 :verbose: false
 :concurrency: 25
 :timeout: 30
+
+staging:
+  :pidfile: pids/sidekiq.pid
+
+production:
+  :pidfile: pids/sidekiq.pid
+
+:logfile: log/sidekiq.log
+
 :queues:
   - ['high', 3]
   - ['default', 2]
   - ['low', 1]
+
 :limits:
   low: 1
-development:
-  :pidfile: tmp/pids/sidekiq.pid
-staging:
-  :pidfile: ../shared/pids/sidekiq.pid
-  :logfile: ../shared/log/sidekiq.log
-production:
-  :pidfile: ../shared/pids/sidekiq.pid
-  :logfile: ../shared/log/sidekiq.log
