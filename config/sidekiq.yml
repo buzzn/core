@@ -7,17 +7,16 @@
 :timeout: 30
 
 staging:
-  :pidfile: pids/sidekiq.pid
+  :pidfile: ../shared/pids/sidekiq.pid
 
 production:
-  :pidfile: pids/sidekiq.pid
+  :pidfile: ../shared/pids/sidekiq.pid
 
 :logfile: log/sidekiq.log
-
 :queues:
   - ['high', 3]
   - ['default', 2]
   - ['low', 1]
-
-:limits:
+limits:
   low: 1
+
