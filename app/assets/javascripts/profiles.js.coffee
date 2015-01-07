@@ -27,6 +27,7 @@ $(".profiles.show").ready ->
       metering_point_id = $(this).attr('id').split('_')[2]
       $.getJSON "/metering_points/" + metering_point_id + "/chart?resolution=day_to_hours", (data) ->
         $("#metering_point_#{metering_point_id}").find("[id^=chart-]").highcharts().series[0].setData(data[0].data)
+        $("#metering_point_#{metering_point_id}").find("[id^=chart-]").highcharts().xAxis.dateTimeLabelFormats
         console.log "chart-#{metering_point_id} updated"
     )
 

@@ -16,6 +16,15 @@ class MeteringPointDecorator < Draper::Decorator
 
 
   def chart(resolution='day_to_hours', chart_type='column_chart')
+    if resolution == 'day_to_hours'
+      date_format = '{value: %H:%M}'
+    elsif resolution == 'hour_to_minutes'
+      date_format = '{value: %H:%M:%S}'
+    elsif resolution == 'month_to_days'
+      date_format = '{value: %e. %b}'
+    elsif resolution == 'year_to_months'
+      date_format = '{value: %Y}'
+    end
     colors = []
     model.registers.map(&:mode).each do |mode|
       case mode
@@ -42,7 +51,7 @@ class MeteringPointDecorator < Draper::Decorator
           }
         },
         tooltip:{
-          pointFormat: "{point.y:,.2f} kwh"
+          pointFormat: "{point.y:,.2f} kWh"
         },
         exporting: {
           enabled: false
@@ -51,10 +60,11 @@ class MeteringPointDecorator < Draper::Decorator
         xAxis: {
           type: 'datetime',
           dateTimeLabelFormats: {
-              month: '%e. %b',
-              year: '%b'
+            minute: '%H:%M:%S'
           },
           labels: {
+            format: date_format,
+            align: 'right',
             enabled: true,
             style: {
               color: '#FFF'

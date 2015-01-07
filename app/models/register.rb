@@ -66,7 +66,7 @@ private
     hours = []
     data.each do |hour|
       hours << [
-        hour['firstTimestamp'],
+        hour['firstTimestamp'].to_i*1000,
         hour['consumption'].to_i/1000.0
       ]
     end
