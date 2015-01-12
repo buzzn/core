@@ -60,7 +60,7 @@ class MeteringPointDecorator < Draper::Decorator
         xAxis: {
           type: 'datetime',
           dateTimeLabelFormats: {
-            minute: '%H:%M:%S'
+            minute: "%H:%M" #TODO not working.
           },
           labels: {
             format: date_format,
