@@ -38,6 +38,9 @@
 //= require devices
 //= require profiles
 
+//= require CustomTooltip
+//= require d3
+
 //= require pusher.min
 
 //= require turbolinks
