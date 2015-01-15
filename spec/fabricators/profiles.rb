@@ -101,6 +101,52 @@ Fabricator :profile_manuela_baier, from: :profile do
 end
 
 
+Fabricator :profile_dirk_mittelstaedt, from: :profile do
+  first_name  'Dirk'
+  last_name   'Mittelstaedt'
+end
+
+Fabricator :profile_manuel_dmoch, from: :profile do
+  first_name  'Manuel'
+  last_name   'Dmoch'
+end
+
+Fabricator :profile_sibo_ahrens, from: :profile do
+  first_name  'Sibo'
+  last_name   'Ahrens'
+end
+
+Fabricator :profile_nicolas_sadoni, from: :profile do
+  first_name  'Nicolas'
+  last_name   'Sadoni'
+end
+
+Fabricator :profile_josef_neu, from: :profile do
+  first_name  'Josef'
+  last_name   'Neu'
+end
+
+Fabricator :profile_elisabeth_christiansen, from: :profile do
+  first_name  'Elisabeth'
+  last_name   'Christiansen'
+end
+
+Fabricator :profile_florian_butz, from: :profile do
+  first_name  'Florian'
+  last_name   'Butz'
+end
+
+Fabricator :profile_ulrike_bez, from: :profile do
+  first_name  'Ulrike'
+  last_name   'Bez'
+end
+
+Fabricator :profile_rudolf_hassenstein, from: :profile do
+  first_name  'Rudolf'
+  last_name   'Hassenstein'
+end
+
+
 
 
 

@@ -100,4 +100,63 @@ end
 
 
 
+Fabricator :dirk_mittelstaedt, from: :user do
+  email               'dirk.mittelstaedt@t-online.de'
+  profile             { Fabricate(:profile_dirk_mittelstaedt) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :manuel_dmoch, from: :user do
+  email               'manuel.dmoch@gmail.com'
+  profile             { Fabricate(:profile_manuel_dmoch) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :sibo_ahrens, from: :user do
+  email               'sibo_ahrens@yahoo.de'
+  profile             { Fabricate(:profile_sibo_ahrens) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :nicolas_sadoni, from: :user do
+  email               'nicolas.sadoni@gmx.de'
+  profile             { Fabricate(:profile_nicolas_sadoni) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :josef_neu, from: :user do
+  email               'burger.neu@web.de'
+  profile             { Fabricate(:profile_josef_neu) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :elisabeth_christiansen, from: :user do
+  email               'elisa.christiansen@gmx.de'
+  profile             { Fabricate(:profile_elisabeth_christiansen) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :florian_butz, from: :user do
+  email               'flob@gmx.net'
+  profile             { Fabricate(:profile_florian_butz) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :ulrike_bez, from: :user do
+  email               'ulrike@bezmedien.com'
+  profile             { Fabricate(:profile_ulrike_bez) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :rudolf_hassenstein, from: :user do
+  email               'ruhn@arcor.de'
+  profile             { Fabricate(:profile_rudolf_hassenstein) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+
+
+
+
+
 

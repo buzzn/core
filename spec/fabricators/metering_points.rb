@@ -191,6 +191,81 @@ end
 
 
 
+#Wagnis 4 - West Wohnung 02 - Dirk Mittelstaedt
+Fabricator :mp_60009416, from: :metering_point do
+  address_addition  'Wohnung'
+  registers { Fabricate(:easymeter_60009416).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - West Wohnung 03 - Manuel Dmoch
+Fabricator :mp_60009419, from: :metering_point do
+  address_addition  'Wohnung'
+  registers { Fabricate(:easymeter_60009419).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - West Wohnung 04 - Sibo Ahrens
+Fabricator :mp_60009415, from: :metering_point do
+  address_addition  'Wohnung'
+  registers { Fabricate(:easymeter_60009415).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - West Wohnung 05 - Nicolas Sadoni
+Fabricator :mp_60009418, from: :metering_point do
+  address_addition  'Wohnung'
+  registers { Fabricate(:easymeter_60009418).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - West Wohnung 11 - Josef Neu
+Fabricator :mp_60009411, from: :metering_point do
+  address_addition  'Wohnung'
+  registers { Fabricate(:easymeter_60009411).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - West Wohnung 13 - Elisabeth Christiansen
+Fabricator :mp_60009410, from: :metering_point do
+  address_addition  'Wohnung'
+  registers { Fabricate(:easymeter_60009410).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - West Wohnung 12 - Florian Butz
+Fabricator :mp_60009407, from: :metering_point do
+  address_addition  'Wohnung'
+  registers { Fabricate(:easymeter_60009407).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - West Wohnung 15 - Ulrike Bez
+Fabricator :mp_60009409, from: :metering_point do
+  address_addition  'Wohnung'
+  registers { Fabricate(:easymeter_60009409).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - West Wohnung 15 - Rudolf Hassenstein
+Fabricator :mp_60009435, from: :metering_point do
+  address_addition  'Wohnung'
+  registers { Fabricate(:easymeter_60009435).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Allgemeinstrom Haus West
+Fabricator :mp_60009420, from: :metering_point do
+  address_addition  'Wohnung'
+  registers { Fabricate(:easymeter_60009420).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+
+
+
+
+
 
 
 

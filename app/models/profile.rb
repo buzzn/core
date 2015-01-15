@@ -17,8 +17,8 @@ class Profile < ActiveRecord::Base
   belongs_to :user
 
   #validates :username, allow_blank: true, uniqueness: true, length: { in: 4..30 }
-  validates :first_name, presence: true, length: { in: 3..30 }
-  validates :last_name,  presence: true, length: { in: 3..30 }
+  validates :first_name, presence: true, length: { in: 2..30 }
+  validates :last_name,  presence: true, length: { in: 2..30 }
   validates_acceptance_of :terms, accept: true
 
 

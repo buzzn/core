@@ -47,6 +47,9 @@
         %tr
           %td= t('online')
           %td= @meter.online
+        %tr
+          %td= t('initialized_successfully')
+          %td= @meter.init_reading
   .registers.content.no-padding
     - if @meter.registers.empty?
       .header.no-border

@@ -129,6 +129,90 @@ end
 
 
 
+# wagnis 4
+Fabricator :easymeter_60009416, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009416'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+# wagnis 4
+Fabricator :easymeter_60009419, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009419'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+# wagnis 4
+Fabricator :easymeter_60009415, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009415'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+# wagnis 4
+Fabricator :easymeter_60009418, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009418'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+# wagnis 4
+Fabricator :easymeter_60009411, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009411'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+# wagnis 4
+Fabricator :easymeter_60009410, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009410'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+# wagnis 4
+Fabricator :easymeter_60009407, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009407'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+# wagnis 4
+Fabricator :easymeter_60009409, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009409'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+# wagnis 4
+Fabricator :easymeter_60009435, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009435'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+# wagnis 4
+Fabricator :easymeter_60009420, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009420'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+
+
+
+
 
 
 

@@ -28,4 +28,11 @@ Fabricator :group_karins_pv_strom, from: :group do
   description { "Diese Gruppe ist offen für alle, die gerne meinen selbstgemachten PV-Strom von meiner Scheune beziehen möchten." }
 end
 
+Fabricator :group_wagnis4, from: :group do
+  name        'Wagnis 4'
+  description { "Dies ist der Localpool von Wagnis 4." }
+  servicing_contract                { Fabricate(:servicing_contract) }
+end
+
+
 

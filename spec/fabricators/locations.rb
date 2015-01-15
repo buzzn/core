@@ -86,6 +86,52 @@ end
 
 
 
+Fabricator :location_dirk_mittelstaedt, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009416)}
+end
+
+Fabricator :location_manuel_dmoch, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009419)}
+end
+
+Fabricator :location_sibo_ahrens, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009415)}
+end
+Fabricator :location_nicolas_sadoni, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009418)}
+end
+Fabricator :location_josef_neu, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009411)}
+end
+Fabricator :location_elisabeth_christiansen, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009410)}
+end
+Fabricator :location_florian_butz, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009407)}
+end
+Fabricator :location_ulrike_bez, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009409)}
+end
+Fabricator :location_rudolf_hassenstein, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009435)}
+end
+Fabricator :location_wagnis4, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009420)}
+end
+
+
+
+
 
 
 
