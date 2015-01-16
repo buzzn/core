@@ -10,7 +10,7 @@
     = analytics_init if Rails.env.production?
 
   %body{class: "#{controller_name} #{action_name}"}
-    = include_gon
+    = include_gon(:init => true)
     #myModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
 
     %section#container
