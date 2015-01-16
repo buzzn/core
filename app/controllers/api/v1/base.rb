@@ -6,7 +6,7 @@ module API
       mount API::V1::MeteringPoints
       mount API::V1::Meters
       # mount API::V1::Registers
-      mount API::V1::Readings
+      #mount API::V1::Readings
 
       add_swagger_documentation(
         api_version: "v1",
