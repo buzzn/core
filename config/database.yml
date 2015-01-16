@@ -2,12 +2,10 @@ development:
   adapter: postgresql
   encoding: unicode
   database: buzzn_development
-  pool: 25
-  timeout: 1500
+  pool: 5
 
 test:
   adapter: postgresql
   encoding: unicode
   database: buzzn_test
-  pool: 25
-  timeout: 1500
+  pool: 5

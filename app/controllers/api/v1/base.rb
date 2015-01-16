@@ -4,7 +4,9 @@ module API
   module V1
     class Base < Grape::API
       mount API::V1::MeteringPoints
-      mount API::V1::Groups
+      mount API::V1::Meters
+      mount API::V1::Registers
+      mount API::V1::Readings
 
       add_swagger_documentation(
         api_version: "v1",

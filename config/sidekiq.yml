@@ -3,7 +3,7 @@
 #   sidekiq -C config.yml
 ---
 :verbose: false
-:concurrency: 1
+:concurrency: 2
 :timeout: 30
 
 development:
