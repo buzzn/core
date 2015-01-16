@@ -22,33 +22,28 @@ $(".groups.show").ready ->
     window.location.hash = e.target.hash
     return
 
-  Pusher.host    = gon.pusher_host
-  Pusher.ws_port = 8080
-  Pusher.wss_port = 8080
-  pusher = new Pusher(gon.pusher_key)
+  #for register_id in gon.register_ids
+  #
+  #  channel = pusher.subscribe("register_#{register_id}")
+  #  console.log "subscribed to channel register_#{register_id}"
+  #
+  #  channel.bind "new_reading", (reading) ->
+  #    $("#ticker_#{reading.register_id}").html reading.watt_hour
 
-  for register_id in gon.register_ids
+  #minuteTimer = ->
+  #  $("#metering_points").children().each(->
+  #    metering_point_id = $(this).attr('id').split('_')[2]
+  #    $.getJSON "/metering_points/" + metering_point_id + "/chart?resolution=day_to_hours", (data) ->
+  #      $("#metering_point_#{metering_point_id}").find("[id^=chart-]").highcharts().series[0].setData(data[0].data)
+  #      console.log "chart-#{metering_point_id} updated"
+  #  )
 
-    channel = pusher.subscribe("register_#{register_id}")
-    console.log "subscribed to channel register_#{register_id}"
-
-    channel.bind "new_reading", (reading) ->
-      $("#ticker_#{reading.register_id}").html reading.watt_hour
-
-  minuteTimer = ->
-    $("#metering_points").children().each(->
-      metering_point_id = $(this).attr('id').split('_')[2]
-      $.getJSON "/metering_points/" + metering_point_id + "/chart?resolution=day_to_hours", (data) ->
-        $("#metering_point_#{metering_point_id}").find("[id^=chart-]").highcharts().series[0].setData(data[0].data)
-        console.log "chart-#{metering_point_id} updated"
-    )
-
-  timers.push(
-    window.setInterval(->
-      minuteTimer()
-      return
-    , 1000*60)
-    )
+  #timers.push(
+  #  window.setInterval(->
+  #    minuteTimer()
+  #    return
+  #  , 1000*60)
+  #  )
 
 
 
@@ -119,9 +114,9 @@ class BubbleChart
       .domain(["low", "medium", "high"])
       .range(["#d84b2a", "#beccae", "#7aa25c"])
 
-    # use the max total_amount in the data as the max in the scale's domain
-    max_amount = d3.max(@data, (d) -> parseInt(d[3]))
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, max_amount]).range([2, 45])
+    # use the max watt_hour in the data as the max in the scale's domain
+    max_amount = d3.max(@data, (d) -> parseInt(d[1]))
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, max_amount]).range([2, 85])
 
     this.create_nodes()
     this.create_vis()
@@ -130,25 +125,13 @@ class BubbleChart
   # that will serve as the data behind each
   # bubble in the vis, then add each node
   # to @nodes to be used later
-  #grant_title: 0
-  #id: 1
-  #organization: 2
-  #total_amount: 3
-  #group: 4
-  #Grant start date: 5
-  #start_month: 6
-  #start_day: 7
-  #start_year: 8
   create_nodes: () =>
     @data.forEach (d) =>
       node = {
-        id: d[1]
-        radius: @radius_scale(parseInt(d[3]))
-        value: d[3]
-        name: d[0]
-        org: d[2]
-        group: d[4]
-        year: d[8]
+        id: d[0]
+        radius: @radius_scale(parseInt(d[1]))
+        value: d[1]
+        name: d[2]
         x: Math.random() * 900
         y: Math.random() * 800
       }
@@ -200,7 +183,7 @@ class BubbleChart
   # Dividing by 8 scales down the charge to be
   # appropriate for the visualization dimensions.
   charge: (d) ->
-    -Math.pow(d.radius, 2.0) / 6
+    -Math.pow(d.radius, 2.0) / 7
 
   # Starts up the force layout with
   # the default values
@@ -232,38 +215,38 @@ class BubbleChart
 
   # sets the display of bubbles to be separated
   # into each year. Does this by calling move_towards_year
-  display_by_year: () =>
-    @force.gravity(@layout_gravity)
-      .charge(this.charge)
-      .friction(0.9)
-      .on "tick", (e) =>
-        @circles.each(this.move_towards_year(e.alpha))
-          .attr("cx", (d) -> d.x)
-          .attr("cy", (d) -> d.y)
-    @force.start()
-
-    this.display_years()
+  #display_by_year: () =>
+  #  @force.gravity(@layout_gravity)
+  #    .charge(this.charge)
+  #    .friction(0.9)
+  #    .on "tick", (e) =>
+  #      @circles.each(this.move_towards_year(e.alpha))
+  #        .attr("cx", (d) -> d.x)
+  #        .attr("cy", (d) -> d.y)
+  #  @force.start()
+  #
+  #  this.display_years()
 
   # move all circles to their associated @year_centers
-  move_towards_year: (alpha) =>
-    (d) =>
-      target = @year_centers[d.year]
-      d.x = d.x + (target.x - d.x) * (@damper + 0.02) * alpha * 1.1
-      d.y = d.y + (target.y - d.y) * (@damper + 0.02) * alpha * 1.1
+  #move_towards_year: (alpha) =>
+  #  (d) =>
+  #    target = @year_centers[d.year]
+  #    d.x = d.x + (target.x - d.x) * (@damper + 0.02) * alpha * 1.1
+  #    d.y = d.y + (target.y - d.y) * (@damper + 0.02) * alpha * 1.1
 
   # Method to display year titles
-  display_years: () =>
-    years_x = {"2008": 160, "2009": @width / 2, "2010": @width - 160}
-    years_data = d3.keys(years_x)
-    years = @vis.selectAll(".years")
-      .data(years_data)
+  #display_years: () =>
+  #  years_x = {"2008": 160, "2009": @width / 2, "2010": @width - 160}
+  #  years_data = d3.keys(years_x)
+  #  years = @vis.selectAll(".years")
+  #    .data(years_data)
 
-    years.enter().append("text")
-      .attr("class", "years")
-      .attr("x", (d) => years_x[d] )
-      .attr("y", 40)
-      .attr("text-anchor", "middle")
-      .text((d) -> d)
+  #  years.enter().append("text")
+  #    .attr("class", "years")
+  #    .attr("x", (d) => years_x[d] )
+  #    .attr("y", 40)
+  #    .attr("text-anchor", "middle")
+  #    .text((d) -> d)
 
   # Method to hide year titiles
   hide_years: () =>
@@ -271,9 +254,8 @@ class BubbleChart
 
   show_details: (data, i, element) =>
     d3.select(element).attr("stroke", "black")
-    content = "<span class=\"name\">Title:</span><span class=\"value\"> #{data.name}</span><br/>"
-    content +="<span class=\"name\">Amount:</span><span class=\"value\"> $#{addCommas(data.value)}</span><br/>"
-    content +="<span class=\"name\">Year:</span><span class=\"value\"> #{data.year}</span>"
+    content = "<span class=\"name\">Name:</span><span class=\"value\"> #{data.name}</span><br/>"
+    content +="<span class=\"name\">Aktueller Bezug:</span><span class=\"value\"> $#{addCommas(data.value)}</span><br/>"
     @tooltip.showTooltip(content,d3.event)
 
 
@@ -281,15 +263,11 @@ class BubbleChart
     d3.select(element).attr("stroke", (d) => d3.rgb(@fill_color(d.group)).darker())
     @tooltip.hideTooltip()
 
-  reset_radius: () =>
+  reset_radius: (id, value) =>
     @nodes.forEach (d) =>
-      offset = Math.random()*10 - 5.2
-      if d.radius + offset <= 0
-        d.radius = d.radius
-      else if d.radius > 60
-        d.radius = 60
-      else
-        d.radius = d.radius + offset
+      if d.id.toString() == id.toString()
+        d.radius = @radius_scale(parseInt(value))
+        d.value = value
     #@circles = @vis.selectAll("circle")
     #  .data(@nodes, (d) -> d.id)
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
@@ -317,27 +295,25 @@ $ ->
     else
       root.display_all()
 
-  data = gon.bubble_data
+  data = gon.metering_point_data
 
-  arr = csvArr data
-  #grant_title: 0
-  #id: 1
-  #organization: 2
-  #total_amount: 3
-  #group: 4
-  #Grant start date: 5
-  #start_month: 6
-  #start_day: 7
-  #start_year: 8
+  render_vis data
 
+  Pusher.host    = gon.pusher_host
+  Pusher.ws_port = 8080
+  Pusher.wss_port = 8080
+  pusher = new Pusher(gon.pusher_key)
 
+  for register_id in gon.register_ids
 
-  render_vis arr
+    channel = pusher.subscribe("register_#{register_id}")
+    channel.bind "new_reading", (reading) ->
+      chart.reset_radius(reading.register_id, reading.watt_hour)
 
 
-  window.setInterval(->
-    chart.reset_radius()
-  , 1000*5)
+  #window.setInterval(->
+  #  chart.reset_radius()
+  #, 1000*5)
 
 addCommas = (nStr) ->
   nStr += ""
@@ -360,27 +336,6 @@ csvArr = (csv) ->
       entry.push(v)
     result.push(entry)
   return result
-
-
-csvJSON = (csv) ->
-  lines = csv.split("\n")
-  result = []
-  headers = lines[0].split(",")
-  i = 1
-
-  while i < lines.length - 1
-    obj = {}
-    currentline = lines[i].split(",")
-    j = 0
-
-    while j < headers.length
-      obj[headers[j]] = currentline[j+1]
-      j++
-    result.push obj
-    i++
-
-  #return result; //JavaScript object
-  JSON.stringify result #JSON
 
 
 
