@@ -17,6 +17,7 @@ module API
           Group.where(id: permitted_params[:id]).first!
         end
       end
+
     end
   end
 end
