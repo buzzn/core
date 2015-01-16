@@ -249,41 +249,51 @@ group_home_of_the_brave.create_activity key: 'group.create', owner: justus, reci
 puts 'group wagnis4'
 dirk_mittelstaedt = Fabricate(:dirk_mittelstaedt)
 location_dirk_mittelstaedt = Fabricate(:location_dirk_mittelstaedt)
+dirk_mittelstaedt.add_role(:manager, location_dirk_mittelstaedt)
 mp_60009416 = location_dirk_mittelstaedt.metering_point
 mp_60009416.users << dirk_mittelstaedt
 manuel_dmoch = Fabricate(:manuel_dmoch)
 location_manuel_dmoch = Fabricate(:location_manuel_dmoch)
+manuel_dmoch.add_role(:manager, location_manuel_dmoch)
 mp_60009419 = location_manuel_dmoch.metering_point
 mp_60009419.users << manuel_dmoch
 sibo_ahrens = Fabricate(:sibo_ahrens)
 location_sibo_ahrens = Fabricate(:location_sibo_ahrens)
+sibo_ahrens.add_role(:manager, location_sibo_ahrens)
 mp_60009415 = location_sibo_ahrens.metering_point
 mp_60009415.users << sibo_ahrens
 nicolas_sadoni = Fabricate(:nicolas_sadoni)
 location_nicolas_sadoni = Fabricate(:location_nicolas_sadoni)
+nicolas_sadoni.add_role(:manager, location_nicolas_sadoni)
 mp_60009418 = location_nicolas_sadoni.metering_point
 mp_60009418.users << nicolas_sadoni
 josef_neu = Fabricate(:josef_neu)
 location_josef_neu = Fabricate(:location_josef_neu)
+josef_neu.add_role(:manager, location_josef_neu)
 mp_60009411 = location_josef_neu.metering_point
 mp_60009411.users << josef_neu
 elisabeth_christiansen = Fabricate(:elisabeth_christiansen)
 location_elisabeth_christiansen = Fabricate(:location_elisabeth_christiansen)
+elisabeth_christiansen.add_role(:manager, location_elisabeth_christiansen)
 mp_60009410 = location_elisabeth_christiansen.metering_point
 mp_60009410.users << elisabeth_christiansen
 florian_butz = Fabricate(:florian_butz)
 location_florian_butz = Fabricate(:location_florian_butz)
+florian_butz.add_role(:manager, location_florian_butz)
 mp_60009407 = location_florian_butz.metering_point
 mp_60009407.users << florian_butz
 ulrike_bez = Fabricate(:ulrike_bez)
 location_ulrike_bez = Fabricate(:location_ulrike_bez)
+ulrike_bez.add_role(:manager, location_ulrike_bez)
 mp_60009409 = location_ulrike_bez.metering_point
 mp_60009409.users << ulrike_bez
 rudolf_hassenstein = Fabricate(:rudolf_hassenstein)
 location_rudolf_hassenstein = Fabricate(:location_rudolf_hassenstein)
+rudolf_hassenstein.add_role(:manager, location_rudolf_hassenstein)
 mp_60009435 = location_rudolf_hassenstein.metering_point
 mp_60009435.users << rudolf_hassenstein
 location_wagnis4 = Fabricate(:location_wagnis4)
+manuel_dmoch.add_role(:manager, location_wagnis4)
 mp_60009420 = location_wagnis4.metering_point
 mp_60009420.users << dirk_mittelstaedt
 mp_60009420.users << manuel_dmoch
@@ -316,11 +326,11 @@ group_wagnis4.metering_point_operator_contract = Fabricate(:mpoc_buzzn_metering,
 
 
 
-puts '5 simple users'
-5.times do
-  user = Fabricate(:user)
-  puts "  #{user.email}"
-end
+# puts '5 simple users'
+# 5.times do
+#   user = Fabricate(:user)
+#   puts "  #{user.email}"
+# end
 
 
 
