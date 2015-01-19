@@ -28,21 +28,21 @@ class GroupsController < InheritedResources::Base
     metering_point_data = []
     @metering_points.each do |metering_point|
       data_entry = []
-      latest_watt_hour = -1 # -1 means: no current data available
+      latest_watt = -1 # -1 means: no current data available
       user_name = Profile.where(user: User.with_role(:manager, metering_point.location)).first.first_name
       if metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
-        latest_reading = Reading.last_by_register_id(metering_point.registers.first.id)
+        latest_reading = Reading.last_power_by_register_id(metering_point.registers.first.id)
         if !latest_reading.nil?
-          latest_watt_hour = latest_reading[:watt_hour]/1000.0
+          latest_watt = latest_reading
         end
       elsif metering_point.meter.smart? && metering_point.meter.online && !metering_point.meter.init_reading
         #TODO: init_reading ausführen
       elsif metering_point.meter.smart? && !metering_point.meter.online && metering_point.meter.init_reading
-        latest_watt_hour = -1
+        latest_watt = -1
       elsif !metering_point.meter.smart?
         #TODO: show slp values
       end
-      data_entry.push(metering_point.registers.first.id, latest_watt_hour, user_name)
+      data_entry.push(metering_point.registers.first.id, latest_watt, user_name)
       metering_point_data.push(data_entry)
     end
 

@@ -140,6 +140,34 @@ class Reading
 
 
 
+  def self.last_power_by_register_id(register_id)
+    pipe = [
+      { "$match" => {
+          register_id: {
+            "$in" => [register_id]
+          }
+        }
+      },
+      { "$sort" => {
+          timestamp: -1
+        }
+      },
+      { "$limit" => 2 }
+    ]
+    readings = Reading.collection.aggregate(pipe)
+    if readings.any?
+      firstTimestamp = readings.last[:timestamp].to_i
+      lastTimestamp = readings.first[:timestamp].to_i
+      firstValue = readings.last[:watt_hour]
+      lastValue = readings.first[:watt_hour]
+      return (lastValue - firstValue)*3600.0/((lastTimestamp - firstTimestamp)*10000000)
+    else
+      return nil
+    end
+  end
+
+
+
   def self.first_by_register_id(register_id)
     pipe = [
       { "$match" => {
@@ -161,9 +189,9 @@ class Reading
     values = []
     readings = Reading.where(:timestamp.gte => (Time.now - 15.minutes), :timestamp.lt => (Time.now + 15.minutes), source: "slp")
     firstTimestamp = readings.first.timestamp.to_i*1000
-    firstValue = readings.first.watt_hour/1000.0
+    firstValue = readings.first.watt_hour/10000000000.0
     lastTimestamp = readings.last.timestamp.to_i*1000
-    lastValue = readings.last.watt_hour/1000.0
+    lastValue = readings.last.watt_hour/10000000000.0
     values << [firstTimestamp, firstValue]
     values << [lastTimestamp, lastValue]
     return values
@@ -172,14 +200,17 @@ class Reading
 
 
   def push_reading
-    Sidekiq::Client.push({
-     'class' => PushReadingWorker,
-     'queue' => :default,
-     'args' => [
-                register_id,
-                watt_hour
-               ]
-    })
+    if self.source != 'slp'
+      watt = Reading.last_power_by_register_id(register_id)
+      Sidekiq::Client.push({
+       'class' => PushReadingWorker,
+       'queue' => :default,
+       'args' => [
+                  register_id,
+                  watt
+                 ]
+      })
+    end
   end
 
 

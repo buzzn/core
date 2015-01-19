@@ -29,7 +29,7 @@ namespace :slp do
             dateString = remString[0..3] + "-" + remString[4..5] + "-" + remString[6..7] + " " + remString[8..9] + ":" + remString[10..11]
             Reading.create(
               timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
-              watt_hour: watt_hour,
+              watt_hour: watt_hour*10000000.0, #convert from Wh to 10^-10 kWh
               source: "slp"
             )
           elsif parseString.include? "QTY"

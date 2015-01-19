@@ -20,7 +20,7 @@ class GetReadingWorker
               watt_hour             = item['energy']
               Reading.create( register_id:  register_id,
                               timestamp:    timestamp,
-                              watt_hour:    watt_hour / 10000000.0, #energy is in 10^-10 kWh; convert to Wh
+                              watt_hour:    watt_hour, #energy is in 10^-10 kWh;
                               metering_point_id: metering_point_id
                             )
             else
@@ -35,7 +35,7 @@ class GetReadingWorker
                 end
                 Reading.create( register_id:  register_id,
                                 timestamp:    timestamp,
-                                watt_hour:    watt_hour / 10000000.0, #energy is in 10^-10 kWh; convert to Wh
+                                watt_hour:    watt_hour, #energy is in 10^-10 kWh;
                                 metering_point_id: metering_point_id
                               )
               end

@@ -18,7 +18,7 @@
       - if register.meter.smart?
         .ticker{id: "ticker_#{register.id}" }
           - if Reading.where(register_id: register.id).last
-            = "Aktueller Zählerstand: " + (Reading.where(register_id: register.id).last.watt_hour/1000.0).to_s + " kWh"
+            = "Aktuelle Leistung: " + (Reading.last_power_by_register_id(register.id)).to_s + " kWh"
           - else
             = "Kein aktueller Zählerstand vorhanden"
       - else

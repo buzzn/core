@@ -132,6 +132,7 @@ class BubbleChart
         radius: @radius_scale(parseInt(d[1]))
         value: d[1]
         name: d[2]
+        timestamp: d[3]
         x: Math.random() * 900
         y: Math.random() * 800
       }
@@ -255,7 +256,7 @@ class BubbleChart
   show_details: (data, i, element) =>
     d3.select(element).attr("stroke", "black")
     content = "<span class=\"name\">Name:</span><span class=\"value\"> #{data.name}</span><br/>"
-    content +="<span class=\"name\">Aktueller Bezug:</span><span class=\"value\"> $#{addCommas(data.value)}</span><br/>"
+    content +="<span class=\"name\">Aktueller Bezug:</span><span class=\"value\"> #{addCommas(parseInt(data.value)).replace(",", ".")} Watt</span><br/>"
     @tooltip.showTooltip(content,d3.event)
 
 
@@ -308,7 +309,7 @@ $ ->
 
     channel = pusher.subscribe("register_#{register_id}")
     channel.bind "new_reading", (reading) ->
-      chart.reset_radius(reading.register_id, reading.watt_hour)
+      chart.reset_radius(reading.register_id, reading.watt)
 
 
   #window.setInterval(->
