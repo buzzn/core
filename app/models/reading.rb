@@ -167,6 +167,23 @@ class Reading
   end
 
 
+  def self.last_two_by_register_id(register_id)
+    pipe = [
+      { "$match" => {
+          register_id: {
+            "$in" => [register_id]
+          }
+        }
+      },
+      { "$sort" => {
+          timestamp: -1
+        }
+      },
+      { "$limit" => 2 }
+    ]
+    return Reading.collection.aggregate(pipe)
+  end
+
 
   def self.first_by_register_id(register_id)
     pipe = [
@@ -201,13 +218,13 @@ class Reading
 
   def push_reading
     if self.source != 'slp'
-      watt = Reading.last_power_by_register_id(register_id)
       Sidekiq::Client.push({
        'class' => PushReadingWorker,
        'queue' => :default,
        'args' => [
                   register_id,
-                  watt
+                  watt_hour,
+                  timestamp.to_i*1000
                  ]
       })
     end

@@ -115,7 +115,7 @@ class BubbleChart
       .range(["#d84b2a", "#beccae", "#7aa25c"])
 
     # use the max watt_hour in the data as the max in the scale's domain
-    max_amount = d3.max(@data, (d) -> parseInt(d[1]))
+    max_amount = d3.max(@data, (d) -> parseInt(calculate_power(d[3], d[1], d[4], d[2])))
     @radius_scale = d3.scale.pow().exponent(0.5).domain([0, max_amount]).range([2, 85])
 
     this.create_nodes()
@@ -129,10 +129,13 @@ class BubbleChart
     @data.forEach (d) =>
       node = {
         id: d[0]
-        radius: @radius_scale(parseInt(d[1]))
-        value: d[1]
-        name: d[2]
-        timestamp: d[3]
+        firstTimestamp: d[3]
+        secondTimestamp: d[1]
+        firstWattHour: d[4]
+        secondWattHour: d[2]
+        value: calculate_power(d[3], d[1], d[4], d[2])
+        radius: @radius_scale(parseInt(calculate_power(d[3], d[1], d[4], d[2])))
+        name: d[5]
         x: Math.random() * 900
         y: Math.random() * 800
       }
@@ -264,17 +267,26 @@ class BubbleChart
     d3.select(element).attr("stroke", (d) => d3.rgb(@fill_color(d.group)).darker())
     @tooltip.hideTooltip()
 
-  reset_radius: (id, value) =>
+  reset_radius: (id, value, timestamp) =>
     @nodes.forEach (d) =>
       if d.id.toString() == id.toString()
-        d.radius = @radius_scale(parseInt(value))
-        d.value = value
+        d.firstTimestamp = d.secondTimestamp
+        d.firstWattHour = d. secondWattHour
+        d.secondTimestamp = timestamp
+        d.secondWattHour = value
+        d.value = calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)
+        d.radius = @radius_scale(parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
+
     #@circles = @vis.selectAll("circle")
     #  .data(@nodes, (d) -> d.id)
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
     #@circles.attr("r", (d) -> d.radius)
 
     this.display_group_all()
+
+  calculate_power = (firstTimestamp, secondTimestamp, firstWattHour, secondWattHour) =>
+    console.log firstTimestamp + "   " + secondTimestamp + "   " + firstWattHour + "   " + secondWattHour
+    return (secondWattHour - firstWattHour)*3600/((secondTimestamp - firstTimestamp)*10000)
 
 
 root = exports ? this
@@ -309,7 +321,7 @@ $ ->
 
     channel = pusher.subscribe("register_#{register_id}")
     channel.bind "new_reading", (reading) ->
-      chart.reset_radius(reading.register_id, reading.watt)
+      chart.reset_radius(reading.register_id, reading.watt_hour, reading.timestamp)
 
 
   #window.setInterval(->
