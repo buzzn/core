@@ -25,11 +25,16 @@ class GroupsController < InheritedResources::Base
                 pusher_key: Rails.application.secrets.pusher_key })
     gon.push({ bubble_data: File.new(Rails.root.join('db', 'bubble_data', 'gates_money_20.csv'))})
 
-    metering_point_data = []
+    in_metering_point_data = []
+    out_metering_point_data = []
     @metering_points.each do |metering_point|
       data_entry = []
       latest_readings = nil
-      user_name = Profile.where(user: User.with_role(:manager, metering_point.location)).first.first_name
+      if metering_point.users.any?
+        user_name = metering_point.users.collect{|user| user.profile.first_name}.join(", ")
+      else
+        user_name = Profile.where(user: User.with_role(:manager, metering_point.location)).first.first_name
+      end
       if metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
         latest_readings = Reading.last_two_by_register_id(metering_point.registers.first.id)
       elsif metering_point.meter.smart? && metering_point.meter.online && !metering_point.meter.init_reading
@@ -39,15 +44,25 @@ class GroupsController < InheritedResources::Base
       elsif !metering_point.meter.smart?
         #TODO: show slp values
       end
-      if !latest_readings.nil?
-        data_entry.push(metering_point.registers.first.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
+      if metering_point.mode == "out"
+        if !latest_readings.nil?
+          data_entry.push(metering_point.registers.first.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
+        else
+          data_entry.push(metering_point.registers.first.id, -1, -1, -1, -1, user_name)
+        end
+        out_metering_point_data.push(data_entry)
       else
-        data_entry.push(metering_point.registers.first.id, -1, -1, -1, -1, user_name)
+        if !latest_readings.nil?
+          data_entry.push(metering_point.registers.first.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
+        else
+          data_entry.push(metering_point.registers.first.id, -1, -1, -1, -1, user_name)
+        end
+        in_metering_point_data.push(data_entry)
       end
-      metering_point_data.push(data_entry)
     end
 
-    gon.push({ metering_point_data: metering_point_data })
+    gon.push({ in_metering_point_data: in_metering_point_data,
+               out_metering_point_data: out_metering_point_data })
 
   end
 

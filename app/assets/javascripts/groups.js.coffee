@@ -112,7 +112,7 @@ class BubbleChart
     # nice looking colors - no reason to buck the trend
     @fill_color = d3.scale.ordinal()
       .domain(["low", "medium", "high"])
-      .range(["#d84b2a", "#beccae", "#7aa25c"])
+      .range(["#6699FF", "#6699FF", "#6699FF"])
 
     # use the max watt_hour in the data as the max in the scale's domain
     max_amount = d3.max(@data, (d) -> parseInt(calculate_power(d[3], d[1], d[4], d[2])))
@@ -120,6 +120,8 @@ class BubbleChart
 
     this.create_nodes()
     this.create_vis()
+
+
 
   # create node objects from original data
   # that will serve as the data behind each
@@ -160,12 +162,36 @@ class BubbleChart
     # mouse callbacks
     that = this
 
+    jsonCircles = [
+      {
+        x_axis: 300
+        y_axis: 300
+        radius: 250
+        color: "#ff9999"
+      }
+    ]
+
+    svgContainer = d3.select("#svg_vis")
+
+    circles = svgContainer.selectAll("rect")
+      .data(jsonCircles)
+      .enter()
+      .append("circle")
+
+    circleAttributes = circles
+      .attr("cx", (d) -> d.x_axis)
+      .attr("cy", (d) -> d.y_axis)
+      .attr("r", (d) -> d.radius)
+      .style("fill", (d) -> d.color)
+      .attr("stroke-width", 10)
+      .attr("stroke", (d) => d3.rgb(d.color).darker())
+
     # radius will be set to 0 initially.
     # see transition below
     @circles.enter().append("circle")
       .attr("r", 0)
       .attr("fill", (d) => @fill_color(d.group))
-      .attr("stroke-width", 2)
+      .attr("stroke-width", 4)
       .attr("stroke", (d) => d3.rgb(@fill_color(d.group)).darker())
       .attr("id", (d) -> "bubble_#{d.id}")
       .on("mouseover", (d,i) -> that.show_details(d,i,this))
@@ -174,6 +200,8 @@ class BubbleChart
     # Fancy transition to make bubbles appear, ending with the
     # correct radius
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
+
+
 
 
   # Charge function that is called for each node.
@@ -285,8 +313,9 @@ class BubbleChart
     this.display_group_all()
 
   calculate_power = (firstTimestamp, secondTimestamp, firstWattHour, secondWattHour) =>
-    console.log firstTimestamp + "   " + secondTimestamp + "   " + firstWattHour + "   " + secondWattHour
     return (secondWattHour - firstWattHour)*3600/((secondTimestamp - firstTimestamp)*10000)
+
+
 
 
 root = exports ? this
@@ -308,9 +337,15 @@ $ ->
     else
       root.display_all()
 
-  data = gon.metering_point_data
+  in_data = gon.in_metering_point_data
 
-  render_vis data
+  render_vis in_data
+
+  out_data = gon.out_metering_point_data
+
+
+
+
 
   Pusher.host    = gon.pusher_host
   Pusher.ws_port = 8080
