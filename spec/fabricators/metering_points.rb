@@ -261,6 +261,13 @@ Fabricator :mp_60009420, from: :metering_point do
   electricity_supplier_contracts         { [] }
 end
 
+#Pickel Wasserkraft
+Fabricator :mp_60051562, from: :metering_point do
+  address_addition  'Wasserkraft'
+  registers { Fabricate(:easymeter_60051562).registers }
+  electricity_supplier_contracts         { [] }
+end
+
 
 
 

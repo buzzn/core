@@ -239,12 +239,12 @@ karins_pv_group.create_activity key: 'group.create', owner: karin, recipient: ka
 # group_hof_butenland.create_activity key: 'group.create', owner: jan_gerdes, recipient: group_hof_butenland
 
 
-puts 'group home_of_the_brave'
-group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [@fichtenweg8.metering_point])
-group_home_of_the_brave.metering_points << fichtenweg10.metering_point
-justus = User.where(email: 'justus@buzzn.net').first
-justus.add_role :manager, group_home_of_the_brave
-group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
+#puts 'group home_of_the_brave'
+#group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [@fichtenweg8.metering_point])
+#group_home_of_the_brave.metering_points << fichtenweg10.metering_point
+#justus = User.where(email: 'justus@buzzn.net').first
+#justus.add_role :manager, group_home_of_the_brave
+#group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
 
 puts 'group wagnis4'
 dirk_mittelstaedt = Fabricate(:dirk_mittelstaedt)
@@ -306,7 +306,10 @@ mp_60009420.users << ulrike_bez
 mp_60009420.users << rudolf_hassenstein
 #Wagnis 4 - Allgemeinstrom Haus West mp_60009420
 #TODO: add real PV metering_point
-group_wagnis4 = Fabricate(:group_wagnis4, metering_points: [gautinger_weg.metering_point])
+mp_wagnis = Fabricate(:mp_60051562)
+mp_wagnis.parent = location_wagnis4.metering_point
+location_wagnis4.metering_point.save
+group_wagnis4 = Fabricate(:group_wagnis4, metering_points: [mp_wagnis])
 group_wagnis4.metering_points << mp_60009416
 group_wagnis4.metering_points << mp_60009419
 group_wagnis4.metering_points << mp_60009415

@@ -39,7 +39,7 @@ class Group < ActiveRecord::Base
   end
 
   def keywords
-    %w(buzzn people power) << self.name << self.metering_points.first.location.address.city
+    %w(buzzn people power) << self.name << self.metering_points.first.root.location.address.city
   end
 
   private

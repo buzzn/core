@@ -209,6 +209,16 @@ Fabricator :easymeter_60009420, from: :meter do
   registers                           { [Fabricate(:register_in)] }
   equipments                          { [Fabricate(:equipment)] }
 end
+# Pickel - temporär in wagnis 4 eingebunden
+Fabricator :easymeter_60051562, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051562'
+  registers                           { [Fabricate(:register_out)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+
+
 
 
 

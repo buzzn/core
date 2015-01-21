@@ -81,8 +81,9 @@ jQuery ->
 
 
 class BubbleChart
-  constructor: (data) ->
+  constructor: (data, data_out) ->
     @data = data
+    @data_out = data_out
     @width = 600
     @height = 600
 
@@ -106,6 +107,7 @@ class BubbleChart
     # these will be set in create_nodes and create_vis
     @vis = null
     @nodes = []
+    @nodes_out = []
     @force = null
     @circles = null
 
@@ -140,6 +142,7 @@ class BubbleChart
         name: d[5]
         x: Math.random() * 900
         y: Math.random() * 800
+        color: "#6699FF"
       }
       @nodes.push node
 
@@ -162,40 +165,51 @@ class BubbleChart
     # mouse callbacks
     that = this
 
-    jsonCircles = [
-      {
-        x_axis: 300
-        y_axis: 300
-        radius: 220
+    @data_out.forEach (d) =>
+      node = {
+        id: d[0]
+        firstTimestamp: d[3]
+        secondTimestamp: d[1]
+        firstWattHour: d[4]
+        secondWattHour: d[2]
+        value: calculate_power(d[3], d[1], d[4], d[2])
+        radius: @radius_scale(parseInt(calculate_power(d[3], d[1], d[4], d[2])))
+        name: d[5]
+        x: @width / 2
+        y: @height / 2
         color: "#ff9999"
       }
-    ]
+      @nodes_out.push node
+    @nodes.sort (a,b) -> b.value - a.value
 
     svgContainer = d3.select("#svg_vis")
 
-    circles = svgContainer.selectAll("rect")
-      .data(jsonCircles)
+    @circles_out = svgContainer.selectAll("rect")
+      .data(@nodes_out, (d) -> d.id)
       .enter()
       .append("circle")
 
-    circleAttributes = circles
-      .attr("cx", (d) -> d.x_axis)
-      .attr("cy", (d) -> d.y_axis)
+    circleAttributes = @circles_out
+      .attr("cx", (d) -> d.x)
+      .attr("cy", (d) -> d.y)
       .attr("r", (d) -> d.radius)
       .style("fill", (d) -> d.color)
       .attr("stroke-width", 10)
       .attr("stroke", (d) => d3.rgb(d.color).darker())
+      .on("mouseover", (d,i) -> that.show_details(d,i,this))
+      .on("mouseout", (d,i) -> that.hide_details(d,i,this))
 
     # radius will be set to 0 initially.
     # see transition below
     @circles.enter().append("circle")
       .attr("r", 0)
-      .attr("fill", (d) => @fill_color(d.group))
+      .attr("fill", (d) => d.color)
       .attr("stroke-width", 4)
-      .attr("stroke", (d) => d3.rgb(@fill_color(d.group)).darker())
+      .attr("stroke", (d) => d3.rgb(d.color).darker())
       .attr("id", (d) -> "bubble_#{d.id}")
       .on("mouseover", (d,i) -> that.show_details(d,i,this))
       .on("mouseout", (d,i) -> that.hide_details(d,i,this))
+      .style("opacity", 0.9)
 
     # Fancy transition to make bubbles appear, ending with the
     # correct radius
@@ -285,14 +299,14 @@ class BubbleChart
     years = @vis.selectAll(".years").remove()
 
   show_details: (data, i, element) =>
-    d3.select(element).attr("stroke", "white")
+    d3.select(element).attr("stroke", (d) -> d3.rgb(d.color).darker().darker())
     content = "<span class=\"name\">Name:</span><span class=\"value\"> #{data.name}</span><br/>"
     content +="<span class=\"name\">Aktueller Bezug:</span><span class=\"value\"> #{addCommas(parseInt(data.value)).replace(",", ".")} Watt</span><br/>"
     @tooltip.showTooltip(content,d3.event)
 
 
   hide_details: (data, i, element) =>
-    d3.select(element).attr("stroke", (d) => d3.rgb(@fill_color(d.group)).darker())
+    d3.select(element).attr("stroke", (d) => d3.rgb(d.color).darker())
     @tooltip.hideTooltip()
 
   reset_radius: (id, value, timestamp) =>
@@ -305,9 +319,19 @@ class BubbleChart
         d.value = calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)
         d.radius = @radius_scale(parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
 
+    @nodes_out.forEach (d) =>
+      if d.id.toString() == id.toString()
+        d.firstTimestamp = d.secondTimestamp
+        d.firstWattHour = d. secondWattHour
+        d.secondTimestamp = timestamp
+        d.secondWattHour = value
+        d.value = calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)
+        d.radius = @radius_scale(parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
+
     #@circles = @vis.selectAll("circle")
     #  .data(@nodes, (d) -> d.id)
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
+    @circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
     #@circles.attr("r", (d) -> d.radius)
 
     this.display_group_all()
@@ -323,8 +347,8 @@ root = exports ? this
 $ ->
   chart = null
 
-  render_vis = (csv) ->
-    chart = new BubbleChart csv
+  render_vis = (data, data_out) ->
+    chart = new BubbleChart data, data_out
     chart.start()
     root.display_all()
   root.display_all = () =>
@@ -337,11 +361,12 @@ $ ->
     else
       root.display_all()
 
-  in_data = gon.in_metering_point_data
+  data_in = gon.in_metering_point_data
+  data_out = gon.out_metering_point_data
 
-  render_vis in_data
+  render_vis data_in, data_out
 
-  out_data = gon.out_metering_point_data
+
 
 
 

@@ -33,7 +33,7 @@ class GroupsController < InheritedResources::Base
       if metering_point.users.any?
         user_name = metering_point.users.collect{|user| user.profile.first_name}.join(", ")
       else
-        user_name = Profile.where(user: User.with_role(:manager, metering_point.location)).first.first_name
+        user_name = Profile.where(user: User.with_role(:manager, metering_point.root.location)).first.first_name
       end
       if metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
         latest_readings = Reading.last_two_by_register_id(metering_point.registers.first.id)
