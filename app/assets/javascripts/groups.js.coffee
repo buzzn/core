@@ -166,7 +166,7 @@ class BubbleChart
       {
         x_axis: 300
         y_axis: 300
-        radius: 250
+        radius: 220
         color: "#ff9999"
       }
     ]
@@ -285,7 +285,7 @@ class BubbleChart
     years = @vis.selectAll(".years").remove()
 
   show_details: (data, i, element) =>
-    d3.select(element).attr("stroke", "black")
+    d3.select(element).attr("stroke", "white")
     content = "<span class=\"name\">Name:</span><span class=\"value\"> #{data.name}</span><br/>"
     content +="<span class=\"name\">Aktueller Bezug:</span><span class=\"value\"> #{addCommas(parseInt(data.value)).replace(",", ".")} Watt</span><br/>"
     @tooltip.showTooltip(content,d3.event)
