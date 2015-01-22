@@ -23,7 +23,6 @@ class GroupsController < InheritedResources::Base
     end
     gon.push({  pusher_host: Rails.application.secrets.pusher_host,
                 pusher_key: Rails.application.secrets.pusher_key })
-    gon.push({ bubble_data: File.new(Rails.root.join('db', 'bubble_data', 'gates_money_20.csv'))})
 
     in_metering_point_data = []
     out_metering_point_data = []
@@ -62,7 +61,8 @@ class GroupsController < InheritedResources::Base
     end
 
     gon.push({ in_metering_point_data: in_metering_point_data,
-               out_metering_point_data: out_metering_point_data })
+               out_metering_point_data: out_metering_point_data,
+               sn_img: asset_path('sn_default.jpg') })
 
   end
 

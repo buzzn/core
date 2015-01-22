@@ -175,7 +175,7 @@ class BubbleChart
         firstWattHour: d[4]
         secondWattHour: d[2]
         value: calculate_power(d[3], d[1], d[4], d[2])
-        radius: @radius_scale(parseInt(calculate_power(d[3], d[1], d[4], d[2])))
+        radius: @radius_scale(parseInt(calculate_power(d[3], d[1], d[4], d[2]))) * 1.1
         name: d[5]
         x: @width / 2
         y: @height / 2
@@ -192,6 +192,7 @@ class BubbleChart
       .append("circle")
 
     circleAttributes = @circles_out
+      .attr("id", (d) -> "bubble_#{d.id}")
       .attr("cx", (d) -> d.x)
       .attr("cy", (d) -> d.y)
       .attr("r", (d) -> d.radius)
@@ -212,6 +213,7 @@ class BubbleChart
       .on("mouseover", (d,i) -> that.show_details(d,i,this))
       .on("mouseout", (d,i) -> that.hide_details(d,i,this))
       .style("opacity", 0.9)
+      .html('<img class="img-circle" id="bubble_img" src="/assets/sn_default.jpg"/></img>')
 
     # Fancy transition to make bubbles appear, ending with the
     # correct radius
@@ -303,7 +305,7 @@ class BubbleChart
   show_details: (data, i, element) =>
     d3.select(element).attr("stroke", (d) -> d3.rgb(d.color).darker().darker())
     content = "<span class=\"name\">Name:</span><span class=\"value\"> #{data.name}</span><br/>"
-    content +="<span class=\"name\">Aktueller Bezug:</span><span class=\"value\"> #{addCommas(parseInt(data.value)).replace(",", ".")} Watt</span><br/>"
+    content +="<span class=\"name\">Aktuelle Leistung:</span><span class=\"value\"> #{addCommas(parseInt(data.value)).replace(",", ".")} Watt</span><br/>"
     @tooltip.showTooltip(content,d3.event)
 
 
@@ -328,7 +330,7 @@ class BubbleChart
         d.secondTimestamp = timestamp
         d.secondWattHour = value
         d.value = calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)
-        d.radius = @radius_scale(parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
+        d.radius = @radius_scale(parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour))) * 1.1
 
     #@circles = @vis.selectAll("circle")
     #  .data(@nodes, (d) -> d.id)

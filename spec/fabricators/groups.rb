@@ -32,6 +32,7 @@ Fabricator :group_wagnis4, from: :group do
   name        'Wagnis 4'
   description { "Dies ist der Localpool von Wagnis 4." }
   servicing_contract                { Fabricate(:servicing_contract) }
+  assets      { [ Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'groups', 'wagnis4.png'))) ] }
 end
 
 
