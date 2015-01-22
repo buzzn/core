@@ -7,7 +7,7 @@ every 1.minute do
   runner "Meter.pull_readings"
 end
 
-every 60.minutes do
+every 30.minutes do
   runner "Meter.reactivate"
 end
 
