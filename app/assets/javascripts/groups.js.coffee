@@ -84,8 +84,10 @@ class BubbleChart
   constructor: (data, data_out) ->
     @data = data
     @data_out = data_out
-    @width = 600
-    @height = 600
+    canvasWidth = $("#vis").width()
+    canvasHeight = $("#vis").height()
+    @width = canvasWidth
+    @height = canvasHeight
 
     @tooltip = CustomTooltip("gates_tooltip", 240)
 
@@ -339,6 +341,16 @@ class BubbleChart
   calculate_power = (firstTimestamp, secondTimestamp, firstWattHour, secondWattHour) =>
     return (secondWattHour - firstWattHour)*3600/((secondTimestamp - firstTimestamp)*10000)
 
+  calculateNewCenter: () =>
+    @height = $("#svg_vis").height()
+    @width = $("#svg_vis").width()
+    @center = {x: @width / 2, y: @height / 2}
+    circleAttributes = @circles_out
+      .attr("cx", @width / 2)
+      .attr("cy", @height / 2)
+    this.display_group_all()
+
+
 
 
 
@@ -382,6 +394,8 @@ $ ->
     channel = pusher.subscribe("register_#{register_id}")
     channel.bind "new_reading", (reading) ->
       chart.reset_radius(reading.register_id, reading.watt_hour, reading.timestamp)
+
+  $(window).on "resize", chart.calculateNewCenter
 
 
   #window.setInterval(->
