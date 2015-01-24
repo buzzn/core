@@ -8,11 +8,6 @@ Bundler.require(:default, Rails.env)
 
 module Buzzn
   class Application < Rails::Application
-    # Enable rack-dev-mark
-    config.rack_dev_mark.enable = !%w(development production).include?(Rails.env)
-    config.rack_dev_mark.theme = [:title, Rack::DevMark::Theme::GithubForkRibbon.new(position: 'right')]
-    # Customize themes if you want to do so
-    # config.rack_dev_mark.theme = [:title, :github_fork_ribbon]
 
     config.middleware.use Rack::Cors do
       allow do
