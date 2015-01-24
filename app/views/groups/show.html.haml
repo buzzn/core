@@ -2,41 +2,39 @@
 - meta description: @group.description
 - meta keywords: @group.keywords
 
-.col-sm-3
-  .detail_icon
-    %i.fa.fa-users
-  %h4= @group.name
+.col-sm-12
+  .groupe-header
+    = @group.image_tag_small
+    %h5= @group.name
 
-  - if user_signed_in?
-    - if current_user.can_update?(@group)
-      = @group.link_to_edit
-    - else
-      .btn-group
-        %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
-          =t('membership')
-          %span.caret
-        %ul.dropdown-menu{role: "menu"}
-          - current_user.editable_metering_points.flatten.each do |metering_point|
-            - if @group.received_group_metering_point_requests.any? && @group.received_group_metering_point_requests.collect(&:metering_point).include?(metering_point)
-              %li= t('sent_request_with_metering_point', metering_point_name: metering_point.decorate.name)
-              - next
-            - if metering_point.group == @group
-              %li= link_to(t('leave_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), cancel_membership_group_path(metering_point_id: metering_point.id), :data => {:confirm => t('are_you_sure')})
-            - elsif metering_point.group
-              %li= link_to(t('join_this_group_with_metering_point_and_leave_group', metering_point_name: metering_point.decorate.name, group_name: metering_point.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post)
-            - else
-              %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post
-  %h5.page-header= t('description')
-  %p= @group.description
+    - if user_signed_in?
+      - if current_user.can_update?(@group)
+        = @group.link_to_edit
+      - else
+        .btn-group
+          %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
+            =t('membership')
+            %span.caret
+          %ul.dropdown-menu{role: "menu"}
+            = @group.join_or_leave
+            - current_user.editable_metering_points.flatten.each do |metering_point|
+              - if @group.received_group_metering_point_requests.any? && @group.received_group_metering_point_requests.collect(&:metering_point).include?(metering_point)
+                %li= t('sent_request_with_metering_point', metering_point_name: metering_point.decorate.name)
+                - next
+              - if metering_point.group == @group
+                %li= link_to(t('leave_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), cancel_membership_group_path(metering_point_id: metering_point.id), :data => {:confirm => t('are_you_sure')})
+              - elsif metering_point.group
+                %li= link_to(t('join_this_group_with_metering_point_and_leave_group', metering_point_name: metering_point.decorate.name, group_name: metering_point.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post)
+              - else
+                %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post
 
 
-  %h5.page-header= t('more_groups')
-  %article.sidebar_module.groups
-    %ul
-      = render @all_groups
-    .clearfix
+.col-sm-12
+  #vis
 
-.col-sm-9
+
+
+.col-sm-12
   - if user_signed_in?
     - if current_user.can_update?(@group)
       - if @group.received_group_metering_point_requests.any?
@@ -45,8 +43,8 @@
 
   %ul.nav.nav-pills#mytab.nav-spacer
     %li.active
-      %a{"data-toggle" => "tab", href: "#metering_points"}
-        = t'metering_points'
+      %a{"data-toggle" => "tab", href: "#description"}
+        = t'description'
     %li
       %a{"data-toggle" => "tab", href: "#users"}
         = t'members'
@@ -62,38 +60,43 @@
         = t('comments')
 
   .tab-content
-    #metering_points.tab-pane.active
-      .row
-        .col-sm-9
-          #vis
+
+    #description.tab-pane.active
+      .lead
+        = @group.description
 
     #users.tab-pane
-      %article.sidebar_module.energy_producers.residents
-        %h5.page-header= t('energy_producers')
-        %ul
-          - @energy_producers.each do |user|
-            = render user.profile
-      .clear
+      - if @energy_producers.any?
+        %article.sidebar_module.energy_producers.residents
+          %h5.page-header= t('energy_producers')
+          %ul
+            - @energy_producers.each do |user|
+              = render user.profile
+        .clear
 
-      %article.sidebar_module.energy_consumers.residents
-        %h5.page-header= t('energy_consumers')
-        %ul
-          - @energy_consumers.each do |user|
-            = render user.profile
-      .clear
+      - if @energy_consumers.any?
+        %article.sidebar_module.energy_consumers.residents
+          %h5.page-header= t('energy_consumers')
+          %ul
+            - @energy_consumers.each do |user|
+              = render user.profile
+        .clear
 
-      %article.sidebar_module.interested-members.residents
-        %h5.page-header= t('interested_members')
-        %ul
-          - @interested_members.each do |user|
-            =render user.profile
-      .clear
+      - if @interested_members.any?
+        %article.sidebar_module.interested-members.residents
+          %h5.page-header= t('interested_members')
+          %ul
+            - @interested_members.each do |user|
+              =render user.profile
+        .clear
+
 
     #assets.tab-pane
       .assets
         = render @group.assets
       - if user_signed_in? && current_user.can_update?(@group)
         = @group.new_asset
+
 
     #contracts.tab-pane
       .contracts
@@ -112,7 +115,6 @@
 
     #comments.tab-pane
       .comments
-        %h2= t('comments')
         - if user_signed_in? #TODO: bring commentable_by? to work
           = render :partial => 'comments/form', :locals => { :comment => @new_comment }
         .comments-all
