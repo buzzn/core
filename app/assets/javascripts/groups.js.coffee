@@ -84,8 +84,8 @@ class BubbleChart
   constructor: (data, data_out) ->
     @data = data
     @data_out = data_out
-    canvasWidth = $("#vis").width()
-    canvasHeight = $("#vis").height()
+    canvasWidth = $("#bubbles_container").width()
+    canvasHeight = $("#bubbles_container").height()
     @width = canvasWidth
     @height = canvasHeight
 
@@ -112,6 +112,7 @@ class BubbleChart
     @nodes_out = []
     @force = null
     @circles = null
+    @max_power = null
 
     # nice looking colors - no reason to buck the trend
     @fill_color = d3.scale.ordinal()
@@ -119,8 +120,13 @@ class BubbleChart
       .range(["#6699FF", "#6699FF", "#6699FF"])
 
     # use the max watt_hour in the data as the max in the scale's domain
-    max_amount = d3.max(@data, (d) -> parseInt(calculate_power(d[3], d[1], d[4], d[2])))
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, max_amount]).range([2, 85])
+    max_power_in = d3.max(@data, (d) -> parseInt(calculate_power(d[3], d[1], d[4], d[2])))
+    max_power_out = d3.max(@data_out, (d) -> parseInt(calculate_power(d[3], d[1], d[4], d[2])))
+    if max_power_in > max_power_out
+      @max_power = max_power_in
+    else
+      @max_power = max_power_out
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / 3])
 
     this.create_nodes()
     this.create_vis()
@@ -155,7 +161,7 @@ class BubbleChart
   # create svg at #vis and then
   # create circle representation for each node
   create_vis: () =>
-    @vis = d3.select("#vis").append("svg")
+    @vis = d3.select("#bubbles_container").append("svg")
       .attr("width", @width)
       .attr("height", @height)
       .attr("id", "svg_vis")
@@ -314,6 +320,7 @@ class BubbleChart
     @tooltip.hideTooltip()
 
   reset_radius: (id, value, timestamp) =>
+
     @nodes.forEach (d) =>
       if d.id.toString() == id.toString()
         d.firstTimestamp = d.secondTimestamp
@@ -321,7 +328,9 @@ class BubbleChart
         d.secondTimestamp = timestamp
         d.secondWattHour = value
         d.value = calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)
+        this.calculateMaxPower(d.value)
         d.radius = @radius_scale(parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
+
 
     @nodes_out.forEach (d) =>
       if d.id.toString() == id.toString()
@@ -330,7 +339,10 @@ class BubbleChart
         d.secondTimestamp = timestamp
         d.secondWattHour = value
         d.value = calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)
+        this.calculateMaxPower(d.value)
         d.radius = @radius_scale(parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour))) * 1.1
+
+
 
     #@circles = @vis.selectAll("circle")
     #  .data(@nodes, (d) -> d.id)
@@ -352,6 +364,22 @@ class BubbleChart
       .attr("cy", @height / 2)
     this.display_group_all()
 
+  calculateMaxPower: (value) =>
+    max_power_in = d3.max(@nodes, (d) -> parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
+    max_power_out = d3.max(@nodes_out, (d) -> parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
+    if max_power_in > max_power_out
+      @max_power = max_power_in
+      if value > max_power_in
+        @max_power = value
+    else
+      @max_power = max_power_out
+      if value > max_power_out
+        @max_power = value
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / 3])
+    @nodes.forEach (d) =>
+      d.radius = @radius_scale(parseInt(d.value))
+    @nodes_out.forEach (d) =>
+      d.radius = @radius_scale(parseInt(d.value))
 
 
 

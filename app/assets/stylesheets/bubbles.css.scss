@@ -1,19 +1,16 @@
 
-.bubbles_container{
+#bubbles_container{
   margin-top: 10px;
   margin-bottom: 10px;
-
-  #vis {
-    min-height: 300px;
-    background-color: #ff0; /* for visual testing */
-  }
+  min-height: 300px;
+  min-width: 300px;
+  background-color: #ff0; /* for visual testing */
 }
 
 
 
 #svg_vis{
   width: 100%;
-  height: 100%;
   background-color: #f00; /* for visual testing */
 }
 
