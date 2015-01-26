@@ -16,7 +16,6 @@
             =t('membership')
             %span.caret
           %ul.dropdown-menu{role: "menu"}
-            = @group.join_or_leave
             - current_user.editable_metering_points.flatten.each do |metering_point|
               - if @group.received_group_metering_point_requests.any? && @group.received_group_metering_point_requests.collect(&:metering_point).include?(metering_point)
                 %li= t('sent_request_with_metering_point', metering_point_name: metering_point.decorate.name)
