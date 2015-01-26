@@ -295,15 +295,6 @@ mp_60009435.users << rudolf_hassenstein
 location_wagnis4 = Fabricate(:location_wagnis4)
 manuel_dmoch.add_role(:manager, location_wagnis4)
 mp_60009420 = location_wagnis4.metering_point
-mp_60009420.users << dirk_mittelstaedt
-mp_60009420.users << manuel_dmoch
-mp_60009420.users << sibo_ahrens
-mp_60009420.users << nicolas_sadoni
-mp_60009420.users << josef_neu
-mp_60009420.users << elisabeth_christiansen
-mp_60009420.users << florian_butz
-mp_60009420.users << ulrike_bez
-mp_60009420.users << rudolf_hassenstein
 #Wagnis 4 - Allgemeinstrom Haus West mp_60009420
 #TODO: add real PV metering_point
 mp_wagnis = Fabricate(:mp_60051562)
