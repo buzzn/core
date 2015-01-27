@@ -1,18 +1,21 @@
 !!!
 %html{lang: locale}
 
+
   %head
     = stylesheet_link_tag    "application", "data-turbolinks-track" => true, media: "all"
     = javascript_include_tag "application", "data-turbolinks-track" => true
     = csrf_meta_tags
     = metamagic :title => "buzzn"
-    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1.0"}
+    %meta{name: "viewport", content: "width=device-width, initial-scale=1.0"}
+    %meta{name: "apple-mobile-web-app-capable", content: "yes"}
+    %meta{name: "apple-mobile-web-app-status-bar-style", content:"black"}
     = analytics_init if Rails.env.production?
+
 
   %body{class: "#{controller_name} #{action_name}"}
     = include_gon(:init => true)
     #myModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
-
     %section#container
       %header
         = render 'layouts/navigation'
