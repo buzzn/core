@@ -1,7 +1,8 @@
 - meta title: @group.name
 - meta description: @group.description
 - meta keywords: @group.keywords
-- rel "apple-touch-icon" => @group.assets.first.image.url
+- rel "apple-touch-icon" => @group.assets.first.image.url if @group.assets.any?
+- rel "apple-touch-startup-image" => image_path("apple-touch-startup-image.png")
 
 .col-sm-12
   .groupe-header
