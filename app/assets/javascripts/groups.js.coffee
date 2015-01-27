@@ -116,7 +116,8 @@ class BubbleChart
     @circles = null
     @max_power = null
     @max_power_in = null
-    @number_max = 1
+    @totalPower = 0
+    @zoomFactor = 1
 
     # nice looking colors - no reason to buck the trend
     @fill_color = d3.scale.ordinal()
@@ -130,8 +131,11 @@ class BubbleChart
       @max_power = @max_power_in
     else
       @max_power = max_power_out
-    this.calculateNumberOfMax()
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @number_max / 3.5)])
+    @data.forEach (d) =>
+      @totalPower += parseInt(calculate_power(d[3], d[1], d[4], d[2]))
+    alert @max_power_in + "     " + @totalPower
+    this.setZoomFactor()
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @zoomFactor / 3.5)])
 
     this.create_nodes()
     this.create_vis()
@@ -380,10 +384,12 @@ class BubbleChart
       @max_power = max_power_out
       if value > max_power_out
         @max_power = value
+    this.calculateTotalPower()
+    this.setZoomFactor()
     this.setNewScale()
 
   setNewScale: () =>
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @number_max / 3.5)])
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @zoomFactor/ 3.5)])
     @nodes.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
     @nodes_out.forEach (d) =>
@@ -392,12 +398,30 @@ class BubbleChart
     @circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
     this.display_group_all()
 
-  calculateNumberOfMax: () =>
-    @number_max = 1
+  calculateTotalPower: () =>
+    @totalPower = 0
     @nodes.forEach (d) =>
-      if d.value >= 0.6*@max_power_in
-        @number_max += 1
+      @totalPower += d.value
 
+  setZoomFactor: () =>
+    if @max_power_in <= 0.1 * @totalPower
+      @zoomFactor = 1
+    else if @max_power_in <= 0.2 * @totalPower
+      @zoomFactor = 1
+    else if @max_power_in <= 0.3 * @totalPower
+      @zoomFactor = 1.5
+    else if @max_power_in <= 0.4 * @totalPower
+      @zoomFactor = 1.5
+    else if @max_power_in <= 0.5 * @totalPower
+      @zoomFactor = 1.5
+    else if @max_power_in <= 0.6 * @totalPower
+      @zoomFactor = 1.5
+    else if @max_power_in <= 0.7 * @totalPower
+      @zoomFactor = 1.5
+    else if @max_power_in <= 0.8 * @totalPower
+      @zoomFactor = 1
+    else if @max_power_in <= 0.9 * @totalPower
+      @zoomFactor = 1
 
 
 
