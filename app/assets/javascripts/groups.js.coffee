@@ -88,6 +88,8 @@ class BubbleChart
     canvasHeight = $("#bubbles_container").height()
     @width = canvasWidth
     @height = canvasHeight
+    if @width < @height
+      @height = @width
 
     @tooltip = CustomTooltip("gates_tooltip", 240)
 
@@ -113,6 +115,8 @@ class BubbleChart
     @force = null
     @circles = null
     @max_power = null
+    @max_power_in = null
+    @number_max = 1
 
     # nice looking colors - no reason to buck the trend
     @fill_color = d3.scale.ordinal()
@@ -120,13 +124,14 @@ class BubbleChart
       .range(["#6699FF", "#6699FF", "#6699FF"])
 
     # use the max watt_hour in the data as the max in the scale's domain
-    max_power_in = d3.max(@data, (d) -> parseInt(calculate_power(d[3], d[1], d[4], d[2])))
+    @max_power_in = d3.max(@data, (d) -> parseInt(calculate_power(d[3], d[1], d[4], d[2])))
     max_power_out = d3.max(@data_out, (d) -> parseInt(calculate_power(d[3], d[1], d[4], d[2])))
-    if max_power_in > max_power_out
-      @max_power = max_power_in
+    if @max_power_in > max_power_out
+      @max_power = @max_power_in
     else
       @max_power = max_power_out
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / 3])
+    this.calculateNumberOfMax()
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @number_max / 3.5)])
 
     this.create_nodes()
     this.create_vis()
@@ -162,8 +167,8 @@ class BubbleChart
   # create circle representation for each node
   create_vis: () =>
     @vis = d3.select("#bubbles_container").append("svg")
-      .attr("width", @width)
-      .attr("height", @height)
+      .attr("width", "100%")
+      .attr("height", "100%")
       .attr("id", "svg_vis")
 
     @circles = @vis.selectAll("circle")
@@ -356,30 +361,42 @@ class BubbleChart
     return (secondWattHour - firstWattHour)*3600/((secondTimestamp - firstTimestamp)*10000)
 
   calculateNewCenter: () =>
-    @height = $("#svg_vis").height()
-    @width = $("#svg_vis").width()
+    @height = $("#bubbles_container").height()
+    @width = $("#bubbles_container").width()
     @center = {x: @width / 2, y: @height / 2}
     circleAttributes = @circles_out
       .attr("cx", @width / 2)
       .attr("cy", @height / 2)
-    this.display_group_all()
+    this.setNewScale()
 
   calculateMaxPower: (value) =>
-    max_power_in = d3.max(@nodes, (d) -> parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
+    @max_power_in = d3.max(@nodes, (d) -> parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
     max_power_out = d3.max(@nodes_out, (d) -> parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
-    if max_power_in > max_power_out
-      @max_power = max_power_in
-      if value > max_power_in
+    if @max_power_in > max_power_out
+      @max_power = @max_power_in
+      if value > @max_power_in
         @max_power = value
     else
       @max_power = max_power_out
       if value > max_power_out
         @max_power = value
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / 3])
+    this.setNewScale()
+
+  setNewScale: () =>
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @number_max / 3.5)])
     @nodes.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
     @nodes_out.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
+    @circles.transition().duration(2000).attr("r", (d) -> d.radius)
+    @circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
+    this.display_group_all()
+
+  calculateNumberOfMax: () =>
+    @number_max = 1
+    @nodes.forEach (d) =>
+      if d.value >= 0.6*@max_power_in
+        @number_max += 1
 
 
 
@@ -408,12 +425,6 @@ $ ->
 
   render_vis data_in, data_out
 
-
-
-
-
-
-
   Pusher.host    = gon.pusher_host
   Pusher.ws_port = 8080
   Pusher.wss_port = 8080
@@ -426,11 +437,6 @@ $ ->
       chart.reset_radius(reading.register_id, reading.watt_hour, reading.timestamp)
 
   $(window).on "resize", chart.calculateNewCenter
-
-
-  #window.setInterval(->
-  #  chart.reset_radius()
-  #, 1000*5)
 
 addCommas = (nStr) ->
   nStr += ""

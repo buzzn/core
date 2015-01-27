@@ -53,7 +53,7 @@ class GroupDecorator < Draper::Decorator
 
   def image_tag_medium
     if model.assets.any?
-      image_tag model.assets.first.image.medium, class: 'img-circle', size: '150x150', alt: ""
+      image_tag model.assets.first.image.medium, class: 'img-circle', size: '100x100', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-users')
     end

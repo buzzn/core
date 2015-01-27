@@ -5,7 +5,7 @@
 
 .col-sm-12
   .groupe-header
-    = @group.image_tag_small
+    = @group.image_tag_medium
     %h5= @group.name
 
     - if user_signed_in?
@@ -31,6 +31,7 @@
 
 .col-sm-12
   #bubbles_container
+    #dummy
 
 
 .col-sm-12
