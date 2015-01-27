@@ -133,7 +133,6 @@ class BubbleChart
       @max_power = max_power_out
     @data.forEach (d) =>
       @totalPower += parseInt(calculate_power(d[3], d[1], d[4], d[2]))
-    alert @max_power_in + "     " + @totalPower
     this.setZoomFactor()
     @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @zoomFactor / 3.5)])
 
