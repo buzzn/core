@@ -15,18 +15,7 @@
             - if current_user.can_update?(@location)
               = @location.link_to_edit
           %hr
-            %ul.list-group.bg-trans
-              / Profile Details
-              %li.list-group-item.list-item-sm
-                %i.fa.fa-home.fa-fw
-                San Jose, CA
-              %li.list-group-item.list-item-sm
-                %i.fa.fa-clock-o.fa-fw
-                Member since 1 years ago
-              %li.list-group-item.list-item-sm.text-primary.text-semibold
-                %a.btn-link{:href => "#"}
-                  %i.fa.fa-globe.fa-fw
-                  http://www.themeon.net
+
             %hr
               .pad-hor
                 %h5=t('address')

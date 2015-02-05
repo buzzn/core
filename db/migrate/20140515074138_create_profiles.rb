@@ -10,6 +10,10 @@ class CreateProfiles < ActiveRecord::Migration
       t.string :last_name
       t.text   :about_me
       t.string :website
+      t.string :facebook
+      t.string :twitter
+      t.string :xing
+      t.string :linkedin
       t.string :gender
       t.string :phone
       t.string :time_zone
