@@ -2,7 +2,7 @@ class GroupsController < InheritedResources::Base
   respond_to :html, :js
 
   def show
-    @group                          = Group.includes(:assets).find(params[:id]).decorate
+    @group                          = Group.find(params[:id]).decorate
     @metering_points                = MeteringPoint.includes(:users).by_group_id_and_modes(@group.id, ['out','in']).flatten.uniq
     @energy_producers               = MeteringPoint.includes(:users).by_group_id_and_modes(@group.id, ['out']).decorate.collect(&:users).flatten
     @energy_consumers               = MeteringPoint.includes(:users).by_group_id_and_modes(@group.id, ['in']).decorate.collect(&:users).flatten
@@ -11,7 +11,7 @@ class GroupsController < InheritedResources::Base
     @group_metering_point_requests  = @group.received_group_metering_point_requests
 
     @all_users                      = User.all.decorate
-    @all_groups                     = Group.includes(:assets).all.decorate
+    @all_groups                     = Group.all.decorate
 
     @all_comments                   = @group.comment_threads.order('created_at desc')
     @new_comment                    = Comment.build_from(@group, current_user.id, "") if user_signed_in?

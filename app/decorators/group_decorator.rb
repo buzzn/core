@@ -5,7 +5,6 @@ class GroupDecorator < Draper::Decorator
   decorates_association :metering_points
   decorates_association :profile
   decorates_association :user
-  decorates_association :assets
   decorates_association :metering_point_operator_contract
   decorates_association :servicing_contract
 
@@ -44,40 +43,29 @@ class GroupDecorator < Draper::Decorator
   end
 
   def image_tag_group
-    if model.assets.any?
-      image_tag model.assets.first.image.sm, class: 'img-circle img-user media-object', alt: ""
+    if model.image
+      image_tag model.image.sm, class: 'img-circle img-user media-object', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-users')
     end
   end
 
   def image_tag_sm
-    if model.assets.any?
-      image_tag model.assets.first.image.sm, class: 'img-circle img-sm img-border', alt: ""
+    if model.image
+      image_tag model.image.sm, class: 'img-circle img-sm img-border', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-users')
     end
   end
 
   def image_tag_lg
-    if model.assets.any?
-      image_tag model.assets.first.image.lg, class: 'img-circle img-lg img-border', alt: ""
+    if model.image
+      image_tag model.image.lg, class: 'img-circle img-lg img-border', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-users')
     end
   end
 
-  def new_asset
-    link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle'),
-      new_asset_path(assetable_id: model.id, assetable_type: 'Group'),
-      {
-        :remote                     => true,
-        :class                      => 'content-plus',
-        'data-toggle'               => 'modal',
-        'data-target'               => '#myModal'
-      })
-  end
 
   def new_metering_point_operator_contract
     link_to(
