@@ -21,22 +21,10 @@ class ProfileDecorator < Draper::Decorator
     )
   end
 
-  def thumb
-    link_to image_tag_small, model
-  end
 
-  def image_tag_small
+  def image_tag_user
     if model.image?
-      image_tag model.image.small, class: 'img-circle', size: '45x45', alt: ""
-    else
-      content_tag(:i, '', class: 'fa fa-user')
-    end
-  end
-
-
-  def image_tag_medium
-    if model.image?
-      image_tag model.image.medium, class: 'img-circle', size: '150x150', alt: ""
+      image_tag model.image.sm, class: 'img-circle img-user media-object', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-user')
     end
@@ -44,7 +32,15 @@ class ProfileDecorator < Draper::Decorator
 
   def image_tag_sm
     if model.image?
-      image_tag model.image.medium, class: 'img-circle', size: '100x100', alt: ""
+      image_tag model.image.sm, class: 'img-circle img-sm img-border', alt: ""
+    else
+      content_tag(:i, '', class: 'fa fa-user')
+    end
+  end
+
+  def image_tag_lg
+    if model.image?
+      image_tag model.image.lg, class: 'img-circle img-lg img-border', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-user')
     end

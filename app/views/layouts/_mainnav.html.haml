@@ -1,0 +1,81 @@
+%nav#mainnav-container
+  #mainnav
+    / Shortcut buttons
+    / ================================
+    #mainnav-shortcut
+      %ul.list-unstyled
+        %li.col-xs-4{"data-content" => "Additional Sidebar"}
+          %a#demo-toggle-aside.shortcut-grid{:href => "#"}
+            %i.fa.fa-magic
+        %li.col-xs-4{"data-content" => "Notification"}
+          %a#demo-alert.shortcut-grid{:href => "#"}
+            %i.fa.fa-bullhorn
+        %li.col-xs-4{"data-content" => "Page Alerts"}
+          %a#demo-page-alert.shortcut-grid{:href => "#"}
+            %i.fa.fa-bell
+    / ================================
+    / End shortcut buttons
+    / Menu
+    / ================================
+    #mainnav-menu-wrap
+      .nano
+        .nano-content
+          %ul#mainnav-menu.list-group
+            / Category name
+            %li.list-header= t'explore'
+            / Menu list item
+            = mainnav_profiles_path
+            = mainnav_groups_path
+            = mainnav_groups_path
+
+            %li.list-divider
+            / Category name
+            %li.list-header Components
+            / Menu list item
+            %li
+              %a{:href => "#"}
+                %i.fa.fa-edit
+                %span.menu-title Forms
+                %i.arrow
+              / Submenu
+              %ul.collapse
+                %li
+                  %a{:href => "forms-general.html"} General
+                %li
+                  %a{:href => "forms-components.html"} Components
+                %li
+                  %a{:href => "forms-validation.html"} Validation
+                %li
+                  %a{:href => "forms-wizard.html"} Wizard
+            / Menu list item
+            %li
+              %a{:href => "#"}
+                %i.fa.fa-table
+                %span.menu-title Tables
+                %i.arrow
+              / Submenu
+              %ul.collapse
+                %li
+                  %a{:href => "tables-static.html"} Static Tables
+                %li
+                  %a{:href => "tables-bootstrap.html"} Bootstrap Tables
+                %li
+                  %a{:href => "tables-datatable.html"}
+                    Data Tables
+                    %span.label.label-info.pull-right New
+                %li
+                  %a{:href => "tables-footable.html"}
+                    Foo Tables
+                    %span.label.label-info.pull-right New
+            / Menu list item
+            %li
+              %a{:href => "charts.html"}
+                %i.fa.fa-line-chart
+                %span.menu-title Charts
+          / Widget
+          / ================================
+          .mainnav-widget
+            / Show the button on collapsed navigation
+            .show-small
+              %a{"data-target" => "#demo-wg-server", "data-toggle" => "menu-widget", :href => "#"}
+                %i.fa.fa-desktop

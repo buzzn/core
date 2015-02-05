@@ -1,0 +1,59 @@
+%header#navbar
+  #navbar-container.boxed
+    / Brand logo &amp; name
+    / ================================
+    .navbar-header
+
+      .navbar-brand
+        = image_tag('bz_logo.png')
+
+    / ================================
+    / End brand logo &amp; name
+    / Navbar Dropdown
+    / ================================
+    .navbar-content.clearfix
+      %ul.nav.navbar-top-links.pull-left
+        / Navigation toogle button
+        / ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        %li.tgl-menu-btn
+          %a.mainnav-toggle{:href => "#"}
+            %i.fa.fa-navicon.fa-lg
+        / ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        / End Navigation toogle button
+
+
+      %ul.nav.navbar-top-links.pull-right
+
+        / User dropdown
+        / ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        - if user_signed_in?
+          %li#dropdown-user.dropdown
+            %a.dropdown-toggle.text-right{"data-toggle" => "dropdown", :href => "#"}
+              %span.pull-right
+                = current_user.profile.image_tag_user
+              .username.hidden-xs= current_user.name
+            .dropdown-menu.dropdown-menu-md.dropdown-menu-right.with-arrow.panel-default
+              / Dropdown heading
+
+              / User dropdown menu
+              %ul.head-list
+                %li
+                  %a{:href => "#"}
+                    %i.fa.fa-user.fa-fw.fa-lg
+                    Profile
+
+                %li
+                  %a{:href => "#"}
+                    %span.label.label-success.pull-right New
+                    %i.fa.fa-gear.fa-fw.fa-lg
+                    Settings
+                %li
+                  %a{:href => "#"}
+                    %i.fa.fa-question-circle.fa-fw.fa-lg
+                    Help
+
+              / Dropdown footer
+              .pad-all.text-right
+                %a.btn.btn-primary{:href => "pages-login.html"}
+                  %i.fa.fa-sign-out.fa-fw
+                  Logout

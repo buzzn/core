@@ -3,12 +3,13 @@ class CreateProfiles < ActiveRecord::Migration
     create_table :profiles do |t|
 
       t.string :username
-      t.text :description
       t.string :slug
       t.string :title
       t.string :image
       t.string :first_name
       t.string :last_name
+      t.text   :about_me
+      t.string :website
       t.string :gender
       t.string :phone
       t.string :time_zone

@@ -7,6 +7,8 @@ Fabricator :profile do
   terms       true
   i = 1
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', "#{i+=1}.jpg")) }
+  about_me    { Faker::Lorem.sentence }
+  website     { "http://www.#{Faker::Internet.domain_name}" }
 end
 
 

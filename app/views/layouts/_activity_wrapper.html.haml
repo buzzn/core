@@ -14,9 +14,9 @@
     .details
       .avatar.thumb_icon
         - if a.owner
-          = @a.owner.profile.thumb
+          = @a.owner.profile.image_tag_sm
       - if a.key == 'friendship.create'
         .avatar.thumb_icon
           -if a.recipient
-            = @a.recipient.profile.thumb
+            = @a.recipient.profile.image_tag_sm
       = yield

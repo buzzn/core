@@ -1,0 +1,43 @@
+%aside#aside-container
+  #aside
+    .nano
+      .nano-content{:tabindex => "0"}
+        / Simple profile
+        .text-center.pad-all
+          .pad-ver
+            %img.img-lg.img-border.img-circle{:alt => "Profile Picture", :src => "img/av1.png"}
+          %h4.text-lg.text-overflow.mar-no John Doe
+          %p.text-sm Digital Marketing Director
+          .pad-ver.btn-group
+            %a.btn.btn-icon.btn-hover-primary.fa.fa-facebook.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Facebook", :href => "#", :title => ""}
+            %a.btn.btn-icon.btn-hover-info.fa.fa-twitter.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Twitter", :href => "#", :title => ""}
+            %a.btn.btn-icon.btn-hover-danger.fa.fa-google-plus.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Google+", :href => "#", :title => ""}
+            %a.btn.btn-icon.btn-hover-mint.fa.fa-envelope.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Email", :href => "#", :title => ""}
+          %button.btn.btn-block.btn-success Follow
+        %hr
+          %ul.list-group.bg-trans
+            / Profile Details
+            %li.list-group-item.list-item-sm
+              %i.fa.fa-home.fa-fw
+              San Jose, CA
+            %li.list-group-item.list-item-sm
+              %i.fa.fa-clock-o.fa-fw
+              Member since 1 years ago
+            %li.list-group-item.list-item-sm.text-primary.text-semibold
+              %a.btn-link{:href => "#"}
+                %i.fa.fa-globe.fa-fw
+                http://www.themeon.net
+          %hr
+            .pad-hor
+              %h5 About Me
+              %small.text-thin Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+            %hr
+              .text-center.clearfix
+                .col-xs-6
+                  %p.h3 523
+                  %small.text-muted Likes
+                .col-xs-6
+                  %p.h3 7,345
+                  %small.text-muted Friends
+      .nano-pane{:style => "display: none;"}
+        .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}

@@ -18,7 +18,9 @@ class ApplicationController < ActionController::Base
     current_user.profile
   end
 
-
+  def current_user
+    UserDecorator.decorate(super) unless super.nil?
+  end
 
 
 end

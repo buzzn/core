@@ -11,7 +11,7 @@ gem 'haml-rails'
 gem 'coffee-rails'
 gem 'uglifier'
 gem 'rails_layout'
-gem 'bootstrap-sass',           '3.2.0.2'
+#gem 'bootstrap-sass',           '3.2.0.2'
 gem 'autoprefixer-rails'
 gem 'font-awesome-rails'
 gem 'jquery-rails'
@@ -88,9 +88,11 @@ gem 'acts_as_list'
 gem 'pusher'
 
 source 'http://rails-assets.org' do
+  gem 'rails-assets-bootstrap'
   gem 'rails-assets-highcharts'
   gem 'rails-assets-underscore'
   gem 'rails-assets-jquery-readyselector'
+  gem 'rails-assets-metisMenu'
 end
 
 

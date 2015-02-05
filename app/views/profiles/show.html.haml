@@ -1,65 +1,88 @@
 - meta title: @profile.name
-- meta description: @profile.description
-
-.col-sm-3
-  .detail_icon
-    %i= @profile.image_tag_medium
-  %h4= @profile.name
-  - if current_user.can_update?(@profile)
-    = @profile.link_to_edit
+- meta about_me: @profile.about_me
 
 
-  - if @profile.user != current_user
-    .btn-group
-      %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
-        =t('friendship')
-        %span.caret
-      %ul.dropdown-menu{role: "menu"}
-        %li
-          - if current_user.friend?(@profile.user)
-            = link_to(t('cancel_friendship'),cancel_friendship_path(@profile.user),:data => {:confirm => t('are_you_sure')})
-          - else
-            - if FriendshipRequest.where(sender: current_user, receiver: @profile.user).empty?
-              = link_to t('send_friend_request'), friendship_requests_path( receiver_id: @profile.user), method: :post
-            - else
-              = t'waiting_for_accepting'
-
-  - if @profile.description && @profile.description != ""
-    %article.sidebar_module
-      %h5.page-header= t('description')
-      = @profile.description
-
-  %article.sidebar_module
-    %h5.page-header= t('groups')
-    %ul
-      = render @groups
-    .clearfix
-
-
-  %article.sidebar_module
-    %h5.page-header= t('friends')
-    %ul
-      = render @friends.decorate.collect(&:profile)
-    .clearfix
-
-  - if @profile.readable_by? current_user
-    %article.sidebar_module
-      %h5.page-header= t('devices')
-      %ul
-        - @profile.user.editable_devices.each do |device|
-          = render device
-      .clearfix
+= content_for :aside do
+  %aside#aside-container
+    #aside
+      .nano
+        .nano-content{:tabindex => "0"}
+          .text-center.pad-all
+            .pad-ver
+              = @profile.image_tag_lg
+            %h4.text-lg.text-overflow.mar-no= @profile.name
+            //%p.text-sm Digital Marketing Director
+            .pad-ver.btn-group
+              %a.btn.btn-icon.btn-hover-primary.fa.fa-facebook.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Facebook", :href => "#", :title => ""}
+              %a.btn.btn-icon.btn-hover-info.fa.fa-twitter.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Twitter", :href => "#", :title => ""}
+              %a.btn.btn-icon.btn-hover-danger.fa.fa-google-plus.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Google+", :href => "#", :title => ""}
+              %a.btn.btn-icon.btn-hover-mint.fa.fa-envelope.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Email", :href => "#", :title => ""}
+            %button.btn.btn-block.btn-success Follow
+          %hr
+            %ul.list-group.bg-trans
+              / Profile Details
+              %li.list-group-item.list-item-sm
+                %i.fa.fa-home.fa-fw
+                San Jose, CA
+              %li.list-group-item.list-item-sm
+                %i.fa.fa-clock-o.fa-fw
+                Member since 1 years ago
+              %li.list-group-item.list-item-sm.text-primary.text-semibold
+                %a.btn-link{:href => "#"}
+                  %i.fa.fa-globe.fa-fw
+                  http://www.themeon.net
+            %hr
+              .pad-hor
+                %h5=t('about_me')
+                %small.text-thin= @profile.about_me
+              %hr
+                .text-center.clearfix
+                  .col-xs-6
+                    %p.h3= @groups.count
+                    %small.text-muted= t'groups'
+                  .col-xs-6
+                    %p.h3= @friends.count
+                    %small.text-muted= t'friends'
+        .nano-pane{:style => "display: none;"}
+          .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
 
 
 
-.col-sm-9
-  - if @profile.user.editable_locations.empty? && @profile.user == current_user
-    = render 'no_location'
+#page-title
+  %h1.page-header.text-overflow= t'groups'
+  / Searchbox
+  .searchbox
+    .input-group.custom-search-form
+      %input.form-control{:placeholder => "Search..", :type => "text"}
+        %span.input-group-btn
+          %button.text-muted{:type => "button"}
+            %i.fa.fa-search
 
-  .location_metering_points
-    = render 'locations/location_overview'
 
+#page-content
+
+  .row
+    - @locations.each do |location|
+      .col-lg-8
+        / Profile Heading
+        / ===================================================
+        .panel
+          .panel-bg-cover
+            = image_tag location.metering_point.background_image_url, class: 'img-responsive'
+          .panel-media
+            %img.panel-media-img.img-circle.img-border-light{:alt => "Profile Picture", :src => image_path(location.metering_point.background_image_url)}
+              .row
+                .col-lg-7
+                  %h3.panel-media-heading Stephen Tran
+                  %a.btn-link{:href => "#"} @stephen_doe
+                  %p.text-muted.mar-btm Web and Graphic designer
+                .col-lg-5.text-lg-right
+                  %button.btn.btn-sm.btn-primary Add Friend
+                  %button.btn.btn-sm.btn-mint.btn-icon.fa.fa-envelope.icon-lg
+          .panel-body
+            %h4 Consectetur adipisicing
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
 
 
 

@@ -451,12 +451,12 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   create_table "profiles", force: true do |t|
     t.string   "username"
-    t.text     "description"
     t.string   "slug"
     t.string   "title"
     t.string   "image"
     t.string   "first_name"
     t.string   "last_name"
+    t.text     "about_me"
     t.string   "gender"
     t.string   "phone"
     t.string   "time_zone"

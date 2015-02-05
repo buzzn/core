@@ -1,14 +1,24 @@
-/ %h1= t'listing_profiles'
-/ #users
-/   %ul
-/   - @profiles.each do |profile|
-/     .user
-/       %strong= link_to profile.name, profile
+#page-title
+  %h1.page-header.text-overflow= t'groups'
+  / Searchbox
+  .searchbox
+    .input-group.custom-search-form
+      %input.form-control{:placeholder => "Search..", :type => "text"}
+        %span.input-group-btn
+          %button.text-muted{:type => "button"}
+            %i.fa.fa-search
 
-%h1.page-header= t('listing_profiles')
-%ul
-  - @profiles.each do |profile|
-    .user
-      = render profile.decorate
-      = link_to profile.name, profile
-
+#page-content
+  .row
+    - @profiles.each do |profile|
+      - profile.decorate
+      .col-md-6.col-lg-3
+        .panel.widget
+          .widget-header.bg-primary
+          .widget-body.text-center
+            %img.widget-img.img-circle.img-border-light{:alt => "Profile Picture", :src => profile.image.sm}
+              %h4.mar-no= link_to profile.name, profile
+              %p.text-muted.mar-btm Administrator
+              .pad-ver
+                %button.btn.btn-primary Follow
+                %button.btn.btn-success Message

@@ -1,0 +1,22 @@
+%footer#footer
+  / Visible when footer positions are fixed
+  / ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  .show-fixed.pull-right
+    %ul.footer-list.list-inline
+      %li
+        %p.text-sm SEO Proggres
+        .progress.progress-sm.progress-light-base
+          .progress-bar.progress-bar-danger{:style => "width: 80%"}
+      %li
+        %p.text-sm Online Tutorial
+        .progress.progress-sm.progress-light-base
+          .progress-bar.progress-bar-primary{:style => "width: 80%"}
+      %li
+        %button.btn.btn-sm.btn-dark.btn-active-success Checkout
+  / Visible when footer positions are static
+  / ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  .hide-fixed.pull-right.pad-rgt= APP_VERSION
+  / ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  / Remove the class name "show-fixed" and "hide-fixed" to make the content always appears.
+  / ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  %p.pad-lft © 2015 buzzn

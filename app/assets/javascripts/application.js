@@ -16,7 +16,9 @@
 //= require jquery_ujs
 //= require jquery-ui
 //= require jquery.remotipart
+//= require jquery.nanoscroller.min
 
+//= require bootstrap
 //= require highcharts
 //= require highcharts_no_utc
 //= require chartkick
@@ -25,13 +27,23 @@
 //= require address_picker-rails
 //= require select2
 //= require cocoon
-//= require bootstrap-sprockets
 //= require rails-timeago
 //= require rails-timeago-all
 //= require underscore
 //= require dependent-fields
+//= require metisMenu
+
+
+//= require nifty_init
+//= require nifty_notification
+//= require nifty_aside
+//= require nifty_navigation
+//= require nifty_affix
+//= require nifty_alert
+//= require nifty_buzzn
 
 //= require global
+
 //= require metering_points
 //= require locations
 //= require groups
@@ -42,6 +54,9 @@
 //= require d3
 
 //= require pusher.min
+
+
+
 
 //= require turbolinks
 // don't require libs below this command

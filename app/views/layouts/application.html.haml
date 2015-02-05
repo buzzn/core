@@ -15,11 +15,17 @@
 
   %body{class: "#{controller_name} #{action_name}"}
     = include_gon(:init => true)
-    #myModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
-    %section#container
-      %header
-        = render 'layouts/navigation'
-      %main#main
-        .container#content
-          = render 'layouts/messages'
+
+    #container.effect.aside-in.aside-left.aside-bright.mainnav-lg
+      = render 'layouts/navbar'
+
+      .boxed
+        #content-container
+          .page-alert
           = yield
+
+        = render 'layouts/mainnav'
+
+        = yield(:aside)
+
+      = render 'layouts/footer'
