@@ -46,40 +46,14 @@
 
 
 
-#page-title
-  %h1.page-header.text-overflow= t'groups'
-  / Searchbox
-  .searchbox
-    .input-group.custom-search-form
-      %input.form-control{:placeholder => "Search..", :type => "text"}
-        %span.input-group-btn
-          %button.text-muted{:type => "button"}
-            %i.fa.fa-search
-
-
 #page-content
 
+  %h1.page-header.text-overflow= t'groups'
   .row
-    - @locations.each do |location|
-      .col-lg-8
-        / Profile Heading
-        / ===================================================
-        .panel
-          .panel-bg-cover
-            = image_tag location.metering_point.background_image_url, class: 'img-responsive'
-          .panel-media
-            %img.panel-media-img.img-circle.img-border-light{:alt => "Profile Picture", :src => image_path(location.metering_point.background_image_url)}
-              .row
-                .col-lg-7
-                  %h3.panel-media-heading Stephen Tran
-                  %a.btn-link{:href => "#"} @stephen_doe
-                  %p.text-muted.mar-btm Web and Graphic designer
-                .col-lg-5.text-lg-right
-                  %button.btn.btn-sm.btn-primary Add Friend
-                  %button.btn.btn-sm.btn-mint.btn-icon.fa.fa-envelope.icon-lg
-          .panel-body
-            %h4 Consectetur adipisicing
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+    = render @groups
 
+  %h1.page-header.text-overflow= t'locations'
+  .row
+    = render @locations
 
 

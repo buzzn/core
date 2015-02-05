@@ -270,6 +270,8 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   create_table "groups", force: true do |t|
     t.string   "slug"
     t.string   "name"
+    t.string   "logo"
+    t.string   "image"
     t.string   "mode",        default: ""
     t.boolean  "private",     default: false
     t.text     "description"
@@ -458,6 +460,10 @@ ActiveRecord::Schema.define(version: 20150114092836) do
     t.string   "last_name"
     t.text     "about_me"
     t.string   "website"
+    t.string   "facebook"
+    t.string   "twitter"
+    t.string   "xing"
+    t.string   "linkedin"
     t.string   "gender"
     t.string   "phone"
     t.string   "time_zone"

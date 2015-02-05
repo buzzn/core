@@ -6,9 +6,8 @@ end
 
 Fabricator :group_hof_butenland, from: :group do
   name        'Hof Butenland'
-  assets      { [ Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'groups', 'hof_butenland.jpg'))) ] }
+  logo      { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'hof_butenland', 'logo.jpg')) }
 end
-
 
 
 Fabricator :group_hopf, from: :group do
@@ -17,10 +16,8 @@ Fabricator :group_hopf, from: :group do
   servicing_contract                { Fabricate(:servicing_contract) }
 end
 
-
 Fabricator :group_home_of_the_brave, from: :group do
   name        'Home of the Brave'
-  assets      { [ Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'groups', 'home_of_the_brave.jpg'))) ] }
 end
 
 Fabricator :group_karins_pv_strom, from: :group do
@@ -31,8 +28,9 @@ end
 Fabricator :group_wagnis4, from: :group do
   name        'Wagnis 4'
   description { "Dies ist der Localpool von Wagnis 4." }
-  servicing_contract                { Fabricate(:servicing_contract) }
-  assets      { [ Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'groups', 'wagnis4.png'))) ] }
+  servicing_contract { Fabricate(:servicing_contract) }
+  logo      { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'wagnis4', 'logo.png'))}
+  image     { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'wagnis4', 'image.png')) }
 end
 
 
