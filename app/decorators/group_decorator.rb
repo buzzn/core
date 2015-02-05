@@ -43,25 +43,25 @@ class GroupDecorator < Draper::Decorator
     end
   end
 
-  def thumb_small
-    link_to image_tag_small, model
-  end
-
-  def thumb_medium
-    link_to image_tag_medium, model
-  end
-
-  def image_tag_medium
+  def image_tag_group
     if model.assets.any?
-      image_tag model.assets.first.image.medium, class: 'img-circle', size: '100x100', alt: ""
+      image_tag model.assets.first.image.sm, class: 'img-circle img-user media-object', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-users')
     end
   end
 
-  def image_tag_small
+  def image_tag_sm
     if model.assets.any?
-      image_tag model.assets.first.image.small, class: 'img-circle', size: '45x45', alt: ""
+      image_tag model.assets.first.image.sm, class: 'img-circle img-sm img-border', alt: ""
+    else
+      content_tag(:i, '', class: 'fa fa-users')
+    end
+  end
+
+  def image_tag_lg
+    if model.assets.any?
+      image_tag model.assets.first.image.lg, class: 'img-circle img-lg img-border', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-users')
     end

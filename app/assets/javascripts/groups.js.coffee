@@ -388,7 +388,7 @@ class BubbleChart
     this.setNewScale()
 
   setNewScale: () =>
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @zoomFactor/ 3.5)])
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @zoomFactor/ 5)])
     @nodes.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
     @nodes_out.forEach (d) =>
