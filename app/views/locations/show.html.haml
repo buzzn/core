@@ -1,69 +1,83 @@
 - meta title: @location.name
 
-.col-sm-3
-  .detail_icon
-    %i.fa.fa-home
-  %h4= @location.long_name
-
-  - if current_user.can_update?(@location)
-    = @location.link_to_edit
-
-  %h5.page-header= t('residents')
-  %article.sidebar_module.residents
-    %ul
-      - if @residents.any?
-        - @residents.each do |resident|
-          = render resident.profile
-      - else
-        = t('no_residents_available')
-    .clearfix
 
 
-  %h5.page-header= t('devices')
-  %article.sidebar_module.devices
-    %ul
-      - if @devices.any?
-        - @devices.each do |device|
-          = render device
-      - else
-        = t('no_devices_available')
-    .clearfix
+
+= content_for :aside do
+  %aside#aside-container
+    #aside
+      .nano
+        .nano-content{:tabindex => "0"}
+          .text-center.pad-all
+            .pad-ver
+              = @location.image_tag_lg
+            %h4.text-lg.text-overflow.mar-no= @location.name
+            - if current_user.can_update?(@location)
+              = @location.link_to_edit
+          %hr
+            %ul.list-group.bg-trans
+              / Profile Details
+              %li.list-group-item.list-item-sm
+                %i.fa.fa-home.fa-fw
+                San Jose, CA
+              %li.list-group-item.list-item-sm
+                %i.fa.fa-clock-o.fa-fw
+                Member since 1 years ago
+              %li.list-group-item.list-item-sm.text-primary.text-semibold
+                %a.btn-link{:href => "#"}
+                  %i.fa.fa-globe.fa-fw
+                  http://www.themeon.net
+            %hr
+              .pad-hor
+                %h5=t('address')
+                %address
+                  = "#{@location.address.street_name} #{@location.address.street_number}"
+                  %br
+                  = "#{@location.address.zip} #{@location.address.city}"
+                  %br
+                  = @location.address.state
+
+            %hr
+              .text-center.clearfix
+                .col-xs-6
+                  %p.h3= @residents.count
+                  %small.text-muted= t'residents'
+                .col-xs-6
+                  %p.h3= @devices.count
+                  %small.text-muted= t'devices'
 
 
-  %h5.page-header= t('address')
-  %address
-    = "#{@location.address.street_name} #{@location.address.street_number}"
-    %br
-    = "#{@location.address.zip} #{@location.address.city}"
-    %br
-    = @location.address.state
 
 
-.col-sm-9
-  %ul.nav.nav-pills#mytab.nav-spacer
-    %li.active
-      %a{"data-toggle" => "tab", href: "#metering_points"}
-        = t'metering_points'
-    - if @location.metering_point
-      %li
-        %a{"data-toggle" => "tab", href: "#metering_point_tree"}
-          = t'metering_point_tree'
+#page-content
+
+  .row
+
+    .col-sm-9
+      %ul.nav.nav-pills#mytab.nav-spacer
+        %li.active
+          %a{"data-toggle" => "tab", href: "#metering_points"}
+            = t'metering_points'
+        - if @location.metering_point
+          %li
+            %a{"data-toggle" => "tab", href: "#metering_point_tree"}
+              = t'metering_point_tree'
 
 
-  .tab-content
-    #metering_points.tab-pane.active
-      - if @location.metering_point == nil
-        = render 'no_metering_point'
-      - else
-        .metering_points
-          - @location.metering_point.subtree.each do |metering_point|
-            = render metering_point.decorate unless metering_point == @location.metering_point && metering_point.mode == "in_out"
+      .tab-content
+        #metering_points.tab-pane.active
+          - if @location.metering_point == nil
+            = render 'no_metering_point'
+          - else
+            .metering_points
+              - @location.metering_point.subtree.each do |metering_point|
+                = render metering_point.decorate unless metering_point == @location.metering_point && metering_point.mode == "in_out"
 
-    #metering_point_tree.tab-pane
-      .block
-        #tree1
-        - if user_signed_in? && @location.metering_point && current_user.can_update?(@location.metering_point)
-          = @location.metering_point.new_sub_metering_point
+        #metering_point_tree.tab-pane
+          .block
+            #tree1
+            - if user_signed_in? && @location.metering_point && current_user.can_update?(@location.metering_point)
+              = @location.metering_point.new_sub_metering_point
 
 
 

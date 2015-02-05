@@ -457,6 +457,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
     t.string   "first_name"
     t.string   "last_name"
     t.text     "about_me"
+    t.string   "website"
     t.string   "gender"
     t.string   "phone"
     t.string   "time_zone"

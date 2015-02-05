@@ -1,0 +1,17 @@
+#page-title
+  %h1.page-header.text-overflow= t'organizations'
+
+
+#page-content
+  .row
+    - @organizations.each do |organization|
+      .col-md-6.col-lg-3
+        .panel.widget
+          .widget-header.bg-primary
+          .widget-body.text-center
+            %img.widget-img.img-circle.img-border-light{:alt => "Profile Picture", :src => organization.assets.first}
+              %h4.mar-no= link_to organization.name, organization
+              %p.text-muted.mar-btm Administrator
+              .pad-ver
+                %button.btn.btn-primary Follow
+                %button.btn.btn-success Message

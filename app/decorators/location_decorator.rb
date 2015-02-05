@@ -9,6 +9,16 @@ class LocationDecorator < Draper::Decorator
   decorates_association :assets
 
 
+
+  def image_tag_lg
+    if model.metering_point && model.metering_point.assets.any?
+      image_tag model.metering_point.assets.first.image.lg, class: 'img-circle img-lg img-border', alt: ""
+    else
+      icon_tag_small
+    end
+  end
+
+
   def thumb_small
     link_to image_tag_small, model
   end

@@ -40,10 +40,9 @@
 //= require nifty_navigation
 //= require nifty_affix
 //= require nifty_alert
-//= require nifty_buzzn
+
 
 //= require global
-
 //= require metering_points
 //= require locations
 //= require groups

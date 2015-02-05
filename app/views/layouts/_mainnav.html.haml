@@ -17,65 +17,40 @@
     / End shortcut buttons
     / Menu
     / ================================
-    #mainnav-menu-wrap
-      .nano
-        .nano-content
-          %ul#mainnav-menu.list-group
-            / Category name
-            %li.list-header= t'explore'
-            / Menu list item
-            = mainnav_profiles_path
-            = mainnav_groups_path
-            = mainnav_groups_path
+    - if user_signed_in?
+      #mainnav-menu-wrap
+        .nano
+          .nano-content
+            %ul#mainnav-menu.list-group
 
-            %li.list-divider
-            / Category name
-            %li.list-header Components
-            / Menu list item
-            %li
-              %a{:href => "#"}
-                %i.fa.fa-edit
-                %span.menu-title Forms
-                %i.arrow
-              / Submenu
-              %ul.collapse
-                %li
-                  %a{:href => "forms-general.html"} General
-                %li
-                  %a{:href => "forms-components.html"} Components
-                %li
-                  %a{:href => "forms-validation.html"} Validation
-                %li
-                  %a{:href => "forms-wizard.html"} Wizard
-            / Menu list item
-            %li
-              %a{:href => "#"}
-                %i.fa.fa-table
-                %span.menu-title Tables
-                %i.arrow
-              / Submenu
-              %ul.collapse
-                %li
-                  %a{:href => "tables-static.html"} Static Tables
-                %li
-                  %a{:href => "tables-bootstrap.html"} Bootstrap Tables
-                %li
-                  %a{:href => "tables-datatable.html"}
-                    Data Tables
-                    %span.label.label-info.pull-right New
-                %li
-                  %a{:href => "tables-footable.html"}
-                    Foo Tables
-                    %span.label.label-info.pull-right New
-            / Menu list item
-            %li
-              %a{:href => "charts.html"}
-                %i.fa.fa-line-chart
-                %span.menu-title Charts
-          / Widget
-          / ================================
-          .mainnav-widget
-            / Show the button on collapsed navigation
-            .show-small
-              %a{"data-target" => "#demo-wg-server", "data-toggle" => "menu-widget", :href => "#"}
-                %i.fa.fa-desktop
+
+              %li.list-header= t'my_locations'
+              - current_user.editable_locations.each do |location|
+                = mainnav_location_path(location)
+
+              %li.list-header= t'my_devices'
+              - current_user.editable_devices.each do |device|
+                = mainnav_device_path(device)
+
+              %li.list-header= t'my_friends'
+              %li
+                %a{:href => "#"}
+                  %i.fa.fa-edit
+                  %span.menu-title= t'my_friends'
+                  %i.arrow
+                / Submenu
+                %ul.collapse
+                  - current_user.friends.each do |profile|
+                    = mainnav_profile_path(profile)
+
+
+
+              %li.list-divider
+              %li.list-header= t'explore_buzzn'
+              = mainnav_profiles_path
+              = mainnav_groups_path
+              = mainnav_organizations_path
+
+
+
+
