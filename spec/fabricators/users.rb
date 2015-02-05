@@ -156,6 +156,81 @@ end
 
 
 
+Fabricator :andreas_schlafer, from: :user do
+  email               'andreas.schlafer@gmx.de'
+  profile             { Fabricate(:profile_andreas_schlafer) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :luise_woerle, from: :user do
+  email               'luise.woerle@t-online.de'
+  profile             { Fabricate(:profile_luise_woerle) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :peter_waechter, from: :user do
+  email               'info.peter.waechter@t-online.de'
+  profile             { Fabricate(:profile_peter_waechter) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :sigrid_cycon, from: :user do
+  email               'cycon.sigrid@t-online.de'
+  profile             { Fabricate(:profile_sigrid_cycon) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :dietlind_klemm, from: :user do
+  email               'dietlind.klemm@gmx.de'
+  profile             { Fabricate(:profile_dietlind_klemm) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :wilhelm_wagner, from: :user do
+  email               'bcw15@t-online.de'
+  profile             { Fabricate(:profile_wilhelm_wagner) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :volker_letzner, from: :user do
+  email               'vletzner@web.de'
+  profile             { Fabricate(:profile_volker_letzner) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+#maria_mueller -> Kiosk
+Fabricator :maria_mueller, from: :user do
+  email               'mar_s1@gmx.de'
+  profile             { Fabricate(:profile_maria_mueller) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :evang_pflege, from: :user do
+  email               'email@ev-pflegedienst.de'
+  profile             { Fabricate(:profile_evang_pflege) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :david_stadlmann, from: :user do
+  email               'david.stadlmann@divad.de'
+  profile             { Fabricate(:profile_david_stadlmann) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :doris_knaier, from: :user do
+  email               'info@dorisknaier.de'
+  profile             { Fabricate(:profile_doris_knaier) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+Fabricator :sabine_dumler, from: :user do
+  email               'sabine.dumler@googlemail.com'
+  profile             { Fabricate(:profile_sabine_dumler) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
+
+
 
 
 

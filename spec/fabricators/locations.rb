@@ -134,6 +134,88 @@ end
 
 
 
+Fabricator :location_wagnis4_laden_eg, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009390)}
+end
+
+#Wagnis 4 - Nord Wohnung 01
+Fabricator :location_andreas_schlafer, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009387)}
+end
+
+#Wagnis 4 - Nord Wohnung 10
+Fabricator :location_luise_woerle, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009438)}
+end
+
+#Wagnis 4 - Nord Wohnung 12
+Fabricator :location_peter_waechter, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009440)}
+end
+
+#Wagnis 4 - Nord Wohnung 15
+Fabricator :location_sigrid_cycon, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009404)}
+end
+
+#Wagnis 4 - Nord Wohnung 17
+Fabricator :location_dietlind_klemm, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009405)}
+end
+
+#Wagnis 4 - Nord Wohnung 18
+Fabricator :location_wilhelm_wagner, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009422)}
+end
+
+#Wagnis 4 - Nord Wohnung 19
+Fabricator :location_volker_letzner, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009425)}
+end
+
+#Wagnis 4 - Nord Wohnung 20
+Fabricator :location_maria_mueller, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009402)}
+end
+
+#Wagnis 4 - Ost 03
+Fabricator :location_evang_pflege, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009429)}
+end
+
+#Wagnis 4 - Ost Wohnung 12
+Fabricator :location_david_stadlmann, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009393)}
+end
+
+#Wagnis 4 - Ost Wohnung 13
+Fabricator :location_doris_knaier, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009442)}
+end
+
+#Wagnis 4 - Ost Wohnung 15
+Fabricator :location_sabine_dumler, from: :location do
+  address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
+  metering_point { Fabricate(:mp_60009441)}
+end
+
+
+
+
+
+
 
 
 

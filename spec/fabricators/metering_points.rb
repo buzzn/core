@@ -256,10 +256,142 @@ end
 
 #Wagnis 4 - Allgemeinstrom Haus West
 Fabricator :mp_60009420, from: :metering_point do
-  address_addition  'Wohnung'
+  address_addition  'Allgemeinstrom Haus West'
   registers { Fabricate(:easymeter_60009420).registers }
   electricity_supplier_contracts         { [] }
 end
+
+#Wagnis 4 - PV
+Fabricator :mp_60118460, from: :metering_point do
+  address_addition  'PV'
+  registers { Fabricate(:easymeter_60118460).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+
+
+
+#Wagnis 4 - Allgemeinstrom Haus Nord
+Fabricator :mp_60009386, from: :metering_point do
+  address_addition  'Allgemeinstrom Haus Nord'
+  registers { Fabricate(:easymeter_60009386).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Allgemeinstrom Haus Ost
+Fabricator :mp_60009445, from: :metering_point do
+  address_addition  'Allgemeinstrom Haus Nord'
+  registers { Fabricate(:easymeter_60009445).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Gäste Haus Ost 1+2
+Fabricator :mp_60009446, from: :metering_point do
+  address_addition  'Gäste Haus Ost 1+2'
+  registers { Fabricate(:easymeter_60009446).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Laden EG
+Fabricator :mp_60009390, from: :metering_point do
+  address_addition  'Laden EG'
+  registers { Fabricate(:easymeter_60009390).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Nord Wohnung 01
+Fabricator :mp_60009387, from: :metering_point do
+  address_addition  'Nord Wohnung 01'
+  registers { Fabricate(:easymeter_60009387).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Nord Wohnung 10
+Fabricator :mp_60009438, from: :metering_point do
+  address_addition  'Nord Wohnung 10'
+  registers { Fabricate(:easymeter_60009438).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Nord Wohnung 12
+Fabricator :mp_60009440, from: :metering_point do
+  address_addition  'Nord Wohnung 12'
+  registers { Fabricate(:easymeter_60009440).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Nord Wohnung 15
+Fabricator :mp_60009404, from: :metering_point do
+  address_addition  'Nord Wohnung 15'
+  registers { Fabricate(:easymeter_60009404).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Nord Wohnung 17
+Fabricator :mp_60009405, from: :metering_point do
+  address_addition  'Nord Wohnung 17'
+  registers { Fabricate(:easymeter_60009405).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Nord Wohnung 18
+Fabricator :mp_60009422, from: :metering_point do
+  address_addition  'Nord Wohnung 18'
+  registers { Fabricate(:easymeter_60009422).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Nord Wohnung 19
+Fabricator :mp_60009425, from: :metering_point do
+  address_addition  'Nord Wohnung 19'
+  registers { Fabricate(:easymeter_60009425).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Nord Wohnung 20
+Fabricator :mp_60009402, from: :metering_point do
+  address_addition  'Nord Wohnung 20'
+  registers { Fabricate(:easymeter_60009402).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Ost 03
+Fabricator :mp_60009429, from: :metering_point do
+  address_addition  'Ost 03'
+  registers { Fabricate(:easymeter_60009429).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Ost Wohnung 12
+Fabricator :mp_60009393, from: :metering_point do
+  address_addition  'Ost Wohnung 12'
+  registers { Fabricate(:easymeter_60009393).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Ost Wohnung 13
+Fabricator :mp_60009442, from: :metering_point do
+  address_addition  'Ost Wohnung 13'
+  registers { Fabricate(:easymeter_60009442).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Ost Wohnung 15
+Fabricator :mp_60009441, from: :metering_point do
+  address_addition  'Ost Wohnung 15'
+  registers { Fabricate(:easymeter_60009441).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+#Wagnis 4 - Übergabe
+Fabricator :mp_60118484, from: :metering_point do
+  address_addition  'Übergabe'
+  registers { Fabricate(:easymeter_60118484).registers }
+  electricity_supplier_contracts         { [] }
+end
+
+
+
 
 #Pickel Wasserkraft
 Fabricator :mp_60051562, from: :metering_point do
@@ -267,8 +399,6 @@ Fabricator :mp_60051562, from: :metering_point do
   registers { Fabricate(:easymeter_60051562).registers }
   electricity_supplier_contracts         { [] }
 end
-
-
 
 
 

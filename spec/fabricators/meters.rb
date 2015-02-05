@@ -209,7 +209,158 @@ Fabricator :easymeter_60009420, from: :meter do
   registers                           { [Fabricate(:register_in)] }
   equipments                          { [Fabricate(:equipment)] }
 end
-# Pickel - temporär in wagnis 4 eingebunden
+# Wagnis 4 PV
+Fabricator :easymeter_60118460, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60118460'
+  registers                           { [Fabricate(:register_out)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Allgemeinstrom Haus Nord
+Fabricator :easymeter_60009386, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009386'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Allgemeinstrom Haus Ost
+Fabricator :easymeter_60009445, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009445'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Gäste Haus Ost 1+2
+Fabricator :easymeter_60009446, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009446'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Laden EG
+Fabricator :easymeter_60009390, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009390'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Nord Wohnung 01
+Fabricator :easymeter_60009387, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009387'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Nord Wohnung 10
+Fabricator :easymeter_60009438, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009438'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Nord Wohnung 12
+Fabricator :easymeter_60009440, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009440'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Nord Wohnung 15
+Fabricator :easymeter_60009404, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009404'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Nord Wohnung 17
+Fabricator :easymeter_60009405, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '600093405'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Nord Wohnung 18
+Fabricator :easymeter_60009422, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009422'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Nord Wohnung 19
+Fabricator :easymeter_60009425, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009425'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Nord Wohnung 20
+Fabricator :easymeter_60009402, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009402'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Ost 03
+Fabricator :easymeter_60009429, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009429'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Ost Wohnung 12
+Fabricator :easymeter_60009393, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009393'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Ost Wohnung 13
+Fabricator :easymeter_60009442, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009442'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Ost Wohnung 15
+Fabricator :easymeter_60009441, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009441'
+  registers                           { [Fabricate(:register_in)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+#Wagnis 4 - Übergabe
+Fabricator :easymeter_60118484, from: :meter do
+  manufacturer_name                   'Easymeter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60118484'
+  registers                           { [Fabricate(:register_in), Fabricate(:register_out)] }
+  equipments                          { [Fabricate(:equipment)] }
+end
+
+
+
+
+
+
+
+# Pickel
 Fabricator :easymeter_60051562, from: :meter do
   manufacturer_name                   'Easymeter'
   manufacturer_product_name           'Q3D'
@@ -217,6 +368,7 @@ Fabricator :easymeter_60051562, from: :meter do
   registers                           { [Fabricate(:register_out)] }
   equipments                          { [Fabricate(:equipment)] }
 end
+
 
 
 

@@ -147,6 +147,68 @@ Fabricator :profile_rudolf_hassenstein, from: :profile do
 end
 
 
+Fabricator :profile_andreas_schlafer, from: :profile do
+  first_name  'Andreas'
+  last_name   'Schlafer'
+end
+
+Fabricator :profile_luise_woerle, from: :profile do
+  first_name  'Luise'
+  last_name   'Woerle'
+end
+
+Fabricator :profile_peter_waechter, from: :profile do
+  first_name  'Peter'
+  last_name   'Waechter'
+end
+
+Fabricator :profile_sigrid_cycon, from: :profile do
+  first_name  'Sigird'
+  last_name   'Cycon'
+end
+
+Fabricator :profile_dietlind_klemm, from: :profile do
+  first_name  'Dietlind'
+  last_name   'Klemm'
+end
+
+Fabricator :profile_wilhelm_wagner, from: :profile do
+  first_name  'Wilhelm'
+  last_name   'Wagner'
+end
+
+Fabricator :profile_volker_letzner, from: :profile do
+  first_name  'Volker'
+  last_name   'Letzner'
+end
+
+Fabricator :profile_maria_mueller, from: :profile do
+  first_name  'Maria'
+  last_name   'Mueller'
+end
+
+Fabricator :profile_evang_pflege, from: :profile do
+  first_name  'Evangelischer'
+  last_name   'Pflegedienst'
+end
+
+Fabricator :profile_david_stadlmann, from: :profile do
+  first_name  'David'
+  last_name   'Stadlmann'
+end
+
+Fabricator :profile_doris_knaier, from: :profile do
+  first_name  'Doris'
+  last_name   'Knaier'
+end
+
+Fabricator :profile_sabine_dumler, from: :profile do
+  first_name  'Sabine'
+  last_name   'Dumler'
+end
+
+
+
 
 
 
