@@ -42,13 +42,9 @@ class GroupDecorator < Draper::Decorator
     end
   end
 
-  def image_tag_group
-    if model.image
-      image_tag model.image.sm, class: 'img-circle img-user media-object', alt: ""
-    else
-      content_tag(:i, '', class: 'fa fa-users')
-    end
-  end
+
+
+
 
   def image_tag_sm
     if model.image

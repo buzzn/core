@@ -70,12 +70,6 @@
 
 #page-content
 
-
-
-  .row
-    #bubbles_container
-      #dummy
-
   .row
     .col-sm-12
       - if user_signed_in?
@@ -84,71 +78,45 @@
             %h5.page-header= t('group_requests')
             = render @group_metering_point_requests
 
-      %ul.nav.nav-pills#mytab.nav-spacer
-        %li.active
-          %a{"data-toggle" => "tab", href: "#users"}
-            = t'members'
-        - if user_signed_in? && current_user.can_update?(@group)
-          %li
-            %a{"data-toggle" => "tab", href: "#contracts"}
-              = t('contracts')
-        %li
-          %a{"data-toggle" => "tab", href: "#comments"}
-            = t('comments')
+  .row
+    - if true #@location.metering_point.input?
+      .col-sm-6.col-md-4.col-lg-3
+        .panel.panel-primary.panel-colorful
+          .pad-all.text-center
+            %span.text-5x.text-thin 241 W
+            %p= t'power_input'
+            %i.fa.fa-arrow-down
 
-      .tab-content
+    - if true #@location.metering_point.output?
+      .col-sm-6.col-md-4.col-lg-3
+        .panel.panel-danger.panel-colorful
+          .pad-all.text-center
+            %span.text-5x.text-thin 1253 W
+            %p= t'power_output'
+            %i.fa.fa-arrow-up
 
-        #users.tab-pane
-          - if @energy_producers.any?
-            %article.sidebar_module.energy_producers.residents
-              %h5.page-header= t('energy_producers')
-              %ul
-                - @energy_producers.each do |user|
-                  = render user.profile
-            .clear
 
-          - if @energy_consumers.any?
-            %article.sidebar_module.energy_consumers.residents
-              %h5.page-header= t('energy_consumers')
-              %ul
-                - @energy_consumers.each do |user|
-                  = render user.profile
-            .clear
-
-          - if @interested_members.any?
-            %article.sidebar_module.interested-members.residents
-              %h5.page-header= t('interested_members')
-              %ul
-                - @interested_members.each do |user|
-                  =render user.profile
-            .clear
+  .row
+    #bubbles_container
+      #dummy
 
 
 
-        #contracts.tab-pane
-          .contracts
-            .servicing_contracts
-              - if @group.servicing_contract
-                = render @group.servicing_contract
-            .new_servicing_contract_group
-              - if @group.servicing_contract.nil?
-                = @group.new_servicing_contract
-            .metering_point_operator_contracts
-              - if @group.metering_point_operator_contract
-                = render @group.metering_point_operator_contract
-            .new_metering_point_operator_contract_group
-              - if @group.metering_point_operator_contract.nil?
-                = @group.new_metering_point_operator_contract
-
-        #comments.tab-pane
-          .comments
-            - if user_signed_in? #TODO: bring commentable_by? to work
-              = render :partial => 'comments/form', :locals => { :comment => @new_comment }
-            .comments-all
-              = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
-
-
-
+  - if @energy_producers.any?
+    %h1.page-header.text-overflow= t('energy_producers')
+    .row
+      - @energy_producers.each do |user|
+        = render user.profile
+  - if @energy_consumers.any?
+    %h1.page-header.text-overflow= t('energy_consumers')
+    .row
+      - @energy_consumers.each do |user|
+        = render user.profile
+  - if @interested_members.any?
+    %h1.page-header.text-overflow= t('interested_members')
+    .row
+      - @interested_members.each do |user|
+        = render user.profile
 
 
 

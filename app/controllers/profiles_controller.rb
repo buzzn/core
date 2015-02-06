@@ -1,6 +1,10 @@
 class ProfilesController < InheritedResources::Base
   before_filter :authenticate_user!
 
+  def index
+    @profiles = Profile.all.decorate
+  end
+
 
   def show
     @profile              = Profile.find(params[:id]).decorate

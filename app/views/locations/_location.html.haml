@@ -1,3 +1,23 @@
-%li.thumb_icon.floating
-  = link_to location.image_tag_small, location, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => location.short_name }, rel: 'tooltip'
-
+.col-md-8.col-lg-4
+  .panel.widget
+    .widget-header.bg-purple
+      %img.widget-bg.img-responsive{:alt => "Image", :src => image_path(location.metering_point.image)}/
+    .widget-body.text-center
+      %img.widget-img.img-border-light{:alt => "Profile Picture", :src => image_path(location.metering_point.image)}/
+      %h4.mar-no= link_to location.short_name, location
+      %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
+        %li.col-xs-4
+          %span.text-lg 1,345
+          %p.text-muted.text-uppercase
+            %small Following
+        %li.col-xs-4
+          %span.text-lg 23,456
+          %p.text-muted.text-uppercase
+            %small Followers
+        %li.col-xs-4
+          %span.text-lg 52,678
+          %p.text-muted.text-uppercase
+            %small Likes
+      .pad-all
+        .pad-btm
+          %button.btn.btn-primary Follow

@@ -33,7 +33,7 @@ class MeteringPoint < ActiveRecord::Base
   has_many :metering_point_operator_contracts,      dependent: :destroy
   has_many :distribution_system_operator_contracts, dependent: :destroy
 
-  has_many :assets, -> { order("position ASC") }, as: :assetable, dependent: :destroy
+  mount_uploader :image, PictureUploader
 
   has_many :devices
 

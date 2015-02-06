@@ -38,6 +38,14 @@ class ProfileDecorator < Draper::Decorator
     end
   end
 
+  def image_tag_md
+    if model.image?
+      image_tag model.image.md, class: 'img-circle img-md img-border', alt: ""
+    else
+      content_tag(:i, '', class: 'fa fa-user')
+    end
+  end
+
   def image_tag_lg
     if model.image?
       image_tag model.image.lg, class: 'img-circle img-lg img-border', alt: ""

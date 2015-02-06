@@ -1,23 +1,25 @@
-.col-md-6.col-lg-3
-  .panel.widget
-    .widget-header.bg-purple
-      %img.widget-bg.img-responsive{:alt => "Image", :src => image_path(group.image)}/
-    .widget-body.text-center
-      %img.widget-img.img-border-light{:alt => "Profile Picture", :src => image_path(group.logo)}/
-      %h4.mar-no= link_to group.name, group
-      %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
-        %li.col-xs-4
-          %span.text-lg 1,345
-          %p.text-muted.text-uppercase
-            %small Following
-        %li.col-xs-4
-          %span.text-lg 23,456
-          %p.text-muted.text-uppercase
-            %small Followers
-        %li.col-xs-4
-          %span.text-lg 52,678
-          %p.text-muted.text-uppercase
-            %small Likes
-      .pad-all
-        .pad-btm
-          %button.btn.btn-primary Follow
+.col-lg-8
+  .panel
+    .panel-bg-cover
+      - if group.image?
+        = image_tag group.image.extra_large, class: 'img-responsive'
+      - else
+        = image_tag "http://placehold.it/800x600&text=#{t('no_image')}", class: 'img-responsive'
+
+    .panel-media
+      - if group.logo?
+        = image_tag group.logo.lg, class: 'panel-media-img img-circle img-border-light bg-light', alt: ""
+      - else
+        = content_tag(:span, content_tag(:i, '', class: 'fa fa-users fa-4x'), class: 'panel-media-img icon-wrap-lg icon-circle bg-light text-center')
+
+
+      .row
+        .col-lg-7
+          %h3.panel-media-heading= group.name
+          %p.text-muted.mar-btm= group.description
+        .col-lg-5.text-lg-right
+          = link_to t('more_info'), group, class: 'btn btn-sm btn-primary'
+    .panel-body
+
+
+

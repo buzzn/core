@@ -1,6 +1,11 @@
 class GroupsController < InheritedResources::Base
   respond_to :html, :js
 
+  def index
+    @groups = Group.all.decorate
+  end
+
+
   def show
     @group                          = Group.find(params[:id]).decorate
     @metering_points                = MeteringPoint.includes(:users).by_group_id_and_modes(@group.id, ['out','in']).flatten.uniq

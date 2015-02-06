@@ -1,2 +1,12 @@
-%li.thumb_icon.floating
-  = link_to profile.image_tag_sm, profile, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => profile.name }, rel: 'tooltip'
+
+
+.col-md-6.col-lg-3
+  .panel.text-center
+    .panel-body
+      .mar-btm
+        = profile.image_tag_md
+      %h4.mar-no= link_to profile.name, profile
+      %p stromgeber
+    .pad-all
+      .pad-btm
+        %button.btn.btn-success Message

@@ -10,15 +10,4 @@
 
 #page-content
   .row
-    - @profiles.each do |profile|
-      - profile.decorate
-      .col-md-6.col-lg-3
-        .panel.widget
-          .widget-header.bg-primary
-          .widget-body.text-center
-            %img.widget-img.img-circle.img-border-light{:alt => "Profile Picture", :src => profile.image.sm}
-              %h4.mar-no= link_to profile.name, profile
-              %p.text-muted.mar-btm Administrator
-              .pad-ver
-                %button.btn.btn-primary Follow
-                %button.btn.btn-success Message
+    = render @profiles
