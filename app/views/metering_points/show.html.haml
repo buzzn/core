@@ -1,129 +1,82 @@
 - meta title: @metering_point.name
 
-.col-sm-3
-  .detail_icon
-    %i.fa.fa-map-marker
-  %h4= @metering_point.name
-  - if current_user.can_update?(@metering_point)
-    = @metering_point.link_to_edit
+= content_for :aside do
+  %aside#aside-container
+    #aside
+      .nano
+        .nano-content{:tabindex => "0"}
+          .text-center.pad-all
+            .pad-ver
+              = image_tag @metering_point.image.lg, class: 'img-circle img-lg img-border', alt: ""
+            %h4.text-lg.text-overflow.mar-no= @metering_point.name
+            - if current_user.can_update?(@metering_point)
+              = @metering_point.link_to_edit
 
-
-  %h5.page-header= t('belongs_to_location')
-  %article.sidebar_module.residents
-    %ul
-      = render @metering_point.root.location.decorate
-    .clearfix
-
-  - if @group
-    %h5.page-header= t('belongs_to_group')
-    %article.sidebar_module.residents
-      %ul
-        = render @group
-      .clearfix
-  - if @metering_point.mode == 'in'
-    %h5.page-header= t('energy_consumers')
-  - elsif @metering_point.mode == 'out'
-    %h5.page-header= t('energy_producers')
-  - else
-    %h5.page-header= t('energy_producers') +' '+ t('and') +' '+ t('energy_consumers')
-  %article.sidebar_module.residents
-    %ul
-      - if @users.any?
-        - @users.each do |user|
-          = render user.profile
-      - else
-        = t('no_users_available')
-      - if current_user.can_update?(@metering_point) || @metering_point.users.include?(current_user)
-        = @metering_point.edit_users
-    .clearfix
-
-
-  %h5.page-header= t('devices')
-  %article.sidebar_module.devices
-    %ul
-      - if @devices.any?
-        - @devices.each do |device|
-          = render device
-      - else
-        = t('no_devices_available')
-      - if current_user.can_update?(@metering_point) || @metering_point.users.include?(current_user)
-        = @metering_point.edit_devices
-    .clearfix
+          %hr
+            .text-center.clearfix
+              .col-xs-6
+                %p.h3= @users.count
+                %small.text-muted= t'residents'
+              .col-xs-6
+                %p.h3= @devices.count
+                %small.text-muted= t'devices'
 
 
 
 
+#page-content
 
-.col-sm-9
-  %ul.nav.nav-pills#mytab.nav-spacer
-    %li.active
-      %a{"data-toggle" => "tab", href: "#meter"}
-        = t'meter'
-    %li
-      %a{"data-toggle" => "tab", href: "#contracts"}
-        = t'contracts'
-    %li
-      %a{"data-toggle" => "tab", href: "#charts"}
-        = t'charts'
-    %li
-      %a{"data-toggle" => "tab", href: "#assets"}
-        = t'assets'
+  .row
+    - if @metering_point.input?
+      .col-sm-6.col-md-4.col-lg-3
+        .panel.panel-primary.panel-colorful
+          .pad-all.text-center
+            %span.text-5x.text-thin 241 W
+            %p= t'power_input'
+            %i.fa.fa-arrow-down
 
-  .tab-content
+    - if @metering_point.output?
+      .col-sm-6.col-md-4.col-lg-3
+        .panel.panel-danger.panel-colorful
+          .pad-all.text-center
+            %span.text-5x.text-thin 1253 W
+            %p= t'power_output'
+            %i.fa.fa-arrow-up
 
-    #meter.tab-pane.active
-      .meter
-        - if @meter
-          = render @meter
-        - else
-          = @metering_point.new_meter
+  .row
+    .col-lg-8
+      .panel.panel-primary
+        .panel-heading
+          .panel-control
+            %ul.nav.nav-tabs
+              %li
+                %a{"aria-expanded" => "false", "data-toggle" => "tab", :href => "#hour-to-minutes"}= t('hour_to_minutes')
+              %li.active
+                %a{"aria-expanded" => "true", "data-toggle" => "tab", :href => "#day-to-hours"}= t('day_to_hours')
+              %li
+                %a{"aria-expanded" => "false", "data-toggle" => "tab", :href => "#month-to-days"}= t('month_to_days')
+              %li
+                %a{"aria-expanded" => "false", "data-toggle" => "tab", :href => "#year-to-months"}= t('year_to_months')
 
-    #contracts.tab-pane
-      - if @metering_point.electricity_supplier_contracts.any?
-        = render @metering_point.electricity_supplier_contracts
-      - else
-        .alert.alert-danger= t'no_electricity_supplier_contract_for_metering_point'
-      .metering_point_operator_contracts
-        - if !@metering_point.metering_point_operator_contracts.empty?
-          - @metering_point.metering_point_operator_contracts.each do |metering_point_operator_contract|
-            = render metering_point_operator_contract
-      - if !(@metering_point.group && @metering_point.group.metering_point_operator_contract)
-        = @metering_point.new_metering_point_operator_contract
-
-    #charts.tab-pane
-      .block{id: 'hour_to_minutes' }
-        .header.no-border
-          %h2= t('hour_to_minutes')
-        = @metering_point.chart('hour_to_minutes')
-
-      .block{id: 'day_to_hours' }
-        .header.no-border
-          %h2= t('day_to_hours')
-        = @metering_point.chart('day_to_hours')
-
-      .block{id: 'month_to_days' }
-        .header.no-border
-          %h2= t('month_to_days')
-        = @metering_point.chart('month_to_days')
-
-      .block{id: 'year_to_months' }
-        .header.no-border
-          %h2= t('year_to_months')
-        = @metering_point.chart('year_to_months')
-
-    #assets.tab-pane
-      .assets
-        = render @metering_point.assets
-      - if user_signed_in? && current_user.can_update?(@metering_point)
-        = @metering_point.new_asset
+          %h3.panel-title= t'charts'
+        .panel-body
+          .tab-content
+            #hour-to-minutes.tab-pane.fade= @metering_point.chart('hour_to_minutes')
+            #day-to-hours.tab-pane.fade.active.in= @metering_point.chart('day_to_hours')
+            #month-to-days.tab-pane.fade= @metering_point.chart('month_to_days')
+            #year-to-months.tab-pane.fade= @metering_point.chart('year_to_months')
 
 
 
 
+  %h1.page-header.text-overflow= t'devices'
+  .row
+    = render @devices
 
-
-
-
+  %h1.page-header.text-overflow= t'friends'
+  .row
+    - @users.each do |user|
+      = render user.profile
 
 
 

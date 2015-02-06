@@ -1,30 +1,23 @@
-.item{id: "metering_point_#{metering_point.id}" }
-  .block
-    .header.no-border
-      .marker-box.pull-left
-        = metering_point.image_tag_small
-      - if user_signed_in?
-        - if current_user.can_update?(metering_point)
-          = link_to t('details'), metering_point, class: 'btn btn-default pull-right'
-      .metering_point_name
-        %h2= metering_point.name
-    - if !metering_point.meter.smart?
-      .ribbon-wrapper-green
-        .ribbon-green
-          = t('slp')
-    .chart-background{:style => "background-image: url('#{metering_point.image.lg}');background-repeat:no-repeat; background-position:50% 50%;"}
-      = metering_point.chart('day_to_hours')
-    - metering_point.registers.each do |register|
-      - if register.meter.smart?
-        .ticker{id: "ticker_#{register.id}" }
-          - if Reading.where(register_id: register.id).last
-            = "Aktuelle Leistung: " + (Reading.last_power_by_register_id(register.id)).to_s + " kWh"
-          - else
-            = "Kein aktueller Zählerstand vorhanden"
-      - else
-        .ticker.slp_ticker
-          - if Reading.latest_slp && metering_point.electricity_supplier_contracts.any? && metering_point.electricity_supplier_contracts.first.forecast_watt_hour_pa
-            = "Aktueller Bezug: "
-          - else
-            = "Zur Berechnung des aktuellen Zählerstandes muss die Prognose im Stromvertrag hinzugefügt werden."
+.col-md-6.col-lg-4{id: "metering_point_#{metering_point.id}" }
+  .panel.widget
+    .widget-header.bg-purple
+      = image_tag metering_point.image, class: 'widget-bg img-responsive'
+    .widget-body.text-center
+      %h4.mar-no= link_to metering_point.name, metering_point
+      %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
+        %li.col-xs-4
+          %span.text-lg 1,345
+          %p.text-muted.text-uppercase
+            %small Following
+        %li.col-xs-4
+          %span.text-lg 23,456
+          %p.text-muted.text-uppercase
+            %small Followers
+        %li.col-xs-4
+          %span.text-lg 52,678
+          %p.text-muted.text-uppercase
+            %small Likes
+
+
+
 

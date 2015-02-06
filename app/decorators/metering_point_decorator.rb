@@ -41,15 +41,7 @@ class MeteringPointDecorator < Draper::Decorator
       chart_metering_point_path(model, resolution: resolution),
       colors: colors,
       library: {
-        chart: {
-          backgroundColor: {
-              linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 },
-              stops: [
-                  [0, "rgba(0, 0, 0, 0)"],
-                  [1, "rgba(0, 0, 0, 0.8)"]
-              ]
-          }
-        },
+
         tooltip:{
           pointFormat: "{point.y:,.2f} kWh"
         },

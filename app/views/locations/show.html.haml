@@ -55,12 +55,17 @@
             %p= t'power_output'
             %i.fa.fa-arrow-up
 
-
+  %h1.page-header.text-overflow= t'metering_points'
   .row
-    .col-sm-9
-      - @location.metering_point.subtree.each do |metering_point|
-        = render metering_point.decorate unless metering_point == @location.metering_point && metering_point.mode == "in_out"
+    - @location.metering_point.subtree.each do |metering_point|
+      = render metering_point.decorate unless metering_point == @location.metering_point && metering_point.mode == "in_out"
 
 
+  %h1.page-header.text-overflow= t'users'
+  .row
+    - @location.users.each do |user|
+      = render user.profile
 
-
+  %h1.page-header.text-overflow= t'devices'
+  .row
+    = render @location.devices

@@ -19,7 +19,6 @@ class LocationDecorator < Draper::Decorator
 
 
 
-
   def thumb_small
     link_to image_tag_small, model
   end

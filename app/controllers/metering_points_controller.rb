@@ -11,7 +11,6 @@ class MeteringPointsController < InheritedResources::Base
     authorize_action_for(@metering_point)
     show!
   end
-  authority_actions :show => 'update'
 
 
 
