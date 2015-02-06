@@ -8,7 +8,7 @@ class ProfilesController < InheritedResources::Base
 
   def show
     @profile              = Profile.find(params[:id]).decorate
-    @friends              = @profile.user.friends
+    @friends              = @profile.user.friends.decorate
     @metering_points      = @profile.user.metering_points
 
 

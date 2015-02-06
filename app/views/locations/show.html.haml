@@ -58,30 +58,8 @@
 
   .row
     .col-sm-9
-      %ul.nav.nav-pills#mytab.nav-spacer
-        %li.active
-          %a{"data-toggle" => "tab", href: "#metering_points"}
-            = t'metering_points'
-        - if @location.metering_point
-          %li
-            %a{"data-toggle" => "tab", href: "#metering_point_tree"}
-              = t'metering_point_tree'
-
-
-      .tab-content
-        #metering_points.tab-pane.active
-          - if @location.metering_point == nil
-            = render 'no_metering_point'
-          - else
-            .metering_points
-              - @location.metering_point.subtree.each do |metering_point|
-                = render metering_point.decorate unless metering_point == @location.metering_point && metering_point.mode == "in_out"
-
-        #metering_point_tree.tab-pane
-          .block
-            #tree1
-            - if user_signed_in? && @location.metering_point && current_user.can_update?(@location.metering_point)
-              = @location.metering_point.new_sub_metering_point
+      - @location.metering_point.subtree.each do |metering_point|
+        = render metering_point.decorate unless metering_point == @location.metering_point && metering_point.mode == "in_out"
 
 
 

@@ -58,4 +58,7 @@
   .row
     = render @devices
 
-
+  %h1.page-header.text-overflow= t'friends'
+  .row
+    - @friends.each do |user|
+      = render user.profile

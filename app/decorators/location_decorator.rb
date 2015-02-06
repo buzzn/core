@@ -11,12 +11,13 @@ class LocationDecorator < Draper::Decorator
 
 
   def image_tag_lg
-    if model.metering_point && model.metering_point.assets.any?
-      image_tag model.metering_point.assets.first.image.lg, class: 'img-circle img-lg img-border', alt: ""
-    else
-      icon_tag_small
+    if model.metering_point && model.metering_point.image?
+      image_tag model.metering_point.image.lg, class: 'img-circle img-lg img-border', alt: ""
     end
   end
+
+
+
 
 
   def thumb_small
