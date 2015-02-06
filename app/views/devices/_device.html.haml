@@ -1,2 +1,24 @@
-%li.thumb_icon.floating{id: "device_#{device.id}"}
-  = link_to device.image_tag_small, device, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => device.name }, rel: 'tooltip'
+.col-md-6.col-lg-4
+  .panel.widget
+    .widget-header.bg-success
+    .widget-body.text-center
+      %img.widget-img.img-circle.img-border-light{:alt => "Profile Picture", :src => device.image.sm}
+    .pad-all
+      %h4.mar-no.text-center
+        = link_to device.name, device_path(device)
+      %small
+        = device.category
+      %hr/
+      %ul.list-unstyled.row.text-center
+        / Gauge info
+        %li.col-xs-6
+          %span#demo-gauge-text.text-2x
+            = device.watt_hour_pa
+          %p.text-uppercase
+            %small
+              = t('watt_hour_pa')
+        %li.col-xs-6
+          %span.text-2x
+            = device.watt_peak
+          %p.text-uppercase
+            %small Watt

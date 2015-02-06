@@ -11,6 +11,7 @@ class ProfilesController < InheritedResources::Base
     @friends              = @profile.user.friends
     @metering_points      = @profile.user.metering_points
 
+
     @locations            = @profile.user.editable_locations
     @metering_points.collect(&:location).compact.each do |location|
       if !@locations.include?(location)
@@ -20,6 +21,8 @@ class ProfilesController < InheritedResources::Base
     @friendship_requests  = @profile.user.received_friendship_requests
 
     @groups               = @metering_points.collect(&:group).compact.uniq{|group| group.id} # TODO also include group interested
+
+    @devices              = Device.with_role(:manager, @profile.user)
 
     @activities           = PublicActivity::Activity
                               .order("created_at desc")

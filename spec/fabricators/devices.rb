@@ -77,10 +77,7 @@ end
 
 
 Fabricator :gocycle, from: :device do
-  assets                         { [
-                                    Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'devices', 'gocycle1.jpg')), description: 'Ich freue mich wie ein Schneekönig.'),
-                                    Fabricate( :asset, image: File.new(Rails.root.join('db', 'seed_assets', 'devices', 'gocycle2.jpg')), description: 'Mit der App kann ich das Bike tunen.')
-                                    ] }
+  image                          { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'gocycle1.jpg')) }
   mode                          'in'
   manufacturer_name             'Gocycle'
   manufacturer_product_name     'GR2'

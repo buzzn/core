@@ -8,26 +8,25 @@ class DeviceDecorator < Draper::Decorator
   decorates_association :assets
 
 
-  def thumb_small
-    link_to image_tag_small, model
-  end
-
-  def thumb_medium
-    link_to image_tag_medium, model
-  end
-
-  def image_tag_medium
-    if model.assets.any?
-      image_tag model.assets.first.image.medium, class: 'img-circle', size: '150x150', alt: ""
+  def image_tag_device
+    if model.image?
+      image_tag model.image.sm, class: 'img-circle img-user media-object', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-flash')
     end
   end
 
+  def image_tag_sm
+    if model.image?
+      image_tag model.image.sm, class: 'img-circle img-sm img-border', alt: ""
+    else
+      content_tag(:i, '', class: 'fa fa-flash')
+    end
+  end
 
-  def image_tag_small
-    if model.assets.any?
-      image_tag model.assets.first.image.small, class: 'img-circle', size: '45x45', alt: ""
+  def image_tag_lg
+    if model.image?
+      image_tag model.image.lg, class: 'img-circle img-lg img-border', alt: ""
     else
       content_tag(:i, '', class: 'fa fa-flash')
     end

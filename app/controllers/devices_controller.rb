@@ -7,8 +7,9 @@ class DevicesController < InheritedResources::Base
   def show
     @device         = Device.find(params[:id]).decorate
     @metering_point = @device.metering_point if @device.metering_point
-    @location       = @metering_point.location if @metering_point
+    @location       = @metering_point.root.location.decorate if @metering_point
     @users          = @metering_point.users if @metering_point
+    @group          = @metering_point.group if @metering_point
     @manager        = @device.editable_users
     authorize_action_for(@device)
     show!

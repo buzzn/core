@@ -5,6 +5,7 @@ class CreateDevices < ActiveRecord::Migration
       t.string  :manufacturer_name
       t.string  :manufacturer_product_name
       t.string  :manufacturer_product_serialnumber
+      t.string  :image
       t.string  :mode
       t.string  :law
       t.string  :category

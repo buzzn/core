@@ -1,97 +1,99 @@
 - meta title: t('device')
 
+= content_for :aside do
+  %aside#aside-container
+    #aside
+      .nano
+        .nano-content{:tabindex => "0"}
+          .text-center.pad-all
+            .pad-ver
+              = @device.image_tag_lg
+            %h4.text-lg.text-overflow.mar-no= @device.name
+            - if current_user.can_update?(@device)
+              = @device.link_to_edit
+          %hr
+            %ul.list-group.bg-trans
+              %li.list-group-item.list-item-sm
+                %i.fa.fa-home.fa-fw
+                San Jose, CA
+              %li.list-group-item.list-item-sm
+                %i.fa.fa-clock-o.fa-fw
+                Member since 1 years ago
+              %li.list-group-item.list-item-sm.text-primary.text-semibold
+                %a.btn-link{:href => "#"}
+                  %i.fa.fa-globe.fa-fw
+                  http://www.themeon.net
+              %hr
+                .text-center.clearfix
+                  .col-xs-6
+                    %p.h3= @users.count
+                    %small.text-muted= t'users'
+        .nano-pane{:style => "display: none;"}
+          .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
-.col-md-3
-  .detail_icon
-    %i.fa.fa-flash
+#page-content
+  .row
+    .col-sm-6
+      .panel
+        .panel-heading
+          %h3.panel-title
+            =t('device_properties')
+        .panel-body
+          .table-responsive
+            %table.table.table-striped
+              %tbody
+                %tr
+                  %td= t('mode')
+                  %td= @device.mode
+                - if @device.output?
+                  %tr
+                    %td= t('category')
+                    %td= @device.category
+                %tr
+                  %td= t('manufacturer')
+                  %td= @device.manufacturer_name
+                %tr
+                  %td= t('manufacturer_product_name')
+                  %td= @device.manufacturer_product_name
+                - if @device.output?
+                  %tr
+                    %td= t('primary_energy')
+                    %td= @device.primary_energy
+                %tr
+                  %td= t('watt_peak')
+                  %td= @device.watt_peak
+                %tr
+                  %td= t('watt_hour_pa')
+                  %td= @device.watt_hour_pa
+                %tr
+                  %td= t('commissioning')
+                  %td= @device.commissioning
+                %tr
+                  %td= t('mobile')
+                  %td= t @device.mobile
 
-  %h4= @device.name
-  - if current_user.can_update?(@device)
-    = @device.link_to_edit
 
-  %h5.page-header= t('belongs_to_user')
-  %article.sidebar_module.residents
-    %ul
-      - @manager.each do |user|
-        = render user.profile.decorate
-    .clearfix
+  %h1.page-header.text-overflow= t'belongs_to_user'
+  .row
+    - @manager.each do |user|
+      = render user.profile.decorate
 
   - if @metering_point && current_user.can_update?(@device)
-    %h5.page-header= t('belongs_to_metering_point')
-    %article.sidebar_module.residents
-      %ul
-        .thumb_icon=@metering_point.thumb_small
-      .clearfix
+    %h1.page-header.text-overflow= t'belongs_to_metering_point'
+    .row
+      = render @metering_point
 
-  - if @location
-    %h5.page-header= t('belongs_to_location')
-    %article.sidebar_module.residents
-      %ul
-        = render @metering_point.location
-      .clearfix
+  - if @location && current_user.can_update?(@device)
+    %h1.page-header.text-overflow= t'belongs_to_location'
+    .row
+      = render @location
 
   - if @group
-    %h5.page-header= t('belongs_to_group')
-    %article.sidebar_module.residents
-      %ul
-        = render @group
-      .clearfix
-
-.col-md-6
-  %ul.nav.nav-pills#mytab.nav-spacer
-    %li.active
-      %a{"data-toggle" => "tab", href: "#device_properties"}
-        = t'device_properties'
-    %li
-      %a{"data-toggle" => "tab", href: "#assets"}
-        = t'assets'
+    %h1.page-header.text-overflow= t'belongs_to_group'
+    .row
+      = render @group
 
 
-  .tab-content
-    #device_properties.tab-pane.active
-      .block
-        .header.no-border
-          %h2= t('device_properties')
-        .content.no-padding
-          %table.table
-            %tbody
-              %tr
-                %td= t('mode')
-                %td= @device.mode
-
-              - if @device.output?
-                %tr
-                  %td= t('category')
-                  %td= @device.category
-
-              %tr
-                %td= t('manufacturer')
-                %td= @device.manufacturer_name
-              %tr
-                %td= t('manufacturer_product_name')
-                %td= @device.manufacturer_product_name
-              - if @device.output?
-                %tr
-                  %td= t('primary_energy')
-                  %td= @device.primary_energy
-              %tr
-                %td= t('watt_peak')
-                %td= @device.watt_peak
-              %tr
-                %td= t('watt_hour_pa')
-                %td= @device.watt_hour_pa
-              %tr
-                %td= t('commissioning')
-                %td= @device.commissioning
-              %tr
-                %td= t('mobile')
-                %td= t @device.mobile
-
-    #assets.tab-pane
-      .assets
-        = render @device.assets
-      - if user_signed_in? && current_user.can_update?(@device)
-        = @device.new_asset
 
 
 
