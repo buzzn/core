@@ -6,7 +6,7 @@ class LocationDecorator < Draper::Decorator
   decorates_association :user
   decorates_association :devices
   decorates_association :users
-  decorates_association :assets
+  decorates_association :registers
 
 
 
@@ -19,21 +19,8 @@ class LocationDecorator < Draper::Decorator
 
 
 
-  def thumb_small
-    link_to image_tag_small, model
-  end
 
-  def image_tag_small
-    if model.metering_point && model.metering_point.assets.any?
-      image_tag model.metering_point.assets.first.image.small, class: 'img-circle', size: '45x45', alt: ""
-    else
-      icon_tag_small
-    end
-  end
 
-  def icon_tag_small
-    content_tag(:i, '', class: 'fa fa-home')
-  end
 
   def link_to_delete
     if model.metering_point

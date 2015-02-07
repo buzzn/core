@@ -28,6 +28,7 @@ class Location < ActiveRecord::Base
 
   has_many :users, -> { uniq }, :through => :metering_point
   has_many :devices, -> { uniq }, :through => :metering_point
+  has_many :registers, -> { uniq }, :through => :metering_point
 
   has_one :address, as: :addressable, dependent: :destroy
   accepts_nested_attributes_for :address, reject_if: :all_blank

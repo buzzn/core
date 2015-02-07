@@ -36,29 +36,15 @@
 
 
 
-
 #page-content
+  %h1.page-header.text-overflow= t'registers'
   .row
-    - if true #@location.metering_point.input?
-      .col-sm-6.col-md-4.col-lg-3
-        .panel.panel-primary.panel-colorful
-          .pad-all.text-center
-            %span.text-5x.text-thin 241 W
-            %p= t'power_input'
-            %i.fa.fa-arrow-down
-
-    - if true #@location.metering_point.output?
-      .col-sm-6.col-md-4.col-lg-3
-        .panel.panel-danger.panel-colorful
-          .pad-all.text-center
-            %span.text-5x.text-thin 1253 W
-            %p= t'power_output'
-            %i.fa.fa-arrow-up
+    = render @location.registers
 
   %h1.page-header.text-overflow= t'metering_points'
   .row
     - @location.metering_point.subtree.each do |metering_point|
-      = render metering_point.decorate unless metering_point == @location.metering_point && metering_point.mode == "in_out"
+      = render metering_point.decorate #unless metering_point == @location.metering_point && metering_point.mode == "in_out"
 
 
   %h1.page-header.text-overflow= t'users'

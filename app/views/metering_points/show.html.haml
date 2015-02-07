@@ -25,23 +25,9 @@
 
 
 #page-content
-
   .row
-    - if @metering_point.input?
-      .col-sm-6.col-md-4.col-lg-3
-        .panel.panel-primary.panel-colorful
-          .pad-all.text-center
-            %span.text-5x.text-thin 241 W
-            %p= t'power_input'
-            %i.fa.fa-arrow-down
+    = render @metering_point.registers
 
-    - if @metering_point.output?
-      .col-sm-6.col-md-4.col-lg-3
-        .panel.panel-danger.panel-colorful
-          .pad-all.text-center
-            %span.text-5x.text-thin 1253 W
-            %p= t'power_output'
-            %i.fa.fa-arrow-up
 
   .row
     .col-lg-8
