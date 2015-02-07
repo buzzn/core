@@ -1,10 +1,9 @@
-.modal-dialog
-  .modal-content
-    .modal-header
-      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'edit_users'
-    .modal-body
-      = simple_form_for @metering_point, remote: true do |f|
-        = f.association :users, collection: [current_user] + current_user.friends + @metering_point.users, input_html: { class: 'select2'}
-        .modal-footer
-          = f.button :submit, id: 'submit', class: 'btn btn-success'
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'edit_users'
+  .modal-body
+    = simple_form_for @metering_point, remote: true do |f|
+      = f.association :users, collection: [current_user] + current_user.friends + @metering_point.users, input_html: { class: 'select2'}
+      .modal-footer
+        = f.button :submit, id: 'submit', class: 'btn btn-success'

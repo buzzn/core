@@ -47,7 +47,7 @@ ready = ->
   DependentFields.bind()
 
   $("body").on "hidden.bs.modal", ".modal", ->
-    $(this).empty()
+    $('.modal-dialog').empty()
 
   $(".metering_point_name").on "mouseenter", ->
     $this = $(this)

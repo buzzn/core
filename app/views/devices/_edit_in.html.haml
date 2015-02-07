@@ -1,11 +1,10 @@
-.modal-dialog
-  .modal-content
-    .modal-header
-      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'edit_in_device'
-    .modal-body
-      = simple_form_for @device, remote: true, html: {multipart: true } do |f|
-        = render 'devices/in_form_fields', f: f
-        .modal-footer
-          = f.button :submit, id: 'submit', class: 'btn btn-success'
-          = @device.link_to_delete
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'edit_in_device'
+  .modal-body
+    = simple_form_for @device, remote: true, html: {multipart: true } do |f|
+      = render 'devices/in_form_fields', f: f
+      .modal-footer
+        = f.button :submit, id: 'submit', class: 'btn btn-success'
+        = @device.link_to_delete

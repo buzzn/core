@@ -1,11 +1,10 @@
-.modal-dialog
-  .modal-content
-    .modal-header
-      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'edit_location'
-    .modal-body
-      = simple_form_for @location, remote: true do |f|
-        = render 'locations/form_fields', f: f
-        .modal-footer
-          = f.button :submit, id: 'submit', class: 'btn btn-success'
-          = @location.link_to_delete
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'edit_location'
+  .modal-body
+    = simple_form_for @location, remote: true do |f|
+      = render 'locations/form_fields', f: f
+      .modal-footer
+        = f.button :submit, id: 'submit', class: 'btn btn-success'
+        = @location.link_to_delete

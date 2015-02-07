@@ -1,11 +1,10 @@
-.modal-dialog
-  .modal-content
-    .modal-header
-      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'edit_metering_service_provider_contract'
-    .modal-body
-      = simple_form_for @metering_service_provider_contract, remote: true do |f|
-        = render 'metering_service_provider_contract/form_fields', f: f
-        .modal-footer
-          = f.button :submit, id: 'submit', class: 'btn btn-success'
-          = @metering_service_provider_contract.link_to_delete
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'edit_metering_service_provider_contract'
+  .modal-body
+    = simple_form_for @metering_service_provider_contract, remote: true do |f|
+      = render 'metering_service_provider_contract/form_fields', f: f
+      .modal-footer
+        = f.button :submit, id: 'submit', class: 'btn btn-success'
+        = @metering_service_provider_contract.link_to_delete

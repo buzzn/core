@@ -1,10 +1,9 @@
-.modal-dialog
-  .modal-content
-    .modal-header
-      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'new_organization'
-    .modal-body
-      = simple_form_for @organization, remote: true, html: {multipart: true } do |f|
-        = render 'organizations/form_fields', f: f
-        .modal-footer
-          = f.button :submit, id: 'submit', class: 'btn btn-success'
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'new_organization'
+  .modal-body
+    = simple_form_for @organization, remote: true, html: {multipart: true } do |f|
+      = render 'organizations/form_fields', f: f
+      .modal-footer
+        = f.button :submit, id: 'submit', class: 'btn btn-success'

@@ -15,7 +15,10 @@
 
   %body{class: "#{controller_name} #{action_name}"}
     = include_gon(:init => true)
-    #myModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+
+    #myModal.modal.fade.in{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+      .modal-dialog
+
     #container.effect.aside-in.aside-left.aside-bright.mainnav-lg
       = render 'layouts/navbar'
 

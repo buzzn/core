@@ -1,8 +1,7 @@
-.modal-dialog
-  .modal-content
-    .modal-header
-      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'asset'
-    .modal-body
-      = image_tag @asset.image.modal
-      %p= @asset.description
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'asset'
+  .modal-body
+    = image_tag @asset.image.modal
+    %p= @asset.description

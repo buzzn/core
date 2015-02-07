@@ -1,14 +1,13 @@
-.modal-dialog
-  .modal-content
-    .modal-header
-      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'new_asset'
-    .modal-body
-      = simple_form_for @asset, remote: true, html: {multipart: true } do |f|
-        - value = params[:assetable_id].nil? ? {} : { value: params[:assetable_id] }
-        = f.input :assetable_id, input_html: {}.merge(value), as: :hidden
-        - value2 = params[:assetable_type].nil? ? {} : { value: params[:assetable_type] }
-        = f.input :assetable_type, input_html: {}.merge(value2), as: :hidden
-        = render 'assets/form_fields', f: f
-        .modal-footer
-          = f.button :submit, id: 'submit', class: 'btn btn-success'
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'new_asset'
+  .modal-body
+    = simple_form_for @asset, remote: true, html: {multipart: true } do |f|
+      - value = params[:assetable_id].nil? ? {} : { value: params[:assetable_id] }
+      = f.input :assetable_id, input_html: {}.merge(value), as: :hidden
+      - value2 = params[:assetable_type].nil? ? {} : { value: params[:assetable_type] }
+      = f.input :assetable_type, input_html: {}.merge(value2), as: :hidden
+      = render 'assets/form_fields', f: f
+      .modal-footer
+        = f.button :submit, id: 'submit', class: 'btn btn-success'
