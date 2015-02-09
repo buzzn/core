@@ -1,11 +1,4 @@
 GIT
-  remote: git://github.com/iainsmith/address_picker-rails.git
-  revision: 43009d96888a9c76e6a8dc0e2f3da48e979fcb4e
-  specs:
-    address_picker-rails (0.3.1)
-      rails (>= 3.2.0)
-
-GIT
   remote: git://github.com/jnicklas/capybara.git
   revision: dbece71888a4434aaae84475fdf415e13cbe8d78
   specs:
@@ -667,7 +660,6 @@ DEPENDENCIES
   acts-as-taggable-on
   acts_as_commentable_with_threading
   acts_as_list
-  address_picker-rails!
   ancestry
   annotate
   asset_sync

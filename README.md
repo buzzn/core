@@ -71,7 +71,7 @@
     bundle exec rails g devise:views:locale de
     bundle exec rails g devise:views:locale en
 
-## add Sublime Settings to Preferences -> File Settings - User:
+## add Sublime Settings to Preferences -> Settings - User:
     "draw_white_space": "selection",
     "trim_trailing_white_space_on_save": true,
     "tab_size": 2,
