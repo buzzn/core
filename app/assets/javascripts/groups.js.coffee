@@ -117,6 +117,7 @@ class BubbleChart
     @max_power = null
     @max_power_in = null
     @totalPower = 0
+    @totalPowerOut = 0
     @zoomFactor = 1
 
     # nice looking colors - no reason to buck the trend
@@ -134,10 +135,12 @@ class BubbleChart
     @data.forEach (d) =>
       @totalPower += parseInt(calculate_power(d[3], d[1], d[4], d[2]))
     this.setZoomFactor()
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @zoomFactor / 3.5)])
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @zoomFactor / 7)])
 
     this.create_nodes()
     this.create_vis()
+    this.calculateTotalPower()
+    this.calculateTotalPowerOut()
 
 
 
@@ -384,11 +387,12 @@ class BubbleChart
       if value > max_power_out
         @max_power = value
     this.calculateTotalPower()
+    this.calculateTotalPowerOut()
     this.setZoomFactor()
     this.setNewScale()
 
   setNewScale: () =>
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @zoomFactor/ 5)])
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @zoomFactor/ 7)])
     @nodes.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
     @nodes_out.forEach (d) =>
@@ -401,6 +405,13 @@ class BubbleChart
     @totalPower = 0
     @nodes.forEach (d) =>
       @totalPower += d.value
+    $("#kw-ticker-in").html(parseInt(@totalPower) + " W")
+
+  calculateTotalPowerOut: () =>
+    @totalPowerOut = 0
+    @nodes_out.forEach (d) =>
+      @totalPowerOut += d.value
+    $("#kw-ticker-out").html(parseInt(@totalPowerOut) + " W")
 
   setZoomFactor: () =>
     if @max_power_in <= 0.1 * @totalPower
@@ -469,19 +480,6 @@ addCommas = (nStr) ->
   rgx = /(\d+)(\d{3})/
   x1 = x1.replace(rgx, "$1" + "," + "$2")  while rgx.test(x1)
   x1 + x2
-
-csvArr = (csv) ->
-  lines = csv.toString().split("\n,")
-  lines.splice(0, 1)
-  entry = []
-  result = []
-  lines.forEach (l) =>
-    entry = []
-    values = l.split(",")
-    values.forEach (v) =>
-      entry.push(v)
-    result.push(entry)
-  return result
 
 
 

@@ -83,7 +83,7 @@
       .col-sm-6.col-md-4.col-lg-3
         .panel.panel-primary.panel-colorful
           .pad-all.text-center
-            %span.text-5x.text-thin 241 W
+            %span.text-5x.text-thin{id: "kw-ticker-in"}
             %p= t'power_input'
             %i.fa.fa-arrow-down
 
@@ -91,14 +91,16 @@
       .col-sm-6.col-md-4.col-lg-3
         .panel.panel-danger.panel-colorful
           .pad-all.text-center
-            %span.text-5x.text-thin 1253 W
+            %span.text-5x.text-thin{id: "kw-ticker-out"}
             %p= t'power_output'
             %i.fa.fa-arrow-up
 
 
   .row
-    #bubbles_container
-      #dummy
+    .col-sm-12.col-md-12.col-lg-12
+      .panel.panel-warning.panel-colorful
+        #bubbles_container
+          #dummy
 
 
 
