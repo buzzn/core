@@ -78,12 +78,15 @@ buzzn_team_names.each do |user_name|
 
     user_location.metering_point = mp_z1
 
-    device        = Fabricate(:dach_pv_justus)
-    user.add_role :manager, device
-    device        = Fabricate(:carport_pv_justus)
-    user.add_role :manager, device
-    device        = Fabricate(:bhkw_justus)
-    user.add_role :manager, device
+    dach_pv_justus = Fabricate(:dach_pv_justus)
+    mp_z2.devices << dach_pv_justus
+    user.add_role :manager, dach_pv_justus
+
+    carport_pv_justus = Fabricate(:carport_pv_justus)
+    user.add_role :manager, carport_pv_justus
+
+    bhkw_justus        = Fabricate(:bhkw_justus)
+    user.add_role :manager, bhkw_justus
   when 'felix'
     @gocycle       = Fabricate(:gocycle)
     user.add_role :manager, @gocycle
