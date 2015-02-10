@@ -2,6 +2,9 @@
   .panel.text-center
     .panel-body
       .mar-btm
-        = profile.image_tag_md
+        = image_tag profile.image.lg, class: 'img-lg img-circle img-border mar-btm'
       %h4.mar-no= link_to profile.name, profile
       %p in out oder in_out?
+
+
+

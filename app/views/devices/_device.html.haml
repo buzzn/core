@@ -1,16 +1,16 @@
-.col-md-6.col-lg-4
+.col-md-4.col-lg-3
   .panel.widget
     .widget-header.bg-success
     .widget-body.text-center
       %img.widget-img.img-circle.img-border-light{:alt => "Profile Picture", :src => device.image.sm}
+
     .pad-all
       %h4.mar-no.text-center
         = link_to device.name, device_path(device)
-      %small
+      %p
         = device.category
       %hr/
       %ul.list-unstyled.row.text-center
-        / Gauge info
         %li.col-xs-6
           %span#demo-gauge-text.text-2x
             = device.watt_hour_pa
