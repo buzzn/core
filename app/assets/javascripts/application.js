@@ -24,7 +24,6 @@
 //= require chartkick
 //= require tree.jquery
 //= require jquery-readyselector
-//= require address_picker-rails
 //= require select2
 //= require cocoon
 //= require rails-timeago
