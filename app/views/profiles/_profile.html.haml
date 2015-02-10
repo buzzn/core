@@ -1,10 +1,11 @@
-.col-md-6.col-lg-3
-  .panel.text-center
-    .panel-body
-      .mar-btm
-        = image_tag profile.image.lg, class: 'img-lg img-circle img-border mar-btm'
-      %h4.mar-no= link_to profile.name, profile
-      %p in out oder in_out?
-
-
-
+.col-md-6.col-lg-4
+  .panel.media.pad-all
+    .media-left
+      - if profile.image?
+        = image_tag profile.image.sm, class: 'img-circle img-sm'
+      - else
+        %span.icon-wrap.icon-wrap-sm.icon-circle.bg-success
+          %i.fa.fa-user.fa-2x
+    .media-body
+      %h3.text-thin.media-heading= link_to profile.name, profile
+      %p.text-muted.mar-no in out oder in_out?

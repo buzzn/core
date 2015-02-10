@@ -1,24 +1,10 @@
-.col-md-4.col-lg-3
-  .panel.widget
-    .widget-header.bg-success
-    .widget-body.text-center
-      %img.widget-img.img-circle.img-border-light{:alt => "Profile Picture", :src => device.image.sm}
+.col-sm-6.col-md-3.col-lg-2
+  .panel.text-center
+    .panel-body.panel-primary.panel-colorful
+      %p.text-uppercase.mar-btm.text-sm= device.category
+      = link_to image_tag(device.image.lg, class: 'img-lg img-circle img-border mar-btm'), device
+    .pad-all.text-center
+      = link_to device.name, device
 
-    .pad-all
-      %h4.mar-no.text-center
-        = link_to device.name, device_path(device)
-      %p
-        = device.category
       %hr/
-      %ul.list-unstyled.row.text-center
-        %li.col-xs-6
-          %span#demo-gauge-text.text-2x
-            = device.watt_hour_pa
-          %p.text-uppercase
-            %small
-              = t('watt_hour_pa')
-        %li.col-xs-6
-          %span.text-2x
-            = device.watt_peak
-          %p.text-uppercase
-            %small Watt
+      %p.text-2x.text-primary 5,327 Watt
