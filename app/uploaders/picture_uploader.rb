@@ -28,30 +28,6 @@ class PictureUploader < CarrierWave::Uploader::Base
   #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
   # end
 
-  version :col9 do
-    process :resize_to_fit  => [97*9, -1]
-  end
-
-  version :col6 do
-    process :resize_to_fit  => [97*6, -1]
-  end
-
-  version :col3 do
-    process :resize_to_fit  => [97*3, -1]
-  end
-
-  version :col2 do
-    process :resize_to_fit  => [97*2, -1]
-  end
-
-  version :col1 do
-    process :resize_to_fit  => [97, -1]
-  end
-
-  version :modal do
-    process :resize_to_fit  => [1200, -1]
-  end
-
 
 
 
@@ -69,24 +45,14 @@ class PictureUploader < CarrierWave::Uploader::Base
 
 
 
-
-
-
   version :extra_large do
     process :resize_to_fill  => [1500, 1500]
   end
 
-  version :large do
-    process :resize_to_fill  => [500, 500]
-  end
 
-  version :medium do
-    process :resize_to_fill  => [150, 150]
-  end
 
-  version :small do
-    process :resize_to_fill  => [50, 50]
-  end
+
+
 
   # Process files as they are uploaded:
   # process :scale => [200, 300]

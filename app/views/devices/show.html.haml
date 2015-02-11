@@ -1,4 +1,4 @@
-- meta title: t('device')
+- meta title: @device.name
 
 = content_for :aside do
   %aside#aside-container
@@ -9,8 +9,7 @@
             .pad-ver
               = @device.image_tag_lg
             %h4.text-lg.text-overflow.mar-no= @device.name
-            - if current_user.can_update?(@device)
-              = @device.link_to_edit
+
           %hr
             %ul.list-group.bg-trans
               %li.list-group-item.list-item-sm
@@ -23,11 +22,18 @@
                 %a.btn-link{:href => "#"}
                   %i.fa.fa-globe.fa-fw
                   http://www.themeon.net
-              %hr
-                .text-center.clearfix
-                  .col-xs-6
-                    %p.h3= 34
-                    %small.text-muted= t'users'
+          %hr
+            .text-center.clearfix
+              .col-xs-6
+                %p.h3= 34
+                %small.text-muted= t'users'
+
+          %hr
+            .text-center.clearfix
+              - if current_user.can_update?(@device)
+                = @device.link_to_edit
+
+
         .nano-pane{:style => "display: none;"}
           .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 

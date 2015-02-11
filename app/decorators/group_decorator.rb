@@ -8,17 +8,23 @@ class GroupDecorator < Draper::Decorator
   decorates_association :metering_point_operator_contract
   decorates_association :servicing_contract
 
+
+
+
   def link_to_edit
     link_to(
-      raw(content_tag(:i, '', class: 'fa fa-cog') + t('edit')),
+      t('edit'),
       edit_group_path(model),
       {
         :remote       => true,
-        :class        => 'start_modal btn btn-icon btn-danger btn-xs',
+        :class        => 'start_modal btn btn-primary btn-rounded btn-labeled fa fa-cog',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })
   end
+
+
+
 
   def link_to_delete
     if model.metering_point_operator_contract && model.metering_point_operator_contract.running
@@ -43,24 +49,6 @@ class GroupDecorator < Draper::Decorator
   end
 
 
-
-
-
-  def image_tag_sm
-    if model.image
-      image_tag model.image.sm, class: 'img-circle img-sm img-border', alt: ""
-    else
-      content_tag(:i, '', class: 'fa fa-users')
-    end
-  end
-
-  def image_tag_lg
-    if model.image
-      image_tag model.image.lg, class: 'img-circle img-lg img-border', alt: ""
-    else
-      content_tag(:i, '', class: 'fa fa-users')
-    end
-  end
 
 
   def new_metering_point_operator_contract

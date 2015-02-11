@@ -89,6 +89,11 @@ module ApplicationHelper
                             })
   end
 
+  def link_to_external(link, html_options = {})
+    html_options[:target] = "_blank"
+    link_to(truncate(link, length: 24, separator: ' '), link, html_options)
+  end
+
 
   def new_location
     link_to(

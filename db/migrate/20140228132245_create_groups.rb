@@ -4,6 +4,7 @@ class CreateGroups < ActiveRecord::Migration
       t.string  :slug
       t.string  :name
       t.string  :logo
+      t.string  :website
       t.string  :image
       t.string  :mode, :default => ""
       t.boolean :private, default: false

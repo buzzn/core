@@ -1,13 +1,13 @@
-= f.input :username, hint: "Frei wählbarer Name, der als Pseudonym verwendet wird"
-= f.input :image
+= f.input :username
 = f.input :first_name
 = f.input :last_name
+= f.input :image
 = f.input :gender, include_blank: false, collection: Profile.genders, input_html: { class: 'select2' }
 = f.input :phone
-= f.input :description
+= f.input :about_me
 
 %fieldset
-  %legend= t'email_notifications'
+  %legend= t'notifications'
   = f.input :newsletter_notifications
   = f.input :location_notifications
   = f.input :group_notifications

@@ -1,5 +1,7 @@
 class ProfilesController < InheritedResources::Base
   before_filter :authenticate_user!
+  respond_to :html, :js
+
 
   def index
     @profiles = Profile.all.decorate
@@ -70,7 +72,7 @@ private
       :newsletter_notifications,
       :location_notifications,
       :group_notifications,
-      :description
+      :about_me
     ]
   end
 end

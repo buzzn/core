@@ -54,15 +54,17 @@ class DeviceDecorator < Draper::Decorator
     end
 
     link_to(
-      raw(content_tag(:i, '', class: 'fa fa-cog') + t('edit')),
+      t('edit'),
       path,
       {
         :remote       => true,
-        :class        => 'start_modal btn btn-icon btn-danger btn-xs',
+        :class        => 'start_modal btn btn-primary btn-rounded btn-labeled fa fa-cog',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })
   end
+
+
 
   def new_asset
     link_to(

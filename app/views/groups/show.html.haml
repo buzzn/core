@@ -9,56 +9,74 @@
       .nano
         .nano-content{:tabindex => "0"}
           .text-center.pad-all
+
             .pad-ver
-              = @group.image_tag_lg
+              - if @group.image?
+                = image_tag @group.image.lg, class: 'img-circle img-lg img-border'
+              - else
+                %span.icon-wrap.icon-wrap-sm.icon-circle.bg-dark
+                  %i.fa.fa-users.fa-5x
+
             %h4.text-lg.text-overflow.mar-no= @group.name
+
             %p.text-sm
             .btn-group
               %button.btn.btn-block.btn-success.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
                 =t('membership')
               %ul.dropdown-menu{role: "menu"}
-                - if current_user.editable_metering_points.flatten.count == 1
-                  - if current_user.editable_metering_points.flatten.first.group == nil
-                    %li= link_to t('join_this_group'), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id), method: :post
-                  - elsif current_user.editable_metering_points.flatten.first.group == @group
-                    %li= link_to(t('leave_this_group'), cancel_membership_group_path(metering_point_id: current_user.editable_metering_points.flatten.first.id), :data => {:confirm => t('are_you_sure')})
-                  - else
-                    %li= link_to(t('join_this_group_and_leave_group', group_name: current_user.editable_metering_points.flatten.first.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id), method: :post)
-                - else
-                  - current_user.editable_metering_points.flatten.each do |metering_point|
-                    - if @group.received_group_metering_point_requests.any? && @group.received_group_metering_point_requests.collect(&:metering_point).include?(metering_point)
-                      %li= t('sent_request_with_metering_point', metering_point_name: metering_point.decorate.name)
-                      - next
-                    - if metering_point.group == @group
-                      %li= link_to(t('leave_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), cancel_membership_group_path(metering_point_id: metering_point.id), :data => {:confirm => t('are_you_sure')})
-                    - elsif metering_point.group
-                      %li= link_to(t('join_this_group_with_metering_point_and_leave_group', metering_point_name: metering_point.decorate.name, group_name: metering_point.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post)
+                - if user_signed_in?
+                  - if current_user.editable_metering_points.flatten.count == 1
+                    - if current_user.editable_metering_points.flatten.first.group == nil
+                      %li= link_to t('join_this_group'), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id), method: :post
+                    - elsif current_user.editable_metering_points.flatten.first.group == @group
+                      %li= link_to(t('leave_this_group'), cancel_membership_group_path(metering_point_id: current_user.editable_metering_points.flatten.first.id), :data => {:confirm => t('are_you_sure')})
                     - else
-                      %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post
-          - if user_signed_in?
-            - if current_user.can_update?(@group)
-              = @group.link_to_edit
+                      %li= link_to(t('join_this_group_and_leave_group', group_name: current_user.editable_metering_points.flatten.first.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id), method: :post)
+                  - else
+                    - current_user.editable_metering_points.flatten.each do |metering_point|
+                      - if @group.received_group_metering_point_requests.any? && @group.received_group_metering_point_requests.collect(&:metering_point).include?(metering_point)
+                        %li= t('sent_request_with_metering_point', metering_point_name: metering_point.decorate.name)
+                        - next
+                      - if metering_point.group == @group
+                        %li= link_to(t('leave_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), cancel_membership_group_path(metering_point_id: metering_point.id), :data => {:confirm => t('are_you_sure')})
+                      - elsif metering_point.group
+                        %li= link_to(t('join_this_group_with_metering_point_and_leave_group', metering_point_name: metering_point.decorate.name, group_name: metering_point.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post)
+                      - else
+                        %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post
+
           %hr
             %ul.list-group.bg-trans
               %li.list-group-item.list-item-sm
                 %i.fa.fa-clock-o.fa-fw
-                Member since 1 years ago
-              %li.list-group-item.list-item-sm.text-primary.text-semibold
-                %a.btn-link{:href => "#"}
-                  %i.fa.fa-globe.fa-fw
-                  http://www.themeon.net
-            %hr
-              .pad-hor
-                %h5=t('description')
-                %small.text-thin= @group.description
-              %hr
-                .text-center.clearfix
-                  .col-xs-6
-                    %p.h3= @energy_producers.count
-                    %small.text-muted= t'energy_producers'
-                  .col-xs-6
-                    %p.h3= @energy_consumers.count
-                    %small.text-muted= t'energy_consumers'
+                = t'created_at'
+                = timeago_tag @group.created_at
+
+              - if @group.website
+                %li.list-group-item.list-item-sm.text-primary.text-semibold
+                  %a.btn-link{:href => "#"}
+                    %i.fa.fa-globe.fa-fw
+                    = link_to_external @group.website
+          %hr
+            .pad-hor
+              %h5=t('description')
+              %small.text-thin= @group.description
+
+          %hr
+            .text-center.clearfix
+              .col-xs-6
+                %p.h3= @energy_producers.count
+                %small.text-muted= t'energy_producers'
+              .col-xs-6
+                %p.h3= @energy_consumers.count
+                %small.text-muted= t'energy_consumers'
+
+
+          %hr
+            .text-center.clearfix
+              - if user_signed_in?
+                - if current_user.can_update?(@group)
+                  = @group.link_to_edit
+
         .nano-pane{:style => "display: none;"}
           .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
@@ -70,35 +88,11 @@
 
 #page-content
 
-  .row
-    .col-sm-12
-      - if user_signed_in?
-        - if current_user.can_update?(@group)
-          - if @group.received_group_metering_point_requests.any?
-            %h5.page-header= t('group_requests')
-            = render @group_metering_point_requests
 
-  .row
-    - if true #@location.metering_point.input?
-      .col-sm-6.col-md-4.col-lg-3
-        .panel.panel-primary.panel-colorful
-          .pad-all.text-center
-            %span.text-5x.text-thin{id: "kw-ticker-in"}
-            %p= t'power_input'
-            %i.fa.fa-arrow-down
-
-    - if true #@location.metering_point.output?
-      .col-sm-6.col-md-4.col-lg-3
-        .panel.panel-danger.panel-colorful
-          .pad-all.text-center
-            %span.text-5x.text-thin{id: "kw-ticker-out"}
-            %p= t'power_output'
-            %i.fa.fa-arrow-up
-
-
+  %h1.page-header.text-overflow= t('realtime')
   .row
     .col-sm-12.col-md-12.col-lg-12
-      .panel.panel-warning.panel-colorful
+      .panel.panel-warning
         #bubbles_container
           #dummy
 

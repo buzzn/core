@@ -2,7 +2,6 @@
 
 
 
-
 = content_for :aside do
   %aside#aside-container
     #aside
@@ -12,8 +11,7 @@
             .pad-ver
               = @location.image_tag_lg
             %h4.text-lg.text-overflow.mar-no= @location.name
-            - if current_user.can_update?(@location)
-              = @location.link_to_edit
+
 
           %hr
             .pad-hor
@@ -33,6 +31,12 @@
               .col-xs-6
                 %p.h3= @devices.count
                 %small.text-muted= t'devices'
+
+          %hr
+            .text-center.clearfix
+              - if current_user.can_update?(@location)
+                = @location.link_to_edit
+
 
 
 

@@ -272,6 +272,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
     t.string   "slug"
     t.string   "name"
     t.string   "logo"
+    t.string   "website"
     t.string   "image"
     t.string   "mode",        default: ""
     t.boolean  "private",     default: false

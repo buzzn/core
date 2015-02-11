@@ -49,7 +49,6 @@ class MeteringPoint < ActiveRecord::Base
 
   def mode
     registers.select(:mode).map(&:mode).join('_')
-
   end
 
   def metering_point_operator_contract
