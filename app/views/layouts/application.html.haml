@@ -1,7 +1,6 @@
 !!!
 %html{lang: locale}
 
-
   %head
     = stylesheet_link_tag    "application", "data-turbolinks-track" => true, media: "all"
     = javascript_include_tag "application", "data-turbolinks-track" => true
@@ -12,23 +11,16 @@
     %meta{name: "apple-mobile-web-app-status-bar-style", content:"black"}
     = analytics_init if Rails.env.production?
 
-
   %body{class: "#{controller_name} #{action_name}"}
-    = include_gon(:init => true)
-
+    = include_gon
     #myModal.modal.fade.in{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
       .modal-dialog
-
-    #container.effect.aside-in.aside-left.aside-bright.mainnav-lg
+    #container.effect.mainnav-lg{ class: content_for?(:aside) ? 'aside-in aside-left aside-bright' : nil }
       = render 'layouts/navbar'
-
       .boxed
         #content-container
           .page-alert
           = yield
-
         = render 'layouts/mainnav'
-
         = yield(:aside)
-
       = render 'layouts/footer'
