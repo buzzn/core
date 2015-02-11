@@ -5,9 +5,9 @@ class RegisterDecorator < Draper::Decorator
   def panel_mode_class
     case model.mode
     when 'in'
-      'panel-danger'
+      'danger'
     when 'out'
-      'panel-primary'
+      'primary'
     end
   end
 

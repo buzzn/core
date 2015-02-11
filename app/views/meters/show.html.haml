@@ -1,0 +1,33 @@
+- meta title: @meter.name
+
+= content_for :aside do
+  %aside#aside-container
+    #aside
+      .nano
+        .nano-content{:tabindex => "0"}
+          .text-center.pad-all
+            .pad-ver
+              = image_tag @meter.image.lg, class: 'img-circle img-lg img-border'
+            %h4.text-lg.text-overflow.mar-no= @meter.name
+
+          %hr
+            .text-center.clearfix
+              - if current_user.can_update?(@meter)
+                = @meter.link_to_edit
+
+
+
+
+
+.pad-ver
+  %ol.breadcrumb
+    %li= link_to @meter.metering_point.location.name, @meter.metering_point.location
+    %li= link_to @meter.metering_point.name, @meter.metering_point
+    %li.active= @meter.name
+
+#page-content
+
+  %h1.page-header.text-overflow= t'registers'
+  .row
+    = render @meter.registers
+

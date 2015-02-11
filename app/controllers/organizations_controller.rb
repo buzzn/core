@@ -7,7 +7,7 @@ class OrganizationsController < InheritedResources::Base
     authorize_action_for(@organization)
     show!
   end
-  authority_actions :show => 'read'
+
 
   def new
     @organization = Organization.new

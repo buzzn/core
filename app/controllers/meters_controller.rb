@@ -2,6 +2,13 @@ class MetersController < InheritedResources::Base
   before_filter :authenticate_user!
   respond_to :html, :js
 
+
+  def show
+    @meter = Meter.find(params[:id]).decorate
+    authorize_action_for(@meter)
+    show!
+  end
+
   def new
     @meter = Meter.new
     authorize_action_for(@meter)

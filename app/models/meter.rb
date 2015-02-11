@@ -68,6 +68,9 @@ class Meter < ActiveRecord::Base
   end
 
 
+  def name
+    "#{manufacturer_name} #{manufacturer_product_name}"
+  end
 
 
   def self.reactivate

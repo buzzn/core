@@ -2,6 +2,9 @@ class MeterDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
 
+  decorates_association :registers
+  decorates_association :metering_point
+
   def link_to_edit
     metering_point_id = model.registers.first.metering_point.id
     link_to(

@@ -77,25 +77,6 @@ class MeteringPointDecorator < Draper::Decorator
     )
   end
 
-  def thumb_small
-    link_to image_tag_small, model, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => name }, rel: 'tooltip'
-  end
-
-  def image_tag_small
-    content_tag(:i, '', class: 'fa fa-map-marker')
-  end
-
-  def thumb_medium
-    link_to image_tag_medium, model
-  end
-
-  def image_tag_medium
-    content_tag(:i, '', class: 'fa fa-map-marker')
-  end
-
-  def image_tag_sm
-    content_tag(:i, '', class: 'fa fa-map-marker')
-  end
 
   def link_to_delete
     if model.electricity_supplier_contracts.collect(&:status).compact.include?("running") || metering_point_operator_contracts.collect(&:running).compact.include?(true)
@@ -153,15 +134,16 @@ class MeteringPointDecorator < Draper::Decorator
 
   def link_to_edit
     link_to(
-      raw(content_tag(:i, '', class: 'fa fa-cog') + t('edit')),
+      t('edit'),
       edit_metering_point_path(model),
       {
         :remote       => true,
-        :class        => 'start_modal btn btn-icon btn-danger btn-xs',
+        :class        => 'start_modal btn btn-primary btn-rounded btn-labeled fa fa-cog',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })
   end
+
 
 
   def new_register
