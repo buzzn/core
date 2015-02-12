@@ -6,8 +6,18 @@
       .nano
         .nano-content{:tabindex => "0"}
           .text-center.pad-all
+
+
             .pad-ver
-              = @device.image_tag_lg
+              - if @device.image?
+                = image_tag @device.image.lg, class: 'img-circle img-lg img-border'
+              - else
+                %span.fa-stack.fa-lg.fa-5x
+                  %i.fa.fa-circle.fa-stack-2x
+                  %i.fa.fa-bolt.fa-stack-1x.fa-inverse
+
+
+
             %h4.text-lg.text-overflow.mar-no= @device.name
 
           %hr

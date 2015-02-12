@@ -44,6 +44,7 @@ clearTimers = ->
 ready = ->
   $(".select2").select2()
   $('a[rel~="tooltip"]').tooltip()
+  $('[data-tooltip="true"]').tooltip();
   DependentFields.bind()
 
   $("body").on "hidden.bs.modal", ".modal", ->

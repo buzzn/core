@@ -89,6 +89,7 @@ module ApplicationHelper
                             })
   end
 
+
   def link_to_external(link, html_options = {})
     html_options[:target] = "_blank"
     link_to(truncate(link, length: 24, separator: ' '), link, html_options)
@@ -97,43 +98,50 @@ module ApplicationHelper
 
   def new_location
     link_to(
-      t("add_new_location"),
+      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
       new_location_path,
       {
-        :remote       => true,
-        :class        => 'start_modal',
-        'data-toggle' => 'modal',
-        'data-target' => '#myModal'
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal',
+        'data-tooltip'  => "true",
+        'title'         => t("add_new_location"),
       })
   end
 
   def new_group
     link_to(
-      t("add_new_group"),
+      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
       new_group_path,
       {
-        :remote       => true,
-        :class        => 'start_modal',
-        'data-toggle' => 'modal',
-        'data-target' => '#myModal'
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal',
+        'data-tooltip'  => "true",
+        'title'         => t("add_new_group"),
       })
   end
 
+
   def new_in_device
     link_to(
-      t("add_new_in_device"),
+      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
       new_in_device_path(:id),
       {
-        :remote       => true,
-        :class        => 'start_modal',
-        'data-toggle' => 'modal',
-        'data-target' => '#myModal'
+        :remote           => true,
+        :class            => 'btn start_modal',
+        'data-toggle'     => 'modal',
+        'data-target'     => '#myModal',
+        'data-tooltip'    => "true",
+        'title'           => t("add_new_in_device"),
       })
   end
 
   def new_out_device
     link_to(
-      t("add_new_out_device"),
+      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
       new_out_device_path(:id),
       {
         :remote       => true,
@@ -143,9 +151,9 @@ module ApplicationHelper
       })
   end
 
-    def new_organization
+  def new_organization
     link_to(
-      t("add_new_organization"),
+      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
       new_organization_path,
       {
         :remote       => true,

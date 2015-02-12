@@ -192,6 +192,8 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
+
+
   def edit_devices
     link_to(
       t("edit_devices"),

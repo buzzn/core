@@ -54,7 +54,7 @@
       = render metering_point.decorate #unless metering_point == @location.metering_point && metering_point.mode == "in_out"
 
     - if current_user.can_update?(@location)
-      .new-metering-point.col-sm-4
+      .new-metering-point.col-lg-3
         .panel.panel-new
           .panel-container
             %span.text-1x= @location.new_metering_point

@@ -64,16 +64,48 @@
   %h1.page-header.text-overflow= t'groups'
   .row
     = render @groups
+    - if current_user.can_create?(Group)
+      .new-device.col-lg-6
+        .panel.panel-new
+          .panel-container
+            %span.text-1x= new_group
+
 
   %h1.page-header.text-overflow= t'locations'
   .row
     = render @locations
+    - if current_user.can_create?(Location)
+      .new-device.col-lg-4
+        .panel.panel-new
+          .panel-container
+            %span.text-1x= new_location
+
 
   %h1.page-header.text-overflow= t'devices'
   .row
     = render @devices
+    - if current_user.can_create?(Device)
+      .new-device.col-sm-6.col-md-3.col-lg-2
+        .panel.panel-new
+          .panel-container
+            %span.text-1x= new_in_device
+
 
   %h1.page-header.text-overflow= t'friends'
   .row
     - @friends.each do |user|
       = render user.profile
+
+
+
+
+
+
+
+
+
+
+
+
+
+

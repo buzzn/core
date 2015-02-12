@@ -115,6 +115,7 @@ class GroupsController < InheritedResources::Base
     [
       :id,
       :name,
+      :image,
       :mode,
       :private,
       :website,
