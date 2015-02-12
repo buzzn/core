@@ -1,0 +1,52 @@
+- meta title: t(@register.mode)
+
+= content_for :aside do
+  %aside#aside-container
+    #aside
+      .nano
+        .nano-content{:tabindex => "0"}
+          .text-center.pad-all
+            .pad-ver
+              //= image_tag @register.image.lg, class: 'img-circle img-lg img-border'
+            %h4.text-lg.text-overflow.mar-no= t @register.mode
+          %hr
+            .text-center.clearfix
+              - if current_user.can_update?(@register)
+                = @register.link_to_edit
+
+
+.pad-ver
+  %ol.breadcrumb
+    %li= link_to "#{t('location')} (#{@register.metering_point.root.location.name})", @register.metering_point.root.location
+    %li= link_to "#{t('metering_point')} (#{@register.metering_point.name})", @register.metering_point
+    %li= link_to "#{t('meter')} (#{@register.metering_point.meter.name})", @register.metering_point.meter
+    %li.active= "#{t('register')} (#{@register.name})"
+
+
+
+#page-content
+  .row
+    .col-sm-6
+      .panel
+        .panel-heading
+          %h3.panel-title
+            =t('register_properties')
+        .panel-body
+          .table-responsive
+            %table.table.table-striped
+              %tbody
+                %tr
+                  %td= t('mode')
+                  %td= @register.mode
+                %tr
+                  %td= t('obis_index')
+                  %td= @register.obis_index
+                %tr
+                  %td= t('variable_tariff')
+                  %td= @register.variable_tariff
+                %tr
+                  %td= t('virtual')
+                  %td= @register.virtual
+                %tr
+                  %td= t('formula')
+                  %td= @register.formula

@@ -13,7 +13,7 @@ class OrganizationAuthorizer < ApplicationAuthorizer
   end
 
   def deletable_by?(user)
-    user.has_role?(:admin) || user.has_role?(:manager, resource)
+    user.has_role?(:admin)
   end
 
 end

@@ -2,7 +2,7 @@
   .panel.panel-colorful{ class: "panel-#{register.panel_mode_class}"}
     .pad-all.text-center
       %span.text-5x.text-thin 241 W
-      %p= t(register.mode)
+      %p= link_to t(register.mode), register
       - if register.mode == 'in'
         %i.fa.fa-arrow-down
       - elsif register.mode == 'out'

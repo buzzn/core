@@ -68,11 +68,6 @@ class Meter < ActiveRecord::Base
   end
 
 
-  def name
-    "#{manufacturer_name} #{manufacturer_product_name}"
-  end
-
-
   def self.reactivate
     Meter.where(init_reading: true, smart: true, online: false).select(:id).each do |meter|
       Sidekiq::Client.push({

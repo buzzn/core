@@ -1,0 +1,10 @@
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'edit_register'
+  .modal-body
+    = simple_form_for @register, remote: true do |f|
+      = render 'registers/form_fields', f: f
+      .modal-footer
+        = f.button :submit, id: 'submit', class: 'btn btn-success'
+        = link_to t('destroy'), @register, id: 'delete', :method => :delete, remote: true, :data => { :confirm => t('are_you_sure') }, class: 'btn btn-danger'

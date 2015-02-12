@@ -1,4 +1,5 @@
 class Register < ActiveRecord::Base
+  include Authority::Abilities
 
   belongs_to :meter
   belongs_to :metering_point

@@ -1,11 +1,17 @@
 Fabricator :meter do
   i = 1
-  manufacturer_name           'Elster'
+  manufacturer_name           'Ferraris'
   manufacturer_product_name    'AS 1440'
   manufacturer_product_serialnumber   {3353984 + (i += 1)}
   registers                    { [Fabricate(:register_in)] }
 end
 
+Fabricator :urbanstr88_meter, from: :meter do
+  image { File.new(Rails.root.join('db', 'seed_assets', 'meters', 'urbanstr88', '1.jpg' )) }
+  manufacturer_product_name           'CG11'
+  manufacturer_product_serialnumber   '08053883'
+  registers { [Fabricate(:register_in)] }
+end
 
 Fabricator :in_meter, from: :meter do
   registers { [Fabricate(:register_in)] }

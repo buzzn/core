@@ -9,25 +9,82 @@
             .pad-ver
               = image_tag @meter.image.lg, class: 'img-circle img-lg img-border'
             %h4.text-lg.text-overflow.mar-no= @meter.name
-
           %hr
             .text-center.clearfix
               - if current_user.can_update?(@meter)
                 = @meter.link_to_edit
 
 
-
-
-
 .pad-ver
   %ol.breadcrumb
-    %li= link_to @meter.metering_point.location.name, @meter.metering_point.location
-    %li= link_to @meter.metering_point.name, @meter.metering_point
-    %li.active= @meter.name
+    %li= link_to "#{t('location')} (#{@meter.metering_point.root.location.name})", @meter.metering_point.root.location
+    %li= link_to "#{t('metering_point')} (#{@meter.metering_point.name})", @meter.metering_point
+    %li.active= "#{t('meter')} (#{@meter.name})"
+
 
 #page-content
+  .row
+    .col-sm-6
+      .panel
+        .panel-heading
+          %h3.panel-title
+            =t('meter_properties')
+        .panel-body
+          .table-responsive
+            %table.table.table-striped
+              %tbody
+                %tr
+                  %td= t('manufacturer_name')
+                  %td= @meter.manufacturer_name
+                %tr
+                  %td= t('manufacturer_product_name')
+                  %td= @meter.manufacturer_product_name
+                %tr
+                  %td= t('manufacturer_product_serialnumber')
+                  %td= @meter.manufacturer_product_serialnumber
+                %tr
+                  %td= t('owner')
+                  %td= @meter.owner
+                %tr
+                  %td= t('mode')
+                  %td= @meter.mode
+                %tr
+                  %td= t('meter_size')
+                  %td= @meter.meter_size
+                %tr
+                  %td= t('rate')
+                  %td= @meter.rate
+                %tr
+                  %td= t('measurement_capture')
+                  %td= @meter.measurement_capture
+                %tr
+                  %td= t('mounting_method')
+                  %td= @meter.mounting_method
+                %tr
+                  %td= t('build_year')
+                  %td= @meter.build_year
+                %tr
+                  %td= t('calibrated_till')
+                  %td= @meter.calibrated_till
+                %tr
+                  %td= t('smart')
+                  %td= @meter.smart
+                %tr
+                  %td= t('online')
+                  %td= @meter.online
+                %tr
+                  %td= t('initialized_successfully')
+                  %td= @meter.init_reading
+
+
 
   %h1.page-header.text-overflow= t'registers'
   .row
     = render @meter.registers
+
+  / TODO not working ???
+  / %h1.page-header.text-overflow= t'equipments'
+  / .row
+  /   = render @meter.equipments
+
 

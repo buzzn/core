@@ -86,6 +86,7 @@ end
 Fabricator :mp_urbanstr88, from: :metering_point do
   address_addition  '3Etage Links'
   image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'urbanstr88', 'wohnung.jpg' )) }
+  registers  { Fabricate(:urbanstr88_meter).registers }
 end
 
 

@@ -25,8 +25,9 @@
 
 .pad-ver
   %ol.breadcrumb
-    %li= link_to @metering_point.location.name, @metering_point.location
-    %li.active= @metering_point.name
+    %li= link_to "#{t('location')} (#{@metering_point.root.location.name})", @metering_point.root.location
+    %li.active= "#{t('metering_point')} (#{@metering_point.name})"
+
 
 #page-content
 

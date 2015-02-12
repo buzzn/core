@@ -8,6 +8,7 @@ class MeteringPointsController < InheritedResources::Base
     @devices                          = @metering_point.devices
     @group                            = @metering_point.group
     @meter                            = @metering_point.meter
+    @location                         = @metering_point.location
     authorize_action_for(@metering_point)
     show!
   end

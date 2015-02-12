@@ -100,9 +100,11 @@ class MeteringPointDecorator < Draper::Decorator
     end
   end
 
-
-
   def name
+    address_addition
+  end
+
+  def name_long
     case mode
     when 'in'
       address_addition
