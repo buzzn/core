@@ -14,8 +14,11 @@
               - if @group.image?
                 = image_tag @group.image.lg, class: 'img-circle img-lg img-border'
               - else
-                %span.icon-wrap.icon-wrap-sm.icon-circle.bg-dark
-                  %i.fa.fa-users.fa-5x
+                %span.fa-stack.fa-lg.fa-5x
+                  %i.fa.fa-circle.fa-stack-2x
+                  %i.fa.fa-users.fa-stack-1x.fa-inverse
+
+
 
             %h4.text-lg.text-overflow.mar-no= @group.name
 

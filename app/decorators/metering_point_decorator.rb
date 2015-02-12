@@ -168,7 +168,7 @@ class MeteringPointDecorator < Draper::Decorator
       path = new_in_device_path(metering_point_id: model.id)
     end
     link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      t('add_device'),
       path,
       {
         :remote       => true,
@@ -194,11 +194,11 @@ class MeteringPointDecorator < Draper::Decorator
 
   def edit_devices
     link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      t("edit_devices"),
       edit_devices_metering_point_path(model),
       {
         :remote       => true,
-        :class        => 'sidebar-plus',
+        :class        => 'start_modal',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })

@@ -1,10 +1,16 @@
-.register.col-sm-6.col-md-4.col-lg-3{ id: register.id}
+.register.col-sm-6.col-md-4.col-lg-2{ id: register.id}
   .panel.panel-colorful{ class: "panel-#{register.panel_mode_class}"}
     .pad-all.text-center
-      %span.text-5x.text-thin 241 W
-      %p= link_to t(register.mode), register
+
+      %p.text-uppercase.mar-btm.text-sm= link_to t(register.mode), register
+
+      %span.text-5x.text-thin
+        241
+
+      %p= t'watt'
       - if register.mode == 'in'
         %i.fa.fa-arrow-down
       - elsif register.mode == 'out'
         %i.fa.fa-arrow-up
       - else
+

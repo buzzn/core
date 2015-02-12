@@ -5,14 +5,24 @@
     #aside
       .nano
         .nano-content{:tabindex => "0"}
+
           .text-center.pad-all
             .pad-ver
-              //= image_tag @register.image.lg, class: 'img-circle img-lg img-border'
+              - if @register.mode == 'in'
+                %span.fa-stack.fa-lg.fa-5x
+                  %i.fa.fa-circle.fa-stack-2x
+                  %i.fa.fa-arrow-down.fa-stack-1x.fa-inverse
+              - elsif @register.mode == 'out'
+                %span.fa-stack.fa-lg.fa-5x
+                  %i.fa.fa-circle.fa-stack-2x
+                  %i.fa.fa-arrow-up.fa-stack-1x.fa-inverse
+
             %h4.text-lg.text-overflow.mar-no= t @register.mode
+
           %hr
-            .text-center.clearfix
-              - if current_user.can_update?(@register)
-                = @register.link_to_edit
+          .text-center.clearfix
+            - if current_user.can_update?(@register)
+              = @register.link_to_edit
 
 
 .pad-ver

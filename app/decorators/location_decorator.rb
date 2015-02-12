@@ -10,14 +10,6 @@ class LocationDecorator < Draper::Decorator
 
 
 
-  def image_tag_lg
-    if model.metering_point && model.metering_point.image?
-      image_tag model.metering_point.image.lg, class: 'img-circle img-lg img-border', alt: ""
-    end
-  end
-
-
-
 
 
   def link_to_delete
@@ -62,7 +54,7 @@ class LocationDecorator < Draper::Decorator
 
   def new_metering_point
     link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      t('add_metering_point'),
       metering_point_wizard_metering_points_path(location_id: model.id),
       {
         :class => 'content-plus',

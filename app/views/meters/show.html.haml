@@ -7,7 +7,13 @@
         .nano-content{:tabindex => "0"}
           .text-center.pad-all
             .pad-ver
-              = image_tag @meter.image.lg, class: 'img-circle img-lg img-border'
+              - if @meter.image?
+                = image_tag @meter.image.lg, class: 'img-circle img-lg img-border'
+              - else
+                %span.fa-stack.fa-lg.fa-5x
+                  %i.fa.fa-circle.fa-stack-2x
+                  %i.fa.fa-tachometer.fa-stack-1x.fa-inverse
+
             %h4.text-lg.text-overflow.mar-no= @meter.name
           %hr
             .text-center.clearfix

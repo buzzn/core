@@ -7,8 +7,15 @@
         .nano-content{:tabindex => "0"}
           .text-center.pad-all
             .pad-ver
-              = image_tag @metering_point.image.lg, class: 'img-circle img-lg img-border'
+              - if @metering_point.image?
+                = image_tag @metering_point.image.lg, class: 'img-circle img-lg img-border'
+              - else
+                %span.fa-stack.fa-lg.fa-5x
+                  %i.fa.fa-circle.fa-stack-2x
+                  %i.fa.fa-map-marker.fa-stack-1x.fa-inverse
+
             %h4.text-lg.text-overflow.mar-no= @metering_point.name
+
           %hr
             .text-center.clearfix
               .col-xs-6
@@ -66,6 +73,12 @@
   %h1.page-header.text-overflow= t'devices'
   .row
     = render @devices
+
+    - if current_user.can_update?(@metering_point)
+      .new-device.col-sm-6.col-md-3.col-lg-2
+        .panel.panel-new
+          .panel-container
+            %span.text-1x= @metering_point.edit_devices
 
   %h1.page-header.text-overflow= t'friends'
   .row
