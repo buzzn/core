@@ -93,6 +93,7 @@ private
       :manufacturer_name,
       :manufacturer_product_name,
       :manufacturer_product_serialnumber,
+      :image,
       :shop_link,
       :primary_energy,
       :watt_hour_pa,

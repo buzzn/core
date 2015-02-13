@@ -5,24 +5,11 @@ module ApplicationHelper
   def mainnav_profiles_path
     active_link_to(
       content_tag(:i, nil, class: 'fa fa-user')+
-      content_tag(:span,
-        content_tag(:strong, t('users')), class: "menu-title"
-      ),
+      content_tag(:span, t('users'), class: "menu-title" ),
       profiles_path, class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
   end
-
-  def mainnav_profile_path(profile)
-    active_link_to(
-      content_tag(:i, nil, class: 'fa fa-user')+
-      content_tag(:span, profile.name , class: "menu-title"),
-      profile_path(profile), class: 'button white',
-      :wrap_tag => :li, :class_active => 'active-link'
-    )
-  end
-
-
 
   def mainnav_groups_path
     active_link_to(
@@ -43,20 +30,40 @@ module ApplicationHelper
   end
 
 
-  def mainnav_location_path(location)
+
+
+  def mainnav_profile_path(profile)
     active_link_to(
-      content_tag(:i, nil, class: 'fa fa-home')+
-      content_tag(:span, location.name, class: "menu-title"),
-      location_path(location), class: 'button white',
+      (
+        profile.image? ?
+        content_tag(:i, image_tag(profile.image.sm, class: 'img-circle', size: '20x20')) :
+        content_tag(:i, nil, class: 'fa fa-home')
+      ) + content_tag(:span, profile.name, class: "menu-title"),
+      profile_path(profile), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
   end
 
 
+  def mainnav_location_path(location)
+    active_link_to(
+      (
+        location.metering_point.image? ?
+        content_tag(:i, image_tag(location.metering_point.image.sm, class: 'img-circle', size: '20x20')) :
+        content_tag(:i, nil, class: 'fa fa-home')
+      ) + content_tag(:span, location.metering_point.name, class: "menu-title"),
+      location_path(location), class: 'button white',
+      :wrap_tag => :li, :class_active => 'active-link'
+    )
+  end
+
   def mainnav_device_path(device)
     active_link_to(
-      content_tag(:i, nil, class: 'fa fa-plug')+
-      content_tag(:span, device.name, class: "menu-title"),
+      (
+        device.image? ?
+        content_tag(:i, image_tag(device.image.sm, class: 'img-circle', size: '20x20')) :
+        content_tag(:i, nil, class: 'fa fa-plug')
+      ) + content_tag(:span, device.name, class: "menu-title"),
       device_path(device), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
