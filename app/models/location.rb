@@ -35,6 +35,7 @@ class Location < ActiveRecord::Base
 
   has_one :metering_point
 
+  default_scope { order('created_at ASC') }
 
   private
 

@@ -20,28 +20,25 @@ class MeteringPoint < ActiveRecord::Base
   tracked recipient: Proc.new{ |controller, model| controller && model }
 
 
-
   belongs_to :location
-
   belongs_to :group
-
   has_many :registers, dependent: :destroy
   accepts_nested_attributes_for :registers, reject_if: :all_blank
-
   has_many :electricity_supplier_contracts,         dependent: :destroy
   has_many :metering_service_provider_contracts,    dependent: :destroy
   has_many :metering_point_operator_contracts,      dependent: :destroy
   has_many :distribution_system_operator_contracts, dependent: :destroy
-
-  mount_uploader :image, PictureUploader
-
   has_many :devices
-
   has_many :metering_point_users
   has_many :users, through: :metering_point_users, dependent: :destroy
 
   validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
   validates :address_addition, presence: true, length: { in: 2..30 }
+
+  mount_uploader :image, PictureUploader
+
+  default_scope { order('created_at ASC') }
+
 
   def meter
     registers.collect(&:meter).first

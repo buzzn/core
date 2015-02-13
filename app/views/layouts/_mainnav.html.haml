@@ -1,7 +1,5 @@
 %nav#mainnav-container
   #mainnav
-    / Shortcut buttons
-    / ================================
     #mainnav-shortcut
       %ul.list-unstyled
         %li.col-xs-4{"data-content" => "Additional Sidebar"}
@@ -13,16 +11,14 @@
         %li.col-xs-4{"data-content" => "Page Alerts"}
           %a#demo-page-alert.shortcut-grid{:href => "#"}
             %i.fa.fa-bell
-    / ================================
-    / End shortcut buttons
-    / Menu
-    / ================================
     - if user_signed_in?
       #mainnav-menu-wrap
         .nano
           .nano-content
             %ul#mainnav-menu.list-group
 
+              %li.list-header= t'my_profile'
+              = mainnav_profile_path(current_user.profile)
 
               %li.list-header= t'my_locations'
               - current_user.editable_locations.each do |location|
@@ -33,17 +29,8 @@
                 = mainnav_device_path(device)
 
               %li.list-header= t'my_friends'
-              %li
-                %a{:href => "#"}
-                  %i.fa.fa-edit
-                  %span.menu-title= t'my_friends'
-                  %i.arrow
-                / Submenu
-                %ul.collapse
-                  - current_user.friends.each do |profile|
-                    = mainnav_profile_path(profile)
-
-
+              - current_user.friends.each do |user|
+                = mainnav_profile_path(user.profile)
 
               %li.list-divider
               %li.list-header= t'explore_buzzn'

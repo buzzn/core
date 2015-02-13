@@ -12,12 +12,11 @@ module ApplicationHelper
       :wrap_tag => :li, :class_active => 'active-link'
     )
   end
+
   def mainnav_profile_path(profile)
     active_link_to(
       content_tag(:i, nil, class: 'fa fa-user')+
-      content_tag(:span,
-        content_tag(:strong, profile.name), class: "menu-title"
-      ),
+      content_tag(:span, profile.name , class: "menu-title"),
       profile_path(profile), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
@@ -28,9 +27,7 @@ module ApplicationHelper
   def mainnav_groups_path
     active_link_to(
       content_tag(:i, nil, class: 'fa fa-users')+
-      content_tag(:span,
-        content_tag(:strong, t('groups')), class: "menu-title"
-      ),
+      content_tag(:span, t('groups'), class: "menu-title"),
       groups_path, class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
@@ -39,9 +36,7 @@ module ApplicationHelper
   def mainnav_organizations_path
     active_link_to(
       content_tag(:i, nil, class: 'fa fa-building-o')+
-      content_tag(:span,
-        content_tag(:strong, t('organizations')), class: "menu-title"
-      ),
+      content_tag(:span, t('organizations'), class: "menu-title"),
       organizations_path, class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
@@ -50,10 +45,8 @@ module ApplicationHelper
 
   def mainnav_location_path(location)
     active_link_to(
-      content_tag(:i, nil, class: 'fa fa-building-o')+
-      content_tag(:span,
-        content_tag(:strong, location.name), class: "menu-title"
-      ),
+      content_tag(:i, nil, class: 'fa fa-home')+
+      content_tag(:span, location.name, class: "menu-title"),
       location_path(location), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
@@ -62,10 +55,8 @@ module ApplicationHelper
 
   def mainnav_device_path(device)
     active_link_to(
-      content_tag(:i, nil, class: 'fa fa-building-o')+
-      content_tag(:span,
-        content_tag(:strong, device.name), class: "menu-title"
-      ),
+      content_tag(:i, nil, class: 'fa fa-plug')+
+      content_tag(:span, device.name, class: "menu-title"),
       device_path(device), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
