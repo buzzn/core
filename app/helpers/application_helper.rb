@@ -50,7 +50,7 @@ module ApplicationHelper
         location.metering_point.image? ?
         content_tag(:i, image_tag(location.metering_point.image.sm, class: 'img-circle', size: '20x20')) :
         content_tag(:i, nil, class: 'fa fa-home')
-      ) + content_tag(:span, location.metering_point.name, class: "menu-title"),
+      ) + content_tag(:span, location.name, class: "menu-title"),
       location_path(location), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )

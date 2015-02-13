@@ -455,7 +455,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   end
 
   create_table "profiles", force: true do |t|
-    t.string   "username"
+    t.string   "user_name"
     t.string   "slug"
     t.string   "title"
     t.string   "image"
@@ -483,7 +483,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   add_index "profiles", ["slug"], name: "index_profiles_on_slug", unique: true, using: :btree
   add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
-  add_index "profiles", ["username"], name: "index_profiles_on_username", unique: true, using: :btree
+  add_index "profiles", ["user_name"], name: "index_profiles_on_user_name", unique: true, using: :btree
 
   create_table "registers", force: true do |t|
     t.string   "mode"

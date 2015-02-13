@@ -8,12 +8,10 @@
       = simple_form_for resource, as: resource_name, url: registration_path(resource_name) do |f|
 
         = f.simple_fields_for :profile, resource.build_profile do |p|
-          = p.input :first_name
-          = p.input :last_name
+          = p.input :user_name
 
         = f.input :email,                 required: true
         = f.input :password,              required: true
         = f.input :password_confirmation, required: true
-
 
         = f.button :submit, t('sign_up'), class: 'btn btn-lg btn-success btn-block', id: 'submit'

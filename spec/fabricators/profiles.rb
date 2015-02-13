@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 Fabricator :profile do
+  user_name   { Faker::Internet.user_name }
   first_name  { Faker::Name.first_name }
   last_name   { Faker::Name.last_name }
   phone       { Faker::PhoneNumber.phone_number }
@@ -13,6 +14,7 @@ end
 
 
 Fabricator :profile_felix, from: :profile do
+  user_name   'ffaerber'
   first_name  'Felix'
   last_name   'Faerber'
   website     'http://www.ffaerber.com'
@@ -58,7 +60,6 @@ Fabricator :profile_karin, from: :profile do
   last_name   'Smith'
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'karin.jpg')) }
 end
-
 
 Fabricator :profile_ole, from: :profile do
   first_name  'Ole'

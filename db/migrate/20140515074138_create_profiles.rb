@@ -2,7 +2,7 @@ class CreateProfiles < ActiveRecord::Migration
   def change
     create_table :profiles do |t|
 
-      t.string :username
+      t.string :user_name
       t.string :slug
       t.string :title
       t.string :image
@@ -32,7 +32,7 @@ class CreateProfiles < ActiveRecord::Migration
       t.timestamps
     end
     add_index :profiles, :slug,                 unique: true
-    add_index :profiles, :username,             unique: true
+    add_index :profiles, :user_name,            unique: true
     add_index :profiles, :user_id
   end
 end

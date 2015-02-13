@@ -63,10 +63,10 @@ private
 
   def init_permitted_params
     [
-      :username,
-      :image,
+      :user_name,
       :first_name,
       :last_name,
+      :image,
       :gender,
       :phone,
       :newsletter_notifications,

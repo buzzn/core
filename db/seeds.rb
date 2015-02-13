@@ -92,6 +92,7 @@ buzzn_team_names.each do |user_name|
     user.add_role :manager, @gocycle
     user.add_role :admin # felix is admin
     user_location = Fabricate(:urbanstr88)
+    user_location.metering_point.devices << @gocycle
   when 'christian'
     user_location = Fabricate(:roentgenstrasse11)
     user_location.metering_point.metering_point_operator_contracts << Fabricate(:mpoc_christian, metering_point: user_location.metering_point)
@@ -127,17 +128,17 @@ end
 
 
 
-# hof_butenland
-# jan_gerdes = Fabricate(:jan_gerdes)
-# niensweg   = Fabricate(:niensweg)
-# niensweg.metering_point.metering_point_operator_contracts << Fabricate(:metering_point_operator_contract, metering_point: niensweg.metering_point)
-# jan_gerdes.add_role :manager, niensweg
-# device = Fabricate(:hof_butenland_wind)
-# niensweg.metering_point.devices << device
-# jan_gerdes.add_role :manager, device
+#hof_butenland
+jan_gerdes = Fabricate(:jan_gerdes)
+niensweg   = Fabricate(:niensweg)
+niensweg.metering_point.metering_point_operator_contracts << Fabricate(:metering_point_operator_contract, metering_point: niensweg.metering_point)
+jan_gerdes.add_role :manager, niensweg
+device = Fabricate(:hof_butenland_wind)
+niensweg.metering_point.devices << device
+jan_gerdes.add_role :manager, device
 
-# niensweg.metering_point.electricity_supplier_contracts.first.contracting_party = jan_gerdes.contracting_party
-# niensweg.metering_point.electricity_supplier_contracts.first.save
+niensweg.metering_point.electricity_supplier_contracts.first.contracting_party = jan_gerdes.contracting_party
+niensweg.metering_point.electricity_supplier_contracts.first.save
 
 
 # karin
@@ -199,55 +200,55 @@ karins_pv_group.create_activity key: 'group.create', owner: karin, recipient: ka
 
 
 
-# puts 'Group Hopf(localpool)'
-# hans_dieter_hopf  = Fabricate(:hans_dieter_hopf)
-# manuela_baier     = Fabricate(:manuela_baier)
-# thomas_hopf       = Fabricate(:thomas_hopf)
+puts 'Group Hopf(localpool)'
+hans_dieter_hopf  = Fabricate(:hans_dieter_hopf)
+manuela_baier     = Fabricate(:manuela_baier)
+thomas_hopf       = Fabricate(:thomas_hopf)
 
-# location_manuela_baier = Fabricate(:location_manuela_baier)
-# location_thomas_hopf   = Fabricate(:location_thomas_hopf)
-# location_hopf = Fabricate(:location_hopf)
+location_manuela_baier = Fabricate(:location_manuela_baier)
+location_thomas_hopf   = Fabricate(:location_thomas_hopf)
+location_hopf = Fabricate(:location_hopf)
 
-# mp_60118470 = Fabricate(:mp_60118470)
-# mp_60009316 = Fabricate(:mp_60009316)
-# mp_60009272 = location_thomas_hopf.metering_point
-# mp_60009348 = location_manuela_baier.metering_point
-# mp_hans_dieter_hopf = Fabricate(:mp_hans_dieter_hopf)
+mp_60118470 = Fabricate(:mp_60118470)
+mp_60009316 = Fabricate(:mp_60009316)
+mp_60009272 = location_thomas_hopf.metering_point
+mp_60009348 = location_manuela_baier.metering_point
+mp_hans_dieter_hopf = Fabricate(:mp_hans_dieter_hopf)
 
-# mp_60009272.users         << thomas_hopf
-# mp_60009348.users         << manuela_baier
-# mp_60009316.users         << hans_dieter_hopf
-# mp_hans_dieter_hopf.users << hans_dieter_hopf
+mp_60009272.users         << thomas_hopf
+mp_60009348.users         << manuela_baier
+mp_60009316.users         << hans_dieter_hopf
+mp_hans_dieter_hopf.users << hans_dieter_hopf
 
-# mp_60009316.update_attribute :parent, mp_60118470
-# mp_60009272.update_attribute :parent, mp_60118470
-# mp_60009348.update_attribute :parent, mp_60118470
-# mp_hans_dieter_hopf.update_attribute :parent, mp_60118470
+mp_60009316.update_attribute :parent, mp_60118470
+mp_60009272.update_attribute :parent, mp_60118470
+mp_60009348.update_attribute :parent, mp_60118470
+mp_hans_dieter_hopf.update_attribute :parent, mp_60118470
 
-# group_hopf = Fabricate(:group, name: 'Hopf Strom', metering_points: [mp_60118470])
-# group_hopf.metering_points << mp_60009316
-# group_hopf.metering_points << mp_60009272
-# group_hopf.metering_points << mp_60009348
-# group_hopf.metering_points << mp_hans_dieter_hopf
-# group_hopf.metering_point_operator_contract = Fabricate(:mpoc_buzzn_metering, group: group_hopf)
+group_hopf = Fabricate(:group, name: 'Hopf Strom', metering_points: [mp_60118470])
+group_hopf.metering_points << mp_60009316
+group_hopf.metering_points << mp_60009272
+group_hopf.metering_points << mp_60009348
+group_hopf.metering_points << mp_hans_dieter_hopf
+group_hopf.metering_point_operator_contract = Fabricate(:mpoc_buzzn_metering, group: group_hopf)
 
-# puts 'group hof_butenland'
-# group_hof_butenland = Fabricate(:group_hof_butenland, metering_points: [niensweg.metering_point])
-# jan_gerdes.add_role :manager, group_hof_butenland
-# 15.times do
-#   user, location, metering_point = user_with_location
-#   group_hof_butenland.metering_points << metering_point
-#   puts "  #{user.email}"
-# end
-# group_hof_butenland.create_activity key: 'group.create', owner: jan_gerdes, recipient: group_hof_butenland
+puts 'group hof_butenland'
+group_hof_butenland = Fabricate(:group_hof_butenland, metering_points: [niensweg.metering_point])
+jan_gerdes.add_role :manager, group_hof_butenland
+15.times do
+  user, location, metering_point = user_with_location
+  group_hof_butenland.metering_points << metering_point
+  puts "  #{user.email}"
+end
+group_hof_butenland.create_activity key: 'group.create', owner: jan_gerdes, recipient: group_hof_butenland
 
 
-#puts 'group home_of_the_brave'
-#group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [@fichtenweg8.metering_point])
-#group_home_of_the_brave.metering_points << fichtenweg10.metering_point
-#justus = User.where(email: 'justus@buzzn.net').first
-#justus.add_role :manager, group_home_of_the_brave
-#group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
+puts 'group home_of_the_brave'
+group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [@fichtenweg8.metering_point])
+group_home_of_the_brave.metering_points << fichtenweg10.metering_point
+justus = User.where(email: 'justus@buzzn.net').first
+justus.add_role :manager, group_home_of_the_brave
+group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
 
 puts 'group wagnis4'
 dirk_mittelstaedt = Fabricate(:dirk_mittelstaedt)
@@ -417,15 +418,11 @@ group_wagnis4.metering_point_operator_contract = Fabricate(:mpoc_buzzn_metering,
 
 
 
-
-
-
-
-# puts '5 simple users'
-# 5.times do
-#   user = Fabricate(:user)
-#   puts "  #{user.email}"
-# end
+puts '5 simple users'
+5.times do
+  user = Fabricate(:user)
+  puts "  #{user.email}"
+end
 
 
 
