@@ -44,7 +44,6 @@ module ApplicationHelper
     )
   end
 
-
   def mainnav_location_path(location)
     active_link_to(
       (

@@ -5,9 +5,8 @@
     #aside
       .nano
         .nano-content{:tabindex => "0"}
+
           .text-center.pad-all
-
-
             .pad-ver
               - if @device.image?
                 = image_tag @device.image.lg, class: 'img-circle img-lg img-border'
@@ -15,28 +14,25 @@
                 %span.fa-stack.fa-lg.fa-5x
                   %i.fa.fa-circle.fa-stack-2x
                   %i.fa.fa-plug.fa-stack-1x.fa-inverse
-
-
-
             %h4.text-lg.text-overflow.mar-no= @device.name
 
           %hr
             %ul.list-group.bg-trans
-              %li.list-group-item.list-item-sm
-                %i.fa.fa-home.fa-fw
-                San Jose, CA
+
+              - @manager.each do |user|
+                %li.list-group-item.list-item-sm
+                  %i.fa.fa-user.fa-fw
+                  = link_to user.profile.name, user.profile
+
               %li.list-group-item.list-item-sm
                 %i.fa.fa-clock-o.fa-fw
-                Member since 1 years ago
-              %li.list-group-item.list-item-sm.text-primary.text-semibold
-                %a.btn-link{:href => "#"}
-                  %i.fa.fa-globe.fa-fw
-                  http://www.themeon.net
+                = timeago_tag @device.commissioning
+
+
           %hr
             .text-center.clearfix
-              .col-xs-6
-                %p.h3= 34
-                %small.text-muted= t'users'
+              %p.h3= @device.watt_peak
+              %small.text-muted= t'watt_peak'
 
           %hr
             .text-center.clearfix
@@ -71,6 +67,9 @@
                 %tr
                   %td= t('manufacturer_product_name')
                   %td= @device.manufacturer_product_name
+                %tr
+                  %td= t('shop_link')
+                  %td= @device.shop_link
                 - if @device.output?
                   %tr
                     %td= t('primary_energy')
@@ -83,31 +82,31 @@
                   %td= @device.watt_hour_pa
                 %tr
                   %td= t('commissioning')
-                  %td= @device.commissioning
+                  %td= timeago_tag @device.commissioning
                 %tr
                   %td= t('mobile')
                   %td= t @device.mobile
 
 
-  %h1.page-header.text-overflow= t'belongs_to_user'
-  .row
-    - @manager.each do |user|
-      = render user.profile.decorate
+  / %h1.page-header.text-overflow= t'belongs_to_user'
+  / .row
+  /   - @manager.each do |user|
+  /     = render user.profile.decorate
 
-  - if @metering_point && current_user.can_update?(@device)
-    %h1.page-header.text-overflow= t'belongs_to_metering_point'
-    .row
-      = render @metering_point
+  / - if @metering_point && current_user.can_update?(@device)
+  /   %h1.page-header.text-overflow= t'belongs_to_metering_point'
+  /   .row
+  /     = render @metering_point
 
-  - if @location && current_user.can_update?(@device)
-    %h1.page-header.text-overflow= t'belongs_to_location'
-    .row
-      = render @location
+  / - if @location && current_user.can_update?(@device)
+  /   %h1.page-header.text-overflow= t'belongs_to_location'
+  /   .row
+  /     = render @location
 
-  - if @group
-    %h1.page-header.text-overflow= t'belongs_to_group'
-    .row
-      = render @group
+  / - if @group
+  /   %h1.page-header.text-overflow= t'belongs_to_group'
+  /   .row
+  /     = render @group
 
 
 
