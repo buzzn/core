@@ -93,10 +93,10 @@ module ApplicationHelper
   end
 
 
-  def new_location
+  def new_metering_point
     link_to(
       content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
-      new_location_path,
+      new_metering_point_path,
       {
         :remote         => true,
         :class          => 'btn start_modal',

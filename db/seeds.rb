@@ -4,17 +4,16 @@
 #
 require 'rubygems' #so it can load gems
 
-def user_with_location
-  location                    = Fabricate(:location)
+def user_with_metering_point
+  metering_point              = Fabricate(:metering_point_with_address)
   contracting_party           = Fabricate(:contracting_party)
   user                        = Fabricate(:user)
   user.contracting_party      = contracting_party
-  metering_point              = location.metering_point
   metering_point.users        << user
   contracting_party.electricity_supplier_contracts << metering_point.electricity_supplier_contracts.first
 
-  user.add_role :manager, location
-  return user, location, metering_point
+  user.add_role :manager, metering_point
+  return user, metering_point
 end
 
 
@@ -230,11 +229,10 @@ puts 'group hof_butenland'
 group_hof_butenland = Fabricate(:group_hof_butenland, metering_points: [mp_hof_butenland_wind])
 jan_gerdes.add_role :manager, group_hof_butenland
 15.times do
-  user, location, metering_point = user_with_location
+  user, metering_point = user_with_metering_point
   group_hof_butenland.metering_points << metering_point
   puts "  #{user.email}"
 end
-group_hof_butenland.create_activity key: 'group.create', owner: jan_gerdes, recipient: group_hof_butenland
 
 
 # puts 'group home_of_the_brave'

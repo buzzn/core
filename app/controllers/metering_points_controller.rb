@@ -3,12 +3,11 @@ class MeteringPointsController < InheritedResources::Base
   respond_to :html, :json, :js
 
   def show
-    @metering_point                   = MeteringPoint.find(params[:id]).decorate
-    @users                            = @metering_point.users
-    @devices                          = @metering_point.devices
-    @group                            = @metering_point.group
-    @meter                            = @metering_point.meter
-    @location                         = @metering_point.location
+    @metering_point = MeteringPoint.find(params[:id]).decorate
+    @users          = @metering_point.users
+    @devices        = @metering_point.devices
+    @group          = @metering_point.group
+    @meter          = @metering_point.meter
     authorize_action_for(@metering_point)
     show!
   end
@@ -100,13 +99,9 @@ private
 
   def init_permitted_params
     [
-      :location_id,
-      :name,
       :uid,
-      :mode,
-      :registers,
       :address_addition,
-      :id,
+      :image,
       :parent_id,
       :user_ids => [],
       :device_ids => []

@@ -335,9 +335,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
     t.string   "voltage_level"
     t.date     "regular_reeding"
     t.string   "regular_interval"
-    t.string   "meter_type"
     t.string   "ancestry"
-    t.integer  "location_id"
     t.integer  "contract_id"
     t.integer  "group_id"
     t.datetime "created_at"
@@ -347,7 +345,6 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "metering_points", ["ancestry"], name: "index_metering_points_on_ancestry", using: :btree
   add_index "metering_points", ["contract_id"], name: "index_metering_points_on_contract_id", using: :btree
   add_index "metering_points", ["group_id"], name: "index_metering_points_on_group_id", using: :btree
-  add_index "metering_points", ["location_id"], name: "index_metering_points_on_location_id", using: :btree
 
   create_table "metering_service_provider_contracts", force: true do |t|
     t.string   "status"

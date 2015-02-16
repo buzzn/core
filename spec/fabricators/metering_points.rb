@@ -1,5 +1,4 @@
 Fabricator :metering_point do
-  address                                { Fabricate(:address) }
   address_addition  'Verbrauch'
   i = 1
   uid                                    {"DE001068825151000000000000#{2677114 + (i += 1)}"}
@@ -7,6 +6,10 @@ Fabricator :metering_point do
   electricity_supplier_contracts         { [Fabricate(:electricity_supplier_contract)] }
 end
 
+
+Fabricator :metering_point_with_address, from: :metering_point do
+  address                                { Fabricate(:address) }
+end
 
 
 
