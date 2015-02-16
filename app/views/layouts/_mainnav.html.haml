@@ -20,9 +20,9 @@
               %li.list-header= t'my_profile'
               = mainnav_profile_path(current_user.profile)
 
-              %li.list-header= t'my_locations'
-              - current_user.editable_locations.each do |location|
-                = mainnav_location_path(location)
+              %li.list-header= t'my_metering_points'
+              - current_user.editable_metering_points.each do |metering_point|
+                = mainnav_metering_point_path(metering_point)
 
               %li.list-header= t'my_devices'
               - current_user.editable_devices.each do |device|

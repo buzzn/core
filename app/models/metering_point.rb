@@ -1,8 +1,11 @@
 class MeteringPoint < ActiveRecord::Base
+  resourcify
+  has_ancestry
   include Authority::Abilities
   include PublicActivity::Model
 
-  has_ancestry
+  tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
+  tracked recipient: Proc.new{ |controller, model| controller && model }
 
   before_destroy :check_for_active_contracts
 
@@ -31,6 +34,9 @@ class MeteringPoint < ActiveRecord::Base
   has_many :devices
   has_many :metering_point_users
   has_many :users, through: :metering_point_users, dependent: :destroy
+  has_one :address, as: :addressable, dependent: :destroy
+  accepts_nested_attributes_for :address, reject_if: :all_blank
+
 
   validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
   validates :address_addition, presence: true, length: { in: 2..30 }

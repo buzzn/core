@@ -71,10 +71,10 @@
             %span.text-1x= new_group
 
 
-  %h1.page-header.text-overflow= t'locations'
+  %h1.page-header.text-overflow= t'root_metering_points'
   .row
-    = render @locations
-    - if current_user.can_create?(Location)
+    = render @root_metering_points
+    - if current_user.can_create?(MeteringPoint)
       .new-device.col-lg-4
         .panel.panel-new
           .panel-container

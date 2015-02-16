@@ -16,8 +16,6 @@ Buzzn::Application.routes.draw do
     end
   end
 
-  resources :locations
-
   resources :metering_points do
     member do
       get :chart

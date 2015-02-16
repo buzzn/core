@@ -44,14 +44,14 @@ module ApplicationHelper
     )
   end
 
-  def mainnav_location_path(location)
+  def mainnav_metering_point_path(metering_point)
     active_link_to(
       (
-        location.metering_point.image? ?
-        content_tag(:i, image_tag(location.metering_point.image.sm, class: 'img-circle', size: '20x20')) :
+        metering_point.image? ?
+        content_tag(:i, image_tag(metering_point.image.sm, class: 'img-circle', size: '20x20')) :
         content_tag(:i, nil, class: 'fa fa-home')
-      ) + content_tag(:span, location.name, class: "menu-title"),
-      location_path(location), class: 'button white',
+      ) + content_tag(:span, metering_point.name, class: "menu-title"),
+      metering_point_path(metering_point), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
   end

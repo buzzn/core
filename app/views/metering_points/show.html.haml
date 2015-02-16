@@ -16,6 +16,17 @@
 
             %h4.text-lg.text-overflow.mar-no= @metering_point.name
 
+          - if @metering_point.address
+            %hr
+            .pad-hor
+              %h5=t('address')
+              %address
+                = "#{@metering_point.address.street_name} #{@metering_point.address.street_number}"
+                %br
+                = "#{@metering_point.address.zip} #{@metering_point.address.city}"
+                %br
+                = @metering_point.address.state
+
           %hr
             .text-center.clearfix
               .col-xs-6
@@ -29,11 +40,6 @@
               - if current_user.can_update?(@metering_point)
                 = @metering_point.link_to_edit
 
-
-.pad-ver
-  %ol.breadcrumb
-    %li= link_to "#{t('location')} (#{@metering_point.root.location.name})", @metering_point.root.location
-    %li.active= "#{t('metering_point')} (#{@metering_point.name})"
 
 
 #page-content
@@ -85,6 +91,17 @@
     - @users.each do |user|
       = render user.profile
 
+
+  %h1.page-header.text-overflow= t'metering_points'
+  .row
+    - @metering_point.subtree.each do |sub_metering_point|
+      = render sub_metering_point.decorate #unless metering_point == @location.metering_point && metering_point.mode == "in_out"
+
+    - if current_user.can_update?(@metering_point)
+      .new-metering-point.col-lg-3
+        .panel.panel-new
+          .panel-container
+            %span.text-1x= #@metering_point.new_sub_metering_point
 
 
 

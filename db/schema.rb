@@ -294,16 +294,6 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   add_index "ilns", ["organization_id"], name: "index_ilns_on_organization_id", using: :btree
 
-  create_table "locations", force: true do |t|
-    t.string   "token"
-    t.string   "slug"
-    t.boolean  "new_habitation",  default: false
-    t.date     "inhabited_since"
-    t.boolean  "active",          default: true
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "metering_point_operator_contracts", force: true do |t|
     t.string   "status"
     t.decimal  "price_cents",             precision: 16, scale: 0, default: 0

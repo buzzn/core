@@ -47,8 +47,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def editable_locations
-    Location.with_role(:manager, self).decorate
+  def editable_metering_points
+    MeteringPoint.with_role(:manager, self).decorate
   end
 
   def editable_groups
@@ -57,18 +57,6 @@ class User < ActiveRecord::Base
 
   def editable_devices
     Device.with_role(:manager, self).decorate
-  end
-
-  def editable_metering_points
-    if self.editable_locations.any?
-      if self.editable_locations.collect(&:metering_point).any?
-        self.editable_locations.collect(&:metering_point).compact.collect(&:subtree)
-      else
-        []
-      end
-    else
-      []
-    end
   end
 
   def editable_devices_by_mode(mode)
