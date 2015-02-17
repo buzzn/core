@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "activities", force: true do |t|
+  create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id"
     t.string   "trackable_type"
     t.integer  "owner_id"
@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
   add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
 
-  create_table "addresses", force: true do |t|
+  create_table "addresses", force: :cascade do |t|
     t.string   "address"
     t.string   "street_name"
     t.string   "street_number"
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   add_index "addresses", ["addressable_id", "addressable_type"], name: "index_addressable", using: :btree
 
-  create_table "areas", force: true do |t|
+  create_table "areas", force: :cascade do |t|
     t.string   "name"
     t.integer  "zoom",           default: 16
     t.string   "address"
@@ -68,7 +68,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   add_index "areas", ["group_id"], name: "index_areas_on_group_id", using: :btree
 
-  create_table "bank_accounts", force: true do |t|
+  create_table "bank_accounts", force: :cascade do |t|
     t.string   "holder"
     t.string   "iban"
     t.string   "bic"
@@ -82,7 +82,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   add_index "bank_accounts", ["bank_accountable_id", "bank_accountable_type"], name: "index_accountable", using: :btree
 
-  create_table "comments", force: true do |t|
+  create_table "comments", force: :cascade do |t|
     t.integer  "commentable_id",   default: 0
     t.string   "commentable_type"
     t.string   "title"
@@ -99,7 +99,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "comments", ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
-  create_table "contracting_parties", force: true do |t|
+  create_table "contracting_parties", force: :cascade do |t|
     t.string   "legal_entity"
     t.integer  "sales_tax_number"
     t.float    "tax_rate"
@@ -115,7 +115,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "contracting_parties", ["organization_id"], name: "index_contracting_parties_on_organization_id", using: :btree
   add_index "contracting_parties", ["user_id"], name: "index_contracting_parties_on_user_id", using: :btree
 
-  create_table "devices", force: true do |t|
+  create_table "devices", force: :cascade do |t|
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
     t.string   "manufacturer_product_serialnumber"
@@ -136,10 +136,10 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   add_index "devices", ["metering_point_id"], name: "index_devices_on_metering_point_id", using: :btree
 
-  create_table "distribution_system_operator_contracts", force: true do |t|
+  create_table "distribution_system_operator_contracts", force: :cascade do |t|
     t.string   "name"
     t.string   "status"
-    t.decimal  "price_cents",       precision: 16, scale: 0, default: 0
+    t.decimal  "price_cents",       precision: 16, default: 0
     t.string   "bdew_code"
     t.string   "edifact_email"
     t.string   "contact_name"
@@ -153,7 +153,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "distribution_system_operator_contracts", ["metering_point_id"], name: "index_dso_contracts_on_metering_point_id", using: :btree
   add_index "distribution_system_operator_contracts", ["organization_id"], name: "index_distribution_system_operator_contracts_on_organization_id", using: :btree
 
-  create_table "electricity_supplier_contracts", force: true do |t|
+  create_table "electricity_supplier_contracts", force: :cascade do |t|
     t.string   "tariff"
     t.integer  "price_cents",           default: 0,     null: false
     t.string   "price_currency",        default: "USD", null: false
@@ -178,7 +178,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "electricity_supplier_contracts", ["metering_point_id"], name: "index_electricity_supplier_contracts_on_metering_point_id", using: :btree
   add_index "electricity_supplier_contracts", ["organization_id"], name: "index_electricity_supplier_contracts_on_organization_id", using: :btree
 
-  create_table "equipment", force: true do |t|
+  create_table "equipment", force: :cascade do |t|
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
     t.string   "manufacturer_product_serialnumber"
@@ -195,7 +195,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   add_index "equipment", ["meter_id"], name: "index_equipment_on_meter_id", using: :btree
 
-  create_table "friendly_id_slugs", force: true do |t|
+  create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
     t.integer  "sluggable_id",              null: false
     t.string   "sluggable_type", limit: 50
@@ -208,7 +208,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
-  create_table "friendship_requests", force: true do |t|
+  create_table "friendship_requests", force: :cascade do |t|
     t.integer  "sender_id"
     t.integer  "receiver_id"
     t.string   "status"
@@ -220,7 +220,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "friendship_requests", ["receiver_id"], name: "index_friendship_requests_on_receiver_id", using: :btree
   add_index "friendship_requests", ["sender_id"], name: "index_friendship_requests_on_sender_id", using: :btree
 
-  create_table "friendships", force: true do |t|
+  create_table "friendships", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "friend_id"
     t.string   "status"
@@ -232,7 +232,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id", using: :btree
   add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
 
-  create_table "group_metering_point_requests", force: true do |t|
+  create_table "group_metering_point_requests", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "group_id"
     t.integer  "metering_point_id"
@@ -246,7 +246,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "group_metering_point_requests", ["metering_point_id"], name: "index_group_metering_point_requests_on_metering_point_id", using: :btree
   add_index "group_metering_point_requests", ["user_id"], name: "index_group_metering_point_requests_on_user_id", using: :btree
 
-  create_table "group_users", force: true do |t|
+  create_table "group_users", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "group_id"
     t.datetime "created_at"
@@ -256,7 +256,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "group_users", ["group_id"], name: "index_group_users_on_group_id", using: :btree
   add_index "group_users", ["user_id"], name: "index_group_users_on_user_id", using: :btree
 
-  create_table "groups", force: true do |t|
+  create_table "groups", force: :cascade do |t|
     t.string   "slug"
     t.string   "name"
     t.string   "logo"
@@ -269,7 +269,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
     t.datetime "updated_at"
   end
 
-  create_table "ilns", force: true do |t|
+  create_table "ilns", force: :cascade do |t|
     t.string   "bdew"
     t.string   "eic"
     t.string   "vnb"
@@ -282,17 +282,17 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   add_index "ilns", ["organization_id"], name: "index_ilns_on_organization_id", using: :btree
 
-  create_table "metering_point_operator_contracts", force: true do |t|
+  create_table "metering_point_operator_contracts", force: :cascade do |t|
     t.string   "status"
-    t.decimal  "price_cents",             precision: 16, scale: 0, default: 0
+    t.decimal  "price_cents",             precision: 16, default: 0
     t.string   "customer_number"
     t.string   "contract_number"
     t.string   "username"
     t.string   "encrypted_password"
     t.string   "encrypted_password_salt"
     t.string   "encrypted_password_iv"
-    t.boolean  "valid_credentials",                                default: false
-    t.boolean  "running",                                          default: true
+    t.boolean  "valid_credentials",                      default: false
+    t.boolean  "running",                                default: true
     t.integer  "metering_point_id"
     t.integer  "organization_id"
     t.integer  "group_id"
@@ -304,7 +304,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "metering_point_operator_contracts", ["metering_point_id"], name: "index_metering_point_operator_contracts_on_metering_point_id", using: :btree
   add_index "metering_point_operator_contracts", ["organization_id"], name: "index_metering_point_operator_contracts_on_organization_id", using: :btree
 
-  create_table "metering_point_users", force: true do |t|
+  create_table "metering_point_users", force: :cascade do |t|
     t.integer  "usage",             default: 100
     t.integer  "user_id"
     t.integer  "metering_point_id"
@@ -315,7 +315,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "metering_point_users", ["metering_point_id"], name: "index_metering_point_users_on_metering_point_id", using: :btree
   add_index "metering_point_users", ["user_id"], name: "index_metering_point_users_on_user_id", using: :btree
 
-  create_table "metering_points", force: true do |t|
+  create_table "metering_points", force: :cascade do |t|
     t.string   "slug"
     t.string   "uid"
     t.string   "name"
@@ -334,9 +334,9 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "metering_points", ["contract_id"], name: "index_metering_points_on_contract_id", using: :btree
   add_index "metering_points", ["group_id"], name: "index_metering_points_on_group_id", using: :btree
 
-  create_table "metering_service_provider_contracts", force: true do |t|
+  create_table "metering_service_provider_contracts", force: :cascade do |t|
     t.string   "status"
-    t.decimal  "price_cents",       precision: 16, scale: 0, default: 0
+    t.decimal  "price_cents",       precision: 16, default: 0
     t.string   "customer_number"
     t.string   "contract_number"
     t.string   "username"
@@ -350,7 +350,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "metering_service_provider_contracts", ["metering_point_id"], name: "index_metering_service_provider_contracts_on_metering_point_id", using: :btree
   add_index "metering_service_provider_contracts", ["organization_id"], name: "index_metering_service_provider_contracts_on_organization_id", using: :btree
 
-  create_table "meters", force: true do |t|
+  create_table "meters", force: :cascade do |t|
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
     t.string   "manufacturer_product_serialnumber"
@@ -375,7 +375,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   add_index "meters", ["metering_point_id"], name: "index_meters_on_metering_point_id", using: :btree
 
-  create_table "oauth_access_grants", force: true do |t|
+  create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", null: false
     t.integer  "application_id",    null: false
     t.string   "token",             null: false
@@ -388,7 +388,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   add_index "oauth_access_grants", ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
 
-  create_table "oauth_access_tokens", force: true do |t|
+  create_table "oauth_access_tokens", force: :cascade do |t|
     t.integer  "resource_owner_id"
     t.integer  "application_id"
     t.string   "token",             null: false
@@ -403,7 +403,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "oauth_access_tokens", ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id", using: :btree
   add_index "oauth_access_tokens", ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
 
-  create_table "oauth_applications", force: true do |t|
+  create_table "oauth_applications", force: :cascade do |t|
     t.string   "name",                      null: false
     t.string   "uid",                       null: false
     t.string   "secret",                    null: false
@@ -415,7 +415,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
-  create_table "organizations", force: true do |t|
+  create_table "organizations", force: :cascade do |t|
     t.string   "slug"
     t.string   "image"
     t.string   "name"
@@ -429,7 +429,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
     t.datetime "updated_at"
   end
 
-  create_table "profiles", force: true do |t|
+  create_table "profiles", force: :cascade do |t|
     t.string   "user_name"
     t.string   "slug"
     t.string   "title"
@@ -460,7 +460,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
   add_index "profiles", ["user_name"], name: "index_profiles_on_user_name", unique: true, using: :btree
 
-  create_table "registers", force: true do |t|
+  create_table "registers", force: :cascade do |t|
     t.string   "mode"
     t.string   "obis_index"
     t.boolean  "variable_tariff",   default: false
@@ -477,7 +477,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "registers", ["meter_id"], name: "index_registers_on_meter_id", using: :btree
   add_index "registers", ["metering_point_id"], name: "index_registers_on_metering_point_id", using: :btree
 
-  create_table "roles", force: true do |t|
+  create_table "roles", force: :cascade do |t|
     t.string   "name"
     t.integer  "resource_id"
     t.string   "resource_type"
@@ -488,7 +488,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
-  create_table "servicing_contracts", force: true do |t|
+  create_table "servicing_contracts", force: :cascade do |t|
     t.string   "tariff"
     t.string   "status"
     t.string   "signing_user"
@@ -510,7 +510,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "servicing_contracts", ["group_id"], name: "index_servicing_contracts_on_group_id", using: :btree
   add_index "servicing_contracts", ["organization_id"], name: "index_servicing_contracts_on_organization_id", using: :btree
 
-  create_table "standard_profiles", force: true do |t|
+  create_table "standard_profiles", force: :cascade do |t|
     t.string   "mode"
     t.string   "category"
     t.datetime "date"
@@ -519,7 +519,7 @@ ActiveRecord::Schema.define(version: 20150114092836) do
     t.datetime "updated_at"
   end
 
-  create_table "taggings", force: true do |t|
+  create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
     t.integer  "taggable_id"
     t.string   "taggable_type"
@@ -532,14 +532,14 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
   add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
 
-  create_table "tags", force: true do |t|
+  create_table "tags", force: :cascade do |t|
     t.string  "name"
     t.integer "taggings_count", default: 0
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
@@ -581,14 +581,14 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
-  create_table "users_roles", id: false, force: true do |t|
+  create_table "users_roles", id: false, force: :cascade do |t|
     t.integer "user_id"
     t.integer "role_id"
   end
 
   add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
 
-  create_table "versions", force: true do |t|
+  create_table "versions", force: :cascade do |t|
     t.string   "item_type",  null: false
     t.integer  "item_id",    null: false
     t.string   "event",      null: false
