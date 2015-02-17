@@ -68,18 +68,6 @@ ActiveRecord::Schema.define(version: 20150114092836) do
 
   add_index "areas", ["group_id"], name: "index_areas_on_group_id", using: :btree
 
-  create_table "assets", force: true do |t|
-    t.string   "image"
-    t.text     "description"
-    t.integer  "position"
-    t.integer  "assetable_id"
-    t.string   "assetable_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "assets", ["assetable_id", "assetable_type"], name: "index_assetable", using: :btree
-
   create_table "bank_accounts", force: true do |t|
     t.string   "holder"
     t.string   "iban"
