@@ -27,9 +27,7 @@
     %li.active
       %a{"data-toggle" => "tab", href: "#organization_properties"}
         = t'organization_properties'
-    %li
-      %a{"data-toggle" => "tab", href: "#assets"}
-        = t'assets'
+
 
   .tab-content
     #organization_properties.tab-pane.active
@@ -45,13 +43,6 @@
               %tr
                 %td= t('contracting_party')
                 %td= @organization.contracting_party
-
-    #assets.tab-pane
-      .assets
-        = render @organization.assets
-      - if user_signed_in? && current_user.can_update?(@organization)
-        = @organization.new_asset
-
 
 
 

@@ -238,12 +238,5 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
-  def background_image_url
-    if model.assets.any?
-      model.assets.first.image.col9.url
-    else
-      'http://placehold.it/830x480&text=bitte lade ein bild hoch.'
-    end
-  end
 
 end

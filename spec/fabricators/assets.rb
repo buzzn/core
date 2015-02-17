@@ -1,2 +1,0 @@
-Fabricator :asset do
-end

@@ -120,8 +120,7 @@ class GroupsController < InheritedResources::Base
       :private,
       :website,
       :description,
-      :metering_point_ids => [],
-      assets_attributes: [:id, :image, :description, :assetable_id, :assetable_type]
+      :metering_point_ids => []
     ]
   end
 end

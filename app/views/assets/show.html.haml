@@ -1,7 +1,0 @@
-.modal-content
-  .modal-header
-    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-    %h4.modal-title= t'asset'
-  .modal-body
-    = @asset.decorate.image_tag_large
-    %p= @asset.description

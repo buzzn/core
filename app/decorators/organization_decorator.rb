@@ -28,15 +28,5 @@ class OrganizationDecorator < Draper::Decorator
       })
   end
 
-  def new_asset
-    link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle'),
-      new_asset_path(assetable_id: model.id, assetable_type: 'Organization'),
-      {
-        :remote                     => true,
-        :class                      => 'content-plus',
-        'data-toggle'               => 'modal',
-        'data-target'               => '#myModal'
-      })
-  end
+
 end
