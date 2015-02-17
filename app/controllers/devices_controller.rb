@@ -1,4 +1,4 @@
-class DevicesController < InheritedResources::Base
+class DevicesController < ApplicationController
   before_filter :authenticate_user!
   respond_to :html, :js
 
@@ -6,87 +6,56 @@ class DevicesController < InheritedResources::Base
 
   def show
     @device         = Device.find(params[:id]).decorate
-    @metering_point = @device.metering_point if @device.metering_point
-    @location       = @metering_point.root.location.decorate if @metering_point
-    @users          = @metering_point.users if @metering_point
-    @group          = @metering_point.group if @metering_point
+    if @device.metering_point
+      @metering_point = @device.metering_point
+      @users          = @metering_point.users
+      @group          = @metering_point.group
+    end
     @manager        = @device.editable_users
     authorize_action_for(@device)
-    show!
   end
-  authority_actions :show => 'read'
 
-
-  def new_out
+  def new
     @device = Device.new
-    authorize_action_for(@device)
-    new!
+    authorize_action_for @device
   end
-  authority_actions :new_out => 'create'
 
-  def edit_out
+
+  def create
+    @device = Device.new(device_params)
+    authorize_action_for @device
+    if @device.save
+      current_user.add_role :manager, @device
+      respond_with @device.decorate
+    else
+      render :new
+    end
+  end
+
+
+  def edit
     @device = Device.find(params[:id]).decorate
-    authorize_action_for(@device)
-    edit!
+    authorize_action_for @device
   end
-  authority_actions :edit_out => 'update'
-
-
-
-  def new_in
-    @device = Device.new
-    authorize_action_for(@device)
-    new!
-  end
-  authority_actions :new_in => 'create'
-
-
-  def edit_in
-    @device = Device.find(params[:id]).decorate
-    authorize_action_for(@device)
-    edit!
-  end
-  authority_actions :edit_in => 'update'
 
 
   def update
-    update! do |success, failure|
-      @device = DeviceDecorator.new(@device)
-      success.js { @device }
-      failure.js {
-        render :edit_in if @device.mode == "in"
-        render :edit_out if @device.mode == "out"
-      }
-    end
-  end
-
-  def create
-    create! do |success, failure|
-      current_user.add_role :manager, @device
-      @device = DeviceDecorator.new(@device)
-      success.js { @device }
-      failure.js {
-        render :new_in if @device.mode == "in"
-        render :new_out if @device.mode == "out"
-      }
+    @device = Device.find(params[:id])
+    authorize_action_for @device
+    if @device.update_attributes(device_params)
+      respond_with @device
+    else
+      render :edit
     end
   end
 
 
 
-
-protected
-  def permitted_params
-    params.permit(:device => init_permitted_params)
-  end
 
 private
   def device_params
-    params.require(:device).permit(init_permitted_params)
-  end
-
-  def init_permitted_params
-    [
+    params.require(:device).permit(
+      :mode,
       :image,
       :law,
       :category,
@@ -99,8 +68,11 @@ private
       :watt_hour_pa,
       :watt_peak,
       :commissioning,
-      :metering_point_id,
-      :mode
-    ]
+      :metering_point_id
+      )
   end
+
+
+
+
 end

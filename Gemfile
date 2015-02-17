@@ -88,6 +88,7 @@ gem 'pusher'
 source 'http://rails-assets.org' do
   gem 'rails-assets-bootstrap'
   gem 'rails-assets-highcharts'
+  gem 'rails-assets-sparklines'
   gem 'rails-assets-underscore'
   gem 'rails-assets-jquery-readyselector'
   gem 'rails-assets-metisMenu'

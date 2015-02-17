@@ -11,6 +11,7 @@
       .boxed
         #content-container
           .page-alert
+          = render 'layouts/messages'
           = yield
         = render 'layouts/mainnav'
         = yield(:aside)

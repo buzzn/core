@@ -61,15 +61,6 @@
 
 #page-content
 
-  %h1.page-header.text-overflow= t'groups'
-  .row
-    = render @groups
-    - if current_user.can_create?(Group)
-      .new-device.col-lg-6
-        .panel.panel-new
-          .panel-container
-            %span.text-1x= new_group
-
 
   %h1.page-header.text-overflow= t'root_metering_points'
   .row
@@ -88,7 +79,7 @@
       .new-device.col-sm-6.col-md-3.col-lg-2
         .panel.panel-new
           .panel-container
-            %span.text-1x= new_in_device
+            %span.text-1x= new_device
 
 
   %h1.page-header.text-overflow= t'friends'
@@ -97,7 +88,14 @@
       = render user.profile
 
 
-
+  %h1.page-header.text-overflow= t'groups'
+  .row
+    = render @groups
+    - if current_user.can_create?(Group)
+      .new-device.col-lg-6
+        .panel.panel-new
+          .panel-container
+            %span.text-1x= new_group
 
 
 

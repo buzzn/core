@@ -1,0 +1,10 @@
+de:
+  flash:
+    actions:
+      create:
+        notice: "%{resource_name} wurde erfolgreich gespeichert."
+      update:
+        notice: "%{resource_name} wurde erfolgreich bearbeitet."
+      destroy:
+        notice: "%{resource_name} wurde erfolgreich gelöscht."
+        alert: "%{resource_name} konnte nicht gelöscht werden."

@@ -9,7 +9,9 @@ class Register < ActiveRecord::Base
   scope :in, -> { where(mode: :in) }
   scope :out, -> { where(mode: :out) }
 
-
+  def last_watt
+    4353
+  end
 
 
   def hour_to_minutes

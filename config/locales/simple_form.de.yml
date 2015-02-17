@@ -144,10 +144,8 @@ de:
     hints:
       defaults:
         username: 'Benutzername, mit dem Du dich einloggen kannst.'
-      location:
-        name: 'Frei wählbarer Name des Standorts'
       metering_point:
-        address_addition: 'Frei wählbarer Name des Zählpunkts, z.B. "3. OG links" oder "Dachboden"'
+        name: 'Name des Zählpunkts, z.B. Wohnung oder Solaranlage'
       metering_point_operator_contract:
         username: 'Benutzername, mit dem du dich beim Messstellenbetreiber einloggen kannst.'
 

@@ -10,7 +10,12 @@ class Device < ActiveRecord::Base
   validates :manufacturer_product_name, presence: true, length: { in: 2..30 }
   validates :manufacturer_name, allow_blank: true, length: { in: 2..30 }
 
+
+  validates :mode, presence: true
+
   validates :law, :category, :primary_energy, presence: true, if: :output?
+
+
 
   default_scope { order('created_at ASC') }
 
@@ -22,6 +27,13 @@ class Device < ActiveRecord::Base
     %w{
       eeg
       kwkg
+    }
+  end
+
+  def self.modes
+    %w{
+      in
+      out
     }
   end
 

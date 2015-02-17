@@ -438,7 +438,7 @@ private
   end
 
   def metering_point_params
-    params.require(:metering_point).permit( :uid, :mode, :address_addition, :type )
+    params.require(:metering_point).permit( :uid, :mode, :name, :type )
   end
 
   def electricity_supplier_contract_params

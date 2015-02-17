@@ -27,19 +27,21 @@ Buzzn::Application.routes.draw do
   end
 
 
+
   resources :meters
   resources :registers
   resources :equipments
+  resources :devices
+  resources :metering_service_provider_contracts
+  resources :metering_point_operator_contracts
+  resources :electricity_supplier_contracts
+  resources :servicing_contracts
+  resources :contracting_parties
+  resources :assets
+  resources :organizations
+  resources :comments, :only => [:create, :destroy]
+  resources :stream
 
-
-  resources :devices do
-    member do
-      get :new_out
-      get :edit_out
-      get :new_in
-      get :edit_in
-    end
-  end
 
 
   resources :friendships do
@@ -70,21 +72,8 @@ Buzzn::Application.routes.draw do
     end
   end
 
-  resources :metering_service_provider_contracts
-  resources :metering_point_operator_contracts
-  resources :electricity_supplier_contracts
-  resources :servicing_contracts
-  resources :contracting_parties
 
-  resources :assets
 
-  resources :organizations
-
-  resources :comments, :only => [:create, :destroy]
-
-  resources :startpage
-
-  resources :stream
 
 
   resources :wizard_consumers do

@@ -24,7 +24,7 @@
 #       expect(page).to have_content('You Have No Metering Point')
 #       click_on 'Create New Metering Point'
 
-#       fill_in :metering_point_address_addition,       with: 'Wohnung'
+#       fill_in :metering_point_name,       with: 'Wohnung'
 #       fill_in :metering_point_uid,                    with: 'DE123456789012345678901'
 
 #       click_on 'continue'
@@ -55,19 +55,19 @@
 #       visit "/locations/#{@location.slug}"
 #       click_on 'Create New Metering Point'
 
-#       fill_in :metering_point_address_addition,       with: ''
+#       fill_in :metering_point_name,       with: ''
 #       fill_in :metering_point_uid,                    with: 'DE123456789012345678901'
 
 #       click_on 'continue'
 #       expect(page).to have_content("can't be blank")
 
-#       fill_in :metering_point_address_addition,       with: 'Wohnung'
+#       fill_in :metering_point_name,       with: 'Wohnung'
 #       fill_in :metering_point_uid,                    with: 'DE12345678901234567890123456789012345'
 
 #       click_on 'continue'
 #       expect(page).to have_content('is too long')
 
-#       fill_in :metering_point_address_addition,       with: 'Wohnung'
+#       fill_in :metering_point_name,       with: 'Wohnung'
 #       fill_in :metering_point_uid,                    with: 'DE123456789012345678901'
 
 #       click_on 'continue'

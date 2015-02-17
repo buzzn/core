@@ -22,6 +22,7 @@
 //= require highcharts
 //= require highcharts_no_utc
 //= require chartkick
+//= require sparklines
 //= require tree.jquery
 //= require jquery-readyselector
 //= require select2

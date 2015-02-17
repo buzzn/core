@@ -20,7 +20,7 @@
         %h1= t'location_metering_point'
 
         = simple_form_for @metering_point, url: url_for( action: 'location_metering_point_update', controller: 'wizard_producers'), method: 'put'  do |f|
-          = f.input :address_addition
+          = f.input :name
           = f.input :uid
           = f.input :meter_type, include_blank: false, collection: MeteringPoint.types, input_html: { class: 'select2' }
           = f.submit t("continue"), class: 'btn btn-success pull-right', id: 'submit'

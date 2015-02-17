@@ -1,4 +1,4 @@
-class MeteringPointsController < InheritedResources::Base
+class MeteringPointsController < ApplicationController
   before_filter :authenticate_user!, except: [:chart, :latest_slp]
   respond_to :html, :json, :js
 
@@ -9,10 +9,64 @@ class MeteringPointsController < InheritedResources::Base
     @group          = @metering_point.group
     @meter          = @metering_point.meter
     authorize_action_for(@metering_point)
-    show!
   end
 
 
+  def new
+    @metering_point = MeteringPoint.new
+    authorize_action_for @metering_point
+  end
+
+
+  def create
+    @metering_point = MeteringPoint.new(metering_point_params)
+    authorize_action_for @metering_point
+    if @metering_point.save
+      current_user.add_role :manager, @metering_point
+      respond_with @metering_point.decorate
+    else
+      render :new
+    end
+  end
+
+
+  def edit
+    @metering_point = MeteringPoint.find(params[:id]).decorate
+    authorize_action_for(@metering_point)
+  end
+
+
+  def update
+    @metering_point = MeteringPoint.find(params[:id])
+    authorize_action_for @metering_point
+    if @metering_point.update_attributes(metering_point_params)
+      respond_with @metering_point
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    @metering_point = MeteringPoint.find(params[:id])
+    @metering_point.destroy
+    respond_with current_user.profile
+  end
+
+
+
+  def edit_users
+    # TODO: insert added user directly
+    @metering_point = MeteringPoint.find(params[:id]).decorate
+    authorize_action_for(@metering_point, action: 'edit_users')
+  end
+  authority_actions :edit_users => 'update'
+
+  def edit_devices
+    # TODO: insert added device directly
+    @metering_point = MeteringPoint.find(params[:id]).decorate
+    authorize_action_for(@metering_point, action: 'edit_devices')
+  end
+  authority_actions :edit_devices => 'update'
 
   def chart
     @metering_point = MeteringPoint.find(params[:id])
@@ -23,49 +77,11 @@ class MeteringPointsController < InheritedResources::Base
     render json: @chart_data.to_json
   end
 
+
   def latest_slp
     render json: Reading.latest_slp.to_json
   end
 
-
-  def edit
-    @metering_point = MeteringPoint.find(params[:id]).decorate
-    authorize_action_for(@metering_point)
-    edit!
-  end
-
-
-  def edit_users
-    # TODO: insert added user directly
-    @metering_point = MeteringPoint.find(params[:id]).decorate
-    authorize_action_for(@metering_point, action: 'edit_users')
-    edit!
-  end
-  authority_actions :edit_users => 'update'
-
-  def edit_devices
-    # TODO: insert added device directly
-    @metering_point = MeteringPoint.find(params[:id]).decorate
-    authorize_action_for(@metering_point, action: 'edit_devices')
-    edit!
-  end
-  authority_actions :edit_devices => 'update'
-
-
-  def update
-    update! do |success, failure|
-      @metering_point = MeteringPointDecorator.new(@metering_point).decorate
-      success.js { @metering_point }
-      failure.js { render :edit }
-    end
-  end
-
-  def create
-    create! do |success, failure|
-      success.js { location_path(@metering_point.location) }
-      failure.js { render :new }
-    end
-  end
 
   def update_parent
     @metering_point = MeteringPoint.find(params[:id])
@@ -76,36 +92,20 @@ class MeteringPointsController < InheritedResources::Base
   end
   authority_actions :update_parent => 'update'
 
-  def destroy
-    destroy! do |failure|
-      failure.js {
-        @metering_point = MeteringPointDecorator.new(@metering_point)
-        flash[:error] = t('cannot_delete_metering_point_while_running_contract_exists')
-        @metering_point
-      }
-    end
-  end
 
 
-protected
-  def permitted_params
-    params.permit(:metering_point => init_permitted_params)
-  end
+
 
 private
   def metering_point_params
-    params.require(:metering_point).permit(init_permitted_params)
-  end
-
-  def init_permitted_params
-    [
+    params.require(:metering_point).permit(
       :uid,
-      :address_addition,
+      :name,
       :image,
       :parent_id,
       :user_ids => [],
       :device_ids => []
-    ]
+    )
   end
 
 

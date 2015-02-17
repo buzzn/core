@@ -79,39 +79,26 @@ class MeteringPointDecorator < Draper::Decorator
 
 
   def link_to_delete
-    if model.electricity_supplier_contracts.collect(&:status).compact.include?("running") || metering_point_operator_contracts.collect(&:running).compact.include?(true)
-      link_to(
-        t('delete'),
-        model,
-        class: 'btn btn-danger disabled',
-        :data => {
-          :confirm => t('cannot_delete_metering_point_while_running_contract_exists')
-        })
-    else
-      link_to(
-        t('delete'),
-        model,
-        remote: true,
-        class: 'btn btn-danger',
-        :method => :delete,
-        :data => {
-          :confirm => t('are_you_sure')
-        })
-    end
+    link_to(
+      t('delete'),
+      model,
+      remote: false,
+      class: 'btn btn-danger',
+      :method => :delete,
+      :data => {
+        :confirm => t('are_you_sure')
+    })
   end
 
-  def name
-    address_addition
-  end
 
   def name_long
     case mode
     when 'in'
-      address_addition
+      name
     when 'in_out'
-      "#{t(mode)} #{generator_type_names}-#{address_addition}"
+      "#{t(mode)} #{generator_type_names}-#{name}"
     when 'out'
-      "#{t(mode)} #{generator_type_names} #{address_addition}"
+      "#{t(mode)} #{generator_type_names} #{name}"
     end
   end
 
@@ -162,14 +149,9 @@ class MeteringPointDecorator < Draper::Decorator
 
 
   def new_device
-    if model.output?
-      path = new_out_device_path(metering_point_id: model.id)
-    else
-      path = new_in_device_path(metering_point_id: model.id)
-    end
     link_to(
       t('add_device'),
-      path,
+      new_device_path(metering_point_id: model.id),
       {
         :remote       => true,
         :class        => 'sidebar-plus',

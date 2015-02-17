@@ -59,13 +59,6 @@ class User < ActiveRecord::Base
     Device.with_role(:manager, self).decorate
   end
 
-  def editable_devices_by_mode(mode)
-    if mode == "in_out"
-      mode = ["in", "out", "in_out"]
-    end
-    Device.with_role(:manager, self).where("mode in (?)", mode)
-  end
-
 
 private
   def create_complement_friendship(friend)

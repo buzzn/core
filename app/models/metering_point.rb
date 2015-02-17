@@ -14,7 +14,7 @@ class MeteringPoint < ActiveRecord::Base
   def slug_candidates
     [
       :uid,
-      :id
+      :name
     ]
   end
 
@@ -39,11 +39,12 @@ class MeteringPoint < ActiveRecord::Base
 
 
   validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
-  validates :address_addition, presence: true, length: { in: 2..30 }
+  validates :name, presence: true, length: { in: 2..30 }
 
   mount_uploader :image, PictureUploader
 
   default_scope { order('created_at ASC') }
+
 
 
   def meter
@@ -52,6 +53,13 @@ class MeteringPoint < ActiveRecord::Base
 
   def mode
     registers.select(:mode).map(&:mode).join('_')
+  end
+
+  def addable_devices
+    @users = []
+    @users << self.users
+    @users << User.with_role(:manager, self)
+    (@users).flatten.uniq.collect{|u| u.editable_devices }.flatten
   end
 
   def metering_point_operator_contract
@@ -87,6 +95,7 @@ class MeteringPoint < ActiveRecord::Base
     root_metering_points = location_ids.collect{|location_id| Location.find(location_id).metering_point.id}.join('|')
     MeteringPoint.joins(:registers).where("mode in (?)", modes).where("location_id in (?) OR ancestry SIMILAR TO ? OR ancestry SIMILAR TO ?", location_ids, subtree_metering_points, root_metering_points)
   }
+
 
 
 

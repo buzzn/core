@@ -12,11 +12,6 @@ class RegistersController < ApplicationController
     authorize_action_for @register
   end
 
-  def edit
-    @register = Register.find(params[:id]).decorate
-    authorize_action_for @register
-  end
-
 
   def create
     @register = Register.new(register_params)
@@ -27,6 +22,13 @@ class RegistersController < ApplicationController
       render :edit
     end
   end
+
+
+  def edit
+    @register = Register.find(params[:id]).decorate
+    authorize_action_for @register
+  end
+
 
   def update
     @register = Register.find(params[:id]).decorate

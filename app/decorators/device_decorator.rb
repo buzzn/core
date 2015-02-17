@@ -47,15 +47,9 @@ class DeviceDecorator < Draper::Decorator
 
 
   def link_to_edit
-    if model.output?
-      path = edit_out_device_path(model)
-    else
-      path = edit_in_device_path(model)
-    end
-
     link_to(
       t('edit'),
-      path,
+      edit_device_path(model),
       {
         :remote       => true,
         :class        => 'start_modal btn btn-primary btn-rounded btn-labeled fa fa-cog',

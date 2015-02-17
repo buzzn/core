@@ -1,7 +1,7 @@
 class MeteringPointSerializer < ActiveModel::Serializer
   attributes  :id,
               :uid,
-              :address_addition
+              :name
 
   has_one :meter
 end

@@ -9,7 +9,7 @@
         0%
     .forminput.box
       = simple_form_for @metering_point, remote: true, url: metering_point_update_wizard_metering_points_path(location_id: params[:location_id], parent_metering_point_id: params[:parent_metering_point_id]), method: 'put'  do |f|
-        = f.input :address_addition
+        = f.input :name
         = f.input :uid
         .modal-footer
           = f.submit t("continue"), class: 'btn btn-success', id: 'submit'

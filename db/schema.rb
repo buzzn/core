@@ -330,8 +330,8 @@ ActiveRecord::Schema.define(version: 20150114092836) do
   create_table "metering_points", force: true do |t|
     t.string   "slug"
     t.string   "uid"
+    t.string   "name"
     t.string   "image"
-    t.string   "address_addition"
     t.string   "voltage_level"
     t.date     "regular_reeding"
     t.string   "regular_interval"

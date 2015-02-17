@@ -12,15 +12,10 @@ class ProfilesController < InheritedResources::Base
     @profile              = Profile.find(params[:id]).decorate
     @friends              = @profile.user.friends.decorate
     @metering_points      = @profile.user.metering_points
-
     @root_metering_points = @profile.user.editable_metering_points
-
     @friendship_requests  = @profile.user.received_friendship_requests
-
     @groups               = @metering_points.collect(&:group).compact.uniq{|group| group.id} # TODO also include group interested
-
     @devices              = Device.with_role(:manager, @profile.user)
-
     @activities           = PublicActivity::Activity
                               .order("created_at desc")
                               .where(owner_id: @profile.user.id, owner_type: "User")

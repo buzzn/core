@@ -103,7 +103,7 @@ module ApplicationHelper
         'data-toggle'   => 'modal',
         'data-target'   => '#myModal',
         'data-tooltip'  => "true",
-        'title'         => t("add_new_location"),
+        'title'         => t("add_metering_point"),
       })
   end
 
@@ -122,31 +122,20 @@ module ApplicationHelper
   end
 
 
-  def new_in_device
+  def new_device
     link_to(
       content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
-      new_in_device_path(:id),
+      new_device_path,
       {
         :remote           => true,
         :class            => 'btn start_modal',
         'data-toggle'     => 'modal',
         'data-target'     => '#myModal',
         'data-tooltip'    => "true",
-        'title'           => t("add_new_in_device"),
+        'title'           => t("add_new_device"),
       })
   end
 
-  def new_out_device
-    link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
-      new_out_device_path(:id),
-      {
-        :remote       => true,
-        :class        => 'start_modal',
-        'data-toggle' => 'modal',
-        'data-target' => '#myModal'
-      })
-  end
 
   def new_organization
     link_to(
