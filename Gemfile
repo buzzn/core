@@ -92,6 +92,7 @@ source 'http://rails-assets.org' do
   gem 'rails-assets-underscore'
   gem 'rails-assets-jquery-readyselector'
   gem 'rails-assets-metisMenu'
+  gem 'rails-assets-nanoscroller'
 end
 
 

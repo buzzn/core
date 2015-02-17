@@ -26,7 +26,7 @@ class DevicesController < ApplicationController
     authorize_action_for @device
     if @device.save
       current_user.add_role :manager, @device
-      respond_with @device.decorate
+      @device.decorate
     else
       render :new
     end
@@ -34,7 +34,7 @@ class DevicesController < ApplicationController
 
 
   def edit
-    @device = Device.find(params[:id]).decorate
+    @device = Device.find(params[:id])
     authorize_action_for @device
   end
 
@@ -49,6 +49,12 @@ class DevicesController < ApplicationController
     end
   end
 
+
+  def destroy
+    @device = Device.find(params[:id])
+    @device.destroy
+    redirect_to current_user.profile
+  end
 
 
 

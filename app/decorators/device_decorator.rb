@@ -36,7 +36,7 @@ class DeviceDecorator < Draper::Decorator
     link_to(
       t('delete'),
       model,
-      remote: true,
+      remote: false,
       class: 'btn btn-danger',
       :method => :delete,
       :data => {

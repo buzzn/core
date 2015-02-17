@@ -16,9 +16,10 @@
 //= require jquery_ujs
 //= require jquery-ui
 //= require jquery.remotipart
-//= require jquery.nanoscroller.min
+
 
 //= require bootstrap
+//= require nanoscroller
 //= require highcharts
 //= require highcharts_no_utc
 //= require chartkick

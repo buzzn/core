@@ -13,9 +13,6 @@ class Device < ActiveRecord::Base
 
   validates :mode, presence: true
 
-  validates :law, :category, :primary_energy, presence: true, if: :output?
-
-
 
   default_scope { order('created_at ASC') }
 

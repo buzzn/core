@@ -509,6 +509,8 @@ GEM
     rails-assets-jquery-readyselector (0.1.0)
     rails-assets-metisMenu (1.1.3)
       rails-assets-bootstrap (~> 3.3.0)
+    rails-assets-nanoscroller (0.8.4)
+      rails-assets-jquery (>= 1.6)
     rails-assets-sparklines (1.0.0)
     rails-assets-underscore (1.7.0)
     rails-erd (1.1.0)
@@ -749,6 +751,7 @@ DEPENDENCIES
   rails-assets-highcharts!
   rails-assets-jquery-readyselector!
   rails-assets-metisMenu!
+  rails-assets-nanoscroller!
   rails-assets-sparklines!
   rails-assets-underscore!
   rails-erd

@@ -31,7 +31,7 @@ class MeteringPointsController < ApplicationController
 
 
   def edit
-    @metering_point = MeteringPoint.find(params[:id]).decorate
+    @metering_point = MeteringPoint.find(params[:id])
     authorize_action_for(@metering_point)
   end
 
