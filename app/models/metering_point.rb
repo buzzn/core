@@ -80,10 +80,10 @@ class MeteringPoint < ActiveRecord::Base
     if modes == "in_out"
       modes = ["in", "out", "in_out"]
     end
-    location_ids = user.editable_locations.collect{|location| location.id if location.metering_point}.compact
-    subtree_metering_points = location_ids.collect{|location_id| Location.find(location_id).metering_point.subtree_ids}.join('/%|') + "/%"
-    root_metering_points = location_ids.collect{|location_id| Location.find(location_id).metering_point.id}.join('|')
-    MeteringPoint.joins(:registers).where("mode in (?)", modes).where(group_id: nil).where("location_id in (?) OR ancestry SIMILAR TO ? OR ancestry SIMILAR TO ?", location_ids, subtree_metering_points, root_metering_points)
+    metering_points_ids = user.editable_metering_points.collect{|metering_point| metering_point.id if metering_point}.compact
+    subtree_metering_points = metering_points_ids.collect{|metering_points_id| MeteringPoint.find(metering_points_id).subtree_ids}.join('/%|') + "/%"
+    root_metering_points = metering_points_ids.collect{|metering_points_id| MeteringPoint.find(metering_points_id).id}.join('|')
+    MeteringPoint.joins(:registers).where("mode in (?)", modes).where(group_id: nil).where("metering_point_id in (?) OR ancestry SIMILAR TO ? OR ancestry SIMILAR TO ?", metering_points_ids, subtree_metering_points, root_metering_points)
   }
 
   scope :by_modes_and_user, lambda {|modes, user|

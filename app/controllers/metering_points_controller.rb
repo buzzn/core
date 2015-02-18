@@ -48,6 +48,7 @@ class MeteringPointsController < ApplicationController
 
   def destroy
     @metering_point = MeteringPoint.find(params[:id])
+    authorize_action_for @group
     @metering_point.destroy
     respond_with current_user.profile
   end

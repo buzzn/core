@@ -21,11 +21,6 @@
                 = @meter.link_to_edit
 
 
-.pad-ver
-  %ol.breadcrumb
-    %li= link_to "#{t('location')} (#{@meter.metering_point.root.location.name})", @meter.metering_point.root.location
-    %li= link_to "#{t('metering_point')} (#{@meter.metering_point.name})", @meter.metering_point
-    %li.active= "#{t('meter')} (#{@meter.name})"
 
 
 #page-content
@@ -86,11 +81,11 @@
 
   %h1.page-header.text-overflow= t'registers'
   .row
-    = render @meter.registers
+    - if @meter.registers.any?
+      = render @meter.registers
+    - else
 
-  / TODO not working ???
-  / %h1.page-header.text-overflow= t'equipments'
-  / .row
-  /   = render @meter.equipments
+
+
 
 

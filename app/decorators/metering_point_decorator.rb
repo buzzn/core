@@ -176,67 +176,71 @@ class MeteringPointDecorator < Draper::Decorator
 
 
 
+
   def edit_devices
     link_to(
-      t("edit_devices"),
+      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
       edit_devices_metering_point_path(model),
       {
-        :remote       => true,
-        :class        => 'start_modal',
-        'data-toggle' => "modal",
-        'data-target' => '#myModal'
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal',
+        'data-tooltip'  => "true",
+        'title'         => t("add_devices"),
       })
   end
 
+
+
   def new_metering_point_operator_contract
     link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle') + '  ' + t("add_metering_point_operator_contract"),
+      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
       new_metering_point_operator_contract_path(metering_point_id: model.id),
       {
-        :remote       => true,
-        :class        => 'start_modal',
-        'data-toggle' => 'modal',
-        'data-target' => '#myModal'
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal',
+        'data-tooltip'  => "true",
+        'title'         => t("add_metering_point_operator_contract"),
       })
   end
+
 
 
   def new_meter
     link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
       new_meter_path(metering_point_id: model.id),
       {
-        :remote       => true,
-        :class        => 'content-plus',
-        'data-toggle' => 'modal',
-        'data-target' => '#myModal'
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal',
+        'data-tooltip'  => "true",
+        'title'         => t("add_meter"),
       })
   end
+
+
+
 
   def new_sub_metering_point
     link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
       metering_point_wizard_metering_points_path(parent_metering_point_id: model.id),
       {
-        :remote       => true,
-        :class        => 'content-plus',
-        'data-toggle' => 'modal',
-        'data-target' => '#myModal'
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal',
+        'data-tooltip'  => "true",
+        'title'         => t("add_sub_metering_point"),
       })
   end
 
 
-  def new_asset
-    link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle'),
-      new_asset_path(assetable_id: model.id, assetable_type: 'MeteringPoint'),
-      {
-        :remote                     => true,
-        :class                      => 'content-plus',
-        'data-toggle'               => 'modal',
-        'data-target'               => '#myModal'
-      })
-  end
 
 
 end

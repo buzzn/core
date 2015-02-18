@@ -14,23 +14,30 @@ de:
   add_in_out_metering_point: Messpunkt für Einspeisezähler hinzufügen
   add_diff_metering_point: Messpunkt für Abgrenzungszähler hinzufügen
 
-
   out: Produktion
   in: Bezug
   in_out: Bezug/Produktion
   diff: Abgrenzungszähler
 
-
   add_metering_point: Messpunkt hinzufügen
+  add_sub_metering_point: Unter Messpunkt hinzufügen
+  sub_metering_points: Unter Messpunkte
 
-  add_new_location: Neuen Standort hinzufügen.
+  new_meter: neuer Zähler
+  add_new_meter: neuer Zähler hinzufügen
+  add_meter: Zähler hinzufügen
 
-  edit_location: Standort bearbeiten.
+  new_device: neuer Gerät
+  add_new_device: Neues Gerät hinzufügen
+  add_device: Gerät hinzufügen
+  add_devices: Geräte hinzufügen
+  edit_devices: Geräte bearbeiten
+  connect_devices: Geräte verbinden
+
 
   email: E-Mail Addresse
   password: Password
   remember_me: Eingeloggt bleiben
-
 
   find_a_friend: Freund Finden
   wind: Windkraftanlage
@@ -189,9 +196,6 @@ de:
   devices: Geräte
   explore: Entdecken
   contracts: Verträge
-  belongs_to_location: Gehört zum Standort
-  locations: Standorte
-  new_location: Neuer Standort
   listing_profiles: Liste aller Profile
   send_friend_request: Freundschaftsanfrage senden
   complete_user: Daten vervollständigen
@@ -202,16 +206,12 @@ de:
   has_updated: aktualisierte
   metering_point: Zählpunkt
   contracting_party_legal_entity: Vertragspartner
-  location_address: Addresse
   contracting_party: Vertragspartner
-  location_habitation: Wohnung am Standort
-  location_metering_point: Zählpunkt am Standort
   metering_point_current_supplier: Aktueller Stromlieferant am Zählpunkt
   contracting_party_bank_account: Bankverbindung des Vertragspartners
   complete_contract: Vertragsabschluss
   has_deleted: löschte
   has_created: erzeugte
-  location: Standort
   bank_account: Bankverbindung
   editing_contracting_party: Vertragspartner bearbeiten
   organization: Organisation
@@ -246,7 +246,6 @@ de:
   didnt_receive_confirmation_instructions: Bestätigungs-Email nicht erhalten
   didnt_receive_unlock_instructions: Entsperrungs-Email nicht erhalten
   no_devices_available: Keine Geräte vorhanden
-  no_locations_available: Kein Standort vorhanden
   no_metering_points_available: Kein Zählpunkt vorhanden
   the_metering_point: den Zählpunkt
   the_group: die Gruppe
@@ -263,7 +262,6 @@ de:
   has_joined_the_group_with_a_metering_point_html: "ist der Gruppe %{group_name} mit einem Zählpunkt beigetreten"
   energy_producers: Stromgeber
   energy_consumers: Stromnehmer
-  add_new_device: Neues Gerät hinzufügen
   device_properties: Geräteeigenschaften
   mode: Richtung
   law: Gesetz
@@ -290,18 +288,12 @@ de:
   belongs_to_metering_point: Gehört zum Zählpunkt
   new_asset: Neues Bild
   a_metering_point: einen Zählpunkt
-  has_created_the_location: erzeugte den Standort
-  has_created_a_location_which_has_been_removed: "erzeugte einen Standort, der bereits gelöscht wurde"
-  has_deleted_a_location: löschte einen Standort
-  the_location: den Standort
   meter: Zähler
   register: Zählwerk
   registers: Zählwerke
   add_register: Zählwerk hinzufügen
   remove_register: Zählwerk löschen
   device: Gerät
-  you_have_no_location: Sie haben noch keinen Standort erstellt
-  create_new_location: Neuen Standort hinzufügen
   you_have_no_metering_point: Dieser Standort hat noch keinen Zählpunkt
   create_new_metering_point: Neuen Zählpunkt hinzufügen
   take_current: Strom nehmen
@@ -372,13 +364,11 @@ de:
   add_new_out_device: Neue Stromerzeugungsanlage hinzufügen
   sent_request_with_metering_point: "Anfrage mit Zählpunkt %{metering_point_name} gesendet"
   metering_point_tree: Zählpunktanordnung
-  location_created_successfully: Der Standort wurde erfolgreich erstellt
   metering_point_created_successfully: Der Zählpunkt wurde erfolgreich erstellt
   manufacturer: Hersteller
   slp: SLP
   edit_contract: Vertrag bearbeiten
   hour_to_minutes: Stunde in Minuten
-  cannot_delete_location_while_metering_point_exists: "Der Standort kann nicht gelöscht werden, solange er noch einen Zählpunkt besitzt."
   cannot_delete_metering_point_while_running_contract_exists: "Der Zählpunkt kann nicht gelöscht werden, solange er noch laufende Verträge besitzt."
   cannot_delete_group_while_running_contracts_exists: "Die Gruppe kann nicht gelöscht werden, solange sie noch laufende Verträge besitzt."
 

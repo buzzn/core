@@ -72,14 +72,19 @@
             #month-to-days.tab-pane.fade= @metering_point.chart('month_to_days')
             #year-to-months.tab-pane.fade= @metering_point.chart('year_to_months')
 
-  %h1.page-header.text-overflow= t'registers'
-  .row
-    = render @metering_point.registers
 
   %h1.page-header.text-overflow= t'meter'
-  - if @meter
-    .row
+  .row
+    - if @meter
       = render @meter
+    - else
+      - if current_user.can_update?(@metering_point)
+        .new-metering-point.col-sm-6.col-md-4.col-lg-3
+          .panel.panel-new
+            .panel-container
+              %span.text-1x= @metering_point.new_meter
+
+
 
   %h1.page-header.text-overflow= t'devices'
   .row
@@ -107,7 +112,7 @@
       .new-metering-point.col-lg-3
         .panel.panel-new
           .panel-container
-            %span.text-1x= @metering_point.new_metering_point
+            %span.text-1x= @metering_point.new_sub_metering_point
 
 
 

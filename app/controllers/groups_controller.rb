@@ -1,4 +1,4 @@
-class GroupsController < InheritedResources::Base
+class GroupsController < ApplicationController
   respond_to :html, :js
 
   def index
@@ -66,37 +66,54 @@ class GroupsController < InheritedResources::Base
     end
 
     gon.push({ in_metering_point_data: in_metering_point_data,
-               out_metering_point_data: out_metering_point_data,
-               sn_img: asset_path('sn_default.jpg') })
+               out_metering_point_data: out_metering_point_data })
 
   end
+
+
+
+  def new
+    @group = Group.new
+    authorize_action_for @group
+  end
+
+  def create
+    @group = Group.new(group_params)
+    authorize_action_for @group
+    if @group.save
+      current_user.add_role :manager, @group
+      respond_with @group.decorate
+    else
+      render :new
+    end
+  end
+
+
 
   def edit
     @group = Group.find(params[:id]).decorate
     authorize_action_for(@group)
-    edit!
   end
 
-  def create
-    create! do |success, failure|
-      success.js {
-        current_user.add_role :manager, @group
-        @group = GroupDecorator.new(@group)
-        @group
-      }
-      failure.js { render :new }
+  def update
+    @group = Group.find(params[:id])
+    authorize_action_for @group
+    if @group.update_attributes(group_params)
+      respond_with @group
+    else
+      render :edit
     end
   end
+
 
   def destroy
-    destroy! do |failure|
-      failure.js {
-        @group = LocationDecorator.new(@group)
-        flash[:error] = t('cannot_delete_group_while_running_contracts_exists')
-        @group
-      }
-    end
+    @group = Group.find(params[:id])
+    authorize_action_for @group
+    @group.destroy
+    respond_with current_user.profile
   end
+
+
 
   def cancel_membership
     @group = Group.find(params[:id])
@@ -105,14 +122,15 @@ class GroupsController < InheritedResources::Base
     redirect_to group_path(@group)
   end
 
-  def permitted_params
-    params.permit(:group => init_permitted_params)
-  end
 
-  private
 
-  def init_permitted_params
-    [
+
+
+
+
+private
+  def group_params
+    params.require(:group).permit(
       :id,
       :name,
       :image,
@@ -121,6 +139,15 @@ class GroupsController < InheritedResources::Base
       :website,
       :description,
       :metering_point_ids => []
-    ]
+    )
   end
+
+
+
 end
+
+
+
+
+
+

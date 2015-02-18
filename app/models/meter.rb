@@ -28,8 +28,9 @@ class Meter < ActiveRecord::Base
 
   def self.manufacturers
     %w{
-      ferraris
-      smart_meter
+      EasyMeter
+      Ferraris
+      other
     }
   end
 

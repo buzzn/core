@@ -1,17 +1,4 @@
+= f.input :image
+= f.input :manufacturer_product_serialnumber
 = f.input :manufacturer_name, collection: Meter.manufacturers
 = f.input :manufacturer_product_name
-= f.input :manufacturer_product_serialnumber
-
-%h3=t('registers')
-#registers
-  = f.simple_fields_for :registers do |r|
-    = render 'meters/register_fields', f: r
-  .links
-    = link_to_add_association t('add_register'), f, :registers
-
-%h3=t('equipments')
-#equipments
-  = f.simple_fields_for :equipments do |r|
-    = render 'meters/equipment_fields', f: r
-  .links
-    = link_to_add_association t('add_equipment'), f, :equipments

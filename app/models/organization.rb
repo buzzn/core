@@ -5,6 +5,8 @@ class Organization < ActiveRecord::Base
 
   acts_as_taggable_on :contract_types
 
+  mount_uploader :image, PictureUploader
+
   has_many :distribution_system_operator_contracts
   has_many :electricity_supplier_contracts
   has_many :metering_service_provider_contracts
