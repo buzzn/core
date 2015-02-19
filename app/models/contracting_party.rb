@@ -5,7 +5,7 @@ class ContractingParty < ActiveRecord::Base
   belongs_to :user
   belongs_to :metering_point
 
-  has_many :electricity_supplier_contracts
+  has_many :contracts
 
   has_one :address, as: :addressable
   accepts_nested_attributes_for :address, :reject_if => :all_blank

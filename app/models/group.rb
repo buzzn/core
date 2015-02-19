@@ -19,8 +19,7 @@ class Group < ActiveRecord::Base
   mount_uploader :logo, PictureUploader
   mount_uploader :image, PictureUploader
 
-  has_one  :metering_point_operator_contract, dependent: :destroy
-  has_one  :servicing_contract, dependent: :destroy
+  has_many  :contracts, dependent: :destroy
   has_one  :area
   has_many :metering_points
 

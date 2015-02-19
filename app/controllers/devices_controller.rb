@@ -3,7 +3,6 @@ class DevicesController < ApplicationController
   respond_to :html, :js
 
 
-
   def show
     @device         = Device.find(params[:id]).decorate
     if @device.metering_point

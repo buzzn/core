@@ -26,10 +26,7 @@ class MeteringPoint < ActiveRecord::Base
   belongs_to :location
   belongs_to :group
   has_many :registers
-  has_many :electricity_supplier_contracts,         dependent: :destroy
-  has_many :metering_service_provider_contracts,    dependent: :destroy
-  has_many :metering_point_operator_contracts,      dependent: :destroy
-  has_many :distribution_system_operator_contracts, dependent: :destroy
+  has_many :contracts,         dependent: :destroy
   has_many :devices
   has_many :metering_point_users
   has_many :users, through: :metering_point_users, dependent: :destroy

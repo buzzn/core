@@ -11,9 +11,8 @@ end
 
 
 Fabricator :group_hopf, from: :group do
-  name                              'Hopf'
-  metering_point_operator_contract  { Fabricate(:mspc_buzzn_metering) }
-  servicing_contract                { Fabricate(:servicing_contract) }
+  name 'Hopf'
+  contracts { [Fabricate(:mspc_buzzn_metering), Fabricate(:servicing_contract)] }
 end
 
 Fabricator :group_home_of_the_brave, from: :group do
@@ -29,7 +28,7 @@ Fabricator :group_wagnis4, from: :group do
   name        'Wagnis 4'
   website     'http://www.wagnis.org/wagnis/wohnprojekte/wagnis-4.html'
   description { "Dies ist der Localpool von Wagnis 4." }
-  servicing_contract { Fabricate(:servicing_contract) }
+  contracts { [Fabricate(:servicing_contract)] }
   logo      { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'wagnis4', 'logo.png'))}
   image     { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'wagnis4', 'image.png')) }
 end

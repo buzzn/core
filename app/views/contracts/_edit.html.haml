@@ -1,10 +1,10 @@
 .modal-content
   .modal-header
     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-    %h4.modal-title= t'edit_servicing_contract'
+    %h4.modal-title= t'edit_contract'
   .modal-body
-    = simple_form_for @servicing_contract, remote: true do |f|
-      = render 'servicing_contracts/form_fields', f: f
+    = simple_form_for @contract, remote: true do |f|
+      = render 'contracts/form_fields', f: f
       .modal-footer
         = f.button :submit, id: 'submit', class: 'btn btn-success'
-        = @servicing_contract.link_to_delete
+

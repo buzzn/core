@@ -10,7 +10,7 @@ def user_with_metering_point
   user                        = Fabricate(:user)
   user.contracting_party      = contracting_party
   metering_point.users        << user
-  contracting_party.electricity_supplier_contracts << metering_point.electricity_supplier_contracts.first
+  contracting_party.contracts << metering_point.contracts.electricity_suppliers.first
 
   user.add_role :manager, metering_point
   return user, metering_point
@@ -53,20 +53,20 @@ buzzn_team_names.each do |user_name|
   case user_name
   when 'justus'
     root_mp = mp_z1 = Fabricate(:mp_z1)
-    mp_z1.metering_point_operator_contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z1)
-    user.contracting_party.electricity_supplier_contracts << mp_z1.electricity_supplier_contracts.first
+    mp_z1.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z1)
+    user.contracting_party.contracts << mp_z1.contracts.metering_point_operators.first
     mp_z2 = Fabricate(:mp_z2)
-    mp_z2.metering_point_operator_contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z2)
-    user.contracting_party.electricity_supplier_contracts << mp_z2.electricity_supplier_contracts.first
+    mp_z2.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z2)
+    user.contracting_party.contracts << mp_z2.contracts.metering_point_operators.first
     mp_z3 = Fabricate(:mp_z3)
-    mp_z3.metering_point_operator_contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z3)
-    user.contracting_party.electricity_supplier_contracts << mp_z3.electricity_supplier_contracts.first
+    mp_z3.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z3)
+    user.contracting_party.contracts << mp_z3.contracts.metering_point_operators.first
     mp_z4 = Fabricate(:mp_z4)
-    mp_z4.metering_point_operator_contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z4)
-    user.contracting_party.electricity_supplier_contracts << mp_z4.electricity_supplier_contracts.first
+    mp_z4.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z4)
+    user.contracting_party.contracts << mp_z4.contracts.metering_point_operators.first
     mp_z5 = Fabricate(:mp_z5)
-    mp_z5.metering_point_operator_contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z5)
-    user.contracting_party.electricity_supplier_contracts << mp_z5.electricity_supplier_contracts.first
+    mp_z5.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z5)
+    user.contracting_party.contracts << mp_z5.contracts.metering_point_operators.first
 
     mp_z2.update_attribute :parent, mp_z1
     mp_z3.update_attribute :parent, mp_z5
@@ -90,15 +90,15 @@ buzzn_team_names.each do |user_name|
     root_mp.devices << @gocycle
   when 'christian'
     root_mp = Fabricate(:mp_60138988)
-    root_mp.metering_point_operator_contracts << Fabricate(:mpoc_christian, metering_point: root_mp)
+    root_mp.contracts << Fabricate(:mpoc_christian, metering_point: root_mp)
     user.add_role :admin # christian is admin
   when 'philipp'
     root_mp = Fabricate(:mp_60009269)
-    root_mp.metering_point_operator_contracts << Fabricate(:mpoc_philipp, metering_point: root_mp)
+    root_mp.contracts << Fabricate(:mpoc_philipp, metering_point: root_mp)
   when 'stefan'
     @bhkw_stefan       = Fabricate(:bhkw_stefan)
     @forstenrieder_weg_mp = root_mp = Fabricate(:mp_stefans_bhkw)
-    root_mp.metering_point_operator_contracts << Fabricate(:mpoc_stefan, metering_point: root_mp)
+    root_mp.contracts << Fabricate(:mpoc_stefan, metering_point: root_mp)
     root_mp.devices << @bhkw_stefan
     user.add_role :manager, @bhkw_stefan
   else
@@ -107,11 +107,8 @@ buzzn_team_names.each do |user_name|
   root_mp.users << user
   user.add_role :manager, root_mp
 
-  # add user.contracting_party location.metering_point.contracts
-  root_mp.electricity_supplier_contracts.first.contracting_party = user.contracting_party
-  root_mp.electricity_supplier_contracts.first.save
-
-  root_mp.create_activity key: 'location.create', owner: user, recipient: root_mp
+  root_mp.contracts.electricity_suppliers.first.contracting_party = user.contracting_party
+  root_mp.contracts.electricity_suppliers.first.save
 end
 
 puts 'friendships for buzzn team ...'
@@ -126,27 +123,27 @@ end
 #hof_butenland
 jan_gerdes = Fabricate(:jan_gerdes)
 mp_hof_butenland_wind   = Fabricate(:mp_hof_butenland_wind)
-mp_hof_butenland_wind.metering_point_operator_contracts << Fabricate(:metering_point_operator_contract, metering_point: mp_hof_butenland_wind)
+mp_hof_butenland_wind.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_hof_butenland_wind)
 jan_gerdes.add_role :manager, mp_hof_butenland_wind
 device = Fabricate(:hof_butenland_wind)
 mp_hof_butenland_wind.devices << device
 jan_gerdes.add_role :manager, device
 
-mp_hof_butenland_wind.electricity_supplier_contracts.first.contracting_party = jan_gerdes.contracting_party
-mp_hof_butenland_wind.electricity_supplier_contracts.first.save
+mp_hof_butenland_wind.contracts.metering_point_operators.first.contracting_party = jan_gerdes.contracting_party
+mp_hof_butenland_wind.contracts.metering_point_operators.first.save
 
 
 # karin
 karin = Fabricate(:karin)
 mp_pv_karin = Fabricate(:mp_pv_karin)
-mp_pv_karin.metering_point_operator_contracts << Fabricate(:mpoc_karin, metering_point: mp_pv_karin)
+mp_pv_karin.contracts << Fabricate(:mpoc_karin, metering_point: mp_pv_karin)
 mp_pv_karin.users << karin
 karin.add_role :manager, mp_pv_karin
 pv_karin = Fabricate(:pv_karin)
 karin.add_role :manager, pv_karin
 mp_pv_karin.devices << pv_karin
-mp_pv_karin.electricity_supplier_contracts.first.contracting_party = karin.contracting_party
-mp_pv_karin.electricity_supplier_contracts.first.save
+mp_pv_karin.contracts.metering_point_operators.first.contracting_party = karin.contracting_party
+mp_pv_karin.contracts.metering_point_operators.first.save
 
 @forstenrieder_weg_mp.users << karin
 
@@ -162,10 +159,10 @@ end
 christian_schuetze = Fabricate(:christian_schuetze)
 mp_cs_1 = Fabricate(:mp_cs_1)
 christian_schuetze.add_role :manager, mp_cs_1
-mp_cs_1.metering_point_operator_contracts << Fabricate(:mpoc_justus, metering_point: mp_cs_1)
+mp_cs_1.contracts << Fabricate(:mpoc_justus, metering_point: mp_cs_1)
 mp_cs_1.users << christian_schuetze
-mp_cs_1.electricity_supplier_contracts.first.contracting_party = christian_schuetze.contracting_party
-mp_cs_1.electricity_supplier_contracts.first.save
+mp_cs_1.contracts.metering_point_operators.first.contracting_party = christian_schuetze.contracting_party
+mp_cs_1.contracts.metering_point_operators.first.save
 
 
 # felix zieht in forstenrieder_weg ein
@@ -221,7 +218,7 @@ group_hopf.metering_points << mp_60009316
 group_hopf.metering_points << mp_60009272
 group_hopf.metering_points << mp_60009348
 group_hopf.metering_points << mp_hans_dieter_hopf
-group_hopf.metering_point_operator_contract = Fabricate(:mpoc_buzzn_metering, group: group_hopf)
+group_hopf.contracts << Fabricate(:mpoc_buzzn_metering, group: group_hopf)
 
 
 
@@ -385,7 +382,7 @@ group_wagnis4.metering_points << mp_60009429
 group_wagnis4.metering_points << mp_60009393
 group_wagnis4.metering_points << mp_60009442
 group_wagnis4.metering_points << mp_60009441
-group_wagnis4.metering_point_operator_contract = Fabricate(:mpoc_buzzn_metering, group: group_wagnis4)
+group_wagnis4.contracts       << Fabricate(:mpoc_buzzn_metering, group: group_wagnis4)
 
 
 

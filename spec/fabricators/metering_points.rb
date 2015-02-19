@@ -1,9 +1,9 @@
 Fabricator :metering_point do
   name  'Verbrauch'
   i = 1
-  uid                                    {"DE001068825151000000000000#{2677114 + (i += 1)}"}
-  registers                              { Fabricate(:meter).registers }
-  electricity_supplier_contracts         { [Fabricate(:electricity_supplier_contract)] }
+  uid        {"DE001068825151000000000000#{2677114 + (i += 1)}"}
+  registers  { Fabricate(:meter).registers }
+  contracts  { [ Fabricate(:electricity_supplier_contract)] }
 end
 
 
@@ -166,7 +166,7 @@ Fabricator :mp_60118470, from: :metering_point do
   name  'Keller'
   image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'hopfstr', 'in_out.jpg' )) }
   registers { Fabricate(:easymeter_60118470).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 # Z2  Nr. 60009316 für BHKW Erzeugung (Einrichtungszähler Einspeisung)
@@ -175,7 +175,7 @@ Fabricator :mp_60009316, from: :metering_point do
   name  'Keller'
   image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'hopfstr', 'bhkw.jpg' ))}
   registers { Fabricate(:easymeter_60009316).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 # ZN1 Nr. 60009272 für Thomas Hopf  (Einrichtungszähler Bezug)
@@ -184,7 +184,7 @@ Fabricator :mp_60009272, from: :metering_point do
   name  'Wohnung'
   image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'hopfstr', 'wohnung_thomas.jpg' ))}
   registers { Fabricate(:easymeter_60009272).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 # ZN2 Nr. 60009348 für Mauela Beier (Einrichtungszähler Bezug)
@@ -193,7 +193,7 @@ Fabricator :mp_60009348, from: :metering_point do
   name  'Restaurant Beier'
   image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'hopfstr', 'restaurant.jpg' ))}
   registers { Fabricate(:easymeter_60009348).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 # Wohnung Hr. Hopf ("ZN3") ist ungezählt kann aber berechnet werden
@@ -201,7 +201,7 @@ Fabricator :mp_hans_dieter_hopf, from: :metering_point do
   address  { Fabricate(:address_hopf) }
   name  'Wohnung'
   image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'hopfstr', 'wohnung_hans.jpg' ))}
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
   registers { Fabricate(:virtual_meter_hopf).registers }
 end
 
@@ -213,7 +213,7 @@ Fabricator :mp_60009416, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Wohnung'
   registers { Fabricate(:easymeter_60009416).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - West Wohnung 03 - Manuel Dmoch
@@ -221,7 +221,7 @@ Fabricator :mp_60009419, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Wohnung'
   registers { Fabricate(:easymeter_60009419).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - West Wohnung 04 - Sibo Ahrens
@@ -229,7 +229,7 @@ Fabricator :mp_60009415, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Wohnung'
   registers { Fabricate(:easymeter_60009415).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - West Wohnung 05 - Nicolas Sadoni
@@ -237,7 +237,7 @@ Fabricator :mp_60009418, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Wohnung'
   registers { Fabricate(:easymeter_60009418).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - West Wohnung 11 - Josef Neu
@@ -245,7 +245,7 @@ Fabricator :mp_60009411, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Wohnung'
   registers { Fabricate(:easymeter_60009411).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - West Wohnung 13 - Elisabeth Christiansen
@@ -253,7 +253,7 @@ Fabricator :mp_60009410, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Wohnung'
   registers { Fabricate(:easymeter_60009410).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - West Wohnung 12 - Florian Butz
@@ -261,7 +261,7 @@ Fabricator :mp_60009407, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Wohnung'
   registers { Fabricate(:easymeter_60009407).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - West Wohnung 15 - Ulrike Bez
@@ -269,7 +269,7 @@ Fabricator :mp_60009409, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Wohnung'
   registers { Fabricate(:easymeter_60009409).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - West Wohnung 15 - Rudolf Hassenstein
@@ -277,7 +277,7 @@ Fabricator :mp_60009435, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Wohnung'
   registers { Fabricate(:easymeter_60009435).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Allgemeinstrom Haus West
@@ -285,7 +285,7 @@ Fabricator :mp_60009420, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Allgemeinstrom Haus West'
   registers { Fabricate(:easymeter_60009420).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - PV
@@ -293,7 +293,7 @@ Fabricator :mp_60118460, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'PV'
   registers { Fabricate(:easymeter_60118460).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 
@@ -304,7 +304,7 @@ Fabricator :mp_60009386, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Allgemeinstrom Haus Nord'
   registers { Fabricate(:easymeter_60009386).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Allgemeinstrom Haus Ost
@@ -312,7 +312,7 @@ Fabricator :mp_60009445, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Allgemeinstrom Haus Nord'
   registers { Fabricate(:easymeter_60009445).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Gäste Haus Ost 1+2
@@ -320,7 +320,7 @@ Fabricator :mp_60009446, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Gäste Haus Ost 1+2'
   registers { Fabricate(:easymeter_60009446).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Laden EG
@@ -328,7 +328,7 @@ Fabricator :mp_60009390, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Laden EG'
   registers { Fabricate(:easymeter_60009390).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Nord Wohnung 01
@@ -336,7 +336,7 @@ Fabricator :mp_60009387, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Nord Wohnung 01'
   registers { Fabricate(:easymeter_60009387).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Nord Wohnung 10
@@ -344,7 +344,7 @@ Fabricator :mp_60009438, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Nord Wohnung 10'
   registers { Fabricate(:easymeter_60009438).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Nord Wohnung 12
@@ -352,7 +352,7 @@ Fabricator :mp_60009440, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Nord Wohnung 12'
   registers { Fabricate(:easymeter_60009440).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Nord Wohnung 15
@@ -360,7 +360,7 @@ Fabricator :mp_60009404, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Nord Wohnung 15'
   registers { Fabricate(:easymeter_60009404).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Nord Wohnung 17
@@ -368,7 +368,7 @@ Fabricator :mp_60009405, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Nord Wohnung 17'
   registers { Fabricate(:easymeter_60009405).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Nord Wohnung 18
@@ -376,7 +376,7 @@ Fabricator :mp_60009422, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Nord Wohnung 18'
   registers { Fabricate(:easymeter_60009422).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Nord Wohnung 19
@@ -384,7 +384,7 @@ Fabricator :mp_60009425, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Nord Wohnung 19'
   registers { Fabricate(:easymeter_60009425).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Nord Wohnung 20
@@ -392,7 +392,7 @@ Fabricator :mp_60009402, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Nord Wohnung 20'
   registers { Fabricate(:easymeter_60009402).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Ost 03
@@ -400,7 +400,7 @@ Fabricator :mp_60009429, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Ost 03'
   registers { Fabricate(:easymeter_60009429).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Ost Wohnung 12
@@ -408,7 +408,7 @@ Fabricator :mp_60009393, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Ost Wohnung 12'
   registers { Fabricate(:easymeter_60009393).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Ost Wohnung 13
@@ -416,7 +416,7 @@ Fabricator :mp_60009442, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Ost Wohnung 13'
   registers { Fabricate(:easymeter_60009442).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Ost Wohnung 15
@@ -424,7 +424,7 @@ Fabricator :mp_60009441, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Ost Wohnung 15'
   registers { Fabricate(:easymeter_60009441).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 #Wagnis 4 - Übergabe
@@ -432,7 +432,7 @@ Fabricator :mp_60118484, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Übergabe'
   registers { Fabricate(:easymeter_60118484).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 
@@ -442,7 +442,7 @@ end
 Fabricator :mp_60051562, from: :metering_point do
   name  'Wasserkraft'
   registers { Fabricate(:easymeter_60051562).registers }
-  electricity_supplier_contracts         { [] }
+  contracts         { [] }
 end
 
 

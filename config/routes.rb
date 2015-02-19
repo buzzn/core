@@ -32,10 +32,7 @@ Buzzn::Application.routes.draw do
   resources :registers
   resources :equipments
   resources :devices
-  resources :metering_service_provider_contracts
-  resources :metering_point_operator_contracts
-  resources :electricity_supplier_contracts
-  resources :servicing_contracts
+  resources :contract
   resources :contracting_parties
   resources :organizations
   resources :comments, :only => [:create, :destroy]
