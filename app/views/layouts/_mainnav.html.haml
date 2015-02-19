@@ -19,6 +19,9 @@
 
               %li.list-header= t'my_profile'
               = mainnav_profile_path(current_user.profile)
+              = mainnav_contracting_party_path(current_user.contracting_party)
+
+
 
               %li.list-header= t'my_metering_points'
               - current_user.editable_metering_points.each do |metering_point|

@@ -44,6 +44,17 @@ module ApplicationHelper
     )
   end
 
+  def mainnav_contracting_party_path(contracting_party)
+    active_link_to(
+      content_tag(:i, nil, class: 'fa fa-home') + content_tag(:span, contracting_party.name, class: "menu-title"),
+      contracting_party_path(contracting_party), class: 'button white',
+      :wrap_tag => :li, :class_active => 'active-link'
+    )
+  end
+
+
+
+
   def mainnav_metering_point_path(metering_point)
     active_link_to(
       (

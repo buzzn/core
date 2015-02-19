@@ -1,0 +1,65 @@
+- meta title: @contracting_party.name
+
+= content_for :aside do
+  %aside#aside-container
+    #aside
+      .nano
+        .nano-content{:tabindex => "0"}
+
+          .text-center.pad-all
+            .pad-ver
+              %span.fa-stack.fa-lg.fa-5x
+                %i.fa.fa-circle.fa-stack-2x
+                %i.fa.fa-plug.fa-stack-1x.fa-inverse
+            %h4.text-lg.text-overflow.mar-no= @contracting_party.name
+
+
+          %hr
+            .text-center.clearfix
+              - if current_user.can_update?(@contracting_party)
+                = #@contracting_party.link_to_edit
+
+
+        .nano-pane{:style => "display: none;"}
+          .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
+
+#page-content
+  .row
+    .col-sm-6
+      .panel
+        .panel-heading
+          %h3.panel-title
+            =t('contracting_party_properties')
+        .panel-body
+          .table-responsive
+            %table.table.table-striped
+              %tbody
+                %tr
+                  %td= t('legal_entity')
+                  %td= t @contracting_party.legal_entity
+                %tr
+                  %td= t('sales_tax_number')
+                  %td= t @contracting_party.sales_tax_number
+                %tr
+                  %td= t('tax_rate')
+                  %td= t @contracting_party.tax_rate
+                %tr
+                  %td= t('tax_number')
+                  %td= t @contracting_party.tax_number
+
+
+  %h1.page-header.text-overflow= t'contracts'
+  .row
+    = render @contracting_party.contracts
+
+  %h1.page-header.text-overflow= t'address'
+  .row
+    = render @contracting_party.address
+
+  %h1.page-header.text-overflow= t'bank_account'
+  .row
+    = render @contracting_party.bank_account
+
+
+
+
