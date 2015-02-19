@@ -262,19 +262,6 @@ ActiveRecord::Schema.define(version: 20150219151449) do
     t.datetime "updated_at"
   end
 
-  create_table "ilns", force: :cascade do |t|
-    t.string   "bdew"
-    t.string   "eic"
-    t.string   "vnb"
-    t.date     "valid_begin"
-    t.date     "valid_end"
-    t.integer  "organization_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "ilns", ["organization_id"], name: "index_ilns_on_organization_id", using: :btree
-
   create_table "metering_point_users", force: :cascade do |t|
     t.integer  "usage",             default: 100
     t.integer  "user_id"

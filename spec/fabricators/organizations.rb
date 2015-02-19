@@ -27,5 +27,4 @@ end
 
 Fabricator :transmission_system_operator, from: :organization do
   mode 'transmission_system_operator'
-  iln  { Fabricate(:iln) }
 end
