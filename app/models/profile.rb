@@ -21,7 +21,7 @@ class Profile < ActiveRecord::Base
       male
       female
       intersex
-    }
+    }.map(&:to_sym)
   end
 
 

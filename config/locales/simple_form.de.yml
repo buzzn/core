@@ -157,6 +157,9 @@ de:
           male: 'Mann'
           female: 'Frau'
           intersex: 'Intersexualität'
-
+      register:
+        mode:
+          in: 'Bezug'
+          out: 'Production'
 
 

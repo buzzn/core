@@ -31,7 +31,7 @@ class Meter < ActiveRecord::Base
       EasyMeter
       Ferraris
       other
-    }
+    }.map(&:to_sym)
   end
 
 

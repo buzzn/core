@@ -84,12 +84,7 @@ private
   end
 
 
-  def self.modes
-    %w{
-      in
-      out
-    }
-  end
+
 
 
   def get_operators_from_formula
@@ -134,6 +129,15 @@ private
       ]
     end
     return result
+  end
+
+
+
+  def self.modes
+    %w{
+      in
+      out
+    }.map(&:to_sym)
   end
 
 end
