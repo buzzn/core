@@ -21,7 +21,6 @@
 //= require highcharts
 //= require highcharts_no_utc
 //= require chartkick
-//= require d3
 //= require sparklines
 //= require tree.jquery
 //= require jquery-readyselector

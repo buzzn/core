@@ -16,7 +16,7 @@ de:
 
   out: Produktion
   in: Bezug
-  in_out: Bezug/Produktion
+  in_out: Bezug/Einspeisung
   diff: Abgrenzungszähler
 
   add_metering_point: Messpunkt hinzufügen

@@ -3,9 +3,9 @@
     .pad-all.text-center
 
       %p.text-uppercase.mar-btm.text-sm= link_to t(register.mode), register
-      = content_tag :div, id: "register-info", data: {register: register} do
+      = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { readings: register.last_two_readings } do
         %span.text-5x.text-thin
-          241
+          .power-ticker
 
       %p= t'watt'
       - if register.mode == 'in'

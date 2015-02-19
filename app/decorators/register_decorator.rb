@@ -29,6 +29,19 @@ class RegisterDecorator < Draper::Decorator
       })
   end
 
+  def last_two_readings
+    latest_readings = Reading.last_two_by_register_id(model.id)
+    if latest_readings.nil?
+      return nil
+    end
+    result = []
+    result.push(latest_readings.first[:timestamp].to_i*1000)
+    result.push(latest_readings.first[:watt_hour])
+    result.push(latest_readings.last[:timestamp].to_i*1000)
+    result.push(latest_readings.last[:watt_hour])
+    return result
+  end
+
 
 
 
