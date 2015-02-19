@@ -25,8 +25,7 @@ class MeteringPoint < ActiveRecord::Base
 
   belongs_to :location
   belongs_to :group
-  has_many :registers, dependent: :destroy
-  accepts_nested_attributes_for :registers, reject_if: :all_blank
+  has_many :registers
   has_many :electricity_supplier_contracts,         dependent: :destroy
   has_many :metering_service_provider_contracts,    dependent: :destroy
   has_many :metering_point_operator_contracts,      dependent: :destroy

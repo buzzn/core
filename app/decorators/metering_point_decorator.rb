@@ -135,30 +135,8 @@ class MeteringPointDecorator < Draper::Decorator
 
 
 
-  def new_register
-    link_to(
-      t("add_register"),
-      new_register_path(metering_point_id: model.id),
-      {
-        :remote       => true,
-        :class        => 'start_modal',
-        'data-toggle' => 'modal',
-        'data-target' => '#myModal'
-      })
-  end
 
 
-  def new_device
-    link_to(
-      t('add_device'),
-      new_device_path(metering_point_id: model.id),
-      {
-        :remote       => true,
-        :class        => 'sidebar-plus',
-        'data-toggle' => 'modal',
-        'data-target' => '#myModal',
-      })
-  end
 
 
 
@@ -191,6 +169,21 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
+
+
+  def new_register
+    link_to(
+      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
+      new_register_path(metering_point_id: model.id),
+      {
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal',
+        'data-tooltip'  => "true",
+        'title'         => t("add_register"),
+      })
+  end
 
 
   def new_metering_point_operator_contract

@@ -72,6 +72,17 @@
             %span.text-1x= new_root_metering_point
 
 
+  %h1.page-header.text-overflow= t'meters'
+  .row
+    = render @meters
+    - if current_user.can_create?(Meter)
+      .new-device.col-lg-4
+        .panel.panel-new
+          .panel-container
+            %span.text-1x= new_meter
+
+
+
   %h1.page-header.text-overflow= t'devices'
   .row
     = render @devices

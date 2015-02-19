@@ -25,14 +25,6 @@
               = @register.link_to_edit
 
 
-.pad-ver
-  %ol.breadcrumb
-    %li= link_to "#{t('location')} (#{@register.metering_point.root.location.name})", @register.metering_point.root.location
-    %li= link_to "#{t('metering_point')} (#{@register.metering_point.name})", @register.metering_point
-    %li= link_to "#{t('meter')} (#{@register.metering_point.meter.name})", @register.metering_point.meter
-    %li.active= "#{t('register')} (#{@register.name})"
-
-
 
 #page-content
   .row

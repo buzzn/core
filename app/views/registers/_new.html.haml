@@ -1,0 +1,11 @@
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'new_register'
+  .modal-body
+    = simple_form_for @register, remote: true, html: { multipart: true } do |f|
+      - value = params[:metering_point_id].nil? ? {} : { value: params[:metering_point_id]}
+      = f.input :metering_point_id, input_html: {}.merge(value), as: :hidden
+      = render 'registers/form_fields', f: f
+      .modal-footer
+        = f.button :submit, id: 'submit', class: 'btn btn-success'

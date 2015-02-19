@@ -9,6 +9,13 @@ class Register < ActiveRecord::Base
   scope :in, -> { where(mode: :in) }
   scope :out, -> { where(mode: :out) }
 
+
+  def name
+    "#{metering_point.name} #{mode}"
+  end
+
+
+
   def last_watt
     4353
   end
@@ -79,8 +86,8 @@ private
 
   def self.modes
     %w{
-      out
       in
+      out
     }
   end
 

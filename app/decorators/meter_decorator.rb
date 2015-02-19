@@ -37,4 +37,23 @@ class MeterDecorator < Draper::Decorator
   end
 
 
+
+
+  def new_register
+    link_to(
+      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
+      new_register_path(meter_id: model.id),
+      {
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal',
+        'data-tooltip'  => "true",
+        'title'         => t("add_register"),
+      })
+  end
+
+
+
+
 end

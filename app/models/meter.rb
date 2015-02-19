@@ -1,17 +1,17 @@
 class Meter < ActiveRecord::Base
+  resourcify
   include Authority::Abilities
 
   validates :manufacturer_product_serialnumber, presence: true    #, unless: "self.virtual"
 
-  has_many :registers, dependent: :destroy
-  accepts_nested_attributes_for :registers, :reject_if => :all_blank, :allow_destroy => true
-
-  has_many :equipments
-  accepts_nested_attributes_for :equipments, :reject_if => :all_blank, :allow_destroy => true
-
   mount_uploader :image, PictureUploader
 
   after_save :validates_smartmeter_job
+
+
+  has_many :registers
+  has_many :equipments
+
 
 
   def metering_point

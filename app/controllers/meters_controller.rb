@@ -19,6 +19,7 @@ class MetersController < ApplicationController
     @meter = Meter.new(meter_params)
     authorize_action_for @meter
     if @meter.save
+      current_user.add_role :manager, @meter
       respond_with @meter.decorate
     else
       render :new
@@ -49,14 +50,13 @@ class MetersController < ApplicationController
 private
   def meter_params
     params.require(:meter).permit(
-      :id,
       :image,
-      :metering_point_id,
       :manufacturer_name,
       :manufacturer_product_name,
       :manufacturer_product_serialnumber,
       :virtual,
-      registers_attributes: [:id, :mode, :obis_index, :variable_tariff, :_destroy, :metering_point_id, :virtual, :formula]
+      :metering_point_id,
+      :register_ids => []
     )
   end
 

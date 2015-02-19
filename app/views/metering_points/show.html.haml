@@ -16,6 +16,7 @@
 
             %h4.text-lg.text-overflow.mar-no= @metering_point.name
 
+
           - if @metering_point.address
             %hr
             .pad-hor
@@ -26,6 +27,12 @@
                 = "#{@metering_point.address.zip} #{@metering_point.address.city}"
                 %br
                 = @metering_point.address.state
+
+          %hr
+            %ul.list-group.bg-trans
+              %li.list-group-item.list-item-sm
+                %i.fa.fa-tachometer.fa-fw
+                = link_to @meter.name, @meter
 
           %hr
             .text-center.clearfix
@@ -73,16 +80,11 @@
             #year-to-months.tab-pane.fade= @metering_point.chart('year_to_months')
 
 
-  %h1.page-header.text-overflow= t'meter'
+
+  %h1.page-header.text-overflow= t'registers'
   .row
-    - if @meter
-      = render @meter
-    - else
-      - if current_user.can_update?(@metering_point)
-        .new-metering-point.col-sm-6.col-md-4.col-lg-3
-          .panel.panel-new
-            .panel-container
-              %span.text-1x= @metering_point.new_meter
+    = render @metering_point.registers
+    = @metering_point.new_register
 
 
 

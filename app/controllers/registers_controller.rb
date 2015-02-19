@@ -41,6 +41,13 @@ class RegistersController < ApplicationController
   end
 
 
+  def destroy
+    @register = Register.find(params[:id])
+    authorize_action_for @register
+    @metering_point = @register.metering_point
+    @register.destroy
+    redirect_to @metering_point
+  end
 
 
 

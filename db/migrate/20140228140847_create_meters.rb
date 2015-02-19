@@ -1,7 +1,6 @@
 class CreateMeters < ActiveRecord::Migration
   def change
     create_table :meters do |t|
-
       t.string :manufacturer_name
       t.string :manufacturer_product_name
       t.string :manufacturer_product_serialnumber
@@ -17,13 +16,9 @@ class CreateMeters < ActiveRecord::Migration
       t.date :calibrated_till
       t.boolean :smart, default: false
       t.boolean :online, default: false
-
       t.boolean :init_first_reading, default: false
       t.boolean :init_reading, default: false
-
-      t.integer :metering_point_id
       t.timestamps
     end
-    add_index :meters, :metering_point_id
   end
 end

@@ -51,6 +51,10 @@ class User < ActiveRecord::Base
     MeteringPoint.with_role(:manager, self).decorate
   end
 
+  def editable_meters
+    Meter.with_role(:manager, self).decorate
+  end
+
   def editable_groups
     Group.with_role(:manager, self).decorate
   end
@@ -58,6 +62,9 @@ class User < ActiveRecord::Base
   def editable_devices
     Device.with_role(:manager, self).decorate
   end
+
+
+
 
 
 private
