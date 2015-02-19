@@ -1,4 +1,7 @@
 de:
+
+
+
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler
   in_out_metering: Einspeisezähler
@@ -32,13 +35,19 @@ de:
   add_device: Gerät hinzufügen
   add_devices: Geräte hinzufügen
   edit_devices: Geräte bearbeiten
+  edit_device: Gerät bearbeiten
   connect_devices: Geräte verbinden
+
+
+  users: Benutzer
+  edit_users: Benutzer bearbeiten
+  add_user: Benutzer hinzufuegen
+
 
 
   email: E-Mail Addresse
   password: Password
   remember_me: Eingeloggt bleiben
-
   find_a_friend: Freund Finden
   wind: Windkraftanlage
   wind_short: Wind
@@ -73,7 +82,7 @@ de:
   for_who: Für wen
   prices: Preise
   updated: aktualisiert
-  users: Benutzer
+
   meters: Zähler
   groups: Gruppen
   registered_users: Registrierte Nutzer
@@ -86,7 +95,7 @@ de:
   news: Aktuelles
   sheet: Datenblatt
   members: Mitglieder
-  add_user: Benutzer suchen und hinzufuegen
+
   glossary: Glossar
   email_notifications: E-Mail Benachrichtigung
   terms_and_conditions: Nutzungsbedingung
@@ -200,7 +209,7 @@ de:
   send_friend_request: Freundschaftsanfrage senden
   complete_user: Daten vervollständigen
   edit_metering_point: Zählpunkt bearbeiten
-  edit_users: Benutzer bearbeiten
+
   new_down_device: Neues Bezugsgerät
   new_metering_point: Neuer Zählpunkt
   has_updated: aktualisierte

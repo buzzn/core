@@ -66,7 +66,7 @@
   .row
     = render @root_metering_points
     - if current_user.can_create?(MeteringPoint)
-      .new-device.col-lg-4
+      .new-metering-point.col-lg-4
         .panel.panel-new
           .panel-container
             %span.text-1x= new_root_metering_point
@@ -76,7 +76,7 @@
   .row
     = render @meters
     - if current_user.can_create?(Meter)
-      .new-device.col-lg-4
+      .new-meter.col-sm-6.col-md-4.col-lg-3
         .panel.panel-new
           .panel-container
             %span.text-1x= new_meter
@@ -103,7 +103,7 @@
   .row
     = render @groups
     - if current_user.can_create?(Group)
-      .new-device.col-lg-6
+      .new-group.col-lg-6
         .panel.panel-new
           .panel-container
             %span.text-1x= new_group
