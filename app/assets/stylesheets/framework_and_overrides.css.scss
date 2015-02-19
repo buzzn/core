@@ -20,12 +20,37 @@
 
 .new-metering-point{
   .panel-container{
-    line-height: 262px;
+    line-height: 300px;
+  }
+}
+
+.new-meter{
+  .panel-container{
+    line-height: 225px;
   }
 }
 
 .new-device{
   .panel-container{
     line-height: 340px;
+  }
+}
+
+.new-register{
+  .panel-container{
+    line-height: 156px;
+  }
+}
+
+.new-user{
+  .panel-container{
+    line-height: 70px;
+  }
+}
+
+
+.new-group{
+  .panel-container{
+    line-height: 300px;
   }
 }

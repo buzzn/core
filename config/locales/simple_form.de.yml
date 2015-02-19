@@ -161,5 +161,14 @@ de:
         mode:
           in: 'Bezug'
           out: 'Production'
+      device:
+        mode:
+          in: 'Verbraucher'
+          out: 'Erzeuger'
+
+
+
+
+
 
 

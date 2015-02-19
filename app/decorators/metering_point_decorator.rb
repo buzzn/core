@@ -142,16 +142,17 @@ class MeteringPointDecorator < Draper::Decorator
 
   def edit_users
     link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle'),
+      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
       edit_users_metering_point_path(model),
       {
-        :remote       => true,
-        :class        => 'sidebar-plus',
-        'data-toggle' => "modal",
-        'data-target' => '#myModal'
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal',
+        'data-tooltip'  => "true",
+        'title'         => t("add_user"),
       })
   end
-
 
 
 

@@ -12,7 +12,7 @@
               - else
                 %span.fa-stack.fa-lg.fa-5x
                   %i.fa.fa-circle.fa-stack-2x
-                  %i.fa.fa-map-marker.fa-stack-1x.fa-inverse
+                  %i.fa.fa-bolt.fa-stack-1x.fa-inverse
 
             %h4.text-lg.text-overflow.mar-no= @metering_point.name
 
@@ -120,6 +120,11 @@
     - @users.each do |user|
       = render user.profile
 
+    - if current_user.can_update?(@metering_point)
+      .new-user.col-md-6.col-lg-4
+        .panel.panel-new
+          .panel-container
+            %span.text-1x= @metering_point.edit_users
 
 
 
@@ -129,7 +134,7 @@
       = render sub_metering_point.decorate
 
     - if current_user.can_update?(@metering_point)
-      .new-metering-point.col-lg-3
+      .new-metering-point.col-lg-4
         .panel.panel-new
           .panel-container
             %span.text-1x= @metering_point.new_sub_metering_point

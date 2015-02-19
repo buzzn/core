@@ -24,14 +24,14 @@ class Device < ActiveRecord::Base
     %w{
       eeg
       kwkg
-    }
+    }.map(&:to_sym)
   end
 
   def self.modes
     %w{
       in
       out
-    }
+    }.map(&:to_sym)
   end
 
   def self.primary_energies
@@ -43,7 +43,7 @@ class Device < ActiveRecord::Base
       wind
       water
       biomass
-    }
+    }.map(&:to_sym)
   end
 
 
