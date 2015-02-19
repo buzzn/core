@@ -16,13 +16,12 @@
 //= require jquery_ujs
 //= require jquery-ui
 //= require jquery.remotipart
-
-
 //= require bootstrap
 //= require nanoscroller
 //= require highcharts
 //= require highcharts_no_utc
 //= require chartkick
+//= require d3
 //= require sparklines
 //= require tree.jquery
 //= require jquery-readyselector
@@ -33,6 +32,7 @@
 //= require underscore
 //= require dependent-fields
 //= require metisMenu
+//= require pusher.min
 
 
 //= require nifty_init
@@ -44,21 +44,13 @@
 
 
 //= require registers
-
 //= require global
 //= require metering_points
 //= require locations
 //= require groups
 //= require devices
 //= require profiles
-
-
-
-//= require CustomTooltip
-//= require d3
-
-//= require pusher.min
-
+//= require bubble_tooltip
 
 
 

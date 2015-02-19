@@ -28,11 +28,12 @@
                 %br
                 = @metering_point.address.state
 
-          %hr
-            %ul.list-group.bg-trans
-              %li.list-group-item.list-item-sm
-                %i.fa.fa-tachometer.fa-fw
-                = link_to @meter.name, @meter
+          - if @meter
+            %hr
+              %ul.list-group.bg-trans
+                %li.list-group-item.list-item-sm
+                  %i.fa.fa-tachometer.fa-fw
+                  = link_to @meter.name, @meter
 
           %hr
             .text-center.clearfix
@@ -48,12 +49,18 @@
                 = @metering_point.link_to_edit
 
 
+
+
+
 - if @metering_point.path_ids.count > 1
   .pad-ver
     %ol.breadcrumb
       - @metering_point.path_ids.each do |metering_point_id|
         - @metering_point = MeteringPoint.find(metering_point_id).decorate
         %li= link_to @metering_point.name, @metering_point
+
+
+
 
 #page-content
   %h1.page-header.text-overflow= t'charts'
@@ -81,10 +88,17 @@
 
 
 
+
   %h1.page-header.text-overflow= t'registers'
   .row
     = render @metering_point.registers
-    = @metering_point.new_register
+
+    - if current_user.can_update?(@metering_point)
+      .new-register.col-sm-6.col-md-4.col-lg-2
+        .panel.panel-new
+          .panel-container
+            %span.text-1x= @metering_point.new_register
+
 
 
 
@@ -99,10 +113,14 @@
             %span.text-1x= @metering_point.edit_devices
 
 
+
+
   %h1.page-header.text-overflow= t'residents'
   .row
     - @users.each do |user|
       = render user.profile
+
+
 
 
   %h1.page-header.text-overflow= t'sub_metering_points'
