@@ -165,7 +165,17 @@ de:
         mode:
           in: 'Verbraucher'
           out: 'Erzeuger'
-
+      meter:
+        manufacturer_name:
+          landis_gyr: 'Landis & Gyr'
+          goerlitz: 'Görlitz'
+          easy_meter: 'EasyMeter'
+          ferraris: 'Ferraris'
+          elster: 'Elster'
+          bauer: 'Bauer'
+          nzr: 'NZR'
+          emh: 'EMH'
+          other: Anderer
 
 
 

@@ -26,10 +26,16 @@ class Meter < ActiveRecord::Base
     return register_mode_and_ids
   end
 
-  def self.manufacturers
+  def self.manufacturer_names
     %w{
-      EasyMeter
-      Ferraris
+      easy_meter
+      ferraris
+      landis_gyr
+      goerlitz
+      elster
+      bauer
+      nzr
+      emh
       other
     }.map(&:to_sym)
   end
