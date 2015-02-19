@@ -7,44 +7,6 @@ clearTimers = ->
     i++
   timers = []
 
-$(".groups.show").ready ->
-
-  $("#mytab a").click (e) ->
-    e.preventDefault()
-    $(this).tab "show"
-
-  # Javascript to enable link to tab
-  hash = document.location.hash
-  $(".nav-pills a[href=" + hash + "]").tab "show"  if hash
-
-  # Change hash for page-reload
-  $(".nav-pills a").on "shown.bs.tab", (e) ->
-    window.location.hash = e.target.hash
-    return
-
-  #for register_id in gon.register_ids
-  #
-  #  channel = pusher.subscribe("register_#{register_id}")
-  #  console.log "subscribed to channel register_#{register_id}"
-  #
-  #  channel.bind "new_reading", (reading) ->
-  #    $("#ticker_#{reading.register_id}").html reading.watt_hour
-
-  #minuteTimer = ->
-  #  $("#metering_points").children().each(->
-  #    metering_point_id = $(this).attr('id').split('_')[2]
-  #    $.getJSON "/metering_points/" + metering_point_id + "/chart?resolution=day_to_hours", (data) ->
-  #      $("#metering_point_#{metering_point_id}").find("[id^=chart-]").highcharts().series[0].setData(data[0].data)
-  #      console.log "chart-#{metering_point_id} updated"
-  #  )
-
-  #timers.push(
-  #  window.setInterval(->
-  #    minuteTimer()
-  #    return
-  #  , 1000*60)
-  #  )
-
 
 
 $(document).on('page:before-change', clearTimers)
