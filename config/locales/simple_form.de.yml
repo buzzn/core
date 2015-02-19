@@ -151,3 +151,12 @@ de:
 
 
 
+    options:
+      profile:
+        gender:
+          male: 'Mann'
+          female: 'Frau'
+          intersex: 'Intersexualität'
+
+
+

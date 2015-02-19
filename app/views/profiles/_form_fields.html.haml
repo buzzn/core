@@ -2,5 +2,5 @@
 = f.input :user_name
 = f.input :first_name
 = f.input :last_name
-= f.input :gender, include_blank: false, collection: Profile.genders, input_html: { class: 'select2' }
+= f.input :gender, include_blank: false, collection: Profile.genders.map(&:to_sym), input_html: { class: 'select2' }
 = f.input :about_me
