@@ -2,6 +2,12 @@ class ContractsController < ApplicationController
   before_filter :authenticate_user!
   respond_to :html, :js
 
+  def show
+    @contract = Contract.find(params[:id])
+    authorize_action_for(@contract)
+    @contract.decorate
+  end
+
 
   def new
     @contract              = Contract.new
