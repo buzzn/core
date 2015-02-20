@@ -46,7 +46,6 @@
 //= require registers
 //= require global
 //= require metering_points
-//= require locations
 //= require groups
 //= require devices
 //= require profiles

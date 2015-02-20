@@ -8,11 +8,12 @@
       .modal-dialog
     #container.effect.mainnav-lg{ class: content_for?(:aside) ? 'aside-in aside-left aside-bright' : nil }
       = render 'layouts/navbar'
-      .boxed
-        #content-container
-          .page-alert
-          = render 'layouts/messages'
-          = yield
-        = render 'layouts/mainnav'
-        = yield(:aside)
-      = render 'layouts/footer'
+      = content_tag :div, class: "pusher", data: { pusherhost: Rails.application.secrets.pusher_host, pusherkey: Rails.application.secrets.pusher_key } do
+        .boxed
+          #content-container
+            .page-alert
+            = render 'layouts/messages'
+            = yield
+          = render 'layouts/mainnav'
+          = yield(:aside)
+        = render 'layouts/footer'
