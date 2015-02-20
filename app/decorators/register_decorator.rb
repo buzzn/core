@@ -31,7 +31,7 @@ class RegisterDecorator < Draper::Decorator
 
   def last_two_readings
     latest_readings = Reading.last_two_by_register_id(model.id)
-    if !latest_readings.any?
+    if latest_readings.empty?
       return nil
     end
     result = []
