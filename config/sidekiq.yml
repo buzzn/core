@@ -3,7 +3,7 @@
 #   sidekiq -C config.yml
 ---
 :verbose: false
-:concurrency: 2
+:concurrency: 25
 :timeout: 30
 
 development:
@@ -16,11 +16,12 @@ production:
   :pidfile: ../../shared/pids/sidekiq.pid
 
 :logfile: log/sidekiq.log
+
 :queues:
   - [high, 3]
   - [default, 2]
   - [low, 1]
 
-limits:
-  low: 1
+:limits:
+  low: 3
 
