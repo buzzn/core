@@ -61,7 +61,7 @@ private
     Sidekiq::Client.push({
      'class' => ValidatesCredentialsWorker,
      'queue' => :low,
-     'args' => [ 'MeteringPointOperatorContract', self.id ]
+     'args' => [ self.id ]
     })
   end
 

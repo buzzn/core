@@ -62,8 +62,8 @@ class MeteringPoint < ActiveRecord::Base
     if self.contracts.metering_point_operators.running.any?
       return self.contracts.metering_point_operators.running.first
     elsif self.group
-      if self.group.contracts.metering_point_operators
-        return self.group.contracts.metering_point_operators
+      if self.group.contracts.metering_point_operators.running.any?
+        return self.group.contracts.metering_point_operators.running.first
       end
     end
   end
