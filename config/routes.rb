@@ -32,7 +32,7 @@ Buzzn::Application.routes.draw do
   resources :registers
   resources :equipments
   resources :devices
-  resources :contract
+  resources :contracts
   resources :contracting_parties
   resources :organizations
   resources :comments, :only => [:create, :destroy]

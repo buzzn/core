@@ -3,9 +3,8 @@ class ContractsController < ApplicationController
   respond_to :html, :js
 
   def show
-    @contract = Contract.find(params[:id])
+    @contract = Contract.find(params[:id]).decorate
     authorize_action_for(@contract)
-    @contract.decorate
   end
 
 
