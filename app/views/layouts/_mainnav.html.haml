@@ -2,15 +2,14 @@
   #mainnav
     #mainnav-shortcut
       %ul.list-unstyled
-        %li.col-xs-4{"data-content" => "Additional Sidebar"}
-          %a#demo-toggle-aside.shortcut-grid{:href => "#"}
-            %i.fa.fa-magic
-        %li.col-xs-4{"data-content" => "Notification"}
-          %a#demo-alert.shortcut-grid{:href => "#"}
-            %i.fa.fa-bullhorn
-        %li.col-xs-4{"data-content" => "Page Alerts"}
-          %a#demo-page-alert.shortcut-grid{:href => "#"}
-            %i.fa.fa-bell
+
+        %li.col-xs-6{"data-content" => t('groups')}
+          = link_to( content_tag(:i, nil, class: 'fa fa-users'), groups_path, class: 'shortcut-grid')
+
+        %li.col-xs-6{"data-content" => t('users')}
+          = link_to( content_tag(:i, nil, class: 'fa fa-user'), profiles_path, class: 'shortcut-grid')
+
+
     - if user_signed_in?
       #mainnav-menu-wrap
         .nano
@@ -19,9 +18,6 @@
 
               %li.list-header= t'my_profile'
               = mainnav_profile_path(current_user.profile)
-              = mainnav_contracting_party_path(current_user.contracting_party)
-
-
 
               %li.list-header= t'my_metering_points'
               - current_user.editable_metering_points.each do |metering_point|
@@ -35,11 +31,7 @@
               - current_user.friends.each do |user|
                 = mainnav_profile_path(user.profile)
 
-              %li.list-divider
-              %li.list-header= t'explore_buzzn'
-              = mainnav_profiles_path
-              = mainnav_groups_path
-              = mainnav_organizations_path
+
 
 
 
