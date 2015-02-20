@@ -16,6 +16,7 @@
 //= require jquery_ujs
 //= require jquery-ui
 //= require jquery.remotipart
+//= require d3
 //= require bootstrap
 //= require nanoscroller
 //= require highcharts
