@@ -106,17 +106,26 @@
     .row
       - @energy_producers.each do |user|
         = render user.profile
+
+
   - if @energy_consumers.any?
     %h1.page-header.text-overflow= t('energy_consumers')
     .row
       - @energy_consumers.each do |user|
         = render user.profile
+
+
   - if @interested_members.any?
     %h1.page-header.text-overflow= t('interested_members')
     .row
       - @interested_members.each do |user|
         = render user.profile
 
+
+  - if current_user.can_update?(@group)
+    %h1.page-header.text-overflow= t('contracts')
+    .row
+      = render @group.contracts
 
 
 

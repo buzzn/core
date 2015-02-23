@@ -19,7 +19,7 @@ class Group < ActiveRecord::Base
   mount_uploader :logo, PictureUploader
   mount_uploader :image, PictureUploader
 
-  has_many  :contracts, dependent: :destroy
+  has_many :contracts, dependent: :destroy
   has_one  :area
   has_many :metering_points
 
@@ -41,6 +41,8 @@ class Group < ActiveRecord::Base
   def keywords
     %w(buzzn people power) << self.name
   end
+
+
 
   private
 

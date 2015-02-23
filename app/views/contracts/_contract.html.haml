@@ -60,3 +60,38 @@
           %span.text-lg= contract.contracting_party
           %p.text-muted
             %small= t('contracting_party')
+
+
+
+
+  - elsif contract.mode == 'servicing_contract'
+    .panel
+      .pad-all.media.panel-mint.panel-colorful
+        .media-left
+          %span.icon-wrap.icon-wrap-xs
+            %i.fa.fa-file-text-o.fa-2x
+        .media-body
+          %p.h3.text-thin.media-heading= t('localpool_servicing')
+          %small.text-uppercase= link_to t(contract.mode), contract
+      %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
+        %li.col-xs-4
+          %span.text-lg= contract.organization.name
+          %p.text-muted
+            %small= t('organization')
+        %li.col-xs-4
+          %span.text-lg= contract.tariff
+          %p.text-muted
+            %small= t('tariff')
+        %li.col-xs-4
+          %span.text-lg= humanized_money_with_symbol contract.price
+          %p.text-muted
+            %small= t('price')
+        %li.col-xs-4
+          %span.text-lg= contract.contracting_party
+          %p.text-muted
+            %small= t('contracting_party')
+
+
+
+
+
