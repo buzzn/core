@@ -293,6 +293,7 @@ ActiveRecord::Schema.define(version: 20150219151449) do
   add_index "metering_points", ["group_id"], name: "index_metering_points_on_group_id", using: :btree
 
   create_table "meters", force: :cascade do |t|
+    t.string   "slug"
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
     t.string   "manufacturer_product_serialnumber"

@@ -2,6 +2,10 @@ class Meter < ActiveRecord::Base
   resourcify
   include Authority::Abilities
 
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :finders]
+
+
   validates :manufacturer_product_serialnumber, presence: true    #, unless: "self.virtual"
 
   mount_uploader :image, PictureUploader
@@ -12,6 +16,10 @@ class Meter < ActiveRecord::Base
   has_many :registers
   has_many :equipments
 
+
+  def name
+    "#{manufacturer_name} #{manufacturer_product_serialnumber}"
+  end
 
 
   def metering_point
@@ -39,8 +47,6 @@ class Meter < ActiveRecord::Base
       other
     }.map(&:to_sym)
   end
-
-
 
 
   def self.pull_readings

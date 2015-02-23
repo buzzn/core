@@ -5,10 +5,6 @@ class MeterDecorator < Draper::Decorator
   decorates_association :registers
   decorates_association :metering_point
 
-  def name
-    "#{manufacturer_name} #{manufacturer_product_serialnumber}"
-  end
-
 
   def link_to_edit
     link_to(
