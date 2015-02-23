@@ -8,5 +8,5 @@
 
     .list-group
       - meter.registers.each do |register|
-        = link_to t(register.mode), register, class: "list-group-item list-group-item-#{register.panel_mode_class}"
+        = link_to "#{t(register.mode)} // #{register.metering_point.name}", register, class: "list-group-item list-group-item-#{register.panel_mode_class}"
 

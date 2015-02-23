@@ -1,5 +1,5 @@
 Fabricator :metering_point do
-  name  'Verbrauch'
+  name  'Wohnung'
   i = 1
   uid        {"DE001068825151000000000000#{2677114 + (i += 1)}"}
   registers  { Fabricate(:meter).registers }
@@ -83,14 +83,14 @@ end
 #felix münchen
 Fabricator :mp_belfortstr10, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Belfortstraße', street_number: '10', zip: 81667, city: 'München', state: 'Bayern') }
-  name  '3Etage Rechts'
+  name  'Wohnung'
   image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'belfortstr10', 'wohnung.jpg' ))}
 end
 
 #felix berlin
 Fabricator :mp_urbanstr88, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Urbanstr', street_number: '88', zip: 81667, city: 'Berlin', state: 'Berlin') }
-  name  '3Etage Links'
+  name  'Wohnung'
   image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'urbanstr88', 'wohnung.jpg' )) }
   registers  { Fabricate(:urbanstr88_meter).registers }
 end
@@ -143,7 +143,7 @@ end
 # Nr. 60138988 für Christian Widmann (Einrichtungszähler Bezug)
 Fabricator :mp_60138988, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Röntgenstrasse', street_number: '11', zip: 86199, city: 'Augsburg', state: 'Bayern') }
-  name  'Bezug'
+  name  'Wohnung'
   image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'roentgenstrasse11', 'bezug.jpg' )) }
   registers { Fabricate(:easymeter_60138988).registers }
 end
@@ -151,7 +151,7 @@ end
 
 # Nr. 60009269 für Philipp Oßwald (Einrichtungszähler Bezug)
 Fabricator :mp_60009269, from: :metering_point do
-  name  'Bezug'
+  name  'Wohnung'
   registers { Fabricate(:easymeter_60009269).registers }
 end
 

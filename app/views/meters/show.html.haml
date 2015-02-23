@@ -15,6 +15,15 @@
                   %i.fa.fa-tachometer.fa-stack-1x.fa-inverse
 
             %h4.text-lg.text-overflow.mar-no= @meter.name
+
+
+          - if @meter.metering_point
+            %hr
+              %ul.list-group.bg-trans
+                %li.list-group-item.list-item-sm
+                  %i.fa.fa-bolt.fa-fw
+                  = link_to @meter.metering_point.name, @meter.metering_point
+
           %hr
             .text-center.clearfix
               - if current_user.can_update?(@meter)
