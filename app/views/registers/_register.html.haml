@@ -3,9 +3,14 @@
     .pad-all.text-center
 
       %p.text-uppercase.mar-btm.text-sm= link_to t(register.mode), register
-      = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { readings: register.last_two_readings } do
-        %span.text-5x.text-thin
-          .power-ticker
+      - if register.meter.smart?
+        = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { readings: register.last_two_readings, slp: true } do
+          %span.text-5x.text-thin
+            .power-ticker
+      - else
+        = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { slp: true } do
+          %span.text-5x.text-thin
+            .power-ticker
 
       %p= t'watt'
       - if register.mode == 'in'
