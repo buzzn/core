@@ -8,12 +8,12 @@ gem 'moped'
 gem 'bson'
 gem 'puma'
 gem 'haml-rails'
+gem 'sass-rails'
 gem 'coffee-rails'
 gem 'coffee-script-source', '1.8.0' # TODO: https://github.com/jashkenas/coffeescript/issues/3829
 gem 'uglifier'
 gem 'rails_layout'
 gem 'autoprefixer-rails'
-gem 'font-awesome-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'select2-rails'
@@ -86,6 +86,8 @@ gem 'rack-google-analytics'
 gem 'acts_as_list'
 gem 'pusher'
 
+
+gem 'font-awesome-rails'
 source 'http://rails-assets.org' do
   gem 'rails-assets-bootstrap'
   gem 'rails-assets-highcharts'
