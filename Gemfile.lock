@@ -186,7 +186,7 @@ GEM
     coffee-script (2.3.0)
       coffee-script-source
       execjs
-    coffee-script-source (1.9.1)
+    coffee-script-source (1.8.0)
     colored (1.2)
     connection_pool (2.1.1)
     countries (0.9.3)
@@ -558,7 +558,7 @@ GEM
     rails-assets-nanoscroller (0.8.4)
       rails-assets-jquery (>= 1.6)
     rails-assets-sparklines (1.0.0)
-    rails-assets-underscore (1.7.0)
+    rails-assets-underscore (1.8.2)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
     rails-dom-testing (1.0.5)
@@ -738,6 +738,7 @@ DEPENDENCIES
   chartkick
   cocoon
   coffee-rails
+  coffee-script-source (= 1.8.0)
   country_select
   database_cleaner
   dependent-fields-rails

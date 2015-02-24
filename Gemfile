@@ -9,7 +9,7 @@ gem 'bson'
 gem 'puma'
 gem 'haml-rails'
 gem 'coffee-rails'
-#gem 'coffee-script-source', '1.8.0'
+gem 'coffee-script-source', '1.8.0' # TODO: https://github.com/jashkenas/coffeescript/issues/3829
 gem 'uglifier'
 gem 'rails_layout'
 gem 'autoprefixer-rails'
