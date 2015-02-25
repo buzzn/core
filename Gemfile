@@ -17,7 +17,7 @@ gem 'autoprefixer-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'select2-rails'
-gem 'inherited_resources',      github: 'josevalim/inherited_resources'
+gem 'inherited_resources',      github: 'josevalim/inherited_resources'  # TODO: remove inherited_resources
 gem 'has_scope'
 gem 'responders'
 gem 'simple_form'
@@ -87,8 +87,8 @@ gem 'acts_as_list'
 gem 'pusher'
 
 
-gem 'font-awesome-rails'
 source 'http://rails-assets.org' do
+  gem 'rails-assets-font-awesome'
   gem 'rails-assets-bootstrap'
   gem 'rails-assets-highcharts'
   gem 'rails-assets-sparklines'
