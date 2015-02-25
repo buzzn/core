@@ -102,7 +102,7 @@
 
 
 
-  %h1.page-header.text-overflow= t'devices'
+  %h1.page-header.text-overflow= t'devices' if current_user.can_update?(@metering_point) || @devices.size != 0
   .row
     = render @devices
 
@@ -115,7 +115,7 @@
 
 
 
-  %h1.page-header.text-overflow= t'residents'
+  %h1.page-header.text-overflow= t'residents' if current_user.can_update?(@metering_point) || @users.size != 0
   .row
     - @users.each do |user|
       = render user.profile
@@ -128,7 +128,7 @@
 
 
 
-  %h1.page-header.text-overflow= t'sub_metering_points'
+  %h1.page-header.text-overflow= t'sub_metering_points' if current_user.can_update?(@metering_point) || @metering_point.children.size != 0
   .row
     - @metering_point.children.each do |sub_metering_point|
       = render sub_metering_point.decorate
@@ -141,9 +141,9 @@
 
 
 
-
-  %h1.page-header.text-overflow= t'contracts'
-  .row
-    = render @metering_point.contracts
+  - if current_user.can_update?(@metering_point)
+    %h1.page-header.text-overflow= t'contracts'
+    .row
+      = render @metering_point.contracts
 
 

@@ -1,7 +1,5 @@
 de:
 
-
-
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler
   in_out_metering: Einspeisezähler
@@ -17,11 +15,21 @@ de:
   add_in_out_metering_point: Messpunkt für Einspeisezähler hinzufügen
   add_diff_metering_point: Messpunkt für Abgrenzungszähler hinzufügen
 
-  out: Produktion
-  in: Bezug
-  in_out: Bezug/Einspeisung
-  diff: Abgrenzungszähler
 
+  out_root_metering_point: Einspeisung
+  in_root_metering_point: Bezug
+  in_metering_point: Bezug
+
+  out_device: Erzeuger
+  in_device: Verbraucher
+
+  out: Produktion
+  in: Verbrauch
+  in_out: Verbrauch/Produktion
+  diff: Abgrenzung
+
+  my_root_metering_points: Meine Locations
+  root_metering_points: Locations
   add_metering_point: Messpunkt hinzufügen
   add_sub_metering_point: Unter Messpunkt hinzufügen
   sub_metering_points: Unter Messpunkte
@@ -30,6 +38,17 @@ de:
   add_new_meter: neuer Zähler hinzufügen
   add_meter: Zähler hinzufügen
 
+  landis_gyr: 'Landis & Gyr'
+  goerlitz: 'Görlitz'
+  easy_meter: 'EasyMeter'
+  ferraris: 'Ferraris'
+  elster: 'Elster'
+  bauer: 'Bauer'
+  nzr: 'NZR'
+  emh: 'EMH'
+  other: Anderer
+
+
   new_device: neuer Gerät
   add_new_device: Neues Gerät hinzufügen
   add_device: Gerät hinzufügen
@@ -37,14 +56,15 @@ de:
   edit_devices: Geräte bearbeiten
   edit_device: Gerät bearbeiten
   connect_devices: Geräte verbinden
-
+  my_devices: Meine Geräte
 
   users: Benutzer
   edit_users: Benutzer bearbeiten
   add_user: Benutzer hinzufuegen
 
+  my_friends: Meine Freunde
 
-
+  about_me: Über mich
   email: E-Mail Addresse
   password: Password
   remember_me: Eingeloggt bleiben

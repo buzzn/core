@@ -8,13 +8,3 @@
 = f.input :commissioning
 = f.input :termination
 = f.input :forecast_watt_hour_pa
-
-%fieldset
-  %legend= t'address'
-  = f.simple_fields_for :address do |a|
-    = render 'addresses/form_fields', f: a
-
-%fieldset
-  %legend= t'bank_account'
-  = f.simple_fields_for :bank_account do |ba|
-    = render 'bank_accounts/form_fields', f: ba

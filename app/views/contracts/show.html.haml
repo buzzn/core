@@ -10,7 +10,7 @@
             .pad-ver
               %span.fa-stack.fa-lg.fa-5x
                 %i.fa.fa-circle.fa-stack-2x
-                %i.fa.fa-plug.fa-stack-1x.fa-inverse
+                %i.fa.fa-file-text.fa-stack-1x.fa-inverse
             %h4.text-lg.text-overflow.mar-no= @contract.name
 
 
@@ -28,7 +28,7 @@
       .panel
         .panel-heading
           %h3.panel-title
-            =t('device_properties')
+            =t('contract_properties')
         .panel-body
           .table-responsive
             %table.table.table-striped
@@ -39,9 +39,6 @@
                 %tr
                   %td= t('contract_number')
                   %td= @contract.contract_number
-                %tr
-                  %td= t('mode')
-                  %td= @contract.mode
                 %tr
                   %td= t('tariff')
                   %td= @contract.tariff

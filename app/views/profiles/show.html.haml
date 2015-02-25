@@ -65,28 +65,29 @@
   %h1.page-header.text-overflow= t'root_metering_points'
   .row
     = render @root_metering_points
-    - if current_user.can_create?(MeteringPoint)
+    - if current_user.can_create?(MeteringPoint) && current_user.profile == @profile
       .new-metering-point.col-lg-4
         .panel.panel-new
           .panel-container
             %span.text-1x= new_root_metering_point
 
 
-  %h1.page-header.text-overflow= t'meters'
-  .row
-    = render @meters
-    - if current_user.can_create?(Meter)
-      .new-meter.col-sm-6.col-md-4.col-lg-3
-        .panel.panel-new
-          .panel-container
-            %span.text-1x= new_meter
+  - if current_user.profile == @profile
+    %h1.page-header.text-overflow= t'meters'
+    .row
+      = render @meters
+      - if current_user.can_create?(Meter)
+        .new-meter.col-sm-6.col-md-4.col-lg-3
+          .panel.panel-new
+            .panel-container
+              %span.text-1x= new_meter
 
 
 
   %h1.page-header.text-overflow= t'devices'
   .row
     = render @devices
-    - if current_user.can_create?(Device)
+    - if current_user.can_create?(Device) && current_user.profile == @profile
       .new-device.col-sm-6.col-md-3.col-lg-2
         .panel.panel-new
           .panel-container
@@ -99,10 +100,10 @@
       = render user.profile
 
 
-  %h1.page-header.text-overflow= t'groups'
+  %h1.page-header.text-overflow= t'group'
   .row
     = render @groups
-    - if current_user.can_create?(Group)
+    - if current_user.can_create?(Group) && current_user.profile == @profile
       .new-group.col-lg-6
         .panel.panel-new
           .panel-container

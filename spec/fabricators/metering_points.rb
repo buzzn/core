@@ -8,7 +8,7 @@ end
 
 
 Fabricator :metering_point_with_address, from: :metering_point do
-  address                                { Fabricate(:address) }
+  address { Fabricate(:address) }
 end
 
 
@@ -18,7 +18,7 @@ Fabricator :mp_z1, from: :metering_point do
   image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'fichtenweg10', 'in_out.jpg' ))  }
   registers {
     Fabricate( :in_out_meter,
-                manufacturer_name:                    'Easymeter',
+                manufacturer_name:                    'easy_meter',
                 manufacturer_product_name:            'Q3D',
                 manufacturer_product_serialnumber:    '60139082',
                 ).registers
@@ -31,7 +31,7 @@ Fabricator :mp_z2, from: :metering_point do
 
   registers {
      Fabricate(:out_meter,
-                manufacturer_name:                    'Easymeter',
+                manufacturer_name:                    'easy_meter',
                 manufacturer_product_name:            'Q3D',
                 manufacturer_product_serialnumber:    '60051599',
                 ).registers
@@ -45,7 +45,7 @@ Fabricator :mp_z3, from: :metering_point do
   image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'fichtenweg10', 'ladesaeule.jpg' )) }
   registers {
     Fabricate(:in_meter,
-              manufacturer_name:                  'Easymeter',
+              manufacturer_name:                  'easy_meter',
               manufacturer_product_name:          'Q3D',
               manufacturer_product_serialnumber:  '60051559',
               ).registers
@@ -58,7 +58,7 @@ Fabricator :mp_z4, from: :metering_point do
   image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'fichtenweg10', 'bhkw.jpg' )) }
   registers {
     Fabricate(:out_meter,
-              manufacturer_name:                    'Easymeter',
+              manufacturer_name:                    'easy_meter',
               manufacturer_product_name:            'Q3D',
               manufacturer_product_serialnumber:    '60051560',
               ).registers
@@ -71,7 +71,7 @@ Fabricator :mp_z5, from: :metering_point do
   name  'Abgrenzung'
   registers {
     Fabricate(:out_meter,
-              manufacturer_name:                    'Easymeter',
+              manufacturer_name:                    'easy_meter',
               manufacturer_product_name:            'Q3D',
               manufacturer_product_serialnumber:    '60051600',
               ).registers
