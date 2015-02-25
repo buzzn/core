@@ -18,7 +18,7 @@ production:
 :logfile: log/sidekiq.log
 
 :queues:
-  - [high, 3]
+  - [high, 5]
   - [default, 3]
   - [low, 1]
 
