@@ -13,7 +13,7 @@ end
 
 
 
-Fabricator :mp_z1, from: :metering_point do
+Fabricator :mp_z1, from: :metering_point_with_address do
   name  'Übergabe'
   image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'fichtenweg10', 'in_out.jpg' ))  }
   registers {
@@ -150,7 +150,7 @@ end
 
 
 # Nr. 60009269 für Philipp Oßwald (Einrichtungszähler Bezug)
-Fabricator :mp_60009269, from: :metering_point do
+Fabricator :mp_60009269, from: :metering_point_with_address do
   name  'Wohnung'
   registers { Fabricate(:easymeter_60009269).registers }
 end

@@ -15,6 +15,14 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :distribution_system_operator_contracts
   decorates_association :transmission_system_operator_contracts
 
+  def long_name
+    if model.address
+       "#{model.name} (#{model.address.street_name})"
+    else
+      model.name
+    end
+  end
+
 
   def chart(resolution='day_to_hours', chart_type='column_chart')
     if resolution == 'day_to_hours'
@@ -91,16 +99,6 @@ class MeteringPointDecorator < Draper::Decorator
   end
 
 
-  def name_long
-    case mode
-    when 'in'
-      name
-    when 'in_out'
-      "#{t(mode)} #{generator_type_names}-#{name}"
-    when 'out'
-      "#{t(mode)} #{generator_type_names} #{name}"
-    end
-  end
 
 
   def generator_type_names
@@ -116,11 +114,6 @@ class MeteringPointDecorator < Draper::Decorator
 
 
 
-  def link_to_show
-    link_to model.name, metering_point_path(model)
-  end
-
-
   def link_to_edit
     link_to(
       t('edit'),
@@ -132,10 +125,6 @@ class MeteringPointDecorator < Draper::Decorator
         'data-target' => '#myModal'
       })
   end
-
-
-
-
 
 
 

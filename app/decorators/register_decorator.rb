@@ -3,6 +3,7 @@ class RegisterDecorator < Draper::Decorator
   delegate_all
 
   decorates_association :metering_point
+  decorates_association :meter
 
   def panel_mode_class
     case model.mode

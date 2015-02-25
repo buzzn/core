@@ -19,7 +19,7 @@
               %li.list-header= t'my_profile'
               = mainnav_profile_path(current_user.profile)
 
-              %li.list-header= t'my_metering_points'
+              %li.list-header= t'my_root_metering_points'
               - current_user.editable_metering_points.each do |metering_point|
                 = mainnav_metering_point_path(metering_point)
 
