@@ -42,10 +42,6 @@ class MeteringPointDecorator < Draper::Decorator
       chart_metering_point_path(model, resolution: resolution),
       colors: colors,
       library: {
-
-        tooltip:{
-          pointFormat: "{point.y:,.2f} kWh"
-        },
         exporting: {
           enabled: false
         },
@@ -53,23 +49,27 @@ class MeteringPointDecorator < Draper::Decorator
         xAxis: {
           type: 'datetime',
           dateTimeLabelFormats: {
-            minute: "%H:%M" #TODO not working.
+            minute: "%H:%M",
+            hour: "%H:%M",
+            day: "%e. %b",
+            year: "%Y"
           },
           labels: {
             format: date_format,
             align: 'right',
             enabled: true,
             style: {
-              color: '#FFF'
+              color: '#000'
             }
-          }
+          },
+          endOnTick: true
         },
         yAxis: {
-          gridLineWidth: 0,
+          gridLineWidth: 1,
           labels: {
             enabled: true,
             style: {
-              color: '#FFF'
+              color: '#000'
             }
           }
         }

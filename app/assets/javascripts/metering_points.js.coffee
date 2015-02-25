@@ -1,2 +1,3 @@
 $(".metering_points").ready ->
 
+
