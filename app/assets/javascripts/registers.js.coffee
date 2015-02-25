@@ -42,7 +42,7 @@ getSLPValue = ->
 setSLPValue = (register) ->
   if Date.parse(readingsSLP[1][0]) < new Date()
     getSLPValue()
-  register.find(".power-ticker").html interpolateSLPkW().toFixed(0) + " W"
+  register.find(".power-ticker").html interpolateSLPkW().toFixed(0)
 
 interpolateSLPkW = ->
   firstTimestamp = readingsSLP[0][0]
