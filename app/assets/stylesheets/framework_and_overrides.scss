@@ -54,14 +54,17 @@
   }
 }
 
-.properties-container{
-  height: 250px;
-}
 
 .cover-container{
   height: 80px;
 }
 
+
+.metering-point-cover{
+  clip: rect(0px,auto, 400px,0px);
+}
+
+
 .cover{
- position:absolute;
+  position:absolute;
 }

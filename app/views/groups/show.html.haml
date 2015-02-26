@@ -81,21 +81,15 @@
           .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
 
-
-.cover-container
-  = image_tag @group.image.cover, class: 'img-responsive cover'
+= image_tag @group.image.cover, class: 'img-responsive cover'
 
 
 #page-content
 
-
-  %h1.page-header.text-overflow= t('realtime')
   .row
     .col-sm-12.col-md-12.col-lg-12
-      .panel.panel-warning
-        #bubbles_container
-          #dummy
-
+      #bubbles_container
+        #dummy
 
 
   - if @energy_producers.any?
@@ -119,7 +113,7 @@
         = render user.profile
 
 
-  - if current_user.can_update?(@group)
+  - if user_signed_in? && current_user.can_update?(@group)
     %h1.page-header.text-overflow= t('contracts')
     .row
       = render @group.contracts
