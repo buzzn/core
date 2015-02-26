@@ -83,11 +83,14 @@ buzzn_team_names.each do |user_name|
     mp_z2.devices << dach_pv_justus
     user.add_role :manager, dach_pv_justus
 
-    carport_pv_justus = Fabricate(:carport_pv_justus)
-    user.add_role :manager, carport_pv_justus
-
     bhkw_justus        = Fabricate(:bhkw_justus)
+    mp_z4.devices << bhkw_justus
     user.add_role :manager, bhkw_justus
+
+    auto_justus        = Fabricate(:auto_justus)
+    mp_z3.devices << auto_justus
+    user.add_role :manager, auto_justus
+
   when 'felix'
     @gocycle       = Fabricate(:gocycle)
     user.add_role :manager, @gocycle
@@ -174,11 +177,6 @@ mp_cs_1.users << christian_schuetze
 mp_cs_1.contracts.metering_point_operators.first.contracting_party = christian_schuetze.contracting_party
 mp_cs_1.contracts.metering_point_operators.first.save
 
-
-# felix zieht in forstenrieder_weg ein
-felix = User.where(email: 'felix@buzzn.net').first
-@forstenrieder_weg_mp.users << felix
-@forstenrieder_weg_mp.devices << @gocycle
 
 
 # puts '20 more users with location'

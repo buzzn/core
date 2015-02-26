@@ -2,6 +2,19 @@ Fabricator :device do
   shop_link                     'http://www.amazon.com'
 end
 
+
+
+Fabricator :auto_justus, from: :device do
+  mode                          'in'
+  manufacturer_name             'Mitsubishi'
+  manufacturer_product_name     'i-MiEV'
+  category                      'car'
+  watt_peak                     49000
+  commissioning                 Date.new(2012,10,1)
+  image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'justus', 'auto.jpg' )) }
+end
+
+
 Fabricator :bhkw_justus, from: :device do
   law                           'kwkg'
   mode                          'out'
@@ -11,6 +24,7 @@ Fabricator :bhkw_justus, from: :device do
   primary_energy                'gas'
   watt_peak                     1000
   commissioning                 Date.new(2012,10,1)
+  image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'justus', 'bhkw.jpg' )) }
 end
 
 Fabricator :dach_pv_justus, from: :device do
@@ -22,6 +36,7 @@ Fabricator :dach_pv_justus, from: :device do
   primary_energy                'sun'
   watt_peak                     8510
   commissioning                 Date.new(2012,3,31)
+  image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'justus', 'pv.jpg' )) }
 end
 
 Fabricator :carport_pv_justus, from: :device do
@@ -33,6 +48,7 @@ Fabricator :carport_pv_justus, from: :device do
   primary_energy                'sun'
   watt_peak                     5300
   commissioning                 Date.new(2012,1,1)
+  image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'justus', 'carport-pv.jpg' )) }
 end
 
 
@@ -45,6 +61,7 @@ Fabricator :pv_karin, from: :device do
   primary_energy                'sun'
   watt_peak                     2160
   commissioning                 Date.new(2002,11,1)
+  image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'karin', 'pv.jpg' )) }
 end
 
 
@@ -57,6 +74,7 @@ Fabricator :bhkw_stefan, from: :device do
   primary_energy                'gas'
   watt_peak                     5500
   commissioning                 Date.new(1995,11,1)
+  image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'stefan', 'bhkw.jpg' )) }
 end
 
 
@@ -70,6 +88,7 @@ Fabricator :hof_butenland_wind, from: :device do
   primary_energy                'wind'
   watt_peak                     55000
   commissioning                 Date.new(1989,12,1)
+  image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'butenland', 'wind.jpg' )) }
 end
 
 
@@ -77,13 +96,13 @@ end
 
 
 Fabricator :gocycle, from: :device do
-  image                          { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'gocycle1.jpg')) }
   mode                          'in'
   manufacturer_name             'Gocycle'
   manufacturer_product_name     'GR2'
   category                      'E-Bike'
   watt_peak                     250
   commissioning                 Date.new(2014,6,1)
+  image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'felix', 'gocycle.jpg' )) }
 end
 
 

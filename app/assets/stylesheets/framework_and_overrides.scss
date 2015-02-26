@@ -8,7 +8,6 @@
   }
 }
 
-
 .panel-new{
   border: 3px dashed #fff;
   background: rgba(255,255,255,0.1);
@@ -51,6 +50,18 @@
 
 .new-group{
   .panel-container{
-    line-height: 300px;
+    line-height: 400px;
   }
+}
+
+.properties-container{
+  height: 250px;
+}
+
+.cover-container{
+  height: 80px;
+}
+
+.cover{
+ position:absolute;
 }

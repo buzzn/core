@@ -8,12 +8,9 @@
 
           .text-center.pad-all
             .pad-ver
-              - if @device.image?
-                = image_tag @device.image.lg, class: 'img-circle img-lg img-border'
-              - else
-                %span.fa-stack.fa-lg.fa-5x
-                  %i.fa.fa-circle.fa-stack-2x
-                  %i.fa.fa-plug.fa-stack-1x.fa-inverse
+              %span.fa-stack.fa-lg.fa-5x
+                %i.fa.fa-circle.fa-stack-2x
+                %i.fa.fa-plug.fa-stack-1x.fa-inverse
             %h4.text-lg.text-overflow.mar-no= @device.name
 
           %hr
@@ -42,6 +39,9 @@
 
         .nano-pane{:style => "display: none;"}
           .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
+
+.properties-container
+  = image_tag @device.image.cover, class: 'img-responsive cover'
 
 #page-content
   .row

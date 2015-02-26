@@ -7,12 +7,9 @@
         .nano-content{:tabindex => "0"}
           .text-center.pad-all
             .pad-ver
-              - if @meter.image?
-                = image_tag @meter.image.lg, class: 'img-circle img-lg img-border'
-              - else
-                %span.fa-stack.fa-lg.fa-5x
-                  %i.fa.fa-circle.fa-stack-2x
-                  %i.fa.fa-tachometer.fa-stack-1x.fa-inverse
+              %span.fa-stack.fa-lg.fa-5x
+                %i.fa.fa-circle.fa-stack-2x
+                %i.fa.fa-tachometer.fa-stack-1x.fa-inverse
 
             %h4.text-lg.text-overflow.mar-no= @meter.name
 
@@ -29,8 +26,8 @@
               - if current_user.can_update?(@meter)
                 = @meter.link_to_edit
 
-
-
+.properties-container
+  = image_tag @meter.image.cover, class: 'img-responsive cover'
 
 #page-content
   .row

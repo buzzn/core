@@ -29,7 +29,9 @@ class PictureUploader < CarrierWave::Uploader::Base
   # end
 
 
-
+  version :cover do
+    process :resize_to_fill  => [1000, 400]
+  end
 
   version :sm do
     process :resize_to_fill  => [46, 46]
@@ -44,10 +46,6 @@ class PictureUploader < CarrierWave::Uploader::Base
   end
 
 
-
-  version :extra_large do
-    process :resize_to_fill  => [1500, 1500]
-  end
 
 
 

@@ -38,9 +38,9 @@ class MeteringPointDecorator < Draper::Decorator
     model.registers.map(&:mode).each do |mode|
       case mode
       when 'in'
-        colors << '#00f'
+        colors << '#5fa2dd'
       when 'out'
-        colors << '#f00'
+        colors << '#F76C52'
       else
         colors << '#0f0'
       end
@@ -50,6 +50,16 @@ class MeteringPointDecorator < Draper::Decorator
       chart_metering_point_path(model, resolution: resolution),
       colors: colors,
       library: {
+
+        chart: {
+          backgroundColor: {
+              linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 },
+              stops: [
+                  [0, "rgba(0, 0, 0, 0)"],
+                  [1, "rgba(0, 0, 0, 0.7)"]
+              ]
+          }
+        },
 
         tooltip:{
           pointFormat: "{point.y:,.2f} kWh"
