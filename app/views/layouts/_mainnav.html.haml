@@ -3,11 +3,11 @@
     #mainnav-shortcut
       %ul.list-unstyled
 
-        %li.col-xs-6{"data-content" => t('groups')}
-          = link_to( content_tag(:i, nil, class: 'fa fa-users'), groups_path, class: 'shortcut-grid')
-
         %li.col-xs-6{"data-content" => t('users')}
           = link_to( content_tag(:i, nil, class: 'fa fa-user'), profiles_path, class: 'shortcut-grid')
+
+        %li.col-xs-6{"data-content" => t('groups')}
+          = link_to( content_tag(:i, nil, class: 'fa fa-users'), groups_path, class: 'shortcut-grid')
 
 
     - if user_signed_in?
