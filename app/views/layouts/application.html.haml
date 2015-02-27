@@ -6,7 +6,7 @@
     = include_gon
     #myModal.modal.fade.in{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
       .modal-dialog
-    #container.effect.mainnav-lg{ class: content_for?(:aside) ? 'aside-in aside-left aside-bright' : nil }
+    #container.effect{ class: "#{(content_for?(:aside) ? 'aside-in aside-left aside-bright' : nil)} #{ user_signed_in? ? 'mainnav-lg' : 'mainnav-sm'} "}
       = render 'layouts/navbar'
       = content_tag :div, class: "pusher", data: { pusherhost: Rails.application.secrets.pusher_host, pusherkey: Rails.application.secrets.pusher_key } do
         .boxed
