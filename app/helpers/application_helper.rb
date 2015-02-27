@@ -37,7 +37,7 @@ module ApplicationHelper
       (
         profile.image? ?
         content_tag(:i, image_tag(profile.image.sm, class: 'img-circle', size: '20x20')) :
-        content_tag(:i, nil, class: 'fa fa-home')
+        content_tag(:i, nil, class: 'fa fa-user')
       ) + content_tag(:span, profile.name, class: "menu-title"),
       profile_path(profile), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'

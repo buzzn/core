@@ -15,8 +15,10 @@ class RegisterDecorator < Draper::Decorator
   end
 
   def name
-    t(model.mode)
+    "#{metering_point.name} // #{t(model.mode)}"
   end
+
+
 
   def link_to_edit
     link_to(

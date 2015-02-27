@@ -19,17 +19,20 @@
               %li.list-header= t'my_profile'
               = mainnav_profile_path(current_user.profile)
 
-              %li.list-header= t'my_root_metering_points'
-              - current_user.editable_metering_points.each do |metering_point|
-                = mainnav_metering_point_path(metering_point)
+              - if current_user.editable_metering_points.any?
+                %li.list-header= t'my_root_metering_points'
+                - current_user.editable_metering_points.each do |metering_point|
+                  = mainnav_metering_point_path(metering_point)
 
-              %li.list-header= t'my_devices'
-              - current_user.editable_devices.each do |device|
-                = mainnav_device_path(device)
+              - if current_user.editable_devices.any?
+                %li.list-header= t'my_devices'
+                - current_user.editable_devices.each do |device|
+                  = mainnav_device_path(device)
 
-              %li.list-header= t'my_friends'
-              - current_user.friends.each do |user|
-                = mainnav_profile_path(user.profile)
+              - if current_user.friends.any?
+                %li.list-header= t'my_friends'
+                - current_user.friends.each do |user|
+                  = mainnav_profile_path(user.profile)
 
 
 

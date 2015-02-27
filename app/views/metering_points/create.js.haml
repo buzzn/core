@@ -1,2 +1,2 @@
-$(".metering_points").prepend("#{escape_javascript(render @metering_point )}");
+$(".metering_points").prepend("#{escape_javascript(render @metering_point.decorate )}");
 $("#myModal").modal('hide');

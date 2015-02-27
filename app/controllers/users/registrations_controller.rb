@@ -55,7 +55,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
                   :email,
                   :password,
                   :password_confirmation,
-                  profile_attributes: [:id, :first_name, :last_name, :terms]
+                  profile_attributes: [:id, :user_name, :terms]
                 )
       end
 
@@ -65,7 +65,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
                   :password,
                   :password_confirmation,
                   :current_password,
-                  profile_attributes: [:id, :username, :image, :first_name, :last_name, :gender, :phone, :terms, :newsletter_notifications, :location_notifications, :group_notifications, :_destroy, :description]
+                  profile_attributes: [:id, :username, :image, :user_name, :first_name, :last_name, :gender, :phone, :terms, :newsletter_notifications, :location_notifications, :group_notifications, :_destroy, :description]
                 )
       end
 

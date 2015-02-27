@@ -12,6 +12,7 @@ class Meter < ActiveRecord::Base
 
   after_save :validates_smartmeter_job
 
+  default_scope { order('created_at ASC') }
 
   has_many :registers
   has_many :equipments
