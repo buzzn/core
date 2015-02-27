@@ -25,6 +25,11 @@
                 %i.fa.fa-clock-o.fa-fw
                 = timeago_tag @device.commissioning
 
+              %li.list-group-item.list-item-sm
+                %i.fa.fa-fw{class: @device.input? ? 'fa-arrow-down' : 'fa-arrow-up' }
+                = t("#{@device.mode}_device")
+
+
 
           %hr
             .text-center.clearfix
@@ -54,9 +59,6 @@
           .table-responsive
             %table.table.table-striped
               %tbody
-                %tr
-                  %td= t('mode')
-                  %td= @device.mode
                 - if @device.output?
                   %tr
                     %td= t('category')
