@@ -46,16 +46,20 @@
 
 
 
-.cover-container
-  - if @metering_point.image?
-    = image_tag @metering_point.image.cover, class: 'img-responsive cover metering-point-cover'
-  - elsif @metering_point.devices.any?
-    - if @metering_point.devices.first.image?
-      = image_tag @metering_point.devices.first.image.cover, class: 'img-responsive cover metering-point-cover'
-
 
 #page-content
-  = @metering_point.chart('day_to_hours')
+
+  .row
+    .col-sm-12.col-md-12.col-lg-12
+      - if @metering_point.image?
+        - @cover_image = @metering_point.image.cover
+      - elsif @metering_point.devices.any?
+        - @cover_image = @metering_point.devices.first.image.cover
+
+      .panel.cover{:style => "background-image: url(#{@cover_image})"}
+        .chart
+          = @metering_point.chart('day_to_hours')
+
 
 
   - if @metering_point.path_ids.count > 1

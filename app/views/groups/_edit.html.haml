@@ -7,4 +7,7 @@
       = render 'groups/form_fields', f: f
       .modal-footer
         = f.button :submit, id: 'submit', class: 'btn btn-success'
-        = @group.link_to_delete
+        - if @group.contracts.metering_point_operators.running.any?
+          %button.btn.btn-danger{:disabled => "disabled"}= t('not_deletable')
+        - else
+          = @group.link_to_delete

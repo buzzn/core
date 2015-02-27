@@ -47,7 +47,6 @@
   }
 }
 
-
 .new-group{
   .panel-container{
     line-height: 400px;
@@ -55,16 +54,15 @@
 }
 
 
-.cover-container{
-  height: 80px;
+
+.cover {
+  padding-top: 10%;  /* slope */
+  background-size: cover;
+  -moz-background-size: cover;  /* Firefox 3.6 */
+  background-position: center;  /* Internet Explorer 7/8 */
+
 }
 
 
-.metering-point-cover{
-  clip: rect(0px,auto, 400px,0px);
-}
 
 
-.cover{
-  position:absolute;
-}

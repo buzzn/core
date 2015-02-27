@@ -81,15 +81,15 @@
           .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
 
-= image_tag @group.image.cover, class: 'img-responsive cover'
-
-
 #page-content
 
   .row
     .col-sm-12.col-md-12.col-lg-12
-      #bubbles_container
-        #dummy
+
+      .panel.cover{:style => "background-image: url(#{@group.image.cover})"}
+        #bubbles_container
+          #dummy
+
 
 
   - if @energy_producers.any?
