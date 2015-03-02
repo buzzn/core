@@ -12,14 +12,12 @@ class MeterAuthorizer < ApplicationAuthorizer
 
   def updatable_by?(user)
      user.has_role?(:admin) ||
-     user.has_role?(:manager, resource.metering_point) ||
-     user.has_role?(:manager, resource.metering_point.root)
+     user.has_role?(:manager, resource)
   end
 
   def deletable_by?(user)
     user.has_role?(:admin) ||
-    user.has_role?(:manager, resource.metering_point) ||
-    user.has_role?(:manager, resource.metering_point.root)
+    user.has_role?(:manager, resource)
   end
 
 end
