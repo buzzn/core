@@ -167,6 +167,11 @@ de:
         mode:
           in: 'Verbraucher'
           out: 'Erzeuger'
+      metering_point:
+        registers:
+          mode:
+            in: 'Bezug'
+            out: 'Production'
       meter:
         manufacturer_name:
           landis_gyr: 'Landis & Gyr'

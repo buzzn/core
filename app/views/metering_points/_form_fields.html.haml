@@ -2,7 +2,9 @@
 = f.input :name
 = f.input :uid
 
-%fieldset
-  %h5= t'registers'
-  = f.simple_fields_for :registers do |r|
-    = r.input :mode
+%label= t'current_directions'
+#registers
+  = f.simple_fields_for :registers do |register|
+    = render 'register_fields', :f => register
+  .links
+    = link_to_add_association t('add_current_direction'), f, :registers

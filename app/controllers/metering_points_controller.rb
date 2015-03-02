@@ -14,6 +14,7 @@ class MeteringPointsController < ApplicationController
 
   def new
     @metering_point = MeteringPoint.new
+    @metering_point.registers.new
     authorize_action_for @metering_point
   end
 
@@ -105,7 +106,8 @@ private
       :image,
       :parent_id,
       :user_ids => [],
-      :device_ids => []
+      :device_ids => [],
+      registers_attributes: [:id, :mode, :_destroy]
     )
   end
 

@@ -25,7 +25,8 @@ class MeteringPoint < ActiveRecord::Base
   belongs_to :group
 
   has_many :registers, dependent: :destroy
-  accepts_nested_attributes_for :registers, reject_if: :all_blank
+  accepts_nested_attributes_for :registers, reject_if: :all_blank, :allow_destroy => true
+
 
   has_many :contracts, dependent: :destroy
   has_many :devices

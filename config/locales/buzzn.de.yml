@@ -117,7 +117,8 @@ de:
   news: Aktuelles
   sheet: Datenblatt
   members: Mitglieder
-
+  current_directions: Stromrichtungen
+  add_current_direction: Stromrichtung hinzufügen
   glossary: Glossar
   email_notifications: E-Mail Benachrichtigung
   terms_and_conditions: Nutzungsbedingung
