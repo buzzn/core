@@ -13,6 +13,8 @@ class Profile < ActiveRecord::Base
 
   validates_acceptance_of :terms, accept: true
 
+  normalize_attributes :user_name, :first_name, :last_name
+
 
 
   def self.genders
@@ -25,8 +27,8 @@ class Profile < ActiveRecord::Base
 
 
   def name
-    if self.first_name != '' && self.last_name != ''
-      "#{self.first_name} #{self.last_name}"
+    if first_name != nil && last_name != nil
+      "#{first_name} #{last_name}"
     else
       user_name
     end

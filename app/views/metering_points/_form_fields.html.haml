@@ -1,3 +1,8 @@
 = f.input :image
 = f.input :name
 = f.input :uid
+
+%fieldset
+  %h5= t'registers'
+  = f.simple_fields_for :registers do |r|
+    = r.input :mode

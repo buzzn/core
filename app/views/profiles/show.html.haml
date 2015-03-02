@@ -20,12 +20,20 @@
 
             %h4.text-lg.text-overflow.mar-no= @profile.name
 
-            .pad-ver.btn-group
-              %a.btn.btn-icon.btn-hover-primary.fa.fa-facebook.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Facebook", :href => "#", :title => ""}
-              %a.btn.btn-icon.btn-hover-info.fa.fa-twitter.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Twitter", :href => "#", :title => ""}
-              %a.btn.btn-icon.btn-hover-mint.fa.fa-envelope.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Email", :href => "#", :title => ""}
+            -# .pad-ver.btn-group
+            -#   %a.btn.btn-icon.btn-hover-primary.fa.fa-facebook.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Facebook", :href => "#", :title => ""}
+            -#   %a.btn.btn-icon.btn-hover-info.fa.fa-twitter.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Twitter", :href => "#", :title => ""}
+            -#   %a.btn.btn-icon.btn-hover-mint.fa.fa-envelope.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Email", :href => "#", :title => ""}
 
-            %button.btn.btn-block.btn-success Follow
+            - if @profile.user != current_user
+              - if current_user.friend?(@profile.user)
+                = link_to( t('cancel_friendship'),cancel_friendship_path(@profile.user),:data => {:confirm => t('are_you_sure')}, class: 'btn btn-block btn-warning btn-labeled fa fa-minus')
+              - else
+                - if FriendshipRequest.where(sender: current_user, receiver: @profile.user).empty?
+                  = link_to t('friend_request'), friendship_requests_path( receiver_id: @profile.user), method: :post, class: 'btn btn-block btn-success btn-labeled fa fa-plus'
+                - else
+                  %button.btn.btn-success.btn-labeled.fa.fa-spinner{:disabled => "disabled"}= t'waiting_for_accepting'
+
 
           %hr
             %ul.list-group.bg-trans
@@ -64,6 +72,14 @@
 
 #page-content
 
+  - if @root_metering_points.empty? && @profile.user == current_user
+    = render "welcome_#{I18n.locale.to_s}"
+
+
+  - if @profile.user == current_user
+    - if @friendship_requests.any?
+      %h1.page-header.text-overflow= t'friendship_requests'
+      = render @friendship_requests
 
   %h1.page-header.text-overflow= t'root_metering_points'
   .row

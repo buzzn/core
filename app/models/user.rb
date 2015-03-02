@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
   has_many :group_users
   has_many :groups, :through => :group_users
 
-
+  delegate :name, to: :profile
 
   def friend?(user)
     self.friendships.where(friend: user).empty? ? false : true
@@ -37,14 +37,6 @@ class User < ActiveRecord::Base
 
   def sent_group_metering_point_requests
     GroupMeteringPointRequest.where(user: self)
-  end
-
-  def name
-    if profile.persisted?
-      profile.name
-    else
-      email
-    end
   end
 
   def editable_metering_points
