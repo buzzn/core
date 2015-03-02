@@ -1,14 +1,21 @@
 .metering_point.col-lg-4{id: "metering_point_#{metering_point.id}" }
   .panel.widget
     .widget-header.bg-purple.metering-point-widget{:style => "background-image: url(#{metering_point.image.cover})", :href => metering_point_path(metering_point)}
-      .chart{id: "chart-container", style: "width: 100%; height: 100%; max-height: 200px;"}
+      .chart{id: "chart-container-#{metering_point.id}", style: "width: 100%; height: 125px;"}
 
     .widget-body.text-center
       %h4.mar-no= link_to metering_point.long_name, metering_point
       %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
         - metering_point.registers.each do |register|
           %li.register.col-xs-6{ id: register.id}
-            %span.text-2x.text-thin= register.last_watt
+            - if register.meter && register.meter.smart?
+              = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { readings: register.last_two_readings, slp: false } do
+                %span.text-2x.text-thin
+                  .power-ticker
+            - else
+              = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { slp: true } do
+                %span.text-2x.text-thin
+                  .power-ticker
             %p Watt
             %p.text-muted.text-uppercase
               - if register.mode == 'in'
