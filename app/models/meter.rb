@@ -1,5 +1,4 @@
 class Meter < ActiveRecord::Base
-  resourcify
   include Authority::Abilities
 
   extend FriendlyId
@@ -14,18 +13,20 @@ class Meter < ActiveRecord::Base
 
   default_scope { order('created_at ASC') }
 
-  has_many :registers
-  has_many :equipments
 
+  has_many :equipments
+  belongs_to :metering_point
+
+
+
+  def registers
+    metering_point.registers
+  end
 
   def slug_name
     "#{manufacturer_name} #{manufacturer_product_serialnumber}"
   end
 
-
-  def metering_point
-    registers.collect(&:metering_point).first
-  end
 
   def registers_modes_and_ids
     register_mode_and_ids = {}

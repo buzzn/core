@@ -27,7 +27,7 @@ class MeteringPoint < ActiveRecord::Base
   has_many :registers, dependent: :destroy
   accepts_nested_attributes_for :registers, reject_if: :all_blank, :allow_destroy => true
 
-
+  has_one :meter
   has_many :contracts, dependent: :destroy
   has_many :devices
   has_many :metering_point_users
@@ -45,9 +45,6 @@ class MeteringPoint < ActiveRecord::Base
   default_scope { order('created_at ASC') }
 
 
-  def meter
-    registers.collect(&:meter).first
-  end
 
   def mode
     registers.select(:mode).map(&:mode).join('_')

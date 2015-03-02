@@ -311,9 +311,12 @@ ActiveRecord::Schema.define(version: 20150219151449) do
     t.boolean  "online",                            default: false
     t.boolean  "init_first_reading",                default: false
     t.boolean  "init_reading",                      default: false
+    t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "meters", ["metering_point_id"], name: "index_meters_on_metering_point_id", using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", null: false

@@ -39,16 +39,14 @@ class User < ActiveRecord::Base
     GroupMeteringPointRequest.where(user: self)
   end
 
+
+
   def editable_metering_points
     MeteringPoint.with_role(:manager, self).decorate
   end
 
   def editable_registers
     Register.where(metering_point_id: MeteringPoint.with_role(:manager, self).collect(&:id)).decorate
-  end
-
-  def editable_meters
-    Meter.with_role(:manager, self).decorate
   end
 
   def editable_groups

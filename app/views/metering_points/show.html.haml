@@ -124,6 +124,18 @@
 
 
   - if current_user.can_update?(@metering_point)
+    %h1.page-header.text-overflow= t'meters'
+    .row
+      .meters
+        = render @metering_point.meter if @metering_point.meter
+        - if @metering_point.meter.nil?
+          .new-meter.col-sm-6.col-md-4.col-lg-3
+            .panel.panel-new
+              .panel-container
+                %span.text-1x= new_meter
+
+
+  - if current_user.can_update?(@metering_point)
     - if @metering_point.contracts.any?
       %h1.page-header.text-overflow= t'contracts'
       .row

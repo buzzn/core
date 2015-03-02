@@ -13,7 +13,6 @@ def user_with_metering_point
   contracting_party.contracts << metering_point.contracts.electricity_suppliers.first
 
   user.add_role :manager, metering_point
-  user.add_role :manager, metering_point.meter
   return user, metering_point
 end
 
@@ -54,23 +53,18 @@ buzzn_team_names.each do |user_name|
   case user_name
   when 'justus'
     @fichtenweg8 = root_mp = mp_z1 = Fabricate(:mp_z1)
-    user.add_role :manager, mp_z1.meter
     mp_z1.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z1)
     user.contracting_party.contracts << mp_z1.contracts.metering_point_operators.first
     mp_z2 = Fabricate(:mp_z2)
-    user.add_role :manager, mp_z2.meter
     mp_z2.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z2)
     user.contracting_party.contracts << mp_z2.contracts.metering_point_operators.first
     mp_z3 = Fabricate(:mp_z3)
-    user.add_role :manager, mp_z3.meter
     mp_z3.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z3)
     user.contracting_party.contracts << mp_z3.contracts.metering_point_operators.first
     mp_z4 = Fabricate(:mp_z4)
-    user.add_role :manager, mp_z4.meter
     mp_z4.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z4)
     user.contracting_party.contracts << mp_z4.contracts.metering_point_operators.first
     mp_z5 = Fabricate(:mp_z5)
-    user.add_role :manager, mp_z5.meter
     mp_z5.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z5)
     user.contracting_party.contracts << mp_z5.contracts.metering_point_operators.first
 
@@ -96,30 +90,25 @@ buzzn_team_names.each do |user_name|
     user.add_role :manager, @gocycle
     user.add_role :admin # felix is admin
     root_mp = Fabricate(:mp_urbanstr88)
-    user.add_role :manager, root_mp.meter
     root_mp.devices << @gocycle
   when 'christian'
     root_mp = Fabricate(:mp_60138988)
-    user.add_role :manager, root_mp.meter
     root_mp.contracts << Fabricate(:mpoc_christian, metering_point: root_mp)
     user.add_role :admin # christian is admin
   when 'philipp'
     root_mp = Fabricate(:mp_60009269)
-    user.add_role :manager, root_mp.meter
     root_mp.contracts << Fabricate(:mpoc_philipp, metering_point: root_mp)
   when 'stefan'
     @bhkw_stefan       = Fabricate(:bhkw_stefan)
     @forstenrieder_weg_mp = root_mp = Fabricate(:mp_stefans_bhkw)
-    user.add_role :manager, root_mp.meter
     root_mp.contracts << Fabricate(:mpoc_stefan, metering_point: root_mp)
     root_mp.devices << @bhkw_stefan
     user.add_role :manager, @bhkw_stefan
   else
     root_mp = Fabricate(:metering_point)
-    user.add_role :manager, root_mp.meter
   end
-  root_mp.users << user
   user.add_role :manager, root_mp
+  root_mp.users << user
   root_mp.contracts.electricity_suppliers.first.contracting_party = user.contracting_party
   root_mp.contracts.electricity_suppliers.first.save
 end
@@ -253,136 +242,113 @@ puts 'group wagnis4'
 dirk_mittelstaedt = Fabricate(:dirk_mittelstaedt)
 mp_60009416 = Fabricate(:mp_60009416)
 dirk_mittelstaedt.add_role(:manager, mp_60009416)
-dirk_mittelstaedt.add_role(:manager, mp_60009416.meter)
 mp_60009416.users << dirk_mittelstaedt
 
 manuel_dmoch = Fabricate(:manuel_dmoch)
 mp_60009419 = Fabricate(:mp_60009419)
 manuel_dmoch.add_role(:manager, mp_60009419)
-manuel_dmoch.add_role(:manager, mp_60009419.meter)
 mp_60009419.users << manuel_dmoch
 
 sibo_ahrens = Fabricate(:sibo_ahrens)
 mp_60009415 = Fabricate(:mp_60009415)
 sibo_ahrens.add_role(:manager, mp_60009415)
-sibo_ahrens.add_role(:manager, mp_60009415.meter)
 mp_60009415.users << sibo_ahrens
 
 nicolas_sadoni = Fabricate(:nicolas_sadoni)
 mp_60009418 = Fabricate(:mp_60009418)
 nicolas_sadoni.add_role(:manager, mp_60009418)
-nicolas_sadoni.add_role(:manager, mp_60009418.meter)
 mp_60009418.users << nicolas_sadoni
 
 josef_neu = Fabricate(:josef_neu)
 mp_60009411 = Fabricate(:mp_60009411)
 josef_neu.add_role(:manager, mp_60009411)
-josef_neu.add_role(:manager, mp_60009411.meter)
 mp_60009411.users << josef_neu
 
 elisabeth_christiansen = Fabricate(:elisabeth_christiansen)
 mp_60009410 = Fabricate(:mp_60009410)
 elisabeth_christiansen.add_role(:manager, mp_60009410)
-elisabeth_christiansen.add_role(:manager, mp_60009410.meter)
 mp_60009410.users << elisabeth_christiansen
 
 florian_butz = Fabricate(:florian_butz)
 mp_60009407 = Fabricate(:mp_60009407)
 florian_butz.add_role(:manager, mp_60009407)
-florian_butz.add_role(:manager, mp_60009407.meter)
 mp_60009407.users << florian_butz
 
 ulrike_bez = Fabricate(:ulrike_bez)
 mp_60009409 = Fabricate(:mp_60009409)
 ulrike_bez.add_role(:manager, mp_60009409)
-ulrike_bez.add_role(:manager, mp_60009409.meter)
 mp_60009409.users << ulrike_bez
 
 rudolf_hassenstein = Fabricate(:rudolf_hassenstein)
 mp_60009435 = Fabricate(:mp_60009435)
 rudolf_hassenstein.add_role(:manager, mp_60009435)
-rudolf_hassenstein.add_role(:manager, mp_60009435.meter)
 mp_60009435.users << rudolf_hassenstein
 
 maria_mueller = Fabricate(:maria_mueller)
 mp_60009402 = Fabricate(:mp_60009402)
 mp_60009390 = Fabricate(:mp_60009390)
 maria_mueller.add_role(:manager, mp_60009402)
-maria_mueller.add_role(:manager, mp_60009402.meter)
 maria_mueller.add_role(:manager, mp_60009390)
-maria_mueller.add_role(:manager, mp_60009390.meter)
 mp_60009402.users << maria_mueller
 mp_60009390.users << maria_mueller
 
 andreas_schlafer = Fabricate(:andreas_schlafer)
 mp_60009387 = Fabricate(:mp_60009387)
 andreas_schlafer.add_role(:manager, mp_60009387)
-andreas_schlafer.add_role(:manager, mp_60009387.meter)
 mp_60009387.users << andreas_schlafer
 
 luise_woerle = Fabricate(:luise_woerle)
 mp_60009438 = Fabricate(:mp_60009438)
 luise_woerle.add_role(:manager, mp_60009438)
-luise_woerle.add_role(:manager, mp_60009438.meter)
 mp_60009438.users << luise_woerle
 
 peter_waechter = Fabricate(:peter_waechter)
 mp_60009440 = Fabricate(:mp_60009440)
 peter_waechter.add_role(:manager, mp_60009440)
-peter_waechter.add_role(:manager, mp_60009440.meter)
 mp_60009440.users << peter_waechter
 
 sigrid_cycon = Fabricate(:sigrid_cycon)
 mp_60009404 = Fabricate(:mp_60009404)
 sigrid_cycon.add_role(:manager, mp_60009404)
-sigrid_cycon.add_role(:manager, mp_60009404.meter)
 mp_60009404.users << sigrid_cycon
 
 dietlind_klemm = Fabricate(:dietlind_klemm)
 mp_60009405 = Fabricate(:mp_60009405)
 dietlind_klemm.add_role(:manager, mp_60009405)
-dietlind_klemm.add_role(:manager, mp_60009405.meter)
 mp_60009405.users << dietlind_klemm
 
 wilhelm_wagner = Fabricate(:wilhelm_wagner)
 mp_60009422 = Fabricate(:mp_60009422)
 wilhelm_wagner.add_role(:manager, mp_60009422)
-wilhelm_wagner.add_role(:manager, mp_60009422.meter)
 mp_60009422.users << wilhelm_wagner
 
 volker_letzner = Fabricate(:volker_letzner)
 mp_60009425 = Fabricate(:mp_60009425)
 volker_letzner.add_role(:manager, mp_60009425)
-volker_letzner.add_role(:manager, mp_60009425.meter)
 mp_60009425.users << volker_letzner
 
 evang_pflege = Fabricate(:evang_pflege)
 mp_60009429 = Fabricate(:mp_60009429)
 evang_pflege.add_role(:manager, mp_60009429)
-evang_pflege.add_role(:manager, mp_60009429.meter)
 mp_60009429.users << evang_pflege
 
 david_stadlmann = Fabricate(:david_stadlmann)
 mp_60009393 = Fabricate(:mp_60009393)
 david_stadlmann.add_role(:manager, mp_60009393)
-david_stadlmann.add_role(:manager, mp_60009393.meter)
 mp_60009393.users << david_stadlmann
 
 doris_knaier = Fabricate(:doris_knaier)
 mp_60009442 = Fabricate(:mp_60009442)
 doris_knaier.add_role(:manager, mp_60009442)
-doris_knaier.add_role(:manager, mp_60009442.meter)
 mp_60009442.users << doris_knaier
 
 sabine_dumler = Fabricate(:sabine_dumler)
 mp_60009441 = Fabricate(:mp_60009441)
 sabine_dumler.add_role(:manager, mp_60009441)
-sabine_dumler.add_role(:manager, mp_60009441.meter)
 mp_60009441.users << sabine_dumler
 
 mp_60009420 = Fabricate(:mp_60009420)
 manuel_dmoch.add_role(:manager, mp_60009420)
-manuel_dmoch.add_role(:manager, mp_60009420.meter)
 #Wagnis 4 - Allgemeinstrom Haus West mp_60009420
 #TODO: add real PV metering_point
 mp_60118460 = Fabricate(:mp_60118460)
