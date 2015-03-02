@@ -44,6 +44,13 @@ class MetersController < ApplicationController
   end
 
 
+  def destroy
+    @meter = Meter.find(params[:id])
+    authorize_action_for @meter
+    @meter.destroy
+    respond_with current_user.profile
+  end
+
 
 
 
