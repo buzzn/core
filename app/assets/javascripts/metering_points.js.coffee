@@ -12,8 +12,8 @@ $(".metering_points").ready ->
                     [0, "rgba(0, 0, 0, 0)"],
                     [1, "rgba(0, 0, 0, 0.7)"]
                 ]
-          spacingBottom: 15,
-          spacingTop: 20,
+          spacingBottom: 0,
+          spacingTop: 0,
           spacingLeft: 20,
           spacingRight: 20
         exporting:
@@ -26,23 +26,20 @@ $(".metering_points").ready ->
         credits:
           enabled: false
         xAxis:
+          lineWidth: 0
+          tickWidth: 0
           type: 'datetime'
           endOnTick: true
           min: beginningOfDay(data[0].data[0][0])
           max: endOfDay(data[0].data[0][0])
-          dateTimeLabelFormats:
-            minute: "%H:%M"
-            hour: "%H:%M"
-            day: "%e. %b"
-            year: "%Y"
           labels:
-            enabled: true
+            enabled: false
             style:
               color: '#FFF'
         yAxis:
           gridLineWidth: 0
           labels:
-            enabled: true
+            enabled: false
             style:
               color: '#FFF'
             format: "{value} kWh"
