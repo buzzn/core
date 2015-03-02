@@ -27,46 +27,22 @@ class GroupDecorator < Draper::Decorator
 
 
   def link_to_delete
-    if model.metering_point_operator_contract && model.metering_point_operator_contract.running
-      link_to(
-        t('delete'),
-        model,
-        class: 'btn btn-danger',
-        :data => {
-          :confirm => t('cannot_delete_group_while_running_contracts_exists')
-        })
-    else
-      link_to(
-        t('delete'),
-        model,
-        remote: true,
-        class: 'btn btn-danger',
-        :method => :delete,
-        :data => {
-          :confirm => t('are_you_sure')
-        })
-    end
-  end
-
-
-
-
-  def new_metering_point_operator_contract
     link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle') + '  ' + t("add_metering_point_operator_contract"),
-      new_metering_point_operator_contract_path(group_id: model.id),
-      {
-        :remote       => true,
-        :class        => 'start_modal',
-        'data-toggle' => 'modal',
-        'data-target' => '#myModal'
+      t('delete'),
+      model,
+      remote: true,
+      class: 'btn btn-danger',
+      :method => :delete,
+      :data => {
+        :confirm => t('are_you_sure')
       })
   end
 
-  def new_servicing_contract
+
+  def new_contract
     link_to(
-      content_tag(:i, '', class: 'fa fa-plus-circle') + '  ' + t("add_servicing_contract"),
-      new_servicing_contract_path(group_id: model.id),
+      content_tag(:i, '', class: 'fa fa-plus-circle') + '  ' + t("add_contract"),
+      new_contract_path(group_id: model.id),
       {
         :remote       => true,
         :class        => 'start_modal',

@@ -10,11 +10,6 @@ class Register < ActiveRecord::Base
   scope :out, -> { where(mode: :out) }
 
 
-  def name
-    "#{metering_point.name} #{mode}"
-  end
-
-
 
   def last_watt
     4353

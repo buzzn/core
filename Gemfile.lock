@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/jnicklas/capybara.git
-  revision: dbece71888a4434aaae84475fdf415e13cbe8d78
+  revision: 9dcd6d7546a4ac4f4b585a9c52b55801628af5b4
   specs:
-    capybara (2.4.1)
+    capybara (2.5.0.dev)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
@@ -27,7 +27,7 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/devise.git
-  revision: 61ec44b76edb7f4f0df9683ebb515beb80196fe9
+  revision: 4bb457ff6d7429194ad53c6f21078cdec290b716
   specs:
     devise (3.4.1)
       bcrypt (~> 3.0)
@@ -39,7 +39,7 @@ GIT
 
 GIT
   remote: git://github.com/teampoltergeist/poltergeist.git
-  revision: f826d135dd54a91f674992e2b5cab60a081e39c4
+  revision: de1e49ff3481320be8059320cd9a7a848956fd68
   specs:
     poltergeist (1.6.0)
       capybara (~> 2.1)
@@ -116,21 +116,21 @@ GEM
     authority (3.0.0)
       activesupport (>= 3.0.0)
       rake (>= 0.8.7)
-    autoprefixer-rails (5.1.6)
+    autoprefixer-rails (5.1.7)
       execjs
       json
     awesome_nested_set (3.0.2)
       activerecord (>= 4.0.0, < 5)
     awesome_print (1.6.1)
-    aws-sdk (2.0.26)
-      aws-sdk-resources (= 2.0.26)
-    aws-sdk-core (2.0.26)
+    aws-sdk (2.0.28)
+      aws-sdk-resources (= 2.0.28)
+    aws-sdk-core (2.0.28)
       builder (~> 3.0)
       jmespath (~> 1.0)
       multi_json (~> 1.0)
       multi_xml (~> 0.5)
-    aws-sdk-resources (2.0.26)
-      aws-sdk-core (= 2.0.26)
+    aws-sdk-resources (2.0.28)
+      aws-sdk-core (= 2.0.28)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
@@ -210,7 +210,7 @@ GEM
       actionmailer (>= 3.2.6, < 5)
       devise (>= 3.2.0)
     diff-lcs (1.2.5)
-    doorkeeper (2.1.1)
+    doorkeeper (2.1.2)
       railties (>= 3.1)
     draper (1.4.0)
       actionpack (>= 3.0)
@@ -227,7 +227,7 @@ GEM
     equalizer (0.0.9)
     erubis (2.7.0)
     eventmachine (1.0.7)
-    excon (0.44.2)
+    excon (0.44.3)
     execjs (2.3.0)
     fabrication (2.12.2)
     faraday (0.9.1)
@@ -237,7 +237,7 @@ GEM
     ffi (1.9.6)
     fission (0.5.0)
       CFPropertyList (~> 2.2)
-    fog (1.27.0)
+    fog (1.28.0)
       fog-atmos
       fog-aws (~> 0.0)
       fog-brightbox (~> 0.4)
@@ -246,6 +246,7 @@ GEM
       fog-json
       fog-profitbricks
       fog-radosgw (>= 0.0.2)
+      fog-riakcs
       fog-sakuracloud (>= 0.0.4)
       fog-serverlove
       fog-softlayer
@@ -259,7 +260,7 @@ GEM
     fog-atmos (0.1.0)
       fog-core
       fog-xml
-    fog-aws (0.1.0)
+    fog-aws (0.1.1)
       fog-core (~> 1.27)
       fog-json (~> 1.0)
       fog-xml (~> 0.1)
@@ -268,7 +269,7 @@ GEM
       fog-core (~> 1.22)
       fog-json
       inflecto (~> 0.0.2)
-    fog-core (1.28.0)
+    fog-core (1.29.0)
       builder
       excon (~> 0.38)
       formatador (~> 0.2)
@@ -288,6 +289,10 @@ GEM
       fog-core (>= 1.21.0)
       fog-json
       fog-xml (>= 0.0.1)
+    fog-riakcs (0.1.0)
+      fog-core
+      fog-json
+      fog-xml
     fog-sakuracloud (1.0.0)
       fog-core
       fog-json
@@ -328,7 +333,7 @@ GEM
       json
       multi_json
       request_store (>= 1.0.5)
-    grape (0.10.1)
+    grape (0.11.0)
       activesupport
       builder
       hashie (>= 2.1.0)
@@ -350,7 +355,7 @@ GEM
     grape-swagger-rails (0.1.0)
       grape-swagger (>= 0.7.2)
       railties (>= 3.2.12)
-    guard (2.12.1)
+    guard (2.12.4)
       formatador (>= 0.2.4)
       listen (~> 2.7)
       lumberjack (~> 1.0)
@@ -399,11 +404,11 @@ GEM
     httpclient (2.6.0.1)
     i18n (0.7.0)
     ice_nine (0.11.1)
-    immigrant (0.2.0)
+    immigrant (0.3.0)
       activerecord (>= 3.0)
     inflecto (0.0.2)
     ipaddress (0.8.0)
-    jbuilder (2.2.7)
+    jbuilder (2.2.8)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
     jmespath (1.0.2)
@@ -463,12 +468,12 @@ GEM
       monetize (~> 1.1.0)
       money (~> 6.5.0)
       railties (>= 3.0)
-    mongoid (4.0.1)
+    mongoid (4.0.2)
       activemodel (~> 4.0)
       moped (~> 2.0.0)
       origin (~> 2.1)
       tzinfo (>= 0.3.37)
-    moped (2.0.3)
+    moped (2.0.4)
       bson (~> 2.2)
       connection_pool (~> 2.0)
       optionable (~> 0.2.0)
@@ -482,7 +487,7 @@ GEM
     newrelic_rpm (3.10.0.279)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
-    notiffany (0.0.5)
+    notiffany (0.0.6)
       nenv (~> 0.1)
       shellany (~> 0.0)
     optionable (0.2.0)
@@ -549,7 +554,7 @@ GEM
       rails-assets-jquery (>= 1.9.1)
     rails-assets-d3 (3.5.5)
     rails-assets-font-awesome (4.3.0)
-    rails-assets-highcharts (4.1.1)
+    rails-assets-highcharts (4.1.2)
     rails-assets-jquery (2.1.3)
     rails-assets-jquery-readyselector (0.1.0)
     rails-assets-metisMenu (1.1.3)
@@ -571,7 +576,7 @@ GEM
       ruby-graphviz (~> 1.0.4)
     rails-html-sanitizer (1.0.1)
       loofah (~> 2.0)
-    rails-i18n (4.0.3)
+    rails-i18n (4.0.4)
       i18n (~> 0.6)
       railties (~> 4.0)
     rails-timeago (2.11.1)
@@ -600,25 +605,25 @@ GEM
       rspec-core (~> 3.2.0)
       rspec-expectations (~> 3.2.0)
       rspec-mocks (~> 3.2.0)
-    rspec-core (3.2.0)
+    rspec-core (3.2.1)
       rspec-support (~> 3.2.0)
     rspec-expectations (3.2.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.2.0)
-    rspec-mocks (3.2.0)
+    rspec-mocks (3.2.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.2.0)
-    rspec-rails (3.2.0)
-      actionpack (>= 3.0, <= 4.2)
-      activesupport (>= 3.0, <= 4.2)
-      railties (>= 3.0, <= 4.2)
+    rspec-rails (3.2.1)
+      actionpack (>= 3.0, < 4.3)
+      activesupport (>= 3.0, < 4.3)
+      railties (>= 3.0, < 4.3)
       rspec-core (~> 3.2.0)
       rspec-expectations (~> 3.2.0)
       rspec-mocks (~> 3.2.0)
       rspec-support (~> 3.2.0)
     rspec-retry (0.3.0)
       rspec
-    rspec-support (3.2.1)
+    rspec-support (3.2.2)
     ruby-graphviz (1.0.9)
     ruby2ruby (2.1.3)
       ruby_parser (~> 3.1)
@@ -626,7 +631,7 @@ GEM
     ruby_parser (3.5.0)
       sexp_processor (~> 4.1)
     safe_yaml (1.0.4)
-    sass (3.4.12)
+    sass (3.4.13)
     sass-rails (5.0.1)
       railties (>= 4.0.0, < 5.0)
       sass (~> 3.1)
@@ -656,7 +661,7 @@ GEM
     sitemap_generator (5.0.5)
       builder
     slop (3.6.0)
-    spring (1.3.2)
+    spring (1.3.3)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
     sprockets (2.12.3)
@@ -702,12 +707,12 @@ GEM
     webmock (1.20.4)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
-    websocket-driver (0.5.1)
+    websocket-driver (0.5.3)
       websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.1)
+    websocket-extensions (0.1.2)
     whenever (0.9.4)
       chronic (>= 0.6.3)
-    wicked (1.1.0)
+    wicked (1.1.1)
       rails (>= 3.0.7)
     xpath (2.0.0)
       nokogiri (~> 1.3)

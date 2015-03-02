@@ -16,9 +16,11 @@ class Device < ActiveRecord::Base
 
   default_scope { order('created_at ASC') }
 
+
   def name
     "#{self.manufacturer_name} #{self.manufacturer_product_name}"
   end
+
 
   def self.laws
     %w{

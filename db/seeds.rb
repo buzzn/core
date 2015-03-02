@@ -53,7 +53,7 @@ buzzn_team_names.each do |user_name|
   buzzn_team << user = Fabricate(user_name)
   case user_name
   when 'justus'
-    root_mp = mp_z1 = Fabricate(:mp_z1)
+    @fichtenweg8 = root_mp = mp_z1 = Fabricate(:mp_z1)
     user.add_role :manager, mp_z1.meter
     mp_z1.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z1)
     user.contracting_party.contracts << mp_z1.contracts.metering_point_operators.first
@@ -83,11 +83,14 @@ buzzn_team_names.each do |user_name|
     mp_z2.devices << dach_pv_justus
     user.add_role :manager, dach_pv_justus
 
-    carport_pv_justus = Fabricate(:carport_pv_justus)
-    user.add_role :manager, carport_pv_justus
-
     bhkw_justus        = Fabricate(:bhkw_justus)
+    mp_z4.devices << bhkw_justus
     user.add_role :manager, bhkw_justus
+
+    auto_justus        = Fabricate(:auto_justus)
+    mp_z3.devices << auto_justus
+    user.add_role :manager, auto_justus
+
   when 'felix'
     @gocycle       = Fabricate(:gocycle)
     user.add_role :manager, @gocycle
@@ -167,18 +170,13 @@ end
 
 # christian_schuetze
 christian_schuetze = Fabricate(:christian_schuetze)
-mp_cs_1 = Fabricate(:mp_cs_1)
+@fichtenweg10 = mp_cs_1 = Fabricate(:mp_cs_1)
 christian_schuetze.add_role :manager, mp_cs_1
 mp_cs_1.contracts << Fabricate(:mpoc_justus, metering_point: mp_cs_1)
 mp_cs_1.users << christian_schuetze
 mp_cs_1.contracts.metering_point_operators.first.contracting_party = christian_schuetze.contracting_party
 mp_cs_1.contracts.metering_point_operators.first.save
 
-
-# felix zieht in forstenrieder_weg ein
-felix = User.where(email: 'felix@buzzn.net').first
-@forstenrieder_weg_mp.users << felix
-@forstenrieder_weg_mp.devices << @gocycle
 
 
 # puts '20 more users with location'
@@ -242,12 +240,12 @@ jan_gerdes.add_role :manager, group_hof_butenland
 end
 
 
-# puts 'group home_of_the_brave'
-# group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [@fichtenweg8.metering_point])
-# group_home_of_the_brave.metering_points << fichtenweg10.metering_point
-# justus = User.where(email: 'justus@buzzn.net').first
-# justus.add_role :manager, group_home_of_the_brave
-# group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
+puts 'group home_of_the_brave'
+group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [@fichtenweg8])
+group_home_of_the_brave.metering_points << @fichtenweg10
+justus = User.where(email: 'justus@buzzn.net').first
+justus.add_role :manager, group_home_of_the_brave
+group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
 
 
 

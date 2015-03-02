@@ -131,9 +131,9 @@ class GroupsController < ApplicationController
 private
   def group_params
     params.require(:group).permit(
-      :id,
       :name,
       :image,
+      :logo,
       :mode,
       :private,
       :website,

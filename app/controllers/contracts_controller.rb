@@ -9,9 +9,7 @@ class ContractsController < ApplicationController
 
 
   def new
-    @contract              = Contract.new
-    @contract.bank_account = BankAccount.new
-    @contract.address      = Address.new
+    @contract = Contract.new
     authorize_action_for @contract
   end
 
@@ -25,6 +23,32 @@ class ContractsController < ApplicationController
     else
       render :new
     end
+  end
+
+
+  def edit
+    @contract = Contract.find(params[:id])
+    authorize_action_for @contract
+  end
+
+
+
+
+  def update
+    @contract = Contract.find(params[:id])
+    authorize_action_for @contract
+    if @contract.update_attributes(contract_params)
+      respond_with @contract
+    else
+      render :edit
+    end
+  end
+
+
+  def destroy
+    @contract = Contract.find(params[:id])
+    @contract.destroy
+    redirect_to current_user.profile
   end
 
 
@@ -46,9 +70,7 @@ private
       :customer_number,
       :contract_number,
       :metering_point_id,
-      :organization_id,
-      address_attributes: [:id, :street, :city, :state, :zip, :country, :_destroy],
-      bank_account_attributes: [:id, :holder, :iban, :bic, :_destroy]
+      :organization_id
       )
   end
 

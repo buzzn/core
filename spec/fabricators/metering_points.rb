@@ -8,17 +8,17 @@ end
 
 
 Fabricator :metering_point_with_address, from: :metering_point do
-  address                                { Fabricate(:address) }
+  address { Fabricate(:address) }
 end
 
 
 
-Fabricator :mp_z1, from: :metering_point do
+Fabricator :mp_z1, from: :metering_point_with_address do
   name  'Übergabe'
   image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'fichtenweg10', 'in_out.jpg' ))  }
   registers {
     Fabricate( :in_out_meter,
-                manufacturer_name:                    'Easymeter',
+                manufacturer_name:                    'easy_meter',
                 manufacturer_product_name:            'Q3D',
                 manufacturer_product_serialnumber:    '60139082',
                 ).registers
@@ -27,11 +27,10 @@ end
 
 Fabricator :mp_z2, from: :metering_point do
   name  'PV'
-  image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'fichtenweg10', 'pv.jpg' )) }
 
   registers {
      Fabricate(:out_meter,
-                manufacturer_name:                    'Easymeter',
+                manufacturer_name:                    'easy_meter',
                 manufacturer_product_name:            'Q3D',
                 manufacturer_product_serialnumber:    '60051599',
                 ).registers
@@ -42,10 +41,9 @@ end
 
 Fabricator :mp_z3, from: :metering_point do
   name  'Ladestation'
-  image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'fichtenweg10', 'ladesaeule.jpg' )) }
   registers {
     Fabricate(:in_meter,
-              manufacturer_name:                  'Easymeter',
+              manufacturer_name:                  'easy_meter',
               manufacturer_product_name:          'Q3D',
               manufacturer_product_serialnumber:  '60051559',
               ).registers
@@ -55,10 +53,9 @@ end
 
 Fabricator :mp_z4, from: :metering_point do
   name  'BHKW'
-  image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'fichtenweg10', 'bhkw.jpg' )) }
   registers {
     Fabricate(:out_meter,
-              manufacturer_name:                    'Easymeter',
+              manufacturer_name:                    'easy_meter',
               manufacturer_product_name:            'Q3D',
               manufacturer_product_serialnumber:    '60051560',
               ).registers
@@ -71,7 +68,7 @@ Fabricator :mp_z5, from: :metering_point do
   name  'Abgrenzung'
   registers {
     Fabricate(:out_meter,
-              manufacturer_name:                    'Easymeter',
+              manufacturer_name:                    'easy_meter',
               manufacturer_product_name:            'Q3D',
               manufacturer_product_serialnumber:    '60051600',
               ).registers
@@ -102,7 +99,6 @@ end
 Fabricator :mp_pv_karin, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Gautinger Weg', street_number: '11', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'Dach'
-  image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'gautinger_weg', 'pv.jpg' ))}
   registers { Fabricate(:easymeter_60051431).registers }
 end
 
@@ -113,7 +109,6 @@ end
 Fabricator :mp_stefans_bhkw, from: :metering_point do
   address { Fabricate(:address, street_name: 'Forstenrieder Weg', street_number: '51', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'Keller'
-  image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'forstenrieder_weg', 'bhkw_stefan.jpg' ))}
   registers { Fabricate(:out_meter).registers }
 end
 
@@ -124,7 +119,6 @@ end
 Fabricator :mp_hof_butenland_wind, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Niensweg', street_number: '1', zip: 26969, city: 'Butjadingen', state: 'Niedersachsen') }
   name  'Acker'
-  image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'niensweg', 'wind.jpg' ))}
   registers { Fabricate(:out_meter).registers }
 end
 
@@ -150,7 +144,7 @@ end
 
 
 # Nr. 60009269 für Philipp Oßwald (Einrichtungszähler Bezug)
-Fabricator :mp_60009269, from: :metering_point do
+Fabricator :mp_60009269, from: :metering_point_with_address do
   name  'Wohnung'
   registers { Fabricate(:easymeter_60009269).registers }
 end
@@ -173,7 +167,6 @@ end
 Fabricator :mp_60009316, from: :metering_point do
   address  { Fabricate(:address_hopf) }
   name  'Keller'
-  image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'hopfstr', 'bhkw.jpg' ))}
   registers { Fabricate(:easymeter_60009316).registers }
   contracts         { [] }
 end

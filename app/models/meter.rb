@@ -3,7 +3,7 @@ class Meter < ActiveRecord::Base
   include Authority::Abilities
 
   extend FriendlyId
-  friendly_id :name, use: [:slugged, :finders]
+  friendly_id :slug_name, use: [:slugged, :finders]
 
 
   validates :manufacturer_product_serialnumber, presence: true    #, unless: "self.virtual"
@@ -12,12 +12,13 @@ class Meter < ActiveRecord::Base
 
   after_save :validates_smartmeter_job
 
+  default_scope { order('created_at ASC') }
 
   has_many :registers
   has_many :equipments
 
 
-  def name
+  def slug_name
     "#{manufacturer_name} #{manufacturer_product_serialnumber}"
   end
 

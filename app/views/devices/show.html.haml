@@ -8,12 +8,9 @@
 
           .text-center.pad-all
             .pad-ver
-              - if @device.image?
-                = image_tag @device.image.lg, class: 'img-circle img-lg img-border'
-              - else
-                %span.fa-stack.fa-lg.fa-5x
-                  %i.fa.fa-circle.fa-stack-2x
-                  %i.fa.fa-plug.fa-stack-1x.fa-inverse
+              %span.fa-stack.fa-lg.fa-5x
+                %i.fa.fa-circle.fa-stack-2x
+                %i.fa.fa-plug.fa-stack-1x.fa-inverse
             %h4.text-lg.text-overflow.mar-no= @device.name
 
           %hr
@@ -27,6 +24,11 @@
               %li.list-group-item.list-item-sm
                 %i.fa.fa-clock-o.fa-fw
                 = timeago_tag @device.commissioning
+
+              %li.list-group-item.list-item-sm
+                %i.fa.fa-fw{class: @device.input? ? 'fa-arrow-down' : 'fa-arrow-up' }
+                = t("#{@device.mode}_device")
+
 
 
           %hr
@@ -43,6 +45,9 @@
         .nano-pane{:style => "display: none;"}
           .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
+
+= image_tag @device.image.cover, class: 'img-responsive'
+
 #page-content
   .row
     .col-sm-6
@@ -54,9 +59,6 @@
           .table-responsive
             %table.table.table-striped
               %tbody
-                %tr
-                  %td= t('mode')
-                  %td= @device.mode
                 - if @device.output?
                   %tr
                     %td= t('category')

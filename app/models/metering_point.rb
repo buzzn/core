@@ -7,7 +7,6 @@ class MeteringPoint < ActiveRecord::Base
   tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
   tracked recipient: Proc.new{ |controller, model| controller && model }
 
-  before_destroy :check_for_active_contracts
 
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :finders]
@@ -23,10 +22,12 @@ class MeteringPoint < ActiveRecord::Base
   tracked recipient: Proc.new{ |controller, model| controller && model }
 
 
-  belongs_to :location
   belongs_to :group
-  has_many :registers
-  has_many :contracts,         dependent: :destroy
+
+  has_many :registers, dependent: :destroy
+  accepts_nested_attributes_for :registers, reject_if: :all_blank
+
+  has_many :contracts, dependent: :destroy
   has_many :devices
   has_many :metering_point_users
   has_many :users, through: :metering_point_users, dependent: :destroy
@@ -39,8 +40,8 @@ class MeteringPoint < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
-  default_scope { order('created_at ASC') }
 
+  default_scope { order('created_at ASC') }
 
 
   def meter
@@ -150,16 +151,21 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-  private
-
-  def check_for_active_contracts
-    if electricity_supplier_contracts.collect(&:status).compact.include?("running") || metering_point_operator_contracts.collect(&:running).compact.include?(true)
-      return false
-    end
-  end
-
-
-
-
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

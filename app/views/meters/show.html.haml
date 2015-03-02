@@ -7,12 +7,9 @@
         .nano-content{:tabindex => "0"}
           .text-center.pad-all
             .pad-ver
-              - if @meter.image?
-                = image_tag @meter.image.lg, class: 'img-circle img-lg img-border'
-              - else
-                %span.fa-stack.fa-lg.fa-5x
-                  %i.fa.fa-circle.fa-stack-2x
-                  %i.fa.fa-tachometer.fa-stack-1x.fa-inverse
+              %span.fa-stack.fa-lg.fa-5x
+                %i.fa.fa-circle.fa-stack-2x
+                %i.fa.fa-tachometer.fa-stack-1x.fa-inverse
 
             %h4.text-lg.text-overflow.mar-no= @meter.name
 
@@ -22,15 +19,15 @@
               %ul.list-group.bg-trans
                 %li.list-group-item.list-item-sm
                   %i.fa.fa-bolt.fa-fw
-                  = link_to @meter.metering_point.name, @meter.metering_point
+                  = link_to @meter.metering_point.long_name, @meter.metering_point
 
           %hr
             .text-center.clearfix
               - if current_user.can_update?(@meter)
                 = @meter.link_to_edit
 
-
-
+.properties-container
+  = image_tag @meter.image.cover, class: 'img-responsive cover'
 
 #page-content
   .row
@@ -45,7 +42,7 @@
               %tbody
                 %tr
                   %td= t('manufacturer_name')
-                  %td= @meter.manufacturer_name
+                  %td= t @meter.manufacturer_name
                 %tr
                   %td= t('manufacturer_product_name')
                   %td= @meter.manufacturer_product_name
@@ -79,12 +76,13 @@
                 %tr
                   %td= t('smart')
                   %td= @meter.smart
-                %tr
-                  %td= t('online')
-                  %td= @meter.online
-                %tr
-                  %td= t('initialized_successfully')
-                  %td= @meter.init_reading
+                - if @meter.smart
+                  %tr
+                    %td= t('online')
+                    %td= @meter.online
+                  %tr
+                    %td= t('initialized_successfully')
+                    %td= @meter.init_reading
 
 
 

@@ -9,16 +9,13 @@
       .nano
         .nano-content{:tabindex => "0"}
           .text-center.pad-all
-
             .pad-ver
-              - if @group.image?
-                = image_tag @group.image.lg, class: 'img-circle img-lg img-border'
+              - if @group.logo?
+                = image_tag @group.logo.lg, class: 'img-circle img-lg img-border'
               - else
                 %span.fa-stack.fa-lg.fa-5x
                   %i.fa.fa-circle.fa-stack-2x
                   %i.fa.fa-users.fa-stack-1x.fa-inverse
-
-
 
             %h4.text-lg.text-overflow.mar-no= @group.name
 
@@ -84,18 +81,12 @@
           .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
 
-
-
-
-
-
 #page-content
 
-
-  %h1.page-header.text-overflow= t('realtime')
   .row
     .col-sm-12.col-md-12.col-lg-12
-      .panel.panel-warning
+
+      .panel.cover{:style => "background-image: url(#{@group.image.cover})"}
         #bubbles_container
           #dummy
 
@@ -122,7 +113,7 @@
         = render user.profile
 
 
-  - if current_user.can_update?(@group)
+  - if user_signed_in? && current_user.can_update?(@group)
     %h1.page-header.text-overflow= t('contracts')
     .row
       = render @group.contracts

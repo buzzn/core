@@ -7,14 +7,16 @@
     #aside
       .nano
         .nano-content{:tabindex => "0"}
-          .text-center.pad-all
 
+          .text-center.pad-all
             .pad-ver
               - if @profile.image?
-                = image_tag @profile.image.lg, class: 'img-circle img-lg img-border', alt: ""
+                = image_tag @profile.image.lg, class: 'img-circle img-lg img-border'
               - else
-                %span.icon-wrap.icon-wrap-sm.icon-circle.bg-dark
-                  %i.fa.fa-user.fa-5x
+                %span.fa-stack.fa-lg.fa-5x
+                  %i.fa.fa-circle.fa-stack-2x
+                  %i.fa.fa-user.fa-stack-1x.fa-inverse
+
 
             %h4.text-lg.text-overflow.mar-no= @profile.name
 
@@ -22,6 +24,7 @@
               %a.btn.btn-icon.btn-hover-primary.fa.fa-facebook.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Facebook", :href => "#", :title => ""}
               %a.btn.btn-icon.btn-hover-info.fa.fa-twitter.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Twitter", :href => "#", :title => ""}
               %a.btn.btn-icon.btn-hover-mint.fa.fa-envelope.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Email", :href => "#", :title => ""}
+
             %button.btn.btn-block.btn-success Follow
 
           %hr
@@ -64,49 +67,55 @@
 
   %h1.page-header.text-overflow= t'root_metering_points'
   .row
-    = render @root_metering_points
-    - if current_user.can_create?(MeteringPoint)
-      .new-metering-point.col-lg-4
-        .panel.panel-new
-          .panel-container
-            %span.text-1x= new_root_metering_point
+    .metering_points
+      = render @root_metering_points
+      - if current_user.can_create?(MeteringPoint) && current_user.profile == @profile
+        .new-metering-point.col-lg-4
+          .panel.panel-new
+            .panel-container
+              %span.text-1x= new_root_metering_point
 
 
-  %h1.page-header.text-overflow= t'meters'
-  .row
-    = render @meters
-    - if current_user.can_create?(Meter)
-      .new-meter.col-sm-6.col-md-4.col-lg-3
-        .panel.panel-new
-          .panel-container
-            %span.text-1x= new_meter
+  - if current_user.profile == @profile
+    %h1.page-header.text-overflow= t'meters'
+    .row
+      .meters
+        = render @meters
+        - if current_user.can_create?(Meter)
+          .new-meter.col-sm-6.col-md-4.col-lg-3
+            .panel.panel-new
+              .panel-container
+                %span.text-1x= new_meter
 
 
 
   %h1.page-header.text-overflow= t'devices'
   .row
-    = render @devices
-    - if current_user.can_create?(Device)
-      .new-device.col-sm-6.col-md-3.col-lg-2
-        .panel.panel-new
-          .panel-container
-            %span.text-1x= new_device
+    .devices
+      = render @devices
+      - if current_user.can_create?(Device) && current_user.profile == @profile
+        .new-device.col-sm-6.col-md-3.col-lg-2
+          .panel.panel-new
+            .panel-container
+              %span.text-1x= new_device
 
 
   %h1.page-header.text-overflow= t'friends'
   .row
-    - @friends.each do |user|
-      = render user.profile
+    .profiles
+      - @friends.each do |user|
+        = render user.profile
 
 
-  %h1.page-header.text-overflow= t'groups'
+  %h1.page-header.text-overflow= t'group'
   .row
-    = render @groups
-    - if current_user.can_create?(Group)
-      .new-group.col-lg-6
-        .panel.panel-new
-          .panel-container
-            %span.text-1x= new_group
+    .groups
+      = render @groups
+      - if current_user.can_create?(Group) && current_user.profile == @profile
+        .new-group.col-lg-6
+          .panel.panel-new
+            .panel-container
+              %span.text-1x= new_group
 
 
 

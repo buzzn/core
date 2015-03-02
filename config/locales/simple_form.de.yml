@@ -145,7 +145,9 @@ de:
       defaults:
         username: 'Benutzername, mit dem Du dich einloggen kannst.'
       metering_point:
+        image: Ein Bild von dem Zählpunkt erleichtert die übersichtlichkeit.
         name: 'Name des Zählpunkts, z.B. Wohnung oder Solaranlage'
+        uid: Zählpunkt ist die Bezeichnung in der Energiewirtschaft für den Punkt, an dem Versorgungsleistungen wie z. B. Elektrizität, Erdgas, Fernwärme oder Trinkwasser an Verbraucher geleistet oder von Erzeugern bezogen werden. Dem Zählpunkt wird eine eindeutige Bezeichnung, die Zählpunktbezeichnung zugeordnet. Beispiel DE 000562 66802 AO6G56M11SN51G21M24S
       metering_point_operator_contract:
         username: 'Benutzername, mit dem du dich beim Messstellenbetreiber einloggen kannst.'
 
