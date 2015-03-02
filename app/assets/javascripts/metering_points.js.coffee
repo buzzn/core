@@ -3,8 +3,25 @@ $(".metering_points").ready ->
     chart = new (Highcharts.Chart)(
       chart:
         type: 'column'
-        renderTo: 'highchart-container'
+        renderTo: 'chart-container'
+        backgroundColor:
+              linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
+              stops: [
+                  [0, "rgba(0, 0, 0, 0)"],
+                  [1, "rgba(0, 0, 0, 0.7)"]
+              ]
+        spacingBottom: 15,
+        spacingTop: 20,
+        spacingLeft: 20,
+        spacingRight: 20
       exporting:
+        enabled: false
+      legend:
+        enabled: false
+      title:
+        margin: 0
+        text: ""
+      credits:
         enabled: false
       xAxis:
         type: 'datetime'
@@ -19,13 +36,17 @@ $(".metering_points").ready ->
         labels:
           enabled: true
           style:
-            color: '#000'
+            color: '#FFF'
       yAxis:
-        gridLineWidth: 1
+        gridLineWidth: 0
         labels:
           enabled: true
           style:
-            color: '#000'
+            color: '#FFF'
+          format: "{value} kWh"
+        title:
+          enabled: false
+
       tooltip:
         pointFormat: "{point.y:,.2f} kWh"
       series: data))
