@@ -411,13 +411,11 @@ ActiveRecord::Schema.define(version: 20150219151449) do
     t.integer  "decimal_places",    default: 2
     t.boolean  "virtual",           default: false
     t.string   "formula"
-    t.integer  "meter_id"
     t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "registers", ["meter_id"], name: "index_registers_on_meter_id", using: :btree
   add_index "registers", ["metering_point_id"], name: "index_registers_on_metering_point_id", using: :btree
 
   create_table "roles", force: :cascade do |t|

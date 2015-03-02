@@ -1,7 +1,6 @@
 class Register < ActiveRecord::Base
   include Authority::Abilities
 
-  belongs_to :meter
   belongs_to :metering_point
 
   validates :mode, presence: true
@@ -58,11 +57,11 @@ private
       data = []
       operands.each do |register_id|
         register = Register.find(register_id)
-        data << convert_to_array(Reading.aggregate(resolution_format, register.meter.smart ? [register_id] : nil))
+        data << convert_to_array(Reading.aggregate(resolution_format, register.metering_point.meter.smart ? [register_id] : nil))
       end
       return calculate_virtual_register(data, operators)
     else
-      convert_to_array(Reading.aggregate(resolution_format, meter.smart ? [self.id] : nil))
+      convert_to_array(Reading.aggregate(resolution_format, metering_point.meter.smart ? [self.id] : nil))
     end
   end
 

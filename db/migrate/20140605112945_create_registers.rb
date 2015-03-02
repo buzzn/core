@@ -9,12 +9,11 @@ class CreateRegisters < ActiveRecord::Migration
       t.integer :decimal_places,    default: 2
       t.boolean :virtual,           default: false
       t.string  :formula
-      t.integer :meter_id
+
       t.integer :metering_point_id
 
       t.timestamps
     end
-    add_index :registers, :meter_id
     add_index :registers, :metering_point_id
   end
 end

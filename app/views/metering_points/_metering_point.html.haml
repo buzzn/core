@@ -8,7 +8,7 @@
       %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
         - metering_point.registers.each do |register|
           %li.register.col-xs-6{ id: register.id}
-            - if register.meter && register.meter.smart?
+            - if register.metering_point.meter && register.metering_point.meter.smart?
               = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { readings: register.last_two_readings, slp: false } do
                 %span.text-2x.text-thin
                   .power-ticker
