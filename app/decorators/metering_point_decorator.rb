@@ -15,6 +15,20 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :distribution_system_operator_contracts
   decorates_association :transmission_system_operator_contracts
 
+
+
+  def mode_class
+    case model.mode
+    when 'in'
+      'primary'
+    when 'out'
+      'danger'
+    when 'in_out'
+      'purple'
+    end
+  end
+
+
   def long_name
     if model.address
        "#{model.name} (#{model.address.street_name})"
@@ -224,7 +238,7 @@ class MeteringPointDecorator < Draper::Decorator
   def new_sub_metering_point
     link_to(
       content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
-      metering_point_wizard_metering_points_path(parent_metering_point_id: model.id),
+      new_metering_point_path(parent_id: model.id),
       {
         :remote         => true,
         :class          => 'btn start_modal',

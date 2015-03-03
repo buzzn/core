@@ -17,8 +17,8 @@
               %span.pull-right
                 - if current_user.profile.image?
                   = image_tag current_user.profile.image.sm, class: 'img-circle img-user media-object', alt: ""
-                - else
-                  %i.fa.fa-user
+
+
               .username.hidden-xs= current_user.name
             .dropdown-menu.dropdown-menu-md.dropdown-menu-right.with-arrow.panel-default
               %ul.head-list

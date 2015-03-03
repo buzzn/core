@@ -1,6 +1,8 @@
 .metering_point.col-lg-4{id: "metering_point_#{metering_point.id}" }
   .panel.widget
-    .widget-header.bg-purple.metering-point-widget{:style => "background-image: url(#{metering_point.image.cover})", :href => metering_point_path(metering_point)}
+
+    .widget-header.widget-header-slim{class: "bg-#{metering_point.mode_class}" }
+      = image_tag metering_point.image.cover, class: 'widget-bg img-responsive'
       .chart{id: "chart-container-#{metering_point.id}", style: "width: 100%; height: 125px;"}
 
     .widget-body.text-center
