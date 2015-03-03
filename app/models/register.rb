@@ -56,12 +56,21 @@ private
       operators = get_operators_from_formula
       data = []
       operands.each do |register_id|
-        register = Register.find(register_id)
-        data << convert_to_array(Reading.aggregate(resolution_format, register.metering_point.meter.smart ? [register_id] : nil))
+        data << slp_or_smart(register_id, resolution_format)
       end
       return calculate_virtual_register(data, operators)
     else
-      convert_to_array(Reading.aggregate(resolution_format, metering_point.meter.smart ? [self.id] : nil))
+      slp_or_smart(self.id, resolution_format)
+    end
+  end
+
+
+  def slp_or_smart(register_id, resolution_format)
+    register = Register.find(register_id)
+    if register.metering_point.meter && register.metering_point.meter.smart
+      convert_to_array(Reading.aggregate(resolution_format, register.id)) # smart
+    else
+      convert_to_array(Reading.aggregate(resolution_format, nil)) # SLP
     end
   end
 

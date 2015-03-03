@@ -11,10 +11,10 @@ de:
   add_in_out_metering: Einspeisezähler hinzufügen
   add_diff_metering: Abgrenzungszähler hinzufügen
 
-  add_out_metering_point: Messpunkt für Generatorzähler hinzufügen
-  add_in_metering_point: Messpunkt für Verbrauchszähler hinzufügen
-  add_in_out_metering_point: Messpunkt für Einspeisezähler hinzufügen
-  add_diff_metering_point: Messpunkt für Abgrenzungszähler hinzufügen
+  add_out_metering_point: Zählpunkt für Generatorzähler hinzufügen
+  add_in_metering_point: Zählpunkt für Verbrauchszähler hinzufügen
+  add_in_out_metering_point: Zählpunkt für Einspeisezähler hinzufügen
+  add_diff_metering_point: Zählpunkt für Abgrenzungszähler hinzufügen
 
 
   out_root_metering_point: Einspeisung
@@ -29,11 +29,11 @@ de:
   in_out: Verbrauch/Produktion
   diff: Abgrenzung
 
-  my_root_metering_points: Meine Locations
-  root_metering_points: Locations
-  add_metering_point: Messpunkt hinzufügen
-  add_sub_metering_point: Unter Messpunkt hinzufügen
-  sub_metering_points: Unter Messpunkte
+  my_root_metering_points: Meine Haupt-Zählpunkte
+  root_metering_points: Haupt-Zählpunkte
+  add_metering_point: Zählpunkt hinzufügen
+  add_sub_metering_point: Unter Zählpunkt hinzufügen
+  sub_metering_points: Unter Zählpunkt
 
   new_meter: neuer Zähler
   add_new_meter: neuer Zähler hinzufügen
@@ -51,7 +51,7 @@ de:
 
   member_since: Mitglied seit
 
-  new_device: neuer Gerät
+  new_device: neues Gerät
   add_new_device: Neues Gerät hinzufügen
   add_device: Gerät hinzufügen
   add_devices: Geräte hinzufügen
