@@ -53,7 +53,7 @@ class ProfilesController < ApplicationController
 
 
   def redirect_to_current_user
-    redirect_to current_user
+    redirect_to current_user.profile
   end
 
 

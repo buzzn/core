@@ -68,7 +68,7 @@ private
   def slp_or_smart(register_id, resolution_format)
     register = Register.find(register_id)
     if register.metering_point.meter && register.metering_point.meter.smart
-      convert_to_array(Reading.aggregate(resolution_format, register.id)) # smart
+      convert_to_array(Reading.aggregate(resolution_format, [register.id])) # smart
     else
       convert_to_array(Reading.aggregate(resolution_format, nil)) # SLP
     end
