@@ -175,8 +175,8 @@ Buzzn::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
 
-  #root controller: 'profiles', action: 'redirect_to_current_user'
-  root to: "startpage#index"
+  root controller: 'profiles', action: 'redirect_to_current_user'
+  #root to: "startpage#index"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

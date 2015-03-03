@@ -52,6 +52,10 @@ class ProfilesController < ApplicationController
   end
 
 
+  def redirect_to_current_user
+    redirect_to current_user
+  end
+
 
 
 private
