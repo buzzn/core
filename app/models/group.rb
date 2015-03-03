@@ -28,6 +28,7 @@ class Group < ActiveRecord::Base
   has_many :group_users
   has_many :users, :through => :group_users
 
+  normalize_attributes :description, :website
 
 
   def member?(metering_point)

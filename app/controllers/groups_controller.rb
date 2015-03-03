@@ -39,14 +39,16 @@ class GroupsController < ApplicationController
       else
         user_name = metering_point.decorate.name
       end
-      if metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
-        latest_readings = Reading.last_two_by_register_id(metering_point.registers.first.id)
-      elsif metering_point.meter.smart? && metering_point.meter.online && !metering_point.meter.init_reading
-        #TODO: init_reading ausführen
-      elsif metering_point.meter.smart? && !metering_point.meter.online && metering_point.meter.init_reading
-        #TODO: show slp values?
-      elsif !metering_point.meter.smart?
-        #TODO: show slp values
+      if metering_point.meter
+        if metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
+          latest_readings = Reading.last_two_by_register_id(metering_point.registers.first.id)
+        elsif metering_point.meter.smart? && metering_point.meter.online && !metering_point.meter.init_reading
+          #TODO: init_reading ausführen
+        elsif metering_point.meter.smart? && !metering_point.meter.online && metering_point.meter.init_reading
+          #TODO: show slp values?
+        elsif !metering_point.meter.smart?
+          #TODO: show slp values
+        end
       end
       if metering_point.mode == "out"
         if !latest_readings.nil? && !latest_readings.first.nil? && !latest_readings.last.nil?

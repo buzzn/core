@@ -103,8 +103,9 @@
 
   %h1.page-header.text-overflow= t'sub_metering_points' if current_user.can_update?(@metering_point) || @metering_point.children.size != 0
   .row
-    - @metering_point.children.each do |sub_metering_point|
-      = render sub_metering_point.decorate
+    .metering_points
+      - @metering_point.children.each do |sub_metering_point|
+        = render sub_metering_point.decorate
 
     - if current_user.can_update?(@metering_point)
       .new-metering-point.col-lg-4

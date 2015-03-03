@@ -56,10 +56,13 @@
                   %a.btn-link{:href => "#"}
                     %i.fa.fa-globe.fa-fw
                     = link_to_external @group.website
-          %hr
-            .pad-hor
-              %h5=t('description')
-              %small.text-thin= @group.description
+
+
+          - if @group.description
+            %hr
+              .pad-hor
+                %h5=t('description')
+                %small.text-thin= @group.description
 
           %hr
             .text-center.clearfix

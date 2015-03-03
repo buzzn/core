@@ -2,7 +2,7 @@
 %html{lang: locale}
   = render 'layouts/head'
 
-  %body{class: "#{controller_name} #{action_name}"}
+  %body
     = include_gon
     #myModal.modal.fade.in{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
       .modal-dialog

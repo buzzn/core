@@ -94,6 +94,12 @@ de:
         description: Beschreibung
       group:
         private: Privat
+        logo: Logo
+        image: Hintergrundbild
+        name: Name
+        website: Webseite
+        description: Beschreibung
+
       meter:
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname
