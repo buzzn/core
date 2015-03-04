@@ -29,6 +29,11 @@
                 %i.fa.fa-fw{class: @device.input? ? 'fa-arrow-down' : 'fa-arrow-up' }
                 = t("#{@device.mode}_device")
 
+              - if @device.metering_point
+                %li.list-group-item.list-item-sm
+                  %i.fa.fa-bolt.fa-fw
+                  = link_to @device.metering_point.long_name, @device.metering_point
+
 
 
           %hr
@@ -88,29 +93,6 @@
                 %tr
                   %td= t('mobile')
                   %td= t @device.mobile
-
-
-  / %h1.page-header.text-overflow= t'belongs_to_user'
-  / .row
-  /   - @manager.each do |user|
-  /     = render user.profile.decorate
-
-  / - if @metering_point && current_user.can_update?(@device)
-  /   %h1.page-header.text-overflow= t'belongs_to_metering_point'
-  /   .row
-  /     = render @metering_point
-
-  / - if @location && current_user.can_update?(@device)
-  /   %h1.page-header.text-overflow= t'belongs_to_location'
-  /   .row
-  /     = render @location
-
-  / - if @group
-  /   %h1.page-header.text-overflow= t'belongs_to_group'
-  /   .row
-  /     = render @group
-
-
 
 
 

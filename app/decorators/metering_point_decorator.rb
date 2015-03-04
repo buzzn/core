@@ -16,6 +16,14 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :transmission_system_operator_contracts
 
 
+  def cover_image
+    if model.image?
+      return model.image.cover
+    elsif model.devices.any?
+      return model.devices.first.image.cover
+    end
+  end
+
 
   def mode_class
     case model.mode

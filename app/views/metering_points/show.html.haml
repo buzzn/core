@@ -49,19 +49,6 @@
 
 #page-content
 
-  .row
-    .col-sm-12.col-md-12.col-lg-12
-      - if @metering_point.image?
-        - @cover_image = @metering_point.image.cover
-      - elsif @metering_point.devices.any?
-        - @cover_image = @metering_point.devices.first.image.cover
-
-      .panel.cover{:style => "background-image: url(#{@cover_image})"}
-        .chart
-          = @metering_point.chart('day_to_hours')
-
-
-
   - if @metering_point.path_ids.count > 1
     .pad-ver
       %ol.breadcrumb
@@ -69,9 +56,30 @@
           - @metering_point = MeteringPoint.find(metering_point_id).decorate
           %li= link_to @metering_point.name, @metering_point
 
-
   .row
     = render @metering_point.registers
+
+  .row
+    .col-sm-12.col-md-12.col-lg-12
+
+      .panel.cover{:style => "background-image: url(#{@metering_point.cover_image})"}
+        .chart
+          = @metering_point.chart('day_to_hours')
+
+
+
+  %h1.page-header.text-overflow= t'sub_metering_points' if current_user.can_update?(@metering_point) || @metering_point.children.size != 0
+  .row
+    .metering_points
+      - @metering_point.children.each do |sub_metering_point|
+        = render sub_metering_point.decorate
+
+    - if current_user.can_update?(@metering_point)
+      .new-metering-point.col-lg-4
+        .panel.panel-new
+          .panel-container
+            %span.text-1x= @metering_point.new_sub_metering_point
+
 
 
   %h1.page-header.text-overflow= t'devices' if current_user.can_update?(@metering_point) || @devices.size != 0
@@ -101,17 +109,7 @@
 
 
 
-  %h1.page-header.text-overflow= t'sub_metering_points' if current_user.can_update?(@metering_point) || @metering_point.children.size != 0
-  .row
-    .metering_points
-      - @metering_point.children.each do |sub_metering_point|
-        = render sub_metering_point.decorate
 
-    - if current_user.can_update?(@metering_point)
-      .new-metering-point.col-lg-4
-        .panel.panel-new
-          .panel-container
-            %span.text-1x= @metering_point.new_sub_metering_point
 
 
 
