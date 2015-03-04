@@ -75,7 +75,7 @@ class Meter < ActiveRecord::Base
           })
           update_info << "register_id: #{register.id} | from: #{Time.at(last)}, to: #{Time.at(now)}, #{range.count} seconds"
         else
-          register.meter.update_columns(online: false)
+          register.metering_point.meter.update_columns(online: false)
         end
       end
     end

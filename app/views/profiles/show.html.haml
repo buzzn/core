@@ -93,12 +93,14 @@
             .panel-container
               %span.text-1x= new_group
 
+
+
   %h1.page-header.text-overflow= t'root_metering_points'
   .row
     .metering_points
       = render @root_metering_points
       - if current_user.can_create?(MeteringPoint) && current_user.profile == @profile
-        .new-metering-point.col-lg-4
+        .new-metering-point.col-sm-12.col-md-12.col-lg-6
           .panel.panel-new
             .panel-container
               %span.text-1x= new_root_metering_point
@@ -109,7 +111,7 @@
     .devices
       = render @devices
       - if current_user.can_create?(Device) && current_user.profile == @profile
-        .new-device.col-sm-6.col-md-3.col-lg-2
+        .new-device.col-sm-12.col-md-12.col-lg-6
           .panel.panel-new
             .panel-container
               %span.text-1x= new_device

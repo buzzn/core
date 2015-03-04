@@ -11,24 +11,54 @@
         %i.fa.fa-bolt.fa-3x
 
 
-      %h4.mar-no= link_to metering_point.long_name, metering_point
+      %p.text-2x.mar-no= link_to metering_point.long_name, metering_point
       %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
         - metering_point.registers.each do |register|
           %li.register.col-xs-6{ id: register.id}
+
             - if register.metering_point.meter && register.metering_point.meter.smart?
               = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { readings: register.last_two_readings, slp: false } do
-                %span.text-2x.text-thin
+                %span.text-3x
                   .power-ticker
             - else
               = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { slp: true } do
-                %span.text-2x.text-thin
+                %span.text-3x
                   .power-ticker
-            %p Watt
-            %p.text-muted.text-uppercase
+
+            %p.text-muted
+
               - if register.mode == 'in'
                 %i.fa.fa-arrow-down
+                Watt
+                = t register.mode
               - elsif register.mode == 'out'
                 %i.fa.fa-arrow-up
-              - else
+                Watt
+                = t register.mode
 
 
+      %hr
+
+
+      %ul.list-unstyled.text-center.clearfix
+
+        %li.col-xs-3
+          %p.text-uppercase
+            %i.fa.fa-sitemap
+          %p.text-sm= "#{metering_point.children.count} #{t('sub_metering_points')}"
+
+        %li.col-xs-3
+          %p.text-uppercase
+            %i.fa.fa-user
+          %p.text-sm= "#{metering_point.users.count} #{t('residents')}"
+
+        %li.col-xs-3
+          %p.text-uppercase
+            %i.fa.fa-plug
+          %p.text-sm= "#{metering_point.devices.count} #{t('devices')}"
+
+
+        %li.col-xs-3
+          %p.text-uppercase
+            %i.fa.fa-users
+          %p.text-sm= t'buzzn'
