@@ -5,7 +5,3 @@
       %i.fa.fa-tachometer.fa-5x
       %hr
       %h4= link_to meter.name, meter
-
-    .list-group
-      - meter.registers.each do |register|
-        = link_to register.name, register, class: "list-group-item list-group-item-#{register.panel_mode_class}"

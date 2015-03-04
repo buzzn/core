@@ -2,7 +2,7 @@
   .panel.panel-colorful{ class: "panel-#{register.panel_mode_class}"}
     .pad-all.text-center
 
-      %p.text-uppercase.mar-btm.text-sm= link_to t(register.mode), register
+      %p.text-uppercase.mar-btm.text-sm= t(register.mode)
       - if register.metering_point.meter && register.metering_point.meter.smart?
         = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { readings: register.last_two_readings, slp: false } do
           %span.text-5x.text-thin

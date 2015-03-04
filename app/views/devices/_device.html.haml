@@ -1,11 +1,10 @@
-.col-sm-6.col-md-3.col-lg-2
-  .panel.text-center
-    .panel-body.panel-primary.panel-colorful
-      %p.text-uppercase.mar-btm.text-sm= device.category
-      = link_to image_tag(device.image.lg, class: 'img-lg img-circle img-border mar-btm'), device
+.col-sm-12.col-md-12.col-lg-6
+  .panel.media.middle
 
-    .pad-all.text-center
-      = link_to device.name, device
+    .media-left{class: "bg-#{device.panel_mode_class}"}
+      = link_to image_tag(device.image.lg), device
 
-      %hr/
-      %p.text-2x.text-primary 5,327 Watt
+    .media-body.pad-lft
+      %p.text-1x.text-thin= t(device.category)
+      %p.text-2x.mar-no= link_to device.manufacturer_name, device
+      %p.text-2x.mar-no.text-thin= link_to device.manufacturer_product_name, device

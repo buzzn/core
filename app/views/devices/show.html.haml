@@ -33,7 +33,7 @@
 
           %hr
             .text-center.clearfix
-              %p.h3= @device.watt_peak
+              %p.h3= human_readable_watt @device.watt_peak
               %small.text-muted= t'watt_peak'
 
           %hr

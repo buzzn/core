@@ -4,7 +4,14 @@ class DeviceDecorator < Draper::Decorator
 
   decorates_association :metering_point
 
-
+  def panel_mode_class
+    case model.mode
+    when 'in'
+      'primary'
+    when 'out'
+      'danger'
+    end
+  end
 
   def link_to_delete
     link_to(
