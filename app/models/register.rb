@@ -10,10 +10,10 @@ class Register < ActiveRecord::Base
 
 
 
-  def last_watt
-    4353
-  end
 
+  def smart?
+    metering_point.meter && metering_point.meter.smart?
+  end
 
   def hour_to_minutes
     chart_data(:hour_to_minutes)
@@ -85,9 +85,6 @@ private
     end
     return hours
   end
-
-
-
 
 
   def get_operators_from_formula
