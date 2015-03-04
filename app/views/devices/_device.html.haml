@@ -2,9 +2,13 @@
   .panel.media.middle
 
     .media-left{class: "bg-#{device.panel_mode_class}"}
-      = link_to image_tag(device.image.md), device
+      - if device.image?
+        = link_to image_tag(device.image.md), device
+      - else
+        = link_to image_tag('//placehold.it/128&text=no+pic'), device
+
 
     .media-body.pad-lft
-      %p.text-1x.text-thin= t(device.category)
+      %p.text-1x.text-thin= device.category
       %p.text-2x.mar-no= link_to device.manufacturer_name, device
       %p.text-2x.mar-no.text-thin= link_to device.manufacturer_product_name, device

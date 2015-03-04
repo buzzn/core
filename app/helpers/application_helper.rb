@@ -50,8 +50,8 @@ module ApplicationHelper
   def mainnav_metering_point_path(metering_point)
     active_link_to(
       (
-        metering_point.image? ?
-        content_tag(:i, image_tag(metering_point.image.sm, class: 'img-circle', size: '20x20')) :
+        metering_point.smart_image ?
+        content_tag(:i, image_tag(metering_point.smart_image.sm, class: 'img-circle', size: '20x20')) :
         content_tag(:i, nil, class: 'fa fa-bolt')
       ) + content_tag(:span, metering_point.long_name, class: "menu-title"),
       metering_point_path(metering_point), class: 'button white',
@@ -106,7 +106,7 @@ module ApplicationHelper
         'data-toggle'   => 'modal',
         'data-target'   => '#myModal',
         'data-tooltip'  => "true",
-        'title'         => t("add_metering_point"),
+        'title'         => t("add_root_metering_point"),
       })
   end
 

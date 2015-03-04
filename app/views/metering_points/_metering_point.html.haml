@@ -2,7 +2,7 @@
   .panel.widget
 
     .widget-header{class: "bg-#{metering_point.mode_class}" }
-      = image_tag metering_point.cover_image, class: 'widget-bg img-responsive'
+      = image_tag metering_point.smart_image.cover, class: 'widget-bg img-responsive' if metering_point.smart_image
       .chart{id: "chart-container-#{metering_point.id}", style: "width: 100%; height: 180px;"}
 
     .widget-body.text-center

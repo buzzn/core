@@ -62,7 +62,7 @@
   .row
     .col-sm-12.col-md-12.col-lg-12
 
-      .panel.cover{:style => "background-image: url(#{@metering_point.cover_image})"}
+      .panel.cover{:style => "background-image: url(#{@metering_point.smart_image ? @metering_point.smart_image.cover : '//placehold.it/1000x400&text=no_image_found'})"}
         .chart
           = @metering_point.chart('day_to_hours')
 
@@ -75,10 +75,11 @@
         = render sub_metering_point.decorate
 
     - if current_user.can_update?(@metering_point)
-      .new-metering-point.col-lg-4
-        .panel.panel-new
-          .panel-container
-            %span.text-1x= @metering_point.new_sub_metering_point
+      .row
+        .col-lg-12.text-center
+          = @metering_point.new_sub_metering_point
+    %hr
+
 
 
 
@@ -88,10 +89,11 @@
       = render @devices
 
     - if current_user.can_update?(@metering_point)
-      .new-device.col-sm-6.col-md-3.col-lg-2
-        .panel.panel-new
-          .panel-container
-            %span.text-1x= @metering_point.edit_devices
+      .row
+        .col-lg-12.text-center
+          = @metering_point.edit_devices
+    %hr
+
 
 
 
@@ -102,13 +104,10 @@
       = render user.profile
 
     - if current_user.can_update?(@metering_point)
-      .new-user.col-md-6.col-lg-4
-        .panel.panel-new
-          .panel-container
-            %span.text-1x= @metering_point.edit_users
-
-
-
+      .row
+        .col-lg-12.text-center
+          = @metering_point.edit_users
+    %hr
 
 
 
@@ -118,11 +117,13 @@
     .row
       .meters
         = render @metering_point.meter if @metering_point.meter
-        - if @metering_point.meter.nil?
-          .new-meter.col-sm-6.col-md-4.col-lg-3
-            .panel.panel-new
-              .panel-container
-                %span.text-1x= new_meter
+    - if @metering_point.meter.nil?
+      .row
+        .col-lg-12.text-center
+          = new_meter
+    %hr
+
+
 
 
   - if current_user.can_update?(@metering_point)
@@ -130,5 +131,8 @@
       %h1.page-header.text-overflow= t'contracts'
       .row
         = render @metering_point.contracts
+
+
+
 
 

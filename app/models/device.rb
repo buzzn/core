@@ -6,12 +6,13 @@ class Device < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
-  validates :watt_peak, numericality: { only_integer: true }, presence: true
-  validates :manufacturer_product_name, presence: true, length: { in: 2..30 }
-  validates :manufacturer_name, allow_blank: true, length: { in: 2..30 }
-
-
   validates :mode, presence: true
+  validates :manufacturer_name, presence: true, length: { in: 2..30 }
+  validates :manufacturer_product_name, presence: true, length: { in: 2..30 }
+  validates :watt_peak, numericality: { only_integer: true }, presence: true
+
+
+
 
 
   default_scope { order('created_at ASC') }
