@@ -67,6 +67,9 @@ de:
   edit_group: Gruppe bearbeiten
 
 
+  contracts: Verträge
+  add_contract: Vertrag hinzufügen
+
 
   users: Benutzer
   edit_users: Benutzer bearbeiten
@@ -232,7 +235,6 @@ de:
   cancel_friendship: Freundschaft beenden
   devices: Geräte
   explore: Entdecken
-  contracts: Verträge
   listing_profiles: Liste aller Profile
   send_friend_request: Freundschaftsanfrage senden
   complete_user: Daten vervollständigen

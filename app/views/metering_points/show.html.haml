@@ -61,7 +61,6 @@
 
   .row
     .col-sm-12.col-md-12.col-lg-12
-
       .panel.cover{:style => "background-image: url(#{@metering_point.smart_image ? @metering_point.smart_image.cover : '//placehold.it/1000x400&text=no_image_found'})"}
         .chart
           = @metering_point.chart('day_to_hours')
@@ -117,21 +116,25 @@
     .row
       .meters
         = render @metering_point.meter if @metering_point.meter
+
     - if @metering_point.meter.nil?
       .row
         .col-lg-12.text-center
-          = new_meter
+          = @metering_point.new_meter
     %hr
 
 
 
 
-  - if current_user.can_update?(@metering_point)
-    - if @metering_point.contracts.any?
-      %h1.page-header.text-overflow= t'contracts'
-      .row
-        = render @metering_point.contracts
+    %h1.page-header.text-overflow= t'contracts'
+    .row
+      = render @metering_point.contracts
 
+    - if current_user.can_update?(@metering_point)
+      .row
+        .col-lg-12.text-center
+          = @metering_point.new_contract
+    %hr
 
 
 

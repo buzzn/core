@@ -110,20 +110,6 @@ module ApplicationHelper
       })
   end
 
-  def new_meter
-    link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
-      new_meter_path,
-      {
-        :remote         => true,
-        :class          => 'btn start_modal',
-        'data-toggle'   => 'modal',
-        'data-target'   => '#myModal',
-        'data-tooltip'  => "true",
-        'title'         => t("add_meter"),
-      })
-  end
-
   def new_group
     link_to(
       content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),

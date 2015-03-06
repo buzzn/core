@@ -1,10 +1,8 @@
 = f.association :contracting_party, include_blank: false, input_html: { class: 'select2' }
-= f.input :status
 = f.input :price_cents, precision: 16, default: 0
-= f.input :signing_user
-= f.input :terms
-= f.input :confirm_pricing_model
-= f.input :power_of_attorney
+-# = f.input :terms
+-# = f.input :confirm_pricing_model
+-# = f.input :power_of_attorney
 = f.input :commissioning
 = f.input :termination
 = f.input :forecast_watt_hour_pa
