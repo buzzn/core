@@ -12,9 +12,11 @@ class Contract < ActiveRecord::Base
   belongs_to :metering_point
   belongs_to :group
 
-  validates :organization, presence: true
-  validates :username, presence: true, if: :login_required?
-  validates :password, presence: true, if: :login_required?
+  validates :mode, presence: true
+  #validates :organization, presence: true
+  # validates :username, presence: true, if: :login_required?
+  # validates :password, presence: true, if: :login_required?
+  validates :price_cents, presence: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
 
   scope :running,                   -> { where(running: :true) }
   scope :metering_point_operators,  -> { where(mode: 'metering_point_operator_contract') }
@@ -41,15 +43,17 @@ class Contract < ActiveRecord::Base
 
   def self.modes
     %w{
-      sss
-    }
+      electricity_supplier_contract
+      metering_point_operator_contract
+      servicing_contract
+    }.map(&:to_sym)
   end
 
   def login_required?
-    if self.organization.nil?
-      false
-    else
+    if self.organization
       self.organization.slug == 'discovergy'
+    else
+      false
     end
   end
 

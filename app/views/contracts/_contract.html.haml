@@ -11,10 +11,11 @@
           %p.h3.text-thin.media-heading= t('electricity_supplier')
           %small.text-uppercase= link_to t(contract.mode), contract
       %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
-        %li.col-xs-4
-          %span.text-lg= contract.organization.name
-          %p.text-muted.text-uppercase
-            %small= t('organization')
+        - if contract.organization
+          %li.col-xs-4
+            %span.text-lg= contract.organization.name
+            %p.text-muted.text-uppercase
+              %small= t('organization')
         %li.col-xs-4
           %span.text-lg= contract.tariff
           %p.text-muted.text-uppercase
@@ -44,10 +45,11 @@
           %p.h3.text-thin.media-heading= t('metering_point_operator')
           %small.text-uppercase= link_to t(contract.mode), contract
       %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
-        %li.col-xs-4
-          %span.text-lg= contract.organization.name
-          %p.text-muted
-            %small= t('organization')
+        - if contract.organization
+          %li.col-xs-4
+            %span.text-lg= contract.organization.name
+            %p.text-muted.text-uppercase
+              %small= t('organization')
         %li.col-xs-4
           %span.text-lg= contract.tariff
           %p.text-muted
@@ -75,10 +77,11 @@
           %p.h3.text-thin.media-heading= t('localpool_servicing')
           %small.text-uppercase= link_to t(contract.mode), contract
       %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
-        %li.col-xs-4
-          %span.text-lg= contract.organization.name
-          %p.text-muted
-            %small= t('organization')
+        - if contract.organization
+          %li.col-xs-4
+            %span.text-lg= contract.organization.name
+            %p.text-muted.text-uppercase
+              %small= t('organization')
         %li.col-xs-4
           %span.text-lg= contract.tariff
           %p.text-muted

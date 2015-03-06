@@ -1,8 +1,9 @@
-= f.association :contracting_party, include_blank: false, input_html: { class: 'select2' }
+= f.input :mode, collection: Contract.modes, include_blank: false, input_html: { class: 'select2' }
+= f.association :organization, input_html: { class: 'select2' }
+= f.input :tariff
 = f.input :price_cents, precision: 16, default: 0
--# = f.input :terms
--# = f.input :confirm_pricing_model
--# = f.input :power_of_attorney
-= f.input :commissioning
-= f.input :termination
 = f.input :forecast_watt_hour_pa
+= f.input :commissioning
+
+= f.input :username
+= f.input :password, as: :string

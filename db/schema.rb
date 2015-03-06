@@ -118,10 +118,10 @@ ActiveRecord::Schema.define(version: 20150219151449) do
   create_table "contracts", force: :cascade do |t|
     t.string   "mode"
     t.string   "tariff"
-    t.integer  "price_cents",             default: 0,     null: false
-    t.string   "price_currency",          default: "USD", null: false
+    t.integer  "price_cents",                       default: 0,     null: false
+    t.string   "price_currency",                    default: "EUR", null: false
     t.string   "status"
-    t.decimal  "forecast_watt_hour_pa"
+    t.integer  "forecast_watt_hour_pa",   limit: 8
     t.date     "commissioning"
     t.date     "termination"
     t.boolean  "terms"
@@ -134,14 +134,14 @@ ActiveRecord::Schema.define(version: 20150219151449) do
     t.string   "encrypted_password"
     t.string   "encrypted_password_salt"
     t.string   "encrypted_password_iv"
-    t.boolean  "valid_credentials",       default: false
-    t.boolean  "running",                 default: true
+    t.boolean  "valid_credentials",                 default: false
+    t.boolean  "running",                           default: true
     t.integer  "contracting_party_id"
     t.integer  "metering_point_id"
     t.integer  "organization_id"
     t.integer  "group_id"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
   end
 
   add_index "contracts", ["contracting_party_id"], name: "index_contracts_on_contracting_party_id", using: :btree
@@ -161,7 +161,7 @@ ActiveRecord::Schema.define(version: 20150219151449) do
     t.string   "shop_link"
     t.string   "primary_energy"
     t.integer  "watt_peak"
-    t.decimal  "watt_hour_pa"
+    t.integer  "watt_hour_pa"
     t.date     "commissioning"
     t.boolean  "mobile",                            default: false
     t.integer  "metering_point_id"

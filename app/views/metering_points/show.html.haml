@@ -67,20 +67,6 @@
 
 
 
-  %h1.page-header.text-overflow= t'sub_metering_points' if current_user.can_update?(@metering_point) || @metering_point.children.size != 0
-  .row
-    .metering_points
-      - @metering_point.children.each do |sub_metering_point|
-        = render sub_metering_point.decorate
-
-    - if current_user.can_update?(@metering_point)
-      .row
-        .col-lg-12.text-center
-          = @metering_point.new_sub_metering_point
-    %hr
-
-
-
 
   %h1.page-header.text-overflow= t'devices' if current_user.can_update?(@metering_point) || @devices.size != 0
   .row
@@ -128,7 +114,8 @@
 
     %h1.page-header.text-overflow= t'contracts'
     .row
-      = render @metering_point.contracts
+      .contracts
+        = render @metering_point.contracts
 
     - if current_user.can_update?(@metering_point)
       .row
@@ -136,6 +123,19 @@
           = @metering_point.new_contract
     %hr
 
+
+
+  %h1.page-header.text-overflow= t'sub_metering_points' if current_user.can_update?(@metering_point) || @metering_point.children.size != 0
+  .row
+    .metering_points
+      - @metering_point.children.each do |sub_metering_point|
+        = render sub_metering_point.decorate
+
+    - if current_user.can_update?(@metering_point)
+      .row
+        .col-lg-12.text-center
+          = @metering_point.new_sub_metering_point
+    %hr
 
 
 

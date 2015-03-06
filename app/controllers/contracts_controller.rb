@@ -69,6 +69,8 @@ private
       :signing_user,
       :customer_number,
       :contract_number,
+      :username,
+      :password,
       :metering_point_id,
       :organization_id
       )

@@ -27,7 +27,7 @@ class ContractingParty < ActiveRecord::Base
       company
       cooperative
       corporation
-    }
+    }.map(&:to_sym)
   end
 
 

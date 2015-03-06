@@ -7,7 +7,7 @@ class CreateContracts < ActiveRecord::Migration
       t.string   :tariff
       t.monetize :price
       t.string   :status
-      t.decimal  :forecast_watt_hour_pa
+      t.integer  :forecast_watt_hour_pa, :limit => 8
 
       t.date    :commissioning
       t.date    :termination

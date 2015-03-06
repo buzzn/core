@@ -60,31 +60,32 @@ de:
         salex_tax_number: Steuer-ID
         tax_rate: Steuersatz
         tax_number: Steuernummer
-      electricity_supplier_contract:
-        organization: Firmenname
-        customer_number: Kundennummer
-        contract_number: Vertragskontonummer
-        forecast_watt_hour_pa: Geschätzter Stromverbrauch pro Jahr (kWh)
-        contracting_party: Vertragspartner
-        status: Status
-        price_cents: Preis (cent)
-        signing_user: Unterzeichnet von
-        terms: AGB bestätigt
-        confirm_pricing_model: Preismodell bestätigt
-        power_of_attorney: Bevollmächtigung
-        commissioning: Vertragsbeginn
-        termination: Vertragsende
+
       bank_account:
         holder: Kontoinhaber
         iban: IBAN
         bic: BIC
         bank_name: Kreditinstitut
         direct_debit: Umsatzsteuerpflicht
+
       contract:
+        username: Benutzername
+        password: Passwort
+        mode: Vertragstyp
         terms: Ich akzeptiere die AGB
         confirm_pricing_model: Ich akzeptiere das Preismodell
         power_of_attorney: Ich erteile euch Vollmacht
         forecast_watt_hour_pa: Geschätzter Stromverbrauch pro Jahr (kWh)
+        organization: Firmenname
+        customer_number: Kundennummer
+        contract_number: Vertragskontonummer
+        contracting_party: Vertragspartner
+        status: Status
+        price_cents: Preis (cent)
+        signing_user: Unterzeichnet von
+        commissioning: Vertragsbeginn
+        termination: Vertragsende
+
       organization:
         name: Name
         email: Email
@@ -178,6 +179,13 @@ de:
           mode:
             in: 'Bezug'
             out: 'Production'
+      contract:
+        mode:
+          electricity_supplier_contract: Stromliefervertrag
+          metering_point_operator_contract: Messstellenbetreiber Vertrag
+          servicing_contract: Abwicklungsvertrag
+
+
       meter:
         manufacturer_name:
           landis_gyr: 'Landis & Gyr'

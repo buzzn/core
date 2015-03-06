@@ -12,7 +12,7 @@ class CreateDevices < ActiveRecord::Migration
       t.string  :shop_link
       t.string  :primary_energy
       t.integer :watt_peak
-      t.decimal :watt_hour_pa
+      t.integer :watt_hour_pa
       t.date    :commissioning
       t.boolean :mobile, default: false
 

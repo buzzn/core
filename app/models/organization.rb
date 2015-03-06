@@ -7,10 +7,7 @@ class Organization < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
-  has_many :distribution_system_operator_contracts
-  has_many :electricity_supplier_contracts
-  has_many :metering_service_provider_contracts
-  has_many :metering_point_operator_contract
+  has_many :contracts
 
   has_one  :contracting_party
 
