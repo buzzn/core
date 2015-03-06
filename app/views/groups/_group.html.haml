@@ -1,8 +1,8 @@
 .col-lg-12
   .panel
     .panel-bg-cover
-      - if group.image?
-        = image_tag group.image.cover, class: 'img-responsive'
+      - if group.smart_image
+        = image_tag group.smart_image.cover, class: 'img-responsive'
       - else
         = image_tag "http://placehold.it/800x600&text=#{t('no_image')}", class: 'img-responsive'
 

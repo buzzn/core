@@ -1,8 +1,26 @@
 .row
-  .col-md-6
-    #demo-panel-ref.panel.panel-bordered.panel-primary
-      .panel-heading
-        %h1.panel-title Willkommen bei Buzzn
+
+  .col-lg-12
+    #demo-weather-widget-lg.panel.panel-info.panel-colorful.text-center
       .panel-body
-        %p und nun? fragen sie sich bestimmt. buzzn lässt sich über eine vielzahl von möglichkeiten nutzen.
-        = link_to t('wizard_consumers'), complete_user_wizard_consumers_path, class: 'btn btn-primary btn-lg'
+        / Widget heading
+        .media
+          .media-left
+            %i.fa.fa-map-marker.fa-3x
+          .media-body
+            %h4.mar-no.text-left Willkommen
+            %p.text-left In Drei einfachen schritten zum Energiewender
+
+        / Widget body
+        .row.pad-top
+          .col-xs-4
+            %p.text-4x 1
+            %p Haupt-Zählpunkt erstellen
+          .col-xs-4
+            %p.text-4x 2
+            %p Smartmeter einrichten
+          .col-xs-4
+            %p.text-4x 3
+            %p Strom Gruppe beitreten
+        %hr
+

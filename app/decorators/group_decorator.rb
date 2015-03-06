@@ -9,6 +9,13 @@ class GroupDecorator < Draper::Decorator
   decorates_association :servicing_contract
 
 
+  def smart_image
+    if model.image?
+      return model.image
+    elsif MeteringPoint.by_group_id_and_modes(model.id, ['out']).any?
+      return MeteringPoint.by_group_id_and_modes(model.id, ['out']).first.decorate.smart_image
+    end
+  end
 
 
   def link_to_edit

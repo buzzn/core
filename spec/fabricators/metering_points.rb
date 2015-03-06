@@ -74,8 +74,9 @@ end
 # karins pv anlage
 Fabricator :mp_pv_karin, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Gautinger Weg', street_number: '11', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
-  name  'Dach'
-  meter { Fabricate(:easymeter_60051431) }
+  name  'PV Scheune'
+  registers   { [Fabricate(:register_out)] }
+  meter       { Fabricate(:easymeter_60051431) }
 end
 
 
@@ -84,7 +85,7 @@ end
 # stefans bhkw anlage
 Fabricator :mp_stefans_bhkw, from: :metering_point do
   address { Fabricate(:address, street_name: 'Forstenrieder Weg', street_number: '51', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
-  name  'Keller'
+  name  'BHKW'
   registers   { [Fabricate(:register_out)] }
 end
 
@@ -94,8 +95,8 @@ end
 # hof butenland windanlage
 Fabricator :mp_hof_butenland_wind, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Niensweg', street_number: '1', zip: 26969, city: 'Butjadingen', state: 'Niedersachsen') }
-  name  'Acker'
-  registers   { [Fabricate(:register_in)] }
+  name  'Windanlage'
+  registers   { [Fabricate(:register_out)] }
 end
 
 
