@@ -60,10 +60,10 @@
     = render @metering_point.registers
 
   .row
-    .col-sm-12.col-md-12.col-lg-12
+    .col-sm-12.col-md-12.col-lg-12.metering_point_detail{id: "metering_point_#{@metering_point.id}"}
       .panel.cover{:style => "background-image: url(#{@metering_point.smart_image ? @metering_point.smart_image.cover : '//placehold.it/1000x400&text=no_image_found'})"}
-        .chart
-          = @metering_point.chart('day_to_hours')
+        .chart{id: "chart-container-#{@metering_point.id}", style: "width: 100%; height: 300px;"}
+
 
 
 

@@ -34,6 +34,10 @@ class RegisterDecorator < Draper::Decorator
 
   def last_two_readings
     latest_readings = Reading.last_two_by_register_id(model.id)
+    while latest_readings.any? && latest_readings.first[:timestamp] == latest_readings.last[:timestamp] do
+      Reading.where(register_id: model.id).last.delete
+      latest_readings = Reading.last_two_by_register_id(model.id)
+    end
     if latest_readings.empty?
       return nil
     end
