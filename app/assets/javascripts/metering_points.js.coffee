@@ -76,16 +76,6 @@ beginningOfDay = (timestamp) ->
 $(".metering_point_detail").ready ->
   id = $(this).attr('id').split('_')[2]
   $.getJSON('http://localhost:3000/metering_points/' + id + '/chart?resolution=day_to_hours', (data) ->
-    colors = []
-    obj = data[0]
-    for key of obj
-      attrName = key
-      attrValue = obj[key]
-      if attrName == "name" && attrValue == "in"
-        colors.push('#5fa2dd')
-      else if attrName == "name" && attrValue == "out"
-        colors.push('#F76C52')
-
     chart = new (Highcharts.Chart)(
       chart:
         type: 'column'
@@ -100,7 +90,6 @@ $(".metering_point_detail").ready ->
         spacingTop: 10
         spacingLeft: 20
         spacingRight: 20
-      colors: colors
       exporting:
         enabled: false
       legend:

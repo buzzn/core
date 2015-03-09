@@ -74,7 +74,12 @@ class MeteringPointsController < ApplicationController
     @metering_point = MeteringPoint.find(params[:id])
     @chart_data = []
     @metering_point.registers.each do |register|
-      @chart_data << {name: register.mode, data: register.send(params[:resolution])}
+      if register.mode == "in"
+        register_color = '#5fa2dd'
+      else
+        register_color = '#F76C52'
+      end
+      @chart_data << {name: register.mode, color: register_color, data: register.send(params[:resolution])}
     end
     render json: @chart_data.to_json
   end
