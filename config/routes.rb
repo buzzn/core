@@ -37,7 +37,7 @@ Buzzn::Application.routes.draw do
   resources :organizations
   resources :comments, :only => [:create, :destroy]
   resources :stream
-
+  resources :addresses
 
 
   resources :friendships do

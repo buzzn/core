@@ -1,6 +1,0 @@
-$(".profiles.show").ready ->
-
-
-
-
-

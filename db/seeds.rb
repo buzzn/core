@@ -5,7 +5,7 @@
 require 'rubygems' #so it can load gems
 
 def user_with_metering_point
-  metering_point              = Fabricate(:metering_point_with_address)
+  metering_point              = Fabricate(:metering_point)
   contracting_party           = Fabricate(:contracting_party)
   user                        = Fabricate(:user)
   user.contracting_party      = contracting_party

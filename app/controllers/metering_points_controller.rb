@@ -8,6 +8,15 @@ class MeteringPointsController < ApplicationController
     @devices        = @metering_point.devices
     @group          = @metering_point.group
     @meter          = @metering_point.meter
+
+    if @metering_point.address
+      gon.push({ markers: [
+        {
+          "lat": @metering_point.address.latitude,
+          "lng": @metering_point.address.longitude
+        }
+      ]})
+    end
     authorize_action_for(@metering_point)
   end
 

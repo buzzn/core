@@ -3,6 +3,7 @@ class MeteringPointDecorator < Draper::Decorator
 
   delegate_all
   decorates_association :devices
+  decorates_association :address
   decorates_association :meter
   decorates_association :users
   decorates_association :location
@@ -226,17 +227,17 @@ class MeteringPointDecorator < Draper::Decorator
 
 
 
-  def new_meter
+  def new_address
     link_to(
       content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
-      new_meter_path(metering_point_id: model.id),
+      new_address_path(metering_point_id: model.id),
       {
         :remote         => true,
         :class          => 'btn start_modal',
         'data-toggle'   => 'modal',
         'data-target'   => '#myModal',
         'data-tooltip'  => "true",
-        'title'         => t("add_meter"),
+        'title'         => t("add_address"),
       })
   end
 

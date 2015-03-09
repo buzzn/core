@@ -1,5 +1,5 @@
 class Address < ActiveRecord::Base
-
+  include Authority::Abilities
   belongs_to :addressable, polymorphic: true
 
   validates :street_name,     presence: true, length: { in: 4..30 }
@@ -10,12 +10,10 @@ class Address < ActiveRecord::Base
   validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name).keys
 
 
-  after_validation :geocode if Rails.env == 'production'
+  after_validation :geocode
   geocoded_by :full_name
 
   default_scope -> { order(:created_at => :asc) }
-
-
 
   def full_name
     [ street_name, street_number, city, zip, state, country].compact.join(', ')

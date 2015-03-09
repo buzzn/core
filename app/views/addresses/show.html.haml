@@ -1,0 +1,35 @@
+
+= content_for :aside do
+  %aside#aside-container
+    #aside
+      .nano
+        .nano-content{:tabindex => "0"}
+
+          .text-center.pad-all
+            .pad-ver
+              %span.fa-stack.fa-lg.fa-5x
+                %i.fa.fa-circle.fa-stack-2x
+                %i.fa.fa-plug.fa-stack-1x.fa-inverse
+            %h4.text-lg.text-overflow.mar-no= @address.short_name
+
+          %hr
+            %ul.list-group.bg-trans
+
+
+
+#page-content
+  .row
+    .col-sm-6
+      .panel
+        .panel-heading
+          %h3.panel-title
+            =t('address')
+        .panel-body
+          .table-responsive
+            %table.table.table-striped
+              %tbody
+                %tr
+                  %td= t('manufacturer')
+                  %td= "@device.manufacturer_name"
+
+

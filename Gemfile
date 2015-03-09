@@ -85,6 +85,9 @@ gem 'sitemap_generator'
 gem 'rack-google-analytics'
 gem 'acts_as_list'
 gem 'pusher'
+gem 'gmaps4rails'
+
+
 
 
 source 'http://rails-assets.org' do

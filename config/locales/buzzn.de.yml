@@ -75,6 +75,12 @@ de:
   edit_users: Benutzer bearbeiten
   add_user: Benutzer hinzufuegen
 
+  address: Addresse
+  add_address: Addresse hinzufügen
+
+
+
+
   my_friends: Meine Freunde
   car: PKW
   about_me: Über mich
@@ -165,7 +171,7 @@ de:
   search_project: Projekt Suchen
   place: Ort
   general_information: Allgemeine Informationen
-  address: Addresse
+
   area: Fläche
   performance_and_yield: Leistung und Ertrag
   performance_in_kilowatts_peak: Leistung in Kilowatt peak

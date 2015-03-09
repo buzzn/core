@@ -325,6 +325,7 @@ GEM
     geocoder (1.2.7)
     globalid (0.3.3)
       activesupport (>= 4.1.0)
+    gmaps4rails (2.1.2)
     goldiloader (0.0.8)
       activerecord (>= 3.2, < 4.3)
       activesupport (>= 3.2, < 4.3)
@@ -559,7 +560,7 @@ GEM
     rails-assets-jquery-readyselector (0.1.0)
     rails-assets-metisMenu (1.1.3)
       rails-assets-bootstrap (~> 3.3.0)
-    rails-assets-nanoscroller (0.8.4)
+    rails-assets-nanoscroller (0.8.5)
       rails-assets-jquery (>= 1.6)
     rails-assets-sparklines (1.0.0)
     rails-assets-underscore (1.8.2)
@@ -766,6 +767,7 @@ DEPENDENCIES
   foreigner
   friendly_id
   geocoder
+  gmaps4rails
   goldiloader
   gon
   grape

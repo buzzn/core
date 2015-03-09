@@ -5,7 +5,6 @@ Fabricator :organization do
   email       { Faker::Internet.email }
   description { Faker::Company.catch_phrase }
   website     { "http://www.#{Faker::Internet.domain_name}" }
-  address     { Fabricate(:address) }
 end
 
 
