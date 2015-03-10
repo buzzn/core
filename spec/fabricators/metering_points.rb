@@ -2,7 +2,7 @@ Fabricator :metering_point do
   name  'Wohnung'
   i = 1
   uid         {"DE001068825151000000000000#{2677114 + (i += 1)}"}
-  registers   { [Fabricate(:register_in)] }
+  register   { Fabricate(:register_in) }
   contracts   { [ Fabricate(:electricity_supplier_contract)] }
 end
 
@@ -10,13 +10,13 @@ end
 Fabricator :mp_z1, from: :metering_point do
   name  'Übergabe'
   image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'fichtenweg10', 'in_out.jpg' ))  }
-  registers   { [Fabricate(:register_in),Fabricate(:register_out)] }
+  register   { Fabricate(:register_in) }
   meter       { Fabricate(:easymeter_60139082) }
 end
 
 Fabricator :mp_z2, from: :metering_point do
   name  'PV'
-  registers   { [Fabricate(:register_out)] }
+  register   { Fabricate(:register_out) }
   meter       { Fabricate(:easymeter_60051599) }
 end
 
@@ -24,14 +24,14 @@ end
 
 Fabricator :mp_z3, from: :metering_point do
   name  'Ladestation'
-  registers   { [Fabricate(:register_in)] }
+  register   { Fabricate(:register_in) }
   meter       { Fabricate(:easymeter_60051559) }
 end
 
 
 Fabricator :mp_z4, from: :metering_point do
   name  'BHKW'
-  registers   { [Fabricate(:register_out)] }
+  register   { Fabricate(:register_out) }
   meter       { Fabricate(:easymeter_60051560) }
 end
 
@@ -39,7 +39,7 @@ end
 
 Fabricator :mp_z5, from: :metering_point do
   name  'Abgrenzung'
-  registers   { [Fabricate(:register_out)] }
+  register   { Fabricate(:register_out) }
   meter       { Fabricate(:easymeter_60051600) }
 end
 
@@ -59,7 +59,7 @@ end
 Fabricator :mp_pv_karin, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Gautinger Weg', street_number: '11', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'PV Scheune'
-  registers   { [Fabricate(:register_out)] }
+  register   { Fabricate(:register_out) }
   meter       { Fabricate(:easymeter_60051431) }
 end
 
@@ -70,7 +70,7 @@ end
 Fabricator :mp_stefans_bhkw, from: :metering_point do
   address { Fabricate(:address, street_name: 'Forstenrieder Weg', street_number: '51', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'BHKW'
-  registers   { [Fabricate(:register_out)] }
+  register   { Fabricate(:register_out) }
 end
 
 
@@ -80,7 +80,7 @@ end
 Fabricator :mp_hof_butenland_wind, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Niensweg', street_number: '1', zip: 26969, city: 'Butjadingen', state: 'Niedersachsen') }
   name  'Windanlage'
-  registers   { [Fabricate(:register_out)] }
+  register   { Fabricate(:register_out) }
 end
 
 
@@ -231,7 +231,7 @@ end
 Fabricator :mp_60118460, from: :metering_point do
   name  'PV'
   meter          { Fabricate(:easymeter_60118460) }
-  registers      { [Fabricate(:register_out)] }
+  register      { [Fabricate(:register_out)] }
   contracts         { [] }
 end
 
@@ -355,7 +355,7 @@ Fabricator :mp_60118484, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Übergabe'
   meter          { Fabricate(:easymeter_60118484) }
-  registers   { [Fabricate(:register_in),Fabricate(:register_out)] }
+  register   { Fabricate(:register_in) }
   contracts         { [] }
 end
 

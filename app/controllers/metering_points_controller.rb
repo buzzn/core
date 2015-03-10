@@ -8,22 +8,13 @@ class MeteringPointsController < ApplicationController
     @devices        = @metering_point.devices
     @group          = @metering_point.group
     @meter          = @metering_point.meter
-
-    if @metering_point.address
-      gon.push({ markers: [
-        {
-          "lat": @metering_point.address.latitude,
-          "lng": @metering_point.address.longitude
-        }
-      ]})
-    end
     authorize_action_for(@metering_point)
   end
 
 
   def new
     @metering_point = MeteringPoint.new
-    @metering_point.registers.new
+    @metering_point.register = Register.new
     authorize_action_for @metering_point
   end
 
@@ -79,17 +70,13 @@ class MeteringPointsController < ApplicationController
   end
   authority_actions :edit_devices => 'update'
 
+
+
+
   def chart
     @metering_point = MeteringPoint.find(params[:id])
     @chart_data = []
-    @metering_point.registers.each do |register|
-      if register.mode == "in"
-        register_color = '#5fa2dd'
-      else
-        register_color = '#F76C52'
-      end
-      @chart_data << {name: register.mode, color: register_color, data: register.send(params[:resolution])}
-    end
+    @chart_data << {name: @metering_point.register.mode, color: '#fff', data: @metering_point.register.send(params[:resolution])}
     render json: @chart_data.to_json
   end
 
@@ -121,7 +108,7 @@ private
       :parent_id,
       :user_ids => [],
       :device_ids => [],
-      registers_attributes: [:id, :mode, :_destroy]
+      register_attributes: [:id, :mode, :_destroy]
     )
   end
 

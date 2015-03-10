@@ -2,7 +2,6 @@
   .panel.widget
 
     .widget-header{class: "bg-#{metering_point.mode_class}" }
-      = image_tag metering_point.smart_image.cover, class: 'widget-bg img-responsive' if metering_point.smart_image
       .chart{id: "chart-container-#{metering_point.id}", style: "width: 100%; height: 180px;"}
 
     .widget-body.text-center
@@ -13,17 +12,17 @@
 
       %p.text-2x.mar-no= link_to metering_point.long_name, metering_point
       %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
-        - metering_point.registers.each do |register|
-          %li.register{ id: register.id, class: "col-xs-#{12/metering_point.registers.count}"}
 
-            = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { readings: register.smart? ? register.last_two_readings : nil, slp: !register.smart? } do
-              %span.text-4x
-                .power-ticker
+        %li.register.col-xs-12{ id: metering_point.register.id}
 
-            %p.text-muted
-              %i.fa{class: "fa-arrow-#{ register.mode == 'in' ? 'down' : 'up'}"}
-              Watt
-              = t "#{register.mode}_root_metering_point"
+          = content_tag :div, id: "register-ticker-#{metering_point.register.id}", class: "register-ticker", data: { readings: metering_point.smart? ? metering_point.register.last_two_readings : nil, slp: !metering_point.smart? } do
+            %span.text-4x
+              .power-ticker
+
+          %p.text-muted
+            %i.fa{class: "fa-arrow-#{ metering_point.mode == 'in' ? 'down' : 'up'}"}
+            Watt
+            = t "#{metering_point.mode}_root_metering_point"
 
 
       %hr

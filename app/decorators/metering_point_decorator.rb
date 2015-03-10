@@ -9,7 +9,7 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :location
   decorates_association :group
   decorates_association :contracts
-  decorates_association :registers
+  decorates_association :register
   decorates_association :electricity_supplier_contracts
   decorates_association :metering_service_provider_contracts
   decorates_association :metering_point_operator_contracts
@@ -32,8 +32,6 @@ class MeteringPointDecorator < Draper::Decorator
       'primary'
     when 'out'
       'danger'
-    when 'in_out'
-      'purple'
     end
   end
 
@@ -230,7 +228,7 @@ class MeteringPointDecorator < Draper::Decorator
   def new_address
     link_to(
       content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
-      new_address_path(metering_point_id: model.id),
+      new_address_path(addressable_id: model.id, addressable_type: 'MeteringPoint'),
       {
         :remote         => true,
         :class          => 'btn start_modal',

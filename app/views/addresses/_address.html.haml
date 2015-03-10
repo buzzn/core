@@ -3,6 +3,6 @@
     = link_to image_tag(address.static_gmap_url('1300x400'), class: 'img-responsive'), address
     .pad-all
       %address
-        = "#{@metering_point.address.street_name} #{@metering_point.address.street_number}"
+        = "#{address.street_name} #{address.street_number}"
         %br
-        = "#{@metering_point.address.zip} #{@metering_point.address.city}"
+        = "#{address.zip} #{address.city}"

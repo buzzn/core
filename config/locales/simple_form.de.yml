@@ -182,6 +182,7 @@ de:
       contract:
         mode:
           electricity_supplier_contract: Stromliefervertrag
+          electricity_purchase_contract: Stromabnahmevertrag
           metering_point_operator_contract: Messstellenbetreiber Vertrag
           servicing_contract: Abwicklungsvertrag
 

@@ -24,7 +24,7 @@ class ProfilesController < ApplicationController
 
 
     if @metering_points
-      gon.push({ register_ids: @metering_points.collect(&:registers).flatten.collect(&:id) })
+      gon.push({ register_ids: @metering_points.collect(&:register).flatten.collect(&:id) })
     else
       gon.push({ register_ids: [] })
     end

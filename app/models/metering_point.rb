@@ -24,17 +24,16 @@ class MeteringPoint < ActiveRecord::Base
 
   belongs_to :group
 
-  has_many :registers, dependent: :destroy
-  accepts_nested_attributes_for :registers, reject_if: :all_blank, :allow_destroy => true
+  belongs_to :meter
 
-  has_one :meter, dependent: :destroy
+  has_one :register, dependent: :destroy
+  accepts_nested_attributes_for :register, reject_if: :all_blank
+
   has_many :contracts, dependent: :destroy
   has_many :devices
   has_many :metering_point_users
   has_many :users, through: :metering_point_users, dependent: :destroy
   has_one :address, as: :addressable, dependent: :destroy
-  accepts_nested_attributes_for :address, reject_if: :all_blank
-
 
   validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
   validates :name, presence: true, length: { in: 2..30 }
@@ -44,10 +43,16 @@ class MeteringPoint < ActiveRecord::Base
 
   default_scope { order('created_at ASC') }
 
+  delegate :mode, to: :register, allow_nil: true
 
 
-  def mode
-    registers.select(:mode).map(&:mode).join('_')
+
+  def smart?
+    if meter
+      meter.smart
+    else
+      false
+    end
   end
 
   def addable_devices

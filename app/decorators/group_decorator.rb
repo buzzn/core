@@ -10,11 +10,7 @@ class GroupDecorator < Draper::Decorator
 
 
   def smart_image
-    if model.image?
-      return model.image
-    elsif MeteringPoint.by_group_id_and_modes(model.id, ['out']).any?
-      return MeteringPoint.by_group_id_and_modes(model.id, ['out']).first.decorate.smart_image
-    end
+ false
   end
 
 

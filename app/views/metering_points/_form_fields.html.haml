@@ -1,10 +1,11 @@
-= f.input :image
+-# = f.input :image
 = f.input :name
 = f.input :uid
 
 %label= t'current_directions'
 #registers
-  = f.simple_fields_for :registers do |register|
-    = render 'register_fields', :f => register
-  .links
-    = link_to_add_association t('add_current_direction'), f, :registers
+  = f.simple_fields_for :register do |r|
+    .nested-fields
+      .row
+        = r.input :mode, collection: Register.modes, include_blank: false, label: false, wrapper_html: { class: 'col-md-3' }
+

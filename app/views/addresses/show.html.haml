@@ -1,4 +1,6 @@
 
+
+
 = content_for :aside do
   %aside#aside-container
     #aside
@@ -9,15 +11,31 @@
             .pad-ver
               %span.fa-stack.fa-lg.fa-5x
                 %i.fa.fa-circle.fa-stack-2x
-                %i.fa.fa-plug.fa-stack-1x.fa-inverse
+                %i.fa.fa-map-marker.fa-stack-1x.fa-inverse
             %h4.text-lg.text-overflow.mar-no= @address.short_name
+
+
 
           %hr
             %ul.list-group.bg-trans
 
+              - if @address.metering_point
+                %li.list-group-item.list-item-sm
+                  %i.fa.fa-bolt.fa-fw
+                  = link_to @address.metering_point.name, @address.metering_point
 
+          %hr
+            .text-center.clearfix
+              - if current_user.can_update?(@address)
+                = @address.link_to_edit
 
 #page-content
+
+
+  .panel
+    .address
+      #map{:style => "height: 500px;"}
+
   .row
     .col-sm-6
       .panel
@@ -29,7 +47,24 @@
             %table.table.table-striped
               %tbody
                 %tr
-                  %td= t('manufacturer')
-                  %td= "@device.manufacturer_name"
+                  %td= t('street')
+                  %td= "#{@address.street_name} #{@address.street_number}"
+                %tr
+                  %td= t('zip')
+                  %td= @address.zip
+                %tr
+                  %td= t('city')
+                  %td= @address.city
+                %tr
+                  %td= t('state')
+                  %td= @address.state
+
+
+
+
+
+
+
+
 
 

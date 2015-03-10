@@ -21,7 +21,9 @@ class Contract < ActiveRecord::Base
   scope :running,                   -> { where(running: :true) }
   scope :metering_point_operators,  -> { where(mode: 'metering_point_operator_contract') }
   scope :electricity_suppliers,     -> { where(mode: 'electricity_supplier_contract') }
+  scope :electricity_suppliers,     -> { where(mode: 'electricity_purchase_contract') }
   scope :servicings,                -> { where(mode: 'servicing_contract') }
+
 
 
 
@@ -44,6 +46,7 @@ class Contract < ActiveRecord::Base
   def self.modes
     %w{
       electricity_supplier_contract
+      electricity_purchase_contract
       metering_point_operator_contract
       servicing_contract
     }.map(&:to_sym)

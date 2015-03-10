@@ -14,7 +14,7 @@ class ValidatesCredentialsWorker
                 metering_point.meter.save
               end
             end
-            if @contract.metering_point
+            if @contract.metering_point && @contract.metering_point.meter
               @contract.metering_point.meter.save
             end
           else

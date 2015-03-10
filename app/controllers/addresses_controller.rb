@@ -5,6 +5,12 @@ class AddressesController < ApplicationController
 
   def show
     @address = Address.find(params[:id]).decorate
+    gon.push({ markers: [
+      {
+        "lat": @address.latitude,
+        "lng": @address.longitude
+      }
+    ]})
     authorize_action_for(@address)
   end
 
@@ -18,7 +24,7 @@ class AddressesController < ApplicationController
   def create
     @address = Address.new(address_params)
     authorize_action_for @address
-    if @address.save
+    if @address.save!
       current_user.add_role :manager, @address
       respond_with @address.decorate
     else
@@ -58,11 +64,16 @@ class AddressesController < ApplicationController
 private
   def address_params
     params.require(:address).permit(
+      :address,
       :street_name,
       :street_number,
-      :zip,
       :city,
-      :state
+      :state,
+      :zip,
+      :country,
+      :time_zone,
+      :addressable_id,
+      :addressable_type
     )
   end
 

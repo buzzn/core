@@ -20,9 +20,7 @@ class CreateMeters < ActiveRecord::Migration
       t.boolean :init_first_reading, default: false
       t.boolean :init_reading, default: false
 
-      t.integer :metering_point_id
       t.timestamps
     end
-    add_index :meters, :metering_point_id
   end
 end

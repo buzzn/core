@@ -282,6 +282,7 @@ ActiveRecord::Schema.define(version: 20150219151449) do
     t.date     "regular_reeding"
     t.string   "regular_interval"
     t.string   "ancestry"
+    t.integer  "meter_id"
     t.integer  "contract_id"
     t.integer  "group_id"
     t.datetime "created_at"
@@ -291,6 +292,7 @@ ActiveRecord::Schema.define(version: 20150219151449) do
   add_index "metering_points", ["ancestry"], name: "index_metering_points_on_ancestry", using: :btree
   add_index "metering_points", ["contract_id"], name: "index_metering_points_on_contract_id", using: :btree
   add_index "metering_points", ["group_id"], name: "index_metering_points_on_group_id", using: :btree
+  add_index "metering_points", ["meter_id"], name: "index_metering_points_on_meter_id", using: :btree
 
   create_table "meters", force: :cascade do |t|
     t.string   "slug"
@@ -311,12 +313,9 @@ ActiveRecord::Schema.define(version: 20150219151449) do
     t.boolean  "online",                            default: false
     t.boolean  "init_first_reading",                default: false
     t.boolean  "init_reading",                      default: false
-    t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "meters", ["metering_point_id"], name: "index_meters_on_metering_point_id", using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", null: false

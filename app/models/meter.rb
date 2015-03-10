@@ -15,18 +15,18 @@ class Meter < ActiveRecord::Base
 
 
   has_many :equipments
-  belongs_to :metering_point
 
+  has_many :metering_points
+  has_many :registers, through: :metering_points
 
-
-  def registers
-    metering_point.registers
-  end
 
   def slug_name
     "#{manufacturer_name} #{manufacturer_product_serialnumber}"
   end
 
+  def metering_point_operator_contract
+    self.metering_points.first.contracts.metering_point_operators.first
+  end
 
   def registers_modes_and_ids
     register_mode_and_ids = {}
@@ -93,28 +93,32 @@ class Meter < ActiveRecord::Base
     end
   end
 
-  def virtual
-    if self.registers.collect{|r| true if r.virtual}.include?(true)
-      true
-    else
-      false
-    end
-  end
 
 
-def smart?
-  self.registers.each do |register|
-    if self.virtual
-      if register.get_operands_from_formula.collect{|id| Register.find(id).meter.smart? }.include?(false)
-        return false
-      else
-        return true
-      end
-    else
-      return self.smart
-    end
-  end
-end
+
+# what is this ???
+
+#  def virtual
+#   if self.registers.collect{|r| true if r.virtual}.include?(true)
+#     true
+#   else
+#     false
+#   end
+# end
+#
+# def smart?
+#   self.registers.each do |register|
+#     if self.virtual
+#       if register.get_operands_from_formula.collect{|id| Register.find(id).meter.smart? }.include?(false)
+#         return false
+#       else
+#         return true
+#       end
+#     else
+#       return self.smart
+#     end
+#   end
+# end
 
 
 

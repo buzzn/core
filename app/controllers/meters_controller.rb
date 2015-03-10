@@ -62,7 +62,7 @@ private
       :manufacturer_product_name,
       :manufacturer_product_serialnumber,
       :virtual,
-      :metering_point_id
+      :metering_point_ids => []
     )
   end
 

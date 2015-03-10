@@ -4,9 +4,11 @@ class MeterInitWorker
   def perform(meter_id)
     @meter = Meter.find(meter_id)
 
-    if @meter.metering_point
-      if @meter.metering_point.metering_point_operator_contract
-        @mpoc = @meter.metering_point.metering_point_operator_contract
+    if @meter.metering_points.any?
+
+      if @meter.metering_points.first.metering_point_operator_contract
+        @mpoc = @meter.metering_points.first.metering_point_operator_contract
+
         if @mpoc.organization.slug == 'discovergy' || @mpoc.organization.slug == 'buzzn-metering'
           request = Discovergy.new(@mpoc.username, @mpoc.password).raw(@meter.manufacturer_product_serialnumber)
           if request['status'] == 'ok'
@@ -18,8 +20,8 @@ class MeterInitWorker
               if Reading.last_by_register_id(@meter.registers.first.id)
                 logger.warn "Meter:#{@meter.id} init reading already written"
               else
-                @metering_point = @meter.metering_point
-                @mpoc           = @meter.metering_point.metering_point_operator_contract
+                @metering_point = @meter.metering_points.first
+                @mpoc           = @meter.metering_points.first.metering_point_operator_contract
                 if @metering_point && @mpoc
                   init_meter_id = @meter.id
 

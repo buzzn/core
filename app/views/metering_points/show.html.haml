@@ -1,11 +1,5 @@
 - meta title: @metering_point.name
 
-- content_for(:gmap_js) do
-  = javascript_include_tag "//maps.google.com/maps/api/js?v=3.13&sensor=false&libraries=geometry"
-  = javascript_include_tag "//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js"
-
-
-
 
 = content_for :aside do
   %aside#aside-container
@@ -52,11 +46,11 @@
           %li= link_to @metering_point.name, @metering_point
 
   .row
-    = render @metering_point.registers
+    = render @metering_point.register
 
   .row
     .col-sm-12.col-md-12.col-lg-12.metering_point_detail{id: "metering_point_#{@metering_point.id}"}
-      .panel.cover{:style => "background-image: url(#{@metering_point.smart_image ? @metering_point.smart_image.cover : '//placehold.it/1000x400&text=no_image_found'})"}
+      .panel
         .chart{id: "chart-container-#{@metering_point.id}", style: "width: 100%; height: 300px;"}
 
 
@@ -91,7 +85,7 @@
   - if current_user.can_update?(@metering_point)
     %h1.page-header.text-overflow= t'address'
     .row
-      .meters
+      .addresses
         = render @metering_point.address if @metering_point.address
 
     - if @metering_point.address.nil?
