@@ -1,23 +1,13 @@
 $(".metering_points").ready ->
   $(".metering_point").each ->
     id = $(this).attr('id').split('_')[2]
+    width = $("#chart-container-" + id).width()
     $.getJSON('http://localhost:3000/metering_points/' + id + '/chart?resolution=day_to_hours', (data) ->
-      colors = []
-      obj = data[0]
-      for key of obj
-        attrName = key
-        attrValue = obj[key]
-        if attrName == "name" && attrValue == "in"
-          colors.push('#5fa2dd')
-          console.log 'pushed in'
-        else if attrName == "name" && attrValue == "out"
-          colors.push('#F76C52')
-          console.log 'pushed out'
-
       chart = new (Highcharts.Chart)(
         chart:
           type: 'column'
           renderTo: 'chart-container-' + id
+          width: width
           backgroundColor:
                 linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
                 stops: [
@@ -28,7 +18,6 @@ $(".metering_points").ready ->
           spacingTop: 0,
           spacingLeft: 20,
           spacingRight: 20
-        colors: colors
         exporting:
           enabled: false
         legend:
@@ -75,11 +64,13 @@ beginningOfDay = (timestamp) ->
 
 $(".metering_point_detail").ready ->
   id = $(this).attr('id').split('_')[2]
+  width = $("#chart-container-" + id).width()
   $.getJSON('http://localhost:3000/metering_points/' + id + '/chart?resolution=day_to_hours', (data) ->
     chart = new (Highcharts.Chart)(
       chart:
         type: 'column'
         renderTo: 'chart-container-' + id
+        width: width
         backgroundColor:
               linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
               stops: [
@@ -127,3 +118,5 @@ $(".metering_point_detail").ready ->
         pointFormat: "{point.y:,.2f} kWh"
       series: data))
 
+$(document).on "beforeunload", () ->
+  console.log "jjj"
