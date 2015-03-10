@@ -231,7 +231,7 @@ end
 Fabricator :mp_60118460, from: :metering_point do
   name  'PV'
   meter          { Fabricate(:easymeter_60118460) }
-  register      { [Fabricate(:register_out)] }
+  register      { Fabricate(:register_out) }
   contracts         { [] }
 end
 

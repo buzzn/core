@@ -10,7 +10,7 @@ def user_with_metering_point
   user                        = Fabricate(:user)
   user.contracting_party      = contracting_party
   metering_point.users        << user
-  contracting_party.contracts << metering_point.contracts.electricity_suppliers.first
+  #contracting_party.contracts << metering_point.contracts.electricity_suppliers.first
 
   user.add_role :manager, metering_point
   return user, metering_point
