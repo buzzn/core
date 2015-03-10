@@ -47,7 +47,6 @@ $(".metering_points").ready ->
             format: "{value} kWh"
           title:
             enabled: false
-
         tooltip:
           pointFormat: "{point.y:,.2f} kWh"
         series: data))
@@ -113,10 +112,8 @@ $(".metering_point_detail").ready ->
       plotOptions:
         column:
           borderWidth: 0
-
       tooltip:
         pointFormat: "{point.y:,.2f} kWh"
       series: data))
 
-$(document).on "beforeunload", () ->
-  console.log "jjj"
+
