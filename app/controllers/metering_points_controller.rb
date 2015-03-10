@@ -76,7 +76,7 @@ class MeteringPointsController < ApplicationController
   def chart
     @metering_point = MeteringPoint.find(params[:id])
     @chart_data = []
-    @chart_data << {name: @metering_point.register.mode, color: '#fff', data: @metering_point.register.send(params[:resolution])}
+    @chart_data << {name: @metering_point.register.mode, color: '#fff', data: @metering_point.register.send(params[:resolution], params[:containing_timestamp])}
     render json: @chart_data.to_json
   end
 

@@ -9,20 +9,25 @@ class Register < ActiveRecord::Base
   scope :out, -> { where(mode: :out) }
 
 
-  def hour_to_minutes
-    chart_data(:hour_to_minutes)
+
+  def smart?
+    metering_point.meter && metering_point.meter.smart?
   end
 
-  def day_to_hours
-    chart_data(:day_to_hours)
+  def hour_to_minutes(containing_timestamp)
+    chart_data(:hour_to_minutes, containing_timestamp)
   end
 
-  def month_to_days
-    chart_data(:month_to_days)
+  def day_to_hours(containing_timestamp)
+    chart_data(:day_to_hours, containing_timestamp)
   end
 
-  def year_to_months
-    chart_data(:year_to_months)
+  def month_to_days(containing_timestamp)
+    chart_data(:month_to_days, containing_timestamp)
+  end
+
+  def year_to_months(containing_timestamp)
+    chart_data(:year_to_months, containing_timestamp)
   end
 
   def get_operands_from_formula
@@ -44,7 +49,7 @@ class Register < ActiveRecord::Base
 
 private
 
-  def chart_data(resolution_format)
+  def chart_data(resolution_format, containing_timestamp)
     if self.virtual && self.formula
       operands = get_operands_from_formula
       operators = get_operators_from_formula
@@ -54,17 +59,17 @@ private
       end
       return calculate_virtual_register(data, operators)
     else
-      slp_or_smart(self.id, resolution_format)
+      slp_or_smart(self.id, resolution_format, containing_timestamp)
     end
   end
 
 
-  def slp_or_smart(register_id, resolution_format)
+  def slp_or_smart(register_id, resolution_format, containing_timestamp)
     register = Register.find(register_id)
     if register.metering_point.meter && register.metering_point.meter.smart
-      convert_to_array(Reading.aggregate(resolution_format, [register.id])) # smart
+      convert_to_array(Reading.aggregate(resolution_format, [register.id], containing_timestamp)) # smart
     else
-      convert_to_array(Reading.aggregate(resolution_format, nil)) # SLP
+      convert_to_array(Reading.aggregate(resolution_format, nil, containing_timestamp)) # SLP
     end
   end
 

@@ -19,7 +19,7 @@ class Reading
 
 
 
-  def self.aggregate(resolution_format, register_ids=nil)
+  def self.aggregate(resolution_format, register_ids=nil, containing_timestamp=nil)
     resolution_formats = {
       year_to_months: ['year', 'month'],
       month_to_days:  ['month', 'dayOfMonth'],
@@ -32,21 +32,25 @@ class Reading
     @time_zone          = 'Berlin'
     date                = Time.now
     @location_time_now  = ActiveSupport::TimeZone[@time_zone].local(date.year, date.month, date.day, date.hour, date.min, date.sec)
-
+    if containing_timestamp
+      @location_time = DateTime.strptime((containing_timestamp.to_i/1000).to_s, "%s")
+    else
+      @location_time = @location_time_now
+    end
 
     case resolution_format
     when :year_to_months
-      @start_time = @location_time_now.beginning_of_year
-      @end_time   = @location_time_now.end_of_year
+      @start_time = @location_time.beginning_of_year
+      @end_time   = @location_time.end_of_year
     when :month_to_days
-      @start_time = @location_time_now.beginning_of_month
-      @end_time   = @location_time_now.end_of_month
+      @start_time = @location_time.beginning_of_month
+      @end_time   = @location_time.end_of_month
     when :day_to_hours
-      @start_time = @location_time_now.beginning_of_day
-      @end_time   = @location_time_now.end_of_day
+      @start_time = @location_time.beginning_of_day
+      @end_time   = @location_time.end_of_day
     when :hour_to_minutes
-      @start_time = @location_time_now.beginning_of_hour
-      @end_time   = @location_time_now.end_of_hour
+      @start_time = @location_time.beginning_of_hour
+      @end_time   = @location_time.end_of_hour
     else
       puts "You gave me #{resolution_format} -- I have no idea what to do with that."
     end

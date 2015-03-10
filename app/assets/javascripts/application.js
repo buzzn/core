@@ -33,7 +33,6 @@
 //= require dependent-fields
 //= require metisMenu
 //= require pusher.min
-//= require gmaps/google
 
 //= require nifty_init
 //= require nifty_notification
@@ -44,7 +43,6 @@
 
 //= require global
 //= require registers
-//= require addresses
 //= require metering_points
 //= require groups
 //= require bubble_tooltip
