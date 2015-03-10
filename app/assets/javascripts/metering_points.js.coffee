@@ -49,6 +49,16 @@ $(".metering_points").ready ->
             enabled: false
         tooltip:
           pointFormat: "{point.y:,.2f} kWh"
+          dateTimeLabelFormats:
+            millisecond:"%e.%b, %H:%M:%S.%L",
+            second:"%e.%b, %H:%M:%S",
+            minute:"%e.%b, %H:%M",
+            hour:"%e.%b, %H:%M",
+            day:"%e.%b.%Y",
+            week:"Week from %e.%b.%Y",
+            month:"%B %Y",
+            year:"%Y"
+
         series: data))
 
 endOfDay = (timestamp) ->
@@ -114,6 +124,15 @@ $(".metering_point_detail").ready ->
           borderWidth: 0
       tooltip:
         pointFormat: "{point.y:,.2f} kWh"
+        dateTimeLabelFormats:
+          millisecond:"%e.%b, %H:%M:%S.%L",
+          second:"%e.%b, %H:%M:%S",
+          minute:"%e.%b, %H:%M",
+          hour:"%e.%b, %H:%M",
+          day:"%e.%b.%Y",
+          week:"Week from %e.%b.%Y",
+          month:"%B %Y",
+          year:"%Y"
       series: data))
 
 
