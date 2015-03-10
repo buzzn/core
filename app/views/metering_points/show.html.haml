@@ -51,11 +51,12 @@
   .row
     .col-sm-12.col-md-12.col-lg-12.metering_point_detail{id: "metering_point_#{@metering_point.id}"}
       .panel
-        .btn.btn-success.btn-chart-prev
-          =t('prev')
-        .btn.btn-success.btn-chart-next.pull-right
-          =t('next')
-        .chart{id: "chart-container-#{@metering_point.id}", style: "width: 100%; height: 300px;"}
+        .panel-body.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+          .chart{id: "chart-container-#{@metering_point.id}", style: "width: 100%; height: 300px;"}
+          .pad-all
+            .btn.btn-success.btn-chart-prev=t('prev')
+            .btn.btn-success.btn-chart-next.pull-right=t('next')
+
 
 
 
