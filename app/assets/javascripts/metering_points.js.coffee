@@ -2,18 +2,13 @@ $(".metering_points").ready ->
   $(".metering_point").each ->
     id = $(this).attr('id').split('_')[2]
     width = $("#chart-container-" + id).width()
-    $.getJSON('http://localhost:3000/metering_points/' + id + '/chart?resolution=day_to_hours', (data) ->
+    $.getJSON('http://' + location.host + '/metering_points/' + id + '/chart?resolution=day_to_hours', (data) ->
       chart = new (Highcharts.Chart)(
         chart:
           type: 'column'
           renderTo: 'chart-container-' + id
           width: width
-          backgroundColor:
-                linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
-                stops: [
-                    [0, "rgba(0, 0, 0, 0)"],
-                    [1, "rgba(0, 0, 0, 0.7)"]
-                ]
+          backgroundColor:'rgba(255, 255, 255, 0.0)'
           spacingBottom: 0,
           spacingTop: 0,
           spacingLeft: 20,
@@ -75,13 +70,13 @@ $(".metering_point_detail").ready ->
   id = $(this).attr('id').split('_')[2]
   width = $("#chart-container-" + id).width()
   chart = undefined
-  $.getJSON('http://localhost:3000/metering_points/' + id + '/chart?resolution=day_to_hours', (data) ->
+  $.getJSON('http://' + location.host + '/metering_points/' + id + '/chart?resolution=day_to_hours', (data) ->
     chart = new (Highcharts.Chart)(
       chart:
         type: 'column'
         renderTo: 'chart-container-' + id
+        backgroundColor:'rgba(255, 255, 255, 0.0)'
         width: width
-        backgroundColor: '#5fa2dd'
         spacingBottom: 20
         spacingTop: 10
         spacingLeft: 20
@@ -138,7 +133,7 @@ $(".metering_point_detail").ready ->
   $(".btn-chart-prev").on 'click', ->
     if actual_resolution == "day_to_hours"
       containing_timestamp = min_x - 24*3600*1000
-    $.getJSON('http://localhost:3000/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+    $.getJSON('http://' + location.host + '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       chart.series[0].setData(data[0].data)
       chart.xAxis.min = beginningOfDay(data[0].data[0][0])
       chart.xAxis.max = endOfDay(data[0].data[0][0])
@@ -150,7 +145,7 @@ $(".metering_point_detail").ready ->
   $(".btn-chart-next").on 'click', ->
     if actual_resolution == "day_to_hours"
       containing_timestamp = min_x + 24*3600*1000
-    $.getJSON('http://localhost:3000/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+    $.getJSON('http://' + location.host + '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       chart.series[0].setData(data[0].data)
       chart.xAxis.min = beginningOfDay(data[0].data[0][0])
       chart.xAxis.max = endOfDay(data[0].data[0][0])
@@ -168,7 +163,7 @@ checkIfPreviousDataExists = () ->
     id = $(this).attr('id').split('_')[2]
     if actual_resolution == "day_to_hours"
       containing_timestamp = min_x - 24*3600*1000
-    $.getJSON('http://localhost:3000/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+    $.getJSON('http://' + location.host + '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
         $(".btn-chart-prev").attr('disabled', true)
       else
@@ -180,7 +175,7 @@ checkIfNextDataExists = () ->
     id = $(this).attr('id').split('_')[2]
     if actual_resolution == "day_to_hours"
       containing_timestamp = min_x + 24*3600*1000
-    $.getJSON('http://localhost:3000/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+    $.getJSON('http://' + location.host + '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
         $(".btn-chart-next").attr('disabled', true)
       else
