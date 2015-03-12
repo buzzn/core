@@ -128,6 +128,9 @@ $(".metering_point_detail").ready ->
         text: ""
       credits:
         enabled: false
+      loading:
+        hideDuration: 800
+        showDuration: 800
       xAxis:
         lineWidth: 1
         tickWidth: 1
@@ -183,10 +186,12 @@ $(".metering_point_detail").ready ->
 
 
   $(".btn-chart-prev").on 'click', ->
+    chart.showLoading()
     containing_timestamp = getPreviousTimestamp()
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
-         return
+        chart.hideLoading()
+        return
       chart.series[0].setData(data[0].data)
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
@@ -194,12 +199,15 @@ $(".metering_point_detail").ready ->
       checkIfPreviousDataExists()
       checkIfNextDataExists()
       checkIfZoomOut()
+      chart.hideLoading()
 
   $(".btn-chart-next").on 'click', ->
+    chart.showLoading()
     containing_timestamp = getNextTimestamp()
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
-         return
+        chart.hideLoading()
+        return
       chart.series[0].setData(data[0].data)
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
@@ -207,8 +215,10 @@ $(".metering_point_detail").ready ->
       checkIfPreviousDataExists()
       checkIfNextDataExists()
       checkIfZoomOut()
+      chart.hideLoading()
 
   $(".btn-chart-zoomout").on 'click', ->
+    chart.showLoading()
     if actual_resolution == "hour_to_minutes"
       actual_resolution = "day_to_hours"
     else if actual_resolution == "day_to_hours"
@@ -219,7 +229,8 @@ $(".metering_point_detail").ready ->
     containing_timestamp = chart_data_min_x
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
-         return
+        chart.hideLoading()
+        return
       chart.series[0].setData(data[0].data)
       new_point_width = setPointWidth()
       chart.series[0].update({pointWidth: new_point_width})
@@ -229,6 +240,7 @@ $(".metering_point_detail").ready ->
       checkIfPreviousDataExists()
       checkIfNextDataExists()
       checkIfZoomOut()
+      chart.hideLoading()
 
   $(window).on "resize", ->
     new_point_width = setPointWidth()
@@ -316,6 +328,7 @@ setPointWidth = () ->
     return $(".chart").width()/42.0
 
 zoomIn = (timestamp) ->
+  chart.showLoading()
   $(".metering_point_detail").each (div) ->
     id = $(this).attr('id').split('_')[2]
     if actual_resolution == "hour_to_minutes"
@@ -329,7 +342,8 @@ zoomIn = (timestamp) ->
     containing_timestamp = timestamp
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
-         return
+        chart.hideLoading()
+        return
       chart.series[0].setData(data[0].data)
       new_point_width = setPointWidth()
       chart.series[0].update({pointWidth: new_point_width})
@@ -339,6 +353,7 @@ zoomIn = (timestamp) ->
       checkIfPreviousDataExists()
       checkIfNextDataExists()
       checkIfZoomOut()
+      chart.hideLoading()
 
 checkIfZoomOut = () ->
   $(".metering_point_detail").each (div) ->
