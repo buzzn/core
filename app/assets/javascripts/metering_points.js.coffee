@@ -1,9 +1,14 @@
+actual_resolution = "day_to_hours"
+chart_data_min_x = 0
+chart = undefined
+
+
 $(".metering_points").ready ->
   $(".metering_point").each ->
     id = $(this).attr('id').split('_')[2]
     width = $("#chart-container-" + id).width()
-    $.getJSON('http://' + location.host + '/metering_points/' + id + '/chart?resolution=day_to_hours', (data) ->
-      chart = new (Highcharts.Chart)(
+    $.getJSON('/metering_points/' + id + '/chart?resolution=day_to_hours', (data) ->
+      partial_chart = new (Highcharts.Chart)(
         chart:
           type: 'column'
           renderTo: 'chart-container-' + id
@@ -69,8 +74,7 @@ beginningOfDay = (timestamp) ->
 $(".metering_point_detail").ready ->
   id = $(this).attr('id').split('_')[2]
   width = $("#chart-container-" + id).width()
-  chart = undefined
-  $.getJSON('http://' + location.host + '/metering_points/' + id + '/chart?resolution=day_to_hours', (data) ->
+  $.getJSON('/metering_points/' + id + '/chart?resolution=day_to_hours', (data) ->
     chart = new (Highcharts.Chart)(
       chart:
         type: 'column'
@@ -101,6 +105,10 @@ $(".metering_point_detail").ready ->
           enabled: true
           style:
             color: '#FFF'
+        title:
+          text: "Zeit"
+          enabled: true
+          style: { "color": "#FFF", "fontWeight": "bold"}
       yAxis:
         gridLineWidth: 0
         labels:
@@ -109,7 +117,9 @@ $(".metering_point_detail").ready ->
             color: '#FFF'
           format: "{value} kWh"
         title:
-          enabled: false
+          enabled: true
+          text: "Energie"
+          style: { "color": "#FFF", "fontWeight": "bold"}
       plotOptions:
         column:
           borderWidth: 0
@@ -125,45 +135,54 @@ $(".metering_point_detail").ready ->
           month:"%B %Y",
           year:"%Y"
       series: data)
-    min_x = chart.series[0].data[0].x
-  )
-  checkIfPreviousDataExists()
-  checkIfNextDataExists()
+    #$("#chart-container-" + id).attr('data-xmin', chart.series[0].data[0].x)
+    #alert $("#chart-container-" + id).attr("data-xmin")
+    return
+  ).success ->
+    chart_data_min_x = chart.series[0].data[0].x
+    checkIfPreviousDataExists()
+    checkIfNextDataExists()
+
+
 
   $(".btn-chart-prev").on 'click', ->
     if actual_resolution == "day_to_hours"
-      containing_timestamp = min_x - 24*3600*1000
-    $.getJSON('http://' + location.host + '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+      containing_timestamp = chart_data_min_x - 24*3600*1000
+    $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+      if data[0].data[0] == undefined
+         return
       chart.series[0].setData(data[0].data)
-      chart.xAxis.min = beginningOfDay(data[0].data[0][0])
-      chart.xAxis.max = endOfDay(data[0].data[0][0])
-      min_x = chart.series[0].data[0].x
+      chart.xAxis[0].update({
+        min: beginningOfDay(data[0].data[0][0])
+        max: endOfDay(data[0].data[0][0])
+      }, true)
+      chart_data_min_x = chart.series[0].data[0].x
       checkIfPreviousDataExists()
       checkIfNextDataExists()
     )
 
   $(".btn-chart-next").on 'click', ->
     if actual_resolution == "day_to_hours"
-      containing_timestamp = min_x + 24*3600*1000
-    $.getJSON('http://' + location.host + '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+      containing_timestamp = chart_data_min_x + 24*3600*1000
+    $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+      if data[0].data[0] == undefined
+         return
       chart.series[0].setData(data[0].data)
-      chart.xAxis.min = beginningOfDay(data[0].data[0][0])
-      chart.xAxis.max = endOfDay(data[0].data[0][0])
-      min_x = chart.series[0].data[0].x
+      chart.xAxis[0].update({
+        min: beginningOfDay(data[0].data[0][0])
+        max: endOfDay(data[0].data[0][0])
+      }, true)
+      chart_data_min_x = chart.series[0].data[0].x
       checkIfPreviousDataExists()
       checkIfNextDataExists()
     )
-
-
-actual_resolution = "day_to_hours"
-min_x = 0
 
 checkIfPreviousDataExists = () ->
   $(".metering_point_detail").each (div) ->
     id = $(this).attr('id').split('_')[2]
     if actual_resolution == "day_to_hours"
-      containing_timestamp = min_x - 24*3600*1000
-    $.getJSON('http://' + location.host + '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+      containing_timestamp = chart_data_min_x - 24*3600*1000
+    $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
         $(".btn-chart-prev").attr('disabled', true)
       else
@@ -174,8 +193,8 @@ checkIfNextDataExists = () ->
   $(".metering_point_detail").each (div) ->
     id = $(this).attr('id').split('_')[2]
     if actual_resolution == "day_to_hours"
-      containing_timestamp = min_x + 24*3600*1000
-    $.getJSON('http://' + location.host + '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+      containing_timestamp = chart_data_min_x + 24*3600*1000
+    $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
         $(".btn-chart-next").attr('disabled', true)
       else

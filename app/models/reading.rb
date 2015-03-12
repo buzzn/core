@@ -33,7 +33,7 @@ class Reading
     date                = Time.now
     @location_time_now  = ActiveSupport::TimeZone[@time_zone].local(date.year, date.month, date.day, date.hour, date.min, date.sec)
     if containing_timestamp
-      @location_time = DateTime.strptime((containing_timestamp.to_i/1000).to_s, "%s")
+      @location_time = DateTime.strptime((containing_timestamp.to_i/1000).to_s, "%s").in_time_zone
     else
       @location_time = @location_time_now
     end
