@@ -9,10 +9,6 @@ class GroupDecorator < Draper::Decorator
   decorates_association :servicing_contract
 
 
-  def smart_image
- false
-  end
-
 
   def link_to_edit
     link_to(
