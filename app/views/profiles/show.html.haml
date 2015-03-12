@@ -95,7 +95,7 @@
   %hr
 
 
-  - if @profile.user.friend?(current_user)
+  - if @profile.user.friend?(current_user) || current_user.profile == @profile
     %h1.page-header.text-overflow= t'root_metering_points'
     .row
       .metering_points
@@ -107,7 +107,7 @@
     %hr
 
 
-  - if @profile.user.friend?(current_user)
+  - if @profile.user.friend?(current_user) || current_user.profile == @profile
     %h1.page-header.text-overflow= t'devices'
     .row
       .devices
