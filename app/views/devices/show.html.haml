@@ -51,9 +51,12 @@
           .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
 
-= image_tag @device.image.cover, class: 'img-responsive'
-
 #page-content
+
+  .panel
+    = image_tag @device.image.cover, class: 'img-responsive'
+
+
   .row
     .col-sm-6
       .panel
