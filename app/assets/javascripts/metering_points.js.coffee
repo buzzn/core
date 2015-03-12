@@ -307,7 +307,7 @@ getNextTimestamp = () ->
 
 setPointWidth = () ->
   if actual_resolution == "hour_to_minutes"
-    return $(".chart").width()/4.0
+    return $(".chart").width()/100.0
   else if actual_resolution == "day_to_hours"
     return $(".chart").width()/70.0
   else if actual_resolution == "month_to_days"
