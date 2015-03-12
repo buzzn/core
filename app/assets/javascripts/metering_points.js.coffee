@@ -335,7 +335,7 @@ zoomIn = (timestamp) ->
   $(".metering_point_detail").each (div) ->
     id = $(this).attr('id').split('_')[2]
     if actual_resolution == "hour_to_minutes"
-      #chart.hideLoading()
+      chart.hideLoading()
       return
     else if actual_resolution == "day_to_hours"
       actual_resolution = "hour_to_minutes"
