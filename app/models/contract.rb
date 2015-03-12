@@ -3,7 +3,7 @@ class Contract < ActiveRecord::Base
   include Authority::Abilities
   has_paper_trail
 
-  attr_encrypted :password, :charset => 'UTF-8', :key => 'This is a salt for your soup'
+  attr_encrypted :password, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
   monetize :price_cents
 

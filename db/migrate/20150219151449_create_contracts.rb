@@ -22,8 +22,7 @@ class CreateContracts < ActiveRecord::Migration
 
       t.string :username
       t.string :encrypted_password
-      t.string :encrypted_password_salt
-      t.string :encrypted_password_iv
+
       t.boolean :valid_credentials, default: false
       t.boolean :running, default: true
 

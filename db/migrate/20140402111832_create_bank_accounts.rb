@@ -2,7 +2,7 @@ class CreateBankAccounts < ActiveRecord::Migration
   def change
     create_table :bank_accounts do |t|
       t.string  :holder
-      t.string  :iban
+      t.string  :encrypted_iban
       t.string  :bic
       t.string  :bank_name
       t.boolean :direct_debit
