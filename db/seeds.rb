@@ -52,9 +52,19 @@ buzzn_team_names.each do |user_name|
   buzzn_team << user = Fabricate(user_name)
   case user_name
   when 'justus'
-    @fichtenweg8 = root_mp = mp_z1 = Fabricate(:mp_z1)
-    mp_z1.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z1)
+
+    @fichtenweg8 = root_mp = mp_z1a = Fabricate(:mp_z1a)
+    mp_z1a.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z1a)
     #user.contracting_party.contracts << mp_z1.contracts.metering_point_operators.first
+
+    mp_z1b = Fabricate(:mp_z1b)
+    user.add_role :manager, mp_z1b
+    mp_z1b.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z1b)
+    #user.contracting_party.contracts << mp_z1.contracts.metering_point_operators.first
+
+    Fabricate(:easymeter_60139082, metering_points: [mp_z1a, mp_z1b])
+
+
     mp_z2 = Fabricate(:mp_z2)
     user.add_role :manager, mp_z2
     mp_z2.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z2)

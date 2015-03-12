@@ -1,3 +1,5 @@
+
+
 Fabricator :metering_point do
   name  'Wohnung'
   i = 1
@@ -7,12 +9,16 @@ Fabricator :metering_point do
 end
 
 
-Fabricator :mp_z1, from: :metering_point do
-  name  'Übergabe'
-  image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'fichtenweg10', 'in_out.jpg' ))  }
+Fabricator :mp_z1a, from: :metering_point do
+  name  'Netzanschluss Bezug'
   register   { Fabricate(:register_in) }
-  meter       { Fabricate(:easymeter_60139082) }
 end
+
+Fabricator :mp_z1b, from: :metering_point do
+  name  'Netzanschluss Einspeisung'
+  register   { Fabricate(:register_out) }
+end
+
 
 Fabricator :mp_z2, from: :metering_point do
   name  'PV'
@@ -49,7 +55,6 @@ end
 Fabricator :mp_urbanstr88, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Urbanstr', street_number: '88', zip: 81667, city: 'Berlin', state: 'Berlin') }
   name  'Wohnung'
-  image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'urbanstr88', 'wohnung.jpg' )) }
 end
 
 
@@ -89,7 +94,6 @@ end
 Fabricator :mp_cs_1, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Fichtenweg', street_number: '8', zip: 82515, city: 'Wolfratshausen', state: 'Bayern') }
   name  'Wohnung'
-  image { File.new(Rails.root.join('db', 'seed_assets', 'locations', 'fichtenweg8', 'bezug.jpg' )) }
   meter { Fabricate(:easymeter_1124001747) }
 end
 
@@ -99,7 +103,6 @@ end
 Fabricator :mp_60138988, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Röntgenstrasse', street_number: '11', zip: 86199, city: 'Augsburg', state: 'Bayern') }
   name  'Wohnung'
-  image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'roentgenstrasse11', 'bezug.jpg' )) }
   meter { Fabricate(:easymeter_60138988) }
 end
 
@@ -118,7 +121,6 @@ end
 # Z1  Nr. 60118470 für Hans-Dieter Hopf übergame  (Zweirichtungszähler)
 Fabricator :mp_60118470, from: :metering_point do
   name  'Keller'
-  image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'hopfstr', 'in_out.jpg' )) }
   meter { Fabricate(:easymeter_60118470) }
   contracts         { [] }
 end
@@ -133,7 +135,6 @@ end
 # ZN1 Nr. 60009272 für Thomas Hopf  (Einrichtungszähler Bezug)
 Fabricator :mp_60009272, from: :metering_point do
   name  'Wohnung'
-  image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'hopfstr', 'wohnung_thomas.jpg' ))}
   meter { Fabricate(:easymeter_60009272) }
   contracts         { [] }
 end
@@ -141,7 +142,6 @@ end
 # ZN2 Nr. 60009348 für Mauela Beier (Einrichtungszähler Bezug)
 Fabricator :mp_60009348, from: :metering_point do
   name  'Restaurant Beier'
-  image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'hopfstr', 'restaurant.jpg' ))}
   meter          { Fabricate(:easymeter_60009348) }
   contracts         { [] }
 end
@@ -149,7 +149,6 @@ end
 # Wohnung Hr. Hopf ("ZN3") ist ungezählt kann aber berechnet werden
 Fabricator :mp_hans_dieter_hopf, from: :metering_point do
   name  'Wohnung'
-  image {File.new(Rails.root.join('db', 'seed_assets', 'locations', 'hopfstr', 'wohnung_hans.jpg' ))}
   contracts         { [] }
   meter          { Fabricate(:virtual_meter_hopf) }
 end
