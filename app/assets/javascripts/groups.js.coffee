@@ -1,20 +1,3 @@
-timers = []
-
-clearTimers = ->
-  i = 0
-  while i < timers.length
-    window.clearInterval timers[i]
-    i++
-  timers = []
-
-
-
-$(document).on('page:before-change', clearTimers)
-
-
-
-
-
 jQuery ->
   # Create a comment
   $(".comment-form")
@@ -97,7 +80,7 @@ class BubbleChart
     @data.forEach (d) =>
       @totalPower += parseInt(calculate_power(d[3], d[1], d[4], d[2]))
     this.setZoomFactor()
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @zoomFactor / 7)])
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @zoomFactor])
 
     this.create_nodes()
     this.create_vis()
@@ -135,9 +118,9 @@ class BubbleChart
   # create circle representation for each node
   create_vis: () =>
     @vis = d3.select("#bubbles_container").append("svg")
+      .attr("id", "svg_vis")
       .attr("width", "100%")
       .attr("height", "100%")
-      .attr("id", "svg_vis")
 
     @circles = @vis.selectAll("circle")
       .data(@nodes, (d) -> d.id)
@@ -354,7 +337,8 @@ class BubbleChart
     this.setNewScale()
 
   setNewScale: () =>
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @height / (@data.length * @zoomFactor/ 7)])
+    this.setZoomFactor()
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @zoomFactor])
     @nodes.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
     @nodes_out.forEach (d) =>
@@ -376,24 +360,27 @@ class BubbleChart
     $("#kw-ticker-out").html(parseInt(@totalPowerOut) + " W")
 
   setZoomFactor: () =>
-    if @max_power_in <= 0.1 * @totalPower
-      @zoomFactor = 1
-    else if @max_power_in <= 0.2 * @totalPower
-      @zoomFactor = 1
-    else if @max_power_in <= 0.3 * @totalPower
-      @zoomFactor = 1.5
-    else if @max_power_in <= 0.4 * @totalPower
-      @zoomFactor = 1.5
-    else if @max_power_in <= 0.5 * @totalPower
-      @zoomFactor = 1.5
-    else if @max_power_in <= 0.6 * @totalPower
-      @zoomFactor = 1.5
-    else if @max_power_in <= 0.7 * @totalPower
-      @zoomFactor = 1.5
-    else if @max_power_in <= 0.8 * @totalPower
-      @zoomFactor = 1
-    else if @max_power_in <= 0.9 * @totalPower
-      @zoomFactor = 1
+    smallest_border = @height
+    if @width < @height
+      smallest_border = @width
+    #@zoomFactor = 20 + smallest_border/(4 +  Math.pow(@data.length, 0.1) + 1 / ((1 + @totalPower)/(1 + @max_power_in)))
+    if @max_power < 0.3 * @totalPower
+      @zoomFactor = 20 + smallest_border / 3
+    else if @max_power < 0.4 * @totalPower
+      @zoomFactor = 20 + smallest_border / 4
+    else if @max_power < 0.5 * @totalPower
+      @zoomFactor = smallest_border / 5
+    else if @max_power < 0.6 * @totalPower
+      @zoomFactor = smallest_border / 5
+    else if @max_power < 0.7 * @totalPower
+      @zoomFactor = smallest_border / 4
+    else if @max_power < 0.8 * @totalPower
+      @zoomFactor = 20 + smallest_border / 4
+    else if @max_power < 0.9 * @totalPower
+      @zoomFactor = smallest_border / 3
+    else
+      @zoomFactor = 20 + smallest_border / 3
+
 
 
 
@@ -434,6 +421,8 @@ $ ->
 
   $(window).on "resize", chart.calculateNewCenter
 
+
+
 addCommas = (nStr) ->
   nStr += ""
   x = nStr.split(".")
@@ -442,6 +431,9 @@ addCommas = (nStr) ->
   rgx = /(\d+)(\d{3})/
   x1 = x1.replace(rgx, "$1" + "," + "$2")  while rgx.test(x1)
   x1 + x2
+
+
+
 
 
 

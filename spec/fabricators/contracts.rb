@@ -75,3 +75,9 @@ Fabricator :mpoc_philipp, from: :metering_point_operator_contract do
   username      'info@philipp-osswald.de'
   password      'Null8fünfzehn'
 end
+
+Fabricator :mpoc_thomas, from: :metering_point_operator_contract do
+  organization  { Organization.find('discovergy') }
+  username      'thomas@buzzn.net'
+  password      'DSivKK1980'
+end

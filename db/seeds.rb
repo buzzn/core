@@ -118,6 +118,9 @@ buzzn_team_names.each do |user_name|
     root_mp.contracts << Fabricate(:mpoc_stefan, metering_point: root_mp)
     root_mp.devices << @bhkw_stefan
     user.add_role :manager, @bhkw_stefan
+  when 'thomas'
+    root_mp = Fabricate(:mp_60176745)
+    root_mp.contracts << Fabricate(:mpoc_thomas, metering_point: root_mp)
   else
     root_mp = Fabricate(:metering_point)
   end
@@ -197,7 +200,7 @@ puts 'group karin strom'
 karins_pv_group = Fabricate(:group_karins_pv_strom, metering_points: [mp_pv_karin])
 karin.add_role :manager, karins_pv_group
 karins_pv_group.metering_points << User.where(email: 'christian@buzzn.net').first.metering_points.first
-karins_pv_group.metering_points << User.where(email: 'felix@buzzn.net').first.metering_points.first
+karins_pv_group.metering_points << User.where(email: 'philipp@buzzn.net').first.metering_points.first
 karins_pv_group.metering_points << User.where(email: 'thomas@buzzn.net').first.metering_points.first
 karins_pv_group.create_activity key: 'group.create', owner: karin, recipient: karins_pv_group
 

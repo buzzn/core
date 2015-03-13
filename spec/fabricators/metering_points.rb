@@ -113,6 +113,12 @@ Fabricator :mp_60009269, from: :metering_point do
   meter { Fabricate(:easymeter_60009269) }
 end
 
+# Nr. 60176745 für Thomas Theenhaus (Einrichtungszähler Bezug)
+Fabricator :mp_60176745, from: :metering_point do
+  name  'Wohnung'
+  meter { Fabricate(:easymeter_60176745) }
+end
+
 
 
 

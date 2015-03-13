@@ -109,13 +109,19 @@ Fabricator :easymeter_60138988, from: :meter do
   manufacturer_product_serialnumber   '60138988'
 end
 
-
 # Nr. 60009269 für Philipp Oßwald (Einrichtungszähler Bezug)
 Fabricator :easymeter_60009269, from: :meter do
   manufacturer_name                   'easy_meter'
   manufacturer_product_name           'Q3D'
   manufacturer_product_serialnumber   '60009269'
 end
+
+Fabricator :easymeter_60176745, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60176745'
+end
+
 
 # Meter für virtuellen MP für Hopf
 Fabricator :virtual_meter_hopf, from: :meter do

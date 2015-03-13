@@ -24,6 +24,9 @@ ready = ->
 $(document).ready(ready)
 $(document).on('page:load', ready)
 $(document).on('show.bs.modal', ready)
+$(document).on('page:restore', ->
+  $(window).trigger('resize')
+)
 
 
 
