@@ -1,6 +1,6 @@
 class AddressesController < ApplicationController
   before_filter :authenticate_user!
-  respond_to :html, :js, :json
+  respond_to :html, :js
 
 
   def show
@@ -24,7 +24,7 @@ class AddressesController < ApplicationController
   def create
     @address = Address.new(address_params)
     authorize_action_for @address
-    if @address.save!
+    if @address.save
       current_user.add_role :manager, @address
       respond_with @address.decorate
     else

@@ -22,5 +22,6 @@ class CreateMeters < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :meters, :slug, :unique => true
   end
 end

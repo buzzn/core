@@ -1,0 +1,16 @@
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'new_bank_account'
+  .modal-body
+    = simple_form_for @bank_account, remote: true do |f|
+
+      - value = params[:bank_accountable_type].nil? ? {} : { value: params[:bank_accountable_type] }
+      = f.input :bank_accountable_type, input_html: {}.merge(value), as: :hidden
+
+      - value = params[:bank_accountable_id].nil? ? {} : { value: params[:bank_accountable_id] }
+      = f.input :bank_accountable_id, input_html: {}.merge(value), as: :hidden
+
+      = render 'bank_accounts/form_fields', f: f
+      .modal-footer
+        = f.button :submit, id: 'submit', class: 'btn btn-success'

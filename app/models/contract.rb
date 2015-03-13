@@ -3,6 +3,9 @@ class Contract < ActiveRecord::Base
   include Authority::Abilities
   has_paper_trail
 
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :finders]
+
   attr_encrypted :password, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
   monetize :price_cents

@@ -2,6 +2,10 @@ class Device < ActiveRecord::Base
   resourcify
   include Authority::Abilities
 
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :finders]
+
+
   belongs_to :metering_point
 
   mount_uploader :image, PictureUploader

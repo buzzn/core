@@ -1,6 +1,7 @@
 class CreateAddresses < ActiveRecord::Migration
   def change
     create_table :addresses do |t|
+      t.string  :slug
       t.string  :address
       t.string  :street_name
       t.string  :street_number
@@ -17,6 +18,7 @@ class CreateAddresses < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :addresses, :slug, :unique => true
     add_index :addresses, [:addressable_id, :addressable_type], name: 'index_addressable'
   end
 end

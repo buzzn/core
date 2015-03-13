@@ -77,8 +77,21 @@ de:
 
   address: Addresse
   add_address: Addresse hinzufügen
+  invoice_address: Rechnungsadresse
+
+  bank_account: Bankverbindung
+  new_bank_account: Neue Bankverbindung
+  edit_bank_account: Bankverbindung bearbeiten
 
 
+  contracting_party_properties: Vertragspartner Eigenschaften
+  editing_contracting_party: Vertragspartner bearbeiten
+  contracting_party_legal_entity: Vertragspartner
+  contracting_party: Vertragspartner
+  contracting_party_bank_account: Bankverbindung des Vertragspartners
+  contracting_party_organization: "Vertragspartner: Organisation"
+  contracting_party_organizations_address: "Vertragspartner: Addresse der Organisation"
+  contracting_party_taxation: "Vertragspartner: Steuerdaten"
 
 
   my_friends: Meine Freunde
@@ -250,20 +263,17 @@ de:
   new_metering_point: Neuer Zählpunkt
   has_updated: aktualisierte
   metering_point: Zählpunkt
-  contracting_party_legal_entity: Vertragspartner
-  contracting_party: Vertragspartner
-  metering_point_current_supplier: Aktueller Stromlieferant am Zählpunkt
-  contracting_party_bank_account: Bankverbindung des Vertragspartners
+
   complete_contract: Vertragsabschluss
   has_deleted: löschte
   has_created: erzeugte
-  bank_account: Bankverbindung
-  editing_contracting_party: Vertragspartner bearbeiten
+  metering_point_current_supplier: Aktueller Stromlieferant am Zählpunkt
+
+
   organization: Organisation
   contract_forecast: Jahresverbrauch (Prognose)
   progress: Fortschritt
-  contracting_party_organization: "Vertragspartner: Organisation"
-  contracting_party_organizations_address: "Vertragspartner: Addresse der Organisation"
+
   waiting_for_exept: Warten auf Antwort
   new_friendship_requests: Neue Freundschaftsanfragen
   new_friendship_request: Neue Freundschaftsanfrage
@@ -274,7 +284,6 @@ de:
   accepted_friendship_request: Akzeptierte Freundschaftsanfrage
   rejected_friendship_request: Abgelehnte Freundschaftsanfrage
   meter_type: Zählertyp
-  contracting_party_taxation: "Vertragspartner: Steuerdaten"
   supply_with_current: Strom geben
   my_profile: Mein Profil
   activities: Aktivitäten

@@ -20,6 +20,8 @@ class CreateMeteringPoints < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :metering_points, :slug, :unique => true
+
     add_index :metering_points, :ancestry
     add_index :metering_points, :meter_id
     add_index :metering_points, :contract_id

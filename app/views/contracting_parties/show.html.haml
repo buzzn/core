@@ -10,14 +10,14 @@
             .pad-ver
               %span.fa-stack.fa-lg.fa-5x
                 %i.fa.fa-circle.fa-stack-2x
-                %i.fa.fa-plug.fa-stack-1x.fa-inverse
+                %i.fa.fa-pencil.fa-stack-1x.fa-inverse
             %h4.text-lg.text-overflow.mar-no= @contracting_party.name
 
 
           %hr
             .text-center.clearfix
               - if current_user.can_update?(@contracting_party)
-                = #@contracting_party.link_to_edit
+                = @contracting_party.link_to_edit
 
 
         .nano-pane{:style => "display: none;"}
@@ -48,17 +48,34 @@
                   %td= t @contracting_party.tax_number
 
 
+  %hr
+  %h1.page-header.text-overflow= t'invoice_address'
+  .row
+    .addresses
+      = render @contracting_party.address if @contracting_party.address
+
+  - if @contracting_party.address.nil?
+    .row
+      .col-lg-12.text-center
+        = @contracting_party.new_address
+
+
+  %hr
+  %h1.page-header.text-overflow= t'bank_account'
+  .row
+    .devices
+      = render @contracting_party.bank_account
+
+  - if current_user.can_create?(BankAccount)
+    .row
+      .col-lg-12.text-center
+        = @contracting_party.new_bank_account
+
+
+  %hr
   %h1.page-header.text-overflow= t'contracts'
   .row
     = render @contracting_party.contracts
-
-  %h1.page-header.text-overflow= t'address'
-  .row
-    = render @contracting_party.address
-
-  %h1.page-header.text-overflow= t'bank_account'
-  .row
-    = render @contracting_party.bank_account
 
 
 

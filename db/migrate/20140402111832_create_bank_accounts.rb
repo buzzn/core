@@ -1,6 +1,7 @@
 class CreateBankAccounts < ActiveRecord::Migration
   def change
     create_table :bank_accounts do |t|
+      t.string  :slug
       t.string  :holder
       t.string  :encrypted_iban
       t.string  :bic
@@ -12,6 +13,7 @@ class CreateBankAccounts < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :bank_accounts, :slug, :unique => true
     add_index :bank_accounts, [:bank_accountable_id, :bank_accountable_type], name: 'index_accountable'
   end
 end

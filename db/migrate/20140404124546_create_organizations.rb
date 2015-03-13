@@ -14,5 +14,6 @@ class CreateOrganizations < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :organizations, :slug, :unique => true
   end
 end

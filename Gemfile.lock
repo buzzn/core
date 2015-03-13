@@ -403,6 +403,7 @@ GEM
     http_parser.rb (0.6.0)
     httpclient (2.6.0.1)
     i18n (0.7.0)
+    iban-tools (1.0.0)
     ice_nine (0.11.1)
     immigrant (0.3.1)
       activerecord (>= 3.0)
@@ -778,6 +779,7 @@ DEPENDENCIES
   has_scope
   hashie_rails
   highcharts-rails
+  iban-tools
   immigrant
   inherited_resources!
   jbuilder

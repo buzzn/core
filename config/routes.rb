@@ -34,6 +34,7 @@ Buzzn::Application.routes.draw do
   resources :devices
   resources :contracts
   resources :contracting_parties
+  resources :bank_accounts
   resources :organizations
   resources :comments, :only => [:create, :destroy]
   resources :stream

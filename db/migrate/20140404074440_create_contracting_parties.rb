@@ -1,7 +1,7 @@
 class CreateContractingParties < ActiveRecord::Migration
   def change
     create_table :contracting_parties do |t|
-
+      t.string :slug
       t.string :legal_entity
 
       t.integer :sales_tax_number
@@ -14,6 +14,7 @@ class CreateContractingParties < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :contracting_parties, :slug, :unique => true
     add_index :contracting_parties, :metering_point_id
     add_index :contracting_parties, :user_id
     add_index :contracting_parties, :organization_id

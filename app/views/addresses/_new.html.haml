@@ -6,10 +6,10 @@
     = simple_form_for @address, remote: true do |f|
 
       - value = params[:addressable_type].nil? ? {} : { value: params[:addressable_type] }
-      = f.input :addressable_type, input_html: {}.merge(value)#, as: :hidden
+      = f.input :addressable_type, input_html: {}.merge(value), as: :hidden
 
       - value = params[:addressable_id].nil? ? {} : { value: params[:addressable_id] }
-      = f.input :addressable_id, input_html: {}.merge(value)#, as: :hidden
+      = f.input :addressable_id, input_html: {}.merge(value), as: :hidden
 
       = render 'addresses/form_fields', f: f
       .modal-footer

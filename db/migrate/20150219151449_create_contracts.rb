@@ -1,7 +1,7 @@
 class CreateContracts < ActiveRecord::Migration
   def change
     create_table :contracts do |t|
-
+      t.string :slug
       t.string   :mode
 
       t.string   :tariff
@@ -33,6 +33,7 @@ class CreateContracts < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+    add_index :contracts, :slug, :unique => true
     add_index :contracts, :mode
     add_index :contracts, :contracting_party_id
     add_index :contracts, :organization_id

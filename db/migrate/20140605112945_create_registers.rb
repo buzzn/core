@@ -1,7 +1,7 @@
 class CreateRegisters < ActiveRecord::Migration
   def change
     create_table :registers do |t|
-
+      t.string  :slug
       t.string  :mode
       t.string  :obis_index
       t.boolean :variable_tariff,   default: false
@@ -14,6 +14,7 @@ class CreateRegisters < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :registers, :slug, :unique => true
     add_index :registers, :metering_point_id
   end
 end

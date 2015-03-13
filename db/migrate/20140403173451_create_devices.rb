@@ -1,7 +1,7 @@
 class CreateDevices < ActiveRecord::Migration
   def change
     create_table :devices do |t|
-
+      t.string  :slug
       t.string  :manufacturer_name
       t.string  :manufacturer_product_name
       t.string  :manufacturer_product_serialnumber
@@ -20,6 +20,7 @@ class CreateDevices < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :devices, :slug, :unique => true
     add_index :devices, :metering_point_id
   end
 end

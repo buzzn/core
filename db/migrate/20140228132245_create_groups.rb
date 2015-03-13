@@ -12,5 +12,6 @@ class CreateGroups < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :groups, :slug, :unique => true
   end
 end
