@@ -3,7 +3,7 @@
 
     .media-left{class: "bg-#{device.panel_mode_class}"}
       - if device.image?
-        = link_to image_tag(device.image.md), device
+        = link_to image_tag(device.image.big_tumb, size: '200x200'), device
       - else
         = link_to image_tag('//placehold.it/128&text=no+pic'), device
 

@@ -16,9 +16,6 @@ class Device < ActiveRecord::Base
   validates :watt_peak, numericality: { only_integer: true }, presence: true
 
 
-
-
-
   default_scope { order('created_at ASC') }
 
 

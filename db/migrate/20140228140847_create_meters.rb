@@ -19,9 +19,11 @@ class CreateMeters < ActiveRecord::Migration
       t.boolean :online, default: false
       t.boolean :init_first_reading, default: false
       t.boolean :init_reading, default: false
+      t.string  :ancestry
 
       t.timestamps
     end
     add_index :meters, :slug, :unique => true
+    add_index :meters, :ancestry
   end
 end

@@ -1,6 +1,5 @@
 class MeteringPoint < ActiveRecord::Base
   resourcify
-  has_ancestry
   include Authority::Abilities
   include PublicActivity::Model
 

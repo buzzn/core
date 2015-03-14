@@ -33,18 +33,21 @@ class PictureUploader < CarrierWave::Uploader::Base
     process :resize_to_fill  => [1000, 550].each.map{|i| i*2}
   end
 
-  version :sm do
-    process :resize_to_fill  => [46, 46].each.map{|i| i*2}
-  end
-
-  version :md do
-    process :resize_to_fill  => [64, 64].each.map{|i| i*2}
+  version :big_tumb do
+    process :resize_to_fill  => [200, 200].each.map{|i| i*2}
   end
 
   version :lg do
     process :resize_to_fill  => [96, 96].each.map{|i| i*2}
   end
 
+  version :md do
+    process :resize_to_fill  => [64, 64].each.map{|i| i*2}
+  end
+
+  version :sm do
+    process :resize_to_fill  => [46, 46].each.map{|i| i*2}
+  end
 
 
 

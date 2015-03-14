@@ -63,6 +63,8 @@ class MeteringPointsController < ApplicationController
   end
   authority_actions :edit_users => 'update'
 
+
+
   def edit_devices
     # TODO: insert added device directly
     @metering_point = MeteringPoint.find(params[:id]).decorate
@@ -86,15 +88,6 @@ class MeteringPointsController < ApplicationController
   end
 
 
-  def update_parent
-    @metering_point = MeteringPoint.find(params[:id])
-    @parent = MeteringPoint.find(params[:parent_id])
-    @metering_point.parent = @parent
-    authorize_action_for(@metering_point)
-    @metering_point.save!
-  end
-  authority_actions :update_parent => 'update'
-
 
 
 
@@ -105,7 +98,6 @@ private
       :uid,
       :name,
       :image,
-      :parent_id,
       :user_ids => [],
       :device_ids => [],
       register_attributes: [:id, :mode, :_destroy]

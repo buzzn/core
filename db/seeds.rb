@@ -82,10 +82,6 @@ buzzn_team_names.each do |user_name|
     mp_z5.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z5)
     #user.contracting_party.contracts << mp_z5.contracts.metering_point_operators.first
 
-    # mp_z2.update_attribute :parent, mp_z1
-    # mp_z3.update_attribute :parent, mp_z5
-    # mp_z4.update_attribute :parent, mp_z5
-    # mp_z5.update_attribute :parent, mp_z2
 
     dach_pv_justus = Fabricate(:dach_pv_justus)
     mp_z2.devices << dach_pv_justus
@@ -212,20 +208,25 @@ manuela_baier     = Fabricate(:manuela_baier)
 thomas_hopf       = Fabricate(:thomas_hopf)
 
 mp_60118470 = Fabricate(:mp_60118470)
+hans_dieter_hopf.add_role :manager, mp_60118470
+
 mp_60009316 = Fabricate(:mp_60009316)
+hans_dieter_hopf.add_role :manager, mp_60009316
+
 mp_60009272 = Fabricate(:mp_60009272)
+thomas_hopf.add_role :manager, mp_60009272
+
 mp_60009348 = Fabricate(:mp_60009348)
+manuela_baier.add_role :manager, mp_60009348
+
 mp_hans_dieter_hopf = Fabricate(:mp_hans_dieter_hopf)
+hans_dieter_hopf.add_role :manager, mp_hans_dieter_hopf
 
 mp_60009272.users         << thomas_hopf
 mp_60009348.users         << manuela_baier
 mp_60009316.users         << hans_dieter_hopf
 mp_hans_dieter_hopf.users << hans_dieter_hopf
 
-mp_60009316.update_attribute :parent, mp_60118470
-mp_60009272.update_attribute :parent, mp_60118470
-mp_60009348.update_attribute :parent, mp_60118470
-mp_hans_dieter_hopf.update_attribute :parent, mp_60118470
 
 group_hopf = Fabricate(:group, name: 'Hopf Strom', metering_points: [mp_60118470])
 group_hopf.metering_points << mp_60009316
@@ -369,8 +370,8 @@ manuel_dmoch.add_role(:manager, mp_60009420)
 #Wagnis 4 - Allgemeinstrom Haus West mp_60009420
 #TODO: add real PV metering_point
 mp_60118460 = Fabricate(:mp_60118460)
-mp_60118460.parent = mp_60009420
-mp_60009420.save
+manuel_dmoch.add_role(:manager, mp_60118460)
+
 group_wagnis4 = Fabricate(:group_wagnis4, metering_points: [mp_60118460])
 group_wagnis4.metering_points << mp_60009416
 group_wagnis4.metering_points << mp_60009419

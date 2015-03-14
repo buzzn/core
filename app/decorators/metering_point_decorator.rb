@@ -167,21 +167,6 @@ class MeteringPointDecorator < Draper::Decorator
 
 
 
-  def new_sub_metering_point
-    link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
-      new_metering_point_path(parent_id: model.id),
-      {
-        :remote         => true,
-        :class          => 'btn start_modal',
-        'data-toggle'   => 'modal',
-        'data-target'   => '#myModal',
-        'data-tooltip'  => "true",
-        'title'         => t("add_sub_metering_point"),
-      })
-  end
-
-
   def new_meter
     link_to(
       content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),

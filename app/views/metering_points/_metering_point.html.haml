@@ -24,29 +24,3 @@
             Watt
             = t "#{metering_point.mode}_root_metering_point"
 
-
-      %hr
-
-
-      %ul.list-unstyled.text-center.clearfix
-
-        %li.col-xs-3
-          %p.text-uppercase
-            %i.fa.fa-sitemap
-          %p.text-sm= "#{metering_point.children.count} #{t('sub_metering_points')}"
-
-        %li.col-xs-3
-          %p.text-uppercase
-            %i.fa.fa-user
-          %p.text-sm= "#{metering_point.users.count} #{t('residents')}"
-
-        %li.col-xs-3
-          %p.text-uppercase
-            %i.fa.fa-plug
-          %p.text-sm= "#{metering_point.devices.count} #{t('devices')}"
-
-
-        %li.col-xs-3
-          %p.text-uppercase
-            %i.fa.fa-users
-          %p.text-sm= t'buzzn'

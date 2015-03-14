@@ -1,9 +1,11 @@
 class Meter < ActiveRecord::Base
+
   include Authority::Abilities
 
   extend FriendlyId
   friendly_id :slug_name, use: [:slugged, :finders]
 
+  has_ancestry
 
   validates :manufacturer_product_serialnumber, presence: true    #, unless: "self.virtual"
 
