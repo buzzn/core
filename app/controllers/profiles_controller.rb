@@ -21,7 +21,7 @@ class ProfilesController < ApplicationController
                               .where(owner_id: @profile.user.id, owner_type: "User")
                               .limit(10)
 
-
+    # TODO: removable?
     if @metering_points
       gon.push({ register_ids: @metering_points.collect(&:register).flatten.collect(&:id) })
     else
