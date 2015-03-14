@@ -4,7 +4,7 @@ class Contract < ActiveRecord::Base
   has_paper_trail
 
   extend FriendlyId
-  friendly_id :name, use: [:slugged, :finders]
+  friendly_id :slug_name, use: [:slugged, :finders]
 
   attr_encrypted :password, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
@@ -43,7 +43,7 @@ class Contract < ActiveRecord::Base
 
 
   def name
-    metering_point.name if metering_point
+    "#{organization.name} #{tariff}"
   end
 
   def self.modes
@@ -66,6 +66,10 @@ class Contract < ActiveRecord::Base
 
 
 private
+
+  def slug_name
+    SecureRandom.uuid
+  end
 
   def validates_credentials_job
     Sidekiq::Client.push({

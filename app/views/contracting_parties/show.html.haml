@@ -24,40 +24,11 @@
           .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
 #page-content
+
+
+  %h1.page-header.text-overflow= t'contracts'
   .row
-    .col-sm-6
-      .panel
-        .panel-heading
-          %h3.panel-title
-            =t('contracting_party_properties')
-        .panel-body
-          .table-responsive
-            %table.table.table-striped
-              %tbody
-                %tr
-                  %td= t('legal_entity')
-                  %td= t @contracting_party.legal_entity
-                %tr
-                  %td= t('sales_tax_number')
-                  %td= t @contracting_party.sales_tax_number
-                %tr
-                  %td= t('tax_rate')
-                  %td= t @contracting_party.tax_rate
-                %tr
-                  %td= t('tax_number')
-                  %td= t @contracting_party.tax_number
-
-
-  %hr
-  %h1.page-header.text-overflow= t'invoice_address'
-  .row
-    .addresses
-      = render @contracting_party.address if @contracting_party.address
-
-  - if @contracting_party.address.nil?
-    .row
-      .col-lg-12.text-center
-        = @contracting_party.new_address
+    = render @contracting_party.contracts
 
 
   %hr
@@ -73,9 +44,20 @@
 
 
   %hr
-  %h1.page-header.text-overflow= t'contracts'
+  %h1.page-header.text-overflow= t'invoice_address'
   .row
-    = render @contracting_party.contracts
+    .addresses
+      = render @contracting_party.address if @contracting_party.address
+
+  - if @contracting_party.address.nil?
+    .row
+      .col-lg-12.text-center
+        = @contracting_party.new_address
+
+
+
+
+
 
 
 

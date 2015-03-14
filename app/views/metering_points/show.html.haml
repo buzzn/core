@@ -1,4 +1,4 @@
-- meta title: @metering_point.name
+- meta title: @metering_point.long_name
 
 
 = content_for :aside do
@@ -11,7 +11,7 @@
               %span.fa-stack.fa-lg.fa-5x
                 %i.fa.fa-circle.fa-stack-2x
                 %i.fa.fa-bolt.fa-stack-1x.fa-inverse
-            %h4.text-lg.text-overflow.mar-no= @metering_point.name
+            %h4.text-lg.text-overflow.mar-no= @metering_point.long_name
 
           - if @meter
             %hr

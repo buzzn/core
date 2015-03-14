@@ -29,7 +29,7 @@
           %p.text-muted.text-uppercase
             %small= t('price')
         %li.col-xs-4
-          %span.text-lg= contract.contracting_party
+          %span.text-lg= link_to contract.contracting_party.name, contract.contracting_party
           %p.text-muted
             %small= t('contracting_party')
 
@@ -91,7 +91,7 @@
           %p.text-muted
             %small= t('price')
         %li.col-xs-4
-          %span.text-lg= contract.contracting_party
+          %span.text-lg= link_to contract.contracting_party.name, contract.contracting_party
           %p.text-muted
             %small= t('contracting_party')
 

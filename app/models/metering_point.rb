@@ -9,10 +9,11 @@ class MeteringPoint < ActiveRecord::Base
 
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :finders]
+
   def slug_candidates
     [
       :uid,
-      :name
+      :slug_name
     ]
   end
 
@@ -151,6 +152,14 @@ class MeteringPoint < ActiveRecord::Base
       end
       {:label => label, :mode => node.mode, :id => node.id, :children => json_tree(sub_nodes).compact}
     end
+  end
+
+
+
+private
+
+  def slug_name
+    SecureRandom.uuid
   end
 
 

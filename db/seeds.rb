@@ -10,7 +10,7 @@ def user_with_metering_point
   user                        = Fabricate(:user)
   user.contracting_party      = contracting_party
   metering_point.users        << user
-  #contracting_party.contracts << metering_point.contracts.electricity_suppliers.first
+  user.contracting_party.contracts << metering_point.contracts
 
   user.add_role :manager, metering_point
   return user, metering_point
@@ -55,32 +55,30 @@ buzzn_team_names.each do |user_name|
 
     @fichtenweg8 = root_mp = mp_z1a = Fabricate(:mp_z1a)
     mp_z1a.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z1a)
-    #user.contracting_party.contracts << mp_z1.contracts.metering_point_operators.first
 
     mp_z1b = Fabricate(:mp_z1b)
     user.add_role :manager, mp_z1b
     mp_z1b.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z1b)
-    #user.contracting_party.contracts << mp_z1.contracts.metering_point_operators.first
-
+    user.contracting_party.contracts << mp_z1b.contracts
     Fabricate(:easymeter_60139082, metering_points: [mp_z1a, mp_z1b])
 
 
     mp_z2 = Fabricate(:mp_z2)
     user.add_role :manager, mp_z2
     mp_z2.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z2)
-    #user.contracting_party.contracts << mp_z2.contracts.metering_point_operators.first
+    user.contracting_party.contracts << mp_z2.contracts
     mp_z3 = Fabricate(:mp_z3)
     user.add_role :manager, mp_z3
     mp_z3.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z3)
-    #user.contracting_party.contracts << mp_z3.contracts.metering_point_opertors.first
+    user.contracting_party.contracts << mp_z3.contracts
     mp_z4 = Fabricate(:mp_z4)
     user.add_role :manager, mp_z4
     mp_z4.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z4)
-    #user.contracting_party.contracts << mp_z4.contracts.metering_point_operators.first
+    user.contracting_party.contracts << mp_z4.contracts
     mp_z5 = Fabricate(:mp_z5)
     user.add_role :manager, mp_z5
     mp_z5.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z5)
-    #user.contracting_party.contracts << mp_z5.contracts.metering_point_operators.first
+    user.contracting_party.contracts << mp_z5.contracts
 
 
     dach_pv_justus = Fabricate(:dach_pv_justus)
@@ -122,8 +120,8 @@ buzzn_team_names.each do |user_name|
   end
   user.add_role :manager, root_mp
   root_mp.users << user
-  #root_mp.contracts.electricity_suppliers.first.contracting_party = user.contracting_party
-  #root_mp.contracts.electricity_suppliers.first.save
+
+  user.contracting_party.contracts << root_mp.contracts
 end
 
 puts 'friendships for buzzn team ...'
