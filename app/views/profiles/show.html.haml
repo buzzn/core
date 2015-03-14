@@ -75,7 +75,7 @@
 
 #page-content
 
-  - if @root_metering_points.empty? && @profile.user == current_user
+  - if @metering_points.empty? && @profile.user == current_user
     = render "welcome_#{I18n.locale.to_s}"
 
 
@@ -98,14 +98,14 @@
 
 
   - if @profile.user.friend?(current_user) || current_user.profile == @profile
-    %h1.page-header.text-overflow= t'root_metering_points'
+    %h1.page-header.text-overflow= t'metering_points'
     .row
       .metering_points
-        = render @root_metering_points
+        = render @metering_points
     - if current_user.can_create?(MeteringPoint) && current_user.profile == @profile
       .row
         .col-lg-12.text-center
-          = new_root_metering_point
+          = new_metering_point
     %hr
 
 

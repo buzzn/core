@@ -94,7 +94,7 @@ module ApplicationHelper
   end
 
 
-  def new_root_metering_point
+  def new_metering_point
     link_to(
       content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
       new_metering_point_path,
@@ -104,7 +104,7 @@ module ApplicationHelper
         'data-toggle'   => 'modal',
         'data-target'   => '#myModal',
         'data-tooltip'  => "true",
-        'title'         => t("add_root_metering_point"),
+        'title'         => t("add_metering_point"),
       })
   end
 

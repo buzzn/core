@@ -5,9 +5,6 @@
   .modal-body
     = simple_form_for @metering_point, remote: true do |f|
 
-      - value = params[:parent_id].nil? ? {} : { value: params[:parent_id] }
-      = f.input :parent_id, input_html: {}.merge(value), as: :hidden
-
       = render 'metering_points/form_fields', f: f
       .modal-footer
         = f.button :submit, id: 'submit', class: 'btn btn-success'

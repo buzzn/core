@@ -23,7 +23,7 @@ class MeteringPointsController < ApplicationController
     @metering_point = MeteringPoint.new(metering_point_params)
     authorize_action_for @metering_point
     if @metering_point.save
-      current_user.add_role(:manager, @metering_point) if @metering_point.parent.nil?
+      current_user.add_role(:manager, @metering_point)
       respond_with @metering_point.decorate
     else
       render :new

@@ -29,12 +29,9 @@ de:
   in_out: Verbrauch/Produktion
   diff: Abgrenzung
 
-  my_root_metering_points: Meine Haupt-Zählpunkte
-  root_metering_points: Haupt-Zählpunkte
-  add_root_metering_point: Haupt-Zählpunkt hinzufügen
+  my_metering_points: Meine Zählpunkte
+  metering_points: Zählpunkte
   add_metering_point: Zählpunkt hinzufügen
-  add_sub_metering_point: Unter Zählpunkt hinzufügen
-  sub_metering_points: Unter Zählpunkte
 
   meters: Zähler
   new_meter: neuer Zähler

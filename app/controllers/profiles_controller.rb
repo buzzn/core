@@ -12,8 +12,7 @@ class ProfilesController < ApplicationController
   def show
     @profile              = Profile.find(params[:id]).decorate
     @friends              = @profile.user.friends.decorate
-    @metering_points      = @profile.user.metering_points
-    @root_metering_points = @profile.user.editable_metering_points
+    @metering_points      = @profile.user.editable_metering_points
     @friendship_requests  = @profile.user.received_friendship_requests
     @groups               = @metering_points.collect(&:group).compact.uniq{|group| group.id} # TODO also include group interested
     @devices              = Device.with_role(:manager, @profile.user).decorate
@@ -28,6 +27,9 @@ class ProfilesController < ApplicationController
     else
       gon.push({ register_ids: [] })
     end
+
+
+
     gon.push({  pusher_host: Rails.application.secrets.pusher_host,
                 pusher_key: Rails.application.secrets.pusher_key })
   end
