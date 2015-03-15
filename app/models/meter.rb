@@ -98,7 +98,7 @@ class Meter < ActiveRecord::Base
 
 
 
-# what is this ???
+# TODO: what is this ???
 
 #  def virtual
 #   if self.registers.collect{|r| true if r.virtual}.include?(true)

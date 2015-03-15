@@ -7,6 +7,7 @@ class Reading
   field :register_id,   type: Integer
   field :timestamp,     type: DateTime
   field :watt_hour,     type: Integer
+  field :power,         type: Integer
   field :reason
   field :source
   field :quality
