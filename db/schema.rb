@@ -322,6 +322,7 @@ ActiveRecord::Schema.define(version: 20150219151449) do
     t.date     "calibrated_till"
     t.boolean  "smart",                             default: false
     t.boolean  "online",                            default: false
+    t.boolean  "pull_readings",                     default: true
     t.boolean  "init_first_reading",                default: false
     t.boolean  "init_reading",                      default: false
     t.string   "ancestry"
