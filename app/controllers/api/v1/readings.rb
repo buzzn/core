@@ -6,34 +6,35 @@ module API
 
       resource :readings do
 
-        # desc "Get Last Reading by Register ID"
-        # params do
-        #   requires :register_id, type: Integer, desc: "ID of the Register"
-        # end
-        # get do
-        #   Reading.last_by_register_id(permitted_params[:register_id])
-        # end
-
-
-        # # test: curl -d '{"register_id": 20, "timestamp": "Fri, 16 Jan 2015 12:58:03 +0100", "watt_hour": "123456789"}' 'http://localhost:3000/api/v1/readings' -H Content-Type:application/json -v
-        # desc "Create Reading by register_id"
-        # params do
-        #   requires :register_id, type: Integer, desc: "ID of the Register"
-        #   requires :timestamp, type: DateTime, desc: "Timestamp of the Reading"
-        #   requires :watt_hour, type: Integer, desc: "Watt Hour of the Reading. energy is in Wh"
-        # end
-        # post do
-        #   Reading.create( register_id:  permitted_params[:register_id],
-        #                   timestamp:    permitted_params[:timestamp],
-        #                   watt_hour:    permitted_params[:watt_hour]
-        #                   )
-        # end
+        desc "Get Last Reading by Register ID"
+        params do
+          requires :register_id, type: Integer, desc: "ID of the Register"
+        end
+        get do
+          Reading.last_by_register_id(permitted_params[:register_id])
+        end
 
 
 
-        # curl -d '{"meter_manufacturer_name": "easy_meter", "meter_manufacturer_product_serialnumber": "60139082", "timestamp": "Sun, 15 Mar 2015 16:23:07 +0100", "in_watt_hour": "48539360401000",  "out_watt_hour": "48539260401000",  "in_power": "0", "out_power": "0" }' 'http://localhost:3000/api/v1/readings' -H Content-Type:application/json -v
 
 
+        # curl -d '{"register_id": 20, "timestamp": "Fri, 16 Jan 2015 12:58:03 +0100", "watt_hour": "123456789"}' 'http://localhost:3000/api/v1/readings/register' -H Content-Type:application/json -v
+        desc "Create Reading by register_id"
+        params do
+          requires :register_id, type: Integer, desc: "ID of the Register"
+          requires :timestamp, type: DateTime, desc: "Timestamp of the Reading"
+          requires :watt_hour, type: Integer, desc: "Watt Hour of the Reading. energy is in Wh"
+        end
+        post '/register' do
+          Reading.create( register_id:  permitted_params[:register_id],
+                          timestamp:    permitted_params[:timestamp],
+                          watt_hour:    permitted_params[:watt_hour]
+                          )
+        end
+
+
+
+        # curl -d '{"meter_manufacturer_name": "easy_meter", "meter_manufacturer_product_serialnumber": "60139082", "timestamp": "Sun, 15 Mar 2015 18:48:08 +0100", "in_watt_hour": "68539464401000",  "out_watt_hour": "68539464401000",  "in_power": "0", "out_power": "0" }' 'http://localhost:3000/api/v1/readings/meter' -H Content-Type:application/json -v
         desc "Create Reading by the Meter manufacturer and serialnumber"
         params do
           requires :meter_manufacturer_name, type: String, desc: "name of the meter manufacturer, for example: easy_meter"
@@ -46,7 +47,7 @@ module API
           requires :out_watt_hour, type: Integer
           requires :out_power, type: Integer
         end
-        post do
+        post '/meter' do
           meter = Meter.where(
             manufacturer_name:                  permitted_params[:meter_manufacturer_name],
             manufacturer_product_serialnumber:  permitted_params[:meter_manufacturer_product_serialnumber]
