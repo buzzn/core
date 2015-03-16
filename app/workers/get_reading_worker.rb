@@ -16,18 +16,15 @@ class GetReadingWorker
               register_mode_and_id  = registers_modes_and_ids.first
               register_mode         = register_mode_and_id.first
               register_id           = register_mode_and_id.last
-              metering_point_id     = Register.find(register_id).metering_point.id
               watt_hour             = item['energy']
               Reading.create( register_id:  register_id,
                               timestamp:    timestamp,
                               watt_hour:    watt_hour, #energy is in 10^-10 kWh;
-                              metering_point_id: metering_point_id
                             )
             else
               registers_modes_and_ids.each do |register_mode_and_id|
                 register_mode = register_mode_and_id.first
                 register_id   = register_mode_and_id.last
-                metering_point_id = Register.find(register_id).metering_point.id
                 if register_mode == 'in'
                   watt_hour = item['energy']
                 elsif register_mode == 'out'
@@ -36,7 +33,6 @@ class GetReadingWorker
                 Reading.create( register_id:  register_id,
                                 timestamp:    timestamp,
                                 watt_hour:    watt_hour, #energy is in 10^-10 kWh;
-                                metering_point_id: metering_point_id
                               )
               end
             end

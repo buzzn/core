@@ -29,8 +29,8 @@ $(".register").ready ->
       )
 
 calculate_power = (last_readings) =>
-  if last_readings == undefined
-    return -1
+  if last_readings == undefined || last_readings == null
+    return "?"
   return Math.round((last_readings[1] - last_readings[3])*3600/((last_readings[0] - last_readings[2])*10000))
 
 

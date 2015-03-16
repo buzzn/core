@@ -2,7 +2,7 @@
 
 Fabricator :user do
   email             { Faker::Internet.email }
-  password          'testtest'
+  password          'numeinfgentf'
   profile           { Fabricate(:profile) }
   after_create { |user | user.confirm! }
 end

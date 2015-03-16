@@ -13,7 +13,6 @@ class Reading
   field :quality
   field :load_course_time_series, type: Float
   field :state
-  field :metering_point_id,   type: Integer
 
   index({ register_id: 1 })
   index({ timestamp: 1 })

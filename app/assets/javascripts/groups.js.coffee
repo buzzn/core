@@ -365,6 +365,12 @@ class BubbleChart
       smallest_border = @width
     #@zoomFactor = 20 + smallest_border/(4 +  Math.pow(@data.length, 0.1) + 1 / ((1 + @totalPower)/(1 + @max_power_in)))
     if @max_power < 0.3 * @totalPower
+      if @data.length > 20
+        @zoomFactor = 20 + smallest_border / 5
+      else if @data.length > 10
+        @zoomFactor = 20 + smallest_border / 4
+      else
+        @zoomFactor = 20 + smallest_border / 3
       @zoomFactor = 20 + smallest_border / 3
     else if @max_power < 0.4 * @totalPower
       @zoomFactor = 20 + smallest_border / 4
