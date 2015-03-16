@@ -106,9 +106,22 @@ beginningOfHour = (timestamp) ->
   return start.getTime()
 
 endOfHour = (timestamp) ->
-  start = new Date(timestamp)
-  start.setMinutes(59,59,999)
+  end = new Date(timestamp)
+  end.setMinutes(59,59,999)
+  return end.getTime()
+
+beginningOfWeek = (timestamp) ->
+  startDay = 1
+  start = new Date(timestamp.valueOf() - (timestamp<=0 ? 7-startDay:timestamp-startDay)*86400000);
+  start.setHours(0,0,0,0)
   return start.getTime()
+
+endOfWeek = (timestamp) ->
+  startDay = 1
+  start = new Date(timestamp.valueOf() - (timestamp<=0 ? 7-startDay:timestamp-startDay)*86400000);
+  end = new Date(start.valueOf() + 6*86400000);
+  end.setHours(23,59,59,999)
+  return end.getTime()
 
 $(".metering_point_detail").ready ->
   id = $(this).attr('id').split('_')[2]
@@ -236,6 +249,8 @@ $(".metering_point_detail").ready ->
     if actual_resolution == "hour_to_minutes"
       actual_resolution = "day_to_hours"
     else if actual_resolution == "day_to_hours"
+      actual_resolution = "week_to_days"
+    else if actual_resolution == "week_to_days"
       actual_resolution = "month_to_days"
     else if actual_resolution == "month_to_days"
       actual_resolution = "year_to_months"
@@ -292,6 +307,9 @@ getExtremes = (timestamp) ->
   else if actual_resolution == "day_to_hours"
     start = beginningOfDay(timestamp)
     end = endOfDay(timestamp)
+  else if actual_resolution == "week_to_days"
+    start = beginningOfWeek(timestamp)
+    end = endOfWeek(timestamp)
   else if actual_resolution == "month_to_days"
     start = beginningOfMonth(timestamp)
     end = endOfMonth(timestamp)
@@ -308,6 +326,8 @@ getPreviousTimestamp = () ->
     return chart_data_min_x - 3600*1000
   else if actual_resolution == "day_to_hours"
     return chart_data_min_x - 24*3600*1000
+  else if actual_resolution == "week_to_days"
+    return chart_data_min_x - 7*24*3600*1000
   else if actual_resolution == "month_to_days"
     tmpDate = new Date(chart_data_min_x)
     tmpDate.setMonth(tmpDate.getMonth() - 1)
@@ -322,6 +342,8 @@ getNextTimestamp = () ->
     return chart_data_min_x + 3600*1000
   else if actual_resolution == "day_to_hours"
     return chart_data_min_x + 24*3600*1000
+  else if actual_resolution == "week_to_days"
+    return chart_data_min_x + 7*24*3600*1000
   else if actual_resolution == "month_to_days"
     tmpDate = new Date(chart_data_min_x)
     tmpDate.setMonth(tmpDate.getMonth() + 1)
@@ -336,6 +358,8 @@ setPointWidth = () ->
     return $(".chart").width()/100.0
   else if actual_resolution == "day_to_hours"
     return $(".chart").width()/70.0
+  else if actual_resolution == "week_to_days"
+    return $(".chart").width()/32.0
   else if actual_resolution == "month_to_days"
     return $(".chart").width()/80.0
   else if actual_resolution == "year_to_months"
@@ -350,14 +374,18 @@ zoomIn = (timestamp) ->
       return
     else if actual_resolution == "day_to_hours"
       actual_resolution = "hour_to_minutes"
-    else if actual_resolution == "month_to_days"
+    else if actual_resolution == "week_to_days"
       actual_resolution = "day_to_hours"
+    else if actual_resolution == "month_to_days"
+      actual_resolution = "week_to_days"
     else if actual_resolution == "year_to_months"
       actual_resolution = "month_to_days"
     containing_timestamp = timestamp
+    console.log actual_resolution
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
         chart.hideLoading()
+        console.log 'no'
         return
       chart.series[0].setData(data[0].data)
       new_point_width = setPointWidth()
@@ -376,6 +404,8 @@ checkIfZoomOut = () ->
     if actual_resolution == "hour_to_minutes"
       out_resolution = "day_to_hours"
     else if actual_resolution == "day_to_hours"
+      out_resolution = "week_to_days"
+    else if actual_resolution == "week_to_days"
       out_resolution = "month_to_days"
     else if actual_resolution == "month_to_days"
       out_resolution = "year_to_months"

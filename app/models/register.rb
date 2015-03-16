@@ -22,6 +22,10 @@ class Register < ActiveRecord::Base
     chart_data(:day_to_hours, containing_timestamp)
   end
 
+  def week_to_days(containing_timestamp)
+    chart_data(:week_to_days, containing_timestamp)
+  end
+
   def month_to_days(containing_timestamp)
     chart_data(:month_to_days, containing_timestamp)
   end

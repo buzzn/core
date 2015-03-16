@@ -23,6 +23,7 @@ class Reading
     resolution_formats = {
       year_to_months: ['year', 'month'],
       month_to_days:  ['month', 'dayOfMonth'],
+      week_to_days:   ['week', 'dayOfWeek'],
       day_to_hours:   ['dayOfMonth', 'hour'],
       hour_to_minutes:['hour', 'minute']
     }
@@ -45,6 +46,9 @@ class Reading
     when :month_to_days
       @start_time = @location_time.beginning_of_month
       @end_time   = @location_time.end_of_month
+    when :week_to_days
+      @start_time = @location_time.beginning_of_week
+      @end_time   = @location_time.end_of_week
     when :day_to_hours
       @start_time = @location_time.beginning_of_day
       @end_time   = @location_time.end_of_day
