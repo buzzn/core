@@ -70,7 +70,7 @@
 
 
   %hr
-  %h1.page-header.text-overflow= t'residents' if current_user.can_update?(@metering_point) || @users.size != 0
+  %h1.page-header.text-overflow= t'members' if current_user.can_update?(@metering_point) || @users.size != 0
   .row
     - @users.each do |user|
       = render user.profile
