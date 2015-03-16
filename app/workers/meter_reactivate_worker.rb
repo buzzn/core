@@ -3,7 +3,7 @@ class MeterReactivateWorker
 
   def perform(meter_id)
     @meter = Meter.find(meter_id)
-    @mpoc  = @meter.metering_point.metering_point_operator_contract
+    @mpoc  = @meter.metering_points.first.metering_point_operator_contract
     request = Discovergy.new(@mpoc.username, @mpoc.password).raw(@meter.manufacturer_product_serialnumber)
 
     if request['status'] == 'ok'

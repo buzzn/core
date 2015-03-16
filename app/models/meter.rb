@@ -22,13 +22,12 @@ class Meter < ActiveRecord::Base
   has_many :registers, through: :metering_points
 
 
+
+
   def slug_name
     "#{manufacturer_name} #{manufacturer_product_serialnumber}"
   end
 
-  def metering_point_operator_contract
-    self.metering_points.first.contracts.metering_point_operators.first
-  end
 
   def registers_modes_and_ids
     register_mode_and_ids = {}
