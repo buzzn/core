@@ -249,8 +249,8 @@ $(".metering_point_detail").ready ->
     if actual_resolution == "hour_to_minutes"
       actual_resolution = "day_to_hours"
     else if actual_resolution == "day_to_hours"
-      actual_resolution = "week_to_days"
-    else if actual_resolution == "week_to_days"
+    #  actual_resolution = "week_to_days"
+    #else if actual_resolution == "week_to_days"
       actual_resolution = "month_to_days"
     else if actual_resolution == "month_to_days"
       actual_resolution = "year_to_months"
@@ -374,18 +374,17 @@ zoomIn = (timestamp) ->
       return
     else if actual_resolution == "day_to_hours"
       actual_resolution = "hour_to_minutes"
-    else if actual_resolution == "week_to_days"
-      actual_resolution = "day_to_hours"
+    #else if actual_resolution == "week_to_days"
+    #  actual_resolution = "day_to_hours"
     else if actual_resolution == "month_to_days"
-      actual_resolution = "week_to_days"
+    #  actual_resolution = "week_to_days"
+      actual_resolution = "day_to_hours"
     else if actual_resolution == "year_to_months"
       actual_resolution = "month_to_days"
     containing_timestamp = timestamp
-    console.log actual_resolution
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
         chart.hideLoading()
-        console.log 'no'
         return
       chart.series[0].setData(data[0].data)
       new_point_width = setPointWidth()
@@ -404,8 +403,8 @@ checkIfZoomOut = () ->
     if actual_resolution == "hour_to_minutes"
       out_resolution = "day_to_hours"
     else if actual_resolution == "day_to_hours"
-      out_resolution = "week_to_days"
-    else if actual_resolution == "week_to_days"
+    #  out_resolution = "week_to_days"
+    #else if actual_resolution == "week_to_days"
       out_resolution = "month_to_days"
     else if actual_resolution == "month_to_days"
       out_resolution = "year_to_months"
