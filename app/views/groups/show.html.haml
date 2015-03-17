@@ -5,43 +5,45 @@
 
 = content_for :aside do
   %aside#aside-container
-    #aside.nano
-      .nano-content
-        .text-center.pad-all
-          .pad-ver
-            - if @group.logo?
-              = image_tag @group.logo.lg, class: 'img-circle img-lg img-border'
-            - else
-              %span.fa-stack.fa-lg.fa-5x
-                %i.fa.fa-circle.fa-stack-2x
-                %i.fa.fa-users.fa-stack-1x.fa-inverse
 
-          %h4.text-lg.text-overflow.mar-no= @group.name
+    #aside
+      .nano
+        .nano-content{:tabindex => "0"}
+          .text-center.pad-all
+            .pad-ver
+              - if @group.logo?
+                = image_tag @group.logo.lg, class: 'img-circle img-lg img-border'
+              - else
+                %span.fa-stack.fa-lg.fa-5x
+                  %i.fa.fa-circle.fa-stack-2x
+                  %i.fa.fa-users.fa-stack-1x.fa-inverse
 
-          %p.text-sm
-          .btn-group
-            %button.btn.btn-block.btn-success.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
-              =t('membership')
-            %ul.dropdown-menu{role: "menu"}
-              - if user_signed_in?
-                - if current_user.editable_metering_points.flatten.count == 1
-                  - if current_user.editable_metering_points.flatten.first.group == nil
-                    %li= link_to t('join_this_group'), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id), method: :post
-                  - elsif current_user.editable_metering_points.flatten.first.group == @group
-                    %li= link_to(t('leave_this_group'), cancel_membership_group_path(metering_point_id: current_user.editable_metering_points.flatten.first.id), :data => {:confirm => t('are_you_sure')})
-                  - else
-                    %li= link_to(t('join_this_group_and_leave_group', group_name: current_user.editable_metering_points.flatten.first.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id), method: :post)
-                - else
-                  - current_user.editable_metering_points.flatten.each do |metering_point|
-                    - if @group.received_group_metering_point_requests.any? && @group.received_group_metering_point_requests.collect(&:metering_point).include?(metering_point)
-                      %li= t('sent_request_with_metering_point', metering_point_name: metering_point.decorate.name)
-                      - next
-                    - if metering_point.group == @group
-                      %li= link_to(t('leave_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), cancel_membership_group_path(metering_point_id: metering_point.id), :data => {:confirm => t('are_you_sure')})
-                    - elsif metering_point.group
-                      %li= link_to(t('join_this_group_with_metering_point_and_leave_group', metering_point_name: metering_point.decorate.name, group_name: metering_point.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post)
+            %h4.text-lg.text-overflow.mar-no= @group.name
+
+            %p.text-sm
+            .btn-group
+              %button.btn.btn-block.btn-success.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
+                =t('membership')
+              %ul.dropdown-menu{role: "menu"}
+                - if user_signed_in?
+                  - if current_user.editable_metering_points.flatten.count == 1
+                    - if current_user.editable_metering_points.flatten.first.group == nil
+                      %li= link_to t('join_this_group'), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id), method: :post
+                    - elsif current_user.editable_metering_points.flatten.first.group == @group
+                      %li= link_to(t('leave_this_group'), cancel_membership_group_path(metering_point_id: current_user.editable_metering_points.flatten.first.id), :data => {:confirm => t('are_you_sure')})
                     - else
-                      %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post
+                      %li= link_to(t('join_this_group_and_leave_group', group_name: current_user.editable_metering_points.flatten.first.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id), method: :post)
+                  - else
+                    - current_user.editable_metering_points.flatten.each do |metering_point|
+                      - if @group.received_group_metering_point_requests.any? && @group.received_group_metering_point_requests.collect(&:metering_point).include?(metering_point)
+                        %li= t('sent_request_with_metering_point', metering_point_name: metering_point.decorate.name)
+                        - next
+                      - if metering_point.group == @group
+                        %li= link_to(t('leave_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), cancel_membership_group_path(metering_point_id: metering_point.id), :data => {:confirm => t('are_you_sure')})
+                      - elsif metering_point.group
+                        %li= link_to(t('join_this_group_with_metering_point_and_leave_group', metering_point_name: metering_point.decorate.name, group_name: metering_point.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post)
+                      - else
+                        %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post
 
           %hr
             %ul.list-group.bg-trans
@@ -86,10 +88,20 @@
 #page-content
 
   .row
-    .col-sm-12.col-md-12.col-lg-12
-      .panel.cover{:style => "background-image: url(#{@group.image.cover})"}
+    .col-sm-6.col-md-6.col-lg-6
+      .panel
         #bubbles_container
           #dummy
+
+    .col-sm-6.col-md-6.col-lg-6
+      .panel.comment-form
+        #demo-chat-body.collapse.in
+          .nano{:style => "height:410px"}
+            .nano-content.pad-all
+              %ul.list-unstyled.media-block.comments-all
+                = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
+          .panel-footer
+            = render :partial => 'comments/form', :locals => { :comment => @new_comment } if user_signed_in?
 
 
 
@@ -118,43 +130,8 @@
     %h1.page-header.text-overflow= t('contracts')
     .row
       = render @group.contracts
-  .panel.comment-form
-    / Heading
-    .panel-heading
-      .panel-control
-        .btn-group
-          %button.btn.btn-default{"data-target" => "#demo-chat-body", "data-toggle" => "collapse", :type => "button"}
-            %i.fa.fa-chevron-down
-          %button.btn.btn-default{"data-toggle" => "dropdown", :type => "button"}
-            %i.fa.fa-gear
-          %ul.dropdown-menu.dropdown-menu-right
-            %li
-              %a{:href => "#"} Available
-            %li
-              %a{:href => "#"} Busy
-            %li
-              %a{:href => "#"} Away
-            %li.divider
-            %li
-              %a#demo-connect-chat.disabled-link{"data-target" => "#demo-chat-body", :href => "#"} Connect
-            %li
-              %a#demo-disconnect-chat{"data-target" => "#demo-chat-body", :href => "#"} Disconect
-      %h3.panel-title Chat
-    / Widget body
-    #demo-chat-body.collapse.in
-      .nano{:style => "height:380px"}
-        .nano-content.pad-all
-          %ul.list-unstyled.media-block.comments-all
-            = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
-      / Widget footer
-      .panel-footer
-        = render :partial => 'comments/form', :locals => { :comment => @new_comment }
-        / .row
-        /   .col-xs-9
-        /     %input.form-control.chat-input{:placeholder => t("enter_your_text"), :type => "textarea"}/
-        /   .col-xs-3
-        /     %button.btn.btn-primary.btn-block{:type => "submit"}
-        /       =t('send')
+
+
 
 
 

@@ -9,6 +9,10 @@ ready = ->
   $("body").on "hidden.bs.modal", ".modal", ->
     $('.modal-dialog').empty()
 
+
+  window.addEventListener 'resize:end', (event) ->
+    console.log event.type
+
   $(window).on 'resize', ->
     chartDivs = $(".chart")
     chartDivs.each (div) ->
@@ -29,7 +33,6 @@ $(document).on('show.bs.modal', ready)
 $(document).on('page:restore', ->
   $(window).trigger('resize')
 )
-
 
 
 

@@ -18,6 +18,7 @@
 //= require jquery.remotipart
 //= require d3
 //= require bootstrap
+//= require bootstrap-datepicker
 //= require nanoscroller
 //= require highcharts
 //= require highcharts_no_utc
@@ -33,7 +34,9 @@
 //= require dependent-fields
 //= require metisMenu
 //= require pusher.min
-
+//= require switchery
+//= require resizeend
+//= require pace
 
 //= require nifty_init
 //= require nifty_notification
