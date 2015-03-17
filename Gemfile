@@ -87,12 +87,11 @@ gem 'pusher'
 gem 'gmaps4rails'
 gem 'iban-tools'
 
-# gem 'highcharts-rails'
+gem 'highcharts-rails'
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-font-awesome'
   gem 'rails-assets-bootstrap'
-  gem 'rails-assets-highcharts'
   gem 'rails-assets-sparklines'
   gem 'rails-assets-d3'
   gem 'rails-assets-underscore'
