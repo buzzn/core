@@ -5,44 +5,43 @@
 
 = content_for :aside do
   %aside#aside-container
-    #aside
-      .nano
-        .nano-content
-          .text-center.pad-all
-            .pad-ver
-              - if @group.logo?
-                = image_tag @group.logo.lg, class: 'img-circle img-lg img-border'
-              - else
-                %span.fa-stack.fa-lg.fa-5x
-                  %i.fa.fa-circle.fa-stack-2x
-                  %i.fa.fa-users.fa-stack-1x.fa-inverse
+    #aside.nano
+      .content
+        .text-center.pad-all
+          .pad-ver
+            - if @group.logo?
+              = image_tag @group.logo.lg, class: 'img-circle img-lg img-border'
+            - else
+              %span.fa-stack.fa-lg.fa-5x
+                %i.fa.fa-circle.fa-stack-2x
+                %i.fa.fa-users.fa-stack-1x.fa-inverse
 
-            %h4.text-lg.text-overflow.mar-no= @group.name
+          %h4.text-lg.text-overflow.mar-no= @group.name
 
-            %p.text-sm
-            .btn-group
-              %button.btn.btn-block.btn-success.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
-                =t('membership')
-              %ul.dropdown-menu{role: "menu"}
-                - if user_signed_in?
-                  - if current_user.editable_metering_points.flatten.count == 1
-                    - if current_user.editable_metering_points.flatten.first.group == nil
-                      %li= link_to t('join_this_group'), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id), method: :post
-                    - elsif current_user.editable_metering_points.flatten.first.group == @group
-                      %li= link_to(t('leave_this_group'), cancel_membership_group_path(metering_point_id: current_user.editable_metering_points.flatten.first.id), :data => {:confirm => t('are_you_sure')})
-                    - else
-                      %li= link_to(t('join_this_group_and_leave_group', group_name: current_user.editable_metering_points.flatten.first.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id), method: :post)
+          %p.text-sm
+          .btn-group
+            %button.btn.btn-block.btn-success.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
+              =t('membership')
+            %ul.dropdown-menu{role: "menu"}
+              - if user_signed_in?
+                - if current_user.editable_metering_points.flatten.count == 1
+                  - if current_user.editable_metering_points.flatten.first.group == nil
+                    %li= link_to t('join_this_group'), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id), method: :post
+                  - elsif current_user.editable_metering_points.flatten.first.group == @group
+                    %li= link_to(t('leave_this_group'), cancel_membership_group_path(metering_point_id: current_user.editable_metering_points.flatten.first.id), :data => {:confirm => t('are_you_sure')})
                   - else
-                    - current_user.editable_metering_points.flatten.each do |metering_point|
-                      - if @group.received_group_metering_point_requests.any? && @group.received_group_metering_point_requests.collect(&:metering_point).include?(metering_point)
-                        %li= t('sent_request_with_metering_point', metering_point_name: metering_point.decorate.name)
-                        - next
-                      - if metering_point.group == @group
-                        %li= link_to(t('leave_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), cancel_membership_group_path(metering_point_id: metering_point.id), :data => {:confirm => t('are_you_sure')})
-                      - elsif metering_point.group
-                        %li= link_to(t('join_this_group_with_metering_point_and_leave_group', metering_point_name: metering_point.decorate.name, group_name: metering_point.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post)
-                      - else
-                        %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post
+                    %li= link_to(t('join_this_group_and_leave_group', group_name: current_user.editable_metering_points.flatten.first.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id), method: :post)
+                - else
+                  - current_user.editable_metering_points.flatten.each do |metering_point|
+                    - if @group.received_group_metering_point_requests.any? && @group.received_group_metering_point_requests.collect(&:metering_point).include?(metering_point)
+                      %li= t('sent_request_with_metering_point', metering_point_name: metering_point.decorate.name)
+                      - next
+                    - if metering_point.group == @group
+                      %li= link_to(t('leave_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), cancel_membership_group_path(metering_point_id: metering_point.id), :data => {:confirm => t('are_you_sure')})
+                    - elsif metering_point.group
+                      %li= link_to(t('join_this_group_with_metering_point_and_leave_group', metering_point_name: metering_point.decorate.name, group_name: metering_point.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post)
+                    - else
+                      %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post
 
           %hr
             %ul.list-group.bg-trans
