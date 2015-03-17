@@ -1,4 +1,5 @@
 ready = ->
+  FastClick.attach(document.body);
   $(".select2").select2()
   $('a[rel~="tooltip"]').tooltip()
   $('[data-tooltip="true"]').tooltip();

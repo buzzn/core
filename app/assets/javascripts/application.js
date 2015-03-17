@@ -25,6 +25,7 @@
 //= require tree.jquery
 //= require jquery-readyselector
 //= require select2
+//= require fastclick
 //= require cocoon
 //= require rails-timeago
 //= require rails-timeago-all
@@ -32,6 +33,7 @@
 //= require dependent-fields
 //= require metisMenu
 //= require pusher.min
+
 
 //= require nifty_init
 //= require nifty_notification

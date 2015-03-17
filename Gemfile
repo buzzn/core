@@ -86,8 +86,8 @@ gem 'acts_as_list'
 gem 'pusher'
 gem 'gmaps4rails'
 gem 'iban-tools'
-
 gem 'highcharts-rails'
+
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-font-awesome'
