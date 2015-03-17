@@ -305,7 +305,9 @@ class BubbleChart
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
     @circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
     #@circles.attr("r", (d) -> d.radius)
-
+    while checkIfBubbleIsHidden()
+      @zoomFactor = @zoomFactor - 20
+      setNewScale()
     this.display_group_all()
 
   calculate_power = (firstTimestamp, secondTimestamp, firstWattHour, secondWattHour) =>
@@ -359,33 +361,42 @@ class BubbleChart
       @totalPowerOut += d.value
     $("#kw-ticker-out").html(parseInt(@totalPowerOut) + " W")
 
+  checkIfBubbleIsHidden = () =>
+    @circles.forEach (d) =>
+      if d.cx - d.r <= 5 || d.cx + d.r >= @height - 5 || d.cy - d.r <= 5 || d.cy + d.r >= @width - 5
+        return true
+    @circles_out.forEach (d) =>
+      if d.cx - d.r <= 5 || d.cx + d.r >= @height - 5 || d.cy - d.r <= 5 || d.cy + d.r >= @width - 5
+        return true
+    return false
+
   setZoomFactor: () =>
     smallest_border = @height
     if @width < @height
       smallest_border = @width
     #@zoomFactor = 20 + smallest_border/(4 +  Math.pow(@data.length, 0.1) + 1 / ((1 + @totalPower)/(1 + @max_power_in)))
-    if @max_power < 0.3 * @totalPower
-      if @data.length > 20
-        @zoomFactor = 20 + smallest_border / 5
-      else if @data.length > 10
-        @zoomFactor = 20 + smallest_border / 4
-      else
-        @zoomFactor = 20 + smallest_border / 3
-      @zoomFactor = 20 + smallest_border / 3
-    else if @max_power < 0.4 * @totalPower
-      @zoomFactor = 20 + smallest_border / 4
-    else if @max_power < 0.5 * @totalPower
-      @zoomFactor = smallest_border / 5
-    else if @max_power < 0.6 * @totalPower
-      @zoomFactor = smallest_border / 5
-    else if @max_power < 0.7 * @totalPower
-      @zoomFactor = smallest_border / 4
-    else if @max_power < 0.8 * @totalPower
-      @zoomFactor = 20 + smallest_border / 4
-    else if @max_power < 0.9 * @totalPower
-      @zoomFactor = smallest_border / 3
-    else
-      @zoomFactor = 20 + smallest_border / 3
+    # if @max_power < 0.3 * @totalPower
+    #   if @data.length > 20
+    #     @zoomFactor = 20 + smallest_border / 5
+    #   else if @data.length > 10
+    #     @zoomFactor = 20 + smallest_border / 4
+    #   else
+    #     @zoomFactor = 20 + smallest_border / 3
+    #   @zoomFactor = 20 + smallest_border / 3
+    # else if @max_power < 0.4 * @totalPower
+    #   @zoomFactor = 20 + smallest_border / 4
+    # else if @max_power < 0.5 * @totalPower
+    #   @zoomFactor = smallest_border / 5
+    # else if @max_power < 0.6 * @totalPower
+    #   @zoomFactor = smallest_border / 5
+    # else if @max_power < 0.7 * @totalPower
+    #   @zoomFactor = smallest_border / 4
+    # else if @max_power < 0.8 * @totalPower
+    #   @zoomFactor = 20 + smallest_border / 4
+    # else if @max_power < 0.9 * @totalPower
+    #   @zoomFactor = smallest_border / 3
+    # else
+    @zoomFactor = smallest_border / 3
 
 
 
