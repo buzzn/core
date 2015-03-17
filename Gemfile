@@ -72,7 +72,6 @@ gem 'acts-as-taggable-on'
 gem 'remotipart'
 gem 'public_activity'
 gem 'gon'
-gem 'highcharts-rails'
 gem 'tzinfo'
 gem 'rails-timeago'
 gem 'turbolinks_transitions'
@@ -88,17 +87,19 @@ gem 'pusher'
 gem 'gmaps4rails'
 gem 'iban-tools'
 
-
+# gem 'highcharts-rails'
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-font-awesome'
   gem 'rails-assets-bootstrap'
+  gem 'rails-assets-highcharts'
   gem 'rails-assets-sparklines'
   gem 'rails-assets-d3'
   gem 'rails-assets-underscore'
   gem 'rails-assets-jquery-readyselector'
   gem 'rails-assets-metisMenu'
   gem 'rails-assets-nanoscroller'
+  gem 'rails-assets-fastclick'
 end
 
 

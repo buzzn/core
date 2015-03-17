@@ -7,8 +7,11 @@
   = javascript_include_tag "//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js"
 
   = csrf_meta_tags
+
   = metamagic :title => "buzzn"
+
   %meta{name: "viewport", content: "width=device-width, initial-scale=1.0"}
   %meta{name: "apple-mobile-web-app-capable", content: "yes"}
   %meta{name: "apple-mobile-web-app-status-bar-style", content:"black"}
+
   = analytics_init if Rails.env.production?
