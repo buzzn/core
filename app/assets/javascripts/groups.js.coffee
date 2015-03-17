@@ -63,6 +63,7 @@ class BubbleChart
     @max_power_in = null
     @totalPower = 0
     @totalPowerOut = 0
+    @radius_scale = null
     @zoomFactor = 1
 
     # nice looking colors - no reason to buck the trend
@@ -79,9 +80,7 @@ class BubbleChart
       @max_power = max_power_out
     @data.forEach (d) =>
       @totalPower += parseInt(calculate_power(d[3], d[1], d[4], d[2]))
-    this.setZoomFactor()
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @zoomFactor])
-
+    this.setZoomFactor(true)
     this.create_nodes()
     this.create_vis()
     this.calculateTotalPower()
@@ -225,40 +224,6 @@ class BubbleChart
       d.x = d.x + (@center.x - d.x) * (@damper + 0.02) * alpha
       d.y = d.y + (@center.y - d.y) * (@damper + 0.02) * alpha
 
-  # sets the display of bubbles to be separated
-  # into each year. Does this by calling move_towards_year
-  #display_by_year: () =>
-  #  @force.gravity(@layout_gravity)
-  #    .charge(this.charge)
-  #    .friction(0.9)
-  #    .on "tick", (e) =>
-  #      @circles.each(this.move_towards_year(e.alpha))
-  #        .attr("cx", (d) -> d.x)
-  #        .attr("cy", (d) -> d.y)
-  #  @force.start()
-  #
-  #  this.display_years()
-
-  # move all circles to their associated @year_centers
-  #move_towards_year: (alpha) =>
-  #  (d) =>
-  #    target = @year_centers[d.year]
-  #    d.x = d.x + (target.x - d.x) * (@damper + 0.02) * alpha * 1.1
-  #    d.y = d.y + (target.y - d.y) * (@damper + 0.02) * alpha * 1.1
-
-  # Method to display year titles
-  #display_years: () =>
-  #  years_x = {"2008": 160, "2009": @width / 2, "2010": @width - 160}
-  #  years_data = d3.keys(years_x)
-  #  years = @vis.selectAll(".years")
-  #    .data(years_data)
-
-  #  years.enter().append("text")
-  #    .attr("class", "years")
-  #    .attr("x", (d) => years_x[d] )
-  #    .attr("y", 40)
-  #    .attr("text-anchor", "middle")
-  #    .text((d) -> d)
 
   # Method to hide year titiles
   hide_years: () =>
@@ -302,12 +267,9 @@ class BubbleChart
 
     #@circles = @vis.selectAll("circle")
     #  .data(@nodes, (d) -> d.id)
+    #@circles.attr("r", (d) -> d.radius)
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
     @circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
-    #@circles.attr("r", (d) -> d.radius)
-    while checkIfBubbleIsHidden()
-      @zoomFactor = @zoomFactor - 20
-      setNewScale()
     this.display_group_all()
 
   calculate_power = (firstTimestamp, secondTimestamp, firstWattHour, secondWattHour) =>
@@ -335,12 +297,11 @@ class BubbleChart
         @max_power = value
     this.calculateTotalPower()
     this.calculateTotalPowerOut()
-    this.setZoomFactor()
     this.setNewScale()
 
   setNewScale: () =>
-    this.setZoomFactor()
-    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @zoomFactor])
+    this.setZoomFactor(false)
+
     @nodes.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
     @nodes_out.forEach (d) =>
@@ -361,42 +322,18 @@ class BubbleChart
       @totalPowerOut += d.value
     $("#kw-ticker-out").html(parseInt(@totalPowerOut) + " W")
 
-  checkIfBubbleIsHidden = () =>
-    @circles.forEach (d) =>
-      if d.cx - d.r <= 5 || d.cx + d.r >= @height - 5 || d.cy - d.r <= 5 || d.cy + d.r >= @width - 5
-        return true
-    @circles_out.forEach (d) =>
-      if d.cx - d.r <= 5 || d.cx + d.r >= @height - 5 || d.cy - d.r <= 5 || d.cy + d.r >= @width - 5
-        return true
-    return false
-
-  setZoomFactor: () =>
+  setZoomFactor: (init) =>
     smallest_border = @height
     if @width < @height
       smallest_border = @width
-    #@zoomFactor = 20 + smallest_border/(4 +  Math.pow(@data.length, 0.1) + 1 / ((1 + @totalPower)/(1 + @max_power_in)))
-    # if @max_power < 0.3 * @totalPower
-    #   if @data.length > 20
-    #     @zoomFactor = 20 + smallest_border / 5
-    #   else if @data.length > 10
-    #     @zoomFactor = 20 + smallest_border / 4
-    #   else
-    #     @zoomFactor = 20 + smallest_border / 3
-    #   @zoomFactor = 20 + smallest_border / 3
-    # else if @max_power < 0.4 * @totalPower
-    #   @zoomFactor = 20 + smallest_border / 4
-    # else if @max_power < 0.5 * @totalPower
-    #   @zoomFactor = smallest_border / 5
-    # else if @max_power < 0.6 * @totalPower
-    #   @zoomFactor = smallest_border / 5
-    # else if @max_power < 0.7 * @totalPower
-    #   @zoomFactor = smallest_border / 4
-    # else if @max_power < 0.8 * @totalPower
-    #   @zoomFactor = 20 + smallest_border / 4
-    # else if @max_power < 0.9 * @totalPower
-    #   @zoomFactor = smallest_border / 3
-    # else
-    @zoomFactor = smallest_border / 3
+    if init
+      @zoomFactor = smallest_border / 3
+      @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @zoomFactor])
+    while @radius_scale(@totalPower) > smallest_border / 2.3
+      @zoomFactor = @zoomFactor - 20
+      @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @zoomFactor])
+
+
 
 
 
