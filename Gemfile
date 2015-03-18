@@ -90,10 +90,15 @@ gem 'highcharts-rails'
 
 
 source 'http://rails-assets.org' do
+  gem 'rails-assets-pace'
+  gem 'rails-assets-resizeend'
+  gem 'rails-assets-animate-css'
   gem 'rails-assets-font-awesome'
   gem 'rails-assets-bootstrap'
+  gem 'rails-assets-bootstrap-datepicker'
   gem 'rails-assets-sparklines'
   gem 'rails-assets-d3'
+  gem 'rails-assets-switchery'
   gem 'rails-assets-underscore'
   gem 'rails-assets-jquery-readyselector'
   gem 'rails-assets-metisMenu'

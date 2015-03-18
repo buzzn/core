@@ -1,5 +1,6 @@
 ready = ->
   FastClick.attach(document.body);
+  $(".nano").nanoScroller();
   $(".select2").select2()
   $('a[rel~="tooltip"]').tooltip()
   $('[data-tooltip="true"]').tooltip();
@@ -7,6 +8,7 @@ ready = ->
 
   $("body").on "hidden.bs.modal", ".modal", ->
     $('.modal-dialog').empty()
+
 
   $('.fa-info-circle').popover(placement: 'right')
 
@@ -16,6 +18,11 @@ ready = ->
       #the 'has' for icons within a button that triggers a popup
       if !$(this).is(e.target) and $(this).has(e.target).length == 0 and $('.popover').has(e.target).length == 0
         $(this).popover 'hide'
+
+
+  window.addEventListener 'resize:end', (event) ->
+    console.log event.type
+
 
   $(window).on 'resize', ->
     chartDivs = $(".chart")
@@ -37,7 +44,6 @@ $(document).on('show.bs.modal', ready)
 $(document).on('page:restore', ->
   $(window).trigger('resize')
 )
-
 
 
 

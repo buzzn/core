@@ -551,8 +551,12 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.2.0)
       sprockets-rails
+    rails-assets-animate-css (3.2.3)
     rails-assets-bootstrap (3.3.4)
       rails-assets-jquery (>= 1.9.1)
+    rails-assets-bootstrap-datepicker (1.4.0)
+      rails-assets-bootstrap (>= 2.0.4, < 4.0)
+      rails-assets-jquery (>= 1.7.1)
     rails-assets-d3 (3.5.5)
     rails-assets-fastclick (1.0.6)
     rails-assets-font-awesome (4.3.0)
@@ -562,7 +566,12 @@ GEM
       rails-assets-bootstrap (~> 3.3.0)
     rails-assets-nanoscroller (0.8.5)
       rails-assets-jquery (>= 1.6)
+    rails-assets-pace (1.0.2)
+    rails-assets-resizeend (1.2.1)
     rails-assets-sparklines (1.0.0)
+    rails-assets-switchery (0.3.6)
+      rails-assets-transitionize
+    rails-assets-transitionize (0.0.3)
     rails-assets-underscore (1.8.2)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
@@ -813,14 +822,19 @@ DEPENDENCIES
   rack-livereload
   rack-oauth2
   rails
+  rails-assets-animate-css!
   rails-assets-bootstrap!
+  rails-assets-bootstrap-datepicker!
   rails-assets-d3!
   rails-assets-fastclick!
   rails-assets-font-awesome!
   rails-assets-jquery-readyselector!
   rails-assets-metisMenu!
   rails-assets-nanoscroller!
+  rails-assets-pace!
+  rails-assets-resizeend!
   rails-assets-sparklines!
+  rails-assets-switchery!
   rails-assets-underscore!
   rails-erd
   rails-i18n

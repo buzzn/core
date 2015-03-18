@@ -5,6 +5,7 @@
 
 = content_for :aside do
   %aside#aside-container
+
     #aside
       .nano
         .nano-content{:tabindex => "0"}
@@ -87,28 +88,20 @@
 #page-content
 
   .row
-    .col-sm-12.col-md-12.col-lg-12
-      .panel.cover{:style => "background-image: url(#{@group.image.cover})"}
+    .col-sm-6.col-md-6.col-lg-6
+      .panel
         #bubbles_container
           #dummy
 
-  .panel.comment-form
-    / Heading
-    .panel-heading
-      .panel-control
-        .btn-group
-          %button.btn.btn-default{"data-target" => "#demo-chat-body", "data-toggle" => "collapse", :type => "button"}
-            %i.fa.fa-chevron-down
-      %h3.panel-title Chat
-    / Widget body
-    #demo-chat-body.collapse.in
-      .nano{:style => "height:380px"}
-        .nano-content.pad-all
-          %ul.list-unstyled.media-block.comments-all
-            = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
-      / Widget footer
-      .panel-footer
-        = render :partial => 'comments/form', :locals => { :comment => @new_comment }
+    .col-sm-6.col-md-6.col-lg-6
+      .panel.comment-form
+        #demo-chat-body.collapse.in
+          .nano{:style => "height:410px"}
+            .nano-content.pad-all
+              %ul.list-unstyled.media-block.comments-all
+                = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
+          .panel-footer
+            = render :partial => 'comments/form', :locals => { :comment => @new_comment } if user_signed_in?
 
 
 
@@ -142,6 +135,7 @@
     %h1.page-header.text-overflow= t('contracts')
     .row
       = render @group.contracts
+
 
 
 
