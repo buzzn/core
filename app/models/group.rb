@@ -31,11 +31,6 @@ class Group < ActiveRecord::Base
   normalize_attributes :description, :website
 
 
-
-  scope :public, lambda {
-    self.where(:private => false)
-  }
-
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
   }
