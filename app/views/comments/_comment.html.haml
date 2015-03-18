@@ -1,10 +1,10 @@
 %li.mar-btm.comment{ :id => "comment_#{comment.id}" }
   - if user_signed_in? && current_user == comment.user
     .media-left
-      %img.img-circle.img-sm{:alt => t("profile_picture"), :src => comment.user.profile.image}
+      %img.img-circle.img-sm{:alt => t("profile_picture"), :src => comment.user.profile.image }
     .media-body.pad-hor.speech-left
       .speech
-        %a.media-heading{:href => "#"}
+        %a.media-heading{:href => profile_path(comment.user)}
           = comment.user.name
         - if user_signed_in? && (current_user == comment.user || current_user.can_update?(@group))
           = link_to "×", comment_path(comment), :method => :delete, :remote => true, :confirm => "Are you sure you want to remove this comment?", :disable_with => "×", :class => 'close'
@@ -12,12 +12,15 @@
         %p.speech-time.time
           %i.fa.fa-clock-o.fa-fw
           = timeago_tag comment.updated_at, :nojs => true, :lang => locale, :limit => 10.days.ago
+        = render comment.children
+        .nested-comments.pull-right
+          =t('reply')
   - else
     .media-right
       %img.img-circle.img-sm{:alt => t("profile_picture"), :src => comment.user.profile.image}
     .media-body.pad-hor.speech-right
       .speech
-        %a.media-heading{:href => "#"}
+        %a.media-heading{:href => profile_path(comment.user)}
           = comment.user.name
         - if user_signed_in? && (current_user == comment.user || current_user.can_update?(@group))
           = link_to "×", comment_path(comment), :method => :delete, :remote => true, :confirm => "Are you sure you want to remove this comment?", :disable_with => "×", :class => 'close'
@@ -25,3 +28,5 @@
         %p.speech-time.time
           %i.fa.fa-clock-o.fa-fw
           = timeago_tag comment.updated_at, :nojs => true, :lang => locale, :limit => 10.days.ago
+        .nested-comments.pull-right
+          =t('reply')

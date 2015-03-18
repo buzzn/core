@@ -301,7 +301,6 @@ class BubbleChart
 
   setNewScale: () =>
     this.setZoomFactor(false)
-
     @nodes.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
     @nodes_out.forEach (d) =>

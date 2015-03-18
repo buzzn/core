@@ -18,7 +18,7 @@ class GroupsController < ApplicationController
     @all_users                      = User.all.decorate
     @all_groups                     = Group.all.decorate
 
-    @all_comments                   = @group.comment_threads.order('created_at desc')
+    @all_comments                   = @group.root_comments.order('created_at asc')
     @new_comment                    = Comment.build_from(@group, current_user.id, "") if user_signed_in?
 
     if @metering_points

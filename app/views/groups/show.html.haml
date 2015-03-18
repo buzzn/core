@@ -92,33 +92,6 @@
         #bubbles_container
           #dummy
 
-
-
-  - if @energy_producers.any?
-    %h1.page-header.text-overflow= t('energy_producers')
-    .row
-      - @energy_producers.each do |user|
-        = render user.profile
-
-
-  - if @energy_consumers.any?
-    %h1.page-header.text-overflow= t('energy_consumers')
-    .row
-      - @energy_consumers.each do |user|
-        = render user.profile
-
-
-  - if @interested_members.any?
-    %h1.page-header.text-overflow= t('interested_members')
-    .row
-      - @interested_members.each do |user|
-        = render user.profile
-
-
-  - if user_signed_in? && current_user.can_update?(@group)
-    %h1.page-header.text-overflow= t('contracts')
-    .row
-      = render @group.contracts
   .panel.comment-form
     / Heading
     .panel-heading
@@ -126,20 +99,6 @@
         .btn-group
           %button.btn.btn-default{"data-target" => "#demo-chat-body", "data-toggle" => "collapse", :type => "button"}
             %i.fa.fa-chevron-down
-          %button.btn.btn-default{"data-toggle" => "dropdown", :type => "button"}
-            %i.fa.fa-gear
-          %ul.dropdown-menu.dropdown-menu-right
-            %li
-              %a{:href => "#"} Available
-            %li
-              %a{:href => "#"} Busy
-            %li
-              %a{:href => "#"} Away
-            %li.divider
-            %li
-              %a#demo-connect-chat.disabled-link{"data-target" => "#demo-chat-body", :href => "#"} Connect
-            %li
-              %a#demo-disconnect-chat{"data-target" => "#demo-chat-body", :href => "#"} Disconect
       %h3.panel-title Chat
     / Widget body
     #demo-chat-body.collapse.in
@@ -150,12 +109,39 @@
       / Widget footer
       .panel-footer
         = render :partial => 'comments/form', :locals => { :comment => @new_comment }
-        / .row
-        /   .col-xs-9
-        /     %input.form-control.chat-input{:placeholder => t("enter_your_text"), :type => "textarea"}/
-        /   .col-xs-3
-        /     %button.btn.btn-primary.btn-block{:type => "submit"}
-        /       =t('send')
+
+
+
+
+  - if @energy_producers.any?
+    %h1.page-header.text-overflow= t('energy_producers')
+    .fa.fa-info-circle{'data-content' => "Ein Stromgeber ist eine Person, die über ihre Stromerzeugungsanlage (z.B. Photovoltaikanlage, Blockheizkraftwerk) Strom an andere Personen liefert. Du findest hier also eine Liste aller Stromgeber, die Strom über diese Gruppe teilen.", 'data-title' => "Was ist ein Stromgeber?"}
+    .row
+      - @energy_producers.each do |user|
+        = render user.profile
+
+
+  - if @energy_consumers.any?
+    %h1.page-header.text-overflow= t('energy_consumers')
+    .fa.fa-info-circle{'data-content' => "Ein Stromnehmer ist eine Person, die über ihren Stromzähler Strom von einer anderen Person bekommt. Du findest hier also eine Liste aller Stromnehmer, die aus dieser Gruppe Strom beziehen.", 'data-title' => "Was ist ein Stromnehmer?"}
+    .row
+      - @energy_consumers.each do |user|
+        = render user.profile
+
+
+  - if @interested_members.any?
+    .fa.fa-info-circle{'data-content' => "Ein interessiertes Mitglied ist eine Person, die sich gerne am Geschehen in der Gruppe beteiligen möchte, ohne konkret Strom aus dieser Grupper zu nehmen oder ihr zu geben.", 'data-title' => "Was ist ein interessiertes Mitglied?"}
+    %h1.page-header.text-overflow= t('interested_members')
+    .row
+      - @interested_members.each do |user|
+        = render user.profile
+
+
+  - if user_signed_in? && current_user.can_update?(@group)
+    .fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind.", 'data-title' => "Was ist ein Vertrag?"}
+    %h1.page-header.text-overflow= t('contracts')
+    .row
+      = render @group.contracts
 
 
 

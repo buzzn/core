@@ -8,6 +8,15 @@ ready = ->
   $("body").on "hidden.bs.modal", ".modal", ->
     $('.modal-dialog').empty()
 
+  $('.fa-info-circle').popover(placement: 'right')
+
+  $('body').on 'click', (e) ->
+    $('.fa-info-circle').each ->
+      #the 'is' for buttons that trigger popups
+      #the 'has' for icons within a button that triggers a popup
+      if !$(this).is(e.target) and $(this).has(e.target).length == 0 and $('.popover').has(e.target).length == 0
+        $(this).popover 'hide'
+
   $(window).on 'resize', ->
     chartDivs = $(".chart")
     chartDivs.each (div) ->
