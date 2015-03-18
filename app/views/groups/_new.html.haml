@@ -5,7 +5,7 @@
   .modal-body
     = simple_form_for @group, remote: true do |f|
       = render 'groups/form_fields', f: f
-      = f.association :metering_points, collection: MeteringPoint.by_modes_and_user_without_group(["in_out", "out"], current_user).collect(&:decorate), input_html: { class: 'select2'}
+      = f.association :metering_points, collection: MeteringPoint.editable_by_user(current_user).outputs.without_group, include_blank: false, input_html: { class: 'select2'}
       .modal-footer
         = f.button :submit, id: 'submit', class: 'btn btn-success'
 

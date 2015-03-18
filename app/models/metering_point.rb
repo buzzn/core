@@ -40,10 +40,28 @@ class MeteringPoint < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
+  delegate :mode, to: :register, allow_nil: true
+
+
 
   default_scope { order('created_at ASC') }
 
-  delegate :mode, to: :register, allow_nil: true
+  scope :outputs, lambda { self.joins(:register).where("mode in (?)", 'out') }
+  scope :inputs,  lambda { self.joins(:register).where("mode in (?)", 'in') }
+
+  scope :without_group, lambda { self.where(group: nil) }
+
+  scope :editable_by_user, lambda {|user|
+    self.with_role(:manager, user)
+  }
+
+  scope :by_group, lambda {|group|
+    self.where(group: group.id)
+  }
+
+  scope :by_group_id_and_modes, lambda { |group_id, modes|
+    MeteringPoint.joins(:register).where("mode in (?)", modes)
+  }
 
 
 
@@ -71,31 +89,6 @@ class MeteringPoint < ActiveRecord::Base
       end
     end
   end
-
-  scope :by_group_id_and_modes, lambda { |group_id, modes|
-    MeteringPoint.joins(:register).where("mode in (?)", modes).where(group_id: group_id).order('mode DESC')
-  }
-
-  scope :by_modes_and_user_without_group, lambda {|modes, user|
-    if modes == "in_out"
-      modes = ["in", "out", "in_out"]
-    end
-    metering_points_ids = user.editable_metering_points.collect{|metering_point| metering_point.id if metering_point}.compact
-    subtree_metering_points = metering_points_ids.collect{|metering_points_id| MeteringPoint.find(metering_points_id).subtree_ids}.join('/%|') + "/%"
-    root_metering_points = metering_points_ids.collect{|metering_points_id| MeteringPoint.find(metering_points_id).id}.join('|')
-    MeteringPoint.joins(:register).where("mode in (?)", modes).where(group_id: nil).where("metering_point_id in (?) OR ancestry SIMILAR TO ? OR ancestry SIMILAR TO ?", metering_points_ids, subtree_metering_points, root_metering_points)
-  }
-
-  scope :by_modes_and_user, lambda {|modes, user|
-    if modes == "in_out"
-      modes = ["in", "out", "in_out"]
-    end
-    location_ids = user.editable_locations.collect{|location| location.id if location.metering_point}.compact
-    subtree_metering_points = location_ids.collect{|location_id| Location.find(location_id).metering_point.subtree_ids}.join('/%|') + "/%"
-    root_metering_points = location_ids.collect{|location_id| Location.find(location_id).metering_point.id}.join('|')
-    MeteringPoint.joins(:register).where("mode in (?)", modes).where("location_id in (?) OR ancestry SIMILAR TO ? OR ancestry SIMILAR TO ?", location_ids, subtree_metering_points, root_metering_points)
-  }
-
 
 
 
@@ -134,10 +127,6 @@ class MeteringPoint < ActiveRecord::Base
 
   def input?
     self.mode == 'in'
-  end
-
-  def in_and_output?
-    self.mode == 'in_out'
   end
 
 

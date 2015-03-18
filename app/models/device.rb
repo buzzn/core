@@ -18,6 +18,10 @@ class Device < ActiveRecord::Base
 
   default_scope { order('created_at ASC') }
 
+  scope :editable_by_user, lambda {|user|
+    self.with_role(:manager, user)
+  }
+
 
   def name
     "#{self.manufacturer_name} #{self.manufacturer_product_name}"

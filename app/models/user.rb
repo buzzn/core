@@ -42,19 +42,19 @@ class User < ActiveRecord::Base
 
 
   def editable_metering_points
-    MeteringPoint.with_role(:manager, self).decorate
+    MeteringPoint.editable_by_user(self).decorate
   end
 
   def editable_registers
-    Register.where(metering_point_id: MeteringPoint.with_role(:manager, self).collect(&:id)).decorate
+    Register.where(metering_point_id: MeteringPoint.editable_by_user(self).collect(&:id)).decorate
   end
 
   def editable_groups
-    Group.with_role(:manager, self).decorate
+    Group.editable_by_user(self).decorate
   end
 
   def editable_devices
-    Device.with_role(:manager, self).decorate
+    Device.editable_by_user(self).decorate
   end
 
 
