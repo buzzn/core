@@ -80,7 +80,7 @@ class BubbleChart
       @max_power = max_power_out
     @data.forEach (d) =>
       @totalPower += parseInt(calculate_power(d[3], d[1], d[4], d[2]))
-    this.setZoomFactor(true)
+    this.setZoomFactor()
     this.create_nodes()
     this.create_vis()
     this.calculateTotalPower()
@@ -273,6 +273,8 @@ class BubbleChart
     this.display_group_all()
 
   calculate_power = (firstTimestamp, secondTimestamp, firstWattHour, secondWattHour) =>
+    if secondTimestamp - firstTimestamp == 0
+      return 0
     return (secondWattHour - firstWattHour)*3600/((secondTimestamp - firstTimestamp)*10000)
 
   calculateNewCenter: () =>
@@ -300,7 +302,7 @@ class BubbleChart
     this.setNewScale()
 
   setNewScale: () =>
-    this.setZoomFactor(false)
+    this.setZoomFactor()
     @nodes.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
     @nodes_out.forEach (d) =>
@@ -321,13 +323,12 @@ class BubbleChart
       @totalPowerOut += d.value
     $("#kw-ticker-out").html(parseInt(@totalPowerOut) + " W")
 
-  setZoomFactor: (init) =>
+  setZoomFactor: () =>
     smallest_border = @height
     if @width < @height
       smallest_border = @width
-    if init
-      @zoomFactor = smallest_border / 3
-      @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @zoomFactor])
+    @zoomFactor = smallest_border / 3
+    @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @zoomFactor])
     while @radius_scale(@totalPower) > smallest_border / 2.3
       @zoomFactor = @zoomFactor - 20
       @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @zoomFactor])
@@ -372,7 +373,7 @@ $ ->
     channel.bind "new_reading", (reading) ->
       chart.reset_radius(reading.register_id, reading.watt_hour, reading.timestamp)
 
-  $(window).on "resize", chart.calculateNewCenter
+  $(window).on "resize:end", chart.calculateNewCenter
 
 
 
