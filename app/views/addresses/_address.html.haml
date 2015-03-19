@@ -1,8 +1,11 @@
-.address.col-sm-6.col-md-6.col-lg-6
-  .panel
-    = link_to image_tag(address.static_gmap_url('1300x400'), class: 'img-responsive'), address
-    .pad-all
-      %address
-        = "#{address.street_name} #{address.street_number}"
-        %br
-        = "#{address.zip} #{address.city}"
+.address.col-md-6.col-lg-3
+  = link_to address do
+    .panel
+      = image_tag(address.static_gmap_url('1300x400'), class: 'img-responsive')
+      .pad-all
+        %address
+          = "#{address.street_name} #{address.street_number}"
+          %br
+          = "#{address.zip} #{address.city}"
+
+

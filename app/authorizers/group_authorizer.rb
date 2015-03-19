@@ -2,7 +2,7 @@ class GroupAuthorizer < ApplicationAuthorizer
 
 
   def self.creatable_by?(user)
-    MeteringPoint.editable_by_user(user).outputs.any?
+    MeteringPoint.editable_by_user(user).outputs.without_group.any?
   end
 
   def updatable_by?(user)
@@ -15,9 +15,9 @@ class GroupAuthorizer < ApplicationAuthorizer
     user.has_role?(:manager, resource)
   end
 
-  def commentable_by?(user)
-    user_signed_in? #TODO: undefined mehtod user_signed_in? for GroupAuthorizer
-  end
+  # def commentable_by?(user)
+  #   user_signed_in? #TODO: undefined mehtod user_signed_in? for GroupAuthorizer
+  # end
 
 
 end
