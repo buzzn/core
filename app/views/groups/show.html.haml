@@ -89,6 +89,11 @@
 
   .row
     .col-sm-6.col-md-6.col-lg-6
+      %h1.page-header.text-overflow
+        %span
+          = t('live_chart')
+          %small
+            %i.fa.fa-info-circle{'data-content' => "Jeder Kreis repräsentiert die aktuell bezogene Leistung eines Stromnehmer (blau) bzw. die aktuell zur Verfügung gestellte Leistung des Stromgebers (rot) in dieser Gruppe. Sind alle blauen Kreise größer als der rote Kreis, wird zu viel Strom bezogen.", 'data-title' => "Was bedeuten die Kreise?"}
       .panel
         #bubbles_container
           #dummy
@@ -107,32 +112,44 @@
 
 
   - if @energy_producers.any?
-    %h1.page-header.text-overflow= t('energy_producers')
-    .fa.fa-info-circle{'data-content' => "Ein Stromgeber ist eine Person, die über ihre Stromerzeugungsanlage (z.B. Photovoltaikanlage, Blockheizkraftwerk) Strom an andere Personen liefert. Du findest hier also eine Liste aller Stromgeber, die Strom über diese Gruppe teilen.", 'data-title' => "Was ist ein Stromgeber?"}
+    %h1.page-header.text-overflow
+      %span
+        = t('energy_producers')
+        %small
+          %i.fa.fa-info-circle{'data-content' => "Ein Stromgeber ist eine Person, die über ihre Stromerzeugungsanlage (z.B. Photovoltaikanlage, Blockheizkraftwerk) Strom an andere Personen liefert. Du findest hier also eine Liste aller Stromgeber, die Strom über diese Gruppe teilen.", 'data-title' => "Was ist ein Stromgeber?"}
     .row
       - @energy_producers.each do |user|
         = render user.profile
 
 
   - if @energy_consumers.any?
-    %h1.page-header.text-overflow= t('energy_consumers')
-    .fa.fa-info-circle{'data-content' => "Ein Stromnehmer ist eine Person, die über ihren Stromzähler Strom von einer anderen Person bekommt. Du findest hier also eine Liste aller Stromnehmer, die aus dieser Gruppe Strom beziehen.", 'data-title' => "Was ist ein Stromnehmer?"}
+    %h1.page-header.text-overflow
+      %span
+        = t('energy_consumers')
+        %small
+          %i.fa.fa-info-circle{'data-content' => "Ein Stromnehmer ist eine Person, die über ihren Stromzähler Strom von einer anderen Person bekommt. Du findest hier also eine Liste aller Stromnehmer, die aus dieser Gruppe Strom beziehen.", 'data-title' => "Was ist ein Stromnehmer?"}
     .row
       - @energy_consumers.each do |user|
         = render user.profile
 
 
   - if @interested_members.any?
-    .fa.fa-info-circle{'data-content' => "Ein interessiertes Mitglied ist eine Person, die sich gerne am Geschehen in der Gruppe beteiligen möchte, ohne konkret Strom aus dieser Grupper zu nehmen oder ihr zu geben.", 'data-title' => "Was ist ein interessiertes Mitglied?"}
-    %h1.page-header.text-overflow= t('interested_members')
+    %h1.page-header.text-overflow
+      %span
+        = t('interested_members')
+        %small
+          %i.fa.fa-info-circle{'data-content' => "Ein interessiertes Mitglied ist eine Person, die sich gerne am Geschehen in der Gruppe beteiligen möchte, ohne konkret Strom aus dieser Grupper zu nehmen oder ihr zu geben.", 'data-title' => "Was ist ein interessiertes Mitglied?"}
     .row
       - @interested_members.each do |user|
         = render user.profile
 
 
   - if user_signed_in? && current_user.can_update?(@group)
-    .fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind.", 'data-title' => "Was ist ein Vertrag?"}
-    %h1.page-header.text-overflow= t('contracts')
+    %h1.page-header.text-overflow
+      %span
+        = t('contracts')
+        %small
+          %i.fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind.", 'data-title' => "Was ist ein Vertrag?"}
     .row
       = render @group.contracts
 

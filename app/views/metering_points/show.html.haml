@@ -52,38 +52,48 @@
             .btn.btn-success.btn-chart-zoomout=t('zoom_out')
             .btn.btn-success.btn-chart-next.pull-right=t('next')
 
+  - if current_user.can_update?(@metering_point) || @devices.size != 0
+    %hr
+    %h1.page-header.text-overflow
+      %span
+        = t('devices')
+        %small
+          %i.fa.fa-info-circle{'data-content' => "Hier kannst Du Deine Geräte, die mit Strom zu tun haben, anlegen und deinem Strombezug bzw. deiner Stromerzeugung hinzufügen.", 'data-title' => "Was sind Geräte?"}
+    .row
+      .devices
+        = render @devices
+
+      - if current_user.can_update?(@metering_point)
+        .row
+          .col-lg-12.text-center
+            = @metering_point.edit_devices
 
 
 
+  - if current_user.can_update?(@metering_point) || @users.size != 0
+    %hr
+    %h1.page-header.text-overflow
+      %span
+        = t('members')
+        %small
+          %i.fa.fa-info-circle{'data-content' => "Mitglieder sind hier alle Leute, die diesem Zählpunkt zugeordnet sind, also z.B. Mitbewohner einer Wohnung oder eines Hauses.", 'data-title' => "Wer ist Mitglied?"}
+    .row
+      - @users.each do |user|
+        = render user.profile
 
-  %hr
-  %h1.page-header.text-overflow= t'devices' if current_user.can_update?(@metering_point) || @devices.size != 0
-  .row
-    .devices
-      = render @devices
-
-    - if current_user.can_update?(@metering_point)
-      .row
-        .col-lg-12.text-center
-          = @metering_point.edit_devices
-
-
-
-  %hr
-  %h1.page-header.text-overflow= t'members' if current_user.can_update?(@metering_point) || @users.size != 0
-  .row
-    - @users.each do |user|
-      = render user.profile
-
-    - if current_user.can_update?(@metering_point)
-      .row
-        .col-lg-12.text-center
-          = @metering_point.edit_users
+      - if current_user.can_update?(@metering_point)
+        .row
+          .col-lg-12.text-center
+            = @metering_point.edit_users
 
 
-  %hr
   - if current_user.can_update?(@metering_point)
-    %h1.page-header.text-overflow= t'address'
+    %hr
+    %h1.page-header.text-overflow
+      %span
+        = t('address')
+        %small
+          %i.fa.fa-info-circle{'data-content' => "Jeder Zählpunkt hat eine Adresse, z.B. ist das die Adresse des Hauses oder der Wohnung, in der sich der Zählpunkt befindet.", 'data-title' => "Was macht die Adresse?"}
     .row
       .addresses
         = render @metering_point.address if @metering_point.address
@@ -95,9 +105,13 @@
 
 
 
-  %hr
   - if current_user.can_update?(@metering_point)
-    %h1.page-header.text-overflow= t'meters'
+    %hr
+    %h1.page-header.text-overflow
+      %span
+        = t('meters')
+        %small
+          %i.fa.fa-info-circle{'data-content' => "Der Zähler ist das Gerät, das den Stromverbrauch bzw. die Stromerzeugung misst, welche dem Zählpunkt zugeordnet ist.", 'data-title' => "Was ist ein Zähler?"}
     .row
       .meters
         = render @metering_point.meter if @metering_point.meter
@@ -110,7 +124,11 @@
 
 
   %hr
-  %h1.page-header.text-overflow= t'contracts'
+  %h1.page-header.text-overflow
+    %span
+      = t('contracts')
+      %small
+        %i.fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind.", 'data-title' => "Was ist ein Vertrag?"}
   .row
     .contracts
       = render @metering_point.contracts

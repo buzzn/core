@@ -26,13 +26,21 @@
 #page-content
 
 
-  %h1.page-header.text-overflow= t'contracts'
   .row
+    %h1.page-header.text-overflow
+      %span
+        = t('contracts')
+        %small
+          %i.fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind.", 'data-title' => "Was ist ein Vertrag?"}
     = render @contracting_party.contracts
 
 
   %hr
-  %h1.page-header.text-overflow= t'bank_account'
+  %h1.page-header.text-overflow
+    %span
+      = t('bank_account')
+      %small
+        %i.fa.fa-info-circle{'data-content' => "Um Deine Verträge zu bezahlen musst Du einen Bank Account anlegen. ", 'data-title' => "Wozu ein Bank Account?"}
   .row
     .devices
       = render @contracting_party.bank_account
@@ -44,7 +52,11 @@
 
 
   %hr
-  %h1.page-header.text-overflow= t'invoice_address'
+  %h1.page-header.text-overflow
+    %span
+      = t('invoice_addresses')
+      %small
+        %i.fa.fa-info-circle{'data-content' => "Sollte Deine Rechnungsadresse nicht gleich deiner persönlichen Adresse sein, kannst Du dies hier ändern.", 'data-title' => "Wozu eine Rechnunsadresse?"}
   .row
     .addresses
       = render @contracting_party.address if @contracting_party.address
