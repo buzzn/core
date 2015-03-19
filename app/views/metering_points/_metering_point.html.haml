@@ -1,26 +1,27 @@
 .col-sm-12.col-md-12.col-lg-6.metering_point{id: "metering_point_#{metering_point.id}" }
-  .panel.widget
+  = link_to metering_point do
+    .panel.widget
 
-    .widget-header{class: "bg-#{metering_point.mode_class}" }
-      .chart{id: "chart-container-#{metering_point.id}", style: "width: 100%; height: 180px;"}
+      .widget-header{class: "bg-#{metering_point.mode_class}" }
+        .chart{id: "chart-container-#{metering_point.id}", style: "width: 100%; height: 180px;"}
 
-    .widget-body.text-center
+      .widget-body.text-center
 
-      %span.icon-wrap.icon-wrap-sm.icon-circle.widget-img.img-border-light{ class: "bg-#{metering_point.mode_class}"}
-        %i.fa.fa-bolt.fa-3x
+        %span.icon-wrap.icon-wrap-sm.icon-circle.widget-img.img-border-light{ class: "bg-#{metering_point.mode_class}"}
+          %i.fa.fa-bolt.fa-3x
 
 
-      %p.text-2x.mar-no= link_to metering_point.long_name, metering_point
-      %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
+        %p.text-2x.mar-no= metering_point.long_name
+        %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
 
-        %li.register.col-xs-12{ id: metering_point.register.id}
+          %li.register.col-xs-12{ id: metering_point.register.id}
 
-          = content_tag :div, id: "register-ticker-#{metering_point.register.id}", class: "register-ticker", data: { readings: metering_point.smart? ? metering_point.register.last_two_readings : nil, slp: !metering_point.smart? } do
-            %span.text-4x
-              .power-ticker
+            = content_tag :div, id: "register-ticker-#{metering_point.register.id}", class: "register-ticker", data: { readings: metering_point.smart? ? metering_point.register.last_two_readings : nil, slp: !metering_point.smart? } do
+              %span.text-4x
+                .power-ticker
 
-          %p.text-muted
-            %i.fa{class: "fa-arrow-#{ metering_point.mode == 'in' ? 'down' : 'up'}"}
-            Watt
-            = t "#{metering_point.mode}_root_metering_point"
+            %p.text-muted
+              %i.fa{class: "fa-arrow-#{ metering_point.mode == 'in' ? 'down' : 'up'}"}
+              Watt
+              = t "#{metering_point.mode}_root_metering_point"
 
