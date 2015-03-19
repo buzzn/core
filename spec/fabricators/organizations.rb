@@ -1,10 +1,10 @@
 Fabricator :organization do
-  name        { Faker::Company.name }
-  phone       { Faker::PhoneNumber.phone_number }
-  fax         { Faker::PhoneNumber.phone_number }
-  email       { Faker::Internet.email }
-  description { Faker::Company.catch_phrase }
-  website     { "http://www.#{Faker::Internet.domain_name}" }
+  name        { FFaker::Company.name }
+  phone       { FFaker::PhoneNumber.phone_number }
+  fax         { FFaker::PhoneNumber.phone_number }
+  email       { FFaker::Internet.email }
+  description { FFaker::Company.catch_phrase }
+  website     { "http://www.#{FFaker::Internet.domain_name}" }
 end
 
 

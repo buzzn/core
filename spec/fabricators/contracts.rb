@@ -3,7 +3,7 @@ Fabricator :contract do
   status                'running'
   customer_number       { sequence(:customer_number, 9261502) }
   contract_number       'xl245245235'
-  signing_user          { "#{Faker::Name.first_name} #{Faker::Name.last_name}" }
+  signing_user          { "#{FFaker::Name.first_name} #{FFaker::Name.last_name}" }
   terms                 true
   power_of_attorney     true
   confirm_pricing_model true

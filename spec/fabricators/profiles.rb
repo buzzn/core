@@ -1,13 +1,13 @@
 # encoding: utf-8
 
 Fabricator :profile do
-  user_name   { Faker::Internet.user_name }
-  phone       { Faker::PhoneNumber.phone_number }
+  user_name   { FFaker::Internet.user_name }
+  phone       { FFaker::PhoneNumber.phone_number }
   terms       true
   i = 1
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', "#{i+=1}.jpg")) }
-  about_me    { Faker::Lorem.sentence }
-  website     { "http://www.#{Faker::Internet.domain_name}" }
+  about_me    { FFaker::Lorem.sentence }
+  website     { "http://www.#{FFaker::Internet.domain_name}" }
 end
 
 

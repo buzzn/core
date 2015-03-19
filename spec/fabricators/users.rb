@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 Fabricator :user do
-  email             { Faker::Internet.email }
+  email             { FFaker::Internet.email }
   password          'numeinfgentf'
   profile           { Fabricate(:profile) }
   after_create { |user | user.confirm! }
