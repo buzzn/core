@@ -1,12 +1,13 @@
-.col-md-6.col-lg-4
+.col-md-6.col-lg-3
   = link_to profile do
-    .panel.media.pad-all
+    .panel.media.middle
       .media-left
         - if profile.image?
-          = image_tag profile.image.sm, class: 'img-circle img-sm'
+          = image_tag profile.image.md, class: 'img-md'
         - else
           %span.icon-wrap.icon-wrap-sm.icon-circle.bg-success
             %i.fa.fa-user.fa-2x
-      .media-body
-        %h3.text-thin.media-heading= profile.name
+
+      .media-body.pad-lft
+        %p.text-2x.text-thin.mar-no= profile.name
 
