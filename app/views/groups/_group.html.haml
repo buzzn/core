@@ -1,13 +1,9 @@
 .col-lg-12
   .panel
     .panel-bg-cover
-      - if group.image?
-        = image_tag group.image.cover, class: 'img-responsive'
-      - else
-        = image_tag "http://placehold.it/800x600&text=#{t('no_image')}", class: 'img-responsive'
-    .bubble-mini-chart
-      #bubbles_container{'data-content' => group.id}
-        #dummy
+      .bubble-mini-chart.pull-right
+        .bubbles_container{'data-content' => group.id, id: "bubbles_container_" + group.id.to_s}
+          #dummy
 
 
     .panel-media

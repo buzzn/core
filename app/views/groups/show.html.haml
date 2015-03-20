@@ -95,7 +95,7 @@
           %small
             %i.fa.fa-info-circle{'data-content' => "Jeder Kreis repräsentiert die aktuell bezogene Leistung eines Stromnehmer (blau) bzw. die aktuell zur Verfügung gestellte Leistung des Stromgebers (rot) in dieser Gruppe. Sind alle blauen Kreise größer als der rote Kreis, wird zu viel Strom bezogen.", 'data-title' => "Was bedeuten die Kreise?"}
       .panel
-        #bubbles_container{'data-content' => @group.id}
+        .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
           #dummy
 
     .col-sm-6.col-md-6.col-lg-6

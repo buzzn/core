@@ -1,8 +1,5 @@
 
-#bubbles_container{
-  margin-top: 10px;
-  margin-bottom: 10px;
-  min-height: 300px;
+.bubbles_container{
   max-height: 500px;
   display: inline-block;
   position: relative;
@@ -58,7 +55,7 @@
 }
 
 .bubble-mini-chart{
-  height: 200px;
-  width: 200px;
+  height: 180px;
+  width: 180px;
 }
 

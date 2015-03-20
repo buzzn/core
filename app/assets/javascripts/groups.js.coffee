@@ -29,8 +29,8 @@ class BubbleChart
   constructor: (data, data_out, group_id) ->
     @data = data
     @data_out = data_out
-    canvasWidth = $("#bubbles_container").width()
-    canvasHeight = $("#bubbles_container").height()
+    canvasWidth = $("#bubbles_container_" + group_id).width()
+    canvasHeight = $("#bubbles_container_" + group_id).height()
     @width = canvasWidth
     @height = canvasHeight
     if @width < @height
@@ -145,7 +145,7 @@ class BubbleChart
       @nodes_out.push node
     @nodes.sort (a,b) -> b.value - a.value
 
-    svgContainer = d3.select("#svg_vis")
+    svgContainer = d3.select("#bubbles_container_" + group_id).select("#svg_vis")
 
     @circles_out = svgContainer.selectAll("rect")
       .data(@nodes_out, (d) -> d.id)
@@ -278,8 +278,8 @@ class BubbleChart
     return (secondWattHour - firstWattHour)*3600/((secondTimestamp - firstTimestamp)*10000)
 
   calculateNewCenter: () =>
-    @height = $("#bubbles_container").height()
-    @width = $("#bubbles_container").width()
+    @height = $(".bubbles_container").height()
+    @width = $(".bubbles_container").width()
     @center = {x: @width / 2, y: @height / 2}
     circleAttributes = @circles_out
       .attr("cx", @width / 2)
@@ -329,7 +329,7 @@ class BubbleChart
       smallest_border = @width
     @zoomFactor = smallest_border / 3
     @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @zoomFactor])
-    while @radius_scale(@totalPower) > smallest_border / 2.3
+    while @radius_scale(@totalPower) > smallest_border / 2.4
       @zoomFactor = @zoomFactor - 20
       @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @zoomFactor])
 
@@ -340,7 +340,7 @@ class BubbleChart
 
 root = exports ? this
 
-$("#bubbles_container").ready ->
+$(".bubbles_container").ready ->
   chart = null
 
   render_vis = (data, data_out, group_id) ->
