@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  respond_to :html, :js
+  respond_to :html, :js, :json
 
   def index
     @groups = Group.all.decorate
@@ -23,50 +23,6 @@ class GroupsController < ApplicationController
     else
       gon.push({ register_ids: [] })
     end
-    gon.push({  pusher_host: Rails.application.secrets.pusher_host,
-                pusher_key: Rails.application.secrets.pusher_key })
-
-    in_metering_point_data = []
-    out_metering_point_data = []
-    @metering_points.each do |metering_point|
-      data_entry = []
-      latest_readings = nil
-      if metering_point.users.any?
-        user_name = metering_point.users.collect{|user| user.profile.first_name}.join(", ")
-      else
-        user_name = metering_point.decorate.name
-      end
-      if metering_point.meter
-        if metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
-          latest_readings = Reading.last_two_by_register_id(metering_point.register.id)
-        elsif metering_point.meter.smart? && metering_point.meter.online && !metering_point.meter.init_reading
-          #TODO: init_reading ausführen
-        elsif metering_point.meter.smart? && !metering_point.meter.online && metering_point.meter.init_reading
-          #TODO: show slp values?
-        elsif !metering_point.meter.smart?
-          #TODO: show slp values
-        end
-      end
-      if metering_point.mode == "out"
-        if !latest_readings.nil? && !latest_readings.first.nil? && !latest_readings.last.nil?
-          data_entry.push(metering_point.register.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
-        else
-          data_entry.push(metering_point.register.id, 1, -1, 0, -1, user_name)
-        end
-        out_metering_point_data.push(data_entry)
-      else
-        if !latest_readings.nil? && !latest_readings.first.nil? && !latest_readings.last.nil?
-          data_entry.push(metering_point.register.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
-        else
-          data_entry.push(metering_point.register.id, 1, -1, 0, -1, user_name)
-        end
-        in_metering_point_data.push(data_entry)
-      end
-    end
-
-    gon.push({ in_metering_point_data: in_metering_point_data,
-               out_metering_point_data: out_metering_point_data })
-
   end
 
 
@@ -119,6 +75,48 @@ class GroupsController < ApplicationController
     @metering_point = MeteringPoint.find(params[:metering_point_id])
     @group.metering_points.delete(@metering_point)
     redirect_to group_path(@group)
+  end
+
+  def bubbles_data
+    @group = Group.find(params[:id])
+    in_metering_point_data = []
+    out_metering_point_data = []
+    @group.metering_points.each do |metering_point|
+      data_entry = []
+      latest_readings = nil
+      if metering_point.users.any?
+        user_name = metering_point.users.collect{|user| user.profile.first_name}.join(", ")
+      else
+        user_name = metering_point.decorate.name
+      end
+      if metering_point.meter
+        if metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
+          latest_readings = Reading.last_two_by_register_id(metering_point.register.id)
+        elsif metering_point.meter.smart? && metering_point.meter.online && !metering_point.meter.init_reading
+          #TODO: init_reading ausführen
+        elsif metering_point.meter.smart? && !metering_point.meter.online && metering_point.meter.init_reading
+          #TODO: show slp values?
+        elsif !metering_point.meter.smart?
+          #TODO: show slp values
+        end
+      end
+      if metering_point.mode == "out"
+        if !latest_readings.nil? && !latest_readings.first.nil? && !latest_readings.last.nil?
+          data_entry.push(metering_point.register.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
+        else
+          data_entry.push(metering_point.register.id, 1, -1, 0, -1, user_name)
+        end
+        out_metering_point_data.push(data_entry)
+      else
+        if !latest_readings.nil? && !latest_readings.first.nil? && !latest_readings.last.nil?
+          data_entry.push(metering_point.register.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
+        else
+          data_entry.push(metering_point.register.id, 1, -1, 0, -1, user_name)
+        end
+        in_metering_point_data.push(data_entry)
+      end
+    end
+    render json: [in_metering_point_data, out_metering_point_data].to_json
   end
 
 

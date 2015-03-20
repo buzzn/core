@@ -66,6 +66,7 @@ Buzzn::Application.routes.draw do
     resources :metering_points, only: [:index]
     member do
       get :cancel_membership
+      get :bubbles_data
     end
   end
 

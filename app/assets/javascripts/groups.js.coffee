@@ -26,7 +26,7 @@ jQuery ->
 
 
 class BubbleChart
-  constructor: (data, data_out) ->
+  constructor: (data, data_out, group_id) ->
     @data = data
     @data_out = data_out
     canvasWidth = $("#bubbles_container").width()
@@ -82,7 +82,7 @@ class BubbleChart
       @totalPower += parseInt(calculate_power(d[3], d[1], d[4], d[2]))
     this.setZoomFactor()
     this.create_nodes()
-    this.create_vis()
+    this.create_vis(group_id)
     this.calculateTotalPower()
     this.calculateTotalPowerOut()
 
@@ -115,8 +115,8 @@ class BubbleChart
 
   # create svg at #vis and then
   # create circle representation for each node
-  create_vis: () =>
-    @vis = d3.select("#bubbles_container").append("svg")
+  create_vis: (group_id) =>
+    @vis = d3.select("#bubbles_container_" + group_id).append("svg")
       .attr("id", "svg_vis")
       .attr("width", "100%")
       .attr("height", "100%")
@@ -340,40 +340,41 @@ class BubbleChart
 
 root = exports ? this
 
-$ ->
+$("#bubbles_container").ready ->
   chart = null
 
-  render_vis = (data, data_out) ->
-    chart = new BubbleChart data, data_out
+  render_vis = (data, data_out, group_id) ->
+    chart = new BubbleChart data, data_out, group_id
     chart.start()
-    root.display_all()
-  root.display_all = () =>
     chart.display_group_all()
-  root.display_year = () =>
-    chart.display_by_year()
-  root.toggle_view = (view_type) =>
-    if view_type == 'year'
-      root.display_year()
-    else
-      root.display_all()
 
-  data_in = gon.in_metering_point_data
-  data_out = gon.out_metering_point_data
+  #data_in = gon.in_metering_point_data
+  #data_out = gon.out_metering_point_data
+  group_id = $(this).attr('data-content')
+  $.ajax({url: '/groups/' + group_id + '/bubbles_data'})
+    .success (data) ->
+      data_in = data[0]
+      data_out = data[1]
 
-  render_vis data_in, data_out
+      render_vis data_in, data_out, group_id
 
-  Pusher.host    = gon.pusher_host
-  Pusher.ws_port = 8080
-  Pusher.wss_port = 8080
-  pusher = new Pusher(gon.pusher_key)
+      Pusher.host    = $(".pusher").data('pusherhost')
+      Pusher.ws_port = 8080
+      Pusher.wss_port = 8080
+      pusher = new Pusher($(".pusher").data('pusherkey'))
 
-  for register_id in gon.register_ids
+      for register_data in data_in
+        register_id = register_data[0]
+        channel = pusher.subscribe("register_#{register_id}")
+        channel.bind "new_reading", (reading) ->
+          chart.reset_radius(reading.register_id, reading.watt_hour, reading.timestamp)
+      for register_data in data_out
+        register_id = register_data[0]
+        channel = pusher.subscribe("register_#{register_id}")
+        channel.bind "new_reading", (reading) ->
+          chart.reset_radius(reading.register_id, reading.watt_hour, reading.timestamp)
 
-    channel = pusher.subscribe("register_#{register_id}")
-    channel.bind "new_reading", (reading) ->
-      chart.reset_radius(reading.register_id, reading.watt_hour, reading.timestamp)
-
-  $(window).on "resize:end", chart.calculateNewCenter
+      $(window).on "resize:end", chart.calculateNewCenter
 
 
 

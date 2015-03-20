@@ -5,6 +5,10 @@
         = image_tag group.image.cover, class: 'img-responsive'
       - else
         = image_tag "http://placehold.it/800x600&text=#{t('no_image')}", class: 'img-responsive'
+    .bubble-mini-chart
+      #bubbles_container{'data-content' => group.id}
+        #dummy
+
 
     .panel-media
       - if group.logo?
