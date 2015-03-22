@@ -1,25 +1,12 @@
-.col-lg-12
-  .panel
-    .panel-bg-cover
-      .bubble-mini-chart.pull-right
-        .bubbles_container{'data-content' => group.id, id: "bubbles_container_" + group.id.to_s}
-          #dummy
+.col-sm-12.col-md-12.col-lg-6{id: "group_#{group.id}" }
+  = link_to group do
+    .panel.media.middle
+      .media-left
+        .bubble-mini-chart
+          .bubbles_container{'data-content' => group.id, id: "bubbles_container_" + group.id.to_s}
+            #dummy
+      .media-body.pad-lft.pad-rgt
+        %p.text-2x.mar-no= group.name
 
-
-    .panel-media
-      - if group.logo?
-        = image_tag group.logo.lg, class: 'panel-media-img img-circle img-border-light bg-light', alt: ""
-      - else
-        = content_tag(:span, content_tag(:i, '', class: 'fa fa-users fa-4x'), class: 'panel-media-img icon-wrap-lg icon-circle bg-light text-center')
-
-
-      .row
-        .col-lg-7
-          %h3.panel-media-heading= group.name
-          %p.text-muted.mar-btm= group.description
-        .col-lg-5.text-lg-right
-          = link_to t('more_info'), group, class: 'btn btn-sm btn-primary'
-    .panel-body
-
-
-
+        %p.text-1x.text-thin= truncate(group.description, length: 120)
+        %span.badge.badge-primary.mar-top localpool
