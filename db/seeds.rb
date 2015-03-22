@@ -226,12 +226,11 @@ mp_60009316.users         << hans_dieter_hopf
 mp_hans_dieter_hopf.users << hans_dieter_hopf
 
 
-group_hopf = Fabricate(:group, name: 'Hopf Strom', metering_points: [mp_60118470])
+group_hopf = Fabricate(:group_hopf, metering_points: [mp_60118470])
 group_hopf.metering_points << mp_60009316
 group_hopf.metering_points << mp_60009272
 group_hopf.metering_points << mp_60009348
 group_hopf.metering_points << mp_hans_dieter_hopf
-group_hopf.contracts << Fabricate(:mpoc_buzzn_metering, group: group_hopf)
 
 
 
@@ -394,7 +393,6 @@ group_wagnis4.metering_points << mp_60009429
 group_wagnis4.metering_points << mp_60009393
 group_wagnis4.metering_points << mp_60009442
 group_wagnis4.metering_points << mp_60009441
-group_wagnis4.contracts       << Fabricate(:mpoc_buzzn_metering, group: group_wagnis4)
 
 
 

@@ -107,8 +107,18 @@
                 = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
           .panel-footer
             = render :partial => 'comments/form', :locals => { :comment => @new_comment } if user_signed_in?
+  %hr
 
-
+  - if user_signed_in? && current_user.can_update?(@group)
+    %h1.page-header.text-overflow
+      %span
+        = t('metering_points')
+        %small
+          %i.fa.fa-info-circle{'data-content' => "Ein Zählpunkt ist die Bezeichnung für die Messstelle, für die der Strom gemessen wird, z.B. „Keller“ oder „Dachboden“. In den meisten Fällen ist der Zählpunkt gleichbedeutend mit dem Haus oder der Wohnung, in der er sich befindet.", 'data-title' => "Was ist ein Zählpunkt?"}
+    .row
+      .metering_points
+        = render @metering_points
+    %hr
 
 
   - if @energy_producers.any?
@@ -120,7 +130,7 @@
     .row
       - @energy_producers.each do |user|
         = render user.profile
-
+    %hr
 
   - if @energy_consumers.any?
     %h1.page-header.text-overflow
@@ -131,7 +141,7 @@
     .row
       - @energy_consumers.each do |user|
         = render user.profile
-
+    %hr
 
   - if @interested_members.any?
     %h1.page-header.text-overflow
@@ -142,7 +152,7 @@
     .row
       - @interested_members.each do |user|
         = render user.profile
-
+    %hr
 
   - if user_signed_in? && current_user.can_update?(@group)
     %h1.page-header.text-overflow
