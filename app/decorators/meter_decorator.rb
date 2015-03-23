@@ -6,7 +6,7 @@ class MeterDecorator < Draper::Decorator
   decorates_association :registers
 
   def name
-    "#{t(manufacturer_name)} #{manufacturer_product_serialnumber}"
+    "#{manufacturer_name} #{manufacturer_product_serialnumber}"
   end
 
 

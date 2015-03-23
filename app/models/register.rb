@@ -59,7 +59,7 @@ private
       operators = get_operators_from_formula
       data = []
       operands.each do |register_id|
-        data << slp_or_smart(register_id, resolution_format)
+        data << slp_or_smart(register_id, resolution_format, containing_timestamp)
       end
       return calculate_virtual_register(data, operators)
     else

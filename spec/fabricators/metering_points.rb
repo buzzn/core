@@ -132,6 +132,7 @@ end
 # Z2  Nr. 60009316 für BHKW Erzeugung (Einrichtungszähler Einspeisung)
 Fabricator :mp_60009316, from: :metering_point do
   name  'Keller'
+  register   { Fabricate(:register_out) }
   meter { Fabricate(:easymeter_60009316) }
 end
 
@@ -150,6 +151,7 @@ end
 # Wohnung Hr. Hopf ("ZN3") ist ungezählt kann aber berechnet werden
 Fabricator :mp_hans_dieter_hopf, from: :metering_point do
   name  'Wohnung'
+  register   { Fabricate(:virtual_register_in_hopf) }
   meter          { Fabricate(:virtual_meter_hopf) }
 end
 

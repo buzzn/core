@@ -100,7 +100,7 @@ private
       :image,
       :user_ids => [],
       :device_ids => [],
-      register_attributes: [:id, :mode, :_destroy]
+      register_attributes: [:id, :mode, :virtual, :formula, :_destroy]
     )
   end
 

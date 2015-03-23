@@ -4,10 +4,10 @@ Fabricator :register do
   mode             'in'
 end
 
-Fabricator :register_virtuel_hopf, from: :register do
+Fabricator :virtual_register_in_hopf, from: :register do
   mode             'in'
   virtual           true
-  formula           "44-43+42-39-38"
+  formula           "44-43+42-39-38" "24-23+22-19-18"
 end
 
 
@@ -18,3 +18,4 @@ end
 Fabricator :register_out, from: :register  do
   mode             'out'
 end
+
