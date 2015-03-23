@@ -107,14 +107,14 @@ class GroupsController < ApplicationController
         if !latest_readings.nil? && !latest_readings.first.nil? && !latest_readings.last.nil?
           data_entry.push(metering_point.register.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
         else
-          data_entry.push(metering_point.register.id, 1, -1, 0, -1, user_name)
+          data_entry.push(metering_point.register.id, -1, 0, -1, 0, user_name)
         end
         out_metering_point_data.push(data_entry)
       else
         if !latest_readings.nil? && !latest_readings.first.nil? && !latest_readings.last.nil?
           data_entry.push(metering_point.register.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
         else
-          data_entry.push(metering_point.register.id, 1, -1, 0, -1, user_name)
+          data_entry.push(metering_point.register.id, -1, 0, -1, 0, user_name)
         end
         in_metering_point_data.push(data_entry)
       end

@@ -69,7 +69,7 @@ class BubbleChart
     # nice looking colors - no reason to buck the trend
     @fill_color = d3.scale.ordinal()
       .domain(["low", "medium", "high"])
-      .range(["#6699FF", "#6699FF", "#6699FF"])
+      .range(["#5FA2DD", "#5FA2DD", "#5FA2DD"])
 
     # use the max watt_hour in the data as the max in the scale's domain
     @max_power_in = d3.max(@data, (d) -> parseInt(calculate_power(d[3], d[1], d[4], d[2])))
@@ -81,10 +81,15 @@ class BubbleChart
     @data.forEach (d) =>
       @totalPower += parseInt(calculate_power(d[3], d[1], d[4], d[2]))
     this.setZoomFactor()
+    console.log 'zoom'
     this.create_nodes()
+    console.log 'nodes'
     this.create_vis(group_id)
+    console.log 'vis'
     this.calculateTotalPower()
+    console.log 'total'
     this.calculateTotalPowerOut()
+    console.log 'total_out'
 
 
 
@@ -94,6 +99,7 @@ class BubbleChart
   # to @nodes to be used later
   create_nodes: () =>
     @data.forEach (d) =>
+      console.log d
       node = {
         id: d[0]
         firstTimestamp: d[3]
@@ -105,7 +111,7 @@ class BubbleChart
         name: d[5]
         x: Math.random() * 900
         y: Math.random() * 800
-        color: "#6699FF"
+        color: "#5FA2DD"
       }
       @nodes.push node
 
@@ -129,6 +135,7 @@ class BubbleChart
     that = this
 
     @data_out.forEach (d) =>
+      console.log d
       node = {
         id: d[0]
         firstTimestamp: d[3]
@@ -140,10 +147,10 @@ class BubbleChart
         name: d[5]
         x: @width / 2
         y: @height / 2
-        color: "#ff9999"
+        color: "#F76C51"
       }
       @nodes_out.push node
-    @nodes.sort (a,b) -> b.value - a.value
+    @nodes_out.sort (a,b) -> b.value - a.value
 
     svgContainer = d3.select("#bubbles_container_" + group_id).select("#svg_vis")
 
@@ -158,7 +165,7 @@ class BubbleChart
       .attr("cy", (d) -> d.y)
       .attr("r", (d) -> d.radius)
       .style("fill", (d) -> d.color)
-      .attr("stroke-width", 10)
+      .attr("stroke-width", 8)
       .attr("stroke", (d) => d3.rgb(d.color).darker())
       .on("mouseover", (d,i) -> that.show_details(d,i,this))
       .on("mouseout", (d,i) -> that.hide_details(d,i,this))
@@ -174,7 +181,6 @@ class BubbleChart
       .on("mouseover", (d,i) -> that.show_details(d,i,this))
       .on("mouseout", (d,i) -> that.hide_details(d,i,this))
       .style("opacity", 0.9)
-      .html('<img class="img-circle" id="bubble_img" src="/assets/sn_default.jpg"/></img>')
 
     # Fancy transition to make bubbles appear, ending with the
     # correct radius
@@ -273,9 +279,10 @@ class BubbleChart
     this.display_group_all()
 
   calculate_power = (firstTimestamp, secondTimestamp, firstWattHour, secondWattHour) =>
-    if secondTimestamp - firstTimestamp == 0
+    if secondTimestamp - firstTimestamp == 0 || firstTimestamp == -1
       return 0
-    return (secondWattHour - firstWattHour)*3600/((secondTimestamp - firstTimestamp)*10000)
+    else
+      return (secondWattHour - firstWattHour)*3600/((secondTimestamp - firstTimestamp)*10000)
 
   calculateNewCenter: () =>
     @height = $(".bubbles_container").height()
@@ -287,6 +294,7 @@ class BubbleChart
     this.setNewScale()
 
   calculateMaxPower: (value) =>
+    console.log 'calc'
     @max_power_in = d3.max(@nodes, (d) -> parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
     max_power_out = d3.max(@nodes_out, (d) -> parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
     if @max_power_in > max_power_out
@@ -307,7 +315,9 @@ class BubbleChart
       d.radius = @radius_scale(parseInt(d.value))
     @nodes_out.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
+    console.log 'scale 1'
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
+    console.log 'scale 2'
     @circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
     this.display_group_all()
 
@@ -355,6 +365,9 @@ $(".bubbles_container").ready ->
     .success (data) ->
       data_in = data[0]
       data_out = data[1]
+
+      #for register_data in data[0]
+        #if register_data[1] == register_data[3] == -1
 
       render_vis data_in, data_out, group_id
 

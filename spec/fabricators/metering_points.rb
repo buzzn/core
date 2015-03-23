@@ -125,6 +125,7 @@ end
 # Z1  Nr. 60118470 für Hans-Dieter Hopf übergame  (Zweirichtungszähler)
 Fabricator :mp_60118470, from: :metering_point do
   name  'Keller'
+  register   { Fabricate(:register_out) }
   meter { Fabricate(:easymeter_60118470) }
 end
 
