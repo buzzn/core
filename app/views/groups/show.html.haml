@@ -93,7 +93,7 @@
         %span
           = t('live_chart')
           %small
-            %i.fa.fa-info-circle{'data-content' => "Jeder Kreis repräsentiert die aktuell bezogene Leistung eines Stromnehmer (blau) bzw. die aktuell zur Verfügung gestellte Leistung des Stromgebers (rot) in dieser Gruppe. Sind alle blauen Kreise größer als der rote Kreis, wird zu viel Strom bezogen.", 'data-title' => "Was bedeuten die Kreise?"}
+            %i.small-info-circle.fa.fa-info-circle{'data-content' => "Jeder Kreis repräsentiert die aktuell bezogene Leistung eines Stromnehmer (blau) bzw. die aktuell zur Verfügung gestellte Leistung des Stromgebers (rot) in dieser Gruppe. Sind alle blauen Kreise größer als der rote Kreis, wird zu viel Strom bezogen."}
       .panel
         .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
           #dummy
@@ -126,7 +126,7 @@
       %span
         = t('energy_producers')
         %small
-          %i.fa.fa-info-circle{'data-content' => "Ein Stromgeber ist eine Person, die über ihre Stromerzeugungsanlage (z.B. Photovoltaikanlage, Blockheizkraftwerk) Strom an andere Personen liefert. Du findest hier also eine Liste aller Stromgeber, die Strom über diese Gruppe teilen.", 'data-title' => "Was ist ein Stromgeber?"}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Ein Stromgeber ist eine Person, die über ihre Stromerzeugungsanlage (z.B. Photovoltaikanlage, Blockheizkraftwerk) Strom an andere Personen liefert. Du findest hier also eine Liste aller Stromgeber, die Strom über diese Gruppe teilen."}
     .row
       - @energy_producers.each do |user|
         = render user.profile
@@ -137,7 +137,7 @@
       %span
         = t('energy_consumers')
         %small
-          %i.fa.fa-info-circle{'data-content' => "Ein Stromnehmer ist eine Person, die über ihren Stromzähler Strom von einer anderen Person bekommt. Du findest hier also eine Liste aller Stromnehmer, die aus dieser Gruppe Strom beziehen.", 'data-title' => "Was ist ein Stromnehmer?"}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Ein Stromnehmer ist eine Person, die über ihren Stromzähler Strom von einer anderen Person bekommt. Du findest hier also eine Liste aller Stromnehmer, die aus dieser Gruppe Strom beziehen."}
     .row
       - @energy_consumers.each do |user|
         = render user.profile
@@ -148,7 +148,7 @@
       %span
         = t('interested_members')
         %small
-          %i.fa.fa-info-circle{'data-content' => "Ein interessiertes Mitglied ist eine Person, die sich gerne am Geschehen in der Gruppe beteiligen möchte, ohne konkret Strom aus dieser Grupper zu nehmen oder ihr zu geben.", 'data-title' => "Was ist ein interessiertes Mitglied?"}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Ein interessiertes Mitglied ist eine Person, die sich gerne am Geschehen in der Gruppe beteiligen möchte, ohne konkret Strom aus dieser Grupper zu nehmen oder ihr zu geben."}
     .row
       - @interested_members.each do |user|
         = render user.profile
@@ -159,7 +159,7 @@
       %span
         = t('contracts')
         %small
-          %i.fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind.", 'data-title' => "Was ist ein Vertrag?"}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."}
     .row
       = render @group.contracts
 

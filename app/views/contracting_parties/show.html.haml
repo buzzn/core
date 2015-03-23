@@ -31,7 +31,7 @@
       %span
         = t('contracts')
         %small
-          %i.fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind.", 'data-title' => "Was ist ein Vertrag?"}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."}
     = render @contracting_party.contracts
 
 
@@ -40,7 +40,7 @@
     %span
       = t('bank_account')
       %small
-        %i.fa.fa-info-circle{'data-content' => "Um Deine Verträge zu bezahlen musst Du einen Bank Account anlegen. ", 'data-title' => "Wozu ein Bank Account?"}
+        %i.small-info-circle.fa.fa-info-circle{'data-content' => "Um Deine Verträge zu bezahlen musst Du einen Bank Account anlegen. "}
   .row
     .devices
       = render @contracting_party.bank_account
@@ -56,7 +56,7 @@
     %span
       = t('invoice_addresses')
       %small
-        %i.fa.fa-info-circle{'data-content' => "Sollte Deine Rechnungsadresse nicht gleich deiner persönlichen Adresse sein, kannst Du dies hier ändern.", 'data-title' => "Wozu eine Rechnunsadresse?"}
+        %i.small-info-circle.fa.fa-info-circle{'data-content' => "Sollte Deine Rechnungsadresse nicht gleich deiner persönlichen Adresse sein, kannst Du dies hier ändern."}
   .row
     .addresses
       = render @contracting_party.address if @contracting_party.address

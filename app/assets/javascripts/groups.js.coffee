@@ -36,7 +36,7 @@ class BubbleChart
     if @width < @height
       @height = @width
 
-    @tooltip = CustomTooltip("gates_tooltip", 240)
+    @tooltip = CustomTooltip("gates_tooltip_" + group_id, 240)
 
     # locations the nodes will move towards
     # depending on which view is currently being

@@ -9,8 +9,8 @@ ready = ->
   $("body").on "hidden.bs.modal", ".modal", ->
     $('.modal-dialog').empty()
 
+  $('.fa-info-circle').popover(placement: 'right', trigger: "hover" )
 
-  $('.fa-info-circle').popover(placement: 'right')
 
   $('body').on 'click', (e) ->
     $('.fa-info-circle').each ->

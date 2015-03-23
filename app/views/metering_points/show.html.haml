@@ -58,7 +58,7 @@
       %span
         = t('devices')
         %small
-          %i.fa.fa-info-circle{'data-content' => "Hier kannst Du Deine Geräte, die mit Strom zu tun haben, anlegen und deinem Strombezug bzw. deiner Stromerzeugung hinzufügen.", 'data-title' => "Was sind Geräte?"}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Hier kannst Du Deine Geräte, die mit Strom zu tun haben, anlegen und deinem Strombezug bzw. deiner Stromerzeugung hinzufügen."}
     .row
       .devices
         = render @devices
@@ -76,7 +76,7 @@
       %span
         = t('members')
         %small
-          %i.fa.fa-info-circle{'data-content' => "Mitglieder sind hier alle Leute, die diesem Zählpunkt zugeordnet sind, also z.B. Mitbewohner einer Wohnung oder eines Hauses.", 'data-title' => "Wer ist Mitglied?"}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Mitglieder sind hier alle Leute, die diesem Zählpunkt zugeordnet sind, also z.B. Mitbewohner einer Wohnung oder eines Hauses."}
     .row
       - @users.each do |user|
         = render user.profile
@@ -93,7 +93,7 @@
       %span
         = t('address')
         %small
-          %i.fa.fa-info-circle{'data-content' => "Jeder Zählpunkt hat eine Adresse, z.B. ist das die Adresse des Hauses oder der Wohnung, in der sich der Zählpunkt befindet.", 'data-title' => "Was macht die Adresse?"}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Jeder Zählpunkt hat eine Adresse, z.B. ist das die Adresse des Hauses oder der Wohnung, in der sich der Zählpunkt befindet."}
     .row
       .addresses
         = render @metering_point.address if @metering_point.address
@@ -111,7 +111,7 @@
       %span
         = t('meters')
         %small
-          %i.fa.fa-info-circle{'data-content' => "Der Zähler ist das Gerät, das den Stromverbrauch bzw. die Stromerzeugung misst, welche dem Zählpunkt zugeordnet ist.", 'data-title' => "Was ist ein Zähler?"}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Der Zähler ist das Gerät, das den Stromverbrauch bzw. die Stromerzeugung misst, welche dem Zählpunkt zugeordnet ist."}
     .row
       .meters
         = render @metering_point.meter if @metering_point.meter
@@ -128,7 +128,7 @@
     %span
       = t('contracts')
       %small
-        %i.fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind.", 'data-title' => "Was ist ein Vertrag?"}
+        %i.small-info-circle.fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."}
   .row
     .contracts
       = render @metering_point.contracts

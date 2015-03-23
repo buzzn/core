@@ -90,7 +90,7 @@
     %span
       = t('group')
       %small
-        %i.fa.fa-info-circle{'data-content' => "Jeder Stromnehmer kann sich mit seinem Stromverbrauch einer Gruppe zuordnen, von deren Stromgeber(n) er dann Strom bekommt.", 'data-title' => "Was ist eine Gruppe?"}
+        %i.small-info-circle.fa.fa-info-circle{'data-content' => "Jeder Stromnehmer kann sich mit seinem Stromverbrauch einer Gruppe zuordnen, von deren Stromgeber(n) er dann Strom bekommt."}
   .row
     .groups
       = render @groups
@@ -106,7 +106,7 @@
       %span
         = t('metering_points')
         %small
-          %i.fa.fa-info-circle{'data-content' => "Ein Zählpunkt ist die Bezeichnung für die Messstelle, für die der Strom gemessen wird, z.B. „Keller“ oder „Dachboden“. In den meisten Fällen ist der Zählpunkt gleichbedeutend mit dem Haus oder der Wohnung, in der er sich befindet.", 'data-title' => "Was ist ein Zählpunkt?"}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Ein Zählpunkt ist die Bezeichnung für die Messstelle, für die der Strom gemessen wird, z.B. „Keller“ oder „Dachboden“. In den meisten Fällen ist der Zählpunkt gleichbedeutend mit dem Haus oder der Wohnung, in der er sich befindet."}
     .row
       .metering_points
         = render @metering_points
@@ -122,7 +122,7 @@
       %span
         = t('devices')
         %small
-          %i.fa.fa-info-circle{'data-content' => "Hier kannst Du Deine Geräte, die mit Strom zu tun haben, anlegen und deinem Strombezug bzw. deiner Stromerzeugung hinzufügen.", 'data-title' => "Was sind Geräte?"}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Hier kannst Du Deine Geräte, die mit Strom zu tun haben, anlegen und deinem Strombezug bzw. deiner Stromerzeugung hinzufügen."}
     .row
       .devices
         = render @devices
@@ -140,7 +140,7 @@
       %span
         = t('friends')
         %small
-          %i.fa.fa-info-circle{'data-content' => "Durch die freunschaft mit anderen Usern kannst du deren Stromkurven sehen und deine mit ihnen vergleichen. ", 'data-title' => "Was bewirkt die Freundschaft mit anderen Usern?"}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Durch die freunschaft mit anderen Usern kannst du deren Stromkurven sehen und deine mit ihnen vergleichen. "}
     .row
       .profiles
         - @friends.each do |user|
