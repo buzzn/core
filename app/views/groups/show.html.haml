@@ -46,7 +46,18 @@
                         %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post
 
           %hr
+            .pad-hor
+              %h5=t 'group_admin'
+
             %ul.list-group.bg-trans
+              - @group.managers.each do |user|
+                %li.list-group-item.list-item-sm
+                  %i.fa.fa-user.fa-fw
+                  = link_to user.name, user.profile
+
+          %hr
+            %ul.list-group.bg-trans
+
               %li.list-group-item.list-item-sm
                 %i.fa.fa-clock-o.fa-fw
                 = t'created_at'
@@ -57,6 +68,9 @@
                   %a.btn-link{:href => "#"}
                     %i.fa.fa-globe.fa-fw
                     = link_to_external @group.website
+
+
+
 
 
           - if @group.description
@@ -109,6 +123,18 @@
             = render :partial => 'comments/form', :locals => { :comment => @new_comment } if user_signed_in?
   %hr
 
+
+
+  %h1.page-header.text-overflow
+    %span
+      = t('out_metering_points')
+  .row
+    .metering_points
+      = render @out_metering_points
+  %hr
+
+
+
   - if user_signed_in? && current_user.can_update?(@group)
     %h1.page-header.text-overflow
       %span
@@ -117,8 +143,10 @@
           %i.fa.fa-info-circle{'data-content' => "Ein Zählpunkt ist die Bezeichnung für die Messstelle, für die der Strom gemessen wird, z.B. „Keller“ oder „Dachboden“. In den meisten Fällen ist der Zählpunkt gleichbedeutend mit dem Haus oder der Wohnung, in der er sich befindet.", 'data-title' => "Was ist ein Zählpunkt?"}
     .row
       .metering_points
-        = render @metering_points
+        = render @in_metering_points
     %hr
+
+
 
 
   - if @energy_producers.any?
@@ -132,6 +160,10 @@
         = render user.profile
     %hr
 
+
+
+
+
   - if @energy_consumers.any?
     %h1.page-header.text-overflow
       %span
@@ -143,6 +175,10 @@
         = render user.profile
     %hr
 
+
+
+
+
   - if @interested_members.any?
     %h1.page-header.text-overflow
       %span
@@ -153,6 +189,9 @@
       - @interested_members.each do |user|
         = render user.profile
     %hr
+
+
+
 
   - if user_signed_in? && current_user.can_update?(@group)
     %h1.page-header.text-overflow

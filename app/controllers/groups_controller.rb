@@ -8,7 +8,10 @@ class GroupsController < ApplicationController
 
   def show
     @group                          = Group.find(params[:id]).decorate
-    @metering_points                = MeteringPoint.includes(:users).by_group(@group).decorate.flatten.uniq
+
+    @out_metering_points            = MeteringPoint.by_group(@group).outputs.decorate
+    @in_metering_points             = MeteringPoint.by_group(@group).inputs.decorate
+
     @energy_producers               = MeteringPoint.includes(:users).by_group(@group).outputs.decorate.collect(&:users).flatten
     @energy_consumers               = MeteringPoint.includes(:users).by_group(@group).inputs.decorate.collect(&:users).flatten
     @interested_members             = @group.users
@@ -16,7 +19,7 @@ class GroupsController < ApplicationController
     @group_metering_point_requests  = @group.received_group_metering_point_requests
 
     @all_comments                   = @group.root_comments.order('created_at asc')
-    @new_comment                    = Comment.build_from(@group, current_user.id, "") if user_signed_in?
+    @new_comment                    = Comment.build_from(@group, current_user.id, "")
 
     # if @metering_points
     #   gon.push({ register_ids: @metering_points.collect(&:register).flatten.collect(&:id) })

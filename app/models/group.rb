@@ -30,11 +30,15 @@ class Group < ActiveRecord::Base
 
   normalize_attributes :description, :website
 
+  default_scope { order('created_at DESC') }
 
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
   }
 
+  def managers
+    User.with_role :manager, self
+  end
 
   def member?(metering_point)
     self.metering_points.include?(metering_point) ? true : false

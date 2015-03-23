@@ -7,21 +7,19 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
   def readable_by?(user)
     user.has_role?(:admin) ||
     user.has_role?(:manager, resource) ||
-    user.has_role?(:manager, resource.root) ||
-    User.with_role(:manager, resource).first.friend?(user)
+    User.with_role(:manager, resource).first.friend?(user) ||
+    resource.output?
   end
 
 
   def updatable_by?(user, options = {})
     if options.empty?
       user.has_role?(:admin) ||
-      user.has_role?(:manager, resource) ||
-      user.has_role?(:manager, resource.root)
+      user.has_role?(:manager, resource)
     else
       if options[:action] == 'edit_devices' || options[:action] == 'edit_users'
         user.has_role?(:admin) ||
         user.has_role?(:manager, resource) ||
-        user.has_role?(:manager, resource.root) ||
         resource.users.include?(user)
       end
     end
@@ -29,8 +27,7 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
 
   def deletable_by?(user)
     user.has_role?(:admin) ||
-    user.has_role?(:manager, resource) ||
-    user.has_role?(:manager, resource.root)
+    user.has_role?(:manager, resource)
   end
 
 end
