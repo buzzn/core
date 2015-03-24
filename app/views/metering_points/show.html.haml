@@ -13,13 +13,6 @@
                 %i.fa.fa-bolt.fa-stack-1x.fa-inverse
             %h4.text-lg.text-overflow.mar-no= @metering_point.long_name
 
-          - if @meter
-            %hr
-              %ul.list-group.bg-trans
-                %li.list-group-item.list-item-sm
-                  %i.fa.fa-tachometer.fa-fw
-                  = link_to @meter.name, @meter
-
 
           - if @metering_point.register
             %hr
@@ -37,6 +30,14 @@
                         .power-ticker
                           0
                   %p= t'watt'
+
+
+          - if @meter
+            %hr
+              %ul.list-group.bg-trans
+                %li.list-group-item.list-item-sm
+                  %i.fa.fa-tachometer.fa-fw
+                  = link_to @meter.name, @meter
 
           %hr
             .text-center.clearfix
