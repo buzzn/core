@@ -8,6 +8,3 @@
       .media-body.pad-lft.pad-rgt
         %p.text-2x.mar-no= group.name
         %p.text-1x.text-thin= truncate(group.description, length: 120)
-
-        - if group.contracts.servicings.any?
-          %span.badge.badge-primary.mar-top Localpool

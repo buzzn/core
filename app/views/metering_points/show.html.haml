@@ -20,6 +20,24 @@
                   %i.fa.fa-tachometer.fa-fw
                   = link_to @meter.name, @meter
 
+
+          - if @metering_point.register
+            %hr
+            .text-center.clearfix
+              .register{ id: @metering_point.register.id}
+                .pad-all.text-center
+                  - if @metering_point.meter && @metering_point.meter.smart?
+                    = content_tag :div, id: "register-ticker-#{@metering_point.register.id}", class: "register-ticker", data: { readings: @metering_point.register.last_two_readings, slp: false } do
+                      %span.text-4x.text-thin
+                        .power-ticker
+                          0
+                  - else
+                    = content_tag :div, id: "register-ticker-#{@metering_point.register.id}", class: "register-ticker", data: { slp: true } do
+                      %span.text-4x.text-thin
+                        .power-ticker
+                          0
+                  %p= t'watt'
+
           %hr
             .text-center.clearfix
               .col-xs-6
@@ -38,9 +56,6 @@
 
 #page-content
 
-
-  .row
-    = render @metering_point.register
 
   .row
     .col-sm-12.col-md-12.col-lg-12.metering_point_detail{id: "metering_point_#{@metering_point.id}"}
