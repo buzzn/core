@@ -87,81 +87,41 @@ class MeteringPointDecorator < Draper::Decorator
 
 
 
-
-  def edit_users
-    link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
-      edit_users_metering_point_path(model),
-      {
-        :remote         => true,
-        :class          => 'btn start_modal',
-        'data-toggle'   => 'modal',
-        'data-target'   => '#myModal',
-        'data-tooltip'  => "true",
-        'title'         => t("add_user"),
-      })
-  end
-
-
-
   def edit_devices
     link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
+      content_tag(:i, t("add_or_remove_devices"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
       edit_devices_metering_point_path(model),
       {
         :remote         => true,
         :class          => 'btn start_modal',
         'data-toggle'   => 'modal',
-        'data-target'   => '#myModal',
-        'data-tooltip'  => "true",
-        'title'         => t("add_devices"),
+        'data-target'   => '#myModal'
       })
   end
 
 
-
-  def new_register
+  def edit_users
     link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
-      new_register_path(metering_point_id: model.id),
+      content_tag(:i, t("add_or_remove_members"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
+      edit_users_metering_point_path(model),
       {
         :remote         => true,
         :class          => 'btn start_modal',
         'data-toggle'   => 'modal',
-        'data-target'   => '#myModal',
-        'data-tooltip'  => "true",
-        'title'         => t("add_register"),
+        'data-target'   => '#myModal'
       })
   end
-
-
-  def new_metering_point_operator_contract
-    link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
-      new_metering_point_operator_contract_path(metering_point_id: model.id),
-      {
-        :remote         => true,
-        :class          => 'btn start_modal',
-        'data-toggle'   => 'modal',
-        'data-target'   => '#myModal',
-        'data-tooltip'  => "true",
-        'title'         => t("add_metering_point_operator_contract"),
-      })
-  end
-
 
 
   def new_address
     link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
+      content_tag(:i, t("create_address"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
       new_address_path(addressable_id: model.id, addressable_type: 'MeteringPoint'),
       {
         :remote         => true,
         :class          => 'btn start_modal',
         'data-toggle'   => 'modal',
-        'data-target'   => '#myModal',
-        'data-tooltip'  => "true",
-        'title'         => t("add_address"),
+        'data-target'   => '#myModal'
       })
   end
 
@@ -169,29 +129,26 @@ class MeteringPointDecorator < Draper::Decorator
 
   def new_meter
     link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
+      content_tag(:i, t("create_meter"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
       new_meter_path(metering_point_id: model.id),
       {
         :remote         => true,
         :class          => 'btn start_modal',
         'data-toggle'   => 'modal',
-        'data-target'   => '#myModal',
-        'data-tooltip'  => "true",
-        'title'         => t("add_meter"),
+        'data-target'   => '#myModal'
       })
   end
 
+
   def new_contract
     link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
+      content_tag(:i, t("create_contract"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
       new_contract_path(metering_point_id: model.id),
       {
         :remote         => true,
         :class          => 'btn start_modal',
         'data-toggle'   => 'modal',
-        'data-target'   => '#myModal',
-        'data-tooltip'  => "true",
-        'title'         => t("add_contract"),
+        'data-target'   => '#myModal'
       })
   end
 

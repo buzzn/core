@@ -49,7 +49,7 @@
 
           %hr
             .pad-hor
-              %h5=t 'group_admin'
+              %h5=t'group_admin'
 
             %ul.list-group.bg-trans
               - @group.managers.each do |user|
@@ -62,7 +62,7 @@
 
               %li.list-group-item.list-item-sm
                 %i.fa.fa-clock-o.fa-fw
-                = t'created_at'
+                = t'created'
                 = timeago_tag @group.created_at
 
               - if @group.website
@@ -115,6 +115,9 @@
           #dummy
 
     .col-sm-6.col-md-6.col-lg-6
+      %h1.page-header.text-overflow
+        %span
+          = t('comments')
       .panel.comment-form
         #demo-chat-body.collapse.in
           .nano{:style => "height:410px"}
@@ -122,7 +125,7 @@
               %ul.list-unstyled.media-block.comments-all
                 = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
           .panel-footer
-            = render :partial => 'comments/form', :locals => { :comment => @new_comment } if user_signed_in?
+            = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "") } if user_signed_in?
   %hr
 
 

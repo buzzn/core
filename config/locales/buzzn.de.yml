@@ -1,6 +1,12 @@
 de:
   welcome: Willkommen
 
+  metering_point: Zählpunkt
+  edit_metering_point: Zählpunkt bearbeiten
+  new_metering_point: Neuer Zählpunkt
+  new_down_device: Neues Bezugsgerät
+
+
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler
   in_out_metering: Einspeisezähler
@@ -16,11 +22,13 @@ de:
   add_in_out_metering_point: Zählpunkt für Einspeisezähler hinzufügen
   add_diff_metering_point: Zählpunkt für Abgrenzungszähler hinzufügen
 
-
   out_root_metering_point: Einspeisung
   in_root_metering_point: Bezug
   in_metering_point: Bezug
 
+  create_metering_point: Zählpunkt erstellen
+
+  create_device: Gerät erstellen
   out_device: Erzeuger
   in_device: Verbraucher
 
@@ -37,6 +45,7 @@ de:
   new_meter: neuer Zähler
   add_new_meter: neuer Zähler hinzufügen
   add_meter: Zähler hinzufügen
+  create_meter: Zähler erstellen
 
   landis_gyr: 'Landis & Gyr'
   goerlitz: 'Görlitz'
@@ -58,7 +67,7 @@ de:
   edit_device: Gerät bearbeiten
   connect_devices: Geräte verbinden
   my_devices: Meine Geräte
-
+  add_or_remove_devices: Geräte hinzufügen oder entfernen
 
   group_admin: Gruppen Admin
   groups: Gruppen
@@ -67,20 +76,29 @@ de:
   new_contract: Neuer Vertrag
   contracts: Verträge
   add_contract: Vertrag hinzufügen
-
+  create_contract: Vertrag erstellen
 
   users: Benutzer
   edit_users: Benutzer bearbeiten
   add_user: Benutzer hinzufuegen
+  add_or_remove_members: Mitglieder hinzufügen oder entfernen
+
 
   address: Addresse
   add_address: Addresse hinzufügen
   invoice_address: Rechnungsadresse
+  create_address: Addresse erstellen
+
+
 
   bank_account: Bankverbindung
   new_bank_account: Neue Bankverbindung
   edit_bank_account: Bankverbindung bearbeiten
 
+  news: Nachrichten
+  comments: Kommentare
+  created_at: 'erstellt am:'
+  created: 'erstellt'
 
   contracting_party_properties: Vertragspartner Eigenschaften
   editing_contracting_party: Vertragspartner bearbeiten
@@ -255,12 +273,8 @@ de:
   listing_profiles: Liste aller Profile
   send_friend_request: Freundschaftsanfrage senden
   complete_user: Daten vervollständigen
-  edit_metering_point: Zählpunkt bearbeiten
 
-  new_down_device: Neues Bezugsgerät
-  new_metering_point: Neuer Zählpunkt
   has_updated: aktualisierte
-  metering_point: Zählpunkt
 
   complete_contract: Vertragsabschluss
   has_deleted: löschte

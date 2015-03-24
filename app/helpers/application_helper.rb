@@ -29,9 +29,6 @@ module ApplicationHelper
     )
   end
 
-
-
-
   def mainnav_profile_path(profile)
     active_link_to(
       (
@@ -43,9 +40,6 @@ module ApplicationHelper
       :wrap_tag => :li, :class_active => 'active-link'
     )
   end
-
-
-
 
   def mainnav_metering_point_path(metering_point)
     active_link_to(
@@ -94,53 +88,51 @@ module ApplicationHelper
   end
 
 
-  def new_metering_point
-    link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
-      new_metering_point_path,
-      {
-        :remote         => true,
-        :class          => 'btn start_modal',
-        'data-toggle'   => 'modal',
-        'data-target'   => '#myModal',
-        'data-tooltip'  => "true",
-        'title'         => t("add_metering_point"),
-      })
-  end
+
+
+
 
   def new_group
     link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
+      content_tag(:i, t("create_group"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
       new_group_path,
       {
         :remote         => true,
-        :class          => 'btn start_modal',
+        :class          => 'start_modal',
         'data-toggle'   => 'modal',
-        'data-target'   => '#myModal',
-        'data-tooltip'  => "true",
-        'title'         => t("add_new_group"),
+        'data-target'   => '#myModal'
+      })
+  end
+
+  def new_metering_point
+    link_to(
+      content_tag(:i, t("create_metering_point"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
+      new_metering_point_path,
+      {
+        :remote         => true,
+        :class          => 'start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal'
       })
   end
 
 
   def new_device
     link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
+      content_tag(:i, t("create_device"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
       new_device_path,
       {
         :remote           => true,
         :class            => 'btn start_modal',
         'data-toggle'     => 'modal',
-        'data-target'     => '#myModal',
-        'data-tooltip'    => "true",
-        'title'           => t("add_new_device"),
+        'data-target'     => '#myModal'
       })
   end
 
 
   def new_organization
     link_to(
-      content_tag(:i, nil, class: 'fa fa-plus-circle fa-3x fa-inverse'),
+      content_tag(:i, t("create_organization"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
       new_organization_path,
       {
         :remote       => true,
