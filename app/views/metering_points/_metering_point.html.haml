@@ -19,5 +19,6 @@
             = content_tag :div, id: "register-ticker-#{metering_point.register.id}", class: "register-ticker", data: { readings: metering_point.smart? ? metering_point.register.last_two_readings : nil, slp: !metering_point.smart? } do
               %span.text-4x
                 .power-ticker
+                  0
             %p.text-muted Watt
 

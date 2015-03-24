@@ -1,6 +1,7 @@
 de:
   welcome: Willkommen
 
+
   metering_point: Zählpunkt
   edit_metering_point: Zählpunkt bearbeiten
   new_metering_point: Neuer Zählpunkt
@@ -69,6 +70,7 @@ de:
   my_devices: Meine Geräte
   add_or_remove_devices: Geräte hinzufügen oder entfernen
 
+  find_and_join_group: Gruppe finden und beitreten
   group_admin: Gruppen Admin
   groups: Gruppen
   edit_group: Gruppe bearbeiten
@@ -110,7 +112,7 @@ de:
   contracting_party_organizations_address: "Vertragspartner: Addresse der Organisation"
   contracting_party_taxation: "Vertragspartner: Steuerdaten"
 
-
+  no_pic: kein bild
   my_friends: Meine Freunde
   car: PKW
   about_me: Über mich

@@ -5,7 +5,7 @@
         - if device.image?
           = image_tag(device.image.big_tumb, size: '200x200')
         - else
-          = image_tag('//placehold.it/128&text=no+pic')
+          = image_tag("//placehold.it/200&text=#{t'no_pic'}")
       .media-body.pad-lft
         %p.text-1x.text-thin= device.category
         %p.text-2x.mar-no= device.manufacturer_name

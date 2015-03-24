@@ -104,6 +104,16 @@ module ApplicationHelper
       })
   end
 
+  def groups
+    link_to(
+      content_tag(:i, t("find_and_join_group"), class: 'btn btn-default btn-rounded btn-labeled fa fa-search'),
+      groups_path,
+      {
+        :class        => 'start_modal'
+      })
+  end
+
+
   def new_metering_point
     link_to(
       content_tag(:i, t("create_metering_point"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
