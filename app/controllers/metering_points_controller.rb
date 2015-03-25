@@ -102,7 +102,7 @@ private
       :mode,
       :user_ids => [],
       :device_ids => [],
-      formula_parts_attributes: [:id, :operator, :metering_point_id, :operand_id]
+      formula_parts_attributes: [:id, :operator, :metering_point_id, :operand_id, :_destroy]
     )
   end
 

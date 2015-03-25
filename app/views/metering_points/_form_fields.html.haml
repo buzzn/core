@@ -3,10 +3,11 @@
 = f.input :uid
 = f.input :mode, collection: MeteringPoint.modes, include_blank: false
 = f.input :virtual
-.nested-fields
+
+%h3 formula_parts
+#formula_parts
+  = f.simple_fields_for :formula_parts do |formula_part|
+    = render 'formula_part_fields', :f => formula_part
   .links
     = link_to_add_association 'add_formula_part', f, :formula_parts
-
-
-
 
