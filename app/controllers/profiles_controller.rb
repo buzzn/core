@@ -8,11 +8,10 @@ class ProfilesController < ApplicationController
   end
 
 
-
   def show
     @profile              = Profile.find(params[:id]).decorate
     @friends              = @profile.user.friends.decorate
-    @metering_points      = @profile.user.metering_points
+    @metering_points      = @profile.metering_points
     @friendship_requests  = @profile.user.received_friendship_requests
     @groups               = @metering_points.collect(&:group).compact.uniq{|group| group.id} # TODO also include group interested
     @devices              = Device.with_role(:manager, @profile.user).decorate
@@ -20,21 +19,9 @@ class ProfilesController < ApplicationController
                               .order("created_at desc")
                               .where(owner_id: @profile.user.id, owner_type: "User")
                               .limit(10)
-
-    # TODO: removable?
-    if @metering_points
-      gon.push({ metering_point_ids: @metering_points.collect(&:id) })
-    else
-      gon.push({ metering_point_ids: [] })
-    end
-
-
-
     gon.push({  pusher_host: Rails.application.secrets.pusher_host,
                 pusher_key: Rails.application.secrets.pusher_key })
   end
-
-
 
 
   def edit

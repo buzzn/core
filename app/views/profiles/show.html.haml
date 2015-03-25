@@ -97,8 +97,9 @@
 
   .row
     .col-lg-12.text-center
-      = groups if @profile.user == current_user
-      -# = new_group if current_user.can_create?(Group) && current_user.profile == @profile
+      - if @profile.user == current_user
+        = groups
+        = new_group if current_user.can_create?(Group)
 
   %hr
 
