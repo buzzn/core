@@ -15,6 +15,7 @@ class MeteringPointsController < ApplicationController
   def new
     @metering_point = MeteringPoint.new
     authorize_action_for @metering_point
+    2.times{@metering_point.formula_parts.build}
   end
 
 
@@ -101,7 +102,7 @@ private
       :mode,
       :user_ids => [],
       :device_ids => [],
-      formula_parts_attributes: [:id, :operator, :metering_point_id, :virtual_metering_point_id]
+      formula_parts_attributes: [:id, :operator, :metering_point_id, :operand_id]
     )
   end
 

@@ -2,11 +2,11 @@
 = f.input :name
 = f.input :uid
 = f.input :mode, collection: MeteringPoint.modes, include_blank: false
-.row
-  = r.input :virtual, wrapper_html: { class: 'col-md-3' }
-
+= f.input :virtual
+.nested-fields
   .links
-    = link_to_add_association 'add_formula_part', r, :formula_parts
+    = link_to_add_association 'add_formula_part', f, :formula_parts
+
 
 
 

@@ -54,7 +54,11 @@ class User < ActiveRecord::Base
   end
 
   def usable_metering_points
-    self.friends.collect(&:editable_metering_points)
+    result = []
+    self.friends.each do |friend|
+      result << friend.editable_metering_points
+    end
+    return result.flatten
   end
 
 
