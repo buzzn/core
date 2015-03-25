@@ -77,8 +77,6 @@
           .col-lg-12.text-center
             = @metering_point.edit_devices
 
-
-
   - if current_user.can_update?(@metering_point) || @users.size != 0
     %hr
     %h1.page-header.text-overflow

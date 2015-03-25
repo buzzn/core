@@ -4,11 +4,11 @@
 = f.input :mode, collection: MeteringPoint.modes, include_blank: false
 = f.association :group, collection: Group.editable_by_user(current_user)
 = f.input :virtual
-
-%h5= t("formula")
-#formula_parts
-  = f.simple_fields_for :formula_parts do |formula_part|
-    = render 'formula_part_fields', :f => formula_part
-  .links.mar-btm
-    = link_to_add_association t('add_formula_part'), f, :formula_parts, class: "btn btn-xs btn-default btn-rounded btn-labeled fa fa-plus"
+.js-dependent-fields{data: {checkbox: {id: 'metering_point_virtual', value: 'true'}}}
+  %h5= t("formula")
+  #formula_parts
+    = f.simple_fields_for :formula_parts do |formula_part|
+      = render 'formula_part_fields', :f => formula_part
+    .links.mar-btm
+      = link_to_add_association t('add_formula_part'), f, :formula_parts, class: "btn btn-xs btn-default btn-rounded btn-labeled fa fa-plus"
 

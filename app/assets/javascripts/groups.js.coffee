@@ -81,15 +81,10 @@ class BubbleChart
     @data.forEach (d) =>
       @totalPower += parseInt(calculate_power(d[3], d[1], d[4], d[2]))
     this.setZoomFactor()
-    console.log 'zoom'
     this.create_nodes()
-    console.log 'nodes'
     this.create_vis(group_id)
-    console.log 'vis'
     this.calculateTotalPower()
-    console.log 'total'
     this.calculateTotalPowerOut()
-    console.log 'total_out'
 
 
 
@@ -99,7 +94,6 @@ class BubbleChart
   # to @nodes to be used later
   create_nodes: () =>
     @data.forEach (d) =>
-      console.log d
       node = {
         id: d[0]
         firstTimestamp: d[3]
@@ -135,7 +129,6 @@ class BubbleChart
     that = this
 
     @data_out.forEach (d) =>
-      console.log d
       node = {
         id: d[0]
         firstTimestamp: d[3]
@@ -294,7 +287,6 @@ class BubbleChart
     this.setNewScale()
 
   calculateMaxPower: (value) =>
-    console.log 'calc'
     @max_power_in = d3.max(@nodes, (d) -> parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
     max_power_out = d3.max(@nodes_out, (d) -> parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
     if @max_power_in > max_power_out
@@ -315,9 +307,7 @@ class BubbleChart
       d.radius = @radius_scale(parseInt(d.value))
     @nodes_out.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
-    console.log 'scale 1'
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
-    console.log 'scale 2'
     @circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
     this.display_group_all()
 

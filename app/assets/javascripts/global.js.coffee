@@ -4,10 +4,13 @@ ready = ->
   $(".select2").select2()
   $('a[rel~="tooltip"]').tooltip()
   $('[data-tooltip="true"]').tooltip();
-  DependentFields.bind()
 
   $("body").on "hidden.bs.modal", ".modal", ->
     $('.modal-dialog').empty()
+
+  $(".js-dependent-fields").waitUntilExists( ->
+    DependentFields.bind()
+  )
 
   $('.fa-info-circle').popover(placement: 'right', trigger: "hover" )
 
@@ -44,6 +47,34 @@ $(document).on('show.bs.modal', ready)
 $(document).on('page:restore', ->
   $(window).trigger('resize')
 )
+
+(($) ->
+
+  ###*
+  * @function
+  * @property {object} jQuery plugin which runs handler function once specified element is inserted into the DOM
+  * @param {function} handler A function to execute at the time when the element is inserted
+  * @param {bool} shouldRunHandlerOnce Optional: if true, handler is unbound after its first invocation
+  * @example $(selector).waitUntilExists(function);
+  ###
+
+  $.fn.waitUntilExists = (handler, shouldRunHandlerOnce, isChild) ->
+    found = 'found'
+    $this = $(@selector)
+    $elements = $this.not(->
+      $(this).data found
+    ).each(handler).data(found, true)
+    if !isChild
+      (window.waitUntilExists_Intervals = window.waitUntilExists_Intervals or {})[@selector] = window.setInterval((->
+        $this.waitUntilExists handler, shouldRunHandlerOnce, true
+        return
+      ), 500)
+    else if shouldRunHandlerOnce and $elements.length
+      window.clearInterval window.waitUntilExists_Intervals[@selector]
+    $this
+
+  return
+) jQuery
 
 
 

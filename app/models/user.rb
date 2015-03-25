@@ -54,7 +54,7 @@ class User < ActiveRecord::Base
   end
 
   def usable_metering_points
-    result = []
+    result = self.editable_metering_points
     self.friends.each do |friend|
       result << friend.editable_metering_points
     end
