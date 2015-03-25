@@ -2,6 +2,7 @@
 = f.input :name
 = f.input :uid
 = f.input :mode, collection: MeteringPoint.modes, include_blank: false
+= f.association :group, collection: Group.editable_by_user(current_user)
 = f.input :virtual
 
 %h5= t("formula")
