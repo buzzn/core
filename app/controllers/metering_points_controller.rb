@@ -97,6 +97,7 @@ private
       :uid,
       :name,
       :image,
+      :mode,
       :user_ids => [],
       :device_ids => []
     )

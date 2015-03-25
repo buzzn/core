@@ -75,6 +75,15 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
+
+  def output?
+    self.mode == 'out'
+  end
+
+  def input?
+    self.mode == 'in'
+  end
+
   def smart?
     if meter
       meter.smart
@@ -82,6 +91,9 @@ class MeteringPoint < ActiveRecord::Base
       false
     end
   end
+
+
+
 
   def addable_devices
     @users = []
@@ -107,42 +119,7 @@ class MeteringPoint < ActiveRecord::Base
     }.map(&:to_sym)
   end
 
-  def self.voltages
-    %w{
-      low
-      medium
-      high
-      highest
-    }
-  end
 
-  def self.regular_intervals
-    %w{
-      monthly
-      annually
-      quarterly
-      half_yearly
-    }
-  end
-
-  def self.types
-    %w{
-      2_way_meter
-      one_of_two_meter
-      virtual_meter
-      demarcation_meter
-    }
-  end
-
-
-
-  def output?
-    self.mode == 'out'
-  end
-
-  def input?
-    self.mode == 'in'
-  end
 
 
 
