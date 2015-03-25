@@ -22,11 +22,10 @@ class MeteringPoint < ActiveRecord::Base
   tracked recipient: Proc.new{ |controller, model| controller && model }
 
   belongs_to :group
-
   belongs_to :meter
 
-  has_many :formula_parts
-  accepts_nested_attributes_for :formula_parts, reject_if: :all_blank
+  has_many :formula_parts, dependent: :destroy
+  accepts_nested_attributes_for :formula_parts, reject_if: :all_blank, :allow_destroy => true
 
   has_many :contracts, dependent: :destroy
   has_many :devices
