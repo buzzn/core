@@ -98,6 +98,7 @@ private
       :uid,
       :name,
       :image,
+      :mode,
       :user_ids => [],
       :device_ids => [],
       formula_parts_attributes: [:id, :operator, :metering_point_id, :virtual_metering_point_id]

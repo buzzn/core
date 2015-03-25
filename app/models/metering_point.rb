@@ -44,8 +44,8 @@ class MeteringPoint < ActiveRecord::Base
 
   default_scope { order('created_at ASC') } #DESC
 
-  scope :in, -> { where(mode: :in) }
-  scope :out, -> { where(mode: :out) }
+  scope :inputs, -> { where(mode: :in) }
+  scope :outputs, -> { where(mode: :out) }
 
   scope :without_group, lambda { self.where(group: nil) }
 
@@ -77,6 +77,15 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
+
+  def output?
+    self.mode == 'out'
+  end
+
+  def input?
+    self.mode == 'in'
+  end
+
   def smart?
     if meter
       meter.smart
@@ -84,6 +93,9 @@ class MeteringPoint < ActiveRecord::Base
       false
     end
   end
+
+
+
 
   def addable_devices
     @users = []
@@ -102,44 +114,14 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-
-
-  def self.voltages
+  def self.modes
     %w{
-      low
-      medium
-      high
-      highest
-    }
-  end
-
-  def self.regular_intervals
-    %w{
-      monthly
-      annually
-      quarterly
-      half_yearly
-    }
-  end
-
-  def self.types
-    %w{
-      2_way_meter
-      one_of_two_meter
-      virtual_meter
-      demarcation_meter
-    }
+      in
+      out
+    }.map(&:to_sym)
   end
 
 
-
-  def output?
-    self.mode == 'out'
-  end
-
-  def input?
-    self.mode == 'in'
-  end
 
 
 
@@ -294,12 +276,7 @@ private
   end
 
 
-  def self.modes
-    %w{
-      in
-      out
-    }.map(&:to_sym)
-  end
+
 
 
 
