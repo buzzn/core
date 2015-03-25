@@ -176,10 +176,9 @@ de:
           in: 'Verbraucher'
           out: 'Erzeuger'
       metering_point:
-        registers:
-          mode:
-            in: 'Bezug'
-            out: 'Production'
+        mode:
+          in: 'Bezug'
+          out: 'Production'
       contract:
         mode:
           electricity_supplier_contract: Stromliefervertrag

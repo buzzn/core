@@ -1,4 +1,4 @@
 -# = f.input :image
 = f.input :name
 = f.input :uid
-= f.input :mode
+= f.input :mode, collection: MeteringPoint.modes, include_blank: false

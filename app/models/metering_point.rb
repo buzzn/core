@@ -100,7 +100,12 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-
+  def self.modes
+    %w{
+      in
+      out
+    }.map(&:to_sym)
+  end
 
   def self.voltages
     %w{
@@ -283,12 +288,7 @@ private
   end
 
 
-  def self.modes
-    %w{
-      in
-      out
-    }.map(&:to_sym)
-  end
+
 
 
 
