@@ -5,7 +5,6 @@ module API
     class Base < Grape::API
       mount API::V1::MeteringPoints
       mount API::V1::Meters
-      mount API::V1::Registers
       mount API::V1::Readings
       mount API::V1::Groups
 

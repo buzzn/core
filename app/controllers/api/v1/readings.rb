@@ -6,27 +6,27 @@ module API
 
       resource :readings do
 
-        desc "Get Last Reading by Register ID"
+        desc "Get Last Reading by metering_point ID"
         params do
-          requires :register_id, type: Integer, desc: "ID of the Register"
+          requires :metering_point_id, type: Integer, desc: "ID of the metering_point"
         end
         get do
-          Reading.last_by_register_id(permitted_params[:register_id])
+          Reading.last_by_metering_point_id(permitted_params[:metering_point_id])
         end
 
 
 
 
 
-        # curl -d '{"register_id": 20, "timestamp": "Fri, 16 Jan 2015 12:58:03 +0100", "watt_hour": "123456789"}' 'http://localhost:3000/api/v1/readings/register' -H Content-Type:application/json -v
-        desc "Create Reading by register_id"
+        # curl -d '{"metering_point_id": 20, "timestamp": "Fri, 16 Jan 2015 12:58:03 +0100", "watt_hour": "123456789"}' 'http://localhost:3000/api/v1/readings/metering_point' -H Content-Type:application/json -v
+        desc "Create Reading by metering_point_id"
         params do
-          requires :register_id, type: Integer, desc: "ID of the Register"
+          requires :metering_point_id, type: Integer, desc: "ID of the metering_point"
           requires :timestamp, type: DateTime, desc: "Timestamp of the Reading"
           requires :watt_hour, type: Integer, desc: "Watt Hour of the Reading. energy is in Wh"
         end
-        post '/register' do
-          Reading.create( register_id:  permitted_params[:register_id],
+        post '/metering_point' do
+          Reading.create( metering_point_id:  permitted_params[:metering_point_id],
                           timestamp:    permitted_params[:timestamp],
                           watt_hour:    permitted_params[:watt_hour]
                           )
@@ -54,11 +54,11 @@ module API
             ).first
 
           readings = []
-          meter.registers.each do |register|
-            readings << Reading.create( register_id: register.id,
+          meter.metering_points.each do |metering_point|
+            readings << Reading.create( metering_point_id: metering_point.id,
                             timestamp:   permitted_params[:timestamp],
-                            watt_hour:   permitted_params["#{register.mode}_watt_hour".to_sym],
-                            power:       permitted_params["#{register.mode}_power".to_sym]
+                            watt_hour:   permitted_params["#{metering_point.mode}_watt_hour".to_sym],
+                            power:       permitted_params["#{metering_point.mode}_power".to_sym]
                           )
           end
           return readings

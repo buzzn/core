@@ -9,7 +9,6 @@ class MeteringPointDecorator < Draper::Decorator
   decorates_association :location
   decorates_association :group
   decorates_association :contracts
-  decorates_association :register
   decorates_association :electricity_supplier_contracts
   decorates_association :metering_service_provider_contracts
   decorates_association :metering_point_operator_contracts

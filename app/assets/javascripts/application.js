@@ -46,7 +46,6 @@
 //= require nifty_alert
 
 //= require global
-//= require registers
 //= require metering_points
 //= require groups
 //= require bubble_tooltip

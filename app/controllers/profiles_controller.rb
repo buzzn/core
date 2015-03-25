@@ -23,9 +23,9 @@ class ProfilesController < ApplicationController
 
     # TODO: removable?
     if @metering_points
-      gon.push({ register_ids: @metering_points.collect(&:register).flatten.collect(&:id) })
+      gon.push({ metering_point_ids: @metering_points.collect(&:id) })
     else
-      gon.push({ register_ids: [] })
+      gon.push({ metering_point_ids: [] })
     end
 
 

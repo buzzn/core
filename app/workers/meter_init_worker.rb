@@ -14,10 +14,10 @@ class MeterInitWorker
           if request['status'] == 'ok'
             @meter.update_columns(smart: true)
 
-            if request['result'].any? && @meter.registers.any? && @meter.smart
+            if request['result'].any? && @meter.metering_points.any? && @meter.smart
               @meter.update_columns(online: true)
 
-              if Reading.last_by_register_id(@meter.registers.first.id)
+              if Reading.last_by_metering_point_id(@meter.metering_points.first.id)
                 logger.warn "Meter:#{@meter.id} init reading already written"
               else
                 @metering_point = @meter.metering_points.first
@@ -32,7 +32,7 @@ class MeterInitWorker
                    'class' => GetReadingWorker,
                    'queue' => :low,
                    'args' => [
-                              @meter.registers_modes_and_ids,
+                              @meter.metering_points_modes_and_ids,
                               @meter.manufacturer_product_serialnumber,
                               @mpoc.organization.slug,
                               @mpoc.username,
@@ -46,7 +46,7 @@ class MeterInitWorker
                 end
               end
             else
-              logger.warn "Meter#{@meter.id}: is not posible to initialize. registers:#{@meter.registers.size}, smart:#{@meter.smart}, online:#{@meter.online}"
+              logger.warn "Meter#{@meter.id}: is not posible to initialize. metering_points:#{@meter.metering_points.size}, smart:#{@meter.smart}, online:#{@meter.online}"
             end
 
           elsif request['status'] == "error"

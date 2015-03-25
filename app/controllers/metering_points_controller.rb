@@ -14,7 +14,6 @@ class MeteringPointsController < ApplicationController
 
   def new
     @metering_point = MeteringPoint.new
-    @metering_point.register = Register.new
     authorize_action_for @metering_point
   end
 
@@ -78,7 +77,7 @@ class MeteringPointsController < ApplicationController
   def chart
     @metering_point = MeteringPoint.find(params[:id])
     @chart_data = []
-    @chart_data << {name: @metering_point.register.mode, color: '#fff', data: @metering_point.register.send(params[:resolution], params[:containing_timestamp])}
+    @chart_data << {name: @metering_point.mode, color: '#fff', data: @metering_point.send(params[:resolution], params[:containing_timestamp])}
     render json: @chart_data.to_json
   end
 
@@ -99,8 +98,7 @@ private
       :name,
       :image,
       :user_ids => [],
-      :device_ids => [],
-      register_attributes: [:id, :mode, :virtual, :formula, :_destroy]
+      :device_ids => []
     )
   end
 

@@ -4,7 +4,7 @@ Fabricator :metering_point do
   name  'Wohnung'
   i = 1
   uid         {"DE001068825151000000000000#{2677114 + (i += 1)}"}
-  register   { Fabricate(:register_in) }
+  mode        'in'
   #contracts   { [ Fabricate(:electricity_supplier_contract)] }
 end
 
@@ -15,13 +15,13 @@ end
 
 Fabricator :mp_z1b, from: :metering_point do
   name  'Netzanschluss Einspeisung'
-  register   { Fabricate(:register_out) }
+  mode        'out'
 end
 
 
 Fabricator :mp_z2, from: :metering_point do
   name  'PV'
-  register   { Fabricate(:register_out) }
+  mode        'out'
   meter       { Fabricate(:easymeter_60051599) }
 end
 
@@ -35,7 +35,7 @@ end
 
 Fabricator :mp_z4, from: :metering_point do
   name  'BHKW'
-  register   { Fabricate(:register_out) }
+  mode        'out'
   meter       { Fabricate(:easymeter_60051560) }
 end
 
@@ -43,7 +43,7 @@ end
 
 Fabricator :mp_z5, from: :metering_point do
   name  'Abgrenzung'
-  register   { Fabricate(:register_out) }
+  mode        'out'
   meter       { Fabricate(:easymeter_60051600) }
 end
 
@@ -62,7 +62,7 @@ end
 Fabricator :mp_pv_karin, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Gautinger Weg', street_number: '11', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'PV Scheune'
-  register   { Fabricate(:register_out) }
+  mode        'out'
   meter       { Fabricate(:easymeter_60051431) }
 end
 
@@ -73,7 +73,7 @@ end
 Fabricator :mp_stefans_bhkw, from: :metering_point do
   address { Fabricate(:address, street_name: 'Forstenrieder Weg', street_number: '51', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'BHKW'
-  register   { Fabricate(:register_out) }
+  mode        'out'
 end
 
 
@@ -83,7 +83,7 @@ end
 Fabricator :mp_hof_butenland_wind, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Niensweg', street_number: '1', zip: 26969, city: 'Butjadingen', state: 'Niedersachsen') }
   name  'Windanlage'
-  register   { Fabricate(:register_out) }
+  mode        'out'
 end
 
 
@@ -125,14 +125,14 @@ end
 # Z1  Nr. 60118470 für Hans-Dieter Hopf übergame  (Zweirichtungszähler)
 Fabricator :mp_60118470, from: :metering_point do
   name  'Keller'
-  register   { Fabricate(:register_out) }
+  mode        'out'
   meter { Fabricate(:easymeter_60118470) }
 end
 
 # Z2  Nr. 60009316 für BHKW Erzeugung (Einrichtungszähler Einspeisung)
 Fabricator :mp_60009316, from: :metering_point do
   name  'Keller'
-  register   { Fabricate(:register_out) }
+  mode        'out'
   meter { Fabricate(:easymeter_60009316) }
 end
 
@@ -151,7 +151,6 @@ end
 # Wohnung Hr. Hopf ("ZN3") ist ungezählt kann aber berechnet werden
 Fabricator :mp_hans_dieter_hopf, from: :metering_point do
   name  'Wohnung'
-  register   { Fabricate(:virtual_register_in_hopf) }
   meter          { Fabricate(:virtual_meter_hopf) }
 end
 
@@ -222,7 +221,7 @@ end
 Fabricator :mp_60118460, from: :metering_point do
   name  'PV'
   meter          { Fabricate(:easymeter_60118460) }
-  register      { Fabricate(:register_out) }
+  mode        'out'
 end
 
 
@@ -329,7 +328,6 @@ Fabricator :mp_60118484, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Übergabe'
   meter          { Fabricate(:easymeter_60118484) }
-  register   { Fabricate(:register_in) }
 end
 
 

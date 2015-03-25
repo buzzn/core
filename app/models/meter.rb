@@ -19,7 +19,6 @@ class Meter < ActiveRecord::Base
   has_many :equipments
 
   has_many :metering_points
-  has_many :registers, through: :metering_points
 
 
 
@@ -29,12 +28,12 @@ class Meter < ActiveRecord::Base
   end
 
 
-  def registers_modes_and_ids
-    register_mode_and_ids = {}
-    self.registers.each do |register|
-      register_mode_and_ids.merge!({"#{register.mode}" => register.id})
+  def metering_points_modes_and_ids
+    metering_point_mode_and_ids = {}
+    self.metering_points.each do |metering_point|
+      metering_point_mode_and_ids.merge!({"#{metering_point.mode}" => metering_point.id})
     end
-    return register_mode_and_ids
+    return metering_point_mode_and_ids
   end
 
   def self.manufacturer_names
@@ -55,9 +54,9 @@ class Meter < ActiveRecord::Base
   def self.pull_readings
     update_info = []
     Meter.where(init_reading: true, smart: true, online: true).each do |meter|
-      meter.registers.each do |register|
-        mpoc  = register.metering_point.metering_point_operator_contract
-        last  = Reading.last_by_register_id(register.id)[:timestamp]
+      meter.metering_points.each do |metering_point|
+        mpoc  = metering_point.metering_point_operator_contract
+        last  = Reading.last_by_metering_point_id(metering_point.id)[:timestamp]
         now   = Time.now.in_time_zone.utc
         range = (last.to_i .. now.to_i)
         if range.count < 1.hour
@@ -65,7 +64,7 @@ class Meter < ActiveRecord::Base
            'class' => GetReadingWorker,
            'queue' => :low,
            'args' => [
-                      meter.registers_modes_and_ids,
+                      meter.metering_points_modes_and_ids,
                       meter.manufacturer_product_serialnumber,
                       mpoc.organization.slug,
                       mpoc.username,
@@ -74,9 +73,9 @@ class Meter < ActiveRecord::Base
                       now.to_i * 1000
                      ]
           })
-          update_info << "register_id: #{register.id} | from: #{Time.at(last)}, to: #{Time.at(now)}, #{range.count} seconds"
+          update_info << "metering_point_id: #{metering_point.id} | from: #{Time.at(last)}, to: #{Time.at(now)}, #{range.count} seconds"
         else
-          register.metering_point.meter.update_columns(online: false)
+          metering_point.meter.update_columns(online: false)
         end
       end
     end
@@ -97,29 +96,6 @@ class Meter < ActiveRecord::Base
 
 
 
-# TODO: what is this ???
-
-#  def virtual
-#   if self.registers.collect{|r| true if r.virtual}.include?(true)
-#     true
-#   else
-#     false
-#   end
-# end
-#
-# def smart?
-#   self.registers.each do |register|
-#     if self.virtual
-#       if register.get_operands_from_formula.collect{|id| Register.find(id).meter.smart? }.include?(false)
-#         return false
-#       else
-#         return true
-#       end
-#     else
-#       return self.smart
-#     end
-#   end
-# end
 
 
 

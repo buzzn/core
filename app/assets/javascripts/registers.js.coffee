@@ -1,29 +1,29 @@
 readingsSLP = []
 timers = []
 
-$(".register").ready ->
-  register_id = $(this).attr('id')
-  register = $(this)
-  if $(this).find(".register-ticker").data('slp') == false
+$(".metering_point").ready ->
+  metering_point_id = $(this).attr('id')
+  metering_point = $(this)
+  if $(this).find(".metering_point-ticker").data('slp') == false
     Pusher.host = $(".pusher").data('pusherhost')
     Pusher.ws_port = 8080
     Pusher.wss_port = 8080
     pusher = new Pusher($(".pusher").data('pusherkey'))
 
-    $(this).find(".power-ticker").html(calculate_power($(this).find(".register-ticker").data('readings')))
+    $(this).find(".power-ticker").html(calculate_power($(this).find(".metering_point-ticker").data('readings')))
 
-    channel = pusher.subscribe("register_#{register_id}")
+    channel = pusher.subscribe("metering_point_#{metering_point_id}")
     channel.bind "new_reading", (reading) ->
-      oldString = register.find(".register-ticker").attr('data-readings')
+      oldString = metering_point.find(".metering_point-ticker").attr('data-readings')
       oldWattHour = oldString.split(",")[1]
       oldTimestamp = oldString.split(",")[0].substring(1, oldString.split(",")[0].length)
-      register.find(".register-ticker").attr('data-readings', "[#{reading.timestamp}, #{reading.watt_hour}, #{oldTimestamp}, #{oldWattHour}]")
-      register.find(".power-ticker").html(calculate_power([reading.timestamp, reading.watt_hour, oldTimestamp, oldWattHour]))
+      metering_point.find(".metering_point-ticker").attr('data-readings', "[#{reading.timestamp}, #{reading.watt_hour}, #{oldTimestamp}, #{oldWattHour}]")
+      metering_point.find(".power-ticker").html(calculate_power([reading.timestamp, reading.watt_hour, oldTimestamp, oldWattHour]))
   else
     getSLPValue()
     timers.push(
       window.setInterval(->
-        setSLPValue(register)
+        setSLPValue(metering_point)
         return
       , 1000*2)
       )
@@ -39,10 +39,10 @@ getSLPValue = ->
   $.getJSON "/metering_points/1/latest_slp", (data) ->
     readingsSLP = data
 
-setSLPValue = (register) ->
+setSLPValue = (metering_point) ->
   if Date.parse(readingsSLP[1][0]) < new Date()
     getSLPValue()
-  register.find(".power-ticker").html interpolateSLPkW().toFixed(0)
+  metering_point.find(".power-ticker").html interpolateSLPkW().toFixed(0)
 
 interpolateSLPkW = ->
   firstTimestamp = readingsSLP[0][0]

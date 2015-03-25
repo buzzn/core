@@ -45,10 +45,6 @@ class User < ActiveRecord::Base
     MeteringPoint.editable_by_user(self).decorate
   end
 
-  def editable_registers
-    Register.where(metering_point_id: MeteringPoint.editable_by_user(self).collect(&:id)).decorate
-  end
-
   def editable_groups
     Group.editable_by_user(self).decorate
   end

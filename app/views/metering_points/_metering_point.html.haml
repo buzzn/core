@@ -14,11 +14,9 @@
         %p.text-2x.mar-no= metering_point.long_name
         %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
 
-          %li.register.col-xs-12{ id: metering_point.register.id}
-
-            = content_tag :div, id: "register-ticker-#{metering_point.register.id}", class: "register-ticker", data: { readings: metering_point.smart? ? metering_point.register.last_two_readings : nil, slp: !metering_point.smart? } do
-              %span.text-4x
-                .power-ticker
-                  0
-            %p.text-muted Watt
+          = content_tag :div, id: "metering_point-ticker-#{metering_point.id}", class: "metering_point-ticker", data: { readings: metering_point.smart? ? metering_point.last_two_readings : nil, slp: !metering_point.smart? } do
+            %span.text-4x
+              .power-ticker
+                0
+          %p.text-muted Watt
 

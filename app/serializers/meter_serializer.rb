@@ -6,5 +6,4 @@ class MeterSerializer < ActiveModel::Serializer
               :smart,
               :online
 
-  has_many :registers
 end

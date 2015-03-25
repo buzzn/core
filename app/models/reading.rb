@@ -4,7 +4,7 @@ class Reading
   after_create :push_reading
 
   field :contract_id,   type: Integer
-  field :register_id,   type: Integer
+  field :metering_point_id,   type: Integer
   field :timestamp,     type: DateTime
   field :watt_hour,     type: Integer
   field :power,         type: Integer
@@ -14,12 +14,12 @@ class Reading
   field :load_course_time_series, type: Float
   field :state
 
-  index({ register_id: 1 })
+  index({ metering_point_id: 1 })
   index({ timestamp: 1 })
 
 
 
-  def self.aggregate(resolution_format, register_ids=nil, containing_timestamp=nil)
+  def self.aggregate(resolution_format, metering_point_ids=nil, containing_timestamp=nil)
     resolution_formats = {
       year_to_months: ['year', 'month'],
       month_to_days:  ['month', 'dayOfMonth'],
@@ -68,12 +68,12 @@ class Reading
                 }
               }
             }
-    if register_ids
-      register_or_slp = { register_id: { "$in" => register_ids } }
+    if metering_point_ids
+      metering_point_or_slp = { metering_point_id: { "$in" => metering_point_ids } }
     else
-      register_or_slp = { source: { "$in" => ['slp'] } }
+      metering_point_or_slp = { source: { "$in" => ['slp'] } }
     end
-    match["$match"].merge!(register_or_slp)
+    match["$match"].merge!(metering_point_or_slp)
     pipe << match
 
 
@@ -129,11 +129,11 @@ class Reading
 
 
 
-  def self.last_by_register_id(register_id)
+  def self.last_by_metering_point_id(metering_point_id)
     pipe = [
       { "$match" => {
-          register_id: {
-            "$in" => [register_id]
+          metering_point_id: {
+            "$in" => [metering_point_id]
           }
         }
       },
@@ -148,11 +148,11 @@ class Reading
 
 
 
-  def self.last_power_by_register_id(register_id)
+  def self.last_power_by_metering_point_id(metering_point_id)
     pipe = [
       { "$match" => {
-          register_id: {
-            "$in" => [register_id]
+          metering_point_id: {
+            "$in" => [metering_point_id]
           }
         }
       },
@@ -175,11 +175,11 @@ class Reading
   end
 
 
-  def self.last_two_by_register_id(register_id)
+  def self.last_two_by_metering_point_id(metering_point_id)
     pipe = [
       { "$match" => {
-          register_id: {
-            "$in" => [register_id]
+          metering_point_id: {
+            "$in" => [metering_point_id]
           }
         }
       },
@@ -193,11 +193,11 @@ class Reading
   end
 
 
-  def self.first_by_register_id(register_id)
+  def self.first_by_metering_point_id(metering_point_id)
     pipe = [
       { "$match" => {
-          register_id: {
-            "$in" => [register_id]
+          metering_point_id: {
+            "$in" => [metering_point_id]
           }
         }
       },
@@ -230,7 +230,7 @@ class Reading
        'class' => PushReadingWorker,
        'queue' => :default,
        'args' => [
-                  register_id,
+                  metering_point_id,
                   watt_hour,
                   timestamp.to_i*1000
                  ]

@@ -29,7 +29,6 @@ Buzzn::Application.routes.draw do
 
 
   resources :meters
-  resources :registers
   resources :equipments
   resources :devices
   resources :contracts

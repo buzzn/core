@@ -14,18 +14,18 @@
             %h4.text-lg.text-overflow.mar-no= @metering_point.long_name
 
 
-          - if @metering_point.register
+          - if @metering_point
             %hr
             .text-center.clearfix
-              .register{ id: @metering_point.register.id}
+              .metering_point{ id: @metering_point.id}
                 .pad-all.text-center
                   - if @metering_point.meter && @metering_point.meter.smart?
-                    = content_tag :div, id: "register-ticker-#{@metering_point.register.id}", class: "register-ticker", data: { readings: @metering_point.register.last_two_readings, slp: false } do
+                    = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { readings: @metering_point.last_two_readings, slp: false } do
                       %span.text-4x.text-thin
                         .power-ticker
                           0
                   - else
-                    = content_tag :div, id: "register-ticker-#{@metering_point.register.id}", class: "register-ticker", data: { slp: true } do
+                    = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { slp: true } do
                       %span.text-4x.text-thin
                         .power-ticker
                           0

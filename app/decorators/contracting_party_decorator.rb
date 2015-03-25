@@ -42,7 +42,7 @@ class ContractingPartyDecorator < Draper::Decorator
         'data-toggle'   => 'modal',
         'data-target'   => '#myModal',
         'data-tooltip'  => "true",
-        'title'         => t("add_register"),
+        'title'         => t("add_bank_account"),
       })
   end
 

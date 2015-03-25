@@ -8,7 +8,7 @@ class MeterUpdateWorker
      'class' => GetReadingWorker,
      'queue' => :low,
      'args' => [
-                @registers_modes_and_ids,
+                @metering_points_modes_and_ids,
                 @manufacturer_product_serialnumber,
                 @mpo_slug,
                 @mpo_login_username,
@@ -19,15 +19,15 @@ class MeterUpdateWorker
     })
   end
 
-  def perform(registers_modes_and_ids, manufacturer_product_serialnumber, mpo_slug, mpo_login_username, mpo_login_password, start_time, end_time)
-    @registers_modes_and_ids            = registers_modes_and_ids
+  def perform(metering_points_modes_and_ids, manufacturer_product_serialnumber, mpo_slug, mpo_login_username, mpo_login_password, start_time, end_time)
+    @metering_points_modes_and_ids            = metering_points_modes_and_ids
     @manufacturer_product_serialnumber  = manufacturer_product_serialnumber
     @mpo_slug                           = mpo_slug
     @mpo_login_username                 = mpo_login_username
     @mpo_login_password                 = mpo_login_password
 
     if mpo_slug == 'discovergy' or mpo_slug == 'buzzn-metering'
-      puts "get history for register: #{registers_modes_and_ids}"
+      puts "get history for metering_point: #{metering_points_modes_and_ids}"
 
       past = Time.at(start_time)
       now  = Time.at(end_time)

@@ -366,8 +366,6 @@ $(".bubbles_container").ready ->
       data_in = data[0]
       data_out = data[1]
 
-      #for register_data in data[0]
-        #if register_data[1] == register_data[3] == -1
 
       render_vis data_in, data_out, group_id
 
@@ -376,16 +374,16 @@ $(".bubbles_container").ready ->
       Pusher.wss_port = 8080
       pusher = new Pusher($(".pusher").data('pusherkey'))
 
-      for register_data in data_in
-        register_id = register_data[0]
-        channel = pusher.subscribe("register_#{register_id}")
+      for metering_point_data in data_in
+        metering_point_id = metering_point_data[0]
+        channel = pusher.subscribe("metering_point_#{metering_point_id}")
         channel.bind "new_reading", (reading) ->
-          chart.reset_radius(reading.register_id, reading.watt_hour, reading.timestamp)
-      for register_data in data_out
-        register_id = register_data[0]
-        channel = pusher.subscribe("register_#{register_id}")
+          chart.reset_radius(reading.metering_point_id, reading.watt_hour, reading.timestamp)
+      for metering_point_data in data_out
+        metering_point_id = metering_point_data[0]
+        channel = pusher.subscribe("metering_point_#{metering_point_id}")
         channel.bind "new_reading", (reading) ->
-          chart.reset_radius(reading.register_id, reading.watt_hour, reading.timestamp)
+          chart.reset_radius(reading.metering_point_id, reading.watt_hour, reading.timestamp)
 
       $(window).on "resize:end", chart.calculateNewCenter
 

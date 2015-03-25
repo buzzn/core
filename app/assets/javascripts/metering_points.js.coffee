@@ -5,6 +5,7 @@ chart = undefined
 
 $(".metering_points").ready ->
   $(".metering_point").each ->
+    console.log 'xxx'
     id = $(this).attr('id').split('_')[2]
     width = $("#chart-container-" + id).width()
     $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_hours', dataType: 'json'})

@@ -7,9 +7,9 @@ class MeterReactivateWorker
     request = Discovergy.new(@mpoc.username, @mpoc.password).raw(@meter.manufacturer_product_serialnumber)
 
     if request['status'] == 'ok'
-      if request['result'].any? && @meter.registers.any? && @meter.smart
+      if request['result'].any? && @meter.metering_points.any? && @meter.smart
 
-        last  = Reading.last_by_register_id(@meter.registers.first.id)['timestamp']
+        last  = Reading.last_by_metering_point_id(@meter.metering_points.first.id)['timestamp']
         now   = Time.now.in_time_zone.utc
 
         if (last.to_i .. now.to_i).size < 1.hour
@@ -19,7 +19,7 @@ class MeterReactivateWorker
            'class' => MeterUpdateWorker,
            'queue' => :low,
            'args' => [
-                      @meter.registers_modes_and_ids,
+                      @meter.metering_points_modes_and_ids,
                       @meter.manufacturer_product_serialnumber,
                       @mpoc.organization.slug,
                       @mpoc.username,

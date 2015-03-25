@@ -1,14 +1,4 @@
 -# = f.input :image
 = f.input :name
 = f.input :uid
-
-%label= t'current_directions'
-#registers
-  = f.simple_fields_for :register do |r|
-    .nested-fields
-      .row
-        = r.input :mode, collection: Register.modes, include_blank: false, label: false, wrapper_html: { class: 'col-md-3' }
-      .row
-        = r.input :virtual, wrapper_html: { class: 'col-md-3' }
-        = r.input :formula, wrapper_html: { class: 'col-md-3' }
-
+= f.input :mode

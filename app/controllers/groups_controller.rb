@@ -82,7 +82,7 @@ class GroupsController < ApplicationController
       end
       if metering_point.meter
         if metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
-          latest_readings = Reading.last_two_by_register_id(metering_point.register.id)
+          latest_readings = Reading.last_two_by_metering_point_id(metering_point.id)
         elsif metering_point.meter.smart? && metering_point.meter.online && !metering_point.meter.init_reading
           #TODO: init_reading ausführen
         elsif metering_point.meter.smart? && !metering_point.meter.online && metering_point.meter.init_reading
@@ -93,16 +93,16 @@ class GroupsController < ApplicationController
       end
       if metering_point.mode == "out"
         if !latest_readings.nil? && !latest_readings.first.nil? && !latest_readings.last.nil?
-          data_entry.push(metering_point.register.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
+          data_entry.push(metering_point.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
         else
-          data_entry.push(metering_point.register.id, -1, 0, -1, 0, user_name)
+          data_entry.push(metering_point.id, -1, 0, -1, 0, user_name)
         end
         out_metering_point_data.push(data_entry)
       else
         if !latest_readings.nil? && !latest_readings.first.nil? && !latest_readings.last.nil?
-          data_entry.push(metering_point.register.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
+          data_entry.push(metering_point.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
         else
-          data_entry.push(metering_point.register.id, -1, 0, -1, 0, user_name)
+          data_entry.push(metering_point.id, -1, 0, -1, 0, user_name)
         end
         in_metering_point_data.push(data_entry)
       end
