@@ -42,8 +42,8 @@ class MeteringPoint < ActiveRecord::Base
 
   default_scope { order('created_at ASC') } #DESC
 
-  scope :in, -> { where(mode: :in) }
-  scope :out, -> { where(mode: :out) }
+  scope :inputs, -> { where(mode: :in) }
+  scope :outputs, -> { where(mode: :out) }
 
   scope :without_group, lambda { self.where(group: nil) }
 
