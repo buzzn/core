@@ -1,0 +1,6 @@
+#formula
+  = simple_fields_for :formula_parts do |fp|
+    .nested-fields
+      .row
+        = fp.input :operator, collection: ["+", "-"], wrapper_html: { class: 'col-md-2' }
+        = fp.input :metering_point, collection: current_user.usable_metering_points, include_blank: false, input_html: { class: 'select2'}, wrapper_html: { class: 'col-md-3' }
