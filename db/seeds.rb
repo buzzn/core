@@ -406,6 +406,11 @@ puts '5 simple users'
 end
 
 
+puts 'send friendships requests for buzzn team'
+like_to_friend = Fabricate(:user)
+buzzn_team.each do |user|
+  FriendshipRequest.create(sender: like_to_friend, receiver: user)
+end
 
 
 

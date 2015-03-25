@@ -73,18 +73,24 @@
           .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
 
-#page-content
 
-  - if @metering_points.empty? && @profile.user == current_user
+- if @profile.user == current_user
+
+  - if @metering_points.empty?
     = render "welcome_#{I18n.locale.to_s}"
 
+  - if @friendship_requests.any?
+    .row
+      .col-lg-12
+        .panel.panel-colorful.panel-warning
+          .panel-body
+            .friendship_requests
+              = render @friendship_requests
 
-  - if @profile.user == current_user
-    - if @friendship_requests.any?
-      %h1.page-header.text-overflow= t'friendship_requests'
-      = render @friendship_requests
 
 
+
+#page-content
 
   %h1.page-header.text-overflow
     %span
@@ -100,7 +106,6 @@
       - if @profile.user == current_user
         = groups
         = new_group if current_user.can_create?(Group)
-
   %hr
 
 
