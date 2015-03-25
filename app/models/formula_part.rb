@@ -1,3 +1,4 @@
 class FormulaPart < ActiveRecord::Base
-  has_one :metering_point
+  belongs_to :user
+  belongs_to :operand, class_name: 'MeteringPoint'
 end

@@ -1,4 +1,6 @@
 .nested-fields
-  = f.input :operator, collection: ["+", "-"], wrapper_html: { class: 'col-md-2' }
-  = f.input :metering_point, collection: current_user.usable_metering_points, include_blank: false, input_html: { class: 'select2'}, wrapper_html: { class: 'col-md-3' }
-  = link_to_remove_association t("remove_formula_part"), f
+  .row
+    = f.input :operator, collection: ["+", "-"], wrapper_html: { class: 'col-md-2' }
+    = f.input :metering_point, collection: current_user.usable_metering_points, include_blank: false, input_html: { class: 'select2'}, wrapper_html: { class: 'col-md-3' }
+    = link_to_remove_association f, :class => "btn btn-xs btn-rounded btn-default fa fa-times" do
+      .link_to_remove_association
