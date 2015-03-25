@@ -100,6 +100,7 @@ private
       :name,
       :image,
       :mode,
+      :virtual,
       :user_ids => [],
       :device_ids => [],
       formula_parts_attributes: [:id, :operator, :metering_point_id, :operand_id, :_destroy]
