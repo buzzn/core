@@ -219,6 +219,8 @@ manuela_baier.add_role :manager, mp_60009348
 
 mp_hans_dieter_hopf = Fabricate(:mp_hans_dieter_hopf)
 hans_dieter_hopf.add_role :manager, mp_hans_dieter_hopf
+mp_hans_dieter_hopf.formula_parts << Fabricate(:fp_plus, operand_id: mp_60009348.id)
+mp_hans_dieter_hopf.formula_parts << Fabricate(:fp_plus, operand_id: mp_60009316.id)
 
 mp_60009272.users         << thomas_hopf
 mp_60009348.users         << manuela_baier

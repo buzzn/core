@@ -2,3 +2,9 @@
 = f.input :name
 = f.input :uid
 = f.input :mode
+.row
+  = r.input :virtual, wrapper_html: { class: 'col-md-3' }
+
+  .links
+    = link_to_add_association 'add_formula_part', r, :formula_parts
+

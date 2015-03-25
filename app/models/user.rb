@@ -53,6 +53,10 @@ class User < ActiveRecord::Base
     Device.editable_by_user(self).decorate
   end
 
+  def usable_metering_points
+    self.friends.collect(&:editable_metering_points)
+  end
+
 
 
 

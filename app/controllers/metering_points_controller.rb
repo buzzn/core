@@ -91,6 +91,7 @@ class MeteringPointsController < ApplicationController
 
 
 
+
 private
   def metering_point_params
     params.require(:metering_point).permit(
@@ -98,7 +99,8 @@ private
       :name,
       :image,
       :user_ids => [],
-      :device_ids => []
+      :device_ids => [],
+      formula_parts_attributes: [:id, :operator, :metering_point_id, :virtual_metering_point_id]
     )
   end
 

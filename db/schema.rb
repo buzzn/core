@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150219151449) do
+ActiveRecord::Schema.define(version: 20150325094707) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -197,6 +197,17 @@ ActiveRecord::Schema.define(version: 20150219151449) do
 
   add_index "equipment", ["meter_id"], name: "index_equipment_on_meter_id", using: :btree
   add_index "equipment", ["slug"], name: "index_equipment_on_slug", unique: true, using: :btree
+
+  create_table "formula_parts", force: :cascade do |t|
+    t.string   "operator"
+    t.integer  "metering_point_id"
+    t.integer  "operand_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "formula_parts", ["metering_point_id"], name: "index_formula_parts_on_metering_point_id", using: :btree
+  add_index "formula_parts", ["operand_id"], name: "index_formula_parts_on_operand_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
@@ -421,6 +432,22 @@ ActiveRecord::Schema.define(version: 20150219151449) do
   add_index "profiles", ["slug"], name: "index_profiles_on_slug", unique: true, using: :btree
   add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
   add_index "profiles", ["user_name"], name: "index_profiles_on_user_name", unique: true, using: :btree
+
+  create_table "registers", force: :cascade do |t|
+    t.string   "slug"
+    t.string   "mode"
+    t.string   "obis_index"
+    t.boolean  "variable_tariff",   default: false
+    t.integer  "predecimal_places", default: 8
+    t.integer  "decimal_places",    default: 2
+    t.boolean  "virtual",           default: false
+    t.integer  "metering_point_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "registers", ["metering_point_id"], name: "index_registers_on_metering_point_id", using: :btree
+  add_index "registers", ["slug"], name: "index_registers_on_slug", unique: true, using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"

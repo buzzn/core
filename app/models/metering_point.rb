@@ -21,10 +21,12 @@ class MeteringPoint < ActiveRecord::Base
   tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
   tracked recipient: Proc.new{ |controller, model| controller && model }
 
-
   belongs_to :group
 
   belongs_to :meter
+
+  has_many :formula_parts
+  accepts_nested_attributes_for :formula_parts, reject_if: :all_blank
 
   has_many :contracts, dependent: :destroy
   has_many :devices
@@ -179,6 +181,14 @@ class MeteringPoint < ActiveRecord::Base
     chart_data(:year_to_months, containing_timestamp)
   end
 
+  def formula
+    result = ""
+    self.formula_parts.each do |formula_part|
+      result += formula_part.operator + formula_part.operand_id.to_s
+    end
+    return result
+  end
+
   def get_operands_from_formula
     operands = []
     operand = ""
@@ -191,6 +201,7 @@ class MeteringPoint < ActiveRecord::Base
       end
     end
     operands << operand.to_i
+    operands.shift #remove first element of array
     return operands
   end
 

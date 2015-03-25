@@ -1,0 +1,156 @@
+class Register < ActiveRecord::Base
+  include Authority::Abilities
+
+  belongs_to :metering_point
+
+  validates :mode, presence: true
+
+  scope :in, -> { where(mode: :in) }
+  scope :out, -> { where(mode: :out) }
+
+  has_many :formula_parts, dependent: :destroy
+  accepts_nested_attributes_for :formula_parts, reject_if: :all_blank
+
+  def smart?
+    metering_point.meter && metering_point.meter.smart?
+  end
+
+  def hour_to_minutes(containing_timestamp)
+    chart_data(:hour_to_minutes, containing_timestamp)
+  end
+
+  def day_to_hours(containing_timestamp)
+    chart_data(:day_to_hours, containing_timestamp)
+  end
+
+  def week_to_days(containing_timestamp)
+    chart_data(:week_to_days, containing_timestamp)
+  end
+
+  def month_to_days(containing_timestamp)
+    chart_data(:month_to_days, containing_timestamp)
+  end
+
+  def year_to_months(containing_timestamp)
+    chart_data(:year_to_months, containing_timestamp)
+  end
+
+  def formula
+    result = ""
+    self.formula_parts.each do |formula_part|
+      result += formula_part.operator + Register.where(metering_point_id: formula_part.metering_point_id).first.id.to_s
+    end
+    return result
+  end
+
+  def get_operands_from_formula
+    operands = []
+    operand = ""
+    self.formula.gsub(/\s+/, "").each_char do |char|
+      if ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].include?(char)
+        operand += char
+      elsif ['+', '-', '*'].include?(char)
+        operands << operand.to_i
+        operand = ""
+      end
+    end
+    operands << operand.to_i
+    return operands
+  end
+
+
+
+private
+
+  def chart_data(resolution_format, containing_timestamp)
+    if self.virtual && self.formula
+      operands = get_operands_from_formula
+      operators = get_operators_from_formula
+      data = []
+      operands.each do |register_id|
+        data << slp_or_smart(register_id, resolution_format, containing_timestamp)
+      end
+      return calculate_virtual_register(data, operators)
+    else
+      slp_or_smart(self.id, resolution_format, containing_timestamp)
+    end
+  end
+
+
+  def slp_or_smart(register_id, resolution_format, containing_timestamp)
+    register = Register.find(register_id)
+    if register.metering_point.meter && register.metering_point.meter.smart
+      convert_to_array(Reading.aggregate(resolution_format, [register.id], containing_timestamp)) # smart
+    else
+      convert_to_array(Reading.aggregate(resolution_format, nil, containing_timestamp)) # SLP
+    end
+  end
+
+
+  def convert_to_array(data)
+    hours = []
+    data.each do |hour|
+      hours << [
+        hour['firstTimestamp'].to_i*1000,
+        hour['consumption'].to_i/10000000000.0
+      ]
+    end
+    return hours
+  end
+
+
+  def get_operators_from_formula
+    operators = []
+    self.formula.gsub(/\s+/, "").each_char do |char|
+      if ['+', '-', '*'].include?(char)
+        operators << char
+      end
+    end
+    return operators
+  end
+
+  def calculate_virtual_register(data, operators)
+    hours = []
+    timestamps = []
+    i = 0
+    data.each do |register|
+      j = 0
+      register.each do |reading|
+        if i == 0
+          timestamps << reading[0]
+          hours << reading[1]
+        else
+          timestamps[j] = reading[0]
+          if operators[i - 1] == "+"
+            hours[j] += reading[1]
+          elsif operators[i - 1] == "-"
+            hours[j] -= reading[1]
+          elsif operators[i - 1] == "*"
+            hours[j] *= reading[1]
+          end
+        end
+        j += 1
+      end
+      i += 1
+    end
+    result = []
+    for i in 0...hours.length
+      result << [
+        timestamps[i],
+        hours[i]
+      ]
+    end
+    return result
+  end
+
+
+
+  def self.modes
+    %w{
+      in
+      out
+    }.map(&:to_sym)
+  end
+
+end
+
