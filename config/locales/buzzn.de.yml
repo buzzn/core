@@ -61,7 +61,7 @@ de:
   member_since: Mitglied seit
 
   formula: Formel
-  add_formula_part: Formel Schritt hinzufügen
+  add_formula_part: Summand hinzufügen
 
   new_device: neues Gerät
   add_new_device: Neues Gerät hinzufügen
@@ -188,7 +188,6 @@ de:
   financing_costs: Finanzierungskosten
   funding_project: Projekt Finanzieren
   end_of_funding: endet die Finanzierung
-  comments: Kommentare
   comment: Kommentar
   edit_message: Nachricht Bearbeiten
   new_message: Neue Nachricht
@@ -447,6 +446,7 @@ de:
   cannot_delete_group_while_running_contracts_exists: "Die Gruppe kann nicht gelöscht werden, solange sie noch laufende Verträge besitzt."
   enter_your_text: Text hier eingeben
   out_metering_points: Produktionszählpunkte
+  create_comment: Kommentar erstellen
 
 
 

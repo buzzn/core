@@ -13,6 +13,8 @@ ready = ->
     DependentFields.bind()
   )
 
+  $('.fa-info-circle').popover(placement: 'right', trigger: "hover" )
+
   $(".modal-content").waitUntilExists( ->
     $('.fa-info-circle').popover(placement: 'right', trigger: "hover" )
   )
