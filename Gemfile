@@ -96,6 +96,7 @@ source 'http://rails-assets.org' do
   gem 'rails-assets-font-awesome'
   gem 'rails-assets-bootstrap'
   gem 'rails-assets-bootstrap-datepicker'
+  gem 'rails-assets-bootstrap-select'
   gem 'rails-assets-sparklines'
   gem 'rails-assets-d3'
   gem 'rails-assets-switchery'

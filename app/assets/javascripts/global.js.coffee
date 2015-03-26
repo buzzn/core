@@ -2,6 +2,7 @@ ready = ->
   FastClick.attach(document.body);
   $(".nano").nanoScroller();
   $(".select2").select2()
+  $('.selectpicker').selectpicker();
   $('a[rel~="tooltip"]').tooltip()
   $('[data-tooltip="true"]').tooltip();
 

@@ -19,6 +19,7 @@
 //= require d3
 //= require bootstrap
 //= require bootstrap-datepicker
+//= require bootstrap-select
 //= require nanoscroller
 //= require highcharts
 //= require highcharts_no_utc

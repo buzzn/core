@@ -129,21 +129,20 @@
           = @metering_point.new_meter
 
 
-
-  %hr
-  %h1.page-header.text-overflow
-    %span
-      = t('contracts')
-      %small
-        %i.small-info-circle.fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."}
-  .row
-    .contracts
-      = render @metering_point.contracts
-
   - if current_user.can_update?(@metering_point)
+    %hr
+    %h1.page-header.text-overflow
+      %span
+        = t('contracts')
+        %small
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."}
     .row
-      .col-lg-12.text-center
-        = @metering_point.new_contract
+      .contracts
+        = render @metering_point.contracts
+
+      .row
+        .col-lg-12.text-center
+          = @metering_point.new_contract
 
 
 
