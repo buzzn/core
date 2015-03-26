@@ -75,7 +75,7 @@ de:
         terms: Ich akzeptiere die AGB
         confirm_pricing_model: Ich akzeptiere das Preismodell
         power_of_attorney: Ich erteile euch Vollmacht
-        forecast_watt_hour_pa: Geschätzter Stromverbrauch pro Jahr (kWh)
+        forecast_watt_hour_pa: Geschätzte Strommenge pro Jahr (kWh)
         organization: Firmenname
         customer_number: Kundennummer
         contract_number: Vertragskontonummer
