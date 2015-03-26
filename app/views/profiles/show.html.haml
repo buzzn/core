@@ -41,7 +41,7 @@
               %li.list-group-item.list-item-sm
                 %i.fa.fa-clock-o.fa-fw
                 = t'member_since'
-                = timeago_tag @profile.created_at
+                = timeago_tag @profile.created_at, :nojs => true, :lang => locale, :limit => 10.days.ago
 
               - if @profile.website
                 %li.list-group-item.list-item-sm.text-primary.text-semibold

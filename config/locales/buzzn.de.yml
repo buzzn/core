@@ -446,6 +446,7 @@ de:
   cannot_delete_metering_point_while_running_contract_exists: "Der Zählpunkt kann nicht gelöscht werden, solange er noch laufende Verträge besitzt."
   cannot_delete_group_while_running_contracts_exists: "Die Gruppe kann nicht gelöscht werden, solange sie noch laufende Verträge besitzt."
   enter_your_text: Text hier eingeben
+  out_metering_points: Produktionszählpunkte
 
 
 

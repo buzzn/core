@@ -43,6 +43,8 @@ de:
         address_addition: Addresszusatz
         mode: Richtung
         meter_type: Zählertyp
+        virtual: Virtueller Zählpunkt
+        group: Zu eigener Gruppe hinzufügen
       device:
         law: Gesetz
         manufacturer_name: Herstellername
@@ -167,10 +169,6 @@ de:
           male: 'Mann'
           female: 'Frau'
           intersex: 'Intersexualität'
-      register:
-        mode:
-          in: 'Bezug'
-          out: 'Production'
       device:
         mode:
           in: 'Verbraucher'
@@ -178,7 +176,7 @@ de:
       metering_point:
         mode:
           in: 'Bezug'
-          out: 'Production'
+          out: 'Produktion'
       contract:
         mode:
           electricity_supplier_contract: Stromliefervertrag
