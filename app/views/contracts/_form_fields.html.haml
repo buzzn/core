@@ -5,6 +5,6 @@
 = f.input :forecast_watt_hour_pa
 = f.input :commissioning
 
-.js-dependent-fields{data: {select: {id: 'contract_mode', value: 'metering_point_operator_contract'}}}
+.js-dependent-fields{'data-select-id' => 'contract_mode', 'data-option-value' => 'metering_point_operator_contract'}
   = f.input :username
   = f.input :password, as: :string
