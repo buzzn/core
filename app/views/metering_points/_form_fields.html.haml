@@ -1,9 +1,13 @@
 -# = f.input :image
-= f.input :name
-= f.input :uid
-= f.input :mode, collection: MeteringPoint.modes, include_blank: false
-= f.association :group, collection: Group.editable_by_user(current_user)
+= f.input :mode, collection: MeteringPoint.modes, include_blank: false, as: :radio_buttons, label: false
 = f.input :virtual
+= f.input :name
+
+.js-dependent-fields{data: {checkbox: {id: 'metering_point_virtual', value: 'false'}}}
+  = f.input :uid
+
+= f.association :group, collection: Group.editable_by_user(current_user)
+
 .js-dependent-fields{data: {checkbox: {id: 'metering_point_virtual', value: 'true'}}}
   %h5= t("formula")
   #formula_parts
