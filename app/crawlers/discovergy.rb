@@ -3,7 +3,8 @@ class Discovergy
   # how to use
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').meters
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').live(60009269)
-  # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').raw(60009269)
+  # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').raw_with_power(60009269)
+
 
   # Discovergy.new('karin.smith@solfux.de', '19200buzzn').raw(60051431)
 
@@ -13,6 +14,7 @@ class Discovergy
   # start       = date.beginning_of_hour
   # ending      = start + 1.minute
   # request     = discovergy.raw('60009316', start.to_i*1000, ending.to_i*1000)
+
 
 
 
@@ -72,6 +74,22 @@ class Discovergy
 
 
 
+  def raw_with_power(  meter_uid,
+                       datetime_from = (Time.now.in_time_zone.utc- 1.minute).to_i * 1000,
+                       datetime_to   = Time.now.in_time_zone.utc.to_i * 1000 )
+    @datetime_from  = datetime_from
+    @datetime_to    = datetime_to
+    response = @conn.get do |req|
+      req.url '/json/Api.getRawWithPower'
+      req.headers['Content-Type'] = 'application/json'
+      req.params['user']          = @username
+      req.params['password']      = @password
+      req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      req.params['from']          = @datetime_from
+      req.params['to']            = @datetime_to
+    end
+    return JSON.parse(response.body)
+  end
 
 
 end

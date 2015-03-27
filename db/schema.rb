@@ -276,13 +276,14 @@ ActiveRecord::Schema.define(version: 20150325094707) do
     t.string   "logo"
     t.string   "website"
     t.string   "image"
-    t.string   "mode",        default: ""
-    t.boolean  "private",     default: false
+    t.string   "mode",         default: ""
+    t.string   "secret_level"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "groups", ["secret_level"], name: "index_groups_on_secret_level", using: :btree
   add_index "groups", ["slug"], name: "index_groups_on_slug", unique: true, using: :btree
 
   create_table "metering_point_users", force: :cascade do |t|

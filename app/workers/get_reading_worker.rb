@@ -5,7 +5,7 @@ class GetReadingWorker
 
     if mpo_slug == 'discovergy' or mpo_slug == 'buzzn-metering'
       discovergy  = Discovergy.new(mpo_login_username, mpo_login_password)
-      request     = discovergy.raw(manufacturer_device_number, start_time, end_time)
+      request     = discovergy.raw_with_power(manufacturer_device_number, start_time, end_time)
 
       if request['status'] == "ok"
         if request['result'].any?
@@ -16,9 +16,11 @@ class GetReadingWorker
               metering_point_mode_and_id  = metering_points_modes_and_ids.first
               metering_point_mode         = metering_point_mode_and_id.first
               metering_point_id           = metering_point_mode_and_id.last
-              watt_hour             = item['energy']
+              watt_hour                   = item['energy']
+              power                       = item['power']
               Reading.create( metering_point_id:  metering_point_id,
                               timestamp:    timestamp,
+                              power:        power.abs, # make power positiv
                               watt_hour:    watt_hour, #energy is in 10^-10 kWh;
                             )
             else
@@ -30,8 +32,10 @@ class GetReadingWorker
                 elsif metering_point_mode == 'out'
                   watt_hour = item['energyOut']
                 end
+                power                       = item['power']
                 Reading.create( metering_point_id:  metering_point_id,
                                 timestamp:    timestamp,
+                                power:        power.abs, # make power positiv
                                 watt_hour:    watt_hour, #energy is in 10^-10 kWh;
                               )
               end

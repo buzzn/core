@@ -10,7 +10,7 @@ class MeterInitWorker
         @mpoc = @meter.metering_points.first.metering_point_operator_contract
 
         if @mpoc.organization.slug == 'discovergy' || @mpoc.organization.slug == 'buzzn-metering'
-          request = Discovergy.new(@mpoc.username, @mpoc.password).raw(@meter.manufacturer_product_serialnumber)
+          request = Discovergy.new(@mpoc.username, @mpoc.password).raw_with_power(@meter.manufacturer_product_serialnumber)
           if request['status'] == 'ok'
             @meter.update_columns(smart: true)
 
