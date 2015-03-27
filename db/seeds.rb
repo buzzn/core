@@ -366,8 +366,6 @@ mp_60009441.users << sabine_dumler
 
 mp_60009420 = Fabricate(:mp_60009420)
 manuel_dmoch.add_role(:manager, mp_60009420)
-#Wagnis 4 - Allgemeinstrom Haus West mp_60009420
-#TODO: add real PV metering_point
 mp_60118460 = Fabricate(:mp_60118460)
 manuel_dmoch.add_role(:manager, mp_60118460)
 
@@ -395,6 +393,8 @@ group_wagnis4.metering_points << mp_60009429
 group_wagnis4.metering_points << mp_60009393
 group_wagnis4.metering_points << mp_60009442
 group_wagnis4.metering_points << mp_60009441
+
+manuel_dmoch.add_role(:manager, group_wagnis4)
 
 
 

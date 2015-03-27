@@ -63,7 +63,7 @@ de:
   formula: Formel
   add_formula_part: Summand hinzufügen
 
-  new_device: neues Gerät
+  new_device: Neues Gerät anlegen
   add_new_device: Neues Gerät hinzufügen
   add_device: Gerät hinzufügen
   add_devices: Geräte hinzufügen
@@ -447,8 +447,12 @@ de:
   enter_your_text: Text hier eingeben
   out_metering_points: Produktionszählpunkte
   create_comment: Kommentar erstellen
-
-
+  friend_request: Freunfschaftsanfrage
+  create_contract: Vertrag erstellen
+  prev: Zurück
+  next: Weiter
+  zoom_out: Rauszoomen
+  help: Hilfe
 
 
 

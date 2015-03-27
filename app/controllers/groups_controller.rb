@@ -76,7 +76,12 @@ class GroupsController < ApplicationController
       data_entry = []
       latest_readings = nil
       if metering_point.users.any?
-        user_name = metering_point.users.collect{|user| user.profile.first_name}.join(", ")
+        if metering_point.users.include?(current_user)
+          user_name = current_user.profile.first_name
+        else
+          user_name = "anonym"
+          #user_name = metering_point.users.collect{|user| user.profile.first_name}.join(", ")
+        end
       else
         user_name = metering_point.decorate.name
       end

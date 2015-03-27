@@ -46,6 +46,8 @@ de:
         virtual: Virtueller Zählpunkt
         group: Zu eigener Gruppe hinzufügen
       device:
+        image: Bild
+        mode: Modus
         law: Gesetz
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname

@@ -100,6 +100,15 @@
         .nano-pane{:style => "display: none;"}
           .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
+- if user_signed_in? && current_user.can_update?(@group)
+  - if @group_metering_point_requests.any?
+    .row
+      .col-lg-12
+        .panel.panel-colorful.panel-warning
+          .panel-body
+            .friendship_requests
+              = render @group_metering_point_requests
+
 
 #page-content
 
