@@ -28,6 +28,14 @@ class Device < ActiveRecord::Base
   end
 
 
+  def secret_levels
+    %w{
+      secret
+      friends
+      world
+    }.map(&:to_sym)
+  end
+
   def self.laws
     %w{
       eeg
