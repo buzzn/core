@@ -213,6 +213,11 @@ Fabricator :profile_sabine_dumler, from: :profile do
   last_name   'Dumler'
 end
 
+Fabricator :profile_uxtest, from: :profile do
+  first_name 'Test'
+  last_name  'User'
+end
+
 
 
 

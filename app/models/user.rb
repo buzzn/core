@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
 
   has_one :contracting_party
 
+  has_one :dashboard
+
   has_one :profile, :dependent => :destroy
   accepts_nested_attributes_for :profile
 

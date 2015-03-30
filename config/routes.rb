@@ -38,8 +38,13 @@ Buzzn::Application.routes.draw do
   resources :comments, :only => [:create, :destroy]
   resources :stream
   resources :addresses
-  resources :dashboards
 
+
+  resources :dashboards do
+    member do
+      get :add_metering_point
+    end
+  end
 
   resources :friendships do
     member do

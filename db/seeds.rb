@@ -131,6 +131,8 @@ buzzn_team.each do |user|
   end
 end
 
+uxtest_user = Fabricate(:uxtest_user)
+
 
 
 #hof_butenland

@@ -2,7 +2,7 @@ actual_resolution = "day_to_hours"
 chart_data_min_x = 0
 chart = undefined
 
-
+#code for partial: _metering_point.html.haml
 $(".metering_points").ready ->
   $(".metering_point").each ->
     id = $(this).attr('id').split('_')[2]
@@ -123,6 +123,7 @@ endOfWeek = (timestamp) ->
   end.setHours(23,59,59,999)
   return end.getTime()
 
+#code for metering_point.show
 $(".metering_point_detail").ready ->
   id = $(this).attr('id').split('_')[2]
   width = $("#chart-container-" + id).width()
@@ -245,6 +246,174 @@ $(".metering_point_detail").ready ->
       chart.hideLoading()
 
   $(".btn-chart-zoomout").on 'click', ->
+    chart.showLoading()
+    if actual_resolution == "hour_to_minutes"
+      actual_resolution = "day_to_hours"
+    else if actual_resolution == "day_to_hours"
+    #  actual_resolution = "week_to_days"
+    #else if actual_resolution == "week_to_days"
+      actual_resolution = "month_to_days"
+    else if actual_resolution == "month_to_days"
+      actual_resolution = "year_to_months"
+
+    containing_timestamp = chart_data_min_x
+    $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+      if data[0].data[0] == undefined
+        chart.hideLoading()
+        data[0].data[0] = [new Date(), 0]
+      chart.series[0].setData(data[0].data)
+      new_point_width = setPointWidth()
+      chart.series[0].update({pointWidth: new_point_width})
+      chart.xAxis[0].update(getExtremes(containing_timestamp), true)
+    ).success ->
+      chart_data_min_x = chart.series[0].data[0].x
+      checkIfPreviousDataExists()
+      checkIfNextDataExists()
+      checkIfZoomOut()
+      chart.hideLoading()
+
+  $(window).on "resize", ->
+    new_point_width = setPointWidth()
+    if chart != undefined
+      chart.series[0].update({pointWidth: new_point_width})
+
+
+
+#code for dashboard
+$(".dashboard").ready ->
+  dashboard_id = $(this).attr('id')
+  width = $("#chart-container-" + dashboard_id).width()
+  metering_point_ids = $(this).data('metering_point-ids').toString().split(",")
+  metering_point_ids.forEach (id) ->
+    console.log id
+    $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_hours', dataType: 'json'})
+      .success (data) ->
+        if data[0].data[0] == undefined
+          data[0].data[0] = [new Date(), 0] #TODO: Search for last data
+        if chart == undefined
+          chart = new Highcharts.Chart(
+            chart:
+              type: 'column'
+              renderTo: 'chart-container-' + dashboard_id
+              backgroundColor:'rgba(0, 255, 255, 0.5)'
+              width: width
+              spacingBottom: 20
+              spacingTop: 10
+              spacingLeft: 20
+              spacingRight: 20
+            exporting:
+              enabled: false
+            legend:
+              enabled: true
+            title:
+              margin: 0
+              text: ""
+            credits:
+              enabled: false
+            loading:
+              hideDuration: 800
+              showDuration: 800
+              labelStyle:
+                color: 'black'
+                'font-size': '20pt'
+            xAxis:
+              lineWidth: 1
+              tickWidth: 1
+              type: 'datetime'
+              startOnTick: false
+              endOnTick: false
+              min: beginningOfDay(data[0].data[0][0])
+              max: endOfDay(data[0].data[0][0])
+              labels:
+                enabled: true
+                style:
+                  color: '#FFF'
+              title:
+                text: "Zeit"
+                enabled: true
+                style: { "color": "#FFF", "fontWeight": "bold"}
+            yAxis:
+              gridLineWidth: 0
+              labels:
+                enabled: true
+                style:
+                  color: '#FFF'
+                format: "{value} kWh"
+              title:
+                enabled: true
+                text: "Energie"
+                style: { "color": "#FFF", "fontWeight": "bold"}
+            plotOptions:
+              column:
+                borderWidth: 0
+                events:
+                  cursor: 'pointer'
+                  click: (event) ->
+                    zoomIn(event.point.x)
+            tooltip:
+              pointFormat: "{point.y:,.3f} kWh"
+              dateTimeLabelFormats:
+                millisecond:"%e.%b, %H:%M:%S.%L",
+                second:"%e.%b, %H:%M:%S",
+                minute:"%e.%b, %H:%M",
+                hour:"%e.%b, %H:%M",
+                day:"%e.%b.%Y",
+                week:"Week from %e.%b.%Y",
+                month:"%B %Y",
+                year:"%Y"
+            series: data
+          )
+          chart_data_min_x = chart.series[0].data[0].x
+          checkIfPreviousDataExists()
+          checkIfNextDataExists()
+        else
+          chart.addSeries(
+            name: data[0].name
+            data: data[0].data
+          )
+      .error (jqXHR, textStatus, errorThrown) ->
+        console.log textStatus
+
+
+
+
+
+  $(".btn-chart-prev").on 'click', ->
+    return
+    chart.showLoading()
+    containing_timestamp = getPreviousTimestamp()
+    $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+      if data[0].data[0] == undefined
+        chart.hideLoading()
+        return
+      chart.series[0].setData(data[0].data)
+      chart.xAxis[0].update(getExtremes(containing_timestamp), true)
+    ).success ->
+      chart_data_min_x = chart.series[0].data[0].x
+      checkIfPreviousDataExists()
+      checkIfNextDataExists()
+      checkIfZoomOut()
+      chart.hideLoading()
+
+  $(".btn-chart-next").on 'click', ->
+    return
+    chart.showLoading()
+    containing_timestamp = getNextTimestamp()
+    $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
+      if data[0].data[0] == undefined
+        chart.hideLoading()
+        return
+      chart.series[0].setData(data[0].data)
+      chart.xAxis[0].update(getExtremes(containing_timestamp), true)
+    ).success ->
+      chart_data_min_x = chart.series[0].data[0].x
+      checkIfPreviousDataExists()
+      checkIfNextDataExists()
+      checkIfZoomOut()
+      chart.hideLoading()
+
+  $(".btn-chart-zoomout").on 'click', ->
+    return
     chart.showLoading()
     if actual_resolution == "hour_to_minutes"
       actual_resolution = "day_to_hours"

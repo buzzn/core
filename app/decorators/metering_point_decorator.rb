@@ -151,6 +151,15 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
+  def add_to_dashboard
+    link_to(
+      content_tag(:i, t("add_to_dashboard"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
+      add_metering_point_dashboard_path(metering_point_id: model.id),
+      {
+        :remote         => true,
+      })
+  end
+
 
 
 

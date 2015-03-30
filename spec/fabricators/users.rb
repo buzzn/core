@@ -229,6 +229,12 @@ Fabricator :sabine_dumler, from: :user do
   contracting_party   { Fabricate(:contracting_party) }
 end
 
+Fabricator :uxtest_user, from: :user do
+  email               'ux-test@buzzn.net'
+  profile             { Fabricate(:profile_uxtest) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
 
 
 
