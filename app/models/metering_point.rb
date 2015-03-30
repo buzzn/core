@@ -39,7 +39,7 @@ class MeteringPoint < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
-
+  has_and_belongs_to_many :dashboards
 
   default_scope { order('created_at ASC') } #DESC
 
