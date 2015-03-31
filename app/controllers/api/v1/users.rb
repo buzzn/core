@@ -5,8 +5,8 @@ module API
 
       resource :users do
 
-        desc "Return the current_user"
-        get "current_user", root: :current_user do
+        desc "Return me"
+        get "me", root: :user do
           guard!
           current_user
         end
