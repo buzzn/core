@@ -29,18 +29,18 @@ Doorkeeper.configure do
   #   # Example implementation:
   #   Admin.find_by_id(session[:admin_id]) || redirect_to(new_admin_session_url)
   # end
-  admin_authenticator do |routes|
-    if session["warden.user.user.key"]
-      @user = User.find(session["warden.user.user.key"][0][0])
-      if @user || @user.has_role?(:admin)
-        @user
-      else
-        redirect_to(routes.new_user_session_url)
-      end
-    else
-      redirect_to(routes.new_user_session_url)
-    end
-  end
+  # admin_authenticator do |routes|
+  #   if session["warden.user.user.key"]
+  #     @user = User.find(session["warden.user.user.key"][0][0])
+  #     if @user || @user.has_role?(:admin)
+  #       @user
+  #     else
+  #       redirect_to(routes.new_user_session_url)
+  #     end
+  #   else
+  #     redirect_to(routes.new_user_session_url)
+  #   end
+  # end
 
 
   # Authorization Code expiration time (default 10 minutes).
@@ -66,8 +66,8 @@ Doorkeeper.configure do
   # Define access token scopes for your provider
   # For more information go to
   # https://github.com/doorkeeper-gem/doorkeeper/wiki/Using-Scopes
-  default_scopes  :public
-  optional_scopes :write, :update
+  # default_scopes  :public
+  # optional_scopes :write, :update
 
   # Change the way client credentials are retrieved from the request object.
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then

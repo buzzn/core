@@ -3,6 +3,8 @@ require "grape-swagger"
 module API
   module V1
     class Base < Grape::API
+      mount API::V1::Users
+      mount API::V1::Profiles
       mount API::V1::MeteringPoints
       mount API::V1::Meters
       mount API::V1::Readings
