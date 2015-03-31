@@ -43,6 +43,7 @@ Buzzn::Application.routes.draw do
   resources :dashboards do
     member do
       get :add_metering_point
+      get :remove_metering_point
     end
   end
 

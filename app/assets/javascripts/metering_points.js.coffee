@@ -346,10 +346,6 @@ $(".dashboard").ready ->
             plotOptions:
               column:
                 borderWidth: 0
-                events:
-                  cursor: 'pointer'
-                  click: (event) ->
-                    zoomIn(event.point.x)
             tooltip:
               pointFormat: "{point.y:,.3f} kWh"
               dateTimeLabelFormats:
@@ -364,8 +360,8 @@ $(".dashboard").ready ->
             series: data
           )
           chart_data_min_x = chart.series[0].data[0].x
-          checkIfPreviousDataExists()
-          checkIfNextDataExists()
+          #checkIfPreviousDataExists()
+          #checkIfNextDataExists()
         else
           chart.addSeries(
             name: data[0].name

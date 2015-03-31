@@ -34,6 +34,10 @@
                 - current_user.friends.each do |user|
                   = mainnav_profile_path(user.profile)
 
+              - if !current_user.dashboard.nil?
+                %li.list-header= t'my_dashboard'
+                = mainnav_dashboard_path(current_user.dashboard)
+
 
 
 

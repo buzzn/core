@@ -8,3 +8,7 @@ de:
       destroy:
         notice: "%{resource_name} wurde erfolgreich gelöscht."
         alert: "%{resource_name} konnte nicht gelöscht werden."
+    dashboard:
+      add_metering_point:
+        notice: "%{resource_name} erfolgreich hinzugefügt."
+        alert: "%{resource_name} konnte nicht hinzugefügt werden."

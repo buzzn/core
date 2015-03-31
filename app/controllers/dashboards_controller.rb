@@ -21,7 +21,15 @@ class DashboardsController < ApplicationController
       @dashboard.metering_points << @metering_point
       @dashboard.save
     end
-    return
+  end
+
+  def remove_metering_point
+    @dashboard = Dashboard.where(user_id: current_user.id).first
+    @metering_point = MeteringPoint.find(params[:metering_point_id])
+    if @dashboard.metering_points.include?(@metering_point)
+      @dashboard.metering_points.delete(@metering_point)
+      @dashboard.save
+    end
   end
 
 end
