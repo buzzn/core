@@ -10,7 +10,6 @@
               .btn.btn-success.btn-chart-zoomout=t('zoom_out')
               .btn.btn-success.btn-chart-next.pull-right=t('next')
   .metering_points
-    - @metering_points.uniq.each do |metering_point|
-      = render metering_point.decorate
+    = render partial: "metering_points/metering_point_small", collection: @metering_points.decorate, as: :metering_point
 
 
