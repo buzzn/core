@@ -285,7 +285,6 @@ $(".dashboard").ready ->
   width = $("#chart-container-" + dashboard_id).width()
   metering_point_ids = $(this).data('metering_point-ids').toString().split(",")
   metering_point_ids.forEach (id) ->
-    console.log id
     $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_hours', dataType: 'json'})
       .success (data) ->
         if data[0].data[0] == undefined

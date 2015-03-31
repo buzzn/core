@@ -25,6 +25,8 @@ class User < ActiveRecord::Base
 
   delegate :name, to: :profile
 
+  after_create :create_dashboard
+
   def friend?(user)
     self.friendships.where(friend: user).empty? ? false : true
   end
@@ -70,6 +72,10 @@ class User < ActiveRecord::Base
 private
   def create_complement_friendship(friend)
     friend.friends << self unless friend.friends.include?(self)
+  end
+
+  def create_dashboard
+    self.dashboard = Dashboard.create(user_id: self.id)
   end
 
 end

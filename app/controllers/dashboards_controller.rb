@@ -4,7 +4,7 @@ class DashboardsController < ApplicationController
 
   def show
     if user_signed_in?
-      @dashboard = Dashboard.where(user_id: current_user.id).first
+      @dashboard = Dashboard.find(params[:id])
       @metering_points = @dashboard.metering_points
     else
       redirect_to new_user_session_path
@@ -12,10 +12,7 @@ class DashboardsController < ApplicationController
   end
 
   def add_metering_point
-    @dashboard = Dashboard.where(user_id: current_user.id).first
-    if @dashboard.nil?
-      @dashboard = Dashboard.create(user_id: current_user.id)
-    end
+    @dashboard = Dashboard.find(params[:slug])
     @metering_point = MeteringPoint.find(params[:metering_point_id])
     if !@dashboard.metering_points.include?(@metering_point)
       @dashboard.metering_points << @metering_point
@@ -24,7 +21,7 @@ class DashboardsController < ApplicationController
   end
 
   def remove_metering_point
-    @dashboard = Dashboard.where(user_id: current_user.id).first
+    @dashboard = Dashboard.find(params[:slug])
     @metering_point = MeteringPoint.find(params[:metering_point_id])
     if @dashboard.metering_points.include?(@metering_point)
       @dashboard.metering_points.delete(@metering_point)
