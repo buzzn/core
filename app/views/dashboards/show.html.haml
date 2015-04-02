@@ -1,5 +1,5 @@
 #page-content
-  .dashboard-chart{id: @dashboard.id, 'data-metering_point-ids': @dashboard.dashboard_metering_points.collect{|m| m.id}}
+  .dashboard-chart{id: @dashboard.id, 'data-metering_point-ids': @dashboard.dashboard_metering_points.collect{|m| m.id if m.formula != "" }.compact}
     .row
       .col-sm-12.col-md-12.col-lg-12
         .panel

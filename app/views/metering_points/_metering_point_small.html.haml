@@ -18,4 +18,10 @@
             = metering_point.remove_from_dashboard
         .display-in-series
           - if user_signed_in? && !current_user.dashboard.nil? && current_user.dashboard.metering_points.include?(metering_point)
-            = metering_point.display_in_series
+            .btn-group
+              %button.btn.btn-block.btn-success.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
+                =t('display_in_series')
+              %ul.dropdown-menu{role: "menu"}
+                %li= link_to "1", display_metering_point_in_series_dashboard_path(metering_point_id: metering_point.id, slug: current_user.dashboard.slug, operator: "+", series: 1), remote: true
+                %li= link_to "2", display_metering_point_in_series_dashboard_path(metering_point_id: metering_point.id, slug: current_user.dashboard.slug, operator: "+", series: 2), remote: true
+                %li= link_to "3", display_metering_point_in_series_dashboard_path(metering_point_id: metering_point.id, slug: current_user.dashboard.slug, operator: "+", series: 3), remote: true

@@ -169,10 +169,10 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
-  def display_in_series
+  def display_in_series(series_number)
     link_to(
       content_tag(:i, t("display_in_series"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
-      display_metering_point_in_series_dashboard_path(metering_point_id: model.id, slug: current_user.dashboard.slug, operator: "+", series: 1),
+      display_metering_point_in_series_dashboard_path(metering_point_id: model.id, slug: current_user.dashboard.slug, operator: "+", series: series_number),
       {
         :remote         => true,
       })
