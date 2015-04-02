@@ -1,9 +1,9 @@
 #page-content
-  .dashboard{id: @dashboard.id, 'data-metering_point-ids': @metering_points.collect{|m| m.id}}
+  .dashboard-chart{id: @dashboard.id, 'data-metering_point-ids': @dashboard.dashboard_metering_points.collect{|m| m.id}}
     .row
       .col-sm-12.col-md-12.col-lg-12
         .panel
-          .panel-body.panel-colorful
+          .panel-body.panel-colorful.dashboard-background
             .chart{id: "chart-container-#{@dashboard.id}", style: "width: 100%; height: 300px;"}
             .pad-all
               .btn.btn-success.btn-chart-prev=t('prev')

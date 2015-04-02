@@ -33,9 +33,9 @@ class MeteringPoint < ActiveRecord::Base
   has_many :users, through: :metering_point_users, dependent: :destroy
   has_one :address, as: :addressable, dependent: :destroy
 
-  validates :mode, presence: true
+  validates :mode, presence: true, if: :no_dashboard_metering_point?
   validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
-  validates :name, presence: true, length: { in: 2..30 }
+  validates :name, presence: true, length: { in: 2..30 }, if: :no_dashboard_metering_point?
 
   mount_uploader :image, PictureUploader
 
@@ -91,6 +91,10 @@ class MeteringPoint < ActiveRecord::Base
     else
       false
     end
+  end
+
+  def no_dashboard_metering_point?
+    !self.is_dashboard_metering_point
   end
 
 

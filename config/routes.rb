@@ -44,6 +44,7 @@ Buzzn::Application.routes.draw do
     member do
       get :add_metering_point
       get :remove_metering_point
+      get :display_metering_point_in_series
     end
   end
 

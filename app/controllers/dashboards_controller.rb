@@ -5,7 +5,7 @@ class DashboardsController < ApplicationController
   def show
     if user_signed_in?
       @dashboard = Dashboard.find(params[:id])
-      @metering_points = @dashboard.metering_points
+      @metering_points = @dashboard.metering_points.where(is_dashboard_metering_point: false)
     else
       redirect_to new_user_session_path
     end
@@ -27,6 +27,15 @@ class DashboardsController < ApplicationController
       @dashboard.metering_points.delete(@metering_point)
       @dashboard.save
     end
+  end
+
+  def display_metering_point_in_series
+    @dashboard = Dashboard.find(params[:slug])
+    @metering_point = MeteringPoint.find(params[:metering_point_id])
+    @dashboard_metering_point = @dashboard.dashboard_metering_points[params[:series].to_i]
+    @operator = params[:operator]
+    @dashboard_metering_point.formula_parts << FormulaPart.create(operator: @operator, metering_point_id: @dashboard_metering_point.id, operand_id: @metering_point.id)
+    @dashboard.save
   end
 
 end

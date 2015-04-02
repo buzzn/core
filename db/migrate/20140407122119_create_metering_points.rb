@@ -10,6 +10,7 @@ class CreateMeteringPoints < ActiveRecord::Migration
       t.date    :regular_reeding
       t.string  :regular_interval
       t.boolean :virtual, default: false
+      t.boolean :is_dashboard_metering_point, default: false
 
       t.integer :meter_id
       t.integer :contract_id

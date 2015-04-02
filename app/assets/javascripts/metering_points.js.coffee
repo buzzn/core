@@ -280,7 +280,7 @@ $(".metering_point_detail").ready ->
 
 
 #code for dashboard
-$(".dashboard").ready ->
+$(".dashboard-chart").ready ->
   dashboard_id = $(this).attr('id')
   width = $("#chart-container-" + dashboard_id).width()
   metering_point_ids = $(this).data('metering_point-ids').toString().split(",")
@@ -292,9 +292,9 @@ $(".dashboard").ready ->
         if chart == undefined
           chart = new Highcharts.Chart(
             chart:
-              type: 'column'
+              type: 'line'
               renderTo: 'chart-container-' + dashboard_id
-              backgroundColor:'rgba(0, 255, 255, 0.5)'
+              backgroundColor:'rgba(255, 255, 255, 0.0)'
               width: width
               spacingBottom: 20
               spacingTop: 10
