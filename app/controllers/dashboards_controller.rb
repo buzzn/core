@@ -32,7 +32,7 @@ class DashboardsController < ApplicationController
   def display_metering_point_in_series
     @dashboard = Dashboard.find(params[:slug])
     @metering_point = MeteringPoint.find(params[:metering_point_id])
-    @dashboard_metering_point = @dashboard.dashboard_metering_points[params[:series].to_i]
+    @dashboard_metering_point = @dashboard.dashboard_metering_points[params[:series].to_i - 1]
     @operator = params[:operator]
     @dashboard_metering_point.formula_parts << FormulaPart.create(operator: @operator, metering_point_id: @dashboard_metering_point.id, operand_id: @metering_point.id)
     @dashboard.save
