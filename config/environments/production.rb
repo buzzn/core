@@ -56,7 +56,7 @@ Buzzn::Application.configure do
   # config.cache_store = :mem_cache_store
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = '//d682lv2c2abix.cloudfront.net'
+  config.action_controller.asset_host = Rails.application.secrets.asset_host
 
   # Precompile additional assets.
   # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
@@ -65,7 +65,7 @@ Buzzn::Application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   #config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options  = { :host => "www.buzzn.net" }
+  config.action_mailer.default_url_options  = { :host => Rails.application.secrets.hostname }
   config.action_mailer.delivery_method      = :amazon_ses
 
 
