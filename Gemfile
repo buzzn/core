@@ -55,6 +55,7 @@ gem 'mini_magick'
 gem 'carrierwave'
 gem 'fog'
 gem 'aws-sdk'
+gem 'aws-sdk-rails'
 gem 'therubyracer'
 gem 'draper', require: false
 gem 'whenever', require: false
