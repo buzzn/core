@@ -56,7 +56,11 @@ class MeteringPoint < ActiveRecord::Base
     self.where(group: group.id)
   }
 
-
+  def dashboard
+    if self.is_dashboard_metering_point
+      self.dashboards.collect{|d| d if d.dashboard_metering_points.include?(self)}.first
+    end
+  end
 
   def last_two_readings
     latest_readings = Reading.last_two_by_metering_point_id(self.id)

@@ -453,6 +453,9 @@ de:
   next: Weiter
   zoom_out: Rauszoomen
   help: Hilfe
+  remove_from_dashboard: Vom Dashboard entfernen
+  display_in_series: Im Diagramm anzeigen
+  series: Graph
 
 
 

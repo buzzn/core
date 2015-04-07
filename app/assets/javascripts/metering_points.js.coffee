@@ -343,8 +343,11 @@ $(".dashboard-chart").ready ->
                 text: "Energie"
                 style: { "color": "#FFF", "fontWeight": "bold"}
             plotOptions:
-              column:
-                borderWidth: 0
+              line:
+                events:
+                  cursor: 'pointer'
+                  click: (event) ->
+                    zoomInDashboard(event.point.x)
             tooltip:
               pointFormat: "{point.y:,.3f} kWh"
               dateTimeLabelFormats:
@@ -359,8 +362,8 @@ $(".dashboard-chart").ready ->
             series: data
           )
           chart_data_min_x = chart.series[0].data[0].x
-          #checkIfPreviousDataExists()
-          #checkIfNextDataExists()
+          checkIfPreviousDataExistsDashboard()
+          checkIfNextDataExistsDashboard()
         else
           chart.addSeries(
             name: data[0].name
@@ -374,41 +377,46 @@ $(".dashboard-chart").ready ->
 
 
   $(".btn-chart-prev").on 'click', ->
-    return
     chart.showLoading()
     containing_timestamp = getPreviousTimestamp()
-    $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
-      if data[0].data[0] == undefined
-        chart.hideLoading()
-        return
-      chart.series[0].setData(data[0].data)
-      chart.xAxis[0].update(getExtremes(containing_timestamp), true)
-    ).success ->
-      chart_data_min_x = chart.series[0].data[0].x
-      checkIfPreviousDataExists()
-      checkIfNextDataExists()
-      checkIfZoomOut()
-      chart.hideLoading()
+    metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
+    numberOfSeries = 0
+    metering_point_ids.forEach (id) ->
+      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+        .success (data) ->
+          if data[0].data[0] == undefined
+            chart.hideLoading()
+            return
+          chart.series[numberOfSeries].setData(data[0].data)
+          chart.xAxis[0].update(getExtremes(containing_timestamp), true)
+          chart_data_min_x = chart.series[numberOfSeries].data[0].x
+          chart.hideLoading()
+          numberOfSeries += 1
+    checkIfPreviousDataExistsDashboard()
+    checkIfNextDataExistsDashboard()
+    checkIfZoomOutDashboard()
 
   $(".btn-chart-next").on 'click', ->
-    return
     chart.showLoading()
     containing_timestamp = getNextTimestamp()
-    $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
-      if data[0].data[0] == undefined
-        chart.hideLoading()
-        return
-      chart.series[0].setData(data[0].data)
-      chart.xAxis[0].update(getExtremes(containing_timestamp), true)
-    ).success ->
-      chart_data_min_x = chart.series[0].data[0].x
-      checkIfPreviousDataExists()
-      checkIfNextDataExists()
-      checkIfZoomOut()
-      chart.hideLoading()
+    metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
+    numberOfSeries = 0
+    metering_point_ids.forEach (id) ->
+      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+        .success (data) ->
+          if data[0].data[0] == undefined
+            chart.hideLoading()
+            return
+          chart.series[numberOfSeries].setData(data[0].data)
+          chart.xAxis[0].update(getExtremes(containing_timestamp), true)
+          chart_data_min_x = chart.series[numberOfSeries].data[0].x
+          chart.hideLoading()
+          numberOfSeries += 1
+    checkIfPreviousDataExistsDashboard()
+    checkIfNextDataExistsDashboard()
+    checkIfZoomOutDashboard()
 
   $(".btn-chart-zoomout").on 'click', ->
-    return
     chart.showLoading()
     if actual_resolution == "hour_to_minutes"
       actual_resolution = "day_to_hours"
@@ -420,20 +428,22 @@ $(".dashboard-chart").ready ->
       actual_resolution = "year_to_months"
 
     containing_timestamp = chart_data_min_x
-    $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
-      if data[0].data[0] == undefined
-        chart.hideLoading()
-        data[0].data[0] = [new Date(), 0]
-      chart.series[0].setData(data[0].data)
-      new_point_width = setPointWidth()
-      chart.series[0].update({pointWidth: new_point_width})
-      chart.xAxis[0].update(getExtremes(containing_timestamp), true)
-    ).success ->
-      chart_data_min_x = chart.series[0].data[0].x
-      checkIfPreviousDataExists()
-      checkIfNextDataExists()
-      checkIfZoomOut()
-      chart.hideLoading()
+    metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
+    numberOfSeries = 0
+    metering_point_ids.forEach (id) ->
+      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+        .success (data) ->
+          if data[0].data[0] == undefined
+            chart.hideLoading()
+            data[0].data[0] = [new Date(), 0]
+          chart.series[numberOfSeries].setData(data[0].data)
+          chart.xAxis[0].update(getExtremes(containing_timestamp), true)
+          chart_data_min_x = chart.series[numberOfSeries].data[0].x
+          chart.hideLoading()
+          numberOfSeries += 1
+    checkIfPreviousDataExistsDashboard()
+    checkIfNextDataExistsDashboard()
+    checkIfZoomOutDashboard()
 
   $(window).on "resize", ->
     new_point_width = setPointWidth()
@@ -463,6 +473,34 @@ checkIfNextDataExists = () ->
       else
         $(".btn-chart-next").removeAttr("disabled")
     )
+
+checkIfPreviousDataExistsDashboard = () ->
+  containing_timestamp = getPreviousTimestamp()
+  metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
+  dataAvailable = false
+  metering_point_ids.forEach (id) ->
+    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+      .success (data) ->
+        if data[0].data[0] != undefined
+          dataAvailable = true
+  if !dataAvailable
+    $(".btn-chart-prev").attr('disabled', true)
+  else
+    $(".btn-chart-prev").removeAttr("disabled")
+
+checkIfNextDataExistsDashboard = () ->
+  containing_timestamp = getNextTimestamp()
+  metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
+  dataAvailable = false
+  metering_point_ids.forEach (id) ->
+    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+      .success (data) ->
+        if data[0].data[0] != undefined
+          dataAvailable = true
+  if !dataAvailable
+    $(".btn-chart-next").attr('disabled', true)
+  else
+    $(".btn-chart-next").removeAttr("disabled")
 
 getExtremes = (timestamp) ->
   if actual_resolution == "hour_to_minutes"
@@ -561,6 +599,41 @@ zoomIn = (timestamp) ->
       checkIfZoomOut()
       chart.hideLoading()
 
+zoomInDashboard = (timestamp) ->
+  chart.showLoading()
+
+  if actual_resolution == "hour_to_minutes"
+    chart.hideLoading()
+    return
+  else if actual_resolution == "day_to_hours"
+    actual_resolution = "hour_to_minutes"
+  #else if actual_resolution == "week_to_days"
+  #  actual_resolution = "day_to_hours"
+  else if actual_resolution == "month_to_days"
+  #  actual_resolution = "week_to_days"
+    actual_resolution = "day_to_hours"
+  else if actual_resolution == "year_to_months"
+    actual_resolution = "month_to_days"
+  containing_timestamp = timestamp
+
+  metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
+  numberOfSeries = 0
+  metering_point_ids.forEach (id) ->
+    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+      .success (data) ->
+        if data[0].data[0] == undefined
+          chart.hideLoading()
+          return
+        chart.series[numberOfSeries].setData(data[0].data)
+        chart.xAxis[0].update(getExtremes(containing_timestamp), true)
+        chart_data_min_x = chart.series[0].data[0].x
+        chart.hideLoading()
+        numberOfSeries += 1
+  checkIfPreviousDataExistsDashboard()
+  checkIfNextDataExistsDashboard()
+  checkIfZoomOutDashboard()
+
+
 checkIfZoomOut = () ->
   $(".metering_point_detail").each (div) ->
     id = $(this).attr('id').split('_')[2]
@@ -577,15 +650,42 @@ checkIfZoomOut = () ->
     containing_timestamp = chart_data_min_x
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + out_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
-         $(".btn-chart-next").attr('disabled', true)
+        $(".btn-chart-next").attr('disabled', true)
       noData = true
       data[0].data.forEach (d) ->
         if d[1] != 0
           noData = false
       if noData
-        $(".btn-chart-next").attr('disabled', true)
+        $(".btn-chart-zoomout").attr('disabled', true)
       $(".btn-chart-zoomout").removeAttr("disabled")
     )
+
+
+checkIfZoomOutDashboard = () ->
+  if actual_resolution == "hour_to_minutes"
+    out_resolution = "day_to_hours"
+  else if actual_resolution == "day_to_hours"
+  #  out_resolution = "week_to_days"
+  #else if actual_resolution == "week_to_days"
+    out_resolution = "month_to_days"
+  else if actual_resolution == "month_to_days"
+    out_resolution = "year_to_months"
+  else if actual_resolution == "year_to_months"
+    $(".btn-chart-zoomout").attr('disabled', true)
+    return
+  containing_timestamp = chart_data_min_x
+  metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
+  dataAvailable = false
+  metering_point_ids.forEach (id) ->
+    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+      .success (data) ->
+        if data[0].data[0] != undefined && data[0].data[1] != 0
+          dataAvailable = true
+
+  if !dataAvailable
+    $(".btn-chart-next").attr('disabled', true)
+  else
+    $(".btn-chart-zoomout").removeAttr("disabled")
 
 
 

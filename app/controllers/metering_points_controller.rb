@@ -78,7 +78,20 @@ class MeteringPointsController < ApplicationController
   def chart
     @metering_point = MeteringPoint.find(params[:id])
     @chart_data = []
-    @chart_data << {name: @metering_point.mode, color: '#fff', data: @metering_point.send(params[:resolution], params[:containing_timestamp])}
+    if @metering_point.is_dashboard_metering_point
+      i = 0
+      index = 0
+      @metering_point.dashboard.dashboard_metering_points.each do |dashboard_metering_point|
+        if dashboard_metering_point == @metering_point
+          index = i + 1
+        end
+        i += 1
+      end
+      name = t('series') + ' ' + index.to_s
+    else
+      name = @metering_point.name
+    end
+    @chart_data << {name: name, color: '#fff', data: @metering_point.send(params[:resolution], params[:containing_timestamp])}
     render json: @chart_data.to_json
   end
 
