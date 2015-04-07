@@ -169,10 +169,19 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
-  def display_in_series(series_number)
+  def display_in_series
     link_to(
-      content_tag(:i, t("display_in_series"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
-      display_metering_point_in_series_dashboard_path(metering_point_id: model.id, slug: current_user.dashboard.slug, operator: "+", series: series_number),
+      content_tag(:i, nil, class: 'btn btn-default fa fa-bar-chart'),
+      display_metering_point_in_series_dashboard_path(metering_point_id: model.id, slug: current_user.dashboard.slug),
+      {
+        :remote         => true,
+      })
+  end
+
+  def remove_from_series
+    link_to(
+      content_tag(:i, nil, class: 'btn btn-default fa fa-bar-chart'),
+      remove_metering_point_from_series_dashboard_path(metering_point_id: model.id, slug: current_user.dashboard.slug),
       {
         :remote         => true,
       })

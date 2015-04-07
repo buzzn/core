@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150327135326) do
+ActiveRecord::Schema.define(version: 20150407152833) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -156,6 +156,14 @@ ActiveRecord::Schema.define(version: 20150327135326) do
   add_index "contracts", ["organization_id"], name: "index_contracts_on_organization_id", using: :btree
   add_index "contracts", ["slug"], name: "index_contracts_on_slug", unique: true, using: :btree
 
+  create_table "dashboard_metering_points", force: :cascade do |t|
+    t.boolean  "displayed",         default: false
+    t.integer  "dashboard_id"
+    t.integer  "metering_point_id"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+  end
+
   create_table "dashboards", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "slug"
@@ -164,14 +172,6 @@ ActiveRecord::Schema.define(version: 20150327135326) do
   end
 
   add_index "dashboards", ["user_id"], name: "index_dashboards_on_user_id", using: :btree
-
-  create_table "dashboards_metering_points", id: false, force: :cascade do |t|
-    t.integer "dashboard_id"
-    t.integer "metering_point_id"
-  end
-
-  add_index "dashboards_metering_points", ["dashboard_id"], name: "index_dashboards_metering_points_on_dashboard_id", using: :btree
-  add_index "dashboards_metering_points", ["metering_point_id"], name: "index_dashboards_metering_points_on_metering_point_id", using: :btree
 
   create_table "devices", force: :cascade do |t|
     t.string   "slug"

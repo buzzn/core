@@ -445,11 +445,6 @@ $(".dashboard-chart").ready ->
     checkIfNextDataExistsDashboard()
     checkIfZoomOutDashboard()
 
-  $(window).on "resize", ->
-    new_point_width = setPointWidth()
-    if chart != undefined
-      chart.series[0].update({pointWidth: new_point_width})
-
 
 
 checkIfPreviousDataExists = () ->

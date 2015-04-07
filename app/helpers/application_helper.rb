@@ -66,7 +66,7 @@ module ApplicationHelper
   def mainnav_dashboard_path(dashboard)
     active_link_to(
       (
-        content_tag(:i, nil, class: 'fa fa-bolt')
+        content_tag(:i, nil, class: 'fa fa-dashboard')
       ) + content_tag(:span, "Dashboard", class: "menu-title"),
       dashboard_path(dashboard), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
