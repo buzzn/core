@@ -126,6 +126,7 @@ endOfWeek = (timestamp) ->
 
 #code for metering_point.show
 $(".metering_point_detail").ready ->
+  chart = undefined
   id = $(this).attr('id').split('_')[2]
   width = $("#chart-container-" + id).width()
   $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_hours', dataType: 'json'})
@@ -283,6 +284,7 @@ $(".metering_point_detail").ready ->
 
 #code for dashboard
 $(".dashboard-chart").ready ->
+  chart = undefined
   dashboard_id = $(this).attr('id')
   width = $("#chart-container-" + dashboard_id).width()
   metering_point_ids = $(this).data('metering_point-ids').toString().split(",")
