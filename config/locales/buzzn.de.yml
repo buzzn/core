@@ -457,7 +457,9 @@ de:
   display_in_series: Im Diagramm anzeigen
   series: Graph
   my_dashboard: Mein Dashboard
-
+  add_to_dashboard: Zum Dashboard hinzufügen
+  start_display: Graph anzeigen
+  stop_display: Graph entfernen
 
 
 

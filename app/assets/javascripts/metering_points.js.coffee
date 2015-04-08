@@ -21,6 +21,7 @@ $(".metering_points").ready ->
             spacingTop: 0,
             spacingLeft: 20,
             spacingRight: 20
+          colors: ['#FFF']
           exporting:
             enabled: false
           legend:
@@ -141,6 +142,7 @@ $(".metering_point_detail").ready ->
           spacingTop: 10
           spacingLeft: 20
           spacingRight: 20
+        colors: ['#FFF']
         exporting:
           enabled: false
         legend:
@@ -300,6 +302,7 @@ $(".dashboard-chart").ready ->
               spacingTop: 10
               spacingLeft: 20
               spacingRight: 20
+            colors: ['#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
             exporting:
               enabled: false
             legend:
@@ -326,22 +329,22 @@ $(".dashboard-chart").ready ->
               labels:
                 enabled: true
                 style:
-                  color: '#FFF'
+                  color: '#000'
               title:
                 text: "Zeit"
                 enabled: true
-                style: { "color": "#FFF", "fontWeight": "bold"}
+                style: { "color": "#000", "fontWeight": "bold"}
             yAxis:
               gridLineWidth: 0
               labels:
                 enabled: true
                 style:
-                  color: '#FFF'
+                  color: '#000'
                 format: "{value} kWh"
               title:
                 enabled: true
                 text: "Energie"
-                style: { "color": "#FFF", "fontWeight": "bold"}
+                style: { "color": "#000", "fontWeight": "bold"}
             plotOptions:
               line:
                 events:

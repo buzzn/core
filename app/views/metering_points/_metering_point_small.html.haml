@@ -10,18 +10,16 @@
           =metering_point.long_name
 
         %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
-        .add-to-dashboard
-          - if user_signed_in? && (current_user.dashboard.nil? || !current_user.dashboard.metering_points.include?(metering_point))
-            = metering_point.add_to_dashboard
-        .remove-from-dashboard
-          - if user_signed_in? && !current_user.dashboard.nil? && current_user.dashboard.metering_points.include?(metering_point)
-            = metering_point.remove_from_dashboard
         .display-in-series
           - if user_signed_in? && !current_user.dashboard.nil? && current_user.dashboard.metering_points.include?(metering_point)
             - if current_user.dashboard.dashboard_metering_points.where(metering_point_id: metering_point.id).first.displayed
               = metering_point.remove_from_series
             - else
               = metering_point.display_in_series
+        .remove-from-dashboard
+          - if user_signed_in? && !current_user.dashboard.nil? && current_user.dashboard.metering_points.include?(metering_point)
+            = metering_point.remove_from_dashboard
+
             / .btn-group
             /   %button.btn.btn-block.btn-success.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
             /     =t('display_in_series')
