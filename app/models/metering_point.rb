@@ -232,6 +232,7 @@ private
     data.each do |hour|
       hours << [
         hour['firstTimestamp'].to_i*1000,
+        hour['avgPower'].to_i/1000,
         hour['consumption'].to_i/10000000000.0
       ]
     end
