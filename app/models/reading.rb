@@ -59,8 +59,11 @@ class Reading
       puts "You gave me #{resolution_format} -- I have no idea what to do with that."
     end
 
+    # start pipe
     pipe = []
 
+
+    # match time range
     match = { "$match" => {
                 timestamp: {
                   "$gte" => @start_time.utc,
@@ -77,8 +80,11 @@ class Reading
     pipe << match
 
 
+
+    #
     project = { "$project" => {
                   watt_hour: 1,
+                  power: 1,
                   timestamp: 1
                 }
               }
@@ -90,9 +96,14 @@ class Reading
     pipe << project
 
 
-    group = { "$group" => {
-                firstReading:   { "$first"  => "$watt_hour" },
-                lastReading:    { "$last"   => "$watt_hour" },
+
+
+
+    group = {
+              "$group" => {
+                firstWattHour:  { "$first"  => "$watt_hour" },
+                lastWattHour:   { "$last"   => "$watt_hour" },
+                avgPower:       { "$avg"    => "$power" },
                 firstTimestamp: { "$first"  => "$timestamp" },
                 lastTimestamp:  { "$last"   => "$timestamp" }
               }
@@ -104,8 +115,12 @@ class Reading
     pipe << group
 
 
+
+
+
     project = { "$project" => {
-                  consumption: { "$subtract" => [ "$lastReading", "$firstReading" ] },
+                  consumption:    { "$subtract" => [ "$lastWattHour", "$firstWattHour" ] },
+                  avgPower:       "$avgPower",
                   firstTimestamp: "$firstTimestamp",
                   lastTimestamp:  "$lastTimestamp"
                 }
@@ -113,10 +128,16 @@ class Reading
     pipe << project
 
 
+
+
+
     sort = { "$sort" => {
                 _id: 1
               }
             }
+
+
+
     pipe << sort
 
 
