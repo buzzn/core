@@ -73,6 +73,16 @@ module ApplicationHelper
     )
   end
 
+  def mainnav_group_path(group)
+    active_link_to(
+      (
+        content_tag(:i, nil, class: 'fa fa-users')
+      ) + content_tag(:span, group.name, class: "menu-title"),
+      group_path(group), class: 'button white',
+      :wrap_tag => :li, :class_active => 'active-link'
+    )
+  end
+
 
 
 

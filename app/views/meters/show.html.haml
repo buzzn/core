@@ -18,8 +18,9 @@
               - if current_user.can_update?(@meter)
                 = @meter.link_to_edit
 
-.properties-container
-  = image_tag @meter.image.cover, class: 'img-responsive'
+-if @meter.image
+  .properties-container
+    = image_tag @meter.image.cover, class: 'img-responsive'
 
 #page-content
   .row
@@ -77,10 +78,10 @@
                     %td= @meter.init_reading
 
 
-
-  %h1.page-header.text-overflow= t'metering_points'
-  .row
-    = render @meter.metering_points
+  .metering_points
+    %h1.page-header.text-overflow= t'metering_points'
+    .row
+      = render @meter.metering_points
 
 
 
