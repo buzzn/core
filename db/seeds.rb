@@ -745,6 +745,68 @@ peter_schmidt.add_role(:manager, mp_1305004864_out)
 group_forstenried = Fabricate(:group_forstenried, metering_points: [mp_60138947, mp_60138943, mp_1338000816])
 peter_schmidt.add_role(:manager, group_forstenried)
 
+group_forstenried.metering_points << mp_60051595
+group_forstenried.metering_points << mp_60051547
+group_forstenried.metering_points << mp_60051620
+group_forstenried.metering_points << mp_60051602
+group_forstenried.metering_points << mp_60051618
+group_forstenried.metering_points << mp_60051557
+group_forstenried.metering_points << mp_60051596
+group_forstenried.metering_points << mp_60051558
+group_forstenried.metering_points << mp_60051551
+group_forstenried.metering_points << mp_60051619
+group_forstenried.metering_points << mp_60051556
+group_forstenried.metering_points << mp_60051617
+group_forstenried.metering_points << mp_60051555
+group_forstenried.metering_points << mp_60051616
+group_forstenried.metering_points << mp_60051615
+group_forstenried.metering_points << mp_60051546
+group_forstenried.metering_points << mp_60051553
+group_forstenried.metering_points << mp_60051601
+group_forstenried.metering_points << mp_60051568
+group_forstenried.metering_points << mp_60051610
+group_forstenried.metering_points << mp_60051537
+group_forstenried.metering_points << mp_60051564
+group_forstenried.metering_points << mp_60051572
+group_forstenried.metering_points << mp_60051552
+group_forstenried.metering_points << mp_60051567
+group_forstenried.metering_points << mp_60051586
+group_forstenried.metering_points << mp_60051540
+group_forstenried.metering_points << mp_60051578
+group_forstenried.metering_points << mp_60051597
+group_forstenried.metering_points << mp_60051541
+group_forstenried.metering_points << mp_60051570
+group_forstenried.metering_points << mp_60051548
+group_forstenried.metering_points << mp_60051612
+group_forstenried.metering_points << mp_60051549
+group_forstenried.metering_points << mp_60051587
+group_forstenried.metering_points << mp_60051566
+group_forstenried.metering_points << mp_60051592
+group_forstenried.metering_points << mp_60051580
+group_forstenried.metering_points << mp_60051538
+group_forstenried.metering_points << mp_60051590
+group_forstenried.metering_points << mp_60051588
+group_forstenried.metering_points << mp_60051543
+group_forstenried.metering_points << mp_60051582
+group_forstenried.metering_points << mp_60051539
+group_forstenried.metering_points << mp_60051545
+group_forstenried.metering_points << mp_60051614
+group_forstenried.metering_points << mp_60051550
+group_forstenried.metering_points << mp_60051573
+group_forstenried.metering_points << mp_60051571
+group_forstenried.metering_points << mp_60051544
+group_forstenried.metering_points << mp_60051594
+group_forstenried.metering_points << mp_60051583
+group_forstenried.metering_points << mp_60051604
+group_forstenried.metering_points << mp_60051593
+group_forstenried.metering_points << mp_60051613
+group_forstenried.metering_points << mp_60051611
+group_forstenried.metering_points << mp_60051609
+group_forstenried.metering_points << mp_60051554
+group_forstenried.metering_points << mp_60051585
+group_forstenried.metering_points << mp_60051621
+group_forstenried.metering_points << mp_60051565
+
 
 
 
