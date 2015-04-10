@@ -21,11 +21,13 @@ class Reading
 
   def self.aggregate(resolution_format, metering_point_ids=nil, containing_timestamp=nil)
     resolution_formats = {
-      year_to_months: ['year', 'month'],
-      month_to_days:  ['month', 'dayOfMonth'],
-      week_to_days:   ['week', 'dayOfWeek'],
-      day_to_hours:   ['dayOfMonth', 'hour'],
-      hour_to_minutes:['hour', 'minute']
+      year_to_months:   ['year', 'month'],
+      month_to_days:    ['month', 'dayOfMonth'],
+      week_to_days:     ['week', 'dayOfWeek'],
+      day_to_hours:     ['dayOfMonth', 'hour'],
+      day_to_minutes:   ['dayOfMonth', 'hour', 'minute'],
+      hour_to_minutes:  ['hour', 'minute'],
+      minute_to_seconds:['minute', 'second']
     }
     resolution = resolution_formats[resolution_format]
 
@@ -33,6 +35,7 @@ class Reading
     @time_zone          = 'Berlin'
     date                = Time.now
     @location_time_now  = ActiveSupport::TimeZone[@time_zone].local(date.year, date.month, date.day, date.hour, date.min, date.sec)
+
     if containing_timestamp
       @location_time = DateTime.strptime((containing_timestamp.to_i/1000).to_s, "%s").in_time_zone
     else
@@ -52,9 +55,15 @@ class Reading
     when :day_to_hours
       @start_time = @location_time.beginning_of_day
       @end_time   = @location_time.end_of_day
+    when :day_to_minutes
+      @start_time = @location_time.beginning_of_day
+      @end_time   = @location_time.end_of_day
     when :hour_to_minutes
       @start_time = @location_time.beginning_of_hour
       @end_time   = @location_time.end_of_hour
+    when :minute_to_seconds
+      @start_time = @location_time.beginning_of_minute
+      @end_time   = @location_time.end_of_minute
     else
       puts "You gave me #{resolution_format} -- I have no idea what to do with that."
     end
@@ -63,7 +72,7 @@ class Reading
     pipe = []
 
 
-    # match time range
+    # 0 match
     match = { "$match" => {
                 timestamp: {
                   "$gte" => @start_time.utc,
@@ -81,8 +90,9 @@ class Reading
 
 
 
-    #
-    project = { "$project" => {
+    # 1 project
+    project = {
+                "$project" => {
                   watt_hour: 1,
                   power: 1,
                   timestamp: 1
@@ -97,8 +107,7 @@ class Reading
 
 
 
-
-
+    # 2 group
     group = {
               "$group" => {
                 firstWattHour:  { "$first"  => "$watt_hour" },
@@ -108,17 +117,20 @@ class Reading
                 lastTimestamp:  { "$last"   => "$timestamp" }
               }
             }
-    group["$group"].merge!({_id: {
-      "#{resolution.first.gsub('OfMonth','')}ly" => "$#{resolution.first.gsub('OfMonth','')}ly",
-      "#{resolution.last.gsub('OfMonth','')}ly" => "$#{resolution.last.gsub('OfMonth','')}ly"
-      }})
+    formats = {_id: {}}
+    resolution.each do |format|
+      formats[:_id].merge!({ "#{format.gsub('OfMonth','')}ly" =>  "$#{format.gsub('OfMonth','')}ly" })
+    end
+    group["$group"].merge!(formats)
     pipe << group
 
 
 
 
 
-    project = { "$project" => {
+    # 3 project
+    project = {
+                "$project" => {
                   consumption:    { "$subtract" => [ "$lastWattHour", "$firstWattHour" ] },
                   avgPower:       "$avgPower",
                   firstTimestamp: "$firstTimestamp",
@@ -130,15 +142,14 @@ class Reading
 
 
 
-
-    sort = { "$sort" => {
+    # 4 sort
+    sort = {
+            "$sort" => {
                 _id: 1
               }
             }
-
-
-
     pipe << sort
+    ap pipe
 
 
     return Reading.collection.aggregate(pipe)
@@ -168,7 +179,7 @@ class Reading
   end
 
 
-
+   # TODO: remove this
   def self.last_power_by_metering_point_id(metering_point_id)
     pipe = [
       { "$match" => {
@@ -253,6 +264,7 @@ class Reading
        'args' => [
                   metering_point_id,
                   watt_hour,
+                  power,
                   timestamp.to_i*1000
                  ]
       })

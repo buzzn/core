@@ -151,12 +151,20 @@ class MeteringPoint < ActiveRecord::Base
     meter && meter.smart?
   end
 
+  def minute_to_seconds(containing_timestamp)
+    chart_data(:minute_to_seconds, containing_timestamp)
+  end
+
   def hour_to_minutes(containing_timestamp)
     chart_data(:hour_to_minutes, containing_timestamp)
   end
 
   def day_to_hours(containing_timestamp)
     chart_data(:day_to_hours, containing_timestamp)
+  end
+
+  def day_to_minutes(containing_timestamp)
+    chart_data(:day_to_minutes, containing_timestamp)
   end
 
   def week_to_days(containing_timestamp)
