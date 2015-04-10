@@ -36,4 +36,11 @@ Fabricator :group_wagnis4, from: :group do
 end
 
 
+Fabricator :group_forstenried, from: :group do
+  name        'Wogeno Forstenried'
+  website     'http://www.energie.wogeno.de/'
+  description { "Dies ist der Localpool der Wogeno in Forstenried." }
+  contracts { [Fabricate(:mpoc_buzzn_metering), Fabricate(:servicing_contract)] }
+end
+
 

@@ -318,6 +318,461 @@ end
 
 
 
+#Ab hier: Hell & Warm (Forstenried)
+#Markus Becher
+Fabricator :easymeter_60051595, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051595'
+end
+
+#inge_brack
+Fabricator :easymeter_60051547, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051547'
+end
+
+#peter brack
+Fabricator :easymeter_60051620, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051620'
+end
+
+#annika brandl
+Fabricator :easymeter_60051602, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051602'
+end
+
+#gudrun brandl
+Fabricator :easymeter_60051618, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051618'
+end
+
+#martin bräunlich
+Fabricator :easymeter_60051557, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051557'
+end
+
+#daniel bruno
+Fabricator :easymeter_60051596, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051596'
+end
+
+#zubair butt
+Fabricator :easymeter_60051558, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051558'
+end
+
+#maria cerghizan
+Fabricator :easymeter_60051551, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051551'
+end
+
+#stefan csizmadia
+Fabricator :easymeter_60051619, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051619'
+end
+
+#patrick fierley
+Fabricator :easymeter_60051556, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051556'
+end
+
+#maria frank
+Fabricator :easymeter_60051617, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051617'
+end
+
+#eva galow
+Fabricator :easymeter_60051555, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051555'
+end
+
+#christel guesgen
+Fabricator :easymeter_60051616, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051616'
+end
+
+#gilda hencke
+Fabricator :easymeter_60051615, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051615'
+end
+
+#uwe hetzer
+Fabricator :easymeter_60051546, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051546'
+end
+
+#andreas kapfer
+Fabricator :easymeter_60051553, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051553'
+end
+
+#renate koller
+Fabricator :easymeter_60051601, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051601'
+end
+
+#thekla lorber
+Fabricator :easymeter_60051568, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051568'
+end
+
+#ludwig maaßen
+Fabricator :easymeter_60051610, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051610'
+end
+
+#franz petschler
+Fabricator :easymeter_60051537, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051537'
+end
+
+#anna pfaffel
+Fabricator :easymeter_60051564, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051564'
+end
+
+#cornelia roth
+Fabricator :easymeter_60051572, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051572'
+end
+
+#christian voigt
+Fabricator :easymeter_60051552, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051552'
+end
+
+#claudia weber
+Fabricator :easymeter_60051567, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051567'
+end
+
+#sissi banos
+Fabricator :easymeter_60051586, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051586'
+end
+
+#laura häusler
+Fabricator :easymeter_60051540, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051540'
+end
+
+#bastian hentschel
+Fabricator :easymeter_60051578, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051578'
+end
+
+#dagmar holland
+Fabricator :easymeter_60051597, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051597'
+end
+
+#ahmad majid
+Fabricator :easymeter_60051541, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051541'
+end
+
+#marinus meiners
+Fabricator :easymeter_60051570, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051570'
+end
+
+#wolfgang pfaffel
+Fabricator :easymeter_60051548, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051548'
+end
+
+#magali thomas
+Fabricator :easymeter_60051612, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051612'
+end
+
+#kathrin kaisenberg
+Fabricator :easymeter_60051549, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051549'
+end
+
+#christian winkler
+Fabricator :easymeter_60051587, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051587'
+end
+
+#dorothea wolff
+Fabricator :easymeter_60051566, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051566'
+end
+
+#esra kwiek
+Fabricator :easymeter_60051592, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051592'
+end
+
+#felix pfeiffer
+Fabricator :easymeter_60051580, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051580'
+end
+
+#jorg nasri
+Fabricator :easymeter_60051538, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051538'
+end
+
+#ruth jürgensen
+Fabricator :easymeter_60051590, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051590'
+end
+
+#rafal jaskolka
+Fabricator :easymeter_60051588, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051588'
+end
+
+#elisabeth gritzmann
+Fabricator :easymeter_60051543, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051543'
+end
+
+#matthias flegel
+Fabricator :easymeter_60051582, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051582'
+end
+
+#michael göbl
+Fabricator :easymeter_60051539, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051539'
+end
+
+#joaquim gongolo
+Fabricator :easymeter_60051545, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051545'
+end
+
+#patrick haas
+Fabricator :easymeter_60051614, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051614'
+end
+
+#gundula herrenberg
+Fabricator :easymeter_60051550, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051550'
+end
+
+#dominik sölch
+Fabricator :easymeter_60051573, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051573'
+end
+
+#jessica rensburg
+Fabricator :easymeter_60051571, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051571'
+end
+
+#ulrich hafen
+Fabricator :easymeter_60051544, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051544'
+end
+
+#anke merk
+Fabricator :easymeter_60051594, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051594'
+end
+
+#alex erdl
+Fabricator :easymeter_60051583, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051583'
+end
+
+#katrin frische
+Fabricator :easymeter_60051604, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051604'
+end
+
+#claudia krumm
+Fabricator :easymeter_60051593, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051593'
+end
+
+#rasim abazovic
+Fabricator :easymeter_60051613, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051613'
+end
+
+#moritz feith
+Fabricator :easymeter_60051611, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051611'
+end
+
+#irmgard loderer
+Fabricator :easymeter_60051609, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051609'
+end
+
+#eunice schüler
+Fabricator :easymeter_60051554, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051554'
+end
+
+#sara strödel
+Fabricator :easymeter_60051585, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051585'
+end
+
+#hannelore voigt
+Fabricator :easymeter_60051621, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051621'
+end
+
+#roswitha weber
+Fabricator :easymeter_60051565, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60051565'
+end
+
+# #alexandra brunner
+# Fabricator :easymeter_6005195, from: :meter do
+#   manufacturer_name                   'easy_meter'
+#  manufacturer_product_name           'Q3D'
+#  manufacturer_product_serialnumber   '60051562'
+# end
+
+# #sww ggmbh
+# Fabricator :easymeter_6005195, from: :meter do
+#   manufacturer_name                   'easy_meter'
+#  manufacturer_product_name           'Q3D'
+#  manufacturer_product_serialnumber   '60051562'
+#  meter          { Fabricate(:easymeter_60051595) }
+# end
+
+# #peter schmidt
+# Fabricator :easymeter_6005195, from: :meter do
+#   manufacturer_name                   'easy_meter'
+#  manufacturer_product_name           'Q3D'
+#  manufacturer_product_serialnumber   '60051562'
+# end
+
+
+
+
+
+
 
 
 

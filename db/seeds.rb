@@ -403,6 +403,349 @@ group_wagnis4.metering_points << mp_60009441
 manuel_dmoch.add_role(:manager, group_wagnis4)
 
 
+puts 'group wogeno forstenried'
+#Ab hier: Hell & Warm (Forstenried)
+markus_becher = Fabricate(:markus_becher)
+mp_60051595 = Fabricate(:mp_60051595)
+markus_becher.add_role(:manager, mp_60051595)
+mp_60051595.users << markus_becher
+
+inge_brack = Fabricate(:inge_brack)
+mp_60051547 = Fabricate(:mp_60051547)
+inge_brack.add_role(:manager, mp_60051547)
+mp_60051547.users << inge_brack
+
+peter_brack = Fabricate(:peter_brack)
+mp_60051620 = Fabricate(:mp_60051620)
+peter_brack.add_role(:manager, mp_60051620)
+mp_60051620.users << peter_brack
+
+annika_brandl = Fabricate(:annika_brandl)
+mp_60051602 = Fabricate(:mp_60051602)
+annika_brandl.add_role(:manager, mp_60051602)
+mp_60051602.users << annika_brandl
+
+gudrun_brandl = Fabricate(:gudrun_brandl)
+mp_60051618 = Fabricate(:mp_60051618)
+gudrun_brandl.add_role(:manager, mp_60051618)
+mp_60051618.users << gudrun_brandl
+
+martin_braeunlich = Fabricate(:martin_braeunlich)
+mp_60051557 = Fabricate(:mp_60051557)
+martin_braeunlich.add_role(:manager, mp_60051557)
+mp_60051557.users << martin_braeunlich
+
+daniel_bruno = Fabricate(:daniel_bruno)
+mp_60051596 = Fabricate(:mp_60051596)
+daniel_bruno.add_role(:manager, mp_60051596)
+mp_60051596.users << daniel_bruno
+
+zubair_butt = Fabricate(:zubair_butt)
+mp_60051558 = Fabricate(:mp_60051558)
+zubair_butt.add_role(:manager, mp_60051558)
+mp_60051558.users << zubair_butt
+
+maria_cerghizan = Fabricate(maria_cerghizan)
+mp_60051551 = Fabricate(:mp_60051551)
+maria_cerghizan.add_role(:manager, mp_60051551)
+mp_60051551.users << maria_cerghizan
+
+stefan_csizmadia = Fabricate(:stefan_csizmadia)
+mp_60051619 = Fabricate(:mp_60051619)
+stefan_csizmadia.add_role(:manager, mp_60051619)
+mp_60051619.users << stefan_csizmadia
+
+patrick_fierley = Fabricate(:patrick_fierley)
+mp_60051556 = Fabricate(:mp_60051556)
+patrick_fierley.add_role(:manager, mp_60051556)
+mp_60051556.users << patrick_fierley
+
+maria_frank = Fabricate(:maria_frank)
+mp_60051617 = Fabricate(:mp_60051617)
+maria_frank.add_role(:manager, mp_60051617)
+mp_60051617.users << maria_frank
+
+eva_galow = Fabricate(:eva_galow)
+mp_60051555 = Fabricate(:mp_60051555)
+eva_galow.add_role(:manager, mp_60051555)
+mp_60051555.users << eva_galow
+
+christel_guesgen = Fabricate(:christel_guesgen)
+mp_60051616 = Fabricate(:mp_60051616)
+christel_guesgen.add_role(:manager, mp_60051616)
+mp_60051616.users << christel_guesgen
+
+gilda_hencke = Fabricate(:gilda_hencke)
+mp_60051615 = Fabricate(:mp_60051615)
+gilda_hencke.add_role(:manager, mp_60051615)
+mp_60051615.users << gilda_hencke
+
+uwe_hetzer = Fabricate(:uwe_hetzer)
+mp_60051546 = Fabricate(:mp_60051546)
+uwe_hetzer.add_role(:manager, mp_60051546)
+mp_60051546.users << uwe_hetzer
+
+andreas_kapfer = Fabricate(:andreas_kapfer)
+mp_60051553 = Fabricate(:mp_60051553)
+andreas_kapfer.add_role(:manager, mp_60051553)
+mp_60051553.users << andreas_kapfer
+
+renate_koller = Fabricate(:renate_koller)
+mp_60051601 = Fabricate(:mp_60051601)
+renate_koller.add_role(:manager, mp_60051601)
+mp_60051601.users << renate_koller
+
+thekla_lorber = Fabricate(:thekla_lorber)
+mp_60051568 = Fabricate(:mp_60051568)
+thekla_lorber.add_role(:manager, mp_60051568)
+mp_60051568.users << thekla_lorber
+
+ludwig_maaßen = Fabricate(:ludwig_maaßen)
+mp_60051610 = Fabricate(:mp_60051610)
+ludwig_maaßen.add_role(:manager, mp_60051610)
+mp_60051610.users << ludwig_maaßen
+
+franz_petschler = Fabricate(:franz_petschler)
+mp_60051537 = Fabricate(:mp_60051537)
+franz_petschler.add_role(:manager, mp_60051537)
+mp_60051537.users << franz_petschler
+
+anna_pfaffel = Fabricate(:anna_pfaffel)
+mp_60051564 = Fabricate(:mp_60051564)
+anna_pfaffel.add_role(:manager, mp_60051564)
+mp_60051564.users << anna_pfaffel
+
+cornelia_roth = Fabricate(:cornelia_roth)
+mp_60051572 = Fabricate(:mp_60051572)
+cornelia_roth.add_role(:manager, mp_60051572)
+mp_60051572.users << cornelia_roth
+
+christian_voigt = Fabricate(:christian_voigt)
+mp_60051552 = Fabricate(:mp_60051552)
+christian_voigt.add_role(:manager, mp_60051552)
+mp_60051552.users << christian_voigt
+
+claudia_weber = Fabricate(:claudia_weber)
+mp_60051567 = Fabricate(:mp_60051567)
+claudia_weber.add_role(:manager, mp_60051567)
+mp_60051567.users << claudia_weber
+
+sissi_banos = Fabricate(:sissi_banos)
+mp_60051586 = Fabricate(:mp_60051586)
+sissi_banos.add_role(:manager, mp_60051586)
+mp_60051586.users << sissi_banos
+
+laura_häusler = Fabricate(:laura_häusler)
+mp_60051540 = Fabricate(:mp_60051540)
+laura_häusler.add_role(:manager, mp_60051540)
+mp_60051540.users << laura_häusler
+
+bastian_hentschel = Fabricate(:bastian_hentschel)
+mp_60051578 = Fabricate(:mp_60051578)
+bastian_hentschel.add_role(:manager, mp_60051578)
+mp_60051578.users << bastian_hentschel
+
+dagmar_holland = Fabricate(:dagmar_holland)
+mp_60051597 = Fabricate(:mp_60051597)
+dagmar_holland.add_role(:manager, mp_60051597)
+mp_60051597.users << dagmar_holland
+
+ahmad_majid = Fabricate(:ahmad_majid)
+mp_60051541 = Fabricate(:mp_60051541)
+ahmad_majid.add_role(:manager, mp_60051541)
+mp_60051541.users << ahmad_majid
+
+marinus_meiners = Fabricate(:marinus_meiners)
+mp_60051570 = Fabricate(:mp_60051570)
+marinus_meiners.add_role(:manager, mp_60051570)
+mp_60051570.users << marinus_meiners
+
+wolfgang_pfaffel = Fabricate(:wolfgang_pfaffel)
+mp_60051548 = Fabricate(:mp_60051548)
+wolfgang_pfaffel.add_role(:manager, mp_60051548)
+mp_60051548.users << wolfgang_pfaffel
+
+magali_thomas = Fabricate(:magali_thomas)
+mp_60051612 = Fabricate(:mp_60051612)
+magali_thomas.add_role(:manager, mp_60051612)
+mp_60051612.users << magali_thomas
+
+kathrin_kaisenberg = Fabricate(:kathrin_kaisenberg)
+mp_60051549 = Fabricate(:mp_60051549)
+kathrin_kaisenberg.add_role(:manager, mp_60051549)
+mp_60051549.users << kathrin_kaisenberg
+
+christian_winkler = Fabricate(:christian_winkler)
+mp_60051587 = Fabricate(:mp_60051587)
+christian_winkler.add_role(:manager, mp_60051587)
+mp_60051587.users << christian_winkler
+
+dorothea_wolff = Fabricate(:dorothea_wolff)
+mp_60051566 = Fabricate(:mp_60051566)
+dorothea_wolff.add_role(:manager, mp_60051566)
+mp_60051566.users << dorothea_wolff
+
+esra_kwiek = Fabricate(:esra_kwiek)
+mp_60051592 = Fabricate(:mp_60051592)
+esra_kwiek.add_role(:manager, mp_60051592)
+mp_60051592.users << esra_kwiek
+
+felix_pfeiffer = Fabricate(:felix_pfeiffer)
+mp_60051580 = Fabricate(:mp_60051580)
+felix_pfeiffer.add_role(:manager, mp_60051580)
+mp_60051580.users << felix_pfeiffer
+
+jorg_nasri = Fabricate(:jorg_nasri)
+mp_60051538 = Fabricate(:mp_60051538)
+jorg_nasri.add_role(:manager, mp_60051538)
+mp_60051538.users << jorg_nasri
+
+ruth_jürgensen = Fabricate(:ruth_jürgensen)
+mp_60051590 = Fabricate(:mp_60051590)
+ruth_jürgensen.add_role(:manager, mp_60051590)
+mp_60051590.users << ruth_jürgensen
+
+rafal_jaskolka = Fabricate(:rafal_jaskolka)
+mp_60051588 = Fabricate(:mp_60051588)
+rafal_jaskolka.add_role(:manager, mp_60051588)
+mp_60051588.users << rafal_jaskolka
+
+elisabeth_gritzmann = Fabricate(:elisabeth_gritzmann)
+mp_60051543 = Fabricate(:mp_60051543)
+elisabeth_gritzmann.add_role(:manager, mp_60051543)
+mp_60051543.users << elisabeth_gritzmann
+
+matthias_flegel = Fabricate(:matthias_flegel)
+mp_60051582 = Fabricate(:mp_60051582)
+matthias_flegel.add_role(:manager, mp_60051582)
+mp_60051582.users << matthias_flegel
+
+michael_göbl = Fabricate(:michael_göbl)
+mp_60051539 = Fabricate(:mp_60051539)
+michael_göbl.add_role(:manager, mp_60051539)
+mp_60051539.users << michael_göbl
+
+joaquim_gongolo = Fabricate(:joaquim_gongolo)
+mp_60051545 = Fabricate(:mp_60051545)
+joaquim_gongolo.add_role(:manager, mp_60051545)
+mp_60051545.users << joaquim_gongolo
+
+patrick_haas = Fabricate(:patrick_haas)
+mp_60051614 = Fabricate(:mp_60051614)
+patrick_haas.add_role(:manager, mp_60051614)
+mp_60051614.users << patrick_haas
+
+gundula_herrenberg = Fabricate(:gundula_herrenberg)
+mp_60051550 = Fabricate(:mp_60051550)
+gundula_herrenberg.add_role(:manager, mp_60051550)
+mp_60051550.users << gundula_herrenberg
+
+dominik_sölch = Fabricate(:dominik_sölch)
+mp_60051573 = Fabricate(:mp_60051573)
+dominik_sölch.add_role(:manager, mp_60051573)
+mp_60051573.users << dominik_sölch
+
+jessica_rensburg = Fabricate(:jessica_rensburg)
+mp_60051571 = Fabricate(:mp_60051571)
+jessica_rensburg.add_role(:manager, mp_60051571)
+mp_60051571.users << jessica_rensburg
+
+ulrich_hafen = Fabricate(:ulrich_hafen)
+mp_60051544 = Fabricate(:mp_60051544)
+ulrich_hafen.add_role(:manager, mp_60051544)
+mp_60051544.users << ulrich_hafen
+
+anke_merk = Fabricate(:anke_merk)
+mp_60051594 = Fabricate(:mp_60051594)
+anke_merk.add_role(:manager, mp_60051594)
+mp_60051594.users << anke_merk
+
+alex_erdl = Fabricate(:alex_erdl)
+mp_60051583 = Fabricate(:mp_60051583)
+alex_erdl.add_role(:manager, mp_60051583)
+mp_60051583.users << alex_erdl
+
+katrin_frische = Fabricate(:katrin_frische)
+mp_60051604 = Fabricate(:mp_60051604)
+katrin_frische.add_role(:manager, mp_60051604)
+mp_60051604.users << katrin_frische
+
+claudia_krumm = Fabricate(:claudia_krumm)
+mp_60051593 = Fabricate(:mp_60051593)
+claudia_krumm.add_role(:manager, mp_60051593)
+mp_60051593.users << claudia_krumm
+
+rasim_abazovic = Fabricate(:rasim_abazovic)
+mp_60051613 = Fabricate(:mp_60051613)
+rasim_abazovic.add_role(:manager, mp_60051613)
+mp_60051613.users << rasim_abazovic
+
+moritz_feith = Fabricate(:moritz_feith)
+mp_60051611 = Fabricate(:mp_60051611)
+moritz_feith.add_role(:manager, mp_60051611)
+mp_60051611.users << moritz_feith
+
+irmgard_loderer = Fabricate(:irmgard_loderer)
+mp_60051609 = Fabricate(:mp_60051609)
+irmgard_loderer.add_role(:manager, mp_60051609)
+mp_60051609.users << irmgard_loderer
+
+eunice_schüler = Fabricate(:eunice_schüler)
+mp_60051554 = Fabricate(:mp_60051554)
+eunice_schüler.add_role(:manager, mp_60051554)
+mp_60051554.users << eunice_schüler
+
+sara_strödel = Fabricate(:sara_strödel)
+mp_60051585 = Fabricate(:mp_60051585)
+sara_strödel.add_role(:manager, mp_60051585)
+mp_60051585.users << sara_strödel
+
+hannelore_voigt = Fabricate(:hannelore_voigt)
+mp_60051621 = Fabricate(:mp_60051621)
+hannelore_voigt.add_role(:manager, mp_60051621)
+mp_60051621.users << hannelore_voigt
+
+roswitha_weber = Fabricate(:roswitha_weber)
+mp_60051565 = Fabricate(:mp_60051565)
+roswitha_weber.add_role(:manager, mp_60051565)
+mp_60051565.users << roswitha_weber
+
+# #alexandra brunner
+# Fabricator :mp_6005195, from: :metering_point do
+#   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
+#  name  'N 27'
+#  meter          { Fabricate(:easymeter_60051595) }
+# end
+
+# #sww ggmbh
+# Fabricator :mp_6005195, from: :metering_point do
+#   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
+#  name  'N 01'
+#  meter          { Fabricate(:easymeter_60051595) }
+# end
+
+peter_schmidt = Fabricate(:peter_schmidt)
+mp_60009484 = Fabricate(:mp_60009484) #abgrenzung pv
+peter_schmidt.add_role(:manager, mp_60009484)
+mp_60138947 = Fabricate(:mp_60138947) #bhkw1
+peter_schmidt.add_role(:manager, mp_60138947)
+mp_60138943 = Fabricate(:mp_60138943) #bhkw2
+peter_schmidt.add_role(:manager, mp_60138943)
+mp_1338000816 = Fabricate(:mp_1338000816) #pv
+peter_schmidt.add_role(:manager, mp_1338000816)
+mp_60009485 = Fabricate(:mp_60009485) #schule
+peter_schmidt.add_role(:manager, mp_60009485)
+mp_1338000818 = Fabricate(:mp_1338000818) #hst_mitte
+peter_schmidt.add_role(:manager, mp_1338000818)
+mp_1305004864 = Fabricate(:mp_1305004864) #übergabe in
+peter_schmidt.add_role(:manager, mp_1305004864)
+mp_1305004864 = Fabricate(:mp_1305004864) #übergabe out
+peter_schmidt.add_role(:manager, mp_1305004864)
+
+group_forstenried = Fabricate(:group_forstenried, metering_points: [mp_60138947, mp_60138943, mp_1338000816])
+peter_schmidt.add_role(:manager, group_forstenried)
+
+
 
 
 puts '5 simple users'
