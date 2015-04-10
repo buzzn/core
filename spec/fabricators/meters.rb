@@ -769,6 +769,63 @@ end
 # end
 
 
+#abgrenzung pv
+Fabricator :easymeter_60009484, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009484'
+end
+
+#bhkw1
+Fabricator :easymeter_60138947, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60138947'
+end
+
+#bhkw2
+Fabricator :easymeter_60138943, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60138943'
+end
+
+#pv
+Fabricator :easymeter_1338000816, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '1338000816'
+end
+
+#schule
+Fabricator :easymeter_60009485, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '60009485'
+end
+
+#hst_mitte
+Fabricator :easymeter_1338000818, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '1338000818'
+end
+
+#übergabe in
+Fabricator :easymeter_1305004864, from: :meter do
+  manufacturer_name                   'easy_meter'
+  manufacturer_product_name           'Q3D'
+  manufacturer_product_serialnumber   '1305004864'
+end
+
+# #übergabe out
+# Fabricator :easymeter_1305004864, from: :meter do
+#   manufacturer_name                   'easy_meter'
+#   manufacturer_product_name           'Q3D'
+#   manufacturer_product_serialnumber   '1305004864'
+# end
+
+
 
 
 

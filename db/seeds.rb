@@ -445,7 +445,7 @@ mp_60051558 = Fabricate(:mp_60051558)
 zubair_butt.add_role(:manager, mp_60051558)
 mp_60051558.users << zubair_butt
 
-maria_cerghizan = Fabricate(maria_cerghizan)
+maria_cerghizan = Fabricate(:maria_cerghizan)
 mp_60051551 = Fabricate(:mp_60051551)
 maria_cerghizan.add_role(:manager, mp_60051551)
 mp_60051551.users << maria_cerghizan
@@ -500,10 +500,10 @@ mp_60051568 = Fabricate(:mp_60051568)
 thekla_lorber.add_role(:manager, mp_60051568)
 mp_60051568.users << thekla_lorber
 
-ludwig_maaßen = Fabricate(:ludwig_maaßen)
+ludwig_maassen = Fabricate(:ludwig_maassen)
 mp_60051610 = Fabricate(:mp_60051610)
-ludwig_maaßen.add_role(:manager, mp_60051610)
-mp_60051610.users << ludwig_maaßen
+ludwig_maassen.add_role(:manager, mp_60051610)
+mp_60051610.users << ludwig_maassen
 
 franz_petschler = Fabricate(:franz_petschler)
 mp_60051537 = Fabricate(:mp_60051537)
@@ -520,10 +520,10 @@ mp_60051572 = Fabricate(:mp_60051572)
 cornelia_roth.add_role(:manager, mp_60051572)
 mp_60051572.users << cornelia_roth
 
-christian_voigt = Fabricate(:christian_voigt)
+christiane_voigt = Fabricate(:christiane_voigt)
 mp_60051552 = Fabricate(:mp_60051552)
-christian_voigt.add_role(:manager, mp_60051552)
-mp_60051552.users << christian_voigt
+christiane_voigt.add_role(:manager, mp_60051552)
+mp_60051552.users << christiane_voigt
 
 claudia_weber = Fabricate(:claudia_weber)
 mp_60051567 = Fabricate(:mp_60051567)
@@ -535,7 +535,7 @@ mp_60051586 = Fabricate(:mp_60051586)
 sissi_banos.add_role(:manager, mp_60051586)
 mp_60051586.users << sissi_banos
 
-laura_häusler = Fabricate(:laura_häusler)
+laura_häusler = Fabricate(:laura_haeusler)
 mp_60051540 = Fabricate(:mp_60051540)
 laura_häusler.add_role(:manager, mp_60051540)
 mp_60051540.users << laura_häusler
@@ -600,7 +600,7 @@ mp_60051538 = Fabricate(:mp_60051538)
 jorg_nasri.add_role(:manager, mp_60051538)
 mp_60051538.users << jorg_nasri
 
-ruth_jürgensen = Fabricate(:ruth_jürgensen)
+ruth_jürgensen = Fabricate(:ruth_juergensen)
 mp_60051590 = Fabricate(:mp_60051590)
 ruth_jürgensen.add_role(:manager, mp_60051590)
 mp_60051590.users << ruth_jürgensen
@@ -620,7 +620,7 @@ mp_60051582 = Fabricate(:mp_60051582)
 matthias_flegel.add_role(:manager, mp_60051582)
 mp_60051582.users << matthias_flegel
 
-michael_göbl = Fabricate(:michael_göbl)
+michael_göbl = Fabricate(:michael_goebl)
 mp_60051539 = Fabricate(:mp_60051539)
 michael_göbl.add_role(:manager, mp_60051539)
 mp_60051539.users << michael_göbl
@@ -635,12 +635,12 @@ mp_60051614 = Fabricate(:mp_60051614)
 patrick_haas.add_role(:manager, mp_60051614)
 mp_60051614.users << patrick_haas
 
-gundula_herrenberg = Fabricate(:gundula_herrenberg)
+gundula_herrberg = Fabricate(:gundula_herrberg)
 mp_60051550 = Fabricate(:mp_60051550)
-gundula_herrenberg.add_role(:manager, mp_60051550)
-mp_60051550.users << gundula_herrenberg
+gundula_herrberg.add_role(:manager, mp_60051550)
+mp_60051550.users << gundula_herrberg
 
-dominik_sölch = Fabricate(:dominik_sölch)
+dominik_sölch = Fabricate(:dominik_soelch)
 mp_60051573 = Fabricate(:mp_60051573)
 dominik_sölch.add_role(:manager, mp_60051573)
 mp_60051573.users << dominik_sölch
@@ -690,12 +690,12 @@ mp_60051609 = Fabricate(:mp_60051609)
 irmgard_loderer.add_role(:manager, mp_60051609)
 mp_60051609.users << irmgard_loderer
 
-eunice_schüler = Fabricate(:eunice_schüler)
+eunice_schüler = Fabricate(:eunice_schueler)
 mp_60051554 = Fabricate(:mp_60051554)
 eunice_schüler.add_role(:manager, mp_60051554)
 mp_60051554.users << eunice_schüler
 
-sara_strödel = Fabricate(:sara_strödel)
+sara_strödel = Fabricate(:sara_stroedel)
 mp_60051585 = Fabricate(:mp_60051585)
 sara_strödel.add_role(:manager, mp_60051585)
 mp_60051585.users << sara_strödel
@@ -739,8 +739,8 @@ mp_1338000818 = Fabricate(:mp_1338000818) #hst_mitte
 peter_schmidt.add_role(:manager, mp_1338000818)
 mp_1305004864 = Fabricate(:mp_1305004864) #übergabe in
 peter_schmidt.add_role(:manager, mp_1305004864)
-mp_1305004864 = Fabricate(:mp_1305004864) #übergabe out
-peter_schmidt.add_role(:manager, mp_1305004864)
+mp_1305004864_out = Fabricate(:mp_1305004864_out) #übergabe out
+peter_schmidt.add_role(:manager, mp_1305004864_out)
 
 group_forstenried = Fabricate(:group_forstenried, metering_points: [mp_60138947, mp_60138943, mp_1338000816])
 peter_schmidt.add_role(:manager, group_forstenried)

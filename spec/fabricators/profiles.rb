@@ -5,7 +5,7 @@ Fabricator :profile do
   phone       { FFaker::PhoneNumber.phone_number }
   terms       true
   i = 1
-  image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', "#{i+=1}.jpg")) }
+  image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', "#{60%i + 1}.jpg")) }
   about_me    { FFaker::Lorem.sentence }
   website     { "http://www.#{FFaker::Internet.domain_name}" }
 end

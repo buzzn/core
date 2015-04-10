@@ -846,7 +846,7 @@ Fabricator :mp_1305004864, from: :metering_point do
 end
 
 #übergabe out
-Fabricator :mp_1305004864, from: :metering_point do
+Fabricator :mp_1305004864_out, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Netzanschluss Einspeisung'
   meter          { Fabricate(:easymeter_1305004864) }
