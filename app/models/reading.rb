@@ -149,7 +149,6 @@ class Reading
               }
             }
     pipe << sort
-    ap pipe
 
 
     return Reading.collection.aggregate(pipe)
