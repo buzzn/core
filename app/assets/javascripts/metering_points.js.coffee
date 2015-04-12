@@ -13,7 +13,7 @@ $(".metering_points").ready ->
           data[0].data[0] = [new Date(), 0] #TODO: Search for last data
         partial_chart = new Highcharts.Chart(
           chart:
-            type: 'column'
+            type: 'areaspline'
             renderTo: 'chart-container-' + id
             width: width
             backgroundColor:'rgba(255, 255, 255, 0.0)'
@@ -51,6 +51,21 @@ $(".metering_points").ready ->
               format: "{value} kWh"
             title:
               enabled: false
+          plotOptions:
+            series:
+              fillColor:
+                linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
+                stops: [
+                  [0, "rgba(255, 255, 255, 0.4)"],
+                  [1, "rgba(255, 255, 255, 0.1)"]
+                ]
+              states:
+                hover:
+                  halo:
+                    size: 4
+            areaspline:
+              marker:
+                radius: 2
           tooltip:
             pointFormat: "{point.y:,.3f} kWh"
             dateTimeLabelFormats:
@@ -135,7 +150,7 @@ $(".metering_point_detail").ready ->
         data[0].data[0] = [new Date(), 0] #TODO: Search for last data
       chart = new Highcharts.Chart(
         chart:
-          type: 'column'
+          type: 'areaspline'
           renderTo: 'chart-container-' + id
           backgroundColor:'rgba(255, 255, 255, 0.0)'
           width: width
@@ -177,6 +192,7 @@ $(".metering_point_detail").ready ->
             style: { "color": "#FFF", "fontWeight": "bold"}
         yAxis:
           gridLineWidth: 0
+          min: 0
           labels:
             enabled: true
             style:
@@ -187,7 +203,14 @@ $(".metering_point_detail").ready ->
             text: "Energie"
             style: { "color": "#FFF", "fontWeight": "bold"}
         plotOptions:
-          column:
+          series:
+            fillColor:
+              linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
+              stops: [
+                [0, "rgba(255, 255, 255, 0.4)"],
+                [1, "rgba(255, 255, 255, 0.1)"]
+              ]
+          line:
             borderWidth: 0
             events:
               cursor: 'pointer'
@@ -296,7 +319,7 @@ $(".dashboard-chart").ready ->
         if chart == undefined
           chart = new Highcharts.Chart(
             chart:
-              type: 'line'
+              type: 'areaspline'
               renderTo: 'chart-container-' + dashboard_id
               backgroundColor:'rgba(255, 255, 255, 0.0)'
               width: width
@@ -338,6 +361,7 @@ $(".dashboard-chart").ready ->
                 style: { "color": "#000", "fontWeight": "bold"}
             yAxis:
               gridLineWidth: 0
+              min: 0
               labels:
                 enabled: true
                 style:
@@ -348,7 +372,8 @@ $(".dashboard-chart").ready ->
                 text: "Energie"
                 style: { "color": "#000", "fontWeight": "bold"}
             plotOptions:
-              line:
+              series:
+                fillOpacity: 0.5
                 events:
                   cursor: 'pointer'
                   click: (event) ->

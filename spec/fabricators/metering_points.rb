@@ -152,6 +152,7 @@ end
 Fabricator :mp_hans_dieter_hopf, from: :metering_point do
   name  'Wohnung'
   meter          { Fabricate(:virtual_meter_hopf) }
+  virtual         true
 end
 
 
@@ -853,6 +854,20 @@ Fabricator :mp_1305004864_out, from: :metering_point do
   mode        'out'
 end
 
+#virtueller Zählpunkt
+Fabricator :mp_forstenried_erzeugung, from: :metering_point do
+  name  'Gesamterzeugung'
+  meter          { Fabricate(:virtual_forstenried_erzeugung) }
+  virtual        true
+  mode            'out'
+end
+
+#virtueller Zählpunkt
+Fabricator :mp_forstenried_bezug, from: :metering_point do
+  name  'Gesamtverbrauch'
+  meter          { Fabricate(:virtual_forstenried_bezug) }
+  virtual         true
+end
 
 
 

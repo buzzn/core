@@ -92,9 +92,18 @@ class MeteringPoint < ActiveRecord::Base
 
   def smart?
     if meter
-      meter.smart
+      return meter.smart
     else
-      false
+      if self.virtual
+        self.formula_parts.each do |formula_part|
+          if !formula_part.operand.smart?
+            return false
+          end
+        end
+        return true
+      else
+        false
+      end
     end
   end
 
@@ -145,11 +154,6 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-
-
-  def smart?
-    meter && meter.smart?
-  end
 
   def minute_to_seconds(containing_timestamp)
     chart_data(:minute_to_seconds, containing_timestamp)
@@ -240,8 +244,8 @@ private
     data.each do |hour|
       hours << [
         hour['firstTimestamp'].to_i*1000,
-        hour['avgPower'].to_i/1000,
-        hour['consumption'].to_i/10000000000.0
+        hour['consumption'].to_i/10000000000.0,
+        hour['avgPower'].to_i/1000
       ]
     end
     return hours

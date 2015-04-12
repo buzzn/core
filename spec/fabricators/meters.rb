@@ -825,7 +825,17 @@ end
 #   manufacturer_product_serialnumber   '1305004864'
 # end
 
+Fabricator :virtual_forstenried_erzeugung, from: :meter do
+  manufacturer_name                   ''
+  manufacturer_product_name           ''
+  manufacturer_product_serialnumber   '1234567'
+end
 
+Fabricator :virtual_forstenried_bezug, from: :meter do
+  manufacturer_name                   ''
+  manufacturer_product_name           ''
+  manufacturer_product_serialnumber   '12345678'
+end
 
 
 
