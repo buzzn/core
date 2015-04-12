@@ -15,6 +15,7 @@ class CreateDevices < ActiveRecord::Migration
       t.integer :watt_hour_pa
       t.date    :commissioning
       t.boolean :mobile, default: false
+      t.string  :secret_level
 
       t.integer :metering_point_id
 
@@ -22,5 +23,6 @@ class CreateDevices < ActiveRecord::Migration
     end
     add_index :devices, :slug, :unique => true
     add_index :devices, :metering_point_id
+    add_index :devices, :secret_level
   end
 end

@@ -8,5 +8,7 @@ class CreateDashboardMeteringPoints < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+    add_index :dashboard_metering_points, :dashboard_id
+    add_index :dashboard_metering_points, :metering_point_id
   end
 end

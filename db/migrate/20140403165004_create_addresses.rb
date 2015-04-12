@@ -12,6 +12,7 @@ class CreateAddresses < ActiveRecord::Migration
       t.float   :longitude
       t.float   :latitude
       t.string  :time_zone
+      t.string  :secret_level
 
       t.integer :addressable_id
       t.string  :addressable_type
@@ -20,5 +21,6 @@ class CreateAddresses < ActiveRecord::Migration
     end
     add_index :addresses, :slug, :unique => true
     add_index :addresses, [:addressable_id, :addressable_type], name: 'index_addressable'
+    add_index :addresses, :secret_level
   end
 end
