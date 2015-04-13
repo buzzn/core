@@ -20,7 +20,7 @@ class CreateProfiles < ActiveRecord::Migration
       t.text   :know_buzzn_from
       t.boolean :confirm_pricing_model
       t.boolean :terms
-      t.string :secret_level
+      t.string :readable
 
       # notifications
       t.boolean :newsletter_notifications,  :default => true
@@ -35,6 +35,6 @@ class CreateProfiles < ActiveRecord::Migration
     add_index :profiles, :slug,                 unique: true
     add_index :profiles, :user_name,            unique: true
     add_index :profiles, :user_id
-    add_index :profiles, :secret_level
+    add_index :profiles, :readable
   end
 end

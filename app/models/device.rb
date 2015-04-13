@@ -28,9 +28,9 @@ class Device < ActiveRecord::Base
   end
 
 
-  def secret_levels
+  def readables
     %w{
-      secret
+      me
       friends
       world
     }.map(&:to_sym)

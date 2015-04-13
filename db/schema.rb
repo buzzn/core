@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.float    "longitude"
     t.float    "latitude"
     t.string   "time_zone"
+    t.string   "readable"
     t.integer  "addressable_id"
     t.string   "addressable_type"
     t.datetime "created_at"
@@ -52,6 +53,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   end
 
   add_index "addresses", ["addressable_id", "addressable_type"], name: "index_addressable", using: :btree
+  add_index "addresses", ["readable"], name: "index_addresses_on_readable", using: :btree
   add_index "addresses", ["slug"], name: "index_addresses_on_slug", unique: true, using: :btree
 
   create_table "areas", force: :cascade do |t|
@@ -164,9 +166,13 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.datetime "updated_at",                        null: false
   end
 
+  add_index "dashboard_metering_points", ["dashboard_id"], name: "index_dashboard_metering_points_on_dashboard_id", using: :btree
+  add_index "dashboard_metering_points", ["metering_point_id"], name: "index_dashboard_metering_points_on_metering_point_id", using: :btree
+
   create_table "dashboards", force: :cascade do |t|
-    t.integer  "user_id"
+    t.string   "name"
     t.string   "slug"
+    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -188,12 +194,14 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.integer  "watt_hour_pa"
     t.date     "commissioning"
     t.boolean  "mobile",                            default: false
+    t.string   "readable"
     t.integer  "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "devices", ["metering_point_id"], name: "index_devices_on_metering_point_id", using: :btree
+  add_index "devices", ["readable"], name: "index_devices_on_readable", using: :btree
   add_index "devices", ["slug"], name: "index_devices_on_slug", unique: true, using: :btree
 
   create_table "equipment", force: :cascade do |t|
@@ -293,14 +301,14 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.string   "logo"
     t.string   "website"
     t.string   "image"
-    t.string   "mode",         default: ""
-    t.string   "secret_level"
+    t.string   "mode",        default: ""
+    t.string   "readable"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "groups", ["secret_level"], name: "index_groups_on_secret_level", using: :btree
+  add_index "groups", ["readable"], name: "index_groups_on_readable", using: :btree
   add_index "groups", ["slug"], name: "index_groups_on_slug", unique: true, using: :btree
 
   create_table "metering_point_users", force: :cascade do |t|
@@ -440,6 +448,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.text     "know_buzzn_from"
     t.boolean  "confirm_pricing_model"
     t.boolean  "terms"
+    t.string   "readable"
     t.boolean  "newsletter_notifications", default: true
     t.boolean  "location_notifications",   default: true
     t.boolean  "group_notifications",      default: true
@@ -448,6 +457,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.datetime "updated_at"
   end
 
+  add_index "profiles", ["readable"], name: "index_profiles_on_readable", using: :btree
   add_index "profiles", ["slug"], name: "index_profiles_on_slug", unique: true, using: :btree
   add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
   add_index "profiles", ["user_name"], name: "index_profiles_on_user_name", unique: true, using: :btree

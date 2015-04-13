@@ -7,12 +7,12 @@ class CreateGroups < ActiveRecord::Migration
       t.string  :website
       t.string  :image
       t.string  :mode, :default => ""
-      t.string  :secret_level
+      t.string  :readable
       t.text    :description
 
       t.timestamps
     end
     add_index :groups, :slug, :unique => true
-    add_index :groups, :secret_level
+    add_index :groups, :readable
   end
 end
