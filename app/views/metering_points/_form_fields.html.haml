@@ -14,7 +14,7 @@
   = f.input :uid
 
 = f.association :group, collection: Group.editable_by_user(current_user) if Group.editable_by_user(current_user).any?
-
+= f.input :readable, collection: MeteringPoint.readables, include_blank: false, :checked => [:friends]
 .js-dependent-fields{data: {checkbox: {id: 'metering_point_virtual', value: 'true'}}}
   %h5
     %span

@@ -11,6 +11,7 @@ class CreateMeteringPoints < ActiveRecord::Migration
       t.string  :regular_interval
       t.boolean :virtual, default: false
       t.boolean :is_dashboard_metering_point, default: false
+      t.string  :readable
 
       t.integer :meter_id
       t.integer :contract_id
@@ -22,5 +23,6 @@ class CreateMeteringPoints < ActiveRecord::Migration
     add_index :metering_points, :meter_id
     add_index :metering_points, :contract_id
     add_index :metering_points, :group_id
+    add_index :metering_points, :readable
   end
 end

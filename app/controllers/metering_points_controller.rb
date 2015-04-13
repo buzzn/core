@@ -1,5 +1,5 @@
 class MeteringPointsController < ApplicationController
-  before_filter :authenticate_user!, except: [:chart, :latest_slp]
+  before_filter :authenticate_user!, except: [:show, :chart, :latest_slp]
   respond_to :html, :json, :js
 
   def show
@@ -8,7 +8,13 @@ class MeteringPointsController < ApplicationController
     @devices        = @metering_point.devices
     @group          = @metering_point.group
     @meter          = @metering_point.meter
-    authorize_action_for(@metering_point)
+    if !@metering_point.readable_by_world?
+      if user_signed_in?
+        authorize_action_for(@metering_point)
+      else
+        redirect_to root_path
+      end
+    end
   end
 
 
@@ -101,6 +107,7 @@ private
       :name,
       :image,
       :mode,
+      :readable,
       :virtual,
       :group_id,
       :user_ids => [],

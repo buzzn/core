@@ -44,10 +44,12 @@
               .col-xs-6
                 %p.h3= @devices.count
                 %small.text-muted= t'devices'
-          %hr
-            .text-center.clearfix
-              - if current_user.can_update?(@metering_point)
-                = @metering_point.link_to_edit
+
+          - if user_signed_in?
+            - if current_user.can_update?(@metering_point)
+              %hr
+                .text-center.clearfix
+                  = @metering_point.link_to_edit
 
 
 
@@ -67,7 +69,7 @@
             /.btn.btn-success.btn-chart-next.pull-right=content_tag(:i, nil, class: 'fa fa-angle-double-right')
             .btn.btn-success.btn-chart-next.pull-right=content_tag(:i, nil, class: 'fa fa-chevron-circle-right fa-2x')
 
-  - if current_user.can_update?(@metering_point) || @devices.size != 0
+  - if user_signed_in? && current_user.can_update?(@metering_point) || @devices.size != 0
     %hr
     %h1.page-header.text-overflow
       %span
@@ -78,12 +80,12 @@
       .devices
         = render @devices
 
-      - if current_user.can_update?(@metering_point)
+      - if user_signed_in? && current_user.can_update?(@metering_point)
         .row
           .col-lg-12.text-center
             = @metering_point.edit_devices
 
-  - if current_user.can_update?(@metering_point) || @users.size != 0
+  - if user_signed_in? && current_user.can_update?(@metering_point) || @users.size != 0
     %hr
     %h1.page-header.text-overflow
       %span
@@ -94,13 +96,13 @@
       - @users.each do |user|
         = render user.profile
 
-      - if current_user.can_update?(@metering_point)
+      - if user_signed_in? && current_user.can_update?(@metering_point)
         .row
           .col-lg-12.text-center
             = @metering_point.edit_users
 
 
-  - if current_user.can_update?(@metering_point)
+  - if user_signed_in? && current_user.can_update?(@metering_point)
     %hr
     %h1.page-header.text-overflow
       %span
@@ -118,7 +120,7 @@
 
 
 
-  - if current_user.can_update?(@metering_point)
+  - if user_signed_in? && current_user.can_update?(@metering_point)
     %hr
     %h1.page-header.text-overflow
       %span
@@ -135,7 +137,7 @@
           = @metering_point.new_meter
 
 
-  - if current_user.can_update?(@metering_point)
+  - if user_signed_in? && current_user.can_update?(@metering_point)
     %hr
     %h1.page-header.text-overflow
       %span

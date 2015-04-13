@@ -333,6 +333,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.string   "regular_interval"
     t.boolean  "virtual",                     default: false
     t.boolean  "is_dashboard_metering_point", default: false
+    t.string   "readable"
     t.integer  "meter_id"
     t.integer  "contract_id"
     t.integer  "group_id"
@@ -343,6 +344,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "metering_points", ["contract_id"], name: "index_metering_points_on_contract_id", using: :btree
   add_index "metering_points", ["group_id"], name: "index_metering_points_on_group_id", using: :btree
   add_index "metering_points", ["meter_id"], name: "index_metering_points_on_meter_id", using: :btree
+  add_index "metering_points", ["readable"], name: "index_metering_points_on_readable", using: :btree
   add_index "metering_points", ["slug"], name: "index_metering_points_on_slug", unique: true, using: :btree
 
   create_table "meters", force: :cascade do |t|

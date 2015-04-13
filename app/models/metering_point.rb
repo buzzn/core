@@ -12,7 +12,6 @@ class MeteringPoint < ActiveRecord::Base
 
   def slug_candidates
     [
-      :uid,
       :slug_name
     ]
   end
@@ -33,6 +32,8 @@ class MeteringPoint < ActiveRecord::Base
   has_many :users, through: :metering_point_users, dependent: :destroy
   has_one :address, as: :addressable, dependent: :destroy
 
+
+  validates :readable, presence: true
   validates :mode, presence: true, if: :no_dashboard_metering_point?
   validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
   validates :name, presence: true, length: { in: 2..30 }, if: :no_dashboard_metering_point?
@@ -81,6 +82,14 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
+
+  def readable_by_friends?
+    self.readable == 'friends'
+  end
+
+  def readable_by_world?
+    self.readable == 'world'
+  end
 
   def output?
     self.mode == 'out'
@@ -138,8 +147,13 @@ class MeteringPoint < ActiveRecord::Base
     }.map(&:to_sym)
   end
 
-
-
+  def self.readables
+    %w{
+      me
+      friends
+      world
+    }.map(&:to_sym)
+  end
 
 
 

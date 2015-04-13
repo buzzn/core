@@ -5,6 +5,7 @@ Fabricator :metering_point do
   i = 1
   uid         {"DE001068825151000000000000#{2677114 + (i += 1)}"}
   mode        'in'
+  readable    'friends'
   #contracts   { [ Fabricate(:electricity_supplier_contract)] }
 end
 
