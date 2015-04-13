@@ -48,7 +48,7 @@ $(".metering_points").ready ->
               enabled: false
               style:
                 color: '#FFF'
-              format: "{value} kWh"
+              format: "{value} W"
             title:
               enabled: false
           plotOptions:
@@ -57,7 +57,7 @@ $(".metering_points").ready ->
                 linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
                 stops: [
                   [0, "rgba(255, 255, 255, 0.4)"],
-                  [1, "rgba(255, 255, 255, 0.1)"]
+                  [1, "rgba(255, 255, 255, 0.0)"]
                 ]
               states:
                 hover:
@@ -67,7 +67,7 @@ $(".metering_points").ready ->
               marker:
                 radius: 2
           tooltip:
-            pointFormat: "{point.y:,.3f} kWh"
+            pointFormat: "{point.y:,.0f} W"
             dateTimeLabelFormats:
               millisecond:"%e.%b, %H:%M:%S.%L",
               second:"%e.%b, %H:%M:%S",
@@ -197,7 +197,7 @@ $(".metering_point_detail").ready ->
             enabled: true
             style:
               color: '#FFF'
-            format: "{value} kWh"
+            format: "{value} W"
           title:
             enabled: true
             text: "Energie"
@@ -210,14 +210,14 @@ $(".metering_point_detail").ready ->
                 [0, "rgba(255, 255, 255, 0.4)"],
                 [1, "rgba(255, 255, 255, 0.1)"]
               ]
-          line:
+          areaspline:
             borderWidth: 0
             events:
               cursor: 'pointer'
               click: (event) ->
                 zoomIn(event.point.x)
         tooltip:
-          pointFormat: "{point.y:,.3f} kWh"
+          pointFormat: "{point.y:,.0f} W"
           dateTimeLabelFormats:
             millisecond:"%e.%b, %H:%M:%S.%L",
             second:"%e.%b, %H:%M:%S",
@@ -366,7 +366,7 @@ $(".dashboard-chart").ready ->
                 enabled: true
                 style:
                   color: '#000'
-                format: "{value} kWh"
+                format: "{value} W"
               title:
                 enabled: true
                 text: "Energie"
@@ -379,7 +379,7 @@ $(".dashboard-chart").ready ->
                   click: (event) ->
                     zoomInDashboard(event.point.x)
             tooltip:
-              pointFormat: "{point.y:,.3f} kWh"
+              pointFormat: "{point.y:,.0f} W"
               dateTimeLabelFormats:
                 millisecond:"%e.%b, %H:%M:%S.%L",
                 second:"%e.%b, %H:%M:%S",
@@ -614,8 +614,8 @@ zoomIn = (timestamp) ->
         chart.hideLoading()
         return
       chart.series[0].setData(data[0].data)
-      new_point_width = setPointWidth()
-      chart.series[0].update({pointWidth: new_point_width})
+      #new_point_width = setPointWidth()
+      #chart.series[0].update({pointWidth: new_point_width})
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
       chart_data_min_x = chart.series[0].data[0].x
