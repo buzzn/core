@@ -17,6 +17,7 @@ namespace :slp do
       all_lines = infile.readline
       infile.close
       watt_hour = 0.0
+      watts = 0.0
       while true do
         posOfSeperator = all_lines.index("'")
         if posOfSeperator == nil
@@ -30,10 +31,14 @@ namespace :slp do
             Reading.create(
               timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
               watt_hour: watt_hour*10000000.0, #convert from Wh to 10^-10 kWh
+              power: watts,
               source: "slp"
             )
           elsif parseString.include? "QTY"
-            watt_hour += parseString[8...parseString.length].to_f
+            additional_watt_hour = parseString[8...parseString.length].to_f
+            new_watt_hour = watt_hour + additional_watt_hour
+            watts = (new_watt_hour - watt_hour)*4
+            watt_hour += additional_watt_hour
             watt_hour = watt_hour.round(3)
           end
         end
