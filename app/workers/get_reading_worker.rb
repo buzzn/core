@@ -27,7 +27,7 @@ class GetReadingWorker
 
                 Reading.create( metering_point_id:  metering_point_id,
                                 timestamp:    timestamp,
-                                power:        power, # if power positiv than power out
+                                power:        power,
                                 watt_hour:    watt_hour, #energy is in 10^-10 kWh;
                               )
               end
