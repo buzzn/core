@@ -41,6 +41,8 @@ Fabricator :group_forstenried, from: :group do
   website     'http://www.energie.wogeno.de/'
   description { "Dies ist der Localpool der Wogeno in Forstenried." }
   contracts { [Fabricate(:mpoc_buzzn_metering), Fabricate(:servicing_contract)] }
+  logo      { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'forstenried', 'haus_weich.jpg'))}
+  image     { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'forstenried', 'Wogeno_app.jpg')) }
 end
 
 

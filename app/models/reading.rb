@@ -178,34 +178,6 @@ class Reading
   end
 
 
-   # TODO: remove this
-  def self.last_power_by_metering_point_id(metering_point_id)
-    pipe = [
-      { "$match" => {
-          metering_point_id: {
-            "$in" => [metering_point_id]
-          }
-        }
-      },
-      { "$sort" => {
-          timestamp: -1
-        }
-      },
-      { "$limit" => 2 }
-    ]
-    readings = Reading.collection.aggregate(pipe)
-    if readings.any?
-      firstTimestamp = readings.last[:timestamp].to_i
-      lastTimestamp = readings.first[:timestamp].to_i
-      firstValue = readings.last[:watt_hour]
-      lastValue = readings.first[:watt_hour]
-      return (lastValue - firstValue)*3600.0/((lastTimestamp - firstTimestamp)*10000000)
-    else
-      return nil
-    end
-  end
-
-
   def self.last_two_by_metering_point_id(metering_point_id)
     pipe = [
       { "$match" => {

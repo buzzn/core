@@ -64,29 +64,23 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-  def last_two_readings
-    latest_readings = Reading.last_two_by_metering_point_id(self.id)
-    while latest_readings.any? && latest_readings.first[:timestamp] == latest_readings.last[:timestamp] do
-      Reading.where(metering_point_id: self.id).last.delete
-      latest_readings = Reading.last_two_by_metering_point_id(self.id)
-    end
-    if latest_readings.empty?
-      return nil
-    end
-    result = []
-    result.push(latest_readings.first[:timestamp].to_i*1000)
-    result.push(latest_readings.first[:watt_hour])
-    result.push(latest_readings.last[:timestamp].to_i*1000)
-    result.push(latest_readings.last[:watt_hour])
-    return result
-  end
-
   def last_power
-    last_reading = Reading.last_by_metering_point_id(self.id)
-    if last_reading.nil?
-      return 0
+    if self.virtual && self.formula
+      operands = get_operands_from_formula
+      operators = get_operators_from_formula
+      data = []
+      operands.each do |metering_point_id|
+        reading = Reading.last_by_metering_point_id(metering_point_id)
+        data << [[reading[:timestamp], reading[:power], reading[:watt_hour]]]
+      end
+      return calculate_virtual_metering_point(data, operators)[0][1]/1000
+    else
+      last_reading = Reading.last_by_metering_point_id(self.id)
+      if last_reading.nil?
+        return 0
+      end
+      return last_reading[:power]/1000
     end
-    return last_reading[:power]/1000
   end
 
 
@@ -287,21 +281,26 @@ private
   def calculate_virtual_metering_point(data, operators)
     hours = []
     timestamps = []
+    watts = []
     i = 0
     data.each do |metering_point|
       j = 0
       metering_point.each do |reading|
         if i == 0
           timestamps << reading[0]
-          hours << reading[1]
+          watts << reading[1]
+          hours << reading[2]
         else
           timestamps[j] = reading[0]
           if operators[i - 1] == "+"
-            hours[j] += reading[1]
+            watts[j] += reading[1]
+            hours[j] += reading[2]
           elsif operators[i - 1] == "-"
-            hours[j] -= reading[1]
+            watts[j] -= reading[1]
+            hours[j] -= reading[2]
           elsif operators[i - 1] == "*"
-            hours[j] *= reading[1]
+            watts[j] *= reading[1]
+            hours[j] *= reading[2]
           end
         end
         j += 1
@@ -309,9 +308,10 @@ private
       i += 1
     end
     result = []
-    for i in 0...hours.length
+    for i in 0...watts.length
       result << [
         timestamps[i],
+        watts[i],
         hours[i]
       ]
     end

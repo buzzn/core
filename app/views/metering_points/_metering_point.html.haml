@@ -14,9 +14,9 @@
         %p.text-2x.mar-no= metering_point.long_name
         %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
 
-          = content_tag :div, id: "metering_point-ticker-#{metering_point.id}", class: "metering_point-ticker", data: { readings: metering_point.smart? ? metering_point.last_two_readings : nil, slp: !metering_point.smart? && !metering_point.virtual } do
+          = content_tag :div, id: "metering_point-ticker-#{metering_point.id}", class: "metering_point-ticker", data: { slp: !metering_point.smart? && !metering_point.virtual } do
             %span.text-4x
               .power-ticker
-                0
+                = metering_point.last_power
           %p.text-muted Watt
 

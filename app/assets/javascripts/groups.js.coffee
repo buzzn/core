@@ -72,14 +72,14 @@ class BubbleChart
       .range(["#5FA2DD", "#5FA2DD", "#5FA2DD"])
 
     # use the max watt_hour in the data as the max in the scale's domain
-    @max_power_in = d3.max(@data, (d) -> parseInt(calculate_power(d[3], d[1], d[4], d[2])))
-    max_power_out = d3.max(@data_out, (d) -> parseInt(calculate_power(d[3], d[1], d[4], d[2])))
+    @max_power_in = d3.max(@data, (d) -> parseInt(d[1]))
+    max_power_out = d3.max(@data_out, (d) -> parseInt(d[1]))
     if @max_power_in > max_power_out
       @max_power = @max_power_in
     else
       @max_power = max_power_out
     @data.forEach (d) =>
-      @totalPower += parseInt(calculate_power(d[3], d[1], d[4], d[2]))
+      @totalPower += parseInt(d[1])
     this.setZoomFactor()
     this.create_nodes()
     this.create_vis(group_id)
@@ -96,13 +96,9 @@ class BubbleChart
     @data.forEach (d) =>
       node = {
         id: d[0]
-        firstTimestamp: d[3]
-        secondTimestamp: d[1]
-        firstWattHour: d[4]
-        secondWattHour: d[2]
-        value: calculate_power(d[3], d[1], d[4], d[2])
-        radius: @radius_scale(parseInt(calculate_power(d[3], d[1], d[4], d[2])))
-        name: d[5]
+        value: d[1]
+        radius: @radius_scale(parseInt(d[1]))
+        name: d[2]
         x: Math.random() * 900
         y: Math.random() * 800
         color: "#5FA2DD"
@@ -131,13 +127,9 @@ class BubbleChart
     @data_out.forEach (d) =>
       node = {
         id: d[0]
-        firstTimestamp: d[3]
-        secondTimestamp: d[1]
-        firstWattHour: d[4]
-        secondWattHour: d[2]
-        value: calculate_power(d[3], d[1], d[4], d[2])
-        radius: @radius_scale(parseInt(calculate_power(d[3], d[1], d[4], d[2]))) * 1.1
-        name: d[5]
+        value: d[1]
+        radius: @radius_scale(parseInt(d[1])) * 1.1
+        name: d[2]
         x: @width / 2
         y: @height / 2
         color: "#F76C51"
@@ -243,24 +235,16 @@ class BubbleChart
 
     @nodes.forEach (d) =>
       if d.id.toString() == id.toString()
-        d.firstTimestamp = d.secondTimestamp
-        d.firstWattHour = d. secondWattHour
-        d.secondTimestamp = timestamp
-        d.secondWattHour = value
-        d.value = calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)
+        d.value = value
         this.calculateMaxPower(d.value)
-        d.radius = @radius_scale(parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
+        d.radius = @radius_scale(parseInt(value))
 
 
     @nodes_out.forEach (d) =>
       if d.id.toString() == id.toString()
-        d.firstTimestamp = d.secondTimestamp
-        d.firstWattHour = d. secondWattHour
-        d.secondTimestamp = timestamp
-        d.secondWattHour = value
-        d.value = calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)
+        d.value = value
         this.calculateMaxPower(d.value)
-        d.radius = @radius_scale(parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour))) * 1.1
+        d.radius = @radius_scale(parseInt(value)) * 1.1
 
 
 
@@ -270,12 +254,6 @@ class BubbleChart
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
     @circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
     this.display_group_all()
-
-  calculate_power = (firstTimestamp, secondTimestamp, firstWattHour, secondWattHour) =>
-    if secondTimestamp - firstTimestamp == 0 || firstTimestamp == -1
-      return 0
-    else
-      return (secondWattHour - firstWattHour)*3600/((secondTimestamp - firstTimestamp)*10000)
 
   calculateNewCenter: () =>
     @height = $(".bubbles_container").height()
@@ -287,8 +265,8 @@ class BubbleChart
     this.setNewScale()
 
   calculateMaxPower: (value) =>
-    @max_power_in = d3.max(@nodes, (d) -> parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
-    max_power_out = d3.max(@nodes_out, (d) -> parseInt(calculate_power(d.firstTimestamp, d.secondTimestamp, d.firstWattHour, d.secondWattHour)))
+    @max_power_in = d3.max(@nodes, (d) -> parseInt(value))
+    max_power_out = d3.max(@nodes_out, (d) -> parseInt(value))
     if @max_power_in > max_power_out
       @max_power = @max_power_in
       if value > @max_power_in
@@ -368,12 +346,12 @@ $(".bubbles_container").ready ->
         metering_point_id = metering_point_data[0]
         channel = pusher.subscribe("metering_point_#{metering_point_id}")
         channel.bind "new_reading", (reading) ->
-          chart.reset_radius(reading.metering_point_id, reading.watt_hour, reading.timestamp)
+          chart.reset_radius(reading.metering_point_id, reading.power, reading.timestamp)
       for metering_point_data in data_out
         metering_point_id = metering_point_data[0]
         channel = pusher.subscribe("metering_point_#{metering_point_id}")
         channel.bind "new_reading", (reading) ->
-          chart.reset_radius(reading.metering_point_id, reading.watt_hour, reading.timestamp)
+          chart.reset_radius(reading.metering_point_id, reading.power, reading.timestamp)
 
       $(window).on "resize:end", chart.calculateNewCenter
 

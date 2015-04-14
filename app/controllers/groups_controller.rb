@@ -74,7 +74,7 @@ class GroupsController < ApplicationController
     out_metering_point_data = []
     @group.metering_points.each do |metering_point|
       data_entry = []
-      latest_readings = nil
+      latest_power = nil
       if metering_point.users.any?
         if metering_point.users.include?(current_user)
           user_name = current_user.profile.first_name
@@ -87,7 +87,7 @@ class GroupsController < ApplicationController
       end
       if metering_point.meter
         if metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
-          latest_readings = Reading.last_two_by_metering_point_id(metering_point.id)
+          latest_power = metering_point.last_power
         elsif metering_point.meter.smart? && metering_point.meter.online && !metering_point.meter.init_reading
           #TODO: init_reading ausführen
         elsif metering_point.meter.smart? && !metering_point.meter.online && metering_point.meter.init_reading
@@ -95,19 +95,23 @@ class GroupsController < ApplicationController
         elsif !metering_point.meter.smart?
           #TODO: show slp values
         end
+      else
+        if metering_point.virtual #&& metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
+          latest_power = metering_point.last_power
+        end
       end
       if metering_point.mode == "out"
-        if !latest_readings.nil? && !latest_readings.first.nil? && !latest_readings.last.nil?
-          data_entry.push(metering_point.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
+        if !latest_power.nil?
+          data_entry.push(metering_point.id, latest_power, user_name)
         else
-          data_entry.push(metering_point.id, -1, 0, -1, 0, user_name)
+          data_entry.push(metering_point.id, 0, user_name)
         end
         out_metering_point_data.push(data_entry)
       else
-        if !latest_readings.nil? && !latest_readings.first.nil? && !latest_readings.last.nil?
-          data_entry.push(metering_point.id, latest_readings.first[:timestamp].to_i*1000, latest_readings.first[:watt_hour], latest_readings.last[:timestamp].to_i*1000, latest_readings.last[:watt_hour], user_name)
+        if !latest_power.nil?
+          data_entry.push(metering_point.id, latest_power, user_name)
         else
-          data_entry.push(metering_point.id, -1, 0, -1, 0, user_name)
+          data_entry.push(metering_point.id, 0, user_name)
         end
         in_metering_point_data.push(data_entry)
       end

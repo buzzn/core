@@ -858,7 +858,7 @@ end
 #virtueller Zählpunkt
 Fabricator :mp_forstenried_erzeugung, from: :metering_point do
   name  'Gesamterzeugung'
-  meter          { Fabricate(:virtual_forstenried_erzeugung) }
+  #meter          { Fabricate(:virtual_forstenried_erzeugung) }
   virtual        true
   mode            'out'
 end
@@ -866,7 +866,7 @@ end
 #virtueller Zählpunkt
 Fabricator :mp_forstenried_bezug, from: :metering_point do
   name  'Gesamtverbrauch'
-  meter          { Fabricate(:virtual_forstenried_bezug) }
+  #meter          { Fabricate(:virtual_forstenried_bezug) }
   virtual         true
 end
 
