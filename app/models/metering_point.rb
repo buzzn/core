@@ -81,6 +81,14 @@ class MeteringPoint < ActiveRecord::Base
     return result
   end
 
+  def last_power
+    last_reading = Reading.last_by_metering_point_id(self.id)
+    if last_reading.nil?
+      return 0
+    end
+    return last_reading[:power]/1000
+  end
+
 
 
   def readable_by_friends?

@@ -1,4 +1,4 @@
-actual_resolution = "day_to_hours"
+actual_resolution = "day_to_minutes"
 chart_data_min_x = 0
 chart = undefined
 
@@ -61,22 +61,12 @@ $(".metering_points").ready ->
                 ]
               states:
                 hover:
-                  halo:
-                    size: 4
+                  enabled: false
             areaspline:
               marker:
                 radius: 2
           tooltip:
-            pointFormat: "{point.y:,.0f} W"
-            dateTimeLabelFormats:
-              millisecond:"%e.%b, %H:%M:%S.%L",
-              second:"%e.%b, %H:%M:%S",
-              minute:"%e.%b, %H:%M",
-              hour:"%e.%b, %H:%M",
-              day:"%e.%b.%Y",
-              week:"Week from %e.%b.%Y",
-              month:"%B %Y",
-              year:"%Y"
+            enabled: false
 
           series: data)
       .error (jqXHR, textStatus, errorThrown) ->
@@ -144,7 +134,7 @@ $(".metering_point_detail").ready ->
   chart = undefined
   id = $(this).attr('id').split('_')[2]
   width = $("#chart-container-" + id).width()
-  $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_hours', dataType: 'json'})
+  $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_minutes', dataType: 'json'})
     .success (data) ->
       if data[0].data[0] == undefined
         data[0].data[0] = [new Date(), 0] #TODO: Search for last data
@@ -274,8 +264,8 @@ $(".metering_point_detail").ready ->
   $(".btn-chart-zoomout").on 'click', ->
     chart.showLoading()
     if actual_resolution == "hour_to_minutes"
-      actual_resolution = "day_to_hours"
-    else if actual_resolution == "day_to_hours"
+      actual_resolution = "day_to_minutes"
+    else if actual_resolution == "day_to_minutes"
     #  actual_resolution = "week_to_days"
     #else if actual_resolution == "week_to_days"
       actual_resolution = "month_to_days"
@@ -288,8 +278,8 @@ $(".metering_point_detail").ready ->
         chart.hideLoading()
         data[0].data[0] = [new Date(), 0]
       chart.series[0].setData(data[0].data)
-      new_point_width = setPointWidth()
-      chart.series[0].update({pointWidth: new_point_width})
+      #new_point_width = setPointWidth()
+      #chart.series[0].update({pointWidth: new_point_width})
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
       chart_data_min_x = chart.series[0].data[0].x
@@ -312,7 +302,7 @@ $(".dashboard-chart").ready ->
   width = $("#chart-container-" + dashboard_id).width()
   metering_point_ids = $(this).data('metering_point-ids').toString().split(",")
   metering_point_ids.forEach (id) ->
-    $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_hours', async: false, dataType: 'json'})
+    $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_minutes', async: false, dataType: 'json'})
       .success (data) ->
         if data[0].data[0] == undefined
           data[0].data[0] = [new Date(), 0] #TODO: Search for last data
@@ -449,8 +439,8 @@ $(".dashboard-chart").ready ->
   $(".btn-chart-zoomout").on 'click', ->
     chart.showLoading()
     if actual_resolution == "hour_to_minutes"
-      actual_resolution = "day_to_hours"
-    else if actual_resolution == "day_to_hours"
+      actual_resolution = "day_to_minutes"
+    else if actual_resolution == "day_to_minutes"
     #  actual_resolution = "week_to_days"
     #else if actual_resolution == "week_to_days"
       actual_resolution = "month_to_days"
@@ -531,7 +521,7 @@ getExtremes = (timestamp) ->
   if actual_resolution == "hour_to_minutes"
     start = beginningOfHour(timestamp)
     end = endOfHour(timestamp)
-  else if actual_resolution == "day_to_hours"
+  else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
     start = beginningOfDay(timestamp)
     end = endOfDay(timestamp)
   else if actual_resolution == "week_to_days"
@@ -551,7 +541,7 @@ getExtremes = (timestamp) ->
 getPreviousTimestamp = () ->
   if actual_resolution == "hour_to_minutes"
     return chart_data_min_x - 3600*1000
-  else if actual_resolution == "day_to_hours"
+  else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
     return chart_data_min_x - 24*3600*1000
   else if actual_resolution == "week_to_days"
     return chart_data_min_x - 7*24*3600*1000
@@ -567,7 +557,7 @@ getPreviousTimestamp = () ->
 getNextTimestamp = () ->
   if actual_resolution == "hour_to_minutes"
     return chart_data_min_x + 3600*1000
-  else if actual_resolution == "day_to_hours"
+  else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
     return chart_data_min_x + 24*3600*1000
   else if actual_resolution == "week_to_days"
     return chart_data_min_x + 7*24*3600*1000
@@ -585,6 +575,8 @@ setPointWidth = () ->
     return $(".chart").width()/100.0
   else if actual_resolution == "day_to_hours"
     return $(".chart").width()/70.0
+  else if actual_resolution == "day_to_minutes"
+    return $(".chart").width()/200.0
   else if actual_resolution == "week_to_days"
     return $(".chart").width()/32.0
   else if actual_resolution == "month_to_days"
@@ -599,13 +591,13 @@ zoomIn = (timestamp) ->
     if actual_resolution == "hour_to_minutes"
       chart.hideLoading()
       return
-    else if actual_resolution == "day_to_hours"
+    else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
       actual_resolution = "hour_to_minutes"
     #else if actual_resolution == "week_to_days"
     #  actual_resolution = "day_to_hours"
     else if actual_resolution == "month_to_days"
     #  actual_resolution = "week_to_days"
-      actual_resolution = "day_to_hours"
+      actual_resolution = "day_to_minutes"
     else if actual_resolution == "year_to_months"
       actual_resolution = "month_to_days"
     containing_timestamp = timestamp
@@ -630,13 +622,13 @@ zoomInDashboard = (timestamp) ->
   if actual_resolution == "hour_to_minutes"
     chart.hideLoading()
     return
-  else if actual_resolution == "day_to_hours"
+  else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
     actual_resolution = "hour_to_minutes"
   #else if actual_resolution == "week_to_days"
   #  actual_resolution = "day_to_hours"
   else if actual_resolution == "month_to_days"
   #  actual_resolution = "week_to_days"
-    actual_resolution = "day_to_hours"
+    actual_resolution = "day_to_minutes"
   else if actual_resolution == "year_to_months"
     actual_resolution = "month_to_days"
   containing_timestamp = timestamp
@@ -664,7 +656,7 @@ checkIfZoomOut = () ->
     id = $(this).attr('id').split('_')[2]
     if actual_resolution == "hour_to_minutes"
       out_resolution = "day_to_hours"
-    else if actual_resolution == "day_to_hours"
+    else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
     #  out_resolution = "week_to_days"
     #else if actual_resolution == "week_to_days"
       out_resolution = "month_to_days"
@@ -689,7 +681,7 @@ checkIfZoomOut = () ->
 checkIfZoomOutDashboard = () ->
   if actual_resolution == "hour_to_minutes"
     out_resolution = "day_to_hours"
-  else if actual_resolution == "day_to_hours"
+  else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
   #  out_resolution = "week_to_days"
   #else if actual_resolution == "week_to_days"
     out_resolution = "month_to_days"
@@ -742,15 +734,13 @@ $(".metering_point").ready ->
     Pusher.wss_port = 8080
     pusher = new Pusher($(".pusher").data('pusherkey'))
 
-    $(this).find(".power-ticker").html(calculate_power($(this).find(".metering_point-ticker").data('readings')))
-
     channel = pusher.subscribe("metering_point_#{metering_point_id}")
     channel.bind "new_reading", (reading) ->
-      oldString = metering_point.find(".metering_point-ticker").attr('data-readings')
-      oldWattHour = oldString.split(",")[1]
-      oldTimestamp = oldString.split(",")[0].substring(1, oldString.split(",")[0].length)
-      metering_point.find(".metering_point-ticker").attr('data-readings', "[#{reading.timestamp}, #{reading.watt_hour}, #{oldTimestamp}, #{oldWattHour}]")
-      metering_point.find(".power-ticker").html(calculate_power([reading.timestamp, reading.watt_hour, oldTimestamp, oldWattHour]))
+      #oldString = metering_point.find(".metering_point-ticker").attr('data-readings')
+      #oldWattHour = oldString.split(",")[1]
+      #oldTimestamp = oldString.split(",")[0].substring(1, oldString.split(",")[0].length)
+      #metering_point.find(".metering_point-ticker").attr('data-readings', "[#{reading.timestamp}, #{reading.watt_hour}, #{oldTimestamp}, #{oldWattHour}]")
+      metering_point.find(".power-ticker").html(reading.power)
   else
     getSLPValue()
     timers.push(

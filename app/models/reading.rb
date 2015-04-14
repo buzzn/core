@@ -263,7 +263,7 @@ class Reading
        'args' => [
                   metering_point_id,
                   watt_hour,
-                  power,
+                  power/1000,
                   timestamp.to_i*1000
                  ]
       })
