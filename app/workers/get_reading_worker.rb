@@ -9,6 +9,9 @@ class GetReadingWorker
 
       if request['status'] == "ok"
         if request['result'].any?
+
+          # TODO: make this nicer
+
           request['result'].each do |item|
             timestamp = DateTime.strptime(item['time'].to_s,'%Q')
 
