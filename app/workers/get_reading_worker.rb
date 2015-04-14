@@ -21,7 +21,7 @@ class GetReadingWorker
 
               Reading.create( metering_point_id:  metering_point_id,
                               timestamp:    timestamp,
-                              power:        power < 0 ? power : 0, # if power negativ than power in
+                              power:        power, # if power negativ than power in
                               watt_hour:    watt_hour, #energy is in 10^-10 kWh;
                             )
             else
@@ -37,7 +37,7 @@ class GetReadingWorker
                 power                     = item['power']
                 Reading.create( metering_point_id:  metering_point_id,
                                 timestamp:    timestamp,
-                                power:        power > 0 ? power : 0, # if power positiv than power out
+                                power:        power, # if power positiv than power out
                                 watt_hour:    watt_hour, #energy is in 10^-10 kWh;
                               )
               end
