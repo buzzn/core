@@ -6,7 +6,7 @@ class Discovergy
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').raw_with_power(60009269)
 
 
-  # Discovergy.new('karin.smith@solfux.de', '19200buzzn').raw(60051431)
+  # Discovergy.new('karin.smith@solfux.de', '19200buzzn').raw_with_power(60051431)
 
   # Discovergy.new('team@buzzn-metering.de', 'Zebulon_4711').raw_with_power(60139082)
 
