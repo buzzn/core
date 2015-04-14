@@ -18,11 +18,11 @@ class GetReadingWorker
 
                 if metering_point_mode == 'in'
                   watt_hour = item['energy']
-                  power     = item['power'] < 0 ? item['power'].abs : 0
+                  power     = item['power'] > 0 ? item['power'].abs : 0
 
                 elsif metering_point_mode == 'out'
                   watt_hour = item['energyOut']
-                  power     = item['power'] > 0 ? item['power'].abs : 0
+                  power     = item['power'] < 0 ? item['power'].abs : 0
                 end
 
                 Reading.create( metering_point_id:  metering_point_id,
