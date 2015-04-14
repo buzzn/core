@@ -12,10 +12,22 @@ class GetReadingWorker
           request['result'].each do |item|
             timestamp = DateTime.strptime(item['time'].to_s,'%Q')
 
+            if metering_points_modes_and_ids.size == 1
+              metering_point_mode_and_id  = metering_points_modes_and_ids.first
+              metering_point_mode         = metering_point_mode_and_id.first
+              metering_point_id           = metering_point_mode_and_id.last
+              watt_hour                   = item['energy']
+              power                       = item['power'].abs
+
+              Reading.create( metering_point_id:  metering_point_id,
+                              timestamp:    timestamp,
+                              power:        power,
+                              watt_hour:    watt_hour, #energy is in 10^-10 kWh;
+                            )
+            else
               metering_points_modes_and_ids.each do |metering_point_mode_and_id|
                 metering_point_mode = metering_point_mode_and_id.first
                 metering_point_id   = metering_point_mode_and_id.last
-
                 if metering_point_mode == 'in'
                   watt_hour = item['energy']
                   power     = item['power'] > 0 ? item['power'].abs : 0
@@ -33,6 +45,8 @@ class GetReadingWorker
               end
             end
 
+
+          end
 
         else
           logger.warn "GetReadingWorker: No result form request. starttime: #{start_time}, endtime: #{end_time}"
