@@ -190,7 +190,7 @@ $(".metering_point_detail").ready ->
             format: "{value} W"
           title:
             enabled: true
-            text: "Energie"
+            text: "Leistung"
             style: { "color": "#FFF", "fontWeight": "bold"}
         plotOptions:
           series:
@@ -206,8 +206,14 @@ $(".metering_point_detail").ready ->
               cursor: 'pointer'
               click: (event) ->
                 zoomIn(event.point.x)
+          column:
+            borderWidth: 0
+            events:
+              cursor: 'pointer'
+              click: (event) ->
+                zoomIn(event.point.x)
         tooltip:
-          pointFormat: "{point.y:,.0f} W"
+          pointFormat: '<b>{point.y:,.0f} W</b><br/>'
           dateTimeLabelFormats:
             millisecond:"%e.%b, %H:%M:%S.%L",
             second:"%e.%b, %H:%M:%S",
@@ -269,8 +275,10 @@ $(".metering_point_detail").ready ->
     #  actual_resolution = "week_to_days"
     #else if actual_resolution == "week_to_days"
       actual_resolution = "month_to_days"
+      setChartToBarchart()
     else if actual_resolution == "month_to_days"
       actual_resolution = "year_to_months"
+      setChartToBarchart()
 
     containing_timestamp = chart_data_min_x
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
@@ -278,8 +286,8 @@ $(".metering_point_detail").ready ->
         chart.hideLoading()
         data[0].data[0] = [new Date(), 0]
       chart.series[0].setData(data[0].data)
-      #new_point_width = setPointWidth()
-      #chart.series[0].update({pointWidth: new_point_width})
+      new_point_width = setPointWidth()
+      chart.series[0].update({pointWidth: new_point_width})
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
       chart_data_min_x = chart.series[0].data[0].x
@@ -359,7 +367,7 @@ $(".dashboard-chart").ready ->
                 format: "{value} W"
               title:
                 enabled: true
-                text: "Energie"
+                text: "Leistung"
                 style: { "color": "#000", "fontWeight": "bold"}
             plotOptions:
               series:
@@ -369,7 +377,7 @@ $(".dashboard-chart").ready ->
                   click: (event) ->
                     zoomInDashboard(event.point.x)
             tooltip:
-              pointFormat: "{point.y:,.0f} W"
+              pointFormat: '<b>{point.y:,.0f} W</b><br/>'
               dateTimeLabelFormats:
                 millisecond:"%e.%b, %H:%M:%S.%L",
                 second:"%e.%b, %H:%M:%S",
@@ -440,12 +448,15 @@ $(".dashboard-chart").ready ->
     chart.showLoading()
     if actual_resolution == "hour_to_minutes"
       actual_resolution = "day_to_minutes"
+      setChartToLinechart()
     else if actual_resolution == "day_to_minutes"
     #  actual_resolution = "week_to_days"
     #else if actual_resolution == "week_to_days"
       actual_resolution = "month_to_days"
+      setChartToBarchart()
     else if actual_resolution == "month_to_days"
       actual_resolution = "year_to_months"
+      setChartToBarchart()
 
     containing_timestamp = chart_data_min_x
     metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
@@ -457,6 +468,8 @@ $(".dashboard-chart").ready ->
             chart.hideLoading()
             data[0].data[0] = [new Date(), 0]
           chart.series[numberOfSeries].setData(data[0].data)
+          new_point_width = setPointWidth()
+          chart.series[0].update({pointWidth: new_point_width})
           chart.xAxis[0].update(getExtremes(containing_timestamp), true)
           chart_data_min_x = chart.series[numberOfSeries].data[0].x
           chart.hideLoading()
@@ -589,25 +602,26 @@ zoomIn = (timestamp) ->
   $(".metering_point_detail").each (div) ->
     id = $(this).attr('id').split('_')[2]
     if actual_resolution == "hour_to_minutes"
+      setChartToLinechart()
       chart.hideLoading()
       return
     else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
       actual_resolution = "hour_to_minutes"
-    #else if actual_resolution == "week_to_days"
-    #  actual_resolution = "day_to_hours"
+      setChartToLinechart()
     else if actual_resolution == "month_to_days"
-    #  actual_resolution = "week_to_days"
       actual_resolution = "day_to_minutes"
+      setChartToLinechart()
     else if actual_resolution == "year_to_months"
       actual_resolution = "month_to_days"
+      setChartToBarchart()
     containing_timestamp = timestamp
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
         chart.hideLoading()
         return
       chart.series[0].setData(data[0].data)
-      #new_point_width = setPointWidth()
-      #chart.series[0].update({pointWidth: new_point_width})
+      new_point_width = setPointWidth()
+      chart.series[0].update({pointWidth: new_point_width})
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
       chart_data_min_x = chart.series[0].data[0].x
@@ -620,17 +634,21 @@ zoomInDashboard = (timestamp) ->
   chart.showLoading()
 
   if actual_resolution == "hour_to_minutes"
+    setChartToLinechart()
     chart.hideLoading()
     return
   else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
     actual_resolution = "hour_to_minutes"
+    setChartToLinechart()
   #else if actual_resolution == "week_to_days"
   #  actual_resolution = "day_to_hours"
   else if actual_resolution == "month_to_days"
   #  actual_resolution = "week_to_days"
     actual_resolution = "day_to_minutes"
+    setChartToLinechart()
   else if actual_resolution == "year_to_months"
     actual_resolution = "month_to_days"
+    setChartToBarchart()
   containing_timestamp = timestamp
 
   metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
@@ -642,6 +660,8 @@ zoomInDashboard = (timestamp) ->
           chart.hideLoading()
           return
         chart.series[numberOfSeries].setData(data[0].data)
+        new_point_width = setPointWidth()
+        chart.series[0].update({pointWidth: new_point_width})
         chart.xAxis[0].update(getExtremes(containing_timestamp), true)
         chart_data_min_x = chart.series[0].data[0].x
         chart.hideLoading()
@@ -703,6 +723,34 @@ checkIfZoomOutDashboard = () ->
     $(".btn-chart-next").attr('disabled', true)
   else
     $(".btn-chart-zoomout").removeAttr("disabled")
+
+
+setChartToBarchart = () ->
+  chart.series[0].update({
+    type: 'column'
+    tooltip:
+      pointFormat: '<b>{point.y:.2f} kWh</b><br/>'
+  })
+  chart.yAxis[0].update({
+    labels:
+      format: "{value} kWh"
+    title:
+      text: "Energie"
+  })
+
+setChartToLinechart = () ->
+  chart.series[0].update({
+    type: 'areaspline'
+    tooltip:
+      pointFormat: '<b>{point.y:,.0f} W</b><br/>'
+  })
+  chart.yAxis[0].update({
+    labels:
+      format: "{value} W"
+    title:
+      text: "Leistung"
+  })
+
 
 
 

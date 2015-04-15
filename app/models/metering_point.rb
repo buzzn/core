@@ -248,21 +248,27 @@ private
   def slp_or_smart(metering_point_id, resolution_format, containing_timestamp)
     metering_point = MeteringPoint.find(metering_point_id)
     if metering_point.meter && metering_point.meter.smart
-      convert_to_array(Reading.aggregate(resolution_format, [metering_point.id], containing_timestamp)) # smart
+      convert_to_array(Reading.aggregate(resolution_format, [metering_point.id], containing_timestamp), resolution_format) # smart
     else
-      convert_to_array(Reading.aggregate(resolution_format, nil, containing_timestamp)) # SLP
+      convert_to_array(Reading.aggregate(resolution_format, nil, containing_timestamp), resolution_format) # SLP
     end
   end
 
 
-  def convert_to_array(data)
+  def convert_to_array(data, resolution_format)
     hours = []
     data.each do |hour|
-      hours << [
-        hour['firstTimestamp'].to_i*1000,
-        hour['avgPower'].to_i/1000,
-        hour['consumption'].to_i/10000000000.0
-      ]
+      if resolution_format == :year_to_months || resolution_format == :month_to_days
+        hours << [
+          hour['firstTimestamp'].to_i*1000,
+          hour['consumption'].to_i/10000000000.0
+        ]
+      else
+        hours << [
+          hour['firstTimestamp'].to_i*1000,
+          hour['avgPower'].to_i/1000
+        ]
+      end
     end
     return hours
   end
