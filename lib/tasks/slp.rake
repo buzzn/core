@@ -37,7 +37,7 @@ namespace :slp do
           elsif parseString.include? "QTY"
             additional_watt_hour = parseString[8...parseString.length].to_f
             new_watt_hour = watt_hour + additional_watt_hour
-            watts = (new_watt_hour - watt_hour)*4
+            watts = (new_watt_hour - watt_hour)*4*1000 #convert to mW
             watt_hour += additional_watt_hour
             watt_hour = watt_hour.round(3)
           end

@@ -71,7 +71,11 @@ class MeteringPoint < ActiveRecord::Base
       data = []
       operands.each do |metering_point_id|
         reading = Reading.last_by_metering_point_id(metering_point_id)
-        data << [[reading[:timestamp], reading[:power], reading[:watt_hour]]]
+        if reading.nil?
+          data << [[0, 0, 0]]
+        else
+          data << [[reading[:timestamp], reading[:power], reading[:watt_hour]]]
+        end
       end
       return calculate_virtual_metering_point(data, operators)[0][1]/1000
     else
@@ -291,6 +295,10 @@ private
     i = 0
     data.each do |metering_point|
       j = 0
+      if metering_point.empty?
+        j += 1
+        next
+      end
       metering_point.each do |reading|
         if i == 0
           timestamps << reading[0]
