@@ -274,14 +274,15 @@ $(".metering_point_detail").ready ->
     chart.showLoading()
     if actual_resolution == "hour_to_minutes"
       actual_resolution = "day_to_minutes"
+      setChartToLinechart(false)
     else if actual_resolution == "day_to_minutes"
     #  actual_resolution = "week_to_days"
     #else if actual_resolution == "week_to_days"
       actual_resolution = "month_to_days"
-      setChartToBarchart()
+      setChartToBarchart(false)
     else if actual_resolution == "month_to_days"
       actual_resolution = "year_to_months"
-      setChartToBarchart()
+      setChartToBarchart(false)
 
     containing_timestamp = chart_data_min_x
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
@@ -382,7 +383,7 @@ $(".dashboard-chart").ready ->
               column:
                 stacking: 'normal'
             tooltip:
-              pointFormat: '<b>{series.name} {point.y:,.0f} W</b><br/>'
+              pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
               dateTimeLabelFormats:
                 millisecond:"%e.%b, %H:%M:%S.%L",
                 second:"%e.%b, %H:%M:%S",
@@ -457,15 +458,15 @@ $(".dashboard-chart").ready ->
     chart.showLoading()
     if actual_resolution == "hour_to_minutes"
       actual_resolution = "day_to_minutes"
-      setChartToLinechart()
+      setChartToLinechart(true)
     else if actual_resolution == "day_to_minutes"
     #  actual_resolution = "week_to_days"
     #else if actual_resolution == "week_to_days"
       actual_resolution = "month_to_days"
-      setChartToBarchart()
+      setChartToBarchart(true)
     else if actual_resolution == "month_to_days"
       actual_resolution = "year_to_months"
-      setChartToBarchart()
+      setChartToBarchart(true)
 
     containing_timestamp = chart_data_min_x
     metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
@@ -487,10 +488,10 @@ $(".dashboard-chart").ready ->
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
-    chart.hideLoading()
     checkIfPreviousDataExistsDashboard()
     checkIfNextDataExistsDashboard()
     checkIfZoomOutDashboard()
+    chart.hideLoading()
 
 
 
@@ -616,15 +617,15 @@ zoomIn = (timestamp) ->
   $(".metering_point_detail").each (div) ->
     id = $(this).attr('id').split('_')[2]
     if actual_resolution == "hour_to_minutes"
-      setChartToLinechart()
+      setChartToLinechart(false)
       chart.hideLoading()
       return
     else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
       actual_resolution = "hour_to_minutes"
-      setChartToLinechart()
+      setChartToLinechart(false)
     else if actual_resolution == "month_to_days"
       actual_resolution = "day_to_minutes"
-      setChartToLinechart()
+      setChartToLinechart(false)
     else if actual_resolution == "year_to_months"
       actual_resolution = "month_to_days"
       setChartToBarchart()
@@ -648,21 +649,21 @@ zoomInDashboard = (timestamp) ->
   chart.showLoading()
 
   if actual_resolution == "hour_to_minutes"
-    setChartToLinechart()
+    setChartToLinechart(true)
     chart.hideLoading()
     return
   else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
     actual_resolution = "hour_to_minutes"
-    setChartToLinechart()
+    setChartToLinechart(true)
   #else if actual_resolution == "week_to_days"
   #  actual_resolution = "day_to_hours"
   else if actual_resolution == "month_to_days"
   #  actual_resolution = "week_to_days"
     actual_resolution = "day_to_minutes"
-    setChartToLinechart()
+    setChartToLinechart(true)
   else if actual_resolution == "year_to_months"
     actual_resolution = "month_to_days"
-    setChartToBarchart()
+    setChartToBarchart(true)
   containing_timestamp = timestamp
 
   metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
@@ -683,11 +684,11 @@ zoomInDashboard = (timestamp) ->
         chart_data_min_x = chart.series[0].data[0].x
         if !seriesVisible
           chart.series[numberOfSeries].hide()
-        chart.hideLoading()
         numberOfSeries += 1
   checkIfPreviousDataExistsDashboard()
   checkIfNextDataExistsDashboard()
   checkIfZoomOutDashboard()
+  chart.hideLoading()
 
 
 checkIfZoomOut = () ->
@@ -744,13 +745,21 @@ checkIfZoomOutDashboard = () ->
     $(".btn-chart-zoomout").removeAttr("disabled")
 
 
-setChartToBarchart = () ->
-  chart.series.forEach (series) ->
-    series.update({
-      type: 'column'
-      tooltip:
-        pointFormat: '<b>{point.y:.2f} kWh</b><br/>'
-    })
+setChartToBarchart = (displaySeriesName) ->
+  if displaySeriesName
+    chart.series.forEach (series) ->
+      series.update({
+        type: 'column'
+        tooltip:
+          pointFormat: '{series.name}: <b>{point.y:.2f} kWh</b><br/>'
+      })
+  else
+    chart.series.forEach (series) ->
+      series.update({
+        type: 'column'
+        tooltip:
+          pointFormat: '<b>{point.y:.2f} kWh</b><br/>'
+      })
   chart.yAxis[0].update({
     labels:
       format: "{value} kWh"
@@ -758,13 +767,21 @@ setChartToBarchart = () ->
       text: "Energie"
   })
 
-setChartToLinechart = () ->
-  chart.series.forEach (series) ->
-    series.update({
-      type: 'areaspline'
-      tooltip:
-        pointFormat: '<b>{point.y:,.0f} W</b><br/>'
-    })
+setChartToLinechart = (displaySeriesName) ->
+  if displaySeriesName
+    chart.series.forEach (chartSeries) ->
+      chartSeries.update({
+        type: 'areaspline'
+        tooltip:
+          pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
+      })
+  else
+    chart.series.forEach (series) ->
+      series.update({
+        type: 'areaspline'
+        tooltip:
+          pointFormat: '<b>{point.y:,.0f} W</b><br/>'
+      })
   chart.yAxis[0].update({
     labels:
       format: "{value} W"
