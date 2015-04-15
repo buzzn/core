@@ -17,7 +17,7 @@ $(".metering_points").ready ->
             renderTo: 'chart-container-' + id
             width: width
             backgroundColor:'rgba(255, 255, 255, 0.0)'
-            spacingBottom: 0,
+            spacingBottom: 5,
             spacingTop: 0,
             spacingLeft: 20,
             spacingRight: 20
@@ -51,6 +51,8 @@ $(".metering_points").ready ->
               format: "{value} W"
             title:
               enabled: false
+            minRange: 10
+            min: 0
           plotOptions:
             series:
               fillColor:
@@ -192,6 +194,7 @@ $(".metering_point_detail").ready ->
             enabled: true
             text: "Leistung"
             style: { "color": "#FFF", "fontWeight": "bold"}
+          minRange: 1
         plotOptions:
           series:
             fillColor:
@@ -376,8 +379,10 @@ $(".dashboard-chart").ready ->
                   cursor: 'pointer'
                   click: (event) ->
                     zoomInDashboard(event.point.x)
+              column:
+                stacking: 'normal'
             tooltip:
-              pointFormat: '<b>{point.y:,.0f} W</b><br/>'
+              pointFormat: '<b>{series.name} {point.y:,.0f} W</b><br/>'
               dateTimeLabelFormats:
                 millisecond:"%e.%b, %H:%M:%S.%L",
                 second:"%e.%b, %H:%M:%S",
@@ -469,7 +474,7 @@ $(".dashboard-chart").ready ->
             data[0].data[0] = [new Date(), 0]
           chart.series[numberOfSeries].setData(data[0].data)
           new_point_width = setPointWidth()
-          chart.series[0].update({pointWidth: new_point_width})
+          chart.series[numberOfSeries].update({pointWidth: new_point_width})
           chart.xAxis[0].update(getExtremes(containing_timestamp), true)
           chart_data_min_x = chart.series[numberOfSeries].data[0].x
           chart.hideLoading()
@@ -661,7 +666,7 @@ zoomInDashboard = (timestamp) ->
           return
         chart.series[numberOfSeries].setData(data[0].data)
         new_point_width = setPointWidth()
-        chart.series[0].update({pointWidth: new_point_width})
+        chart.series[numberOfSeries].update({pointWidth: new_point_width})
         chart.xAxis[0].update(getExtremes(containing_timestamp), true)
         chart_data_min_x = chart.series[0].data[0].x
         chart.hideLoading()
@@ -726,11 +731,12 @@ checkIfZoomOutDashboard = () ->
 
 
 setChartToBarchart = () ->
-  chart.series[0].update({
-    type: 'column'
-    tooltip:
-      pointFormat: '<b>{point.y:.2f} kWh</b><br/>'
-  })
+  chart.series.forEach (series) ->
+    series.update({
+      type: 'column'
+      tooltip:
+        pointFormat: '<b>{point.y:.2f} kWh</b><br/>'
+    })
   chart.yAxis[0].update({
     labels:
       format: "{value} kWh"
@@ -739,11 +745,12 @@ setChartToBarchart = () ->
   })
 
 setChartToLinechart = () ->
-  chart.series[0].update({
-    type: 'areaspline'
-    tooltip:
-      pointFormat: '<b>{point.y:,.0f} W</b><br/>'
-  })
+  chart.series.forEach (series) ->
+    series.update({
+      type: 'areaspline'
+      tooltip:
+        pointFormat: '<b>{point.y:,.0f} W</b><br/>'
+    })
   chart.yAxis[0].update({
     labels:
       format: "{value} W"
