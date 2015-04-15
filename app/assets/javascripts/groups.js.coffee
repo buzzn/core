@@ -317,6 +317,7 @@ class BubbleChart
 
 
 root = exports ? this
+timers = []
 
 $(".bubbles_container").ready ->
   chart = null
@@ -344,15 +345,30 @@ $(".bubbles_container").ready ->
 
       for metering_point_data in data_in
         metering_point_id = metering_point_data[0]
-        channel = pusher.subscribe("metering_point_#{metering_point_id}")
-        channel.bind "new_reading", (reading) ->
-          chart.reset_radius(reading.metering_point_id, reading.power, reading.timestamp)
+        if metering_point_data[3] == null
+          channel = pusher.subscribe("metering_point_#{metering_point_id}")
+          channel.bind "new_reading", (reading) ->
+            chart.reset_radius(reading.metering_point_id, reading.power, reading.timestamp)
+        else
+          timers.push(
+            window.setInterval(->
+              pullVirtualPowerData(chart, metering_point_id)
+              return
+            , 1000*60)
+            )
       for metering_point_data in data_out
         metering_point_id = metering_point_data[0]
-        channel = pusher.subscribe("metering_point_#{metering_point_id}")
-        channel.bind "new_reading", (reading) ->
-          chart.reset_radius(reading.metering_point_id, reading.power, reading.timestamp)
-
+        if metering_point_data[3] == null
+          channel = pusher.subscribe("metering_point_#{metering_point_id}")
+          channel.bind "new_reading", (reading) ->
+            chart.reset_radius(reading.metering_point_id, reading.power, reading.timestamp)
+        else
+          timers.push(
+            window.setInterval(->
+              pullVirtualPowerData(chart, metering_point_id)
+              return
+            , 1000*60)
+            )
       $(window).on "resize:end", chart.calculateNewCenter
 
 
@@ -365,6 +381,24 @@ addCommas = (nStr) ->
   rgx = /(\d+)(\d{3})/
   x1 = x1.replace(rgx, "$1" + "," + "$2")  while rgx.test(x1)
   x1 + x2
+
+pullVirtualPowerData = (chart, metering_point_id) ->
+  console.log 'pull'
+  $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
+    .success (data) ->
+      console.log data
+      chart.reset_radius(metering_point_id, data, 0)
+
+clearTimers = ->
+  i = 0
+  while i < timers.length
+    window.clearInterval timers[i]
+    i++
+  timers = []
+
+
+$(document).on('page:before-change', clearTimers)
+
 
 
 

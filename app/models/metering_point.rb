@@ -285,7 +285,7 @@ private
   end
 
   def calculate_virtual_metering_point(data, operators)
-    hours = []
+    #hours = []
     timestamps = []
     watts = []
     i = 0
@@ -295,18 +295,18 @@ private
         if i == 0
           timestamps << reading[0]
           watts << reading[1]
-          hours << reading[2]
+          #hours << reading[2]
         else
           timestamps[j] = reading[0]
           if operators[i - 1] == "+"
             watts[j] += reading[1]
-            hours[j] += reading[2]
+            #hours[j] += reading[2]
           elsif operators[i - 1] == "-"
             watts[j] -= reading[1]
-            hours[j] -= reading[2]
+            #hours[j] -= reading[2]
           elsif operators[i - 1] == "*"
             watts[j] *= reading[1]
-            hours[j] *= reading[2]
+            #hours[j] *= reading[2]
           end
         end
         j += 1
@@ -317,8 +317,8 @@ private
     for i in 0...watts.length
       result << [
         timestamps[i],
-        watts[i],
-        hours[i]
+        watts[i]
+        #hours[i]
       ]
     end
     return result

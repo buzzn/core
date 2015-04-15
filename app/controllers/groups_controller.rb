@@ -98,20 +98,21 @@ class GroupsController < ApplicationController
       else
         if metering_point.virtual #&& metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
           latest_power = metering_point.last_power
+          virtual = true
         end
       end
       if metering_point.mode == "out"
         if !latest_power.nil?
-          data_entry.push(metering_point.id, latest_power, user_name)
+          data_entry.push(metering_point.id, latest_power, user_name, virtual)
         else
-          data_entry.push(metering_point.id, 0, user_name)
+          data_entry.push(metering_point.id, 0, user_name, virtual)
         end
         out_metering_point_data.push(data_entry)
       else
         if !latest_power.nil?
-          data_entry.push(metering_point.id, latest_power, user_name)
+          data_entry.push(metering_point.id, latest_power, user_name, virtual)
         else
-          data_entry.push(metering_point.id, 0, user_name)
+          data_entry.push(metering_point.id, 0, user_name, virtual)
         end
         in_metering_point_data.push(data_entry)
       end
