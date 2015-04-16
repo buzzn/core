@@ -231,10 +231,12 @@ class BubbleChart
     d3.select(element).attr("stroke", (d) => d3.rgb(d.color).darker())
     @tooltip.hideTooltip()
 
-  reset_radius: (id, value, timestamp) =>
+  reset_radius: (id, value) =>
 
     @nodes.forEach (d) =>
       if d.id.toString() == id.toString()
+        if value == d.value
+          return
         d.value = value
         this.calculateMaxPower(d.value)
         d.radius = @radius_scale(parseInt(value))
@@ -242,10 +244,11 @@ class BubbleChart
 
     @nodes_out.forEach (d) =>
       if d.id.toString() == id.toString()
+        if value == d.value
+          return
         d.value = value
         this.calculateMaxPower(d.value)
         d.radius = @radius_scale(parseInt(value)) * 1.1
-
 
 
     #@circles = @vis.selectAll("circle")
@@ -348,7 +351,7 @@ $(".bubbles_container").ready ->
         if metering_point_data[3] == null
           channel = pusher.subscribe("metering_point_#{metering_point_id}")
           channel.bind "new_reading", (reading) ->
-            chart.reset_radius(reading.metering_point_id, reading.power, reading.timestamp)
+            chart.reset_radius(reading.metering_point_id, reading.power)
         else
           timers.push(
             window.setInterval(->
@@ -361,7 +364,7 @@ $(".bubbles_container").ready ->
         if metering_point_data[3] == null
           channel = pusher.subscribe("metering_point_#{metering_point_id}")
           channel.bind "new_reading", (reading) ->
-            chart.reset_radius(reading.metering_point_id, reading.power, reading.timestamp)
+            chart.reset_radius(reading.metering_point_id, reading.power)
         else
           timers.push(
             window.setInterval(->
@@ -383,11 +386,9 @@ addCommas = (nStr) ->
   x1 + x2
 
 pullVirtualPowerData = (chart, metering_point_id) ->
-  console.log 'pull'
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
     .success (data) ->
-      console.log data
-      chart.reset_radius(metering_point_id, data, 0)
+      chart.reset_radius(metering_point_id, data)
 
 clearTimers = ->
   i = 0

@@ -244,7 +244,6 @@ class MeteringPoint < ActiveRecord::Base
 
   def chart_data(resolution_format, containing_timestamp)
     if self.virtual && self.formula
-      puts 'virtual'
       operands = get_operands_from_formula
       operators = get_operators_from_formula
       data = []
@@ -291,7 +290,6 @@ class MeteringPoint < ActiveRecord::Base
 
   def calculate_virtual_metering_point(data, operators)
     #hours = []
-    puts data
     timestamps = []
     watts = []
     i = 0
@@ -307,16 +305,21 @@ class MeteringPoint < ActiveRecord::Base
           watts << reading[1]
           #hours << reading[2]
         else
-          timestamps[j] = reading[0]
-          if operators[i] == "+"
-            watts[j] += reading[1]
-            #hours[j] += reading[2]
-          elsif operators[i] == "-"
-            watts[j] -= reading[1]
-            #hours[j] -= reading[2]
-          elsif operators[i] == "*"
-            watts[j] *= reading[1]
-            #hours[j] *= reading[2]
+          if timestamps[j].nil? && watts[j].nil?
+            timestamps << reading[0]
+            watts << reading[1]
+          else
+            timestamps[j] = reading[0]
+            if operators[i] == "+"
+              watts[j] += reading[1]
+              #hours[j] += reading[2]
+            elsif operators[i] == "-"
+              watts[j] -= reading[1]
+              #hours[j] -= reading[2]
+            elsif operators[i] == "*"
+              watts[j] *= reading[1]
+              #hours[j] *= reading[2]
+            end
           end
         end
         j += 1

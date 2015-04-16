@@ -877,7 +877,7 @@ group_forstenried.metering_points << mp_60051554
 group_forstenried.metering_points << mp_60051585
 group_forstenried.metering_points << mp_60051621
 group_forstenried.metering_points << mp_60051565
-
+group_forstenried.metering_points << mp_1338000818
 
 mp_virtual_forstenried_bezug = Fabricate(:mp_forstenried_bezug)
 mp_virtual_forstenried_bezug.formula_parts << Fabricate(:fp_plus, operand_id: mp_60051595.id)
@@ -941,6 +941,8 @@ mp_virtual_forstenried_bezug.formula_parts << Fabricate(:fp_plus, operand_id: mp
 mp_virtual_forstenried_bezug.formula_parts << Fabricate(:fp_plus, operand_id: mp_60051585.id)
 mp_virtual_forstenried_bezug.formula_parts << Fabricate(:fp_plus, operand_id: mp_60051621.id)
 mp_virtual_forstenried_bezug.formula_parts << Fabricate(:fp_plus, operand_id: mp_60051565.id)
+mp_virtual_forstenried_bezug.formula_parts << Fabricate(:fp_plus, operand_id: mp_60009485.id)
+mp_virtual_forstenried_bezug.formula_parts << Fabricate(:fp_plus, operand_id: mp_1338000818.id)
 
 peter_schmidt.add_role(:manager, mp_virtual_forstenried_bezug)
 peter_schmidt.dashboard.metering_points << mp_virtual_forstenried_bezug
