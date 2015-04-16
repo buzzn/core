@@ -37,11 +37,11 @@ end
 
 
 Fabricator :group_forstenried, from: :group do
-  name        'Wogeno Forstenried'
+  name        'Mehrgenerationenplatz Forstenried'
   website     'http://www.energie.wogeno.de/'
-  description { "Dies ist der Localpool der Wogeno in Forstenried." }
+  description { "Dies ist der Localpool des Mehrgenerationenplatzes Forstenried der Freien Waldorfschule München Südwest und Wogeno München eG." }
   contracts { [Fabricate(:mpoc_buzzn_metering), Fabricate(:servicing_contract)] }
-  logo      { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'forstenried', 'haus_weich.jpg'))}
+  logo      { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'forstenried', 'schule_logo_wogeno.jpg'))}
   image     { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'forstenried', 'Wogeno_app.jpg')) }
 end
 

@@ -178,16 +178,16 @@
 
 
 
-  - if @energy_consumers.any?
-    %h1.page-header.text-overflow
-      %span
-        = t('energy_consumers')
-        %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Ein Stromnehmer ist eine Person, die über ihren Stromzähler Strom von einer anderen Person bekommt. Du findest hier also eine Liste aller Stromnehmer, die aus dieser Gruppe Strom beziehen."}
-    .row
-      - @energy_consumers.each do |user|
-        = render user.profile
-    %hr
+  / - if @energy_consumers.any?
+  /   %h1.page-header.text-overflow
+  /     %span
+  /       = t('energy_consumers')
+  /       %small
+  /         %i.small-info-circle.fa.fa-info-circle{'data-content' => "Ein Stromnehmer ist eine Person, die über ihren Stromzähler Strom von einer anderen Person bekommt. Du findest hier also eine Liste aller Stromnehmer, die aus dieser Gruppe Strom beziehen."}
+  /   .row
+  /     - @energy_consumers.each do |user|
+  /       = render user.profile
+  /   %hr
 
 
 

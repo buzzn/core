@@ -228,14 +228,23 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
+  def get_operators_from_formula
+    operators = []
+    self.formula.gsub(/\s+/, "").each_char do |char|
+      if ['+', '-', '*'].include?(char)
+        operators << char
+      end
+    end
+    return operators
+  end
 
 
 
 
-private
 
   def chart_data(resolution_format, containing_timestamp)
     if self.virtual && self.formula
+      puts 'virtual'
       operands = get_operands_from_formula
       operators = get_operators_from_formula
       data = []
@@ -278,25 +287,18 @@ private
   end
 
 
-  def get_operators_from_formula
-    operators = []
-    self.formula.gsub(/\s+/, "").each_char do |char|
-      if ['+', '-', '*'].include?(char)
-        operators << char
-      end
-    end
-    return operators
-  end
+
 
   def calculate_virtual_metering_point(data, operators)
     #hours = []
+    puts data
     timestamps = []
     watts = []
     i = 0
     data.each do |metering_point|
       j = 0
       if metering_point.empty?
-        j += 1
+        i += 1
         next
       end
       metering_point.each do |reading|
@@ -306,13 +308,13 @@ private
           #hours << reading[2]
         else
           timestamps[j] = reading[0]
-          if operators[i - 1] == "+"
+          if operators[i] == "+"
             watts[j] += reading[1]
             #hours[j] += reading[2]
-          elsif operators[i - 1] == "-"
+          elsif operators[i] == "-"
             watts[j] -= reading[1]
             #hours[j] -= reading[2]
-          elsif operators[i - 1] == "*"
+          elsif operators[i] == "*"
             watts[j] *= reading[1]
             #hours[j] *= reading[2]
           end

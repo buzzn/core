@@ -412,367 +412,367 @@ markus_becher = Fabricate(:markus_becher)
 mp_60051595 = Fabricate(:mp_60051595)
 markus_becher.add_role(:manager, mp_60051595)
 mp_60051595.users << markus_becher
-markus_becher.friends << peter_schmidt
+#markus_becher.friends << peter_schmidt
 
 inge_brack = Fabricate(:inge_brack)
 mp_60051547 = Fabricate(:mp_60051547)
 inge_brack.add_role(:manager, mp_60051547)
 mp_60051547.users << inge_brack
-inge_brack.friends << peter_schmidt
+#inge_brack.friends << peter_schmidt
 
 peter_brack = Fabricate(:peter_brack)
 mp_60051620 = Fabricate(:mp_60051620)
 peter_brack.add_role(:manager, mp_60051620)
 mp_60051620.users << peter_brack
-peter_brack.friends << peter_schmidt
+#peter_brack.friends << peter_schmidt
 
 annika_brandl = Fabricate(:annika_brandl)
 mp_60051602 = Fabricate(:mp_60051602)
 annika_brandl.add_role(:manager, mp_60051602)
 mp_60051602.users << annika_brandl
-annika_brandl.friends << peter_schmidt
+#annika_brandl.friends << peter_schmidt
 
 gudrun_brandl = Fabricate(:gudrun_brandl)
 mp_60051618 = Fabricate(:mp_60051618)
 gudrun_brandl.add_role(:manager, mp_60051618)
 mp_60051618.users << gudrun_brandl
-gudrun_brandl.friends << peter_schmidt
+#gudrun_brandl.friends << peter_schmidt
 
 martin_braeunlich = Fabricate(:martin_braeunlich)
 mp_60051557 = Fabricate(:mp_60051557)
 martin_braeunlich.add_role(:manager, mp_60051557)
 mp_60051557.users << martin_braeunlich
-martin_braeunlich.friends << peter_schmidt
+#martin_braeunlich.friends << peter_schmidt
 
 daniel_bruno = Fabricate(:daniel_bruno)
 mp_60051596 = Fabricate(:mp_60051596)
 daniel_bruno.add_role(:manager, mp_60051596)
 mp_60051596.users << daniel_bruno
-daniel_bruno.friends << peter_schmidt
+#daniel_bruno.friends << peter_schmidt
 
 zubair_butt = Fabricate(:zubair_butt)
 mp_60051558 = Fabricate(:mp_60051558)
 zubair_butt.add_role(:manager, mp_60051558)
 mp_60051558.users << zubair_butt
-zubair_butt.friends << peter_schmidt
+#zubair_butt.friends << peter_schmidt
 
 maria_cerghizan = Fabricate(:maria_cerghizan)
 mp_60051551 = Fabricate(:mp_60051551)
 maria_cerghizan.add_role(:manager, mp_60051551)
 mp_60051551.users << maria_cerghizan
-maria_cerghizan.friends << peter_schmidt
+#maria_cerghizan.friends << peter_schmidt
 
 stefan_csizmadia = Fabricate(:stefan_csizmadia)
 mp_60051619 = Fabricate(:mp_60051619)
 stefan_csizmadia.add_role(:manager, mp_60051619)
 mp_60051619.users << stefan_csizmadia
-stefan_csizmadia.friends << peter_schmidt
+#stefan_csizmadia.friends << peter_schmidt
 
 patrick_fierley = Fabricate(:patrick_fierley)
 mp_60051556 = Fabricate(:mp_60051556)
 patrick_fierley.add_role(:manager, mp_60051556)
 mp_60051556.users << patrick_fierley
-patrick_fierley.friends << peter_schmidt
+#patrick_fierley.friends << peter_schmidt
 
 maria_frank = Fabricate(:maria_frank)
 mp_60051617 = Fabricate(:mp_60051617)
 maria_frank.add_role(:manager, mp_60051617)
 mp_60051617.users << maria_frank
-maria_frank.friends << peter_schmidt
+#maria_frank.friends << peter_schmidt
 
 eva_galow = Fabricate(:eva_galow)
 mp_60051555 = Fabricate(:mp_60051555)
 eva_galow.add_role(:manager, mp_60051555)
 mp_60051555.users << eva_galow
-eva_galow.friends << peter_schmidt
+#eva_galow.friends << peter_schmidt
 
 christel_guesgen = Fabricate(:christel_guesgen)
 mp_60051616 = Fabricate(:mp_60051616)
 christel_guesgen.add_role(:manager, mp_60051616)
 mp_60051616.users << christel_guesgen
-christel_guesgen.friends << peter_schmidt
+#christel_guesgen.friends << peter_schmidt
 
 gilda_hencke = Fabricate(:gilda_hencke)
 mp_60051615 = Fabricate(:mp_60051615)
 gilda_hencke.add_role(:manager, mp_60051615)
 mp_60051615.users << gilda_hencke
-gilda_hencke.friends << peter_schmidt
+#gilda_hencke.friends << peter_schmidt
 
 uwe_hetzer = Fabricate(:uwe_hetzer)
 mp_60051546 = Fabricate(:mp_60051546)
 uwe_hetzer.add_role(:manager, mp_60051546)
 mp_60051546.users << uwe_hetzer
-uwe_hetzer.friends << peter_schmidt
+#uwe_hetzer.friends << peter_schmidt
 
 andreas_kapfer = Fabricate(:andreas_kapfer)
 mp_60051553 = Fabricate(:mp_60051553)
 andreas_kapfer.add_role(:manager, mp_60051553)
 mp_60051553.users << andreas_kapfer
-andreas_kapfer.friends << peter_schmidt
+#andreas_kapfer.friends << peter_schmidt
 
 renate_koller = Fabricate(:renate_koller)
 mp_60051601 = Fabricate(:mp_60051601)
 renate_koller.add_role(:manager, mp_60051601)
 mp_60051601.users << renate_koller
-renate_koller.friends << peter_schmidt
+#renate_koller.friends << peter_schmidt
 
 thekla_lorber = Fabricate(:thekla_lorber)
 mp_60051568 = Fabricate(:mp_60051568)
 thekla_lorber.add_role(:manager, mp_60051568)
 mp_60051568.users << thekla_lorber
-thekla_lorber.friends << peter_schmidt
+#thekla_lorber.friends << peter_schmidt
 
 ludwig_maassen = Fabricate(:ludwig_maassen)
 mp_60051610 = Fabricate(:mp_60051610)
 ludwig_maassen.add_role(:manager, mp_60051610)
 mp_60051610.users << ludwig_maassen
-ludwig_maassen.friends << peter_schmidt
+#ludwig_maassen.friends << peter_schmidt
 
 franz_petschler = Fabricate(:franz_petschler)
 mp_60051537 = Fabricate(:mp_60051537)
 franz_petschler.add_role(:manager, mp_60051537)
 mp_60051537.users << franz_petschler
-franz_petschler.friends << peter_schmidt
+#franz_petschler.friends << peter_schmidt
 
 anna_pfaffel = Fabricate(:anna_pfaffel)
 mp_60051564 = Fabricate(:mp_60051564)
 anna_pfaffel.add_role(:manager, mp_60051564)
 mp_60051564.users << anna_pfaffel
-anna_pfaffel.friends << peter_schmidt
+#anna_pfaffel.friends << peter_schmidt
 
 cornelia_roth = Fabricate(:cornelia_roth)
 mp_60051572 = Fabricate(:mp_60051572)
 cornelia_roth.add_role(:manager, mp_60051572)
 mp_60051572.users << cornelia_roth
-cornelia_roth.friends << peter_schmidt
+#cornelia_roth.friends << peter_schmidt
 
 christiane_voigt = Fabricate(:christiane_voigt)
 mp_60051552 = Fabricate(:mp_60051552)
 christiane_voigt.add_role(:manager, mp_60051552)
 mp_60051552.users << christiane_voigt
-christiane_voigt.friends << peter_schmidt
+#christiane_voigt.friends << peter_schmidt
 
 claudia_weber = Fabricate(:claudia_weber)
 mp_60051567 = Fabricate(:mp_60051567)
 claudia_weber.add_role(:manager, mp_60051567)
 mp_60051567.users << claudia_weber
-claudia_weber.friends << peter_schmidt
+#claudia_weber.friends << peter_schmidt
 
 sissi_banos = Fabricate(:sissi_banos)
 mp_60051586 = Fabricate(:mp_60051586)
 sissi_banos.add_role(:manager, mp_60051586)
 mp_60051586.users << sissi_banos
-sissi_banos.friends << peter_schmidt
+#sissi_banos.friends << peter_schmidt
 
 laura_häusler = Fabricate(:laura_haeusler)
 mp_60051540 = Fabricate(:mp_60051540)
 laura_häusler.add_role(:manager, mp_60051540)
 mp_60051540.users << laura_häusler
-laura_häusler.friends << peter_schmidt
+#laura_häusler.friends << peter_schmidt
 
 bastian_hentschel = Fabricate(:bastian_hentschel)
 mp_60051578 = Fabricate(:mp_60051578)
 bastian_hentschel.add_role(:manager, mp_60051578)
 mp_60051578.users << bastian_hentschel
-bastian_hentschel.friends << peter_schmidt
+#bastian_hentschel.friends << peter_schmidt
 
 dagmar_holland = Fabricate(:dagmar_holland)
 mp_60051597 = Fabricate(:mp_60051597)
 dagmar_holland.add_role(:manager, mp_60051597)
 mp_60051597.users << dagmar_holland
-dagmar_holland.friends << peter_schmidt
+#dagmar_holland.friends << peter_schmidt
 
 ahmad_majid = Fabricate(:ahmad_majid)
 mp_60051541 = Fabricate(:mp_60051541)
 ahmad_majid.add_role(:manager, mp_60051541)
 mp_60051541.users << ahmad_majid
-ahmad_majid.friends << peter_schmidt
+#ahmad_majid.friends << peter_schmidt
 
 marinus_meiners = Fabricate(:marinus_meiners)
 mp_60051570 = Fabricate(:mp_60051570)
 marinus_meiners.add_role(:manager, mp_60051570)
 mp_60051570.users << marinus_meiners
-marinus_meiners.friends << peter_schmidt
+#marinus_meiners.friends << peter_schmidt
 
 wolfgang_pfaffel = Fabricate(:wolfgang_pfaffel)
 mp_60051548 = Fabricate(:mp_60051548)
 wolfgang_pfaffel.add_role(:manager, mp_60051548)
 mp_60051548.users << wolfgang_pfaffel
-wolfgang_pfaffel.friends << peter_schmidt
+#wolfgang_pfaffel.friends << peter_schmidt
 
 magali_thomas = Fabricate(:magali_thomas)
 mp_60051612 = Fabricate(:mp_60051612)
 magali_thomas.add_role(:manager, mp_60051612)
 mp_60051612.users << magali_thomas
-magali_thomas.friends << peter_schmidt
+#magali_thomas.friends << peter_schmidt
 
 kathrin_kaisenberg = Fabricate(:kathrin_kaisenberg)
 mp_60051549 = Fabricate(:mp_60051549)
 kathrin_kaisenberg.add_role(:manager, mp_60051549)
 mp_60051549.users << kathrin_kaisenberg
-kathrin_kaisenberg.friends << peter_schmidt
+#kathrin_kaisenberg.friends << peter_schmidt
 
 christian_winkler = Fabricate(:christian_winkler)
 mp_60051587 = Fabricate(:mp_60051587)
 christian_winkler.add_role(:manager, mp_60051587)
 mp_60051587.users << christian_winkler
-christian_winkler.friends << peter_schmidt
+#christian_winkler.friends << peter_schmidt
 
 dorothea_wolff = Fabricate(:dorothea_wolff)
 mp_60051566 = Fabricate(:mp_60051566)
 dorothea_wolff.add_role(:manager, mp_60051566)
 mp_60051566.users << dorothea_wolff
-dorothea_wolff.friends << peter_schmidt
+#dorothea_wolff.friends << peter_schmidt
 
 esra_kwiek = Fabricate(:esra_kwiek)
 mp_60051592 = Fabricate(:mp_60051592)
 esra_kwiek.add_role(:manager, mp_60051592)
 mp_60051592.users << esra_kwiek
-esra_kwiek.friends << peter_schmidt
+#esra_kwiek.friends << peter_schmidt
 
 felix_pfeiffer = Fabricate(:felix_pfeiffer)
 mp_60051580 = Fabricate(:mp_60051580)
 felix_pfeiffer.add_role(:manager, mp_60051580)
 mp_60051580.users << felix_pfeiffer
-felix_pfeiffer.friends << peter_schmidt
+#felix_pfeiffer.friends << peter_schmidt
 
 jorg_nasri = Fabricate(:jorg_nasri)
 mp_60051538 = Fabricate(:mp_60051538)
 jorg_nasri.add_role(:manager, mp_60051538)
 mp_60051538.users << jorg_nasri
-jorg_nasri.friends << peter_schmidt
+#jorg_nasri.friends << peter_schmidt
 
 ruth_jürgensen = Fabricate(:ruth_juergensen)
 mp_60051590 = Fabricate(:mp_60051590)
 ruth_jürgensen.add_role(:manager, mp_60051590)
 mp_60051590.users << ruth_jürgensen
-ruth_jürgensen.friends << peter_schmidt
+#ruth_jürgensen.friends << peter_schmidt
 
 rafal_jaskolka = Fabricate(:rafal_jaskolka)
 mp_60051588 = Fabricate(:mp_60051588)
 rafal_jaskolka.add_role(:manager, mp_60051588)
 mp_60051588.users << rafal_jaskolka
-rafal_jaskolka.friends << peter_schmidt
+#rafal_jaskolka.friends << peter_schmidt
 
 elisabeth_gritzmann = Fabricate(:elisabeth_gritzmann)
 mp_60051543 = Fabricate(:mp_60051543)
 elisabeth_gritzmann.add_role(:manager, mp_60051543)
 mp_60051543.users << elisabeth_gritzmann
-elisabeth_gritzmann.friends << peter_schmidt
+#elisabeth_gritzmann.friends << peter_schmidt
 
 matthias_flegel = Fabricate(:matthias_flegel)
 mp_60051582 = Fabricate(:mp_60051582)
 matthias_flegel.add_role(:manager, mp_60051582)
 mp_60051582.users << matthias_flegel
-matthias_flegel.friends << peter_schmidt
+#matthias_flegel.friends << peter_schmidt
 
 michael_göbl = Fabricate(:michael_goebl)
 mp_60051539 = Fabricate(:mp_60051539)
 michael_göbl.add_role(:manager, mp_60051539)
 mp_60051539.users << michael_göbl
-michael_göbl.friends << peter_schmidt
+#michael_göbl.friends << peter_schmidt
 
 joaquim_gongolo = Fabricate(:joaquim_gongolo)
 mp_60051545 = Fabricate(:mp_60051545)
 joaquim_gongolo.add_role(:manager, mp_60051545)
 mp_60051545.users << joaquim_gongolo
-joaquim_gongolo.friends << peter_schmidt
+#joaquim_gongolo.friends << peter_schmidt
 
 patrick_haas = Fabricate(:patrick_haas)
 mp_60051614 = Fabricate(:mp_60051614)
 patrick_haas.add_role(:manager, mp_60051614)
 mp_60051614.users << patrick_haas
-patrick_haas.friends << peter_schmidt
+#patrick_haas.friends << peter_schmidt
 
 gundula_herrberg = Fabricate(:gundula_herrberg)
 mp_60051550 = Fabricate(:mp_60051550)
 gundula_herrberg.add_role(:manager, mp_60051550)
 mp_60051550.users << gundula_herrberg
-gundula_herrberg.friends << peter_schmidt
+#gundula_herrberg.friends << peter_schmidt
 
 dominik_sölch = Fabricate(:dominik_soelch)
 mp_60051573 = Fabricate(:mp_60051573)
 dominik_sölch.add_role(:manager, mp_60051573)
 mp_60051573.users << dominik_sölch
-dominik_sölch.friends << peter_schmidt
+#dominik_sölch.friends << peter_schmidt
 
 jessica_rensburg = Fabricate(:jessica_rensburg)
 mp_60051571 = Fabricate(:mp_60051571)
 jessica_rensburg.add_role(:manager, mp_60051571)
 mp_60051571.users << jessica_rensburg
-jessica_rensburg.friends << peter_schmidt
+#jessica_rensburg.friends << peter_schmidt
 
 ulrich_hafen = Fabricate(:ulrich_hafen)
 mp_60051544 = Fabricate(:mp_60051544)
 ulrich_hafen.add_role(:manager, mp_60051544)
 mp_60051544.users << ulrich_hafen
-ulrich_hafen.friends << peter_schmidt
+#ulrich_hafen.friends << peter_schmidt
 
 anke_merk = Fabricate(:anke_merk)
 mp_60051594 = Fabricate(:mp_60051594)
 anke_merk.add_role(:manager, mp_60051594)
 mp_60051594.users << anke_merk
-anke_merk.friends << peter_schmidt
+#anke_merk.friends << peter_schmidt
 
 alex_erdl = Fabricate(:alex_erdl)
 mp_60051583 = Fabricate(:mp_60051583)
 alex_erdl.add_role(:manager, mp_60051583)
 mp_60051583.users << alex_erdl
-alex_erdl.friends << peter_schmidt
+#alex_erdl.friends << peter_schmidt
 
 katrin_frische = Fabricate(:katrin_frische)
 mp_60051604 = Fabricate(:mp_60051604)
 katrin_frische.add_role(:manager, mp_60051604)
 mp_60051604.users << katrin_frische
-katrin_frische.friends << peter_schmidt
+#katrin_frische.friends << peter_schmidt
 
 claudia_krumm = Fabricate(:claudia_krumm)
 mp_60051593 = Fabricate(:mp_60051593)
 claudia_krumm.add_role(:manager, mp_60051593)
 mp_60051593.users << claudia_krumm
-claudia_krumm.friends << peter_schmidt
+#claudia_krumm.friends << peter_schmidt
 
 rasim_abazovic = Fabricate(:rasim_abazovic)
 mp_60051613 = Fabricate(:mp_60051613)
 rasim_abazovic.add_role(:manager, mp_60051613)
 mp_60051613.users << rasim_abazovic
-rasim_abazovic.friends << peter_schmidt
+#rasim_abazovic.friends << peter_schmidt
 
 moritz_feith = Fabricate(:moritz_feith)
 mp_60051611 = Fabricate(:mp_60051611)
 moritz_feith.add_role(:manager, mp_60051611)
 mp_60051611.users << moritz_feith
-moritz_feith.friends << peter_schmidt
+#moritz_feith.friends << peter_schmidt
 
 irmgard_loderer = Fabricate(:irmgard_loderer)
 mp_60051609 = Fabricate(:mp_60051609)
 irmgard_loderer.add_role(:manager, mp_60051609)
 mp_60051609.users << irmgard_loderer
-irmgard_loderer.friends << peter_schmidt
+#irmgard_loderer.friends << peter_schmidt
 
 eunice_schüler = Fabricate(:eunice_schueler)
 mp_60051554 = Fabricate(:mp_60051554)
 eunice_schüler.add_role(:manager, mp_60051554)
 mp_60051554.users << eunice_schüler
-eunice_schüler.friends << peter_schmidt
+#eunice_schüler.friends << peter_schmidt
 
 sara_strödel = Fabricate(:sara_stroedel)
 mp_60051585 = Fabricate(:mp_60051585)
 sara_strödel.add_role(:manager, mp_60051585)
 mp_60051585.users << sara_strödel
-sara_strödel.friends << peter_schmidt
+#sara_strödel.friends << peter_schmidt
 
 hannelore_voigt = Fabricate(:hannelore_voigt)
 mp_60051621 = Fabricate(:mp_60051621)
 hannelore_voigt.add_role(:manager, mp_60051621)
 mp_60051621.users << hannelore_voigt
-hannelore_voigt.friends << peter_schmidt
+#hannelore_voigt.friends << peter_schmidt
 
 roswitha_weber = Fabricate(:roswitha_weber)
 mp_60051565 = Fabricate(:mp_60051565)
 roswitha_weber.add_role(:manager, mp_60051565)
 mp_60051565.users << roswitha_weber
-roswitha_weber.friends << peter_schmidt
+#roswitha_weber.friends << peter_schmidt
 
 # #alexandra brunner
 # Fabricator :mp_6005195, from: :metering_point do
