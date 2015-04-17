@@ -228,6 +228,10 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
+
+
+private
+
   def get_operators_from_formula
     operators = []
     self.formula.gsub(/\s+/, "").each_char do |char|
@@ -240,15 +244,17 @@ class MeteringPoint < ActiveRecord::Base
 
 
 
-
-
   def chart_data(resolution_format, containing_timestamp)
     if self.virtual && self.formula
       operands = get_operands_from_formula
       operators = get_operators_from_formula
       data = []
       operands.each do |metering_point_id|
-        data << slp_or_smart(metering_point_id, resolution_format, containing_timestamp)
+        if MeteringPoint.find(metering_point_id).smart?
+          data << slp_or_smart(metering_point_id, resolution_format, containing_timestamp)
+        else
+          data << []
+        end
       end
       return calculate_virtual_metering_point(data, operators)
     else

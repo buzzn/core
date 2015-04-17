@@ -878,6 +878,7 @@ group_forstenried.metering_points << mp_60051585
 group_forstenried.metering_points << mp_60051621
 group_forstenried.metering_points << mp_60051565
 group_forstenried.metering_points << mp_1338000818
+group_forstenried.metering_points << mp_60009485
 
 mp_virtual_forstenried_bezug = Fabricate(:mp_forstenried_bezug)
 mp_virtual_forstenried_bezug.formula_parts << Fabricate(:fp_plus, operand_id: mp_60051595.id)
