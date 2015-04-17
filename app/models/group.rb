@@ -12,7 +12,7 @@ class Group < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
-  validates :name, presence: true, uniqueness: true, length: { in: 4..30 }
+  validates :name, presence: true, uniqueness: true, length: { in: 4..40 }
 
   normalize_attribute :name, with: [:strip]
 

@@ -815,18 +815,26 @@ $(".metering_point").ready ->
   metering_point_id = $(this).attr('id')
   metering_point = $(this)
   if $(this).find(".metering_point-ticker").data('slp') == false
-    Pusher.host = $(".pusher").data('pusherhost')
-    Pusher.ws_port = 8080
-    Pusher.wss_port = 8080
-    pusher = new Pusher($(".pusher").data('pusherkey'))
+    if $(this).find(".metering_point-ticker").data('virtual') == true
+      timers.push(
+        window.setInterval(->
+          pullVirtualPowerData(metering_point, metering_point_id)
+          return
+        , 1000*60)
+        )
+    else
+      Pusher.host = $(".pusher").data('pusherhost')
+      Pusher.ws_port = 8080
+      Pusher.wss_port = 8080
+      pusher = new Pusher($(".pusher").data('pusherkey'))
 
-    channel = pusher.subscribe("metering_point_#{metering_point_id}")
-    channel.bind "new_reading", (reading) ->
-      #oldString = metering_point.find(".metering_point-ticker").attr('data-readings')
-      #oldWattHour = oldString.split(",")[1]
-      #oldTimestamp = oldString.split(",")[0].substring(1, oldString.split(",")[0].length)
-      #metering_point.find(".metering_point-ticker").attr('data-readings', "[#{reading.timestamp}, #{reading.watt_hour}, #{oldTimestamp}, #{oldWattHour}]")
-      metering_point.find(".power-ticker").html(reading.power)
+      channel = pusher.subscribe("metering_point_#{metering_point_id}")
+      channel.bind "new_reading", (reading) ->
+        #oldString = metering_point.find(".metering_point-ticker").attr('data-readings')
+        #oldWattHour = oldString.split(",")[1]
+        #oldTimestamp = oldString.split(",")[0].substring(1, oldString.split(",")[0].length)
+        #metering_point.find(".metering_point-ticker").attr('data-readings', "[#{reading.timestamp}, #{reading.watt_hour}, #{oldTimestamp}, #{oldWattHour}]")
+        metering_point.find(".power-ticker").html(reading.power)
   else
     getSLPValue()
     timers.push(
@@ -835,6 +843,11 @@ $(".metering_point").ready ->
         return
       , 1000*2)
       )
+
+pullVirtualPowerData = (metering_point, metering_point_id) ->
+  $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
+    .success (data) ->
+      metering_point.find(".power-ticker").html(data)
 
 calculate_power = (last_readings) =>
   if last_readings == undefined || last_readings == null
