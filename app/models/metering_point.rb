@@ -71,13 +71,18 @@ class MeteringPoint < ActiveRecord::Base
       data = []
       operands.each do |metering_point_id|
         reading = Reading.last_by_metering_point_id(metering_point_id)
-        if reading.nil?
-          data << [[0, 0, 0]]
-        else
-          data << [[reading[:timestamp], reading[:power], reading[:watt_hour]]]
+        if !reading.nil?
+          #data << [[0, 0, 0]]
+        #else
+          data << [[1, reading[:power], reading[:watt_hour]]]
         end
       end
-      return calculate_virtual_metering_point(data, operators)[0][1]/1000
+      result = calculate_virtual_metering_point(data, operators)
+      if result.any?
+        return result[0][1]/1000
+      else
+        return 0
+      end
     else
       last_reading = Reading.last_by_metering_point_id(self.id)
       if last_reading.nil?
@@ -311,20 +316,22 @@ private
           watts << reading[1]
           #hours << reading[2]
         else
-          if timestamps[j].nil? && watts[j].nil?
+          if data[i - 1].empty? && timestamps[j].nil?
             timestamps << reading[0]
             watts << reading[1]
           else
-            timestamps[j] = reading[0]
-            if operators[i] == "+"
-              watts[j] += reading[1]
-              #hours[j] += reading[2]
-            elsif operators[i] == "-"
-              watts[j] -= reading[1]
-              #hours[j] -= reading[2]
-            elsif operators[i] == "*"
-              watts[j] *= reading[1]
-              #hours[j] *= reading[2]
+            indexOfTimestamp = timestamps.index(reading[0])
+            if indexOfTimestamp
+              if operators[i] == "+"
+                watts[indexOfTimestamp] += reading[1]
+                #hours[j] += reading[2]
+              elsif operators[i] == "-"
+                watts[indexOfTimestamp] -= reading[1]
+                #hours[j] -= reading[2]
+              elsif operators[i] == "*"
+                watts[indexOfTimestamp] *= reading[1]
+                #hours[j] *= reading[2]
+              end
             end
           end
         end

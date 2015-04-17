@@ -19,7 +19,7 @@ class MeteringPointsController < ApplicationController
 
 
   def new
-    @metering_point = MeteringPoint.new
+    @metering_point = MeteringPoint.new(mode: 'in')
     authorize_action_for @metering_point
     2.times{@metering_point.formula_parts.build}
   end
