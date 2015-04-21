@@ -7,6 +7,8 @@ require 'rails/all'
 require 'draper'
 Draper::Railtie.initializers.delete_if {|initializer| initializer.name == 'draper.setup_active_model_serializers' }
 
+## https://docs.newrelic.com/docs/agents/ruby-agent/features/garbage-collection#gc_setup
+GC::Profiler.enable
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
