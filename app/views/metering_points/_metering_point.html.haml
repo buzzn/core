@@ -17,6 +17,6 @@
           = content_tag :div, id: "metering_point-ticker-#{metering_point.id}", class: "metering_point-ticker", data: { slp: !metering_point.smart? && !metering_point.virtual } do
             %span.text-4x
               .power-ticker
-                = metering_point.last_power
+                ?
           %p.text-muted Watt
 

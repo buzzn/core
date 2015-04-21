@@ -812,9 +812,12 @@ readingsSLP = []
 timers = []
 
 $(".metering_point").ready ->
-  metering_point_id = $(this).attr('id')
+  metering_point_id = $(this).attr('id').split('_')[2]
   metering_point = $(this)
   if $(this).find(".metering_point-ticker").data('slp') == false
+    $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
+      .success (data) ->
+        metering_point.find(".power-ticker").html(data)
     if $(this).find(".metering_point-ticker").data('virtual') == true
       timers.push(
         window.setInterval(->
@@ -843,6 +846,7 @@ $(".metering_point").ready ->
         return
       , 1000*2)
       )
+
 
 pullVirtualPowerData = (metering_point, metering_point_id) ->
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})

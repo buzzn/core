@@ -70,11 +70,12 @@ class MeteringPoint < ActiveRecord::Base
       operators = get_operators_from_formula
       data = []
       operands.each do |metering_point_id|
+        metering_point = MeteringPoint.find(metering_point_id)
         reading = Reading.last_by_metering_point_id(metering_point_id)
-        if !reading.nil?
-          #data << [[0, 0, 0]]
-        #else
+        if !reading.nil? && reading[:timestamp] >= Time.now - 1.hour
           data << [[1, reading[:power], reading[:watt_hour]]]
+        else
+          data << [[1, 0, 0]]
         end
       end
       result = calculate_virtual_metering_point(data, operators)
