@@ -17,18 +17,12 @@
           - if @metering_point
             %hr
             .text-center.clearfix
-              .metering_point{ id: @metering_point.id}
+              .metering_point{ id: "metering_point_#{@metering_point.id}"}
                 .pad-all.text-center
-                  - if (@metering_point.meter && @metering_point.meter.smart?) || @metering_point.virtual
-                    = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { slp: false, virtual: @metering_point.virtual ? true : false } do
-                      %span.text-4x.text-thin
-                        .power-ticker
-                          = @metering_point.last_power
-                  - else
-                    = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { slp: true, virtual: @metering_point.virtual ? true : false } do
-                      %span.text-4x.text-thin
-                        .power-ticker
-                          = @metering_point.last_power
+                  = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { slp: !@metering_point.smart? && !@metering_point.virtual } do
+                    %span.text-4x.text-thin
+                      .power-ticker
+                        ?
                   %p= t'watt'
               - if @metering_point.smart?
                 .add-to-dashboard

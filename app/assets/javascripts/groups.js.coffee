@@ -348,6 +348,8 @@ $(".bubbles_container").ready ->
 
       for metering_point_data in data_in
         metering_point_id = metering_point_data[0]
+        $('#bubble_' + metering_point_id).click ->
+          window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
         if metering_point_data[3] == null
           channel = pusher.subscribe("metering_point_#{metering_point_id}")
           channel.bind "new_reading", (reading) ->
@@ -361,6 +363,8 @@ $(".bubbles_container").ready ->
             )
       for metering_point_data in data_out
         metering_point_id = metering_point_data[0]
+        $('#bubble_' + metering_point_id).click ->
+          window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
         if metering_point_data[3] == null
           channel = pusher.subscribe("metering_point_#{metering_point_id}")
           channel.bind "new_reading", (reading) ->
@@ -376,6 +380,8 @@ $(".bubbles_container").ready ->
 
 
 
+
+
 addCommas = (nStr) ->
   nStr += ""
   x = nStr.split(".")
@@ -388,8 +394,10 @@ addCommas = (nStr) ->
 pullVirtualPowerData = (chart, metering_point_id) ->
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
     .success (data) ->
-      chart.reset_radius(metering_point_id, data)
-
+      if data.online == true
+        chart.reset_radius(metering_point_id, data.latest_power)
+      else
+        chart.reset_radius(metering_point_id, 0)
 clearTimers = ->
   i = 0
   while i < timers.length

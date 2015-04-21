@@ -128,6 +128,23 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
+  def online?
+    if meter
+      return meter.online
+    else
+      if self.virtual
+        self.formula_parts.each do |formula_part|
+          if !formula_part.operand.online?
+            return false
+          end
+        end
+        return true
+      else
+        false
+      end
+    end
+  end
+
   def no_dashboard_metering_point?
     !self.is_dashboard_metering_point
   end
