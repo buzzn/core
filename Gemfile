@@ -90,7 +90,6 @@ gem 'gmaps4rails'
 gem 'iban-tools'
 gem 'highcharts-rails'
 gem 'lograge'
-gem 'logstash-event'
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-pace'
