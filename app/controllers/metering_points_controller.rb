@@ -84,11 +84,27 @@ class MeteringPointsController < ApplicationController
   def chart
     @metering_point = MeteringPoint.find(params[:id])
 
-    @cache_id = "/metering_point/#{params[:id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{params[:containing_timestamp]}"
+    @cache_id = "/metering_points/#{params[:id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{params[:containing_timestamp]}"
     if Rails.cache.fetch(@cache_id)
       @data = Rails.cache.fetch(@cache_id)
     else
-      Rails.cache.fetch(@cache_id, :expires_in => 1.minutes ) do
+
+      case params[:resolution]
+      when 'year_to_months'
+        @expires_in = 1.hour
+      when 'month_to_days'
+        @expires_in = 1.hour
+      when 'day_to_hours'
+        @expires_in = 1.hour
+      when 'day_to_minutes'
+        @expires_in = 1.minute
+      when 'hour_to_minutes'
+        @expires_in = 1.minute
+      else
+        @expires_in = 10.seconds
+      end
+
+      Rails.cache.fetch(@cache_id, :expires_in => @expires_in ) do
         @data = @metering_point.send(params[:resolution], params[:containing_timestamp])
       end
     end
