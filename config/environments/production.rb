@@ -53,7 +53,12 @@ Buzzn::Application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
   # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  config.cache_store = :redis_store, {
+                                        :host => Rails.application.secrets.redishost,
+                                        :port => 6379,
+                                        :db => 0,
+                                        :namespace => "cache"
+                                      }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   config.action_controller.asset_host = Rails.application.secrets.asset_host
@@ -80,5 +85,8 @@ Buzzn::Application.configure do
   # config.autoflush_log = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  ## config.log_formatter = ::Logger::Formatter.new
+  config.lograge.enabled = true
+  config.lograge.formatter = Lograge::Formatters::KeyValue.new
+
 end
