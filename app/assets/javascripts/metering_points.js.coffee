@@ -5,74 +5,77 @@ chart = undefined
 #code for partial: _metering_point.html.haml
 $(".metering_points").ready ->
   $(".metering_point").each ->
-    id = $(this).attr('id').split('_')[2]
-    width = $("#chart-container-" + id).width()
-    $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_hours', dataType: 'json'})
-      .success (data) ->
-        if data[0].data[0] == undefined
-          data[0].data[0] = [new Date(), 0] #TODO: Search for last data
-        partial_chart = new Highcharts.Chart(
-          chart:
-            type: 'areaspline'
-            renderTo: 'chart-container-' + id
-            width: width
-            backgroundColor:'rgba(255, 255, 255, 0.0)'
-            spacingBottom: 5,
-            spacingTop: 0,
-            spacingLeft: 20,
-            spacingRight: 20
-          colors: ['#FFF']
-          exporting:
-            enabled: false
-          legend:
-            enabled: false
-          title:
-            margin: 0
-            text: ""
-          credits:
-            enabled: false
-          xAxis:
-            lineWidth: 0
-            tickWidth: 0
-            type: 'datetime'
-            endOnTick: true
-            min: beginningOfDay(data[0].data[0][0])
-            max: endOfDay(data[0].data[0][0])
-            labels:
+    smart = $(this).attr('data-smart')
+    online = $(this).attr('data-online')
+    if !smart || online
+      id = $(this).attr('id').split('_')[2]
+      width = $("#chart-container-" + id).width()
+      $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_hours', dataType: 'json'})
+        .success (data) ->
+          if data[0].data[0] == undefined
+            data[0].data[0] = [new Date(), 0] #TODO: Search for last data
+          partial_chart = new Highcharts.Chart(
+            chart:
+              type: 'areaspline'
+              renderTo: 'chart-container-' + id
+              width: width
+              backgroundColor:'rgba(255, 255, 255, 0.0)'
+              spacingBottom: 5,
+              spacingTop: 0,
+              spacingLeft: 20,
+              spacingRight: 20
+            colors: ['#FFF']
+            exporting:
               enabled: false
-              style:
-                color: '#FFF'
-          yAxis:
-            gridLineWidth: 0
-            labels:
+            legend:
               enabled: false
-              style:
-                color: '#FFF'
-              format: "{value} W"
             title:
+              margin: 0
+              text: ""
+            credits:
               enabled: false
-            minRange: 10
-            min: 0
-          plotOptions:
-            series:
-              fillColor:
-                linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
-                stops: [
-                  [0, "rgba(255, 255, 255, 0.4)"],
-                  [1, "rgba(255, 255, 255, 0.0)"]
-                ]
-              states:
-                hover:
-                  enabled: false
-            areaspline:
-              marker:
-                radius: 2
-          tooltip:
-            enabled: false
+            xAxis:
+              lineWidth: 0
+              tickWidth: 0
+              type: 'datetime'
+              endOnTick: true
+              min: beginningOfDay(data[0].data[0][0])
+              max: endOfDay(data[0].data[0][0])
+              labels:
+                enabled: false
+                style:
+                  color: '#FFF'
+            yAxis:
+              gridLineWidth: 0
+              labels:
+                enabled: false
+                style:
+                  color: '#FFF'
+                format: "{value} W"
+              title:
+                enabled: false
+              minRange: 10
+              min: 0
+            plotOptions:
+              series:
+                fillColor:
+                  linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
+                  stops: [
+                    [0, "rgba(255, 255, 255, 0.4)"],
+                    [1, "rgba(255, 255, 255, 0.0)"]
+                  ]
+                states:
+                  hover:
+                    enabled: false
+              areaspline:
+                marker:
+                  radius: 2
+            tooltip:
+              enabled: false
 
-          series: data)
-      .error (jqXHR, textStatus, errorThrown) ->
-        console.log textStatus
+            series: data)
+        .error (jqXHR, textStatus, errorThrown) ->
+          console.log textStatus
 
 endOfDay = (timestamp) ->
   end = new Date(timestamp)
