@@ -65,24 +65,23 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def last_power
-    if self.virtual && self.formula
+    if self.virtual && self.formula_parts.any?
       operands = get_operands_from_formula
       operators = get_operators_from_formula
-      data = []
+      result = 0
+      i = 0
       operands.each do |metering_point_id|
         reading = Reading.last_by_metering_point_id(metering_point_id)
-        if !reading.nil? && reading[:timestamp] >= Time.now - 1.hour
-          data << [[1, reading[:power], reading[:watt_hour]]]
-        else
-          data << [[1, 0, 0]]
+        if !reading.nil? #&& reading[:timestamp] >= Time.now - 1.hour
+          if operators[i] == "+"
+            result += reading[:power]
+          elsif operators[i] == "-"
+            result -= reading[:power]
+          end
         end
+        i+=1
       end
-      result = calculate_virtual_metering_point(data, operators)
-      if result.any?
-        return result[0][1]/1000
-      else
-        return 0
-      end
+      return result/1000
     else
       last_reading = Reading.last_by_metering_point_id(self.id)
       if last_reading.nil?
@@ -234,19 +233,9 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def get_operands_from_formula
-    operands = []
-    operand = ""
-    self.formula.gsub(/\s+/, "").each_char do |char|
-      if ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].include?(char)
-        operand += char
-      elsif ['+', '-', '*'].include?(char)
-        operands << operand.to_i
-        operand = ""
-      end
+    if self.virtual && self.formula_parts.any?
+      self.formula_parts.collect(&:operand_id)
     end
-    operands << operand.to_i
-    operands.shift #remove first element of array
-    return operands
   end
 
 
@@ -255,15 +244,10 @@ class MeteringPoint < ActiveRecord::Base
 private
 
   def get_operators_from_formula
-    operators = []
-    self.formula.gsub(/\s+/, "").each_char do |char|
-      if ['+', '-', '*'].include?(char)
-        operators << char
-      end
+    if self.virtual && self.formula_parts.any?
+      self.formula_parts.collect(&:operator)
     end
-    return operators
   end
-
 
 
   def chart_data(resolution_format, containing_timestamp)

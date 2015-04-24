@@ -22,7 +22,7 @@
                   = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { slp: !@metering_point.smart? && !@metering_point.virtual } do
                     %span.text-4x.text-thin
                       .power-ticker
-                        ?
+                        = t('loading') + '...'
                   %p= t'watt'
               - if @metering_point.smart?
                 .add-to-dashboard
@@ -30,8 +30,8 @@
                     = @metering_point.add_to_dashboard
 
 
-          %hr
-            - if @metering_point.group
+          - if @metering_point.group
+            %hr
               .pad-hor
                 %h5=t'group'
                 %i.fa.fa-group.fa-fw
