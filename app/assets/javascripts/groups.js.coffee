@@ -394,7 +394,7 @@ addCommas = (nStr) ->
 pullVirtualPowerData = (chart, metering_point_id) ->
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
     .success (data) ->
-      if data.online == true
+      if data.online || data.virtual
         chart.reset_radius(metering_point_id, data.latest_power)
       else
         chart.reset_radius(metering_point_id, 0)

@@ -140,16 +140,16 @@ uxtest_user = Fabricate(:uxtest_user)
 
 
 #hof_butenland
-jan_gerdes = Fabricate(:jan_gerdes)
-mp_hof_butenland_wind   = Fabricate(:mp_hof_butenland_wind)
-mp_hof_butenland_wind.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_hof_butenland_wind)
-jan_gerdes.add_role :manager, mp_hof_butenland_wind
-device = Fabricate(:hof_butenland_wind)
-mp_hof_butenland_wind.devices << device
-jan_gerdes.add_role :manager, device
+# jan_gerdes = Fabricate(:jan_gerdes)
+# mp_hof_butenland_wind   = Fabricate(:mp_hof_butenland_wind)
+# mp_hof_butenland_wind.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_hof_butenland_wind)
+# jan_gerdes.add_role :manager, mp_hof_butenland_wind
+# device = Fabricate(:hof_butenland_wind)
+# mp_hof_butenland_wind.devices << device
+# jan_gerdes.add_role :manager, device
 
-mp_hof_butenland_wind.contracts.metering_point_operators.first.contracting_party = jan_gerdes.contracting_party
-mp_hof_butenland_wind.contracts.metering_point_operators.first.save
+# mp_hof_butenland_wind.contracts.metering_point_operators.first.contracting_party = jan_gerdes.contracting_party
+# mp_hof_butenland_wind.contracts.metering_point_operators.first.save
 
 
 # karin
@@ -242,14 +242,14 @@ group_hopf.metering_points << mp_hans_dieter_hopf
 
 
 
-puts 'group hof_butenland'
-group_hof_butenland = Fabricate(:group_hof_butenland, metering_points: [mp_hof_butenland_wind])
-jan_gerdes.add_role :manager, group_hof_butenland
-15.times do
-  user, metering_point = user_with_metering_point
-  group_hof_butenland.metering_points << metering_point
-  puts "  #{user.email}"
-end
+# puts 'group hof_butenland'
+# group_hof_butenland = Fabricate(:group_hof_butenland, metering_points: [mp_hof_butenland_wind])
+# jan_gerdes.add_role :manager, group_hof_butenland
+# 15.times do
+#   user, metering_point = user_with_metering_point
+#   group_hof_butenland.metering_points << metering_point
+#   puts "  #{user.email}"
+# end
 
 
 puts 'group home_of_the_brave'

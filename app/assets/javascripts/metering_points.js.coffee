@@ -817,7 +817,7 @@ $(".metering_point").ready ->
   if $(this).find(".metering_point-ticker").data('slp') == false
     $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
       .success (data) ->
-        if data.online == true
+        if data.online == true || data.virtual == true
           metering_point.find(".power-ticker").html(data.latest_power)
         else
           metering_point.find(".power-ticker").html('offline')
@@ -854,7 +854,7 @@ $(".metering_point").ready ->
 pullVirtualPowerData = (metering_point, metering_point_id) ->
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
     .success (data) ->
-      if data.online == true
+      if data.online == true || data.virtual == true
         metering_point.find(".power-ticker").html(data.latest_power)
       else
         metering_point.find(".power-ticker").html('offline')
