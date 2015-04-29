@@ -99,8 +99,8 @@ class BubbleChart
         value: d[1]
         radius: @radius_scale(parseInt(d[1]))
         name: d[2]
-        x: Math.random() * 900
-        y: Math.random() * 800
+        x: Math.random() * @width
+        y: Math.random() * @height
         color: "#5FA2DD"
       }
       @nodes.push node
@@ -112,6 +112,7 @@ class BubbleChart
   # create svg at #vis and then
   # create circle representation for each node
   create_vis: (group_id) =>
+
     @vis = d3.select("#bubbles_container_" + group_id).append("svg")
       .attr("id", "svg_vis")
       .attr("width", "100%")
@@ -169,7 +170,8 @@ class BubbleChart
 
     # Fancy transition to make bubbles appear, ending with the
     # correct radius
-    @circles.transition().duration(2000).attr("r", (d) -> d.radius)
+    #@circles.transition().duration(2000).attr("r", (d) -> d.radius)
+    @circles.attr("r", (d) -> d.radius)
 
 
 
@@ -204,9 +206,13 @@ class BubbleChart
         @circles.each(this.move_towards_center(e.alpha))
           .attr("cx", (d) -> d.x)
           .attr("cy", (d) -> d.y)
+      .on "end", (e) =>
+        console.log 'FIN'
+      #  @circles.each(this.move_towards_center(e.alpha))
+      #    .attr("cx", (d) -> d.x)
+      #    .attr("cy", (d) -> d.y)
     @force.start()
 
-    this.hide_years()
 
   # Moves all circles towards the @center
   # of the visualization
@@ -214,11 +220,6 @@ class BubbleChart
     (d) =>
       d.x = d.x + (@center.x - d.x) * (@damper + 0.02) * alpha
       d.y = d.y + (@center.y - d.y) * (@damper + 0.02) * alpha
-
-
-  # Method to hide year titiles
-  hide_years: () =>
-    years = @vis.selectAll(".years").remove()
 
   show_details: (data, i, element) =>
     d3.select(element).attr("stroke", (d) -> d3.rgb(d.color).darker().darker())
@@ -254,8 +255,11 @@ class BubbleChart
     #@circles = @vis.selectAll("circle")
     #  .data(@nodes, (d) -> d.id)
     #@circles.attr("r", (d) -> d.radius)
+
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
     @circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
+    #@circles.attr("r", (d) -> d.radius)
+    #@circles_out.attr("r", (d) -> d.radius)
     this.display_group_all()
 
   calculateNewCenter: () =>
@@ -290,6 +294,8 @@ class BubbleChart
       d.radius = @radius_scale(parseInt(d.value))
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
     @circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
+    #@circles.attr("r", (d) -> d.radius)
+    #@circles_out.attr("r", (d) -> d.radius)
     this.display_group_all()
 
   calculateTotalPower: () =>
@@ -318,7 +324,6 @@ class BubbleChart
 
 
 
-
 root = exports ? this
 timers = []
 
@@ -330,6 +335,7 @@ $(".bubbles_container").ready ->
     chart.start()
     chart.display_group_all()
 
+
   #data_in = gon.in_metering_point_data
   #data_out = gon.out_metering_point_data
   group_id = $(this).attr('data-content')
@@ -340,6 +346,8 @@ $(".bubbles_container").ready ->
 
 
       render_vis data_in, data_out, group_id
+
+      buildSunburst(group_id)
 
       Pusher.host    = $(".pusher").data('pusherhost')
       Pusher.ws_port = 8080
@@ -377,6 +385,40 @@ $(".bubbles_container").ready ->
             , 1000*60)
             )
       $(window).on "resize:end", chart.calculateNewCenter
+
+
+buildSunburst = (group_id) ->
+  $.ajax({url: '/groups/' + group_id + '/sunburst_data', dataType: 'json'})
+    .success (data) ->
+      console.log data
+
+      svg = d3.select("#svg_vis")
+        .append("g")
+
+      canvasWidth = $("#svg_vis").width()
+      canvasHeight = $("#svg_vis").height()
+      radius = Math.min(canvasWidth, canvasHeight) / 2
+      svg.attr("transform", "translate(" + canvasWidth / 2 + "," + canvasHeight * .5 + ")")
+
+      partition = d3.layout.partition()
+        .sort(null)
+        .size([2 * Math.PI, radius * radius])
+        .value((d) ->  d.size)
+
+      arc = d3.svg.arc()
+        .startAngle((d) ->  d.x)
+        .endAngle((d) ->  d.x + d.dx)
+        .innerRadius((d) ->  Math.sqrt(d.y))
+        .outerRadius((d) -> Math.sqrt(d.y + d.dy))
+
+
+      path = svg.selectAll('path').data(partition.nodes(data)).enter().append('path').attr('d', arc).style('stroke', '#fff').style('fill', (d) ->
+        if d.children then '#F76C51' else d3.rgb('#F76C51').darker()
+      ).style('opacity', 0.5)
+
+      console.log partition.nodes(data)
+
+
 
 
 

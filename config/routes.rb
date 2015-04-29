@@ -76,6 +76,7 @@ Buzzn::Application.routes.draw do
     member do
       get :cancel_membership
       get :bubbles_data
+      get :sunburst_data
     end
   end
 

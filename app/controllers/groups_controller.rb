@@ -120,6 +120,17 @@ class GroupsController < ApplicationController
     render json: [in_metering_point_data, out_metering_point_data].to_json
   end
 
+  def sunburst_data
+    #render json: File.new(Rails.root.join('db', 'bubble_data', 'flare.json' ))
+    @group = Group.find(params[:id])
+    children = []
+    @group.metering_points.where(mode: 'out').each do |metering_point|
+      children << {:name => metering_point.name, :size => metering_point.last_power}
+    end
+    result = {:name => 'Gesamterzeugung', :children => children}
+    render json: result.to_json
+  end
+
 
 
 
