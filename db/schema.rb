@@ -386,6 +386,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.string   "scopes"
   end
 
+  add_index "oauth_access_grants", ["application_id"], name: "index_oauth_access_grants_on_application_id", using: :btree
   add_index "oauth_access_grants", ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
 
   create_table "oauth_access_tokens", force: :cascade do |t|
@@ -399,6 +400,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.string   "scopes"
   end
 
+  add_index "oauth_access_tokens", ["application_id"], name: "index_oauth_access_tokens_on_application_id", using: :btree
   add_index "oauth_access_tokens", ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true, using: :btree
   add_index "oauth_access_tokens", ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id", using: :btree
   add_index "oauth_access_tokens", ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
