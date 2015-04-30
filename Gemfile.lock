@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/jnicklas/capybara.git
-  revision: c789ffb08908b043a06017cc8debccc80ebd553e
+  revision: 90f5d374fda563d8457475915b4ac312a0199c9a
   specs:
     capybara (2.5.0.dev)
       mime-types (>= 1.16)
@@ -27,7 +27,7 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/devise.git
-  revision: 2f0002a449a8b9616d51127dc6247bfd8414523d
+  revision: a29fee164449561f177b2f3f404c41d03741095d
   specs:
     devise (3.4.1)
       bcrypt (~> 3.0)
@@ -39,7 +39,7 @@ GIT
 
 GIT
   remote: git://github.com/teampoltergeist/poltergeist.git
-  revision: f02d4dc7d896212e33b868e418e3c5999acf0f29
+  revision: e3fc25919afb07960698785985f1051b9ea7f7ec
   specs:
     poltergeist (1.6.0)
       capybara (~> 2.1)
@@ -71,7 +71,7 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.1)
-    active_link_to (1.0.2)
+    active_link_to (1.0.3)
       actionpack
     active_model_serializers (0.9.3)
       activemodel (>= 3.2)
@@ -116,23 +116,23 @@ GEM
     authority (3.0.0)
       activesupport (>= 3.0.0)
       rake (>= 0.8.7)
-    autoprefixer-rails (5.1.8.1)
+    autoprefixer-rails (5.1.11)
       execjs
       json
     awesome_nested_set (3.0.2)
       activerecord (>= 4.0.0, < 5)
     awesome_print (1.6.1)
-    aws-sdk (2.0.38)
-      aws-sdk-resources (= 2.0.38)
-    aws-sdk-core (2.0.38)
+    aws-sdk (2.0.41)
+      aws-sdk-resources (= 2.0.41)
+    aws-sdk-core (2.0.41)
       builder (~> 3.0)
       jmespath (~> 1.0)
       multi_json (~> 1.0)
     aws-sdk-rails (1.0.0)
       aws-sdk-resources (~> 2)
       rails (>= 3)
-    aws-sdk-resources (2.0.38)
-      aws-sdk-core (= 2.0.38)
+    aws-sdk-resources (2.0.41)
+      aws-sdk-core (= 2.0.41)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
@@ -156,9 +156,9 @@ GEM
       terminal-table (~> 1.4)
     bson (2.3.0)
     builder (3.2.2)
-    bullet (4.14.4)
+    bullet (4.14.5)
       activesupport (>= 3.0.0)
-      uniform_notifier (>= 1.6.0)
+      uniform_notifier (~> 1.9.0)
     callsite (0.0.11)
     capybara-email (2.4.0)
       capybara (~> 2.4)
@@ -211,7 +211,7 @@ GEM
       actionmailer (>= 3.2.6, < 5)
       devise (>= 3.2.0)
     diff-lcs (1.2.5)
-    doorkeeper (2.1.4)
+    doorkeeper (2.2.0)
       railties (>= 3.2)
     draper (2.1.0)
       actionpack (>= 3.0)
@@ -228,9 +228,9 @@ GEM
     equalizer (0.0.11)
     erubis (2.7.0)
     eventmachine (1.0.7)
-    excon (0.45.1)
+    excon (0.45.3)
     execjs (2.5.2)
-    fabrication (2.13.0)
+    fabrication (2.13.2)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
     fastercsv (1.5.5)
@@ -309,7 +309,7 @@ GEM
     fog-serverlove (0.1.2)
       fog-core
       fog-json
-    fog-softlayer (0.4.3)
+    fog-softlayer (0.4.5)
       fog-core
       fog-json
     fog-storm_on_demand (0.1.1)
@@ -336,7 +336,7 @@ GEM
     globalid (0.3.5)
       activesupport (>= 4.1.0)
     gmaps4rails (2.1.2)
-    goldiloader (0.0.8)
+    goldiloader (0.0.9)
       activerecord (>= 3.2, < 4.3)
       activesupport (>= 3.2, < 4.3)
     gon (5.2.3)
@@ -402,10 +402,9 @@ GEM
     hashie (3.4.1)
     hashie-forbidden_attributes (0.1.1)
       hashie (>= 3.0)
-    highcharts-rails (4.1.4)
+    highcharts-rails (4.1.5)
       railties (>= 3.1)
     highline (1.6.21)
-    hike (1.2.3)
     hitimes (1.2.2)
     html2haml (2.0.0)
       erubis (~> 2.7.0)
@@ -448,7 +447,7 @@ GEM
       actionpack (>= 3)
       activesupport (>= 3)
       railties (>= 3)
-    lol_dba (1.6.7)
+    lol_dba (2.0.0)
       actionpack (>= 3.0, < 5.0)
       activerecord (>= 3.0, < 5.0)
       railties (>= 3.0, < 5.0)
@@ -467,17 +466,17 @@ GEM
     metamagic (3.1.7)
       rails (>= 3.0.0)
     method_source (0.8.2)
-    mime-types (2.4.3)
-    mini_magick (4.2.1)
+    mime-types (2.5)
+    mini_magick (4.2.3)
     mini_portile (0.6.2)
-    minitest (5.5.1)
+    minitest (5.6.1)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     monetize (1.1.0)
       money (~> 6.5.0)
     money (6.5.1)
       i18n (>= 0.6.4, <= 0.7.0)
-    money-rails (1.3.0)
+    money-rails (1.4.1)
       activesupport (>= 3.0)
       monetize (~> 1.1.0)
       money (~> 6.5.0)
@@ -507,7 +506,7 @@ GEM
     optionable (0.2.0)
     origin (2.1.1)
     orm_adapter (0.5.0)
-    paper_trail (3.0.7)
+    paper_trail (3.0.8)
       activerecord (>= 3.0, < 5.0)
       activesupport (>= 3.0, < 5.0)
     pg (0.18.1)
@@ -522,7 +521,7 @@ GEM
       activerecord (>= 3.0)
       i18n (>= 0.5.0)
       railties (>= 3.0.0)
-    puma (2.11.1)
+    puma (2.11.2)
       rack (>= 1.1, < 2.0)
     pusher (0.14.4)
       httpclient (~> 2.5)
@@ -535,7 +534,7 @@ GEM
       rack (>= 0.4)
     rack-contrib (1.2.0)
       rack (>= 0.9.1)
-    rack-cors (0.3.1)
+    rack-cors (0.4.0)
     rack-google-analytics (1.2.0)
       actionpack
       activesupport
@@ -575,7 +574,7 @@ GEM
     rails-assets-d3 (3.5.5)
     rails-assets-fastclick (1.0.6)
     rails-assets-font-awesome (4.3.0)
-    rails-assets-jquery (2.1.3)
+    rails-assets-jquery (2.1.4)
     rails-assets-jquery-readyselector (0.1.0)
     rails-assets-metisMenu (2.0.0)
       rails-assets-jquery (~> 2.1.3)
@@ -666,10 +665,10 @@ GEM
       rspec-core
     rspec-support (3.2.2)
     ruby-graphviz (1.0.9)
-    ruby2ruby (2.1.3)
+    ruby2ruby (2.1.4)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.0)
-    ruby_parser (3.6.5)
+    ruby_parser (3.6.6)
       sexp_processor (~> 4.1)
     safe_yaml (1.0.4)
     sass (3.4.13)
@@ -681,9 +680,9 @@ GEM
       tilt (~> 1.1)
     select2-rails (3.5.9.3)
       thor (~> 0.14)
-    sexp_processor (4.5.0)
+    sexp_processor (4.5.1)
     shellany (0.0.1)
-    sidekiq (3.3.3)
+    sidekiq (3.3.4)
       celluloid (>= 0.16.0)
       connection_pool (>= 2.1.1)
       json
@@ -704,14 +703,11 @@ GEM
     slop (3.6.0)
     sort_alphabetical (1.0.1)
       unicode_utils (>= 1.2.2)
-    spring (1.3.4)
+    spring (1.3.5)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
-    sprockets (2.12.3)
-      hike (~> 1.2)
-      multi_json (~> 1.0)
+    sprockets (3.0.3)
       rack (~> 1.0)
-      tilt (~> 1.1, != 1.3.0)
     sprockets-rails (2.2.4)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
@@ -737,9 +733,9 @@ GEM
       json (>= 1.8.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.6)
+    unf_ext (0.0.7.1)
     unicode_utils (1.4.0)
-    uniform_notifier (1.8.0)
+    uniform_notifier (1.9.0)
     vcr (2.9.3)
     virtus (1.0.5)
       axiom-types (~> 0.1)
