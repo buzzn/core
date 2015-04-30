@@ -75,7 +75,7 @@
       %span
         = t('devices')
         %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Hier kannst Du Deine Geräte, die mit Strom zu tun haben, anlegen und deinem Strombezug bzw. deiner Stromerzeugung hinzufügen."}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info')}
     .row
       .devices
         = render @devices
@@ -91,7 +91,7 @@
       %span
         = t('members')
         %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Mitglieder sind hier alle Leute, die diesem Zählpunkt zugeordnet sind, also z.B. Mitbewohner einer Wohnung oder eines Hauses."}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('members_info_metering_point')}
     .row
       - @users.each do |user|
         = render user.profile
@@ -108,7 +108,7 @@
       %span
         = t('address')
         %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Jeder Zählpunkt hat eine Adresse, z.B. ist das die Adresse des Hauses oder der Wohnung, in der sich der Zählpunkt befindet."}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('address_info')}
     .row
       .addresses
         = render @metering_point.address if @metering_point.address
@@ -126,7 +126,7 @@
       %span
         = t('meters')
         %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Der Zähler ist das Gerät, das den Stromverbrauch bzw. die Stromerzeugung misst, welche dem Zählpunkt zugeordnet ist."}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('meters_info')}
     .row
       .meters
         = render @metering_point.meter if @metering_point.meter
@@ -143,7 +143,7 @@
       %span
         = t('contracts')
         %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."}
+          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('contracts_info_metering_point')}
     .row
       .contracts
         = render @metering_point.contracts

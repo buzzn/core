@@ -463,3 +463,22 @@ de:
   my_groups: Meine Gruppen
   loading: lädt
 
+  contracts_info: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."
+  bank_account_info: "Um Deine Verträge zu bezahlen musst Du einen Bank Account anlegen. "
+  invoice_address_info: "Sollte Deine Rechnungsadresse nicht gleich deiner persönlichen Adresse sein, kannst Du dies hier ändern."
+  live_chart_info: "Jeder Kreis repräsentiert die aktuell bezogene Leistung eines Stromnehmer (blau) bzw. die aktuell zur Verfügung gestellte Leistung des Stromgebers (rot) in dieser Gruppe. Sind alle blauen Kreise größer als der rote Kreis, wird zu viel Strom bezogen."
+  energy_producers_info: "Ein Stromgeber ist eine Person, die über ihre Stromerzeugungsanlage (z.B. Photovoltaikanlage, Blockheizkraftwerk) Strom an andere Personen liefert. Du findest hier also eine Liste aller Stromgeber, die Strom über diese Gruppe teilen."
+  energy_consumers_info: "Ein Stromnehmer ist eine Person, die über ihren Stromzähler Strom von einer anderen Person bekommt. Du findest hier also eine Liste aller Stromnehmer, die aus dieser Gruppe Strom beziehen."
+  interested_members_info: "Ein interessiertes Mitglied ist eine Person, die sich gerne am Geschehen in der Gruppe beteiligen möchte, ohne konkret Strom aus dieser Grupper zu nehmen oder ihr zu geben."
+  contracts_info_group: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."
+  devices_info: "Hier kannst Du Deine Geräte, die mit Strom zu tun haben, anlegen und deinem Strombezug bzw. deiner Stromerzeugung hinzufügen."
+  members_info_metering_point: "Mitglieder sind hier alle Leute, die diesem Zählpunkt zugeordnet sind, also z.B. Mitbewohner einer Wohnung oder eines Hauses."
+  address_info: "Jeder Zählpunkt hat eine Adresse, z.B. ist das die Adresse des Hauses oder der Wohnung, in der sich der Zählpunkt befindet."
+  meters_info: "Der Zähler ist das Gerät, das den Stromverbrauch bzw. die Stromerzeugung misst, welche dem Zählpunkt zugeordnet ist."
+  contracts_info_metering_point: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Zählpunkt zugeordnet sind."
+  groups_info: "Jeder Stromnehmer kann sich mit seinem Stromverbrauch einer Gruppe zuordnen, von deren Stromgeber(n) er dann Strom bekommt."
+  metering_points_info: "Ein Zählpunkt ist die Bezeichnung für die Messstelle, für die der Strom gemessen wird, z.B. „Keller“ oder „Dachboden“. In den meisten Fällen ist der Zählpunkt gleichbedeutend mit dem Haus oder der Wohnung, in der er sich befindet."
+  friends_info: "Durch die Freunschaft mit anderen Usern kannst du deren Stromkurven sehen und deine mit ihnen vergleichen. "
+
+
+
