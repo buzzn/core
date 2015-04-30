@@ -75,15 +75,19 @@ class GroupsController < ApplicationController
     @group.metering_points.each do |metering_point|
       data_entry = []
       latest_power = nil
+      virtual = metering_point.virtual
       if metering_point.users.any?
         if metering_point.users.include?(current_user)
           user_name = current_user.profile.first_name
+          own_metering_point = true
         else
           user_name = "anonym"
+          own_metering_point = false
           #user_name = metering_point.users.collect{|user| user.profile.first_name}.join(", ")
         end
       else
         user_name = metering_point.decorate.name
+        own_metering_point = false
       end
       if metering_point.meter
         if metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
@@ -98,34 +102,39 @@ class GroupsController < ApplicationController
       else
         if metering_point.virtual #&& metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
           latest_power = metering_point.last_power
-          virtual = true
         end
       end
       if metering_point.mode == "out"
         if !latest_power.nil?
-          data_entry.push(metering_point.id, latest_power, user_name, virtual)
+          data_entry = {:metering_point_id => metering_point.id, :latest_power => latest_power, :name => user_name, :virtual => virtual, :own_metering_point => own_metering_point}
+          #data_entry.push(metering_point.id, latest_power, user_name, virtual)
         else
-          data_entry.push(metering_point.id, 0, user_name, virtual)
+          data_entry = {:metering_point_id => metering_point.id, :latest_power => 0, :name => user_name, :virtual => virtual, :own_metering_point => own_metering_point}
+          #data_entry.push(metering_point.id, 0, user_name, virtual)
         end
         out_metering_point_data.push(data_entry)
       else
         if !latest_power.nil?
-          data_entry.push(metering_point.id, latest_power, user_name, virtual)
+          data_entry = {:metering_point_id => metering_point.id, :latest_power => latest_power, :name => user_name, :virtual => virtual, :own_metering_point => own_metering_point}
+          #data_entry.push(metering_point.id, latest_power, user_name, virtual)
         else
-          data_entry.push(metering_point.id, 0, user_name, virtual)
+          data_entry = {:metering_point_id => metering_point.id, :latest_power => 0, :name => user_name, :virtual => virtual, :own_metering_point => own_metering_point}
+          #data_entry.push(metering_point.id, 0, user_name, virtual)
         end
         in_metering_point_data.push(data_entry)
       end
     end
-    render json: [in_metering_point_data, out_metering_point_data].to_json
+    out_data = { :name => "Gesamterzeugung", :children => out_metering_point_data}
+    result = {:in => in_metering_point_data, :out => out_data}
+    #render json: [in_metering_point_data, out_metering_point_data].to_json
+    render json: result.to_json
   end
 
   def sunburst_data
-    #render json: File.new(Rails.root.join('db', 'bubble_data', 'flare.json' ))
     @group = Group.find(params[:id])
     children = []
     @group.metering_points.where(mode: 'out').each do |metering_point|
-      children << {:name => metering_point.name, :size => metering_point.last_power}
+      children << {:name => metering_point.decorate.name, :size => metering_point.last_power}
     end
     result = {:name => 'Gesamterzeugung', :children => children}
     render json: result.to_json

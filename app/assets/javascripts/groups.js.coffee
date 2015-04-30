@@ -72,14 +72,14 @@ class BubbleChart
       .range(["#5FA2DD", "#5FA2DD", "#5FA2DD"])
 
     # use the max watt_hour in the data as the max in the scale's domain
-    @max_power_in = d3.max(@data, (d) -> parseInt(d[1]))
-    max_power_out = d3.max(@data_out, (d) -> parseInt(d[1]))
+    @max_power_in = d3.max(@data, (d) -> parseInt(d.latest_power))
+    max_power_out = d3.max(@data_out.children, (d) -> parseInt(d.latest_power))
     if @max_power_in > max_power_out
       @max_power = @max_power_in
     else
       @max_power = max_power_out
     @data.forEach (d) =>
-      @totalPower += parseInt(d[1])
+      @totalPower += parseInt(d.latest_power)
     this.setZoomFactor()
     this.create_nodes()
     this.create_vis(group_id)
@@ -94,14 +94,17 @@ class BubbleChart
   # to @nodes to be used later
   create_nodes: () =>
     @data.forEach (d) =>
+      color = "#5FA2DD"
+      if d.own_metering_point
+        color = "#1FF2DD"
       node = {
-        id: d[0]
-        value: d[1]
-        radius: @radius_scale(parseInt(d[1]))
-        name: d[2]
+        id: d.metering_point_id
+        value: d.latest_power
+        radius: @radius_scale(parseInt(d.latest_power))
+        name: d.name
         x: Math.random() * @width
         y: Math.random() * @height
-        color: "#5FA2DD"
+        color: color
       }
       @nodes.push node
 
@@ -125,36 +128,66 @@ class BubbleChart
     # mouse callbacks
     that = this
 
-    @data_out.forEach (d) =>
-      node = {
-        id: d[0]
-        value: d[1]
-        radius: @radius_scale(parseInt(d[1])) * 1.1
-        name: d[2]
-        x: @width / 2
-        y: @height / 2
-        color: "#F76C51"
-      }
-      @nodes_out.push node
-    @nodes_out.sort (a,b) -> b.value - a.value
+    svg = d3.select("#bubbles_container_" + group_id).select("#svg_vis")
+      .append("g")
+      .attr("transform", "translate(" + @width / 2 + "," + @height / 2 + ")")
+
+    radius = Math.min(@width, @height) / 2
+
+    partition = d3.layout.partition()
+      .sort(null)
+      .size([2 * Math.PI, radius * radius])
+      .value((d) ->  d.latest_power)
+
+    arc = d3.svg.arc()
+      .startAngle((d) ->  d.x)
+      .endAngle((d) ->  d.x + d.dx)
+      .innerRadius((d) ->  Math.sqrt(d.y))
+      .outerRadius((d) -> if d.children then Math.sqrt(d.y + d.dy) else Math.sqrt(d.y + d.dy) - 30)
+
+    path = svg.selectAll('path')
+      .data(partition.nodes(@data_out))
+      .enter()
+      .append('path')
+      .attr('d', arc)
+      .attr("stroke-width", (d) -> if d.children then 0 else 4)
+      .style('stroke', (d) -> if d.children then '#F76C51' else '#fff')
+      .style('fill', (d) -> if d.children then '#F76C51' else d3.rgb('#F76C51').darker())
+      .on("mouseover", (d,i) -> that.show_details(d,i,this))
+      .on("mouseout", (d,i) -> that.hide_details(d,i,this))
+
+    console.log path
+
+    # @data_out.forEach (d) =>
+    #   node = {
+    #     id: d.metering_point_id
+    #     value: d.latest_power
+    #     radius: @radius_scale(parseInt(d.latest_power)) * 1.1
+    #     name: d.name
+    #     x: @width / 2
+    #     y: @height / 2
+    #     color: "#F76C51"
+    #   }
+    #   @nodes_out.push node
+    # @nodes_out.sort (a,b) -> b.value - a.value
 
     svgContainer = d3.select("#bubbles_container_" + group_id).select("#svg_vis")
 
-    @circles_out = svgContainer.selectAll("rect")
-      .data(@nodes_out, (d) -> d.id)
-      .enter()
-      .append("circle")
+    # @circles_out = svgContainer.selectAll("rect")
+    #   .data(@nodes_out, (d) -> d.id)
+    #   .enter()
+    #   .append("circle")
 
-    circleAttributes = @circles_out
-      .attr("id", (d) -> "bubble_#{d.id}")
-      .attr("cx", (d) -> d.x)
-      .attr("cy", (d) -> d.y)
-      .attr("r", (d) -> d.radius)
-      .style("fill", (d) -> d.color)
-      .attr("stroke-width", 8)
-      .attr("stroke", (d) => d3.rgb(d.color).darker())
-      .on("mouseover", (d,i) -> that.show_details(d,i,this))
-      .on("mouseout", (d,i) -> that.hide_details(d,i,this))
+    # circleAttributes = @circles_out
+    #   .attr("id", (d) -> "bubble_#{d.id}")
+    #   .attr("cx", (d) -> d.x)
+    #   .attr("cy", (d) -> d.y)
+    #   .attr("r", (d) -> d.radius)
+    #   .style("fill", (d) -> d.color)
+    #   .attr("stroke-width", 8)
+    #   .attr("stroke", (d) => d3.rgb(d.color).darker())
+    #   .on("mouseover", (d,i) -> that.show_details(d,i,this))
+    #   .on("mouseout", (d,i) -> that.hide_details(d,i,this))
 
     # radius will be set to 0 initially.
     # see transition below
@@ -223,6 +256,7 @@ class BubbleChart
 
   show_details: (data, i, element) =>
     d3.select(element).attr("stroke", (d) -> d3.rgb(d.color).darker().darker())
+    d3.select(element).attr("opacity", 0.5)
     content = "<span class=\"name\">Name:</span><span class=\"value\"> #{data.name}</span><br/>"
     content +="<span class=\"name\">Aktuelle Leistung:</span><span class=\"value\"> #{addCommas(parseInt(data.value)).replace(",", ".")} Watt</span><br/>"
     @tooltip.showTooltip(content,d3.event)
@@ -230,6 +264,7 @@ class BubbleChart
 
   hide_details: (data, i, element) =>
     d3.select(element).attr("stroke", (d) => d3.rgb(d.color).darker())
+    d3.select(element).attr("opacity", 1)
     @tooltip.hideTooltip()
 
   reset_radius: (id, value) =>
@@ -243,13 +278,13 @@ class BubbleChart
         d.radius = @radius_scale(parseInt(value))
 
 
-    @nodes_out.forEach (d) =>
-      if d.id.toString() == id.toString()
-        if value == d.value
-          return
-        d.value = value
-        this.calculateMaxPower(d.value)
-        d.radius = @radius_scale(parseInt(value)) * 1.1
+    # @nodes_out.forEach (d) =>
+    #   if d.id.toString() == id.toString()
+    #     if value == d.value
+    #       return
+    #     d.value = value
+    #     this.calculateMaxPower(d.value)
+    #     d.radius = @radius_scale(parseInt(value)) * 1.1
 
 
     #@circles = @vis.selectAll("circle")
@@ -257,7 +292,7 @@ class BubbleChart
     #@circles.attr("r", (d) -> d.radius)
 
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
-    @circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
+    #@circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
     #@circles.attr("r", (d) -> d.radius)
     #@circles_out.attr("r", (d) -> d.radius)
     this.display_group_all()
@@ -266,9 +301,9 @@ class BubbleChart
     @height = $(".bubbles_container").height()
     @width = $(".bubbles_container").width()
     @center = {x: @width / 2, y: @height / 2}
-    circleAttributes = @circles_out
-      .attr("cx", @width / 2)
-      .attr("cy", @height / 2)
+    # circleAttributes = @circles_out
+    #   .attr("cx", @width / 2)
+    #   .attr("cy", @height / 2)
     this.setNewScale()
 
   calculateMaxPower: (value) =>
@@ -293,7 +328,7 @@ class BubbleChart
     @nodes_out.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
-    @circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
+    #@circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
     #@circles.attr("r", (d) -> d.radius)
     #@circles_out.attr("r", (d) -> d.radius)
     this.display_group_all()
@@ -341,13 +376,10 @@ $(".bubbles_container").ready ->
   group_id = $(this).attr('data-content')
   $.ajax({url: '/groups/' + group_id + '/bubbles_data'})
     .success (data) ->
-      data_in = data[0]
-      data_out = data[1]
-
+      data_in = data.in
+      data_out = data.out
 
       render_vis data_in, data_out, group_id
-
-      buildSunburst(group_id)
 
       Pusher.host    = $(".pusher").data('pusherhost')
       Pusher.ws_port = 8080
@@ -355,10 +387,10 @@ $(".bubbles_container").ready ->
       pusher = new Pusher($(".pusher").data('pusherkey'))
 
       for metering_point_data in data_in
-        metering_point_id = metering_point_data[0]
+        metering_point_id = metering_point_data.metering_point_id
         $('#bubble_' + metering_point_id).click ->
           window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
-        if metering_point_data[3] == null
+        if metering_point_data.virtual
           channel = pusher.subscribe("metering_point_#{metering_point_id}")
           channel.bind "new_reading", (reading) ->
             chart.reset_radius(reading.metering_point_id, reading.power)
@@ -370,10 +402,10 @@ $(".bubbles_container").ready ->
             , 1000*60)
             )
       for metering_point_data in data_out
-        metering_point_id = metering_point_data[0]
+        metering_point_id = metering_point_data.metering_point_id
         $('#bubble_' + metering_point_id).click ->
           window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
-        if metering_point_data[3] == null
+        if metering_point_data.virtual
           channel = pusher.subscribe("metering_point_#{metering_point_id}")
           channel.bind "new_reading", (reading) ->
             chart.reset_radius(reading.metering_point_id, reading.power)
@@ -386,37 +418,6 @@ $(".bubbles_container").ready ->
             )
       $(window).on "resize:end", chart.calculateNewCenter
 
-
-buildSunburst = (group_id) ->
-  $.ajax({url: '/groups/' + group_id + '/sunburst_data', dataType: 'json'})
-    .success (data) ->
-      console.log data
-
-      svg = d3.select("#svg_vis")
-        .append("g")
-
-      canvasWidth = $("#svg_vis").width()
-      canvasHeight = $("#svg_vis").height()
-      radius = Math.min(canvasWidth, canvasHeight) / 2
-      svg.attr("transform", "translate(" + canvasWidth / 2 + "," + canvasHeight * .5 + ")")
-
-      partition = d3.layout.partition()
-        .sort(null)
-        .size([2 * Math.PI, radius * radius])
-        .value((d) ->  d.size)
-
-      arc = d3.svg.arc()
-        .startAngle((d) ->  d.x)
-        .endAngle((d) ->  d.x + d.dx)
-        .innerRadius((d) ->  Math.sqrt(d.y))
-        .outerRadius((d) -> Math.sqrt(d.y + d.dy))
-
-
-      path = svg.selectAll('path').data(partition.nodes(data)).enter().append('path').attr('d', arc).style('stroke', '#fff').style('fill', (d) ->
-        if d.children then '#F76C51' else d3.rgb('#F76C51').darker()
-      ).style('opacity', 0.5)
-
-      console.log partition.nodes(data)
 
 
 
