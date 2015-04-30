@@ -60,7 +60,6 @@ class BubbleChart
     @nodes_out = []
     @path = null
     @arc = null
-    @oldArc = null
     @radius_out = null
     @force = null
     @circles = null
@@ -159,7 +158,6 @@ class BubbleChart
       .outerRadius((d) -> if d.children then radius_out else radius_out * 1.1)
 
     @arc = arc
-    @oldArc = arc
 
     @path = svg.selectAll('path')
       .data(partition.nodes(@data_out))

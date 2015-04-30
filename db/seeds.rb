@@ -813,7 +813,7 @@ mp_virtual_forstenried_erzeugung.formula_parts << Fabricate(:fp_plus, operand_id
 peter_schmidt.add_role(:manager, mp_virtual_forstenried_erzeugung)
 peter_schmidt.dashboard.metering_points << mp_virtual_forstenried_erzeugung
 
-group_forstenried = Fabricate(:group_forstenried, metering_points: [mp_virtual_forstenried_erzeugung])
+group_forstenried = Fabricate(:group_forstenried, metering_points: [mp_60138947, mp_60138943, mp_1338000816])
 peter_schmidt.add_role(:manager, group_forstenried)
 
 group_forstenried.metering_points << mp_60051595
