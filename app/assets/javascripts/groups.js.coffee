@@ -55,8 +55,13 @@ class BubbleChart
 
     # these will be set in create_nodes and create_vis
     @vis = null
+    @partition = null
     @nodes = []
     @nodes_out = []
+    @path = null
+    @arc = null
+    @oldArc = null
+    @radius_out = null
     @force = null
     @circles = null
     @max_power = null
@@ -73,7 +78,10 @@ class BubbleChart
 
     # use the max watt_hour in the data as the max in the scale's domain
     @max_power_in = d3.max(@data, (d) -> parseInt(d.latest_power))
-    max_power_out = d3.max(@data_out.children, (d) -> parseInt(d.latest_power))
+    max_power_out = 0 #max_power_out is equal to totalPowerOut !!
+    @data_out.children.forEach (d) ->
+      max_power_out += d.latest_power
+    @totalPowerOut = max_power_out
     if @max_power_in > max_power_out
       @max_power = @max_power_in
     else
@@ -96,7 +104,7 @@ class BubbleChart
     @data.forEach (d) =>
       color = "#5FA2DD"
       if d.own_metering_point
-        color = "#1FF2DD"
+        color = "#6A5ACD"
       node = {
         id: d.metering_point_id
         value: d.latest_power
@@ -130,33 +138,40 @@ class BubbleChart
 
     svg = d3.select("#bubbles_container_" + group_id).select("#svg_vis")
       .append("g")
+      .attr('id', 'circles_out')
       .attr("transform", "translate(" + @width / 2 + "," + @height / 2 + ")")
 
-    radius = Math.min(@width, @height) / 2
+    #radius = Math.min(@width, @height) / 2
+    radius_out = @radius_scale(parseInt(@totalPowerOut))
+    @radius_out = radius_out
 
     partition = d3.layout.partition()
       .sort(null)
-      .size([2 * Math.PI, radius * radius])
+      .size([2 * Math.PI, radius_out * radius_out])
       .value((d) ->  d.latest_power)
+
+    @partition = partition
 
     arc = d3.svg.arc()
       .startAngle((d) ->  d.x)
       .endAngle((d) ->  d.x + d.dx)
-      .innerRadius((d) ->  Math.sqrt(d.y))
-      .outerRadius((d) -> if d.children then Math.sqrt(d.y + d.dy) else Math.sqrt(d.y + d.dy) - 30)
+      .innerRadius((d) ->  if d.children then 0 else radius_out)
+      .outerRadius((d) -> if d.children then radius_out else radius_out * 1.1)
 
-    path = svg.selectAll('path')
+    @arc = arc
+    @oldArc = arc
+
+    @path = svg.selectAll('path')
       .data(partition.nodes(@data_out))
       .enter()
       .append('path')
       .attr('d', arc)
+      .attr('id', (d) -> "path_" + d.metering_point_id)
       .attr("stroke-width", (d) -> if d.children then 0 else 4)
-      .style('stroke', (d) -> if d.children then '#F76C51' else '#fff')
+      .style('stroke', (d) -> 'none')
       .style('fill', (d) -> if d.children then '#F76C51' else d3.rgb('#F76C51').darker())
       .on("mouseover", (d,i) -> that.show_details(d,i,this))
       .on("mouseout", (d,i) -> that.hide_details(d,i,this))
-
-    console.log path
 
     # @data_out.forEach (d) =>
     #   node = {
@@ -240,7 +255,6 @@ class BubbleChart
           .attr("cx", (d) -> d.x)
           .attr("cy", (d) -> d.y)
       .on "end", (e) =>
-        console.log 'FIN'
       #  @circles.each(this.move_towards_center(e.alpha))
       #    .attr("cx", (d) -> d.x)
       #    .attr("cy", (d) -> d.y)
@@ -256,7 +270,7 @@ class BubbleChart
 
   show_details: (data, i, element) =>
     d3.select(element).attr("stroke", (d) -> d3.rgb(d.color).darker().darker())
-    d3.select(element).attr("opacity", 0.5)
+    d3.select(element).attr("opacity", 0.7)
     content = "<span class=\"name\">Name:</span><span class=\"value\"> #{data.name}</span><br/>"
     content +="<span class=\"name\">Aktuelle Leistung:</span><span class=\"value\"> #{addCommas(parseInt(data.value)).replace(",", ".")} Watt</span><br/>"
     @tooltip.showTooltip(content,d3.event)
@@ -277,6 +291,15 @@ class BubbleChart
         this.calculateMaxPower(d.value)
         d.radius = @radius_scale(parseInt(value))
 
+    @data_out.children.forEach (d) =>
+      if d.metering_point_id.toString() == id.toString()
+        if d.latest_power == value
+          return
+        d.latest_power = value
+        @path = d3.select("circles_out").selectAll('path')
+          .data(@partition.nodes(@data_out))
+        this.calculateMaxPower(value)
+        #resetRadiusArc()
 
     # @nodes_out.forEach (d) =>
     #   if d.id.toString() == id.toString()
@@ -304,19 +327,23 @@ class BubbleChart
     # circleAttributes = @circles_out
     #   .attr("cx", @width / 2)
     #   .attr("cy", @height / 2)
+    d3.select("#circles_out")
+      .attr("transform", "translate(" + @width / 2 + "," + @height / 2 + ")")
     this.setNewScale()
 
   calculateMaxPower: (value) =>
     @max_power_in = d3.max(@nodes, (d) -> parseInt(value))
-    max_power_out = d3.max(@nodes_out, (d) -> parseInt(value))
+    max_power_out = 0 #max_power_out is equal to totalPowerOut !!
+    @data_out.children.forEach (d) ->
+      max_power_out += d.latest_power
     if @max_power_in > max_power_out
       @max_power = @max_power_in
-      if value > @max_power_in
-        @max_power = value
+      #if value > @max_power_in
+      #  @max_power = value
     else
       @max_power = max_power_out
-      if value > max_power_out
-        @max_power = value
+      #if value > max_power_out
+      #  @max_power = value
     this.calculateTotalPower()
     this.calculateTotalPowerOut()
     this.setNewScale()
@@ -325,8 +352,7 @@ class BubbleChart
     this.setZoomFactor()
     @nodes.forEach (d) =>
       d.radius = @radius_scale(parseInt(d.value))
-    @nodes_out.forEach (d) =>
-      d.radius = @radius_scale(parseInt(d.value))
+    this.resetRadiusArc()
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
     #@circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
     #@circles.attr("r", (d) -> d.radius)
@@ -334,15 +360,17 @@ class BubbleChart
     this.display_group_all()
 
   calculateTotalPower: () =>
-    @totalPower = 0
+    totalPower = 0
     @nodes.forEach (d) =>
-      @totalPower += d.value
+      totalPower += d.value
+    @totalPower = totalPower
     $("#kw-ticker-in").html(parseInt(@totalPower) + " W")
 
   calculateTotalPowerOut: () =>
-    @totalPowerOut = 0
-    @nodes_out.forEach (d) =>
-      @totalPowerOut += d.value
+    totalPowerOut = 0
+    @data_out.children.forEach (d) ->
+      totalPowerOut += d.latest_power
+    @totalPowerOut = totalPowerOut
     $("#kw-ticker-out").html(parseInt(@totalPowerOut) + " W")
 
   setZoomFactor: () =>
@@ -354,6 +382,21 @@ class BubbleChart
     while @radius_scale(@totalPower) > smallest_border / 2.4
       @zoomFactor = @zoomFactor - 20
       @radius_scale = d3.scale.pow().exponent(0.5).domain([0, @max_power]).range([2, @zoomFactor])
+
+  resetRadiusArc: () =>
+    radius_out = @radius_scale(parseInt(@totalPowerOut))
+    @radius_out = radius_out
+    @arc = d3.svg.arc()
+      .startAngle((d) ->  d.x)
+      .endAngle((d) ->  d.x + d.dx)
+      .innerRadius((d) ->  if d.children then 0 else radius_out)
+      .outerRadius((d) -> if d.children then radius_out else radius_out * 1.1)
+    d3.select("#circles_out").selectAll('path').transition()
+      .duration(2000)
+      .attr('d', @arc)
+
+
+
 
 
 
@@ -390,7 +433,7 @@ $(".bubbles_container").ready ->
         metering_point_id = metering_point_data.metering_point_id
         $('#bubble_' + metering_point_id).click ->
           window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
-        if metering_point_data.virtual
+        if !metering_point_data.virtual
           channel = pusher.subscribe("metering_point_#{metering_point_id}")
           channel.bind "new_reading", (reading) ->
             chart.reset_radius(reading.metering_point_id, reading.power)
@@ -401,11 +444,11 @@ $(".bubbles_container").ready ->
               return
             , 1000*60)
             )
-      for metering_point_data in data_out
+      for metering_point_data in data_out.children
         metering_point_id = metering_point_data.metering_point_id
-        $('#bubble_' + metering_point_id).click ->
+        $('#path_' + metering_point_id).click ->
           window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
-        if metering_point_data.virtual
+        if !metering_point_data.virtual
           channel = pusher.subscribe("metering_point_#{metering_point_id}")
           channel.bind "new_reading", (reading) ->
             chart.reset_radius(reading.metering_point_id, reading.power)
