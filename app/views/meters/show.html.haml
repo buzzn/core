@@ -1,26 +1,29 @@
 - meta title: @meter.name
 
-= content_for :aside do
-  %aside#aside-container
-    #aside
-      .nano
-        .nano-content{:tabindex => "0"}
-          .text-center.pad-all
-            .pad-ver
-              %span.fa-stack.fa-lg.fa-5x
-                %i.fa.fa-circle.fa-stack-2x
-                %i.fa.fa-tachometer.fa-stack-1x.fa-inverse
 
-            %h4.text-lg.text-overflow.mar-no= @meter.name
 
-          %hr
-            .text-center.clearfix
-              - if current_user.can_update?(@meter)
-                = @meter.link_to_edit
+.panel
+  .panel-body
 
--if @meter.image
-  .properties-container
-    = image_tag @meter.image.cover, class: 'img-responsive'
+    .col-lg-1.col-md-2.col-sm-2.col-xs-3
+      - if @meter.image?
+        = image_tag @meter.image.lg, class: 'img-circle img-lg img-border'
+      - else
+        %span.fa-stack.fa-lg.fa-4x
+          %i.fa.fa-circle.fa-stack-2x
+          %i.fa.fa-tachometer.fa-stack-1x.fa-inverse
+
+
+    .col-lg-2.col-md-3.col-sm-3.col-xs-5
+      .media-body.pad-lft
+        %p.text-3x.mar-no=t @meter.manufacturer_name
+        %p.text-3x.mar-no.text-thin= @meter.manufacturer_product_serialnumber
+
+
+    .panel-control
+      - if current_user.can_update?(@meter)
+        = @meter.link_to_edit
+
 
 #page-content
   .row
@@ -35,47 +38,48 @@
               %tbody
                 %tr
                   %td= t('manufacturer_name')
-                  %td= @meter.manufacturer_name
+                  %td= t @meter.manufacturer_name
                 %tr
                   %td= t('manufacturer_product_name')
                   %td= @meter.manufacturer_product_name
                 %tr
                   %td= t('manufacturer_product_serialnumber')
                   %td= @meter.manufacturer_product_serialnumber
-                %tr
-                  %td= t('owner')
-                  %td= @meter.owner
-                %tr
-                  %td= t('mode')
-                  %td= @meter.mode
-                %tr
-                  %td= t('meter_size')
-                  %td= @meter.meter_size
-                %tr
-                  %td= t('rate')
-                  %td= @meter.rate
-                %tr
-                  %td= t('measurement_capture')
-                  %td= @meter.measurement_capture
-                %tr
-                  %td= t('mounting_method')
-                  %td= @meter.mounting_method
-                %tr
-                  %td= t('build_year')
-                  %td= @meter.build_year
-                %tr
-                  %td= t('calibrated_till')
-                  %td= @meter.calibrated_till
-                %tr
-                  %td= t('smart')
-                  %td= @meter.smart
+                -# %tr
+                -#   %td= t('owner')
+                -#   %td= @meter.owner
+                -# %tr
+                -#   %td= t('mode')
+                -#   %td= @meter.mode
+                -# %tr
+                -#   %td= t('meter_size')
+                -#   %td= @meter.meter_size
+                -# %tr
+                -#   %td= t('rate')
+                -#   %td= @meter.rate
+                -# %tr
+                -#   %td= t('measurement_capture')
+                -#   %td= @meter.measurement_capture
+                -# %tr
+                -#   %td= t('mounting_method')
+                -#   %td= @meter.mounting_method
+                -# %tr
+                -#   %td= t('build_year')
+                -#   %td= @meter.build_year
+                -# %tr
+                -#   %td= t('calibrated_till')
+                -#   %td= @meter.calibrated_till
                 - if @meter.smart
                   %tr
-                    %td= t('online')
-                    %td= @meter.online
-                  %tr
-                    %td= t('initialized_successfully')
-                    %td= @meter.init_reading
+                    %td= t('smart')
+                    %td= @meter.smart
+                  - if @meter.smart
+                    %tr
+                      %td= t('online')
+                      %td= @meter.online
+                    %tr
+                      %td= t('initialized_successfully')
+                      %td= @meter.init_reading
 
 
   .metering_points

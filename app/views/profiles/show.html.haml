@@ -13,7 +13,7 @@
       - if @profile.image?
         = image_tag @profile.image.lg, class: 'img-circle img-lg img-border'
       - else
-        %span.fa-stack.fa-lg.fa-5x
+        %span.fa-stack.fa-lg.fa-4x
           %i.fa.fa-circle.fa-stack-2x
           %i.fa.fa-user.fa-stack-1x.fa-inverse
 
@@ -22,13 +22,6 @@
       .media-body.pad-lft
         %p.text-3x.mar-no= @profile.first_name
         %p.text-3x.mar-no.text-thin= @profile.last_name
-
-
-    - if @profile.about_me
-      .col-lg-2.col-md-3.col-sm-3.col-xs-5
-        .pad-hor
-          %h5=t('about_me')
-          %small.text-thin= @profile.about_me
 
 
     .panel-control
@@ -48,9 +41,6 @@
 
 
 #page-content
-
-
-
 
   %h1.page-header.text-overflow
     %span

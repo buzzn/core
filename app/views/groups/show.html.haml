@@ -6,21 +6,18 @@
 
 
 
-
-
-
 .panel
   .panel-body
     .col-lg-1.col-md-2.col-sm-2.col-xs-3
       - if @group.logo?
         = image_tag @group.logo.lg, class: 'img-circle img-lg img-border'
       - else
-        %span.fa-stack.fa-lg.fa-5x
+        %span.fa-stack.fa-lg.fa-4x
           %i.fa.fa-circle.fa-stack-2x
           %i.fa.fa-users.fa-stack-1x.fa-inverse
 
 
-    .col-lg-3.col-md-3.col-sm-3.col-xs-5
+    .col-lg-6.col-md-6.col-sm-6.col-xs-5
       .media-body.pad-lft
         %p.text-3x.mar-no= @group.name
 
@@ -32,14 +29,6 @@
             %a.btn-link{:href => "#"}
               %i.fa.fa-globe.fa-fw
               = link_to_external @group.website
-
-
-    .col-lg-3.col-md-3.col-sm-3.col-xs-5
-      - if @group.description
-        %h5=t('description')
-        %small.text-thin= @group.description
-
-
 
 
     .panel-control
@@ -71,8 +60,6 @@
 
       - if current_user.can_update?(@group)
         = @group.link_to_edit
-
-
 
 
 
