@@ -1,54 +1,23 @@
 - meta title: @device.name
 
-= content_for :aside do
-  %aside#aside-container
-    #aside
-      .nano
-        .nano-content{:tabindex => "0"}
 
-          .text-center.pad-all
-            .pad-ver
-              %span.fa-stack.fa-lg.fa-5x
-                %i.fa.fa-circle.fa-stack-2x
-                %i.fa.fa-plug.fa-stack-1x.fa-inverse
-            %h4.text-lg.text-overflow.mar-no= @device.name
+.panel
+  .panel-body
+    .col-lg-1.col-md-2.col-sm-2.col-xs-3
+      %span.fa-stack.fa-lg.fa-4x
+        %i.fa.fa-circle.fa-stack-2x
+        %i.fa.fa-plug.fa-stack-1x.fa-inverse
 
-          %hr
-            %ul.list-group.bg-trans
+    .col-lg-2.col-md-3.col-sm-3.col-xs-5
+      .media-body.pad-lft
+        %p.text-3x.mar-no= @device.manufacturer_name
+        %p.text-3x.mar-no.text-thin= @device.manufacturer_product_name
 
-              - @manager.each do |user|
-                %li.list-group-item.list-item-sm
-                  %i.fa.fa-user.fa-fw
-                  = link_to user.profile.name, user.profile
-
-              %li.list-group-item.list-item-sm
-                %i.fa.fa-clock-o.fa-fw
-                = timeago_tag @device.commissioning
-
-              %li.list-group-item.list-item-sm
-                %i.fa.fa-fw{class: @device.input? ? 'fa-arrow-down' : 'fa-arrow-up' }
-                = t("#{@device.mode}_device")
-
-              - if @device.metering_point
-                %li.list-group-item.list-item-sm
-                  %i.fa.fa-bolt.fa-fw
-                  = link_to @device.metering_point.long_name, @device.metering_point
+    .panel-control
+      - if current_user.can_update?(@device)
+        = @device.link_to_edit
 
 
-
-          %hr
-            .text-center.clearfix
-              %p.h3= human_readable_watt @device.watt_peak
-              %small.text-muted= t'watt_peak'
-
-          %hr
-            .text-center.clearfix
-              - if current_user.can_update?(@device)
-                = @device.link_to_edit
-
-
-        .nano-pane{:style => "display: none;"}
-          .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
 
 #page-content
@@ -56,46 +25,44 @@
   .panel
     = image_tag @device.image.cover, class: 'img-responsive'
 
+    .panel-body
+      .table-responsive
+        %table.table.table-striped
+          %tbody
 
-  .row
-    .col-sm-6
-      .panel
-        .panel-heading
-          %h3.panel-title
-            =t('device_properties')
-        .panel-body
-          .table-responsive
-            %table.table.table-striped
-              %tbody
-                - if @device.output?
-                  %tr
-                    %td= t('category')
-                    %td= @device.category
-                %tr
-                  %td= t('manufacturer')
-                  %td= @device.manufacturer_name
-                %tr
-                  %td= t('manufacturer_product_name')
-                  %td= @device.manufacturer_product_name
-                %tr
-                  %td= t('shop_link')
-                  %td= @device.shop_link
-                - if @device.output?
-                  %tr
-                    %td= t('primary_energy')
-                    %td= @device.primary_energy
-                %tr
-                  %td= t('watt_peak')
-                  %td= @device.watt_peak
-                %tr
-                  %td= t('watt_hour_pa')
-                  %td= @device.watt_hour_pa
-                %tr
-                  %td= t('commissioning')
-                  %td= timeago_tag @device.commissioning
-                %tr
-                  %td= t('mobile')
-                  %td= t @device.mobile
+            - if @device.output?
+              %tr
+                %td= t('category')
+                %td= @device.category
+            %tr
+              %td= t('manufacturer')
+              %td= @device.manufacturer_name
+            %tr
+              %td= t('manufacturer_product_name')
+              %td= @device.manufacturer_product_name
+
+            -# %tr
+            -#   %td= t('shop_link')
+            -#   %td= @device.shop_link
+
+            - if @device.output?
+              %tr
+                %td= t('primary_energy')
+                %td= @device.primary_energy
+            %tr
+              %td= t('watt_peak')
+              %td= human_readable_watt @device.watt_peak
+            -# %tr
+            -#   %td= t('watt_hour_pa')
+            -#   %td= @device.watt_hour_pa
+            %tr
+              %td= t('commissioning')
+              %td= timeago_tag @device.commissioning
+            -# %tr
+            -#   %td= t('mobile')
+            -#   %td= t @device.mobile
+
+
 
 
 

@@ -38,6 +38,7 @@
 //= require switchery
 //= require resizeend
 //= require pace
+//= require enquire
 
 //= require nifty_init
 //= require nifty_notification

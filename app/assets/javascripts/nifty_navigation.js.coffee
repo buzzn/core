@@ -371,9 +371,9 @@ ready = ->
 
 
 
-
-
   nifty.window.on('resizeEnd', updateNav).trigger 'resize'
+
+
 
   toggleBtn = $('.mainnav-toggle')
   if toggleBtn.length
