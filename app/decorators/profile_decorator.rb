@@ -18,7 +18,7 @@ class ProfileDecorator < Draper::Decorator
       edit_profile_path(model),
       {
         :remote       => true,
-        :class        => 'start_modal btn btn-primary btn-rounded btn-labeled fa fa-cog',
+        :class        => 'start_modal btn btn-primary btn-labeled fa fa-cog',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })
