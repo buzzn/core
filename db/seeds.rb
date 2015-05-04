@@ -66,18 +66,18 @@ buzzn_team_names.each do |user_name|
     Fabricate(:easymeter_60139082, metering_points: [mp_z1a, mp_z1b])
 
 
-    mp_z2 = Fabricate(:mp_z2)
-    user.add_role :manager, mp_z2
-    mp_z2.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z2)
-    user.contracting_party.contracts << mp_z2.contracts
-    mp_z3 = Fabricate(:mp_z3)
-    user.add_role :manager, mp_z3
-    mp_z3.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z3)
-    user.contracting_party.contracts << mp_z3.contracts
-    mp_z4 = Fabricate(:mp_z4)
-    user.add_role :manager, mp_z4
-    mp_z4.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z4)
-    user.contracting_party.contracts << mp_z4.contracts
+    @mp_z2 = Fabricate(:mp_z2)
+    user.add_role :manager, @mp_z2
+    @mp_z2.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: @mp_z2)
+    user.contracting_party.contracts << @mp_z2.contracts
+    @mp_z3 = Fabricate(:mp_z3)
+    user.add_role :manager, @mp_z3
+    @mp_z3.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: @mp_z3)
+    user.contracting_party.contracts << @mp_z3.contracts
+    @mp_z4 = Fabricate(:mp_z4)
+    user.add_role :manager, @mp_z4
+    @mp_z4.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: @mp_z4)
+    user.contracting_party.contracts << @mp_z4.contracts
     mp_z5 = Fabricate(:mp_z5)
     user.add_role :manager, mp_z5
     mp_z5.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: mp_z5)
@@ -85,15 +85,15 @@ buzzn_team_names.each do |user_name|
 
 
     dach_pv_justus = Fabricate(:dach_pv_justus)
-    mp_z2.devices << dach_pv_justus
+    @mp_z2.devices << dach_pv_justus
     user.add_role :manager, dach_pv_justus
 
     bhkw_justus        = Fabricate(:bhkw_justus)
-    mp_z4.devices << bhkw_justus
+    @mp_z4.devices << bhkw_justus
     user.add_role :manager, bhkw_justus
 
     auto_justus        = Fabricate(:auto_justus)
-    mp_z3.devices << auto_justus
+    @mp_z3.devices << auto_justus
     user.add_role :manager, auto_justus
 
   when 'felix'
@@ -253,8 +253,8 @@ group_hopf.metering_points << mp_hans_dieter_hopf
 
 
 puts 'group home_of_the_brave'
-group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [mp_z2, mp_z4])
-group_home_of_the_brave.metering_points << mp_z3
+group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [@mp_z2, @mp_z4])
+group_home_of_the_brave.metering_points << @mp_z3
 justus = User.where(email: 'justus@buzzn.net').first
 justus.add_role :manager, group_home_of_the_brave
 group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
