@@ -574,6 +574,7 @@ GEM
     rails-assets-jquery-readyselector (0.1.0)
     rails-assets-metisMenu (2.0.0)
       rails-assets-jquery (~> 2.1.3)
+    rails-assets-moment (2.10.2)
     rails-assets-nanoscroller (0.8.6)
       rails-assets-jquery (>= 1.6)
     rails-assets-pace (1.0.2)
@@ -860,6 +861,7 @@ DEPENDENCIES
   rails-assets-font-awesome!
   rails-assets-jquery-readyselector!
   rails-assets-metisMenu!
+  rails-assets-moment!
   rails-assets-nanoscroller!
   rails-assets-pace!
   rails-assets-resizeend!

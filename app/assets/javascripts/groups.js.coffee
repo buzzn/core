@@ -429,8 +429,9 @@ $(".bubbles_container").ready ->
 
       for metering_point_data in data_in
         metering_point_id = metering_point_data.metering_point_id
-        $('#bubble_' + metering_point_id).click ->
-          window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
+        if metering_point_data.readable
+          $('#bubble_' + metering_point_id).click ->
+            window.location.href = '/metering_points/' + metering_point_data.slug
         if !metering_point_data.virtual
           channel = pusher.subscribe("metering_point_#{metering_point_id}")
           channel.bind "new_reading", (reading) ->
@@ -444,8 +445,9 @@ $(".bubbles_container").ready ->
             )
       for metering_point_data in data_out.children
         metering_point_id = metering_point_data.metering_point_id
-        $('#path_' + metering_point_id).click ->
-          window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
+        if metering_point_data.readable
+          $('#path_' + metering_point_id).click ->
+            window.location.href = '/metering_points/' + metering_point_data.slug
         if !metering_point_data.virtual
           channel = pusher.subscribe("metering_point_#{metering_point_id}")
           channel.bind "new_reading", (reading) ->

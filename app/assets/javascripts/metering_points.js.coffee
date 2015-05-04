@@ -822,6 +822,10 @@ $(".metering_point").ready ->
       .success (data) ->
         if data.online == true || data.virtual == true
           metering_point.find(".power-ticker").html(data.latest_power)
+          if data.timestamp <= Date.now() - 60*1000
+            metering_point.find(".power-ticker").css({opacity: 0.3})
+          metering_point.find(".power-ticker").data('content', moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss"))
+          metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
         else
           metering_point.find(".power-ticker").html('offline')
     if $(this).find(".metering_point-ticker").data('virtual') == true
@@ -839,11 +843,9 @@ $(".metering_point").ready ->
 
       channel = pusher.subscribe("metering_point_#{metering_point_id}")
       channel.bind "new_reading", (reading) ->
-        #oldString = metering_point.find(".metering_point-ticker").attr('data-readings')
-        #oldWattHour = oldString.split(",")[1]
-        #oldTimestamp = oldString.split(",")[0].substring(1, oldString.split(",")[0].length)
-        #metering_point.find(".metering_point-ticker").attr('data-readings', "[#{reading.timestamp}, #{reading.watt_hour}, #{oldTimestamp}, #{oldWattHour}]")
         metering_point.find(".power-ticker").html(reading.power)
+        metering_point.find(".power-ticker").data('bs.popover').options.content = moment(reading.timestamp).format("DD.MM.YYYY HH:mm:ss")
+        metering_point.find(".power-ticker").css({opacity: 1})
   else
     getSLPValue()
     timers.push(
@@ -859,6 +861,12 @@ pullVirtualPowerData = (metering_point, metering_point_id) ->
     .success (data) ->
       if data.online == true || data.virtual == true
         metering_point.find(".power-ticker").html(data.latest_power)
+        if data.timestamp <= Date.now().getTime() - 60*1000
+            metering_point.find(".power-ticker").css({opacity: 0.3})
+        metering_point.find(".power-ticker").data('content', moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss"))
+        metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
+        metering_point.find(".power-ticker").data('bs.popover').options.content = moment(reading.timestamp).format("DD.MM.YYYY HH:mm:ss")
+        metering_point.find(".power-ticker").css({opacity: 1})
       else
         metering_point.find(".power-ticker").html('offline')
 
@@ -892,6 +900,7 @@ getRandomPower = (averagePower) ->
     return 0
   else
     return y
+
 
 clearTimers = ->
   i = 0

@@ -39,6 +39,7 @@
 //= require resizeend
 //= require pace
 //= require enquire
+//= require moment
 
 //= require nifty_init
 //= require nifty_notification

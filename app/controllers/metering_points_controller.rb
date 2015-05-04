@@ -125,8 +125,10 @@ class MeteringPointsController < ApplicationController
 
   def latest_power
     @metering_point = MeteringPoint.find(params[:id])
+    last_power = @metering_point.last_power
     render json: {
-      latest_power: @metering_point.last_power,
+      latest_power: last_power[:power],
+      timestamp:    last_power[:timestamp],
       smart:        @metering_point.smart?,
       online:       @metering_point.online?,
       virtual:      @metering_point.virtual

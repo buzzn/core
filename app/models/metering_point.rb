@@ -74,6 +74,8 @@ class MeteringPoint < ActiveRecord::Base
       operators = get_operators_from_formula
       result = 0
       i = 0
+      count_timestamps = 0
+      sum_timestamp = 0
       operands.each do |metering_point_id|
         reading = Reading.last_by_metering_point_id(metering_point_id)
         if !reading.nil? #&& reading[:timestamp] >= Time.now - 1.hour
@@ -82,16 +84,19 @@ class MeteringPoint < ActiveRecord::Base
           elsif operators[i] == "-"
             result -= reading[:power]
           end
+          sum_timestamp += reading[:timestamp].to_i*1000
+          count_timestamps += 1
         end
         i+=1
       end
-      return result/1000
+      average_timestamp = sum_timestamp / count_timestamps
+      return {:power => result/1000, :timestamp => average_timestamp}
     else
       last_reading = Reading.last_by_metering_point_id(self.id)
       if last_reading.nil?
-        return 0
+        return {:power => 0, :timestamp => 0}
       end
-      return last_reading[:power]/1000
+      return {:power => last_reading[:power]/1000, :timestamp => last_reading[:timestamp].to_i*1000}
     end
   end
 

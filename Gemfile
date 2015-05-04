@@ -109,6 +109,7 @@ source 'http://rails-assets.org' do
   gem 'rails-assets-nanoscroller'
   gem 'rails-assets-fastclick'
   gem 'rails-assets-enquire'
+  gem 'rails-assets-moment'
 end
 
 
