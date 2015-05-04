@@ -30,6 +30,20 @@
                     = @metering_point.add_to_dashboard
 
 
+          - if @metering_point.readable
+            %hr
+              .pad-hor
+                %h5=t'readable_by'
+                %i.fa.fa-eye.fa-fw
+                = t(@metering_point.readable)
+          %hr
+            .pad-hor
+              %h5=t'metering_point_admin'
+            %ul.list-group.bg-trans
+              - @metering_point.managers.each do |user|
+                %li.list-group-item.list-item-sm
+                  %i.fa.fa-user.fa-fw
+                  = link_to user.name, user.profile
           - if @metering_point.group
             %hr
               .pad-hor

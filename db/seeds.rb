@@ -253,8 +253,8 @@ group_hopf.metering_points << mp_hans_dieter_hopf
 
 
 puts 'group home_of_the_brave'
-group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [@fichtenweg8])
-group_home_of_the_brave.metering_points << @fichtenweg10
+group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [mp_z2, mp_z4])
+group_home_of_the_brave.metering_points << mp_z3
 justus = User.where(email: 'justus@buzzn.net').first
 justus.add_role :manager, group_home_of_the_brave
 group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave

@@ -58,6 +58,10 @@ class MeteringPoint < ActiveRecord::Base
     self.where(group: group.id)
   }
 
+  def managers
+    User.with_role :manager, self
+  end
+
   def dashboard
     if self.is_dashboard_metering_point
       self.dashboards.collect{|d| d if d.dashboard_metering_points.include?(self)}.first

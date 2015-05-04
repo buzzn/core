@@ -462,6 +462,8 @@ de:
   stop_display: Graph entfernen
   my_groups: Meine Gruppen
   loading: lädt
+  metering_point_admin: Zählpunkt Admin
+  readable_by: Sichtbar für
 
   contracts_info: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."
   bank_account_info: "Um Deine Verträge zu bezahlen musst Du einen Bank Account anlegen. "

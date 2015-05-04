@@ -130,16 +130,6 @@ class GroupsController < ApplicationController
     render json: result.to_json
   end
 
-  def sunburst_data
-    @group = Group.find(params[:id])
-    children = []
-    @group.metering_points.where(mode: 'out').each do |metering_point|
-      children << {:name => metering_point.decorate.name, :size => metering_point.last_power}
-    end
-    result = {:name => 'Gesamterzeugung', :children => children}
-    render json: result.to_json
-  end
-
 
 
 
