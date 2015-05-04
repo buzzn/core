@@ -78,7 +78,7 @@ class MeteringPointDecorator < Draper::Decorator
       edit_metering_point_path(model),
       {
         :remote       => true,
-        :class        => 'start_modal btn btn-primary btn-rounded btn-labeled fa fa-cog',
+        :class        => 'start_modal btn btn-primary btn-labeled fa fa-cog',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })
@@ -153,7 +153,7 @@ class MeteringPointDecorator < Draper::Decorator
 
   def add_to_dashboard
     link_to(
-      content_tag(:i, t("add_to_dashboard"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
+      content_tag(:i, t("add_to_dashboard"), class: 'btn btn-purple btn-labeled fa fa-link'),
       add_metering_point_dashboard_path(metering_point_id: model.id, slug: current_user.dashboard.slug),
       {
         :remote         => true,

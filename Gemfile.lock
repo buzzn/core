@@ -567,6 +567,7 @@ GEM
     rails-assets-bootstrap-select (1.6.5)
       rails-assets-jquery (>= 1.8)
     rails-assets-d3 (3.5.5)
+    rails-assets-enquire (2.1.2)
     rails-assets-fastclick (1.0.6)
     rails-assets-font-awesome (4.3.0)
     rails-assets-jquery (2.1.4)
@@ -854,6 +855,7 @@ DEPENDENCIES
   rails-assets-bootstrap-datepicker!
   rails-assets-bootstrap-select!
   rails-assets-d3!
+  rails-assets-enquire!
   rails-assets-fastclick!
   rails-assets-font-awesome!
   rails-assets-jquery-readyselector!

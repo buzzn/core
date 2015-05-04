@@ -1,6 +1,13 @@
 ready = ->
   console.log 'NIFTY INIT'
 
+  enquire.register 'screen and (max-width: 1200px)',
+    deferSetup: true
+    match: ->
+      $( "#container" ).removeClass( "mainnav-lg" ).addClass( "mainnav-sm" );
+    unmatch: ->
+      $( "#container" ).removeClass( "mainnav-sm" ).addClass( "mainnav-lg" );
+
   window.nifty =
     'container': $('#container')
     'contentContainer': $('#content-container')

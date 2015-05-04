@@ -2,91 +2,41 @@
 - meta about_me: @profile.about_me
 
 
-= content_for :aside do
-  %aside#aside-container
-    #aside
-      .nano
-        .nano-content{:tabindex => "0"}
-
-          .text-center.pad-all
-            .pad-ver
-              - if @profile.image?
-                = image_tag @profile.image.lg, class: 'img-circle img-lg img-border'
-              - else
-                %span.fa-stack.fa-lg.fa-5x
-                  %i.fa.fa-circle.fa-stack-2x
-                  %i.fa.fa-user.fa-stack-1x.fa-inverse
-
-
-            %h4.text-lg.text-overflow.mar-no= @profile.name
-
-            -# .pad-ver.btn-group
-            -#   %a.btn.btn-icon.btn-hover-primary.fa.fa-facebook.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Facebook", :href => "#", :title => ""}
-            -#   %a.btn.btn-icon.btn-hover-info.fa.fa-twitter.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Twitter", :href => "#", :title => ""}
-            -#   %a.btn.btn-icon.btn-hover-mint.fa.fa-envelope.icon-lg.add-tooltip{"data-container" => "body", "data-original-title" => "Email", :href => "#", :title => ""}
-
-            - if @profile.user != current_user
-              - if current_user.friend?(@profile.user)
-                = link_to( t('cancel_friendship'),cancel_friendship_path(@profile.user),:data => {:confirm => t('are_you_sure')}, class: 'btn btn-block btn-warning btn-labeled fa fa-minus')
-              - else
-                - if FriendshipRequest.where(sender: current_user, receiver: @profile.user).empty?
-                  = link_to t('friend_request'), friendship_requests_path( receiver_id: @profile.user), method: :post, class: 'btn btn-block btn-success btn-labeled fa fa-plus'
-                - else
-                  %button.btn.btn-success.btn-labeled.fa.fa-spinner{:disabled => "disabled"}= t'waiting_for_accepting'
-
-
-          %hr
-            %ul.list-group.bg-trans
-
-              %li.list-group-item.list-item-sm
-                %i.fa.fa-clock-o.fa-fw
-                = t'member_since'
-                = timeago_tag @profile.created_at, :nojs => true, :lang => locale, :limit => 10.days.ago
-
-              - if @profile.website
-                %li.list-group-item.list-item-sm.text-primary.text-semibold
-                  %a.btn-link{:href => "#"}
-                    %i.fa.fa-globe.fa-fw
-                    = link_to_external @profile.website
-
-            - if @profile.about_me
-              %hr
-                .pad-hor
-                  %h5=t('about_me')
-                  %small.text-thin= @profile.about_me
-
-            %hr
-              .text-center.clearfix
-                .col-xs-6
-                  %p.h3= @groups.count
-                  %small.text-muted= t'groups'
-                .col-xs-6
-                  %p.h3= @friends.count
-                  %small.text-muted= t'friends'
-
-            %hr
-              .text-center.clearfix
-                - if current_user.can_update?(@profile)
-                  = @profile.link_to_edit
-
-        .nano-pane{:style => "display: none;"}
-          .nano-slider{:style => "height: 20px; transform: translate(0px, 0px);"}
 
 
 
-- if @profile.user == current_user
 
-  - if @metering_points.empty?
-    = render "welcome_#{I18n.locale.to_s}"
+.panel
+  .panel-body
 
-  - if @friendship_requests.any?
-    .row
-      .col-lg-12
-        .panel.panel-colorful.panel-warning
-          .panel-body
-            .friendship_requests
-              = render @friendship_requests
+    .col-lg-1.col-md-2.col-sm-2.col-xs-3
+      - if @profile.image?
+        = image_tag @profile.image.lg, class: 'img-circle img-lg img-border'
+      - else
+        %span.fa-stack.fa-lg.fa-4x
+          %i.fa.fa-circle.fa-stack-2x
+          %i.fa.fa-user.fa-stack-1x.fa-inverse
 
+
+    .col-lg-2.col-md-3.col-sm-3.col-xs-5
+      .media-body.pad-lft
+        %p.text-3x.mar-no= @profile.first_name
+        %p.text-3x.mar-no.text-thin= @profile.last_name
+
+
+    .panel-control
+
+      - if @profile.user != current_user
+        - if current_user.friend?(@profile.user)
+          = link_to( t('cancel_friendship'),cancel_friendship_path(@profile.user),:data => {:confirm => t('are_you_sure')}, class: 'btn btn-warning btn-labeled fa fa-minus')
+        - else
+          - if FriendshipRequest.where(sender: current_user, receiver: @profile.user).empty?
+            = link_to t('friend_request'), friendship_requests_path( receiver_id: @profile.user), method: :post, class: 'btn btn-success btn-labeled fa fa-plus'
+          - else
+            %button.btn.btn-success.btn-labeled.fa.fa-spinner{:disabled => "disabled"}= t'waiting_for_accepting'
+
+      - if current_user.can_update?(@profile)
+        = @profile.link_to_edit
 
 
 

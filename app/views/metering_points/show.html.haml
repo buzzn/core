@@ -1,69 +1,32 @@
 - meta title: @metering_point.long_name
 
 
-= content_for :aside do
-  %aside#aside-container
-    #aside
-      .nano
-        .nano-content{:tabindex => "0"}
-          .text-center.pad-all
-            .pad-ver
-              %span.fa-stack.fa-lg.fa-5x
-                %i.fa.fa-circle.fa-stack-2x
-                %i.fa.fa-bolt.fa-stack-1x.fa-inverse
-            %h4.text-lg.text-overflow.mar-no= @metering_point.long_name
+
+.panel
+  .panel-body
+    .col-lg-1.col-md-2.col-sm-2.col-xs-3
+      %span.fa-stack.fa-lg.fa-4x
+        %i.fa.fa-circle.fa-stack-2x
+        %i.fa.fa-bolt.fa-stack-1x.fa-inverse
+
+    .col-lg-4.col-md-3.col-sm-3.col-xs-5
+      .media-body.pad-lft
+        %p.text-3x.mar-no= @metering_point.name
+        %p.text-3x.mar-no.text-thin= @metering_point.address ? @metering_point.address.short_name : t('no_address')
 
 
-          - if @metering_point
-            %hr
-            .text-center.clearfix
-              .metering_point{ id: "metering_point_#{@metering_point.id}"}
-                .pad-all.text-center
-                  = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { slp: !@metering_point.smart? && !@metering_point.virtual } do
-                    %span.text-4x.text-thin
-                      .power-ticker
-                        = t('loading') + '...'
-                  %p= t'watt'
-              - if @metering_point.smart?
-                .add-to-dashboard
-                  - if user_signed_in? && (current_user.dashboard.nil? || !current_user.dashboard.metering_points.include?(@metering_point))
-                    = @metering_point.add_to_dashboard
+    .panel-control
+
+      - if @metering_point.smart?
+        - if user_signed_in? && (current_user.dashboard.nil? || !current_user.dashboard.metering_points.include?(@metering_point))
+          = @metering_point.add_to_dashboard
+
+      - if current_user.can_update?(@metering_point)
+        = @metering_point.link_to_edit
 
 
-          - if @metering_point.readable
-            %hr
-              .pad-hor
-                %h5=t'readable_by'
-                %i.fa.fa-eye.fa-fw
-                = t(@metering_point.readable)
-          %hr
-            .pad-hor
-              %h5=t'metering_point_admin'
-            %ul.list-group.bg-trans
-              - @metering_point.managers.each do |user|
-                %li.list-group-item.list-item-sm
-                  %i.fa.fa-user.fa-fw
-                  = link_to user.name, user.profile
-          - if @metering_point.group
-            %hr
-              .pad-hor
-                %h5=t'group'
-                %i.fa.fa-group.fa-fw
-                = link_to @metering_point.group.name, @metering_point.group
-          %hr
-            .text-center.clearfix
-              .col-xs-6
-                %p.h3= @users.count
-                %small.text-muted= t'residents'
-              .col-xs-6
-                %p.h3= @devices.count
-                %small.text-muted= t'devices'
 
-          - if user_signed_in?
-            - if current_user.can_update?(@metering_point)
-              %hr
-                .text-center.clearfix
-                  = @metering_point.link_to_edit
+
 
 
 
@@ -83,6 +46,15 @@
             /.btn.btn-success.btn-chart-next.pull-right=content_tag(:i, nil, class: 'fa fa-angle-double-right')
             .btn.btn-success.btn-chart-next.pull-right=content_tag(:i, nil, class: 'fa fa-chevron-circle-right fa-2x')
 
+            .metering_point{ id: "metering_point_#{@metering_point.id}"}
+              .text-center
+                = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { slp: !@metering_point.smart? && !@metering_point.virtual } do
+                  %span.text-4x.text-thin
+                    .power-ticker
+                      = t('loading') + '...'
+                %p= t'watt'
+
+
   - if user_signed_in? && current_user.can_update?(@metering_point) || @devices.size != 0
     %hr
     %h1.page-header.text-overflow
@@ -98,6 +70,7 @@
         .row
           .col-lg-12.text-center
             = @metering_point.edit_devices
+
 
   - if user_signed_in? && current_user.can_update?(@metering_point) || @users.size != 0
     %hr
