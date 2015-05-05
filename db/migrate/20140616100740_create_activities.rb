@@ -2,12 +2,13 @@
 class CreateActivities < ActiveRecord::Migration
   # Create table
   def self.up
-    create_table :activities do |t|
-      t.belongs_to :trackable, :polymorphic => true
-      t.belongs_to :owner, :polymorphic => true
+    enable_extension 'uuid-ossp'
+    create_table :activities, id: :uuid do |t|
+      t.belongs_to :trackable, :polymorphic => true, type: :uuid
+      t.belongs_to :owner, :polymorphic => true, type: :uuid
       t.string  :key
       t.text    :parameters
-      t.belongs_to :recipient, :polymorphic => true
+      t.belongs_to :recipient, :polymorphic => true, type: :uuid
 
       t.timestamps
     end

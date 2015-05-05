@@ -1,9 +1,6 @@
 class Address < ActiveRecord::Base
   include Authority::Abilities
 
-  extend FriendlyId
-  friendly_id :full_name, use: [:slugged, :finders]
-
   belongs_to :addressable, polymorphic: true
 
   validates :street_name,     presence: true
@@ -34,5 +31,6 @@ class Address < ActiveRecord::Base
   def short_name
     "#{street_name} #{city}"
   end
+
 
 end

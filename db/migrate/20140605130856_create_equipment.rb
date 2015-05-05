@@ -1,6 +1,7 @@
 class CreateEquipment < ActiveRecord::Migration
   def change
-    create_table :equipment do |t|
+    enable_extension 'uuid-ossp'
+    create_table :equipment, id: :uuid do |t|
 
       t.string  :slug
       t.string  :manufacturer_name
@@ -14,7 +15,7 @@ class CreateEquipment < ActiveRecord::Migration
       t.date    :calibrated_till
       t.integer :converter_constant
 
-      t.integer :meter_id
+      t.belongs_to :meter, type: :uuid
 
       t.timestamps
     end

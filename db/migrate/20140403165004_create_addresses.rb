@@ -1,6 +1,7 @@
 class CreateAddresses < ActiveRecord::Migration
   def change
-    create_table :addresses do |t|
+    enable_extension 'uuid-ossp'
+    create_table :addresses, id: :uuid do |t|
       t.string  :slug
       t.string  :address
       t.string  :street_name
@@ -14,7 +15,7 @@ class CreateAddresses < ActiveRecord::Migration
       t.string  :time_zone
       t.string  :readable
 
-      t.integer :addressable_id
+      t.belongs_to :addressable, type: :uuid
       t.string  :addressable_type
 
       t.timestamps

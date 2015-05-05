@@ -1,10 +1,9 @@
 class Reading
   include Mongoid::Document
-
   after_create :push_reading
 
-  field :contract_id,   type: Integer
-  field :metering_point_id,   type: Integer
+  field :contract_id,   type: String
+  field :metering_point_id,   type: String
   field :timestamp,     type: DateTime
   field :watt_hour,     type: Integer
   field :power,         type: Integer

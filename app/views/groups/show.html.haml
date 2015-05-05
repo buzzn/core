@@ -58,7 +58,7 @@
                   - else
                     %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id), method: :post
 
-      - if current_user.can_update?(@group)
+      - if user_signed_in? && current_user.can_update?(@group)
         = @group.link_to_edit
 
 

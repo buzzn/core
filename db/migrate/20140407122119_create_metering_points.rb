@@ -1,6 +1,7 @@
 class CreateMeteringPoints < ActiveRecord::Migration
   def change
-    create_table :metering_points do |t|
+    enable_extension 'uuid-ossp'
+    create_table :metering_points, id: :uuid do |t|
       t.string  :slug
       t.string  :uid
       t.string  :mode
@@ -13,9 +14,9 @@ class CreateMeteringPoints < ActiveRecord::Migration
       t.boolean :is_dashboard_metering_point, default: false
       t.string  :readable
 
-      t.integer :meter_id
-      t.integer :contract_id
-      t.integer :group_id
+      t.belongs_to :meter, type: :uuid
+      t.belongs_to :contract, type: :uuid
+      t.belongs_to :group, type: :uuid
 
       t.timestamps
     end

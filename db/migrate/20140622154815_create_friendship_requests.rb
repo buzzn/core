@@ -1,8 +1,9 @@
 class CreateFriendshipRequests < ActiveRecord::Migration
   def change
-    create_table :friendship_requests do |t|
-      t.integer :sender_id
-      t.integer :receiver_id
+    enable_extension 'uuid-ossp'
+    create_table :friendship_requests, id: :uuid do |t|
+      t.belongs_to :sender, type: :uuid
+      t.belongs_to :receiver, type: :uuid
       t.string  :status
 
       t.timestamps

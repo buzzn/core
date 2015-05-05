@@ -2,9 +2,6 @@ class BankAccount < ActiveRecord::Base
   include Authority::Abilities
   belongs_to :bank_accountable, polymorphic: true
 
-  extend FriendlyId
-  friendly_id :iban, use: [:slugged, :finders]
-
 
   validates_with IbanValidator
 
@@ -12,5 +9,6 @@ class BankAccount < ActiveRecord::Base
 
   validates :holder,        presence: true
   validates :iban,          presence: true
+
 
 end

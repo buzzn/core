@@ -2,9 +2,6 @@ class ContractingParty < ActiveRecord::Base
   resourcify
   include Authority::Abilities
 
-  extend FriendlyId
-  friendly_id :slug_name, use: [:slugged, :finders]
-
   belongs_to :user
   belongs_to :metering_point
 
@@ -42,13 +39,6 @@ class ContractingParty < ActiveRecord::Base
     else
       "#{user.name} for #{organization.name}"
     end
-  end
-
-
-private
-
-  def slug_name
-    SecureRandom.uuid
   end
 
 

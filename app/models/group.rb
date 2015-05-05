@@ -12,6 +12,13 @@ class Group < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
+  def slug_candidates
+    [
+      :slug,
+      :slug_name
+    ]
+  end
+
   validates :name, presence: true, uniqueness: true, length: { in: 4..40 }
 
   normalize_attribute :name, with: [:strip]
@@ -30,11 +37,12 @@ class Group < ActiveRecord::Base
 
   normalize_attributes :description, :website
 
-  default_scope { order('created_at DESC') }
+  default_scope { order('created_at ASC') }
 
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
   }
+
 
   def managers
     User.with_role :manager, self
@@ -61,6 +69,10 @@ class Group < ActiveRecord::Base
         metering_point.group = nil
         metering_point.save
       end
+    end
+
+    def slug_name
+      SecureRandom.uuid
     end
 
 

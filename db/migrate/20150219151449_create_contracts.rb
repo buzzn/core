@@ -1,6 +1,8 @@
 class CreateContracts < ActiveRecord::Migration
   def change
-    create_table :contracts do |t|
+    enable_extension 'uuid-ossp'
+
+    create_table :contracts, id: :uuid do |t|
       t.string :slug
       t.string   :mode
 
@@ -26,10 +28,10 @@ class CreateContracts < ActiveRecord::Migration
       t.boolean :valid_credentials, default: false
       t.boolean :running, default: true
 
-      t.integer :contracting_party_id
-      t.integer :metering_point_id
-      t.integer :organization_id
-      t.integer :group_id
+      t.belongs_to :contracting_party, type: :uuid
+      t.belongs_to :metering_point, type: :uuid
+      t.belongs_to :organization, type: :uuid
+      t.belongs_to :group, type: :uuid
 
       t.timestamps null: false
     end

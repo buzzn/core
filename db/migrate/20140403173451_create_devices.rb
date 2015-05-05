@@ -1,6 +1,7 @@
 class CreateDevices < ActiveRecord::Migration
   def change
-    create_table :devices do |t|
+    enable_extension 'uuid-ossp'
+    create_table :devices, id: :uuid do |t|
       t.string  :slug
       t.string  :manufacturer_name
       t.string  :manufacturer_product_name
@@ -17,7 +18,7 @@ class CreateDevices < ActiveRecord::Migration
       t.boolean :mobile, default: false
       t.string  :readable
 
-      t.integer :metering_point_id
+      t.belongs_to :metering_point, type: :uuid
 
       t.timestamps
     end

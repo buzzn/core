@@ -15,15 +15,16 @@ ActiveRecord::Schema.define(version: 20150407152833) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "uuid-ossp"
 
-  create_table "activities", force: :cascade do |t|
-    t.integer  "trackable_id"
+  create_table "activities", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.uuid     "trackable_id"
     t.string   "trackable_type"
-    t.integer  "owner_id"
+    t.uuid     "owner_id"
     t.string   "owner_type"
     t.string   "key"
     t.text     "parameters"
-    t.integer  "recipient_id"
+    t.uuid     "recipient_id"
     t.string   "recipient_type"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -33,7 +34,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
   add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
 
-  create_table "addresses", force: :cascade do |t|
+  create_table "addresses", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "address"
     t.string   "street_name"
@@ -46,7 +47,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.float    "latitude"
     t.string   "time_zone"
     t.string   "readable"
-    t.integer  "addressable_id"
+    t.uuid     "addressable_id"
     t.string   "addressable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -56,7 +57,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "addresses", ["readable"], name: "index_addresses_on_readable", using: :btree
   add_index "addresses", ["slug"], name: "index_addresses_on_slug", unique: true, using: :btree
 
-  create_table "areas", force: :cascade do |t|
+  create_table "areas", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "name"
     t.integer  "zoom",           default: 16
     t.string   "address"
@@ -65,21 +66,21 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.float    "latitude"
     t.float    "longitude"
     t.boolean  "gmaps"
-    t.integer  "group_id"
+    t.uuid     "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "areas", ["group_id"], name: "index_areas_on_group_id", using: :btree
 
-  create_table "bank_accounts", force: :cascade do |t|
+  create_table "bank_accounts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "holder"
     t.string   "encrypted_iban"
     t.string   "bic"
     t.string   "bank_name"
     t.boolean  "direct_debit"
-    t.integer  "bank_accountable_id"
+    t.uuid     "bank_accountable_id"
     t.string   "bank_accountable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -88,13 +89,13 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "bank_accounts", ["bank_accountable_id", "bank_accountable_type"], name: "index_accountable", using: :btree
   add_index "bank_accounts", ["slug"], name: "index_bank_accounts_on_slug", unique: true, using: :btree
 
-  create_table "comments", force: :cascade do |t|
-    t.integer  "commentable_id",   default: 0
+  create_table "comments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.uuid     "commentable_id"
     t.string   "commentable_type"
     t.string   "title"
     t.text     "body"
     t.string   "subject"
-    t.integer  "user_id",          default: 0, null: false
+    t.uuid     "user_id",          null: false
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
@@ -105,15 +106,15 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "comments", ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
-  create_table "contracting_parties", force: :cascade do |t|
+  create_table "contracting_parties", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "legal_entity"
     t.integer  "sales_tax_number"
     t.float    "tax_rate"
     t.integer  "tax_number"
-    t.integer  "organization_id"
-    t.integer  "metering_point_id"
-    t.integer  "user_id"
+    t.uuid     "organization_id"
+    t.uuid     "metering_point_id"
+    t.uuid     "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -123,7 +124,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "contracting_parties", ["slug"], name: "index_contracting_parties_on_slug", unique: true, using: :btree
   add_index "contracting_parties", ["user_id"], name: "index_contracting_parties_on_user_id", using: :btree
 
-  create_table "contracts", force: :cascade do |t|
+  create_table "contracts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "mode"
     t.string   "tariff"
@@ -143,10 +144,10 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.string   "encrypted_password"
     t.boolean  "valid_credentials",               default: false
     t.boolean  "running",                         default: true
-    t.integer  "contracting_party_id"
-    t.integer  "metering_point_id"
-    t.integer  "organization_id"
-    t.integer  "group_id"
+    t.uuid     "contracting_party_id"
+    t.uuid     "metering_point_id"
+    t.uuid     "organization_id"
+    t.uuid     "group_id"
     t.datetime "created_at",                                      null: false
     t.datetime "updated_at",                                      null: false
   end
@@ -158,10 +159,10 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "contracts", ["organization_id"], name: "index_contracts_on_organization_id", using: :btree
   add_index "contracts", ["slug"], name: "index_contracts_on_slug", unique: true, using: :btree
 
-  create_table "dashboard_metering_points", force: :cascade do |t|
+  create_table "dashboard_metering_points", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.boolean  "displayed",         default: false
-    t.integer  "dashboard_id"
-    t.integer  "metering_point_id"
+    t.uuid     "dashboard_id"
+    t.uuid     "metering_point_id"
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
   end
@@ -169,17 +170,17 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "dashboard_metering_points", ["dashboard_id"], name: "index_dashboard_metering_points_on_dashboard_id", using: :btree
   add_index "dashboard_metering_points", ["metering_point_id"], name: "index_dashboard_metering_points_on_metering_point_id", using: :btree
 
-  create_table "dashboards", force: :cascade do |t|
+  create_table "dashboards", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "name"
     t.string   "slug"
-    t.integer  "user_id"
+    t.uuid     "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   add_index "dashboards", ["user_id"], name: "index_dashboards_on_user_id", using: :btree
 
-  create_table "devices", force: :cascade do |t|
+  create_table "devices", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
@@ -195,7 +196,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.date     "commissioning"
     t.boolean  "mobile",                            default: false
     t.string   "readable"
-    t.integer  "metering_point_id"
+    t.uuid     "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -204,7 +205,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "devices", ["readable"], name: "index_devices_on_readable", using: :btree
   add_index "devices", ["slug"], name: "index_devices_on_slug", unique: true, using: :btree
 
-  create_table "equipment", force: :cascade do |t|
+  create_table "equipment", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
@@ -215,7 +216,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.date     "build"
     t.date     "calibrated_till"
     t.integer  "converter_constant"
-    t.integer  "meter_id"
+    t.uuid     "meter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -223,10 +224,10 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "equipment", ["meter_id"], name: "index_equipment_on_meter_id", using: :btree
   add_index "equipment", ["slug"], name: "index_equipment_on_slug", unique: true, using: :btree
 
-  create_table "formula_parts", force: :cascade do |t|
+  create_table "formula_parts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "operator"
-    t.integer  "metering_point_id"
-    t.integer  "operand_id"
+    t.uuid     "metering_point_id"
+    t.uuid     "operand_id"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
   end
@@ -236,7 +237,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
-    t.integer  "sluggable_id",              null: false
+    t.uuid     "sluggable_id",              null: false
     t.string   "sluggable_type", limit: 50
     t.string   "scope"
     t.datetime "created_at"
@@ -247,9 +248,9 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
-  create_table "friendship_requests", force: :cascade do |t|
-    t.integer  "sender_id"
-    t.integer  "receiver_id"
+  create_table "friendship_requests", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.uuid     "sender_id"
+    t.uuid     "receiver_id"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -259,9 +260,9 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "friendship_requests", ["receiver_id"], name: "index_friendship_requests_on_receiver_id", using: :btree
   add_index "friendship_requests", ["sender_id"], name: "index_friendship_requests_on_sender_id", using: :btree
 
-  create_table "friendships", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "friend_id"
+  create_table "friendships", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.uuid     "user_id",    null: false
+    t.uuid     "friend_id",  null: false
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -271,10 +272,10 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id", using: :btree
   add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
 
-  create_table "group_metering_point_requests", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "group_id"
-    t.integer  "metering_point_id"
+  create_table "group_metering_point_requests", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.uuid     "user_id"
+    t.uuid     "group_id"
+    t.uuid     "metering_point_id"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -285,9 +286,9 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "group_metering_point_requests", ["metering_point_id"], name: "index_group_metering_point_requests_on_metering_point_id", using: :btree
   add_index "group_metering_point_requests", ["user_id"], name: "index_group_metering_point_requests_on_user_id", using: :btree
 
-  create_table "group_users", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "group_id"
+  create_table "group_users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.uuid     "user_id"
+    t.uuid     "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -295,7 +296,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "group_users", ["group_id"], name: "index_group_users_on_group_id", using: :btree
   add_index "group_users", ["user_id"], name: "index_group_users_on_user_id", using: :btree
 
-  create_table "groups", force: :cascade do |t|
+  create_table "groups", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "name"
     t.string   "logo"
@@ -311,10 +312,10 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "groups", ["readable"], name: "index_groups_on_readable", using: :btree
   add_index "groups", ["slug"], name: "index_groups_on_slug", unique: true, using: :btree
 
-  create_table "metering_point_users", force: :cascade do |t|
+  create_table "metering_point_users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.integer  "usage",             default: 100
-    t.integer  "user_id"
-    t.integer  "metering_point_id"
+    t.uuid     "user_id"
+    t.uuid     "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -322,7 +323,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "metering_point_users", ["metering_point_id"], name: "index_metering_point_users_on_metering_point_id", using: :btree
   add_index "metering_point_users", ["user_id"], name: "index_metering_point_users_on_user_id", using: :btree
 
-  create_table "metering_points", force: :cascade do |t|
+  create_table "metering_points", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "uid"
     t.string   "mode"
@@ -334,9 +335,9 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.boolean  "virtual",                     default: false
     t.boolean  "is_dashboard_metering_point", default: false
     t.string   "readable"
-    t.integer  "meter_id"
-    t.integer  "contract_id"
-    t.integer  "group_id"
+    t.uuid     "meter_id"
+    t.uuid     "contract_id"
+    t.uuid     "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -347,7 +348,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "metering_points", ["readable"], name: "index_metering_points_on_readable", using: :btree
   add_index "metering_points", ["slug"], name: "index_metering_points_on_slug", unique: true, using: :btree
 
-  create_table "meters", force: :cascade do |t|
+  create_table "meters", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
@@ -417,7 +418,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
-  create_table "organizations", force: :cascade do |t|
+  create_table "organizations", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "image"
     t.string   "name"
@@ -433,7 +434,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
 
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
 
-  create_table "profiles", force: :cascade do |t|
+  create_table "profiles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "user_name"
     t.string   "slug"
     t.string   "title"
@@ -456,7 +457,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.boolean  "newsletter_notifications", default: true
     t.boolean  "location_notifications",   default: true
     t.boolean  "group_notifications",      default: true
-    t.integer  "user_id"
+    t.uuid     "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -468,7 +469,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
-    t.integer  "resource_id"
+    t.uuid     "resource_id"
     t.string   "resource_type"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -479,9 +480,9 @@ ActiveRecord::Schema.define(version: 20150407152833) do
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
-    t.integer  "taggable_id"
+    t.uuid     "taggable_id"
     t.string   "taggable_type"
-    t.integer  "tagger_id"
+    t.uuid     "tagger_id"
     t.string   "tagger_type"
     t.string   "context",       limit: 128
     t.datetime "created_at"
@@ -497,7 +498,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
@@ -523,8 +524,8 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
     t.integer  "invitations_count",      default: 0
-    t.integer  "group_id"
-    t.integer  "metering_point_id"
+    t.uuid     "group_id"
+    t.uuid     "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -536,19 +537,20 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
   add_index "users", ["invited_by_type"], name: "index_users_on_invited_by_type", using: :btree
+  add_index "users", ["metering_point_id"], name: "index_users_on_metering_point_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
   create_table "users_roles", id: false, force: :cascade do |t|
-    t.integer "user_id"
+    t.uuid    "user_id"
     t.integer "role_id"
   end
 
   add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
 
-  create_table "versions", force: :cascade do |t|
+  create_table "versions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "item_type",  null: false
-    t.integer  "item_id",    null: false
+    t.uuid     "item_id",    null: false
     t.string   "event",      null: false
     t.string   "whodunnit"
     t.text     "object"

@@ -1,6 +1,7 @@
 class CreateAreas < ActiveRecord::Migration
   def change
-    create_table :areas do |t|
+    enable_extension 'uuid-ossp'
+    create_table :areas, id: :uuid do |t|
 
       t.string  :name
 
@@ -13,7 +14,7 @@ class CreateAreas < ActiveRecord::Migration
       t.float   :longitude
       t.boolean :gmaps
 
-      t.integer :group_id
+      t.belongs_to :group, type: :uuid
 
       t.timestamps
     end

@@ -1,11 +1,12 @@
 class CreateMeteringPointUsers < ActiveRecord::Migration
   def change
-    create_table :metering_point_users do |t|
+    enable_extension 'uuid-ossp'
+    create_table :metering_point_users, id: :uuid do |t|
 
       t.integer :usage, default: 100
 
-      t.integer :user_id
-      t.integer :metering_point_id
+      t.belongs_to :user, type: :uuid
+      t.belongs_to :metering_point, type: :uuid
 
       t.timestamps
     end

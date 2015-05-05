@@ -2,9 +2,6 @@ class Meter < ActiveRecord::Base
 
   include Authority::Abilities
 
-  extend FriendlyId
-  friendly_id :slug_name, use: [:slugged, :finders]
-
   has_ancestry
 
   validates :manufacturer_product_serialnumber, presence: true    #, unless: "self.virtual"
@@ -22,10 +19,10 @@ class Meter < ActiveRecord::Base
 
 
 
-
-  def slug_name
+  def name
     "#{manufacturer_name} #{manufacturer_product_serialnumber}"
   end
+
 
 
   def metering_points_modes_and_ids

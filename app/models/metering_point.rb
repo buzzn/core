@@ -12,7 +12,7 @@ class MeteringPoint < ActiveRecord::Base
 
   def slug_candidates
     [
-      :slug_name
+      :slug_name #maybe another slug for sharing
     ]
   end
 

@@ -1,6 +1,7 @@
 class CreateContractingParties < ActiveRecord::Migration
   def change
-    create_table :contracting_parties do |t|
+    enable_extension 'uuid-ossp'
+    create_table :contracting_parties, id: :uuid do |t|
       t.string :slug
       t.string :legal_entity
 
@@ -8,9 +9,9 @@ class CreateContractingParties < ActiveRecord::Migration
       t.float   :tax_rate
       t.integer :tax_number
 
-      t.integer :organization_id
-      t.integer :metering_point_id
-      t.integer :user_id
+      t.belongs_to :organization, type: :uuid
+      t.belongs_to :metering_point, type: :uuid
+      t.belongs_to :user, type: :uuid
 
       t.timestamps
     end

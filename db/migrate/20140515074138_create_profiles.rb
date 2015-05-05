@@ -1,6 +1,7 @@
 class CreateProfiles < ActiveRecord::Migration
   def change
-    create_table :profiles do |t|
+    enable_extension 'uuid-ossp'
+    create_table :profiles, id: :uuid do |t|
 
       t.string :user_name
       t.string :slug
@@ -28,7 +29,7 @@ class CreateProfiles < ActiveRecord::Migration
       t.boolean :group_notifications,       :default => true
 
 
-      t.integer  :user_id
+      t.belongs_to :user, type: :uuid
 
       t.timestamps
     end

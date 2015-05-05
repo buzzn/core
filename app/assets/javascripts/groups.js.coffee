@@ -411,9 +411,6 @@ $(".bubbles_container").ready ->
     chart.start()
     chart.display_group_all()
 
-
-  #data_in = gon.in_metering_point_data
-  #data_out = gon.out_metering_point_data
   group_id = $(this).attr('data-content')
   $.ajax({url: '/groups/' + group_id + '/bubbles_data'})
     .success (data) ->
@@ -430,6 +427,7 @@ $(".bubbles_container").ready ->
       for metering_point_data in data_in
         metering_point_id = metering_point_data.metering_point_id
         if metering_point_data.readable
+          $('#bubble_' + metering_point_id).css( 'cursor', 'pointer' )
           $('#bubble_' + metering_point_id).click ->
             window.location.href = '/metering_points/' + metering_point_data.slug
         if !metering_point_data.virtual
@@ -446,6 +444,7 @@ $(".bubbles_container").ready ->
       for metering_point_data in data_out.children
         metering_point_id = metering_point_data.metering_point_id
         if metering_point_data.readable
+          $('#path_' + metering_point_id).css( 'cursor', 'pointer' )
           $('#path_' + metering_point_id).click ->
             window.location.href = '/metering_points/' + metering_point_data.slug
         if !metering_point_data.virtual

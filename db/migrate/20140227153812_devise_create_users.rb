@@ -1,6 +1,7 @@
 class DeviseCreateUsers < ActiveRecord::Migration
   def change
-    create_table(:users) do |t|
+    enable_extension 'uuid-ossp'
+    create_table(:users, id: :uuid) do |t|
 
       t.string :email,              :null => false, :default => ""
       t.string :encrypted_password, :null => false, :default => ""
@@ -40,8 +41,8 @@ class DeviseCreateUsers < ActiveRecord::Migration
       t.integer    :invitations_count, default: 0
 
       # belongs_to
-      t.integer  :group_id
-      t.integer  :metering_point_id
+      t.belongs_to :group, type: :uuid, index: true
+      t.belongs_to :metering_point, type: :uuid, index: true
 
       t.timestamps
     end
@@ -49,7 +50,6 @@ class DeviseCreateUsers < ActiveRecord::Migration
     add_index :users, :reset_password_token, unique: true
     add_index :users, :confirmation_token,   unique: true
     add_index :users, :unlock_token,         unique: true
-    add_index :users, :group_id
     add_index :users, :invitations_count
     add_index :users, :invitation_token, unique: true
     add_index :users, :invited_by_id

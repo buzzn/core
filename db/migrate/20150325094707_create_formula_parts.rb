@@ -1,10 +1,11 @@
 class CreateFormulaParts < ActiveRecord::Migration
   def change
-    create_table :formula_parts do |t|
+    enable_extension 'uuid-ossp'
+    create_table :formula_parts, id: :uuid do |t|
       t.string  :operator
 
-      t.integer :metering_point_id
-      t.integer :operand_id
+      t.belongs_to :metering_point, type: :uuid
+      t.belongs_to :operand, type: :uuid
 
       t.timestamps null: false
     end

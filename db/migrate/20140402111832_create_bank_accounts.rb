@@ -1,6 +1,7 @@
 class CreateBankAccounts < ActiveRecord::Migration
   def change
-    create_table :bank_accounts do |t|
+    enable_extension 'uuid-ossp'
+    create_table :bank_accounts, id: :uuid do |t|
       t.string  :slug
       t.string  :holder
       t.string  :encrypted_iban
@@ -8,7 +9,7 @@ class CreateBankAccounts < ActiveRecord::Migration
       t.string  :bank_name
       t.boolean :direct_debit
 
-      t.integer :bank_accountable_id
+      t.belongs_to :bank_accountable, type: :uuid
       t.string  :bank_accountable_type
 
       t.timestamps

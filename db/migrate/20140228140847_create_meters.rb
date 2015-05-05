@@ -1,6 +1,7 @@
 class CreateMeters < ActiveRecord::Migration
   def change
-    create_table :meters do |t|
+    enable_extension 'uuid-ossp'
+    create_table :meters, id: :uuid do |t|
       t.string :slug
       t.string :manufacturer_name
       t.string :manufacturer_product_name

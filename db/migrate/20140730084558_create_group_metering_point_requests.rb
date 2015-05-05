@@ -1,9 +1,10 @@
 class CreateGroupMeteringPointRequests < ActiveRecord::Migration
   def change
-    create_table :group_metering_point_requests do |t|
-      t.integer :user_id
-      t.integer :group_id
-      t.integer :metering_point_id
+    enable_extension 'uuid-ossp'
+    create_table :group_metering_point_requests, id: :uuid do |t|
+      t.belongs_to :user, type: :uuid
+      t.belongs_to :group, type: :uuid
+      t.belongs_to :metering_point, type: :uuid
       t.string :status
 
       t.timestamps

@@ -3,9 +3,6 @@ class Contract < ActiveRecord::Base
   include Authority::Abilities
   has_paper_trail
 
-  extend FriendlyId
-  friendly_id :slug_name, use: [:slugged, :finders]
-
   attr_encrypted :password, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
   monetize :price_cents
@@ -66,10 +63,6 @@ class Contract < ActiveRecord::Base
 
 
 private
-
-  def slug_name
-    SecureRandom.uuid
-  end
 
   def validates_credentials_job
     Sidekiq::Client.push({

@@ -2,6 +2,7 @@ class Organization < ActiveRecord::Base
   extend FriendlyId
 
   friendly_id :name, use: [:slugged, :finders]
+
   include Authority::Abilities
 
   acts_as_taggable_on :contract_types
