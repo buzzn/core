@@ -236,7 +236,7 @@ class MeteringPoint < ActiveRecord::Base
   def formula
     result = ""
     self.formula_parts.each do |formula_part|
-      result += formula_part.operator + formula_part.operand_id.to_s
+      result += formula_part.operator + " " + formula_part.operand_id.to_s + " "
     end
     return result
   end
@@ -331,6 +331,12 @@ private
             watts << reading[1]
           else
             indexOfTimestamp = timestamps.index(reading[0])
+            if !indexOfTimestamp
+              indexOfTimestamp = timestamps.index(reading[0] - 1000)
+              if !indexOfTimestamp
+                indexOfTimestamp = timestamps.index(reading[0] + 1000)
+              end
+            end
             if indexOfTimestamp
               if operators[i] == "+"
                 watts[indexOfTimestamp] += reading[1]
