@@ -10,7 +10,7 @@
           =metering_point.long_name
 
         .display-in-series
-          /= current_user.dashboard.metering_points.length
+
           - if user_signed_in? && current_user.dashboard.metering_points.include?(metering_point)
             - if current_user.dashboard.dashboard_metering_points.where(metering_point_id: metering_point.id).first.displayed
               = metering_point.remove_from_series
