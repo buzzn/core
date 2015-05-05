@@ -154,7 +154,7 @@ class MeteringPointDecorator < Draper::Decorator
   def add_to_dashboard
     link_to(
       content_tag(:i, t("add_to_dashboard"), class: 'btn btn-purple btn-labeled fa fa-link'),
-      add_metering_point_dashboard_path(metering_point_id: model.id, slug: current_user.dashboard.slug),
+      add_metering_point_dashboard_path(metering_point_id: model.id, dashboard_id: current_user.dashboard.id),
       {
         :remote         => true,
       })
@@ -163,7 +163,7 @@ class MeteringPointDecorator < Draper::Decorator
   def remove_from_dashboard
     link_to(
       content_tag(:i, t("remove_from_dashboard"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
-      remove_metering_point_dashboard_path(metering_point_id: model.id, slug: current_user.dashboard.slug),
+      remove_metering_point_dashboard_path(metering_point_id: model.id, dashboard_id: current_user.dashboard.id),
       {
         :remote         => true,
       })
@@ -172,7 +172,7 @@ class MeteringPointDecorator < Draper::Decorator
   def display_in_series
     link_to(
       content_tag(:i, t('start_display'), class: 'btn btn-success btn-labeled fa fa-bar-chart'),
-      display_metering_point_in_series_dashboard_path(metering_point_id: model.id, slug: current_user.dashboard.slug),
+      display_metering_point_in_series_dashboard_path(metering_point_id: model.id, dashboard_id: current_user.dashboard.id),
       {
         :remote         => true,
       })
@@ -181,7 +181,7 @@ class MeteringPointDecorator < Draper::Decorator
   def remove_from_series
     link_to(
       content_tag(:i, t('stop_display'), class: 'btn btn-danger btn-labeled fa fa-bar-chart'),
-      remove_metering_point_from_series_dashboard_path(metering_point_id: model.id, slug: current_user.dashboard.slug),
+      remove_metering_point_from_series_dashboard_path(metering_point_id: model.id, dashboard_id: current_user.dashboard.id),
       {
         :remote         => true,
       })

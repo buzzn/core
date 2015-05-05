@@ -12,7 +12,7 @@ class DashboardsController < ApplicationController
   end
 
   def add_metering_point
-    @dashboard = Dashboard.find(params[:slug])
+    @dashboard = Dashboard.find(params[:dashboard_id])
     @metering_point = MeteringPoint.find(params[:metering_point_id])
     if !@dashboard.metering_points.include?(@metering_point)
       @dashboard.metering_points << @metering_point
@@ -21,7 +21,7 @@ class DashboardsController < ApplicationController
   end
 
   def remove_metering_point
-    @dashboard = Dashboard.find(params[:slug])
+    @dashboard = Dashboard.find(params[:dashboard_id])
     @metering_point = MeteringPoint.find(params[:metering_point_id])
     if @dashboard.metering_points.include?(@metering_point)
       @dashboard.metering_points.delete(@metering_point)
@@ -30,7 +30,7 @@ class DashboardsController < ApplicationController
   end
 
   def display_metering_point_in_series
-    @dashboard = Dashboard.find(params[:slug])
+    @dashboard = Dashboard.find(params[:dashboard_id])
     @metering_point = MeteringPoint.find(params[:metering_point_id])
     #@dashboard_metering_point = @dashboard.dashboard_metering_points[params[:series].to_i - 1]
     #@operator = params[:operator]
@@ -41,7 +41,7 @@ class DashboardsController < ApplicationController
   end
 
   def remove_metering_point_from_series
-    @dashboard = Dashboard.find(params[:slug])
+    @dashboard = Dashboard.find(params[:dashboard_id])
     @metering_point = MeteringPoint.find(params[:metering_point_id])
     @dashboard_metering_point = DashboardMeteringPoint.where(dashboard_id: @dashboard.id, metering_point_id: @metering_point.id).first
     @dashboard_metering_point.displayed = false

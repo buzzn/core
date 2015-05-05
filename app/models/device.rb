@@ -2,15 +2,6 @@ class Device < ActiveRecord::Base
   resourcify
   include Authority::Abilities
 
-  extend FriendlyId
-  friendly_id :name, use: [:slugged, :finders]
-
-  def slug_candidates
-    [
-      :slug_name #maybe another slug for sharing
-    ]
-  end
-
   belongs_to :metering_point
 
   mount_uploader :image, PictureUploader
@@ -83,12 +74,6 @@ class Device < ActiveRecord::Base
   def editable_users
     User.with_role(:manager, self).to_a
   end
-
-  private
-
-    def slug_name
-      SecureRandom.uuid
-    end
 
 
 end

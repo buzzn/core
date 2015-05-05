@@ -847,7 +847,7 @@ $(".metering_point").ready ->
         metering_point.find(".power-ticker").data('bs.popover').options.content = moment(reading.timestamp).format("DD.MM.YYYY HH:mm:ss")
         metering_point.find(".power-ticker").css({opacity: 1})
   else
-    getSLPValue()
+    getSLPValue(metering_point_id)
     timers.push(
       window.setInterval(->
         setSLPValue(metering_point)
@@ -877,8 +877,8 @@ calculate_power = (last_readings) =>
 
 
 
-getSLPValue = ->
-  $.getJSON "/metering_points/1/latest_slp", (data) ->
+getSLPValue = (metering_point_id) ->
+  $.getJSON "/metering_points/" + metering_point_id + "/latest_slp", (data) ->
     readingsSLP = data
 
 setSLPValue = (metering_point) ->

@@ -9,21 +9,13 @@
         %h4.mar-no.text-thin
           =metering_point.long_name
 
-        %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
         .display-in-series
-          - if user_signed_in? && !current_user.dashboard.nil? && current_user.dashboard.metering_points.include?(metering_point)
+          /= current_user.dashboard.metering_points.length
+          - if user_signed_in? && current_user.dashboard.metering_points.include?(metering_point)
             - if current_user.dashboard.dashboard_metering_points.where(metering_point_id: metering_point.id).first.displayed
               = metering_point.remove_from_series
             - else
               = metering_point.display_in_series
         .remove-from-dashboard
-          - if user_signed_in? && !current_user.dashboard.nil? && current_user.dashboard.metering_points.include?(metering_point)
+          - if user_signed_in? && current_user.dashboard.metering_points.include?(metering_point)
             = metering_point.remove_from_dashboard
-
-            / .btn-group
-            /   %button.btn.btn-block.btn-success.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
-            /     =t('display_in_series')
-            /   %ul.dropdown-menu{role: "menu"}
-            /     %li= link_to t('series') + " 1", display_metering_point_in_series_dashboard_path(metering_point_id: metering_point.id, slug: current_user.dashboard.slug, operator: "+", series: 1), remote: true
-            /     %li= link_to t('series') + " 2", display_metering_point_in_series_dashboard_path(metering_point_id: metering_point.id, slug: current_user.dashboard.slug, operator: "+", series: 2), remote: true
-            /     %li= link_to t('series') + " 3", display_metering_point_in_series_dashboard_path(metering_point_id: metering_point.id, slug: current_user.dashboard.slug, operator: "+", series: 3), remote: true
