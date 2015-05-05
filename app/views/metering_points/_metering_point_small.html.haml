@@ -11,11 +11,11 @@
 
         .display-in-series
 
-          - if user_signed_in? && current_user.dashboard.metering_points.include?(metering_point)
+          - if user_signed_in?
             - if current_user.dashboard.dashboard_metering_points.where(metering_point_id: metering_point.id).first.displayed
               = metering_point.remove_from_series
             - else
               = metering_point.display_in_series
-        .remove-from-dashboard
-          - if user_signed_in? && current_user.dashboard.metering_points.include?(metering_point)
-            = metering_point.remove_from_dashboard
+
+              -# .remove-from-dashboard
+              -#   = metering_point.remove_from_dashboard
