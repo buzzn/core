@@ -128,8 +128,31 @@ class GroupsController < ApplicationController
     end
     out_data = { :name => "Gesamterzeugung", :children => out_metering_point_data}
     result = {:in => in_metering_point_data, :out => out_data}
-    #render json: [in_metering_point_data, out_metering_point_data].to_json
     render json: result.to_json
+  end
+
+  def chart
+    @group = Group.find(params[:id])
+    @data_in = []
+    @data_out = []
+    @operators_in = []
+    @operators_out = []
+
+    @group.metering_points.each do |metering_point|
+      if !metering_point.smart?
+        next
+      end
+      if metering_point.mode == 'in'
+        @operators_in << "+"
+        @data_in << metering_point.send(params[:resolution], params[:containing_timestamp])
+      else
+        @operators_out << "+"
+        @data_out << metering_point.send(params[:resolution], params[:containing_timestamp])
+      end
+    end
+    result_in = @group.calculate_total_energy_data(@data_in, @operators_in, params[:resolution])
+    result_out = @group.calculate_total_energy_data(@data_out, @operators_out, params[:resolution] )
+    render json: [ { :name => t('total_consumption'), :data => result_in}, { :name => t('total_production'), :data => result_out} ].to_json
   end
 
 

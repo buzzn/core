@@ -2,6 +2,7 @@ class MeteringPoint < ActiveRecord::Base
   resourcify
   include Authority::Abilities
   include PublicActivity::Model
+  include CalcVirtualMeteringPoint
 
   tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
   tracked recipient: Proc.new{ |controller, model| controller && model }
@@ -89,8 +90,11 @@ class MeteringPoint < ActiveRecord::Base
         end
         i+=1
       end
-      average_timestamp = sum_timestamp / count_timestamps
-      return {:power => result/1000, :timestamp => average_timestamp}
+      if count_timestamps != 0
+        average_timestamp = sum_timestamp / count_timestamps
+        return {:power => result/1000, :timestamp => average_timestamp}
+      end
+      return {:power => 0, :timestamp => 0}
     else
       last_reading = Reading.last_by_metering_point_id(self.id)
       if last_reading.nil?
@@ -271,7 +275,7 @@ private
           data << []
         end
       end
-      return calculate_virtual_metering_point(data, operators)
+      return calculate_virtual_metering_point(data, operators, resolution_format)
     else
       slp_or_smart(self.id, resolution_format, containing_timestamp)
     end
@@ -309,62 +313,62 @@ private
 
 
 
-  def calculate_virtual_metering_point(data, operators)
-    #hours = []
-    timestamps = []
-    watts = []
-    i = 0
-    data.each do |metering_point|
-      j = 0
-      if metering_point.empty?
-        i += 1
-        next
-      end
-      metering_point.each do |reading|
-        if i == 0
-          timestamps << reading[0]
-          watts << reading[1]
-          #hours << reading[2]
-        else
-          if data[i - 1].empty? && timestamps[j].nil?
-            timestamps << reading[0]
-            watts << reading[1]
-          else
-            indexOfTimestamp = timestamps.index(reading[0])
-            if !indexOfTimestamp
-              indexOfTimestamp = timestamps.index(reading[0] - 1000)
-              if !indexOfTimestamp
-                indexOfTimestamp = timestamps.index(reading[0] + 1000)
-              end
-            end
-            if indexOfTimestamp
-              if operators[i] == "+"
-                watts[indexOfTimestamp] += reading[1]
-                #hours[j] += reading[2]
-              elsif operators[i] == "-"
-                watts[indexOfTimestamp] -= reading[1]
-                #hours[j] -= reading[2]
-              elsif operators[i] == "*"
-                watts[indexOfTimestamp] *= reading[1]
-                #hours[j] *= reading[2]
-              end
-            end
-          end
-        end
-        j += 1
-      end
-      i += 1
-    end
-    result = []
-    for i in 0...watts.length
-      result << [
-        timestamps[i],
-        watts[i]
-        #hours[i]
-      ]
-    end
-    return result
-  end
+  # def calculate_virtual_metering_point(data, operators)
+  #   #hours = []
+  #   timestamps = []
+  #   watts = []
+  #   i = 0
+  #   data.each do |metering_point|
+  #     j = 0
+  #     if metering_point.empty?
+  #       i += 1
+  #       next
+  #     end
+  #     metering_point.each do |reading|
+  #       if i == 0
+  #         timestamps << reading[0]
+  #         watts << reading[1]
+  #         #hours << reading[2]
+  #       else
+  #         if data[i - 1].empty? && timestamps[j].nil?
+  #           timestamps << reading[0]
+  #           watts << reading[1]
+  #         else
+  #           indexOfTimestamp = timestamps.index(reading[0])
+  #           if !indexOfTimestamp
+  #             indexOfTimestamp = timestamps.index(reading[0] - 1000)
+  #             if !indexOfTimestamp
+  #               indexOfTimestamp = timestamps.index(reading[0] + 1000)
+  #             end
+  #           end
+  #           if indexOfTimestamp
+  #             if operators[i] == "+"
+  #               watts[indexOfTimestamp] += reading[1]
+  #               #hours[j] += reading[2]
+  #             elsif operators[i] == "-"
+  #               watts[indexOfTimestamp] -= reading[1]
+  #               #hours[j] -= reading[2]
+  #             elsif operators[i] == "*"
+  #               watts[indexOfTimestamp] *= reading[1]
+  #               #hours[j] *= reading[2]
+  #             end
+  #           end
+  #         end
+  #       end
+  #       j += 1
+  #     end
+  #     i += 1
+  #   end
+  #   result = []
+  #   for i in 0...watts.length
+  #     result << [
+  #       timestamps[i],
+  #       watts[i]
+  #       #hours[i]
+  #     ]
+  #   end
+  #   return result
+  # end
 
 
 

@@ -2,7 +2,8 @@
   #navbar-container.boxed
     .navbar-header
       .navbar-brand
-        = image_tag('bz_logo.png')
+        - if user_signed_in?
+          = link_to image_tag('bz_logo.png'), profile_path(current_user.profile)
     .navbar-content.clearfix
 
       %ul.nav.navbar-top-links.pull-left

@@ -460,13 +460,6 @@ $(".bubbles_container").ready ->
             )
       $(window).on "resize:end", chart.calculateNewCenter
 
-
-
-
-
-
-
-
 addCommas = (nStr) ->
   nStr += ""
   x = nStr.split(".")
@@ -492,6 +485,11 @@ clearTimers = ->
 
 
 $(document).on('page:before-change', clearTimers)
+
+
+
+
+
 
 
 

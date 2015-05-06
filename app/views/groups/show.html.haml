@@ -90,6 +90,25 @@
           .panel-footer
             = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "") } if user_signed_in?
   %hr
+  .row
+    .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id}
+      .panel
+        .panel-body.panel-colorful.dashboard-background
+          .chart{id: "chart-container-#{@group.id}", style: "width: 100%; height: 300px;"}
+          .pad-all
+            /.btn.btn-success.btn-chart-prev=content_tag(:i, nil, class: 'fa fa-angle-double-left')
+            .btn.btn-success.btn-chart-prev{}=content_tag(:i, nil, class: 'fa fa-chevron-circle-left fa-2x')
+            .btn.btn-success.btn-chart-zoomout=content_tag(:i, nil, class: 'fa fa-minus-circle fa-2x')
+            /.btn.btn-success.btn-chart-next.pull-right=content_tag(:i, nil, class: 'fa fa-angle-double-right')
+            .btn.btn-success.btn-chart-next.pull-right=content_tag(:i, nil, class: 'fa fa-chevron-circle-right fa-2x')
+
+            .group{ id: "group#{@group.id}"}
+              .text-center
+                = content_tag :div, id: "group-ticker-#{@group.id}", class: "group-ticker" do
+                  %span.text-4x.text-thin
+                    .power-ticker
+                      = t('loading') + '...'
+                %p= t'watt'
 
 
 
@@ -103,7 +122,7 @@
 
 
 
-  - if @group.managers.any?
+  - if @group.managers.any? && @group.managers != @energy_producers
     %h1.page-header.text-overflow
       %span
         = t('group_managers')

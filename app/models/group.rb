@@ -2,6 +2,7 @@ class Group < ActiveRecord::Base
   resourcify
   acts_as_commentable
   include Authority::Abilities
+  include CalcVirtualMeteringPoint
 
   before_destroy :release_metering_points
 
@@ -58,6 +59,10 @@ class Group < ActiveRecord::Base
 
   def keywords
     %w(buzzn people power) << self.name
+  end
+
+  def calculate_total_energy_data(data, operators, resolution)
+    calculate_virtual_metering_point(data, operators, resolution)
   end
 
 
