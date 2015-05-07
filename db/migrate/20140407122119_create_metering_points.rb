@@ -2,7 +2,6 @@ class CreateMeteringPoints < ActiveRecord::Migration
   def change
     enable_extension 'uuid-ossp'
     create_table :metering_points, id: :uuid do |t|
-      t.string  :slug
       t.string  :uid
       t.string  :mode
       t.string  :name
@@ -20,7 +19,6 @@ class CreateMeteringPoints < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :metering_points, :slug, :unique => true
     add_index :metering_points, :meter_id
     add_index :metering_points, :contract_id
     add_index :metering_points, :group_id

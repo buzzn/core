@@ -8,16 +8,6 @@ class MeteringPoint < ActiveRecord::Base
   tracked recipient: Proc.new{ |controller, model| controller && model }
 
 
-  extend FriendlyId
-  friendly_id :slug_candidates, use: [:slugged, :finders]
-
-  def slug_candidates
-    [
-      :slug_name #maybe another slug for sharing
-    ]
-  end
-
-
   tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
   tracked recipient: Proc.new{ |controller, model| controller && model }
 
@@ -310,74 +300,6 @@ private
     return hours
   end
 
-
-
-
-  # def calculate_virtual_metering_point(data, operators)
-  #   #hours = []
-  #   timestamps = []
-  #   watts = []
-  #   i = 0
-  #   data.each do |metering_point|
-  #     j = 0
-  #     if metering_point.empty?
-  #       i += 1
-  #       next
-  #     end
-  #     metering_point.each do |reading|
-  #       if i == 0
-  #         timestamps << reading[0]
-  #         watts << reading[1]
-  #         #hours << reading[2]
-  #       else
-  #         if data[i - 1].empty? && timestamps[j].nil?
-  #           timestamps << reading[0]
-  #           watts << reading[1]
-  #         else
-  #           indexOfTimestamp = timestamps.index(reading[0])
-  #           if !indexOfTimestamp
-  #             indexOfTimestamp = timestamps.index(reading[0] - 1000)
-  #             if !indexOfTimestamp
-  #               indexOfTimestamp = timestamps.index(reading[0] + 1000)
-  #             end
-  #           end
-  #           if indexOfTimestamp
-  #             if operators[i] == "+"
-  #               watts[indexOfTimestamp] += reading[1]
-  #               #hours[j] += reading[2]
-  #             elsif operators[i] == "-"
-  #               watts[indexOfTimestamp] -= reading[1]
-  #               #hours[j] -= reading[2]
-  #             elsif operators[i] == "*"
-  #               watts[indexOfTimestamp] *= reading[1]
-  #               #hours[j] *= reading[2]
-  #             end
-  #           end
-  #         end
-  #       end
-  #       j += 1
-  #     end
-  #     i += 1
-  #   end
-  #   result = []
-  #   for i in 0...watts.length
-  #     result << [
-  #       timestamps[i],
-  #       watts[i]
-  #       #hours[i]
-  #     ]
-  #   end
-  #   return result
-  # end
-
-
-
-
-
-
-  def slug_name
-    SecureRandom.uuid
-  end
 
 
 end

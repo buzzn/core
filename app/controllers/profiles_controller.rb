@@ -10,11 +10,11 @@ class ProfilesController < ApplicationController
 
   def show
     @profile              = Profile.find(params[:id]).decorate
-    @friends              = @profile.user.friends.decorate
-    @metering_points      = @profile.metering_points
+    @friends              = @profile.user.friends.limit(10).decorate
+    @metering_points      = @profile.metering_points.first(4)
     @friendship_requests  = @profile.user.received_friendship_requests
     @groups               = @metering_points.collect(&:group).compact.uniq{|group| group.id} # TODO also include group interested
-    @devices              = Device.with_role(:manager, @profile.user).decorate
+    @devices              = Device.with_role(:manager, @profile.user).decorate.first(4)
     @activities           = PublicActivity::Activity
                               .order("created_at desc")
                               .where(owner_id: @profile.user.id, owner_type: "User")

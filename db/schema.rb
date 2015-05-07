@@ -324,7 +324,6 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "metering_point_users", ["user_id"], name: "index_metering_point_users_on_user_id", using: :btree
 
   create_table "metering_points", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "slug"
     t.string   "uid"
     t.string   "mode"
     t.string   "name"
@@ -346,7 +345,6 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   add_index "metering_points", ["group_id"], name: "index_metering_points_on_group_id", using: :btree
   add_index "metering_points", ["meter_id"], name: "index_metering_points_on_meter_id", using: :btree
   add_index "metering_points", ["readable"], name: "index_metering_points_on_readable", using: :btree
-  add_index "metering_points", ["slug"], name: "index_metering_points_on_slug", unique: true, using: :btree
 
   create_table "meters", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
