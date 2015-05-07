@@ -467,6 +467,7 @@ de:
   metering_point_admin: Zählpunkt Admin
   readable_by: Sichtbar für
   leave_this_group: Diese Gruppe verlassen
+  trend_chart: Verlaufs-Chart
 
   contracts_info: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."
   bank_account_info: "Um Deine Verträge zu bezahlen musst Du einen Bank Account anlegen. "
@@ -484,6 +485,7 @@ de:
   groups_info: "Jeder Stromnehmer kann sich mit seinem Stromverbrauch einer Gruppe zuordnen, von deren Stromgeber(n) er dann Strom bekommt."
   metering_points_info: "Ein Zählpunkt ist die Bezeichnung für die Messstelle, für die der Strom gemessen wird, z.B. „Keller“ oder „Dachboden“. In den meisten Fällen ist der Zählpunkt gleichbedeutend mit dem Haus oder der Wohnung, in der er sich befindet."
   friends_info: "Durch die Freunschaft mit anderen Usern kannst du deren Stromkurven sehen und deine mit ihnen vergleichen. "
+  trend_chart_info: "Hier findest Du alle Energie-Daten der gesamten Gruppe, also ihre gesamte Stromerzeugung und ihren gesamten Strombezug."
 
 
 

@@ -524,7 +524,7 @@ $(".group-chart").ready ->
             spacingTop: 10
             spacingLeft: 20
             spacingRight: 20
-          colors: ['#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
+          colors: ['#5FA2DD', '#F76C51']
           exporting:
             enabled: false
           legend:
