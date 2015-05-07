@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/flyerhzm/bullet.git
+  revision: 3eb5c82edc4244ab4dbc4ddc7c4df6e8d9035027
+  specs:
+    bullet (4.14.6)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.9.0)
+
+GIT
   remote: git://github.com/jnicklas/capybara.git
   revision: 90f5d374fda563d8457475915b4ac312a0199c9a
   specs:
@@ -85,7 +93,7 @@ GEM
       activerecord (>= 4.0)
       activesupport (>= 4.0)
       awesome_nested_set (>= 3.0)
-    acts_as_list (0.7.0)
+    acts_as_list (0.7.2)
       activerecord (>= 3.0)
     addressable (2.3.8)
     ancestry (2.1.0)
@@ -144,9 +152,6 @@ GEM
       terminal-table (~> 1.4)
     bson (2.3.0)
     builder (3.2.2)
-    bullet (4.14.6)
-      activesupport (>= 3.0.0)
-      uniform_notifier (~> 1.9.0)
     callsite (0.0.11)
     capybara-email (2.4.0)
       capybara (~> 2.4)
@@ -446,7 +451,7 @@ GEM
       actionpack (>= 3.0, < 5.0)
       activerecord (>= 3.0, < 5.0)
       railties (>= 3.0, < 5.0)
-    loofah (2.0.1)
+    loofah (2.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.0.9)
     mail (2.6.3)
@@ -524,7 +529,7 @@ GEM
       signature (~> 0.1.8)
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
-    rack (1.6.0)
+    rack (1.6.1)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rack-contrib (1.2.0)
@@ -780,7 +785,7 @@ DEPENDENCIES
   binding_of_caller
   brakeman
   bson
-  bullet
+  bullet!
   capybara!
   capybara-email
   capybara-screenshot
