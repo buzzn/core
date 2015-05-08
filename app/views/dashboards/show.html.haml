@@ -1,6 +1,11 @@
 #page-content
   .row
     .col-sm-12.col-md-12.col-lg-12.dashboard-chart{id: @dashboard.id, 'data-metering_point-ids': @dashboard.dashboard_metering_points.collect{|m| m.metering_point_id if m.displayed}.compact}
+      %h1.page-header.text-overflow
+        %span
+          = t('dashboard')
+          %small
+            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('dashboard_info')}
       .panel
         .panel-body.panel-colorful.dashboard-background
           .chart{id: "chart-container-#{@dashboard.id}", style: "width: 100%; height: 300px;"}
