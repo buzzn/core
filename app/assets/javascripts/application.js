@@ -42,11 +42,6 @@
 //= require moment
 
 //= require nifty_init
-//= require nifty_notification
-//= require nifty_aside
-//= require nifty_navigation
-//= require nifty_affix
-//= require nifty_alert
 
 //= require global
 //= require metering_points

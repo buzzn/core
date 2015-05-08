@@ -1,12 +1,43 @@
 ready = ->
   console.log 'NIFTY INIT'
 
+  toggleBtn = $('.mainnav-toggle')
+  if toggleBtn.length
+    toggleBtn.on 'click', (e) ->
+      e.preventDefault()
+      if $('#container').hasClass('mainnav-lg')
+        $('#container').removeClass('mainnav-lg').addClass('mainnav-sm')
+      else if $('#container').hasClass('mainnav-sm')
+        $('#container').removeClass('mainnav-sm').addClass('mainnav-lg')
+      else if $('#container').hasClass('mainnav-in')
+        $( "#container" ).removeClass( "mainnav-in" );
+      else
+        $( "#container" ).addClass( "mainnav-in" );
+      return
+
+
+
   enquire.register 'screen and (max-width: 1200px)',
     deferSetup: true
     match: ->
       $( "#container" ).removeClass( "mainnav-lg" ).addClass( "mainnav-sm" );
     unmatch: ->
       $( "#container" ).removeClass( "mainnav-sm" ).addClass( "mainnav-lg" );
+
+
+
+  enquire.register 'screen and (max-width: 768px)',
+    deferSetup: true
+    match: ->
+      $( "#container" ).removeClass( "mainnav-lg" ).removeClass( "mainnav-sm" );
+      $( "#container" ).removeClass( "mainnav-in" );
+    unmatch: ->
+      $( "#container" ).addClass( "mainnav-sm" );
+      $( "#container" ).removeClass( "mainnav-in" );
+
+
+
+
 
   window.nifty =
     'container': $('#container')
@@ -40,9 +71,6 @@ ready = ->
     popover = $('.add-popover')
     if popover.length
       popover.popover()
-
-
-
 
 
   nifty.body.addClass 'nifty-ready'
