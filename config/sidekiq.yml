@@ -18,10 +18,10 @@ production:
 :logfile: log/sidekiq.log
 
 :queues:
-  - [high, 10]
-  - [default, 5]
+  - [high, 20]
+  - [default, 10]
   - [low, 1]
 
 :limits:
-  low: 4
+  low: 5
 
