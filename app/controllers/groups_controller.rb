@@ -10,9 +10,9 @@ class GroupsController < ApplicationController
     @group                          = Group.find(params[:id]).decorate
     @out_metering_points            = MeteringPoint.by_group(@group).outputs.decorate
     @in_metering_points             = MeteringPoint.by_group(@group).inputs.decorate
-    @energy_producers               = MeteringPoint.includes(:users).by_group(@group).outputs.limit(10).decorate.collect(&:users).flatten
-    @energy_consumers               = MeteringPoint.includes(:users).by_group(@group).inputs.limit(10).decorate.collect(&:users).flatten
-    @interested_members             = @group.users.first(10)
+    @energy_producers               = MeteringPoint.includes(:users).by_group(@group).outputs.decorate.collect(&:users).flatten
+    @energy_consumers               = MeteringPoint.includes(:users).by_group(@group).inputs.decorate.collect(&:users).flatten
+    @interested_members             = @group.users
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @all_comments                   = @group.root_comments.order('created_at asc')
   end

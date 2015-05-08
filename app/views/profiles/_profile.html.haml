@@ -3,7 +3,7 @@
     .panel.media.middle
       .media-left
         - if profile.image?
-          = image_tag profile.image.md, class: 'img-md'
+          = image_tag profile.image.md, class: 'img-circle img-md'
         - else
           %span.icon-wrap.icon-wrap-sm.icon-circle.bg-success
             %i.fa.fa-user.fa-2x

@@ -4,8 +4,8 @@ class MeteringPointsController < ApplicationController
 
   def show
     @metering_point = MeteringPoint.find(params[:id]).decorate
-    @users          = @metering_point.users.first(6)
-    @devices        = @metering_point.devices.first(4)
+    @users          = @metering_point.users
+    @devices        = @metering_point.devices
     @group          = @metering_point.group
     @meter          = @metering_point.meter
     if !@metering_point.readable_by_world?

@@ -65,6 +65,39 @@ class User < ActiveRecord::Base
     return result.flatten
   end
 
+  def editable_metering_points_by_address
+    result = []
+    without_address = []
+    all_metering_points =  MeteringPoint.editable_by_user(self)
+    all_addresses = all_metering_points.collect(&:address).compact.uniq{|address| address.longitude && address.latitude}
+
+    all_addresses.each do |address|
+      metering_points_for_one_address = []
+      all_metering_points.each do |metering_point|
+        metering_point_address = metering_point.address
+        if metering_point_address == nil
+          if !without_address.include?(metering_point)
+            without_address << metering_point
+          end
+          next
+        elsif metering_point_address.longitude == address.longitude && metering_point_address.latitude == address.latitude
+          metering_points_for_one_address << metering_point
+        end
+      end
+      result << {:address => address, :metering_points => metering_points_for_one_address}
+    end
+    result << {:address => nil, :metering_points => without_address} if without_address.any?
+
+    #coordinates = all_addresses.compact.collect{|address| [address.longitude, address.latitude]}.uniq
+    #coordinates.each do |coordinate|
+    #  addresses = Address.where(longitude: coordinate[0]).where(latitude: coordinate[1])
+    #  result << {:address => addresses.first, :metering_points => addresses.collect(&:metering_point)}
+    #end
+    #without_address = all_metering_points.collect{|metering_point| metering_point if metering_point.address.nil?}.compact
+    #result << {:address => nil, :metering_points => without_address} if without_address.any?
+    return result
+  end
+
 
 
 
