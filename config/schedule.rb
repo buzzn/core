@@ -3,7 +3,7 @@ env :PATH, '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aw
 set :output, 'log/cron.log'
 
 
-every 1.minute do
+every 2.minute do
   runner "Meter.pull_readings"
 end
 
