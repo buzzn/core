@@ -34,9 +34,8 @@
 
 #page-content
 
-
   .row
-    .col-sm-12.col-md-12.col-lg-12.metering_point_detail{id: "metering_point_#{@metering_point.id}"}
+    .col-lg-12.metering_point_detail{id: "metering_point_#{@metering_point.id}"}
       .panel
         .panel-body.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
           .chart{id: "chart-container-#{@metering_point.id}", style: "width: 100%; height: 300px;"}
@@ -56,92 +55,87 @@
                 %p= t'watt'
 
 
-  - if user_signed_in? && current_user.can_update?(@metering_point) || @devices.size != 0
-    %hr
-    %h1.page-header.text-overflow
-      %span
-        = t('devices')
-        %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info')}
-    .row
-      .devices
-        = render @devices
+  .row
+    .col-md-6.col-lg-6
+      - if user_signed_in? && current_user.can_update?(@metering_point) || @devices.size != 0
+        %h1.page-header.text-overflow
+          %span
+            = t('devices')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info')}
+        .row
+          .devices
+            = render @devices
+        .row
+          - if user_signed_in? && current_user.can_update?(@metering_point)
+            .row
+              .col-lg-12.text-center
+                = @metering_point.edit_devices
+
+
+      - if user_signed_in? && current_user.can_update?(@metering_point) || @users.size != 0
+        %hr
+        %h1.page-header.text-overflow
+          %span
+            = t('members')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('members_info_metering_point')}
+        .row
+          - @users.each do |user|
+            = render user.profile
+        .row
+          - if user_signed_in? && current_user.can_update?(@metering_point)
+            .row
+              .col-lg-12.text-center
+                = @metering_point.edit_users
 
       - if user_signed_in? && current_user.can_update?(@metering_point)
+        %hr
+        %h1.page-header.text-overflow
+          %span
+            = t('address')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('address_info')}
         .row
-          .col-lg-12.text-center
-            = @metering_point.edit_devices
+          .addresses
+            = render @metering_point.address if @metering_point.address
+        .row
+          - if @metering_point.address.nil?
+            .row
+              .col-lg-12.text-center
+                = @metering_point.new_address
 
 
-  - if user_signed_in? && current_user.can_update?(@metering_point) || @users.size != 0
-    %hr
-    %h1.page-header.text-overflow
-      %span
-        = t('members')
-        %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('members_info_metering_point')}
-    .row
-      - @users.each do |user|
-        = render user.profile
+    .col-md-6.col-lg-6
+      - if user_signed_in? && current_user.can_update?(@metering_point)
+        %h1.page-header.text-overflow
+          %span
+            = t('meters')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('meters_info')}
+        .row
+          .meters
+            = render @metering_point.meter if @metering_point.meter
+        .row
+          - if @metering_point.meter.nil?
+            .row
+              .col-lg-12.text-center
+                = @metering_point.new_meter
+
 
       - if user_signed_in? && current_user.can_update?(@metering_point)
+        %hr
+        %h1.page-header.text-overflow
+          %span
+            = t('contracts')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('contracts_info_metering_point')}
         .row
-          .col-lg-12.text-center
-            = @metering_point.edit_users
+          .contracts
+            = render @metering_point.contracts
 
-
-  - if user_signed_in? && current_user.can_update?(@metering_point)
-    %hr
-    %h1.page-header.text-overflow
-      %span
-        = t('address')
-        %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('address_info')}
-    .row
-      .addresses
-        = render @metering_point.address if @metering_point.address
-
-    - if @metering_point.address.nil?
-      .row
-        .col-lg-12.text-center
-          = @metering_point.new_address
-
-
-
-  - if user_signed_in? && current_user.can_update?(@metering_point)
-    %hr
-    %h1.page-header.text-overflow
-      %span
-        = t('meters')
-        %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('meters_info')}
-    .row
-      .meters
-        = render @metering_point.meter if @metering_point.meter
-
-    - if @metering_point.meter.nil?
-      .row
-        .col-lg-12.text-center
-          = @metering_point.new_meter
-
-
-  - if user_signed_in? && current_user.can_update?(@metering_point)
-    %hr
-    %h1.page-header.text-overflow
-      %span
-        = t('contracts')
-        %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('contracts_info_metering_point')}
-    .row
-      .contracts
-        = render @metering_point.contracts
-
-      .row
-        .col-lg-12.text-center
-          = @metering_point.new_contract
-
-
-
-
+          .row
+            .col-lg-12.text-center
+              = @metering_point.new_contract
 
 

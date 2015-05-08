@@ -46,69 +46,80 @@
           .friendship_requests
             = render @friendship_requests
 
+
+
+
+
+
+
+
+
+
 #page-content
 
-  %h1.page-header.text-overflow
-    %span
-      = t('groups')
-      %small
-        %i.small-info-circle.fa.fa-info-circle{'data-content' => t('groups_info')}
   .row
-    .groups
-      = render @groups
 
-  .row
-    .col-lg-12.text-center
-      - if @profile.user == current_user
-        = groups
-        = new_group if current_user.can_create?(Group)
-  %hr
+    .col-md-6.col-lg-6
+      - if @profile.user.friend?(current_user) || current_user.profile == @profile
+        %h1.page-header.text-overflow
+          %span
+            = t('metering_points')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('metering_points_info')}
+        .row
+          .metering_points
+            = render @metering_points
+        - if current_user.can_create?(MeteringPoint) && current_user.profile == @profile
+          .row
+            .col-lg-12.text-center
+              = new_metering_point
 
 
-  - if @profile.user.friend?(current_user) || current_user.profile == @profile
-    %h1.page-header.text-overflow
-      %span
-        = t('metering_points')
-        %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('metering_points_info')}
-    .row
-      .metering_points
-        = render @metering_points
-    - if current_user.can_create?(MeteringPoint) && current_user.profile == @profile
+    .col-md-6.col-lg-6
+      %h1.page-header.text-overflow
+        %span
+          = t('groups')
+          %small
+            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('groups_info')}
+      .row
+        .groups
+          = render @groups
+
       .row
         .col-lg-12.text-center
-          = new_metering_point
-    %hr
+          - if @profile.user == current_user
+            = groups
+            = new_group if current_user.can_create?(Group)
+      %hr
 
 
-  - if @profile.user.friend?(current_user) || current_user.profile == @profile
-    %h1.page-header.text-overflow
-      %span
-        = t('devices')
-        %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info')}
-    .row
-      .devices
-        = render @devices
+      - if @profile.user.friend?(current_user) || current_user.profile == @profile
+        %h1.page-header.text-overflow
+          %span
+            = t('devices')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info')}
+        .row
+          .devices
+            = render @devices
 
-    - if current_user.can_create?(Device) && current_user.profile == @profile
-      .row
-        .col-lg-12.text-center
-          = new_device
-    %hr
+        - if current_user.can_create?(Device) && current_user.profile == @profile
+          .row
+            .col-lg-12.text-center
+              = new_device
+        %hr
 
 
-
-  - if @friends.any?
-    %h1.page-header.text-overflow
-      %span
-        = t('friends')
-        %small
-          %i.small-info-circle.fa.fa-info-circle{'data-content' => t('friends_info')}
-    .row
-      .profiles
-        - @friends.each do |user|
-          = render user.profile
+      - if @friends.any?
+        %h1.page-header.text-overflow
+          %span
+            = t('friends')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('friends_info')}
+        .row
+          .profiles
+            - @friends.each do |user|
+              = render user.profile
 
 
 
