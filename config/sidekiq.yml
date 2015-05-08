@@ -23,5 +23,5 @@ production:
   - [low, 1]
 
 :limits:
-  low: 10
+  low: 5
 

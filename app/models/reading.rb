@@ -230,7 +230,7 @@ class Reading
     if self.source != 'slp'
       Sidekiq::Client.push({
        'class' => PushReadingWorker,
-       'queue' => :high,
+       'queue' => :default,
        'args' => [
                   metering_point_id,
                   watt_hour,
