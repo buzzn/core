@@ -5,66 +5,24 @@
 
 
 
+#page-content
+  .row
+    .col-md-6.col-lg-6
+      %h1.page-header.text-overflow
+        %span
+          = t('stream')
+          %small
+            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('stream_info')}
+      / Timeline
+      / ===================================================
+      .timeline
+        / Timeline header
+        .timeline-header
+          .timeline-header-title.bg-purple
+            =t('now')
 
-.col-lg-6
-  %h4.text-thin With a circle icon
-  / Timeline
-  / ===================================================
-  .timeline
-    / Timeline header
-    .timeline-header
-      .timeline-header-title.bg-purple Now
-
-    .timeline-entry
-      .timeline-stat
-        .timeline-icon.bg-warning
-          %i.fa.fa-comment.fa-lg
-        .timeline-time 3 Hours ago
-      .timeline-label
-        %p.mar-no.pad-btm
-          %a.btn-link.text-semibold{:href => "#"} Lisa D.
-          commented on
-          %a{:href => "#"} The Article
-        %blockquote.bq-sm.bq-open Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.
-
-    .timeline-entry
-      .timeline-stat
-        .timeline-icon.bg-info
-          %i.fa.fa-envelope.fa-lg
-        .timeline-time 15:45
-      .timeline-label
-        %h4.text-info.text-lg Lorem ipsum dolor sit amet
-        %p Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.
-
-    .timeline-entry
-      .timeline-stat
-        .timeline-icon.bg-mint
-          %i.fa.fa-thumbs-up.fa-lg
-        .timeline-time 13:27
-      .timeline-label
-        %img.img-xs.img-circle{:alt => "Profile picture", :src => "img/av2.png"}
-          %a.btn-link.text-semibold{:href => "#"} Michael Both
-          Like
-          %a{:href => "#"} The Article
-
-    .timeline-entry
-      .timeline-stat
-        .timeline-icon.bg-purple
-          %i.fa.fa-line-chart.fa-lg
-        .timeline-time 11:27
-      .timeline-label
-        %p Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.
-  / ===================================================
-  / End Timeline
-
-
-
-
-.col-sm-9
-  .activities
-    %h5= t('activities')
-    - @activities.each do |activity|
-      = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+        - @activities.each do |activity|
+          = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
 
 
 

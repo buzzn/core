@@ -485,6 +485,7 @@ clearTimers = ->
 
 
 $(document).on('page:before-change', clearTimers)
+$(document).on('page:before-change', $(".bubbles_container").stop())
 
 
 

@@ -1,4 +1,9 @@
 - single_content_for :action do
-  = t('and') + ' '
-  = link_to a.recipient.name, a.trackable
-  = ' ' + t('are_now_friends')
+  - if a.recipient
+    = t('and') + ' '
+    %a.btn-link.text-semibold{:href => profile_path(a.recipient.profile)}
+      = a.recipient.name
+    = ' ' + t('are_now_friends')
+  - else
+    = t('and') + ' ' + t('a_unknown_user')
+    = ' ' + t('are_now_friends')

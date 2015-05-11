@@ -1,22 +1,35 @@
 - @a = a.decorate # TODO remove decorater from view
 
-.activity
-  .body
-    .mega-icon
-      = @a.key_icon
-    .time
+.timeline-entry
+  .timeline-stat
+    = @a.key_icon
+    .timeline-time.time
       = timeago_tag @a.created_at, :nojs => true, :lang => locale, :limit => 10.days.ago
-    .title
-      - if a.owner
-        = link_to a.owner.name, a.owner.profile
+  .timeline-label
+    %p.mar-no.pad-btm
+      - if @a.owner
+        %a.btn-link.text-semibold{:href => profile_path(@a.owner.profile)}
+          = @a.owner.name
       - else
+        = t "somebody"
       = content_for :action
-    .details
-      .avatar.thumb_icon
-        - if a.owner
-          = image_tag @a.owner.profile.image.sm
-      - if a.key == 'friendship.create'
-        .avatar.thumb_icon
-          -if a.recipient
-            = image_tag @a.recipient.profile.image.sm
+    .activity-details
+      .row
+        .col-md-4.col-lg-4.col-xs-4
+          .avatar
+            - if @a.owner
+              - if @a.owner.profile.image
+                = link_to image_tag(@a.owner.profile.image.sm, class: "img-sm img-circle"), profile_path(@a.owner.profile)
+              - else
+                %span.icon-wrap.icon-wrap-sm.icon-circle.bg-success
+                  = link_to content_tag(:i, '', class: "fa fa-user fa-2x"), profile_path(@a.owner.profile)
+        - if @a.key == 'friendship.create'
+          .col-md-4.col-lg-4.col-xs-3
+            .avatar
+              -if @a.recipient
+                - if @a.recipient.profile.image
+                  = link_to image_tag(@a.recipient.profile.image.sm, class: "img-sm img-circle"), profile_path(@a.recipient.profile)
+                - else
+                  %span.icon-wrap.icon-wrap-sm.icon-circle.bg-success
+                    = link_to content_tag(:i, '', class: "fa fa-user fa-2x"), profile_path(@a.recipient.profile)
       = yield

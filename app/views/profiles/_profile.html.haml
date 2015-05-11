@@ -2,11 +2,12 @@
   = link_to profile do
     .panel.media.middle
       .media-left
-        - if profile.image?
-          = image_tag profile.image.md, class: 'img-md'
-        - else
-          %span.icon-wrap.icon-wrap-sm.icon-circle.bg-success
-            %i.fa.fa-user.fa-2x
+        .profile-image
+          - if profile.image?
+            = image_tag profile.image.md, class: 'img-md img-circle'
+          - else
+            %span.icon-wrap.icon-wrap-sm.icon-circle.bg-success
+              %i.fa.fa-user.fa-2x
 
       .media-body.pad-lft
         %p.text-2x.text-thin.mar-no= profile.name

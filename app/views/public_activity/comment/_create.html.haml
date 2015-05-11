@@ -1,0 +1,9 @@
+- single_content_for :action do
+  - if a.recipient
+    = t('has_commented_on') + ' ' + t('the_group')
+    %a.btn-link.text-semibold{:href => group_path(a.trackable.commentable)}
+      =a.recipient.commentable.name
+  - else
+    = t('has_commented_on') + ' ' + t("a_#{a.trackable_type.downcase}_which_has_been_removed")
+  %blockquote.bq-sm.bq-open
+    = a.trackable.body

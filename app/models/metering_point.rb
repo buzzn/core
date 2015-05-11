@@ -1,13 +1,9 @@
 class MeteringPoint < ActiveRecord::Base
   resourcify
   include Authority::Abilities
-  include PublicActivity::Model
   include CalcVirtualMeteringPoint
 
-  tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
-  tracked recipient: Proc.new{ |controller, model| controller && model }
-
-
+  include PublicActivity::Model
   tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
   tracked recipient: Proc.new{ |controller, model| controller && model }
 

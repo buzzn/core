@@ -10,46 +10,70 @@ class PublicActivity::ActivityDecorator < Draper::Decorator
   decorates_association :metering_point
   decorates_association :location
 
+
   def key_icon
     case model.key
-    when 'location.create'
-      h.content_tag(:i, '', :class => "fa fa-plus-square fa-2x")
-
-    when 'location.update'
-      h.content_tag(:i, '', :class => "fa fa-refresh fa-2x")
-
-    when 'location.destroy'
-      h.content_tag(:i, '', :class => "fa fa-minus-square fa-2x")
-
-
     when 'metering_point.create'
-      h.content_tag(:i, '', :class => "fa fa-plus-square fa-2x")
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-plus-square fa-2x timeline-circle")
+      end
 
     when 'metering_point.update'
-      h.content_tag(:i, '', :class => "fa fa-refresh fa-2x")
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-refresh fa-2x timeline-circle")
+      end
 
     when 'metering_point.destroy'
-      h.content_tag(:i, '', :class => "fa fa-minus-square fa-2x")
-
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-minus-square fa-2x timeline-circle")
+      end
 
     when 'group.create'
-      h.content_tag(:i, '', :class => "fa fa-plus-square fa-2x")
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-plus-square fa-2x timeline-circle")
+      end
 
     when 'group.update'
-      h.content_tag(:i, '', :class => "fa fa-refresh fa-2x")
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-refresh fa-2x timeline-circle")
+      end
 
     when 'group.destroy'
-      h.content_tag(:i, '', :class => "fa fa-minus-square fa-2x")
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-minus-square fa-2x timeline-circle")
+      end
 
     when 'group.joined'
-      h.content_tag(:i, '', :class => "fa fa-group fa-2x")
-
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-group fa-2x timeline-circle")
+      end
 
     when 'friendship.create'
-      h.content_tag(:i, '', :class => "fa fa-chain fa-2x" )
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-chain fa-2x timeline-circle" )
+      end
 
     when 'group_metering_point_membership.create'
-      h.content_tag(:i, '', :class => "fa fa-group fa-2x")
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-group fa-2x timeline-circle")
+      end
+
+
+    when 'comment.create'
+      h.content_tag :div, :class => "timeline-icon bg-warning" do
+        h.content_tag(:i, '', :class => "fa fa-comment fa-2x timeline-circle")
+      end
+
+
+    when 'device.create'
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-plus-square fa-2x timeline-circle")
+      end
+
+    when 'device.destroy'
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-minus-square fa-2x timeline-circle")
+      end
     end
   end
 

@@ -282,11 +282,16 @@ de:
   complete_user: Daten vervollständigen
 
   has_updated: aktualisierte
+  has_commented_on: kommentierte
+  a_device: ein Gerät
+  the_device: das Gerät
 
   complete_contract: Vertragsabschluss
   has_deleted: löschte
-  has_created: erzeugte
+  has_created: erstellte
   metering_point_current_supplier: Aktueller Stromlieferant am Zählpunkt
+  a_metering_point_which_has_been_removed: "einen Zählpunkt, der bereits gelöscht wurde"
+  a_device_which_has_been_removed: "ein Gerät, das bereits gelöscht wurde"
 
 
   organization: Organisation
@@ -469,6 +474,8 @@ de:
   leave_this_group: Diese Gruppe verlassen
   trend_chart: Verlaufs-Chart
   without_address: Ohne Adresse
+  stream: Stream
+  now: Jetzt
 
   contracts_info: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."
   bank_account_info: "Um Deine Verträge zu bezahlen musst Du einen Bank Account anlegen. "
@@ -488,5 +495,5 @@ de:
   friends_info: "Durch die Freunschaft mit anderen Usern kannst du deren Stromkurven sehen und deine mit ihnen vergleichen. "
   trend_chart_info: "Hier findest Du alle Energie-Daten der gesamten Gruppe, also ihre gesamte Stromerzeugung und ihren gesamten Strombezug."
   dashboard_info: "In Deinem Dashboard kannst du dir die Energiedaten aller Zählpunkte ansehen, die dich interessieren. Z.B. kannst du Die Zählpunkte Deiner Freunde hier reinladen, um so ihr Energieverhalten vergleichen zu können."
-
+  stream_info: "Hier findest Du alle Aktivitäten Deiner Freunde sowie Deine persönlichen Benachrichtigungen bzgl. deines Energieverhaltens."
 
