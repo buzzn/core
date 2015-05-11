@@ -474,7 +474,7 @@ de:
   leave_this_group: Diese Gruppe verlassen
   trend_chart: Verlaufs-Chart
   without_address: Ohne Adresse
-  stream: Stream
+  stream: Aktivitäten
   now: Jetzt
 
   contracts_info: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."
@@ -496,4 +496,5 @@ de:
   trend_chart_info: "Hier findest Du alle Energie-Daten der gesamten Gruppe, also ihre gesamte Stromerzeugung und ihren gesamten Strombezug."
   dashboard_info: "In Deinem Dashboard kannst du dir die Energiedaten aller Zählpunkte ansehen, die dich interessieren. Z.B. kannst du Die Zählpunkte Deiner Freunde hier reinladen, um so ihr Energieverhalten vergleichen zu können."
   stream_info: "Hier findest Du alle Aktivitäten Deiner Freunde sowie Deine persönlichen Benachrichtigungen bzgl. deines Energieverhaltens."
+  stream_info_profile: "Hier findest Du alle Aktivitäten und persönlichen Benachrichtigungen bzgl. des Energieverhaltens des angezeigten Benutzers."
 
