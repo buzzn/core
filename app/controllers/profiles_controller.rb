@@ -18,7 +18,7 @@ class ProfilesController < ApplicationController
     @activities           = PublicActivity::Activity
                               .order("created_at desc")
                               .where("owner_id = (?) OR recipient_id = (?)", @profile.user.id, @profile.user.id)
-                              .where(owner_type: "User")
+                              .where("owner_type = (?) OR recipient_type = (?)", "User", "User")
                               .limit(10)
     gon.push({  pusher_host: Rails.application.secrets.pusher_host,
                 pusher_key: Rails.application.secrets.pusher_key })
