@@ -17,7 +17,6 @@ class Reading
   index({ timestamp: 1 })
 
 
-
   def self.aggregate(resolution_format, metering_point_ids=nil, containing_timestamp=nil)
     resolution_formats = {
       year_to_months:   ['year', 'month'],
@@ -71,7 +70,7 @@ class Reading
     pipe = []
 
 
-    # 0 match
+    # match
     match = { "$match" => {
                 timestamp: {
                   "$gte" => @start_time.utc,
@@ -89,9 +88,13 @@ class Reading
 
 
 
-    # 1 project
+
+
+
+    # project
     project = {
                 "$project" => {
+                  metering_point_id: 1,
                   watt_hour: 1,
                   power: 1,
                   timestamp: 1
@@ -106,19 +109,70 @@ class Reading
 
 
 
-    # 2 group
+
+
+
+
+    # group
     group = {
               "$group" => {
-                firstWattHour:  { "$first"  => "$watt_hour" },
-                lastWattHour:   { "$last"   => "$watt_hour" },
-                avgPower:       { "$avg"    => "$power" },
-                firstTimestamp: { "$first"  => "$timestamp" },
-                lastTimestamp:  { "$last"   => "$timestamp" }
+                firstWattHour:      { "$first"  => "$watt_hour" },
+                lastWattHour:       { "$last"   => "$watt_hour" },
+                avgPower:           { "$avg"    => "$power" },
+                firstTimestamp:     { "$first"  => "$timestamp" },
+                lastTimestamp:      { "$last"   => "$timestamp" }
               }
             }
     formats = {_id: {}}
+
+    if metering_point_ids.size > 1
+      formats[:_id].merge!({ "metering_point_id" =>  "$metering_point_id" })
+    end
+
     resolution.each do |format|
       formats[:_id].merge!({ "#{format.gsub('OfMonth','')}ly" =>  "$#{format.gsub('OfMonth','')}ly" })
+    end
+
+    group["$group"].merge!(formats)
+    pipe << group
+
+
+
+
+
+
+
+    # project
+    if metering_point_ids.size > 1
+      project = {
+                  "$project" => {
+                    metering_point_id: 1,
+                    consumption:  { "$subtract" => [ "$lastWattHour", "$firstWattHour" ] },
+                    avgPower:       "$avgPower",
+                    firstTimestamp: "$firstTimestamp",
+                    lastTimestamp:  "$lastTimestamp"
+                  }
+                }
+      pipe << project
+    end
+
+
+
+
+
+
+
+    # group
+    group = {
+              "$group" => {
+                sumPower:         { "$sum"  => "$avgPower" },
+                sumConsumption:   { "$sum"  => "$consumption" }
+              }
+            }
+    formats = {_id: {}}
+
+    resolution.each do |format|
+      formats[:_id].merge!({ "#{format.gsub('OfMonth','')}ly" =>  "$_id.#{format.gsub('OfMonth','')}ly" })
     end
     group["$group"].merge!(formats)
     pipe << group
@@ -127,27 +181,18 @@ class Reading
 
 
 
-    # 3 project
-    project = {
-                "$project" => {
-                  consumption:    { "$subtract" => [ "$lastWattHour", "$firstWattHour" ] },
-                  avgPower:       "$avgPower",
-                  firstTimestamp: "$firstTimestamp",
-                  lastTimestamp:  "$lastTimestamp"
-                }
-              }
-    pipe << project
 
 
-
-
-    # 4 sort
+    # sort
     sort = {
             "$sort" => {
                 _id: 1
               }
             }
     pipe << sort
+
+
+
 
 
     return Reading.collection.aggregate(pipe)
