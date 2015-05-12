@@ -143,18 +143,17 @@ class Reading
 
 
     # project
-    if metering_point_ids.size > 1
-      project = {
-                  "$project" => {
-                    metering_point_id: 1,
-                    consumption:  { "$subtract" => [ "$lastWattHour", "$firstWattHour" ] },
-                    avgPower:       "$avgPower",
-                    firstTimestamp: "$firstTimestamp",
-                    lastTimestamp:  "$lastTimestamp"
-                  }
+    project = {
+                "$project" => {
+                  metering_point_id: 1,
+                  consumption:  { "$subtract" => [ "$lastWattHour", "$firstWattHour" ] },
+                  avgPower:       "$avgPower",
+                  firstTimestamp: "$firstTimestamp",
+                  lastTimestamp:  "$lastTimestamp"
                 }
-      pipe << project
-    end
+              }
+    pipe << project
+
 
 
 
@@ -163,20 +162,21 @@ class Reading
 
 
     # group
-    group = {
-              "$group" => {
-                avgPower:      { "$sum"  => "$avgPower" },
-                consumption:   { "$sum"  => "$consumption" }
+    if metering_point_ids.size > 1
+      group = {
+                "$group" => {
+                  avgPower:      { "$sum"  => "$avgPower" },
+                  consumption:   { "$sum"  => "$consumption" }
+                }
               }
-            }
-    formats = {_id: {}}
+      formats = {_id: {}}
 
-    resolution.each do |format|
-      formats[:_id].merge!({ "#{format.gsub('OfMonth','')}ly" =>  "$_id.#{format.gsub('OfMonth','')}ly" })
+      resolution.each do |format|
+        formats[:_id].merge!({ "#{format.gsub('OfMonth','')}ly" =>  "$_id.#{format.gsub('OfMonth','')}ly" })
+      end
+      group["$group"].merge!(formats)
+      pipe << group
     end
-    group["$group"].merge!(formats)
-    pipe << group
-
 
 
 
