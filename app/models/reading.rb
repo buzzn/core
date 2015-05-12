@@ -125,7 +125,7 @@ class Reading
             }
     formats = {_id: {}}
 
-    if metering_point_ids.size > 1
+    if metering_point_ids && metering_point_ids.size > 1
       formats[:_id].merge!({ "metering_point_id" =>  "$metering_point_id" })
     end
 
@@ -162,7 +162,7 @@ class Reading
 
 
     # group
-    if metering_point_ids.size > 1
+    if metering_point_ids && metering_point_ids.size > 1
       group = {
                 "$group" => {
                   avgPower:      { "$sum"  => "$avgPower" },
