@@ -2,6 +2,6 @@
 - if a.recipient
     = t('has_updated') + ' ' + t('the_metering_point')
     %a.btn-link.text-semibold{:href => group_path(a.trackable)}
-        =a.recipient.name
+      = a.recipient.name
   - else
     = t('has_updated') + ' ' + t('a_metering_point_which_has_been_removed')
