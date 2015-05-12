@@ -14,13 +14,14 @@
       %ul
         = render @organization.contracting_party
       .clearfix
-  %h5.page-header= t('address')
-  %address
-    = "#{@organization.address.street_name} #{@organization.address.street_number}"
-    %br
-    = "#{@organization.address.zip} #{@organization.address.city}"
-    %br
-    = @organization.address.state
+  - if @organization.address
+    %h5.page-header= t('address')
+    %address
+      = "#{@organization.address.street_name} #{@organization.address.street_number}"
+      %br
+      = "#{@organization.address.zip} #{@organization.address.city}"
+      %br
+      = @organization.address.state
 
 .col-md-6
   %ul.nav.nav-pills#mytab.nav-spacer
