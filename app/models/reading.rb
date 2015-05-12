@@ -165,8 +165,8 @@ class Reading
     # group
     group = {
               "$group" => {
-                sumPower:         { "$sum"  => "$avgPower" },
-                sumConsumption:   { "$sum"  => "$consumption" }
+                avgPower:      { "$sum"  => "$avgPower" },
+                consumption:   { "$sum"  => "$consumption" }
               }
             }
     formats = {_id: {}}
