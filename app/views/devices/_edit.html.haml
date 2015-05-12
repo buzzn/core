@@ -7,3 +7,7 @@
       = render 'devices/form_fields', f: f
       .modal-footer
         = f.button :submit, id: 'submit', class: 'btn btn-success'
+        - if @device.metering_point && @device.metering_point.group && @device.mode == "out"
+          %button.btn.btn-danger{:disabled => "disabled"}= t('not_deletable')
+        - else
+          = @device.decorate.link_to_delete

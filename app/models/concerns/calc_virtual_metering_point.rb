@@ -1,7 +1,7 @@
 module CalcVirtualMeteringPoint
   extend ActiveSupport::Concern
 
-  protected
+
 
   def calculate_virtual_metering_point(data, operators, resolution)
     timestamps = []
@@ -47,6 +47,70 @@ module CalcVirtualMeteringPoint
     end
     return result
   end
+
+
+
+
+  def convert_to_array(data, resolution_format)
+    hours = []
+    data.each do |hour|
+      if resolution_format == :year_to_months || resolution_format == :month_to_days
+        hours << [
+          hour['firstTimestamp'].to_i*1000,
+          hour['consumption'].to_i/10000000000.0
+        ]
+      else
+        hours << [
+          hour['firstTimestamp'].to_i*1000,
+          hour['avgPower'].to_i/1000
+        ]
+      end
+    end
+    return hours
+  end
+
+
+  def convert_to_array_build_timestamp(data, resolution_format, containing_timestamp)
+    hours = []
+    time = Time.at(containing_timestamp.to_i/1000)
+    year = time.year
+    month = time.month
+
+    data.each do |value|
+      if resolution_format == :hour_to_minutes || resolution_format == :day_to_minutes
+        day = time.day
+        hour = value[:_id][:hourly]
+        minute = value[:_id][:minutely]
+        timestamp = Time.new(year, month, day, hour, minute, 0)
+      elsif resolution_format == :day_to_hours
+        day = time.day
+        hour = value[:_id][:hourly]
+        timestamp = Time.new(year, month, day, hour, 0, 0)
+      elsif resolution_format == :month_to_days
+        day = value[:_id][:dayly]
+        timestamp = Time.new(year, month, day, 0, 0, 0)
+      elsif resolution_format == :year_to_months
+        month = value[:_id][:monthly]
+        timestamp = Time.new(year, month, 1, 0, 0, 0)
+      end
+
+
+      if resolution_format == :year_to_months || resolution_format == :month_to_days
+        hours << [
+          timestamp.to_i*1000,
+          value['consumption'].to_i/10000000000.0
+        ]
+      else
+        hours << [
+          timestamp.to_i*1000,
+          value['avgPower'].to_i/1000
+        ]
+      end
+    end
+    return hours
+  end
+
+
 
   private
 

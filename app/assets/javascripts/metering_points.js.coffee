@@ -510,7 +510,6 @@ $(".group-chart").ready ->
   width = $("#chart-container-" + group_id).width()
   $.ajax({url: '/groups/' + group_id + '/chart?resolution=day_to_minutes', async: false, dataType: 'json'})
     .success (data) ->
-      console.log data
       if data[0].data[0] == undefined
         data[0].data[0] = [new Date(), 0] #TODO: Search for last data
       if chart == undefined
@@ -910,7 +909,7 @@ zoomInGroup = (timestamp) ->
   chart.showLoading()
 
   if actual_resolution == "hour_to_minutes"
-    setChartToLinechart(true)
+    #setChartToLinechart(true)
     chart.hideLoading()
     return
   else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
@@ -1038,7 +1037,6 @@ setChartToBarchart = (displaySeriesName) ->
         tooltip:
           pointFormat: '{series.name}: <b>{point.y:.2f} kWh</b><br/>'
       })
-      console.log series
   else
     chart.series.forEach (series) ->
       series.update({

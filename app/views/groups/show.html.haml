@@ -114,10 +114,13 @@
 
       %h1.page-header.text-overflow
         %span
-          = t('out_metering_points')
+          = t('out_devices')
+          %small
+            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('out_devices_info_group')}
       .row
-        .metering_points
-          = render @out_metering_points
+        .out-devices
+          - @out_devices.each do |device|
+            = render device
 
 
 

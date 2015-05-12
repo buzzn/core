@@ -476,6 +476,9 @@ de:
   without_address: Ohne Adresse
   stream: Aktivitäten
   now: Jetzt
+  out_devices: Stromerzeugungsanlagen
+  group_managers: Gruppenadmins
+  not_deletable: Nicht löschbar
 
   contracts_info: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."
   bank_account_info: "Um Deine Verträge zu bezahlen musst Du einen Bank Account anlegen. "
@@ -497,4 +500,5 @@ de:
   dashboard_info: "In Deinem Dashboard kannst du dir die Energiedaten aller Zählpunkte ansehen, die dich interessieren. Z.B. kannst du Die Zählpunkte Deiner Freunde hier reinladen, um so ihr Energieverhalten vergleichen zu können."
   stream_info: "Hier findest Du alle Aktivitäten Deiner Freunde sowie Deine persönlichen Benachrichtigungen bzgl. deines Energieverhaltens."
   stream_info_profile: "Hier findest Du alle Aktivitäten und persönlichen Benachrichtigungen bzgl. des Energieverhaltens des angezeigten Benutzers."
-
+  out_devices_info_group: "Hier findest Du alle Geräte, die für diese Gruppe den Strom erzeugen."
+  group_manager_info: "Die Gruppenadmins verwalten diese Gruppe. Sie entscheiden z.B. wer in die Gruppe aufgenommen wird und haben Zugriff auf die Stromerzeugungsanlagen."

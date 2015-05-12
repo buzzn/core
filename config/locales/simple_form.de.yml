@@ -159,9 +159,11 @@ de:
       metering_point:
         image: Ein Bild von dem Zählpunkt erleichtert die übersichtlichkeit.
         name: 'Name des Zählpunktes, z.B. Wohnung oder Solaranlage'
-        uid: Zählpunkt ist die Bezeichnung in der Energiewirtschaft für den Punkt, an dem Versorgungsleistungen an Verbraucher geleistet oder von Erzeugern bezogen werden. z.B. DE 000562 66802 AO6G56M11SN51G21M24S
+        uid: "Zählpunkt ist die Bezeichnung in der Energiewirtschaft für den Punkt, an dem Versorgungsleistungen an Verbraucher geleistet oder von Erzeugern bezogen werden. z.B. DE 000562 66802 AO6G56M11SN51G21M24S"
       metering_point_operator_contract:
         username: 'Benutzername, mit dem du dich beim Messstellenbetreiber einloggen kannst.'
+      device:
+        image: Ein Bild von Deinem Gerät darf maximal 1 MB groß sein und eine Auflösung von 1024x1024 Pixel nicht überschreiten.
 
 
 

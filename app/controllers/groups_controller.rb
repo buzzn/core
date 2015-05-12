@@ -15,6 +15,7 @@ class GroupsController < ApplicationController
     @interested_members             = @group.users
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @all_comments                   = @group.root_comments.order('created_at asc')
+    @out_devices                    = @out_metering_points.collect(&:devices)
   end
 
 
@@ -134,23 +135,60 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     @data_in = []
     @data_out = []
-    @operators_in = []
-    @operators_out = []
+    @metering_points_in = []
+    @metering_points_out = []
 
     @group.metering_points.each do |metering_point|
       if !metering_point.smart?
         next
       end
-      if metering_point.mode == 'in'
-        @operators_in << "+"
-        @data_in << metering_point.send(params[:resolution], params[:containing_timestamp])
+      if metering_point.mode == "in"
+        @metering_points_in << metering_point.id
       else
-        @operators_out << "+"
-        @data_out << metering_point.send(params[:resolution], params[:containing_timestamp])
+        @metering_points_out << metering_point.id
       end
     end
-    result_in = @group.calculate_total_energy_data(@data_in, @operators_in, params[:resolution])
-    result_out = @group.calculate_total_energy_data(@data_out, @operators_out, params[:resolution] )
+
+    if params[:resolution] == "hour_to_minutes"
+      resolution_format = :hour_to_minutes
+    elsif params[:resolution] == nil || params[:resolution] == "day_to_minutes"
+      resolution_format = :day_to_minutes
+    elsif params[:resolution] == "month_to_days"
+      resolution_format = :month_to_days
+    elsif params[:resolution] == "year_to_months"
+      resolution_format = :year_to_months
+    end
+
+    if params[:containing_timestamp] == nil
+      containing_timestamp = Time.now.to_i * 1000
+    else
+      containing_timestamp = params[:containing_timestamp]
+    end
+
+    result_in = @group.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, @metering_points_in, containing_timestamp), resolution_format, containing_timestamp) # smart
+    result_out = @group.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, @metering_points_out, containing_timestamp), resolution_format, containing_timestamp) # smart
+
+
+    # @operators_in = []
+    # @operators_out = []
+
+    # @group.metering_points.each do |metering_point|
+    #   if !metering_point.smart?
+    #     next
+    #   end
+    #   if metering_point.mode == 'in'
+    #     @operators_in << "+"
+    #     @data_in << metering_point.send(params[:resolution], params[:containing_timestamp])
+    #   else
+    #     @operators_out << "+"
+    #     @data_out << metering_point.send(params[:resolution], params[:containing_timestamp])
+    #   end
+    # end
+    # result_in = @group.calculate_total_energy_data(@data_in, @operators_in, params[:resolution])
+    # result_out = @group.calculate_total_energy_data(@data_out, @operators_out, params[:resolution] )
+
+
+
     render json: [ { :name => t('total_consumption'), :data => result_in}, { :name => t('total_production'), :data => result_out} ].to_json
   end
 
