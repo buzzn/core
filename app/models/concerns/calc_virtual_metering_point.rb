@@ -72,6 +72,7 @@ module CalcVirtualMeteringPoint
 
   def convert_to_array_build_timestamp(data, resolution_format, containing_timestamp)
     hours = []
+    timezone = 'Berlin'
     time = Time.at(containing_timestamp.to_i/1000)
     year = time.year
     month = time.month
@@ -81,17 +82,17 @@ module CalcVirtualMeteringPoint
         day = time.day
         hour = value[:_id][:hourly]
         minute = value[:_id][:minutely]
-        timestamp = Time.new(year, month, day, hour, minute, 0)
+        timestamp = Time.utc(year, month, day, hour, minute, 0).in_time_zone(timezone)
       elsif resolution_format == :day_to_hours
         day = time.day
         hour = value[:_id][:hourly]
-        timestamp = Time.new(year, month, day, hour, 0, 0)
+        timestamp = Time.utc(year, month, day, hour, 0, 0).in_time_zone(timezone)
       elsif resolution_format == :month_to_days
         day = value[:_id][:dayly]
-        timestamp = Time.new(year, month, day, 0, 0, 0)
+        timestamp = Time.utc(year, month, day, 0, 0, 0).in_time_zone(timezone)
       elsif resolution_format == :year_to_months
         month = value[:_id][:monthly]
-        timestamp = Time.new(year, month, 1, 0, 0, 0)
+        timestamp = Time.utc(year, month, 1, 0, 0, 0).in_time_zone(timezone)
       end
 
 

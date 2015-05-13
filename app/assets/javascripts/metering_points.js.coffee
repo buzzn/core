@@ -428,9 +428,14 @@ $(".dashboard-chart").ready ->
           if data[0].data[0] == undefined
             chart.hideLoading()
             return
+          seriesVisible = chart.series[numberOfSeries].visible
+          if !seriesVisible
+            chart.series[numberOfSeries].show()
           chart.series[numberOfSeries].setData(data[0].data)
           chart.xAxis[0].update(getExtremes(containing_timestamp), true)
           chart_data_min_x = chart.series[numberOfSeries].data[0].x
+          if !seriesVisible
+            chart.series[numberOfSeries].hide()
           numberOfSeries += 1
     chart.hideLoading()
     checkIfPreviousDataExistsDashboard()
@@ -448,9 +453,14 @@ $(".dashboard-chart").ready ->
           if data[0].data[0] == undefined
             chart.hideLoading()
             return
+          seriesVisible = chart.series[numberOfSeries].visible
+          if !seriesVisible
+            chart.series[numberOfSeries].show()
           chart.series[numberOfSeries].setData(data[0].data)
           chart.xAxis[0].update(getExtremes(containing_timestamp), true)
           chart_data_min_x = chart.series[numberOfSeries].data[0].x
+          if !seriesVisible
+            chart.series[numberOfSeries].hide()
           numberOfSeries += 1
     chart.hideLoading()
     checkIfPreviousDataExistsDashboard()
@@ -617,10 +627,16 @@ $(".group-chart").ready ->
         if data[0].data[0] == undefined
           chart.hideLoading()
           return
-        chart.series[numberOfSeries].setData(data[0].data)
-        chart.xAxis[0].update(getExtremes(containing_timestamp), true)
-        chart_data_min_x = chart.series[numberOfSeries].data[0].x
-        numberOfSeries += 1
+        data.forEach (d) ->
+          seriesVisible = chart.series[numberOfSeries].visible
+          if !seriesVisible
+            chart.series[numberOfSeries].show()
+          chart.series[numberOfSeries].setData(d.data)
+          chart.xAxis[0].update(getExtremes(containing_timestamp), true)
+          chart_data_min_x = chart.series[numberOfSeries].data[0].x
+          if !seriesVisible
+            chart.series[numberOfSeries].hide()
+          numberOfSeries += 1
     chart.hideLoading()
     checkIfPreviousDataExistsGroup()
     checkIfNextDataExistsGroup()
@@ -635,10 +651,16 @@ $(".group-chart").ready ->
         if data[0].data[0] == undefined
           chart.hideLoading()
           return
-        chart.series[numberOfSeries].setData(data[0].data)
-        chart.xAxis[0].update(getExtremes(containing_timestamp), true)
-        chart_data_min_x = chart.series[numberOfSeries].data[0].x
-        numberOfSeries += 1
+        data.forEach (d) ->
+          seriesVisible = chart.series[numberOfSeries].visible
+          if !seriesVisible
+            chart.series[numberOfSeries].show()
+          chart.series[numberOfSeries].setData(d.data)
+          chart.xAxis[0].update(getExtremes(containing_timestamp), true)
+          chart_data_min_x = chart.series[numberOfSeries].data[0].x
+          if !seriesVisible
+            chart.series[numberOfSeries].hide()
+          numberOfSeries += 1
     chart.hideLoading()
     checkIfPreviousDataExistsGroup()
     checkIfNextDataExistsGroup()
