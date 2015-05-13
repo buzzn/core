@@ -111,16 +111,16 @@
         .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
           #dummy
 
-
-      %h1.page-header.text-overflow
-        %span
-          = t('out_devices')
-          %small
-            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('out_devices_info_group')}
-      .row
-        .out-devices
-          - @out_devices.each do |device|
-            = render device
+      - if @out_devices.any?
+        %h1.page-header.text-overflow
+          %span
+            = t('out_devices')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('out_devices_info_group')}
+        .row
+          .out-devices
+            - @out_devices.each do |device|
+              = render device
 
 
 

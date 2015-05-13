@@ -1,7 +1,7 @@
 .bs-callout.bs-callout-info
   .col-md-3
     .thumb_icon.friendship_req
-      = link_to image_tag(friendship_request.sender.profile.decorate.image.sm), friendship_request.sender.profile, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => friendship_request.sender.profile.name }, rel: 'tooltip'
+      = link_to image_tag(friendship_request.sender.profile.decorate.image.sm, class: "img-circle"), friendship_request.sender.profile, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => friendship_request.sender.profile.name }, rel: 'tooltip'
   .col-md-1
   .col-md-8
     %h4= t'new_friendship_request'
