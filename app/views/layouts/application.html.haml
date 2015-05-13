@@ -7,15 +7,22 @@
 
     #myModal.modal.fade.in{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
       .modal-dialog
-
-    #container.effect{ class: "#{(content_for?(:aside) ? 'aside-in aside-left aside-bright' : nil)} mainnav-lg"}
-      = render 'layouts/navbar'
-      = content_tag :div, class: "pusher", data: { pusherhost: Rails.application.secrets.pusher_host, pusherkey: Rails.application.secrets.pusher_key } do
-        .boxed
-          #content-container
-            .page-alert
-            = render 'layouts/messages'
-            = yield
-          = render 'layouts/mainnav'
-          = yield(:aside)
-        = render 'layouts/footer'
+    - if !request.original_url.end_with?('kiosk')
+      #container.effect{ class: "#{(content_for?(:aside) ? 'aside-in aside-left aside-bright' : nil)} mainnav-lg"}
+        = render 'layouts/navbar'
+        = content_tag :div, class: "pusher", data: { pusherhost: Rails.application.secrets.pusher_host, pusherkey: Rails.application.secrets.pusher_key } do
+          .boxed
+            #content-container
+              .page-alert
+              = render 'layouts/messages'
+              = yield
+            = render 'layouts/mainnav'
+            = yield(:aside)
+          = render 'layouts/footer'
+    - else
+      #container.effect{ class: "#{(content_for?(:aside) ? 'aside-in aside-left aside-bright' : nil)} mainnav-lg"}
+        = content_tag :div, class: "pusher", data: { pusherhost: Rails.application.secrets.pusher_host, pusherkey: Rails.application.secrets.pusher_key } do
+          .boxed
+            #content-container-no-click
+              = yield
+          = render 'layouts/footer'

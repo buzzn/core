@@ -1,0 +1,139 @@
+- meta title: @group.name
+- meta description: @group.description
+- meta keywords: @group.keywords
+- rel "apple-touch-icon" => @group.logo.url if @group.logo
+
+
+
+
+.panel
+  .panel-body
+    .col-lg-1.col-md-2.col-sm-2.col-xs-3
+      - if @group.logo?
+        = image_tag @group.logo.lg, class: 'img-circle img-lg img-border'
+      - else
+        %span.fa-stack.fa-lg.fa-4x
+          %i.fa.fa-circle.fa-stack-2x
+          %i.fa.fa-users.fa-stack-1x.fa-inverse
+
+
+    .col-lg-6.col-md-6.col-sm-6.col-xs-5
+      .media-body.pad-lft
+        %p.text-3x.mar-no= @group.name
+
+
+      %ul.list-group.bg-trans
+
+        - if @group.website
+          %li.list-group-item.list-item-sm.text-primary.text-semibold
+            %a.btn-link{:href => "#"}
+              %i.fa.fa-globe.fa-fw
+              = @group.website
+
+
+
+
+#page-content
+
+  .row
+    .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id}
+      %h1.page-header.text-overflow
+        %span
+          = t('trend_chart')
+          %small
+            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('trend_chart_info')}
+      .panel
+        .panel-body.panel-colorful
+          .chart{id: "chart-container-#{@group.id}", style: "width: 100%; height: 300px;"}
+
+
+
+
+
+
+  .row
+    .col-sm-6.col-md-6.col-lg-6
+      %h1.page-header.text-overflow
+        %span
+          = t('live_chart')
+          %small
+            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('live_chart_info')}
+      .panel
+        .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
+          #dummy
+
+      - if @out_devices.any?
+        %h1.page-header.text-overflow
+          %span
+            = t('out_devices')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('out_devices_info_group')}
+        .row
+          .out-devices
+            - @out_devices.each do |device|
+              = render device
+
+
+
+
+
+
+
+    .col-sm-6.col-md-6.col-lg-6
+      %h1.page-header.text-overflow
+        %span
+          = t('comments')
+      .panel.comment-form
+        #demo-chat-body.collapse.in
+          .nano{:style => "height:410px"}
+            .nano-content.pad-all
+              %ul.list-unstyled.media-block.comments-all
+                = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
+
+
+
+      - if @group.managers.any? && @group.managers != @energy_producers
+        %h1.page-header.text-overflow
+          %span
+            = t('group_managers')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('group_manager_info')}
+        .row
+          - @group.managers.each do |user|
+            = render user.profile
+
+
+
+
+
+      - if @energy_producers.any?
+        %h1.page-header.text-overflow
+          %span
+            = t('energy_producers')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('energy_producers_info')}
+        .row
+          - @energy_producers.each do |user|
+            = render user.profile
+        %hr
+
+
+
+
+
+      - if @interested_members.any?
+        %h1.page-header.text-overflow
+          %span
+            = t('interested_members')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('interested_members_info')}
+        .row
+          - @interested_members.each do |user|
+            = render user.profile
+        %hr
+
+
+
+
+
+

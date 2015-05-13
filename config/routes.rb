@@ -77,6 +77,7 @@ Buzzn::Application.routes.draw do
       get :cancel_membership
       get :bubbles_data
       get :chart
+      get :kiosk
     end
   end
 
