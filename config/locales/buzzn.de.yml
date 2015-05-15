@@ -479,6 +479,7 @@ de:
   out_devices: Stromerzeugungsanlagen
   group_managers: Gruppenadmins
   not_deletable: Nicht löschbar
+  other_organization: Andere Firma
 
   contracts_info: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."
   bank_account_info: "Um Deine Verträge zu bezahlen musst Du einen Bank Account anlegen. "

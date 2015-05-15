@@ -1,8 +1,10 @@
 = f.input :mode, collection: Contract.modes, include_blank: false, input_html: { class: 'select2' }
-= f.association :organization, input_html: { class: 'select2' }
+/= f.input :organization, input_html: { 'data-provide' => 'typeahead', 'data-source' => Organization.all.collect(&:name).to_json }
+= f.association :organization, collection: Organization.all + [t('other_organization')], input_html: {class: 'select2'}
 = f.input :tariff
 = f.input :price_cents, precision: 16, default: 0
-= f.input :forecast_watt_hour_pa
+.js-dependent-fields{'data-select-id' => 'contract_mode', 'data-option-value' => 'electricity_supplier_contract'}
+  = f.input :forecast_watt_hour_pa
 = f.input :commissioning
 
 .js-dependent-fields{'data-select-id' => 'contract_mode', 'data-option-value' => 'metering_point_operator_contract'}

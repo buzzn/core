@@ -40,6 +40,7 @@
 //= require pace
 //= require enquire
 //= require moment
+//= require bootstrap3-typeahead.min
 
 //= require nifty_init
 

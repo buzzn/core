@@ -46,6 +46,8 @@ ready = ->
       shortMonths: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
   )
 
+  $('.typeahead').typeahead()
+
 $(document).ready(ready)
 $(document).on('page:load', ready)
 $(document).on('show.bs.modal', ready)
