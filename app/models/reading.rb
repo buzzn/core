@@ -272,17 +272,19 @@ class Reading
 
 
   def push_reading
-    if self.source != 'slp'
-      Sidekiq::Client.push({
-       'class' => PushReadingWorker,
-       'queue' => :default,
-       'args' => [
-                  metering_point_id,
-                  watt_hour,
-                  power/1000,
-                  timestamp.to_i*1000
-                 ]
-      })
+    if self.source != 'slp' # don't push spl records
+      if self.timestamp < 10.seconds.ago # don't push readings older than 10 seconds
+        Sidekiq::Client.push({
+         'class' => PushReadingWorker,
+         'queue' => :default,
+         'args' => [
+                    metering_point_id,
+                    watt_hour,
+                    power/1000,
+                    timestamp.to_i*1000
+                   ]
+        })
+      end
     end
   end
 
