@@ -3,11 +3,11 @@ env :PATH, '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aw
 set :output, 'log/cron.log'
 
 
-every 30.minute do
+every 1.minute do
   runner "Meter.pull_readings"
 end
 
-every 300.minutes do
+every 30.minutes do
   runner "Meter.reactivate"
 end
 
