@@ -421,6 +421,7 @@ ActiveRecord::Schema.define(version: 20150407152833) do
     t.string   "image"
     t.string   "name"
     t.string   "email"
+    t.string   "edifactemail"
     t.string   "phone"
     t.string   "fax"
     t.string   "description"
@@ -431,6 +432,14 @@ ActiveRecord::Schema.define(version: 20150407152833) do
   end
 
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
+
+  create_table "products", force: :cascade do |t|
+    t.string   "name"
+    t.decimal  "price",      precision: 8, scale: 2
+    t.boolean  "enabled",                            default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "profiles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "user_name"

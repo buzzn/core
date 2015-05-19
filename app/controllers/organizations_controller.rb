@@ -57,6 +57,7 @@ private
       :slug,
       :name,
       :email,
+      :edifactemail,
       :phone,
       :fax,
       :description,

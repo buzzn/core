@@ -22,6 +22,7 @@ class Organization < ActiveRecord::Base
   validates :email, presence: true
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
   validates :phone, presence: true
+  validates :mode, presence: true
 
   scope :electricity_suppliers,         -> { where(mode: 'electricity_supplier') }
   scope :metering_service_providers,    -> { where(mode: 'metering_service_provider') }

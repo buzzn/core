@@ -7,6 +7,7 @@ class CreateOrganizations < ActiveRecord::Migration
       t.string :image
       t.string :name
       t.string :email
+      t.string :edifactemail
       t.string :phone
       t.string :fax
       t.string :description

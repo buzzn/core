@@ -44,6 +44,18 @@
               %tr
                 %td= t('contracting_party')
                 %td= @organization.contracting_party
+              %tr
+                %td= t('EDIFACT_Postfach')
+                %td= @organization.edifactemail
+              %tr
+                %td= t('email')
+                %td= @organization.email
+              %tr
+                %td= t('organisations_typ')
+                %td= @organization.mode 
+              %tr
+                %td= t('BDEW Code')
+                %td= @organization.phone
 
 
 

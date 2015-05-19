@@ -1,7 +1,9 @@
 = f.input :name
 = f.input :email
 = f.input :phone
+= f.input :mode
+= f.input :edifactemail
 
 %h3=t('address')
-= f.simple_fields_for :address do |a|
+= f.simple_fields_for :addresses do |a|
   = render 'addresses/form_fields', f: a
