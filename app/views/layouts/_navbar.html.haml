@@ -1,9 +1,12 @@
 %header#navbar
   #navbar-container.boxed
     .navbar-header
-      .navbar-brand
-        - if user_signed_in?
-          = link_to image_tag('bz_logo.png'), profile_path(current_user.profile)
+      .navbar-brand{:href => profile_path(current_user.profile)}
+        .brand-icon
+          = image_tag('buzzn_energy-icon.png', width: "30px", height: "30px")
+        .brand-title
+          %span.brand-text
+            = image_tag('bz_logo.png')
     .navbar-content.clearfix
 
       %ul.nav.navbar-top-links.pull-left
