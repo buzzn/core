@@ -43,7 +43,7 @@ module ApplicationHelper
 
   def mainnav_metering_point_path(metering_point)
     active_link_to(
-      metering_point.long_name,
+      truncate(metering_point.name, length: 23),
       metering_point_path(metering_point), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
