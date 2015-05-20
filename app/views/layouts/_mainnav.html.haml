@@ -29,21 +29,24 @@
                 - else
                   / Menu list item
                   - current_user.editable_metering_points_by_address.each do |metering_points_address|
-                    %li
-                      %a{:href => "#"}
-                        %i.fa.fa-house
+
+                    %li{class: is_active_link?(metering_points_path, :inclusive) ? 'active active-sub' : ''}
+                      %a{"data-original-title" => "", :href => "#", :title => ""}
+                        %i.fa.fa-bolt
                         %span.menu-title
-                          %strong
-                            - if metering_points_address[:address]
-                              = metering_points_address[:address].street_name + " " + metering_points_address[:address].street_number + " " + metering_points_address[:address].city
-                            - else
-                              = t('without_address')
+                          - if metering_points_address[:address]
+                            = metering_points_address[:address].street_name + " " + metering_points_address[:address].street_number + " " + metering_points_address[:address].city
+                          - else
+                            = t('without_address')
                         %i.arrow
-                      / Submenu
+
                       %ul.collapse.out
                         - metering_points_address[:metering_points].each do |metering_point|
                           %li
                             = mainnav_metering_point_path(metering_point.decorate)
+
+
+
 
                 - if current_user.editable_metering_points.collect(&:group).compact.uniq{|group| group.id}.any?
                   %li.list-header= t'my_groups'

@@ -1,6 +1,8 @@
 ready = ->
   console.log 'NIFTY INIT'
 
+  $('#mainnav-menu').metisMenu();
+
   toggleBtn = $('.mainnav-toggle')
   if toggleBtn.length
     toggleBtn.on 'click', (e) ->

@@ -43,9 +43,7 @@ module ApplicationHelper
 
   def mainnav_metering_point_path(metering_point)
     active_link_to(
-      (
-        content_tag(:i, nil, class: 'fa fa-bolt')
-      ) + content_tag(:span, metering_point.long_name, class: "menu-title"),
+      metering_point.long_name,
       metering_point_path(metering_point), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
