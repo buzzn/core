@@ -41,6 +41,7 @@
 //= require enquire
 //= require moment
 //= require bootstrap3-typeahead.min
+//= require cookie_alert
 
 //= require nifty_init
 

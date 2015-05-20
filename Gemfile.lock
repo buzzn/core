@@ -181,6 +181,7 @@ GEM
       execjs
     coffee-script-source (1.8.0)
     connection_pool (2.2.0)
+    cookie_alert (0.0.5)
     countries (0.11.3)
       currencies (~> 0.4.2)
       i18n_data (~> 0.6.0)
@@ -793,6 +794,7 @@ DEPENDENCIES
   cocoon
   coffee-rails
   coffee-script-source (= 1.8.0)
+  cookie_alert
   country_select
   database_cleaner
   dependent-fields-rails

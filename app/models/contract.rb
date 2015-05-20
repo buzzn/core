@@ -17,6 +17,7 @@ class Contract < ActiveRecord::Base
   # validates :username, presence: true, if: :login_required?
   # validates :password, presence: true, if: :login_required?
   validates :price_cents, presence: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
+  validate :resource_cannot_have_same_contracts
 
   scope :running,                   -> { where(running: :true) }
   scope :metering_point_operators,  -> { where(mode: 'metering_point_operator_contract') }
@@ -57,6 +58,18 @@ class Contract < ActiveRecord::Base
       self.organization.slug == 'discovergy'
     else
       false
+    end
+  end
+
+  def resource_cannot_have_same_contracts
+    if metering_point && metering_point.contracts.any?
+      if Contract.where(metering_point: self.metering_point).where(mode: self.mode).any?
+        errors.add(:mode, "already exists")
+      end
+    elsif group && group.contracts.any?
+      if Contract.where(group: self.group).where(mode: self.mode).any?
+        errors.add(:mode, "already exists")
+      end
     end
   end
 

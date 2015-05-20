@@ -10,6 +10,9 @@ de:
       # html: '<abbr title="required">*</abbr>'
     error_notification:
       default_message: "Es wurden Validierungsfehler bei Ihren Eingaben gefunden."
+      models:
+        contract:
+          mode: "Es gibt bereits einen Vertrag mit dem gleichen Vertragstyp."
 
     labels:
       password: 'Passwort'

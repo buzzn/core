@@ -1,12 +1,20 @@
 %header#navbar
   #navbar-container.boxed
     .navbar-header
-      .navbar-brand{:href => profile_path(current_user.profile)}
-        .brand-icon
-          = image_tag('buzzn_energy-icon.png', width: "30px", height: "30px")
-        .brand-title
-          %span.brand-text
-            = image_tag('bz_logo.png')
+      - if user_signed_in?
+        .navbar-brand{:href => profile_path(current_user.profile)}
+          .brand-icon
+            = image_tag('buzzn_energy-icon.png', width: "30px", height: "30px")
+          .brand-title
+            %span.brand-text
+              = image_tag('bz_logo.png', class: 'brand-logo')
+      - else
+        .navbar-brand{:href => new_user_session_path}
+          .brand-icon
+            = image_tag('buzzn_energy-icon.png', width: "30px", height: "30px")
+          .brand-title
+            %span.brand-text
+              = image_tag('bz_logo.png', class: 'brand-logo')
     .navbar-content.clearfix
 
       %ul.nav.navbar-top-links.pull-left

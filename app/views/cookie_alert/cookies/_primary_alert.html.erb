@@ -1,0 +1,12 @@
+  <div id='cookie_alert'>
+    <div id='cookie_alert_message'>
+        <div id='cookie_alert_title'>
+        Cookies:
+      </div>
+      <div id='cookie_alert_text'>
+        <%= link_to "X", cookie_alert_path, id: 'cookie_alert_close', remote: true %>
+        <%= t('cookie_text') %>
+      </div>
+    </div>
+  </div>
+

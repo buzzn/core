@@ -1,5 +1,5 @@
 module ApplicationHelper
-
+  include CookieAlert
 
 
   def mainnav_profiles_path

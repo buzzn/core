@@ -2,6 +2,7 @@ Buzzn::Application.routes.draw do
   use_doorkeeper
   mount API::Base, at: "/"
   mount GrapeSwaggerRails::Engine, at: "/api"
+  mount CookieAlert::Engine => "/cookie-alert"
 
   require 'sidekiq/web'
   authenticate :user, lambda { |user| user.has_role?(:admin) } do
