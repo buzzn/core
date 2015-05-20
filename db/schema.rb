@@ -433,14 +433,6 @@ ActiveRecord::Schema.define(version: 20150407152833) do
 
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
 
-  create_table "products", force: :cascade do |t|
-    t.string   "name"
-    t.decimal  "price",      precision: 8, scale: 2
-    t.boolean  "enabled",                            default: true
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "profiles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "user_name"
     t.string   "slug"

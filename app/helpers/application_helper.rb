@@ -73,6 +73,16 @@ module ApplicationHelper
     )
   end
 
+  def mainnav_stream_path
+    active_link_to(
+      (
+        content_tag(:i, nil, class: 'fa fa-bullhorn')
+      ) + content_tag(:span, "Stream", class: "menu-title"),
+      stream_index_path, class: 'button white',
+      :wrap_tag => :li, :class_active => 'active-link'
+    )
+  end
+
   def mainnav_group_path(group)
     active_link_to(
       (
