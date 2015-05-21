@@ -318,7 +318,7 @@ $(".dashboard-chart").ready ->
   metering_point_ids = $(this).data('metering_point-ids').toString().split(",")
   metering_point_ids.forEach (id) ->
     if id != ""
-      $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_minutes', async: false, dataType: 'json'})
+      $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_minutes', async: true, dataType: 'json'})
         .success (data) ->
           if data[0].data[0] == undefined
             data[0].data[0] = [new Date(), 0] #TODO: Search for last data
@@ -370,49 +370,81 @@ $(".dashboard-chart").ready ->
                 min: 0
                 labels:
                   enabled: true
-                  style:
-                    color: '#000'
-                  format: "{value} W"
                 title:
-                  enabled: true
-                  text: "Leistung"
-                  style: { "color": "#000", "fontWeight": "bold"}
-              plotOptions:
-                series:
-                  fillOpacity: 0.5
-                  events:
-                    cursor: 'pointer'
-                    click: (event) ->
-                      zoomInDashboard(event.point.x)
-                column:
-                  stacking: 'normal'
-              tooltip:
-                pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
-                dateTimeLabelFormats:
-                  millisecond:"%e.%b, %H:%M:%S.%L",
-                  second:"%e.%b, %H:%M:%S",
-                  minute:"%e.%b, %H:%M",
-                  hour:"%e.%b, %H:%M",
-                  day:"%e.%b.%Y",
-                  week:"Week from %e.%b.%Y",
-                  month:"%B %Y",
-                  year:"%Y"
-              #series: data
-            )
-            chart.addSeries(
-              name: data[0].name
-              data: data[0].data
-            )
-            chart_data_min_x = chart.series[0].data[0].x
-            checkIfPreviousDataExistsDashboard()
-            checkIfNextDataExistsDashboard()
-          else
-            chart.addSeries(
-              name: data[0].name
-              data: data[0].data
-            )
-        .error (jqXHR, textStatus, errorThrown) ->
-          console.log textStatus
+                  margin: 0
+                  text: ""
+                credits:
+                  enabled: false
+                loading:
+                  hideDuration: 800
+                  showDuration: 800
+                  labelStyle:
+                    color: 'black'
+                    'font-size': '20pt'
+                xAxis:
+                  lineWidth: 1
+                  tickWidth: 1
+                  type: 'datetime'
+                  startOnTick: false
+                  endOnTick: false
+                  min: beginningOfDay(data[0].data[0][0])
+                  max: endOfDay(data[0].data[0][0])
+                  labels:
+                    enabled: true
+                    style:
+                      color: '#000'
+                  title:
+                    text: "Zeit"
+                    enabled: true
+                    style: { "color": "#000", "fontWeight": "bold"}
+                yAxis:
+                  gridLineWidth: 0
+                  min: 0
+                  labels:
+                    enabled: true
+                    style:
+                      color: '#000'
+                    format: "{value} W"
+                  title:
+                    enabled: true
+                    text: "Leistung"
+                    style: { "color": "#000", "fontWeight": "bold"}
+                plotOptions:
+                  series:
+                    fillOpacity: 0.5
+                    events:
+                      cursor: 'pointer'
+                      click: (event) ->
+                        zoomInDashboard(event.point.x)
+                  column:
+                    stacking: 'normal'
+                tooltip:
+                  pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
+                  dateTimeLabelFormats:
+                    millisecond:"%e.%b, %H:%M:%S.%L",
+                    second:"%e.%b, %H:%M:%S",
+                    minute:"%e.%b, %H:%M",
+                    hour:"%e.%b, %H:%M",
+                    day:"%e.%b.%Y",
+                    week:"Week from %e.%b.%Y",
+                    month:"%B %Y",
+                    year:"%Y"
+                #series: data
+              )
+              chart.addSeries(
+                name: data[0].name
+                data: data[0].data
+              )
+              chart_data_min_x = chart.series[0].data[0].x
+              checkIfPreviousDataExistsDashboard()
+              checkIfNextDataExistsDashboard()
+            else
+              chart.addSeries(
+                name: data[0].name
+                data: data[0].data
+              )
+          .error (jqXHR, textStatus, errorThrown) ->
+            console.log textStatus
 
 
 
@@ -424,7 +456,7 @@ $(".dashboard-chart").ready ->
     metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
     numberOfSeries = 0
     metering_point_ids.forEach (id) ->
-      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
         .success (data) ->
           if data[0].data[0] == undefined
             chart.hideLoading()
@@ -449,7 +481,7 @@ $(".dashboard-chart").ready ->
     metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
     numberOfSeries = 0
     metering_point_ids.forEach (id) ->
-      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
         .success (data) ->
           if data[0].data[0] == undefined
             chart.hideLoading()
@@ -486,7 +518,7 @@ $(".dashboard-chart").ready ->
     metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
     numberOfSeries = 0
     metering_point_ids.forEach (id) ->
-      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
         .success (data) ->
           if data[0].data[0] == undefined
             chart.hideLoading()
@@ -519,10 +551,13 @@ $(".group-chart").ready ->
   chart = undefined
   group_id = $(this).attr('id')
   width = $("#chart-container-" + group_id).width()
-  $.ajax({url: '/groups/' + group_id + '/chart?resolution=day_to_minutes', async: false, dataType: 'json'})
+  url = '/groups/' + group_id + '/chart?resolution=day_to_minutes'
+  $.ajax({url: url, async: true, dataType: 'json'})
     .success (data) ->
+
       if data[0].data[0] == undefined
         data[0].data[0] = [new Date(), 0] #TODO: Search for last data
+
       if chart == undefined
         chart = new Highcharts.Chart(
           chart:
@@ -609,6 +644,11 @@ $(".group-chart").ready ->
         #   name: data[1].name
         #   data: data[1].data
         # )
+
+        console.log data
+
+        console.log chart.series[0].data
+
         chart_data_min_x = chart.series[0].data[0].x
         checkIfPreviousDataExistsGroup()
         checkIfNextDataExistsGroup()
@@ -623,7 +663,7 @@ $(".group-chart").ready ->
     chart.showLoading()
     containing_timestamp = getPreviousTimestamp()
     numberOfSeries = 0
-    $.ajax({url: '/groups/' + group_id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+    $.ajax({url: '/groups/' + group_id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
       .success (data) ->
         if data[0].data[0] == undefined
           chart.hideLoading()
@@ -647,7 +687,7 @@ $(".group-chart").ready ->
     chart.showLoading()
     containing_timestamp = getNextTimestamp()
     numberOfSeries = 0
-    $.ajax({url: '/groups/' + group_id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+    $.ajax({url: '/groups/' + group_id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
       .success (data) ->
         if data[0].data[0] == undefined
           chart.hideLoading()
@@ -683,7 +723,7 @@ $(".group-chart").ready ->
 
     containing_timestamp = chart_data_min_x
     numberOfSeries = 0
-    $.ajax({url: '/groups/' + group_id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+    $.ajax({url: '/groups/' + group_id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
       .success (data) ->
         if data[0].data[0] == undefined
           chart.hideLoading()
@@ -734,7 +774,7 @@ checkIfPreviousDataExistsDashboard = () ->
   metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
   dataAvailable = false
   metering_point_ids.forEach (id) ->
-    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
       .success (data) ->
         if data[0].data[0] != undefined
           dataAvailable = true
@@ -748,7 +788,7 @@ checkIfNextDataExistsDashboard = () ->
   metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
   dataAvailable = false
   metering_point_ids.forEach (id) ->
-    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
       .success (data) ->
         if data[0].data[0] != undefined
           dataAvailable = true
@@ -761,7 +801,7 @@ checkIfPreviousDataExistsGroup = () ->
   containing_timestamp = getPreviousTimestamp()
   id = $(".group-chart").attr('id')
   dataAvailable = false
-  $.ajax({url: '/groups/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+  $.ajax({url: '/groups/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
     .success (data) ->
       if data[0].data[0] != undefined
         dataAvailable = true
@@ -774,7 +814,7 @@ checkIfNextDataExistsGroup = () ->
   containing_timestamp = getNextTimestamp()
   id = $(".group-chart").attr('id')
   dataAvailable = false
-  $.ajax({url: '/groups/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+  $.ajax({url: '/groups/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
     .success (data) ->
       if data[0].data[0] != undefined
         dataAvailable = true
@@ -907,7 +947,7 @@ zoomInDashboard = (timestamp) ->
   metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
   numberOfSeries = 0
   metering_point_ids.forEach (id) ->
-    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
       .success (data) ->
         if data[0].data[0] == undefined
           chart.hideLoading()
@@ -951,7 +991,7 @@ zoomInGroup = (timestamp) ->
 
   id = $(".group-chart").attr('id')
   numberOfSeries = 0
-  $.ajax({url: '/groups/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+  $.ajax({url: '/groups/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
     .success (data) ->
       if data[0].data[0] == undefined
         chart.hideLoading()
@@ -1017,7 +1057,7 @@ checkIfZoomOutDashboard = () ->
   metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
   dataAvailable = false
   metering_point_ids.forEach (id) ->
-    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
       .success (data) ->
         if data[0].data[0] != undefined && data[0].data[1] != 0
           dataAvailable = true
@@ -1042,7 +1082,7 @@ checkIfZoomOutGroup = () ->
   containing_timestamp = chart_data_min_x
   id = $(".group-chart").attr('id')
   dataAvailable = false
-  $.ajax({url: '/groups/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: false, dataType: 'json'})
+  $.ajax({url: '/groups/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
     .success (data) ->
       if data[0].data[0] != undefined && data[0].data[1] != 0
         dataAvailable = true

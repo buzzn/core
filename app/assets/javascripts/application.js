@@ -22,6 +22,7 @@
 //= require bootstrap-select
 //= require nanoscroller
 //= require highcharts
+//= require highcharts/highcharts-more
 //= require highcharts_no_utc
 //= require sparklines
 //= require tree.jquery
