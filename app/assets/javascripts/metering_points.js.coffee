@@ -267,6 +267,7 @@ $(".metering_point_detail").ready ->
       chart.series[0].setData(data[0].data)
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
+      console.log chart.series[0]
       chart_data_min_x = chart.series[0].data[0].x
       checkIfPreviousDataExists()
       checkIfNextDataExists()
