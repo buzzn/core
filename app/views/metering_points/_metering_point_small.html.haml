@@ -4,6 +4,7 @@
 
       .panel-body{class: "bg-#{metering_point.mode_class}" }
         .chart{id: "chart-container-#{metering_point.id}", style: "width: 100%; height: 70px;"}
+          = t('loading') + '...'
 
       .bg-light.pad-ver
         %h4.mar-no.text-thin

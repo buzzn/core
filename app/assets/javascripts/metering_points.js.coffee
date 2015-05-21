@@ -317,101 +317,102 @@ $(".dashboard-chart").ready ->
   width = $("#chart-container-" + dashboard_id).width()
   metering_point_ids = $(this).data('metering_point-ids').toString().split(",")
   metering_point_ids.forEach (id) ->
-    $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_minutes', async: false, dataType: 'json'})
-      .success (data) ->
-        if data[0].data[0] == undefined
-          data[0].data[0] = [new Date(), 0] #TODO: Search for last data
-        if chart == undefined
-          chart = new Highcharts.Chart(
-            chart:
-              type: 'areaspline'
-              renderTo: 'chart-container-' + dashboard_id
-              backgroundColor:'rgba(255, 255, 255, 0.0)'
-              width: width
-              spacingBottom: 20
-              spacingTop: 10
-              spacingLeft: 20
-              spacingRight: 20
-            colors: ['#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
-            exporting:
-              enabled: false
-            legend:
-              enabled: true
-            title:
-              margin: 0
-              text: ""
-            credits:
-              enabled: false
-            loading:
-              hideDuration: 800
-              showDuration: 800
-              labelStyle:
-                color: 'black'
-                'font-size': '20pt'
-            xAxis:
-              lineWidth: 1
-              tickWidth: 1
-              type: 'datetime'
-              startOnTick: false
-              endOnTick: false
-              min: beginningOfDay(data[0].data[0][0])
-              max: endOfDay(data[0].data[0][0])
-              labels:
+    if id != ""
+      $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_minutes', async: false, dataType: 'json'})
+        .success (data) ->
+          if data[0].data[0] == undefined
+            data[0].data[0] = [new Date(), 0] #TODO: Search for last data
+          if chart == undefined
+            chart = new Highcharts.Chart(
+              chart:
+                type: 'areaspline'
+                renderTo: 'chart-container-' + dashboard_id
+                backgroundColor:'rgba(255, 255, 255, 0.0)'
+                width: width
+                spacingBottom: 20
+                spacingTop: 10
+                spacingLeft: 20
+                spacingRight: 20
+              colors: ['#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
+              exporting:
+                enabled: false
+              legend:
                 enabled: true
-                style:
-                  color: '#000'
               title:
-                text: "Zeit"
-                enabled: true
-                style: { "color": "#000", "fontWeight": "bold"}
-            yAxis:
-              gridLineWidth: 0
-              min: 0
-              labels:
-                enabled: true
-                style:
-                  color: '#000'
-                format: "{value} W"
-              title:
-                enabled: true
-                text: "Leistung"
-                style: { "color": "#000", "fontWeight": "bold"}
-            plotOptions:
-              series:
-                fillOpacity: 0.5
-                events:
-                  cursor: 'pointer'
-                  click: (event) ->
-                    zoomInDashboard(event.point.x)
-              column:
-                stacking: 'normal'
-            tooltip:
-              pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
-              dateTimeLabelFormats:
-                millisecond:"%e.%b, %H:%M:%S.%L",
-                second:"%e.%b, %H:%M:%S",
-                minute:"%e.%b, %H:%M",
-                hour:"%e.%b, %H:%M",
-                day:"%e.%b.%Y",
-                week:"Week from %e.%b.%Y",
-                month:"%B %Y",
-                year:"%Y"
-            #series: data
-          )
-          chart.addSeries(
-            name: data[0].name
-            data: data[0].data
-          )
-          chart_data_min_x = chart.series[0].data[0].x
-          checkIfPreviousDataExistsDashboard()
-          checkIfNextDataExistsDashboard()
-        else
-          chart.addSeries(
-            name: data[0].name
-            data: data[0].data
-          )
-      .error (jqXHR, textStatus, errorThrown) ->
-        console.log textStatus
+                margin: 0
+                text: ""
+              credits:
+                enabled: false
+              loading:
+                hideDuration: 800
+                showDuration: 800
+                labelStyle:
+                  color: 'black'
+                  'font-size': '20pt'
+              xAxis:
+                lineWidth: 1
+                tickWidth: 1
+                type: 'datetime'
+                startOnTick: false
+                endOnTick: false
+                min: beginningOfDay(data[0].data[0][0])
+                max: endOfDay(data[0].data[0][0])
+                labels:
+                  enabled: true
+                  style:
+                    color: '#000'
+                title:
+                  text: "Zeit"
+                  enabled: true
+                  style: { "color": "#000", "fontWeight": "bold"}
+              yAxis:
+                gridLineWidth: 0
+                min: 0
+                labels:
+                  enabled: true
+                  style:
+                    color: '#000'
+                  format: "{value} W"
+                title:
+                  enabled: true
+                  text: "Leistung"
+                  style: { "color": "#000", "fontWeight": "bold"}
+              plotOptions:
+                series:
+                  fillOpacity: 0.5
+                  events:
+                    cursor: 'pointer'
+                    click: (event) ->
+                      zoomInDashboard(event.point.x)
+                column:
+                  stacking: 'normal'
+              tooltip:
+                pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
+                dateTimeLabelFormats:
+                  millisecond:"%e.%b, %H:%M:%S.%L",
+                  second:"%e.%b, %H:%M:%S",
+                  minute:"%e.%b, %H:%M",
+                  hour:"%e.%b, %H:%M",
+                  day:"%e.%b.%Y",
+                  week:"Week from %e.%b.%Y",
+                  month:"%B %Y",
+                  year:"%Y"
+              #series: data
+            )
+            chart.addSeries(
+              name: data[0].name
+              data: data[0].data
+            )
+            chart_data_min_x = chart.series[0].data[0].x
+            checkIfPreviousDataExistsDashboard()
+            checkIfNextDataExistsDashboard()
+          else
+            chart.addSeries(
+              name: data[0].name
+              data: data[0].data
+            )
+        .error (jqXHR, textStatus, errorThrown) ->
+          console.log textStatus
 
 
 
@@ -1120,43 +1121,45 @@ timers = []
 $(".metering_point").ready ->
   metering_point_id = $(this).attr('id').split('_')[2]
   metering_point = $(this)
-  if $(this).find(".metering_point-ticker").data('slp') == false
-    $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
-      .success (data) ->
-        if data.online == true || data.virtual == true
-          metering_point.find(".power-ticker").html(data.latest_power)
-          if data.timestamp <= Date.now() - 60*1000
-            metering_point.find(".power-ticker").css({opacity: 0.3})
-          metering_point.find(".power-ticker").data('content', moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss"))
-          metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
-        else
-          metering_point.find(".power-ticker").html('offline')
-    if $(this).find(".metering_point-ticker").data('virtual') == true
+  if $(this).find(".metering_point-ticker").length != 0
+    console.log 'POWER TICKER'
+    if $(this).find(".metering_point-ticker").data('slp') == false
+      $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
+        .success (data) ->
+          if data.online == true || data.virtual == true
+            metering_point.find(".power-ticker").html(data.latest_power)
+            if data.timestamp <= Date.now() - 60*1000
+              metering_point.find(".power-ticker").css({opacity: 0.3})
+            metering_point.find(".power-ticker").data('content', moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss"))
+            metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
+          else
+            metering_point.find(".power-ticker").html('offline')
+      if $(this).find(".metering_point-ticker").data('virtual') == true
+        timers.push(
+          window.setInterval(->
+            pullVirtualPowerData(metering_point, metering_point_id)
+            return
+          , 1000*60)
+          )
+      else
+        Pusher.host = $(".pusher").data('pusherhost')
+        Pusher.ws_port = 8080
+        Pusher.wss_port = 8080
+        pusher = new Pusher($(".pusher").data('pusherkey'))
+
+        channel = pusher.subscribe("metering_point_#{metering_point_id}")
+        channel.bind "new_reading", (reading) ->
+          metering_point.find(".power-ticker").html(reading.power)
+          metering_point.find(".power-ticker").data('bs.popover').options.content = moment(reading.timestamp).format("DD.MM.YYYY HH:mm:ss")
+          metering_point.find(".power-ticker").css({opacity: 1})
+    else
+      getSLPValue(metering_point_id)
       timers.push(
         window.setInterval(->
-          pullVirtualPowerData(metering_point, metering_point_id)
+          setSLPValue(metering_point)
           return
-        , 1000*60)
+        , 1000*2)
         )
-    else
-      Pusher.host = $(".pusher").data('pusherhost')
-      Pusher.ws_port = 8080
-      Pusher.wss_port = 8080
-      pusher = new Pusher($(".pusher").data('pusherkey'))
-
-      channel = pusher.subscribe("metering_point_#{metering_point_id}")
-      channel.bind "new_reading", (reading) ->
-        metering_point.find(".power-ticker").html(reading.power)
-        metering_point.find(".power-ticker").data('bs.popover').options.content = moment(reading.timestamp).format("DD.MM.YYYY HH:mm:ss")
-        metering_point.find(".power-ticker").css({opacity: 1})
-  else
-    getSLPValue(metering_point_id)
-    timers.push(
-      window.setInterval(->
-        setSLPValue(metering_point)
-        return
-      , 1000*2)
-      )
 
 
 pullVirtualPowerData = (metering_point, metering_point_id) ->

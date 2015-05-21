@@ -63,14 +63,14 @@ class Contract < ActiveRecord::Base
 
   def resource_cannot_have_same_contracts
     if metering_point && metering_point.contracts.any?
-      available_contracts = Contract.where(metering_point: self.metering_point).where(mode: self.mode)
-      #available_contracts = metering_point.contracts.collect{|c| c if c.mode == self.mode}
+      #available_contracts = Contract.where(metering_point: self.metering_point).where(mode: self.mode)
+      available_contracts = metering_point.contracts.collect{|c| c if c.mode == self.mode}
       if available_contracts.any? && available_contracts.first != self
         errors.add(:mode, "already exists")
       end
     elsif group && group.contracts.any?
-      available_contracts = Contract.where(group: self.group).where(mode: self.mode)
-      #available_contracts = group.contracts.collect{|c| c if c.mode == self.mode}
+      #available_contracts = Contract.where(group: self.group).where(mode: self.mode)
+      available_contracts = group.contracts.collect{|c| c if c.mode == self.mode}
       if available_contracts.any? && available_contracts.first != self
         errors.add(:mode, "already exists")
       end
