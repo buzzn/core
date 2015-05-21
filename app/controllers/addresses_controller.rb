@@ -3,19 +3,6 @@ class AddressesController < ApplicationController
   respond_to :html, :js
 
 
-  def show
-    @address = Address.find(params[:id]).decorate
-    gon.push({ markers: [
-      {
-        "lat": @address.latitude,
-        "lng": @address.longitude
-      }
-    ]})
-    authorize_action_for(@address)
-  end
-
-
-
   def new
     @address = Address.new
     authorize_action_for(@address)

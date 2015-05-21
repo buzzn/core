@@ -1122,7 +1122,6 @@ $(".metering_point").ready ->
   metering_point_id = $(this).attr('id').split('_')[2]
   metering_point = $(this)
   if $(this).find(".metering_point-ticker").length != 0
-    console.log 'POWER TICKER'
     if $(this).find(".metering_point-ticker").data('slp') == false
       $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
         .success (data) ->

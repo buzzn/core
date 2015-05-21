@@ -240,7 +240,6 @@ class MeteringPoint < ActiveRecord::Base
 
 
 
-private
 
   def get_operators_from_formula
     if self.virtual && self.formula_parts.any?
@@ -251,17 +250,17 @@ private
 
   def chart_data(resolution_format, containing_timestamp)
     if self.virtual && self.formula
-      operands = get_operands_from_formula
-      operators = get_operators_from_formula
+      operands_plus = FormulaPart.where(metering_point_id: self.id).where(operator: "+").collect(&:operand)
+      operands_minus = FormulaPart.where(metering_point_id: self.id).where(operator: "-").collect(&:operand)
       data = []
-      operands.each do |metering_point_id|
-        if MeteringPoint.find(metering_point_id).smart?
-          data << slp_or_smart(metering_point_id, resolution_format, containing_timestamp)
-        else
-          data << []
-        end
+      data << convert_to_array_build_timestamp(Reading.aggregate(resolution_format, operands_plus.collect(&:id), containing_timestamp), resolution_format, containing_timestamp)
+      if operands_minus.any?
+        data << convert_to_array_build_timestamp(Reading.aggregate(resolution_format, operands_minus.collect(&:id), containing_timestamp), resolution_format, containing_timestamp)
+        operators = ["+", "-"]
+        return calculate_virtual_metering_point(data, operators, resolution_format)
+      else
+        return data[0]
       end
-      return calculate_virtual_metering_point(data, operators, resolution_format)
     else
       slp_or_smart(self.id, resolution_format, containing_timestamp)
     end

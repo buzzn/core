@@ -1,5 +1,5 @@
 .col-xs-12.col-sm-12.col-md-6.col-lg-6.address{id: "address_#{address.id}" }
-  = link_to address do
+  = link_to edit_address_path(address),{:remote => true, :class => 'start_modal','data-toggle' => "modal",'data-target' => "#myModal"} do
     .panel
       = image_tag(address.static_gmap_url('1300x400'), class: 'img-responsive')
       .pad-all
