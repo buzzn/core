@@ -430,21 +430,21 @@ $(".dashboard-chart").ready ->
                     month:"%B %Y",
                     year:"%Y"
                 #series: data
-              )
-              chart.addSeries(
-                name: data[0].name
-                data: data[0].data
-              )
-              chart_data_min_x = chart.series[0].data[0].x
-              checkIfPreviousDataExistsDashboard()
-              checkIfNextDataExistsDashboard()
-            else
-              chart.addSeries(
-                name: data[0].name
-                data: data[0].data
-              )
-          .error (jqXHR, textStatus, errorThrown) ->
-            console.log textStatus
+            )
+            chart.addSeries(
+              name: data[0].name
+              data: data[0].data
+            )
+            chart_data_min_x = chart.series[0].data[0].x
+            checkIfPreviousDataExistsDashboard()
+            checkIfNextDataExistsDashboard()
+          else
+            chart.addSeries(
+              name: data[0].name
+              data: data[0].data
+            )
+        .error (jqXHR, textStatus, errorThrown) ->
+          console.log textStatus
 
 
 
