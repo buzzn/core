@@ -131,7 +131,7 @@ end
 group :development do
   gem 'brakeman', :require => false
   gem 'pry-rails'
-  gem 'bullet'
+  gem 'bullet', github: 'flyerhzm/bullet'
   gem 'rack-livereload'
   gem 'better_errors'
   gem 'binding_of_caller'
