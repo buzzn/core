@@ -402,7 +402,6 @@ $(".dashboard-chart").ready ->
             name: data[0].name
             data: data[0].data
           )
-          console.log chart.series[0]
           chart_data_min_x = chart.series[0].data[0].x
           checkIfPreviousDataExistsDashboard()
           checkIfNextDataExistsDashboard()
@@ -609,6 +608,7 @@ $(".group-chart").ready ->
         #   name: data[1].name
         #   data: data[1].data
         # )
+        console.log chart.series[0]
         chart_data_min_x = chart.series[0].data[0].x
         checkIfPreviousDataExistsGroup()
         checkIfNextDataExistsGroup()
