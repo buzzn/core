@@ -608,7 +608,7 @@ $(".group-chart").ready ->
         #   name: data[1].name
         #   data: data[1].data
         # )
-        console.log chart.series[0]
+        console.log chart.series[0].data
         chart_data_min_x = chart.series[0].data[0].x
         checkIfPreviousDataExistsGroup()
         checkIfNextDataExistsGroup()
