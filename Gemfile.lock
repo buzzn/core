@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/flyerhzm/bullet.git
-  revision: 3eb5c82edc4244ab4dbc4ddc7c4df6e8d9035027
-  specs:
-    bullet (4.14.6)
-      activesupport (>= 3.0.0)
-      uniform_notifier (~> 1.9.0)
-
-GIT
   remote: git://github.com/jnicklas/capybara.git
   revision: 90f5d374fda563d8457475915b4ac312a0199c9a
   specs:
@@ -152,6 +144,9 @@ GEM
       terminal-table (~> 1.4)
     bson (2.3.0)
     builder (3.2.2)
+    bullet (4.14.6)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.9.0)
     callsite (0.0.11)
     capybara-email (2.4.0)
       capybara (~> 2.4)
@@ -786,7 +781,7 @@ DEPENDENCIES
   binding_of_caller
   brakeman
   bson
-  bullet!
+  bullet
   capybara!
   capybara-email
   capybara-screenshot
