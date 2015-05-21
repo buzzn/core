@@ -518,8 +518,10 @@ $(".group-chart").ready ->
   chart = undefined
   group_id = $(this).attr('id')
   width = $("#chart-container-" + group_id).width()
-  $.ajax({url: '/groups/' + group_id + '/chart?resolution=day_to_minutes', async: false, dataType: 'json'})
+  url = '/groups/' + group_id + '/chart?resolution=day_to_minutes'
+  $.ajax({url: url, async: false, dataType: 'json'})
     .success (data) ->
+      console.log data[0].data[0]
       if data[0].data[0] == undefined
         data[0].data[0] = [new Date(), 0] #TODO: Search for last data
       if chart == undefined
