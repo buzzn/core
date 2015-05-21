@@ -115,6 +115,28 @@
       /               - @activities.each do |activity|
       /                 = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
 
+      %h1.page-header.text-overflow
+        %span
+          = t('stream')
+          %small
+            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('stream_info_profile')}
+      .row
+        .stream
+          .col-md-12.col-lg-12
+
+            / Timeline
+            / ===================================================
+            .timeline
+              / Timeline header
+              .timeline-header
+                .timeline-header-title.bg-purple
+                  =t('now')
+
+              - @activities.each do |activity|
+                = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+
+      %hr
+
 
       - if @profile.user.friend?(current_user) || current_user.profile == @profile
         %h1.page-header.text-overflow
@@ -144,24 +166,7 @@
             - @friends.each do |user|
               = render user.profile
 
-      %h1.page-header.text-overflow
-        %span
-          = t('stream')
-          %small
-            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('stream_info_profile')}
-      .stream
-        .col-md-12.col-lg-12
 
-          / Timeline
-          / ===================================================
-          .timeline
-            / Timeline header
-            .timeline-header
-              .timeline-header-title.bg-purple
-                =t('now')
-
-            - @activities.each do |activity|
-              = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
 
 
 
