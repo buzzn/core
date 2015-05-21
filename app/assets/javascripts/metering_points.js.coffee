@@ -521,9 +521,10 @@ $(".group-chart").ready ->
   url = '/groups/' + group_id + '/chart?resolution=day_to_minutes'
   $.ajax({url: url, async: false, dataType: 'json'})
     .success (data) ->
-      console.log data[0].data[0]
+
       if data[0].data[0] == undefined
         data[0].data[0] = [new Date(), 0] #TODO: Search for last data
+
       if chart == undefined
         chart = new Highcharts.Chart(
           chart:
@@ -610,7 +611,11 @@ $(".group-chart").ready ->
         #   name: data[1].name
         #   data: data[1].data
         # )
-        console.log chart.series[0].data
+
+        console.log data
+
+        console.log chart.series[0]
+
         chart_data_min_x = chart.series[0].data[0].x
         checkIfPreviousDataExistsGroup()
         checkIfNextDataExistsGroup()
