@@ -519,7 +519,7 @@ $(".group-chart").ready ->
   group_id = $(this).attr('id')
   width = $("#chart-container-" + group_id).width()
   url = '/groups/' + group_id + '/chart?resolution=day_to_minutes'
-  $.ajax({url: url, async: false, dataType: 'json'})
+  $.ajax({url: url, async: true, dataType: 'json'})
     .success (data) ->
 
       if data[0].data[0] == undefined
@@ -614,7 +614,7 @@ $(".group-chart").ready ->
 
         console.log data
 
-        console.log chart.series[0]
+        console.log chart.series[0].data
 
         chart_data_min_x = chart.series[0].data[0].x
         checkIfPreviousDataExistsGroup()
