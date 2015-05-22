@@ -31,13 +31,14 @@ ready = ->
   window.addEventListener 'resize:end', (event) ->
     console.log event.type
 
+  $('.mainnav-toggle').on 'click', ->
+    resizeChart(500)
+
 
   $(window).on 'resize', ->
-    chartDivs = $(".chart")
-    chartDivs.each (div) ->
-      chart = $("#" + $(this).attr('id')).highcharts()
-      if chart != undefined
-        chart.setSize($(this).width(), $(this).height(), doAnimation = false)
+    resizeChart(0)
+
+
 
   Highcharts.setOptions(
     lang:
@@ -54,6 +55,18 @@ $(document).on('show.bs.modal', ready)
 $(document).on('page:restore', ->
   $(window).trigger('resize')
 )
+
+resizeChart = (duration) ->
+  setTimeout (->
+    chartDivs = $(".chart")
+    chartDivs.each (div) ->
+      chart = $("#" + $(this).attr('id')).highcharts()
+      if chart != undefined
+        chart.setSize($(this).width(), $(this).height(), doAnimation = false)
+    return
+  ), duration
+  return
+
 
 (($) ->
 
