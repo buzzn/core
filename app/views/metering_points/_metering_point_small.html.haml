@@ -9,14 +9,22 @@
       .bg-light.pad-ver
         %h4.mar-no.text-thin
           =metering_point.long_name
+        - if request.original_url.include?("dashboard")
+          .display-in-series
 
-        .display-in-series
+            - if user_signed_in?
+              - if current_user.dashboard.dashboard_metering_points.where(metering_point_id: metering_point.id).first.displayed
+                = metering_point.remove_from_series
+              - else
+                = metering_point.display_in_series
 
-          - if user_signed_in?
-            - if current_user.dashboard.dashboard_metering_points.where(metering_point_id: metering_point.id).first.displayed
-              = metering_point.remove_from_series
-            - else
-              = metering_point.display_in_series
+          .remove-from-dashboard
+            = metering_point.remove_from_dashboard
+        - else
+          %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
 
-        .remove-from-dashboard
-          = metering_point.remove_from_dashboard
+            = content_tag :div, id: "metering_point-ticker-#{metering_point.id}", class: "metering_point-ticker", data: { slp: !metering_point.smart? && !metering_point.virtual } do
+              %span.text-2x
+                .power-ticker
+                  = t('loading') + '...'
+            %p.text-muted Watt
