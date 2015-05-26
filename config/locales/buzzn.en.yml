@@ -9,3 +9,19 @@ en:
   rejected_group_metering_point_request: Rejected Group Metering Point Request
   are_you_sure: Are you sure
   cookie_text: "We use cookies to help personalise and improve your web experience. By using our website you consent to our use of cookies, some of which may have already been set on your device. View our Cookie Policy to learn more. "
+
+  you_can_confirm_your_account_email_through_the_link_below: "You can confirm your account email through the link below:"
+  confirm_my_account: Confirm_my_account
+  someone_has_requested_a_link_to_change_your_password: "Someone has requested a link to change your password."
+  you_can_do_this_through_the_link_below: "You can do this through the link below:"
+  change_my_password: "Change my password"
+  if_you_didnt_request_this_please_ignore_this_email: "If you didn't request this please ignore this email."
+  your_password_wont_change_until_you_access_the_link_above_and_create_a_new_one: "Your password won't change until you access the link above and create a new one."
+  your_buzzn_team: Your buzzn team
+  your_account_has_been_locked_due_to_an_excessive_number_of_unsuccessful_sign_in_attempts: "Your account has been locked due to an excessive number of unsuccessful sign in attempts."
+  click_the_link_below_to_unlock_your_account: "Click the link below to unlock your account."
+  unlock_my_account: Unlock my account
+  if_this_link_shouldnt_work_try_to_copy_and_paste_this_one_directly_in_your_browser: "If this link shouldn't work try to copy and paste this one directly in your browser:"
+
+  sign_up: Sign up
+  create_metering_point: Create Metering Point

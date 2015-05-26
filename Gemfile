@@ -156,4 +156,5 @@ group :test do
   gem 'webmock'
   gem 'poltergeist', github: 'teampoltergeist/poltergeist'
   gem 'database_cleaner'
+  gem 'capybara-select2'
 end

@@ -1,6 +1,17 @@
 de:
   welcome: Willkommen
-
+  you_can_confirm_your_account_email_through_the_link_below: "Du kannst Dein Benutzerkonto bestätigen, indem du den folgenden Link anklickst:"
+  confirm_my_account: Benutzerkonto bestätigen
+  someone_has_requested_a_link_to_change_your_password: "Es wurde ein Link angefragt, um Dein Passwort zu ändern."
+  you_can_do_this_through_the_link_below: "Dies kannst Du mit dem folgenden Link tun:"
+  change_my_password: "Mein Passwort ändern"
+  if_you_didnt_request_this_please_ignore_this_email: "Falls Du diese Anfrage nicht gesendet hast kannst Du diese Email ignorieren."
+  your_password_wont_change_until_you_access_the_link_above_and_create_a_new_one: "Dein Passwort wird sich nicht ändern, bis Du den obigen Link angeklickt hast und ein neues Passwort eingegeben hast."
+  your_buzzn_team: Dein buzzn Team
+  your_account_has_been_locked_due_to_an_excessive_number_of_unsuccessful_sign_in_attempts: "Dein Benutzerkonto wurde wegen einer sehr großen Anzahl an fehlgeschlagenen Anmeldungsversuchen gesperrt."
+  click_the_link_below_to_unlock_your_account: "Klicke auf den folgenden Link, um Dein Benutzerkonto zu entsperren."
+  unlock_my_account: Mein Benutzerkonto entsperren
+  if_this_link_shouldnt_work_try_to_copy_and_paste_this_one_directly_in_your_browser: "Solltest du Probleme haben mit diesem Link kopiere den folgenden direkt in deinen Browser:"
 
   metering_point: Zählpunkt
   edit_metering_point: Zählpunkt bearbeiten

@@ -260,13 +260,16 @@ class Reading
   def self.latest_slp
     values = []
     readings = Reading.where(:timestamp.gte => (Time.now - 15.minutes), :timestamp.lt => (Time.now + 15.minutes), source: "slp")
-    firstTimestamp = readings.first.timestamp.to_i*1000
-    firstValue = readings.first.watt_hour/10000000000.0
-    lastTimestamp = readings.last.timestamp.to_i*1000
-    lastValue = readings.last.watt_hour/10000000000.0
-    values << [firstTimestamp, firstValue]
-    values << [lastTimestamp, lastValue]
-    return values
+    if readings.any?
+      firstTimestamp = readings.first.timestamp.to_i*1000
+      firstValue = readings.first.watt_hour/10000000000.0
+      lastTimestamp = readings.last.timestamp.to_i*1000
+      lastValue = readings.last.watt_hour/10000000000.0
+      values << [firstTimestamp, firstValue]
+      values << [lastTimestamp, lastValue]
+      return values
+    end
+    return nil
   end
 
 

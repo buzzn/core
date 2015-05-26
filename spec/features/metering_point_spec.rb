@@ -1,110 +1,112 @@
-# require 'spec_helper'
+require 'spec_helper'
 
 
-# feature 'MeteringPoint' do
-#   describe 'try to manage metering_points', :js do
+feature 'MeteringPoint' do
+  describe 'try to manage metering_points', :js do
 
-#     before do
-#       @user = Fabricate(:user)
-#       @location = Fabricate(:location, metering_point: nil)
-#       @user.add_role :manager, @location
+    before do
+      @user = Fabricate(:user)
 
-#       visit '/users/sign_in'
-#       fill_in :user_email,    :with => @user.email
-#       fill_in :user_password, :with => 'testtest'
-#       click_button 'Sign in'
-#     end
+      visit '/users/sign_in'
+      fill_in :user_email,    :with => @user.email
+      fill_in :user_password, :with => '12345678'
+      click_button 'Sign in'
+    end
 
-#     it 'will be signed in' do
-#       expect(page).to have_content('Signed in successfully.')
-#     end
+    it 'will be signed in' do
+      expect(page).to have_content('Signed in successfully.')
+    end
 
-#     it 'try to create metering_point', :retry => 3 do
-#       visit "/locations/#{@location.slug}"
-#       expect(page).to have_content('You Have No Metering Point')
-#       click_on 'Create New Metering Point'
+    it 'try to create metering_point', :retry => 3 do
+      #find("#registers").all(".nested-fields").last.find(:css, "input[id^='meter_registers_attributes_'][id$='_obis_index']").set("12345678")
+      #find("#registers").all(".nested-fields").last.find(:css, "select[id^='meter_registers_attributes_'][id$='_mode']").find(:xpath, 'option[2]').select_option
 
-#       fill_in :metering_point_name,       with: 'Wohnung'
-#       fill_in :metering_point_uid,                    with: 'DE123456789012345678901'
+      click_on 'Create Metering Point'
 
-#       click_on 'continue'
-#       expect(page).to have_content('New Meter')
+      fill_in :metering_point_name,       with: 'Wohnung'
+      fill_in :metering_point_uid,        with: 'DE123456789012345678901'
+      select  :world,                     from: 'metering_point_readable'
 
-#       select 'smart_meter',                                 from: 'meter_manufacturer_name'
-#       fill_in :meter_manufacturer_product_name,             with: 'Easymeter'
-#       fill_in :meter_manufacturer_product_serialnumber,     with: '123456'
-#       select  'in',                                         from: 'meter_registers_attributes_0_mode'
+      click_on 'submit'
 
-#       click_on 'continue'
-#       expect(page).to have_content('metering_point_created_successfully')
+      expect(page).to have_content('Loading...')
 
-#       click_on 'Details'
-#       expect(page).to have_content('Contracts')
-#       expect(page).to have_content('Wohnung')
+      find(".metering_point").click
 
-#       click_on 'Meter'
-#       expect(page).to have_content('Meter')
-#       expect(page).to have_content('Easymeter')
-#       expect(page).to have_content('Registers')
+      expect(page).to have_content('Address')
+    end
 
-#       click_on 'Contracts'
-#       expect(page).to have_content('Add Metering Point Operator Contract')
-#     end
+    it 'will fail to create metering_point', :retry => 3 do
+      click_on 'Create Metering Point'
 
-#     it 'will fail to create metering_point', :retry => 3 do
-#       visit "/locations/#{@location.slug}"
-#       click_on 'Create New Metering Point'
+      fill_in :metering_point_name,       with: ''
+      fill_in :metering_point_uid,        with: 'DE123456789012345678901'
+      select  :world,                     from: 'metering_point_readable'
 
-#       fill_in :metering_point_name,       with: ''
-#       fill_in :metering_point_uid,                    with: 'DE123456789012345678901'
+      click_on 'submit'
+      expect(page).to have_content("can't be blank")
 
-#       click_on 'continue'
-#       expect(page).to have_content("can't be blank")
+      fill_in :metering_point_name,       with: 'Wohnung'
+      fill_in :metering_point_uid,        with: 'DE12345678901234567890123456789012345'
+      select  :world,                     from: 'metering_point_readable'
 
-#       fill_in :metering_point_name,       with: 'Wohnung'
-#       fill_in :metering_point_uid,                    with: 'DE12345678901234567890123456789012345'
+      click_on 'submit'
+      expect(page).to have_content('is too long')
 
-#       click_on 'continue'
-#       expect(page).to have_content('is too long')
+      fill_in :metering_point_name,       with: 'Wohnung'
+      fill_in :metering_point_uid,        with: 'DE123456789012345678901'
+      select  :world,                     from: 'metering_point_readable'
 
-#       fill_in :metering_point_name,       with: 'Wohnung'
-#       fill_in :metering_point_uid,                    with: 'DE123456789012345678901'
+      click_on 'submit'
+      expect(page).to have_content('Loading...')
+    end
 
-#       click_on 'continue'
-#       expect(page).to have_content('Manufacturer')
+    it 'will not be allowed to view metering_point as friend', :retry => 3 do
+      @user2 = Fabricate(:user)
+      @metering_point2 = Fabricate(:mp_60009269, readable: "me")
+      @user2.add_role(:manager, @metering_point2)
+      @user.friends << @user2
+      @user.save
 
-#       select 'smart_meter',                                 from: 'meter_manufacturer_name'
-#       fill_in :meter_manufacturer_product_name,             with: 'Easymeter'
-#       fill_in :meter_manufacturer_product_serialnumber,     with: '123456'
+      visit "/profiles/#{@user.profile.slug}"
 
-#       click_on 'continue'
-#       expect(page).not_to have_content('metering_point_created_successfully')
+      expect(page).to have_content("#{@user2.name}")
 
-#       select 'smart_meter',                                 from: 'meter_manufacturer_name'
-#       fill_in :meter_manufacturer_product_name,             with: 'Easymeter'
-#       fill_in :meter_manufacturer_product_serialnumber,     with: ''
-#       select  'in',                                         from: 'meter_registers_attributes_0_mode'
+      visit "/metering_points/#{@user2.editable_metering_points.first.id}"
 
-#       click_on 'continue'
-#       expect(page).not_to have_content('metering_point_created_successfully')
-#     end
+      expect(page).to have_content "Access Denied"
+    end
 
-#     it 'will not be allowed to view metering_point', :retry => 3 do
-#       @location2 = Fabricate(:location)
-#       @user2 = Fabricate(:user)
-#       @user2.add_role :manager, @location2
-#       @user.friends << @user2
-#       @user.save
+    it 'will be allowed to view metering_point as friend', :retry => 3 do
+      @user2 = Fabricate(:user)
+      @metering_point2 = Fabricate(:mp_60009269, readable: "friends")
+      @user2.add_role(:manager, @metering_point2)
+      @user.friends << @user2
+      @user.save
 
-#       visit "/locations/#{@location2.slug}"
+      visit "/profiles/#{@user.profile.slug}"
 
-#       expect(find("#metering_point_#{@location2.metering_point.id}")).not_to have_link('Details', :href => "/metering_points/#{@location2.metering_point.slug}" )
+      expect(page).to have_content("#{@user2.name}")
 
-#       visit "/metering_points/#{@location2.metering_point.slug}"
+      visit "/metering_points/#{@user2.editable_metering_points.first.id}"
 
-#       expect(page).to have_content "Access Denied"
-#     end
+      expect(page).not_to have_content "Access Denied"
+    end
 
-#   end
+    it 'will be allowed to view metering_point as world', :retry => 3 do
+      @user2 = Fabricate(:user)
+      @metering_point2 = Fabricate(:mp_60009269, readable: "world")
+      @user2.add_role(:manager, @metering_point2)
 
-# end
+      visit "/profiles/#{@user.profile.slug}"
+
+      expect(page).not_to have_content("#{@user2.name}")
+
+      visit "/metering_points/#{@user2.editable_metering_points.first.id}"
+
+      expect(page).not_to have_content "Access Denied"
+    end
+
+  end
+
+end
