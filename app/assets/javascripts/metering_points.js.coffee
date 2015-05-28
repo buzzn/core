@@ -543,9 +543,6 @@ $(".dashboard-chart").ready ->
 
 
 
-
-
-
 #code for group
 $(".group-chart").ready ->
   chart = undefined
@@ -554,13 +551,34 @@ $(".group-chart").ready ->
   url = '/groups/' + group_id + '/chart?resolution=day_to_minutes'
   $.ajax({url: url, async: true, dataType: 'json'})
     .success (data) ->
-
       console.log "success"
 
       chart = new Highcharts.Chart(
         chart:
           type: 'areaspline'
           renderTo: 'chart-container-' + group_id
+          backgroundColor:'rgba(255, 255, 255, 0.0)'
+          width: width
+          spacingBottom: 20
+          spacingTop: 10
+          spacingLeft: 20
+          spacingRight: 20
+        colors: ['#5FA2DD', '#F76C51']
+        exporting:
+          enabled: false
+        legend:
+          enabled: true
+        title:
+          margin: 0
+          text: ""
+        credits:
+          enabled: false
+        loading:
+          hideDuration: 800
+          showDuration: 800
+          labelStyle:
+            color: 'black'
+            'font-size': '20pt'
 
         series: data
       )
@@ -571,6 +589,7 @@ $(".group-chart").ready ->
     .error (jqXHR, textStatus, errorThrown) ->
       console.log "error"
       console.log textStatus
+
 
 
 
