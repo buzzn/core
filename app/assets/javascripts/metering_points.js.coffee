@@ -579,8 +579,22 @@ $(".group-chart").ready ->
           labelStyle:
             color: 'black'
             'font-size': '20pt'
-
-
+        xAxis:
+          lineWidth: 1
+          tickWidth: 1
+          type: 'datetime'
+          startOnTick: false
+          endOnTick: false
+          min: beginningOfDay(data[0].data[0][0])
+          max: endOfDay(data[0].data[0][0])
+          labels:
+            enabled: true
+            style:
+              color: '#000'
+          title:
+            text: "Zeit"
+            enabled: true
+            style: { "color": "#000", "fontWeight": "bold"}
         yAxis:
           gridLineWidth: 0
           min: 0
@@ -619,6 +633,7 @@ $(".group-chart").ready ->
       )
 
       console.log data
+      console.log data[0].data[0][0]
       console.log chart.series[0].data
 
     .error (jqXHR, textStatus, errorThrown) ->
