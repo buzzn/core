@@ -23,10 +23,10 @@ class Profile < ActiveRecord::Base
   normalize_attributes :user_name, :first_name, :last_name
 
   def metering_points
-    metering_point_ids = []
-    metering_point_ids << self.user.metering_points.collect(&:id) # as member
-    metering_point_ids << MeteringPoint.editable_by_user(self.user).collect(&:id) # as manager
-    MeteringPoint.where(id: metering_point_ids)
+    metering_points = []
+    metering_points << self.user.metering_points # as member
+    metering_points << MeteringPoint.editable_by_user(self.user) # as manager
+    metering_points.flatten.uniq
   end
 
   def self.genders

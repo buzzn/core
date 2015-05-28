@@ -20,7 +20,7 @@ class GetReadingWorker
               metering_point_mode         = metering_point_mode_and_id.first
               metering_point_id           = metering_point_mode_and_id.last
               watt_hour                   = item['energy']
-              power                       = item['power'].abs
+              power                       = item['power'] > 0 ? item['power'].abs : 0
 
               Reading.create( metering_point_id:  metering_point_id,
                               timestamp:    timestamp,

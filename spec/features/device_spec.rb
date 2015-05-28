@@ -1,166 +1,194 @@
-# require 'spec_helper'
+require 'spec_helper'
 
 
-# feature 'Device' do
-#   describe 'try to manage devices', :js do
+feature 'Device' do
+  describe 'try to manage devices', :js do
 
-#     before do
-#       @user = Fabricate(:user)
-#       visit '/users/sign_in'
-#       fill_in :user_email,    :with => @user.email
-#       fill_in :user_password, :with => 'testtest'
-#       click_button 'Sign in'
-#     end
+    before do
+      @user = Fabricate(:user)
+      visit '/users/sign_in'
+      fill_in :user_email,    :with => @user.email
+      fill_in :user_password, :with => '12345678'
+      click_button 'Sign in'
+    end
 
-#     it 'will be signed in' do
-#       expect(page).to have_content('Signed in successfully.')
-#     end
+    it 'will be signed in' do
+      expect(page).to have_content('Signed in successfully.')
+    end
 
-#     it 'try to create in device', :retry => 3  do
-#       visit "/profiles/#{@user.profile.slug}"
-#       click_on 'Devices'
-#       expect(page).to have_content('Add New In Device')
-#       click_on 'Add New In Device'
-#       expect(page).to have_content('Manufacturer')
+    it 'try to create device', :retry => 3  do
+      visit "/profiles/#{@user.profile.slug}"
+      click_on 'Create Device'
 
-#       fill_in :device_manufacturer_name,                  with: 'Testgerät'
-#       fill_in :device_manufacturer_product_name,          with: 'Testname'
-#       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
-#       fill_in :device_watt_peak,                          with: 200
+      select :in,                                         from: 'device_mode'
+      fill_in :device_category,                           with: 'Testkategorie'
+      fill_in :device_manufacturer_name,                  with: 'Testgerät'
+      fill_in :device_manufacturer_product_name,          with: 'Testname'
+      fill_in :device_watt_peak,                          with: 200
 
-#       click_button 'submit'
-#       expect(page).to have_content('Belongs To')
-#     end
+      click_button 'submit'
 
-#     it 'will fail to create in device', :retry => 3  do
-#       visit "/profiles/#{@user.profile.slug}"
-#       click_on 'Devices'
-#       expect(page).to have_content('Add New In Device')
-#       click_on 'Add New In Device'
-#       expect(page).to have_content('Manufacturer')
+      expect(find(".devices")).to have_content('Testgerät')
+    end
 
-#       fill_in :device_manufacturer_name,                  with: 'Testgerät'
-#       fill_in :device_manufacturer_product_name,          with: 'Testname'
-#       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
+    it 'will fail to create device', :retry => 3  do
+      visit "/profiles/#{@user.profile.slug}"
+      click_on 'Create Device'
 
-#       click_button 'submit'
-#       expect(page).to have_content("is not a number")
+      select :in,                                         from: 'device_mode'
+      fill_in :device_category,                           with: 'Testkategorie'
+      fill_in :device_manufacturer_name,                  with: 'Testgerät'
+      fill_in :device_manufacturer_product_name,          with: 'Testname'
 
-#       fill_in :device_manufacturer_name,                  with: 'Testgerät'
-#       fill_in :device_manufacturer_product_name,          with: 'Testname'
-#       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
-#       fill_in :device_watt_peak,                          with: "abc"
+      click_button 'submit'
+      expect(page).to have_content("is not a number")
 
-#       click_button 'submit'
-#       expect(page).to have_content("is not a number")
+      select :in,                                         from: 'device_mode'
+      fill_in :device_category,                           with: 'Testkategorie'
+      fill_in :device_manufacturer_name,                  with: 'Testgerät'
+      fill_in :device_manufacturer_product_name,          with: 'Testname'
+      fill_in :device_watt_peak,                          with: "abc"
 
-#       fill_in :device_manufacturer_name,                  with: 'Testgerät'
-#       fill_in :device_manufacturer_product_name,          with: 'Testname'
-#       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
-#       fill_in :device_watt_peak,                          with: 200
+      click_button 'submit'
+      expect(page).to have_content("is not a number")
 
-#       click_button 'submit'
-#       expect(page).to have_content('Belongs To')
-#     end
+      select :in,                                         from: 'device_mode'
+      fill_in :device_category,                           with: 'Testkategorie'
+      fill_in :device_manufacturer_name,                  with: 'Testgerät'
+      fill_in :device_manufacturer_product_name,          with: ''
+      fill_in :device_watt_peak,                          with: 200
 
-#     it 'try to create out device', :retry => 3  do
-#       visit "/profiles/#{@user.profile.slug}"
-#       click_on 'Devices'
-#       expect(page).to have_content('Add New Out Device')
-#       click_on 'Add New Out Device'
-#       expect(page).to have_content('Manufacturer')
+      click_button 'submit'
+      expect(page).to have_content("can't be blank")
 
-#       select 'eeg',   from: 'device_law'
-#       select 'sun',   from: 'device_primary_energy'
-#       fill_in :device_category,                        with: 'pv'
-#       fill_in :device_manufacturer_name,                  with: 'Testgerät'
-#       fill_in :device_manufacturer_product_name,          with: 'Testname'
-#       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
-#       fill_in :device_watt_peak,                          with: 2000
+      select :in,                                         from: 'device_mode'
+      fill_in :device_category,                           with: 'Testkategorie'
+      fill_in :device_manufacturer_name,                  with: ''
+      fill_in :device_manufacturer_product_name,          with: 'Testname'
+      fill_in :device_watt_peak,                          with: 200
 
-#       click_button 'submit'
-#       expect(page).to have_content('Belongs To')
-#     end
+      click_button 'submit'
+      expect(page).to have_content("can't be blank")
+    end
 
-#     it 'will fail to create out device', :retry => 3 do
-#       visit "/profiles/#{@user.profile.slug}"
-#       click_on 'Devices'
-#       expect(page).to have_content('Add New Out Device')
-#       click_on 'Add New Out Device'
-#       expect(page).to have_content('Manufacturer')
+    # it 'try to create out device', :retry => 1  do     # *********There is no diference between out- & in-device at the moment************
+    #   visit "/profiles/#{@user.profile.slug}"
+    #   click_on 'Create Device'
 
-#       select '',      from: 'device_law'
-#       select 'sun',   from: 'device_primary_energy'
-#       fill_in :device_category,                        with: 'pv'
-#       fill_in :device_manufacturer_name,                  with: 'Testgerät'
-#       fill_in :device_manufacturer_product_name,          with: 'Testname'
-#       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
-#       fill_in :device_watt_peak,                          with: 2000
+    #   select 'eeg',   from: 'device_law'
+    #   select 'sun',   from: 'device_primary_energy'
+    #   fill_in :device_category,                        with: 'pv'
+    #   fill_in :device_manufacturer_name,                  with: 'Testgerät'
+    #   fill_in :device_manufacturer_product_name,          with: 'Testname'
+    #   fill_in :device_manufacturer_product_serialnumber,  with: '12345'
+    #   fill_in :device_watt_peak,                          with: 2000
 
-#       click_button 'submit'
-#       expect(page).to have_content("can't be blank")
+    #   click_button 'submit'
+    #   expect(page).to have_content('Belongs To')
+    # end
 
-#       select 'eeg',   from: 'device_law'
-#       select 'sun',   from: 'device_primary_energy'
-#       fill_in :device_category,                        with: ''
-#       fill_in :device_manufacturer_name,                  with: 'Testgerät'
-#       fill_in :device_manufacturer_product_name,          with: 'Testname'
-#       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
-#       fill_in :device_watt_peak,                          with: 2000
+    # it 'will fail to create out device', :retry => 3 do
+    #   visit "/profiles/#{@user.profile.slug}"
+    #   click_on 'Devices'
+    #   expect(page).to have_content('Add New Out Device')
+    #   click_on 'Add New Out Device'
+    #   expect(page).to have_content('Manufacturer')
 
-#       click_button 'submit'
-#       expect(page).to have_content("can't be blank")
+    #   select '',      from: 'device_law'
+    #   select 'sun',   from: 'device_primary_energy'
+    #   fill_in :device_category,                        with: 'pv'
+    #   fill_in :device_manufacturer_name,                  with: 'Testgerät'
+    #   fill_in :device_manufacturer_product_name,          with: 'Testname'
+    #   fill_in :device_manufacturer_product_serialnumber,  with: '12345'
+    #   fill_in :device_watt_peak,                          with: 2000
 
-#       select 'eeg',   from: 'device_law'
-#       select '',      from: 'device_primary_energy'
-#       fill_in :device_category,                        with: 'pv'
-#       fill_in :device_manufacturer_name,                  with: 'Testgerät'
-#       fill_in :device_manufacturer_product_name,          with: 'Testname'
-#       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
-#       fill_in :device_watt_peak,                          with: 2000
+    #   click_button 'submit'
+    #   expect(page).to have_content("can't be blank")
 
-#       click_button 'submit'
-#       expect(page).to have_content("can't be blank")
+    #   select 'eeg',   from: 'device_law'
+    #   select 'sun',   from: 'device_primary_energy'
+    #   fill_in :device_category,                        with: ''
+    #   fill_in :device_manufacturer_name,                  with: 'Testgerät'
+    #   fill_in :device_manufacturer_product_name,          with: 'Testname'
+    #   fill_in :device_manufacturer_product_serialnumber,  with: '12345'
+    #   fill_in :device_watt_peak,                          with: 2000
 
-#       select 'eeg',   from: 'device_law'
-#       select 'sun',      from: 'device_primary_energy'
-#       fill_in :device_category,                        with: 'pv'
-#       fill_in :device_manufacturer_name,                  with: 'Testgerät'
-#       fill_in :device_manufacturer_product_name,          with: 'Testname'
-#       fill_in :device_manufacturer_product_serialnumber,  with: '12345'
-#       fill_in :device_watt_peak,                          with: 2000
+    #   click_button 'submit'
+    #   expect(page).to have_content("can't be blank")
 
-#       click_button 'submit'
-#       expect(page).to have_content("Belongs To")
-#     end
+    #   select 'eeg',   from: 'device_law'
+    #   select '',      from: 'device_primary_energy'
+    #   fill_in :device_category,                        with: 'pv'
+    #   fill_in :device_manufacturer_name,                  with: 'Testgerät'
+    #   fill_in :device_manufacturer_product_name,          with: 'Testname'
+    #   fill_in :device_manufacturer_product_serialnumber,  with: '12345'
+    #   fill_in :device_watt_peak,                          with: 2000
 
-#     it 'will not be allowed to edit device', :retry => 3 do
-#       @user2 = Fabricate(:user)
-#       @device = Fabricate(:dach_pv_justus)
-#       @user2.add_role :manager, @device
-#       @user.friends << @user2
-#       @user.save
+    #   click_button 'submit'
+    #   expect(page).to have_content("can't be blank")
 
-#       visit "/profiles/#{@user2.profile.slug}"
+    #   select 'eeg',   from: 'device_law'
+    #   select 'sun',      from: 'device_primary_energy'
+    #   fill_in :device_category,                        with: 'pv'
+    #   fill_in :device_manufacturer_name,                  with: 'Testgerät'
+    #   fill_in :device_manufacturer_product_name,          with: 'Testname'
+    #   fill_in :device_manufacturer_product_serialnumber,  with: '12345'
+    #   fill_in :device_watt_peak,                          with: 2000
 
-#       find("li#device_#{@device.id}").click
-#       expect(page).to have_content('solarwatt')
+    #   click_button 'submit'
+    #   expect(page).to have_content("Belongs To")
+    # end
 
-#       expect(page).not_to have_link('Edit', :href => edit_out_device_path(@device))
-#     end
+    it 'try to edit device', :retry => 3 do
+      @device = Fabricate(:dach_pv_justus)
+      @user.add_role(:manager, @device)
 
-#     it 'will not be allowed to view device', :retry => 3 do
-#       @user2 = Fabricate(:user)
-#       @device = Fabricate(:dach_pv_justus)
-#       @user2.add_role :manager, @device
+      visit "/devices/#{@device.id}"
 
-#       visit "/profiles/#{@user2.profile.slug}"
+      click_on 'Edit'
 
-#       expect(page).not_to have_selector("li#device_#{@device.id}")
+      fill_in :device_manufacturer_name,                  with: 'Testgerät2'
 
-#       visit "/devices/#{@device.id}"
+      click_on 'Update Device'
 
-#       expect(page).to have_content('Access Denied')
-#     end
-#   end
-# end
+      expect(find("#page-content")).to have_content('Testgerät2')
+    end
+
+    it 'will not be allowed to edit device', :retry => 3 do
+      @user2 = Fabricate(:user)
+      @device = Fabricate(:dach_pv_justus)
+      @user2.add_role :manager, @device
+      @user.friends << @user2
+
+      visit "/devices/#{@device.id}"
+
+      expect(page).to have_content('solarwatt')
+
+      expect(page).not_to have_link('Edit', :href => edit_device_path(@device))
+    end
+
+    it 'will not be allowed to view device', :retry => 3 do
+      @user2 = Fabricate(:user)
+      @device = Fabricate(:dach_pv_justus)
+      @user2.add_role :manager, @device
+
+      visit "/profiles/#{@user2.profile.slug}"
+
+      expect(page).not_to have_selector(".devices")
+
+      visit "/devices/#{@device.id}"
+
+      expect(page).to have_content('Access Denied')
+
+      @user2.friends << @user
+
+      visit "/profiles/#{@user2.profile.slug}"
+
+      expect(page).to have_selector(".devices")
+
+      visit "/devices/#{@device.id}"
+
+      expect(page).not_to have_content('Access Denied')
+    end
+  end
+end

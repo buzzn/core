@@ -1,111 +1,100 @@
-# require 'spec_helper'
+require 'spec_helper'
 
 
-# feature 'Group' do
-#   describe 'try to manage groups', :js do
+feature 'Group' do
+  describe 'try to manage groups', :js do
 
-#     before do
-#       Fabricate(:metering_point_operator, name: 'Discovergy')
-#       @user = Fabricate(:karin)
-#       @location = Fabricate(:gautinger_weg)
-#       @location.metering_point.users << @user
-#       @user.add_role :manager, @location
-#       @pv_karin = Fabricate(:pv_karin)
-#       @user.add_role :manager, @pv_karin
-#       @location.metering_point.devices << @pv_karin
-#       @location.metering_point.electricity_supplier_contracts.first.contracting_party = @user.contracting_party
-#       @location.metering_point.electricity_supplier_contracts.first.save
+    before do
+      @karin = Fabricate(:karin)
+      @karin.contracting_party = Fabricate(:contracting_party)
 
-#       visit '/users/sign_in'
-#       fill_in :user_email,    :with => @user.email
-#       fill_in :user_password, :with => 'testtest'
-#       click_button 'Sign in'
-#     end
+      @mp_pv_karin = Fabricate(:mp_pv_karin)
+      @karin.add_role :manager, @mp_pv_karin
 
-#     it 'will be signed in' do
-#       expect(page).to have_content('Signed in successfully.')
-#     end
+      @contract = Fabricate(:metering_point_operator_contract, organization: Fabricate(:metering_point_operator, name: 'Stadtwerke Augsburg'))
+      @mp_pv_karin.contracts << @contract
+      @mp_pv_karin.users << @karin
 
-#     it 'try to create group', :retry => 3 do
-#       visit "/profiles/#{@user.profile.slug}"
-#       click_on 'Groups'
-#       expect(page).to have_content('Add New Group')
-#       click_on 'Add New Group'
-#       expect(page).to have_content('Description')
+      @pv_karin = Fabricate(:pv_karin)
+      @karin.add_role :manager, @pv_karin
+      @mp_pv_karin.devices << @pv_karin
+      @mp_pv_karin.contracts.metering_point_operators.first.contracting_party = @karin.contracting_party
+      @mp_pv_karin.contracts.metering_point_operators.first.save
 
-#       select2 "#{@location.metering_point.decorate.name}", from: 'group_metering_point_ids'
-#       fill_in :group_name,            with: 'Testgruppe'
-#       fill_in :group_description,     with: 'So eine tolle Testgruppe haben wir hier.'
+      visit '/users/sign_in'
+      fill_in :user_email,    :with => @karin.email
+      fill_in :user_password, :with => '12345678'
+      click_button 'Sign in'
+    end
 
-#       click_button 'submit'
-#       expect(page).to have_content('Assets')
+    it 'will be signed in' do
+      expect(page).to have_content('Signed in successfully.')
+    end
 
-#       click_on 'Members'
-#       expect(page).to have_content('Energy Producers')
+    it 'try to create group', :retry => 3 do
+      visit "/profiles/#{@karin.profile.slug}"
+      click_on 'Create Group'
+      expect(page).to have_content('New Group')
 
-#       click_on 'Assets'
+      find('.group_metering_points').find(:css, "input[id^='s2id_autogen']").set("PV")
+      find(".select2-drop").native.send_keys(:return)
 
-#       click_on 'Contracts'
-#       expect(page).to have_content('Add Metering Point Operator Contract')
+      fill_in :group_name,            with: 'Testgruppe'
+      fill_in :group_description,     with: 'So eine tolle Testgruppe haben wir hier.'
 
-#       click_on 'Comments'
-#       fill_in :comment_body,          with: 'Testcomment?!'
-#       click_on 'Create Comment'
-#       expect(find(".comment")).to have_content('Testcomment?!')
-#     end
+      find(:css, 'input[id=submit]').trigger('click')
 
-#     it 'will fail to create group', :retry => 3 do
-#       visit "/profiles/#{@user.profile.slug}"
-#       click_on 'Groups'
-#       expect(page).to have_content('Add New Group')
-#       click_on 'Add New Group'
-#       expect(page).to have_content('Description')
+      sleep 10 #wait for redirecting
+      expect(page).to have_content('Live Chart')
+    end
 
-#       fill_in :group_name,            with: 'Testgruppe'
-#       fill_in :group_description,     with: 'Das sollte niemals zu sehen sein.'
+    it 'will fail to create group', :retry => 3 do
+      visit "/profiles/#{@karin.profile.slug}"
 
-#       click_button 'submit'
-#       expect(page).to have_content("can't be blank")
+      click_on 'Create Group'
 
-#       select2 "#{@location.metering_point.decorate.name}", from: 'group_metering_point_ids'
-#       fill_in :group_name,            with: ''
-#       fill_in :group_description,     with: 'Das sollte niemals zu sehen sein.'
+      #fill_in :group_name,            with: 'Testgruppe'
+      #fill_in :group_description,     with: 'Das sollte niemals zu sehen sein.'
 
-#       click_button 'submit'
-#       expect(page).to have_content("can't be blank")
+      #click_button 'submit'
+      #expect(page).to have_content("can't be blank")
 
-#       fill_in :group_description,     with: 'So eine tolle Testgruppe haben wir hier.'
-#       fill_in :group_name,            with: 'Testgruppe'
+      #find('.group_metering_points').find(:css, "input[id^='s2id_autogen']").set("PV")
+      #find(".select2-drop").native.send_keys(:return)
+      #fill_in :group_name,            with: ''
+      #fill_in :group_description,     with: 'Das sollte niemals zu sehen sein.'
 
-#       click_button 'submit'
-#       expect(page).to have_content('Assets')
-#     end
+      find(:css, 'input[id=submit]').trigger('click')
+      expect(find(".group_name")).to have_content("can't be blank")
+      expect(find(".group_metering_points")).to have_content("can't be blank")
+    end
 
-#     it 'will not be allowed to create group', :retry => 3 do
-#       @user2 = Fabricate(:user)
-#       @location2 = Fabricate(:location)
+    it 'will not be allowed to create group', :retry => 3 do
+      @user2 = Fabricate(:user)
+      @metering_point = Fabricate(:mp_60009269)
+      @user2.add_role(:manager, @metering_point)
 
-#       find(".nav").click_link "#{@user.name}"
-#       click_on 'Logout'
+      find(".navbar-content").click_link "#{@karin.name}"
+      click_on 'Logout'
 
-#       visit '/users/sign_in'
-#       fill_in :user_email,    :with => @user2.email
-#       fill_in :user_password, :with => 'testtest'
-#       click_button 'Sign in'
+      visit '/users/sign_in'
+      fill_in :user_email,    :with => @user2.email
+      fill_in :user_password, :with => '12345678'
+      click_button 'Sign in'
 
-#       expect(find(".nav")).not_to have_link "Groups"
-#     end
+      expect(page).not_to have_link "Create Group"
+    end
 
-#     it 'will not be allowed to edit group', :retry => 3 do
-#       @user2 = Fabricate(:user)
-#       @location2 = Fabricate(:location)
-#       @group = Fabricate(:group, metering_points: [ @location2.metering_point ])
-#       @user2.add_role :manager, @group
-#       @group.metering_points << @location.metering_point
+    it 'will not be allowed to edit group', :retry => 3 do
+      @user2 = Fabricate(:user)
+      @metering_point = Fabricate(:mp_60009269)
+      @user2.add_role(:manager, @metering_point)
+      @group = Fabricate(:group, metering_points: [ @metering_point ])
+      @user2.add_role :manager, @group
 
-#       visit "/groups/#{@group.slug}"
+      visit "/groups/#{@group.slug}"
 
-#       expect(page).not_to have_link('Edit', :href => edit_group_path(@group))
-#     end
-#   end
-# end
+      expect(page).not_to have_link('Edit', :href => edit_group_path(@group))
+    end
+  end
+end

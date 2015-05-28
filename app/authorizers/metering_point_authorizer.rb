@@ -5,10 +5,11 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
-    user.has_role?(:admin) ||
+    !user.nil? &&
+    (user.has_role?(:admin) ||
     user.has_role?(:manager, resource) ||
     (resource.readable_by_friends? && User.with_role(:manager, resource).first.friend?(user)) ||
-    resource.output?
+    resource.output?)
   end
 
   def updatable_by?(user, options = {})

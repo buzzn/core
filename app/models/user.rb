@@ -46,15 +46,15 @@ class User < ActiveRecord::Base
 
 
   def editable_metering_points
-    MeteringPoint.editable_by_user(self).decorate
+    MeteringPoint.editable_by_user(self).collect(&:decorate)
   end
 
   def editable_groups
-    Group.editable_by_user(self).decorate
+    Group.editable_by_user(self).collect(&:decorate)
   end
 
   def editable_devices
-    Device.editable_by_user(self).decorate
+    Device.editable_by_user(self).collect(&:decorate)
   end
 
   def usable_metering_points

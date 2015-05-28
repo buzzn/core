@@ -1,105 +1,88 @@
-# require 'spec_helper'
+require 'spec_helper'
 
 
-# feature 'Comment' do
-#   describe 'try to manage comments', :js do
+feature 'Comment' do
+  describe 'try to manage comments', :js do
 
-#     before do
-#       @user = Fabricate(:justus)
-#       @fichtenweg8 = Fabricate(:fichtenweg8)
+    before do
+      @user = Fabricate(:user)
+      @metering_point = Fabricate(:mp_pv_karin)
+      @user.add_role(:manager, @metering_point)
 
-#       mp_z1 = Fabricate(:mp_z1)
-#       mp_z2 = Fabricate(:mp_z2)
-#       mp_z3 = Fabricate(:mp_z3)
-#       mp_z4 = Fabricate(:mp_z4)
-#       mp_z5 = Fabricate(:mp_z5)
+      @group = Fabricate(:group, metering_points: [@metering_point])
+      @user.add_role(:manager, @group)
 
-#       mp_z2.update_attribute :parent, mp_z1
-#       mp_z3.update_attribute :parent, mp_z1
-#       mp_z4.update_attribute :parent, mp_z1
-#       mp_z5.update_attribute :parent, mp_z1
+      @user2 = Fabricate(:user)
+      @metering_point2 = Fabricate(:mp_60009269)
+      @user2.add_role(:manager, @metering_point2)
+      @group.metering_points << @metering_point2
 
-#       @fichtenweg8.metering_point = mp_z1
+      @user3 = Fabricate(:user)
 
-#       @device        = Fabricate(:dach_pv_justus)
-#       @user.add_role :manager, @device
-#       @user.add_role :manager, @fichtenweg8
+      visit '/users/sign_in'
+      fill_in :user_email,    :with => @user2.email
+      fill_in :user_password, :with => '12345678'
+      click_button 'Sign in'
+    end
 
-#       @group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [@fichtenweg8.metering_point], assets: [])
-#       @user.add_role :manager, @group_home_of_the_brave
+    it 'will be signed in' do
+      expect(page).to have_content('Signed in successfully.')
+    end
 
-#       @user2 = Fabricate(:user)
-#       @location = Fabricate(:location)
-#       @location.metering_point.group = @group_home_of_the_brave
-#       @user3 = Fabricate(:user)
+    it 'try to create and remove comment', :retry => 3 do
+      visit "/groups/#{@group.slug}"
 
-#       visit '/users/sign_in'
-#       fill_in :user_email,    :with => @user2.email
-#       fill_in :user_password, :with => 'testtest'
-#       click_button 'Sign in'
-#     end
+      fill_in 'comment_body', with: 'Test Comment'
 
-#     it 'will be signed in' do
-#       expect(page).to have_content('Signed in successfully.')
-#     end
+      click_button 'Create comment'
 
-#     it 'try to create and remove comment', :retry => 3 do
-#       visit "/groups/#{@group_home_of_the_brave.slug}"
-#       click_on 'Comments'
+      expect(find(".comment")).to have_content('Test Comment')
 
-#       fill_in 'comment_body', with: 'Test Comment'
+      find(".comment").find(".close").click
 
-#       click_button 'Create Comment'
+      expect(page.has_css?(".comment", visible: false))
+    end
 
-#       expect(find(".comment")).to have_content('Test Comment')
+    it 'will fail to create comment', :retry => 3 do
+      visit "/groups/#{@group.slug}"
 
-#       find(".comment").find(".close").click
+      click_button 'Create comment'
 
-#       expect(page.has_css?(".comment", visible: false))
-#     end
+      expect(find(".comments-all")).not_to have_selector('comment')
+    end
 
-#     it 'will fail to create comment', :retry => 3 do
-#       visit "/groups/#{@group_home_of_the_brave.slug}"
-#       click_on 'Comments'
+    it 'will not be allowed to remove comment', :retry => 3 do
+      visit "/groups/#{@group.slug}"
 
-#       click_button 'Create Comment'
+      fill_in 'comment_body', with: 'Test Comment'
 
-#       expect(find(".comments-all")).not_to have_selector('comment')
-#     end
+      click_button 'Create comment'
 
-#     it 'will not be allowed to remove comment', :retry => 3 do
-#       visit "/groups/#{@group_home_of_the_brave.slug}"
-#       click_on 'Comments'
+      expect(find(".comments-all")).to have_content('Test Comment')
 
-#       fill_in 'comment_body', with: 'Test Comment'
+      find(".navbar-content").click_link "#{@user2.name}"
+      click_on 'Logout'
 
-#       click_button 'Create Comment'
+      visit '/users/sign_in'
+      fill_in :user_email,    :with => @user3.email
+      fill_in :user_password, :with => '12345678'
+      click_button 'Sign in'
+      expect(page).to have_content('Signed in successfully.')
 
-#       expect(find(".comments-all")).to have_content('Test Comment')
+      visit "/groups/#{@group.slug}"
 
-#       visit "/profiles/#{@user2.profile.slug}"  #nessessary to enable matching to .nav
-#       find(".nav").click_link "#{@user2.name}"
-#       click_on 'Logout'
-#       visit '/users/sign_in'
-#       fill_in :user_email,    :with => @user3.email
-#       fill_in :user_password, :with => 'testtest'
-#       click_button 'Sign in'
-#       expect(page).to have_content('Signed in successfully.')
+      expect(find(".comments-all")).to have_content('Test Comment')
 
-#       visit "/groups/#{@group_home_of_the_brave.slug}"
-#       click_on 'Comments'
+      expect(find(".comments-all")).not_to have_selector('.close')
+    end
 
-#       expect(find(".comments-all")).to have_content('Test Comment')
+    it 'will not be allowed to create comment', :retry => 3 do
+      find(".navbar-content").click_link "#{@user2.name}"
+      click_on 'Logout'
 
-#       expect(find(".comments-all")).not_to have_selector('.close')
-#     end
+      visit "/groups/#{@group.slug}#comments"
 
-#     it 'will not be allowed to create comment', :retry => 3 do
-#       find(".nav").click_link "#{@user2.name}"
-#       click_on 'Logout'
-#       visit "/groups/#{@group_home_of_the_brave.slug}#comments"
-
-#       expect(find(".comments")).not_to have_selector(".comment-form")
-#     end
-#   end
-# end
+      expect(find(".comments-all")).not_to have_selector(".new_comment")
+    end
+  end
+end

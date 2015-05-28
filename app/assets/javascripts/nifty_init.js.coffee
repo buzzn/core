@@ -1,5 +1,4 @@
 ready = ->
-  console.log 'NIFTY INIT'
 
   $('#mainnav-menu').metisMenu();
 
