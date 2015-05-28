@@ -543,6 +543,9 @@ $(".dashboard-chart").ready ->
 
 
 
+
+
+
 #code for group
 $(".group-chart").ready ->
   chart = undefined
@@ -551,94 +554,106 @@ $(".group-chart").ready ->
   url = '/groups/' + group_id + '/chart?resolution=day_to_minutes'
   $.ajax({url: url, async: true, dataType: 'json'})
     .success (data) ->
-      console.log "success"
 
-      chart = new Highcharts.Chart(
-        chart:
-          type: 'areaspline'
-          renderTo: 'chart-container-' + group_id
-          backgroundColor:'rgba(255, 255, 255, 0.0)'
-          width: width
-          spacingBottom: 20
-          spacingTop: 10
-          spacingLeft: 20
-          spacingRight: 20
-        colors: ['#5FA2DD', '#F76C51']
-        exporting:
-          enabled: false
-        legend:
-          enabled: true
-        title:
-          margin: 0
-          text: ""
-        credits:
-          enabled: false
-        loading:
-          hideDuration: 800
-          showDuration: 800
-          labelStyle:
-            color: 'black'
-            'font-size': '20pt'
-        xAxis:
-          lineWidth: 1
-          tickWidth: 1
-          type: 'datetime'
-          startOnTick: false
-          endOnTick: false
-          min: beginningOfDay(data[0].data[0][0])
-          max: endOfDay(data[0].data[0][0])
-          labels:
+      if data[0].data[0] == undefined
+        data[0].data[0] = [new Date(), 0] #TODO: Search for last data
+
+      if chart == undefined
+        chart = new Highcharts.Chart(
+          chart:
+            type: 'areaspline'
+            renderTo: 'chart-container-' + group_id
+            backgroundColor:'rgba(255, 255, 255, 0.0)'
+            width: width
+            spacingBottom: 20
+            spacingTop: 10
+            spacingLeft: 20
+            spacingRight: 20
+          colors: ['#5FA2DD', '#F76C51']
+          exporting:
+            enabled: false
+          legend:
             enabled: true
-            style:
-              color: '#000'
           title:
-            text: "Zeit"
-            enabled: true
-            style: { "color": "#000", "fontWeight": "bold"}
-        yAxis:
-          gridLineWidth: 0
-          min: 0
-          labels:
-            enabled: true
-            style:
-              color: '#000'
-            format: "{value} W"
-          title:
-            enabled: true
-            text: "Leistung"
-            style: { "color": "#000", "fontWeight": "bold"}
+            margin: 0
+            text: ""
+          credits:
+            enabled: false
+          loading:
+            hideDuration: 800
+            showDuration: 800
+            labelStyle:
+              color: 'black'
+              'font-size': '20pt'
+          xAxis:
+            lineWidth: 1
+            tickWidth: 1
+            type: 'datetime'
+            startOnTick: false
+            endOnTick: false
+            #min: beginningOfDay(data[0].data[0][0])
+            #max: endOfDay(data[0].data[0][0])
+            labels:
+              enabled: true
+              style:
+                color: '#000'
+            title:
+              text: "Zeit"
+              enabled: true
+              style: { "color": "#000", "fontWeight": "bold"}
+          yAxis:
+            gridLineWidth: 0
+            min: 0
+            labels:
+              enabled: true
+              style:
+                color: '#000'
+              format: "{value} W"
+            title:
+              enabled: true
+              text: "Leistung"
+              style: { "color": "#000", "fontWeight": "bold"}
+          plotOptions:
+            series:
+              fillOpacity: 0.5
+              events:
+                cursor: 'pointer'
+                click: (event) ->
+                  zoomInGroup(event.point.x)
+            column:
+              stacking: 'normal'
+          tooltip:
+            shared: true
+            pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
+            dateTimeLabelFormats:
+              millisecond:"%e.%b, %H:%M:%S.%L",
+              second:"%e.%b, %H:%M:%S",
+              minute:"%e.%b, %H:%M",
+              hour:"%e.%b, %H:%M",
+              day:"%e.%b.%Y",
+              week:"Week from %e.%b.%Y",
+              month:"%B %Y",
+              year:"%Y"
+          series: data
+        )
+        # chart.addSeries(
+        #   name: data[0].name
+        #   data: data[0].data
+        # )
+        # chart.addSeries(
+        #   name: data[1].name
+        #   data: data[1].data
+        # )
 
-        plotOptions:
-          series:
-            fillOpacity: 0.5
-            events:
-              cursor: 'pointer'
-              click: (event) ->
-                zoomInGroup(event.point.x)
-          column:
-            stacking: 'normal'
-        tooltip:
-          shared: true
-          pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
-          dateTimeLabelFormats:
-            millisecond:"%e.%b, %H:%M:%S.%L",
-            second:"%e.%b, %H:%M:%S",
-            minute:"%e.%b, %H:%M",
-            hour:"%e.%b, %H:%M",
-            day:"%e.%b.%Y",
-            week:"Week from %e.%b.%Y",
-            month:"%B %Y",
-            year:"%Y"
-        series: data
-      )
+        console.log data
 
-      console.log beginningOfDay(data[0].data[0][0])
-      console.log endOfDay(data[0].data[0][0])
+        console.log chart.series[0].data
 
+        chart_data_min_x = chart.series[0].data[0].x
+        checkIfPreviousDataExistsGroup()
+        checkIfNextDataExistsGroup()
     .error (jqXHR, textStatus, errorThrown) ->
-      console.log "error"
       console.log textStatus
-
 
 
 
