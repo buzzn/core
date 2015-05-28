@@ -636,22 +636,14 @@ $(".group-chart").ready ->
               year:"%Y"
           series: data
         )
-        # chart.addSeries(
-        #   name: data[0].name
-        #   data: data[0].data
-        # )
-        # chart.addSeries(
-        #   name: data[1].name
-        #   data: data[1].data
-        # )
 
         console.log data
-
         console.log chart.series[0].data
 
         chart_data_min_x = chart.series[0].data[0].x
         checkIfPreviousDataExistsGroup()
         checkIfNextDataExistsGroup()
+
     .error (jqXHR, textStatus, errorThrown) ->
       console.log textStatus
 
