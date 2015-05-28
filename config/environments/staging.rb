@@ -25,8 +25,8 @@ Buzzn::Application.configure do
   config.serve_static_files = false
 
   # Compress JavaScripts and CSS.
-  config.assets.compress = true
-  config.assets.js_compressor  = :uglifier # Uglifier.new(mangle: false)
+  config.assets.compress = false
+  # config.assets.js_compressor  = :uglifier # Uglifier.new(mangle: false)
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
