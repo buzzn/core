@@ -580,6 +580,30 @@ $(".group-chart").ready ->
             color: 'black'
             'font-size': '20pt'
 
+
+
+
+        plotOptions:
+          series:
+            fillOpacity: 0.5
+            events:
+              cursor: 'pointer'
+              click: (event) ->
+                zoomInGroup(event.point.x)
+          column:
+            stacking: 'normal'
+        tooltip:
+          shared: true
+          pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
+          dateTimeLabelFormats:
+            millisecond:"%e.%b, %H:%M:%S.%L",
+            second:"%e.%b, %H:%M:%S",
+            minute:"%e.%b, %H:%M",
+            hour:"%e.%b, %H:%M",
+            day:"%e.%b.%Y",
+            week:"Week from %e.%b.%Y",
+            month:"%B %Y",
+            year:"%Y"
         series: data
       )
 
