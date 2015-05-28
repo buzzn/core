@@ -554,13 +554,22 @@ $(".group-chart").ready ->
   url = '/groups/' + group_id + '/chart?resolution=day_to_minutes'
   $.ajax({url: url, async: true, dataType: 'json'})
     .success (data) ->
-      console.log('success')
-      chart = new Highcharts.Chart(series: data)
+
+      console.log "success"
+
+      chart = new Highcharts.Chart(
+        chart:
+          type: 'areaspline'
+          renderTo: 'chart-container-' + group_id
+
+        series: data
+      )
+
       console.log data
       console.log chart.series[0].data
 
     .error (jqXHR, textStatus, errorThrown) ->
-      console.log('error')
+      console.log "error"
       console.log textStatus
 
 
