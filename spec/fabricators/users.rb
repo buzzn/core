@@ -4,7 +4,7 @@ Fabricator :user do
   email             { FFaker::Internet.email }
   password          '12345678'
   profile           { Fabricate(:profile) }
-  after_create { |user | user.confirm! }
+  after_create { |user | user.confirm }
 end
 
 
