@@ -581,7 +581,18 @@ $(".group-chart").ready ->
             'font-size': '20pt'
 
 
-
+        yAxis:
+          gridLineWidth: 0
+          min: 0
+          labels:
+            enabled: true
+            style:
+              color: '#000'
+            format: "{value} W"
+          title:
+            enabled: true
+            text: "Leistung"
+            style: { "color": "#000", "fontWeight": "bold"}
 
         plotOptions:
           series:
