@@ -632,9 +632,8 @@ $(".group-chart").ready ->
         series: data
       )
 
-      console.log data
-      console.log data[0].data[0][0]
-      console.log chart.series[0].data
+      console.log beginningOfDay(data[0].data[0][0])
+      console.log endOfDay(data[0].data[0][0])
 
     .error (jqXHR, textStatus, errorThrown) ->
       console.log "error"
