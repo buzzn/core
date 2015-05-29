@@ -80,12 +80,12 @@ module CalcVirtualMeteringPoint
     data.each do |value|
       if resolution_format == :hour_to_minutes || resolution_format == :day_to_minutes
         day = time.day
-        hour = value[:_id][:hourly] + offset
+        hour = (value[:_id][:hourly] + offset) % 24
         minute = value[:_id][:minutely]
         timestamp = Time.new(year, month, day, hour, minute, 0)
       elsif resolution_format == :day_to_hours
         day = time.day
-        hour = value[:_id][:hourly] + offset
+        hour = (value[:_id][:hourly] + offset) % 24
         timestamp = Time.new(year, month, day, hour, 0, 0)
       elsif resolution_format == :month_to_days
         day = value[:_id][:dayly]
