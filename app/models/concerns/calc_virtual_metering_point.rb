@@ -82,17 +82,17 @@ module CalcVirtualMeteringPoint
         day = time.day
         hour = value[:_id][:hourly]
         minute = value[:_id][:minutely]
-        timestamp = Time.new(year, month, day, hour, minute, 0)
+        timestamp = ActiveSupport::TimeZone[timezone].local(year, month, day, hour, minute, 0)
       elsif resolution_format == :day_to_hours
         day = time.day
         hour = value[:_id][:hourly]
-        timestamp = Time.new(year, month, day, hour, 0, 0)
+        timestamp = ActiveSupport::TimeZone[timezone].local(year, month, day, hour, 0, 0)
       elsif resolution_format == :month_to_days
         day = value[:_id][:dayly]
-        timestamp = Time.new(year, month, day, 0, 0, 0)
+        timestamp = ActiveSupport::TimeZone[timezone].local(year, month, day, 0, 0, 0)
       elsif resolution_format == :year_to_months
         month = value[:_id][:monthly]
-        timestamp = Time.new(year, month, 1, 0, 0, 0)
+        timestamp = ActiveSupport::TimeZone[timezone].local(year, month, 1, 0, 0, 0)
       end
 
 
