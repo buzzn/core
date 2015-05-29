@@ -97,9 +97,9 @@ class MeteringPointsController < ApplicationController
       when 'day_to_hours'
         @expires_in = 1.hour
       when 'day_to_minutes'
-        @expires_in = 1.minute
+        @expires_in = nil
       when 'hour_to_minutes'
-        @expires_in = 1.minute
+        @expires_in = nil
       else
         @expires_in = 10.seconds
       end
