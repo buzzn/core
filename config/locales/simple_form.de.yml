@@ -49,6 +49,7 @@ de:
         meter_type: Zählertyp
         virtual: Virtueller Zählpunkt
         group: Zu eigener Gruppe hinzufügen
+        readable: Sichtbar für
       device:
         image: Bild
         mode: Modus
@@ -185,6 +186,10 @@ de:
         mode:
           in: 'Bezug'
           out: 'Produktion'
+        readable:
+          me: mich
+          friends: meine Freunde
+          world: alle
       contract:
         mode:
           electricity_supplier_contract: Stromliefervertrag
