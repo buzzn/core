@@ -9,7 +9,10 @@ Buzzn::Application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  devise_for :users, controllers: { registrations: 'users/registrations' }
+  devise_for :users, controllers: {
+    registrations: 'users/registrations',
+    invitations: 'users/invitations'
+  }
 
   resources :profiles do
     member do
