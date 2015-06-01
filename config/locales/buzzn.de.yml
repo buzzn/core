@@ -218,6 +218,8 @@ de:
   search_project: Projekt Suchen
   place: Ort
   general_information: Allgemeine Informationen
+  invoice_addresses: Rechnungsadressen
+  add_bank_account: Bankverbindung hinzufügen
 
   area: Fläche
   performance_and_yield: Leistung und Ertrag
@@ -516,7 +518,7 @@ de:
   stream_info_profile: "Hier findest Du alle Aktivitäten und persönlichen Benachrichtigungen bzgl. des Energieverhaltens des angezeigten Benutzers."
   out_devices_info_group: "Hier findest Du alle Geräte, die für diese Gruppe den Strom erzeugen."
   group_manager_info: "Die Gruppenadmins verwalten diese Gruppe. Sie entscheiden z.B. wer in die Gruppe aufgenommen wird und haben Zugriff auf die Stromerzeugungsanlagen."
-
+  contracts_info_contracting_party: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Vertragspartner zugeordnet sind."
 
 
 

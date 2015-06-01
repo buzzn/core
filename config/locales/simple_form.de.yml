@@ -196,6 +196,10 @@ de:
           electricity_purchase_contract: Stromabnahmevertrag
           metering_point_operator_contract: Messstellenbetreiber Vertrag
           servicing_contract: Abwicklungsvertrag
+      contracting_party:
+        legal_entity:
+          natural_person: Natürliche Person
+          company: Firma
 
 
       meter:

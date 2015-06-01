@@ -42,10 +42,12 @@
 //= require moment
 //= require bootstrap3-typeahead.min
 //= require cookie_alert
+//= require gmaps/google
 
 //= require nifty_init
 
 //= require global
+//= require addresses
 //= require metering_points
 //= require groups
 //= require bubble_tooltip
