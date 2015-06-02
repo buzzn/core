@@ -1,6 +1,6 @@
 class AddressesController < ApplicationController
   before_filter :authenticate_user!
-  respond_to :html, :js
+  respond_to :html, :json, :js
 
 
   def new
@@ -43,6 +43,27 @@ class AddressesController < ApplicationController
     authorize_action_for @address
     @address.destroy
     respond_with current_user.profile
+  end
+
+  def index
+    @addresses = Address.all
+    respond_to do |format|
+      format.json {
+        @addresses = Address.all
+        @addresses_in = @addresses.collect{|address| address if address.metering_point && address.metering_point.input?}.compact.uniq{|address| address.longitude && address.latitude}
+        @addresses_out = @addresses.collect{|address| address if address.metering_point && address.metering_point.output?}.compact.uniq{|address| address.longitude && address.latitude}
+        result = []
+        @addresses_in.each do |address|
+          result << { :lat => address.latitude, :lng => address.longitude, :infowindow => address.metering_point.managers.first.name}
+        end
+        render json: result.to_json
+      }
+      format.html
+    end
+  end
+
+  def markers
+
   end
 
 

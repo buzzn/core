@@ -55,11 +55,11 @@ de:
   metering_points: Zählpunkte
   add_metering_point: Zählpunkt hinzufügen
 
-  meters: Zähler
-  new_meter: neuer Zähler
-  add_new_meter: neuer Zähler hinzufügen
-  add_meter: Zähler hinzufügen
-  create_meter: Zähler erstellen
+  meters: Messgerät
+  new_meter: neuers Messgerät
+  add_new_meter: neues Messgerät hinzufügen
+  add_meter: Messgerät hinzufügen
+  create_meter: Messgerät erstellen
 
   landis_gyr: 'Landis & Gyr'
   goerlitz: 'Görlitz'
@@ -218,6 +218,8 @@ de:
   search_project: Projekt Suchen
   place: Ort
   general_information: Allgemeine Informationen
+  invoice_addresses: Rechnungsadressen
+  add_bank_account: Bankverbindung hinzufügen
 
   area: Fläche
   performance_and_yield: Leistung und Ertrag
@@ -377,7 +379,7 @@ de:
   belongs_to_metering_point: Gehört zum Zählpunkt
   new_asset: Neues Bild
   a_metering_point: einen Zählpunkt
-  meter: Zähler
+  meter: Messgerät
   register: Zählwerk
   registers: Zählwerke
   add_register: Zählwerk hinzufügen
@@ -415,7 +417,7 @@ de:
 
   obis_index: OBIS Kennzahlen
   variable_tariff: Variabler Tarif
-  edit_meter: Zähler bearbeiten
+  edit_meter: Messgerät bearbeiten
   equipments: Zubehör
   add_equipment: Zubehör hinzufügen
   remove_equipment: Zubehör entfernen
@@ -469,7 +471,7 @@ de:
   create_contract: Vertrag erstellen
   prev: Zurück
   next: Weiter
-  zoom_out: Rauszoomen
+  zoom_out: Zoom out
   help: Hilfe
   remove_from_dashboard: Vom Dashboard entfernen
   display_in_series: Im Diagramm anzeigen
@@ -491,6 +493,8 @@ de:
   group_managers: Gruppenadmins
   not_deletable: Nicht löschbar
   other_organization: Andere Firma
+  no_address: Ohne Adresse
+
 
   contracts_info: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."
   bank_account_info: "Um Deine Verträge zu bezahlen musst Du einen Bank Account anlegen. "
@@ -503,7 +507,7 @@ de:
   devices_info: "Hier kannst Du Deine Geräte, die mit Strom zu tun haben, anlegen und deinem Strombezug bzw. deiner Stromerzeugung hinzufügen."
   members_info_metering_point: "Mitglieder sind hier alle Leute, die diesem Zählpunkt zugeordnet sind, also z.B. Mitbewohner einer Wohnung oder eines Hauses."
   address_info: "Jeder Zählpunkt hat eine Adresse, z.B. ist das die Adresse des Hauses oder der Wohnung, in der sich der Zählpunkt befindet."
-  meters_info: "Der Zähler ist das Gerät, das den Stromverbrauch bzw. die Stromerzeugung misst, welche dem Zählpunkt zugeordnet ist."
+  meters_info: "Das Messgerät (oder auch 'Zähler') ist das Gerät, das den Stromverbrauch bzw. die Stromerzeugung misst, welche dem Zählpunkt zugeordnet ist."
   contracts_info_metering_point: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Zählpunkt zugeordnet sind."
   groups_info: "Jeder Stromnehmer kann sich mit seinem Stromverbrauch einer Gruppe zuordnen, von deren Stromgeber(n) er dann Strom bekommt."
   metering_points_info: "Ein Zählpunkt ist die Bezeichnung für die Messstelle, für die der Strom gemessen wird, z.B. „Keller“ oder „Dachboden“. In den meisten Fällen ist der Zählpunkt gleichbedeutend mit dem Haus oder der Wohnung, in der er sich befindet."
@@ -514,7 +518,7 @@ de:
   stream_info_profile: "Hier findest Du alle Aktivitäten und persönlichen Benachrichtigungen bzgl. des Energieverhaltens des angezeigten Benutzers."
   out_devices_info_group: "Hier findest Du alle Geräte, die für diese Gruppe den Strom erzeugen."
   group_manager_info: "Die Gruppenadmins verwalten diese Gruppe. Sie entscheiden z.B. wer in die Gruppe aufgenommen wird und haben Zugriff auf die Stromerzeugungsanlagen."
-
+  contracts_info_contracting_party: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Vertragspartner zugeordnet sind."
 
 
 
