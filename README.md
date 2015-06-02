@@ -10,13 +10,19 @@
     phantomjs
     imagemagick
     graphviz
-    gem install bundler
-    gem install mailcatcher
-    gem install slanger
+    sudo apt-get install postgresql postgresql-contrib
+    create superuser on psql: sudo -u postgres createuser -s -d thomas
+    sudo apt-get install mongodb
+    sudo apt-get install apache2
+    ../.rbenv/versions/2.2.2/bin/gem install slanger
+
+    empfohlen: apt-get install git-cola
 
 ## Setup Rails Project
     git clone git@github.com:ffaerber/buzzn.git
     cd buzzn
+    gem install bundler
+    gem install mailcatcher
     bundle install
     bundle exec rake db:create
 
