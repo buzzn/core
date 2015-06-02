@@ -16,7 +16,8 @@
     sudo apt-get install apache2
     ../.rbenv/versions/2.2.2/bin/gem install slanger
 
-    empfohlen: apt-get install git-cola
+    recommended: apt-get install git-cola
+    start git-cola with LANG=c && git-cola to skip strange german translations of push etc.
 
 ## Setup Rails Project
     git clone git@github.com:ffaerber/buzzn.git
