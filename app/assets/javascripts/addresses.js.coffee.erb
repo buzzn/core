@@ -6,7 +6,6 @@ $("#map").ready ->
   }, ->
     $.ajax({url: '/addresses.json', dataType: 'json'})
       .success (data) ->
-        console.log data
         markers = handler.addMarkers(data)
         handler.bounds.extendWith markers
         handler.fitMapToBounds()
