@@ -3,7 +3,7 @@
   = render 'layouts/head'
 
   %body
-    = include_gon
+    = include_gon(:init => true)
 
     #myModal.modal.fade.in{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
       .modal-dialog

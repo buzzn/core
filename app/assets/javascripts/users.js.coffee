@@ -3,9 +3,8 @@ $("#content-container").ready ->
   Pusher.ws_port = 8080
   Pusher.wss_port = 8080
   pusher = new Pusher($(".pusher").data('pusherkey'))
-  if gon && gon.current_user_id != undefined
-    channel = pusher.subscribe("user_#{gon.current_user_id}")
-    console.log 'subscribed to ' + gon.current_user_id
+  if gon && gon.global.current_user_id != undefined
+    channel = pusher.subscribe("user_#{gon.global.current_user_id}")
     channel.bind "new_notification", (notification) ->
       if notification.type == 'primary'
         icon = 'fa fa-star fa-lg'
