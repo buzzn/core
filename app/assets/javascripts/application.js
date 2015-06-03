@@ -45,12 +45,14 @@
 //= require gmaps/google
 
 //= require nifty_init
+//= require nifty.min
 
 //= require global
 //= require addresses
 //= require metering_points
 //= require groups
 //= require bubble_tooltip
+//= require users
 
 
 
