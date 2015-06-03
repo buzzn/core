@@ -14,6 +14,8 @@
     create superuser on psql: sudo -u postgres createuser -s -d thomas
     sudo apt-get install mongodb
     sudo apt-get install apache2
+    mkdir slanger
+    cd slanger
     ../.rbenv/versions/2.2.2/bin/gem install slanger
 
     recommended: apt-get install git-cola
@@ -42,11 +44,14 @@
 
 ## Start Slanger(OpenSource Pusher.com)
     from outside the rails project folder
+    cd slanger
     slanger --app_key 83f4f88842ce2dc76b7b --secret 7c4cfa157cd37a4b35bb
 
 ## Sidekiq Start
     redis-server
+    remark: probably necessary to reinit database (bundle exec rake db:init) to let sidekiq run properly
     bundle exec rake sidekiq:start
+    remark: you must be logged in with admin rights to visit:
     http://localhost:3000/sidekiq
 
 ## Sidekiq Kill
