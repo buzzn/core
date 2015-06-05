@@ -142,10 +142,31 @@ class GroupsController < ApplicationController
       if !metering_point.smart?
         next
       end
-      if metering_point.mode == "in"
-        @metering_points_in << metering_point.id
+
+      if metering_point.virtual
+        operands_plus = FormulaPart.where(metering_point_id: metering_point.id).where(operator: "+").collect(&:operand)
+        operands_plus.each do |metering_point_plus|
+          if metering_point_plus.mode == "in"
+            @metering_points_in << metering_point_plus.id
+          else
+            @metering_points_out << metering_point_plus.id
+          end
+        end
+
+        operands_minus = FormulaPart.where(metering_point_id: metering_point.id).where(operator: "-").collect(&:operand)
+        operands_minus.each do |metering_point_minus|
+          if metering_point_minus.mode == "in"
+            @metering_points_in << metering_point_minus.id
+          else
+            @metering_points_out << metering_point_minus.id
+          end
+        end
       else
-        @metering_points_out << metering_point.id
+        if metering_point.mode == "in"
+          @metering_points_in << metering_point.id
+        else
+          @metering_points_out << metering_point.id
+        end
       end
     end
 
