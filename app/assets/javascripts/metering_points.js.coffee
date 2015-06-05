@@ -1156,13 +1156,15 @@ setChartToLinechart = (displaySeriesName) ->
 
 #ticker
 readingsSLP = []
+readingsSEP_PV = []
+readingsSEP_BHKW = []
 timers = []
 
 $(".metering_point").ready ->
   metering_point_id = $(this).attr('id').split('_')[2]
   metering_point = $(this)
   if $(this).find(".metering_point-ticker").length != 0
-    if $(this).find(".metering_point-ticker").data('slp') == false
+    if $(this).find(".metering_point-ticker").data('fake') == false
       $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
         .success (data) ->
           if data.online == true || data.virtual == true
@@ -1192,10 +1194,11 @@ $(".metering_point").ready ->
           metering_point.find(".power-ticker").data('bs.popover').options.content = moment(reading.timestamp).format("DD.MM.YYYY HH:mm:ss")
           metering_point.find(".power-ticker").css({opacity: 1})
     else
-      getSLPValue(metering_point_id)
+      source = $(this).find(".metering_point-ticker").data('source')
+      getFakeValue(metering_point_id, source)
       timers.push(
         window.setInterval(->
-          setSLPValue(metering_point)
+          setFakeValue(metering_point, source)
           return
         , 1000*2)
         )
@@ -1222,20 +1225,34 @@ calculate_power = (last_readings) =>
 
 
 
-getSLPValue = (metering_point_id) ->
-  $.getJSON "/metering_points/" + metering_point_id + "/latest_slp", (data) ->
-    readingsSLP = data
+getFakeValue = (metering_point_id, source) ->
+  $.getJSON "/metering_points/" + metering_point_id + "/latest_fake_data", (data) ->
+    if source == 'slp'
+      readingsSLP = data
+    else if source == 'sep_pv'
+      readingsSEP_PV = data
+    else
+      readingsSEP_BHKW = data
 
-setSLPValue = (metering_point) ->
-  if Date.parse(readingsSLP[1][0]) < new Date()
-    getSLPValue()
-  metering_point.find(".power-ticker").html interpolateSLPkW().toFixed(0)
+setFakeValue = (metering_point, source) ->
+  if source == 'slp'
+    if Date.parse(readingsSLP[1][0]) < new Date()
+      getFakeValue('slp')
+    metering_point.find(".power-ticker").html interpolateFakekW(readingsSLP).toFixed(0)
+  else if source == 'sep_pv'
+    if Date.parse(readingsSEP_PV[1][0]) < new Date()
+      getFakeValue('sep_pv')
+    metering_point.find(".power-ticker").html interpolateFakekW(readingsSEP_PV).toFixed(0)
+  else
+    if Date.parse(readingsSEP_BHKW[1][0]) < new Date()
+      getFakeValue('sep_BHKW')
+    metering_point.find(".power-ticker").html interpolateFakekW(readingsSEP_BHKW).toFixed(0)
 
-interpolateSLPkW = ->
-  firstTimestamp = readingsSLP[0][0]
-  firstValue = readingsSLP[0][1]
-  lastTimestamp = readingsSLP[1][0]
-  lastValue = readingsSLP[1][1]
+interpolateFakekW = (data_arr) ->
+  firstTimestamp = data_arr[0][0]
+  firstValue = data_arr[0][1]
+  lastTimestamp = data_arr[1][0]
+  lastValue = data_arr[1][1]
   averagePower = (lastValue - firstValue)/0.25*1000
   return getRandomPower(averagePower)
 

@@ -146,6 +146,28 @@ class MeteringPoint < ActiveRecord::Base
     !self.is_dashboard_metering_point
   end
 
+  def slp?
+    self.input? && !self.smart?
+  end
+
+  def pv?
+    self.output? && !self.smart? && self.devices.any? && self.devices.first.primary_energy == 'sun'
+  end
+
+  def bhkw_or_else?
+    self.output? && !self.smart?
+  end
+
+  def fake_source
+    if self.slp?
+      "slp"
+    elsif self.pv?
+      "sep_pv"
+    elsif self.bhkw_or_else?
+      "sep_bhkw"
+    end
+  end
+
 
 
 
@@ -262,17 +284,23 @@ class MeteringPoint < ActiveRecord::Base
         return data[0]
       end
     else
-      slp_or_smart(self.id, resolution_format, containing_timestamp)
+      fake_or_smart(self.id, resolution_format, containing_timestamp)
     end
   end
 
 
-  def slp_or_smart(metering_point_id, resolution_format, containing_timestamp)
+  def fake_or_smart(metering_point_id, resolution_format, containing_timestamp)
     metering_point = MeteringPoint.find(metering_point_id)
     if metering_point.meter && metering_point.meter.smart
       convert_to_array(Reading.aggregate(resolution_format, [metering_point.id], containing_timestamp), resolution_format) # smart
     else
-      convert_to_array(Reading.aggregate(resolution_format, nil, containing_timestamp), resolution_format) # SLP
+      if self.pv?
+        convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format) # SEP
+      elsif self.bhkw_or_else?
+        convert_to_array(Reading.aggregate(resolution_format, ['sep_bhkw'], containing_timestamp), resolution_format) # SEP
+      elsif self.slp?
+        convert_to_array(Reading.aggregate(resolution_format, ['slp'], containing_timestamp), resolution_format) # SLP
+      end
     end
   end
 

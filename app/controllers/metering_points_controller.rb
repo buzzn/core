@@ -118,8 +118,15 @@ class MeteringPointsController < ApplicationController
   end
 
 
-  def latest_slp
-    render json: Reading.latest_slp.to_json
+  def latest_fake_data
+    @metering_point = MeteringPoint.find(params[:id])
+    if @metering_point.slp?
+      render json: Reading.latest_fake_data('slp').to_json
+    elsif @metering_point.pv?
+      render json: Reading.latest_fake_data('sep_pv').to_json
+    elsif @metering_point.bhkw_or_else?
+      render json: Reading.latest_fake_data('sep_bhkw').to_json
+    end
   end
 
 

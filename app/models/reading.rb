@@ -17,7 +17,7 @@ class Reading
   index({ timestamp: 1 })
 
 
-  def self.aggregate(resolution_format, metering_point_ids=nil, containing_timestamp=nil)
+  def self.aggregate(resolution_format, metering_point_ids=['slp'], containing_timestamp=nil)
     resolution_formats = {
       year_to_months:   ['year', 'month'],
       month_to_days:    ['month', 'dayOfMonth'],
@@ -78,12 +78,16 @@ class Reading
                 }
               }
             }
-    if metering_point_ids
-      metering_point_or_slp = { metering_point_id: { "$in" => metering_point_ids } }
+    if metering_point_ids[0] == 'slp'
+      metering_point_or_fake = { source: { "$in" => ['slp'] } }
+    elsif metering_point_ids[0] == 'sep_pv'
+      metering_point_or_fake = { source: { "$in" => ['sep_pv'] } }
+    elsif metering_point_ids[0] == 'sep_bhkw'
+      metering_point_or_fake = { source: { "$in" => ['sep_bhkw'] } }
     else
-      metering_point_or_slp = { source: { "$in" => ['slp'] } }
+      metering_point_or_fake = { metering_point_id: { "$in" => metering_point_ids } }
     end
-    match["$match"].merge!(metering_point_or_slp)
+    match["$match"].merge!(metering_point_or_fake)
     pipe << match
 
 
@@ -125,7 +129,7 @@ class Reading
             }
     formats = {_id: {}}
 
-    if metering_point_ids && metering_point_ids.size > 1
+    if metering_point_ids.size > 1
       formats[:_id].merge!({ "metering_point_id" =>  "$metering_point_id" })
     end
 
@@ -162,7 +166,7 @@ class Reading
 
 
     # group
-    if metering_point_ids && metering_point_ids.size > 1
+    if metering_point_ids.size > 1
       group = {
                 "$group" => {
                   avgPower:      { "$sum"  => "$avgPower" },
@@ -257,9 +261,9 @@ class Reading
     return Reading.collection.aggregate(pipe).first
   end
 
-  def self.latest_slp
+  def self.latest_fake_data(source)
     values = []
-    readings = Reading.where(:timestamp.gte => (Time.now - 15.minutes), :timestamp.lt => (Time.now + 15.minutes), source: "slp")
+    readings = Reading.where(:timestamp.gte => (Time.now - 15.minutes), :timestamp.lt => (Time.now + 15.minutes), source: source)
     if readings.any?
       firstTimestamp = readings.first.timestamp.to_i*1000
       firstValue = readings.first.watt_hour/10000000000.0
