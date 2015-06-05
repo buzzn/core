@@ -200,7 +200,12 @@
             %small
               %i.small-info-circle.fa.fa-info-circle{'data-content' => t('contracts_info_group')}
         .row
-          = render @group.contracts
+          .contracts
+            = render @group.contracts
+          .row
+            .col-lg-12.text-center
+              = @group.new_contract
+
 
 
 

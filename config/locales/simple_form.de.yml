@@ -42,6 +42,8 @@ de:
         newsletter_notifications: Newsletter Benachrichtigungen
         location_notifications: Standort Benachrichtigungen
         group_notifications: Gruppen Benachrichtigungen
+        about_me: Über mich
+        user_name: Benutzername
       metering_point:
         uid: Zählpunkt-ID
         address_addition: Addresszusatz
@@ -109,6 +111,7 @@ de:
         name: Name
         website: Webseite
         description: Beschreibung
+        metering_points: Zählpunkte
 
       meter:
         manufacturer_name: Herstellername
@@ -187,7 +190,7 @@ de:
           in: 'Bezug'
           out: 'Produktion'
         readable:
-          me: mich
+          me: nur für mich
           friends: meine Freunde
           world: alle
       contract:

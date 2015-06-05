@@ -7,6 +7,6 @@
       = render 'groups/form_fields', f: f
       = f.association :metering_points, collection: MeteringPoint.editable_by_user(current_user).outputs.without_group, include_blank: false, input_html: { class: 'select2'}
       .modal-footer
-        = f.button :submit, id: 'submit', class: 'btn btn-success'
+        = f.button :submit, t('create_group'), id: 'submit', class: 'btn btn-success'
 
 
