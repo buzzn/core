@@ -591,8 +591,8 @@ $(".group-chart").ready ->
             type: 'datetime'
             startOnTick: false
             endOnTick: false
-            #min: beginningOfDay(data[0].data[0][0])
-            #max: endOfDay(data[0].data[0][0])
+            min: beginningOfDay(data[0].data[0][0])
+            max: endOfDay(data[0].data[0][0])
             labels:
               enabled: true
               style:
