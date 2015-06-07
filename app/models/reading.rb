@@ -20,12 +20,12 @@ class Reading
   def self.aggregate(resolution_format, metering_point_ids=['slp'], containing_timestamp=nil)
     resolution_formats = {
       year_to_months:   ['year', 'month'],
-      month_to_days:    ['month', 'dayOfMonth'],
-      week_to_days:     ['week', 'dayOfWeek'],
-      day_to_hours:     ['dayOfMonth', 'hour'],
-      day_to_minutes:   ['dayOfMonth', 'hour', 'minute'],
-      hour_to_minutes:  ['hour', 'minute'],
-      minute_to_seconds:['minute', 'second']
+      month_to_days:    ['year', 'month', 'dayOfMonth'],
+      week_to_days:     ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek'],
+      day_to_hours:     ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour'],
+      day_to_minutes:   ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute'],
+      hour_to_minutes:  ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute'],
+      minute_to_seconds:['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute', 'second']
     }
     resolution = resolution_formats[resolution_format]
 
