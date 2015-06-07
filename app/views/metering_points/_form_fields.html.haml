@@ -1,13 +1,6 @@
 -# = f.input :image
 = f.input :mode, collection: MeteringPoint.modes, include_blank: false, as: :radio_buttons, label: false
-%p
-  %span
-    = t('virtual')
-    %small
-      %i.normal-info-circle.fa.fa-info-circle{'data-content' => "Ein virtueller Zählpunkt ist physikalisch nicht existent. Er wird über andere Zählpunkte berechnet. Die Formel zur Berechnung kann unten eingegeben werden."}
-    = f.input :virtual, label: false
-
-
+= f.input :virtual
 = f.input :name
 
 .js-dependent-fields{data: {checkbox: {id: 'metering_point_virtual', value: 'false'}}}
