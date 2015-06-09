@@ -11,4 +11,10 @@ class Notifier < ActionMailer::Base
     mail(to: user.email, subject: t('your_metering_point_is_offline_now', metering_point_name: metering_point.name))
   end
 
+  def send_email_notification_friendship_request(receiver, sender)
+    @receiver = receiver
+    @sender = sender
+    mail(to: receiver.email, subject: 'buzzn: ' + t('new_friendship_request_from', sender: sender.name))
+  end
+
 end

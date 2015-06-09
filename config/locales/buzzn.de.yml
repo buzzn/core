@@ -536,3 +536,7 @@ de:
   to_get_the_latest_data_in_your_app_you_should_try_to_fix_this_issue: "Um die neusten Daten in Deiner App verfügbar zu haben solltest Du dieses Problem schnellstmöglich beheben."
   if_you_can_not_fix_this_problem_on_your_own_contact_the_manufacturer_of_your_hardware: "Wenn Du dieses Problem nicht selbst lösen kannst kontaktiere den Hersteller Deiner Hardware."
   this_is_the_concerned_metering_point: "Das ist der betroffene Zählpunkt:"
+  new_friendship_request_from: "Neue Freundschaftsanfrage von %{sender}"
+  sent_a_friendship_request_to_you: hat Dir eine Freundschaftsanfrage gesendet.
+  to_accept_or_reject_the_friendship_request_please_visit_your_profile: Um die Anfrage zu akzeptieren oder abzulehnen besuche bitte Dein Profil.
+
