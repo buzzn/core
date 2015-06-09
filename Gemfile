@@ -93,6 +93,7 @@ gem 'highcharts-rails'
 gem 'lograge'
 gem 'cookie_alert'
 gem 'devise-async'
+gem 'rack-ssl-enforcer'
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-pace'
