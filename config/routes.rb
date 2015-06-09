@@ -87,6 +87,6 @@ Buzzn::Application.routes.draw do
   end
 
 
-  root controller: 'profiles', action: 'redirect_to_current_user'
+  root :to => "stream#index"
 
 end
