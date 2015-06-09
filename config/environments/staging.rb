@@ -1,7 +1,7 @@
 Buzzn::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  config.middleware.use Rack::SslEnforcer
+  #config.middleware.use Rack::SslEnforcer
 
   #GA.tracker = "UA-43704543-1"
 
