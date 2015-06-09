@@ -22,7 +22,12 @@
             =t('now')
 
         - @activities.each do |activity|
-          = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+          - if activity.trackable && activity.trackable.readable_by?(current_user)
+            = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+          - elsif activity.recipient && activity.recipient_type != "User" && activity.recipient.readable_by?(current_user)
+            = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+          - elsif activity.recipient && activity.recipient_type == "User" && activity.recipient.profile.readable_by?(current_user)
+            = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
 
 
 

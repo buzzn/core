@@ -36,7 +36,7 @@ Buzzn::Application.routes.draw do
   resources :meters
   resources :equipments
   resources :devices
-  resources :contracts
+  resources :contracts, :except => :show
   resources :contracting_parties
   resources :bank_accounts
   resources :organizations
