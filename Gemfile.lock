@@ -561,7 +561,6 @@ GEM
       rack (>= 1.1)
     rack-protection (1.5.3)
       rack
-    rack-ssl-enforcer (0.2.8)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.1)
@@ -871,7 +870,6 @@ DEPENDENCIES
   rack-google-analytics
   rack-livereload
   rack-oauth2
-  rack-ssl-enforcer
   rails
   rails-assets-animate-css!
   rails-assets-bootstrap!
