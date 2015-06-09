@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
 
   include PublicActivity::StoreController
 
+  before_filter :initialize_gon
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
 
@@ -22,12 +24,18 @@ class ApplicationController < ActionController::Base
     else
       stored_location_for(resource) || request.referer || root_path
     end
-    Gon.global.push({current_user_id: current_user.id})
+
     current_user.profile
   end
 
   def current_user
     UserDecorator.decorate(super) unless super.nil?
+  end
+
+  def initialize_gon
+    if user_signed_in?
+      Gon.global.push({current_user_id: current_user.id})
+    end
   end
 
 

@@ -73,6 +73,7 @@ class Meter < ActiveRecord::Base
           update_info << "metering_point_id: #{metering_point.id} | from: #{Time.at(last)}, to: #{Time.at(now)}, #{range.count} seconds"
         else
           metering_point.meter.update_columns(online: false)
+          self.send_notification_meter_offline
         end
       end
     end
@@ -87,6 +88,15 @@ class Meter < ActiveRecord::Base
        'queue' => :low,
        'args' => [ meter.id ]
       })
+    end
+  end
+
+  def send_notification_meter_offline
+    self.metering_points.each do |metering_point|
+      metering_point.managers.each do |user|
+        user.send_notification("warning", I18n.t("metering_point_offline"), I18n.t("your_metering_point_is_offline_now", metering_point_name: metering_point.name))
+        Notifier.send_email_notification_meter_offline(user, metering_point).deliver_now
+      end
     end
   end
 

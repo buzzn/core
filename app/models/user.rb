@@ -112,6 +112,10 @@ class User < ActiveRecord::Base
     })
   end
 
+  def send_email_notification(header, message)
+    #Notifier
+  end
+
 
 
 

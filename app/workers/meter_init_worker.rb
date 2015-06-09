@@ -67,8 +67,7 @@ class MeterInitWorker
     else
       #logger.warn "Meter:#{@meter.id} has no metering_point"
     end
-
-
-
   end
+
+
 end

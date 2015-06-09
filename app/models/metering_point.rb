@@ -175,7 +175,7 @@ class MeteringPoint < ActiveRecord::Base
     @users = []
     @users << self.users
     @users << User.with_role(:manager, self)
-    (@users).flatten.uniq.collect{|u| u.editable_devices }.flatten
+    (@users).flatten.uniq.collect{|user| user.editable_devices.collect{|device| device if device.mode == self.mode} }.flatten.compact
   end
 
   def metering_point_operator_contract

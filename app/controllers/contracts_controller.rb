@@ -17,6 +17,7 @@ class ContractsController < ApplicationController
   def create
     @contract = Contract.new(contract_params)
     authorize_action_for @contract
+    @contract.contracting_party = current_user.contracting_party if current_user.contracting_party
     if @contract.save
       current_user.add_role :manager, @contract
       @contract.decorate
