@@ -92,6 +92,7 @@ gem 'iban-tools'
 gem 'highcharts-rails'
 gem 'lograge'
 gem 'cookie_alert'
+gem 'devise-async'
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-pace'

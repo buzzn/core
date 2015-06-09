@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   rolify
   include Authority::UserAbilities
 
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :async, :registerable,
          :recoverable, :rememberable, :trackable,
          :validatable, :lockable, :timeoutable,
          :confirmable, :invitable #, :omniauthable
