@@ -105,7 +105,7 @@
 
 
     .col-md-6.col-lg-6
-      - if user_signed_in? && current_user.can_update?(@metering_point)
+      - if user_signed_in? && current_user.can_update?(@metering_point) && !@metering_point.virtual
         %h1.page-header.text-overflow
           %span
             = t('meters')
@@ -116,13 +116,15 @@
             = render @metering_point.meter if @metering_point.meter
         .row
           - if @metering_point.meter.nil?
-            .row
-              .col-lg-12.text-center
-                = @metering_point.new_meter
+            .new-meter
+              .row
+                .col-lg-12.text-center
+                  = @metering_point.new_meter
+        %hr
 
 
       - if user_signed_in? && current_user.can_update?(@metering_point)
-        %hr
+
         %h1.page-header.text-overflow
           %span
             = t('contracts')

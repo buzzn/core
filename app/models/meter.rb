@@ -10,6 +10,8 @@ class Meter < ActiveRecord::Base
 
   after_save :validates_smartmeter_job
 
+  before_destroy :release_metering_points
+
   default_scope { order('created_at ASC') }
 
 
@@ -107,6 +109,13 @@ class Meter < ActiveRecord::Base
 
 
 private
+
+  def release_metering_points
+    self.metering_points.each do |metering_point|
+      metering_point.meter = nil
+      metering_point.save
+    end
+  end
 
   def validates_smartmeter_job
     Sidekiq::Client.push({

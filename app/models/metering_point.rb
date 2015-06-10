@@ -24,6 +24,7 @@ class MeteringPoint < ActiveRecord::Base
   validates :mode, presence: true, if: :no_dashboard_metering_point?
   validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
   validates :name, presence: true, length: { in: 2..30 }, if: :no_dashboard_metering_point?
+  validates :meter, presence: false, if: :virtual
 
   mount_uploader :image, PictureUploader
 
@@ -39,6 +40,10 @@ class MeteringPoint < ActiveRecord::Base
 
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
+  }
+
+  scope :editable_by_user_without_meter_not_virtual, lambda {|user|
+    self.with_role(:manager, user).where(meter: nil).where(virtual: false)
   }
 
   scope :by_group, lambda {|group|

@@ -98,6 +98,10 @@ class User < ActiveRecord::Base
     return result
   end
 
+  def editable_metering_points_without_meter_not_virtual
+    MeteringPoint.editable_by_user_without_meter_not_virtual(self)
+  end
+
   #defined types: primary, info, success, warning, danger, mint, purple, pink, dark
   def send_notification(type, header, message)
     Sidekiq::Client.push({
