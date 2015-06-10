@@ -106,6 +106,9 @@ a, img {
   transform: translateY(380%);
 }
 
+.two-column.timeline .timeline-entry:nth-child(2n) {
+  float: none;
+}
 
 
 

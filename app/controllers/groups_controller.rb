@@ -43,6 +43,7 @@ class GroupsController < ApplicationController
   end
 
   def update
+    Group.public_activity_off
     @group = Group.find(params[:id])
     authorize_action_for @group
     if @group.update_attributes(group_params)
@@ -50,6 +51,7 @@ class GroupsController < ApplicationController
     else
       render :edit
     end
+    Group.public_activity_on
   end
 
 

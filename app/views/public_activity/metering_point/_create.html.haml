@@ -1,7 +1,7 @@
 - single_content_for :action do
-  - if a.recipient
+  - if a.trackable
     = t('has_created') + ' ' + t('the_metering_point')
     %a.btn-link.text-semibold{:href => metering_point_path(a.trackable)}
-      = a.recipient.name
+      = a.trackable.name
   - else
     = t('has_created') + ' ' + t('a_metering_point_which_has_been_removed')

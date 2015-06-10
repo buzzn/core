@@ -3,8 +3,8 @@ class Device < ActiveRecord::Base
   include Authority::Abilities
 
   include PublicActivity::Model
-  tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
-  tracked recipient: Proc.new{ |controller, model| controller && model }
+  #tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
+  #tracked recipient: Proc.new{ |controller, model| controller && model }
 
   belongs_to :metering_point
 

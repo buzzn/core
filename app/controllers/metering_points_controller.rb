@@ -30,6 +30,7 @@ class MeteringPointsController < ApplicationController
     authorize_action_for @metering_point
     if @metering_point.save
       current_user.add_role(:manager, @metering_point)
+      @metering_point.create_activity key: 'metering_point.create', owner: current_user
       respond_with @metering_point.decorate
     else
       render :new

@@ -8,7 +8,7 @@ class Group < ActiveRecord::Base
 
   include PublicActivity::Model
   tracked  owner: Proc.new{ |controller, model| controller && controller.current_user }
-  tracked  recipient: Proc.new{ |controller, model| controller && model }
+  #tracked  recipient: Proc.new{ |controller, model| controller && model }
 
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]

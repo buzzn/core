@@ -25,6 +25,7 @@ class DevicesController < ApplicationController
     authorize_action_for @device
     if @device.save
       current_user.add_role :manager, @device
+      @device.create_activity key: 'device.create', owner: current_user
       @device.decorate
     else
       render :new
