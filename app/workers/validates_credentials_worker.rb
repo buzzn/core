@@ -2,8 +2,8 @@ class ValidatesCredentialsWorker
   include Sidekiq::Worker
 
   def perform(contract_id)
+    if Contract.exists?(:id => contract_id)
       @contract = Contract.find(contract_id)
-
       if @contract.mode == 'metering_point_operator_contract'
         if @contract.organization.slug == 'discovergy' || @contract.organization.slug == 'buzzn-metering'
           api_call = Discovergy.new(@contract.username, @contract.password).meters
@@ -24,7 +24,7 @@ class ValidatesCredentialsWorker
           end
         end
       end
-
+    end
   end
 
   def send_notification_credentials(contract_id, valid)
