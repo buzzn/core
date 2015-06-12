@@ -9,4 +9,4 @@
 
 .js-dependent-fields{'data-select-id' => 'contract_mode', 'data-option-value' => 'metering_point_operator_contract'}
   = f.input :username
-  = f.input :password, as: :string
+  = f.input :password, input_html: { value: @contract.password}

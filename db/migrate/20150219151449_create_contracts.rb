@@ -3,7 +3,7 @@ class CreateContracts < ActiveRecord::Migration
     enable_extension 'uuid-ossp'
 
     create_table :contracts, id: :uuid do |t|
-      t.string :slug
+      t.string   :slug
       t.string   :mode
 
       t.string   :tariff
