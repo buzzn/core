@@ -109,12 +109,13 @@ de:
   add_or_remove_members: Mitglieder hinzufügen oder entfernen
 
 
-  address: Addresse
-  add_address: Addresse hinzufügen
+  address: Adresse
+  add_address: Adresse hinzufügen
   invoice_address: Rechnungsadresse
-  create_address: Addresse erstellen
+  create_address: Adresse erstellen
+  new_address: Adresse erstellen
 
-
+  save_changes: Änderungen speichern
 
   bank_account: Bankverbindung
   new_bank_account: Neue Bankverbindung
@@ -131,14 +132,14 @@ de:
   contracting_party: Vertragspartner
   contracting_party_bank_account: Bankverbindung des Vertragspartners
   contracting_party_organization: "Vertragspartner: Organisation"
-  contracting_party_organizations_address: "Vertragspartner: Addresse der Organisation"
+  contracting_party_organizations_address: "Vertragspartner: Adresse der Organisation"
   contracting_party_taxation: "Vertragspartner: Steuerdaten"
 
   no_pic: kein bild
   my_friends: Meine Freunde
   car: PKW
   about_me: Über mich
-  email: E-Mail Addresse
+  email: E-Mail Adresse
   password: Password
   remember_me: Eingeloggt bleiben
   find_a_friend: Freund Finden
@@ -525,7 +526,7 @@ de:
   out_devices_info_group: "Hier findest Du alle Geräte, die für diese Gruppe den Strom erzeugen."
   group_manager_info: "Die Gruppenadmins verwalten diese Gruppe. Sie entscheiden z.B. wer in die Gruppe aufgenommen wird und haben Zugriff auf die Stromerzeugungsanlagen."
   contracts_info_contracting_party: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Vertragspartner zugeordnet sind."
-
+  metering_point_virtual_info: "Hier kann die Formel ausgewählt werden, durch die der virtuelle Zähler berechnet wird. Jede Formel besteht aus einzelnen Summanden, und jeder Summand besteht aus Vorzeichen (Operator) und dem Zählpunkt (Operand)."
 
 
   cookie_text: "Wir verwenden Cookies, um unseren Service zu verbessern und zu personalisieren. Wenn Du unsere Website nutzt erklärst Du Dich mit der Verwendung von Cookies einverstanden. Es kann sein, dass schon jetzt Cookies gespeichert wurden. In unserer Cookie Richtlinie findest Du mehr Informationen. "

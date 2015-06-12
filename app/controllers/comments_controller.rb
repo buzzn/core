@@ -8,7 +8,10 @@ class CommentsController < InheritedResources::Base
     if user_signed_in? #TODO: bring commentable_by? to work
       @comment = Comment.build_from(@obj, current_user.id, @comment_hash[:body])
       create! do |success, failure|
-        success.js { @comment }
+        success.js {
+          @comment.create_activity key: 'comment.create', owner: current_user, recipient_type: @comment_hash[:commentable_type], recipient_id: @comment_hash[:commentable_id]
+          @comment
+        }
         failure.js { render nothing: true, status: :ok } #TODO: show validation errors
       end
     end
@@ -20,6 +23,10 @@ class CommentsController < InheritedResources::Base
     @comment = Comment.find(params[:id])
     if current_user == @comment.user || current_user.can_update?(@group)
       if @comment.destroy
+        activities = PublicActivity::Activity.where(trackable_id: @comment.id).where(trackable_type: 'Comment')
+        activities.each do |activity|
+          activity.destroy
+        end
         render :json => @comment, :status => :ok
       else
         render :js => "alert('error deleting comment');"

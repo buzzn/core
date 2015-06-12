@@ -22,7 +22,7 @@
           - if user_signed_in? && (current_user.dashboard.nil? || !current_user.dashboard.metering_points.include?(@metering_point))
             = @metering_point.add_to_dashboard
 
-      - if current_user.can_update?(@metering_point)
+      - if user_signed_in? && current_user.can_update?(@metering_point)
         = @metering_point.link_to_edit
 
 

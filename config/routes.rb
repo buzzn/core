@@ -33,7 +33,7 @@ Buzzn::Application.routes.draw do
 
 
 
-  resources :meters
+  resources :meters, :except => :show
   resources :equipments
   resources :devices
   resources :contracts, :except => :show

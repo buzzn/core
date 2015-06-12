@@ -18,7 +18,7 @@ de:
       password: 'Passwort'
       user:
         user_name: Benutzername
-        email: E-Mail Addresse
+        email: E-Mail Adresse
         password: Passwort
         password_confirmation: Passwort bestätigen
         remember_me: Eingeloggt bleiben
@@ -166,7 +166,8 @@ de:
         username: 'Benutzername, mit dem Du dich einloggen kannst.'
       metering_point:
         image: Ein Bild von dem Zählpunkt erleichtert die übersichtlichkeit.
-        name: 'Name des Zählpunktes, z.B. Wohnung oder Solaranlage'
+        name: 'Name des Zählpunktes, z.B. Wohnung oder Solaranlage. Bitte trage hier NICHT die Adresse des Zählpunktes ein.'
+        virtual: "Ein Zählpunkt ist virtuell, wenn er physikalisch nicht existiert, sondern aus anderen Daten berechnet wird. Die Formel zur Berechnung kann weiter unten eingegeben werden."
         uid: "Zählpunkt ist die Bezeichnung in der Energiewirtschaft für den Punkt, an dem Versorgungsleistungen an Verbraucher geleistet oder von Erzeugern bezogen werden. z.B. DE 000562 66802 AO6G56M11SN51G21M24S"
       metering_point_operator_contract:
         username: 'Benutzername, mit dem du dich beim Messstellenbetreiber einloggen kannst.'
