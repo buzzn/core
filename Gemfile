@@ -94,6 +94,8 @@ gem 'lograge'
 gem 'cookie_alert'
 gem 'devise-async'
 #gem 'rack-ssl-enforcer'
+gem 'omniauth-facebook'
+gem 'koala'
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-pace'

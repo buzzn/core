@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :async, :registerable,
          :recoverable, :rememberable, :trackable,
          :validatable, :lockable, :timeoutable,
-         :confirmable, :invitable #, :omniauthable
+         :confirmable, :invitable, :omniauthable, :omniauth_providers => [:facebook]
 
   has_one :contracting_party
 
