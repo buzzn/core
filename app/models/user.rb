@@ -131,11 +131,6 @@ class User < ActiveRecord::Base
       return omniauth_users.first
     else
       # https://github.com/mkdynamic/omniauth-facebook#auth-hash
-      user            = User.new()
-      user.uid        = auth.uid
-      user.provider   = auth.provider
-      user.email      = auth.info.email
-      user.password   = Devise.friendly_token[0,20]
 
       profile                   = Profile.new
       profile.user_name         = auth.info.nickname
@@ -143,8 +138,16 @@ class User < ActiveRecord::Base
       profile.last_name         = auth.info.last_name
       profile.remote_image_url  = auth.info.image
 
-      user.profile = profile
-      user.save
+      user            = User.new()
+      user.uid        = auth.uid
+      user.provider   = auth.provider
+      user.email      = auth.info.email
+      user.password   = Devise.friendly_token[0,20]
+      user.profile    = profile
+
+      user.save!
+      user.confirm
+
       return user
     end
   end
