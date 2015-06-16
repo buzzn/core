@@ -5,12 +5,6 @@ class Profile < ActiveRecord::Base
   extend FriendlyId
   friendly_id :user_name, use: [:slugged, :finders]
 
-  def slug_candidates
-    [
-      :slug_name,
-      :user_name
-    ]
-  end
 
   mount_uploader :image, PictureUploader
 
@@ -46,11 +40,6 @@ class Profile < ActiveRecord::Base
     end
   end
 
-  private
-
-    def slug_name
-      SecureRandom.uuid
-    end
 
 
 end
