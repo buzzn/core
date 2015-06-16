@@ -124,6 +124,43 @@ class User < ActiveRecord::Base
 
 
 
+  # https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
+  def self.from_omniauth(auth)
+    omniauth_users = where(provider: auth.provider, uid: auth.uid)
+    if omniauth_users.any?
+      return omniauth_users.first
+    else
+      # https://github.com/mkdynamic/omniauth-facebook#auth-hash
+      user            = User.new()
+      user.uid        = auth.uid
+      user.provider   = auth.provider
+      user.email      = auth.info.email
+      user.password   = Devise.friendly_token[0,20]
+      user.user_name  = auth.info.nickname
+
+      profile                   = Profile.new
+      profile.remote_image_url  = auth.info.image
+      profile.first_name        = auth.info.first_name
+      profile.last_name         = auth.info.last_name
+
+      user.profile = profile
+      user.save
+      return user
+    end
+  end
+  def self.new_with_session(params, session)
+    super.tap do |user|
+      if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
+        user.email = data["email"] if user.email.blank?
+      end
+    end
+  end
+
+
+
+
+
+
 private
   def create_complement_friendship(friend)
     friend.friends << self unless friend.friends.include?(self)
