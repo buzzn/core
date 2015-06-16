@@ -136,12 +136,12 @@ class User < ActiveRecord::Base
       user.provider   = auth.provider
       user.email      = auth.info.email
       user.password   = Devise.friendly_token[0,20]
-      user.user_name  = auth.info.nickname
 
       profile                   = Profile.new
-      profile.remote_image_url  = auth.info.image
+      profile.user_name         = auth.info.nickname
       profile.first_name        = auth.info.first_name
       profile.last_name         = auth.info.last_name
+      profile.remote_image_url  = auth.info.image
 
       user.profile = profile
       user.save
