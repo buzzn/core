@@ -133,7 +133,11 @@ class User < ActiveRecord::Base
       # https://github.com/mkdynamic/omniauth-facebook#auth-hash
 
       profile                   = Profile.new
-      profile.user_name         = auth.info.nickname == "#{auth.info.first_name} #{auth.info.last_name}"
+      if auth.info.nickname == ''
+        profile.user_name = "#{auth.info.first_name} #{auth.info.last_name}"
+      else
+        profile.user_name = auth.info.nickname
+      end
       profile.first_name        = auth.info.first_name
       profile.last_name         = auth.info.last_name
       profile.remote_image_url  = auth.info.image
