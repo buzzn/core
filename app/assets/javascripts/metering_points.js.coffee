@@ -232,8 +232,8 @@ $(".metering_point_detail").ready ->
         series: data
       )
       chart_data_min_x = chart.series[0].data[0].x
-      checkIfPreviousDataExists()
-      checkIfNextDataExists()
+      #checkIfPreviousDataExists()
+      #checkIfNextDataExists()
     .error (jqXHR, textStatus, errorThrown) ->
       console.log textStatus
 
@@ -252,9 +252,9 @@ $(".metering_point_detail").ready ->
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
       chart_data_min_x = chart.series[0].data[0].x
-      checkIfPreviousDataExists()
-      checkIfNextDataExists()
-      checkIfZoomOut()
+      #checkIfPreviousDataExists()
+      #checkIfNextDataExists()
+      #checkIfZoomOut()
       chart.hideLoading()
 
   $(".btn-chart-next").on 'click', ->
@@ -268,9 +268,9 @@ $(".metering_point_detail").ready ->
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
       chart_data_min_x = chart.series[0].data[0].x
-      checkIfPreviousDataExists()
-      checkIfNextDataExists()
-      checkIfZoomOut()
+      #checkIfPreviousDataExists()
+      #checkIfNextDataExists()
+      #checkIfZoomOut()
       chart.hideLoading()
 
   $(".btn-chart-zoomout").on 'click', ->
@@ -298,9 +298,9 @@ $(".metering_point_detail").ready ->
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
       chart_data_min_x = chart.series[0].data[0].x
-      checkIfPreviousDataExists()
-      checkIfNextDataExists()
-      checkIfZoomOut()
+      #checkIfPreviousDataExists()
+      #checkIfNextDataExists()
+      #checkIfZoomOut()
       chart.hideLoading()
 
   $(window).on "resize", ->
@@ -436,8 +436,8 @@ $(".dashboard-chart").ready ->
               data: data[0].data
             )
             chart_data_min_x = chart.series[0].data[0].x
-            checkIfPreviousDataExistsDashboard()
-            checkIfNextDataExistsDashboard()
+            #checkIfPreviousDataExistsDashboard()
+            #checkIfNextDataExistsDashboard()
           else
             chart.addSeries(
               name: data[0].name
@@ -471,9 +471,9 @@ $(".dashboard-chart").ready ->
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
     chart.hideLoading()
-    checkIfPreviousDataExistsDashboard()
-    checkIfNextDataExistsDashboard()
-    checkIfZoomOutDashboard()
+    #checkIfPreviousDataExistsDashboard()
+    #checkIfNextDataExistsDashboard()
+    #checkIfZoomOutDashboard()
 
   $(".btn-chart-next").on 'click', ->
     chart.showLoading()
@@ -496,9 +496,9 @@ $(".dashboard-chart").ready ->
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
     chart.hideLoading()
-    checkIfPreviousDataExistsDashboard()
-    checkIfNextDataExistsDashboard()
-    checkIfZoomOutDashboard()
+    #checkIfPreviousDataExistsDashboard()
+    #checkIfNextDataExistsDashboard()
+    #checkIfZoomOutDashboard()
 
   $(".btn-chart-zoomout").on 'click', ->
     chart.showLoading()
@@ -534,9 +534,9 @@ $(".dashboard-chart").ready ->
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
-    checkIfPreviousDataExistsDashboard()
-    checkIfNextDataExistsDashboard()
-    checkIfZoomOutDashboard()
+    #checkIfPreviousDataExistsDashboard()
+    #checkIfNextDataExistsDashboard()
+    #checkIfZoomOutDashboard()
     chart.hideLoading()
 
 
@@ -650,8 +650,8 @@ $(".group-chart").ready ->
         console.log chart.series[0].data
 
         chart_data_min_x = chart.series[0].data[0].x
-        checkIfPreviousDataExistsGroup()
-        checkIfNextDataExistsGroup()
+        #checkIfPreviousDataExistsGroup()
+        #checkIfNextDataExistsGroup()
     .error (jqXHR, textStatus, errorThrown) ->
       console.log textStatus
 
@@ -679,9 +679,9 @@ $(".group-chart").ready ->
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
     chart.hideLoading()
-    checkIfPreviousDataExistsGroup()
-    checkIfNextDataExistsGroup()
-    checkIfZoomOutGroup()
+    #checkIfPreviousDataExistsGroup()
+    #checkIfNextDataExistsGroup()
+    #checkIfZoomOutGroup()
 
   $(".btn-chart-next").on 'click', ->
     chart.showLoading()
@@ -703,9 +703,9 @@ $(".group-chart").ready ->
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
     chart.hideLoading()
-    checkIfPreviousDataExistsGroup()
-    checkIfNextDataExistsGroup()
-    checkIfZoomOutGroup()
+    #checkIfPreviousDataExistsGroup()
+    #checkIfNextDataExistsGroup()
+    #checkIfZoomOutGroup()
 
   $(".btn-chart-zoomout").on 'click', ->
     chart.showLoading()
@@ -740,9 +740,9 @@ $(".group-chart").ready ->
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
-    checkIfPreviousDataExistsGroup()
-    checkIfNextDataExistsGroup()
-    checkIfZoomOutGroup()
+    #checkIfPreviousDataExistsGroup()
+    #checkIfNextDataExistsGroup()
+    #checkIfZoomOutGroup()
     chart.hideLoading()
 
 
