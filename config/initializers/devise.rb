@@ -271,7 +271,9 @@ Devise.setup do |config|
   config.omniauth(
     :facebook,
     Rails.application.secrets.facebook_app_id,
-    Rails.application.secrets.facebook_secret)
+    Rails.application.secrets.facebook_secret,
+    secure_image_url: true
+    )
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
