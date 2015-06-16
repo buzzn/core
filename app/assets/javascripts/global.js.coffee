@@ -9,6 +9,9 @@ ready = ->
   $("body").on "hidden.bs.modal", ".modal", ->
     $('.modal-dialog').empty()
 
+  $("body").on "show.bs.modal", ".modal", ->
+    console.log 'jo'
+
   $(".js-dependent-fields").waitUntilExists( ->
     DependentFields.bind()
   )

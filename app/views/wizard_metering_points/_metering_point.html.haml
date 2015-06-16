@@ -1,0 +1,22 @@
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'new_metering_point'
+  .modal-body
+    = simple_form_for @metering_point, remote: true, url: metering_point_update_wizard_metering_points_path, method: 'put'  do |f|
+      = f.input :mode, collection: MeteringPoint.modes, include_blank: false, as: :radio_buttons, label: false
+      = f.input :name
+      = f.input :virtual
+      .js-dependent-fields{data: {checkbox: {id: 'metering_point_virtual', value: 'true'}}}
+        %h5
+          %span
+            = t('formula')
+            %small
+              %i.normal-info-circle.fa.fa-info-circle{'data-content' => t('metering_point_virtual_info')}
+        #formula_parts
+          = f.simple_fields_for :formula_parts do |formula_part|
+            = render 'formula_part_fields', :f => formula_part
+          .links.mar-btm
+            = link_to_add_association t('add_formula_part'), f, :formula_parts, class: "btn btn-xs btn-default btn-rounded btn-labeled fa fa-plus"
+
+      = f.submit t("continue"), class: 'btn btn-success', id: 'submit'

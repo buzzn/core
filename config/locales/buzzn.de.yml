@@ -56,8 +56,12 @@ de:
   metering_points: Zählpunkte
   add_metering_point: Zählpunkt hinzufügen
 
+  yes: Ja
+  no: Nein
+  connect_meter_with_data: Messgerät mit Daten verbinden
+
   meters: Messgerät
-  new_meter: neuers Messgerät
+  new_meter: Neues Messgerät
   add_new_meter: neues Messgerät hinzufügen
   add_meter: Messgerät hinzufügen
   create_meter: Messgerät erstellen

@@ -96,6 +96,7 @@ gem 'devise-async'
 #gem 'rack-ssl-enforcer'
 gem 'omniauth-facebook'
 gem 'koala'
+gem 'byebug'
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-pace'

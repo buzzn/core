@@ -127,6 +127,7 @@ de:
         build_year: Herstellungsjahr
         calibrated_till: Geeicht bis
         metering_points: Zählpunkte
+        smartmeter: Smart Meter
       registers:
         mode: Richtung
         obis_index: OBIS Kennzahlen
@@ -217,6 +218,9 @@ de:
           nzr: 'NZR'
           emh: 'EMH'
           other: Anderer
+        smartmeter:
+          yesyes: Ja
+          nono: Nein
 
 
 

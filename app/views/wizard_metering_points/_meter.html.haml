@@ -1,0 +1,11 @@
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'new_meter'
+  .modal-body
+    = simple_form_for @meter, remote: true, url: meter_update_wizard_metering_points_path(metering_point_id: params[:metering_point_id]), method: 'put'  do |f|
+      = f.input :manufacturer_product_serialnumber
+      = f.input :smartmeter, as: :radio_buttons, collection: ["Ja", "Nein"], input_html: {checked: 'unchecked'}
+
+      .modal-footer
+        = f.button :submit, t("continue"), id: 'submit', class: 'btn btn-success'

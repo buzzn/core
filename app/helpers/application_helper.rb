@@ -145,7 +145,7 @@ module ApplicationHelper
   def new_metering_point
     link_to(
       content_tag(:i, t("create_metering_point"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
-      new_metering_point_path,
+      metering_point_wizard_metering_points_path,
       {
         :remote         => true,
         :class          => 'start_modal',
