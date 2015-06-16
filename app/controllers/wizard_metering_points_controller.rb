@@ -4,7 +4,6 @@ class WizardMeteringPointsController  < ApplicationController
 
   def metering_point
     @metering_point = MeteringPoint.new
-    2.times{@metering_point.formula_parts.build}
   end
 
   def metering_point_update
@@ -61,7 +60,7 @@ class WizardMeteringPointsController  < ApplicationController
   private
 
   def metering_point_params
-    params.require(:metering_point).permit( :name, :mode, :virtual, formula_parts_attributes: [:id, :operator, :metering_point_id, :operand_id, :_destroy])
+    params.require(:metering_point).permit( :name, :mode)
   end
 
   def meter_params
