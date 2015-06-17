@@ -18,6 +18,10 @@ class ContractsController < ApplicationController
     @contract = Contract.new(contract_params)
     authorize_action_for @contract
     @contract.contracting_party = current_user.contracting_party if current_user.contracting_party
+    if @contract.organization.slug == 'buzzn-metering'
+      @contract.username = 'team@buzzn-metering.de'
+      @contract.password = 'Zebulon_4711'
+    end
     if @contract.save
       current_user.add_role :manager, @contract
       @contract.decorate

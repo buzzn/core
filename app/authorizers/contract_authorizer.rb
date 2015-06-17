@@ -9,11 +9,11 @@ class ContractAuthorizer < ApplicationAuthorizer
   end
 
   def updatable_by?(user)
-    user.has_role?(:admin) || user.has_role?(:manager, resource.metering_point)
+    user.has_role?(:admin) || user.has_role?(:manager, resource.metering_point) || user.has_role?(:manager, resource.group)
   end
 
   def deletable_by?(user)
-    user.has_role?(:admin) || user.has_role?(:manager, resource.metering_point)
+    user.has_role?(:admin) || user.has_role?(:manager, resource.metering_point) || user.has_role?(:manager, resource.group)
   end
 
 end

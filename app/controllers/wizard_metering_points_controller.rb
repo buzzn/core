@@ -50,7 +50,11 @@ class WizardMeteringPointsController  < ApplicationController
     @contract.mode = 'metering_point_operator_contract'
     @contract.price_cents = 0
     @contract.metering_point = @metering_point
-    if @contract.save
+    if @contract.organization.slug == 'buzzn-metering'
+      @contract.username = 'team@buzzn-metering.de'
+      @contract.password = 'Zebulon_4711'
+    end
+    if @contract.save && @metering_point.meter.save
       render action: 'update'
     else
       render action: 'contract'
