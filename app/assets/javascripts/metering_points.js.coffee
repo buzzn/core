@@ -4,7 +4,7 @@ chart = undefined
 
 #code for partial: _metering_point.html.haml
 $(".metering_points").ready ->
-  $(".metering_point").each ->
+  $(this).find(".metering_point").each ->
     smart = $(this).attr('data-smart')
     online = $(this).attr('data-online')
     if !smart || online

@@ -1,0 +1,15 @@
+.col-xs-12.col-sm-12.col-md-6.col-lg-6.fomula_part.metering_point{id: "metering_point_#{formula_part.operand.id}", data: {smart: "#{formula_part.operand.smart?}", online: "#{formula_part.operand.online?}"} }
+  = link_to formula_part.operand do
+    .panel.panel-info.panel-colorful.text-center
+
+      .panel-body{class: "bg-#{formula_part.operand.decorate.mode_class}" }
+        .chart{id: "chart-container-#{formula_part.operand.id}", style: "width: 100%; height: 70px;"}
+          = t('loading') + '...'
+
+      .bg-light.pad-ver
+        %h3.mar-no
+          =formula_part.operator
+        %h4.mar-no.text-thin
+          =formula_part.operand.decorate.long_name
+
+    /= render partial: "metering_points/metering_point_small", collection: [formula_part.operand.decorate], as: :metering_point

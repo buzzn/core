@@ -45,6 +45,8 @@ de:
   out_device: Erzeuger
   in_device: Verbraucher
 
+
+
   out: Produktion
   in: Verbrauch
   in_out: Verbrauch/Produktion
@@ -88,6 +90,7 @@ de:
 
   formula: Formel
   add_formula_part: Summand hinzufügen
+  formula_parts: Zusammensetzung
 
   new_device: Neues Gerät anlegen
   add_new_device: Neues Gerät hinzufügen
@@ -534,7 +537,7 @@ de:
   group_manager_info: "Die Gruppenadmins verwalten diese Gruppe. Sie entscheiden z.B. wer in die Gruppe aufgenommen wird und haben Zugriff auf die Stromerzeugungsanlagen."
   contracts_info_contracting_party: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Vertragspartner zugeordnet sind."
   metering_point_virtual_info: "Hier kann die Formel ausgewählt werden, durch die der virtuelle Zähler berechnet wird. Jede Formel besteht aus einzelnen Summanden, und jeder Summand besteht aus Vorzeichen (Operator) und dem Zählpunkt (Operand)."
-
+  formula_parts_info: "Der vituelle Zählpunkt besitzt keinen physikalischen Zähler, weshalb er aus den Werten von anderen Zählpunkten berechnet werden muss. Hier findest Du die Auflistung der Bestandteile der Formel zu Berechnung der Energiewerte des aktuellen Zählpunkts."
 
   cookie_text: "Wir verwenden Cookies, um unseren Service zu verbessern und zu personalisieren. Wenn Du unsere Website nutzt erklärst Du Dich mit der Verwendung von Cookies einverstanden. Es kann sein, dass schon jetzt Cookies gespeichert wurden. In unserer Cookie Richtlinie findest Du mehr Informationen. "
 
