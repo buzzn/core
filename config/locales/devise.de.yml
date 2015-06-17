@@ -1,5 +1,9 @@
 de:
   devise:
+    invitations:
+      new:
+        header: "Neue Einladung"
+        submit_button: "Senden"
     confirmations:
       confirmed: Sie haben sich erfolgreich registriert. bitte melden Sie sich erneut an.
       send_instructions: Sie erhalten in wenigen Minuten eine E-Mail, mit der Sie Ihre Registrierung bestätigen können.

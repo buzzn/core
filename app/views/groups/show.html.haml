@@ -154,7 +154,7 @@
             = render user.profile
 
 
-      - if @energy_consumers.any?
+      - if @energy_consumers.any? && user_signed_in?
         %h1.page-header.text-overflow
           %span
             = t('energy_consumers')
@@ -162,7 +162,7 @@
               %i.small-info-circle.fa.fa-info-circle{'data-content' => t('energy_consumers_info')}
         .row
           - @energy_consumers.each do |user|
-            = render user.profile
+            = render user.profile if user.profile.readable_by?(current_user)
         %hr
 
 

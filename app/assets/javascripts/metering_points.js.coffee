@@ -209,14 +209,14 @@ $(".metering_point_detail").ready ->
               ]
           areaspline:
             borderWidth: 0
+            cursor: 'pointer'
             events:
-              cursor: 'pointer'
               click: (event) ->
                 zoomIn(event.point.x)
           column:
             borderWidth: 0
+            cursor: 'pointer'
             events:
-              cursor: 'pointer'
               click: (event) ->
                 zoomIn(event.point.x)
         tooltip:
@@ -380,67 +380,33 @@ $(".dashboard-chart").ready ->
                   text: ""
                 credits:
                   enabled: false
-                loading:
-                  hideDuration: 800
-                  showDuration: 800
-                  labelStyle:
-                    color: 'black'
-                    'font-size': '20pt'
-                xAxis:
-                  lineWidth: 1
-                  tickWidth: 1
-                  type: 'datetime'
-                  startOnTick: false
-                  endOnTick: false
-                  min: beginningOfDay(data[0].data[0][0])
-                  max: endOfDay(data[0].data[0][0])
-                  labels:
-                    enabled: true
-                    style:
-                      color: '#000'
-                  title:
-                    text: "Zeit"
-                    enabled: true
-                    style: { "color": "#000", "fontWeight": "bold"}
-                yAxis:
-                  gridLineWidth: 0
-                  min: 0
-                  labels:
-                    enabled: true
-                    style:
-                      color: '#000'
-                    format: "{value} W"
-                  title:
-                    enabled: true
-                    text: "Leistung"
-                    style: { "color": "#000", "fontWeight": "bold"}
-                plotOptions:
-                  series:
-                    fillOpacity: 0.5
-                  areaspline:
-                    borderWidth: 0
-                    events:
-                      cursor: 'pointer'
-                      click: (event) ->
-                        zoomInDashboard(event.point.x)
-                  column:
-                    borderWidth: 0
-                    events:
-                      cursor: 'pointer'
-                      click: (event) ->
-                        zoomInDashboard(event.point.x)
-                    stacking: 'normal'
-                tooltip:
-                  pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
-                  dateTimeLabelFormats:
-                    millisecond:"%e.%b, %H:%M:%S.%L",
-                    second:"%e.%b, %H:%M:%S",
-                    minute:"%e.%b, %H:%M",
-                    hour:"%e.%b, %H:%M",
-                    day:"%e.%b.%Y",
-                    week:"Week from %e.%b.%Y",
-                    month:"%B %Y",
-                    year:"%Y"
+              plotOptions:
+                series:
+                  fillOpacity: 0.5
+                areaspline:
+                  borderWidth: 0
+                  cursor: 'pointer'
+                  events:
+                    click: (event) ->
+                      zoomInDashboard(event.point.x)
+                column:
+                  borderWidth: 0
+                  cursor: 'pointer'
+                  events:
+                    click: (event) ->
+                      zoomInDashboard(event.point.x)
+                  stacking: 'normal'
+              tooltip:
+                pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
+                dateTimeLabelFormats:
+                  millisecond:"%e.%b, %H:%M:%S.%L",
+                  second:"%e.%b, %H:%M:%S",
+                  minute:"%e.%b, %H:%M",
+                  hour:"%e.%b, %H:%M",
+                  day:"%e.%b.%Y",
+                  week:"Week from %e.%b.%Y",
+                  month:"%B %Y",
+                  year:"%Y"
                 #series: data
             )
             chart.addSeries(
@@ -632,11 +598,16 @@ $(".group-chart").ready ->
           plotOptions:
             series:
               fillOpacity: 0.5
+            areaspline:
+              cursor: 'pointer'
               events:
-                cursor: 'pointer'
                 click: (event) ->
                   zoomInGroup(event.point.x)
             column:
+              cursor: 'pointer'
+              events:
+                click: (event) ->
+                  zoomInGroup(event.point.x)
               stacking: 'normal'
           tooltip:
             shared: true
@@ -660,10 +631,6 @@ $(".group-chart").ready ->
         #   name: data[1].name
         #   data: data[1].data
         # )
-
-        console.log data
-
-        console.log chart.series[0].data
 
         chart_data_min_x = chart.series[0].data[0].x
         #checkIfPreviousDataExistsGroup()

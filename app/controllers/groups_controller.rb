@@ -79,17 +79,16 @@ class GroupsController < ApplicationController
       data_entry = []
       latest_power = nil
       virtual = metering_point.virtual
+      metering_point_name = metering_point.decorate.name
       if metering_point.users.any?
+        metering_point_name = metering_point_name + " (" + metering_point.users.collect{|user| user.profile.first_name}.join(", ") + ")"
         if metering_point.users.include?(current_user)
-          user_name = current_user.profile.first_name
           own_metering_point = true
         else
-          user_name = "anonym"
           own_metering_point = false
           #user_name = metering_point.users.collect{|user| user.profile.first_name}.join(", ")
         end
       else
-        user_name = metering_point.decorate.name
         own_metering_point = false
       end
       if metering_point.meter
@@ -107,22 +106,25 @@ class GroupsController < ApplicationController
           latest_power = metering_point.last_power
         end
       end
-      readable = metering_point.readable_by?(current_user)
+      readable = user_signed_in? ? metering_point.readable_by?(current_user) : false
+      if !readable
+        metering_point_name = "anonym"
+      end
       if metering_point.mode == "out"
         if !latest_power.nil?
-          data_entry = {:metering_point_id => metering_point.id, :latest_power => latest_power[:power], :name => user_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
+          data_entry = {:metering_point_id => metering_point.id, :latest_power => latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => true}
           #data_entry.push(metering_point.id, latest_power, user_name, virtual)
         else
-          data_entry = {:metering_point_id => metering_point.id, :latest_power => 0, :name => user_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
+          data_entry = {:metering_point_id => metering_point.id, :latest_power => 0, :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => true}
           #data_entry.push(metering_point.id, 0, user_name, virtual)
         end
         out_metering_point_data.push(data_entry)
       else
         if !latest_power.nil?
-          data_entry = {:metering_point_id => metering_point.id, :latest_power => latest_power[:power], :name => user_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
+          data_entry = {:metering_point_id => metering_point.id, :latest_power => latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
           #data_entry.push(metering_point.id, latest_power, user_name, virtual)
         else
-          data_entry = {:metering_point_id => metering_point.id, :latest_power => 0, :name => user_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
+          data_entry = {:metering_point_id => metering_point.id, :latest_power => 0, :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
           #data_entry.push(metering_point.id, 0, user_name, virtual)
         end
         in_metering_point_data.push(data_entry)
