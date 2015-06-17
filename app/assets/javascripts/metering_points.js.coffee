@@ -160,7 +160,8 @@ $(".metering_point_detail").ready ->
           enabled: false
         title:
           margin: 0
-          text: ""
+          text: "Heute, " + moment(data[0].data[0][0]).format("DD.MM.YYYY")
+          style: { "color": "#FFF"}
         credits:
           enabled: false
         loading:
@@ -252,6 +253,7 @@ $(".metering_point_detail").ready ->
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
       chart_data_min_x = chart.series[0].data[0].x
+      setChartTitle(chart_data_min_x)
       #checkIfPreviousDataExists()
       #checkIfNextDataExists()
       #checkIfZoomOut()
@@ -268,6 +270,7 @@ $(".metering_point_detail").ready ->
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
       chart_data_min_x = chart.series[0].data[0].x
+      setChartTitle(chart_data_min_x)
       #checkIfPreviousDataExists()
       #checkIfNextDataExists()
       #checkIfZoomOut()
@@ -298,6 +301,7 @@ $(".metering_point_detail").ready ->
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
       chart_data_min_x = chart.series[0].data[0].x
+      setChartTitle(chart_data_min_x)
       #checkIfPreviousDataExists()
       #checkIfNextDataExists()
       #checkIfZoomOut()
@@ -340,7 +344,8 @@ $(".dashboard-chart").ready ->
                 enabled: true
               title:
                 margin: 0
-                text: ""
+                text: "Heute, " + moment(data[0].data[0][0]).format("DD.MM.YYYY")
+                style: { "color": "#000"}
               credits:
                 enabled: false
               loading:
@@ -412,11 +417,18 @@ $(".dashboard-chart").ready ->
                 plotOptions:
                   series:
                     fillOpacity: 0.5
+                  areaspline:
+                    borderWidth: 0
                     events:
                       cursor: 'pointer'
                       click: (event) ->
                         zoomInDashboard(event.point.x)
                   column:
+                    borderWidth: 0
+                    events:
+                      cursor: 'pointer'
+                      click: (event) ->
+                        zoomInDashboard(event.point.x)
                     stacking: 'normal'
                 tooltip:
                   pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
@@ -470,6 +482,7 @@ $(".dashboard-chart").ready ->
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
+    setChartTitle(chart_data_min_x)
     chart.hideLoading()
     #checkIfPreviousDataExistsDashboard()
     #checkIfNextDataExistsDashboard()
@@ -495,6 +508,7 @@ $(".dashboard-chart").ready ->
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
+    setChartTitle(chart_data_min_x)
     chart.hideLoading()
     #checkIfPreviousDataExistsDashboard()
     #checkIfNextDataExistsDashboard()
@@ -537,6 +551,7 @@ $(".dashboard-chart").ready ->
     #checkIfPreviousDataExistsDashboard()
     #checkIfNextDataExistsDashboard()
     #checkIfZoomOutDashboard()
+    setChartTitle(chart_data_min_x)
     chart.hideLoading()
 
 
@@ -576,7 +591,8 @@ $(".group-chart").ready ->
             enabled: true
           title:
             margin: 0
-            text: ""
+            text: "Heute, " + moment(data[0].data[0][0]).format("DD.MM.YYYY")
+            style: { "color": "#000"}
           credits:
             enabled: false
           loading:
@@ -675,9 +691,11 @@ $(".group-chart").ready ->
           chart.series[numberOfSeries].setData(d.data)
           chart.xAxis[0].update(getExtremes(containing_timestamp), true)
           chart_data_min_x = chart.series[numberOfSeries].data[0].x
+          setChartTitle(chart_data_min_x)
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
+
     chart.hideLoading()
     #checkIfPreviousDataExistsGroup()
     #checkIfNextDataExistsGroup()
@@ -699,6 +717,7 @@ $(".group-chart").ready ->
           chart.series[numberOfSeries].setData(d.data)
           chart.xAxis[0].update(getExtremes(containing_timestamp), true)
           chart_data_min_x = chart.series[numberOfSeries].data[0].x
+          setChartTitle(chart_data_min_x)
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
@@ -737,6 +756,7 @@ $(".group-chart").ready ->
           chart.series[numberOfSeries].update({pointWidth: new_point_width})
           chart.xAxis[0].update(getExtremes(containing_timestamp), true)
           chart_data_min_x = chart.series[numberOfSeries].data[0].x
+          setChartTitle(chart_data_min_x)
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
@@ -918,12 +938,14 @@ zoomIn = (timestamp) ->
       chart.xAxis[0].update(getExtremes(containing_timestamp), true)
     ).success ->
       chart_data_min_x = chart.series[0].data[0].x
-      checkIfPreviousDataExists()
-      checkIfNextDataExists()
-      checkIfZoomOut()
+      setChartTitle(chart_data_min_x)
+      #checkIfPreviousDataExists()
+      #checkIfNextDataExists()
+      #checkIfZoomOut()
       chart.hideLoading()
 
 zoomInDashboard = (timestamp) ->
+  console.log 'hehe'
   chart.showLoading()
 
   if actual_resolution == "hour_to_minutes"
@@ -963,9 +985,10 @@ zoomInDashboard = (timestamp) ->
         if !seriesVisible
           chart.series[numberOfSeries].hide()
         numberOfSeries += 1
-  checkIfPreviousDataExistsDashboard()
-  checkIfNextDataExistsDashboard()
-  checkIfZoomOutDashboard()
+  #checkIfPreviousDataExistsDashboard()
+  #checkIfNextDataExistsDashboard()
+  #checkIfZoomOutDashboard()
+  setChartTitle(chart_data_min_x)
   chart.hideLoading()
 
 zoomInGroup = (timestamp) ->
@@ -1005,12 +1028,13 @@ zoomInGroup = (timestamp) ->
         chart.series[numberOfSeries].update({pointWidth: new_point_width})
         chart.xAxis[0].update(getExtremes(containing_timestamp), true)
         chart_data_min_x = chart.series[0].data[0].x
+        setChartTitle(chart_data_min_x)
         if !seriesVisible
           chart.series[numberOfSeries].hide()
         numberOfSeries += 1
-  checkIfPreviousDataExistsGroup()
-  checkIfNextDataExistsGroup()
-  checkIfZoomOutGroup()
+  #checkIfPreviousDataExistsGroup()
+  #checkIfNextDataExistsGroup()
+  #checkIfZoomOutGroup()
   chart.hideLoading()
 
 
@@ -1135,6 +1159,19 @@ setChartToLinechart = (displaySeriesName) ->
     title:
       text: "Leistung"
   })
+
+setChartTitle = (containing_timestamp) ->
+  extremes = getExtremes(containing_timestamp)
+  if actual_resolution == "hour_to_minutes"
+    chart.setTitle({text: moment(extremes.min).format("DD.MM.YYYY") + " ...  " + moment(extremes.min).format("HH:mm") + " - " + moment(extremes.max).format("HH:mm")})
+  else if actual_resolution == "day_to_minutes" || actual_resolution == "day_to_hours"
+    chart.setTitle({text: moment(extremes.min).format("DD.MM.YYYY")})
+  else if actual_resolution == "month_to_days"
+    chart.setTitle({text: moment(extremes.min).format("MMMM YYYY")})
+  else if actual_resolution == "year_to_months"
+    chart.setTitle({text: moment(extremes.min).format("YYYY")})
+
+
 
 
 
