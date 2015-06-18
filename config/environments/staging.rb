@@ -3,8 +3,6 @@ Buzzn::Application.configure do
 
   #config.middleware.use Rack::SslEnforcer
 
-  #GA.tracker = "UA-43704543-1"
-
   # Code is not reloaded between requests.
   config.cache_classes = true
 
