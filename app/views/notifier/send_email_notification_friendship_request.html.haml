@@ -2,5 +2,5 @@
   = t('hello') + " #{@receiver.name}!"
 %p= @sender.name + ' ' + t('sent_a_friendship_request_to_you')
 %p= t('to_accept_or_reject_the_friendship_request_please_visit_your_profile')
-%p= link_to t('my_profile'), profile_url(@receiver)
+%p= link_to t('my_profile'), profile_url(@receiver.profile)
 %p= t('your_buzzn_team')

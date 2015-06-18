@@ -87,7 +87,7 @@ de:
         confirm_pricing_model: Ich akzeptiere das Preismodell
         power_of_attorney: Ich erteile euch Vollmacht
         forecast_watt_hour_pa: Geschätzte Strommenge pro Jahr (kWh)
-        organization: Firmenname
+        organization: Firma
         customer_number: Kundennummer
         contract_number: Vertragskontonummer
         contracting_party: Vertragspartner
@@ -96,6 +96,7 @@ de:
         signing_user: Unterzeichnet von
         commissioning: Vertragsbeginn
         termination: Vertragsende
+        tariff: Tarif
 
       organization:
         name: Name
