@@ -3,8 +3,6 @@ Buzzn::Application.configure do
 
   # config.middleware.use Rack::SslEnforcer
 
-  GA.tracker = Rails.application.secrets.google_analytics
-
   # Code is not reloaded between requests.
   config.cache_classes = true
 
