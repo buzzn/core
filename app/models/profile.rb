@@ -1,3 +1,5 @@
+require 'file_size_validator'
+
 class Profile < ActiveRecord::Base
   resourcify
   include Authority::Abilities
@@ -13,6 +15,10 @@ class Profile < ActiveRecord::Base
   validates :user_name, presence: true, uniqueness: true, length: { in: 2..30 }
 
   validates_acceptance_of :terms, accept: true
+
+  validates :image, :file_size => {
+    :maximum => 2.megabytes.to_i
+  }
 
   normalize_attributes :user_name, :first_name, :last_name
 

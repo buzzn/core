@@ -174,7 +174,9 @@ de:
       metering_point_operator_contract:
         username: 'Benutzername, mit dem du dich beim Messstellenbetreiber einloggen kannst.'
       device:
-        image: Ein Bild von Deinem Gerät darf maximal 1 MB groß sein und eine Auflösung von 1024x1024 Pixel nicht überschreiten.
+        image: "Ein Bild von Deinem Gerät darf maximal 2 MB groß und nur vom Typ GIF, JPG und PNG sein."
+      profile:
+        image: "Ein Bild von Dir darf maximal 2 MB groß und nur vom Typ GIF, JPG und PNG sein."
 
 
 

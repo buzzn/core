@@ -1,3 +1,5 @@
+require 'file_size_validator'
+
 class Device < ActiveRecord::Base
   resourcify
   include Authority::Abilities
@@ -14,6 +16,9 @@ class Device < ActiveRecord::Base
   validates :manufacturer_name, presence: true, length: { in: 2..30 }
   validates :manufacturer_product_name, presence: true, length: { in: 2..30 }
   validates :watt_peak, numericality: { only_integer: true }, presence: true
+  validates :image, :file_size => {
+    :maximum => 2.megabytes.to_i
+  }
 
 
   default_scope { order('created_at ASC') }

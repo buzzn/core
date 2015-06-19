@@ -201,6 +201,17 @@ de:
       <<: *errors
   activerecord:
     errors:
+      models:
+        profile:
+          attributes:
+            image:
+              size_too_big: Das ausgewählte Bild ist zu groß. Maximal 2 MB!
+              wrong_format: Die ausgewählte Datei hat das falsche Format. Nur GIF, JPG, PNG!
+        device:
+          attributes:
+            image:
+              size_too_big: Das ausgewählte Bild ist zu groß. Maximal 2 MB!
+              wrong_format: Die ausgewählte Datei hat das falsche Format. Nur GIF, JPG, PNG!
       <<: *errors
     models:
       location: Standort

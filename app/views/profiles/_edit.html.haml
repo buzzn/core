@@ -6,4 +6,4 @@
     = simple_form_for @profile, remote: true do |f|
       = render 'profiles/form_fields', f: f
       .modal-footer
-        = f.button :submit, id: 'submit', class: 'btn btn-success'
+        = f.button :button, id: 'submit', class: 'btn btn-success', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>" + '  ' + t('loading') + '...'}

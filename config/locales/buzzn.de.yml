@@ -540,7 +540,7 @@ de:
   formula_parts_info: "Der vituelle Zählpunkt besitzt keinen physikalischen Zähler, weshalb er aus den Werten von anderen Zählpunkten berechnet werden muss. Hier findest Du die Auflistung der Bestandteile der Formel zu Berechnung der Energiewerte des aktuellen Zählpunkts."
 
   cookie_text: "Wir verwenden Cookies, um unseren Service zu verbessern und zu personalisieren. Wenn Du unsere Website nutzt erklärst Du Dich mit der Verwendung von Cookies einverstanden. Es kann sein, dass schon jetzt Cookies gespeichert wurden. In unserer Cookie Richtlinie findest Du mehr Informationen. "
-
+  must_be_a_GIF_JPG_or_PNG: "Muss vom Typ GIF, JPG oder PNG sein."
 
 
   possible_reasons_are_a_broken_internet_connection_or_a_failure_in_your_hardware: "Mögliche Gründe sind eine unterbrochene Internetverbindung oder ein Fehler in deiner Hardware."
