@@ -297,7 +297,7 @@ class MeteringPoint < ActiveRecord::Base
   def fake_or_smart(metering_point_id, resolution_format, containing_timestamp)
     metering_point = MeteringPoint.find(metering_point_id)
     if metering_point.meter && metering_point.meter.smart
-      convert_to_array(Reading.aggregate(resolution_format, [metering_point.id], containing_timestamp), resolution_format) # smart
+      convert_to_array(Reading.aggregate(resolution_format, [metering_point.id], containing_timestamp), resolution_format, 1) # smart
     else
       if self.pv?
         convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000) # SEP
