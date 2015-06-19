@@ -1,12 +1,12 @@
-class UpdateMeteringPointChartCache
+class UpdateGroupChartCache
   include Sidekiq::Worker
   sidekiq_options :retry => false, :dead => false
 
-  def perform(metering_point_id, resolution, containing_timestamp)
+  def perform(group_id, resolution, containing_timestamp)
 
-    @metering_point = MeteringPoint.find(metering_point_id)
+    @group = Group.find(group_id)
 
-    @cache_id = "/metering_points/#{params[:metering_point_id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{params[:containing_timestamp]}"
+    @cache_id = "/groups/#{params[:group_id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{params[:containing_timestamp]}"
 
     case params[:resolution]
     when 'year_to_months'
@@ -24,7 +24,7 @@ class UpdateMeteringPointChartCache
     end
 
     Rails.cache.fetch(@cache_id, :expires_in => @expires_in ) do
-      @metering_point.send(params[:resolution], params[:containing_timestamp])
+      @group.send(params[:resolution], params[:containing_timestamp])
     end
 
   end
