@@ -119,7 +119,9 @@ class MeteringPointsController < ApplicationController
 
   def latest_power
     @metering_point = MeteringPoint.find(params[:id])
-    last_power = @metering_point.last_power
+    @cache_id = "/metering_points/#{params[:id]}/latest_power"
+    @cache = Rails.cache.fetch(@cache_id)
+    last_power = @cache || @metering_point.last_power
     render json: {
       latest_power: last_power[:power],
       timestamp:    last_power[:timestamp],

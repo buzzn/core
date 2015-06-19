@@ -220,13 +220,27 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
-  def self.update_chart_cache
+  def self.update_cache
     MeteringPoint.all.select(:id).each.each do |metering_point|
+
       Sidekiq::Client.push({
        'class' => UpdateMeteringPointChartCache,
        'queue' => :default,
        'args' => [ metering_point.id, 'day_to_minutes']
       })
+
+      Sidekiq::Client.push({
+       'class' => UpdateMeteringPointChartCache,
+       'queue' => :default,
+       'args' => [ metering_point.id, 'day_to_hours']
+      })
+
+      Sidekiq::Client.push({
+       'class' => UpdateMeteringPointLatestPowerCache,
+       'queue' => :default,
+       'args' => [ metering_point.id]
+      })
+
     end
   end
 
