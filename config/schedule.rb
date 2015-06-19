@@ -9,6 +9,7 @@ end
 
 every 3.minute do
   runner "Group.update_chart_cache"
+  runner "MeteringPoint.update_chart_cache"
 end
 
 every 30.minutes do

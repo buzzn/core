@@ -209,8 +209,6 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
-
-
   def self.json_tree(nodes)
     nodes.map do |node, sub_nodes|
       label = node.decorate.name
@@ -220,6 +218,18 @@ class MeteringPoint < ActiveRecord::Base
       {:label => label, :mode => node.mode, :id => node.id, :children => json_tree(sub_nodes).compact}
     end
   end
+
+
+  def self.update_chart_cache
+    MeteringPoint.all.select(:id).each.each do |metering_point|
+      Sidekiq::Client.push({
+       'class' => UpdateMeteringPointChartCache,
+       'queue' => :default,
+       'args' => [ metering_point.id, 'day_to_minutes']
+      })
+    end
+  end
+
 
 
   def minute_to_seconds(containing_timestamp)
@@ -263,10 +273,6 @@ class MeteringPoint < ActiveRecord::Base
       self.formula_parts.collect(&:operand_id)
     end
   end
-
-
-
-
 
   def get_operators_from_formula
     if self.virtual && self.formula_parts.any?

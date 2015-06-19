@@ -2,30 +2,10 @@ class UpdateMeteringPointChartCache
   include Sidekiq::Worker
   sidekiq_options :retry => false, :dead => false
 
-  def perform(metering_point_id, resolution, containing_timestamp)
-
-    @metering_point = MeteringPoint.find(metering_point_id)
-
-    @cache_id = "/metering_points/#{params[:metering_point_id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{params[:containing_timestamp]}"
-
-    case params[:resolution]
-    when 'year_to_months'
-      @expires_in = 60.minute
-    when 'month_to_days'
-      @expires_in = 60.minute
-    when 'day_to_hours'
-      @expires_in = 15.minute
-    when 'day_to_minutes'
-      @expires_in = 5.minute
-    when 'hour_to_minutes'
-      @expires_in = 5.minute
-    else
-      @expires_in = 10.seconds
-    end
-
-    Rails.cache.fetch(@cache_id, :expires_in => @expires_in ) do
-      @metering_point.send(params[:resolution], params[:containing_timestamp])
-    end
-
+  def perform(metering_point_id, resolution)
+    @cache_id = "/metering_points/#{metering_point_id}/chart?resolution=#{resolution}&containing_timestamp="
+    @now = (Time.now.in_time_zone.utc).to_i * 1000
+    @fresh_chart = MeteringPoint.find(metering_point_id).send(resolution, @now)
+    Rails.cache.write(@cache_id, @fresh_chart, expires_in: 10.minute)
   end
 end
