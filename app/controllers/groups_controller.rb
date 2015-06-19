@@ -136,64 +136,13 @@ class GroupsController < ApplicationController
   end
 
   def chart
-    @group = Group.find(params[:id])
-    @data_in = []
-    @data_out = []
-    @metering_points_in = []
-    @metering_points_out = []
-
-    @group.metering_points.each do |metering_point|
-      if !metering_point.smart?
-        next
-      end
-
-      if metering_point.virtual
-        operands_plus = FormulaPart.where(metering_point_id: metering_point.id).where(operator: "+").collect(&:operand)
-        operands_plus.each do |metering_point_plus|
-          if metering_point_plus.mode == "in"
-            @metering_points_in << metering_point_plus.id
-          else
-            @metering_points_out << metering_point_plus.id
-          end
-        end
-
-        operands_minus = FormulaPart.where(metering_point_id: metering_point.id).where(operator: "-").collect(&:operand)
-        operands_minus.each do |metering_point_minus|
-          if metering_point_minus.mode == "in"
-            @metering_points_in << metering_point_minus.id
-          else
-            @metering_points_out << metering_point_minus.id
-          end
-        end
-      else
-        if metering_point.mode == "in"
-          @metering_points_in << metering_point.id
-        else
-          @metering_points_out << metering_point.id
-        end
-      end
-    end
-
-    if params[:resolution] == "hour_to_minutes"
-      resolution_format = :hour_to_minutes
-    elsif params[:resolution] == nil || params[:resolution] == "day_to_minutes"
-      resolution_format = :day_to_minutes
-    elsif params[:resolution] == "month_to_days"
-      resolution_format = :month_to_days
-    elsif params[:resolution] == "year_to_months"
-      resolution_format = :year_to_months
-    end
-
-    if params[:containing_timestamp] == nil
-      containing_timestamp = Time.now.to_i * 1000
+    @cache_id = "/groups/#{params[:id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{params[:containing_timestamp]}"
+    @cache = Rails.cache.fetch(@cache_id)
+    if @cache
+      render json: @cache
     else
-      containing_timestamp = params[:containing_timestamp]
+      render json: Group.find(params[:id]).chart(params[:resolution], params[:containing_timestamp]).to_json
     end
-
-    result_in = @group.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, @metering_points_in, containing_timestamp), resolution_format, containing_timestamp)
-    result_out = @group.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, @metering_points_out, containing_timestamp), resolution_format, containing_timestamp)
-
-    render json: [ { :name => t('total_consumption'), :data => result_in}, { :name => t('total_production'), :data => result_out} ].to_json
   end
 
   def kiosk
