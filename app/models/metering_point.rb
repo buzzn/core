@@ -300,11 +300,11 @@ class MeteringPoint < ActiveRecord::Base
       convert_to_array(Reading.aggregate(resolution_format, [metering_point.id], containing_timestamp), resolution_format) # smart
     else
       if self.pv?
-        convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format) # SEP
+        convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000) # SEP
       elsif self.bhkw_or_else?
-        convert_to_array(Reading.aggregate(resolution_format, ['sep_bhkw'], containing_timestamp), resolution_format) # SEP
+        convert_to_array(Reading.aggregate(resolution_format, ['sep_bhkw'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000) # SEP
       elsif self.slp?
-        convert_to_array(Reading.aggregate(resolution_format, ['slp'], containing_timestamp), resolution_format) # SLP
+        convert_to_array(Reading.aggregate(resolution_format, ['slp'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000) # SLP
       end
     end
   end

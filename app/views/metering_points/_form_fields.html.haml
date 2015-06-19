@@ -2,6 +2,7 @@
 = f.input :mode, collection: MeteringPoint.modes, include_blank: false, as: :radio_buttons, label: false
 = f.input :virtual
 = f.input :name
+= f.input :forecast_kwh_pa
 
 .js-dependent-fields{data: {checkbox: {id: 'metering_point_virtual', value: 'false'}}}
   = f.input :uid

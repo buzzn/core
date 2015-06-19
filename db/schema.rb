@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150613142417) do
+ActiveRecord::Schema.define(version: 20150619095317) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -339,6 +339,7 @@ ActiveRecord::Schema.define(version: 20150613142417) do
     t.uuid     "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "forecast_kwh_pa"
   end
 
   add_index "metering_points", ["contract_id"], name: "index_metering_points_on_contract_id", using: :btree

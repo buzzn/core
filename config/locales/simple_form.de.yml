@@ -52,6 +52,7 @@ de:
         virtual: Virtueller Zählpunkt
         group: Zu eigener Gruppe hinzufügen
         readable: Sichtbar für
+        forecast_kwh_pa: Jahresprognose (kWh)
       device:
         image: Bild
         mode: Modus

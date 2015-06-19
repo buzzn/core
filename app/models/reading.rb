@@ -261,14 +261,14 @@ class Reading
     return Reading.collection.aggregate(pipe).first
   end
 
-  def self.latest_fake_data(source)
+  def self.latest_fake_data(source, factor)
     values = []
     readings = Reading.where(:timestamp.gte => (Time.now - 15.minutes), :timestamp.lt => (Time.now + 15.minutes), source: source)
     if readings.any?
       firstTimestamp = readings.first.timestamp.to_i*1000
-      firstValue = readings.first.watt_hour/10000000000.0
+      firstValue = readings.first.watt_hour/10000000000.0*factor
       lastTimestamp = readings.last.timestamp.to_i*1000
-      lastValue = readings.last.watt_hour/10000000000.0
+      lastValue = readings.last.watt_hour/10000000000.0*factor
       values << [firstTimestamp, firstValue]
       values << [lastTimestamp, lastValue]
       return values
