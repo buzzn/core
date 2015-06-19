@@ -45,6 +45,10 @@ de:
   out_device: Erzeuger
   in_device: Verbraucher
 
+  new_reading: Neuer Zählerstand
+  create_reading: Zählerstand senden
+  submit: Senden
+  submit_reading: Zählerstand eingeben
 
 
   out: Produktion

@@ -187,6 +187,18 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
+  def submit_reading
+    link_to(
+      content_tag(:i, t("submit_reading"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
+      new_reading_path(metering_point_id: model.id),
+      {
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal'
+      })
+  end
+
 
 
 

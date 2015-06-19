@@ -1,0 +1,23 @@
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'new_reading'
+  .modal-body
+    = form_for @reading, remote: true do |f|
+
+      = f.hidden_field :metering_point_id, value: params[:metering_point_id]
+
+
+      .table-responsive
+        %table.table
+          %tbody
+            %tr
+              %td= f.label :time_of_reading
+              %td= f.date_field :timestamp
+            %tr
+              %td= f.label :count
+              %td= f.number_field :watt_hour
+
+
+      .modal-footer
+        = f.button t('create_reading'), id: 'submit', class: 'btn btn-success'

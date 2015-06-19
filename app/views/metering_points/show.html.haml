@@ -55,6 +55,10 @@
                     .power-ticker
                       = t('loading') + '...'
                 %p= t'watt'
+            .text-center
+              - if !@metering_point.smart?
+                .new-reading
+                  = @metering_point.submit_reading
 
 
   .row

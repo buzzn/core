@@ -132,6 +132,10 @@ de:
       create: ! '%{model} erstellen'
       submit: ! '%{model} speichern'
       update: ! '%{model} aktualisieren'
+    label:
+      reading:
+        time_of_reading: Ablesezeitpunkt
+        count: Zählerstand
   number:
     currency:
       format:

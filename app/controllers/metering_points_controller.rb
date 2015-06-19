@@ -122,6 +122,7 @@ class MeteringPointsController < ApplicationController
 
 
 
+
 private
   def metering_point_params
     params.require(:metering_point).permit(
