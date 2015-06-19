@@ -66,6 +66,16 @@ class Group < ActiveRecord::Base
   end
 
 
+  def self.update_chart_cache
+    Group.all.each do |group|
+      Sidekiq::Client.push({
+       'class' => UpdateGroupChartCache,
+       'queue' => :default,
+       'args' => [ group.id, 'day_to_minutes', (Time.now.in_time_zone.utc).to_i * 1000 ]
+      })
+    end
+  end
+
 
   private
 
