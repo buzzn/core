@@ -215,9 +215,15 @@ class Reading
 
 
 
-
-
-    return Reading.collection.aggregate(pipe)
+    # TODO this works but is ugly
+    if Mongoid.sessions[:replica_set]
+      hosts = Mongoid.sessions[:replica_set][:hosts]
+      session = Moped::Session.new([ hosts.first ])
+      session.use Mongoid.sessions[:replica_set][:database]
+      return session.with(read: :nearest)[:readings].aggregate(pipe).first
+    else
+      return Reading.collection.aggregate(pipe)
+    end
   end
 
 
