@@ -54,7 +54,7 @@ module CalcVirtualMeteringPoint
   def convert_to_array(data, resolution_format, factor)
     hours = []
     data.each do |hour|
-      if resolution_format == :year_to_months || resolution_format == :month_to_days
+      if resolution_format == :year_to_months || resolution_format == :month_to_days || resolution_format == :year_by_year
         hours << [
           hour['firstTimestamp'].to_i*1000,
           hour['consumption'].to_i/10000000000.0 * factor

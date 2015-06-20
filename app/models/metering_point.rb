@@ -265,7 +265,41 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
+  def calculate_forecast(containing_timestamp)
+    if smart?
+      return
+    end
+    readings = Reading.all_by_metering_point_id(self.id)
+    if readings.size > 1
+      last_timestamp = readings.last[:timestamp].to_i
+      last_value = readings.last[:watt_hour]/10000000000.0
+      another_timestamp = readings[readings.size - 2][:timestamp].to_i
+      another_value = readings[readings.size - 2][:watt_hour]/10000000000.0
+      i = 3
+      while last_timestamp - another_timestamp < 2592000 do # difference must at least be 30 days = 2592000 seconds
+        if i > readings.size
+          return
+        end
+        another_timestamp = readings[readings.size - i][:timestamp].to_i
+        another_value = readings[readings.size - i][:watt_hour]/10000000000.0
+        i += 1
+      end
+      if last_timestamp - another_timestamp >= 2592000
+        puts last_value
+        puts last_timestamp
+        puts another_value
+        puts another_timestamp
+        count_days_in_year = (Time.at(last_timestamp).end_of_year - Time.at(last_timestamp).beginning_of_year)/(3600*24)
+        count_past_days = ((Time.at(last_timestamp) - Time.at(another_timestamp))/3600/24).to_i
+        count_watt_hour = last_value - another_value
+        yearly_consumption = (count_watt_hour / (count_past_days * 1.0)) * count_days_in_year
 
+        self.forecast_kwh_pa = yearly_consumption
+        self.save
+      end
+
+    end
+  end
 
 
   def get_operators_from_formula
@@ -300,11 +334,11 @@ class MeteringPoint < ActiveRecord::Base
       convert_to_array(Reading.aggregate(resolution_format, [metering_point.id], containing_timestamp), resolution_format, 1) # smart
     else
       if self.pv?
-        convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000) # SEP
+        convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
       elsif self.bhkw_or_else?
-        convert_to_array(Reading.aggregate(resolution_format, ['sep_bhkw'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000) # SEP
+        convert_to_array(Reading.aggregate(resolution_format, ['sep_bhkw'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
       elsif self.slp?
-        convert_to_array(Reading.aggregate(resolution_format, ['slp'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000) # SLP
+        convert_to_array(Reading.aggregate(resolution_format, ['slp'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SLP
       end
     end
   end

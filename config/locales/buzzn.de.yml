@@ -49,6 +49,9 @@ de:
   create_reading: Zählerstand senden
   submit: Senden
   submit_reading: Zählerstand eingeben
+  reading_created_successfully: Zählerstand erfolgreich gespeichert.
+  error_while_creating_reading: Fehler beim Erstellen des Zählerstands.
+  watt_hour_is_lower_than_the_last_one: Der Zählerstand ist kleiner als der letzte.
 
 
   out: Produktion

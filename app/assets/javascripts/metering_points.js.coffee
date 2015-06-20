@@ -1162,6 +1162,7 @@ setChartTitle = (containing_timestamp) ->
 readingsSLP = []
 readingsSEP_PV = []
 readingsSEP_BHKW = []
+factors = {}
 timers = []
 
 $(".metering_point").ready ->
@@ -1202,7 +1203,7 @@ $(".metering_point").ready ->
       getFakeValue(metering_point_id, source)
       timers.push(
         window.setInterval(->
-          setFakeValue(metering_point, source)
+          setFakeValue(metering_point, metering_point_id, source)
           return
         , 1000*2)
         )
@@ -1232,32 +1233,34 @@ calculate_power = (last_readings) =>
 getFakeValue = (metering_point_id, source) ->
   $.getJSON "/metering_points/" + metering_point_id + "/latest_fake_data", (data) ->
     if source == 'slp'
-      readingsSLP = data
+      readingsSLP = data.data
     else if source == 'sep_pv'
-      readingsSEP_PV = data
+      readingsSEP_PV = data.data
     else
-      readingsSEP_BHKW = data
+      readingsSEP_BHKW = data.data
+    if !(metering_point_id of factors)
+      factors[metering_point_id] = data.factor
 
-setFakeValue = (metering_point, source) ->
+setFakeValue = (metering_point, metering_point_id, source) ->
   if source == 'slp'
     if Date.parse(readingsSLP[1][0]) < new Date()
-      getFakeValue('slp')
-    metering_point.find(".power-ticker").html interpolateFakekW(readingsSLP).toFixed(0)
+      getFakeValue(metering_point_id, 'slp')
+    metering_point.find(".power-ticker").html interpolateFakekW(readingsSLP, factors[metering_point_id]).toFixed(0)
   else if source == 'sep_pv'
     if Date.parse(readingsSEP_PV[1][0]) < new Date()
-      getFakeValue('sep_pv')
-    metering_point.find(".power-ticker").html interpolateFakekW(readingsSEP_PV).toFixed(0)
+      getFakeValue(metering_point_id, 'sep_pv')
+    metering_point.find(".power-ticker").html interpolateFakekW(readingsSEP_PV, factors[metering_point_id]).toFixed(0)
   else
     if Date.parse(readingsSEP_BHKW[1][0]) < new Date()
-      getFakeValue('sep_BHKW')
-    metering_point.find(".power-ticker").html interpolateFakekW(readingsSEP_BHKW).toFixed(0)
+      getFakeValue(metering_point_id, 'sep_BHKW')
+    metering_point.find(".power-ticker").html interpolateFakekW(readingsSEP_BHKW, factors[metering_point_id]).toFixed(0)
 
-interpolateFakekW = (data_arr) ->
+interpolateFakekW = (data_arr, factor) ->
   firstTimestamp = data_arr[0][0]
   firstValue = data_arr[0][1]
   lastTimestamp = data_arr[1][0]
   lastValue = data_arr[1][1]
-  averagePower = (lastValue - firstValue)/0.25*1000
+  averagePower = (lastValue - firstValue)/0.25*1000*factor
   return getRandomPower(averagePower)
 
 getRandomPower = (averagePower) ->

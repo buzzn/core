@@ -4,9 +4,14 @@
     %h4.modal-title= t'new_reading'
   .modal-body
     = form_for @reading, remote: true do |f|
+      - if @reading.errors.any?
+        #error_explanation
+          %h2= t('error_while_creating_reading')
+          - @reading.errors.full_messages.each do |message|
+            = t(message.downcase!.gsub(' ', '_'))
 
-      = f.hidden_field :metering_point_id, value: params[:metering_point_id]
-
+      - value = params[:metering_point_id].nil? ? @reading.metering_point_id : params[:metering_point_id]
+      = f.hidden_field :metering_point_id, value: value
 
       .table-responsive
         %table.table
@@ -20,4 +25,4 @@
 
 
       .modal-footer
-        = f.button t('create_reading'), id: 'submit', class: 'btn btn-success'
+        = f.button t('create_reading'), id: 'submit', class: 'btn btn-success', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>" + '  ' + t('loading') + '...'}

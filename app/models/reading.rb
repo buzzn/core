@@ -16,6 +16,22 @@ class Reading
   index({ metering_point_id: 1 })
   index({ timestamp: 1 })
 
+  validates_numericality_of :watt_hour, only_integer: true
+  validate :watt_hour_has_to_grow, if: :user_input?
+
+
+  def watt_hour_has_to_grow
+    reading_before = Reading.last_before_user_input(metering_point_id, timestamp)
+    puts reading_before
+    if !reading_before.nil? && reading_before[:watt_hour] > watt_hour
+      puts "ERROR"
+      self.errors.add(:watt_hour, "is lower than the last one")
+    end
+  end
+
+  def user_input?
+    source == 'user_input'
+  end
 
   def self.aggregate(resolution_format, metering_point_ids=['slp'], containing_timestamp=nil)
     resolution_formats = {
@@ -84,6 +100,8 @@ class Reading
       metering_point_or_fake = { source: { "$in" => ['sep_pv'] } }
     elsif metering_point_ids[0] == 'sep_bhkw'
       metering_point_or_fake = { source: { "$in" => ['sep_bhkw'] } }
+    #elsif metering_point_ids[0] == 'user_input'
+    #  metering_point_or_fake = { source: { "$in" => ['user_input'] } }
     else
       metering_point_or_fake = { metering_point_id: { "$in" => metering_point_ids } }
     end
@@ -261,14 +279,56 @@ class Reading
     return Reading.collection.aggregate(pipe).first
   end
 
-  def self.latest_fake_data(source, factor)
+  def self.all_by_metering_point_id(metering_point_id)
+    pipe = [
+      { "$match" => {
+          metering_point_id: {
+            "$in" => [metering_point_id]
+          },
+          source:{
+            "$in" => ['user_input']
+          }
+        }
+      },
+      { "$sort" => {
+          timestamp: 1
+        }
+      }
+    ]
+    return Reading.collection.aggregate(pipe)
+  end
+
+  def self.last_before_user_input(metering_point_id, input_timestamp)
+    pipe = [
+      { "$match" => {
+          metering_point_id: {
+            "$in" => [metering_point_id]
+          },
+          source:{
+            "$in" => ['user_input']
+          },
+          timestamp: {
+            "$lt"  => input_timestamp.utc
+          }
+        }
+      },
+      { "$sort" => {
+          timestamp: -1
+        }
+      },
+      { "$limit" => 1 }
+    ]
+    return Reading.collection.aggregate(pipe).first
+  end
+
+  def self.latest_fake_data(source)
     values = []
     readings = Reading.where(:timestamp.gte => (Time.now - 15.minutes), :timestamp.lt => (Time.now + 15.minutes), source: source)
     if readings.any?
       firstTimestamp = readings.first.timestamp.to_i*1000
-      firstValue = readings.first.watt_hour/10000000000.0*factor
+      firstValue = readings.first.watt_hour/10000000000.0
       lastTimestamp = readings.last.timestamp.to_i*1000
-      lastValue = readings.last.watt_hour/10000000000.0*factor
+      lastValue = readings.last.watt_hour/10000000000.0
       values << [firstTimestamp, firstValue]
       values << [lastTimestamp, lastValue]
       return values
@@ -276,24 +336,26 @@ class Reading
     return nil
   end
 
+  private
 
-
-  def push_reading
-    if self.source != 'slp' # don't push slp records
-      if self.timestamp > 30.seconds.ago # don't push old readings
-        Sidekiq::Client.push({
-         'class' => PushReadingWorker,
-         'queue' => :default,
-         'args' => [
-                    metering_point_id,
-                    watt_hour,
-                    power/1000,
-                    timestamp.to_i*1000
-                   ]
-        })
+    def push_reading
+      if self.source != 'slp' && self.source != 'sep_bhkw' && self.source != 'sep_pv' && self.source != 'user_input' # don't push non-smart records
+        if self.timestamp > 30.seconds.ago # don't push old readings
+          Sidekiq::Client.push({
+           'class' => PushReadingWorker,
+           'queue' => :default,
+           'args' => [
+                      metering_point_id,
+                      watt_hour,
+                      power/1000,
+                      timestamp.to_i*1000
+                     ]
+          })
+        end
       end
     end
-  end
+
+
 
 
 
