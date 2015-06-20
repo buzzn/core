@@ -82,9 +82,14 @@ class MeteringPointsController < ApplicationController
 
 
 
+
+
   def chart
     @metering_point = MeteringPoint.find(params[:id])
-    @data = @metering_point.send(params[:resolution], params[:containing_timestamp])
+    @cache_id = "/metering_points/#{params[:id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{params[:containing_timestamp]}"
+    @cache = Rails.cache.fetch(@cache_id)
+    @data = @cache || @metering_point.send(params[:resolution], params[:containing_timestamp])
+
     @chart_data = []
     @chart_data << {
       name: @metering_point.decorate.long_name,
@@ -92,6 +97,9 @@ class MeteringPointsController < ApplicationController
     }
     render json: @chart_data.to_json
   end
+
+
+
 
 
   def latest_fake_data
@@ -108,7 +116,9 @@ class MeteringPointsController < ApplicationController
 
   def latest_power
     @metering_point = MeteringPoint.find(params[:id])
-    last_power = @metering_point.last_power
+    @cache_id = "/metering_points/#{params[:id]}/latest_power"
+    @cache = Rails.cache.fetch(@cache_id)
+    last_power = @cache || @metering_point.last_power
     render json: {
       latest_power: last_power[:power],
       timestamp:    last_power[:timestamp],
