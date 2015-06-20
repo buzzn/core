@@ -3,11 +3,11 @@ env :PATH, '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aw
 set :output, 'log/cron.log'
 
 
-every 3.minute do
+every 5.minute do
   runner "Meter.pull_readings"
 end
 
-every 2.minute do
+every 3.minute do
   runner "Group.update_chart_cache"
   #runner "MeteringPoint.update_cache"
 end
