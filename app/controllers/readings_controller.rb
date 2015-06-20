@@ -7,7 +7,8 @@ class ReadingsController < ApplicationController
   end
 
   def create
-    @reading = Reading.new(reading_params)
+    date = Date.new params[:reading]["timestamp(1i)"].to_i, params[:reading]["timestamp(2i)"].to_i, params[:reading]["timestamp(3i)"].to_i
+    @reading = Reading.new(metering_point_id: params[:reading][:metering_point_id], timestamp: date, watt_hour: params[:reading][:watt_hour])
     @metering_point = MeteringPoint.find(@reading.metering_point_id)
     @reading.watt_hour *= 10000000000
     @reading.source = 'user_input'
