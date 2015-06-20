@@ -1,6 +1,5 @@
 class UpdateMeteringPointChartCache
   include Sidekiq::Worker
-  sidekiq_options :retry => false, :dead => false
 
   def perform(metering_point_id, resolution)
     @cache_id = "/metering_points/#{metering_point_id}/chart?resolution=#{resolution}&containing_timestamp="

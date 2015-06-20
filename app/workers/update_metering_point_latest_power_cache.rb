@@ -1,6 +1,5 @@
 class UpdateMeteringPointLatestPowerCache
   include Sidekiq::Worker
-  sidekiq_options :retry => false, :dead => false
 
   def perform(metering_point_id)
     @cache_id = "/metering_points/#{metering_point_id}/latest_power"
