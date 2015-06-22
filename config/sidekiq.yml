@@ -20,7 +20,7 @@ production:
 :queues:
   - [high, 20]
   - [default, 10]
-  - [low, 1]
+  - [low, 2]
 
 :limits:
   low: 5
