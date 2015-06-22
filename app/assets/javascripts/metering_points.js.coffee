@@ -233,6 +233,7 @@ $(".metering_point_detail").ready ->
         series: data
       )
       chart_data_min_x = chart.series[0].data[0].x
+      createChartTimer([id], 'metering_point')
       #checkIfPreviousDataExists()
       #checkIfNextDataExists()
     .error (jqXHR, textStatus, errorThrown) ->
@@ -423,6 +424,7 @@ $(".dashboard-chart").ready ->
             )
         .error (jqXHR, textStatus, errorThrown) ->
           console.log textStatus
+  createChartTimer(metering_point_ids, 'dashboard')
 
 
 
@@ -637,6 +639,7 @@ $(".group-chart").ready ->
         #checkIfNextDataExistsGroup()
     .error (jqXHR, textStatus, errorThrown) ->
       console.log textStatus
+  createChartTimer([group_id], 'group')
 
 
 
@@ -727,6 +730,8 @@ $(".group-chart").ready ->
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
+      .error (jqXHR, textStatus, errorThrown) ->
+        console.log textStatus
     #checkIfPreviousDataExistsGroup()
     #checkIfNextDataExistsGroup()
     #checkIfZoomOutGroup()
@@ -912,7 +917,6 @@ zoomIn = (timestamp) ->
       chart.hideLoading()
 
 zoomInDashboard = (timestamp) ->
-  console.log 'hehe'
   chart.showLoading()
 
   if actual_resolution == "hour_to_minutes"
@@ -1145,6 +1149,56 @@ setChartTitle = (containing_timestamp) ->
 
 
 
+#  ****** Chart Update Timers ******
+
+createChartTimer = (resource_ids, mode) ->
+  timers.push(
+    window.setInterval(->
+      updateChart(resource_ids, mode)
+      return
+    , 1000*60*3)
+    )
+
+updateChart = (resource_ids, mode) ->
+  containing_timestamp = new Date().getTime()
+  if mode == 'metering_point'
+    if resource_ids.length == 0
+      return
+    $.ajax({url: '/metering_points/' + resource_ids[0] + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, dataType: 'json'})
+      .success (data) ->
+        if data[0].data[0] == undefined
+          return
+        if chart_data_min_x == data[0].data[0][0]
+          chart.series[0].setData(data[0].data)
+
+  else if mode == 'dashboard'
+    if resource_ids.length == 0
+      return
+    numberOfSeries = 0
+    resource_ids.forEach (id) ->
+      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, dataType: 'json'})
+        .success (data) ->
+          if data[0].data[0] == undefined
+            return
+          if chart_data_min_x == data[0].data[0][0]
+            chart.series[numberOfSeries].setData(data[0].data)
+          numberOfSeries += 1
+        .error (jqXHR, textStatus, errorThrown) ->
+          console.log textStatus
+          numberOfSeries += 1
+
+  else if mode == 'group'
+    if resource_ids.length == 0
+      return
+    numberOfSeries = 0
+    $.ajax({url: '/groups/' + resource_ids[0] + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, dataType: 'json'})
+      .success (data) ->
+        if data[0].data[0] == undefined
+          return
+        if chart_data_min_x == data[0].data[0][0]
+          data.forEach (d) ->
+            chart.series[numberOfSeries].setData(d.data)
+            numberOfSeries += 1
 
 
 
@@ -1157,8 +1211,8 @@ setChartTitle = (containing_timestamp) ->
 
 
 
+# ****** ticker *******
 
-#ticker
 readingsSLP = []
 readingsSEP_PV = []
 readingsSEP_BHKW = []
