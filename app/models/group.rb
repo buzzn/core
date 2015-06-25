@@ -128,20 +128,7 @@ class Group < ActiveRecord::Base
     return [ { :name => I18n.t('total_consumption'), :data => result_in}, { :name => I18n.t('total_production'), :data => result_out} ]
   end
 
-  def get_sufficiency(resolution, containing_timestamp)
-
-    if resolution == "day"
-      resolution_format = :day
-    elsif resolution == "month"
-      resolution_format = :month
-    elsif resolution == nil || resolution == "year"
-      resolution_format = :year
-    end
-
-    if containing_timestamp == nil
-      containing_timestamp = Time.now.to_i * 1000
-    end
-
+  def get_sufficiency(resolution_format, containing_timestamp)
     count_sn_in_group = 0
     metering_points.each do |metering_point|
       count_sn_in_group += metering_point.users.count if metering_point.input?
@@ -170,6 +157,24 @@ class Group < ActiveRecord::Base
       return 0
     end
   end
+
+  def calculate_closeness
+    addresses_out = self.metering_points.where(mode: 'out').collect(&:address).compact
+    addresses_in = self.metering_points.where(mode: 'in').collect(&:address).compact
+    sum_distances = 0
+    addresses_in.each do |address_in|
+      addresses_out.each do |address_out|
+        sum_distances += address_in.distance_to(address_out)
+      end
+    end
+    if addresses_out.count * addresses_in.count != 0
+      self.closeness = sum_distances / (addresses_out.count * addresses_in.count)
+    else
+      self.closeness = nil
+    end
+    self.save
+  end
+
 
   def extrapolate_kwh_pa(kwh_ago, resolution_format, containing_timestamp)
     days_ago = 0

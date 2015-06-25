@@ -68,6 +68,7 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     @metering_point = MeteringPoint.find(params[:metering_point_id])
     @group.metering_points.delete(@metering_point)
+    @group.calculate_closeness
     redirect_to group_path(@group)
   end
 
@@ -161,8 +162,15 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     resolution = params[:resolution]
     containing_timestamp = params[:containing_timestamp]
-    sufficiency = @group.get_sufficiency(resolution, containing_timestamp)
-    render json: { sufficiency: sufficiency }.to_json
+    if resolution.nil?
+      resolution = "year"
+    end
+    resolution_format = resolution.to_sym
+    if containing_timestamp == nil
+      containing_timestamp = Time.now.to_i * 1000
+    end
+    sufficiency = @group.get_sufficiency(resolution_format, containing_timestamp)
+    render json: { sufficiency: sufficiency, closeness: @group.closeness }.to_json
   end
 
 
