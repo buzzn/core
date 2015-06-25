@@ -104,14 +104,13 @@ class MeteringPointsController < ApplicationController
 
   def latest_fake_data
     @metering_point = MeteringPoint.find(params[:id])
-    if @metering_point.slp?
-      render json: {data: Reading.latest_fake_data('slp'), factor: @metering_point.forecast_kwh_pa.nil? ? 1 : @metering_point.forecast_kwh_pa/1000.0}.to_json
-    elsif @metering_point.pv?
-      render json: {data: Reading.latest_fake_data('sep_pv'), factor: @metering_point.forecast_kwh_pa.nil? ? 1 : @metering_point.forecast_kwh_pa/1000.0}.to_json
-    elsif @metering_point.bhkw_or_else?
-      render json: {data: Reading.latest_fake_data('sep_bhkw'), factor: @metering_point.forecast_kwh_pa.nil? ? 1 : @metering_point.forecast_kwh_pa/1000.0}.to_json
-    end
+    @cache_id = "/metering_points/#{params[:id]}/latest_fake_data"
+    @cache = Rails.cache.fetch(@cache_id)
+    @latest_fake_data = @cache || @metering_point.latest_fake_data
+    render json: @latest_fake_data.to_json
   end
+
+
 
 
   def latest_power
