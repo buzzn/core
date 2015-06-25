@@ -157,6 +157,15 @@ class GroupsController < ApplicationController
   end
 
 
+  def get_scores
+    @group = Group.find(params[:id])
+    resolution = params[:resolution]
+    containing_timestamp = params[:containing_timestamp]
+    sufficiency = @group.get_sufficiency(resolution, containing_timestamp)
+    render json: { sufficiency: sufficiency }.to_json
+  end
+
+
 
 
 

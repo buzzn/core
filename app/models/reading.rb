@@ -16,7 +16,6 @@ class Reading
   index({ metering_point_id: 1 })
   index({ timestamp: 1 })
 
-  validates_numericality_of :watt_hour, only_integer: true
   validate :watt_hour_has_to_grow, if: :user_input?
 
 
@@ -41,7 +40,11 @@ class Reading
       day_to_hours:     ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour'],
       day_to_minutes:   ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute'],
       hour_to_minutes:  ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute'],
-      minute_to_seconds:['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute', 'second']
+      minute_to_seconds:['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute', 'second'],
+
+      day:              ['year', 'month', 'dayOfMonth'],
+      month:            ['year', 'month'],
+      year:             ['year']
     }
     resolution = resolution_formats[resolution_format]
 
@@ -78,6 +81,15 @@ class Reading
     when :minute_to_seconds
       @start_time = @location_time.beginning_of_minute
       @end_time   = @location_time.end_of_minute
+    when :day
+      @start_time = @location_time.beginning_of_day
+      @end_time   = @location_time.end_of_day
+    when :month
+      @start_time = @location_time.beginning_of_month
+      @end_time   = @location_time.end_of_month
+    when :year
+      @start_time = @location_time.beginning_of_year
+      @end_time   = @location_time.end_of_year
     else
       puts "You gave me #{resolution_format} -- I have no idea what to do with that."
     end

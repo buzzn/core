@@ -310,10 +310,6 @@ class MeteringPoint < ActiveRecord::Base
         i += 1
       end
       if last_timestamp - another_timestamp >= 2592000
-        puts last_value
-        puts last_timestamp
-        puts another_value
-        puts another_timestamp
         count_days_in_year = (Time.at(last_timestamp).end_of_year - Time.at(last_timestamp).beginning_of_year)/(3600*24)
         count_past_days = ((Time.at(last_timestamp) - Time.at(another_timestamp))/3600/24).to_i
         count_watt_hour = last_value - another_value

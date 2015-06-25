@@ -80,7 +80,7 @@ CookieAlert.configure do |config|
   # REQUIRES: user_must_accept_cookie_use = TRUE
   #           max_alert_display_count > 1
   #
-  config.use_secondary_alert = true
+  config.use_secondary_alert = false
 
 
   # MAX ALERT DISPLAY COUNT:

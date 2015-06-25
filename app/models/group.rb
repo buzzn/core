@@ -45,6 +45,8 @@ class Group < ActiveRecord::Base
   }
 
 
+
+
   def managers
     User.with_role :manager, self
   end
@@ -124,6 +126,74 @@ class Group < ActiveRecord::Base
     result_out = self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, @metering_points_out, @containing_timestamp), resolution_format, @containing_timestamp)
 
     return [ { :name => I18n.t('total_consumption'), :data => result_in}, { :name => I18n.t('total_production'), :data => result_out} ]
+  end
+
+  def get_sufficiency(resolution, containing_timestamp)
+
+    if resolution == "day"
+      resolution_format = :day
+    elsif resolution == "month"
+      resolution_format = :month
+    elsif resolution == nil || resolution == "year"
+      resolution_format = :year
+    end
+
+    if containing_timestamp == nil
+      containing_timestamp = Time.now.to_i * 1000
+    end
+
+    count_sn_in_group = 0
+    metering_points.each do |metering_point|
+      count_sn_in_group += metering_point.users.count if metering_point.input?
+    end
+    result_in = self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, self.metering_points.where(mode: "in").collect(&:id), containing_timestamp), resolution_format, containing_timestamp).flatten
+    if result_in.empty?
+      return 0
+    end
+    if count_sn_in_group != 0
+      sufficiency = extrapolate_kwh_pa(result_in[1], resolution_format, containing_timestamp)/count_sn_in_group
+    else
+      sufficiency = nil
+    end
+
+    if sufficiency < 500
+      return 5
+    elsif sufficiency < 900
+      return 4
+    elsif sufficiency < 1500
+      return 3
+    elsif sufficiency < 2300
+      return 2
+    elsif sufficiency >= 2300
+      return 1
+    else
+      return 0
+    end
+  end
+
+  def extrapolate_kwh_pa(kwh_ago, resolution_format, containing_timestamp)
+    days_ago = 0
+    if resolution_format == :year
+      if Time.at(containing_timestamp).end_of_year < Time.now
+        days_ago = 365
+      else
+        days_ago = ((Time.now - Time.now.beginning_of_year)/(3600*24)).to_i
+      end
+    elsif resolution_format == :month
+      if Time.at(containing_timestamp).end_of_month < Time.now
+        days_ago = Time.at(containing_timestamp).days_in_month
+      else
+        days_ago = Time.now.day
+      end
+    elsif resolution_format == :day
+      if Time.at(containing_timestamp).end_of_day < Time.now
+        days_ago = 1
+      else
+        days_ago = (Time.now - Time.now.beginning_of_day)/(3600*24)
+      end
+    end
+
+    return kwh_ago / (days_ago*1.0) * 365
   end
 
   def self.update_chart_cache

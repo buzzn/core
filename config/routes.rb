@@ -88,6 +88,7 @@ Buzzn::Application.routes.draw do
       get :bubbles_data
       get :chart
       get :kiosk
+      get :get_scores
     end
   end
 

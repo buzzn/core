@@ -4,7 +4,8 @@ class Meter < ActiveRecord::Base
 
   has_ancestry
 
-  validates :manufacturer_product_serialnumber, presence: true    #, unless: "self.virtual"
+  validates :manufacturer_product_serialnumber, presence: true, uniqueness: true   #, unless: "self.virtual"
+
 
   mount_uploader :image, PictureUploader
 
@@ -24,7 +25,6 @@ class Meter < ActiveRecord::Base
   def name
     "#{manufacturer_name} #{manufacturer_product_serialnumber}"
   end
-
 
 
   def metering_points_modes_and_ids

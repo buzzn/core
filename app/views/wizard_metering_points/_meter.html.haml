@@ -7,15 +7,15 @@
         %li.col-xs-4{style: "opacity: 0.5"}
           %span.icon-wrap.icon-wrap-xs.bg-danger
             %i.fa.fa-flash
-          %p.text-thin= t('metering_point')
+          %p.text-thin= t('step_1') + t('create_metering_point')
         %li.col-xs-4
           %span.icon-wrap.icon-wrap-xs.bg-warning
             %i.fa.fa-dashboard
-          %p.text-thin= t('meter')
+          %p.text-thin= t('step_2') + t('create_meter')
         %li.col-xs-4{style: "opacity: 0.5"}
           %span.icon-wrap.icon-wrap-xs.bg-info
             %i.fa.fa-file-text
-          %p.text-thin= t('data_connection')
+          %p.text-thin= t('step_3') + t('establish_data_connection')
     .modal-body
       = simple_form_for @meter, remote: true, url: meter_update_wizard_metering_points_path(metering_point_id: params[:metering_point_id]), method: 'put'  do |f|
         = f.input :manufacturer_product_serialnumber

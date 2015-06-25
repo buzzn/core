@@ -70,6 +70,7 @@ de:
   no: Nein
   connect_meter_with_data: Messgerät mit Daten verbinden
   data_connection: Datenverbindung
+  establish_data_connection: Datenverbindung einrichten
   finish: Erstellen
 
   meters: Messgerät

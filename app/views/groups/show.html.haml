@@ -22,6 +22,8 @@
         %p.text-3x.mar-no= @group.name
 
 
+
+
       %ul.list-group.bg-trans
 
         - if @group.website
@@ -29,6 +31,14 @@
             %a.btn-link{:href => "#"}
               %i.fa.fa-globe.fa-fw
               = link_to_external @group.website
+
+    .col-lg-2.col-md-2.col-sm-2.col-xs-3
+      .group_scores{'data-content' => @group.id}
+        %p.text-1x.mar-no= t('sufficiency')
+        .score_sufficiency
+        %p.text-1x.mar-no= t('closeness')
+        .score_closeness
+
 
 
     .panel-control

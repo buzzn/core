@@ -103,7 +103,8 @@ class BubbleChart
     @data.forEach (d) =>
       color = "#5FA2DD"
       if d.own_metering_point
-        color = "#6A5ACD"
+        color = d3.rgb('#5FA2DD').darker()
+        #color = "#6A5ACD"
       node = {
         id: d.metering_point_id
         value: d.latest_power
@@ -459,6 +460,18 @@ $(".bubbles_container").ready ->
             )
 
       $(window).on "resize:end", chart.calculateNewCenter
+
+
+$(".group_scores").ready ->
+  group_id = $(this).attr('data-content')
+  $.ajax({url: '/groups/' + group_id + '/get_scores'})
+    .success (data) ->
+      sufficiency = data.sufficiency
+      $(".score_sufficiency").append("<div class=star-filled></div>") for [1..sufficiency] if sufficiency
+      $(".score_sufficiency").append("<div class=star-empty></div>") for [1..(5 - sufficiency)] if (5 - sufficiency)
+      $(".star-filled").addClass("fa fa-star")
+      $(".star-empty").addClass("fa fa-star-o")
+
 
 addCommas = (nStr) ->
   nStr += ""
