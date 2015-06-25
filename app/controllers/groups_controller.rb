@@ -74,6 +74,7 @@ class GroupsController < ApplicationController
 
   def bubbles_data
     @group = Group.find(params[:id])
+
     in_metering_point_data = []
     out_metering_point_data = []
     @group.metering_points.each do |metering_point|
@@ -87,7 +88,6 @@ class GroupsController < ApplicationController
           own_metering_point = true
         else
           own_metering_point = false
-          #user_name = metering_point.users.collect{|user| user.profile.first_name}.join(", ")
         end
       else
         own_metering_point = false

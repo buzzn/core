@@ -223,16 +223,22 @@ class MeteringPoint < ActiveRecord::Base
   def self.update_cache
     MeteringPoint.all.select(:id).each.each do |metering_point|
 
-      Sidekiq::Client.push({
-       'class' => UpdateMeteringPointChartCache,
-       'queue' => :default,
-       'args' => [ metering_point.id, 'day_to_minutes']
-      })
+      # Sidekiq::Client.push({
+      #  'class' => UpdateMeteringPointChartCache,
+      #  'queue' => :default,
+      #  'args' => [ metering_point.id, 'day_to_minutes']
+      # })
+
+      # Sidekiq::Client.push({
+      #  'class' => UpdateMeteringPointChartCache,
+      #  'queue' => :default,
+      #  'args' => [ metering_point.id, 'day_to_hours']
+      # })
 
       Sidekiq::Client.push({
-       'class' => UpdateMeteringPointChartCache,
+       'class' => UpdateMeteringPointLatestFakeDataCache,
        'queue' => :default,
-       'args' => [ metering_point.id, 'day_to_hours']
+       'args' => [ metering_point.id]
       })
 
       Sidekiq::Client.push({
@@ -363,6 +369,18 @@ class MeteringPoint < ActiveRecord::Base
       end
     end
   end
+
+
+  def latest_fake_data
+    if self.slp?
+      return {data: Reading.latest_fake_data('slp'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+    elsif self.pv?
+      return {data: Reading.latest_fake_data('sep_pv'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+    elsif self.bhkw_or_else?
+      return {data: Reading.latest_fake_data('sep_bhkw'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+    end
+  end
+
 
 end
 
