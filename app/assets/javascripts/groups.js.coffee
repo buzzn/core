@@ -469,6 +469,10 @@ $(".group_scores").ready ->
       sufficiency = data.sufficiency
       $(".score_sufficiency").append("<div class=star-filled></div>") for [1..sufficiency] if sufficiency
       $(".score_sufficiency").append("<div class=star-empty></div>") for [1..(5 - sufficiency)] if (5 - sufficiency)
+
+      closeness = data.closeness
+      $(".score_closeness").append("<div class=star-filled></div>") for [1..closeness] if closeness
+      $(".score_closeness").append("<div class=star-empty></div>") for [1..(5 - closeness)] if (5 - closeness)
       $(".star-filled").addClass("fa fa-star")
       $(".star-empty").addClass("fa fa-star-o")
 

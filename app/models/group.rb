@@ -168,7 +168,20 @@ class Group < ActiveRecord::Base
       end
     end
     if addresses_out.count * addresses_in.count != 0
-      self.closeness = sum_distances / (addresses_out.count * addresses_in.count)
+      average_distance = sum_distances / (addresses_out.count * addresses_in.count)
+      if average_distance < 10
+        self.closeness = 5
+      elsif average_distance < 20
+        self.closeness = 4
+      elsif average_distance < 50
+        self.closeness = 3
+      elsif average_distance < 200
+        self.closeness = 2
+      elsif average_distance >= 200
+        self.closeness = 1
+      else
+        self.closeness = 0
+      end
     else
       self.closeness = nil
     end
