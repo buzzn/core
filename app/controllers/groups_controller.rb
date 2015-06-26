@@ -142,7 +142,12 @@ class GroupsController < ApplicationController
     if @cache
       render json: @cache
     else
-      render json: Group.find(params[:id]).chart(params[:resolution], params[:containing_timestamp]).to_json
+      resolution = params[:resolution]
+      if resolution.nil?
+        resolution = "day_to_minutes"
+      end
+      resolution_format = resolution.to_sym
+      render json: Group.find(params[:id]).chart(resolution_format, params[:containing_timestamp]).to_json
     end
   end
 
@@ -170,7 +175,8 @@ class GroupsController < ApplicationController
       containing_timestamp = Time.now.to_i * 1000
     end
     sufficiency = @group.get_sufficiency(resolution_format, containing_timestamp)
-    render json: { sufficiency: sufficiency, closeness: @group.closeness }.to_json
+    autarchy = @group.get_autarchy(resolution_format, containing_timestamp)
+    render json: { sufficiency: sufficiency, closeness: @group.closeness, autarchy: autarchy }.to_json
   end
 
 

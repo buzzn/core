@@ -473,6 +473,10 @@ $(".group_scores").ready ->
       closeness = data.closeness
       $(".score_closeness").append("<div class=star-filled></div>") for [1..closeness] if closeness
       $(".score_closeness").append("<div class=star-empty></div>") for [1..(5 - closeness)] if (5 - closeness)
+
+      autarchy = data.autarchy
+      $(".score_autarchy").append("<div class=star-filled></div>") for [1..autarchy] if autarchy
+      $(".score_autarchy").append("<div class=star-empty></div>") for [1..(5 - autarchy)] if (5 - autarchy)
       $(".star-filled").addClass("fa fa-star")
       $(".star-empty").addClass("fa fa-star-o")
 

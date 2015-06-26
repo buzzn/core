@@ -44,7 +44,10 @@ class Reading
 
       day:              ['year', 'month', 'dayOfMonth'],
       month:            ['year', 'month'],
-      year:             ['year']
+      year:             ['year'],
+
+      year_to_minutes:  ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute'],
+      month_to_minutes: ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute']
     }
     resolution = resolution_formats[resolution_format]
 
@@ -90,6 +93,12 @@ class Reading
     when :year
       @start_time = @location_time.beginning_of_year
       @end_time   = @location_time.end_of_year
+    when :year_to_minutes
+      @start_time = @location_time.beginning_of_year
+      @end_time   = @location_time.end_of_year
+    when :month_to_minutes
+      @start_time = @location_time.beginning_of_month
+      @end_time   = @location_time.end_of_month
     else
       puts "You gave me #{resolution_format} -- I have no idea what to do with that."
     end

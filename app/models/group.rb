@@ -68,70 +68,67 @@ class Group < ActiveRecord::Base
   end
 
 
-  def chart(resolution="day_to_minutes", containing_timestamp=nil)
-    @data_in = []
-    @data_out = []
-    @metering_points_in = []
-    @metering_points_out = []
-
+  def chart(resolution_format, containing_timestamp=nil)
+    metering_points_in_plus = []
+    metering_points_in_minus = []
+    metering_points_out_plus = []
+    metering_points_out_minus = []
     self.metering_points.each do |metering_point|
-      if !metering_point.smart?
-        next
-      end
-
       if metering_point.virtual
-        operands_plus = FormulaPart.where(metering_point_id: metering_point.id).where(operator: "+").collect(&:operand)
-        operands_plus.each do |metering_point_plus|
-          if metering_point_plus.mode == "in"
-            @metering_points_in << metering_point_plus.id
+        metering_point.formula_parts.where(operator: "+").collect(&:operand).each do |metering_point_plus|
+          if metering_point_plus.input?
+            metering_points_in_plus << metering_point_plus.id
           else
-            @metering_points_out << metering_point_plus.id
+            metering_points_out_plus << metering_point_plus.id
           end
         end
-
-        operands_minus = FormulaPart.where(metering_point_id: metering_point.id).where(operator: "-").collect(&:operand)
-        operands_minus.each do |metering_point_minus|
-          if metering_point_minus.mode == "in"
-            @metering_points_in << metering_point_minus.id
+        metering_point.formula_parts.where(operator: "-").collect(&:operand).each do |metering_point_minus|
+          if metering_point_minus.input?
+            metering_points_in_minus << metering_point_minus.id
           else
-            @metering_points_out << metering_point_minus.id
+            metering_points_out_minus << metering_point_minus.id
           end
         end
       else
-        if metering_point.mode == "in"
-          @metering_points_in << metering_point.id
+        if metering_point.input?
+          metering_points_in_plus << metering_point.id
         else
-          @metering_points_out << metering_point.id
+          metering_points_out_plus << metering_point.id
         end
       end
     end
 
-    if resolution == "hour_to_minutes"
-      resolution_format = :hour_to_minutes
-    elsif resolution == nil || resolution == "day_to_minutes"
-      resolution_format = :day_to_minutes
-    elsif resolution == "month_to_days"
-      resolution_format = :month_to_days
-    elsif resolution == "year_to_months"
-      resolution_format = :year_to_months
-    end
-
     if containing_timestamp == nil
-      @containing_timestamp = Time.now.to_i * 1000
-    else
-      @containing_timestamp = containing_timestamp
+      containing_timestamp = Time.now.to_i * 1000
     end
 
-    result_in = self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, @metering_points_in, @containing_timestamp), resolution_format, @containing_timestamp)
-    result_out = self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, @metering_points_out, @containing_timestamp), resolution_format, @containing_timestamp)
-
+    data_in = []
+    data_out = []
+    operators = ["+", "-"]
+    data_in << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, metering_points_in_plus, containing_timestamp), resolution_format, containing_timestamp)
+    if metering_points_in_minus.any?
+      data_in << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, metering_points_in_minus, containing_timestamp), resolution_format, containing_timestamp)
+      result_in = calculate_virtual_metering_point(data_in, operators, resolution_format)
+    else
+      result_in = data_in[0]
+    end
+    data_out << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, metering_points_out_plus, containing_timestamp), resolution_format, containing_timestamp)
+    if metering_points_out_minus.any?
+      data_out << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, metering_points_out_minus, containing_timestamp), resolution_format, containing_timestamp)
+      result_out = calculate_virtual_metering_point(data_out, operators, resolution_format)
+    else
+      result_out = data_out[0]
+    end
     return [ { :name => I18n.t('total_consumption'), :data => result_in}, { :name => I18n.t('total_production'), :data => result_out} ]
   end
+
+
 
   def get_sufficiency(resolution_format, containing_timestamp)
     count_sn_in_group = 0
     metering_points.each do |metering_point|
       count_sn_in_group += metering_point.users.count if metering_point.input?
+      #TODO: enable virtual metering_points
     end
     result_in = self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, self.metering_points.where(mode: "in").collect(&:id), containing_timestamp), resolution_format, containing_timestamp).flatten
     if result_in.empty?
@@ -188,6 +185,60 @@ class Group < ActiveRecord::Base
     self.save
   end
 
+  def get_autarchy(resolution_format, containing_timestamp)
+    if resolution_format == :year
+      resolution_format = :year_to_minutes
+    elsif resolution_format == :month
+      resolution_format = :month_to_minutes
+    elsif resolution_format == :day
+      resolution_format = :day_to_minutes
+    end
+    chart_data = self.chart(resolution_format, containing_timestamp)
+    data_in = chart_data[0][:data]
+    data_out = chart_data[1][:data]
+    i = 0
+    sum_variation = 0
+    count_variation = 0
+    while i < data_in.count do
+      if data_in[i][1] > data_out[i][1]
+        sum_variation += (data_in[i][1] - data_out[i][1])/(data_in[i][1] * 1.0)
+        count_variation += 1
+      #else
+      #  sum_variation += (data_out[i][1] - data_in[i][1])/(data_out[i][1] * 1.0)
+      end
+      i+=1
+    end
+
+    if count_variation != 0
+      autarchy = sum_variation / count_variation
+    else
+      return 5
+    end
+
+    if autarchy < 0.1
+      return 5
+    elsif autarchy < 0.2
+      return 4
+    elsif autarchy < 0.5
+      return 3
+    elsif autarchy < 0.75
+      return 2
+    elsif autarchy >= 0.75
+      return 1
+    else
+      return 0
+    end
+  end
+
+
+
+  def extrapolate_pa_with_timestamps(value, timestamp1, timestamp2)
+    seconds_diff = Time.at(timestamp2) - Time.at(timestamp1)
+    puts seconds_diff
+    return value / (seconds_diff * 1.0) * 365 * 24 * 3600
+  end
+
+
 
   def extrapolate_kwh_pa(kwh_ago, resolution_format, containing_timestamp)
     days_ago = 0
@@ -210,9 +261,9 @@ class Group < ActiveRecord::Base
         days_ago = (Time.now - Time.now.beginning_of_day)/(3600*24)
       end
     end
-
     return kwh_ago / (days_ago*1.0) * 365
   end
+
 
   def self.update_chart_cache
     Group.all.select(:id).each.each do |group|
