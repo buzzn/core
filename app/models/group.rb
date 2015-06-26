@@ -13,12 +13,6 @@ class Group < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
-  def slug_candidates
-    [
-      :slug,
-      :slug_name
-    ]
-  end
 
   validates :name, presence: true, uniqueness: true, length: { in: 4..40 }
 
@@ -214,7 +208,7 @@ class Group < ActiveRecord::Base
     return kwh_ago / (days_ago*1.0) * 365
   end
 
-  def self.update_chart_cache
+  def self.update_cache
     Group.all.select(:id).each.each do |group|
       Sidekiq::Client.push({
        'class' => UpdateGroupChartCache,
@@ -234,9 +228,6 @@ class Group < ActiveRecord::Base
       end
     end
 
-    def slug_name
-      SecureRandom.uuid
-    end
 
 
 end
