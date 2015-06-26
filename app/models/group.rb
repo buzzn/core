@@ -192,19 +192,17 @@ class Group < ActiveRecord::Base
     data_out = chart_data[1][:data]
     i = 0
     sum_variation = 0
-    count_variation = 0
     while i < data_in.count do
       if data_in[i][1] > data_out[i][1]
         sum_variation += (data_in[i][1] - data_out[i][1])/(data_in[i][1] * 1.0)
-        count_variation += 1
       #else
       #  sum_variation += (data_out[i][1] - data_in[i][1])/(data_out[i][1] * 1.0)
       end
       i+=1
     end
 
-    if count_variation != 0
-      autarchy = sum_variation / count_variation
+    if i != 0
+      autarchy = sum_variation / i
     else
       return 5
     end
