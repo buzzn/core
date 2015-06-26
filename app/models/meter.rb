@@ -75,7 +75,7 @@ class Meter < ActiveRecord::Base
           update_info << "metering_point_id: #{metering_point.id} | from: #{Time.at(last)}, to: #{Time.at(now)}, #{range.count} seconds"
         else
           metering_point.meter.update_columns(online: false)
-          self.send_notification_meter_offline(meter)
+          #self.send_notification_meter_offline(meter)
         end
       end
     end
