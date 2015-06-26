@@ -231,11 +231,11 @@ class MeteringPoint < ActiveRecord::Base
       #  'args' => [ metering_point.id, 'day_to_minutes']
       # })
 
-      # Sidekiq::Client.push({
-      #  'class' => UpdateMeteringPointChartCache,
-      #  'queue' => :default,
-      #  'args' => [ metering_point.id, 'day_to_hours']
-      # })
+      Sidekiq::Client.push({
+       'class' => UpdateMeteringPointChartCache,
+       'queue' => :default,
+       'args' => [ metering_point.id, 'day_to_hours']
+      })
 
       Sidekiq::Client.push({
        'class' => UpdateMeteringPointLatestFakeDataCache,
