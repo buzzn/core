@@ -89,7 +89,7 @@ class MeteringPoint < ActiveRecord::Base
     else
       @last_reading = Reading.last_by_metering_point_id(self.id)
       if @last_reading && @last_reading[:power]
-        {:power => @last_reading[:power]/1000, :timestamp => last_reading[:timestamp].to_i*1000}
+        {:power => @last_reading[:power]/1000, :timestamp => @last_reading[:timestamp].to_i*1000}
       else
         {:power => 0, :timestamp => 0}
       end
