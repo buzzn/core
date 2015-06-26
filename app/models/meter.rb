@@ -97,7 +97,7 @@ class Meter < ActiveRecord::Base
     meter.metering_points.each do |metering_point|
       metering_point.managers.each do |user|
         user.send_notification("warning", I18n.t("metering_point_offline"), I18n.t("your_metering_point_is_offline_now", metering_point_name: metering_point.name))
-        Notifier.send_email_notification_meter_offline(user, metering_point).deliver_now
+        Notifier.send_email_notification_meter_offline(user, metering_point).deliver_now if user.profile.email_notification_meter_offline
       end
     end
   end

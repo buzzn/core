@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150625114349) do
+ActiveRecord::Schema.define(version: 20150626153325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -455,12 +455,13 @@ ActiveRecord::Schema.define(version: 20150625114349) do
     t.boolean  "confirm_pricing_model"
     t.boolean  "terms"
     t.string   "readable"
-    t.boolean  "newsletter_notifications", default: true
-    t.boolean  "location_notifications",   default: true
-    t.boolean  "group_notifications",      default: true
+    t.boolean  "newsletter_notifications",         default: true
+    t.boolean  "location_notifications",           default: true
+    t.boolean  "group_notifications",              default: true
     t.uuid     "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "email_notification_meter_offline"
   end
 
   add_index "profiles", ["readable"], name: "index_profiles_on_readable", using: :btree

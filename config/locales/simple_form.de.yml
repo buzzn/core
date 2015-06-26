@@ -44,6 +44,7 @@ de:
         group_notifications: Gruppen Benachrichtigungen
         about_me: Über mich
         user_name: Benutzername
+        email_notification_meter_offline: Email Benachrichtigung wenn Messgerät offline ist
       metering_point:
         uid: Zählpunkt-ID
         address_addition: Addresszusatz

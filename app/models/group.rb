@@ -193,10 +193,11 @@ class Group < ActiveRecord::Base
     i = 0
     sum_variation = 0
     while i < data_in.count do
+      if i >= data_out.count
+        break
+      end
       if data_in[i][1] > data_out[i][1]
         sum_variation += (data_in[i][1] - data_out[i][1])/(data_in[i][1] * 1.0)
-      #else
-      #  sum_variation += (data_out[i][1] - data_in[i][1])/(data_out[i][1] * 1.0)
       end
       i+=1
     end
@@ -237,6 +238,9 @@ class Group < ActiveRecord::Base
     sum_in = 0
     sum_out = 0
     while i < data_in.count do
+      if i >= data_out.count
+        break
+      end
       sum_in += data_in[i][1]
       sum_out += data_out[i][1]
       i+=1
@@ -250,6 +254,9 @@ class Group < ActiveRecord::Base
       sum_out = 1
     end
     while i < data_in.count do
+      if i >= data_out.count
+        break
+      end
       power_in = data_in[i][1] / (sum_in*1.0)
       power_out = data_out[i][1] / (sum_out*1.0)
       sum_variation += (power_in - power_out)**2
@@ -270,14 +277,6 @@ class Group < ActiveRecord::Base
     else
       return 0
     end
-  end
-
-
-
-  def extrapolate_pa_with_timestamps(value, timestamp1, timestamp2)
-    seconds_diff = Time.at(timestamp2) - Time.at(timestamp1)
-    puts seconds_diff
-    return value / (seconds_diff * 1.0) * 365 * 24 * 3600
   end
 
 
