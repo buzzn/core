@@ -176,7 +176,8 @@ class GroupsController < ApplicationController
     end
     sufficiency = @group.get_sufficiency(resolution_format, containing_timestamp)
     autarchy = @group.get_autarchy(resolution_format, containing_timestamp)
-    render json: { sufficiency: sufficiency, closeness: @group.closeness, autarchy: autarchy }.to_json
+    fitting = @group.get_fitting(resolution_format, containing_timestamp)
+    render json: { sufficiency: sufficiency, closeness: @group.closeness, autarchy: autarchy, fitting: fitting }.to_json
   end
 
 

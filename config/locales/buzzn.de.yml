@@ -45,6 +45,11 @@ de:
   out_device: Erzeuger
   in_device: Verbraucher
 
+  sufficiency: Sparsamkeit
+  closeness: Nähe
+  autarchy: Autarkie
+  fitting: Passung
+
   new_reading: Neuer Zählerstand
   create_reading: Zählerstand senden
   submit: Senden

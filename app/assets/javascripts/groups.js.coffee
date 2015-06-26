@@ -477,6 +477,10 @@ $(".group_scores").ready ->
       autarchy = data.autarchy
       $(".score_autarchy").append("<div class=star-filled></div>") for [1..autarchy] if autarchy
       $(".score_autarchy").append("<div class=star-empty></div>") for [1..(5 - autarchy)] if (5 - autarchy)
+
+      fitting = data.fitting
+      $(".score_fitting").append("<div class=star-filled></div>") for [1..fitting] if fitting
+      $(".score_fitting").append("<div class=star-empty></div>") for [1..(5 - fitting)] if (5 - fitting)
       $(".star-filled").addClass("fa fa-star")
       $(".star-empty").addClass("fa fa-star-o")
 
