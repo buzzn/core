@@ -7,10 +7,10 @@ every 1.minute do
   runner "Meter.pull_readings"
 end
 
-every 5.minute do
-  runner "Group.update_cache"
-  runner "MeteringPoint.update_cache"
-end
+# every 5.minute do
+#   runner "Group.update_cache"
+#   runner "MeteringPoint.update_cache"
+# end
 
 every 30.minutes do
   runner "Meter.reactivate"
