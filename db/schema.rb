@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150626153325) do
+ActiveRecord::Schema.define(version: 20150630104513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -461,7 +461,7 @@ ActiveRecord::Schema.define(version: 20150626153325) do
     t.uuid     "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "email_notification_meter_offline"
+    t.boolean  "email_notification_meter_offline", default: false
   end
 
   add_index "profiles", ["readable"], name: "index_profiles_on_readable", using: :btree
@@ -479,6 +479,21 @@ ActiveRecord::Schema.define(version: 20150626153325) do
 
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
+
+  create_table "scores", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.string   "mode"
+    t.string   "interval"
+    t.datetime "interval_beginning"
+    t.datetime "interval_end"
+    t.float    "value"
+    t.uuid     "scoreable_id"
+    t.string   "scoreable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "scores", ["scoreable_id", "scoreable_type"], name: "index_scores_on_scoreable_id_and_scoreable_type", using: :btree
+  add_index "scores", ["scoreable_id"], name: "index_scores_on_scoreable_id", using: :btree
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"

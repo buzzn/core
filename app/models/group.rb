@@ -25,6 +25,8 @@ class Group < ActiveRecord::Base
   has_one  :area
   has_many :metering_points
 
+  has_many :scores, as: :scoreable
+
   validates :metering_points, presence: true
 
   has_many :group_users
@@ -69,20 +71,35 @@ class Group < ActiveRecord::Base
     metering_points_out_minus = []
     self.metering_points.each do |metering_point|
       if metering_point.virtual
-        metering_point.formula_parts.where(operator: "+").collect(&:operand).each do |metering_point_plus|
-          if metering_point_plus.input?
+        if metering_point.input?
+          metering_point.formula_parts.where(operator: "+").collect(&:operand).each do |metering_point_plus|
             metering_points_in_plus << metering_point_plus.id
-          else
+          end
+          metering_point.formula_parts.where(operator: "-").collect(&:operand).each do |metering_point_minus|
+            metering_points_in_minus << metering_point_minus.id
+          end
+        else
+          metering_point.formula_parts.where(operator: "+").collect(&:operand).each do |metering_point_plus|
             metering_points_out_plus << metering_point_plus.id
           end
-        end
-        metering_point.formula_parts.where(operator: "-").collect(&:operand).each do |metering_point_minus|
-          if metering_point_minus.input?
-            metering_points_in_minus << metering_point_minus.id
-          else
+          metering_point.formula_parts.where(operator: "-").collect(&:operand).each do |metering_point_minus|
             metering_points_out_minus << metering_point_minus.id
           end
         end
+        # metering_point.formula_parts.where(operator: "+").collect(&:operand).each do |metering_point_plus|
+        #   if metering_point_plus.input?
+        #     metering_points_in_plus << metering_point_plus.id
+        #   else
+        #     metering_points_out_plus << metering_point_plus.id
+        #   end
+        # end
+        # metering_point.formula_parts.where(operator: "-").collect(&:operand).each do |metering_point_minus|
+        #   if metering_point_minus.input?
+        #     metering_points_in_minus << metering_point_minus.id
+        #   else
+        #     metering_points_out_minus << metering_point_minus.id
+        #   end
+        # end
       else
         if metering_point.input?
           metering_points_in_plus << metering_point.id
@@ -279,7 +296,15 @@ class Group < ActiveRecord::Base
     end
   end
 
-
+  def set_score_interval(resolution_format, containing_timestamp)
+    if resolution_format == :year_to_minutes
+      return ['year', Time.at(containing_timestamp).beginning_of_year.utc, Time.at(containing_timestamp).end_of_year.utc]
+    elsif resolution_format == month_to_minutes
+      return ['month', Time.at(containing_timestamp).beginning_of_month.utc, Time.at(containing_timestamp).end_of_month.utc]
+    elsif resolution_format == day_to_minutes
+      return ['day', Time.at(containing_timestamp).beginning_of_day.utc, Time.at(containing_timestamp).end_of_day.utc]
+    end
+  end
 
   def extrapolate_kwh_pa(kwh_ago, resolution_format, containing_timestamp)
     days_ago = 0
@@ -312,6 +337,16 @@ class Group < ActiveRecord::Base
        'class' => UpdateGroupChartCache,
        'queue' => :default,
        'args' => [ group.id, 'day_to_minutes']
+      })
+    end
+  end
+
+  def self.calculate_scores
+    Group.all.select(:id).each.each do |group|
+      Sidekiq::Client.push({
+       'class' => CalculateGroupScoreSufficiencyWorker,
+       'queue' => :default,
+       'args' => [ group.id, :day_to_minutes, Time.now.to_i*1000]
       })
     end
   end

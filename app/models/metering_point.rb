@@ -19,6 +19,8 @@ class MeteringPoint < ActiveRecord::Base
   has_many :users, through: :metering_point_users, dependent: :destroy
   has_one :address, as: :addressable, dependent: :destroy
 
+  has_many :scores, as: :scoreable
+
 
   validates :readable, presence: true
   validates :mode, presence: true, if: :no_dashboard_metering_point?

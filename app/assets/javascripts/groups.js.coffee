@@ -467,22 +467,22 @@ $(".group_scores").ready ->
   $.ajax({url: '/groups/' + group_id + '/get_scores'})
     .success (data) ->
       sufficiency = data.sufficiency
-      $(".score_sufficiency").append("<div class=star-filled></div>") for [1..sufficiency] if sufficiency
-      $(".score_sufficiency").append("<div class=star-empty></div>") for [1..(5 - sufficiency)] if (5 - sufficiency)
+      $(".score_sufficiency").append("<div class=circle-filled></div>") for [1..sufficiency] if sufficiency
+      $(".score_sufficiency").append("<div class=circle-empty></div>") for [1..(5 - sufficiency)] if (5 - sufficiency)
 
       closeness = data.closeness
-      $(".score_closeness").append("<div class=star-filled></div>") for [1..closeness] if closeness
-      $(".score_closeness").append("<div class=star-empty></div>") for [1..(5 - closeness)] if (5 - closeness)
+      $(".score_closeness").append("<div class=circle-filled></div>") for [1..closeness] if closeness
+      $(".score_closeness").append("<div class=circle-empty></div>") for [1..(5 - closeness)] if (5 - closeness)
 
       autarchy = data.autarchy
-      $(".score_autarchy").append("<div class=star-filled></div>") for [1..autarchy] if autarchy
-      $(".score_autarchy").append("<div class=star-empty></div>") for [1..(5 - autarchy)] if (5 - autarchy)
+      $(".score_autarchy").append("<div class=circle-filled></div>") for [1..autarchy] if autarchy
+      $(".score_autarchy").append("<div class=circle-empty></div>") for [1..(5 - autarchy)] if (5 - autarchy)
 
       fitting = data.fitting
-      $(".score_fitting").append("<div class=star-filled></div>") for [1..fitting] if fitting
-      $(".score_fitting").append("<div class=star-empty></div>") for [1..(5 - fitting)] if (5 - fitting)
-      $(".star-filled").addClass("fa fa-star")
-      $(".star-empty").addClass("fa fa-star-o")
+      $(".score_fitting").append("<div class=circle-filled></div>") for [1..fitting] if fitting
+      $(".score_fitting").append("<div class=circle-empty></div>") for [1..(5 - fitting)] if (5 - fitting)
+      $(".circle-filled").addClass("fa fa-circle")
+      $(".circle-empty").addClass("fa fa-circle-o")
 
 
 addCommas = (nStr) ->

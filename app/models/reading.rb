@@ -100,7 +100,9 @@ class Reading
       @start_time = @location_time.beginning_of_month
       @end_time   = @location_time.end_of_month
     else
+      puts resolution_format.class
       puts "You gave me #{resolution_format} -- I have no idea what to do with that."
+      return
     end
 
     # start pipe

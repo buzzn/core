@@ -43,6 +43,14 @@ class MeteringPointDecorator < Draper::Decorator
     end
   end
 
+  def name_with_users
+    if model.users.any?
+      model.name + " (" + model.users.collect{|user| user.profile.first_name}.join(", ") + ")"
+    else
+      model.name
+    end
+  end
+
 
   def link_to_delete
     link_to(

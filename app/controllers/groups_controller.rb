@@ -81,9 +81,8 @@ class GroupsController < ApplicationController
       data_entry = []
       latest_power = nil
       virtual = metering_point.virtual
-      metering_point_name = metering_point.decorate.name
+      metering_point_name = metering_point.decorate.name_with_users
       if metering_point.users.any?
-        metering_point_name = metering_point_name + " (" + metering_point.users.collect{|user| user.profile.first_name}.join(", ") + ")"
         if metering_point.users.include?(current_user)
           own_metering_point = true
         else
