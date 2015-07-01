@@ -328,27 +328,24 @@ class Group < ActiveRecord::Base
   end
 
   def self.calculate_scores
-    resolutions = ['day', 'month', 'year']
-    resolutions.each do |resolution|
-      Group.all.select(:id).each.each do |group|
-        Sidekiq::Client.push({
-         'class' => CalculateGroupScoreSufficiencyWorker,
-         'queue' => :default,
-         'args' => [ group.id, resolution, Time.now.to_i*1000]
-        })
+    Group.all.select(:id).each.each do |group|
+      Sidekiq::Client.push({
+       'class' => CalculateGroupScoreSufficiencyWorker,
+       'queue' => :default,
+       'args' => [ group.id, 'day', Time.now.to_i*1000]
+      })
 
-        # Sidekiq::Client.push({
-        #  'class' => CalculateGroupScoreAutarchyWorker,
-        #  'queue' => :default,
-        #  'args' => [ group.id, resolution, Time.now.to_i*1000]
-        # })
+      # Sidekiq::Client.push({
+      #  'class' => CalculateGroupScoreAutarchyWorker,
+      #  'queue' => :default,
+      #  'args' => [ group.id, 'day', Time.now.to_i*1000]
+      # })
 
-        # Sidekiq::Client.push({
-        #  'class' => CalculateGroupScoreFittingWorker,
-        #  'queue' => :default,
-        #  'args' => [ group.id, resolution, Time.now.to_i*1000]
-        # })
-      end
+      # Sidekiq::Client.push({
+      #  'class' => CalculateGroupScoreFittingWorker,
+      #  'queue' => :default,
+      #  'args' => [ group.id, 'day', Time.now.to_i*1000]
+      # })
     end
   end
 
