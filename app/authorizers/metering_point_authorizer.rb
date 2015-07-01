@@ -10,7 +10,8 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
     user.has_role?(:manager, resource) ||
     (resource.readable_by_friends? && User.with_role(:manager, resource).first.friend?(user)) ||
     resource.output? ||
-    user.can_update?(resource.group) if resource.group
+    (!resource.group.nil? && user.can_update?(resource.group)) ||
+    (!resource.existing_group_request.nil? && user.can_update?(resource.existing_group_request.group))
     )
   end
 

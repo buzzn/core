@@ -54,7 +54,7 @@ module CalcVirtualMeteringPoint
   def convert_to_array(data, resolution_format, factor)
     hours = []
     data.each do |hour|
-      if resolution_format == :year_to_months || resolution_format == :month_to_days || resolution_format == :year || resolution_format == :month || resolution_format == :day
+      if resolution_format == 'year_to_months' || resolution_format == 'month_to_days' || resolution_format == 'year' || resolution_format == 'month' || resolution_format == 'day'
         hours << [
           hour['firstTimestamp'].to_i*1000,
           hour['consumption'].to_i/10000000000.0 * factor
@@ -87,7 +87,7 @@ module CalcVirtualMeteringPoint
         value[:_id][:secondly] || 0
       )
 
-      if resolution_format == :year_to_months || resolution_format == :month_to_days || resolution_format == :year || resolution_format == :month || resolution_format == :day
+      if resolution_format == 'year_to_months' || resolution_format == 'month_to_days' || resolution_format == 'year' || resolution_format == 'month' || resolution_format == 'day'
         hours << [
           timestamp.to_i*1000,
           value['consumption'].to_i/10000000000.0
@@ -110,11 +110,11 @@ module CalcVirtualMeteringPoint
 
   def get_matching_index(arr, value, resolution)
     offset = 1000
-    if resolution.to_s == "day_to_hours"
+    if resolution == "day_to_hours"
       offset = 30*1000
-    elsif resolution.to_s == "month_to_days"
+    elsif resolution == "month_to_days"
       offset = 12*60*60*1000
-    elsif resolution.to_s == "year_to_months"
+    elsif resolution == "year_to_months"
       offset = 15*24*60*60*1000
     end
 

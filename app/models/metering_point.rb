@@ -62,6 +62,10 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
+  def existing_group_request
+    GroupMeteringPointRequest.where(metering_point_id: self.id).first
+  end
+
   def last_power
     if self.virtual && self.formula_parts.any?
       operands = get_operands_from_formula
@@ -257,31 +261,31 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def minute_to_seconds(containing_timestamp)
-    chart_data(:minute_to_seconds, containing_timestamp)
+    chart_data('minute_to_seconds', containing_timestamp)
   end
 
   def hour_to_minutes(containing_timestamp)
-    chart_data(:hour_to_minutes, containing_timestamp)
+    chart_data('hour_to_minutes', containing_timestamp)
   end
 
   def day_to_hours(containing_timestamp)
-    chart_data(:day_to_hours, containing_timestamp)
+    chart_data('day_to_hours', containing_timestamp)
   end
 
   def day_to_minutes(containing_timestamp)
-    chart_data(:day_to_minutes, containing_timestamp)
+    chart_data('day_to_minutes', containing_timestamp)
   end
 
   def week_to_days(containing_timestamp)
-    chart_data(:week_to_days, containing_timestamp)
+    chart_data('week_to_days', containing_timestamp)
   end
 
   def month_to_days(containing_timestamp)
-    chart_data(:month_to_days, containing_timestamp)
+    chart_data('month_to_days', containing_timestamp)
   end
 
   def year_to_months(containing_timestamp)
-    chart_data(:year_to_months, containing_timestamp)
+    chart_data('year_to_months', containing_timestamp)
   end
 
   def formula

@@ -145,7 +145,7 @@ class GroupsController < ApplicationController
       if resolution.nil?
         resolution = "day_to_minutes"
       end
-      resolution_format = resolution.to_sym
+      resolution_format = resolution
       render json: Group.find(params[:id]).chart(resolution_format, params[:containing_timestamp]).to_json
     end
   end
@@ -169,7 +169,7 @@ class GroupsController < ApplicationController
     if resolution.nil?
       resolution = "year"
     end
-    resolution_format = resolution.to_sym
+    resolution_format = resolution
     if containing_timestamp == nil
       containing_timestamp = Time.now.to_i * 1000
     end

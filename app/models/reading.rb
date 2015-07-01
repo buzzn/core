@@ -49,7 +49,7 @@ class Reading
       year_to_minutes:  ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute'],
       month_to_minutes: ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute']
     }
-    resolution = resolution_formats[resolution_format]
+    resolution = resolution_formats[resolution_format.to_sym]
 
 
     @time_zone          = 'Berlin'
@@ -62,7 +62,7 @@ class Reading
       @location_time = @location_time_now
     end
 
-    case resolution_format
+    case resolution_format.to_sym
     when :year_to_months
       @start_time = @location_time.beginning_of_year
       @end_time   = @location_time.end_of_year
@@ -101,6 +101,7 @@ class Reading
       @end_time   = @location_time.end_of_month
     else
       puts resolution_format.class
+      puts resolution
       puts "You gave me #{resolution_format} -- I have no idea what to do with that."
       return
     end

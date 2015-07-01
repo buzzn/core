@@ -16,6 +16,10 @@ every 30.minutes do
   runner "Meter.reactivate"
 end
 
+every 1440.minutes do
+  runner "Group.calculate_scores"
+end
+
 
 
 # every 1.day, :at => '10:00 am' do

@@ -16,25 +16,28 @@ class CalculateGroupScoreSufficiencyWorker
       return
     end
     if count_sn_in_group != 0
-      sufficiency = @group.extrapolate_kwh_pa(result_in[1], resolution_format, containing_timestamp)/count_sn_in_group
+      sufficiency = @group.extrapolate_kwh_pa(result_in[0][1], resolution_format, containing_timestamp)/count_sn_in_group
     else
-      sufficiency = nil
+      sufficiency = 0
     end
-    interval_information = @group.set_score_interval(resolution_format, containing_timestamp)
-    if sufficiency < 500
-      value = 5
+    puts result_in[0][1].to_s + ' --> ' + sufficiency.to_s
+    interval_information = @group.set_score_interval(resolution_format, containing_timestamp/1000)
+    if sufficiency <= 0
+      score_value = 0
+    elsif sufficiency < 500
+      score_value = 5
     elsif sufficiency < 900
-      value = 4
+      score_value = 4
     elsif sufficiency < 1500
-      value = 3
+      score_value = 3
     elsif sufficiency < 2300
-      value = 2
+      score_value = 2
     elsif sufficiency >= 2300
-      value = 1
-    else
-      value = 0
+      score_value = 1
     end
-    Score.create(mode: 'sufficiency', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: value, scoreable_type: 'Group', scoreable_id: group_id)
+    puts '*** ' + score_value.to_s
+    puts interval_information.inspect
+    Score.create(mode: 'sufficiency', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: score_value, scoreable_type: 'Group', scoreable_id: group_id)
   end
 
 

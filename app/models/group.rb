@@ -86,20 +86,6 @@ class Group < ActiveRecord::Base
             metering_points_out_minus << metering_point_minus.id
           end
         end
-        # metering_point.formula_parts.where(operator: "+").collect(&:operand).each do |metering_point_plus|
-        #   if metering_point_plus.input?
-        #     metering_points_in_plus << metering_point_plus.id
-        #   else
-        #     metering_points_out_plus << metering_point_plus.id
-        #   end
-        # end
-        # metering_point.formula_parts.where(operator: "-").collect(&:operand).each do |metering_point_minus|
-        #   if metering_point_minus.input?
-        #     metering_points_in_minus << metering_point_minus.id
-        #   else
-        #     metering_points_out_minus << metering_point_minus.id
-        #   end
-        # end
       else
         if metering_point.input?
           metering_points_in_plus << metering_point.id
@@ -197,12 +183,12 @@ class Group < ActiveRecord::Base
   end
 
   def get_autarchy(resolution_format, containing_timestamp)
-    if resolution_format == :year
-      resolution_format = :year_to_minutes
-    elsif resolution_format == :month
-      resolution_format = :month_to_minutes
-    elsif resolution_format == :day
-      resolution_format = :day_to_minutes
+    if resolution_format == 'year'
+      resolution_format = 'year_to_minutes'
+    elsif resolution_format == 'month'
+      resolution_format = 'month_to_minutes'
+    elsif resolution_format == 'day'
+      resolution_format = 'day_to_minutes'
     end
     chart_data = self.chart(resolution_format, containing_timestamp)
     data_in = chart_data[0][:data]
@@ -241,12 +227,12 @@ class Group < ActiveRecord::Base
   end
 
   def get_fitting(resolution_format, containing_timestamp)
-    if resolution_format == :year
-      resolution_format = :year_to_minutes
-    elsif resolution_format == :month
-      resolution_format = :month_to_minutes
-    elsif resolution_format == :day
-      resolution_format = :day_to_minutes
+    if resolution_format == 'year'
+      resolution_format = 'year_to_minutes'
+    elsif resolution_format == 'month'
+      resolution_format = 'month_to_minutes'
+    elsif resolution_format == 'day'
+      resolution_format = 'day_to_minutes'
     end
     chart_data = self.chart(resolution_format, containing_timestamp)
     data_in = chart_data[0][:data]
@@ -297,34 +283,34 @@ class Group < ActiveRecord::Base
   end
 
   def set_score_interval(resolution_format, containing_timestamp)
-    if resolution_format == :year_to_minutes
+    if resolution_format == 'year_to_minutes' || resolution_format == 'year'
       return ['year', Time.at(containing_timestamp).beginning_of_year.utc, Time.at(containing_timestamp).end_of_year.utc]
-    elsif resolution_format == month_to_minutes
+    elsif resolution_format == 'month_to_minutes' || resolution_format == 'month'
       return ['month', Time.at(containing_timestamp).beginning_of_month.utc, Time.at(containing_timestamp).end_of_month.utc]
-    elsif resolution_format == day_to_minutes
+    elsif resolution_format == 'day_to_minutes' || resolution_format == 'day'
       return ['day', Time.at(containing_timestamp).beginning_of_day.utc, Time.at(containing_timestamp).end_of_day.utc]
     end
   end
 
   def extrapolate_kwh_pa(kwh_ago, resolution_format, containing_timestamp)
     days_ago = 0
-    if resolution_format == :year
+    if resolution_format == 'year'
       if Time.at(containing_timestamp).end_of_year < Time.now
         days_ago = 365
       else
-        days_ago = ((Time.now - Time.now.beginning_of_year)/(3600*24)).to_i
+        days_ago = ((Time.now - Time.now.beginning_of_year)/(3600*24.0)).to_i
       end
-    elsif resolution_format == :month
+    elsif resolution_format == 'month'
       if Time.at(containing_timestamp).end_of_month < Time.now
         days_ago = Time.at(containing_timestamp).days_in_month
       else
         days_ago = Time.now.day
       end
-    elsif resolution_format == :day
+    elsif resolution_format == 'day'
       if Time.at(containing_timestamp).end_of_day < Time.now
         days_ago = 1
       else
-        days_ago = (Time.now - Time.now.beginning_of_day)/(3600*24)
+        days_ago = (Time.now - Time.now.beginning_of_day)/(3600*24.0)
       end
     end
     return kwh_ago / (days_ago*1.0) * 365
@@ -342,12 +328,27 @@ class Group < ActiveRecord::Base
   end
 
   def self.calculate_scores
-    Group.all.select(:id).each.each do |group|
-      Sidekiq::Client.push({
-       'class' => CalculateGroupScoreSufficiencyWorker,
-       'queue' => :default,
-       'args' => [ group.id, :day_to_minutes, Time.now.to_i*1000]
-      })
+    resolutions = ['day', 'month', 'year']
+    resolutions.each do |resolution|
+      Group.all.select(:id).each.each do |group|
+        Sidekiq::Client.push({
+         'class' => CalculateGroupScoreSufficiencyWorker,
+         'queue' => :default,
+         'args' => [ group.id, resolution, Time.now.to_i*1000]
+        })
+
+        # Sidekiq::Client.push({
+        #  'class' => CalculateGroupScoreAutarchyWorker,
+        #  'queue' => :default,
+        #  'args' => [ group.id, resolution, Time.now.to_i*1000]
+        # })
+
+        # Sidekiq::Client.push({
+        #  'class' => CalculateGroupScoreFittingWorker,
+        #  'queue' => :default,
+        #  'args' => [ group.id, resolution, Time.now.to_i*1000]
+        # })
+      end
     end
   end
 

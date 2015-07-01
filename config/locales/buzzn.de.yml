@@ -120,6 +120,7 @@ de:
   groups: Gruppen
   edit_group: Gruppe bearbeiten
   create_group: Gruppe erstellen
+  remove_members: Mitglieder entfernen
 
   new_contract: Neuer Vertrag
   contracts: Verträge
