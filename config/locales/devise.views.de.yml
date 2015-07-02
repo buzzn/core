@@ -31,9 +31,9 @@ de:
         message: Ihr Konto wurde aufgrund einer großen Anzahl von fehlgeschlagenen Anmeldeversuchen gesperrt.
       invitation_instructions:
         hello: "Hallo %{email},"
-        someone_invited_you: "jemand hat Dich zur buzzn-App eingeladen: %{url}. Du kannst die Einladung annehmen, indem du auf folgenden Link klickst:"
+        someone_invited_you: "jemand hat Dich zur buzzn App eingeladen: %{url}. Du kannst die Einladung annehmen, indem Du auf folgenden Link klickst:"
         accept: Einladung annehmen
-        ignore: "Wenn Du die Einladung nicht annehmen willst, ignoriere diese Email. Es wird für Dich solange kein Konto angelegt, bis Du den Link besucht und ein Passwort angelegt hast."
+        ignore: "Wenn Du die Einladung nicht annehmen willst, ignoriere diese Email einfach. Es wird für Dich solange kein Konto angelegt, bis Du die Linkadresse besucht und ein Passwort angelegt hast."
     passwords:
       edit:
         change_my_password: "Ändere mein Passwort"

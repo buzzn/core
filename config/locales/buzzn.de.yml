@@ -1,6 +1,6 @@
 de:
   welcome: Willkommen
-  you_can_confirm_your_account_email_through_the_link_below: "Du kannst Dein Benutzerkonto bestätigen, indem du den folgenden Link anklickst:"
+  you_can_confirm_your_account_email_through_the_link_below: "Du kannst Dein Benutzerkonto bestätigen, indem Du den folgenden Link anklickst:"
   confirm_my_account: Benutzerkonto bestätigen
   someone_has_requested_a_link_to_change_your_password: "Es wurde ein Link angefragt, um Dein Passwort zu ändern."
   you_can_do_this_through_the_link_below: "Dies kannst Du mit dem folgenden Link tun:"
@@ -11,7 +11,7 @@ de:
   your_account_has_been_locked_due_to_an_excessive_number_of_unsuccessful_sign_in_attempts: "Dein Benutzerkonto wurde wegen einer sehr großen Anzahl an fehlgeschlagenen Anmeldungsversuchen gesperrt."
   click_the_link_below_to_unlock_your_account: "Klicke auf den folgenden Link, um Dein Benutzerkonto zu entsperren."
   unlock_my_account: Mein Benutzerkonto entsperren
-  if_this_link_shouldnt_work_try_to_copy_and_paste_this_one_directly_in_your_browser: "Solltest du Probleme haben mit diesem Link kopiere den folgenden direkt in deinen Browser:"
+  if_this_link_shouldnt_work_try_to_copy_and_paste_this_one_directly_in_your_browser: "Sollte dieser Link nicht funktionieren, kopiere bitte dies direkt in Deinen Browser:"
 
   metering_point: Zählpunkt
   edit_metering_point: Zählpunkt bearbeiten
