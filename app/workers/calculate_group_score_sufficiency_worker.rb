@@ -14,10 +14,12 @@ class CalculateGroupScoreSufficiencyWorker
       chart_data = @group.chart(resolution_format, containing_timestamp)
       result_in = chart_data[0][:data]
       if result_in.empty?
-        return
+        watt_hour = 0
+      else
+        watt_hour = result_in[0][1]
       end
       if count_sn_in_group != 0
-        sufficiency = @group.extrapolate_kwh_pa(result_in[0][1], resolution_format, containing_timestamp)/count_sn_in_group
+        sufficiency = @group.extrapolate_kwh_pa(watt_hour, resolution_format, containing_timestamp)/count_sn_in_group
       else
         sufficiency = 0
       end

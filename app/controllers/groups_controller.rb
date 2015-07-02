@@ -164,19 +164,29 @@ class GroupsController < ApplicationController
 
   def get_scores
     @group = Group.find(params[:id])
-    resolution = params[:resolution]
+    resolution_format = params[:resolution]
     containing_timestamp = params[:containing_timestamp]
-    if resolution.nil?
-      resolution = "year"
+    if resolution_format.nil?
+      resolution_format = "year"
     end
-    resolution_format = resolution
-    if containing_timestamp == nil
+    if containing_timestamp.nil?
       containing_timestamp = Time.now.to_i * 1000
     end
-    sufficiency = @group.get_sufficiency(resolution_format, containing_timestamp)
-    autarchy = @group.get_autarchy(resolution_format, containing_timestamp)
-    fitting = @group.get_fitting(resolution_format, containing_timestamp)
-    render json: { sufficiency: sufficiency, closeness: @group.closeness, autarchy: autarchy, fitting: fitting }.to_json
+
+    if resolution_format == 'day'
+      sufficiency = @group.scores.sufficiencies.dayly.last
+      autarchy = @group.scores.autarchies.dayly.last
+      fitting = @group.scores.fittings.dayly.last
+    elsif resolution_format == 'month'
+      sufficiency = @group.scores.sufficiencies.monthly.last
+      autarchy = @group.scores.autarchies.monthly.last
+      fitting = @group.scores.fittings.monthly.last
+    elsif resolution_format == 'year'
+      sufficiency = @group.scores.sufficiencies.yearly.last
+      autarchy = @group.scores.autarchies.yearly.last
+      fitting = @group.scores.fittings.yearly.last
+    end
+    render json: { sufficiency: sufficiency.value, closeness: @group.closeness, autarchy: autarchy.value, fitting: fitting.value }.to_json
   end
 
 

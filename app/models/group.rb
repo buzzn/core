@@ -335,17 +335,17 @@ class Group < ActiveRecord::Base
        'args' => [ group.id, 'day', Time.now.to_i*1000]
       })
 
-      # Sidekiq::Client.push({
-      #  'class' => CalculateGroupScoreAutarchyWorker,
-      #  'queue' => :default,
-      #  'args' => [ group.id, 'day', Time.now.to_i*1000]
-      # })
+      Sidekiq::Client.push({
+       'class' => CalculateGroupScoreAutarchyWorker,
+       'queue' => :default,
+       'args' => [ group.id, 'day', Time.now.to_i*1000]
+      })
 
-      # Sidekiq::Client.push({
-      #  'class' => CalculateGroupScoreFittingWorker,
-      #  'queue' => :default,
-      #  'args' => [ group.id, 'day', Time.now.to_i*1000]
-      # })
+      Sidekiq::Client.push({
+       'class' => CalculateGroupScoreFittingWorker,
+       'queue' => :default,
+       'args' => [ group.id, 'day', Time.now.to_i*1000]
+      })
     end
   end
 

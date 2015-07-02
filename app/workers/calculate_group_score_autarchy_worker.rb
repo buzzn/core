@@ -3,47 +3,71 @@ class CalculateGroupScoreAutarchyWorker
   sidekiq_options :retry => false, :dead => false
 
   def perform(group_id, resolution_format, containing_timestamp)
-    @group = Group.find(group_id)
-    if resolution_format == :year
-      resolution_format = :year_to_minutes
-    elsif resolution_format == :month
-      resolution_format = :month_to_minutes
-    elsif resolution_format == :day
-      resolution_format = :day_to_minutes
-    end
-    chart_data = @group.chart(resolution_format, containing_timestamp)
-    data_in = chart_data[0][:data]
-    data_out = chart_data[1][:data]
-    i = 0
-    sum_variation = 0
-    while i < data_in.count do
-      if i >= data_out.count
-        break
+    if resolution_format == 'day'
+      @group = Group.find(group_id)
+      if resolution_format == 'day'
+        resolution_format = 'day_to_minutes'
       end
-      if data_in[i][1] > data_out[i][1]
-        sum_variation += (data_in[i][1] - data_out[i][1])/(data_in[i][1] * 1.0)
+      chart_data = @group.chart(resolution_format, containing_timestamp)
+      data_in = chart_data[0][:data]
+      data_out = chart_data[1][:data]
+      i = 0
+      sum_variation = 0
+      autarchy = 0
+      while i < data_in.count do
+        if i >= data_out.count
+          break
+        end
+        if data_in[i][1] > data_out[i][1]
+          sum_variation += (data_in[i][1] - data_out[i][1])/(data_in[i][1] * 1.0)
+        end
+        i+=1
       end
-      i+=1
-    end
+      if i != 0
+        autarchy = sum_variation*1.0 / i
+      else
+        autarchy = -1
+      end
+      interval_information = @group.set_score_interval(resolution_format, containing_timestamp/1000)
+      if autarchy < 0
+        score_value = 0
+      elsif autarchy < 0.1
+        score_value = 5
+      elsif autarchy < 0.2
+        score_value = 4
+      elsif autarchy < 0.5
+        score_value = 3
+      elsif autarchy < 0.75
+        score_value = 2
+      elsif autarchy >= 0.75
+        score_value = 1
+      end
+      Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: score_value, scoreable_type: 'Group', scoreable_id: group_id)
 
-    if i != 0
-      autarchy = sum_variation / i
-    else
-      return 5
-    end
+      monthly_score = 0
+      yearly_score = 0
+      count_monthly_autarchies = 0
+      count_yearly_autarchies = 0
+      all_scores = @group.scores.autarchies.dayly
+      all_scores.each do |score|
+        if score.interval_beginning >= Time.now.beginning_of_month && score.interval_end <= Time.now.end_of_month
+          monthly_score += score.value
+          count_monthly_autarchies += 1
+        end
+        if score.interval_beginning >= Time.now.beginning_of_year && score.interval_end <= Time.now.end_of_year
+          yearly_score += score.value
+          count_yearly_autarchies += 1
+        end
+      end
+      interval_information_month = @group.set_score_interval('month', containing_timestamp/1000)
+      Score.create(mode: 'autarchy', interval: interval_information_month[0], interval_beginning: interval_information_month[1], interval_end: interval_information_month[2], value: monthly_score*1.0/count_monthly_autarchies, scoreable_type: 'Group', scoreable_id: group_id)
 
-    if autarchy < 0.1
-      return 5
-    elsif autarchy < 0.2
-      return 4
-    elsif autarchy < 0.5
-      return 3
-    elsif autarchy < 0.75
-      return 2
-    elsif autarchy >= 0.75
-      return 1
-    else
-      return 0
+      interval_information_year = @group.set_score_interval('year', containing_timestamp/1000)
+      Score.create(mode: 'autarchy', interval: interval_information_year[0], interval_beginning: interval_information_year[1], interval_end: interval_information_year[2], value: yearly_score*1.0/count_yearly_autarchies, scoreable_type: 'Group', scoreable_id: group_id)
+    elsif resolution_format == 'month'
+      puts 'month?'
+    elsif resolution_format == 'year'
+      puts 'year?'
     end
   end
 end
