@@ -174,17 +174,17 @@ class GroupsController < ApplicationController
     end
 
     if resolution_format == 'day'
-      sufficiency = @group.scores.sufficiencies.dayly.last
-      autarchy = @group.scores.autarchies.dayly.last
-      fitting = @group.scores.fittings.dayly.last
+      sufficiency = @group.scores.sufficiencies.dayly.at(containing_timestamp).first
+      autarchy = @group.scores.autarchies.dayly.at(containing_timestamp).first
+      fitting = @group.scores.fittings.dayly.at(containing_timestamp).first
     elsif resolution_format == 'month'
-      sufficiency = @group.scores.sufficiencies.monthly.last
-      autarchy = @group.scores.autarchies.monthly.last
-      fitting = @group.scores.fittings.monthly.last
+      sufficiency = @group.scores.sufficiencies.monthly.at(containing_timestamp).first
+      autarchy = @group.scores.autarchies.monthly.at(containing_timestamp).first
+      fitting = @group.scores.fittings.monthly.at(containing_timestamp).first
     elsif resolution_format == 'year'
-      sufficiency = @group.scores.sufficiencies.yearly.last
-      autarchy = @group.scores.autarchies.yearly.last
-      fitting = @group.scores.fittings.yearly.last
+      sufficiency = @group.scores.sufficiencies.yearly.at(containing_timestamp).first
+      autarchy = @group.scores.autarchies.yearly.at(containing_timestamp).first
+      fitting = @group.scores.fittings.yearly.at(containing_timestamp).first
     end
     render json: { sufficiency: sufficiency.value, closeness: @group.closeness, autarchy: autarchy.value, fitting: fitting.value }.to_json
   end

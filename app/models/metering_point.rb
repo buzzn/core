@@ -336,6 +336,24 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
+  def self.calculate_scores
+    MeteringPoint.all.select(:id, :mode).each.each do |metering_point|
+      if metering_point.input?
+        Sidekiq::Client.push({
+         'class' => CalculateMeteringPointScoreSufficiencyWorker,
+         'queue' => :default,
+         'args' => [ metering_point.id, 'day', Time.now.to_i*1000]
+        })
+
+        Sidekiq::Client.push({
+         'class' => CalculateMeteringPointScoreFittingWorker,
+         'queue' => :default,
+         'args' => [ metering_point.id, 'day', Time.now.to_i*1000]
+        })
+      end
+    end
+  end
+
 
   def get_operators_from_formula
     if self.virtual && self.formula_parts.any?

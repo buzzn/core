@@ -9,4 +9,10 @@ class Score < ActiveRecord::Base
   scope :dayly,          -> { where(interval: 'day') }
   scope :monthly,        -> { where(interval: 'month') }
   scope :yearly,         -> { where(interval: 'year') }
+
+  scope :at, lambda {|containing_timestamp|
+    time = Time.at(containing_timestamp/1000).utc
+    self.where(["interval_beginning <= ?", time]).where(["interval_end >= ?", time])
+  }
+
 end

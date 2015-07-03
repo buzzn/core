@@ -32,6 +32,7 @@ Buzzn::Application.routes.draw do
       get :edit_devices
       get :update_parent
       get :latest_power
+      get :get_scores
     end
   end
 

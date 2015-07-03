@@ -127,6 +127,30 @@ class MeteringPointsController < ApplicationController
       }.to_json
   end
 
+  def get_scores
+    @metering_point = MeteringPoint.find(params[:id])
+    resolution_format = params[:resolution]
+    containing_timestamp = params[:containing_timestamp]
+    if resolution_format.nil?
+      resolution_format = "year"
+    end
+    if containing_timestamp.nil?
+      containing_timestamp = Time.now.to_i * 1000
+    end
+
+    if resolution_format == 'day'
+      sufficiency = @metering_point.scores.sufficiencies.dayly.at(containing_timestamp).first
+      fitting = @metering_point.scores.fittings.dayly.at(containing_timestamp).first
+    elsif resolution_format == 'month'
+      sufficiency = @metering_point.scores.sufficiencies.monthly.at(containing_timestamp).first
+      fitting = @metering_point.scores.fittings.monthly.at(containing_timestamp).first
+    elsif resolution_format == 'year'
+      sufficiency = @metering_point.scores.sufficiencies.yearly.at(containing_timestamp).first
+      fitting = @metering_point.scores.fittings.yearly.at(containing_timestamp).first
+    end
+    render json: { sufficiency: sufficiency.value, fitting: fitting.value }.to_json
+  end
+
 
 
 

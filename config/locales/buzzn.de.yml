@@ -2,15 +2,16 @@ de:
   welcome: Willkommen
   you_can_confirm_your_account_email_through_the_link_below: "Du kannst Dein Benutzerkonto bestätigen, indem Du den folgenden Link anklickst:"
   confirm_my_account: Benutzerkonto bestätigen
-  someone_has_requested_a_link_to_change_your_password: "Es wurde ein Link angefragt, um Dein Passwort zu ändern."
+  someone_has_requested_a_link_to_change_your_password: "jemand hat einen Link angefordert, um Dein Passwort zu ändern."
   you_can_do_this_through_the_link_below: "Dies kannst Du mit dem folgenden Link tun:"
   change_my_password: "Mein Passwort ändern"
-  if_you_didnt_request_this_please_ignore_this_email: "Falls Du diese Anfrage nicht gesendet hast kannst Du diese Email ignorieren."
+  if_you_didnt_request_this_please_ignore_this_email: "Falls Du diese Anfrage nicht gesendet hast kannst Du diese Email einfach ignorieren."
   your_password_wont_change_until_you_access_the_link_above_and_create_a_new_one: "Dein Passwort wird sich nicht ändern, bis Du den obigen Link angeklickt hast und ein neues Passwort eingegeben hast."
   your_buzzn_team: Dein buzzn Team
   your_account_has_been_locked_due_to_an_excessive_number_of_unsuccessful_sign_in_attempts: "Dein Benutzerkonto wurde wegen einer sehr großen Anzahl an fehlgeschlagenen Anmeldungsversuchen gesperrt."
   click_the_link_below_to_unlock_your_account: "Klicke auf den folgenden Link, um Dein Benutzerkonto zu entsperren."
   unlock_my_account: Mein Benutzerkonto entsperren
+  if_it_was_you_who_requested_the_link_you_can_do_this_through_the_link_below: "Falls Du das warst, kannst Du dies mit dem folgenden Link tun:"
   if_this_link_shouldnt_work_try_to_copy_and_paste_this_one_directly_in_your_browser: "Sollte dieser Link nicht funktionieren, kopiere bitte dies direkt in Deinen Browser:"
 
   metering_point: Zählpunkt
@@ -529,27 +530,27 @@ de:
 
   contracts_info: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."
   bank_account_info: "Um Deine Verträge zu bezahlen musst Du einen Bank Account anlegen. "
-  invoice_address_info: "Sollte Deine Rechnungsadresse nicht gleich deiner persönlichen Adresse sein, kannst Du dies hier ändern."
+  invoice_address_info: "Sollte Deine Rechnungsadresse nicht gleich Deiner persönlichen Adresse sein, kannst Du dies hier ändern."
   live_chart_info: "Jeder Kreis repräsentiert die aktuell bezogene Leistung eines Stromnehmer (blau) bzw. die aktuell zur Verfügung gestellte Leistung des Stromgebers (rot) in dieser Gruppe. Sind alle blauen Kreise größer als der rote Kreis, wird zu viel Strom bezogen."
   energy_producers_info: "Ein Stromgeber ist eine Person, die über ihre Stromerzeugungsanlage (z.B. Photovoltaikanlage, Blockheizkraftwerk) Strom an andere Personen liefert. Du findest hier also eine Liste aller Stromgeber, die Strom über diese Gruppe teilen."
   energy_consumers_info: "Ein Stromnehmer ist eine Person, die über ihren Stromzähler Strom von einer anderen Person bekommt. Du findest hier also eine Liste aller Stromnehmer, die aus dieser Gruppe Strom beziehen."
   interested_members_info: "Ein interessiertes Mitglied ist eine Person, die sich gerne am Geschehen in der Gruppe beteiligen möchte, ohne konkret Strom aus dieser Grupper zu nehmen oder ihr zu geben."
   contracts_info_group: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."
-  devices_info: "Hier kannst Du Deine Geräte, die mit Strom zu tun haben, anlegen und deinem Strombezug bzw. deiner Stromerzeugung hinzufügen."
+  devices_info: "Hier kannst Du Deine Geräte, die mit Strom zu tun haben, anlegen und Deinem Strombezug bzw. Deiner Stromerzeugung hinzufügen."
   members_info_metering_point: "Mitglieder sind hier alle Leute, die diesem Zählpunkt zugeordnet sind, also z.B. Mitbewohner einer Wohnung oder eines Hauses."
   address_info: "Jeder Zählpunkt hat eine Adresse, z.B. ist das die Adresse des Hauses oder der Wohnung, in der sich der Zählpunkt befindet."
   meters_info: "Das Messgerät (oder auch 'Zähler') ist das Gerät, das den Stromverbrauch bzw. die Stromerzeugung misst, welche dem Zählpunkt zugeordnet ist."
-  contracts_info_metering_point: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Zählpunkt zugeordnet sind."
+  contracts_info_metering_point: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst Du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Zählpunkt zugeordnet sind."
   groups_info: "Jeder Stromnehmer kann sich mit seinem Stromverbrauch einer Gruppe zuordnen, von deren Stromgeber(n) er dann Strom bekommt."
   metering_points_info: "Ein Zählpunkt ist die Bezeichnung für die Messstelle, für die der Strom gemessen wird, z.B. „Keller“ oder „Dachboden“. In den meisten Fällen ist der Zählpunkt gleichbedeutend mit dem Haus oder der Wohnung, in der er sich befindet."
-  friends_info: "Durch die Freunschaft mit anderen Usern kannst du deren Stromkurven sehen und deine mit ihnen vergleichen. "
+  friends_info: "Durch die Freunschaft mit anderen Usern kannst Du deren Stromkurven sehen und Deine mit ihnen vergleichen. "
   trend_chart_info: "Hier findest Du alle Energie-Daten der gesamten Gruppe, also ihre gesamte Stromerzeugung und ihren gesamten Strombezug."
-  dashboard_info: "In Deinem Dashboard kannst du dir die Energiedaten aller Zählpunkte ansehen, die dich interessieren. Z.B. kannst du Die Zählpunkte Deiner Freunde hier reinladen, um so ihr Energieverhalten vergleichen zu können."
-  stream_info: "Hier findest Du alle Aktivitäten Deiner Freunde sowie Deine persönlichen Benachrichtigungen bzgl. deines Energieverhaltens."
+  dashboard_info: "In Deinem Dashboard kannst Du Dir die Energiedaten aller Zählpunkte ansehen, die Dich interessieren. Z.B. kannst Du die Zählpunkte Deiner Freunde hier reinladen, um so ihr Energieverhalten vergleichen zu können."
+  stream_info: "Hier findest Du alle Aktivitäten Deiner Freunde sowie Deine persönlichen Benachrichtigungen bzgl. Deines Energieverhaltens."
   stream_info_profile: "Hier findest Du alle Aktivitäten und persönlichen Benachrichtigungen bzgl. des Energieverhaltens des angezeigten Benutzers."
   out_devices_info_group: "Hier findest Du alle Geräte, die für diese Gruppe den Strom erzeugen."
   group_manager_info: "Die Gruppenadmins verwalten diese Gruppe. Sie entscheiden z.B. wer in die Gruppe aufgenommen wird und haben Zugriff auf die Stromerzeugungsanlagen."
-  contracts_info_contracting_party: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Vertragspartner zugeordnet sind."
+  contracts_info_contracting_party: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst Du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Vertragspartner zugeordnet sind."
   metering_point_virtual_info: "Hier kann die Formel ausgewählt werden, durch die der virtuelle Zähler berechnet wird. Jede Formel besteht aus einzelnen Summanden, und jeder Summand besteht aus Vorzeichen (Operator) und dem Zählpunkt (Operand)."
   formula_parts_info: "Der vituelle Zählpunkt besitzt keinen physikalischen Zähler, weshalb er aus den Werten von anderen Zählpunkten berechnet werden muss. Hier findest Du die Auflistung der Bestandteile der Formel zu Berechnung der Energiewerte des aktuellen Zählpunkts."
 
@@ -558,8 +559,8 @@ de:
 
 
   possible_reasons_are_a_broken_internet_connection_or_a_failure_in_your_hardware: "Mögliche Gründe sind eine unterbrochene Internetverbindung oder ein Fehler in deiner Hardware."
-  to_get_the_latest_data_in_your_app_you_should_try_to_fix_this_issue: "Um die neusten Daten in Deiner App verfügbar zu haben solltest Du dieses Problem schnellstmöglich beheben."
-  if_you_can_not_fix_this_problem_on_your_own_contact_the_manufacturer_of_your_hardware: "Wenn Du dieses Problem nicht selbst lösen kannst kontaktiere den Hersteller Deiner Hardware."
+  to_get_the_latest_data_in_your_app_you_should_try_to_fix_this_issue: "Um die neusten Daten in Deiner buzzn App verfügbar zu haben solltest Du dieses Problem schnellstmöglich beheben."
+  if_you_can_not_fix_this_problem_on_your_own_contact_the_manufacturer_of_your_hardware: "Wenn Du dieses Problem nicht selbst lösen kannst kontaktiere bitte den Hersteller Deiner Hardware."
   this_is_the_concerned_metering_point: "Das ist der betroffene Zählpunkt:"
   new_friendship_request_from: "Neue Freundschaftsanfrage von %{sender}"
   sent_a_friendship_request_to_you: hat Dir eine Freundschaftsanfrage gesendet.
