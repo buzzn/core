@@ -21,15 +21,15 @@ feature 'Equipment' do
       expect(page).to have_content('Signed in successfully.')
     end
 
-    it 'try to create equipment', :retry => 1  do #**********Equipment is currently not visible in the app********************
-      @metering_point.meter.equipments = []
-      @metering_point.meter.save
+    # it 'try to create equipment', :retry => 1  do #**********Equipment is currently not visible in the app********************
+    #   @metering_point.meter.equipments = []
+    #   @metering_point.meter.save
 
-      visit "/meters/#{@metering_point.meter.id}"
+    #   visit "/meters/#{@metering_point.meter.id}"
 
-      expect(page).to have_content('Easy Meter')
+    #   expect(page).to have_content('Easy Meter')
 
-      click_on 'Edit'
+    #   click_on 'Edit'
 
       # click_on 'Add Equipment'
 
@@ -44,7 +44,7 @@ feature 'Equipment' do
       # click_on 'Update Meter'
 
       # expect(find(".equipments")).to have_content('Discovergy')
-    end
+    #end
 
     # it 'try to delete equipment', :retry => 3 do
     #   visit "/metering_points/#{@location.metering_point.slug}/#meter"

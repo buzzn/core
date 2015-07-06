@@ -29,20 +29,31 @@ feature 'FormulaPart' do
     end
 
     it 'try to create virtual metering_point', :retry => 3 do
-      click_on "Create Metering Point"
+      @metering_point3 = Fabricate(:mp_hof_butenland_wind)
+      @meter = Fabricate(:meter, smart: true, online: true, init_reading: true)
+      @metering_point3.meter = @meter
+      @metering_point3.save
+      @user.add_role :manager, @metering_point3
+
+      visit "/metering_points/#{@metering_point3.id}"
+
+      click_on 'Edit'
 
       find(".modal-body").find("#metering_point_mode_out").trigger('click')
       find(".modal-body").find("#metering_point_virtual").trigger('click')
       fill_in :metering_point_name,       with: 'Gesamtstrom'
       select  :world,                     from: 'metering_point_readable'
+
+      click_on 'Add Formula Part'
+      click_on 'Add Formula Part'
       find("#formula_parts").all(".nested-fields").first.find(:css, "select[id^='metering_point_formula_parts_attributes_'][id$='_operand_id']").select("#{@metering_point.name}")
       find("#formula_parts").all(".nested-fields").last.find(:css, "select[id^='metering_point_formula_parts_attributes_'][id$='_operand_id']").select("#{@metering_point2.name}")
 
       click_on 'submit'
 
-      click_on 'Without Address'
+      #click_on 'Without Address'
 
-      expect(find("#mainnav-menu")).to have_content("Gesamtstrom")
+      expect(page).to have_content("Gesamtstrom")
     end
 
     it 'try to add formula_part to metering_point', :retry => 3 do

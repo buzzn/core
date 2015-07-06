@@ -24,10 +24,16 @@ feature 'MeteringPoint' do
       click_on 'Create Metering Point'
 
       fill_in :metering_point_name,       with: 'Wohnung'
-      fill_in :metering_point_uid,        with: 'DE123456789012345678901'
-      select  :world,                     from: 'metering_point_readable'
+      #fill_in :metering_point_uid,        with: 'DE123456789012345678901'
+      #select  :world,                     from: 'metering_point_readable'
+      page.choose('metering_point_mode_in')
 
-      click_on 'submit'
+      click_button 'Continue'
+
+      fill_in :meter_manufacturer_product_serialnumber, with: 12345678
+      page.choose('meter_smartmeter_nein')
+
+      click_button 'Continue'
 
       expect(page).to have_content('Loading...')
 
@@ -39,25 +45,32 @@ feature 'MeteringPoint' do
     it 'will fail to create metering_point', :retry => 3 do
       click_on 'Create Metering Point'
 
-      fill_in :metering_point_name,       with: ''
-      fill_in :metering_point_uid,        with: 'DE123456789012345678901'
-      select  :world,                     from: 'metering_point_readable'
+      fill_in :metering_point_name,       with: 'Wohnung'
+      #fill_in :metering_point_uid,        with: 'DE123456789012345678901'
+      #select  :world,                     from: 'metering_point_readable'
 
-      click_on 'submit'
+      click_button 'Continue'
+      expect(page).to have_content("can't be blank")
+
+      fill_in :metering_point_name,       with: ''
+      page.choose('metering_point_mode_in')
+      #fill_in :metering_point_uid,        with: 'DE12345678901234567890123456789012345'
+      #select  :world,                     from: 'metering_point_readable'
+
+      click_button 'Continue'
       expect(page).to have_content("can't be blank")
 
       fill_in :metering_point_name,       with: 'Wohnung'
-      fill_in :metering_point_uid,        with: 'DE12345678901234567890123456789012345'
-      select  :world,                     from: 'metering_point_readable'
+      page.choose('metering_point_mode_in')
+      #fill_in :metering_point_uid,        with: 'DE123456789012345678901'
+      #select  :world,                     from: 'metering_point_readable'
 
-      click_on 'submit'
-      expect(page).to have_content('is too long')
+      click_button 'Continue'
 
-      fill_in :metering_point_name,       with: 'Wohnung'
-      fill_in :metering_point_uid,        with: 'DE123456789012345678901'
-      select  :world,                     from: 'metering_point_readable'
+      fill_in :meter_manufacturer_product_serialnumber, with: 12345678
+      page.choose('meter_smartmeter_nein')
 
-      click_on 'submit'
+      click_button 'Continue'
       expect(page).to have_content('Loading...')
     end
 

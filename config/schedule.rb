@@ -20,7 +20,9 @@ every 1440.minutes do
   runner "Group.calculate_scores"
 end
 
-
+every 1440.minutes do
+  runner "MeteringPoint.calculate_scores"
+end
 
 # every 1.day, :at => '10:00 am' do
 #   runner "stream::previous_day_consumption"

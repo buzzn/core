@@ -38,39 +38,39 @@ feature 'Meter' do
       expect(find(".meters")).to have_content('123456789')
     end
 
-    it 'try to delete equipment', :retry => 3 do
-      @meter = Fabricate(:meter)
-      @metering_point.meter = @meter
+    # it 'try to delete equipment', :retry => 3 do
+    #   @meter = Fabricate(:meter)
+    #   @metering_point.meter = @meter
 
-      visit "/meters/#{@meter.id}"
+    #   visit "/meters/#{@meter.id}"
 
-      expect(page).to have_content('Meter Properties')
+    #   expect(page).to have_content('Meter Properties')
 
-      click_on 'Edit'
+    #   click_on 'Edit'
 
-      click_on 'Destroy'
+    #   click_on 'Destroy'
 
-      visit "/metering_points/#{@metering_point.id}"
+    #   visit "/metering_points/#{@metering_point.id}"
 
-      expect(find(".meters")).not_to have_content("#{@meter.name}")
-    end
+    #   expect(find(".meters")).not_to have_content("#{@meter.name}")
+    # end
 
-    it 'try to edit equipment', :retry => 3 do
-      @meter = Fabricate(:meter)
-      @metering_point.meter = @meter
+    # it 'try to edit equipment', :retry => 3 do
+    #   @meter = Fabricate(:meter)
+    #   @metering_point.meter = @meter
 
-      visit "/meters/#{@meter.id}"
+    #   visit "/meters/#{@meter.id}"
 
-      expect(page).to have_content('Meter Properties')
+    #   expect(page).to have_content('Meter Properties')
 
-      click_on 'Edit'
+    #   click_on 'Edit'
 
-      fill_in :meter_manufacturer_product_serialnumber, with: '1234567890'
+    #   fill_in :meter_manufacturer_product_serialnumber, with: '1234567890'
 
-      click_on 'Update Meter'
+    #   click_on 'Update Meter'
 
-      expect(find("#page-content")).to have_content("1234567890")
+    #   expect(find("#page-content")).to have_content("1234567890")
 
-    end
+    # end
   end
 end

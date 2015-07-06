@@ -64,9 +64,9 @@ feature 'Contract' do
       visit "/metering_points/#{@metering_point.id}"
       find(".contract").click
 
-      expect(page).to have_content('Contract Properties')
-
-      click_on("Edit")
+      # expect(page).to have_content('Contract Properties')
+      # ******************************* UNCOMMENT THESE 2 LINES WHEN ENABLING CONTRACT/SHOW ******************
+      # click_on("Edit")
 
       expect(page).to have_content('Edit Contract')
 
@@ -76,7 +76,7 @@ feature 'Contract' do
       fill_in :contract_price_cents,                                with: 7777
 
       click_button 'Update Contract'
-      expect(page).to have_content("7777")
+      expect(page).to have_content("blabla")
     end
 
     # it 'try to create metering_point_operator_contract with smart meter' do #TODO: Enable cassette for discovergy request

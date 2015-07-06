@@ -186,7 +186,10 @@ class GroupsController < ApplicationController
       autarchy = @group.scores.autarchies.yearly.at(containing_timestamp).first
       fitting = @group.scores.fittings.yearly.at(containing_timestamp).first
     end
-    render json: { sufficiency: sufficiency.value, closeness: @group.closeness, autarchy: autarchy.value, fitting: fitting.value }.to_json
+    sufficiency.nil? ? sufficiency_value = 0 : sufficiency_value = sufficiency.value
+    autarchy.nil? ? autarchy_value = 0 : autarchy_value = autarchy.value
+    fitting.nil? ? fitting_value = 0 : fitting_value = fitting.value
+    render json: { sufficiency: sufficiency_value, closeness: @group.closeness, autarchy: autarchy_value, fitting: fitting_value }.to_json
   end
 
 

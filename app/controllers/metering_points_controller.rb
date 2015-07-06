@@ -148,7 +148,9 @@ class MeteringPointsController < ApplicationController
       sufficiency = @metering_point.scores.sufficiencies.yearly.at(containing_timestamp).first
       fitting = @metering_point.scores.fittings.yearly.at(containing_timestamp).first
     end
-    render json: { sufficiency: sufficiency.value, fitting: fitting.value }.to_json
+    sufficiency.nil? ? sufficiency_value = 0 : sufficiency_value = sufficiency.value
+    fitting.nil? ? fitting_value = 0 : fitting_value = fitting.value
+    render json: { sufficiency: sufficiency_value, fitting: fitting_value }.to_json
   end
 
 

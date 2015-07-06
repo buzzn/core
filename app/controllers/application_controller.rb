@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
     #   stored_location_for(resource) || request.referer || root_path
     # end
 
-    stream_index_path
+    profile_path(resource.profile)
   end
 
   def current_user
