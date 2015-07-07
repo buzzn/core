@@ -41,7 +41,7 @@ class GroupDecorator < Draper::Decorator
   def new_contract
     link_to(
       content_tag(:i, t("create_contract"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
-      new_contract_path(group: model.id),
+      new_contract_path(group_id: model.id),
       {
         :remote         => true,
         :class          => 'btn start_modal',

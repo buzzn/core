@@ -30,7 +30,8 @@ class ReadingsController < ApplicationController
       flash[:notice] = t('reading_deleted_successfully')
       redirect_to metering_point_path(@metering_point)
     else
-      render :edit, errors: @reading.errors.full_messages
+      flash[:error] = t('failed_to_delete_reading')
+      redirect_to metering_point_path(@metering_point)
     end
   end
 

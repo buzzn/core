@@ -77,7 +77,8 @@ private
       :username,
       :password,
       :metering_point_id,
-      :organization_id
+      :organization_id,
+      :group_id
       )
   end
 

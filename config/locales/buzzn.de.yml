@@ -63,6 +63,7 @@ de:
   time_of_reading: Ablesezeitpunkt
   reading_deleted_successfully: Zählerstand erfolgreich gelöscht.
   edit_readings: Zählerstände bearbeiten
+  failed_to_delete_reading: Zählerstand löschen fehlgeschlagen
 
   close: Schliessen
   out: Produktion
