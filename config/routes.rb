@@ -30,6 +30,7 @@ Buzzn::Application.routes.draw do
       get :latest_fake_data
       get :edit_users
       get :edit_devices
+      get :edit_readings
       get :update_parent
       get :latest_power
       get :get_scores

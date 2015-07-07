@@ -304,7 +304,7 @@ class MeteringPoint < ActiveRecord::Base
 
 
 
-  def calculate_forecast(containing_timestamp)
+  def calculate_forecast
     if smart?
       return
     end
@@ -404,6 +404,12 @@ class MeteringPoint < ActiveRecord::Base
       return {data: Reading.latest_fake_data('sep_pv'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
     elsif self.bhkw_or_else?
       return {data: Reading.latest_fake_data('sep_bhkw'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+    end
+  end
+
+  def submitted_readings_by_user
+    if self.fake_source
+      Reading.all_by_metering_point_id(self.id)
     end
   end
 

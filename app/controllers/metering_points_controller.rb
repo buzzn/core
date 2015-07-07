@@ -79,6 +79,12 @@ class MeteringPointsController < ApplicationController
   end
   authority_actions :edit_devices => 'update'
 
+  def edit_readings
+    @metering_point = MeteringPoint.find(params[:id]).decorate
+    @readings = @metering_point.submitted_readings_by_user
+    authorize_action_for(@metering_point, action: 'edit_devices')
+  end
+  authority_actions :edit_readings => 'update'
 
 
 

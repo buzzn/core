@@ -58,8 +58,13 @@ de:
   reading_created_successfully: Zählerstand erfolgreich gespeichert.
   error_while_creating_reading: Fehler beim Erstellen des Zählerstands.
   watt_hour_is_lower_than_the_last_one: Der Zählerstand ist kleiner als der letzte.
+  old_readings: Vergangene Zählerstände
+  count: Zählerstand (kWh)
+  time_of_reading: Ablesezeitpunkt
+  reading_deleted_successfully: Zählerstand erfolgreich gelöscht.
+  edit_readings: Zählerstände bearbeiten
 
-
+  close: Schliessen
   out: Produktion
   in: Verbrauch
   in_out: Verbrauch/Produktion

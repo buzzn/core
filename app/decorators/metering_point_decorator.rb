@@ -119,6 +119,18 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
+  def edit_readings
+    link_to(
+      content_tag(:i, t("edit_readings"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
+      edit_readings_metering_point_path(model),
+      {
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal'
+      })
+  end
+
 
   def new_address
     link_to(
