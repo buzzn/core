@@ -244,20 +244,20 @@ class Reading
 
 
     # TODO this works but is ugly
-    # if Mongoid.sessions[:replica_set]
-    #   hosts = Mongoid.sessions[:replica_set][:hosts]
-    #   session = Moped::Session.new([ hosts.first ])
-    #   call = session.with(database: :admin) do |admin|
-    #     admin.command(ismaster: 1)
-    #   end
-    #   call[:hosts].delete(call[:primary])
-    #   secondaries = call[:hosts]
-    #   session = Moped::Session.new([ secondaries.sample ])
-    #   session.use Mongoid.sessions[:replica_set][:database]
-    #   session.with(read: :nearest)[:readings].aggregate(pipe)
-    # else
+    if Mongoid.sessions[:replica_set]
+      hosts = Mongoid.sessions[:replica_set][:hosts]
+      session = Moped::Session.new([ hosts.first ])
+      call = session.with(database: :admin) do |admin|
+        admin.command(ismaster: 1)
+      end
+      call[:hosts].delete(call[:primary])
+      secondaries = call[:hosts]
+      session = Moped::Session.new([ secondaries.sample ])
+      session.use Mongoid.sessions[:replica_set][:database]
+      session.with(read: :nearest)[:readings].aggregate(pipe)
+    else
       return Reading.collection.aggregate(pipe)
-    # end
+    end
   end
 
 
