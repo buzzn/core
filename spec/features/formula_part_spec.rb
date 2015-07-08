@@ -30,8 +30,8 @@ feature 'FormulaPart' do
 
     it 'try to create virtual metering_point', :retry => 3 do
       @metering_point3 = Fabricate(:mp_hof_butenland_wind)
-      @meter = Fabricate(:meter, smart: true, online: true, init_reading: true)
-      @metering_point3.meter = @meter
+      #@meter = Fabricate(:meter, smart: true, online: true, init_reading: true)
+      #@metering_point3.meter = @meter
       @metering_point3.save
       @user.add_role :manager, @metering_point3
 

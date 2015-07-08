@@ -43,6 +43,7 @@
 //= require bootstrap3-typeahead.min
 //= require cookie_alert
 //= require gmaps/google
+//= reqiure dropzone
 
 //= require nifty_init
 //= require nifty.min
