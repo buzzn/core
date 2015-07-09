@@ -11,7 +11,7 @@ class MeterDecorator < Draper::Decorator
 
   def link_to_edit
     link_to(
-      t('edit'),
+      t('edit_meter'),
       edit_meter_path(model),
       {
         :remote       => true,

@@ -6,5 +6,7 @@
     = simple_form_for @contract, remote: true do |f|
       = render 'contracts/form_fields', f: f
       .modal-footer
-        = f.button :submit, class: 'btn btn-success'
+        .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+          = t'cancel'
+        = f.button :button, t('save'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check'
 

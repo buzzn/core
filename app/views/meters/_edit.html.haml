@@ -6,8 +6,12 @@
     = simple_form_for @meter, remote: true do |f|
       = render 'meters/form_fields', f: f
       .modal-footer
-        = f.button :submit, t('save_changes'), id: 'submit', class: 'btn btn-success'
-        = link_to t('destroy'), @meter, id: 'delete', :method => :delete, remote: false, :data => { :confirm => t('are_you_sure') }, class: 'btn btn-danger'
+        .float-left= link_to t('delete'), @meter, id: 'delete', :method => :delete, remote: false, :data => { :confirm => t('are_you_sure') }, class: 'btn btn-danger btn-labeled fa fa-trash'
+        .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+          = t'cancel'
+        = f.button :button, t('save'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check'
+
+
 
 
 

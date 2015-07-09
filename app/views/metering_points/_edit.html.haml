@@ -6,5 +6,7 @@
     = simple_form_for @metering_point, remote: true do |f|
       = render 'metering_points/form_fields', f: f
       .modal-footer
-        = f.button :submit, id: 'submit', class: 'btn btn-success'
-        = @metering_point.decorate.link_to_delete
+        .float-left= @metering_point.decorate.link_to_delete
+        .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+          = t'cancel'
+        = f.button :button, t('save'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check'

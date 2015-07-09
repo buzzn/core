@@ -7,5 +7,5 @@
     %h4= t'new_friendship_request'
     %p= friendship_request.sender.profile.name
 
-    = link_to t('accept'), accept_friendship_request_path(friendship_request), class: 'btn btn-success'
-    = link_to t('reject'), reject_friendship_request_path(friendship_request), class: 'btn btn-danger'
+    = link_to t('accept'), accept_friendship_request_path(friendship_request), class: 'btn btn-success btn-labeled fa fa-check'
+    = link_to t('reject'), reject_friendship_request_path(friendship_request), class: 'btn btn-danger btn-labeled fa fa-remove'

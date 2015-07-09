@@ -7,15 +7,15 @@
         %li.col-xs-4{style: "opacity: 0.5"}
           %span.icon-wrap.icon-wrap-xs.bg-danger
             %i.fa.fa-flash
-          %p.text-thin= t('metering_point')
+          %p.text-thin= t('step') + ' 1: ' + t('metering_point')
         %li.col-xs-4{style: "opacity: 0.5"}
           %span.icon-wrap.icon-wrap-xs.bg-warning
             %i.fa.fa-dashboard
-          %p.text-thin= t('meter')
+          %p.text-thin= t('step') + ' 2: ' + t('meter')
         %li.col-xs-4
           %span.icon-wrap.icon-wrap-xs.bg-info
             %i.fa.fa-file-text
-          %p.text-thin= t('data_connection')
+          %p.text-thin= t('step') + ' 3: ' + t('data_connection')
     .modal-body
       = simple_form_for @contract, remote: true, url: contract_update_wizard_metering_points_path(metering_point_id: params[:metering_point_id]), method: 'put'  do |f|
         = f.association :organization, input_html: {class: 'select2'}
@@ -24,4 +24,6 @@
           = f.input :password
 
         .modal-footer
-          = f.button :submit, t("finish"), id: 'submit', class: 'btn btn-success'
+          .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+            = t'cancel'
+          = f.button :button, t("save"), class: 'btn btn-success btn-labeled fa fa-check', id: 'submit'

@@ -6,11 +6,11 @@ class OrganizationDecorator < Draper::Decorator
 
   def link_to_edit
     link_to(
-      raw(content_tag(:i, '', class: 'fa fa-cog') + t('edit')),
+      t('edit_organization'),
       edit_organization_path(model),
       {
-        remote: true,
-        class: 'start_modal btn btn-icon btn-danger btn-xs',
+        :remote       => true,
+        :class        => 'start_modal btn btn-primary btn-labeled fa fa-cog',
         'data-toggle' => "modal",
         'data-target' => '#myModal'
       })
@@ -21,7 +21,7 @@ class OrganizationDecorator < Draper::Decorator
       t('delete'),
       model,
       remote: true,
-      class: 'btn btn-danger',
+      class: 'btn btn-danger btn-labeled fa fa-trash',
       :method => :delete,
       :data => {
         :confirm => t('are_you_sure')

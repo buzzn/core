@@ -6,8 +6,12 @@
     = simple_form_for @device, remote: true, html: { multipart: true } do |f|
       = render 'devices/form_fields', f: f
       .modal-footer
-        = f.button :button, id: 'submit', class: 'btn btn-success', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>" + '  ' + t('loading') + '...'}
         - if @device.metering_point && @device.metering_point.group && @device.mode == "out"
-          %button.btn.btn-danger{:disabled => "disabled"}= t('not_deletable')
+          .float-left
+            %button.btn.btn-danger.btn-labeled.fa.fa-trash{:disabled => "disabled"}= t('not_deletable')
         - else
-          = @device.decorate.link_to_delete
+          .float-left= @device.decorate.link_to_delete
+        .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+          = t'cancel'
+        = f.button :button, t('save'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>" + '  ' + t('loading') + '...'}
+

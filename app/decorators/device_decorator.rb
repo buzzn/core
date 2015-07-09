@@ -18,7 +18,7 @@ class DeviceDecorator < Draper::Decorator
       t('delete'),
       model,
       remote: false,
-      class: 'btn btn-danger',
+      class: 'btn btn-danger btn-labeled fa fa-trash',
       :method => :delete,
       :data => {
         :confirm => t('are_you_sure')
@@ -29,7 +29,7 @@ class DeviceDecorator < Draper::Decorator
 
   def link_to_edit
     link_to(
-      t('edit'),
+      t('edit_device'),
       edit_device_path(model),
       {
         :remote       => true,

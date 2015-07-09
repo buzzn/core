@@ -5,7 +5,7 @@ class BankAccountDecorator < Draper::Decorator
 
   def link_to_edit
     link_to(
-      t('edit'),
+      t('edit_bank_account'),
       edit_bank_account_path(model),
       {
         :remote       => true,
@@ -21,7 +21,7 @@ class BankAccountDecorator < Draper::Decorator
       t('delete'),
       model,
       remote: false,
-      class: 'btn btn-danger',
+      class: 'btn btn-danger btn-labeled fa fa-trash',
       :method => :delete,
       :data => {
         :confirm => t('are_you_sure')

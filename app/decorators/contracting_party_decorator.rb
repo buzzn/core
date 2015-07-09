@@ -7,7 +7,7 @@ class ContractingPartyDecorator < Draper::Decorator
 
   def link_to_edit
     link_to(
-      t('edit'),
+      t('edit_contracting_party'),
       edit_contracting_party_path(model),
       {
         :remote       => true,
@@ -23,7 +23,7 @@ class ContractingPartyDecorator < Draper::Decorator
       t('delete'),
       model,
       remote: false,
-      class: 'btn btn-danger',
+      class: 'btn btn-danger btn-labeled fa fa-trash',
       :method => :delete,
       :data => {
         :confirm => t('are_you_sure')

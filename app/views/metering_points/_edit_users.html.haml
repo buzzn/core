@@ -6,4 +6,6 @@
     = simple_form_for @metering_point, remote: true do |f|
       = f.association :users, collection: [current_user] + current_user.friends + @metering_point.users, input_html: { class: 'select2'}, label: false
       .modal-footer
-        = f.button :submit, id: 'submit', class: 'btn btn-success'
+        .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+          = t'cancel'
+        = f.button :button, t('save'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check'

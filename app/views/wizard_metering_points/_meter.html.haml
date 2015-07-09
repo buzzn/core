@@ -4,22 +4,37 @@
       %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'new_metering_point'
       %ul.row.wz-step.wz-icon-bw.wz-nav-off.mar-top
-        %li.col-xs-4{style: "opacity: 0.5"}
-          %span.icon-wrap.icon-wrap-xs.bg-danger
-            %i.fa.fa-flash
-          %p.text-thin= t('step_1') + t('create_metering_point')
-        %li.col-xs-4
-          %span.icon-wrap.icon-wrap-xs.bg-warning
-            %i.fa.fa-dashboard
-          %p.text-thin= t('step_2') + t('create_meter')
-        %li.col-xs-4{style: "opacity: 0.5"}
-          %span.icon-wrap.icon-wrap-xs.bg-info
-            %i.fa.fa-file-text
-          %p.text-thin= t('step_3') + t('establish_data_connection')
+        .js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: 'Nein'}}}
+          %li.col-xs-6{style: "opacity: 0.5"}
+            %span.icon-wrap.icon-wrap-xs.bg-danger
+              %i.fa.fa-flash
+            %p.text-thin= t('step') + ' 1: ' + t('create_metering_point')
+          %li.col-xs-6
+            %span.icon-wrap.icon-wrap-xs.bg-warning
+              %i.fa.fa-dashboard
+            %p.text-thin= t('step') + ' 2: ' + t('create_meter')
+        .js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: 'Ja'}}}
+          %li.col-xs-4{style: "opacity: 0.5"}
+            %span.icon-wrap.icon-wrap-xs.bg-danger
+              %i.fa.fa-flash
+            %p.text-thin= t('step') + ' 1: ' + t('create_metering_point')
+          %li.col-xs-4
+            %span.icon-wrap.icon-wrap-xs.bg-warning
+              %i.fa.fa-dashboard
+            %p.text-thin= t('step') + ' 2: ' + t('create_meter')
+          %li.col-xs-4{style: "opacity: 0.5"}
+            %span.icon-wrap.icon-wrap-xs.bg-info
+              %i.fa.fa-file-text
+            %p.text-thin= t('step') + ' 3: ' + t('establish_data_connection')
     .modal-body
       = simple_form_for @meter, remote: true, url: meter_update_wizard_metering_points_path(metering_point_id: params[:metering_point_id]), method: 'put'  do |f|
         = f.input :manufacturer_product_serialnumber
-        = f.input :smartmeter, as: :radio_buttons, collection: ["Ja", "Nein"], input_html: {checked: 'unchecked'}
+        = f.input :smartmeter, as: :radio_buttons, collection: ["Ja", "Nein"], checked: 'Nein'
 
         .modal-footer
-          = f.button :submit, t("continue"), id: 'submit', class: 'btn btn-success'
+          .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+            = t'cancel'
+          .pull-right.js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: 'Ja'}}}
+            = f.button :button, t("continue"), class: 'btn btn-success btn-labeled fa fa-arrow-right', id: 'submit'
+          .pull-right.js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: 'Nein'}}}
+            = f.button :button, t("save"), class: 'btn btn-success btn-labeled fa fa-check', id: 'submit'

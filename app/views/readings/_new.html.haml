@@ -25,4 +25,6 @@
 
 
       .modal-footer
-        = f.button t('create_reading'), id: 'submit', class: 'btn btn-success', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>" + '  ' + t('loading') + '...'}
+        .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+          = t'cancel'
+        = f.button t('save'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>" + '  ' + t('loading') + '...'}

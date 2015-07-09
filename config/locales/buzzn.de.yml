@@ -66,6 +66,7 @@ de:
   failed_to_delete_reading: Zählerstand löschen fehlgeschlagen
 
   close: Schliessen
+  close_without_save: Schliessen ohne zu speichern
   out: Produktion
   in: Verbrauch
   in_out: Verbrauch/Produktion
@@ -145,12 +146,21 @@ de:
   invoice_address: Rechnungsadresse
   create_address: Adresse erstellen
   new_address: Adresse erstellen
+  edit_address: Adresse bearbeiten
+  delete_address: Adresse löschen
+  update_address: Adresse aktualisieren
 
   save_changes: Änderungen speichern
+
+  step: Schritt
+  cancel: Abbrechen
 
   bank_account: Bankverbindung
   new_bank_account: Neue Bankverbindung
   edit_bank_account: Bankverbindung bearbeiten
+  update_bank_account: Bankverbindung aktualisieren
+  delete_bank_account: Bankverbindung löschen
+  create_bank_account: Bankverbindung erstellen
 
   news: Nachrichten
   comments: Kommentare
@@ -165,6 +175,9 @@ de:
   contracting_party_organization: "Vertragspartner: Organisation"
   contracting_party_organizations_address: "Vertragspartner: Adresse der Organisation"
   contracting_party_taxation: "Vertragspartner: Steuerdaten"
+  edit_contracting_party: Vertragspartner bearbeiten
+  delete_contracting_party: Vertragspartner löschen
+  update_contracting_party: Vertragspartner aktualisieren
 
   no_pic: kein bild
   my_friends: Meine Freunde
@@ -282,7 +295,7 @@ de:
   investment_request_was_successfully_sends: Investitionens Anfrage wurde erfolgreich versandt
   delete_selected_shape: ausgewählten umriss löschen.
   map: Karte
-  continue: weiter
+  continue: Weiter
   confirm_mail_txt: "Sie können Ihre E-Mail-Konto über den Link unten bestätigen:"
   confirm_my_account: 'Mein Konto Bestätigen'
   requested_password_link_txt: "Jemand hat einen Link, um Ihr Passwort zu ändern angefordert, und Sie können dies über den Link unten tun."
@@ -311,8 +324,8 @@ de:
   message_was_successfully_created: Nachricht wurde erfolgreich erstellt
   message_was_successfully_updated: Nachricht wurde erfolgreich aktualisiert
   accept_investment: investition akzeptieren
-  accept: akzeptieren
-  reject: ablehnen
+  accept: Akzeptieren
+  reject: Ablehnen
   investments: Investitionen
   contact_person: Ansprechpartner
   pending_investments: Investitions-Anfragen

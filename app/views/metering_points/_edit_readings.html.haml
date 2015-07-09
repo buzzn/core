@@ -16,7 +16,7 @@
             %th
               =reading[:watt_hour]/10000000000
             %th
-              =link_to(t('delete'), reading_path(reading[:_id]), remote: false, class: 'btn btn-danger', :method => :delete, :data => {:confirm => t('are_you_sure')})
+              =link_to(t('delete'), reading_path(reading[:_id]), remote: false, class: 'btn btn-danger btn-labeled fa fa-trash', :method => :delete, :data => {:confirm => t('are_you_sure')})
   .modal-footer
-    .btn.btn-success{"data-dismiss" => "modal"}
-      =t'close'
+    .btn.btn-success.btn-labeled.fa.fa-check{"data-dismiss" => "modal"}
+      = t'close'

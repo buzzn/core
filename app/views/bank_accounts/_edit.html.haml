@@ -6,6 +6,9 @@
     = simple_form_for @bank_account, remote: true do |f|
       = render 'bank_accounts/form_fields', f: f
       .modal-footer
-        = f.button :submit, id: 'submit', class: 'btn btn-success'
-        = @bank_account.decorate.link_to_delete
+        .float-left= @bank_account.decorate.link_to_delete
+        .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+          = t'cancel'
+        = f.button :button, t('save'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check'
+
 

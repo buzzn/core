@@ -7,5 +7,5 @@
     %h4= t'new_group_metering_point_request'
     %p= link_to group_metering_point_request.metering_point.decorate.name, group_metering_point_request.metering_point
 
-    = link_to t('accept'), accept_group_metering_point_request_path(group_metering_point_request), class: 'btn btn-success'
-    = link_to t('reject'), reject_group_metering_point_request_path(group_metering_point_request), class: 'btn btn-danger'
+    = link_to t('accept'), accept_group_metering_point_request_path(group_metering_point_request), class: 'btn btn-success btn-labeled fa fa-check'
+    = link_to t('reject'), reject_group_metering_point_request_path(group_metering_point_request), class: 'btn btn-danger btn-labeled fa fa-remove'
