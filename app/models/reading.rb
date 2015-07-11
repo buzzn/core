@@ -15,8 +15,8 @@ class Reading
 
   index({ metering_point_id: 1 })
   index({ timestamp: 1 })
-
-  #index({ metering_point_id: 1, timestamp: 1 })
+  index({ metering_point_id: 1, timestamp: 1 })
+  index({ metering_point_id: 1, source: 1 })
 
   validate :watt_hour_has_to_grow, if: :user_input?
 
