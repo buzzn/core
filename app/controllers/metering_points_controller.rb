@@ -92,9 +92,10 @@ class MeteringPointsController < ApplicationController
 
   def chart
     @metering_point = MeteringPoint.find(params[:id])
-    @cache_id = "/metering_points/#{params[:id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{params[:containing_timestamp]}"
+    params[:containing_timestamp].nil? ? @containing_timestamp = Time.now.to_i*1000 : @containing_timestamp = params[:containing_timestamp]
+    @cache_id = "/metering_points/#{params[:id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{@containing_timestamp}"
     @cache = Rails.cache.fetch(@cache_id)
-    @data = @cache || @metering_point.send(params[:resolution], params[:containing_timestamp])
+    @data = @cache || @metering_point.send(params[:resolution], @containing_timestamp)
 
     @chart_data = []
     @chart_data << {
@@ -124,13 +125,22 @@ class MeteringPointsController < ApplicationController
     @cache_id = "/metering_points/#{params[:id]}/latest_power"
     @cache = Rails.cache.fetch(@cache_id)
     last_power = @cache || @metering_point.last_power
+    if !last_power.nil?
+      latest_power = last_power[:power]
+      latest_timestamp = last_power[:timestamp]
+      online = true
+    else
+       latest_power = nil
+       latest_timestamp = nil
+       online = false
+    end
     render json: {
-      latest_power: last_power[:power],
-      timestamp:    last_power[:timestamp],
+      latest_power: latest_power,
+      timestamp:    latest_timestamp,
       smart:        @metering_point.smart?,
-      online:       @metering_point.online?,
+      online:       online,
       virtual:      @metering_point.virtual
-      }.to_json
+    }.to_json
   end
 
   def get_scores

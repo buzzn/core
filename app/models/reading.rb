@@ -30,6 +30,7 @@ class Reading
     end
   end
 
+#A PY 770
   def user_input?
     source == 'user_input'
   end

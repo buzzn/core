@@ -35,7 +35,7 @@
             .dropdown-menu.dropdown-menu-md.dropdown-menu-right.with-arrow.panel-default
               %ul.head-list
                 %li= link_to content_tag(:i, nil, class: 'fa fa-user fa-fw fa-lg') + t('contracting_party'), contracting_party_path(current_user.contracting_party) if current_user.contracting_party
-                %li= link_to content_tag(:i, nil, class: 'fa fa-question-circle fa-fw fa-lg') + t('help'), root_path
+                /%li= link_to content_tag(:i, nil, class: 'fa fa-question-circle fa-fw fa-lg') + t('help'), root_path
                 %li= link_to content_tag(:i, nil, class: 'fa fa-gear fa-fw fa-lg') + t('edit_account'), edit_user_registration_path
               .pad-all.text-right
                 = link_to(content_tag(:i, nil, class: 'fa fa-sign-out fa-fw') + t('logout'), destroy_user_session_path, :method => 'delete', class: 'btn btn-primary')

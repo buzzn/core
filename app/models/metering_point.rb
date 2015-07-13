@@ -93,11 +93,27 @@ class MeteringPoint < ActiveRecord::Base
       end
       return {:power => 0, :timestamp => 0}
     else
-      last_reading = Reading.last_by_metering_point_id(self.id)
-      if last_reading && last_reading[:power]
-        {:power => last_reading[:power]/1000, :timestamp => last_reading[:timestamp].to_i*1000}
+      # last_reading = Reading.last_by_metering_point_id(self.id)
+      # if last_reading && last_reading[:power]
+      #   {:power => last_reading[:power]/1000, :timestamp => last_reading[:timestamp].to_i*1000}
+      # else
+      #   {:power => 0, :timestamp => 0}
+      # end
+      discovergy  = Discovergy.new(self.metering_point_operator_contract.username, self.metering_point_operator_contract.password)
+      request     = discovergy.live(self.meter.manufacturer_product_serialnumber, 2)
+      if request['status'] == "ok"
+        if request['result'].any?
+
+         request['result'].each do |item|
+            timestamp = item['time']
+            power = item['power'] > 0 ? item['power'].abs/1000 : 0
+            return {:power => power, :timestamp => timestamp}
+          end
+        else
+          puts request.inspect
+        end
       else
-        {:power => 0, :timestamp => 0}
+        puts request.inspect
       end
 
     end
@@ -384,7 +400,76 @@ class MeteringPoint < ActiveRecord::Base
   def fake_or_smart(metering_point_id, resolution_format, containing_timestamp)
     metering_point = MeteringPoint.find(metering_point_id)
     if metering_point.meter && metering_point.meter.smart
-      convert_to_array(Reading.aggregate(resolution_format, [metering_point.id], containing_timestamp), resolution_format, 1) # smart
+      result = []
+      #convert_to_array(Reading.aggregate(resolution_format, [metering_point.id], containing_timestamp), resolution_format, 1) # smart
+      if resolution_format == 'hour_to_minutes'
+        discovergy  = Discovergy.new(self.metering_point_operator_contract.username, self.metering_point_operator_contract.password)
+        request     = discovergy.getHour(self.meter.manufacturer_product_serialnumber, containing_timestamp)
+        if request['status'] == "ok"
+          if request['result'].any?
+            # TODO: make this nicer
+            request['result'].each do |item|
+              puts item.to_s
+              timestamp = item['time']
+              power = item['power'] > 0 ? item['power'].abs/1000 : 0
+              result << [timestamp, power]
+            end
+          else
+            puts request.inspect
+          end
+        else
+          puts request.inspect
+        end
+      elsif resolution_format == 'day_to_minutes'
+        discovergy  = Discovergy.new(self.metering_point_operator_contract.username, self.metering_point_operator_contract.password)
+        request     = discovergy.getDay(self.meter.manufacturer_product_serialnumber, containing_timestamp)
+        if request['status'] == "ok"
+          if request['result'].any?
+            # TODO: make this nicer
+
+            request['result'].each do |item|
+              timestamp = item['timeStart']
+              power = item['power'] > 0 ? item['power'].abs/1000 : 0
+              result << [timestamp, power]
+            end
+          else
+            puts request.inspect
+          end
+        else
+          puts request.inspect
+        end
+      elsif resolution_format == 'month_to_days'
+        discovergy  = Discovergy.new(self.metering_point_operator_contract.username, self.metering_point_operator_contract.password)
+        request     = discovergy.getDataEveryDay(self.meter.manufacturer_product_serialnumber, containing_timestamp)
+        if request['status'] == "ok"
+          if request['result'].any?
+            # TODO: make this nicer
+            old_value = -1
+            new_value = -1
+            timestamp = -1
+            i = 0
+            request['result'].each do |item|
+              puts item.to_s
+              if i == 0
+                old_value = item['energy']
+                timestamp = item['time']
+                i += 1
+                next
+              end
+              new_value = item['energy']
+              result << [timestamp, (new_value - old_value)/10000000000.0]
+              old_value = new_value
+              timestamp = item['time']
+              i += 1
+            end
+          else
+            puts request.inspect
+          end
+        else
+          puts request.inspect
+        end
+      end
+      return result
     else
       if self.pv?
         convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP

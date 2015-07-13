@@ -57,6 +57,55 @@ class Discovergy
     return JSON.parse(response.body)
   end
 
+  def getDay( meter_uid, timestamp)
+    datetime = Time.at(timestamp.to_i/1000)
+    response = @conn.get do |req|
+      req.url '/json/Api.getDay'
+      req.headers['Content-Type'] = 'application/json'
+      req.params['user']          = @username
+      req.params['password']      = @password
+      req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      req.params['day']           = datetime.day
+      req.params['month']         = datetime.month
+      req.params['year']          = datetime.year
+    end
+    return JSON.parse(response.body)
+  end
+
+  def getDataEveryDay( meter_uid, timestamp)
+    datetime_start = Time.at(timestamp.to_i/1000).beginning_of_month
+    datetime_end = Time.at(timestamp.to_i/1000).end_of_month
+    response = @conn.get do |req|
+      req.url '/json/Api.getDataEveryDay'
+      req.headers['Content-Type'] = 'application/json'
+      req.params['user']          = @username
+      req.params['password']      = @password
+      req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      req.params['fromDay']       = datetime_start.day
+      req.params['fromMonth']     = datetime_start.month
+      req.params['fromYear']      = datetime_start.year
+      req.params['toDay']         = datetime_end.day
+      req.params['toMonth']       = datetime_end.month
+      req.params['toYear']        = datetime_end.year
+    end
+    return JSON.parse(response.body)
+  end
+
+  def getHour( meter_uid, timestamp )
+    datetime_from  = (Time.at(timestamp.to_i/1000).beginning_of_hour).to_i*1000
+    datetime_to    = (Time.at(timestamp.to_i/1000).end_of_hour).to_i*1000
+    response = @conn.get do |req|
+      req.url '/json/Api.getRawWithPower'
+      req.headers['Content-Type'] = 'application/json'
+      req.params['user']          = @username
+      req.params['password']      = @password
+      req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      req.params['from']          = datetime_from
+      req.params['to']            = datetime_to
+    end
+    return JSON.parse(response.body)
+  end
+
 
   def raw( meter_uid,
            datetime_from = (Time.now.in_time_zone.utc- 1.minute).to_i * 1000,

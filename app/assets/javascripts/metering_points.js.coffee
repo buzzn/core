@@ -288,8 +288,10 @@ $(".metering_point_detail").ready ->
       actual_resolution = "month_to_days"
       setChartToBarchart(false)
     else if actual_resolution == "month_to_days"
-      actual_resolution = "year_to_months"
-      setChartToBarchart(false)
+      chart.hideLoading()
+      return
+    #   actual_resolution = "year_to_months"
+    #   setChartToBarchart(false)
 
     containing_timestamp = chart_data_min_x
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
@@ -1156,11 +1158,13 @@ createChartTimer = (resource_ids, mode) ->
     window.setInterval(->
       updateChart(resource_ids, mode)
       return
-    , 1000*60*3)
+    , 1000*60*5)
     )
 
 updateChart = (resource_ids, mode) ->
   containing_timestamp = new Date().getTime()
+  if actual_resolution == 'hour_to_minutes'
+    return
   if mode == 'metering_point'
     if resource_ids.length == 0
       return
@@ -1231,39 +1235,18 @@ readingsSEP_BHKW = []
 factors = {}
 timers = []
 
+
 $(".metering_point").ready ->
   metering_point_id = $(this).attr('id').split('_')[2]
   metering_point = $(this)
   if $(this).find(".metering_point-ticker").length != 0
     if $(this).find(".metering_point-ticker").data('fake') == false
-      $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
-        .success (data) ->
-          if data.online == true || data.virtual == true
-            metering_point.find(".power-ticker").html(data.latest_power)
-            if data.timestamp <= Date.now() - 60*1000
-              metering_point.find(".power-ticker").css({opacity: 0.3})
-            metering_point.find(".power-ticker").data('content', moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss"))
-            metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
-          else
-            metering_point.find(".power-ticker").html('offline')
-      if $(this).find(".metering_point-ticker").data('virtual') == true
-        timers.push(
-          window.setInterval(->
-            pullVirtualPowerData(metering_point, metering_point_id)
-            return
-          , 1000*60)
-          )
-      else
-        Pusher.host = $(".pusher").data('pusherhost')
-        Pusher.ws_port = 8080
-        Pusher.wss_port = 8080
-        pusher = new Pusher($(".pusher").data('pusherkey'))
-
-        channel = pusher.subscribe("metering_point_#{metering_point_id}")
-        channel.bind "new_reading", (reading) ->
-          metering_point.find(".power-ticker").html(reading.power)
-          metering_point.find(".power-ticker").data('bs.popover').options.content = moment(reading.timestamp).format("DD.MM.YYYY HH:mm:ss")
-          metering_point.find(".power-ticker").css({opacity: 1})
+      timers.push(
+        window.setInterval(->
+          getLiveData(metering_point, metering_point_id)
+          return
+        , 1000*2)
+        )
     else
       source = $(this).find(".metering_point-ticker").data('source')
       getFakeValue(metering_point_id, source)
@@ -1274,20 +1257,28 @@ $(".metering_point").ready ->
         , 1000*2)
         )
 
-
-pullVirtualPowerData = (metering_point, metering_point_id) ->
+getLiveData = (metering_point, metering_point_id) ->
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
     .success (data) ->
       if data.online == true || data.virtual == true
         metering_point.find(".power-ticker").html(data.latest_power)
-        if data.timestamp <= Date.now().getTime() - 60*1000
-            metering_point.find(".power-ticker").css({opacity: 0.3})
+        if data.timestamp <= Date.now() - 60*1000
+          metering_point.find(".power-ticker").css({opacity: 0.3})
+        else
+          metering_point.find(".power-ticker").css({opacity: 1})
         metering_point.find(".power-ticker").data('content', moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss"))
         metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
-        metering_point.find(".power-ticker").data('bs.popover').options.content = moment(reading.timestamp).format("DD.MM.YYYY HH:mm:ss")
-        metering_point.find(".power-ticker").css({opacity: 1})
+        metering_point.find(".power-ticker").data('bs.popover').options.content = moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss")
+        if $(".metering_point_detail").length != 0 && chart != undefined && actual_resolution == 'hour_to_minutes'
+          if chart_data_min_x > data.timestamp - 60*60*1000
+            chart.series[0].addPoint([data.timestamp, data.latest_power])
+          # else if #TODO: if 1 hour is over toggle to next hour, but only if displayed
+          #   chart.xAxis[0].update(getExtremes(data.timestamp), true)
+          #   setChartTitle(data.timestamp)
+          #   chart.series[0].addPoint([data.timestamp, data.latest_power])
       else
         metering_point.find(".power-ticker").html('offline')
+
 
 calculate_power = (last_readings) =>
   if last_readings == undefined || last_readings == null
