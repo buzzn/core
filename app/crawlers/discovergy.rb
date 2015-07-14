@@ -58,7 +58,7 @@ class Discovergy
   end
 
   def getDay( meter_uid, timestamp)
-    datetime = Time.at(timestamp.to_i/1000).in_time_zone.utc
+    datetime = Time.at(timestamp.to_i/1000)
     response = @conn.get do |req|
       req.url '/json/Api.getDay'
       req.headers['Content-Type'] = 'application/json'
@@ -73,8 +73,8 @@ class Discovergy
   end
 
   def getDataEveryDay( meter_uid, timestamp)
-    datetime_start = Time.at(timestamp.to_i/1000).in_time_zone.utc.beginning_of_month
-    datetime_end = Time.at(timestamp.to_i/1000).in_time_zone.utc.end_of_month
+    datetime_start = Time.at(timestamp.to_i/1000).beginning_of_month
+    datetime_end = Time.at(timestamp.to_i/1000).end_of_month
     response = @conn.get do |req|
       req.url '/json/Api.getDataEveryDay'
       req.headers['Content-Type'] = 'application/json'
@@ -92,8 +92,8 @@ class Discovergy
   end
 
   def getHour( meter_uid, timestamp )
-    datetime_from  = (Time.at(timestamp.to_i/1000).in_time_zone.utc.beginning_of_hour).to_i*1000
-    datetime_to    = (Time.at(timestamp.to_i/1000).in_time_zone.utc.end_of_hour).to_i*1000
+    datetime_from  = (Time.at(timestamp.to_i/1000).beginning_of_hour).to_i*1000
+    datetime_to    = (Time.at(timestamp.to_i/1000).end_of_hour).to_i*1000
     response = @conn.get do |req|
       req.url '/json/Api.getRawWithPower'
       req.headers['Content-Type'] = 'application/json'
