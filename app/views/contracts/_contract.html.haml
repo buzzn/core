@@ -20,7 +20,7 @@
             %p.text-muted.text-uppercase
               %small= t('tariff')
           %li.col-xs-4
-            %span.text-lg= "#{human_readable_watt(contract.forecast_watt_hour_pa)}h"
+            %span.text-lg= "#{human_readable_watt(contract.forecast_watt_hour_pa*1000)}h"
             %p.text-muted.text-uppercase
               %small= t('forecast_watt_hour_pa')
           %li.col-xs-4

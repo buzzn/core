@@ -59,11 +59,6 @@ class Discovergy
 
   def getDay( meter_uid, timestamp)
     datetime = Time.at(timestamp.to_i/1000).in_time_zone
-    puts '******'
-    puts datetime.to_s
-    puts datetime.day.to_s
-    puts datetime.month.to_s
-    puts '******'
     response = @conn.get do |req|
       req.url '/json/Api.getDay'
       req.headers['Content-Type'] = 'application/json'

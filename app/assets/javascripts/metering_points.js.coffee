@@ -1213,11 +1213,11 @@ $(".metering_point_scores").ready ->
   group_id = $(this).attr('data-content')
   $.ajax({url: '/metering_points/' + group_id + '/get_scores'})
     .success (data) ->
-      sufficiency = data.sufficiency
+      sufficiency = Number((data.sufficiency).toFixed(0))
       $(".score_sufficiency").append("<div class=circle-filled></div>") for [1..sufficiency] if sufficiency
       $(".score_sufficiency").append("<div class=circle-empty></div>") for [1..(5 - sufficiency)] if (5 - sufficiency)
 
-      fitting = data.fitting
+      fitting = Number((data.fitting).toFixed(0))
       $(".score_fitting").append("<div class=circle-filled></div>") for [1..fitting] if fitting
       $(".score_fitting").append("<div class=circle-empty></div>") for [1..(5 - fitting)] if (5 - fitting)
       $(".circle-filled").addClass("fa fa-circle")
