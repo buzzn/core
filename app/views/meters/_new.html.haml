@@ -5,8 +5,8 @@
   .modal-body
     = simple_form_for @meter, remote: true do |f|
 
-      - value = params[:metering_point_id].nil? ? {} : { value: params[:metering_point_id] }
-      = f.input :metering_point_id, input_html: {}.merge(value), as: :hidden
+      /- value = params[:metering_point_id].nil? ? {} : { value: params[:metering_point_id] }
+      /= f.input :metering_point_id, input_html: {}.merge(value), as: :hidden
 
       = render 'meters/form_fields', f: f
       .modal-footer

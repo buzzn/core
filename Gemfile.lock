@@ -607,6 +607,7 @@ GEM
     rails-assets-enquire (2.1.2)
     rails-assets-fastclick (0.6.11)
     rails-assets-font-awesome (4.3.0)
+    rails-assets-highcharts (4.1.7)
     rails-assets-jquery (2.1.4)
     rails-assets-jquery-readyselector (0.1.0)
     rails-assets-metisMenu (2.0.2)
@@ -904,6 +905,7 @@ DEPENDENCIES
   rails-assets-enquire!
   rails-assets-fastclick!
   rails-assets-font-awesome!
+  rails-assets-highcharts!
   rails-assets-jquery-readyselector!
   rails-assets-metisMenu!
   rails-assets-moment!

@@ -117,6 +117,7 @@ source 'http://rails-assets.org' do
   gem 'rails-assets-enquire'
   gem 'rails-assets-moment'
   gem 'rails-assets-dropzone'
+  gem 'rails-assets-highcharts'
 end
 
 

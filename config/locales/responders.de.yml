@@ -12,3 +12,9 @@ de:
       add_metering_point:
         notice: "%{resource_name} erfolgreich hinzugefügt."
         alert: "%{resource_name} konnte nicht hinzugefügt werden."
+    meters:
+      destroy:
+        notice: "Messgerät wurde erfolgreich gelöscht."
+    metering_points:
+      destroy:
+        notice: "Zählpunkt wurde erfolgreich gelöscht."
