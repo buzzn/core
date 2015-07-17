@@ -99,8 +99,11 @@ class MeteringPointsController < ApplicationController
 
     @chart_data = []
     @chart_data << {
-      name: @metering_point.decorate.long_name,
-      data: @data
+      step: 'left',
+      type: 'area',
+      data: @data,
+      name: @metering_point.decorate.long_name
+
     }
     render json: @chart_data.to_json
   end

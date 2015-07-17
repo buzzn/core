@@ -145,7 +145,6 @@ $(".metering_point_detail").ready ->
         data[0].data[0] = [new Date(), 0] #TODO: Search for last data
       chart = new Highcharts.Chart(
         chart:
-          type: 'areaspline'
           renderTo: 'chart-container-' + id
           backgroundColor:'rgba(255, 255, 255, 0.0)'
           width: width
