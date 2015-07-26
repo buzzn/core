@@ -19,7 +19,8 @@ class Group < ActiveRecord::Base
   normalize_attribute :name, with: [:strip]
 
   mount_uploader :logo, PictureUploader
-  mount_uploader :image, PictureUploader
+  #mount_uploader :image, PictureUploader
+  mount_base64_uploader :image, PictureUploader
 
   has_many :contracts, dependent: :destroy
   has_one  :area
@@ -27,7 +28,7 @@ class Group < ActiveRecord::Base
 
   has_many :scores, as: :scoreable
 
-  validates :metering_points, presence: true
+  # validates :metering_points, presence: true
 
   has_many :group_users
   has_many :users, :through => :group_users
