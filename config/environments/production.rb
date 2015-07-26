@@ -62,6 +62,8 @@ Buzzn::Application.configure do
                                         :namespace => "cache"
                                       }
 
+  config.force_ssl = true
+
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   config.action_controller.asset_host = Rails.application.secrets.asset_host
 
