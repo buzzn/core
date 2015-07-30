@@ -6,7 +6,7 @@ class GetReadingWorker
     if mpo_slug == 'discovergy' or mpo_slug == 'buzzn-metering'
       discovergy  = Discovergy.new(mpo_login_username, mpo_login_password)
       request     = discovergy.raw_with_power(manufacturer_device_number, start_time, end_time)
-
+      puts "get_reading - Discovergy"
       if request['status'] == "ok"
         if request['result'].any?
 

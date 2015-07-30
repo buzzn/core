@@ -38,6 +38,7 @@ class Meter < ActiveRecord::Base
   def self.manufacturer_names
     %w{
       easy_meter
+      amperix
       ferraris
       landis_gyr
       goerlitz
