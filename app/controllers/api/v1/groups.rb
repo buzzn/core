@@ -21,8 +21,6 @@ module API
         end
 
 
-
-
         desc "Create a Group."
         params do
           requires :name,         type: String, desc: "Name of the Group."
@@ -30,19 +28,10 @@ module API
         end
         post do
           guard!
-          if Group.creatable_by?(current_user)
-            @params = params.group || params
-            @group = Group.new({
-              name: @params.name,
-              description: @params.description
-              })
-
-            if @group.save!
-              current_user.add_role(:manager, @group)
-              return @group
-            end
-          else
-            error!('you need at least one out-metering_point', 401)
+          group = Group.new({ name: params[:name], description: params[:description]})
+          if group.save!
+            current_user.add_role(:manager, group)
+            return todo_list
           end
         end
 
@@ -56,11 +45,12 @@ module API
         put ':id' do
           guard!
           @group = Group.find(params[:id])
+
           if @group.updatable_by?(current_user)
-            @params = params.group || params
+
             @group.update({
-                name:  @params.name,
-                image: @params.image
+                name: params.group.name,
+                image: params.group.image
               })
 
             return @group
