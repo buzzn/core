@@ -56,8 +56,7 @@ class Discovergy
     end
     return JSON.parse(response.body)
   end
-  # usage: disco.getDay("60009269","1438074703700")
-  # output: Array of 96  {"power"=>135200, "timeStart"=>1438073062247, "timeEnd"=>1438073362244}
+
   def getDay( meter_uid, timestamp)
     datetime = Time.at(timestamp.to_i/1000).in_time_zone
     response = @conn.get do |req|
