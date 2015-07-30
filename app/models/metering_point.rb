@@ -67,7 +67,7 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def last_power
-    if 0>1 #self.virtual && self.formula_parts.any?
+    if self.virtual && self.formula_parts.any?
       puts "virual"
       operands = get_operands_from_formula
       operators = get_operators_from_formula
@@ -420,7 +420,7 @@ class MeteringPoint < ActiveRecord::Base
   # usage mp.fake_or_smart("5441452e-724c-4cd1-8eed-b70d4ec3b610","hour_to_minutes","1438074703700")
   def fake_or_smart(metering_point_id, resolution_format, containing_timestamp)
     metering_point = MeteringPoint.find(metering_point_id)
-    if 1 > 0 # TT metering_point.meter && metering_point.meter.smart
+    if metering_point.meter && metering_point.meter.smart
       result = []
       if resolution_format == 'hour_to_minutes'
         if metering_point.meter.manufacturer_name ==  "amperix" # meter.name== 'Amperix'
