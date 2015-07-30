@@ -7,7 +7,6 @@ module API
       mount API::V1::Profiles
       mount API::V1::MeteringPoints
       mount API::V1::Meters
-      mount API::V1::Readings
       mount API::V1::Groups
 
       add_swagger_documentation(

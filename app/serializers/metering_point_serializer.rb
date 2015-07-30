@@ -1,7 +1,9 @@
 class MeteringPointSerializer < ActiveModel::Serializer
   attributes  :id,
               :uid,
-              :name
+              :name,
+              :mode,
+              :device_ids,
+              :meter_id
 
-  has_one :meter
 end

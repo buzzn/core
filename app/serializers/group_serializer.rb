@@ -1,13 +1,9 @@
 class GroupSerializer < ActiveModel::Serializer
-  embed :ids, include: true
-
-  attributes :id, :name, :description, :big_tumb
+  attributes :id, :name, :description, :big_tumb, :metering_point_ids
 
 
   def big_tumb
     object.image.big_tumb.url
   end
 
-
-  has_many :metering_points
 end
