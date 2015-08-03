@@ -8,6 +8,7 @@ module API
       mount API::V1::MeteringPoints
       mount API::V1::Meters
       mount API::V1::Groups
+      mount API::V1::Devices
 
       add_swagger_documentation(
         api_version: "v1",

@@ -23,7 +23,7 @@ class Profile < ActiveRecord::Base
   normalize_attributes :user_name, :first_name, :last_name
 
   delegate :friendships, to: :user
-
+  delegate :groups, to: :user
 
   def metering_points
     metering_points = []
