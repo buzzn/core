@@ -22,6 +22,7 @@ class Profile < ActiveRecord::Base
 
   normalize_attributes :user_name, :first_name, :last_name
 
+  delegate :friends, to: :user
   delegate :friendships, to: :user
   delegate :groups, to: :user
 

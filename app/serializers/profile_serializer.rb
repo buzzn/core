@@ -6,8 +6,8 @@ class ProfileSerializer < ActiveModel::Serializer
               :last_name,
               :md_img,
               :group_ids,
-              :metering_point_ids
-
+              :metering_point_ids,
+              :friendship_ids
 
   def metering_point_ids
     object.metering_points.collect(&:id)
@@ -15,6 +15,10 @@ class ProfileSerializer < ActiveModel::Serializer
 
   def group_ids
     object.metering_points.collect(&:group).compact.uniq.collect(&:id)
+  end
+
+  def friendship_ids
+    object.user.friendship_ids
   end
 
   def md_img
