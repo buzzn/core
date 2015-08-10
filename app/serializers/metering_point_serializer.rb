@@ -5,6 +5,7 @@ class MeteringPointSerializer < ActiveModel::Serializer
               :mode,
               :device_ids,
               :meter_id,
+              :user_ids,
               :chart
 
   def chart
