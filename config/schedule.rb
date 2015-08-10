@@ -3,26 +3,26 @@ env :PATH, '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aw
 set :output, 'log/cron.log'
 
 
-every 1.minute do
-  runner "Meter.pull_readings"
-end
+# every 1.minute do
+#   runner "Meter.pull_readings"
+# end
 
-every 3.minute do
-  runner "Group.update_cache"
-  #runner "MeteringPoint.update_cache"
-end
+# every 3.minute do
+#   runner "Group.update_cache"
+#   #runner "MeteringPoint.update_cache"
+# end
 
-every 30.minutes do
-  runner "Meter.reactivate"
-end
+# every 30.minutes do
+#   runner "Meter.reactivate"
+# end
 
-every 1440.minutes do
-  runner "Group.calculate_scores"
-end
+# every 1440.minutes do
+#   runner "Group.calculate_scores"
+# end
 
-every 1440.minutes do
-  runner "MeteringPoint.calculate_scores"
-end
+# every 1440.minutes do
+#   runner "MeteringPoint.calculate_scores"
+# end
 
 # every 1.day, :at => '10:00 am' do
 #   runner "stream::previous_day_consumption"
