@@ -485,12 +485,11 @@ addCommas = (nStr) ->
 pullPowerData = (chart, metering_point_id) ->
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
     .success (data) ->
-      console.log 'updated: ' + metering_point_id
       if data.online || data.virtual
         if data.latest_power != null
           chart.reset_radius(metering_point_id, data.latest_power) #TODO: check timestamp
-      else
-        chart.reset_radius(metering_point_id, 0)
+      #else
+        #chart.reset_radius(metering_point_id, 0)
 clearTimers = ->
   i = 0
   while i < timers.length

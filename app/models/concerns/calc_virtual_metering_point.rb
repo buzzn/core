@@ -14,11 +14,12 @@ module CalcVirtualMeteringPoint
         next
       end
       metering_point.each do |reading|
+
         if i == 0
           timestamps << reading[0]
           watts << reading[1]
         else
-          if data[i - 1].empty? && timestamps[j].nil?
+          if timestamps[j].nil?
             timestamps << reading[0]
             watts << reading[1]
           else
@@ -28,8 +29,8 @@ module CalcVirtualMeteringPoint
                 watts[indexOfTimestamp] += reading[1]
               elsif operators[i] == "-"
                 watts[indexOfTimestamp] -= reading[1]
-              elsif operators[i] == "*"
-                watts[indexOfTimestamp] *= reading[1]
+              # elsif operators[i] == "*"
+              #   watts[indexOfTimestamp] *= reading[1]
               end
             end
           end
@@ -109,9 +110,9 @@ module CalcVirtualMeteringPoint
   private
 
   def get_matching_index(arr, value, resolution)
-    offset = 1000
+    offset = 60*1000
     if resolution == "day_to_hours"
-      offset = 30*1000
+      offset = 30*60*1000
     elsif resolution == "month_to_days"
       offset = 12*60*60*1000
     elsif resolution == "year_to_months"

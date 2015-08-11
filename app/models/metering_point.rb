@@ -93,12 +93,6 @@ class MeteringPoint < ActiveRecord::Base
       end
       return {:power => 0, :timestamp => 0}
     else
-      # last_reading = Reading.last_by_metering_point_id(self.id)
-      # if last_reading && last_reading[:power]
-      #   {:power => last_reading[:power]/1000, :timestamp => last_reading[:timestamp].to_i*1000}
-      # else
-      #   {:power => 0, :timestamp => 0}
-      # end
       discovergy  = Discovergy.new(self.metering_point_operator_contract.username, self.metering_point_operator_contract.password)
       request     = discovergy.live(self.meter.manufacturer_product_serialnumber, 2)
       if request['status'] == "ok"
