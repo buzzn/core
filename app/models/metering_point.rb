@@ -67,7 +67,7 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def last_power
-    if self.virtual && self.formula_parts.any?
+    if self.virtual && self.formula_parts.any? #TODO: switch to discovergy API if virtual
       operands = get_operands_from_formula
       operators = get_operators_from_formula
       result = 0
@@ -379,7 +379,7 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def chart_data(resolution_format, containing_timestamp)
-    if self.virtual && self.formula
+    if self.virtual && self.formula #TODO: switch to discovergy API if virtual
       operands_plus = FormulaPart.where(metering_point_id: self.id).where(operator: "+").collect(&:operand)
       operands_minus = FormulaPart.where(metering_point_id: self.id).where(operator: "-").collect(&:operand)
       data = []

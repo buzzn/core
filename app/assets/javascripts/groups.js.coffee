@@ -422,39 +422,27 @@ $(".bubbles_container").ready ->
 
       render_vis data_in, data_out, group_id
 
-      # Pusher.host    = $(".pusher").data('pusherhost')
-      # Pusher.ws_port = 8080
-      # Pusher.wss_port = 8080
-      # pusher = new Pusher($(".pusher").data('pusherkey'))
-      for metering_point_data in data_out.children
-        actual_metering_point_id = metering_point_data.metering_point_id
+      data_out.children.forEach (metering_point_data) ->
+        actual_out_metering_point_id = metering_point_data.metering_point_id
         if metering_point_data.readable
-          $('#path_' + actual_metering_point_id).css( 'cursor', 'pointer' )
-          $('#path_' + actual_metering_point_id).click ->
+          $('#path_' + actual_out_metering_point_id).css( 'cursor', 'pointer' )
+          $('#path_' + actual_out_metering_point_id).click ->
             window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
-        # if !metering_point_data.virtual
-        #   channel = pusher.subscribe("metering_point_#{metering_point_data.metering_point_id}")
-        #   channel.bind "new_reading", (reading) ->
-        #     chart.reset_radius(reading.metering_point_data.metering_point_id, reading.power)
         timers.push(
           window.setInterval(->
-            pullPowerData(chart, actual_metering_point_id)
+            pullPowerData(chart, actual_out_metering_point_id)
             return
           , 1000*interval)
           )
-      for metering_point_data in data_in
-        actual_metering_point_id = metering_point_data.metering_point_id
+      data_in.forEach (metering_point_data) ->
+        actual_in_metering_point_id = metering_point_data.metering_point_id
         if metering_point_data.readable
-          $('#bubble_' + actual_metering_point_id).css( 'cursor', 'pointer' )
-          $('#bubble_' + actual_metering_point_id).click ->
+          $('#path_' + actual_in_metering_point_id).css( 'cursor', 'pointer' )
+          $('#path_' + actual_in_metering_point_id).click ->
             window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
-        # if !metering_point_data.virtual
-        #   channel = pusher.subscribe("metering_point_#{metering_point_data.metering_point_id}")
-        #   channel.bind "new_reading", (reading) ->
-        #     chart.reset_radius(reading.metering_point_data.metering_point_id, reading.power)
         timers.push(
           window.setInterval(->
-            pullPowerData(chart, actual_metering_point_id)
+            pullPowerData(chart, actual_in_metering_point_id)
             return
           , 1000*interval)
           )
@@ -497,6 +485,7 @@ addCommas = (nStr) ->
 pullPowerData = (chart, metering_point_id) ->
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
     .success (data) ->
+      console.log 'updated: ' + metering_point_id
       if data.online || data.virtual
         if data.latest_power != null
           chart.reset_radius(metering_point_id, data.latest_power) #TODO: check timestamp
