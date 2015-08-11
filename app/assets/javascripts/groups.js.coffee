@@ -418,46 +418,46 @@ $(".bubbles_container").ready ->
       data_in = data.in
       data_out = data.out
 
+      interval = 0.33 * data_in.length + 10
+
       render_vis data_in, data_out, group_id
 
-      Pusher.host    = $(".pusher").data('pusherhost')
-      Pusher.ws_port = 8080
-      Pusher.wss_port = 8080
-      pusher = new Pusher($(".pusher").data('pusherkey'))
+      # Pusher.host    = $(".pusher").data('pusherhost')
+      # Pusher.ws_port = 8080
+      # Pusher.wss_port = 8080
+      # pusher = new Pusher($(".pusher").data('pusherkey'))
       for metering_point_data in data_out.children
-        metering_point_id = metering_point_data.metering_point_id
+        actual_metering_point_id = metering_point_data.metering_point_id
         if metering_point_data.readable
-          $('#path_' + metering_point_data.metering_point_id).css( 'cursor', 'pointer' )
-          $('#path_' + metering_point_data.metering_point_id).click ->
+          $('#path_' + actual_metering_point_id).css( 'cursor', 'pointer' )
+          $('#path_' + actual_metering_point_id).click ->
             window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
-        if !metering_point_data.virtual
-          channel = pusher.subscribe("metering_point_#{metering_point_data.metering_point_id}")
-          channel.bind "new_reading", (reading) ->
-            chart.reset_radius(reading.metering_point_data.metering_point_id, reading.power)
-        else
-          timers.push(
-            window.setInterval(->
-              pullVirtualPowerData(chart, metering_point_data.metering_point_id)
-              return
-            , 1000*60)
-            )
+        # if !metering_point_data.virtual
+        #   channel = pusher.subscribe("metering_point_#{metering_point_data.metering_point_id}")
+        #   channel.bind "new_reading", (reading) ->
+        #     chart.reset_radius(reading.metering_point_data.metering_point_id, reading.power)
+        timers.push(
+          window.setInterval(->
+            pullPowerData(chart, actual_metering_point_id)
+            return
+          , 1000*interval)
+          )
       for metering_point_data in data_in
-        metering_point_id = metering_point_data.metering_point_id
+        actual_metering_point_id = metering_point_data.metering_point_id
         if metering_point_data.readable
-          $('#bubble_' + metering_point_data.metering_point_id).css( 'cursor', 'pointer' )
-          $('#bubble_' + metering_point_data.metering_point_id).click ->
+          $('#bubble_' + actual_metering_point_id).css( 'cursor', 'pointer' )
+          $('#bubble_' + actual_metering_point_id).click ->
             window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
-        if !metering_point_data.virtual
-          channel = pusher.subscribe("metering_point_#{metering_point_data.metering_point_id}")
-          channel.bind "new_reading", (reading) ->
-            chart.reset_radius(reading.metering_point_data.metering_point_id, reading.power)
-        else
-          timers.push(
-            window.setInterval(->
-              pullVirtualPowerData(chart, metering_point_data.metering_point_id)
-              return
-            , 1000*60)
-            )
+        # if !metering_point_data.virtual
+        #   channel = pusher.subscribe("metering_point_#{metering_point_data.metering_point_id}")
+        #   channel.bind "new_reading", (reading) ->
+        #     chart.reset_radius(reading.metering_point_data.metering_point_id, reading.power)
+        timers.push(
+          window.setInterval(->
+            pullPowerData(chart, actual_metering_point_id)
+            return
+          , 1000*interval)
+          )
 
       $(window).on "resize:end", chart.calculateNewCenter
 
@@ -494,11 +494,12 @@ addCommas = (nStr) ->
   x1 = x1.replace(rgx, "$1" + "," + "$2")  while rgx.test(x1)
   x1 + x2
 
-pullVirtualPowerData = (chart, metering_point_id) ->
+pullPowerData = (chart, metering_point_id) ->
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
     .success (data) ->
       if data.online || data.virtual
-        chart.reset_radius(metering_point_id, data.latest_power)
+        if data.latest_power != null
+          chart.reset_radius(metering_point_id, data.latest_power) #TODO: check timestamp
       else
         chart.reset_radius(metering_point_id, 0)
 clearTimers = ->

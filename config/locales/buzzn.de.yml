@@ -20,6 +20,8 @@ de:
   new_down_device: Neues Bezugsgerät
   metering_point_offline: Zählpunkt offline
   your_metering_point_is_offline_now: "Dein Zählpunkt '%{metering_point_name}' ist offline."
+  define_metering_point: Zählpunkt definieren
+  smart_metering_provider: Smart Metering Anbieter
 
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler

@@ -18,7 +18,7 @@
           %p.text-thin= t('step') + ' 3: ' + t('data_connection')
     .modal-body
       = simple_form_for @contract, remote: true, url: contract_update_wizard_metering_points_path(metering_point_id: params[:metering_point_id]), method: 'put'  do |f|
-        = f.association :organization, input_html: {class: 'select2'}
+        = f.association :organization, input_html: {class: 'select2'}, label: t('smart_metering_provider')
         .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
           = f.input :username
           = f.input :password
