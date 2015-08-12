@@ -379,12 +379,12 @@ class MeteringPoint < ActiveRecord::Base
       data = []
       operands.each do |metering_point|
         new_data = metering_point.chart_data(resolution_format, containing_timestamp)
-        puts '************************'
-        i = 0
-        new_data.each do |d|
-          puts (new_data[i][0]/1000 - new_data[i-1][0]/1000).to_s
-          i += 1
-        end
+        #puts '************************'
+        #i = 0
+        #new_data.each do |d|
+        #  puts (new_data[i][0]/1000 - new_data[i-1][0]/1000).to_s
+        #  i += 1
+        #end
         data << new_data
       end
       result = calculate_virtual_metering_point(data, operators, resolution_format)
@@ -465,6 +465,9 @@ class MeteringPoint < ActiveRecord::Base
         else
           puts request.inspect
         end
+      end
+      if resolution_format == "day_to_minutes" || resolution_format == "day_to_hours"
+        result.pop
       end
       return result
     else

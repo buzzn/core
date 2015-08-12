@@ -87,6 +87,10 @@ class Group < ActiveRecord::Base
       operators << "+"
     end
     result_out = calculate_virtual_metering_point(data_out, operators, resolution_format)
+    if resolution_format == "day_to_minutes" || resolution_format == "day_to_hours"
+      result_in.pop
+      result_out.pop
+    end
     return [ { :name => I18n.t('total_consumption'), :data => result_in}, { :name => I18n.t('total_production'), :data => result_out} ]
   end
 

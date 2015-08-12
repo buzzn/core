@@ -16,7 +16,7 @@ $(".metering_points").ready ->
             data[0].data[0] = [new Date(), 0] #TODO: Search for last data
           partial_chart = new Highcharts.Chart(
             chart:
-              type: 'areaspline'
+              type: 'area'
               renderTo: 'chart-container-' + id
               width: width
               backgroundColor:'rgba(255, 255, 255, 0.0)'
@@ -331,7 +331,7 @@ $(".dashboard-chart").ready ->
           if chart == undefined
             chart = new Highcharts.Chart(
               chart:
-                type: 'areaspline'
+                type: 'area'
                 renderTo: 'chart-container-' + dashboard_id
                 backgroundColor:'rgba(255, 255, 255, 0.0)'
                 width: width
@@ -545,7 +545,7 @@ $(".group-chart").ready ->
       if chart == undefined
         chart = new Highcharts.Chart(
           chart:
-            type: 'areaspline'
+            type: 'area'
             renderTo: 'chart-container-' + group_id
             backgroundColor:'rgba(255, 255, 255, 0.0)'
             width: width
@@ -1245,7 +1245,7 @@ $(".metering_point").ready ->
         window.setInterval(->
           getLiveData(metering_point, metering_point_id)
           return
-        , 1000*2)
+        , 1000*5)
         )
     else
       source = $(this).find(".metering_point-ticker").data('source')
@@ -1254,7 +1254,7 @@ $(".metering_point").ready ->
         window.setInterval(->
           setFakeValue(metering_point, metering_point_id, source)
           return
-        , 1000*2)
+        , 1000*5)
         )
 
 getLiveData = (metering_point, metering_point_id) ->
