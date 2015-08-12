@@ -5,10 +5,17 @@ module API
       resource :groups do
 
 
+
         desc "Return all groups"
         get "", root: :groups do
-          Group.all
+          guard!
+          if current_user
+            Group.all
+          else
+            Group.where(readable: 'world')
+          end
         end
+
 
 
 
@@ -17,6 +24,7 @@ module API
           requires :id, type: String, desc: "ID of the group"
         end
         get ":id", root: "group" do
+          guard!
           Group.where(id: permitted_params[:id]).first!
         end
 
@@ -67,7 +75,6 @@ module API
           else
             status 403
           end
-
         end
 
 

@@ -45,7 +45,7 @@ module APIGuard
       token_string = get_token_string()
 
       if token_string.blank?
-        raise MissingTokenError
+        #raise MissingTokenError
 
       elsif (access_token = find_access_token(token_string)).nil?
         raise TokenNotFoundError
