@@ -206,7 +206,7 @@ $(".metering_point_detail").ready ->
                 [0, "rgba(255, 255, 255, 0.4)"],
                 [1, "rgba(255, 255, 255, 0.1)"]
               ]
-          areaspline:
+          area:
             borderWidth: 0
             cursor: 'pointer'
             events:
@@ -385,7 +385,7 @@ $(".dashboard-chart").ready ->
               plotOptions:
                 series:
                   fillOpacity: 0.5
-                areaspline:
+                area:
                   borderWidth: 0
                   cursor: 'pointer'
                   events:
@@ -601,7 +601,7 @@ $(".group-chart").ready ->
           plotOptions:
             series:
               fillOpacity: 0.5
-            areaspline:
+            area:
               cursor: 'pointer'
               events:
                 click: (event) ->
@@ -884,6 +884,7 @@ setPointWidth = () ->
     return $(".chart").width()/42.0
 
 zoomIn = (timestamp) ->
+  console.log 'zoom in'
   chart.showLoading()
   $(".metering_point_detail").each (div) ->
     id = $(this).attr('id').split('_')[2]
@@ -1114,14 +1115,14 @@ setChartToLinechart = (displaySeriesName) ->
   if displaySeriesName
     chart.series.forEach (chartSeries) ->
       chartSeries.update({
-        type: 'areaspline'
+        type: 'area'
         tooltip:
           pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
       })
   else
     chart.series.forEach (series) ->
       series.update({
-        type: 'areaspline'
+        type: 'area'
         tooltip:
           pointFormat: '<b>{point.y:,.0f} W</b><br/>'
       })

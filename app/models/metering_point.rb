@@ -67,15 +67,15 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def last_power
-    if self.virtual && self.formula_parts.any? #TODO: switch to discovergy API if virtual
+    if self.virtual && self.formula_parts.any?
       operands = get_operands_from_formula
       operators = get_operators_from_formula
       result = 0
       i = 0
       count_timestamps = 0
       sum_timestamp = 0
-      operands.each do |metering_point_id|
-        reading = Reading.last_by_metering_point_id(metering_point_id)
+      operands.each do |metering_point|
+        reading = metering_point.last_power
         if !reading.nil? #&& reading[:timestamp] >= Time.now - 1.hour
           if operators[i] == "+"
             result += reading[:power]
@@ -89,7 +89,7 @@ class MeteringPoint < ActiveRecord::Base
       end
       if count_timestamps != 0
         average_timestamp = sum_timestamp / count_timestamps
-        return {:power => result/1000, :timestamp => average_timestamp}
+        return {:power => result, :timestamp => average_timestamp/1000}
       end
       return {:power => 0, :timestamp => 0}
     else
@@ -308,7 +308,7 @@ class MeteringPoint < ActiveRecord::Base
 
   def get_operands_from_formula
     if self.virtual && self.formula_parts.any?
-      self.formula_parts.collect(&:operand_id)
+      self.formula_parts.collect(&:operand)
     end
   end
 
@@ -373,18 +373,22 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def chart_data(resolution_format, containing_timestamp)
-    if self.virtual && self.formula #TODO: switch to discovergy API if virtual
-      operands_plus = FormulaPart.where(metering_point_id: self.id).where(operator: "+").collect(&:operand)
-      operands_minus = FormulaPart.where(metering_point_id: self.id).where(operator: "-").collect(&:operand)
+    if self.virtual && self.formula
+      operands = self.get_operands_from_formula
+      operators = self.get_operators_from_formula
       data = []
-      data << convert_to_array_build_timestamp(Reading.aggregate(resolution_format, operands_plus.collect(&:id), containing_timestamp), resolution_format, containing_timestamp)
-      if operands_minus.any?
-        data << convert_to_array_build_timestamp(Reading.aggregate(resolution_format, operands_minus.collect(&:id), containing_timestamp), resolution_format, containing_timestamp)
-        operators = ["+", "-"]
-        return calculate_virtual_metering_point(data, operators, resolution_format)
-      else
-        return data[0]
+      operands.each do |metering_point|
+        new_data = metering_point.chart_data(resolution_format, containing_timestamp)
+        puts '************************'
+        i = 0
+        new_data.each do |d|
+          puts (new_data[i][0]/1000 - new_data[i-1][0]/1000).to_s
+          i += 1
+        end
+        data << new_data
       end
+      result = calculate_virtual_metering_point(data, operators, resolution_format)
+      return result
     else
       fake_or_smart(self.id, resolution_format, containing_timestamp)
     end
@@ -395,7 +399,6 @@ class MeteringPoint < ActiveRecord::Base
     metering_point = MeteringPoint.find(metering_point_id)
     if metering_point.meter && metering_point.meter.smart
       result = []
-      #convert_to_array(Reading.aggregate(resolution_format, [metering_point.id], containing_timestamp), resolution_format, 1) # smart
       if resolution_format == 'hour_to_minutes'
         discovergy  = Discovergy.new(self.metering_point_operator_contract.username, self.metering_point_operator_contract.password)
         request     = discovergy.getHour(self.meter.manufacturer_product_serialnumber, containing_timestamp)

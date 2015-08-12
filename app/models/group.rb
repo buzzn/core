@@ -65,35 +65,8 @@ class Group < ActiveRecord::Base
   end
 
   def chart(resolution_format, containing_timestamp=nil)
-    metering_points_in_plus = []
-    metering_points_in_minus = []
-    metering_points_out_plus = []
-    metering_points_out_minus = []
-    self.metering_points.each do |metering_point|
-      if metering_point.virtual
-        if metering_point.input?
-          metering_point.formula_parts.where(operator: "+").collect(&:operand).each do |metering_point_plus|
-            metering_points_in_plus << metering_point_plus
-          end
-          metering_point.formula_parts.where(operator: "-").collect(&:operand).each do |metering_point_minus|
-            metering_points_in_minus << metering_point_minus
-          end
-        else
-          metering_point.formula_parts.where(operator: "+").collect(&:operand).each do |metering_point_plus|
-            metering_points_out_plus << metering_point_plus
-          end
-          metering_point.formula_parts.where(operator: "-").collect(&:operand).each do |metering_point_minus|
-            metering_points_out_minus << metering_point_minus
-          end
-        end
-      else
-        if metering_point.input?
-          metering_points_in_plus << metering_point
-        else
-          metering_points_out_plus << metering_point
-        end
-      end
-    end
+    metering_points_in = self.metering_points.where(mode: 'in')
+    metering_points_out = self.metering_points.where(mode: 'out')
 
     if containing_timestamp == nil
       containing_timestamp = Time.now.to_i * 1000
@@ -102,27 +75,16 @@ class Group < ActiveRecord::Base
     data_in = []
     data_out = []
     operators = []
-    metering_points_in_plus.each do |metering_point|
-      data_in << metering_point.fake_or_smart(metering_point.id, resolution_format, containing_timestamp)
+    metering_points_in.each do |metering_point|
+      data_in << metering_point.chart_data(resolution_format, containing_timestamp)
       operators << "+"
-    end
-    if metering_points_in_minus.any?
-      metering_points_in_minus.each do |metering_point|
-        data_in << metering_point.fake_or_smart(metering_point.id, resolution_format, containing_timestamp)
-        operators << "-"
-      end
     end
     result_in = calculate_virtual_metering_point(data_in, operators, resolution_format)
+    operators = []
 
-    metering_points_out_plus.each do |metering_point|
-      data_out << metering_point.fake_or_smart(metering_point.id, resolution_format, containing_timestamp)
+    metering_points_out.each do |metering_point|
+      data_out << metering_point.chart_data(resolution_format, containing_timestamp)
       operators << "+"
-    end
-    if metering_points_out_minus.any?
-      metering_points_out_minus.each do |metering_point|
-        data_out << metering_point.fake_or_smart(metering_point.id, resolution_format, containing_timestamp)
-        operators << "-"
-      end
     end
     result_out = calculate_virtual_metering_point(data_out, operators, resolution_format)
     return [ { :name => I18n.t('total_consumption'), :data => result_in}, { :name => I18n.t('total_production'), :data => result_out} ]
