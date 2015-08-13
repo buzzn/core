@@ -708,8 +708,10 @@ $(".group-chart").ready ->
       actual_resolution = "month_to_days"
       setChartToBarchart(true)
     else if actual_resolution == "month_to_days"
-      actual_resolution = "year_to_months"
-      setChartToBarchart(true)
+      #actual_resolution = "year_to_months"
+      #setChartToBarchart(true)
+      chart.hideLoading()
+      return
 
     containing_timestamp = chart_data_min_x
     numberOfSeries = 0
@@ -1256,13 +1258,6 @@ $(".metering_point").ready ->
           return
         , 1000*5)
         )
-      #TODO: execute timer when mp was created for the first time
-      #     timers.push(
-      #       window.setInterval(->
-      #         getLiveData($("#metering_point_#{metering_point.id.split('_')[2]}"), metering_point_id)
-      #         return
-      #       , 1000*5)
-      #       )
 
 getLiveData = (metering_point, metering_point_id) ->
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})

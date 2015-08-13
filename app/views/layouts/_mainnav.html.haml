@@ -18,9 +18,9 @@
 
               %li.list-header= t'my_profile'
               = mainnav_profile_path(current_user.profile)
-              - if !current_user.dashboard.nil?
-                = mainnav_dashboard_path(current_user.dashboard)
-              = mainnav_stream_path
+              / - if !current_user.dashboard.nil?
+              /   = mainnav_dashboard_path(current_user.dashboard)
+              / = mainnav_stream_path
 
               - if current_user.editable_metering_points.any?
                 %li.list-header= t'my_metering_points'

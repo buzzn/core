@@ -105,9 +105,9 @@ de:
   other: Anderer
 
   valid_credentials: Zugangsdaten gültig
-  your_credentials_have_been_checked_and_are_valid: "Die Zugangsdaten von Deinem %{contract} sind überprüft worden und sind gültig."
+  your_credentials_have_been_checked_and_are_valid: "Die Zugangsdaten von Deinem Zählpunkt %{metering_point} sind überprüft worden und sind gültig."
   invalid_credentials: Zugangsdaten ungültig
-  your_credentials_have_been_checked_and_are_invalid: "Die Zugangsdaten von Deinem %{contract} sind überprüft worden und sind ungültig."
+  your_credentials_have_been_checked_and_are_invalid: "Die Zugangsdaten von Deinem Zählpunkt %{metering_point} sind überprüft worden und sind ungültig."
 
   member_since: Mitglied seit
 

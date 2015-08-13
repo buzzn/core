@@ -55,8 +55,10 @@ class WizardMeteringPointsController  < ApplicationController
       @contract.password = 'Zebulon_4711'
     end
     if @contract.save && @metering_point.meter.save
+      flash[:notice] = t("your_credentials_have_been_checked_and_are_valid", metering_point: @metering_point.name)
       render action: 'update'
     else
+      flash[:error] = t("your_credentials_have_been_checked_and_are_invalid", metering_point: @metering_point.name)
       render action: 'contract'
     end
   end

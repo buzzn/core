@@ -99,7 +99,7 @@ private
         api_call = Discovergy.new(self.username, self.password).meters
         if api_call['status'] == 'ok'
           self.update_columns(valid_credentials: true)
-          self.send_notification_credentials(true)
+          #self.send_notification_credentials(true)
            if self.group
               self.group.metering_points.each do |metering_point|
                 metering_point.meter.save
@@ -110,7 +110,7 @@ private
             end
         else
           self.update_columns(valid_credentials: false)
-          self.send_notification_credentials(false)
+          #self.send_notification_credentials(false)
         end
       end
     end

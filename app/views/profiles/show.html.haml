@@ -94,6 +94,15 @@
       %hr
 
 
+
+
+
+
+
+
+
+    .col-md-6.col-lg-6
+
       - if @profile.user.friend?(current_user) || current_user.profile == @profile
         %h1.page-header.text-overflow
           %span
@@ -123,41 +132,34 @@
               = render user.profile
 
 
+    /   %h1.page-header.text-overflow
+    /     %span
+    /       = t('stream')
+    /       %small
+    /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('stream_info_profile')}
+    /   .stream
+    /     .panel
+    /       .panel-body
+    /         .col-md-12.col-lg-12
 
+    /           / Timeline
+    /           / ===================================================
+    /           .timeline
+    /             / Timeline header
+    /             .timeline-header
+    /               .timeline-header-title.bg-purple
+    /                 =t('now')
 
-
-
-    .col-md-6.col-lg-6
-
-
-      %h1.page-header.text-overflow
-        %span
-          = t('stream')
-          %small
-            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('stream_info_profile')}
-      .stream
-        .panel
-          .panel-body
-            .col-md-12.col-lg-12
-
-              / Timeline
-              / ===================================================
-              .timeline
-                / Timeline header
-                .timeline-header
-                  .timeline-header-title.bg-purple
-                    =t('now')
-
-                - @activities.each do |activity|
-                  /= render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
-                  - if activity.trackable && activity.trackable.readable_by?(current_user)
-                    = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
-                  - elsif activity.recipient && activity.recipient_type != "User" && activity.recipient.readable_by?(current_user)
-                    = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
-                  - elsif activity.recipient && activity.recipient_type == "User" && activity.recipient.profile.readable_by?(current_user)
-                    = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
-                  - elsif activity.owner && activity.owner_type == "User" && activity.owner.profile.readable_by?(current_user)
-                    = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+    /             - @activities.each do |activity|
+    /               /= render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+    /               - if activity.trackable && activity.trackable.readable_by?(current_user)
+    /                 = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+    /               - elsif activity.recipient && activity.recipient_type != "User" && activity.recipient.readable_by?(current_user)
+    /                 = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+    /               - elsif activity.recipient && activity.recipient_type == "User" && activity.recipient.profile.readable_by?(current_user)
+    /                 = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+    /               - elsif activity.owner && activity.owner_type == "User" && activity.owner.profile.readable_by?(current_user)
+    /                 = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
 
 
 
