@@ -27,8 +27,18 @@ class ValidatesCredentialsWorker
     end
   end
 
-  def send_notification_credentials(contract_id, valid)
-    contract = Contract.find(contract_id)
+  # def perform(organization, username, password, metering_point_id)
+  #   if organization == 'discovergy' || organization == 'buzzn-metering'
+  #     api_call = Discovergy.new(username, password).meters
+  #     if api_call['status'] == 'ok'
+  #       @metering_point = MeteringPointd.find(metering_point_id)
+
+  #     end
+  #   end
+  # end
+
+  def send_notification_credentials(metering_point_id, valid)
+    contract = Contract.find(metering_point_id)
     if contract && contract.contracting_party
       user = contract.contracting_party.user
       if valid

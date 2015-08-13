@@ -58,7 +58,8 @@ private
       :about_me,
       :newsletter_notifications,
       :location_notifications,
-      :group_notifications
+      :group_notifications,
+      :email_notification_meter_offline
     )
   end
 

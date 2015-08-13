@@ -28,7 +28,7 @@ class Contract < ActiveRecord::Base
 
 
 
-  after_save :validates_credentials_job
+  after_save :validates_credentials
 
 
   has_one :address, as: :addressable
@@ -77,17 +77,46 @@ class Contract < ActiveRecord::Base
     end
   end
 
+  def send_notification_credentials(valid)
+    contract = self
+    if contract && contract.contracting_party
+      user = contract.contracting_party.user
+      if valid
+        user.send_notification("success", I18n.t("valid_credentials"), I18n.t("your_credentials_have_been_checked_and_are_valid", contract: contract.mode))
+      else
+        user.send_notification("danger", I18n.t("invalid_credentials"), I18n.t("your_credentials_have_been_checked_and_are_invalid", contract: contract.mode))
+      end
+    end
+  end
+
 
 
 private
 
-  def validates_credentials_job
-    Sidekiq::Client.push({
-     'class' => ValidatesCredentialsWorker,
-     'queue' => :low,
-     'args' => [ self.id ]
-    })
+  def validates_credentials
+    if self.mode == 'metering_point_operator_contract'
+      if self.organization.slug == 'discovergy' || self.organization.slug == 'buzzn-metering'
+        api_call = Discovergy.new(self.username, self.password).meters
+        if api_call['status'] == 'ok'
+          self.update_columns(valid_credentials: true)
+          self.send_notification_credentials(true)
+           if self.group
+              self.group.metering_points.each do |metering_point|
+                metering_point.meter.save
+              end
+            end
+            if self.metering_point && self.metering_point.meter
+              self.metering_point.meter.save
+            end
+        else
+          self.update_columns(valid_credentials: false)
+          self.send_notification_credentials(false)
+        end
+      end
+    end
   end
+
+
 
 
 end

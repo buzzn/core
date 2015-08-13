@@ -17,34 +17,34 @@ class MeterInitWorker
             if request['result'].any? && @meter.metering_points.any? && @meter.smart
               @meter.update_columns(online: true)
 
-              if Reading.last_by_metering_point_id(@meter.metering_points.first.id)
-                logger.warn "Meter:#{@meter.id} init reading already written"
-              else
-                @metering_point = @meter.metering_points.first
-                @mpoc           = @meter.metering_points.first.metering_point_operator_contract
-                if @metering_point && @mpoc
-                  init_meter_id = @meter.id
+              # if Reading.last_by_metering_point_id(@meter.metering_points.first.id)
+              #   logger.warn "Meter:#{@meter.id} init reading already written"
+              # else
+              #   @metering_point = @meter.metering_points.first
+              #   @mpoc           = @meter.metering_points.first.metering_point_operator_contract
+              #   if @metering_point && @mpoc
+              #     init_meter_id = @meter.id
 
-                  start_time    = Time.now.in_time_zone.utc - 1.hour # init this hour
-                  end_time      = Time.now.in_time_zone.utc
+              #     start_time    = Time.now.in_time_zone.utc - 1.hour # init this hour
+              #     end_time      = Time.now.in_time_zone.utc
 
-                  Sidekiq::Client.push({
-                   'class' => GetReadingWorker,
-                   'queue' => :low,
-                   'args' => [
-                              @meter.metering_points_modes_and_ids,
-                              @meter.manufacturer_product_serialnumber,
-                              @mpoc.organization.slug,
-                              @mpoc.username,
-                              @mpoc.password,
-                              start_time.to_i * 1000,
-                              end_time.to_i * 1000
-                             ]
-                  })
+              #     Sidekiq::Client.push({
+              #      'class' => GetReadingWorker,
+              #      'queue' => :low,
+              #      'args' => [
+              #                 @meter.metering_points_modes_and_ids,
+              #                 @meter.manufacturer_product_serialnumber,
+              #                 @mpoc.organization.slug,
+              #                 @mpoc.username,
+              #                 @mpoc.password,
+              #                 start_time.to_i * 1000,
+              #                 end_time.to_i * 1000
+              #                ]
+              #     })
 
-                  @meter.update_columns(init_reading: true) # say that a current reading is created. so update from this timestamp.
-                end
-              end
+              #     @meter.update_columns(init_reading: true) # say that a current reading is created. so update from this timestamp.
+              #   end
+              # end
             else
               logger.warn "Meter#{@meter.id}: is not posible to initialize. metering_points:#{@meter.metering_points.size}, smart:#{@meter.smart}, online:#{@meter.online}"
             end

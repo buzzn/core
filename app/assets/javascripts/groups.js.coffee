@@ -450,27 +450,27 @@ $(".bubbles_container").ready ->
       $(window).on "resize:end", chart.calculateNewCenter
 
 
-$(".group_scores").ready ->
-  group_id = $(this).attr('data-content')
-  $.ajax({url: '/groups/' + group_id + '/get_scores'})
-    .success (data) ->
-      sufficiency = Number((data.sufficiency).toFixed(0))
-      $(".score_sufficiency").append("<div class=circle-filled></div>") for [1..sufficiency] if sufficiency
-      $(".score_sufficiency").append("<div class=circle-empty></div>") for [1..(5 - sufficiency)] if (5 - sufficiency)
+# $(".group_scores").ready ->
+#   group_id = $(this).attr('data-content')
+#   $.ajax({url: '/groups/' + group_id + '/get_scores'})
+#     .success (data) ->
+#       sufficiency = Number((data.sufficiency).toFixed(0))
+#       $(".score_sufficiency").append("<div class=circle-filled></div>") for [1..sufficiency] if sufficiency
+#       $(".score_sufficiency").append("<div class=circle-empty></div>") for [1..(5 - sufficiency)] if (5 - sufficiency)
 
-      closeness = Number((data.closeness).toFixed(0))
-      $(".score_closeness").append("<div class=circle-filled></div>") for [1..closeness] if closeness
-      $(".score_closeness").append("<div class=circle-empty></div>") for [1..(5 - closeness)] if (5 - closeness)
+#       closeness = Number((data.closeness).toFixed(0))
+#       $(".score_closeness").append("<div class=circle-filled></div>") for [1..closeness] if closeness
+#       $(".score_closeness").append("<div class=circle-empty></div>") for [1..(5 - closeness)] if (5 - closeness)
 
-      autarchy = Number((data.autarchy).toFixed(0))
-      $(".score_autarchy").append("<div class=circle-filled></div>") for [1..autarchy] if autarchy
-      $(".score_autarchy").append("<div class=circle-empty></div>") for [1..(5 - autarchy)] if (5 - autarchy)
+#       autarchy = Number((data.autarchy).toFixed(0))
+#       $(".score_autarchy").append("<div class=circle-filled></div>") for [1..autarchy] if autarchy
+#       $(".score_autarchy").append("<div class=circle-empty></div>") for [1..(5 - autarchy)] if (5 - autarchy)
 
-      fitting = Number((data.fitting).toFixed(0))
-      $(".score_fitting").append("<div class=circle-filled></div>") for [1..fitting] if fitting
-      $(".score_fitting").append("<div class=circle-empty></div>") for [1..(5 - fitting)] if (5 - fitting)
-      $(".circle-filled").addClass("fa fa-circle")
-      $(".circle-empty").addClass("fa fa-circle-o")
+#       fitting = Number((data.fitting).toFixed(0))
+#       $(".score_fitting").append("<div class=circle-filled></div>") for [1..fitting] if fitting
+#       $(".score_fitting").append("<div class=circle-empty></div>") for [1..(5 - fitting)] if (5 - fitting)
+#       $(".circle-filled").addClass("fa fa-circle")
+#       $(".circle-empty").addClass("fa fa-circle-o")
 
 
 addCommas = (nStr) ->

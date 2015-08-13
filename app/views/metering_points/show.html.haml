@@ -17,18 +17,18 @@
           %p.text-3x.mar-no= @metering_point.name
         %p.text-2x.mar-no.text-thin= @metering_point.address ? @metering_point.address.short_name : t('no_address')
 
-    - if @metering_point.input?
-      .metering_point_scores{'data-content' => @metering_point.id}
+    / - if @metering_point.input?
+    /   .metering_point_scores{'data-content' => @metering_point.id}
 
-        %table
-          %tbody
-            %tr
-              %td.text-1x.mar-no.float-left= t('sufficiency')
-              %td.score_sufficiency
-            - if @group
-              %tr
-                %td.text-1x.mar-no.float-left= t('fitting')
-                %td.score_fitting
+    /     %table
+    /       %tbody
+    /         %tr
+    /           %td.text-1x.mar-no.float-left= t('sufficiency')
+    /           %td.score_sufficiency
+    /         - if @group
+    /           %tr
+    /             %td.text-1x.mar-no.float-left= t('fitting')
+    /             %td.score_fitting
 
 
     .panel-control
@@ -67,11 +67,11 @@
                     .power-ticker
                       = t('loading') + '...'
                 %p= t'watt'
-            .text-center
-              - if !@metering_point.smart?
-                .new-reading
-                  = @metering_point.submit_reading
-                  = @metering_point.edit_readings
+            / .text-center
+            /   - if !@metering_point.smart?
+            /     .new-reading
+            /       = @metering_point.submit_reading
+            /       = @metering_point.edit_readings
 
 
   .row

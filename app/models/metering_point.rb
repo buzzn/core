@@ -8,7 +8,7 @@ class MeteringPoint < ActiveRecord::Base
   #tracked recipient: Proc.new{ |controller, model| controller && model }
 
   belongs_to :group
-  belongs_to :meter
+  belongs_to :meter, dependent: :destroy
 
   has_many :formula_parts, dependent: :destroy
   accepts_nested_attributes_for :formula_parts, reject_if: :all_blank, :allow_destroy => true
@@ -489,6 +489,8 @@ class MeteringPoint < ActiveRecord::Base
       return {data: Reading.latest_fake_data('sep_pv'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
     elsif self.bhkw_or_else?
       return {data: Reading.latest_fake_data('sep_bhkw'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+    else
+      return {data: [[0, 1], [0, 1]], factor: 1}
     end
   end
 

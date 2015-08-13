@@ -9,7 +9,7 @@ class Meter < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
-  after_save :validates_smartmeter_job
+  after_save :validates_smartmeter
 
   before_destroy :release_metering_points
 
@@ -117,12 +117,32 @@ private
     end
   end
 
-  def validates_smartmeter_job
-    Sidekiq::Client.push({
-     'class' => MeterInitWorker,
-     'queue' => :low,
-     'args' => [ self.id ]
-    })
+  def validates_smartmeter
+    if self.metering_points.any?
+
+      if self.metering_points.first.metering_point_operator_contract
+        @mpoc = self.metering_points.first.metering_point_operator_contract
+
+        if @mpoc.organization.slug == 'discovergy' || @mpoc.organization.slug == 'buzzn-metering'
+          request = Discovergy.new(@mpoc.username, @mpoc.password).raw_with_power(self.manufacturer_product_serialnumber)
+          if request['status'] == 'ok'
+            self.update_columns(smart: true)
+          elsif request['status'] == "error"
+            logger.error request
+            self.update_columns(smart: false)
+          else
+            logger.error request
+          end
+        else
+          logger.warn "Meter:#{self.id} is not posible to validate. @metering_point:#{@metering_point}, @mpoc:#{metering_point.metering_point_operator_contract}"
+          self.update_columns(smart: false)
+        end
+      else
+        logger.warn "Meter:#{self.id} has no metering_point_operator_contract"
+      end
+    else
+      logger.warn "Meter:#{self.id} has no metering_point"
+    end
   end
 
 end
