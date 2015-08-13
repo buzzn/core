@@ -33,10 +33,10 @@
 
     .panel-control
 
-      - if @metering_point.smart?
-        .add-to-dashboard
-          - if user_signed_in? && (current_user.dashboard.nil? || !current_user.dashboard.metering_points.include?(@metering_point))
-            = @metering_point.add_to_dashboard
+      / - if @metering_point.smart?
+      /   .add-to-dashboard
+      /     - if user_signed_in? && (current_user.dashboard.nil? || !current_user.dashboard.metering_points.include?(@metering_point))
+      /       = @metering_point.add_to_dashboard
 
       - if user_signed_in? && current_user.can_update?(@metering_point)
         = @metering_point.link_to_edit

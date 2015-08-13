@@ -131,6 +131,7 @@ de:
         calibrated_till: Geeicht bis
         metering_points: Zählpunkte
         smartmeter: Smart Meter
+        existing_meter: Ein vorhandenes Messgerät hinzufügen
       registers:
         mode: Richtung
         obis_index: OBIS Kennzahlen

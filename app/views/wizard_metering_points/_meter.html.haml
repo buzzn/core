@@ -1,7 +1,7 @@
 .modal-content
   #demo-main-wz
     .modal-header
-      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+      /%button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'new_metering_point'
       %ul.row.wz-step.wz-icon-bw.wz-nav-off.mar-top
         .js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: 'Nein'}}}
@@ -28,12 +28,25 @@
             %p.text-thin= t('step') + ' 3: ' + t('establish_data_connection')
     .modal-body
       = simple_form_for @meter, remote: true, url: meter_update_wizard_metering_points_path(metering_point_id: params[:metering_point_id]), method: 'put'  do |f|
-        = f.input :manufacturer_product_serialnumber
-        = f.input :smartmeter, as: :radio_buttons, collection: ["Ja", "Nein"], checked: 'Nein'
+        - if current_user.editable_metering_points.collect(&:meter).uniq.compact.any?
+          = f.input :existing_meter, as: :radio_buttons, collection: [t("create_new_meter"), t("add_existing_meter")], checked: t("create_new_meter"), label: false
+          .js-dependent-fields{data: {radio: {name: 'meter[existing_meter]', value: t("add_existing_meter")}}}
+            = f.input :meter_id, collection: current_user.editable_metering_points.collect(&:meter).uniq.compact, :label_method => lambda { |m| m.name }, include_blank: false, input_html: { class: 'select2'}, label: false, selected: current_user.editable_metering_points.collect(&:meter).uniq.compact.first
+          .js-dependent-fields{data: {radio: {name: 'meter[existing_meter]', value: t("create_new_meter")}}}
+            = f.input :manufacturer_product_serialnumber
+            = f.input :smartmeter, as: :radio_buttons, collection: ["Ja", "Nein"], checked: 'Nein'
+        - else
+          = f.input :manufacturer_product_serialnumber
+          = f.input :smartmeter, as: :radio_buttons, collection: ["Ja", "Nein"], checked: 'Nein'
+          / = f.input :existing_meter, as: :boolean, :input_html => { :checked => "unchecked"}
+          / .js-dependent-fields{data: {checkbox: {name: 'meter[existing_meter]', checked: "checked"}}}
+          /   = f.input :meter, collection: current_user.editable_metering_points.collect(&:meter).uniq, input_html: { class: 'select2'}, label: false, selected: current_user.editable_metering_points.collect(&:meter).uniq.first
+
+
+
 
         .modal-footer
-          .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
-            = t'cancel'
+          = f.button :button, t("cancel"), class: 'btn btn-primary btn-labeled fa fa-remove', id: 'cancel', name: 'cancel'
           .pull-right.js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: 'Ja'}}}
             = f.button :button, t("continue"), class: 'btn btn-success btn-labeled fa fa-arrow-right', id: 'submit'
           .pull-right.js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: 'Nein'}}}

@@ -45,7 +45,7 @@ class Discovergy
 
 
 
-  def live( meter_uid, num_of_seconds=2 )
+  def live( meter_uid, num_of_seconds=4 )
     response = @conn.get do |req|
       req.url '/json/Api.getLive'
       req.headers['Content-Type'] = 'application/json'

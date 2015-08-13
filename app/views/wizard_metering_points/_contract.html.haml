@@ -1,7 +1,7 @@
 .modal-content
   #demo-main-wz
     .modal-header
-      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+      /%button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'new_metering_point'
       %ul.row.wz-step.wz-icon-bw.wz-nav-off.mar-top
         %li.col-xs-4{style: "opacity: 0.5"}
@@ -24,6 +24,5 @@
           = f.input :password
 
         .modal-footer
-          .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
-            = t'cancel'
+          = f.button :button, t("cancel"), class: 'btn btn-primary btn-labeled fa fa-remove', id: 'cancel', name: 'cancel'
           = f.button :button, t("save"), class: 'btn btn-success btn-labeled fa fa-check', id: 'submit'

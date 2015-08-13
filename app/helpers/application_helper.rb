@@ -150,7 +150,8 @@ module ApplicationHelper
         :remote         => true,
         :class          => 'start_modal',
         'data-toggle'   => 'modal',
-        'data-target'   => '#myModal'
+        'data-target'   => '#myModal',
+        'data-backdrop' => 'static'
       })
   end
 

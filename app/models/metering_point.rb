@@ -8,7 +8,7 @@ class MeteringPoint < ActiveRecord::Base
   #tracked recipient: Proc.new{ |controller, model| controller && model }
 
   belongs_to :group
-  belongs_to :meter, dependent: :destroy
+  belongs_to :meter
 
   has_many :formula_parts, dependent: :destroy
   accepts_nested_attributes_for :formula_parts, reject_if: :all_blank, :allow_destroy => true
@@ -29,6 +29,8 @@ class MeteringPoint < ActiveRecord::Base
   validates :meter, presence: false, if: :virtual
 
   mount_uploader :image, PictureUploader
+
+  before_destroy :delete_meter
 
   has_many :dashboard_metering_points
   has_many :dashboards, :through => :dashboard_metering_points
@@ -97,12 +99,15 @@ class MeteringPoint < ActiveRecord::Base
       request     = discovergy.live(self.meter.manufacturer_product_serialnumber, 2)
       if request['status'] == "ok"
         if request['result'].any?
-
-         request['result'].each do |item|
+          result = {:power => nil, :timestamp => nil}
+          request['result'].each do |item|
             timestamp = item['time']
             power = item['power'] > 0 ? item['power'].abs/1000 : 0
-            return {:power => power, :timestamp => timestamp}
+            if power && timestamp
+              result = {:power => power, :timestamp => timestamp}
+            end
           end
+          return result
         else
           puts request.inspect
         end
@@ -112,6 +117,8 @@ class MeteringPoint < ActiveRecord::Base
 
     end
   end
+
+
 
 
 
@@ -499,6 +506,17 @@ class MeteringPoint < ActiveRecord::Base
       Reading.all_by_metering_point_id(self.id)
     end
   end
+
+  private
+
+    def delete_meter
+      if self.meter
+        if self.meter.metering_points.size == 1
+          self.meter.destroy
+          self.meter.save
+        end
+      end
+    end
 
 
 end

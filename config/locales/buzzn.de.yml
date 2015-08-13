@@ -93,6 +93,8 @@ de:
   add_new_meter: Neues Messgerät hinzufügen
   add_meter: Messgerät hinzufügen
   create_meter: Messgerät erstellen
+  add_existing_meter: Bereits vorhandenes Messgerät hinzufügen
+  create_new_meter: Messgerät neu anlegen
 
   landis_gyr: 'Landis & Gyr'
   goerlitz: 'Görlitz'
