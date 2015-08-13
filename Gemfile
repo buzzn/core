@@ -103,7 +103,7 @@ source 'http://rails-assets.org' do
   gem 'rails-assets-pace'
   gem 'rails-assets-resizeend'
   gem 'rails-assets-animate-css'
-  gem 'rails-assets-font-awesome'
+  gem 'rails-assets-font-awesome', '4.3.0'
   gem 'rails-assets-bootstrap'
   gem 'rails-assets-bootstrap-datepicker'
   gem 'rails-assets-bootstrap-select'
