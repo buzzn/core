@@ -1,4 +1,5 @@
-class UserSerializer < ActiveModel::Serializer
+class UserSerializer < ApplicationSerializer
+
   attributes :id, :email, :profile_id
 
   def profile_id

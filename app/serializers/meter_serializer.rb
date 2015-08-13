@@ -1,4 +1,5 @@
-class MeterSerializer < ActiveModel::Serializer
+class MeterSerializer < ApplicationSerializer
+
   attributes  :id,
               :manufacturer_name,
               :manufacturer_product_name,

@@ -1,4 +1,5 @@
-class ProfileSerializer < ActiveModel::Serializer
+class ProfileSerializer < ApplicationSerializer
+
   attributes  :id,
               :slug,
               :user_name,
@@ -8,6 +9,7 @@ class ProfileSerializer < ActiveModel::Serializer
               :group_ids,
               :metering_point_ids,
               :friendship_ids
+
 
   def metering_point_ids
     object.metering_points.collect(&:id)
@@ -19,10 +21,6 @@ class ProfileSerializer < ActiveModel::Serializer
 
   def friendship_ids
     object.user.friendship_ids
-  end
-
-  def md_img
-    object.image.md.url
   end
 
 end

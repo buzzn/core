@@ -2,8 +2,9 @@ module API
   module V1
     class Friendships < Grape::API
       include API::V1::Defaults
-
       resource :friendships do
+
+
 
         desc "Return a friendship"
         params do
@@ -13,6 +14,9 @@ module API
           Friendship.where(id: permitted_params[:id]).first!
         end
       end
+
+
+
 
     end
   end

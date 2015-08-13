@@ -1,13 +1,10 @@
-class GroupSerializer < ActiveModel::Serializer
+class GroupSerializer < ApplicationSerializer
+
   attributes  :id,
               :name,
               :description,
               :big_tumb,
               :metering_point_ids
 
-
-  def big_tumb
-    object.image.big_tumb.url
-  end
 
 end

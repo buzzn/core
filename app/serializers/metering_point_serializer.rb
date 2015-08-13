@@ -1,4 +1,5 @@
-class MeteringPointSerializer < ActiveModel::Serializer
+class MeteringPointSerializer < ApplicationSerializer
+
   attributes  :id,
               :uid,
               :name,

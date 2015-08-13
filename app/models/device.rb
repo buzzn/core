@@ -33,12 +33,12 @@ class Device < ActiveRecord::Base
   end
 
 
-  def readables
+  def self.readables
     %w{
       me
       friends
       world
-    }.map(&:to_sym)
+    }
   end
 
   def self.laws
@@ -52,7 +52,7 @@ class Device < ActiveRecord::Base
     %w{
       in
       out
-    }.map(&:to_sym)
+    }
   end
 
   def self.primary_energies
