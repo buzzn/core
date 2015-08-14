@@ -15,8 +15,13 @@ module API
         get ":id", root: "device" do
           guard!
           @device = Device.find(params[:id])
-          if @device.
-          current_user.can_read?(@device) ? @device : error_403
+          current_user
+          if @device.readable == 'world'
+            return @device
+          elsif current_user
+            current_user.can_read?(@device) ? @device : error_403
+          end
+
         end
 
 
@@ -28,8 +33,8 @@ module API
         params do
           requires :manufacturer_name,         type: String
           requires :manufacturer_product_name, type: String
-          requires :mode,                      type: String, values: Device.modes
-          requires :readable,                  type: String, values: Device.readables
+          requires :mode,                      type: String, values: Device.modes, default: "in"
+          requires :readable,                  type: String, values: Device.readables, default: "world"
           requires :category,                  type: String
           requires :watt_peak,                 type: Integer
           optional :commissioning,             type: DateTime

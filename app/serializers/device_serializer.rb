@@ -14,6 +14,7 @@ class DeviceSerializer < ApplicationSerializer
               :watt_hour_pa,
               :commissioning,
               :mobile,
+              :readable,
 
               :big_tumb,
               :updateable, :deletable
