@@ -20,6 +20,7 @@
 //= require bootstrap
 //= require bootstrap-datepicker
 //= require bootstrap-select
+//= require bootstrap-tour
 //= require nanoscroller
 //= require highcharts
 //= require highcharts_no_utc
@@ -54,6 +55,7 @@
 //= require groups
 //= require bubble_tooltip
 //= require users
+//= require tour
 
 
 

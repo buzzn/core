@@ -134,7 +134,7 @@ module ApplicationHelper
 
   def groups
     link_to(
-      content_tag(:i, t("find_and_join_group"), class: 'btn btn-default btn-rounded btn-labeled fa fa-search'),
+      content_tag(:i, t("find_and_join_group"), class: 'btn btn-default btn-rounded btn-labeled fa fa-search find_and_join_group'),
       groups_path,
       {
         :class        => 'start_modal'
@@ -144,7 +144,7 @@ module ApplicationHelper
 
   def new_metering_point
     link_to(
-      content_tag(:i, t("create_metering_point"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
+      content_tag(:i, t("create_metering_point"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus new_metering_point'),
       metering_point_wizard_metering_points_path,
       {
         :remote         => true,

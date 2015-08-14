@@ -61,8 +61,8 @@
               %li= link_to(metering_point.decorate.name_with_users, cancel_membership_group_path(metering_point_id: metering_point.id), :data => {:confirm => t('are_you_sure')})
       - if user_signed_in?
         - if current_user.editable_metering_points.flatten.count == 0
-          .btn-group
-            %button.btn.btn-block.btn-success.disabled{"data-toggle" => "popover", "data-placement" => "bottom", "title" => t("not_available"), "data-content" => t("you_need_a_metering_point_to_join_this_group")}
+          .btn-group{"data-toggle" => "popover", "data-placement" => "bottom", "title" => t("not_available"), "data-content" => t("you_need_a_metering_point_to_join_this_group")}
+            %button.btn.btn-block.btn-success.disabled
               =t('membership')
         - else
           .btn-group

@@ -98,6 +98,7 @@ gem 'omniauth-facebook'
 gem 'koala'
 gem 'byebug'
 
+
 source 'http://rails-assets.org' do
   gem 'rails-assets-pace'
   gem 'rails-assets-resizeend'
@@ -118,6 +119,7 @@ source 'http://rails-assets.org' do
   gem 'rails-assets-moment'
   gem 'rails-assets-dropzone'
   gem 'rails-assets-highcharts'
+  gem 'rails-assets-bootstrap-tour'
 end
 
 

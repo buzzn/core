@@ -54,6 +54,9 @@ ready = ->
 
   $('.typeahead').typeahead()
 
+
+
+
 $(document).ready(ready)
 $(document).on('page:load', ready)
 $(document).on('show.bs.modal', ready)

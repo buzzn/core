@@ -86,6 +86,8 @@
         .row
           .metering_points
             = render @metering_points
+            - if @metering_points.empty?
+              .show_global_tour
         - if current_user.can_create?(MeteringPoint) && current_user.profile == @profile
           .row
             .col-lg-12.text-center

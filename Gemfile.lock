@@ -612,6 +612,9 @@ GEM
       rails-assets-jquery (>= 1.7.1)
     rails-assets-bootstrap-select (1.7.3)
       rails-assets-jquery (>= 1.8)
+    rails-assets-bootstrap-tour (0.10.2)
+      rails-assets-bootstrap (>= 2.3.2)
+      rails-assets-jquery (>= 1.9.0)
     rails-assets-d3 (3.5.6)
     rails-assets-dropzone (4.0.1)
     rails-assets-enquire (2.1.2)
@@ -911,6 +914,7 @@ DEPENDENCIES
   rails-assets-bootstrap!
   rails-assets-bootstrap-datepicker!
   rails-assets-bootstrap-select!
+  rails-assets-bootstrap-tour!
   rails-assets-d3!
   rails-assets-dropzone!
   rails-assets-enquire!

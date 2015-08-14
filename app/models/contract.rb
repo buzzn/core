@@ -16,7 +16,7 @@ class Contract < ActiveRecord::Base
   #validates :organization, presence: true
   # validates :username, presence: true, if: :login_required?
   # validates :password, presence: true, if: :login_required?
-  validates :price_cents, presence: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
+  #validates :price_cents, presence: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
   validate :resource_cannot_have_same_contracts
 
   scope :running,                   -> { where(running: :true) }
@@ -44,12 +44,18 @@ class Contract < ActiveRecord::Base
     "#{organization.name} #{tariff}"
   end
 
+  # def self.modes
+  #   %w{
+  #     electricity_supplier_contract
+  #     electricity_purchase_contract
+  #     metering_point_operator_contract
+  #     servicing_contract
+  #   }.map(&:to_sym)
+  # end
+
   def self.modes
     %w{
-      electricity_supplier_contract
-      electricity_purchase_contract
       metering_point_operator_contract
-      servicing_contract
     }.map(&:to_sym)
   end
 

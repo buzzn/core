@@ -1,7 +1,7 @@
 = f.input :image
 = f.input :mode, collection: Device.modes.map(&:to_sym), include_blank: false, input_html: { class: 'select2' }
-= f.input :category
+/= f.input :category
 = f.input :manufacturer_name
 = f.input :manufacturer_product_name
 = f.input :watt_peak
-= f.input :commissioning
+/= f.input :commissioning
