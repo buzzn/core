@@ -8,6 +8,9 @@ class WizardMeteringPointsController  < ApplicationController
 
   def metering_point_update
     @metering_point = MeteringPoint.new(metering_point_params)
+    if params[:metering_point][:add_user] == t("add_me_to_this_metering_point")
+      @metering_point.users << current_user
+    end
     @metering_point.readable = 'friends'
     if @metering_point.save
       current_user.add_role(:manager, @metering_point)
@@ -103,7 +106,7 @@ class WizardMeteringPointsController  < ApplicationController
   end
 
   def meter_params
-    params.require(:meter).permit(:id, :metering_point_id, :meter_id, :manufacturer_product_serialnumber)
+    params.require(:meter).permit(:id, :metering_point_id, :manufacturer_product_serialnumber)
   end
 
   def contract_params

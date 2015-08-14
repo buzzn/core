@@ -18,6 +18,8 @@ ready = ->
 
   $('.fa-info-circle').popover(placement: 'right', trigger: "hover" )
 
+  $('[data-toggle="popover"]').popover(trigger: "hover")
+
   $(".modal-content").waitUntilExists( ->
     $('.fa-info-circle').popover(placement: 'right', trigger: "hover" )
   )

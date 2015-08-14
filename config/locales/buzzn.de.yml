@@ -15,6 +15,9 @@ de:
   if_this_link_shouldnt_work_try_to_copy_and_paste_this_one_directly_in_your_browser: "Sollte dieser Link nicht funktionieren, kopiere bitte dies direkt in Deinen Browser:"
 
   metering_point: Zählpunkt
+  add_me_to_this_metering_point: Füge mich dem Zählpunkt hinzu
+  dont_add_me_to_this_metering_point: Füge mich dem Zählpunkt NICHT hinzu
+  you_need_a_metering_point_to_join_this_group: Du benötigst einen Zählpunkt um dieser Gruppe beizutreten
   edit_metering_point: Zählpunkt bearbeiten
   new_metering_point: Neuer Zählpunkt
   new_down_device: Neues Bezugsgerät
@@ -250,6 +253,7 @@ de:
   project: Projekt
   project_stage: Projektphase
   projects: Projekte
+  not_available: Nicht verfügbar
   messages: Nachrichten
   message: Nachricht
   financed: Finanziert
@@ -576,6 +580,7 @@ de:
   contracts_info_contracting_party: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst Du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Vertragspartner zugeordnet sind."
   metering_point_virtual_info: "Hier kann die Formel ausgewählt werden, durch die der virtuelle Zähler berechnet wird. Jede Formel besteht aus einzelnen Summanden, und jeder Summand besteht aus Vorzeichen (Operator) und dem Zählpunkt (Operand)."
   formula_parts_info: "Der vituelle Zählpunkt besitzt keinen physikalischen Zähler, weshalb er aus den Werten von anderen Zählpunkten berechnet werden muss. Hier findest Du die Auflistung der Bestandteile der Formel zu Berechnung der Energiewerte des aktuellen Zählpunkts."
+  metering_point_wizard_users_info: "Wenn Du persönlich Strom an diesem Zählpunkt beziehst oder produzierst, kannst Du Dich dem Zählpunkt direkt zuordnen. Falls Du diesen Zählpunkt nur verwaltest, aber dort persönlich keinen Strom beziehst bzw. produzierst, solltest Du Dich NICHT dem Zählpunkt zuordnen."
 
   cookie_text: "Wir verwenden Cookies, um unseren Service zu verbessern und zu personalisieren. Wenn Du unsere Website nutzt erklärst Du Dich mit der Verwendung von Cookies einverstanden. Es kann sein, dass schon jetzt Cookies gespeichert wurden. In unserer Cookie Richtlinie findest Du mehr Informationen. "
   must_be_a_GIF_JPG_or_PNG: "Muss vom Typ GIF, JPG oder PNG sein."
