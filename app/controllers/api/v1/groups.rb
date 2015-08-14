@@ -79,6 +79,20 @@ module API
 
 
 
+
+
+        desc "Delete a Group."
+        params do
+          requires :id, type: String, desc: "Group ID"
+        end
+        delete ':id' do
+          guard!
+          current_user.statuses.find(params[:id]).destroy
+        end
+
+
+
+
       end
     end
   end

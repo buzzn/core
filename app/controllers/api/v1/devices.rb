@@ -14,7 +14,8 @@ module API
         end
         get ":id", root: "device" do
           guard!
-          @device = Device.where(id: permitted_params[:id]).first!
+          @device = Device.find(params[:id])
+          if @device.
           current_user.can_read?(@device) ? @device : error_403
         end
 
@@ -54,10 +55,10 @@ module API
                 return @device
               end
             else
-              error_403
+              status_403
             end
           else
-            error_401
+            status_401
           end
         end
 
@@ -98,16 +99,34 @@ module API
                 })
               return @device
             else
-              status 403
+              status_403
             end
           else
-            status 401
+            status_401
           end
         end
 
 
 
 
+        desc "Delete a Device."
+        params do
+          requires :id, type: String, desc: "Device ID"
+        end
+        delete ':id' do
+          guard!
+          if current_user
+            @device = Device.find(params[:id])
+            if @device.deletable_by?(current_user)
+              @device.destroy
+              status 200
+            else
+              status_403
+            end
+          else
+            status_401
+          end
+        end
 
 
 

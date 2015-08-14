@@ -10,19 +10,19 @@ module API
 
         helpers do
 
-          def error_400
+          def status_400
             error!('Bad Request', 400)
           end
 
-          def error_401
+          def status_401
             error!('Unauthorized', 401)
           end
 
-          def error_403
+          def status_403
             error!('Forbidden', 403)
           end
 
-          def error_404
+          def status_404
             error!('Not Found', 404)
           end
 
