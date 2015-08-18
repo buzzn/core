@@ -2,4 +2,4 @@
 = f.input :street_number
 = f.input :zip
 = f.input :city
-= f.input :state
+/= f.association :state, collection: Addresses.states, input_html: { class: 'select2'}, label: false

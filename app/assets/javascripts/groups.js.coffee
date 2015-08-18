@@ -374,6 +374,8 @@ class BubbleChart
 
   setZoomFactor: () =>
     smallest_border = @height
+    if smallest_border == null
+      throw ''
     if @width < @height
       smallest_border = @width
     @zoomFactor = smallest_border / 3

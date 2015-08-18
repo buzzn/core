@@ -6,7 +6,7 @@ class Address < ActiveRecord::Base
   validates :street_name,     presence: true
   validates :street_number,   presence: true
   validates :city,            presence: true
-  validates :state,           presence: true
+  #validates :state,           presence: true
   validates :zip,             presence: true, numericality: { only_integer: true }
 
 
@@ -30,6 +30,27 @@ class Address < ActiveRecord::Base
 
   def short_name
     "#{street_name} #{city}"
+  end
+
+  def self.states
+    %w{
+      Baden-Würrtemberg
+      Bayern
+      Berlin
+      Brandenburg
+      Bremen
+      Hamburg
+      Hessen
+      Niedersachsen
+      Nordrhein-Westfalen
+      Mecklemburg-Vorpommern
+      Rheinland-Pfalz
+      Saarland
+      Sachsen
+      Sachsen-Anhalt
+      Schleswig-Holstein
+      Thüringen
+    }
   end
 
 

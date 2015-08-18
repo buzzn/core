@@ -28,7 +28,7 @@ class WizardMeteringPointsController  < ApplicationController
 
   def meter_update
     @metering_point = MeteringPoint.find(params[:metering_point_id])
-    if params[:cancel] != ""
+    if params[:cancel].nil? #TODO: submit form without "cancel" when hitting ENTER
       if params[:meter][:existing_meter] == t('add_existing_meter')
         @meter = Meter.find(params[:meter][:meter_id])
       else
@@ -74,7 +74,7 @@ class WizardMeteringPointsController  < ApplicationController
 
   def contract_update
     @metering_point = MeteringPoint.find(params[:metering_point_id])
-    if params[:cancel] != ""
+    if params[:cancel].nil? #TODO: submit form without "cancel" when hitting ENTER
       @contract = Contract.new(contract_params)
       @contract.mode = 'metering_point_operator_contract'
       @contract.price_cents = 0

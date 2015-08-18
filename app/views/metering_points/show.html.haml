@@ -135,13 +135,13 @@
                 %i.small-info-circle.fa.fa-info-circle{'data-content' => t('meters_info')}
           .row
             .meters
-              = render @metering_point.meter if @metering_point.meter
-          .row
-            - if @metering_point.meter.nil?
-              .new-meter
-                .row
-                  .col-lg-12.text-center
-                    = @metering_point.new_meter
+              - if @metering_point.meter
+                = render @metering_point.meter
+              - else
+                .new_meter.show_meter_tour
+                  .row
+                    .col-lg-12.text-center
+                      = @metering_point.new_meter
         - else
           %h1.page-header.text-overflow
             %span

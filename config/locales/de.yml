@@ -119,7 +119,7 @@ de:
       too_long: ist zu lang (mehr als %{count} Zeichen)
       too_short: ist zu kurz (weniger als %{count} Zeichen)
       wrong_length: hat die falsche Länge (muss genau %{count} Zeichen haben)
-      already_exists: Es existiert bereits ein anderer Vertrag mit gleichem Vertragstyp
+      already_exists: Existiert bereits
     template:
       body: ! 'Bitte überprüfen Sie die folgenden Felder:'
       header:

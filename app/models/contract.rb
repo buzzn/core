@@ -16,7 +16,7 @@ class Contract < ActiveRecord::Base
   #validates :organization, presence: true
   # validates :username, presence: true, if: :login_required?
   # validates :password, presence: true, if: :login_required?
-  #validates :price_cents, presence: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
+  #validates :price_cents, presence: true, :numericality => { :only_integer => false, :greater_than_or_equal_to => 0 }
   validate :resource_cannot_have_same_contracts
 
   scope :running,                   -> { where(running: :true) }
@@ -72,13 +72,13 @@ class Contract < ActiveRecord::Base
       #available_contracts = Contract.where(metering_point: self.metering_point).where(mode: self.mode)
       available_contracts = metering_point.contracts.collect{|c| c if c.mode == self.mode}.compact
       if available_contracts.any? && available_contracts.first != self
-        errors.add(:mode, "already exists")
+        errors.add(:mode, I18n.t("already_exists"))
       end
     elsif group && group.contracts.any?
       #available_contracts = Contract.where(group: self.group).where(mode: self.mode)
       available_contracts = group.contracts.collect{|c| c if c.mode == self.mode}.compact
       if available_contracts.any? && available_contracts.first != self
-        errors.add(:mode, "already exists")
+        errors.add(:mode, I18n.t("already_exists"))
       end
     end
   end

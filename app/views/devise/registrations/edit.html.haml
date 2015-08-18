@@ -13,11 +13,13 @@
 
     %fieldset
       %legend= t'change_password'
-      = f.input :current_password, autocomplete: "off", required: false
-      = f.input :password, autocomplete: "off", required: false
-      = f.input :password_confirmation, required: false
+      = f.input :current_password, autocomplete: "off", required: true #TODO: validate presence
+      = f.input :password, autocomplete: "off", required: true #TODO: validate presence
+      = f.input :password_confirmation, required: true #TODO: validate presence
   .form-actions
-    = f.button :submit, class: 'btn btn-success'
+    = f.button :button, t("cancel"), class: 'btn btn-primary btn-labeled fa fa-remove', id: 'cancel', name: 'cancel', value: 'cancel'
+    = f.button :button, t("save"), class: 'btn btn-success btn-labeled fa fa-check', id: 'submit'
+
 / %h3= t'cancel_my_account'
 / %p= link_to t('delete_account'), registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete
 

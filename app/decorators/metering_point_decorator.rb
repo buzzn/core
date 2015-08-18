@@ -109,7 +109,7 @@ class MeteringPointDecorator < Draper::Decorator
 
   def edit_users
     link_to(
-      content_tag(:i, t("add_or_remove_members"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
+      content_tag(:i, t("add_or_remove_users"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
       edit_users_metering_point_path(model),
       {
         :remote         => true,
