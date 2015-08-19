@@ -144,7 +144,7 @@ de:
 
   users: Benutzer
   edit_users: Benutzer hinzufügen/entfernen
-  add_user: Benutzer hinzufuegen
+  add_user: Benutzer hinzufügen
   add_or_remove_users: Benutzer hinzufügen oder entfernen
 
 
@@ -156,6 +156,8 @@ de:
   edit_address: Adresse bearbeiten
   delete_address: Adresse löschen
   update_address: Adresse aktualisieren
+  create_new_address: Neue Adresse anlegen
+  add_existing_address: Bereits vorhandene Adresse hinzufügen
 
   save_changes: Änderungen speichern
 

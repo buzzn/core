@@ -9,7 +9,16 @@ class AddressesController < ApplicationController
   end
 
   def create
-    @address = Address.new(address_params)
+    if params[:address][:existing_address] == t('add_existing_address')
+      @address2 = Address.find(params[:address][:address_id])
+      @address = Address.new(address_params)
+      @address.street_name = @address2.street_name
+      @address.street_number = @address2.street_number
+      @address.zip = @address2.zip
+      @address.city = @address2.city
+    else
+      @address = Address.new(address_params)
+    end
     authorize_action_for @address
     if @address.save
       current_user.add_role :manager, @address

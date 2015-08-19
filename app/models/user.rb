@@ -57,6 +57,10 @@ class User < ActiveRecord::Base
     Device.editable_by_user(self).collect(&:decorate)
   end
 
+  def editable_addresses
+    self.editable_metering_points.collect(&:address).compact.uniq{|address| address.longitude && address.latitude}
+  end
+
   def usable_metering_points
     result = self.editable_metering_points
     self.friends.each do |friend|
