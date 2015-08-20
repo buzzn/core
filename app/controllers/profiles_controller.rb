@@ -13,6 +13,7 @@ class ProfilesController < ApplicationController
     @friends              = @profile.user.friends.decorate
     @metering_points      = @profile.metering_points
     @friendship_requests  = @profile.user.received_friendship_requests
+    @group_invitations    = @profile.user.received_group_metering_point_requests
     @groups               = @metering_points.collect(&:group).compact.uniq{|group| group.id} # TODO also include group interested
     @devices              = Device.with_role(:manager, @profile.user).decorate
     @activities           = PublicActivity::Activity

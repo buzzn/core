@@ -46,6 +46,14 @@
           .friendship_requests
             = render @friendship_requests
 
+- if user_signed_in? && current_user == @profile.user && @group_invitations.any?
+  .row
+    .col-lg-12
+      .panel.panel-colorful.panel-warning
+        .panel-body
+          .group_invitations
+            = render @group_invitations
+
 
 
 

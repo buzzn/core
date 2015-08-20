@@ -115,7 +115,7 @@ de:
         website: Webseite
         description: Beschreibung
         metering_points: Zählpunkte
-
+        mode: Zugang
       meter:
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname

@@ -9,7 +9,8 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
   def create
     group = Group.find(params[:group_id])
     metering_point = MeteringPoint.find(params[:metering_point_id])
-    @group_metering_point_request = GroupMeteringPointRequest.new(user: current_user, metering_point: metering_point, group: group)
+    mode = params[:mode]
+    @group_metering_point_request = GroupMeteringPointRequest.new(user: current_user, metering_point: metering_point, group: group, mode: mode)
     if @group_metering_point_request.save
       flash[:notice] = t('sent_group_metering_point_request')
       redirect_to group_path(group)
@@ -21,7 +22,7 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
 
   def accept
     @group_metering_point_request = GroupMeteringPointRequest.find(params[:id])
-    if current_user.can_update?(@group_metering_point_request.group)
+    if @group_metering_point_request.mode == 'request' && current_user.can_update?(@group_metering_point_request.group) || @group_metering_point_request.mode == 'invitation' && current_user.can_update?(@group_metering_point_request.metering_point)
       @group_metering_point_request.accept
       @group_metering_point_request.create_activity key: 'group_metering_point_membership.create', owner: @group_metering_point_request.user, recipient: @group_metering_point_request.group
       if @group_metering_point_request.save
@@ -36,7 +37,7 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
 
   def reject
     @group_metering_point_request = GroupMeteringPointRequest.find(params[:id])
-    if current_user.can_update?(@group_metering_point_request.group)
+    if @group_metering_point_request.mode == 'request' && current_user.can_update?(@group_metering_point_request.group) || @group_metering_point_request.mode == 'invitation' && current_user.can_update?(@group_metering_point_request.metering_point)
       @group_metering_point_request.reject
       if @group_metering_point_request.save
         flash[:notice] = t('rejected_group_metering_point_request')

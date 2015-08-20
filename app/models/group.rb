@@ -30,6 +30,8 @@ class Group < ActiveRecord::Base
 
   # validates :metering_points, presence: true
 
+  after_save :validate_localpool
+
   has_many :group_users
   has_many :users, :through => :group_users
 
@@ -53,11 +55,15 @@ class Group < ActiveRecord::Base
   end
 
   def received_group_metering_point_requests
-    GroupMeteringPointRequest.where(group: self)
+    GroupMeteringPointRequest.where(group: self).requests
   end
 
   def keywords
     %w(buzzn people power) << self.name
+  end
+
+  def self.modes
+    %w(localpool public_group)
   end
 
   def calculate_total_energy_data(data, operators, resolution)
@@ -232,8 +238,26 @@ class Group < ActiveRecord::Base
       self.metering_points.each do |metering_point|
         metering_point.group = nil
         metering_point.save
+        metering_point.meter.save if metering_point.meter
       end
     end
+
+    def validate_localpool
+      if self.mode == 'localpool'
+        if self.contracts.empty?
+          @contract = Contract.new(mode: 'metering_point_operator_contract', price_cents: 0, group: self, organization: Organization.find('buzzn-metering'), username: 'team@buzzn-metering.de', password: 'Zebulon_4711')
+          @contract.save
+        end
+      else
+        if self.contracts.any?
+          self.contracts.each do |contract|
+            contract.delete
+            #contract.save
+          end
+        end
+      end
+    end
+
 
 
 

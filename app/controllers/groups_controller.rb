@@ -54,6 +54,27 @@ class GroupsController < ApplicationController
     Group.public_activity_on
   end
 
+  def send_invitations
+    @group = Group.find(params[:id])
+    authorize_action_for @group
+  end
+  authority_actions :send_invitations => 'update'
+
+  def send_invitations_update
+    @group = Group.find(params[:id])
+    authorize_action_for @group
+    #byebug
+    @meter = Meter.find(params[:group][:new_meters])
+    @metering_point = @meter.metering_points.first
+    @group_invitation = GroupMeteringPointRequest.new(user: @metering_point.managers.first, metering_point: @metering_point, group: @group, mode: 'invitation')
+    if @group_invitation.save
+      flash[:notice] = t('sent_group_metering_point_request_successfully')
+    else
+      flash[:error] = t('unable_to_send_group_metering_point_request')
+    end
+    #byebug
+  end
+  authority_actions :send_invitations_update => 'update'
 
   def destroy
     @group = Group.find(params[:id])

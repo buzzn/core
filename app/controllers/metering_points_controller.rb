@@ -186,6 +186,7 @@ private
       :mode,
       :readable,
       :virtual,
+      :forecast_kwh_pa,
       :group_id,
       :user_ids => [],
       :device_ids => [],

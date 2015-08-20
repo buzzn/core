@@ -10,6 +10,8 @@ class GroupMeteringPointRequest < ActiveRecord::Base
 
   cattr_accessor :skip_callbacks
 
+  scope :requests,    -> { where(mode: 'request') }
+  scope :invitations, -> { where(mode: 'invitation') }
 
   def accept
     GroupMeteringPointRequest.skip_callbacks = true
@@ -29,7 +31,8 @@ class GroupMeteringPointRequest < ActiveRecord::Base
       if status == 'accepted'
         metering_point.group = group
         group.metering_points << metering_point
-        group.calculate_closeness
+        metering_point.meter.save if metering_point.meter
+        #group.calculate_closeness
         self.delete
       elsif status == 'rejected'
         self.delete

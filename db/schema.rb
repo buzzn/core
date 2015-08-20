@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150722092022) do
+ActiveRecord::Schema.define(version: 20150820103035) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -279,6 +279,7 @@ ActiveRecord::Schema.define(version: 20150722092022) do
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "mode"
   end
 
   add_index "group_metering_point_requests", ["group_id", "user_id"], name: "index_group_metering_point_requests_on_group_id_and_user_id", using: :btree

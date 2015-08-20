@@ -119,9 +119,12 @@ private
 
   def validates_smartmeter
     if self.metering_points.any?
-
-      if self.metering_points.first.metering_point_operator_contract
-        @mpoc = self.metering_points.first.metering_point_operator_contract
+      if self.metering_points.first.metering_point_operator_contract || self.metering_points.first.group && self.metering_points.first.group.contracts.metering_point_operators
+        if self.metering_points.first.metering_point_operator_contract
+          @mpoc = self.metering_points.first.metering_point_operator_contract
+        elsif self.metering_points.first.group && self.metering_points.first.group.contracts.metering_point_operators
+          @mpoc = self.metering_points.first.group.contracts.metering_point_operators.first
+        end
 
         if @mpoc.organization.slug == 'discovergy' || @mpoc.organization.slug == 'buzzn-metering'
           request = Discovergy.new(@mpoc.username, @mpoc.password).raw_with_power(self.manufacturer_product_serialnumber)
@@ -139,9 +142,11 @@ private
         end
       else
         logger.warn "Meter:#{self.id} has no metering_point_operator_contract"
+        self.update_columns(smart: false)
       end
     else
       logger.warn "Meter:#{self.id} has no metering_point"
+      self.update_columns(smart: false)
     end
   end
 

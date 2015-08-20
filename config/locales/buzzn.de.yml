@@ -136,11 +136,16 @@ de:
   edit_group: Gruppe bearbeiten
   create_group: Gruppe erstellen
   remove_members: Mitglieder entfernen
+  public_group: Öffentliche Gruppe
+  localpool: Localpool
+  send_invitations: Einladungen versenden
+  invite_users: Benutzer einladen
 
   new_contract: Neuer Vertrag
   contracts: Verträge
   add_contract: Vertrag hinzufügen
   create_contract: Vertrag erstellen
+  wrong_username_and_or_password: Falscher Benutzername und/oder falsches Passwort
 
   users: Benutzer
   edit_users: Benutzer hinzufügen/entfernen

@@ -6,11 +6,11 @@
     = simple_form_for @group, html: { multipart: true } do |f|
       = render 'groups/form_fields', f: f
       .modal-footer
-        - if @group.contracts.metering_point_operators.running.any?
-          .float-left
-            %button.btn.btn-danger.btn-labeled.fa.fa-trash{:disabled => "disabled"}= t('not_deletable')
-        - else
-          .float-left= @group.link_to_delete
+        / - if @group.contracts.metering_point_operators.running.any?
+        /   .float-left
+        /     %button.btn.btn-danger.btn-labeled.fa.fa-trash{:disabled => "disabled"}= t('not_deletable')
+        / - else
+        .float-left= @group.link_to_delete
         .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
           = t'cancel'
         = f.button :button, t('save'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check'

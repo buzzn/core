@@ -91,6 +91,8 @@ Buzzn::Application.routes.draw do
       get :chart
       get :kiosk
       get :get_scores
+      get :send_invitations
+      put :send_invitations_update
     end
   end
 

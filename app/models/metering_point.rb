@@ -95,7 +95,12 @@ class MeteringPoint < ActiveRecord::Base
       end
       return {:power => 0, :timestamp => 0}
     else
-      discovergy  = Discovergy.new(self.metering_point_operator_contract.username, self.metering_point_operator_contract.password)
+      if self.metering_point_operator_contract
+        @mpoc = self.metering_point_operator_contract
+      elsif self.group && self.group.contracts.metering_point_operators.any?
+        @mpoc = self.group.contracts.metering_point_operators.first
+      end
+      discovergy  = Discovergy.new(@mpoc.username, @mpoc.password)
       request     = discovergy.live(self.meter.manufacturer_product_serialnumber, 6)
       if request['status'] == "ok"
         if request['result'].any?
@@ -515,6 +520,10 @@ class MeteringPoint < ActiveRecord::Base
           self.meter.destroy
           self.meter.save
         end
+      end
+      FormulaPart.where(operand_id: self.id).each do |formula_part|
+        formula_part.destroy
+        formula_part.save
       end
     end
 

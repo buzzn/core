@@ -40,7 +40,11 @@ class User < ActiveRecord::Base
   end
 
   def sent_group_metering_point_requests
-    GroupMeteringPointRequest.where(user: self)
+    GroupMeteringPointRequest.where(user: self).requests
+  end
+
+  def received_group_metering_point_requests
+    GroupMeteringPointRequest.where(user: self).invitations
   end
 
 

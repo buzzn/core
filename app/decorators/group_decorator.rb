@@ -50,4 +50,17 @@ class GroupDecorator < Draper::Decorator
       })
   end
 
+
+  def new_invitations
+    link_to(
+      content_tag(:i, t("invite_users"), class: 'btn btn-block btn-success btn-labeled fa fa-plus'),
+      send_invitations_group_path,
+      {
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal'
+      })
+  end
+
 end

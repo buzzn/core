@@ -26,8 +26,6 @@ class Contract < ActiveRecord::Base
   scope :servicings,                -> { where(mode: 'servicing_contract') }
 
 
-
-
   after_save :validates_credentials
 
 
@@ -106,9 +104,9 @@ private
         if api_call['status'] == 'ok'
           self.update_columns(valid_credentials: true)
           #self.send_notification_credentials(true)
-           if self.group
+            if self.group
               self.group.metering_points.each do |metering_point|
-                metering_point.meter.save
+                metering_point.meter.save if metering_point.meter
               end
             end
             if self.metering_point && self.metering_point.meter
