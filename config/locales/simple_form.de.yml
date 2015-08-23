@@ -82,8 +82,8 @@ de:
         direct_debit: Umsatzsteuerpflicht
 
       contract:
-        username: Benutzername
-        password: Passwort
+        username: Benutzername (bei Amperix Sensor ID)
+        password: Passwort (bei Amperix X-Token)
         mode: Vertragstyp
         terms: Ich akzeptiere die AGB
         confirm_pricing_model: Ich akzeptiere das Preismodell
@@ -218,6 +218,7 @@ de:
           landis_gyr: 'Landis & Gyr'
           goerlitz: 'Görlitz'
           easy_meter: 'EasyMeter'
+          amperix: 'Amperix'
           ferraris: 'Ferraris'
           elster: 'Elster'
           bauer: 'Bauer'

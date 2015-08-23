@@ -960,3 +960,6 @@ DEPENDENCIES
   webmock
   whenever
   wicked
+
+BUNDLED WITH
+   1.10.1

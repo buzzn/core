@@ -62,7 +62,7 @@
           .pad-all
             .metering_point{ id: "metering_point_#{@metering_point.id}"}
               .text-center
-                = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { fake: !@metering_point.smart? && !@metering_point.virtual, source: @metering_point.fake_source } do
+                = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { fake: !@metering_point.smart? && !@metering_point.virtual, source: @metering_point.data_source } do
                   %span.text-4x.text-thin
                     .power-ticker
                       = t('loading') + '...'

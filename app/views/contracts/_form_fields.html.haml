@@ -10,3 +10,6 @@
 .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
   = f.input :username
   = f.input :password, input_html: { value: @contract.password}
+.js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'amperix').first.id}
+  = f.input :username
+  = f.input :password, input_html: { value: @contract.password}

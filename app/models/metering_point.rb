@@ -95,31 +95,9 @@ class MeteringPoint < ActiveRecord::Base
       end
       return {:power => 0, :timestamp => 0}
     else
-      if self.metering_point_operator_contract
-        @mpoc = self.metering_point_operator_contract
-      elsif self.group && self.group.contracts.metering_point_operators.any?
-        @mpoc = self.group.contracts.metering_point_operators.first
-      end
-      discovergy  = Discovergy.new(@mpoc.username, @mpoc.password)
-      request     = discovergy.live(self.meter.manufacturer_product_serialnumber, 6)
-      if request['status'] == "ok"
-        if request['result'].any?
-          result = {:power => nil, :timestamp => nil}
-          request['result'].each do |item|
-            timestamp = item['time']
-            power = item['power'] > 0 ? item['power'].abs/1000 : 0
-            if power && timestamp
-              result = {:power => power, :timestamp => timestamp}
-            end
-          end
-          return result
-        else
-          puts request.inspect
-        end
-      else
-        puts request.inspect
-      end
-
+      #metering_point = MeteringPoint.find(metering_point_id)
+      result =  Crawler.new.getDataLive(self, self.metering_point_operator_contract,self.meter)
+      return result
     end
   end
 
@@ -193,13 +171,25 @@ class MeteringPoint < ActiveRecord::Base
     self.output? && !self.smart?
   end
 
-  def fake_source
+  def amperix?
+    metering_point_operator_contract.organization.slug == "amperix" && self.smart?
+  end
+
+  def discovergy?
+    metering_point_operator_contract.organization.slug == "discovergy" && self.smart?
+  end
+
+  def data_source
     if self.slp?
       "slp"
     elsif self.pv?
       "sep_pv"
     elsif self.bhkw_or_else?
       "sep_bhkw"
+    elsif self.amperix?
+      "amperix"
+    elsif self.discovergy?
+      "discovergy"
     end
   end
 
@@ -406,77 +396,18 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-
+  # usage mp.fake_or_smart("5441452e-724c-4cd1-8eed-b70d4ec3b610","hour_to_minutes","1438074703700")
   def fake_or_smart(metering_point_id, resolution_format, containing_timestamp)
     metering_point = MeteringPoint.find(metering_point_id)
     if metering_point.meter && metering_point.meter.smart
       result = []
       if resolution_format == 'hour_to_minutes'
-        discovergy  = Discovergy.new(self.metering_point_operator_contract.username, self.metering_point_operator_contract.password)
-        request     = discovergy.getHour(self.meter.manufacturer_product_serialnumber, containing_timestamp)
-        if request['status'] == "ok"
-          if request['result'].any?
-            # TODO: make this nicer
-            request['result'].each do |item|
-              puts item.to_s
-              timestamp = item['time']
-              power = item['power'] > 0 ? item['power'].abs/1000 : 0
-              result << [timestamp, power]
-            end
-          else
-            puts request.inspect
-          end
-        else
-          puts request.inspect
-        end
+        puts "HOUR *********************************************************************"
+        result = Crawler.new.getDataHour(containing_timestamp, metering_point, self.metering_point_operator_contract,self.meter)
       elsif resolution_format == 'day_to_minutes'
-        discovergy  = Discovergy.new(self.metering_point_operator_contract.username, self.metering_point_operator_contract.password)
-        request     = discovergy.getDay(self.meter.manufacturer_product_serialnumber, containing_timestamp)
-        if request['status'] == "ok"
-          if request['result'].any?
-            # TODO: make this nicer
-
-            request['result'].each do |item|
-              timestamp = item['timeStart']
-              power = item['power'] > 0 ? item['power'].abs/1000 : 0
-              result << [timestamp, power]
-            end
-          else
-            puts request.inspect
-          end
-        else
-          puts request.inspect
-        end
+        result = Crawler.new.getDataDay(containing_timestamp, metering_point, self.metering_point_operator_contract,self.meter)
       elsif resolution_format == 'month_to_days'
-        discovergy  = Discovergy.new(self.metering_point_operator_contract.username, self.metering_point_operator_contract.password)
-        request     = discovergy.getDataEveryDay(self.meter.manufacturer_product_serialnumber, containing_timestamp)
-        if request['status'] == "ok"
-          if request['result'].any?
-            # TODO: make this nicer
-            old_value = -1
-            new_value = -1
-            timestamp = -1
-            i = 0
-            request['result'].each do |item|
-              puts item.to_s
-              if i == 0
-                old_value = item['energy']
-                timestamp = item['time']
-                i += 1
-                next
-              end
-              new_value = item['energy']
-              result << [timestamp, (new_value - old_value)/10000000000.0]
-              old_value = new_value
-              timestamp = item['time']
-              i += 1
-            end
-          else
-            puts request.inspect
-          end
-        else
-          puts request.inspect
-        end
+        result = Crawler.new.getDataMonth(containing_timestamp, metering_point, self.metering_point_operator_contract,self.meter)
       end
       if resolution_format == "day_to_minutes" || resolution_format == "day_to_hours"
         result.pop
@@ -507,7 +438,7 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def submitted_readings_by_user
-    if self.fake_source
+    if self.data_source
       Reading.all_by_metering_point_id(self.id)
     end
   end

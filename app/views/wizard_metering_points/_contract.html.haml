@@ -22,6 +22,10 @@
         .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
           = f.input :username
           = f.input :password
+        .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'amperix').first.id}
+          = f.input :username
+          = f.input :password
+
 
         .modal-footer
           = f.button :button, t("cancel"), class: 'btn btn-primary btn-labeled fa fa-remove', id: 'cancel', name: 'cancel'
