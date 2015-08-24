@@ -82,8 +82,8 @@ de:
         direct_debit: Umsatzsteuerpflicht
 
       contract:
-        username: Benutzername (bei Amperix Sensor ID)
-        password: Passwort (bei Amperix X-Token)
+        username: Benutzername
+        password: Passwort
         mode: Vertragstyp
         terms: Ich akzeptiere die AGB
         confirm_pricing_model: Ich akzeptiere das Preismodell
@@ -99,6 +99,8 @@ de:
         commissioning: Vertragsbeginn
         termination: Vertragsende
         tariff: Tarif
+        x_token: X-Token
+        sensor_id: Sensor-ID
 
       organization:
         name: Name

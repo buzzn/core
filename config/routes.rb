@@ -109,6 +109,16 @@ Buzzn::Application.routes.draw do
     end
   end
 
+  resources :wizard_meters do
+    collection do
+      get :meter
+      put :meter_update
+
+      get :contract
+      put :contract_update
+    end
+  end
+
 
   root controller: 'profiles', action: 'redirect_to_current_user'
 

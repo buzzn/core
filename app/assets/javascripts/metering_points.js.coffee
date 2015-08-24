@@ -1243,7 +1243,9 @@ $(".metering_point").ready ->
   metering_point_id = $(this).attr('id').split('_')[2]
   metering_point = $(this)
   if $(this).find(".metering_point-ticker").length != 0
+    source = $(this).find(".metering_point-ticker").data('source')
     if $(this).find(".metering_point-ticker").data('fake') == true
+      getFakeValue(metering_point_id, source)
       timers.push(
         window.setInterval(->
           setFakeValue(metering_point, metering_point_id, source)
@@ -1251,8 +1253,6 @@ $(".metering_point").ready ->
         , 1000*5)
         )
     else
-      source = $(this).find(".metering_point-ticker").data('source')
-      getFakeValue(metering_point_id, source)
       if source == "amperix"
         timers.push(window.setInterval(->
           getLiveData(metering_point, metering_point_id)

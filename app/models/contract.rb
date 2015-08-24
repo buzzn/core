@@ -28,7 +28,6 @@ class Contract < ActiveRecord::Base
 
   after_save :validates_credentials
 
-
   has_one :address, as: :addressable
   accepts_nested_attributes_for :address, :reject_if => :all_blank
 
@@ -114,7 +113,7 @@ private
             end
           end
       elsif self.organization.slug == 'amperix' # no automated group check implemented yet
-      puts "amp"
+        puts "amp"
         amperix = Amperix.new(self.username, self.password)
         api_call = amperix.mySmartGridOberlFaraLive
         if api_call != ""

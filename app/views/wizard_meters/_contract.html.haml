@@ -2,22 +2,18 @@
   #demo-main-wz
     .modal-header
       /%button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'new_metering_point'
+      %h4.modal-title= t'new_meter'
       %ul.row.wz-step.wz-icon-bw.wz-nav-off.mar-top
-        %li.col-xs-4{style: "opacity: 0.5"}
-          %span.icon-wrap.icon-wrap-xs.bg-danger
-            %i.fa.fa-flash
-          %p.text-thin= t('step') + ' 1: ' + t('define_metering_point')
-        %li.col-xs-4{style: "opacity: 0.5"}
+        %li.col-xs-6{style: "opacity: 0.5"}
           %span.icon-wrap.icon-wrap-xs.bg-warning
             %i.fa.fa-dashboard
-          %p.text-thin= t('step') + ' 2: ' + t('add_meter')
-        %li.col-xs-4
+          %p.text-thin= t('step') + ' 1: ' + t('create_meter')
+        %li.col-xs-6
           %span.icon-wrap.icon-wrap-xs.bg-info
             %i.fa.fa-file-text
-          %p.text-thin= t('step') + ' 3: ' + t('establish_data_connection')
+          %p.text-thin= t('step') + ' 2: ' + t('establish_data_connection')
     .modal-body
-      = simple_form_for @contract, remote: true, url: contract_update_wizard_metering_points_path(metering_point_id: params[:metering_point_id]), method: 'put'  do |f|
+      = simple_form_for @contract, remote: true, url: contract_update_wizard_meters_path(metering_point_id: params[:metering_point_id]), method: 'put'  do |f|
         = f.association :organization, input_html: {class: 'select2'}, label: t('smart_metering_provider')
         .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
           = f.input :username

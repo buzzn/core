@@ -2,32 +2,24 @@
   #demo-main-wz
     .modal-header
       /%button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-      %h4.modal-title= t'new_metering_point'
+      %h4.modal-title= t'new_meter'
       %ul.row.wz-step.wz-icon-bw.wz-nav-off.mar-top
         .js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter', value: "false"}}}
-          %li.col-xs-6{style: "opacity: 0.5"}
-            %span.icon-wrap.icon-wrap-xs.bg-danger
-              %i.fa.fa-flash
-            %p.text-thin= t('step') + ' 1: ' + t('define_metering_point')
+          %li.col-xs-12
+            %span.icon-wrap.icon-wrap-xs.bg-warning
+              %i.fa.fa-dashboard
+            %p.text-thin= t('step') + ' 1: ' + t('create_meter')
+        .js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter', value: "true"}}}
           %li.col-xs-6
             %span.icon-wrap.icon-wrap-xs.bg-warning
               %i.fa.fa-dashboard
-            %p.text-thin= t('step') + ' 2: ' + t('add_meter')
-        .js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter', value: "true"}}}
-          %li.col-xs-4{style: "opacity: 0.5"}
-            %span.icon-wrap.icon-wrap-xs.bg-danger
-              %i.fa.fa-flash
-            %p.text-thin= t('step') + ' 1: ' + t('define_metering_point')
-          %li.col-xs-4
-            %span.icon-wrap.icon-wrap-xs.bg-warning
-              %i.fa.fa-dashboard
-            %p.text-thin= t('step') + ' 2: ' + t('add_meter')
-          %li.col-xs-4{style: "opacity: 0.5"}
+            %p.text-thin= t('step') + ' 1: ' + t('add_meter')
+          %li.col-xs-6{style: "opacity: 0.5"}
             %span.icon-wrap.icon-wrap-xs.bg-info
               %i.fa.fa-file-text
-            %p.text-thin= t('step') + ' 3: ' + t('establish_data_connection')
+            %p.text-thin= t('step') + ' 2: ' + t('establish_data_connection')
     .modal-body
-      = simple_form_for @meter, remote: true, url: meter_update_wizard_metering_points_path(metering_point_id: params[:metering_point_id]), method: 'put'  do |f|
+      = simple_form_for @meter, remote: true, url: meter_update_wizard_meters_path(metering_point_id: params[:metering_point_id]), method: 'put'  do |f|
         - if current_user.editable_metering_points.collect(&:meter).uniq.compact.any?
           = f.input :existing_meter, as: :radio_buttons, collection: [t("create_new_meter"), t("add_existing_meter")], checked: t("create_new_meter"), label: false
           .js-dependent-fields{data: {radio: {name: 'meter[existing_meter]', value: t("add_existing_meter")}}}
@@ -46,7 +38,8 @@
 
 
         .modal-footer
-          = f.button :button, t("cancel"), class: 'btn btn-primary btn-labeled fa fa-remove', id: 'cancel', name: 'cancel', value: 'cancel'
+          .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+            = t'cancel'
           .pull-right.js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter', value: "true"}}}
             = f.button :button, t("continue"), class: 'btn btn-success btn-labeled fa fa-arrow-right', id: 'submit'
           .pull-right.js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter', value: "false"}}}

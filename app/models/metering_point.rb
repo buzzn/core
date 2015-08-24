@@ -449,12 +449,10 @@ class MeteringPoint < ActiveRecord::Base
       if self.meter
         if self.meter.metering_points.size == 1
           self.meter.destroy
-          self.meter.save
         end
       end
       FormulaPart.where(operand_id: self.id).each do |formula_part|
         formula_part.destroy
-        formula_part.save
       end
     end
 

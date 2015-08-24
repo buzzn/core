@@ -113,6 +113,9 @@ private
 
   def release_metering_points
     self.metering_points.each do |metering_point|
+      metering_point.contracts.metering_point_operators.each do |contract|
+        contract.destroy
+      end
       metering_point.meter = nil
       metering_point.save
     end

@@ -76,24 +76,24 @@
 
   .row
     .col-md-6.col-lg-6
-      - if user_signed_in? && current_user.can_update?(@metering_point) || @devices.size != 0
-        %h1.page-header.text-overflow
-          %span
-            = t('devices')
-            %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info_metering_point')}
-        .row
-          .devices
-            = render @devices
-        .row
-          - if user_signed_in? && current_user.can_update?(@metering_point)
-            .row
-              .col-lg-12.text-center
-                = @metering_point.edit_devices
+      / - if user_signed_in? && current_user.can_update?(@metering_point) || @devices.size != 0
+      /   %h1.page-header.text-overflow
+      /     %span
+      /       = t('devices')
+      /       %small
+      /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info_metering_point')}
+      /   .row
+      /     .devices
+      /       = render @devices
+      /   .row
+      /     - if user_signed_in? && current_user.can_update?(@metering_point)
+      /       .row
+      /         .col-lg-12.text-center
+      /           = @metering_point.edit_devices
 
 
       - if user_signed_in? && current_user.can_update?(@metering_point) || @users.size != 0
-        %hr
+        /%hr
         %h1.page-header.text-overflow
           %span
             = t('members')
@@ -154,19 +154,19 @@
         %hr
 
 
-      - if user_signed_in? && current_user.can_update?(@metering_point)
+      / - if user_signed_in? && current_user.can_update?(@metering_point)
 
-        %h1.page-header.text-overflow
-          %span
-            = t('data_connection')
-            %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('data_connection_info')}
-        .row
-          .contracts
-            = render @metering_point.contracts
+      /   %h1.page-header.text-overflow
+      /     %span
+      /       = t('data_connection')
+      /       %small
+      /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('data_connection_info')}
+      /   .row
+      /     .contracts
+      /       = render @metering_point.contracts
 
-          .row
-            .col-lg-12.text-center
-              = @metering_point.new_contract
+      /     .row
+      /       .col-lg-12.text-center
+      /         = @metering_point.new_contract
 
 

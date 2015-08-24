@@ -149,7 +149,7 @@ class MeteringPointDecorator < Draper::Decorator
   def new_meter
     link_to(
       content_tag(:i, t("create_meter"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
-      new_meter_path(metering_point_id: model.id),
+      meter_wizard_meters_path(metering_point_id: model.id),
       {
         :remote         => true,
         :class          => 'btn start_modal',
@@ -161,7 +161,7 @@ class MeteringPointDecorator < Draper::Decorator
 
   def new_contract
     link_to(
-      content_tag(:i, t("create_contract"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
+      content_tag(:i, t("establish_data_connection"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
       new_contract_path(metering_point_id: model.id),
       {
         :remote         => true,

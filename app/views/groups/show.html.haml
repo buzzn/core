@@ -148,16 +148,30 @@
         .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
           #dummy
 
-      - if @out_devices.flatten.any?
-        %h1.page-header.text-overflow
-          %span
-            = t('out_devices')
-            %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('out_devices_info_group')}
-        .row
-          .out-devices
-            - @out_devices.each do |device|
-              = render device
+      / - if @out_devices.flatten.any?
+      /   %h1.page-header.text-overflow
+      /     %span
+      /       = t('out_devices')
+      /       %small
+      /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('out_devices_info_group')}
+      /   .row
+      /     .out-devices
+      /       - @out_devices.each do |device|
+      /         = render device
+
+      / - if @out_metering_points.any?
+      /   %h1.page-header.text-overflow
+      /     %span
+      /       = t('out_metering_points')
+      /       %small
+      /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('out_metering_points_info_group')}
+      /   .row
+      /     .metering_points
+      /       - @out_metering_points.each do |metering_point|
+      /         = render metering_point
+
+
+
 
 
 

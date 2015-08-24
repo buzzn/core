@@ -5,28 +5,27 @@
 
 
 
+- if user_signed_in? && current_user != @profile.user
+  .panel
+    .panel-body
 
-.panel
-  .panel-body
-
-    .col-lg-2.col-md-2.col-sm-2.col-xs-5
-      - if @profile.image?
-        = image_tag @profile.image.lg, class: 'img-circle img-lg img-border'
-      - else
-        %span.fa-stack.fa-lg.fa-4x
-          %i.fa.fa-circle.fa-stack-2x
-          %i.fa.fa-user.fa-stack-1x.fa-inverse
-
-
-    .col-lg-2.col-md-3.col-sm-3.col-xs-5
-      .media-body.pad-lft
-        %p.text-3x.mar-no= @profile.first_name
-        %p.text-3x.mar-no.text-thin= @profile.last_name
+      .col-lg-2.col-md-2.col-sm-2.col-xs-5
+        - if @profile.image?
+          = image_tag @profile.image.lg, class: 'img-circle img-lg img-border'
+        - else
+          %span.fa-stack.fa-lg.fa-4x
+            %i.fa.fa-circle.fa-stack-2x
+            %i.fa.fa-user.fa-stack-1x.fa-inverse
 
 
-    .panel-control
+      .col-lg-2.col-md-3.col-sm-3.col-xs-5
+        .media-body.pad-lft
+          %p.text-3x.mar-no= @profile.first_name
+          %p.text-3x.mar-no.text-thin= @profile.last_name
 
-      - if @profile.user != current_user
+
+      .panel-control
+
         - if current_user.friend?(@profile.user)
           = link_to( t('cancel_friendship'),cancel_friendship_path(@profile.user),:data => {:confirm => t('are_you_sure')}, class: 'btn btn-warning btn-labeled fa fa-minus')
         - else
@@ -35,8 +34,8 @@
           - else
             %button.btn.btn-success.btn-labeled.fa.fa-spinner{:disabled => "disabled"}= t'waiting_for_accepting'
 
-      - if current_user.can_update?(@profile)
-        = @profile.link_to_edit
+        - if current_user.can_update?(@profile)
+          = @profile.link_to_edit
 
 - if user_signed_in? && current_user == @profile.user && @friendship_requests.any?
   .row
@@ -113,21 +112,21 @@
 
     .col-md-6.col-lg-6
 
-      - if @profile.user.friend?(current_user) || current_user.profile == @profile
-        %h1.page-header.text-overflow
-          %span
-            = t('devices')
-            %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info')}
-        .row
-          .devices
-            = render @devices
+      / - if @profile.user.friend?(current_user) || current_user.profile == @profile
+      /   %h1.page-header.text-overflow
+      /     %span
+      /       = t('devices')
+      /       %small
+      /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info')}
+      /   .row
+      /     .devices
+      /       = render @devices
 
-        - if current_user.can_create?(Device) && current_user.profile == @profile
-          .row
-            .col-lg-12.text-center
-              = new_device
-        %hr
+      /   - if current_user.can_create?(Device) && current_user.profile == @profile
+      /     .row
+      /       .col-lg-12.text-center
+      /         = new_device
+      /   %hr
 
 
       - if @friends.any?

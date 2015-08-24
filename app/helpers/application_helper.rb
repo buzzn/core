@@ -91,6 +91,18 @@ module ApplicationHelper
     )
   end
 
+  def link_to_edit_profile(profile)
+    link_to(
+      t('edit_my_profile'),
+      edit_profile_path(profile),
+      {
+        :remote       => true,
+        :class        => 'start_modal fa fa-cog',
+        'data-toggle' => "modal",
+        'data-target' => '#myModal'
+      })
+  end
+
 
 
 
