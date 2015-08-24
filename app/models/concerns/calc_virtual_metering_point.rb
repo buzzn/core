@@ -52,12 +52,12 @@ module CalcVirtualMeteringPoint
   def insert_new_mesh(data, resolution)
     result = []
     if resolution == "day_to_minutes"
-      firstTimestamp = (Time.at(data[0][0]/1000)).beginning_of_minute.in_time_zone
-      lastTimestamp = firstTimestamp.end_of_day
+      firstTimestamp = (Time.at(data[0][0]/1000).in_time_zone).beginning_of_minute
+      lastTimestamp = firstTimestamp.end_of_day.in_time_zone
       offset = 60 * 1000
     elsif resolution == "hour_to_minutes"
-      firstTimestamp = (Time.at(data[0][0]/1000)).beginning_of_minute.in_time_zone
-      lastTimestamp = firstTimestamp.end_of_hour
+      firstTimestamp = (Time.at(data[0][0]/1000).in_time_zone).beginning_of_minute
+      lastTimestamp = firstTimestamp.end_of_hour.in_time_zone
       offset = 60 * 1000
     else
       return data

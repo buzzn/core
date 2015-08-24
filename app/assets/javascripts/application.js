@@ -41,6 +41,7 @@
 //= require pace
 //= require enquire
 //= require moment
+//= require moment/locale/de
 //= require bootstrap3-typeahead.min
 //= require cookie_alert
 //= require gmaps/google

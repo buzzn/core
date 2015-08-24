@@ -81,7 +81,7 @@
           %span
             = t('devices')
             %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info')}
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info_metering_point')}
         .row
           .devices
             = render @devices
@@ -158,9 +158,9 @@
 
         %h1.page-header.text-overflow
           %span
-            = t('contracts')
+            = t('data_connection')
             %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('contracts_info_metering_point')}
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('data_connection_info')}
         .row
           .contracts
             = render @metering_point.contracts

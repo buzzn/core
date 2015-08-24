@@ -17,11 +17,11 @@
         - if group_metering_point_request.group.logo?
           = link_to image_tag(group_metering_point_request.group.logo.sm, class: "img-circle"), group_metering_point_request.group, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => group_metering_point_request.group.name }, rel: 'tooltip'
         - else
-          = link_to content_tag(:i, '', class: "fa fa-users fa-stack-1x fa-inverse"), group_metering_point_request.group, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => group_metering_point_request.group.name }, rel: 'tooltip'
+          = link_to content_tag(:i, '', class: "fa fa-users fa-4x"), group_metering_point_request.group, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => group_metering_point_request.group.name }, rel: 'tooltip'
     .col-md-1
     .col-md-8
       %h4= t'new_group_metering_point_invitation'
-      %p= link_to group_metering_point_request.metering_point.decorate.name, group_metering_point_request.metering_point
+      %p= t('do_you_want_to_join_the_group_with_your_metering_point', group: link_to(group_metering_point_request.group.name, group_metering_point_request.group), metering_point: link_to(group_metering_point_request.metering_point.decorate.name, group_metering_point_request.metering_point)).html_safe + '?'
 
       = link_to t('accept'), accept_group_metering_point_request_path(group_metering_point_request), class: 'btn btn-success btn-labeled fa fa-check'
       = link_to t('reject'), reject_group_metering_point_request_path(group_metering_point_request), class: 'btn btn-danger btn-labeled fa fa-remove'

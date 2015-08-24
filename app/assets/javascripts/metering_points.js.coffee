@@ -1136,6 +1136,7 @@ setChartToLinechart = (displaySeriesName) ->
   })
 
 setChartTitle = (containing_timestamp) ->
+  moment.locale('de')
   extremes = getExtremes(containing_timestamp)
   if actual_resolution == "hour_to_minutes"
     chart.setTitle({text: moment(extremes.min).format("DD.MM.YYYY") + " ...  " + moment(extremes.min).format("HH:mm") + " - " + moment(extremes.max).format("HH:mm")})
