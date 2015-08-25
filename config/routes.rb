@@ -116,6 +116,12 @@ Buzzn::Application.routes.draw do
 
       get :contract
       put :contract_update
+
+      get :edit_meter
+      put :edit_meter_update
+
+      get :edit_contract
+      put :edit_contract_update
     end
   end
 

@@ -1,0 +1,32 @@
+.modal-content
+  #demo-main-wz
+    .modal-header
+      /%button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+      %h4.modal-title= t'new_meter'
+      %ul.row.wz-step.wz-icon-bw.wz-nav-off.mar-top
+        %li.col-xs-6{style: "opacity: 0.5"}
+          %span.icon-wrap.icon-wrap-xs.bg-warning
+            %i.fa.fa-dashboard
+          %p.text-thin= t('step') + ' 1: ' + t('edit_meter')
+        %li.col-xs-6
+          %span.icon-wrap.icon-wrap-xs.bg-info
+            %i.fa.fa-file-text
+          %p.text-thin= t('step') + ' 2: ' + t('edit_data_connection')
+    .modal-body
+      = simple_form_for @contract, remote: true, url: edit_contract_update_wizard_meters_path(meter_id: params[:meter_id]), method: 'put'  do |f|
+        - value = @contract.id.nil? ? {} : { value: @contract.id }
+        = f.input :id, input_html: {}.merge(value), as: :hidden
+
+        = f.association :organization, input_html: {class: 'select2'}, label: t('smart_metering_provider')
+        .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
+          = f.input :username
+          = f.input :password
+        .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'amperix').first.id}
+          = f.input :sensor_id, as: :text, :input_html => {value: ''}, label_method: :sensor_id
+          = f.input :x_token, as: :text, :input_html => {value: ''}, label_method: :x_token
+
+
+        .modal-footer
+          .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+            = t'cancel'
+          = f.button :button, t("save"), class: 'btn btn-success btn-labeled fa fa-check', id: 'submit'

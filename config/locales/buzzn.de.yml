@@ -90,6 +90,7 @@ de:
   data_connection: Datenverbindung
   establish_data_connection: Datenverbindung einrichten
   finish: Erstellen
+  edit_data_connection: Datenverbindung bearbeiten
 
   meters: Messgerät
   new_meter: Neues Messgerät
