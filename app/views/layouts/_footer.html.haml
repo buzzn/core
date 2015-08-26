@@ -15,7 +15,7 @@
         %button.btn.btn-sm.btn-dark.btn-active-success Checkout
   / Visible when footer positions are static
   / ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  .hide-fixed.pull-right.pad-rgt= APP_VERSION
+  .hide-fixed.pull-right.pad-rgt= APP_VERSION if user_signed_in? && current_user.has_role?(:admin)
   / ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   / Remove the class name "show-fixed" and "hide-fixed" to make the content always appears.
   / ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

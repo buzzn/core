@@ -8,7 +8,7 @@
     #myModal.modal.fade.in{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
       .modal-dialog
     - if !request.original_url.end_with?('kiosk')
-      = display_cookie_alert
+      /= display_cookie_alert
       #container.effect{ class: "#{(content_for?(:aside) ? 'aside-in aside-left aside-bright' : nil)} mainnav-lg"}
         = render 'layouts/navbar'
         = content_tag :div, class: "pusher", data: { pusherhost: Rails.application.secrets.pusher_host, pusherkey: Rails.application.secrets.pusher_key } do

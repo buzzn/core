@@ -119,6 +119,35 @@
 #page-content
 
   .row
+    .col-sm-6.col-md-6.col-lg-6
+      %h1.page-header.text-overflow
+        %span
+          = t('live_chart')
+          %small
+            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('live_chart_info')}
+      .panel
+        .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
+          #dummy
+
+
+
+    - if user_signed_in?
+      .col-sm-6.col-md-6.col-lg-6
+        %h1.page-header.text-overflow
+          %span
+            = t('comments')
+        .panel.comments-panel
+          #demo-chat-body.collapse.in
+            .nano{:style => "height:410px"}
+              .nano-content.pad-all.comments-content
+                %ul.list-unstyled.media-block.comments-all
+                  = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
+            .panel-footer
+              = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "") }
+
+
+
+  .row
     .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id}
       %h1.page-header.text-overflow
         %span
@@ -137,16 +166,7 @@
 
 
 
-  .row
-    .col-sm-6.col-md-6.col-lg-6
-      %h1.page-header.text-overflow
-        %span
-          = t('live_chart')
-          %small
-            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('live_chart_info')}
-      .panel
-        .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
-          #dummy
+
 
       / - if @out_devices.flatten.any?
       /   %h1.page-header.text-overflow
@@ -178,19 +198,7 @@
 
 
 
-    - if user_signed_in?
-      .col-sm-6.col-md-6.col-lg-6
-        %h1.page-header.text-overflow
-          %span
-            = t('comments')
-        .panel.comments-panel
-          #demo-chat-body.collapse.in
-            .nano{:style => "height:410px"}
-              .nano-content.pad-all.comments-content
-                %ul.list-unstyled.media-block.comments-all
-                  = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
-            .panel-footer
-              = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "") }
+
 
 
 
