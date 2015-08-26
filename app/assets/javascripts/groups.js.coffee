@@ -459,9 +459,7 @@ $(".comments-panel").ready ->
   pusher = new Pusher($(".pusher").data('pusherkey'))
 
   channel = pusher.subscribe("Group_#{group_id}")
-  console.log 'subscribed to Group_' + group_id
   channel.bind "new_comment", (comment) ->
-    console.log 'comment arrived from socket: ' + comment.socket_id
     if pusher.connection.socket_id != comment.socket_id
       html = '' +
         '<li class="mar-btm comment" id="comment_' + comment.id + '">
@@ -484,6 +482,16 @@ $(".comments-panel").ready ->
           </div>
         </li>'
       $(".comments-all").append(html).hide().show('slow');
+      $(".comments-content").animate({
+        scrollTop: $("#comment_" + comment.id).offset().top
+      }, 1000)
+    else
+      $("#comment_" + comment.id).waitUntilExists( ->
+        $(".comments-content").animate({
+          scrollTop: $("#comment_" + comment.id).offset().top
+        }, 1000)
+      )
+
 
   $(this).on "ajax:beforeSend", (evt, xhr, settings) ->
     settings.data += '&socket_id=' + pusher.connection.socket_id
