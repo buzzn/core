@@ -1,28 +1,4 @@
-jQuery ->
-  # Create a comment
-  $(".comment-form")
-    .on "ajax:beforeSend", (evt, xhr, settings) ->
-      $(this).find('textarea')
-        .addClass('uneditable-input')
-        .attr('disabled', 'disabled');
-    .on "ajax:success", (evt, data, status, xhr) ->
-      $(this).find('textarea')
-        .removeClass('uneditable-input')
-        .removeAttr('disabled', 'disabled')
-        .val('');
-    .on "ajax:error", (evt, data, status, xhr) ->
-      $(this).find('textarea')
-        .removeClass('uneditable-input')
-        .removeAttr('disabled', 'disabled');
 
-  # Delete a comment
-  $(document)
-    .on "ajax:beforeSend", ".comment", ->
-      $(this).fadeTo('fast', 0.5)
-    .on "ajax:success", ".comment", ->
-      $(this).hide('fast')
-    .on "ajax:error", ".comment", ->
-      $(this).fadeTo('fast', 1)
 
 
 class BubbleChart
@@ -475,6 +451,59 @@ $(".bubbles_container").ready ->
 #       $(".circle-empty").addClass("fa fa-circle-o")
 
 
+$(".comments-panel").ready ->
+  group_id = $(".bubbles_container").attr('data-content')
+  Pusher.host    = $(".pusher").data('pusherhost')
+  Pusher.ws_port = 8080
+  Pusher.wss_port = 8080
+  pusher = new Pusher($(".pusher").data('pusherkey'))
+
+  channel = pusher.subscribe("Group_#{group_id}")
+  console.log 'subscribed to Group_' + group_id
+  channel.bind "new_comment", (comment) ->
+    console.log 'comment arrived from socket: ' + comment.socket_id
+    if pusher.connection.socket_id != comment.socket_id
+      html = '' +
+        '<li class="mar-btm comment" id="comment_' + comment.id + '">
+          <div class="media-left">
+            <img alt="' + comment.img_alt + '" class="img-circle img-sm" src="' + comment.image + '"/>
+          </div>
+          <div class="media-body pad-hor speech-left">
+            <div class="speech">
+              <a class="media-heading" href="' + comment.profile_href + '">
+                ' + comment.user_name + '
+              </a>
+              <p>
+                ' + comment.body + '
+              </p>
+              <p class="speech-time time">
+                <i class="fa fa-clock-o fa-fw"></i>
+                ' + comment.created_at + '
+              </p>
+            </div>
+          </div>
+        </li>'
+      $(".comments-all").append(html).hide().show('slow');
+
+  $(this).on "ajax:beforeSend", (evt, xhr, settings) ->
+    settings.data += '&socket_id=' + pusher.connection.socket_id
+    $(this).find('textarea')
+      .addClass('uneditable-input')
+      .attr('disabled', 'disabled');
+  $(this).on "ajax:success", (evt, data, status, xhr) ->
+    $(this).find('textarea')
+      .removeClass('uneditable-input')
+      .removeAttr('disabled', 'disabled')
+      .val('');
+  $(this).on "ajax:error", (evt, data, status, xhr) ->
+    $(this).find('textarea')
+      .removeClass('uneditable-input')
+      .removeAttr('disabled', 'disabled');
+
+
+
+
+
 addCommas = (nStr) ->
   nStr += ""
   x = nStr.split(".")
@@ -502,6 +531,14 @@ clearTimers = ->
 
 $(document).on('page:before-change', clearTimers)
 $(document).on('page:before-change', $(".bubbles_container").stop())
+# Delete a comment
+$(document)
+  .on "ajax:beforeSend", ".comment", ->
+    $(this).fadeTo('fast', 0.5)
+  .on "ajax:success", ".comment", ->
+    $(this).hide('fast')
+  .on "ajax:error", ".comment", ->
+    $(this).fadeTo('fast', 1)
 
 
 
