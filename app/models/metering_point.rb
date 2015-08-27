@@ -172,11 +172,11 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def amperix?
-    metering_point_operator_contract.organization.slug == "amperix" && self.smart?
+    self.smart? && metering_point_operator_contract && metering_point_operator_contract.organization.slug == "amperix"
   end
 
   def discovergy?
-    metering_point_operator_contract.organization.slug == "discovergy" && self.smart?
+    self.smart? && metering_point_operator_contract && metering_point_operator_contract.organization.slug == "discovergy"
   end
 
   def data_source

@@ -19,9 +19,9 @@ $(".show_global_tour").ready ->
     ]
   })
 
-  tour.init()
+  #tour.init()
 
-  tour.start()
+  #tour.start()
 
 $(".show_meter_tour").ready ->
   tour = new Tour({
@@ -37,6 +37,6 @@ $(".show_meter_tour").ready ->
     ]
   })
 
-  tour.init()
+  #tour.init()
 
-  tour.start()
+  #tour.start()
