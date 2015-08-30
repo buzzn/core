@@ -141,6 +141,14 @@ de:
   localpool: Localpool
   send_invitations: Einladungen versenden
   invite_users: Benutzer einladen
+  invitation_sent_successfully_to: "Einladung an %{email} wurde gesendet."
+  invites_you_to_join_the_group: "lädt Dich ein der Gruppe %{group_name} beizutreten."
+  to_accept_the_invitation_please_click_this_link_and_follow_the_instructions: "Zum Akzeptieren der Einladung klicke bitte auf diesen Link und folge den Anweisungen:"
+  join: Beitreten
+  if_you_want_to_refuse_this_invitation_you_can_ignore_this_email: Wenn Du die Einladung ablehnen willst kannst Du diese Email ignorieren.
+  new_group_invitaion: Neue Gruppen-Einladung
+  set_your_password: Gebe Dein Passwort ein
+  set_my_password: Mein Passwort speichern
 
   new_contract: Neuer Vertrag
   contracts: Verträge

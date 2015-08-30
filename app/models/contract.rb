@@ -103,24 +103,22 @@ private
         if api_call['status'] == 'ok'
           self.update_columns(valid_credentials: true)
           #self.send_notification_credentials(true)
-           if self.group
-              self.group.metering_points.each do |metering_point|
-                metering_point.meter.save
-              end
-            end
-            if self.metering_point && self.metering_point.meter
-              self.metering_point.meter.save
+          if self.group
+            self.group.metering_points.each do |metering_point|
+              metering_point.meter.save if metering_point.meter
             end
           end
+          if self.metering_point && self.metering_point.meter
+            self.metering_point.meter.save
+          end
+        end
       elsif self.organization.slug == 'amperix' # no automated group check implemented yet
-        puts "amp"
         amperix = Amperix.new(self.username, self.password)
         api_call = amperix.mySmartGridOberlFaraLive
         if api_call != ""
           self.update_columns(valid_credentials: true)
         end
       else
-        puts "NOOOOO NOOOOO"
         self.update_columns(valid_credentials: false)
       end
     end

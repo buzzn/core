@@ -45,7 +45,7 @@ class MeteringPointDecorator < Draper::Decorator
 
   def name_with_users
     if model.users.any?
-      model.name + " (" + model.users.collect{|user| user.profile.first_name}.join(", ") + ")"
+      model.name + " (" + model.users.collect{|user| if !(user.created_by_invite? && !user.invitation_accepted?) then user.profile.first_name end}.join(", ") + ")"
     else
       model.name
     end

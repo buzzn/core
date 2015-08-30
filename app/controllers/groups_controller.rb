@@ -64,17 +64,55 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     authorize_action_for @group
     #byebug
-    @meter = Meter.find(params[:group][:new_meters])
-    @metering_point = @meter.metering_points.first
-    @group_invitation = GroupMeteringPointRequest.new(user: @metering_point.managers.first, metering_point: @metering_point, group: @group, mode: 'invitation')
-    if @group_invitation.save
-      flash[:notice] = t('sent_group_metering_point_request_successfully')
+    @found_meter = Meter.where(manufacturer_product_serialnumber: params[:group][:new_meters])
+    if @found_meter.any?
+      @meter = @found_meter.first
+      @metering_point = @meter.metering_points.first
+      @group_invitation = GroupMeteringPointRequest.new(user: @metering_point.managers.first, metering_point: @metering_point, group: @group, mode: 'invitation')
+      if @group_invitation.save
+        flash[:notice] = t('sent_group_metering_point_request_successfully')
+      else
+        flash[:error] = t('unable_to_send_group_metering_point_request')
+      end
     else
-      flash[:error] = t('unable_to_send_group_metering_point_request')
+      redirect_to send_invitations_via_email_group_path(manufacturer_product_serialnumber: params[:group][:new_meters])
     end
-    #byebug
   end
   authority_actions :send_invitations_update => 'update'
+
+  def send_invitations_via_email
+    @group = Group.find(params[:id])
+    @meter = Meter.new(manufacturer_product_serialnumber: params[:manufacturer_product_serialnumber])
+    authorize_action_for @group
+  end
+  authority_actions :send_invitations_via_email => 'update'
+
+  def send_invitations_via_email_update
+    @group = Group.find(params[:id])
+    authorize_action_for @group
+    @manufacturer_product_serialnumber = params[:group][:manufacturer_product_serialnumber]
+    #byebug
+    if params[:group][:email] == "" || params[:group][:email_confirmation] == ""
+      @group.errors.add(:email, I18n.t("cant_be_blank"))
+      @group.errors.add(:email_confirmation, I18n.t("cant_be_blank"))
+      render action: 'send_invitations_via_email', manufacturer_product_serialnumber: @manufacturer_product_serialnumber
+    elsif params[:group][:email] != params[:group][:email_confirmation]
+      @group.errors.add(:email_confirmation, I18n.t("doesnt_match_with_email"))
+      render action: 'send_invitations_via_email', manufacturer_product_serialnumber: @manufacturer_product_serialnumber
+    else
+      @email = params[:group][:email]
+      @new_user = User.invite!(email: @email)
+      @metering_point = MeteringPoint.create!(mode: 'in', name: 'Wohnung', readable: 'friends')
+      @metering_point.users << @new_user
+      @new_user.add_role(:manager, @metering_point)
+      @meter = Meter.create!(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
+      @meter.metering_points << @metering_point
+      @group.metering_points << @metering_point
+      @meter.save!
+      flash[:notice] = t('invitation_sent_successfully_to', email: @email)
+    end
+  end
+  authority_actions :send_invitations_via_email_update => 'update'
 
   def destroy
     @group = Group.find(params[:id])

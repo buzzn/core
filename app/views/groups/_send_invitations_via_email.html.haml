@@ -3,8 +3,11 @@
     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
     %h4.modal-title= t'send_invitations'
   .modal-body
-    = simple_form_for @group, remote: true, url: send_invitations_update_group_path, method: 'put' do |f|
-      = f.input :new_meters, input_html: { value: ''}
+    = simple_form_for @group, remote: true, url: send_invitations_via_email_update_group_path, method: 'put' do |f|
+
+      = f.input :manufacturer_product_serialnumber, input_html: {value: @meter.manufacturer_product_serialnumber}, readonly: true
+      = f.input :email, input_html: { value: ''}
+      = f.input :email_confirmation, input_html: { value: ''}
       .modal-footer
         .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
           = t'cancel'

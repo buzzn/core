@@ -1,0 +1,15 @@
+de:
+  devise:
+    invitations:
+      send_instructions: 'Eine Einadung wurde an %{email} gesendet.'
+      invitation_token_invalid: 'The invitation token provided is not valid!'
+      updated: 'Dein Passwort wurde erfolgreich gespeichert. Du bist jetzt eingeloggt.'
+      no_invitations_remaining: "Es ist keine Einladung vorhanden."
+      invitation_removed: 'Deine Einladung wurde zurückgezogen.'
+      new:
+        header: "Einladung senden"
+        submit_button: "Einladung senden"
+      edit:
+        header: "Meine Registrierung"
+        submit_button: "Speichern"
+

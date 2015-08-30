@@ -93,6 +93,8 @@ Buzzn::Application.routes.draw do
       get :get_scores
       get :send_invitations
       put :send_invitations_update
+      get :send_invitations_via_email
+      put :send_invitations_via_email_update
     end
   end
 
@@ -124,6 +126,7 @@ Buzzn::Application.routes.draw do
       put :edit_contract_update
     end
   end
+
 
 
   root controller: 'profiles', action: 'redirect_to_current_user'

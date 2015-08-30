@@ -118,6 +118,7 @@ de:
         description: Beschreibung
         metering_points: Zählpunkte
         mode: Zugang
+        new_meters: Einzuladende Zählernummer
       meter:
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname
