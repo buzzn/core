@@ -12,4 +12,8 @@ de:
       edit:
         header: "Meine Registrierung"
         submit_button: "Speichern"
+    mailer:
+      invitation_instructions:
+        subject: 'Einladung zur buzzn App'
+
 

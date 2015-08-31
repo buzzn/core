@@ -81,6 +81,7 @@ class GroupsController < ApplicationController
   authority_actions :send_invitations_update => 'update'
 
   def send_invitations_via_email
+    #byebug
     @group = Group.find(params[:id])
     @meter = Meter.new(manufacturer_product_serialnumber: params[:manufacturer_product_serialnumber])
     authorize_action_for @group
@@ -94,10 +95,13 @@ class GroupsController < ApplicationController
     #byebug
     if params[:group][:email] == "" || params[:group][:email_confirmation] == ""
       @group.errors.add(:email, I18n.t("cant_be_blank"))
-      @group.errors.add(:email_confirmation, I18n.t("cant_be_blank"))
-      render action: 'send_invitations_via_email', manufacturer_product_serialnumber: @manufacturer_product_serialnumber
+      @group.errors.add(:email_confirmation,  I18n.t("cant_be_blank"))
+      @meter = Meter.new(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
+      render action: 'send_invitations_via_email'
     elsif params[:group][:email] != params[:group][:email_confirmation]
+      @group.errors.add(:email, I18n.t("doesnt_match_with_confirmation"))
       @group.errors.add(:email_confirmation, I18n.t("doesnt_match_with_email"))
+      @meter = Meter.new(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
       render action: 'send_invitations_via_email', manufacturer_product_serialnumber: @manufacturer_product_serialnumber
     else
       @email = params[:group][:email]

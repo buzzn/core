@@ -149,6 +149,9 @@ de:
   new_group_invitaion: Neue Gruppen-Einladung
   set_your_password: Gebe Dein Passwort ein
   set_my_password: Mein Passwort speichern
+  cant_be_blank: Muss ausgefüllt wurden
+  doesnt_match_with_email: Stimmt nicht mit der Email überein
+  doesnt_match_with_confirmation: Stimmt nicht mit der Bestätigung überein
 
   new_contract: Neuer Vertrag
   contracts: Verträge
