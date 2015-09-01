@@ -8,6 +8,7 @@ class MeteringPointsController < ApplicationController
     @devices        = @metering_point.devices
     @group          = @metering_point.group
     @meter          = @metering_point.meter
+    @requests       = @metering_point.received_user_requests
     if !@metering_point.readable_by_world?
       if user_signed_in?
         authorize_action_for(@metering_point)
@@ -85,6 +86,27 @@ class MeteringPointsController < ApplicationController
     authorize_action_for(@metering_point, action: 'edit_devices')
   end
   authority_actions :edit_readings => 'update'
+
+  def cancel_membership
+    @metering_point = MeteringPoint.find(params[:id])
+    @user = User.find(params[:user_id])
+    @metering_point.users.delete(@user)
+    redirect_to metering_point_path(@metering_point)
+  end
+
+  def send_invitations
+    @metering_point = MeteringPoint.find(params[:id])
+  end
+
+  def send_invitations_update
+    @metering_point = MeteringPoint.find(params[:id])
+    @new_user = User.find(params[:metering_point][:new_users])
+    if MeteringPointUserRequest.create(user: @new_user, metering_point: @metering_point, mode: 'invitation')
+      flash[:notice] = t('sent_metering_point_user_invitation_successfully')
+    else
+      flash[:error] = t('unable_to_send_metering_point_user_invitation')
+    end
+  end
 
 
 

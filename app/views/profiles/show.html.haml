@@ -53,6 +53,14 @@
           .group_invitations
             = render @group_invitations
 
+- if user_signed_in? && current_user == @profile.user && @metering_point_invitations.any?
+  .row
+    .col-lg-12
+      .panel.panel-colorful.panel-warning
+        .panel-body
+          .metering_point_invitations
+            = render @metering_point_invitations
+
 
 
 

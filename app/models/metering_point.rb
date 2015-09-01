@@ -68,6 +68,10 @@ class MeteringPoint < ActiveRecord::Base
     GroupMeteringPointRequest.where(metering_point_id: self.id).first
   end
 
+  def received_user_requests
+    MeteringPointUserRequest.where(metering_point: self).requests
+  end
+
   def last_power
     if self.virtual && self.formula_parts.any?
       operands = get_operands_from_formula

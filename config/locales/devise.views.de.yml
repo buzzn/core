@@ -32,6 +32,8 @@ de:
       invitation_instructions:
         hello: "Hallo %{email},"
         someone_invited_you: "jemand hat Dich zur buzzn App eingeladen: %{url}. Du kannst die Einladung annehmen, indem Du auf folgenden Link klickst:"
+        group_invited_you: "Du wurdest zur Gruppe %{group} in der buzzn App eingeladen. Du kannst die Einladung annehmen, indem Du auf folgenden Link klickst:"
+        user_invited_you: "%{user} hat Dich zur buzzn App eingeladen: %{url}. Du kannst die Einladung annehmen, indem Du auf folgenden Link klickst:"
         accept: Einladung annehmen
         ignore: "Wenn Du die Einladung nicht annehmen willst, ignoriere diese Email einfach. Es wird für Dich solange kein Konto angelegt, bis Du die Linkadresse besucht und ein Passwort angelegt hast."
     passwords:

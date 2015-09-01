@@ -1,6 +1,6 @@
 class ProfilesController < ApplicationController
   before_filter :authenticate_user!
-  respond_to :html, :js
+  respond_to :html, :js, :json
 
 
   def index
@@ -13,6 +13,7 @@ class ProfilesController < ApplicationController
     @friends              = @profile.user.friends.decorate
     @metering_points      = @profile.metering_points
     @friendship_requests  = @profile.user.received_friendship_requests
+    @metering_point_invitations = @profile.user.received_metering_point_user_requests
     @group_invitations    = @profile.user.received_group_metering_point_requests
     @groups               = @metering_points.collect(&:group).compact.uniq{|group| group.id} # TODO also include group interested
     @devices              = Device.with_role(:manager, @profile.user).decorate

@@ -25,6 +25,16 @@ de:
   your_metering_point_is_offline_now: "Dein Zählpunkt '%{metering_point_name}' ist offline."
   define_metering_point: Zählpunkt definieren
   smart_metering_provider: Smart Metering Anbieter
+  join_this_metering_point: Diesem Zählpunkt beitreten
+  leave_this_metering_point: Diesen Zählpunkt verlassen
+  new_metering_point_user_invitation: Neue Zählpunkteinladung
+  do_you_want_to_join_the_metering_point: "Möchtest Du dem Zählpunkt %{metering_point} beitreten"
+  sent_metering_point_user_invitation_successfully: Die Zählpunkteinladung wurde erfolgreich versendet.
+  unable_to_send_metering_point_user_invitation: Das Senden der Zählpunkteinladung ist nicht möglich.
+  invite_friends_to_join_this_metering_point: Freunde zu diesem Zählpunkt einladen
+  accepted_metering_point_user_request: Zählpunkteinladung akzeptiert
+  rejected_metering_point_user_request: Zählpunkteinladung abgelehnt
+  sent_metering_point_user_request: Zählpunktanfrage gesendet
 
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler

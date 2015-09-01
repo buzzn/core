@@ -1,0 +1,11 @@
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'invite_friends_to_join_this_metering_point'
+  .modal-body
+    = simple_form_for @metering_point, remote: true,  url: send_invitations_update_metering_point_path, method: 'put'  do |f|
+      = f.input :new_users, collection: current_user.friends - @metering_point.users, input_html: { class: 'select2'}, label: false, selected: current_user.friends.first
+      .modal-footer
+        .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+          = t'cancel'
+        = f.button :button, t('save'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check'

@@ -34,6 +34,9 @@ Buzzn::Application.routes.draw do
       get :update_parent
       get :latest_power
       get :get_scores
+      get :cancel_membership
+      get :send_invitations
+      put :send_invitations_update
     end
   end
 
@@ -76,6 +79,13 @@ Buzzn::Application.routes.draw do
   end
 
   resources :group_metering_point_requests do
+    member do
+      get :accept
+      get :reject
+    end
+  end
+
+  resources :metering_point_user_requests do
     member do
       get :accept
       get :reject

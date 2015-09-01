@@ -47,6 +47,11 @@ class User < ActiveRecord::Base
     GroupMeteringPointRequest.where(user: self).invitations
   end
 
+  def received_metering_point_user_requests
+    MeteringPointUserRequest.where(user: self).invitations
+  end
+
+
 
 
   def editable_metering_points

@@ -219,6 +219,18 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
+  def new_invitations
+    link_to(
+      t("invite_friends_to_join_this_metering_point"),
+      send_invitations_metering_point_path,
+      {
+        :remote         => true,
+        :class          => 'btn start_modal btn-success btn-labeled fa fa-plus',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal'
+      })
+  end
+
 
 
 

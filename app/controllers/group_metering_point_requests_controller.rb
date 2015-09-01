@@ -30,7 +30,7 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
         redirect_to group_path(@group_metering_point_request.group)
       end
     else
-      flash[:error] = t('unable_to_accepted_friendship_request')
+      flash[:error] = t('unable_to_accept_group_metering_point_request')
       redirect_to group_path(@group_metering_point_request.group)
     end
   end
@@ -44,7 +44,7 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
         redirect_to group_path(@group_metering_point_request.group)
       end
     else
-      flash[:error] = t('unable_to_rejected_group_metering_point_request')
+      flash[:error] = t('unable_to_reject_group_metering_point_request')
       redirect_to group_path(@group_metering_point_request.group)
     end
   end
