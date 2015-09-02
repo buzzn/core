@@ -501,6 +501,7 @@ de:
   transmission_system_operator_contract: Übertragungsnetzbetreiber Vertrag
 
   virtual: Virtuell
+  virtual_metering_point: Virtueller Zählpunkt
   image: Bild
   owner: Eigentümer
   meter_size: Zählergröße
@@ -620,9 +621,11 @@ de:
   out_devices_info_group: "Hier siehst Du alle Geräte, die für diese Gruppe den Strom erzeugen."
   group_manager_info: "Eine Gruppe wird von Administratoren verwaltet. Diese entscheiden z. B. wer in die Gruppe aufgenommen wird."
   contracts_info_contracting_party: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst Du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Vertragspartner zugeordnet sind."
-  metering_point_virtual_info: "Hier erstellst Du die Formel, mithilfe derer der virtuelle Zähler berechnet wird. Jede Formel besteht aus einzelnen Summanden. Jeder Summand besteht aus Vorzeichen (Operator) und Zählpunkt (Operand)."
+  metering_point_formula_info: "Hier erstellst Du die Formel, mithilfe derer der virtuelle Zähler berechnet wird. Jede Formel besteht aus einzelnen Summanden. Jeder Summand besteht aus Vorzeichen (Operator) und Zählpunkt (Operand)."
   formula_parts_info: "Ein virtueller Zählpunkt besitzt kein direkt ablesbares Messgerät. Stattdessen wird sein Strom aus den Daten anderer Zählpunkte berechnet. Hier findest Du die Zählpunkte, aus denen sich der virtuelle Zählpunkt zusammensetzt."
   metering_point_wizard_users_info: "Wenn Dein persönliches Stromverhalten Einfluss auf diesen Zählpunkt hat, z. B. weil Dein Verbrauch oder die Produktion Deine Erzeugungsanlage an ihm erfasst wird, solltest Du Dich hier als Mitglied dem Zählpunkt hinzufügen. Es können dem Zählpunkt auch weitere Personen, z. B. Deine Familienmitglieder oder Mitinhaber einer Stromerzeugungsanlage, hinzugefügt werden. Falls Du diesen Zählpunkt nur verwaltest aber dort persönlich keinen Strom beziehst bzw. produzierst, solltest Du Dich NICHT dem Zählpunkt zuordnen."
+  metering_point_virtual_info: "Ein virtueller Zählpunkt besitzt kein direkt ablesbares Messgerät. Stattdessen wird sein Strom aus den Daten anderer Zählpunkte berechnet. Die Formel zur Berechnung kann weiter unten eingegeben werden."
+
 
   cookie_text: "Wir verwenden Cookies, um unseren Service zu verbessern und zu personalisieren. Wenn Du unsere Website nutzt erklärst Du Dich mit der Verwendung von Cookies einverstanden. Es kann sein, dass schon jetzt Cookies gespeichert wurden. In unserer Cookie Richtlinie findest Du mehr Informationen. "
   must_be_a_GIF_JPG_or_PNG: "Muss vom Typ GIF, JPG oder PNG sein."

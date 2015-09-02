@@ -167,22 +167,32 @@ de:
         forecast_watt_hour_pa: Jahresverbrauch (Prognose) in kWh
         price_cents: Preis (Cent)
 
-
+    placeholders:
+      metering_point:
+        name: "Frei wählbar, z.B. 'Wohnung' oder 'Solaranlage' - KEINE Adressangaben!"
+        uid: "DE1234567890123456789012345678901"
+      metering_point_operator_contract:
+        username: "jemand@beispiel.de"
+      meter:
+        manufacturer_product_serialnumber: "12345678"
+      profile:
+        user_name: "Frei wählbar"
+      user:
+        email: "Deine@Email.de"
+        password: "Mindestens 8 Zeichen"
 
     hints:
       defaults:
         username: 'Benutzername, mit dem Du Dich einloggen kannst.'
       metering_point:
-        image: Ein Bild von dem Zählpunkt erleichtert die übersichtlichkeit.
-        name: "Name des Zählpunkts, z. B. 'Wohnung' oder 'Solaranlage'. Bitte hier KEINE Adressangaben!"
-        virtual: "Ein Zählpunkt ist virtuell, wenn er physikalisch nicht existiert, sondern aus anderen Daten berechnet wird. Die Formel zur Berechnung kann weiter unten eingegeben werden."
-        uid: "Zählpunkt ist die Bezeichnung in der Energiewirtschaft für den Punkt, an dem Versorgungsleistungen an Verbraucher geleistet oder von Erzeugern bezogen werden. z.B. DE 000562 66802 AO6G56M11SN51G21M24S"
+        #uid: "Zählpunkt ist die Bezeichnung in der Energiewirtschaft für den Punkt, an dem Versorgungsleistungen an Verbraucher geleistet oder von Erzeugern bezogen werden. z.B. DE 000562 66802 AO6G56M11SN51G21M24S"
       metering_point_operator_contract:
         username: 'Benutzername, mit dem du dich beim Messstellenbetreiber einloggen kannst.'
       device:
         image: "Ein Bild von Deinem Gerät darf maximal 2 MB groß und nur vom Typ GIF, JPG und PNG sein."
       profile:
         image: "Ein Bild von Dir darf maximal 2 MB groß und nur vom Typ GIF, JPG und PNG sein."
+
 
 
 

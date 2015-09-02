@@ -1,6 +1,11 @@
 -# = f.input :image
 = f.input :mode, collection: MeteringPoint.modes, include_blank: false, as: :radio_buttons, label: false
-= f.input :virtual
+%span
+  = t('virtual_metering_point')
+  %small
+    %i.normal-info-circle.fa.fa-info-circle{'data-content' => t('metering_point_virtual_info')}
+= f.input :virtual, label: false
+
 = f.input :name
 = f.input :forecast_kwh_pa
 
@@ -14,7 +19,7 @@
     %span
       = t('formula')
       %small
-        %i.normal-info-circle.fa.fa-info-circle{'data-content' => t('metering_point_virtual_info')}
+        %i.normal-info-circle.fa.fa-info-circle{'data-content' => t('metering_point_formula_info')}
   #formula_parts
     = f.simple_fields_for :formula_parts do |formula_part|
       = render 'formula_part_fields', :f => formula_part
