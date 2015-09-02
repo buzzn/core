@@ -32,6 +32,8 @@ class MeteringPoint < ActiveRecord::Base
 
   before_destroy :delete_meter
 
+  after_save :copy_contract, if: :in_localpool?
+
   has_many :dashboard_metering_points
   has_many :dashboards, :through => :dashboard_metering_points
 
@@ -72,6 +74,10 @@ class MeteringPoint < ActiveRecord::Base
     MeteringPointUserRequest.where(metering_point: self).requests
   end
 
+  def in_localpool?
+    self.group && self.group.mode == "localpool"
+  end
+
   def last_power
     if self.virtual && self.formula_parts.any?
       operands = get_operands_from_formula
@@ -99,8 +105,7 @@ class MeteringPoint < ActiveRecord::Base
       end
       return {:power => 0, :timestamp => 0}
     else
-      #metering_point = MeteringPoint.find(metering_point_id)
-      result =  Crawler.new.getDataLive(self, self.metering_point_operator_contract,self.meter)
+      result = Crawler.new.getDataLive(self, self.metering_point_operator_contract, self.meter)
       return result
     end
   end
@@ -180,7 +185,7 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def discovergy?
-    self.smart? && metering_point_operator_contract && metering_point_operator_contract.organization.slug == "discovergy"
+    self.smart? && metering_point_operator_contract && (metering_point_operator_contract.organization.slug == "discovergy" || metering_point_operator_contract.organization.slug == "buzzn-metering")
   end
 
   def data_source
@@ -457,6 +462,15 @@ class MeteringPoint < ActiveRecord::Base
       end
       FormulaPart.where(operand_id: self.id).each do |formula_part|
         formula_part.destroy
+      end
+    end
+
+    def copy_contract
+      if self.contracts.metering_point_operators.empty?
+        @contract = self.group.contracts.metering_point_operators.first
+        @contract2 = Contract.new(mode: @contract.mode, price_cents: @contract.price_cents, organization: @contract.organization, username: @contract.username, password: @contract.password)
+        @contract2.metering_point = self
+        @contract2.save
       end
     end
 

@@ -570,6 +570,9 @@ $(".group-chart").ready ->
             labelStyle:
               color: 'black'
               'font-size': '20pt'
+            style:
+              backgroundColor: 'grey'
+              opacity: '0.4'
           xAxis:
             lineWidth: 1
             tickWidth: 1
@@ -611,7 +614,8 @@ $(".group-chart").ready ->
               events:
                 click: (event) ->
                   zoomInGroup(event.point.x)
-              stacking: 'normal'
+              #stacking: 'normal'
+
           tooltip:
             shared: true
             pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
@@ -625,6 +629,7 @@ $(".group-chart").ready ->
               month:"%B %Y",
               year:"%Y"
           series: data
+
         )
         # chart.addSeries(
         #   name: data[0].name
@@ -666,8 +671,11 @@ $(".group-chart").ready ->
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
+        chart.hideLoading()
+      .error (jqXHR, textStatus, errorThrown) ->
+        chart.hideLoading()
+        console.log textStatus
 
-    chart.hideLoading()
     #checkIfPreviousDataExistsGroup()
     #checkIfNextDataExistsGroup()
     #checkIfZoomOutGroup()
@@ -692,7 +700,10 @@ $(".group-chart").ready ->
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
-    chart.hideLoading()
+        chart.hideLoading()
+      .error (jqXHR, textStatus, errorThrown) ->
+        chart.hideLoading()
+        console.log textStatus
     #checkIfPreviousDataExistsGroup()
     #checkIfNextDataExistsGroup()
     #checkIfZoomOutGroup()
@@ -733,12 +744,14 @@ $(".group-chart").ready ->
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
+        chart.hideLoading()
       .error (jqXHR, textStatus, errorThrown) ->
+        chart.hideLoading()
         console.log textStatus
     #checkIfPreviousDataExistsGroup()
     #checkIfNextDataExistsGroup()
     #checkIfZoomOutGroup()
-    chart.hideLoading()
+
 
 
 
@@ -904,21 +917,24 @@ zoomIn = (timestamp) ->
       actual_resolution = "month_to_days"
       setChartToBarchart()
     containing_timestamp = timestamp
-    $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
-      if data[0].data[0] == undefined
+    $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataTpe: 'json'})
+      .success (data) ->
+        if data[0].data[0] == undefined
+          chart.hideLoading()
+          return
+        chart.series[0].setData(data[0].data)
+        new_point_width = setPointWidth()
+        chart.series[0].update({pointWidth: new_point_width})
+        chart.xAxis[0].update(getExtremes(containing_timestamp), true)
+        chart_data_min_x = chart.series[0].data[0].x
+        setChartTitle(chart_data_min_x)
+        #checkIfPreviousDataExists()
+        #checkIfNextDataExists()
+        #checkIfZoomOut()
         chart.hideLoading()
-        return
-      chart.series[0].setData(data[0].data)
-      new_point_width = setPointWidth()
-      chart.series[0].update({pointWidth: new_point_width})
-      chart.xAxis[0].update(getExtremes(containing_timestamp), true)
-    ).success ->
-      chart_data_min_x = chart.series[0].data[0].x
-      setChartTitle(chart_data_min_x)
-      #checkIfPreviousDataExists()
-      #checkIfNextDataExists()
-      #checkIfZoomOut()
-      chart.hideLoading()
+      .error (jqXHR, textStatus, errorThrown) ->
+        chart.hideLoading()
+        console.log textStatus
 
 zoomInDashboard = (timestamp) ->
   chart.showLoading()
@@ -1007,10 +1023,14 @@ zoomInGroup = (timestamp) ->
         if !seriesVisible
           chart.series[numberOfSeries].hide()
         numberOfSeries += 1
+      chart.hideLoading()
+    .error (jqXHR, textStatus, errorThrown) ->
+      chart.hideLoading()
+      console.log textStatus
   #checkIfPreviousDataExistsGroup()
   #checkIfNextDataExistsGroup()
   #checkIfZoomOutGroup()
-  chart.hideLoading()
+
 
 
 checkIfZoomOut = () ->

@@ -35,6 +35,8 @@ de:
   accepted_metering_point_user_request: Zählpunkteinladung akzeptiert
   rejected_metering_point_user_request: Zählpunkteinladung abgelehnt
   sent_metering_point_user_request: Zählpunktanfrage gesendet
+  new_metering_point_user_request: Neue Zählpunktanfrage
+  do_you_want_to_admit_user_to_this_metering_point: "Möchtest Du %{user} in diesen Zählpunkt aufnehmen"
 
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler

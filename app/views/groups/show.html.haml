@@ -201,7 +201,8 @@
 
 
 
-
+  .row
+    .col-sm-6.col-md-6.col-lg-6
       - if @group.managers.any? && @group.managers != @energy_producers
         %h1.page-header.text-overflow
           %span
@@ -225,6 +226,7 @@
         %hr
 
 
+    .col-sm-6.col-md-6.col-lg-6
       - if @energy_producers.any?
         %h1.page-header.text-overflow
           %span

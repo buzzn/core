@@ -22,11 +22,11 @@ class Crawler
     # puts metering_point_operator_contract.organization.slug
     #if metering_point.meter.manufacturer_name ==  "amperix" # meter.name== 'Amperix'
     if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
-        #puts "Amperix Live"
-        amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-        request  = amperix.mySmartGridOberlFaraLive
-        if request.any?
-          request.each do |item|
+      #puts "Amperix Live"
+      amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
+      request  = amperix.mySmartGridOberlFaraLive
+      if request.any?
+        request.each do |item|
           timestamp = item[0] * 1000
           if String.try_convert(item[1])== "-nan"
             item[1]=0
@@ -36,167 +36,209 @@ class Crawler
           end
           return {:power => power, :timestamp => timestamp}
         end
+      else
+        puts request.inspect
+      end
+    else
+      # puts "Discovergy Live"
+      discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
+      request     = discovergy.live(meter.manufacturer_product_serialnumber, 4)
+      if request['status'] == "ok"
+        if request['result'].any?
+
+          request['result'].each do |item|
+            timestamp = item['time']
+            if metering_point.meter.metering_points.size > 1
+              if item['power'] > 0 && metering_point.input?
+                power = item['power']/1000
+              elsif item['power'] < 0 && metering_point.output?
+                power = item['power'].abs/1000
+              else
+                power = 0
+              end
+            else
+              power = item['power'] > 0 ? item['power'].abs/1000 : 0
+            end
+            return {:power => power, :timestamp => timestamp}
+          end
         else
           puts request.inspect
         end
       else
-        # puts "Discovergy Live"
-        discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-        request     = discovergy.live(meter.manufacturer_product_serialnumber, 4)
-        if request['status'] == "ok"
-          if request['result'].any?
+        puts request.inspect
+      end
+    end
+    puts "THIS AINT neither DISCO nor Amperix"
+    # return result
+  end
 
-            request['result'].each do |item|
-              timestamp = item['time']
-              power = item['power'] > 0 ? item['power'].abs/1000 : 0
-              return {:power => power, :timestamp => timestamp}
-            end
+
+
+  def getDataHour(containing_timestamp, metering_point, metering_point_operator_contract, meter)
+    result = []
+    if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
+      amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
+      request     = amperix.mySmartGridOberlFaraHour(containing_timestamp)
+      if request.any?
+        request.each do |item|
+          #puts item.to_s
+          timestamp = item[0] * 1000
+          if String.try_convert(item[1])== "-nan"
+            item[1]=0
           else
-            puts request.inspect
+            power = item[1] > 0 ? Integer(item[1].abs) : 0
+            result << [timestamp, power]
+          end
+        end
+      else
+        puts request.inspect
+      end
+    else
+      discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
+      request     = discovergy.getHour(meter.manufacturer_product_serialnumber,containing_timestamp)
+      if request['status'] == "ok"
+        if request['result'].any?
+          # TODO: make this nicer
+          request['result'].each do |item|
+           # puts item.to_s
+            if metering_point.meter.metering_points.size > 1
+              if item['power'] > 0 && metering_point.input?
+                power = item['power']/1000
+              elsif item['power'] < 0 && metering_point.output?
+                power = item['power'].abs/1000
+              else
+                power = 0
+              end
+            else
+              power = item['power'] > 0 ? item['power'].abs/1000 : 0
+            end
+            timestamp = item['time']
+            result << [timestamp, power]
           end
         else
           puts request.inspect
+       end
+      else
+        puts request.inspect
+      end
+    end
+    return result
+  end
+
+
+
+  def getDataMonth(containing_timestamp, metering_point, metering_point_operator_contract, meter)
+    result = []
+    if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
+      amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
+      request     = amperix.mySmartGridOberlFaraMonth(containing_timestamp)
+      if request.any?
+        request.each do |item|
+        #puts item.to_s
+        timestamp = item[0] * 1000 - 720000 # GMT -2h
+        if String.try_convert(item[1])== "-nan"
+          item[1]=0
+        else
+          work = item[1] > 0 ? item[1].abs/365 : 0  # must be converted from kwhperyear to kwhperday
+          result << [timestamp, work]
         end
       end
-      puts "THIS AINT neither DISCO nor Amperix"
-      # return result
-  end
-  def getDataHour(containing_timestamp, metering_point, metering_point_operator_contract, meter)
-      result = []
-      if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
-          amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-          request     = amperix.mySmartGridOberlFaraHour(containing_timestamp)
-          if request.any?
-            request.each do |item|
-            #puts item.to_s
-            timestamp = item[0] * 1000
-            if String.try_convert(item[1])== "-nan"
-              item[1]=0
-            else
-              power = item[1] > 0 ? Integer(item[1].abs) : 0
-              result << [timestamp, power]
-            end
-          end
+      else
+        puts request.inspect
+      end
+    else
+      discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
+      request     = discovergy.getDataEveryDay(meter.manufacturer_product_serialnumber, containing_timestamp)
+      if request['status'] == "ok"
+        if request['result'].any?
+          # TODO: make this nicer
+          old_value = -1
+          new_value = -1
+          timestamp = -1
+          i = 0
+          if metering_point.meter.metering_points.size > 1 && metering_point.output?
+            mode = 'energyOut'
           else
-            puts request.inspect
+            mode = 'energy'
           end
-        else
-          discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-          request     = discovergy.getHour(meter.manufacturer_product_serialnumber,containing_timestamp)
-          if request['status'] == "ok"
-            if request['result'].any?
-              # TODO: make this nicer
-              request['result'].each do |item|
-               # puts item.to_s
-                timestamp = item['time']
-                power = item['power'] > 0 ? item['power'].abs/1000 : 0
-                result << [timestamp, power]
-              end
-            else
-              puts request.inspect
-           end
-          else
-            puts request.inspect
-          end
-        end
-        return result
-  end
-  def getDataMonth(containing_timestamp, metering_point, metering_point_operator_contract, meter)
-        result = []
-        if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
-          amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-          request     = amperix.mySmartGridOberlFaraMonth(containing_timestamp)
-          if request.any?
-            request.each do |item|
-            #puts item.to_s
-            timestamp = item[0] * 1000 - 720000 # GMT -2h
-            if String.try_convert(item[1])== "-nan"
-              item[1]=0
-            else
-              work = item[1] > 0 ? item[1].abs/365 : 0  # must be converted from kwhperyear to kwhperday
-              result << [timestamp, work]
-            end
-          end
-          else
-            puts request.inspect
-          end
-        else
-          discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-          request     = discovergy.getDataEveryDay(meter.manufacturer_product_serialnumber, containing_timestamp)
-          if request['status'] == "ok"
-            if request['result'].any?
-              # TODO: make this nicer
-              old_value = -1
-              new_value = -1
-              timestamp = -1
-              i = 0
-              request['result'].each do |item|
-                puts item.to_s
-                if i == 0
-                  old_value = item['energy']
-                  timestamp = item['time']
-                  i += 1
-                next
-              end
-              new_value = item['energy']
-              result << [timestamp, (new_value - old_value)/10000000000.0]
-              old_value = new_value
+          request['result'].each do |item|
+            if i == 0
+              old_value = item[mode]
               timestamp = item['time']
               i += 1
+              next
             end
-          else
-            puts request.inspect
+            new_value = item[mode]
+            result << [timestamp, (new_value - old_value)/10000000000.0]
+            old_value = new_value
+            timestamp = item['time']
+            i += 1
           end
         else
           puts request.inspect
         end
+      else
+        puts request.inspect
       end
-      return result
+    end
+    return result
   end
+
+
   # returns array with 96 quarter hour values
   def getDataDay(containing_timestamp, metering_point, metering_point_operator_contract, meter)
-     result = []
-        if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
-          amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-          request     = amperix.mySmartGridOberlFaraDay(containing_timestamp)
-          if request.any?
-            request.each do |item|
-            #puts item.to_s
-            timestamp = item[0] * 1000
-            if String.try_convert(item[1])== "-nan"
-              item[1]=0
+    result = []
+    if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
+      amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
+      request     = amperix.mySmartGridOberlFaraDay(containing_timestamp)
+      if request.any?
+        request.each do |item|
+          #puts item.to_s
+          timestamp = item[0] * 1000
+          if String.try_convert(item[1])== "-nan"
+            item[1]=0
+          else
+            power = item[1] > 0 ? Integer(item[1].abs) : 0
+            result << [timestamp, power]
+          end
+        end
+      else
+        puts request.inspect
+      end
+    else
+      discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
+      request     = discovergy.getDay(meter.manufacturer_product_serialnumber, containing_timestamp)
+      if request['status'] == "ok"
+        if request['result'].any?
+          # TODO: make this nicer
+
+          request['result'].each do |item|
+            timestamp = item['timeStart']
+            if metering_point.meter.metering_points.size > 1
+              if item['power'] > 0 && metering_point.input?
+                power = item['power']/1000
+              elsif item['power'] < 0 && metering_point.output?
+                power = item['power'].abs/1000
+              else
+                power = 0
+              end
             else
-              power = item[1] > 0 ? Integer(item[1].abs) : 0
+              power = item['power'] > 0 ? Integer(item['power'].abs)/1000 : 0
+            end
+            #puts Time.new.to_i.to_s + ":   " + (timestamp/1000).to_s
+            timenew = Time.new.to_i - 50
+            if timestamp/1000 < timenew
               result << [timestamp, power]
             end
           end
-          else
-            puts request.inspect
-          end
         else
-          discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-          request     = discovergy.getDay(meter.manufacturer_product_serialnumber, containing_timestamp)
-          if request['status'] == "ok"
-            if request['result'].any?
-              # TODO: make this nicer
-
-              request['result'].each do |item|
-                timestamp = item['timeStart']
-                power = item['power'] > 0 ? item['power'].abs/1000 : 0
-                #puts Time.new.to_i.to_s + ":   " + (timestamp/1000).to_s
-                timenew = Time.new.to_i - 50
-                if timestamp/1000 < timenew
-                  result << [timestamp, power]
-                end
-              end
-            else
-              puts request.inspect
-            end
-          else
-            puts request.inspect
-          end
+          puts request.inspect
         end
-        return result
+      else
+        puts request.inspect
+      end
+    end
+    return result
   end
 end
 

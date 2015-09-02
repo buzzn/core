@@ -415,8 +415,8 @@ $(".bubbles_container").ready ->
       data_in.forEach (metering_point_data) ->
         actual_in_metering_point_id = metering_point_data.metering_point_id
         if metering_point_data.readable
-          $('#path_' + actual_in_metering_point_id).css( 'cursor', 'pointer' )
-          $('#path_' + actual_in_metering_point_id).click ->
+          $('#bubble_' + actual_in_metering_point_id).css( 'cursor', 'pointer' )
+          $('#bubble_' + actual_in_metering_point_id).click ->
             window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
         timers.push(
           window.setInterval(->
