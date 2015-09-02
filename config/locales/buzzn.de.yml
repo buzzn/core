@@ -324,6 +324,9 @@ de:
   lease_square_meter: Pacht pro Quadratmeter Cents
   runtime: Laufzeit
   search: Suchen
+  go: Los
+  no_users_found_matching: "Es wurden keine Benutzer mit dem Suchwort '%{search}' gefunden."
+  no_groups_found_matching: "Es wurden keine Gruppen mit dem Suchwort '%{search}' gefunden."
   finance: Finanzen
   admin: Admin
   investors: Investoren
@@ -335,10 +338,10 @@ de:
   delete_selected_shape: ausgewählten Umriss löschen.
   map: Karte
   continue: Weiter
-  confirm_mail_txt: "Sie können Ihre E-Mail-Konto über den Link unten bestätigen:"
+  confirm_mail_txt: "Du kannst Dein E-Mail-Konto über den Link unten bestätigen:"
   confirm_my_account: 'Mein Konto bestätigen'
-  requested_password_link_txt: "Jemand hat einen Link, um Ihr Passwort zu ändern angefordert, und Sie können dies über den Link unten tun."
-  not_request_this_txt: "Sollten Sie die E-Mail nicht angefordert haben, entschuldigen Sie bitte dies. Dann hat sich wahrscheinlich jemand vertippt. Ignorieren Sie einfach die Mail und löschen Sie diese."
+  requested_password_link_txt: "Jemand hat einen Link zum Ändern Deines Passworts angefordert. Du kannst dies über den Link unten tun."
+  not_request_this_txt: "Solltest Du diese E-Mail nicht angefordert haben, entschuldige bitte dies. Dann hat sich wahrscheinlich jemand vertippt. Ignoriere einfach die Mail und lösche sie."
   search_users: Person Suchen
   can_edit: kann bearbeiten
   can_not_edit: kann nicht bearbeiten

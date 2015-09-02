@@ -17,18 +17,18 @@ de:
       confirmation_instructions:
         action: Mein Konto bestätigen
         greeting: Willkommen %{recipient}!
-        instruction: 'Folgen Sie dem untenstehenden Link, um Ihr Konto zu bestätigen:'
+        instruction: 'Folge dem untenstehenden Link, um Dein Konto zu bestätigen:'
       reset_password_instructions:
         action: Passwort ändern
         greeting: Hallo %{recipient}!
-        instruction: Jemand hat einen Link angefordert, um Ihr Passwort zu ändern. Klicken Sie auf den unten aufgeführten Link um das Passwort zu ändern.
-        instruction_2: Bitte ignorieren Sie diese E-Mail, wenn Sie kein neues Passwort angefordert haben.
-        instruction_3: Das Passwort wird nicht geändert bis Sie den obenstehenden Link abrufen und ein neues Passwort bestimmen.
+        instruction: Jemand hat einen Link angefordert, um Dein Passwort zu ändern. Klicke auf den unten aufgeführten Link um das Passwort zu ändern.
+        instruction_2: Bitte ignoriere diese E-Mail, wenn Du kein neues Passwort angefordert hast.
+        instruction_3: Das Passwort wird nicht geändert bis Du den obenstehenden Link abrufen und ein neues Passwort bestimmt hast.
       unlock_instructions:
         action: Mein Konto entsperren
         greeting: Hallo %{recipient}!
-        instruction: 'Folgen Sie dem untenstehenden Link, um Ihr Konto zu entsperren:'
-        message: Ihr Konto wurde aufgrund einer großen Anzahl von fehlgeschlagenen Anmeldeversuchen gesperrt.
+        instruction: 'Folge dem untenstehenden Link, um Dein Konto zu entsperren:'
+        message: Dein Konto wurde aufgrund einer großen Anzahl von fehlgeschlagenen Anmeldeversuchen gesperrt.
       invitation_instructions:
         hello: "Hallo %{email},"
         someone_invited_you: "jemand hat Dich zur buzzn App eingeladen: %{url}. Du kannst die Einladung annehmen, indem Du auf folgenden Link klickst:"
@@ -43,18 +43,18 @@ de:
         confirm_new_password: Neues Passwort bestätigen
         new_password: Neues Passwort
       new:
-        forgot_your_password: Haben Sie Ihr Passwort vergessen?
-        send_me_reset_password_instructions: Schicken Sie mir die Anleitung, mein Passwort zurückzusetzen
+        forgot_your_password: Hast Du Dein Passwort vergessen?
+        send_me_reset_password_instructions: Schicke mir die Anleitung, um mein Passwort zurückzusetzen
     registrations:
       edit:
-        are_you_sure: Sind Sie sicher?
+        are_you_sure: Bist Du Dir sicher?
         cancel_my_account: Konto löschen
         currently_waiting_confirmation_for_email: Warte auf Bestätigung von %{email}.
-        leave_blank_if_you_don_t_want_to_change_it: freilassen, wenn Sie das nicht ändern wollen
+        leave_blank_if_you_don_t_want_to_change_it: freilassen, wenn Du das nicht ändern willst
         title: "%{resource} bearbeiten"
         unhappy: Unglücklich
         update: Aktualisieren
-        we_need_your_current_password_to_confirm_your_changes: wir benötigen Ihr aktuelles Passwort, um die Änderung zu bestätigen
+        we_need_your_current_password_to_confirm_your_changes: wir benötigen Dein aktuelles Passwort, um die Änderung zu bestätigen
       new:
         sign_up: Registrieren
     sessions:

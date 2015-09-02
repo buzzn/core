@@ -45,6 +45,14 @@ class Group < ActiveRecord::Base
 
 
 
+  def self.search(search)
+    if search
+      where('name ILIKE ? or slug ILIKE ?', "%#{search}%", "%#{search}%")
+    else
+      all
+    end
+  end
+
 
   def managers
     User.with_role :manager, self

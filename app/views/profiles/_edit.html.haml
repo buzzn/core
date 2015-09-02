@@ -3,8 +3,9 @@
     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
     %h4.modal-title= t'edit_profile'
   .modal-body
-    = simple_form_for @profile, remote: true, html: { class: 'dropzone', id: 'my-awesome-dropzone' } do |f|
-      .dropzone-previews
+    /= simple_form_for @profile, remote: true, html: { class: 'dropzone', id: 'my-awesome-dropzone' } do |f|
+    = simple_form_for @profile, remote: true do |f|
+      /.dropzone-previews
       = render 'profiles/form_fields', f: f
       .modal-footer
         .btn.btn-danger{"data-dismiss" => "modal"}

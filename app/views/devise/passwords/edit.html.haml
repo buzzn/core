@@ -1,6 +1,6 @@
-- meta title: t('change_your_password')
+- meta title: t('change_password')
 
-%h2= t('change_your_password')
+%h2= t('change_password')
 
 = simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f|
   = f.error_notification
@@ -10,6 +10,6 @@
     = f.input :password, required: true, autofocus: true
     = f.input :password_confirmation, required: true
   .form-actions
-    = f.button :submit
+    = f.button :submit, t('save')
 
 = render "devise/shared/links"

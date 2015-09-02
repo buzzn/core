@@ -4,7 +4,7 @@ class ProfilesController < ApplicationController
 
 
   def index
-    @profiles = Profile.all.decorate
+    @profiles = Profile.search(params[:search]).decorate
   end
 
 

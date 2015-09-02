@@ -1,14 +1,17 @@
 #page-title
   %h1.page-header.text-overflow= t'users'
-  .new-invitation
-  / Searchbox
-  / .searchbox
-  /   .input-group.custom-search-form
-  /     %input.form-control{:placeholder => "Search..", :type => "text"}
-  /       %span.input-group-btn
-  /         %button.text-muted{:type => "button"}
-  /           %i.fa.fa-search
+
+  .searchbox
+    = form_tag profiles_path, method: 'get' do
+      .input-group.custom-search-form
+        = text_field_tag :search, params[:search], placeholder: t('search'), class: 'form-control'
+        %span.input-group-btn
+          .text-muted= button_tag '', name: nil, class: 'btn btn-default fa fa-search'
+
 
 #page-content
   .row
-    = render @profiles
+    - if @profiles.empty?
+      = t('no_users_found_matching', search: params[:search])
+    - else
+      = render @profiles

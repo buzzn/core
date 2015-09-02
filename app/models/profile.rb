@@ -50,6 +50,14 @@ class Profile < ActiveRecord::Base
     end
   end
 
+  def self.search(search)
+    if search
+      where('first_name ILIKE ? or last_name ILIKE ? or user_name ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
+    else
+      all
+    end
+  end
+
 
 
 end

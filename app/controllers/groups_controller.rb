@@ -2,7 +2,7 @@ class GroupsController < ApplicationController
   respond_to :html, :js, :json
 
   def index
-    @groups = Group.all.decorate
+    @groups = Group.search(params[:search])
   end
 
 

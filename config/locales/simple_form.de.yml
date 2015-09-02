@@ -9,7 +9,7 @@ de:
       # When using html, text and mark won't be used.
       # html: '<abbr title="required">*</abbr>'
     error_notification:
-      default_message: "Es wurden Validierungsfehler bei Ihren Eingaben gefunden."
+      default_message: "Es wurden Validierungsfehler bei Deinen Eingaben gefunden."
       models:
         contract:
           mode: "Es gibt bereits einen Vertrag mit dem gleichen Vertragstyp."
@@ -171,7 +171,7 @@ de:
 
     hints:
       defaults:
-        username: 'Benutzername, mit dem Du dich einloggen kannst.'
+        username: 'Benutzername, mit dem Du Dich einloggen kannst.'
       metering_point:
         image: Ein Bild von dem Zählpunkt erleichtert die übersichtlichkeit.
         name: "Name des Zählpunkts, z. B. 'Wohnung' oder 'Solaranlage'. Bitte hier KEINE Adressangaben!"
