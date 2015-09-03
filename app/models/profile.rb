@@ -5,16 +5,18 @@ class Profile < ActiveRecord::Base
   include Authority::Abilities
 
   extend FriendlyId
-  friendly_id :user_name, use: [:slugged, :finders]
+  friendly_id :user_name, use: [:slugged, :history, :finders]
 
 
   mount_uploader :image, PictureUploader
 
   belongs_to :user
 
-  validates :user_name, presence: true, uniqueness: true, length: { in: 2..30 }
+  validates :user_name, uniqueness: true, length: { in: 2..63 }, format: { with: /\A[a-zA-Z0-9äöüßÄÖÜ]+\Z/}
+  validates :first_name, presence: true, length: { in: 2..30 }, format: { with: /\A[a-zA-ZäöüßÄÖÜ]+\Z/}
+  validates :last_name, presence: true, length: { in: 2..30 }, format: { with: /\A[a-zA-ZäöüßÄÖÜ]+\Z/}
 
-  validates_acceptance_of :terms, accept: true
+  #validates_acceptance_of :terms, accept: true
 
   validates :image, :file_size => {
     :maximum => 2.megabytes.to_i
@@ -25,6 +27,29 @@ class Profile < ActiveRecord::Base
   delegate :friends, to: :user
   delegate :friendships, to: :user
   delegate :groups, to: :user
+
+  def generate_username
+    if first_name && last_name && user_name.nil?
+      new_user_name = first_name.downcase + last_name.downcase
+      #profiles = Profile.where(user_name: new_user_name)
+      profiles = Profile.where('user_name ~* ?', new_user_name + '(?:\d+$|)').order(:user_name)
+      if profiles.any?
+        max = 0
+        profiles.each do |profile|
+          number = profile.user_name[/\d+$/].to_i
+          number > max ? max = number : nil
+        end
+        self.user_name = new_user_name + (max+1).to_s
+      else
+        self.user_name = new_user_name
+      end
+    end
+  end
+
+  def should_generate_new_friendly_id?
+    self.generate_username
+    slug.blank? || user_name_changed?
+  end
 
   def metering_points
     metering_points = []
@@ -57,6 +82,7 @@ class Profile < ActiveRecord::Base
       all
     end
   end
+
 
 
 

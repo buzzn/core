@@ -16,6 +16,8 @@ ready = ->
     DependentFields.bind()
   )
 
+  $("#menu").metisMenu()
+
   $('.fa-info-circle').popover(placement: 'right', trigger: "hover" )
 
   $('[data-toggle="popover"]').popover(trigger: "hover")

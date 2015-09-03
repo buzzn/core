@@ -22,6 +22,9 @@ class ProfilesController < ApplicationController
                               .where("owner_id = (?) OR recipient_id = (?)", @profile.user.id, @profile.user.id)
                               .where("owner_type = (?) OR recipient_type = (?)", "User", "User")
                               .limit(10)
+    if request.path != profile_path(@profile)
+      redirect_to @profile, status: :moved_permanently
+    end
   end
 
 

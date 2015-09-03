@@ -26,7 +26,7 @@ class Users::InvitationsController < Devise::InvitationsController
                   :password,
                   :password_confirmation,
                   :invitation_token,
-                  profile_attributes: [:id, :user_name, :terms]
+                  profile_attributes: [:id, :first_name, :last_name, :terms]
                   )
       end
     end

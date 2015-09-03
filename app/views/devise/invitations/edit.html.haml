@@ -4,7 +4,8 @@
   = f.hidden_field :invitation_token
 
   = f.simple_fields_for :profile, resource.build_profile do |p|
-    = p.input :user_name
+    = p.input :first_name
+    = p.input :last_name
   = f.input :password,              required: true
   = f.input :password_confirmation, required: true
 

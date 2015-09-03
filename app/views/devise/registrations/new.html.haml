@@ -5,7 +5,8 @@
 = simple_form_for resource, as: resource_name, url: registration_path(resource_name) do |f|
   = devise_error_messages!
   = f.simple_fields_for :profile, resource.build_profile do |p|
-    = p.input :user_name
+    = p.input :first_name
+    = p.input :last_name
   = f.input :email,                 required: true
   = f.input :password,              required: true
   = f.input :password_confirmation, required: true

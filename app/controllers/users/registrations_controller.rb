@@ -62,7 +62,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
                   :email,
                   :password,
                   :password_confirmation,
-                  profile_attributes: [:id, :user_name, :terms]
+                  profile_attributes: [:id, :first_name, :last_name, :terms]
                 )
       end
 
