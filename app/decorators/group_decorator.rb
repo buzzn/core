@@ -57,7 +57,7 @@ class GroupDecorator < Draper::Decorator
       send_invitations_group_path,
       {
         :remote         => true,
-        :class          => 'start_modal btn btn-block btn-success btn-labeled fa fa-plus',
+        :class          => 'start_modal btn btn-block btn-success btn-labeled fa fa-user-plus',
         'data-toggle'   => 'modal',
         'data-target'   => '#myModal'
       })

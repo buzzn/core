@@ -1,7 +1,8 @@
 # encoding: utf-8
 
 Fabricator :profile do
-  user_name   { FFaker::Internet.user_name }
+  first_name  { FFaker::Name.first_name }
+  last_name   { FFaker::Name.last_name }
   phone       { FFaker::PhoneNumber.phone_number }
   terms       true
   i = 0

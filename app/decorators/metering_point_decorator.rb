@@ -225,7 +225,7 @@ class MeteringPointDecorator < Draper::Decorator
       send_invitations_metering_point_path,
       {
         :remote         => true,
-        :class          => 'btn start_modal btn-success btn-labeled fa fa-plus',
+        :class          => 'btn start_modal btn-success btn-labeled fa fa-user-plus',
         'data-toggle'   => 'modal',
         'data-target'   => '#myModal'
       })

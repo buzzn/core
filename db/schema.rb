@@ -95,13 +95,13 @@ ActiveRecord::Schema.define(version: 20150904104902) do
     t.string   "title"
     t.text     "body"
     t.string   "subject"
-    t.uuid     "user_id",          null: false
+    t.uuid     "user_id",                      null: false
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "likes"
+    t.integer  "likes",            default: 0
   end
 
   add_index "comments", ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type", using: :btree

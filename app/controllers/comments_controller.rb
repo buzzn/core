@@ -16,7 +16,7 @@ class CommentsController < InheritedResources::Base
           end
           #@comment.create_activity key: 'comment.create', owner: current_user, recipient_type: @comment_hash[:commentable_type], recipient_id: @comment_hash[:commentable_id]
           time = ActionController::Base.helpers.timeago_tag(@comment.updated_at, :nojs => true, :lang => locale, :limit => 10.days.ago)
-          Pusher.trigger("#{@comment.commentable_type}_#{@comment.commentable_id}", 'new_comment', :id => @comment.id, :img_alt => I18n.t('profile_picture'), :image => ActionController::Base.helpers.image_url(@comment.user.profile.image.sm), :user_name => @comment.user.name, :profile_href => profile_path(@comment.user.profile), :body => @comment.body, :created_at => time, :socket_id => @socket_id)
+          Pusher.trigger("#{@comment.commentable_type}_#{@comment.commentable_id}", 'new_comment', :id => @comment.id, :img_alt => I18n.t('profile_picture'), :image => ActionController::Base.helpers.image_url(@comment.user.profile.image.sm), :user_name => @comment.user.name, :profile_href => profile_path(@comment.user.profile), :body => @comment.body, :created_at => time, :likes => 0, :socket_id => @socket_id)
           @comment
         }
         failure.js { render nothing: true, status: :ok } #TODO: show validation errors

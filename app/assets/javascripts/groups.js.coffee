@@ -459,7 +459,9 @@ $(".comments-panel").ready ->
   pusher = new Pusher($(".pusher").data('pusherkey'))
 
   channel = pusher.subscribe("Group_#{group_id}")
+  console.log 'subscribed to ' + group_id
   channel.bind "new_comment", (comment) ->
+    console.log 'incoming comment'
     if pusher.connection.socket_id != comment.socket_id
       html = '' +
         '<li class="mar-btm comment" id="comment_' + comment.id + '">
@@ -474,6 +476,14 @@ $(".comments-panel").ready ->
               <p>
                 ' + comment.body + '
               </p>
+              <div class="likes pull-right">
+                <p class="speech-time">
+                  <i class="increase-likes fa fa-thumbs-o-up"></i>
+                  <div class="likes-count">
+                    <%=' + comment.likes + '%>
+                  </div>
+                </p>
+              </div>
               <p class="speech-time time">
                 <i class="fa fa-clock-o fa-fw"></i>
                 ' + comment.created_at + '
@@ -485,6 +495,12 @@ $(".comments-panel").ready ->
       $(".comments-content").animate({
         scrollTop: $("#comment_" + comment.id).offset().top
       }, 1000)
+      that = $("#comment_#{coment.id}")
+      that.find(".increase-likes").on "click", ->
+        $.ajax({url: '/comments/' + comment_id + '/increase_likes', dataType: 'json'})
+          .success (data) ->
+            that.find(".likes-count").html(data.likes)
+            that.find(".increase-likes").unbind "click"
     else
       $("#comment_" + comment.id).waitUntilExists( ->
         $(".comments-content").animate({
