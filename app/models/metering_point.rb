@@ -56,6 +56,8 @@ class MeteringPoint < ActiveRecord::Base
     self.where(group: group.id)
   }
 
+
+
   def managers
     User.with_role :manager, self
   end
@@ -411,7 +413,6 @@ class MeteringPoint < ActiveRecord::Base
     if metering_point.meter && metering_point.meter.smart
       result = []
       if resolution_format == 'hour_to_minutes'
-        puts "HOUR *********************************************************************"
         result = Crawler.new.getDataHour(containing_timestamp, metering_point, self.metering_point_operator_contract,self.meter)
       elsif resolution_format == 'day_to_minutes'
         result = Crawler.new.getDataDay(containing_timestamp, metering_point, self.metering_point_operator_contract,self.meter)
@@ -424,11 +425,14 @@ class MeteringPoint < ActiveRecord::Base
       return result
     else
       if self.pv?
-        convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
+        MeteringPoint.fake_data(forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0, resolution_format, containing_timestamp, :sep_pv)
+        #convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
       elsif self.bhkw_or_else?
-        convert_to_array(Reading.aggregate(resolution_format, ['sep_bhkw'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
+        MeteringPoint.fake_data(forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0, resolution_format, containing_timestamp, :sep_bhkw)
+        #convert_to_array(Reading.aggregate(resolution_format, ['sep_bhkw'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
       elsif self.slp?
-        convert_to_array(Reading.aggregate(resolution_format, ['slp'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SLP
+        MeteringPoint.fake_data(forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0, resolution_format, containing_timestamp, :slp)
+        #convert_to_array(Reading.aggregate(resolution_format, ['slp'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SLP
       end
     end
   end
@@ -450,6 +454,74 @@ class MeteringPoint < ActiveRecord::Base
     if self.data_source
       Reading.all_by_metering_point_id(self.id)
     end
+  end
+
+  # def self.fake_watt_hours(factor, resolution, containing_timestamp, source)
+  #   result = []
+  #   watt_hours_per_day = {}
+  #   watt_hours_per_day[:slp] = 3344.3660000 #Wh
+  #   watt_hours_per_day[:sep_pv] = 7730.000000
+  #   watt_hours_per_day[:sep_bhkw] = 2783.9999999
+  #   days_in_month = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+  #   if resolution == "year_to_months"
+  #     time = Time.at(containing_timestamp/1000).beginning_of_year
+  #     days_in_month.each do |count_days|
+  #       time = time + count_days.days
+  #       result << [time.to_i*1000, watt_hours_per_day[source] * count_days]
+  #     end
+  #   elsif resolution == "month_to_days"
+  #     time = Time.at(containing_timestamp/1000).beginning_of_month
+  #     count_days = days_in_month[time.month - 1]
+  #     count_days.times do
+  #       time = time + 1.day
+  #       result << [time.to_i*1000, factor*watt_hours_per_day[source]]
+  #     end
+  #   end
+  #   return result
+  # end
+
+  def self.fake_data(factor, resolution, containing_timestamp, source)
+    result = []
+    watts = {}
+    watts[:slp] = [108984, 101011, 93392, 86072, 78947, 72471, 66744, 62159, 58923, 56683, 55039, 53943, 52796, 51700, 50704, 49807, 48963, 48316, 47968, 47715, 47715, 47816, 48215, 48711, 49460, 50307, 51452, 52796, 54791, 58028, 63655, 72620, 85423, 101264, 118543, 135731, 151820, 166512, 179811, 191764, 202476, 212336, 221652, 231116, 240727, 249792, 257264, 262243, 263739, 261747, 256416, 247699, 236096, 222547, 208351, 194904, 183047, 172988, 164520, 157547, 151920, 147087, 142952, 138868, 134883, 131896, 131000, 133736, 140611, 150572, 161879, 173087, 182799, 191167, 198888, 206211, 213579, 219659, 223043, 221799, 215324, 205116, 193755, 183448, 176075, 170843, 166512, 161631, 155404, 147683, 138968, 129504, 119791, 110079, 100515, 91152]
+    watts[:sep_pv] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 700, 4019, 11715, 24596, 40755, 59851, 81655, 105892, 132255, 160408, 190000, 220643, 251960, 283535, 314972, 345863, 375812, 404431, 431344, 456212, 478700, 498520, 515408, 529144, 539540, 546460, 549799, 549516, 545591, 538075, 527047, 512639, 495023, 474416, 451063, 425252, 397300, 367544, 336359, 304119, 271228, 238084, 205088, 172648, 141160, 110999, 82531, 56099, 33343, 17183, 6851, 1440, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    watts[:sep_bhkw] = [114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168]
+    arr = watts[source]
+    watt_hours_per_day = {}
+    watt_hours_per_day[:slp] = 3.3443660000 #kWh
+    watt_hours_per_day[:sep_pv] = 7.730000000
+    watt_hours_per_day[:sep_bhkw] = 2.7839999999
+    days_in_month = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    if resolution == "year_to_months"
+      time = Time.at(containing_timestamp.to_i/1000).beginning_of_year
+      days_in_month.each do |count_days|
+        result << [time.to_i*1000, factor * watt_hours_per_day[source] * count_days]
+        time = time + count_days.days
+      end
+    elsif resolution == "month_to_days"
+      time = Time.at(containing_timestamp.to_i/1000).beginning_of_month
+      count_days = days_in_month[time.month - 1]
+      count_days.times do
+        result << [time.to_i*1000, factor * watt_hours_per_day[source]]
+        time = time + 1.day
+      end
+    elsif resolution == "day_to_minutes" || resolution == "day_to_hours"
+      time = Time.at(containing_timestamp.to_i/1000).beginning_of_day
+      arr.size.times do |i|
+        time = time + 15.minutes
+        result << [time.to_i*1000, factor * arr[i]/1000]
+      end
+    elsif resolution == "hour_to_minutes" || resolution == "hour_to_seconds"
+      time = Time.at(containing_timestamp.to_i/1000)
+      start_time = time.beginning_of_hour
+      day_beginning = time.beginning_of_day
+      offset = (start_time - day_beginning)/(60*15)
+      4.times do |i|
+        time_result = start_time + (i*15).minutes
+        result << [time_result.to_i*1000, factor * arr[offset + i]/1000]
+      end
+    end
+    return result
   end
 
   private
