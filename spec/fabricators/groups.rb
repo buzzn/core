@@ -1,6 +1,7 @@
 Fabricator :group do
   name        { FFaker::Company.name }
   description { FFaker::Lorem.paragraphs.join('-') }
+  readable    'world'
 end
 
 

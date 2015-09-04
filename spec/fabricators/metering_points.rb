@@ -22,6 +22,7 @@ end
 
 Fabricator :mp_z2, from: :metering_point do
   name  'PV'
+  readable    'world'
   mode        'out'
   meter       { Fabricate(:easymeter_60051599) }
 end
@@ -30,12 +31,14 @@ end
 
 Fabricator :mp_z3, from: :metering_point do
   name  'Ladestation'
+  readable    'world'
   meter       { Fabricate(:easymeter_60051559) }
 end
 
 
 Fabricator :mp_z4, from: :metering_point do
   name  'BHKW'
+  readable    'world'
   mode        'out'
   meter       { Fabricate(:easymeter_60051560) }
 end
@@ -74,6 +77,7 @@ end
 Fabricator :mp_stefans_bhkw, from: :metering_point do
   address { Fabricate(:address, street_name: 'Forstenrieder Weg', street_number: '51', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'BHKW'
+  readable    'world'
   mode        'out'
 end
 
@@ -84,6 +88,7 @@ end
 Fabricator :mp_hof_butenland_wind, from: :metering_point do
   address  { Fabricate(:address, street_name: 'Niensweg', street_number: '1', zip: 26969, city: 'Butjadingen', state: 'Niedersachsen') }
   name  'Windanlage'
+  readable    'world'
   mode        'out'
 end
 
@@ -250,6 +255,7 @@ end
 #Wagnis 4 - Laden EG
 Fabricator :mp_60009390, from: :metering_point do
   name  'Laden EG'
+  readable    'world'
   meter          { Fabricate(:easymeter_60009390) }
 end
 
@@ -338,6 +344,7 @@ end
 #Pickel Wasserkraft
 Fabricator :mp_60051562, from: :metering_point do
   name  'Wasserkraft'
+  readable    'world'
   meter          { Fabricate(:easymeter_60051562) }
 end
 
