@@ -1,6 +1,6 @@
 class CommentsController < InheritedResources::Base
   before_filter :authenticate_user!
-  respond_to :html, :js
+  respond_to :html, :js, :json
 
   def create
     @comment_hash = params[:comment]
@@ -38,6 +38,15 @@ class CommentsController < InheritedResources::Base
       else
         render :js => "alert('error deleting comment');"
       end
+    end
+  end
+
+  def increase_likes
+    @comment = Comment.find(params[:id])
+    @comment.likes.nil? ? @comment.likes = 0 : nil
+    @comment.likes += 1
+    if @comment.save
+      render :json => { :likes => @comment.likes}
     end
   end
 

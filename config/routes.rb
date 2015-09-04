@@ -49,11 +49,15 @@ Buzzn::Application.routes.draw do
   resources :contracting_parties
   resources :bank_accounts
   resources :organizations
-  resources :comments, :only => [:create, :destroy]
   resources :stream
   resources :addresses
   resources :readings
 
+  resources :comments, :except => [:new, :index, :edit, :show, :update] do
+    member do
+      get :increase_likes
+    end
+  end
 
 
   resources :dashboards do

@@ -492,6 +492,14 @@ $(".comments-panel").ready ->
         }, 1000)
       )
 
+  $(this).find(".comment").each ->
+    comment_id = $(this).attr('id').split('_')[1]
+    that = $(this)
+    that.find(".increase-likes").on "click", ->
+      $.ajax({url: '/comments/' + comment_id + '/increase_likes', dataType: 'json'})
+        .success (data) ->
+          that.find(".likes-count").html(data.likes)
+          that.find(".increase-likes").unbind "click"
 
   $(this).on "ajax:beforeSend", (evt, xhr, settings) ->
     settings.data += '&socket_id=' + pusher.connection.socket_id
