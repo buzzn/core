@@ -440,13 +440,13 @@ class MeteringPoint < ActiveRecord::Base
 
   def latest_fake_data
     if self.slp?
-      return {data: Reading.latest_fake_data('slp'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+      return {data: MeteringPoint.fake_data(1, "latest_fake_data", Time.now.to_i*1000, :slp), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
     elsif self.pv?
-      return {data: Reading.latest_fake_data('sep_pv'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+      return {data: MeteringPoint.fake_data(1, "latest_fake_data", Time.now.to_i*1000, :sep_pv), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
     elsif self.bhkw_or_else?
-      return {data: Reading.latest_fake_data('sep_bhkw'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+      return {data: MeteringPoint.fake_data(1, "latest_fake_data", Time.now.to_i*1000, :sep_bhkw), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
     else
-      return {data: [[0, 1], [0, 1]], factor: 1}
+      return {data: [[0, 1]], factor: 1}
     end
   end
 
@@ -456,29 +456,6 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-  # def self.fake_watt_hours(factor, resolution, containing_timestamp, source)
-  #   result = []
-  #   watt_hours_per_day = {}
-  #   watt_hours_per_day[:slp] = 3344.3660000 #Wh
-  #   watt_hours_per_day[:sep_pv] = 7730.000000
-  #   watt_hours_per_day[:sep_bhkw] = 2783.9999999
-  #   days_in_month = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-  #   if resolution == "year_to_months"
-  #     time = Time.at(containing_timestamp/1000).beginning_of_year
-  #     days_in_month.each do |count_days|
-  #       time = time + count_days.days
-  #       result << [time.to_i*1000, watt_hours_per_day[source] * count_days]
-  #     end
-  #   elsif resolution == "month_to_days"
-  #     time = Time.at(containing_timestamp/1000).beginning_of_month
-  #     count_days = days_in_month[time.month - 1]
-  #     count_days.times do
-  #       time = time + 1.day
-  #       result << [time.to_i*1000, factor*watt_hours_per_day[source]]
-  #     end
-  #   end
-  #   return result
-  # end
 
   def self.fake_data(factor, resolution, containing_timestamp, source)
     result = []
@@ -515,11 +492,18 @@ class MeteringPoint < ActiveRecord::Base
       time = Time.at(containing_timestamp.to_i/1000)
       start_time = time.beginning_of_hour
       day_beginning = time.beginning_of_day
-      offset = (start_time - day_beginning)/(60*15)
+      offset = ((start_time - day_beginning)/(60*15)).to_i
       4.times do |i|
         time_result = start_time + (i*15).minutes
         result << [time_result.to_i*1000, factor * arr[offset + i]/1000]
       end
+    elsif resolution == "latest_fake_data"
+      time = Time.at(containing_timestamp.to_i/1000)
+      hour_beginning = time.beginning_of_hour
+      day_beginning = time.beginning_of_day
+      offset = ((hour_beginning - day_beginning)/(60*15) + (time - hour_beginning)/(60*15)).to_i
+      time_result = day_beginning + (offset*15).minutes
+      result << [time_result.to_i*1000, factor * arr[offset]/1000]
     end
     return result
   end

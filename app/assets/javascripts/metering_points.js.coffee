@@ -1329,25 +1329,25 @@ getFakeValue = (metering_point_id, source) ->
 
 setFakeValue = (metering_point, metering_point_id, source) ->
   if source == 'slp'
-    if Date.parse(readingsSLP[1][0]) < new Date()
+    if Date.parse(readingsSLP[0][0]) < new Date()
       getFakeValue(metering_point_id, 'slp')
-    metering_point.find(".power-ticker").html interpolateFakekW(readingsSLP, factors[metering_point_id]).toFixed(0)
+    metering_point.find(".power-ticker").html getRandomPower(readingsSLP[0][1] * factors[metering_point_id]).toFixed(0)
   else if source == 'sep_pv'
-    if Date.parse(readingsSEP_PV[1][0]) < new Date()
+    if Date.parse(readingsSEP_PV[0][0]) < new Date()
       getFakeValue(metering_point_id, 'sep_pv')
-    metering_point.find(".power-ticker").html interpolateFakekW(readingsSEP_PV, factors[metering_point_id]).toFixed(0)
+    metering_point.find(".power-ticker").html getRandomPower(readingsSEP_PV[0][1] * factors[metering_point_id]).toFixed(0)
   else
-    if Date.parse(readingsSEP_BHKW[1][0]) < new Date()
+    if Date.parse(readingsSEP_BHKW[0][0]) < new Date()
       getFakeValue(metering_point_id, 'sep_BHKW')
-    metering_point.find(".power-ticker").html interpolateFakekW(readingsSEP_BHKW, factors[metering_point_id]).toFixed(0)
+    metering_point.find(".power-ticker").html getRandomPower(readingsSEP_BHKW[0][1] * factors[metering_point_id]).toFixed(0)
 
-interpolateFakekW = (data_arr, factor) ->
-  firstTimestamp = data_arr[0][0]
-  firstValue = data_arr[0][1]
-  lastTimestamp = data_arr[1][0]
-  lastValue = data_arr[1][1]
-  averagePower = (lastValue - firstValue)/0.25*1000*factor
-  return getRandomPower(averagePower)
+# interpolateFakekW = (data_arr, factor) ->
+#   firstTimestamp = data_arr[0][0]
+#   firstValue = data_arr[0][1]
+#   lastTimestamp = data_arr[1][0]
+#   lastValue = data_arr[1][1]
+#   averagePower = (lastValue - firstValue)/0.25*1000*factor
+#   return getRandomPower(averagePower)
 
 getRandomPower = (averagePower) ->
   y = averagePower + Math.random()*10 - 5
