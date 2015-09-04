@@ -12,9 +12,9 @@ class Profile < ActiveRecord::Base
 
   belongs_to :user
 
-  validates :user_name, uniqueness: true, length: { in: 2..63 }, format: { with: /\A[a-zA-Z0-9äöüßÄÖÜ]+\Z/}
-  validates :first_name, presence: true, length: { in: 2..30 }, format: { with: /\A[a-zA-ZäöüßÄÖÜ]+\Z/}
-  validates :last_name, presence: true, length: { in: 2..30 }, format: { with: /\A[a-zA-ZäöüßÄÖÜ]+\Z/}
+  validates :user_name, uniqueness: true, length: { in: 2..63 }
+  validates :first_name, presence: true, length: { in: 2..30 }
+  validates :last_name, presence: true, length: { in: 2..30 }
 
   #validates_acceptance_of :terms, accept: true
 
