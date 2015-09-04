@@ -2,8 +2,9 @@ module API
   module V1
     class Users < Grape::API
       include API::V1::Defaults
-
       resource :users do
+
+
 
         desc "Return me"
         get "me", root: :user do
@@ -11,10 +12,7 @@ module API
           current_user
         end
 
-        desc "Return all users"
-        get "", root: :users do
-          User.all
-        end
+
 
         desc "Return a user"
         params do
@@ -23,8 +21,10 @@ module API
         get ":id", root: "user" do
           User.where(id: permitted_params[:id]).first!
         end
-      end
 
+
+
+      end
     end
   end
 end

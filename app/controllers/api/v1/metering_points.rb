@@ -5,6 +5,19 @@ module API
       resource :metering_points do
 
 
+
+        desc "Return all MeteringPoints"
+        get "", root: :metering_points do
+          guard!
+          if current_user
+            MeteringPoint.all
+          else
+            MeteringPoint.where(readable: 'world')
+          end
+        end
+
+
+
         desc "Return a MeteringPoint"
         params do
           requires :id, type: String, desc: "ID of the metering_point"
