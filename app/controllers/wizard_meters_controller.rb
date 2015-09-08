@@ -113,7 +113,7 @@ class WizardMetersController  < ApplicationController
   def edit_contract_update
     @meter = Meter.find(params[:meter_id])
     @metering_point = @meter.metering_points.first
-    byebug
+    #byebug
     if params[:contract][:id] == ""
       @contract = Contract.new(contract_params)
     else
