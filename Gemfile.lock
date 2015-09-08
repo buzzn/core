@@ -148,7 +148,7 @@ GEM
       ruby_parser (~> 3.7.0)
       sass (~> 3.0)
       terminal-table (~> 1.4)
-    bson (3.2.1)
+    bson (3.2.4)
     builder (3.2.2)
     byebug (5.0.0)
       columnize (= 0.9.0)
@@ -507,12 +507,14 @@ GEM
       monetize (~> 1.1.0)
       money (~> 6.5.0)
       railties (>= 3.0)
-    mongoid (4.0.2)
+    mongo (2.1.0.beta)
+      bson (~> 3.0)
+    mongoid (5.0.0.beta)
       activemodel (~> 4.0)
-      moped (~> 2.0.0)
+      mongo (= 2.1.0.beta)
       origin (~> 2.1)
       tzinfo (>= 0.3.37)
-    moped (2.0.6)
+    moped (2.0.7)
       bson (~> 3.0)
       connection_pool (~> 2.0)
       optionable (~> 0.2.0)
@@ -893,7 +895,7 @@ DEPENDENCIES
   mini_magick
   mocha
   money-rails
-  mongoid
+  mongoid (= 5.0.0.beta)
   moped
   newrelic_rpm
   omniauth-facebook
