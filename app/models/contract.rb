@@ -114,7 +114,7 @@ private
         end
       elsif self.organization.slug == 'amperix' # no automated group check implemented yet
         amperix = Amperix.new(self.username, self.password)
-        api_call = amperix.mySmartGridOberlFaraLive
+        api_call = amperix.get_ive
         if api_call != ""
           self.update_columns(valid_credentials: true)
         end

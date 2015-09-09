@@ -15,7 +15,7 @@ class Amperix
 # Amperix thins out data older then one month (one value every quarter hour to one value every hour)
 # and even more after two month (hour to day).
 # This results in bad day-charts for historic data older then two month
-  def mySmartGridOberlFaraDay(time)
+  def get_day(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_day.to_time.to_i
     datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_day.to_time.to_i
     response = @conn.get do |req|
@@ -28,7 +28,7 @@ class Amperix
 
 # This subroutine returns an array of time and work of the requested month on a time-grid of days
 # This holds for data not older than one month only. Amperix thins out data older then one month and even more after two month.
-def mySmartGridOberlFaraMonth(time)
+def get_month(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_month.to_time.to_i
     datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_month.to_time.to_i
     puts datetime_end
@@ -45,7 +45,7 @@ def mySmartGridOberlFaraMonth(time)
 # Maximum delay is 5 minutes.
 # This holds for data not older than one month only. amperix thins out data older then one month and even more after two month.
 #
-def mySmartGridOberlFaraHour(time)
+def get_hour(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_hour.to_time.to_i
     datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_hour.to_time.to_i
     #puts datetime_end
@@ -65,7 +65,7 @@ def mySmartGridOberlFaraHour(time)
 # They are on a timegrid of 1 minute distance.
 # Taking the first value of the return lead therefore to a value change every minute and you always
 # have a delay of 5 minutes in "real time view"
-def mySmartGridOberlFaraLive
+def get_live
     datetime_start = Time.now.to_i - 300
     datetime_end   = Time.now.to_i
     # puts datetime_end

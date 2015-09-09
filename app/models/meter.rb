@@ -139,7 +139,7 @@ private
           end
         elsif @mpoc.organization.slug == 'amperix'
           amperix =  Amperix.new(@mpoc.username, @mpoc.password)
-          request = amperix.mySmartGridOberlFaraLive
+          request = amperix.get_live
           if request != ""
             self.update_columns(smart: true)
           else

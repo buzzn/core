@@ -45,7 +45,7 @@ class Discovergy
 
 
 
-  def live( meter_uid, num_of_seconds=4 )
+  def get_live( meter_uid, num_of_seconds=4 )
     response = @conn.get do |req|
       req.url '/json/Api.getLive'
       req.headers['Content-Type'] = 'application/json'
@@ -57,7 +57,7 @@ class Discovergy
     return JSON.parse(response.body)
   end
 
-  def getDay( meter_uid, timestamp)
+  def get_day( meter_uid, timestamp)
     datetime = Time.at(timestamp.to_i/1000).in_time_zone
     response = @conn.get do |req|
       req.url '/json/Api.getDay'
@@ -72,7 +72,7 @@ class Discovergy
     return JSON.parse(response.body)
   end
 
-  def getDataEveryDay( meter_uid, timestamp)
+  def get_month( meter_uid, timestamp)
     datetime_start = Time.at(timestamp.to_i/1000).in_time_zone.beginning_of_month
     datetime_end = Time.at(timestamp.to_i/1000).in_time_zone.end_of_month
     response = @conn.get do |req|
@@ -91,7 +91,7 @@ class Discovergy
     return JSON.parse(response.body)
   end
 
-  def getHour( meter_uid, timestamp )
+  def get_hour( meter_uid, timestamp )
     datetime_from  = (Time.at(timestamp.to_i/1000).in_time_zone.beginning_of_hour).to_i*1000
     datetime_to    = (Time.at(timestamp.to_i/1000).in_time_zone.end_of_hour).to_i*1000
     response = @conn.get do |req|

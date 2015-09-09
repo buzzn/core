@@ -24,7 +24,7 @@ class Crawler
     if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
       #puts "Amperix Live"
       amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request  = amperix.mySmartGridOberlFaraLive
+      request  = amperix.get_live
       if request.any?
         request.each do |item|
           timestamp = item[0] * 1000
@@ -42,7 +42,7 @@ class Crawler
     else
       # puts "Discovergy Live"
       discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = discovergy.live(meter.manufacturer_product_serialnumber, 4)
+      request     = discovergy.get_live(meter.manufacturer_product_serialnumber, 4)
       if request['status'] == "ok"
         if request['result'].any?
 
@@ -78,7 +78,7 @@ class Crawler
     result = []
     if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
       amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = amperix.mySmartGridOberlFaraHour(containing_timestamp)
+      request     = amperix.get_hour(containing_timestamp)
       if request.any?
         request.each do |item|
           #puts item.to_s
@@ -95,7 +95,7 @@ class Crawler
       end
     else
       discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = discovergy.getHour(meter.manufacturer_product_serialnumber,containing_timestamp)
+      request     = discovergy.get_hour(meter.manufacturer_product_serialnumber,containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
           # TODO: make this nicer
@@ -131,7 +131,7 @@ class Crawler
     result = []
     if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
       amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = amperix.mySmartGridOberlFaraMonth(containing_timestamp)
+      request     = amperix.get_month(containing_timestamp)
       if request.any?
         request.each do |item|
         #puts item.to_s
@@ -148,7 +148,7 @@ class Crawler
       end
     else
       discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = discovergy.getDataEveryDay(meter.manufacturer_product_serialnumber, containing_timestamp)
+      request     = discovergy.get_month(meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
           # TODO: make this nicer
@@ -190,7 +190,7 @@ class Crawler
     result = []
     if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
       amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = amperix.mySmartGridOberlFaraDay(containing_timestamp)
+      request     = amperix.get_day(containing_timestamp)
       if request.any?
         request.each do |item|
           #puts item.to_s
@@ -207,7 +207,7 @@ class Crawler
       end
     else
       discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = discovergy.getDay(meter.manufacturer_product_serialnumber, containing_timestamp)
+      request     = discovergy.get_day(meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
           # TODO: make this nicer
