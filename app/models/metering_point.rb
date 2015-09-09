@@ -425,14 +425,14 @@ class MeteringPoint < ActiveRecord::Base
       return result
     else
       if self.pv?
-        MeteringPoint.fake_data(forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0, resolution_format, containing_timestamp, :sep_pv)
-        #convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
+        #MeteringPoint.fake_data(forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0, resolution_format, containing_timestamp, :sep_pv)
+        convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
       elsif self.bhkw_or_else?
-        MeteringPoint.fake_data(forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0, resolution_format, containing_timestamp, :sep_bhkw)
-        #convert_to_array(Reading.aggregate(resolution_format, ['sep_bhkw'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
+        #MeteringPoint.fake_data(forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0, resolution_format, containing_timestamp, :sep_bhkw)
+        convert_to_array(Reading.aggregate(resolution_format, ['sep_bhkw'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
       elsif self.slp?
-        MeteringPoint.fake_data(forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0, resolution_format, containing_timestamp, :slp)
-        #convert_to_array(Reading.aggregate(resolution_format, ['slp'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SLP
+        #MeteringPoint.fake_data(forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0, resolution_format, containing_timestamp, :slp)
+        convert_to_array(Reading.aggregate(resolution_format, ['slp'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SLP
       end
     end
   end
@@ -440,11 +440,11 @@ class MeteringPoint < ActiveRecord::Base
 
   def latest_fake_data
     if self.slp?
-      return {data: MeteringPoint.fake_data(1, "latest_fake_data", Time.now.to_i*1000, :slp), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+      return {data: Reading.latest_fake_data('slp'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
     elsif self.pv?
-      return {data: MeteringPoint.fake_data(1, "latest_fake_data", Time.now.to_i*1000, :sep_pv), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+      return {data: Reading.latest_fake_data('sep_pv'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
     elsif self.bhkw_or_else?
-      return {data: MeteringPoint.fake_data(1, "latest_fake_data", Time.now.to_i*1000, :sep_bhkw), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+      return {data: Reading.latest_fake_data('sep_bhkw'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
     else
       return {data: [[0, 1]], factor: 1}
     end

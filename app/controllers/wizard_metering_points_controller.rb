@@ -91,10 +91,15 @@ class WizardMeteringPointsController  < ApplicationController
           flash[:notice] = t("your_credentials_have_been_checked_and_are_valid", metering_point: @metering_point.name)
           render action: 'update'
         else
-          @contract.errors.add(:password, I18n.t("wrong_username_and_or_password"))
-          @contract.errors.add(:username, I18n.t("wrong_username_and_or_password"))
-          @contract.destroy
-          render action: 'contract', metering_point_id: @metering_point.id
+          if @contract.organization.slug == 'buzzn-metering'
+            flash[:error] = t("your_credentials_have_been_checked_and_are_invalid", metering_point: @metering_point.name)
+            render action: 'update'
+          else
+            @contract.errors.add(:password, I18n.t("wrong_username_and_or_password"))
+            @contract.errors.add(:username, I18n.t("wrong_username_and_or_password"))
+            @contract.destroy
+            render action: 'contract', metering_point_id: @metering_point.id
+          end
         end
       else
         render action: 'contract', metering_point_id: @metering_point.id

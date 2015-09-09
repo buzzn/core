@@ -125,7 +125,7 @@ de:
   valid_credentials: Zugangsdaten gültig
   your_credentials_have_been_checked_and_are_valid: "Die Zugangsdaten von Deinem Zählpunkt %{metering_point} sind überprüft worden und sind gültig."
   invalid_credentials: Zugangsdaten ungültig
-  your_credentials_have_been_checked_and_are_invalid: "Die Zugangsdaten von Deinem Zählpunkt %{metering_point} sind überprüft worden und sind ungültig."
+  your_credentials_have_been_checked_and_are_invalid: "Die Zugangsdaten von Deinem Zählpunkt %{metering_point} sind überprüft worden und sind ungültig. Bitte Zählernummer und Datenverbindung prüfen. "
 
   member_since: Mitglied seit
 
@@ -333,7 +333,7 @@ de:
   edit_project: Projekt Bearbeiten
   new_investment: Neues Investment
   new_investment_request: Neue Investment Anfrage
-  send: senden
+  send: Senden
   investment_request_was_successfully_sends: Investitionens Anfrage wurde erfolgreich versandt
   delete_selected_shape: ausgewählten Umriss löschen.
   map: Karte

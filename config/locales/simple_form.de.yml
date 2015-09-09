@@ -119,6 +119,9 @@ de:
         metering_points: Zählpunkte
         mode: Zugang
         new_meters: Einzuladende Zählernummer
+        manufacturer_product_serialnumber: Einzuladende Zählernummer
+        email: Email
+        email_confirmation: Email bestätigen
       meter:
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname

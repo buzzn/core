@@ -67,11 +67,11 @@
         - else
           - if current_user.editable_metering_points.flatten.count == 0
             .btn-group{"data-toggle" => "popover", "data-placement" => "bottom", "title" => t("not_available"), "data-content" => t("you_need_a_metering_point_to_join_this_group")}
-              %button.btn.btn-block.btn-success.disabled
+              %button.btn.btn-block.btn-success.btn-labeled.fa.fa-plus.disabled
                 =t('membership')
           - else
             .btn-group
-              %button.btn.btn-block.btn-success.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
+              %button.btn.btn-block.btn-success.btn-labeled.fa.fa-plus.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
                 =t('membership')
               %ul.dropdown-menu{role: "menu"}
                 - if current_user.editable_metering_points.flatten.count == 1
