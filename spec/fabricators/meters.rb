@@ -116,10 +116,16 @@ Fabricator :easymeter_60009269, from: :meter do
   manufacturer_product_serialnumber   '60009269'
 end
 
-Fabricator :easymeter_60176745, from: :meter do
+Fabricator :easymeter_60232499, from: :meter do
   manufacturer_name                   'easy_meter'
   manufacturer_product_name           'Q3D'
-  manufacturer_product_serialnumber   '60176745'
+  manufacturer_product_serialnumber   '60232499'
+end
+
+Fabricator :amperix_60232AMPE, from: :meter do
+  manufacturer_name                   'amperix'
+  manufacturer_product_name           'AMP'
+  manufacturer_product_serialnumber   '60232AMPE'
 end
 
 

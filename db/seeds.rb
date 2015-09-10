@@ -118,8 +118,15 @@ buzzn_team_names.each do |user_name|
     root_mp.devices << @bhkw_stefan
     user.add_role :manager, @bhkw_stefan
   when 'thomas'
-    root_mp = Fabricate(:mp_60176745)
+    root_mp = Fabricate(:mp_60232499)
     root_mp.contracts << Fabricate(:mpoc_thomas, metering_point: root_mp)
+    user.add_role :admin # thomas is admin
+
+    mp_amp = Fabricate(:mp_amperixTT)
+    mp_amp.contracts << Fabricate(:mpoc_amperix_tt, metering_point: mp_amp)
+ #   user.contracting_party.contracts << mp_amp.contracts
+ #   Fabricate(:amperix_60232AMPE, metering_point: root_mp)
+
   else
     root_mp = Fabricate(:metering_point)
   end

@@ -81,3 +81,9 @@ Fabricator :mpoc_thomas, from: :metering_point_operator_contract do
   username      'thomas@buzzn.net'
   password      'DSivKK1980'
 end
+
+Fabricator :mpoc_amperix_tt, from: :metering_point_operator_contract do
+  organization  { Organization.find('amperix') }
+  username      '6ed89edf81be48586afc19f9006feb8b'
+  password      '1a875e34e291c28db95ecbda015ad433'
+end

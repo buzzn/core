@@ -2,13 +2,25 @@ class Amperix
 
   # how to use
   # Amperix.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693').meters
-  # Amperix.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693').mySmartGridOberlFaraDay(unixtime)
+  # Amperix.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693').get_day(unixtime)
   #
 
   # amperix  = Amperix.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693')
   # unixtime = Time.now.to_i
-  # request  = amperix.mySmartGridOberlFaraDay(unixtime)
+  # request  = amperix.get_day(unixtime)
 
+# sensor_id replaces username and x_token the password
+  def initialize(sensor_id, x_token)
+    #sensor_id = "721bcb386c8a4dab2510d40a93a7bf66" #to be removed
+    #x_token   = "0b81f58c19135bc01420aa0120ae7693" #dito
+    @conn = Faraday.new(:url => 'https://api.mysmartgrid.de:8443/sensor/'+ sensor_id, ssl: {verify: false}) do |faraday|
+      faraday.request  :url_encoded
+      faraday.response :logger
+      faraday.adapter :net_http
+      faraday.headers["X-Token"] = x_token
+      faraday.headers["X-Version"] = "1.0"
+    end
+  end
 
 # This subroutine returns an array of time and work of the requested month on a time-grid of quarter hours
 # This holds for data not older than one month only.
@@ -102,10 +114,4 @@ def get_live
     end
     return JSON.parse(response.body)
   end
-
-
-
-
-
-
 end

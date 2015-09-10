@@ -180,8 +180,8 @@ de:
   address: Adresse
   add_address: Adresse hinzufügen
   invoice_address: Rechnungsadresse
-  create_address: Adresse erstellen
-  new_address: Adresse erstellen
+  create_address: Adresse festlegen
+  new_address: Adresse festlegen
   edit_address: Adresse bearbeiten
   delete_address: Adresse löschen
   update_address: Adresse aktualisieren
