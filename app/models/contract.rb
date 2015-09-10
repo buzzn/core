@@ -104,11 +104,10 @@ private
           self.update_columns(valid_credentials: true)
           #self.send_notification_credentials(true)
           if self.group
-            self.group.metering_points.each do |metering_point|
-              metering_point.meter.save if metering_point.meter
-            end
+            copy_contract(:group)
           end
           if self.metering_point && self.metering_point.meter
+            copy_contract(:metering_point)
             self.metering_point.meter.save
           end
         end
@@ -120,6 +119,22 @@ private
         end
       else
         self.update_columns(valid_credentials: false)
+      end
+    end
+  end
+
+  def copy_contract(resource)
+    if resource == :group
+      @metering_points = self.group.metering_points
+    elsif resource == :metering_point
+      @metering_points = self.metering_point.meter.metering_points
+    end
+    @metering_points.each do |metering_point|
+      if metering_point.contracts.metering_point_operators.empty?
+        @contract = self
+        @contract2 = Contract.new(mode: @contract.mode, price_cents: @contract.price_cents, organization: @contract.organization, username: @contract.username, password: @contract.password)
+        @contract2.metering_point = metering_point
+        @contract2.save
       end
     end
   end

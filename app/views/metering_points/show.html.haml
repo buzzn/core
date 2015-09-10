@@ -68,13 +68,17 @@
 #page-content
 
   .row
-    .col-lg-12.metering_point_detail{id: "metering_point_#{@metering_point.id}"}
+    .metering_point_detail{id: "metering_point_#{@metering_point.id}"}
+      - if !@metering_point.smart?
+        .ribbon-wrapper-green
+          .ribbon-green= 'Fake'
       .panel
         .panel-body.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
           .text-center
             .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-zoomout.fa.fa-search-minus.fa-2x
           .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-prev.fa.fa-chevron-left.fa-2x
           .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-next.pull-right.fa.fa-chevron-right.fa-2x
+
           .chart{id: "chart-container-#{@metering_point.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
           .pad-all
             .metering_point{ id: "metering_point_#{@metering_point.id}"}

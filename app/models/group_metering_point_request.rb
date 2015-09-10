@@ -31,7 +31,7 @@ class GroupMeteringPointRequest < ActiveRecord::Base
       if status == 'accepted'
         metering_point.group = group
         group.metering_points << metering_point
-        metering_point.meter.save if metering_point.meter
+        group.save
         #group.calculate_closeness
         self.delete
       elsif status == 'rejected'

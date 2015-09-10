@@ -3,6 +3,9 @@
     .panel.panel-info.panel-colorful.text-center
 
       .panel-body{class: "bg-#{metering_point.mode_class}" }
+        - if !metering_point.smart?
+          .ribbon-wrapper-green
+            .ribbon-green= 'Fake'
         .chart{id: "chart-container-#{metering_point.id}", style: "width: 100%; height: 70px;"}
           = t('loading') + '...'
 

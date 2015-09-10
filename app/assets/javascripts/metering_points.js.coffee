@@ -76,6 +76,7 @@ $(".metering_points").ready ->
           series: data)
       .error (jqXHR, textStatus, errorThrown) ->
         console.log textStatus
+        $('#chart-container-' + id).html('error')
 
 endOfDay = (timestamp) ->
   end = new Date(timestamp)
@@ -237,6 +238,7 @@ $(".metering_point_detail").ready ->
       #checkIfNextDataExists()
     .error (jqXHR, textStatus, errorThrown) ->
       console.log textStatus
+      $('#chart-container-' + id).html('error')
 
 
 
@@ -645,6 +647,7 @@ $(".group-chart").ready ->
         #checkIfNextDataExistsGroup()
     .error (jqXHR, textStatus, errorThrown) ->
       console.log textStatus
+      $('#chart-container-' + group_id).html('error')
   createChartTimer([group_id], 'group')
 
 
@@ -1307,6 +1310,9 @@ getLiveData = (metering_point, metering_point_id) ->
           #   chart.series[0].addPoint([data.timestamp, data.latest_power])
       else
         metering_point.find(".power-ticker").html('offline')
+    .error (jqXHR, textStatus, errorThrown) ->
+      console.log textStatus
+      metering_point.find(".power-ticker").html('error')
 
 
 calculate_power = (last_readings) =>
