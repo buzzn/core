@@ -32,8 +32,6 @@ class MeteringPoint < ActiveRecord::Base
 
   before_destroy :delete_meter
 
-  after_save :copy_contract, if: :in_localpool?
-
   has_many :dashboard_metering_points
   has_many :dashboards, :through => :dashboard_metering_points
 
@@ -521,14 +519,7 @@ class MeteringPoint < ActiveRecord::Base
       end
     end
 
-    def copy_contract
-      if self.contracts.metering_point_operators.empty?
-        @contract = self.group.contracts.metering_point_operators.first
-        @contract2 = Contract.new(mode: @contract.mode, price_cents: @contract.price_cents, organization: @contract.organization, username: @contract.username, password: @contract.password)
-        @contract2.metering_point = self
-        @contract2.save
-      end
-    end
+
 
 
 end

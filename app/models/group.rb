@@ -252,10 +252,12 @@ class Group < ActiveRecord::Base
 
     def validate_localpool
       if self.mode == 'localpool'
-        if self.contracts.empty?
+        if self.contracts.metering_point_operators.empty?
           @contract = Contract.new(mode: 'metering_point_operator_contract', price_cents: 0, group: self, organization: Organization.find('buzzn-metering'), username: 'team@buzzn-metering.de', password: 'Zebulon_4711')
-          @contract.save
+        else
+          @contract = self.contracts.metering_point_operators.first
         end
+        @contract.save
       else
         if self.contracts.any?
           self.contracts.each do |contract|
@@ -265,6 +267,8 @@ class Group < ActiveRecord::Base
         end
       end
     end
+
+
 
 
 

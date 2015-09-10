@@ -37,6 +37,7 @@ de:
   sent_metering_point_user_request: Zählpunktanfrage gesendet
   new_metering_point_user_request: Neue Zählpunktanfrage
   do_you_want_to_admit_user_to_this_metering_point: "Möchtest Du %{user} in diesen Zählpunkt aufnehmen"
+  sent_group_metering_point_request_successfully: "Zählpunkteinladung erfolgreich gesendet. Warten auf Annahme."
 
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler
@@ -519,6 +520,7 @@ de:
   remove_equipment: Zubehör entfernen
   destroy: löschen
   forecast_watt_hour_pa: Jahresstrommenge (Prognose)
+  forecast: Prognose
   price_cents: Preis (Cent)
   termination: Vertragsende
   signing_user: Unterzeichnet von
