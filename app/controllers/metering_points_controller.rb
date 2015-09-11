@@ -1,5 +1,5 @@
 class MeteringPointsController < ApplicationController
-  before_filter :authenticate_user!, except: [:show, :chart, :latest_slp]
+  before_filter :authenticate_user!, except: [:show, :chart, :latest_fake_data, :latest_power]
   respond_to :html, :json, :js
 
   def show
@@ -100,11 +100,39 @@ class MeteringPointsController < ApplicationController
 
   def send_invitations_update
     @metering_point = MeteringPoint.find(params[:id])
-    @new_user = User.find(params[:metering_point][:new_users])
-    if MeteringPointUserRequest.create(user: @new_user, metering_point: @metering_point, mode: 'invitation')
-      flash[:notice] = t('sent_metering_point_user_invitation_successfully')
+    if params[:metering_point][:invite_via_email] == "1"
+      if params[:metering_point][:email] == "" || params[:metering_point][:email_confirmation] == ""
+        @metering_point.errors.add(:email, I18n.t("cant_be_blank"))
+        @metering_point.errors.add(:email_confirmation,  I18n.t("cant_be_blank"))
+        render action: 'send_invitations', invite_via_email: 'checked'
+      elsif params[:metering_point][:email] != params[:metering_point][:email_confirmation]
+        @metering_point.errors.add(:email, I18n.t("doesnt_match_with_confirmation"))
+        @metering_point.errors.add(:email_confirmation, I18n.t("doesnt_match_with_email"))
+        render action: 'send_invitations', invite_via_email: 'checked'
+      else
+        @email = params[:metering_point][:email]
+        @existing_users = User.where(email: @email)
+        if @existing_users.any?
+          if MeteringPointUserRequest.create(user: @existing_users.first, metering_point: @metering_point, mode: 'invitation')
+            flash[:notice] = t('sent_metering_point_user_invitation_successfully')
+          else
+            flash[:error] = t('unable_to_send_metering_point_user_invitation')
+          end
+        else
+          @new_user = User.invite!(email: @email) #TODO: set invited_by to Metering_Point or User
+          @metering_point.users << @new_user
+          current_user.friends << @new_user
+          @metering_point.save!
+          flash[:notice] = t('invitation_sent_successfully_to', email: @email)
+        end
+      end
     else
-      flash[:error] = t('unable_to_send_metering_point_user_invitation')
+      @new_user = User.find(params[:metering_point][:new_users])
+      if MeteringPointUserRequest.create(user: @new_user, metering_point: @metering_point, mode: 'invitation')
+        flash[:notice] = t('sent_metering_point_user_invitation_successfully')
+      else
+        flash[:error] = t('unable_to_send_metering_point_user_invitation')
+      end
     end
   end
 

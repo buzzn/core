@@ -54,6 +54,9 @@ de:
         group: Zu eigener Gruppe hinzufügen
         readable: Sichtbar für
         forecast_kwh_pa: Jahresprognose (kWh)
+        invite_via_email: Per Email Adresse einladen
+        email: Email
+        email_confirmation: Email Bestätigung
       device:
         image: Bild
         mode: Modus
