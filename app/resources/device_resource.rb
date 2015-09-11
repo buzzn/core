@@ -1,4 +1,4 @@
-class DeviceSerializer < ApplicationSerializer
+class DeviceResource < ApplicationResource
 
   attributes  :id,
               :name,

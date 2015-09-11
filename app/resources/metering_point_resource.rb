@@ -1,4 +1,4 @@
-class MeteringPointSerializer < ApplicationSerializer
+class MeteringPointResource < ApplicationResource
 
   attributes  :id,
               :uid,

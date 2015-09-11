@@ -1,4 +1,4 @@
-class MeterSerializer < ApplicationSerializer
+class MeterResource < ApplicationResource
 
   attributes  :id,
               :manufacturer_name,

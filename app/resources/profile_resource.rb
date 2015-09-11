@@ -1,4 +1,4 @@
-class ProfileSerializer < ApplicationSerializer
+class ProfileResource < ApplicationResource
 
   attributes  :id,
               :slug,
@@ -12,15 +12,15 @@ class ProfileSerializer < ApplicationSerializer
 
 
   def metering_point_ids
-    object.metering_points.collect(&:id)
+    @model.metering_points.collect(&:id)
   end
 
   def group_ids
-    object.metering_points.collect(&:group).compact.uniq.collect(&:id)
+    @model.metering_points.collect(&:group).compact.uniq.collect(&:id)
   end
 
   def friendship_ids
-    object.user.friendship_ids
+    @model.user.friendship_ids
   end
 
 end

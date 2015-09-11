@@ -1,4 +1,4 @@
-class FriendshipSerializer < ApplicationSerializer
+class FriendshipResource < ApplicationResource
 
   attributes  :id,
               :friend_id,

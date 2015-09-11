@@ -436,6 +436,7 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
+
   def latest_fake_data
     if self.slp?
       return {data: Reading.latest_fake_data('slp'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
