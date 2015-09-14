@@ -31,6 +31,7 @@ class MeteringPoint < ActiveRecord::Base
   mount_uploader :image, PictureUploader
 
   before_destroy :delete_meter
+  before_destroy :delete_requests
 
   has_many :dashboard_metering_points
   has_many :dashboards, :through => :dashboard_metering_points
@@ -517,6 +518,13 @@ class MeteringPoint < ActiveRecord::Base
       end
       FormulaPart.where(operand_id: self.id).each do |formula_part|
         formula_part.destroy
+      end
+    end
+
+    def delete_requests
+      requests = MeteringPointUserRequest.where(metering_point_id: self.id)
+      requests.each do |request|
+        request.destroy
       end
     end
 
