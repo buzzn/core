@@ -137,64 +137,7 @@ class GroupsController < ApplicationController
 
   def bubbles_data
     @group = Group.find(params[:id])
-
-    in_metering_point_data = []
-    out_metering_point_data = []
-    @group.metering_points.each do |metering_point|
-      data_entry = []
-      latest_power = nil
-      virtual = metering_point.virtual
-      metering_point_name = metering_point.decorate.name_with_users
-      if metering_point.users.any?
-        if metering_point.users.include?(current_user)
-          own_metering_point = true
-        else
-          own_metering_point = false
-        end
-      else
-        own_metering_point = false
-      end
-      if metering_point.meter
-        if metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
-          latest_power = metering_point.last_power
-        elsif metering_point.meter.smart? && metering_point.meter.online && !metering_point.meter.init_reading
-          #TODO: init_reading ausführen
-        elsif metering_point.meter.smart? && !metering_point.meter.online && metering_point.meter.init_reading
-          #TODO: show slp values?
-        elsif !metering_point.meter.smart?
-          #TODO: show slp values
-        end
-      else
-        if metering_point.virtual #&& metering_point.meter.smart? && metering_point.meter.online && metering_point.meter.init_reading
-          latest_power = metering_point.last_power
-        end
-      end
-      readable = user_signed_in? ? metering_point.readable_by?(current_user) : false
-      if !readable
-        metering_point_name = "anonym"
-      end
-      if metering_point.mode == "out"
-        if !latest_power.nil?
-          data_entry = {:metering_point_id => metering_point.id, :latest_power => latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => true}
-          #data_entry.push(metering_point.id, latest_power, user_name, virtual)
-        else
-          data_entry = {:metering_point_id => metering_point.id, :latest_power => 0, :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => true}
-          #data_entry.push(metering_point.id, 0, user_name, virtual)
-        end
-        out_metering_point_data.push(data_entry)
-      else
-        if !latest_power.nil?
-          data_entry = {:metering_point_id => metering_point.id, :latest_power => latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
-          #data_entry.push(metering_point.id, latest_power, user_name, virtual)
-        else
-          data_entry = {:metering_point_id => metering_point.id, :latest_power => 0, :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
-          #data_entry.push(metering_point.id, 0, user_name, virtual)
-        end
-        in_metering_point_data.push(data_entry)
-      end
-    end
-    out_data = { :name => "Gesamterzeugung", :children => out_metering_point_data}
-    result = {:in => in_metering_point_data, :out => out_data}
+    result = @group.bubbles_data(current_user)
     render json: result.to_json
   end
 
@@ -227,32 +170,8 @@ class GroupsController < ApplicationController
 
   def get_scores
     @group = Group.find(params[:id])
-    resolution_format = params[:resolution]
-    containing_timestamp = params[:containing_timestamp]
-    if resolution_format.nil?
-      resolution_format = "year"
-    end
-    if containing_timestamp.nil?
-      containing_timestamp = Time.now.to_i * 1000
-    end
-
-    if resolution_format == 'day'
-      sufficiency = @group.scores.sufficiencies.dayly.at(containing_timestamp).first
-      autarchy = @group.scores.autarchies.dayly.at(containing_timestamp).first
-      fitting = @group.scores.fittings.dayly.at(containing_timestamp).first
-    elsif resolution_format == 'month'
-      sufficiency = @group.scores.sufficiencies.monthly.at(containing_timestamp).first
-      autarchy = @group.scores.autarchies.monthly.at(containing_timestamp).first
-      fitting = @group.scores.fittings.monthly.at(containing_timestamp).first
-    elsif resolution_format == 'year'
-      sufficiency = @group.scores.sufficiencies.yearly.at(containing_timestamp).first
-      autarchy = @group.scores.autarchies.yearly.at(containing_timestamp).first
-      fitting = @group.scores.fittings.yearly.at(containing_timestamp).first
-    end
-    sufficiency.nil? ? sufficiency_value = 0 : sufficiency_value = sufficiency.value
-    autarchy.nil? ? autarchy_value = 0 : autarchy_value = autarchy.value
-    fitting.nil? ? fitting_value = 0 : fitting_value = fitting.value
-    render json: { sufficiency: sufficiency_value, closeness: @group.closeness, autarchy: autarchy_value, fitting: fitting_value }.to_json
+    result = @group.get_scores(params[:resolution], params[:containing_timestamp])
+    render json: result.to_json
   end
 
 

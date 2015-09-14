@@ -592,6 +592,9 @@ de:
   not_deletable: Nicht löschbar
   other_organization: Andere Firma
   no_address: Ohne Adresse
+  bubbles: Kreise
+  lines: Linien
+
 
   new_group_metering_point_invitation: Neue Gruppeneinladung
   do_you_want_to_join_the_group_with_your_metering_point: "Möchtest Du der Gruppe %{group} mit deinem Zählpunkt %{metering_point} beitreten"

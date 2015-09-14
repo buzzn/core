@@ -250,6 +250,69 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def bubbles_data(requesting_user)
+    in_metering_point_data = []
+    out_metering_point_data = []
+    self.metering_points.each do |metering_point|
+      data_entry = []
+      latest_power = nil
+      virtual = metering_point.virtual
+      metering_point_name = metering_point.decorate.name_with_users
+      if metering_point.users.any?
+        if metering_point.users.include?(requesting_user)
+          own_metering_point = true
+        else
+          own_metering_point = false
+        end
+      else
+        own_metering_point = false
+      end
+      latest_power = metering_point.last_power
+
+      readable = metering_point.readable_by?(requesting_user)
+      if !readable
+        metering_point_name = "anonym"
+      end
+      if metering_point.mode == "out"
+        data_entry = {:metering_point_id => metering_point.id, :latest_power => latest_power.nil? ? 0 : latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => true}
+        out_metering_point_data.push(data_entry)
+      else
+        data_entry = {:metering_point_id => metering_point.id, :latest_power => latest_power.nil? ? 0 : latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
+        in_metering_point_data.push(data_entry)
+      end
+    end
+    out_data = { :name => "Gesamterzeugung", :children => out_metering_point_data}
+    result = {:in => in_metering_point_data, :out => out_data}
+    return result
+  end
+
+  def get_scores(resolution, containing_timestamp)
+    if resolution.nil?
+      resolution = "year"
+    end
+    if containing_timestamp.nil?
+      containing_timestamp = Time.now.to_i * 1000
+    end
+
+    if resolution == 'day'
+      sufficiency = self.scores.sufficiencies.dayly.at(containing_timestamp).first
+      autarchy = self.scores.autarchies.dayly.at(containing_timestamp).first
+      fitting = self.scores.fittings.dayly.at(containing_timestamp).first
+    elsif resolution == 'month'
+      sufficiency = self.scores.sufficiencies.monthly.at(containing_timestamp).first
+      autarchy = self.scores.autarchies.monthly.at(containing_timestamp).first
+      fitting = self.scores.fittings.monthly.at(containing_timestamp).first
+    elsif resolution == 'year'
+      sufficiency = self.scores.sufficiencies.yearly.at(containing_timestamp).first
+      autarchy = self.scores.autarchies.yearly.at(containing_timestamp).first
+      fitting = self.scores.fittings.yearly.at(containing_timestamp).first
+    end
+    sufficiency.nil? ? sufficiency_value = 0 : sufficiency_value = sufficiency.value
+    autarchy.nil? ? autarchy_value = 0 : autarchy_value = autarchy.value
+    fitting.nil? ? fitting_value = 0 : fitting_value = fitting.value
+    return { sufficiency: sufficiency_value, closeness: self.closeness, autarchy: autarchy_value, fitting: fitting_value }
+  end
+
 
   private
 

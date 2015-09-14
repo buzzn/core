@@ -105,9 +105,12 @@ class MeteringPoint < ActiveRecord::Base
         return {:power => result, :timestamp => average_timestamp/1000}
       end
       return {:power => 0, :timestamp => 0}
-    else
+    elsif self.smart?
       result = Crawler.new.getDataLive(self, self.metering_point_operator_contract, self.meter)
       return result
+    else
+      result = self.latest_fake_data
+      return { :power => result[:data].flatten[1] * result[:factor], :timestamp => result[:data].flatten[0]}
     end
   end
 

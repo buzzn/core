@@ -109,6 +109,10 @@ class Reading
       return
     end
 
+    if (metering_point_ids.include?('slp') || metering_point_ids.include?('sep_pv') || metering_point_ids.include?('sep_bhkw')) && @end_time > Time.now
+      @end_time = Time.now
+    end
+
     # start pipe
     pipe = []
 

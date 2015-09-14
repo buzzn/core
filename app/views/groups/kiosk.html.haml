@@ -36,94 +36,56 @@
 #page-content
 
 
-  .col-sm-6.col-md-6.col-lg-6
-    .row
+  .row
+    .col-sm-6.col-md-6.col-lg-6
       %h1.page-header.text-overflow
         %span
-          = t('live_chart')
+          = t('bubbles')
           %small
             %i.small-info-circle.fa.fa-info-circle{'data-content' => t('live_chart_info')}
       .panel
         .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
           #dummy
 
-    .row
-      - if @out_devices.any?
+
+
+    - if user_signed_in?
+      .col-sm-6.col-md-6.col-lg-6
         %h1.page-header.text-overflow
           %span
-            = t('out_devices')
-            %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('out_devices_info_group')}
-        .row
-          .out-devices
-            - @out_devices.each do |device|
-              = render device
+            = t('comments')
+        .panel.comments-panel
+          #demo-chat-body.collapse.in
+            .nano{:style => "height:410px"}
+              .nano-content.pad-all.comments-content
+                %ul.list-unstyled.media-block.comments-all
+                  = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
+            .panel-footer
+              = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "") }
 
 
-  .col-sm-6.col-md-6.col-lg-6.group-chart{id: @group.id}
-    .row-margin-left
+
+  .row
+    .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id}
       %h1.page-header.text-overflow
         %span
-          = t('trend_chart')
+          = t('lines')
           %small
             %i.small-info-circle.fa.fa-info-circle{'data-content' => t('trend_chart_info')}
       .panel
         .panel-body.panel-colorful
-          .chart{id: "chart-container-#{@group.id}", style: "width: 100%; height: 300px;"}
-
-
-    .row-margin-left
-      %h1.page-header.text-overflow
-        %span
-          = t('comments')
-      .panel.comment-form
-        #demo-chat-body.collapse.in
-          .nano{:style => "height:410px"}
-            .nano-content.pad-all
-              %ul.list-unstyled.media-block.comments-all
-                = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
-
-
-
-      - if @group.managers.any? && @group.managers != @energy_producers
-        %h1.page-header.text-overflow
-          %span
-            = t('group_managers')
-            %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('group_manager_info')}
-        .row
-          - @group.managers.each do |user|
-            = render user.profile
+          .text-center
+            .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-zoomout.fa.fa-search-minus.fa-2x
+          .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-prev.fa.fa-chevron-left.fa-2x
+          .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-next.pull-right.fa.fa-chevron-right.fa-2x
+          .chart{id: "chart-container-#{@group.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
 
 
 
 
 
-      - if @energy_producers.any?
-        %h1.page-header.text-overflow
-          %span
-            = t('energy_producers')
-            %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('energy_producers_info')}
-        .row
-          - @energy_producers.each do |user|
-            = render user.profile
-        %hr
 
 
-
-
-
-      - if @interested_members.any?
-        %h1.page-header.text-overflow
-          %span
-            = t('interested_members')
-            %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('interested_members_info')}
-        .row
-          - @interested_members.each do |user|
-            = render user.profile
-        %hr
 
 
 
