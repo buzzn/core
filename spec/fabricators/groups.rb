@@ -14,13 +14,13 @@ end
 
 Fabricator :group_hopf, from: :group do
   name 'Hopf'
-  mode: 'localpool'
+  mode 'localpool'
   contracts { [Fabricate(:mpoc_buzzn_metering)] }
 end
 
 Fabricator :group_home_of_the_brave, from: :group do
   name        'Home of the Brave'
-  mode: 'localpool'
+  mode        'localpool'
   contracts { [Fabricate(:mpoc_buzzn_metering)] }
 end
 
@@ -31,7 +31,7 @@ end
 
 Fabricator :group_wagnis4, from: :group do
   name        'Wagnis 4'
-  mode: 'localpool'
+  mode        'localpool'
   website     'http://www.wagnis.org/wagnis/wohnprojekte/wagnis-4.html'
   description { "Dies ist der Localpool von Wagnis 4." }
   contracts { [Fabricate(:mpoc_buzzn_metering)] }
@@ -42,7 +42,7 @@ end
 
 Fabricator :group_forstenried, from: :group do
   name        'Mehrgenerationenplatz Forstenried'
-  mode: 'localpool'
+  mode        'localpool'
   website     'http://www.energie.wogeno.de/'
   description { "Dies ist der Localpool des Mehrgenerationenplatzes Forstenried der Freien Waldorfschule München Südwest und Wogeno München eG." }
   contracts { [Fabricate(:mpoc_buzzn_metering)] }
