@@ -162,7 +162,8 @@ a, img {
   overflow: hidden;
   position: absolute;
   top: -3px;
-  right: -3px;
+  right: 9px;
+  z-index: 100;
 }
 
 .ribbon-green {
@@ -207,10 +208,13 @@ a, img {
   right: 0;
 }
 .metering_point_detail {
-  margin-right: 12px;
-  margin-left: 12px;
+  padding-right: 12px;
+  padding-left: 12px;
   position: relative;
 }
+
+
+
 
 
 

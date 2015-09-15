@@ -24,6 +24,24 @@ class ProfileDecorator < Draper::Decorator
       })
   end
 
+  def picture(size)
+    if model.image
+      if size == 'lg'
+        image_tag current_user.profile.image.lg, class: 'img-circle img-user media-object', alt: ""
+      elsif size == 'sm'
+        image_tag current_user.profile.image.sm, class: 'img-circle img-user media-object', alt: ""
+      elsif size == 'md'
+        image_tag current_user.profile.image.md, class: 'img-circle img-user media-object', alt: ""
+      elsif size == 'cover'
+        image_tag current_user.profile.image.cover, class: 'img-circle img-user media-object', alt: ""
+      elsif size == 'big_tumb'
+        image_tag current_user.profile.image.big_tumb, class: 'img-circle img-user media-object', alt: ""
+      end
+    else
+
+    end
+  end
+
 
 
 end

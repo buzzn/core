@@ -55,7 +55,7 @@
               - if current_user.friends.any?
                 %li.list-header= t'my_friends'
                 - current_user.friends.each do |user|
-                  = mainnav_profile_path(user.profile)
+                  = mainnav_profile_path(user.profile) if user.profile
 
 / %aside.sidebar
 /   %nav.sidebar-nav

@@ -70,8 +70,8 @@
   .row
     .metering_point_detail{id: "metering_point_#{@metering_point.id}"}
       - if !@metering_point.smart?
-        .ribbon-wrapper-green
-          .ribbon-green= 'Fake'
+        .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("dummy"), "data-content" => t("you_dont_have_a_smart_meter_so_your_energy_data_is_estimated_as_shown")}
+          .ribbon-green= t('dummy')
       .panel
         .panel-body.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
           .text-center
