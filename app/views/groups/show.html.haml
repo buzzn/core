@@ -9,12 +9,7 @@
 .panel
   .panel-body
     .col-lg-1.col-md-2.col-sm-2.col-xs-3
-      - if @group.logo?
-        = image_tag @group.logo.lg, class: 'img-circle img-lg img-border'
-      - else
-        %span.fa-stack.fa-lg.fa-4x
-          %i.fa.fa-circle.fa-stack-2x
-          %i.fa.fa-users.fa-stack-1x.fa-inverse
+      = @group.picture('lg')
 
 
     .col-lg-6.col-md-6.col-sm-6.col-xs-5

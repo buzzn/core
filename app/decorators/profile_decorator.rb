@@ -27,17 +27,17 @@ class ProfileDecorator < Draper::Decorator
   def picture(size=nil)
     if model.image.present?
       if size == 'lg'
-        image_tag model.image.lg, class: 'img-lg img-circle img-user media-object', alt: ""
+        image_tag model.image.lg, class: 'img-lg img-circle img-user media-object', alt: "profile-picture"
       elsif size == 'md'
-        image_tag model.image.md, class: 'img-md img-circle img-user media-object', alt: ""
+        image_tag model.image.md, class: 'img-md img-circle img-user media-object', alt: "profile-picture"
       elsif size == 'sm'
-        image_tag model.image.sm, class: 'img-sm img-circle img-user media-object', alt: ""
+        image_tag model.image.sm, class: 'img-sm img-circle img-user media-object', alt: "profile-picture"
       elsif size == 'xs'
-        image_tag model.image.md, class: 'img-xs img-circle img-user media-object', alt: ""
+        image_tag model.image.md, class: 'img-xs img-circle img-user media-object', alt: "profile-picture"
       elsif size == 'cover'
-        image_tag model.image.cover, class: 'img-circle img-user media-object', alt: ""
+        image_tag model.image.cover, class: 'img-circle img-user media-object', alt: "profile-picture"
       elsif size == 'big_tumb'
-        image_tag model.image.big_tumb, class: 'img-circle img-user media-object', alt: ""
+        image_tag model.image.big_tumb, class: 'img-circle img-user media-object', alt: "profile-picture"
       end
     else
       if size == 'lg'

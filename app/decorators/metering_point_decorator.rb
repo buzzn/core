@@ -24,6 +24,37 @@ class MeteringPointDecorator < Draper::Decorator
     end
   end
 
+  def picture(size=nil)
+    if model.image.present?
+      if size == 'lg'
+        image_tag model.image.lg, class: 'img-lg img-circle img-user media-object', alt: ""
+      elsif size == 'md'
+        image_tag model.image.md, class: 'img-md img-circle img-user media-object', alt: ""
+      elsif size == 'sm'
+        image_tag model.image.sm, class: 'img-sm img-circle img-user media-object', alt: ""
+      elsif size == 'xs'
+        image_tag model.image.md, class: 'img-xs img-circle img-user media-object', alt: ""
+      elsif size == 'cover'
+        image_tag model.image.cover, class: 'img-circle img-user media-object', alt: ""
+      elsif size == 'big_tumb'
+        image_tag model.image.big_tumb, class: 'img-circle img-user media-object', alt: ""
+      end
+    else
+      bg_color = model.output? ? 'bg-red' : 'bg-blue'
+      if size == 'lg'
+        content_tag(:span, nil, class: 'img-lg imc-circle icon-wrapper-lg icon-circle fa fa-bolt fa-5x ' + bg_color)
+      elsif size == 'md'
+        content_tag(:span, nil, class: 'img-md imc-circle icon-wrapper-md icon-circle fa fa-bolt fa-3x ' + bg_color)
+      elsif size == 'sm'
+        content_tag(:span, nil, class: 'img-sm imc-circle icon-wrapper-sm icon-circle fa fa-bolt fa-2x ' + bg_color)
+      elsif size == 'xs'
+        content_tag(:span, nil, class: 'img-xs imc-circle icon-wrapper-xs icon-circle fa fa-bolt ' + bg_color)
+      else
+        content_tag(:i, nil, class: 'img-xxs imc-circle icon-wrapper-xxs icon-circle fa fa-bolt ' + bg_color)
+      end
+    end
+  end
+
 
   def mode_class
     case model.mode

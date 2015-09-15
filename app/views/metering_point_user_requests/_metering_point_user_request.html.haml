@@ -18,7 +18,7 @@
           .bs-callout.bs-callout-info
             .col-md-3
               .thumb_icon.friendship_req
-                = link_to content_tag(:i, '', class: "fa fa-bolt fa-4x"), metering_point_user_request.metering_point, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => metering_point_user_request.metering_point.decorate.name }, rel: 'tooltip'
+                = link_to metering_point_user_request.metering_point.decorate.picture('lg'), metering_point_user_request.metering_point, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => metering_point_user_request.metering_point.decorate.name }, rel: 'tooltip'
             .col-md-1
             .col-md-8
               %h4= t'new_metering_point_user_invitation'
