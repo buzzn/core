@@ -3,7 +3,7 @@
 
   - if user_signed_in? && current_user == comment.user
     .media-right
-      %img.img-circle.img-sm{:alt => t("profile_picture"), :src => comment.user.profile.image.sm }
+      = comment.user.profile.decorate.picture('sm')
     .media-body.pad-hor.speech-right
       .speech
         %a.media-heading{:href => profile_path(comment.user.profile)}
@@ -28,7 +28,7 @@
 
   - else
     .media-left
-      %img.img-circle.img-sm{:alt => t("profile_picture"), :src => comment.user.profile.image.sm}
+      = comment.user.profile.decorate.picture('sm')
     .media-body.pad-hor.speech-left
       .speech
         %a.media-heading{:href => profile_path(comment.user.profile)}

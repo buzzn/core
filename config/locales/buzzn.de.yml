@@ -599,6 +599,7 @@ de:
   new_group_metering_point_invitation: Neue Gruppeneinladung
   do_you_want_to_join_the_group_with_your_metering_point: "Möchtest Du der Gruppe %{group} mit deinem Zählpunkt %{metering_point} beitreten"
   do_you_want_to_get_friends_with: "Möchtest Du %{user} zu Deinen Freunden hinzufügen"
+  do_you_want_to_admit_user_with_the_metering_point_to_this_group: "Möchtest Du %{user} mit dem Zählpunkt %{metering_point} in diese Gruppe aufnehmen"
 
   dummy: Dummy
   you_dont_have_a_smart_meter_so_your_energy_data_is_estimated_as_shown: "Du hast keinen Smart Meter an diesem Zählpunkt, also werden die Energiedaten wie gezeigt geschätzt."

@@ -18,18 +18,12 @@
         .col-md-4.col-lg-4.col-xs-4
           .avatar
             - if @a.owner
-              - if @a.owner.profile.image
-                = link_to image_tag(@a.owner.profile.image.sm, class: "img-sm img-circle"), profile_path(@a.owner.profile)
-              - else
-                %span.icon-wrap.icon-wrap-sm.icon-circle.bg-success
-                  = link_to content_tag(:i, '', class: "fa fa-user fa-2x"), profile_path(@a.owner.profile)
+              = link_to @a.owner.profile.decorate.picture('sm'), profile_path(@a.owner.profile)
+
         - if @a.key == 'friendship.create'
           .col-md-4.col-lg-4.col-xs-3
             .avatar
               -if @a.recipient
-                - if @a.recipient.profile.image
-                  = link_to image_tag(@a.recipient.profile.image.sm, class: "img-sm img-circle"), profile_path(@a.recipient.profile)
-                - else
-                  %span.icon-wrap.icon-wrap-sm.icon-circle.bg-success
-                    = link_to content_tag(:i, '', class: "fa fa-user fa-2x"), profile_path(@a.recipient.profile)
+                = link_to @a.recipient.profile.decorate.picture('sm'), profile_path(@a.recipient.profile)
+
       = yield

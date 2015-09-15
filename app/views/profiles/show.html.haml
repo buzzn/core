@@ -10,12 +10,7 @@
     .panel-body
 
       .col-lg-2.col-md-2.col-sm-2.col-xs-5
-        - if @profile.image?
-          = image_tag @profile.image.lg, class: 'img-circle img-lg img-border'
-        - else
-          %span.fa-stack.fa-lg.fa-4x
-            %i.fa.fa-circle.fa-stack-2x
-            %i.fa.fa-user.fa-stack-1x.fa-inverse
+        = @profile.picture('lg')
 
 
       .col-lg-2.col-md-3.col-sm-3.col-xs-5
@@ -38,28 +33,16 @@
           = @profile.link_to_edit
 
 - if user_signed_in? && current_user == @profile.user && @friendship_requests.any?
-  .row
-    .col-lg-12
-      .panel.panel-colorful.panel-warning
-        .panel-body
-          .friendship_requests
-            = render @friendship_requests
+  .friendship_requests
+    = render @friendship_requests
 
 - if user_signed_in? && current_user == @profile.user && @group_invitations.any?
-  .row
-    .col-lg-12
-      .panel.panel-colorful.panel-warning
-        .panel-body
-          .group_invitations
-            = render @group_invitations
+  .group_invitations
+    = render @group_invitations
 
 - if user_signed_in? && current_user == @profile.user && @metering_point_invitations.any?
-  .row
-    .col-lg-12
-      .panel.panel-colorful.panel-warning
-        .panel-body
-          .metering_point_invitations
-            = render @metering_point_invitations
+  .metering_point_invitations
+    = render @metering_point_invitations
 
 
 

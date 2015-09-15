@@ -102,12 +102,8 @@
 
 - if user_signed_in? && current_user.can_update?(@group)
   - if @group_metering_point_requests.any?
-    .row
-      .col-lg-12
-        .panel.panel-colorful.panel-warning
-          .panel-body
-            .friendship_requests
-              = render @group_metering_point_requests
+    .friendship_requests
+      = render @group_metering_point_requests
 
 
 

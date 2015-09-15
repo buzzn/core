@@ -27,8 +27,7 @@
           %li#dropdown-user.dropdown
             %a.dropdown-toggle.text-right{"data-toggle" => "dropdown", :href => "#"}
               %span.pull-right
-                - if current_user.profile.image?
-                  = current_user.profile.decorate.picture('sm')
+                = current_user.profile.decorate.picture('xs')
 
 
               .username.hidden-xs= current_user.name
