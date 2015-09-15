@@ -4,7 +4,8 @@
   = t('virtual_metering_point')
   %small
     %i.normal-info-circle.fa.fa-info-circle{'data-content' => t('metering_point_virtual_info')}
-= f.input :virtual, label: false
+
+= f.input :virtual, as: :radio_buttons, label: false
 
 = f.input :name
 = f.input :forecast_kwh_pa
