@@ -47,10 +47,10 @@
                   %li.list-header= t'my_groups'
                   - current_user.editable_metering_points.collect(&:group).compact.uniq{|group| group.id}.each do |group|
                     = mainnav_group_path(group)
-              - if current_user.editable_devices.any?
-                %li.list-header= t'my_devices'
-                - current_user.editable_devices.each do |device|
-                  = mainnav_device_path(device)
+              / - if current_user.editable_devices.any?
+              /   %li.list-header= t'my_devices'
+              /   - current_user.editable_devices.each do |device|
+              /     = mainnav_device_path(device)
 
               - if current_user.friends.any?
                 %li.list-header= t'my_friends'

@@ -529,6 +529,10 @@ class MeteringPoint < ActiveRecord::Base
       requests.each do |request|
         request.destroy
       end
+      requests = GroupMeteringPointRequest.where(metering_point_id: self.id)
+      requests.each do |request|
+        request.destroy
+      end
     end
 
 

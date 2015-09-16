@@ -119,7 +119,7 @@ class MeteringPointsController < ApplicationController
             flash[:error] = t('unable_to_send_metering_point_user_invitation')
           end
         else
-          @new_user = User.invite!(email: @email) #TODO: set invited_by to Metering_Point or User
+          @new_user = User.invite!({email: @email}, current_user)
           @metering_point.users << @new_user
           current_user.friends << @new_user
           @metering_point.save!
