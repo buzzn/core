@@ -1,4 +1,6 @@
 de:
+  'yes': Ja
+  'no': Nein
   date:
     abbr_day_names:
     - So

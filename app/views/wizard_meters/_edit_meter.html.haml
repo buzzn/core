@@ -4,12 +4,12 @@
       /%button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
       %h4.modal-title= t'edit_meter'
       %ul.row.wz-step.wz-icon-bw.wz-nav-off.mar-top
-        .js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter', value: "false"}}}
+        .js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: t('no')}}}
           %li.col-xs-12
             %span.icon-wrap.icon-wrap-xs.bg-warning
               %i.fa.fa-dashboard
             %p.text-thin= t('step') + ' 1: ' + t('edit_meter')
-        .js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter', value: "true"}}}
+        .js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: t('yes')}}}
           %li.col-xs-6
             %span.icon-wrap.icon-wrap-xs.bg-warning
               %i.fa.fa-dashboard
@@ -23,13 +23,14 @@
         = f.input :manufacturer_name, collection: Meter.manufacturer_names, include_blank: false, input_html: { class: 'select2' }
         = f.input :manufacturer_product_serialnumber
         = f.association :metering_points, collection: current_user.editable_metering_points_without_meter_not_virtual + @meter.metering_points, include_blank: false, input_html: { class: 'select2' }
-        = f.input :smartmeter, as: :boolean, :input_html => { :checked => @meter.smart ? "checked" : "unchecked" }
+        /= f.input :smartmeter, as: :boolean, :input_html => { :checked => @meter.smart ? "checked" : "unchecked" }
+        = f.input :smartmeter, as: :radio_buttons, collection: [t('yes'), t('no')], checked: @meter.smart ? t('yes') : t('no')
 
         .modal-footer
           .float-left= link_to t('delete'), @meter, id: 'delete', :method => :delete, remote: false, :data => { :confirm => t('are_you_sure') }, class: 'btn btn-danger btn-labeled fa fa-trash'
           .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
             = t'cancel'
-          .pull-right.js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter', value: "true"}}}
+          .pull-right.js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: t('yes')}}}
             = f.button :button, t("continue"), class: 'btn btn-success btn-labeled fa fa-arrow-right', id: 'submit'
-          .pull-right.js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter', value: "false"}}}
+          .pull-right.js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: t('no')}}}
             = f.button :button, t("save"), class: 'btn btn-success btn-labeled fa fa-check', id: 'submit'

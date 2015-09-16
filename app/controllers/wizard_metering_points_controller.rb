@@ -8,7 +8,7 @@ class WizardMeteringPointsController  < ApplicationController
 
   def metering_point_update
     @metering_point = MeteringPoint.new(metering_point_params)
-    if params[:metering_point][:add_user] == '1'
+    if params[:metering_point][:add_user] == I18n.t('yes')
       @metering_point.users << current_user
     end
     @metering_point.readable = 'friends'
@@ -50,7 +50,7 @@ class WizardMeteringPointsController  < ApplicationController
       end
       if @meter.save
         @metering_point.create_activity key: 'metering_point.create', owner: current_user
-        if params[:meter][:smartmeter] == "1"
+        if params[:meter][:smartmeter] == I18n.t('yes')
           redirect_to contract_wizard_metering_points_path(metering_point_id: @metering_point.id)
         else
           render action: 'update'

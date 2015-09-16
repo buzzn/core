@@ -29,7 +29,7 @@ class WizardMetersController  < ApplicationController
       end
     end
     if @meter.save
-      if params[:meter][:smartmeter] == "1"
+      if params[:meter][:smartmeter] == I18n.t('yes')
         redirect_to contract_wizard_meters_path(metering_point_id: @metering_point.id)
       else
         render action: 'update'
@@ -95,7 +95,7 @@ class WizardMetersController  < ApplicationController
     end
 
     if @meter.save
-      if params[:meter][:smartmeter] == "1"
+      if params[:meter][:smartmeter] == I18n.t('yes')
         redirect_to edit_contract_wizard_meters_path(meter_id: @meter.id)
       else
         render action: 'update'

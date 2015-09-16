@@ -178,6 +178,8 @@ de:
   add_or_remove_users: Benutzer hinzufügen oder entfernen
 
 
+
+
   address: Adresse
   add_address: Adresse hinzufügen
   invoice_address: Rechnungsadresse
@@ -594,7 +596,6 @@ de:
   no_address: Ohne Adresse
   bubbles: Kreise
   lines: Linien
-
 
   new_group_metering_point_invitation: Neue Gruppeneinladung
   do_you_want_to_join_the_group_with_your_metering_point: "Möchtest Du der Gruppe %{group} mit deinem Zählpunkt %{metering_point} beitreten"

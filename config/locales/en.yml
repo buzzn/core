@@ -1,4 +1,6 @@
 en:
+  'yes': yes
+  'no': no
   out: Out
   pv_short: PV
   date:
