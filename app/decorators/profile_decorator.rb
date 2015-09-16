@@ -41,15 +41,15 @@ class ProfileDecorator < Draper::Decorator
       end
     else
       if size == 'lg'
-        content_tag(:span, nil, class: 'img-lg imc-circle icon-wrapper-lg icon-circle bg-success fa fa-user fa-5x')
+        content_tag(:span, nil, class: 'img-lg img-user imc-circle icon-wrapper-lg icon-circle bg-white fa fa-user fa-5x')
       elsif size == 'md'
-        content_tag(:span, nil, class: 'img-md imc-circle icon-wrapper-md icon-circle bg-success fa fa-user fa-3x')
+        content_tag(:span, nil, class: 'img-md img-user imc-circle icon-wrapper-md icon-circle bg-white fa fa-user fa-3x')
       elsif size == 'sm'
-        content_tag(:span, nil, class: 'img-sm imc-circle icon-wrapper-sm icon-circle bg-success fa fa-user fa-2x')
+        content_tag(:span, nil, class: 'img-sm img-user imc-circle icon-wrapper-sm icon-circle bg-white fa fa-user fa-2x')
       elsif size == 'xs'
-        content_tag(:span, nil, class: 'img-xs imc-circle icon-wrapper-xs icon-circle bg-success fa fa-user')
+        content_tag(:span, nil, class: 'img-xs img-user imc-circle icon-wrapper-xs icon-circle bg-white fa fa-user')
       else
-        content_tag(:i, nil, class: 'img-xxs imc-circle icon-wrapper-xxs icon-circle bg-success fa fa-user')
+        content_tag(:i, nil, class: 'img-xxs img-user imc-circle icon-wrapper-xxs icon-circle bg-white fa fa-user')
       end
     end
   end

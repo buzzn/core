@@ -129,7 +129,7 @@
         .row
           .profiles
             - @friends.each do |user|
-              = render user.profile
+              = render user.profile if user.profile
 
 
     /   %h1.page-header.text-overflow
