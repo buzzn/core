@@ -35,7 +35,6 @@
 //= require underscore
 //= require dependent-fields
 //= require metisMenu
-//= require pusher.min
 //= require switchery
 //= require resizeend
 //= require pace
