@@ -453,60 +453,60 @@ $(".bubbles_container").ready ->
 
 $(".comments-panel").ready ->
   group_id = $(".bubbles_container").attr('data-content')
-  Pusher.host    = $(".pusher").data('pusherhost')
-  Pusher.ws_port = 8080
-  Pusher.wss_port = 8080
-  pusher = new Pusher($(".pusher").data('pusherkey'))
+  # Pusher.host    = $(".pusher").data('pusherhost')
+  # Pusher.ws_port = 8080
+  # Pusher.wss_port = 8080
+  # pusher = new Pusher($(".pusher").data('pusherkey'))
 
-  channel = pusher.subscribe("Group_#{group_id}")
-  console.log 'subscribed to ' + group_id
-  channel.bind "new_comment", (comment) ->
-    console.log 'incoming comment'
-    if pusher.connection.socket_id != comment.socket_id
-      html = '' +
-        '<li class="mar-btm comment" id="comment_' + comment.id + '">
-          <div class="media-left">
-            <img alt="' + comment.img_alt + '" class="img-circle img-sm" src="' + comment.image + '"/>
-          </div>
-          <div class="media-body pad-hor speech-left">
-            <div class="speech">
-              <a class="media-heading" href="' + comment.profile_href + '">
-                ' + comment.user_name + '
-              </a>
-              <p>
-                ' + comment.body + '
-              </p>
-              <div class="likes pull-right">
-                <p class="speech-time">
-                  <i class="increase-likes fa fa-thumbs-o-up"></i>
-                  <div class="likes-count">
-                    <%=' + comment.likes + '%>
-                  </div>
-                </p>
-              </div>
-              <p class="speech-time time">
-                <i class="fa fa-clock-o fa-fw"></i>
-                ' + comment.created_at + '
-              </p>
-            </div>
-          </div>
-        </li>'
-      $(".comments-all").append(html).hide().show('slow');
-      $(".comments-content").animate({
-        scrollTop: $("#comment_" + comment.id).offset().top
-      }, 1000)
-      that = $("#comment_#{coment.id}")
-      that.find(".increase-likes").on "click", ->
-        $.ajax({url: '/comments/' + comment_id + '/increase_likes', dataType: 'json'})
-          .success (data) ->
-            that.find(".likes-count").html(data.likes)
-            that.find(".increase-likes").unbind "click"
-    else
-      $("#comment_" + comment.id).waitUntilExists( ->
-        $(".comments-content").animate({
-          scrollTop: $("#comment_" + comment.id).offset().top
-        }, 1000)
-      )
+  # channel = pusher.subscribe("Group_#{group_id}")
+  # console.log 'subscribed to ' + group_id
+  # channel.bind "new_comment", (comment) ->
+  #   console.log 'incoming comment'
+  #   if pusher.connection.socket_id != comment.socket_id
+  #     html = '' +
+  #       '<li class="mar-btm comment" id="comment_' + comment.id + '">
+  #         <div class="media-left">
+  #           <img alt="' + comment.img_alt + '" class="img-circle img-sm" src="' + comment.image + '"/>
+  #         </div>
+  #         <div class="media-body pad-hor speech-left">
+  #           <div class="speech">
+  #             <a class="media-heading" href="' + comment.profile_href + '">
+  #               ' + comment.user_name + '
+  #             </a>
+  #             <p>
+  #               ' + comment.body + '
+  #             </p>
+  #             <div class="likes pull-right">
+  #               <p class="speech-time">
+  #                 <i class="increase-likes fa fa-thumbs-o-up"></i>
+  #                 <div class="likes-count">
+  #                   <%=' + comment.likes + '%>
+  #                 </div>
+  #               </p>
+  #             </div>
+  #             <p class="speech-time time">
+  #               <i class="fa fa-clock-o fa-fw"></i>
+  #               ' + comment.created_at + '
+  #             </p>
+  #           </div>
+  #         </div>
+  #       </li>'
+  #     $(".comments-all").append(html).hide().show('slow');
+  #     $(".comments-content").animate({
+  #       scrollTop: $("#comment_" + comment.id).offset().top
+  #     }, 1000)
+  #     that = $("#comment_#{coment.id}")
+  #     that.find(".increase-likes").on "click", ->
+  #       $.ajax({url: '/comments/' + comment_id + '/increase_likes', dataType: 'json'})
+  #         .success (data) ->
+  #           that.find(".likes-count").html(data.likes)
+  #           that.find(".increase-likes").unbind "click"
+  #   else
+  #     $("#comment_" + comment.id).waitUntilExists( ->
+  #       $(".comments-content").animate({
+  #         scrollTop: $("#comment_" + comment.id).offset().top
+  #       }, 1000)
+  #     )
 
   $(this).find(".comment").each ->
     comment_id = $(this).attr('id').split('_')[1]
