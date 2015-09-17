@@ -14,7 +14,7 @@
   = f.input :uid
 
 = f.association :group, collection: Group.editable_by_user(current_user) if Group.editable_by_user(current_user).any?
-= f.input :readable, collection: MeteringPoint.readables.map(&:to_sym), include_blank: false, :selected => :friends
+= f.input :readable, collection: MeteringPoint.readables.map(&:to_sym), include_blank: false
 .js-dependent-fields{data: {radio: {name: 'metering_point[virtual]', value: 'true'}}}
   %h5
     %span

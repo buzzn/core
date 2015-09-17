@@ -68,11 +68,15 @@ class GroupsController < ApplicationController
     if @found_meter.any?
       @meter = @found_meter.first
       @metering_point = @meter.metering_points.first
-      @group_invitation = GroupMeteringPointRequest.new(user: @metering_point.managers.first, metering_point: @metering_point, group: @group, mode: 'invitation')
-      if @group_invitation.save
-        flash[:notice] = t('sent_group_metering_point_request_successfully')
+      if GroupMeteringPointRequest.where(metering_point: @metering_point).where(group: @group).empty? && !@group.metering_points.include?(@metering_point)
+        @group_invitation = GroupMeteringPointRequest.new(user: @metering_point.managers.first, metering_point: @metering_point, group: @group, mode: 'invitation')
+        if @group_invitation.save
+          flash[:notice] = t('sent_group_metering_point_invitation_successfully')
+        else
+          flash[:error] = t('unable_to_send_group_metering_point_invitation')
+        end
       else
-        flash[:error] = t('unable_to_send_group_metering_point_request')
+        flash[:arror] = t('group_metering_point_invitation_already_sent') + '. ' + t('waiting_for_accepting') + '.'
       end
     else
       redirect_to send_invitations_via_email_group_path(manufacturer_product_serialnumber: params[:group][:new_meters])

@@ -100,7 +100,7 @@ class MeteringPointsController < ApplicationController
 
   def send_invitations_update
     @metering_point = MeteringPoint.find(params[:id])
-    if params[:metering_point][:invite_via_email] == "1"
+    if params[:metering_point][:invite_via_email] == "true"
       if params[:metering_point][:email] == "" || params[:metering_point][:email_confirmation] == ""
         @metering_point.errors.add(:email, I18n.t("cant_be_blank"))
         @metering_point.errors.add(:email_confirmation,  I18n.t("cant_be_blank"))
@@ -113,10 +113,14 @@ class MeteringPointsController < ApplicationController
         @email = params[:metering_point][:email]
         @existing_users = User.where(email: @email)
         if @existing_users.any?
-          if MeteringPointUserRequest.create(user: @existing_users.first, metering_point: @metering_point, mode: 'invitation')
-            flash[:notice] = t('sent_metering_point_user_invitation_successfully')
+          if MeteringPointUserRequest.where(metering_point: @metering_point).where(user: @existing_users.first).empty?
+            if MeteringPointUserRequest.create(user: @existing_users.first, metering_point: @metering_point, mode: 'invitation')
+              flash[:notice] = t('sent_metering_point_user_invitation_successfully')
+            else
+              flash[:error] = t('unable_to_send_metering_point_user_invitation')
+            end
           else
-            flash[:error] = t('unable_to_send_metering_point_user_invitation')
+            flash[:error] = t('metering_point_user_invitation_already_sent') + '. ' + t('waiting_for_accepting') + '.'
           end
         else
           @new_user = User.invite!({email: @email}, current_user)
