@@ -78,6 +78,19 @@ class User < ActiveRecord::Base
     return result.flatten
   end
 
+  def invitable_users(metering_point)
+    result = self.friends.collect(&:profile).compact.collect(&:user)
+    not_invitable = []
+
+    metering_point.users.each do |user|
+      user.profile.nil? ? nil : not_invitable << user
+    end
+    MeteringPointUserRequest.where(metering_point: metering_point).collect(&:user).each do |user|
+      user.profile.nil? ? nil : not_invitable << user
+    end
+    return result - not_invitable
+  end
+
   def editable_metering_points_by_address
     result = []
     without_address = []
