@@ -24,11 +24,11 @@
 
           .remove-from-dashboard
             = metering_point.remove_from_dashboard
-        - else
-          %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
+        / - else
+        /   %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
 
-            = content_tag :div, id: "metering_point-ticker-#{metering_point.id}", class: "metering_point-ticker", data: { slp: !metering_point.smart? && !metering_point.virtual } do
-              %span.text-2x
-                .power-ticker
-                  = t('loading') + '...'
-            %p.text-muted Watt
+        /     = content_tag :div, id: "metering_point-ticker-#{metering_point.id}", class: "metering_point-ticker", data: { fake: !metering_point.smart? && !metering_point.virtual, source: metering_point.data_source } do
+        /       %span.text-2x
+        /         .power-ticker
+        /           = t('loading') + '...'
+        /     %p.text-muted Watt

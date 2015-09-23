@@ -10,13 +10,19 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
     group = Group.find(params[:group_id])
     metering_point = MeteringPoint.find(params[:metering_point_id])
     mode = params[:mode]
-    @group_metering_point_request = GroupMeteringPointRequest.new(user: current_user, metering_point: metering_point, group: group, mode: mode)
-    if @group_metering_point_request.save
-      flash[:notice] = t('sent_group_metering_point_request')
+    if current_user.can_update?(group) && current_user.can_update?(metering_point)
+      group.metering_points << metering_point
+      flash[:notice] = t('metering_point_added_successfully')
       redirect_to group_path(group)
     else
-      flash[:error] = t('unable_to_send_group_metering_point_request')
-      redirect_to group_path(group)
+      @group_metering_point_request = GroupMeteringPointRequest.new(user: current_user, metering_point: metering_point, group: group, mode: mode)
+      if @group_metering_point_request.save
+        flash[:notice] = t('sent_group_metering_point_request')
+        redirect_to group_path(group)
+      else
+        flash[:error] = t('unable_to_send_group_metering_point_request')
+        redirect_to group_path(group)
+      end
     end
   end
 

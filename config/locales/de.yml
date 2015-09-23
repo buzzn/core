@@ -123,7 +123,7 @@ de:
       wrong_length: hat die falsche Länge (muss genau %{count} Zeichen haben)
       already_exists: Existiert bereits
     template:
-      body: ! 'Bitte überprüfen Sie die folgenden Felder:'
+      body: ! 'Bitte überprüfe die folgenden Felder:'
       header:
         one: ! 'Konnte %{model} nicht speichern: ein Fehler.'
         other: ! 'Konnte %{model} nicht speichern: %{count} Fehler.'

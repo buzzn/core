@@ -234,6 +234,7 @@ $(".metering_point_detail").ready ->
       )
       chart_data_min_x = chart.series[0].data[0].x
       createChartTimer([id], 'metering_point')
+      activateButtons(true)
       #checkIfPreviousDataExists()
       #checkIfNextDataExists()
     .error (jqXHR, textStatus, errorThrown) ->
@@ -246,6 +247,7 @@ $(".metering_point_detail").ready ->
 
   $(".btn-chart-prev").on 'click', ->
     chart.showLoading()
+    activateButtons(false)
     containing_timestamp = getPreviousTimestamp()
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
@@ -260,9 +262,11 @@ $(".metering_point_detail").ready ->
       #checkIfNextDataExists()
       #checkIfZoomOut()
       chart.hideLoading()
+      activateButtons(true)
 
   $(".btn-chart-next").on 'click', ->
     chart.showLoading()
+    activateButtons(false)
     containing_timestamp = getNextTimestamp()
     $.getJSON('/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, (data) ->
       if data[0].data[0] == undefined
@@ -277,9 +281,11 @@ $(".metering_point_detail").ready ->
       #checkIfNextDataExists()
       #checkIfZoomOut()
       chart.hideLoading()
+      activateButtons(true)
 
   $(".btn-chart-zoomout").on 'click', ->
     chart.showLoading()
+    activateButtons(false)
     if actual_resolution == "hour_to_minutes"
       actual_resolution = "day_to_minutes"
       setChartToLinechart(false)
@@ -290,6 +296,7 @@ $(".metering_point_detail").ready ->
       setChartToBarchart(false)
     else if actual_resolution == "month_to_days"
       chart.hideLoading()
+      activateButtons(true)
       return
     #   actual_resolution = "year_to_months"
     #   setChartToBarchart(false)
@@ -310,6 +317,7 @@ $(".metering_point_detail").ready ->
       #checkIfNextDataExists()
       #checkIfZoomOut()
       chart.hideLoading()
+      activateButtons(true)
 
   $(window).on "resize", ->
     new_point_width = setPointWidth()
@@ -425,6 +433,7 @@ $(".dashboard-chart").ready ->
               name: data[0].name
               data: data[0].data
             )
+          activateButtons(true)
         .error (jqXHR, textStatus, errorThrown) ->
           console.log textStatus
   createChartTimer(metering_point_ids, 'dashboard')
@@ -435,6 +444,7 @@ $(".dashboard-chart").ready ->
 
   $(".btn-chart-prev").on 'click', ->
     chart.showLoading()
+    activateButtons(false)
     containing_timestamp = getPreviousTimestamp()
     metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
     numberOfSeries = 0
@@ -455,12 +465,14 @@ $(".dashboard-chart").ready ->
           numberOfSeries += 1
     setChartTitle(chart_data_min_x)
     chart.hideLoading()
+    activateButtons(true)
     #checkIfPreviousDataExistsDashboard()
     #checkIfNextDataExistsDashboard()
     #checkIfZoomOutDashboard()
 
   $(".btn-chart-next").on 'click', ->
     chart.showLoading()
+    activateButtons(false)
     containing_timestamp = getNextTimestamp()
     metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
     numberOfSeries = 0
@@ -481,12 +493,14 @@ $(".dashboard-chart").ready ->
           numberOfSeries += 1
     setChartTitle(chart_data_min_x)
     chart.hideLoading()
+    activateButtons(true)
     #checkIfPreviousDataExistsDashboard()
     #checkIfNextDataExistsDashboard()
     #checkIfZoomOutDashboard()
 
   $(".btn-chart-zoomout").on 'click', ->
     chart.showLoading()
+    activateButtons(false)
     if actual_resolution == "hour_to_minutes"
       actual_resolution = "day_to_minutes"
       setChartToLinechart(true)
@@ -496,8 +510,11 @@ $(".dashboard-chart").ready ->
       actual_resolution = "month_to_days"
       setChartToBarchart(true)
     else if actual_resolution == "month_to_days"
-      actual_resolution = "year_to_months"
+      #actual_resolution = "year_to_months"
       setChartToBarchart(true)
+      activateButtons(true)
+      hart.hideLoading()
+      return
 
     containing_timestamp = chart_data_min_x
     metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
@@ -524,6 +541,7 @@ $(".dashboard-chart").ready ->
     #checkIfZoomOutDashboard()
     setChartTitle(chart_data_min_x)
     chart.hideLoading()
+    activateButtons(true)
 
 
 
@@ -645,6 +663,7 @@ $(".group-chart").ready ->
         chart_data_min_x = chart.series[0].data[0].x
         #checkIfPreviousDataExistsGroup()
         #checkIfNextDataExistsGroup()
+      activateButtons(true)
     .error (jqXHR, textStatus, errorThrown) ->
       console.log textStatus
       $('#chart-container-' + group_id).html('error')
@@ -656,12 +675,14 @@ $(".group-chart").ready ->
 
   $(".btn-chart-prev").on 'click', ->
     chart.showLoading()
+    activateButtons(false)
     containing_timestamp = getPreviousTimestamp()
     numberOfSeries = 0
     $.ajax({url: '/groups/' + group_id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
       .success (data) ->
         if data[0].data[0] == undefined
           chart.hideLoading()
+          activateButtons(true)
           return
         data.forEach (d) ->
           seriesVisible = chart.series[numberOfSeries].visible
@@ -675,9 +696,11 @@ $(".group-chart").ready ->
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
         chart.hideLoading()
+        activateButtons(true)
       .error (jqXHR, textStatus, errorThrown) ->
         chart.hideLoading()
         console.log textStatus
+        activateButtons(true)
 
     #checkIfPreviousDataExistsGroup()
     #checkIfNextDataExistsGroup()
@@ -685,12 +708,14 @@ $(".group-chart").ready ->
 
   $(".btn-chart-next").on 'click', ->
     chart.showLoading()
+    activateButtons(false)
     containing_timestamp = getNextTimestamp()
     numberOfSeries = 0
     $.ajax({url: '/groups/' + group_id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
       .success (data) ->
         if data[0].data[0] == undefined
           chart.hideLoading()
+          activateButtons(true)
           return
         data.forEach (d) ->
           seriesVisible = chart.series[numberOfSeries].visible
@@ -704,15 +729,18 @@ $(".group-chart").ready ->
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
         chart.hideLoading()
+        activateButtons(true)
       .error (jqXHR, textStatus, errorThrown) ->
         chart.hideLoading()
         console.log textStatus
+        activateButtons(true)
     #checkIfPreviousDataExistsGroup()
     #checkIfNextDataExistsGroup()
     #checkIfZoomOutGroup()
 
   $(".btn-chart-zoomout").on 'click', ->
     chart.showLoading()
+    activateButtons(false)
     if actual_resolution == "hour_to_minutes"
       actual_resolution = "day_to_minutes"
       setChartToLinechart(true)
@@ -725,6 +753,7 @@ $(".group-chart").ready ->
       #actual_resolution = "year_to_months"
       #setChartToBarchart(true)
       chart.hideLoading()
+      activateButtons(true)
       return
 
     containing_timestamp = chart_data_min_x
@@ -748,9 +777,11 @@ $(".group-chart").ready ->
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
         chart.hideLoading()
+        activateButtons(true)
       .error (jqXHR, textStatus, errorThrown) ->
         chart.hideLoading()
         console.log textStatus
+        activateButtons(true)
     #checkIfPreviousDataExistsGroup()
     #checkIfNextDataExistsGroup()
     #checkIfZoomOutGroup()
@@ -902,13 +933,14 @@ setPointWidth = () ->
     return $(".chart").width()/42.0
 
 zoomIn = (timestamp) ->
-  console.log 'zoom in'
+  activateButtons(false)
   chart.showLoading()
   $(".metering_point_detail").each (div) ->
     id = $(this).attr('id').split('_')[2]
     if actual_resolution == "hour_to_minutes"
       setChartToLinechart(false)
       chart.hideLoading()
+      activateButtons(true)
       return
     else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
       actual_resolution = "hour_to_minutes"
@@ -924,6 +956,7 @@ zoomIn = (timestamp) ->
       .success (data) ->
         if data[0].data[0] == undefined
           chart.hideLoading()
+          activateButtons(true)
           return
         chart.series[0].setData(data[0].data)
         new_point_width = setPointWidth()
@@ -935,16 +968,18 @@ zoomIn = (timestamp) ->
         #checkIfNextDataExists()
         #checkIfZoomOut()
         chart.hideLoading()
+        activateButtons(true)
       .error (jqXHR, textStatus, errorThrown) ->
         chart.hideLoading()
         console.log textStatus
 
 zoomInDashboard = (timestamp) ->
   chart.showLoading()
-
+  activateButtons(false)
   if actual_resolution == "hour_to_minutes"
     setChartToLinechart(true)
     chart.hideLoading()
+    activateButtons(true)
     return
   else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
     actual_resolution = "hour_to_minutes"
@@ -967,6 +1002,7 @@ zoomInDashboard = (timestamp) ->
       .success (data) ->
         if data[0].data[0] == undefined
           chart.hideLoading()
+          activateButtons(true)
           return
         seriesVisible = chart.series[numberOfSeries].visible
         if !seriesVisible
@@ -979,18 +1015,21 @@ zoomInDashboard = (timestamp) ->
         if !seriesVisible
           chart.series[numberOfSeries].hide()
         numberOfSeries += 1
+
   #checkIfPreviousDataExistsDashboard()
   #checkIfNextDataExistsDashboard()
   #checkIfZoomOutDashboard()
   setChartTitle(chart_data_min_x)
   chart.hideLoading()
+  activateButtons(true)
 
 zoomInGroup = (timestamp) ->
   chart.showLoading()
-
+  activateButtons(false)
   if actual_resolution == "hour_to_minutes"
     #setChartToLinechart(true)
     chart.hideLoading()
+    activateButtons(true)
     return
   else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
     actual_resolution = "hour_to_minutes"
@@ -1012,6 +1051,7 @@ zoomInGroup = (timestamp) ->
     .success (data) ->
       if data[0].data[0] == undefined
         chart.hideLoading()
+        activateButtons(true)
         return
       data.forEach (d) ->
         seriesVisible = chart.series[numberOfSeries].visible
@@ -1027,6 +1067,7 @@ zoomInGroup = (timestamp) ->
           chart.series[numberOfSeries].hide()
         numberOfSeries += 1
       chart.hideLoading()
+      activateButtons(true)
     .error (jqXHR, textStatus, errorThrown) ->
       chart.hideLoading()
       console.log textStatus
@@ -1169,6 +1210,11 @@ setChartTitle = (containing_timestamp) ->
     chart.setTitle({text: moment(extremes.min).format("MMMM YYYY")})
   else if actual_resolution == "year_to_months"
     chart.setTitle({text: moment(extremes.min).format("YYYY")})
+
+activateButtons = (disabled) ->
+  $(".btn-chart-next").attr('disabled', !disabled)
+  $(".btn-chart-prev").attr('disabled', !disabled)
+  $(".btn-chart-zoomout").attr('disabled', !disabled)
 
 
 
