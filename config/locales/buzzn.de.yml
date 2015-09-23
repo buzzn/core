@@ -109,6 +109,7 @@ de:
   establish_data_connection: Datenverbindung einrichten
   finish: Erstellen
   edit_data_connection: Datenverbindung bearbeiten
+  search_friends: Freunde suchen
 
   meters: Messgerät
   new_meter: Neues Messgerät
@@ -212,6 +213,7 @@ de:
   comments: Kommentare
   created_at: 'erstellt am:'
   created: 'erstellt'
+  write_a_comment: Schreibe einen Kommentar
 
   contracting_party_properties: Vertragspartner Eigenschaften
   editing_contracting_party: Vertragspartner bearbeiten

@@ -501,12 +501,7 @@ $(".comments-panel").ready ->
   #         .success (data) ->
   #           that.find(".likes-count").html(data.likes)
   #           that.find(".increase-likes").unbind "click"
-  #   else
-  #     $("#comment_" + comment.id).waitUntilExists( ->
-  #       $(".comments-content").animate({
-  #         scrollTop: $("#comment_" + comment.id).offset().top
-  #       }, 1000)
-  #     )
+
 
   $(this).find(".comment").each ->
     comment_id = $(this).attr('id').split('_')[1]
@@ -527,6 +522,9 @@ $(".comments-panel").ready ->
       .removeClass('uneditable-input')
       .removeAttr('disabled', 'disabled')
       .val('');
+    $('.comments-content').animate({
+      scrollTop: $('.comments-all').children().last().offset().top
+    }, 1000)
   $(this).on "ajax:error", (evt, data, status, xhr) ->
     $(this).find('textarea')
       .removeClass('uneditable-input')

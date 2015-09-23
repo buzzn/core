@@ -5,7 +5,7 @@
   .modal-body
     = simple_form_for @metering_point, remote: true,  url: send_invitations_update_metering_point_path, method: 'put'  do |f|
       .js-dependent-fields{data: {radio: {name: 'metering_point[invite_via_email]', value: "false"}}}
-        = f.input :new_users, collection: current_user.invitable_users(@metering_point), input_html: { class: 'select2'}, label: false, selected: current_user.friends.first
+        = f.input :new_users, collection: current_user.invitable_users(@metering_point), input_html: { class: 'select2', 'data-placeholder': t('search_friends')}, label: false, selected: '', include_blank: true
       = f.input :invite_via_email, as: :radio_buttons, checked: (params[:metering_point].nil? || params[:metering_point][:invite_via_email].nil?) ? 'false' : 'true'
       .js-dependent-fields{data: {radio: {name: 'metering_point[invite_via_email]', value: "true"}}}
         = f.input :email, input_html: { value: ''}
