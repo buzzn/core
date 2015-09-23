@@ -101,14 +101,14 @@ class MeteringPointsController < ApplicationController
   def send_invitations_update
     @metering_point = MeteringPoint.find(params[:id])
     if params[:metering_point][:invite_via_email] == "true"
-      if params[:metering_point][:email] == "" || params[:metering_point][:email_confirmation] == ""
+      if params[:metering_point][:email] == "" #|| params[:metering_point][:email_confirmation] == ""
         @metering_point.errors.add(:email, I18n.t("cant_be_blank"))
-        @metering_point.errors.add(:email_confirmation,  I18n.t("cant_be_blank"))
+#        @metering_point.errors.add(:email_confirmation,  I18n.t("cant_be_blank"))
         render action: 'send_invitations', invite_via_email: 'checked'
-      elsif params[:metering_point][:email] != params[:metering_point][:email_confirmation]
-        @metering_point.errors.add(:email, I18n.t("doesnt_match_with_confirmation"))
-        @metering_point.errors.add(:email_confirmation, I18n.t("doesnt_match_with_email"))
-        render action: 'send_invitations', invite_via_email: 'checked'
+#      elsif params[:metering_point][:email] != params[:metering_point][:email_confirmation]
+#        @metering_point.errors.add(:email, I18n.t("doesnt_match_with_confirmation"))
+#        @metering_point.errors.add(:email_confirmation, I18n.t("doesnt_match_with_email"))
+#        render action: 'send_invitations', invite_via_email: 'checked'
       else
         @email = params[:metering_point][:email]
         @existing_users = User.where(email: @email)

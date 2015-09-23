@@ -97,16 +97,16 @@ class GroupsController < ApplicationController
     authorize_action_for @group
     @manufacturer_product_serialnumber = params[:group][:manufacturer_product_serialnumber]
     #byebug
-    if params[:group][:email] == "" || params[:group][:email_confirmation] == ""
+    if params[:group][:email] == "" #|| params[:group][:email_confirmation] == ""
       @group.errors.add(:email, I18n.t("cant_be_blank"))
-      @group.errors.add(:email_confirmation,  I18n.t("cant_be_blank"))
+    #  @group.errors.add(:email_confirmation,  I18n.t("cant_be_blank"))
       @meter = Meter.new(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
       render action: 'send_invitations_via_email'
-    elsif params[:group][:email] != params[:group][:email_confirmation]
-      @group.errors.add(:email, I18n.t("doesnt_match_with_confirmation"))
-      @group.errors.add(:email_confirmation, I18n.t("doesnt_match_with_email"))
-      @meter = Meter.new(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
-      render action: 'send_invitations_via_email', manufacturer_product_serialnumber: @manufacturer_product_serialnumber
+ #   elsif params[:group][:email] != params[:group][:email_confirmation]
+ #     @group.errors.add(:email, I18n.t("doesnt_match_with_confirmation"))
+ #     @group.errors.add(:email_confirmation, I18n.t("doesnt_match_with_email"))
+ #     @meter = Meter.new(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
+ #     render action: 'send_invitations_via_email', manufacturer_product_serialnumber: @manufacturer_product_serialnumber
     else
       @email = params[:group][:email]
       @new_user = User.invite!({email: @email}, current_user)
