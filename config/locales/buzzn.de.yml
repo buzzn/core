@@ -42,6 +42,7 @@ de:
   group_metering_point_invitation_already_sent: "Gruppeneinladung wurde bereits gesendet"
   unable_to_send_group_metering_point_invitation: "Das Senden der Gruppeneinladung ist nicht möglich."
   sent_group_metering_point_invitation_successfully: "Die Gruppeneinladung wurde erfolgreich versendet."
+  rejected_group_metering_point_request: Die Gruppenanfrage wurde abgelehnt.
 
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler
@@ -571,7 +572,7 @@ de:
   enter_your_text: Text hier eingeben
   out_metering_points: Produktionszählpunkte
   create_comment: Kommentar erstellen
-  friend_request: Freunfschaftsanfrage
+  friend_request: Freundschaftsanfrage
   create_contract: Vertrag erstellen
   prev: Zurück
   next: Weiter

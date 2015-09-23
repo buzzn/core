@@ -518,7 +518,7 @@ $(".comments-panel").ready ->
           that.find(".increase-likes").unbind "click"
 
   $(this).on "ajax:beforeSend", (evt, xhr, settings) ->
-    settings.data += '&socket_id=' + pusher.connection.socket_id
+    #settings.data += '&socket_id=' + pusher.connection.socket_id
     $(this).find('textarea')
       .addClass('uneditable-input')
       .attr('disabled', 'disabled');
