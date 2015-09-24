@@ -1,7 +1,6 @@
 class DeviceResource < ApplicationResource
 
-  attributes  :id,
-              :name,
+  attributes  :name,
               :manufacturer_name,
               :manufacturer_product_name,
               :manufacturer_product_serialnumber,

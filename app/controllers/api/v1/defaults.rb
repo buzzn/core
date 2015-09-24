@@ -5,6 +5,7 @@ module API
       included do
         prefix "api"
         version "v1", using: :path
+        #format 'json'
         default_format :json
         formatter :json, Grape::Formatter::JSONAPIResources
 

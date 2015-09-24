@@ -1,11 +1,10 @@
 class GroupResource < ApplicationResource
 
-  attributes  :id,
-              :name,
+  attributes  :name,
               :description,
               :big_tumb,
-              :readable, :updateable, :deletable,
-              :metering_point_ids
+              :readable, :updateable, :deletable
 
 
+  has_many :metering_points
 end

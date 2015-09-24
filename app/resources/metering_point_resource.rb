@@ -1,20 +1,11 @@
 class MeteringPointResource < ApplicationResource
 
-  attributes  :id,
-              :uid,
+  attributes  :uid,
               :name,
-              :mode,
-              :device_ids,
-              :meter_id,
-              :user_ids,
-              :chart
+              :mode
 
-  def chart
-   return {
-    :columns => [
-      ['data1', 230, 190, 300, 500, 300, 400],
-      ['data2', 50, 20, 10, 40, 15, 25]]
-   }
-  end
+  has_many :devices
+  has_one :meter
+  has_many :users
 
 end

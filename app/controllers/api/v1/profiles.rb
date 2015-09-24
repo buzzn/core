@@ -6,8 +6,16 @@ module API
 
 
 
+        desc "Return me"
+        get "me" do
+          guard!
+          current_user.profile
+        end
+
+
+
         desc "Return all profiles"
-        get "", root: :profiles do
+        get "" do
           Profile.all
         end
 
@@ -17,9 +25,37 @@ module API
         params do
           requires :id, type: String, desc: "ID of the profile"
         end
-        get ":id", root: "profile" do
-          Profile.where(id: permitted_params[:id]).first!
+        get ":id" do
+          profile = Profile.where(id: permitted_params[:id]).first!
+          render profile
         end
+
+
+
+        desc "Return the related groups of Profile"
+        params do
+          requires :id, type: String, desc: "ID of the profile"
+        end
+        get ":id/groups" do
+          @profile = Profile.where(id: permitted_params[:id]).first!
+          render @profile.metering_points.collect(&:group).compact.uniq.collect(&:id)
+        end
+
+
+
+  # def metering_point_ids
+  #   @model.metering_points.collect(&:id)
+  # end
+
+  # def group_ids
+  #   @model.metering_points.collect(&:group).compact.uniq.collect(&:id)
+  # end
+
+  # def friendship_ids
+  #   @model.user.friendship_ids
+  # end
+
+
 
 
 
