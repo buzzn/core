@@ -172,6 +172,8 @@ de:
         termination: Vertragsende
         forecast_watt_hour_pa: Jahresverbrauch (Prognose) in kWh
         price_cents: Preis (Cent)
+      comment:
+        image: Bild
 
     placeholders:
       metering_point:

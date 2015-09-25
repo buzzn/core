@@ -1,2 +1,10 @@
-$(".comments-all").append("#{escape_javascript( render @comment )}").hide().show('fast');
+- if @comment.parent_id.nil?
+  $(".comments-all").prepend("#{escape_javascript( render @comment )}").hide().show('fast');
+  $('.comments-content').animate({scrollTop: 0}, 1000);
+  /$("#comment_#{@comment.id}").find(".comment-reply").on("click", function() { if ($("#comment_#{@comment.id}").find(".comment-answer").css("display") == "none") { $("#comment_#{@comment.id}").find(".comment-answer").css("display", "block"); } else { $("#comment_#{@comment.id}").find(".comment-answer").css("display", "none"); }});
+  $("#comment_#{@comment.id}").find(".comment-reply").css("display", "none");
+- else
+  $("#comment_#{@comment.parent.id}").find(".child-comments").append("#{escape_javascript( render @comment )}");
+  /$('.comments-content').animate({scrollTop: $('.comments-all').find("#comment_#{@comment.id}").offset().top}, 1000);
+
 

@@ -73,7 +73,7 @@ gem 'wicked'
 gem 'acts_as_commentable_with_threading'
 gem 'awesome_nested_set'
 gem 'acts-as-taggable-on'
-gem 'remotipart'
+gem 'remotipart', github: 'magicmarkker/remotipart'
 gem 'public_activity'
 gem 'gon'
 gem 'tzinfo'
@@ -97,6 +97,7 @@ gem 'devise-async'
 gem 'omniauth-facebook'
 gem 'koala'
 gem 'byebug'
+gem 'rails_autolink'
 
 
 source 'http://rails-assets.org' do

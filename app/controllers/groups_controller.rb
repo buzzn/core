@@ -14,7 +14,7 @@ class GroupsController < ApplicationController
     @energy_consumers               = MeteringPoint.includes(:users).by_group(@group).inputs.decorate.collect(&:users).flatten
     @interested_members             = @group.users
     @group_metering_point_requests  = @group.received_group_metering_point_requests
-    @all_comments                   = @group.root_comments.order('created_at asc')
+    @all_comments                   = @group.root_comments
     @out_devices                    = @out_metering_points.collect(&:devices)
   end
 

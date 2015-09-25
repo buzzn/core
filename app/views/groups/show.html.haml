@@ -134,7 +134,7 @@
                 %ul.list-unstyled.media-block.comments-all
                   = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
             .panel-footer
-              = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "") }
+              = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "", nil) }
 
 
 

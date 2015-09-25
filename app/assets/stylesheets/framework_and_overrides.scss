@@ -137,6 +137,11 @@ a, img {
   display: inline;
 }
 
+.likes {
+  display: inline;
+  margin-left: 5px;
+}
+
 .increase-likes {
   cursor: pointer;
 }
@@ -242,7 +247,56 @@ a, img {
   background-color: white;
 }
 
+.child-comments {
+  margin-left: 5px;
+  margin-top: 20px;
+}
 
+.speech {
+  background: white none repeat scroll 0% 0%;
+  display: block;
+  padding: 0px 0px;
+}
+
+.speech::before {
+  content: none;
+}
+
+.speech .media-heading {
+  border-bottom: none;
+  margin-bottom: 0px;
+}
+
+.remove_comment {
+  display: none;
+}
+
+.speech:hover .remove_comment{
+  display: block;
+}
+
+.comment-answer {
+  display: none;
+}
+
+.comment-reply {
+  cursor: pointer;
+  color: #1F8DD6;
+}
+
+.comment-view-all-answers {
+  cursor: pointer;
+  color: #1F8DD6;
+}
+
+.comment-form-image {
+  display: none;
+}
+
+.comment-form-show-image {
+  cursor: pointer;
+  color: #1F8DD6;
+}
 
 
 

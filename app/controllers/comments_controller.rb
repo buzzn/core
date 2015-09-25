@@ -6,9 +6,13 @@ class CommentsController < InheritedResources::Base
     @comment_hash = params[:comment]
     @obj = @comment_hash[:commentable_type].constantize.find(@comment_hash[:commentable_id])
     if user_signed_in? #TODO: bring commentable_by? to work
-      @comment = Comment.build_from(@obj, current_user.id, @comment_hash[:body])
+      @comment = Comment.build_from(@obj, current_user.id, @comment_hash[:body], @comment_hash[:parent_id])
+      if @comment_hash[:image].present?
+        @comment.image = @comment_hash[:image]
+      end
       create! do |success, failure|
         success.js {
+          #byebug
           # if !params[:socket_id].nil?
           #   @socket_id = params[:socket_id]
           # else
@@ -20,6 +24,7 @@ class CommentsController < InheritedResources::Base
           @comment
         }
         failure.js {
+
           render nothing: true, status: :ok
         } #TODO: show validation errors
       end
@@ -29,13 +34,13 @@ class CommentsController < InheritedResources::Base
 
   def destroy
     @comment = Comment.find(params[:id])
-    if current_user == @comment.user || current_user.can_update?(@group)
+    if @comment.deletable_by?(current_user)
       if @comment.destroy
         activities = PublicActivity::Activity.where(trackable_id: @comment.id).where(trackable_type: 'Comment')
         activities.each do |activity|
           activity.destroy
         end
-        render :json => @comment, :status => :ok
+        @comment
       else
         render :js => "alert('error deleting comment');"
       end
@@ -52,6 +57,6 @@ class CommentsController < InheritedResources::Base
   end
 
   def permitted_params
-    params.permit(:comment => [:title, :body, :subject, :user_id, :commentable_id, :commentably_type, :parent_id])
+    params.permit(:comment => [:title, :body, :subject, :user_id, :commentable_id, :commentably_type, :parent_id, :image])
   end
 end

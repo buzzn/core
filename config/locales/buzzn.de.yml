@@ -97,6 +97,7 @@ de:
   diff: Abgrenzung
   total_consumption: Gesamtverbrauch
   total_production: Gesamterzeugung
+  reply: Antworten
 
   my_metering_points: Meine Zählpunkte
   metering_points: Zählpunkte
@@ -215,6 +216,11 @@ de:
   created_at: 'erstellt am:'
   created: 'erstellt'
   write_a_comment: Schreibe einen Kommentar
+  are_you_sure_you_want_to_remove_this_comment: "Bist Du dir Sicher, dass Du diesen Kommentar löschen willst?"
+  send_answer: Antworten
+  answer_this_comment: Antworte auf diesen Kommentar
+  view_all_answers: Alle Antworten anzeigen
+  add_image: Bild hinzufügen
 
   contracting_party_properties: Vertragspartner Eigenschaften
   editing_contracting_party: Vertragspartner bearbeiten

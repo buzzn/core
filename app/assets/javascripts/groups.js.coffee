@@ -501,7 +501,12 @@ $(".comments-panel").ready ->
   #         .success (data) ->
   #           that.find(".likes-count").html(data.likes)
   #           that.find(".increase-likes").unbind "click"
-
+  $(this).find(".child-comments").each ->
+    count_answers = 0
+    $(this).find(".comment").each ->
+      count_answers += 1
+      if count_answers > 2
+        $(this).hide()
 
   $(this).find(".comment").each ->
     comment_id = $(this).attr('id').split('_')[1]
@@ -511,24 +516,46 @@ $(".comments-panel").ready ->
         .success (data) ->
           that.find(".likes-count").html(data.likes)
           that.find(".increase-likes").unbind "click"
+    that.find(".comment-reply").on "click", ->
+      if that.find(".comment-answer").css("display") == "none"
+        that.find(".comment-answer").css("display", "block")
+      else
+        that.find(".comment-answer").css("display", "none")
+    that.find(".comment-view-all-answers").on "click", ->
+      that.find(".child-comments").find(".comment").each ->
+        $(this).show()
+      that.find(".comment-view-all-answers").hide()
 
-  $(this).on "ajax:beforeSend", (evt, xhr, settings) ->
-    #settings.data += '&socket_id=' + pusher.connection.socket_id
-    $(this).find('textarea')
-      .addClass('uneditable-input')
-      .attr('disabled', 'disabled');
-  $(this).on "ajax:success", (evt, data, status, xhr) ->
-    $(this).find('textarea')
-      .removeClass('uneditable-input')
-      .removeAttr('disabled', 'disabled')
-      .val('');
-    $('.comments-content').animate({
-      scrollTop: $('.comments-all').children().last().offset().top
-    }, 1000)
-  $(this).on "ajax:error", (evt, data, status, xhr) ->
-    $(this).find('textarea')
-      .removeClass('uneditable-input')
-      .removeAttr('disabled', 'disabled');
+  $(this).find(".comment-form").each ->
+    $(this).find(".comment-form-show-image").on "click", ->
+      if $(this).find(".comment-form-image").css("display") == "none"
+        $(this).find(".comment-form-image").css("display", "block")
+      else
+        $(this).find(".comment-form-image").css("display", "none")
+
+
+    $(this).on "ajax:beforeSend", (evt, xhr, settings) ->
+      #settings.data += '&socket_id=' + pusher.connection.socket_id
+      console.log 'before'
+      $(this).find('textarea')
+        .addClass('uneditable-input')
+        .attr('disabled', 'disabled')
+
+    $(this).on "ajax:success", (evt, data, status, xhr) ->
+      console.log 'success'
+      $(this).find('textarea')
+        .removeClass('uneditable-input')
+        .removeAttr('disabled', 'disabled')
+        .val('')
+      $(this).find('form').get(0).reset()
+      $(this).find('.comment-form-image').css("display", "none")
+
+    $(this).on "ajax:error", (evt, data, status, xhr) ->
+      $(this).find('textarea')
+        .removeClass('uneditable-input')
+        .removeAttr('disabled', 'disabled')
+
+
 
 
 
@@ -561,14 +588,6 @@ clearTimers = ->
 
 $(document).on('page:before-change', clearTimers)
 $(document).on('page:before-change', $(".bubbles_container").stop())
-# Delete a comment
-$(document)
-  .on "ajax:beforeSend", ".comment", ->
-    $(this).fadeTo('fast', 0.5)
-  .on "ajax:success", ".comment", ->
-    $(this).hide('fast')
-  .on "ajax:error", ".comment", ->
-    $(this).fadeTo('fast', 1)
 
 
 

@@ -1,48 +1,37 @@
 %li.mar-btm.comment{ :id => "comment_#{comment.id}" }
+  .media-left
+    = link_to(comment.user.profile.decorate.picture('sm'), profile_path(comment.user.profile))
+  .media-body.pad-hor
+    .speech
+      - if user_signed_in? && comment.deletable_by?(current_user) && !comment.has_children?
+        .remove_comment.pull-right
+          = link_to "×", comment_path(comment), :method => :delete, :remote => true, :data => { :confirm => t("are_you_sure_you_want_to_remove_this_comment") }, :disable_with => "×", :class => 'close'
+      %h5= link_to(comment.user.name, profile_path(comment.user.profile))
+
+      %p= image_tag(comment.image.lg) if comment.image.present?
+
+      %p= auto_link(comment.body, :html => { :target => '_blank' })
 
 
-  - if user_signed_in? && current_user == comment.user
-    .media-right
-      = comment.user.profile.decorate.picture('sm')
-    .media-body.pad-hor.speech-right
-      .speech
-        %a.media-heading{:href => profile_path(comment.user.profile)}
-          = comment.user.name
-
-        %p= comment.body
-        - if comment.deletable_by?(current_user)
-          .remove_comment
-            = link_to "×", comment_path(comment), :method => :delete, :remote => true, :confirm => "Are you sure you want to remove this comment?", :disable_with => "×", :class => 'close'
-        .likes
-          %p.speech-time
-            %i.fa.fa-thumbs-o-up
-            = comment.likes.nil? ? 0 : comment.likes
-        %p.speech-time.time
-          %i.fa.fa-clock-o.fa-fw
-          = timeago_tag comment.updated_at, :nojs => true, :lang => locale, :limit => 10.days.ago
-        = render comment.children
-        -# .nested-comments.pull-left
-        -#   =t('reply')
-
-
-
-  - else
-    .media-left
-      = comment.user.profile.decorate.picture('sm')
-    .media-body.pad-hor.speech-left
-      .speech
-        %a.media-heading{:href => profile_path(comment.user.profile)}
-          = comment.user.name
-        %p= comment.body
-        - if user_signed_in? && (current_user == comment.user || current_user.can_update?(@group))
-          .remove_comment
-            = link_to "×", comment_path(comment), :method => :delete, :remote => true, :confirm => "Are you sure you want to remove this comment?", :disable_with => "×", :class => 'close'
-        .likes.pull-right
-          %p.speech-time
+      %p.speech-time.time
+        %i.fa.fa-clock-o.fa-fw
+        = timeago_tag comment.updated_at, :nojs => true, :lang => locale, :limit => 10.days.ago
+      .likes
+        %p.speech-time
+          - if user_signed_in? && current_user != comment.user
             %i.increase-likes.fa.fa-thumbs-o-up
-            .likes-count= comment.likes.nil? ? 0 : comment.likes
-        %p.speech-time.time
-          %i.fa.fa-clock-o.fa-fw
-          = timeago_tag comment.updated_at, :nojs => true, :lang => locale, :limit => 10.days.ago
-        -# .nested-comments.pull-left
-        -#   =t('reply')
+          - else
+            %i.fa.fa-thumbs-o-up
+          .likes-count= comment.likes.nil? ? 0 : comment.likes
+      - if comment.parent.nil?
+        - if comment.children.size > 2
+          .comment-view-all-answers
+            = t('view_all_answers')
+        %ul.list-unstyled.media-block.child-comments
+          = render :partial => 'comments/comment', :collection => comment.children.reverse, :as => :comment
+        - if user_signed_in?
+          .nested-comments.pull-left
+            .comment-reply
+              = t('reply')
+            .comment-answer
+              = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(comment.commentable, current_user.id, "", comment.id) }
