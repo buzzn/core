@@ -26,19 +26,18 @@ module API
           requires :id, type: String, desc: "ID of the profile"
         end
         get ":id" do
-          profile = Profile.where(id: permitted_params[:id]).first!
-          render profile
+          Profile.where(id: permitted_params[:id]).first!
         end
 
 
 
-        desc "Return the related groups of Profile"
+        desc "Return the related groups for Profile"
         params do
           requires :id, type: String, desc: "ID of the profile"
         end
         get ":id/groups" do
-          @profile = Profile.where(id: permitted_params[:id]).first!
-          render @profile.metering_points.collect(&:group).compact.uniq.collect(&:id)
+          profile = Profile.where(id: permitted_params[:id]).first!
+          render profile.metering_points.collect(&:group).compact.uniq
         end
 
 

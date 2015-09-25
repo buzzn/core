@@ -8,6 +8,7 @@ module API
         #format 'json'
         default_format :json
         formatter :json, Grape::Formatter::JSONAPIResources
+        jsonapi_base_url "/api/v1"
 
         helpers do
 

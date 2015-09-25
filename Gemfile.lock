@@ -7,6 +7,13 @@ GIT
       jsonapi-resources (>= 0.5.0)
 
 GIT
+  remote: git://github.com/cerebris/jsonapi-resources.git
+  revision: e087af497c0665c6d5db8c1cd8cca51971da237c
+  specs:
+    jsonapi-resources (0.5.9)
+      rails (>= 4.0)
+
+GIT
   remote: git://github.com/flyerhzm/bullet.git
   revision: a536145604e6f77d7518c18bd5d464ae93aa99b5
   specs:
@@ -459,8 +466,6 @@ GEM
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
     json (1.8.3)
-    jsonapi-resources (0.5.9)
-      rails (>= 4.0)
     jwt (1.5.1)
     koala (2.2.0)
       addressable
@@ -879,7 +884,7 @@ DEPENDENCIES
   jquery-rails
   jquery-turbolinks
   jquery-ui-rails
-  jsonapi-resources
+  jsonapi-resources!
   koala
   launchy
   listen
