@@ -37,22 +37,40 @@ module API
         end
         get ":id/groups" do
           profile = Profile.where(id: permitted_params[:id]).first!
-          render profile.metering_points.collect(&:group).compact.uniq
+          profile.metering_points.collect(&:group).compact.uniq
+        end
+
+
+        desc "Return the related metering_points for Profile"
+        params do
+          requires :id, type: String, desc: "ID of the profile"
+        end
+        get ":id/metering_points" do
+          profile = Profile.where(id: permitted_params[:id]).first!
+          profile.metering_points
         end
 
 
 
-  # def metering_point_ids
-  #   @model.metering_points.collect(&:id)
-  # end
+        desc "Return the related friendships for Profile"
+        params do
+          requires :id, type: String, desc: "ID of the profile"
+        end
+        get ":id/friendships" do
+          profile = Profile.where(id: permitted_params[:id]).first!
+          profile.user.friendships
+        end
 
-  # def group_ids
-  #   @model.metering_points.collect(&:group).compact.uniq.collect(&:id)
-  # end
 
-  # def friendship_ids
-  #   @model.user.friendship_ids
-  # end
+
+        desc "Return the related devices for Profile"
+        params do
+          requires :id, type: String, desc: "ID of the profile"
+        end
+        get ":id/devices" do
+          profile = Profile.where(id: permitted_params[:id]).first!
+          Device.with_role(:manager, profile.user)
+        end
 
 
 

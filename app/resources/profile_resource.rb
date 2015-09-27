@@ -10,5 +10,5 @@ class ProfileResource < ApplicationResource
   has_many :groups
   has_many :friendships
   has_many :metering_points
-
+  has_many :devices
 end
