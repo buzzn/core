@@ -1,6 +1,8 @@
 actual_resolution = "day_to_minutes"
 chart_data_min_x = 0
 chart = undefined
+ttlastSample = new Date()
+rem_metering_point_id = ""
 
 #code for partial: _metering_point.html.haml
 $(".metering_points").ready ->
@@ -1332,8 +1334,30 @@ $(".metering_point").ready ->
         timers.push(window.setInterval(->
           getLiveData(metering_point, metering_point_id)
           return
-        , 1000*5)
+        , 1000*7)
         )
+      timers.push(window.setInterval(->
+        ttsample(metering_point,metering_point_id)
+        return
+      , 1000 * 20)
+      )
+
+
+
+ttsample = (metering_point,metering_point_id) ->
+  delta = Date.now() - ttlastSample
+  if Date.now() - ttlastSample >= 40000 && metering_point_id == rem_metering_point_id
+    # Code here will only run if the timer is delayed by more 2X the sample rate
+    # (e.g. if the laptop sleeps for more than 20-40 seconds)
+    # Finetuning of times may be necessary
+    # for debugging uncomment this line: metering_point.find(".power-ticker").html('Servus! Woke up from sleep!! ' + delta)
+    location.reload()
+  # for debugging uncomment this line: else
+  # for debugging uncomment this line:   metering_point.find(".power-ticker").html('always awake ' + delta)
+  rem_metering_point_id = metering_point_id
+  ttlastSample = Date.now()
+
+
 
 getLiveData = (metering_point, metering_point_id) ->
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
@@ -1416,10 +1440,7 @@ clearTimers = ->
     i++
   timers = []
 
-
 $(document).on('page:before-change', clearTimers)
-
-
 
 
 
