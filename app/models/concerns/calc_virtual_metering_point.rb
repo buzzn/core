@@ -87,6 +87,14 @@ module CalcVirtualMeteringPoint
       end
       i += 1
     end
+    if count_readings != 0
+      new_reading = (sum_readings*1.0 / count_readings).to_i
+      result << [new_timestamp, new_reading]
+      count_readings = 0
+      sum_readings = 0
+    else
+      result << [new_timestamp, new_reading]
+    end
     return result
   end
 
