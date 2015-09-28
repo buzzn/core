@@ -527,11 +527,12 @@ $(".comments-panel").ready ->
       that.find(".comment-view-all-answers").hide()
 
   $(this).find(".comment-form").each ->
+    that = $(this)
     $(this).find(".comment-form-show-image").on "click", ->
-      if $(this).find(".comment-form-image").css("display") == "none"
-        $(this).find(".comment-form-image").css("display", "block")
+      if that.find(".comment-form-image").css("display") == "none"
+        that.find(".comment-form-image").css("display", "block")
       else
-        $(this).find(".comment-form-image").css("display", "none")
+        that.find(".comment-form-image").css("display", "none")
 
 
     $(this).on "ajax:beforeSend", (evt, xhr, settings) ->
