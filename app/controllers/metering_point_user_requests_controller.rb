@@ -9,13 +9,19 @@ class MeteringPointUserRequestsController < InheritedResources::Base
   def create
     metering_point = MeteringPoint.find(params[:metering_point_id])
     mode = params[:mode]
-    @metering_point_user_request = MeteringPointUserRequest.new(user: current_user, metering_point: metering_point, mode: mode)
-    if @metering_point_user_request.save
-      flash[:notice] = t('sent_metering_point_user_request')
+    if current_user.can_update?(metering_point)
+      metering_point.users << current_user
+      flash[:notice] = t('you_were_added_successfully')
       redirect_to metering_point_path(metering_point)
     else
-      flash[:error] = t('unable_to_send_metering_point_user_request')
-      redirect_to metering_point_path(metering_point)
+      @metering_point_user_request = MeteringPointUserRequest.new(user: current_user, metering_point: metering_point, mode: mode)
+      if @metering_point_user_request.save
+        flash[:notice] = t('sent_metering_point_user_request')
+        redirect_to metering_point_path(metering_point)
+      else
+        flash[:error] = t('unable_to_send_metering_point_user_request')
+        redirect_to metering_point_path(metering_point)
+      end
     end
   end
 

@@ -44,6 +44,7 @@ de:
   sent_group_metering_point_invitation_successfully: "Die Gruppeneinladung wurde erfolgreich versendet."
   rejected_group_metering_point_request: Die Gruppenanfrage wurde abgelehnt.
   metering_point_added_successfully: Der Zählpunkt wurde hinzugefügt.
+  you_were_added_successfully: Du wurdest erfolgreich hinzugefügt.
 
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler
