@@ -4,6 +4,7 @@ class ProfileResource < ApplicationResource
               :user_name,
               :first_name,
               :last_name,
+              :about_me,
               :md_img
 
 
