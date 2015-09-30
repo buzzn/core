@@ -35,6 +35,7 @@ class Crawler
     @unixtime_now                     = Time.now.in_time_zone.utc.to_i*1000
     @metering_point                   = metering_point
     @metering_point_input             = @metering_point.input?
+    @metering_point_output            = @metering_point.output?
     @metering_points_size             = @metering_point.meter.metering_points.size
     @metering_point_operator_contract = @metering_point.metering_point_operator_contract
     @meter                            = @metering_point.meter
@@ -66,10 +67,10 @@ class Crawler
         if request['result'].any?
           request['result'].each do |item|
             timestamp = item['time']
-            if @metering_point.meter.metering_points.size > 1
-              if item['power'] > 0 && @metering_point.input?
+            if @metering_points_size > 1
+              if item['power'] > 0 && @metering_point_input
                 power = item['power']/1000
-              elsif item['power'] < 0 && @metering_point.output?
+              elsif item['power'] < 0 && @metering_point_output
                 power = item['power'].abs/1000
               else
                 power = 0
@@ -123,7 +124,7 @@ class Crawler
             if @metering_points_size > 1
               if item['power'] > 0 && @metering_point_input
                 power = item['power']/1000
-              elsif item['power'] < 0 && !@metering_point_input
+              elsif item['power'] < 0 && @metering_point_output
                 power = item['power'].abs/1000
               else
                 power = 0
@@ -178,7 +179,7 @@ class Crawler
             if @metering_points_size > 1
               if item['power'] > 0 && @metering_point_input
                 power = item['power']/1000
-              elsif item['power'] < 0 && !@metering_point_input
+              elsif item['power'] < 0 && @metering_point_output
                 power = item['power'].abs/1000
               else
                 power = 0
@@ -241,7 +242,7 @@ class Crawler
           new_value = -1
           timestamp = -1
           i = 0
-          if @metering_point.meter.metering_points.size > 1 && @metering_point.output?
+          if @metering_point_size > 1 && @metering_point_output
             mode = 'energyOut'
           else
             mode = 'energy'
