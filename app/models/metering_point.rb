@@ -106,8 +106,8 @@ class MeteringPoint < ActiveRecord::Base
       end
       return {:power => 0, :timestamp => 0}
     elsif self.smart?
-      result = Crawler.new.getDataLive(self, self.metering_point_operator_contract, self.meter)
-      return result
+      crawler = Crawler.new(self)
+      return crawler.live
     else
       result = self.latest_fake_data
       return { :power => result[:data].flatten[1] * result[:factor], :timestamp => result[:data].flatten[0]}
@@ -253,36 +253,6 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
-  def self.update_cache
-    MeteringPoint.all.select(:id).each.each do |metering_point|
-
-      # Sidekiq::Client.push({
-      #  'class' => UpdateMeteringPointChartCache,
-      #  'queue' => :default,
-      #  'args' => [ metering_point.id, 'day_to_minutes']
-      # })
-
-      Sidekiq::Client.push({
-       'class' => UpdateMeteringPointChartCache,
-       'queue' => :default,
-       'args' => [ metering_point.id, 'day_to_hours']
-      })
-
-      # Sidekiq::Client.push({
-      #  'class' => UpdateMeteringPointLatestFakeDataCache,
-      #  'queue' => :default,
-      #  'args' => [ metering_point.id]
-      # })
-
-      Sidekiq::Client.push({
-       'class' => UpdateMeteringPointLatestPowerCache,
-       'queue' => :default,
-       'args' => [ metering_point.id]
-      })
-
-    end
-  end
-
 
 
   def minute_to_seconds(containing_timestamp)
@@ -312,6 +282,9 @@ class MeteringPoint < ActiveRecord::Base
   def year_to_months(containing_timestamp)
     chart_data('year_to_months', containing_timestamp)
   end
+
+
+
 
   def formula
     result = ""
@@ -394,12 +367,6 @@ class MeteringPoint < ActiveRecord::Base
       data = []
       operands.each do |metering_point|
         new_data = metering_point.chart_data(resolution_format, containing_timestamp)
-        #puts '************************'
-        #i = 0
-        #new_data.each do |d|
-        #  puts (new_data[i][0]/1000 - new_data[i-1][0]/1000).to_s
-        #  i += 1
-        #end
         data << new_data
       end
       result = calculate_virtual_metering_point(data, operators, resolution_format)
@@ -414,12 +381,13 @@ class MeteringPoint < ActiveRecord::Base
     metering_point = MeteringPoint.find(metering_point_id)
     if metering_point.meter && metering_point.meter.smart
       result = []
+      crawler = Crawler.new(self)
       if resolution_format == 'hour_to_minutes'
-        result = Crawler.new.getDataHour(containing_timestamp, metering_point, self.metering_point_operator_contract,self.meter)
+        result = crawler.hour(containing_timestamp)
       elsif resolution_format == 'day_to_minutes'
-        result = Crawler.new.getDataDay(containing_timestamp, metering_point, self.metering_point_operator_contract,self.meter)
+        result = crawler.day(containing_timestamp)
       elsif resolution_format == 'month_to_days'
-        result = Crawler.new.getDataMonth(containing_timestamp, metering_point, self.metering_point_operator_contract,self.meter)
+        result = crawler.month(containing_timestamp)
       end
       if resolution_format == "day_to_minutes" || resolution_format == "day_to_hours"
         result.pop

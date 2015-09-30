@@ -846,7 +846,11 @@ end
 
 
 
-
+Fabricator :ferraris_001_amperix, from: :meter do
+  manufacturer_name                   'ferraris'
+  manufacturer_product_name           'xy'
+  manufacturer_product_serialnumber   '001'
+end
 
 
 

@@ -2,7 +2,7 @@ class Discovergy
 
   # how to use
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').meters
-  # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').live(60009269)
+  # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').get_live(60009269)
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').raw_with_power(60009269)
 
 

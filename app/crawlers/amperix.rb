@@ -1,6 +1,7 @@
 class Amperix
 
   # how to use
+  # # wogeno oberländerstr bhkw
   # Amperix.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693').meters
   # Amperix.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693').get_day(unixtime)
   #

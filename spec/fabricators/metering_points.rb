@@ -117,15 +117,16 @@ Fabricator :mp_60009269, from: :metering_point do
   meter { Fabricate(:easymeter_60009269) }
 end
 
+# # Nr. 60232499 für Thomas Theenhaus (Einrichtungszähler Bezug)
+# Fabricator :mp_60232499, from: :metering_point do
+#   name  'Am Pfannenstiel Discovergy'
+#   meter { Fabricate(:easymeter_60232499) }
+# end
+
 # Nr. 60232499 für Thomas Theenhaus (Einrichtungszähler Bezug)
-Fabricator :mp_60232499, from: :metering_point do
-  name  'Am Pfannenstiel Discovergy'
-  meter { Fabricate(:easymeter_60232499) }
-end
-# Nr. 60232499 für Thomas Theenhaus (Einrichtungszähler Bezug)
-Fabricator :mp_amperixTT, from: :metering_point do
-  name  'Am Pfannenstiel Amperix'
-  meter { Fabricate(:amperix_60232AMPE) }
+Fabricator :mp_ferraris_001_amperix, from: :metering_point do
+  name  'Wohnung'
+  meter { Fabricate(:ferraris_001_amperix) }
 end
 
 

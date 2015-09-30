@@ -40,12 +40,6 @@ class Meter < ActiveRecord::Base
       easy_meter
       amperix
       ferraris
-      landis_gyr
-      goerlitz
-      elster
-      bauer
-      nzr
-      emh
       other
     }.map(&:to_sym)
   end

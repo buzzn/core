@@ -16,14 +16,35 @@
 # for testing the respective API it is recomended to use amperix- and discovergy- crawlers directly as
 # here meter, meteringpoint and metering_point_operator_contract must be declarated first.
 
+
+
+# Discovergy
+# metering_point = MeteringPoint.find('91b2c688-d73f-4fda-ae2b-c3a3f3db84e4')
+# Benchmark.measure{ Crawler.new(metering_point).live }
+# Benchmark.measure{ Crawler.new(metering_point).hour().count }
+# Benchmark.measure{ Crawler.new(metering_point).day().count }
+# Benchmark.measure{ Crawler.new(metering_point).month().count }
+
+
+# Amperix
+
+
 class Crawler
-  def getDataLive(metering_point, metering_point_operator_contract, meter)
-  # result = []
-    # puts metering_point_operator_contract.organization.slug
-    #if metering_point.meter.manufacturer_name ==  "amperix" # meter.name== 'Amperix'
-    if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
-      #puts "Amperix Live"
-      amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
+
+  def initialize(metering_point)
+    @unixtime_now                     = Time.now.in_time_zone.utc.to_i*1000
+    @metering_point                   = metering_point
+    @metering_point_input             = @metering_point.input?
+    @metering_points_size             = @metering_point.meter.metering_points.size
+    @metering_point_operator_contract = @metering_point.metering_point_operator_contract
+    @meter                            = @metering_point.meter
+  end
+
+
+
+  def live
+    if @metering_point_operator_contract.organization.slug ==  "amperix"
+      amperix  = Amperix.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request  = amperix.get_live
       if request.any?
         request.each do |item|
@@ -32,7 +53,6 @@ class Crawler
             item[1]=0
           else
             power = item[1] > 0 ? Integer(item[1].abs) : 0
-          #  result << [timestamp, power]
           end
           return {:power => power, :timestamp => timestamp}
         end
@@ -40,18 +60,16 @@ class Crawler
         puts request.inspect
       end
     else
-      # puts "Discovergy Live"
-      discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = discovergy.get_live(meter.manufacturer_product_serialnumber, 4)
+      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
       if request['status'] == "ok"
         if request['result'].any?
-
           request['result'].each do |item|
             timestamp = item['time']
-            if metering_point.meter.metering_points.size > 1
-              if item['power'] > 0 && metering_point.input?
+            if @metering_point.meter.metering_points.size > 1
+              if item['power'] > 0 && @metering_point.input?
                 power = item['power']/1000
-              elsif item['power'] < 0 && metering_point.output?
+              elsif item['power'] < 0 && @metering_point.output?
                 power = item['power'].abs/1000
               else
                 power = 0
@@ -69,15 +87,18 @@ class Crawler
       end
     end
     puts "THIS AINT neither DISCO nor Amperix"
-    # return result
   end
 
 
 
-  def getDataHour(containing_timestamp, metering_point, metering_point_operator_contract, meter)
+
+
+
+
+  def hour(containing_timestamp=@unixtime_now)
     result = []
-    if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
-      amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
+    if @metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
+      amperix  = Amperix.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request     = amperix.get_hour(containing_timestamp)
       if request.any?
         request.each do |item|
@@ -94,17 +115,15 @@ class Crawler
         puts request.inspect
       end
     else
-      discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = discovergy.get_hour(meter.manufacturer_product_serialnumber,containing_timestamp)
+      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request     = discovergy.get_hour(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
-          # TODO: make this nicer
           request['result'].each do |item|
-           # puts item.to_s
-            if metering_point.meter.metering_points.size > 1
-              if item['power'] > 0 && metering_point.input?
+            if @metering_points_size > 1
+              if item['power'] > 0 && @metering_point_input
                 power = item['power']/1000
-              elsif item['power'] < 0 && metering_point.output?
+              elsif item['power'] < 0 && !@metering_point_input
                 power = item['power'].abs/1000
               else
                 power = 0
@@ -127,11 +146,75 @@ class Crawler
 
 
 
-  def getDataMonth(containing_timestamp, metering_point, metering_point_operator_contract, meter)
+
+  # returns array with 96 quarter hour values
+  def day(containing_timestamp=@unixtime_now)
     result = []
-    if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
-      amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = amperix.get_month(containing_timestamp)
+    if @metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
+      amperix  = Amperix.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request  = amperix.get_day(containing_timestamp)
+      if request.any?
+        request.each do |item|
+          #puts item.to_s
+          timestamp = item[0] * 1000
+          if String.try_convert(item[1])== "-nan"
+            item[1]=0
+          else
+            power = item[1] > 0 ? Integer(item[1].abs) : 0
+            result << [timestamp, power]
+          end
+        end
+      else
+        puts request.inspect
+      end
+    else
+      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request     = discovergy.get_day(@meter.manufacturer_product_serialnumber, containing_timestamp)
+      if request['status'] == "ok"
+        if request['result'].any?
+          request['result'].each do |item|
+            timestamp = item['timeStart']
+
+            if @metering_points_size > 1
+              if item['power'] > 0 && @metering_point_input
+                power = item['power']/1000
+              elsif item['power'] < 0 && !@metering_point_input
+                power = item['power'].abs/1000
+              else
+                power = 0
+              end
+            else
+              power = item['power'] > 0 ? Integer(item['power'].abs)/1000 : 0
+            end
+
+            timenew = Time.new.to_i - 50
+            if timestamp/1000 < timenew
+              result << [timestamp, power]
+            end
+
+          end
+        else
+          puts request.inspect
+        end
+      else
+        puts request.inspect
+      end
+    end
+    return result
+  end
+
+
+
+
+
+
+
+
+  def month(containing_timestamp=@unixtime_now)
+    result = []
+    if @metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
+      amperix  = Amperix.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request  = amperix.get_month(containing_timestamp)
       if request.any?
         request.each do |item|
         #puts item.to_s
@@ -147,20 +230,23 @@ class Crawler
         puts request.inspect
       end
     else
-      discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = discovergy.get_month(meter.manufacturer_product_serialnumber, containing_timestamp)
+      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request     = discovergy.get_month(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
+
+
           # TODO: make this nicer
           old_value = -1
           new_value = -1
           timestamp = -1
           i = 0
-          if metering_point.meter.metering_points.size > 1 && metering_point.output?
+          if @metering_point.meter.metering_points.size > 1 && @metering_point.output?
             mode = 'energyOut'
           else
             mode = 'energy'
           end
+
           request['result'].each do |item|
             if i == 0
               old_value = item[mode]
@@ -185,60 +271,8 @@ class Crawler
   end
 
 
-  # returns array with 96 quarter hour values
-  def getDataDay(containing_timestamp, metering_point, metering_point_operator_contract, meter)
-    result = []
-    if metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
-      amperix  = Amperix.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = amperix.get_day(containing_timestamp)
-      if request.any?
-        request.each do |item|
-          #puts item.to_s
-          timestamp = item[0] * 1000
-          if String.try_convert(item[1])== "-nan"
-            item[1]=0
-          else
-            power = item[1] > 0 ? Integer(item[1].abs) : 0
-            result << [timestamp, power]
-          end
-        end
-      else
-        puts request.inspect
-      end
-    else
-      discovergy  = Discovergy.new(metering_point_operator_contract.username, metering_point_operator_contract.password)
-      request     = discovergy.get_day(meter.manufacturer_product_serialnumber, containing_timestamp)
-      if request['status'] == "ok"
-        if request['result'].any?
-          # TODO: make this nicer
 
-          request['result'].each do |item|
-            timestamp = item['timeStart']
-            if metering_point.meter.metering_points.size > 1
-              if item['power'] > 0 && metering_point.input?
-                power = item['power']/1000
-              elsif item['power'] < 0 && metering_point.output?
-                power = item['power'].abs/1000
-              else
-                power = 0
-              end
-            else
-              power = item['power'] > 0 ? Integer(item['power'].abs)/1000 : 0
-            end
-            #puts Time.new.to_i.to_s + ":   " + (timestamp/1000).to_s
-            timenew = Time.new.to_i - 50
-            if timestamp/1000 < timenew
-              result << [timestamp, power]
-            end
-          end
-        else
-          puts request.inspect
-        end
-      else
-        puts request.inspect
-      end
-    end
-    return result
-  end
+
+
 end
 
