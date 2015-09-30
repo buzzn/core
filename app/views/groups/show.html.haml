@@ -19,6 +19,7 @@
 
 
 
+
       %ul.list-group.bg-trans
 
         - if @group.website
@@ -111,6 +112,14 @@
 
   .row
     .col-sm-6.col-md-6.col-lg-6
+      - if @group.description
+        %h1.page-header.text-overflow
+          %span
+            = t('description')
+        .panel
+          .panel-body= @group.description
+
+      /.col-sm-6.col-md-6.col-lg-6
       %h1.page-header.text-overflow
         %span
           = t('bubbles')
@@ -127,7 +136,7 @@
         %h1.page-header.text-overflow
           %span
             = t('comments')
-        .panel.comments-panel
+        .panel.comments-panel{data: {commentable_type: 'Group', commentable_id: @group.id} }
           #demo-chat-body.collapse.in
             .nano{:style => "height:410px"}
               .nano-content.pad-all.comments-content

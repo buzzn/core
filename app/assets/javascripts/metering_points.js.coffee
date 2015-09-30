@@ -21,7 +21,7 @@ $(".metering_points").ready ->
             type: 'area'
             renderTo: 'chart-container-' + id
             width: width
-            backgroundColor:'rgba(255, 255, 255, 0.0)'
+            backgroundColor: 'rgba(255, 255, 255, 0.0)'
             spacingBottom: 5,
             spacingTop: 0,
             spacingLeft: 20,

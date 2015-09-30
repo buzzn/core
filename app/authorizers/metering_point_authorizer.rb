@@ -8,6 +8,9 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
     !user.nil? &&
     (user.has_role?(:admin) ||
     user.has_role?(:manager, resource) ||
+    resource.users.include?(user) ||
+    resource.readable_by_world? ||
+    resource.readable != 'me' ||
     (resource.readable_by_friends? && User.with_role(:manager, resource).first.friend?(user)) ||
     resource.output? ||
     (!resource.group.nil? && user.can_update?(resource.group)) ||

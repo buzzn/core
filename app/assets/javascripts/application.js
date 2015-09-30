@@ -55,6 +55,7 @@
 //= require bubble_tooltip
 //= require users
 //= require tour
+//= require comments
 
 
 

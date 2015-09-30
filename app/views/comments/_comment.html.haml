@@ -30,8 +30,9 @@
         %ul.list-unstyled.media-block.child-comments
           = render :partial => 'comments/comment', :collection => comment.children.reverse, :as => :comment
         - if user_signed_in?
-          .nested-comments.pull-left
+          .nested-comments
             .comment-reply
               = t('reply')
             .comment-answer
               = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(comment.commentable, current_user.id, "", comment.id) }
+        %hr
