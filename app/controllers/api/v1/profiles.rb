@@ -15,8 +15,9 @@ module API
 
 
         desc "Return all profiles"
+        paginate per_page: 10, max_per_page: 200
         get "" do
-          Profile.all
+          paginate Profile.all
         end
 
 

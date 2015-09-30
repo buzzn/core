@@ -120,6 +120,7 @@ GEM
     annotate (2.6.10)
       activerecord (>= 3.2, <= 4.3)
       rake (~> 10.4)
+    api-pagination (4.1.1)
     arel (6.0.3)
     asset_sync (1.1.0)
       activemodel
@@ -473,6 +474,9 @@ GEM
       railties (>= 3.2.16)
     json (1.8.3)
     jwt (1.5.1)
+    kaminari (0.16.3)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     koala (2.2.0)
       addressable
       faraday
@@ -826,6 +830,7 @@ DEPENDENCIES
   acts_as_list
   ancestry
   annotate
+  api-pagination
   asset_sync
   attr_encrypted
   attribute_normalizer!
@@ -892,6 +897,7 @@ DEPENDENCIES
   jquery-turbolinks
   jquery-ui-rails
   jsonapi-resources!
+  kaminari
   koala
   launchy
   listen
