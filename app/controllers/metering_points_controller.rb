@@ -113,7 +113,7 @@ class MeteringPointsController < ApplicationController
         @email = params[:metering_point][:email]
         @existing_users = User.where(email: @email)
         if @existing_users.any?
-          if MeteringPointUserRequest.where(metering_point: @metering_point).where(user: @existing_users.first).empty?
+          if MeteringPointUserRequest.where(metering_point: @metering_point).where(user: @existing_users.first).empty? && !@metering_point.users.include?(@existing_users.first)
             if MeteringPointUserRequest.create(user: @existing_users.first, metering_point: @metering_point, mode: 'invitation')
               flash[:notice] = t('sent_metering_point_user_invitation_successfully')
             else
