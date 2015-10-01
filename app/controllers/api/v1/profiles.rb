@@ -15,9 +15,12 @@ module API
 
 
         desc "Return all profiles"
-        paginate per_page: 10, max_per_page: 200
+        paginate(per_page: per_page=10)
         get "" do
-          paginate Profile.all
+          @per_page     = params[:per_page] || per_page
+          @page         = params[:page] || 1
+          @total_pages  = Profile.all.page(@page).per(@per_page).total_pages
+          paginate(render(Profile.all, meta: { total_pages: @total_pages }))
         end
 
 
