@@ -43,7 +43,7 @@ Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
 # Messdienstleistung (Ablesung und Messung)
 Fabricate(:metering_point_operator, name: 'buzzn Metering')
 Fabricate(:metering_point_operator, name: 'Discovergy')
-Fabricate(:metering_point_operator, name: 'Amperix')
+Fabricate(:metering_point_operator, name: 'MySmartGrid')
 
 
 buzzn_team_names = %w[ felix justus danusch thomas martina stefan ole philipp christian ]

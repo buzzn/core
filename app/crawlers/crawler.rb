@@ -1,19 +1,19 @@
 # This file bundles all crawlers.
 # it branches via meter.manufacturer_name to the respective API
 # The first two json APIs, discovergy (https://my.discovergy.com/json/api/help) and flukso
-# (old for amperix; http://www.flukso.net/files/flm02/manual.pdf) are quite similar in respect to input
+# (old for my_smart_grid; http://www.flukso.net/files/flm02/manual.pdf) are quite similar in respect to input
 # input is managed by faraday gem and self explaining.
 # output differs also little:
 # discovergy: each member of json array has a name, e.g. "time"
-# amperix: each member of json array has no name position 1 is always time, position 2 is always power
+# my_smart_grid: each member of json array has no name position 1 is always time, position 2 is always power
 # however authorisation strategy differs.
 # discovergy: username -- password
-# amperix: sensor-uuid -- x-token
+# my_smart_grid: sensor-uuid -- x-token
 # Also measurementmethod and intention of the devices differ but this is too much to tell here.
 #
 #
 # subroutines implemented here are used by meteringpoints and groups
-# for testing the respective API it is recomended to use amperix- and discovergy- crawlers directly as
+# for testing the respective API it is recomended to use my_smart_grid- and discovergy- crawlers directly as
 # here meter, meteringpoint and metering_point_operator_contract must be declarated first.
 
 
@@ -24,11 +24,8 @@
 # Benchmark.measure{ Crawler.new(metering_point).hour().count }
 # Benchmark.measure{ Crawler.new(metering_point).day().count }
 # Benchmark.measure{ Crawler.new(metering_point).month().count }
+# Crawler.new(metering_point).valid_credential?
 
-
-# Crawler.new(MeteringPoint.find('b192b036-24ba-467a-906c-d4f642566c54')).valid_credential?
-
-# Amperix
 
 
 class Crawler
@@ -59,9 +56,9 @@ class Crawler
       request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
       return request['status'] == 'ok'
 
-    when 'amperix'
-      amperix = Amperix.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
-      request = amperix.get_live
+    when 'my_smart_grid'
+      my_smart_grid = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request = my_smart_grid.get_live
       return request != ""
 
     else
@@ -70,9 +67,9 @@ class Crawler
   end
 
   def live
-    if @metering_point_operator_contract.organization.slug ==  "amperix"
-      amperix  = Amperix.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
-      request  = amperix.get_live
+    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid"
+      my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request  = my_smart_grid.get_live
       if request.any?
         request.each do |item|
           timestamp = item[0] * 1000
@@ -113,7 +110,7 @@ class Crawler
         puts request.inspect
       end
     end
-    puts "THIS AINT neither DISCO nor Amperix"
+    puts "THIS AINT neither DISCO nor MySmartGrid"
   end
 
 
@@ -124,9 +121,9 @@ class Crawler
 
   def hour(containing_timestamp=@unixtime_now)
     result = []
-    if @metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
-      amperix  = Amperix.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
-      request     = amperix.get_hour(containing_timestamp)
+    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
+      my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request     = my_smart_grid.get_hour(containing_timestamp)
       if request.any?
         request.each do |item|
           #puts item.to_s
@@ -177,9 +174,9 @@ class Crawler
   # returns array with 96 quarter hour values
   def day(containing_timestamp=@unixtime_now)
     result = []
-    if @metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
-      amperix  = Amperix.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
-      request  = amperix.get_day(containing_timestamp)
+    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
+      my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request  = my_smart_grid.get_day(containing_timestamp)
       if request.any?
         request.each do |item|
           #puts item.to_s
@@ -239,9 +236,9 @@ class Crawler
 
   def month(containing_timestamp=@unixtime_now)
     result = []
-    if @metering_point_operator_contract.organization.slug ==  "amperix" # meter.name== 'Amperix'
-      amperix  = Amperix.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
-      request  = amperix.get_month(containing_timestamp)
+    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
+      my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request  = my_smart_grid.get_month(containing_timestamp)
       if request.any?
         request.each do |item|
         #puts item.to_s

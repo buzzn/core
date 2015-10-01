@@ -84,14 +84,14 @@ end
 
 # thomas wohnung
 Fabricator :mpoc_ferraris_0001_amperix, from: :metering_point_operator_contract do
-  organization  { Organization.find('amperix') }
+  organization  { Organization.find('mysmartgrid') }
   username      '6ed89edf81be48586afc19f9006feb8b'
   password      '1a875e34e291c28db95ecbda015ad433'
 end
 
 # wogeno oberländerstr bhkw
 Fabricator :mpoc_ferraris_0002_amperix, from: :metering_point_operator_contract do
-  organization  { Organization.find('amperix') }
+  organization  { Organization.find('mysmartgrid') }
   username      '721bcb386c8a4dab2510d40a93a7bf66'
   password      '0b81f58c19135bc01420aa0120ae7693'
 end

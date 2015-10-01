@@ -21,11 +21,10 @@
         = f.association :organization, collection: Organization.metering_point_operators, input_html: {class: 'select2'}, include_blank: false, label: t('smart_metering_provider')
         .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
           = f.input :username
-          = f.input :password
-        .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'amperix').first.id}
-          = f.input :username, label_method: :sensor_id
-          = f.input :password, :input_html => {value: @contract.password}, label_method: :x_token
-
+          = f.input :password, :input_html => {value: @contract.password}
+        .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'mysmartgrid').first.id}
+          = f.input :username, label: 'SensorID'
+          = f.input :password, :input_html => {value: @contract.password}, label: 'XToken'
 
         .modal-footer
           .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}

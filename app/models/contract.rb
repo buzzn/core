@@ -58,7 +58,7 @@ class Contract < ActiveRecord::Base
 
   def login_required?
     if self.organization
-      self.organization.slug == 'discovergy' ||  self.organization.slug == 'amperix'
+      self.organization.slug == 'discovergy' ||  self.organization.slug == 'mysmartgrid'
     else
       false
     end
