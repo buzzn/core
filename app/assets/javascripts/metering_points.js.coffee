@@ -1324,7 +1324,7 @@ $(".metering_point").ready ->
         , 1000*5)
         )
     else
-      if source == "amperix"
+      if source == "mysmartgrid"
         timers.push(window.setInterval(->
           getLiveData(metering_point, metering_point_id)
           return
