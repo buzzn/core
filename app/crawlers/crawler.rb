@@ -19,12 +19,14 @@
 
 
 # Discovergy
-# metering_point = MeteringPoint.find('91b2c688-d73f-4fda-ae2b-c3a3f3db84e4')
+# metering_point = MeteringPoint.find('b192b036-24ba-467a-906c-d4f642566c54')
 # Benchmark.measure{ Crawler.new(metering_point).live }
 # Benchmark.measure{ Crawler.new(metering_point).hour().count }
 # Benchmark.measure{ Crawler.new(metering_point).day().count }
 # Benchmark.measure{ Crawler.new(metering_point).month().count }
 
+
+# Crawler.new(MeteringPoint.find('b192b036-24ba-467a-906c-d4f642566c54')).valid_credential?
 
 # Amperix
 
@@ -34,14 +36,38 @@ class Crawler
   def initialize(metering_point)
     @unixtime_now                     = Time.now.in_time_zone.utc.to_i*1000
     @metering_point                   = metering_point
+    raise ArgumentError.new("no metering_point_operator_contract on metering_point") unless @metering_point.metering_point_operator_contract
+    @metering_point_operator_contract = @metering_point.metering_point_operator_contract
+    @metering_point_operator          = @metering_point_operator_contract.organization.slug
     @metering_point_input             = @metering_point.input?
     @metering_point_output            = @metering_point.output?
-    @metering_points_size             = @metering_point.meter.metering_points.size
-    @metering_point_operator_contract = @metering_point.metering_point_operator_contract
+    raise ArgumentError.new("no meter on metering_point") unless @metering_point.meter
     @meter                            = @metering_point.meter
+    @metering_points_size             = @meter.metering_points.size
   end
 
+  def valid_credential?
+    case @metering_point_operator
 
+    when 'discovergy'
+      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
+      return request['status'] == 'ok'
+
+    when 'buzzn-metering'
+      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
+      return request['status'] == 'ok'
+
+    when 'amperix'
+      amperix = Amperix.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request = amperix.get_live
+      return request != ""
+
+    else
+      "You gave me #{@metering_point_operator} -- I have no idea what to do with that."
+    end
+  end
 
   def live
     if @metering_point_operator_contract.organization.slug ==  "amperix"

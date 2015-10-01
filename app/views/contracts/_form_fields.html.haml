@@ -11,5 +11,5 @@
   = f.input :username
   = f.input :password, input_html: { value: @contract.password}
 .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'amperix').first.id}
-  = f.input :sensor_id, as: :text, :input_html => {value: ''}, label_method: :sensor_id
+  = f.input :sensor_id label_method: :sensor_id
   = f.input :x_token, as: :text, :input_html => {value: @contract.password}, label_method: :x_token

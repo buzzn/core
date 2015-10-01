@@ -14,16 +14,17 @@
           %p.text-thin= t('step') + ' 2: ' + t('edit_data_connection')
     .modal-body
       = simple_form_for @contract, remote: true, url: edit_contract_update_wizard_meters_path(meter_id: params[:meter_id]), method: 'put'  do |f|
+
         - value = @contract.id.nil? ? {} : { value: @contract.id }
         = f.input :id, input_html: {}.merge(value), as: :hidden
 
-        = f.association :organization, input_html: {class: 'select2'}, label: t('smart_metering_provider')
+        = f.association :organization, collection: Organization.metering_point_operators, input_html: {class: 'select2'}, include_blank: false, label: t('smart_metering_provider')
         .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
           = f.input :username
           = f.input :password
         .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'amperix').first.id}
-          = f.input :sensor_id, as: :text, :input_html => {value: ''}, label_method: :sensor_id
-          = f.input :x_token, as: :text, :input_html => {value: ''}, label_method: :x_token
+          = f.input :username, label_method: :sensor_id
+          = f.input :password, :input_html => {value: @contract.password}, label_method: :x_token
 
 
         .modal-footer
