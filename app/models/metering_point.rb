@@ -184,8 +184,8 @@ class MeteringPoint < ActiveRecord::Base
     self.output? && !self.smart?
   end
 
-  def amperix?
-    self.smart? && metering_point_operator_contract && metering_point_operator_contract.organization.slug == "amperix"
+  def mysmartgrid?
+    self.smart? && metering_point_operator_contract && metering_point_operator_contract.organization.slug == "mysmartgrid"
   end
 
   def discovergy?
@@ -199,8 +199,8 @@ class MeteringPoint < ActiveRecord::Base
       "sep_pv"
     elsif self.bhkw_or_else?
       "sep_bhkw"
-    elsif self.amperix?
-      "amperix"
+    elsif self.mysmartgrid?
+      "mysmartgrid"
     elsif self.discovergy?
       "discovergy"
     end
