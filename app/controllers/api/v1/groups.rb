@@ -93,6 +93,20 @@ module API
 
 
 
+
+        desc "Return the related metering-points for Group"
+        params do
+          requires :id, type: String, desc: "ID of the profile"
+        end
+        get ":id/metering-points" do
+          group = Group.where(id: permitted_params[:id]).first!
+          group.metering_points
+        end
+
+
+
+
+
       end
     end
   end

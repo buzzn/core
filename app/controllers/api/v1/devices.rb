@@ -12,7 +12,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the Device"
         end
-        get ":id", root: "device" do
+        get ":id" do
           guard!
           @device = Device.find(params[:id])
           current_user

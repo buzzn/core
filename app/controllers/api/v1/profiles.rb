@@ -2,7 +2,7 @@ module API
   module V1
     class Profiles < Grape::API
       include API::V1::Defaults
-      resource :profiles do
+      resource 'profiles' do
 
 
 
@@ -49,7 +49,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the profile"
         end
-        get ":id/metering_points" do
+        get ":id/metering-points" do
           profile = Profile.where(id: permitted_params[:id]).first!
           profile.metering_points
         end
