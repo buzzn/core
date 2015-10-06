@@ -408,7 +408,9 @@ $(".bubbles_container").ready ->
             window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
         timers.push(
           window.setInterval(->
-            pullPowerData(chart, actual_out_metering_point_id)
+            console.log window.wisActive
+            if  window.wisActive == true
+              pullPowerData(chart, actual_out_metering_point_id)
             return
           , 1000*interval)
           )
@@ -420,7 +422,9 @@ $(".bubbles_container").ready ->
             window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
         timers.push(
           window.setInterval(->
-            pullPowerData(chart, actual_in_metering_point_id)
+            console.log window.wisActive
+            if  window.wisActive == true
+              pullPowerData(chart, actual_in_metering_point_id)
             return
           , 1000*interval)
           )
