@@ -85,8 +85,29 @@ class Group < ActiveRecord::Base
     %w(buzzn people power) << self.name
   end
 
+  def self.readables
+    %w{
+      world
+      community
+      friends
+      me
+    }
+  end
+
   def self.modes
     %w(localpool public_group)
+  end
+
+  def readable_by_friends?
+    self.readable == 'friends'
+  end
+
+  def readable_by_community?
+    self.readable == 'community'
+  end
+
+  def readable_by_world?
+    self.readable == 'world'
   end
 
   def calculate_total_energy_data(data, operators, resolution)

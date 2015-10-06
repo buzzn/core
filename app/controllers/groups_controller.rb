@@ -1,4 +1,5 @@
 class GroupsController < ApplicationController
+  before_filter :authenticate_user!, except: [:show, :chart, :bubbles_data]
   respond_to :html, :js, :json
 
   def index
@@ -16,9 +17,18 @@ class GroupsController < ApplicationController
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @all_comments                   = @group.root_comments
     @out_devices                    = @out_metering_points.collect(&:devices)
-
-    if request.path != group_path(@group)
-      redirect_to @group, status: :moved_permanently
+    if @group.readable_by_world?
+      return @group
+    else
+      if user_signed_in?
+        if @group.readable_by_community?
+          return @group
+        else
+          authorize_action_for(@group)
+        end
+      else
+        redirect_to root_path
+      end
     end
   end
 
@@ -200,6 +210,7 @@ private
       :private,
       :website,
       :description,
+      :readable,
       :metering_point_ids => []
     )
   end
