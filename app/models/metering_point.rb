@@ -203,6 +203,8 @@ class MeteringPoint < ActiveRecord::Base
       "mysmartgrid"
     elsif self.discovergy?
       "discovergy"
+    elsif self.virtual?
+      "virtual"
     end
   end
 

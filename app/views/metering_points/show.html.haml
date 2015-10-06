@@ -44,12 +44,18 @@
           %button.btn.btn-success.btn-labeled.fa.fa-spinner{:disabled => "disabled"}= t'waiting_for_accepting'
         - else
           - if !@users.include?(current_user)
-            - if current_user.friend?(@metering_point.managers.first)
+            - if current_user.friend?(@metering_point.managers.first) || current_user.can_update?(@metering_point)
               .btn.btn
               = link_to(t('join_this_metering_point'), metering_point_user_requests_path(user_id: current_user.id, metering_point_id: @metering_point.id, mode: 'request'), method: :post, class: 'btn btn-success btn-labeled fa fa-plus')
           - else
             = link_to(t('leave_this_metering_point'), cancel_membership_metering_point_path(user_id: current_user.id), :data => {:confirm => t('are_you_sure')}, class: 'btn btn-warning btn-labeled fa fa-minus')
       - if user_signed_in? && current_user.can_update?(@metering_point)
+        .btn-group
+          %button.btn.btn-block.btn-success.btn-labeled.fa.fa-user-times.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
+            =t('remove_members')
+          %ul.dropdown-menu{role: "menu"}
+            - @metering_point.users.each do |user|
+              %li= link_to(user.name, cancel_membership_metering_point_path(user_id: user.id), :data => {:confirm => t('are_you_sure')})
         = @metering_point.new_invitations
         = @metering_point.link_to_edit
 

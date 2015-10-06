@@ -37,6 +37,7 @@ Buzzn::Application.routes.draw do
       get :cancel_membership
       get :send_invitations
       put :send_invitations_update
+      get :cancel_membership
     end
   end
 
