@@ -17,6 +17,11 @@ class GroupsController < ApplicationController
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @all_comments                   = @group.root_comments
     @out_devices                    = @out_metering_points.collect(&:devices)
+
+    # if request.path != group_path(@group)
+    #   redirect_to @group, status: :moved_permanently
+    # end
+
     if @group.readable_by_world?
       return @group
     else
