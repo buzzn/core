@@ -185,7 +185,7 @@ $(".metering_point_detail").ready ->
             style:
               color: '#FFF'
           title:
-            text: "Zeit"
+#            text: "Zeit"
             enabled: true
             style: { "color": "#FFF", "fontWeight": "bold"}
         yAxis:
@@ -198,7 +198,7 @@ $(".metering_point_detail").ready ->
             format: "{value} W"
           title:
             enabled: true
-            text: "Leistung"
+            text: ""#"Leistung"
             style: { "color": "#FFF", "fontWeight": "bold"}
           minRange: 1
         plotOptions:
@@ -608,7 +608,7 @@ $(".group-chart").ready ->
               style:
                 color: '#000'
             title:
-              text: "Zeit"
+              #text: "Zeit"
               enabled: true
               style: { "color": "#000", "fontWeight": "bold"}
           yAxis:
@@ -621,7 +621,7 @@ $(".group-chart").ready ->
               format: "{value} W"
             title:
               enabled: true
-              text: "Leistung"
+#              text: "Leistung"
               style: { "color": "#000", "fontWeight": "bold"}
           plotOptions:
             series:
@@ -1175,8 +1175,8 @@ setChartToBarchart = (displaySeriesName) ->
   chart.yAxis[0].update({
     labels:
       format: "{value} kWh"
-    title:
-      text: "Energie"
+#    title:
+#      text: "Energie"
   })
 
 setChartToLinechart = (displaySeriesName) ->
@@ -1197,8 +1197,8 @@ setChartToLinechart = (displaySeriesName) ->
   chart.yAxis[0].update({
     labels:
       format: "{value} W"
-    title:
-      text: "Leistung"
+#    title:
+#      text: "Leistung"
   })
 
 setChartTitle = (containing_timestamp) ->
