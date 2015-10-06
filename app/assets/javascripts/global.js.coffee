@@ -1,3 +1,23 @@
+window.wisActive = true
+
+window.addEventListener 'pageshow', (event)->
+  console.log event.type
+  window.wisActive = true
+
+window.addEventListener 'pagehide', (event)->
+  console.log event.type
+  #alert("Ciao!")
+  window.wisActive = false
+
+window.addEventListener 'focus', (event)->
+  console.log event.type
+  window.wisActive = true
+
+window.addEventListener 'blur', (event)->
+  console.log event.type
+  window.wisActive = false
+
+
 ready = ->
   FastClick.attach(document.body);
   $(".nano").nanoScroller();
@@ -44,6 +64,7 @@ ready = ->
 
   $(window).on 'resize', ->
     resizeChart(0)
+
 
 
 
@@ -105,6 +126,17 @@ resizeChart = (duration) ->
 
   return
 ) jQuery
+
+
+#setInterval (->
+#  console.log if wisActive then 'active' else 'inactive'
+#  return
+#), 1000
+
+
+
+
+# test
 
 
 

@@ -1331,18 +1331,20 @@ $(".metering_point").ready ->
         , 1000*30)
         )
       if source == "discovergy"
-        timers.push(window.setInterval(->
-          getLiveData(metering_point, metering_point_id)
-          return
-        , 1000*7)
-        )
+
+          timers.push(window.setInterval(->
+            console.log window.wisActive
+            if  window.wisActive == true
+              getLiveData(metering_point, metering_point_id)
+            return
+          , 1000*5)
+          )
+
       timers.push(window.setInterval(->
         ttsample(metering_point,metering_point_id)
         return
       , 1000 * 20)
       )
-
-
 
 ttsample = (metering_point,metering_point_id) ->
   delta = Date.now() - ttlastSample
@@ -1441,6 +1443,5 @@ clearTimers = ->
   timers = []
 
 $(document).on('page:before-change', clearTimers)
-
 
 
