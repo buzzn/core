@@ -58,7 +58,7 @@ class Contract < ActiveRecord::Base
 
   def login_required?
     if self.organization
-      self.organization.slug == 'discovergy' ||  self.organization.slug == 'amperix'
+      self.organization.slug == 'discovergy' ||  self.organization.slug == 'mysmartgrid'
     else
       false
     end
@@ -96,32 +96,23 @@ class Contract < ActiveRecord::Base
 
 private
 
+
   def validates_credentials
-    if self.mode == 'metering_point_operator_contract'
-      if self.organization.slug == 'discovergy' || self.organization.slug == 'buzzn-metering'
-        api_call = Discovergy.new(self.username, self.password).meters
-        if api_call['status'] == 'ok'
-          self.update_columns(valid_credentials: true)
-          #self.send_notification_credentials(true)
-          if self.group
-            copy_contract(:group)
-          end
-          if self.metering_point && self.metering_point.meter
-            copy_contract(:metering_point)
-            self.metering_point.meter.save
-          end
-        end
-      elsif self.organization.slug == 'amperix' # no automated group check implemented yet
-        amperix = Amperix.new(self.username, self.password)
-        api_call = amperix.get_live
-        if api_call != ""
-          self.update_columns(valid_credentials: true)
+    if self.mode == 'metering_point_operator_contract' && self.metering_point && self.metering_point.meter
+      crawler = Crawler.new(self.metering_point)
+      if crawler.valid_credential?
+        self.update_columns(valid_credentials: true)
+        #self.send_notification_credentials(true)
+        copy_contract(:group) if self.group
+        if self.metering_point && self.metering_point.meter
+          copy_contract(:metering_point)
+          self.metering_point.meter.save
         end
       else
-        self.update_columns(valid_credentials: false)
       end
     end
   end
+
 
   def copy_contract(resource)
     if resource == :group

@@ -117,32 +117,11 @@ private
 
   def validates_smartmeter
     if self.metering_points.any?
-
       if self.metering_points.first.metering_point_operator_contract
-        @mpoc = self.metering_points.first.metering_point_operator_contract
-
-        if @mpoc.organization.slug == 'discovergy' || @mpoc.organization.slug == 'buzzn-metering'
-          request = Discovergy.new(@mpoc.username, @mpoc.password).raw_with_power(self.manufacturer_product_serialnumber)
-          if request['status'] == 'ok'
-            self.update_columns(smart: true)
-          elsif request['status'] == "error"
-            logger.error request
-            self.update_columns(smart: false)
-          else
-            logger.error request
-          end
-        elsif @mpoc.organization.slug == 'amperix'
-          amperix =  Amperix.new(@mpoc.username, @mpoc.password)
-          request = amperix.get_live
-          if request != ""
-            self.update_columns(smart: true)
-          else
-            logger.error request
-            self.update_columns(smart: false)
-          end
+        crawler = Crawler.new(self.metering_points.first)
+        if crawler.valid_credential?
+          self.update_columns(smart: true)
         else
-#          logger.warn "Meter:#{self.id} is not posible to validate. @metering_point:#{@metering_point}, @mpoc:#{metering_point.metering_point_operator_contract}"
-           logger.warn "Meter:#{self.id} is not posible to validate."
           self.update_columns(smart: false)
         end
       else

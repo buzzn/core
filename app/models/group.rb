@@ -11,7 +11,7 @@ class Group < ActiveRecord::Base
   #tracked  recipient: Proc.new{ |controller, model| controller && model }
 
   extend FriendlyId
-  friendly_id :name, use: [:slugged, :finders]
+  friendly_id :name, use: [:slugged, :history, :finders]
 
 
   validates :name, presence: true, uniqueness: true, length: { in: 4..40 }
@@ -51,6 +51,10 @@ class Group < ActiveRecord::Base
     else
       all
     end
+  end
+
+  def should_generate_new_friendly_id?
+    slug.blank? || name_changed?
   end
 
 

@@ -18,7 +18,7 @@
         .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
           = f.input :username
           = f.input :password
-        .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'amperix').first.id}
+        .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'mysmartgrid').first.id}
           = f.input :sensor_id, as: :text, :input_html => {value: ''}, label_method: :sensor_id
           = f.input :x_token, as: :text, :input_html => {value: ''}, label_method: :x_token
 

@@ -1,14 +1,14 @@
-class Amperix
+class MySmartGrid
 
   # how to use
   # # wogeno oberländerstr bhkw
-  # Amperix.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693').meters
-  # Amperix.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693').get_day(unixtime)
+  # MySmartGrid.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693').meters
+  # MySmartGrid.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693').get_day(unixtime)
   #
 
-  # amperix  = Amperix.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693')
+  # mysmartgrid  = MySmartGrid.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693')
   # unixtime = Time.now.to_i
-  # request  = amperix.get_day(unixtime)
+  # request  = mysmartgrid.get_day(unixtime)
 
 # sensor_id replaces username and x_token the password
   def initialize(sensor_id, x_token)
@@ -25,7 +25,7 @@ class Amperix
 
 # This subroutine returns an array of time and work of the requested month on a time-grid of quarter hours
 # This holds for data not older than one month only.
-# Amperix thins out data older then one month (one value every quarter hour to one value every hour)
+# MySmartGrid thins out data older then one month (one value every quarter hour to one value every hour)
 # and even more after two month (hour to day).
 # This results in bad day-charts for historic data older then two month
   def get_day(time)
@@ -40,7 +40,7 @@ class Amperix
   end
 
 # This subroutine returns an array of time and work of the requested month on a time-grid of days
-# This holds for data not older than one month only. Amperix thins out data older then one month and even more after two month.
+# This holds for data not older than one month only. MySmartGrid thins out data older then one month and even more after two month.
 def get_month(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_month.to_time.to_i
     datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_month.to_time.to_i
@@ -56,7 +56,7 @@ def get_month(time)
 
 # This subroutine returns an array of time and power of the requested hour on a time-grid of minutes
 # Maximum delay is 5 minutes.
-# This holds for data not older than one month only. amperix thins out data older then one month and even more after two month.
+# This holds for data not older than one month only. mysmartgrid thins out data older then one month and even more after two month.
 #
 def get_hour(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_hour.to_time.to_i
@@ -74,7 +74,7 @@ def get_hour(time)
 
 # "real time view" with 5 minutes delay!
 #
-# This subroutine returns values of the last 340 seconds. Actually amperix data are updated every 5 minutes
+# This subroutine returns values of the last 340 seconds. Actually mysmartgrid data are updated every 5 minutes
 # They are on a timegrid of 1 minute distance.
 # Taking the first value of the return lead therefore to a value change every minute and you always
 # have a delay of 5 minutes in "real time view"
