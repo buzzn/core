@@ -2,12 +2,7 @@
 
 %h1= t('sign_up')
 
-= simple_form_for resource, as: resource_name, url: registration_path(resource_name) do |f|
-  = devise_error_messages!
-  = f.simple_fields_for :profile, resource.build_profile do |p|
-    = p.input :first_name
-    = p.input :last_name
-  = f.input :email,                 required: true
-  = f.input :password,              required: true
-  = f.input :password_confirmation, required: true
-  = f.button :submit, t('sign_up'), id: 'submit', class: 'btn btn-lg btn-success btn-block'
+%h3= t('its_impossible_to_sign_up_at_the_moment_because_this_function_has_been_deactivated')
+%h3= t('only_invited_members_can_use_this_app_now')
+
+%h3= t('if_the_beta_test_is_over_you_can_register_without_invitation')

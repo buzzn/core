@@ -15,6 +15,9 @@ de:
   if_this_link_shouldnt_work_try_to_copy_and_paste_this_one_directly_in_your_browser: "Sollte dieser Link nicht funktionieren, kopiere bitte dies direkt in Deinen Browser:"
 
   this_app_is_currently_under_development_and_may_contain_bugs: "Diese App befindet sich im Moment in der Entwicklung und kann daher Fehler beinhalten."
+  its_impossible_to_sign_up_at_the_moment_because_this_function_has_been_deactivated: "Im Moment ist es nicht möglich sich zu registrieren, da diese Funktion deaktiviert wurde."
+  only_invited_members_can_use_this_app_now: "Nur eingeladene Mitglieder können die App nutzen."
+  if_the_beta_test_is_over_you_can_register_without_invitation: Sobald der Beta Test vorüber ist kannst Du Dich wieder wie gewohnt auch ohne Einladung registrieren.
 
   metering_point: Zählpunkt
   add_me_to_this_metering_point: Füge mich dem Zählpunkt hinzu
@@ -47,6 +50,8 @@ de:
   rejected_group_metering_point_request: Die Gruppenanfrage wurde abgelehnt.
   metering_point_added_successfully: Der Zählpunkt wurde hinzugefügt.
   you_were_added_successfully: Du wurdest erfolgreich hinzugefügt.
+  metering_point_removed_successfully: Der Zählpunkt wurde erfolgreich entfernt.
+  unable_to_remove_metering_point: Das Entfernen des Zählpunkts ist fehlgeschlagen.
 
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler
