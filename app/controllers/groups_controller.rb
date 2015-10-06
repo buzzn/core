@@ -138,8 +138,12 @@ class GroupsController < ApplicationController
   def cancel_membership
     @group = Group.find(params[:id])
     @metering_point = MeteringPoint.find(params[:metering_point_id])
-    @group.metering_points.delete(@metering_point)
-    @group.calculate_closeness
+    if @group.metering_points.delete(@metering_point)
+      @group.calculate_closeness
+      flash[:notice] = t('metering_point_removed_successfully')
+    else
+      flash[:error] = t('unable_to_remove_metering_point')
+    end
     redirect_to group_path(@group)
   end
 

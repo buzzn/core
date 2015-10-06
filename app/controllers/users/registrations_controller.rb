@@ -58,12 +58,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
     def configure_permitted_parameters
 
       devise_parameter_sanitizer.for(:sign_up) do |u|
-        u.permit(
-                  :email,
-                  :password,
-                  :password_confirmation,
-                  profile_attributes: [:id, :first_name, :last_name, :terms]
-                )
+        # u.permit(
+        #           :email,
+        #           :password,
+        #           :password_confirmation,
+        #           profile_attributes: [:id, :first_name, :last_name, :terms]
+        #         )
       end
 
       devise_parameter_sanitizer.for(:account_update) do |u|
