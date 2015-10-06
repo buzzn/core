@@ -265,12 +265,11 @@ class Crawler
           new_value = -1
           timestamp = -1
           i = 0
-          if @metering_point_size > 1 && @metering_point_output
+          if @metering_points_size > 1 && @metering_point_output
             mode = 'energyOut'
           else
             mode = 'energy'
           end
-
           request['result'].each do |item|
             if i == 0
               old_value = item[mode]
