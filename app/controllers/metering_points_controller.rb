@@ -141,6 +141,14 @@ class MeteringPointsController < ApplicationController
   end
 
 
+  def cancel_membership
+    @metering_point = MeteringPoint.find(params[:id])
+    @user = User.find(params[:user_id])
+    @metering_point.users.delete(@user)
+    redirect_to metering_point_path(@metering_point)
+  end
+
+
 
 
 

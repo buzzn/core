@@ -26,3 +26,6 @@
           .boxed
             #content-container-no-click
               = yield
+
+    .ribbon-wrapper-green.global-ribbon-wrapper{"data-toggle" => "popover", "data-placement" => "right", "title" => "Beta", "data-content" => t("this_app_is_currently_under_development_and_may_contain_bugs")}
+      .ribbon-green.global-ribbon= "Beta"

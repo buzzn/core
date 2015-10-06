@@ -14,6 +14,8 @@ de:
   if_it_was_you_who_requested_the_link_you_can_do_this_through_the_link_below: "Falls Du das warst, kannst Du dies mit dem folgenden Link tun:"
   if_this_link_shouldnt_work_try_to_copy_and_paste_this_one_directly_in_your_browser: "Sollte dieser Link nicht funktionieren, kopiere bitte dies direkt in Deinen Browser:"
 
+  this_app_is_currently_under_development_and_may_contain_bugs: "Diese App befindet sich im Moment in der Entwicklung und kann daher Fehler beinhalten."
+
   metering_point: Zählpunkt
   add_me_to_this_metering_point: Füge mich dem Zählpunkt hinzu
   dont_add_me_to_this_metering_point: Füge mich dem Zählpunkt NICHT hinzu

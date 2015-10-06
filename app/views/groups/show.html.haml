@@ -50,7 +50,7 @@
     .panel-control
       - if user_signed_in? && current_user.can_update?(@group)
         .btn-group
-          %button.btn.btn-block.btn-success.btn-labeled.fa.fa-minus.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
+          %button.btn.btn-block.btn-success.btn-labeled.fa.fa-user-times.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
             =t('remove_members')
           %ul.dropdown-menu{role: "menu"}
             - @group.metering_points.each do |metering_point|

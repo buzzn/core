@@ -1330,7 +1330,7 @@ $(".metering_point").ready ->
           return
         , 1000*30)
         )
-      if source == "discovergy"
+      else if source == "discovergy" || source == "virtual"
 
           timers.push(window.setInterval(->
             console.log window.wisActive
