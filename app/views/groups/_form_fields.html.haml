@@ -3,6 +3,6 @@
 = f.input :name
 = f.input :website
 = f.input :description
-= f.input :mode, as: :radio_buttons, collection: Group.modes, label_method: ->(obj){ t(obj)}#[t("public_group"), t("localpool")]#, checked: t("public_group")
--# = f.input :private
+= f.input :readable, collection: Group.readables.map(&:to_sym), include_blank: false
+= f.input :mode, as: :radio_buttons, collection: Group.modes.map(&:to_sym), label_method: ->(obj){ t(obj)}
 

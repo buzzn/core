@@ -232,15 +232,16 @@ class MeteringPoint < ActiveRecord::Base
     %w{
       in
       out
-    }.map(&:to_sym)
+    }
   end
 
   def self.readables
     %w{
-      me
-      friends
       world
-    }.map(&:to_sym)
+      community
+      friends
+      me
+    }
   end
 
 

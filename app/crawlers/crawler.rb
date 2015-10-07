@@ -270,6 +270,7 @@ class Crawler
           else
             mode = 'energy'
           end
+          #puts request['result']
           request['result'].each do |item|
             if i == 0
               old_value = item[mode]
@@ -281,6 +282,8 @@ class Crawler
             result << [timestamp, (new_value - old_value)/10000000000.0]
             old_value = new_value
             timestamp = item['time']
+            #puts i.to_s
+            #puts timestamp
             i += 1
           end
         else
@@ -290,6 +293,7 @@ class Crawler
         puts request.inspect
       end
     end
+
     return result
   end
 
