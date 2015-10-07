@@ -137,12 +137,20 @@ a, img {
   display: inline;
 }
 
+.dislikes-count {
+  display: inline;
+}
+
 .likes {
   display: inline;
   margin-left: 5px;
 }
 
 .increase-likes {
+  cursor: pointer;
+}
+
+.increase-dislikes {
   cursor: pointer;
 }
 
@@ -310,6 +318,15 @@ a, img {
 .global-ribbon-wrapper{
   left: -5px;
   right: 0px;
+}
+
+.comments-content {
+  top: 143px !important;
+}
+
+.comment-form-container {
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.024);
 }
 
 

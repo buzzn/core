@@ -100,6 +100,7 @@ gem 'omniauth-facebook'
 gem 'koala'
 gem 'byebug'
 gem 'rails_autolink'
+gem 'acts_as_votable', '~> 0.10.0'
 
 
 source 'http://rails-assets.org' do

@@ -56,7 +56,7 @@ Buzzn::Application.routes.draw do
 
   resources :comments, :except => [:new, :index, :edit, :show, :update] do
     member do
-      get :increase_likes
+      get :voted
     end
   end
 

@@ -47,13 +47,14 @@ class CommentsController < InheritedResources::Base
     end
   end
 
-  def increase_likes
+  def voted
     @comment = Comment.find(params[:id])
-    @comment.likes.nil? ? @comment.likes = 0 : nil
-    @comment.likes += 1
-    if @comment.save
-      render :json => { :likes => @comment.likes}
+    if params[:mode] == 'good'
+      @comment.liked_by current_user
+    elsif params[:mode] == 'bad'
+      @comment.disliked_by current_user
     end
+    render :json => { :likes => @comment.get_likes.size, :dislikes => @comment.get_dislikes.size}
   end
 
   def permitted_params

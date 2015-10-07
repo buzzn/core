@@ -60,10 +60,21 @@ $(".comments-panel").ready ->
     comment_id = $(this).attr('id').split('_')[1]
     that = $(this)
     that.find(".increase-likes").on "click", ->
-      $.ajax({url: '/comments/' + comment_id + '/increase_likes', dataType: 'json'})
+      console.log 'click like'
+      $.ajax({url: '/comments/' + comment_id + '/voted?mode=good', dataType: 'json'})
         .success (data) ->
-          that.find(".likes-count").html(data.likes)
-          that.find(".increase-likes").unbind "click"
+          console.log 'success'
+          that.find(".likes").first().find(".likes-count").html(data.likes)
+          that.find(".likes").first().find(".dislikes-count").html(data.dislikes)
+          #that.find(".likes").first().find(".increase-likes").unbind "click"
+    that.find(".increase-dislikes").on "click", ->
+      console.log 'click dislike'
+      $.ajax({url: '/comments/' + comment_id + '/voted?mode=bad', dataType: 'json'})
+        .success (data) ->
+          console.log 'success'
+          that.find(".likes").first().find(".likes-count").html(data.likes)
+          that.find(".likes").first().find(".dislikes-count").html(data.dislikes)
+          #that.find(".likes").first().find(".increase-dislikes").unbind "click"
     that.find(".comment-reply").on "click", ->
       if that.find(".comment-answer").css("display") == "none"
         that.find(".comment-answer").css("display", "block")
@@ -85,13 +96,11 @@ $(".comments-panel").ready ->
 
     $(this).on "ajax:beforeSend", (evt, xhr, settings) ->
       #settings.data += '&socket_id=' + pusher.connection.socket_id
-      console.log 'before'
       $(this).find('textarea')
         .addClass('uneditable-input')
         .attr('disabled', 'disabled')
 
     $(this).on "ajax:success", (evt, data, status, xhr) ->
-      console.log 'success'
       $(this).find('textarea')
         .removeClass('uneditable-input')
         .removeAttr('disabled', 'disabled')
