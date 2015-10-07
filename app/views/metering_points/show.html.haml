@@ -79,11 +79,20 @@
       .panel
         .panel-body.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
           .text-center
-            .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-zoomout.fa.fa-search-minus.fa-2x{disabled: "disabled"}
+            /.btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-zoomout.fa.fa-search-minus.fa-2x{disabled: "disabled"}
+            .btn.btn-default.btn-chart-zoom-month{disabled: "disabled"}
+              = t('month')
+            .btn.btn-default.btn-chart-zoom-day{disabled: "disabled"}
+              = t('day')
+            .btn.btn-default.btn-chart-zoom-hour{disabled: "disabled"}
+              = t('hour')
+            .btn.btn-default.btn-chart-zoom-live{disabled: "disabled"}
+              = t('live')
           .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-prev.fa.fa-chevron-left.fa-2x{disabled: "disabled"}
           .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-next.pull-right.fa.fa-chevron-right.fa-2x{disabled: "disabled"}
 
           .chart{id: "chart-container-#{@metering_point.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
+            .fa.fa-spinner.fa-spin
           .pad-all
             .metering_point{ id: "metering_point_#{@metering_point.id}"}
               .text-center
