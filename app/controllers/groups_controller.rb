@@ -3,7 +3,20 @@ class GroupsController < ApplicationController
   respond_to :html, :js, :json
 
   def index
-    @groups = Group.search(params[:search])
+    group_ids = Group.where(readable: 'world').ids
+    if user_signed_in?
+      group_ids << Group.where(readable: 'community').ids
+      group_ids << Group.with_role(:manager, current_user)
+
+      current_user.friends.each do |friend|
+        if friend
+          Group.where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
+            group_ids << friend_group.id
+          end
+        end
+      end
+    end
+    @groups  = Group.where(id: group_ids)
   end
 
 

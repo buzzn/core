@@ -1,12 +1,12 @@
 #page-title
-  %h1.page-header.text-overflow= t'groups'
+  %h1.page-header.text-overflow= "#{@groups.count} #{t'groups'}"
 
-  .searchbox
-    = form_tag groups_path, method: 'get' do
-      .input-group.custom-search-form
-        = text_field_tag :search, params[:search], placeholder: t('search'), class: 'form-control'
-        %span.input-group-btn
-          .text-muted= button_tag '', name: nil, class: 'btn btn-default fa fa-search'
+  -# .searchbox
+  -#   = form_tag groups_path, method: 'get' do
+  -#     .input-group.custom-search-form
+  -#       = text_field_tag :search, params[:search], placeholder: t('search'), class: 'form-control'
+  -#       %span.input-group-btn
+  -#         .text-muted= button_tag '', name: nil, class: 'btn btn-default fa fa-search'
 
 #page-content
   .row
