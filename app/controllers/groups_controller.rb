@@ -1,4 +1,5 @@
 class GroupsController < ApplicationController
+  before_filter :authenticate_user!, except: [:show, :chart, :bubbles_data]
   respond_to :html, :js, :json
 
   def index
@@ -8,6 +9,10 @@ class GroupsController < ApplicationController
 
   def show
     @group                          = Group.find(params[:id]).decorate
+
+    # if url changed redirect to new url
+    redirect_to(@group, status: :moved_permanently) if request.path != group_path(@group)
+
     @out_metering_points            = MeteringPoint.by_group(@group).outputs.decorate
     @in_metering_points             = MeteringPoint.by_group(@group).inputs.decorate
     @energy_producers               = MeteringPoint.includes(:users).by_group(@group).outputs.decorate.collect(&:users).flatten
@@ -17,8 +22,18 @@ class GroupsController < ApplicationController
     @all_comments                   = @group.root_comments
     @out_devices                    = @out_metering_points.collect(&:devices)
 
-    if request.path != group_path(@group)
-      redirect_to @group, status: :moved_permanently
+    if @group.readable_by_world?
+      return @group
+    else
+      if user_signed_in?
+        if @group.readable_by_community?
+          return @group
+        else
+          authorize_action_for(@group)
+        end
+      else
+        redirect_to root_path
+      end
     end
   end
 
@@ -200,6 +215,7 @@ private
       :private,
       :website,
       :description,
+      :readable,
       :metering_point_ids => []
     )
   end

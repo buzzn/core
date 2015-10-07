@@ -5,6 +5,13 @@ class GroupAuthorizer < ApplicationAuthorizer
     MeteringPoint.editable_by_user(user).outputs.without_group.any?
   end
 
+  def readable_by?(user)
+    user.has_role?(:admin) ||
+    user.has_role?(:manager, resource) ||
+    resource.users.include?(user) ||
+    resource.member?(user)
+  end
+
   def updatable_by?(user)
     user.has_role?(:admin) ||
     user.has_role?(:manager, resource)
