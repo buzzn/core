@@ -1341,14 +1341,14 @@ $(".metering_point").ready ->
           )
 
       timers.push(window.setInterval(->
-        ttsample(metering_point,metering_point_id)
+        sleepDetect(metering_point,metering_point_id)
         return
       , 1000 * 20)
       )
 
-ttsample = (metering_point,metering_point_id) ->
+sleepDetect = (metering_point,metering_point_id) ->
   delta = Date.now() - ttlastSample
-  if Date.now() - ttlastSample >= 40000 && metering_point_id == rem_metering_point_id
+  if delta >= 40000 && metering_point_id == rem_metering_point_id
     # Code here will only run if the timer is delayed by more 2X the sample rate
     # (e.g. if the laptop sleeps for more than 20-40 seconds)
     # Finetuning of times may be necessary
