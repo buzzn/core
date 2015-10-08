@@ -27,6 +27,14 @@ module API
         end
 
 
+        desc "Return the related devices for MeteringPoint"
+        params do
+          requires :id, type: String, desc: "ID of the MeteringPoint"
+        end
+        get ":id/devices" do
+          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          metering_point.devices
+        end
 
 
 

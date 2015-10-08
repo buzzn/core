@@ -7,6 +7,8 @@ class User < ActiveRecord::Base
          :validatable, :lockable, :timeoutable,
          :confirmable, :invitable, :omniauthable#, :omniauth_providers => [:facebook]
 
+  acts_as_voter
+
   has_one :contracting_party
 
   has_one :dashboard

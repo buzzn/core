@@ -106,6 +106,17 @@ module API
 
 
 
+        desc "Return the related devices for Group"
+        params do
+          requires :id, type: String, desc: "ID of the profile"
+        end
+        get ":id/devices" do
+          group = Group.where(id: permitted_params[:id]).first!
+          group.devices
+        end
+
+
+
 
       end
     end

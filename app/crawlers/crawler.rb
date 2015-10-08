@@ -235,7 +235,7 @@ class Crawler
 
 
   def month(containing_timestamp=@unixtime_now)
-    result = []
+  result = []
     if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
       my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request  = my_smart_grid.get_month(containing_timestamp)

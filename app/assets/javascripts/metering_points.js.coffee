@@ -1082,7 +1082,7 @@ $(".metering_point").ready ->
       else if source == "discovergy" || source == "virtual"
 
           timers.push(window.setInterval(->
-            console.log window.wisActive
+            #console.log window.wisActive
             if  window.wisActive == true
               getLiveData(metering_point, metering_point_id)
             return

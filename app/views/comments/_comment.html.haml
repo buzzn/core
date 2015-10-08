@@ -17,12 +17,18 @@
         %i.fa.fa-clock-o.fa-fw
         = timeago_tag comment.updated_at, :nojs => true, :lang => locale, :limit => 10.days.ago
       .likes
-        %p.speech-time
+        .speech-time
           - if user_signed_in? && current_user != comment.user
             %i.increase-likes.fa.fa-thumbs-o-up
           - else
             %i.fa.fa-thumbs-o-up
-          .likes-count= comment.likes.nil? ? 0 : comment.likes
+          .likes-count= comment.get_likes.nil? ? 0 : comment.get_likes.size
+          - if user_signed_in? && current_user != comment.user
+            %i.increase-dislikes.fa.fa-thumbs-o-down
+          - else
+            %i.fa.fa-thumbs-o-down
+          .dislikes-count= comment.get_dislikes.nil? ? 0 : comment.get_dislikes.size
+
       - if comment.parent.nil?
         - if comment.children.size > 2
           .comment-view-all-answers

@@ -1,8 +1,11 @@
 - if @comment.parent_id.nil?
   $(".comments-all").prepend("#{escape_javascript( render @comment )}").hide().show('fast');
   $('.comments-content').animate({scrollTop: 0}, 1000);
-  /$("#comment_#{@comment.id}").find(".comment-reply").on("click", function() { if ($("#comment_#{@comment.id}").find(".comment-answer").css("display") == "none") { $("#comment_#{@comment.id}").find(".comment-answer").css("display", "block"); } else { $("#comment_#{@comment.id}").find(".comment-answer").css("display", "none"); }});
-  $("#comment_#{@comment.id}").find(".comment-reply").css("display", "none");
+  $("#comment_#{@comment.id}").find(".comment-reply").on("click", function() { if ($("#comment_#{@comment.id}").find(".comment-answer").css("display") == "none") { $("#comment_#{@comment.id}").find(".comment-answer").css("display", "block"); } else { $("#comment_#{@comment.id}").find(".comment-answer").css("display", "none"); }});
+  /$("#comment_#{@comment.id}").find(".comment-reply").css("display", "none");
+  $("#comment_#{@comment.id}").find(".comment-form").on("ajax:beforeSend", function(evt, xhr, settings){$(this).find('textarea').addClass('uneditable-input').attr('disabled', 'disabled');})
+  $("#comment_#{@comment.id}").find(".comment-form").on("ajax:success", function(evt, data, status, xhr){$(this).find('textarea').removeClass('uneditable-input').removeAttr('disabled', 'disabled').val(''); })
+  $("#comment_#{@comment.id}").find(".comment-form").on("ajax:error", function(evt, data, status, xhr){$(this).find('textarea').removeClass('uneditable-input').removeAttr('disabled', 'disabled');})
 - else
   $("#comment_#{@comment.parent.id}").find(".child-comments").append("#{escape_javascript( render @comment )}");
   /$('.comments-content').animate({scrollTop: $('.comments-all').find("#comment_#{@comment.id}").offset().top}, 1000);
