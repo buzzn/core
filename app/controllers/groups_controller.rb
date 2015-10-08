@@ -28,6 +28,7 @@ class GroupsController < ApplicationController
 
     @out_metering_points            = MeteringPoint.by_group(@group).outputs.decorate
     @in_metering_points             = MeteringPoint.by_group(@group).inputs.decorate
+    @managers                       = @group.managers
     @energy_producers               = MeteringPoint.includes(:users).by_group(@group).outputs.decorate.collect(&:users).flatten
     @energy_consumers               = MeteringPoint.includes(:users).by_group(@group).inputs.decorate.collect(&:users).flatten
     @interested_members             = @group.users

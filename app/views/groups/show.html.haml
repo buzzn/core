@@ -209,49 +209,45 @@
 
 
 
-
-  .row
-    .col-sm-6.col-md-6.col-lg-6
-      - if @group.managers.any? && @group.managers != @energy_producers
-        %h1.page-header.text-overflow
-          %span
-            = t('group_managers')
-            %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('group_manager_info')}
-        .row
-          - @group.managers.each do |user|
-            = render user.profile
-
-
-      - if @energy_consumers.any? && user_signed_in?
-        %h1.page-header.text-overflow
-          %span
-            = t('energy_consumers')
-            %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('energy_consumers_info')}
-        .row
-          - @energy_consumers.each do |user|
-            = render user.profile if user.profile && user.profile.readable_by?(current_user)
-        %hr
+  - if user_signed_in?
+    .row
+      .col-sm-6.col-md-6.col-lg-6
+        - if @energy_consumers.any?
+          %h1.page-header.text-overflow
+            %span
+              = t('energy_consumers')
+              %small
+                %i.small-info-circle.fa.fa-info-circle{'data-content' => t('energy_consumers_info')}
+          .row
+            - @energy_consumers.each do |user|
+              = render user.profile
+          %hr
 
 
-    .col-sm-6.col-md-6.col-lg-6
-      - if @energy_producers.any?
-        %h1.page-header.text-overflow
-          %span
-            = t('energy_producers')
-            %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('energy_producers_info')}
-        .row
-          - @energy_producers.each do |user|
-            = render user.profile if user.profile
-        %hr
+      .col-sm-6.col-md-6.col-lg-6
+        - if @energy_producers.any?
+          %h1.page-header.text-overflow
+            %span
+              = t('energy_producers')
+              %small
+                %i.small-info-circle.fa.fa-info-circle{'data-content' => t('energy_producers_info')}
+          .row
+            - @energy_producers.each do |user|
+              = render user.profile if user.profile
+          %hr
 
+        - if @managers.any?
+          %h1.page-header.text-overflow
+            %span
+              = t('group_managers')
+              %small
+                %i.small-info-circle.fa.fa-info-circle{'data-content' => t('group_manager_info')}
+          .row
+            - @managers.each do |user|
+              = render user.profile
+          %hr
 
-
-
-
-      - if @interested_members.any? && user_signed_in?
+      - if @interested_members.any?
         %h1.page-header.text-overflow
           %span
             = t('interested_members')
@@ -261,6 +257,10 @@
           - @interested_members.each do |user|
             = render user.profile
         %hr
+
+
+
+
   - if user_signed_in? && current_user.can_update?(@group)
     %h1.page-header.text-overflow
       %span
