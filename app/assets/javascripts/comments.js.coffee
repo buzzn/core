@@ -90,9 +90,10 @@ $(".comments-panel").ready ->
     $(this).find(".comment-form-show-image").on "click", ->
       if that.find(".comment-form-image").css("display") == "none"
         that.find(".comment-form-image").css("display", "block")
+        $(".comments-content").css("cssText", "top: 220px !important; right: -14px;")
       else
         that.find(".comment-form-image").css("display", "none")
-
+        $(".comments-content").css("cssText", "top: 143px !important; right: -14px;")
 
     $(this).on "ajax:beforeSend", (evt, xhr, settings) ->
       #settings.data += '&socket_id=' + pusher.connection.socket_id

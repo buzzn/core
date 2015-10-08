@@ -185,7 +185,6 @@ $(".metering_point_detail").ready ->
             style:
               color: '#FFF'
           title:
-#            text: "Zeit"
             enabled: true
             style: { "color": "#FFF", "fontWeight": "bold"}
         yAxis:
@@ -198,7 +197,7 @@ $(".metering_point_detail").ready ->
             format: "{value} W"
           title:
             enabled: true
-            text: ""#"Leistung"
+            text: ""
             style: { "color": "#FFF", "fontWeight": "bold"}
           minRange: 1
         plotOptions:
@@ -209,6 +208,7 @@ $(".metering_point_detail").ready ->
                 [0, "rgba(255, 255, 255, 0.4)"],
                 [1, "rgba(255, 255, 255, 0.1)"]
               ]
+            turboThreshold: 2000
           area:
             borderWidth: 0
             cursor: 'pointer'
@@ -237,8 +237,6 @@ $(".metering_point_detail").ready ->
       chart_data_min_x = chart.series[0].data[0].x
       createChartTimer([id], 'metering_point')
       activateButtons(true)
-      #checkIfPreviousDataExists()
-      #checkIfNextDataExists()
     .error (jqXHR, textStatus, errorThrown) ->
       console.log textStatus
       $('#chart-container-' + id).html('error')
@@ -923,7 +921,7 @@ setChartData = (resource, id, containing_timestamp) ->
   $.ajax({url: '/' + resource + '/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
     .success (data) ->
       if data[0].data[0] == undefined
-        data[0].data[0] = [new Date(), 0]
+        data[0].data[0] = [(new Date()).getTime(), 0]
       chart.series[0].setData(data[0].data)
       new_point_width = setPointWidth()
       chart.series[0].update({pointWidth: new_point_width})
