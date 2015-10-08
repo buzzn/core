@@ -100,6 +100,7 @@ gem 'omniauth-facebook'
 gem 'koala'
 gem 'byebug'
 gem 'rails_autolink'
+gem 'browser'
 
 
 source 'http://rails-assets.org' do
