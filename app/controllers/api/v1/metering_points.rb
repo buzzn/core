@@ -37,6 +37,17 @@ module API
         end
 
 
+        desc "Return the related users for MeteringPoint"
+        params do
+          requires :id, type: String, desc: "ID of the MeteringPoint"
+        end
+        get ":id/users" do
+          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          metering_point.users
+        end
+
+
+
 
       end
     end
