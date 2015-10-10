@@ -25,14 +25,7 @@ class User < ActiveRecord::Base
   has_many :group_users
   has_many :groups, :through => :group_users
 
-  delegate :slug, to: :profile
   delegate :name, to: :profile
-  delegate :user_name, to: :profile
-  delegate :first_name, to: :profile
-  delegate :last_name, to: :profile
-  delegate :about_me, to: :profile
-  delegate :image, to: :profile
-
 
   after_create :create_dashboard
 
