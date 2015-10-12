@@ -801,6 +801,7 @@ GEM
     unf_ext (0.0.7.1)
     unicode_utils (1.4.0)
     uniform_notifier (1.9.0)
+    user-agent (1.0.0)
     vcr (2.9.3)
     virtus (1.0.5)
       axiom-types (~> 0.1)
@@ -976,6 +977,7 @@ DEPENDENCIES
   turbolinks_transitions
   tzinfo
   uglifier
+  user-agent
   vcr
   webmock
   whenever

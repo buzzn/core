@@ -2,6 +2,8 @@ class MeteringPointsController < ApplicationController
   before_filter :authenticate_user!, except: [:show, :chart, :latest_fake_data, :latest_power]
   respond_to :html, :json, :js
 
+
+
   def show
     @metering_point = MeteringPoint.find(params[:id]).decorate
     @users          = @metering_point.users
@@ -9,6 +11,9 @@ class MeteringPointsController < ApplicationController
     @group          = @metering_point.group
     @meter          = @metering_point.meter
     @requests       = @metering_point.received_user_requests
+    puts request.env['SERVER_NAME']
+    browser = Browser.new(ua: request.user_agent, accept_language: request.accept_language)
+    puts browser.modern?.to_s
     if !@metering_point.readable_by_world?
       if user_signed_in?
         authorize_action_for(@metering_point)
