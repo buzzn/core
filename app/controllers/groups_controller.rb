@@ -35,6 +35,7 @@ class GroupsController < ApplicationController
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @all_comments                   = @group.root_comments
     @out_devices                    = @out_metering_points.collect(&:devices)
+    @activities                     = @group.activities
 
     if @group.readable_by_world?
       return @group

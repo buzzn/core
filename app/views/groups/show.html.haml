@@ -144,6 +144,8 @@
               .nano-content.pad-all.comments-content
                 %ul.list-unstyled.media-block.comments-all
                   = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
+                  - @activities.each do |activity|
+                    = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
 
 
 
