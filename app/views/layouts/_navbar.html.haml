@@ -21,8 +21,11 @@
         %li.tgl-menu-btn
           %a.mainnav-toggle{:href => "#"}
             %i.fa.fa-navicon.fa-lg
+      .ribbon-wrapper-green.global-ribbon-wrapper{"data-toggle" => "popover", "data-placement" => "right", "title" => "Beta", "data-content" => t("this_app_is_currently_under_development_and_may_contain_bugs")}
+        .ribbon-green.global-ribbon= "Beta"
 
       %ul.nav.navbar-top-links.pull-right
+
         - if user_signed_in?
           %li#dropdown-user.dropdown
             %a.dropdown-toggle.text-right{"data-toggle" => "dropdown", :href => "#"}

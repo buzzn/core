@@ -1,18 +1,18 @@
 - @a = a.decorate # TODO remove decorater from view
 
-.timeline-entry
-  .timeline-stat
+%li.mar-btm.activity{ :id => "activity_#{@a.id}" }
+  .media-left
     = @a.key_icon
-    .timeline-time.time
-      = timeago_tag @a.created_at, :nojs => true, :lang => locale, :limit => 10.days.ago
-  .timeline-label
-    %p.mar-no.pad-btm
+  .media-body.pad-hor
+    .speech
+      %h5= t('system_message')
       - if @a.owner
         %a.btn-link.text-semibold{:href => profile_path(@a.owner.profile)}
           = @a.owner.name
       - else
         = t "somebody"
       = content_for :action
+
     .activity-details
       .row
         .col-md-4.col-lg-4.col-xs-4
@@ -27,3 +27,30 @@
                 = link_to @a.recipient.profile.decorate.picture('sm'), profile_path(@a.recipient.profile)
 
       = yield
+
+      %p.speech-time.time
+        %i.fa.fa-clock-o.fa-fw
+        = timeago_tag @a.created_at, :nojs => true, :lang => locale, :limit => 10.days.ago
+      .likes
+        .speech-time
+          - if user_signed_in?
+            %i.increase-likes.vote-icon.fa.fa-thumbs-o-up
+          - else
+            %i.vote-icon.fa.fa-thumbs-o-up
+          .likes-count= @a.get_likes.nil? ? 0 : @a.get_likes.size
+          - if user_signed_in?
+            %i.increase-dislikes.vote-icon.fa.fa-thumbs-o-down
+          - else
+            %i.vote-icon.fa.fa-thumbs-o-down
+          .dislikes-count= @a.get_dislikes.nil? ? 0 : @a.get_dislikes.size
+
+      - if @a.root_comments.any?
+        %ul.list-unstyled.media-block.child-comments
+          = render :partial => 'comments/comment', :collection => @a.root_comments.reverse, :as => :comment
+        - if @a.root_comments.size > 2
+          .comment-view-all-answers
+            = t('view_all_answers')
+      - if user_signed_in?
+        .comment-answer
+          = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@a, current_user.id, "", nil) }
+

@@ -56,6 +56,9 @@ class MeteringPoint < ActiveRecord::Base
   }
 
 
+  def profiles
+    Profile.where(user_id: users.ids)
+  end
 
   def managers
     User.with_role :manager, self
@@ -193,7 +196,9 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def data_source
-    if self.slp?
+    if self.virtual?
+      "virtual"
+    elsif self.slp?
       "slp"
     elsif self.pv?
       "sep_pv"
@@ -203,8 +208,6 @@ class MeteringPoint < ActiveRecord::Base
       "mysmartgrid"
     elsif self.discovergy?
       "discovergy"
-    elsif self.virtual?
-      "virtual"
     end
   end
 

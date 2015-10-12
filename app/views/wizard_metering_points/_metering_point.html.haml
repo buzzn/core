@@ -15,13 +15,13 @@
 
     .modal-body
       = simple_form_for @metering_point, remote: true, url: metering_point_update_wizard_metering_points_path, method: 'put'  do |f|
-        = f.input :mode, collection: MeteringPoint.modes, include_blank: false, as: :radio_buttons, label: t("metering_point_mode"), checked: MeteringPoint.modes.first
+        = f.input :mode, collection: MeteringPoint.modes.map(&:to_sym), include_blank: false, as: :radio_buttons, label: t("metering_point_mode"), checked: MeteringPoint.modes.first
         = f.input :name
         %span
           = t('add_me_to_this_metering_point')
           %small
             %i.normal-info-circle.fa.fa-info-circle{'data-content' => t('metering_point_wizard_users_info')}
-        = f.input :add_user, as: :radio_buttons, collection: [t('yes'), t('no')], checked: t('yes')
+        = f.input :add_user, as: :radio_buttons, collection: [t('yes'), t('no')], checked: t('yes'), label: false
 
         .modal-footer
           .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}

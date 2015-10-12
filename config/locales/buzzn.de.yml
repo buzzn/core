@@ -620,6 +620,7 @@ de:
   no_address: Ohne Adresse
   bubbles: Kreise
   lines: Linien
+  somebody: Jemand
 
   new_group_metering_point_invitation: Neue Gruppeneinladung
   do_you_want_to_join_the_group_with_your_metering_point: "Möchtest Du der Gruppe %{group} mit deinem Zählpunkt %{metering_point} beitreten"
@@ -672,4 +673,6 @@ de:
   new_friendship_request_from: "Neue Freundschaftsanfrage von %{sender}"
   sent_a_friendship_request_to_you: hat Dir eine Freundschaftsanfrage gesendet.
   to_accept_or_reject_the_friendship_request_please_visit_your_profile: Um die Anfrage zu akzeptieren oder abzulehnen besuche bitte Dein Profil.
+
+  system_message: Systemnachricht
 
