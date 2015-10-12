@@ -60,18 +60,14 @@ $(".comments-panel").ready ->
     comment_id = $(this).attr('id').split('_')[1]
     that = $(this)
     that.find(".increase-likes").on "click", ->
-      console.log 'click like'
       $.ajax({url: '/comments/' + comment_id + '/voted?mode=good', dataType: 'json'})
         .success (data) ->
-          console.log 'success'
           that.find(".likes").first().find(".likes-count").html(data.likes)
           that.find(".likes").first().find(".dislikes-count").html(data.dislikes)
           #that.find(".likes").first().find(".increase-likes").unbind "click"
     that.find(".increase-dislikes").on "click", ->
-      console.log 'click dislike'
       $.ajax({url: '/comments/' + comment_id + '/voted?mode=bad', dataType: 'json'})
         .success (data) ->
-          console.log 'success'
           that.find(".likes").first().find(".likes-count").html(data.likes)
           that.find(".likes").first().find(".dislikes-count").html(data.dislikes)
           #that.find(".likes").first().find(".increase-dislikes").unbind "click"
@@ -113,3 +109,30 @@ $(".comments-panel").ready ->
       $(this).find('textarea')
         .removeClass('uneditable-input')
         .removeAttr('disabled', 'disabled')
+
+
+
+  $(this).find(".activity").each ->
+    activity_id = $(this).attr('id').split('_')[1]
+    that = $(this)
+    that.find(".likes").first().find(".increase-likes").on "click", ->
+      $.ajax({url: '/activities/' + activity_id + '/voted?mode=good', dataType: 'json'})
+        .success (data) ->
+          that.find(".likes").first().find(".likes-count").html(data.likes)
+          that.find(".likes").first().find(".dislikes-count").html(data.dislikes)
+          #that.find(".likes").first().find(".increase-likes").unbind "click"
+    that.find(".likes").first().find(".increase-dislikes").on "click", ->
+      $.ajax({url: '/activities/' + activity_id + '/voted?mode=bad', dataType: 'json'})
+        .success (data) ->
+          that.find(".likes").first().find(".likes-count").html(data.likes)
+          that.find(".likes").first().find(".dislikes-count").html(data.dislikes)
+          #that.find(".likes").first().find(".increase-dislikes").unbind "click"
+    that.find(".comment-reply").on "click", ->
+      if that.find(".comment-answer").css("display") == "none"
+        that.find(".comment-answer").css("display", "block")
+      else
+        that.find(".comment-answer").css("display", "none")
+    that.find(".comment-view-all-answers").on "click", ->
+      that.find(".child-comments").find(".comment").each ->
+        $(this).show()
+      that.find(".comment-view-all-answers").hide()

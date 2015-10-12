@@ -29,7 +29,7 @@
             %i.vote-icon.fa.fa-thumbs-o-down
           .dislikes-count= comment.get_dislikes.nil? ? 0 : comment.get_dislikes.size
 
-      - if comment.parent.nil?
+      - if comment.parent.nil? && comment.commentable_type != 'PublicActivity::ORM::ActiveRecord::Activity'
         - if comment.children.size > 2
           .comment-view-all-answers
             = t('view_all_answers')

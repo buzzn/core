@@ -35,7 +35,8 @@ class GroupsController < ApplicationController
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @all_comments                   = @group.root_comments
     @out_devices                    = @out_metering_points.collect(&:devices)
-    @activities                     = @group.activities
+    @activities                     = @group.activities.group_joins
+    @activities_and_comments        = (@all_comments + @activities).sort_by!(&:created_at).reverse!
 
     if @group.readable_by_world?
       return @group
@@ -150,6 +151,7 @@ class GroupsController < ApplicationController
       @meter = Meter.create!(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
       @meter.metering_points << @metering_point
       @group.metering_points << @metering_point
+      @group.create_activity key: 'group_metering_point_membership.create', owner: @new_user, recipient: @group
       @meter.save!
       flash[:notice] = t('invitation_sent_successfully_to', email: @email)
     end

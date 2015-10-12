@@ -143,9 +143,11 @@
                 = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "", nil) }
               .nano-content.pad-all.comments-content
                 %ul.list-unstyled.media-block.comments-all
-                  = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
-                  - @activities.each do |activity|
-                    = render_activity activity, locals: {decorator: activity.decorate} , layout: "layouts/activity_wrapper"
+                  - @activities_and_comments.each do |object|
+                    - if object.class.name == 'Comment'
+                      = render :partial => 'comments/comment', :collection => [object], :as => :comment
+                    -elsif object.class.name == 'PublicActivity::Activity'
+                      = render_activity object, locals: {decorator: object.decorate} , layout: "layouts/activity_wrapper"
 
 
 
@@ -222,7 +224,7 @@
                 %i.small-info-circle.fa.fa-info-circle{'data-content' => t('energy_consumers_info')}
           .row
             - @energy_consumers.each do |user|
-              = render user.profile
+              = render user.profile if user.profile
           %hr
 
 
@@ -246,7 +248,7 @@
                 %i.small-info-circle.fa.fa-info-circle{'data-content' => t('group_manager_info')}
           .row
             - @managers.each do |user|
-              = render user.profile
+              = render user.profile if user.profile
           %hr
 
       - if @interested_members.any?
@@ -257,7 +259,7 @@
               %i.small-info-circle.fa.fa-info-circle{'data-content' => t('interested_members_info')}
         .row
           - @interested_members.each do |user|
-            = render user.profile
+            = render user.profile if user.profile
         %hr
 
 
