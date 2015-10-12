@@ -56,6 +56,9 @@ class MeteringPoint < ActiveRecord::Base
   }
 
 
+  def profiles
+    Profile.where(user_id: users.ids)
+  end
 
   def managers
     User.with_role :manager, self

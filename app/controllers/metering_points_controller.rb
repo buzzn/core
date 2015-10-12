@@ -4,7 +4,7 @@ class MeteringPointsController < ApplicationController
 
   def show
     @metering_point = MeteringPoint.find(params[:id]).decorate
-    @users          = @metering_point.users
+    @profiles       = @metering_point.profiles
     @devices        = @metering_point.devices
     @group          = @metering_point.group
     @meter          = @metering_point.meter
