@@ -676,3 +676,6 @@ de:
 
   system_message: Systemnachricht
 
+  error_not_found: "Uups, die gewünschte Seite wurde leider nicht gefunden!"
+  go_to_startpage: "> Zur Startseite"
+
