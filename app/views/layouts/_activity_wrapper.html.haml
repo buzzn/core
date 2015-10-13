@@ -6,7 +6,7 @@
   .media-body.pad-hor
     .speech
       %h5= t('system_message')
-      - if @a.owner
+      - if @a.owner && @a.owner.profile
         %a.btn-link.text-semibold{:href => profile_path(@a.owner.profile)}
           = @a.owner.name
       - else
@@ -15,10 +15,10 @@
 
     .activity-details
       .row
-        .col-md-4.col-lg-4.col-xs-4
-          .avatar
-            - if @a.owner
-              = link_to @a.owner.profile.decorate.picture('sm'), profile_path(@a.owner.profile)
+        / .col-md-4.col-lg-4.col-xs-4
+        /   .avatar
+        /     - if @a.owner
+        /       = link_to @a.owner.profile.decorate.picture('sm'), profile_path(@a.owner.profile)
 
         - if @a.key == 'friendship.create'
           .col-md-4.col-lg-4.col-xs-3
@@ -51,6 +51,11 @@
           .comment-view-all-answers
             = t('view_all_answers')
       - if user_signed_in?
+        .nested-comments
+          .comment-reply
+            = t('reply')
         .comment-answer
           = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@a, current_user.id, "", nil) }
+
+      %hr
 

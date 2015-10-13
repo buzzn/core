@@ -13,6 +13,7 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
     if current_user.can_update?(group) && current_user.can_update?(metering_point)
       group.metering_points << metering_point
       flash[:notice] = t('metering_point_added_successfully')
+      group.create_activity key: 'group_metering_point_membership.create', owner: current_user, recipient: group
       redirect_to group_path(group)
     else
       @group_metering_point_request = GroupMeteringPointRequest.new(user: current_user, metering_point: metering_point, group: group, mode: mode)

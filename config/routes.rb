@@ -60,6 +60,12 @@ Buzzn::Application.routes.draw do
     end
   end
 
+  resources :activities, :except => [:new, :index, :edit, :show, :update, :create, :destroy] do
+    member do
+      get :voted
+    end
+  end
+
 
   resources :dashboards do
     member do

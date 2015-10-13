@@ -201,7 +201,7 @@ karin.add_role :manager, karins_pv_group
 karins_pv_group.metering_points << User.where(email: 'christian@buzzn.net').first.metering_points.first
 karins_pv_group.metering_points << User.where(email: 'philipp@buzzn.net').first.metering_points.first
 karins_pv_group.metering_points << User.where(email: 'thomas@buzzn.net').first.metering_points.first
-karins_pv_group.create_activity key: 'group.create', owner: karin, recipient: karins_pv_group
+#karins_pv_group.create_activity key: 'group.create', owner: karin, recipient: karins_pv_group
 
 
 
@@ -256,7 +256,7 @@ group_home_of_the_brave = Fabricate(:group_home_of_the_brave, metering_points: [
 group_home_of_the_brave.metering_points << @mp_z3
 justus = User.where(email: 'justus@buzzn.net').first
 justus.add_role :manager, group_home_of_the_brave
-group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
+#group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
 
 
 
