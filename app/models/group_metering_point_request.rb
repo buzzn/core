@@ -1,6 +1,6 @@
 class GroupMeteringPointRequest < ActiveRecord::Base
-  include PublicActivity::Model
-  tracked
+  #include PublicActivity::Model
+  #tracked
 
   belongs_to :user
   belongs_to :metering_point
