@@ -77,6 +77,10 @@ ready = ->
 
   $('.typeahead').typeahead()
 
+$(".error-not-found").ready ->
+  $("#container").css("background-color", "black")
+  $("#content-container").css("background-color", "black")
+
 
 
 
