@@ -12,6 +12,8 @@ class MeteringPointsController < ApplicationController
     @meter          = @metering_point.meter
     @requests       = @metering_point.received_user_requests
     puts request.env['SERVER_NAME']
+    Browser.modern_rules.clear
+    Browser.modern_rules << -> b { b.firefox? && b.version.to_i >= 41 }
     browser = Browser.new(ua: request.user_agent, accept_language: request.accept_language)
     puts browser.modern?.to_s
     if !@metering_point.readable_by_world?
