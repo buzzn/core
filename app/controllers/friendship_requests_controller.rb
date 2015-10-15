@@ -12,6 +12,7 @@ class FriendshipRequestsController < InheritedResources::Base
     if @friendship_request.save
       flash[:notice] = t('sent_friendship_request')
       Notifier.send_email_notification_friendship_request(receiver, current_user).deliver_now
+      receiver.send_notification('mint', t('new_friendship_request'), current_user.name, 4000)
       redirect_to profile_path(receiver.profile)
     else
       flash[:error] = t('unable_to_send_friendship_request')

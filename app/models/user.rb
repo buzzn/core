@@ -138,7 +138,7 @@ class User < ActiveRecord::Base
   end
 
   #defined types: primary, info, success, warning, danger, mint, purple, pink, dark
-  def send_notification(type, header, message)
+  def send_notification(type, header, message, duration)
     Sidekiq::Client.push({
      'class' => PushNotificationWorker,
      'queue' => :default,
@@ -146,7 +146,8 @@ class User < ActiveRecord::Base
                 self.id,
                 type,
                 header,
-                message
+                message,
+                duration
                ]
     })
   end
