@@ -1,20 +1,15 @@
 window.wisActive = true
 
 window.addEventListener 'pageshow', (event)->
-  console.log event.type
   window.wisActive = true
 
 window.addEventListener 'pagehide', (event)->
-  console.log event.type
-  #alert("Ciao!")
   window.wisActive = false
 
 window.addEventListener 'focus', (event)->
-  console.log event.type
   window.wisActive = true
 
 window.addEventListener 'blur', (event)->
-  console.log event.type
   window.wisActive = false
 
 

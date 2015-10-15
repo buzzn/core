@@ -35,7 +35,9 @@ class ApplicationController < ActionController::Base
 
   def initialize_gon
     if user_signed_in?
-      Gon.global.push({current_user_id: current_user.id})
+      Gon.global.push({ current_user_id: current_user.id,
+                        pusher_key: Rails.application.secrets.pusher_key,
+                        pusher_host: Rails.application.secrets.pusher_host})
     end
   end
 

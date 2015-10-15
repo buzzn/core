@@ -18,15 +18,9 @@
         = timeago_tag comment.updated_at, :nojs => true, :lang => locale, :limit => 10.days.ago
       .likes
         .speech-time
-          - if user_signed_in? && current_user != comment.user
-            %i.increase-likes.vote-icon.fa.fa-thumbs-o-up
-          - else
-            %i.vote-icon.fa.fa-thumbs-o-up
+          %i.increase-likes.vote-icon.fa.fa-thumbs-o-up
           .likes-count= comment.get_likes.nil? ? 0 : comment.get_likes.size
-          - if user_signed_in? && current_user != comment.user
-            %i.increase-dislikes.vote-icon.fa.fa-thumbs-o-down
-          - else
-            %i.vote-icon.fa.fa-thumbs-o-down
+          %i.increase-dislikes.vote-icon.fa.fa-thumbs-o-down
           .dislikes-count= comment.get_dislikes.nil? ? 0 : comment.get_dislikes.size
 
       - if comment.parent.nil? && comment.commentable_type != 'PublicActivity::ORM::ActiveRecord::Activity'

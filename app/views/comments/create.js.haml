@@ -4,7 +4,7 @@
     $('.comments-content').animate({scrollTop: 0}, 1000);
     $("#comment_#{@comment.id}").find(".comment-reply").on("click", function() { if ($("#comment_#{@comment.id}").find(".comment-answer").css("display") == "none") { $("#comment_#{@comment.id}").find(".comment-answer").css("display", "block"); } else { $("#comment_#{@comment.id}").find(".comment-answer").css("display", "none"); }});
     /$("#comment_#{@comment.id}").find(".comment-reply").css("display", "none");
-    $("#comment_#{@comment.id}").find(".comment-form").on("ajax:beforeSend", function(evt, xhr, settings){$(this).find('textarea').addClass('uneditable-input').attr('disabled', 'disabled');})
+    $("#comment_#{@comment.id}").find(".comment-form").on("ajax:beforeSend", function(evt, xhr, settings){$(this).find('textarea').addClass('uneditable-input').attr('disabled', 'disabled'); settings.data += "&socket_id=#{escape_javascript(socket_id)}"; })
     $("#comment_#{@comment.id}").find(".comment-form").on("ajax:success", function(evt, data, status, xhr){$(this).find('textarea').removeClass('uneditable-input').removeAttr('disabled', 'disabled').val(''); })
     $("#comment_#{@comment.id}").find(".comment-form").on("ajax:error", function(evt, data, status, xhr){$(this).find('textarea').removeClass('uneditable-input').removeAttr('disabled', 'disabled');})
   - else

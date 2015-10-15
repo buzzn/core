@@ -299,10 +299,10 @@ class Group < ActiveRecord::Base
         metering_point_name = "anonym"
       end
       if metering_point.mode == "out"
-        data_entry = {:metering_point_id => metering_point.id, :latest_power => latest_power.nil? ? 0 : latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => true}
+        data_entry = {:metering_point_id => metering_point.id, :latest_power => (latest_power.nil? || latest_power[:power].nil?) ? 0 : latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => true}
         out_metering_point_data.push(data_entry)
       else
-        data_entry = {:metering_point_id => metering_point.id, :latest_power => latest_power.nil? ? 0 : latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
+        data_entry = {:metering_point_id => metering_point.id, :latest_power => (latest_power.nil? || latest_power[:power].nil?) ? 0 : latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
         in_metering_point_data.push(data_entry)
       end
     end

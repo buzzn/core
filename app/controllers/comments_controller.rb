@@ -13,15 +13,25 @@ class CommentsController < InheritedResources::Base
       create! do |success, failure|
         success.js {
           #byebug
-          # if !params[:socket_id].nil?
-          #   @socket_id = params[:socket_id]
-          # else
-          #   @socket_id = ""
-          # end
-          #@comment.create_activity key: 'comment.create', owner: current_user, recipient_type: @comment_hash[:commentable_type], recipient_id: @comment_hash[:commentable_id]
-          #time = ActionController::Base.helpers.timeago_tag(@comment.updated_at, :nojs => true, :lang => locale, :limit => 10.days.ago)
-          #Pusher.trigger("#{@comment.commentable_type}_#{@comment.commentable_id}", 'new_comment', :id => @comment.id, :img_alt => I18n.t('profile_picture'), :image => @comment.user.profile.image? ? ActionController::Base.helpers.image_url(@comment.user.profile.image.sm) : @comment.user.profile.decorate.picture('sm') , :user_name => @comment.user.name, :profile_href => profile_path(@comment.user.profile), :body => @comment.body, :created_at => time, :likes => 0, :socket_id => @socket_id)
-          @comment
+          html = render_to_string :partial => 'comments/comment', :collection => [@comment], :as => :comment, :formats => [:html]
+          @socket_id = params[:socket_id].nil? ? "" : params[:socket_id]
+
+          @channel_name = @comment.commentable_type + '_' + @comment.commentable_id
+          if @comment.commentable_type == "PublicActivity::ORM::ActiveRecord::Activity"
+            @root_id = @comment.commentable_id
+            @root_type = @comment.commentable_type
+            @channel_name = @comment.commentable.trackable_type + '_' + @comment.commentable.trackable_id
+          else
+            if @comment.parent_id.nil?
+              @root_id = nil
+              @root_type = @comment.commentable_type
+            else
+              @root_id = @comment.parent_id
+              @root_type = "Comment"
+            end
+          end
+          Pusher.trigger(@channel_name, 'new_comment', :id => @comment.id, :html => html, :root_id => @root_id, :root_type => @root_type, :socket_id => @socket_id)
+          render "create", :locals => { :socket_id => @socket_id }
         }
         failure.js {
 
@@ -49,10 +59,12 @@ class CommentsController < InheritedResources::Base
 
   def voted
     @comment = Comment.find(params[:id])
-    if params[:mode] == 'good'
-      @comment.liked_by current_user
-    elsif params[:mode] == 'bad'
-      @comment.disliked_by current_user
+    if @comment.user != current_user
+      if params[:mode] == 'good'
+        @comment.liked_by current_user
+      elsif params[:mode] == 'bad'
+        @comment.disliked_by current_user
+      end
     end
     render :json => { :likes => @comment.get_likes.size, :dislikes => @comment.get_dislikes.size}
   end
