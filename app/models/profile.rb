@@ -55,7 +55,7 @@ class Profile < ActiveRecord::Base
     metering_points = []
     metering_points << self.user.metering_points # as member
     metering_points << MeteringPoint.editable_by_user(self.user) # as manager
-    metering_points.flatten.uniq
+    metering_points.compact.flatten.uniq
   end
 
   def self.genders

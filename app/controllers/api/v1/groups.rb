@@ -9,12 +9,21 @@ module API
         desc "Return all groups"
         get "", root: :groups do
           guard!
+          group_ids = Group.where(readable: 'world').ids
           if current_user
-            Group.all
-          else
-            Group.where(readable: 'world')
+            group_ids << Group.where(readable: 'community').ids
+            group_ids << Group.with_role(:manager, current_user)
+            current_user.friends.each do |friend|
+              if friend
+                Group.where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
+                  group_ids << friend_group.id
+                end
+              end
+            end
           end
+          return Group.where(id: group_ids)
         end
+
 
 
 

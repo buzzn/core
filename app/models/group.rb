@@ -66,16 +66,7 @@ class Group < ActiveRecord::Base
     self.metering_points.include?(metering_point) ? true : false
   end
 
-  def all_members_include_managers
-    result = []
-    self.metering_points.each do |metering_point|
-      result << metering_point.users.flatten
-      metering_point.managers.each do |user|
-        metering_point.users.include?(user) ? nil : result << user
-      end
-    end
-    return result.uniq
-  end
+
 
   def received_group_metering_point_requests
     GroupMeteringPointRequest.where(group: self).requests

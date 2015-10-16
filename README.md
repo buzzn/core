@@ -102,5 +102,10 @@
     https://trello.com/b/SuonZHEd/buzzn-kanban
     https://codeship.io/projects/41893
 
+## API
+    get api token
+    client = OAuth2::Client.new('a71d41c4ed35cc0f1fcc71624e2dedb944bb0f5b08f28ba5ca1e414080d27944', '7f60d77d9cd7bbce803f90fce6075b1a346322a3ddd31b05409d9b26374f368a', :site => "http://localhost:3000")
+    client.password.get_token('felix@buzzn.net', '12345678').token
 
-
+    go to http://localhost:3000/api
+    add token and explore api
