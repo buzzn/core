@@ -8,10 +8,7 @@ $(".comments-panel").ready ->
   pusher = new Pusher(gon.global.pusher_key)
 
   channel = pusher.subscribe("#{commentable_type}_#{commentable_id}")
-  console.log 'subscribed to ' + commentable_type + '_' + commentable_id
   channel.bind "new_comment", (comment) ->
-    console.log 'incoming comment'
-    console.log comment
     if pusher.connection.socket_id != comment.socket_id
       html = comment.html
       destination = ""
@@ -27,16 +24,15 @@ $(".comments-panel").ready ->
 
       that = $("#comment_#{comment.id}")
 
-      that.find(".increase-likes").on "click", ->
-        $.ajax({url: '/comments/' + comment.id + '/voted?mode=good', dataType: 'json'})
+      that.find(".vote-for").on "click", ->
+        $.ajax({url: '/comments/' + comment.id + '/voted', dataType: 'json'})
           .success (data) ->
             that.find(".likes").first().find(".likes-count").html(data.likes)
-            that.find(".likes").first().find(".dislikes-count").html(data.dislikes)
-      that.find(".increase-dislikes").on "click", ->
-        $.ajax({url: '/comments/' + comment.id + '/voted?mode=bad', dataType: 'json'})
-          .success (data) ->
-            that.find(".likes").first().find(".likes-count").html(data.likes)
-            that.find(".likes").first().find(".dislikes-count").html(data.dislikes)
+            if data.liked_by_current_user
+              that.find(".likes").first().find(".vote-icon").removeClass("fa-heart-o").addClass("fa-heart")
+            else
+              that.find(".likes").first().find(".vote-icon").removeClass("fa-heart").addClass("fa-heart-o")
+
       that.find(".comment-reply").on "click", ->
         if that.find(".comment-answer").css("display") == "none"
           that.find(".comment-answer").css("display", "block")
@@ -75,6 +71,10 @@ $(".comments-panel").ready ->
           .removeClass('uneditable-input')
           .removeAttr('disabled', 'disabled')
 
+  channel.bind "likes_changed", (data) ->
+    if pusher.connection.socket_id != data.socket_id
+      $("##{data.div}").find(".likes").first().find(".likes-count").html(data.likes)
+
 
   $(window).on 'beforeunload', ->
     pusher.disconnect()
@@ -89,16 +89,14 @@ $(".comments-panel").ready ->
   $(this).find(".comment").each ->
     comment_id = $(this).attr('id').split('_')[1]
     that = $(this)
-    that.find(".increase-likes").on "click", ->
-      $.ajax({url: '/comments/' + comment_id + '/voted?mode=good', dataType: 'json'})
+    that.find(".likes").first().find(".vote-for").on "click", ->
+      $.ajax({url: '/comments/' + comment_id + '/voted', dataType: 'json'})
         .success (data) ->
           that.find(".likes").first().find(".likes-count").html(data.likes)
-          that.find(".likes").first().find(".dislikes-count").html(data.dislikes)
-    that.find(".increase-dislikes").on "click", ->
-      $.ajax({url: '/comments/' + comment_id + '/voted?mode=bad', dataType: 'json'})
-        .success (data) ->
-          that.find(".likes").first().find(".likes-count").html(data.likes)
-          that.find(".likes").first().find(".dislikes-count").html(data.dislikes)
+          if data.liked_by_current_user
+            that.find(".likes").first().find(".vote-icon").removeClass("fa-heart-o").addClass("fa-heart")
+          else
+            that.find(".likes").first().find(".vote-icon").removeClass("fa-heart").addClass("fa-heart-o")
     that.find(".comment-reply").on "click", ->
       if that.find(".comment-answer").css("display") == "none"
         that.find(".comment-answer").css("display", "block")
@@ -143,16 +141,14 @@ $(".comments-panel").ready ->
   $(this).find(".activity").each ->
     activity_id = $(this).attr('id').split('_')[1]
     that = $(this)
-    that.find(".likes").first().find(".increase-likes").on "click", ->
-      $.ajax({url: '/activities/' + activity_id + '/voted?mode=good', dataType: 'json'})
+    that.find(".likes").first().find(".vote-for").on "click", ->
+      $.ajax({url: '/activities/' + activity_id + '/voted', dataType: 'json'})
         .success (data) ->
           that.find(".likes").first().find(".likes-count").html(data.likes)
-          that.find(".likes").first().find(".dislikes-count").html(data.dislikes)
-    that.find(".likes").first().find(".increase-dislikes").on "click", ->
-      $.ajax({url: '/activities/' + activity_id + '/voted?mode=bad', dataType: 'json'})
-        .success (data) ->
-          that.find(".likes").first().find(".likes-count").html(data.likes)
-          that.find(".likes").first().find(".dislikes-count").html(data.dislikes)
+          if data.liked_by_current_user
+            that.find(".likes").first().find(".vote-icon").removeClass("fa-heart-o").addClass("fa-heart")
+          else
+            that.find(".likes").first().find(".vote-icon").removeClass("fa-heart").addClass("fa-heart-o")
     that.find(".comment-reply").on "click", ->
       if that.find(".comment-answer").css("display") == "none"
         that.find(".comment-answer").css("display", "block")

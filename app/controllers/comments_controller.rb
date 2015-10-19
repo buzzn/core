@@ -60,13 +60,19 @@ class CommentsController < InheritedResources::Base
   def voted
     @comment = Comment.find(params[:id])
     if @comment.user != current_user
-      if params[:mode] == 'good'
+      if current_user.liked?(@comment)
+        @comment.unliked_by current_user
+      else
         @comment.liked_by current_user
-      elsif params[:mode] == 'bad'
-        @comment.disliked_by current_user
       end
     end
-    render :json => { :likes => @comment.get_likes.size, :dislikes => @comment.get_dislikes.size}
+    @channel_name = @comment.commentable_type + '_' + @comment.commentable_id
+    @div = 'comment_' + @comment.id
+    if @comment.commentable_type == "PublicActivity::ORM::ActiveRecord::Activity"
+      @channel_name = @comment.commentable.trackable_type + '_' + @comment.commentable.trackable_id
+    end
+    Pusher.trigger(@channel_name, 'likes_changed', :div => @div, :likes => @comment.get_likes.size, :socket_id => @socket_id)
+    render :json => { :likes => @comment.get_likes.size, :liked_by_current_user => current_user.liked?(@comment) }
   end
 
   def permitted_params

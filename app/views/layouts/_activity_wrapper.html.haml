@@ -34,15 +34,15 @@
       .likes
         .speech-time
           - if user_signed_in?
-            %i.increase-likes.vote-icon.fa.fa-thumbs-o-up
+            - if current_user.liked?(@a)
+              %i.vote-for.vote-icon.fa.fa-heart
+            -else
+              %i.vote-for.vote-icon.fa.fa-heart-o
           - else
-            %i.vote-icon.fa.fa-thumbs-o-up
-          .likes-count= @a.get_likes.nil? ? 0 : @a.get_likes.size
-          - if user_signed_in?
-            %i.increase-dislikes.vote-icon.fa.fa-thumbs-o-down
-          - else
-            %i.vote-icon.fa.fa-thumbs-o-down
-          .dislikes-count= @a.get_dislikes.nil? ? 0 : @a.get_dislikes.size
+            %i.vote-icon.fa.fa-heart-o
+
+          .likes-count= @a.get_likes.size
+
 
       - if @a.root_comments.any?
         %ul.list-unstyled.media-block.child-comments
