@@ -54,8 +54,8 @@
           %button.btn.btn-block.btn-success.btn-labeled.fa.fa-user-times.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
             =t('remove_members')
           %ul.dropdown-menu{role: "menu"}
-            - @profiles.each do |user|
-              %li= link_to(user.name, cancel_membership_metering_point_path(user_id: user.id), :data => {:confirm => t('are_you_sure')})
+            - @profiles.each do |profile|
+              %li= link_to(profile.name, cancel_membership_metering_point_path(user_id: profile.user.id), :data => {:confirm => t('are_you_sure')})
         = @metering_point.new_invitations
         = @metering_point.link_to_edit
 
