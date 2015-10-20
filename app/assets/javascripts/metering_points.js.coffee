@@ -587,7 +587,7 @@ $(".group-chart").ready ->
               format: "{value} W"
             title:
               enabled: true
-#              text: "Leistung"
+              text: ""
               style: { "color": "#000", "fontWeight": "bold"}
           plotOptions:
             series:
