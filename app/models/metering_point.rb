@@ -129,6 +129,10 @@ class MeteringPoint < ActiveRecord::Base
     self.readable == 'world'
   end
 
+  def readable_by_me?
+    self.readable == 'me'
+  end
+
   def output?
     self.mode == 'out'
   end
