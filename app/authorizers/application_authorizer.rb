@@ -1,6 +1,11 @@
 # Other authorizers should subclass this one
 class ApplicationAuthorizer < Authority::Authorizer
 
+  # DOKU
+  # https://docs.google.com/spreadsheets/d/1_KMXlYH3xcPKXx1p_RxxuLe6wP1pI-P2gOcJu7_rUNs/edit#gid=0
+  #
+  #
+
   # Any class method from Authority::Authorizer that isn't overridden
   # will call its authorizer's default method.
   #
