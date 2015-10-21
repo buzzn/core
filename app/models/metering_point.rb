@@ -133,6 +133,10 @@ class MeteringPoint < ActiveRecord::Base
     self.readable == 'me'
   end
 
+  def readable_by_community?
+    self.readable == 'community'
+  end
+
   def output?
     self.mode == 'out'
   end

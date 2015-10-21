@@ -126,7 +126,7 @@
       /           = @metering_point.edit_devices
 
 
-      - if user_signed_in? && current_user.can_update?(@metering_point) || @profiles.size != 0
+      - if user_signed_in? && current_user.can_read?(@metering_point)
         /%hr
         %h1.page-header.text-overflow
           %span
@@ -138,7 +138,7 @@
             = render profile
 
 
-      - if user_signed_in? && current_user.can_update?(@metering_point)
+      - if user_signed_in? && current_user.can_read?(@metering_point.address)
         %hr
         %h1.page-header.text-overflow
           %span
