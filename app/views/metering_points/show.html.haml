@@ -138,7 +138,7 @@
             = render profile
 
 
-      - if user_signed_in? && current_user.can_read?(@metering_point.address)
+      - if user_signed_in? #&& current_user.can_read?(@metering_point.address)
         %hr
         %h1.page-header.text-overflow
           %span

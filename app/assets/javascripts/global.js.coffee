@@ -1,12 +1,23 @@
 window.wisActive = true
+ttlastSample = new Date()
+rem_page_id = ""
+randomvalue = "12345678"
 
 window.addEventListener 'pageshow', (event)->
+  randomvalue = Math.random()
+  console.log("page_show " + randomvalue)
   window.wisActive = true
 
 window.addEventListener 'pagehide', (event)->
   window.wisActive = false
 
 window.addEventListener 'focus', (event)->
+  delta = Date.now() - ttlastSample
+  if delta >= 40000
+    location.reload()
+  ttlastSample = Date.now()
+  randomvalue = Math.random()
+  console.log("focus " + randomvalue)
   window.wisActive = true
 
 window.addEventListener 'blur', (event)->
@@ -84,7 +95,28 @@ $(document).on('page:load', ready)
 $(document).on('show.bs.modal', ready)
 $(document).on('page:restore', ->
   $(window).trigger('resize')
+timers = []
+
+  timers.push(window.setInterval(->
+    sleepDetect(randomvalue)
+    return
+  , 1000*19)
+  )
 )
+
+sleepDetect = (page_id) ->
+  delta = Date.now() - ttlastSample
+  if delta >= 40000 && page_id == rem_page_id
+    # Code here will only run if the timer is delayed by more 2X the sample rate
+    # (e.g. if the laptop sleeps for more than 20-40 seconds)
+    # Finetuning of times may be necessary
+    # for debugging uncomment this line: metering_point.find(".power-ticker").html('Servus! Woke up from sleep!! ' + delta)
+    location.reload()
+  else
+    console.log('always awake ' + delta + " PID: " +  page_id)
+  rem_page_id = page_id
+  ttlastSample = Date.now()
+
 
 resizeChart = (duration) ->
   setTimeout (->
@@ -96,6 +128,7 @@ resizeChart = (duration) ->
     return
   ), duration
   return
+
 
 
 (($) ->
