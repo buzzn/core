@@ -5,7 +5,7 @@ randomvalue = "12345678"
 
 window.addEventListener 'pageshow', (event)->
   randomvalue = Math.random()
-  console.log("page_show " + randomvalue)
+  #console.log("page_show " + randomvalue)
   window.wisActive = true
 
 window.addEventListener 'pagehide', (event)->
@@ -17,7 +17,7 @@ window.addEventListener 'focus', (event)->
     location.reload()
   ttlastSample = Date.now()
   randomvalue = Math.random()
-  console.log("focus " + randomvalue)
+  #console.log("focus " + randomvalue)
   window.wisActive = true
 
 window.addEventListener 'blur', (event)->
@@ -112,8 +112,8 @@ sleepDetect = (page_id) ->
     # Finetuning of times may be necessary
     # for debugging uncomment this line: metering_point.find(".power-ticker").html('Servus! Woke up from sleep!! ' + delta)
     location.reload()
-  else
-    console.log('always awake ' + delta + " PID: " +  page_id)
+  #else
+  #  console.log('always awake ' + delta + " PID: " +  page_id)
   rem_page_id = page_id
   ttlastSample = Date.now()
 
