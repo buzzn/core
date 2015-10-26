@@ -58,6 +58,8 @@ de:
   in_out_metering: Einspeisezähler
   diff_metering: Abgrenzungszähler
 
+  current_power_in_watts: Aktuelle Leistung (Watt)
+
   add_out_metering: Generatorzähler hinzufügen
   add_in_metering: Verbrauchszähler hinzufügen
   add_in_out_metering: Einspeisezähler hinzufügen
@@ -678,4 +680,6 @@ de:
 
   error_not_found: "Uups, die gewünschte Seite wurde leider nicht gefunden!"
   go_to_startpage: "> Zur Startseite"
+  internal_server_error: "Uups, es ist ein unerwarteter Fehler aufgetreten!"
+  error_forbidden: "Uups, Du hast nicht die nötigen Rechte, um diese Seite anzusehen!"
 

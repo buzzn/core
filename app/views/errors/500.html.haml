@@ -1,1 +1,10 @@
-= 'Internal Server Error 500'
+#page-content.error-not-found
+  .col-sm-1.col-md-2.col-lg-4
+  .col-sm-10.col-md-8.col-lg-4
+    .row
+      .error-message
+
+        %p= image_tag('Error_Page.svg', height: '300')
+
+        %p= t('internal_server_error')
+        %p.color-white= link_to(t('go_to_startpage'), root_path)

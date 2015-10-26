@@ -70,6 +70,19 @@
 
 
 #page-content
+  .row
+    .col-sm-6.col-md-3.col-lg-3
+      .panel.media.pad-all
+        .media-left
+          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+            %i.fa.fa-arrow-circle-o-right.fa-2x
+        .media-body.metering_point{ id: "metering_point_#{@metering_point.id}"}
+          = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { fake: !@metering_point.smart? && !@metering_point.virtual, source: @metering_point.data_source } do
+            %span.text-2x.text-thin
+              .power-ticker
+                = t('loading') + '...'
+          %p= t('current_power_in_watts')
+
 
   .row
     .metering_point_detail{id: "metering_point_#{@metering_point.id}"}
@@ -93,14 +106,8 @@
 
           .chart{id: "chart-container-#{@metering_point.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
             .fa.fa-spinner.fa-spin
-          .pad-all
-            .metering_point{ id: "metering_point_#{@metering_point.id}"}
-              .text-center
-                = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { fake: !@metering_point.smart? && !@metering_point.virtual, source: @metering_point.data_source } do
-                  %span.text-4x.text-thin
-                    .power-ticker
-                      = t('loading') + '...'
-                %p= t'watt'
+
+
             / .text-center
             /   - if !@metering_point.smart?
             /     .new-reading
