@@ -3,6 +3,10 @@ env :PATH, '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aw
 set :output, 'log/cron.log'
 
 
+# every 5.minute do
+#   runner "MeteringPoint.observe"
+# end
+
 # every 1.minute do
 #   runner "Meter.pull_readings"
 # end

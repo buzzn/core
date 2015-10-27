@@ -6,12 +6,16 @@
     %i.normal-info-circle.fa.fa-info-circle{'data-content' => t('metering_point_virtual_info')}
 
 = f.input :virtual, as: :radio_buttons, label: false
-
 = f.input :name
 = f.input :forecast_kwh_pa
 
 .js-dependent-fields{data: {radio: {name: 'metering_point[virtual]', value: 'false'}}}
   = f.input :uid
+
+= f.input :observe, as: :radio_buttons
+.js-dependent-fields{data: {radio: {name: 'metering_point[observe]', value: 'true'}}}
+  = f.input :min_watt
+  = f.input :max_watt
 
 = f.association :group, collection: Group.editable_by_user(current_user) if Group.editable_by_user(current_user).any?
 = f.input :readable, collection: MeteringPoint.readables.map(&:to_sym), include_blank: false

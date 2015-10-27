@@ -348,6 +348,19 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
+
+
+  def self.observe
+    MeteringPoint.where(observe: true).each do |metering_point|
+      Sidekiq::Client.push({
+       'class' => MeteringPointObserveWorker,
+       'queue' => :default,
+       'args' => [metering_point.id]
+      })
+    end
+  end
+
+
   def self.calculate_scores
     MeteringPoint.all.select(:id, :mode).each.each do |metering_point|
       if metering_point.input?

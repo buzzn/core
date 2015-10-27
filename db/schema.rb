@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151012151021) do
+ActiveRecord::Schema.define(version: 20151023150629) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -357,6 +357,9 @@ ActiveRecord::Schema.define(version: 20151012151021) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "forecast_kwh_pa"
+    t.boolean  "observe",                     default: false
+    t.integer  "min_watt",                    default: 100
+    t.integer  "max_watt",                    default: 5000
   end
 
   add_index "metering_points", ["contract_id"], name: "index_metering_points_on_contract_id", using: :btree
