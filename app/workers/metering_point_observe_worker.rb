@@ -20,7 +20,7 @@ class MeteringPointObserveWorker
          'class' => PushNotificationWorker,
          'queue' => :default,
          'args' => [
-                    @metering_point.id,
+                    user.id,
                     'warning',
                     @metering_point.name,
                     message,
