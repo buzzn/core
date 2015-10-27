@@ -8,11 +8,11 @@ class Discovergy
 
   # Discovergy.new('karin.smith@solfux.de', '19200buzzn').raw_with_power(60051431)
 
-  # Discovergy.new('team@buzzn-metering.de', 'Zebulon_4711').raw_with_power(60139082)
+  # Discovergy.new('team@localpool.de', 'Zebulon_4711').raw_with_power(60139082)
 
 
 
-  # discovergy  = Discovergy.new('team@buzzn-metering.de', 'Zebulon_4711')
+  # discovergy  = Discovergy.new('team@localpool.de', 'Zebulon_4711')
   # date        = Time.now.in_time_zone
   # start       = date.beginning_of_hour
   # ending      = start + 1.minute

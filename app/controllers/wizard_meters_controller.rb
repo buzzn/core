@@ -52,7 +52,7 @@ class WizardMetersController  < ApplicationController
       @contract.price_cents = 0
       @contract.metering_point = @metering_point
       if @contract.organization.slug == 'buzzn-metering'
-        @contract.username = 'team@buzzn-metering.de'
+        @contract.username = 'team@localpool.de'
         @contract.password = 'Zebulon_4711'
       elsif @contract.organization.slug == 'mysmartgrid'
         @contract.username = params[:contract][:sensor_id]
@@ -128,7 +128,7 @@ class WizardMetersController  < ApplicationController
     @contract.price_cents = 0
     @contract.metering_point = @metering_point
     if @contract.organization.slug == 'buzzn-metering'
-      @contract.username = 'team@buzzn-metering.de'
+      @contract.username = 'team@localpool.de'
       @contract.password = 'Zebulon_4711'
     elsif @contract.organization.slug == 'mysmartgrid'
       @contract.username = params[:contract][:sensor_id]

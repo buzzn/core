@@ -122,7 +122,7 @@ class MeteringPointsController < ApplicationController
         if @existing_users.any?
           if MeteringPointUserRequest.where(metering_point: @metering_point).where(user: @existing_users.first).empty? && !@metering_point.users.include?(@existing_users.first)
             if MeteringPointUserRequest.create(user: @existing_users.first, metering_point: @metering_point, mode: 'invitation')
-              @existing_users.first.send_notification('mint', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 4000)
+              @existing_users.first.send_notification('mint', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0)
               flash[:notice] = t('sent_metering_point_user_invitation_successfully')
             else
               flash[:error] = t('unable_to_send_metering_point_user_invitation')
@@ -141,7 +141,7 @@ class MeteringPointsController < ApplicationController
     else
       @new_user = User.find(params[:metering_point][:new_users])
       if MeteringPointUserRequest.create(user: @new_user, metering_point: @metering_point, mode: 'invitation')
-        @new_user.send_notification('mint', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 4000)
+        @new_user.send_notification('mint', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0)
         flash[:notice] = t('sent_metering_point_user_invitation_successfully')
       else
         flash[:error] = t('unable_to_send_metering_point_user_invitation')
