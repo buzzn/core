@@ -147,7 +147,8 @@ class User < ActiveRecord::Base
                 type,
                 header,
                 message,
-                duration
+                duration,
+                Rails.application.routes.url_helpers.profile_path(self.profile)
                ]
     })
   end

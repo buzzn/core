@@ -34,8 +34,12 @@ $("#content-container").ready ->
           title: notification.header,
           message: notification.message,
           container: "floating",
-          timer: notification.duration
+          timer: notification.duration,
+          closeBtn: false
         })
+        $(".alert-wrap").css('cursor', 'pointer')
+        $(".alert-wrap").on 'click', ->
+          window.location.href = notification.href
     $(window).on 'beforeunload', ->
       pusher.disconnect()
   else
