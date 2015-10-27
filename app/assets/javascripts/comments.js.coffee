@@ -23,6 +23,7 @@ $(".comments-panel").ready ->
         $(destination).prepend(html).hide().show('slow');
 
       that = $("#comment_#{comment.id}")
+      that.find('time[data-time-ago]').timeago()
 
       that.find(".vote-for").on "click", ->
         $.ajax({url: '/comments/' + comment.id + '/voted', dataType: 'json'})
