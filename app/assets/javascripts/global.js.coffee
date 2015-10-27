@@ -1,3 +1,4 @@
+window.wwasInactive = true
 window.wisActive = true
 ttlastSample = new Date()
 rem_page_id = ""
@@ -19,9 +20,14 @@ window.addEventListener 'focus', (event)->
   randomvalue = Math.random()
   #console.log("focus " + randomvalue)
   window.wisActive = true
+#  actual_resolution = "hour_to_minutes"
+#  containing_timestamp = chart_data_min_x
+#  setChartData('metering_points', id, containing_timestamp)
+
 
 window.addEventListener 'blur', (event)->
   window.wisActive = false
+  window.wwasInactive = true
 
 
 ready = ->
@@ -110,7 +116,6 @@ sleepDetect = (page_id) ->
     # Code here will only run if the timer is delayed by more 2X the sample rate
     # (e.g. if the laptop sleeps for more than 20-40 seconds)
     # Finetuning of times may be necessary
-    # for debugging uncomment this line: metering_point.find(".power-ticker").html('Servus! Woke up from sleep!! ' + delta)
     location.reload()
   #else
   #  console.log('always awake ' + delta + " PID: " +  page_id)

@@ -983,8 +983,8 @@ createChartTimer = (resource_ids, mode) ->
 
 updateChart = (resource_ids, mode) ->
   containing_timestamp = new Date().getTime()
-  if actual_resolution == 'hour_to_minutes'
-    return
+  #if actual_resolution == 'hour_to_minutes'
+  #  return
   if mode == 'metering_point'
     if resource_ids.length == 0
       return
@@ -1104,10 +1104,18 @@ getLiveData = (metering_point, metering_point_id) ->
         if $(".metering_point_detail").length != 0 && chart != undefined && actual_resolution == 'hour_to_minutes'
           if chart_data_min_x > data.timestamp - 60*60*1000
             chart.series[0].addPoint([data.timestamp, data.latest_power])
-          # else if #TODO: if 1 hour is over toggle to next hour, but only if displayed
-          #   chart.xAxis[0].update(getExtremes(data.timestamp), true)
-          #   setChartTitle(data.timestamp)
-          #   chart.series[0].addPoint([data.timestamp, data.latest_power])
+          if data.timestamp > chart_data_min_x +  60 *60 *1000 && data.timestamp < chart_data_min_x +  61 *60 *1000
+            # TODO: if 1 hour is over toggle to next hour, but only if displayed
+            # macht getExtremes oder?
+            chart_data_min_x = data.timestamp
+            #console.log("aktualisiere Chart " + data.timestamp + " power " + data.latest_power)
+            chart.xAxis[0].update(getExtremes(data.timestamp), true)
+            setChartTitle(data.timestamp)
+            setChartData('metering_points', metering_point_id, data.timestamp)
+          if window.wisActive && window.wwasInactive # eigentlich nur, wenn neu aktiv oder wenn delta t zu groß
+            window.wwasInactive = false
+            setChartData('metering_points', metering_point_id, data.timestamp)
+            #console.log("neuer Chart " + data.timestamp + " power " + data.latest_power)
       else
         metering_point.find(".power-ticker").html('offline')
     .error (jqXHR, textStatus, errorThrown) ->
