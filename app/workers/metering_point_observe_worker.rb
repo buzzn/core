@@ -7,9 +7,9 @@ class MeteringPointObserveWorker
 
 
     if @current_power < @metering_point.min_watt
-      message = I18n.t('undershot_min_watt')
+      message = I18n.t('metering_point_undershot_min_watt', @metering_point.min_watt)
     elsif @current_power > @metering_point.max_watt
-      message = I18n.t('exceeded_max_watt')
+      message = I18n.t('metering_point_exceeded_max_watt', @metering_point.max_watt)
     else
       message = nil
     end

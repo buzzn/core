@@ -76,6 +76,9 @@ de:
 
   create_metering_point: Zählpunkt erstellen
 
+  metering_point_undershot_min_watt: "%{min_watt} watt unterschritten"
+  metering_point_exceeded_max_watt: "%{max_watt} watt überschritten"
+
   create_device: Gerät erstellen
   out_device: Erzeuger
   in_device: Verbraucher
