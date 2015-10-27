@@ -24,7 +24,7 @@ class MeteringPointObserveWorker
                     'warning',
                     @metering_point.name,
                     message,
-                    4000
+                    10*1000
                    ]
         })
       end
