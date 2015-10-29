@@ -857,6 +857,7 @@ DEPENDENCIES
   capybara-select2
   carrierwave
   carrierwave-base64
+  celluloid
   cocoon
   coffee-rails
   coffee-script-source (= 1.8.0)
