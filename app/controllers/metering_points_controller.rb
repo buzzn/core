@@ -108,21 +108,17 @@ class MeteringPointsController < ApplicationController
   def send_invitations_update
     @metering_point = MeteringPoint.find(params[:id])
     if params[:metering_point][:invite_via_email] == "true"
-      if params[:metering_point][:email] == "" #|| params[:metering_point][:email_confirmation] == ""
+      if params[:metering_point][:email] == ""
         @metering_point.errors.add(:email, I18n.t("cant_be_blank"))
-#        @metering_point.errors.add(:email_confirmation,  I18n.t("cant_be_blank"))
         render action: 'send_invitations', invite_via_email: 'checked'
-#      elsif params[:metering_point][:email] != params[:metering_point][:email_confirmation]
-#        @metering_point.errors.add(:email, I18n.t("doesnt_match_with_confirmation"))
-#        @metering_point.errors.add(:email_confirmation, I18n.t("doesnt_match_with_email"))
-#        render action: 'send_invitations', invite_via_email: 'checked'
       else
         @email = params[:metering_point][:email]
         @existing_users = User.where(email: @email)
         if @existing_users.any?
           if MeteringPointUserRequest.where(metering_point: @metering_point).where(user: @existing_users.first).empty? && !@metering_point.users.include?(@existing_users.first)
             if MeteringPointUserRequest.create(user: @existing_users.first, metering_point: @metering_point, mode: 'invitation')
-              @existing_users.first.send_notification('mint', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0)
+              @existing_users.first.send_notification('mint', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0, profile_path(@existing_users.first.profile))
+              Notifier.send_email_notification_new_metering_point_user_request(@existing_users.first, @metering_point.managers.first, @metering_point, 'invitation').deliver_now
               flash[:notice] = t('sent_metering_point_user_invitation_successfully')
             else
               flash[:error] = t('unable_to_send_metering_point_user_invitation')
@@ -141,7 +137,8 @@ class MeteringPointsController < ApplicationController
     else
       @new_user = User.find(params[:metering_point][:new_users])
       if MeteringPointUserRequest.create(user: @new_user, metering_point: @metering_point, mode: 'invitation')
-        @new_user.send_notification('mint', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0)
+        @new_user.send_notification('mint', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0, profile_path(@new_user.profile))
+        Notifier.send_email_notification_new_metering_point_user_request(@new_user, @metering_point.managers.first, @metering_point, 'invitation').deliver_now
         flash[:notice] = t('sent_metering_point_user_invitation_successfully')
       else
         flash[:error] = t('unable_to_send_metering_point_user_invitation')

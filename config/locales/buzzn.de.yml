@@ -14,7 +14,7 @@ de:
   if_it_was_you_who_requested_the_link_you_can_do_this_through_the_link_below: "Falls Du das warst, kannst Du dies mit dem folgenden Link tun:"
   if_this_link_shouldnt_work_try_to_copy_and_paste_this_one_directly_in_your_browser: "Sollte dieser Link nicht funktionieren, kopiere bitte dies direkt in Deinen Browser:"
 
-  this_app_is_currently_under_development_and_may_contain_bugs: "Diese App befindet sich im Moment in der Entwicklung und kann daher Fehler beinhalten."
+  beta_text: "Die buzzn App befindet sich derzeit noch in Beta Phase der Entwicklung. Das bedeutet, dass einige Funktionen noch nicht richtig oder gar nicht funktionieren.\n Die Beta Phase hat zum Ziel, gemeinsam mit Dir als User den für das offizielle Release der App nötigen Funktionsumfang zu testen und sicher zu stellen.\n Das buzzn Team freut sich deshalb über Feedback jeglicher Art, am besten per E-Mail an team@buzzn.net.\n Vielen Dank für Deine Unterstützung!"
   its_impossible_to_sign_up_at_the_moment_because_this_function_has_been_deactivated: "Im Moment ist es nicht möglich sich zu registrieren, da diese Funktion deaktiviert wurde."
   only_invited_members_can_use_this_app_now: "Nur eingeladene Mitglieder können die App nutzen."
   if_the_beta_test_is_over_you_can_register_without_invitation: Sobald der Beta Test vorüber ist kannst Du Dich auch ohne Einladung registrieren.
@@ -37,11 +37,12 @@ de:
   sent_metering_point_user_invitation_successfully: Die Zählpunkteinladung wurde erfolgreich versendet.
   unable_to_send_metering_point_user_invitation: Das Senden der Zählpunkteinladung ist nicht möglich.
   invite_friends_to_join_this_metering_point: Freunde zu diesem Zählpunkt einladen
-  accepted_metering_point_user_request: Zählpunkteinladung akzeptiert
+  accepted_metering_point_user_request: Zählpunktanfrage akzeptiert
   rejected_metering_point_user_request: Zählpunkteinladung abgelehnt
   sent_metering_point_user_request: Zählpunktanfrage gesendet
   new_metering_point_user_request: Neue Zählpunktanfrage
   do_you_want_to_admit_user_to_this_metering_point: "Möchtest Du %{user} in diesen Zählpunkt aufnehmen"
+  do_you_want_to_admit_user_to_your_metering_point: "Möchtest Du %{user} in Deinen Zählpunkt %{metering_point} aufnehmen?"
   sent_group_metering_point_request_successfully: "Zählpunkteinladung erfolgreich gesendet. Warten auf Annahme."
   metering_point_user_invitation_already_sent: "Zählpunkteinladung wurde bereits gesendet"
   group_metering_point_invitation_already_sent: "Gruppeneinladung wurde bereits gesendet"
@@ -678,9 +679,13 @@ de:
   new_friendship_request_from: "Neue Freundschaftsanfrage von %{sender}"
   sent_a_friendship_request_to_you: hat Dir eine Freundschaftsanfrage gesendet.
   to_accept_or_reject_the_friendship_request_please_visit_your_profile: Um die Anfrage zu akzeptieren oder abzulehnen besuche bitte Dein Profil.
+  to_accept_or_reject_this_request_please_visit_your_metering_point: Um die Anfrage zu akzeptieren oder abzulehnen besuche bitte Deinen Zählpunkt.
+  to_accept_or_reject_this_invitation_please_visit_your_profile: Um diese Einladung anzunehmen oder abzulehnen besuche bitte Dein Profil.
 
   system_message: Systemnachricht
-
+  user_is_your_friend_now: "%{user_name} ist jetzt mit Dir befreundet."
+  visit_users_profile_to_see_the_energy_data_that_is_visible_for_you: "Besuche das Profil von %{user_name} und sehe Dir die Energiedaten an, die jetzt für Dich sichtbar sind."
+  users_profile: "Profil von %{user_name}"
   error_not_found: "Uups, die gewünschte Seite wurde leider nicht gefunden!"
   go_to_startpage: "> Zur Startseite"
   internal_server_error: "Uups, es ist ein unerwarteter Fehler aufgetreten!"

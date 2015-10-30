@@ -106,7 +106,7 @@ class GroupsController < ApplicationController
       if GroupMeteringPointRequest.where(metering_point: @metering_point).where(group: @group).empty? && !@group.metering_points.include?(@metering_point)
         @group_invitation = GroupMeteringPointRequest.new(user: @metering_point.managers.first, metering_point: @metering_point, group: @group, mode: 'invitation')
         if @group_invitation.save
-          @metering_point.managers.first.send_notification('mint', t('new_group_metering_point_invitation'), @group.name, 0)
+          @metering_point.managers.first.send_notification('mint', t('new_group_metering_point_invitation'), @group.name, 0, profile_path(@metering_point.managers.first.profile))
           flash[:notice] = t('sent_group_metering_point_invitation_successfully')
         else
           flash[:error] = t('unable_to_send_group_metering_point_invitation')

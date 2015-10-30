@@ -16,17 +16,7 @@ class MeteringPointObserveWorker
 
     if message
       @metering_point.users.each do |user|
-        Sidekiq::Client.push({
-         'class' => PushNotificationWorker,
-         'queue' => :default,
-         'args' => [
-                    user.id,
-                    'warning',
-                    @metering_point.name,
-                    message,
-                    10*1000
-                   ]
-        })
+        user.send_notification('warning', @metering_point.name, message, 0, Rails.application.routes.url_helpers.metering_point_path(@metering_point))
       end
     end
 

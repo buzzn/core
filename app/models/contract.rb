@@ -85,9 +85,9 @@ class Contract < ActiveRecord::Base
     if contract && contract.contracting_party
       user = contract.contracting_party.user
       if valid
-        user.send_notification("success", I18n.t("valid_credentials"), I18n.t("your_credentials_have_been_checked_and_are_valid", contract: contract.mode))
+        user.send_notification("success", I18n.t("valid_credentials"), I18n.t("your_credentials_have_been_checked_and_are_valid", contract: contract.mode), contract_path(self))
       else
-        user.send_notification("danger", I18n.t("invalid_credentials"), I18n.t("your_credentials_have_been_checked_and_are_invalid", contract: contract.mode))
+        user.send_notification("danger", I18n.t("invalid_credentials"), I18n.t("your_credentials_have_been_checked_and_are_invalid", contract: contract.mode), contract_path(self))
       end
     end
   end

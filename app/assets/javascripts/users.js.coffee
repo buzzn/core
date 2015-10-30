@@ -1,15 +1,15 @@
 $("#content-container").ready ->
   if gon && gon.global
     pusher = new Pusher(gon.global.pusher_key)
-    pusher.connection.bind 'state_change', (states) ->
-      console.log 'changed from ' + states.previous + ' to ' + states.current
+    # pusher.connection.bind 'state_change', (states) ->
+    #   console.log 'changed from ' + states.previous + ' to ' + states.current
 
     if gon.global.current_user_id != undefined
       channel = pusher.subscribe("user_#{gon.global.current_user_id}")
       console.log "subscribed to user_#{gon.global.current_user_id}"
       channel.bind "new_notification", (notification) ->
-        console.log 'new_notification'
-        console.log notification
+        #console.log 'new_notification'
+        #console.log notification.message
         if notification.type == 'primary'
           icon = 'fa fa-star fa-lg'
         else if notification.type == 'info'
@@ -34,12 +34,8 @@ $("#content-container").ready ->
           title: notification.header,
           message: notification.message,
           container: "floating",
-          timer: notification.duration,
-          closeBtn: false
+          timer: notification.duration
         })
-        $(".alert-wrap").css('cursor', 'pointer')
-        $(".alert-wrap").on 'click', ->
-          window.location.href = notification.href
     $(window).on 'beforeunload', ->
       pusher.disconnect()
   else

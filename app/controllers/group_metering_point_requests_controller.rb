@@ -19,9 +19,9 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
       @group_metering_point_request = GroupMeteringPointRequest.new(user: current_user, metering_point: metering_point, group: group, mode: mode)
       if @group_metering_point_request.save
         if mode == 'request'
-          group.managers.first.send_notification('mint', t('new_group_metering_point_request'), metering_point.decorate.name_with_users, 0)
+          group.managers.first.send_notification('mint', t('new_group_metering_point_request'), metering_point.decorate.name_with_users, 0, group_path(group))
         else
-          metering_point.managers.first.send_notification('mint', t('new_group_metering_point_invitation'), group.name, 0)
+          metering_point.managers.first.send_notification('mint', t('new_group_metering_point_invitation'), group.name, 0, profile_path(metering_point.managers.first.profile))
         end
         flash[:notice] = t('sent_group_metering_point_request')
         redirect_to group_path(group)
