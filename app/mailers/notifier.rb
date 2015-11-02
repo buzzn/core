@@ -47,4 +47,11 @@ class Notifier < ActionMailer::Base
       mail(to: @receiver.email, subject: 'buzzn: ' + t('new_metering_point_user_invitation'))
     end
   end
+
+  def send_email_removed_from_metering_point(receiver, sender, metering_point)
+    @receiver = receiver
+    @sender = sender
+    @metering_point = metering_point
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('user_removed_you_from_metering_point', username: @sender.name, metering_point_name: @metering_point.name))
+  end
 end

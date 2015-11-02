@@ -94,13 +94,6 @@ class MeteringPointsController < ApplicationController
   end
   authority_actions :edit_readings => 'update'
 
-  def cancel_membership
-    @metering_point = MeteringPoint.find(params[:id])
-    @user = User.find(params[:user_id])
-    @metering_point.users.delete(@user)
-    redirect_to metering_point_path(@metering_point)
-  end
-
   def send_invitations
     @metering_point = MeteringPoint.find(params[:id])
   end
@@ -151,6 +144,13 @@ class MeteringPointsController < ApplicationController
     @metering_point = MeteringPoint.find(params[:id])
     @user = User.find(params[:user_id])
     @metering_point.users.delete(@user)
+    if @user == current_user
+      flash[:notice] = t('metering_point_left_successfully', metering_point_name: @metering_point.name)
+    else
+      flash[:notice] = t('user_removed_successfully', username: @user.name)
+      Notifier.send_email_removed_from_metering_point(@user, current_user, @metering_point).deliver_now
+      @user.send_notification('mint', t('notifiaction'), t('user_removed_you_from_metering_point', username: @current_user.name, metering_point_name: @metering_point.name), 0, metering_point_path(@metering_point))
+    end
     redirect_to metering_point_path(@metering_point)
   end
 

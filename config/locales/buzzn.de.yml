@@ -303,6 +303,7 @@ de:
   add_current_direction: Stromrichtung hinzufügen
   glossary: Glossar
   email_notifications: E-Mail Benachrichtigung
+  notifiaction: Benachrichtigung
   terms_and_conditions: Nutzungsbedingung
   investor_relations: Investor Relations
   imprint: Impressum
@@ -681,6 +682,10 @@ de:
   to_accept_or_reject_the_friendship_request_please_visit_your_profile: Um die Anfrage zu akzeptieren oder abzulehnen besuche bitte Dein Profil.
   to_accept_or_reject_this_request_please_visit_your_metering_point: Um die Anfrage zu akzeptieren oder abzulehnen besuche bitte Deinen Zählpunkt.
   to_accept_or_reject_this_invitation_please_visit_your_profile: Um diese Einladung anzunehmen oder abzulehnen besuche bitte Dein Profil.
+  metering_point_left_successfully: "Du hast den Zählpunkt '%{metering_point_name}' erfolgreich verlassen."
+  user_removed_successfully: "Du hast den Benutzer '%{username}' erfolgreich von disem Zählpunkt entfernt."
+  user_removed_you_from_metering_point: "%{username} hat Dich vom Zählpunkt %{metering_point_name} entfernt"
+  to_join_this_metering_point_again_visit_this_link_and_ask_for_permission: "Du kannst den folgenden Link besuchen, um für die Erlaubnis, dem Zählpunkt wieder beizutreten, zu bitten."
 
   system_message: Systemnachricht
   user_is_your_friend_now: "%{user_name} ist jetzt mit Dir befreundet."
