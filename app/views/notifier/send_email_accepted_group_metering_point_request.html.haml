@@ -1,0 +1,13 @@
+%p
+  = t('hello') + " #{@receiver.name}!"
+- if @mode == "request"
+  %p= t('your_group_metering_point_request_has_been_accepted')
+  %p= t('you_are_now_a_member_of_the_group_with_your_metering_point', group_name: @group.name, metering_point_name: @metering_point.name)
+  %p= t('visit_the_group_page_to_see_the_energy_data_that_is_visible_for_you_now')
+  %p= link_to @group.name, group_url(@group)
+- else
+  %p= t('your_group_metering_point_invitation_has_been_accepted')
+  %p= t('user_is_now_a_member_of_your_group_with_the_metering_point', username: @sender.name, group_name: @group.name, metering_point_name: @metering_point.name)
+  %p= t('visit_the_group_page_to_see_the_how_the_energy_data_has_changed_now')
+  %p= link_to @group.name, group_url(@group)
+%p= t('your_buzzn_team')

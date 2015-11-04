@@ -110,7 +110,7 @@ class MeteringPointsController < ApplicationController
         if @existing_users.any?
           if MeteringPointUserRequest.where(metering_point: @metering_point).where(user: @existing_users.first).empty? && !@metering_point.users.include?(@existing_users.first)
             if MeteringPointUserRequest.create(user: @existing_users.first, metering_point: @metering_point, mode: 'invitation')
-              @existing_users.first.send_notification('mint', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0, profile_path(@existing_users.first.profile))
+              @existing_users.first.send_notification('info', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0, profile_path(@existing_users.first.profile))
               Notifier.send_email_notification_new_metering_point_user_request(@existing_users.first, @metering_point.managers.first, @metering_point, 'invitation').deliver_now
               flash[:notice] = t('sent_metering_point_user_invitation_successfully')
             else
@@ -130,7 +130,7 @@ class MeteringPointsController < ApplicationController
     else
       @new_user = User.find(params[:metering_point][:new_users])
       if MeteringPointUserRequest.create(user: @new_user, metering_point: @metering_point, mode: 'invitation')
-        @new_user.send_notification('mint', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0, profile_path(@new_user.profile))
+        @new_user.send_notification('info', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0, profile_path(@new_user.profile))
         Notifier.send_email_notification_new_metering_point_user_request(@new_user, @metering_point.managers.first, @metering_point, 'invitation').deliver_now
         flash[:notice] = t('sent_metering_point_user_invitation_successfully')
       else
@@ -149,7 +149,7 @@ class MeteringPointsController < ApplicationController
     else
       flash[:notice] = t('user_removed_successfully', username: @user.name)
       Notifier.send_email_removed_from_metering_point(@user, current_user, @metering_point).deliver_now
-      @user.send_notification('mint', t('notifiaction'), t('user_removed_you_from_metering_point', username: @current_user.name, metering_point_name: @metering_point.name), 0, metering_point_path(@metering_point))
+      @user.send_notification('info', t('notifiaction'), t('user_removed_you_from_metering_point', username: @current_user.name, metering_point_name: @metering_point.name), 0, metering_point_path(@metering_point))
     end
     redirect_to metering_point_path(@metering_point)
   end

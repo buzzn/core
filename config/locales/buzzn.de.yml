@@ -686,6 +686,24 @@ de:
   user_removed_successfully: "Du hast den Benutzer '%{username}' erfolgreich von disem Zählpunkt entfernt."
   user_removed_you_from_metering_point: "%{username} hat Dich vom Zählpunkt %{metering_point_name} entfernt"
   to_join_this_metering_point_again_visit_this_link_and_ask_for_permission: "Du kannst den folgenden Link besuchen, um für die Erlaubnis, dem Zählpunkt wieder beizutreten, zu bitten."
+  group_created_successfully: Die Gruppe wurde erfolgreich erstellt
+  failed_to_create_group: Beim Erstellen der Gruppe ist ein Fehler aufgetreten
+  group_destroyed_successfully: Die Gruppe wurde erfolgreich gelöscht
+  failed_to_destroy_group: Beim Löschen der Gruppe ist ein Fehler aufgetreten
+  new_comment_from_user: "Neuer Kommentar von %{username}"
+  at_your_group: "Bei Deiner Gruppe %{group_name}"
+  user_liked_your_comment: "%{username} hat Deinen Kommentar geliked"
+  at_resource: "Bei %{resource_type} '%{resource_name}'"
+  user_wants_to_join_your_group_with_the_metering_point: "%{username} möchte Deiner Gruppe '%{group_name}' mit dem Zählpunkt '%{metering_point_name}' beitreten."
+  to_accept_or_reject_this_request_please_visit_your_group_page: "Um diese Anfrage anzunehmen oder abzulehnen besuche bitte Deine Gruppenseite."
+  user_invited_you_to_join_the_group_with_your_metering_point: "%{username} hat Dich dazu eingeladen der Gruppe '%{group_name}' mit Deinem Zählpunkt '%{metering_point_name}' beizutreten."
+  visit_the_group_page_to_see_the_energy_data_that_is_visible_for_you_now: "Besuche die Gruppenseite um die Energiedaten einzusehen, die für Dich jetzt sichtbar sind."
+  you_are_now_a_member_of_the_group_with_your_metering_point: "Du bist jetzt mit Deinem Zählpunkt '%{metering_point_name}' Mitglied der Gruppe '%{group_name}'."
+  user_is_now_a_member_of_your_group_with_the_metering_point: "%{username} ist jetzt mit dem Zählpunkt '%{metering_point_name}' ein Mitglied Deiner Gruppe '%{group_name}'."
+  visit_the_group_page_to_see_the_how_the_energy_data_has_changed_now: "Besuche die Gruppenseite um zu sehen, wie sich die Energiedaten nun verändert haben."
+  new_group_member: Neues Gruppenmitglied
+  your_group_metering_point_request_has_been_accepted: "Deine Gruppenanfrage wurde akzeptiert."
+  your_group_metering_point_invitation_has_been_accepted: "Deine Gruppeneinladung wurde akzeptiert."
 
   system_message: Systemnachricht
   user_is_your_friend_now: "%{user_name} ist jetzt mit Dir befreundet."

@@ -12,7 +12,7 @@ class FriendshipRequestsController < InheritedResources::Base
     if @friendship_request.save
       flash[:notice] = t('sent_friendship_request')
       Notifier.send_email_notification_new_friendship_request(receiver, current_user).deliver_now
-      receiver.send_notification('mint', t('new_friendship_request'), current_user.name, 0, profile_path(receiver.profile))
+      receiver.send_notification('info', t('new_friendship_request'), current_user.name, 0, profile_path(receiver.profile))
       redirect_to profile_path(receiver.profile)
     else
       flash[:error] = t('unable_to_send_friendship_request')
@@ -28,7 +28,7 @@ class FriendshipRequestsController < InheritedResources::Base
       if @friendship_request.save
         flash[:notice] = t('accepted_friendship_request')
         Notifier.send_email_notification_accepted_friendship_request(@friendship_request.sender, current_user).deliver_now
-        @friendship_request.sender.send_notification('mint', t('accepted_friendship_request'), t('user_is_your_friend_now', user_name: @friendship_request.receiver.name), 0, profile_path(@friendship_request.receiver.profile))
+        @friendship_request.sender.send_notification('info', t('accepted_friendship_request'), t('user_is_your_friend_now', user_name: @friendship_request.receiver.name), 0, profile_path(@friendship_request.receiver.profile))
         redirect_to profile_path(current_user.profile)
       end
     else

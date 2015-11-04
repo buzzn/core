@@ -54,4 +54,30 @@ class Notifier < ActionMailer::Base
     @metering_point = metering_point
     mail(to: @receiver.email, subject: 'buzzn: ' + t('user_removed_you_from_metering_point', username: @sender.name, metering_point_name: @metering_point.name))
   end
+
+  def send_email_new_group_metering_point_request(receiver, sender, metering_point, group, mode)
+    @receiver = receiver
+    @sender = sender
+    @metering_point = metering_point
+    @mode = mode
+    @group = group
+    if @mode == "request"
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('new_group_metering_point_request'))
+    else
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('new_group_metering_point_invitation'))
+    end
+  end
+
+  def send_email_accepted_group_metering_point_request(receiver, sender, metering_point, group, mode)
+    @receiver = receiver
+    @sender = sender
+    @metering_point = metering_point
+    @mode = mode
+    @group = group
+    if @mode == "request"
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('accepted_group_metering_point_request'))
+    else
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('accepted_group_metering_point_invitation'))
+    end
+  end
 end

@@ -17,10 +17,10 @@ class MeteringPointUserRequestsController < InheritedResources::Base
       @metering_point_user_request = MeteringPointUserRequest.new(user: current_user, metering_point: metering_point, mode: mode)
       if @metering_point_user_request.save
         if mode == 'request'
-          metering_point.managers.first.send_notification('mint', t('new_metering_point_user_request'), current_user.name, 0, metering_point_path(metering_point))
+          metering_point.managers.first.send_notification('info', t('new_metering_point_user_request'), current_user.name, 0, metering_point_path(metering_point))
           Notifier.send_email_notification_new_metering_point_user_request(metering_point.managers.first, current_user, metering_point, 'request').deliver_now
         else
-          current_user.send_notification('mint', t('new_metering_point_user_invitation'), metering_point.decorate.name_with_users, 0, profile_path(current_user.profile))
+          current_user.send_notification('info', t('new_metering_point_user_invitation'), metering_point.decorate.name_with_users, 0, profile_path(current_user.profile))
           Notifier.send_email_notification_new_metering_point_user_request(current_user, metering_point.managers.first, metering_point, 'invitation').deliver_now
         end
         flash[:notice] = t('sent_metering_point_user_request')
@@ -43,10 +43,10 @@ class MeteringPointUserRequestsController < InheritedResources::Base
       if @metering_point_user_request.save
         flash[:notice] = t('accepted_metering_point_user_request')
         if @mode == 'request'
-          @user.send_notification('mint', t('accepted_metering_point_user_request'), @metering_point.name, 0, metering_point_path(@metering_point))
+          @user.send_notification('info', t('accepted_metering_point_user_request'), @metering_point.name, 0, metering_point_path(@metering_point))
           Notifier.send_email_notification_accepted_metering_point_user_request(@metering_point_user_request.user, current_user, @metering_point, 'request').deliver_now
         else
-          @metering_point.managers.first.send_notification('mint', t('accepted_metering_point_user_invitation'), @metering_point.name, 0, metering_point_path(@metering_point))
+          @metering_point.managers.first.send_notification('info', t('accepted_metering_point_user_invitation'), @metering_point.name, 0, metering_point_path(@metering_point))
           Notifier.send_email_notification_accepted_metering_point_user_request(@metering_point.managers.first, current_user, @metering_point, 'request').deliver_now
         end
         redirect_to metering_point_path(@metering_point)
