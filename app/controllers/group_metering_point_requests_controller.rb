@@ -60,6 +60,11 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
     if @group_metering_point_request.mode == 'request' && current_user.can_update?(@group_metering_point_request.group) || @group_metering_point_request.mode == 'invitation' && current_user.can_update?(@group_metering_point_request.metering_point)
       @group_metering_point_request.reject
       if @group_metering_point_request.save
+        if @group_metering_point_request.mode == 'request'
+          Notifier.send_email_rejected_group_metering_point_request(@group_metering_point_request.metering_point.managers.first, current_user, @group_metering_point_request.metering_point, @group_metering_point_request.group, 'request').deliver_now
+        else
+          Notifier.send_email_rejected_group_metering_point_request(@group_metering_point_request.group.managers.first, current_user, @group_metering_point_request.metering_point, @group_metering_point_request.group, 'invitation').deliver_now
+        end
         flash[:notice] = t('rejected_group_metering_point_request')
         redirect_to group_path(@group_metering_point_request.group)
       end

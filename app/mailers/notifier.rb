@@ -80,4 +80,29 @@ class Notifier < ActionMailer::Base
       mail(to: @receiver.email, subject: 'buzzn: ' + t('accepted_group_metering_point_invitation'))
     end
   end
+
+  def send_email_rejected_group_metering_point_request(receiver, sender, metering_point, group, mode)
+    @receiver = receiver
+    @sender = sender
+    @metering_point = metering_point
+    @mode = mode
+    @group = group
+    if @mode == "request"
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('rejected_group_metering_point_request'))
+    else
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('rejected_group_metering_point_invitation'))
+    end
+  end
+
+  def send_email_metering_point_exceeds_or_undershoots(receiver, metering_point, mode)
+    @receiver = receiver
+    @metering_point = metering_point
+    @mode = mode
+    if @mode == 'exceeds'
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('metering_point_exceeded_max_watt', @metering_point.max_watt))
+    else
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('metering_point_undershot_min_watt', @metering_point.min_watt))
+    end
+  end
+
 end

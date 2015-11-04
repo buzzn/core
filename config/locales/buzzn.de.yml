@@ -704,6 +704,15 @@ de:
   new_group_member: Neues Gruppenmitglied
   your_group_metering_point_request_has_been_accepted: "Deine Gruppenanfrage wurde akzeptiert."
   your_group_metering_point_invitation_has_been_accepted: "Deine Gruppeneinladung wurde akzeptiert."
+  your_group_metering_point_request_for_the_group_has_been_rejected: "Deine Gruppenanfrage an die Gruppe '%{group_name}' wurde abgelehnt."
+  to_look_for_another_group_please_visit_the_groups_index_page: "Um eine andere Gruppe zu finden besuche bitte die Gruppenübersicht."
+  index_page: Übersichtsseite
+  your_group_metering_point_invitation_for_metering_point_has_been_rejected: "Deine Gruppeneinladung an den Zählpunkt '%{metering_point_name}' wurde abgelehnt."
+  to_invite_more_users_please_visit_the_group_page: "Um weitere Benutzer einzuladen besuche bitte Deine Gruppe."
+  your_metering_point_exceeded_the_maximum_value_of: "Dein Zählpunkt %{metering_point_name} hat den Wert von %{max_watt} Watt überschritten."
+  you_receive_this_message_because_you_subscribed_to_this_event: "Du erhälst diese Nachricht, da Du angegeben hast, bei dem eingetretenen Ereignis benachrichtigt zu werden."
+  to_unsubscribe_this_event_please_visit_your_metering_point_and_change_this_setting: "Um keine Benachrichtigungen mehr bei diesem Ereignis zu erhalten besuche bitte Deinen Zählpunkt und ändere die Einstellungen."
+  your_metering_point_undershot_the_minimum_value_of: "Dein Zählpunkt %{metering_point_name} hat den Wert von %{min_watt} Watt unterschritten."
 
   system_message: Systemnachricht
   user_is_your_friend_now: "%{user_name} ist jetzt mit Dir befreundet."
