@@ -52,6 +52,8 @@ ready = ->
 
   $('.fa-info-circle').popover(placement: 'right', trigger: "hover" )
 
+  $('.change-order').popover(placement: 'right', trigger: "hover" )
+
   $(".likes").tooltip({html: true})
 
   $('[data-toggle="popover"]').popover(trigger: "hover")
