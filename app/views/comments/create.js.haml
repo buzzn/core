@@ -13,5 +13,6 @@
 - elsif @comment.commentable_type == 'PublicActivity::ORM::ActiveRecord::Activity'
   $("#activity_#{@comment.commentable_id}").find(".child-comments").append("#{escape_javascript( render @comment )}");
   $("#activity_#{@comment.commentable_id}").find(".comment-answer").css("display", "none");
+$(".likes").tooltip({html: true});
 
 

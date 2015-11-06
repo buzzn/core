@@ -31,7 +31,12 @@ class CommentsController < InheritedResources::Base
             end
           end
           if @comment.root.commentable_type == 'Group'
-            @comment.root.commentable.members.each{|user| if current_user != user then user.send_notification('info', I18n.t('new_comment_from_user', username: current_user.name), I18n.t('at_your_group', group_name: @comment.root.commentable.name), 0, group_path(@comment.root.commentable)) end}
+            @comment.root.commentable.members.each do |user|
+              if current_user != user
+                user.send_notification('info', I18n.t('new_comment_from_user', username: current_user.name), I18n.t('at_your_group', group_name: @comment.root.commentable.name), 0, group_path(@comment.root.commentable))
+                Notifier.send_email_new_comment(user, current_user, @comment.root.commentable, @comment.body).deliver_now
+              end
+            end
           end
           Pusher.trigger(@channel_name, 'new_comment', :id => @comment.id, :html => html, :root_id => @root_id, :root_type => @root_type, :socket_id => @socket_id)
           render "create", :locals => { :socket_id => @socket_id }
@@ -75,8 +80,8 @@ class CommentsController < InheritedResources::Base
     if @comment.commentable_type == "PublicActivity::ORM::ActiveRecord::Activity"
       @channel_name = @comment.commentable.trackable_type + '_' + @comment.commentable.trackable_id
     end
-    Pusher.trigger(@channel_name, 'likes_changed', :div => @div, :likes => @comment.get_likes.size, :socket_id => @socket_id)
-    render :json => { :likes => @comment.get_likes.size, :liked_by_current_user => current_user.liked?(@comment) }
+    Pusher.trigger(@channel_name, 'likes_changed', :div => @div, :likes => @comment.get_likes.size, :voters => @comment.get_likes.voters.collect(&:name).join(", "), :i18n_this_comment => t('this_comment'), :socket_id => @socket_id)
+    render :json => { :likes => @comment.get_likes.size, :liked_by_current_user => current_user.liked?(@comment), :voters => @comment.get_likes.voters.collect(&:name).join(", "), :i18n_this_comment => t('this_comment')}
   end
 
   def permitted_params

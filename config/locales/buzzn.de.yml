@@ -230,6 +230,7 @@ de:
   created_at: 'erstellt am:'
   created: 'erstellt'
   write_a_comment: Schreibe einen Kommentar
+  this_comment: diesen Kommentar
   are_you_sure_you_want_to_remove_this_comment: "Bist Du dir Sicher, dass Du diesen Kommentar löschen willst?"
   send_answer: Antworten
   answer_this_comment: Antworte auf diesen Kommentar
@@ -713,7 +714,10 @@ de:
   you_receive_this_message_because_you_subscribed_to_this_event: "Du erhälst diese Nachricht, da Du angegeben hast, bei dem eingetretenen Ereignis benachrichtigt zu werden."
   to_unsubscribe_this_event_please_visit_your_metering_point_and_change_this_setting: "Um keine Benachrichtigungen mehr bei diesem Ereignis zu erhalten besuche bitte Deinen Zählpunkt und ändere die Einstellungen."
   your_metering_point_undershot_the_minimum_value_of: "Dein Zählpunkt %{metering_point_name} hat den Wert von %{min_watt} Watt unterschritten."
-
+  to_unsubscribe_this_event_please_visit_your_group_and_change_this_setting: "Um keine Benachrichtigungen mehr bei diesem Ereignis zu erhalten besuche bitte Deine Gruppe und ändere die Einstellungen."
+  user_wrote_a_new_comment_at_the_group: "%{username} hat einen neuen Kommentar bei der Gruppe %{group_name} geschrieben."
+  user_wrote_a_new_comment_at_the_metering_point: "%{username} hat einen neuen Kommentar beim Zählpunkt %{metering_point_name} geschrieben."
+  new_comment: Neuer Kommentar
   system_message: Systemnachricht
   user_is_your_friend_now: "%{user_name} ist jetzt mit Dir befreundet."
   visit_users_profile_to_see_the_energy_data_that_is_visible_for_you: "Besuche das Profil von %{user_name} und sehe Dir die Energiedaten an, die jetzt für Dich sichtbar sind."

@@ -33,6 +33,8 @@ $(".comments-panel").ready ->
               that.find(".likes").first().find(".vote-icon").removeClass("fa-heart-o").addClass("fa-heart")
             else
               that.find(".likes").first().find(".vote-icon").removeClass("fa-heart").addClass("fa-heart-o")
+            that.find(".likes").first().attr('data-original-title', data.voters + ' ' + "<span><div class='fa fa-heart'></div></span>" + ' ' + data.i18n_this_comment)
+
 
       that.find(".comment-reply").on "click", ->
         if that.find(".comment-answer").css("display") == "none"
@@ -72,9 +74,12 @@ $(".comments-panel").ready ->
           .removeClass('uneditable-input')
           .removeAttr('disabled', 'disabled')
 
+      $(".likes").tooltip({html: true})
+
   channel.bind "likes_changed", (data) ->
     if pusher.connection.socket_id != data.socket_id
       $("##{data.div}").find(".likes").first().find(".likes-count").html(data.likes)
+      $("##{data.div}").find(".likes").first().attr('data-original-title', data.voters + ' ' + "<span><div class='fa fa-heart'></div></span>" + ' ' + data.i18n_this_comment)
 
 
   $(window).on 'beforeunload', ->
@@ -98,6 +103,8 @@ $(".comments-panel").ready ->
             that.find(".likes").first().find(".vote-icon").removeClass("fa-heart-o").addClass("fa-heart")
           else
             that.find(".likes").first().find(".vote-icon").removeClass("fa-heart").addClass("fa-heart-o")
+          that.find(".likes").first().attr('data-original-title', data.voters + ' ' + "<span><div class='fa fa-heart'></div></span>" + ' ' + data.i18n_this_comment)
+
     that.find(".comment-reply").on "click", ->
       if that.find(".comment-answer").css("display") == "none"
         that.find(".comment-answer").css("display", "block")
@@ -150,6 +157,8 @@ $(".comments-panel").ready ->
             that.find(".likes").first().find(".vote-icon").removeClass("fa-heart-o").addClass("fa-heart")
           else
             that.find(".likes").first().find(".vote-icon").removeClass("fa-heart").addClass("fa-heart-o")
+          that.find(".likes").first().attr('data-original-title', data.voters + ' ' + "<span><div class='fa fa-heart'></div></span>" + ' ' + data.i18n_this_comment)
+
     that.find(".comment-reply").on "click", ->
       if that.find(".comment-answer").css("display") == "none"
         that.find(".comment-answer").css("display", "block")

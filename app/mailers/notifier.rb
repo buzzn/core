@@ -105,4 +105,12 @@ class Notifier < ActionMailer::Base
     end
   end
 
+  def send_email_new_comment(receiver, sender, commentable, message)
+    @receiver = receiver
+    @sender = sender
+    @commentable = commentable
+    @message = message
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('new_comment'))
+  end
+
 end
