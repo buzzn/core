@@ -62,6 +62,14 @@ class Group < ActiveRecord::Base
     User.with_role :manager, self
   end
 
+  def energy_producers
+    MeteringPoint.includes(:users).by_group(self).outputs.collect(&:users).flatten
+  end
+
+  def energy_consumers
+    MeteringPoint.includes(:users).by_group(self).inputs.collect(&:users).flatten
+  end
+
   def member?(metering_point)
     self.metering_points.include?(metering_point) ? true : false
   end
@@ -69,7 +77,6 @@ class Group < ActiveRecord::Base
   def members
     (self.managers + MeteringPoint.includes(:users).by_group(self).outputs.collect(&:users).flatten + MeteringPoint.includes(:users).by_group(self).inputs.collect(&:users).flatten).uniq
   end
-
 
 
   def received_group_metering_point_requests

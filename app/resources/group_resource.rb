@@ -9,4 +9,8 @@ class GroupResource < ApplicationResource
 
 
   has_many :metering_points
+  has_many :devices
+  has_many :managers
+  has_many :energy_producers
+  has_many :energy_consumers
 end
