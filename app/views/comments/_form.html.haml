@@ -5,6 +5,8 @@
     = f.input :commentable_type, :as => :hidden, :value => comment.commentable_type
     - value = comment.parent_id.nil? ? {} : { value: comment.parent_id }
     = f.input :parent_id, input_html: {}.merge(value), as: :hidden
+    = f.input :chart_timestamp, :as => :hidden
+    = f.input :chart_resolution, :as => :hidden
     - if comment.parent_id.nil?
       .comment-form-image
         = f.input :image

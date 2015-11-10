@@ -74,6 +74,11 @@ class PublicActivity::ActivityDecorator < Draper::Decorator
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-minus-square fa-2x timeline-circle")
       end
+
+    when 'metering_point_user_membership.create'
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-user-plus fa-2x timeline-circle")
+      end
     end
   end
 

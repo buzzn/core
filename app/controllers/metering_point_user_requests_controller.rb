@@ -11,6 +11,7 @@ class MeteringPointUserRequestsController < InheritedResources::Base
     mode = params[:mode]
     if current_user.can_update?(metering_point)
       metering_point.users << current_user
+      metering_point.create_activity key: 'metering_point_user_membership.create', owner: current_user, recipient: metering_point
       flash[:notice] = t('you_were_added_successfully')
       redirect_to metering_point_path(metering_point)
     else
@@ -41,6 +42,7 @@ class MeteringPointUserRequestsController < InheritedResources::Base
     if @mode == 'request' && current_user.can_update?(@metering_point) || @mode == 'invitation'
       @metering_point_user_request.accept
       if @metering_point_user_request.save
+        @metering_point.create_activity key: 'metering_point_user_membership.create', owner: @user, recipient: @metering_point
         flash[:notice] = t('accepted_metering_point_user_request')
         if @mode == 'request'
           @user.send_notification('info', t('accepted_metering_point_user_request'), @metering_point.name, 0, metering_point_path(@metering_point))

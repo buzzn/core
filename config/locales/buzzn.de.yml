@@ -481,6 +481,7 @@ de:
   belongs_to_group: Gehört zur Gruppe
   has_joined_the_group_with_metering_point_html: "ist der Gruppe %{group_name} mit dem Zählpunkt %{metering_point_name} beigetreten"
   has_joined_the_group_with_a_metering_point_html: "ist der Gruppe %{group_name} mit einem Zählpunkt beigetreten"
+  has_joined_the_metering_point_html: "ist dem Zählpunkt %{metering_point_name} beigetreten"
   energy_producers: Stromgeber
   energy_consumers: Stromnehmer
   device_properties: Geräteeigenschaften
@@ -590,6 +591,7 @@ de:
   sent_request_with_metering_point: "Anfrage mit Zählpunkt %{metering_point_name} gesendet"
   metering_point_tree: Zählpunktanordnung
   metering_point_created_successfully: Der Zählpunkt wurde erfolgreich erstellt
+  metering_point_deleted_successfully: Der Zählpunkt wurde erfolgreich gelöscht
   manufacturer: Hersteller
   slp: SLP
   edit_contract: Vertrag bearbeiten
@@ -599,11 +601,13 @@ de:
   enter_your_text: Text hier eingeben
   out_metering_points: Produktionszählpunkte
   create_comment: Kommentar erstellen
+  create_new_comment_here: Neuen Kommentar hier erstellen
   friend_request: Freundschaftsanfrage
   create_contract: Vertrag erstellen
   prev: Zurück
   next: Weiter
   zoom_out: Zoom out
+  zoom_in_here_if_possible: Hineinzoomen wenn möglich
   help: Hilfe
   remove_from_dashboard: Vom Dashboard entfernen
   display_in_series: Im Diagramm anzeigen

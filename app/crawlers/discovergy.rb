@@ -60,7 +60,7 @@ class Discovergy
   def get_day( meter_uid, timestamp)
     datetime = Time.at(timestamp.to_i/1000).in_time_zone
     response = @conn.get do |req|
-      req.url '/json/Api.getDay'
+      req.url '/json/Api.getDayEveryFifteenMinutes'
       req.headers['Content-Type'] = 'application/json'
       req.params['user']          = @username
       req.params['password']      = @password

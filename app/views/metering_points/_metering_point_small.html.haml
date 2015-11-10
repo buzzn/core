@@ -8,7 +8,7 @@
       .panel-body{class: "bg-#{metering_point.mode_class}" }
 
         .chart{id: "chart-container-#{metering_point.id}", style: "width: 100%; height: 70px;"}
-          = t('loading') + '...'
+          .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
 
       .bg-light.pad-ver
         %h4.mar-no.text-thin

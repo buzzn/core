@@ -9,6 +9,9 @@
       %h5= link_to(comment.user.name, profile_path(comment.user.profile))
 
       %p= link_to(image_tag(comment.image.lg), image_path(comment.image)) if comment.image.present?
+      - if comment.chart_timestamp
+        %span.pull-left.set-chart-view{data: {'commentable_type' => comment.commentable_type, 'commentable_id' => comment.commentable_id, 'resolution' => comment.chart_resolution, 'timestamp' => comment.chart_timestamp.to_i*1000}}
+          .fa.fa-bar-chart
 
       %p= auto_link(comment.body, :html => { :target => '_blank' })
 

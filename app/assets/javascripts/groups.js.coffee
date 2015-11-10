@@ -398,6 +398,7 @@ $(".bubbles_container").ready ->
   group_id = $(this).attr('data-content')
   $.ajax({url: '/groups/' + group_id + '/bubbles_data'})
     .success (data) ->
+      $(".waiting-spinner").hide()
       data_in = data.in
       data_out = data.out
 

@@ -5,10 +5,14 @@ class CommentsController < InheritedResources::Base
   def create
     @comment_hash = params[:comment]
     @obj = @comment_hash[:commentable_type].constantize.find(@comment_hash[:commentable_id])
-    if user_signed_in? #TODO: bring commentable_by? to work
+    if user_signed_in?
       @comment = Comment.build_from(@obj, current_user.id, @comment_hash[:body], @comment_hash[:parent_id])
       if @comment_hash[:image].present?
         @comment.image = @comment_hash[:image]
+      end
+      if @comment_hash[:chart_timestamp].present?
+        @comment.chart_timestamp = Time.at(@comment_hash[:chart_timestamp].to_i/1000).to_datetime
+        @comment.chart_resolution = @comment_hash[:chart_resolution]
       end
       create! do |success, failure|
         success.js {
@@ -83,6 +87,7 @@ class CommentsController < InheritedResources::Base
     Pusher.trigger(@channel_name, 'likes_changed', :div => @div, :likes => @comment.get_likes.size, :voters => @comment.get_likes.voters.collect(&:name).join(", "), :i18n_this_comment => t('this_comment'), :socket_id => @socket_id)
     render :json => { :likes => @comment.get_likes.size, :liked_by_current_user => current_user.liked?(@comment), :voters => @comment.get_likes.voters.collect(&:name).join(", "), :i18n_this_comment => t('this_comment')}
   end
+
 
   def permitted_params
     params.permit(:comment => [:title, :body, :subject, :user_id, :commentable_id, :commentably_type, :parent_id, :image])

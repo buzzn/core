@@ -105,14 +105,22 @@
           .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-next.pull-right.fa.fa-chevron-right.fa-2x{disabled: "disabled"}
 
           .chart{id: "chart-container-#{@metering_point.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
-            .fa.fa-spinner.fa-spin
+            .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
+          %ul.chart-context-menu
+            %li{"data-action" => "comment"}= t('create_new_comment_here')
+            /%li{"data-action" => "zoom_in"}= t('zoom_in_here_if_possible')
+          .chart-comment-form
+            .comments-panel{data: {commentable_type: 'MeteringPoint', commentable_id: @metering_point.id} }
+              .comment-form-container
+                = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@metering_point, current_user.id, "", nil) }
 
 
-            / .text-center
-            /   - if !@metering_point.smart?
-            /     .new-reading
-            /       = @metering_point.submit_reading
-            /       = @metering_point.edit_readings
+
+          / .text-center
+          /   - if !@metering_point.smart?
+          /     .new-reading
+          /       = @metering_point.submit_reading
+          /       = @metering_point.edit_readings
 
 
   .row
@@ -161,9 +169,8 @@
               .col-lg-12.text-center
                 = @metering_point.new_address
 
-
-    .col-md-6.col-lg-6
       - if user_signed_in? && current_user.can_update?(@metering_point)
+        %hr
         - if !@metering_point.virtual
           %h1.page-header.text-overflow
             %span
@@ -188,7 +195,31 @@
           .row
             .formula_parts.metering_points
               = render @metering_point.formula_parts if @metering_point.formula_parts.any?
-        %hr
+
+
+
+    .col-md-6.col-lg-6
+
+      - if user_signed_in?
+        /.col-sm-6.col-md-6.col-lg-6
+        %h1.page-header.text-overflow
+          %span
+            = t('comments')
+        .panel.comments-panel{data: {commentable_type: 'MeteringPoint', commentable_id: @metering_point.id} }
+          #demo-chat-body.collapse.in
+            .nano{:style => "height:610px"}
+              .comment-form-container
+                = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@metering_point, current_user.id, "", nil) }
+              .nano-content.pad-all.comments-content
+                %ul.list-unstyled.media-block.comments-all
+                  - @activities_and_comments.each do |object|
+                    - if object.class.name == 'Comment'
+                      = render :partial => 'comments/comment', :collection => [object], :as => :comment
+                    -elsif object.class.name == 'PublicActivity::Activity'
+                      = render_activity object, locals: {decorator: object.decorate} , layout: "layouts/activity_wrapper"
+
+
+
 
 
       / - if user_signed_in? && current_user.can_update?(@metering_point)

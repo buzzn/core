@@ -5,12 +5,15 @@ class MeteringPointsController < ApplicationController
 
 
   def show
-    @metering_point = MeteringPoint.find(params[:id]).decorate
-    @profiles       = @metering_point.profiles
-    @devices        = @metering_point.devices
-    @group          = @metering_point.group
-    @meter          = @metering_point.meter
-    @requests       = @metering_point.received_user_requests
+    @metering_point                 = MeteringPoint.find(params[:id]).decorate
+    @profiles                       = @metering_point.profiles
+    @devices                        = @metering_point.devices
+    @group                          = @metering_point.group
+    @meter                          = @metering_point.meter
+    @requests                       = @metering_point.received_user_requests
+    @all_comments                   = @metering_point.root_comments
+    @activities                     = @metering_point.activities.metering_point_joins
+    @activities_and_comments        = (@all_comments + @activities).sort_by!(&:created_at).reverse!
     puts request.env['SERVER_NAME']
     Browser.modern_rules.clear
     Browser.modern_rules << -> b { b.firefox? && b.version.to_i >= 41 }
@@ -40,6 +43,7 @@ class MeteringPointsController < ApplicationController
       current_user.add_role(:manager, @metering_point)
       #@metering_point.create_activity key: 'metering_point.create', owner: current_user
       respond_with @metering_point.decorate
+      flash[:notice] = t('metering_point_created_successfully')
     else
       render :new
     end
@@ -67,6 +71,7 @@ class MeteringPointsController < ApplicationController
     authorize_action_for @metering_point
     @metering_point.destroy
     respond_with current_user.profile
+    flash[:notice] = t('metering_point_deleted_successfully')
   end
 
 

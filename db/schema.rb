@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151023150629) do
+ActiveRecord::Schema.define(version: 20151109114235) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,8 @@ ActiveRecord::Schema.define(version: 20151023150629) do
     t.integer  "likes",            default: 0
     t.uuid     "parent_id"
     t.string   "image"
+    t.string   "chart_resolution"
+    t.datetime "chart_timestamp"
   end
 
   add_index "comments", ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type", using: :btree
