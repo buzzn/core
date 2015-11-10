@@ -165,6 +165,8 @@ $(".metering_point_detail").ready ->
             events:
               click: (event) ->
                 Chart.Functions.zoomIn(event.point.x)
+            marker:
+              enabled: false
           column:
             borderWidth: 0
             cursor: 'pointer'
@@ -350,6 +352,8 @@ $(".dashboard-chart").ready ->
                   events:
                     click: (event) ->
                       Chart.Functions.zoomInDashboard(event.point.x)
+                  marker:
+                    enabled: false
                 column:
                   borderWidth: 0
                   cursor: 'pointer'
@@ -578,6 +582,8 @@ $(".group-chart").ready ->
               events:
                 click: (event) ->
                   Chart.Functions.zoomInGroup(event.point.x)
+              marker:
+                enabled: false
             column:
               cursor: 'pointer'
               events:
