@@ -8,6 +8,7 @@ window.addEventListener 'pageshow', (event)->
   randomvalue = Math.random()
   #console.log("page_show " + randomvalue)
   window.wisActive = true
+  window.wwasInactive = false
 
 window.addEventListener 'pagehide', (event)->
   window.wisActive = false
