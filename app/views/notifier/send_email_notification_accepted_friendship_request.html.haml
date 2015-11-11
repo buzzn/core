@@ -1,0 +1,6 @@
+%p
+  = t('hello') + " #{@receiver.name}!"
+%p= t('user_is_your_friend_now', user_name: @sender.name)
+%p= t('visit_users_profile_to_see_the_energy_data_that_is_visible_for_you', user_name: @sender.name)
+%p= link_to t('users_profile', user_name: @sender.name), profile_url(@sender.profile)
+%p= t('your_buzzn_team')

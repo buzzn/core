@@ -8,11 +8,11 @@ class Discovergy
 
   # Discovergy.new('karin.smith@solfux.de', '19200buzzn').raw_with_power(60051431)
 
-  # Discovergy.new('team@buzzn-metering.de', 'Zebulon_4711').raw_with_power(60139082)
+  # Discovergy.new('team@localpool.de', 'Zebulon_4711').raw_with_power(60139082)
 
 
 
-  # discovergy  = Discovergy.new('team@buzzn-metering.de', 'Zebulon_4711')
+  # discovergy  = Discovergy.new('team@localpool.de', 'Zebulon_4711')
   # date        = Time.now.in_time_zone
   # start       = date.beginning_of_hour
   # ending      = start + 1.minute
@@ -60,7 +60,7 @@ class Discovergy
   def get_day( meter_uid, timestamp)
     datetime = Time.at(timestamp.to_i/1000).in_time_zone
     response = @conn.get do |req|
-      req.url '/json/Api.getDay'
+      req.url '/json/Api.getDayEveryFifteenMinutes'
       req.headers['Content-Type'] = 'application/json'
       req.params['user']          = @username
       req.params['password']      = @password

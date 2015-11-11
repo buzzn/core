@@ -45,6 +45,7 @@ class BubbleChart
     @totalPowerOut = 0
     @radius_scale = null
     @zoomFactor = 1
+    @input_in_front = true
 
     # nice looking colors - no reason to buck the trend
     @fill_color = d3.scale.ordinal()
@@ -379,6 +380,10 @@ class BubbleChart
 
 
 
+
+
+
+
 root = exports ? this
 timers = []
 
@@ -393,6 +398,7 @@ $(".bubbles_container").ready ->
   group_id = $(this).attr('data-content')
   $.ajax({url: '/groups/' + group_id + '/bubbles_data'})
     .success (data) ->
+      $(".waiting-spinner").hide()
       data_in = data.in
       data_out = data.out
 
@@ -428,6 +434,19 @@ $(".bubbles_container").ready ->
           )
 
       $(window).on "resize:end", chart.calculateNewCenter
+
+  $(".change-order").on 'click', ->
+    sel = d3.select(chart.circles)
+    console.log sel
+    if chart.input_in_front
+      sel.moveToBack()
+      chart.input_in_front = false
+    else
+      sel.moveToFront()
+      chart.input_in_front = true
+    return
+
+
 
 
 # $(".group_scores").ready ->
@@ -480,6 +499,20 @@ clearTimers = ->
     window.clearInterval timers[i]
     i++
   timers = []
+
+d3.selection::moveToFront = ->
+  @each ->
+    @each ->
+      @parentNode.appendChild this
+      return
+
+d3.selection::moveToBack = ->
+  @each ->
+    @each ->
+      firstChild = @parentNode.firstChild
+      if firstChild
+        @parentNode.insertBefore this, firstChild
+      return
 
 
 $(document).on('page:before-change', clearTimers)

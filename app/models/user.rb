@@ -138,15 +138,23 @@ class User < ActiveRecord::Base
   end
 
   #defined types: primary, info, success, warning, danger, mint, purple, pink, dark
-  def send_notification(type, header, message, duration)
+  def send_notification(type, header, message, duration, url)
+    if url
+      ActionView::Base.send(:include, Rails.application.routes.url_helpers)
+      @message = ActionController::Base.helpers.link_to(message, url)
+      @header = ActionController::Base.helpers.link_to(header, url)
+    else
+      @message = message
+      @header = header
+    end
     Sidekiq::Client.push({
      'class' => PushNotificationWorker,
      'queue' => :default,
      'args' => [
                 self.id,
                 type,
-                header,
-                message,
+                @header,
+                @message,
                 duration
                ]
     })

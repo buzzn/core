@@ -31,7 +31,7 @@
       %p.speech-time.time
         %i.fa.fa-clock-o.fa-fw
         = timeago_tag @a.created_at, :nojs => true, :lang => locale, :limit => 10.days.ago
-      .likes
+      .likes{'data-toggle' => 'tooltip', 'title' => @a.get_likes.size > 0 ? (@a.get_likes.voters.collect(&:name).join(", ") + ' ' + "<span><div class='fa fa-heart'></div></span>" + ' ' + t('this_comment')) : '' }
         .speech-time
           - if user_signed_in?
             - if current_user.liked?(@a)

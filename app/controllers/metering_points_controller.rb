@@ -5,12 +5,15 @@ class MeteringPointsController < ApplicationController
 
 
   def show
-    @metering_point = MeteringPoint.find(params[:id]).decorate
-    @profiles       = @metering_point.profiles
-    @devices        = @metering_point.devices
-    @group          = @metering_point.group
-    @meter          = @metering_point.meter
-    @requests       = @metering_point.received_user_requests
+    @metering_point                 = MeteringPoint.find(params[:id]).decorate
+    @profiles                       = @metering_point.profiles
+    @devices                        = @metering_point.devices
+    @group                          = @metering_point.group
+    @meter                          = @metering_point.meter
+    @requests                       = @metering_point.received_user_requests
+    @all_comments                   = @metering_point.root_comments
+    @activities                     = @metering_point.activities.metering_point_joins
+    @activities_and_comments        = (@all_comments + @activities).sort_by!(&:created_at).reverse!
     puts request.env['SERVER_NAME']
     Browser.modern_rules.clear
     Browser.modern_rules << -> b { b.firefox? && b.version.to_i >= 41 }
@@ -40,6 +43,7 @@ class MeteringPointsController < ApplicationController
       current_user.add_role(:manager, @metering_point)
       #@metering_point.create_activity key: 'metering_point.create', owner: current_user
       respond_with @metering_point.decorate
+      flash[:notice] = t('metering_point_created_successfully')
     else
       render :new
     end
@@ -67,6 +71,7 @@ class MeteringPointsController < ApplicationController
     authorize_action_for @metering_point
     @metering_point.destroy
     respond_with current_user.profile
+    flash[:notice] = t('metering_point_deleted_successfully')
   end
 
 
@@ -94,13 +99,6 @@ class MeteringPointsController < ApplicationController
   end
   authority_actions :edit_readings => 'update'
 
-  def cancel_membership
-    @metering_point = MeteringPoint.find(params[:id])
-    @user = User.find(params[:user_id])
-    @metering_point.users.delete(@user)
-    redirect_to metering_point_path(@metering_point)
-  end
-
   def send_invitations
     @metering_point = MeteringPoint.find(params[:id])
   end
@@ -108,21 +106,17 @@ class MeteringPointsController < ApplicationController
   def send_invitations_update
     @metering_point = MeteringPoint.find(params[:id])
     if params[:metering_point][:invite_via_email] == "true"
-      if params[:metering_point][:email] == "" #|| params[:metering_point][:email_confirmation] == ""
+      if params[:metering_point][:email] == ""
         @metering_point.errors.add(:email, I18n.t("cant_be_blank"))
-#        @metering_point.errors.add(:email_confirmation,  I18n.t("cant_be_blank"))
         render action: 'send_invitations', invite_via_email: 'checked'
-#      elsif params[:metering_point][:email] != params[:metering_point][:email_confirmation]
-#        @metering_point.errors.add(:email, I18n.t("doesnt_match_with_confirmation"))
-#        @metering_point.errors.add(:email_confirmation, I18n.t("doesnt_match_with_email"))
-#        render action: 'send_invitations', invite_via_email: 'checked'
       else
         @email = params[:metering_point][:email]
         @existing_users = User.where(email: @email)
         if @existing_users.any?
           if MeteringPointUserRequest.where(metering_point: @metering_point).where(user: @existing_users.first).empty? && !@metering_point.users.include?(@existing_users.first)
             if MeteringPointUserRequest.create(user: @existing_users.first, metering_point: @metering_point, mode: 'invitation')
-              @existing_users.first.send_notification('mint', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 4000)
+              @existing_users.first.send_notification('info', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0, profile_path(@existing_users.first.profile))
+              Notifier.send_email_notification_new_metering_point_user_request(@existing_users.first, @metering_point.managers.first, @metering_point, 'invitation').deliver_now
               flash[:notice] = t('sent_metering_point_user_invitation_successfully')
             else
               flash[:error] = t('unable_to_send_metering_point_user_invitation')
@@ -141,7 +135,8 @@ class MeteringPointsController < ApplicationController
     else
       @new_user = User.find(params[:metering_point][:new_users])
       if MeteringPointUserRequest.create(user: @new_user, metering_point: @metering_point, mode: 'invitation')
-        @new_user.send_notification('mint', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 4000)
+        @new_user.send_notification('info', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0, profile_path(@new_user.profile))
+        Notifier.send_email_notification_new_metering_point_user_request(@new_user, @metering_point.managers.first, @metering_point, 'invitation').deliver_now
         flash[:notice] = t('sent_metering_point_user_invitation_successfully')
       else
         flash[:error] = t('unable_to_send_metering_point_user_invitation')
@@ -154,6 +149,13 @@ class MeteringPointsController < ApplicationController
     @metering_point = MeteringPoint.find(params[:id])
     @user = User.find(params[:user_id])
     @metering_point.users.delete(@user)
+    if @user == current_user
+      flash[:notice] = t('metering_point_left_successfully', metering_point_name: @metering_point.name)
+    else
+      flash[:notice] = t('user_removed_successfully', username: @user.name)
+      Notifier.send_email_removed_from_metering_point(@user, current_user, @metering_point).deliver_now
+      @user.send_notification('info', t('notifiaction'), t('user_removed_you_from_metering_point', username: @current_user.name, metering_point_name: @metering_point.name), 0, metering_point_path(@metering_point))
+    end
     redirect_to metering_point_path(@metering_point)
   end
 
@@ -256,6 +258,9 @@ private
       :image,
       :mode,
       :readable,
+      :observe,
+      :min_watt,
+      :max_watt,
       :virtual,
       :forecast_kwh_pa,
       :group_id,

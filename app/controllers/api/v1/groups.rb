@@ -131,6 +131,37 @@ module API
 
 
 
+        desc "Return the related managers for Group"
+        params do
+          requires :id, type: String, desc: "ID of the profile"
+        end
+        get ":id/managers" do
+          group = Group.where(id: permitted_params[:id]).first!
+          group.managers
+        end
+
+
+        desc "Return the related energy-producers for Group"
+        params do
+          requires :id, type: String, desc: "ID of the profile"
+        end
+        get ":id/energy-producers" do
+          group = Group.where(id: permitted_params[:id]).first!
+          group.energy_producers
+        end
+
+
+        desc "Return the related energy-consumers for Group"
+        params do
+          requires :id, type: String, desc: "ID of the profile"
+        end
+        get ":id/energy-consumers" do
+          group = Group.where(id: permitted_params[:id]).first!
+          group.energy_consumers
+        end
+
+
+
 
       end
     end

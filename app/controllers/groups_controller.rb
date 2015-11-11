@@ -64,8 +64,10 @@ class GroupsController < ApplicationController
     authorize_action_for @group
     if @group.save
       current_user.add_role :manager, @group
+      flash[:notice] = t('group_created_successfully')
       respond_with @group.decorate
     else
+      flash[:error] = t('failed_to_create_group')
       render :new
     end
   end
@@ -106,7 +108,8 @@ class GroupsController < ApplicationController
       if GroupMeteringPointRequest.where(metering_point: @metering_point).where(group: @group).empty? && !@group.metering_points.include?(@metering_point)
         @group_invitation = GroupMeteringPointRequest.new(user: @metering_point.managers.first, metering_point: @metering_point, group: @group, mode: 'invitation')
         if @group_invitation.save
-          @metering_point.managers.first.send_notification('mint', t('new_group_metering_point_invitation'), @group.name, 4000)
+          @metering_point.managers.first.send_notification('info', t('new_group_metering_point_invitation'), @group.name, 0, profile_path(@metering_point.managers.first.profile))
+          Notifier.send_email_new_group_metering_point_request(@metering_point.managers.first, current_user, @metering_point, @group, 'invitation')
           flash[:notice] = t('sent_group_metering_point_invitation_successfully')
         else
           flash[:error] = t('unable_to_send_group_metering_point_invitation')
@@ -163,6 +166,7 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     authorize_action_for @group
     @group.destroy
+    flash[:notice] = t('group_destroyed_successfully')
     respond_with current_user.profile
   end
 

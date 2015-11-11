@@ -40,7 +40,7 @@ end
 
 Fabricator :mpoc_buzzn_metering, from: :metering_point_operator_contract do
   organization  { Organization.find('buzzn-metering') }
-  username      'team@buzzn-metering.de'
+  username      'team@localpool.de'
   password      'Zebulon_4711'
 end
 

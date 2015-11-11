@@ -53,12 +53,11 @@
 //= require metering_points
 //= require groups
 //= require bubble_tooltip
-//= require users
 //= require tour
 //= require comments
+//= require users
 
 
 
-//= require turbolinks
 // don't require libs below this command
 

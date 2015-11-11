@@ -62,10 +62,21 @@ class Group < ActiveRecord::Base
     User.with_role :manager, self
   end
 
+  def energy_producers
+    MeteringPoint.includes(:users).by_group(self).outputs.collect(&:users).flatten
+  end
+
+  def energy_consumers
+    MeteringPoint.includes(:users).by_group(self).inputs.collect(&:users).flatten
+  end
+
   def member?(metering_point)
     self.metering_points.include?(metering_point) ? true : false
   end
 
+  def members
+    (self.managers + MeteringPoint.includes(:users).by_group(self).outputs.collect(&:users).flatten + MeteringPoint.includes(:users).by_group(self).inputs.collect(&:users).flatten).uniq
+  end
 
 
   def received_group_metering_point_requests
@@ -343,7 +354,7 @@ class Group < ActiveRecord::Base
     def validate_localpool
       if self.mode == 'localpool'
         if self.contracts.metering_point_operators.empty?
-          @contract = Contract.new(mode: 'metering_point_operator_contract', price_cents: 0, group: self, organization: Organization.find('buzzn-metering'), username: 'team@buzzn-metering.de', password: 'Zebulon_4711')
+          @contract = Contract.new(mode: 'metering_point_operator_contract', price_cents: 0, group: self, organization: Organization.find('buzzn-metering'), username: 'team@localpool.de', password: 'Zebulon_4711')
         else
           @contract = self.contracts.metering_point_operators.first
         end

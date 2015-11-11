@@ -2,19 +2,15 @@ de:
   flash:
     actions:
       create:
-        notice: "%{resource_name} wurde erfolgreich gespeichert."
+        notice: "%{resource_name} erfolgreich erstellt."
+        error: "%{resource_name} konnte nicht erstellt werden."
       update:
-        notice: "%{resource_name} wurde erfolgreich bearbeitet."
+        notice: "%{resource_name} erfolgreich bearbeitet."
+        error: "%{resource_name} konnte nicht bearbeitet werden."
       destroy:
-        notice: "%{resource_name} wurde erfolgreich gelöscht."
-        alert: "%{resource_name} konnte nicht gelöscht werden."
+        notice: "%{resource_name} erfolgreich gelöscht."
+        error: "%{resource_name} konnte nicht gelöscht werden."
     dashboard:
       add_metering_point:
-        notice: "%{resource_name} erfolgreich hinzugefügt."
-        alert: "%{resource_name} konnte nicht hinzugefügt werden."
-    meters:
-      destroy:
-        notice: "Messgerät wurde erfolgreich gelöscht."
-    metering_points:
-      destroy:
-        notice: "Zählpunkt wurde erfolgreich gelöscht."
+        notice: "Der Zählpunkt wurde erfolgreich hinzugefügt."
+        error: "Der Zählpunkt konnte nicht hinzugefügt werden."

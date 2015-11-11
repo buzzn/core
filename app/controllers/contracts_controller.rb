@@ -19,7 +19,7 @@ class ContractsController < ApplicationController
     authorize_action_for @contract
     @contract.contracting_party = current_user.contracting_party if current_user.contracting_party
     if @contract.organization.slug == 'buzzn-metering'
-      @contract.username = 'team@buzzn-metering.de'
+      @contract.username = 'team@localpool.de'
       @contract.password = 'Zebulon_4711'
     end
     if @contract.save

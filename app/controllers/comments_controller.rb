@@ -5,10 +5,14 @@ class CommentsController < InheritedResources::Base
   def create
     @comment_hash = params[:comment]
     @obj = @comment_hash[:commentable_type].constantize.find(@comment_hash[:commentable_id])
-    if user_signed_in? #TODO: bring commentable_by? to work
+    if user_signed_in?
       @comment = Comment.build_from(@obj, current_user.id, @comment_hash[:body], @comment_hash[:parent_id])
       if @comment_hash[:image].present?
         @comment.image = @comment_hash[:image]
+      end
+      if @comment_hash[:chart_timestamp].present?
+        @comment.chart_timestamp = Time.at(@comment_hash[:chart_timestamp].to_i/1000).to_datetime
+        @comment.chart_resolution = @comment_hash[:chart_resolution]
       end
       create! do |success, failure|
         success.js {
@@ -28,6 +32,14 @@ class CommentsController < InheritedResources::Base
             else
               @root_id = @comment.parent_id
               @root_type = "Comment"
+            end
+          end
+          if @comment.root.commentable_type == 'Group'
+            @comment.root.commentable.members.each do |user|
+              if current_user != user
+                user.send_notification('info', I18n.t('new_comment_from_user', username: current_user.name), I18n.t('at_your_group', group_name: @comment.root.commentable.name), 0, group_path(@comment.root.commentable))
+                Notifier.send_email_new_comment(user, current_user, @comment.root.commentable, @comment.body).deliver_now
+              end
             end
           end
           Pusher.trigger(@channel_name, 'new_comment', :id => @comment.id, :html => html, :root_id => @root_id, :root_type => @root_type, :socket_id => @socket_id)
@@ -64,6 +76,7 @@ class CommentsController < InheritedResources::Base
         @comment.unliked_by current_user
       else
         @comment.liked_by current_user
+        @comment.user.send_notification('info', I18n.t('user_liked_your_comment', username: current_user.name), I18n.t('at_resource', resource_name: @comment.root.commentable.name, resource_type: @comment.root.commentable_type), 0, nil)
       end
     end
     @channel_name = @comment.commentable_type + '_' + @comment.commentable_id
@@ -71,9 +84,10 @@ class CommentsController < InheritedResources::Base
     if @comment.commentable_type == "PublicActivity::ORM::ActiveRecord::Activity"
       @channel_name = @comment.commentable.trackable_type + '_' + @comment.commentable.trackable_id
     end
-    Pusher.trigger(@channel_name, 'likes_changed', :div => @div, :likes => @comment.get_likes.size, :socket_id => @socket_id)
-    render :json => { :likes => @comment.get_likes.size, :liked_by_current_user => current_user.liked?(@comment) }
+    Pusher.trigger(@channel_name, 'likes_changed', :div => @div, :likes => @comment.get_likes.size, :voters => @comment.get_likes.voters.collect(&:name).join(", "), :i18n_this_comment => t('this_comment'), :socket_id => @socket_id)
+    render :json => { :likes => @comment.get_likes.size, :liked_by_current_user => current_user.liked?(@comment), :voters => @comment.get_likes.voters.collect(&:name).join(", "), :i18n_this_comment => t('this_comment')}
   end
+
 
   def permitted_params
     params.permit(:comment => [:title, :body, :subject, :user_id, :commentable_id, :commentably_type, :parent_id, :image])

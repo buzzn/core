@@ -1,11 +1,12 @@
 class MeteringPoint < ActiveRecord::Base
   resourcify
+  acts_as_commentable
   include Authority::Abilities
   include CalcVirtualMeteringPoint
 
   include PublicActivity::Model
-  #tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
-  #tracked recipient: Proc.new{ |controller, model| controller && model }
+  tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
+  tracked recipient: Proc.new{ |controller, model| controller && model }
 
   belongs_to :group
   belongs_to :meter
@@ -347,6 +348,19 @@ class MeteringPoint < ActiveRecord::Base
 
     end
   end
+
+
+
+  def self.observe
+    MeteringPoint.where(observe: true).each do |metering_point|
+      Sidekiq::Client.push({
+       'class' => MeteringPointObserveWorker,
+       'queue' => :default,
+       'args' => [metering_point.id]
+      })
+    end
+  end
+
 
   def self.calculate_scores
     MeteringPoint.all.select(:id, :mode).each.each do |metering_point|

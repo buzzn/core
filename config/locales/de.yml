@@ -225,3 +225,11 @@ de:
       device: Gerät
       contracting_party: Vertragspartner
       comment: Kommentar
+      group: Gruppe
+      meter: Messgerät
+      contract: Vertrag
+      address: Adresse
+      bank_account: Bankverbindung
+      organization: Firma
+      profile: Profil
+      user: Benutzer
