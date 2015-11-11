@@ -223,6 +223,18 @@ class GroupsController < ApplicationController
     render json: result.to_json
   end
 
+  def chart_comments
+    @group = Group.find(params[:id])
+    @resolution = params[:resolution]
+    @timestamp = params[:containing_timestamp]
+    @comments = @group.chart_comments(@resolution, @timestamp)
+    result = []
+    @comments.each do |comment|
+      result << {comment_id: comment.id, user_image: comment.user.profile.decorate.picture('xs'), body: comment.body, chart_timestamp: comment.chart_timestamp.to_i*1000}
+    end
+    render json: { comments: result }
+  end
+
 
 
 

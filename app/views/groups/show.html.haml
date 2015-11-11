@@ -182,6 +182,7 @@
             %ul.chart-context-menu
               %li{"data-action" => "comment"}= t('create_new_comment_here')
               /%li{"data-action" => "zoom_in"}= t('zoom_in_here_if_possible')
+            .chart-comments
             .chart-comment-form
               .comments-panel{data: {commentable_type: 'Group', commentable_id: @group.id} }
                 .comment-form-container

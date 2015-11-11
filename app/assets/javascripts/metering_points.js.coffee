@@ -620,6 +620,7 @@ $(".group-chart").ready ->
         #checkIfPreviousDataExistsGroup()
         #checkIfNextDataExistsGroup()
       Chart.Functions.activateButtons(true)
+      Chart.Functions.getChartComments('groups', group_id, chart_data_min_x)
     .error (jqXHR, textStatus, errorThrown) ->
       console.log textStatus
       $('#chart-container-' + group_id).html('error')
@@ -969,6 +970,7 @@ namespace 'Chart.Functions', (exports) ->
         Chart.Functions.setChartType(true)
         chart.hideLoading()
         Chart.Functions.activateButtons(true)
+        Chart.Functions.getChartComments(resource, id, chart_data_min_x)
       .error (jqXHR, textStatus, errorThrown) ->
         chart.hideLoading()
         console.log textStatus
