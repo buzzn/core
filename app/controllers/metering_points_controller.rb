@@ -246,7 +246,17 @@ class MeteringPointsController < ApplicationController
   end
 
 
-
+  def chart_comments
+    @metering_point = MeteringPoint.find(params[:id])
+    @resolution = params[:resolution]
+    @timestamp = params[:containing_timestamp]
+    @comments = @metering_point.chart_comments(@resolution, @timestamp)
+    result = []
+    @comments.each do |comment|
+      result << {comment_id: comment.id, user_image: comment.user.profile.decorate.picture('xs'), body: comment.body, chart_timestamp: comment.chart_timestamp.to_i*1000}
+    end
+    render json: { comments: result }
+  end
 
 
 

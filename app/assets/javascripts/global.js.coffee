@@ -135,6 +135,7 @@ resizeChart = (duration) ->
       chart = $("#" + $(this).attr('id')).highcharts()
       if chart != undefined
         chart.setSize($(this).width(), $(this).height(), doAnimation = false)
+        Chart.Functions.resizeChartComments(false)
     return
   ), duration
   return

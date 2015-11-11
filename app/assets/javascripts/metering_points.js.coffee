@@ -189,6 +189,7 @@ $(".metering_point_detail").ready ->
       chart_data_min_x = chart.series[0].data[0].x
       createChartTimer([id], 'metering_point')
       Chart.Functions.activateButtons(true)
+      Chart.Functions.getChartComments('metering_points', id, chart_data_min_x)
     .error (jqXHR, textStatus, errorThrown) ->
       console.log textStatus
       $('#chart-container-' + id).html('error')
@@ -938,6 +939,7 @@ namespace 'Chart.Functions', (exports) ->
         Chart.Functions.setChartType(false)
         chart.hideLoading()
         Chart.Functions.activateButtons(true)
+        Chart.Functions.getChartComments(resource, id, containing_timestamp)
       .error (jqXHR, textStatus, errorThrown) ->
         console.log textStatus
         $('#chart-container-' + id).html('error')
@@ -1032,8 +1034,62 @@ namespace 'Chart.Functions', (exports) ->
     return end.getTime()
 
 
+  exports.getChartComments = (resource, resource_id, containing_timestamp) ->
+    $.ajax({url: '/' + resource + '/' + resource_id + '/chart_comments?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, dataType: 'json'})
+      .success (data) ->
+        $('.chart-comments').find('.chart-comment').each ->
+          $(this).remove()
+        data.comments.forEach (comment) ->
+          $('.chart-comments').append("<div class='chart-comment pull-left' id=chart-comment_#{comment.comment_id} data-content='#{comment.body}' data-chart_timestamp='#{comment.chart_timestamp}'>#{comment.user_image} </div>")
+          comment_div = $("#chart-comment_#{comment.comment_id}")
+          comment_div.on 'click', ->
+            console.log $("#comment_#{comment.comment_id}").offset().top
+            $('html, body').animate({ scrollTop: $('.comments-content').offset().top}, 1000)
+            $('.nano-content').animate({ scrollTop: $("#comment_#{comment.comment_id}")[0].offsetTop}, 1000)
+            $("#comment_#{comment.comment_id}").find('.comment-answer').show()
+        Chart.Functions.resizeChartComments(true)
+        $('.chart-comment').popover(placement: 'bottom', trigger: "hover" )
 
 
+  exports.resizeChartComments = (initializing) ->
+    firstDataX = parseInt($('.highcharts-series-group').find('.highcharts-series').first().children().first().attr('x')) || 0
+    pointWidth = parseInt($('.highcharts-series-group').find('.highcharts-series').first().children().first().attr('width')) || 0
+    xAxisWidth = $('.highcharts-axis').first()[0].getBoundingClientRect().width
+    xAxisOffset = 2*firstDataX + pointWidth
+    xAxisWidth -= xAxisOffset
+    xAxisLeftMargin = $('.highcharts-axis').first()[0].getBoundingClientRect().x
+    xAxisLefMarginOffset = firstDataX + 0.5 * pointWidth
+    xAxisLeftMargin += xAxisLefMarginOffset
+    min_max = Chart.Functions.getExtremes(chart_data_min_x)
+    x_min = min_max.min
+    x_max = min_max.max
+    occuring_timestamps = []
+    $('.chart-comment').each ->
+      chart_timestamp = $(this).data('chart_timestamp')
+      offset_top = 10
+      count = {}
+      i = 0
+      while i < occuring_timestamps.length
+        timestamp = occuring_timestamps[i]
+        count[timestamp] = if count[timestamp] then count[timestamp] + 1 else 1
+        i++
+      if $.inArray(chart_timestamp, occuring_timestamps) != -1
+        offset_top -= count[chart_timestamp]*8
+      occuring_timestamps.push(chart_timestamp)
+      original_offset = $(this).offset()
+      left_new = (chart_timestamp - x_min)/((x_max - x_min))*xAxisWidth
+      if initializing
+        new_offset_top = original_offset.top - offset_top - 7
+      else
+        new_offset_top = original_offset.top
+      $(this).offset({top: new_offset_top , left: xAxisLeftMargin + left_new - 6 - offset_top})
+
+
+  exports.refreshChartComments = () ->
+    url = window.location.href
+    resource = url.toString().split('/')[3]
+    resource_id = url.toString().split('/')[4]
+    Chart.Functions.getChartComments(resource, resource_id, chart_data_min_x)
 
 
 

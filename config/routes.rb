@@ -38,6 +38,7 @@ Buzzn::Application.routes.draw do
       get :send_invitations
       put :send_invitations_update
       get :cancel_membership
+      get :chart_comments
     end
   end
 
@@ -116,6 +117,7 @@ Buzzn::Application.routes.draw do
       put :send_invitations_update
       get :send_invitations_via_email
       put :send_invitations_via_email_update
+      get :chart_comments
     end
   end
 

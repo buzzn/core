@@ -3,6 +3,7 @@ class Group < ActiveRecord::Base
   acts_as_commentable
   include Authority::Abilities
   include CalcVirtualMeteringPoint
+  include ChartFunctions
 
   before_destroy :release_metering_points
 
