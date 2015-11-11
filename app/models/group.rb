@@ -296,7 +296,8 @@ class Group < ActiveRecord::Base
       end
       latest_power = metering_point.last_power
 
-      readable = metering_point.readable_by?(requesting_user)
+
+      readable = requesting_user.nil? ? false : metering_point.readable_by?(requesting_user)
       if !readable
         metering_point_name = "anonym"
       end
