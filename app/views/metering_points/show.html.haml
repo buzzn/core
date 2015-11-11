@@ -106,13 +106,14 @@
 
           .chart{id: "chart-container-#{@metering_point.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
             .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
-          %ul.chart-context-menu
-            %li{"data-action" => "comment"}= t('create_new_comment_here')
-            /%li{"data-action" => "zoom_in"}= t('zoom_in_here_if_possible')
-          .chart-comment-form
-            .comments-panel{data: {commentable_type: 'MeteringPoint', commentable_id: @metering_point.id} }
-              .comment-form-container
-                = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@metering_point, current_user.id, "", nil) }
+          - if user_signed_in?
+            %ul.chart-context-menu
+              %li{"data-action" => "comment"}= t('create_new_comment_here')
+              /%li{"data-action" => "zoom_in"}= t('zoom_in_here_if_possible')
+            .chart-comment-form
+              .comments-panel{data: {commentable_type: 'MeteringPoint', commentable_id: @metering_point.id} }
+                .comment-form-container
+                  = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@metering_point, current_user.id, "", nil) }
 
 
 
