@@ -105,6 +105,7 @@ $(".metering_point_detail").ready ->
           spacingTop: 10
           spacingLeft: 20
           spacingRight: 20
+          animation: false
         colors: ['#FFF']
         exporting:
           enabled: false
@@ -301,6 +302,7 @@ $(".dashboard-chart").ready ->
                 spacingTop: 10
                 spacingLeft: 20
                 spacingRight: 20
+                animation: false
               colors: ['#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
               exporting:
                 enabled: false
@@ -1059,7 +1061,7 @@ namespace 'Chart.Functions', (exports) ->
     xAxisWidth = $('.highcharts-axis').first()[0].getBoundingClientRect().width
     xAxisOffset = 2*firstDataX + pointWidth
     xAxisWidth -= xAxisOffset
-    xAxisLeftMargin = $('.highcharts-axis').first()[0].getBoundingClientRect().x
+    xAxisLeftMargin = $('.highcharts-axis').first()[0].getBoundingClientRect().x || $('.highcharts-axis').first()[0].getBoundingClientRect().left
     xAxisLefMarginOffset = firstDataX + 0.5 * pointWidth
     xAxisLeftMargin += xAxisLefMarginOffset
     min_max = Chart.Functions.getExtremes(chart_data_min_x)
