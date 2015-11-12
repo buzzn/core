@@ -722,6 +722,12 @@ de:
   user_wrote_a_new_comment_at_the_group: "%{username} hat einen neuen Kommentar bei der Gruppe %{group_name} geschrieben."
   user_wrote_a_new_comment_at_the_metering_point: "%{username} hat einen neuen Kommentar beim Zählpunkt %{metering_point_name} geschrieben."
   accepted_metering_point_user_invitation: Zählpunkteinladung akzeptiert
+  your_metering_point_user_request_has_been_accepted: "Deine Zählpunktanfrage wurde akzeptiert."
+  you_are_now_a_member_of_the_metering_point: "Du bist ein Mitglied des Zählpunktes '%{metering_point_name}'."
+  visit_the_metering_point_page_to_see_the_energy_data_that_is_visible_for_you_now: "Besuche die Seite des Zählpunktes um die Energiedaten einzusehen, die für Dich jetzt sichtbar sind."
+  your_metering_point_user_invitation_has_been_accepted: "Deine Zählpunkteinladung wurde angenommen."
+  user_is_now_a_member_of_your_metering_point: "%{username} ist jetzt ein Mitglied deines Zählpunktes '%{metering_point_name}'."
+  visit_the_metering_point_page_to_see_the_how_the_energy_data_has_changed_now: "Besuche die Seite des Zählpunktes um zu sehen, wie sich die Energiedaten nun verändert haben."
 
   new_comment: Neuer Kommentar
   system_message: Systemnachricht

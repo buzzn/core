@@ -49,7 +49,7 @@ class MeteringPointUserRequestsController < InheritedResources::Base
           Notifier.send_email_notification_accepted_metering_point_user_request(@metering_point_user_request.user, current_user, @metering_point, 'request').deliver_now
         else
           @metering_point.managers.first.send_notification('info', t('accepted_metering_point_user_invitation'), @metering_point.name, 0, metering_point_path(@metering_point))
-          Notifier.send_email_notification_accepted_metering_point_user_request(@metering_point.managers.first, current_user, @metering_point, 'request').deliver_now
+          Notifier.send_email_notification_accepted_metering_point_user_request(@metering_point.managers.first, current_user, @metering_point, 'invitation').deliver_now
         end
         redirect_to metering_point_path(@metering_point)
       end
