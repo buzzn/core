@@ -222,7 +222,16 @@ class Crawler
             # end
 
             second_timestamp = item['time']
-            second_reading = item['energy']
+            if @metering_points_size > 1
+              if @metering_point_input
+                second_reading = item['energy']
+              elsif @metering_point_output
+                second_reading = item['energyOut']
+              end
+            else
+              second_reading = item['energy']
+            end
+
             if first_timestamp
               power = (second_reading - first_reading)/(1000*3600*1.0)
               result << [first_timestamp, power]
