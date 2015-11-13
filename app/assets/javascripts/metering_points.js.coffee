@@ -1053,7 +1053,6 @@ namespace 'Chart.Functions', (exports) ->
           $('.chart-comments').append("<div class='chart-comment pull-left' id=chart-comment_#{comment.comment_id} data-content='#{comment.body}' data-chart_timestamp='#{comment.chart_timestamp}'>#{comment.user_image} </div>")
           comment_div = $("#chart-comment_#{comment.comment_id}")
           comment_div.on 'click', ->
-            console.log $("#comment_#{comment.comment_id}").offset().top
             $('html, body').animate({ scrollTop: $('.comments-content').offset().top}, 1000)
             $('.nano-content').animate({ scrollTop: $("#comment_#{comment.comment_id}")[0].offsetTop}, 1000)
             $("#comment_#{comment.comment_id}").find('.comment-answer').show()

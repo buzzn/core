@@ -2,7 +2,7 @@ module ChartFunctions
   extend ActiveSupport::Concern
 
   def chart_comments(resolution, containing_timestamp)
-    time = Time.at(containing_timestamp.to_i/1000)
+    time = Time.at(containing_timestamp.to_i/1000).in_time_zone
     if resolution == 'hour_to_minutes'
       start_time = time.beginning_of_hour
       end_time = time.end_of_hour
