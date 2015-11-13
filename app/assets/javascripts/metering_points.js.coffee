@@ -262,9 +262,15 @@ $(".metering_point_detail").ready ->
 $(document).on "contextmenu", (event) ->
   if (event.target.nodeName == 'path' || event.target.nodeName == 'rect') && $(event.target).closest('.highcharts-series-group').length != 0
     event.preventDefault()
-    chart_comment_input_x = (event.originalEvent.originalTarget.point.plotX + 150)
-    chart_comment_input_y = (event.originalEvent.originalTarget.point.plotY + 140)
-    timestamp = event.originalEvent.originalTarget.point.x
+    if event.originalEvent.originalTarget  #Code for Firefox && Opera
+      chart_comment_input_x = event.originalEvent.originalTarget.point.plotX + 150
+      chart_comment_input_y = event.originalEvent.originalTarget.point.plotY + 140
+      timestamp = event.originalEvent.originalTarget.point.x
+    else if event.originalEvent.srcElement  #Code for Chrome
+      chart_comment_input_x = event.originalEvent.srcElement.point.plotX + 150
+      chart_comment_input_y = event.originalEvent.srcElement.point.plotY + 140
+      timestamp = event.originalEvent.srcElement.point.x
+
     $('.chart-comment-form').find('#comment_chart_timestamp').attr('value', timestamp)
     $('.chart-comment-form').find('#comment_chart_resolution').attr('value', actual_resolution)
     $(".chart-context-menu").finish().toggle(100).css({top: chart_comment_input_y + "px", left: chart_comment_input_x + "px"})
