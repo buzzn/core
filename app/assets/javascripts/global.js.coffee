@@ -55,7 +55,7 @@ ready = ->
 
   $('.change-order').popover(placement: 'right', trigger: "hover" )
 
-  $(".likes").tooltip({html: true})
+  $(".likes").tooltip({html: true, container: 'body'})
 
   $('[data-toggle="popover"]').popover(trigger: "hover")
 

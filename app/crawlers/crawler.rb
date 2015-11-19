@@ -198,46 +198,46 @@ class Crawler
         if request['result'].any?
           first_reading = first_timestamp = nil
           request['result'].each do |item|
-            # timeStart = item['timeStart']
-            # timeEnd = item['timeEnd']
-            # i = 0
-            # while timeStart + i * 6000 < timeEnd
-            #   if @metering_points_size > 1
-            #     if item['power'] > 0 && @metering_point_input
-            #       power = item['power']/1000
-            #     elsif item['power'] < 0 && @metering_point_output
-            #       power = item['power'].abs/1000
-            #     else
-            #       power = 0
-            #     end
-            #   else
-            #     power = item['power'] > 0 ? Integer(item['power'].abs)/1000 : 0
+            timeStart = item['timeStart']
+            timeEnd = item['timeEnd']
+            i = 0
+            while timeStart + i * 6000 < timeEnd
+              if @metering_points_size > 1
+                if item['power'] > 0 && @metering_point_input
+                  power = item['power']/1000
+                elsif item['power'] < 0 && @metering_point_output
+                  power = item['power'].abs/1000
+                else
+                  power = 0
+                end
+              else
+                power = item['power'] > 0 ? Integer(item['power'].abs)/1000 : 0
+              end
+              timestamp = timeStart + i * 6000
+              timenew = Time.new.to_i - 50
+              if timestamp/1000 < timenew
+                result << [timestamp, power]
+              end
+              i += 1
+            end
+
+            # second_timestamp = item['time']
+            # if @metering_points_size > 1
+            #   if @metering_point_input
+            #     second_reading = item['energy']
+            #   elsif @metering_point_output
+            #     second_reading = item['energyOut']
             #   end
-            #   timestamp = timeStart + i * 6000
-            #   timenew = Time.new.to_i - 50
-            #   if timestamp/1000 < timenew
-            #     result << [timestamp, power]
-            #   end
-            #   i += 1
+            # else
+            #   second_reading = item['energy']
             # end
 
-            second_timestamp = item['time']
-            if @metering_points_size > 1
-              if @metering_point_input
-                second_reading = item['energy']
-              elsif @metering_point_output
-                second_reading = item['energyOut']
-              end
-            else
-              second_reading = item['energy']
-            end
-
-            if first_timestamp
-              power = (second_reading - first_reading)/(1000*3600*1.0)
-              result << [first_timestamp, power]
-            end
-            first_timestamp = second_timestamp
-            first_reading = second_reading
+            # if first_timestamp
+            #   power = (second_reading - first_reading)/(3600000.0)
+            #   result << [first_timestamp, power]
+            # end
+            # first_timestamp = second_timestamp
+            # first_reading = second_reading
           end
         else
           puts request.inspect

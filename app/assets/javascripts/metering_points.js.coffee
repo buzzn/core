@@ -262,6 +262,7 @@ $(".metering_point_detail").ready ->
 $(document).on "contextmenu", (event) ->
   if (event.target.nodeName == 'path' || event.target.nodeName == 'rect') && $(event.target).closest('.highcharts-series-group').length != 0
     event.preventDefault()
+    console.log event
     if event.originalEvent.originalTarget  #Code for Firefox && Opera
       chart_comment_input_x = event.originalEvent.originalTarget.point.plotX + 150
       chart_comment_input_y = event.originalEvent.originalTarget.point.plotY + 140
@@ -270,6 +271,8 @@ $(document).on "contextmenu", (event) ->
       chart_comment_input_x = event.originalEvent.srcElement.point.plotX + 150
       chart_comment_input_y = event.originalEvent.srcElement.point.plotY + 140
       timestamp = event.originalEvent.srcElement.point.x
+    else
+      console.log 'no element found'
 
     $('.chart-comment-form').find('#comment_chart_timestamp').attr('value', timestamp)
     $('.chart-comment-form').find('#comment_chart_resolution').attr('value', actual_resolution)
@@ -1067,6 +1070,7 @@ namespace 'Chart.Functions', (exports) ->
     xAxisOffset = 2*firstDataX + pointWidth
     xAxisWidth -= xAxisOffset
     xAxisLeftMargin = $('.highcharts-axis').first()[0].getBoundingClientRect().x || $('.highcharts-axis').first()[0].getBoundingClientRect().left
+    console.log xAxisLeftMargin
     xAxisLefMarginOffset = firstDataX + 0.5 * pointWidth
     xAxisLeftMargin += xAxisLefMarginOffset
     min_max = Chart.Functions.getExtremes(chart_data_min_x)
