@@ -1068,7 +1068,7 @@ namespace 'Chart.Functions', (exports) ->
     xAxisWidth = $('.highcharts-axis').first()[0].getBoundingClientRect().width || $('.highcharts-axis').first().children().last()[0].getBoundingClientRect().width
     xAxisOffset = 2*firstDataX + pointWidth
     xAxisWidth -= xAxisOffset
-    xAxisLeftMargin = $('.highcharts-axis').first()[0].getBoundingClientRect().x || $('.highcharts-axis').first()[0].getBoundingClientRect().left
+    xAxisLeftMargin = $('.highcharts-axis').first().children().first()[0].getBoundingClientRect().left || $('.highcharts-axis').first()[0].getBoundingClientRect().x
     xAxisLefMarginOffset = firstDataX + 0.5 * pointWidth
     xAxisLeftMargin += xAxisLefMarginOffset
     min_max = Chart.Functions.getExtremes(chart_data_min_x)
