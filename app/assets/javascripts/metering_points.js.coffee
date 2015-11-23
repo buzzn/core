@@ -945,6 +945,7 @@ namespace 'Chart.Functions', (exports) ->
         new_point_width = Chart.Functions.setPointWidth()
         chart.series[0].update({pointWidth: new_point_width})
         chart.xAxis[0].update(Chart.Functions.getExtremes(containing_timestamp), true)
+        #console.log chart.series[0]
         chart_data_min_x = chart.series[0].data[0].x
         Chart.Functions.setChartTitle(chart_data_min_x)
         Chart.Functions.setChartType(false)
@@ -1068,7 +1069,11 @@ namespace 'Chart.Functions', (exports) ->
     xAxisWidth = $('.highcharts-axis').first()[0].getBoundingClientRect().width || $('.highcharts-axis').first().children().last()[0].getBoundingClientRect().width
     xAxisOffset = 2*firstDataX + pointWidth
     xAxisWidth -= xAxisOffset
-    xAxisLeftMargin = $('.highcharts-axis').first().children().first()[0].getBoundingClientRect().left || $('.highcharts-axis').first()[0].getBoundingClientRect().x
+    if $('.highcharts-axis').first()[0].getBoundingClientRect().x && $('.highcharts-axis').first()[0].getBoundingClientRect().x != 0
+      xAxisLeftMargin = $('.highcharts-axis').first()[0].getBoundingClientRect().x
+    else
+      xAxisLeftMargin = $('.highcharts-axis').first().children().first()[0].getBoundingClientRect().left
+    #xAxisLeftMargin = 300
     xAxisLefMarginOffset = firstDataX + 0.5 * pointWidth
     xAxisLeftMargin += xAxisLefMarginOffset
     min_max = Chart.Functions.getExtremes(chart_data_min_x)
