@@ -34,10 +34,10 @@ Buzzn::Application.routes.draw do
       get :update_parent
       get :latest_power
       get :get_scores
-      get :cancel_membership
+      get :remove_members
+      put :remove_members_update
       get :send_invitations
       put :send_invitations_update
-      get :cancel_membership
       get :chart_comments
     end
   end
@@ -108,7 +108,6 @@ Buzzn::Application.routes.draw do
   resources :groups do
     resources :metering_points, only: [:index]
     member do
-      get :cancel_membership
       get :bubbles_data
       get :chart
       get :kiosk
@@ -117,6 +116,8 @@ Buzzn::Application.routes.draw do
       put :send_invitations_update
       get :send_invitations_via_email
       put :send_invitations_via_email_update
+      get :remove_members
+      put :remove_members_update
       get :chart_comments
     end
   end

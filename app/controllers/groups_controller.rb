@@ -172,16 +172,23 @@ class GroupsController < ApplicationController
 
 
 
-  def cancel_membership
+  def remove_members
     @group = Group.find(params[:id])
-    @metering_point = MeteringPoint.find(params[:metering_point_id])
+    authorize_action_for @group
+  end
+  authority_actions :remove_members => 'update'
+
+  def remove_members_update
+    @group = Group.find(params[:id])
+    metering_point_id = params[:metering_point_id] || params[:group][:metering_point_id]
+    @metering_point = MeteringPoint.find(metering_point_id)
     if @group.metering_points.delete(@metering_point)
-      @group.calculate_closeness
+      #@group.calculate_closeness
       flash[:notice] = t('metering_point_removed_successfully')
     else
       flash[:error] = t('unable_to_remove_metering_point')
     end
-    redirect_to group_path(@group)
+    respond_with @group
   end
 
   def bubbles_data

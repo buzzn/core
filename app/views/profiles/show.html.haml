@@ -18,17 +18,23 @@
 
 
       .panel-control
+        .btn-group
+          %button.btn.btn-block.btn-success.btn-labeled.fa.fa-bars.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
+            = t('actions')
+          %ul.dropdown-menu.dropdown-menu-right{role: "menu"}
+            - if current_user.can_update?(@profile)
+              %li= link_to(t('edit_profile'), edit_profile_path(@profile), {:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal'})
 
-        - if current_user.friend?(@profile.user)
-          = link_to( t('cancel_friendship'),cancel_friendship_path(@profile.user),:data => {:confirm => t('are_you_sure')}, class: 'btn btn-warning btn-labeled fa fa-minus')
-        - else
-          - if FriendshipRequest.where(sender: current_user, receiver: @profile.user).empty?
-            = link_to t('friend_request'), friendship_requests_path( receiver_id: @profile.user), method: :post, class: 'btn btn-success btn-labeled fa fa-plus'
-          - else
-            %button.btn.btn-success.btn-labeled.fa.fa-spinner{:disabled => "disabled"}= t'waiting_for_accepting'
+            %li.dropdown-header= t('friendship')
+            - if current_user.friend?(@profile.user)
+              %li= link_to( t('cancel_friendship'), cancel_friendship_path(@profile.user),:data => {:confirm => t('are_you_sure')})
+            - else
+              - if FriendshipRequest.where(sender: current_user, receiver: @profile.user).empty?
+                %li= link_to t('send_friend_request'), friendship_requests_path( receiver_id: @profile.user), method: :post
+              - else
+                %li{:disabled => "disabled"}= t'waiting_for_accepting'
 
-        - if current_user.can_update?(@profile)
-          = @profile.link_to_edit
+
 
 - if user_signed_in? && current_user == @profile.user && @friendship_requests.any?
   .friendship_requests

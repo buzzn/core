@@ -77,7 +77,8 @@ $(".metering_points").ready ->
                   enabled: false
             areaspline:
               marker:
-                radius: 2
+                enabled: false
+                #radius: 2
           tooltip:
             enabled: false
 

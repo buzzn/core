@@ -1,0 +1,11 @@
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'remove_members'
+  .modal-body
+    = simple_form_for @group, remote: true,  url: remove_members_update_group_path, method: 'put'  do |f|
+      = f.input :metering_point_id, collection: @group.metering_points, input_html: { class: 'select2', 'data-placeholder': t('remove_members')}, label: false, selected: '', include_blank: true, :label_method => lambda { |m| m.decorate.name_with_users }
+      .modal-footer
+        .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+          = t'cancel'
+        = f.button :button, t('send'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check'

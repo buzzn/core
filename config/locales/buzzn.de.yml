@@ -60,6 +60,7 @@ de:
   diff_metering: Abgrenzungszähler
 
   current_power_in_watts: Aktuelle Leistung (Watt)
+  actions: Aktionen
 
   add_out_metering: Generatorzähler hinzufügen
   add_in_metering: Verbrauchszähler hinzufügen
