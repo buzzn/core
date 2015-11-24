@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
   delegate :image, to: :profile
 
 
-  after_create :create_dashboard
+  after_create :create_dashboard, :create_token
 
   def friend?(user)
     self.friendships.where(friend: user).empty? ? false : true
@@ -215,6 +215,11 @@ private
 
   def create_dashboard
     self.dashboard = Dashboard.create(user_id: self.id)
+  end
+
+  def create_token
+    app = Doorkeeper::Application.first
+    Doorkeeper::AccessToken.create!(:application_id => app.id, :resource_owner_id => self.id)
   end
 
 end

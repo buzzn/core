@@ -4,8 +4,7 @@
 #
 require 'rubygems' #so it can load gems
 
-
-my_frontend = Doorkeeper::Application.create(name: 'MyFrontend', redirect_uri: "http://127.0.0.1:4200")
+Doorkeeper::Application.create(name: 'MyFrontend', redirect_uri: "http://127.0.0.1:4200")
 
 def user_with_metering_point
   metering_point              = Fabricate(:metering_point)
@@ -95,7 +94,6 @@ buzzn_team_names.each do |user_name|
     user.add_role :manager, auto_justus
 
   when 'felix'
-    Doorkeeper::AccessToken.create!(:application_id => my_frontend.id, :resource_owner_id => user.id)
     @gocycle       = Fabricate(:gocycle)
     user.add_role :manager, @gocycle
     user.add_role :admin # felix is admin
