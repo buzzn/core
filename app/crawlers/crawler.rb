@@ -363,7 +363,7 @@ class Crawler
               next
             end
 
-            if item['time'] == (Time.at(timestamp/1000).end_of_month + 1.second).to_i*1000
+            if item['time'] == (Time.at(timestamp/1000).in_time_zone.end_of_month + 1.second).to_i*1000
               new_value = item[mode]
               result << [timestamp, (new_value - old_value)/10000000000.0]
               old_value = new_value
@@ -372,7 +372,7 @@ class Crawler
             i += 1
           end
           new_value = request['result'][request['result'].size - 1][mode]
-          result << [(Time.at(timestamp/1000).beginning_of_month).to_i*1000, (new_value - old_value)/10000000000.0]
+          result << [(Time.at(timestamp/1000).in_time_zone.beginning_of_month).to_i*1000, (new_value - old_value)/10000000000.0]
         else
           puts request.inspect
         end
