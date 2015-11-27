@@ -59,6 +59,12 @@ module CalcVirtualMeteringPoint
       firstTimestamp = (Time.at(data[0][0]/1000).in_time_zone).beginning_of_minute
       lastTimestamp = firstTimestamp.end_of_hour.in_time_zone
       offset = 60 * 1000
+    elsif resolution == "year_to_months"
+      data.each do |reading|
+        #puts reading
+        result << [Time.at(reading[0]/1000).in_time_zone.beginning_of_month.to_i*1000, reading[1]]
+      end
+      return result
     else
       return data
     end

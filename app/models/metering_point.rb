@@ -428,6 +428,8 @@ class MeteringPoint < ActiveRecord::Base
         result = crawler.day(containing_timestamp)
       elsif resolution_format == 'month_to_days'
         result = crawler.month(containing_timestamp)
+      elsif resolution_format == 'year_to_months'
+        result = crawler.year(containing_timestamp)
       end
       # if resolution_format == "day_to_minutes" || resolution_format == "day_to_hours"
       #   result.pop

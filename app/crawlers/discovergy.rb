@@ -61,6 +61,7 @@ class Discovergy
     datetime = Time.at(timestamp.to_i/1000).in_time_zone
     response = @conn.get do |req|
       req.url '/json/Api.getDayEveryFifteenMinutes'
+      #req.url '/json/Api.getDay'
       req.headers['Content-Type'] = 'application/json'
       req.params['user']          = @username
       req.params['password']      = @password
@@ -86,6 +87,25 @@ class Discovergy
       req.params['fromYear']      = datetime_start.year
       req.params['toDay']         = 2 #datetime_end.day
       req.params['toMonth']       = datetime_end.month+1
+      req.params['toYear']        = datetime_end.year
+    end
+    return JSON.parse(response.body)
+  end
+
+  def get_year( meter_uid, timestamp)
+    datetime_start = Time.at(timestamp.to_i/1000).in_time_zone.beginning_of_year
+    datetime_end = Time.at(timestamp.to_i/1000).in_time_zone.end_of_year + 1.second
+    response = @conn.get do |req|
+      req.url '/json/Api.getDataEveryDay'
+      req.headers['Content-Type'] = 'application/json'
+      req.params['user']          = @username
+      req.params['password']      = @password
+      req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      req.params['fromDay']       = datetime_start.day
+      req.params['fromMonth']     = datetime_start.month
+      req.params['fromYear']      = datetime_start.year
+      req.params['toDay']         = 2 #datetime_end.day
+      req.params['toMonth']       = datetime_end.month
       req.params['toYear']        = datetime_end.year
     end
     return JSON.parse(response.body)

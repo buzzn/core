@@ -233,7 +233,7 @@ class Crawler
             end
 
             if first_timestamp
-              power = (second_reading - first_reading)/(3600000.0)
+              power = (second_reading - first_reading)/(2500000.0)
               result << [first_timestamp, power]
             end
             first_timestamp = second_timestamp
@@ -292,7 +292,7 @@ class Crawler
           else
             mode = 'energy'
           end
-          #puts request['result']
+
           request['result'].each do |item|
             if i == 0
               old_value = item[mode]
@@ -304,8 +304,6 @@ class Crawler
             result << [timestamp, (new_value - old_value)/10000000000.0]
             old_value = new_value
             timestamp = item['time']
-            #puts i.to_s
-            #puts timestamp
             i += 1
           end
         else
@@ -320,7 +318,71 @@ class Crawler
   end
 
 
+  def year(containing_timestamp=@unixtime_now)
+  result = []
+    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
+      # my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      # request  = my_smart_grid.get_month(containing_timestamp)
+      # if request.any?
+      #   request.each do |item|
+      #   #puts item.to_s
+      #   timestamp = item[0] * 1000 - 720000 # GMT -2h
+      #   if String.try_convert(item[1])== "-nan"
+      #     item[1]=0
+      #   else
+      #     work = item[1] > 0 ? item[1].abs/365 : 0  # must be converted from kwhperyear to kwhperday
+      #     result << [timestamp, work]
+      #   end
+      # end
+      # else
+      #   puts request.inspect
+      # end
+    else
+      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request     = discovergy.get_year(@meter.manufacturer_product_serialnumber, containing_timestamp)
+      if request['status'] == "ok"
+        if request['result'].any?
 
+
+          # TODO: make this nicer
+          old_value = -1
+          new_value = -1
+          timestamp = -1
+          i = 0
+          if @metering_points_size > 1 && @metering_point_output
+            mode = 'energyOut'
+          else
+            mode = 'energy'
+          end
+
+          request['result'].each do |item|
+            if i == 0
+              old_value = item[mode]
+              timestamp = item['time']
+              i += 1
+              next
+            end
+
+            if item['time'] == (Time.at(timestamp/1000).end_of_month + 1.second).to_i*1000
+              new_value = item[mode]
+              result << [timestamp, (new_value - old_value)/10000000000.0]
+              old_value = new_value
+              timestamp = item['time']
+            end
+            i += 1
+          end
+          new_value = request['result'][request['result'].size - 1][mode]
+          result << [(Time.at(timestamp/1000).beginning_of_month).to_i*1000, (new_value - old_value)/10000000000.0]
+        else
+          puts request.inspect
+        end
+      else
+        puts request.inspect
+      end
+    end
+
+    return result
+  end
 
 
 end

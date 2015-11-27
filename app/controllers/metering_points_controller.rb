@@ -177,11 +177,8 @@ class MeteringPointsController < ApplicationController
     @data = @metering_point.chart_data(params[:resolution], @containing_timestamp)
     @chart_data = []
     @chart_data << {
-      step: 'left',
-      type: 'area',
       data: @data,
       name: @metering_point.decorate.long_name
-
     }
     render json: @chart_data.to_json
   end

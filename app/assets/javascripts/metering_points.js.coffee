@@ -24,7 +24,7 @@ $(".metering_points").ready ->
           data[0].data[0] = [new Date(), 0] #TODO: Search for last data
         partial_chart = new Highcharts.Chart(
           chart:
-            type: 'area'
+            type: 'areaspline'
             renderTo: 'chart-container-' + id
             width: width
             backgroundColor: 'rgba(255, 255, 255, 0.0)'
@@ -99,6 +99,7 @@ $(".metering_point_detail").ready ->
         data[0].data[0] = [new Date(), 0] #TODO: Search for last data
       chart = new Highcharts.Chart(
         chart:
+          type: 'areaspline'
           renderTo: 'chart-container-' + id
           backgroundColor:'rgba(255, 255, 255, 0.0)'
           width: width
@@ -161,7 +162,7 @@ $(".metering_point_detail").ready ->
                 [1, "rgba(255, 255, 255, 0.1)"]
               ]
             turboThreshold: 2000
-          area:
+          areaspline:
             borderWidth: 0
             cursor: 'pointer'
             events:
@@ -212,6 +213,13 @@ $(".metering_point_detail").ready ->
       chart.hideLoading()
       Chart.Functions.activateButtons(true)
       return
+    Chart.Functions.setChartData('metering_points', id, containing_timestamp)
+
+  $(".btn-chart-zoom-year").on 'click', ->
+    chart.showLoading()
+    Chart.Functions.activateButtons(false)
+    actual_resolution = "year_to_months"
+    containing_timestamp = chart_data_min_x
     Chart.Functions.setChartData('metering_points', id, containing_timestamp)
 
   $(".btn-chart-zoom-month").on 'click', ->
@@ -303,7 +311,7 @@ $(".dashboard-chart").ready ->
           if chart == undefined
             chart = new Highcharts.Chart(
               chart:
-                type: 'area'
+                type: 'areaspline'
                 renderTo: 'chart-container-' + dashboard_id
                 backgroundColor:'rgba(255, 255, 255, 0.0)'
                 width: width
@@ -358,7 +366,7 @@ $(".dashboard-chart").ready ->
               plotOptions:
                 series:
                   fillOpacity: 0.5
-                area:
+                areaspline:
                   borderWidth: 0
                   cursor: 'pointer'
                   events:
@@ -530,7 +538,7 @@ $(".group-chart").ready ->
       if chart == undefined
         chart = new Highcharts.Chart(
           chart:
-            type: 'area'
+            type: 'areaspline'
             renderTo: 'chart-container-' + group_id
             backgroundColor:'rgba(255, 255, 255, 0.0)'
             width: width
@@ -589,7 +597,7 @@ $(".group-chart").ready ->
           plotOptions:
             series:
               fillOpacity: 0.5
-            area:
+            areaspline:
               cursor: 'pointer'
               events:
                 click: (event) ->
@@ -654,6 +662,14 @@ $(".group-chart").ready ->
       chart.hideLoading()
       Chart.Functions.activateButtons(true)
       return
+    Chart.Functions.setChartDataMultiSeries('groups', group_id, containing_timestamp)
+
+
+  $(".btn-chart-zoom-year").on 'click', ->
+    chart.showLoading()
+    Chart.Functions.activateButtons(false)
+    actual_resolution = "year_to_months"
+    containing_timestamp = chart_data_min_x
     Chart.Functions.setChartDataMultiSeries('groups', group_id, containing_timestamp)
 
 
@@ -892,14 +908,14 @@ namespace 'Chart.Functions', (exports) ->
       if displaySeriesName
         chart.series.forEach (chartSeries) ->
           chartSeries.update({
-            type: 'area'
+            type: 'areaspline'
             tooltip:
               pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
           })
       else
         chart.series.forEach (series) ->
           series.update({
-            type: 'area'
+            type: 'areaspline'
             tooltip:
               pointFormat: '<b>{point.y:,.0f} W</b><br/>'
           })
@@ -919,16 +935,27 @@ namespace 'Chart.Functions', (exports) ->
     else if actual_resolution == "month_to_days"
       chart.setTitle({text: moment(extremes.min).format("MMMM YYYY")})
     else if actual_resolution == "year_to_months"
-      chart.setTitle({text: moment(extremes.min).format("YYYY")})
+      chart.setTitle({text: moment(extremes.max).format("YYYY")})
 
   exports.activateButtons = (disabled) ->
     $(".btn-chart-next").attr('disabled', !disabled)
     $(".btn-chart-prev").attr('disabled', !disabled)
     $(".btn-chart-zoomout").attr('disabled', !disabled)
+    $(".btn-chart-zoom-year").attr('disabled', !disabled)
     $(".btn-chart-zoom-month").attr('disabled', !disabled)
     $(".btn-chart-zoom-day").attr('disabled', !disabled)
     $(".btn-chart-zoom-hour").attr('disabled', !disabled)
     $(".btn-chart-zoom-live").attr('disabled', !disabled)
+    if disabled
+      if actual_resolution == 'year_to_months'
+        $(".btn-chart-zoom-year").attr('disabled', disabled)
+      else if actual_resolution == 'month_to_days'
+        $(".btn-chart-zoom-month").attr('disabled', disabled)
+      else if actual_resolution == 'day_to_minutes'
+        $(".btn-chart-zoom-day").attr('disabled', disabled)
+      else if actual_resolution == 'hour_to_minutes'
+        $(".btn-chart-zoom-hour").attr('disabled', disabled)
+
 
   exports.setResolution = (resolution) ->
     actual_resolution = resolution
