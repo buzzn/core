@@ -139,6 +139,18 @@ class MeteringPoint < ActiveRecord::Base
     self.readable == 'community'
   end
 
+  def readable_icon
+    if readable_by_friends?
+      "user-plus"
+    elsif readable_by_world?
+      "globe"
+    elsif readable_by_me?
+      "key"
+    elsif readable_by_community?
+      "users"
+    end
+  end
+
   def output?
     self.mode == 'out'
   end
@@ -148,19 +160,18 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def smart?
-    if meter
-      return meter.smart
-    else
-      if self.virtual
-        self.formula_parts.each do |formula_part|
-          if !formula_part.operand.smart?
-            return false
-          end
+    if self.virtual
+      self.formula_parts.each do |formula_part|
+        if !formula_part.operand.smart?
+          return false
         end
-        return true
-      else
-        false
       end
+      return true
+    else
+      if meter
+        return meter.smart
+      end
+      return false
     end
   end
 
@@ -418,9 +429,9 @@ class MeteringPoint < ActiveRecord::Base
       elsif resolution_format == 'month_to_days'
         result = crawler.month(containing_timestamp)
       end
-      if resolution_format == "day_to_minutes" || resolution_format == "day_to_hours"
-        result.pop
-      end
+      # if resolution_format == "day_to_minutes" || resolution_format == "day_to_hours"
+      #   result.pop
+      # end
       return result
     else
       if self.pv?

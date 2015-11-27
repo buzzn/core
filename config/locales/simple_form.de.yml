@@ -125,6 +125,7 @@ de:
         manufacturer_product_serialnumber: Einzuladende Zählernummer
         email: Email
         email_confirmation: Email bestätigen
+        readable: Sichtbar für
       meter:
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname
@@ -219,9 +220,10 @@ de:
           in: 'Verbrauch'
           out: 'Produktion'
         readable:
-          me: nur für mich
-          friends: meine Freunde
-          world: alle
+          me: Nur mich
+          friends: Meine Freunde
+          community: Alle angemeldeten Nutzer
+          world: Alle Internet-Nutzer
       contract:
         mode:
           electricity_supplier_contract: Stromliefervertrag
@@ -232,6 +234,12 @@ de:
         legal_entity:
           natural_person: Natürliche Person
           company: Firma
+      group:
+        readable:
+          me: Nur mich und den Gruppenmitgliedern
+          friends: Meine Freunde
+          community: Alle angemeldeten Nutzer
+          world: Alle Internet-Nutzer
 
 
       meter:

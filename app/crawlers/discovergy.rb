@@ -84,7 +84,7 @@ class Discovergy
       req.params['fromDay']       = datetime_start.day
       req.params['fromMonth']     = datetime_start.month
       req.params['fromYear']      = datetime_start.year
-      req.params['toDay']         = 1 #datetime_end.day
+      req.params['toDay']         = 2 #datetime_end.day
       req.params['toMonth']       = datetime_end.month+1
       req.params['toYear']        = datetime_end.year
     end

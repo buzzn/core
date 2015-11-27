@@ -6,6 +6,7 @@
         .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("dummy"), "data-content" => t("you_dont_have_a_smart_meter_so_your_energy_data_is_estimated_as_shown")}
           .ribbon-green= t('dummy')
       .widget-header{class: "bg-#{metering_point.mode_class}" }
+        .pull-left.readability{class: "fa fa-#{metering_point.readable_icon}", 'data-title' => t('readable_by') + ': ' + t("#{metering_point.readable}")}
 
         .chart{id: "chart-container-#{metering_point.id}", style: "width: 100%; height: 180px;"}
           .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin

@@ -424,6 +424,10 @@ de:
   send_friend_request: Freundschaftsanfrage senden
   complete_user: Daten vervollständigen
 
+  world: Alle Internet-Nutzer
+  community: Alle angemeldeten Nutzer
+  me: Nur für mich
+
   has_updated: aktualisierte
   has_commented_on: kommentierte
   a_device: ein Gerät

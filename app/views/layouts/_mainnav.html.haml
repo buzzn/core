@@ -16,7 +16,7 @@
           .nano-content
             %ul#mainnav-menu.list-group
 
-              %li.list-header= t'my_profile'
+              %li.list-header{"data-content" => ''}= t'my_profile'
               = mainnav_profile_path(current_user.profile)
               / - if !current_user.dashboard.nil?
               /   = mainnav_dashboard_path(current_user.dashboard)

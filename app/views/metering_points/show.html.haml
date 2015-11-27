@@ -17,6 +17,7 @@
         - else
           %p.text-3x.mar-no= @metering_point.name
         %p.text-2x.mar-no.text-thin= @metering_point.address ? @metering_point.address.short_name : t('no_address')
+        %p.readability{class: "fa fa-#{@metering_point.readable_icon}", 'data-title' => t('readable_by') + ': ' + t("#{@metering_point.readable}")}
 
     / - if @metering_point.input?
     /   .metering_point_scores{'data-content' => @metering_point.id}
@@ -42,6 +43,11 @@
         %button.btn.btn-block.btn-success.btn-labeled.fa.fa-bars.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
           = t('actions')
         %ul.dropdown-menu.dropdown-menu-right{role: "menu"}
+          - if user_signed_in? && current_user.can_update?(@metering_point)
+            %li= link_to(t('edit_metering_point'), edit_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
+
+            %li= link_to(t('remove_members'), remove_members_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
+            %li= link_to(t("invite_friends_to_join_this_metering_point"),send_invitations_metering_point_path, {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
           - if user_signed_in?
             - if @requests.any? && @requests.collect(&:user).include?(current_user)
               %li= t'waiting_for_accepting'
@@ -51,11 +57,7 @@
                   %li= link_to(t('join_this_metering_point'), metering_point_user_requests_path(user_id: current_user.id, metering_point_id: @metering_point.id, mode: 'request'), method: :post)
               - else
                 %li= link_to(t('leave_this_metering_point'), remove_members_update_metering_point_path(user_id: current_user.id), method: :put, :data => {:confirm => t('are_you_sure')})
-          - if user_signed_in? && current_user.can_update?(@metering_point)
-            %li= link_to(t('edit_metering_point'), edit_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
 
-            %li= link_to(t('remove_members'), remove_members_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
-            %li= link_to(t("invite_friends_to_join_this_metering_point"),send_invitations_metering_point_path, {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
 
 
 
@@ -89,6 +91,7 @@
           .ribbon-green= t('dummy')
       .panel
         .panel-body.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+
           .text-center
             /.btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-zoomout.fa.fa-search-minus.fa-2x{disabled: "disabled"}
             .btn.btn-default.btn-chart-zoom-month{disabled: "disabled"}
@@ -101,6 +104,8 @@
               = t('live')
           .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-prev.fa.fa-chevron-left.fa-2x{disabled: "disabled"}
           .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-next.pull-right.fa.fa-chevron-right.fa-2x{disabled: "disabled"}
+
+
 
           .chart{id: "chart-container-#{@metering_point.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
             .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
@@ -153,7 +158,7 @@
             = render profile
 
 
-      - if user_signed_in? && @metering_point.address && current_user.can_read?(@metering_point.address)
+      - if user_signed_in? && ((@metering_point.address && current_user.can_read?(@metering_point.address)) || @metering_point.address.nil?)
         %hr
         %h1.page-header.text-overflow
           %span
@@ -164,7 +169,7 @@
           .addresses
             = render @metering_point.address if @metering_point.address
         .row
-          - if @metering_point.address.nil?
+          - if @metering_point.address.nil? && current_user.can_update?(@metering_point)
             .row
               .col-lg-12.text-center
                 = @metering_point.new_address

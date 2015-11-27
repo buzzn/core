@@ -55,6 +55,8 @@ ready = ->
 
   $('.change-order').popover(placement: 'right', trigger: "hover" )
 
+  $('.readability').tooltip({container: 'body'})
+
   $(".likes").tooltip({html: true, container: 'body'})
 
   $('[data-toggle="popover"]').popover(trigger: "hover")
@@ -79,8 +81,8 @@ ready = ->
     resizeChart(500)
 
 
-  $(window).on 'resize', ->
-    resizeChart(0)
+  $(window).on 'resize:end', ->
+    resizeChart(300)
 
 
 

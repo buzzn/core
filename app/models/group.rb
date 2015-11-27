@@ -101,6 +101,10 @@ class Group < ActiveRecord::Base
     %w(localpool public_group)
   end
 
+  def readable_by_me?
+    self.readable == 'me'
+  end
+
   def readable_by_friends?
     self.readable == 'friends'
   end
@@ -111,6 +115,18 @@ class Group < ActiveRecord::Base
 
   def readable_by_world?
     self.readable == 'world'
+  end
+
+  def readable_icon
+    if readable_by_friends?
+      "user-plus"
+    elsif readable_by_world?
+      "globe"
+    elsif readable_by_me?
+      "key"
+    elsif readable_by_community?
+      "users"
+    end
   end
 
   def calculate_total_energy_data(data, operators, resolution)

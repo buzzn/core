@@ -27,6 +27,7 @@
             %a.btn-link{:href => "#"}
               %i.fa.fa-globe.fa-fw
               = link_to_external @group.website
+        %li.list-group-item.list-item-sm.text-primary.readability{class: "fa fa-#{@group.readable_icon}", 'data-title' => t('readable_by') + ': ' + t("#{@group.readable}")}
 
     / .group_scores{'data-content' => @group.id}
 
@@ -85,6 +86,8 @@
                         %li= link_to(t('join_this_group_with_metering_point_and_leave_group', metering_point_name: metering_point.decorate.name, group_name: metering_point.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id, mode: 'request'), method: :post)
                       - else
                         %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id, mode: 'request'), method: :post
+
+
 
 
 - if user_signed_in? && current_user.can_update?(@group)
@@ -155,6 +158,7 @@
             %i.small-info-circle.fa.fa-info-circle{'data-content' => t('trend_chart_info')}
       .panel
         .panel-body.panel-colorful
+
           .text-center
             /.btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-zoomout.btn.fa.fa-search-minus.fa-2x{disabled: "disabled"}
             .btn.btn-default.btn-chart-zoom-month{disabled: "disabled"}

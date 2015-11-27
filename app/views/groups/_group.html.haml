@@ -9,3 +9,4 @@
       .media-body.pad-lft.pad-rgt
         %p.text-2x.mar-no= group.name
         %p.text-1x.text-thin= truncate(group.description, length: 120)
+        .readability{class: "fa fa-#{group.readable_icon}", 'data-title' => t('readable_by') + ': ' + t(group.readable)}
