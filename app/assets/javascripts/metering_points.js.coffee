@@ -979,6 +979,7 @@ namespace 'Chart.Functions', (exports) ->
         Chart.Functions.setChartType(false)
         chart.hideLoading()
         Chart.Functions.activateButtons(true)
+        Chart.Functions.setEnergyStats()
         Chart.Functions.getChartComments(resource, id, containing_timestamp)
       .error (jqXHR, textStatus, errorThrown) ->
         console.log textStatus
@@ -1134,6 +1135,39 @@ namespace 'Chart.Functions', (exports) ->
     resource = url.toString().split('/')[3]
     resource_id = url.toString().split('/')[4]
     Chart.Functions.getChartComments(resource, resource_id, chart_data_min_x)
+
+  exports.setEnergyStats = () ->
+    if chart && chart.series.length != 0 && chart.series[0].data.length != 0 && chart.series[0].type == 'column'
+      min = chart.series[0].data[0].y
+      min_time = chart.series[0].data[0].x
+      max = min
+      max_time = min_time
+      sum = 0
+      chart.series[0].data.forEach (reading) ->
+        value = reading.y
+        time = reading.x
+        if value >= max
+          max = value
+          max_time = time
+        if value <= min
+          min = value
+          min_time = time
+        sum += value
+      if actual_resolution == 'year_to_months'
+        format_string = "MMMM"
+      else if actual_resolution == 'month_to_days'
+        format_string = "DD.MM"
+      moment.locale('de')
+      $('.stats-energy-max').html(max.toFixed(2))
+      $('.stats-energy-max-time').html('max (kWh): ' + moment(max_time).format(format_string))
+      $('.stats-energy-min').html(min.toFixed(2))
+      $('.stats-energy-min-time').html('min (kWh): ' + moment(min_time).format(format_string))
+      $('.stats-energy-sum').html(sum.toFixed(2))
+
+      $('.metering_point-stats').show(500);
+    else
+      $('.metering_point-stats').hide(500);
+
 
 
 

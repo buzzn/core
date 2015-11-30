@@ -745,3 +745,7 @@ de:
   internal_server_error: "Uups, es ist ein unerwarteter Fehler aufgetreten!"
   error_forbidden: "Uups, Du hast nicht die nötigen Rechte, um diese Seite anzusehen!"
 
+  energy_max_in_visible_interval: Max (kWh)
+  energy_min_in_visible_interval: Min (kWh)
+  energy_in_visible_interval: Gesamt (kWh)
+

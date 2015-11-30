@@ -83,6 +83,43 @@
                 = t('loading') + '...'
           %p= t('current_power_in_watts')
 
+    .col-sm-6.col-md-3.col-lg-3.metering_point-stats
+      .panel.media.pad-all
+        .media-left
+          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+            %i.fa.fa-arrow-circle-o-up.fa-2x
+        .media-body
+          = content_tag :div, class: "number" do
+            %span.text-2x.text-thin
+              .stats-energy-max
+                = t('loading') + '...'
+          %p.stats-energy-max-time
+
+
+    .col-sm-6.col-md-3.col-lg-3.metering_point-stats
+      .panel.media.pad-all
+        .media-left
+          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+            %i.fa.fa-arrow-circle-o-down.fa-2x
+        .media-body
+          = content_tag :div, class: "number" do
+            %span.text-2x.text-thin
+              .stats-energy-min
+                = t('loading') + '...'
+          %p.stats-energy-min-time
+
+    .col-sm-6.col-md-3.col-lg-3.metering_point-stats
+      .panel.media.pad-all
+        .media-left
+          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+            %i.fa.fa-tachometer.fa-2x
+        .media-body
+          = content_tag :div, class: "number" do
+            %span.text-2x.text-thin
+              .stats-energy-sum
+                = t('loading') + '...'
+          %p= t('energy_in_visible_interval')
+
 
   .row
     .metering_point_detail{id: "metering_point_#{@metering_point.id}"}

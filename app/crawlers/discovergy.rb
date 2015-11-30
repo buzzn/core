@@ -51,7 +51,12 @@ class Discovergy
       req.headers['Content-Type'] = 'application/json'
       req.params['user']          = @username
       req.params['password']      = @password
-      req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      #TODO: make this dynamic
+      if meter_uid == '9999997'
+        req.params['meterId']       = "VIRTUAL_#{meter_uid}"
+      else
+        req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      end
       req.params['numOfSeconds']  = num_of_seconds
     end
     return JSON.parse(response.body)
@@ -65,7 +70,12 @@ class Discovergy
       req.headers['Content-Type'] = 'application/json'
       req.params['user']          = @username
       req.params['password']      = @password
-      req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      #TODO: make this dynamic
+      if meter_uid == '9999997'
+        req.params['meterId']       = "VIRTUAL_#{meter_uid}"
+      else
+        req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      end
       req.params['day']           = datetime.day
       req.params['month']         = datetime.month
       req.params['year']          = datetime.year
@@ -81,7 +91,12 @@ class Discovergy
       req.headers['Content-Type'] = 'application/json'
       req.params['user']          = @username
       req.params['password']      = @password
-      req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      #TODO: make this dynamic
+      if meter_uid == '9999997'
+        req.params['meterId']       = "VIRTUAL_#{meter_uid}"
+      else
+        req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      end
       req.params['fromDay']       = datetime_start.day
       req.params['fromMonth']     = datetime_start.month
       req.params['fromYear']      = datetime_start.year
@@ -100,7 +115,12 @@ class Discovergy
       req.headers['Content-Type'] = 'application/json'
       req.params['user']          = @username
       req.params['password']      = @password
-      req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      #TODO: make this dynamic
+      if meter_uid == '9999997'
+        req.params['meterId']       = "VIRTUAL_#{meter_uid}"
+      else
+        req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      end
       req.params['fromDay']       = datetime_start.day
       req.params['fromMonth']     = datetime_start.month
       req.params['fromYear']      = datetime_start.year
@@ -119,7 +139,12 @@ class Discovergy
       req.headers['Content-Type'] = 'application/json'
       req.params['user']          = @username
       req.params['password']      = @password
-      req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      #TODO: make this dynamic
+      if meter_uid == '9999997'
+        req.params['meterId']       = "VIRTUAL_#{meter_uid}"
+      else
+        req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      end
       req.params['from']          = datetime_from
       req.params['to']            = datetime_to
     end
@@ -137,7 +162,12 @@ class Discovergy
       req.headers['Content-Type'] = 'application/json'
       req.params['user']          = @username
       req.params['password']      = @password
-      req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      #TODO: make this dynamic
+      if meter_uid == '9999997'
+        req.params['meterId']       = "VIRTUAL_#{meter_uid}"
+      else
+        req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      end
       req.params['from']          = @datetime_from
       req.params['to']            = @datetime_to
     end
@@ -156,7 +186,12 @@ class Discovergy
       req.headers['Content-Type'] = 'application/json'
       req.params['user']          = @username
       req.params['password']      = @password
-      req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      #TODO: make this dynamic
+      if meter_uid == '9999997'
+        req.params['meterId']       = "VIRTUAL_#{meter_uid}"
+      else
+        req.params['meterId']       = "EASYMETER_#{meter_uid}"
+      end
       req.params['from']          = @datetime_from
       req.params['to']            = @datetime_to
     end

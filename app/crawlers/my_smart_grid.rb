@@ -10,7 +10,7 @@ class MySmartGrid
   # unixtime = Time.now.to_i
   # request  = mysmartgrid.get_day(unixtime)
 
-# sensor_id replaces username and x_token the password
+  # sensor_id replaces username and x_token the password
   def initialize(sensor_id, x_token)
     #sensor_id = "721bcb386c8a4dab2510d40a93a7bf66" #to be removed
     #x_token   = "0b81f58c19135bc01420aa0120ae7693" #dito
@@ -23,42 +23,42 @@ class MySmartGrid
     end
   end
 
-# This subroutine returns an array of time and work of the requested month on a time-grid of quarter hours
-# This holds for data not older than one month only.
-# MySmartGrid thins out data older then one month (one value every quarter hour to one value every hour)
-# and even more after two month (hour to day).
-# This results in bad day-charts for historic data older then two month
+  # This subroutine returns an array of time and work of the requested month on a time-grid of quarter hours
+  # This holds for data not older than one month only.
+  # MySmartGrid thins out data older then one month (one value every quarter hour to one value every hour)
+  # and even more after two month (hour to day).
+  # This results in bad day-charts for historic data older then two month
   def get_day(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_day.to_time.to_i
     datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_day.to_time.to_i
     response = @conn.get do |req|
       req.url '?start='+(datetime_start-20).to_s+'&end='+datetime_end.to_s+'&resolution=15min&unit=watt'
-#      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=day&unit=watt'
+  #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=day&unit=watt'
       req.headers["Accept"] = "application/json"
     end
     return JSON.parse(response.body)
   end
 
-# This subroutine returns an array of time and work of the requested month on a time-grid of days
-# This holds for data not older than one month only. MySmartGrid thins out data older then one month and even more after two month.
-def get_month(time)
+  # This subroutine returns an array of time and work of the requested month on a time-grid of days
+  # This holds for data not older than one month only. MySmartGrid thins out data older then one month and even more after two month.
+  def get_month(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_month.to_time.to_i
     datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_month.to_time.to_i
     puts datetime_end
     puts datetime_start
     response = @conn.get do |req|
       req.url '?start='+datetime_start.to_s+'&end='+datetime_end.to_s+'&resolution=day&unit=kwhperyear'
-#      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=month&unit=watt'
+  #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=month&unit=watt'
       req.headers["Accept"] = "application/json"
     end
     return JSON.parse(response.body)
   end
 
-# This subroutine returns an array of time and power of the requested hour on a time-grid of minutes
-# Maximum delay is 5 minutes.
-# This holds for data not older than one month only. mysmartgrid thins out data older then one month and even more after two month.
-#
-def get_hour(time)
+  # This subroutine returns an array of time and power of the requested hour on a time-grid of minutes
+  # Maximum delay is 5 minutes.
+  # This holds for data not older than one month only. mysmartgrid thins out data older then one month and even more after two month.
+  #
+  def get_hour(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_hour.to_time.to_i
     datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_hour.to_time.to_i
     #puts datetime_end
@@ -66,19 +66,19 @@ def get_hour(time)
     #puts "HOUR"
     response = @conn.get do |req|
       req.url '?start='+(datetime_start-40).to_s+'&end='+datetime_end.to_s+'&resolution=minute&unit=watt'
-#      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=hour&unit=watt'
+  #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=hour&unit=watt'
       req.headers["Accept"] = "application/json"
     end
     return JSON.parse(response.body)
   end
 
-# "real time view" with 5 minutes delay!
-#
-# This subroutine returns values of the last 340 seconds. Actually mysmartgrid data are updated every 5 minutes
-# They are on a timegrid of 1 minute distance.
-# Taking the first value of the return lead therefore to a value change every minute and you always
-# have a delay of 5 minutes in "real time view"
-def get_live
+  # "real time view" with 5 minutes delay!
+  #
+  # This subroutine returns values of the last 340 seconds. Actually mysmartgrid data are updated every 5 minutes
+  # They are on a timegrid of 1 minute distance.
+  # Taking the first value of the return lead therefore to a value change every minute and you always
+  # have a delay of 5 minutes in "real time view"
+  def get_live
     datetime_start = Time.now.to_i - 300
     datetime_end   = Time.now.to_i
     # puts datetime_end
@@ -95,7 +95,22 @@ def get_live
     end
   end
 
-# sensor_id replaces username and x_token the password
+  # This subroutine returns an array of time and work of the requested year on a time-grid of months
+  # This holds for data not older than one year only. MySmartGrid thins out data older then one month and even more after two month.
+  def get_year(time)
+    datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_year.to_time.to_i
+    datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_year.to_time.to_i
+    puts datetime_end
+    puts datetime_start
+    response = @conn.get do |req|
+      req.url '?start='+datetime_start.to_s+'&end='+datetime_end.to_s+'&resolution=month&unit=kwhperyear'
+  #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=month&unit=watt'
+      req.headers["Accept"] = "application/json"
+    end
+    return JSON.parse(response.body)
+  end
+
+  # sensor_id replaces username and x_token the password
   def initialize(sensor_id, x_token)
     #sensor_id = "721bcb386c8a4dab2510d40a93a7bf66" #to be removed
     #x_token   = "0b81f58c19135bc01420aa0120ae7693" #dito

@@ -233,7 +233,7 @@ class Crawler
             end
 
             if first_timestamp
-              power = (second_reading - first_reading)/(2500000.0)
+              power = (second_reading - first_reading)/(2500000.0) # convert vsm to power
               result << [first_timestamp, power]
             end
             first_timestamp = second_timestamp
@@ -321,22 +321,22 @@ class Crawler
   def year(containing_timestamp=@unixtime_now)
   result = []
     if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
-      # my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
-      # request  = my_smart_grid.get_month(containing_timestamp)
-      # if request.any?
-      #   request.each do |item|
-      #   #puts item.to_s
-      #   timestamp = item[0] * 1000 - 720000 # GMT -2h
-      #   if String.try_convert(item[1])== "-nan"
-      #     item[1]=0
-      #   else
-      #     work = item[1] > 0 ? item[1].abs/365 : 0  # must be converted from kwhperyear to kwhperday
-      #     result << [timestamp, work]
-      #   end
-      # end
-      # else
-      #   puts request.inspect
-      # end
+      my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request  = my_smart_grid.get_year(containing_timestamp)
+      if request.any?
+        request.each do |item|
+        #puts item.to_s
+        timestamp = item[0] * 1000 - 720000 # GMT -2h
+        if String.try_convert(item[1])== "-nan"
+          item[1]=0
+        else
+          work = item[1] > 0 ? item[1].abs*0.03287671232876712 : 0  # must be converted from kwhperyear to kwhpermonth
+          result << [timestamp, work]
+        end
+      end
+      else
+        puts request.inspect
+      end
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request     = discovergy.get_year(@meter.manufacturer_product_serialnumber, containing_timestamp)
