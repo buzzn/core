@@ -113,4 +113,11 @@ class Notifier < ActionMailer::Base
     mail(to: @receiver.email, subject: 'buzzn: ' + t('new_comment'))
   end
 
+  def send_email_to_user_variable_content(receiver, subject, message)
+    @receiver = receiver
+    @subject = subject
+    @message = message
+    mail(to: @receiver.email, subject: @subject)
+  end
+
 end

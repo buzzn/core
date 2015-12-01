@@ -79,6 +79,7 @@ class User < ActiveRecord::Base
     self.editable_metering_points.collect(&:address).compact.uniq{|address| address.longitude && address.latitude}
   end
 
+
   def usable_metering_points
     result = self.editable_metering_points
     self.friends.each do |friend|
@@ -160,8 +161,8 @@ class User < ActiveRecord::Base
     })
   end
 
-  def send_email_notification(header, message)
-    #Notifier
+  def send_email(header, message)
+    Notifier.send_email_to_user_variable_content(self, header, message).deliver_now
   end
 
 

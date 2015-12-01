@@ -117,7 +117,9 @@ de:
   my_metering_points: Meine Zählpunkte
   metering_points: Zählpunkte
   add_metering_point: Zählpunkt hinzufügen
+  add_metering_points: Zählpunkte hinzufügen
   metering_point_mode: Art des Zählpunkts
+  remove_metering_points: Zählpunkte entfernen
 
   yes: Ja
   no: Nein
@@ -682,7 +684,7 @@ de:
   click_to_change_order_of_all_red_and_blue_bubbles: Klicke hier um die Reihenfolge der roten und blauen Kreise zu ändern
   cookie_text: "Wir verwenden Cookies, um unseren Service zu verbessern und zu personalisieren. Wenn Du unsere Website nutzt erklärst Du Dich mit der Verwendung von Cookies einverstanden. Es kann sein, dass schon jetzt Cookies gespeichert wurden. In unserer Cookie Richtlinie findest Du mehr Informationen. "
   must_be_a_GIF_JPG_or_PNG: "Muss vom Typ GIF, JPG oder PNG sein."
-
+  localpool_invite_metering_points_info: "Du kannst hier die Zählernummer des Zählers eingeben, den Du zur Gruppe hinzufügen möchtest. Wenn Du einen Benutzer neu zu diesem Localpool einladen möchtest, so kannst du im zweiten Schritt dessen E-Mail Adresse eingeben und er wird eine Einladung erhalten. "
 
   possible_reasons_are_a_broken_internet_connection_or_a_failure_in_your_hardware: "Mögliche Gründe sind eine unterbrochene Internetverbindung oder ein Fehler in deiner Hardware."
   to_get_the_latest_data_in_your_app_you_should_try_to_fix_this_issue: "Um die neusten Daten in Deiner buzzn App verfügbar zu haben solltest Du dieses Problem schnellstmöglich beheben."

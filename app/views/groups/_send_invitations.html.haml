@@ -4,6 +4,8 @@
     %h4.modal-title= t'send_invitations'
   .modal-body
     = simple_form_for @group, remote: true, url: send_invitations_update_group_path, method: 'put' do |f|
+      %p= t('localpool_invite_metering_points_info')
+
       = f.input :new_meters, input_html: { value: ''}
       .modal-footer
         .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
