@@ -554,6 +554,12 @@ de:
   mounting_method: Befestigungsmethode
   build_year: Herstellungsjahr
   calibrated_till: Geeicht bis
+  add_group_manager: Neuen Gruppenadmin festlegen
+  add_metering_point_manager: Neuen Zählpunktadmin festlegen
+  user_is_now_a_new_group_manager: "%{username} ist jetzt ein neuer Gruppenadmin."
+  user_is_now_a_new_metering_point_manager: "%{username} ist jetzt ein neuer Zählpunktadmin."
+  user_is_already_group_manager: "%{username} ist bereits Gruppenadmin."
+  user_is_already_metering_point_manager: "%{username} ist bereits Zählpunktadmin."
 
   obis_index: OBIS Kennzahlen
   variable_tariff: Variabler Tarif
@@ -685,6 +691,9 @@ de:
   cookie_text: "Wir verwenden Cookies, um unseren Service zu verbessern und zu personalisieren. Wenn Du unsere Website nutzt erklärst Du Dich mit der Verwendung von Cookies einverstanden. Es kann sein, dass schon jetzt Cookies gespeichert wurden. In unserer Cookie Richtlinie findest Du mehr Informationen. "
   must_be_a_GIF_JPG_or_PNG: "Muss vom Typ GIF, JPG oder PNG sein."
   localpool_invite_metering_points_info: "Du kannst hier die Zählernummer des Zählers eingeben, den Du zur Gruppe hinzufügen möchtest. Wenn Du einen Benutzer neu zu diesem Localpool einladen möchtest, so kannst du im zweiten Schritt dessen E-Mail Adresse eingeben und er wird eine Einladung erhalten. "
+  add_metering_point_manager_info: "Du kannst hier weiteren Benutzern ermöglichen, diesen Zählpunkt zu verwalten. Diese Benutzer können dann alles einsehen, was Du siehst und können z.B. weitere Benutzer zu diesem Zählpunkt einladen oder den Zählpunkt einer Gruppe zuordnen."
+  add_manager_careful_info: "Überlege also genau, wem du hier diese Rechte zukommen lässt!"
+  add_group_manager_info: "Du kannst hier weiteren Benutzern ermöglichen diese Gruppe zu verwalten. Diese Benutzer können dann alles einsehen, was Du siehst und können z.B. weitere Zählpunkte zu dieser Gruppe hinzufügen oder bestehende davon entfernen."
 
   possible_reasons_are_a_broken_internet_connection_or_a_failure_in_your_hardware: "Mögliche Gründe sind eine unterbrochene Internetverbindung oder ein Fehler in deiner Hardware."
   to_get_the_latest_data_in_your_app_you_should_try_to_fix_this_issue: "Um die neusten Daten in Deiner buzzn App verfügbar zu haben solltest Du dieses Problem schnellstmöglich beheben."

@@ -1,0 +1,5 @@
+$(".modal-dialog").html("<%= escape_javascript( render 'metering_points/add_manager') %>");
+$(".select2").select2({
+  minimumInputLength: 1,
+  formatInputTooShort: ''
+});

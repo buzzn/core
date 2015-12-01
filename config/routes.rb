@@ -39,6 +39,8 @@ Buzzn::Application.routes.draw do
       get :send_invitations
       put :send_invitations_update
       get :chart_comments
+      get :add_manager
+      put :add_manager_update
     end
   end
 
@@ -119,6 +121,8 @@ Buzzn::Application.routes.draw do
       get :remove_members
       put :remove_members_update
       get :chart_comments
+      get :add_manager
+      put :add_manager_update
     end
   end
 

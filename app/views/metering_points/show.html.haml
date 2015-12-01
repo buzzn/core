@@ -48,6 +48,7 @@
 
             %li= link_to(t('remove_members'), remove_members_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
             %li= link_to(t("invite_friends_to_join_this_metering_point"),send_invitations_metering_point_path, {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
+            %li= link_to(t('add_metering_point_manager'), add_manager_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
           - if user_signed_in?
             - if @requests.any? && @requests.collect(&:user).include?(current_user)
               %li= t'waiting_for_accepting'

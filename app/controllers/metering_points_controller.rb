@@ -147,10 +147,13 @@ class MeteringPointsController < ApplicationController
 
   def remove_members
     @metering_point = MeteringPoint.find(params[:id])
+    authorize_action_for @metering_point
   end
+  authority_actions :remove_members => 'update'
 
   def remove_members_update
     @metering_point = MeteringPoint.find(params[:id])
+    authorize_action_for @metering_point
     user_id = params[:user_id] || params[:metering_point][:user_id]
     @user = User.find(user_id)
     @metering_point.users.delete(@user)
@@ -163,6 +166,28 @@ class MeteringPointsController < ApplicationController
     end
     respond_with @metering_point
   end
+  authority_actions :remove_members_update => 'update'
+
+
+  def add_manager
+    @metering_point = MeteringPoint.find(params[:id])
+    authorize_action_for @metering_point
+  end
+  authority_actions :add_manager => 'update'
+
+  def add_manager_update
+    @metering_point = MeteringPoint.find(params[:id])
+    authorize_action_for @metering_point
+    @user = User.find(params[:metering_point][:user_id])
+    if @user.has_role?(:manager, @metering_point)
+      flash[:notice] = t('user_is_already_metering_point_manager', username: @user.name)
+    else
+      @user.add_role(:manager, @metering_point)
+      flash[:notice] = t('user_is_now_a_new_metering_point_manager', username: @user.name)
+    end
+  end
+  authority_actions :add_manager_update => 'update'
+
 
 
 
@@ -259,6 +284,7 @@ class MeteringPointsController < ApplicationController
     end
     render json: { comments: result }
   end
+
 
 
 

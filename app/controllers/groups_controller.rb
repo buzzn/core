@@ -191,6 +191,27 @@ class GroupsController < ApplicationController
     respond_with @group
   end
 
+
+  def add_manager
+    @group = Group.find(params[:id])
+    authorize_action_for @group
+  end
+  authority_actions :add_manager => 'update'
+
+  def add_manager_update
+    @group = Group.find(params[:id])
+    authorize_action_for @group
+    @user = User.find(params[:group][:user_id])
+    if @user.has_role?(:manager, @group)
+      flash[:notice] = t('user_is_already_group_manager', username: @user.name)
+    else
+      @user.add_role(:manager, @group)
+      flash[:notice] = t('user_is_now_a_new_group_manager', username: @user.name)
+    end
+  end
+  authority_actions :add_manager_update => 'update'
+
+
   def bubbles_data
     @group = Group.find(params[:id])
     result = @group.bubbles_data(current_user)

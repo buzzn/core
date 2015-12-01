@@ -57,6 +57,7 @@
           - if user_signed_in? && current_user.can_update?(@group)
             %li= link_to(t('edit_group'), edit_group_path(@group), {:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal'})
             %li= link_to(t('remove_metering_points'), remove_members_group_path(@group),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
+            %li= link_to(t('add_group_manager'), add_manager_group_path(@group),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
           - if user_signed_in?
             - if @group.mode == 'localpool'
               -if current_user.can_update?(@group)
