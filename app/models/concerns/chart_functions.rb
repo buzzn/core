@@ -34,4 +34,22 @@ module ChartFunctions
       return 1.day
     end
   end
+
+  def get_cache_interval(resolution, containing_timestamp)
+    time = Time.at(containing_timestamp.to_i/1000).in_time_zone
+    if resolution == "hour_to_minutes"
+      start_time = time.beginning_of_hour
+      end_time = time.end_of_hour
+    elsif resolution == "day_to_minutes"
+      start_time = time.beginning_of_day
+      end_time = time.end_of_day
+    elsif resolution == "month_to_days"
+      start_time = time.beginning_of_month
+      end_time = time.end_of_month
+    elsif resolution == "year_to_months"
+      start_time = time.beginning_of_year
+      end_time = time.end_of_year
+    end
+    return start_time.to_i.to_s + "_" + end_time.to_i.to_s
+  end
 end

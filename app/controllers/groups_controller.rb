@@ -221,7 +221,7 @@ class GroupsController < ApplicationController
   def chart
     @group = Group.find(params[:id])
     @resolution = params[:resolution] || "day_to_minutes"
-    @cache_id = "/groups/#{params[:id]}/chart?resolution=#{@resolution}&containing_timestamp=#{params[:containing_timestamp]}"
+    @cache_id = "/groups/#{params[:id]}/chart?resolution=#{@resolution}&interval=#{@group.get_cache_interval(@resolution, params[:containing_timestamp])}"
     @cache = Rails.cache.fetch(@cache_id)
     @data = @cache || @group.chart(@resolution, params[:containing_timestamp])
     if @cache.nil?

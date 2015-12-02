@@ -196,7 +196,7 @@ class MeteringPointsController < ApplicationController
   def chart
     @metering_point = MeteringPoint.find(params[:id])
     params[:containing_timestamp].nil? ? @containing_timestamp = Time.now.to_i*1000 : @containing_timestamp = params[:containing_timestamp]
-    @cache_id = "/metering_points/#{params[:id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{@containing_timestamp}"
+    @cache_id = "/metering_points/#{params[:id]}/chart?resolution=#{params[:resolution]}&interval=#{@metering_point.get_cache_interval(params[:resolution], @containing_timestamp)}"
     @cache = Rails.cache.fetch(@cache_id)
     @data = @cache || @metering_point.chart_data(params[:resolution], @containing_timestamp)
     #@data = @metering_point.chart_data(params[:resolution], @containing_timestamp)
