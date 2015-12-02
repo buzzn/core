@@ -22,4 +22,16 @@ module ChartFunctions
     end
     return Comment.where(commentable_type: self.class, commentable_id: self.id).where('chart_resolution IN (?)', resolutions).where("chart_timestamp > ?", start_time).where("chart_timestamp < ?", end_time).order('chart_timestamp ASC')
   end
+
+  def get_cache_duration(resolution)
+    if resolution == "hour_to_minutes"
+      return 1.minute
+    elsif resolution == "day_to_minutes"
+      return 3.minutes
+    elsif resolution == "month_to_days"
+      return 2.hours
+    elsif resolution == "year_to_months"
+      return 1.day
+    end
+  end
 end

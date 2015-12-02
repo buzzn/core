@@ -196,15 +196,18 @@ class MeteringPointsController < ApplicationController
   def chart
     @metering_point = MeteringPoint.find(params[:id])
     params[:containing_timestamp].nil? ? @containing_timestamp = Time.now.to_i*1000 : @containing_timestamp = params[:containing_timestamp]
-    #@cache_id = "/metering_points/#{params[:id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{@containing_timestamp}"
-    #@cache = Rails.cache.fetch(@cache_id)
-    #@data = @cache || @metering_point.chart_data(params[:resolution], @containing_timestamp)
-    @data = @metering_point.chart_data(params[:resolution], @containing_timestamp)
+    @cache_id = "/metering_points/#{params[:id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{@containing_timestamp}"
+    @cache = Rails.cache.fetch(@cache_id)
+    @data = @cache || @metering_point.chart_data(params[:resolution], @containing_timestamp)
+    #@data = @metering_point.chart_data(params[:resolution], @containing_timestamp)
     @chart_data = []
     @chart_data << {
       data: @data,
       name: @metering_point.decorate.long_name
     }
+    if @cache.nil?
+      Rails.cache.write(@cache_id, @data, expires_in: @metering_point.get_cache_duration(params[:resolution]))
+    end
     render json: @chart_data.to_json
   end
 
@@ -236,6 +239,9 @@ class MeteringPointsController < ApplicationController
        latest_power = nil
        latest_timestamp = nil
        online = false
+    end
+    if @cache.nil?
+      Rails.cache.write(@cache_id, last_power, expires_in: 4.seconds)
     end
     render json: {
       latest_power: latest_power,

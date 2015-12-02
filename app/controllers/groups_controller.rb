@@ -219,18 +219,15 @@ class GroupsController < ApplicationController
   end
 
   def chart
-    @cache_id = "/groups/#{params[:id]}/chart?resolution=#{params[:resolution]}&containing_timestamp=#{params[:containing_timestamp]}"
+    @group = Group.find(params[:id])
+    @resolution = params[:resolution] || "day_to_minutes"
+    @cache_id = "/groups/#{params[:id]}/chart?resolution=#{@resolution}&containing_timestamp=#{params[:containing_timestamp]}"
     @cache = Rails.cache.fetch(@cache_id)
-    if @cache
-      render json: @cache
-    else
-      resolution = params[:resolution]
-      if resolution.nil?
-        resolution = "day_to_minutes"
-      end
-      resolution_format = resolution
-      render json: Group.find(params[:id]).chart(resolution_format, params[:containing_timestamp]).to_json
+    @data = @cache || @group.chart(@resolution, params[:containing_timestamp])
+    if @cache.nil?
+      Rails.cache.write(@cache_id, @data, expires_in: @group.get_cache_duration(@resolution))
     end
+    render json: @data.to_json
   end
 
   def kiosk

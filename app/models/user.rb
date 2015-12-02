@@ -239,7 +239,8 @@ private
       end
     end
     MeteringPointUserRequest.where(user: self).each{|request| request.destroy}
-
+    FriendshipRequest.where(sender: self).each{|request| request.destroy}
+    FriendshipRequest.where(receiver: self).each{|request| request.destroy}
     dummy_user = User.dummy
     Comment.where(user: self).each do |comment|
       comment.user_id = dummy_user.id
@@ -253,6 +254,7 @@ private
       activity.recipient_id = dummy_user.id
       activity.save
     end
+
 
     self.roles.each{|role| role.destroy}
   end
