@@ -17,10 +17,10 @@ Buzzn::Application.routes.draw do
   }
 
 
-
   resources :profiles do
     member do
       get :redirect_to_current_user
+      get :check_destroyable
     end
   end
 

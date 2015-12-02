@@ -10,6 +10,8 @@ class Comment < ActiveRecord::Base
 
   default_scope { order('created_at DESC') }
 
+  before_destroy :destroy_children
+
   mount_uploader :image, PictureUploader
 
   # NOTE: install the acts_as_votable plugin if you
@@ -54,5 +56,10 @@ class Comment < ActiveRecord::Base
   def self.find_commentable(commentable_str, commentable_id)
     commentable_str.constantize.find(commentable_id)
   end
+
+  private
+    def destroy_children
+      self.children.each{|comment| comment.destroy}
+    end
 
 end

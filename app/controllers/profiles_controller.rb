@@ -50,6 +50,13 @@ class ProfilesController < ApplicationController
   end
 
 
+  def check_destroyable
+    #byebug
+    @profile = Profile.find(params[:id])
+    @user = @profile.user
+  end
+
+
 
 private
   def profile_params

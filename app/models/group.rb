@@ -5,7 +5,7 @@ class Group < ActiveRecord::Base
   include CalcVirtualMeteringPoint
   include ChartFunctions
 
-  before_destroy :release_metering_points
+  before_destroy :destroy_content
 
   include PublicActivity::Model
   tracked  owner: Proc.new{ |controller, model| controller && controller.current_user }
@@ -77,6 +77,14 @@ class Group < ActiveRecord::Base
 
   def members
     (self.managers + MeteringPoint.includes(:users).by_group(self).outputs.collect(&:users).flatten + MeteringPoint.includes(:users).by_group(self).inputs.collect(&:users).flatten).uniq
+  end
+
+  def in_metering_points
+    MeteringPoint.where(group: self).where(mode: 'in')
+  end
+
+  def out_metering_points
+    MeteringPoint.where(group: self).where(mode: 'out')
   end
 
 
@@ -361,12 +369,14 @@ class Group < ActiveRecord::Base
 
   private
 
-    def release_metering_points
+    def destroy_content
       self.metering_points.each do |metering_point|
         metering_point.group = nil
         metering_point.save
         metering_point.meter.save if metering_point.meter
       end
+      GroupMeteringPointRequest.where(group: self).each{|request| request.destroy}
+      self.root_comments.each{|comment| comment.destroy}
     end
 
     def validate_localpool

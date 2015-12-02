@@ -1,0 +1,27 @@
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'delete_account'
+  .modal-body
+    - deletable = true
+    = simple_form_for @user, remote: false, url: registration_path(@user), method: :delete do |f|
+      - if @user.editable_groups.any?
+        - @user.editable_groups.each do |group|
+          - if group.managers.count == 1 || (group.in_metering_points.any? && group.in_metering_points.collect{|metering_point| @user.can_update?(metering_point)}.include?(false))
+            %p= t('group_not_deletable', group_name: group.name)
+            - deletable = false
+      - if @user.editable_metering_points.any?
+        - @user.editable_metering_points.each do |metering_point|
+          - if (metering_point.managers.count == 1 && metering_point.users.count > 1)
+            %p= t('metering_point_not_deletable', metering_point_name: metering_point.name)
+            - deletable = false
+      - if deletable
+        %p= t('your_data_has_been_checked_and_you_can_now_delete_all_of_it')
+      - else
+        %p= t('you_can_not_delete_your_account_right_now_due_to_data_others_rely_on')
+        %p= t('please_make_sure_to_add_managers_to_your_groups_and_metering_points_or_to_release_all_of_its_members')
+      .modal-footer
+        .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+          = t'cancel'
+        - if deletable
+          = f.button :button, t('delete'), id: 'submit', class: 'btn btn-danger btn-labeled fa fa-trash'

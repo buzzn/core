@@ -33,7 +33,7 @@ class MeteringPoint < ActiveRecord::Base
   mount_uploader :image, PictureUploader
 
   before_destroy :delete_meter
-  before_destroy :delete_requests
+  before_destroy :destroy_content
 
   has_many :dashboard_metering_points
   has_many :dashboards, :through => :dashboard_metering_points
@@ -534,15 +534,11 @@ class MeteringPoint < ActiveRecord::Base
       end
     end
 
-    def delete_requests
-      requests = MeteringPointUserRequest.where(metering_point_id: self.id)
-      requests.each do |request|
-        request.destroy
-      end
-      requests = GroupMeteringPointRequest.where(metering_point_id: self.id)
-      requests.each do |request|
-        request.destroy
-      end
+    def destroy_content
+      MeteringPointUserRequest.where(metering_point: self).each{|request| request.destroy}
+      GroupMeteringPointRequest.where(metering_point: self).each{|request| request.destroy}
+      self.root_comments.each{|comment| comment.destroy}
+      #self.activities.each{|activity| activity.destroy}
     end
 
 

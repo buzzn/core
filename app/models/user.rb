@@ -33,8 +33,12 @@ class User < ActiveRecord::Base
   delegate :about_me, to: :profile
   delegate :image, to: :profile
 
+  before_destroy :delete_content
+
 
   after_create :create_dashboard, :create_token
+
+  self.scope :dummy, -> { where(email: 'sys@buzzn.net').first }
 
   def friend?(user)
     self.friendships.where(friend: user).empty? ? false : true
@@ -221,6 +225,36 @@ private
   def create_token
     app = Doorkeeper::Application.first
     Doorkeeper::AccessToken.create!(:application_id => app.id, :resource_owner_id => self.id)
+  end
+
+  def delete_content
+    self.editable_groups.each do |group|
+      if (group.managers.count == 1 && !group.in_metering_points.collect{|metering_point| self.can_update?(metering_point)}.include?(false))
+        group.destroy
+      end
+    end
+    self.editable_metering_points.each do |metering_point|
+      if metering_point.managers.count == 1 && (metering_point.users.count <= 1 && (metering_point.users.include?(self) || metering_point.users.empty?))
+        metering_point.destroy
+      end
+    end
+    MeteringPointUserRequest.where(user: self).each{|request| request.destroy}
+
+    dummy_user = User.dummy
+    Comment.where(user: self).each do |comment|
+      comment.user_id = dummy_user.id
+      comment.save
+    end
+    PublicActivity::Activity.where(owner: self).each do |activity|
+      activity.owner_id = dummy_user.id
+      activity.save
+    end
+    PublicActivity::Activity.where(recipient: self).each do |activity|
+      activity.recipient_id = dummy_user.id
+      activity.save
+    end
+
+    self.roles.each{|role| role.destroy}
   end
 
 end

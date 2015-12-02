@@ -34,7 +34,7 @@ class MeteringPointUserRequestsController < InheritedResources::Base
   end
 
   def accept
-    byebug
+    #byebug
     @metering_point_user_request = MeteringPointUserRequest.find(params[:id])
     @metering_point = @metering_point_user_request.metering_point
     @mode = @metering_point_user_request.mode

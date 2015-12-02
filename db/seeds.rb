@@ -169,6 +169,9 @@ buzzn_team.each do |buzzn_user|
   buzzn_user.friendships.create(friend: karin)
 end
 
+#Dieser User wird allen Kommentaren von gelöschten Benutzern zugewiesen
+geloeschter_benutzer = Fabricate(:geloeschter_benutzer)
+
 
 
 # christian_schuetze

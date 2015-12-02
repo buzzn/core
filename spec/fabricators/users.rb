@@ -79,6 +79,12 @@ Fabricator :christian_schuetze, from: :user do
   contracting_party   { Fabricate(:contracting_party) }
 end
 
+Fabricator :geloeschter_benutzer, from: :user do
+  email     'sys@buzzn.net'
+  profile   { Fabricate(:profile_geloeschter_benutzer) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
 
 
 

@@ -416,6 +416,7 @@ de:
   create_project: Projekt erstellen
   delete_organization: Organisation löschen
   delete_project: Projekt löschen
+  delete_account: Konto löschen
 
   residents: Bewohner
   friends: Freunde
@@ -656,6 +657,14 @@ de:
   dummy: Dummy
   you_dont_have_a_smart_meter_so_your_energy_data_is_estimated_as_shown: "Du hast keinen Smart Meter an diesem Zählpunkt, also werden die Energiedaten wie gezeigt geschätzt."
 
+  group_not_deletable: "Die Gruppe %{group_name} ist momentan nicht löschbar."
+  metering_point_not_deletable: "Der Zählpunkt %{metering_point_name} ist momentan nicht löschbar."
+  your_data_has_been_checked_and_you_can_now_delete_all_of_it: Deine Daten wurden überprüft und Du kannst Dein Konto nun vollständig löschen.
+  you_can_not_delete_your_account_right_now_due_to_data_others_rely_on: "Du kannst Dein Konto noch nicht löschen da sich andere Benutzer auf Deine Inhalte stützen (z.B. auf Deine Gruppen, Zählpunkte)"
+  please_make_sure_to_add_managers_to_your_groups_and_metering_points_or_to_release_all_of_its_members: "Stelle bitte sicher dass du weitere Gruppen- oder Zählpunktadmins ernennst oder alle Mitglieder deine Gruppen oder Zählpunkte entfernst."
+  please_make_sure_to_add_managers_to_your_group_or_release_all_of_its_metering_points: "Stelle bitte sicher dass du weitere Gruppenadmins ernennst oder entferne alle Zählpunkte aus der Gruppe."
+  please_make_sure_to_add_managers_to_your_metering_point_or_release_all_of_its_members: "Stelle bitte sicher dass du weitere Zählpunktadmins ernennst oder entferne alle Mitglieder aus der Gruppe."
+
 
   contracts_info: "Um mit diesem Zählpunkt am Stromgeschehen teilnehmen zu können, benötigst Du Verträge mit verschiedenen Anbietern. Zum Beispiel mit einem Lieferanten (buzzn.net oder anderer), um überhaupt Strom zu bekommen. Oder zusätzlich mit einem Messstellenbetreiber (Discovergy oder anderer), der sich um Deinen Stromzähler kümmert. Hier siehst Du alle Verträge, die diesem Vertragspartner zugeordnet sind."
   data_connection_info: "Um Deine Ernergie-Daten in der App in Echtzeit ansehen zu können, musst Du Deine Zugangsdaten zu Deinem Smart Metering Anbieter hier eingeben."
@@ -694,6 +703,7 @@ de:
   add_metering_point_manager_info: "Du kannst hier weiteren Benutzern ermöglichen, diesen Zählpunkt zu verwalten. Diese Benutzer können dann alles einsehen, was Du siehst und können z.B. weitere Benutzer zu diesem Zählpunkt einladen oder den Zählpunkt einer Gruppe zuordnen."
   add_manager_careful_info: "Überlege also genau, wem du hier diese Rechte zukommen lässt!"
   add_group_manager_info: "Du kannst hier weiteren Benutzern ermöglichen diese Gruppe zu verwalten. Diese Benutzer können dann alles einsehen, was Du siehst und können z.B. weitere Zählpunkte zu dieser Gruppe hinzufügen oder bestehende davon entfernen."
+  delete_account_confirmation_info: "Bist du Dir sicher, dass du Dein Konto vollständig löschen willst? Alle von Dir erzeugten Daten werden dabei gelöscht, sofern sie nicht von Dir für andere Nutzer zur Verwaltung freigegeben worden sind."
 
   possible_reasons_are_a_broken_internet_connection_or_a_failure_in_your_hardware: "Mögliche Gründe sind eine unterbrochene Internetverbindung oder ein Fehler in deiner Hardware."
   to_get_the_latest_data_in_your_app_you_should_try_to_fix_this_issue: "Um die neusten Daten in Deiner buzzn App verfügbar zu haben solltest Du dieses Problem schnellstmöglich beheben."
