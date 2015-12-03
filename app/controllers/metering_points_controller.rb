@@ -305,6 +305,7 @@ private
       :observe,
       :min_watt,
       :max_watt,
+      :observe_offline,
       :virtual,
       :forecast_kwh_pa,
       :group_id,

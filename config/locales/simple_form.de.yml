@@ -57,6 +57,10 @@ de:
         invite_via_email: Per Email Adresse einladen
         email: Email
         email_confirmation: Email Bestätigung
+        observe: Leistungsüberwachung
+        min_watt: Email Benachrichtigung wenn Leistung diesen Wert unterschreitet (Watt)
+        max_watt: Email Benachrichtigung wenn Leistung diesen Wert überschreitet (Watt)
+        observe_offline: Email Benachrichtigung wenn Zählpunkt offline ist
       device:
         image: Bild
         mode: Modus

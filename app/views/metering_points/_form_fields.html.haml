@@ -16,6 +16,7 @@
 .js-dependent-fields{data: {radio: {name: 'metering_point[observe]', value: 'true'}}}
   = f.input :min_watt
   = f.input :max_watt
+  = f.input :observe_offline, as: :radio_buttons
 
 = f.association :group, collection: Group.editable_by_user(current_user) if Group.editable_by_user(current_user).any?
 = f.input :readable, collection: MeteringPoint.readables.map(&:to_sym), include_blank: false
