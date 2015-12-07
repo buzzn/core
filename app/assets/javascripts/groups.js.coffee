@@ -268,13 +268,14 @@ class BubbleChart
 
   #sets the maximum available power-values needed for scaling
   calculateMaxPower: () =>
+    that = this
     @max_power_in = 0
     max_power_out = 0 #max_power_out is equal to totalPowerOut !!
     @data_out.children.forEach (d) ->
       max_power_out += d.latest_power
     @nodes.forEach (d) ->
-      if d.value > @max_power_in
-        @max_power_in = d.value
+      if d.value > that.max_power_in
+        that.max_power_in = d.value
     if @max_power_in > max_power_out
       @max_power = @max_power_in
     else

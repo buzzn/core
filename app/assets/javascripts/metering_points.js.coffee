@@ -980,7 +980,8 @@ namespace 'Chart.Functions', (exports) ->
         chart.hideLoading()
         Chart.Functions.activateButtons(true)
         Chart.Functions.setEnergyStats()
-        Chart.Functions.getChartComments(resource, id, containing_timestamp)
+        if $(".metering_point_detail").length > 0
+          Chart.Functions.getChartComments(resource, id, containing_timestamp)
       .error (jqXHR, textStatus, errorThrown) ->
         console.log textStatus
         $('#chart-container-' + id).html('error')
