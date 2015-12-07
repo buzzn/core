@@ -149,36 +149,7 @@ class BubbleChart
       .on("mouseover", (d,i) -> that.show_details(d,i,this))
       .on("mouseout", (d,i) -> that.hide_details(d,i,this))
 
-    # @data_out.forEach (d) =>
-    #   node = {
-    #     id: d.metering_point_id
-    #     value: d.latest_power
-    #     radius: @radius_scale(parseInt(d.latest_power)) * 1.1
-    #     name: d.name
-    #     x: @width / 2
-    #     y: @height / 2
-    #     color: "#F76C51"
-    #   }
-    #   @nodes_out.push node
-    # @nodes_out.sort (a,b) -> b.value - a.value
-
     svgContainer = d3.select("#bubbles_container_" + group_id).select("#svg_vis")
-
-    # @circles_out = svgContainer.selectAll("rect")
-    #   .data(@nodes_out, (d) -> d.id)
-    #   .enter()
-    #   .append("circle")
-
-    # circleAttributes = @circles_out
-    #   .attr("id", (d) -> "bubble_#{d.id}")
-    #   .attr("cx", (d) -> d.x)
-    #   .attr("cy", (d) -> d.y)
-    #   .attr("r", (d) -> d.radius)
-    #   .style("fill", (d) -> d.color)
-    #   .attr("stroke-width", 8)
-    #   .attr("stroke", (d) => d3.rgb(d.color).darker())
-    #   .on("mouseover", (d,i) -> that.show_details(d,i,this))
-    #   .on("mouseout", (d,i) -> that.hide_details(d,i,this))
 
     # radius will be set to 0 initially.
     # see transition below
@@ -244,6 +215,7 @@ class BubbleChart
       d.x = d.x + (@center.x - d.x) * (@damper + 0.02) * alpha
       d.y = d.y + (@center.y - d.y) * (@damper + 0.02) * alpha
 
+  # tooltip
   show_details: (data, i, element) =>
     d3.select(element).attr("stroke", (d) -> d3.rgb(d.color).darker().darker())
     d3.select(element).attr("opacity", 0.7)
@@ -252,50 +224,37 @@ class BubbleChart
     @tooltip.showTooltip(content,d3.event)
 
 
+  #tooltip
   hide_details: (data, i, element) =>
     d3.select(element).attr("stroke", (d) => d3.rgb(d.color).darker())
     d3.select(element).attr("opacity", 1)
     @tooltip.hideTooltip()
 
-  reset_radius: (id, value) =>
 
+  #is called when new data arrived. sets new values and radiuses for all bubbles and triggers rearrangement
+  reset_radius: (data) =>
+    that = this
     @nodes.forEach (d) =>
-      if d.id.toString() == id.toString()
-        if value == d.value
-          return
-        d.value = value
-        this.calculateMaxPower(d.value)
-        d.radius = @radius_scale(parseInt(value))
+      data.in.forEach (metering_point_data) ->
+        if d.id.toString() == metering_point_data.metering_point_id
+          d.value = metering_point_data.latest_power
+          d.radius = that.radius_scale(parseInt(metering_point_data.latest_power))
+
 
     @data_out.children.forEach (d) =>
-      if d.metering_point_id.toString() == id.toString()
-        if d.latest_power == value
-          return
-        d.latest_power = value
-        @path = d3.select("circles_out").selectAll('path')
-          .data(@partition.nodes(@data_out))
-        this.calculateMaxPower(value)
-        #resetRadiusArc()
+      data.out.children.forEach (metering_point_data) ->
+        if d.metering_point_id.toString() == metering_point_data.metering_point_id
+          d.latest_power = metering_point_data.latest_power
+          that.path = d3.select("circles_out").selectAll('path')
+            .data(that.partition.nodes(that.data_out))
 
-    # @nodes_out.forEach (d) =>
-    #   if d.id.toString() == id.toString()
-    #     if value == d.value
-    #       return
-    #     d.value = value
-    #     this.calculateMaxPower(d.value)
-    #     d.radius = @radius_scale(parseInt(value)) * 1.1
-
-
-    #@circles = @vis.selectAll("circle")
-    #  .data(@nodes, (d) -> d.id)
-    #@circles.attr("r", (d) -> d.radius)
+    this.calculateMaxPower()
 
     @circles.transition().duration(2000).attr("r", (d) -> d.radius)
-    #@circles_out.transition().duration(2000).attr("r", (d) -> d.radius)
-    #@circles.attr("r", (d) -> d.radius)
-    #@circles_out.attr("r", (d) -> d.radius)
+
     this.display_group_all()
 
+  #is called when window size changes
   calculateNewCenter: () =>
     @height = $(".bubbles_container").height()
     @width = $(".bubbles_container").width()
@@ -307,23 +266,24 @@ class BubbleChart
       .attr("transform", "translate(" + @width / 2 + "," + @height / 2 + ")")
     this.setNewScale()
 
-  calculateMaxPower: (value) =>
-    @max_power_in = d3.max(@nodes, (d) -> parseInt(value))
+  #sets the maximum available power-values needed for scaling
+  calculateMaxPower: () =>
+    @max_power_in = 0
     max_power_out = 0 #max_power_out is equal to totalPowerOut !!
     @data_out.children.forEach (d) ->
       max_power_out += d.latest_power
+    @nodes.forEach (d) ->
+      if d.value > @max_power_in
+        @max_power_in = d.value
     if @max_power_in > max_power_out
       @max_power = @max_power_in
-      #if value > @max_power_in
-      #  @max_power = value
     else
       @max_power = max_power_out
-      #if value > max_power_out
-      #  @max_power = value
     this.calculateTotalPower()
     this.calculateTotalPowerOut()
     this.setNewScale()
 
+  #scales all bubbles
   setNewScale: () =>
     this.setZoomFactor()
     @nodes.forEach (d) =>
@@ -402,7 +362,8 @@ $(".bubbles_container").ready ->
       data_in = data.in
       data_out = data.out
 
-      interval = 0.33 * data_in.length + 10
+      #interval = 0.1 * data_in.length + 10
+      interval = 15 #seconds to refresh bubbles
 
       render_vis data_in, data_out, group_id
 
@@ -412,26 +373,21 @@ $(".bubbles_container").ready ->
           $('#path_' + actual_out_metering_point_id).css( 'cursor', 'pointer' )
           $('#path_' + actual_out_metering_point_id).click ->
             window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
-        timers.push(
-          window.setInterval(->
-            if  window.wisActive == true
-              pullPowerData(chart, actual_out_metering_point_id)
-            return
-          , 1000*interval)
-          )
+
       data_in.forEach (metering_point_data) ->
         actual_in_metering_point_id = metering_point_data.metering_point_id
         if metering_point_data.readable
           $('#bubble_' + actual_in_metering_point_id).css( 'cursor', 'pointer' )
           $('#bubble_' + actual_in_metering_point_id).click ->
             window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
-        timers.push(
-          window.setInterval(->
-            if  window.wisActive == true
-              pullPowerData(chart, actual_in_metering_point_id)
-            return
-          , 1000*interval)
-          )
+
+      timers.push(
+        window.setInterval(->
+          if  window.wisActive == true
+            pullPowerData(chart, group_id)
+          return
+        , 1000*interval)
+        )
 
       $(window).on "resize:end", chart.calculateNewCenter
 
@@ -485,14 +441,12 @@ addCommas = (nStr) ->
   x1 = x1.replace(rgx, "$1" + "," + "$2")  while rgx.test(x1)
   x1 + x2
 
-pullPowerData = (chart, metering_point_id) ->
-  $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
-    .success (data) ->
-      if data.online || data.virtual
-        if data.latest_power != null
-          chart.reset_radius(metering_point_id, data.latest_power) #TODO: check timestamp
-      #else
-        #chart.reset_radius(metering_point_id, 0)
+pullPowerData = (chart, group_id) ->
+  if chart != null
+    $.ajax({url: '/groups/' + group_id + '/bubbles_data', async: true, dataType: 'json'})
+      .success (data) ->
+        chart.reset_radius(data)
+
 clearTimers = ->
   i = 0
   while i < timers.length

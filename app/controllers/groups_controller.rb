@@ -29,8 +29,8 @@ class GroupsController < ApplicationController
     @out_metering_points            = MeteringPoint.by_group(@group).outputs.decorate
     @in_metering_points             = MeteringPoint.by_group(@group).inputs.decorate
     @managers                       = @group.managers
-    @energy_producers               = MeteringPoint.includes(:users).by_group(@group).outputs.decorate.collect(&:users).flatten
-    @energy_consumers               = MeteringPoint.includes(:users).by_group(@group).inputs.decorate.collect(&:users).flatten
+    @energy_producers               = MeteringPoint.includes(:users).by_group(@group).outputs.decorate.collect(&:users).flatten.uniq
+    @energy_consumers               = MeteringPoint.includes(:users).by_group(@group).inputs.decorate.collect(&:users).flatten.uniq
     @interested_members             = @group.users
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @all_comments                   = @group.root_comments
@@ -214,8 +214,13 @@ class GroupsController < ApplicationController
 
   def bubbles_data
     @group = Group.find(params[:id])
-    result = @group.bubbles_data(current_user)
-    render json: result.to_json
+    @cache_id = "/groups/#{params[:id]}/bubbles_data"
+    @cache = Rails.cache.fetch(@cache_id)
+    @data = @cache || @group.bubbles_data(current_user)
+    if @cache.nil?
+      Rails.cache.write(@cache_id, @data, expires_in: 14.seconds)
+    end
+    render json: @data.to_json
   end
 
   def chart
