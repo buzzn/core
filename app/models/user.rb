@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
   before_destroy :delete_content
 
 
-  after_create :create_dashboard, :create_token
+  after_create :create_dashboard
 
   self.scope :dummy, -> { where(email: 'sys@buzzn.net').first }
 
@@ -220,11 +220,6 @@ private
 
   def create_dashboard
     self.dashboard = Dashboard.create(user_id: self.id)
-  end
-
-  def create_token
-    app = Doorkeeper::Application.first
-    Doorkeeper::AccessToken.create!(:application_id => app.id, :resource_owner_id => self.id)
   end
 
   def delete_content
