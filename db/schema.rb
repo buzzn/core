@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151203091129) do
+ActiveRecord::Schema.define(version: 20151209101130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -364,6 +364,7 @@ ActiveRecord::Schema.define(version: 20151203091129) do
     t.integer  "max_watt",                    default: 5000
     t.datetime "last_observed_timestamp"
     t.boolean  "observe_offline",             default: false
+    t.boolean  "external",                    default: false
   end
 
   add_index "metering_points", ["contract_id"], name: "index_metering_points_on_contract_id", using: :btree

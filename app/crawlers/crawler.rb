@@ -114,6 +114,32 @@ class Crawler
   end
 
 
+  def live_each
+    if @metering_point_operator_contract.organization.slug == "mysmartgrid"
+      #do something?
+    else
+      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      request     = discovergy.get_live_each(@meter.manufacturer_product_serialnumber)
+      if request['status'] == "ok"
+        if request['result'].any?
+          result = []
+          request['result'].each do |item|
+            timestamp = item['time']
+            power = item['power'].abs/1000
+            meter_id = item['meterId'].split('_')[1]
+            result << {:meter_id => meter_id, :timestamp => timestamp, :power => power}
+          end
+          return {:result => result}
+        else
+          puts request.inspect
+        end
+      else
+        puts request.inspect
+      end
+    end
+  end
+
+
 
 
 

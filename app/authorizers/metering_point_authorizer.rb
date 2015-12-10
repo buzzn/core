@@ -7,11 +7,10 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
   def readable_by?(user)
     user.has_role?(:admin) ||
     user.has_role?(:manager, resource) ||
-    resource.users.include?(user) ||
+    resource.users.include?(user) && resource.readable_by_members? ||
     resource.readable_by_world? ||
     resource.readable_by_community? ||
-    (resource.readable_by_me? && User.with_role(:manager, resource).first == user) ||
-    (resource.readable_by_friends? && User.with_role(:manager, resource).first.friend?(user)) ||
+    (resource.readable_by_friends? && resource.managers.map(&:friends).flatten.uniq.include?(user)) ||
     (!resource.group.nil? && user.can_update?(resource.group)) ||
     (!resource.existing_group_request.nil? && user.can_update?(resource.existing_group_request.group))
   end

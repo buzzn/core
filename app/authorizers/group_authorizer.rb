@@ -9,6 +9,7 @@ class GroupAuthorizer < ApplicationAuthorizer
     user.has_role?(:admin) ||
     user.has_role?(:manager, resource) ||
     resource.users.include?(user) ||
+    resource.managers.map(&:friends).flatten.uniq.include?(user) && resource.readable_by_friends? ||
     resource.member?(user)
   end
 

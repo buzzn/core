@@ -6,11 +6,11 @@ class CalculateGroupScoreSufficiencyWorker
     if resolution_format == 'day'
       @group = Group.find(group_id)
       count_sn_in_group = 0
-      @group.metering_points.each do |metering_point|
+      @group.metering_points.without_externals.each do |metering_point|
         count_sn_in_group += metering_point.users.count if metering_point.input?
         #TODO: enable virtual metering_points
       end
-      #result_in = @group.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, @group.metering_points.where(mode: "in").collect(&:id), containing_timestamp), resolution_format, containing_timestamp).flatten
+      #result_in = @group.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, @group.metering_points.without_externals.where(mode: "in").collect(&:id), containing_timestamp), resolution_format, containing_timestamp).flatten
       chart_data = @group.chart(resolution_format, containing_timestamp)
       result_in = chart_data[0][:data]
       if result_in.empty?

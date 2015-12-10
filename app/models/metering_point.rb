@@ -57,6 +57,11 @@ class MeteringPoint < ActiveRecord::Base
     self.where(group: group.id)
   }
 
+  scope :externals, -> { where(external: true) }
+  scope :without_externals, -> { where(external: false) }
+
+  #default_scope { where(external: false) }
+
 
   def profiles
     Profile.where(user_id: users.ids)
@@ -119,6 +124,13 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
+  def last_power_each
+    if self.external && self.smart?
+      crawler = Crawler.new(self)
+      return crawler.live_each
+    end
+  end
+
 
 
 
@@ -131,8 +143,8 @@ class MeteringPoint < ActiveRecord::Base
     self.readable == 'world'
   end
 
-  def readable_by_me?
-    self.readable == 'me'
+  def readable_by_members?
+    self.readable == 'members'
   end
 
   def readable_by_community?
@@ -144,7 +156,7 @@ class MeteringPoint < ActiveRecord::Base
       "user-plus"
     elsif readable_by_world?
       "globe"
-    elsif readable_by_me?
+    elsif readable_by_members?
       "key"
     elsif readable_by_community?
       "users"
@@ -264,7 +276,7 @@ class MeteringPoint < ActiveRecord::Base
       world
       community
       friends
-      me
+      members
     }
   end
 

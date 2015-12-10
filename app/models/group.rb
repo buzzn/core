@@ -101,7 +101,7 @@ class Group < ActiveRecord::Base
       world
       community
       friends
-      me
+      members
     }
   end
 
@@ -109,8 +109,8 @@ class Group < ActiveRecord::Base
     %w(localpool public_group)
   end
 
-  def readable_by_me?
-    self.readable == 'me'
+  def readable_by_members?
+    self.readable == 'members'
   end
 
   def readable_by_friends?
@@ -130,7 +130,7 @@ class Group < ActiveRecord::Base
       "user-plus"
     elsif readable_by_world?
       "globe"
-    elsif readable_by_me?
+    elsif readable_by_members?
       "key"
     elsif readable_by_community?
       "users"
@@ -142,32 +142,41 @@ class Group < ActiveRecord::Base
   end
 
   def chart(resolution_format, containing_timestamp=nil)
-    metering_points_in = self.metering_points.where(mode: 'in')
-    metering_points_out = self.metering_points.where(mode: 'out')
-
     if containing_timestamp == nil
       containing_timestamp = Time.now.to_i * 1000
     end
 
     data_in = []
     data_out = []
+
+    metering_points_in = self.metering_points.without_externals.where(mode: 'in')
+    metering_points_out = self.metering_points.without_externals.where(mode: 'out')
     operators = []
     metering_points_in.each do |metering_point|
       data_in << metering_point.chart_data(resolution_format, containing_timestamp)
       operators << "+"
     end
-    result_in = calculate_virtual_metering_point(data_in, operators, resolution_format)
+    if metering_points_in.size > 1
+      result_in = calculate_virtual_metering_point(data_in, operators, resolution_format)
+    else
+      result_in = data_in.first
+    end
     operators = []
 
     metering_points_out.each do |metering_point|
       data_out << metering_point.chart_data(resolution_format, containing_timestamp)
       operators << "+"
     end
-    result_out = calculate_virtual_metering_point(data_out, operators, resolution_format)
+    if metering_points_out.size > 1
+      result_out = calculate_virtual_metering_point(data_out, operators, resolution_format)
+    else
+      result_out = data_out.first
+    end
     # if resolution_format == "day_to_minutes" || resolution_format == "day_to_hours"
     #   result_in.pop
     #   result_out.pop
     # end
+
     return [ { :name => I18n.t('total_consumption'), :data => result_in}, { :name => I18n.t('total_production'), :data => result_out} ]
   end
 
@@ -177,7 +186,7 @@ class Group < ActiveRecord::Base
     metering_points_in_minus = []
     metering_points_out_plus = []
     metering_points_out_minus = []
-    self.metering_points.each do |metering_point|
+    self.metering_points.without_externals.each do |metering_point|
       if metering_point.virtual
         if metering_point.input?
           metering_point.formula_parts.where(operator: "+").collect(&:operand).each do |metering_point_plus|
@@ -305,35 +314,74 @@ class Group < ActiveRecord::Base
   def bubbles_data(requesting_user)
     in_metering_point_data = []
     out_metering_point_data = []
-    self.metering_points.each do |metering_point|
-      data_entry = []
-      latest_power = nil
-      virtual = metering_point.virtual
-      metering_point_name = metering_point.decorate.name_with_users
-      if metering_point.users.any?
-        if metering_point.users.include?(requesting_user)
-          own_metering_point = true
+
+    if self.metering_points.externals.any?
+      self.metering_points.externals.each do |external_metering_point| #TODO: enable for more than 1 external metering_point
+
+        if external_metering_point.mode == 'in'
+          data = external_metering_point.last_power_each
+        else
+          data = external_metering_point.last_power_each
+        end
+        data[:result].each do |reading|
+          metering_point = self.metering_points.without_externals.joins(:meter).where("meters.manufacturer_product_serialnumber" => (reading[:meter_id]).to_i).first
+          if metering_point.nil?
+            next
+          end
+          metering_point_name = metering_point.decorate.name_with_users
+          if metering_point.users.any?
+            if metering_point.users.include?(requesting_user)
+              own_metering_point = true
+            else
+              own_metering_point = false
+            end
+          else
+            own_metering_point = false
+          end
+          readable = requesting_user.nil? ? false : metering_point.readable_by?(requesting_user)
+          if !readable
+            metering_point_name = "anonym"
+          end
+          if external_metering_point.mode == 'in'
+            data_entry = {:metering_point_id => metering_point.id, :latest_power => reading[:power], :name => metering_point_name, :own_metering_point => own_metering_point, :readable => readable}
+            in_metering_point_data.push(data_entry)
+          else
+            data_entry = {:metering_point_id => metering_point.id, :latest_power => reading[:power], :name => metering_point_name, :own_metering_point => own_metering_point, :readable => true}
+            out_metering_point_data.push(data_entry)
+          end
+        end
+      end
+    else
+      self.metering_points.without_externals.each do |metering_point|
+        data_entry = []
+        latest_power = nil
+        virtual = metering_point.virtual
+        metering_point_name = metering_point.decorate.name_with_users
+        if metering_point.users.any?
+          if metering_point.users.include?(requesting_user)
+            own_metering_point = true
+          else
+            own_metering_point = false
+          end
         else
           own_metering_point = false
         end
-      else
-        own_metering_point = false
-      end
-      latest_power = metering_point.last_power
+        latest_power = metering_point.last_power
 
-
-      readable = requesting_user.nil? ? false : metering_point.readable_by?(requesting_user)
-      if !readable
-        metering_point_name = "anonym"
-      end
-      if metering_point.mode == "out"
-        data_entry = {:metering_point_id => metering_point.id, :latest_power => (latest_power.nil? || latest_power[:power].nil?) ? 0 : latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => true}
-        out_metering_point_data.push(data_entry)
-      else
-        data_entry = {:metering_point_id => metering_point.id, :latest_power => (latest_power.nil? || latest_power[:power].nil?) ? 0 : latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
-        in_metering_point_data.push(data_entry)
+        readable = requesting_user.nil? ? false : metering_point.readable_by?(requesting_user)
+        if !readable
+          metering_point_name = "anonym"
+        end
+        if metering_point.mode == "out"
+          data_entry = {:metering_point_id => metering_point.id, :latest_power => (latest_power.nil? || latest_power[:power].nil?) ? 0 : latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => true}
+          out_metering_point_data.push(data_entry)
+        else
+          data_entry = {:metering_point_id => metering_point.id, :latest_power => (latest_power.nil? || latest_power[:power].nil?) ? 0 : latest_power[:power], :name => metering_point_name, :virtual => virtual, :own_metering_point => own_metering_point, :readable => readable}
+          in_metering_point_data.push(data_entry)
+        end
       end
     end
+
     out_data = { :name => "Gesamterzeugung", :children => out_metering_point_data}
     result = {:in => in_metering_point_data, :out => out_data}
     return result

@@ -4,8 +4,8 @@ class CalculateGroupScoreClosenessWorker
 
   def perform(group_id)
     @group = Group.find(group_id)
-    addresses_out = @group.metering_points.where(mode: 'out').collect(&:address).compact
-    addresses_in = @group.metering_points.where(mode: 'in').collect(&:address).compact
+    addresses_out = @group.metering_points.without_externals.where(mode: 'out').collect(&:address).compact
+    addresses_in = @group.metering_points.without_externals.where(mode: 'in').collect(&:address).compact
     sum_distances = 0
     addresses_in.each do |address_in|
       addresses_out.each do |address_out|

@@ -225,6 +225,7 @@ de:
           out: 'Produktion'
         readable:
           me: Nur mich
+          members: Mitglieder des Zählpunkts
           friends: Meine Freunde
           community: Alle angemeldeten Nutzer
           world: Alle Internet-Nutzer
@@ -240,7 +241,8 @@ de:
           company: Firma
       group:
         readable:
-          me: Nur mich und den Gruppenmitgliedern
+          me: Nur mich
+          members: Mitglieder der Gruppe
           friends: Meine Freunde
           community: Alle angemeldeten Nutzer
           world: Alle Internet-Nutzer

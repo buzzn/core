@@ -1003,8 +1003,9 @@ namespace 'Chart.Functions', (exports) ->
           new_point_width = Chart.Functions.setPointWidth()
           chart.series[numberOfSeries].update({pointWidth: new_point_width})
           chart.xAxis[0].update(Chart.Functions.getExtremes(containing_timestamp), true)
-          chart_data_min_x = chart.series[numberOfSeries].data[0].x
-          Chart.Functions.setChartTitle(chart_data_min_x)
+          if chart.series[numberOfSeries].data[0] != undefined
+            chart_data_min_x = chart.series[numberOfSeries].data[0].x
+            Chart.Functions.setChartTitle(chart_data_min_x)
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1

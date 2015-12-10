@@ -26,11 +26,11 @@ class GroupsController < ApplicationController
     # if url changed redirect to new url
     redirect_to(@group, status: :moved_permanently) if request.path != group_path(@group)
 
-    @out_metering_points            = MeteringPoint.by_group(@group).outputs.decorate
-    @in_metering_points             = MeteringPoint.by_group(@group).inputs.decorate
+    @out_metering_points            = MeteringPoint.by_group(@group).outputs.without_externals.decorate
+    @in_metering_points             = MeteringPoint.by_group(@group).inputs.without_externals.decorate
     @managers                       = @group.managers
-    @energy_producers               = MeteringPoint.includes(:users).by_group(@group).outputs.decorate.collect(&:users).flatten.uniq
-    @energy_consumers               = MeteringPoint.includes(:users).by_group(@group).inputs.decorate.collect(&:users).flatten.uniq
+    @energy_producers               = MeteringPoint.includes(:users).by_group(@group).outputs.without_externals.decorate.collect(&:users).flatten.uniq
+    @energy_consumers               = MeteringPoint.includes(:users).by_group(@group).inputs.without_externals.decorate.collect(&:users).flatten.uniq
     @interested_members             = @group.users
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @all_comments                   = @group.root_comments
@@ -105,7 +105,7 @@ class GroupsController < ApplicationController
     if @found_meter.any?
       @meter = @found_meter.first
       @metering_point = @meter.metering_points.first
-      if GroupMeteringPointRequest.where(metering_point: @metering_point).where(group: @group).empty? && !@group.metering_points.include?(@metering_point)
+      if GroupMeteringPointRequest.where(metering_point: @metering_point).where(group: @group).empty? && !@group.metering_points.without_externals.include?(@metering_point)
         @group_invitation = GroupMeteringPointRequest.new(user: @metering_point.managers.first, metering_point: @metering_point, group: @group, mode: 'invitation')
         if @group_invitation.save
           @metering_point.managers.first.send_notification('info', t('new_group_metering_point_invitation'), @group.name, 0, profile_path(@metering_point.managers.first.profile))
@@ -218,7 +218,7 @@ class GroupsController < ApplicationController
     @cache = Rails.cache.fetch(@cache_id)
     @data = @cache || @group.bubbles_data(current_user)
     if @cache.nil?
-      Rails.cache.write(@cache_id, @data, expires_in: 14.seconds)
+      Rails.cache.write(@cache_id, @data, expires_in: 9.seconds)
     end
     render json: @data.to_json
   end

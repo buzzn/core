@@ -36,7 +36,7 @@ class CommentsController < InheritedResources::Base
           end
           if @comment.root.commentable_type == 'Group'
             @comment.root.commentable.members.each do |user|
-              if current_user != user
+              if current_user != user && user.profile
                 user.send_notification('info', I18n.t('new_comment_from_user', username: current_user.name), I18n.t('at_your_group', group_name: @comment.root.commentable.name), 0, group_path(@comment.root.commentable))
                 Notifier.send_email_new_comment(user, current_user, @comment.root.commentable, @comment.body).deliver_now
               end

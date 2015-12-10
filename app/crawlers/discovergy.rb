@@ -45,7 +45,7 @@ class Discovergy
 
 
 
-  def get_live( meter_uid, num_of_seconds=4 )
+  def get_live( meter_uid, num_of_seconds=6 )
     response = @conn.get do |req|
       req.url '/json/Api.getLive'
       req.headers['Content-Type'] = 'application/json'
@@ -58,6 +58,18 @@ class Discovergy
         req.params['meterId']       = "EASYMETER_#{meter_uid}"
       end
       req.params['numOfSeconds']  = num_of_seconds
+    end
+    return JSON.parse(response.body)
+  end
+
+  def get_live_each( virtual_meter_uid )
+    response = @conn.get do |req|
+      req.url '/json/Api.getLastEach'
+      req.headers['Content-Type'] = 'application/json'
+      req.params['user']          = @username
+      req.params['password']      = @password
+      #TODO: make this dynamic
+      req.params['meterId']       = "VIRTUAL_#{virtual_meter_uid}"
     end
     return JSON.parse(response.body)
   end

@@ -116,7 +116,7 @@ private
 
   def copy_contract(resource)
     if resource == :group
-      @metering_points = self.group.metering_points
+      @metering_points = self.group.metering_points.without_externals
     elsif resource == :metering_point
       @metering_points = self.metering_point.meter.metering_points
     end
