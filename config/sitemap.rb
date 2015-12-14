@@ -25,7 +25,7 @@ SitemapGenerator::Sitemap.create do
   #     add article_path(article), :lastmod => article.updated_at
   #   end
   group :staging do
-    SitemapGenerator::Sitemap.default_host = 'http://staging.buzzn.net'
+    SitemapGenerator::Sitemap.default_host = 'https://staging.buzzn.net'
   end
 
   group :production do
