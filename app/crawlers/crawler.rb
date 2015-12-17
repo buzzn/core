@@ -384,7 +384,7 @@ class Crawler
           request['result'].each do |item|
             if i == 0
               old_value = item[mode]
-              timestamp = item['time']
+              timestamp = Time.at(item['time']/1000).in_time_zone.beginning_of_month.to_i*1000
               i += 1
               next
             end
@@ -395,7 +395,6 @@ class Crawler
               old_value = new_value
               timestamp = item['time']
             end
-            i += 1
           end
           new_value = request['result'][request['result'].size - 1][mode]
           result << [(Time.at(timestamp/1000).in_time_zone.beginning_of_month).to_i*1000, (new_value - old_value)/10000000000.0]

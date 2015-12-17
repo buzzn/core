@@ -52,4 +52,6 @@ module ChartFunctions
     end
     return start_time.to_i.to_s + "_" + end_time.to_i.to_s
   end
+
+
 end
