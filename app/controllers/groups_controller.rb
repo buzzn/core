@@ -237,13 +237,25 @@ class GroupsController < ApplicationController
 
   def kiosk
     @group                          = Group.find(params[:id]).decorate
-    @out_metering_points            = MeteringPoint.by_group(@group).outputs.decorate
-    @in_metering_points             = MeteringPoint.by_group(@group).inputs.decorate
-    @energy_producers               = MeteringPoint.includes(:users).by_group(@group).outputs.decorate.collect(&:users).flatten
-    @energy_consumers               = MeteringPoint.includes(:users).by_group(@group).inputs.decorate.collect(&:users).flatten
-    @interested_members             = @group.users
-    @all_comments                   = @group.root_comments.order('created_at asc')
-    @out_devices                    = @out_metering_points.collect(&:devices)
+
+    @all_comments                   = @group.root_comments
+    @activities                     = @group.activities.group_joins
+    @activities_and_comments        = (@all_comments + @activities).sort_by!(&:created_at).reverse!
+
+    if @group.readable_by_world?
+      return @group
+    else
+      if user_signed_in?
+        if @group.readable_by_community?
+          return @group
+        else
+          authorize_action_for(@group)
+        end
+      else
+        redirect_to root_path
+      end
+    end
+
   end
 
 

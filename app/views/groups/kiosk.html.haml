@@ -9,17 +9,15 @@
 .panel
   .panel-body
     .col-lg-1.col-md-2.col-sm-2.col-xs-3
-      - if @group.logo?
-        = image_tag @group.logo.lg, class: 'img-circle img-lg img-border'
-      - else
-        %span.fa-stack.fa-lg.fa-4x
-          %i.fa.fa-circle.fa-stack-2x
-          %i.fa.fa-users.fa-stack-1x.fa-inverse
+      = @group.picture('lg')
 
 
     .col-lg-6.col-md-6.col-sm-6.col-xs-5
       .media-body.pad-lft
         %p.text-3x.mar-no= @group.name
+
+
+
 
 
       %ul.list-group.bg-trans
@@ -28,23 +26,52 @@
           %li.list-group-item.list-item-sm.text-primary.text-semibold
             %a.btn-link{:href => "#"}
               %i.fa.fa-globe.fa-fw
-              = @group.website
+              = link_to_external @group.website
+        %li.list-group-item.list-item-sm.text-primary.readability{class: "fa fa-#{@group.readable_icon}", 'data-title' => t('readable_by') + ': ' + t("#{@group.readable}")}
+
+    / .group_scores{'data-content' => @group.id}
+
+    /   %table
+    /     %tbody
+    /       %tr
+    /         %td.text-1x.mar-no.float-left= t('sufficiency')
+    /         %td.score_sufficiency
+    /       %tr
+    /         %td.text-1x.mar-no.float-left= t('closeness')
+    /         %td.score_closeness
+    /       %tr
+    /         %td.text-1x.mar-no.float-left= t('autarchy')
+    /         %td.score_autarchy
+    /       %tr
+    /         %td.text-1x.mar-no.float-left= t('fitting')
+    /         %td.score_fitting
+
 
 
 
 
 #page-content
 
-
   .row
     .col-sm-6.col-md-6.col-lg-6
+      - if @group.description
+        %h1.page-header.text-overflow
+          %span
+            = t('description')
+        .panel
+          .panel-body= @group.description
+
+      /.col-sm-6.col-md-6.col-lg-6
       %h1.page-header.text-overflow
         %span
           = t('bubbles')
           %small
             %i.small-info-circle.fa.fa-info-circle{'data-content' => t('live_chart_info')}
       .panel
+        .change-order
+          .fa.fa-retweet{'data-content' => t('click_to_change_order_of_all_red_and_blue_bubbles')}
         .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
+          .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
           #dummy
 
 
@@ -54,14 +81,19 @@
         %h1.page-header.text-overflow
           %span
             = t('comments')
-        .panel.comments-panel
+        .panel.comments-panel{data: {commentable_type: 'Group', commentable_id: @group.id} }
           #demo-chat-body.collapse.in
-            .nano{:style => "height:410px"}
+            .nano{:style => "height:610px"}
+              .comment-form-container
+                = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "", nil) }
               .nano-content.pad-all.comments-content
                 %ul.list-unstyled.media-block.comments-all
-                  = render :partial => 'comments/comment', :collection => @all_comments, :as => :comment
-            .panel-footer
-              = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "") }
+                  - @activities_and_comments.each do |object|
+                    - if object.class.name == 'Comment'
+                      = render :partial => 'comments/comment', :collection => [object], :as => :comment
+                    -elsif object.class.name == 'PublicActivity::Activity'
+                      = render_activity object, locals: {decorator: object.decorate} , layout: "layouts/activity_wrapper"
+
 
 
 
@@ -74,21 +106,29 @@
             %i.small-info-circle.fa.fa-info-circle{'data-content' => t('trend_chart_info')}
       .panel
         .panel-body.panel-colorful
+
           .text-center
-            .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-zoomout.fa.fa-search-minus.fa-2x
-          .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-prev.fa.fa-chevron-left.fa-2x
-          .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-next.pull-right.fa.fa-chevron-right.fa-2x
+            /.btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-zoomout.btn.fa.fa-search-minus.fa-2x{disabled: "disabled"}
+            .btn.btn-default.btn-chart-zoom-year{disabled: "disabled"}
+              = t('year')
+            .btn.btn-default.btn-chart-zoom-month{disabled: "disabled"}
+              = t('month')
+            .btn.btn-default.btn-chart-zoom-day{disabled: "disabled"}
+              = t('day')
+            .btn.btn-default.btn-chart-zoom-hour{disabled: "disabled"}
+              = t('hour')
+            / .btn.btn-default.btn-chart-zoom-live{disabled: "disabled"}
+            /   = t('live')
+          .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-prev.fa.fa-chevron-left.fa-2x{disabled: "disabled"}
+          .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-next.pull-right.fa.fa-chevron-right.fa-2x{disabled: "disabled"}
           .chart{id: "chart-container-#{@group.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
-
-
-
-
-
-
-
-
-
-
-
-
-
+            .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
+          - if user_signed_in?
+            %ul.chart-context-menu
+              %li{"data-action" => "comment"}= t('create_new_comment_here')
+              /%li{"data-action" => "zoom_in"}= t('zoom_in_here_if_possible')
+            .chart-comments
+            .chart-comment-form
+              .comments-panel{data: {commentable_type: 'Group', commentable_id: @group.id} }
+                .comment-form-container
+                  = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "", nil) }
