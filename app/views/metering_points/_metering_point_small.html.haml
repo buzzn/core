@@ -14,14 +14,6 @@
         %h4.mar-no.text-thin
           =metering_point.long_name
         - if request.original_url.include?("dashboard")
-          .display-in-series
-
-            - if user_signed_in?
-              - if current_user.dashboard.dashboard_metering_points.where(metering_point_id: metering_point.id).first.displayed
-                = metering_point.remove_from_series
-              - else
-                = metering_point.display_in_series
-
           .remove-from-dashboard
             = metering_point.remove_from_dashboard
         / - else

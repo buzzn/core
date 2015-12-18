@@ -350,8 +350,7 @@ $(".dashboard-chart").ready ->
                   style:
                     color: '#000'
                 title:
-                  text: "Zeit"
-                  enabled: true
+                  enabled: false
                   style: { "color": "#000", "fontWeight": "bold"}
               yAxis:
                 gridLineWidth: 0
@@ -380,7 +379,6 @@ $(".dashboard-chart").ready ->
                   events:
                     click: (event) ->
                       Chart.Functions.zoomInDashboard(event.point.x)
-                  stacking: 'normal'
               tooltip:
                 pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
                 dateTimeLabelFormats:
@@ -392,15 +390,13 @@ $(".dashboard-chart").ready ->
                   week:"Week from %e.%b.%Y",
                   month:"%B %Y",
                   year:"%Y"
-                #series: data
             )
             chart.addSeries(
               name: data[0].name
               data: data[0].data
             )
             chart_data_min_x = chart.series[0].data[0].x
-            #checkIfPreviousDataExistsDashboard()
-            #checkIfNextDataExistsDashboard()
+
           else
             chart.addSeries(
               name: data[0].name
@@ -419,105 +415,41 @@ $(".dashboard-chart").ready ->
     chart.showLoading()
     Chart.Functions.activateButtons(false)
     containing_timestamp = Chart.Functions.getPreviousTimestamp()
-    metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
-    numberOfSeries = 0
-    metering_point_ids.forEach (id) ->
-      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
-        .success (data) ->
-          if data[0].data[0] == undefined
-            chart.hideLoading()
-            return
-          seriesVisible = chart.series[numberOfSeries].visible
-          if !seriesVisible
-            chart.series[numberOfSeries].show()
-          chart.series[numberOfSeries].setData(data[0].data)
-          chart.xAxis[0].update(Chart.Functions.getExtremes(containing_timestamp), true)
-          chart_data_min_x = chart.series[numberOfSeries].data[0].x
-          if !seriesVisible
-            chart.series[numberOfSeries].hide()
-          numberOfSeries += 1
-    Chart.Functions.setChartTitle(chart_data_min_x)
-    chart.hideLoading()
-    Chart.Functions.activateButtons(true)
-    #checkIfPreviousDataExistsDashboard()
-    #checkIfNextDataExistsDashboard()
-    #checkIfZoomOutDashboard()
+    Chart.Functions.setChartDataMultiSeries('dashboard', dashboard_id, containing_timestamp)
 
   $(".btn-chart-next").on 'click', ->
     chart.showLoading()
     Chart.Functions.activateButtons(false)
     containing_timestamp = Chart.Functions.getNextTimestamp()
-    metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
-    numberOfSeries = 0
-    metering_point_ids.forEach (id) ->
-      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
-        .success (data) ->
-          if data[0].data[0] == undefined
-            chart.hideLoading()
-            return
-          seriesVisible = chart.series[numberOfSeries].visible
-          if !seriesVisible
-            chart.series[numberOfSeries].show()
-          chart.series[numberOfSeries].setData(data[0].data)
-          chart.xAxis[0].update(Chart.Functions.getExtremes(containing_timestamp), true)
-          chart_data_min_x = chart.series[numberOfSeries].data[0].x
-          if !seriesVisible
-            chart.series[numberOfSeries].hide()
-          numberOfSeries += 1
-    Chart.Functions.setChartTitle(chart_data_min_x)
-    chart.hideLoading()
-    Chart.Functions.activateButtons(true)
-    #checkIfPreviousDataExistsDashboard()
-    #checkIfNextDataExistsDashboard()
-    #checkIfZoomOutDashboard()
+    Chart.Functions.setChartDataMultiSeries('dashboard', dashboard_id, containing_timestamp)
 
-  $(".btn-chart-zoomout").on 'click', ->
+  $(".btn-chart-zoom-year").on 'click', ->
     chart.showLoading()
     Chart.Functions.activateButtons(false)
-    if actual_resolution == "hour_to_minutes"
-      actual_resolution = "day_to_minutes"
-      Chart.Functions.setChartType(true)
-    else if actual_resolution == "day_to_minutes"
-    #  actual_resolution = "week_to_days"
-    #else if actual_resolution == "week_to_days"
-      actual_resolution = "month_to_days"
-      Chart.Functions.setChartType(true)
-    else if actual_resolution == "month_to_days"
-      #actual_resolution = "year_to_months"
-      Chart.Functions.setChartType(true)
-      Chart.Functions.activateButtons(true)
-      hart.hideLoading()
-      return
-
+    actual_resolution = "year_to_months"
     containing_timestamp = chart_data_min_x
-    metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
-    numberOfSeries = 0
-    metering_point_ids.forEach (id) ->
-      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
-        .success (data) ->
-          if data[0].data[0] == undefined
-            chart.hideLoading()
-            data[0].data[0] = [new Date(), 0]
-          seriesVisible = chart.series[numberOfSeries].visible
-          if !seriesVisible
-            chart.series[numberOfSeries].show()
-          chart.series[numberOfSeries].setData(data[0].data)
-          new_point_width = Chart.Functions.setPointWidth()
-          chart.series[numberOfSeries].update({pointWidth: new_point_width})
-          chart.xAxis[0].update(Chart.Functions.getExtremes(containing_timestamp), true)
-          chart_data_min_x = chart.series[numberOfSeries].data[0].x
-          if !seriesVisible
-            chart.series[numberOfSeries].hide()
-          numberOfSeries += 1
-    #checkIfPreviousDataExistsDashboard()
-    #checkIfNextDataExistsDashboard()
-    #checkIfZoomOutDashboard()
-    Chart.Functions.setChartTitle(chart_data_min_x)
-    chart.hideLoading()
-    Chart.Functions.activateButtons(true)
+    Chart.Functions.setChartDataMultiSeries('dashboard', dashboard_id, containing_timestamp)
 
+  $(".btn-chart-zoom-month").on 'click', ->
+    chart.showLoading()
+    Chart.Functions.activateButtons(false)
+    actual_resolution = "month_to_days"
+    containing_timestamp = chart_data_min_x
+    Chart.Functions.setChartDataMultiSeries('dashboard', dashboard_id, containing_timestamp)
 
+  $(".btn-chart-zoom-day").on 'click', ->
+    chart.showLoading()
+    Chart.Functions.activateButtons(false)
+    containing_timestamp = chart_data_min_x
+    actual_resolution = "day_to_minutes"
+    Chart.Functions.setChartDataMultiSeries('dashboard', dashboard_id, containing_timestamp)
 
+  $(".btn-chart-zoom-hour").on 'click', ->
+    chart.showLoading()
+    Chart.Functions.activateButtons(false)
+    actual_resolution = "hour_to_minutes"
+    containing_timestamp = chart_data_min_x
+    Chart.Functions.setChartDataMultiSeries('dashboard', dashboard_id, containing_timestamp)
 
 
 
@@ -817,10 +749,7 @@ namespace 'Chart.Functions', (exports) ->
     else if actual_resolution == "day_to_hours" || actual_resolution == "day_to_minutes"
       actual_resolution = "hour_to_minutes"
       Chart.Functions.setChartType(true)
-    #else if actual_resolution == "week_to_days"
-    #  actual_resolution = "day_to_hours"
     else if actual_resolution == "month_to_days"
-    #  actual_resolution = "week_to_days"
       actual_resolution = "day_to_minutes"
       Chart.Functions.setChartType(true)
     else if actual_resolution == "year_to_months"
@@ -845,14 +774,10 @@ namespace 'Chart.Functions', (exports) ->
           chart.series[numberOfSeries].update({pointWidth: new_point_width})
           chart.xAxis[0].update(Chart.Functions.getExtremes(containing_timestamp), true)
           chart_data_min_x = chart.series[0].data[0].x
+          Chart.Functions.setChartTitle(chart_data_min_x)
           if !seriesVisible
             chart.series[numberOfSeries].hide()
           numberOfSeries += 1
-
-    #checkIfPreviousDataExistsDashboard()
-    #checkIfNextDataExistsDashboard()
-    #checkIfZoomOutDashboard()
-    Chart.Functions.setChartTitle(chart_data_min_x)
     chart.hideLoading()
     Chart.Functions.activateButtons(true)
 
@@ -928,6 +853,7 @@ namespace 'Chart.Functions', (exports) ->
   exports.setChartTitle = (containing_timestamp) ->
     moment.locale('de')
     extremes = Chart.Functions.getExtremes(containing_timestamp)
+    #console.log moment(extremes.min).format("DD.MM.YYYY") + ' comes from ' + moment(containing_timestamp).format("DD.MM.YYYY")
     if actual_resolution == "hour_to_minutes"
       chart.setTitle({text: moment(extremes.min).format("DD.MM.YYYY") + " ...  " + moment(extremes.min).format("HH:mm") + " - " + moment(extremes.max).format("HH:mm")})
     else if actual_resolution == "day_to_minutes" || actual_resolution == "day_to_hours"
@@ -990,34 +916,68 @@ namespace 'Chart.Functions', (exports) ->
 
   exports.setChartDataMultiSeries = (resource, id, containing_timestamp) ->
     numberOfSeries = 0
-    $.ajax({url: '/' + resource + '/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
-      .success (data) ->
-        if data[0].data[0] == undefined
-          chart.hideLoading()
-          data[0].data[0] = [new Date(), 0]
-        data.forEach (d) ->
-          seriesVisible = chart.series[numberOfSeries].visible
-          if !seriesVisible
-            chart.series[numberOfSeries].show()
-          chart.series[numberOfSeries].setData(d.data)
-          new_point_width = Chart.Functions.setPointWidth()
-          chart.series[numberOfSeries].update({pointWidth: new_point_width})
-          chart.xAxis[0].update(Chart.Functions.getExtremes(containing_timestamp), true)
-          if chart.series[numberOfSeries].data[0] != undefined
-            chart_data_min_x = chart.series[numberOfSeries].data[0].x
+    if resource == 'dashboard'
+      metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
+      # metering_point_ids.forEach (metering_point_id) ->
+      #   chart.series[numberOfSeries].remove(false)
+      metering_point_ids.forEach (metering_point_id) ->
+        $.ajax({url: '/metering_points/' + metering_point_id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
+          .success (data) ->
+            # chart.addSeries(
+            #   name: data[0].name
+            #   data: data[0].data
+            # )
+            seriesVisible = chart.series[numberOfSeries].visible
+            if !seriesVisible
+              chart.series[numberOfSeries].show()
+            chart.series[numberOfSeries].setData(data[0].data)
+            new_point_width = Chart.Functions.setPointWidth()
+            chart.series[numberOfSeries].update({pointWidth: new_point_width, name: data[0].name})
+            extremes = Chart.Functions.getExtremes(containing_timestamp)
+            chart.xAxis[0].update(extremes, true)
+            chart_data_min_x = extremes.min
             Chart.Functions.setChartTitle(chart_data_min_x)
-          if !seriesVisible
-            chart.series[numberOfSeries].hide()
-          numberOfSeries += 1
-        Chart.Functions.setChartType(true)
-        chart.hideLoading()
-        Chart.Functions.activateButtons(true)
-        Chart.Functions.getChartComments(resource, id, chart_data_min_x)
-      .error (jqXHR, textStatus, errorThrown) ->
-        chart.hideLoading()
-        console.log textStatus
-        $('#chart-container-' + id).html('error')
-        Chart.Functions.activateButtons(true)
+            Chart.Functions.setChartType(true)
+            if !seriesVisible
+              chart.series[numberOfSeries].hide()
+            numberOfSeries += 1
+          .error (jqXHR, textStatus, errorThrown) ->
+            chart.hideLoading()
+            console.log textStatus
+            $('#chart-container-' + id).html('error')
+            Chart.Functions.activateButtons(true)
+
+      chart.hideLoading()
+      Chart.Functions.activateButtons(true)
+    else
+      $.ajax({url: '/' + resource + '/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
+        .success (data) ->
+          if data[0].data[0] == undefined
+            chart.hideLoading()
+            data[0].data[0] = [new Date(), 0]
+          data.forEach (d) ->
+            seriesVisible = chart.series[numberOfSeries].visible
+            if !seriesVisible
+              chart.series[numberOfSeries].show()
+            chart.series[numberOfSeries].setData(d.data)
+            new_point_width = Chart.Functions.setPointWidth()
+            chart.series[numberOfSeries].update({pointWidth: new_point_width})
+            extremes = Chart.Functions.getExtremes(containing_timestamp)
+            chart.xAxis[0].update(extremes, true)
+            chart_data_min_x = extremes.min
+            Chart.Functions.setChartTitle(chart_data_min_x)
+            if !seriesVisible
+              chart.series[numberOfSeries].hide()
+            numberOfSeries += 1
+          Chart.Functions.setChartType(true)
+          chart.hideLoading()
+          Chart.Functions.activateButtons(true)
+          Chart.Functions.getChartComments(resource, id, chart_data_min_x)
+        .error (jqXHR, textStatus, errorThrown) ->
+          chart.hideLoading()
+          console.log textStatus
+          $('#chart-container-' + id).html('error')
+          Chart.Functions.activateButtons(true)
 
 
   exports.endOfDay = (timestamp) ->
@@ -1044,13 +1004,13 @@ namespace 'Chart.Functions', (exports) ->
 
   exports.beginningOfYear = (timestamp) ->
     tmpDate = new Date(timestamp)
-    start = new Date(tmpDate.getFullYear(), 0, 0)
+    start = new Date(tmpDate.getFullYear(), 0, 1)
     start.setHours(0,0,0,0)
     return start.getTime()
 
   exports.endOfYear = (timestamp) ->
     tmpDate = new Date(timestamp)
-    end = new Date(tmpDate.getFullYear(), 11, 30)
+    end = new Date(tmpDate.getFullYear(), 11, 31)
     end.setHours(23, 59, 59, 999)
     return end.getTime()
 

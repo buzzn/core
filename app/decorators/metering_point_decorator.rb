@@ -212,7 +212,7 @@ class MeteringPointDecorator < Draper::Decorator
 
   def remove_from_dashboard
     link_to(
-      content_tag(:i, t("remove_from_dashboard"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
+      content_tag(:i, t("remove_from_dashboard"), class: 'btn btn-default btn-rounded btn-labeled fa fa-remove'),
       remove_metering_point_dashboard_path(metering_point_id: model.id, dashboard_id: current_user.dashboard.id),
       {
         :remote         => true,
