@@ -1,7 +1,6 @@
 class MeterResource < ApplicationResource
 
-  attributes  :id,
-              :manufacturer_name,
+  attributes  :manufacturer_name,
               :manufacturer_product_name,
               :manufacturer_product_serialnumber,
               :smart,
