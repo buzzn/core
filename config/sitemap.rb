@@ -2,7 +2,7 @@
 SitemapGenerator::Sitemap.default_host = Rails.application.secrets.hostname
 
 SitemapGenerator::Sitemap.create do
-  Group.find_each do |group|
+  Group.readable_by_world.each do |group|
     add group_path(group), :lastmod => group.updated_at
   end
 end

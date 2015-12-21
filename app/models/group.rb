@@ -44,6 +44,7 @@ class Group < ActiveRecord::Base
     self.with_role(:manager, user)
   }
 
+  scope :readable_by_world, -> { where(readable: 'world') }
 
 
   def self.search(search)
