@@ -24,6 +24,8 @@
 # Ignore uploads
 /public/uploads
 
+# Ignore sidemap
+/public/sidemap.xml.gz
 
 # redis
 dump.rdb
