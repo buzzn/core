@@ -7,6 +7,11 @@ every 5.minute do
   runner "MeteringPoint.observe"
 end
 
+every 1.day, :at => '5:00 am' do
+  rake "sitemap:refresh"
+end
+
+
 # every 1.minute do
 #   runner "Meter.pull_readings"
 # end
