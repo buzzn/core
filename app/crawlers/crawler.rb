@@ -351,15 +351,15 @@ class Crawler
       request  = my_smart_grid.get_year(containing_timestamp)
       if request.any?
         request.each do |item|
-        #puts item.to_s
-        timestamp = item[0] * 1000 - 720000 # GMT -2h
-        if String.try_convert(item[1])== "-nan"
-          item[1]=0
-        else
-          work = item[1] > 0 ? item[1].abs*0.03287671232876712 : 0  # must be converted from kwhperyear to kwhpermonth
-          result << [timestamp, work]
+          #puts item.to_s
+          timestamp = item[0] * 1000 - 720000 # GMT -2h
+          if String.try_convert(item[1])== "-nan"
+            item[1]=0
+          else
+            work = item[1] > 0 ? item[1].abs*0.03287671232876712 : 0  # must be converted from kwhperyear to kwhpermonth
+            result << [timestamp, work]
+          end
         end
-      end
       else
         puts request.inspect
       end
@@ -385,6 +385,7 @@ class Crawler
             if i == 0
               old_value = item[mode]
               timestamp = Time.at(item['time']/1000).in_time_zone.beginning_of_month.to_i*1000
+              #timestamp = item['time']
               i += 1
               next
             end

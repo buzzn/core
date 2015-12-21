@@ -178,6 +178,7 @@ de:
   public_group: Öffentliche Gruppe
   localpool: Localpool
   send_invitations: Einladungen versenden
+  send_invitation: Einladung versenden
   invite_users: Benutzer einladen
   invitation_sent_successfully_to: "Einladung an %{email} wurde gesendet."
   invites_you_to_join_the_group: "lädt Dich ein der Gruppe %{group_name} beizutreten."
@@ -384,6 +385,7 @@ de:
   project_editable: Projekt Editierbarkeit
   profile: Profil
   profile_picture: Profilbild
+  confirm: Bestätigen
   day: Tag
   days: Tage
   days_to: Tage noch
@@ -667,6 +669,10 @@ de:
   please_make_sure_to_add_managers_to_your_group_or_release_all_of_its_metering_points: "Stelle bitte sicher dass du weitere Gruppenadmins ernennst oder entferne alle Zählpunkte aus der Gruppe."
   please_make_sure_to_add_managers_to_your_metering_point_or_release_all_of_its_members: "Stelle bitte sicher dass du weitere Zählpunktadmins ernennst oder entferne alle Mitglieder aus der Gruppe."
   these_metering_points_and_groups_are_not_deletable_at_the_moment: "Diese Zählpunkte und Gruppen sind davon betroffen:"
+  this_manufacturer_product_serialnumber_is_not_known: Diese Zählernummer ist buzzn noch nicht bekannt.
+  please_use_this_input_field_to_invite_the_owner_of_the_meter: "Nutze folgendes Eingabefeld, um die Person, der der Zähler gehört, per E-Mail einzuladen."
+  the_created_metering_point_will_be_added_to_this_group_immediatly_after_sending_the_invitation: "Mit der Einladung wird ein anonymer Zählpunkt angelegt, den Du in Deiner Gruppe sehen kannst."
+  the_invitee_will_take_control_of_this_metering_point_after_registration: "Sobald die von Dir eingeladene Person die Einladung angenommen hat, übernimmt sie die Kontrolle über den Zählpunkt. Das heißt, sie kann z.B. den Zählpunkt umbenennen oder anderweitig bearbeiten, sich als Nutzer vom Zählpunkt abmelden, andere Nutzer dem Zählpunkt hinzufügen oder auch den Zählpunkt wieder löschen."
 
   contracts_info: "Um mit diesem Zählpunkt am Stromgeschehen teilnehmen zu können, benötigst Du Verträge mit verschiedenen Anbietern. Zum Beispiel mit einem Lieferanten (buzzn.net oder anderer), um überhaupt Strom zu bekommen. Oder zusätzlich mit einem Messstellenbetreiber (Discovergy oder anderer), der sich um Deinen Stromzähler kümmert. Hier siehst Du alle Verträge, die diesem Vertragspartner zugeordnet sind."
   data_connection_info: "Um Deine Ernergie-Daten in der App in Echtzeit ansehen zu können, musst Du Deine Zugangsdaten zu Deinem Smart Metering Anbieter hier eingeben."
@@ -701,7 +707,7 @@ de:
   click_to_change_order_of_all_red_and_blue_bubbles: Klicke hier um die Reihenfolge der roten und blauen Kreise zu ändern
   cookie_text: "Wir verwenden Cookies, um unseren Service zu verbessern und zu personalisieren. Wenn Du unsere Website nutzt erklärst Du Dich mit der Verwendung von Cookies einverstanden. Es kann sein, dass schon jetzt Cookies gespeichert wurden. In unserer Cookie Richtlinie findest Du mehr Informationen. "
   must_be_a_GIF_JPG_or_PNG: "Muss vom Typ GIF, JPG oder PNG sein."
-  localpool_invite_metering_points_info: "Du kannst hier die Zählernummer des Zählers eingeben, den Du zur Gruppe hinzufügen möchtest. Wenn Du einen Benutzer neu zu diesem Localpool einladen möchtest, so kannst du im zweiten Schritt dessen E-Mail Adresse eingeben und er wird eine Einladung erhalten. "
+  localpool_invite_metering_points_info: "Auf jedem Zählpunkt sitzt ein Zähler. Dieser Zähler hat eine Nummer (meistens 6 - 10 Stellen). Gib hier diese Zählernummer ein, um den Zählpunkt hinzuzufügen. Wenn Du den Zählpunkt eines neuen Benutzers zu dieser Gruppe einladen möchtest, kannst Du im zweiten Schritt dessen E-Mail Adresse eingeben und er wird eine Einladung erhalten."
   add_metering_point_manager_info: "Du kannst hier weiteren Benutzern ermöglichen, diesen Zählpunkt zu verwalten. Diese Benutzer können dann alles einsehen, was Du siehst und können z.B. weitere Benutzer zu diesem Zählpunkt einladen oder den Zählpunkt einer Gruppe zuordnen."
   add_manager_careful_info: "Überlege also genau, wem du hier diese Rechte zukommen lässt!"
   add_group_manager_info: "Du kannst hier weiteren Benutzern ermöglichen diese Gruppe zu verwalten. Diese Benutzer können dann alles einsehen, was Du siehst und können z.B. weitere Zählpunkte zu dieser Gruppe hinzufügen oder bestehende davon entfernen."

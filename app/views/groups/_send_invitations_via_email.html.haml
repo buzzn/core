@@ -1,13 +1,17 @@
 .modal-content
   .modal-header
     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-    %h4.modal-title= t'send_invitations'
+    %h4.modal-title= t'send_invitation'
   .modal-body
     = simple_form_for @group, remote: true, url: send_invitations_via_email_update_group_path, method: 'put' do |f|
 
+      %p= t('this_manufacturer_product_serialnumber_is_not_known')
       = f.input :manufacturer_product_serialnumber, input_html: {value: @meter.manufacturer_product_serialnumber}, readonly: true
+      %p= t('please_use_this_input_field_to_invite_the_owner_of_the_meter')
+      %p= t('the_created_metering_point_will_be_added_to_this_group_immediatly_after_sending_the_invitation')
+      %p= t('the_invitee_will_take_control_of_this_metering_point_after_registration')
       = f.input :email, input_html: { value: ''}
       .modal-footer
         .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
           = t'cancel'
-        = f.button :button, t('send'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check'
+        = f.button :button, t('confirm'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check'

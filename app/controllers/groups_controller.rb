@@ -229,6 +229,7 @@ class GroupsController < ApplicationController
     @cache_id = "/groups/#{params[:id]}/chart?resolution=#{@resolution}&interval=#{@group.get_cache_interval(@resolution, params[:containing_timestamp])}"
     @cache = Rails.cache.fetch(@cache_id)
     @data = @cache || @group.chart(@resolution, params[:containing_timestamp])
+    #@data = @group.chart(@resolution, params[:containing_timestamp])
     if @cache.nil?
       Rails.cache.write(@cache_id, @data, expires_in: @group.get_cache_duration(@resolution))
     end

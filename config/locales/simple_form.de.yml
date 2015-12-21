@@ -125,10 +125,10 @@ de:
         description: Beschreibung
         metering_points: Zählpunkte
         mode: Zugang
-        new_meters: Einzuladende Zählernummer
-        manufacturer_product_serialnumber: Einzuladende Zählernummer
-        email: Email
-        email_confirmation: Email bestätigen
+        new_meters: "Hier Zählernummer eingeben:"
+        manufacturer_product_serialnumber: "Zählernummer, die hinzugefügt werden soll"
+        email: E-Mailadresse für Einladung des Zählerbesitzers
+        email_confirmation: E-Mail bestätigen
         readable: Sichtbar für
       meter:
         manufacturer_name: Herstellername
