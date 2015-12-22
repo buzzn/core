@@ -23,7 +23,7 @@ GIT
 
 GIT
   remote: git://github.com/jnicklas/capybara.git
-  revision: bad6d566f86d63f06671b867ca08941814419fba
+  revision: 52dab1b9e7b18547636ebdd0aabd5b24ac452f1d
   specs:
     capybara (2.6.0.dev)
       mime-types (>= 1.16)
@@ -133,21 +133,21 @@ GEM
     authority (3.1.0)
       activesupport (>= 3.0.0)
       rake (>= 0.8.7)
-    autoprefixer-rails (6.2.0)
+    autoprefixer-rails (6.2.1)
       execjs
       json
     awesome_nested_set (3.0.2)
       activerecord (>= 4.0.0, < 5)
     awesome_print (1.6.1)
-    aws-sdk (2.2.7)
-      aws-sdk-resources (= 2.2.7)
-    aws-sdk-core (2.2.7)
+    aws-sdk (2.2.8)
+      aws-sdk-resources (= 2.2.8)
+    aws-sdk-core (2.2.8)
       jmespath (~> 1.0)
     aws-sdk-rails (1.0.0)
       aws-sdk-resources (~> 2)
       rails (>= 3)
-    aws-sdk-resources (2.2.7)
-      aws-sdk-core (= 2.2.7)
+    aws-sdk-resources (2.2.8)
+      aws-sdk-core (= 2.2.8)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
@@ -346,7 +346,7 @@ GEM
       fog-core
       fog-json
       fog-xml
-    fog-sakuracloud (1.6.0)
+    fog-sakuracloud (1.7.3)
       fog-core
       fog-json
     fog-serverlove (0.1.2)
@@ -526,7 +526,7 @@ GEM
       railties (>= 3.0)
     mongo (2.1.2)
       bson (~> 3.0)
-    mongoid (5.0.1)
+    mongoid (5.0.2)
       activemodel (~> 4.0)
       mongo (~> 2.1)
       origin (~> 2.1)
@@ -633,7 +633,7 @@ GEM
     rails-assets-enquire (2.1.2)
     rails-assets-fastclick (0.6.11)
     rails-assets-font-awesome (4.3.0)
-    rails-assets-highcharts (4.2.0)
+    rails-assets-highcharts (4.2.1)
     rails-assets-jquery (2.1.4)
     rails-assets-jquery-readyselector (0.1.0)
     rails-assets-metisMenu (2.2.0)
@@ -752,9 +752,9 @@ GEM
       redis (~> 3.2, >= 3.2.1)
     sidekiq-limit_fetch (3.0.1)
       sidekiq (>= 4)
-    simple_form (3.2.0)
-      actionpack (~> 4.0)
-      activemodel (~> 4.0)
+    simple_form (3.2.1)
+      actionpack (> 4, < 5.1)
+      activemodel (> 4, < 5.1)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -796,7 +796,7 @@ GEM
     unf_ext (0.0.7.1)
     unicode_utils (1.4.0)
     uniform_notifier (1.9.0)
-    vcr (3.0.0)
+    vcr (3.0.1)
     virtus (1.0.5)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
