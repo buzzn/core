@@ -1,4 +1,7 @@
 Buzzn::Application.routes.draw do
+
+  default_url_options host: Rails.application.secrets.hostname
+
   use_doorkeeper
   mount API::Base, at: "/"
   mount GrapeSwaggerRails::Engine, at: "/api"
