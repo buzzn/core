@@ -1,4 +1,7 @@
 CarrierWave.configure do |config|
+
+  config.asset_host = Rails.application.secrets.asset_host
+
   if Rails.env.production?
     config.storage = :fog
     config.fog_credentials  = {
@@ -8,7 +11,6 @@ CarrierWave.configure do |config|
       region:                 Rails.application.secrets.aws_region
     }
     config.fog_directory    = Rails.application.secrets.fog_directory
-    config.asset_host       = Rails.application.secrets.asset_host
     #config.fog_attributes   = { 'Cache-Control' => 'max-age=31556926' }  # 1 year to seconds
   else
     config.storage            = :file

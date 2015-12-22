@@ -9,7 +9,7 @@ module API
 
         # https://github.com/cdunn/grape-jsonapi-resources
         formatter :json, Grape::Formatter::JSONAPIResources
-        jsonapi_base_url "/api/v1"
+        jsonapi_base_url "#{Rails.application.secrets.hostname}/api/v1"
 
         helpers do
 
