@@ -732,6 +732,7 @@ de:
   failed_to_destroy_group: Beim Löschen der Gruppe ist ein Fehler aufgetreten
   new_comment_from_user: "Neuer Kommentar von %{username}"
   at_your_group: "Bei Deiner Gruppe %{group_name}"
+  at_your_metering_point: "Bei Deinem Zählpunkt %{metering_point_name}"
   user_liked_your_comment: "%{username} hat Deinen Kommentar geliked"
   at_resource: "Bei %{resource_type} '%{resource_name}'"
   user_wants_to_join_your_group_with_the_metering_point: "%{username} möchte Deiner Gruppe '%{group_name}' mit dem Zählpunkt '%{metering_point_name}' beitreten."

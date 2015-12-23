@@ -41,12 +41,18 @@ class CommentsController < InheritedResources::Base
                 Notifier.send_email_new_comment(user, current_user, @comment.root.commentable, @comment.body).deliver_now
               end
             end
+          elsif @comment.root.commentable_type == 'MeteringPoint'
+            @comment.root.commentable.members.each do |user|
+              if current_user != user && user.profile
+                user.send_notification('info', I18n.t('new_comment_from_user', username: current_user.name), I18n.t('at_your_metering_point', metering_point_name: @comment.root.commentable.name), 0, metering_point_path(@comment.root.commentable))
+                Notifier.send_email_new_comment(user, current_user, @comment.root.commentable, @comment.body).deliver_now
+              end
+            end
           end
           Pusher.trigger(@channel_name, 'new_comment', :id => @comment.id, :html => html, :root_id => @root_id, :root_type => @root_type, :socket_id => @socket_id)
           render "create", :locals => { :socket_id => @socket_id }
         }
         failure.js {
-
           render nothing: true, status: :ok
         } #TODO: show validation errors
       end

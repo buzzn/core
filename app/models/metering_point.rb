@@ -163,6 +163,10 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
+  def members
+    (self.managers + self.users).uniq
+  end
+
   def output?
     self.mode == 'out'
   end
