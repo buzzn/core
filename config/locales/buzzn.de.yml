@@ -664,7 +664,7 @@ de:
   your_data_has_been_checked_and_you_can_now_delete_all_of_it: Deine Daten wurden überprüft und Du kannst Dein Konto nun vollständig löschen.
   you_can_not_delete_your_account_right_now_due_to_data_others_rely_on: "Du kannst Dein Konto noch nicht löschen da sich andere Benutzer auf Deine Zählpunkte oder Gruppen stützen."
   before_you_delete_your_account_please_make_sure: "Bevor Du Dein Konto löschst stelle bitte sicher, dass Du"
-  a_add_managers_to_your_metering_points_or_groups: "(a) für Deine Zählpunkte und Gruppen neue Administratoren ernennst,"
+  a_add_managers_to_your_metering_points_or_groups: "(a) für Deine Zählpunkte und Gruppen neue Administratoren ernennst, oder"
   b_remove_all_members_of_your_metering_points_or_groups: "(b) alle Zählpunkt-Mitglieder und Gruppen-Zählpunkte entfernst."
   please_make_sure_to_add_managers_to_your_group_or_release_all_of_its_metering_points: "Stelle bitte sicher dass du weitere Gruppenadmins ernennst oder entferne alle Zählpunkte aus der Gruppe."
   please_make_sure_to_add_managers_to_your_metering_point_or_release_all_of_its_members: "Stelle bitte sicher dass du weitere Zählpunktadmins ernennst oder entferne alle Mitglieder aus der Gruppe."

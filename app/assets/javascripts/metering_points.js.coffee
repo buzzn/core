@@ -590,7 +590,6 @@ $(".group-chart").ready ->
     chart.showLoading()
     Chart.Functions.activateButtons(false)
     containing_timestamp = Chart.Functions.getNextTimestamp()
-    console.log 'nextClick: ' + containing_timestamp
     if containing_timestamp > new Date().getTime()
       chart.hideLoading()
       Chart.Functions.activateButtons(true)
@@ -695,10 +694,7 @@ namespace 'Chart.Functions', (exports) ->
       return chart_data_min_x + 7*24*3600*1000
     else if actual_resolution == "month_to_days"
       tmpDate = new Date(chart_data_min_x)
-      console.log 'getNextTimestamp chart_data_min_x: ' + tmpDate
       tmpDate.setMonth(tmpDate.getMonth() + 1)
-      console.log 'getNextTimestamp tmpDate: ' + tmpDate
-      console.log 'getNextTimestamp tmpDate: ' + tmpDate.getTime()
       return tmpDate.getTime()
     else if actual_resolution == "year_to_months"
       tmpDate = new Date(chart_data_min_x)

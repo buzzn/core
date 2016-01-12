@@ -7,11 +7,10 @@ namespace :slp do
     else
       year = args[:year].to_s
     end
-    lastReading = Reading.where(source: "slp").last
-    if !lastReading.nil?
-      if lastReading.timestamp.year.to_s == year
-        puts "SLP for " + year + " already available."
-      end
+    count_readings = Reading.where(source: "slp").size
+    lastReading = Reading.where(source: "slp")[count_readings - 1]
+    if !lastReading.nil? && lastReading.timestamp.year.to_s == year
+      puts "SLP for " + year + " already available."
     else
       infile = File.new("#{Rails.root}/db/slp/" + year + "/h0.txt", "r")
       all_lines = infile.readline

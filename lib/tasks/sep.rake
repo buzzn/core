@@ -8,10 +8,8 @@ namespace :sep do
       year = args[:year].to_s
     end
     lastReading = Reading.where(source: "sep_pv").last
-    if !lastReading.nil?
-      if lastReading.timestamp.year.to_s == year
-        puts "SEP for " + year + " already available."
-      end
+    if !lastReading.nil? && lastReading.timestamp.year.to_s == year
+      puts "SEP for " + year + " already available."
     else
       infile = File.open("#{Rails.root}/db/sep/" + year + "/sep_pv_jahresband.csv", "r")
 
