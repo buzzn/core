@@ -172,6 +172,10 @@ class MeteringPointsController < ApplicationController
   def add_manager
     @metering_point = MeteringPoint.find(params[:id])
     authorize_action_for @metering_point
+    @collection = []
+    [@metering_point.users + current_user.friends].flatten.uniq.each do |user|
+      user.profile.nil? ? nil : @collection << user
+    end
   end
   authority_actions :add_manager => 'update'
 

@@ -40,8 +40,6 @@ class User < ActiveRecord::Base
 
   self.scope :dummy, -> { where(email: 'sys@buzzn.net').first }
 
-  default_scope { where('id IN (SELECT DISTINCT(user_id) FROM profiles)') }
-
   def friend?(user)
     self.friendships.where(friend: user).empty? ? false : true
   end

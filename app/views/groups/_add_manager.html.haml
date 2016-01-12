@@ -6,7 +6,7 @@
     = simple_form_for @group, remote: true, url: add_manager_update_group_path, method: 'put'  do |f|
       %p= t('add_group_manager_info')
       %p= t('add_manager_careful_info')
-      = f.input :user_id, collection: [@group.members + current_user.friends].flatten.uniq, input_html: { class: 'select2', 'data-placeholder': t('add_group_manager')}, label: false, selected: '', include_blank: true
+      = f.input :user_id, collection: @collection, input_html: { class: 'select2', 'data-placeholder': t('add_group_manager')}, label: false, selected: '', include_blank: true
       .modal-footer
         .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
           = t'cancel'
