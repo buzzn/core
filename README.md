@@ -34,13 +34,10 @@
     bundle exec rails s
 
 ## Reset end Start Test Environment
-    bundle exec rake test:prepare
-    bundle exec guard
-
-## Reset end Start Test Environment
     bundle exec rake db:init
     bundle exec rake db:test:prepare
     bundle exec guard
+    bundle exec rescue rspec
 
 ## Start Slanger(OpenSource Pusher.com)
     from outside the rails project folder

@@ -5,6 +5,20 @@ module API
       resource :devices do
 
 
+        desc "Return all Device"
+        params do
+          requires :id, type: String, desc: "ID of the Device"
+        end
+        get ":id" do
+          guard!
+          @device = Device.find(params[:id])
+          current_user
+          if @device.readable == 'world'
+            return @device
+          elsif current_user
+            current_user.can_read?(@device) ? @device : error_403
+          end
+        end
 
 
 
@@ -21,7 +35,6 @@ module API
           elsif current_user
             current_user.can_read?(@device) ? @device : error_403
           end
-
         end
 
 

@@ -13,7 +13,7 @@ module API
 
         desc "Return all Users"
         paginate(per_page: per_page=10)
-        get "" do
+        get do
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
           @total_pages  = User.all.page(@page).per(@per_page).total_pages
@@ -28,6 +28,22 @@ module API
         get ":id" do
           User.where(id: permitted_params[:id]).first!
         end
+
+
+        # desc "Create a User"
+        # params do
+        #   requires :email, type: String, desc: "email of the user"
+        #   requires :password, type: String, desc: "password of the user"
+        # end
+        # post do
+        #   User.create!({
+        #     email: params[:email],
+        #     password: params[:password]
+        #   })
+        # end
+
+
+
 
 
 

@@ -155,18 +155,14 @@ group :development do
 end
 
 group :test do
-  gem 'rspec-retry'
+  gem 'pry-rescue'
+  gem 'pry-stack_explorer'
   gem 'rspec-rails'
-  gem 'capybara-screenshot'
-  gem 'capybara-email'
   gem 'email_spec'
   gem 'spring-commands-rspec'
   gem 'guard-rspec'
-  gem 'capybara', github: 'jnicklas/capybara'
   gem 'mocha'
   gem 'vcr'
   gem 'webmock'
-  gem 'poltergeist', github: 'teampoltergeist/poltergeist'
   gem 'database_cleaner'
-  gem 'capybara-select2'
 end

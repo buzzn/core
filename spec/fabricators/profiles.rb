@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 Fabricator :profile do
+  user_name   { FFaker::Name.name }
   first_name  { FFaker::Name.first_name }
   last_name   { FFaker::Name.last_name }
   phone       { FFaker::PhoneNumber.phone_number }

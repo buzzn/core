@@ -1,4 +1,10 @@
 Fabricator :device do
+  mode                          'in'
+  manufacturer_name             { FFaker::Product.brand }
+  manufacturer_product_name     { FFaker::Product.product_name }
+  category                      'Elektroauto'
+  watt_peak                     49000
+  commissioning                 { FFaker::Time.date }
   shop_link                     'http://www.amazon.com'
 end
 

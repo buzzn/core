@@ -2,21 +2,9 @@
 ENV["RAILS_ENV"] = 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'rspec/retry'
-require 'capybara'
-require 'capybara/dsl'
-require 'capybara/rspec'
-require 'capybara/email/rspec'
-require 'capybara/poltergeist'
-require 'capybara/rspec/matchers'
-require 'capybara/rspec/features'
 require 'database_cleaner'
 require 'webmock/rspec'
 require 'vcr'
-
-# you should require 'capybara/rspec' first
-require 'capybara-screenshot'
-require 'capybara-screenshot/rspec'
 
 require 'sidekiq/testing'
 Sidekiq::Testing.inline!
@@ -57,51 +45,17 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
 
+  # In Rspec 3.x the spec type is not automatically inferred from a file location, and you must manually set it
+  config.infer_spec_type_from_file_location!
 
-  # Discussion of retry
-  # https://github.com/rspec/rspec-core/issues/456
-  config.verbose_retry       = true # show retry status in spec process
-  retry_count                = ENV['RSPEC_RETRY_COUNT']
-  config.default_retry_count = retry_count.try(:to_i) || 1
-  puts "RSpec retry count is #{config.default_retry_count}"
+  # spec/support/request_helpers.rb
+  config.include Requests::JsonHelpers, type: :request
 
-
-  # VCR
-  VCR.configure do |config|
-    config.cassette_library_dir       = 'spec/cassettes'
-    config.hook_into                  :webmock
-    config.configure_rspec_metadata!
-    config.ignore_localhost           = true
-    config.ignore_hosts 'maps.googleapis.com'
-  end
 
 
   def last_email
     ActionMailer::Base.deliveries.last
   end
-
-
-  def select2(value, attrs)
-    first("#s2id_#{attrs[:from]}").click
-    find(".select2-input").set(value)
-    within ".select2-result" do
-      find("span", text: value).click
-    end
-  end
-
-
-  Capybara.default_wait_time = 10 # Seconds to wait before timeout error. Default is 2
-
-  # Register slightly larger than default window size...
-  Capybara.register_driver :poltergeist do |app|
-    Capybara::Poltergeist::Driver.new(app, { debug: false, # change this to true to troubleshoot
-                                             window_size: [1440, 900], # this can affect dynamic layout
-                                             js_errors: false
-    })
-  end
-  Capybara.javascript_driver = :poltergeist
-
-
 
 
   config.before(:suite) do
