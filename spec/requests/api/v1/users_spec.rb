@@ -2,17 +2,10 @@ describe "Users API" do
 
 
   it 'gets the current user' do
-    user  = Fabricate(:user)
-    app   = Doorkeeper::Application.create(name: 'backend')
-    token = Doorkeeper::AccessToken.create!(:application_id => app.id, :resource_owner_id => user.id).token
+    user          = Fabricate(:user)
+    access_token  = Fabricate(:access_token, resource_owner_id: user.id)
 
-    request_headers = {
-      "Accept"              => "application/json",
-      "Content-Type"        => "application/json",
-      "HTTP_AUTHORIZATION"  => "Bearer #{token}"
-    }
-
-    get "/api/v1/users/me", nil, request_headers
+    get_with_token '/api/v1/users/me', access_token.token
 
     expect(response).to be_success
     expect(json['data']['attributes']['slug']).to eq(user.slug)

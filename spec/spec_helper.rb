@@ -46,9 +46,8 @@ RSpec.configure do |config|
   # In Rspec 3.x the spec type is not automatically inferred from a file location, and you must manually set it
   config.infer_spec_type_from_file_location!
 
-  # spec/support/request_helpers.rb
-  config.include Requests::JsonHelpers, type: :request
-
+  # Include the requests helper
+  config.include RequestsHelper, type: :request
 
 
   def last_email

@@ -7,33 +7,25 @@ describe "Profiles API" do
     get "/api/v1/profiles/#{profile.id}"
 
     expect(response).to be_success
-
     expect(json['data']['attributes']['slug']).to eq(profile.slug)
   end
 
 
-  it 'creates a profile' do
-    user = Fabricate(:user)
-    user.add_role :admin
 
-    app = Doorkeeper::Application.create(name: 'backend')
-    token = Doorkeeper::AccessToken.create!(:application_id => app.id, :resource_owner_id => user.id)
+
+
+  it 'creates a profile' do
+    token = Fabricate(:admin_access_token).token
 
     profile = Fabricate.build(:profile)
 
-    params = {
+    request_params = {
       user_name:  profile.user_name,
       first_name: profile.first_name,
       last_name:  profile.last_name
     }.to_json
 
-    request_headers = {
-      "Accept" => "application/json",
-      "Content-Type" => "application/json",
-      "Authorization" => "Token token='#{token}'"
-    }
-
-    post "/api/v1/profiles", params, request_headers
+    post_with_token "/api/v1/profiles", request_params, token
 
     expect(response).to be_success
     expect(json['data']['attributes']['first-name']).to eq(profile.first_name)

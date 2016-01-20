@@ -7,6 +7,9 @@ Fabricator :user do
   after_create { |user | user.confirm }
 end
 
+Fabricator :admin, from: :user do
+  after_create { |user | user.add_role(:admin) }
+end
 
 Fabricator :felix, from: :user do
   email               'felix@buzzn.net'
