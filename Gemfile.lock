@@ -183,8 +183,6 @@ GEM
     country_select (2.5.1)
       countries (~> 1.2.0)
       sort_alphabetical (~> 1.0)
-    crack (0.4.3)
-      safe_yaml (~> 1.0.0)
     currencies (0.4.2)
     database_cleaner (1.5.1)
     debug_inspector (0.0.2)
@@ -416,7 +414,6 @@ GEM
     has_scope (0.6.0)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
-    hashdiff (0.2.3)
     hashie (3.4.3)
     hashie-forbidden_attributes (0.1.1)
       hashie (>= 3.0)
@@ -480,7 +477,6 @@ GEM
       mime-types (>= 1.16, < 3)
     mail_view (2.0.4)
       tilt
-    metaclass (0.0.4)
     metamagic (3.1.7)
       rails (>= 3.0.0)
     method_source (0.8.2)
@@ -488,8 +484,6 @@ GEM
     mini_magick (4.3.6)
     mini_portile2 (2.0.0)
     minitest (5.8.3)
-    mocha (1.1.0)
-      metaclass (~> 0.0.1)
     monetize (1.4.0)
       money (~> 6.7)
     money (6.7.0)
@@ -781,7 +775,6 @@ GEM
     unf_ext (0.0.7.1)
     unicode_utils (1.4.0)
     uniform_notifier (1.10.0)
-    vcr (3.0.1)
     virtus (1.0.5)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
@@ -789,10 +782,6 @@ GEM
       equalizer (~> 0.0, >= 0.0.9)
     warden (1.2.4)
       rack (>= 1.0)
-    webmock (1.22.6)
-      addressable (>= 2.3.6)
-      crack (>= 0.3.2)
-      hashdiff
     whenever (0.9.4)
       chronic (>= 0.6.3)
     wicked (1.2.1)
@@ -882,7 +871,6 @@ DEPENDENCIES
   mail_view
   metamagic
   mini_magick
-  mocha
   money-rails
   mongoid
   moped
@@ -947,8 +935,6 @@ DEPENDENCIES
   therubyracer
   tzinfo
   uglifier
-  vcr
-  webmock
   whenever
   wicked
 

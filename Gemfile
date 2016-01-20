@@ -155,14 +155,11 @@ group :development do
 end
 
 group :test do
+  gem 'spring-commands-rspec'
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
   gem 'rspec-rails'
   gem 'email_spec'
-  gem 'spring-commands-rspec'
   gem 'guard-rspec'
-  gem 'mocha'
-  gem 'vcr'
-  gem 'webmock'
   gem 'database_cleaner'
 end

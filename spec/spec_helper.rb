@@ -3,8 +3,6 @@ ENV["RAILS_ENV"] = 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'database_cleaner'
-require 'webmock/rspec'
-require 'vcr'
 
 require 'sidekiq/testing'
 Sidekiq::Testing.inline!
