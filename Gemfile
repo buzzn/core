@@ -147,10 +147,8 @@ group :development do
   gem 'rack-livereload'
   gem 'better_errors'
   gem 'binding_of_caller'
-  #gem 'meta_request'
   gem 'table_print'
   gem 'quiet_assets'
-  gem 'rails-erd'
   gem 'annotate'
 end
 

@@ -161,7 +161,6 @@ GEM
       mime-types (>= 1.16)
     carrierwave-base64 (2.1.1)
       carrierwave (>= 0.8.0, < 0.11.0)
-    choice (0.2.0)
     chronic (0.10.2)
     cocoon (1.2.6)
     coderay (1.1.0)
@@ -631,11 +630,6 @@ GEM
       activesupport (>= 4.2.0.beta, < 5.0)
       nokogiri (~> 1.6.0)
       rails-deprecated_sanitizer (>= 1.0.1)
-    rails-erd (1.4.5)
-      activerecord (>= 3.2)
-      activesupport (>= 3.2)
-      choice (~> 0.2.0)
-      ruby-graphviz (~> 1.2)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
     rails-i18n (4.0.8)
@@ -705,7 +699,6 @@ GEM
       rspec-mocks (~> 3.4.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
-    ruby-graphviz (1.2.2)
     ruby2ruby (2.2.0)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.0)
@@ -910,7 +903,6 @@ DEPENDENCIES
   rails-assets-sparklines!
   rails-assets-switchery!
   rails-assets-underscore!
-  rails-erd
   rails-i18n
   rails-timeago
   rails_autolink
