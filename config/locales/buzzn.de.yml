@@ -445,6 +445,7 @@ de:
   metering_point_current_supplier: Aktueller Stromlieferant am Zählpunkt
   a_metering_point_which_has_been_removed: "einen Zählpunkt, der bereits gelöscht wurde"
   a_device_which_has_been_removed: "ein Gerät, das bereits gelöscht wurde"
+  has_created_the_metering_point: "erstellte den Zählpunkt %{metering_point_name}"
 
 
   organization: Organisation
@@ -774,6 +775,7 @@ de:
   go_to_startpage: "> Zur Startseite"
   internal_server_error: "Uups, es ist ein unerwarteter Fehler aufgetreten!"
   error_forbidden: "Uups, Du hast nicht die nötigen Rechte, um diese Seite anzusehen!"
+  you_have_count_messages: "Du hast %{count} Nachrichten"
 
   energy_max_in_visible_interval: Max (kWh)
   energy_min_in_visible_interval: Min (kWh)

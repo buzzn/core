@@ -64,6 +64,14 @@ class User < ActiveRecord::Base
     MeteringPointUserRequest.where(user: self).invitations
   end
 
+  def old_badge_notifications
+    BadgeNotification.where(user: self).read
+  end
+
+  def new_badge_notifications
+    BadgeNotification.where(user: self).unread
+  end
+
 
 
 

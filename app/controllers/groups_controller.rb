@@ -241,6 +241,7 @@ class GroupsController < ApplicationController
   end
 
   def kiosk
+    response.headers.delete('X-Frame-Options') #Enables iFrames
     @group                          = Group.find(params[:id]).decorate
 
     @all_comments                   = @group.root_comments
@@ -261,6 +262,12 @@ class GroupsController < ApplicationController
       end
     end
 
+  end
+
+  def widget
+    response.headers.delete('X-Frame-Options') #Enables iFrames
+    @group                          = Group.find(params[:id]).decorate
+    @group.readable_by_world? ? @group : t('the_requested_group_is_not_public')
   end
 
 

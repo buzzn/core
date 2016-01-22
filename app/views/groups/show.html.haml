@@ -28,6 +28,9 @@
               %i.fa.fa-globe.fa-fw
               = link_to_external @group.website
         %li.list-group-item.list-item-sm.text-primary.readability{class: "fa fa-#{@group.readable_icon}", 'data-title' => t('readable_by') + ': ' + t("#{@group.readable}")}
+        %li.list-group-item.list-item-sm.text-primary.embed{class: "fa fa-share"}
+          = t('share')
+        .embed-code= "<iframe width='500' height='580' src='#{request.original_url}/widget' frameborder='0' scrolling: 'no'>Error loading iFrame</iframe>"
 
     / .group_scores{'data-content' => @group.id}
 
@@ -144,7 +147,7 @@
                   - @activities_and_comments.each do |object|
                     - if object.class.name == 'Comment'
                       = render :partial => 'comments/comment', :collection => [object], :as => :comment
-                    -elsif object.class.name == 'PublicActivity::Activity'
+                    - elsif object.class.name == 'PublicActivity::Activity'
                       = render_activity object, locals: {decorator: object.decorate} , layout: "layouts/activity_wrapper"
 
 

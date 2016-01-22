@@ -398,7 +398,7 @@ class Crawler
             end
           end
           new_value = request['result'][request['result'].size - 1][mode]
-          result << [(Time.at(timestamp/1000).in_time_zone.beginning_of_month).to_i*1000, (new_value - old_value)/10000000000.0]
+          new_value != old_value ? result << [(Time.at(timestamp/1000).in_time_zone.beginning_of_month).to_i*1000, (new_value - old_value)/10000000000.0] : nil
         else
           puts request.inspect
         end

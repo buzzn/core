@@ -127,6 +127,7 @@ Buzzn::Application.routes.draw do
       get :chart_comments
       get :add_manager
       put :add_manager_update
+      get :widget
     end
   end
 

@@ -31,31 +31,31 @@
       %p.speech-time.time
         %i.fa.fa-clock-o.fa-fw
         = timeago_tag @a.created_at, :nojs => true, :lang => locale, :limit => 10.days.ago
-      .likes{'data-toggle' => 'tooltip', 'title' => @a.get_likes.size > 0 ? (@a.get_likes.voters.collect(&:name).join(", ") + ' ' + "<span><div class='fa fa-heart'></div></span>" + ' ' + t('this_comment')) : '' }
-        .speech-time
-          - if user_signed_in?
-            - if current_user.liked?(@a)
-              %i.vote-for.vote-icon.fa.fa-heart
-            -else
-              %i.vote-for.vote-icon.fa.fa-heart-o
-          - else
-            %i.vote-icon.fa.fa-heart-o
+        .likes{'data-toggle' => 'tooltip', 'title' => @a.get_likes.size > 0 ? (@a.get_likes.voters.collect(&:name).join(", ") + ' ' + "<span><div class='fa fa-heart'></div></span>" + ' ' + t('this_comment')) : '' }
+          .speech-time
+            - if user_signed_in?
+              - if current_user.liked?(@a)
+                %i.vote-for.vote-icon.fa.fa-heart
+              -else
+                %i.vote-for.vote-icon.fa.fa-heart-o
+            - else
+              %i.vote-icon.fa.fa-heart-o
 
-          .likes-count= @a.get_likes.size
+            .likes-count= @a.get_likes.size
 
 
-      - if @a.root_comments.any?
-        %ul.list-unstyled.media-block.child-comments
-          = render :partial => 'comments/comment', :collection => @a.root_comments.reverse, :as => :comment
-        - if @a.root_comments.size > 2
-          .comment-view-all-answers
-            = t('view_all_answers')
-      - if user_signed_in?
-        .nested-comments
-          .comment-reply
-            = t('reply')
-        .comment-answer
-          = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@a, current_user.id, "", nil) }
+        - if @a.root_comments.any?
+          %ul.list-unstyled.media-block.child-comments
+            = render :partial => 'comments/comment', :collection => @a.root_comments.reverse, :as => :comment
+          - if @a.root_comments.size > 2
+            .comment-view-all-answers
+              = t('view_all_answers')
+        - if user_signed_in?
+          .nested-comments
+            .comment-reply
+              = t('reply')
+          .comment-answer
+            = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@a, current_user.id, "", nil) }
 
-      %hr
+        %hr
 

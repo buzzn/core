@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151209101130) do
+ActiveRecord::Schema.define(version: 20160120084020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,18 @@ ActiveRecord::Schema.define(version: 20151209101130) do
   end
 
   add_index "areas", ["group_id"], name: "index_areas_on_group_id", using: :btree
+
+  create_table "badge_notifications", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.boolean  "read_by_user", default: false
+    t.uuid     "user_id"
+    t.uuid     "activity_id"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "badge_notifications", ["activity_id"], name: "index_badge_notifications_on_activity_id", using: :btree
+  add_index "badge_notifications", ["read_by_user"], name: "index_badge_notifications_on_read_by_user", using: :btree
+  add_index "badge_notifications", ["user_id"], name: "index_badge_notifications_on_user_id", using: :btree
 
   create_table "bank_accounts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"

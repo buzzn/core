@@ -176,6 +176,7 @@ $(".metering_point_detail").ready ->
             events:
               click: (event) ->
                 Chart.Functions.zoomIn(event.point.x)
+            #pointPlacement: "on"
         tooltip:
           pointFormat: '<b>{point.y:,.0f} W</b><br/>'
           dateTimeLabelFormats:
@@ -1000,13 +1001,13 @@ namespace 'Chart.Functions', (exports) ->
     start = new Date(timestamp)
     start.setDate(1)
     start.setHours(0,0,0,0)
-    return start.getTime()
+    return start.getTime()# - 43200000
 
   exports.beginningOfYear = (timestamp) ->
     tmpDate = new Date(timestamp)
     start = new Date(tmpDate.getFullYear(), 0, 1)
     start.setHours(0,0,0,0)
-    return start.getTime()
+    return start.getTime()# - 1296000000
 
   exports.endOfYear = (timestamp) ->
     tmpDate = new Date(timestamp)
@@ -1050,11 +1051,11 @@ namespace 'Chart.Functions', (exports) ->
             $('html, body').animate({ scrollTop: $('.comments-content').offset().top}, 1000)
             $('.nano-content').animate({ scrollTop: $("#comment_#{comment.comment_id}")[0].offsetTop}, 1000)
             $("#comment_#{comment.comment_id}").find('.comment-answer').show()
-        Chart.Functions.resizeChartComments(true)
+        Chart.Functions.resizeChartComments(true, resource_id)
         $('.chart-comment').popover(placement: 'bottom', trigger: "hover" )
 
 
-  exports.resizeChartComments = (initializing) ->
+  exports.resizeChartComments = (initializing, resource_id) ->
     firstDataX = parseInt($('.highcharts-series-group').find('.highcharts-series').first().children().first().attr('x')) || 0
     pointWidth = parseInt($('.highcharts-series-group').find('.highcharts-series').first().children().first().attr('width')) || 0
     xAxisWidth = $('.highcharts-axis').first()[0].getBoundingClientRect().width || $('.highcharts-axis').first().children().last()[0].getBoundingClientRect().width
@@ -1064,7 +1065,6 @@ namespace 'Chart.Functions', (exports) ->
       xAxisLeftMargin = $('.highcharts-axis').first()[0].getBoundingClientRect().x
     else
       xAxisLeftMargin = $('.highcharts-axis').first()[0].getBoundingClientRect().left || $('.highcharts-axis').first().children().first()[0].getBoundingClientRect().left
-    #xAxisLeftMargin = 300
     xAxisLeftMarginOffset = firstDataX + 0.5 * pointWidth
     xAxisLeftMargin += xAxisLeftMarginOffset
     min_max = Chart.Functions.getExtremes(chart_data_min_x)

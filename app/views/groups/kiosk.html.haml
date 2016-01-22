@@ -19,16 +19,6 @@
 
 
 
-
-      %ul.list-group.bg-trans
-
-        - if @group.website
-          %li.list-group-item.list-item-sm.text-primary.text-semibold
-            %a.btn-link{:href => "#"}
-              %i.fa.fa-globe.fa-fw
-              = link_to_external @group.website
-        %li.list-group-item.list-item-sm.text-primary.readability{class: "fa fa-#{@group.readable_icon}", 'data-title' => t('readable_by') + ': ' + t("#{@group.readable}")}
-
     / .group_scores{'data-content' => @group.id}
 
     /   %table
