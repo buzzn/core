@@ -4,7 +4,7 @@
     %h4.modal-title= t'edit_metering_point'
   .modal-body
     = simple_form_for @metering_point, remote: true do |f|
-      = render 'metering_points/form_fields', f: f
+      = render 'metering_points/form_fields', f: f, locals: { metering_point: @metering_point}
       .modal-footer
         .float-left= @metering_point.decorate.link_to_delete
         .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}

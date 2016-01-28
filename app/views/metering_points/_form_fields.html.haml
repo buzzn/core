@@ -28,7 +28,7 @@
         %i.normal-info-circle.fa.fa-info-circle{'data-content' => t('metering_point_formula_info')}
   #formula_parts
     = f.simple_fields_for :formula_parts do |formula_part|
-      = render 'formula_part_fields', :f => formula_part
+      = render 'formula_part_fields', :f => formula_part, locals: {metering_point: @metering_point}
     .links.mar-btm
       = link_to_add_association t('add_formula_part'), f, :formula_parts, class: "btn btn-xs btn-default btn-rounded btn-labeled fa fa-plus"
 

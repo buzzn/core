@@ -43,6 +43,9 @@ class MeteringPoint < ActiveRecord::Base
   scope :inputs, -> { where(mode: :in) }
   scope :outputs, -> { where(mode: :out) }
 
+  scope :non_privates, -> { where("readable in (?)", ["world", "community", "friends"]) }
+  scope :privates, -> { where("readable in (?)", ["members"]) }
+
   scope :without_group, lambda { self.where(group: nil) }
 
   scope :editable_by_user, lambda {|user|

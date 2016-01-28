@@ -91,13 +91,17 @@ class User < ActiveRecord::Base
     self.editable_metering_points.collect(&:address).compact.uniq{|address| address.longitude && address.latitude}
   end
 
+  def non_private_editable_metering_points
+    MeteringPoint.editable_by_user(self).non_privates.collect(&:decorate)
+  end
+
 
   def usable_metering_points
     result = self.editable_metering_points
     self.friends.each do |friend|
-      result << friend.editable_metering_points
+      result << friend.non_private_editable_metering_points
     end
-    return result.flatten
+    return result.flatten.uniq
   end
 
   def invitable_users(metering_point)
