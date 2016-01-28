@@ -1,4 +1,3 @@
-
 PublicActivity::Activity.class_eval do
   acts_as_commentable
   acts_as_votable
@@ -12,4 +11,22 @@ PublicActivity::Activity.class_eval do
   scope :metering_point_joins, lambda {
     where(:key => 'metering_point_user_membership.create')
   }
+
+  after_create :notify_users
+
+  def notify_users
+    Sidekiq::Client.push({
+     'class' => NotificationCreationWorker,
+     'queue' => :default,
+     'args' => [
+                self.id
+               ]
+    })
+  end
+
 end
+
+
+
+
+

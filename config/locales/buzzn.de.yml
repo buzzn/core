@@ -777,6 +777,9 @@ de:
   error_forbidden: "Uups, Du hast nicht die nötigen Rechte, um diese Seite anzusehen!"
   you_have_count_messages: "Du hast %{count} Nachrichten"
 
+  the_requested_content_is_not_public: Der angefragte Inhalt ist nicht öffentlich
+  embed: Einbetten
+
   energy_max_in_visible_interval: Max (kWh)
   energy_min_in_visible_interval: Min (kWh)
   energy_in_visible_interval: Gesamt (kWh)

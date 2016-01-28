@@ -65,6 +65,12 @@ ready = ->
     $('.fa-info-circle').popover(placement: 'right', trigger: "hover" )
   )
 
+  $(".embed").on 'click', ->
+    if $(".embed-code").css("display") == 'none'
+      $(".embed-code").show()
+    else
+      $(".embed-code").hide()
+
 
   $('body').on 'click', (e) ->
     $('.fa-info-circle').each ->

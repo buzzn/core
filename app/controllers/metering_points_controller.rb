@@ -29,6 +29,8 @@ class MeteringPointsController < ApplicationController
   end
 
 
+
+
   def new
     @metering_point = MeteringPoint.new(mode: 'in')
     authorize_action_for @metering_point
@@ -295,7 +297,11 @@ class MeteringPointsController < ApplicationController
     render json: { comments: result }
   end
 
-
+  def widget
+    response.headers.delete('X-Frame-Options') #Enables iFrames
+    @metering_point                 = MeteringPoint.find(params[:id]).decorate
+    @metering_point.readable_by_world? ? @metering_point : t('the_requested_content_is_not_public')
+  end
 
 
 private

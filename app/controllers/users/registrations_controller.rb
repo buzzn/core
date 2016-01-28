@@ -32,6 +32,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
 
 
+
+
   private
 
     # check if we need password to update user data

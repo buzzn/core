@@ -12,6 +12,8 @@ Buzzn::Application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
+  #post 'pusher/auth', to: 'pusher#auth'
+
 
   devise_for :users, controllers: {
     registrations:      'users/registrations',
@@ -24,6 +26,7 @@ Buzzn::Application.routes.draw do
     member do
       get :redirect_to_current_user
       get :check_destroyable
+      put :read_new_badge_notifications
     end
   end
 
@@ -44,6 +47,7 @@ Buzzn::Application.routes.draw do
       get :chart_comments
       get :add_manager
       put :add_manager_update
+      get :widget
     end
   end
 

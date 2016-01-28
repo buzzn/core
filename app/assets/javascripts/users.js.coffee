@@ -4,8 +4,17 @@ $("#content-container").ready ->
     if gon.global.current_user_id != undefined
       channel = pusher.subscribe("user_#{gon.global.current_user_id}")
       channel.bind "new_notification", notify_user
+
+      $(".badge-header-container").on "click", ->
+         $.ajax({url: '/profiles/' + gon.global.profile_name + '/read_new_badge_notifications', dataType: 'text', type: 'PUT'})
+          .success () ->
+            $(".badge-danger").remove();
+          .error (jqXHR, textStatus, errorThrown) ->
+            console.log errorThrown
   else
     console.log 'gon not available or variable undefined'
+
+
 
 
 notify_user = (notification) ->
@@ -33,5 +42,5 @@ notify_user = (notification) ->
     title: notification.header,
     message: notification.message,
     container: "floating",
-    timer: notification.duration
+    timer: 3
   })

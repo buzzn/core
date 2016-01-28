@@ -1,1 +1,1 @@
-%li= render_activity badge_notification.activity, locals: {decorator: badge_notification.activity.decorate} , layout: "layouts/badge_notification_activity_wrapper"
+%li{class: badge_notification.read_by_user ? "old_badge_notification" : "new_badge_notification"}= render_activity badge_notification.activity, locals: {decorator: badge_notification.activity.decorate} , layout: "layouts/badge_notification_activity_wrapper"

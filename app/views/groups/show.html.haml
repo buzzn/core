@@ -29,8 +29,8 @@
               = link_to_external @group.website
         %li.list-group-item.list-item-sm.text-primary.readability{class: "fa fa-#{@group.readable_icon}", 'data-title' => t('readable_by') + ': ' + t("#{@group.readable}")}
         %li.list-group-item.list-item-sm.text-primary.embed{class: "fa fa-share"}
-          = t('share')
-        .embed-code= "<iframe width='500' height='580' src='#{request.original_url}/widget' frameborder='0' scrolling: 'no'>Error loading iFrame</iframe>"
+          = t('embed')
+        .embed-code= "<iframe width='100%' height='580' src='#{request.original_url}/widget' frameborder='0' scrolling: 'no'>Error loading iFrame</iframe>"
 
     / .group_scores{'data-content' => @group.id}
 
@@ -292,18 +292,8 @@
 
 
 
-      / - if user_signed_in? && current_user.can_update?(@group)
-      /   %h1.page-header.text-overflow
-      /     %span
-      /       = t('contracts')
-      /       %small
-      /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('contracts_info_group')}
-      /   .row
-      /     .contracts
-      /       = render @group.contracts
-      /     .row
-      /       .col-lg-12.text-center
-      /         = @group.new_contract
+
+
 
 
 

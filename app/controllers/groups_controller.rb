@@ -267,7 +267,7 @@ class GroupsController < ApplicationController
   def widget
     response.headers.delete('X-Frame-Options') #Enables iFrames
     @group                          = Group.find(params[:id]).decorate
-    @group.readable_by_world? ? @group : t('the_requested_group_is_not_public')
+    @group.readable_by_world? ? @group : t('the_requested_content_is_not_public')
   end
 
 

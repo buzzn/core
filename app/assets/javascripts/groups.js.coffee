@@ -404,12 +404,6 @@ $(".bubbles_container").ready ->
     return
 
 
-  $(".embed").on 'click', ->
-    if $(".embed-code").css("display") == 'none'
-      $(".embed-code").show()
-    else
-      $(".embed-code").hide()
-
 
 # $(".group_scores").ready ->
 #   group_id = $(this).attr('data-content')

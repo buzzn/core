@@ -4,4 +4,5 @@ class BadgeNotification < ActiveRecord::Base
 
   scope :unread, -> { where(read_by_user: false) }
   scope :read, -> { where(read_by_user: true) }
+
 end

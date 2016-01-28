@@ -41,18 +41,19 @@
                 %li= link_to(t("create_metering_point"), metering_point_wizard_metering_points_path, {:remote => true, :class => 'start_modal', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-backdrop' => 'static'})
                 - if current_user.can_create?(Group)
                   %li= link_to(t("create_group"), new_group_path, {:remote => true, :class => 'start_modal', 'data-toggle' => 'modal', 'data-target'   => '#myModal'})
-          / %li.dropdown
-          /   %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
-          /     %i.fa.fa-bell.fa-lg
-          /     %span.badge.badge-header.badge-danger
-          /       = current_user.new_badge_notifications.size
-          /   .dropdown-menu.dropdown-menu-right.dropdown-menu-lg.with-arrow
-          /     .pad-all.bord-btm
-          /       %p.text-lg.text-muted.text-thin.mar-no= t('you_have_count_messages', count: current_user.new_badge_notifications.size)
-          /     .nano.scrollable
-          /       .nano-content.pad-all
-          /         %ul.list-unstyled.media-block
-          /           = render current_user.new_badge_notifications
+          %li.dropdown.badge-header-container
+            %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+              %i.fa.fa-bell.fa-lg
+              - if current_user.new_badge_notifications.size != 0
+                %span.badge.badge-header.badge-danger
+                  = current_user.new_badge_notifications.size
+            .dropdown-menu.dropdown-menu-right.dropdown-menu-lg.with-arrow
+              .pad-all.bord-btm
+                %p.text-lg.text-muted.text-thin.mar-no= t('you_have_count_messages', count: current_user.new_badge_notifications.size)
+              .nano.scrollable
+                .nano-content.pad-all
+                  %ul.list-unstyled.media-block
+                    = render current_user.new_badge_notifications
 
           %li#dropdown-user.dropdown
             %a.dropdown-toggle.text-right{"data-toggle" => "dropdown", :href => "#"}

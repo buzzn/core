@@ -20,6 +20,9 @@ class CommentsController < InheritedResources::Base
           html = render_to_string :partial => 'comments/comment', :collection => [@comment], :as => :comment, :formats => [:html]
           @socket_id = params[:socket_id].nil? ? "" : params[:socket_id]
 
+
+          #TODO: Growl and Email Notification in Worker
+          @comment.create_activity key: 'comment.create', owner: current_user
           @channel_name = @comment.commentable_type + '_' + @comment.commentable_id
           if @comment.commentable_type == "PublicActivity::ORM::ActiveRecord::Activity"
             @root_id = @comment.commentable_id

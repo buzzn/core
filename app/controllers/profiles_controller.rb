@@ -57,6 +57,15 @@ class ProfilesController < ApplicationController
   end
 
 
+  def read_new_badge_notifications
+    @profile = Profile.find(params[:id])
+    authorize_action_for @profile
+    @user = @profile.user
+    @user.new_badge_notifications.update_all(read_by_user: true)
+  end
+  authority_actions :read_new_badge_notifications => 'update'
+
+
 
 private
   def profile_params
