@@ -7,6 +7,9 @@ guard :bundler do
   # watch(/^.+\.gemspec/)
 end
 
+
+
+
 guard 'livereload' do
   watch(%r{app/views/.+\.(erb|haml|slim)$})
   watch(%r{app/helpers/.+\.rb})
@@ -15,6 +18,9 @@ guard 'livereload' do
   # Rails Assets Pipeline
   watch(%r{(app|vendor)(/assets/\w+/(.+\.(css|js|html|png|jpg))).*}) { |m| "/assets/#{m[3]}" }
 end
+
+
+
 
 guard :rspec, cmd:"spring rspec" do
   watch(%r{^spec/.+_spec\.rb$})
@@ -36,6 +42,18 @@ guard :rspec, cmd:"spring rspec" do
   watch(%r{^spec/acceptance/(.+)\.feature$})
   watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$})   { |m| Dir[File.join("**/#{m[1]}.feature")][0] || 'spec/acceptance' }
 end
+
+
+
+
+
+guard :brakeman, run_on_start: true do
+  watch(%r{^app/.+\.(erb|haml|rhtml|rb)$})
+  watch(%r{^config/.+\.rb$})
+  watch(%r{^lib/.+\.rb$})
+  watch('Gemfile')
+end
+
 
 
 ### Guard::Sidekiq

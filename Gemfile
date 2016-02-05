@@ -131,6 +131,7 @@ group :production do
 end
 
 group :development, :test do
+  gem 'brakeman', :require => false
   gem 'spring'
   gem 'lol_dba'
   gem 'listen'
@@ -138,6 +139,7 @@ group :development, :test do
   gem 'guard'
   gem 'guard-livereload'
   gem 'guard-bundler'
+  gem 'guard-brakeman'
 end
 
 group :development do
