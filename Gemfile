@@ -143,7 +143,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'brakeman', :require => false
   gem 'pry-rails'
   gem 'bullet', github: 'flyerhzm/bullet'
   gem 'rack-livereload'
