@@ -32,7 +32,8 @@
           .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-next.pull-right.fa.fa-chevron-right.fa-2x{disabled: "disabled"}
 
           .chart{id: "chart-container-#{@dashboard.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
-            .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
+            - if @dashboard.metering_points.any?
+              .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
 
     .metering_points
       = render partial: "metering_points/metering_point_small", collection: @metering_points.decorate, as: :metering_point

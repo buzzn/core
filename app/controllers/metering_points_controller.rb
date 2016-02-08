@@ -1,5 +1,5 @@
 class MeteringPointsController < ApplicationController
-  before_filter :authenticate_user!, except: [:show, :chart, :latest_fake_data, :latest_power]
+  before_filter :authenticate_user!, except: [:show, :chart, :latest_fake_data, :latest_power, :widget]
   respond_to :html, :json, :js
 
 

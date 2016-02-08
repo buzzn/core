@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_filter :authenticate_user!, except: [:index, :show, :chart, :bubbles_data]
+  before_filter :authenticate_user!, except: [:index, :show, :chart, :bubbles_data, :widget]
   respond_to :html, :js, :json
 
   def index
