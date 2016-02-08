@@ -82,7 +82,6 @@ gem 'rails-timeago'
 gem 'dependent-fields-rails'
 gem 'ancestry'
 gem 'goldiloader'
-gem 'newrelic_rpm'
 gem 'attr_encrypted'
 gem 'sitemap_generator'
 gem 'rack-google-analytics'
@@ -123,6 +122,10 @@ source 'http://rails-assets.org' do
   gem 'rails-assets-dropzone'
   gem 'rails-assets-highcharts'
   gem 'rails-assets-bootstrap-tour'
+end
+
+group :production, :staging do
+  gem 'newrelic_rpm'
 end
 
 
