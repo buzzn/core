@@ -7,6 +7,7 @@ class MeteringPointsController < ApplicationController
   def show
     @metering_point                 = MeteringPoint.find(params[:id]).decorate
     @profiles                       = @metering_point.profiles
+    @managers                       = @metering_point.managers
     @devices                        = @metering_point.devices
     @group                          = @metering_point.group
     @meter                          = @metering_point.meter
@@ -129,7 +130,7 @@ class MeteringPointsController < ApplicationController
         else
           @new_user = User.invite!({email: @email}, current_user)
           @metering_point.users << @new_user
-          current_user.friends << @new_user
+          current_user.friends.include?(@new_user) ? nil : current_user.friends << @new_user
           @metering_point.save!
           flash[:notice] = t('invitation_sent_successfully_to', email: @email)
         end

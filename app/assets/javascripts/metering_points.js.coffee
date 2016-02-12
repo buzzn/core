@@ -75,6 +75,7 @@ $(".metering_points").ready ->
               states:
                 hover:
                   enabled: false
+              turboThreshold: 0
             areaspline:
               marker:
                 enabled: false
@@ -161,7 +162,7 @@ $(".metering_point_detail").ready ->
                 [0, "rgba(255, 255, 255, 0.4)"],
                 [1, "rgba(255, 255, 255, 0.1)"]
               ]
-            turboThreshold: 2000
+            turboThreshold: 0
           areaspline:
             borderWidth: 0
             cursor: 'pointer'
@@ -366,6 +367,7 @@ $(".dashboard-chart").ready ->
               plotOptions:
                 series:
                   fillOpacity: 0.5
+                  turboThreshold: 0
                 areaspline:
                   borderWidth: 0
                   cursor: 'pointer'
@@ -530,6 +532,7 @@ $(".group-chart").ready ->
           plotOptions:
             series:
               fillOpacity: 0.5
+              turboThreshold: 0
             areaspline:
               cursor: 'pointer'
               events:

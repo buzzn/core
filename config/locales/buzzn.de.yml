@@ -645,6 +645,7 @@ de:
   now: Jetzt
   out_devices: Stromerzeugungsanlagen
   group_managers: Gruppenadmins
+  metering_point_managers: Zählpunktadmins
   not_deletable: Nicht löschbar
   other_organization: Andere Firma
   no_address: Ohne Adresse
@@ -658,7 +659,11 @@ de:
   do_you_want_to_admit_user_with_the_metering_point_to_this_group: "Möchtest Du %{user} mit dem Zählpunkt %{metering_point} in diese Gruppe aufnehmen"
 
   dummy: Dummy
+  slp: SLP
+  sep: SEP
   you_dont_have_a_smart_meter_so_your_energy_data_is_estimated_as_shown: "Du hast keinen Smart Meter an diesem Zählpunkt, also werden die Energiedaten wie gezeigt geschätzt."
+  dummy_description: "SEP = Standardeinspeiseprofil \nSLP = Standardlastprofil \nEin Standardprofil ist die berechnete Stromkurve eines Zählpunkts, der noch nicht über einen sog. Smart Meter verfügt. Ein Smart Meter würde den tatsächlich aktuell gemessenen Strom am Zählpunkt anzeigen. Ein Standardprofil hingegen entsteht aus einem Algorithmus, in den diese Werte einfließen: (a) eine über viele vergleichbare Zählpunkte ermittelte Normkurve, (b) die voraussichtlichen Kilowattstunden, die an Deinem Zählpunkt entweder bezogen/verbraucht (Standardlastprofil) oder eingespeist/produziert (Standardeinspeiseprofil) werden. Letztgenannte Kilowattstunden werden dann per Standardprofil 'ausgerollt'. In der Grafik stellt sich dies als Stromkurve dar, die sich über die Zeitachse nach rechts bewegt. Diese Stromkurve ist insoweit fiktiv, als sie Deiner tatsächlichen Last oder Leistung nicht entspricht. Dennoch spiegelt sie ein Stück weit die Realität wieder, indem ihr die spezifische elektrische Arbeit Deines Zählpunkts zugrunde liegt. "
+
 
   group_not_deletable: "Die Gruppe %{group_name} ist momentan nicht löschbar."
   metering_point_not_deletable: "Der Zählpunkt %{metering_point_name} ist momentan nicht löschbar."
@@ -699,6 +704,7 @@ de:
   stream_info_profile: "Hier findest Du alle Aktivitäten und persönlichen Benachrichtigungen bzgl. des Energieverhaltens des angezeigten Benutzers."
   out_devices_info_group: "Hier siehst Du alle Geräte, die für diese Gruppe den Strom erzeugen."
   group_manager_info: "Eine Gruppe wird von Administratoren verwaltet. Diese entscheiden z. B. wer in die Gruppe aufgenommen wird."
+  metering_point_manager_info: "Ein Zählpunkt wird von Administratoren verwaltet. Diese entscheiden z. B. wer zum Zählpunkt aufgenommen wird und können diesen konfigurieren."
   contracts_info_contracting_party: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst Du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Vertragspartner zugeordnet sind."
   metering_point_formula_info: "Hier erstellst Du die Formel, mithilfe derer der virtuelle Zähler berechnet wird. Jede Formel besteht aus einzelnen Summanden. Jeder Summand besteht aus Vorzeichen (Operator) und Zählpunkt (Operand)."
   formula_parts_info: "Ein virtueller Zählpunkt besitzt kein direkt ablesbares Messgerät. Stattdessen wird sein Strom aus den Daten anderer Zählpunkte berechnet. Hier findest Du die Zählpunkte, aus denen sich der virtuelle Zählpunkt zusammensetzt."

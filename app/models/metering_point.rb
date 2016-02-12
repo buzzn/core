@@ -23,11 +23,13 @@ class MeteringPoint < ActiveRecord::Base
 
   has_many :scores, as: :scoreable
 
+  accepts_nested_attributes_for :meter
+  accepts_nested_attributes_for :contracts
 
   validates :readable, presence: true
-  validates :mode, presence: true, if: :no_dashboard_metering_point?
+  validates :mode, presence: true#, if: :no_dashboard_metering_point?
   validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
-  validates :name, presence: true, length: { in: 2..30 }, if: :no_dashboard_metering_point?
+  validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_metering_point?
   validates :meter, presence: false, if: :virtual
 
   mount_uploader :image, PictureUploader

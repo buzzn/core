@@ -64,6 +64,14 @@ class MeteringPointDecorator < Draper::Decorator
     end
   end
 
+  def fake_label
+    if model.mode == 'in'
+      'slp'
+    elsif model.mode == 'out'
+      'sep'
+    end
+  end
+
 
   def long_name
     if model.address

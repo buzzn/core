@@ -129,7 +129,7 @@
   .row
     .metering_point_detail{id: "metering_point_#{@metering_point.id}"}
       - if !@metering_point.smart?
-        .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("dummy"), "data-content" => t("you_dont_have_a_smart_meter_so_your_energy_data_is_estimated_as_shown")}
+        .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("#{@metering_point.fake_label}"), "data-content" => t("dummy_description")}
           .ribbon-green= t('dummy')
       .panel
         .panel-body.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
@@ -266,6 +266,18 @@
                       = render :partial => 'comments/comment', :collection => [object], :as => :comment
                     -elsif object.class.name == 'PublicActivity::Activity'
                       = render_activity object, locals: {decorator: object.decorate} , layout: "layouts/activity_wrapper"
+
+        - if @managers.any?
+          %hr
+          %h1.page-header.text-overflow
+            %span
+              = t('metering_point_managers')
+              %small
+                %i.small-info-circle.fa.fa-info-circle{'data-content' => t('metering_point_manager_info')}
+          .row
+            - @managers.each do |user|
+              = render user.profile if user.profile
+
 
 
 

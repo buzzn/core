@@ -42,5 +42,5 @@ notify_user = (notification) ->
     title: notification.header,
     message: notification.message,
     container: "floating",
-    timer: 3
+    timer: 3000
   })
