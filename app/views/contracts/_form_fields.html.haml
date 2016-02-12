@@ -1,15 +1,7 @@
-/= f.input :mode, collection: Contract.modes, include_blank: false, input_html: { class: 'select2' }
-/= f.input :organization, input_html: { 'data-provide' => 'typeahead', 'data-source' => Organization.all.collect(&:name).to_json }
 = f.association :organization, input_html: {class: 'select2'}
-/= f.input :tariff
-/= f.input :price_cents, precision: 16, default: 0
-/ .js-dependent-fields{'data-select-id' => 'contract_mode', 'data-option-value' => 'electricity_supplier_contract'}
-/   = f.input :forecast_watt_hour_pa
-/= f.input :commissioning
-
 .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
   = f.input :username
   = f.input :password, input_html: { value: @contract.password}
 .js-dependent-fields{'data-select-id' => 'contract_organization_id', 'data-option-value' => Organization.where(slug: 'mysmartgrid').first.id}
-  = f.input :sensor_id label_method: :sensor_id
+  = f.input :sensor_id, label_method: :sensor_id
   = f.input :x_token, as: :text, :input_html => {value: @contract.password}, label_method: :x_token

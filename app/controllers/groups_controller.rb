@@ -24,7 +24,7 @@ class GroupsController < ApplicationController
     @group                          = Group.find(params[:id]).decorate
 
     # if url changed redirect to new url
-    redirect_to(@group, status: :moved_permanently) if request.path != group_path(@group)
+    redirect_to(group_path(@group), status: :moved_permanently) if request.path != group_path(@group)
 
     @out_metering_points            = MeteringPoint.by_group(@group).outputs.without_externals.decorate
     @in_metering_points             = MeteringPoint.by_group(@group).inputs.without_externals.decorate
