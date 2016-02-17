@@ -1,3 +1,5 @@
+require 'doorkeeper/grape/helpers'
+
 module API
   module V1
     module Defaults
@@ -11,7 +13,13 @@ module API
         formatter :json, Grape::Formatter::JSONAPIResources
         jsonapi_base_url "#{Rails.application.secrets.hostname}/api/v1"
 
+        helpers Doorkeeper::Grape::Helpers
+
         helpers do
+
+          def current_user
+            User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+          end
 
           def permitted_params
             @permitted_params ||= declared(params, include_missing: false)

@@ -2,12 +2,16 @@ module API
   module V1
     class Users < Grape::API
       include API::V1::Defaults
-      resource 'users' do
 
+      # before do
+      #   doorkeeper_authorize!
+      # end
+
+      resource 'users' do
 
         desc "Return me"
         get "me" do
-          guard!
+          doorkeeper_authorize!
           current_user
         end
 
@@ -28,20 +32,6 @@ module API
         get ":id" do
           User.where(id: permitted_params[:id]).first!
         end
-
-
-        # desc "Create a User"
-        # params do
-        #   requires :email, type: String, desc: "email of the user"
-        #   requires :password, type: String, desc: "password of the user"
-        # end
-        # post do
-        #   User.create!({
-        #     email: params[:email],
-        #     password: params[:password]
-        #   })
-        # end
-
 
 
 

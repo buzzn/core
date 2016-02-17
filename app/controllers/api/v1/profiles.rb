@@ -20,7 +20,6 @@ module API
           requires :id, type: String, desc: "ID of the Profile"
         end
         get ":id" do
-          guard!
           profile = Profile.where(id: permitted_params[:id]).first!
           if current_user && profile.readable_by?(current_user)
             return profile
@@ -37,7 +36,6 @@ module API
           requires :last_name, type: String
         end
         post do
-          guard!
           if current_user && current_user.can_create?(Profile)
             Profile.create!({
               user_name: params[:user_name],
