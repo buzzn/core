@@ -6,17 +6,17 @@ class Doorkeeper::ApplicationAuthorizer < ApplicationAuthorizer
 
   def updatable_by?(user)
     user.has_role?(:admin) ||
-    user.has_role?(:manager, resource)
+    resource.owner == user
   end
 
   def deletable_by?(user)
     user.has_role?(:admin) ||
-    user.has_role?(:manager, resource)
+    resource.owner == user
   end
 
   def readable_by?(user)
     user.has_role?(:admin) ||
-    user.has_role?(:manager, resource)
+    resource.owner == user
   end
 
 end
