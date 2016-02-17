@@ -4,8 +4,6 @@
 #
 require 'rubygems' #so it can load gems
 
-Doorkeeper::Application.create(name: 'MyFrontend', redirect_uri: "http://127.0.0.1:4200")
-
 def user_with_metering_point
   metering_point              = Fabricate(:metering_point)
   contracting_party           = Fabricate(:contracting_party)
@@ -99,6 +97,7 @@ buzzn_team_names.each do |user_name|
     user.add_role :admin # felix is admin
     root_mp = Fabricate(:mp_urbanstr88)
     root_mp.devices << @gocycle
+    Fabricate(:application, owner: user, name: 'Buzzn Mobile')
   when 'christian'
     root_mp = Fabricate(:mp_60138988)
     root_mp.contracts << Fabricate(:mpoc_christian, metering_point: root_mp)

@@ -450,7 +450,7 @@ ActiveRecord::Schema.define(version: 20160217120441) do
     t.string   "scopes",       default: "", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "owner_id"
+    t.uuid     "owner_id"
     t.string   "owner_type"
   end
 
