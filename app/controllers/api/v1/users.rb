@@ -3,15 +3,14 @@ module API
     class Users < Grape::API
       include API::V1::Defaults
 
-      # before do
-      #   doorkeeper_authorize!
-      # end
+      before do
+        doorkeeper_authorize!
+      end
 
       resource 'users' do
 
         desc "Return me"
         get "me" do
-          doorkeeper_authorize!
           current_user
         end
 

@@ -4,6 +4,9 @@ module API
       include API::V1::Defaults
       resource 'profiles' do
 
+        before do
+          doorkeeper_authorize!
+        end
 
         desc "Return all profiles"
         paginate(per_page: per_page=10)
