@@ -1,6 +1,7 @@
 class UserResource < ApplicationResource
 
   attributes  :slug,
+              :email,
               :user_name,
               :first_name,
               :last_name,
