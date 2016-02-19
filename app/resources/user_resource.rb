@@ -8,6 +8,7 @@ class UserResource < ApplicationResource
               :about_me,
               :md_img
 
+  has_one :profile
   has_many :groups
   has_many :friends
   has_many :metering_points
