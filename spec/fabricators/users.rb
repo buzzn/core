@@ -11,6 +11,14 @@ Fabricator :admin, from: :user do
   after_create { |user | user.add_role(:admin) }
 end
 
+Fabricator :user_with_friend, from: :user do
+  after_create { |user |
+    friend = Fabricate(:user)
+    user.friendships.create(friend: friend)
+    friend.friendships.create(friend: user)
+  }
+end
+
 Fabricator :felix, from: :user do
   email               'felix@buzzn.net'
   profile             { Fabricate(:profile_felix) }

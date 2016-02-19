@@ -29,6 +29,9 @@ module RequestsHelper
     post path, params, headers_with_token(token)
   end
 
+  def post_without_token(path, params={})
+    post path, params, headers_without_token
+  end
 
   def json
     JSON.parse(response.body)

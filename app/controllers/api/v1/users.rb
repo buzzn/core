@@ -7,13 +7,14 @@ module API
 
         desc "Return me"
         get "me" do
-          guard!
+          doorkeeper_authorize!
           current_user
         end
 
         desc "Return all Users"
         paginate(per_page: per_page=10)
         get do
+          doorkeeper_authorize!
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
           @total_pages  = User.all.page(@page).per(@per_page).total_pages
@@ -26,25 +27,30 @@ module API
           requires :id, type: String, desc: "ID of the user"
         end
         get ":id" do
-          User.where(id: permitted_params[:id]).first!
+          doorkeeper_authorize!
+          user = User.where(id: permitted_params[:id]).first!
+          if current_user && user.profile.readable_by?(current_user)
+            return user
+          else
+            status 403
+          end
         end
 
 
-        # desc "Create a User"
-        # params do
-        #   requires :email, type: String, desc: "email of the user"
-        #   requires :password, type: String, desc: "password of the user"
-        # end
-        # post do
-        #   User.create!({
-        #     email: params[:email],
-        #     password: params[:password]
-        #   })
-        # end
-
-
-
-
+        desc "Create a User"
+        params do
+          requires :email, type: String
+          requires :password, type: String
+          requires :first_name, type: String
+          requires :last_name, type: String
+        end
+        post do
+          User.create!(
+            email:    params[:email],
+            password: params[:password],
+            profile:  Profile.new( user_name: params[:user_name], first_name: params[:first_name], last_name:  params[:last_name] )
+            )
+        end
 
 
         desc "Return the related groups for User"

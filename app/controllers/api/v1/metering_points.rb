@@ -8,7 +8,6 @@ module API
 
         desc "Return all MeteringPoints"
         get "" do
-          guard!
           if current_user
             MeteringPoint.all
           else

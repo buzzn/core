@@ -25,6 +25,8 @@ class User < ActiveRecord::Base
   has_many :group_users
   has_many :groups, :through => :group_users
 
+  has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
+
   delegate :slug, to: :profile
   delegate :name, to: :profile
   delegate :user_name, to: :profile
