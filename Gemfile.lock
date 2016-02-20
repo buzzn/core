@@ -106,6 +106,7 @@ GEM
       activemodel
       fog (>= 1.8.0)
       unf
+    ast (2.2.0)
     attr_encrypted (1.3.5)
       encryptor (~> 1.3.0)
     attr_required (1.0.1)
@@ -213,6 +214,10 @@ GEM
       activemodel (>= 3.0)
       activesupport (>= 3.0)
       request_store (~> 1.0)
+    easy_translate (0.5.0)
+      json
+      thread
+      thread_safe
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
@@ -431,6 +436,16 @@ GEM
     http_parser.rb (0.6.0)
     httpclient (2.7.1)
     i18n (0.7.0)
+    i18n-tasks (0.9.4)
+      activesupport (>= 4.0.2)
+      ast (>= 2.1.0)
+      easy_translate (>= 0.5.0)
+      erubis
+      highline (>= 1.7.3)
+      i18n
+      parser (>= 2.2.3.0)
+      term-ansicolor (>= 1.3.2)
+      terminal-table (>= 1.5.1)
     i18n_data (0.7.0)
     iban-tools (1.1.0)
     ice_nine (0.11.2)
@@ -538,6 +553,8 @@ GEM
       activerecord (>= 3.0, < 6.0)
       activesupport (>= 3.0, < 6.0)
       request_store (~> 1.1)
+    parser (2.3.0.6)
+      ast (~> 2.2)
     pg (0.18.4)
     pry (0.10.3)
       coderay (~> 1.1.0)
@@ -753,13 +770,17 @@ GEM
       sprockets (>= 3.0.0)
     table_print (1.5.4)
     temple (0.7.6)
+    term-ansicolor (1.3.2)
+      tins (~> 1.0)
     terminal-table (1.5.2)
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
       ref
     thor (0.19.1)
+    thread (0.2.2)
     thread_safe (0.3.5)
     tilt (2.0.2)
+    tins (1.8.2)
     trollop (2.1.2)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
@@ -852,6 +873,7 @@ DEPENDENCIES
   has_scope
   hashie-forbidden_attributes
   highcharts-rails
+  i18n-tasks
   iban-tools
   immigrant
   inherited_resources!
