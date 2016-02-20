@@ -4,7 +4,9 @@ module API
       include API::V1::Defaults
       resource :groups do
 
-
+        before do
+          doorkeeper_authorize!
+        end
 
         desc "Return all groups"
         get "", root: :groups do

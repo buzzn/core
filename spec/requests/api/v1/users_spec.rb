@@ -35,7 +35,9 @@ describe "Users API" do
 
 
 
-  it 'does creates a user as guest' do
+  it 'does creates a user as admin' do
+    access_token  = Fabricate(:admin_access_token)
+
     user = Fabricate.build(:user)
     request_params = {
       email:      user.email,
@@ -44,7 +46,7 @@ describe "Users API" do
       first_name: user.profile.first_name,
       last_name:  user.profile.last_name
     }.to_json
-    post_without_token "/api/v1/users", request_params
+    post_with_token "/api/v1/users", request_params, access_token.token
     expect(response).to be_successful
     expect(json['data']['attributes']['email']).to eq(user.email)
   end

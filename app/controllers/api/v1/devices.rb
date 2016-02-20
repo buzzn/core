@@ -4,6 +4,9 @@ module API
       include API::V1::Defaults
       resource :devices do
 
+        before do
+          doorkeeper_authorize!
+        end
 
         desc "Return all Device"
         params do

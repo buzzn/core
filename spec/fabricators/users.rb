@@ -4,16 +4,32 @@ Fabricator :user do
   email             { FFaker::Internet.email }
   password          '12345678'
   profile           { Fabricate(:profile) }
-  after_create { |user | user.confirm }
+  after_create { |user |
+    user.confirm
+  }
 end
 
 Fabricator :admin, from: :user do
   after_create { |user | user.add_role(:admin) }
 end
 
+Fabricator :user_with_metering_point, from: :user do
+  after_create { |user|
+    user.add_role(:manager, Fabricate(:metering_point))
+  }
+end
+
 Fabricator :user_with_friend, from: :user do
   after_create { |user |
     friend = Fabricate(:user)
+    user.friendships.create(friend: friend)
+    friend.friendships.create(friend: user)
+  }
+end
+
+Fabricator :user_with_friend_and_metering_point, from: :user do
+  after_create { |user |
+    friend = Fabricate(:user_with_metering_point)
     user.friendships.create(friend: friend)
     friend.friendships.create(friend: user)
   }

@@ -1,12 +1,18 @@
 
 
 Fabricator :metering_point do
-  name  'Wohnung'
-  i = 1
-  uid         {"DE001068825151000000000000#{2677114 + (i += 1)}"}
+  name        'Wohnung'
+  uid         { sequence(:uid, 10688251510000000000002677114) }
   mode        'in'
   readable    'friends'
   #contracts   { [ Fabricate(:electricity_supplier_contract)] }
+end
+
+Fabricator :metering_point_with_manager, from: :metering_point do
+  after_create { |metering_point|
+    user = Fabricate(:user_with_token)
+    user.add_role(:manager, metering_point)
+  }
 end
 
 

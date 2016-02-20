@@ -42,6 +42,10 @@ class User < ActiveRecord::Base
 
   self.scope :dummy, -> { where(email: 'sys@buzzn.net').first }
 
+  def access_tokens
+    Doorkeeper::AccessToken.where(resource_owner_id: self.id)
+  end
+
   def friend?(user)
     self.friendships.where(friend: user).empty? ? false : true
   end

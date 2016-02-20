@@ -4,17 +4,18 @@ module API
       include API::V1::Defaults
       resource 'users' do
 
+        before do
+          doorkeeper_authorize!
+        end
 
         desc "Return me"
         get "me" do
-          doorkeeper_authorize!
           current_user
         end
 
         desc "Return all Users"
         paginate(per_page: per_page=10)
         get do
-          doorkeeper_authorize!
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
           @total_pages  = User.all.page(@page).per(@per_page).total_pages
@@ -27,7 +28,6 @@ module API
           requires :id, type: String, desc: "ID of the user"
         end
         get ":id" do
-          doorkeeper_authorize!
           user = User.where(id: permitted_params[:id]).first!
           if current_user && user.profile.readable_by?(current_user)
             return user

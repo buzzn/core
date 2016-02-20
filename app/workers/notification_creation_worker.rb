@@ -4,6 +4,7 @@ class NotificationCreationWorker
   def perform(activity_id)
     @activity = PublicActivity::Activity.find(activity_id)
     owner = @activity.owner
+    puts owner
     users = []
     case @activity.key
     when 'friendship.create'
@@ -11,7 +12,7 @@ class NotificationCreationWorker
     when 'friendship_request.create' #TODO: create this
       users = @activity.recipient
     when 'metering_point.create'
-      users = owner.friends
+      users = owner.friends if owner
     when 'metering_point.update'
       users = @activity.trackable.members
     when 'metering_point.destroy'
