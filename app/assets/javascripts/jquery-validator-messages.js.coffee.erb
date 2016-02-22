@@ -1,0 +1,12 @@
+$.extend $.validator.messages,
+  required: "<%=  I18n.t('errors.messages.blank')%>"
+  number: "<%=  I18n.t('errors.messages.not_a_number')%>"
+  equalTo: "<%=  I18n.t('errors.messages.confirmation')%>"
+  accept: "<%=  I18n.t('errors.messages.accepted')%>"
+  maxlength: $.validator.format("<%=  I18n.t('errors.messages.too_long')%>")
+  minlength: $.validator.format("<%=  I18n.t('errors.messages.too_short')%>")
+  max: $.validator.format("<%=  I18n.t('errors.messages.less_than')%>")
+  min: $.validator.format("<%=  I18n.t('errors.messages.great_than')%>")
+
+
+

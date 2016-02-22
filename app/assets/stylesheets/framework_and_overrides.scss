@@ -99,11 +99,17 @@ a, img {
 .btn-chart-prev{
   position: relative;
   transform: translateY(380%);
+  z-index: 1;
 }
 
 .btn-chart-next{
   position: relative;
   transform: translateY(380%);
+  z-index: 1;
+}
+
+.chart {
+  z-index: 2;
 }
 
 .two-column.timeline .timeline-entry:nth-child(2n) {
@@ -434,6 +440,29 @@ a, img {
   margin-left: 5px;
   margin-top: 5px;
 }
+
+.wizard > .steps > ul > li {
+  width: inherit;
+}
+
+.radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+  margin-left: 10px;
+}
+
+.wizard > .actions a, .wizard > .actions a:hover, .wizard > .actions a:active {
+  border-radius: 0;
+}
+
+.wizard > .steps a, .wizard > .steps a:hover, .wizard > .steps a:active {
+  border-radius: 0;
+}
+
+.wizard > .actions a[href='#next'], .actions a[href='#finish'] {
+  background-color: #97c664;
+}
+
+
+
 
 
 

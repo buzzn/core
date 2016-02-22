@@ -152,14 +152,90 @@
 
 
 
-
   .row
-    .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id}
+    .col-sm-12.col-md-12.col-lg-12
       %h1.page-header.text-overflow
         %span
           = t('lines')
           %small
             %i.small-info-circle.fa.fa-info-circle{'data-content' => t('trend_chart_info')}
+    .col-sm-6.col-md-3.col-lg-3
+      .panel.media.pad-all
+        .media-left
+          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful.panel-primary
+            %i.fa.fa-arrow-circle-o-right.fa-2x
+        .media-body
+          = content_tag :div, id: "group-ticker-live-in-#{@group.id}", class: "group-ticker" do
+            %span.text-2x.text-thin
+              .power-ticker
+                = t('loading') + '...'
+          %p= t('current_consumption_in_watts')
+
+    .col-sm-6.col-md-3.col-lg-3
+      .panel.media.pad-all
+        .media-left
+          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful.panel-danger
+            %i.fa.fa-arrow-circle-o-right.fa-2x
+        .media-body
+          = content_tag :div, id: "group-ticker-live-out-#{@group.id}", class: "group-ticker" do
+            %span.text-2x.text-thin
+              .power-ticker
+                = t('loading') + '...'
+          %p= t('current_production_in_watts')
+
+    .col-sm-6.col-md-3.col-lg-3
+      .panel.media.pad-all
+        .media-left
+          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful.panel-mint
+            %i.fa.fa-flag-checkered.fa-2x
+        .media-body
+          = content_tag :div, class: "number" do
+            %span.text-2x.text-thin
+              .stats-autarchy
+                = t('loading') + '...'
+          %p= t('autarchy') + ' (%)'
+
+    / .col-sm-6.col-md-3.col-lg-3.group-stats
+    /   .panel.media.pad-all
+    /     .media-left
+    /       %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+    /         %i.fa.fa-arrow-circle-o-up.fa-2x
+    /     .media-body
+    /       = content_tag :div, class: "number" do
+    /         %span.text-2x.text-thin
+    /           .stats-energy-max
+    /             = t('loading') + '...'
+    /       %p.stats-energy-max-time
+
+
+    / .col-sm-6.col-md-3.col-lg-3.group-stats
+    /   .panel.media.pad-all
+    /     .media-left
+    /       %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+    /         %i.fa.fa-arrow-circle-o-down.fa-2x
+    /     .media-body
+    /       = content_tag :div, class: "number" do
+    /         %span.text-2x.text-thin
+    /           .stats-energy-min
+    /             = t('loading') + '...'
+    /       %p.stats-energy-min-time
+
+    / .col-sm-6.col-md-3.col-lg-3.group-stats
+    /   .panel.media.pad-all
+    /     .media-left
+    /       %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+    /         %i.fa.fa-tachometer.fa-2x
+    /     .media-body
+    /       = content_tag :div, class: "number" do
+    /         %span.text-2x.text-thin
+    /           .stats-energy-sum
+    /             = t('loading') + '...'
+    /       %p= t('energy_in_visible_interval')
+
+
+  .row
+    .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id}
+
       .panel
         .panel-body.panel-colorful
 

@@ -60,6 +60,8 @@ de:
   diff_metering: Abgrenzungszähler
 
   current_power_in_watts: Aktuelle Leistung (Watt)
+  current_consumption_in_watts: Aktueller Gesamtbezug (Watt)
+  current_production_in_watts: Aktuelle Gesamterzeugung (Watt)
   actions: Aktionen
 
   add_out_metering: Generatorzähler hinzufügen
@@ -628,6 +630,7 @@ de:
   zoom_in_here_if_possible: Hineinzoomen wenn möglich
   help: Hilfe
   remove_from_dashboard: Vom Dashboard entfernen
+  add_metering_point_to_dashboard: Zählpunkt zum Dashboard hinzufügen
   display_in_series: Im Diagramm anzeigen
   series: Graph
   my_dashboard: Mein Dashboard
@@ -661,8 +664,10 @@ de:
   dummy: Dummy
   slp: SLP
   sep: SEP
+  slp_abbreviation: SLP (Standardlastprofil)
+  sep_abbreviation: SEP (Standardeinspeiseprofil)
   you_dont_have_a_smart_meter_so_your_energy_data_is_estimated_as_shown: "Du hast keinen Smart Meter an diesem Zählpunkt, also werden die Energiedaten wie gezeigt geschätzt."
-  dummy_description: "SEP = Standardeinspeiseprofil \nSLP = Standardlastprofil \nEin Standardprofil ist die berechnete Stromkurve eines Zählpunkts, der noch nicht über einen sog. Smart Meter verfügt. Ein Smart Meter würde den tatsächlich aktuell gemessenen Strom am Zählpunkt anzeigen. Ein Standardprofil hingegen entsteht aus einem Algorithmus, in den diese Werte einfließen: (a) eine über viele vergleichbare Zählpunkte ermittelte Normkurve, (b) die voraussichtlichen Kilowattstunden, die an Deinem Zählpunkt entweder bezogen/verbraucht (Standardlastprofil) oder eingespeist/produziert (Standardeinspeiseprofil) werden. Letztgenannte Kilowattstunden werden dann per Standardprofil 'ausgerollt'. In der Grafik stellt sich dies als Stromkurve dar, die sich über die Zeitachse nach rechts bewegt. Diese Stromkurve ist insoweit fiktiv, als sie Deiner tatsächlichen Last oder Leistung nicht entspricht. Dennoch spiegelt sie ein Stück weit die Realität wieder, indem ihr die spezifische elektrische Arbeit Deines Zählpunkts zugrunde liegt. "
+  dummy_description: "Ein Standardprofil ist die berechnete (nicht gemessene) Stromkurve eines Zählpunkts ohne sog. Smart Meter. In die Berechnung fließen ein: (a) eine über viele vergleichbare Zählpunkte ermittelte Normkurve, (b) die voraussichtlichen Kilowattstunden, die an Deinem Zählpunkt entweder bezogen/verbraucht (Standardlastprofil) oder eingespeist/produziert (Standardeinspeiseprofil) werden.  "
 
 
   group_not_deletable: "Die Gruppe %{group_name} ist momentan nicht löschbar."
@@ -782,9 +787,12 @@ de:
   internal_server_error: "Uups, es ist ein unerwarteter Fehler aufgetreten!"
   error_forbidden: "Uups, Du hast nicht die nötigen Rechte, um diese Seite anzusehen!"
   you_have_count_messages: "Du hast %{count} Nachrichten"
+  no_smartmeter_means_you_get_dummy_data: "Da der Zähler kein Smartmeter ist werden die Messwerte mit Standard-Daten dargestellt."
 
   the_requested_content_is_not_public: Der angefragte Inhalt ist nicht öffentlich
   embed: Einbetten
+  current_step: Aktueller Schritt
+  pagination: Seitenzahlen
 
   energy_max_in_visible_interval: Max (kWh)
   energy_min_in_visible_interval: Min (kWh)

@@ -122,6 +122,8 @@ source 'http://rails-assets.org' do
   gem 'rails-assets-dropzone'
   gem 'rails-assets-highcharts'
   gem 'rails-assets-bootstrap-tour'
+  gem 'rails-assets-jquery-steps'
+  gem 'rails-assets-jquery-validation'
 end
 
 group :production, :staging do

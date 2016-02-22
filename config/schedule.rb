@@ -25,9 +25,9 @@ end
 #   runner "Meter.reactivate"
 # end
 
-# every 1440.minutes do
-#   runner "Group.calculate_scores"
-# end
+every 1.day, :at => '4:00 am' do
+  runner "Group.calculate_scores"
+end
 
 # every 1440.minutes do
 #   runner "MeteringPoint.calculate_scores"

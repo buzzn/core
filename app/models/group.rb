@@ -157,26 +157,15 @@ class Group < ActiveRecord::Base
       data_in << metering_point.chart_data(resolution_format, containing_timestamp)
       operators << "+"
     end
-    if metering_points_in.size > 1
-      result_in = calculate_virtual_metering_point(data_in, operators, resolution_format)
-    else
-      result_in = data_in.first
-    end
+    result_in = calculate_virtual_metering_point(data_in, operators, resolution_format)
+
     operators = []
 
     metering_points_out.each do |metering_point|
       data_out << metering_point.chart_data(resolution_format, containing_timestamp)
       operators << "+"
     end
-    if metering_points_out.size > 1
-      result_out = calculate_virtual_metering_point(data_out, operators, resolution_format)
-    else
-      result_out = data_out.first
-    end
-    # if resolution_format == "day_to_minutes" || resolution_format == "day_to_hours"
-    #   result_in.pop
-    #   result_out.pop
-    # end
+    result_out = calculate_virtual_metering_point(data_out, operators, resolution_format)
 
     return [ { :name => I18n.t('total_consumption'), :data => result_in}, { :name => I18n.t('total_production'), :data => result_out} ]
   end
@@ -292,11 +281,11 @@ class Group < ActiveRecord::Base
 
   def self.calculate_scores
     Group.all.select(:id).each.each do |group|
-      Sidekiq::Client.push({
-       'class' => CalculateGroupScoreSufficiencyWorker,
-       'queue' => :default,
-       'args' => [ group.id, 'day', Time.now.to_i*1000]
-      })
+      # Sidekiq::Client.push({
+      #  'class' => CalculateGroupScoreSufficiencyWorker,
+      #  'queue' => :default,
+      #  'args' => [ group.id, 'day', Time.now.to_i*1000]
+      # })
 
       Sidekiq::Client.push({
        'class' => CalculateGroupScoreAutarchyWorker,
@@ -304,11 +293,11 @@ class Group < ActiveRecord::Base
        'args' => [ group.id, 'day', Time.now.to_i*1000]
       })
 
-      Sidekiq::Client.push({
-       'class' => CalculateGroupScoreFittingWorker,
-       'queue' => :default,
-       'args' => [ group.id, 'day', Time.now.to_i*1000]
-      })
+      # Sidekiq::Client.push({
+      #  'class' => CalculateGroupScoreFittingWorker,
+      #  'queue' => :default,
+      #  'args' => [ group.id, 'day', Time.now.to_i*1000]
+      # })
     end
   end
 

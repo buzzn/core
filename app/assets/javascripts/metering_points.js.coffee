@@ -575,6 +575,7 @@ $(".group-chart").ready ->
         #checkIfPreviousDataExistsGroup()
         #checkIfNextDataExistsGroup()
       Chart.Functions.activateButtons(true)
+      Chart.Functions.setEnergyStatsGroup()
       Chart.Functions.getChartComments('groups', group_id, chart_data_min_x)
     .error (jqXHR, textStatus, errorThrown) ->
       console.log textStatus
@@ -976,6 +977,7 @@ namespace 'Chart.Functions', (exports) ->
           Chart.Functions.setChartType(true)
           chart.hideLoading()
           Chart.Functions.activateButtons(true)
+          Chart.Functions.setEnergyStatsGroup()
           Chart.Functions.getChartComments(resource, id, chart_data_min_x)
         .error (jqXHR, textStatus, errorThrown) ->
           chart.hideLoading()
@@ -1133,7 +1135,19 @@ namespace 'Chart.Functions', (exports) ->
     else
       $('.metering_point-stats').hide(500);
 
+  exports.setEnergyStatsGroup = () ->
+    if chart && chart.series.length != 0 && chart.series[0].data.length != 0
+      sum_autarchy = 0
+      count_autarchies = 0
+      for i in [0...chart.series[0].data.length]
+        if chart.series[1].data[i]
+          if chart.series[1].data[i].y >= chart.series[0].data[i].y
+            sum_autarchy += 1
+          else
+            sum_autarchy += chart.series[1].data[i].y * 1.0 / chart.series[0].data[i].y
+          count_autarchies += 1
 
+      $('.stats-autarchy').html((sum_autarchy*100 / count_autarchies).toFixed(2))
 
 
 #  ****** Chart Update Timers ******

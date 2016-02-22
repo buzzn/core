@@ -13,6 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
+//= require jquery-steps
+//= require jquery-validation
 //= require jquery.remotipart
 //= require d3
 //= require bootstrap
@@ -45,6 +47,7 @@
 
 //= require nifty_init
 //= require nifty.min
+//= require jquery-validator-messages
 
 //= require global
 //= require addresses

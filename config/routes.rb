@@ -145,6 +145,9 @@ Buzzn::Application.routes.draw do
 
       get :contract
       put :contract_update
+
+      get :wizard
+      put :wizard_update
     end
   end
 

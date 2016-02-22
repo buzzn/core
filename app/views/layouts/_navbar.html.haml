@@ -38,7 +38,7 @@
               %i.fa.fa-plus.fa-lg
             .dropdown-menu.dropdown-menu-right.dropdown-menu-xs.with-arrow.panel-default
               %ul.head-list
-                %li= link_to(t("create_metering_point"), metering_point_wizard_metering_points_path, {:remote => true, :class => 'start_modal', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-backdrop' => 'static'})
+                %li= link_to(t("create_metering_point"), wizard_wizard_metering_points_path, {:remote => true, :class => 'start_modal', 'data-toggle' => 'modal', 'data-target' => '#myModal'})
                 - if current_user.can_create?(Group)
                   %li= link_to(t("create_group"), new_group_path, {:remote => true, :class => 'start_modal', 'data-toggle' => 'modal', 'data-target'   => '#myModal'})
           / %li.dropdown.badge-header-container

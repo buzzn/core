@@ -47,6 +47,8 @@
 
         .modal-footer
           = f.button :button, t("cancel"), class: 'btn btn-primary btn-labeled fa fa-remove', id: 'cancel', name: 'cancel', value: 'cancel'
+          = f.button :button, t("back"), class: 'btn btn-primary btn-labeled fa fa-remove', id: 'back', name: 'back', value: 'back'
+
           .pull-right.js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: t('yes')}}}
             = f.button :button, t("continue"), class: 'btn btn-success btn-labeled fa fa-arrow-right', id: 'submit'
           .pull-right.js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: t('no')}}}

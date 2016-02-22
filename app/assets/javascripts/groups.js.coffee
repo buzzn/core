@@ -3,6 +3,7 @@
 
 class BubbleChart
   constructor: (data, data_out, group_id) ->
+    @group_id = group_id
     @data = data
     @data_out = data_out
     canvasWidth = $("#bubbles_container_" + group_id).width()
@@ -69,6 +70,7 @@ class BubbleChart
     this.create_vis(group_id)
     this.calculateTotalPower()
     this.calculateTotalPowerOut()
+    this.setStatValues(@totalPower, @totalPowerOut, @group_id)
 
 
 
@@ -283,6 +285,7 @@ class BubbleChart
     this.calculateTotalPower()
     this.calculateTotalPowerOut()
     this.setNewScale()
+    this.setStatValues(@totalPower, @totalPowerOut, @group_id)
 
   #scales all bubbles
   setNewScale: () =>
@@ -333,6 +336,10 @@ class BubbleChart
     d3.select("#circles_out").selectAll('path').transition()
       .duration(2000)
       .attr('d', @arc)
+
+  setStatValues: (power_in, power_out, group_id) =>
+    $("#group-ticker-live-in-#{group_id}").find(".power-ticker").html(power_in)
+    $("#group-ticker-live-out-#{group_id}").find(".power-ticker").html(power_out)
 
 
 
@@ -467,6 +474,8 @@ d3.selection::moveToBack = ->
       if firstChild
         @parentNode.insertBefore this, firstChild
       return
+
+
 
 
 $(document).on('page:before-change', clearTimers)

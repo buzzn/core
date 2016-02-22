@@ -129,8 +129,8 @@
   .row
     .metering_point_detail{id: "metering_point_#{@metering_point.id}"}
       - if !@metering_point.smart?
-        .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("#{@metering_point.fake_label}"), "data-content" => t("dummy_description")}
-          .ribbon-green= t('dummy')
+        .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("#{@metering_point.fake_label}_abbreviation"), "data-content" => t("dummy_description")}
+          .ribbon-green= t("#{@metering_point.fake_label}")
       .panel
         .panel-body.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
 

@@ -3,8 +3,8 @@
   = link_to metering_point do
     .panel.widget
       - if !metering_point.smart?
-        .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("#{metering_point.fake_label}"), "data-content" => t("dummy_description")}
-          .ribbon-green= t('dummy')
+        .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("#{metering_point.fake_label}_abbreviation"), "data-content" => t("dummy_description")}
+          .ribbon-green= t("#{metering_point.fake_label}")
       .widget-header{class: "bg-#{metering_point.mode_class}" }
         .pull-left.readability{class: "fa fa-#{metering_point.readable_icon}", 'data-title' => t('readable_by') + ': ' + t("#{metering_point.readable}")}
 
