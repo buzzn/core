@@ -24,7 +24,7 @@ class NotificationCreationWorker
     when 'metering_point_user_membership.create'
       users = @activity.trackable.members
     when 'group.create'
-      users = owner.friends
+      users = owner.friends if owner
     when 'group.update'
       users = @activity.trackable.members
     when 'group.destroy'

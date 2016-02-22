@@ -4,9 +4,9 @@ module API
       include API::V1::Defaults
       resource :groups do
 
-        before do
-          doorkeeper_authorize!
-        end
+        # before do
+        #   doorkeeper_authorize!
+        # end
 
         desc "Return all groups"
         get "", root: :groups do
@@ -34,7 +34,17 @@ module API
           requires :id, type: String, desc: "ID of the group"
         end
         get ":id", root: "group" do
-          Group.where(id: permitted_params[:id]).first!
+          group = Group.where(id: permitted_params[:id]).first!
+          if group.readable_by_world?
+            return group
+          else
+            doorkeeper_authorize!
+            if group.readable_by?(current_user)
+              group
+            else
+              status 403
+            end
+          end
         end
 
 

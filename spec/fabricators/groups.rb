@@ -4,6 +4,18 @@ Fabricator :group do
   readable    'world'
 end
 
+Fabricator :group_readable_by_community, from: :group do
+  readable    'community'
+end
+
+Fabricator :group_readable_by_friends, from: :group do
+  readable    'friends'
+end
+
+Fabricator :group_readable_by_members, from: :group do
+  readable    'members'
+end
+
 
 Fabricator :group_hof_butenland, from: :group do
   name        'Hof Butenland'
