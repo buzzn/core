@@ -6,3 +6,11 @@ end
 Fabricator :admin_access_token, from: :access_token do
   resource_owner_id { Fabricate(:admin).id }
 end
+
+Fabricator :access_token_with_friend, from: :access_token do
+  resource_owner_id { Fabricate(:user_with_friend).id }
+end
+
+Fabricator :access_token_with_friend_and_metering_point, from: :access_token do
+  resource_owner_id { Fabricate(:user_with_friend_and_metering_point).id }
+end

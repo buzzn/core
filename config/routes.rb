@@ -2,7 +2,10 @@ Buzzn::Application.routes.draw do
 
   default_url_options host: Rails.application.secrets.hostname
 
-  use_doorkeeper
+  use_doorkeeper do
+    controllers :applications => 'oauth/applications'
+  end
+
   mount API::Base, at: "/"
   mount GrapeSwaggerRails::Engine, at: "/api"
   mount CookieAlert::Engine => "/cookie-alert"

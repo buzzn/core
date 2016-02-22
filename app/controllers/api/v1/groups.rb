@@ -4,11 +4,12 @@ module API
       include API::V1::Defaults
       resource :groups do
 
-
+        before do
+          doorkeeper_authorize!
+        end
 
         desc "Return all groups"
         get "", root: :groups do
-          guard!
           group_ids = Group.where(readable: 'world').ids
           if current_user
             group_ids << Group.where(readable: 'community').ids
@@ -33,7 +34,6 @@ module API
           requires :id, type: String, desc: "ID of the group"
         end
         get ":id", root: "group" do
-          guard!
           Group.where(id: permitted_params[:id]).first!
         end
 
@@ -46,7 +46,6 @@ module API
           requires :description,  type: String, desc: "Description of the Group."
         end
         post do
-          guard!
           if Group.creatable_by?(current_user)
             @params = params.group || params
             @group = Group.new({
@@ -71,7 +70,6 @@ module API
           optional :name
         end
         put ':id' do
-          guard!
           @group = Group.find(params[:id])
           if @group.updatable_by?(current_user)
             @params = params.group || params
@@ -95,7 +93,6 @@ module API
           requires :id, type: String, desc: "Group ID"
         end
         delete ':id' do
-          guard!
           current_user.statuses.find(params[:id]).destroy
         end
 

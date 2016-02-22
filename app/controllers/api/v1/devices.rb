@@ -4,13 +4,15 @@ module API
       include API::V1::Defaults
       resource :devices do
 
+        before do
+          doorkeeper_authorize!
+        end
 
         desc "Return all Device"
         params do
           requires :id, type: String, desc: "ID of the Device"
         end
         get ":id" do
-          guard!
           @device = Device.find(params[:id])
           current_user
           if @device.readable == 'world'
@@ -27,7 +29,6 @@ module API
           requires :id, type: String, desc: "ID of the Device"
         end
         get ":id" do
-          guard!
           @device = Device.find(params[:id])
           current_user
           if @device.readable == 'world'
@@ -54,7 +55,6 @@ module API
           requires :mobile,                    type: Boolean
         end
         post do
-          guard!
           if current_user
             if Device.creatable_by?(current_user)
               @params = params.device || params
@@ -99,7 +99,6 @@ module API
           requires :mobile,                    type: Boolean
         end
         put ':id' do
-          guard!
           if current_user
             @device = Device.find(params[:id])
             if @device.updatable_by?(current_user)
@@ -132,7 +131,6 @@ module API
           requires :id, type: String, desc: "Device ID"
         end
         delete ':id' do
-          guard!
           if current_user
             @device = Device.find(params[:id])
             if @device.deletable_by?(current_user)

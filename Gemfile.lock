@@ -8,14 +8,14 @@ GIT
 
 GIT
   remote: git://github.com/cerebris/jsonapi-resources.git
-  revision: 8e85d68dfbaf9181344c7618b0b29b4cfd362034
+  revision: 7130207b4bd77f5fb0f802e0a8a2641af8691e3e
   specs:
     jsonapi-resources (0.7.0)
       rails (>= 4.0)
 
 GIT
   remote: git://github.com/flyerhzm/bullet.git
-  revision: 9baac062fa0068327a9c74ed8a6f9ec55cfc05b7
+  revision: bd63b75a959f1b378efeb1ae992363283d888827
   specs:
     bullet (5.0.0)
       activesupport (>= 3.0.0)
@@ -106,27 +106,28 @@ GEM
       activemodel
       fog (>= 1.8.0)
       unf
+    ast (2.2.0)
     attr_encrypted (1.3.5)
       encryptor (~> 1.3.0)
     attr_required (1.0.1)
     authority (3.1.0)
       activesupport (>= 3.0.0)
       rake (>= 0.8.7)
-    autoprefixer-rails (6.3.2)
+    autoprefixer-rails (6.3.3)
       execjs
       json
     awesome_nested_set (3.0.3)
       activerecord (>= 4.0.0, < 5)
     awesome_print (1.6.1)
-    aws-sdk (2.2.16)
-      aws-sdk-resources (= 2.2.16)
-    aws-sdk-core (2.2.16)
+    aws-sdk (2.2.18)
+      aws-sdk-resources (= 2.2.18)
+    aws-sdk-core (2.2.18)
       jmespath (~> 1.0)
     aws-sdk-rails (1.0.1)
       aws-sdk-resources (~> 2)
       railties (>= 3)
-    aws-sdk-resources (2.2.16)
-      aws-sdk-core (= 2.2.16)
+    aws-sdk-resources (2.2.18)
+      aws-sdk-core (= 2.2.18)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
@@ -163,7 +164,7 @@ GEM
       carrierwave (>= 0.8.0, < 0.11.0)
     chronic (0.10.2)
     cocoon (1.2.7)
-    coderay (1.1.0)
+    coderay (1.1.1)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     coffee-rails (4.1.1)
@@ -213,6 +214,10 @@ GEM
       activemodel (>= 3.0)
       activesupport (>= 3.0)
       request_store (~> 1.0)
+    easy_translate (0.5.0)
+      json
+      thread
+      thread_safe
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
@@ -319,7 +324,7 @@ GEM
     fog-serverlove (0.1.2)
       fog-core
       fog-json
-    fog-softlayer (1.0.3)
+    fog-softlayer (1.1.0)
       fog-core
       fog-json
     fog-storm_on_demand (0.1.1)
@@ -348,7 +353,7 @@ GEM
     formatador (0.2.5)
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
-    geocoder (1.3.0)
+    geocoder (1.3.1)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     gmaps4rails (2.1.2)
@@ -431,6 +436,16 @@ GEM
     http_parser.rb (0.6.0)
     httpclient (2.7.1)
     i18n (0.7.0)
+    i18n-tasks (0.9.4)
+      activesupport (>= 4.0.2)
+      ast (>= 2.1.0)
+      easy_translate (>= 0.5.0)
+      erubis
+      highline (>= 1.7.3)
+      i18n
+      parser (>= 2.2.3.0)
+      term-ansicolor (>= 1.3.2)
+      terminal-table (>= 1.5.1)
     i18n_data (0.7.0)
     iban-tools (1.1.0)
     ice_nine (0.11.2)
@@ -438,7 +453,7 @@ GEM
       activerecord (>= 3.0)
     inflecto (0.0.2)
     interception (0.5)
-    ipaddress (0.8.2)
+    ipaddress (0.8.3)
     jbuilder (2.4.1)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
@@ -464,7 +479,7 @@ GEM
     listen (3.0.6)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9.7)
-    lograge (0.3.5)
+    lograge (0.3.6)
       actionpack (>= 3)
       activesupport (>= 3)
       railties (>= 3)
@@ -498,7 +513,7 @@ GEM
       railties (>= 3.0)
     mongo (2.1.2)
       bson (~> 3.0)
-    mongoid (5.1.0)
+    mongoid (5.1.1)
       activemodel (~> 4.0)
       mongo (~> 2.1)
       origin (~> 2.2)
@@ -511,7 +526,7 @@ GEM
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     nenv (0.3.0)
-    newrelic_rpm (3.14.3.313)
+    newrelic_rpm (3.15.0.314)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
     notiffany (0.0.8)
@@ -538,6 +553,8 @@ GEM
       activerecord (>= 3.0, < 6.0)
       activesupport (>= 3.0, < 6.0)
       request_store (~> 1.1)
+    parser (2.3.0.6)
+      ast (~> 2.2)
     pg (0.18.4)
     pry (0.10.3)
       coderay (~> 1.1.0)
@@ -551,7 +568,7 @@ GEM
     pry-stack_explorer (0.4.9.2)
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
-    public_activity (1.4.2)
+    public_activity (1.4.3)
       actionpack (>= 3.0.0)
       activerecord (>= 3.0)
       i18n (>= 0.5.0)
@@ -575,7 +592,7 @@ GEM
       rack
     rack-mount (0.8.3)
       rack (>= 1.0.0)
-    rack-oauth2 (1.2.3)
+    rack-oauth2 (1.3.0)
       activesupport (>= 2.3)
       attr_required (>= 0.0.5)
       httpclient (>= 2.4)
@@ -601,13 +618,13 @@ GEM
       rails-assets-jquery (>= 1.9.1, < 3)
     rails-assets-bootstrap-datepicker (1.6.0)
       rails-assets-jquery (>= 1.7.1)
-    rails-assets-bootstrap-select (1.9.4)
+    rails-assets-bootstrap-select (1.10.0)
       rails-assets-jquery (>= 1.8)
-    rails-assets-bootstrap-tour (0.10.2)
+    rails-assets-bootstrap-tour (0.10.3)
       rails-assets-bootstrap (>= 2.3.2)
       rails-assets-jquery (>= 1.9.0)
-    rails-assets-d3 (3.5.15)
-    rails-assets-dropzone (4.2.0)
+    rails-assets-d3 (3.5.16)
+    rails-assets-dropzone (4.3.0)
     rails-assets-enquire (2.1.2)
     rails-assets-fastclick (0.6.11)
     rails-assets-font-awesome (4.3.0)
@@ -689,7 +706,7 @@ GEM
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
       rspec-mocks (~> 3.4.0)
-    rspec-core (3.4.2)
+    rspec-core (3.4.3)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -721,7 +738,7 @@ GEM
       tilt (>= 1.1, < 3)
     select2-rails (3.5.9.3)
       thor (~> 0.14)
-    sexp_processor (4.6.1)
+    sexp_processor (4.7.0)
     shellany (0.0.1)
     sidekiq (4.1.0)
       concurrent-ruby (~> 1.0)
@@ -757,13 +774,17 @@ GEM
       sprockets (>= 3.0.0)
     table_print (1.5.4)
     temple (0.7.6)
+    term-ansicolor (1.3.2)
+      tins (~> 1.0)
     terminal-table (1.5.2)
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
       ref
     thor (0.19.1)
+    thread (0.2.2)
     thread_safe (0.3.5)
     tilt (2.0.2)
+    tins (1.8.2)
     trollop (2.1.2)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
@@ -856,6 +877,7 @@ DEPENDENCIES
   has_scope
   hashie-forbidden_attributes
   highcharts-rails
+  i18n-tasks
   iban-tools
   immigrant
   inherited_resources!

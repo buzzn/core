@@ -1,0 +1,25 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "4f3abc029bf48f05677b3c5cbfc807354b83fc5c7f0e108dd11d1dc4a31f0117",
+      "message": "Unsafe reflection method constantize called with parameter value",
+      "file": "app/controllers/comments_controller.rb",
+      "line": 7,
+      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "params[:comment][:commentable_type].constantize",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CommentsController",
+        "method": "create"
+      },
+      "user_input": "params[:comment][:commentable_type]",
+      "confidence": "High",
+      "note": ""
+    }
+  ],
+  "updated": "2016-02-12 15:10:50 +0100",
+  "brakeman_version": "3.1.5"
+}

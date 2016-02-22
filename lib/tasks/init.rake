@@ -14,9 +14,7 @@ namespace :db do
                   'db:drop',
                   'db:create',
                   'db:migrate',
-                  'db:seed',
-                  'slp:import_h0',
-                  'sep:import_pv_bhkw'
+                  'db:seed'
                 ]
 end
 

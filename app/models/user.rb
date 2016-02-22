@@ -25,6 +25,8 @@ class User < ActiveRecord::Base
   has_many :group_users
   has_many :groups, :through => :group_users
 
+  has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
+
   delegate :slug, to: :profile
   delegate :name, to: :profile
   delegate :user_name, to: :profile
@@ -39,6 +41,10 @@ class User < ActiveRecord::Base
   after_create :create_dashboard
 
   self.scope :dummy, -> { where(email: 'sys@buzzn.net').first }
+
+  def access_tokens
+    Doorkeeper::AccessToken.where(resource_owner_id: self.id)
+  end
 
   def friend?(user)
     self.friendships.where(friend: user).empty? ? false : true

@@ -100,11 +100,13 @@
     https://codeship.io/projects/41893
 
 ## API
-    get api token
-
-    app = Doorkeeper::Application.last
+    #https://github.com/doorkeeper-gem/doorkeeper/wiki/Testing-your-provider-with-OAuth2-gem
+    app = Doorkeeper::Application.first
+    client_redirect_url = 'urn:ietf:wg:oauth:2.0:oob'
     client = OAuth2::Client.new(app.uid, app.secret, :site => "http://localhost:3000")
-    client.password.get_token('felix@buzzn.net', '12345678').token
+    client.auth_code.authorize_url(:redirect_uri => client_redirect_url)
+    token = client.auth_code.get_token('xxxxxxxxxx', :redirect_uri => client_redirect_url)
+    access_token = token.token
 
-    go to http://localhost:3000/api
-    add token and explore api
+
+

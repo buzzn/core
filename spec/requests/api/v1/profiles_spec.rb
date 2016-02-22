@@ -9,17 +9,33 @@ describe "Profiles API" do
   end
 
 
-  # it 'does not gets a profile with bad token' do
-  #   token = Fabricate(:access_token).token
-  #   profile = Fabricate(:profile)
-  #   get_with_token "/api/v1/profiles/#{profile.id}", token
-  #   expect(response).not_to be_successful
-  # end
+  it 'does not gets a profile as foreigner' do
+    access_token = Fabricate(:access_token)
+    profile = Fabricate(:profile)
+    get_with_token "/api/v1/profiles/#{profile.id}", access_token.token
+    expect(response).not_to be_successful
+  end
 
+
+  it 'does gets a profile as admin' do
+    access_token  = Fabricate(:admin_access_token)
+    profile       = Fabricate(:profile)
+    get_with_token "/api/v1/profiles/#{profile.id}", access_token.token
+    expect(response).to be_successful
+  end
+
+
+  it 'does gets a profile as friend' do
+    access_token      = Fabricate(:access_token_with_friend)
+    token_user        = User.find(access_token.resource_owner_id)
+    token_user_friend = token_user.friends.first
+    get_with_token "/api/v1/profiles/#{token_user_friend.profile.id}", access_token.token
+    expect(response).to be_successful
+  end
 
 
   it 'does not creates a profile as simple user' do
-    token = Fabricate(:access_token).token
+    access_token = Fabricate(:access_token)
 
     profile = Fabricate.build(:profile)
 
@@ -29,7 +45,7 @@ describe "Profiles API" do
       last_name:  profile.last_name
     }.to_json
 
-    post_with_token "/api/v1/profiles", request_params, token
+    post_with_token "/api/v1/profiles", request_params, access_token.token
 
     expect(response).not_to be_successful
   end
@@ -39,7 +55,7 @@ describe "Profiles API" do
 
 
   it 'creates a profile as admin' do
-    token = Fabricate(:admin_access_token).token
+    access_token = Fabricate(:admin_access_token)
 
     profile = Fabricate.build(:profile)
 
@@ -49,7 +65,7 @@ describe "Profiles API" do
       last_name:  profile.last_name
     }.to_json
 
-    post_with_token "/api/v1/profiles", request_params, token
+    post_with_token "/api/v1/profiles", request_params, access_token.token
 
     expect(response).to be_successful
     expect(json['data']['attributes']['first-name']).to eq(profile.first_name)
