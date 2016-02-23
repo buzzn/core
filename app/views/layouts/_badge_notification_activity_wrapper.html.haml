@@ -1,15 +1,22 @@
 - @a = a.decorate # TODO remove decorater from view
 
-= link_to @a.trackable do
-  %a.media.badge_notification
-    .media-left
-      %span= @a.key_icon
-    .media-body
-      .speech
-        - if @a.owner && @a.owner.profile
-          = link_to @a.owner.name, profile_path(@a.owner.profile)
-        - else
-          = t "somebody"
-        %span= content_for :action
-      %small.text-muted
+%li.media.badge-notification
+  .media-left
+    = @a.key_icon
+  .media-body.pad-hor
+    .speech
+      - if @a.owner && @a.owner.profile
+        = @a.owner.name
+      - else
+        = t "somebody"
+      = content_for :action
+
+    .activity-details
+      .row
+      = yield
+
+      %p.speech-time.time
+        %i.fa.fa-clock-o.fa-fw
         = timeago_tag @a.created_at, :nojs => true, :lang => locale, :limit => 10.days.ago
+
+

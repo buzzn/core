@@ -398,9 +398,9 @@ class Group < ActiveRecord::Base
       autarchy = self.scores.autarchies.yearly.at(containing_timestamp).first
       fitting = self.scores.fittings.yearly.at(containing_timestamp).first
     end
-    sufficiency.nil? ? sufficiency_value = 0 : sufficiency_value = sufficiency.value
-    autarchy.nil? ? autarchy_value = 0 : autarchy_value = autarchy.value
-    fitting.nil? ? fitting_value = 0 : fitting_value = fitting.value
+    sufficiency.nil? ? sufficiency_value = -1 : sufficiency_value = sufficiency.value
+    autarchy.nil? ? autarchy_value = -1 : autarchy_value = autarchy.value
+    fitting.nil? ? fitting_value = -1 : fitting_value = fitting.value
     return { sufficiency: sufficiency_value, closeness: self.closeness, autarchy: autarchy_value, fitting: fitting_value }
   end
 

@@ -1,6 +1,8 @@
 class Score < ActiveRecord::Base
   belongs_to :scoreable, polymorphic: true
 
+  default_scope { order('interval_beginning ASC') }
+
   scope :sufficiencies,  -> { where(mode: 'sufficiency') }
   scope :closenesses,    -> { where(mode: 'closeness') }
   scope :autarchies,     -> { where(mode: 'autarchy') }
