@@ -128,7 +128,7 @@ class MeteringPointsController < ApplicationController
             flash[:error] = t('metering_point_user_invitation_already_sent') + '. ' + t('waiting_for_accepting') + '.'
           end
         else
-          @new_user = User.invite!({email: @email}, current_user)
+          @new_user = User.invite!({email: @email, invitation_message: params[:metering_point][:message]}, current_user)
           @metering_point.users << @new_user
           current_user.friends.include?(@new_user) ? nil : current_user.friends << @new_user
           @metering_point.save!

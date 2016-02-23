@@ -61,6 +61,7 @@ de:
         min_watt: Email Benachrichtigung wenn Leistung diesen Wert unterschreitet (Watt)
         max_watt: Email Benachrichtigung wenn Leistung diesen Wert überschreitet (Watt)
         observe_offline: Email Benachrichtigung wenn Zählpunkt offline ist
+        message: Nachricht
       device:
         image: Bild
         mode: Modus
@@ -130,6 +131,7 @@ de:
         email: E-Mailadresse für Einladung des Zählerbesitzers
         email_confirmation: E-Mail bestätigen
         readable: Sichtbar für
+        message: Nachricht
       meter:
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname

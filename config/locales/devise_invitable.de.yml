@@ -2,7 +2,7 @@ de:
   devise:
     invitations:
       send_instructions: 'Eine Einadung wurde an %{email} gesendet.'
-      invitation_token_invalid: 'The invitation token provided is not valid!'
+      invitation_token_invalid: 'Der eingegebene Einladungs-Token ist nicht (mehr) gültig!'
       updated: 'Dein Passwort wurde erfolgreich gespeichert. Du bist jetzt eingeloggt.'
       no_invitations_remaining: "Es ist keine Einladung vorhanden."
       invitation_removed: 'Deine Einladung wurde zurückgezogen.'
@@ -14,6 +14,6 @@ de:
         submit_button: "Speichern"
     mailer:
       invitation_instructions:
-        subject: 'Einladung zur buzzn App'
+        subject: 'Einladung zu buzzn'
 
 

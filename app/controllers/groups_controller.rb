@@ -148,7 +148,7 @@ class GroupsController < ApplicationController
  #     render action: 'send_invitations_via_email', manufacturer_product_serialnumber: @manufacturer_product_serialnumber
     else
       @email = params[:group][:email]
-      @new_user = User.invite!({email: @email}, current_user)
+      @new_user = User.invite!({email: @email, invitation_message: params[:group][:message]}, current_user)
       @metering_point = MeteringPoint.create!(mode: 'in', name: 'Wohnung', readable: 'friends')
       @metering_point.users << @new_user
       @new_user.add_role(:manager, @metering_point)

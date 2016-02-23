@@ -11,6 +11,7 @@
       %p= t('the_created_metering_point_will_be_added_to_this_group_immediatly_after_sending_the_invitation')
       %p= t('the_invitee_will_take_control_of_this_metering_point_after_registration')
       = f.input :email, input_html: { value: ''}
+      = f.input :message, input_html: { value: ''}
       .modal-footer
         .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
           = t'cancel'
