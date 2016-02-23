@@ -187,9 +187,4 @@ resizeChart = (duration) ->
 
 
 
-# test
-
-
-
-
 

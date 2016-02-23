@@ -2,19 +2,23 @@ ready = ->
 
   $('#mainnav-menu').metisMenu();
 
-  toggleBtn = $('.mainnav-toggle')
-  if toggleBtn.length
-    toggleBtn.on 'click', (e) ->
-      e.preventDefault()
-      if $('#container').hasClass('mainnav-lg')
-        $('#container').removeClass('mainnav-lg').addClass('mainnav-sm')
-      else if $('#container').hasClass('mainnav-sm')
-        $('#container').removeClass('mainnav-sm').addClass('mainnav-lg')
-      else if $('#container').hasClass('mainnav-in')
-        $( "#container" ).removeClass( "mainnav-in" );
-      else
-        $( "#container" ).addClass( "mainnav-in" );
-      return
+  # toggleBtn = $('.mainnav-toggle')
+  # if toggleBtn.length
+  #   toggleBtn.on 'click', (e) ->
+  #     e.preventDefault()
+  #     if $('#container').hasClass('mainnav-lg')
+  #       console.log 'hey'
+  #       $('#container').removeClass('mainnav-lg').addClass('mainnav-sm')
+  #     else if $('#container').hasClass('mainnav-sm')
+  #       console.log 'ahoi'
+  #       $('#container').removeClass('mainnav-sm').addClass('mainnav-lg')
+  #     else if $('#container').hasClass('mainnav-in')
+  #       console.log 'jo'
+  #       $( "#container" ).removeClass( "mainnav-in" );
+  #     else
+  #       console.log 'ne'
+  #       $( "#container" ).addClass( "mainnav-in" );
+  #     return
 
 
 

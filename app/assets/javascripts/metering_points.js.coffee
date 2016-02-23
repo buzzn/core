@@ -1061,6 +1061,8 @@ namespace 'Chart.Functions', (exports) ->
 
 
   exports.resizeChartComments = (initializing, resource_id) ->
+    if $(".chart-comments").length == 0
+      return
     firstDataX = parseInt($('.highcharts-series-group').find('.highcharts-series').first().children().first().attr('x')) || 0
     pointWidth = parseInt($('.highcharts-series-group').find('.highcharts-series').first().children().first().attr('width')) || 0
     xAxisWidth = $('.highcharts-axis').first()[0].getBoundingClientRect().width || $('.highcharts-axis').first().children().last()[0].getBoundingClientRect().width

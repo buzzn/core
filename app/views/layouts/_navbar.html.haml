@@ -21,12 +21,11 @@
         %li.tgl-menu-btn
           %a.mainnav-toggle{:href => "#"}
             %i.fa.fa-navicon.fa-lg
-      .ribbon-wrapper-green.global-ribbon-wrapper{"data-toggle" => "popover", "data-placement" => "right", "data-content" => t("beta_text")}
-        .ribbon-green.global-ribbon
-          %span
-            = "Beta"
-            %small
-              %i.fa.fa-info-circle
+
+
+
+
+
 
 
 
@@ -73,3 +72,11 @@
         - else
           %li= link_to t('sign_in'), new_user_session_path
           %li= link_to t('sign_up'), new_user_registration_path
+
+      %ul.nav.navbar-top-links.pull-right
+        %li.dropdown
+          %a.dropdown-toggle.text-right{"data-toggle" => "popover", "data-placement" => "bottom", "data-content" => t("beta_text"), "data-container" => "body"}
+            %span
+              %i.text-muted= 'BETA'
+              %small
+                %i.fa.fa-info-circle
