@@ -16,7 +16,7 @@ class GroupsController < ApplicationController
         end
       end
     end
-    @groups  = Group.where(id: group_ids)
+    @groups  = Group.where(id: group_ids).search(params[:search]).paginate(:page => params[:page], :per_page => 3)
   end
 
 

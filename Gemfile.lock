@@ -807,6 +807,7 @@ GEM
       chronic (>= 0.6.3)
     wicked (1.2.1)
       railties (>= 3.0.7)
+    will_paginate (3.0.7)
     xml-simple (1.1.5)
 
 PLATFORMS
@@ -961,6 +962,7 @@ DEPENDENCIES
   uglifier
   whenever
   wicked
+  will_paginate (~> 3.0.6)
 
 BUNDLED WITH
    1.11.2

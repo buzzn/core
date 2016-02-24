@@ -101,12 +101,19 @@ class User < ActiveRecord::Base
     MeteringPoint.editable_by_user(self).non_privates.collect(&:decorate)
   end
 
+  def accessible_groups
+    result = []
+    result << Group.editable_by_user(self).collect(&:decorate)
+    result << self.profile.metering_points.collect(&:group).compact.collect(&:decorate)
+    return result.flatten.uniq
+  end
 
   def usable_metering_points
     result = self.editable_metering_points
     self.friends.each do |friend|
       result << friend.non_private_editable_metering_points
     end
+    editable_metering_points_without_meter_not_virtual
     return result.flatten.uniq
   end
 

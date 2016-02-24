@@ -125,6 +125,9 @@ class MeteringPoint < ActiveRecord::Base
       return crawler.live
     else
       result = self.latest_fake_data
+      if result[:data].nil?
+        return { :power => 0, :timestamp => Time.now.to_i*1000}
+      end
       return { :power => result[:data].flatten[1] * result[:factor], :timestamp => result[:data].flatten[0]}
     end
   end
