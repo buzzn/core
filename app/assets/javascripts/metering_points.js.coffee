@@ -546,8 +546,7 @@ $(".group-chart").ready ->
                 click: (event) ->
                   Chart.Functions.zoomInGroup(event.point.x)
               groupPadding: 0.2
-              #stacking: 'normal'
-
+              grouping: true
           tooltip:
             shared: true
             pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
