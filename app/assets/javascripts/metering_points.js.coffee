@@ -532,7 +532,7 @@ $(".group-chart").ready ->
           plotOptions:
             series:
               fillOpacity: 0.5
-              turboThreshold: 0
+              turboThreshold: 10000
             areaspline:
               cursor: 'pointer'
               events:
@@ -545,7 +545,7 @@ $(".group-chart").ready ->
               events:
                 click: (event) ->
                   Chart.Functions.zoomInGroup(event.point.x)
-              groupPadding: 0.2
+              groupPadding: 0
               grouping: true
           tooltip:
             shared: true
