@@ -545,6 +545,7 @@ $(".group-chart").ready ->
               events:
                 click: (event) ->
                   Chart.Functions.zoomInGroup(event.point.x)
+              groupPadding: 0.2
               #stacking: 'normal'
 
           tooltip:
