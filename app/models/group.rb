@@ -167,6 +167,24 @@ class Group < ActiveRecord::Base
     end
     result_out = calculate_virtual_metering_point(data_out, operators, resolution_format)
 
+    #TODO: Aus irgend einem Grund gibt es bei manchen Gruppen einen falschen Zeitstempel
+    if resolution_format == 'month_to_days'
+      i = 0
+      while i < result_in.size do
+        if Time.at(result_in[i][0]/1000).in_time_zone.hour != 0
+          result_in.delete_at(i)
+        end
+        i+=1
+      end
+      i = 0
+      while i < result_out.size do
+        if Time.at(result_out[i][0]/1000).in_time_zone.hour != 0
+          result_out.delete_at(i)
+        end
+        i+=1
+      end
+    end
+
     return [ { :name => I18n.t('total_consumption'), :data => result_in}, { :name => I18n.t('total_production'), :data => result_out} ]
   end
 

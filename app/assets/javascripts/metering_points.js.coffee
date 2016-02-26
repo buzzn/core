@@ -532,6 +532,7 @@ $(".group-chart").ready ->
           plotOptions:
             series:
               fillOpacity: 0.5
+              turboThreshold: 0
             areaspline:
               cursor: 'pointer'
               events:
