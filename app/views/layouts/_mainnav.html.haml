@@ -43,9 +43,9 @@
 
 
 
-                - if current_user.profile.metering_points.collect(&:group).compact.uniq{|group| group.id}.any?
+                - if current_user.accessible_groups.any?
                   %li.list-header= t'my_groups'
-                  - current_user.profile.metering_points.collect(&:group).compact.uniq{|group| group.id}.each do |group|
+                  - current_user.accessible_groups.each do |group|
                     = mainnav_group_path(group)
               / - if current_user.editable_devices.any?
               /   %li.list-header= t'my_devices'

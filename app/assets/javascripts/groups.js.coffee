@@ -338,8 +338,8 @@ class BubbleChart
       .attr('d', @arc)
 
   setStatValues: (power_in, power_out, group_id) =>
-    $("#group-ticker-live-in-#{group_id}").find(".power-ticker").html(power_in)
-    $("#group-ticker-live-out-#{group_id}").find(".power-ticker").html(power_out)
+    $("#group-ticker-live-in-#{group_id}").find(".power-ticker").html(power_in.toFixed(0))
+    $("#group-ticker-live-out-#{group_id}").find(".power-ticker").html(power_out.toFixed(0))
 
 
 

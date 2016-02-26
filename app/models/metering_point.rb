@@ -6,8 +6,8 @@ class MeteringPoint < ActiveRecord::Base
   include ChartFunctions
 
   include PublicActivity::Model
-  tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
-  tracked recipient: Proc.new{ |controller, model| controller && model }
+  tracked except: :update, owner: Proc.new{ |controller, model| controller && controller.current_user }, recipient: Proc.new{ |controller, model| controller && model }
+
 
   belongs_to :group
   belongs_to :meter
@@ -564,10 +564,6 @@ class MeteringPoint < ActiveRecord::Base
       self.root_comments.each{|comment| comment.destroy}
       #self.activities.each{|activity| activity.destroy}
     end
-
-
-
-
 end
 
 

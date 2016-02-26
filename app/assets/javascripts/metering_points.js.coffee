@@ -1157,7 +1157,7 @@ namespace 'Chart.Functions', (exports) ->
         $.ajax({url: '/groups/' + resource_id + '/get_scores?resolution=' + actual_resolution + '&containing_timestamp=' + chart_data_min_x, dataType: 'json'})
           .success (data) ->
             if data.autarchy != -1
-              $('.stats-autarchy').html(data.autarchy)
+              $('.stats-autarchy').html(data.autarchy.toFixed(2))
             else
               $('.stats-autarchy').html('n.a.')
 
