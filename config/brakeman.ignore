@@ -18,8 +18,26 @@
       "user_input": "params[:comment][:commentable_type]",
       "confidence": "High",
       "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "cf4a97d13b586beb71b1042d60a672cef9df01b0394186abba8493fe5fc29233",
+      "message": "Render path contains parameter value",
+      "file": "app/views/groups/index.html.haml",
+      "line": 16,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => Group.where(:id => (((Group.where(:readable => \"world\").ids << Group.where(:readable => \"community\").ids) << Group.with_role(:manager, current_user)) << friend_group.id)).search(params[:search]).paginate(:page => params[:page], :per_page => 3), {})",
+      "render_path": [{"type":"controller","class":"GroupsController","method":"index","line":20,"file":"app/controllers/groups_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "groups/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
     }
   ],
-  "updated": "2016-02-12 15:10:50 +0100",
+  "updated": "2016-03-03 20:48:48 +0100",
   "brakeman_version": "3.1.5"
 }
