@@ -17,7 +17,7 @@ describe "Users API" do
   end
 
 
-  it 'does not gets a user as foreigner' do
+  it 'does not gets a user as stranger' do
     access_token  = Fabricate(:access_token)
     user          = Fabricate(:user)
     get_with_token "/api/v1/users/#{user.id}", access_token.token

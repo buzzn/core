@@ -10,7 +10,7 @@ end
 
 Fabricator :metering_point_with_manager, from: :metering_point do
   after_create { |metering_point|
-    user = Fabricate(:user_with_token)
+    user = Fabricate(:user)
     user.add_role(:manager, metering_point)
   }
 end
@@ -888,14 +888,3 @@ Fabricator :mp_forstenried_bezug, from: :metering_point do
   #meter          { Fabricate(:virtual_forstenried_bezug) }
   virtual         true
 end
-
-
-
-
-
-
-
-
-
-
-

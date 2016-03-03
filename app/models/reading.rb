@@ -1,5 +1,7 @@
 class Reading
   include Mongoid::Document
+  include Authority::Abilities
+
   after_create :push_reading
 
   field :contract_id,   type: String
@@ -20,6 +22,9 @@ class Reading
 
   validate :watt_hour_has_to_grow, if: :user_input?
 
+  def metering_point
+    MeteringPoint.find(self.metering_point_id)
+  end
 
   def watt_hour_has_to_grow
     reading_before = Reading.last_before_user_input(metering_point_id, timestamp)
