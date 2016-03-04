@@ -4,27 +4,14 @@ module API
       include API::V1::Defaults
       resource 'metering-points' do
 
-        before do
-          doorkeeper_authorize!
-        end
-
-        desc "Return all MeteringPoints"
-        get "" do
-          if current_user
-            MeteringPoint.all
-          else
-            MeteringPoint.where(readable: 'world')
-          end
-        end
-
-
 
         desc "Return a MeteringPoint"
         params do
           requires :id, type: String, desc: "ID of the metering_point"
         end
         get ":id" do
-          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          doorkeeper_authorize! :admin, :public
+          metering_point = MeteringPoint.where(id: params[:id]).first!
           if current_user && metering_point.readable_by?(current_user)
             return metering_point
           else
@@ -33,12 +20,93 @@ module API
         end
 
 
+
+        desc "Create a MeteringPoint."
+        params do
+          requires :name, type: String, desc: "name"
+          requires :mode, type: String, desc: "direction of energie", values: MeteringPoint.modes
+          requires :readable, type: String, desc: "readable by?", values: MeteringPoint.readables
+          optional :uid,  type: String, desc: "UID(DE00...)"
+        end
+        post do
+          doorkeeper_authorize! :admin, :public
+          if current_user && MeteringPoint.creatable_by?(current_user)
+
+            metering_point = MeteringPoint.new({
+              name: params[:name],
+              mode: params[:mode],
+              readable: params[:readable],
+              uid: params[:uid]
+              })
+
+            if metering_point.save!
+              current_user.add_role(:manager, metering_point)
+              return metering_point
+            end
+          else
+            status 403
+          end
+        end
+
+
+
+        desc "Update a MeteringPoint."
+        params do
+          requires :id, type: String, desc: 'MeteringPoint ID.'
+          requires :name, type: String, desc: "name"
+          requires :mode, type: String, desc: "direction of energie", values: MeteringPoint.modes
+          requires :readable, type: String, desc: "readable by?", values: MeteringPoint.readables
+          optional :uid,  type: String, desc: "UID(DE00...)"
+        end
+        put do
+          doorkeeper_authorize! :admin, :public
+          if current_user
+            metering_point = MeteringPoint.find(params[:id])
+            if metering_point.updatable_by?(current_user)
+              metering_point.update({
+                name: params[:name],
+                mode: params[:mode],
+                readable: params[:readable],
+                uid: params[:uid]
+              })
+              return metering_point
+            else
+              status 403
+            end
+          else
+            status 401
+          end
+        end
+
+
+        desc 'Delete a MeteringPoint.'
+        params do
+          requires :id, type: String, desc: 'MeteringPoint ID.'
+        end
+        delete ':id' do
+          doorkeeper_authorize! :admin, :public
+          if current_user
+            metering_point = MeteringPoint.find(params[:id])
+            if metering_point.deletable_by?(current_user)
+              metering_point.destroy
+              status 200
+            else
+              status 403
+            end
+          else
+            status 401
+          end
+        end
+
+
+
         desc "Return the related devices for MeteringPoint"
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
         get ":id/devices" do
-          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          doorkeeper_authorize! :admin, :public
+          metering_point = MeteringPoint.where(id: params[:id]).first!
           metering_point.devices
         end
 
@@ -48,7 +116,8 @@ module API
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
         get ":id/users" do
-          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          doorkeeper_authorize! :admin, :public
+          metering_point = MeteringPoint.where(id: params[:id]).first!
           metering_point.users
         end
 

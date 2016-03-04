@@ -5,7 +5,7 @@ module API
       resource 'profiles' do
 
         before do
-          doorkeeper_authorize!
+          doorkeeper_authorize! :admin, :public
         end
 
         desc "Return all profiles"

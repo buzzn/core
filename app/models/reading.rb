@@ -28,9 +28,7 @@ class Reading
 
   def watt_hour_has_to_grow
     reading_before = Reading.last_before_user_input(metering_point_id, timestamp)
-    puts reading_before
     if !reading_before.nil? && reading_before[:watt_hour] > watt_hour
-      puts "ERROR"
       self.errors.add(:watt_hour, "is lower than the last one")
     end
   end

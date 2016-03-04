@@ -33,6 +33,26 @@ module RequestsHelper
     post path, params, headers_without_token
   end
 
+
+
+  def put_with_token(path, params={}, token)
+    put path, params, headers_with_token(token)
+  end
+
+  def put_without_token(path, params={})
+    put path, params, headers_without_token
+  end
+
+
+  def delete_with_token(path, token)
+    delete path, headers_with_token(token)
+  end
+
+  def delete_without_token(path)
+    delete path, headers_without_token
+  end
+
+
   def json
     JSON.parse(response.body)
   end

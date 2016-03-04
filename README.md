@@ -101,12 +101,9 @@
 
 ## API
     #https://github.com/doorkeeper-gem/doorkeeper/wiki/Testing-your-provider-with-OAuth2-gem
-    app = Doorkeeper::Application.first
+    app = Doorkeeper::Application.last
     client_redirect_url = 'urn:ietf:wg:oauth:2.0:oob'
-    client = OAuth2::Client.new(app.uid, app.secret, :site => "http://localhost:3000")
-    client.auth_code.authorize_url(:redirect_uri => client_redirect_url)
-    token = client.auth_code.get_token('xxxxxxxxxx', :redirect_uri => client_redirect_url)
+    client = OAuth2::Client.new(app.uid, app.secret, site: "http://localhost:3000")
+    client.auth_code.authorize_url(scope: app.scopes, redirect_uri: client_redirect_url)
+    token = client.auth_code.get_token('xxxxxxxxxx', redirect_uri: client_redirect_url)
     access_token = token.token
-
-
-

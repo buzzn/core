@@ -5,7 +5,7 @@ module API
       resource 'users' do
 
         before do
-          doorkeeper_authorize!
+          doorkeeper_authorize! :admin, :public
         end
 
         desc "Return me"
@@ -69,6 +69,7 @@ module API
           requires :id, type: String, desc: "ID of the User"
         end
         get ":id/metering-points" do
+          doorkeeper_authorize! :public
           user = User.where(id: permitted_params[:id]).first!
           user.metering_points
         end

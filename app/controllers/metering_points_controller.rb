@@ -15,11 +15,9 @@ class MeteringPointsController < ApplicationController
     @all_comments                   = @metering_point.root_comments
     @activities                     = @metering_point.activities.metering_point_joins
     @activities_and_comments        = (@all_comments + @activities).sort_by!(&:created_at).reverse!
-    puts request.env['SERVER_NAME']
     Browser.modern_rules.clear
     Browser.modern_rules << -> b { b.firefox? && b.version.to_i >= 41 }
     browser = Browser.new(ua: request.user_agent, accept_language: request.accept_language)
-    puts browser.modern?.to_s
     if !@metering_point.readable_by_world?
       if user_signed_in?
         authorize_action_for(@metering_point)
