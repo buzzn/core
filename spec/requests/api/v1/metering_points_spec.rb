@@ -4,15 +4,19 @@ describe "Metering Points API" do
   it 'does not gets a metering_point without token' do
     metering_point = Fabricate(:metering_point)
     get_without_token "/api/v1/metering-points/#{metering_point.id}"
-    expect(response).not_to be_successful
+    expect(response).to have_http_status(401)
   end
+
+
 
   it 'does gets a metering_point with admin token' do
     access_token  = Fabricate(:admin_access_token)
     metering_point = Fabricate(:metering_point)
     get_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
-    expect(response).to be_successful
+    expect(response).to have_http_status(200)
   end
+
+
 
   it 'does gets a metering_point as friend' do
     access_token = Fabricate(:access_token_with_friend_and_metering_point)
@@ -21,14 +25,14 @@ describe "Metering Points API" do
     metering_point2 = MeteringPoint.last
 
     get_with_token "/api/v1/metering-points/#{metering_point2.id}", access_token.token
-    expect(response).to be_successful
+    expect(response).to have_http_status(200)
 
     get_with_token "/api/v1/metering-points/#{metering_point1.id}", access_token.token
-    expect(response).to be_successful
+    expect(response).to have_http_status(200)
 
     metering_point3 = Fabricate(:metering_point) # metering_point from unknown user
     get_with_token "/api/v1/metering-points/#{metering_point3.id}", access_token.token
-    expect(response).not_to be_successful
+    expect(response).to have_http_status(403)
   end
 
 
@@ -45,7 +49,7 @@ describe "Metering Points API" do
     }.to_json
     post_with_token "/api/v1/metering-points", request_params, access_token.token
 
-    expect(response).to be_successful
+    expect(response).to have_http_status(201)
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
@@ -64,7 +68,7 @@ describe "Metering Points API" do
     }.to_json
     post_without_token "/api/v1/metering-points", request_params
 
-    expect(response).not_to be_successful
+    expect(response).to have_http_status(401)
   end
 
 
@@ -80,7 +84,7 @@ describe "Metering Points API" do
     }.to_json
     post_with_token "/api/v1/metering-points", request_params, access_token.token
 
-    expect(response).to be_successful
+    expect(response).to have_http_status(201)
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
@@ -103,7 +107,7 @@ describe "Metering Points API" do
     }.to_json
     put_with_token "/api/v1/metering-points", request_params, access_token.token
 
-    expect(response).to be_successful
+    expect(response).to have_http_status(200)
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
@@ -125,7 +129,7 @@ describe "Metering Points API" do
     }.to_json
     put_with_token "/api/v1/metering-points", request_params, access_token.token
 
-    expect(response).to be_successful
+    expect(response).to have_http_status(200)
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
@@ -146,20 +150,17 @@ describe "Metering Points API" do
     }.to_json
     put_without_token "/api/v1/metering-points", request_params
 
-    expect(response).not_to be_successful
+    expect(response).to have_http_status(401)
   end
 
 
 
-
-
-  skip 'does delete a metering_point with admin_token' do
+  xit 'does delete a metering_point with admin_token' do
     metering_point = Fabricate(:metering_point)
     access_token  = Fabricate(:admin_access_token)
     delete_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
-    expect(response).to be_successful
+    expect(response).to have_http_status(200)
   end
-
 
 
 

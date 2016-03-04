@@ -12,10 +12,14 @@ module API
         get ":id" do
           doorkeeper_authorize! :admin, :public
           metering_point = MeteringPoint.where(id: params[:id]).first!
-          if current_user && metering_point.readable_by?(current_user)
-            return metering_point
+          if current_user
+            if metering_point.readable_by?(current_user)
+              return metering_point
+            else
+              status 403
+            end
           else
-            status 403
+            status 401
           end
         end
 
@@ -30,21 +34,23 @@ module API
         end
         post do
           doorkeeper_authorize! :admin, :public
-          if current_user && MeteringPoint.creatable_by?(current_user)
-
-            metering_point = MeteringPoint.new({
-              name: params[:name],
-              mode: params[:mode],
-              readable: params[:readable],
-              uid: params[:uid]
-              })
-
-            if metering_point.save!
-              current_user.add_role(:manager, metering_point)
-              return metering_point
+          if current_user
+            if MeteringPoint.creatable_by?(current_user)
+              metering_point = MeteringPoint.new({
+                name: params[:name],
+                mode: params[:mode],
+                readable: params[:readable],
+                uid: params[:uid]
+                })
+              if metering_point.save!
+                current_user.add_role(:manager, metering_point)
+                return metering_point
+              end
+            else
+              status 403
             end
           else
-            status 403
+            status 401
           end
         end
 
@@ -111,12 +117,13 @@ module API
         end
 
 
+
         desc "Return the related users for MeteringPoint"
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
         get ":id/users" do
-          doorkeeper_authorize! :admin, :public
+          doorkeeper_authorize! :admin
           metering_point = MeteringPoint.where(id: params[:id]).first!
           metering_point.users
         end

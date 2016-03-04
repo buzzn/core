@@ -5,7 +5,7 @@ describe "Profiles API" do
   it 'does not gets a profile without token' do
     profile = Fabricate(:profile)
     get_without_token "/api/v1/profiles/#{profile.id}"
-    expect(response).not_to be_successful
+    expect(response).to have_http_status(401)
   end
 
 
@@ -13,7 +13,7 @@ describe "Profiles API" do
     access_token = Fabricate(:access_token)
     profile = Fabricate(:profile)
     get_with_token "/api/v1/profiles/#{profile.id}", access_token.token
-    expect(response).not_to be_successful
+    expect(response).to have_http_status(403)
   end
 
 
@@ -21,7 +21,7 @@ describe "Profiles API" do
     access_token  = Fabricate(:admin_access_token)
     profile       = Fabricate(:profile)
     get_with_token "/api/v1/profiles/#{profile.id}", access_token.token
-    expect(response).to be_successful
+    expect(response).to have_http_status(200)
   end
 
 
@@ -30,13 +30,12 @@ describe "Profiles API" do
     token_user        = User.find(access_token.resource_owner_id)
     token_user_friend = token_user.friends.first
     get_with_token "/api/v1/profiles/#{token_user_friend.profile.id}", access_token.token
-    expect(response).to be_successful
+    expect(response).to have_http_status(200)
   end
 
 
   it 'does not creates a profile as simple user' do
     access_token = Fabricate(:access_token)
-
     profile = Fabricate.build(:profile)
 
     request_params = {
@@ -46,17 +45,12 @@ describe "Profiles API" do
     }.to_json
 
     post_with_token "/api/v1/profiles", request_params, access_token.token
-
-    expect(response).not_to be_successful
+    expect(response).to have_http_status(403)
   end
-
-
-
 
 
   it 'creates a profile as admin' do
     access_token = Fabricate(:admin_access_token)
-
     profile = Fabricate.build(:profile)
 
     request_params = {
@@ -64,15 +58,12 @@ describe "Profiles API" do
       first_name: profile.first_name,
       last_name:  profile.last_name
     }.to_json
-
     post_with_token "/api/v1/profiles", request_params, access_token.token
 
-    expect(response).to be_successful
+    expect(response).to have_http_status(201)
     expect(json['data']['attributes']['first-name']).to eq(profile.first_name)
     expect(json['data']['attributes']['last-name']).to eq(profile.last_name)
   end
-
-
 
 
 

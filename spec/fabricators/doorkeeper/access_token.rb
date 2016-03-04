@@ -6,7 +6,7 @@ end
 
 Fabricator :admin_access_token, from: :access_token do
   resource_owner_id { Fabricate(:admin).id }
-  scopes 'admin'
+  scopes 'public admin'
 end
 
 Fabricator :access_token_with_friend, from: :access_token do
