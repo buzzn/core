@@ -155,11 +155,11 @@ describe "Metering Points API" do
 
 
 
-  xit 'does delete a metering_point with admin_token' do
+  it 'does delete a metering_point with admin_token' do
     metering_point = Fabricate(:metering_point)
     access_token  = Fabricate(:admin_access_token)
     delete_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
-    expect(response).to have_http_status(200)
+    expect(response).to have_http_status(204)
   end
 
 

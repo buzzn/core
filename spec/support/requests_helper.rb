@@ -45,11 +45,11 @@ module RequestsHelper
 
 
   def delete_with_token(path, token)
-    delete path, headers_with_token(token)
+    delete path, {}, headers_with_token(token)
   end
 
   def delete_without_token(path)
-    delete path, headers_without_token
+    delete path, {}, headers_without_token
   end
 
 

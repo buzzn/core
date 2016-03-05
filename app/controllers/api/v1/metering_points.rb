@@ -85,6 +85,7 @@ module API
         end
 
 
+
         desc 'Delete a MeteringPoint.'
         params do
           requires :id, type: String, desc: 'MeteringPoint ID.'
@@ -93,9 +94,9 @@ module API
           doorkeeper_authorize! :admin, :public
           if current_user
             metering_point = MeteringPoint.find(params[:id])
-            if metering_point.deletable_by?(current_user)
+            if metering_point.updatable_by?(current_user)
               metering_point.destroy
-              status 200
+              status 204
             else
               status 403
             end
