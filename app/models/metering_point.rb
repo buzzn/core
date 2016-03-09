@@ -112,6 +112,8 @@ class MeteringPoint < ActiveRecord::Base
           end
           sum_timestamp += reading[:timestamp].to_i*1000
           count_timestamps += 1
+        else
+          return {:power => 0, :timestamp => 0}
         end
         i+=1
       end
@@ -199,6 +201,8 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
+
+  # uses meter.online attribute which is never set to true
   def online?
     if meter
       return meter.online

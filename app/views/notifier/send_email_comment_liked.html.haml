@@ -1,0 +1,10 @@
+%p
+  = t('hello') + " #{@receiver.name}!"
+  %p= t('user_liked_your_comment', username: @sender.name)
+  %p= '----------------'
+  %p= @message
+  %p= '----------------'
+  %p= t('you_receive_this_message_because_you_subscribed_to_this_event')
+  %p= t('to_unsubscribe_this_event_please_visit_your_profile_and_change_this_setting')
+  %p= link_to t('my_profile'), profile_url(@receiver.profile)
+%p= t('your_buzzn_team')

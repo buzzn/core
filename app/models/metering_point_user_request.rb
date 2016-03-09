@@ -1,6 +1,6 @@
 class MeteringPointUserRequest < ActiveRecord::Base
   include PublicActivity::Model
-  tracked
+  tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
 
   belongs_to :user
   belongs_to :metering_point
