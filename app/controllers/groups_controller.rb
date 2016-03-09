@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_filter :authenticate_user!, except: [:index, :show, :chart, :bubbles_data, :widget]
+  before_filter :authenticate_user!, except: [:index, :show, :chart, :bubbles_data, :widget, :kiosk]
   respond_to :html, :js, :json
 
   def index
@@ -241,7 +241,7 @@ class GroupsController < ApplicationController
   end
 
   def kiosk
-    response.headers.delete('X-Frame-Options') #Enables iFrames
+    #response.headers.delete('X-Frame-Options') #Enables iFrames
     @group                          = Group.find(params[:id]).decorate
 
     @all_comments                   = @group.root_comments
