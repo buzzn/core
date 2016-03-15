@@ -64,7 +64,17 @@ de:
   has_joined_a_metering_point_which_has_been_removed: "ist einem Zählpunkt beigetreten, welcher bereits gelöscht wurde."
   has_sent_a_metering_point_user_request_to_a_metering_point_which_has_been_removed: "hat eine Zählpunktanfrage an einen bereits gelöschten Zählpunkt gesendet."
   rejected_a_metering_point_user_request_from_an_unknown_user: hat die Zählpunktanfrage eines unbekannten Nutzers abgelehnt.
-
+  user_is_no_longer_a_member_of_your_metering_point: "%{user} ist nicht länger Mitglied Deines Zählpunktes %{metering_point}."
+  user_joined_your_metering_point: "%{user} ist ab jetzt Mitglied Deines Zählpunktes %{metering_point}."
+  user_invited_you_to_join_the_metering_point: "%{user} hat Dich eingeladen dem Zählpunkt %{metering_point} beizutreten."
+  user_rejected_your_metering_point_user_invitation_for_metering_point: "%{user} hat Deine Zählpunkteinladung zum Zählpunkt %{metering_point} abgelehnt."
+  to_invite_user_again_please_visit_your_metering_point: "Um %{user} erneut einzuladen besuche bitte Deinen Zählpunkt %{metering_point}."
+  rejected_metering_point_user_invitation: Zählpunkteinladung wurde abgelehnt
+  user_wants_to_join_your_metering_point: "%{user} würde gerne Deinem Zählpunkt %{metering_point} beitreten."
+  user_rejected_your_metering_point_user_request_for_metering_point: "%{user} hat Deine Zählpunktanfrage an den Zählpunkt %{metering_point} abgelehnt."
+  to_ask_again_for_membership_please_visit_the_metering_point: "Um nochmal eine Anfrage zu senden besuche bitte den Zählpunkt %{metering_point}."
+  new_metering_point_user_membership: Neues Zählpunktmitglied
+  user_rejected_the_request_with_your_metering_point_to_join_the_group: "%{user} lehnte die Anfrage von Deinem Zählpunkt %{metering_point} bei der Gruppe %{group} ab."
 
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler

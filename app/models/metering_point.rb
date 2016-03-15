@@ -173,7 +173,7 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-  def members
+  def involved
     (self.managers + self.users).uniq
   end
 

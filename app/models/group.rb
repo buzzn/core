@@ -76,8 +76,12 @@ class Group < ActiveRecord::Base
     self.metering_points.include?(metering_point) ? true : false
   end
 
+  def involved
+    (self.managers + MeteringPoint.includes(:users).by_group(self).collect(&:involved).flatten).uniq
+  end
+
   def members
-    (self.managers + MeteringPoint.includes(:users).by_group(self).outputs.collect(&:users).flatten + MeteringPoint.includes(:users).by_group(self).inputs.collect(&:users).flatten).uniq
+    (MeteringPoint.includes(:users).by_group(self).collect(&:users).flatten).uniq
   end
 
   def in_metering_points

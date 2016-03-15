@@ -1,6 +1,0 @@
-%p
-  = t('hello') + " #{@receiver.name}!"
-%p= t('user_removed_you_from_metering_point', username: @sender.name, metering_point_name: @metering_point.name)
-%p= t('to_join_this_metering_point_again_visit_this_link_and_ask_for_permission')
-%p= link_to(t('metering_point') + ' ' + @metering_point.name, metering_point_url(@metering_point))
-%p= t('your_buzzn_team')

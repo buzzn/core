@@ -16,7 +16,7 @@ class MeteringPointUserRequestsController < InheritedResources::Base
     else
       @metering_point_user_request = MeteringPointUserRequest.new(user: current_user, metering_point: metering_point, mode: mode)
       if @metering_point_user_request.save
-        @metering_point.create_activity('metering_point_user_request.create', owner: current_user)
+        metering_point.create_activity(key: 'metering_point_user_request.create', owner: current_user)
         flash[:notice] = t('sent_metering_point_user_request')
       else
         flash[:error] = t('unable_to_send_metering_point_user_request')
@@ -51,10 +51,10 @@ class MeteringPointUserRequestsController < InheritedResources::Base
       if @metering_point_user_request.save
         flash[:notice] = t('rejected_metering_point_user_request')
         if @metering_point_user_request.mode == 'invitation'
-          @metering_point.create_activity('metering_point_user_invitation.reject', owner: current_user)
+          @metering_point_user_request.metering_point.create_activity(key: 'metering_point_user_invitation.reject', owner: current_user)
           redirect_to profile_path(@metering_point_user_request.user.profile)
         else
-          @metering_point.create_activity('metering_point_user_request.reject', owner: current_user, recipient: @metering_point_user_request.user)
+          @metering_point_user_request.metering_point.create_activity(key: 'metering_point_user_request.reject', owner: current_user, recipient: @metering_point_user_request.user)
           redirect_to metering_point_path(@metering_point_user_request.metering_point)
         end
       end

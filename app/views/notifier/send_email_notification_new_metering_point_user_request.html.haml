@@ -1,11 +1,11 @@
 %p
   = t('hello') + " #{@receiver.name}!"
 - if @mode == 'request'
-  %p= t('do_you_want_to_admit_user_to_your_metering_point', user: @sender.name, metering_point: @metering_point.name)
+  %p= t('user_wants_to_join_your_metering_point', user: @sender.name, metering_point: @metering_point.name)
   %p= t('to_accept_or_reject_this_request_please_visit_your_metering_point')
   %p= link_to @metering_point.name, metering_point_url(@metering_point)
 - else
-  %p= t('do_you_want_to_join_the_metering_point', metering_point: @metering_point.name) + '?'
+  %p= t('user_invited_you_to_join_the_metering_point', user: @sender.name, metering_point: link_to(@metering_point.name, metering_point_url(@metering_point))).html_safe
   %p= t('to_accept_or_reject_this_invitation_please_visit_your_profile')
   %p= link_to t('my_profile'), profile_url(@receiver.profile)
 %p= t('your_buzzn_team')

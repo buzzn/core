@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   rolify
   include Authority::UserAbilities
   include PublicActivity::Model
-  tracked except: :update, owner: Proc.new{ |controller, model| controller && controller.current_user }
+  tracked except: [:create, :update, :destroy], owner: Proc.new{ |controller, model| controller && controller.current_user }
 
   devise :database_authenticatable, :async, :registerable,
          :recoverable, :rememberable, :trackable,

@@ -119,7 +119,7 @@ class MeteringPointsController < ApplicationController
           if MeteringPointUserRequest.where(metering_point: @metering_point).where(user: @existing_users.first).empty? && !@metering_point.users.include?(@existing_users.first)
             @metering_point_user_request = MeteringPointUserRequest.new(user: @existing_users.first, metering_point: @metering_point, mode: 'invitation')
             if @metering_point_user_request.save
-              @metering_point_user_request.create_activity('metering_point_user_invitation.create', owner: current_user, recipient: @existing_users.first)
+              @metering_point.create_activity(key: 'metering_point_user_invitation.create', owner: current_user, recipient: @existing_users.first)
               flash[:notice] = t('sent_metering_point_user_invitation_successfully')
             else
               flash[:error] = t('unable_to_send_metering_point_user_invitation')
@@ -138,7 +138,7 @@ class MeteringPointsController < ApplicationController
     else
       @new_user = User.find(params[:metering_point][:new_users])
       if MeteringPointUserRequest.create(user: @new_user, metering_point: @metering_point, mode: 'invitation')
-        @metering_point_user_request.create_activity('metering_point_user_invitation.create', owner: current_user, recipient: @new_user)
+        @metering_point.create_activity(key: 'metering_point_user_invitation.create', owner: current_user, recipient: @new_user)
         flash[:notice] = t('sent_metering_point_user_invitation_successfully')
       else
         flash[:error] = t('unable_to_send_metering_point_user_invitation')
@@ -164,10 +164,10 @@ class MeteringPointsController < ApplicationController
     else
       flash[:notice] = t('user_removed_successfully', username: @user.name)
     end
-    @metering_point.create_activity('metering_point_user_membership.cancel', owner: @user)
+    @metering_point.create_activity(key: 'metering_point_user_membership.cancel', owner: @user)
     respond_with @metering_point
   end
-  authority_actions :remove_members_update => 'update'
+  authority_actions :remove_members_update => 'read'
 
 
   def add_manager
@@ -243,7 +243,7 @@ class MeteringPointsController < ApplicationController
        latest_power = nil
        latest_timestamp = nil
     end
-    online = latest_timestamp >= (Time.now - 60.seconds).to_i*1000 ? true : false
+    online = latest_timestamp && latest_timestamp >= (Time.now - 60.seconds).to_i*1000 ? true : false
     if @cache.nil?
       Rails.cache.write(@cache_id, last_power, expires_in: 4.seconds)
     end

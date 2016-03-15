@@ -49,7 +49,6 @@ class Notifier < ActionMailer::Base
     @receiver = receiver
     @sender = sender
     @metering_point = metering_point
-    @mode = mode
     mail(to: @receiver.email, subject: 'buzzn: ' + t('new_metering_point_user_membership'))
   end
 
@@ -69,20 +68,11 @@ class Notifier < ActionMailer::Base
     @receiver = receiver
     @sender = sender
     @metering_point = metering_point
-    @mode = mode
     mail(to: @receiver.email, subject: 'buzzn: ' + t('cancelled_metering_point_user_membership'))
   end
 
 
 
-
-
-  def send_email_removed_from_metering_point(receiver, sender, metering_point)
-    @receiver = receiver
-    @sender = sender
-    @metering_point = metering_point
-    mail(to: @receiver.email, subject: 'buzzn: ' + t('user_removed_you_from_metering_point', username: @sender.name, metering_point_name: @metering_point.name))
-  end
 
 
 
