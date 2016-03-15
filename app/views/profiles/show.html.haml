@@ -73,7 +73,8 @@
 
       .row
         .groups
-          = render @groups
+          = render @groups.decorate
+          = will_paginate(@groups, { class: 'flickr_pagination', param_name: 'group_page' })
 
       .row
         .col-lg-12.text-center
@@ -90,7 +91,8 @@
       .row
         .metering_points
           - @metering_points.each do |metering_point|
-            = render metering_point if metering_point.readable_by?(current_user)
+            = render metering_point.decorate if metering_point.readable_by?(current_user)
+          = will_paginate(@metering_points, { class: 'flickr_pagination', param_name: 'metering_point_page' })
           - if @metering_points.empty?
             .show_global_tour
       - if current_user.can_create?(MeteringPoint) && current_user.profile == @profile

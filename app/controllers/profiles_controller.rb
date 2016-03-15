@@ -11,11 +11,11 @@ class ProfilesController < ApplicationController
   def show
     @profile              = Profile.find(params[:id]).decorate
     @friends              = @profile.user.friends.decorate
-    @metering_points      = @profile.metering_points
+    @metering_points      = MeteringPoint.where(id: @profile.metering_points.map(&:id)).paginate(:page => params[:metering_point_page], :per_page => 10)
     @friendship_requests  = @profile.user.received_friendship_requests
     @metering_point_invitations = @profile.user.received_metering_point_user_requests
     @group_invitations    = @profile.user.received_group_metering_point_requests
-    @groups               = @profile.user.accessible_groups # TODO also include group interested
+    @groups               = Group.where(id: @profile.user.accessible_groups.map(&:id)).paginate(:page => params[:group_page], :per_page => 3) # TODO also include group interested
     @devices              = Device.with_role(:manager, @profile.user).decorate
     @activities           = PublicActivity::Activity
                               .order("created_at desc")

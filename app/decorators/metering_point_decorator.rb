@@ -2,6 +2,7 @@ class MeteringPointDecorator < Draper::Decorator
   include Draper::LazyHelpers
 
   delegate_all
+
   decorates_association :devices
   decorates_association :address
   decorates_association :meter

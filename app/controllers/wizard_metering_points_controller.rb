@@ -192,6 +192,7 @@ class WizardMeteringPointsController  < ApplicationController
             end
 
           else
+            flash[:notice] = I18n.t('metering_point_created_successfully')
             render action: 'update'
           end
         else
