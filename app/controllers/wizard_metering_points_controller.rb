@@ -218,7 +218,7 @@ class WizardMeteringPointsController  < ApplicationController
   end
 
   def contract_params
-    params.require(:metering_point).require(:contract).permit( :organization_id, :username, :password, :sensor_id, :x_token)
+    params.require(:metering_point).require(:contract).permit( :organization_id, :username, :password)
   end
 
 end
