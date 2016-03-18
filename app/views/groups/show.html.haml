@@ -9,7 +9,7 @@
 .panel
   .panel-body
     .col-lg-1.col-md-2.col-sm-2.col-xs-3
-      = @group.picture('lg')
+      = @group.picture('md')
 
 
     .col-lg-6.col-md-6.col-sm-6.col-xs-5
@@ -103,32 +103,46 @@
 
 
 
-
-
-
 #page-content
-
   .row
-    .col-sm-6.col-md-6.col-lg-6
-      - if @group.description
-        %h1.page-header.text-overflow
-          %span
-            = t('description')
-        .panel
-          .panel-body= @group.description
-
-      /.col-sm-6.col-md-6.col-lg-6
+    .col-sm-12.col-md-6.col-lg-6
       %h1.page-header.text-overflow
         %span
           = t('bubbles')
           %small
             %i.small-info-circle.fa.fa-info-circle{'data-content' => t('live_chart_info')}
-      .panel
-        .change-order
-          .fa.fa-retweet{'data-content' => t('click_to_change_order_of_all_red_and_blue_bubbles')}
-        .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
-          .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
-          #dummy
+      .row
+        .col-sm-12.col-md-6.col-lg-6
+          .panel.media.pad-all
+            .media-left
+              %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful.panel-primary
+                %i.fa.fa-arrow-circle-o-right.fa-2x
+            .media-body
+              = content_tag :div, id: "group-ticker-live-in-#{@group.id}", class: "group-ticker" do
+                %span.text-2x.text-thin
+                  .power-ticker
+                    = t('loading') + '...'
+              %p= t('current_consumption_in_watts')
+
+        .col-sm-12.col-md-6.col-lg-6
+          .panel.media.pad-all
+            .media-left
+              %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful.panel-danger
+                %i.fa.fa-arrow-circle-o-right.fa-2x
+            .media-body
+              = content_tag :div, id: "group-ticker-live-out-#{@group.id}", class: "group-ticker" do
+                %span.text-2x.text-thin
+                  .power-ticker
+                    = t('loading') + '...'
+              %p= t('current_production_in_watts')
+
+        .col-sm-12.col-md-12.col-lg-12
+          .panel
+            .change-order
+              .fa.fa-retweet{'data-content' => t('click_to_change_order_of_all_red_and_blue_bubbles')}
+            .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
+              .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
+              #dummy
 
 
 
@@ -159,29 +173,7 @@
           = t('lines')
           %small
             %i.small-info-circle.fa.fa-info-circle{'data-content' => t('trend_chart_info')}
-    .col-sm-6.col-md-3.col-lg-3
-      .panel.media.pad-all
-        .media-left
-          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful.panel-primary
-            %i.fa.fa-arrow-circle-o-right.fa-2x
-        .media-body
-          = content_tag :div, id: "group-ticker-live-in-#{@group.id}", class: "group-ticker" do
-            %span.text-2x.text-thin
-              .power-ticker
-                = t('loading') + '...'
-          %p= t('current_consumption_in_watts')
 
-    .col-sm-6.col-md-3.col-lg-3
-      .panel.media.pad-all
-        .media-left
-          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful.panel-danger
-            %i.fa.fa-arrow-circle-o-right.fa-2x
-        .media-body
-          = content_tag :div, id: "group-ticker-live-out-#{@group.id}", class: "group-ticker" do
-            %span.text-2x.text-thin
-              .power-ticker
-                = t('loading') + '...'
-          %p= t('current_production_in_watts')
 
     .col-sm-6.col-md-3.col-lg-3
       .panel.media.pad-all

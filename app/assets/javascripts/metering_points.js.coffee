@@ -1137,7 +1137,7 @@ namespace 'Chart.Functions', (exports) ->
 
   exports.setEnergyStatsGroup = () ->
     if chart && chart.series.length != 0 && chart.series[0].data.length != 0
-      if actual_resolution == "day_to_minutes" && chart_data_min_x >= Chart.Functions.beginningOfDay((new Date()).getTime())
+      if actual_resolution == "day_to_minutes" && chart_data_min_x >= Chart.Functions.beginningOfDay((new Date()).getTime()) || actual_resolution == "hour_to_minutes"
         sum_autarchy = 0
         count_autarchies = 0
         for i in [0...chart.series[0].data.length]
