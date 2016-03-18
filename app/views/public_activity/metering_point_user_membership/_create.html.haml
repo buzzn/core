@@ -1,2 +1,5 @@
 - single_content_for :action do
-  = t("has_joined_the_metering_point_html", metering_point_name: link_to(a.recipient.name, a.recipient))
+  - if a.trackable
+    = t("has_joined_the_metering_point_html", metering_point_name: link_to(a.trackable.name, a.trackable)).html_safe
+  - else
+    = t("has_joined_a_metering_point_which_has_been_removed")

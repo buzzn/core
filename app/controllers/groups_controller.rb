@@ -100,7 +100,6 @@ class GroupsController < ApplicationController
   def send_invitations_update
     @group = Group.find(params[:id])
     authorize_action_for @group
-    #byebug
     @found_meter = Meter.where(manufacturer_product_serialnumber: params[:group][:new_meters])
     if @found_meter.any?
       @meter = @found_meter.first
@@ -108,8 +107,7 @@ class GroupsController < ApplicationController
       if GroupMeteringPointRequest.where(metering_point: @metering_point).where(group: @group).empty? && !@group.metering_points.without_externals.include?(@metering_point)
         @group_invitation = GroupMeteringPointRequest.new(user: @metering_point.managers.first, metering_point: @metering_point, group: @group, mode: 'invitation')
         if @group_invitation.save
-          @metering_point.managers.first.send_notification('info', t('new_group_metering_point_invitation'), @group.name, 0, profile_path(@metering_point.managers.first.profile))
-          Notifier.send_email_new_group_metering_point_request(@metering_point.managers.first, current_user, @metering_point, @group, 'invitation')
+          @group.create_activity(key: 'group_metering_point_invitation.create', owner: current_user, recipient: @metering_point)
           flash[:notice] = t('sent_group_metering_point_invitation_successfully')
         else
           flash[:error] = t('unable_to_send_group_metering_point_invitation')
@@ -124,7 +122,6 @@ class GroupsController < ApplicationController
   authority_actions :send_invitations_update => 'update'
 
   def send_invitations_via_email
-    #byebug
     @group = Group.find(params[:id])
     @meter = Meter.new(manufacturer_product_serialnumber: params[:manufacturer_product_serialnumber])
     authorize_action_for @group
@@ -135,17 +132,10 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     authorize_action_for @group
     @manufacturer_product_serialnumber = params[:group][:manufacturer_product_serialnumber]
-    #byebug
-    if params[:group][:email] == "" #|| params[:group][:email_confirmation] == ""
+    if params[:group][:email] == ""
       @group.errors.add(:email, I18n.t("cant_be_blank"))
-    #  @group.errors.add(:email_confirmation,  I18n.t("cant_be_blank"))
       @meter = Meter.new(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
       render action: 'send_invitations_via_email'
- #   elsif params[:group][:email] != params[:group][:email_confirmation]
- #     @group.errors.add(:email, I18n.t("doesnt_match_with_confirmation"))
- #     @group.errors.add(:email_confirmation, I18n.t("doesnt_match_with_email"))
- #     @meter = Meter.new(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
- #     render action: 'send_invitations_via_email', manufacturer_product_serialnumber: @manufacturer_product_serialnumber
     else
       @email = params[:group][:email]
       @new_user = User.invite!({email: @email, invitation_message: params[:group][:message]}, current_user)
@@ -155,7 +145,8 @@ class GroupsController < ApplicationController
       @meter = Meter.create!(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
       @meter.metering_points << @metering_point
       @group.metering_points << @metering_point
-      @group.create_activity key: 'group_metering_point_membership.create', owner: @new_user, recipient: @group
+      @group.create_activity key: 'group_metering_point_membership.create', owner: @new_user, recipient: @metering_point
+      current_user.create_activity key: 'user.create_platform_invitation', owner: current_user, recipient: @new_user
       @meter.save!
       flash[:notice] = t('invitation_sent_successfully_to', email: @email)
     end
@@ -183,7 +174,7 @@ class GroupsController < ApplicationController
     metering_point_id = params[:metering_point_id] || params[:group][:metering_point_id]
     @metering_point = MeteringPoint.find(metering_point_id)
     if @group.metering_points.delete(@metering_point)
-      #@group.calculate_closeness
+      @group.create_activity(key: 'group_metering_point_membership.cancel', owner: @metering_point.managers.first, recipient: @metering_point)
       flash[:notice] = t('metering_point_removed_successfully')
     else
       flash[:error] = t('unable_to_remove_metering_point')
@@ -196,7 +187,7 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     authorize_action_for @group
     @collection = []
-    [@group.members + current_user.friends].flatten.uniq.each do |user|
+    [@group.involved + current_user.friends].flatten.uniq.each do |user|
       user.profile.nil? ? nil : @collection << user
     end
   end
@@ -210,6 +201,7 @@ class GroupsController < ApplicationController
       flash[:notice] = t('user_is_already_group_manager', username: @user.name)
     else
       @user.add_role(:manager, @group)
+      @user.create_activity(key: 'user.appointed_group_manager', owner: current_user, recipient: @group)
       flash[:notice] = t('user_is_now_a_new_group_manager', username: @user.name)
     end
   end

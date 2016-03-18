@@ -1,6 +1,6 @@
 class FriendshipRequest < ActiveRecord::Base
   include PublicActivity::Model
-  tracked
+  tracked owner: :sender, recipient: :receiver
 
   belongs_to :sender, class_name: 'User'
   belongs_to :receiver, class_name: 'User'

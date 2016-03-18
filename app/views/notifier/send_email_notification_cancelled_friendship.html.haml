@@ -1,0 +1,6 @@
+%p
+  = t('hello') + " #{@receiver.name}!"
+%p= t('user_cancelled_the_friendship_with_you', user: @sender.name)
+%p= t('you_are_not_able_to_view_users_not_public_content_anymore', user: @sender.name)
+%p= t('if_you_want_to_get_to_know_more_users_please_visit', index: link_to(t('this_site'), profiles_url)).html_safe
+%p= t('your_buzzn_team')

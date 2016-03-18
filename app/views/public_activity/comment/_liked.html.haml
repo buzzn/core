@@ -1,0 +1,10 @@
+- single_content_for :action do
+  - if a.trackable
+    %span.fa.fa-heart
+    = t('the_comment_by') + ' ' + a.trackable.user.name + ' ' + t("at_the_#{a.trackable.commentable.class.name.underscore}")
+    %a.btn-link.text-semibold{:href => polymorphic_path(a.trackable.commentable)}
+      =a.trackable.commentable.name
+    %blockquote.bq-sm.bq-open
+      = a.trackable.body
+  - else
+    = t('no_information_available')

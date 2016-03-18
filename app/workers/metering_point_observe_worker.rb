@@ -9,9 +9,7 @@ class MeteringPointObserveWorker
     if @current_power.nil?
       if @metering_point.observe_offline && @metering_point.last_observed_timestamp
         if Time.now >= @metering_point.last_observed_timestamp + 1.hour && Time.now <= @metering_point.last_observed_timestamp + 1.hour + 3.minutes
-          @metering_point.members.each do |user|
-            Notifier.send_email_notification_meter_offline(user, @metering_point).deliver_now
-          end
+          @metering_point.create_activity(key: 'metering_point.offline', owner: @metering_point)
         end
       end
     else
@@ -29,10 +27,7 @@ class MeteringPointObserveWorker
     end
 
     if @metering_point.observe && message
-      @metering_point.members.each do |user|
-        user.send_notification('info', message, @metering_point.name, 0, Rails.application.routes.url_helpers.metering_point_path(@metering_point))
-        Notifier.send_email_metering_point_exceeds_or_undershoots(user, @metering_point, mode).deliver_now
-      end
+      @metering_point.create_activity(key: "metering_point.#{mode}", owner: @metering_point)
     end
 
   end

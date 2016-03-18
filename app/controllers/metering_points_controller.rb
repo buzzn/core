@@ -112,12 +112,12 @@ class MeteringPointsController < ApplicationController
         render action: 'send_invitations', invite_via_email: 'checked'
       else
         @email = params[:metering_point][:email]
-        @existing_users = User.where(email: @email)
+        @existing_users = User.unscoped.where(email: @email)
         if @existing_users.any?
           if MeteringPointUserRequest.where(metering_point: @metering_point).where(user: @existing_users.first).empty? && !@metering_point.users.include?(@existing_users.first)
-            if MeteringPointUserRequest.create(user: @existing_users.first, metering_point: @metering_point, mode: 'invitation')
-              @existing_users.first.send_notification('info', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0, profile_path(@existing_users.first.profile))
-              Notifier.send_email_notification_new_metering_point_user_request(@existing_users.first, @metering_point.managers.first, @metering_point, 'invitation').deliver_now
+            @metering_point_user_request = MeteringPointUserRequest.new(user: @existing_users.first, metering_point: @metering_point, mode: 'invitation')
+            if @metering_point_user_request.save
+              @metering_point.create_activity(key: 'metering_point_user_invitation.create', owner: current_user, recipient: @existing_users.first)
               flash[:notice] = t('sent_metering_point_user_invitation_successfully')
             else
               flash[:error] = t('unable_to_send_metering_point_user_invitation')
@@ -126,7 +126,9 @@ class MeteringPointsController < ApplicationController
             flash[:error] = t('metering_point_user_invitation_already_sent') + '. ' + t('waiting_for_accepting') + '.'
           end
         else
-          @new_user = User.invite!({email: @email, invitation_message: params[:metering_point][:message]}, current_user)
+
+          @new_user = User.unscoped.invite!({email: @email, invitation_message: params[:metering_point][:message]}, current_user)
+          current_user.create_activity key: 'user.create_platform_invitation', owner: current_user, recipient: @new_user
           @metering_point.users << @new_user
           current_user.friends.include?(@new_user) ? nil : current_user.friends << @new_user
           @metering_point.save!
@@ -136,8 +138,7 @@ class MeteringPointsController < ApplicationController
     else
       @new_user = User.find(params[:metering_point][:new_users])
       if MeteringPointUserRequest.create(user: @new_user, metering_point: @metering_point, mode: 'invitation')
-        @new_user.send_notification('info', t('new_metering_point_user_invitation'), @metering_point.decorate.name_with_users, 0, profile_path(@new_user.profile))
-        Notifier.send_email_notification_new_metering_point_user_request(@new_user, @metering_point.managers.first, @metering_point, 'invitation').deliver_now
+        @metering_point.create_activity(key: 'metering_point_user_invitation.create', owner: current_user, recipient: @new_user)
         flash[:notice] = t('sent_metering_point_user_invitation_successfully')
       else
         flash[:error] = t('unable_to_send_metering_point_user_invitation')
@@ -162,12 +163,11 @@ class MeteringPointsController < ApplicationController
       flash[:notice] = t('metering_point_left_successfully', metering_point_name: @metering_point.name)
     else
       flash[:notice] = t('user_removed_successfully', username: @user.name)
-      Notifier.send_email_removed_from_metering_point(@user, current_user, @metering_point).deliver_now
-      @user.send_notification('info', t('notifiaction'), t('user_removed_you_from_metering_point', username: @current_user.name, metering_point_name: @metering_point.name), 0, metering_point_path(@metering_point))
     end
+    @metering_point.create_activity(key: 'metering_point_user_membership.cancel', owner: @user)
     respond_with @metering_point
   end
-  authority_actions :remove_members_update => 'update'
+  authority_actions :remove_members_update => 'read'
 
 
   def add_manager
@@ -188,6 +188,7 @@ class MeteringPointsController < ApplicationController
       flash[:notice] = t('user_is_already_metering_point_manager', username: @user.name)
     else
       @user.add_role(:manager, @metering_point)
+      @user.create_activity(key: 'user.appointed_metering_point_manager', owner: current_user, recipient: @metering_point)
       flash[:notice] = t('user_is_now_a_new_metering_point_manager', username: @user.name)
     end
   end
@@ -239,12 +240,11 @@ class MeteringPointsController < ApplicationController
     if !last_power.nil?
       latest_power = last_power[:power]
       latest_timestamp = last_power[:timestamp]
-      online = true
     else
        latest_power = nil
        latest_timestamp = nil
-       online = false
     end
+    online = latest_timestamp && latest_timestamp >= (Time.now - 60.seconds).to_i*1000 ? true : false
     if @cache.nil?
       Rails.cache.write(@cache_id, last_power, expires_in: 4.seconds)
     end

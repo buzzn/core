@@ -12,7 +12,7 @@ PublicActivity::Activity.class_eval do
     where(:key => 'metering_point_user_membership.create')
   }
 
-  after_create :notify_users
+  after_commit :notify_users, on: :create
 
   def notify_users
     Sidekiq::Client.push({

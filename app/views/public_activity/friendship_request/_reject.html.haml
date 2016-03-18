@@ -1,0 +1,5 @@
+- single_content_for :action do
+  - if a.recipient
+    = t('rejected_the_friendship_request_from_user', user: link_to(a.recipient.name, profile_path(a.recipient.profile))).html_safe
+  - else
+    = t('rejected_the_friendship_request_from_user', user: t('an_unknown_user'))

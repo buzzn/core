@@ -1,7 +1,7 @@
 - single_content_for :action do
   - if a.trackable
-    = t('has_commented_on') + ' ' + t('the_group')
-    %a.btn-link.text-semibold{:href => group_path(a.trackable.commentable)}
+    = t('has_commented_on') + ' ' + t("the_#{a.trackable.commentable.class.name.underscore}")
+    %a.btn-link.text-semibold{:href => polymorphic_path(a.trackable.commentable)}
       =a.trackable.commentable.name
     %blockquote.bq-sm.bq-open
       = a.trackable.body

@@ -41,6 +41,8 @@ de:
   rejected_metering_point_user_request: Zählpunkteinladung abgelehnt
   sent_metering_point_user_request: Zählpunktanfrage gesendet
   new_metering_point_user_request: Neue Zählpunktanfrage
+  has_sent_a_metering_point_user_request_to_metering_point: "hat eine neue Zählpunktanfrage an %{metering_point_name} gesendet."
+  rejected_a_metering_point_user_invitation_to_the_metering_point: "lehnte eine Zählpunkteinladung zum Zählpunkt %{metering_point_name} ab."
   do_you_want_to_admit_user_to_this_metering_point: "Möchtest Du %{user} in diesen Zählpunkt aufnehmen"
   do_you_want_to_admit_user_to_your_metering_point: "Möchtest Du %{user} in Deinen Zählpunkt %{metering_point} aufnehmen?"
   sent_group_metering_point_request_successfully: "Zählpunkteinladung erfolgreich gesendet. Warten auf Annahme."
@@ -53,6 +55,50 @@ de:
   you_were_added_successfully: Du wurdest erfolgreich hinzugefügt.
   metering_point_removed_successfully: Der Zählpunkt wurde erfolgreich entfernt.
   unable_to_remove_metering_point: Das Entfernen des Zählpunkts ist fehlgeschlagen.
+  is_no_longer_member_of_metering_point_anymore: "ist nicht mehr Mitglied des Zählpunktes %{metering_point_name}"
+  rejected_a_metering_point_user_request_from_user: "lehnte die Zählpunktanfrage von %{user} ab."
+  invited_user_to_join_the_metering_point: "hat %{user} eingeladen dem Zählpunkt %{metering_point_name} beizutreten."
+  invited_user_to_join_a_metering_point_which_has_been_removed: "hat %{user} eingeladen einem bereits gelöschten Zählpunkt beizutreten."
+  rejected_a_metering_point_user_invitation_to_a_metering_point_which_has_been_removed: "hat eine Zählpunkteinladung zu einem bereits gelöschten Zählpunkt abgelehnt."
+  is_no_longer_member_of_a_metering_point_which_has_been_removed_anymore: "ist nicht mehr Mitglied eines Zählpunktes, welcher bereits gelöscht wurde."
+  has_joined_a_metering_point_which_has_been_removed: "ist einem Zählpunkt beigetreten, welcher bereits gelöscht wurde."
+  has_sent_a_metering_point_user_request_to_a_metering_point_which_has_been_removed: "hat eine Zählpunktanfrage an einen bereits gelöschten Zählpunkt gesendet."
+  rejected_a_metering_point_user_request_from_an_unknown_user: hat die Zählpunktanfrage eines unbekannten Nutzers abgelehnt.
+  user_is_no_longer_a_member_of_your_metering_point: "%{user} ist nicht länger Mitglied Deines Zählpunktes %{metering_point}."
+  user_joined_your_metering_point: "%{user} ist ab jetzt Mitglied Deines Zählpunktes %{metering_point}."
+  user_invited_you_to_join_the_metering_point: "%{user} hat Dich eingeladen dem Zählpunkt %{metering_point} beizutreten."
+  user_rejected_your_metering_point_user_invitation_for_metering_point: "%{user} hat Deine Zählpunkteinladung zum Zählpunkt %{metering_point} abgelehnt."
+  to_invite_user_again_please_visit_your_metering_point: "Um %{user} erneut einzuladen besuche bitte Deinen Zählpunkt %{metering_point}."
+  rejected_metering_point_user_invitation: Zählpunkteinladung wurde abgelehnt
+  user_wants_to_join_your_metering_point: "%{user} würde gerne Deinem Zählpunkt %{metering_point} beitreten."
+  user_rejected_your_metering_point_user_request_for_metering_point: "%{user} hat Deine Zählpunktanfrage an den Zählpunkt %{metering_point} abgelehnt."
+  to_ask_again_for_membership_please_visit_the_metering_point: "Um nochmal eine Anfrage zu senden besuche bitte den Zählpunkt %{metering_point}."
+  new_metering_point_user_membership: Neues Zählpunktmitglied
+  user_rejected_the_request_with_your_metering_point_to_join_the_group: "%{user} lehnte die Anfrage von Deinem Zählpunkt %{metering_point} bei der Gruppe %{group} ab."
+  the_group_metering_point_request_with_your_metering_point_for_the_group_has_been_rejected: "Die Gruppenanfrage mit Deinem Zählpunkt %{metering_point_name} bei der Gruppe %{group_name} wurde abgelehnt."
+  has_invited_the_metering_point_to_join_the_group: "hat den Zählpunkt %{metering_point_name} eingeladen der Gruppe %{group_name} beizutreten."
+  has_rejected_the_group_metering_point_invitation_from_group_with_metering_point: "hat die Gruppeneinladung für den Zählpunkt %{metering_point_name} der Gruppe %{group_name} abgelehnt."
+  is_not_a_part_of_the_group_anymore: "ist nicht mehr Teil der Gruppe %{group_name}."
+  has_joined_the_group_with_the_metering_point: "ist der Gruppe %{group_name} mit dem Zählpunkt %{metering_point_name} beigetreten."
+  has_requested_to_join_the_group_with_the_metering_point: "hat eine Anfrage gestellt der Gruppe %{group_name} mit dem Zählpunkt %{metering_point_name} beizutreten."
+  has_rejected_the_group_metering_point_request_from_metering_point_at_group: "hat die Anfrage des Zählpunktes %{metering_point_name} der Gruppe %{group_name} beizutreten abgelehnt."
+  cancelled_group_metering_point_membership: "Gruppenmitgliedschaft beendet"
+  metering_point_is_not_a_part_of_the_group_anymore: "Der Zählpunkt %{metering_point_name} ist nicht mehr Teil der Gruppe %{group_name}."
+  visit_the_group_page_to_see_how_the_energy_data_has_changed_now: "Besuche bitte die Gruppenseite um zu sehen, was sich verändert hat."
+  new_group_metering_point_membership: Neue Gruppenmitgliedschaft
+  metering_point_is_now_a_part_of_the_group: "Der Zählpunkt %{metering_point_name} ist ab jetzt Mitglied der Gruppe %{group_name}."
+  accepted_platform_invitation: Einladung zu buzzn akzeptiert
+
+  appointed_metering_point_manager: Zum Zählpunktadmin ernannt
+  appointed_group_manager: Zum Gruppenadmin ernannt
+  user_appointed_you_metering_point_manager_of_the_metering_point: "%{user} hat Dich zum Zählpunktadmin vom Zählpunkt %{metering_point} ernannt."
+  user_appointed_you_group_manager_of_the_group: "%{user} hat Dich zum Gruppenadmin der Gruppe %{group} ernannt."
+  you_are_now_able_to_edit_everything_that_deals_with_this_group: "Du kannst jetzt alles bearbeiten was mit dieser Gruppe zu tun hat."
+  visit_the_group_page_to_see_your_new_options: "Besuche die Gruppenseite um Deine neuen Optionen zu prüfen."
+  you_are_now_able_to_edit_everything_that_deals_with_this_metering_point: "Du kannst jetzt alles bearbeiten was mit diesem Zählpunkt zu tun hat."
+  visit_the_metering_point_page_to_see_your_new_options: "Besuche die Zählpunktseite um Deine neuen Optionen zu prüfen."
+  has_appointed_user_metering_point_manager_for_metering_point: "hat %{user} zum Zählpunktadmin des Zählpunktes %{metering_point} ernannt."
+  has_appointed_user_group_manager_for_group: "hat %{user} zum Gruppenadmin der Gruppe %{group} ernannt."
 
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler
@@ -231,6 +277,7 @@ de:
   delete_bank_account: Bankverbindung löschen
   create_bank_account: Bankverbindung erstellen
 
+  at: Bei
   news: Nachrichten
   comments: Kommentare
   created_at: 'erstellt am:'
@@ -482,7 +529,7 @@ de:
   didnt_receive_unlock_instructions: Entsperrungs-Email nicht erhalten
   no_devices_available: Keine Geräte vorhanden
   no_metering_points_available: Kein Zählpunkt vorhanden
-  the_metering_point: den Zählpunkt
+  the_metering_point: Der Zählpunkt
   the_group: die Gruppe
   and: und
   are_now_friends: sind jetzt befreundet
@@ -655,6 +702,19 @@ de:
   bubbles: Kreise
   lines: Linien
   somebody: Jemand
+  the_comment_by: den Kommentar von
+  at_the_group: bei der Gruppe
+  at_the_metering_point: bei dem Zählpunkt
+  are_no_friends_anymore: sind nicht mehr befreundet
+  sent_a_friendship_request_to_user: "hat eine Freundschaftsanfrage an %{user} gesendet"
+  rejected_the_friendship_request_from_user: "hat eine Freundschaftsanfrage von %{user} abgelehnt"
+  an_unknown_user: jemanden
+  if_you_want_to_get_to_know_more_users_please_visit: "Wenn Du weitere Leute kennen lernen willst besuche bitte %{index}."
+  this_site: diese Seite
+  user_cancelled_the_friendship_with_you: "%{user} hat die Freundschaft mir Dir beendet."
+  user_rejected_your_friendship_request: "%{user} hat Deine Freundschaftsanfrage abgelehnt."
+  you_are_not_able_to_view_users_not_public_content_anymore: "Du kannst die nicht-öffentlichen Inhalte von %{user} ab jetzt nicht mehr sehen."
+  cancelled_friendship: "Freundschaft beendet"
 
   new_group_metering_point_invitation: Neue Gruppeneinladung
   do_you_want_to_join_the_group_with_your_metering_point: "Möchtest Du der Gruppe %{group} mit deinem Zählpunkt %{metering_point} beitreten"
@@ -731,6 +791,7 @@ de:
   this_is_the_concerned_metering_point: "Das ist der betroffene Zählpunkt:"
   new_friendship_request_from: "Neue Freundschaftsanfrage von %{sender}"
   sent_a_friendship_request_to_you: hat Dir eine Freundschaftsanfrage gesendet.
+  sent_a_friendship_request_to_user: "hat eine Freundschaftsanfrage an %{user} gesendet."
   to_accept_or_reject_the_friendship_request_please_visit_your_profile: Um die Anfrage zu akzeptieren oder abzulehnen besuche bitte Dein Profil.
   to_accept_or_reject_this_request_please_visit_your_metering_point: Um die Anfrage zu akzeptieren oder abzulehnen besuche bitte Deinen Zählpunkt.
   to_accept_or_reject_this_invitation_please_visit_your_profile: Um diese Einladung anzunehmen oder abzulehnen besuche bitte Dein Profil.
@@ -745,7 +806,7 @@ de:
   new_comment_from_user: "Neuer Kommentar von %{username}"
   at_your_group: "Bei Deiner Gruppe %{group_name}"
   at_your_metering_point: "Bei Deinem Zählpunkt %{metering_point_name}"
-  user_liked_your_comment: "%{username} hat Deinen Kommentar geliked"
+  user_liked_your_comment: "%{username} gefällt Dein Kommentar."
   at_resource: "Bei %{resource_type} '%{resource_name}'"
   user_wants_to_join_your_group_with_the_metering_point: "%{username} möchte Deiner Gruppe '%{group_name}' mit dem Zählpunkt '%{metering_point_name}' beitreten."
   to_accept_or_reject_this_request_please_visit_your_group_page: "Um diese Anfrage anzunehmen oder abzulehnen besuche bitte Deine Gruppenseite."
@@ -767,6 +828,7 @@ de:
   to_unsubscribe_this_event_please_visit_your_metering_point_and_change_this_setting: "Um keine Benachrichtigungen mehr bei diesem Ereignis zu erhalten besuche bitte Deinen Zählpunkt und ändere die Einstellungen."
   your_metering_point_undershot_the_minimum_value_of: "Dein Zählpunkt %{metering_point_name} hat den Wert von %{min_watt} Watt unterschritten."
   to_unsubscribe_this_event_please_visit_your_group_and_change_this_setting: "Um keine Benachrichtigungen mehr bei diesem Ereignis zu erhalten besuche bitte Deine Gruppe und ändere die Einstellungen."
+  to_unsubscribe_this_event_please_visit_your_profile_and_change_this_setting: "Um keine Benachrichtigungen mehr bei diesem Ereignis zu erhalten besuche bitte Dein Profil und ändere die Einstellungen."
   user_wrote_a_new_comment_at_the_group: "%{username} hat einen neuen Kommentar bei der Gruppe %{group_name} geschrieben."
   user_wrote_a_new_comment_at_the_metering_point: "%{username} hat einen neuen Kommentar beim Zählpunkt %{metering_point_name} geschrieben."
   accepted_metering_point_user_invitation: Zählpunkteinladung akzeptiert
@@ -776,6 +838,15 @@ de:
   your_metering_point_user_invitation_has_been_accepted: "Deine Zählpunkteinladung wurde angenommen."
   user_is_now_a_member_of_your_metering_point: "%{username} ist jetzt ein Mitglied deines Zählpunktes '%{metering_point_name}'."
   visit_the_metering_point_page_to_see_the_how_the_energy_data_has_changed_now: "Besuche die Seite des Zählpunktes um zu sehen, wie sich die Energiedaten nun verändert haben."
+  rejected_group_metering_point_invitation: "Abgelehnte Gruppeneinladung"
+  the_group_metering_point_invitation_for_metering_point_at_group_has_been_rejected: "Die Gruppeneinladung an den Zählpunkt %{metering_point_name} der Gruppe %{group_name} beizutreten ist abgelehnt worden."
+  user_rejected_the_invitation_to_group_with_metering_point: "%{user} hat die Einladung der Gruppe %{group} mit dem Zählpunkt %{metering_point} beizutreten abgelehnt."
+
+  has_accepted_the_platform_invitation_and_is_now_a_member_of_the_buzzn_community: "hat die Einladung akzeptiert und ist nun Mitglied der buzzn Community."
+  has_invited_user_to_join_the_buzzn_community: "hat %{user} eingeladen der buzzn Community beizutreten."
+  has_invited_someone_to_join_the_buzzn_community: "hat jemanden eingeladen der buzzn Community beizutreten."
+  user_has_accepted_the_invitation_to_join_the_buzzn_community: "%{user} hat die Einladung angenommen und ist nun ein Teil der buzzn Community."
+  user_has_accepted_the_invitation_to_join_the_buzzn_community_and_is_your_friend_now: "%{user} hat die Einladung angenommen und ist nun ein Teil der buzzn Community. Außerdem seid ihr nun befreundet."
 
   new_comment: Neuer Kommentar
   system_message: Systemnachricht

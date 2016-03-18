@@ -1280,7 +1280,7 @@ $(".metering_point").ready ->
 getLiveData = (metering_point, metering_point_id) ->
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
     .success (data) ->
-      if data.online == true || data.virtual == true
+      if data.online == true
         metering_point.find(".power-ticker").html(data.latest_power)
         if data.timestamp <= Date.now() - 60*1000
           metering_point.find(".power-ticker").css({opacity: 0.3})
