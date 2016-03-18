@@ -1,2 +1,2 @@
 - single_content_for :action do
-  = t("has_joined_the_group_with_a_metering_point_html", group_name: link_to(a.recipient.name, a.recipient))
+  = t("has_joined_the_group_with_the_metering_point", group_name: link_to(a.trackable.name, a.trackable), metering_point_name: link_to(a.recipient.name, a.recipient)).html_safe

@@ -38,7 +38,7 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
       @group_metering_point_request.accept
       if @group_metering_point_request.save
         flash[:notice] = t('accepted_group_metering_point_request')
-        @group.create_activity(key: 'group_metering_point_membership.create', owner: current_user, recipient: @group_metering_point_request.metering_point)
+        @group_metering_point_request.group.create_activity(key: 'group_metering_point_membership.create', owner: @group_metering_point_request.mode == 'invitation' ? current_user : @group_metering_point_request.user, recipient: @group_metering_point_request.metering_point)
         redirect_to group_path(@group_metering_point_request.group)
       end
     else
@@ -53,9 +53,9 @@ class GroupMeteringPointRequestsController < InheritedResources::Base
       @group_metering_point_request.reject
       if @group_metering_point_request.save
         if @group_metering_point_request.mode == 'request'
-          @group.create_activity(key: 'group_metering_point_request.reject', owner: current_user, recipient: @group_metering_point_request.metering_point)
+          @group_metering_point_request.group.create_activity(key: 'group_metering_point_request.reject', owner: current_user, recipient: @group_metering_point_request.metering_point)
         else
-          @group.create_activity(key: 'group_metering_point_invitation.reject', owner: current_user, recipient: @group_metering_point_request.metering_point)
+          @group_metering_point_request.group.create_activity(key: 'group_metering_point_invitation.reject', owner: current_user, recipient: @group_metering_point_request.metering_point)
         end
         flash[:notice] = t('rejected_group_metering_point_request')
         redirect_to group_path(@group_metering_point_request.group)

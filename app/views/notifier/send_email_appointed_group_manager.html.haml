@@ -1,0 +1,7 @@
+%p
+  = t('hello') + " #{@receiver.name}!"
+%p= t('user_appointed_you_group_manager_of_the_group', user: @sender.name, group: @group.name)
+%p= t('you_are_now_able_to_edit_everything_that_deals_with_this_group')
+%p= t('visit_the_group_page_to_see_your_new_options')
+%p= link_to @group.name, group_url(@group)
+%p= t('your_buzzn_team')

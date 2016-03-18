@@ -114,7 +114,7 @@ class MeteringPointsController < ApplicationController
         render action: 'send_invitations', invite_via_email: 'checked'
       else
         @email = params[:metering_point][:email]
-        @existing_users = User.where(email: @email)
+        @existing_users = User.unscoped.where(email: @email)
         if @existing_users.any?
           if MeteringPointUserRequest.where(metering_point: @metering_point).where(user: @existing_users.first).empty? && !@metering_point.users.include?(@existing_users.first)
             @metering_point_user_request = MeteringPointUserRequest.new(user: @existing_users.first, metering_point: @metering_point, mode: 'invitation')
@@ -128,7 +128,9 @@ class MeteringPointsController < ApplicationController
             flash[:error] = t('metering_point_user_invitation_already_sent') + '. ' + t('waiting_for_accepting') + '.'
           end
         else
-          @new_user = User.invite!({email: @email, invitation_message: params[:metering_point][:message]}, current_user)
+
+          @new_user = User.unscoped.invite!({email: @email, invitation_message: params[:metering_point][:message]}, current_user)
+          current_user.create_activity key: 'user.create_platform_invitation', owner: current_user, recipient: @new_user
           @metering_point.users << @new_user
           current_user.friends.include?(@new_user) ? nil : current_user.friends << @new_user
           @metering_point.save!
@@ -188,6 +190,7 @@ class MeteringPointsController < ApplicationController
       flash[:notice] = t('user_is_already_metering_point_manager', username: @user.name)
     else
       @user.add_role(:manager, @metering_point)
+      @user.create_activity(key: 'user.appointed_metering_point_manager', owner: current_user, recipient: @metering_point)
       flash[:notice] = t('user_is_now_a_new_metering_point_manager', username: @user.name)
     end
   end

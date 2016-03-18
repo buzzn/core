@@ -1,0 +1,2 @@
+- single_content_for :action do
+  = t("has_rejected_the_group_metering_point_request_from_metering_point_at_group", group_name: link_to(a.trackable.name, a.trackable), metering_point_name: link_to(a.recipient.name, a.recipient)).html_safe

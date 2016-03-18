@@ -91,19 +91,6 @@ class Notifier < ActionMailer::Base
     end
   end
 
-  def send_email_accepted_group_metering_point_request(receiver, sender, metering_point, group, mode)
-    @receiver = receiver
-    @sender = sender
-    @metering_point = metering_point
-    @mode = mode
-    @group = group
-    if @mode == "request"
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('accepted_group_metering_point_request'))
-    else
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('accepted_group_metering_point_invitation'))
-    end
-  end
-
   def send_email_rejected_group_metering_point_request(receiver, sender, metering_point, group, mode)
     @receiver = receiver
     @sender = sender
@@ -116,6 +103,24 @@ class Notifier < ActionMailer::Base
       mail(to: @receiver.email, subject: 'buzzn: ' + t('rejected_group_metering_point_invitation'))
     end
   end
+
+  def send_email_new_group_metering_point_membership(receiver, sender, metering_point, group)
+    @receiver = receiver
+    @sender = sender
+    @metering_point = metering_point
+    @group = group
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('new_group_metering_point_membership'))
+  end
+
+  def send_email_cancelled_group_metering_point_membership(receiver, sender, metering_point, group)
+    @receiver = receiver
+    @sender = sender
+    @metering_point = metering_point
+    @group = group
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('cancelled_group_metering_point_membership'))
+  end
+
+
 
 
 
@@ -136,6 +141,33 @@ class Notifier < ActionMailer::Base
     @metering_point = metering_point
     mail(to: user.email, subject: t('your_metering_point_is_offline_now', metering_point_name: metering_point.name))
   end
+
+
+
+
+  def send_email_accepted_platform_invitation(receiver, sender)
+    @receiver = receiver
+    @sender = sender
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('accepted_platform_invitation'))
+  end
+
+
+
+
+  def send_email_appointed_metering_point_manager(receiver, sender, metering_point)
+    @receiver = receiver
+    @sender = sender
+    @metering_point = metering_point
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('appointed_metering_point_manager'))
+  end
+
+  def send_email_appointed_group_manager(receiver, sender, group)
+    @receiver = receiver
+    @sender = sender
+    @group = group
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('appointed_group_manager'))
+  end
+
 
 
 

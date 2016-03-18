@@ -41,8 +41,10 @@ class User < ActiveRecord::Base
 
   after_create :create_dashboard
 
+  after_invitation_accepted :invoke_invitation_accepted_activity
+
   #this exludes all users who were already invited but did not register to prevent 'user.profile == nil'
-  default_scope { where('invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NOT NULL OR invitation_sent_at IS NULL')}
+  #default_scope { where('invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NOT NULL OR invitation_sent_at IS NULL')}
 
   self.scope :dummy, -> { where(email: 'sys@buzzn.net').first }
 
@@ -249,6 +251,10 @@ private
 
   def create_dashboard
     self.dashboard = Dashboard.create(user_id: self.id)
+  end
+
+  def invoke_invitation_accepted_activity
+    self.create_activity(key: 'user.accept_platform_invitation', owner: self, recipient: self.invited_by)
   end
 
   def delete_content

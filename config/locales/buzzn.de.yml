@@ -75,6 +75,30 @@ de:
   to_ask_again_for_membership_please_visit_the_metering_point: "Um nochmal eine Anfrage zu senden besuche bitte den Zählpunkt %{metering_point}."
   new_metering_point_user_membership: Neues Zählpunktmitglied
   user_rejected_the_request_with_your_metering_point_to_join_the_group: "%{user} lehnte die Anfrage von Deinem Zählpunkt %{metering_point} bei der Gruppe %{group} ab."
+  the_group_metering_point_request_with_your_metering_point_for_the_group_has_been_rejected: "Die Gruppenanfrage mit Deinem Zählpunkt %{metering_point_name} bei der Gruppe %{group_name} wurde abgelehnt."
+  has_invited_the_metering_point_to_join_the_group: "hat den Zählpunkt %{metering_point_name} eingeladen der Gruppe %{group_name} beizutreten."
+  has_rejected_the_group_metering_point_invitation_from_group_with_metering_point: "hat die Gruppeneinladung für den Zählpunkt %{metering_point_name} der Gruppe %{group_name} abgelehnt."
+  is_not_a_part_of_the_group_anymore: "ist nicht mehr Teil der Gruppe %{group_name}."
+  has_joined_the_group_with_the_metering_point: "ist der Gruppe %{group_name} mit dem Zählpunkt %{metering_point_name} beigetreten."
+  has_requested_to_join_the_group_with_the_metering_point: "hat eine Anfrage gestellt der Gruppe %{group_name} mit dem Zählpunkt %{metering_point_name} beizutreten."
+  has_rejected_the_group_metering_point_request_from_metering_point_at_group: "hat die Anfrage des Zählpunktes %{metering_point_name} der Gruppe %{group_name} beizutreten abgelehnt."
+  cancelled_group_metering_point_membership: "Gruppenmitgliedschaft beendet"
+  metering_point_is_not_a_part_of_the_group_anymore: "Der Zählpunkt %{metering_point_name} ist nicht mehr Teil der Gruppe %{group_name}."
+  visit_the_group_page_to_see_how_the_energy_data_has_changed_now: "Besuche bitte die Gruppenseite um zu sehen, was sich verändert hat."
+  new_group_metering_point_membership: Neue Gruppenmitgliedschaft
+  metering_point_is_now_a_part_of_the_group: "Der Zählpunkt %{metering_point_name} ist ab jetzt Mitglied der Gruppe %{group_name}."
+  accepted_platform_invitation: Einladung zu buzzn akzeptiert
+
+  appointed_metering_point_manager: Zum Zählpunktadmin ernannt
+  appointed_group_manager: Zum Gruppenadmin ernannt
+  user_appointed_you_metering_point_manager_of_the_metering_point: "%{user} hat Dich zum Zählpunktadmin vom Zählpunkt %{metering_point} ernannt."
+  user_appointed_you_group_manager_of_the_group: "%{user} hat Dich zum Gruppenadmin der Gruppe %{group} ernannt."
+  you_are_now_able_to_edit_everything_that_deals_with_this_group: "Du kannst jetzt alles bearbeiten was mit dieser Gruppe zu tun hat."
+  visit_the_group_page_to_see_your_new_options: "Besuche die Gruppenseite um Deine neuen Optionen zu prüfen."
+  you_are_now_able_to_edit_everything_that_deals_with_this_metering_point: "Du kannst jetzt alles bearbeiten was mit diesem Zählpunkt zu tun hat."
+  visit_the_metering_point_page_to_see_your_new_options: "Besuche die Zählpunktseite um Deine neuen Optionen zu prüfen."
+  has_appointed_user_metering_point_manager_for_metering_point: "hat %{user} zum Zählpunktadmin des Zählpunktes %{metering_point} ernannt."
+  has_appointed_user_group_manager_for_group: "hat %{user} zum Gruppenadmin der Gruppe %{group} ernannt."
 
   out_metering: Generatorzähler
   in_metering: Verbrauchszähler
@@ -505,7 +529,7 @@ de:
   didnt_receive_unlock_instructions: Entsperrungs-Email nicht erhalten
   no_devices_available: Keine Geräte vorhanden
   no_metering_points_available: Kein Zählpunkt vorhanden
-  the_metering_point: den Zählpunkt
+  the_metering_point: Der Zählpunkt
   the_group: die Gruppe
   and: und
   are_now_friends: sind jetzt befreundet
@@ -814,6 +838,15 @@ de:
   your_metering_point_user_invitation_has_been_accepted: "Deine Zählpunkteinladung wurde angenommen."
   user_is_now_a_member_of_your_metering_point: "%{username} ist jetzt ein Mitglied deines Zählpunktes '%{metering_point_name}'."
   visit_the_metering_point_page_to_see_the_how_the_energy_data_has_changed_now: "Besuche die Seite des Zählpunktes um zu sehen, wie sich die Energiedaten nun verändert haben."
+  rejected_group_metering_point_invitation: "Abgelehnte Gruppeneinladung"
+  the_group_metering_point_invitation_for_metering_point_at_group_has_been_rejected: "Die Gruppeneinladung an den Zählpunkt %{metering_point_name} der Gruppe %{group_name} beizutreten ist abgelehnt worden."
+  user_rejected_the_invitation_to_group_with_metering_point: "%{user} hat die Einladung der Gruppe %{group} mit dem Zählpunkt %{metering_point} beizutreten abgelehnt."
+
+  has_accepted_the_platform_invitation_and_is_now_a_member_of_the_buzzn_community: "hat die Einladung akzeptiert und ist nun Mitglied der buzzn Community."
+  has_invited_user_to_join_the_buzzn_community: "hat %{user} eingeladen der buzzn Community beizutreten."
+  has_invited_someone_to_join_the_buzzn_community: "hat jemanden eingeladen der buzzn Community beizutreten."
+  user_has_accepted_the_invitation_to_join_the_buzzn_community: "%{user} hat die Einladung angenommen und ist nun ein Teil der buzzn Community."
+  user_has_accepted_the_invitation_to_join_the_buzzn_community_and_is_your_friend_now: "%{user} hat die Einladung angenommen und ist nun ein Teil der buzzn Community. Außerdem seid ihr nun befreundet."
 
   new_comment: Neuer Kommentar
   system_message: Systemnachricht

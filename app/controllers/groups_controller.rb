@@ -174,7 +174,7 @@ class GroupsController < ApplicationController
     metering_point_id = params[:metering_point_id] || params[:group][:metering_point_id]
     @metering_point = MeteringPoint.find(metering_point_id)
     if @group.metering_points.delete(@metering_point)
-      @group.create_activity(key: 'group_metering_point_membership.cancel', owner: current_user, recipient: @metering_point)
+      @group.create_activity(key: 'group_metering_point_membership.cancel', owner: @metering_point.managers.first, recipient: @metering_point)
       flash[:notice] = t('metering_point_removed_successfully')
     else
       flash[:error] = t('unable_to_remove_metering_point')
@@ -201,6 +201,7 @@ class GroupsController < ApplicationController
       flash[:notice] = t('user_is_already_group_manager', username: @user.name)
     else
       @user.add_role(:manager, @group)
+      @user.create_activity(key: 'user.appointed_group_manager', owner: current_user, recipient: @group)
       flash[:notice] = t('user_is_now_a_new_group_manager', username: @user.name)
     end
   end

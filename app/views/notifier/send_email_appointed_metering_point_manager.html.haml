@@ -1,0 +1,7 @@
+%p
+  = t('hello') + " #{@receiver.name}!"
+%p= t('user_appointed_you_metering_point_manager_of_the_metering_point', user: @sender.name, metering_point: @metering_point.name)
+%p= t('you_are_now_able_to_edit_everything_that_deals_with_this_metering_point')
+%p= t('visit_the_metering_point_page_to_see_your_new_options')
+%p= link_to @metering_point.name, metering_point_url(@metering_point)
+%p= t('your_buzzn_team')

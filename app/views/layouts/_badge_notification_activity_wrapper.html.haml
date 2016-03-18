@@ -5,8 +5,10 @@
     = @a.key_icon
   .media-body.pad-hor
     .speech
-      - if @a.owner && @a.owner.profile
+      - if @a.owner && @a.owner.is_a?(User) && @a.owner.profile
         = @a.owner.name
+      - elsif @a.owner && @a.owner.is_a?(MeteringPoint)
+        = t('the_metering_point') + ' ' + @a.owner.name
       - else
         = t "somebody"
       = content_for :action
