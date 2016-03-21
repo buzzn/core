@@ -312,7 +312,7 @@ class Group < ActiveRecord::Base
       Sidekiq::Client.push({
        'class' => CalculateGroupScoreAutarchyWorker,
        'queue' => :default,
-       'args' => [ group.id, 'day', Time.now.to_i*1000]
+       'args' => [ group.id, 'day', (Time.now - 1.day).to_i*1000]
       })
 
       # Sidekiq::Client.push({
@@ -401,21 +401,21 @@ class Group < ActiveRecord::Base
 
   def get_scores(resolution, containing_timestamp)
     if resolution.nil?
-      resolution = "year"
+      resolution = "year_to_months"
     end
     if containing_timestamp.nil?
       containing_timestamp = Time.now.to_i * 1000
     end
 
-    if resolution == 'day'
+    if resolution == 'day_to_minutes'
       sufficiency = self.scores.sufficiencies.dayly.at(containing_timestamp).first
       autarchy = self.scores.autarchies.dayly.at(containing_timestamp).first
       fitting = self.scores.fittings.dayly.at(containing_timestamp).first
-    elsif resolution == 'month'
+    elsif resolution == 'month_to_days'
       sufficiency = self.scores.sufficiencies.monthly.at(containing_timestamp).first
       autarchy = self.scores.autarchies.monthly.at(containing_timestamp).first
       fitting = self.scores.fittings.monthly.at(containing_timestamp).first
-    elsif resolution == 'year'
+    elsif resolution == 'year_to_months'
       sufficiency = self.scores.sufficiencies.yearly.at(containing_timestamp).first
       autarchy = self.scores.autarchies.yearly.at(containing_timestamp).first
       fitting = self.scores.fittings.yearly.at(containing_timestamp).first

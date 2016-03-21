@@ -32,25 +32,6 @@
           = t('embed')
         .embed-code= "<iframe width='100%' height='580' src='#{request.original_url}/widget' frameborder='0' scrolling: 'no'>Error loading iFrame</iframe>"
 
-    / .group_scores{'data-content' => @group.id}
-
-    /   %table
-    /     %tbody
-    /       %tr
-    /         %td.text-1x.mar-no.float-left= t('sufficiency')
-    /         %td.score_sufficiency
-    /       %tr
-    /         %td.text-1x.mar-no.float-left= t('closeness')
-    /         %td.score_closeness
-    /       %tr
-    /         %td.text-1x.mar-no.float-left= t('autarchy')
-    /         %td.score_autarchy
-    /       %tr
-    /         %td.text-1x.mar-no.float-left= t('fitting')
-    /         %td.score_fitting
-
-
-
     .panel-control
 
       .btn-group
@@ -187,43 +168,6 @@
                 = t('loading') + '...'
           %p= t('autarchy') + ' (%)'
 
-    / .col-sm-6.col-md-3.col-lg-3.group-stats
-    /   .panel.media.pad-all
-    /     .media-left
-    /       %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
-    /         %i.fa.fa-arrow-circle-o-up.fa-2x
-    /     .media-body
-    /       = content_tag :div, class: "number" do
-    /         %span.text-2x.text-thin
-    /           .stats-energy-max
-    /             = t('loading') + '...'
-    /       %p.stats-energy-max-time
-
-
-    / .col-sm-6.col-md-3.col-lg-3.group-stats
-    /   .panel.media.pad-all
-    /     .media-left
-    /       %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
-    /         %i.fa.fa-arrow-circle-o-down.fa-2x
-    /     .media-body
-    /       = content_tag :div, class: "number" do
-    /         %span.text-2x.text-thin
-    /           .stats-energy-min
-    /             = t('loading') + '...'
-    /       %p.stats-energy-min-time
-
-    / .col-sm-6.col-md-3.col-lg-3.group-stats
-    /   .panel.media.pad-all
-    /     .media-left
-    /       %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
-    /         %i.fa.fa-tachometer.fa-2x
-    /     .media-body
-    /       = content_tag :div, class: "number" do
-    /         %span.text-2x.text-thin
-    /           .stats-energy-sum
-    /             = t('loading') + '...'
-    /       %p= t('energy_in_visible_interval')
-
 
   .row
     .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id}
@@ -256,42 +200,6 @@
               .comments-panel{data: {commentable_type: 'Group', commentable_id: @group.id} }
                 .comment-form-container
                   = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "", nil) }
-
-
-
-
-
-
-      / - if @out_devices.flatten.any?
-      /   %h1.page-header.text-overflow
-      /     %span
-      /       = t('out_devices')
-      /       %small
-      /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('out_devices_info_group')}
-      /   .row
-      /     .out-devices
-      /       - @out_devices.each do |device|
-      /         = render device
-
-      / - if @out_metering_points.any?
-      /   %h1.page-header.text-overflow
-      /     %span
-      /       = t('out_metering_points')
-      /       %small
-      /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('out_metering_points_info_group')}
-      /   .row
-      /     .metering_points
-      /       - @out_metering_points.each do |metering_point|
-      /         = render metering_point
-
-
-  %iframe{width:'100%', height:'580', src:'http://localhost:3000/groups/karins-pv-strom/widget', frameborder:'0', scrolling: 'no'}
-
-
-
-
-
-
 
 
   - if user_signed_in?
