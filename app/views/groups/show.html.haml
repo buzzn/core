@@ -150,7 +150,7 @@
       .col-sm-6.col-md-6.col-lg-6
         %h1.page-header.text-overflow
           %span
-            = t('comments')
+            = t('discussion')
         .panel.comments-panel{data: {commentable_type: 'Group', commentable_id: @group.id} }
           #demo-chat-body.collapse.in
             .nano{:style => "height:610px"}
@@ -285,7 +285,7 @@
       /         = render metering_point
 
 
-
+  %iframe{width:'100%', height:'580', src:'http://localhost:3000/groups/karins-pv-strom/widget', frameborder:'0', scrolling: 'no'}
 
 
 

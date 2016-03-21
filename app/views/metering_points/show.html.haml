@@ -51,7 +51,7 @@
             %li= link_to(t('edit_metering_point'), edit_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
 
             %li= link_to(t('remove_members'), remove_members_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
-            %li= link_to(t("invite_friends_to_join_this_metering_point"),send_invitations_metering_point_path, {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
+            %li= link_to(t("invite_somebody_to_join_this_metering_point"),send_invitations_metering_point_path, {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
             %li= link_to(t('add_metering_point_manager'), add_manager_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
           - if user_signed_in?
             - if @requests.any? && @requests.collect(&:user).include?(current_user)
@@ -253,7 +253,7 @@
         /.col-sm-6.col-md-6.col-lg-6
         %h1.page-header.text-overflow
           %span
-            = t('comments')
+            = t('discussion')
         .panel.comments-panel{data: {commentable_type: 'MeteringPoint', commentable_id: @metering_point.id} }
           #demo-chat-body.collapse.in
             .nano{:style => "height:610px"}

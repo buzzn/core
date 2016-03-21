@@ -1,7 +1,7 @@
 .modal-content
   .modal-header
     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-    %h4.modal-title= t'invite_friends_to_join_this_metering_point'
+    %h4.modal-title= t'invite_somebody_to_join_this_metering_point'
   .modal-body
     = simple_form_for @metering_point, remote: true,  url: send_invitations_update_metering_point_path, method: 'put'  do |f|
       .js-dependent-fields{data: {radio: {name: 'metering_point[invite_via_email]', value: "false"}}}

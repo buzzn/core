@@ -7,19 +7,6 @@
 
 
 #page-content
-  / .row
-  /   %h1.page-header.text-overflow
-  /     %span
-  /       = @group.name
-  /       %small
-  /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('live_chart_info')}
-  /   .panel
-  /     .change-order
-  /       .fa.fa-retweet{'data-content' => t('click_to_change_order_of_all_red_and_blue_bubbles')}
-  /     .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
-  /       .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
-  /       #dummy
-
   .row
     .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id}
       %h1.page-header.text-overflow
@@ -31,7 +18,6 @@
         .panel-body.panel-colorful
 
           .text-center
-            /.btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-zoomout.btn.fa.fa-search-minus.fa-2x{disabled: "disabled"}
             .btn.btn-default.btn-chart-zoom-year{disabled: "disabled"}
               = t('year')
             .btn.btn-default.btn-chart-zoom-month{disabled: "disabled"}
@@ -42,17 +28,14 @@
               = t('hour')
             / .btn.btn-default.btn-chart-zoom-live{disabled: "disabled"}
             /   = t('live')
+            .brand-title.pull-right
+              %span.brand-text
+                = link_to image_tag('bz_logo_115px_grey.png', class: 'brand-logo'), group_path(@group)
           .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-prev.fa.fa-chevron-left.fa-2x{disabled: "disabled"}
           .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-next.pull-right.fa.fa-chevron-right.fa-2x{disabled: "disabled"}
+
           .chart{id: "chart-container-#{@group.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
             .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
-          / - if user_signed_in?
-          /   %ul.chart-context-menu
-          /     %li{"data-action" => "comment"}= t('create_new_comment_here')
-          /     /%li{"data-action" => "zoom_in"}= t('zoom_in_here_if_possible')
-          /   .chart-comments
-          /   .chart-comment-form
-          /     .comments-panel{data: {commentable_type: 'Group', commentable_id: @group.id} }
-          /       .comment-form-container
-          /         = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "", nil) }
+
+
 
