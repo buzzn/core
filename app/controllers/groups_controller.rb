@@ -265,7 +265,7 @@ class GroupsController < ApplicationController
 
   def get_scores
     @group = Group.find(params[:id])
-    result = @group.get_scores(params[:resolution], params[:containing_timestamp])
+    result = @group.get_scores(params[:resolution], params[:containing_timestamp].to_i)
     render json: result.to_json
   end
 

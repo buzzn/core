@@ -13,7 +13,7 @@ class Score < ActiveRecord::Base
   scope :yearly,         -> { where(interval: 'year') }
 
   scope :at, lambda {|containing_timestamp|
-    time = Time.at(containing_timestamp/1000).utc
+    time = Time.at(containing_timestamp.to_i/1000).in_time_zone
     self.where(["interval_beginning <= ?", time]).where(["interval_end >= ?", time])
   }
 
