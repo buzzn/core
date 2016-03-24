@@ -258,11 +258,11 @@ class Group < ActiveRecord::Base
 
   def set_score_interval(resolution_format, containing_timestamp)
     if resolution_format == 'year_to_minutes' || resolution_format == 'year'
-      return ['year', Time.at(containing_timestamp).beginning_of_year.in_time_zone, Time.at(containing_timestamp).end_of_year.in_time_zone]
+      return ['year', Time.at(containing_timestamp).in_time_zone.beginning_of_year, Time.at(containing_timestamp).in_time_zone.end_of_year]
     elsif resolution_format == 'month_to_minutes' || resolution_format == 'month'
-      return ['month', Time.at(containing_timestamp).beginning_of_month.in_time_zone, Time.at(containing_timestamp).end_of_month.in_time_zone]
+      return ['month', Time.at(containing_timestamp).in_time_zone.beginning_of_month, Time.at(containing_timestamp).in_time_zone.end_of_month]
     elsif resolution_format == 'day_to_minutes' || resolution_format == 'day'
-      return ['day', Time.at(containing_timestamp).beginning_of_day.in_time_zone, Time.at(containing_timestamp).end_of_day.in_time_zone]
+      return ['day', Time.at(containing_timestamp).in_time_zone.beginning_of_day, Time.at(containing_timestamp).in_time_zone.end_of_day]
     end
   end
 
