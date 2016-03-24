@@ -21,7 +21,11 @@ class CalculateGroupScoreAutarchyWorker
         end
         i+=1
       end
-      autarchy = own_consumption * 100 / (own_consumption + foreign_consumption)
+      if own_consumption + foreign_consumption != 0
+        autarchy = own_consumption * 1.0 / (own_consumption + foreign_consumption)
+      else
+        autarchy = -1
+      end
       interval_information = @group.set_score_interval(resolution_format, containing_timestamp/1000)
 
       Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: autarchy, scoreable_type: 'Group', scoreable_id: group_id)

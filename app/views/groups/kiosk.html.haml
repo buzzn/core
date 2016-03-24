@@ -5,10 +5,15 @@
 
 
 .panel.media.pad-all
+  .brand-title.clear-width.pull-right
+    %span.brand-text
+      = image_tag('bz_logo_115px_grey.png', class: 'brand-logo')
   .media-left
     = @group.picture('md')
   .media-body.pad-lft
     %p.text-3x.mar-no= @group.name
+
+
 
 #page-content
   .row

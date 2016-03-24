@@ -375,19 +375,20 @@ $(".bubbles_container").ready ->
 
       render_vis data_in, data_out, group_id
 
-      data_out.children.forEach (metering_point_data) ->
-        actual_out_metering_point_id = metering_point_data.metering_point_id
-        if metering_point_data.readable
-          $('#path_' + actual_out_metering_point_id).css( 'cursor', 'pointer' )
-          $('#path_' + actual_out_metering_point_id).click ->
-            window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
+      if !window.location.href.endsWith('/kiosk')
+        data_out.children.forEach (metering_point_data) ->
+          actual_out_metering_point_id = metering_point_data.metering_point_id
+          if metering_point_data.readable
+            $('#path_' + actual_out_metering_point_id).css( 'cursor', 'pointer' )
+            $('#path_' + actual_out_metering_point_id).click ->
+              window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
 
-      data_in.forEach (metering_point_data) ->
-        actual_in_metering_point_id = metering_point_data.metering_point_id
-        if metering_point_data.readable
-          $('#bubble_' + actual_in_metering_point_id).css( 'cursor', 'pointer' )
-          $('#bubble_' + actual_in_metering_point_id).click ->
-            window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
+        data_in.forEach (metering_point_data) ->
+          actual_in_metering_point_id = metering_point_data.metering_point_id
+          if metering_point_data.readable
+            $('#bubble_' + actual_in_metering_point_id).css( 'cursor', 'pointer' )
+            $('#bubble_' + actual_in_metering_point_id).click ->
+              window.location.href = '/metering_points/' + $(this).attr('id').split('_')[1]
 
       timers.push(
         window.setInterval(->

@@ -1147,7 +1147,10 @@ namespace 'Chart.Functions', (exports) ->
             else
               own_consumption += chart.series[1].data[i].y
               foreign_consumption += chart.series[0].data[i].y - chart.series[1].data[i].y
-        autarchy = (own_consumption*100 / (foreign_consumption + own_consumption)).toFixed(2)
+        if foreign_consumption + own_consumption != 0
+          autarchy = (own_consumption*100 / (foreign_consumption + own_consumption)).toFixed(2)
+        else
+          autarchy = "n.a."
         $('.stats-autarchy').html(autarchy)
       else
         url = window.location.href
