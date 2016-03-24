@@ -1,6 +1,7 @@
 class NotificationCreationWorker
   include Sidekiq::Worker
   include Rails.application.routes.url_helpers
+  sidekiq_options :retry => false, :dead => false
 
   # This worker gets triggered after a PublicActivity::Activity is created in the database
   # For each activity the worker decides which users get which notification dependent on
