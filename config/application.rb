@@ -55,7 +55,7 @@ module Buzzn
       g.helper      = false
     end
 
-    config.middleware.use Rack::GoogleAnalytics, :tracker => Rails.application.secrets.google_analytics
+    #config.middleware.use Rack::GoogleAnalytics, :tracker => Rails.application.secrets.google_analytics
 
     config.middleware.delete Rack::Lock
 
