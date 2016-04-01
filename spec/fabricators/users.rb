@@ -112,7 +112,11 @@ Fabricator :geloeschter_benutzer, from: :user do
   contracting_party   { Fabricate(:contracting_party) }
 end
 
-
+Fabricator :mustafa, from: :user do
+  email       'mustafaakman@ymail.de'
+  profile     { Fabricate(:profile_mustafa) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
 
 
 #Ab hier: Hopf

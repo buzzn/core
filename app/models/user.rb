@@ -46,10 +46,12 @@ class User < ActiveRecord::Base
   #this exludes all users who were already invited but did not register to prevent 'user.profile == nil'
   #default_scope { where('invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NOT NULL OR invitation_sent_at IS NULL')}
 
-  self.scope :dummy, -> { where(email: 'sys@buzzn.net').first }
-
   def access_tokens
     Doorkeeper::AccessToken.where(resource_owner_id: self.id)
+  end
+
+  def self.dummy
+    self.where(email: 'sys@buzzn.net').first
   end
 
   def friend?(user)

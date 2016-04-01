@@ -43,7 +43,7 @@ Fabricate(:metering_point_operator, name: 'Discovergy')
 Fabricate(:metering_point_operator, name: 'MySmartGrid')
 
 
-buzzn_team_names = %w[ felix justus danusch thomas martina stefan ole philipp christian ]
+buzzn_team_names = %w[ felix justus danusch thomas martina stefan ole philipp christian mustafa ]
 buzzn_team = []
 buzzn_team_names.each do |user_name|
   puts "  #{user_name}"
@@ -115,6 +115,9 @@ buzzn_team_names.each do |user_name|
     root_mp = Fabricate(:mp_ferraris_001_amperix)
     root_mp.contracts << Fabricate(:mpoc_ferraris_0001_amperix, metering_point: root_mp)
     user.add_role :admin # thomas is admin
+  when 'mustafa'
+    root_mp = Fabricate(:mp_mustafa)
+    root_mp.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: root_mp)
   else
     root_mp = Fabricate(:metering_point)
   end

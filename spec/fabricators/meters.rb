@@ -51,7 +51,12 @@ Fabricator :easymeter_1124001747, from: :meter do
 end
 
 
-
+# Mustafa verbrauch
+Fabricator :easymeter_60232612, from: :meter do
+  manufacturer_name           'easy_meter'
+  manufacturer_product_name   'Q3D'
+  manufacturer_product_serialnumber  '60232612'
+end
 
 # Stefan easymeter fur verbrauch
 Fabricator :easymeter_1024000034, from: :meter do
