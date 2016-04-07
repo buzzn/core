@@ -12,11 +12,11 @@ class WizardMeteringPointsController  < ApplicationController
 
   def metering_point_update
     @metering_point = MeteringPoint.new(metering_point_params)
-    if params[:metering_point][:add_user] == I18n.t('yes')
-      @metering_point.users << current_user
-    end
     @metering_point.readable = 'friends'
     if @metering_point.save
+      if params[:metering_point][:add_user] == I18n.t('yes')
+        current_user.add_role(:member, @metering_point)
+      end
       current_user.add_role(:manager, @metering_point)
       redirect_to meter_wizard_metering_points_path(metering_point_id: @metering_point.id)
     else
@@ -129,11 +129,11 @@ class WizardMeteringPointsController  < ApplicationController
   def wizard_update
     MeteringPoint.transaction do
       @metering_point = MeteringPoint.new(metering_point_params)
-      if params[:metering_point][:add_user] == I18n.t('yes')
-        @metering_point.users << current_user
-      end
       @metering_point.readable = 'friends'
       if @metering_point.save!
+        if params[:metering_point][:add_user] == I18n.t('yes')
+          current_user.add_role(:member, @metering_point)
+        end
         current_user.add_role(:manager, @metering_point)
 
         #metering_point is valid and now check meter

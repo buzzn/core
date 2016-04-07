@@ -23,6 +23,16 @@ form.steps({
       form.find('.body:eq(' + newIndex + ') label.error').remove();
       form.find('.body:eq(' + newIndex + ') .error').removeClass('error');
     }
+    //validate the uniqueness of the serialnnumber via ajax-call
+    if (newIndex == 2){
+      var serialnumber_valid = ($.ajax({url: "/meters/validate?metering_point[meter][manufacturer_product_serialnumber]=" + $("#metering_point_meter_manufacturer_product_serialnumber").val(), dataType: 'json', async: false}).responseText == 'true');
+      if (!serialnumber_valid) {
+        form.validate().showErrors({
+          "metering_point[meter][manufacturer_product_serialnumber]": "<%= escape_javascript( t('errors.messages.already_exists'))%>"
+        });
+        return false;
+      }
+    }
     form.validate().settings.ignore = ':disabled,:hidden';
     return form.valid();
   },
@@ -46,6 +56,7 @@ form.steps({
     required: "<%= escape_javascript( t('errors.messages.blank'))%>",
     number: "<%= escape_javascript( t('errors.messages.not_a_number'))%>",
     equalTo: "<%= escape_javascript( t('errors.messages.confirmation'))%>",
-    accept: "<%= escape_javascript( t('errors.messages.accepted'))%>"
+    accept: "<%= escape_javascript( t('errors.messages.accepted'))%>",
+    unique: "<%= escape_javascript( t('errors.messages.already_exists'))%>"
   }
 });

@@ -129,7 +129,7 @@ class MeteringPointsController < ApplicationController
 
           @new_user = User.unscoped.invite!({email: @email, invitation_message: params[:metering_point][:message]}, current_user)
           current_user.create_activity key: 'user.create_platform_invitation', owner: current_user, recipient: @new_user
-          @metering_point.users << @new_user
+          @new_user.add_role(:member, @metering_point)
           current_user.friends.include?(@new_user) ? nil : current_user.friends << @new_user
           @metering_point.save!
           flash[:notice] = t('invitation_sent_successfully_to', email: @email)
@@ -158,7 +158,7 @@ class MeteringPointsController < ApplicationController
     authorize_action_for @metering_point
     user_id = params[:user_id] || params[:metering_point][:user_id]
     @user = User.find(user_id)
-    @metering_point.users.delete(@user)
+    @user.remove_role(:member, @metering_point)
     if @user == current_user
       flash[:notice] = t('metering_point_left_successfully', metering_point_name: @metering_point.name)
     else

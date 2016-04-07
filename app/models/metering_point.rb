@@ -17,8 +17,8 @@ class MeteringPoint < ActiveRecord::Base
 
   has_many :contracts, dependent: :destroy
   has_many :devices
-  has_many :metering_point_users
-  has_many :users, through: :metering_point_users, dependent: :destroy
+  #has_many :metering_point_users
+  #has_many :users, through: :metering_point_users, dependent: :destroy
   has_one :address, as: :addressable, dependent: :destroy
 
   has_many :scores, as: :scoreable
@@ -70,6 +70,14 @@ class MeteringPoint < ActiveRecord::Base
 
   def profiles
     Profile.where(user_id: users.ids)
+  end
+
+  def users
+    User.with_role(:member, self)
+  end
+
+  def members
+    self.users
   end
 
   def managers

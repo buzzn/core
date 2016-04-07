@@ -65,11 +65,11 @@ class Group < ActiveRecord::Base
   end
 
   def energy_producers
-    MeteringPoint.includes(:users).by_group(self).outputs.collect(&:users).flatten
+    MeteringPoint.by_group(self).outputs.collect(&:users).flatten
   end
 
   def energy_consumers
-    MeteringPoint.includes(:users).by_group(self).inputs.collect(&:users).flatten
+    MeteringPoint.by_group(self).inputs.collect(&:users).flatten
   end
 
   def member?(metering_point)
@@ -77,7 +77,7 @@ class Group < ActiveRecord::Base
   end
 
   def involved
-    (self.managers + MeteringPoint.includes(:users).by_group(self).collect(&:involved).flatten).uniq
+    (self.managers + MeteringPoint.by_group(self).collect(&:involved).flatten).uniq
   end
 
   def members
@@ -390,8 +390,8 @@ class Group < ActiveRecord::Base
     in_metering_point_personal_data = []
     self.metering_points.without_externals.each do |metering_point|
       metering_point_name = metering_point.decorate.name_with_users
-      if metering_point.users.any?
-        if metering_point.users.include?(requesting_user)
+      if metering_point.involved.any?
+        if metering_point.involved.include?(requesting_user)
           own_metering_point = true
         else
           own_metering_point = false

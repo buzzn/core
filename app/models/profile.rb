@@ -51,12 +51,12 @@ class Profile < ActiveRecord::Base
     slug.blank? || user_name_changed?
   end
 
-  def metering_points
-    metering_points = []
-    metering_points << self.user.metering_points # as member
-    metering_points << MeteringPoint.editable_by_user(self.user) # as manager
-    metering_points.compact.flatten.uniq
-  end
+  # def metering_points
+  #   metering_points = []
+  #   metering_points << self.user.metering_points # as member
+  #   metering_points << MeteringPoint.editable_by_user(self.user) # as manager
+  #   metering_points.compact.flatten.uniq
+  # end
 
   def self.genders
     %w{

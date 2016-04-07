@@ -57,6 +57,8 @@ Buzzn::Application.routes.draw do
 
 
   resources :meters, :except => :show
+  match 'meters/validate' => 'meters#validate', :via => :get
+
   resources :equipments
   resources :devices
   resources :contracts, :except => :show

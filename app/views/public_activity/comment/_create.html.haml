@@ -1,5 +1,5 @@
 - single_content_for :action do
-  - if a.trackable
+  - if a.trackable && a.trackable.commentable
     = t('has_commented_on') + ' ' + t("the_#{a.trackable.commentable.class.name.underscore}")
     %a.btn-link.text-semibold{:href => polymorphic_path(a.trackable.commentable)}
       =a.trackable.commentable.name

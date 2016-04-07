@@ -21,9 +21,6 @@ class User < ActiveRecord::Base
   has_many :friendships
   has_many :friends, :through => :friendships, after_add: :create_complement_friendship
 
-  has_many :metering_point_users
-  has_many :metering_points, :through => :metering_point_users
-
   has_many :group_users
   has_many :groups, :through => :group_users
 
@@ -42,9 +39,6 @@ class User < ActiveRecord::Base
   after_create :create_dashboard
 
   after_invitation_accepted :invoke_invitation_accepted_activity
-
-  #this exludes all users who were already invited but did not register to prevent 'user.profile == nil'
-  #default_scope { where('invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NOT NULL OR invitation_sent_at IS NULL')}
 
   def access_tokens
     Doorkeeper::AccessToken.where(resource_owner_id: self.id)
@@ -109,10 +103,18 @@ class User < ActiveRecord::Base
     MeteringPoint.editable_by_user(self).non_privates.collect(&:decorate)
   end
 
+  def metering_points_as_member
+    MeteringPoint.with_role(:member, self).collect(&:decorate)
+  end
+
+  def accessible_metering_points
+    MeteringPoint.with_role([:member, :manager], self).uniq.collect(&:decorate)
+  end
+
   def accessible_groups
     result = []
     result << Group.editable_by_user(self).collect(&:decorate)
-    result << self.profile.metering_points.collect(&:group).compact.collect(&:decorate)
+    result << self.accessible_metering_points.collect(&:group).compact.collect(&:decorate)
     return result.flatten.uniq
   end
 

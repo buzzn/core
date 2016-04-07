@@ -29,8 +29,8 @@ class GroupsController < ApplicationController
     @out_metering_points            = MeteringPoint.by_group(@group).outputs.without_externals.decorate
     @in_metering_points             = MeteringPoint.by_group(@group).inputs.without_externals.decorate
     @managers                       = @group.managers
-    @energy_producers               = MeteringPoint.includes(:users).by_group(@group).outputs.without_externals.decorate.collect(&:users).flatten.uniq
-    @energy_consumers               = MeteringPoint.includes(:users).by_group(@group).inputs.without_externals.decorate.collect(&:users).flatten.uniq
+    @energy_producers               = MeteringPoint.by_group(@group).outputs.without_externals.decorate.collect(&:users).flatten.uniq
+    @energy_consumers               = MeteringPoint.by_group(@group).inputs.without_externals.decorate.collect(&:users).flatten.uniq
     @interested_members             = @group.users
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @all_comments                   = @group.root_comments
@@ -140,7 +140,7 @@ class GroupsController < ApplicationController
       @email = params[:group][:email]
       @new_user = User.invite!({email: @email, invitation_message: params[:group][:message]}, current_user)
       @metering_point = MeteringPoint.create!(mode: 'in', name: 'Wohnung', readable: 'friends')
-      @metering_point.users << @new_user
+      @new_user.add_role(:member, @metering_point)
       @new_user.add_role(:manager, @metering_point)
       @meter = Meter.create!(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
       @meter.metering_points << @metering_point

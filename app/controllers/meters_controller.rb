@@ -1,6 +1,6 @@
 class MetersController < ApplicationController
   before_filter :authenticate_user!
-  respond_to :html, :js
+  respond_to :html, :js, :json
 
 
   def show
@@ -49,6 +49,11 @@ class MetersController < ApplicationController
     authorize_action_for @meter
     @meter.destroy
     respond_with current_user.profile
+  end
+
+  def validate
+    @serial = params[:metering_point][:meter][:manufacturer_product_serialnumber]
+    render json: Meter.where(manufacturer_product_serialnumber: @serial).empty?
   end
 
 

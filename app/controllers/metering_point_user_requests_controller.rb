@@ -10,7 +10,7 @@ class MeteringPointUserRequestsController < InheritedResources::Base
     metering_point = MeteringPoint.find(params[:metering_point_id])
     mode = 'request'
     if current_user.can_update?(metering_point)
-      metering_point.users << current_user
+      current_user.add_role(:member, metering_point)
       metering_point.create_activity key: 'metering_point_user_membership.create', owner: current_user
       flash[:notice] = t('you_were_added_successfully')
     else

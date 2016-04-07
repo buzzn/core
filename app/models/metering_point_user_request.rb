@@ -28,7 +28,7 @@ class MeteringPointUserRequest < ActiveRecord::Base
   private
     def created_membership
       if status == 'accepted'
-        metering_point.users << user
+        user.add_role(:member, metering_point)
         self.delete
       elsif status == 'rejected'
         self.delete

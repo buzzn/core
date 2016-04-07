@@ -1,5 +1,5 @@
 - single_content_for :action do
-  - if a.trackable
+  - if a.trackable && a.trackable.commentable
     %span.fa.fa-heart
     = t('the_comment_by') + ' ' + a.trackable.user.name + ' ' + t("at_the_#{a.trackable.commentable.class.name.underscore}")
     %a.btn-link.text-semibold{:href => polymorphic_path(a.trackable.commentable)}
