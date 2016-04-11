@@ -229,7 +229,7 @@
           .row
             .meters
               - if @metering_point.meter
-                = render @metering_point.meter
+                = render @metering_point.meter, locals: { metering_point: @metering_point }
               - else
                 .new_meter.show_meter_tour
                   .row

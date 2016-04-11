@@ -187,6 +187,7 @@ class WizardMeteringPointsController  < ApplicationController
                 end
               end
             else
+              raise ActiveRecord::Rollback
               flash[:error] = 'Error'
               render action: 'update'
             end
@@ -196,10 +197,12 @@ class WizardMeteringPointsController  < ApplicationController
             render action: 'update'
           end
         else
+          raise ActiveRecord::Rollback
           flash[:error] = 'Error'
           render action: 'update'
         end
       else
+        raise ActiveRecord::Rollback
         flash[:error] = 'Error'
         render action: 'update'
       end

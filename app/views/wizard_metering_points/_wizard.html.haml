@@ -37,5 +37,8 @@
             .js-dependent-fields{'data-select-id' => 'metering_point_contract_organization_id', 'data-option-value' => Organization.where(slug: 'mysmartgrid').first.id}
               = ff.input :sensor_id, as: :text, :input_html => {value: ''}, label_method: :sensor_id
               = ff.input :x_token, as: :text, :input_html => {value: ''}, label_method: :x_token
-          .js-dependent-fields{data: {radio: {name: 'metering_point[meter][smartmeter]', value: t("no")}}}
-            = t('no_smartmeter_means_you_get_dummy_data')
+          .js-dependent-fields{data: {radio: {name: 'metering_point[meter][existing_meter]', value: t("add_existing_meter")}}}
+            = t('the_metering_point_will_get_its_data_via_the_connection_established_by_the_selected_meter')
+          .js-dependent-fields{data: {radio: {name: 'metering_point[meter][existing_meter]', value: t("create_new_meter")}}}
+            .js-dependent-fields{data: {radio: {name: 'metering_point[meter][smartmeter]', value: t("no")}}}
+              = t('no_smartmeter_means_you_get_dummy_data')

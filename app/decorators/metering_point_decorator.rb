@@ -188,12 +188,13 @@ class MeteringPointDecorator < Draper::Decorator
   def new_meter
     link_to(
       content_tag(:i, t("create_meter"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
-      meter_wizard_meters_path(metering_point_id: model.id),
+      wizard_wizard_meters_path(metering_point_id: model.id),
       {
         :remote         => true,
         :class          => 'btn start_modal',
         'data-toggle'   => 'modal',
-        'data-target'   => '#myModal'
+        'data-target'   => '#myModal',
+        'data-backdrop' => 'static'
       })
   end
 

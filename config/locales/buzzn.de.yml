@@ -185,6 +185,8 @@ de:
   create_meter: Messgerät erstellen
   add_existing_meter: Bereits vorhandenes Messgerät hinzufügen
   create_new_meter: Messgerät neu anlegen
+  could_not_create_meter_due_to_problems_while_establishing_data_connection: "Das Messgerät konnte nicht erstellt werden wegen eines Fehlers beim einrichten der Datenverbindung."
+  could_not_create_meter_due_to_problems_while_saving_data: "Das Messgerät konnte nicht erstellt werden wegen eines Fehlers beim Speichern."
 
   landis_gyr: 'Landis & Gyr'
   goerlitz: 'Görlitz'
@@ -859,16 +861,21 @@ de:
   internal_server_error: "Uups, es ist ein unerwarteter Fehler aufgetreten!"
   error_forbidden: "Uups, Du hast nicht die nötigen Rechte, um diese Seite anzusehen!"
   you_have_count_messages: "Du hast %{count} Nachrichten"
-  no_smartmeter_means_you_get_dummy_data: "Da der Zähler kein Smartmeter ist werden die Messwerte mit Standard-Daten dargestellt."
+  no_smartmeter_means_you_get_dummy_data: "Da das Messgerät kein Smartmeter ist werden die Messwerte mit Standard-Daten dargestellt. Dies kann jederzeit geändert werden."
+  the_metering_point_will_get_its_data_via_the_connection_established_by_the_selected_meter: "Der Zählpunkt wird seine Daten über die Datenverbindung beziehen, die mit dem ausgewählten Messgerät eingerichtet wurde."
 
   the_requested_content_is_not_public: Der angefragte Inhalt ist nicht öffentlich
   embed: Einbetten
   current_step: Aktueller Schritt
   pagination: Seitenzahlen
+  meter_created_successfully: 'Messgerät erfolgreich erstellt'
 
   energy_max_in_visible_interval: Max (kWh)
   energy_min_in_visible_interval: Min (kWh)
   energy_in_visible_interval: Gesamt (kWh)
+
+  data_saved_successfully: Die Daten wurden erfolgreich gespeichert.
+  error_while_saving_data: Fehler beim Speichern der Daten.
 
 
 

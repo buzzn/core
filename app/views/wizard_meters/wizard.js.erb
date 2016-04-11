@@ -1,7 +1,7 @@
-$(".modal-dialog").html("<%= escape_javascript( render 'wizard_metering_points/wizard') %>");
+$(".modal-dialog").html("<%= escape_javascript( render 'wizard_meters/wizard') %>");
 var form;
 
-form = $('#new_metering_point').show();
+form = $('#new_meter').show();
 
 form.steps({
   headerTag: 'h3',
@@ -24,12 +24,12 @@ form.steps({
       form.find('.body:eq(' + newIndex + ') .error').removeClass('error');
     }
     //validate the uniqueness of the serialnnumber via ajax-call
-    if (newIndex == 2){
-      if ($(".js-dependent-fields[style='display: none;'][data-radio-name='metering_point[meter][existing_meter]']").find("#metering_point_meter_manufacturer_product_serialnumber").length == 0) {
-        var serialnumber_valid = ($.ajax({url: "/meters/validate?metering_point[meter][manufacturer_product_serialnumber]=" + $("#metering_point_meter_manufacturer_product_serialnumber").val(), dataType: 'json', async: false}).responseText == 'true');
+    if (newIndex == 1){
+      if ($(".js-dependent-fields[style='display: none;'][data-radio-name='meter[existing_meter]']").find("#meter_manufacturer_product_serialnumber").length == 0) {
+        var serialnumber_valid = ($.ajax({url: "/meters/validate?metering_point[meter][manufacturer_product_serialnumber]=" + $("#meter_manufacturer_product_serialnumber").val(), dataType: 'json', async: false}).responseText == 'true');
         if (!serialnumber_valid) {
           form.validate().showErrors({
-            "metering_point[meter][manufacturer_product_serialnumber]": "<%= escape_javascript( t('errors.messages.already_exists'))%>"
+            "meter[manufacturer_product_serialnumber]": "<%= escape_javascript( t('errors.messages.already_exists'))%>"
           });
           return false;
         }
@@ -44,7 +44,7 @@ form.steps({
     // }
   },
   onFinishing: function(event, currentIndex) {
-    form.validate().settings.ignore = ':disabled';
+    form.validate().settings.ignore = ':disabled,:hidden';
     return form.valid();
   },
   onFinished: function(event, currentIndex) {
