@@ -1,21 +1,5 @@
 describe "Users API" do
 
-  it 'does not gets the current user without scope read' do
-    access_token  = Fabricate(:access_token)
-    user          = User.find(access_token.resource_owner_id)
-    get_with_token '/api/v1/users/me', access_token.token
-    expect(response).to have_http_status(403)
-  end
-
-  it 'gets the current user with scope read' do
-    access_token  = Fabricate(:access_token)
-    access_token.update_attribute :scopes, 'read'
-    user          = User.find(access_token.resource_owner_id)
-    get_with_token '/api/v1/users/me', access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data']['attributes']['slug']).to eq(user.slug)
-  end
-
 
   it 'does not gets a user without token' do
     user = Fabricate(:user)
