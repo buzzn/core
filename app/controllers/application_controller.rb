@@ -8,6 +8,16 @@ class ApplicationController < ActionController::Base
 
   before_filter :initialize_gon
 
+  before_filter :http_basic_authenticate
+
+  def http_basic_authenticate
+    if Rails.env.staging?
+      authenticate_or_request_with_http_basic do |username, password|
+        username == "buzzn" && password == "sonnenaufgang"
+      end
+    end
+  end
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
 
