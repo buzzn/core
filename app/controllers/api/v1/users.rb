@@ -6,7 +6,7 @@ module API
 
         desc "Return me"
         get "me" do
-          doorkeeper_authorize! :admin, :read
+          doorkeeper_authorize! :public
           current_user
         end
 
@@ -103,6 +103,15 @@ module API
         end
 
 
+        desc "Return the related access_tokens for User"
+        params do
+          requires :id, type: String, desc: "ID of the User"
+        end
+        get ":id/access-tokens" do
+          doorkeeper_authorize! :admin, :read
+          user = User.find(params[:id])
+          user.access_tokens
+        end
 
 
       end

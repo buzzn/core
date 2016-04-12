@@ -26,6 +26,9 @@ class User < ActiveRecord::Base
 
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
 
+  has_many :access_tokens, class_name: 'Doorkeeper::AccessToken', dependent: :destroy, :foreign_key => :resource_owner_id
+
+
   delegate :slug, to: :profile
   delegate :name, to: :profile
   delegate :user_name, to: :profile
@@ -40,9 +43,6 @@ class User < ActiveRecord::Base
 
   after_invitation_accepted :invoke_invitation_accepted_activity
 
-  def access_tokens
-    Doorkeeper::AccessToken.where(resource_owner_id: self.id)
-  end
 
   def self.dummy
     self.where(email: 'sys@buzzn.net').first

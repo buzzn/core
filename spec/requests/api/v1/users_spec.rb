@@ -58,5 +58,14 @@ describe "Users API" do
   end
 
 
+  it 'does gets the access_tokens for user' do
+    access_token  = Fabricate(:access_token)
+    access_token.update_attribute :scopes, 'read'
+    user          = User.find(access_token.resource_owner_id)
+    get_with_token "/api/v1/users/#{user.id}/access-tokens", access_token.token
+    expect(response).to have_http_status(200)
+  end
+
+
 
 end
