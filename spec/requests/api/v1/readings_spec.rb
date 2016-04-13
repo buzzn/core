@@ -40,13 +40,39 @@ describe "Readings API" do
       watt_hour: reading.watt_hour,
       power: reading.power
     }.to_json
-
     post_with_token "/api/v1/readings", request_params, access_token.token
     expect(response).to have_http_status(201)
     expect(DateTime.parse(json['data']['attributes']['timestamp'])).to eq(reading.timestamp)
     expect(json['data']['attributes']['watt-hour']).to eq(reading.watt_hour)
     expect(json['data']['attributes']['power']).to eq(reading.power)
   end
+
+
+
+  it 'does create a correct reading with token' do
+    metering_point = Fabricate(:metering_point_with_manager)
+    manager       = metering_point.managers.first
+    access_token  = Fabricate(:access_token, resource_owner_id: manager.id)
+
+    timestamp = "Wed Apr 13 2016 14:07:35 GMT+0200 (CEST)"
+    watt_hour = 80616
+    power = 90
+    
+    request_params = {
+      metering_point_id: metering_point.id,
+      timestamp: timestamp,
+      watt_hour: watt_hour,
+      power: power
+    }.to_json
+
+    post_with_token "/api/v1/readings", request_params, access_token.token
+    expect(response).to have_http_status(201)
+
+    expect(DateTime.parse(json['data']['attributes']['timestamp'])).to eq("Wed Apr 13 2016 14:07:35 GMT+0200 (CEST)")
+    expect(json['data']['attributes']['watt-hour']).to eq(watt_hour)
+    expect(json['data']['attributes']['power']).to eq(power)
+  end
+
 
 
 

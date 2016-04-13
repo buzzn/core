@@ -39,6 +39,7 @@ Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
 
 # Messdienstleistung (Ablesung und Messung)
 Fabricate(:metering_point_operator, name: 'buzzn Metering')
+Fabricate(:metering_point_operator, name: 'buzzn Reader')
 Fabricate(:metering_point_operator, name: 'Discovergy')
 Fabricate(:metering_point_operator, name: 'MySmartGrid')
 
@@ -958,17 +959,3 @@ like_to_friend = Fabricate(:user)
 buzzn_team.each do |user|
   FriendshipRequest.create(sender: like_to_friend, receiver: user)
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-

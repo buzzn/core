@@ -252,6 +252,10 @@ class MeteringPoint < ActiveRecord::Base
     self.smart? && metering_point_operator_contract && (metering_point_operator_contract.organization.slug == "discovergy" || metering_point_operator_contract.organization.slug == "buzzn-metering")
   end
 
+  def buzzn_reader?
+    metering_point_operator_contract.organization.slug == "buzzn-reader"
+  end
+
   def data_source
     if self.virtual?
       "virtual"
@@ -265,6 +269,8 @@ class MeteringPoint < ActiveRecord::Base
       "mysmartgrid"
     elsif self.discovergy?
       "discovergy"
+    elsif self.buzzn_reader?
+      "buzzn-reader"
     end
   end
 
@@ -455,7 +461,8 @@ class MeteringPoint < ActiveRecord::Base
   # usage mp.fake_or_smart("5441452e-724c-4cd1-8eed-b70d4ec3b610","hour_to_minutes","1438074703700")
   def fake_or_smart(metering_point_id, resolution_format, containing_timestamp)
     metering_point = MeteringPoint.find(metering_point_id)
-    if metering_point.meter && metering_point.meter.smart
+
+    if self.discovergy? || self.mysmartgrid?
       result = []
       crawler = Crawler.new(self)
       if resolution_format == 'hour_to_minutes'
@@ -467,21 +474,20 @@ class MeteringPoint < ActiveRecord::Base
       elsif resolution_format == 'year_to_months'
         result = crawler.year(containing_timestamp)
       end
-      # if resolution_format == "day_to_minutes" || resolution_format == "day_to_hours"
-      #   result.pop
-      # end
       return result
-    else
-      if self.pv?
-        #MeteringPoint.fake_data(forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0, resolution_format, containing_timestamp, :sep_pv)
-        convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
-      elsif self.bhkw_or_else?
-        #MeteringPoint.fake_data(forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0, resolution_format, containing_timestamp, :sep_bhkw)
-        convert_to_array(Reading.aggregate(resolution_format, ['sep_bhkw'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
-      elsif self.slp?
-        #MeteringPoint.fake_data(forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0, resolution_format, containing_timestamp, :slp)
-        convert_to_array(Reading.aggregate(resolution_format, ['slp'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SLP
-      end
+
+    elsif self.pv?
+      convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
+
+    elsif self.bhkw_or_else?
+      convert_to_array(Reading.aggregate(resolution_format, ['sep_bhkw'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
+
+    elsif self.slp?
+      convert_to_array(Reading.aggregate(resolution_format, ['slp'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SLP
+
+    elsif self.buzzn_reader?
+      convert_to_array(Reading.aggregate(resolution_format, [metering_point.id], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0)
+
     end
   end
 
@@ -577,19 +583,3 @@ class MeteringPoint < ActiveRecord::Base
       #self.activities.each{|activity| activity.destroy}
     end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
