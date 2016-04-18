@@ -36,8 +36,27 @@
       "user_input": "params[:page]",
       "confidence": "Weak",
       "note": ""
+    },
+    {
+      "warning_type": "Basic Auth",
+      "warning_code": 9,
+      "fingerprint": "f45fd07be0135c148b61e9f9f282031eaa5be455fe8806933385a15fee02b6a0",
+      "message": "Basic authentication password stored in source code",
+      "file": "app/controllers/application_controller.rb",
+      "line": 16,
+      "link": "http://brakemanscanner.org/docs/warning_types/basic_auth/",
+      "code": "(password == \"sonnenaufgang\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationController",
+        "method": "http_basic_authenticate"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
     }
   ],
-  "updated": "2016-03-03 20:48:48 +0100",
-  "brakeman_version": "3.1.5"
+  "updated": "2016-04-18 10:53:16 +0200",
+  "brakeman_version": "3.2.1"
 }
