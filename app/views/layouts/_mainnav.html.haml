@@ -22,9 +22,9 @@
                 = mainnav_dashboard_path(current_user.dashboard)
               / = mainnav_stream_path
 
-              - if current_user.editable_metering_points.any?
+              - if current_user.accessible_metering_points.any?
                 %li.list-header= t'my_metering_points'
-                - current_user.editable_metering_points_by_address.each do |metering_points_address|
+                - current_user.accessible_metering_points_by_address.each do |metering_points_address|
                   %li{class: is_active_link?(metering_points_path, :inclusive) ? 'active active-sub' : ''}
                     %a{"data-original-title" => "", :href => "#", :title => ""}
                       %i.fa.fa-bolt
@@ -70,7 +70,7 @@
 /       = mainnav_profile_path(current_user.profile)
 /       - if current_user.editable_metering_points.any?
 /         %li.list-header= t'my_metering_points'
-/         - current_user.editable_metering_points_by_address.each do |metering_points_address|
+/         - current_user.accessible_metering_points_by_address.each do |metering_points_address|
 /           %li{class: is_active_link?(metering_points_path, :inclusive) ? 'active active-sub' : ''}
 /             %a{"data-original-title" => "", :href => "#", :title => "", 'aria-expanded': true }
 /               %i.fa.fa-bolt

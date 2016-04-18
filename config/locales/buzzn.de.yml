@@ -844,6 +844,7 @@ de:
   rejected_group_metering_point_invitation: "Abgelehnte Gruppeneinladung"
   the_group_metering_point_invitation_for_metering_point_at_group_has_been_rejected: "Die Gruppeneinladung an den Zählpunkt %{metering_point_name} der Gruppe %{group_name} beizutreten ist abgelehnt worden."
   user_rejected_the_invitation_to_group_with_metering_point: "%{user} hat die Einladung der Gruppe %{group} mit dem Zählpunkt %{metering_point} beizutreten abgelehnt."
+  cancelled_metering_point_user_membership: "Mitgliedschaft beim Zählpunkt beendet"
 
   has_accepted_the_platform_invitation_and_is_now_a_member_of_the_buzzn_community: "hat die Einladung akzeptiert und ist nun Mitglied der buzzn Community."
   has_invited_user_to_join_the_buzzn_community: "hat %{user} eingeladen der buzzn Community beizutreten."

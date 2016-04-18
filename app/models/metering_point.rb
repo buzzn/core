@@ -54,6 +54,10 @@ class MeteringPoint < ActiveRecord::Base
     self.with_role(:manager, user)
   }
 
+  scope :accessible_by_user, lambda {|user|
+    self.with_role([:manager, :member], user).uniq
+  }
+
   scope :editable_by_user_without_meter_not_virtual, lambda {|user|
     self.with_role(:manager, user).where(meter: nil).where(virtual: false)
   }

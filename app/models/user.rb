@@ -108,7 +108,7 @@ class User < ActiveRecord::Base
   end
 
   def accessible_metering_points
-    MeteringPoint.with_role([:member, :manager], self).uniq.collect(&:decorate)
+    MeteringPoint.accessible_by_user(self).uniq.collect(&:decorate)
   end
 
   def accessible_groups
@@ -140,10 +140,10 @@ class User < ActiveRecord::Base
     return result - not_invitable
   end
 
-  def editable_metering_points_by_address
+  def accessible_metering_points_by_address
     result = []
     without_address = []
-    all_metering_points =  MeteringPoint.editable_by_user(self)
+    all_metering_points = MeteringPoint.accessible_by_user(self)
     all_addresses = all_metering_points.collect(&:address).compact.uniq{|address| address.longitude && address.latitude}
     result << {:address => nil, :metering_points => all_metering_points} if all_addresses.empty?
 
