@@ -35,7 +35,7 @@ form.steps({
         }
       }
     }
-    form.validate().settings.ignore = ':disabled,:hidden';
+    form.validate().settings.ignore = ":disabled,:hidden";
     return form.valid();
   },
   onStepChanged: function(event, currentIndex, priorIndex) {
@@ -44,7 +44,7 @@ form.steps({
     // }
   },
   onFinishing: function(event, currentIndex) {
-    form.validate().settings.ignore = ':disabled';
+    form.validate().settings.ignore = ':disabled,:hidden';
     return form.valid();
   },
   onFinished: function(event, currentIndex) {

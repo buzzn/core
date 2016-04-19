@@ -30,7 +30,8 @@
       %fieldset
         = f.simple_fields_for @contract do |ff|
           .js-dependent-fields{data: {radio: {name: 'metering_point[meter][smartmeter]', value: t("yes")}}}
-            = ff.association :organization, input_html: {class: 'select2'}, label: t('smart_metering_provider')
+            .js-dependent-fields{data: {radio: {name: 'metering_point[meter][existing_meter]', value: t("create_new_meter")}}}
+              = ff.association :organization, input_html: {class: 'select2'}, label: t('smart_metering_provider')
             .js-dependent-fields{'data-select-id' => 'metering_point_contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
               = ff.input :username
               = ff.input :password

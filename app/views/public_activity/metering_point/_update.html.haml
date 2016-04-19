@@ -2,4 +2,4 @@
   - if a.trackable
     = t("has_updated_the_metering_point", metering_point_name: link_to(a.trackable.name, a.trackable)).html_safe
   - else
-    = t('has_created') + ' ' + t('a_metering_point_which_has_been_removed')
+    = t('has_updated') + ' ' + t('a_metering_point_which_has_been_removed')

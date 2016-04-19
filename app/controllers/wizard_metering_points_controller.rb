@@ -157,7 +157,7 @@ class WizardMeteringPointsController  < ApplicationController
         end
         if @meter.save!
           #@metering_point.create_activity key: 'metering_point.create', owner: current_user
-          if params[:metering_point][:meter][:smartmeter] == I18n.t('yes')
+          if params[:metering_point][:meter][:smartmeter] == I18n.t('yes') && params[:metering_point][:meter][:existing_meter] != t('add_existing_meter')
 
             #meter is valid an now check contract
             @contract = Contract.new(contract_params)
