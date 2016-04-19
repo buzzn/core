@@ -32,6 +32,7 @@ Buzzn::Application.routes.draw do
       put :read_new_badge_notifications
     end
   end
+  resources :access_tokens
 
   resources :metering_points do
     member do
