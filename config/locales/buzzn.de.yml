@@ -498,6 +498,7 @@ de:
   a_metering_point_which_has_been_removed: "einen Zählpunkt, der bereits gelöscht wurde"
   a_device_which_has_been_removed: "ein Gerät, das bereits gelöscht wurde"
   has_created_the_metering_point: "erstellte den Zählpunkt %{metering_point_name}"
+  has_updated_the_metering_point: "aktualisierte den Zählpunkt %{metering_point_name}"
 
 
   organization: Organisation

@@ -1,0 +1,5 @@
+- single_content_for :action do
+  - if a.trackable
+    = t("your_metering_point_exceeded_the_maximum_value_of", metering_point_name: link_to(a.trackable.name, a.trackable), max_watt: a.trackable.max_watt).html_safe
+  - else
+    = t('has_created') + ' ' + t('a_metering_point_which_has_been_removed')
