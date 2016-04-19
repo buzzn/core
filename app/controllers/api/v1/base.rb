@@ -9,6 +9,7 @@ module API
       mount API::V1::Profiles
       mount API::V1::MeteringPoints
       mount API::V1::Readings
+      mount API::V1::Aggregate
       mount API::V1::Groups
       mount API::V1::Devices
 
