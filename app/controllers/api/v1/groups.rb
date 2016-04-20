@@ -4,10 +4,6 @@ module API
       include API::V1::Defaults
       resource :groups do
 
-        # before do
-        #   doorkeeper_authorize!
-        # end
-
         desc "Return all groups"
         get "", root: :groups do
           group_ids = Group.where(readable: 'world').ids
@@ -56,6 +52,7 @@ module API
           requires :description,  type: String, desc: "Description of the Group."
         end
         post do
+          doorkeeper_authorize! :write
           if Group.creatable_by?(current_user)
             @params = params.group || params
             @group = Group.new({
@@ -79,7 +76,8 @@ module API
           requires :id, type: String, desc: "Group ID."
           optional :name
         end
-        put ':id' do
+        put do
+          doorkeeper_authorize! :write
           @group = Group.find(params[:id])
           if @group.updatable_by?(current_user)
             @params = params.group || params
@@ -87,7 +85,6 @@ module API
                 name:  @params.name,
                 image: @params.image
               })
-
             return @group
           else
             status 403
@@ -96,18 +93,24 @@ module API
 
 
 
-
-
-        desc "Delete a Group."
+        desc 'Delete a Group.'
         params do
           requires :id, type: String, desc: "Group ID"
         end
         delete ':id' do
-          current_user.statuses.find(params[:id]).destroy
+          doorkeeper_authorize! :write
+          if current_user
+            group = Group.find(params[:id])
+            if group.updatable_by?(current_user)
+              group.destroy
+              status 204
+            else
+              status 403
+            end
+          else
+            status 401
+          end
         end
-
-
-
 
 
 
@@ -117,6 +120,7 @@ module API
         end
         paginate(per_page: per_page=10)
         get ":id/metering-points" do
+          doorkeeper_authorize!
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
           group         = Group.where(id: permitted_params[:id]).first!
@@ -132,6 +136,7 @@ module API
           requires :id, type: String, desc: "ID of the profile"
         end
         get ":id/devices" do
+          doorkeeper_authorize!
           group = Group.where(id: permitted_params[:id]).first!
           group.devices
         end
@@ -143,6 +148,7 @@ module API
           requires :id, type: String, desc: "ID of the profile"
         end
         get ":id/managers" do
+          doorkeeper_authorize!
           group = Group.where(id: permitted_params[:id]).first!
           group.managers
         end
@@ -153,6 +159,7 @@ module API
           requires :id, type: String, desc: "ID of the profile"
         end
         get ":id/energy-producers" do
+          doorkeeper_authorize!
           group = Group.where(id: permitted_params[:id]).first!
           group.energy_producers
         end
@@ -163,6 +170,7 @@ module API
           requires :id, type: String, desc: "ID of the profile"
         end
         get ":id/energy-consumers" do
+          doorkeeper_authorize!
           group = Group.where(id: permitted_params[:id]).first!
           group.energy_consumers
         end

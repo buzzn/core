@@ -16,6 +16,11 @@ Fabricator :metering_point_with_manager, from: :metering_point do
 end
 
 
+Fabricator :out_metering_point_with_manager, from: :metering_point_with_manager do
+  mode 'out'
+end
+
+
 Fabricator :mp_z1a, from: :metering_point do
   name  'Netzanschluss Bezug'
 end

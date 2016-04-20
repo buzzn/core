@@ -26,6 +26,7 @@ module API
           requires :id, type: String, desc: "ID of the user"
         end
         get ":id" do
+          doorkeeper_authorize! :public
           user = User.find(params[:id])
           if current_user
             if user.profile.readable_by?(current_user)
@@ -61,7 +62,7 @@ module API
           requires :id, type: String, desc: "ID of the profile"
         end
         get ":id/groups" do
-          doorkeeper_authorize! :admin, :read
+          doorkeeper_authorize! :public
           user = User.find(params[:id])
           user.metering_points.collect(&:group).compact.uniq
         end
@@ -73,7 +74,7 @@ module API
           requires :id, type: String, desc: "ID of the User"
         end
         get ":id/metering-points" do
-          doorkeeper_authorize! :admin, :read
+          doorkeeper_authorize! :public
           user = User.find(params[:id])
           user.metering_points
         end
@@ -85,7 +86,7 @@ module API
           requires :id, type: String, desc: "ID of the User"
         end
         get ":id/friends" do
-          doorkeeper_authorize! :admin, :read
+          doorkeeper_authorize! :public
           user = User.find(params[:id])
           user.friends
         end
@@ -97,7 +98,7 @@ module API
           requires :id, type: String, desc: "ID of the User"
         end
         get ":id/devices" do
-          doorkeeper_authorize! :admin, :read
+          doorkeeper_authorize! :public
           user = User.find(params[:id])
           Device.with_role(:manager, user)
         end
@@ -108,7 +109,7 @@ module API
           requires :id, type: String, desc: "ID of the User"
         end
         get ":id/access-tokens" do
-          doorkeeper_authorize! :admin, :read
+          doorkeeper_authorize! :admin
           user = User.find(params[:id])
           user.access_tokens
         end
