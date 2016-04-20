@@ -64,7 +64,7 @@ module API
         get ":id/groups" do
           doorkeeper_authorize! :public
           user = User.find(params[:id])
-          user.metering_points.collect(&:group).compact.uniq
+          groups = Group.where(id: user.accessible_groups.map(&:id))
         end
 
 

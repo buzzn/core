@@ -8,6 +8,11 @@ Fabricator :metering_point do
   #contracts   { [ Fabricate(:electricity_supplier_contract)] }
 end
 
+
+Fabricator :metering_point_with_device, from: :metering_point do
+  devices  { [Fabricate(:device)] }
+end
+
 Fabricator :metering_point_with_manager, from: :metering_point do
   after_create { |metering_point|
     user = Fabricate(:user)

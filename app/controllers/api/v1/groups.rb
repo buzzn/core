@@ -123,11 +123,10 @@ module API
           doorkeeper_authorize!
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
-          group         = Group.where(id: permitted_params[:id]).first!
-          @total_pages  = group.metering_points.without_externals.page(@page).per(@per_page).total_pages
-          paginate(render(group.metering_points.without_externals, meta: { total_pages: @total_pages }))
+          group         = Group.find(permitted_params[:id])
+          @total_pages  = MeteringPoint.by_group(group).without_externals.page(@page).per_page(@per_page).total_pages
+          paginate(render(MeteringPoint.by_group(group).without_externals, meta: { total_pages: @total_pages }))
         end
-
 
 
 
@@ -137,8 +136,9 @@ module API
         end
         get ":id/devices" do
           doorkeeper_authorize!
-          group = Group.where(id: permitted_params[:id]).first!
-          group.devices
+          group = Group.find(permitted_params[:id])
+          devices = MeteringPoint.by_group(group).without_externals.collect(&:devices).flatten
+          return devices
         end
 
 

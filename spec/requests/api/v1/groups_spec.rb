@@ -107,6 +107,37 @@ describe "Groups API" do
   end
 
 
+  it 'gets the related metering-points for Group' do
+    access_token  = Fabricate(:access_token)
+    group         = Fabricate(:group_readable_by_members)
+    get_with_token "/api/v1/groups/#{group.id}/metering-points", access_token.token
+    expect(response).to have_http_status(200)
+  end
+
+  it 'gets the related devices for Group' do
+    access_token  = Fabricate(:access_token)
+    group         = Fabricate(:group_readable_by_members)
+    group.metering_points << Fabricate(:metering_point_with_device)
+    get_with_token "/api/v1/groups/#{group.id}/devices", access_token.token
+    expect(response).to have_http_status(200)
+  end
+
+  it 'gets the related managers for Group' do
+    access_token  = Fabricate(:access_token)
+    group         = Fabricate(:group_readable_by_members)
+    group.metering_points << Fabricate(:metering_point)
+    get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
+    expect(response).to have_http_status(200)
+  end
+
+  it 'gets the related energy-producers for Group' do
+    access_token  = Fabricate(:access_token)
+    group         = Fabricate(:group_readable_by_members)
+    group.metering_points << Fabricate(:metering_point)
+    get_with_token "/api/v1/groups/#{group.id}/energy-producers", access_token.token
+    expect(response).to have_http_status(200)
+  end
+
 
 
 
