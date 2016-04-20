@@ -98,7 +98,7 @@ buzzn_team_names.each do |user_name|
     user.add_role :admin # felix is admin
     root_mp = Fabricate(:mp_urbanstr88)
     root_mp.devices << @gocycle
-    Fabricate(:application, owner: user, name: 'Buzzn Mobile')
+    Fabricate(:application, owner: user, name: 'Buzzn Mobile', scopes: 'public admin', callback_uri: 'http://localhost:4200/')
   when 'christian'
     root_mp = Fabricate(:mp_60138988)
     root_mp.contracts << Fabricate(:mpoc_christian, metering_point: root_mp)
