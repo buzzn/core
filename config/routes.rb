@@ -70,6 +70,12 @@ Buzzn::Application.routes.draw do
   resources :addresses
   resources :readings
 
+  resources :conversations do
+    member do
+      put :unsubscribe
+    end
+  end
+
   resources :comments, :except => [:new, :index, :edit, :show, :update] do
     member do
       get :voted

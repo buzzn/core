@@ -21,10 +21,15 @@ class CommentsController < InheritedResources::Base
           @socket_id = params[:socket_id].nil? ? "" : params[:socket_id]
 
           @comment.create_activity key: 'comment.create', owner: current_user
-          @channel_name = @comment.commentable_type + '_' + @comment.commentable_id
-          if @comment.commentable_type == "PublicActivity::ORM::ActiveRecord::Activity"
+          if @comment.parent_id.nil?
             @root_id = @comment.commentable_id
             @root_type = @comment.commentable_type
+          else
+            @root_id = @comment.parent_id
+            @root_type = 'Comment'
+          end
+          @channel_name = @comment.commentable_type + '_' + @comment.commentable_id
+          if @comment.commentable_type == "PublicActivity::ORM::ActiveRecord::Activity"
             @channel_name = @comment.commentable.trackable_type + '_' + @comment.commentable.trackable_id
           end
           Pusher.trigger(@channel_name, 'new_comment', :id => @comment.id, :html => html, :root_id => @root_id, :root_type => @root_type, :socket_id => @socket_id)

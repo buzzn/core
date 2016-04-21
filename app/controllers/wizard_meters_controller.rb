@@ -167,10 +167,19 @@ class WizardMetersController  < ApplicationController
       #@meter.metering_points = @metering_point_ids.each{|id| MeteringPoint.find(id)}
 
       if @meter.save
-        if params[:meter][:smartmeter] == I18n.t('yes') && !@meter.smart?
+        if params[:meter][:smartmeter] == I18n.t('yes')
           #meter valid, now check contract
 
-          @contract = Contract.new(contract_params)
+          if params[:contract_id] == ""
+            @contract = Contract.new(contract_params)
+          else
+            @contract = Contract.find(params[:contract_id])
+          end
+          if !@contract.new_record?
+            @contract.organization_id = params[:meter][:contract][:organization_id]
+            @contract.username = params[:meter][:contract][:username]
+            @contract.password = params[:meter][:contract][:password]
+          end
           @contract.mode = 'metering_point_operator_contract'
           @contract.price_cents = 0
           @contract.metering_point = @metering_point
@@ -178,8 +187,8 @@ class WizardMetersController  < ApplicationController
             @contract.username = 'team@localpool.de'
             @contract.password = 'Zebulon_4711'
           elsif @contract.organization.slug == 'mysmartgrid'
-            @contract.username = params[:contract][:sensor_id]
-            @contract.password = params[:contract][:x_token]
+            @contract.username = params[:meter][:contract][:sensor_id]
+            @contract.password = params[:meter][:contract][:x_token]
           end
 
           if @contract.save && @meter.save

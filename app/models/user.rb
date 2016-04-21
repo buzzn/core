@@ -43,6 +43,10 @@ class User < ActiveRecord::Base
 
   after_invitation_accepted :invoke_invitation_accepted_activity
 
+  scope :exclude_user, lambda {|user|
+    where('user_id NOT IN (?)', [user.id])
+  }
+
 
   def self.dummy
     self.where(email: 'sys@buzzn.net').first

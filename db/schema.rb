@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160223100219) do
+ActiveRecord::Schema.define(version: 20160413090939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -174,6 +174,11 @@ ActiveRecord::Schema.define(version: 20160223100219) do
   add_index "contracts", ["mode"], name: "index_contracts_on_mode", using: :btree
   add_index "contracts", ["organization_id"], name: "index_contracts_on_organization_id", using: :btree
   add_index "contracts", ["slug"], name: "index_contracts_on_slug", unique: true, using: :btree
+
+  create_table "conversations", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "dashboard_metering_points", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.boolean  "displayed",         default: false

@@ -197,4 +197,16 @@ module ApplicationHelper
       })
   end
 
+  def new_conversation
+    link_to(
+      content_tag(:i, t("create_conversation"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
+      new_conversation_path,
+      {
+        :remote       => true,
+        :class        => 'start_modal',
+        'data-toggle' => 'modal',
+        'data-target' => '#myModal'
+      })
+  end
+
 end

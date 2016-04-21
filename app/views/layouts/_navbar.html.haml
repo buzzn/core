@@ -40,6 +40,7 @@
                 %li= link_to(t("create_metering_point"), wizard_wizard_metering_points_path, {:remote => true, :class => 'start_modal', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-backdrop' => 'static'})
                 - if current_user.can_create?(Group)
                   %li= link_to(t("create_group"), new_group_path, {:remote => true, :class => 'start_modal', 'data-toggle' => 'modal', 'data-target'   => '#myModal', 'data-backdrop' => 'static'})
+          %li= link_to(content_tag(:i, nil, class: 'fa fa-comment'), conversations_path)
           %li.dropdown.badge-header-container
             %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
               %i.fa.fa-bell.fa-lg

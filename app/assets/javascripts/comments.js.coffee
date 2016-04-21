@@ -15,88 +15,90 @@ $(".comments-panel").ready ->
       $(this).on "ajax:beforeSend", (evt, xhr, settings) ->
         settings.data += '&socket_id=' + pusher.connection.socket_id
     channel.bind "new_comment", (comment) ->
-      if pusher.connection.socket_id != comment.socket_id
-        html = comment.html
-        destination = ""
-        if comment.root_type == "PublicActivity::ORM::ActiveRecord::Activity"
-          destination = "#activity_#{comment.root_id}"
-          $(destination).find(".child-comments").append(html).hide().show('slow');
-        else if comment.root_type == "Comment"
-          destination = "#comment_#{comment.root_id}"
-          $(destination).find(".child-comments").append(html).hide().show('slow');
+      html = comment.html
+      destination = ""
+      if comment.root_type == "PublicActivity::ORM::ActiveRecord::Activity"
+        destination = "#activity_#{comment.root_id}"
+        $(destination).find(".child-comments").append(html).hide().show('slow');
+      else if comment.root_type == "Comment"
+        destination = "#comment_#{comment.root_id}"
+        $(destination).find(".child-comments").append(html).hide().show('slow');
+      else if comment.root_type == "Conversation"
+        destination = "#conversation_#{comment.root_id}_comments-all"
+        $(destination).prepend(html).hide().show('slow');
+      else
+        destination = ".comments-all"
+        $(destination).prepend(html).hide().show('slow');
+
+      that = $("#comment_#{comment.id}")
+      that.find('time[data-time-ago]').timeago()
+
+      that.find(".vote-for").on "click", ->
+        $.ajax({url: '/comments/' + comment.id + '/voted', dataType: 'json'})
+          .success (data) ->
+            that.find(".likes").first().find(".likes-count").html(data.likes)
+            if data.liked_by_current_user
+              that.find(".likes").first().find(".vote-icon").removeClass("fa-heart-o").addClass("fa-heart")
+            else
+              that.find(".likes").first().find(".vote-icon").removeClass("fa-heart").addClass("fa-heart-o")
+            that.find(".likes").first().attr('data-original-title', data.voters + ' ' + "<span><div class='fa fa-heart'></div></span>" + ' ' + data.i18n_this_comment)
+
+
+      that.find(".comment-reply").on "click", ->
+        if that.find(".comment-answer").css("display") == "none"
+          that.find(".comment-answer").css("display", "block")
         else
-          destination = ".comments-all"
-          $(destination).prepend(html).hide().show('slow');
+          that.find(".comment-answer").css("display", "none")
 
-        that = $("#comment_#{comment.id}")
-        that.find('time[data-time-ago]').timeago()
+      that.find(".comment-view-all-answers").on "click", ->
+        that.find(".child-comments").find(".comment").each ->
+          $(this).show()
+        that.find(".comment-view-all-answers").hide()
 
-        that.find(".vote-for").on "click", ->
-          $.ajax({url: '/comments/' + comment.id + '/voted', dataType: 'json'})
-            .success (data) ->
-              that.find(".likes").first().find(".likes-count").html(data.likes)
-              if data.liked_by_current_user
-                that.find(".likes").first().find(".vote-icon").removeClass("fa-heart-o").addClass("fa-heart")
-              else
-                that.find(".likes").first().find(".vote-icon").removeClass("fa-heart").addClass("fa-heart-o")
-              that.find(".likes").first().attr('data-original-title', data.voters + ' ' + "<span><div class='fa fa-heart'></div></span>" + ' ' + data.i18n_this_comment)
+      that.find(".comment-form").find(".comment-form-show-image").on "click", ->
+        if that.find(".comment-form-image").css("display") == "none"
+          that.find(".comment-form-image").css("display", "block")
+          $(".comments-content").css("cssText", "top: 220px !important; right: -14px;")
+        else
+          that.find(".comment-form-image").css("display", "none")
+          $(".comments-content").css("cssText", "top: 143px !important; right: -14px;")
 
+      that.find(".comment-form").on "ajax:beforeSend", (evt, xhr, settings) ->
+        settings.data += '&socket_id=' + pusher.connection.socket_id
+        $(this).find('textarea')
+          .addClass('uneditable-input')
+          .attr('disabled', 'disabled')
 
-        that.find(".comment-reply").on "click", ->
-          if that.find(".comment-answer").css("display") == "none"
-            that.find(".comment-answer").css("display", "block")
-          else
-            that.find(".comment-answer").css("display", "none")
+      that.find(".comment-form").on "ajax:success", (evt, data, status, xhr) ->
+        $(this).find('textarea')
+          .removeClass('uneditable-input')
+          .removeAttr('disabled', 'disabled')
+          .val('')
+        $(this).find('form').get(0).reset()
+        $(this).find('.comment-form-image').css("display", "none")
 
-        that.find(".comment-view-all-answers").on "click", ->
-          that.find(".child-comments").find(".comment").each ->
-            $(this).show()
-          that.find(".comment-view-all-answers").hide()
+      that.find(".comment-form").on "ajax:error", (evt, data, status, xhr) ->
+        $(this).find('textarea')
+          .removeClass('uneditable-input')
+          .removeAttr('disabled', 'disabled')
 
-        that.find(".comment-form").find(".comment-form-show-image").on "click", ->
-          if that.find(".comment-form-image").css("display") == "none"
-            that.find(".comment-form-image").css("display", "block")
-            $(".comments-content").css("cssText", "top: 220px !important; right: -14px;")
-          else
-            that.find(".comment-form-image").css("display", "none")
-            $(".comments-content").css("cssText", "top: 143px !important; right: -14px;")
+      that.find('.set-chart-view').on 'click', ->
+        timestamp = $(this).data('timestamp')
+        resolution = $(this).data('resolution')
+        type = $(this).data('commentable-type')
+        id = $(this).data('commentable-id')
+        Chart.Functions.setResolution(resolution)
+        Chart.Functions.showLoadingBlockButtons()
+        if type == 'MeteringPoint'
+          type = 'metering_points'
+          Chart.Functions.setChartData(type, id, timestamp)
+          $('html, body').animate({ scrollTop: $('.metering_point_detail').offset().top}, 1000)
+        else if type == 'Group'
+          type = 'groups'
+          Chart.Functions.setChartDataMultiSeries(type, id, timestamp)
+          $('html, body').animate({ scrollTop: $('.group-chart').offset().top}, 1000)
 
-        that.find(".comment-form").on "ajax:beforeSend", (evt, xhr, settings) ->
-          settings.data += '&socket_id=' + pusher.connection.socket_id
-          $(this).find('textarea')
-            .addClass('uneditable-input')
-            .attr('disabled', 'disabled')
-
-        that.find(".comment-form").on "ajax:success", (evt, data, status, xhr) ->
-          $(this).find('textarea')
-            .removeClass('uneditable-input')
-            .removeAttr('disabled', 'disabled')
-            .val('')
-          $(this).find('form').get(0).reset()
-          $(this).find('.comment-form-image').css("display", "none")
-
-        that.find(".comment-form").on "ajax:error", (evt, data, status, xhr) ->
-          $(this).find('textarea')
-            .removeClass('uneditable-input')
-            .removeAttr('disabled', 'disabled')
-
-        that.find('.set-chart-view').on 'click', ->
-          timestamp = $(this).data('timestamp')
-          resolution = $(this).data('resolution')
-          type = $(this).data('commentable-type')
-          id = $(this).data('commentable-id')
-          Chart.Functions.setResolution(resolution)
-          Chart.Functions.showLoadingBlockButtons()
-          if type == 'MeteringPoint'
-            type = 'metering_points'
-            Chart.Functions.setChartData(type, id, timestamp)
-            $('html, body').animate({ scrollTop: $('.metering_point_detail').offset().top}, 1000)
-          else if type == 'Group'
-            type = 'groups'
-            Chart.Functions.setChartDataMultiSeries(type, id, timestamp)
-            $('html, body').animate({ scrollTop: $('.group-chart').offset().top}, 1000)
-
-        $(".likes").tooltip({html: true})
+      $(".likes").tooltip({html: true})
 
     channel.bind "likes_changed", (data) ->
       if pusher.connection.socket_id != data.socket_id

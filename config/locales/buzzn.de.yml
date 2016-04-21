@@ -883,5 +883,13 @@ de:
   data_saved_successfully: Die Daten wurden erfolgreich gespeichert.
   error_while_saving_data: Fehler beim Speichern der Daten.
 
+  conversations: Unterhaltungen
+  my_conversations: Meine Unterhaltungen
+  edit_conversation: Unterhaltung bearbeiten
+  create_conversation: Unterhaltung erstellen
+  new_conversation: Neue Unterhaltung
+  participating_users: Teilnehmende Nutzer
+  no_participating_users: Keine teilnehmenden Nutzer
+
 
 
