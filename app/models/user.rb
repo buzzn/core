@@ -47,6 +47,8 @@ class User < ActiveRecord::Base
     where('user_id NOT IN (?)', [user.id])
   }
 
+  scope :registered, -> { where('invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NOT NULL OR invitation_sent_at IS NULL') }
+  scope :unregistered, -> { where('invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL') }
 
   def self.dummy
     self.where(email: 'sys@buzzn.net').first
