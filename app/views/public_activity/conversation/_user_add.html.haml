@@ -1,0 +1,5 @@
+- single_content_for :action do
+  - if a.recipient && a.recipient.profile
+    = t('has_added_user_to_the_conversation', user: a.recipient.name)
+  - else
+    = t('has_added_someone_to_the_conversation')

@@ -159,6 +159,25 @@ class PublicActivity::ActivityDecorator < Draper::Decorator
         h.content_tag(:i, '', :class => "fa fa-comment fa-2x timeline-circle")
       end
 
+
+
+
+
+    when 'conversation.user_add'
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-user-plus fa-2x timeline-circle")
+      end
+
+    when 'conversation.user_leave'
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-user-times fa-2x timeline-circle")
+      end
+
+    when 'conversation.user_remove'
+      h.content_tag :div, :class => "timeline-icon bg-info" do
+        h.content_tag(:i, '', :class => "fa fa-user-times fa-2x timeline-circle")
+      end
+
     # when 'device.create'
     #   h.content_tag :div, :class => "timeline-icon bg-info" do
     #     h.content_tag(:i, '', :class => "fa fa-plus-square fa-2x timeline-circle")

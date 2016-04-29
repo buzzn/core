@@ -11,7 +11,7 @@ class GroupAuthorizer < ApplicationAuthorizer
     (user && resource.readable_by_community? ) ||
     resource.users.include?(user) ||
     resource.managers.map(&:friends).flatten.uniq.include?(user) && resource.readable_by_friends? ||
-    resource.member?(user)
+    resource.members.include?(user)
   end
 
   def updatable_by?(user)

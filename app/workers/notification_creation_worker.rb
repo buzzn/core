@@ -49,11 +49,11 @@ class NotificationCreationWorker
         user.send_notification('info', I18n.t('new_metering_point_user_request'), I18n.t('user_wants_to_join_your_metering_point', user: owner.name, metering_point: @activity.trackable.name), 0, metering_point_path(@activity.trackable))
       end
     when 'metering_point_user_request.reject'
-      email_users = @activity.trackable.managers
+      email_users = @activity.trackable.managers - [owner] + [@activity.recipient]
       email_users.each do |user|
         Notifier.send_email_notification_rejected_metering_point_user_request(user, owner, @activity.trackable, 'request').deliver_now
       end
-      badge_users = @activity.trackable.managers - [owner] + [@activity.recipient]
+      badge_users = email_users
       growl_users = email_users
       growl_users.each do |user|
         user.send_notification('info', I18n.t('rejected_metering_point_user_request'), @activity.trackable.name, 0, metering_point_path(@activity.trackable))
@@ -98,32 +98,32 @@ class NotificationCreationWorker
 
     ########## metering_point.observation ##########
     when 'metering_point.exceeds'
-      email_users = @activity.trackable.involved
+      email_users = @activity.trackable.involved - User.unsubscribed_from_notification(@activity.key, @activity.trackable)
       email_users.each do |user|
         Notifier.send_email_metering_point_exceeds_or_undershoots(user, @activity.trackable, 'exceeds').deliver_now
       end
-      badge_users = email_users
-      growl_users = email_users
+      badge_users = @activity.trackable.involved
+      growl_users = @activity.trackable.involved
       growl_users.each do |user|
         user.send_notification('info', I18n.t('metering_point_exceeded_max_watt', max_watt: @activity.trackable.max_watt), @activity.trackable.name, 0, metering_point_path(@activity.trackable))
       end
     when 'metering_point.undershoots'
-      email_users = @activity.trackable.involved
+      email_users = @activity.trackable.involved - User.unsubscribed_from_notification(@activity.key, @activity.trackable)
       email_users.each do |user|
         Notifier.send_email_metering_point_exceeds_or_undershoots(user, @activity.trackable, 'undershoots').deliver_now
       end
-      badge_users = email_users
-      growl_users = email_users
+      badge_users = @activity.trackable.involved
+      growl_users = @activity.trackable.involved
       growl_users.each do |user|
         user.send_notification('info', I18n.t('metering_point_undershot_min_watt', min_watt: @activity.trackable.min_watt), @activity.trackable.name, 0, metering_point_path(@activity.trackable))
       end
     when 'metering_point.offline'
-      email_users = @activity.trackable.involved
+      email_users = @activity.trackable.involved - User.unsubscribed_from_notification(@activity.key, @activity.trackable)
       email_users.each do |user|
         Notifier.send_email_notification_meter_offline(user, @activity.trackable).deliver_now
       end
-      badge_users = email_users
-      growl_users = email_users
+      badge_users = @activity.trackable.involved
+      growl_users = @activity.trackable.involved
       growl_users.each do |user|
         user.send_notification('info', I18n.t('metering_point_offline'), @activity.trackable.name, 0, metering_point_path(@activity.trackable))
       end
@@ -213,18 +213,18 @@ class NotificationCreationWorker
 
     ########## comment ###########
     when 'comment.create'
-      email_users = @activity.trackable.root.commentable.involved - [owner]
+      email_users = @activity.trackable.root.commentable.members - [owner] - User.unsubscribed_from_notification(@activity.key, @activity.trackable.root.commentable)
       email_users.each do |user|
         Notifier.send_email_new_comment(user, @activity.trackable.user, @activity.trackable.root.commentable, @activity.trackable.body).deliver_now
       end
-      badge_users = email_users
-      growl_users = email_users
+      badge_users = @activity.trackable.root.commentable.members - [owner]
+      growl_users = @activity.trackable.root.commentable.members - [owner]
       message = I18n.t('at') + ' ' + @activity.trackable.root.commentable.name
       growl_users.each do |user|
         user.send_notification('info', I18n.t('new_comment_from_user', username: @activity.trackable.user.name), message, 0, polymorphic_path(@activity.trackable.root.commentable))
       end
     when 'comment.liked'
-      Notifier.send_email_comment_liked(@activity.trackable.user, owner, @activity.trackable.body).deliver_now
+      Notifier.send_email_comment_liked(@activity.trackable.user, owner, @activity.trackable.body).deliver_now if @activity.trackable.user.wants_to_get_notified_by_email?(@activity.key, @activity.trackable.root.commentable)
       badge_users = [@activity.trackable.user]
       growl_users = badge_users
       message = I18n.t('at') + ' ' + @activity.trackable.root.commentable.name
@@ -242,8 +242,33 @@ class NotificationCreationWorker
       Notifier.send_email_appointed_group_manager(@activity.trackable, owner, @activity.recipient).deliver_now
       badge_users = @activity.recipient.involved - [owner]
       @activity.trackable.send_notification('info', I18n.t('appointed_group_manager'), I18n.t('user_appointed_you_group_manager_of_the_group', user: owner.name, group: @activity.recipient.name), 0, group_path(@activity.recipient))
-    end
 
+
+
+    ########### conversation ##########
+    when 'conversation.user_add'
+      badge_users = @activity.trackable.members - [owner]
+      growl_users = badge_users
+      growl_users.each do |user|
+        user.send_notification('info', I18n.t('new_user_in_conversation'), I18n.t('user_has_added_user_to_the_conversation', user: owner.name, user2: @activity.recipient.name), 0, conversations_path)
+      end
+    when 'conversation.user_leave'
+      badge_users = @activity.trackable.members - [owner]
+      growl_users = badge_users
+      growl_users.each do |user|
+        user.send_notification('info', I18n.t('user_left_conversation'), I18n.t('user_has_left_the_conversation', user: owner.name), 0, conversations_path)
+      end
+    when 'conversation.user_remove'
+      email_users = [@activity.recipient]
+      email_users.each do |user|
+        Notifier.send_email_removed_user_from_conversation(user, owner).deliver_now
+      end
+      badge_users = @activity.trackable.members - [owner] + [@activity.recipient]
+      growl_users = badge_users
+      growl_users.each do |user|
+        user.send_notification('info', I18n.t('user_removed_from_conversation'), I18n.t('user_has_removed_user_from_the_conversation', user: owner.name, user2: @activity.recipient.name), 0, conversations_path)
+      end
+    end
 
 
     #Since there is a link from BadgeNotification(BN) to the originial Activity the BN

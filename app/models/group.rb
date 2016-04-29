@@ -81,7 +81,7 @@ class Group < ActiveRecord::Base
   end
 
   def members
-    (MeteringPoint.includes(:users).by_group(self).collect(&:users).flatten).uniq
+    (MeteringPoint.by_group(self).collect(&:members).flatten).uniq
   end
 
   def in_metering_points

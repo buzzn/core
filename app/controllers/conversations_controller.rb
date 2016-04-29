@@ -14,9 +14,9 @@ class ConversationsController < ApplicationController
     if user_ids.any?
       user_ids.each do |user_id|
         User.find(user_id).add_role(:member, @conversation)
-        #TODO: create activity and notify users
       end
     end
+    flash[:notice] = t('conversation_created_successfully')
   end
 
   def index
@@ -38,22 +38,27 @@ class ConversationsController < ApplicationController
     @conversation.users.each do |user|
       if !user_ids.include?(user.id)
         user.remove_role(:member, @conversation)
-        #TODO: create activity and notify users
+        @conversation.create_activity(key: 'conversation.user_remove', owner: current_user, recipient: user)
       end
     end
     if user_ids.any?
       user_ids.each do |user_id|
-        User.find(user_id).add_role(:member, @conversation)
-        #TODO: create activity and notify users
+        user = User.find(user_id)
+        if !@conversation.members.include?(user)
+          user.add_role(:member, @conversation)
+          @conversation.create_activity(key: 'conversation.user_add', owner: current_user, recipient: user)
+        end
       end
     end
+    flash[:notice] = t('conversation_edited_successfully')
   end
 
   def unsubscribe
     @conversation = Conversation.find(params[:id])
     authorize_action_for(@conversation)
     current_user.remove_role(:member, @conversation)
-    #TODO: create activity and notify users
+    @conversation.create_activity(key: 'conversation.user_leave', owner: current_user)
+    flash[:notice] = t('conversation_left_successfully')
   end
   authority_actions :unsubscribe => 'update'
 

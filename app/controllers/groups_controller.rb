@@ -278,8 +278,8 @@ class GroupsController < ApplicationController
         redirect_to root_path
       end
     end
-
   end
+  authority_actions :kiosk => 'read'
 
   def widget
     response.headers.delete('X-Frame-Options') #Enables iFrames

@@ -126,7 +126,6 @@ class MeteringPointsController < ApplicationController
             flash[:error] = t('metering_point_user_invitation_already_sent') + '. ' + t('waiting_for_accepting') + '.'
           end
         else
-
           @new_user = User.unscoped.invite!({email: @email, invitation_message: params[:metering_point][:message]}, current_user)
           current_user.create_activity key: 'user.create_platform_invitation', owner: current_user, recipient: @new_user
           @new_user.add_role(:member, @metering_point)
@@ -137,11 +136,15 @@ class MeteringPointsController < ApplicationController
       end
     else
       @new_user = User.find(params[:metering_point][:new_users])
-      if MeteringPointUserRequest.create(user: @new_user, metering_point: @metering_point, mode: 'invitation')
-        @metering_point.create_activity(key: 'metering_point_user_invitation.create', owner: current_user, recipient: @new_user)
-        flash[:notice] = t('sent_metering_point_user_invitation_successfully')
+      if MeteringPointUserRequest.where(metering_point: @metering_point).where(user: @new_user).empty? && !@metering_point.users.include?(@new_user)
+        if MeteringPointUserRequest.create(user: @new_user, metering_point: @metering_point, mode: 'invitation')
+          @metering_point.create_activity(key: 'metering_point_user_invitation.create', owner: current_user, recipient: @new_user)
+          flash[:notice] = t('sent_metering_point_user_invitation_successfully')
+        else
+          flash[:error] = t('unable_to_send_metering_point_user_invitation')
+        end
       else
-        flash[:error] = t('unable_to_send_metering_point_user_invitation')
+        flash[:error] = t('metering_point_user_invitation_already_sent') + '. ' + t('waiting_for_accepting') + '.'
       end
     end
   end

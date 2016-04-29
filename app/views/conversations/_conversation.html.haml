@@ -14,5 +14,10 @@
           = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(conversation, current_user.id, "", nil) }
         .nano-content.pad-all.comments-content
           %ul.list-unstyled.media-block.comments-all{id: "conversation_#{conversation.id}_comments-all"}
-            - conversation.root_comments.each do |comment|
-              = render :partial => 'comments/comment', :collection => [comment], :as => :comment
+            - activities = conversation.activities
+            - activities_and_comments = (conversation.root_comments + activities).sort_by!(&:created_at).reverse!
+            - activities_and_comments.each do |object|
+              - if object.class.name == 'Comment'
+                = render :partial => 'comments/comment', :collection => [object], :as => :comment
+              - elsif object.class.name == 'PublicActivity::Activity'
+                = render_activity object, locals: {decorator: object.decorate} , layout: "layouts/activity_wrapper"

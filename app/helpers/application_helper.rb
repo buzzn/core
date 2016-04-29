@@ -69,7 +69,7 @@ module ApplicationHelper
     active_link_to(
       (
         content_tag(:i, nil, class: 'fa fa-dashboard')
-      ) + content_tag(:span, "Dashboard", class: "menu-title"),
+      ) + content_tag(:span, t('my_dashboard'), class: "menu-title"),
       dashboard_path(dashboard), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
@@ -91,6 +91,16 @@ module ApplicationHelper
         content_tag(:i, nil, class: 'fa fa-users')
       ) + content_tag(:span, group.name, class: "menu-title"),
       group_path(group), class: 'button white',
+      :wrap_tag => :li, :class_active => 'active-link'
+    )
+  end
+
+  def mainnav_conversations_path
+    active_link_to(
+      (
+        content_tag(:i, nil, class: 'fa fa-comments')
+      ) + content_tag(:span, t('my_conversations'), class: "menu-title"),
+      conversations_path, class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
   end

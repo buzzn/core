@@ -196,4 +196,12 @@ class Notifier < ActionMailer::Base
     mail(to: @receiver.email, subject: @subject)
   end
 
+
+
+  def send_email_removed_user_from_conversation(receiver, sender)
+    @receiver = receiver
+    @sender = sender
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('user_removed_from_conversation'))
+  end
+
 end

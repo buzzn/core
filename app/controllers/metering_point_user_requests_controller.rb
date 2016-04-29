@@ -49,13 +49,14 @@ class MeteringPointUserRequestsController < InheritedResources::Base
     if @metering_point_user_request.mode == 'request' && current_user.can_update?(@metering_point_user_request.metering_point) || @metering_point_user_request.mode == 'invitation'
       @metering_point_user_request.reject
       if @metering_point_user_request.save
-        flash[:notice] = t('rejected_metering_point_user_request')
         if @metering_point_user_request.mode == 'invitation'
           @metering_point_user_request.metering_point.create_activity(key: 'metering_point_user_invitation.reject', owner: current_user)
           redirect_to profile_path(@metering_point_user_request.user.profile)
+          flash[:notice] = t('rejected_metering_point_user_invitation')
         else
           @metering_point_user_request.metering_point.create_activity(key: 'metering_point_user_request.reject', owner: current_user, recipient: @metering_point_user_request.user)
           redirect_to metering_point_path(@metering_point_user_request.metering_point)
+          flash[:notice] = t('rejected_metering_point_user_request')
         end
       end
     else

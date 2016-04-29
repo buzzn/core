@@ -28,6 +28,7 @@ class User < ActiveRecord::Base
 
   has_many :access_tokens, class_name: 'Doorkeeper::AccessToken', dependent: :destroy, :foreign_key => :resource_owner_id
 
+  has_many :notification_unsubscribers
 
   delegate :slug, to: :profile
   delegate :name, to: :profile
@@ -117,6 +118,14 @@ class User < ActiveRecord::Base
     MeteringPoint.accessible_by_user(self).uniq.collect(&:decorate)
   end
 
+  def self.unsubscribed_from_notification(key, resource)
+    NotificationUnsubscriber.by_resource(resource).by_key(key).collect(&:user)
+  end
+
+  def wants_to_get_notified_by_email?(key, resource)
+    NotificationUnsubscriber.by_user(self).by_resource(resource).by_key(key).empty?
+  end
+
   def accessible_groups
     result = []
     result << Group.editable_by_user(self).collect(&:decorate)
@@ -138,9 +147,6 @@ class User < ActiveRecord::Base
     not_invitable = []
 
     metering_point.users.each do |user|
-      user.profile.nil? ? nil : not_invitable << user
-    end
-    MeteringPointUserRequest.where(metering_point: metering_point).collect(&:user).each do |user|
       user.profile.nil? ? nil : not_invitable << user
     end
     return result - not_invitable

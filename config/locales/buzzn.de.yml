@@ -28,6 +28,7 @@ de:
   new_down_device: Neues Bezugsgerät
   metering_point_offline: Zählpunkt offline
   your_metering_point_is_offline_now: "Dein Zählpunkt '%{metering_point_name}' ist offline."
+  is_offline_now: ist jetzt offline
   define_metering_point: Zählpunkt definieren
   smart_metering_provider: Smart Metering Anbieter
   join_this_metering_point: Diesem Zählpunkt beitreten
@@ -890,6 +891,24 @@ de:
   new_conversation: Neue Unterhaltung
   participating_users: Teilnehmende Nutzer
   no_participating_users: Keine teilnehmenden Nutzer
+  conversation_created_successfully: Die Unterhaltung wurde erfolgreich eingerichtet.
+  conversation_edited_successfully: Die Unterhaltung wurde erfolgreich bearbeitet.
+  conversation_left_successfully: Die Unterhaltung wurde verlassen.
+  has_added_someone_to_the_conversation: hat jemanden zu der Unterhaltung hinzugefügt.
+  has_added_user_to_the_conversation: "hat %{user} zu der Unterhaltung hinzugefügt."
+  has_left_the_conversation: "hat die Unterhaltung verlassen."
+  has_removed_user_from_the_conversation: "hat %{user} von der Unterhaltung entfernt."
+  has_removed_someone_to_the_conversation: hat jemanden von der Unterhaltung entfernt.
+  new_user_in_conversation: Neuer Nutzer in einer Unterhaltung
+  user_has_added_user_to_the_conversation: "%{user} hat %{user2} zu der Unterhaltung hinzugefügt."
+  user_left_conversation: "Unterhaltung wurde verlassen"
+  user_has_left_the_conversation: "%{user} hat die Unterhaltung verlassen."
+  user_removed_from_conversation: Nutzer aus Unterhaltung entfernt
+  user_has_removed_user_from_the_conversation: "%{user} hat %{user2} aus der Unterhaltung entfernt."
+  user_has_removed_you_from_the_conversation: "%{user} hat dich aus der Unterhaltung entfernt."
+  you_cannot_join_the_conversation_until_someone_adds_you_to_it: Du kanst der Unthaltung nicht wieder beitreten, es sei denn, jemand fügt dich wieder hinzu.
+  user_wrote_a_new_comment_at_your_conversation: "%{user} hat einen neuen Beitrag in euerer Unterhaltung verfasst."
+  wrote_a_new_comment_at_your_conversation: "hat einen neuen Beitrag in euerer Unterhaltung verfasst."
 
-
+  the_conversation: Die Unterhaltung
 

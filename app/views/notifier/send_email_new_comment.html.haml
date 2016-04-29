@@ -16,4 +16,12 @@
   %p= t('you_receive_this_message_because_you_subscribed_to_this_event')
   %p= t('to_unsubscribe_this_event_please_visit_your_metering_point_and_change_this_setting')
   %p= link_to @commentable.name, metering_point_url(@commentable)
+- elsif @commentable.is_a?(Conversation)
+  %p= t('user_wrote_a_new_comment_at_your_conversation', user: @sender.name)
+  %p= '----------------'
+  %p= @message
+  %p= '----------------'
+  %p= t('you_receive_this_message_because_you_subscribed_to_this_event')
+  %p= t('to_unsubscribe_this_event_please_visit_your_profile_and_change_this_setting')
+  %p= link_to t('my_conversations'), conversations_url
 %p= t('your_buzzn_team')

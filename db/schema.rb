@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160413090939) do
+ActiveRecord::Schema.define(version: 20160422110752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -416,6 +416,21 @@ ActiveRecord::Schema.define(version: 20160413090939) do
 
   add_index "meters", ["ancestry"], name: "index_meters_on_ancestry", using: :btree
   add_index "meters", ["slug"], name: "index_meters_on_slug", unique: true, using: :btree
+
+  create_table "notification_unsubscribers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.string   "notification_key"
+    t.string   "channel"
+    t.uuid     "user_id"
+    t.uuid     "trackable_id"
+    t.string   "trackable_type"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "notification_unsubscribers", ["trackable_id", "trackable_type"], name: "index_noti_unsub_trackable", using: :btree
+  add_index "notification_unsubscribers", ["user_id", "trackable_id", "trackable_type", "notification_key"], name: "index_noti_unsub_full", using: :btree
+  add_index "notification_unsubscribers", ["user_id", "trackable_id", "trackable_type"], name: "index_noti_unsub_user_and_trackable", using: :btree
+  add_index "notification_unsubscribers", ["user_id"], name: "index_notification_unsubscribers_on_user_id", using: :btree
 
   create_table "oauth_access_grants", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "token",                                            null: false
