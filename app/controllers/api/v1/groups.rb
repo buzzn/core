@@ -5,7 +5,7 @@ module API
       resource :groups do
 
         desc "Return all groups"
-        get "", root: :groups do
+        get root: :groups do
           group_ids = Group.where(readable: 'world').ids
           if current_user
             group_ids << Group.where(readable: 'community').ids

@@ -44,8 +44,8 @@ class MySmartGrid
   def get_month(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_month.to_time.to_i
     datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_month.to_time.to_i
-    puts datetime_end
-    puts datetime_start
+    Rails.log datetime_end
+    Rails.log datetime_start
     response = @conn.get do |req|
       req.url '?start='+datetime_start.to_s+'&end='+datetime_end.to_s+'&resolution=day&unit=kwhperyear'
   #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=month&unit=watt'
@@ -61,9 +61,9 @@ class MySmartGrid
   def get_hour(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_hour.to_time.to_i
     datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_hour.to_time.to_i
-    #puts datetime_end
-    #puts datetime_start
-    #puts "HOUR"
+    #Rails.log datetime_end
+    #Rails.log datetime_start
+    #Rails.log "HOUR"
     response = @conn.get do |req|
       req.url '?start='+(datetime_start-40).to_s+'&end='+datetime_end.to_s+'&resolution=minute&unit=watt'
   #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=hour&unit=watt'
@@ -81,17 +81,17 @@ class MySmartGrid
   def get_live
     datetime_start = Time.now.to_i - 300
     datetime_end   = Time.now.to_i
-    # puts datetime_end
-    # puts datetime_start
+    # Rails.log datetime_end
+    # Rails.log datetime_start
     response = @conn.get do |req|
       req.url '?start='+(datetime_start-40).to_s+'&end='+datetime_end.to_s+'&resolution=minute&unit=watt'
       req.headers["Accept"] = "application/json"
     end
     if response['content-length'] != "0"
-      puts response.body
+      Rails.log response.body
       return JSON.parse(response.body)
     else
-      puts "NO DATA FROM AMPERIX API"
+      Rails.log "NO DATA FROM AMPERIX API"
     end
   end
 
@@ -100,8 +100,8 @@ class MySmartGrid
   def get_year(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_year.to_time.to_i
     datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_year.to_time.to_i
-    puts datetime_end
-    puts datetime_start
+    Rails.log datetime_end
+    Rails.log datetime_start
     response = @conn.get do |req|
       req.url '?start='+datetime_start.to_s+'&end='+datetime_end.to_s+'&resolution=month&unit=kwhperyear'
   #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=month&unit=watt'
