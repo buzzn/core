@@ -49,6 +49,8 @@ class MeteringPoint < ActiveRecord::Base
   scope :privates, -> { where("readable in (?)", ["members"]) }
 
   scope :without_group, lambda { self.where(group: nil) }
+  scope :without_meter, lambda { self.where(meter: nil) }
+  scope :with_meter, lambda { self.where.not(meter: nil) }
 
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
@@ -241,22 +243,31 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def pv?
-    self.output? && !self.smart? && self.devices.any? && self.devices.first.primary_energy == 'sun'
+    self.output? &&
+    !self.smart? &&
+    self.devices.any? &&
+    self.devices.first.primary_energy == 'sun'
   end
 
   def bhkw_or_else?
-    self.output? && !self.smart?
+    self.output? &&
+    !self.smart?
   end
 
   def mysmartgrid?
-    self.smart? && metering_point_operator_contract && metering_point_operator_contract.organization.slug == "mysmartgrid"
+    self.smart? &&
+    !metering_point_operator_contract.nil? &&
+    metering_point_operator_contract.organization.slug == "mysmartgrid"
   end
 
   def discovergy?
-    self.smart? && metering_point_operator_contract && (metering_point_operator_contract.organization.slug == "discovergy" || metering_point_operator_contract.organization.slug == "buzzn-metering")
+    self.smart? &&
+    !metering_point_operator_contract.nil? &&
+    (metering_point_operator_contract.organization.slug == "discovergy" || metering_point_operator_contract.organization.slug == "buzzn-metering")
   end
 
   def buzzn_reader?
+    !metering_point_operator_contract.nil? &&
     metering_point_operator_contract.organization.slug == "buzzn-reader"
   end
 

@@ -55,6 +55,7 @@ RSpec.configure do |config|
   end
 
 
+
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
   end
@@ -73,6 +74,7 @@ RSpec.configure do |config|
 
   config.after(:each) do
     DatabaseCleaner.clean
+    Mongoid.purge!
   end
 
 end

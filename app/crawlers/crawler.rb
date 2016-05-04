@@ -81,7 +81,7 @@ class Crawler
           return {:power => power, :timestamp => timestamp}
         end
       else
-        puts request.inspect
+        logger.info request.inspect
       end
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -104,13 +104,13 @@ class Crawler
             return {:power => power, :timestamp => timestamp}
           end
         else
-          puts request.inspect
+          logger.info request.inspect
         end
       else
-        puts request.inspect
+        logger.info request.inspect
       end
     end
-    puts "THIS AINT neither DISCO nor MySmartGrid"
+    logger.info "THIS AINT neither DISCO nor MySmartGrid"
   end
 
 
@@ -131,10 +131,10 @@ class Crawler
           end
           return {:result => result}
         else
-          puts request.inspect
+          logger.info request.inspect
         end
       else
-        puts request.inspect
+        logger.info request.inspect
       end
     end
   end
@@ -152,7 +152,7 @@ class Crawler
       request     = my_smart_grid.get_hour(containing_timestamp)
       if request.any?
         request.each do |item|
-          #puts item.to_s
+          #logger.info item.to_s
           timestamp = item[0] * 1000
           if String.try_convert(item[1])== "-nan"
             item[1]=0
@@ -162,7 +162,7 @@ class Crawler
           end
         end
       else
-        puts request.inspect
+        logger.info request.inspect
       end
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -185,10 +185,10 @@ class Crawler
             result << [timestamp, power]
           end
         else
-          puts request.inspect
+          logger.info request.inspect
        end
       else
-        puts request.inspect
+        logger.info request.inspect
       end
     end
     return result
@@ -205,7 +205,7 @@ class Crawler
       request  = my_smart_grid.get_day(containing_timestamp)
       if request.any?
         request.each do |item|
-          #puts item.to_s
+          #logger.info item.to_s
           timestamp = item[0] * 1000
           if String.try_convert(item[1])== "-nan"
             item[1]=0
@@ -215,7 +215,7 @@ class Crawler
           end
         end
       else
-        puts request.inspect
+        logger.info request.inspect
       end
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -266,10 +266,10 @@ class Crawler
             first_reading = second_reading
           end
         else
-          puts request.inspect
+          logger.info request.inspect
         end
       else
-        puts request.inspect
+        logger.info request.inspect
       end
     end
     return result
@@ -289,7 +289,7 @@ class Crawler
       request  = my_smart_grid.get_month(containing_timestamp)
       if request.any?
         request.each do |item|
-        #puts item.to_s
+        #logger.info item.to_s
         timestamp = item[0] * 1000 - 720000 # GMT -2h
         if String.try_convert(item[1])== "-nan"
           item[1]=0
@@ -299,7 +299,7 @@ class Crawler
         end
       end
       else
-        puts request.inspect
+        logger.info request.inspect
       end
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -333,10 +333,10 @@ class Crawler
             i += 1
           end
         else
-          puts request.inspect
+          logger.info request.inspect
         end
       else
-        puts request.inspect
+        logger.info request.inspect
       end
     end
 
@@ -351,7 +351,7 @@ class Crawler
       request  = my_smart_grid.get_year(containing_timestamp)
       if request.any?
         request.each do |item|
-          #puts item.to_s
+          #logger.info item.to_s
           timestamp = item[0] * 1000 - 720000 # GMT -2h
           if String.try_convert(item[1])== "-nan"
             item[1]=0
@@ -361,7 +361,7 @@ class Crawler
           end
         end
       else
-        puts request.inspect
+        logger.info request.inspect
       end
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -400,10 +400,10 @@ class Crawler
           new_value = request['result'][request['result'].size - 1][mode]
           new_value != old_value ? result << [(Time.at(timestamp/1000).in_time_zone.beginning_of_month).to_i*1000, (new_value - old_value)/10000000000.0] : nil
         else
-          puts request.inspect
+          logger.info request.inspect
         end
       else
-        puts request.inspect
+        logger.info request.inspect
       end
     end
 
@@ -412,4 +412,3 @@ class Crawler
 
 
 end
-
