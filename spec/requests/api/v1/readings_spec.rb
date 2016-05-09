@@ -8,13 +8,13 @@ describe "Readings API" do
 
   it 'does gets a reading as admin' do
     access_token  = Fabricate(:admin_access_token)
-    reading       = Fabricate(:reading)
+    reading       = Fabricate(:reading_with_metering_point)
     get_with_token "/api/v1/readings/#{reading.id.to_s}", access_token.token
     expect(response).to have_http_status(200)
   end
 
   it 'does get a reading as manager' do
-    reading       = Fabricate(:reading)
+    reading       = Fabricate(:reading_with_metering_point_and_manager)
     manager       = reading.metering_point.managers.first
     access_token  = Fabricate(:access_token, resource_owner_id: manager.id)
     get_with_token "/api/v1/readings/#{reading.id.to_s}", access_token.token
@@ -22,7 +22,7 @@ describe "Readings API" do
   end
 
   it 'does not get a reading as stranger' do
-    reading       = Fabricate(:reading)
+    reading       = Fabricate(:reading_with_metering_point)
     access_token  = Fabricate(:access_token)
     get_with_token "/api/v1/readings/#{reading.id.to_s}", access_token.token
     expect(response).to have_http_status(403)
@@ -57,7 +57,7 @@ describe "Readings API" do
     timestamp = "Wed Apr 13 2016 14:07:35 GMT+0200 (CEST)"
     watt_hour = 80616
     power = 90
-    
+
     request_params = {
       metering_point_id: metering_point.id,
       timestamp: timestamp,
