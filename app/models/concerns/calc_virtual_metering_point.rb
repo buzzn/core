@@ -58,6 +58,7 @@ module CalcVirtualMeteringPoint
       i += 1
     end
     result = []
+
     for i in 0...watts.length
       result << [
         timestamps[i],
@@ -131,19 +132,18 @@ module CalcVirtualMeteringPoint
 
 
 
-
   def convert_to_array(data, resolution_format, factor)
     hours = []
     data.each do |hour|
-      if resolution_format == 'year_to_months' || resolution_format == 'month_to_days' || resolution_format == 'year' || resolution_format == 'month' || resolution_format == 'day'
+      if %w{ year_to_months month_to_days year month day }.include?(resolution_format)
         hours << [
           hour['firstTimestamp'].to_i*1000,
-          hour['consumption'].to_i/10000000000.0 * factor
+          hour['consumption'] * factor
         ]
       else
         hours << [
           hour['firstTimestamp'].to_i*1000,
-          hour['avgPower'].to_i/1000 * factor
+          hour['avgPower'] * factor
         ]
       end
     end
@@ -152,42 +152,7 @@ module CalcVirtualMeteringPoint
 
 
 
-
-
-  def convert_to_array_build_timestamp(data, resolution_format, containing_timestamp)
-    hours = []
-
-    data.each do |value|
-
-      timestamp = Time.utc(
-        value[:_id][:yearly]   || 2000,
-        value[:_id][:monthly]  || 1,
-        value[:_id][:dayly]    || 1,
-        value[:_id][:hourly]   || 0,
-        value[:_id][:minutely] || 0,
-        value[:_id][:secondly] || 0
-      )
-
-      if resolution_format == 'year_to_months' || resolution_format == 'month_to_days' || resolution_format == 'year' || resolution_format == 'month' || resolution_format == 'day'
-        hours << [
-          timestamp.to_i*1000,
-          value['consumption'].to_i/10000000000.0
-        ]
-      else
-        hours << [
-          timestamp.to_i*1000,
-          value['avgPower'].to_i/1000
-        ]
-      end
-
-    end
-    return hours
-  end
-
-
-
-
-  private
+private
 
   # this function is looking for the index of a special value in an array.
   # If the value is not in the array it returns the next index dependent on the resolution

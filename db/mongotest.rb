@@ -378,3 +378,77 @@ db.readings.aggregate(
 
 
 
+
+
+
+
+
+
+map = %Q{
+  function() {
+    var quarter;
+    var mins = this.time.getMinutes();
+    if(mins <= 14)
+    	quarter = 0;
+    else if(mins<=29)
+    	quarter = 15;
+    else if(mins<=44)
+    	quarter = 30;
+    else
+    	quarter = 45;
+      var time_at_minute = new Date(this.time.getFullYear(),
+          this.time.getMonth(),
+          this.time.getDate(),
+          this.time.getHours(),
+          quarter);
+
+    emit(time_at_minute, {
+    	count: 1,
+    	power: this.power,
+    	volume: this.amount,
+    	total: this.total,
+    	low: this.power,
+    	high: this.power,
+    	open: this.power,
+    	close: this.power,
+    });
+  }
+}
+
+reduce = %Q{
+  function(key, values) {
+    var powers = 0.0;
+    var volume = 0.0;
+    var total = 0.0;
+    var high = values[0].power;
+    var low = values[0].power;
+    var count = 0;
+    values.forEach(function(value)
+    {
+      powers += value.power;
+      volume+= value.volume;
+      total+= value.total;
+      if(value.power > high)
+        high = value.power;
+      if(value.power < low)
+        low = value.power;
+        count+=1;
+    });
+    var result = {
+      open: values[0].power,
+      close: values[values.length-1].power,
+      high: high,
+      low: low,
+      power: powers/count,
+      volume: volume,
+      total: total,
+      count: count,
+    };
+    return result;
+  }
+}
+
+
+Reading.where( source: 'slp', :time.gte => Time.new(2016,2,1).beginning_of_month ).map_reduce(map, reduce).out(inline: true).each do |document|
+  p document
+end

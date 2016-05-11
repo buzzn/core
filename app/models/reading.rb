@@ -38,73 +38,62 @@ class Reading
     source == 'user_input'
   end
 
-  def self.aggregate(resolution_format, metering_point_ids=['slp'], containing_timestamp=nil)
+  def self.aggregate(resolution_format, metering_point_ids=['slp'], timestamp)
     resolution_formats = {
       year_to_months:   ['year', 'month'],
       month_to_days:    ['year', 'month', 'dayOfMonth'],
-      week_to_days:     ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek'],
-      day_to_hours:     ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour'],
-      day_to_minutes:   ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute'],
-      hour_to_minutes:  ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute'],
-      minute_to_seconds:['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute', 'second'],
+      week_to_days:     ['year', 'month', 'dayOfMonth'],
+      day_to_hours:     ['year', 'month', 'dayOfMonth', 'hour'],
+      day_to_minutes:   ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
+      hour_to_minutes:  ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
+      minute_to_seconds:['year', 'month', 'dayOfMonth', 'hour', 'minute', 'second'],
 
       day:              ['year', 'month', 'dayOfMonth'],
       month:            ['year', 'month'],
       year:             ['year'],
 
-      year_to_minutes:  ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute'],
-      month_to_minutes: ['year', 'month', 'dayOfMonth', 'week', 'dayOfWeek', 'hour', 'minute']
+      year_to_minutes:  ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
+      month_to_minutes: ['year', 'month', 'dayOfMonth', 'hour', 'minute']
     }
     resolution = resolution_formats[resolution_format.to_sym]
 
-
-    @time_zone          = 'Berlin'
-    date                = Time.now
-    @location_time_now  = ActiveSupport::TimeZone[@time_zone].local(date.year, date.month, date.day, date.hour, date.min, date.sec)
-
-    if containing_timestamp
-      @location_time = DateTime.strptime((containing_timestamp.to_i/1000).to_s, "%s").in_time_zone
-    else
-      @location_time = @location_time_now
-    end
-
     case resolution_format.to_sym
     when :year_to_months
-      @start_time = @location_time.beginning_of_year
-      @end_time   = @location_time.end_of_year
+      @start_time = timestamp.beginning_of_year
+      @end_time   = timestamp.end_of_year
     when :month_to_days
-      @start_time = @location_time.beginning_of_month
-      @end_time   = @location_time.end_of_month
+      @start_time = timestamp.beginning_of_month
+      @end_time   = timestamp.end_of_month
     when :week_to_days
-      @start_time = @location_time.beginning_of_week
-      @end_time   = @location_time.end_of_week
+      @start_time = timestamp.beginning_of_week
+      @end_time   = timestamp.end_of_week
     when :day_to_hours
-      @start_time = @location_time.beginning_of_day
-      @end_time   = @location_time.end_of_day
+      @start_time = timestamp.beginning_of_day
+      @end_time   = timestamp.end_of_day
     when :day_to_minutes
-      @start_time = @location_time.beginning_of_day
-      @end_time   = @location_time.end_of_day
+      @start_time = timestamp.beginning_of_day
+      @end_time   = timestamp.end_of_day
     when :hour_to_minutes
-      @start_time = @location_time.beginning_of_hour
-      @end_time   = @location_time.end_of_hour
+      @start_time = timestamp.beginning_of_hour
+      @end_time   = timestamp.end_of_hour
     when :minute_to_seconds
-      @start_time = @location_time.beginning_of_minute
-      @end_time   = @location_time.end_of_minute
+      @start_time = timestamp.beginning_of_minute
+      @end_time   = timestamp.end_of_minute
     when :day
-      @start_time = @location_time.beginning_of_day
-      @end_time   = @location_time.end_of_day
+      @start_time = timestamp.beginning_of_day
+      @end_time   = timestamp.end_of_day
     when :month
-      @start_time = @location_time.beginning_of_month
-      @end_time   = @location_time.end_of_month
+      @start_time = timestamp.beginning_of_month
+      @end_time   = timestamp.end_of_month
     when :year
-      @start_time = @location_time.beginning_of_year
-      @end_time   = @location_time.end_of_year
+      @start_time = timestamp.beginning_of_year
+      @end_time   = timestamp.end_of_year
     when :year_to_minutes
-      @start_time = @location_time.beginning_of_year
-      @end_time   = @location_time.end_of_year
+      @start_time = timestamp.beginning_of_year
+      @end_time   = timestamp.end_of_year
     when :month_to_minutes
-      @start_time = @location_time.beginning_of_month
-      @end_time   = @location_time.end_of_month
+      @start_time = timestamp.beginning_of_month
+      @end_time   = timestamp.end_of_month
     else
       puts resolution_format.class
       puts resolution
@@ -112,9 +101,9 @@ class Reading
       return
     end
 
-    if (metering_point_ids.include?('slp') || metering_point_ids.include?('sep_pv') || metering_point_ids.include?('sep_bhkw')) && @end_time > Time.now
-      @end_time = Time.now
-    end
+    # if (metering_point_ids.include?('slp') || metering_point_ids.include?('sep_pv') || metering_point_ids.include?('sep_bhkw')) && @end_time > Time.now
+    #   @end_time = Time.now
+    # end
 
     # start pipe
     pipe = []
@@ -123,11 +112,12 @@ class Reading
     # match
     match = { "$match" => {
                 timestamp: {
-                  "$gte" => @start_time.utc,
-                  "$lt"  => @end_time.utc
+                  "$gte" => @start_time,
+                  "$lt"  => @end_time
                 }
               }
             }
+
     if metering_point_ids[0] == 'slp'
       metering_point_or_fake = { source: { "$in" => ['slp'] } }
     elsif metering_point_ids[0] == 'sep_pv'
@@ -158,7 +148,16 @@ class Reading
               }
     formats = {}
     resolution.each do |format|
-      formats.merge!({ "#{format.gsub('OfMonth','')}ly" => { "$#{format}" => "$timestamp" } })
+
+      offset = timestamp.utc_offset*1000
+
+      formats.merge!({
+        "#{format.gsub('OfMonth','')}ly" => {
+          "$#{format}" => {
+            "$add" => ["$timestamp", offset]
+          }
+        }
+      })
     end
     project["$project"].merge!(formats)
     pipe << project
@@ -172,11 +171,11 @@ class Reading
     # group
     group = {
               "$group" => {
-                firstWattHour:      { "$first"  => "$watt_hour" },
-                lastWattHour:       { "$last"   => "$watt_hour" },
-                avgPower:           { "$avg"    => "$power" },
-                firstTimestamp:     { "$first"  => "$timestamp" },
-                lastTimestamp:      { "$last"   => "$timestamp" }
+                firstWattHour:  { "$first"  => "$watt_hour" },
+                lastWattHour:   { "$last"   => "$watt_hour" },
+                avgPower:       { "$avg"    => "$power" },
+                firstTimestamp: { "$first"  => "$timestamp" },
+                lastTimestamp:  { "$last"  => "$timestamp" },
               }
             }
     formats = {_id: {}}
@@ -186,9 +185,8 @@ class Reading
     end
 
     resolution.each do |format|
-      formats[:_id].merge!({ "#{format.gsub('OfMonth','')}ly" =>  "$#{format.gsub('OfMonth','')}ly" })
+      formats[:_id].merge!({ "#{format.gsub('OfMonth','')}ly" => "$#{format.gsub('OfMonth','')}ly" })
     end
-
     group["$group"].merge!(formats)
     pipe << group
 
