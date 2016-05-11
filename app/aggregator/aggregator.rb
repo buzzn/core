@@ -18,7 +18,7 @@ class Aggregator
   def chart(chart_params = {})
     seconds_to_process = Benchmark.realtime do
       @chart_items = []
-      timestamp  = chart_params.fetch(:timestamp, DateTime.now) || DateTime.now
+      timestamp  = chart_params.fetch(:timestamp, Time.now.in_time_zone) || Time.now.in_time_zone
       resolution = chart_params.fetch(:resolution, 'day_to_hours') || 'day_to_hours'
 
       # sorting metering_points
@@ -53,7 +53,7 @@ class Aggregator
 
       #slp
       if slp_metering_points.any?
-        collection = Reading.aggregate(resolution, ['slp'], timestamp.to_i*1000)
+        collection = Reading.aggregate(resolution, ['slp'], timestamp)
         @chart_items << convert_to_array(collection, resolution, 1)
       end
 
