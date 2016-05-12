@@ -222,6 +222,9 @@ de:
 
   find_and_join_group: Gruppe finden und beitreten
   group_admin: Gruppen Admin
+  remove_me_as_group_manager: Als Gruppenadmin zurückziehen
+  you_will_no_longer_be_able_to_edit_this_group: "Du wirst diese Gruppe nicht länger bearbeiten können."
+  you_can_not_be_removed_as_role_because_you_are_the_only_one_with_this_role: "Du kannst Dich leider nicht als %{role} zurückziehen da Du der einzige mit dieser Rolle bist. Stelle bitte sicher, dass es noch einen anderen %{role} gibt und versuche es erneut."
   groups: Gruppen
   edit_group: Gruppe bearbeiten
   create_group: Gruppe erstellen
@@ -692,6 +695,9 @@ de:
   my_groups: Meine Gruppen
   loading: lädt
   metering_point_admin: Zählpunkt Admin
+  removed_role_successfully: "Du bist ab jetzt nicht länger %{role} von %{resource}."
+  remove_me_as_metering_point_manager: "Als Zählpunktadmin zurückziehen"
+  you_will_no_longer_be_able_to_edit_this_metering_point: "Du wirst diesen Zählpunkt nicht länger bearbeiten können."
   readable_by: Sichtbar für
   leave_this_group: Diese Gruppe verlassen
   trend_chart: Verlaufs-Chart

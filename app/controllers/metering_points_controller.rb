@@ -197,6 +197,18 @@ class MeteringPointsController < ApplicationController
   end
   authority_actions :add_manager_update => 'update'
 
+  def remove_manager_update
+    @metering_point = MeteringPoint.find(params[:id])
+    authorize_action_for @metering_point
+    if @metering_point.managers.size > 1
+      current_user.remove_role(:manager, @metering_point)
+      flash[:notice] = t('removed_role_successfully', role: t('metering_point_admin'), resource: @metering_point.name)
+    else
+      flash[:error] = t('you_can_not_be_removed_as_role_because_you_are_the_only_one_with_this_role', role: t('group_admin'))
+    end
+  end
+  authority_actions :remove_manager_update => 'update'
+
 
 
 
