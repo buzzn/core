@@ -107,22 +107,23 @@ module CalcVirtualMeteringPoint
 
 
 
-  def convert_to_array(data, resolution_format, factor)
-    hours = []
-    data.each do |hour|
-      if %w{ year_to_months month_to_days year month day }.include?(resolution_format)
-        hours << [
-          hour['firstTimestamp'].to_i*1000,
-          hour['consumption'] * factor
+  def convert_to_array(collection, resolution, factor)
+    items = []
+    collection.each do |document|
+      if %w{ year_to_months month_to_days year month day }.include?(resolution)
+        items << [
+          document['firstTimestamp'].to_i*1000,
+          document['sumEnergyAMilliWattHour'] * factor,
+          document['sumEnergyBMilliWattHour'] * factor
         ]
       else
-        hours << [
-          hour['firstTimestamp'].to_i*1000,
-          hour['avgPower'] * factor
+        items << [
+          document['firstTimestamp'].to_i*1000,
+          document['avgPowerMilliwatt'] * factor
         ]
       end
     end
-    return hours
+    return items
   end
 
 

@@ -33,16 +33,16 @@ describe "Aggregate API" do
   it 'does aggregate month_to_days slp as stranger in wintertime' do
     metering_point = Fabricate(:metering_point, readable: 'world')
 
-    watt_hour = 0
+    energy_a_milliwatt_hour = 0
     timestamp = Time.new(2016,1,1)
     (24*30).times do |i|
       Fabricate(:reading,
         source: 'slp',
         timestamp: timestamp,
-        watt_hour: watt_hour,
-        power: 930*1000
+        energy_a_milliwatt_hour: energy_a_milliwatt_hour,
+        power_milliwatt: 930*1000
       )
-      watt_hour += 1300*1000
+      energy_a_milliwatt_hour += 1300*1000
       timestamp += 1.hour
     end
 
@@ -62,6 +62,7 @@ describe "Aggregate API" do
     json.each do |item|
       expect(Time.at(item[0]/1000)).to eq(timestamp)
       expect(item[1]).to eq(23*1300*1000)
+      expect(item[2]).to eq(nil)
       timestamp += 1.day
     end
   end
@@ -72,19 +73,18 @@ describe "Aggregate API" do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:metering_point)
 
-    watt_hour = 0
+    energy_a_milliwatt_hour = 0
     timestamp = Time.new(2016,6,1)
     (24*30).times do |i|
       Fabricate(:reading,
         source: 'slp',
         timestamp: timestamp,
-        watt_hour: watt_hour,
-        power: 930*1000
+        energy_a_milliwatt_hour: energy_a_milliwatt_hour,
+        power_milliwatt: 930*1000
       )
-      watt_hour += 1300*1000
+      energy_a_milliwatt_hour += 1300*1000
       timestamp += 1.hour
     end
-
 
     request_params = {
       metering_point_ids: metering_point.id,
@@ -112,17 +112,17 @@ describe "Aggregate API" do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:metering_point)
 
-    watt_hour = 0
+    energy_a_milliwatt_hour = 0
     timestamp = Time.new(2016,2,1)
     # 3 hours * 60 minutes * 60/2 seconds
     (3*60*30).times do |i|
       Fabricate(:reading,
         source: 'slp',
         timestamp: timestamp,
-        watt_hour: watt_hour,
-        power: 930*1000
+        energy_a_milliwatt_hour: energy_a_milliwatt_hour,
+        power_milliwatt: 930*1000
       )
-      watt_hour += 1300*1000
+      energy_a_milliwatt_hour += 1300*1000
       timestamp += 2.second
     end
 
@@ -151,16 +151,16 @@ describe "Aggregate API" do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:metering_point)
 
-    watt_hour = 0
+    energy_a_milliwatt_hour = 0
     timestamp = Time.new(2016,2,1)
     4.times do |i|
       Fabricate(:reading,
         source: 'slp',
         timestamp: timestamp,
-        watt_hour: watt_hour,
-        power: 930*1000
+        energy_a_milliwatt_hour: energy_a_milliwatt_hour,
+        power_milliwatt: 930*1000
       )
-      watt_hour += 1300*1000
+      energy_a_milliwatt_hour += 1300*1000
       timestamp += 15.minutes
     end
 

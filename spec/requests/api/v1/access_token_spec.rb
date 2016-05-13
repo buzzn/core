@@ -44,7 +44,4 @@ describe "AccessTokens API" do
     expect(response).to have_http_status(201)
   end
 
-
-
-
 end

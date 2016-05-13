@@ -25,17 +25,19 @@ module API
 
         desc "Create a Reading"
         params do
-          requires :metering_point_id, type: String,   desc: "The ID of metering point"
-          requires :timestamp,         type: DateTime, desc: "DateTime of the reading"
-          requires :watt_hour,         type: Integer,  desc: "work in watt hour"
-          requires :power,             type: Integer,  desc: "current power in Watt"
+          requires :metering_point_id,        type: String,   desc: "The ID of metering point"
+          requires :timestamp,                type: DateTime, desc: "DateTime of the reading"
+          requires :energy_a_milliwatt_hour,  type: Integer,  desc: "energy A(often consumption) in Milliwatt Hour for the first register"
+          optional :energy_b_milliwatt_hour,  type: Integer,  desc: "energy B(often production) in Milliwatt Hour for the second register"
+          requires :power_milliwatt,          type: Integer,  desc: "power in Milliwatt"
         end
         post do
           reading = Reading.new(
-            metering_point_id: params[:metering_point_id],
-            timestamp: params[:timestamp],
-            watt_hour: params[:watt_hour],
-            power: params[:power]
+            metering_point_id:        params[:metering_point_id],
+            timestamp:                params[:timestamp],
+            energy_a_milliwatt_hour:  params[:energy_a_milliwatt_hour],
+            energy_b_milliwatt_hour:  params[:energy_b_milliwatt_hour],
+            power_milliwatt:          params[:power_milliwatt]
           )
           if current_user && current_user.can_create?(reading)
             reading.save!
