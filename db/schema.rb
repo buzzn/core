@@ -427,6 +427,7 @@ ActiveRecord::Schema.define(version: 20160422110752) do
     t.datetime "updated_at",       null: false
   end
 
+  add_index "notification_unsubscribers", ["trackable_id", "trackable_type", "notification_key"], name: "index_noti_unsub_trackable_and_key", using: :btree
   add_index "notification_unsubscribers", ["trackable_id", "trackable_type"], name: "index_noti_unsub_trackable", using: :btree
   add_index "notification_unsubscribers", ["user_id", "trackable_id", "trackable_type", "notification_key"], name: "index_noti_unsub_full", using: :btree
   add_index "notification_unsubscribers", ["user_id", "trackable_id", "trackable_type"], name: "index_noti_unsub_user_and_trackable", using: :btree
