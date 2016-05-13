@@ -4,11 +4,12 @@ class Reading
 
   after_create :push_reading
 
-  field :contract_id,   type: String
-  field :metering_point_id,   type: String
-  field :timestamp,     type: DateTime
-  field :watt_hour,     type: Integer
-  field :power,         type: Integer
+  field :contract_id
+  field :metering_point_id
+  field :timestamp,               type: DateTime
+  field :energy_a_milliwatt_hour, type: Integer
+  field :energy_b_milliwatt_hour, type: Integer
+  field :power_milliwatt,         type: Integer
   field :reason
   field :source
   field :quality
@@ -20,16 +21,16 @@ class Reading
   index({ metering_point_id: 1, timestamp: 1 })
   index({ metering_point_id: 1, source: 1 })
 
-  validate :watt_hour_has_to_grow, if: :user_input?
+  validate :energy_milliwatt_hour_has_to_grow, if: :user_input?
 
   def metering_point
     MeteringPoint.find(self.metering_point_id)
   end
 
-  def watt_hour_has_to_grow
+  def energy_milliwatt_hour_has_to_grow
     reading_before = Reading.last_before_user_input(metering_point_id, timestamp)
-    if !reading_before.nil? && reading_before[:watt_hour] > watt_hour
-      self.errors.add(:watt_hour, "is lower than the last one")
+    if !reading_before.nil? && reading_before[:energy_milliwatt_hour] > energy_milliwatt_hour
+      self.errors.add(:energy_milliwatt_hour, "is lower than the last one")
     end
   end
 
@@ -40,20 +41,20 @@ class Reading
 
   def self.aggregate(resolution_format, metering_point_ids=['slp'], timestamp)
     resolution_formats = {
-      year_to_months:   ['year', 'month'],
-      month_to_days:    ['year', 'month', 'dayOfMonth'],
-      week_to_days:     ['year', 'month', 'dayOfMonth'],
-      day_to_hours:     ['year', 'month', 'dayOfMonth', 'hour'],
-      day_to_minutes:   ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
-      hour_to_minutes:  ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
-      minute_to_seconds:['year', 'month', 'dayOfMonth', 'hour', 'minute', 'second'],
+      year_to_months:     ['year', 'month'],
+      month_to_days:      ['year', 'month', 'dayOfMonth'],
+      week_to_days:       ['year', 'month', 'dayOfMonth'],
+      day_to_hours:       ['year', 'month', 'dayOfMonth', 'hour'],
+      day_to_minutes:     ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
+      hour_to_minutes:    ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
+      minute_to_seconds:  ['year', 'month', 'dayOfMonth', 'hour', 'minute', 'second'],
 
-      day:              ['year', 'month', 'dayOfMonth'],
-      month:            ['year', 'month'],
-      year:             ['year'],
+      day:                ['year', 'month', 'dayOfMonth'],
+      month:              ['year', 'month'],
+      year:               ['year'],
 
-      year_to_minutes:  ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
-      month_to_minutes: ['year', 'month', 'dayOfMonth', 'hour', 'minute']
+      year_to_minutes:    ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
+      month_to_minutes:   ['year', 'month', 'dayOfMonth', 'hour', 'minute']
     }
     resolution = resolution_formats[resolution_format.to_sym]
 
@@ -141,8 +142,9 @@ class Reading
     project = {
                 "$project" => {
                   metering_point_id: 1,
-                  watt_hour: 1,
-                  power: 1,
+                  energy_a_milliwatt_hour: 1,
+                  energy_b_milliwatt_hour: 1,
+                  power_milliwatt: 1,
                   timestamp: 1
                 }
               }
@@ -171,11 +173,13 @@ class Reading
     # group
     group = {
               "$group" => {
-                firstWattHour:  { "$first"  => "$watt_hour" },
-                lastWattHour:   { "$last"   => "$watt_hour" },
-                avgPower:       { "$avg"    => "$power" },
-                firstTimestamp: { "$first"  => "$timestamp" },
-                lastTimestamp:  { "$last"  => "$timestamp" },
+                firstEnergyAMilliWattHour:  { "$first"  => "$energy_a_milliwatt_hour" },
+                lastEnergyAMilliWattHour:   { "$last"   => "$energy_a_milliwatt_hour" },
+                firstEnergyBMilliWattHour:  { "$first"  => "$energy_b_milliwatt_hour" },
+                lastEnergyBMilliWattHour:   { "$last"   => "$energy_b_milliwatt_hour" },
+                avgPowerMilliwatt:          { "$avg"    => "$power_milliwatt" },
+                firstTimestamp:             { "$first"  => "$timestamp" },
+                lastTimestamp:              { "$last"   => "$timestamp" },
               }
             }
     formats = {_id: {}}
@@ -200,10 +204,11 @@ class Reading
     project = {
                 "$project" => {
                   metering_point_id: 1,
-                  consumption:  { "$subtract" => [ "$lastWattHour", "$firstWattHour" ] },
-                  avgPower:       "$avgPower",
-                  firstTimestamp: "$firstTimestamp",
-                  lastTimestamp:  "$lastTimestamp"
+                  sumEnergyAMilliWattHour: { "$subtract" => [ "$lastEnergyAMilliWattHour", "$firstEnergyAMilliWattHour" ] },
+                  sumEnergyBMilliWattHour: { "$subtract" => [ "$lastEnergyBMilliWattHour", "$firstEnergyBMilliWattHour" ] },
+                  avgPowerMilliwatt:      "$avgPowerMilliwatt",
+                  firstTimestamp:         "$firstTimestamp",
+                  lastTimestamp:          "$lastTimestamp"
                 }
               }
     pipe << project
@@ -219,8 +224,9 @@ class Reading
     if metering_point_ids.size > 1
       group = {
                 "$group" => {
-                  avgPower:      { "$sum"  => "$avgPower" },
-                  consumption:   { "$sum"  => "$consumption" }
+                  avgPowerMilliwatt:       {"$sum"  => "$avgPowerMilliwatt" },
+                  sumEnergyAMilliWattHour: {"$sum"  => "$sumEnergyAMilliWattHour" },
+                  sumEnergyBMilliWattHour: {"$sum"  => "$sumEnergyBMilliWattHour" }
                 }
               }
       formats = {_id: {}}
@@ -356,34 +362,33 @@ class Reading
     readings = Reading.where(:timestamp.gte => (Time.now - 15.minutes), :timestamp.lt => (Time.now + 15.minutes), source: source)
     if readings.any?
       firstTimestamp = readings.first.timestamp.to_i*1000
-      firstValue = readings.first.power/1000
+      firstValue = readings.first.milliwatt/1000
       values << [firstTimestamp, firstValue]
       return values
     end
     return nil
   end
 
-  private
 
-    def push_reading
-      if self.source != 'slp' && self.source != 'sep_bhkw' && self.source != 'sep_pv' && self.source != 'user_input' # don't push non-smart records
-        if self.timestamp > 30.seconds.ago # don't push old readings
-          Sidekiq::Client.push({
-           'class' => PushReadingWorker,
-           'queue' => :default,
-           'args' => [
-                      metering_point_id,
-                      watt_hour,
-                      power/1000,
-                      timestamp.to_i*1000
-                     ]
-          })
-        end
+
+private
+
+  def push_reading
+    if self.source != 'slp' && self.source != 'sep_bhkw' && self.source != 'sep_pv' && self.source != 'user_input' # don't push non-smart records
+      if self.timestamp > 30.seconds.ago # don't push old readings
+        Sidekiq::Client.push({
+         'class' => PushReadingWorker,
+         'queue' => :default,
+         'args' => [
+                    metering_point_id,
+                    energy_milliwatt_hour,
+                    milliwatt/1000,
+                    timestamp.to_i*1000
+                   ]
+        })
       end
     end
-
-
-
+  end
 
 
 
