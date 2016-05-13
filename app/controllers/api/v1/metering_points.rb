@@ -94,7 +94,7 @@ module API
           doorkeeper_authorize! :public
           if current_user
             metering_point = MeteringPoint.find(params[:id])
-            if metering_point.updatable_by?(current_user)
+            if metering_point.deletable_by?(current_user)
               metering_point.destroy
               status 204
             else
