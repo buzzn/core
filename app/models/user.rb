@@ -119,7 +119,12 @@ class User < ActiveRecord::Base
   end
 
   def self.unsubscribed_from_notification(key, resource)
-    NotificationUnsubscriber.by_resource(resource).by_key(key).collect(&:user)
+    result = []
+    result << NotificationUnsubscriber.by_resource(resource).by_key(key).collect(&:user)
+    if resource.is_a?(Group) || resource.is_a?(MeteringPoint)
+      result << NotificationUnsubscriber.within_users(resource.involved).by_key(key).collect(&:user)
+    end
+    return result.flatten
   end
 
   def wants_to_get_notified_by_email?(key, resource)

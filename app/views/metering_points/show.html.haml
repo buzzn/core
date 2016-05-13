@@ -56,6 +56,8 @@
             - if @metering_point.managers.include?(current_user)
               %li= link_to(t('remove_me_as_metering_point_manager'), remove_manager_update_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal', :method => 'put', 'data-confirm' => t('are_you_sure') + ' ' + t('you_will_no_longer_be_able_to_edit_this_metering_point')})
           - if user_signed_in?
+            - if @metering_point.members.include?(current_user)
+              %li= link_to(t('edit_notifications'), edit_notifications_metering_point_path(@metering_point),{:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal'})
             - if @requests.any? && @requests.collect(&:user).include?(current_user)
               %li= t'waiting_for_accepting'
             - else

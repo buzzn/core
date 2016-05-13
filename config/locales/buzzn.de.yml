@@ -178,6 +178,7 @@ de:
   finish: Erstellen
   edit_data_connection: Datenverbindung bearbeiten
   search_friends: Freunde suchen
+  settings_saved: Einstellungen gespeichert.
 
   meters: Messgerät
   new_meter: Neues Messgerät
@@ -441,6 +442,7 @@ de:
   project_editable: Projekt Editierbarkeit
   profile: Profil
   profile_picture: Profilbild
+  your_profile: Dein Profil
   confirm: Bestätigen
   day: Tag
   days: Tage
@@ -917,4 +919,12 @@ de:
   wrote_a_new_comment_at_your_conversation: "hat einen neuen Beitrag in euerer Unterhaltung verfasst."
 
   the_conversation: die Unterhaltung
+
+  edit_notifications: Benachrichtigungen bearbeiten
+  these_settings_are_just_valid_for_this_metering_point: "Diese Einstellungen gelten nur für diesen Zählpunkt."
+  to_change_your_global_notification_settings_please_visit_your_profile: "Um Deine Benachrichtigungen global zu verwalten besuche bitte %{your_profile}."
+  these_settings_are_just_valid_for_this_group: Diese Einstellungen gelten nur für diese Gruppe.
+  these_settings_are_valid_globally_and_override_the_settings_for_each_of_your_groups_and_metering_points: Diese Einstellungen gelten global und überschreiben die Einstellungen von deinen Zählpunkten und Gruppen.
+  this_setting_is_overridden_by_your_global_settings_so_you_have_to_change_these_first: "Diese Einstellung wird von Deinen globalen Einstellungen überschrieben. Du solltest also die globalen Einstellungen zuerst ändern."
+
 

@@ -317,6 +317,55 @@ class MeteringPointsController < ApplicationController
     @metering_point.readable_by_world? ? @metering_point : t('the_requested_content_is_not_public')
   end
 
+  def edit_notifications
+    @metering_point = MeteringPoint.find(params[:id])
+  end
+  #TODO: add authority_actions
+
+  def edit_notifications_update
+    @metering_point = MeteringPoint.find(params[:id])
+    notify_when_comment_create = params[:metering_point][:notify_me_when_comment_create]
+    notify_when_metering_point_exceeds = params[:metering_point][:notify_me_when_metering_point_exceeds]
+    notify_when_metering_point_undershoots = params[:metering_point][:notify_me_when_metering_point_undershoots]
+    notify_when_metering_point_offline = params[:metering_point][:notify_me_when_metering_point_offline]
+
+    notification_unsubscriber_comment_create = NotificationUnsubscriber.by_user(current_user).by_resource(@metering_point).by_key('comment.create').first
+    notification_unsubscriber_metering_point_exceeds = NotificationUnsubscriber.by_user(current_user).by_resource(@metering_point).by_key('metering_point.exceeds').first
+    notification_unsubscriber_metering_point_undershoots = NotificationUnsubscriber.by_user(current_user).by_resource(@metering_point).by_key('metering_point.undershoots').first
+    notification_unsubscriber_metering_point_offline = NotificationUnsubscriber.by_user(current_user).by_resource(@metering_point).by_key('metering_point.offline').first
+
+    if notify_when_comment_create == "false"
+      if !notification_unsubscriber_comment_create
+        NotificationUnsubscriber.create(trackable: @metering_point, user: current_user, notification_key: 'comment.create', channel: 'email')
+      end
+    else
+      notification_unsubscriber_comment_create.destroy if notification_unsubscriber_comment_create
+    end
+    if notify_when_metering_point_exceeds == "false"
+      if !notification_unsubscriber_metering_point_exceeds
+        NotificationUnsubscriber.create(trackable: @metering_point, user: current_user, notification_key: 'metering_point.exceeds', channel: 'email')
+      end
+    else
+      notification_unsubscriber_metering_point_exceeds.destroy if notification_unsubscriber_metering_point_exceeds
+    end
+    if notify_when_metering_point_undershoots == "false"
+      if !otification_unsubscriber_metering_point_undershoots
+        NotificationUnsubscriber.create(trackable: @metering_point, user: current_user, notification_key: 'metering_point.undershoots', channel: 'email')
+      end
+    else
+     notification_unsubscriber_metering_point_undershoots .destroy if notification_unsubscriber_metering_point_undershoots
+    end
+    if notify_when_metering_point_offline == "false"
+      if !notification_unsubscriber_metering_point_offline
+        NotificationUnsubscriber.create(trackable: @metering_point, user: current_user, notification_key: 'metering_point.offline', channel: 'email')
+      end
+    else
+      notification_unsubscriber_metering_point_offline.destroy if notification_unsubscriber_metering_point_offline
+    end
+    flash[:notice] = t('settings_saved')
+  end
+  #TODO: add authority_actions
+
 
 private
   def metering_point_params

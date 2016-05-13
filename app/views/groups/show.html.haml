@@ -43,8 +43,10 @@
             %li= link_to(t('remove_metering_points'), remove_members_group_path(@group),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
             %li= link_to(t('add_group_manager'), add_manager_group_path(@group),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
             - if @group.managers.include?(current_user)
-              %li= link_to(t('remove_me_as_group_manager'), remove_manager_update_group_path(@group),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal', :method => :put, 'data-confirm' => t('are_you_sure') + ' ' + t('you_will_no_longer_be_able_to_edit_this_group')})
+              %li= link_to(t('remove_me_as_group_manager'), remove_manager_update_group_path(@group),{:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal', :method => :put, 'data-confirm' => t('are_you_sure') + ' ' + t('you_will_no_longer_be_able_to_edit_this_group')})
           - if user_signed_in?
+            - if @group.members.include?(current_user)
+              %li= link_to(t('edit_notifications'), edit_notifications_group_path(@group),{:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal'})
             - if @group.mode == 'localpool'
               -if current_user.can_update?(@group)
                 %li= link_to(t("add_metering_points"), send_invitations_group_path, {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})

@@ -30,6 +30,8 @@ Buzzn::Application.routes.draw do
       get :redirect_to_current_user
       get :check_destroyable
       put :read_new_badge_notifications
+      get :edit_notifications
+      put :edit_notifications_update
     end
   end
   resources :access_tokens
@@ -53,6 +55,8 @@ Buzzn::Application.routes.draw do
       put :add_manager_update
       put :remove_manager_update
       get :widget
+      get :edit_notifications
+      put :edit_notifications_update
     end
   end
 
@@ -146,6 +150,8 @@ Buzzn::Application.routes.draw do
       put :add_manager_update
       put :remove_manager_update
       get :widget
+      get :edit_notifications
+      put :edit_notifications_update
     end
   end
 

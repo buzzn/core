@@ -45,6 +45,11 @@ de:
         about_me: Über mich
         user_name: Benutzername
         email_notification_meter_offline: Email Benachrichtigung wenn Messgerät offline ist
+        notify_me_when_comment_create: Email Benachrichtigung wenn neuer Kommentar erstellt wurde
+        notify_me_when_comment_liked: Email Benachrichtigung wenn mein Kommentar geliked wurde
+        notify_me_when_metering_point_exceeds: Email Benachrichtigung wenn ein Zählpunkt seine Leistungsgrenze übersteigt
+        notify_me_when_metering_point_undershoots: Email Benachrichtigung wenn ein Zählpunkt seine Leistungsgrenze unterschreitet
+        notify_me_when_metering_point_offline: Email Benachrichtigung wenn ein Zählpunkt offline ist
       metering_point:
         uid: Zählpunkt-ID
         address_addition: Addresszusatz
@@ -62,6 +67,10 @@ de:
         max_watt: Email Benachrichtigung wenn Leistung diesen Wert überschreitet (Watt)
         observe_offline: Email Benachrichtigung wenn Zählpunkt offline ist
         message: Nachricht
+        notify_me_when_comment_create: Email Benachrichtigung wenn neuer Kommentar erstellt wurde
+        notify_me_when_metering_point_exceeds: Email Benachrichtigung wenn der Zählpunkt seine Leistungsgrenze übersteigt
+        notify_me_when_metering_point_undershoots: Email Benachrichtigung wenn der Zählpunkt seine Leistungsgrenze unterschreitet
+        notify_me_when_metering_point_offline: Email Benachrichtigung wenn der Zählpunkt offline ist
       device:
         image: Bild
         mode: Modus
@@ -132,6 +141,7 @@ de:
         email_confirmation: E-Mail bestätigen
         readable: Sichtbar für
         message: Nachricht
+        notify_me_when_comment_create: Email Benachrichtigung wenn neuer Kommentar erstellt wurde
       meter:
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname

@@ -63,6 +63,64 @@ class ProfilesController < ApplicationController
     @user.new_badge_notifications.update_all(read_by_user: true)
   end
 
+  def edit_notifications
+    @profile = Profile.find(params[:id])
+  end
+  #TODO: add authority_actions
+
+  def edit_notifications_update
+    @profile = Profile.find(params[:id])
+    notify_when_comment_create = params[:profile][:notify_me_when_comment_create]
+    notify_when_comment_liked = params[:profile][:notify_me_when_comment_liked]
+    notify_when_metering_point_exceeds = params[:profile][:notify_me_when_metering_point_exceeds]
+    notify_when_metering_point_undershoots = params[:profile][:notify_me_when_metering_point_undershoots]
+    notify_when_metering_point_offline = params[:profile][:notify_me_when_metering_point_offline]
+
+    notification_unsubscriber_comment_create = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('comment.create').first
+    notification_unsubscriber_comment_liked = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('comment.liked').first
+    notification_unsubscriber_metering_point_exceeds = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('metering_point.exceeds').first
+    notification_unsubscriber_metering_point_undershoots = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('metering_point.undershoots').first
+    notification_unsubscriber_metering_point_offline = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('metering_point.offline').first
+
+    if notify_when_comment_create == "false"
+      if !notification_unsubscriber_comment_create
+        NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'comment.create', channel: 'email')
+      end
+    else
+      notification_unsubscriber_comment_create.destroy if notification_unsubscriber_comment_create
+    end
+    if notify_when_comment_liked == "false"
+      if !notification_unsubscriber_comment_liked
+        NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'comment.liked', channel: 'email')
+      end
+    else
+      notification_unsubscriber_comment_liked.destroy if notification_unsubscriber_comment_liked
+    end
+    if notify_when_metering_point_exceeds == "false"
+      if !notification_unsubscriber_metering_point_exceeds
+        NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'metering_point.exceeds', channel: 'email')
+      end
+    else
+      notification_unsubscriber_metering_point_exceeds.destroy if notification_unsubscriber_metering_point_exceeds
+    end
+    if notify_when_metering_point_undershoots == "false"
+      if !notification_unsubscriber_metering_point_undershoots
+        NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'metering_point.undershoots', channel: 'email')
+      end
+    else
+     notification_unsubscriber_metering_point_undershoots .destroy if notification_unsubscriber_metering_point_undershoots
+    end
+    if notify_when_metering_point_offline == "false"
+      if !notification_unsubscriber_metering_point_offline
+        NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'metering_point.offline', channel: 'email')
+      end
+    else
+      notification_unsubscriber_metering_point_offline.destroy if notification_unsubscriber_metering_point_offline
+    end
+    flash[:notice] = t('settings_saved')
+  end
+  #TODO: add authority_actions
+
 
 
 private

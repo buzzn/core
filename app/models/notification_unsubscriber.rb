@@ -13,4 +13,9 @@ class NotificationUnsubscriber < ActiveRecord::Base
   scope :by_user, lambda {|user|
     where(user: user)
   }
+
+  scope :within_users, lambda {|user_ids|
+    where('user_id IN (?)', user_ids)
+  }
+
 end

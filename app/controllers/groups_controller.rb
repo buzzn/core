@@ -320,6 +320,30 @@ class GroupsController < ApplicationController
 
 
 
+  def edit_notifications
+    @group = Group.find(params[:id])
+  end
+  #TODO: add authority_actions
+
+  def edit_notifications_update
+    @group = Group.find(params[:id])
+    notify_when_comment_create = params[:group][:notify_me_when_comment_create]
+
+    notification_unsubscriber_comment_create = NotificationUnsubscriber.by_user(current_user).by_resource(@group).by_key('comment.create').first
+
+    if notify_when_comment_create == "false"
+      if !notification_unsubscriber_comment_create
+        NotificationUnsubscriber.create(trackable: @group, user: current_user, notification_key: 'comment.create', channel: 'email')
+      end
+    else
+      notification_unsubscriber_comment_create.destroy if notification_unsubscriber_comment_create
+    end
+    flash[:notice] = t('settings_saved')
+  end
+  #TODO: add authority_actions
+
+
+
 
 
 private
