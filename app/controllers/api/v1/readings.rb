@@ -46,11 +46,11 @@ module API
               Sidekiq::Client.push({
                'class' => PushReadingWorker,
                'queue' => :default,
-               'args' => [metering_point_id,
-                          energy_a_milliwatt_hour,
-                          energy_b_milliwatt_hour,
-                          power_milliwatt,
-                          timestamp]
+               'args' => [reading.metering_point_id,
+                          reading.energy_a_milliwatt_hour,
+                          reading.energy_b_milliwatt_hour,
+                          reading.power_milliwatt,
+                          reading.timestamp]
               })
             end
 
