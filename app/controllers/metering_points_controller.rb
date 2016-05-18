@@ -204,19 +204,13 @@ class MeteringPointsController < ApplicationController
 
   def chart
     @metering_point = MeteringPoint.find(params[:id])
-    params[:containing_timestamp].nil? ? @containing_timestamp = Time.now.to_i*1000 : @containing_timestamp = params[:containing_timestamp]
-    @cache_id = "/metering_points/#{params[:id]}/chart?resolution=#{params[:resolution]}&interval=#{@metering_point.get_cache_interval(params[:resolution], @containing_timestamp)}"
-    @cache = Rails.cache.fetch(@cache_id)
-    @data = @cache || @metering_point.chart_data(params[:resolution], @containing_timestamp)
-    #@data = @metering_point.chart_data(params[:resolution], @containing_timestamp)
+    aggregator = Aggregator.new({metering_point_ids: [@metering_point.id] })
+    timestamp = params[:containing_timestamp].nil? ? Time.now : Time.at(params[:containing_timestamp].to_i/1000)
     @chart_data = []
     @chart_data << {
-      data: @data,
+      data: @aggregator.chart({timestamp: timestamp, resolution: params[:resolution]}),
       name: @metering_point.decorate.long_name
     }
-    if @cache.nil?
-      Rails.cache.write(@cache_id, @data, expires_in: @metering_point.get_cache_duration(params[:resolution]))
-    end
     render json: @chart_data.to_json
   end
 

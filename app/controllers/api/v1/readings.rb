@@ -41,6 +41,19 @@ module API
           )
           if current_user && current_user.can_create?(reading)
             reading.save!
+
+            if reading.timestamp > 30.seconds.ago # don't push old readings
+              Sidekiq::Client.push({
+               'class' => PushReadingWorker,
+               'queue' => :default,
+               'args' => [metering_point_id,
+                          energy_a_milliwatt_hour,
+                          energy_b_milliwatt_hour,
+                          power_milliwatt,
+                          timestamp]
+              })
+            end
+
             return reading
           else
             status 403

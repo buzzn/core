@@ -239,19 +239,20 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def slp?
-    self.input? && !self.smart?
+    !self.smart? &&
+    self.input?
   end
 
   def pv?
-    self.output? &&
     !self.smart? &&
+    self.output? &&
     self.devices.any? &&
     self.devices.first.primary_energy == 'sun'
   end
 
   def bhkw_or_else?
-    self.output? &&
-    !self.smart?
+    !self.smart? &&
+    self.output?
   end
 
   def mysmartgrid?
@@ -263,12 +264,13 @@ class MeteringPoint < ActiveRecord::Base
   def discovergy?
     self.smart? &&
     !metering_point_operator_contract.nil? &&
-    (metering_point_operator_contract.organization.slug == "discovergy" || metering_point_operator_contract.organization.slug == "buzzn-metering")
+    (metering_point_operator_contract.organization.slug == "discovergy" ||
+    metering_point_operator_contract.organization.slug == "buzzn-metering")
   end
 
-  def buzzn_reader?
-    !metering_point_operator_contract.nil? &&
-    metering_point_operator_contract.organization.slug == "buzzn-reader"
+  def buzzn_api?
+    self.smart? &&
+    metering_point_operator_contract.nil?
   end
 
   def data_source
@@ -284,8 +286,8 @@ class MeteringPoint < ActiveRecord::Base
       "mysmartgrid"
     elsif self.discovergy?
       "discovergy"
-    elsif self.buzzn_reader?
-      "buzzn-reader"
+    elsif self.buzzn_api?
+      "buzzn-api"
     end
   end
 

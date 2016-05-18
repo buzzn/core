@@ -167,4 +167,5 @@ group :test do
   gem 'email_spec'
   gem 'guard-rspec'
   gem 'database_cleaner'
+  gem 'timecop'
 end

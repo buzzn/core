@@ -114,7 +114,7 @@ module CalcVirtualMeteringPoint
         items << [
           document['firstTimestamp'].to_i*1000,
           document['sumEnergyAMilliWattHour'] * factor,
-          document['sumEnergyBMilliWattHour'] * factor
+          document['sumEnergyBMilliWattHour'] ? document['sumEnergyBMilliWattHour'] * factor : 0
         ]
       else
         items << [
