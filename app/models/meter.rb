@@ -9,8 +9,6 @@ class Meter < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
-  after_save :validates_smartmeter
-
   before_destroy :release_metering_points
 
   default_scope { order('created_at ASC') }
@@ -115,23 +113,6 @@ private
     end
   end
 
-  def validates_smartmeter
-    if self.metering_points.any?
-      if self.metering_points.first.metering_point_operator_contract
-        crawler = Crawler.new(self.metering_points.first)
-        if crawler.valid_credential?
-          self.update_columns(smart: true)
-        else
-          self.update_columns(smart: false)
-        end
-      else
-        logger.warn "Meter:#{self.id} has no metering_point_operator_contract"
-        self.update_columns(smart: false)
-      end
-    else
-      logger.warn "Meter:#{self.id} has no metering_point"
-      self.update_columns(smart: false)
-    end
-  end
+
 
 end

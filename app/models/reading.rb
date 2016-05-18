@@ -2,8 +2,6 @@ class Reading
   include Mongoid::Document
   include Authority::Abilities
 
-  after_create :push_reading
-
   field :contract_id
   field :metering_point_id
   field :timestamp,               type: DateTime
@@ -369,26 +367,6 @@ class Reading
     return nil
   end
 
-
-
-private
-
-  def push_reading
-    if self.source != 'slp' && self.source != 'sep_bhkw' && self.source != 'sep_pv' && self.source != 'user_input' # don't push non-smart records
-      if self.timestamp > 30.seconds.ago # don't push old readings
-        Sidekiq::Client.push({
-         'class' => PushReadingWorker,
-         'queue' => :default,
-         'args' => [
-                    metering_point_id,
-                    energy_milliwatt_hour,
-                    milliwatt/1000,
-                    timestamp.to_i*1000
-                   ]
-        })
-      end
-    end
-  end
 
 
 

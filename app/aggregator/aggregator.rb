@@ -15,62 +15,115 @@ class Aggregator
     @example            = initialize_params.fetch(:example, ['slp']) || ['slp']
   end
 
-  def chart(chart_params = {})
-    seconds_to_process = Benchmark.realtime do
-      @chart_items = []
-      timestamp  = chart_params.fetch(:timestamp, Time.now.in_time_zone) || Time.now.in_time_zone
-      resolution = chart_params.fetch(:resolution, 'day_to_hours') || 'day_to_hours'
+  def power(params = {})
+    @cache_id = "/aggregate/power?metering_point_ids=#{@metering_point_ids.join(',')}"
+    if Rails.cache.exist?(@cache_id)
+      @power = Rails.cache.fetch(@cache_id)
+    else
+      seconds_to_process = Benchmark.realtime do
+        @power_items = []
+        @timestamp = params.fetch(:timestamp, Time.now.in_time_zone) || Time.now.in_time_zone
 
-      # sorting metering_points
-      buzzn_reader_metering_points  = []
-      discovergy_metering_points    = []
-      slp_metering_points           = []
-      MeteringPoint.where(id: @metering_point_ids).each do |metering_point|
+        buzzn_api_metering_points, discovergy_metering_points, slp_metering_points = metering_points_sort(@metering_point_ids)
 
-        case metering_point.data_source
-        when 'buzzn-reader'
-          buzzn_reader_metering_points << metering_point
-        when 'discovergy'
-          discovergy_metering_points << metering_point
-        when 'slp'
-          slp_metering_points << metering_point
-        else
-          "You gave me #{a} -- I have no idea what to do with that."
+        # buzzn_api
+        # TODO sum this in mongodb.
+        buzzn_api_metering_points.each do |metering_point|
+          reading = Reading.where(metering_point_id: metering_point.id, :timestamp.gte => @timestamp).last
+          @power_items << reading.power_milliwatt
         end
 
-      end
+        # discovergy
+        discovergy_metering_points.each do |metering_point|
+          @power_items << external_chart_data(metering_point, @resolution, @timestamp.to_i*1000)
+        end
 
-      # buzzn_reader
-      if buzzn_reader_metering_points.any?
-        collection = Reading.aggregate(resolution, buzzn_reader_metering_points.collect(&:id), timestamp.to_i*1000)
-        @chart_items << convert_to_array(collection, resolution, 1)
+        #slp
+        if slp_metering_points.any?
+          reading = Reading.where(:timestamp.gte => (@timestamp - 15.minutes), :timestamp.lte => (@timestamp + 15.minutes), source: 'slp').last
+          slp_metering_points.each do |metering_point|
+            factor = metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/900.0) : 1
+            @power_items << reading.power_milliwatt * factor
+          end
+        end
       end
-
-      # discovergy
-      discovergy_metering_points.each do |metering_point|
-        @chart_items << external_chart_data(metering_point, resolution, timestamp.to_i*1000)
-      end
-
-      #slp
-      if slp_metering_points.any?
-        collection = Reading.aggregate(resolution, ['slp'], timestamp)
-        @chart_items << convert_to_array(collection, resolution, 1)
-      end
-
-      @chart = calculate_virtual_metering_point(@chart_items, Array.new(@chart_items.count, "+"), resolution)
     end
 
+    @power = @power_items.inject(0, :+)
+
+    if seconds_to_process > 2
+      Rails.cache.write(@cache_id, @power, expires_in: 5.seconds)
+    end
+
+    return @power
+  end
 
 
-    # if seconds_to_process > 2
-    # else
-    # end
+  def chart(params = {})
+    @cache_id = "/aggregate/chart?metering_point_ids=#{@metering_point_ids.join(',')}&timestamp=#{@timestamp}&resolution=#{@resolution}"
 
+    if Rails.cache.exist?(@cache_id)
+      @chart = Rails.cache.fetch(@cache_id)
+    else
+      seconds_to_process = Benchmark.realtime do
+        @chart_items = []
+        @timestamp  = params.fetch(:timestamp, Time.now.in_time_zone) || Time.now.in_time_zone
+        @resolution = params.fetch(:resolution, 'day_to_hours') || 'day_to_hours'
+
+        buzzn_api_metering_points, discovergy_metering_points, slp_metering_points = metering_points_sort(@metering_point_ids)
+
+        # buzzn_api
+        if buzzn_api_metering_points.any?
+          collection = Reading.aggregate(@resolution, buzzn_api_metering_points.collect(&:id), @timestamp.to_i*1000)
+          @chart_items << convert_to_array(collection, @resolution, 1)
+        end
+
+        # discovergy
+        discovergy_metering_points.each do |metering_point|
+          @chart_items << external_chart_data(metering_point, @resolution, @timestamp.to_i*1000)
+        end
+
+        #slp
+        if slp_metering_points.any?
+          collection = Reading.aggregate(@resolution, ['slp'], @timestamp)
+          slp_metering_points.each do |metering_point|
+            factor = metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/900.0) : 1
+            @chart_items << convert_to_array(collection, @resolution, factor)
+          end
+        end
+
+        @chart = calculate_virtual_metering_point(@chart_items, Array.new(@chart_items.count, "+"), @resolution)
+      end
+      if seconds_to_process > 2
+        Rails.cache.write(@cache_id, @chart, expires_in: 1.minute)
+      end
+    end
     return @chart
   end
 
 
 private
+
+  def metering_points_sort(metering_point_ids)
+    buzzn_api_metering_points     = []
+    discovergy_metering_points    = []
+    slp_metering_points           = []
+
+    MeteringPoint.where(id: @metering_point_ids).each do |metering_point|
+      case metering_point.data_source
+      when 'buzzn-api'
+        buzzn_api_metering_points << metering_point
+      when 'discovergy'
+        discovergy_metering_points << metering_point
+      when 'slp'
+        slp_metering_points << metering_point
+      else
+        Rails.logger.error "You gave me #{metering_point.data_source} -- I have no idea what to do with that."
+      end
+    end
+    return buzzn_api_metering_points, discovergy_metering_points, slp_metering_points
+  end
+
 
   def external_chart_data(metering_point, resolution, timestamp)
     crawler = Crawler.new(metering_point)
