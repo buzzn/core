@@ -36,4 +36,12 @@ Buzzn::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.allow_concurrency = false # TODO https://github.com/rails/rails/issues/15089
+
+
+  config.after_initialize do
+    # Set Time.now to September 1, 2008 10:05:00 AM (at this instant), but allow it to move forward
+    t = Time.local(2014, 9, 1, 10, 5, 0)
+    Timecop.travel(t)
+  end
+
 end
