@@ -211,7 +211,7 @@ class MeteringPointsController < ApplicationController
 
   def chart
     @metering_point = MeteringPoint.find(params[:id])
-    aggregator = Aggregator.new({metering_point_ids: [@metering_point.id] })
+    @aggregator = Aggregator.new({metering_point_ids: [@metering_point.id] })
     timestamp = params[:containing_timestamp].nil? ? Time.now : Time.at(params[:containing_timestamp].to_i/1000)
     @chart_data = []
     @chart_data << {
@@ -227,9 +227,8 @@ class MeteringPointsController < ApplicationController
 
   def latest_fake_data
     @metering_point = MeteringPoint.find(params[:id])
-    @cache_id = "/metering_points/#{params[:id]}/latest_fake_data"
-    @cache = Rails.cache.fetch(@cache_id)
-    @latest_fake_data = @cache || @metering_point.latest_fake_data
+    @aggregator = Aggregator.new({metering_point_ids: [@metering_point.id] })
+    @latest_fake_data = {data: [[Time.now.to_i, @aggregator.power.to_i/1000]], factor: 1}
     render json: @latest_fake_data.to_json
   end
 
