@@ -111,7 +111,7 @@ describe "Aggregate API" do
     request_params = {
       metering_point_ids: metering_point.id,
       resolution: 'year_to_months',
-      timestamp: Time.new(2016,6,2)
+      timestamp: Time.new(2016,6,2).in_time_zone
     }
 
     get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
