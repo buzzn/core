@@ -85,7 +85,7 @@ class Aggregator
 
         #slp
         if slp_metering_points.any?
-          collection = Reading.aggregate(@resolution, ['slp'], @timestamp)
+          collection = Reading.aggregate(@resolution, ['slp'], @timestamp.in_time_zone)
           slp_metering_points.each do |metering_point|
             factor = metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/900.0) : 1
             @chart_items << convert_to_array(collection, @resolution, factor)

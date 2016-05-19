@@ -96,7 +96,7 @@ describe "Aggregate API" do
     metering_point = Fabricate(:metering_point)
 
     energy_a_milliwatt_hour = 0
-    timestamp = Time.new(2016,1,1)
+    timestamp = Time.new(2016,1,1).in_time_zone
     (366).times do |i|
       Fabricate(:reading,
         source: 'slp',
@@ -119,7 +119,7 @@ describe "Aggregate API" do
     expect(response).to have_http_status(200)
     expect(json.count).to eq(12) # 12 month
 
-    timestamp = Time.new(2016,1,1)
+    timestamp = Time.new(2016,1,1).in_time_zone
     json.each do |item|
       expect(Time.at(item[0]/1000)).to eq(timestamp)
       expect(item[1]).to eq(1300*1000 * (Time.days_in_month(timestamp.month, timestamp.year)-1))
