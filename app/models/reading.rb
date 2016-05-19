@@ -148,9 +148,7 @@ class Reading
               }
     formats = {}
     resolution.each do |format|
-
       offset = timestamp.utc_offset*1000
-
       formats.merge!({
         "#{format.gsub('OfMonth','')}ly" => {
           "$#{format}" => {
