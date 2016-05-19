@@ -67,14 +67,14 @@ class Aggregator
     else
       seconds_to_process = Benchmark.realtime do
         @chart_items = []
-        @timestamp  = params.fetch(:timestamp, Time.now.in_time_zone) || Time.now.in_time_zone
+        @timestamp  = params.fetch(:timestamp, Time.now) || Time.now
         @resolution = params.fetch(:resolution, 'day_to_hours') || 'day_to_hours'
 
         buzzn_api_metering_points, discovergy_metering_points, slp_metering_points = metering_points_sort(@metering_point_ids)
 
         # buzzn_api
         if buzzn_api_metering_points.any?
-          collection = Reading.aggregate(@resolution, buzzn_api_metering_points.collect(&:id), @timestamp.to_i*1000)
+          collection = Reading.aggregate(@resolution, buzzn_api_metering_points.collect(&:id), @timestamp.in_time_zone)
           @chart_items << convert_to_array(collection, @resolution, 1)
         end
 
