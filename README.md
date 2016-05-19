@@ -7,19 +7,7 @@
     version number found in file .ruby-version
 
 ## install software
-    phantomjs
-    imagemagick
-    graphviz
-    sudo apt-get install postgresql postgresql-contrib
-    create superuser on psql: sudo -u postgres createuser -s -d thomas
-    sudo apt-get install mongodb
-    sudo apt-get install apache2
-    mkdir slanger
-    cd slanger
-    ../.rbenv/versions/2.2.2/bin/gem install slanger
-
-    recommended: apt-get install git-cola
-    start git-cola with LANG=c && git-cola to skip strange german translations of push etc.
+    imagemagick, mongodb, postgresql, redis
 
 ## Setup Rails Project
     git clone git@github.com:ffaerber/buzzn.git
@@ -39,11 +27,6 @@
     bundle exec guard
     bundle exec rescue rspec
 
-## Start Slanger(OpenSource Pusher.com)
-    from outside the rails project folder
-    cd slanger
-    slanger --app_key 83f4f88842ce2dc76b7b --secret 7c4cfa157cd37a4b35bb
-
 ## Sidekiq Start
     redis-server
     remark: probably necessary to reinit database (bundle exec rake db:init) to let sidekiq run properly
@@ -53,12 +36,6 @@
 
 ## Sidekiq Kill
     bundle exec rake sidekiq:kill
-
-## pull_readings meters
-    bundle exec rake meter:pull_readings
-
-## reactivate meters
-    bundle exec rake meter:reactivate
 
 ## Mail Views
     http://localhost:3000/de/mail_view
@@ -75,19 +52,6 @@
 
 ## Analysis security vulnerability in this app
     bundle exec brakeman
-
-## update locales
-    bundle exec rails g devise:views:locale de
-    bundle exec rails g devise:views:locale en
-
-## add Sublime Settings to Preferences -> Settings - User:
-    "draw_white_space": "selection",
-    "trim_trailing_white_space_on_save": true,
-    "tab_size": 2,
-    "translate_tabs_to_spaces": true,
-    "tab_completion": true,
-    "save_on_focus_lost": true,
-    "highlight_line": true
 
 ## Troubleshooting
     bin/spring stop
@@ -107,3 +71,10 @@
     client.auth_code.authorize_url(scope: app.scopes, redirect_uri: client_redirect_url)
     token = client.auth_code.get_token('xxxxxxxxxx', redirect_uri: client_redirect_url)
     access_token = token.token
+
+## TODO
+  - chart nicht mit end_of_xxx sondern mit hinzugefügtem zeitraum + 1.day oder + 60.seconds
+  - rails controller den neuen Aggregator benuzten lassen.
+  - rake slp und co auf milli_watt ändern
+  - year_to_month chart testen.
+  - remove discovergy pull readings
