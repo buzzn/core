@@ -59,40 +59,40 @@ class Reading
     case resolution_format.to_sym
     when :year_to_months
       @start_time = timestamp.beginning_of_year
-      @end_time   = timestamp.end_of_year
+      @end_time   = @start_time.next_year
     when :month_to_days
       @start_time = timestamp.beginning_of_month
-      @end_time   = timestamp.end_of_month
+      @end_time   = @start_time.next_month
     when :week_to_days
       @start_time = timestamp.beginning_of_week
-      @end_time   = timestamp.end_of_week
+      @end_time   = @start_time.next_week
     when :day_to_hours
       @start_time = timestamp.beginning_of_day
-      @end_time   = timestamp.end_of_day
+      @end_time   = @start_time + 1.day
     when :day_to_minutes
       @start_time = timestamp.beginning_of_day
-      @end_time   = timestamp.end_of_day
+      @end_time   = @start_time + 1.day
     when :hour_to_minutes
       @start_time = timestamp.beginning_of_hour
-      @end_time   = timestamp.end_of_hour
+      @end_time   = @start_time + 1.hour
     when :minute_to_seconds
       @start_time = timestamp.beginning_of_minute
-      @end_time   = timestamp.end_of_minute
+      @end_time   = @start_time + 1.minute
     when :day
       @start_time = timestamp.beginning_of_day
-      @end_time   = timestamp.end_of_day
+      @end_time   = @start_time + 1.day
     when :month
       @start_time = timestamp.beginning_of_month
-      @end_time   = timestamp.end_of_month
+      @end_time   = @start_time.next_month
     when :year
       @start_time = timestamp.beginning_of_year
-      @end_time   = timestamp.end_of_year
+      @end_time   = @start_time.next_year
     when :year_to_minutes
       @start_time = timestamp.beginning_of_year
-      @end_time   = timestamp.end_of_year
+      @end_time   = @start_time.next_year
     when :month_to_minutes
       @start_time = timestamp.beginning_of_month
-      @end_time   = timestamp.end_of_month
+      @end_time   = @start_time.next_month
     else
       puts resolution_format.class
       puts resolution
@@ -111,8 +111,8 @@ class Reading
     # match
     match = { "$match" => {
                 timestamp: {
-                  "$gte" => @start_time,
-                  "$lt"  => @end_time
+                  "$gte"  => @start_time,
+                  "$lte"  => @end_time
                 }
               }
             }
