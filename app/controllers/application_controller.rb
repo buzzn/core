@@ -7,8 +7,8 @@ class ApplicationController < ActionController::Base
   include PublicActivity::StoreController
 
   before_filter :initialize_gon
-
   before_filter :http_basic_authenticate
+  before_filter :set_paper_trail_whodunnit
 
   def http_basic_authenticate
     if Rails.env.staging?
