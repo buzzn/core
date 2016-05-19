@@ -9,6 +9,7 @@ describe "Aggregate API" do
   it 'does have the Berlin timezone' do
     Timecop.freeze(Time.local(2016,2,1, 1,30,1))
     expect(Time.now.utc_offset).to eq(3600)
+    expect(Time.zone.name).to eq("Berlin")
   end
 
   ##
