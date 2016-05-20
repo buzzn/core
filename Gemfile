@@ -139,7 +139,6 @@ end
 
 group :development, :test do
   gem 'brakeman', :require => false
-  gem 'spring'
   gem 'lol_dba'
   gem 'listen'
   gem 'launchy'
@@ -161,7 +160,6 @@ group :development do
 end
 
 group :test do
-  gem 'spring-commands-rspec'
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
   gem 'rspec-rails'

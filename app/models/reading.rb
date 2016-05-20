@@ -56,10 +56,13 @@ class Reading
     }
     resolution = resolution_formats[resolution_format.to_sym]
 
+    @offset = timestamp.utc_offset*1000
+
     case resolution_format.to_sym
     when :year_to_months
       @start_time = timestamp.beginning_of_year
       @end_time   = @start_time.next_year
+      @offset     = (@start_time + 6.month).utc_offset*1000
     when :month_to_days
       @start_time = timestamp.beginning_of_month
       @end_time   = @start_time.next_month
@@ -87,6 +90,7 @@ class Reading
     when :year
       @start_time = timestamp.beginning_of_year
       @end_time   = @start_time.next_year
+      @offset     = (@start_time + 6.month).utc_offset*1000
     when :year_to_minutes
       @start_time = timestamp.beginning_of_year
       @end_time   = @start_time.next_year
@@ -116,6 +120,7 @@ class Reading
                 }
               }
             }
+
 
     if metering_point_ids[0] == 'slp'
       metering_point_or_fake = { source: { "$in" => ['slp'] } }
@@ -147,12 +152,12 @@ class Reading
                 }
               }
     formats = {}
+
     resolution.each do |format|
-      offset = timestamp.utc_offset*1000
       formats.merge!({
         "#{format.gsub('OfMonth','')}ly" => {
           "$#{format}" => {
-            "$add" => ["$timestamp", offset]
+            "$add" => ["$timestamp", @offset]
           }
         }
       })

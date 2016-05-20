@@ -22,7 +22,7 @@ class Aggregator
     else
       seconds_to_process = Benchmark.realtime do
         @power_items = []
-        @timestamp = params.fetch(:timestamp, Time.now.in_time_zone) || Time.now.in_time_zone
+        @timestamp = params.fetch(:timestamp, Time.current) || Time.current
 
         buzzn_api_metering_points, discovergy_metering_points, slp_metering_points = metering_points_sort(@metering_point_ids)
 
@@ -67,7 +67,7 @@ class Aggregator
     else
       seconds_to_process = Benchmark.realtime do
         @chart_items = []
-        @timestamp  = params.fetch(:timestamp, Time.now) || Time.now
+        @timestamp  = params.fetch(:timestamp, Time.current) || Time.current
         @resolution = params.fetch(:resolution, 'day_to_hours') || 'day_to_hours'
 
         buzzn_api_metering_points, discovergy_metering_points, slp_metering_points = metering_points_sort(@metering_point_ids)
@@ -85,7 +85,7 @@ class Aggregator
 
         #slp
         if slp_metering_points.any?
-          collection = Reading.aggregate(@resolution, ['slp'], @timestamp.in_time_zone)
+          collection = Reading.aggregate(@resolution, ['slp'], @timestamp)
           slp_metering_points.each do |metering_point|
             factor = metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/900.0) : 1
             @chart_items << convert_to_array(collection, @resolution, factor)
