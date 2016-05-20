@@ -76,5 +76,4 @@
   - chart nicht mit end_of_xxx sondern mit hinzugefügtem zeitraum + 1.day oder + 60.seconds
   - rails controller den neuen Aggregator benuzten lassen.
   - rake slp und co auf milli_watt ändern
-  - year_to_month chart testen.
   - remove discovergy pull readings
