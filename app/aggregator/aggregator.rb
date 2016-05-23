@@ -5,6 +5,7 @@
 
 
 require 'benchmark'
+require 'matrix'
 class Aggregator
   include CalcVirtualMeteringPoint
 
@@ -14,6 +15,9 @@ class Aggregator
     @metering_point_ids = initialize_params.fetch(:metering_point_ids, nil) || nil
     @example            = initialize_params.fetch(:example, ['slp']) || ['slp']
   end
+
+
+
 
   def power(params = {})
     @cache_id = "/aggregate/power?metering_point_ids=#{@metering_point_ids.join(',')}"
@@ -29,20 +33,20 @@ class Aggregator
         # buzzn_api
         # TODO sum this in mongodb.
         buzzn_api_metering_points.each do |metering_point|
-          reading = Reading.where(metering_point_id: metering_point.id, :timestamp.gte => @timestamp).last
+          reading = Reading.where(meter_id: metering_point.meter.id, :timestamp.gte => @timestamp).last
           @power_items << reading.power_milliwatt
         end
 
         # discovergy
         discovergy_metering_points.each do |metering_point|
-          @power_items << external_chart_data(metering_point, @resolution, @timestamp.to_i*1000)
+          @power_items << external_data(metering_point, @resolution, @timestamp.to_i*1000)
         end
 
         #slp
         if slp_metering_points.any?
           reading = Reading.where(:timestamp.gte => (@timestamp - 15.minutes), :timestamp.lte => (@timestamp + 15.minutes), source: 'slp').last
           slp_metering_points.each do |metering_point|
-            factor = metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/900.0) : 1
+            factor = metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/1000) : 1
             @power_items << reading.power_milliwatt * factor
           end
         end
@@ -57,6 +61,8 @@ class Aggregator
 
     return @power
   end
+
+
 
 
   def chart(params = {})
@@ -74,25 +80,30 @@ class Aggregator
 
         # buzzn_api
         if buzzn_api_metering_points.any?
-          collection = Reading.aggregate(@resolution, buzzn_api_metering_points.collect(&:id), @timestamp.in_time_zone)
-          @chart_items << convert_to_array(collection, @resolution, 1)
+          collection = Reading.aggregate(@resolution, buzzn_api_metering_points.collect(&:meter_id), @timestamp)
+          @chart_items << collection_to_hash(collection)
+          #@chart_items << convert_to_array(collection, @resolution, 1)
         end
 
         # discovergy
         discovergy_metering_points.each do |metering_point|
-          @chart_items << external_chart_data(metering_point, @resolution, @timestamp.to_i*1000)
+          @chart_items << external_data(metering_point, @resolution, @timestamp.to_i*1000)
         end
 
         #slp
         if slp_metering_points.any?
           collection = Reading.aggregate(@resolution, ['slp'], @timestamp)
           slp_metering_points.each do |metering_point|
-            factor = metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/900.0) : 1
-            @chart_items << convert_to_array(collection, @resolution, factor)
+            factor = metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/1000) : 1
+            @chart_items << collection_to_hash(collection, factor)
+            #@chart_items << convert_to_array(collection, @resolution, 1)
           end
         end
 
+        binding.pry
         @chart = calculate_virtual_metering_point(@chart_items, Array.new(@chart_items.count, "+"), @resolution)
+
+
       end
       if seconds_to_process > 2
         Rails.cache.write(@cache_id, @chart, expires_in: 1.minute)
@@ -102,7 +113,14 @@ class Aggregator
   end
 
 
+
+
+
+
+
+
 private
+
 
   def metering_points_sort(metering_point_ids)
     buzzn_api_metering_points     = []
@@ -125,7 +143,19 @@ private
   end
 
 
-  def external_chart_data(metering_point, resolution, timestamp)
+  def collection_to_hash(collection, factor=1)
+    items = []
+    collection.each do |document|
+      timestamp = document['firstTimestamp']
+      power     = document['avgPowerMilliwatt'] * factor
+      energy_a  = document['sumEnergyAMilliWattHour'] ? (document['sumEnergyAMilliWattHour'] * factor) : 0
+      energy_b  = document['sumEnergyBMilliWattHour'] ? (document['sumEnergyBMilliWattHour'] * factor) : 0
+      items     << { timestamp: timestamp, power_milliwatt: power, energy_a_milliwatt_hour: energy_a, energy_b_milliwatt_hour: energy_b }
+    end
+    return items
+  end
+
+  def external_data(metering_point, resolution, timestamp)
     crawler = Crawler.new(metering_point)
     if resolution == 'hour_to_minutes'
       result = crawler.hour(timestamp)
@@ -136,7 +166,15 @@ private
     elsif resolution == 'year_to_months'
       result = crawler.year(timestamp)
     end
-    return result
+
+    # the rails view is using Crawler.rb dirctly. so i need to change the result later
+    # TODO move this into Crawler.rb
+    items = []
+    result.each do |item|
+      items << { timestamp: Time.at(item[0]/1000), power_milliwatt: item[1]*1000 }
+    end
+
+    return items
   end
 
 

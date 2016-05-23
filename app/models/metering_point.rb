@@ -78,10 +78,12 @@ class MeteringPoint < ActiveRecord::Base
     Profile.where(user_id: users.ids)
   end
 
+  ## TODO rename do managers
   def users
     User.with_role(:member, self)
   end
 
+  ## TODO remove this
   def members
     self.users
   end

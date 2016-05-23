@@ -73,7 +73,9 @@
     access_token = token.token
 
 ## TODO
-  - chart nicht mit end_of_xxx sondern mit hinzugefügtem zeitraum + 1.day oder + 60.seconds
+  - change metering_point_id to meter_id in reader.rb
   - rails controller den neuen Aggregator benuzten lassen.
   - rake slp und co auf milli_watt ändern
   - remove discovergy pull readings
+  - query die mongodb nur auf die werte die benötigt werden, power oder energy a oder b
+  - mongodb TTL 4 jahre.
