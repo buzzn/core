@@ -25,7 +25,7 @@ module API
 
         desc "Create a Reading"
         params do
-          requires :metering_point_id,        type: String,   desc: "The ID of metering point"
+          requires :meter_id,                 type: String,   desc: "The ID of meter"
           requires :timestamp,                type: DateTime, desc: "DateTime of the reading"
           requires :energy_a_milliwatt_hour,  type: Integer,  desc: "energy A(often consumption) in Milliwatt Hour for the first register"
           optional :energy_b_milliwatt_hour,  type: Integer,  desc: "energy B(often production) in Milliwatt Hour for the second register"
@@ -33,7 +33,7 @@ module API
         end
         post do
           reading = Reading.new(
-            metering_point_id:        params[:metering_point_id],
+            meter_id:                 params[:meter_id],
             timestamp:                params[:timestamp],
             energy_a_milliwatt_hour:  params[:energy_a_milliwatt_hour],
             energy_b_milliwatt_hour:  params[:energy_b_milliwatt_hour],
@@ -46,7 +46,7 @@ module API
             #   Sidekiq::Client.push({
             #    'class' => PushReadingWorker,
             #    'queue' => :default,
-            #    'args' => [reading.metering_point_id,
+            #    'args' => [reading.meter_id,
             #               reading.energy_a_milliwatt_hour,
             #               reading.energy_b_milliwatt_hour,
             #               reading.power_milliwatt,

@@ -102,7 +102,6 @@ gem 'i18n-tasks'
 gem 'will_paginate', '~> 3.0.6'
 gem 'high_voltage', '~> 3.0.0'
 
-
 source 'http://rails-assets.org' do
   gem 'rails-assets-pace'
   gem 'rails-assets-resizeend'

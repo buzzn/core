@@ -11,8 +11,15 @@ Fabricator :easy_meter_q3d, from: :meter  do
 end
 
 
-Fabricator :meter_smart_with_metering_point, from: :easy_meter_q3d  do
+Fabricator :easy_meter_q3d_with_metering_point, from: :easy_meter_q3d  do
   metering_points {[Fabricate(:metering_point)]}
+end
+
+Fabricator :easy_meter_q3d_with_manager, from: :easy_meter_q3d do
+  after_create { |meter|
+    user = Fabricate(:user)
+    user.add_role(:manager, meter)
+  }
 end
 
 

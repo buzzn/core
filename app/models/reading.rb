@@ -3,7 +3,7 @@ class Reading
   include Authority::Abilities
 
   field :contract_id
-  field :metering_point_id
+  field :meter_id
   field :timestamp,               type: DateTime
   field :energy_a_milliwatt_hour, type: Integer
   field :energy_b_milliwatt_hour, type: Integer
@@ -14,19 +14,19 @@ class Reading
   field :load_course_time_series, type: Float
   field :state
 
-  index({ metering_point_id: 1 })
+  index({ meter_id: 1 })
   index({ timestamp: 1 })
-  index({ metering_point_id: 1, timestamp: 1 })
-  index({ metering_point_id: 1, source: 1 })
+  index({ meter_id: 1, timestamp: 1 })
+  index({ meter_id: 1, source: 1 })
 
   validate :energy_milliwatt_hour_has_to_grow, if: :user_input?
 
-  def metering_point
-    MeteringPoint.find(self.metering_point_id)
+  def meter
+    Meter.find(self.meter_id)
   end
 
   def energy_milliwatt_hour_has_to_grow
-    reading_before = Reading.last_before_user_input(metering_point_id, timestamp)
+    reading_before = Reading.last_before_user_input(meter_id, timestamp)
     if !reading_before.nil? && reading_before[:energy_milliwatt_hour] > energy_milliwatt_hour
       self.errors.add(:energy_milliwatt_hour, "is lower than the last one")
     end
@@ -37,7 +37,7 @@ class Reading
     source == 'user_input'
   end
 
-  def self.aggregate(resolution_format, metering_point_ids=['slp'], timestamp)
+  def self.aggregate(resolution_format, meter_ids=['slp'], timestamp)
     resolution_formats = {
       year_to_months:     ['year', 'month'],
       month_to_days:      ['year', 'month', 'dayOfMonth'],
@@ -104,9 +104,6 @@ class Reading
       return
     end
 
-    # if (metering_point_ids.include?('slp') || metering_point_ids.include?('sep_pv') || metering_point_ids.include?('sep_bhkw')) && @end_time > Time.now
-    #   @end_time = Time.now
-    # end
 
     # start pipe
     pipe = []
@@ -116,22 +113,20 @@ class Reading
     match = { "$match" => {
                 timestamp: {
                   "$gte"  => @start_time,
-                  "$lte"  => @end_time
+                  "$lt"  => @end_time
                 }
               }
             }
 
 
-    if metering_point_ids[0] == 'slp'
+    if meter_ids[0] == 'slp'
       metering_point_or_fake = { source: { "$in" => ['slp'] } }
-    elsif metering_point_ids[0] == 'sep_pv'
+    elsif meter_ids[0] == 'sep_pv'
       metering_point_or_fake = { source: { "$in" => ['sep_pv'] } }
-    elsif metering_point_ids[0] == 'sep_bhkw'
+    elsif meter_ids[0] == 'sep_bhkw'
       metering_point_or_fake = { source: { "$in" => ['sep_bhkw'] } }
-    #elsif metering_point_ids[0] == 'user_input'
-    #  metering_point_or_fake = { source: { "$in" => ['user_input'] } }
     else
-      metering_point_or_fake = { metering_point_id: { "$in" => metering_point_ids } }
+      metering_point_or_fake = { meter_id: { "$in" => meter_ids } }
     end
     match["$match"].merge!(metering_point_or_fake)
     pipe << match
@@ -144,7 +139,7 @@ class Reading
     # project
     project = {
                 "$project" => {
-                  metering_point_id: 1,
+                  meter_id: 1,
                   energy_a_milliwatt_hour: 1,
                   energy_b_milliwatt_hour: 1,
                   power_milliwatt: 1,
@@ -185,8 +180,8 @@ class Reading
             }
     formats = {_id: {}}
 
-    if metering_point_ids.size > 1
-      formats[:_id].merge!({ "metering_point_id" =>  "$metering_point_id" })
+    if meter_ids.size > 1
+      formats[:_id].merge!({ "meter_id" =>  "$meter_id" })
     end
 
     resolution.each do |format|
@@ -204,7 +199,7 @@ class Reading
     # project
     project = {
                 "$project" => {
-                  metering_point_id: 1,
+                  meter_id: 1,
                   sumEnergyAMilliWattHour: { "$subtract" => [ "$lastEnergyAMilliWattHour", "$firstEnergyAMilliWattHour" ] },
                   sumEnergyBMilliWattHour: { "$subtract" => [ "$lastEnergyBMilliWattHour", "$firstEnergyBMilliWattHour" ] },
                   avgPowerMilliwatt:      "$avgPowerMilliwatt",
@@ -222,12 +217,13 @@ class Reading
 
 
     # group
-    if metering_point_ids.size > 1
+    if meter_ids.size > 1
       group = {
                 "$group" => {
-                  avgPowerMilliwatt:       {"$sum"  => "$avgPowerMilliwatt" },
-                  sumEnergyAMilliWattHour: {"$sum"  => "$sumEnergyAMilliWattHour" },
-                  sumEnergyBMilliWattHour: {"$sum"  => "$sumEnergyBMilliWattHour" }
+                  avgPowerMilliwatt:       {"$sum"   => "$avgPowerMilliwatt" },
+                  sumEnergyAMilliWattHour: {"$sum"   => "$sumEnergyAMilliWattHour" },
+                  sumEnergyBMilliWattHour: {"$sum"   => "$sumEnergyBMilliWattHour" },
+                  firstTimestamp:          {"$first" => "$firstTimestamp" }
                 }
               }
       formats = {_id: {}}
@@ -263,11 +259,11 @@ class Reading
 
 
 
-  def self.last_by_metering_point_id(metering_point_id)
+  def self.last_by_meter_id(meter_id)
     pipe = [
       { "$match" => {
-          metering_point_id: {
-            "$in" => [metering_point_id]
+          meter_id: {
+            "$in" => [meter_id]
           }
         }
       },
@@ -281,11 +277,11 @@ class Reading
   end
 
 
-  def self.last_two_by_metering_point_id(metering_point_id)
+  def self.last_two_by_meter_id(meter_id)
     pipe = [
       { "$match" => {
-          metering_point_id: {
-            "$in" => [metering_point_id]
+          meter_id: {
+            "$in" => [meter_id]
           }
         }
       },
@@ -299,11 +295,11 @@ class Reading
   end
 
 
-  def self.first_by_metering_point_id(metering_point_id)
+  def self.first_by_meter_id(meter_id)
     pipe = [
       { "$match" => {
-          metering_point_id: {
-            "$in" => [metering_point_id]
+          meter_id: {
+            "$in" => [meter_id]
           }
         }
       },
@@ -316,11 +312,11 @@ class Reading
     return Reading.collection.aggregate(pipe).first
   end
 
-  def self.all_by_metering_point_id(metering_point_id)
+  def self.all_by_meter_id(meter_id)
     pipe = [
       { "$match" => {
-          metering_point_id: {
-            "$in" => [metering_point_id]
+          meter_id: {
+            "$in" => [meter_id]
           },
           source:{
             "$in" => ['user_input']
@@ -335,11 +331,11 @@ class Reading
     return Reading.collection.aggregate(pipe)
   end
 
-  def self.last_before_user_input(metering_point_id, input_timestamp)
+  def self.last_before_user_input(meter_id, input_timestamp)
     pipe = [
       { "$match" => {
-          metering_point_id: {
-            "$in" => [metering_point_id]
+          meter_id: {
+            "$in" => [meter_id]
           },
           source:{
             "$in" => ['user_input']

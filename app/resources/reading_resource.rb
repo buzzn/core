@@ -3,5 +3,5 @@ class ReadingResource < ApplicationResource
               :energy_b_milliwatt_hour,
               :power_milliwatt,
               :timestamp,
-              :metering_point_id
+              :meter_id
 end

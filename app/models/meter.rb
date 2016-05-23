@@ -18,7 +18,9 @@ class Meter < ActiveRecord::Base
 
   has_many :metering_points
 
-
+  def managers
+    User.with_role :manager, self
+  end
 
   def name
     "#{manufacturer_name} #{manufacturer_product_serialnumber}"
