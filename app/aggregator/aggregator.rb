@@ -100,9 +100,8 @@ class Aggregator
           end
         end
 
-        binding.pry
-        @chart = calculate_virtual_metering_point(@chart_items, Array.new(@chart_items.count, "+"), @resolution)
-
+        #@chart = calculate_virtual_metering_point(@chart_items, Array.new(@chart_items.count, "+"), @resolution)
+        @chart = @chart_items
 
       end
       if seconds_to_process > 2
