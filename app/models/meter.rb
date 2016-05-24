@@ -1,22 +1,16 @@
 class Meter < ActiveRecord::Base
-
+  resourcify
   include Authority::Abilities
-
   has_ancestry
-
   validates :manufacturer_product_serialnumber, presence: true, uniqueness: true   #, unless: "self.virtual"
-
-
   mount_uploader :image, PictureUploader
-
   before_destroy :release_metering_points
-
-  default_scope { order('created_at ASC') }
-
-
   has_many :equipments
-
   has_many :metering_points
+  default_scope { order('created_at ASC') }
+  scope :editable_by_user, lambda {|user|
+    self.with_role(:manager, user)
+  }
 
   def managers
     User.with_role :manager, self

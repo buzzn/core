@@ -60,5 +60,43 @@ describe "Users API" do
   end
 
 
+  it 'gets all related meters for User' do
+    meter1 = Fabricate(:meter)
+    meter2 = Fabricate(:meter)
+    meter3 = Fabricate(:meter)
+
+    access_token  = Fabricate(:access_token)
+    access_token.update_attribute :scopes, 'admin'
+    user = User.find(access_token.resource_owner_id)
+    user.add_role(:manager, meter1)
+    user.add_role(:manager, meter2)
+
+    get_with_token "/api/v1/users/#{user.id}/meters", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(2)
+  end
+
+
+  it 'gets the related meters for User but filtert by manufacturer_product_serialnumber' do
+    meter1 = Fabricate(:meter)
+    meter2 = Fabricate(:meter)
+    meter3 = Fabricate(:meter)
+
+    access_token  = Fabricate(:access_token)
+    access_token.update_attribute :scopes, 'admin'
+    user          = User.find(access_token.resource_owner_id)
+    user.add_role(:manager, meter1)
+    user.add_role(:manager, meter2)
+
+    request_params = {
+      manufacturer_product_serialnumber: meter1.manufacturer_product_serialnumber
+    }
+
+    get_with_token "/api/v1/users/#{user.id}/meters", request_params, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
+    expect(json['data'].first['attributes']['manufacturer-product-serialnumber']).to eq(meter1.manufacturer_product_serialnumber)
+  end
+
 
 end
