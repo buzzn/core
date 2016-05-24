@@ -30,6 +30,7 @@ module API
           requires :manufacturer_name, desc: "name of the manufacturer"
           requires :manufacturer_product_name, desc: "meter produkt name"
           requires :manufacturer_product_serialnumber, desc: "meter produkt serialnumber"
+          requires :smart, desc: "meter is smart"
         end
         post do
           doorkeeper_authorize! :admin
@@ -38,7 +39,8 @@ module API
               meter = Meter.new({
                 manufacturer_name:                  params[:manufacturer_name],
                 manufacturer_product_name:          params[:manufacturer_product_name],
-                manufacturer_product_serialnumber:  params[:manufacturer_product_serialnumber]
+                manufacturer_product_serialnumber:  params[:manufacturer_product_serialnumber],
+                smart:                              params[:smart]
                 })
               if meter.save!
                 current_user.add_role(:manager, meter)
@@ -60,6 +62,7 @@ module API
           requires :manufacturer_name, desc: "name of the manufacturer"
           requires :manufacturer_product_name, desc: "meter produkt name"
           requires :manufacturer_product_serialnumber, desc: "meter produkt serialnumber"
+          requires :smart, desc: "meter is smart"
         end
         put do
           doorkeeper_authorize! :admin
@@ -69,7 +72,8 @@ module API
               meter.update({
                 manufacturer_name:                  params[:manufacturer_name],
                 manufacturer_product_name:          params[:manufacturer_product_name],
-                manufacturer_product_serialnumber:  params[:manufacturer_product_serialnumber]
+                manufacturer_product_serialnumber:  params[:manufacturer_product_serialnumber],
+                smart:                              params[:smart]
               })
               return meter
             else

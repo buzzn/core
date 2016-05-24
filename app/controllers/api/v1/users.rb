@@ -80,6 +80,21 @@ module API
         end
 
 
+        desc "Return the related meters for User"
+        params do
+          requires :id, type: String, desc: "ID of the User"
+          optional :manufacturer_product_serialnumber, type: String, desc: "manufacturer product serialnumber"
+        end
+        get ":id/meters" do
+          doorkeeper_authorize! :admin
+          user = User.find(params[:id])
+          if params[:manufacturer_product_serialnumber]
+            Meter.with_role(:manager, user).where(manufacturer_product_serialnumber: params[:manufacturer_product_serialnumber])
+          else
+            Meter.with_role(:manager, user)
+          end
+        end
+
 
         desc "Return the related friends for User"
         params do

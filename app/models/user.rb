@@ -94,6 +94,10 @@ class User < ActiveRecord::Base
     MeteringPoint.editable_by_user(self).collect(&:decorate)
   end
 
+  def editable_meters
+    Meter.editable_by_user(self)
+  end
+
   def editable_groups
     Group.editable_by_user(self).collect(&:decorate)
   end
