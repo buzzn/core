@@ -18,13 +18,8 @@ class MeteringPointsController < ApplicationController
     Browser.modern_rules.clear
     Browser.modern_rules << -> b { b.firefox? && b.version.to_i >= 41 }
     browser = Browser.new(ua: request.user_agent, accept_language: request.accept_language)
-    if !@metering_point.readable_by_world?
-      if user_signed_in?
-        authorize_action_for(@metering_point)
-      else
-        redirect_to root_path
-      end
-    end
+
+    authorize_action_for(@metering_point)
   end
 
 

@@ -142,6 +142,26 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def self.readable_group_ids_by_user(user)
+    group_ids = Group.all.readable_by_world.ids
+    if user.nil?
+      return group_ids
+    else
+      group_ids << Group.where(readable: 'community').collect(&:id)
+      group_ids << Group.with_role(:manager, user).collect(&:id)
+      group_ids << user.accessible_metering_points.collect(&:group).compact.collect(&:id)
+
+      user.friends.each do |friend|
+        if friend
+          Group.where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
+            group_ids << friend_group.id
+          end
+        end
+      end
+      return group_ids.compact.flatten.uniq
+    end
+  end
+
   def calculate_total_energy_data(data, operators, resolution)
     calculate_virtual_metering_point(data, operators, resolution)
   end

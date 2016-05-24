@@ -51,6 +51,15 @@ class ApplicationController < ActionController::Base
     UserDecorator.decorate(super) unless super.nil?
   end
 
+  # used for authority to make it possible to deal with logged out users
+  def current_or_null_user
+    if current_user == nil
+      User.new
+    else
+      current_user
+    end
+  end
+
   def initialize_gon
     if user_signed_in?
       Gon.global.push({ current_user_id: current_user.id,

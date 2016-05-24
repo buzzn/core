@@ -3,19 +3,7 @@ class GroupsController < ApplicationController
   respond_to :html, :js, :json
 
   def index
-    group_ids = Group.where(readable: 'world').ids
-    if user_signed_in?
-      group_ids << Group.where(readable: 'community').ids
-      group_ids << Group.with_role(:manager, current_user)
-
-      current_user.friends.each do |friend|
-        if friend
-          Group.where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
-            group_ids << friend_group.id
-          end
-        end
-      end
-    end
+    group_ids = Group.readable_group_ids_by_user(current_user)
     @groups  = Group.where(id: group_ids).search(params[:search]).paginate(:page => params[:page], :per_page => 3)
   end
 
@@ -38,19 +26,7 @@ class GroupsController < ApplicationController
     @activities                     = @group.activities.group_joins
     @activities_and_comments        = (@all_comments + @activities).sort_by!(&:created_at).reverse!
 
-    if @group.readable_by_world?
-      return @group
-    else
-      if user_signed_in?
-        if @group.readable_by_community?
-          return @group
-        else
-          authorize_action_for(@group)
-        end
-      else
-        redirect_to root_path
-      end
-    end
+    authorize_action_for(@group)
   end
 
 
