@@ -112,6 +112,65 @@ class Aggregator
   end
 
 
+  # json:
+  # [{"operator"=>"+", "data"=>[{"timestamp"=>"2016-01-31T23:00:00.000Z", "power_milliwatt"=>930000.0},
+  # {"timestamp"=>"2016-01-31T23:15:00.000Z", "power_milliwatt"=>930000.0},
+  # {"timestamp"=>"2016-01-31T23:30:00.000Z", "power_milliwatt"=>930000.0},
+  # {"timestamp"=>"2016-01-31T23:45:00.000Z", "power_milliwatt"=>930000.0}]},
+  # {"operator"=>"+", "data"=>[{"timestamp"=>"2016-01-31T23:00:00.000Z", "power_milliwatt"=>130000.0},
+  # {"timestamp"=>"2016-01-31T23:15:00.000Z", "power_milliwatt"=>230000.0},
+  # {"timestamp"=>"2016-01-31T23:30:00.000Z", "power_milliwatt"=>330000.0},
+  # {"timestamp"=>"2016-01-31T23:45:00.000Z", "power_milliwatt"=>430000.0}]}]
+  def aggregate(json, resolution)
+    key = json.first['data'].first.keys.last.to_sym
+    puts key
+    timestamps = []
+    values = []
+    i = 0
+    json.each do |series|
+      j = 0
+      if series.empty? || series['data'].empty?
+        i += 1
+        next
+      end
+      final_series = insert_new_mesh(series['data'], resolution)
+      final_series.each do |data_point|
+        if i == 0
+          timestamps << data_point[:timestamp]
+          values << data_point[key]
+        else
+          if timestamps[j].nil?
+            timestamps << data_point[:timestamp]
+            values << data_point[key]
+          else
+            indexOfTimestamp = get_matching_index(timestamps, data_point[:timestamp], resolution)
+            if indexOfTimestamp
+              if series['operator'] == "+"
+                values[indexOfTimestamp] += data_point[key]
+              elsif series['operator'] == "-"
+                values[indexOfTimestamp] -= data_point[key]
+              end
+            end
+          end
+        end
+        j += 1
+      end
+      i += 1
+    end
+    result = []
+
+    for i in 0...values.length
+      result << {
+        timestamp: timestamps[i],
+        key => values[i]
+      }
+    end
+    return result
+  end
+
+
+
+
 
 
 
@@ -175,6 +234,95 @@ private
 
     return items
   end
+
+  # data:
+  # [{"timestamp"=>"2016-01-31T23:00:00.000Z", "power_milliwatt"=>930000.0},
+  # {"timestamp"=>"2016-01-31T23:15:00.000Z", "power_milliwatt"=>930000.0},
+  # {"timestamp"=>"2016-01-31T23:30:00.000Z", "power_milliwatt"=>930000.0},
+  # {"timestamp"=>"2016-01-31T23:45:00.000Z", "power_milliwatt"=>930000.0}]
+  def insert_new_mesh(data, resolution)
+    result = []
+    key = data.first.keys.last
+    if resolution == "day_to_minutes"
+      firstTimestamp = data.first['timestamp'].to_time.in_time_zone.beginning_of_minute
+      lastTimestamp = data.first['timestamp'].to_time.in_time_zone.end_of_day
+      offset = 60
+    elsif resolution == "hour_to_minutes"
+      firstTimestamp = data.first['timestamp'].to_time.in_time_zone.beginning_of_minute
+      lastTimestamp = data.first['timestamp'].to_time.in_time_zone.end_of_hour
+      offset = 60
+    elsif resolution == "year_to_months"
+      data.each do |reading|
+        result << { timestamp: reading['timestamp'].in_time_zone.beginning_of_month, "#{key}": reading[key]}
+      end
+      return result
+    else
+      return data
+    end
+    new_timestamp = firstTimestamp
+    now = Time.now.in_time_zone
+    new_value = 0
+    count_readings = 0
+    sum_power = 0
+    i = 0
+    j = 0
+    while firstTimestamp + j * offset < lastTimestamp && (now > lastTimestamp || i < data.size)
+      if i < data.size && data[i]['timestamp'].to_time.in_time_zone - new_timestamp <= offset
+        count_readings += 1
+        sum_power += data[i][key]
+      else
+        if count_readings != 0
+          new_value = (sum_power*1.0 / count_readings).to_i
+          result << { timestamp: new_timestamp, "#{key}": new_value }
+          count_readings = 0
+          sum_power = 0
+        else
+          result << { timestamp: new_timestamp, "#{key}": new_value }
+        end
+        new_timestamp += offset
+        j += 1
+        i -= 1
+      end
+      i += 1
+    end
+    if count_readings != 0
+      new_value = (sum_power*1.0 / count_readings).to_i
+      result << { timestamp: new_timestamp, "#{key}": new_value }
+      count_readings = 0
+      sum_power = 0
+    else
+      result << { timestamp: new_timestamp, "#{key}": new_value }
+    end
+    return result
+  end
+
+
+  def get_matching_index(arr, value, resolution)
+    offset = 1
+    if resolution == "day_to_minutes" || resolution == "hour_to_minutes"
+      offset = 30
+    elsif resolution == "day_to_hours"
+      offset = 3600
+    elsif resolution == "month_to_days"
+      offset = 12*3600
+    elsif resolution == "year_to_months"
+      offset = 15*24*3600
+    end
+
+    result = arr.index(value)
+    if result
+      return result
+    end
+    i = 0
+    length = arr.length
+    while i < length
+      if (value.to_time - arr[i].to_time).abs <= offset
+        return i
+      end
+      i+=1
+    end
+  end
+
 
 
 
