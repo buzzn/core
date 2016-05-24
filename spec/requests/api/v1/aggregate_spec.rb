@@ -224,7 +224,7 @@ describe "Aggregate API" do
 
     get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
 
-    puts json
+    binding.pry
 
     # expect(response).to have_http_status(200)
     # expect(json.count).to eq(45)
