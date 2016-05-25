@@ -95,13 +95,11 @@ class Aggregator
           collection = Reading.aggregate(@resolution, ['slp'], @timestamp)
           slp_metering_points.each do |metering_point|
             factor = metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/1000) : 1
-            @chart_items << collection_to_hash(collection, factor)
-            #@chart_items << convert_to_array(collection, @resolution, 1)
+            @chart_items << {"operator"=>"+", "data"=> collection_to_hash(collection, factor)}
           end
         end
 
-        #@chart = calculate_virtual_metering_point(@chart_items, Array.new(@chart_items.count, "+"), @resolution)
-        @chart = @chart_items
+        @chart = aggregate(@chart_items, @resolution)
 
       end
       if seconds_to_process > 2
@@ -112,18 +110,9 @@ class Aggregator
   end
 
 
-  # json:
-  # [{"operator"=>"+", "data"=>[{"timestamp"=>"2016-01-31T23:00:00.000Z", "power_milliwatt"=>930000.0},
-  # {"timestamp"=>"2016-01-31T23:15:00.000Z", "power_milliwatt"=>930000.0},
-  # {"timestamp"=>"2016-01-31T23:30:00.000Z", "power_milliwatt"=>930000.0},
-  # {"timestamp"=>"2016-01-31T23:45:00.000Z", "power_milliwatt"=>930000.0}]},
-  # {"operator"=>"+", "data"=>[{"timestamp"=>"2016-01-31T23:00:00.000Z", "power_milliwatt"=>130000.0},
-  # {"timestamp"=>"2016-01-31T23:15:00.000Z", "power_milliwatt"=>230000.0},
-  # {"timestamp"=>"2016-01-31T23:30:00.000Z", "power_milliwatt"=>330000.0},
-  # {"timestamp"=>"2016-01-31T23:45:00.000Z", "power_milliwatt"=>430000.0}]}]
+
   def aggregate(json, resolution)
     key = json.first['data'].first.keys.last.to_sym
-    puts key
     timestamps = []
     values = []
     i = 0
@@ -206,9 +195,14 @@ private
     collection.each do |document|
       timestamp = document['firstTimestamp']
       power     = document['avgPowerMilliwatt'] * factor
-      energy_a  = document['sumEnergyAMilliWattHour'] ? (document['sumEnergyAMilliWattHour'] * factor) : 0
-      energy_b  = document['sumEnergyBMilliWattHour'] ? (document['sumEnergyBMilliWattHour'] * factor) : 0
-      items     << { timestamp: timestamp, power_milliwatt: power, energy_a_milliwatt_hour: energy_a, energy_b_milliwatt_hour: energy_b }
+      energy_a  = document['sumEnergyAMilliwattHour'] * factor
+      energy_b  = document['sumEnergyBMilliwattHour'] * factor
+      items << {
+        'timestamp' => timestamp,
+        'power_milliwatt' => power,
+        'energy_a_milliwatt_hour' => energy_a,
+        'energy_b_milliwatt_hour' => energy_b
+      }
     end
     return items
   end
@@ -244,30 +238,30 @@ private
     result = []
     key = data.first.keys.last
     if resolution == "day_to_minutes"
-      firstTimestamp = data.first['timestamp'].to_time.in_time_zone.beginning_of_minute
-      lastTimestamp = data.first['timestamp'].to_time.in_time_zone.end_of_day
+      firstTimestamp = data.first['timestamp'].to_time.beginning_of_minute
+      lastTimestamp = data.first['timestamp'].to_time.end_of_day
       offset = 60
     elsif resolution == "hour_to_minutes"
-      firstTimestamp = data.first['timestamp'].to_time.in_time_zone.beginning_of_minute
-      lastTimestamp = data.first['timestamp'].to_time.in_time_zone.end_of_hour
+      firstTimestamp = data.first['timestamp'].to_time.beginning_of_minute
+      lastTimestamp = data.first['timestamp'].to_time.end_of_hour
       offset = 60
     elsif resolution == "year_to_months"
       data.each do |reading|
-        result << { timestamp: reading['timestamp'].in_time_zone.beginning_of_month, "#{key}": reading[key]}
+        result << { timestamp: reading['timestamp'].beginning_of_month, "#{key}": reading[key]}
       end
       return result
     else
       return data
     end
     new_timestamp = firstTimestamp
-    now = Time.now.in_time_zone
+    now = Time.now
     new_value = 0
     count_readings = 0
     sum_power = 0
     i = 0
     j = 0
     while firstTimestamp + j * offset < lastTimestamp && (now > lastTimestamp || i < data.size)
-      if i < data.size && data[i]['timestamp'].to_time.in_time_zone - new_timestamp <= offset
+      if i < data.size && data[i]['timestamp'].to_time - new_timestamp <= offset
         count_readings += 1
         sum_power += data[i][key]
       else

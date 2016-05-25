@@ -41,12 +41,14 @@ describe "Readings API" do
       meter_id: meter.id,
       timestamp: reading.timestamp,
       energy_a_milliwatt_hour: reading.energy_a_milliwatt_hour,
+      energy_b_milliwatt_hour: reading.energy_b_milliwatt_hour,
       power_milliwatt: reading.power_milliwatt
     }.to_json
     post_with_token "/api/v1/readings", request_params, access_token.token
     expect(response).to have_http_status(201)
     expect(DateTime.parse(json['data']['attributes']['timestamp'])).to eq(reading.timestamp)
     expect(json['data']['attributes']['energy-a-milliwatt-hour']).to eq(reading.energy_a_milliwatt_hour)
+    expect(json['data']['attributes']['energy-b-milliwatt-hour']).to eq(reading.energy_b_milliwatt_hour)
     expect(json['data']['attributes']['power-milliwatt']).to eq(reading.power_milliwatt )
   end
 

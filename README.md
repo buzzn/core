@@ -79,3 +79,4 @@
   - remove discovergy pull readings
   - query die mongodb nur auf die werte die benötigt werden, power oder energy a oder b
   - mongodb TTL 4 jahre.
+  - fix swagger ui
