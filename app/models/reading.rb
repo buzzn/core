@@ -169,10 +169,10 @@ class Reading
     # group
     group = {
               "$group" => {
-                firstEnergyAMilliWattHour:  { "$first"  => "$energy_a_milliwatt_hour" },
-                lastEnergyAMilliWattHour:   { "$last"   => "$energy_a_milliwatt_hour" },
-                firstEnergyBMilliWattHour:  { "$first"  => "$energy_b_milliwatt_hour" },
-                lastEnergyBMilliWattHour:   { "$last"   => "$energy_b_milliwatt_hour" },
+                firstEnergyAMilliwattHour:  { "$first"  => "$energy_a_milliwatt_hour" },
+                lastEnergyAMilliwattHour:   { "$last"   => "$energy_a_milliwatt_hour" },
+                firstEnergyBMilliwattHour:  { "$first"  => "$energy_b_milliwatt_hour" },
+                lastEnergyBMilliwattHour:   { "$last"   => "$energy_b_milliwatt_hour" },
                 avgPowerMilliwatt:          { "$avg"    => "$power_milliwatt" },
                 firstTimestamp:             { "$first"  => "$timestamp" },
                 lastTimestamp:              { "$last"   => "$timestamp" },
@@ -200,8 +200,8 @@ class Reading
     project = {
                 "$project" => {
                   meter_id: 1,
-                  sumEnergyAMilliWattHour: { "$subtract" => [ "$lastEnergyAMilliWattHour", "$firstEnergyAMilliWattHour" ] },
-                  sumEnergyBMilliWattHour: { "$subtract" => [ "$lastEnergyBMilliWattHour", "$firstEnergyBMilliWattHour" ] },
+                  sumEnergyAMilliwattHour: { "$subtract" => [ "$lastEnergyAMilliwattHour", "$firstEnergyAMilliwattHour" ] },
+                  sumEnergyBMilliwattHour: { "$subtract" => [ "$lastEnergyBMilliwattHour", "$firstEnergyBMilliwattHour" ] },
                   avgPowerMilliwatt:      "$avgPowerMilliwatt",
                   firstTimestamp:         "$firstTimestamp",
                   lastTimestamp:          "$lastTimestamp"
@@ -221,8 +221,8 @@ class Reading
       group = {
                 "$group" => {
                   avgPowerMilliwatt:       {"$sum"   => "$avgPowerMilliwatt" },
-                  sumEnergyAMilliWattHour: {"$sum"   => "$sumEnergyAMilliWattHour" },
-                  sumEnergyBMilliWattHour: {"$sum"   => "$sumEnergyBMilliWattHour" },
+                  sumEnergyAMilliwattHour: {"$sum"   => "$sumEnergyAMilliwattHour" },
+                  sumEnergyBMilliwattHour: {"$sum"   => "$sumEnergyBMilliwattHour" },
                   firstTimestamp:          {"$first" => "$firstTimestamp" }
                 }
               }

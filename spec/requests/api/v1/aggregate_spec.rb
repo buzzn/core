@@ -204,8 +204,9 @@ describe "Aggregate API" do
     metering_point2 = Fabricate(:metering_point)
 
     energy_a_milliwatt_hour = 0
-    timestamp = Time.new(2016,2,1)
-    4.times do |i|
+
+    timestamp = Time.find_zone('Fiji').local(2015,2,1)
+    (60*60).times do |i|
       Fabricate(:reading,
         source: 'slp',
         timestamp: timestamp,
@@ -213,25 +214,27 @@ describe "Aggregate API" do
         power_milliwatt: 930*1000
       )
       energy_a_milliwatt_hour += 1300*1000
-      timestamp += 15.minutes
+      timestamp += 1.seconds
     end
 
     request_params = {
       metering_point_ids: "#{metering_point1.id},#{metering_point2.id}",
       resolution: 'hour_to_minutes',
-      timestamp: Time.new(2016,2,1, 0,30)
+      timestamp: Time.find_zone('Fiji').local(2015,2,1, 0,30)
     }
 
     get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
 
-    binding.pry
+    timestamp = Time.find_zone('Fiji').local(2015,2,1)
+    expect(response).to have_http_status(200)
+    expect(json.count).to eq(59)
 
-    # expect(response).to have_http_status(200)
-    # expect(json.count).to eq(45)
-    # expect(Time.at(json[0][0]/1000)).to eq(Time.new(2016,2,1))
-    # json.each do |item|
-    #   expect(item[1]).to eq(2*930*1000)
-    # end
+    timestamp = Time.find_zone('Fiji').local(2015,2,1)
+    json.each do |item|
+      expect(Time.parse(item['timestamp'])).to eq(timestamp.utc)
+      expect(item['power_milliwatt']).to eq(930*1000*2)
+      timestamp += 1.minute
+    end
 
   end
 
