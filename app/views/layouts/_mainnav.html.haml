@@ -10,11 +10,11 @@
           = link_to( content_tag(:i, nil, class: 'fa fa-users'), groups_path, class: 'shortcut-grid')
 
 
-    - if user_signed_in?
-      #mainnav-menu-wrap
-        .nano
-          .nano-content
-            %ul#mainnav-menu.list-group
+    #mainnav-menu-wrap
+      .nano
+        .nano-content
+          %ul#mainnav-menu.list-group
+            - if user_signed_in?
 
               %li.list-header{"data-content" => ''}= t'my_profile'
               = mainnav_profile_path(current_user.profile)
@@ -58,36 +58,8 @@
                 - current_user.friends.each do |user|
                   = mainnav_profile_path(user.profile) if user.profile
 
-
-
-/ %aside.sidebar
-/   %nav.sidebar-nav
-/     %ul
-/       %li.col-xs-6{"data-content" => t('users')}
-/         = link_to( content_tag(:i, nil, class: 'fa fa-user'), profiles_path, class: 'shortcut-grid')
-
-/       %li.col-xs-6{"data-content" => t('groups')}
-/         = link_to( content_tag(:i, nil, class: 'fa fa-users'), groups_path, class: 'shortcut-grid')
-/     %ul.metismenu{id: 'menu'}
-/       %li.list-header= t'my_profile'
-/       = mainnav_profile_path(current_user.profile)
-/       - if current_user.editable_metering_points.any?
-/         %li.list-header= t'my_metering_points'
-/         - current_user.accessible_metering_points_by_address.each do |metering_points_address|
-/           %li{class: is_active_link?(metering_points_path, :inclusive) ? 'active active-sub' : ''}
-/             %a{"data-original-title" => "", :href => "#", :title => "", 'aria-expanded': true }
-/               %i.fa.fa-bolt
-/               %span.menu-title
-/                 - if metering_points_address[:address]
-/                   = truncate( metering_points_address[:address].street_name + " " + metering_points_address[:address].street_number + " " + metering_points_address[:address].city, length: 23)
-/                 - else
-/                   = t('without_address')
-/               %i.arrow
-
-/             %ul.collapse.out
-/               - metering_points_address[:metering_points].each do |metering_point|
-/                 %li
-/                   = mainnav_metering_point_path(metering_point.decorate)
+            %li.list-header= link_to t('terms_of_use'), page_path('terms_of_use')
+            %li.list-header= link_to t('legal_info'), page_path('legal_info')
 
 
 

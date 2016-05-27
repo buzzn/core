@@ -100,6 +100,7 @@ gem 'browser'
 gem 'acts_as_votable', '~> 0.10.0'
 gem 'i18n-tasks'
 gem 'will_paginate', '~> 3.0.6'
+gem 'high_voltage', '~> 3.0.0'
 
 
 source 'http://rails-assets.org' do

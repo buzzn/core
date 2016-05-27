@@ -199,4 +199,6 @@ Buzzn::Application.routes.draw do
 
   root controller: 'profiles', action: 'redirect_to_current_user'
 
+
+
 end
