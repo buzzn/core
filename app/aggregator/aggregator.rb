@@ -5,7 +5,6 @@
 
 
 require 'benchmark'
-require 'matrix'
 class Aggregator
   include CalcVirtualMeteringPoint
 
@@ -30,37 +29,52 @@ class Aggregator
 
         buzzn_api_metering_points, discovergy_metering_points, slp_metering_points = metering_points_sort(@metering_point_ids)
 
-        # buzzn_api
-        # TODO sum this in mongodb.
-        buzzn_api_metering_points.each do |metering_point|
-          reading = Reading.where(meter_id: metering_point.meter.id, :timestamp.gte => @timestamp).last
-          @power_items << reading.power_milliwatt
-        end
+        ['in', 'out'].each do |mode|
+          buzzn_api_metering_points[mode.to_sym].each do |metering_point|
+            reading = Reading.where(meter_id: metering_point.meter.id, :timestamp.gte => @timestamp).last
+            @power_items << {
+              "operator" => (mode == 'in' ? '+' : '-'),
+              "data" => reading.power_milliwatt
+            }
+          end
 
-        # discovergy
-        discovergy_metering_points.each do |metering_point|
-          @power_items << external_data(metering_point, @resolution, @timestamp.to_i*1000)
+          # discovergy
+          discovergy_metering_points[mode.to_sym].each do |metering_point|
+            @power_items << {
+              "operator" => (mode == 'in' ? '+' : '-'),
+              "data" => external_data(metering_point, @resolution, @timestamp.to_i*1000)
+            }
+          end
         end
 
         #slp
         if slp_metering_points.any?
-          reading = Reading.where(:timestamp.gte => (@timestamp - 15.minutes), :timestamp.lte => (@timestamp + 15.minutes), source: 'slp').last
+          document = Reading.where(:timestamp.gte => (@timestamp - 15.minutes), :timestamp.lte => (@timestamp + 15.minutes), source: 'slp').last
           slp_metering_points.each do |metering_point|
-            factor = metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/1000) : 1
-            @power_items << reading.power_milliwatt * factor
+            factor = factor_from_metering_point(metering_point)
+            @power_items << {
+              "operator" => "+",
+              "data" => {
+                'timestamp'               => document['timestamp'],
+                'power_milliwatt'         => document['power_milliwatt'] * factor,
+                'energy_a_milliwatt_hour' => document['energy_a_milliwatt_hour'] * factor,
+                'energy_b_milliwatt_hour' => document['energy_b_milliwatt_hour'] * factor
+              }
+            }
           end
         end
+
       end
     end
 
-    @power = @power_items.inject(0, :+)
+    @power = sum_chart_items(@power_items)
 
     if seconds_to_process > 2
       Rails.cache.write(@cache_id, @power, expires_in: 5.seconds)
     end
-
     return @power
   end
+
 
 
 
@@ -78,28 +92,38 @@ class Aggregator
 
         buzzn_api_metering_points, discovergy_metering_points, slp_metering_points = metering_points_sort(@metering_point_ids)
 
-        # buzzn_api
-        if buzzn_api_metering_points.any?
-          collection = Reading.aggregate(@resolution, buzzn_api_metering_points.collect(&:meter_id), @timestamp)
-          @chart_items << collection_to_hash(collection)
-          #@chart_items << convert_to_array(collection, @resolution, 1)
-        end
+        ['in', 'out'].each do |mode|
+          # buzzn_api
+          if buzzn_api_metering_points[mode.to_sym].any?
+            source = { meter_id: { "$#{mode}" => buzzn_api_metering_points[mode.to_sym].collect(&:meter_id) } }
+            keys = [key_from_resolution_and_mode(@resolution, mode)]
+            collection = Reading.aggregate(@resolution, source, @timestamp, keys)
+            @chart_items << {
+              "operator" => (mode == 'in' ? '+' : '-'),
+              "data" => collection_to_hash(collection, 1)
+            }
+          end
 
-        # discovergy
-        discovergy_metering_points.each do |metering_point|
-          @chart_items << external_data(metering_point, @resolution, @timestamp.to_i*1000)
+          # discovergy
+          discovergy_metering_points[mode.to_sym].each do |metering_point|
+            @chart_items << {
+              "operator" => (mode == 'in' ? '+' : '-'),
+              "data" => external_data(metering_point, @resolution, @timestamp.to_i*1000)
+            }
+          end
         end
 
         #slp
         if slp_metering_points.any?
-          collection = Reading.aggregate(@resolution, ['slp'], @timestamp)
+          source = { source: { "$in" => ['slp'] } }
+          keys = [key_from_resolution_and_mode(@resolution, 'in')]
+          collection = Reading.aggregate(@resolution, source, @timestamp, keys)
           slp_metering_points.each do |metering_point|
-            factor = metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/1000) : 1
-            @chart_items << {"operator"=>"+", "data"=> collection_to_hash(collection, factor)}
+            factor = factor_from_metering_point(metering_point)
+            @chart_items << { "operator" => "+", "data" => collection_to_hash(collection, factor) }
           end
         end
-
-        @chart = aggregate(@chart_items, @resolution)
+        @chart = sum_chart_items(@chart_items)
 
       end
       if seconds_to_process > 2
@@ -111,75 +135,77 @@ class Aggregator
 
 
 
-  def aggregate(json, resolution)
-    key = json.first['data'].first.keys.last.to_sym
-    timestamps = []
-    values = []
-    i = 0
-    json.each do |series|
-      j = 0
-      if series.empty? || series['data'].empty?
-        i += 1
-        next
+private
+
+  def factor_from_metering_point(metering_point)
+     metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/1000) : 1
+  end
+
+  def key_from_resolution_and_mode(resolution, mode)
+    if Reading.energy_resolutions.include?(resolution)
+      case mode
+      when 'in'
+        return 'energy_a_milliwatt_hour'
+      when 'out'
+        return 'energy_b_milliwatt_hour'
+      else
+        "You gave me mode: #{mode} -- I have no idea what to do with that."
       end
-      final_series = insert_new_mesh(series['data'], resolution)
-      final_series.each do |data_point|
-        if i == 0
-          timestamps << data_point[:timestamp]
-          values << data_point[key]
-        else
-          if timestamps[j].nil?
-            timestamps << data_point[:timestamp]
-            values << data_point[key]
-          else
-            indexOfTimestamp = get_matching_index(timestamps, data_point[:timestamp], resolution)
-            if indexOfTimestamp
-              if series['operator'] == "+"
-                values[indexOfTimestamp] += data_point[key]
-              elsif series['operator'] == "-"
-                values[indexOfTimestamp] -= data_point[key]
-              end
+    elsif Reading.power_resolutions.include?(resolution)
+      return 'power_milliwatt'
+    end
+  end
+
+  def sum_chart_items(chart_items)
+    if chart_items.count > 1
+      chart_tamplate  = chart_items.pop
+      chart           = chart_tamplate['data']
+      chart_keys      = chart_tamplate['data'].first.keys
+      chart_keys.delete('timestamp')
+      chart_items.each do |chart_item|
+        operator        = chart_item['operator']
+        chart_item_data = chart_item['data']
+        chart_item_data.each_with_index do |item, index|
+          chart_keys.each do |key|
+            case operator
+            when '+'
+              chart[index][key] += item[key]
+            when '-'
+              chart[index][key] -= item[key]
+            else
+              "You gave me operator: #{operator} -- I have no idea what to do with that."
             end
           end
         end
-        j += 1
       end
-      i += 1
+      return chart
+    else
+      return chart_items.first['data']
     end
-    result = []
-
-    for i in 0...values.length
-      result << {
-        timestamp: timestamps[i],
-        key => values[i]
-      }
-    end
-    return result
   end
 
 
 
-
-
-
-
-
-
-
-private
-
-
   def metering_points_sort(metering_point_ids)
-    buzzn_api_metering_points     = []
-    discovergy_metering_points    = []
-    slp_metering_points           = []
-
+    buzzn_api_metering_points   = { in:[], out:[] }
+    discovergy_metering_points  = { in:[], out:[] }
+    slp_metering_points         = []
     MeteringPoint.where(id: @metering_point_ids).each do |metering_point|
       case metering_point.data_source
       when 'buzzn-api'
-        buzzn_api_metering_points << metering_point
+        case metering_point.mode
+        when 'in'
+          buzzn_api_metering_points[:in] << metering_point
+        when 'out'
+          buzzn_api_metering_points[:out] << metering_point
+        end
       when 'discovergy'
-        discovergy_metering_points << metering_point
+        case metering_point.mode
+        when 'in'
+          discovergy_metering_points[:in] << metering_point
+        when 'out'
+          discovergy_metering_points[:out] << metering_point
+        end
       when 'slp'
         slp_metering_points << metering_point
       else
@@ -193,130 +219,40 @@ private
   def collection_to_hash(collection, factor=1)
     items = []
     collection.each do |document|
-      timestamp = document['firstTimestamp']
-      power     = document['avgPowerMilliwatt'] * factor
-      energy_a  = document['sumEnergyAMilliwattHour'] * factor
-      energy_b  = document['sumEnergyBMilliwattHour'] * factor
-      items << {
-        'timestamp' => timestamp,
-        'power_milliwatt' => power,
-        'energy_a_milliwatt_hour' => energy_a,
-        'energy_b_milliwatt_hour' => energy_b
-      }
+      item = {'timestamp' => document['firstTimestamp']}
+      item.merge!('power_milliwatt' => document['avgPowerMilliwatt'] * factor) if document['avgPowerMilliwatt']
+      item.merge!('energy_a_milliwatt_hour' => document['sumEnergyAMilliwattHour'] * factor) if document['sumEnergyAMilliwattHour']
+      item.merge!('energy_b_milliwatt_hour' => document['sumEnergyBMilliwattHour'] * factor) if document['sumEnergyBMilliwattHour']
+      items << item
     end
     return items
   end
 
   def external_data(metering_point, resolution, timestamp)
+    items = []
     crawler = Crawler.new(metering_point)
+
     if resolution == 'hour_to_minutes'
       result = crawler.hour(timestamp)
+
     elsif resolution == 'day_to_minutes'
       result = crawler.day(timestamp)
+      result.each do |item|
+        items << {
+          timestamp: Time.at(item[0]/1000),
+          power_milliwatt: (item[1]*1000).to_i
+        }
+      end
+
     elsif resolution == 'month_to_days'
       result = crawler.month(timestamp)
+
     elsif resolution == 'year_to_months'
       result = crawler.year(timestamp)
-    end
 
-    # the rails view is using Crawler.rb dirctly. so i need to change the result later
-    # TODO move this into Crawler.rb
-    items = []
-    result.each do |item|
-      items << { timestamp: Time.at(item[0]/1000), power_milliwatt: item[1]*1000 }
     end
-
     return items
   end
-
-  # data:
-  # [{"timestamp"=>"2016-01-31T23:00:00.000Z", "power_milliwatt"=>930000.0},
-  # {"timestamp"=>"2016-01-31T23:15:00.000Z", "power_milliwatt"=>930000.0},
-  # {"timestamp"=>"2016-01-31T23:30:00.000Z", "power_milliwatt"=>930000.0},
-  # {"timestamp"=>"2016-01-31T23:45:00.000Z", "power_milliwatt"=>930000.0}]
-  def insert_new_mesh(data, resolution)
-    result = []
-    key = data.first.keys.last
-    if resolution == "day_to_minutes"
-      firstTimestamp = data.first['timestamp'].to_time.beginning_of_minute
-      lastTimestamp = data.first['timestamp'].to_time.end_of_day
-      offset = 60
-    elsif resolution == "hour_to_minutes"
-      firstTimestamp = data.first['timestamp'].to_time.beginning_of_minute
-      lastTimestamp = data.first['timestamp'].to_time.end_of_hour
-      offset = 60
-    elsif resolution == "year_to_months"
-      data.each do |reading|
-        result << { timestamp: reading['timestamp'].beginning_of_month, "#{key}": reading[key]}
-      end
-      return result
-    else
-      return data
-    end
-    new_timestamp = firstTimestamp
-    now = Time.now
-    new_value = 0
-    count_readings = 0
-    sum_power = 0
-    i = 0
-    j = 0
-    while firstTimestamp + j * offset < lastTimestamp && (now > lastTimestamp || i < data.size)
-      if i < data.size && data[i]['timestamp'].to_time - new_timestamp <= offset
-        count_readings += 1
-        sum_power += data[i][key]
-      else
-        if count_readings != 0
-          new_value = (sum_power*1.0 / count_readings).to_i
-          result << { timestamp: new_timestamp, "#{key}": new_value }
-          count_readings = 0
-          sum_power = 0
-        else
-          result << { timestamp: new_timestamp, "#{key}": new_value }
-        end
-        new_timestamp += offset
-        j += 1
-        i -= 1
-      end
-      i += 1
-    end
-    if count_readings != 0
-      new_value = (sum_power*1.0 / count_readings).to_i
-      result << { timestamp: new_timestamp, "#{key}": new_value }
-      count_readings = 0
-      sum_power = 0
-    else
-      result << { timestamp: new_timestamp, "#{key}": new_value }
-    end
-    return result
-  end
-
-
-  def get_matching_index(arr, value, resolution)
-    offset = 1
-    if resolution == "day_to_minutes" || resolution == "hour_to_minutes"
-      offset = 30
-    elsif resolution == "day_to_hours"
-      offset = 3600
-    elsif resolution == "month_to_days"
-      offset = 12*3600
-    elsif resolution == "year_to_months"
-      offset = 15*24*3600
-    end
-
-    result = arr.index(value)
-    if result
-      return result
-    end
-    i = 0
-    length = arr.length
-    while i < length
-      if (value.to_time - arr[i].to_time).abs <= offset
-        return i
-      end
-      i+=1
-    end
-  end
-
 
 
 

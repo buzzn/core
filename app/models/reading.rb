@@ -37,7 +37,73 @@ class Reading
     source == 'user_input'
   end
 
-  def self.aggregate(resolution_format, meter_ids=['slp'], timestamp)
+  def self.power_resolutions
+    %w{
+      day_to_minutes
+      hour_to_minutes
+      minute_to_seconds
+    }
+  end
+
+  def self.energy_resolutions
+    %w{
+      year_to_months
+      month_to_days
+      day_to_hours
+    }
+  end
+
+  def self.time_range_from_timestamp_and_resolution(timestamp, resolution)
+    offset = timestamp.utc_offset*1000
+    case resolution.to_sym
+    when :year_to_months
+      start_time = timestamp.beginning_of_year
+      end_time   = start_time.next_year
+      offset     = (start_time + 6.month).utc_offset*1000
+    when :month_to_days
+      start_time = timestamp.beginning_of_month
+      end_time   = start_time.next_month
+    when :week_to_days
+      start_time = timestamp.beginning_of_week
+      end_time   = start_time.next_week
+    when :day_to_hours
+      start_time = timestamp.beginning_of_day
+      end_time   = start_time + 1.day
+    when :day_to_minutes
+      start_time = timestamp.beginning_of_day
+      end_time   = start_time + 1.day
+    when :hour_to_minutes
+      start_time = timestamp.beginning_of_hour
+      end_time   = start_time + 1.hour
+    when :minute_to_seconds
+      start_time = timestamp.beginning_of_minute
+      end_time   = start_time + 1.minute
+
+    when :day
+      start_time = timestamp.beginning_of_day
+      end_time   = start_time + 1.day
+    when :month
+      start_time = timestamp.beginning_of_month
+      end_time   = start_time.next_month
+    when :year
+      start_time = timestamp.beginning_of_year
+      end_time   = start_time.next_year
+      offset     = (start_time + 6.month).utc_offset*1000
+    when :year_to_minutes
+      start_time = timestamp.beginning_of_year
+      end_time   = start_time.next_year
+    when :month_to_minutes
+      start_time = timestamp.beginning_of_month
+      end_time   = start_time.next_month
+    else
+      puts "You gave me #{resolution_format} -- I have no idea what to do with that."
+    end
+
+    return start_time, end_time, offset
+  end
+
+
+  def self.aggregate(resolution_format, source, timestamp, keys)
     resolution_formats = {
       year_to_months:     ['year', 'month'],
       month_to_days:      ['year', 'month', 'dayOfMonth'],
@@ -56,54 +122,7 @@ class Reading
     }
     resolution = resolution_formats[resolution_format.to_sym]
 
-    @offset = timestamp.utc_offset*1000
-
-    case resolution_format.to_sym
-    when :year_to_months
-      @start_time = timestamp.beginning_of_year
-      @end_time   = @start_time.next_year
-      @offset     = (@start_time + 6.month).utc_offset*1000
-    when :month_to_days
-      @start_time = timestamp.beginning_of_month
-      @end_time   = @start_time.next_month
-    when :week_to_days
-      @start_time = timestamp.beginning_of_week
-      @end_time   = @start_time.next_week
-    when :day_to_hours
-      @start_time = timestamp.beginning_of_day
-      @end_time   = @start_time + 1.day
-    when :day_to_minutes
-      @start_time = timestamp.beginning_of_day
-      @end_time   = @start_time + 1.day
-    when :hour_to_minutes
-      @start_time = timestamp.beginning_of_hour
-      @end_time   = @start_time + 1.hour
-    when :minute_to_seconds
-      @start_time = timestamp.beginning_of_minute
-      @end_time   = @start_time + 1.minute
-    when :day
-      @start_time = timestamp.beginning_of_day
-      @end_time   = @start_time + 1.day
-    when :month
-      @start_time = timestamp.beginning_of_month
-      @end_time   = @start_time.next_month
-    when :year
-      @start_time = timestamp.beginning_of_year
-      @end_time   = @start_time.next_year
-      @offset     = (@start_time + 6.month).utc_offset*1000
-    when :year_to_minutes
-      @start_time = timestamp.beginning_of_year
-      @end_time   = @start_time.next_year
-    when :month_to_minutes
-      @start_time = timestamp.beginning_of_month
-      @end_time   = @start_time.next_month
-    else
-      puts resolution_format.class
-      puts resolution
-      puts "You gave me #{resolution_format} -- I have no idea what to do with that."
-      return
-    end
-
+    @start_time, @end_time, @offset = time_range_from_timestamp_and_resolution(timestamp, resolution_format)
 
     # start pipe
     pipe = []
@@ -117,18 +136,7 @@ class Reading
                 }
               }
             }
-
-
-    if meter_ids[0] == 'slp'
-      metering_point_or_fake = { source: { "$in" => ['slp'] } }
-    elsif meter_ids[0] == 'sep_pv'
-      metering_point_or_fake = { source: { "$in" => ['sep_pv'] } }
-    elsif meter_ids[0] == 'sep_bhkw'
-      metering_point_or_fake = { source: { "$in" => ['sep_bhkw'] } }
-    else
-      metering_point_or_fake = { meter_id: { "$in" => meter_ids } }
-    end
-    match["$match"].merge!(metering_point_or_fake)
+    match["$match"].merge!(source)
     pipe << match
 
 
@@ -140,14 +148,15 @@ class Reading
     project = {
                 "$project" => {
                   meter_id: 1,
-                  energy_a_milliwatt_hour: 1,
-                  energy_b_milliwatt_hour: 1,
-                  power_milliwatt: 1,
                   timestamp: 1
                 }
               }
-    formats = {}
 
+    project["$project"].merge!(energy_a_milliwatt_hour: 1) if keys.include?('energy_a_milliwatt_hour')
+    project["$project"].merge!(energy_b_milliwatt_hour: 1) if keys.include?('energy_b_milliwatt_hour')
+    project["$project"].merge!(power_milliwatt: 1) if keys.include?('power_milliwatt')
+
+    formats = {}
     resolution.each do |format|
       formats.merge!({
         "#{format.gsub('OfMonth','')}ly" => {
@@ -163,24 +172,31 @@ class Reading
 
 
 
-
-
-
     # group
     group = {
               "$group" => {
-                firstEnergyAMilliwattHour:  { "$first"  => "$energy_a_milliwatt_hour" },
-                lastEnergyAMilliwattHour:   { "$last"   => "$energy_a_milliwatt_hour" },
-                firstEnergyBMilliwattHour:  { "$first"  => "$energy_b_milliwatt_hour" },
-                lastEnergyBMilliwattHour:   { "$last"   => "$energy_b_milliwatt_hour" },
-                avgPowerMilliwatt:          { "$avg"    => "$power_milliwatt" },
-                firstTimestamp:             { "$first"  => "$timestamp" },
-                lastTimestamp:              { "$last"   => "$timestamp" },
+                firstTimestamp: { "$first"  => "$timestamp" },
+                lastTimestamp:  { "$last"   => "$timestamp" }
               }
             }
+
+    if keys.include?('energy_a_milliwatt_hour')
+      group["$group"].merge!(firstEnergyAMilliwattHour: { "$first" => "$energy_a_milliwatt_hour" })
+      group["$group"].merge!(lastEnergyAMilliwattHour:  { "$last"  => "$energy_a_milliwatt_hour" })
+    end
+
+    if keys.include?('energy_b_milliwatt_hour')
+      group["$group"].merge!(firstEnergyBMilliwattHour: { "$first" => "$energy_b_milliwatt_hour" })
+      group["$group"].merge!(lastEnergyBMilliwattHour:  { "$last"  => "$energy_b_milliwatt_hour" })
+    end
+
+    if keys.include?('power_milliwatt')
+      group["$group"].merge!(avgPowerMilliwatt: { "$avg" => "$power_milliwatt" })
+    end
+
     formats = {_id: {}}
 
-    if meter_ids.size > 1
+    if source[:meter_id] && source[:meter_id]['$in'].size > 1
       formats[:_id].merge!({ "meter_id" =>  "$meter_id" })
     end
 
@@ -200,13 +216,23 @@ class Reading
     project = {
                 "$project" => {
                   meter_id: 1,
-                  sumEnergyAMilliwattHour: { "$subtract" => [ "$lastEnergyAMilliwattHour", "$firstEnergyAMilliwattHour" ] },
-                  sumEnergyBMilliwattHour: { "$subtract" => [ "$lastEnergyBMilliwattHour", "$firstEnergyBMilliwattHour" ] },
-                  avgPowerMilliwatt:      "$avgPowerMilliwatt",
                   firstTimestamp:         "$firstTimestamp",
                   lastTimestamp:          "$lastTimestamp"
                 }
               }
+
+    if keys.include?('energy_a_milliwatt_hour')
+      project["$project"].merge!(sumEnergyAMilliwattHour: { "$subtract" => [ "$lastEnergyAMilliwattHour", "$firstEnergyAMilliwattHour" ] })
+    end
+
+    if keys.include?('energy_b_milliwatt_hour')
+      project["$project"].merge!(sumEnergyBMilliwattHour: { "$subtract" => [ "$lastEnergyBMilliwattHour", "$firstEnergyBMilliwattHour" ] })
+    end
+
+    if keys.include?('power_milliwatt')
+      project["$project"].merge!(avgPowerMilliwatt: "$avgPowerMilliwatt")
+    end
+
     pipe << project
 
 
@@ -217,15 +243,25 @@ class Reading
 
 
     # group
-    if meter_ids.size > 1
+    if source[:meter_id] && source[:meter_id]['$in'].size > 1
       group = {
                 "$group" => {
-                  avgPowerMilliwatt:       {"$sum"   => "$avgPowerMilliwatt" },
-                  sumEnergyAMilliwattHour: {"$sum"   => "$sumEnergyAMilliwattHour" },
-                  sumEnergyBMilliwattHour: {"$sum"   => "$sumEnergyBMilliwattHour" },
-                  firstTimestamp:          {"$first" => "$firstTimestamp" }
+                  firstTimestamp: { "$first" => "$firstTimestamp" }
                 }
               }
+
+      if keys.include?('energy_a_milliwatt_hour')
+        group["$group"].merge!(sumEnergyAMilliwattHour: {"$sum" => "$sumEnergyAMilliwattHour"})
+      end
+
+      if keys.include?('energy_b_milliwatt_hour')
+        group["$group"].merge!(sumEnergyBMilliwattHour: {"$sum" => "$sumEnergyBMilliwattHour"})
+      end
+
+      if keys.include?('power_milliwatt')
+        group["$group"].merge!(avgPowerMilliwatt: {"$sum" => "$avgPowerMilliwatt"})
+      end
+
       formats = {_id: {}}
 
       resolution.each do |format|
