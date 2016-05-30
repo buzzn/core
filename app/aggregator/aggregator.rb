@@ -31,10 +31,16 @@ class Aggregator
 
         ['in', 'out'].each do |mode|
           buzzn_api_metering_points[mode.to_sym].each do |metering_point|
-            reading = Reading.where(meter_id: metering_point.meter.id, :timestamp.gte => @timestamp).last
+            document = Reading.where(meter_id: metering_point.meter.id, :timestamp.gte => @timestamp).last
+
+            item = {'timestamp' => document['timestamp']}
+            item.merge!('power_milliwatt' => document['power_milliwatt']) if document['power_milliwatt']
+            item.merge!('energy_a_milliwatt_hour' => document['energy_a_milliwatt_hour']) if document['energy_a_milliwatt_hour']
+            item.merge!('energy_b_milliwatt_hour' => document['energy_b_milliwatt_hour']) if document['energy_b_milliwatt_hour']
+
             @power_items << {
               "operator" => (mode == 'in' ? '+' : '-'),
-              "data" => reading.power_milliwatt
+              "data" => item
             }
           end
 
@@ -52,22 +58,20 @@ class Aggregator
           document = Reading.where(:timestamp.gte => (@timestamp - 15.minutes), :timestamp.lte => (@timestamp + 15.minutes), source: 'slp').last
           slp_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
-            @power_items << {
-              "operator" => "+",
-              "data" => {
-                'timestamp'               => document['timestamp'],
-                'power_milliwatt'         => document['power_milliwatt'] * factor,
-                'energy_a_milliwatt_hour' => document['energy_a_milliwatt_hour'] * factor,
-                'energy_b_milliwatt_hour' => document['energy_b_milliwatt_hour'] * factor
-              }
-            }
+
+            item = {'timestamp' => document['timestamp']}
+            item.merge!('power_milliwatt' => document['power_milliwatt'] * factor) if document['power_milliwatt']
+            item.merge!('energy_a_milliwatt_hour' => document['energy_a_milliwatt_hour'] * factor) if document['energy_a_milliwatt_hour']
+            item.merge!('energy_b_milliwatt_hour' => document['energy_b_milliwatt_hour'] * factor) if document['energy_b_milliwatt_hour']
+
+            @power_items <<  { "operator" => "+", "data" => item }
           end
         end
 
       end
     end
 
-    @power = sum_chart_items(@power_items)
+    @power = sum_power_items(@power_items)
 
     if seconds_to_process > 2
       Rails.cache.write(@cache_id, @power, expires_in: 5.seconds)
@@ -156,6 +160,34 @@ private
     end
   end
 
+  def sum_power_items(power_items)
+    if power_items.count > 1
+      power_tamplate  = power_items.pop
+      power           = power_tamplate['data']
+      power_keys      = power_tamplate['data'].keys
+      power_keys.delete('timestamp')
+      power_items.each do |power_item|
+        operator        = power_item['operator']
+        power_item_data = power_item['data']
+
+        power_keys.each do |key|
+          case operator
+          when '+'
+            power[key] += power_item_data[key]
+          when '-'
+            power[key] -= power_item_data[key]
+          else
+            "You gave me operator: #{operator} -- I have no idea what to do with that."
+          end
+        end
+
+      end
+      return power
+    else
+      return power_items.first['data']
+    end
+  end
+
   def sum_chart_items(chart_items)
     if chart_items.count > 1
       chart_tamplate  = chart_items.pop
@@ -227,6 +259,9 @@ private
     end
     return items
   end
+
+
+
 
   def external_data(metering_point, resolution, timestamp)
     items = []
