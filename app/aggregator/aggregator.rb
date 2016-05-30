@@ -1,20 +1,12 @@
-#
-# aggregator = Aggregator.new()
-# aggregator.chart
-#
-
-
 require 'benchmark'
 class Aggregator
-  include CalcVirtualMeteringPoint
 
-  attr_accessor :metering_point_ids, :charts
+  attr_accessor :metering_point_ids, :energys
 
   def initialize(initialize_params = {})
     @metering_point_ids = initialize_params.fetch(:metering_point_ids, nil) || nil
     @example            = initialize_params.fetch(:example, ['slp']) || ['slp']
   end
-
 
 
 
@@ -83,14 +75,14 @@ class Aggregator
 
 
 
-  def chart(params = {})
-    @cache_id = "/aggregate/chart?metering_point_ids=#{@metering_point_ids.join(',')}&timestamp=#{@timestamp}&resolution=#{@resolution}"
+  def energy(params = {})
+    @cache_id = "/aggregate/energy?metering_point_ids=#{@metering_point_ids.join(',')}&timestamp=#{@timestamp}&resolution=#{@resolution}"
 
     if Rails.cache.exist?(@cache_id)
-      @chart = Rails.cache.fetch(@cache_id)
+      @energy = Rails.cache.fetch(@cache_id)
     else
       seconds_to_process = Benchmark.realtime do
-        @chart_items = []
+        @energy_items = []
         @timestamp  = params.fetch(:timestamp, Time.current) || Time.current
         @resolution = params.fetch(:resolution, 'day_to_hours') || 'day_to_hours'
 
@@ -102,7 +94,7 @@ class Aggregator
             source = { meter_id: { "$#{mode}" => buzzn_api_metering_points[mode.to_sym].collect(&:meter_id) } }
             keys = [key_from_resolution_and_mode(@resolution, mode)]
             collection = Reading.aggregate(@resolution, source, @timestamp, keys)
-            @chart_items << {
+            @energy_items << {
               "operator" => (mode == 'in' ? '+' : '-'),
               "data" => collection_to_hash(collection, 1)
             }
@@ -110,7 +102,7 @@ class Aggregator
 
           # discovergy
           discovergy_metering_points[mode.to_sym].each do |metering_point|
-            @chart_items << {
+            @energy_items << {
               "operator" => (mode == 'in' ? '+' : '-'),
               "data" => external_data(metering_point, @resolution, @timestamp.to_i*1000)
             }
@@ -124,17 +116,17 @@ class Aggregator
           collection = Reading.aggregate(@resolution, source, @timestamp, keys)
           slp_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
-            @chart_items << { "operator" => "+", "data" => collection_to_hash(collection, factor) }
+            @energy_items << { "operator" => "+", "data" => collection_to_hash(collection, factor) }
           end
         end
-        @chart = sum_chart_items(@chart_items)
+        @energy = sum_energy_items(@energy_items)
 
       end
       if seconds_to_process > 2
-        Rails.cache.write(@cache_id, @chart, expires_in: 1.minute)
+        Rails.cache.write(@cache_id, @energy, expires_in: 1.minute)
       end
     end
-    return @chart
+    return @energy
   end
 
 
@@ -188,31 +180,31 @@ private
     end
   end
 
-  def sum_chart_items(chart_items)
-    if chart_items.count > 1
-      chart_tamplate  = chart_items.pop
-      chart           = chart_tamplate['data']
-      chart_keys      = chart_tamplate['data'].first.keys
-      chart_keys.delete('timestamp')
-      chart_items.each do |chart_item|
-        operator        = chart_item['operator']
-        chart_item_data = chart_item['data']
-        chart_item_data.each_with_index do |item, index|
-          chart_keys.each do |key|
+  def sum_energy_items(energy_items)
+    if energy_items.count > 1
+      energy_tamplate  = energy_items.pop
+      energy           = energy_tamplate['data']
+      energy_keys      = energy_tamplate['data'].first.keys
+      energy_keys.delete('timestamp')
+      energy_items.each do |energy_item|
+        operator          = energy_item['operator']
+        energy_item_data  = energy_item['data']
+        energy_item_data.each_with_index do |item, index|
+          energy_keys.each do |key|
             case operator
             when '+'
-              chart[index][key] += item[key]
+              energy[index][key] += item[key]
             when '-'
-              chart[index][key] -= item[key]
+              energy[index][key] -= item[key]
             else
               "You gave me operator: #{operator} -- I have no idea what to do with that."
             end
           end
         end
       end
-      return chart
+      return energy
     else
-      return chart_items.first['data']
+      return energy_items.first['data']
     end
   end
 

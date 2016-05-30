@@ -4,6 +4,11 @@ module API
       include API::V1::Defaults
       resource :aggregate do
 
+
+
+
+
+
         desc "Aggregate Power"
         params do
           optional :metering_point_ids, type: String, desc: "metering_point IDs"
@@ -38,7 +43,11 @@ module API
 
 
 
-        desc "Aggregate Chart"
+
+
+
+
+        desc "Aggregate Energy"
         params do
           optional :metering_point_ids, type: String, desc: "metering_point IDs"
           optional :timestamp, type: DateTime
@@ -52,7 +61,7 @@ module API
                                                         minute_to_seconds
                                                         )
         end
-        get 'chart' do
+        get 'energy' do
           doorkeeper_authorize! :public
 
           if params[:metering_point_ids]
@@ -76,8 +85,10 @@ module API
             @aggregator = Aggregator.new() # SLP
           end
 
-          return @aggregator.chart({timestamp: params[:timestamp], resolution: params[:resolution]})
+          return @aggregator.energy({timestamp: params[:timestamp], resolution: params[:resolution]})
         end
+
+
 
 
 
