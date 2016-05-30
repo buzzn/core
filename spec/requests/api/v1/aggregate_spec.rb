@@ -11,7 +11,7 @@ describe "Aggregate API" do
   ## SLP
   ##
 
-  it 'does aggregate year_to_months slp chart as admin in sommertime ' do
+  it 'does aggregate year_to_months slp energy chart as admin in sommertime ' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:metering_point)
 
@@ -34,7 +34,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
     }
 
-    get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(12) # 12 month
@@ -75,7 +75,7 @@ describe "Aggregate API" do
       resolution: 'month_to_days'
     }
 
-    get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(30)
@@ -114,7 +114,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Berlin').local(2016,6,2)
     }
 
-    get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(30)
@@ -156,7 +156,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Berlin').local(2015,2,1).iso8601
     }
 
-    get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(3*60) # 3 hours
@@ -194,7 +194,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Bangkok').local(2015,2,1, 0,30).iso8601
     }
 
-    get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(4)
@@ -233,7 +233,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Sydney').local(2015,2,1, 0,30).iso8601
     }
 
-    get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(60)
@@ -274,7 +274,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Berlin').local(2015,2,1,0,30)
     }
 
-    get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(4)
@@ -474,7 +474,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Fiji').local(2015,2,1, 0,30)
     }
 
-    get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(60)
@@ -509,7 +509,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Berlin').local(2016,2,1)
     }
 
-    get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(96)
@@ -536,7 +536,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Berlin').local(2016,2,1)
     }
 
-    get_with_token "/api/v1/aggregate/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(96)
