@@ -30,7 +30,7 @@ module API
           requires :manufacturer_name, desc: "name of the manufacturer"
           requires :manufacturer_product_name, desc: "meter produkt name"
           requires :manufacturer_product_serialnumber, desc: "meter produkt serialnumber"
-          requires :smart, desc: "meter is smart"
+          optional :smart, desc: "meter is smart"
         end
         post do
           doorkeeper_authorize! :admin
@@ -62,7 +62,7 @@ module API
           requires :manufacturer_name, desc: "name of the manufacturer"
           requires :manufacturer_product_name, desc: "meter produkt name"
           requires :manufacturer_product_serialnumber, desc: "meter produkt serialnumber"
-          requires :smart, desc: "meter is smart"
+          optional :smart, desc: "meter is smart"
         end
         put do
           doorkeeper_authorize! :admin
