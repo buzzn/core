@@ -524,7 +524,7 @@ describe "Aggregates API" do
     end
   end
 
-  
+
   it 'does aggregate day_to_minutes Discovergy power chart as admin' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:mp_z2) # PV

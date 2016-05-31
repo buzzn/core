@@ -1,4 +1,4 @@
-# This file bundles all crawlers.
+# This file bundles all external APIs.
 # it branches via meter.manufacturer_name to the respective API
 # The first two json APIs, discovergy (https://my.discovergy.com/json/api/help) and flukso
 # (old for my_smart_grid; http://www.flukso.net/files/flm02/manual.pdf) are quite similar in respect to input
