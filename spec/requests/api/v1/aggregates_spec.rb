@@ -1,4 +1,4 @@
-describe "Aggregate API" do
+describe "Aggregates API" do
 
   before(:all) do
     Fabricate(:metering_point_operator, name: 'buzzn Metering')
@@ -10,7 +10,7 @@ describe "Aggregate API" do
   ##
   ## SLP
   ##
-
+  #
   it 'does aggregate year_to_months slp energy chart as admin in sommertime ' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:metering_point)
@@ -34,7 +34,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
     }
 
-    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(12) # 12 month
@@ -75,7 +75,7 @@ describe "Aggregate API" do
       resolution: 'month_to_days'
     }
 
-    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(30)
@@ -114,7 +114,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Berlin').local(2016,6,2)
     }
 
-    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(30)
@@ -156,7 +156,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Berlin').local(2015,2,1).iso8601
     }
 
-    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(3*60) # 3 hours
@@ -194,7 +194,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Bangkok').local(2015,2,1, 0,30).iso8601
     }
 
-    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(4)
@@ -233,7 +233,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Sydney').local(2015,2,1, 0,30).iso8601
     }
 
-    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(60)
@@ -274,7 +274,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Berlin').local(2015,2,1,0,30)
     }
 
-    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(4)
@@ -314,7 +314,7 @@ describe "Aggregate API" do
       metering_point_ids: metering_point.id
     }
 
-    get_with_token "/api/v1/aggregate/power", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/power", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(Time.parse(json['timestamp'])).to eq( Time.find_zone('Berlin').local(2016,2,1, 1,30).utc )
@@ -348,7 +348,7 @@ describe "Aggregate API" do
       metering_point_ids: metering_point.id
     }
 
-    get_with_token "/api/v1/aggregate/power", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/power", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(Time.parse(json['timestamp'])).to eq( Time.find_zone('Berlin').local(2016,2,1, 1,30).utc )
@@ -382,8 +382,7 @@ describe "Aggregate API" do
       metering_point_ids: "#{metering_point1.id},#{metering_point2.id}"
     }
 
-    get_with_token "/api/v1/aggregate/power", request_params, access_token.token
-
+    get_with_token "/api/v1/aggregates/power", request_params, access_token.token
     expect(response).to have_http_status(200)
     expect(json['power_milliwatt']).to eq(900*1000*11) # forcast_formel = 3000+8000/1000 = 11
     expect(json['energy_a_milliwatt_hour']).to eq(1300*1000*6*11)
@@ -431,7 +430,7 @@ describe "Aggregate API" do
       metering_point_ids: "#{meter1.metering_points.first.id},#{meter2.metering_points.first.id}"
     }
 
-    get_with_token "/api/v1/aggregate/power", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/power", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['power_milliwatt']).to eq((900*1000 + 2700)+((800*1000 + 2700))) # 1 hour and 30 minutes every 2 seconds = (3600+1800)/2 = 2700
@@ -474,7 +473,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Fiji').local(2015,2,1, 0,30)
     }
 
-    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(60)
@@ -509,7 +508,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Berlin').local(2016,2,1)
     }
 
-    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(96)
@@ -525,6 +524,7 @@ describe "Aggregate API" do
     end
   end
 
+  
   it 'does aggregate day_to_minutes Discovergy power chart as admin' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:mp_z2) # PV
@@ -536,7 +536,7 @@ describe "Aggregate API" do
       timestamp: Time.find_zone('Berlin').local(2016,2,1)
     }
 
-    get_with_token "/api/v1/aggregate/energy", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/energy", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(96)
