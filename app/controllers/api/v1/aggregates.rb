@@ -9,12 +9,12 @@ module API
 
 
 
-        desc "Aggregates Power"
+        desc "Aggregate Power"
         params do
           requires :metering_point_ids, type: String, desc: "metering_point IDs"
           optional :timestamp, type: DateTime
         end
-        get 'power' do
+        get 'last-reading' do
           doorkeeper_authorize! :public
 
           metering_points = MeteringPoint.where(id: params[:metering_point_ids].split(","))
@@ -34,7 +34,7 @@ module API
           end
           @aggregate = Aggregate.new({metering_point_ids: metering_point_ids })
 
-          return @aggregate.power({timestamp: params[:timestamp]})
+          return @aggregate.last_reading({timestamp: params[:timestamp]})
         end
 
 
@@ -43,7 +43,7 @@ module API
 
 
 
-        desc "Aggregates Energy"
+        desc "Aggregate Chart"
         params do
           requires :metering_point_ids, type: String, desc: "metering_point IDs"
           optional :timestamp, type: DateTime
@@ -57,7 +57,7 @@ module API
                                                         minute_to_seconds
                                                         )
         end
-        get 'energy' do
+        get 'chart' do
           doorkeeper_authorize! :public
 
           metering_points = MeteringPoint.where(id: params[:metering_point_ids].split(","))
@@ -78,7 +78,7 @@ module API
           end
           @aggregate = Aggregate.new({metering_point_ids: metering_point_ids })
 
-          return @aggregate.energy({timestamp: params[:timestamp], resolution: params[:resolution]})
+          return @aggregate.chart({timestamp: params[:timestamp], resolution: params[:resolution]})
         end
 
 
