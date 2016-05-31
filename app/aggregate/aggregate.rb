@@ -1,5 +1,5 @@
 require 'benchmark'
-class Aggregator
+class Aggregate
 
   attr_accessor :metering_point_ids, :energys
 
@@ -24,15 +24,9 @@ class Aggregator
         ['in', 'out'].each do |mode|
           buzzn_api_metering_points[mode.to_sym].each do |metering_point|
             document = Reading.where(meter_id: metering_point.meter.id, :timestamp.gte => @timestamp).last
-
-            item = {'timestamp' => document['timestamp']}
-            item.merge!('power_milliwatt' => document['power_milliwatt']) if document['power_milliwatt']
-            item.merge!('energy_a_milliwatt_hour' => document['energy_a_milliwatt_hour']) if document['energy_a_milliwatt_hour']
-            item.merge!('energy_b_milliwatt_hour' => document['energy_b_milliwatt_hour']) if document['energy_b_milliwatt_hour']
-
             @power_items << {
               "operator" => (mode == 'in' ? '+' : '-'),
-              "data" => item
+              "data" => document_to_hash(document)
             }
           end
 
@@ -50,13 +44,7 @@ class Aggregator
           document = Reading.where(:timestamp.gte => (@timestamp - 15.minutes), :timestamp.lte => (@timestamp + 15.minutes), source: 'slp').last
           slp_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
-
-            item = {'timestamp' => document['timestamp']}
-            item.merge!('power_milliwatt' => document['power_milliwatt'] * factor) if document['power_milliwatt']
-            item.merge!('energy_a_milliwatt_hour' => document['energy_a_milliwatt_hour'] * factor) if document['energy_a_milliwatt_hour']
-            item.merge!('energy_b_milliwatt_hour' => document['energy_b_milliwatt_hour'] * factor) if document['energy_b_milliwatt_hour']
-
-            @power_items <<  { "operator" => "+", "data" => item }
+            @power_items <<  { "operator" => "+", "data" => document_to_hash(document, factor) }
           end
         end
 
@@ -253,6 +241,13 @@ private
   end
 
 
+  def document_to_hash(document, factor=1)
+    item = {'timestamp' => document['timestamp']}
+    item.merge!('power_milliwatt' => document['power_milliwatt'] * factor) if document['power_milliwatt']
+    item.merge!('energy_a_milliwatt_hour' => document['energy_a_milliwatt_hour'] * factor) if document['energy_a_milliwatt_hour']
+    item.merge!('energy_b_milliwatt_hour' => document['energy_b_milliwatt_hour'] * factor) if document['energy_b_milliwatt_hour']
+    return item
+  end
 
 
   def external_data(metering_point, resolution, timestamp)
