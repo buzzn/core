@@ -23,11 +23,13 @@ class Aggregate
 
         ['in', 'out'].each do |mode|
           buzzn_api_metering_points[mode.to_sym].each do |metering_point|
-            document = Reading.where(meter_id: metering_point.meter.id, :timestamp.gte => @timestamp).last
-            @last_reading_items << {
-              "operator" => (mode == 'in' ? '+' : '-'),
-              "data" => document_to_hash(document)
-            }
+            document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
+            if document
+              @last_reading_items << {
+                "operator" => (mode == 'in' ? '+' : '-'),
+                "data" => document_to_hash(document)
+              }
+            end
           end
 
           # discovergy
@@ -41,7 +43,7 @@ class Aggregate
 
         #slp
         if slp_metering_points.any?
-          document = Reading.where(:timestamp.gte => (@timestamp - 15.minutes), :timestamp.lte => (@timestamp + 15.minutes), source: 'slp').last
+          document = Reading.where(:timestamp.gte => @timestamp, source: 'slp').first
           slp_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
             @last_reading_items <<  { "operator" => "+", "data" => document_to_hash(document, factor) }
@@ -51,7 +53,10 @@ class Aggregate
       end
     end
 
-    @last_reading = sum_last_reading_items(@last_reading_items)
+    @last_reading = {
+      "readings" => @last_reading_items,
+      "power_milliwatt_summed" => sum_power_from_last_reading_items(@last_reading_items)
+    }       
 
     if seconds_to_process > 2
       Rails.cache.write(@cache_id, @last_reading, expires_in: 5.seconds)
@@ -140,32 +145,21 @@ private
     end
   end
 
-  def sum_last_reading_items(last_reading_items)
-    if last_reading_items.count > 1
-      last_reading_tamplate  = last_reading_items.pop
-      last_reading           = last_reading_tamplate['data']
-      last_reading_keys      = last_reading_tamplate['data'].keys
-      last_reading_keys.delete('timestamp')
+  def sum_power_from_last_reading_items(last_reading_items)
+      last_readings_power_milliwatt = 0
+
       last_reading_items.each do |last_reading_item|
-        operator        = last_reading_item['operator']
-        last_reading_item_data = last_reading_item['data']
-
-        last_reading_keys.each do |key|
-          case operator
-          when '+'
-            last_reading[key] += last_reading_item_data[key]
-          when '-'
-            last_reading[key] -= last_reading_item_data[key]
-          else
-            "You gave me operator: #{operator} -- I have no idea what to do with that."
-          end
+        case last_reading_item['operator']
+        when '+'
+          last_readings_power_milliwatt += last_reading_item['data']['power_milliwatt']
+        when '-'
+          last_readings_power_milliwatt -= last_reading_item['data']['power_milliwatt']
+        else
+          "You gave me operator: #{operator} -- I have no idea what to do with that."
         end
-
       end
-      return last_reading
-    else
-      return last_reading_items.first['data']
-    end
+
+      return last_readings_power_milliwatt
   end
 
   def sum_chart_items(chart_items)
