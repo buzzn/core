@@ -91,7 +91,7 @@ describe "Groups API" do
     expect(response).to have_http_status(200)
   end
 
-  it 'does gets a group readable by members if user is member' do
+  xit 'does gets a group readable by members if user is member' do
     access_token  = Fabricate(:access_token)
     group         = Fabricate(:group_readable_by_members)
     group.users   << User.find(access_token.resource_owner_id)
