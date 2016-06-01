@@ -14,7 +14,7 @@ module API
           requires :metering_point_ids, type: String, desc: "metering_point IDs"
           optional :timestamp, type: DateTime
         end
-        get 'last-reading' do
+        get 'present' do
           doorkeeper_authorize! :public
 
           metering_points = MeteringPoint.where(id: params[:metering_point_ids].split(","))
@@ -34,7 +34,7 @@ module API
           end
           @aggregate = Aggregate.new({metering_point_ids: metering_point_ids })
 
-          return @aggregate.last_reading({timestamp: params[:timestamp]})
+          return @aggregate.present({timestamp: params[:timestamp]})
         end
 
 
@@ -43,7 +43,7 @@ module API
 
 
 
-        desc "Aggregate Chart"
+        desc "Aggregate Past"
         params do
           requires :metering_point_ids, type: String, desc: "metering_point IDs"
           optional :timestamp, type: DateTime
@@ -57,7 +57,7 @@ module API
                                                         minute_to_seconds
                                                         )
         end
-        get 'chart' do
+        get 'past' do
           doorkeeper_authorize! :public
 
           metering_points = MeteringPoint.where(id: params[:metering_point_ids].split(","))
@@ -78,7 +78,7 @@ module API
           end
           @aggregate = Aggregate.new({metering_point_ids: metering_point_ids })
 
-          return @aggregate.chart({timestamp: params[:timestamp], resolution: params[:resolution]})
+          return @aggregate.past({timestamp: params[:timestamp], resolution: params[:resolution]})
         end
 
 

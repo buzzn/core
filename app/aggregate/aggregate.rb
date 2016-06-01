@@ -10,13 +10,13 @@ class Aggregate
 
 
 
-  def last_reading(params = {})
-    @cache_id = "/aggregate/last-reading?metering_point_ids=#{@metering_point_ids.join(',')}"
+  def present(params = {})
+    @cache_id = "/aggregate/present?metering_point_ids=#{@metering_point_ids.join(',')}"
     if Rails.cache.exist?(@cache_id)
-      @last_reading = Rails.cache.fetch(@cache_id)
+      @present = Rails.cache.fetch(@cache_id)
     else
       seconds_to_process = Benchmark.realtime do
-        @last_reading_items = []
+        @present_items = []
         @timestamp = params.fetch(:timestamp, Time.current) || Time.current
 
         buzzn_api_metering_points, discovergy_metering_points, slp_metering_points = metering_points_sort(@metering_point_ids)
@@ -25,7 +25,7 @@ class Aggregate
           buzzn_api_metering_points[mode.to_sym].each do |metering_point|
             document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
             if document
-              @last_reading_items << {
+              @present_items << {
                 "operator" => (mode == 'in' ? '+' : '-'),
                 "data" => document_to_hash(document)
               }
@@ -34,7 +34,7 @@ class Aggregate
 
           # discovergy
           discovergy_metering_points[mode.to_sym].each do |metering_point|
-            @last_reading_items << {
+            @present_items << {
               "operator" => (mode == 'in' ? '+' : '-'),
               "data" => external_data(metering_point, @resolution, @timestamp.to_i*1000)
             }
@@ -46,36 +46,36 @@ class Aggregate
           document = Reading.where(:timestamp.gte => @timestamp, source: 'slp').first
           slp_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
-            @last_reading_items <<  { "operator" => "+", "data" => document_to_hash(document, factor) }
+            @present_items <<  { "operator" => "+", "data" => document_to_hash(document, factor) }
           end
         end
 
       end
     end
 
-    @last_reading = {
-      "readings" => @last_reading_items,
-      "power_milliwatt_summed" => sum_power_from_last_reading_items(@last_reading_items)
-    }       
+    @present = {
+      "readings" => @present_items,
+      "power_milliwatt_summed" => sum_power_from_present_items(@present_items)
+    }
 
     if seconds_to_process > 2
-      Rails.cache.write(@cache_id, @last_reading, expires_in: 5.seconds)
+      Rails.cache.write(@cache_id, @present, expires_in: 5.seconds)
     end
-    return @last_reading
+    return @present
   end
 
 
 
 
 
-  def chart(params = {})
-    @cache_id = "/aggregate/chart?metering_point_ids=#{@metering_point_ids.join(',')}&timestamp=#{@timestamp}&resolution=#{@resolution}"
+  def past(params = {})
+    @cache_id = "/aggregate/past?metering_point_ids=#{@metering_point_ids.join(',')}&timestamp=#{@timestamp}&resolution=#{@resolution}"
 
     if Rails.cache.exist?(@cache_id)
-      @chart = Rails.cache.fetch(@cache_id)
+      @past = Rails.cache.fetch(@cache_id)
     else
       seconds_to_process = Benchmark.realtime do
-        @chart_items = []
+        @past_items = []
         @timestamp  = params.fetch(:timestamp, Time.current) || Time.current
         @resolution = params.fetch(:resolution, 'day_to_hours') || 'day_to_hours'
 
@@ -87,7 +87,7 @@ class Aggregate
             source = { meter_id: { "$#{mode}" => buzzn_api_metering_points[mode.to_sym].collect(&:meter_id) } }
             keys = [key_from_resolution_and_mode(@resolution, mode)]
             collection = Reading.aggregate(@resolution, source, @timestamp, keys)
-            @chart_items << {
+            @past_items << {
               "operator" => (mode == 'in' ? '+' : '-'),
               "data" => collection_to_hash(collection, 1)
             }
@@ -95,7 +95,7 @@ class Aggregate
 
           # discovergy
           discovergy_metering_points[mode.to_sym].each do |metering_point|
-            @chart_items << {
+            @past_items << {
               "operator" => (mode == 'in' ? '+' : '-'),
               "data" => external_data(metering_point, @resolution, @timestamp.to_i*1000)
             }
@@ -109,17 +109,17 @@ class Aggregate
           collection = Reading.aggregate(@resolution, source, @timestamp, keys)
           slp_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
-            @chart_items << { "operator" => "+", "data" => collection_to_hash(collection, factor) }
+            @past_items << { "operator" => "+", "data" => collection_to_hash(collection, factor) }
           end
         end
-        @chart = sum_chart_items(@chart_items)
+        @past = sum_past_items(@past_items)
 
       end
       if seconds_to_process > 2
-        Rails.cache.write(@cache_id, @chart, expires_in: 1.minute)
+        Rails.cache.write(@cache_id, @past, expires_in: 1.minute)
       end
     end
-    return @chart
+    return @past
   end
 
 
@@ -145,48 +145,48 @@ private
     end
   end
 
-  def sum_power_from_last_reading_items(last_reading_items)
-      last_readings_power_milliwatt = 0
+  def sum_power_from_present_items(present_items)
+      presents_power_milliwatt = 0
 
-      last_reading_items.each do |last_reading_item|
-        case last_reading_item['operator']
+      present_items.each do |present_item|
+        case present_item['operator']
         when '+'
-          last_readings_power_milliwatt += last_reading_item['data']['power_milliwatt']
+          presents_power_milliwatt += present_item['data']['power_milliwatt']
         when '-'
-          last_readings_power_milliwatt -= last_reading_item['data']['power_milliwatt']
+          presents_power_milliwatt -= present_item['data']['power_milliwatt']
         else
           "You gave me operator: #{operator} -- I have no idea what to do with that."
         end
       end
 
-      return last_readings_power_milliwatt
+      return presents_power_milliwatt
   end
 
-  def sum_chart_items(chart_items)
-    if chart_items.count > 1
-      chart_tamplate  = chart_items.pop
-      chart           = chart_tamplate['data']
-      chart_keys      = chart_tamplate['data'].first.keys
-      chart_keys.delete('timestamp')
-      chart_items.each do |chart_item|
-        operator          = chart_item['operator']
-        chart_item_data  = chart_item['data']
-        chart_item_data.each_with_index do |item, index|
-          chart_keys.each do |key|
+  def sum_past_items(past_items)
+    if past_items.count > 1
+      past_tamplate  = past_items.pop
+      past           = past_tamplate['data']
+      past_keys      = past_tamplate['data'].first.keys
+      past_keys.delete('timestamp')
+      past_items.each do |past_item|
+        operator          = past_item['operator']
+        past_item_data  = past_item['data']
+        past_item_data.each_with_index do |item, index|
+          past_keys.each do |key|
             case operator
             when '+'
-              chart[index][key] += item[key]
+              past[index][key] += item[key]
             when '-'
-              chart[index][key] -= item[key]
+              past[index][key] -= item[key]
             else
               "You gave me operator: #{operator} -- I have no idea what to do with that."
             end
           end
         end
       end
-      return chart
+      return past
     else
-      return chart_items.first['data']
+      return past_items.first['data']
     end
   end
 

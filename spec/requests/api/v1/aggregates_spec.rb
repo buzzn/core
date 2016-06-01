@@ -16,7 +16,7 @@ describe "Aggregates API" do
   # |_____/|______|_|
   #
 
-  it 'does aggregate slp energy chart by year_to_months as admin in sommertime' do
+  it 'does aggregate slp past energy by year_to_months as admin in sommertime' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:metering_point)
 
@@ -39,7 +39,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(12) # 12 month
@@ -56,7 +56,7 @@ describe "Aggregates API" do
   end
 
 
-  it 'does aggregate slp metering-point energy chart by month_to_days as stranger in wintertime' do
+  it 'does aggregate slp past energy by month_to_days as stranger in wintertime' do
     metering_point = Fabricate(:metering_point, readable: 'world')
 
     energy_a_milliwatt_hour = 0
@@ -80,7 +80,7 @@ describe "Aggregates API" do
       resolution: 'month_to_days'
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(30)
@@ -96,7 +96,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate slp energy chart by month_to_days as admin in sommertime ' do
+  it 'does aggregate slp energy past by month_to_days as admin in sommertime ' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:metering_point)
 
@@ -119,7 +119,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Berlin').local(2016,6,2)
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(30)
@@ -137,7 +137,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate slp power chart by day_to_minutes as admin' do
+  it 'does aggregate slp power past by day_to_minutes as admin' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:metering_point)
 
@@ -161,7 +161,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Berlin').local(2015,2,1).iso8601
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(3*60) # 3 hours
@@ -178,7 +178,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate slp power chart by hour_to_minutes as admin' do
+  it 'does aggregate slp power past by hour_to_minutes as admin' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:metering_point)
 
@@ -201,7 +201,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Bangkok').local(2015,2,1, 0,30).iso8601
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(4)
@@ -218,7 +218,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate multiple slp power charts by hour_to_minutes as admin' do
+  it 'does aggregate multiple slp power pasts by hour_to_minutes as admin' do
     access_token = Fabricate(:admin_access_token)
     metering_point1 = Fabricate(:metering_point)
     metering_point2 = Fabricate(:metering_point)
@@ -242,7 +242,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Sydney').local(2015,2,1, 0,30).iso8601
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(60)
@@ -259,7 +259,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate multiple slp power charts by hour_to_minutes with forecast_kwh_pa as admin' do
+  it 'does aggregate multiple slp power pasts by hour_to_minutes with forecast_kwh_pa as admin' do
     access_token = Fabricate(:admin_access_token)
     metering_point1 = Fabricate(:metering_point, forecast_kwh_pa: 3000)
     metering_point2 = Fabricate(:metering_point, forecast_kwh_pa: 8000)
@@ -283,7 +283,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Berlin').local(2015,2,1,0,30)
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(4)
@@ -302,7 +302,7 @@ describe "Aggregates API" do
   #
   # Last Reading
   #
-  it 'does aggregate slp last-reading as admin' do
+  it 'does aggregate slp present as admin' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:metering_point)
 
@@ -324,7 +324,7 @@ describe "Aggregates API" do
       metering_point_ids: metering_point.id
     }
 
-    get_with_token "/api/v1/aggregates/last-reading", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/present", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(1)
@@ -332,7 +332,7 @@ describe "Aggregates API" do
   end
 
 
-  it 'does aggregate slp last-reading with forecast_kwh_pa as admin' do
+  it 'does aggregate slp present with forecast_kwh_pa as admin' do
     access_token = Fabricate(:admin_access_token)
 
     metering_point = Fabricate(:metering_point, forecast_kwh_pa: 3000)
@@ -354,7 +354,7 @@ describe "Aggregates API" do
       metering_point_ids: metering_point.id
     }
 
-    get_with_token "/api/v1/aggregates/last-reading", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/present", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(1)
@@ -364,7 +364,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate multiple slp last-readings with forecast_kwh_pa as admin' do
+  it 'does aggregate multiple slp presents with forecast_kwh_pa as admin' do
     access_token = Fabricate(:admin_access_token)
 
     metering_point1 = Fabricate(:metering_point, forecast_kwh_pa: 3000)
@@ -388,7 +388,7 @@ describe "Aggregates API" do
       metering_point_ids: "#{metering_point1.id},#{metering_point2.id}"
     }
 
-    get_with_token "/api/v1/aggregates/last-reading", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/present", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(2)
@@ -406,7 +406,7 @@ describe "Aggregates API" do
   #  |_.__/ \__,_/___/___|_| |_| /_/    \_\_|   |_____|
 
 
-   it 'does aggregate buzzn energy chart by year_to_months as admin in sommertime' do
+   it 'does aggregate buzzn energy past by year_to_months as admin in sommertime' do
      access_token = Fabricate(:admin_access_token)
 
      meter = Fabricate(:easy_meter_q3d_with_metering_point)
@@ -430,7 +430,7 @@ describe "Aggregates API" do
        timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
      }
 
-     get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+     get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
      expect(response).to have_http_status(200)
      expect(json.count).to eq(12) # 12 month
@@ -446,7 +446,7 @@ describe "Aggregates API" do
      end
    end
 
-  it 'does aggregate buzzn energy chart by month_to_days as stranger in wintertime' do
+  it 'does aggregate buzzn energy past by month_to_days as stranger in wintertime' do
 
     meter = Fabricate(:easy_meter_q3d_with_metering_point)
     metering_point = meter.metering_points.first
@@ -473,7 +473,7 @@ describe "Aggregates API" do
         resolution: 'month_to_days'
       }
 
-      get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+      get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
       expect(response).to have_http_status(200)
       expect(json.count).to eq(30)
@@ -489,7 +489,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate buzzn energy chart by month_to_days as admin in sommertime ' do
+  it 'does aggregate buzzn energy past by month_to_days as admin in sommertime ' do
     access_token = Fabricate(:admin_access_token)
 
     meter = Fabricate(:easy_meter_q3d_with_metering_point)
@@ -513,7 +513,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Berlin').local(2016,6,2)
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(30)
@@ -529,7 +529,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate multiple buzzn power charts by hour_to_minutes as admin' do
+  it 'does aggregate multiple buzzn power pasts by hour_to_minutes as admin' do
     access_token = Fabricate(:admin_access_token)
 
     meter1 = Fabricate(:easy_meter_q3d_with_metering_point)
@@ -563,7 +563,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Fiji').local(2015,2,1, 0,30)
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(60)
@@ -578,7 +578,7 @@ describe "Aggregates API" do
   end
 
 
-  it 'does aggregate buzzn and slp power charts by hour_to_minutes as admin' do
+  it 'does aggregate buzzn and slp power past by hour_to_minutes as admin' do
     access_token = Fabricate(:admin_access_token)
 
     metering_point  = Fabricate(:metering_point, forecast_kwh_pa: 3000)
@@ -612,7 +612,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Berlin').local(2015,2,1, 0,30)
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(60)
@@ -627,7 +627,7 @@ describe "Aggregates API" do
   end
 
 
-  it 'does aggregate buzzn and slp energy chart by year_to_months as admin in sommertime' do
+  it 'does aggregate buzzn and slp past energy by year_to_months as admin in sommertime' do
     access_token = Fabricate(:admin_access_token)
 
     metering_point  = Fabricate(:metering_point, forecast_kwh_pa: 3000)
@@ -658,7 +658,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Berlin').local(2015,6).iso8601
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(12) # 12 month
@@ -677,7 +677,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate buzzn and slp energy chart by year_to_months as admin in sommertime' do
+  it 'does aggregate buzzn and slp energy past by year_to_months as admin in sommertime' do
     access_token = Fabricate(:admin_access_token)
 
     metering_point  = Fabricate(:metering_point, forecast_kwh_pa: 3000)
@@ -708,7 +708,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Berlin').local(2015,6).iso8601
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(12) # 12 month
@@ -728,7 +728,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate multiple buzzn last-reading as admin' do
+  it 'does aggregate multiple buzzn present as admin' do
     access_token = Fabricate(:admin_access_token)
 
     meter1 = Fabricate(:easy_meter_q3d_with_metering_point)
@@ -761,7 +761,7 @@ describe "Aggregates API" do
       metering_point_ids: "#{meter1.metering_points.first.id},#{meter2.metering_points.first.id}"
     }
 
-    get_with_token "/api/v1/aggregates/last-reading", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/present", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(2)
@@ -771,7 +771,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate buzzn and slp last-reading as admin' do
+  it 'does aggregate buzzn and slp present as admin' do
     access_token = Fabricate(:admin_access_token)
 
     metering_point  = Fabricate(:metering_point, forecast_kwh_pa: 3000)
@@ -810,7 +810,7 @@ describe "Aggregates API" do
       metering_point_ids: "#{metering_point.id},#{meter.metering_points.first.id}"
     }
 
-    get_with_token "/api/v1/aggregates/last-reading", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/present", request_params, access_token.token
 
     expect(response).to have_http_status(200)
 
@@ -834,7 +834,7 @@ describe "Aggregates API" do
    #                                       __/ | __/ |
    #                                      |___/ |___/
 
-  it 'does aggregate day_to_minutes Discovergy chart for out metering_point as admin' do
+  it 'does aggregate day_to_minutes Discovergy past for out metering_point as admin' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:mp_z2) # PV
     metering_point.contracts << Fabricate(:mpoc_buzzn_metering)
@@ -845,7 +845,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Berlin').local(2016,2,1)
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(96)
@@ -862,7 +862,7 @@ describe "Aggregates API" do
   end
 
 
-  it 'does aggregate day_to_minutes Discovergy chart as admin' do
+  it 'does aggregate day_to_minutes Discovergy past as admin' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:mp_z2) # PV
     metering_point.contracts << Fabricate(:mpoc_buzzn_metering)
@@ -873,7 +873,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Berlin').local(2016,2,1)
     }
 
-    get_with_token "/api/v1/aggregates/chart", request_params, access_token.token
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(96)
