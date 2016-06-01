@@ -93,12 +93,14 @@ buzzn_team_names.each do |user_name|
     user.add_role :manager, auto_justus
 
   when 'felix'
-    @gocycle       = Fabricate(:gocycle)
+    @gocycle = Fabricate(:gocycle)
     user.add_role :manager, @gocycle
     user.add_role :admin # felix is admin
     root_mp = Fabricate(:mp_urbanstr88)
     root_mp.devices << @gocycle
-    Fabricate(:application, owner: user, name: 'Buzzn Mobile', scopes: 'public admin', callback_uri: 'http://localhost:4200/')
+    application = Fabricate(:application, owner: user, name: 'Buzzn Mobile', scopes: 'public admin', redirect_uri: 'http://localhost:4200/')
+    Fabricate(:access_token, application_id: application.id, resource_owner_id: user.id, scopes: 'public admin' )
+
   when 'christian'
     root_mp = Fabricate(:mp_60138988)
     root_mp.contracts << Fabricate(:mpoc_christian, metering_point: root_mp)

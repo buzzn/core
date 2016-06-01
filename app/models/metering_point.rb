@@ -49,6 +49,8 @@ class MeteringPoint < ActiveRecord::Base
   scope :privates, -> { where("readable in (?)", ["members"]) }
 
   scope :without_group, lambda { self.where(group: nil) }
+  scope :without_meter, lambda { self.where(meter: nil) }
+  scope :with_meter, lambda { self.where.not(meter: nil) }
 
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
@@ -76,10 +78,12 @@ class MeteringPoint < ActiveRecord::Base
     Profile.where(user_id: users.ids)
   end
 
+  ## TODO rename do managers
   def users
     User.with_role(:member, self)
   end
 
+  ## TODO remove this
   def members
     self.users
   end
@@ -237,27 +241,38 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def slp?
-    self.input? && !self.smart?
+    !self.smart? &&
+    self.input?
   end
 
   def pv?
-    self.output? && !self.smart? && self.devices.any? && self.devices.first.primary_energy == 'sun'
+    !self.smart? &&
+    self.output? &&
+    self.devices.any? &&
+    self.devices.first.primary_energy == 'sun'
   end
 
   def bhkw_or_else?
-    self.output? && !self.smart?
+    !self.smart? &&
+    self.output?
   end
 
   def mysmartgrid?
-    self.smart? && metering_point_operator_contract && metering_point_operator_contract.organization.slug == "mysmartgrid"
+    self.smart? &&
+    !metering_point_operator_contract.nil? &&
+    metering_point_operator_contract.organization.slug == "mysmartgrid"
   end
 
   def discovergy?
-    self.smart? && metering_point_operator_contract && (metering_point_operator_contract.organization.slug == "discovergy" || metering_point_operator_contract.organization.slug == "buzzn-metering")
+    self.smart? &&
+    !metering_point_operator_contract.nil? &&
+    (metering_point_operator_contract.organization.slug == "discovergy" ||
+    metering_point_operator_contract.organization.slug == "buzzn-metering")
   end
 
-  def buzzn_reader?
-    metering_point_operator_contract.organization.slug == "buzzn-reader"
+  def buzzn_api?
+    self.smart? &&
+    metering_point_operator_contract.nil?
   end
 
   def data_source
@@ -273,8 +288,8 @@ class MeteringPoint < ActiveRecord::Base
       "mysmartgrid"
     elsif self.discovergy?
       "discovergy"
-    elsif self.buzzn_reader?
-      "buzzn-reader"
+    elsif self.buzzn_api?
+      "buzzn-api"
     end
   end
 

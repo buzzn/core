@@ -31,8 +31,8 @@ namespace :slp do
           else
             Reading.create(
               timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
-              watt_hour: watt_hour*10000000.0, #convert from Wh to 10^-10 kWh
-              power: watts,
+              energy_a_milliwatt_hour: watt_hour*10000000.0, #convert from Wh to 10^-10 kWh
+              power_milliwatt: watts,
               source: "slp"
             )
           end
@@ -47,4 +47,3 @@ namespace :slp do
     end
   end
 end
-

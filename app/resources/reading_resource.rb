@@ -1,7 +1,7 @@
 class ReadingResource < ApplicationResource
-  attributes  :watt_hour,
-              :power,
+  attributes  :energy_a_milliwatt_hour,
+              :energy_b_milliwatt_hour,
+              :power_milliwatt,
               :timestamp,
-              :metering_point_id
-
+              :meter_id
 end

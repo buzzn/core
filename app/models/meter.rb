@@ -1,26 +1,20 @@
 class Meter < ActiveRecord::Base
-
+  resourcify
   include Authority::Abilities
-
   has_ancestry
-
   validates :manufacturer_product_serialnumber, presence: true, uniqueness: true   #, unless: "self.virtual"
-
-
   mount_uploader :image, PictureUploader
-
-  after_save :validates_smartmeter
-
   before_destroy :release_metering_points
-
-  default_scope { order('created_at ASC') }
-
-
   has_many :equipments
-
   has_many :metering_points
+  default_scope { order('created_at ASC') }
+  scope :editable_by_user, lambda {|user|
+    self.with_role(:manager, user)
+  }
 
-
+  def managers
+    User.with_role :manager, self
+  end
 
   def name
     "#{manufacturer_name} #{manufacturer_product_serialnumber}"
@@ -115,23 +109,6 @@ private
     end
   end
 
-  def validates_smartmeter
-    if self.metering_points.any?
-      if self.metering_points.first.metering_point_operator_contract
-        crawler = Crawler.new(self.metering_points.first)
-        if crawler.valid_credential?
-          self.update_columns(smart: true)
-        else
-          self.update_columns(smart: false)
-        end
-      else
-        logger.warn "Meter:#{self.id} has no metering_point_operator_contract"
-        self.update_columns(smart: false)
-      end
-    else
-      logger.warn "Meter:#{self.id} has no metering_point"
-      self.update_columns(smart: false)
-    end
-  end
+
 
 end

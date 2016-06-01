@@ -100,7 +100,7 @@ gem 'browser'
 gem 'acts_as_votable', '~> 0.10.0'
 gem 'i18n-tasks'
 gem 'will_paginate', '~> 3.0.6'
-gem 'high_voltage', '~> 3.0.0'
+gem 'high_voltage'
 
 
 source 'http://rails-assets.org' do
@@ -139,7 +139,6 @@ end
 
 group :development, :test do
   gem 'brakeman', :require => false
-  gem 'spring'
   gem 'lol_dba'
   gem 'listen'
   gem 'launchy'
@@ -161,11 +160,11 @@ group :development do
 end
 
 group :test do
-  gem 'spring-commands-rspec'
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
   gem 'rspec-rails'
   gem 'email_spec'
   gem 'guard-rspec'
   gem 'database_cleaner'
+  gem 'timecop'
 end
