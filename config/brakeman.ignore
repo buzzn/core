@@ -28,7 +28,33 @@
       "line": 16,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => Group.where(:id => (((Group.where(:readable => \"world\").ids << Group.where(:readable => \"community\").ids) << Group.with_role(:manager, current_user)) << friend_group.id)).search(params[:search]).paginate(:page => params[:page], :per_page => 3), {})",
-      "render_path": [{"type":"controller","class":"GroupsController","method":"index","line":20,"file":"app/controllers/groups_controller.rb"}],
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "GroupsController",
+          "method": "index",
+          "line": 20,
+          "file": "app/controllers/groups_controller.rb"
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "groups/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "d1ff3a873bec7be4e31f512f20ca170a700b2189ab426141abdbd648abb98741",
+      "message": "Render path contains parameter value",
+      "file": "app/views/groups/index.html.haml",
+      "line": 16,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => Group.where(:id => Group.readable_group_ids_by_user(current_user)).search(params[:search]).paginate(:page => params[:page], :per_page => 3), {})",
+      "render_path": [{"type":"controller","class":"GroupsController","method":"index","line":8,"file":"app/controllers/groups_controller.rb"}],
       "location": {
         "type": "template",
         "template": "groups/index"
@@ -57,6 +83,6 @@
       "note": ""
     }
   ],
-  "updated": "2016-04-18 10:53:16 +0200",
-  "brakeman_version": "3.2.1"
+  "updated": "2016-06-01 15:42:58 +0200",
+  "brakeman_version": "3.3.0"
 }
