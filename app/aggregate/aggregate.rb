@@ -245,28 +245,42 @@ private
 
 
   def external_data(metering_point, resolution, timestamp)
-    items = []
     crawler = Crawler.new(metering_point)
 
-    if resolution == 'hour_to_minutes'
-      result = crawler.hour(timestamp)
-
-    elsif resolution == 'day_to_minutes'
-      result = crawler.day(timestamp)
-      result.each do |item|
-        items << {
-          timestamp: Time.at(item[0]/1000),
-          power_milliwatt: (item[1]*1000).to_i
-        }
-      end
-
-    elsif resolution == 'month_to_days'
-      result = crawler.month(timestamp)
-
-    elsif resolution == 'year_to_months'
-      result = crawler.year(timestamp)
-
+    case resolution
+    when 'hour_to_minutes'
+      results = crawler.hour(timestamp)
+    when 'day_to_minutes'
+      results = crawler.day(timestamp)
+    when 'month_to_days'
+      results = crawler.month(timestamp)
+    when 'year_to_months'
+      results = crawler.year(timestamp)
     end
+
+    if results.first.size == 2 && metering_point.input?
+      type_of_meter = 'in'
+    elsif results.first.size == 2 && metering_point.output?
+      type_of_meter = 'out'
+    elsif results.first.size == 3 && metering_point.input?
+      type_of_meter = 'in_out'
+    end
+
+    items = []
+    results.each do |result|
+      item = {'timestamp' => Time.at(result[0]/1000)}
+      case type_of_meter
+      when 'in'
+        item.merge!('energy_a_milliwatt_hour' => (result[1]*1000*1000).to_i)
+      when 'out'
+        item.merge!('energy_b_milliwatt_hour' => (result[1]*1000*1000).to_i)
+      when 'in_out'
+        item.merge!('energy_a_milliwatt_hour' => (result[1]*1000*1000).to_i)
+        item.merge!('energy_b_milliwatt_hour' => (result[2]*1000*1000).to_i)
+      end
+      items << item
+    end
+
     return items
   end
 
