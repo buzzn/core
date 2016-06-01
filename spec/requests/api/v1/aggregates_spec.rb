@@ -839,32 +839,6 @@ describe "Aggregates API" do
    #                                       __/ | __/ |
    #                                      |___/ |___/
 
-  it 'does aggregate Discovergy past day_to_minutes for out metering_point as admin' do
-    access_token = Fabricate(:admin_access_token)
-    metering_point = Fabricate(:mp_z2) # PV
-    metering_point.contracts << Fabricate(:mpoc_buzzn_metering)
-
-    request_params = {
-      metering_point_ids: metering_point.id,
-      resolution: 'day_to_minutes',
-      timestamp: Time.find_zone('Berlin').local(2016,2,1)
-    }
-
-    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
-
-    expect(response).to have_http_status(200)
-    expect(json.count).to eq(96)
-
-    expect(json[50]['power_milliwatt']).to eq(800210)
-    expect(json[50]['energy_a_milliwatt_hour']).to eq(nil)
-    expect(json[50]['energy_b_milliwatt_hour']).to eq(nil)
-
-    timestamp = Time.find_zone('Berlin').local(2016,2,1)
-    json.each do |item|
-      expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
-      timestamp += 15.minutes
-    end
-  end
 
 
   it 'does aggregate Discovergy past month_to_days for out metering_point as admin' do
