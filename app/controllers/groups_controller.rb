@@ -19,7 +19,6 @@ class GroupsController < ApplicationController
     @managers                       = @group.managers
     @energy_producers               = MeteringPoint.by_group(@group).outputs.without_externals.decorate.collect(&:users).flatten.uniq
     @energy_consumers               = MeteringPoint.by_group(@group).inputs.without_externals.decorate.collect(&:users).flatten.uniq
-    @interested_members             = @group.users
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @all_comments                   = @group.root_comments
     @out_devices                    = @out_metering_points.collect(&:devices)
@@ -340,9 +339,3 @@ private
 
 
 end
-
-
-
-
-
-

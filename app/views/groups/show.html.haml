@@ -244,17 +244,6 @@
               = render user.profile if user.profile
           %hr
 
-      - if @interested_members.any?
-        %h1.page-header.text-overflow
-          %span
-            = t('interested_members')
-            %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('interested_members_info')}
-        .row
-          - @interested_members.each do |user|
-            = render user.profile if user.profile
-        %hr
-
 
 
 
@@ -268,14 +257,3 @@
       .col-sm-12.col-md-12.col-lg-12
         .metering_points
           = render partial: "metering_points/metering_point_small", collection: @out_metering_points + @in_metering_points, as: :metering_point
-
-
-
-
-
-
-
-
-
-
-
