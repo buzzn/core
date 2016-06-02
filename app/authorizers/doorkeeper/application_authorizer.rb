@@ -4,19 +4,19 @@ class Doorkeeper::ApplicationAuthorizer < ApplicationAuthorizer
     true
   end
 
+  def readable_by?(user)
+    resource.owner == user ||
+    user.has_role?(:admin)
+  end
+
   def updatable_by?(user)
-    user.has_role?(:admin) ||
-    resource.owner == user
+    resource.owner == user ||
+    user.has_role?(:admin)
   end
 
   def deletable_by?(user)
-    user.has_role?(:admin) ||
-    resource.owner == user
-  end
-
-  def readable_by?(user)
-    user.has_role?(:admin) ||
-    resource.owner == user
+    resource.owner == user ||
+    user.has_role?(:admin)
   end
 
 end

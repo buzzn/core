@@ -1,9 +1,13 @@
 class ProfileAuthorizer < ApplicationAuthorizer
 
+  def self.creatable_by?(user)
+    user.has_role?(:admin)
+  end
+
   def readable_by?(user)
-    user.has_role?(:admin) ||
     (resource.user && resource.user.friend?(user)) ||
-    resource.user == user
+    resource.user == user ||
+    user.has_role?(:admin)
   end
 
   def updatable_by?(user)
@@ -11,5 +15,8 @@ class ProfileAuthorizer < ApplicationAuthorizer
     user.has_role?(:admin)
   end
 
+  def deletable_by?(user)
+    user.has_role?(:admin)
+  end
 
 end

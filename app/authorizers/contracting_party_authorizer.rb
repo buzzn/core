@@ -1,7 +1,22 @@
 class ContractingPartyAuthorizer < ApplicationAuthorizer
 
-  def self.readable_by?(user)
+  def self.creatable_by?(user)
     true
+  end
+
+  def readable_by?(user)
+    User.with_role(:member, resource) ||
+    user.has_role?(:admin)
+  end
+
+  def updatable_by?(user)
+     User.with_role(:member, resource) ||
+     user.has_role?(:admin)
+  end
+
+  def deletable_by?(user)
+    User.with_role(:member, resource) ||
+    user.has_role?(:admin)
   end
 
 end

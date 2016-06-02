@@ -73,10 +73,12 @@
     access_token = token.token
 
 ## TODO
-  - change metering_point_id to meter_id in reader.rb
   - rails controller den neuen Aggregator benuzten lassen.
   - rake slp und co auf milli_watt ändern
   - remove discovergy pull readings
-  - query die mongodb nur auf die werte die benötigt werden, power oder energy a oder b
   - mongodb TTL 4 jahre.
   - fix swagger ui
+
+## Docs
+  https://docs.google.com/spreadsheets/d/1OPsKFke9NGUYPtWs7Nv5Iv4hMAvqpmYvCPtXEhPhYL4/edit#gid=0
+  https://docs.google.com/spreadsheets/d/1_KMXlYH3xcPKXx1p_RxxuLe6wP1pI-P2gOcJu7_rUNs/edit?ts=574ef7ae#gid=0
