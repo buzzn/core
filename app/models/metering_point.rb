@@ -473,43 +473,19 @@ class MeteringPoint < ActiveRecord::Base
       result = calculate_virtual_metering_point(data, operators, resolution_format)
       return result
     else
-      fake_or_smart(self.id, resolution_format, containing_timestamp)
+      aggregate = Aggregate.new({metering_point_ids: [self.id]})
+      chart_hash = aggregate.past({timestamp: Time.at(containing_timestamp/1000), resolution: resolution_format })
+      convert_to_highchart_array(chart_hash)
     end
   end
 
-  # usage mp.fake_or_smart("5441452e-724c-4cd1-8eed-b70d4ec3b610","hour_to_minutes","1438074703700")
-  def fake_or_smart(metering_point_id, resolution_format, containing_timestamp)
-    metering_point = MeteringPoint.find(metering_point_id)
-
-    if self.discovergy? || self.mysmartgrid?
-      result = []
-      crawler = Crawler.new(self)
-      if resolution_format == 'hour_to_minutes'
-        result = crawler.hour(containing_timestamp)
-      elsif resolution_format == 'day_to_minutes'
-        result = crawler.day(containing_timestamp)
-      elsif resolution_format == 'month_to_days'
-        result = crawler.month(containing_timestamp)
-      elsif resolution_format == 'year_to_months'
-        result = crawler.year(containing_timestamp)
-      end
-      return result
-
-    elsif self.pv?
-      convert_to_array(Reading.aggregate(resolution_format, ['sep_pv'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
-
-    elsif self.bhkw_or_else?
-      convert_to_array(Reading.aggregate(resolution_format, ['sep_bhkw'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SEP
-
-    elsif self.slp?
-      convert_to_array(Reading.aggregate(resolution_format, ['slp'], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0) # SLP
-
-    elsif self.buzzn_reader?
-      convert_to_array(Reading.aggregate(resolution_format, [metering_point.id], containing_timestamp), resolution_format, forecast_kwh_pa.nil? ? 1 : forecast_kwh_pa/1000.0)
-
+  def convert_to_highchart_array(chart_hash)
+    array = []
+    chart_hash.each do |item|
+      array << [item['timestamp'].to_time.to_i*1000, item['power_milliwatt']/1000]
     end
+    return array
   end
-
 
 
   def latest_fake_data
