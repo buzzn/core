@@ -78,6 +78,7 @@
   - remove discovergy pull readings
   - mongodb TTL 4 jahre.
   - fix swagger ui
+  - fix google anlytics 
 
 ## Docs
   https://docs.google.com/spreadsheets/d/1OPsKFke9NGUYPtWs7Nv5Iv4hMAvqpmYvCPtXEhPhYL4/edit#gid=0
