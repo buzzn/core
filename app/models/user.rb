@@ -21,9 +21,6 @@ class User < ActiveRecord::Base
   has_many :friendships
   has_many :friends, :through => :friendships, after_add: :create_complement_friendship
 
-  has_many :group_users
-  has_many :groups, :through => :group_users
-
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
 
   has_many :access_tokens, class_name: 'Doorkeeper::AccessToken', dependent: :destroy, :foreign_key => :resource_owner_id

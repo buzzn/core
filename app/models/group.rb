@@ -33,9 +33,6 @@ class Group < ActiveRecord::Base
 
   after_save :validate_localpool
 
-  has_many :group_users
-  has_many :users, :through => :group_users
-
   normalize_attributes :description, :website
 
   default_scope { order('created_at ASC') }

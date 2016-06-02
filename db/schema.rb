@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160422110752) do
+ActiveRecord::Schema.define(version: 20160602120455) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -307,16 +307,6 @@ ActiveRecord::Schema.define(version: 20160422110752) do
   add_index "group_metering_point_requests", ["group_id"], name: "index_group_metering_point_requests_on_group_id", using: :btree
   add_index "group_metering_point_requests", ["metering_point_id"], name: "index_group_metering_point_requests_on_metering_point_id", using: :btree
   add_index "group_metering_point_requests", ["user_id"], name: "index_group_metering_point_requests_on_user_id", using: :btree
-
-  create_table "group_users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.uuid     "user_id"
-    t.uuid     "group_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "group_users", ["group_id"], name: "index_group_users_on_group_id", using: :btree
-  add_index "group_users", ["user_id"], name: "index_group_users_on_user_id", using: :btree
 
   create_table "groups", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
