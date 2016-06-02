@@ -84,7 +84,7 @@ class Aggregate
         ['in', 'out'].each do |mode|
           # buzzn_api
           if buzzn_api_metering_points[mode.to_sym].any?
-            source = { meter_id: { "$#{mode}" => buzzn_api_metering_points[mode.to_sym].collect(&:meter_id) } }
+            source = { meter_id: { "$in" => buzzn_api_metering_points[mode.to_sym].collect(&:meter_id) } }
             keys = [key_from_resolution_and_mode(@resolution, mode)]
             collection = Reading.aggregate(@resolution, source, @timestamp, keys)
             @past_items << {
