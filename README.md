@@ -78,7 +78,10 @@
   - remove discovergy pull readings
   - mongodb TTL 4 jahre.
   - fix swagger ui
-  - fix google anlytics 
+  - fix google anlytics
+  - remove MeteringPointUser model
+  - move manager form metering_point to meter
+  - add grape-rails-cache.gem
 
 ## Docs
   https://docs.google.com/spreadsheets/d/1OPsKFke9NGUYPtWs7Nv5Iv4hMAvqpmYvCPtXEhPhYL4/edit#gid=0
