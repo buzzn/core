@@ -77,7 +77,6 @@
   - rake slp und co auf milli_watt ändern
   - remove discovergy pull readings
   - mongodb TTL 4 jahre.
-  - fix swagger ui
   - fix google anlytics
   - remove MeteringPointUser model
   - move manager form metering_point to meter
