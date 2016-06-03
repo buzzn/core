@@ -177,6 +177,8 @@ class MeteringPoint < ActiveRecord::Base
     self.readable == 'community'
   end
 
+
+  # TODO move this to decorater
   def readable_icon
     if readable_by_friends?
       "user-plus"
@@ -188,6 +190,7 @@ class MeteringPoint < ActiveRecord::Base
       "users"
     end
   end
+
 
   def involved
     (self.managers + self.users).uniq

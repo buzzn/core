@@ -21,17 +21,20 @@ class Aggregate
 
         buzzn_api_metering_points, discovergy_metering_points, slp_metering_points = metering_points_sort(@metering_point_ids)
 
-        ['in', 'out'].each do |mode|
-          buzzn_api_metering_points[mode.to_sym].each do |metering_point|
-            document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
-            if document
-              @present_items << {
-                "operator" => (mode == 'in' ? '+' : '-'),
-                "data" => document_to_hash(document)
-              }
-            end
-          end
 
+
+        buzzn_api_metering_points.each do |metering_point|
+          document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
+
+          if document
+            @present_items << {
+              "operator" => (metering_point.mode == 'in' ? '+' : '-'),
+              "data" => document_to_hash(document)
+            }
+          end
+        end
+
+        ['in', 'out'].each do |mode|
           # discovergy
           discovergy_metering_points[mode.to_sym].each do |metering_point|
             @present_items << {
@@ -46,16 +49,31 @@ class Aggregate
           document = Reading.where(:timestamp.gte => @timestamp, source: 'slp').first
           slp_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
-            @present_items <<  { "operator" => "+", "data" => document_to_hash(document, factor) }
+            @present_items << {
+              "operator" => "+",
+              "data" => document_to_hash(document, factor)
+            }
           end
         end
 
       end
     end
 
+    power_milliwatt_summed = 0
+    @present_items.each do |present_item|
+      case present_item['operator']
+      when '+'
+        power_milliwatt_summed += present_item['data']['power_a_milliwatt']
+      when '-'
+        power_milliwatt_summed -= present_item['data']['power_a_milliwatt']
+      else
+        "You gave me operator: #{operator} -- I have no idea what to do with that."
+      end
+    end
+
     @present = {
       "readings" => @present_items,
-      "power_milliwatt_summed" => sum_power_from_present_items(@present_items)
+      "power_milliwatt_summed" => power_milliwatt_summed
     }
 
     if seconds_to_process > 2
@@ -81,18 +99,19 @@ class Aggregate
 
         buzzn_api_metering_points, discovergy_metering_points, slp_metering_points = metering_points_sort(@metering_point_ids)
 
-        ['in', 'out'].each do |mode|
-          # buzzn_api
-          if buzzn_api_metering_points[mode.to_sym].any?
-            source = { meter_id: { "$in" => buzzn_api_metering_points[mode.to_sym].collect(&:meter_id) } }
-            keys = [key_from_resolution_and_mode(@resolution, mode)]
-            collection = Reading.aggregate(@resolution, source, @timestamp, keys)
-            @past_items << {
-              "operator" => (mode == 'in' ? '+' : '-'),
-              "data" => collection_to_hash(collection, 1)
-            }
-          end
 
+        # buzzn_api
+        buzzn_api_metering_points.each do |metering_point|
+          source = { meter_id: { "$in" => [metering_point.meter.id] } }
+          keys = [required_reading_attributes(@resolution, metering_point)]
+          collection = Reading.aggregate(@resolution, source, @timestamp, keys)
+          @past_items << {
+            "operator" => (metering_point.mode == 'in' ? '+' : '-'),
+            "data" => collection_to_hash(collection, 1)
+          }
+        end
+
+        ['in', 'out'].each do |mode|
           # discovergy
           discovergy_metering_points[mode.to_sym].each do |metering_point|
             @past_items << {
@@ -105,13 +124,18 @@ class Aggregate
         #slp
         if slp_metering_points.any?
           source = { source: { "$in" => ['slp'] } }
-          keys = [key_from_resolution_and_mode(@resolution, 'in')]
+          if Reading.energy_resolutions.include?(@resolution)
+            keys = ['energy_a_milliwatt_hour']
+          elsif Reading.power_resolutions.include?(@resolution)
+            keys = ['power_a_milliwatt']
+          end
           collection = Reading.aggregate(@resolution, source, @timestamp, keys)
           slp_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
             @past_items << { "operator" => "+", "data" => collection_to_hash(collection, factor) }
           end
         end
+
         @past = sum_past_items(@past_items)
 
       end
@@ -130,37 +154,29 @@ private
      metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/1000) : 1
   end
 
-  def key_from_resolution_and_mode(resolution, mode)
+  def required_reading_attributes(resolution, metering_point)
+
+    directions  = metering_point.meter.metering_points.count
+    mode        = metering_point.mode
+
+    if directions == 1 && metering_point.input?
+      x = 'a'
+    elsif directions == 1 && metering_point.output?
+      x = 'a'
+    elsif directions == 2 && metering_point.input?
+      x = 'a'
+    elsif directions == 2 && metering_point.output?
+      x = 'b'
+    end
+
     if Reading.energy_resolutions.include?(resolution)
-      case mode
-      when 'in'
-        return 'energy_a_milliwatt_hour'
-      when 'out'
-        return 'energy_b_milliwatt_hour'
-      else
-        "You gave me mode: #{mode} -- I have no idea what to do with that."
-      end
+      return "energy_#{x}_milliwatt_hour"
     elsif Reading.power_resolutions.include?(resolution)
-      return 'power_milliwatt'
+      return "power_#{x}_milliwatt"
     end
   end
 
-  def sum_power_from_present_items(present_items)
-      presents_power_milliwatt = 0
 
-      present_items.each do |present_item|
-        case present_item['operator']
-        when '+'
-          presents_power_milliwatt += present_item['data']['power_milliwatt']
-        when '-'
-          presents_power_milliwatt -= present_item['data']['power_milliwatt']
-        else
-          "You gave me operator: #{operator} -- I have no idea what to do with that."
-        end
-      end
-
-      return presents_power_milliwatt
-  end
 
   def sum_past_items(past_items)
     if past_items.count > 1
@@ -193,18 +209,13 @@ private
 
 
   def metering_points_sort(metering_point_ids)
-    buzzn_api_metering_points   = { in:[], out:[] }
+    buzzn_api_metering_points   = []
     discovergy_metering_points  = { in:[], out:[] }
     slp_metering_points         = []
     MeteringPoint.where(id: @metering_point_ids).each do |metering_point|
       case metering_point.data_source
       when 'buzzn-api'
-        case metering_point.mode
-        when 'in'
-          buzzn_api_metering_points[:in] << metering_point
-        when 'out'
-          buzzn_api_metering_points[:out] << metering_point
-        end
+        buzzn_api_metering_points << metering_point
       when 'discovergy'
         case metering_point.mode
         when 'in'
@@ -226,9 +237,10 @@ private
     items = []
     collection.each do |document|
       item = {'timestamp' => document['firstTimestamp']}
-      item.merge!('power_milliwatt' => document['avgPowerMilliwatt'] * factor) if document['avgPowerMilliwatt']
       item.merge!('energy_a_milliwatt_hour' => document['sumEnergyAMilliwattHour'] * factor) if document['sumEnergyAMilliwattHour']
       item.merge!('energy_b_milliwatt_hour' => document['sumEnergyBMilliwattHour'] * factor) if document['sumEnergyBMilliwattHour']
+      item.merge!('power_a_milliwatt' => document['avgPowerAMilliwatt'] * factor) if document['avgPowerAMilliwatt']
+      item.merge!('power_b_milliwatt' => document['avgPowerBMilliwatt'] * factor) if document['avgPowerBMilliwatt']
       items << item
     end
     return items
@@ -237,9 +249,10 @@ private
 
   def document_to_hash(document, factor=1)
     item = {'timestamp' => document['timestamp']}
-    item.merge!('power_milliwatt' => document['power_milliwatt'] * factor) if document['power_milliwatt']
     item.merge!('energy_a_milliwatt_hour' => document['energy_a_milliwatt_hour'] * factor) if document['energy_a_milliwatt_hour']
     item.merge!('energy_b_milliwatt_hour' => document['energy_b_milliwatt_hour'] * factor) if document['energy_b_milliwatt_hour']
+    item.merge!('power_a_milliwatt' => document['power_a_milliwatt'] * factor) if document['power_a_milliwatt']
+    item.merge!('power_b_milliwatt' => document['power_b_milliwatt'] * factor) if document['power_b_milliwatt']
     return item
   end
 

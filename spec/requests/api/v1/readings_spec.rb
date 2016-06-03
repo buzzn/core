@@ -42,14 +42,14 @@ describe "Readings API" do
       timestamp: reading.timestamp,
       energy_a_milliwatt_hour: reading.energy_a_milliwatt_hour,
       energy_b_milliwatt_hour: reading.energy_b_milliwatt_hour,
-      power_milliwatt: reading.power_milliwatt
+      power_a_milliwatt: reading.power_a_milliwatt
     }.to_json
     post_with_token "/api/v1/readings", request_params, access_token.token
     expect(response).to have_http_status(201)
     expect(DateTime.parse(json['data']['attributes']['timestamp'])).to eq(reading.timestamp)
     expect(json['data']['attributes']['energy-a-milliwatt-hour']).to eq(reading.energy_a_milliwatt_hour)
     expect(json['data']['attributes']['energy-b-milliwatt-hour']).to eq(reading.energy_b_milliwatt_hour)
-    expect(json['data']['attributes']['power-milliwatt']).to eq(reading.power_milliwatt )
+    expect(json['data']['attributes']['power-a-milliwatt']).to eq(reading.power_a_milliwatt )
   end
 
 
@@ -61,13 +61,13 @@ describe "Readings API" do
 
     timestamp = "Wed Apr 13 2016 14:07:35 GMT+0200 (CEST)"
     energy_a_milliwatt_hour = 80616
-    power_milliwatt = 90
+    power_a_milliwatt = 90
 
     request_params = {
       meter_id: meter.id,
       timestamp: timestamp,
       energy_a_milliwatt_hour: energy_a_milliwatt_hour,
-      power_milliwatt: power_milliwatt
+      power_a_milliwatt: power_a_milliwatt
     }.to_json
 
     post_with_token "/api/v1/readings", request_params, access_token.token
@@ -75,7 +75,7 @@ describe "Readings API" do
 
     expect(DateTime.parse(json['data']['attributes']['timestamp'])).to eq("Wed Apr 13 2016 14:07:35 GMT+0200 (CEST)")
     expect(json['data']['attributes']['energy-a-milliwatt-hour']).to eq(energy_a_milliwatt_hour)
-    expect(json['data']['attributes']['power-milliwatt']).to eq(power_milliwatt)
+    expect(json['data']['attributes']['power-a-milliwatt']).to eq(power_a_milliwatt)
   end
 
 
@@ -90,7 +90,7 @@ describe "Readings API" do
       # metering_point_id: metering_point.id,
       timestamp: reading.timestamp,
       energy_a_milliwatt_hour: reading.energy_a_milliwatt_hour,
-      power_milliwatt: reading.power_milliwatt
+      power_a_milliwatt: reading.power_a_milliwatt
     }.to_json
 
     post_with_token "/api/v1/readings", request_params, access_token.token
@@ -109,7 +109,7 @@ describe "Readings API" do
       meter_id: meter.id,
       # timestamp: reading.timestamp,
       energy_a_milliwatt_hour: reading.energy_a_milliwatt_hour,
-      power_milliwatt: reading.power_milliwatt
+      power_a_milliwatt: reading.power_a_milliwatt
     }.to_json
 
     post_with_token "/api/v1/readings", request_params, access_token.token
@@ -127,7 +127,7 @@ describe "Readings API" do
       meter_id: meter.id,
       timestamp: reading.timestamp,
       #energy_a_milliwatt_hour: reading.energy_a_milliwatt_hour,
-      power_milliwatt: reading.power_milliwatt
+      power_a_milliwatt: reading.power_a_milliwatt
     }.to_json
 
     post_with_token "/api/v1/readings", request_params, access_token.token
@@ -146,12 +146,12 @@ describe "Readings API" do
       meter_id: meter.id,
       timestamp: reading.timestamp,
       energy_a_milliwatt_hour: reading.energy_a_milliwatt_hour,
-      #power_milliwatt: reading.power_milliwatt
+      #power_a_milliwatt: reading.power_a_milliwatt
     }.to_json
 
     post_with_token "/api/v1/readings", request_params, access_token.token
     expect(response).to have_http_status(400)
-    expect(json['error']).to eq("power_milliwatt is missing")
+    expect(json['error']).to eq("power_a_milliwatt is missing")
   end
 
 

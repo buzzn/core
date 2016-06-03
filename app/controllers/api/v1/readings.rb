@@ -29,15 +29,18 @@ module API
           requires :timestamp,                type: DateTime, desc: "DateTime of the reading"
           requires :energy_a_milliwatt_hour,  type: Integer,  desc: "energy A(often consumption) in Milliwatt Hour for the first register"
           optional :energy_b_milliwatt_hour,  type: Integer,  desc: "energy B(often production) in Milliwatt Hour for the second register"
-          requires :power_milliwatt,          type: Integer,  desc: "power in Milliwatt"
+          requires :power_a_milliwatt,        type: Integer,  desc: "power A(often consumption) in Milliwatt"
+          optional :power_b_milliwatt,        type: Integer,  desc: "power B(often production) in Milliwatt"
         end
+
         post do
           reading = Reading.new(
             meter_id:                 params[:meter_id],
             timestamp:                params[:timestamp],
             energy_a_milliwatt_hour:  params[:energy_a_milliwatt_hour],
             energy_b_milliwatt_hour:  params[:energy_b_milliwatt_hour],
-            power_milliwatt:          params[:power_milliwatt]
+            power_a_milliwatt:        params[:power_a_milliwatt],
+            power_b_milliwatt:        params[:power_b_milliwatt]
           )
           if current_user && current_user.can_create?(reading)
             reading.save!

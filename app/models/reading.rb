@@ -7,7 +7,8 @@ class Reading
   field :timestamp,               type: DateTime
   field :energy_a_milliwatt_hour, type: Integer
   field :energy_b_milliwatt_hour, type: Integer
-  field :power_milliwatt,         type: Integer
+  field :power_a_milliwatt,       type: Integer
+  field :power_b_milliwatt,       type: Integer
   field :reason
   field :source
   field :quality
@@ -154,7 +155,8 @@ class Reading
 
     project["$project"].merge!(energy_a_milliwatt_hour: 1) if keys.include?('energy_a_milliwatt_hour')
     project["$project"].merge!(energy_b_milliwatt_hour: 1) if keys.include?('energy_b_milliwatt_hour')
-    project["$project"].merge!(power_milliwatt: 1) if keys.include?('power_milliwatt')
+    project["$project"].merge!(power_a_milliwatt: 1) if keys.include?('power_a_milliwatt')
+    project["$project"].merge!(power_b_milliwatt: 1) if keys.include?('power_b_milliwatt')
 
     formats = {}
     resolution.each do |format|
@@ -190,8 +192,12 @@ class Reading
       group["$group"].merge!(lastEnergyBMilliwattHour:  { "$last"  => "$energy_b_milliwatt_hour" })
     end
 
-    if keys.include?('power_milliwatt')
-      group["$group"].merge!(avgPowerMilliwatt: { "$avg" => "$power_milliwatt" })
+    if keys.include?('power_a_milliwatt')
+      group["$group"].merge!(avgPowerAMilliwatt: { "$avg" => "$power_a_milliwatt" })
+    end
+
+    if keys.include?('power_b_milliwatt')
+      group["$group"].merge!(avgPowerBMilliwatt: { "$avg" => "$power_b_milliwatt" })
     end
 
     formats = {_id: {}}
@@ -229,8 +235,12 @@ class Reading
       project["$project"].merge!(sumEnergyBMilliwattHour: { "$subtract" => [ "$lastEnergyBMilliwattHour", "$firstEnergyBMilliwattHour" ] })
     end
 
-    if keys.include?('power_milliwatt')
-      project["$project"].merge!(avgPowerMilliwatt: "$avgPowerMilliwatt")
+    if keys.include?('power_a_milliwatt')
+      project["$project"].merge!(avgPowerAMilliwatt: "$avgPowerAMilliwatt")
+    end
+
+    if keys.include?('power_b_milliwatt')
+      project["$project"].merge!(avgPowerBMilliwatt: "$avgPowerBMilliwatt")
     end
 
     pipe << project
@@ -258,8 +268,12 @@ class Reading
         group["$group"].merge!(sumEnergyBMilliwattHour: {"$sum" => "$sumEnergyBMilliwattHour"})
       end
 
-      if keys.include?('power_milliwatt')
-        group["$group"].merge!(avgPowerMilliwatt: {"$sum" => "$avgPowerMilliwatt"})
+      if keys.include?('power_a_milliwatt')
+        group["$group"].merge!(avgPowerAMilliwatt: {"$sum" => "$avgPowerAMilliwatt"})
+      end
+
+      if keys.include?('power_b_milliwatt')
+        group["$group"].merge!(avgPowerBMilliwatt: {"$sum" => "$avgPowerBMilliwatt"})
       end
 
       formats = {_id: {}}
