@@ -30,6 +30,7 @@ module API
           requires :name, type: String, desc: "name"
           requires :mode, type: String, desc: "direction of energie", values: MeteringPoint.modes
           requires :readable, type: String, desc: "readable by?", values: MeteringPoint.readables
+          requires :meter_id, type: String, desc: "Meter"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
         post do
@@ -62,6 +63,7 @@ module API
           requires :name, type: String, desc: "name"
           requires :mode, type: String, desc: "direction of energie", values: MeteringPoint.modes
           requires :readable, type: String, desc: "readable by?", values: MeteringPoint.readables
+          requires :meter_id, type: String, desc: "Meter"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
         put do

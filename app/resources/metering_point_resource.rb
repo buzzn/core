@@ -6,7 +6,6 @@ class MeteringPointResource < ApplicationResource
               :readable
 
   has_many :devices
-  has_one :meter
   has_many :users
 
 end

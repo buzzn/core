@@ -6,4 +6,6 @@ class MeterResource < ApplicationResource
               :smart,
               :online
 
+  has_many :metering_points
+
 end
