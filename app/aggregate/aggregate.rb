@@ -5,7 +5,6 @@ class Aggregate
 
   def initialize(initialize_params = {})
     @metering_point_ids = initialize_params.fetch(:metering_point_ids, nil) || nil
-    @example            = initialize_params.fetch(:example, ['slp']) || ['slp']
   end
 
 
@@ -19,9 +18,7 @@ class Aggregate
         @present_items = []
         @timestamp = params.fetch(:timestamp, Time.current) || Time.current
 
-        buzzn_api_metering_points, discovergy_metering_points, slp_metering_points = metering_points_sort(@metering_point_ids)
-
-
+        buzzn_api_metering_points, discovergy_metering_points, slp_metering_points, sep_bhkw_metering_points = metering_points_sort(@metering_point_ids)
 
         buzzn_api_metering_points.each do |metering_point|
           document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
@@ -51,6 +48,18 @@ class Aggregate
             factor = factor_from_metering_point(metering_point)
             @present_items << {
               "operator" => "+",
+              "data" => document_to_hash(document, factor)
+            }
+          end
+        end
+
+        #sep_bhkw
+        if sep_bhkw_metering_points.any?
+          document = Reading.where(:timestamp.gte => @timestamp, source: 'sep_bhkw').first
+          sep_bhkw_metering_points.each do |metering_point|
+            factor = factor_from_metering_point(metering_point)
+            @present_items << {
+              "operator" => "-",
               "data" => document_to_hash(document, factor)
             }
           end
@@ -97,8 +106,7 @@ class Aggregate
         @timestamp  = params.fetch(:timestamp, Time.current) || Time.current
         @resolution = params.fetch(:resolution, 'day_to_hours') || 'day_to_hours'
 
-        buzzn_api_metering_points, discovergy_metering_points, slp_metering_points = metering_points_sort(@metering_point_ids)
-
+        buzzn_api_metering_points, discovergy_metering_points, slp_metering_points, sep_bhkw_metering_points = metering_points_sort(@metering_point_ids)
 
         # buzzn_api
         buzzn_api_metering_points.each do |metering_point|
@@ -212,6 +220,8 @@ private
     buzzn_api_metering_points   = []
     discovergy_metering_points  = { in:[], out:[] }
     slp_metering_points         = []
+    sep_bhkw_metering_points    = []
+
     MeteringPoint.where(id: @metering_point_ids).each do |metering_point|
       case metering_point.data_source
       when 'buzzn-api'
@@ -225,11 +235,13 @@ private
         end
       when 'slp'
         slp_metering_points << metering_point
+      when 'sep_bhkw'
+        sep_bhkw_metering_points << metering_point
       else
         Rails.logger.error "You gave me #{metering_point.data_source} -- I have no idea what to do with that."
       end
     end
-    return buzzn_api_metering_points, discovergy_metering_points, slp_metering_points
+    return buzzn_api_metering_points, discovergy_metering_points, slp_metering_points, sep_bhkw_metering_points
   end
 
 
@@ -281,15 +293,15 @@ private
 
     items = []
     results.each do |result|
-      item = {'timestamp' => Time.at(result[0]/1000)}
+      item = {'timestamp' => Time.at(result[0]/1000) }
       case type_of_meter
       when 'in'
-        item.merge!('energy_a_milliwatt_hour' => (result[1]*1000*1000).to_i)
+        item.merge!('energy_a_milliwatt_hour' => (result[1]*1000).to_i)
       when 'out'
-        item.merge!('energy_b_milliwatt_hour' => (result[1]*1000*1000).to_i)
+        item.merge!('energy_b_milliwatt_hour' => (result[1]*1000).to_i)
       when 'in_out'
-        item.merge!('energy_a_milliwatt_hour' => (result[1]*1000*1000).to_i)
-        item.merge!('energy_b_milliwatt_hour' => (result[2]*1000*1000).to_i)
+        item.merge!('energy_a_milliwatt_hour' => (result[1]*1000).to_i)
+        item.merge!('energy_b_milliwatt_hour' => (result[2]*1000).to_i)
       end
       items << item
     end

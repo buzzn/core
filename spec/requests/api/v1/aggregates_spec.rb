@@ -856,7 +856,7 @@ describe "Aggregates API" do
     expect(json.count).to eq(29)
     expect(json[15]['power_a_milliwatt']).to eq(nil)
     expect(json[15]['energy_a_milliwatt_hour']).to eq(nil)
-    expect(json[15]['energy_b_milliwatt_hour']).to eq(2146232)
+    expect(json[15]['energy_b_milliwatt_hour']).to eq(2146)
 
     timestamp = Time.find_zone('Berlin').local(2016,2,1)
     json.each do |item|
@@ -867,12 +867,111 @@ describe "Aggregates API" do
 
 
 
-    #
-    # Virtuel
-    #
-    xit 'does aggregate Virtuel past month_to_days for out Discovergy metering_points as admin' do
-    end
+  it 'does aggregate Discovergy past day_to_minutes for out metering_point as admin' do
+    access_token = Fabricate(:admin_access_token)
+    metering_point = Fabricate(:mp_z4) # BHKW
+    metering_point.contracts << Fabricate(:mpoc_buzzn_metering)
 
+    request_params = {
+      metering_point_ids: metering_point.id,
+      resolution: 'day_to_minutes',
+      timestamp: Time.find_zone('Berlin').local(2016,5,6)
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json.count).to eq(96)
+    expect(json[15]['power_a_milliwatt']).to eq(nil)
+    expect(json[15]['energy_a_milliwatt_hour']).to eq(nil)
+    expect(json[15]['energy_b_milliwatt_hour']).to eq(881706)
+
+    timestamp = Time.find_zone('Berlin').local(2016,5,6)
+    json.each do |item|
+      expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
+      timestamp += 15.minute
+    end
+  end
+
+
+
+  it 'does aggregate Discovergy past day_to_minutes for in metering_point on a two-way meter as admin' do
+    access_token = Fabricate(:admin_access_token)
+
+    meter = Fabricate(:easymeter_60139082)
+
+    metering_point_a = Fabricate(:mp_z1a)
+    metering_point_a.contracts << Fabricate(:mpoc_buzzn_metering)
+    meter.metering_points << metering_point_a
+
+    metering_point_b = Fabricate(:mp_z1b)
+    metering_point_b.contracts << Fabricate(:mpoc_buzzn_metering)
+    meter.metering_points << metering_point_b
+
+
+    request_params = {
+      metering_point_ids: metering_point_a.id,
+      resolution: 'day_to_minutes',
+      timestamp: Time.find_zone('Berlin').local(2016,4,6)
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json.count).to eq(96)
+
+    expect(json[0]['energy_a_milliwatt_hour']).to eq(10304)
+
+    timestamp = Time.find_zone('Berlin').local(2016,4,6)
+    json.each do |item|
+      expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
+      timestamp += 15.minute
+    end
+  end
+
+
+
+  it 'does aggregate Discovergy past day_to_minutes for out metering_point on a two-way meter as admin' do
+    access_token = Fabricate(:admin_access_token)
+
+    meter = Fabricate(:easymeter_60139082)
+
+    metering_point_a = Fabricate(:mp_z1a)
+    metering_point_a.contracts << Fabricate(:mpoc_buzzn_metering)
+    meter.metering_points << metering_point_a
+
+    metering_point_b = Fabricate(:mp_z1b)
+    metering_point_b.contracts << Fabricate(:mpoc_buzzn_metering)
+    meter.metering_points << metering_point_b
+
+
+    request_params = {
+      metering_point_ids: metering_point_b.id,
+      resolution: 'day_to_minutes',
+      timestamp: Time.find_zone('Berlin').local(2016,4,6)
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json.count).to eq(96)
+
+    expect(json[0]['energy_b_milliwatt_hour']).to eq(109988)
+
+    timestamp = Time.find_zone('Berlin').local(2016,4,6)
+    json.each do |item|
+      expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
+      timestamp += 15.minute
+    end
+  end
+
+
+  # #
+  # # Virtuel
+  # #
+  # xit 'does aggregate Virtuel past month_to_days for out Discovergy metering_points as admin' do
+  # end
+  #
 
 
 

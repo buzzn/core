@@ -477,7 +477,7 @@ class MeteringPoint < ActiveRecord::Base
       return result
     else
       aggregate = Aggregate.new({metering_point_ids: [self.id]})
-      chart_hash = aggregate.past({timestamp: Time.at(containing_timestamp/1000), resolution: resolution_format })
+      chart_hash = aggregate.past({timestamp: Time.at(containing_timestamp.to_i/1000), resolution: resolution_format })
       convert_to_highchart_array(chart_hash)
     end
   end
@@ -485,7 +485,7 @@ class MeteringPoint < ActiveRecord::Base
   def convert_to_highchart_array(chart_hash)
     array = []
     chart_hash.each do |item|
-      array << [item['timestamp'].to_time.to_i*1000, item['power_milliwatt']/1000]
+      array << [ item['timestamp'].to_time.to_i*1000, item[item.keys.last]/1000 ]
     end
     return array
   end
