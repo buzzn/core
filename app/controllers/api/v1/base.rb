@@ -13,6 +13,7 @@ module API
       mount API::V1::Aggregates
       mount API::V1::Groups
       mount API::V1::Devices
+      mount API::V1::Contracts
 
       add_swagger_documentation(
         api_version: "v1",
