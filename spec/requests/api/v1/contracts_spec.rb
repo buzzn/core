@@ -47,16 +47,17 @@ describe 'Contracts API' do
   end
 
   it 'does not get contract with token for wrong id' do
-    id = Random.new().rand(10000)
     access_token  = Fabricate(:access_token).token
-    get_with_token "/api/v1/contracts/#{id}random", {}, access_token
+    get_with_token "/api/v1/contracts/xxrandomxx", {}, access_token
     expect(response).to have_http_status(404)
   end
 
   it 'does not create contract without token' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
-    @contract_param_names.each { |param_name| request_params[param_name] = contract[param_name] }
+    @contract_param_names.each do |param_name|
+      request_params[param_name] = contract[param_name]
+    end
     post_without_token "/api/v1/contracts/", request_params.to_json
     expect(response).to have_http_status(401)
   end
@@ -64,7 +65,9 @@ describe 'Contracts API' do
   it 'create contract with admin token' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
-    @contract_param_names.each { |param_name| request_params[param_name] = contract[param_name] }
+    @contract_param_names.each do |param_name|
+      request_params[param_name] = contract[param_name]
+    end
     access_token  = Fabricate(:admin_access_token).token
     post_with_token "/api/v1/contracts/", request_params.to_json, access_token
     expect(response).to have_http_status(201)
@@ -73,11 +76,16 @@ describe 'Contracts API' do
   it 'does not create contract with admin token if some of the params missing' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
-    incomplete_params = @contract_param_names.sample(@contract_param_names.length / 2)
-    incomplete_params.each { |param_name| request_params[param_name] = contract[param_name] }
+    @contract_param_names.each do |param_name|
+      request_params[param_name] = contract[param_name]
+    end
     access_token  = Fabricate(:admin_access_token).token
-    post_with_token "/api/v1/contracts/", request_params.to_json, access_token
-    expect(response).to have_http_status(400)
+    request_params.each do |missing_param, val|
+      broken_params = request_params.reject { |key, val| key == missing_param }
+      post_with_token "/api/v1/contracts/", broken_params.to_json, access_token
+      expect(response).to have_http_status(400)
+      expect(json['error']).to eq("#{missing_param} is missing")
+    end
   end
 
   it 'does not create contract with admin token if some params are wrong' do
@@ -138,7 +146,7 @@ describe 'Contracts API' do
   end
 
   it 'does not update contract with admin token and wrong id' do
-    id = Random.new().rand(10000)
+    id = SecureRandom.uuid
     new_contract = Fabricate.build(:mpoc_ferraris_0002_amperix)
     access_token  = Fabricate(:admin_access_token).token
     request_params = {
