@@ -41,6 +41,7 @@ module API
                 name: params[:name],
                 mode: params[:mode],
                 readable: params[:readable],
+                meter_id: params[:meter_id],
                 uid: params[:uid]
                 })
               if metering_point.save!
@@ -75,6 +76,7 @@ module API
                 name: params[:name],
                 mode: params[:mode],
                 readable: params[:readable],
+                meter_id: params[:meter_id],
                 uid: params[:uid]
               })
               return metering_point

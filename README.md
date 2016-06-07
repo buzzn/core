@@ -63,7 +63,7 @@
     https://trello.com/b/SuonZHEd/buzzn-kanban
     https://codeship.io/projects/41893
 
-## API
+# create API token via API
     #https://github.com/doorkeeper-gem/doorkeeper/wiki/Testing-your-provider-with-OAuth2-gem
     app = Doorkeeper::Application.last
     client_redirect_url = 'urn:ietf:wg:oauth:2.0:oob'
@@ -71,6 +71,14 @@
     client.auth_code.authorize_url(scope: app.scopes, redirect_uri: client_redirect_url)
     token = client.auth_code.get_token('xxxxxxxxxx', redirect_uri: client_redirect_url)
     access_token = token.token
+
+# create API token via rails console
+    open or create oauth Application https://staging.buzzn.net/oauth/applications
+    get id of application and go to rails console
+    application = Doorkeeper::Application.find('2a81c128-ef09-4c21-b779-f2655b38d1b4')
+    user = User.where(email: 'felix@buzzn.net').first
+    access_token = Doorkeeper::AccessToken.create(application_id: application.id, resource_owner_id: user.id, scopes: 'public admin' )
+    to to https://staging.buzzn.net/access_tokens to view generated tokens
 
 ## TODO
   - rails controller den neuen Aggregator benuzten lassen.
@@ -81,6 +89,7 @@
   - remove MeteringPointUser model
   - move manager form metering_point to meter
   - add grape-rails-cache.gem
+  - oauth/applications/show is not working
 
 ## Docs
   https://docs.google.com/spreadsheets/d/1OPsKFke9NGUYPtWs7Nv5Iv4hMAvqpmYvCPtXEhPhYL4/edit#gid=0
