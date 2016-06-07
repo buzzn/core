@@ -1,6 +1,14 @@
 describe "Profiles API" do
 
 
+  it 'get all profiles with token' do
+    Fabricate(:profile)
+    Fabricate(:profile)
+    access_token = Fabricate(:access_token).token
+    get_with_token '/api/v1/profiles', {}, access_token
+    expect(response).to have_http_status(200)
+  end
+
 
   it 'does not gets a profile without token' do
     profile = Fabricate(:profile)

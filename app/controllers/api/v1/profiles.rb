@@ -13,7 +13,7 @@ module API
         get do
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
-          @total_pages  = Profile.all.page(@page).per(@per_page).total_pages
+          @total_pages  = Profile.all.page(@page).per_page(@per_page).total_pages
           paginate(render(Profile.all, meta: { total_pages: @total_pages }))
         end
 

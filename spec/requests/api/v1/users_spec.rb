@@ -1,6 +1,15 @@
 describe "Users API" do
 
 
+  it 'get all users with admin token' do
+    Fabricate(:profile)
+    Fabricate(:profile)
+    access_token = Fabricate(:admin_access_token).token
+    get_with_token '/api/v1/users', {}, access_token
+    expect(response).to have_http_status(200)
+  end
+
+
   it 'does not gets a user without token' do
     user = Fabricate(:user)
     get_without_token "/api/v1/users/#{user.id}"
