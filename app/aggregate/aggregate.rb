@@ -22,7 +22,6 @@ class Aggregate
 
         buzzn_api_metering_points.each do |metering_point|
           document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
-
           if document
             @present_items << {
               "operator" => (metering_point.mode == 'in' ? '+' : '-'),
@@ -31,14 +30,12 @@ class Aggregate
           end
         end
 
-        ['in', 'out'].each do |mode|
-          # discovergy
-          discovergy_metering_points[mode.to_sym].each do |metering_point|
-            @present_items << {
-              "operator" => (mode == 'in' ? '+' : '-'),
-              "data" => external_data(metering_point, @resolution, @timestamp.to_i*1000)
-            }
-          end
+        # discovergy
+        discovergy_metering_points.each do |metering_point|
+          @present_items << {
+            "operator" => (metering_point.mode == 'in' ? '+' : '-'),
+            "data" => external_data(metering_point, @resolution, @timestamp.to_i*1000)
+          }
         end
 
         #slp
@@ -113,20 +110,12 @@ class Aggregate
           source = { meter_id: { "$in" => [metering_point.meter.id] } }
           keys = [required_reading_attributes(@resolution, metering_point)]
           collection = Reading.aggregate(@resolution, source, @timestamp, keys)
-          @past_items << {
-            "operator" => (metering_point.mode == 'in' ? '+' : '-'),
-            "data" => collection_to_hash(collection, 1)
-          }
+          @past_items << aggregation_to_hash(collection, 1, metering_point.mode == 'in' ? '+' : '-')
         end
 
-        ['in', 'out'].each do |mode|
-          # discovergy
-          discovergy_metering_points[mode.to_sym].each do |metering_point|
-            @past_items << {
-              "operator" => (mode == 'in' ? '+' : '-'),
-              "data" => external_data(metering_point, @resolution, @timestamp.to_i*1000)
-            }
-          end
+        # discovergy
+        discovergy_metering_points.each do |metering_point|
+          @past_items << external_data(metering_point, @resolution, @timestamp.to_i*1000)
         end
 
         #slp
@@ -140,11 +129,11 @@ class Aggregate
           collection = Reading.aggregate(@resolution, source, @timestamp, keys)
           slp_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
-            @past_items << { "operator" => "+", "data" => collection_to_hash(collection, factor) }
+            @past_items << aggregation_to_hash(collection, factor, '+')
           end
         end
 
-        @past = sum_past_items(@past_items)
+        @past = sum_lists(@past_items)
 
       end
       if seconds_to_process > 2
@@ -162,55 +151,48 @@ private
      metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/1000) : 1
   end
 
-  def required_reading_attributes(resolution, metering_point)
-
+  def required_register(metering_point)
     directions  = metering_point.meter.metering_points.count
-    mode        = metering_point.mode
-
     if directions == 1 && metering_point.input?
-      x = 'a'
+      register = 'a'
     elsif directions == 1 && metering_point.output?
-      x = 'a'
+      register = 'a'
     elsif directions == 2 && metering_point.input?
-      x = 'a'
+      register = 'a'
     elsif directions == 2 && metering_point.output?
-      x = 'b'
+      register = 'b'
     end
+    return register
+  end
 
+  def required_reading_attributes(resolution, metering_point)
+    register = required_register(metering_point)
     if Reading.energy_resolutions.include?(resolution)
-      return "energy_#{x}_milliwatt_hour"
+      return "energy_#{register}_milliwatt_hour"
     elsif Reading.power_resolutions.include?(resolution)
-      return "power_#{x}_milliwatt"
+      return "power_#{register}_milliwatt"
     end
   end
 
 
 
-  def sum_past_items(past_items)
-    if past_items.count > 1
-      past_tamplate  = past_items.pop
-      past           = past_tamplate['data']
-      past_keys      = past_tamplate['data'].first.keys
-      past_keys.delete('timestamp')
-      past_items.each do |past_item|
-        operator          = past_item['operator']
-        past_item_data  = past_item['data']
-        past_item_data.each_with_index do |item, index|
-          past_keys.each do |key|
-            case operator
-            when '+'
-              past[index][key] += item[key]
-            when '-'
-              past[index][key] -= item[key]
-            else
-              "You gave me operator: #{operator} -- I have no idea what to do with that."
-            end
+  def sum_lists(lists)
+    if lists.count > 1
+      tamplate_list  = lists.pop
+      keys           = tamplate_list.first.keys
+      keys.delete('timestamp')
+      lists.each do |list|
+        list.each_with_index do |item, index|
+          keys.each do |key|
+            tamplate_list[index][key] += item[key]
           end
         end
       end
-      return past
+      return tamplate_list
+
     else
-      return past_items.first['data']
+      return lists.first
+
     end
   end
 
@@ -218,7 +200,7 @@ private
 
   def metering_points_sort(metering_point_ids)
     buzzn_api_metering_points   = []
-    discovergy_metering_points  = { in:[], out:[] }
+    discovergy_metering_points  = []
     slp_metering_points         = []
     sep_bhkw_metering_points    = []
 
@@ -227,12 +209,7 @@ private
       when 'buzzn-api'
         buzzn_api_metering_points << metering_point
       when 'discovergy'
-        case metering_point.mode
-        when 'in'
-          discovergy_metering_points[:in] << metering_point
-        when 'out'
-          discovergy_metering_points[:out] << metering_point
-        end
+        discovergy_metering_points << metering_point
       when 'slp'
         slp_metering_points << metering_point
       when 'sep_bhkw'
@@ -245,31 +222,58 @@ private
   end
 
 
-  def collection_to_hash(collection, factor=1)
+  def aggregation_to_hash(collection, factor=1, negativ=false)
     items = []
+
+    # TODO DRY this
     collection.each do |document|
       item = {'timestamp' => document['firstTimestamp']}
-      item.merge!('energy_a_milliwatt_hour' => document['sumEnergyAMilliwattHour'] * factor) if document['sumEnergyAMilliwattHour']
-      item.merge!('energy_b_milliwatt_hour' => document['sumEnergyBMilliwattHour'] * factor) if document['sumEnergyBMilliwattHour']
-      item.merge!('power_a_milliwatt' => document['avgPowerAMilliwatt'] * factor) if document['avgPowerAMilliwatt']
-      item.merge!('power_b_milliwatt' => document['avgPowerBMilliwatt'] * factor) if document['avgPowerBMilliwatt']
+
+      if document['sumEnergyAMilliwattHour']
+        energy_a_milliwatt_hour = document['sumEnergyAMilliwattHour'] * factor
+        energy_a_milliwatt_hour * -1 if negativ
+        item.merge!('energy_a_milliwatt_hour' => energy_a_milliwatt_hour)
+      end
+
+      if document['sumEnergyBMilliwattHour']
+        energy_b_milliwatt_hour = document['sumEnergyBMilliwattHour'] * factor
+        energy_b_milliwatt_hour * -1 if negativ
+        item.merge!('energy_b_milliwatt_hour' => energy_b_milliwatt_hour)
+      end
+
+      if document['avgPowerAMilliwatt']
+        power_a_milliwatt = document['avgPowerAMilliwatt'] * factor
+        power_a_milliwatt * -1 if negativ
+        item.merge!('power_a_milliwatt' => power_a_milliwatt)
+      end
+
+      if document['avgPowerBMilliwatt']
+        power_b_milliwatt = document['avgPowerBMilliwatt'] * factor
+        power_b_milliwatt * -1 if negativ
+        item.merge!('power_b_milliwatt' => power_b_milliwatt)
+      end
+      
       items << item
     end
     return items
   end
 
 
-  def document_to_hash(document, factor=1)
+  def document_to_hash(document, factor=1, negativ=false)
     item = {'timestamp' => document['timestamp']}
-    item.merge!('energy_a_milliwatt_hour' => document['energy_a_milliwatt_hour'] * factor) if document['energy_a_milliwatt_hour']
-    item.merge!('energy_b_milliwatt_hour' => document['energy_b_milliwatt_hour'] * factor) if document['energy_b_milliwatt_hour']
-    item.merge!('power_a_milliwatt' => document['power_a_milliwatt'] * factor) if document['power_a_milliwatt']
-    item.merge!('power_b_milliwatt' => document['power_b_milliwatt'] * factor) if document['power_b_milliwatt']
+    ['energy_a_milliwatt_hour', 'energy_b_milliwatt_hour', 'power_a_milliwatt', 'power_b_milliwatt'].each do |key|
+      if document[key]
+        value = document[key] * factor
+        value * -1 if negativ
+        item.merge!(key => value)
+      end
+    end
     return item
   end
 
 
   def external_data(metering_point, resolution, timestamp)
+    puts '<================ external api call'
     crawler = Crawler.new(metering_point)
 
     case resolution
@@ -282,6 +286,7 @@ private
     when 'year_to_months'
       results = crawler.year(timestamp)
     end
+
 
     if results.first.size == 2 && metering_point.input?
       type_of_meter = 'in'
@@ -298,10 +303,10 @@ private
       when 'in'
         item.merge!('energy_a_milliwatt_hour' => (result[1]*1000).to_i)
       when 'out'
-        item.merge!('energy_b_milliwatt_hour' => (result[1]*1000).to_i)
+        item.merge!('energy_b_milliwatt_hour' => (result[1]*1000*-1).to_i)
       when 'in_out'
         item.merge!('energy_a_milliwatt_hour' => (result[1]*1000).to_i)
-        item.merge!('energy_b_milliwatt_hour' => (result[2]*1000).to_i)
+        item.merge!('energy_b_milliwatt_hour' => (result[2]*1000*-1).to_i)
       end
       items << item
     end

@@ -129,7 +129,7 @@ describe "Metering Points API" do
     expect(json['data']['attributes']['name']).to eq("#{metering_point.name} updated")
   end
 
-  
+
 
   it 'does update a metering_point with admin_token' do
     metering_point = Fabricate(:metering_point_with_manager)
@@ -183,6 +183,10 @@ describe "Metering Points API" do
     expect(response).to have_http_status(204)
   end
 
+
+
+  xit 'does add a metering_point to meter with admin_token' do
+  end
 
 
 

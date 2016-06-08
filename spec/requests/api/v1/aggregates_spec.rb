@@ -8,6 +8,15 @@ describe "Aggregates API" do
 
 
 
+  xit 'does not aggregate if meter is offline as admin' do
+  end
+
+  xit 'does not aggregate to many metering_points at once as admin' do
+  end
+
+  xit 'does not aggregate many metering_points with different type as admin' do
+  end
+
   #   _____ _      _____
   #  / ____| |    |  __ \
   # | (___ | |    | |__) |
@@ -828,21 +837,20 @@ describe "Aggregates API" do
 
 
 
-   #  _____  _
-   # |  __ \(_)
-   # | |  | |_ ___  ___ _____   _____ _ __ __ _ _   _
-   # | |  | | / __|/ __/ _ \ \ / / _ \ '__/ _` | | | |
-   # | |__| | \__ \ (_| (_) \ V /  __/ | | (_| | |_| |
-   # |_____/|_|___/\___\___/ \_/ \___|_|  \__, |\__, |
-   #                                       __/ | __/ |
-   #                                      |___/ |___/
+  #   _____  _
+  #  |  __ \(_)
+  #  | |  | |_ ___  ___ _____   _____ _ __ __ _ _   _
+  #  | |  | | / __|/ __/ _ \ \ / / _ \ '__/ _` | | | |
+  #  | |__| | \__ \ (_| (_) \ V /  __/ | | (_| | |_| |
+  #  |_____/|_|___/\___\___/ \_/ \___|_|  \__, |\__, |
+  #                                        __/ | __/ |
+  #                                       |___/ |___/
 
 
 
   it 'does aggregate Discovergy past month_to_days for out metering_point as admin' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:mp_z2) # PV
-    metering_point.contracts << Fabricate(:mpoc_buzzn_metering)
 
     request_params = {
       metering_point_ids: metering_point.id,
@@ -856,7 +864,7 @@ describe "Aggregates API" do
     expect(json.count).to eq(29)
     expect(json[15]['power_a_milliwatt']).to eq(nil)
     expect(json[15]['energy_a_milliwatt_hour']).to eq(nil)
-    expect(json[15]['energy_b_milliwatt_hour']).to eq(2146)
+    expect(json[15]['energy_b_milliwatt_hour']).to eq(-2146)
 
     timestamp = Time.find_zone('Berlin').local(2016,2,1)
     json.each do |item|
@@ -870,7 +878,6 @@ describe "Aggregates API" do
   it 'does aggregate Discovergy past day_to_minutes for out metering_point as admin' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:mp_z4) # BHKW
-    metering_point.contracts << Fabricate(:mpoc_buzzn_metering)
 
     request_params = {
       metering_point_ids: metering_point.id,
@@ -884,7 +891,7 @@ describe "Aggregates API" do
     expect(json.count).to eq(96)
     expect(json[15]['power_a_milliwatt']).to eq(nil)
     expect(json[15]['energy_a_milliwatt_hour']).to eq(nil)
-    expect(json[15]['energy_b_milliwatt_hour']).to eq(881706)
+    expect(json[15]['energy_b_milliwatt_hour']).to eq(-881706)
 
     timestamp = Time.find_zone('Berlin').local(2016,5,6)
     json.each do |item|
@@ -956,7 +963,7 @@ describe "Aggregates API" do
     expect(response).to have_http_status(200)
     expect(json.count).to eq(96)
 
-    expect(json[0]['energy_b_milliwatt_hour']).to eq(109988)
+    expect(json[0]['energy_b_milliwatt_hour']).to eq(-109988)
 
     timestamp = Time.find_zone('Berlin').local(2016,4,6)
     json.each do |item|
@@ -966,12 +973,81 @@ describe "Aggregates API" do
   end
 
 
-  # #
-  # # Virtuel
-  # #
-  # xit 'does aggregate Virtuel past month_to_days for out Discovergy metering_points as admin' do
-  # end
+
+
+
+
+  it 'does aggregate multibale Discovergy past day_to_minutes metering_point as admin' do
+    access_token = Fabricate(:admin_access_token)
+
+    mp_z2 = Fabricate(:mp_z2) # PV
+    mp_z4 = Fabricate(:mp_z4) # BHKW
+
+
+    request_params = {
+      metering_point_ids: mp_z2.id,
+      resolution: 'day_to_minutes',
+      timestamp: Time.find_zone('Berlin').local(2016,4,6)
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json.count).to eq(96)
+    expect(json[50]['energy_b_milliwatt_hour']).to eq(-1507120)
+
+
+
+
+
+    request_params = {
+      metering_point_ids: mp_z4.id,
+      resolution: 'day_to_minutes',
+      timestamp: Time.find_zone('Berlin').local(2016,4,6)
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json.count).to eq(96)
+    expect(json[50]['energy_b_milliwatt_hour']).to eq(-907367)
+
+
+
+
+    request_params = {
+      metering_point_ids: "#{mp_z2.id},#{mp_z4.id}",
+      resolution: 'day_to_minutes',
+      timestamp: Time.find_zone('Berlin').local(2016,4,6)
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json.count).to eq(96)
+    expect(json[50]['energy_b_milliwatt_hour']).to eq(-907367 + -1507120)
+
+
+
+    timestamp = Time.find_zone('Berlin').local(2016,4,6)
+    json.each do |item|
+      expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
+      timestamp += 15.minute
+    end
+  end
+
+
+
+
+
+
   #
+  # Virtuel
+  #
+  xit 'does aggregate Virtuel past month_to_days for out Discovergy metering_points as admin' do
+  end
+
+
 
 
 

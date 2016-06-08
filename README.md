@@ -78,7 +78,7 @@
     application = Doorkeeper::Application.find('2a81c128-ef09-4c21-b779-f2655b38d1b4')
     user = User.where(email: 'felix@buzzn.net').first
     access_token = Doorkeeper::AccessToken.create(application_id: application.id, resource_owner_id: user.id, scopes: 'public admin' )
-    to to https://staging.buzzn.net/access_tokens to view generated tokens
+    go to https://staging.buzzn.net/access_tokens to view generated tokens
 
 ## TODO
   - rails controller den neuen Aggregator benuzten lassen.
