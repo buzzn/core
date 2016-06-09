@@ -25,7 +25,6 @@
     bundle exec rake db:init
     bundle exec rake db:test:prepare
     bundle exec guard
-    bundle exec rescue rspec
 
 ## Sidekiq Start
     redis-server
@@ -90,6 +89,7 @@
   - move manager form metering_point to meter
   - add grape-rails-cache.gem
   - oauth/applications/show is not working
+  - add rubocop.gem
 
 ## Docs
   https://docs.google.com/spreadsheets/d/1OPsKFke9NGUYPtWs7Nv5Iv4hMAvqpmYvCPtXEhPhYL4/edit#gid=0
