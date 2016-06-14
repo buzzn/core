@@ -94,18 +94,49 @@ describe "Groups API" do
     expect(response).to have_http_status(200)
   end
 
-  xit 'does gets a group readable by members if user is member' do
-    access_token  = Fabricate(:access_token)
-    group         = Fabricate(:group_readable_by_members)
-    group.users   << User.find(access_token.resource_owner_id)
+  it 'get a friend-readable group by managers friend' do
+    access_token      = Fabricate(:access_token_with_friend)
+    token_user        = User.find(access_token.resource_owner_id)
+    token_user_friend = token_user.friends.first
+    group             = Fabricate(:group_readable_by_friends)
+    token_user_friend.add_role(:manager, group)
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
   end
 
-  it 'does not gets a group readable by members if user is not member' do
-    access_token  = Fabricate(:access_token)
-    group         = Fabricate(:group_readable_by_members)
+  it 'get a friend-readable group by member' do
+    access_token      = Fabricate(:access_token)
+    token_user        = User.find(access_token.resource_owner_id)
+    member            = Fabricate(:user)
+    group             = Fabricate(:group_readable_by_friends)
+    metering_point    = Fabricate(:metering_point)
+    member.add_role(:member, metering_point)
+    token_user.add_role(:member, metering_point)
+    group.metering_points << metering_point
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
+    expect(response).to have_http_status(200)
+  end
+
+  it 'get a member-readable group by member' do
+    access_token      = Fabricate(:access_token)
+    token_user        = User.find(access_token.resource_owner_id)
+    member            = Fabricate(:user)
+    group             = Fabricate(:group_readable_by_members)
+    metering_point    = Fabricate(:metering_point)
+    member.add_role(:member, metering_point)
+    token_user.add_role(:member, metering_point)
+    group.metering_points << metering_point
+    get_with_token "/api/v1/groups/#{group.id}", access_token.token
+    expect(response).to have_http_status(200)
+  end
+
+  it 'does not gets a group readable by members or friends if user is not member or friend' do
+    access_token  = Fabricate(:access_token)
+    members_group         = Fabricate(:group_readable_by_members)
+    friends_group         = Fabricate(:group_readable_by_friends)
+    get_with_token "/api/v1/groups/#{members_group.id}", access_token.token
+    expect(response).to have_http_status(403)
+    get_with_token "/api/v1/groups/#{friends_group.id}", access_token.token
     expect(response).to have_http_status(403)
   end
 
