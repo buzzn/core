@@ -83,5 +83,21 @@ class Profile < ActiveRecord::Base
     end
   end
 
+  def readable_by_friends?
+    self.readable == 'friends'
+  end
+
+  def readable_by_world?
+    self.readable == 'world'
+  end
+
+  def readable_by_members?
+    self.readable == 'members'
+  end
+
+  def readable_by_community?
+    self.readable == 'community'
+  end
+
 
 end

@@ -13,6 +13,14 @@ Fabricator :profile do
 end
 
 
+Fabricator :world_readable_profile, from: :profile do
+  readable    'world'
+end
+
+Fabricator :community_readable_profile, from: :profile do
+  readable    'community'
+end
+
 Fabricator :profile_felix, from: :profile do
   user_name   'ffaerber'
   first_name  'Felix'

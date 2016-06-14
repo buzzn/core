@@ -1,8 +1,11 @@
 describe "Groups API" do
 
-  it 'does gets a group readable by world without token' do
+  it 'does gets a group readable by world with or without token' do
+    access_token  = Fabricate(:access_token).token
     group = Fabricate(:group)
     get_without_token "/api/v1/groups/#{group.id}"
+    expect(response).to have_http_status(200)
+    get_with_token "/api/v1/groups/#{group.id}", access_token
     expect(response).to have_http_status(200)
   end
 

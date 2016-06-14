@@ -1,10 +1,20 @@
 describe "Profiles API" do
 
 
-  it 'get all profiles with token' do
+  it 'does not get all profiles with regular token or without token' do
     Fabricate(:profile)
     Fabricate(:profile)
     access_token = Fabricate(:access_token).token
+    get_with_token '/api/v1/profiles', {}, access_token
+    expect(response).to have_http_status(403)
+    get_without_token '/api/v1/profiles'
+    expect(response).to have_http_status(401)
+  end
+
+  it 'get all profiles with admin token' do
+    Fabricate(:profile)
+    Fabricate(:profile)
+    access_token = Fabricate(:admin_access_token).token
     get_with_token '/api/v1/profiles', {}, access_token
     expect(response).to have_http_status(200)
   end
@@ -13,7 +23,7 @@ describe "Profiles API" do
   it 'does not gets a profile without token' do
     profile = Fabricate(:profile)
     get_without_token "/api/v1/profiles/#{profile.id}"
-    expect(response).to have_http_status(401)
+    expect(response).to have_http_status(403)
   end
 
 
@@ -21,6 +31,24 @@ describe "Profiles API" do
     access_token = Fabricate(:access_token)
     profile = Fabricate(:profile)
     get_with_token "/api/v1/profiles/#{profile.id}", access_token.token
+    expect(response).to have_http_status(403)
+  end
+
+  it 'get a world-readable profile as foreigner' do
+    access_token = Fabricate(:access_token)
+    profile = Fabricate(:world_readable_profile)
+    get_with_token "/api/v1/profiles/#{profile.id}", access_token.token
+    expect(response).to have_http_status(200)
+    get_without_token "/api/v1/profiles/#{profile.id}"
+    expect(response).to have_http_status(200)
+  end
+
+  it 'does not get a community-readable profile as foreigner' do
+    access_token = Fabricate(:access_token)
+    profile = Fabricate(:community_readable_profile)
+    get_with_token "/api/v1/profiles/#{profile.id}", access_token.token
+    expect(response).to have_http_status(403)
+    get_without_token "/api/v1/profiles/#{profile.id}"
     expect(response).to have_http_status(403)
   end
 
