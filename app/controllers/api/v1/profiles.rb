@@ -51,7 +51,23 @@ module API
         end
 
 
+        desc 'Return profile groups'
+        params do
+          requires :id, type: String, desc: "ID of the Profile"
+        end
+        get ':id/groups' do
+          profile = Profile.where(id: permitted_params[:id]).first!
+          user = User.find(profile.user_id)
+          group_ids = user.accessible_groups.map(&:id)
 
+          if current_user && profile.readable_by?(current_user)
+            Group.where(id: group_ids)
+          elsif profile.readable_by_world?
+            Group.where(id: group_ids, readable: 'world')
+          else
+            status 403
+          end
+        end
 
 
       end
