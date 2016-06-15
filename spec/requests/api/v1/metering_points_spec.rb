@@ -1,12 +1,79 @@
 describe "Metering Points API" do
 
+  it 'get world-readable metering point with or without token' do
+    access_token      = Fabricate(:access_token).token
+    metering_point_id = Fabricate(:metering_point_readable_by_world).id
 
-  it 'does not gets a metering_point without token' do
-    metering_point = Fabricate(:metering_point)
-    get_without_token "/api/v1/metering-points/#{metering_point.id}"
+    get_without_token "/api/v1/metering-points/#{metering_point_id}"
+    expect(response).to have_http_status(200)
+    get_with_token "/api/v1/metering-points/#{metering_point_id}", access_token
+    expect(response).to have_http_status(200)
+  end
+
+
+  it 'does not get a world-unreadable metering point without token' do
+    metering_point_id1 = Fabricate(:metering_point_readable_by_friends).id
+    metering_point_id2 = Fabricate(:metering_point_readable_by_community).id
+    metering_point_id3 = Fabricate(:metering_point_readable_by_members).id
+
+    get_without_token "/api/v1/metering-points/#{metering_point_id1}"
+    expect(response).to have_http_status(401)
+    get_without_token "/api/v1/metering-points/#{metering_point_id2}"
+    expect(response).to have_http_status(401)
+    get_without_token "/api/v1/metering-points/#{metering_point_id3}"
     expect(response).to have_http_status(401)
   end
 
+  it 'get community-readable metering point with community token' do
+    metering_point_id = Fabricate(:metering_point_readable_by_community).id
+    access_token      = Fabricate(:access_token).token
+
+    get_with_token "/api/v1/metering-points/#{metering_point_id}", access_token
+    expect(response).to have_http_status(200)
+  end
+
+  it 'does not get friends or members readable metering point with community token' do
+    metering_point_id1  = Fabricate(:metering_point_readable_by_friends).id
+    metering_point_id2  = Fabricate(:metering_point_readable_by_members).id
+    access_token        = Fabricate(:access_token).token
+
+    get_with_token "/api/v1/metering-points/#{metering_point_id1}", access_token
+    expect(response).to have_http_status(403)
+    get_with_token "/api/v1/metering-points/#{metering_point_id2}", access_token
+    expect(response).to have_http_status(403)
+  end
+
+  it 'get friends-readable metering point by manager friends but not by members' do
+    metering_point    = Fabricate(:metering_point_readable_by_friends)
+    member_token      = Fabricate(:access_token)
+    member_user       = User.find(member_token.resource_owner_id)
+    access_token      = Fabricate(:access_token_with_friend)
+    token_user        = User.find(access_token.resource_owner_id)
+    token_user_friend = token_user.friends.first
+    token_user_friend.add_role(:manager, metering_point)
+    member_user.add_role(:member, metering_point)
+
+    get_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
+    expect(response).to have_http_status(200)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}", member_token.token
+    expect(response).to have_http_status(403)
+  end
+
+  it 'get members-readable metering point by members but not by manager friends' do
+    metering_point    = Fabricate(:metering_point_readable_by_members)
+    member_token      = Fabricate(:access_token)
+    member_user       = User.find(member_token.resource_owner_id)
+    access_token      = Fabricate(:access_token_with_friend)
+    token_user        = User.find(access_token.resource_owner_id)
+    token_user_friend = token_user.friends.first
+    token_user_friend.add_role(:manager, metering_point)
+    member_user.add_role(:member, metering_point)
+
+    get_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
+    expect(response).to have_http_status(403)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}", member_token.token
+    expect(response).to have_http_status(200)
+  end
 
 
   it 'does gets a metering_point with admin token' do

@@ -10,16 +10,16 @@ module API
           requires :id, type: String, desc: "ID of the metering_point"
         end
         get ":id" do
-          doorkeeper_authorize! :public
           metering_point = MeteringPoint.where(id: params[:id]).first!
-          if current_user
+          if metering_point.readable_by_world?
+            metering_point
+          else
+            doorkeeper_authorize! :public
             if metering_point.readable_by?(current_user)
-              return metering_point
+              metering_point
             else
               status 403
             end
-          else
-            status 401
           end
         end
 

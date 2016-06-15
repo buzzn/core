@@ -8,6 +8,22 @@ Fabricator :metering_point do
   #contracts   { [ Fabricate(:electricity_supplier_contract)] }
 end
 
+Fabricator :metering_point_readable_by_world, from: :metering_point do
+  readable    'world'
+end
+
+Fabricator :metering_point_readable_by_friends, from: :metering_point do
+  readable    'friends'
+end
+
+Fabricator :metering_point_readable_by_community, from: :metering_point do
+  readable    'community'
+end
+
+Fabricator :metering_point_readable_by_members, from: :metering_point do
+  readable    'members'
+end
+
 
 Fabricator :metering_point_with_device, from: :metering_point do
   devices  { [Fabricate(:device)] }
