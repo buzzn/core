@@ -43,7 +43,7 @@ describe "Metering Points API" do
     expect(response).to have_http_status(403)
   end
 
-  it 'get friends-readable metering point by manager friends but not by members' do
+  it 'get friends-readable metering point by manager friends or by members' do
     metering_point    = Fabricate(:metering_point_readable_by_friends)
     member_token      = Fabricate(:access_token)
     member_user       = User.find(member_token.resource_owner_id)
@@ -56,7 +56,7 @@ describe "Metering Points API" do
     get_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
     expect(response).to have_http_status(200)
     get_with_token "/api/v1/metering-points/#{metering_point.id}", member_token.token
-    expect(response).to have_http_status(403)
+    expect(response).to have_http_status(200)
   end
 
   it 'get members-readable metering point by members but not by manager friends' do
