@@ -144,5 +144,58 @@ describe "Profiles API" do
     expect(json['data']).to eq([])
   end
 
+  it 'get community-readable groups for world-readable profile with token' do
+    access_token      = Fabricate(:access_token)
+    token_user        = User.find(access_token.resource_owner_id)
+    profile           = token_user.profile
+    profile.readable  = 'world'
+    profile.save
+    group             = Fabricate(:group_readable_by_community)
+    metering_point    = Fabricate(:metering_point_readable_by_world)
+    token_user.add_role(:member, metering_point)
+    group.metering_points << metering_point
+
+    get_with_token "/api/v1/profiles/#{profile.id}/groups", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].first['id']).to eq(group.id)
+  end
+
+  it 'get friends-readable groups for world-readable profile with friend token' do
+    access_token      = Fabricate(:access_token_with_friend)
+    token_user        = User.find(access_token.resource_owner_id)
+    token_user_friend = token_user.friends.first
+    profile           = token_user_friend.profile
+    profile.readable  = 'world'
+    profile.save
+    group             = Fabricate(:group_readable_by_friends)
+    metering_point    = Fabricate(:metering_point_readable_by_world)
+    token_user_friend.add_role(:member, metering_point)
+    group.metering_points << metering_point
+
+    get_with_token "/api/v1/profiles/#{profile.id}/groups", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].first['id']).to eq(group.id)
+  end
+
+  it 'does not get friends-readable groups for world-readable profile with or without token' do
+    access_token      = Fabricate(:access_token)
+    wrong_token       = Fabricate(:access_token).token
+    token_user        = User.find(access_token.resource_owner_id)
+    profile           = token_user.profile
+    profile.readable  = 'world'
+    profile.save
+    group             = Fabricate(:group_readable_by_friends)
+    metering_point    = Fabricate(:metering_point_readable_by_world)
+    token_user.add_role(:member, metering_point)
+    group.metering_points << metering_point
+
+    get_without_token "/api/v1/profiles/#{profile.id}/groups"
+    expect(response).to have_http_status(200)
+    expect(json['data']).to eq([])
+    get_with_token "/api/v1/profiles/#{profile.id}/groups", wrong_token
+    expect(response).to have_http_status(200)
+    expect(json['data']).to eq([])
+  end
+
 
 end
