@@ -79,18 +79,6 @@
     access_token = Doorkeeper::AccessToken.create(application_id: application.id, resource_owner_id: user.id, scopes: 'public admin' )
     go to https://staging.buzzn.net/access_tokens to view generated tokens
 
-## TODO
-  - rails controller den neuen Aggregator benuzten lassen.
-  - rake slp und co auf milli_watt ändern
-  - remove discovergy pull readings
-  - mongodb TTL 4 jahre.
-  - fix google anlytics
-  - remove MeteringPointUser model
-  - move manager form metering_point to meter
-  - add grape-rails-cache.gem
-  - oauth/applications/show is not working
-  - add rubocop.gem
-
 ## Docs
   https://docs.google.com/spreadsheets/d/1OPsKFke9NGUYPtWs7Nv5Iv4hMAvqpmYvCPtXEhPhYL4/edit#gid=0
   https://docs.google.com/spreadsheets/d/1_KMXlYH3xcPKXx1p_RxxuLe6wP1pI-P2gOcJu7_rUNs/edit?ts=574ef7ae#gid=0
