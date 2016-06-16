@@ -21,6 +21,10 @@ Fabricator :community_readable_profile, from: :profile do
   readable    'community'
 end
 
+Fabricator :friends_readable_profile, from: :profile do
+  readable    'friends'
+end
+
 Fabricator :profile_felix, from: :profile do
   user_name   'ffaerber'
   first_name  'Felix'
