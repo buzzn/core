@@ -116,7 +116,7 @@ module API
 
         desc "Return the related metering-points for Group"
         params do
-          requires :id, type: String, desc: "ID of the profile"
+          requires :id, type: String, desc: "ID of the group"
         end
         paginate(per_page: per_page=10)
         get ":id/metering-points" do
@@ -132,7 +132,7 @@ module API
 
         desc "Return the related devices for Group"
         params do
-          requires :id, type: String, desc: "ID of the profile"
+          requires :id, type: String, desc: "ID of the group"
         end
         get ":id/devices" do
           doorkeeper_authorize!
@@ -145,7 +145,7 @@ module API
 
         desc "Return the related managers for Group"
         params do
-          requires :id, type: String, desc: "ID of the profile"
+          requires :id, type: String, desc: "ID of the group"
         end
         get ":id/managers" do
           doorkeeper_authorize!
@@ -156,7 +156,7 @@ module API
 
         desc "Return the related energy-producers for Group"
         params do
-          requires :id, type: String, desc: "ID of the profile"
+          requires :id, type: String, desc: "ID of the group"
         end
         get ":id/energy-producers" do
           doorkeeper_authorize!
@@ -167,12 +167,33 @@ module API
 
         desc "Return the related energy-consumers for Group"
         params do
-          requires :id, type: String, desc: "ID of the profile"
+          requires :id, type: String, desc: "ID of the group"
         end
         get ":id/energy-consumers" do
           doorkeeper_authorize!
           group = Group.where(id: permitted_params[:id]).first!
           group.energy_consumers
+        end
+
+
+        desc 'Return the related comments for Group'
+        params do
+          requires :id, type: String, desc: 'ID of the group'
+        end
+        get ':id/comments' do
+          group = Group.where(id: permitted_params[:id]).first!
+          if group.readable_by_world?
+            # group.comment_threads
+            group.root_comments
+          else
+            doorkeeper_authorize! :public
+            if group.readable_by?(current_user)
+              # group.comment_threads
+              group.root_comments
+            else
+              status 403
+            end
+          end
         end
 
 
