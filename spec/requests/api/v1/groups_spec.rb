@@ -172,8 +172,6 @@ describe "Groups API" do
     expect(response).to have_http_status(200)
   end
 
-  # because comments don't have their own read access control, here the only one test
-  # for getting them
   it 'gets the related comments for the group only with token' do
     access_token  = Fabricate(:access_token).token
     group         = Fabricate(:group)
@@ -188,6 +186,22 @@ describe "Groups API" do
     expect(response).to have_http_status(200)
     expect(json.last['body']).to eq('Hola!')
     expect(json.first['body']).to eq('2nd comment')
+  end
+
+  it 'gets the related chart for the group' do
+    group = Fabricate(:group)
+    metering_point1 = Fabricate(:metering_point)
+    metering_point2 = Fabricate(:metering_point)
+    group.metering_points << metering_point1
+    group.metering_points << metering_point2
+    get_without_token "/api/v1/groups/#{group.id}/chart"
+    expect(response).to have_http_status(400)
+    expect(json['error']).to eq('resolution_format is missing')
+    request_params = {
+      resolution_format: 'month_to_days'
+    }
+    get_without_token "/api/v1/groups/#{group.id}/chart", request_params
+    expect(response).to have_http_status(200)
   end
 
 
