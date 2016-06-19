@@ -174,12 +174,15 @@ describe "Groups API" do
 
   # because comments don't have their own read access control, here the only one test
   # for getting them
-  it 'gets the related comments for the group' do
-    group   = Fabricate(:group)
-    user    = Fabricate(:user)
-    comment = Comment.build_from(group, user.id, 'Hola!', '')
+  it 'gets the related comments for the group only with token' do
+    access_token  = Fabricate(:access_token).token
+    group         = Fabricate(:group)
+    user          = Fabricate(:user)
+    comment       = Comment.build_from(group, user.id, 'Hola!', '')
     comment.save
     get_without_token "/api/v1/groups/#{group.id}/comments"
+    expect(response).to have_http_status(401)
+    get_with_token "/api/v1/groups/#{group.id}/comments", access_token
     expect(response).to have_http_status(200)
     expect(json.first['body']).to eq('Hola!')
   end

@@ -181,18 +181,13 @@ module API
           requires :id, type: String, desc: 'ID of the group'
         end
         get ':id/comments' do
+          doorkeeper_authorize! :public
           group = Group.where(id: permitted_params[:id]).first!
-          if group.readable_by_world?
+          if group.readable_by?(current_user)
             # group.comment_threads
             group.root_comments
           else
-            doorkeeper_authorize! :public
-            if group.readable_by?(current_user)
-              # group.comment_threads
-              group.root_comments
-            else
-              status 403
-            end
+            status 403
           end
         end
 
