@@ -184,8 +184,7 @@ module API
           doorkeeper_authorize! :public
           group = Group.where(id: permitted_params[:id]).first!
           if group.readable_by?(current_user)
-            # group.comment_threads
-            group.root_comments
+            group.comment_threads
           else
             status 403
           end
