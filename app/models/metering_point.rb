@@ -485,7 +485,7 @@ class MeteringPoint < ActiveRecord::Base
   def convert_to_highchart_array(chart_hash)
     array = []
     chart_hash.each do |item|
-      array << [ item['timestamp'].to_time.to_i*1000, item[item.keys.last]/1000 ]
+      array << [ item['timestamp'].to_time.to_i*1000, item[item.keys.last]/ (item.keys.last.to_s.starts_with?('power') ? 1000.0 : 1000000.0) ]
     end
     return array
   end

@@ -18,7 +18,7 @@ class Aggregate
         @present_items = []
         @timestamp = params.fetch(:timestamp, Time.current) || Time.current
 
-        buzzn_api_metering_points, discovergy_metering_points, slp_metering_points, sep_bhkw_metering_points = metering_points_sort(@metering_point_ids)
+        buzzn_api_metering_points, discovergy_metering_points, slp_metering_points, sep_bhkw_metering_points, sep_pv_metering_points = metering_points_sort(@metering_point_ids)
 
         buzzn_api_metering_points.each do |metering_point|
           document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
@@ -54,6 +54,18 @@ class Aggregate
         if sep_bhkw_metering_points.any?
           document = Reading.where(:timestamp.gte => @timestamp, source: 'sep_bhkw').first
           sep_bhkw_metering_points.each do |metering_point|
+            factor = factor_from_metering_point(metering_point)
+            @present_items << {
+              "operator" => "-",
+              "data" => document_to_hash(document, factor)
+            }
+          end
+        end
+
+        #sep_pv
+        if sep_pv_metering_points.any?
+          document = Reading.where(:timestamp.gte => @timestamp, source: 'sep_pv').first
+          sep_pv_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
             @present_items << {
               "operator" => "-",
@@ -101,9 +113,9 @@ class Aggregate
       seconds_to_process = Benchmark.realtime do
         @past_items = []
         @timestamp  = params.fetch(:timestamp, Time.current) || Time.current
-        @resolution = params.fetch(:resolution, 'day_to_hours') || 'day_to_hours'
+        @resolution = params.fetch(:resolution, 'day_to_minutes') || 'day_to_minutes'
 
-        buzzn_api_metering_points, discovergy_metering_points, slp_metering_points, sep_bhkw_metering_points = metering_points_sort(@metering_point_ids)
+        buzzn_api_metering_points, discovergy_metering_points, slp_metering_points, sep_bhkw_metering_points, sep_pv_metering_points = metering_points_sort(@metering_point_ids)
 
         # buzzn_api
         buzzn_api_metering_points.each do |metering_point|
@@ -129,7 +141,37 @@ class Aggregate
           collection = Reading.aggregate(@resolution, source, @timestamp, keys)
           slp_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
-            @past_items << aggregation_to_hash(collection, factor, '+')
+            @past_items << aggregation_to_hash(collection, factor, false)
+          end
+        end
+
+        #sep_bhkw
+        if sep_bhkw_metering_points.any?
+          source = { source: { "$in" => ['sep_bhkw'] } }
+          if Reading.energy_resolutions.include?(@resolution)
+            keys = ['energy_a_milliwatt_hour']
+          elsif Reading.power_resolutions.include?(@resolution)
+            keys = ['power_a_milliwatt']
+          end
+          collection = Reading.aggregate(@resolution, source, @timestamp, keys)
+          sep_bhkw_metering_points.each do |metering_point|
+            factor = factor_from_metering_point(metering_point)
+            @past_items << aggregation_to_hash(collection, factor, false)
+          end
+        end
+
+        #sep_pv
+        if sep_pv_metering_points.any?
+          source = { source: { "$in" => ['sep_pv'] } }
+          if Reading.energy_resolutions.include?(@resolution)
+            keys = ['energy_a_milliwatt_hour']
+          elsif Reading.power_resolutions.include?(@resolution)
+            keys = ['power_a_milliwatt']
+          end
+          collection = Reading.aggregate(@resolution, source, @timestamp, keys)
+          sep_pv_metering_points.each do |metering_point|
+            factor = factor_from_metering_point(metering_point)
+            @past_items << aggregation_to_hash(collection, factor, false)
           end
         end
 
@@ -203,6 +245,7 @@ private
     discovergy_metering_points  = []
     slp_metering_points         = []
     sep_bhkw_metering_points    = []
+    sep_pv_metering_points      = []
 
     MeteringPoint.where(id: @metering_point_ids).each do |metering_point|
       case metering_point.data_source
@@ -214,11 +257,13 @@ private
         slp_metering_points << metering_point
       when 'sep_bhkw'
         sep_bhkw_metering_points << metering_point
+      when 'sep_pv'
+        sep_pv_metering_points << metering_point
       else
         Rails.logger.error "You gave me #{metering_point.data_source} -- I have no idea what to do with that."
       end
     end
-    return buzzn_api_metering_points, discovergy_metering_points, slp_metering_points, sep_bhkw_metering_points
+    return buzzn_api_metering_points, discovergy_metering_points, slp_metering_points, sep_bhkw_metering_points, sep_pv_metering_points
   end
 
 
@@ -231,28 +276,28 @@ private
 
       if document['sumEnergyAMilliwattHour']
         energy_a_milliwatt_hour = document['sumEnergyAMilliwattHour'] * factor
-        energy_a_milliwatt_hour * -1 if negativ
+        energy_a_milliwatt_hour *= -1 if negativ
         item.merge!('energy_a_milliwatt_hour' => energy_a_milliwatt_hour)
       end
 
       if document['sumEnergyBMilliwattHour']
         energy_b_milliwatt_hour = document['sumEnergyBMilliwattHour'] * factor
-        energy_b_milliwatt_hour * -1 if negativ
+        energy_b_milliwatt_hour *= -1 if negativ
         item.merge!('energy_b_milliwatt_hour' => energy_b_milliwatt_hour)
       end
 
       if document['avgPowerAMilliwatt']
         power_a_milliwatt = document['avgPowerAMilliwatt'] * factor
-        power_a_milliwatt * -1 if negativ
+        power_a_milliwatt *= -1 if negativ
         item.merge!('power_a_milliwatt' => power_a_milliwatt)
       end
 
       if document['avgPowerBMilliwatt']
         power_b_milliwatt = document['avgPowerBMilliwatt'] * factor
-        power_b_milliwatt * -1 if negativ
+        power_b_milliwatt *= -1 if negativ
         item.merge!('power_b_milliwatt' => power_b_milliwatt)
       end
-      
+
       items << item
     end
     return items
