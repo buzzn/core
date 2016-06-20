@@ -12,21 +12,16 @@ class User < ActiveRecord::Base
   acts_as_voter
 
   has_one :contracting_party
-
   has_one :dashboard
-
   has_one :profile, :dependent => :destroy
   accepts_nested_attributes_for :profile
-
   has_many :friendships
   has_many :friends, :through => :friendships, after_add: :create_complement_friendship
-
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
-
   has_many :access_tokens, class_name: 'Doorkeeper::AccessToken', dependent: :destroy, :foreign_key => :resource_owner_id
-
   has_many :notification_unsubscribers
 
+  # TODO remove delegates
   delegate :slug, to: :profile
   delegate :name, to: :profile
   delegate :user_name, to: :profile

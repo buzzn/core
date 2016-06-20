@@ -80,5 +80,6 @@
     go to https://staging.buzzn.net/access_tokens to view generated tokens
 
 ## Docs
+  https://www.lucidchart.com/documents/edit/023ef2a3-0b1d-4740-a202-4ad868f3c098
   https://docs.google.com/spreadsheets/d/1OPsKFke9NGUYPtWs7Nv5Iv4hMAvqpmYvCPtXEhPhYL4/edit#gid=0
   https://docs.google.com/spreadsheets/d/1_KMXlYH3xcPKXx1p_RxxuLe6wP1pI-P2gOcJu7_rUNs/edit?ts=574ef7ae#gid=0
