@@ -12,6 +12,8 @@ class Profile < ActiveRecord::Base
 
   belongs_to :user
 
+  after_commit :registration_completed, on: :create
+
   validates :user_name, uniqueness: true, length: { in: 2..63 }
   validates :first_name, presence: true, length: { in: 2..30 }
   validates :last_name, presence: true, length: { in: 2..30 }
@@ -80,6 +82,14 @@ class Profile < ActiveRecord::Base
       where('first_name ILIKE ? or last_name ILIKE ? or user_name ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
     else
       all
+    end
+  end
+
+  private
+
+  def registration_completed
+    if self.user
+      Notifier.send_email_completed_registration(self.user).deliver_now
     end
   end
 

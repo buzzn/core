@@ -26,6 +26,7 @@ class Users::InvitationsController < Devise::InvitationsController
                   :password,
                   :password_confirmation,
                   :invitation_token,
+                  :legal_notes,
                   profile_attributes: [:id, :first_name, :last_name, :terms]
                   )
       end

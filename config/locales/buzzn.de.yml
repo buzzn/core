@@ -1,5 +1,10 @@
 de:
   welcome: Willkommen
+  welcome_to_the_buzzn_community: Willkommen bei der buzzn Community
+  here_you_can_find_the_terms_of_use_and_the_data_protection_guidelines_which_you_have_agreed_to: Hier findest Du die Nutzungsbedingungen und die Datenschutzrichtlinen, denen Du zugestimmt hast.
+  terms_of_service: Nutzungsbedingungen
+  data_protection_guidelines: Datenschutzrichtlinen
+  you_registered_successfully: Du hast Dich erfolgreich registriert.
   you_can_confirm_your_account_email_through_the_link_below: "Du kannst Dein Benutzerkonto bestätigen, indem Du den folgenden Link anklickst:"
   confirm_my_account: Benutzerkonto bestätigen
   someone_has_requested_a_link_to_change_your_password: "jemand hat einen Link angefordert, um Dein Passwort zu ändern."
@@ -67,6 +72,7 @@ de:
   rejected_a_metering_point_user_request_from_an_unknown_user: hat die Zählpunktanfrage eines unbekannten Nutzers abgelehnt.
   user_is_no_longer_a_member_of_your_metering_point: "%{user} ist nicht länger Mitglied Deines Zählpunktes %{metering_point}."
   user_joined_your_metering_point: "%{user} ist ab jetzt Mitglied Deines Zählpunktes %{metering_point}."
+  you_are_now_a_member_of_the_metering_point: "Du bist ab jetzt Mitglied des Zählpunktes %{metering_point}."
   user_invited_you_to_join_the_metering_point: "%{user} hat Dich eingeladen dem Zählpunkt %{metering_point} beizutreten."
   user_rejected_your_metering_point_user_invitation_for_metering_point: "%{user} hat Deine Zählpunkteinladung zum Zählpunkt %{metering_point} abgelehnt."
   to_invite_user_again_please_visit_your_metering_point: "Um %{user} erneut einzuladen besuche bitte Deinen Zählpunkt %{metering_point}."
@@ -929,6 +935,7 @@ de:
 
   terms_of_use: Nutzungsbedingungen
   legal_info: Impressum
+  legal_notes: "Ich akzeptiere die %{terms_of_use} und die %{data_protection_guidelines}"
 
 
 

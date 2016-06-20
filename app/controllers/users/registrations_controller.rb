@@ -3,7 +3,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_filter :configure_permitted_parameters
 
 
-
   def update
     @user = User.find(current_user.id)
 
@@ -66,6 +65,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         #           :email,
         #           :password,
         #           :password_confirmation,
+        #           :legal_notes,
         #           profile_attributes: [:id, :first_name, :last_name, :terms]
         #         )
       end

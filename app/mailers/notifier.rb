@@ -5,6 +5,13 @@ class Notifier < ActionMailer::Base
     mail(to: user.email, subject: "subject")
   end
 
+  def send_email_completed_registration(user)
+    @user = user
+    mail(to: @user.email, subject: t('welcome_to_the_buzzn_community'))
+  end
+
+
+
   def send_email_notification_new_friendship_request(receiver, sender)
     @receiver = receiver
     @sender = sender
@@ -130,9 +137,9 @@ class Notifier < ActionMailer::Base
     @metering_point = metering_point
     @mode = mode
     if @mode == 'exceeds'
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('metering_point_exceeded_max_watt', @metering_point.max_watt))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('metering_point_exceeded_max_watt', max_watt: @metering_point.max_watt))
     else
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('metering_point_undershot_min_watt', @metering_point.min_watt))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('metering_point_undershot_min_watt', min_watt: @metering_point.min_watt))
     end
   end
 

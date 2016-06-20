@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
          :validatable, :lockable, :timeoutable,
          :confirmable, :invitable, :omniauthable#, :omniauth_providers => [:facebook]
 
+  validates :legal_notes, acceptance: true
+
   acts_as_voter
 
   has_one :contracting_party
