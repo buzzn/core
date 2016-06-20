@@ -109,29 +109,6 @@ module API
 
 
 
-        desc "Return the related devices for MeteringPoint"
-        params do
-          requires :id, type: String, desc: "ID of the MeteringPoint"
-        end
-        get ":id/devices" do
-          doorkeeper_authorize! :public
-          metering_point = MeteringPoint.where(id: params[:id]).first!
-          metering_point.devices
-        end
-
-
-
-        desc "Return the related users for MeteringPoint"
-        params do
-          requires :id, type: String, desc: "ID of the MeteringPoint"
-        end
-        get ":id/users" do
-          doorkeeper_authorize! :public
-          metering_point = MeteringPoint.where(id: params[:id]).first!
-          metering_point.users
-        end
-
-
         desc 'Return the related comments for MeteringPoint'
         params do
           requires :id, type: String, desc: 'ID of the MeteringPoint'
@@ -147,27 +124,6 @@ module API
         end
 
 
-        desc 'Return the related chart for MeteringPoint'
-        params do
-          requires :id,                   type: String, desc: 'ID of the MeteringPoint'
-          requires :resolution_format,    type: String, desc: 'resolution format'
-          optional :containing_timestamp, type: String, desc: 'timestamp'
-        end
-        get ':id/chart' do
-          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
-          if metering_point.readable_by_world?
-            metering_point.chart_data(permitted_params[:resolution_format], permitted_params[:containing_timestamp])
-          else
-            doorkeeper_authorize! :public
-            if metering_point.readable_by?(current_user)
-              metering_point.chart_data(permitted_params[:resolution_format], permitted_params[:containing_timestamp])
-            else
-              status 403
-            end
-          end
-        end
-
-
         desc "Return the related managers for MeteringPoint"
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
@@ -175,7 +131,11 @@ module API
         get ":id/managers" do
           doorkeeper_authorize! :public
           metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
-          metering_point.managers
+          if metering_point.readable_by?(current_user)
+            metering_point.managers
+          else
+            status 403
+          end
         end
 
 
@@ -184,16 +144,39 @@ module API
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
         get ":id/address" do
+          doorkeeper_authorize! :public
           metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
-          if metering_point.readable_by_world?
+          if metering_point.readable_by?(current_user)
             metering_point.address
           else
-            doorkeeper_authorize! :public
-            if metering_point.readable_by?(current_user)
-              metering_point.address
-            else
-              status 403
-            end
+            status 403
+          end
+        end
+
+
+        desc 'Return members of the MeteringPoint'
+        params do
+          requires :id, type: String, desc: "ID of the MeteringPoint"
+        end
+        get ':id/members' do
+          metering_point  = MeteringPoint.where(id: permitted_params[:id]).first!
+          metering_point.members.select do |member|
+            member.profile.readable_by_world? || (current_user && member.profile.readable_by?(current_user))
+          end
+        end
+
+
+        desc 'Return meter for the MeteringPoint'
+        params do
+          requires :id, type: String, desc: "ID of the MeteringPoint"
+        end
+        get ':id/meter' do
+          doorkeeper_authorize! :public
+          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          if current_user.has_role?(:manager, metering_point)
+            metering_point.meter
+          else
+            status 403
           end
         end
 

@@ -120,25 +120,16 @@ module API
         end
         paginate(per_page: per_page=10)
         get ":id/metering-points" do
-          doorkeeper_authorize!
-          @per_page     = params[:per_page] || per_page
-          @page         = params[:page] || 1
+          doorkeeper_authorize! :public
           group         = Group.find(permitted_params[:id])
-          @total_pages  = MeteringPoint.by_group(group).without_externals.page(@page).per_page(@per_page).total_pages
-          paginate(render(MeteringPoint.by_group(group).without_externals, meta: { total_pages: @total_pages }))
-        end
-
-
-
-        desc "Return the related devices for Group"
-        params do
-          requires :id, type: String, desc: "ID of the group"
-        end
-        get ":id/devices" do
-          doorkeeper_authorize!
-          group = Group.find(permitted_params[:id])
-          devices = MeteringPoint.by_group(group).without_externals.collect(&:devices).flatten
-          return devices
+          if current_user.has_role?(:manager, group)
+            @per_page     = params[:per_page] || per_page
+            @page         = params[:page] || 1
+            @total_pages  = MeteringPoint.by_group(group).without_externals.page(@page).per_page(@per_page).total_pages
+            paginate(render(MeteringPoint.by_group(group).without_externals, meta: { total_pages: @total_pages }))
+          else
+            status 403
+          end
         end
 
 
@@ -148,9 +139,13 @@ module API
           requires :id, type: String, desc: "ID of the group"
         end
         get ":id/managers" do
-          doorkeeper_authorize!
+          doorkeeper_authorize! :public
           group = Group.where(id: permitted_params[:id]).first!
-          group.managers
+          if group.readable_by?(current_user)
+            group.managers
+          else
+            status 403
+          end
         end
 
 
@@ -159,9 +154,17 @@ module API
           requires :id, type: String, desc: "ID of the group"
         end
         get ":id/energy-producers" do
-          doorkeeper_authorize!
           group = Group.where(id: permitted_params[:id]).first!
-          group.energy_producers
+          if group.readable_by_world?
+            group.energy_producers
+          else
+            doorkeeper_authorize! :public
+            if group.readable_by?(current_user)
+              group.energy_producers
+            else
+              status 403
+            end
+          end
         end
 
 
@@ -170,9 +173,17 @@ module API
           requires :id, type: String, desc: "ID of the group"
         end
         get ":id/energy-consumers" do
-          doorkeeper_authorize!
           group = Group.where(id: permitted_params[:id]).first!
-          group.energy_consumers
+          if group.readable_by_world?
+            group.energy_consumers
+          else
+            doorkeeper_authorize! :public
+            if group.readable_by?(current_user)
+              group.energy_consumers
+            else
+              status 403
+            end
+          end
         end
 
 
@@ -187,27 +198,6 @@ module API
             group.comment_threads
           else
             status 403
-          end
-        end
-
-
-        desc 'Return the related chart for Group'
-        params do
-          requires :id,                   type: String, desc: 'ID of the group'
-          requires :resolution_format,    type: String, desc: 'resolution format'
-          optional :containing_timestamp, type: String, desc: 'timestamp'
-        end
-        get ':id/chart' do
-          group = Group.where(id: permitted_params[:id]).first!
-          if group.readable_by_world?
-            group.chart(permitted_params[:resolution_format], permitted_params[:containing_timestamp])
-          else
-            doorkeeper_authorize! :public
-            if group.readable_by?(current_user)
-              group.chart(permitted_params[:resolution_format], permitted_params[:containing_timestamp])
-            else
-              status 403
-            end
           end
         end
 

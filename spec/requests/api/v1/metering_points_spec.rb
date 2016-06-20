@@ -264,19 +264,6 @@ describe "Metering Points API" do
   end
 
 
-  it 'gets the related chart for the metering point' do
-    metering_point = Fabricate(:metering_point_readable_by_world)
-    get_without_token "/api/v1/metering-points/#{metering_point.id}/chart"
-    expect(response).to have_http_status(400)
-    expect(json['error']).to eq('resolution_format is missing')
-    request_params = {
-      resolution_format: 'month_to_days'
-    }
-    get_without_token "/api/v1/metering-points/#{metering_point.id}/chart", request_params
-    expect(response).to have_http_status(200)
-  end
-
-
   it 'gets the related managers for the metering point only with token' do
     access_token    = Fabricate(:access_token).token
     metering_point  = Fabricate(:metering_point_with_manager, readable: 'world')
@@ -289,12 +276,61 @@ describe "Metering Points API" do
   end
 
 
-  it 'gets address of the metering point' do
+  it 'gets address of the metering point only with token' do
+    access_token    = Fabricate(:access_token).token
     metering_point  = Fabricate(:mp_urbanstr88, readable: 'world')
     address         = metering_point.address
     get_without_token "/api/v1/metering-points/#{metering_point.id}/address"
+    expect(response).to have_http_status(401)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/address", access_token
     expect(json['id']).to eq(address.id)
     expect(response).to have_http_status(200)
+  end
+
+
+
+  it 'gets only accessible profiles for the metering point' do
+    metering_point    = Fabricate(:metering_point_readable_by_world)
+    access_token      = Fabricate(:access_token_with_friend)
+    token_user        = User.find(access_token.resource_owner_id)
+    token_user_friend = token_user.friends.first
+    token_user_friend.profile.readable = 'friends'
+    token_user_friend.profile.save
+    community_token   = Fabricate(:access_token)
+    community_user    = Fabricate(:user)
+    community_user.profile.readable = 'community'
+    community_user.profile.save
+    world_user        = Fabricate(:user)
+    world_user.profile.readable = 'world'
+    world_user.profile.save
+    token_user_friend.add_role(:member, metering_point)
+    community_user.add_role(:member, metering_point)
+    world_user.add_role(:member, metering_point)
+
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/members"
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(3)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", community_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(2)
+  end
+
+
+  it 'gets meter for the metering point only by managers' do
+    metering_point  = Fabricate(:mp_z2)
+    access_token    = Fabricate(:access_token)
+    token_user      = User.find(access_token.resource_owner_id)
+    wrong_token     = Fabricate(:access_token)
+    token_user.add_role(:manager, metering_point)
+
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/meter", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq(metering_point.meter.id)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/meter", wrong_token.token
+    expect(response).to have_http_status(403)
   end
 
 

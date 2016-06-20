@@ -141,32 +141,31 @@ describe "Groups API" do
   end
 
 
-  it 'gets the related metering-points for Group' do
+  it 'gets the related metering-points for Group only by group managers' do
     access_token  = Fabricate(:access_token)
-    group         = Fabricate(:group_readable_by_members)
+    token_user    = User.find(access_token.resource_owner_id)
+    wrong_token   = Fabricate(:access_token)
+    group         = Fabricate(:group)
+    token_user.add_role(:manager, group)
     get_with_token "/api/v1/groups/#{group.id}/metering-points", access_token.token
     expect(response).to have_http_status(200)
+    get_with_token "/api/v1/groups/#{group.id}/metering-points", wrong_token.token
+    expect(response).to have_http_status(403)
   end
 
-  it 'gets the related devices for Group' do
+  it 'gets the related managers for Group only with token' do
     access_token  = Fabricate(:access_token)
-    group         = Fabricate(:group_readable_by_members)
-    group.metering_points << Fabricate(:metering_point_with_device)
-    get_with_token "/api/v1/groups/#{group.id}/devices", access_token.token
-    expect(response).to have_http_status(200)
-  end
-
-  it 'gets the related managers for Group' do
-    access_token  = Fabricate(:access_token)
-    group         = Fabricate(:group_readable_by_members)
+    group         = Fabricate(:group)
     group.metering_points << Fabricate(:metering_point)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
+    get_without_token "/api/v1/groups/#{group.id}/managers"
+    expect(response).to have_http_status(401)
   end
 
   it 'gets the related energy-producers for Group' do
     access_token  = Fabricate(:access_token)
-    group         = Fabricate(:group_readable_by_members)
+    group         = Fabricate(:group)
     group.metering_points << Fabricate(:metering_point)
     get_with_token "/api/v1/groups/#{group.id}/energy-producers", access_token.token
     expect(response).to have_http_status(200)
@@ -186,22 +185,6 @@ describe "Groups API" do
     expect(response).to have_http_status(200)
     expect(json.last['body']).to eq('Hola!')
     expect(json.first['body']).to eq('2nd comment')
-  end
-
-  it 'gets the related chart for the group' do
-    group = Fabricate(:group)
-    metering_point1 = Fabricate(:metering_point)
-    metering_point2 = Fabricate(:metering_point)
-    group.metering_points << metering_point1
-    group.metering_points << metering_point2
-    get_without_token "/api/v1/groups/#{group.id}/chart"
-    expect(response).to have_http_status(400)
-    expect(json['error']).to eq('resolution_format is missing')
-    request_params = {
-      resolution_format: 'month_to_days'
-    }
-    get_without_token "/api/v1/groups/#{group.id}/chart", request_params
-    expect(response).to have_http_status(200)
   end
 
 
