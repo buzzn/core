@@ -247,6 +247,62 @@ describe "Metering Points API" do
   end
 
 
+  it 'gets the related comments for the metering point only with token' do
+    access_token    = Fabricate(:access_token).token
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    user            = Fabricate(:user)
+    comment         = Comment.build_from(metering_point, user.id, 'Hola!', '')
+    comment.save
+    comment2        = Comment.build_from(metering_point, user.id, '2nd comment', comment.id)
+    comment2.save
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/comments"
+    expect(response).to have_http_status(401)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/comments", access_token
+    expect(response).to have_http_status(200)
+    expect(json.last['body']).to eq('Hola!')
+    expect(json.first['body']).to eq('2nd comment')
+  end
+
+
+  it 'gets the related chart for the metering point' do
+    metering_point = Fabricate(:metering_point_readable_by_world)
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/chart"
+    expect(response).to have_http_status(400)
+    expect(json['error']).to eq('resolution_format is missing')
+    request_params = {
+      resolution_format: 'month_to_days'
+    }
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/chart", request_params
+    expect(response).to have_http_status(200)
+  end
+
+
+  it 'gets the related managers for the metering point only with token' do
+    access_token    = Fabricate(:access_token).token
+    metering_point  = Fabricate(:metering_point_with_manager)
+    metering_point.readable = 'world'
+    metering_point.save
+    manager         = metering_point.managers.first
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/managers"
+    expect(response).to have_http_status(401)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token
+    expect(json['data'].first['id']).to eq(manager.id)
+    expect(response).to have_http_status(200)
+  end
+
+
+  it 'gets address of the metering point' do
+    metering_point  = Fabricate(:mp_urbanstr88)
+    metering_point.readable = 'world'
+    metering_point.save
+    address         = metering_point.address
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/address"
+    expect(json['id']).to eq(address.id)
+    expect(response).to have_http_status(200)
+  end
+
+
+
 
 
 end

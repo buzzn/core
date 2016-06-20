@@ -132,6 +132,74 @@ module API
         end
 
 
+        desc 'Return the related comments for MeteringPoint'
+        params do
+          requires :id, type: String, desc: 'ID of the MeteringPoint'
+        end
+        get ':id/comments' do
+          doorkeeper_authorize! :public
+          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          if metering_point.readable_by?(current_user)
+            metering_point.comment_threads
+          else
+            status 403
+          end
+        end
+
+
+        desc 'Return the related chart for MeteringPoint'
+        params do
+          requires :id,                   type: String, desc: 'ID of the MeteringPoint'
+          requires :resolution_format,    type: String, desc: 'resolution format'
+          optional :containing_timestamp, type: String, desc: 'timestamp'
+        end
+        get ':id/chart' do
+          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          if metering_point.readable_by_world?
+            metering_point.chart_data(permitted_params[:resolution_format], permitted_params[:containing_timestamp])
+          else
+            doorkeeper_authorize! :public
+            if metering_point.readable_by?(current_user)
+              metering_point.chart_data(permitted_params[:resolution_format], permitted_params[:containing_timestamp])
+            else
+              status 403
+            end
+          end
+        end
+
+
+        desc "Return the related managers for MeteringPoint"
+        params do
+          requires :id, type: String, desc: "ID of the MeteringPoint"
+        end
+        get ":id/managers" do
+          doorkeeper_authorize! :public
+          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          metering_point.managers
+        end
+
+
+        desc "Return address for the MeteringPoint"
+        params do
+          requires :id, type: String, desc: "ID of the MeteringPoint"
+        end
+        get ":id/address" do
+          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          if metering_point.readable_by_world?
+            metering_point.address
+          else
+            doorkeeper_authorize! :public
+            if metering_point.readable_by?(current_user)
+              metering_point.address
+            else
+              status 403
+            end
+          end
+        end
+
+
+
+
 
 
       end
