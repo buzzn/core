@@ -279,9 +279,7 @@ describe "Metering Points API" do
 
   it 'gets the related managers for the metering point only with token' do
     access_token    = Fabricate(:access_token).token
-    metering_point  = Fabricate(:metering_point_with_manager)
-    metering_point.readable = 'world'
-    metering_point.save
+    metering_point  = Fabricate(:metering_point_with_manager, readable: 'world')
     manager         = metering_point.managers.first
     get_without_token "/api/v1/metering-points/#{metering_point.id}/managers"
     expect(response).to have_http_status(401)
@@ -292,9 +290,7 @@ describe "Metering Points API" do
 
 
   it 'gets address of the metering point' do
-    metering_point  = Fabricate(:mp_urbanstr88)
-    metering_point.readable = 'world'
-    metering_point.save
+    metering_point  = Fabricate(:mp_urbanstr88, readable: 'world')
     address         = metering_point.address
     get_without_token "/api/v1/metering-points/#{metering_point.id}/address"
     expect(json['id']).to eq(address.id)
