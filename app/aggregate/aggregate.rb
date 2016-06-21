@@ -56,7 +56,7 @@ class Aggregate
           sep_bhkw_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
             @present_items << {
-              "operator" => "-",
+              "operator" => "+",
               "data" => document_to_hash(document, factor)
             }
           end
@@ -68,7 +68,7 @@ class Aggregate
           sep_pv_metering_points.each do |metering_point|
             factor = factor_from_metering_point(metering_point)
             @present_items << {
-              "operator" => "-",
+              "operator" => "+",
               "data" => document_to_hash(document, factor)
             }
           end
@@ -122,7 +122,7 @@ class Aggregate
           source = { meter_id: { "$in" => [metering_point.meter.id] } }
           keys = [required_reading_attributes(@resolution, metering_point)]
           collection = Reading.aggregate(@resolution, source, @timestamp, keys)
-          @past_items << aggregation_to_hash(collection, 1, metering_point.mode == 'in' ? '+' : '-')
+          @past_items << aggregation_to_hash(collection, 1, metering_point.mode == 'in' ? false : true)
         end
 
         # discovergy
