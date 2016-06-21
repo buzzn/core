@@ -15,6 +15,10 @@ Fabricator :easy_meter_q3d_with_metering_point, from: :easy_meter_q3d  do
   metering_points {[Fabricate(:metering_point)]}
 end
 
+Fabricator :easy_meter_q3d_with_out_metering_point, from: :easy_meter_q3d  do
+  metering_points {[Fabricate(:out_metering_point_with_manager)]}
+end
+
 Fabricator :easy_meter_q3d_with_manager, from: :easy_meter_q3d do
   after_create { |meter|
     user = Fabricate(:user)

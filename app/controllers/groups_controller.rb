@@ -17,8 +17,8 @@ class GroupsController < ApplicationController
     @out_metering_points            = MeteringPoint.by_group(@group).outputs.without_externals.decorate
     @in_metering_points             = MeteringPoint.by_group(@group).inputs.without_externals.decorate
     @managers                       = @group.managers
-    @energy_producers               = MeteringPoint.by_group(@group).outputs.without_externals.decorate.collect(&:users).flatten.uniq
-    @energy_consumers               = MeteringPoint.by_group(@group).inputs.without_externals.decorate.collect(&:users).flatten.uniq
+    @energy_producers               = MeteringPoint.by_group(@group).outputs.without_externals.decorate.collect(&:members).flatten.uniq
+    @energy_consumers               = MeteringPoint.by_group(@group).inputs.without_externals.decorate.collect(&:members).flatten.uniq
     @group_metering_point_requests  = @group.received_group_metering_point_requests
     @all_comments                   = @group.root_comments
     @out_devices                    = @out_metering_points.collect(&:devices)

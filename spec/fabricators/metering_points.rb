@@ -914,7 +914,12 @@ end
 Fabricator :mp_forstenried_erzeugung, from: :metering_point do
   name  'Gesamterzeugung'
   #meter          { Fabricate(:virtual_forstenried_erzeugung) }
-  virtual        true
+  virtual         true
+  formula_parts   {[
+                    Fabricate(:fp_plus, operand_id: Fabricate(:mp_60138947).id),
+                    Fabricate(:fp_plus, operand_id: Fabricate(:mp_60138943).id),
+                    Fabricate(:fp_plus, operand_id: Fabricate(:mp_1338000816).id)
+                  ]}
   mode            'out'
 end
 
