@@ -40,7 +40,7 @@ class MeteringPoint < ActiveRecord::Base
   has_many :dashboard_metering_points
   has_many :dashboards, :through => :dashboard_metering_points
 
-  default_scope { order('created_at ASC') } #DESC
+  default_scope { order('name ASC') } #DESC
 
   scope :inputs, -> { where(mode: :in) }
   scope :outputs, -> { where(mode: :out) }
@@ -478,8 +478,13 @@ class MeteringPoint < ActiveRecord::Base
 
   def convert_to_highchart_array(chart_hash)
     array = []
+    if self.smart?
+      factor = 1000.0
+    else
+      factor = chart_hash.first.keys.last.to_s.starts_with?('power') ? 1000.0 : 1000000.0
+    end
     chart_hash.each do |item|
-      array << [ item['timestamp'].to_time.to_i*1000, item[item.keys.last]/1000 ]
+      array << [ item['timestamp'].to_time.to_i*1000, item[item.keys.last]/factor]
     end
     return array
   end

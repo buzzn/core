@@ -106,6 +106,8 @@ describe "Meters API" do
   end
 
 
+  xit 'does delete a meter and related metering_points with admin_token' do
+  end
 
 
 

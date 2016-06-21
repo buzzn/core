@@ -46,6 +46,7 @@ Fabricator :mp_z1a, from: :metering_point do
   name  'Netzanschluss Bezug'
 end
 
+
 Fabricator :mp_z1b, from: :metering_point do
   name  'Netzanschluss Einspeisung'
   mode        'out'
@@ -57,6 +58,7 @@ Fabricator :mp_z2, from: :metering_point do
   readable    'world'
   mode        'out'
   meter       { Fabricate(:easymeter_60051599) }
+  contracts { [Fabricate(:mpoc_buzzn_metering)] }
 end
 
 
@@ -73,6 +75,7 @@ Fabricator :mp_z4, from: :metering_point do
   readable    'world'
   mode        'out'
   meter       { Fabricate(:easymeter_60051560) }
+  contracts { [Fabricate(:mpoc_buzzn_metering)] }
 end
 
 

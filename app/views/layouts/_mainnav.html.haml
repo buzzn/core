@@ -58,8 +58,9 @@
                 - current_user.friends.each do |user|
                   = mainnav_profile_path(user.profile) if user.profile
 
-            %li.list-header= link_to t('terms_of_use'), page_path('terms_of_use')
-            %li.list-header= link_to t('legal_info'), page_path('legal_info')
+            %li.list-header
+              = link_to t('terms_of_use'), page_path('terms_of_use')
+              = link_to t('legal_info'), page_path('legal_info')
 
 
 

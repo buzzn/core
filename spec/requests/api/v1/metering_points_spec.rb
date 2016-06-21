@@ -123,6 +123,7 @@ describe "Metering Points API" do
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
+    expect(json['data']['attributes']['meter-id']).to eq(meter.id)
     expect(json['data']['attributes']['name']).to eq(metering_point.name)
   end
 
@@ -164,6 +165,7 @@ describe "Metering Points API" do
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
+    expect(json['data']['attributes']['meter-id']).to eq(meter.id)
     expect(json['data']['attributes']['name']).to eq(metering_point.name)
   end
 
@@ -190,6 +192,7 @@ describe "Metering Points API" do
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
+    expect(json['data']['attributes']['meter-id']).to eq(meter.id)
     expect(json['data']['attributes']['name']).to eq("#{metering_point.name} updated")
   end
 
@@ -214,6 +217,7 @@ describe "Metering Points API" do
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
+    expect(json['data']['attributes']['meter-id']).to eq(meter.id)
     expect(json['data']['attributes']['name']).to eq("#{metering_point.name} updated")
   end
 
@@ -339,6 +343,10 @@ describe "Metering Points API" do
   end
 
 
+
+
+  xit 'does add a metering_point to meter with admin_token' do
+  end
 
 
 

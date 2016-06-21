@@ -64,7 +64,7 @@ buzzn_team_names.each do |user_name|
 
     @mp_z2 = Fabricate(:mp_z2)
     user.add_role :manager, @mp_z2
-    @mp_z2.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: @mp_z2)
+    #@mp_z2.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: @mp_z2)
     user.contracting_party.contracts << @mp_z2.contracts
     @mp_z3 = Fabricate(:mp_z3)
     user.add_role :manager, @mp_z3
@@ -72,7 +72,7 @@ buzzn_team_names.each do |user_name|
     user.contracting_party.contracts << @mp_z3.contracts
     @mp_z4 = Fabricate(:mp_z4)
     user.add_role :manager, @mp_z4
-    @mp_z4.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: @mp_z4)
+    #@mp_z4.contracts << Fabricate(:mpoc_buzzn_metering, metering_point: @mp_z4)
     user.contracting_party.contracts << @mp_z4.contracts
     mp_z5 = Fabricate(:mp_z5)
     user.add_role :manager, mp_z5

@@ -31,17 +31,16 @@ namespace :slp do
           else
             Reading.create(
               timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
-              energy_a_milliwatt_hour: watt_hour*10000000.0, #convert from Wh to 10^-10 kWh
-              power_milliwatt: watts,
+              energy_a_milliwatt_hour: watt_hour,
+              power_a_milliwatt: watts,
               source: "slp"
             )
           end
         elsif parseString.include? "QTY"
-          additional_watt_hour = parseString[8...parseString.length].to_f
+          additional_watt_hour = parseString[8...parseString.length].to_f*1000 #convert to mWh
           new_watt_hour = watt_hour + additional_watt_hour
-          watts = (new_watt_hour - watt_hour)*4*1000 #convert to mW
+          watts = (new_watt_hour - watt_hour)*4
           watt_hour += additional_watt_hour
-          watt_hour = watt_hour.round(3)
         end
       end
     end

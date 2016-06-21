@@ -25,7 +25,6 @@
     bundle exec rake db:init
     bundle exec rake db:test:prepare
     bundle exec guard
-    bundle exec rescue rspec
 
 ## Sidekiq Start
     redis-server
@@ -63,7 +62,7 @@
     https://trello.com/b/SuonZHEd/buzzn-kanban
     https://codeship.io/projects/41893
 
-## API
+# create API token via API
     #https://github.com/doorkeeper-gem/doorkeeper/wiki/Testing-your-provider-with-OAuth2-gem
     app = Doorkeeper::Application.last
     client_redirect_url = 'urn:ietf:wg:oauth:2.0:oob'
@@ -72,16 +71,15 @@
     token = client.auth_code.get_token('xxxxxxxxxx', redirect_uri: client_redirect_url)
     access_token = token.token
 
-## TODO
-  - rails controller den neuen Aggregator benuzten lassen.
-  - rake slp und co auf milli_watt ändern
-  - remove discovergy pull readings
-  - mongodb TTL 4 jahre.
-  - fix google anlytics
-  - remove MeteringPointUser model
-  - move manager form metering_point to meter
-  - add grape-rails-cache.gem
+# create API token via rails console
+    open or create oauth Application https://staging.buzzn.net/oauth/applications
+    get id of application and go to rails console
+    application = Doorkeeper::Application.find('2a81c128-ef09-4c21-b779-f2655b38d1b4')
+    user = User.where(email: 'felix@buzzn.net').first
+    access_token = Doorkeeper::AccessToken.create(application_id: application.id, resource_owner_id: user.id, scopes: 'public admin' )
+    go to https://staging.buzzn.net/access_tokens to view generated tokens
 
 ## Docs
+  https://www.lucidchart.com/documents/edit/023ef2a3-0b1d-4740-a202-4ad868f3c098
   https://docs.google.com/spreadsheets/d/1OPsKFke9NGUYPtWs7Nv5Iv4hMAvqpmYvCPtXEhPhYL4/edit#gid=0
   https://docs.google.com/spreadsheets/d/1_KMXlYH3xcPKXx1p_RxxuLe6wP1pI-P2gOcJu7_rUNs/edit?ts=574ef7ae#gid=0

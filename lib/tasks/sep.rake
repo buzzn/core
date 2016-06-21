@@ -30,28 +30,26 @@ namespace :sep do
         next
       end
 
-      add_pv_watt_hour = cur_line.split(',')[2].delete("\"").to_f
-      add_bhkw_watt_hour = cur_line.split(',')[3].delete("\"").to_f
+      add_pv_watt_hour = cur_line.split(',')[2].delete("\"").to_f*1000000 #convert to mWh
+      add_bhkw_watt_hour = cur_line.split(',')[3].delete("\"").to_f*1000000 #convert to mWh
 
       new_pv_watt_hour = pv_watt_hour + add_pv_watt_hour
-      pv_watts = (new_pv_watt_hour - pv_watt_hour)*4*1000*1000
+      pv_watts = (new_pv_watt_hour - pv_watt_hour)*4
       pv_watt_hour += add_pv_watt_hour
-      pv_watt_hour = pv_watt_hour.round(3)
       Reading.create(
         timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
-        energy_a_milliwatt_hour: pv_watt_hour*10000000000.0, #convert from kWh to 10^-10 kWh
-        power_milliwatt: pv_watts,
+        energy_a_milliwatt_hour: pv_watt_hour,
+        power_a_milliwatt: pv_watts,
         source: "sep_pv"
       )
 
       new_bhkw_watt_hour = bhkw_watt_hour + add_bhkw_watt_hour
-      bhkw_watts = (new_bhkw_watt_hour - bhkw_watt_hour)*4*1000*1000
+      bhkw_watts = (new_bhkw_watt_hour - bhkw_watt_hour)*4
       bhkw_watt_hour += add_bhkw_watt_hour
-      bhkw_watt_hour = bhkw_watt_hour.round(3)
       Reading.create(
         timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
-        energy_a_milliwatt_hour: bhkw_watt_hour*10000000000.0, #convert from kWh to 10^-10 kWh
-        power_milliwatt: bhkw_watts,
+        energy_a_milliwatt_hour: bhkw_watt_hour,
+        power_a_milliwatt: bhkw_watts,
         source: "sep_bhkw"
       )
 
