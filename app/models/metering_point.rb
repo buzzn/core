@@ -75,7 +75,10 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def profiles
-    Profile.where(user_id: users.ids)
+    user_ids = []
+    user_ids << members.ids
+    user_ids << managers.ids
+    Profile.where(user_id: user_ids)
   end
 
   def members
