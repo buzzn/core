@@ -1121,7 +1121,20 @@ describe "Aggregates API" do
   #
   # Virtuel
   #
-  xit 'does aggregate Virtuel past month_to_days for out Discovergy metering_points as admin' do
+  it 'does aggregate Virtuel past month_to_days for out Discovergy metering_points as admin' do
+    access_token = Fabricate(:admin_access_token)
+
+    metering_point = Fabricate(:mp_forstenried_erzeugung) # Virtuel metering_point
+
+    request_params = {
+      metering_point_ids: metering_point.id,
+      resolution: 'month_to_days',
+      timestamp: Time.find_zone('Berlin').local(2016,4,6)
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    
   end
 
 
