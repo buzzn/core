@@ -251,16 +251,21 @@ describe "Metering Points API" do
     access_token    = Fabricate(:access_token).token
     metering_point  = Fabricate(:metering_point_readable_by_world)
     user            = Fabricate(:user)
-    comment         = Comment.build_from(metering_point, user.id, 'Hola!', '')
-    comment.save
-    comment2        = Comment.build_from(metering_point, user.id, '2nd comment', comment.id)
-    comment2.save
+    comment_params  = {
+      commentable_id:     metering_point.id,
+      commentable_type:   'MeteringPoint',
+      user_id:            user.id,
+      parent_id:          '',
+    }
+    comment         = Fabricate(:comment, comment_params)
+    comment_params[:parent_id] = comment.id
+    comment2        = Fabricate(:comment, comment_params)
     get_without_token "/api/v1/metering-points/#{metering_point.id}/comments"
     expect(response).to have_http_status(401)
     get_with_token "/api/v1/metering-points/#{metering_point.id}/comments", access_token
     expect(response).to have_http_status(200)
-    expect(json.last['body']).to eq('Hola!')
-    expect(json.first['body']).to eq('2nd comment')
+    expect(json.last['body']).to eq(comment.body)
+    expect(json.first['body']).to eq(comment2.body)
   end
 
 
