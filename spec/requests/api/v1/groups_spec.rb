@@ -188,8 +188,8 @@ describe "Groups API" do
     expect(response).to have_http_status(401)
     get_with_token "/api/v1/groups/#{group.id}/comments", access_token
     expect(response).to have_http_status(200)
-    expect(json.last['body']).to eq(comment.body)
-    expect(json.first['body']).to eq(comment2.body)
+    expect(json['data'].last['attributes']['body']).to eq(comment.body)
+    expect(json['data'].first['attributes']['body']).to eq(comment2.body)
   end
 
 

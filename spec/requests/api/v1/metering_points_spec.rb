@@ -268,8 +268,8 @@ describe "Metering Points API" do
     expect(response).to have_http_status(401)
     get_with_token "/api/v1/metering-points/#{metering_point.id}/comments", access_token
     expect(response).to have_http_status(200)
-    expect(json.last['body']).to eq(comment.body)
-    expect(json.first['body']).to eq(comment2.body)
+    expect(json['data'].last['attributes']['body']).to eq(comment.body)
+    expect(json['data'].first['attributes']['body']).to eq(comment2.body)
   end
 
 
@@ -292,7 +292,7 @@ describe "Metering Points API" do
     get_without_token "/api/v1/metering-points/#{metering_point.id}/address"
     expect(response).to have_http_status(401)
     get_with_token "/api/v1/metering-points/#{metering_point.id}/address", access_token
-    expect(json['id']).to eq(address.id)
+    expect(json['data']['id']).to eq(address.id)
     expect(response).to have_http_status(200)
   end
 
@@ -329,7 +329,7 @@ describe "Metering Points API" do
 
 
   it 'gets meter for the metering point only by managers' do
-    metering_point  = Fabricate(:mp_z2)
+    metering_point  = Fabricate(:mp_z3)
     access_token    = Fabricate(:access_token)
     token_user      = User.find(access_token.resource_owner_id)
     wrong_token     = Fabricate(:access_token)
