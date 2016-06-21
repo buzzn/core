@@ -371,6 +371,7 @@ describe "Aggregates API" do
 
 
 
+
   it 'does aggregate multiple slp presents with forecast_kwh_pa as admin' do
     access_token = Fabricate(:admin_access_token)
 
