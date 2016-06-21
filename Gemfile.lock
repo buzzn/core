@@ -793,6 +793,7 @@ GEM
     unf_ext (0.0.7.2)
     unicode_utils (1.4.0)
     uniform_notifier (1.10.0)
+    vcr (3.0.3)
     virtus (1.0.5)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
@@ -956,6 +957,7 @@ DEPENDENCIES
   timecop
   tzinfo
   uglifier
+  vcr
   whenever
   wicked
   will_paginate (~> 3.0.6)

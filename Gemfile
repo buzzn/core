@@ -160,6 +160,7 @@ group :development do
 end
 
 group :test do
+  gem 'vcr'
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
   gem 'rspec-rails'
