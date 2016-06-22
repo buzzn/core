@@ -485,7 +485,7 @@ class MeteringPoint < ActiveRecord::Base
       factor = chart_hash.first.keys.last.to_s.starts_with?('power') ? 1000.0 : 1000000.0
     end
     chart_hash.each do |item|
-      array << [ item['timestamp'].to_time.to_i*1000, item[item.keys.last]/factor]
+      array << [ item['timestamp'].to_time.to_i*1000, (item[item.keys.last]/factor).abs]
     end
     return array
   end
