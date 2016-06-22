@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160602120455) do
+ActiveRecord::Schema.define(version: 20160622111108) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -338,17 +338,6 @@ ActiveRecord::Schema.define(version: 20160602120455) do
   add_index "metering_point_user_requests", ["mode"], name: "index_metering_point_user_requests_on_mode", using: :btree
   add_index "metering_point_user_requests", ["user_id"], name: "index_metering_point_user_requests_on_user_id", using: :btree
 
-  create_table "metering_point_users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.integer  "usage",             default: 100
-    t.uuid     "user_id"
-    t.uuid     "metering_point_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "metering_point_users", ["metering_point_id"], name: "index_metering_point_users_on_metering_point_id", using: :btree
-  add_index "metering_point_users", ["user_id"], name: "index_metering_point_users_on_user_id", using: :btree
-
   create_table "metering_points", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "uid"
     t.string   "mode"
@@ -588,7 +577,6 @@ ActiveRecord::Schema.define(version: 20160602120455) do
     t.string   "invited_by_type"
     t.integer  "invitations_count",      default: 0
     t.uuid     "group_id"
-    t.uuid     "metering_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "provider"
@@ -603,7 +591,6 @@ ActiveRecord::Schema.define(version: 20160602120455) do
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
   add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
   add_index "users", ["invited_by_type"], name: "index_users_on_invited_by_type", using: :btree
-  add_index "users", ["metering_point_id"], name: "index_users_on_metering_point_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
