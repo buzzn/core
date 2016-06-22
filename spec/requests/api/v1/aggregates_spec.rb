@@ -926,7 +926,9 @@ describe "Aggregates API" do
 
   it 'does aggregate Discovergy past month_to_days for out metering_point as admin' do
     access_token = Fabricate(:admin_access_token)
-    metering_point = Fabricate(:mp_z2) # PV
+
+    meter = Fabricate(:easymeter_60051599)
+    metering_point = meter.metering_points.first
 
     request_params = {
       metering_point_ids: metering_point.id,
@@ -951,9 +953,11 @@ describe "Aggregates API" do
 
 
 
+
   it 'does aggregate Discovergy past day_to_minutes for out metering_point as admin' do
     access_token = Fabricate(:admin_access_token)
-    metering_point = Fabricate(:mp_z4) # BHKW
+    meter = Fabricate(:easymeter_60051560) # BHKW
+    metering_point = meter.metering_points.first
 
     request_params = {
       metering_point_ids: metering_point.id,
@@ -977,7 +981,7 @@ describe "Aggregates API" do
   end
 
 
-
+  
   it 'does aggregate Discovergy past day_to_minutes for in metering_point on a two-way meter as admin' do
     access_token = Fabricate(:admin_access_token)
 
@@ -1035,7 +1039,7 @@ describe "Aggregates API" do
     end
   end
 
-  
+
 
 
 
@@ -1043,8 +1047,13 @@ describe "Aggregates API" do
   it 'does aggregate multibale Discovergy past day_to_minutes metering_point as admin' do
     access_token = Fabricate(:admin_access_token)
 
-    mp_z2 = Fabricate(:mp_z2) # PV
-    mp_z4 = Fabricate(:mp_z4) # BHKW
+
+    easymeter_60051599 = Fabricate(:easymeter_60051599) # PV
+    easymeter_60051560 = Fabricate(:easymeter_60051560) # BHKW
+
+    mp_z2 = easymeter_60051599.metering_points.outputs.first
+    mp_z4 = easymeter_60051560.metering_points.outputs.first
+
 
 
     request_params = {
