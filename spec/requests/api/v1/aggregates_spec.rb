@@ -16,6 +16,56 @@ describe "Aggregates API" do
   xit 'does not aggregate many metering_points with different type as admin' do
   end
 
+
+  #   _____ ______ _____
+  #  / ____|  ____|  __ \
+  # | (___ | |__  | |__) |
+  #  \___ \|  __| |  ___/
+  #  ____) | |____| |
+  # |_____/|______|_|
+
+
+  it 'does aggregate BHKW SEP past energy by year_to_months as admin in sommertime' do
+    access_token   = Fabricate(:admin_access_token)
+    metering_point = Fabricate(:out_metering_point_with_manager)
+
+    energy_a_milliwatt_hour = 0
+    timestamp = Time.find_zone('Moscow').local(2015,1,1)
+    (400).times do |i|
+      Fabricate(:reading,
+        source: 'sep_bhkw',
+        timestamp: timestamp,
+        energy_a_milliwatt_hour: energy_a_milliwatt_hour,
+        power_a_milliwatt: 930*1000
+      )
+      energy_a_milliwatt_hour += 1300*1000
+      timestamp += 1.day
+    end
+
+    request_params = {
+      metering_point_ids: metering_point.id,
+      resolution: 'year_to_months',
+      timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json.count).to eq(12) # 12 month
+
+    timestamp = Time.find_zone('Moscow').local(2015,1,1)
+
+    json.each do |item|
+      expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
+      expect(item['energy_a_milliwatt_hour']).to eq(1300*1000 * (Time.days_in_month(timestamp.month, timestamp.year)-1)) # -1 day becouse it is in the next day
+      timestamp += 1.month
+    end
+  end
+
+
+
+
+
   #   _____ _      _____
   #  / ____| |    |  __ \
   # | (___ | |    | |__) |
@@ -981,7 +1031,7 @@ describe "Aggregates API" do
   end
 
 
-  
+
   it 'does aggregate Discovergy past day_to_minutes for in metering_point on a two-way meter as admin' do
     access_token = Fabricate(:admin_access_token)
 
