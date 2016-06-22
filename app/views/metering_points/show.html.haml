@@ -163,16 +163,19 @@
               /%li{"data-action" => "zoom_in"}= t('zoom_in_here_if_possible')
             .chart-comments
             .chart-comment-form
+              .chart-comment-form-close
+                %button.close{"aria-hidden" => "true", type: "button"} ×
               .comments-panel{data: {commentable_type: 'MeteringPoint', commentable_id: @metering_point.id} }
                 .comment-form-container
+
                   = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@metering_point, current_user.id, "", nil) }
 
 
 
-          / .text-center
-          /   - if !@metering_point.smart?
-          /     .new-reading
-          /       = @metering_point.submit_reading
+          .text-center
+            - if !@metering_point.smart?
+              .new-reading
+                = @metering_point.submit_reading
           /       = @metering_point.edit_readings
 
 

@@ -284,6 +284,20 @@ $(document).on "contextmenu", (event) ->
     else
       console.log 'no element found'
 
+    placeholder = $('.chart-comment-form').find('#comment_body').attr('placeholder')
+    index = placeholder.indexOf("(")
+    if index != -1
+      placeholder = placeholder.substring(0, index - 1)
+    displayed_time = new Date(timestamp)
+    if actual_resolution == "hour_to_minutes"
+      displayed_time = moment(timestamp).format("HH:mm")
+    else if actual_resolution == "day_to_minutes" || actual_resolution == "day_to_hours"
+      displayed_time = moment(timestamp).format("HH:mm")
+    else if actual_resolution == "month_to_days"
+      displayed_time = moment(timestamp).format("DD.MM")
+    else if actual_resolution == "year_to_months"
+      displayed_time = moment(timestamp).format("MMMM")
+    $('.chart-comment-form').find('#comment_body').attr('placeholder', placeholder + ' (' + displayed_time + ')')
     $('.chart-comment-form').find('#comment_chart_timestamp').attr('value', timestamp)
     $('.chart-comment-form').find('#comment_chart_resolution').attr('value', actual_resolution)
     $(".chart-context-menu").finish().toggle(100).css({top: chart_comment_input_y + "px", left: chart_comment_input_x + "px"})

@@ -102,6 +102,10 @@ ready = ->
 
   $('.typeahead').typeahead()
 
+  $(".chart-comment-form-close").on "click", ->
+    $('.chart-comment-form').hide 100
+    $('.chart-comment-form').find('#comment_body').val('')
+
 $(".error-not-found").ready ->
   $("#container").css("background-color", "black")
   $("#content-container").css("background-color", "black")

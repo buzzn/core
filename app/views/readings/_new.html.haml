@@ -6,12 +6,13 @@
     = form_for @reading, remote: true do |f|
       - if @reading.errors.any?
         #error_explanation
-          %h2= t('error_while_creating_reading')
+          %h4= t('error_while_creating_reading')
           - @reading.errors.full_messages.each do |message|
-            = t(message.downcase!.gsub(' ', '_'))
+            - value = message.split(':')[1]
+            - message_only = message.split(':')[0]
+            = t(message_only.downcase!.gsub(' ', '_'), value: value)
 
-      - value = params[:metering_point_id].nil? ? @reading.metering_point_id : params[:metering_point_id]
-      = f.hidden_field :metering_point_id, value: value
+      = f.hidden_field :metering_point_id, value: params[:metering_point_id]
 
       .table-responsive
         %table.table
@@ -21,7 +22,7 @@
               %td= f.date_select :timestamp
             %tr
               %td= f.label :count
-              %td= f.number_field :watt_hour
+              %td= f.number_field :energy_a_milliwatt_hour
 
 
       .modal-footer

@@ -11,5 +11,5 @@
       .comment-form-image
         = f.input :image
       .comment-form-show-image.pull-right
-        = t('add_image')
+        %i.fa.fa-picture-o.fa-2x
     = f.button :button, id: 'submit', :class => "btn btn-primary", :value => comment.parent_id.nil? ? t("create_comment") : t("send_answer"), data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>" + '  ' + t('loading') + '...'}

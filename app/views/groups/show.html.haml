@@ -201,6 +201,8 @@
               /%li{"data-action" => "zoom_in"}= t('zoom_in_here_if_possible')
             .chart-comments
             .chart-comment-form
+              .chart-comment-form-close
+                %button.close{"aria-hidden" => "true", type: "button"} ×
               .comments-panel{data: {commentable_type: 'Group', commentable_id: @group.id} }
                 .comment-form-container
                   = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@group, current_user.id, "", nil) }

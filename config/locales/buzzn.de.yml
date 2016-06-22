@@ -151,7 +151,10 @@ de:
   submit_reading: Zählerstand eingeben
   reading_created_successfully: Zählerstand erfolgreich gespeichert.
   error_while_creating_reading: Fehler beim Erstellen des Zählerstands.
-  watt_hour_is_lower_than_the_last_one: Der Zählerstand ist kleiner als der letzte.
+  energy_a_milliwatt_hour_is_lower_than_the_last_one: "Der Zählerstand ist kleiner als der letzte (%{value})."
+  energy_a_milliwatt_hour_is_greater_than_the_next_one: "Der Zählerstand ist größer als der nächste (%{value})."
+  energy_b_milliwatt_hour_is_lower_than_the_last_one: "Der Zählerstand ist kleiner als der letzte (%{value})."
+  energy_b_milliwatt_hour_is_greater_than_the_next_one: "Der Zählerstand ist größer als der nächste (%{value})."
   old_readings: Vergangene Zählerstände
   count: Zählerstand (kWh)
   time_of_reading: Ablesezeitpunkt

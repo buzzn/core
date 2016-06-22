@@ -305,7 +305,8 @@ a, img {
 
 .comment-form-show-image {
   cursor: pointer;
-  color: #1F8DD6;
+  color: #333;
+  opacity: 0.5;
 }
 
 .searchbox .form-control {
@@ -394,6 +395,10 @@ a, img {
   margin-left: 25px;
   margin-right: 25px;
   border-radius: 3px;
+}
+
+.chart-comment-form-close {
+  margin-right: 15px;
 }
 
 .set-chart-view {

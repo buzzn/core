@@ -28,8 +28,12 @@ class Reading
 
   def energy_milliwatt_hour_has_to_grow
     reading_before = Reading.last_before_user_input(meter_id, timestamp)
-    if !reading_before.nil? && reading_before[:energy_milliwatt_hour] > energy_milliwatt_hour
-      self.errors.add(:energy_milliwatt_hour, "is lower than the last one")
+    reading_after = Reading.next_after_user_input(meter_id, timestamp)
+    if !reading_before.nil? && reading_before[:energy_a_milliwatt_hour] > energy_a_milliwatt_hour
+      self.errors.add(:energy_a_milliwatt_hour, "is lower than the last one:" + (reading_before[:energy_a_milliwatt_hour]/1000000).to_s)
+    end
+    if !reading_after.nil? && reading_after[:energy_a_milliwatt_hour] < energy_a_milliwatt_hour
+      self.errors.add(:energy_a_milliwatt_hour, "is greater than the next one:" + (reading_after[:energy_a_milliwatt_hour]/1000000).to_s)
     end
   end
 
@@ -378,7 +382,7 @@ class Reading
         }
       }
     ]
-    return Reading.collection.aggregate(pipe)
+    return Reading.collection.aggregate(pipe).to_a
   end
 
   def self.last_before_user_input(meter_id, input_timestamp)
@@ -392,6 +396,29 @@ class Reading
           },
           timestamp: {
             "$lt"  => input_timestamp.utc
+          }
+        }
+      },
+      { "$sort" => {
+          timestamp: -1
+        }
+      },
+      { "$limit" => 1 }
+    ]
+    return Reading.collection.aggregate(pipe).first
+  end
+
+  def self.next_after_user_input(meter_id, input_timestamp)
+    pipe = [
+      { "$match" => {
+          meter_id: {
+            "$in" => [meter_id]
+          },
+          source:{
+            "$in" => ['user_input']
+          },
+          timestamp: {
+            "$gt"  => input_timestamp.utc
           }
         }
       },
