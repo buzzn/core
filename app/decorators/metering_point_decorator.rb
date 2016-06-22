@@ -259,6 +259,18 @@ class MeteringPointDecorator < Draper::Decorator
       })
   end
 
+  def get_reading
+    link_to(
+      content_tag(:i, t("get_reading"), class: 'btn btn-default btn-rounded btn-labeled fa fa-database'),
+      get_reading_metering_point_path(metering_point_id: model.id),
+      {
+        :remote         => true,
+        :class          => 'btn start_modal',
+        'data-toggle'   => 'modal',
+        'data-target'   => '#myModal'
+      })
+  end
+
   def new_invitations
     link_to(
       t("invite_friends_to_join_this_metering_point"),

@@ -162,6 +162,8 @@ de:
   edit_readings: Zählerstände bearbeiten
   failed_to_delete_reading: Zählerstand löschen fehlgeschlagen
 
+  get_reading: Zählerstand abfragen
+
   close: Schließen
   close_without_save: Schliessen ohne zu speichern
   out: Produktion

@@ -76,7 +76,7 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def profiles
-    Profile.where(user_id: users.ids)
+    Profile.where(user_id: users.collect(&:id))
   end
 
   def members

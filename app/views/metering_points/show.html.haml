@@ -176,7 +176,11 @@
             - if !@metering_point.smart?
               .new-reading
                 = @metering_point.submit_reading
-          /       = @metering_point.edit_readings
+                /= @metering_point.edit_readings
+
+            / - else
+            /   .get-reading
+            /     = @metering_point.get_reading
 
 
   .row
