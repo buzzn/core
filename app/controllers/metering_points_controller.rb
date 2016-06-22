@@ -358,6 +358,15 @@ class MeteringPointsController < ApplicationController
   end
   #TODO: add authority_actions
 
+  def get_reading
+    @metering_point = MeteringPoint.find(params[:metering_point_id])
+  end
+
+  def get_reading_update
+    render :get_reading_update
+    #render json: { data: [timestamp: Time.now.to_i*1000, reading: 12345]}
+  end
+
 
 private
   def metering_point_params

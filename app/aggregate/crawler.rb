@@ -104,13 +104,13 @@ class Crawler
             return {:power => power, :timestamp => timestamp}
           end
         else
-          Rails.logger.info request.inspect
+          request.inspect
         end
       else
-        Rails.logger.info request.inspect
+        request.inspect
       end
     end
-    Rails.logger.info "THIS AINT neither DISCO nor MySmartGrid"
+    "this aint neither Discovergy or MySmartGrid"
   end
 
 

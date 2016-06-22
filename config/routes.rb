@@ -57,6 +57,8 @@ Buzzn::Application.routes.draw do
       get :widget
       get :edit_notifications
       put :edit_notifications_update
+      get :get_reading
+      get :get_reading_update
     end
   end
 

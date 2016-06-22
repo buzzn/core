@@ -29,12 +29,21 @@ end
 
 # Justus Übergabe
 Fabricator :easymeter_60139082, from: :easy_meter_q3d do
-  manufacturer_product_serialnumber  '60139082'
+  manufacturer_product_serialnumber '60139082'
+  after_create { |meter|
+    meter.metering_points << Fabricate(:mp_z1a)
+    meter.metering_points << Fabricate(:mp_z1b)
+    meter.save
+  }
 end
 
 # Justus PV
 Fabricator :easymeter_60051599, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051599'
+  after_create { |meter|
+    meter.metering_points << Fabricate(:mp_z2)
+    meter.save
+  }
 end
 
 # Justus Ladestation
@@ -45,6 +54,10 @@ end
 # Justus BHKW
 Fabricator :easymeter_60051560, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051560'
+  after_create { |meter|
+    meter.metering_points << Fabricate(:mp_z4)
+    meter.save
+  }
 end
 
 
