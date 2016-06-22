@@ -20,61 +20,10 @@ describe "Profiles API" do
   end
 
 
-  it 'does not gets a profile without token' do
-    profile = Fabricate(:profile)
-    get_without_token "/api/v1/profiles/#{profile.id}"
-    expect(response).to have_http_status(403)
-  end
-
-
-  it 'does not gets a profile as foreigner' do
-    access_token = Fabricate(:access_token)
-    profile = Fabricate(:profile)
-    get_with_token "/api/v1/profiles/#{profile.id}", access_token.token
-    expect(response).to have_http_status(403)
-  end
-
-  it 'get a world-readable profile as foreigner' do
-    access_token = Fabricate(:access_token)
-    profile = Fabricate(:world_readable_profile)
-    get_with_token "/api/v1/profiles/#{profile.id}", access_token.token
-    expect(response).to have_http_status(200)
+  it 'gets even friend-readable profile without token' do
+    profile = Fabricate(:friends_readable_profile)
     get_without_token "/api/v1/profiles/#{profile.id}"
     expect(response).to have_http_status(200)
-  end
-
-  it 'does not get a community-readable profile as foreigner' do
-    profile = Fabricate(:community_readable_profile)
-    get_without_token "/api/v1/profiles/#{profile.id}"
-    expect(response).to have_http_status(403)
-  end
-
-
-  it 'does gets a profile as admin' do
-    access_token  = Fabricate(:admin_access_token)
-    profile       = Fabricate(:profile)
-    get_with_token "/api/v1/profiles/#{profile.id}", access_token.token
-    expect(response).to have_http_status(200)
-  end
-
-
-  it 'does gets a profile as friend' do
-    access_token      = Fabricate(:access_token_with_friend)
-    token_user        = User.find(access_token.resource_owner_id)
-    token_user_friend = token_user.friends.first
-    get_with_token "/api/v1/profiles/#{token_user_friend.profile.id}", access_token.token
-    expect(response).to have_http_status(200)
-  end
-
-  it 'does not get friend-readable profile as foreigner' do
-    access_token      = Fabricate(:access_token_with_friend)
-    wrong_token       = Fabricate(:access_token).token
-    token_user        = User.find(access_token.resource_owner_id)
-    token_user_friend = token_user.friends.first
-    get_with_token "/api/v1/profiles/#{token_user_friend.profile.id}", wrong_token
-    expect(response).to have_http_status(403)
-    get_without_token "/api/v1/profiles/#{token_user_friend.profile.id}"
-    expect(response).to have_http_status(403)
   end
 
 

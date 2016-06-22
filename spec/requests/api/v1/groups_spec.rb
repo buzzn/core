@@ -141,16 +141,39 @@ describe "Groups API" do
   end
 
 
-  it 'gets the related metering-points for Group only by group managers' do
-    access_token  = Fabricate(:access_token)
-    token_user    = User.find(access_token.resource_owner_id)
-    wrong_token   = Fabricate(:access_token)
-    group         = Fabricate(:group)
-    token_user.add_role(:manager, group)
-    get_with_token "/api/v1/groups/#{group.id}/metering-points", access_token.token
+  it 'gets the related metering-points for Group restricted by metering points' do
+    regular_token         = Fabricate(:access_token)
+    token_with_friend     = Fabricate(:access_token_with_friend)
+    token_user            = User.find(token_with_friend.resource_owner_id)
+    friend                = token_user.friends.first
+    member_token          = Fabricate(:access_token)
+    member                = User.find(member_token.resource_owner_id)
+    metering_point1       = Fabricate(:metering_point_readable_by_world)
+    metering_point2       = Fabricate(:metering_point_readable_by_community)
+    metering_point3       = Fabricate(:metering_point_readable_by_friends)
+    metering_point4       = Fabricate(:metering_point_readable_by_members)
+    friend.add_role(:manager, metering_point3)
+    member.add_role(:member, metering_point4)
+    group                 = Fabricate(:group)
+    group.metering_points = [
+      metering_point1,
+      metering_point2,
+      metering_point3,
+      metering_point4,
+    ]
+
+    get_without_token "/api/v1/groups/#{group.id}/metering-points"
     expect(response).to have_http_status(200)
-    get_with_token "/api/v1/groups/#{group.id}/metering-points", wrong_token.token
-    expect(response).to have_http_status(403)
+    expect(json['data'].size).to eq(1)
+    get_with_token "/api/v1/groups/#{group.id}/metering-points", regular_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(2)
+    get_with_token "/api/v1/groups/#{group.id}/metering-points", token_with_friend.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(3)
+    get_with_token "/api/v1/groups/#{group.id}/metering-points", member_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(3)
   end
 
   it 'gets the related managers for Group only with token' do

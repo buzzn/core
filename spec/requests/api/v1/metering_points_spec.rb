@@ -343,6 +343,45 @@ describe "Metering Points API" do
   end
 
 
+  it 'gets current power for the metering point' do
+    metering_point  = Fabricate(:mp_z3, readable: 'community')
+    access_token    = Fabricate(:access_token)
+
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/current-power"
+    expect(response).to have_http_status(401)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/current-power", access_token.token
+    expect(response).to have_http_status(200)
+  end
+
+
+
+  it 'gets current power for the group metering point' do
+    group           = Fabricate(:group_readable_by_members)
+    metering_point  = Fabricate(:mp_z3, readable: 'community')
+    access_token    = Fabricate(:access_token)
+    member_token    = Fabricate(:access_token)
+    member          = User.find(member_token.resource_owner_id)
+    member.add_role(:member, metering_point)
+    group.metering_points << metering_point
+
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/current-power", access_token.token
+    expect(response).to have_http_status(403)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/current-power", member_token.token
+    expect(response).to have_http_status(200)
+  end
+
+
+  it 'gets the related chart for the metering point' do
+    metering_point = Fabricate(:mp_z3)
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/chart"
+    expect(response).to have_http_status(400)
+    expect(json['error']).to eq('resolution_format is missing')
+    request_params = {
+      resolution_format: 'month_to_days'
+    }
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/chart", request_params
+    expect(response).to have_http_status(200)
+  end
 
 
   xit 'does add a metering_point to meter with admin_token' do
