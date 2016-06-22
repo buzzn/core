@@ -17,8 +17,6 @@ class MeteringPoint < ActiveRecord::Base
 
   has_many :contracts, dependent: :destroy
   has_many :devices
-  #has_many :metering_point_users
-  #has_many :users, through: :metering_point_users, dependent: :destroy
   has_one :address, as: :addressable, dependent: :destroy
 
   has_many :scores, as: :scoreable
@@ -73,12 +71,12 @@ class MeteringPoint < ActiveRecord::Base
 
   #default_scope { where(external: false) }
 
+  def users
+    members + managers
+  end
 
   def profiles
-    user_ids = []
-    user_ids << members.ids
-    user_ids << managers.ids
-    Profile.where(user_id: user_ids)
+    Profile.where(user_id: users.ids)
   end
 
   def members
@@ -190,7 +188,7 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def involved
-    (self.managers + self.users).uniq
+    (self.managers + self.members).uniq
   end
 
   def output?
@@ -298,8 +296,8 @@ class MeteringPoint < ActiveRecord::Base
 
   def addable_devices
     @users = []
-    @users << self.users
-    @users << User.with_role(:manager, self)
+    @users << members
+    @users << manager
     (@users).flatten.uniq.collect{|user| user.editable_devices.collect{|device| device if device.mode == self.mode} }.flatten.compact
   end
 
