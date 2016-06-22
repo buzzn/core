@@ -34,7 +34,7 @@ class Aggregate
         discovergy_metering_points.each do |metering_point|
           @present_items << {
             "operator" => (metering_point.mode == 'in' ? '+' : '-'),
-            "data" => external_data(metering_point, @resolution, @timestamp.to_i*1000)
+            "data" => external_data_live(metering_point)
           }
         end
 
@@ -317,8 +317,18 @@ private
   end
 
 
+  def external_data_live(metering_point)
+    crawler = Crawler.new(metering_point)
+    result = crawler.live
+    item = {
+      'timestamp' => Time.at(result[:timestamp]/1000),
+      'power_a_milliwatt' => (result[:power]*1000).to_i
+    }
+    return item
+  end
+
+
   def external_data(metering_point, resolution, timestamp)
-    puts '<================ external api call'
     crawler = Crawler.new(metering_point)
 
     case resolution
@@ -331,7 +341,6 @@ private
     when 'year_to_months'
       results = crawler.year(timestamp)
     end
-
 
     if results.first.size == 2 && metering_point.input?
       type_of_meter = 'in'

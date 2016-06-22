@@ -29,7 +29,12 @@ end
 
 # Justus Übergabe
 Fabricator :easymeter_60139082, from: :easy_meter_q3d do
-  manufacturer_product_serialnumber  '60139082'
+  manufacturer_product_serialnumber '60139082'
+  after_create { |meter|
+    meter.metering_points << Fabricate(:mp_z1a)
+    meter.metering_points << Fabricate(:mp_z1b)
+    meter.save
+  }
 end
 
 # Justus PV

@@ -43,13 +43,15 @@ end
 
 
 Fabricator :mp_z1a, from: :metering_point do
-  name  'Netzanschluss Bezug'
+  name      'Netzanschluss Bezug'
+  contracts { [Fabricate(:mpoc_buzzn_metering)] }
 end
 
 
 Fabricator :mp_z1b, from: :metering_point do
-  name  'Netzanschluss Einspeisung'
+  name        'Netzanschluss Einspeisung'
   mode        'out'
+  contracts   { [Fabricate(:mpoc_buzzn_metering)] }
 end
 
 
