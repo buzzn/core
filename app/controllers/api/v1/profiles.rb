@@ -50,11 +50,11 @@ module API
         end
         paginate(per_page: per_page=10)
         get ':id/groups' do
-          profile = Profile.where(id: permitted_params[:id]).first!
-          user = User.find(profile.user_id)
+          profile   = Profile.where(id: permitted_params[:id]).first!
+          user      = User.find(profile.user_id)
           group_ids = user.accessible_groups.map(&:id)
-          @per_page     = params[:per_page] || per_page
-          @page         = params[:page] || 1
+          @per_page = params[:per_page] || per_page
+          @page     = params[:page] || 1
 
           if current_user && profile.readable_by?(current_user)
             filter = {}

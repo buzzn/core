@@ -82,10 +82,7 @@ module API
         get ":id/metering-points" do
           doorkeeper_authorize! :public
           user = User.find(params[:id])
-          @per_page     = params[:per_page] || per_page
-          @page         = params[:page] || 1
-          @total_pages  = user.metering_points.page(@page).per_page(@per_page).total_pages
-          paginate(render(user.metering_points, meta: { total_pages: @total_pages }))
+          user.accessible_metering_points
         end
 
 

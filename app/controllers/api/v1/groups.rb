@@ -21,8 +21,8 @@ module API
           end
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
-          @total_pages  = Group.where(id: group_ids).page(@page).per_page(@per_page).total_pages
-          paginate(render(Group.where(id: group_ids), meta: { total_pages: @total_pages }))
+          @total_pages  = Group.where(id: group_ids.flatten).page(@page).per_page(@per_page).total_pages
+          paginate(render(Group.where(id: group_ids.flatten), meta: { total_pages: @total_pages }))
         end
 
 

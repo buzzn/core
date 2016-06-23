@@ -1,5 +1,9 @@
 describe "Metering Points API" do
 
+  before(:all) do
+    @page_overload = 11
+  end
+
   it 'get world-readable metering point with or without token' do
     access_token      = Fabricate(:access_token).token
     metering_point_id = Fabricate(:metering_point_readable_by_world).id
@@ -272,6 +276,26 @@ describe "Metering Points API" do
     expect(json['data'].first['attributes']['body']).to eq(comment2.body)
   end
 
+  it 'paginate comments' do
+    access_token    = Fabricate(:access_token).token
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    user            = Fabricate(:user)
+    comment_params  = {
+      commentable_id:     metering_point.id,
+      commentable_type:   'MeteringPoint',
+      user_id:            user.id,
+      parent_id:          '',
+    }
+    comment         = Fabricate(:comment, comment_params)
+    @page_overload.times do
+      comment_params[:parent_id] = comment.id
+      comment = Fabricate(:comment, comment_params)
+    end
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/comments", access_token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(2)
+  end
+
 
   it 'gets the related managers for the metering point only with token' do
     access_token    = Fabricate(:access_token).token
@@ -282,6 +306,18 @@ describe "Metering Points API" do
     get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token
     expect(json['data'].first['id']).to eq(manager.id)
     expect(response).to have_http_status(200)
+  end
+
+  it 'paginate managers' do
+    access_token    = Fabricate(:access_token).token
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    @page_overload.times do
+      user = Fabricate(:user)
+      user.add_role(:manager, metering_point)
+    end
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(2)
   end
 
 
