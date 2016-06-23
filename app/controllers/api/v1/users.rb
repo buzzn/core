@@ -61,10 +61,15 @@ module API
         params do
           requires :id, type: String, desc: "ID of the profile"
         end
+        paginate(per_page: per_page=10)
         get ":id/groups" do
           doorkeeper_authorize! :public
-          user = User.find(params[:id])
-          groups = Group.where(id: user.accessible_groups.map(&:id))
+          user          = User.find(params[:id])
+          groups        = Group.where(id: user.accessible_groups.map(&:id))
+          @per_page     = params[:per_page] || per_page
+          @page         = params[:page] || 1
+          @total_pages  = groups.page(@page).per_page(@per_page).total_pages
+          paginate(render(groups, meta: { total_pages: @total_pages }))
         end
 
 
@@ -73,10 +78,14 @@ module API
         params do
           requires :id, type: String, desc: "ID of the User"
         end
+        paginate(per_page: per_page=10)
         get ":id/metering-points" do
           doorkeeper_authorize! :public
           user = User.find(params[:id])
-          user.metering_points
+          @per_page     = params[:per_page] || per_page
+          @page         = params[:page] || 1
+          @total_pages  = user.metering_points.page(@page).per_page(@per_page).total_pages
+          paginate(render(user.metering_points, meta: { total_pages: @total_pages }))
         end
 
 
@@ -85,14 +94,19 @@ module API
           requires :id, type: String, desc: "ID of the User"
           optional :manufacturer_product_serialnumber, type: String, desc: "manufacturer product serialnumber"
         end
+        paginate(per_page: per_page=10)
         get ":id/meters" do
           doorkeeper_authorize! :admin
           user = User.find(params[:id])
           if params[:manufacturer_product_serialnumber]
-            Meter.with_role(:manager, user).where(manufacturer_product_serialnumber: params[:manufacturer_product_serialnumber])
+            meters = Meter.with_role(:manager, user).where(manufacturer_product_serialnumber: params[:manufacturer_product_serialnumber])
           else
-            Meter.with_role(:manager, user)
+            meters = Meter.with_role(:manager, user)
           end
+          @per_page     = params[:per_page] || per_page
+          @page         = params[:page] || 1
+          @total_pages  = meters.page(@page).per_page(@per_page).total_pages
+          paginate(render(meters, meta: { total_pages: @total_pages }))
         end
 
 
@@ -100,10 +114,14 @@ module API
         params do
           requires :id, type: String, desc: "ID of the User"
         end
+        paginate(per_page: per_page=10)
         get ":id/friends" do
           doorkeeper_authorize! :public
           user = User.find(params[:id])
-          user.friends
+          @per_page     = params[:per_page] || per_page
+          @page         = params[:page] || 1
+          @total_pages  = user.friends.page(@page).per_page(@per_page).total_pages
+          paginate(render(user.friends, meta: { total_pages: @total_pages }))
         end
 
 
@@ -112,10 +130,14 @@ module API
         params do
           requires :id, type: String, desc: "ID of the User"
         end
+        paginate(per_page: per_page=10)
         get ":id/devices" do
           doorkeeper_authorize! :public
           user = User.find(params[:id])
-          Device.with_role(:manager, user)
+          @per_page     = params[:per_page] || per_page
+          @page         = params[:page] || 1
+          @total_pages  = Device.with_role(:manager, user).page(@page).per_page(@per_page).total_pages
+          paginate(render(Device.with_role(:manager, user), meta: { total_pages: @total_pages }))
         end
 
 

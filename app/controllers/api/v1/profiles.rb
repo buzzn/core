@@ -48,19 +48,28 @@ module API
         params do
           requires :id, type: String, desc: "ID of the Profile"
         end
+        paginate(per_page: per_page=10)
         get ':id/groups' do
           profile = Profile.where(id: permitted_params[:id]).first!
           user = User.find(profile.user_id)
           group_ids = user.accessible_groups.map(&:id)
+          @per_page     = params[:per_page] || per_page
+          @page         = params[:page] || 1
 
           if current_user && profile.readable_by?(current_user)
+            filter = {}
             if current_user.friend?(user)
-              Group.where(id: group_ids).where.not(readable: 'members')
+              filter = { readable: 'members' }
             else
-              Group.where(id: group_ids).where.not(readable: ['friends', 'members'])
+              filter = { readable: ['friends', 'members'] }
             end
+            groups        = Group.where(id: group_ids).where.not(filter)
+            @total_pages  = groups.page(@page).per_page(@per_page).total_pages
+            paginate(render(groups, meta: { total_pages: @total_pages }))
           elsif profile.readable_by_world?
-            Group.where(id: group_ids, readable: 'world')
+            groups        = Group.where(id: group_ids, readable: 'world')
+            @total_pages  = groups.page(@page).per_page(@per_page).total_pages
+            paginate(render(groups, meta: { total_pages: @total_pages }))
           else
             status 403
           end
@@ -71,11 +80,16 @@ module API
         params do
           requires :id, type: String, desc: "ID of the Profile"
         end
+        paginate(per_page: per_page=10)
         get ':id/friends' do
           profile = Profile.where(id: permitted_params[:id]).first!
 
           if (current_user && profile.readable_by?(current_user)) || profile.readable_by_world?
-            User.find(profile.user_id).friends
+            @per_page     = params[:per_page] || per_page
+            @page         = params[:page] || 1
+            friends       = User.find(profile.user_id).friends
+            @total_pages  = friends.page(@page).per_page(@per_page).total_pages
+            paginate(render(friends, meta: { total_pages: @total_pages }))
           else
             status 403
           end
@@ -85,19 +99,28 @@ module API
         params do
           requires :id, type: String, desc: "ID of the Profile"
         end
+        paginate(per_page: per_page=10)
         get ':id/metering-points' do
           profile               = Profile.where(id: permitted_params[:id]).first!
           user                  = User.find(profile.user_id)
           metering_points_ids   = MeteringPoint.accessible_by_user(user).map(&:id)
+          @per_page             = params[:per_page] || per_page
+          @page                 = params[:page] || 1
 
           if current_user && profile.readable_by?(current_user)
+            filter = {}
             if current_user.friend?(user)
-              MeteringPoint.where(id: metering_points_ids).where.not(readable: 'members')
+              filter = { readable: 'members' }
             else
-              MeteringPoint.where(id: metering_points_ids).where.not(readable: ['friends', 'members'])
+              filter = { readable: ['friends', 'members'] }
             end
+            metering_points = MeteringPoint.where(id: metering_points_ids).where.not(filter)
+            @total_pages    = metering_points.page(@page).per_page(@per_page).total_pages
+            paginate(render(metering_points, meta: { total_pages: @total_pages }))
           elsif profile.readable_by_world?
-            MeteringPoint.where(id: metering_points_ids, readable: 'world')
+            metering_points = MeteringPoint.where(id: metering_points_ids, readable: 'world')
+            @total_pages    = metering_points.page(@page).per_page(@per_page).total_pages
+            paginate(render(metering_points, meta: { total_pages: @total_pages }))
           else
             status 403
           end

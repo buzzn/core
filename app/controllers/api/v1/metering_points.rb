@@ -115,11 +115,15 @@ module API
         params do
           requires :id, type: String, desc: 'ID of the MeteringPoint'
         end
+        paginate(per_page: per_page=10)
         get ':id/comments' do
           doorkeeper_authorize! :public
           metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
           if metering_point.readable_by?(current_user)
-            metering_point.comment_threads
+            @per_page     = params[:per_page] || per_page
+            @page         = params[:page] || 1
+            @total_pages  = metering_point.comment_threads.page(@page).per_page(@per_page).total_pages
+            paginate(render(metering_point.comment_threads, meta: { total_pages: @total_pages }))
           else
             status 403
           end
@@ -130,11 +134,15 @@ module API
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
+        paginate(per_page: per_page=10)
         get ":id/managers" do
           doorkeeper_authorize! :public
           metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
           if metering_point.readable_by?(current_user)
-            metering_point.managers
+            @per_page     = params[:per_page] || per_page
+            @page         = params[:page] || 1
+            @total_pages  = metering_point.managers.page(@page).per_page(@per_page).total_pages
+            paginate(render(metering_point.managers, meta: { total_pages: @total_pages }))
           else
             status 403
           end

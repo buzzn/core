@@ -5,6 +5,7 @@ module API
       resource :groups do
 
         desc "Return all groups"
+        paginate(per_page: per_page=10)
         get root: :groups do
           group_ids = Group.where(readable: 'world').ids
           if current_user
@@ -18,7 +19,10 @@ module API
               end
             end
           end
-          return Group.where(id: group_ids)
+          @per_page     = params[:per_page] || per_page
+          @page         = params[:page] || 1
+          @total_pages  = Group.where(id: group_ids).page(@page).per_page(@per_page).total_pages
+          paginate(render(Group.where(id: group_ids), meta: { total_pages: @total_pages }))
         end
 
 
@@ -141,11 +145,15 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
+        paginate(per_page: per_page=10)
         get ":id/managers" do
           doorkeeper_authorize! :public
           group = Group.where(id: permitted_params[:id]).first!
           if group.readable_by?(current_user)
-            group.managers
+            @per_page     = params[:per_page] || per_page
+            @page         = params[:page] || 1
+            @total_pages  = group.managers.page(@page).per_page(@per_page).total_pages
+            paginate(render(group.managers, meta: { total_pages: @total_pages }))
           else
             status 403
           end
@@ -194,11 +202,15 @@ module API
         params do
           requires :id, type: String, desc: 'ID of the group'
         end
+        paginate(per_page: per_page=10)
         get ':id/comments' do
           doorkeeper_authorize! :public
           group = Group.where(id: permitted_params[:id]).first!
           if group.readable_by?(current_user)
-            group.comment_threads
+            @per_page     = params[:per_page] || per_page
+            @page         = params[:page] || 1
+            @total_pages  = group.comment_threads.page(@page).per_page(@per_page).total_pages
+            paginate(render(group.comment_threads, meta: { total_pages: @total_pages }))
           else
             status 403
           end
