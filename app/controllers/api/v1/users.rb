@@ -138,17 +138,6 @@ module API
         end
 
 
-        desc "Return the related access_tokens for User"
-        params do
-          requires :id, type: String, desc: "ID of the User"
-        end
-        get ":id/access-tokens" do
-          doorkeeper_authorize! :admin
-          user = User.find(params[:id])
-          user.access_tokens
-        end
-
-
       end
     end
   end
