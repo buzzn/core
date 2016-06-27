@@ -18,23 +18,32 @@ module API
           doorkeeper_authorize! :public
 
           metering_points = MeteringPoint.where(id: params[:metering_point_ids].split(","))
-          metering_point_ids = []
-          metering_points.each do |metering_point|
-            if metering_point.readable_by_world?
-              metering_point_ids << metering_point.id
-            elsif current_user
-              if metering_point.readable_by?(current_user)
-                metering_point_ids << metering_point.id
-              else
-                status 403
-              end
+          metering_points_hash = Aggregate.sort_metering_points(metering_points)
+
+          if metering_points.size > 5
+            error!('maximum 5 metering_points per request', 413)
+          else
+            if metering_points_hash[:data_sources].size > 1
+              error!('it is not possible to sum metering_points with differend data_source', 406)
             else
-              status 401
+              @metering_points = []
+              metering_points.each do |metering_point|
+                if metering_point.readable_by_world?
+                  @metering_points << metering_point
+                elsif current_user
+                  if metering_point.readable_by?(current_user)
+                    @metering_points << metering_point
+                  else
+                    error!('Forbidden', 403)
+                  end
+                else
+                  error!('Unauthorized', 401)
+                end
+              end
+              return Aggregate.new(metering_points_hash).present( { timestamp: params[:timestamp] })
             end
           end
-          @aggregate = Aggregate.new({metering_point_ids: metering_point_ids })
 
-          return @aggregate.present({timestamp: params[:timestamp]})
         end
 
 
@@ -61,24 +70,32 @@ module API
           doorkeeper_authorize! :public
 
           metering_points = MeteringPoint.where(id: params[:metering_point_ids].split(","))
-          metering_point_ids = []
+          metering_points_hash = Aggregate.sort_metering_points(metering_points)
 
-          metering_points.each do |metering_point|
-            if metering_point.readable_by_world?
-              metering_point_ids << metering_point.id
-            elsif current_user
-              if metering_point.readable_by?(current_user)
-                metering_point_ids << metering_point.id
-              else
-                status 403
-              end
+          if metering_points.size > 5
+            error!('maximum 5 metering_points per request', 413)
+          else
+            if metering_points_hash[:data_sources].size > 1
+              error!('it is not possible to sum metering_points with differend data_source', 406)
             else
-              status 401
+              @metering_points = []
+              metering_points.each do |metering_point|
+                if metering_point.readable_by_world?
+                  @metering_points << metering_point
+                elsif current_user
+                  if metering_point.readable_by?(current_user)
+                    @metering_points << metering_point
+                  else
+                    error!('Forbidden', 403)
+                  end
+                else
+                  error!('Unauthorized', 401)
+                end
+              end
+              return Aggregate.new(metering_points_hash).past( { timestamp: params[:timestamp], resolution: params[:resolution] })
             end
           end
-          @aggregate = Aggregate.new({metering_point_ids: metering_point_ids })
 
-          return @aggregate.past({timestamp: params[:timestamp], resolution: params[:resolution]})
         end
 
 

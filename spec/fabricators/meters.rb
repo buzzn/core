@@ -639,6 +639,10 @@ end
 #   manufacturer_name                   ''
 #   manufacturer_product_name           ''
 #   manufacturer_product_serialnumber   '1234567'
+#   after_create { |meter|
+#     meter.metering_points << Fabricate(:mp_forstenried_erzeugung)
+#     meter.save
+#   }
 # end
 
 # Fabricator :virtual_forstenried_bezug, from: :meter do

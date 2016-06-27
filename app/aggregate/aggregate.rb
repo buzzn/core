@@ -1,16 +1,12 @@
 require 'benchmark'
 class Aggregate
 
-  attr_accessor :metering_point_ids, :energys
-
-  def initialize(initialize_params = {})
-    @metering_point_ids = initialize_params.fetch(:metering_point_ids, nil) || nil
+  def initialize(metering_points_hash)
+    @metering_points_hash = metering_points_hash
   end
 
-
-
   def present(params = {})
-    @cache_id = "/aggregate/present?metering_point_ids=#{@metering_point_ids.join(',')}"
+    @cache_id = "/aggregate/present?metering_point_ids=#{@metering_points_hash[:ids].join(',')}"
     if Rails.cache.exist?(@cache_id)
       @present = Rails.cache.fetch(@cache_id)
     else
@@ -18,9 +14,7 @@ class Aggregate
         @present_items = []
         @timestamp = params.fetch(:timestamp, Time.current) || Time.current
 
-        buzzn_api_metering_points, discovergy_metering_points, slp_metering_points, sep_bhkw_metering_points, sep_pv_metering_points = metering_points_sort(@metering_point_ids)
-
-        buzzn_api_metering_points.each do |metering_point|
+        @metering_points_hash[:buzzn_api].each do |metering_point|
           document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
           if document
             @present_items << {
@@ -31,7 +25,7 @@ class Aggregate
         end
 
         # discovergy
-        discovergy_metering_points.each do |metering_point|
+        @metering_points_hash[:discovergy].each do |metering_point|
           @present_items << {
             "operator" => (metering_point.mode == 'in' ? '+' : '-'),
             "data" => external_data_live(metering_point)
@@ -39,9 +33,9 @@ class Aggregate
         end
 
         #slp
-        if slp_metering_points.any?
+        if @metering_points_hash[:slp].any?
           document = Reading.where(:timestamp.gte => @timestamp, source: 'slp').first
-          slp_metering_points.each do |metering_point|
+          @metering_points_hash[:slp].each do |metering_point|
             factor = factor_from_metering_point(metering_point)
             @present_items << {
               "operator" => "+",
@@ -51,9 +45,9 @@ class Aggregate
         end
 
         #sep_bhkw
-        if sep_bhkw_metering_points.any?
+        if @metering_points_hash[:sep_bhkw].any?
           document = Reading.where(:timestamp.gte => @timestamp, source: 'sep_bhkw').first
-          sep_bhkw_metering_points.each do |metering_point|
+          @metering_points_hash[:sep_bhkw].each do |metering_point|
             factor = factor_from_metering_point(metering_point)
             @present_items << {
               "operator" => "+",
@@ -63,9 +57,9 @@ class Aggregate
         end
 
         #sep_pv
-        if sep_pv_metering_points.any?
+        if @metering_points_hash[:sep_pv].any?
           document = Reading.where(:timestamp.gte => @timestamp, source: 'sep_pv').first
-          sep_pv_metering_points.each do |metering_point|
+          @metering_points_hash[:sep_pv].each do |metering_point|
             factor = factor_from_metering_point(metering_point)
             @present_items << {
               "operator" => "+",
@@ -105,8 +99,8 @@ class Aggregate
 
 
   def past(params = {})
-    @cache_id = "/aggregate/past?metering_point_ids=#{@metering_point_ids.join(',')}&timestamp=#{@timestamp}&resolution=#{@resolution}"
 
+    @cache_id = "/aggregate/past?metering_point_ids=#{@metering_points_hash[:ids].join(',')}&timestamp=#{@timestamp}&resolution=#{@resolution}"
     if Rails.cache.exist?(@cache_id)
       @past = Rails.cache.fetch(@cache_id)
     else
@@ -115,10 +109,9 @@ class Aggregate
         @timestamp  = params.fetch(:timestamp, Time.current) || Time.current
         @resolution = params.fetch(:resolution, 'day_to_minutes') || 'day_to_minutes'
 
-        buzzn_api_metering_points, discovergy_metering_points, slp_metering_points, sep_bhkw_metering_points, sep_pv_metering_points = metering_points_sort(@metering_point_ids)
 
         # buzzn_api
-        buzzn_api_metering_points.each do |metering_point|
+        @metering_points_hash[:buzzn_api].each do |metering_point|
           source = { meter_id: { "$in" => [metering_point.meter.id] } }
           keys = [required_reading_attributes(@resolution, metering_point)]
           collection = Reading.aggregate(@resolution, source, @timestamp, keys)
@@ -126,12 +119,12 @@ class Aggregate
         end
 
         # discovergy
-        discovergy_metering_points.each do |metering_point|
+        @metering_points_hash[:discovergy].each do |metering_point|
           @past_items << external_data(metering_point, @resolution, @timestamp.to_i*1000)
         end
 
         #slp
-        if slp_metering_points.any?
+        if @metering_points_hash[:slp].any?
           source = { source: { "$in" => ['slp'] } }
           if Reading.energy_resolutions.include?(@resolution)
             keys = ['energy_a_milliwatt_hour']
@@ -139,14 +132,14 @@ class Aggregate
             keys = ['power_a_milliwatt']
           end
           collection = Reading.aggregate(@resolution, source, @timestamp, keys)
-          slp_metering_points.each do |metering_point|
+          @metering_points_hash[:slp].each do |metering_point|
             factor = factor_from_metering_point(metering_point)
             @past_items << aggregation_to_hash(collection, factor, false)
           end
         end
 
         #sep_bhkw
-        if sep_bhkw_metering_points.any?
+        if @metering_points_hash[:sep_bhkw].any?
           source = { source: { "$in" => ['sep_bhkw'] } }
           if Reading.energy_resolutions.include?(@resolution)
             keys = ['energy_a_milliwatt_hour']
@@ -154,14 +147,14 @@ class Aggregate
             keys = ['power_a_milliwatt']
           end
           collection = Reading.aggregate(@resolution, source, @timestamp, keys)
-          sep_bhkw_metering_points.each do |metering_point|
+          @metering_points_hash[:sep_bhkw].each do |metering_point|
             factor = factor_from_metering_point(metering_point)
             @past_items << aggregation_to_hash(collection, factor, false)
           end
         end
 
         #sep_pv
-        if sep_pv_metering_points.any?
+        if @metering_points_hash[:sep_pv].any?
           source = { source: { "$in" => ['sep_pv'] } }
           if Reading.energy_resolutions.include?(@resolution)
             keys = ['energy_a_milliwatt_hour']
@@ -169,7 +162,7 @@ class Aggregate
             keys = ['power_a_milliwatt']
           end
           collection = Reading.aggregate(@resolution, source, @timestamp, keys)
-          sep_pv_metering_points.each do |metering_point|
+          @metering_points_hash[:sep_pv].each do |metering_point|
             factor = factor_from_metering_point(metering_point)
             @past_items << aggregation_to_hash(collection, factor, false)
           end
@@ -183,6 +176,53 @@ class Aggregate
       end
     end
     return @past
+  end
+
+
+
+  def self.sort_metering_points(metering_points)
+    buzzn_api           = []
+    discovergy          = []
+    virtual             = []
+    slp                 = []
+    sep_bhkw            = []
+    sep_pv              = []
+    data_sources        = []
+    metering_point_ids  = []
+
+    metering_points.each do |metering_point|
+      data_sources.push(metering_point.data_source) unless data_sources.include?(metering_point.data_source)
+      metering_point_ids << metering_point.id
+      case metering_point.data_source
+      when 'buzzn-api'
+        buzzn_api << metering_point
+      when 'discovergy'
+        discovergy << metering_point
+      when 'virtual'
+        virtual << metering_point
+      when 'slp'
+        slp << metering_point
+      when 'sep_bhkw'
+        sep_bhkw << metering_point
+      when 'sep_pv'
+        sep_pv << metering_point
+      else
+        Rails.logger.error "You gave me #{metering_point.data_source} -- I have no idea what to do with that."
+      end
+    end
+
+    hash = {
+      buzzn_api: buzzn_api,
+      discovergy: discovergy,
+      virtual: virtual,
+      slp: slp,
+      sep_bhkw: sep_bhkw,
+      sep_pv: sep_pv,
+      data_sources: data_sources,
+      ids: metering_point_ids
+    }
+
+    return hash
   end
 
 
@@ -240,31 +280,7 @@ private
 
 
 
-  def metering_points_sort(metering_point_ids)
-    buzzn_api_metering_points   = []
-    discovergy_metering_points  = []
-    slp_metering_points         = []
-    sep_bhkw_metering_points    = []
-    sep_pv_metering_points      = []
 
-    MeteringPoint.where(id: @metering_point_ids).each do |metering_point|
-      case metering_point.data_source
-      when 'buzzn-api'
-        buzzn_api_metering_points << metering_point
-      when 'discovergy'
-        discovergy_metering_points << metering_point
-      when 'slp'
-        slp_metering_points << metering_point
-      when 'sep_bhkw'
-        sep_bhkw_metering_points << metering_point
-      when 'sep_pv'
-        sep_pv_metering_points << metering_point
-      else
-        Rails.logger.error "You gave me #{metering_point.data_source} -- I have no idea what to do with that."
-      end
-    end
-    return buzzn_api_metering_points, discovergy_metering_points, slp_metering_points, sep_bhkw_metering_points, sep_pv_metering_points
-  end
 
 
   def aggregation_to_hash(collection, factor=1, negativ=false)

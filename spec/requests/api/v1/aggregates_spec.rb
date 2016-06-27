@@ -20,6 +20,8 @@ describe "Aggregates API" do
 
 
 
+
+
   #   _____ _      _____
   #  / ____| |    |  __ \
   # | (___ | |    | |__) |
@@ -225,6 +227,76 @@ describe "Aggregates API" do
       timestamp += 15.minutes
     end
   end
+
+
+  it 'does not aggregate multiple metering_points power past by hour_to_minutes with differend data_sources as admin' do
+    access_token = Fabricate(:admin_access_token)
+
+    slp = Fabricate(:metering_point)
+    pv = Fabricate(:easymeter_60051599).metering_points.first
+
+    energy_a_milliwatt_hour = 0
+    timestamp = Time.find_zone('Sydney').local(2015,2,1)
+    (60*60).times do |i|
+      Fabricate(:reading,
+        source: 'slp',
+        timestamp: timestamp,
+        energy_a_milliwatt_hour: energy_a_milliwatt_hour,
+        power_a_milliwatt: 930*1000
+      )
+      energy_a_milliwatt_hour += 1300
+      timestamp += 1.second
+    end
+
+    request_params = {
+      metering_point_ids: "#{slp.id},#{pv.id}",
+      resolution: 'hour_to_minutes',
+      timestamp: Time.find_zone('Sydney').local(2015,2,1, 0,30).iso8601
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    expect(response).to have_http_status(406)
+  end
+
+
+
+
+  it 'does not aggregate more than 5 metering_points as admin' do
+    access_token = Fabricate(:admin_access_token)
+
+    slp1 = Fabricate(:metering_point)
+    slp2 = Fabricate(:metering_point)
+    slp3 = Fabricate(:metering_point)
+    slp4 = Fabricate(:metering_point)
+    slp5 = Fabricate(:metering_point)
+    slp6 = Fabricate(:metering_point)
+
+    energy_a_milliwatt_hour = 0
+    timestamp = Time.find_zone('Sydney').local(2015,2,1)
+    (60*60).times do |i|
+      Fabricate(:reading,
+        source: 'slp',
+        timestamp: timestamp,
+        energy_a_milliwatt_hour: energy_a_milliwatt_hour,
+        power_a_milliwatt: 930*1000
+      )
+      energy_a_milliwatt_hour += 1300
+      timestamp += 1.second
+    end
+
+    request_params = {
+      metering_point_ids: "#{slp1.id},#{slp2.id},#{slp3.id},#{slp4.id},#{slp5.id},#{slp6.id}",
+      resolution: 'hour_to_minutes',
+      timestamp: Time.find_zone('Sydney').local(2015,2,1, 0,30).iso8601
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    expect(response).to have_http_status(413)
+  end
+
+
 
 
 
@@ -670,156 +742,6 @@ describe "Aggregates API" do
   end
 
 
-  it 'does aggregate buzzn and slp power past by hour_to_minutes as admin' do
-    access_token = Fabricate(:admin_access_token)
-
-    metering_point  = Fabricate(:metering_point, forecast_kwh_pa: 3000)
-    meter           = Fabricate(:easy_meter_q3d_with_metering_point)
-
-    energy_a_milliwatt_hour = 0
-    timestamp = Time.find_zone('Berlin').local(2015,2,1)
-    (60*60).times do |i|
-
-      Fabricate(:reading,
-        source: 'slp',
-        timestamp: timestamp,
-        energy_a_milliwatt_hour: energy_a_milliwatt_hour,
-        power_a_milliwatt: 1000*1000
-      )
-
-      Fabricate(:reading,
-        meter_id: meter.id,
-        timestamp: timestamp,
-        energy_a_milliwatt_hour: energy_a_milliwatt_hour,
-        power_a_milliwatt: 900*1000
-      )
-
-      energy_a_milliwatt_hour += 1300*1000
-      timestamp += 1.seconds
-    end
-
-    request_params = {
-      metering_point_ids: "#{meter.metering_points.first.id},#{metering_point.id}",
-      resolution: 'hour_to_minutes',
-      timestamp: Time.find_zone('Berlin').local(2015,2,1, 0,30)
-    }
-
-    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
-
-    expect(response).to have_http_status(200)
-    expect(json.count).to eq(60)
-    timestamp = Time.find_zone('Berlin').local(2015,2,1)
-    json.each do |item|
-      expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
-      expect(item['power_a_milliwatt']).to eq((900*1000)+(3000*1000))
-      expect(item['energy_a_milliwatt_hour']).to eq(nil)
-      expect(item['energy_b_milliwatt_hour']).to eq(nil)
-      timestamp += 1.minutes
-    end
-  end
-
-
-  it 'does aggregate buzzn and slp past energy by year_to_months as admin in sommertime' do
-    access_token = Fabricate(:admin_access_token)
-
-    metering_point  = Fabricate(:metering_point, forecast_kwh_pa: 3000)
-    meter           = Fabricate(:easy_meter_q3d_with_metering_point)
-
-    slp_energy_a_milliwatt_hour = 0
-    buzzn_energy_a_milliwatt_hour = 0
-    timestamp = Time.find_zone('Berlin').local(2015,1,1)
-    (400).times do |i|
-      Fabricate(:reading,
-        source: 'slp',
-        timestamp: timestamp,
-        energy_a_milliwatt_hour: slp_energy_a_milliwatt_hour
-      )
-      Fabricate(:reading,
-        meter_id: meter.id,
-        timestamp: timestamp,
-        energy_a_milliwatt_hour: buzzn_energy_a_milliwatt_hour
-      )
-      slp_energy_a_milliwatt_hour += 1000*1000
-      buzzn_energy_a_milliwatt_hour += 2100*1000
-      timestamp += 1.day
-    end
-
-    request_params = {
-      metering_point_ids: "#{meter.metering_points.first.id},#{metering_point.id}",
-      resolution: 'year_to_months',
-      timestamp: Time.find_zone('Berlin').local(2015,6).iso8601
-    }
-
-    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
-
-    expect(response).to have_http_status(200)
-    expect(json.count).to eq(12) # 12 month
-
-    timestamp = Time.find_zone('Berlin').local(2015,1,1)
-
-    json.each do |item|
-      days_in_month = Time.days_in_month(timestamp.month, timestamp.year) - 1 # -1 day becouse it is in the next day
-      expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
-      expect(item['power_a_milliwatt']).to eq(nil)
-      expect(item['energy_a_milliwatt_hour']).to eq((2100*1000*days_in_month)+(3000*1000*days_in_month))
-      expect(item['energy_b_milliwatt_hour']).to eq(nil)
-      timestamp += 1.month
-    end
-  end
-
-
-
-  it 'does aggregate buzzn and slp energy past by year_to_months as admin in sommertime' do
-    access_token = Fabricate(:admin_access_token)
-
-    metering_point  = Fabricate(:metering_point, forecast_kwh_pa: 3000)
-    meter           = Fabricate(:easy_meter_q3d_with_metering_point)
-
-    slp_energy_a_milliwatt_hour = 0
-    buzzn_energy_a_milliwatt_hour = 0
-    timestamp = Time.find_zone('Berlin').local(2015,1,1)
-    (400).times do |i|
-      Fabricate(:reading,
-        source: 'slp',
-        timestamp: timestamp,
-        energy_a_milliwatt_hour: slp_energy_a_milliwatt_hour
-      )
-      Fabricate(:reading,
-        meter_id: meter.id,
-        timestamp: timestamp,
-        energy_a_milliwatt_hour: buzzn_energy_a_milliwatt_hour
-      )
-      slp_energy_a_milliwatt_hour += 1000*1000
-      buzzn_energy_a_milliwatt_hour += 2100*1000
-      timestamp += 1.day
-    end
-
-    request_params = {
-      metering_point_ids: "#{meter.metering_points.first.id},#{metering_point.id}",
-      resolution: 'year_to_months',
-      timestamp: Time.find_zone('Berlin').local(2015,6).iso8601
-    }
-
-    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
-
-    expect(response).to have_http_status(200)
-    expect(json.count).to eq(12) # 12 month
-
-    timestamp = Time.find_zone('Berlin').local(2015,1,1)
-
-    json.each do |item|
-      days_in_month = Time.days_in_month(timestamp.month, timestamp.year) - 1 # -1 day becouse it is in the next day
-      expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
-      expect(item['power_a_milliwatt']).to eq(nil)
-      expect(item['energy_a_milliwatt_hour']).to eq((2100*1000*days_in_month)+(3000*1000*days_in_month))
-      expect(item['energy_b_milliwatt_hour']).to eq(nil)
-      timestamp += 1.month
-    end
-  end
-
-
-
-
   it 'does aggregate multiple buzzn present as admin' do
     access_token = Fabricate(:admin_access_token)
 
@@ -859,59 +781,6 @@ describe "Aggregates API" do
     expect(json['readings'].count).to eq(2)
     expect(json['power_milliwatt_summed']).to eq((900*1000)+(800*1000))
   end
-
-
-
-
-  it 'does aggregate buzzn and slp present as admin' do
-    access_token = Fabricate(:admin_access_token)
-
-    metering_point  = Fabricate(:metering_point, forecast_kwh_pa: 3000)
-    meter           = Fabricate(:easy_meter_q3d_with_metering_point)
-
-
-    slp_energy_a_milliwatt_hour = 0
-    timestamp = Time.find_zone('Berlin').local(2015,1,1)
-    (60*60).times do |i|
-      Fabricate(:reading,
-        source: 'slp',
-        timestamp: timestamp,
-        power_a_milliwatt: 1000*1000,
-        energy_a_milliwatt_hour: slp_energy_a_milliwatt_hour
-      )
-      timestamp += 1.seconds
-      slp_energy_a_milliwatt_hour += 1000*1000
-    end
-
-    buzzn_energy_a_milliwatt_hour = 0
-    timestamp = Time.find_zone('Berlin').local(2015,1,1)
-    (60*30).times do |i|
-      Fabricate(:reading,
-        meter_id: meter.id,
-        timestamp: timestamp,
-        power_a_milliwatt: 6000*1000,
-        energy_a_milliwatt_hour: buzzn_energy_a_milliwatt_hour
-      )
-      timestamp += 1.seconds
-      buzzn_energy_a_milliwatt_hour += 2100*1000
-    end
-
-
-    Timecop.freeze(Time.find_zone('Berlin').local(2015,1,1, 0,30)) # 6*15 minutes
-    request_params = {
-      metering_point_ids: "#{metering_point.id},#{meter.metering_points.first.id}"
-    }
-
-    get_with_token "/api/v1/aggregates/present", request_params, access_token.token
-
-    expect(response).to have_http_status(200)
-
-    expect(json['readings'].count).to eq(2)
-    expect(json['power_milliwatt_summed']).to eq((1000*1000*3)+(6000*1000))
-  end
-
-
-
 
 
 
@@ -1151,21 +1020,24 @@ describe "Aggregates API" do
   #
   # Virtuel
   #
-  it 'does aggregate Virtuel past month_to_days for out Discovergy metering_points as admin' do
-    access_token = Fabricate(:admin_access_token)
 
-    metering_point = Fabricate(:mp_forstenried_erzeugung) # Virtuel metering_point
-
-    request_params = {
-      metering_point_ids: metering_point.id,
-      resolution: 'month_to_days',
-      timestamp: Time.find_zone('Berlin').local(2016,4,6)
-    }
-
-    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
-
-
-  end
+  # it 'does not aggregate Virtuel metering_points with different data_sources past month_to_days as admin' do
+  #   access_token = Fabricate(:admin_access_token)
+  #
+  #   virtuel_metering_point = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtuel metering_point
+  #   virtuel_metering_point.formula_parts << Fabricate(:fp_plus, operand_id: Fabricate(:metering_point).id) # add slp metering_point
+  #   virtuel_metering_point.save
+  #
+  #   request_params = {
+  #     metering_point_ids: virtuel_metering_point.id,
+  #     resolution: 'month_to_days',
+  #     timestamp: Time.find_zone('Berlin').local(2016,4,6)
+  #   }
+  #
+  #   get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+  #
+  #
+  # end
 
 
 
