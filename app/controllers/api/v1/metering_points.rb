@@ -191,63 +191,6 @@ module API
         end
 
 
-        desc 'Return current power for the MeteringPoint'
-        params do
-          requires :id, type: String, desc: "ID of the MeteringPoint"
-        end
-        get ':id/current-power' do
-          metering_point  = MeteringPoint.where(id: params[:id]).first!
-          aggregate       = Aggregate.new({metering_point_ids: [metering_point.id] })
-
-          if metering_point.group
-            if metering_point.group.readable_by_world?
-              aggregate.present
-            else
-              doorkeeper_authorize! :public
-              if metering_point.group.readable_by?(current_user)
-                aggregate.present
-              else
-                status 403
-              end
-            end
-          else
-            if metering_point.readable_by_world?
-              aggregate.present
-            else
-              doorkeeper_authorize! :public
-              if metering_point.readable_by?(current_user)
-                aggregate.present
-              else
-                status 403
-              end
-            end
-          end
-        end
-
-
-        desc 'Return the related chart for MeteringPoint'
-        params do
-          requires :id,                   type: String, desc: 'ID of the MeteringPoint'
-          requires :resolution_format,    type: String, desc: 'resolution format'
-          optional :containing_timestamp, type: String, desc: 'timestamp'
-        end
-        get ':id/chart' do
-          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
-          if metering_point.readable_by_world?
-            metering_point.chart_data(permitted_params[:resolution_format], permitted_params[:containing_timestamp])
-          else
-            doorkeeper_authorize! :public
-            if metering_point.readable_by?(current_user)
-              metering_point.chart_data(permitted_params[:resolution_format], permitted_params[:containing_timestamp])
-            else
-              status 403
-            end
-          end
-        end
-
-
-
-
       end
     end
   end
