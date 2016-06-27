@@ -105,6 +105,7 @@ class MeteringPoint < ActiveRecord::Base
     self.group && self.group.mode == "localpool"
   end
 
+  # TODO remove this
   def last_power
     if self.virtual && self.formula_parts.any?
       operands = get_operands_from_formula
@@ -145,6 +146,7 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
+  # TODO remove this
   def last_power_each
     if self.external && self.smart?
       crawler = Crawler.new(self)
@@ -216,7 +218,7 @@ class MeteringPoint < ActiveRecord::Base
   end
 
 
-  # uses meter.online attribute which is never set to true
+  # TODO remove this
   def online?
     if meter
       return meter.online
@@ -458,7 +460,7 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-
+  # TODO remove this
   def chart_data(resolution_format, containing_timestamp)
     if self.virtual && self.formula
       operands = self.get_operands_from_formula
@@ -477,6 +479,7 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
+  # TODO remove this
   def convert_to_highchart_array(chart_hash)
     array = []
     if self.smart?
@@ -490,7 +493,7 @@ class MeteringPoint < ActiveRecord::Base
     return array
   end
 
-
+  # TODO remove this
   def latest_fake_data
     if self.slp?
       return {data: Reading.latest_fake_data('slp'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
@@ -502,14 +505,14 @@ class MeteringPoint < ActiveRecord::Base
       return {data: [[0, 1]], factor: 1}
     end
   end
-
+  
   def submitted_readings_by_user
     if self.data_source
       Reading.all_by_metering_point_id(self.id)
     end
   end
 
-
+  # TODO remove this
   def self.fake_data(factor, resolution, containing_timestamp, source)
     result = []
     watts = {}
