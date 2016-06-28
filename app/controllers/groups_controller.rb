@@ -306,7 +306,7 @@ class GroupsController < ApplicationController
 
     notification_unsubscriber_comment_create = NotificationUnsubscriber.by_user(current_user).by_resource(@group).by_key('comment.create').first
 
-    if notify_when_comment_create == "false"
+    if notify_when_comment_create == "0"
       if !notification_unsubscriber_comment_create
         NotificationUnsubscriber.create(trackable: @group, user: current_user, notification_key: 'comment.create', channel: 'email')
       end

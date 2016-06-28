@@ -82,35 +82,35 @@ class ProfilesController < ApplicationController
     notification_unsubscriber_metering_point_undershoots = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('metering_point.undershoots').first
     notification_unsubscriber_metering_point_offline = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('metering_point.offline').first
 
-    if notify_when_comment_create == "false"
+    if notify_when_comment_create == "0"
       if !notification_unsubscriber_comment_create
         NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'comment.create', channel: 'email')
       end
     else
       notification_unsubscriber_comment_create.destroy if notification_unsubscriber_comment_create
     end
-    if notify_when_comment_liked == "false"
+    if notify_when_comment_liked == "0"
       if !notification_unsubscriber_comment_liked
         NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'comment.liked', channel: 'email')
       end
     else
       notification_unsubscriber_comment_liked.destroy if notification_unsubscriber_comment_liked
     end
-    if notify_when_metering_point_exceeds == "false"
+    if notify_when_metering_point_exceeds == "0"
       if !notification_unsubscriber_metering_point_exceeds
         NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'metering_point.exceeds', channel: 'email')
       end
     else
       notification_unsubscriber_metering_point_exceeds.destroy if notification_unsubscriber_metering_point_exceeds
     end
-    if notify_when_metering_point_undershoots == "false"
+    if notify_when_metering_point_undershoots == "0"
       if !notification_unsubscriber_metering_point_undershoots
         NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'metering_point.undershoots', channel: 'email')
       end
     else
      notification_unsubscriber_metering_point_undershoots .destroy if notification_unsubscriber_metering_point_undershoots
     end
-    if notify_when_metering_point_offline == "false"
+    if notify_when_metering_point_offline == "0"
       if !notification_unsubscriber_metering_point_offline
         NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'metering_point.offline', channel: 'email')
       end
