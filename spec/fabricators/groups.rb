@@ -16,6 +16,15 @@ Fabricator :group_readable_by_members, from: :group do
   readable    'members'
 end
 
+Fabricator :world_group_with_manager_and_member, from: :group do
+  after_create { |group|
+    user = Fabricate(:user)
+    user.add_role(:member, group)
+    manager = Fabricate(:user)
+    manager.add_role(:manager, group)
+  }
+end
+
 Fabricator :world_group_with_two_comments, from: :group do
   after_create { |group|
     comment_params  = {

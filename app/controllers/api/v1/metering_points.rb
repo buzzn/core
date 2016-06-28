@@ -110,6 +110,18 @@ module API
         end
 
 
+        desc 'Return related users for MeteringPoint'
+        params do
+          requires :id, type: String, desc: "ID of the MeteringPoint"
+        end
+        get ':id/members' do
+          doorkeeper_authorize! :admin
+          metering_point   = MeteringPoint.find(params[:id])
+          users            = metering_point.roles.map { |role| User.with_role(role.name, metering_point) }
+          users.flatten.uniq
+        end
+
+
 
         desc 'Return the related comments for MeteringPoint'
         params do

@@ -255,6 +255,19 @@ describe "Metering Points API" do
   end
 
 
+  it 'does get users related to the metering point with admin token' do
+    metering_point   = Fabricate(:world_metering_point_with_manager_and_member)
+    metering_point2  = Fabricate(:world_metering_point_with_manager_and_member)
+    admin_token      = Fabricate(:admin_access_token)
+
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/members"
+    expect(response).to have_http_status(401)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].length).to eq(2)
+  end
+
+
   it 'gets the related comments for the metering point only with token' do
     access_token    = Fabricate(:access_token)
     metering_point  = Fabricate(:world_metering_point_with_two_comments)

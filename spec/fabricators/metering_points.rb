@@ -24,6 +24,15 @@ Fabricator :metering_point_readable_by_members, from: :metering_point do
   readable    'members'
 end
 
+Fabricator :world_metering_point_with_manager_and_member, from: :metering_point do
+  after_create { |metering_point|
+    user = Fabricate(:user)
+    user.add_role(:member, metering_point)
+    manager = Fabricate(:user)
+    manager.add_role(:manager, metering_point)
+  }
+end
+
 Fabricator :world_metering_point_with_two_comments, from: :metering_point do
   readable    'world'
   after_create { |metering_point|
