@@ -264,8 +264,9 @@ describe "Groups API" do
     expect(response).to have_http_status(401)
     get_with_token "/api/v1/groups/#{group.id}/comments", access_token
     expect(response).to have_http_status(200)
-    expect(json['data'].first['attributes']['body']).to eq(comments.first.body)
-    expect(json['data'].last['attributes']['body']).to eq(comments.last.body)
+    comments.each do |comment|
+      expect(json['data'].find{ |c| c['id'] == comment.id }['attributes']['body']).to eq(comment.body)
+    end
   end
 
   it 'paginate comments' do
