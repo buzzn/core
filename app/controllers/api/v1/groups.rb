@@ -117,6 +117,17 @@ module API
         end
 
 
+        desc 'Return all related members'
+        params do
+          requires :id, type: String, desc: "ID of the group"
+        end
+        get ':id/roles' do
+          doorkeeper_authorize! :admin
+          group   = Group.find(params[:id])
+          users   = group.roles.map { |role| User.with_role(role.name, group) }
+          users.flatten.uniq
+        end
+
 
         desc "Return the related metering-points for Group"
         params do
