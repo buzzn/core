@@ -110,7 +110,7 @@ module API
         end
 
 
-        desc 'Return related users for MeteringPoint'
+        desc 'Return all related members'
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end

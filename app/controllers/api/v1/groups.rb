@@ -117,7 +117,7 @@ module API
         end
 
 
-        desc 'Return related users for Group'
+        desc 'Return all related members'
         params do
           requires :id, type: String, desc: "ID of the group"
         end
