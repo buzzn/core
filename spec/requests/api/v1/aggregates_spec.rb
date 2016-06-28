@@ -1021,10 +1021,23 @@ describe "Aggregates API" do
   # Virtuel
   #
 
-  it 'does not aggregate Virtuel metering_points with different data_sources past month_to_days as admin' do
+  it 'does aggregate Virtuel metering_points past month_to_days as admin' do
     access_token = Fabricate(:admin_access_token)
 
     virtuel_metering_point = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtuel metering_point
+
+    single_energy_values = []
+
+    virtuel_metering_point.formula_parts.each do |formula_part|
+      metering_point = MeteringPoint.find(formula_part.operand_id)
+      request_params = {
+        metering_point_ids: metering_point.id,
+        resolution: 'month_to_days',
+        timestamp: Time.find_zone('Berlin').local(2016,4,6)
+      }
+      get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+      single_energy_values << json.first['energy_b_milliwatt_hour']
+    end
 
     request_params = {
       metering_point_ids: virtuel_metering_point.id,
@@ -1034,6 +1047,7 @@ describe "Aggregates API" do
 
     get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
+    expect(json.first['energy_b_milliwatt_hour']).to eq(single_energy_values.inject(0, :+))
   end
 
 
