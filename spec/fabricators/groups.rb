@@ -25,19 +25,6 @@ Fabricator :world_group_with_manager_and_member, from: :group do
   }
 end
 
-Fabricator :world_group_with_two_comments, from: :group do
-  after_create { |group|
-    comment_params  = {
-       commentable_id:     group.id,
-       commentable_type:   'Group',
-       parent_id:          '',
-     }
-    comment         = Fabricate(:comment, comment_params)
-    comment_params[:parent_id] = comment.id
-    comment2        = Fabricate(:comment, comment_params)
-  }
-end
-
 
 Fabricator :group_hof_butenland, from: :group do
   name        'Hof Butenland'

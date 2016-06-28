@@ -270,17 +270,23 @@ describe "Metering Points API" do
 
   it 'gets the related comments for the metering point only with token' do
     access_token    = Fabricate(:access_token)
-    metering_point  = Fabricate(:world_metering_point_with_two_comments)
+    metering_point  = Fabricate(:metering_point_readable_by_world)
     user            = Fabricate(:user)
-    comments        = metering_point.comment_threads
-
+    comment_params  = {
+      commentable_id:     metering_point.id,
+      commentable_type:   'MeteringPoint',
+      user_id:            user.id,
+      parent_id:          '',
+    }
+    comment         = Fabricate(:comment, comment_params)
+    comment_params[:parent_id] = comment.id
+    comment2        = Fabricate(:comment, comment_params)
     get_without_token "/api/v1/metering-points/#{metering_point.id}/comments"
     expect(response).to have_http_status(401)
     get_with_token "/api/v1/metering-points/#{metering_point.id}/comments", access_token.token
     expect(response).to have_http_status(200)
-    comments.each do |comment|
-      expect(json['data'].find{ |c| c['id'] == comment.id }['attributes']['body']).to eq(comment.body)
-    end
+    expect(json['data'].last['attributes']['body']).to eq(comment.body)
+    expect(json['data'].first['attributes']['body']).to eq(comment2.body)
   end
 
   it 'paginate comments' do
