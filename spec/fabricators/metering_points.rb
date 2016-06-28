@@ -24,6 +24,20 @@ Fabricator :metering_point_readable_by_members, from: :metering_point do
   readable    'members'
 end
 
+Fabricator :world_metering_point_with_two_comments, from: :metering_point do
+  readable    'world'
+  after_create { |metering_point|
+    comment_params  = {
+      commentable_id:     metering_point.id,
+      commentable_type:   'MeteringPoint',
+      parent_id:          '',
+    }
+    comment         = Fabricate(:comment, comment_params)
+    comment_params[:parent_id] = comment.id
+    comment2        = Fabricate(:comment, comment_params)
+  }
+end
+
 
 Fabricator :metering_point_with_device, from: :metering_point do
   devices  { [Fabricate(:device)] }
