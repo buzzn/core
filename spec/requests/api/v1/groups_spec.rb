@@ -128,6 +128,19 @@ describe "Groups API" do
   end
 
 
+  it 'does get users related to the group with admin token' do
+    group       = Fabricate(:world_group_with_manager_and_member)
+    group2      = Fabricate(:world_group_with_manager_and_member)
+    admin_token = Fabricate(:admin_access_token)
+
+    get_without_token "/api/v1/groups/#{group.id}/roles"
+    expect(response).to have_http_status(401)
+    get_with_token "/api/v1/groups/#{group.id}/roles", admin_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].length).to eq(2)
+  end
+
+
   it 'does gets a group readable by community' do
     access_token  = Fabricate(:access_token)
     group         = Fabricate(:group_readable_by_community)
