@@ -860,25 +860,28 @@ end
 #bhkw1
 Fabricator :mp_60138947, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'BHKW 1'
+  name          'BHKW 1'
   meter          { Fabricate(:easymeter_60138947) }
-  mode        'out'
+  mode          'out'
+  contracts { [Fabricate(:mpoc_buzzn_metering)] }
 end
 
 #bhkw2
 Fabricator :mp_60138943, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'BHKW 2'
+  name          'BHKW 2'
   meter          { Fabricate(:easymeter_60138943) }
-  mode        'out'
+  mode          'out'
+  contracts { [Fabricate(:mpoc_buzzn_metering)] }
 end
 
 #pv
 Fabricator :mp_1338000816, from: :metering_point do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'PV'
+  name          'PV'
   meter          { Fabricate(:easymeter_1338000816) }
-  mode        'out'
+  mode          'out'
+  contracts { [Fabricate(:mpoc_buzzn_metering)] }
 end
 
 #schule

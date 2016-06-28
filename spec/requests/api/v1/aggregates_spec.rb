@@ -1021,23 +1021,20 @@ describe "Aggregates API" do
   # Virtuel
   #
 
-  # it 'does not aggregate Virtuel metering_points with different data_sources past month_to_days as admin' do
-  #   access_token = Fabricate(:admin_access_token)
-  #
-  #   virtuel_metering_point = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtuel metering_point
-  #   virtuel_metering_point.formula_parts << Fabricate(:fp_plus, operand_id: Fabricate(:metering_point).id) # add slp metering_point
-  #   virtuel_metering_point.save
-  #
-  #   request_params = {
-  #     metering_point_ids: virtuel_metering_point.id,
-  #     resolution: 'month_to_days',
-  #     timestamp: Time.find_zone('Berlin').local(2016,4,6)
-  #   }
-  #
-  #   get_with_token "/api/v1/aggregates/past", request_params, access_token.token
-  #
-  #
-  # end
+  it 'does not aggregate Virtuel metering_points with different data_sources past month_to_days as admin' do
+    access_token = Fabricate(:admin_access_token)
+
+    virtuel_metering_point = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtuel metering_point
+
+    request_params = {
+      metering_point_ids: virtuel_metering_point.id,
+      resolution: 'month_to_days',
+      timestamp: Time.find_zone('Berlin').local(2016,4,6)
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+  end
 
 
 

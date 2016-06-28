@@ -289,7 +289,7 @@ class MeteringPoint < ActiveRecord::Base
     elsif self.discovergy?
       "discovergy"
     elsif self.buzzn_api?
-      "buzzn-api"
+      "buzzn_api"
     end
   end
 
@@ -505,7 +505,7 @@ class MeteringPoint < ActiveRecord::Base
       return {data: [[0, 1]], factor: 1}
     end
   end
-  
+
   def submitted_readings_by_user
     if self.data_source
       Reading.all_by_metering_point_id(self.id)

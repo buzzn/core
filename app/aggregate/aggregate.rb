@@ -32,39 +32,9 @@ class Aggregate
           }
         end
 
-        #slp
-        if @metering_points_hash[:slp].any?
-          document = Reading.where(:timestamp.gte => @timestamp, source: 'slp').first
-          @metering_points_hash[:slp].each do |metering_point|
-            factor = factor_from_metering_point(metering_point)
-            @present_items << {
-              "operator" => "+",
-              "data" => document_to_hash(document, factor)
-            }
-          end
-        end
-
-        #sep_bhkw
-        if @metering_points_hash[:sep_bhkw].any?
-          document = Reading.where(:timestamp.gte => @timestamp, source: 'sep_bhkw').first
-          @metering_points_hash[:sep_bhkw].each do |metering_point|
-            factor = factor_from_metering_point(metering_point)
-            @present_items << {
-              "operator" => "+",
-              "data" => document_to_hash(document, factor)
-            }
-          end
-        end
-
-        #sep_pv
-        if @metering_points_hash[:sep_pv].any?
-          document = Reading.where(:timestamp.gte => @timestamp, source: 'sep_pv').first
-          @metering_points_hash[:sep_pv].each do |metering_point|
-            factor = factor_from_metering_point(metering_point)
-            @present_items << {
-              "operator" => "+",
-              "data" => document_to_hash(document, factor)
-            }
+        ['slp', 'sep_bhkw', 'sep_pv'].each do |fake_type|
+          if @metering_points_hash[fake_type.to_sym].any?
+            @present_items.concat(present_fake(fake_type, @metering_points_hash, @timestamp ))
           end
         end
 
@@ -109,62 +79,34 @@ class Aggregate
         @timestamp  = params.fetch(:timestamp, Time.current) || Time.current
         @resolution = params.fetch(:resolution, 'day_to_minutes') || 'day_to_minutes'
 
-
         # buzzn_api
         @metering_points_hash[:buzzn_api].each do |metering_point|
-          source = { meter_id: { "$in" => [metering_point.meter.id] } }
-          keys = [required_reading_attributes(@resolution, metering_point)]
-          collection = Reading.aggregate(@resolution, source, @timestamp, keys)
-          @past_items << aggregation_to_hash(collection, 1, metering_point.mode == 'in' ? false : true)
+          @past_items << past_buzzn_api(metering_point, @resolution, @timestamp)
         end
 
         # discovergy
         @metering_points_hash[:discovergy].each do |metering_point|
-          @past_items << external_data(metering_point, @resolution, @timestamp.to_i*1000)
+          @past_items << past_discovergy(metering_point, @resolution, @timestamp)
         end
 
-        #slp
-        if @metering_points_hash[:slp].any?
-          source = { source: { "$in" => ['slp'] } }
-          if Reading.energy_resolutions.include?(@resolution)
-            keys = ['energy_a_milliwatt_hour']
-          elsif Reading.power_resolutions.include?(@resolution)
-            keys = ['power_a_milliwatt']
-          end
-          collection = Reading.aggregate(@resolution, source, @timestamp, keys)
-          @metering_points_hash[:slp].each do |metering_point|
-            factor = factor_from_metering_point(metering_point)
-            @past_items << aggregation_to_hash(collection, factor, false)
+        ['slp', 'sep_bhkw', 'sep_pv'].each do |fake_type|
+          if @metering_points_hash[fake_type.to_sym].any?
+            @past_items.concat( past_fake(fake_type, @metering_points_hash, @resolution, @timestamp) )
           end
         end
 
-        #sep_bhkw
-        if @metering_points_hash[:sep_bhkw].any?
-          source = { source: { "$in" => ['sep_bhkw'] } }
-          if Reading.energy_resolutions.include?(@resolution)
-            keys = ['energy_a_milliwatt_hour']
-          elsif Reading.power_resolutions.include?(@resolution)
-            keys = ['power_a_milliwatt']
-          end
-          collection = Reading.aggregate(@resolution, source, @timestamp, keys)
-          @metering_points_hash[:sep_bhkw].each do |metering_point|
-            factor = factor_from_metering_point(metering_point)
-            @past_items << aggregation_to_hash(collection, factor, false)
-          end
-        end
+        @metering_points_hash[:virtual].each do |metering_point|
+          metering_point_ids    = FormulaPart.where(metering_point_id: metering_point.id).map(&:operand_id)
+          metering_points       = MeteringPoint.find(metering_point_ids)
+          metering_points_hash  = Aggregate.sort_metering_points(metering_points)
 
-        #sep_pv
-        if @metering_points_hash[:sep_pv].any?
-          source = { source: { "$in" => ['sep_pv'] } }
-          if Reading.energy_resolutions.include?(@resolution)
-            keys = ['energy_a_milliwatt_hour']
-          elsif Reading.power_resolutions.include?(@resolution)
-            keys = ['power_a_milliwatt']
-          end
-          collection = Reading.aggregate(@resolution, source, @timestamp, keys)
-          @metering_points_hash[:sep_pv].each do |metering_point|
-            factor = factor_from_metering_point(metering_point)
-            @past_items << aggregation_to_hash(collection, factor, false)
+          if metering_points_hash[:data_sources].size > 1
+            return 'error different data_sources'
+          else
+            data_source = metering_points_hash[:data_sources].first
+            metering_points_hash[data_source.to_sym].each do |metering_point|
+              @past_items << send("past_#{data_source}", metering_point, @resolution, @timestamp)
+            end
           end
         end
 
@@ -194,7 +136,7 @@ class Aggregate
       data_sources.push(metering_point.data_source) unless data_sources.include?(metering_point.data_source)
       metering_point_ids << metering_point.id
       case metering_point.data_source
-      when 'buzzn-api'
+      when 'buzzn_api'
         buzzn_api << metering_point
       when 'discovergy'
         discovergy << metering_point
@@ -228,6 +170,51 @@ class Aggregate
 
 
 private
+
+  def present_fake(fake_type, metering_points_hash, timestamp )
+    document = Reading.where(:timestamp.gte => timestamp, source: fake_type).first
+    present_items = []
+    metering_points_hash[fake_type.to_sym].each do |metering_point|
+      factor = factor_from_metering_point(metering_point)
+      present_items << {
+        "operator"  => "+",
+        "data"      => document_to_hash(document, factor)
+      }
+    end
+    return present_items
+  end
+
+
+  def past_buzzn_api(metering_point, resolution, timestamp)
+    source = { meter_id: { "$in" => [metering_point.meter.id] } }
+    keys = [required_reading_attributes(resolution, metering_point)]
+    collection = Reading.aggregate(resolution, source, timestamp, keys)
+    return aggregation_to_hash(collection, 1, metering_point.mode == 'in' ? false : true)
+  end
+
+  def past_discovergy(metering_point, resolution, timestamp)
+    return external_data(metering_point, resolution, timestamp.to_i*1000)
+  end
+
+  def past_fake(fake_type, metering_points_hash, resolution, timestamp)
+    source = { source: { "$in" => [fake_type] } }
+    if Reading.energy_resolutions.include?(@resolution)
+      keys = ['energy_a_milliwatt_hour']
+    elsif Reading.power_resolutions.include?(@resolution)
+      keys = ['power_a_milliwatt']
+    end
+    collection = Reading.aggregate(@resolution, source, @timestamp, keys)
+    past_items = []
+    metering_points_hash[fake_type.to_sym].each do |metering_point|
+      factor = factor_from_metering_point(metering_point)
+      past_items << aggregation_to_hash(collection, factor, false)
+    end
+    return past_items
+  end
+
+
+
+
 
   def factor_from_metering_point(metering_point)
      metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/1000) : 1
