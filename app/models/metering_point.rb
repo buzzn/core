@@ -473,8 +473,8 @@ class MeteringPoint < ActiveRecord::Base
       result = calculate_virtual_metering_point(data, operators, resolution_format)
       return result
     else
-      aggregate = Aggregate.new({metering_point_ids: [self.id]})
-      chart_hash = aggregate.past({timestamp: Time.at(containing_timestamp.to_i/1000), resolution: resolution_format })
+      metering_points_hash = Aggregate.sort_metering_points([self])
+      chart_hash = Aggregate.new(metering_points_hash).past({timestamp: Time.at(containing_timestamp.to_i/1000), resolution: resolution_format })
       convert_to_highchart_array(chart_hash)
     end
   end
