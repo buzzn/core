@@ -121,7 +121,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        get ':id/members' do
+        get ':id/roles' do
           doorkeeper_authorize! :admin
           group   = Group.find(params[:id])
           users   = group.roles.map { |role| User.with_role(role.name, group) }

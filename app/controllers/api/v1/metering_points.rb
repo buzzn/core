@@ -114,7 +114,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
-        get ':id/members' do
+        get ':id/roles' do
           doorkeeper_authorize! :admin
           metering_point   = MeteringPoint.find(params[:id])
           users            = metering_point.roles.map { |role| User.with_role(role.name, metering_point) }

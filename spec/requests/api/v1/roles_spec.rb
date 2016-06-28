@@ -11,11 +11,11 @@ describe 'Roles API' do
       user_id:        user.id,
     }.to_json
 
-    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/roles", admin_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].length).to eq(0)
     post_with_token '/api/v1/roles/add', params, admin_token.token
-    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/roles", admin_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].length).to eq(1)
   end
@@ -32,11 +32,11 @@ describe 'Roles API' do
       user_id:        user.id,
     }.to_json
 
-    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/roles", admin_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].length).to eq(1)
     post_with_token '/api/v1/roles/remove', params, admin_token.token
-    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/roles", admin_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].length).to eq(0)
   end

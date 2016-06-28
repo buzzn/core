@@ -133,9 +133,9 @@ describe "Groups API" do
     group2      = Fabricate(:world_group_with_manager_and_member)
     admin_token = Fabricate(:admin_access_token)
 
-    get_without_token "/api/v1/groups/#{group.id}/members"
+    get_without_token "/api/v1/groups/#{group.id}/roles"
     expect(response).to have_http_status(401)
-    get_with_token "/api/v1/groups/#{group.id}/members", admin_token.token
+    get_with_token "/api/v1/groups/#{group.id}/roles", admin_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].length).to eq(2)
   end

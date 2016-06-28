@@ -260,9 +260,9 @@ describe "Metering Points API" do
     metering_point2  = Fabricate(:world_metering_point_with_manager_and_member)
     admin_token      = Fabricate(:admin_access_token)
 
-    get_without_token "/api/v1/metering-points/#{metering_point.id}/members"
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/roles"
     expect(response).to have_http_status(401)
-    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/roles", admin_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].length).to eq(2)
   end
