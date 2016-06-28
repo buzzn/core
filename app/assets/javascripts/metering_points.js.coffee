@@ -1,6 +1,7 @@
 actual_resolution = "day_to_minutes"
 chart_data_min_x = 0
 chart = undefined
+metering_point_ids_hash = {}
 
 namespace = (target, name, block) ->
   [target, name, block] = [(if typeof exports isnt 'undefined' then exports else window), arguments...] if arguments.length < 3
@@ -318,6 +319,9 @@ $(".dashboard-chart").ready ->
   dashboard_id = $(this).attr('id')
   width = $("#chart-container-" + dashboard_id).width()
   metering_point_ids = $(this).data('metering_point-ids').toString().split(",")
+
+  i = 0
+
   metering_point_ids.forEach (id) ->
     if id != ""
       $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_minutes', async: true, dataType: 'json'})
@@ -419,6 +423,8 @@ $(".dashboard-chart").ready ->
               name: data[0].name
               data: data[0].data
             )
+          metering_point_ids_hash[id] = i
+          i += 1
           Chart.Functions.activateButtons(true)
         .error (jqXHR, textStatus, errorThrown) ->
           console.log textStatus
@@ -932,11 +938,8 @@ namespace 'Chart.Functions', (exports) ->
         Chart.Functions.activateButtons(true)
 
   exports.setChartDataMultiSeries = (resource, id, containing_timestamp) ->
-    numberOfSeries = 0
     if resource == 'dashboard'
       metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
-      # metering_point_ids.forEach (metering_point_id) ->
-      #   chart.series[numberOfSeries].remove(false)
       metering_point_ids.forEach (metering_point_id) ->
         $.ajax({url: '/metering_points/' + metering_point_id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
           .success (data) ->
@@ -944,6 +947,7 @@ namespace 'Chart.Functions', (exports) ->
             #   name: data[0].name
             #   data: data[0].data
             # )
+            numberOfSeries = metering_point_ids_hash[metering_point_id]
             seriesVisible = chart.series[numberOfSeries].visible
             if !seriesVisible
               chart.series[numberOfSeries].show()
@@ -957,7 +961,6 @@ namespace 'Chart.Functions', (exports) ->
             Chart.Functions.setChartType(true)
             if !seriesVisible
               chart.series[numberOfSeries].hide()
-            numberOfSeries += 1
           .error (jqXHR, textStatus, errorThrown) ->
             chart.hideLoading()
             console.log textStatus
@@ -1203,18 +1206,16 @@ updateChart = (resource_ids, mode) ->
   else if mode == 'dashboard'
     if resource_ids.length == 0
       return
-    numberOfSeries = 0
     resource_ids.forEach (id) ->
       $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, dataType: 'json'})
         .success (data) ->
           if data[0].data[0] == undefined
             return
           if chart_data_min_x == data[0].data[0][0]
+            numberOfSeries = metering_point_ids_hash[id]
             chart.series[numberOfSeries].setData(data[0].data)
-          numberOfSeries += 1
         .error (jqXHR, textStatus, errorThrown) ->
           console.log textStatus
-          numberOfSeries += 1
 
   else if mode == 'group'
     if resource_ids.length == 0
