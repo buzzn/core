@@ -10,7 +10,7 @@ class ConversationsController < ApplicationController
   def create
     @conversation = Conversation.create
     authorize_action_for(@conversation)
-    user_ids = params[:conversation][:user_ids].reject{|id| id.empty?} + [current_user.id]
+    user_ids = params[:conversation][:member_ids].reject{|id| id.empty?} + [current_user.id]
     if user_ids.any?
       user_ids.each do |user_id|
         User.find(user_id).add_role(:member, @conversation)
@@ -34,8 +34,8 @@ class ConversationsController < ApplicationController
   def update
     @conversation = Conversation.find(params[:id])
     authorize_action_for @conversation
-    user_ids = params[:conversation][:user_ids].reject{|id| id.empty?} + [current_user.id]
-    @conversation.users.each do |user|
+    user_ids = params[:conversation][:member_ids].reject{|id| id.empty?} + [current_user.id]
+    @conversation.members.each do |user|
       if !user_ids.include?(user.id)
         user.remove_role(:member, @conversation)
         @conversation.create_activity(key: 'conversation.user_remove', owner: current_user, recipient: user)

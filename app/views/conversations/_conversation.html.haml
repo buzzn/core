@@ -6,7 +6,7 @@
         = link_to(content_tag(:button, nil, class: 'btn btn-default fa fa-cog'), edit_conversation_path(conversation),{:remote => true, :class => 'start-modal', 'data-toggle' => "modal", 'data-target' => '#myModal'})
         = link_to(content_tag(:button, nil, class: 'btn btn-default fa fa-times'), unsubscribe_conversation_path(conversation), {remote: true, method: 'put'})
     %h4.panel-title
-      %a{'data-parent' => "#accordion", 'data-toggle' => 'collapse', href: "#collapse_#{conversation.id}"}= conversation.users.exclude_user(current_user).any? ? conversation.users.exclude_user(current_user).collect(&:name).join(', ') : t("no_participating_users")
+      %a{'data-parent' => "#accordion", 'data-toggle' => 'collapse', href: "#collapse_#{conversation.id}"}= conversation.members.exclude_user(current_user).any? ? conversation.members.exclude_user(current_user).collect(&:name).join(', ') : t("no_participating_users")
   .panel-collapse.collapse.comments-panel{id: "collapse_#{conversation.id}", data: {commentable_type: 'Conversation', commentable_id: conversation.id} }
     .chat-body
       .nano{:style => "height:610px"}
