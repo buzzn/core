@@ -53,15 +53,15 @@
             %li= link_to(t('remove_members'), remove_members_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
 
             %li= link_to(t('add_metering_point_manager'), add_manager_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
-            - if @metering_point.managers.include?(current_user)
+            - if @managers.include?(current_user)
               %li= link_to(t('remove_me_as_metering_point_manager'), remove_manager_update_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal', :method => 'put', 'data-confirm' => t('are_you_sure') + ' ' + t('you_will_no_longer_be_able_to_edit_this_metering_point')})
           - if user_signed_in?
-            - if @metering_point.members.include?(current_user)
+            - if @members.include?(current_user)
               %li= link_to(t('edit_notifications'), edit_notifications_metering_point_path(@metering_point),{:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal'})
             - if @requests.any? && @requests.collect(&:user).include?(current_user)
               %li= t'waiting_for_accepting'
             - else
-              - if !@profiles.include?(current_user.profile)
+              - if !@members.include?(current_user.profile)
                 - if current_user.friend?(@metering_point.managers.first) || current_user.can_update?(@metering_point)
                   %li= link_to(t('join_this_metering_point'), metering_point_user_requests_path(user_id: current_user.id, metering_point_id: @metering_point.id, mode: 'request'), method: :post)
               - else
@@ -209,8 +209,8 @@
             %small
               %i.small-info-circle.fa.fa-info-circle{'data-content' => t('members_info_metering_point')}
         .row
-          - @profiles.each do |profile|
-            = render profile
+          - @members.each do |member|
+            = render member.profile
 
 
       - if user_signed_in? && ((@metering_point.address && current_user.can_read?(@metering_point.address)) || @metering_point.address.nil?)

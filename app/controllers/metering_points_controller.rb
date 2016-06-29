@@ -6,8 +6,8 @@ class MeteringPointsController < ApplicationController
 
   def show
     @metering_point                 = MeteringPoint.find(params[:id]).decorate
-    @profiles                       = @metering_point.profiles
-    @managers                       = @metering_point.managers
+    @members                        = @metering_point.members.registered
+    @managers                       = @metering_point.managers.registered
     @devices                        = @metering_point.devices
     @group                          = @metering_point.group
     @meter                          = @metering_point.meter
@@ -101,7 +101,8 @@ class MeteringPointsController < ApplicationController
 
   def send_invitations_update
     @metering_point = MeteringPoint.find(params[:id])
-    if params[:metering_point][:invite_via_email] == "true"
+    byebug
+    if params[:metering_point][:invite_via_email] == "1"
       if params[:metering_point][:email] == ""
         @metering_point.errors.add(:email, I18n.t("cant_be_blank"))
         render action: 'send_invitations', invite_via_email: 'checked'
@@ -326,28 +327,28 @@ class MeteringPointsController < ApplicationController
     notification_unsubscriber_metering_point_undershoots = NotificationUnsubscriber.by_user(current_user).by_resource(@metering_point).by_key('metering_point.undershoots').first
     notification_unsubscriber_metering_point_offline = NotificationUnsubscriber.by_user(current_user).by_resource(@metering_point).by_key('metering_point.offline').first
 
-    if notify_when_comment_create == "false"
+    if notify_when_comment_create == "0"
       if !notification_unsubscriber_comment_create
         NotificationUnsubscriber.create(trackable: @metering_point, user: current_user, notification_key: 'comment.create', channel: 'email')
       end
     else
       notification_unsubscriber_comment_create.destroy if notification_unsubscriber_comment_create
     end
-    if notify_when_metering_point_exceeds == "false"
+    if notify_when_metering_point_exceeds == "0"
       if !notification_unsubscriber_metering_point_exceeds
         NotificationUnsubscriber.create(trackable: @metering_point, user: current_user, notification_key: 'metering_point.exceeds', channel: 'email')
       end
     else
       notification_unsubscriber_metering_point_exceeds.destroy if notification_unsubscriber_metering_point_exceeds
     end
-    if notify_when_metering_point_undershoots == "false"
-      if !otification_unsubscriber_metering_point_undershoots
+    if notify_when_metering_point_undershoots == "0"
+      if !notification_unsubscriber_metering_point_undershoots
         NotificationUnsubscriber.create(trackable: @metering_point, user: current_user, notification_key: 'metering_point.undershoots', channel: 'email')
       end
     else
      notification_unsubscriber_metering_point_undershoots .destroy if notification_unsubscriber_metering_point_undershoots
     end
-    if notify_when_metering_point_offline == "false"
+    if notify_when_metering_point_offline == "0"
       if !notification_unsubscriber_metering_point_offline
         NotificationUnsubscriber.create(trackable: @metering_point, user: current_user, notification_key: 'metering_point.offline', channel: 'email')
       end

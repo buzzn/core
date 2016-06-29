@@ -9,12 +9,12 @@
         = f.input :manufacturer_name, collection: Meter.manufacturer_names, include_blank: false, input_html: { class: 'select2' }
         = f.input :manufacturer_product_serialnumber
         //= f.association :metering_points, collection: current_user.editable_metering_points_without_meter_not_virtual + @meter.metering_points, include_blank: false, input_html: { class: 'select2' } #select2 association doesnt work with fieldset!!!!!
-        = f.input :smartmeter, as: :radio_buttons, collection: [t('yes'), t('no')], checked: @meter.smart ? t('yes') : t('no')
+        = f.input :smartmeter, as: :boolean, wrapper: :vertical_boolean, input_html: { checked: @meter.smart ? true : false}
 
       %h3=t('edit_data_connection')
       %fieldset
         = f.simple_fields_for @contract do |ff|
-          .js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: t("yes")}}}
+          .js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter', value: "true"}}}
             = ff.association :organization, input_html: {class: 'select2'}, label: t('smart_metering_provider')
             .js-dependent-fields{'data-select-id' => 'meter_contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
               = ff.input :username
@@ -23,5 +23,5 @@
               = ff.input :sensor_id, as: :text, :input_html => {value: ''}, label_method: :sensor_id
               = ff.input :x_token, as: :text, :input_html => {value: ''}, label_method: :x_token
 
-          .js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: t("no")}}}
+          .js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter', value: "false"}}}
             = t('no_smartmeter_means_you_get_dummy_data')

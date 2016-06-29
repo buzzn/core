@@ -12,7 +12,7 @@
           = t('add_me_to_this_metering_point')
           %small
             %i.normal-info-circle.fa.fa-info-circle{'data-content' => t('metering_point_wizard_users_info')}
-        = f.input :add_user, as: :radio_buttons, collection: [t('yes'), t('no')], checked: t('yes'), label: false
+        = f.input :add_user, as: :boolean, wrapper: :vertical_boolean, checked_value: true, unchecked_value: false, input_html: { checked: true }, label: false
       %h3=t('add_meter')
       %fieldset
         = f.simple_fields_for @meter do |ff|
@@ -22,14 +22,14 @@
               = ff.input :meter_id, collection: current_user.editable_metering_points.collect(&:meter).uniq.compact, :label_method => lambda { |m| m.name }, include_blank: false, input_html: { class: 'select2'}, label: false, selected: current_user.editable_metering_points.collect(&:meter).uniq.compact.first
             .js-dependent-fields{data: {radio: {name: 'metering_point[meter][existing_meter]', value: t("create_new_meter")}}}
               = ff.input :manufacturer_product_serialnumber
-              = ff.input :smartmeter, as: :radio_buttons, collection: [t('yes'), t('no')], checked: t('no')
+              = ff.input :smartmeter, as: :boolean, wrapper: :vertical_boolean, input_html: { checked: 'false' }
           - else
             = ff.input :manufacturer_product_serialnumber
-            = ff.input :smartmeter, as: :radio_buttons, collection: [t('yes'), t('no')], checked: t('no')
+            = ff.input :smartmeter, as: :boolean, wrapper: :vertical_boolean, input_html: { checked: false }
       %h3=t('establish_data_connection')
       %fieldset
         = f.simple_fields_for @contract do |ff|
-          .js-dependent-fields{data: {radio: {name: 'metering_point[meter][smartmeter]', value: t("yes")}}}
+          .js-dependent-fields{data: {checkbox: {id: 'metering_point_meter_smartmeter', value: 'true'}}}
             .js-dependent-fields{data: {radio: {name: 'metering_point[meter][existing_meter]', value: t("create_new_meter")}}}
               = ff.association :organization, input_html: {class: 'select2'}, label: t('smart_metering_provider')
             .js-dependent-fields{'data-select-id' => 'metering_point_contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
@@ -41,5 +41,5 @@
           .js-dependent-fields{data: {radio: {name: 'metering_point[meter][existing_meter]', value: t("add_existing_meter")}}}
             = t('the_metering_point_will_get_its_data_via_the_connection_established_by_the_selected_meter')
           .js-dependent-fields{data: {radio: {name: 'metering_point[meter][existing_meter]', value: t("create_new_meter")}}}
-            .js-dependent-fields{data: {radio: {name: 'metering_point[meter][smartmeter]', value: t("no")}}}
+            .js-dependent-fields{data: {checkbox: {id: 'metering_point_meter_smartmeter', value: 'false'}}}
               = t('no_smartmeter_means_you_get_dummy_data')
