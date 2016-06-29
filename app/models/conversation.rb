@@ -1,6 +1,6 @@
 class Conversation < ActiveRecord::Base
   resourcify
-  has_many :users, through: :roles, class_name: 'User', source: :users
+  has_many :members, through: :roles, class_name: 'User', source: :users
 
   include Authority::Abilities
   acts_as_commentable
@@ -11,10 +11,6 @@ class Conversation < ActiveRecord::Base
   scope :with_user, lambda {|user|
     self.with_role(:member, user)
   }
-
-  def members
-    self.users
-  end
 
   def name
     self.members.collect(&:name).join(", ")

@@ -27,6 +27,8 @@ class Group < ActiveRecord::Base
   has_one  :area
   has_many :metering_points
 
+  has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
+
   has_many :scores, as: :scoreable
 
   # validates :metering_points, presence: true
@@ -54,11 +56,6 @@ class Group < ActiveRecord::Base
 
   def should_generate_new_friendly_id?
     slug.blank? || name_changed?
-  end
-
-
-  def managers
-    User.with_role :manager, self
   end
 
   def energy_producers
