@@ -68,6 +68,34 @@ describe 'Comments API' do
     expect(json['error']).to eq('resource_name does not have a valid value')
   end
 
+  it 'creates a comment only with token' do
+    access_token  = Fabricate(:access_token)
+    group         = Fabricate(:group)
+    comment = {
+      resource_id: group.id,
+      resource_name: 'Group',
+      body: FFaker::Lorem.paragraphs.join('-'),
+    }
+
+    post_with_token '/api/v1/comments', comment.to_json, access_token.token
+    expect(response).to have_http_status(201)
+    post_without_token '/api/v1/comments', comment.to_json
+    expect(response).to have_http_status(401)
+  end
+
+  it 'does not create comment for resource not readable by user' do
+    access_token  = Fabricate(:access_token)
+    group         = Fabricate(:group_readable_by_friends)
+    comment = {
+      resource_id: group.id,
+      resource_name: 'Group',
+      body: FFaker::Lorem.paragraphs.join('-'),
+    }
+
+    post_with_token '/api/v1/comments', comment.to_json, access_token.token
+    expect(response).to have_http_status(403)
+  end
+
   it 'updates a comment with admin token' do
     admin_token     = Fabricate(:admin_access_token)
     group           = Fabricate(:world_group_with_two_comments)
@@ -92,6 +120,37 @@ describe 'Comments API' do
     put_with_token "/api/v1/comments/#{child_comment.id}", {}, admin_token.token
     expect(response).to have_http_status(400)
     expect(json['error']).to eq('body is missing')
+  end
+
+  it 'allows only update own comment' do
+    wrong_token   = Fabricate(:access_token)
+    access_token  = Fabricate(:access_token)
+    user          = User.find(access_token.resource_owner_id)
+    group         = Fabricate(:group)
+    comment_params = {
+      commentable_id: group.id,
+      commentable_type: 'Group',
+      user_id: user.id,
+    }
+    comment       = Fabricate(:comment, comment_params)
+    request_params = { body: 'xxxx' }
+
+    put_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, wrong_token.token
+    expect(response).to have_http_status(403)
+    put_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, access_token.token
+    expect(response).to have_http_status(200)
+  end
+
+  it 'allows resource manager to update any resource comment' do
+    access_token  = Fabricate(:access_token)
+    user          = User.find(access_token.resource_owner_id)
+    group         = Fabricate(:world_group_with_two_comments)
+    comment       = group.comment_threads.first
+    user.add_role(:manager, group)
+
+    request_params = { body: 'xxxx' }
+    put_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, access_token.token
+    expect(response).to have_http_status(200)
   end
 
   it 'removes a child comment with admin token' do
@@ -121,5 +180,35 @@ describe 'Comments API' do
     get_with_token "/api/v1/groups/#{group.id}/comments", admin_token.token
     expect(json['data'].size).to eq(0)
   end
+
+  it 'allows only remove own comment' do
+    wrong_token   = Fabricate(:access_token)
+    access_token  = Fabricate(:access_token)
+    user          = User.find(access_token.resource_owner_id)
+    group         = Fabricate(:group)
+    comment_params = {
+      commentable_id: group.id,
+      commentable_type: 'Group',
+      user_id: user.id,
+    }
+    comment       = Fabricate(:comment, comment_params)
+
+    delete_with_token "/api/v1/comments/#{comment.id}", wrong_token.token
+    expect(response).to have_http_status(403)
+    delete_with_token "/api/v1/comments/#{comment.id}", access_token.token
+    expect(response).to have_http_status(200)
+  end
+
+  it 'allows resource manager to delete any resource comment' do
+    access_token  = Fabricate(:access_token)
+    user          = User.find(access_token.resource_owner_id)
+    group         = Fabricate(:world_group_with_two_comments)
+    comment       = group.comment_threads.first
+    user.add_role(:manager, group)
+
+    delete_with_token "/api/v1/comments/#{comment.id}", access_token.token
+    expect(response).to have_http_status(200)
+  end
+
 
 end
