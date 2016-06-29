@@ -256,13 +256,13 @@ describe "Groups API" do
   end
 
   it 'gets the related comments for the group only with token' do
-    access_token    = Fabricate(:access_token).token
+    access_token    = Fabricate(:access_token)
     group           = Fabricate(:world_group_with_two_comments)
     comments        = group.comment_threads
 
     get_without_token "/api/v1/groups/#{group.id}/comments"
     expect(response).to have_http_status(401)
-    get_with_token "/api/v1/groups/#{group.id}/comments", access_token
+    get_with_token "/api/v1/groups/#{group.id}/comments", access_token.token
     expect(response).to have_http_status(200)
     comments.each do |comment|
       expect(json['data'].find{ |c| c['id'] == comment.id }['attributes']['body']).to eq(comment.body)
