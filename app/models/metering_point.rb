@@ -21,6 +21,9 @@ class MeteringPoint < ActiveRecord::Base
 
   has_many :scores, as: :scoreable
 
+  has_many :members, -> { where roles:  { name: 'member'} }, through: :roles, source: :users
+  has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
+
   accepts_nested_attributes_for :meter
   accepts_nested_attributes_for :contracts
 
@@ -77,14 +80,6 @@ class MeteringPoint < ActiveRecord::Base
 
   def profiles
     Profile.where(user_id: users.collect(&:id))
-  end
-
-  def members
-    User.with_role(:member, self)
-  end
-
-  def managers
-    User.with_role :manager, self
   end
 
   def dashboard
