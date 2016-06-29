@@ -65,7 +65,8 @@ class ApplicationController < ActionController::Base
       Gon.global.push({ current_user_id: current_user.id,
                         profile_name: current_user.profile.slug,
                         pusher_key: Rails.application.secrets.pusher_key,
-                        pusher_host: Rails.application.secrets.pusher_host})
+                        pusher_host: Rails.application.secrets.pusher_host,
+                        access_token: current_user.access_tokens.first.token})
     end
   end
 

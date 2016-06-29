@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   before_destroy :delete_content
 
   after_create :create_dashboard
+  after_create :create_rails_view_access_token
 
   after_invitation_accepted :invoke_invitation_accepted_activity
 
@@ -270,6 +271,13 @@ private
 
   def create_dashboard
     self.dashboard = Dashboard.create(user_id: self.id)
+  end
+
+  def create_rails_view_access_token
+    application = Doorkeeper::Application.where(name: 'Buzzn RailsView')
+    if application.any?
+      Doorkeeper::AccessToken.create(application_id: application.first.id, resource_owner_id: self.id, scopes: 'public admin' )
+    end
   end
 
   def invoke_invitation_accepted_activity
