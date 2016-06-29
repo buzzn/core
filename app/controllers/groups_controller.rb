@@ -4,7 +4,7 @@ class GroupsController < ApplicationController
 
   def index
     group_ids = Group.readable_group_ids_by_user(current_user)
-    @groups  = Group.where(id: group_ids).search(params[:search])
+    @groups  = Group.where(id: group_ids).search(params[:search]).decorate
   end
 
 

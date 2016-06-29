@@ -2,9 +2,15 @@
   = link_to group do
     .panel.widget
       .widget-header.bg-purple
-        %img.widget-bg.img-responsive{:alt => "Image", :src => group.image.cover}
+        - if group.image.present?
+          %img.widget-bg.img-responsive{:alt => "Image", :src => group.image.cover}
+
       .widget-body.text-center
-        %img.widget-img.img-border-light{:alt => "Profile Picture", :src => group.logo.lg}
+        - if group.logo.present?
+          %img.widget-img.img-border-light.bg-gray-light{:src => group.logo.lg}
+        - else
+          = content_tag(:span, nil, class: 'widget-img img-border-light bg-gray-light fa fa-users fa-5x')
+
         %h4.mar-no= group.name
         -# %p.text-muted.mar-btm Organization
         %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
@@ -15,9 +21,9 @@
               %small= t'members'
 
           %li.col-xs-4
-            %span.text-lg= group.metering_points.outputs.count
+            %span.text-lg= group.metering_points.count
             %p.text-muted.text-uppercase
-              %small= t'generators'
+              %small= t'metering_points'
 
           %li.col-xs-4
             %span.text-lg= group.get_scores('day_to_minutes', Time.now.to_i)[:autarchy]
