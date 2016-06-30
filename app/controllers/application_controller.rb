@@ -62,10 +62,18 @@ class ApplicationController < ActionController::Base
 
   def initialize_gon
     if user_signed_in?
+
+      if current_user.access_tokens.any?
+        gon_access_token = current_user.access_tokens.first.token
+      else
+        gon_access_token = nil
+      end
+
       Gon.global.push({ current_user_id: current_user.id,
                         profile_name: current_user.profile.slug,
                         pusher_key: Rails.application.secrets.pusher_key,
-                        pusher_host: Rails.application.secrets.pusher_host})
+                        pusher_host: Rails.application.secrets.pusher_host,
+                        access_token: gon_access_token })
     end
   end
 
@@ -74,6 +82,8 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+
     def verified_request?
       super || valid_authenticity_token?(session, request.headers['X-XSRF-TOKEN'])
     end
