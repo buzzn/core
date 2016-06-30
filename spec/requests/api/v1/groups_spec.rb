@@ -247,6 +247,16 @@ describe "Groups API" do
     expect(json['meta']['total_pages']).to eq(2)
   end
 
+  it 'gets the related members for Group only with token' do
+    access_token  = Fabricate(:access_token)
+    group         = Fabricate(:world_group_with_members)
+
+    get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
+    expect(response).to have_http_status(200)
+    get_without_token "/api/v1/groups/#{group.id}/members"
+    expect(response).to have_http_status(401)
+  end
+
   it 'gets the related energy-producers for Group' do
     access_token  = Fabricate(:access_token)
     group         = Fabricate(:group)
