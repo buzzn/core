@@ -1266,64 +1266,39 @@ $(".metering_point").ready ->
   metering_point_id = $(this).attr('id').split('_')[2]
   metering_point = $(this)
   if $(this).find(".metering_point-ticker").length != 0
-    source = $(this).find(".metering_point-ticker").data('source')
-    if $(this).find(".metering_point-ticker").data('fake') == true
-      getFakeValue(metering_point_id, source)
-      timers.push(
-        window.setInterval(->
-          setFakeValue(metering_point, metering_point_id, source)
-          return
-        , 1000*5)
-        )
-    else
-      if source == "mysmartgrid"
-        timers.push(window.setInterval(->
-          getLiveData(metering_point, metering_point_id)
-          return
-        , 1000*30)
-        )
-      else if source == "discovergy" || source == "virtual"
-
-          timers.push(window.setInterval(->
-            #console.log window.wisActive
-            if  window.wisActive == true
-              getLiveData(metering_point, metering_point_id)
-            return
-          , 1000*5)
-          )
-
-
-
+    timers.push(window.setInterval(->
+      getLiveData(metering_point, metering_point_id)
+      return
+    , 1000*5)
+    )
 
 getLiveData = (metering_point, metering_point_id) ->
   $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
     .success (data) ->
-      if data.online == true
-        metering_point.find(".power-ticker").html(data.latest_power)
-        if data.timestamp <= Date.now() - 60*1000
-          metering_point.find(".power-ticker").css({opacity: 0.3})
-        else
-          metering_point.find(".power-ticker").css({opacity: 1})
-        metering_point.find(".power-ticker").data('content', moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss"))
-        metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
-        metering_point.find(".power-ticker").data('bs.popover').options.content = moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss")
-        if $(".metering_point_detail").length != 0 && chart != undefined && actual_resolution == 'hour_to_minutes'
-          if chart_data_min_x > data.timestamp - 60*60*1000
-            chart.series[0].addPoint([data.timestamp, data.latest_power])
-          if data.timestamp > chart_data_min_x +  60 *60 *1000 && data.timestamp < chart_data_min_x +  60 *60 *1011
-            # TODO: if 1 hour is over toggle to next hour, but only if displayed
-            # macht getExtremes oder?
-            chart_data_min_x = data.timestamp
-            # console.log("aktualisiere Chart " + data.timestamp + " power " + data.latest_power)
-            chart.xAxis[0].update(Chart.Functions.getExtremes(data.timestamp), true)
-            Chart.Functions.setChartTitle(data.timestamp)
-            Chart.Functions.setChartData('metering_points', metering_point_id, data.timestamp)
-          if window.wisActive && window.wwasInactive # eigentlich nur, wenn neu aktiv oder wenn delta t zu groß
-            window.wwasInactive = false
-            Chart.Functions.setChartData('metering_points', metering_point_id, data.timestamp)
-            # console.log("neuer Chart " + data.timestamp + " power " + data.latest_power)
+      metering_point.find(".power-ticker").html(data.latest_power)
+      if data.timestamp <= Date.now() - 60*1000
+        metering_point.find(".power-ticker").css({opacity: 0.3})
       else
-        metering_point.find(".power-ticker").html('offline')
+        metering_point.find(".power-ticker").css({opacity: 1})
+      metering_point.find(".power-ticker").data('content', moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss"))
+      metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
+      metering_point.find(".power-ticker").data('bs.popover').options.content = moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss")
+      if $(".metering_point_detail").length != 0 && chart != undefined && actual_resolution == 'hour_to_minutes'
+        if chart_data_min_x > data.timestamp - 60*60*1000
+          chart.series[0].addPoint([data.timestamp, data.latest_power])
+        if data.timestamp > chart_data_min_x +  60 *60 *1000 && data.timestamp < chart_data_min_x +  60 *60 *1011
+          # TODO: if 1 hour is over toggle to next hour, but only if displayed
+          # macht getExtremes oder?
+          chart_data_min_x = data.timestamp
+          # console.log("aktualisiere Chart " + data.timestamp + " power " + data.latest_power)
+          chart.xAxis[0].update(Chart.Functions.getExtremes(data.timestamp), true)
+          Chart.Functions.setChartTitle(data.timestamp)
+          Chart.Functions.setChartData('metering_points', metering_point_id, data.timestamp)
+        if window.wisActive && window.wwasInactive # eigentlich nur, wenn neu aktiv oder wenn delta t zu groß
+          window.wwasInactive = false
+          Chart.Functions.setChartData('metering_points', metering_point_id, data.timestamp)
+          # console.log("neuer Chart " + data.timestamp + " power " + data.latest_power)
+
       if actual_resolution == 'day_to_minutes'
         window.wwasInactive = false
     .error (jqXHR, textStatus, errorThrown) ->
@@ -1387,7 +1362,3 @@ clearTimers = ->
   timers = []
 
 $(document).on('page:before-change', clearTimers)
-
-
-
-
