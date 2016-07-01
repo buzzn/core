@@ -204,41 +204,6 @@ module API
         end
 
 
-        desc 'Add user to group members'
-        params do
-          requires :user_id, type: String, desc: 'User id'
-        end
-        post ':id/members' do
-          doorkeeper_authorize! :public
-          group           = Group.find(params[:id])
-          user            = User.find(params[:user_id])
-          if (current_user.has_role?(:manager, group) ||
-              !!group.members.index { |m| m.id == current_user.id } ||
-              current_user.has_role?(:admin))
-
-            MeteringPoint.by_group(group).each { |metering_point| user.add_role(:member, metering_point) }
-          else
-            status 403
-          end
-        end
-
-
-        desc 'Remove user from group members'
-        delete ':id/members/:user_id' do
-          doorkeeper_authorize! :public
-          group           = Group.find(params[:id])
-          user            = User.find(params[:user_id])
-          if (current_user.id == user.id ||
-              current_user.has_role?(:admin) ||
-              current_user.has_role?(:manager, group))
-
-            MeteringPoint.by_group(group).each { |metering_point| user.remove_role(:member, metering_point) }
-          else
-            status 403
-          end
-        end
-
-
         desc "Return the related energy-producers for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
