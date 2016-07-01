@@ -3,8 +3,8 @@ class MeteringPointResource < ApplicationResource
   attributes  :uid,
               :name,
               :mode,
-              :readable,
-              :meter_id
+              :meter_id,
+              :readable, :updateable, :deletable
 
   has_many :devices
   has_many :users
