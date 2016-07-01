@@ -16,7 +16,7 @@ Fabricator :group_readable_by_members, from: :group do
   readable    'members'
 end
 
-Fabricator :world_group_with_members, from: :group do
+Fabricator :group_with_members_readable_by_world, from: :group do
   transient members: 1
   metering_points do |attrs|
     metering_point  = Fabricate(:metering_point_readable_by_world)

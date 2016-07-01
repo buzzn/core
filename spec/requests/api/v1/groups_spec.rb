@@ -249,7 +249,7 @@ describe "Groups API" do
 
   it 'gets the related members for Group only with token' do
     access_token  = Fabricate(:access_token)
-    group         = Fabricate(:world_group_with_members)
+    group         = Fabricate(:group_with_members_readable_by_world)
 
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)

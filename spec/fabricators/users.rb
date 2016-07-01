@@ -9,10 +9,6 @@ Fabricator :user do
   }
 end
 
-Fabricator :user_with_world_readable_profile, from: :user do
-  profile { Fabricate(:world_readable_profile) }
-end
-
 Fabricator :admin, from: :user do
   after_create { |user | user.add_role(:admin) }
 end
