@@ -96,18 +96,6 @@ describe 'Comments API' do
     expect(response).to have_http_status(403)
   end
 
-  it 'updates a comment with admin token' do
-    admin_token     = Fabricate(:admin_access_token)
-    group           = Fabricate(:world_group_with_two_comments)
-    comments        = group.comment_threads
-    child_comment   = comments.find{|c| !c.parent_id.nil?}
-    params = { body: FFaker::Lorem.paragraphs.join('-') }
-
-    put_with_token "/api/v1/comments/#{child_comment.id}", params.to_json, admin_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data']['attributes']['body']).to eq(params[:body])
-  end
-
   it 'does not update comment with wrong arguments' do
     admin_token     = Fabricate(:admin_access_token)
     group           = Fabricate(:world_group_with_two_comments)
@@ -141,8 +129,9 @@ describe 'Comments API' do
     expect(response).to have_http_status(200)
   end
 
-  it 'allows resource manager to update any resource comment' do
+  it 'does not allow resource manager or admin to update any resource comment' do
     access_token  = Fabricate(:access_token)
+    admin_token   = Fabricate(:admin_access_token)
     user          = User.find(access_token.resource_owner_id)
     group         = Fabricate(:world_group_with_two_comments)
     comment       = group.comment_threads.first
@@ -150,7 +139,9 @@ describe 'Comments API' do
 
     request_params = { body: 'xxxx' }
     put_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, access_token.token
-    expect(response).to have_http_status(200)
+    expect(response).to have_http_status(403)
+    put_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, admin_token.token
+    expect(response).to have_http_status(403)
   end
 
   it 'removes a child comment with admin token' do
@@ -167,18 +158,14 @@ describe 'Comments API' do
     expect(json['data'].size).to eq(1)
   end
 
-  it 'removes a root comment with admin token' do
+  it 'does not remove a root comment even with admin token' do
     admin_token     = Fabricate(:admin_access_token)
     group           = Fabricate(:world_group_with_two_comments)
     comments        = group.comment_threads
     root_comment    = comments.find{|c| c.parent_id.nil?}
 
-    get_with_token "/api/v1/groups/#{group.id}/comments", admin_token.token
-    expect(json['data'].size).to eq(2)
     delete_with_token "/api/v1/comments/#{root_comment.id}", admin_token.token
-    expect(response).to have_http_status(200)
-    get_with_token "/api/v1/groups/#{group.id}/comments", admin_token.token
-    expect(json['data'].size).to eq(0)
+    expect(response).to have_http_status(403)
   end
 
   it 'allows only remove own comment' do
@@ -199,14 +186,18 @@ describe 'Comments API' do
     expect(response).to have_http_status(200)
   end
 
-  it 'allows resource manager to delete any resource comment' do
+  it 'allows resource manager to delete resource comment-child' do
     access_token  = Fabricate(:access_token)
     user          = User.find(access_token.resource_owner_id)
     group         = Fabricate(:world_group_with_two_comments)
-    comment       = group.comment_threads.first
+    comments      = group.comment_threads
+    root_comment  = comments.find{|c| c.parent_id.nil?}
+    child_comment = comments.find{|c| !c.parent_id.nil?}
     user.add_role(:manager, group)
 
-    delete_with_token "/api/v1/comments/#{comment.id}", access_token.token
+    delete_with_token "/api/v1/comments/#{root_comment.id}", access_token.token
+    expect(response).to have_http_status(403)
+    delete_with_token "/api/v1/comments/#{child_comment.id}", access_token.token
     expect(response).to have_http_status(200)
   end
 

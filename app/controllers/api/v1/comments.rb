@@ -53,7 +53,7 @@ module API
         end
         delete ':id' do
           comment = Comment.find(permitted_params[:id])
-          if comment.deletable_by?(current_user)
+          if comment.deletable_by?(current_user) && !comment.has_children?
             comment.destroy
           else
             status 403
