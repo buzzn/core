@@ -13,4 +13,5 @@
     - if @groups.empty?
       = t('no_groups_found_matching', search: params[:search])
     - else
-      = render @groups
+      - @groups.each do |group|
+        .col-xs-12.col-sm-6.col-md-6.col-lg-3= render group.decorate
