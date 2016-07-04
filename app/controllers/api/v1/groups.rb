@@ -160,6 +160,50 @@ module API
         end
 
 
+        desc 'Add user to group managers'
+        params do
+          requires :user_id, type: String, desc: 'User id'
+        end
+        post ':id/managers' do
+          doorkeeper_authorize! :public
+          group           = Group.find(params[:id])
+          user            = User.find(params[:user_id])
+          if current_user.has_role?(:manager, group) || current_user.has_role?(:admin)
+            user.add_role(:manager, group)
+          else
+            status 403
+          end
+        end
+
+
+        desc 'Remove user from group managers'
+        delete ':id/managers/:user_id' do
+          doorkeeper_authorize! :public
+          group           = Group.find(params[:id])
+          user            = User.find(params[:user_id])
+          if current_user.id == user.id || current_user.has_role?(:admin)
+            user.remove_role(:manager, group)
+          else
+            status 403
+          end
+        end
+
+
+        desc "Return the related members for Group"
+        params do
+          requires :id, type: String, desc: "ID of the group"
+        end
+        get ":id/members" do
+          doorkeeper_authorize! :public
+          group = Group.where(id: permitted_params[:id]).first!
+          if group.readable_by?(current_user)
+            group.members
+          else
+            status 403
+          end
+        end
+
+
         desc "Return the related energy-producers for Group"
         params do
           requires :id, type: String, desc: "ID of the group"

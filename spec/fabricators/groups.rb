@@ -16,6 +16,18 @@ Fabricator :group_readable_by_members, from: :group do
   readable    'members'
 end
 
+Fabricator :group_with_members_readable_by_world, from: :group do
+  transient members: 1
+  metering_points do |attrs|
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    attrs[:members].times do
+      user          = Fabricate(:user)
+      user.add_role(:member, metering_point)
+    end
+    [metering_point]
+  end
+end
+
 
 Fabricator :group_hof_butenland, from: :group do
   name        'Hof Butenland'

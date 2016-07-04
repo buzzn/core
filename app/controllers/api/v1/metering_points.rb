@@ -149,6 +149,35 @@ module API
         end
 
 
+        desc 'Add user to metering point managers'
+        params do
+          requires :user_id, type: String, desc: 'User id'
+        end
+        post ':id/managers' do
+          doorkeeper_authorize! :public
+          metering_point  = MeteringPoint.find(params[:id])
+          user            = User.find(params[:user_id])
+          if current_user.has_role?(:manager, metering_point) || current_user.has_role?(:admin)
+            user.add_role(:manager, metering_point)
+          else
+            status 403
+          end
+        end
+
+
+        desc 'Remove user from metering point managers'
+        delete ':id/managers/:user_id' do
+          doorkeeper_authorize! :public
+          metering_point  = MeteringPoint.find(params[:id])
+          user            = User.find(params[:user_id])
+          if current_user.id == user.id || current_user.has_role?(:admin)
+            user.remove_role(:manager, metering_point)
+          else
+            status 403
+          end
+        end
+
+
         desc "Return address for the MeteringPoint"
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
@@ -172,6 +201,41 @@ module API
           metering_point  = MeteringPoint.where(id: permitted_params[:id]).first!
           metering_point.members.select do |member|
             member.profile.readable_by_world? || (current_user && member.profile.readable_by?(current_user))
+          end
+        end
+
+
+        desc 'Add user to metering point members'
+        params do
+          requires :user_id, type: String, desc: 'User id'
+        end
+        post ':id/members' do
+          doorkeeper_authorize! :public
+          metering_point  = MeteringPoint.find(params[:id])
+          user            = User.find(params[:user_id])
+          if (current_user.has_role?(:manager, metering_point) ||
+              current_user.has_role?(:member, metering_point) ||
+              current_user.has_role?(:admin))
+
+            user.add_role(:member, metering_point)
+          else
+            status 403
+          end
+        end
+
+
+        desc 'Remove user from metering point members'
+        delete ':id/members/:user_id' do
+          doorkeeper_authorize! :public
+          metering_point  = MeteringPoint.find(params[:id])
+          user            = User.find(params[:user_id])
+          if (current_user.id == user.id ||
+              current_user.has_role?(:admin) ||
+              current_user.has_role?(:manager, metering_point))
+
+            user.remove_role(:member, metering_point)
+          else
+            status 403
           end
         end
 
