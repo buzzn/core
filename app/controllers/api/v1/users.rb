@@ -122,6 +122,77 @@ module API
         end
 
 
+        desc 'Return a friend'
+        get ':id/friends/:friend_id' do
+          doorkeeper_authorize! :public
+          user = User.find(params[:id])
+          user.friends.find(params[:friend_id])
+        end
+
+
+        desc 'Delete a friend'
+        delete ':id/friends/:friend_id' do
+          doorkeeper_authorize! :public
+          if current_user.id == params[:id]
+            user    = User.find(params[:id])
+            friend  = user.friends.find(params[:friend_id])
+            user.friends.delete(friend) if friend
+          else
+            status 403
+          end
+        end
+
+
+        desc 'List of received friendship requests'
+        get ':id/friendship-requests' do
+          doorkeeper_authorize! :public
+          if current_user.id == params[:id]
+            User.find(params[:id]).received_friendship_requests
+          else
+            status 403
+          end
+        end
+
+
+        desc 'Create friendship request'
+        params do
+          requires :receiver_id, type: String, desc: 'ID of a receiver'
+        end
+        post ':id/friendship-requests' do
+          doorkeeper_authorize! :public
+          if current_user.id == params[:id]
+            sender    = User.find(params[:id])
+            receiver  = User.find(params[:receiver_id])
+            FriendshipRequest.create(sender: sender, receiver: receiver)
+          else
+            status 403
+          end
+        end
+
+
+        desc 'Accept friendship request'
+        put ':id/friendship-requests/:request_id' do
+          doorkeeper_authorize! :public
+          if current_user.id == params[:id]
+            request = FriendshipRequest.where(receiver: params[:id]).find(params[:request_id])
+            request.accept
+          else
+            status 403
+          end
+        end
+
+
+        desc 'Reject friendship request'
+        delete ':id/friendship-requests/:request_id' do
+          doorkeeper_authorize! :public
+          if current_user.id == params[:id]
+            request = FriendshipRequest.where(receiver: params[:id]).find(params[:request_id])
+            request.reject
+          else
+            status 403
+          end
+        end
+
 
         desc "Return the related devices for User"
         params do

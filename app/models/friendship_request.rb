@@ -5,7 +5,7 @@ class FriendshipRequest < ActiveRecord::Base
   belongs_to :sender, class_name: 'User'
   belongs_to :receiver, class_name: 'User'
 
-  after_save :created_friendship, :unless => :skip_callbacks
+  after_save :created_friendship #, :unless => :skip_callbacks
 
   cattr_accessor :skip_callbacks
 

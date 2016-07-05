@@ -19,6 +19,13 @@ Fabricator :user_with_metering_point, from: :user do
   }
 end
 
+Fabricator :user_received_friendship_request, from: :user do
+  after_create do |user|
+    user2 = Fabricate(:user)
+    Fabricate(:friendship_request, { sender: user2, receiver: user })
+  end
+end
+
 Fabricator :user_with_friend, from: :user do
   after_create { |user |
     friend = Fabricate(:user)

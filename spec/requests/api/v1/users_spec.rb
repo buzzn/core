@@ -173,6 +173,76 @@ describe "Users API" do
     expect(json['meta']['total_pages']).to eq(2)
   end
 
+  it 'gets specific friend for user' do
+    access_token  = Fabricate(:access_token)
+    user          = User.find(access_token.resource_owner_id)
+    friend        = Fabricate(:user)
+    user.friends << friend
+
+    get_with_token "/api/v1/users/#{user.id}/friends/#{friend.id}", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq(friend.id)
+  end
+
+  it 'deletes specific friend for user' do
+    access_token  = Fabricate(:access_token)
+    user          = User.find(access_token.resource_owner_id)
+    friend        = Fabricate(:user)
+    user.friends << friend
+
+    delete_with_token "/api/v1/users/#{user.id}/friends/#{friend.id}", access_token.token
+    expect(response).to have_http_status(200)
+    get_with_token "/api/v1/users/#{user.id}/friends/#{friend.id}", access_token.token
+    expect(response).to have_http_status(404)
+  end
+
+
+  it 'lists received friendship requests' do
+    access_token  = Fabricate(:access_token_received_friendship_request)
+    user          = User.find(access_token.resource_owner_id)
+
+    get_with_token "/api/v1/users/#{user.id}/friendship-requests", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
+  end
+
+  it 'creates a new friendship request' do
+    access_token  = Fabricate(:access_token)
+    user          = User.find(access_token.resource_owner_id)
+    target_user   = Fabricate(:user)
+    params = {
+      receiver_id: target_user.id
+    }
+
+    post_with_token "/api/v1/users/#{user.id}/friendship-requests", params.to_json, access_token.token
+    expect(response).to have_http_status(201)
+  end
+
+  it 'accepts friendship request' do
+    access_token  = Fabricate(:access_token_received_friendship_request)
+    user          = User.find(access_token.resource_owner_id)
+    request       = user.received_friendship_requests.first
+
+    put_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", {}, access_token.token
+    expect(response).to have_http_status(200)
+    modified_user = User.find(access_token.resource_owner_id)
+    expect(modified_user.friends.size).to eq(1)
+    expect(modified_user.received_friendship_requests.size).to eq(0)
+  end
+
+
+  it 'rejects friendship request' do
+    access_token  = Fabricate(:access_token_received_friendship_request)
+    user          = User.find(access_token.resource_owner_id)
+    request       = user.received_friendship_requests.first
+
+    delete_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", access_token.token
+    expect(response).to have_http_status(200)
+    modified_user = User.find(access_token.resource_owner_id)
+    expect(modified_user.friends.size).to eq(0)
+    expect(modified_user.received_friendship_requests.size).to eq(0)
+  end
+
 
   it 'gets related devices for user' do
     access_token  = Fabricate(:access_token)
