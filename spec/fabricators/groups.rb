@@ -16,6 +16,19 @@ Fabricator :group_readable_by_members, from: :group do
   readable    'members'
 end
 
+Fabricator :group_with_two_comments_readable_by_world, from: :group do
+  after_create { |group|
+    comment_params  = {
+       commentable_id:     group.id,
+       commentable_type:   'Group',
+       parent_id:          '',
+     }
+    comment         = Fabricate(:comment, comment_params)
+    comment_params[:parent_id] = comment.id
+    comment2        = Fabricate(:comment, comment_params)
+  }
+end
+
 Fabricator :group_with_members_readable_by_world, from: :group do
   transient members: 1
   metering_points do |attrs|

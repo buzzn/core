@@ -339,24 +339,17 @@ describe "Groups API" do
   end
 
   it 'gets the related comments for the group only with token' do
-    access_token    = Fabricate(:access_token).token
-    group           = Fabricate(:group)
-    user            = Fabricate(:user)
-    comment_params  = {
-      commentable_id:     group.id,
-      commentable_type:   'Group',
-      user_id:            user.id,
-      parent_id:          '',
-    }
-    comment         = Fabricate(:comment, comment_params)
-    comment_params[:parent_id] = comment.id
-    comment2        = Fabricate(:comment, comment_params)
+    access_token    = Fabricate(:access_token)
+    group           = Fabricate(:group_with_two_comments_readable_by_world)
+    comments        = group.comment_threads
+
     get_without_token "/api/v1/groups/#{group.id}/comments"
     expect(response).to have_http_status(401)
-    get_with_token "/api/v1/groups/#{group.id}/comments", access_token
+    get_with_token "/api/v1/groups/#{group.id}/comments", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['data'].last['attributes']['body']).to eq(comment.body)
-    expect(json['data'].first['attributes']['body']).to eq(comment2.body)
+    comments.each do |comment|
+      expect(json['data'].find{ |c| c['id'] == comment.id }['attributes']['body']).to eq(comment.body)
+    end
   end
 
   it 'paginate comments' do
