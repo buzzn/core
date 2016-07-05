@@ -40,20 +40,20 @@ describe "Metering Points API" do
 
   it 'get community-readable metering point with community token' do
     metering_point_id = Fabricate(:metering_point_readable_by_community).id
-    access_token      = Fabricate(:access_token).token
+    access_token      = Fabricate(:access_token)
 
-    get_with_token "/api/v1/metering-points/#{metering_point_id}", access_token
+    get_with_token "/api/v1/metering-points/#{metering_point_id}", access_token.token
     expect(response).to have_http_status(200)
   end
 
   it 'does not get friends or members readable metering point with community token' do
     metering_point_id1  = Fabricate(:metering_point_readable_by_friends).id
     metering_point_id2  = Fabricate(:metering_point_readable_by_members).id
-    access_token        = Fabricate(:access_token).token
+    access_token        = Fabricate(:access_token)
 
-    get_with_token "/api/v1/metering-points/#{metering_point_id1}", access_token
+    get_with_token "/api/v1/metering-points/#{metering_point_id1}", access_token.token
     expect(response).to have_http_status(403)
-    get_with_token "/api/v1/metering-points/#{metering_point_id2}", access_token
+    get_with_token "/api/v1/metering-points/#{metering_point_id2}", access_token.token
     expect(response).to have_http_status(403)
   end
 
@@ -266,28 +266,22 @@ describe "Metering Points API" do
 
 
   it 'gets the related comments for the metering point only with token' do
-    access_token    = Fabricate(:access_token).token
-    metering_point  = Fabricate(:metering_point_readable_by_world)
+    access_token    = Fabricate(:access_token)
+    metering_point  = Fabricate(:world_metering_point_with_two_comments)
     user            = Fabricate(:user)
-    comment_params  = {
-      commentable_id:     metering_point.id,
-      commentable_type:   'MeteringPoint',
-      user_id:            user.id,
-      parent_id:          '',
-    }
-    comment         = Fabricate(:comment, comment_params)
-    comment_params[:parent_id] = comment.id
-    comment2        = Fabricate(:comment, comment_params)
+    comments        = metering_point.comment_threads
+
     get_without_token "/api/v1/metering-points/#{metering_point.id}/comments"
     expect(response).to have_http_status(401)
-    get_with_token "/api/v1/metering-points/#{metering_point.id}/comments", access_token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/comments", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['data'].last['attributes']['body']).to eq(comment.body)
-    expect(json['data'].first['attributes']['body']).to eq(comment2.body)
+    comments.each do |comment|
+      expect(json['data'].find{ |c| c['id'] == comment.id }['attributes']['body']).to eq(comment.body)
+    end
   end
 
   it 'paginate comments' do
-    access_token    = Fabricate(:access_token).token
+    access_token    = Fabricate(:access_token)
     metering_point  = Fabricate(:metering_point_readable_by_world)
     user            = Fabricate(:user)
     comment_params  = {
@@ -301,43 +295,180 @@ describe "Metering Points API" do
       comment_params[:parent_id] = comment.id
       comment = Fabricate(:comment, comment_params)
     end
-    get_with_token "/api/v1/metering-points/#{metering_point.id}/comments", access_token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/comments", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
   end
 
 
   it 'gets the related managers for the metering point only with token' do
-    access_token    = Fabricate(:access_token).token
+    access_token    = Fabricate(:access_token)
     metering_point  = Fabricate(:metering_point_with_manager, readable: 'world')
     manager         = metering_point.managers.first
     get_without_token "/api/v1/metering-points/#{metering_point.id}/managers"
     expect(response).to have_http_status(401)
-    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token.token
     expect(json['data'].first['id']).to eq(manager.id)
     expect(response).to have_http_status(200)
   end
 
   it 'paginate managers' do
-    access_token    = Fabricate(:access_token).token
+    access_token    = Fabricate(:access_token)
     metering_point  = Fabricate(:metering_point_readable_by_world)
     @page_overload.times do
       user = Fabricate(:user)
       user.add_role(:manager, metering_point)
     end
-    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
   end
 
+  it 'does not add/delete metering point manager or member without token' do
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    user            = Fabricate(:user)
+    params = {
+      user_id: user.id
+    }
+
+    post_without_token "/api/v1/metering-points/#{metering_point.id}/managers", params.to_json
+    expect(response).to have_http_status(401)
+    delete_without_token "/api/v1/metering-points/#{metering_point.id}/managers/#{user.id}"
+    expect(response).to have_http_status(401)
+    post_without_token "/api/v1/metering-points/#{metering_point.id}/members", params.to_json
+    expect(response).to have_http_status(401)
+    delete_without_token "/api/v1/metering-points/#{metering_point.id}/members/#{user.id}"
+    expect(response).to have_http_status(401)
+  end
+
+  it 'adds metering point manager only with manager or admin token' do
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    user1           = Fabricate(:user)
+    user2           = Fabricate(:user)
+    admin_token     = Fabricate(:admin_access_token)
+    manager_token   = Fabricate(:access_token)
+    manager         = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, metering_point)
+    member_token    = Fabricate(:access_token)
+    member          = User.find(member_token.resource_owner_id)
+    member.add_role(:member, metering_point)
+    params = {
+      user_id: user1.id
+    }
+
+    post_with_token "/api/v1/metering-points/#{metering_point.id}/managers", params.to_json, member_token.token
+    expect(response).to have_http_status(403)
+    post_with_token "/api/v1/metering-points/#{metering_point.id}/managers", params.to_json, manager_token.token
+    expect(response).to have_http_status(201)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", admin_token.token
+    expect(json['data'].size).to eq(2)
+    params[:user_id] = user2.id
+    post_with_token "/api/v1/metering-points/#{metering_point.id}/managers", params.to_json, admin_token.token
+    expect(response).to have_http_status(201)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", admin_token.token
+    expect(json['data'].size).to eq(3)
+  end
+
+  it 'removes metering point manager only for current user or with admin token' do
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    user            = Fabricate(:user)
+    user.add_role(:manager, metering_point)
+    admin_token     = Fabricate(:admin_access_token)
+    manager_token   = Fabricate(:access_token)
+    manager         = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, metering_point)
+    member_token    = Fabricate(:access_token)
+    member          = User.find(member_token.resource_owner_id)
+    member.add_role(:member, metering_point)
+
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", admin_token.token
+    expect(json['data'].size).to eq(2)
+    delete_with_token "/api/v1/metering-points/#{metering_point.id}/managers/#{user.id}", member_token.token
+    expect(response).to have_http_status(403)
+    delete_with_token "/api/v1/metering-points/#{metering_point.id}/managers/#{user.id}", manager_token.token
+    expect(response).to have_http_status(403)
+    delete_with_token "/api/v1/metering-points/#{metering_point.id}/managers/#{user.id}", admin_token.token
+    expect(response).to have_http_status(200)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", admin_token.token
+    expect(json['data'].size).to eq(1)
+    delete_with_token "/api/v1/metering-points/#{metering_point.id}/managers/#{manager.id}", manager_token.token
+    expect(response).to have_http_status(200)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", admin_token.token
+    expect(json['data'].size).to eq(0)
+  end
+
+  it 'adds metering point member with member, manager or admin token' do
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    user1           = Fabricate(:user)
+    user2           = Fabricate(:user)
+    user3           = Fabricate(:user)
+    admin_token     = Fabricate(:admin_access_token)
+    manager_token   = Fabricate(:access_token)
+    manager         = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, metering_point)
+    member_token    = Fabricate(:access_token)
+    member          = User.find(member_token.resource_owner_id)
+    member.add_role(:member, metering_point)
+    params = {
+      user_id: user1.id
+    }
+
+    post_with_token "/api/v1/metering-points/#{metering_point.id}/members", params.to_json, member_token.token
+    expect(response).to have_http_status(201)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    expect(json['data'].size).to eq(2)
+    params[:user_id] = user2.id
+    post_with_token "/api/v1/metering-points/#{metering_point.id}/members", params.to_json, manager_token.token
+    expect(response).to have_http_status(201)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    expect(json['data'].size).to eq(3)
+    params[:user_id] = user3.id
+    post_with_token "/api/v1/metering-points/#{metering_point.id}/members", params.to_json, admin_token.token
+    expect(response).to have_http_status(201)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    expect(json['data'].size).to eq(4)
+  end
+
+  it 'removes metering point member only for current user, manager or with admin token' do
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    user1           = Fabricate(:user)
+    user1.add_role(:member, metering_point)
+    user2           = Fabricate(:user)
+    user2.add_role(:member, metering_point)
+    admin_token     = Fabricate(:admin_access_token)
+    manager_token   = Fabricate(:access_token)
+    manager         = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, metering_point)
+    member_token    = Fabricate(:access_token)
+    member          = User.find(member_token.resource_owner_id)
+    member.add_role(:member, metering_point)
+
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    expect(json['data'].size).to eq(3)
+    delete_with_token "/api/v1/metering-points/#{metering_point.id}/members/#{user1.id}", member_token.token
+    expect(response).to have_http_status(403)
+    delete_with_token "/api/v1/metering-points/#{metering_point.id}/members/#{member.id}", member_token.token
+    expect(response).to have_http_status(200)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    expect(json['data'].size).to eq(2)
+    delete_with_token "/api/v1/metering-points/#{metering_point.id}/members/#{user1.id}", manager_token.token
+    expect(response).to have_http_status(200)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    expect(json['data'].size).to eq(1)
+    delete_with_token "/api/v1/metering-points/#{metering_point.id}/members/#{user2.id}", admin_token.token
+    expect(response).to have_http_status(200)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
+    expect(json['data'].size).to eq(0)
+  end
+
 
   it 'gets address of the metering point only with token' do
-    access_token    = Fabricate(:access_token).token
+    access_token    = Fabricate(:access_token)
     metering_point  = Fabricate(:mp_urbanstr88, readable: 'world')
     address         = metering_point.address
     get_without_token "/api/v1/metering-points/#{metering_point.id}/address"
     expect(response).to have_http_status(401)
-    get_with_token "/api/v1/metering-points/#{metering_point.id}/address", access_token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/address", access_token.token
     expect(json['data']['id']).to eq(address.id)
     expect(response).to have_http_status(200)
   end

@@ -257,6 +257,89 @@ describe "Groups API" do
     expect(json['meta']['total_pages']).to eq(2)
   end
 
+  it 'gets the related members for Group only with token' do
+    access_token  = Fabricate(:access_token)
+    group         = Fabricate(:group_with_members_readable_by_world)
+
+    get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
+    expect(response).to have_http_status(200)
+    get_without_token "/api/v1/groups/#{group.id}/members"
+    expect(response).to have_http_status(401)
+  end
+
+  it 'does not add/delete group manager without token' do
+    group  = Fabricate(:group)
+    user   = Fabricate(:user)
+    params = {
+      user_id: user.id
+    }
+
+    post_without_token "/api/v1/groups/#{group.id}/managers", params.to_json
+    expect(response).to have_http_status(401)
+    delete_without_token "/api/v1/groups/#{group.id}/managers/#{user.id}"
+    expect(response).to have_http_status(401)
+  end
+
+  it 'adds group manager only with manager or admin token' do
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    group           = Fabricate(:group)
+    user1           = Fabricate(:user)
+    user2           = Fabricate(:user)
+    admin_token     = Fabricate(:admin_access_token)
+    manager_token   = Fabricate(:access_token)
+    manager         = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, group)
+    member_token    = Fabricate(:access_token)
+    member          = User.find(member_token.resource_owner_id)
+    member.add_role(:member, metering_point)
+    group.metering_points << metering_point
+    params = {
+      user_id: user1.id
+    }
+
+    post_with_token "/api/v1/groups/#{group.id}/managers", params.to_json, member_token.token
+    expect(response).to have_http_status(403)
+    post_with_token "/api/v1/groups/#{group.id}/managers", params.to_json, manager_token.token
+    expect(response).to have_http_status(201)
+    get_with_token "/api/v1/groups/#{group.id}/managers", admin_token.token
+    expect(json['data'].size).to eq(2)
+    params[:user_id] = user2.id
+    post_with_token "/api/v1/groups/#{group.id}/managers", params.to_json, admin_token.token
+    expect(response).to have_http_status(201)
+    get_with_token "/api/v1/groups/#{group.id}/managers", admin_token.token
+    expect(json['data'].size).to eq(3)
+  end
+
+  it 'removes group manager only for current user or with admin token' do
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    group           = Fabricate(:group)
+    user            = Fabricate(:user)
+    user.add_role(:manager, group)
+    admin_token     = Fabricate(:admin_access_token)
+    manager_token   = Fabricate(:access_token)
+    manager         = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, group)
+    member_token    = Fabricate(:access_token)
+    member          = User.find(member_token.resource_owner_id)
+    member.add_role(:member, metering_point)
+    group.metering_points << metering_point
+
+    get_with_token "/api/v1/groups/#{group.id}/managers", admin_token.token
+    expect(json['data'].size).to eq(2)
+    delete_with_token "/api/v1/groups/#{group.id}/managers/#{user.id}", member_token.token
+    expect(response).to have_http_status(403)
+    delete_with_token "/api/v1/groups/#{group.id}/managers/#{user.id}", manager_token.token
+    expect(response).to have_http_status(403)
+    delete_with_token "/api/v1/groups/#{group.id}/managers/#{user.id}", admin_token.token
+    expect(response).to have_http_status(200)
+    get_with_token "/api/v1/groups/#{group.id}/managers", admin_token.token
+    expect(json['data'].size).to eq(1)
+    delete_with_token "/api/v1/groups/#{group.id}/managers/#{manager.id}", manager_token.token
+    expect(response).to have_http_status(200)
+    get_with_token "/api/v1/groups/#{group.id}/managers", admin_token.token
+    expect(json['data'].size).to eq(0)
+  end
+
   it 'gets the related energy-producers for Group' do
     access_token  = Fabricate(:access_token)
     group         = Fabricate(:group)
@@ -266,24 +349,17 @@ describe "Groups API" do
   end
 
   it 'gets the related comments for the group only with token' do
-    access_token    = Fabricate(:access_token).token
-    group           = Fabricate(:group)
-    user            = Fabricate(:user)
-    comment_params  = {
-      commentable_id:     group.id,
-      commentable_type:   'Group',
-      user_id:            user.id,
-      parent_id:          '',
-    }
-    comment         = Fabricate(:comment, comment_params)
-    comment_params[:parent_id] = comment.id
-    comment2        = Fabricate(:comment, comment_params)
+    access_token    = Fabricate(:access_token)
+    group           = Fabricate(:group_with_two_comments_readable_by_world)
+    comments        = group.comment_threads
+
     get_without_token "/api/v1/groups/#{group.id}/comments"
     expect(response).to have_http_status(401)
-    get_with_token "/api/v1/groups/#{group.id}/comments", access_token
+    get_with_token "/api/v1/groups/#{group.id}/comments", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['data'].last['attributes']['body']).to eq(comment.body)
-    expect(json['data'].first['attributes']['body']).to eq(comment2.body)
+    comments.each do |comment|
+      expect(json['data'].find{ |c| c['id'] == comment.id }['attributes']['body']).to eq(comment.body)
+    end
   end
 
   it 'paginate comments' do
