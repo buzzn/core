@@ -8,8 +8,8 @@ describe "Profiles API" do
   it 'does not get all profiles with regular token or without token' do
     Fabricate(:profile)
     Fabricate(:profile)
-    access_token = Fabricate(:access_token).token
-    get_with_token '/api/v1/profiles', {}, access_token
+    access_token = Fabricate(:access_token)
+    get_with_token '/api/v1/profiles', {}, access_token.token
     expect(response).to have_http_status(403)
     get_without_token '/api/v1/profiles'
     expect(response).to have_http_status(401)
@@ -18,17 +18,27 @@ describe "Profiles API" do
   it 'get all profiles with admin token' do
     Fabricate(:profile)
     Fabricate(:profile)
-    access_token = Fabricate(:admin_access_token).token
-    get_with_token '/api/v1/profiles', {}, access_token
+    access_token = Fabricate(:admin_access_token)
+    get_with_token '/api/v1/profiles', {}, access_token.token
     expect(response).to have_http_status(200)
+  end
+
+  it 'contains CRUD info' do
+    Fabricate(:profile)
+    access_token = Fabricate(:admin_access_token)
+
+    get_with_token '/api/v1/profiles', access_token.token
+    ['readable', 'updateable', 'deletable'].each do |attr|
+      expect(json['data'].first['attributes']).to include(attr)
+    end
   end
 
   it 'paginate profiles with admin token' do
     @page_overload.times do
       Fabricate(:profile)
     end
-    access_token = Fabricate(:admin_access_token).token
-    get_with_token '/api/v1/profiles', {}, access_token
+    access_token = Fabricate(:admin_access_token)
+    get_with_token '/api/v1/profiles', {}, access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
   end

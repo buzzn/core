@@ -6,12 +6,22 @@ describe "Metering Points API" do
 
   it 'get world-readable metering point with or without token' do
     access_token      = Fabricate(:access_token)
-    metering_point_id = Fabricate(:metering_point_readable_by_world).id
+    metering_point    = Fabricate(:metering_point_readable_by_world)
 
-    get_without_token "/api/v1/metering-points/#{metering_point_id}"
+    get_without_token "/api/v1/metering-points/#{metering_point.id}"
     expect(response).to have_http_status(200)
-    get_with_token "/api/v1/metering-points/#{metering_point_id}", access_token.token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
     expect(response).to have_http_status(200)
+  end
+
+  it 'contains CRUD info' do
+    metering_point  = Fabricate(:metering_point)
+    access_token    = Fabricate(:admin_access_token)
+
+    get_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
+    ['readable', 'updateable', 'deletable'].each do |attr|
+      expect(json['data']['attributes']).to include(attr)
+    end
   end
 
 

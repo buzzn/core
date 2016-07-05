@@ -9,7 +9,8 @@ class ContractResource < ApplicationResource
               :power_of_attorney,
               :confirm_pricing_model,
               :commissioning,
-              :mode
+              :mode,
+              :updateable, :deletable
 
   has_one :address
   has_one :bank_account
