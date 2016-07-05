@@ -477,128 +477,239 @@ $(".dashboard-chart").ready ->
 
 
 
-
 #code for group
 $(".group-chart").ready ->
   chart = undefined
   group_id = $(this).attr('id')
+  in_ids = $(this).attr('metering_point_ids-in').split(",")
+  out_ids = $(this).attr('metering_point_ids-out').split(",")
   width = $("#chart-container-" + group_id).width()
-  url = '/groups/' + group_id + '/chart?resolution=day_to_minutes'
-  $.ajax({url: url, async: true, dataType: 'json'})
-    .success (data) ->
+  i = 0
+  out_data = []
+  in_data = []
+  ajax_calls = []
+  aggregators = []
+  in_ids.forEach (id) ->
+    aggregator = new Aggregator(id)
+    ajax_calls.push(aggregator.past(new Date(), 'day_to_minutes'))
+    aggregators.push(aggregator)
+  $.when.apply($, ajax_calls).done ->
+    aggregators.forEach (aggregator) ->
+      in_data.push(aggregator.returned_ajax_data)
+    in_data = aggregators[0].sumData(in_data)
 
-      if data[0].data[0] == undefined
-        data[0].data[0] = [new Date(), 0] #TODO: Search for last data
 
-      if chart == undefined
-        chart = new Highcharts.Chart(
-          chart:
-            type: 'areaspline'
-            renderTo: 'chart-container-' + group_id
-            backgroundColor:'rgba(255, 255, 255, 0.0)'
-            width: width
-            spacingBottom: 20
-            spacingTop: 10
-            spacingLeft: 20
-            spacingRight: 20
-          colors: ['#5FA2DD', '#F76C51']
-          exporting:
+    chart = new Highcharts.Chart(
+      chart:
+        type: 'areaspline'
+        renderTo: 'chart-container-' + group_id
+        backgroundColor:'rgba(255, 255, 255, 0.0)'
+        width: width
+        spacingBottom: 20
+        spacingTop: 10
+        spacingLeft: 20
+        spacingRight: 20
+        animation: false
+      colors: ['#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
+      exporting:
+        enabled: false
+      legend:
+        enabled: true
+      title:
+        margin: 0
+        text: "Heute, " + moment(in_data[0][0]).format("DD.MM.YYYY")
+        style: { "color": "#000"}
+      credits:
+        enabled: false
+      loading:
+        hideDuration: 800
+        showDuration: 800
+        labelStyle:
+          color: 'black'
+          'font-size': '20pt'
+      xAxis:
+        lineWidth: 1
+        tickWidth: 1
+        type: 'datetime'
+        startOnTick: false
+        endOnTick: false
+        min: Chart.Functions.beginningOfDay(in_data[0][0])
+        max: Chart.Functions.endOfDay(in_data[0][0])
+        labels:
+          enabled: true
+          style:
+            color: '#000'
+        title:
+          enabled: false
+          style: { "color": "#000", "fontWeight": "bold"}
+      yAxis:
+        gridLineWidth: 0
+        min: 0
+        labels:
+          enabled: true
+        title:
+          margin: 0
+          text: ""
+        credits:
+          enabled: false
+      plotOptions:
+        series:
+          fillOpacity: 0.5
+          turboThreshold: 0
+        areaspline:
+          borderWidth: 0
+          cursor: 'pointer'
+          events:
+            click: (event) ->
+              Chart.Functions.zoomInGroup(event.point.x)
+          marker:
             enabled: false
-          legend:
-            enabled: true
-          title:
-            margin: 0
-            text: "Heute, " + moment(data[0].data[0][0]).format("DD.MM.YYYY")
-            style: { "color": "#000"}
-          credits:
-            enabled: false
-          loading:
-            hideDuration: 800
-            showDuration: 800
-            labelStyle:
-              color: 'black'
-              'font-size': '20pt'
-            style:
-              backgroundColor: 'grey'
-              opacity: '0.4'
-          xAxis:
-            lineWidth: 1
-            tickWidth: 1
-            type: 'datetime'
-            startOnTick: false
-            endOnTick: false
-            min: Chart.Functions.beginningOfDay(data[0].data[0][0])
-            max: Chart.Functions.endOfDay(data[0].data[0][0])
-            labels:
-              enabled: true
-              style:
-                color: '#000'
-            title:
-              #text: "Zeit"
-              enabled: true
-              style: { "color": "#000", "fontWeight": "bold"}
-          yAxis:
-            gridLineWidth: 0
-            min: 0
-            labels:
-              enabled: true
-              style:
-                color: '#000'
-              format: "{value} W"
-            title:
-              enabled: true
-              text: ""
-              style: { "color": "#000", "fontWeight": "bold"}
-          plotOptions:
-            series:
-              fillOpacity: 0.5
-              turboThreshold: 0
-            areaspline:
-              cursor: 'pointer'
-              events:
-                click: (event) ->
-                  Chart.Functions.zoomInGroup(event.point.x)
-              marker:
-                enabled: false
-            column:
-              cursor: 'pointer'
-              events:
-                click: (event) ->
-                  Chart.Functions.zoomInGroup(event.point.x)
-          tooltip:
-            shared: true
-            pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
-            dateTimeLabelFormats:
-              millisecond:"%e.%b, %H:%M:%S.%L",
-              second:"%e.%b, %H:%M:%S",
-              minute:"%e.%b, %H:%M",
-              hour:"%e.%b, %H:%M",
-              day:"%e.%b.%Y",
-              week:"Week from %e.%b.%Y",
-              month:"%B %Y",
-              year:"%Y"
-          series: data
+          stacking: 'normal'
+        column:
+          borderWidth: 0
+          cursor: 'pointer'
+          events:
+            click: (event) ->
+              Chart.Functions.zoomInGroup(event.point.x)
+          stacking: 'normal'
+      tooltip:
+        pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
+        dateTimeLabelFormats:
+          millisecond:"%e.%b, %H:%M:%S.%L",
+          second:"%e.%b, %H:%M:%S",
+          minute:"%e.%b, %H:%M",
+          hour:"%e.%b, %H:%M",
+          day:"%e.%b.%Y",
+          week:"Week from %e.%b.%Y",
+          month:"%B %Y",
+          year:"%Y"
+    )
+    chart.addSeries(
+      name: 'FIRST'
+      data: in_data
+    )
+    chart_data_min_x = chart.series[0].data[0].x
+    Chart.Functions.activateButtons(true)
 
-        )
-        # chart.addSeries(
-        #   name: data[0].name
-        #   data: data[0].data
-        # )
-        # chart.addSeries(
-        #   name: data[1].name
-        #   data: data[1].data
-        # )
 
-        chart_data_min_x = chart.series[0].data[0].x
-        #checkIfPreviousDataExistsGroup()
-        #checkIfNextDataExistsGroup()
-      Chart.Functions.activateButtons(true)
-      Chart.Functions.setEnergyStatsGroup()
-      Chart.Functions.getChartComments('groups', group_id, chart_data_min_x)
-    .error (jqXHR, textStatus, errorThrown) ->
-      console.log textStatus
-      $('#chart-container-' + group_id).html('error')
-  createChartTimer([group_id], 'group')
+
+
+  # url = '/groups/' + group_id + '/chart?resolution=day_to_minutes'
+  # $.ajax({url: url, async: true, dataType: 'json'})
+  #   .success (data) ->
+
+  #     if data[0].data[0] == undefined
+  #       data[0].data[0] = [new Date(), 0] #TODO: Search for last data
+
+  #     if chart == undefined
+  #       chart = new Highcharts.Chart(
+  #         chart:
+  #           type: 'areaspline'
+  #           renderTo: 'chart-container-' + group_id
+  #           backgroundColor:'rgba(255, 255, 255, 0.0)'
+  #           width: width
+  #           spacingBottom: 20
+  #           spacingTop: 10
+  #           spacingLeft: 20
+  #           spacingRight: 20
+  #         colors: ['#5FA2DD', '#F76C51']
+  #         exporting:
+  #           enabled: false
+  #         legend:
+  #           enabled: true
+  #         title:
+  #           margin: 0
+  #           text: "Heute, " + moment(data[0].data[0][0]).format("DD.MM.YYYY")
+  #           style: { "color": "#000"}
+  #         credits:
+  #           enabled: false
+  #         loading:
+  #           hideDuration: 800
+  #           showDuration: 800
+  #           labelStyle:
+  #             color: 'black'
+  #             'font-size': '20pt'
+  #           style:
+  #             backgroundColor: 'grey'
+  #             opacity: '0.4'
+  #         xAxis:
+  #           lineWidth: 1
+  #           tickWidth: 1
+  #           type: 'datetime'
+  #           startOnTick: false
+  #           endOnTick: false
+  #           min: Chart.Functions.beginningOfDay(data[0].data[0][0])
+  #           max: Chart.Functions.endOfDay(data[0].data[0][0])
+  #           labels:
+  #             enabled: true
+  #             style:
+  #               color: '#000'
+  #           title:
+  #             #text: "Zeit"
+  #             enabled: true
+  #             style: { "color": "#000", "fontWeight": "bold"}
+  #         yAxis:
+  #           gridLineWidth: 0
+  #           min: 0
+  #           labels:
+  #             enabled: true
+  #             style:
+  #               color: '#000'
+  #             format: "{value} W"
+  #           title:
+  #             enabled: true
+  #             text: ""
+  #             style: { "color": "#000", "fontWeight": "bold"}
+  #         plotOptions:
+  #           series:
+  #             fillOpacity: 0.5
+  #             turboThreshold: 0
+  #           areaspline:
+  #             cursor: 'pointer'
+  #             events:
+  #               click: (event) ->
+  #                 Chart.Functions.zoomInGroup(event.point.x)
+  #             marker:
+  #               enabled: false
+  #           column:
+  #             cursor: 'pointer'
+  #             events:
+  #               click: (event) ->
+  #                 Chart.Functions.zoomInGroup(event.point.x)
+  #         tooltip:
+  #           shared: true
+  #           pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
+  #           dateTimeLabelFormats:
+  #             millisecond:"%e.%b, %H:%M:%S.%L",
+  #             second:"%e.%b, %H:%M:%S",
+  #             minute:"%e.%b, %H:%M",
+  #             hour:"%e.%b, %H:%M",
+  #             day:"%e.%b.%Y",
+  #             week:"Week from %e.%b.%Y",
+  #             month:"%B %Y",
+  #             year:"%Y"
+  #         series: data
+
+  #       )
+  #       # chart.addSeries(
+  #       #   name: data[0].name
+  #       #   data: data[0].data
+  #       # )
+  #       # chart.addSeries(
+  #       #   name: data[1].name
+  #       #   data: data[1].data
+  #       # )
+
+  #       chart_data_min_x = chart.series[0].data[0].x
+  #       #checkIfPreviousDataExistsGroup()
+  #       #checkIfNextDataExistsGroup()
+  #     Chart.Functions.activateButtons(true)
+  #     Chart.Functions.setEnergyStatsGroup()
+  #     Chart.Functions.getChartComments('groups', group_id, chart_data_min_x)
+  #   .error (jqXHR, textStatus, errorThrown) ->
+  #     console.log textStatus
+  #     $('#chart-container-' + group_id).html('error')
+  # createChartTimer([group_id], 'group')
 
 
 
