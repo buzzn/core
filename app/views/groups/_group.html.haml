@@ -1,12 +1,31 @@
-.col-xs-12.col-sm-12.col-md-12.col-lg-12.group{id: "group_#{group.id}" }
+.group{id: "group_#{group.id}" }
   = link_to group do
-    .panel.media.middle
-      .media-left
-        .bubble-mini-chart
-          .bubbles_container{'data-content' => group.id, id: "bubbles_container_" + group.id.to_s}
-            .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
-            #dummy
-      .media-body.pad-lft.pad-rgt
-        %p.text-2x.mar-no= group.name
-        %p.text-1x.text-thin= truncate(group.description, length: 120)
-        .readability{class: "fa fa-#{group.readable_icon}", 'data-title' => t('readable_by') + ': ' + t(group.readable)}
+    .panel.widget
+      .widget-header.bg-purple
+        - if group.image.present?
+          %img.widget-bg.img-responsive{:alt => "Image", :src => group.image.cover}
+
+      .widget-body.text-center
+        - if group.logo.present?
+          %img.widget-img.img-border-light.bg-gray-light{:src => group.logo.lg}
+        - else
+          = content_tag(:span, nil, class: 'widget-img img-border-light bg-gray-light fa fa-users fa-5x')
+
+        %h4.mar-no= group.name
+        -# %p.text-muted.mar-btm Organization
+        %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
+
+          %li.col-xs-4
+            %span.text-lg= group.members.count
+            %p.text-muted.text-uppercase
+              %small= t'members'
+
+          %li.col-xs-4
+            %span.text-lg= group.metering_points.count
+            %p.text-muted.text-uppercase
+              %small= t'metering_points'
+
+          %li.col-xs-4
+            %span.text-lg= group.get_scores('day_to_minutes', Time.now.to_i)[:autarchy]
+            %p.text-muted.text-uppercase
+              %small= t'autarchy'

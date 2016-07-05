@@ -4,7 +4,7 @@ class GroupsController < ApplicationController
 
   def index
     group_ids = Group.readable_group_ids_by_user(current_user)
-    @groups  = Group.where(id: group_ids).search(params[:search]).paginate(:page => params[:page], :per_page => 3)
+    @groups  = Group.where(id: group_ids).search(params[:search]).decorate
   end
 
 
@@ -306,7 +306,7 @@ class GroupsController < ApplicationController
 
     notification_unsubscriber_comment_create = NotificationUnsubscriber.by_user(current_user).by_resource(@group).by_key('comment.create').first
 
-    if notify_when_comment_create == "false"
+    if notify_when_comment_create == "0"
       if !notification_unsubscriber_comment_create
         NotificationUnsubscriber.create(trackable: @group, user: current_user, notification_key: 'comment.create', channel: 'email')
       end

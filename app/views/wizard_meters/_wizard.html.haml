@@ -12,14 +12,14 @@
             = f.input :meter_id, collection: current_user.editable_metering_points.collect(&:meter).uniq.compact, :label_method => lambda { |m| m.name }, include_blank: false, input_html: { class: 'select2'}, label: false, selected: current_user.editable_metering_points.collect(&:meter).uniq.compact.first
           .js-dependent-fields{data: {radio: {name: 'meter[existing_meter]', value: t("create_new_meter")}}}
             = f.input :manufacturer_product_serialnumber
-            = f.input :smartmeter, as: :radio_buttons, collection: [t('yes'), t('no')], checked: t('no')
+            = f.input :smartmeter, as: :boolean, wrapper: :vertical_boolean, input_html: { checked: 'false' }
         - else
           = f.input :manufacturer_product_serialnumber
-          = f.input :smartmeter, as: :radio_buttons, collection: [t('yes'), t('no')], checked: t('no')
+          = f.input :smartmeter, as: :boolean, wrapper: :vertical_boolean, input_html: { checked: 'false' }
       %h3=t('establish_data_connection')
       %fieldset
         = f.simple_fields_for @contract do |ff|
-          .js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: t("yes")}}}
+          .js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter_', value: 'true'}}}
             = ff.association :organization, input_html: {class: 'select2'}, label: t('smart_metering_provider')
             .js-dependent-fields{'data-select-id' => 'meter_contract_organization_id', 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
               = ff.input :username
@@ -30,5 +30,5 @@
           .js-dependent-fields{data: {radio: {name: 'meter[existing_meter]', value: t("add_existing_meter")}}}
             = t('the_metering_point_will_get_its_data_via_the_connection_established_by_the_selected_meter')
           .js-dependent-fields{data: {radio: {name: 'meter[existing_meter]', value: t("create_new_meter")}}}
-            .js-dependent-fields{data: {radio: {name: 'meter[smartmeter]', value: t("no")}}}
+            .js-dependent-fields{data: {checkbox: {id: 'meter_smartmeter', value: 'false'}}}
               = t('no_smartmeter_means_you_get_dummy_data')

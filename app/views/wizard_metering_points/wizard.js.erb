@@ -23,6 +23,15 @@ form.steps({
       form.find('.body:eq(' + newIndex + ') label.error').remove();
       form.find('.body:eq(' + newIndex + ') .error').removeClass('error');
     }
+    //validate the length of the metering_point name
+    if (newIndex == 1){
+      if (form.find('#metering_point_name').val().length > 30){
+        form.validate().showErrors({
+          "metering_point[name]": "<%= escape_javascript( t('errors.messages.too_long', count: 30))%>"
+        });
+        return false;
+      }
+    }
     //validate the uniqueness of the serialnnumber via ajax-call
     if (newIndex == 2){
       if ($(".js-dependent-fields[style='display: none;'][data-radio-name='metering_point[meter][existing_meter]']").find("#metering_point_meter_manufacturer_product_serialnumber").length == 0) {

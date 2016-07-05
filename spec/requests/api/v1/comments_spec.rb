@@ -20,7 +20,7 @@ describe 'Comments API' do
 
   it 'creates a child comment with admin token' do
     admin_token     = Fabricate(:admin_access_token)
-    group           = Fabricate(:world_group_with_two_comments)
+    group           = Fabricate(:group_with_two_comments_readable_by_world)
     comments        = group.comment_threads
     child_comment   = comments.find{|c| !c.parent_id.nil?}
     comment = {
@@ -98,7 +98,7 @@ describe 'Comments API' do
 
   it 'does not update comment with wrong arguments' do
     admin_token     = Fabricate(:admin_access_token)
-    group           = Fabricate(:world_group_with_two_comments)
+    group           = Fabricate(:group_with_two_comments_readable_by_world)
     comments        = group.comment_threads
     child_comment   = comments.find{|c| !c.parent_id.nil?}
     params = { body: FFaker::Lorem.paragraphs.join('-') }
@@ -133,7 +133,7 @@ describe 'Comments API' do
     access_token  = Fabricate(:access_token)
     admin_token   = Fabricate(:admin_access_token)
     user          = User.find(access_token.resource_owner_id)
-    group         = Fabricate(:world_group_with_two_comments)
+    group         = Fabricate(:group_with_two_comments_readable_by_world)
     comment       = group.comment_threads.first
     user.add_role(:manager, group)
 
@@ -146,7 +146,7 @@ describe 'Comments API' do
 
   it 'removes a child comment with admin token' do
     admin_token     = Fabricate(:admin_access_token)
-    group           = Fabricate(:world_group_with_two_comments)
+    group           = Fabricate(:group_with_two_comments_readable_by_world)
     comments        = group.comment_threads
     child_comment   = comments.find{|c| !c.parent_id.nil?}
 
@@ -160,7 +160,7 @@ describe 'Comments API' do
 
   it 'does not remove a root comment even with admin token' do
     admin_token     = Fabricate(:admin_access_token)
-    group           = Fabricate(:world_group_with_two_comments)
+    group           = Fabricate(:group_with_two_comments_readable_by_world)
     comments        = group.comment_threads
     root_comment    = comments.find{|c| c.parent_id.nil?}
 
@@ -189,7 +189,7 @@ describe 'Comments API' do
   it 'allows resource manager to delete resource comment-child' do
     access_token  = Fabricate(:access_token)
     user          = User.find(access_token.resource_owner_id)
-    group         = Fabricate(:world_group_with_two_comments)
+    group         = Fabricate(:group_with_two_comments_readable_by_world)
     comments      = group.comment_threads
     root_comment  = comments.find{|c| c.parent_id.nil?}
     child_comment = comments.find{|c| !c.parent_id.nil?}

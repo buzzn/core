@@ -16,7 +16,7 @@ Fabricator :group_readable_by_members, from: :group do
   readable    'members'
 end
 
-Fabricator :world_group_with_two_comments, from: :group do
+Fabricator :group_with_two_comments_readable_by_world, from: :group do
   after_create { |group|
     comment_params  = {
        commentable_id:     group.id,
@@ -27,6 +27,18 @@ Fabricator :world_group_with_two_comments, from: :group do
     comment_params[:parent_id] = comment.id
     comment2        = Fabricate(:comment, comment_params)
   }
+end
+
+Fabricator :group_with_members_readable_by_world, from: :group do
+  transient members: 1
+  metering_points do |attrs|
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    attrs[:members].times do
+      user          = Fabricate(:user)
+      user.add_role(:member, metering_point)
+    end
+    [metering_point]
+  end
 end
 
 

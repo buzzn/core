@@ -6,14 +6,15 @@ class Aggregate
   end
 
   def present(params = {})
+    @timestamp = params.fetch(:timestamp, Time.current) || Time.current
+    @present_items = []
+
     @cache_id = "/aggregate/present?metering_point_ids=#{@metering_points_hash[:ids].join(',')}"
     if Rails.cache.exist?(@cache_id)
       @present = Rails.cache.fetch(@cache_id)
     else
       seconds_to_process = Benchmark.realtime do
-        @present_items = []
-        @timestamp = params.fetch(:timestamp, Time.current) || Time.current
-
+      
         @metering_points_hash[:buzzn_api].each do |metering_point|
           document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
           if document
@@ -69,15 +70,14 @@ class Aggregate
 
 
   def past(params = {})
-
+    @timestamp  = params.fetch(:timestamp, Time.current) || Time.current
+    @resolution = params.fetch(:resolution, 'day_to_minutes') || 'day_to_minutes'
+    @past_items = []
     @cache_id = "/aggregate/past?metering_point_ids=#{@metering_points_hash[:ids].join(',')}&timestamp=#{@timestamp}&resolution=#{@resolution}"
     if Rails.cache.exist?(@cache_id)
       @past = Rails.cache.fetch(@cache_id)
     else
       seconds_to_process = Benchmark.realtime do
-        @past_items = []
-        @timestamp  = params.fetch(:timestamp, Time.current) || Time.current
-        @resolution = params.fetch(:resolution, 'day_to_minutes') || 'day_to_minutes'
 
         # buzzn_api
         @metering_points_hash[:buzzn_api].each do |metering_point|

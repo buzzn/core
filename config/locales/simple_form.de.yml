@@ -134,7 +134,7 @@ de:
         website: Webseite
         description: Beschreibung
         metering_points: Zählpunkte
-        mode: Zugang
+        mode: Art
         new_meters: "Hier Zählernummer eingeben:"
         manufacturer_product_serialnumber: "Zählernummer, die hinzugefügt werden soll"
         email: E-Mailadresse für Einladung des Zählerbesitzers
