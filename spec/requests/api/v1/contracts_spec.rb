@@ -57,6 +57,16 @@ describe 'Contracts API' do
     expect(response).to have_http_status(200)
   end
 
+  it 'have crud infos' do
+    contract = Fabricate(:mpoc_buzzn_metering)
+    access_token  = Fabricate(:access_token)
+
+    get_with_token "/api/v1/contracts/#{contract.id}", {}, access_token.token
+    ['updateable', 'deletable'].each do |attr|
+      expect(json['data']['attributes']).to include(attr)
+    end
+  end
+
   it 'does not get contract with token for wrong id' do
     access_token  = Fabricate(:access_token).token
     get_with_token "/api/v1/contracts/xxrandomxx", {}, access_token
