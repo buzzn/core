@@ -12,17 +12,13 @@ module API
         desc "Return all organizations"
         paginate(per_page: per_page=10)
         get root: :organizations do
-          if current_user
-            if Organization.readable_by?(current_user)
-              per_page     = params[:per_page] || per_page
-              page         = params[:page] || 1
-              total_pages  = Organization.all.page(page).per_page(per_page).total_pages
-              paginate(render(Organization.all, meta: { total_pages: total_pages }))
-            else
-              status 403
-            end
+          if Organization.readable_by?(current_user)
+            per_page     = params[:per_page] || per_page
+            page         = params[:page] || 1
+            total_pages  = Organization.all.page(page).per_page(per_page).total_pages
+            paginate(render(Organization.all, meta: { total_pages: total_pages }))
           else
-            status 401
+            status 403
           end
         end
 
@@ -33,15 +29,11 @@ module API
           requires :id, type: String, desc: "ID of the organization"
         end
         get ":id", root: "organization" do
-          if current_user
-            organization = Organization.where(id: permitted_params[:id]).first!
-            if organization.readable_by?(current_user)
-              organization
-            else
-              status 403
-            end
+          organization = Organization.where(id: permitted_params[:id]).first!
+          if organization.readable_by?(current_user)
+            organization
           else
-            status 401
+            status 403
           end
         end
 
@@ -59,9 +51,8 @@ module API
           requires :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
         end
         post do
-          if current_user
-            if Organization.creatable_by?(current_user)
-              organization = Organization.new({
+          if Organization.creatable_by?(current_user)
+            organization = Organization.new({
                 name:        params.name,
                 phone:       params.phone,
                 fax:         params.fax,
@@ -69,19 +60,16 @@ module API
                 description: params.description,
                 mode:        params.mode,
                 email:       params.email
-              })
+            })
 
-              if organization.save!
-                current_user.add_role(:manager, organization)
-                return organization
-              else
-                error!('error saving organization', 500)
-              end
+            if organization.save!
+              current_user.add_role(:manager, organization)
+              return organization
             else
-              status 403
+              error!('error saving organization', 500)
             end
           else
-            status 401
+            status 403
           end
         end
 
@@ -99,18 +87,13 @@ module API
           requires :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
         end
         put do
-          if current_user
-            organization = Organization.find(params[:id])
-            if organization.updatable_by?(current_user)
-              #params = params.organization || params
-              params.delete(:id)
-              organization.update(params)
-              return organization
-            else
-              status 403
-            end
+          organization = Organization.find(params[:id])
+          if organization.updatable_by?(current_user)
+            params.delete(:id)
+            organization.update(params)
+            return organization
           else
-            status 401
+            status 403
           end
         end
 
@@ -121,16 +104,12 @@ module API
           requires :id, type: String, desc: "Organization ID"
         end
         delete ':id' do
-          if current_user
-            organization = Organization.find(params[:id])
-            if organization.deletable_by?(current_user)
-              organization.destroy
-              status 204
-            else
-              status 403
-            end
+          organization = Organization.find(params[:id])
+          if organization.deletable_by?(current_user)
+            organization.destroy
+            status 204
           else
-            status 402
+            status 403
           end
         end
 
