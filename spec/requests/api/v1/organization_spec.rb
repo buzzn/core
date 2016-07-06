@@ -49,6 +49,19 @@ describe "Organizations API" do
     expect(json['data'].size).to eq Organization.all.size
     expect(json['data'].last['id']).to eq organization.id
   end
+
+
+  it 'gets all organizations as manager' do
+    access_token = Fabricate(:admin_access_token)
+    organization = Fabricate(:electricity_supplier)
+    manager = User.find(access_token.resource_owner_id)
+    manager.add_role(:manager, organization)
+
+    get_with_token "/api/v1/organizations", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq Organization.all.size
+    expect(json['data'].last['id']).to eq organization.id
+  end
   
 
   it 'paginate organizations' do
@@ -154,6 +167,30 @@ describe "Organizations API" do
   it 'updates an organization with admin token' do
     access_token = Fabricate(:admin_access_token)
     organization = Fabricate(:metering_service_provider)
+
+    request_params = {
+      id:          organization.id,
+      name:        'Google',
+      phone:       organization.phone,
+      fax:         organization.fax,
+      website:     organization.website,
+      description: organization.description,
+      mode:        organization.mode,
+      email:       organization.email
+    }.to_json
+
+    put_with_token "/api/v1/organizations", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq organization.id
+    expect(json['data']['attributes']['name']).to eq 'Google'
+  end
+
+  it 'updates an organization as manager' do
+    access_token = Fabricate(:access_token)
+    organization = Fabricate(:metering_service_provider)
+    manager = User.find(access_token.resource_owner_id)
+    manager.add_role(:manager, organization)
 
     request_params = {
       id:          organization.id,
