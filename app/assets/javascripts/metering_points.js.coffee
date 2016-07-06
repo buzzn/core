@@ -488,15 +488,24 @@ $(".group-chart").ready ->
   out_data = []
   in_data = []
   ajax_calls = []
-  aggregators = []
+  in_aggregators = []
+  out_aggregators = []
   in_ids.forEach (id) ->
     aggregator = new Aggregator(id)
     ajax_calls.push(aggregator.past(new Date(), 'day_to_minutes'))
-    aggregators.push(aggregator)
+    in_aggregators.push(aggregator)
+  out_ids.forEach (id) ->
+    aggregator = new Aggregator(id)
+    ajax_calls.push(aggregator.past(new Date(), 'day_to_minutes'))
+    out_aggregators.push(aggregator)
+
   $.when.apply($, ajax_calls).done ->
-    aggregators.forEach (aggregator) ->
+    in_aggregators.forEach (aggregator) ->
       in_data.push(aggregator.returned_ajax_data)
-    in_data = aggregators[0].sumData(in_data)
+    in_data = in_aggregators[0].sumData(in_data)
+    out_aggregators.forEach (aggregator) ->
+      out_data.push(aggregator.returned_ajax_data)
+    out_data = out_aggregators[0].sumData(out_data)
 
 
     chart = new Highcharts.Chart(
@@ -510,14 +519,14 @@ $(".group-chart").ready ->
         spacingLeft: 20
         spacingRight: 20
         animation: false
-      colors: ['#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
+      colors: ['#5FA2DD', '#F76C51']
       exporting:
         enabled: false
       legend:
         enabled: true
       title:
         margin: 0
-        text: "Heute, " + moment(in_data[0][0]).format("DD.MM.YYYY")
+        text: "Heute, " + moment(out_data[0][0]).format("DD.MM.YYYY")
         style: { "color": "#000"}
       credits:
         enabled: false
@@ -533,8 +542,8 @@ $(".group-chart").ready ->
         type: 'datetime'
         startOnTick: false
         endOnTick: false
-        min: Chart.Functions.beginningOfDay(in_data[0][0])
-        max: Chart.Functions.endOfDay(in_data[0][0])
+        min: Chart.Functions.beginningOfDay(out_data[0][0])
+        max: Chart.Functions.endOfDay(out_data[0][0])
         labels:
           enabled: true
           style:
@@ -564,7 +573,6 @@ $(".group-chart").ready ->
               Chart.Functions.zoomInGroup(event.point.x)
           marker:
             enabled: false
-          stacking: 'normal'
         column:
           borderWidth: 0
           cursor: 'pointer'
@@ -585,9 +593,14 @@ $(".group-chart").ready ->
           year:"%Y"
     )
     chart.addSeries(
-      name: 'FIRST'
+      name: 'Gesamtverbrauch'
       data: in_data
     )
+    chart.addSeries(
+      name: 'Gesamterzeugung'
+      data: out_data
+    )
+
     chart_data_min_x = chart.series[0].data[0].x
     Chart.Functions.activateButtons(true)
 
@@ -1081,35 +1094,39 @@ namespace 'Chart.Functions', (exports) ->
       chart.hideLoading()
       Chart.Functions.activateButtons(true)
     else
-      $.ajax({url: '/' + resource + '/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
-        .success (data) ->
-          if data[0].data[0] == undefined
-            chart.hideLoading()
-            data[0].data[0] = [new Date(), 0]
-          data.forEach (d) ->
-            seriesVisible = chart.series[numberOfSeries].visible
-            if !seriesVisible
-              chart.series[numberOfSeries].show()
-            chart.series[numberOfSeries].setData(d.data)
-            new_point_width = Chart.Functions.setPointWidth()
-            chart.series[numberOfSeries].update({pointWidth: new_point_width})
-            extremes = Chart.Functions.getExtremes(containing_timestamp)
-            chart.xAxis[0].update(extremes, true)
-            chart_data_min_x = extremes.min
-            Chart.Functions.setChartTitle(chart_data_min_x)
-            if !seriesVisible
-              chart.series[numberOfSeries].hide()
-            numberOfSeries += 1
-          Chart.Functions.setChartType(true)
-          chart.hideLoading()
-          Chart.Functions.activateButtons(true)
-          Chart.Functions.setEnergyStatsGroup()
-          Chart.Functions.getChartComments(resource, id, chart_data_min_x)
-        .error (jqXHR, textStatus, errorThrown) ->
-          chart.hideLoading()
-          console.log textStatus
-          $('#chart-container-' + id).html('error')
-          Chart.Functions.activateButtons(true)
+
+
+
+
+      # $.ajax({url: '/' + resource + '/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
+      #   .success (data) ->
+      #     if data[0].data[0] == undefined
+      #       chart.hideLoading()
+      #       data[0].data[0] = [new Date(), 0]
+      #     data.forEach (d) ->
+      #       seriesVisible = chart.series[numberOfSeries].visible
+      #       if !seriesVisible
+      #         chart.series[numberOfSeries].show()
+      #       chart.series[numberOfSeries].setData(d.data)
+      #       new_point_width = Chart.Functions.setPointWidth()
+      #       chart.series[numberOfSeries].update({pointWidth: new_point_width})
+      #       extremes = Chart.Functions.getExtremes(containing_timestamp)
+      #       chart.xAxis[0].update(extremes, true)
+      #       chart_data_min_x = extremes.min
+      #       Chart.Functions.setChartTitle(chart_data_min_x)
+      #       if !seriesVisible
+      #         chart.series[numberOfSeries].hide()
+      #       numberOfSeries += 1
+      #     Chart.Functions.setChartType(true)
+      #     chart.hideLoading()
+      #     Chart.Functions.activateButtons(true)
+      #     Chart.Functions.setEnergyStatsGroup()
+      #     Chart.Functions.getChartComments(resource, id, chart_data_min_x)
+      #   .error (jqXHR, textStatus, errorThrown) ->
+      #     chart.hideLoading()
+      #     console.log textStatus
+      #     $('#chart-container-' + id).html('error')
+      #     Chart.Functions.activateButtons(true)
 
 
   exports.endOfDay = (timestamp) ->
