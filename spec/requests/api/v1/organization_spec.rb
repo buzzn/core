@@ -2,42 +2,34 @@ describe "Organizations API" do
 
   let(:page_overload) { 11 }
 
-  it 'does not get an organization without token' do
-    organization = Fabricate(:distribution_system_operator)
-    get_without_token "/api/v1/organizations/#{organization.id}"
-    expect(response).to have_http_status(401)
-  end
-
 
   it 'gets an organization with admin token' do
     access_token = Fabricate(:admin_access_token)
     organization = Fabricate(:electricity_supplier)
+
     get_with_token "/api/v1/organizations/#{organization.id}", access_token.token
+
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq organization.id
   end
 
-
-  it 'does not get an organization with token' do
+  it 'gets an organization as manager' do
     access_token = Fabricate(:access_token)
-    organization = Fabricate(:metering_point_operator)
+    organization = Fabricate(:electricity_supplier)
+    manager = User.find(access_token.resource_owner_id)
+    manager.add_role(:manager, organization)
+
     get_with_token "/api/v1/organizations/#{organization.id}", access_token.token
-    expect(response).to have_http_status(403)
+
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq organization.id
   end
 
-
-  it 'does not get any organization without token' do
-    Fabricate(:distribution_system_operator)
-    get_without_token "/api/v1/organizations"
-    expect(response).to have_http_status(401)
-  end
-
-
-  it 'does not get any organization with token' do
-    access_token = Fabricate(:access_token)
-    Fabricate(:distribution_system_operator)
-    get_without_token "/api/v1/organizations", access_token.token
-    expect(response).to have_http_status(401)
+  it 'gets an organization' do
+    organization = Fabricate(:electricity_supplier)
+    get_without_token "/api/v1/organizations/#{organization.id}"
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq organization.id
   end
 
 
@@ -62,7 +54,18 @@ describe "Organizations API" do
     expect(json['data'].size).to eq Organization.all.size
     expect(json['data'].last['id']).to eq organization.id
   end
+
   
+  it 'gets all organizations' do
+    organization = Fabricate(:electricity_supplier)
+
+    get_without_token "/api/v1/organizations"
+
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq Organization.all.size
+    expect(json['data'].last['id']).to eq organization.id
+  end
+
 
   it 'paginate organizations' do
     page_overload.times do
@@ -72,6 +75,18 @@ describe "Organizations API" do
     get_with_token "/api/v1/organizations", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+  end
+
+
+  it 'does not create an organization without token' do
+    access_token = Fabricate(:access_token)
+    organization = Fabricate.build(:metering_service_provider)
+
+    request_params = {}.to_json
+
+    post_without_token "/api/v1/organizations", request_params
+
+    expect(response).to have_http_status(401)
   end
 
 

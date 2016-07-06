@@ -5,21 +5,17 @@ module API
       
       resource :organizations do
 
-        before do
-          doorkeeper_authorize!
-        end
-        
         desc "Return all organizations"
         paginate(per_page: per_page=10)
         get root: :organizations do
-          if Organization.readable_by?(current_user)
-            per_page     = params[:per_page] || per_page
-            page         = params[:page] || 1
-            total_pages  = Organization.all.page(page).per_page(per_page).total_pages
-            paginate(render(Organization.all, meta: { total_pages: total_pages }))
-          else
-            status 403
-          end
+          per_page         = params[:per_page] || per_page
+          page             = params[:page] || 1
+          organization_ids = Organization.all.select do |org|
+            org.readable_by?(current_user)
+          end.collect { |org| org.id }
+          organizations = Organization.where(id: organization_ids)
+          total_pages  = organizations.page(page).per_page(per_page).total_pages
+          paginate(render(organizations, meta: { total_pages: total_pages }))
         end
 
 
@@ -39,6 +35,9 @@ module API
 
 
 
+        before do
+          doorkeeper_authorize!
+        end
 
         desc "Create an Organization."
         params do
