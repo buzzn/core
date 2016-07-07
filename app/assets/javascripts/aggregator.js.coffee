@@ -100,6 +100,9 @@ class @Aggregator
     else if resolution == 'hour_to_minutes' || resolution == 'present' #2 seconds
       return delta < 1000
 
-
-
+Object.values = (object) ->
+  values = []
+  for property of object
+    values.push object[property]
+  values
 
