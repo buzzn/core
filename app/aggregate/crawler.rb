@@ -105,9 +105,11 @@ class Crawler
           end
         else
           request.inspect
+          return {:power => -1, :timestamp => Time.now.to_i*1000}
         end
       else
         request.inspect
+        return {:power => -1, :timestamp => Time.now.to_i*1000}
       end
     end
     "this aint neither Discovergy or MySmartGrid"

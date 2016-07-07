@@ -50,6 +50,7 @@
 //= require jquery-validator-messages
 
 //= require global
+//= require aggregator
 //= require addresses
 //= require metering_points
 //= require groups
@@ -57,6 +58,7 @@
 //= require tour
 //= require comments
 //= require users
+
 
 
 

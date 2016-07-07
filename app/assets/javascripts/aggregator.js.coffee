@@ -1,0 +1,111 @@
+# USAGE:
+#
+# For a single metering_point, only latest power:
+#
+#  aggregator = new Aggregator([metering_point_id])
+#  $.when(aggregator.present(new Date())).done ->
+#    data = aggregator.data
+#
+# For multiple metering_points, only chart data:
+#
+# out_aggregator = new Aggregator(out_ids)
+# in_aggregator = new Aggregator(in_ids)
+# $.when(out_aggregator.past(new Date(), 'day_to_minutes')).done ->
+#   out_data = out_aggregator.data
+#   $.when(in_aggregator.past(new Date(), 'day_to_minutes')).done ->
+#     in_data = in_aggregator.data
+#
+# IMPORTANT: DONT REUSE AN AGGREGATOR INSTANCE FOR DIFFERENT CALLS, CREATE A NEW INSTANCE INSTEAD
+#################################################################################################
+
+class @Aggregator
+  constructor: (metering_point_ids) ->
+    @returned_ajax_data = []
+    @data = []
+    @metering_point_ids = metering_point_ids
+
+  present: (timestamp) ->
+    if timestamp == undefined
+      timestamp = new Date()
+    instance = this
+    ajax_calls = []
+    @metering_point_ids.forEach (id) ->
+      ajax_calls.push(instance.fetchData(id, timestamp, 'present', 'present'))
+    return $.when.apply($, ajax_calls).done( ->
+      instance.sumData('present')
+    ).promise()
+
+  past: (timestamp, resolution) ->
+    if timestamp == undefined
+      timestamp = new Date()
+    if resolution == undefined
+      resolution = 'day_to_minutes'
+    instance = this
+    ajax_calls = []
+    @metering_point_ids.forEach (id) ->
+      ajax_calls.push(instance.fetchData(id, timestamp, resolution, 'past'))
+    return $.when.apply($, ajax_calls).done( ->
+      instance.sumData(resolution)
+    ).promise()
+
+
+  fetchData: (id, timestamp, resolution, chartType) ->
+    instance = this
+    if (parseInt(timestamp) == timestamp)
+      timestamp = new Date(timestamp)
+    url = ''
+    if chartType == 'present'
+      url = '/api/v1/aggregates/present?timestamp=' + timestamp.toISOString() + '&metering_point_ids=' + id + '&access_token=' + gon.global.access_token
+    else
+      url = '/api/v1/aggregates/past?timestamp=' + timestamp.toISOString() + '&resolution=' + resolution + '&metering_point_ids=' + id + '&access_token=' + gon.global.access_token
+
+    ajaxCall = $.ajax({url: url, async: true, dataType: 'json'})
+      .success (data) ->
+        if chartType == 'past' && Object.prototype.toString.call(data) == '[object Array]'
+          highcharts_data = []
+          data.forEach (data_point) ->
+            if data_point.energy_a_milliwatt_hour != undefined
+              highcharts_data.push([(new Date(data_point.timestamp)).getTime(), Math.abs(data_point.energy_a_milliwatt_hour)/1000])
+            else if data_point.energy_b_milliwatt_hour != undefined
+              highcharts_data.push([(new Date(data_point.timestamp)).getTime(), Math.abs(data_point.energy_b_milliwatt_hour)/1000])
+          instance.returned_ajax_data.push(highcharts_data)
+        else if chartType == 'present'
+          if data.readings[0].data.power_a_milliwatt != undefined
+            instance.returned_ajax_data.push([[(new Date(data.readings[0].data.timestamp)).getTime(), Math.abs(data.readings[0].data.power_a_milliwatt)/1000]])
+          else if data.readings[0].data.power_b_milliwatt != undefined
+            instance.returned_ajax_data.push([[(new Date(data.readings[0].data.timestamp)).getTime(), Math.abs(data.readings[0].data.power_b_milliwatt)/1000]])
+    return ajaxCall
+
+  sumData: (resolution) ->
+    @data = []
+    maxLength = 0
+    indexMaxLength = 0
+    index = 0
+    @returned_ajax_data.forEach (data) ->
+      if data.length >= maxLength
+        maxLength = data.length
+        indexMaxLength = index
+      index++
+    for i in [0...maxLength]
+      key = @returned_ajax_data[indexMaxLength][i][0]
+      value = 0
+      for n in [0...@returned_ajax_data.length]
+        if @returned_ajax_data[n][i] != undefined && (key == @returned_ajax_data[n][i][0] || @matchesTimestamp(key, @returned_ajax_data[n][i][0], resolution))
+          value += @returned_ajax_data[n][i][1]
+      @data.push([key, value])
+
+
+  matchesTimestamp: (key, timestamp, resolution) ->
+    delta = Math.abs(key - timestamp)
+    if resolution == 'year_to_months'
+      return delta < 1296000000
+    else if resolution == 'month_to_days'
+      return delta < 43200000
+    else if resolution == 'day_to_minutes' #15 minutes
+      return delta < 450000
+    else if resolution == 'hour_to_minutes' || resolution == 'present' #2 seconds
+      return delta < 1000
+
+
+
+

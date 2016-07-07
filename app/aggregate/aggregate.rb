@@ -10,11 +10,11 @@ class Aggregate
     @present_items = []
 
     @cache_id = "/aggregate/present?metering_point_ids=#{@metering_points_hash[:ids].join(',')}"
-    if Rails.cache.exist?(@cache_id)
+    if false #Rails.cache.exist?(@cache_id)
       @present = Rails.cache.fetch(@cache_id)
     else
       seconds_to_process = Benchmark.realtime do
-      
+
         @metering_points_hash[:buzzn_api].each do |metering_point|
           document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
           if document
@@ -343,6 +343,10 @@ private
       results = crawler.month(timestamp)
     when 'year_to_months'
       results = crawler.year(timestamp)
+    end
+
+    if results.empty?
+      return []
     end
 
     if results.first.size == 2 && metering_point.input?
