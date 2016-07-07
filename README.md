@@ -80,6 +80,15 @@
     go to https://staging.buzzn.net/access_tokens to view generated tokens
 
 ## Docs
+  Data Model:
   https://www.lucidchart.com/documents/edit/023ef2a3-0b1d-4740-a202-4ad868f3c098
+  Overview over Groups, MeteringPoints, their User's roles and Invitation flow:
+  https://www.lucidchart.com/documents/edit/0a16d140-934c-4f50-b730-7d6684162232/0
+  Privacy Settings (readability) of Resources:
+  https://docs.google.com/spreadsheets/d/13NtNstj4AVEbxvXTEgx6Hit-g0NHsS7Uy5JPYceETjI/edit#gid=0
+  All Notifications & their User Groups:
   https://docs.google.com/spreadsheets/d/1OPsKFke9NGUYPtWs7Nv5Iv4hMAvqpmYvCPtXEhPhYL4/edit#gid=0
-  https://docs.google.com/spreadsheets/d/1_KMXlYH3xcPKXx1p_RxxuLe6wP1pI-P2gOcJu7_rUNs/edit?ts=574ef7ae#gid=0
+  Overview over treating notifications on backend side:
+  https://www.lucidchart.com/documents/edit/7f412806-aa84-46d6-93c7-76bedebd47d9
+  
+  
