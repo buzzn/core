@@ -64,16 +64,10 @@ class @Aggregator
         if chartType == 'past' && Object.prototype.toString.call(data) == '[object Array]'
           highcharts_data = []
           data.forEach (data_point) ->
-            if data_point.energy_a_milliwatt_hour != undefined
-              highcharts_data.push([(new Date(data_point.timestamp)).getTime(), Math.abs(data_point.energy_a_milliwatt_hour)/1000])
-            else if data_point.energy_b_milliwatt_hour != undefined
-              highcharts_data.push([(new Date(data_point.timestamp)).getTime(), Math.abs(data_point.energy_b_milliwatt_hour)/1000])
+            highcharts_data.push([(new Date(Object.values(data_point)[0])).getTime(), Math.abs(Object.values(data_point)[1])/1000])
           instance.returned_ajax_data.push(highcharts_data)
         else if chartType == 'present'
-          if data.readings[0].data.power_a_milliwatt != undefined
-            instance.returned_ajax_data.push([[(new Date(data.readings[0].data.timestamp)).getTime(), Math.abs(data.readings[0].data.power_a_milliwatt)/1000]])
-          else if data.readings[0].data.power_b_milliwatt != undefined
-            instance.returned_ajax_data.push([[(new Date(data.readings[0].data.timestamp)).getTime(), Math.abs(data.readings[0].data.power_b_milliwatt)/1000]])
+          instance.returned_ajax_data.push([[(new Date(Object.values(data.readings[0].data)[0])).getTime(), Math.abs(Object.values(data.readings[0].data)[1])/1000]])
     return ajaxCall
 
   sumData: (resolution) ->
