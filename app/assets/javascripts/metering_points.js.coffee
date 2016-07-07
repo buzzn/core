@@ -484,245 +484,117 @@ $(".group-chart").ready ->
   in_ids = $(this).attr('metering_point_ids-in').split(",")
   out_ids = $(this).attr('metering_point_ids-out').split(",")
   width = $("#chart-container-" + group_id).width()
-  i = 0
-  out_data = []
-  in_data = []
-  ajax_calls = []
-  in_aggregators = []
-  out_aggregators = []
-  in_ids.forEach (id) ->
-    aggregator = new Aggregator(id)
-    ajax_calls.push(aggregator.past(new Date(), 'day_to_minutes'))
-    in_aggregators.push(aggregator)
-  out_ids.forEach (id) ->
-    aggregator = new Aggregator(id)
-    ajax_calls.push(aggregator.past(new Date(), 'day_to_minutes'))
-    out_aggregators.push(aggregator)
 
-  $.when.apply($, ajax_calls).done ->
-    in_aggregators.forEach (aggregator) ->
-      in_data.push(aggregator.returned_ajax_data)
-    in_data = in_aggregators[0].sumData(in_data)
-    out_aggregators.forEach (aggregator) ->
-      out_data.push(aggregator.returned_ajax_data)
-    out_data = out_aggregators[0].sumData(out_data)
+  out_aggregator = new Aggregator(out_ids)
+  in_aggregator = new Aggregator(in_ids)
+  $.when(out_aggregator.past(new Date(), 'day_to_minutes')).done ->
+    out_data = out_aggregator.data
+    $.when(in_aggregator.past(new Date(), 'day_to_minutes')).done ->
+      in_data = in_aggregator.data
 
+      if out_data == undefined || out_data[0] == undefined || out_data[0][0] == undefined
+        console.log out_data
+        out_data = [[]]
+        $('#chart-container-' + group_id).html('error')
+      if in_data == undefined || in_data[0] == undefined || in_data[0][0] == undefined
+        console.log in_data
+        in_data = [[]]
+        $('#chart-container-' + group_id).html('error')
 
-    chart = new Highcharts.Chart(
-      chart:
-        type: 'areaspline'
-        renderTo: 'chart-container-' + group_id
-        backgroundColor:'rgba(255, 255, 255, 0.0)'
-        width: width
-        spacingBottom: 20
-        spacingTop: 10
-        spacingLeft: 20
-        spacingRight: 20
-        animation: false
-      colors: ['#5FA2DD', '#F76C51']
-      exporting:
-        enabled: false
-      legend:
-        enabled: true
-      title:
-        margin: 0
-        text: "Heute, " + moment(out_data[0][0]).format("DD.MM.YYYY")
-        style: { "color": "#000"}
-      credits:
-        enabled: false
-      loading:
-        hideDuration: 800
-        showDuration: 800
-        labelStyle:
-          color: 'black'
-          'font-size': '20pt'
-      xAxis:
-        lineWidth: 1
-        tickWidth: 1
-        type: 'datetime'
-        startOnTick: false
-        endOnTick: false
-        min: Chart.Functions.beginningOfDay(out_data[0][0])
-        max: Chart.Functions.endOfDay(out_data[0][0])
-        labels:
-          enabled: true
-          style:
-            color: '#000'
-        title:
+      chart = new Highcharts.Chart(
+        chart:
+          type: 'areaspline'
+          renderTo: 'chart-container-' + group_id
+          backgroundColor:'rgba(255, 255, 255, 0.0)'
+          width: width
+          spacingBottom: 20
+          spacingTop: 10
+          spacingLeft: 20
+          spacingRight: 20
+          animation: false
+        colors: ['#5FA2DD', '#F76C51']
+        exporting:
           enabled: false
-          style: { "color": "#000", "fontWeight": "bold"}
-      yAxis:
-        gridLineWidth: 0
-        min: 0
-        labels:
+        legend:
           enabled: true
         title:
           margin: 0
-          text: ""
+          text: "Heute, " + moment(out_data[0][0]).format("DD.MM.YYYY")
+          style: { "color": "#000"}
         credits:
           enabled: false
-      plotOptions:
-        series:
-          fillOpacity: 0.5
-          turboThreshold: 0
-        areaspline:
-          borderWidth: 0
-          cursor: 'pointer'
-          events:
-            click: (event) ->
-              Chart.Functions.zoomInGroup(event.point.x)
-          marker:
+        loading:
+          hideDuration: 800
+          showDuration: 800
+          labelStyle:
+            color: 'black'
+            'font-size': '20pt'
+        xAxis:
+          lineWidth: 1
+          tickWidth: 1
+          type: 'datetime'
+          startOnTick: false
+          endOnTick: false
+          min: Chart.Functions.beginningOfDay(out_data[0][0])
+          max: Chart.Functions.endOfDay(out_data[0][0])
+          labels:
+            enabled: true
+            style:
+              color: '#000'
+          title:
             enabled: false
-        column:
-          borderWidth: 0
-          cursor: 'pointer'
-          events:
-            click: (event) ->
-              Chart.Functions.zoomInGroup(event.point.x)
-          stacking: 'normal'
-      tooltip:
-        pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
-        dateTimeLabelFormats:
-          millisecond:"%e.%b, %H:%M:%S.%L",
-          second:"%e.%b, %H:%M:%S",
-          minute:"%e.%b, %H:%M",
-          hour:"%e.%b, %H:%M",
-          day:"%e.%b.%Y",
-          week:"Week from %e.%b.%Y",
-          month:"%B %Y",
-          year:"%Y"
-    )
-    chart.addSeries(
-      name: 'Gesamtverbrauch'
-      data: in_data
-    )
-    chart.addSeries(
-      name: 'Gesamterzeugung'
-      data: out_data
-    )
+            style: { "color": "#000", "fontWeight": "bold"}
+        yAxis:
+          gridLineWidth: 0
+          min: 0
+          labels:
+            enabled: true
+          title:
+            margin: 0
+            text: ""
+          credits:
+            enabled: false
+        plotOptions:
+          series:
+            fillOpacity: 0.5
+            turboThreshold: 0
+          areaspline:
+            borderWidth: 0
+            cursor: 'pointer'
+            events:
+              click: (event) ->
+                Chart.Functions.zoomInGroup(event.point.x)
+            marker:
+              enabled: false
+          column:
+            cursor: 'pointer'
+            events:
+              click: (event) ->
+                Chart.Functions.zoomInGroup(event.point.x)
+            #stacking: 'normal'
+        tooltip:
+          pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
+          dateTimeLabelFormats:
+            millisecond:"%e.%b, %H:%M:%S.%L",
+            second:"%e.%b, %H:%M:%S",
+            minute:"%e.%b, %H:%M",
+            hour:"%e.%b, %H:%M",
+            day:"%e.%b.%Y",
+            week:"Week from %e.%b.%Y",
+            month:"%B %Y",
+            year:"%Y"
+      )
+      chart.addSeries(
+        name: 'Gesamtverbrauch'
+        data: in_data
+      )
+      chart.addSeries(
+        name: 'Gesamterzeugung'
+        data: out_data
+      )
 
-    chart_data_min_x = chart.series[0].data[0].x
-    Chart.Functions.activateButtons(true)
-
-
-
-
-  # url = '/groups/' + group_id + '/chart?resolution=day_to_minutes'
-  # $.ajax({url: url, async: true, dataType: 'json'})
-  #   .success (data) ->
-
-  #     if data[0].data[0] == undefined
-  #       data[0].data[0] = [new Date(), 0] #TODO: Search for last data
-
-  #     if chart == undefined
-  #       chart = new Highcharts.Chart(
-  #         chart:
-  #           type: 'areaspline'
-  #           renderTo: 'chart-container-' + group_id
-  #           backgroundColor:'rgba(255, 255, 255, 0.0)'
-  #           width: width
-  #           spacingBottom: 20
-  #           spacingTop: 10
-  #           spacingLeft: 20
-  #           spacingRight: 20
-  #         colors: ['#5FA2DD', '#F76C51']
-  #         exporting:
-  #           enabled: false
-  #         legend:
-  #           enabled: true
-  #         title:
-  #           margin: 0
-  #           text: "Heute, " + moment(data[0].data[0][0]).format("DD.MM.YYYY")
-  #           style: { "color": "#000"}
-  #         credits:
-  #           enabled: false
-  #         loading:
-  #           hideDuration: 800
-  #           showDuration: 800
-  #           labelStyle:
-  #             color: 'black'
-  #             'font-size': '20pt'
-  #           style:
-  #             backgroundColor: 'grey'
-  #             opacity: '0.4'
-  #         xAxis:
-  #           lineWidth: 1
-  #           tickWidth: 1
-  #           type: 'datetime'
-  #           startOnTick: false
-  #           endOnTick: false
-  #           min: Chart.Functions.beginningOfDay(data[0].data[0][0])
-  #           max: Chart.Functions.endOfDay(data[0].data[0][0])
-  #           labels:
-  #             enabled: true
-  #             style:
-  #               color: '#000'
-  #           title:
-  #             #text: "Zeit"
-  #             enabled: true
-  #             style: { "color": "#000", "fontWeight": "bold"}
-  #         yAxis:
-  #           gridLineWidth: 0
-  #           min: 0
-  #           labels:
-  #             enabled: true
-  #             style:
-  #               color: '#000'
-  #             format: "{value} W"
-  #           title:
-  #             enabled: true
-  #             text: ""
-  #             style: { "color": "#000", "fontWeight": "bold"}
-  #         plotOptions:
-  #           series:
-  #             fillOpacity: 0.5
-  #             turboThreshold: 0
-  #           areaspline:
-  #             cursor: 'pointer'
-  #             events:
-  #               click: (event) ->
-  #                 Chart.Functions.zoomInGroup(event.point.x)
-  #             marker:
-  #               enabled: false
-  #           column:
-  #             cursor: 'pointer'
-  #             events:
-  #               click: (event) ->
-  #                 Chart.Functions.zoomInGroup(event.point.x)
-  #         tooltip:
-  #           shared: true
-  #           pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
-  #           dateTimeLabelFormats:
-  #             millisecond:"%e.%b, %H:%M:%S.%L",
-  #             second:"%e.%b, %H:%M:%S",
-  #             minute:"%e.%b, %H:%M",
-  #             hour:"%e.%b, %H:%M",
-  #             day:"%e.%b.%Y",
-  #             week:"Week from %e.%b.%Y",
-  #             month:"%B %Y",
-  #             year:"%Y"
-  #         series: data
-
-  #       )
-  #       # chart.addSeries(
-  #       #   name: data[0].name
-  #       #   data: data[0].data
-  #       # )
-  #       # chart.addSeries(
-  #       #   name: data[1].name
-  #       #   data: data[1].data
-  #       # )
-
-  #       chart_data_min_x = chart.series[0].data[0].x
-  #       #checkIfPreviousDataExistsGroup()
-  #       #checkIfNextDataExistsGroup()
-  #     Chart.Functions.activateButtons(true)
-  #     Chart.Functions.setEnergyStatsGroup()
-  #     Chart.Functions.getChartComments('groups', group_id, chart_data_min_x)
-  #   .error (jqXHR, textStatus, errorThrown) ->
-  #     console.log textStatus
-  #     $('#chart-container-' + group_id).html('error')
-  # createChartTimer([group_id], 'group')
+      chart_data_min_x = chart.series[0].data[0].x
+      Chart.Functions.activateButtons(true)
 
 
 
@@ -1094,9 +966,35 @@ namespace 'Chart.Functions', (exports) ->
       chart.hideLoading()
       Chart.Functions.activateButtons(true)
     else
-
-
-
+      in_ids = $(".group-chart").attr('metering_point_ids-in').split(",")
+      out_ids = $(".group-chart").attr('metering_point_ids-out').split(",")
+      out_aggregator = new Aggregator(out_ids)
+      in_aggregator = new Aggregator(in_ids)
+      $.when(out_aggregator.past(containing_timestamp, actual_resolution)).done ->
+        out_data = out_aggregator.data
+        $.when(in_aggregator.past(containing_timestamp, actual_resolution)).done ->
+          in_data = in_aggregator.data
+          data = [in_data, out_data]
+          numberOfSeries = 0
+          data.forEach (d) ->
+            seriesVisible = chart.series[numberOfSeries].visible
+            if !seriesVisible
+              chart.series[numberOfSeries].show()
+            chart.series[numberOfSeries].setData(d)
+            new_point_width = Chart.Functions.setPointWidth()
+            chart.series[numberOfSeries].update({pointWidth: new_point_width})
+            extremes = Chart.Functions.getExtremes(containing_timestamp)
+            chart.xAxis[0].update(extremes, true)
+            chart_data_min_x = extremes.min
+            Chart.Functions.setChartTitle(chart_data_min_x)
+            if !seriesVisible
+              chart.series[numberOfSeries].hide()
+            numberOfSeries += 1
+          Chart.Functions.setChartType(true)
+          chart.hideLoading()
+          Chart.Functions.activateButtons(true)
+          Chart.Functions.setEnergyStatsGroup()
+          Chart.Functions.getChartComments(resource, id, chart_data_min_x)
 
       # $.ajax({url: '/' + resource + '/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
       #   .success (data) ->
@@ -1401,37 +1299,37 @@ $(".metering_point").ready ->
     )
 
 getLiveData = (metering_point, metering_point_id) ->
-  $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
-    .success (data) ->
-      metering_point.find(".power-ticker").html(data.latest_power)
-      if data.timestamp <= Date.now() - 60*1000
-        metering_point.find(".power-ticker").css({opacity: 0.3})
-      else
-        metering_point.find(".power-ticker").css({opacity: 1})
-      metering_point.find(".power-ticker").data('content', moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss"))
-      metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
-      metering_point.find(".power-ticker").data('bs.popover').options.content = moment(data.timestamp).format("DD.MM.YYYY HH:mm:ss")
-      if $(".metering_point_detail").length != 0 && chart != undefined && actual_resolution == 'hour_to_minutes'
-        if chart_data_min_x > data.timestamp - 60*60*1000
-          chart.series[0].addPoint([data.timestamp, data.latest_power])
-        if data.timestamp > chart_data_min_x +  60 *60 *1000 && data.timestamp < chart_data_min_x +  60 *60 *1011
-          # TODO: if 1 hour is over toggle to next hour, but only if displayed
-          # macht getExtremes oder?
-          chart_data_min_x = data.timestamp
-          # console.log("aktualisiere Chart " + data.timestamp + " power " + data.latest_power)
-          chart.xAxis[0].update(Chart.Functions.getExtremes(data.timestamp), true)
-          Chart.Functions.setChartTitle(data.timestamp)
-          Chart.Functions.setChartData('metering_points', metering_point_id, data.timestamp)
-        if window.wisActive && window.wwasInactive # eigentlich nur, wenn neu aktiv oder wenn delta t zu groß
-          window.wwasInactive = false
-          Chart.Functions.setChartData('metering_points', metering_point_id, data.timestamp)
-          # console.log("neuer Chart " + data.timestamp + " power " + data.latest_power)
-
-      if actual_resolution == 'day_to_minutes'
+  aggregator = new Aggregator([metering_point_id])
+  $.when(aggregator.present(new Date())).done ->
+    data = aggregator.data
+  # $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
+  #   .success (data) ->
+    metering_point.find(".power-ticker").html(data[0][1])
+    if data.timestamp <= Date.now() - 60*1000
+      metering_point.find(".power-ticker").css({opacity: 0.3})
+    else
+      metering_point.find(".power-ticker").css({opacity: 1})
+    metering_point.find(".power-ticker").data('content', moment(data[0][0]).format("DD.MM.YYYY HH:mm:ss"))
+    metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
+    metering_point.find(".power-ticker").data('bs.popover').options.content = moment(data[0][0]).format("DD.MM.YYYY HH:mm:ss")
+    if $(".metering_point_detail").length != 0 && chart != undefined && actual_resolution == 'hour_to_minutes'
+      if chart_data_min_x > data[0][0] - 60*60*1000
+        chart.series[0].addPoint([data[0][0], data[0][1]])
+      if data[0][0] > chart_data_min_x +  60 *60 *1000 && data[0][0] < chart_data_min_x +  60 *60 *1011
+        # TODO: if 1 hour is over toggle to next hour, but only if displayed
+        # macht getExtremes oder?
+        chart_data_min_x = data[0][0]
+        # console.log("aktualisiere Chart " + data.timestamp + " power " + data.latest_power)
+        chart.xAxis[0].update(Chart.Functions.getExtremes(data[0][0]), true)
+        Chart.Functions.setChartTitle(data[0][0])
+        Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
+      if window.wisActive && window.wwasInactive # eigentlich nur, wenn neu aktiv oder wenn delta t zu groß
         window.wwasInactive = false
-    .error (jqXHR, textStatus, errorThrown) ->
-      console.log textStatus
-      metering_point.find(".power-ticker").html('error')
+        Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
+        # console.log("neuer Chart " + data.timestamp + " power " + data.latest_power)
+
+    if actual_resolution == 'day_to_minutes'
+      window.wwasInactive = false
 
 
 calculate_power = (last_readings) =>
