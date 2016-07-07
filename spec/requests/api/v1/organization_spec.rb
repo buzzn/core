@@ -201,9 +201,32 @@ describe "Organizations API" do
     expect(json['data']['attributes']['name']).to eq 'Google'
   end
 
-  it 'updates an organization as manager' do
+  it 'does not update an organization as manager' do
     access_token = Fabricate(:access_token)
     organization = Fabricate(:metering_service_provider)
+    manager = User.find(access_token.resource_owner_id)
+    manager.add_role(:manager, organization)
+
+    request_params = {
+      id:          organization.id,
+      name:        'Google',
+      phone:       organization.phone,
+      fax:         organization.fax,
+      website:     organization.website,
+      description: organization.description,
+      mode:        organization.mode,
+      email:       organization.email
+    }.to_json
+
+    put_with_token "/api/v1/organizations", request_params, access_token.token
+
+    expect(response).to have_http_status(403)
+  end
+
+  it 'updates an organization as manager with admin token' do
+    organization = Fabricate(:metering_service_provider)
+    access_token = Fabricate(:user_with_admin_access_token)
+
     manager = User.find(access_token.resource_owner_id)
     manager.add_role(:manager, organization)
 

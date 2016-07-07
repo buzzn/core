@@ -36,7 +36,7 @@ module API
 
 
         before do
-          doorkeeper_authorize!
+          doorkeeper_authorize! :admin
         end
 
         desc "Create an Organization."
@@ -87,6 +87,7 @@ module API
         end
         put do
           organization = Organization.find(params[:id])
+
           if organization.updatable_by?(current_user)
             params.delete(:id)
             organization.update(params)
