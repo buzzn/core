@@ -4,6 +4,11 @@ Fabricator :access_token, class_name: Doorkeeper::AccessToken do
   scopes 'public'
 end
 
+Fabricator :user_with_admin_access_token, from: :access_token do
+  resource_owner_id { Fabricate(:user).id }
+  scopes 'public admin'
+end
+
 Fabricator :admin_access_token, from: :access_token do
   resource_owner_id { Fabricate(:admin).id }
   scopes 'public admin'
