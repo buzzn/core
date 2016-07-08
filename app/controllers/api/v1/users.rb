@@ -209,6 +209,13 @@ module API
         end
 
 
+        desc 'Return user activities'
+        get ':id/activities' do
+          doorkeeper_authorize! :public
+          PublicActivity::Activity.where({ owner_type: 'User', owner_id: params[:id] })
+        end
+
+
       end
     end
   end

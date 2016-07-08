@@ -269,4 +269,15 @@ describe "Users API" do
     expect(json['meta']['total_pages']).to eq(2)
   end
 
+  it 'gets user activities' do
+    access_token  = Fabricate(:access_token)
+    user          = User.find(access_token.resource_owner_id)
+    user2         = Fabricate(:user)
+    Fabricate(:friendship_request_with_activity, { sender: user, receiver: user2 })
+
+    get_with_token "/api/v1/users/#{user.id}/activities", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].first['attributes']['owner-id']).to eq(user.id)
+  end
+
 end
