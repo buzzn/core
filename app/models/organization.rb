@@ -1,4 +1,5 @@
 class Organization < ActiveRecord::Base
+  resourcify
   extend FriendlyId
 
   friendly_id :name, use: [:slugged, :finders]
@@ -15,6 +16,9 @@ class Organization < ActiveRecord::Base
 
   has_one :address, as: :addressable, dependent: :destroy
   accepts_nested_attributes_for :address, reject_if: :all_blank
+
+  has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
+  has_many :members, -> { where roles:  { name: 'member'} }, through: :roles, source: :users
 
   has_one :iln
 
