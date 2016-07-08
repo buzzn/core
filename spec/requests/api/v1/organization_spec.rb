@@ -2,6 +2,7 @@ describe "Organizations API" do
 
   let(:page_overload) { 11 }
 
+  # RETRIEVE
 
   it 'gets an organization with admin token' do
     access_token = Fabricate(:admin_access_token)
@@ -12,6 +13,7 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq organization.id
   end
+
 
   it 'gets an organization as manager' do
     access_token = Fabricate(:access_token)
@@ -24,6 +26,7 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq organization.id
   end
+
 
   it 'gets an organization' do
     organization = Fabricate(:electricity_supplier)
@@ -55,7 +58,7 @@ describe "Organizations API" do
     expect(json['data'].last['id']).to eq organization.id
   end
 
-  
+
   it 'gets all organizations' do
     organization = Fabricate(:electricity_supplier)
 
@@ -77,6 +80,8 @@ describe "Organizations API" do
     expect(json['meta']['total_pages']).to eq(2)
   end
 
+
+  # CREATE
 
   it 'does not create an organization without token' do
     access_token = Fabricate(:access_token)
@@ -138,6 +143,7 @@ describe "Organizations API" do
   end
 
 
+  #UPDATE
 
   it 'does not update an organization without token' do
     organization = Fabricate(:metering_service_provider)
@@ -248,12 +254,15 @@ describe "Organizations API" do
     expect(json['data']['attributes']['name']).to eq 'Google'
   end
 
-  
+
+  #DELETE
+
+
   it 'does not delete an organization without token' do
     organization_id = Fabricate(:metering_service_provider).id
 
     delete "/api/v1/organizations/#{organization_id}"
-   
+
     expect(response).to have_http_status(401)
   end
 
@@ -267,7 +276,7 @@ describe "Organizations API" do
     expect(response).to have_http_status(403)
   end
 
-  
+
   it 'deletes an organization with admin token' do
     access_token = Fabricate(:admin_access_token)
     organization_id = Fabricate(:metering_service_provider).id
@@ -277,4 +286,303 @@ describe "Organizations API" do
     expect(response).to have_http_status(204)
   end
 
+  # RETRIEVE contracts
+
+  it 'gets the related contracts of an organization without token' do
+    organization    = Fabricate(:electricity_supplier_with_contracts)
+    contracts       = organization.contracts
+
+    get_without_token "/api/v1/organizations/#{organization.id}/contracts"
+    expect(response).to have_http_status(200)
+    contracts.each do |contract|
+      expect(json['data'].find{ |c| c['id'] == contract.id }['attributes']['mode']).to eq('electricity_supplier_contract')
+    end
+    expect(json['data'].size).to eq(contracts.size)
+  end
+
+  it 'gets the related contracts of an organization with token' do
+    access_token    = Fabricate(:access_token)
+    organization    = Fabricate(:electricity_supplier_with_contracts)
+    contracts       = organization.contracts
+
+    get_with_token "/api/v1/organizations/#{organization.id}/contracts", access_token.token
+    expect(response).to have_http_status(200)
+    contracts.each do |contract|
+      expect(json['data'].find{ |c| c['id'] == contract.id }['attributes']['mode']).to eq('electricity_supplier_contract')
+    end
+    expect(json['data'].size).to eq(contracts.size)
+  end
+
+  it 'paginate contracts' do
+    access_token    = Fabricate(:access_token).token
+    organization    = Fabricate(:electricity_supplier)
+
+    page_overload.times do
+      organization.contracts << Fabricate(:electricity_supplier_contract)
+    end
+    get_with_token "/api/v1/organizations/#{organization.id}/contracts", access_token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(2)
+  end
+
+  # RETRIEVE address
+
+  it 'gets the related address of an organization without token' do
+    organization    = Fabricate(:transmission_system_operator_with_address)
+    address       = organization.address
+
+    get_without_token "/api/v1/organizations/#{organization.id}/address"
+
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq(address.id)
+    expect(json['data']['attributes']['time-zone']).to eq('Berlin')
+  end
+
+  it 'gets the related address of an organization with token' do
+    access_token    = Fabricate(:access_token)
+    organization    = Fabricate(:transmission_system_operator_with_address)
+    address         = organization.address
+
+    get_with_token "/api/v1/organizations/#{organization.id}/address", access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq(address.id)
+    expect(json['data']['attributes']['time-zone']).to eq('Berlin')
+  end
+
+
+  # RETRIEVE contracting_party
+
+  it 'gets the related contracting_party of an organization without token' do
+    organization    = Fabricate(:metering_service_provider_with_contracting_party)
+    contracting_party       = organization.contracting_party
+
+    get_without_token "/api/v1/organizations/#{organization.id}/contracting_party"
+
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq(contracting_party.id)
+    expect(json['data']['attributes']['legal-entity']).to eq('natural_person')
+  end
+
+  it 'gets the related contracting_party of an organization with token' do
+    access_token    = Fabricate(:access_token)
+    organization    = Fabricate(:metering_service_provider_with_contracting_party)
+    party           = organization.contracting_party
+
+    get_with_token "/api/v1/organizations/#{organization.id}/contracting_party", access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq(party.id)
+    expect(json['data']['attributes']['legal-entity']).to eq('natural_person')
+  end
+
+
+  # RETRIEVE manager
+
+  it 'gets the related managers of an organization only with token' do
+    access_token  = Fabricate(:access_token)
+    organization  = Fabricate(:distribution_system_operator)
+
+    get_with_token "/api/v1/organizations/#{organization.id}/managers", access_token.token
+    expect(response).to have_http_status(200)
+    get_without_token "/api/v1/organizations/#{organization.id}/managers"
+    expect(response).to have_http_status(200)
+  end
+
+  it 'paginate managers of an organziation' do
+    access_token  = Fabricate(:access_token)
+    organization  = Fabricate(:distribution_system_operator)
+    page_overload.times do
+      user = Fabricate(:user)
+      user.add_role(:manager, organization)
+    end
+    get_with_token "/api/v1/organizations/#{organization.id}/managers", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(2)
+  end
+
+  it 'gets the related members for Organization' do
+    access_token  = Fabricate(:access_token)
+    organization  = Fabricate(:distribution_system_operator)
+
+    get_with_token "/api/v1/organizations/#{organization.id}/members", access_token.token
+    expect(response).to have_http_status(200)
+    get_without_token "/api/v1/organizations/#{organization.id}/members"
+    expect(response).to have_http_status(200)
+  end
+
+  it 'paginate members of an organziation' do
+    access_token  = Fabricate(:access_token)
+    organization  = Fabricate(:distribution_system_operator)
+    page_overload.times do
+      user = Fabricate(:user)
+      user.add_role(:member, organization)
+    end
+    get_with_token "/api/v1/organizations/#{organization.id}/members", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(2)
+  end
+
+  # CREATE manager/member
+
+  it 'does not add organization manager/member without token' do
+    organization  = Fabricate(:distribution_system_operator)
+
+    post_without_token "/api/v1/organizations/#{organization.id}/managers", {}.to_json
+    expect(response).to have_http_status(401)
+
+    post_without_token "/api/v1/organizations/#{organization.id}/members", {}.to_json
+    expect(response).to have_http_status(401)
+  end
+
+
+  it 'does not add organization manager/member as member' do
+    organization  = Fabricate(:distribution_system_operator)
+    member_token    = Fabricate(:access_token)
+    member          = User.find(member_token.resource_owner_id)
+    member.add_role(:member, organization)
+
+    post_with_token "/api/v1/organizations/#{organization.id}/managers", {}.to_json, member_token.token
+    expect(response).to have_http_status(403)
+
+    post_with_token "/api/v1/organizations/#{organization.id}/members", {}.to_json, member_token.token
+    expect(response).to have_http_status(403)
+  end
+
+
+  it 'does not add organization manager/member as manager with public token' do
+    organization     = Fabricate(:distribution_system_operator)
+    manager_token    = Fabricate(:access_token)
+    manager          = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, organization)
+
+    post_with_token "/api/v1/organizations/#{organization.id}/managers", {}.to_json, manager_token.token
+    expect(response).to have_http_status(403)
+
+    post_with_token "/api/v1/organizations/#{organization.id}/members", {}.to_json, manager_token.token
+    expect(response).to have_http_status(403)
+  end
+
+
+  it 'adds organization manager/member as manager with admin token' do
+    organization     = Fabricate(:distribution_system_operator)
+    manager_token = Fabricate(:user_with_admin_access_token)
+    manager = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, organization)
+
+    user = Fabricate(:user)
+    user_params = {
+      user_id: user.id
+    }.to_json
+
+    post_with_token "/api/v1/organizations/#{organization.id}/managers", user_params, manager_token.token
+    expect(response).to have_http_status(201)
+
+    post_with_token "/api/v1/organizations/#{organization.id}/members", user_params, manager_token.token
+    expect(response).to have_http_status(201)
+
+    expect(organization.managers).to match_array [manager, user]
+    expect(organization.members).to eq [user]
+  end
+
+
+  it 'adds organization manager/member with admin token' do
+    organization     = Fabricate(:distribution_system_operator)
+    admin_token = Fabricate(:admin_access_token)
+
+    user = Fabricate(:user)
+    user_params = {
+      user_id: user.id
+    }.to_json
+
+    post_with_token "/api/v1/organizations/#{organization.id}/managers", user_params, admin_token.token
+    expect(response).to have_http_status(201)
+
+    post_with_token "/api/v1/organizations/#{organization.id}/members", user_params, admin_token.token
+    expect(response).to have_http_status(201)
+
+    expect(organization.managers).to eq [user]
+    expect(organization.members).to eq [user]
+  end
+
+
+  # REMOVE manager/member
+
+  it 'does not delete organization manager/member without token' do
+    organization  = Fabricate(:distribution_system_operator)
+
+    delete_without_token "/api/v1/organizations/#{organization.id}/managers/123"
+    expect(response).to have_http_status(401)
+
+    delete_without_token "/api/v1/organizations/#{organization.id}/members/123"
+    expect(response).to have_http_status(401)
+  end
+ 
+
+  it 'does not delete organization manager/member as member' do
+    organization  = Fabricate(:distribution_system_operator)
+    member_token    = Fabricate(:access_token)
+    member          = User.find(member_token.resource_owner_id)
+    member.add_role(:member, organization)
+
+    delete_with_token "/api/v1/organizations/#{organization.id}/managers/123", member_token.token
+    expect(response).to have_http_status(403)
+
+    delete_with_token "/api/v1/organizations/#{organization.id}/members/123", member_token.token
+    expect(response).to have_http_status(403)
+  end
+
+
+  it 'does not delete organization manager/member as manager with public token' do
+    organization     = Fabricate(:distribution_system_operator)
+    manager_token    = Fabricate(:access_token)
+    manager          = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, organization)
+
+    delete_with_token "/api/v1/organizations/#{organization.id}/managers/123", manager_token.token
+    expect(response).to have_http_status(403)
+
+    delete_with_token "/api/v1/organizations/#{organization.id}/members/123", manager_token.token
+    expect(response).to have_http_status(403)
+  end
+
+
+  it 'deletes organization manager/member as manager with admin token' do
+    organization     = Fabricate(:distribution_system_operator)
+    manager_token = Fabricate(:user_with_admin_access_token)
+    manager = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, organization)
+
+    user = Fabricate(:user)
+    user.add_role(:manager, organization)
+    user.add_role(:member, organization)
+
+    delete_with_token "/api/v1/organizations/#{organization.id}/managers/#{user.id}", manager_token.token
+    expect(response).to have_http_status(204)
+
+    delete_with_token "/api/v1/organizations/#{organization.id}/members/#{user.id}", manager_token.token
+    expect(response).to have_http_status(204)
+
+    expect(organization.managers).to eq [manager]
+    expect(organization.members).to eq []
+  end
+
+
+  it 'deletes organization manager/member with admin token' do
+    organization     = Fabricate(:distribution_system_operator)
+    admin_token = Fabricate(:admin_access_token)
+
+    user = Fabricate(:user)
+    user.add_role(:manager, organization)
+    user.add_role(:member, organization)
+
+    delete_with_token "/api/v1/organizations/#{organization.id}/managers/#{user.id}", admin_token.token
+    expect(response).to have_http_status(204)
+
+    delete_with_token "/api/v1/organizations/#{organization.id}/members/#{user.id}", admin_token.token
+    expect(response).to have_http_status(204)
+
+    expect(organization.managers).to eq []
+    expect(organization.members).to eq []
+  end
 end
