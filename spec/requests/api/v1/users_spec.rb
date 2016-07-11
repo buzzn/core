@@ -5,10 +5,10 @@ describe "Users API" do
   end
 
 
-  it 'get all users with admin token' do
+  it 'get all users with manager token' do
     Fabricate(:user)
     Fabricate(:user)
-    access_token = Fabricate(:admin_access_token).token
+    access_token = Fabricate(:manager_access_token_as_admin).token
     get_with_token '/api/v1/users', {}, access_token
     expect(response).to have_http_status(200)
   end
@@ -17,7 +17,7 @@ describe "Users API" do
     @page_overload.times do
       Fabricate(:user)
     end
-    access_token = Fabricate(:admin_access_token).token
+    access_token = Fabricate(:manager_access_token_as_admin).token
     get_with_token '/api/v1/users', {}, access_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
@@ -48,8 +48,8 @@ describe "Users API" do
   end
 
 
-  it 'creates a user as admin' do
-    access_token  = Fabricate(:admin_access_token)
+  it 'creates a user as manager' do
+    access_token  = Fabricate(:manager_access_token_as_admin)
 
     user = Fabricate.build(:user)
     request_params = {
@@ -106,7 +106,7 @@ describe "Users API" do
     meter3 = Fabricate(:meter)
 
     access_token  = Fabricate(:access_token)
-    access_token.update_attribute :scopes, 'admin'
+    access_token.update_attribute :scopes, 'manager'
     user = User.find(access_token.resource_owner_id)
     user.add_role(:manager, meter1)
     user.add_role(:manager, meter2)
@@ -117,13 +117,13 @@ describe "Users API" do
   end
 
   it 'paginate meters' do
-    admin_token = Fabricate(:admin_access_token).token
+    manager_token = Fabricate(:manager_access_token_as_admin).token
     user        = Fabricate(:user)
     @page_overload.times do
       meter = Fabricate(:meter)
       user.add_role(:manager, meter)
     end
-    get_with_token "/api/v1/users/#{user.id}/meters", admin_token
+    get_with_token "/api/v1/users/#{user.id}/meters", manager_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
   end
@@ -135,7 +135,7 @@ describe "Users API" do
     meter3 = Fabricate(:meter)
 
     access_token  = Fabricate(:access_token)
-    access_token.update_attribute :scopes, 'admin'
+    access_token.update_attribute :scopes, 'manager'
     user          = User.find(access_token.resource_owner_id)
     user.add_role(:manager, meter1)
     user.add_role(:manager, meter2)

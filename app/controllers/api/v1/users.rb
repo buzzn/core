@@ -13,7 +13,7 @@ module API
         desc "Return all Users"
         paginate(per_page: per_page=10)
         get do
-          doorkeeper_authorize! :admin, :read
+          doorkeeper_authorize! :manager
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
           @total_pages  = User.all.page(@page).per_page(@per_page).total_pages
@@ -48,7 +48,7 @@ module API
           requires :last_name, type: String
         end
         post do
-          doorkeeper_authorize! :admin
+          doorkeeper_authorize! :manager
           User.create!(
             email:    params[:email],
             password: params[:password],
@@ -93,7 +93,7 @@ module API
         end
         paginate(per_page: per_page=10)
         get ":id/meters" do
-          doorkeeper_authorize! :admin
+          doorkeeper_authorize! :manager
           user = User.find(params[:id])
           if params[:manufacturer_product_serialnumber]
             meters = Meter.with_role(:manager, user).where(manufacturer_product_serialnumber: params[:manufacturer_product_serialnumber])

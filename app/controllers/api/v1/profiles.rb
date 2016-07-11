@@ -7,7 +7,7 @@ module API
         desc "Return all profiles"
         paginate(per_page: per_page=10)
         get do
-          doorkeeper_authorize! :admin
+          doorkeeper_authorize! :manager
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
           @total_pages  = Profile.all.page(@page).per_page(@per_page).total_pages

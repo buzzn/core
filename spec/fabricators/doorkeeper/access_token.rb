@@ -1,17 +1,23 @@
-Fabricator :access_token, class_name: Doorkeeper::AccessToken do
+Fabricator :public_access_token, class_name: Doorkeeper::AccessToken do
   application_id { Fabricate(:application).id }
   resource_owner_id { Fabricate(:user).id }
   scopes 'public'
 end
 
-Fabricator :user_with_admin_access_token, from: :access_token do
+Fabricator :smartmeter_access_token_no_role, class_name: Doorkeeper::AccessToken do
+  application_id { Fabricate(:application).id }
   resource_owner_id { Fabricate(:user).id }
-  scopes 'public admin'
+  scopes 'smartmeter'
 end
 
-Fabricator :admin_access_token, from: :access_token do
+Fabricator :manager_access_token_no_role, from: :access_token do
+  resource_owner_id { Fabricate(:user).id }
+  scopes 'public manager'
+end
+
+Fabricator :manager_access_token_as_admin, from: :access_token do
   resource_owner_id { Fabricate(:admin).id }
-  scopes 'public admin'
+  scopes 'public manager'
 end
 
 Fabricator :access_token_received_friendship_request, from: :access_token do

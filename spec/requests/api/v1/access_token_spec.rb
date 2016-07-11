@@ -1,8 +1,8 @@
 describe "AccessTokens API" do
 
   it 'does not creates a AccessToken without token' do
-    access_token  = Fabricate(:admin_access_token)
-    access_token.update_attribute :scopes, 'admin'
+    access_token  = Fabricate(:manager_access_token_as_admin)
+    access_token.update_attribute :scopes, 'manager'
     application = Fabricate(:application)
 
     request_params = {
@@ -16,7 +16,7 @@ describe "AccessTokens API" do
 
 
   it 'does not creates a AccessToken with read token' do
-    access_token  = Fabricate(:admin_access_token)
+    access_token  = Fabricate(:manager_access_token_as_admin)
     access_token.update_attribute :scopes, 'read'
     application = Fabricate(:application)
 
@@ -30,9 +30,9 @@ describe "AccessTokens API" do
   end
 
 
-  it 'does creates a AccessToken with admin token' do
-    access_token  = Fabricate(:admin_access_token)
-    access_token.update_attribute :scopes, 'admin'
+  it 'does creates a AccessToken with manager token' do
+    access_token  = Fabricate(:manager_access_token_as_admin)
+    access_token.update_attribute :scopes, 'manager'
     application = Fabricate(:application)
 
     request_params = {

@@ -34,7 +34,7 @@ describe "Groups API" do
 
   it 'contains CRUD info' do
     Fabricate(:group)
-    access_token = Fabricate(:admin_access_token)
+    access_token = Fabricate(:manager_access_token_as_admin)
 
     get_with_token '/api/v1/groups', access_token.token
     ['readable', 'updateable', 'deletable'].each do |attr|
@@ -280,12 +280,12 @@ describe "Groups API" do
     expect(response).to have_http_status(401)
   end
 
-  it 'adds group manager only with manager or admin token' do
+  it 'adds group manager only with manager or manager token' do
     metering_point  = Fabricate(:metering_point_readable_by_world)
     group           = Fabricate(:group)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
-    admin_token     = Fabricate(:admin_access_token)
+    admin_token     = Fabricate(:manager_access_token_as_admin)
     manager_token   = Fabricate(:access_token)
     manager         = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, group)
@@ -310,12 +310,12 @@ describe "Groups API" do
     expect(json['data'].size).to eq(3)
   end
 
-  it 'removes group manager only for current user or with admin token' do
+  it 'removes group manager only for current user or with manager token' do
     metering_point  = Fabricate(:metering_point_readable_by_world)
     group           = Fabricate(:group)
     user            = Fabricate(:user)
     user.add_role(:manager, group)
-    admin_token     = Fabricate(:admin_access_token)
+    admin_token     = Fabricate(:manager_access_token_as_admin)
     manager_token   = Fabricate(:access_token)
     manager         = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, group)

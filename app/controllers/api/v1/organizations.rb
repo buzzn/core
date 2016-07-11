@@ -117,7 +117,7 @@ module API
 
 
         before do
-          doorkeeper_authorize! :admin
+          doorkeeper_authorize! :manager
         end
 
         desc "Create an Organization."

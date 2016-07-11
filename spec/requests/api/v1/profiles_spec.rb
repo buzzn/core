@@ -15,17 +15,17 @@ describe "Profiles API" do
     expect(response).to have_http_status(401)
   end
 
-  it 'get all profiles with admin token' do
+  it 'get all profiles with manager token' do
     Fabricate(:profile)
     Fabricate(:profile)
-    access_token = Fabricate(:admin_access_token)
+    access_token = Fabricate(:manager_access_token_as_admin)
     get_with_token '/api/v1/profiles', {}, access_token.token
     expect(response).to have_http_status(200)
   end
 
   it 'contains CRUD info' do
     Fabricate(:profile)
-    access_token = Fabricate(:admin_access_token)
+    access_token = Fabricate(:manager_access_token_as_admin)
 
     get_with_token '/api/v1/profiles', access_token.token
     ['readable', 'updateable', 'deletable'].each do |attr|
@@ -33,11 +33,11 @@ describe "Profiles API" do
     end
   end
 
-  it 'paginate profiles with admin token' do
+  it 'paginate profiles with manager token' do
     @page_overload.times do
       Fabricate(:profile)
     end
-    access_token = Fabricate(:admin_access_token)
+    access_token = Fabricate(:manager_access_token_as_admin)
     get_with_token '/api/v1/profiles', {}, access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
@@ -66,8 +66,8 @@ describe "Profiles API" do
   end
 
 
-  it 'creates a profile as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'creates a profile as manager' do
+    access_token = Fabricate(:manager_access_token_as_admin)
     profile = Fabricate.build(:profile)
 
     request_params = {

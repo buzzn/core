@@ -4,8 +4,8 @@ describe "Organizations API" do
 
   # RETRIEVE
 
-  it 'gets an organization with admin token' do
-    access_token = Fabricate(:admin_access_token)
+  it 'gets an organization with manager token' do
+    access_token = Fabricate(:manager_access_token_as_admin)
     organization = Fabricate(:electricity_supplier)
 
     get_with_token "/api/v1/organizations/#{organization.id}", access_token.token
@@ -36,8 +36,8 @@ describe "Organizations API" do
   end
 
 
-  it 'gets all organizations with admin token' do
-    access_token = Fabricate(:admin_access_token)
+  it 'gets all organizations with manager token' do
+    access_token = Fabricate(:manager_access_token_as_admin)
     organization = Fabricate(:electricity_supplier)
     get_with_token "/api/v1/organizations", access_token.token
     expect(response).to have_http_status(200)
@@ -47,7 +47,7 @@ describe "Organizations API" do
 
 
   it 'gets all organizations as manager' do
-    access_token = Fabricate(:admin_access_token)
+    access_token = Fabricate(:manager_access_token_as_admin)
     organization = Fabricate(:electricity_supplier)
     manager = User.find(access_token.resource_owner_id)
     manager.add_role(:manager, organization)
@@ -74,7 +74,7 @@ describe "Organizations API" do
     page_overload.times do
       Fabricate(:distribution_system_operator)
     end
-    access_token = Fabricate(:admin_access_token)
+    access_token = Fabricate(:manager_access_token_as_admin)
     get_with_token "/api/v1/organizations", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
@@ -115,8 +115,8 @@ describe "Organizations API" do
   end
 
 
-  it 'creates an organization with admin token' do
-    access_token = Fabricate(:admin_access_token)
+  it 'creates an organization with manager token' do
+    access_token = Fabricate(:manager_access_token_as_admin)
     organization = Fabricate.build(:metering_service_provider)
 
     request_params = {
@@ -185,8 +185,8 @@ describe "Organizations API" do
   end
 
 
-  it 'updates an organization with admin token' do
-    access_token = Fabricate(:admin_access_token)
+  it 'updates an organization with manager token' do
+    access_token = Fabricate(:manager_access_token_as_admin)
     organization = Fabricate(:metering_service_provider)
 
     request_params = {
@@ -229,9 +229,9 @@ describe "Organizations API" do
     expect(response).to have_http_status(403)
   end
 
-  it 'updates an organization as manager with admin token' do
+  it 'updates an organization as manager with manager token' do
     organization = Fabricate(:metering_service_provider)
-    access_token = Fabricate(:user_with_admin_access_token)
+    access_token = Fabricate(:manager_access_token_no_role)
 
     manager = User.find(access_token.resource_owner_id)
     manager.add_role(:manager, organization)
@@ -277,8 +277,8 @@ describe "Organizations API" do
   end
 
 
-  it 'deletes an organization with admin token' do
-    access_token = Fabricate(:admin_access_token)
+  it 'deletes an organization with manager token' do
+    access_token = Fabricate(:manager_access_token_as_admin)
     organization_id = Fabricate(:metering_service_provider).id
 
     delete_with_token "/api/v1/organizations/#{organization_id}", access_token.token
@@ -464,9 +464,9 @@ describe "Organizations API" do
   end
 
 
-  it 'adds organization manager/member as manager with admin token' do
+  it 'adds organization manager/member as manager with manager token' do
     organization     = Fabricate(:distribution_system_operator)
-    manager_token = Fabricate(:user_with_admin_access_token)
+    manager_token = Fabricate(:manager_access_token_no_role)
     manager = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, organization)
 
@@ -486,19 +486,19 @@ describe "Organizations API" do
   end
 
 
-  it 'adds organization manager/member with admin token' do
+  it 'adds organization manager/member with manager token' do
     organization     = Fabricate(:distribution_system_operator)
-    admin_token = Fabricate(:admin_access_token)
+    manager_token = Fabricate(:manager_access_token_as_admin)
 
     user = Fabricate(:user)
     user_params = {
       user_id: user.id
     }.to_json
 
-    post_with_token "/api/v1/organizations/#{organization.id}/managers", user_params, admin_token.token
+    post_with_token "/api/v1/organizations/#{organization.id}/managers", user_params, manager_token.token
     expect(response).to have_http_status(201)
 
-    post_with_token "/api/v1/organizations/#{organization.id}/members", user_params, admin_token.token
+    post_with_token "/api/v1/organizations/#{organization.id}/members", user_params, manager_token.token
     expect(response).to have_http_status(201)
 
     expect(organization.managers).to eq [user]
@@ -547,9 +547,9 @@ describe "Organizations API" do
   end
 
 
-  it 'deletes organization manager/member as manager with admin token' do
+  it 'deletes organization manager/member as manager with manager token' do
     organization     = Fabricate(:distribution_system_operator)
-    manager_token = Fabricate(:user_with_admin_access_token)
+    manager_token = Fabricate(:manager_access_token_no_role)
     manager = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, organization)
 
@@ -568,18 +568,18 @@ describe "Organizations API" do
   end
 
 
-  it 'deletes organization manager/member with admin token' do
+  it 'deletes organization manager/member with manager token' do
     organization     = Fabricate(:distribution_system_operator)
-    admin_token = Fabricate(:admin_access_token)
+    manager_token = Fabricate(:manager_access_token_as_admin)
 
     user = Fabricate(:user)
     user.add_role(:manager, organization)
     user.add_role(:member, organization)
 
-    delete_with_token "/api/v1/organizations/#{organization.id}/managers/#{user.id}", admin_token.token
+    delete_with_token "/api/v1/organizations/#{organization.id}/managers/#{user.id}", manager_token.token
     expect(response).to have_http_status(204)
 
-    delete_with_token "/api/v1/organizations/#{organization.id}/members/#{user.id}", admin_token.token
+    delete_with_token "/api/v1/organizations/#{organization.id}/members/#{user.id}", manager_token.token
     expect(response).to have_http_status(204)
 
     expect(organization.managers).to eq []

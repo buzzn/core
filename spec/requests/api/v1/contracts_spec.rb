@@ -25,20 +25,20 @@ describe 'Contracts API' do
     expect(response).to have_http_status(401)
   end
 
-  it 'get all contracts for admin user' do
+  it 'get all contracts for manager user' do
     contract_ids = [ Fabricate(:mpoc_buzzn_metering).id, Fabricate(:mpoc_ferraris_0002_amperix).id ]
-    access_token = Fabricate(:admin_access_token).token
+    access_token = Fabricate(:manager_access_token_as_admin).token
     get_with_token '/api/v1/contracts', {}, access_token
     expect(response).to have_http_status(200)
     contracts = json['data'].reject { |contract| contract_ids.include?(contract['id']) }
     expect(contracts).to be_empty
   end
 
-  it 'paginate all contracts for admin user' do
+  it 'paginate all contracts for manager user' do
     @page_overload.times do
       Fabricate(:mpoc_buzzn_metering)
     end
-    access_token = Fabricate(:admin_access_token).token
+    access_token = Fabricate(:manager_access_token_as_admin).token
     get_with_token '/api/v1/contracts', {}, access_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
@@ -83,24 +83,24 @@ describe 'Contracts API' do
     expect(response).to have_http_status(401)
   end
 
-  it 'create contract with admin token' do
+  it 'create contract with manager token' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
     @contract_param_names.each do |param_name|
       request_params[param_name] = contract[param_name]
     end
-    access_token  = Fabricate(:admin_access_token).token
+    access_token  = Fabricate(:manager_access_token_as_admin).token
     post_with_token "/api/v1/contracts/", request_params.to_json, access_token
     expect(response).to have_http_status(201)
   end
 
-  it 'does not create contract with admin token if some of the params missing' do
+  it 'does not create contract with manager token if some of the params missing' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
     @contract_param_names.each do |param_name|
       request_params[param_name] = contract[param_name]
     end
-    access_token  = Fabricate(:admin_access_token).token
+    access_token  = Fabricate(:manager_access_token_as_admin).token
     request_params.each do |missing_param, val|
       broken_params = request_params.reject { |key, val| key == missing_param }
       post_with_token "/api/v1/contracts/", broken_params.to_json, access_token
@@ -109,7 +109,7 @@ describe 'Contracts API' do
     end
   end
 
-  it 'does not create contract with admin token if some params are wrong' do
+  it 'does not create contract with manager token if some params are wrong' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
     @contract_param_names.each do |param_name|
@@ -121,7 +121,7 @@ describe 'Contracts API' do
         request_params[param_name] = contract[param_name]
       end
     end
-    access_token  = Fabricate(:admin_access_token).token
+    access_token  = Fabricate(:manager_access_token_as_admin).token
     post_with_token "/api/v1/contracts/", request_params.to_json, access_token
     expect(response).to have_http_status(400)
   end
@@ -137,10 +137,10 @@ describe 'Contracts API' do
     expect(response).to have_http_status(401)
   end
 
-  it 'update contract with admin token' do
+  it 'update contract with manager token' do
     contract_id = Fabricate(:mpoc_buzzn_metering).id
     new_contract = Fabricate.build(:mpoc_ferraris_0002_amperix)
-    access_token  = Fabricate(:admin_access_token).token
+    access_token  = Fabricate(:manager_access_token_as_admin).token
     request_params = {
       id: contract_id,
       mode:  new_contract.mode,
@@ -150,10 +150,10 @@ describe 'Contracts API' do
     expect(json['data']['attributes']['mode']).to eq(new_contract.mode)
   end
 
-  it 'does not update contract with admin token if some params are wrong' do
+  it 'does not update contract with manager token if some params are wrong' do
     contract_id = Fabricate(:mpoc_buzzn_metering).id
     new_contract = Fabricate.build(:mpoc_ferraris_0002_amperix)
-    access_token  = Fabricate(:admin_access_token).token
+    access_token  = Fabricate(:manager_access_token_as_admin).token
     request_params = { id: contract_id }
     @contract_param_names.each do |param_name|
       if new_contract[param_name].is_a?(Date)
@@ -166,10 +166,10 @@ describe 'Contracts API' do
     expect(response).to have_http_status(400)
   end
 
-  it 'does not update contract with admin token and wrong id' do
+  it 'does not update contract with manager token and wrong id' do
     id = SecureRandom.uuid
     new_contract = Fabricate.build(:mpoc_ferraris_0002_amperix)
-    access_token  = Fabricate(:admin_access_token).token
+    access_token  = Fabricate(:manager_access_token_as_admin).token
     request_params = {
       id: "#{id}random",
       mode:  new_contract.mode,
@@ -184,9 +184,9 @@ describe 'Contracts API' do
     expect(response).to have_http_status(401)
   end
 
-  it 'delete contract with admin token' do
+  it 'delete contract with manager token' do
     contract_id = Fabricate(:mpoc_buzzn_metering).id
-    access_token  = Fabricate(:admin_access_token).token
+    access_token  = Fabricate(:manager_access_token_as_admin).token
     delete_with_token "/api/v1/contracts/#{contract_id}", access_token
     expect(response).to have_http_status(200)
   end

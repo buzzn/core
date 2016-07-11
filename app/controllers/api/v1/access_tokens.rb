@@ -11,7 +11,7 @@ module API
           requires :scopes, type: String, desc: "Application ID"
         end
         post do
-          doorkeeper_authorize! :admin
+          doorkeeper_authorize! :manager
           Doorkeeper::AccessToken.create!(
             scopes: params[:scopes],
             resource_owner_id: current_user.id,
