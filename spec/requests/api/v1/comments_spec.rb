@@ -84,7 +84,7 @@ describe 'Comments API' do
   end
 
   it 'creates a comment only with token' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     group         = Fabricate(:group)
     comment = {
       resource_id: group.id,
@@ -99,7 +99,7 @@ describe 'Comments API' do
   end
 
   it 'does not create comment for resource not readable by user' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     group         = Fabricate(:group_readable_by_friends)
     comment = {
       resource_id: group.id,
@@ -126,8 +126,8 @@ describe 'Comments API' do
   end
 
   it 'allows only update own comment' do
-    wrong_token   = Fabricate(:access_token)
-    access_token  = Fabricate(:access_token)
+    wrong_token   = Fabricate(:public_access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     group         = Fabricate(:group)
     comment_params = {
@@ -145,7 +145,7 @@ describe 'Comments API' do
   end
 
   it 'does not allow resource manager or manager to update any resource comment' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     manager_token = Fabricate(:manager_access_token_as_admin)
     user          = User.find(access_token.resource_owner_id)
     group         = Fabricate(:group_with_two_comments_readable_by_world)
@@ -184,8 +184,8 @@ describe 'Comments API' do
   end
 
   it 'allows only remove own comment' do
-    wrong_token   = Fabricate(:access_token)
-    access_token  = Fabricate(:access_token)
+    wrong_token   = Fabricate(:public_access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     group         = Fabricate(:group)
     comment_params = {
@@ -202,7 +202,7 @@ describe 'Comments API' do
   end
 
   it 'allows resource manager to delete resource comment-child' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     group         = Fabricate(:group_with_two_comments_readable_by_world)
     comments      = group.comment_threads

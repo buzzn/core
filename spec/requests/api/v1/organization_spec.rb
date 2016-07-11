@@ -16,7 +16,7 @@ describe "Organizations API" do
 
 
   it 'gets an organization as manager' do
-    access_token = Fabricate(:access_token)
+    access_token = Fabricate(:public_access_token)
     organization = Fabricate(:electricity_supplier)
     manager = User.find(access_token.resource_owner_id)
     manager.add_role(:manager, organization)
@@ -84,7 +84,7 @@ describe "Organizations API" do
   # CREATE
 
   it 'does not create an organization without token' do
-    access_token = Fabricate(:access_token)
+    access_token = Fabricate(:public_access_token)
     organization = Fabricate.build(:metering_service_provider)
 
     request_params = {}.to_json
@@ -96,7 +96,7 @@ describe "Organizations API" do
 
 
   it 'does not create an organization with user token' do
-    access_token = Fabricate(:access_token)
+    access_token = Fabricate(:public_access_token)
     organization = Fabricate.build(:metering_service_provider)
 
     request_params = {
@@ -166,7 +166,7 @@ describe "Organizations API" do
 
 
   it 'does not update an organization with user token' do
-    access_token = Fabricate(:access_token)
+    access_token = Fabricate(:public_access_token)
     organization = Fabricate(:metering_service_provider)
 
     request_params = {
@@ -208,7 +208,7 @@ describe "Organizations API" do
   end
 
   it 'does not update an organization as manager' do
-    access_token = Fabricate(:access_token)
+    access_token = Fabricate(:public_access_token)
     organization = Fabricate(:metering_service_provider)
     manager = User.find(access_token.resource_owner_id)
     manager.add_role(:manager, organization)
@@ -231,7 +231,7 @@ describe "Organizations API" do
 
   it 'updates an organization as manager with manager token' do
     organization = Fabricate(:metering_service_provider)
-    access_token = Fabricate(:manager_access_token_no_role)
+    access_token = Fabricate(:manager_access_token)
 
     manager = User.find(access_token.resource_owner_id)
     manager.add_role(:manager, organization)
@@ -268,7 +268,7 @@ describe "Organizations API" do
 
 
   it 'does not delete an organization with user token' do
-    access_token = Fabricate(:access_token)
+    access_token = Fabricate(:public_access_token)
     organization_id = Fabricate(:metering_service_provider).id
 
     delete_with_token "/api/v1/organizations/#{organization_id}", access_token.token
@@ -301,7 +301,7 @@ describe "Organizations API" do
   end
 
   it 'gets the related contracts of an organization with token' do
-    access_token    = Fabricate(:access_token)
+    access_token    = Fabricate(:public_access_token)
     organization    = Fabricate(:electricity_supplier_with_contracts)
     contracts       = organization.contracts
 
@@ -314,7 +314,7 @@ describe "Organizations API" do
   end
 
   it 'paginate contracts' do
-    access_token    = Fabricate(:access_token).token
+    access_token    = Fabricate(:public_access_token).token
     organization    = Fabricate(:electricity_supplier)
 
     page_overload.times do
@@ -339,7 +339,7 @@ describe "Organizations API" do
   end
 
   it 'gets the related address of an organization with token' do
-    access_token    = Fabricate(:access_token)
+    access_token    = Fabricate(:public_access_token)
     organization    = Fabricate(:transmission_system_operator_with_address)
     address         = organization.address
 
@@ -354,8 +354,8 @@ describe "Organizations API" do
   # RETRIEVE contracting_party
 
   it 'gets the related contracting_party of an organization without token' do
-    organization    = Fabricate(:metering_service_provider_with_contracting_party)
-    contracting_party       = organization.contracting_party
+    organization      = Fabricate(:metering_service_provider_with_contracting_party)
+    contracting_party = organization.contracting_party
 
     get_without_token "/api/v1/organizations/#{organization.id}/contracting_party"
 
@@ -365,7 +365,7 @@ describe "Organizations API" do
   end
 
   it 'gets the related contracting_party of an organization with token' do
-    access_token    = Fabricate(:access_token)
+    access_token    = Fabricate(:public_access_token)
     organization    = Fabricate(:metering_service_provider_with_contracting_party)
     party           = organization.contracting_party
 
@@ -380,7 +380,7 @@ describe "Organizations API" do
   # RETRIEVE manager
 
   it 'gets the related managers of an organization only with token' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     organization  = Fabricate(:distribution_system_operator)
 
     get_with_token "/api/v1/organizations/#{organization.id}/managers", access_token.token
@@ -390,7 +390,7 @@ describe "Organizations API" do
   end
 
   it 'paginate managers of an organziation' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     organization  = Fabricate(:distribution_system_operator)
     page_overload.times do
       user = Fabricate(:user)
@@ -402,7 +402,7 @@ describe "Organizations API" do
   end
 
   it 'gets the related members for Organization' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     organization  = Fabricate(:distribution_system_operator)
 
     get_with_token "/api/v1/organizations/#{organization.id}/members", access_token.token
@@ -412,7 +412,7 @@ describe "Organizations API" do
   end
 
   it 'paginate members of an organziation' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     organization  = Fabricate(:distribution_system_operator)
     page_overload.times do
       user = Fabricate(:user)
@@ -438,7 +438,7 @@ describe "Organizations API" do
 
   it 'does not add organization manager/member as member' do
     organization  = Fabricate(:distribution_system_operator)
-    member_token    = Fabricate(:access_token)
+    member_token    = Fabricate(:public_access_token)
     member          = User.find(member_token.resource_owner_id)
     member.add_role(:member, organization)
 
@@ -452,7 +452,7 @@ describe "Organizations API" do
 
   it 'does not add organization manager/member as manager with public token' do
     organization     = Fabricate(:distribution_system_operator)
-    manager_token    = Fabricate(:access_token)
+    manager_token    = Fabricate(:public_access_token)
     manager          = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, organization)
 
@@ -466,7 +466,7 @@ describe "Organizations API" do
 
   it 'adds organization manager/member as manager with manager token' do
     organization     = Fabricate(:distribution_system_operator)
-    manager_token = Fabricate(:manager_access_token_no_role)
+    manager_token = Fabricate(:manager_access_token)
     manager = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, organization)
 
@@ -521,7 +521,7 @@ describe "Organizations API" do
 
   it 'does not delete organization manager/member as member' do
     organization  = Fabricate(:distribution_system_operator)
-    member_token    = Fabricate(:access_token)
+    member_token    = Fabricate(:public_access_token)
     member          = User.find(member_token.resource_owner_id)
     member.add_role(:member, organization)
 
@@ -535,7 +535,7 @@ describe "Organizations API" do
 
   it 'does not delete organization manager/member as manager with public token' do
     organization     = Fabricate(:distribution_system_operator)
-    manager_token    = Fabricate(:access_token)
+    manager_token    = Fabricate(:public_access_token)
     manager          = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, organization)
 
@@ -549,7 +549,7 @@ describe "Organizations API" do
 
   it 'deletes organization manager/member as manager with manager token' do
     organization     = Fabricate(:distribution_system_operator)
-    manager_token = Fabricate(:manager_access_token_no_role)
+    manager_token = Fabricate(:manager_access_token)
     manager = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, organization)
 

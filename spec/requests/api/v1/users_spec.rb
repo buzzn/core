@@ -32,7 +32,7 @@ describe "Users API" do
 
 
   it 'does not gets a user as stranger' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = Fabricate(:user)
     get_with_token "/api/v1/users/#{user.id}", access_token.token
     expect(response).to have_http_status(403)
@@ -66,7 +66,7 @@ describe "Users API" do
 
 
   it 'gets the related groups for User' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     group         = Fabricate(:group_readable_by_members)
     user          = User.find(access_token.resource_owner_id)
     metering_point    = Fabricate(:metering_point_readable_by_world)
@@ -77,7 +77,7 @@ describe "Users API" do
   end
 
   it 'paginate groups' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     @page_overload.times do
       group             = Fabricate(:group)
@@ -91,7 +91,7 @@ describe "Users API" do
   end
 
   it 'gets related metering points for User' do
-    access_token    = Fabricate(:access_token)
+    access_token    = Fabricate(:public_access_token)
     user            = User.find(access_token.resource_owner_id)
     metering_point  = Fabricate(:metering_point)
     user.add_role(:member, metering_point)
@@ -105,8 +105,7 @@ describe "Users API" do
     meter2 = Fabricate(:meter)
     meter3 = Fabricate(:meter)
 
-    access_token  = Fabricate(:access_token)
-    access_token.update_attribute :scopes, 'manager'
+    access_token  = Fabricate(:manager_access_token)
     user = User.find(access_token.resource_owner_id)
     user.add_role(:manager, meter1)
     user.add_role(:manager, meter2)
@@ -118,7 +117,7 @@ describe "Users API" do
 
   it 'paginate meters' do
     manager_token = Fabricate(:manager_access_token_as_admin).token
-    user        = Fabricate(:user)
+    user          = Fabricate(:user)
     @page_overload.times do
       meter = Fabricate(:meter)
       user.add_role(:manager, meter)
@@ -134,8 +133,7 @@ describe "Users API" do
     meter2 = Fabricate(:meter)
     meter3 = Fabricate(:meter)
 
-    access_token  = Fabricate(:access_token)
-    access_token.update_attribute :scopes, 'manager'
+    access_token  = Fabricate(:manager_access_token)
     user          = User.find(access_token.resource_owner_id)
     user.add_role(:manager, meter1)
     user.add_role(:manager, meter2)
@@ -151,7 +149,7 @@ describe "Users API" do
   end
 
   it 'gets related friends for user' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     user.friends << Fabricate(:user)
 
@@ -162,7 +160,7 @@ describe "Users API" do
 
 
   it 'paginate friends' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     @page_overload.times do
       user.friends << Fabricate(:user)
@@ -174,7 +172,7 @@ describe "Users API" do
   end
 
   it 'gets specific friend for user' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     friend        = Fabricate(:user)
     user.friends << friend
@@ -185,7 +183,7 @@ describe "Users API" do
   end
 
   it 'deletes specific friend for user' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     friend        = Fabricate(:user)
     user.friends << friend
@@ -207,7 +205,7 @@ describe "Users API" do
   end
 
   it 'creates a new friendship request' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     target_user   = Fabricate(:user)
     params = {
@@ -280,7 +278,7 @@ describe "Users API" do
 
 
   it 'gets related devices for user' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     device        = Fabricate(:device)
     user.add_role(:manager, device)
@@ -292,7 +290,7 @@ describe "Users API" do
 
 
   it 'paginate devices' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     @page_overload.times do
       device      = Fabricate(:device)
@@ -305,7 +303,7 @@ describe "Users API" do
   end
 
   it 'gets user activities' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     user2         = Fabricate(:user)
     Fabricate(:friendship_request_with_activity, { sender: user, receiver: user2 })
