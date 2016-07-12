@@ -4,15 +4,13 @@ module API
       include API::V1::Defaults
       resource 'access-tokens' do
 
-        before do
-          doorkeeper_authorize! :manager
-        end
 
-        desc "Creates an Access Token "
+        desc "Creates an Access Token"
         params do
           requires :application_id, type: String, desc: "Application ID"
           requires :scopes, type: String, desc: "Scopes"
         end
+        oauth2 :manager    
         post do
           unless Doorkeeper::AccessToken.creatable_by?(current_user)
             return status 403

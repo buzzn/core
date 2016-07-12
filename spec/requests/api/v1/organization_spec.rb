@@ -84,9 +84,6 @@ describe "Organizations API" do
   # CREATE
 
   it 'does not create an organization without token' do
-    access_token = Fabricate(:public_access_token)
-    organization = Fabricate.build(:metering_service_provider)
-
     request_params = {}.to_json
 
     post_without_token "/api/v1/organizations", request_params
@@ -95,8 +92,18 @@ describe "Organizations API" do
   end
 
 
-  it 'does not create an organization with user token' do
-    access_token = Fabricate(:public_access_token)
+  [:public_access_token, :smartmeter_access_token].each do |token|
+    it "does not create an organization with #{token}" do
+      access_token = Fabricate(token)
+
+      post_with_token "/api/v1/organizations", {}.to_json, access_token.token
+
+      expect(response).to have_http_status(403)
+    end
+  end
+
+  it 'does not create an organization with manager token' do
+    access_token = Fabricate(:manager_access_token)
     organization = Fabricate.build(:metering_service_provider)
 
     request_params = {
@@ -114,8 +121,7 @@ describe "Organizations API" do
     expect(response).to have_http_status(403)
   end
 
-
-  it 'creates an organization with manager token' do
+  it 'creates an organization with manager token as admin' do
     access_token = Fabricate(:manager_access_token_as_admin)
     organization = Fabricate.build(:metering_service_provider)
 
@@ -165,8 +171,16 @@ describe "Organizations API" do
   end
 
 
-  it 'does not update an organization with user token' do
-    access_token = Fabricate(:public_access_token)
+  [:public_access_token, :smartmeter_access_token].each do |token|
+    it "does not update an organization with #{token}" do
+      access_token = Fabricate(token)
+      put_with_token "/api/v1/organizations", {}.to_json, access_token.token
+      expect(response).to have_http_status(403)
+    end
+  end
+
+  it 'does not update an organization with manager token' do
+    access_token = Fabricate(:manager_access_token)
     organization = Fabricate(:metering_service_provider)
 
     request_params = {
@@ -185,7 +199,7 @@ describe "Organizations API" do
   end
 
 
-  it 'updates an organization with manager token' do
+  it 'updates an organization with manager token admin' do
     access_token = Fabricate(:manager_access_token_as_admin)
     organization = Fabricate(:metering_service_provider)
 
@@ -207,27 +221,6 @@ describe "Organizations API" do
     expect(json['data']['attributes']['name']).to eq 'Google'
   end
 
-  it 'does not update an organization as manager' do
-    access_token = Fabricate(:public_access_token)
-    organization = Fabricate(:metering_service_provider)
-    manager = User.find(access_token.resource_owner_id)
-    manager.add_role(:manager, organization)
-
-    request_params = {
-      id:          organization.id,
-      name:        'Google',
-      phone:       organization.phone,
-      fax:         organization.fax,
-      website:     organization.website,
-      description: organization.description,
-      mode:        organization.mode,
-      email:       organization.email
-    }.to_json
-
-    put_with_token "/api/v1/organizations", request_params, access_token.token
-
-    expect(response).to have_http_status(403)
-  end
 
   it 'updates an organization as manager with manager token' do
     organization = Fabricate(:metering_service_provider)
@@ -267,17 +260,22 @@ describe "Organizations API" do
   end
 
 
-  it 'does not delete an organization with user token' do
-    access_token = Fabricate(:public_access_token)
-    organization_id = Fabricate(:metering_service_provider).id
+  [:public_access_token,
+   :smartmeter_access_token,
+   :manager_access_token].each do |token|
+    it "does not delete an organization with #{token}" do
+      access_token = Fabricate(token)
+      organization = Fabricate(:metering_service_provider)
+      manager = User.find(access_token.resource_owner_id)
+      manager.add_role(:manager, organization)
 
-    delete_with_token "/api/v1/organizations/#{organization_id}", access_token.token
+      delete_with_token "/api/v1/organizations/#{organization.id}", access_token.token
 
-    expect(response).to have_http_status(403)
+      expect(response).to have_http_status(403)
+    end
   end
 
-
-  it 'deletes an organization with manager token' do
+  it 'deletes an organization with manager token as admin' do
     access_token = Fabricate(:manager_access_token_as_admin)
     organization_id = Fabricate(:metering_service_provider).id
 
@@ -436,35 +434,25 @@ describe "Organizations API" do
   end
 
 
-  it 'does not add organization manager/member as member' do
-    organization  = Fabricate(:distribution_system_operator)
-    member_token    = Fabricate(:public_access_token)
-    member          = User.find(member_token.resource_owner_id)
-    member.add_role(:member, organization)
+  [:public_access_token, :smartmeter_access_token].each do |token|
+    [:member, :manager, :admin].each do |role|
+      it "does not add organization manager/member as member with #{token} as #{role}" do
+        organization    = Fabricate(:distribution_system_operator)
+        member_token    = Fabricate(token)
+        member          = User.find(member_token.resource_owner_id)
+        member.add_role(role, organization)
 
-    post_with_token "/api/v1/organizations/#{organization.id}/managers", {}.to_json, member_token.token
-    expect(response).to have_http_status(403)
+        post_with_token "/api/v1/organizations/#{organization.id}/managers", {}.to_json, member_token.token
+        expect(response).to have_http_status(403)
 
-    post_with_token "/api/v1/organizations/#{organization.id}/members", {}.to_json, member_token.token
-    expect(response).to have_http_status(403)
+        post_with_token "/api/v1/organizations/#{organization.id}/members", {}.to_json, member_token.token
+        expect(response).to have_http_status(403)
+        end
+    end
   end
 
 
-  it 'does not add organization manager/member as manager with public token' do
-    organization     = Fabricate(:distribution_system_operator)
-    manager_token    = Fabricate(:public_access_token)
-    manager          = User.find(manager_token.resource_owner_id)
-    manager.add_role(:manager, organization)
-
-    post_with_token "/api/v1/organizations/#{organization.id}/managers", {}.to_json, manager_token.token
-    expect(response).to have_http_status(403)
-
-    post_with_token "/api/v1/organizations/#{organization.id}/members", {}.to_json, manager_token.token
-    expect(response).to have_http_status(403)
-  end
-
-
-  it 'adds organization manager/member as manager with manager token' do
+  it 'adds organization manager/member with manager token as manager' do
     organization     = Fabricate(:distribution_system_operator)
     manager_token = Fabricate(:manager_access_token)
     manager = User.find(manager_token.resource_owner_id)
@@ -486,7 +474,7 @@ describe "Organizations API" do
   end
 
 
-  it 'adds organization manager/member with manager token' do
+  it 'adds organization manager/member with manager token as admin' do
     organization     = Fabricate(:distribution_system_operator)
     manager_token = Fabricate(:manager_access_token_as_admin)
 
@@ -519,32 +507,23 @@ describe "Organizations API" do
   end
  
 
-  it 'does not delete organization manager/member as member' do
-    organization  = Fabricate(:distribution_system_operator)
-    member_token    = Fabricate(:public_access_token)
-    member          = User.find(member_token.resource_owner_id)
-    member.add_role(:member, organization)
+  [:public_access_token, :smartmeter_access_token].each do |token|
+    [:member, :manager, :admin].each do |role|
+      it "does not delete organization manager/member as {role} with #{token}" do
+        organization    = Fabricate(:distribution_system_operator)
+        member_token    = Fabricate(token)
+        member          = User.find(member_token.resource_owner_id)
+        member.add_role(role, organization)
 
-    delete_with_token "/api/v1/organizations/#{organization.id}/managers/123", member_token.token
-    expect(response).to have_http_status(403)
+        delete_with_token "/api/v1/organizations/#{organization.id}/managers/123", member_token.token
+        expect(response).to have_http_status(403)
 
-    delete_with_token "/api/v1/organizations/#{organization.id}/members/123", member_token.token
-    expect(response).to have_http_status(403)
+        delete_with_token "/api/v1/organizations/#{organization.id}/members/123", member_token.token
+        expect(response).to have_http_status(403)
+      end
+    end
   end
 
-
-  it 'does not delete organization manager/member as manager with public token' do
-    organization     = Fabricate(:distribution_system_operator)
-    manager_token    = Fabricate(:public_access_token)
-    manager          = User.find(manager_token.resource_owner_id)
-    manager.add_role(:manager, organization)
-
-    delete_with_token "/api/v1/organizations/#{organization.id}/managers/123", manager_token.token
-    expect(response).to have_http_status(403)
-
-    delete_with_token "/api/v1/organizations/#{organization.id}/members/123", manager_token.token
-    expect(response).to have_http_status(403)
-  end
 
 
   it 'deletes organization manager/member as manager with manager token' do
@@ -568,7 +547,7 @@ describe "Organizations API" do
   end
 
 
-  it 'deletes organization manager/member with manager token' do
+  it 'deletes organization manager/member with manager token as admin' do
     organization     = Fabricate(:distribution_system_operator)
     manager_token = Fabricate(:manager_access_token_as_admin)
 
