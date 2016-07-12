@@ -4,14 +4,54 @@ describe "Users API" do
     @page_overload = 11
   end
 
+  # RETRIEVE me
+
+  it 'does not get me without token' do
+    get_without_token "/api/v1/users/me"
+    expect(response).to have_http_status(401)
+  end
+
+
+  it "does not get me with smartmeter_access_token" do
+    access_token = Fabricate(:smartmeter_access_token)
+    get_with_token "/api/v1/users/me", access_token.token
+    expect(response).to have_http_status(403)
+  end
+
+
+  [:public_access_token, :manager_access_token].each do |token|
+    it "gets me with #{token}" do
+      access_token = Fabricate(token)
+      get_with_token "/api/v1/users/me", access_token.token
+      expect(response).to have_http_status(200)
+    end
+  end
+
+
+  # RETRIEVE users
+
+  it 'does not get users without token' do
+    get_without_token "/api/v1/users"
+    expect(response).to have_http_status(401)
+  end
+
+  [:public_access_token, :smartmeter_access_token].each do |token|
+    it "does not get users with #{token}" do
+      access_token = Fabricate(token)
+      get_with_token "/api/v1/users", {}, access_token.token
+      expect(response).to have_http_status(403)
+    end
+  end
+  
 
   it 'get all users with manager token' do
     Fabricate(:user)
     Fabricate(:user)
-    access_token = Fabricate(:manager_access_token_as_admin).token
+    access_token = Fabricate(:manager_access_token).token
     get_with_token '/api/v1/users', {}, access_token
     expect(response).to have_http_status(200)
   end
+
 
   it 'paginate users' do
     @page_overload.times do
@@ -30,14 +70,16 @@ describe "Users API" do
     expect(response).to have_http_status(401)
   end
 
-
-  it 'does not gets a user as stranger' do
-    access_token  = Fabricate(:public_access_token)
-    user          = Fabricate(:user)
-    get_with_token "/api/v1/users/#{user.id}", access_token.token
-    expect(response).to have_http_status(403)
+ [:public_access_token, :smartmeter_access_token].each do |token|
+    it "does not get an user with #{token}" do
+      access_token = Fabricate(token)
+      user         = Fabricate(:user)
+      get_with_token "/api/v1/users/#{user.id}", access_token.token
+      expect(response).to have_http_status(403)
+    end
   end
 
+ # RETRIEVE users/friend
 
   it 'gets a user as friend' do
     access_token      = Fabricate(:access_token_with_friend)

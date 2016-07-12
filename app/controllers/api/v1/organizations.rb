@@ -8,13 +8,13 @@ module API
         desc "Return all organizations"
         paginate(per_page: per_page=10)
         oauth2 false
-        get root: :organizations do
+        get do
           per_page         = params[:per_page] || per_page
           page             = params[:page] || 1
-          organization_ids = Organization.all.select do |org|
-            org.readable_by?(current_user)
-          end.collect { |org| org.id }
-          organizations = Organization.where(id: organization_ids)
+          ids = Organization.all.select do |obj|
+            obj.readable_by?(current_user)
+          end.collect { |obj| obj.id }
+          organizations = Organization.where(id: ids)
           total_pages  = organizations.page(page).per_page(per_page).total_pages
           paginate(render(organizations, meta: { total_pages: total_pages }))
         end
@@ -26,8 +26,8 @@ module API
           requires :id, type: String, desc: "ID of the organization"
         end
         oauth2 false
-        get ":id", root: "organization" do
-          organization = Organization.where(id: permitted_params[:id]).first!
+        get ":id" do
+          organization = Organization.find(params[:id])
           if organization.readable_by?(current_user)
             organization
           else

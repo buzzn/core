@@ -8,11 +8,11 @@ module API
       message = "OAuth error: #{e.to_s}" if eclass.match('WineBouncer::Errors')
       status = case 
         when eclass.match('OAuthUnauthorizedError')
-          401
+          401 # forbidden
         when eclass.match('OAuthForbiddenError')
-          403
+          403 # no permissions
         when eclass.match('RecordNotFound'), e.message.match(/unable to find/i).present?
-          404
+          404 # not found
         else
           (e.respond_to? :status) && e.status || 500
         end
