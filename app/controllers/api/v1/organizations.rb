@@ -7,13 +7,14 @@ module API
 
         desc "Return all organizations"
         paginate(per_page: per_page=10)
-        get root: :organizations do
+        oauth2 false
+        get do
           per_page         = params[:per_page] || per_page
           page             = params[:page] || 1
-          organization_ids = Organization.all.select do |org|
-            org.readable_by?(current_user)
-          end.collect { |org| org.id }
-          organizations = Organization.where(id: organization_ids)
+          ids = Organization.all.select do |obj|
+            obj.readable_by?(current_user)
+          end.collect { |obj| obj.id }
+          organizations = Organization.where(id: ids)
           total_pages  = organizations.page(page).per_page(per_page).total_pages
           paginate(render(organizations, meta: { total_pages: total_pages }))
         end
@@ -24,8 +25,9 @@ module API
         params do
           requires :id, type: String, desc: "ID of the organization"
         end
-        get ":id", root: "organization" do
-          organization = Organization.where(id: permitted_params[:id]).first!
+        oauth2 false
+        get ":id" do
+          organization = Organization.find(params[:id])
           if organization.readable_by?(current_user)
             organization
           else
@@ -39,6 +41,7 @@ module API
           requires :id, type: String, desc: 'ID of the organization'
         end
         paginate(per_page: per_page=10)
+        oauth2 false
         get ':id/contracts' do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
@@ -57,6 +60,7 @@ module API
           requires :id, type: String, desc: 'ID of the organization'
         end
         paginate(per_page: per_page=10)
+        oauth2 false
         get ':id/managers' do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
@@ -75,6 +79,7 @@ module API
           requires :id, type: String, desc: 'ID of the organization'
         end
         paginate(per_page: per_page=10)
+        oauth2 false
         get ':id/members' do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
@@ -92,6 +97,7 @@ module API
         params do
           requires :id, type: String, desc: 'ID of the organization'
         end
+        oauth2 false
         get ':id/address' do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
@@ -106,6 +112,7 @@ module API
         params do
           requires :id, type: String, desc: 'ID of the organization'
         end
+        oauth2 false
         get ':id/contracting_party' do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
@@ -115,10 +122,6 @@ module API
           end
         end
 
-
-        before do
-          doorkeeper_authorize! :admin
-        end
 
         desc "Create an Organization."
         params do
@@ -130,6 +133,7 @@ module API
           requires :description,  type: String, desc: "Description of the Organization."
           requires :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
         end
+        oauth2 :full
         post do
           if Organization.creatable_by?(current_user)
             organization = Organization.new({
@@ -166,6 +170,7 @@ module API
           requires :description,  type: String, desc: "Description of the Organization."
           requires :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
         end
+        oauth2 :full
         put do
           organization = Organization.find(params[:id])
 
@@ -184,6 +189,7 @@ module API
         params do
           requires :id, type: String, desc: "Organization ID"
         end
+        oauth2 :full
         delete ':id' do
           organization = Organization.find(params[:id])
           if organization.deletable_by?(current_user)
@@ -199,6 +205,7 @@ module API
         params do
           requires :user_id, type: String, desc: 'User id'
         end
+        oauth2 :full
         post ':id/managers' do
           organization = Organization.find(params[:id])
           if organization.updatable_by?(current_user)
@@ -211,6 +218,7 @@ module API
 
 
         desc 'Remove user from organization managers'
+        oauth2 :full
         delete ':id/managers/:user_id' do
           organization = Organization.find(params[:id])
           if organization.updatable_by?(current_user)
@@ -227,6 +235,7 @@ module API
         params do
           requires :user_id, type: String, desc: 'User id'
         end
+        oauth2 :full
         post ':id/members' do
           organization = Organization.find(params[:id])
           if organization.updatable_by?(current_user)
@@ -239,6 +248,7 @@ module API
 
 
         desc 'Remove user from organization members'
+        oauth2 :full
         delete ':id/members/:user_id' do
           organization = Organization.find(params[:id])
           if organization.updatable_by?(current_user)

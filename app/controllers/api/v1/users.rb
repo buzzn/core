@@ -5,19 +5,23 @@ module API
       resource 'users' do
 
         desc "Return me"
+        oauth2 :public, :full
         get "me" do
-          doorkeeper_authorize! :public
           current_user
         end
 
         desc "Return all Users"
         paginate(per_page: per_page=10)
+        oauth2 :full
         get do
-          doorkeeper_authorize! :admin, :read
-          @per_page     = params[:per_page] || per_page
-          @page         = params[:page] || 1
-          @total_pages  = User.all.page(@page).per_page(@per_page).total_pages
-          paginate(render(User.all, meta: { total_pages: @total_pages }))
+          per_page         = params[:per_page] || per_page
+          page             = params[:page] || 1
+          ids = User.all.select do |obj|
+            obj.readable_by?(current_user)
+          end.collect { |obj| obj.id }
+          users = User.where(id: ids)
+          total_pages  = users.page(page).per_page(per_page).total_pages
+          paginate(render(users, meta: { total_pages: total_pages }))
         end
 
 
@@ -25,17 +29,13 @@ module API
         params do
           requires :id, type: String, desc: "ID of the user"
         end
+        oauth2 :public, :full
         get ":id" do
-          doorkeeper_authorize! :public
           user = User.find(params[:id])
-          if current_user
-            if user.profile.readable_by?(current_user)
-              return user
-            else
-              status 403
-            end
+          if user.readable_by?(current_user)
+            user
           else
-            status 401
+            status 403
           end
         end
 
@@ -47,13 +47,17 @@ module API
           requires :first_name, type: String
           requires :last_name, type: String
         end
+        oauth2 :full
         post do
-          doorkeeper_authorize! :admin
-          User.create!(
-            email:    params[:email],
-            password: params[:password],
-            profile:  Profile.new( user_name: params[:user_name], first_name: params[:first_name], last_name:  params[:last_name] )
+          if User.creatable_by?(current_user)
+            User.create!(
+              email:    params[:email],
+              password: params[:password],
+              profile:  Profile.new( user_name: params[:user_name], first_name: params[:first_name], last_name:  params[:last_name] )
             )
+          else
+            status 403
+          end
         end
 
 
@@ -62,8 +66,8 @@ module API
           requires :id, type: String, desc: "ID of the profile"
         end
         paginate(per_page: per_page=10)
+        oauth2 :public, :full
         get ":id/groups" do
-          doorkeeper_authorize! :public
           user          = User.find(params[:id])
           groups        = Group.where(id: user.accessible_groups.map(&:id))
           @per_page     = params[:per_page] || per_page
@@ -79,8 +83,8 @@ module API
           requires :id, type: String, desc: "ID of the User"
         end
         paginate(per_page: per_page=10)
+        oauth2 :public
         get ":id/metering-points" do
-          doorkeeper_authorize! :public
           user = User.find(params[:id])
           user.accessible_metering_points
         end
@@ -92,8 +96,8 @@ module API
           optional :manufacturer_product_serialnumber, type: String, desc: "manufacturer product serialnumber"
         end
         paginate(per_page: per_page=10)
+        oauth2 :full
         get ":id/meters" do
-          doorkeeper_authorize! :admin
           user = User.find(params[:id])
           if params[:manufacturer_product_serialnumber]
             meters = Meter.with_role(:manager, user).where(manufacturer_product_serialnumber: params[:manufacturer_product_serialnumber])
@@ -112,8 +116,8 @@ module API
           requires :id, type: String, desc: "ID of the User"
         end
         paginate(per_page: per_page=10)
+        oauth2 :public, :full
         get ":id/friends" do
-          doorkeeper_authorize! :public
           user = User.find(params[:id])
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
@@ -123,16 +127,16 @@ module API
 
 
         desc 'Return a friend'
+        oauth2 :public
         get ':id/friends/:friend_id' do
-          doorkeeper_authorize! :public
           user = User.find(params[:id])
           user.friends.find(params[:friend_id])
         end
 
 
         desc 'Delete a friend'
+        oauth2 :public, :full
         delete ':id/friends/:friend_id' do
-          doorkeeper_authorize! :public
           if current_user.id == params[:id]
             user    = User.find(params[:id])
             friend  = user.friends.find(params[:friend_id])
@@ -144,8 +148,8 @@ module API
 
 
         desc 'List of received friendship requests'
+        oauth2 :public, :full
         get ':id/friendship-requests' do
-          doorkeeper_authorize! :public
           if current_user.id == params[:id]
             User.find(params[:id]).received_friendship_requests
           else
@@ -158,8 +162,8 @@ module API
         params do
           requires :receiver_id, type: String, desc: 'ID of a receiver'
         end
+        oauth2 :public, :full
         post ':id/friendship-requests' do
-          doorkeeper_authorize! :public
           if current_user.id == params[:id]
             sender    = User.find(params[:id])
             receiver  = User.find(params[:receiver_id])
@@ -174,8 +178,8 @@ module API
 
 
         desc 'Accept friendship request'
+        oauth2 :public, :full
         put ':id/friendship-requests/:request_id' do
-          doorkeeper_authorize! :public
           if current_user.id == params[:id]
             friendship_request = FriendshipRequest.where(receiver: params[:id]).find(params[:request_id])
             friendship_request.create_activity key: 'friendship.create', owner: current_user, recipient: friendship_request.sender
@@ -187,8 +191,8 @@ module API
 
 
         desc 'Reject friendship request'
+        oauth2 :public, :full
         delete ':id/friendship-requests/:request_id' do
-          doorkeeper_authorize! :public
           if current_user.id == params[:id]
             friendship_request = FriendshipRequest.where(receiver: params[:id]).find(params[:request_id])
             friendship_request.create_activity key: 'friendship_request.reject', owner: current_user, recipient: friendship_request.sender
@@ -204,8 +208,8 @@ module API
           requires :id, type: String, desc: "ID of the User"
         end
         paginate(per_page: per_page=10)
+        oauth2 :public, :full
         get ":id/devices" do
-          doorkeeper_authorize! :public
           user = User.find(params[:id])
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
@@ -215,8 +219,8 @@ module API
 
 
         desc 'Return user activities'
+        oauth2 :public, :full
         get ':id/activities' do
-          doorkeeper_authorize! :public
           PublicActivity::Activity.where({ owner_type: 'User', owner_id: params[:id] })
         end
 

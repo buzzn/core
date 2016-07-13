@@ -6,6 +6,7 @@ module API
 
         desc "Return all groups"
         paginate(per_page: per_page=10)
+        oauth2 false
         get root: :groups do
           group_ids = Group.where(readable: 'world').ids
           if current_user
@@ -33,6 +34,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
+        oauth2 false
         get ":id", root: "group" do
           group = Group.where(id: permitted_params[:id]).first!
           if group.readable_by_world?
@@ -55,8 +57,8 @@ module API
           requires :name,         type: String, desc: "Name of the Group."
           requires :description,  type: String, desc: "Description of the Group."
         end
+        oauth2 :full
         post do
-          doorkeeper_authorize! :write
           if Group.creatable_by?(current_user)
             @params = params.group || params
             @group = Group.new({
@@ -80,8 +82,8 @@ module API
           requires :id, type: String, desc: "Group ID."
           optional :name
         end
+        oauth2 :full
         put do
-          doorkeeper_authorize! :write
           @group = Group.find(params[:id])
           if @group.updatable_by?(current_user)
             @params = params.group || params
@@ -101,8 +103,8 @@ module API
         params do
           requires :id, type: String, desc: "Group ID"
         end
+        oauth2 :full
         delete ':id' do
-          doorkeeper_authorize! :write
           if current_user
             group = Group.find(params[:id])
             if group.updatable_by?(current_user)
@@ -123,6 +125,7 @@ module API
           requires :id, type: String, desc: "ID of the group"
         end
         paginate(per_page: per_page=10)
+        oauth2 false
         get ":id/metering-points" do
           group               = Group.find(permitted_params[:id])
           metering_points_ids = []
@@ -146,6 +149,7 @@ module API
           requires :id, type: String, desc: "ID of the group"
         end
         paginate(per_page: per_page=10)
+        oauth2 false
         get ":id/managers" do
           doorkeeper_authorize! :public
           group = Group.where(id: permitted_params[:id]).first!

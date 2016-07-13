@@ -99,6 +99,11 @@ en:
       month: Month
       second: Seconds
       year: Year
+  doorkeeper:
+    scopes:
+      public: 'Read Access to your Public Data'
+      smartmeter: 'Read Write Access on your MeteringPoint, Meter and Reading'
+      manager: 'Full Access to all your Data'
   errors: &errors
     format: ! '%{attribute} %{message}'
     messages:

@@ -1,15 +1,15 @@
-class OrganizationAuthorizer < ApplicationAuthorizer
+class Doorkeeper::AccessTokenAuthorizer < ApplicationAuthorizer
 
   def self.creatable_by?(user)
     user && user.has_role?(:admin)
   end
 
   def readable_by?(user)
-    true
+    user && user.has_role?(:admin)
   end
 
   def updatable_by?(user)
-    user && (user.has_role?(:admin) || user.has_role?(:manager, resource))
+     user && user.has_role?(:admin)
   end
 
   def deletable_by?(user)
@@ -17,3 +17,4 @@ class OrganizationAuthorizer < ApplicationAuthorizer
   end
 
 end
+Doorkeeper::AccessToken.send :include, Authority::Abilities

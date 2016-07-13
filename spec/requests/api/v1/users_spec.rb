@@ -4,20 +4,60 @@ describe "Users API" do
     @page_overload = 11
   end
 
+  # RETRIEVE me
 
-  it 'get all users with admin token' do
+  it 'does not get me without token' do
+    get_without_token "/api/v1/users/me"
+    expect(response).to have_http_status(401)
+  end
+
+
+  it "does not get me with smartmeter_access_token" do
+    access_token = Fabricate(:smartmeter_access_token)
+    get_with_token "/api/v1/users/me", access_token.token
+    expect(response).to have_http_status(403)
+  end
+
+
+  [:public_access_token, :full_access_token].each do |token|
+    it "gets me with #{token}" do
+      access_token = Fabricate(token)
+      get_with_token "/api/v1/users/me", access_token.token
+      expect(response).to have_http_status(200)
+    end
+  end
+
+
+  # RETRIEVE users
+
+  it 'does not get users without token' do
+    get_without_token "/api/v1/users"
+    expect(response).to have_http_status(401)
+  end
+
+  [:public_access_token, :smartmeter_access_token].each do |token|
+    it "does not get users with #{token}" do
+      access_token = Fabricate(token)
+      get_with_token "/api/v1/users", {}, access_token.token
+      expect(response).to have_http_status(403)
+    end
+  end
+  
+
+  it 'get all users with manager token' do
     Fabricate(:user)
     Fabricate(:user)
-    access_token = Fabricate(:admin_access_token).token
+    access_token = Fabricate(:full_access_token).token
     get_with_token '/api/v1/users', {}, access_token
     expect(response).to have_http_status(200)
   end
+
 
   it 'paginate users' do
     @page_overload.times do
       Fabricate(:user)
     end
-    access_token = Fabricate(:admin_access_token).token
+    access_token = Fabricate(:full_access_token_as_admin).token
     get_with_token '/api/v1/users', {}, access_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
@@ -30,14 +70,16 @@ describe "Users API" do
     expect(response).to have_http_status(401)
   end
 
-
-  it 'does not gets a user as stranger' do
-    access_token  = Fabricate(:access_token)
-    user          = Fabricate(:user)
-    get_with_token "/api/v1/users/#{user.id}", access_token.token
-    expect(response).to have_http_status(403)
+ [:public_access_token, :smartmeter_access_token].each do |token|
+    it "does not get an user with #{token}" do
+      access_token = Fabricate(token)
+      user         = Fabricate(:user)
+      get_with_token "/api/v1/users/#{user.id}", access_token.token
+      expect(response).to have_http_status(403)
+    end
   end
 
+ # RETRIEVE users/friend
 
   it 'gets a user as friend' do
     access_token      = Fabricate(:access_token_with_friend)
@@ -48,8 +90,8 @@ describe "Users API" do
   end
 
 
-  it 'creates a user as admin' do
-    access_token  = Fabricate(:admin_access_token)
+  it 'creates a user as manager' do
+    access_token  = Fabricate(:full_access_token_as_admin)
 
     user = Fabricate.build(:user)
     request_params = {
@@ -66,7 +108,7 @@ describe "Users API" do
 
 
   it 'gets the related groups for User' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     group         = Fabricate(:group_readable_by_members)
     user          = User.find(access_token.resource_owner_id)
     metering_point    = Fabricate(:metering_point_readable_by_world)
@@ -77,7 +119,7 @@ describe "Users API" do
   end
 
   it 'paginate groups' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     @page_overload.times do
       group             = Fabricate(:group)
@@ -91,7 +133,7 @@ describe "Users API" do
   end
 
   it 'gets related metering points for User' do
-    access_token    = Fabricate(:access_token)
+    access_token    = Fabricate(:public_access_token)
     user            = User.find(access_token.resource_owner_id)
     metering_point  = Fabricate(:metering_point)
     user.add_role(:member, metering_point)
@@ -105,8 +147,7 @@ describe "Users API" do
     meter2 = Fabricate(:meter)
     meter3 = Fabricate(:meter)
 
-    access_token  = Fabricate(:access_token)
-    access_token.update_attribute :scopes, 'admin'
+    access_token  = Fabricate(:full_access_token)
     user = User.find(access_token.resource_owner_id)
     user.add_role(:manager, meter1)
     user.add_role(:manager, meter2)
@@ -117,13 +158,13 @@ describe "Users API" do
   end
 
   it 'paginate meters' do
-    admin_token = Fabricate(:admin_access_token).token
-    user        = Fabricate(:user)
+    manager_token = Fabricate(:full_access_token_as_admin).token
+    user          = Fabricate(:user)
     @page_overload.times do
       meter = Fabricate(:meter)
       user.add_role(:manager, meter)
     end
-    get_with_token "/api/v1/users/#{user.id}/meters", admin_token
+    get_with_token "/api/v1/users/#{user.id}/meters", manager_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
   end
@@ -134,8 +175,7 @@ describe "Users API" do
     meter2 = Fabricate(:meter)
     meter3 = Fabricate(:meter)
 
-    access_token  = Fabricate(:access_token)
-    access_token.update_attribute :scopes, 'admin'
+    access_token  = Fabricate(:full_access_token)
     user          = User.find(access_token.resource_owner_id)
     user.add_role(:manager, meter1)
     user.add_role(:manager, meter2)
@@ -151,7 +191,7 @@ describe "Users API" do
   end
 
   it 'gets related friends for user' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     user.friends << Fabricate(:user)
 
@@ -162,7 +202,7 @@ describe "Users API" do
 
 
   it 'paginate friends' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     @page_overload.times do
       user.friends << Fabricate(:user)
@@ -174,7 +214,7 @@ describe "Users API" do
   end
 
   it 'gets specific friend for user' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     friend        = Fabricate(:user)
     user.friends << friend
@@ -185,7 +225,7 @@ describe "Users API" do
   end
 
   it 'deletes specific friend for user' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     friend        = Fabricate(:user)
     user.friends << friend
@@ -207,7 +247,7 @@ describe "Users API" do
   end
 
   it 'creates a new friendship request' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     target_user   = Fabricate(:user)
     params = {
@@ -219,7 +259,7 @@ describe "Users API" do
   end
 
   it 'creates activity with a new friendship request' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     target_user   = Fabricate(:user)
     params = {
@@ -280,7 +320,7 @@ describe "Users API" do
 
 
   it 'gets related devices for user' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     device        = Fabricate(:device)
     user.add_role(:manager, device)
@@ -292,7 +332,7 @@ describe "Users API" do
 
 
   it 'paginate devices' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     @page_overload.times do
       device      = Fabricate(:device)
@@ -305,7 +345,7 @@ describe "Users API" do
   end
 
   it 'gets user activities' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     user2         = Fabricate(:user)
     Fabricate(:friendship_request_with_activity, { sender: user, receiver: user2 })
