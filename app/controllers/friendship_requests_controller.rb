@@ -22,12 +22,10 @@ class FriendshipRequestsController < InheritedResources::Base
   def accept
     @friendship_request = FriendshipRequest.find(params[:id])
     if @friendship_request.receiver == current_user
-      @friendship_request.accept
       @friendship_request.create_activity key: 'friendship.create', owner: current_user, recipient: @friendship_request.sender
-      if @friendship_request.save
-        flash[:notice] = t('accepted_friendship_request')
-        redirect_to profile_path(current_user.profile)
-      end
+      @friendship_request.accept
+      flash[:notice] = t('accepted_friendship_request')
+      redirect_to profile_path(current_user.profile)
     else
       flash[:error] = t('unable_to_accepted_friendship_request')
       redirect_to profile_path(@friendship_request.receiver)
@@ -37,12 +35,10 @@ class FriendshipRequestsController < InheritedResources::Base
   def reject
     @friendship_request = FriendshipRequest.find(params[:id])
     if @friendship_request.receiver == current_user
-      @friendship_request.reject
       @friendship_request.create_activity key: 'friendship_request.reject', owner: current_user, recipient: @friendship_request.sender
-      if @friendship_request.save
-        flash[:notice] = t('rejected_friendship_request')
-        redirect_to profile_path(current_user.profile)
-      end
+      @friendship_request.reject
+      flash[:notice] = t('rejected_friendship_request')
+      redirect_to profile_path(current_user.profile)
     else
       flash[:error] = t('unable_to_rejected_friendship_request')
       redirect_to profile_path(@friendship_request.receiver)
