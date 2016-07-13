@@ -218,6 +218,19 @@ describe "Users API" do
     expect(response).to have_http_status(201)
   end
 
+  it 'creates activity with a new friendship request' do
+    access_token  = Fabricate(:access_token)
+    user          = User.find(access_token.resource_owner_id)
+    target_user   = Fabricate(:user)
+    params = {
+      receiver_id: target_user.id
+    }
+
+    post_with_token "/api/v1/users/#{user.id}/friendship-requests", params.to_json, access_token.token
+    activities = PublicActivity::Activity.where({ owner_type: 'User', owner_id: user.id })
+    expect(activities.first.key).to eq('friendship_request.create')
+  end
+
   it 'accepts friendship request' do
     access_token  = Fabricate(:access_token_received_friendship_request)
     user          = User.find(access_token.resource_owner_id)
@@ -231,6 +244,17 @@ describe "Users API" do
   end
 
 
+  it 'creates activity when accepts friendship request' do
+    access_token  = Fabricate(:access_token_received_friendship_request)
+    user          = User.find(access_token.resource_owner_id)
+    request       = user.received_friendship_requests.first
+
+    put_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", {}, access_token.token
+    activities = PublicActivity::Activity.where({ owner_type: 'User', owner_id: user.id })
+    expect(activities.first.key).to eq('friendship.create')
+  end
+
+
   it 'rejects friendship request' do
     access_token  = Fabricate(:access_token_received_friendship_request)
     user          = User.find(access_token.resource_owner_id)
@@ -241,6 +265,17 @@ describe "Users API" do
     modified_user = User.find(access_token.resource_owner_id)
     expect(modified_user.friends.size).to eq(0)
     expect(modified_user.received_friendship_requests.size).to eq(0)
+  end
+
+
+  it 'creates activity when rejects friendship request' do
+    access_token  = Fabricate(:access_token_received_friendship_request)
+    user          = User.find(access_token.resource_owner_id)
+    request       = user.received_friendship_requests.first
+
+    delete_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", access_token.token
+    activities = PublicActivity::Activity.where({ owner_type: 'User', owner_id: user.id })
+    expect(activities.first.key).to eq('friendship_request.reject')
   end
 
 

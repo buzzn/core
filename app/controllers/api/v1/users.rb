@@ -163,7 +163,10 @@ module API
           if current_user.id == params[:id]
             sender    = User.find(params[:id])
             receiver  = User.find(params[:receiver_id])
-            FriendshipRequest.create(sender: sender, receiver: receiver)
+            friendship_request = FriendshipRequest.new(sender: sender, receiver: receiver)
+            if friendship_request.save
+              friendship_request.create_activity key: 'friendship_request.create', owner: sender, recipient: receiver
+            end
           else
             status 403
           end
@@ -174,8 +177,9 @@ module API
         put ':id/friendship-requests/:request_id' do
           doorkeeper_authorize! :public
           if current_user.id == params[:id]
-            request = FriendshipRequest.where(receiver: params[:id]).find(params[:request_id])
-            request.accept
+            friendship_request = FriendshipRequest.where(receiver: params[:id]).find(params[:request_id])
+            friendship_request.create_activity key: 'friendship.create', owner: current_user, recipient: friendship_request.sender
+            friendship_request.accept
           else
             status 403
           end
@@ -186,8 +190,9 @@ module API
         delete ':id/friendship-requests/:request_id' do
           doorkeeper_authorize! :public
           if current_user.id == params[:id]
-            request = FriendshipRequest.where(receiver: params[:id]).find(params[:request_id])
-            request.reject
+            friendship_request = FriendshipRequest.where(receiver: params[:id]).find(params[:request_id])
+            friendship_request.create_activity key: 'friendship_request.reject', owner: current_user, recipient: friendship_request.sender
+            friendship_request.reject
           else
             status 403
           end

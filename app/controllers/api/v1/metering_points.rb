@@ -159,6 +159,7 @@ module API
           user            = User.find(params[:user_id])
           if current_user.has_role?(:manager, metering_point) || current_user.has_role?(:admin)
             user.add_role(:manager, metering_point)
+            user.create_activity(key: 'user.appointed_metering_point_manager', owner: current_user, recipient: metering_point)
           else
             status 403
           end
@@ -218,6 +219,7 @@ module API
               current_user.has_role?(:admin))
 
             user.add_role(:member, metering_point)
+            metering_point.create_activity key: 'metering_point_user_membership.create', owner: user
           else
             status 403
           end
@@ -234,6 +236,7 @@ module API
               current_user.has_role?(:manager, metering_point))
 
             user.remove_role(:member, metering_point)
+            metering_point.create_activity(key: 'metering_point_user_membership.cancel', owner: user)
           else
             status 403
           end
