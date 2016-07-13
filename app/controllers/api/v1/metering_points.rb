@@ -12,14 +12,10 @@ module API
         oauth2 false
         get ":id" do
           metering_point = MeteringPoint.where(id: params[:id]).first!
-          if metering_point.readable_by_world?
+          if metering_point.readable_by?(current_user)
             metering_point
           else
-            if metering_point.readable_by?(current_user)
-              metering_point
-            else
-              status 403
-            end
+            status 403
           end
         end
 

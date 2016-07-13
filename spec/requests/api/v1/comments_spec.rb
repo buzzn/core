@@ -19,7 +19,7 @@ describe 'Comments API' do
   end
 
   it 'creates activity with a new comment creation' do
-    admin_token     = Fabricate(:admin_access_token)
+    admin_token     = Fabricate(:full_edit_access_token_as_admin)
     admin           = User.find(admin_token.resource_owner_id)
     group           = Fabricate(:group)
     comment = {
@@ -34,7 +34,6 @@ describe 'Comments API' do
   end
 
   it 'creates a child comment with full_edit token' do
-    manager_token   = Fabricate(:manager_access_token_as_admin)
     manager_token   = Fabricate(:full_edit_access_token_as_admin)
     group           = Fabricate(:group_with_two_comments_readable_by_world)
     comments        = group.comment_threads

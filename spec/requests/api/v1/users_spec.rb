@@ -259,7 +259,7 @@ describe "Users API" do
   end
 
   it 'creates activity with a new friendship request' do
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
     target_user   = Fabricate(:user)
     params = {
