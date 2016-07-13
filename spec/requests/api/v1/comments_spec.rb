@@ -18,6 +18,21 @@ describe 'Comments API' do
     expect(json['data'].size).to eq(1)
   end
 
+  it 'creates activity with a new comment creation' do
+    admin_token     = Fabricate(:admin_access_token)
+    admin           = User.find(admin_token.resource_owner_id)
+    group           = Fabricate(:group)
+    comment = {
+      resource_id: group.id,
+      resource_name: 'Group',
+      body: FFaker::Lorem.paragraphs.join('-'),
+    }
+
+    post_with_token '/api/v1/comments', comment.to_json, admin_token.token
+    activities = PublicActivity::Activity.where({ owner_type: 'User', owner_id: admin.id })
+    expect(activities.first.key).to eq('comment.create')
+  end
+
   it 'creates a child comment with admin token' do
     admin_token     = Fabricate(:admin_access_token)
     group           = Fabricate(:group_with_two_comments_readable_by_world)

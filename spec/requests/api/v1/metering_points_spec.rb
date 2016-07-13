@@ -369,6 +369,20 @@ describe "Metering Points API" do
     expect(json['data'].size).to eq(3)
   end
 
+  it 'creates activity when adding metering point manager' do
+    user            = Fabricate(:user)
+    admin_token     = Fabricate(:admin_access_token)
+    admin           = User.find(admin_token.resource_owner_id)
+    metering_point  = Fabricate(:metering_point)
+    params = {
+      user_id: user.id
+    }
+
+    post_with_token "/api/v1/metering-points/#{metering_point.id}/managers", params.to_json, admin_token.token
+    activities      = PublicActivity::Activity.where({ owner_type: 'User', owner_id: admin.id })
+    expect(activities.first.key).to eq('user.appointed_metering_point_manager')
+  end
+
   it 'removes metering point manager only for current user or with admin token' do
     metering_point  = Fabricate(:metering_point_readable_by_world)
     user            = Fabricate(:user)
@@ -429,6 +443,19 @@ describe "Metering Points API" do
     expect(json['data'].size).to eq(4)
   end
 
+  it 'creates activity when adding metering point member' do
+    user            = Fabricate(:user)
+    admin_token     = Fabricate(:admin_access_token)
+    metering_point  = Fabricate(:metering_point)
+    params = {
+      user_id: user.id
+    }
+
+    post_with_token "/api/v1/metering-points/#{metering_point.id}/members", params.to_json, admin_token.token
+    activities      = PublicActivity::Activity.where({ owner_type: 'User', owner_id: user.id })
+    expect(activities.first.key).to eq('metering_point_user_membership.create')
+  end
+
   it 'removes metering point member only for current user, manager or with admin token' do
     metering_point  = Fabricate(:metering_point_readable_by_world)
     user1           = Fabricate(:user)
@@ -459,6 +486,16 @@ describe "Metering Points API" do
     expect(response).to have_http_status(200)
     get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
     expect(json['data'].size).to eq(0)
+  end
+
+  it 'creates activity when removing metering point member' do
+    user            = Fabricate(:user)
+    admin_token     = Fabricate(:admin_access_token)
+    metering_point  = Fabricate(:metering_point)
+
+    delete_with_token "/api/v1/metering-points/#{metering_point.id}/members/#{user.id}", admin_token.token
+    activities      = PublicActivity::Activity.where({ owner_type: 'User', owner_id: user.id })
+    expect(activities.first.key).to eq('metering_point_user_membership.cancel')
   end
 
 
