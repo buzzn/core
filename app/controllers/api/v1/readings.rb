@@ -5,7 +5,7 @@ module API
       resource :readings do
 
         before do
-          doorkeeper_authorize! :full_edit, :public
+          doorkeeper_authorize! :full, :public
         end
 
 

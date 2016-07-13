@@ -19,7 +19,7 @@ describe "Users API" do
   end
 
 
-  [:public_access_token, :full_edit_access_token].each do |token|
+  [:public_access_token, :full_access_token].each do |token|
     it "gets me with #{token}" do
       access_token = Fabricate(token)
       get_with_token "/api/v1/users/me", access_token.token
@@ -47,7 +47,7 @@ describe "Users API" do
   it 'get all users with manager token' do
     Fabricate(:user)
     Fabricate(:user)
-    access_token = Fabricate(:full_edit_access_token).token
+    access_token = Fabricate(:full_access_token).token
     get_with_token '/api/v1/users', {}, access_token
     expect(response).to have_http_status(200)
   end
@@ -57,7 +57,7 @@ describe "Users API" do
     @page_overload.times do
       Fabricate(:user)
     end
-    access_token = Fabricate(:full_edit_access_token_as_admin).token
+    access_token = Fabricate(:full_access_token_as_admin).token
     get_with_token '/api/v1/users', {}, access_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
@@ -91,7 +91,7 @@ describe "Users API" do
 
 
   it 'creates a user as manager' do
-    access_token  = Fabricate(:full_edit_access_token_as_admin)
+    access_token  = Fabricate(:full_access_token_as_admin)
 
     user = Fabricate.build(:user)
     request_params = {
@@ -147,7 +147,7 @@ describe "Users API" do
     meter2 = Fabricate(:meter)
     meter3 = Fabricate(:meter)
 
-    access_token  = Fabricate(:full_edit_access_token)
+    access_token  = Fabricate(:full_access_token)
     user = User.find(access_token.resource_owner_id)
     user.add_role(:manager, meter1)
     user.add_role(:manager, meter2)
@@ -158,7 +158,7 @@ describe "Users API" do
   end
 
   it 'paginate meters' do
-    manager_token = Fabricate(:full_edit_access_token_as_admin).token
+    manager_token = Fabricate(:full_access_token_as_admin).token
     user          = Fabricate(:user)
     @page_overload.times do
       meter = Fabricate(:meter)
@@ -175,7 +175,7 @@ describe "Users API" do
     meter2 = Fabricate(:meter)
     meter3 = Fabricate(:meter)
 
-    access_token  = Fabricate(:full_edit_access_token)
+    access_token  = Fabricate(:full_access_token)
     user          = User.find(access_token.resource_owner_id)
     user.add_role(:manager, meter1)
     user.add_role(:manager, meter2)

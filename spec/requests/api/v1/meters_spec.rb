@@ -9,7 +9,7 @@ describe "Meters API" do
 
 
   it 'does gets a meter with manager token' do
-    access_token  = Fabricate(:full_edit_access_token_as_admin)
+    access_token  = Fabricate(:full_access_token_as_admin)
     meter = Fabricate(:meter)
     get_with_token "/api/v1/meters/#{meter.id}", access_token.token
     expect(response).to have_http_status(200)
@@ -18,7 +18,7 @@ describe "Meters API" do
 
 
   it 'does creates a meter with manager token' do
-    access_token = Fabricate(:full_edit_access_token_as_admin)
+    access_token = Fabricate(:full_access_token_as_admin)
     meter = Fabricate.build(:meter)
 
     request_params = {
@@ -38,7 +38,7 @@ describe "Meters API" do
 
 
   it 'does not creates a already existing meter with manager token' do
-    access_token = Fabricate(:full_edit_access_token_as_admin)
+    access_token = Fabricate(:full_access_token_as_admin)
     meter = Fabricate(:meter)
 
     request_params = {
@@ -58,7 +58,7 @@ describe "Meters API" do
 
   it 'does update a meter with manager_token' do
     meter = Fabricate(:meter)
-    access_token  = Fabricate(:full_edit_access_token_as_admin)
+    access_token  = Fabricate(:full_access_token_as_admin)
 
     request_params = {
       id:                                 meter.id,
@@ -100,7 +100,7 @@ describe "Meters API" do
 
   it 'does delete a meter with manager_token' do
     meter = Fabricate(:meter)
-    access_token  = Fabricate(:full_edit_access_token_as_admin)
+    access_token  = Fabricate(:full_access_token_as_admin)
     delete_with_token "/api/v1/meters/#{meter.id}", access_token.token
     expect(response).to have_http_status(204)
   end

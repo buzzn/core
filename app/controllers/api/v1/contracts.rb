@@ -8,7 +8,7 @@ module API
         desc 'Return all Contracts'
         paginate(per_page: per_page=10)
         get do
-          doorkeeper_authorize! :full_edit
+          doorkeeper_authorize! :full
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
           @total_pages  = Contract.all.page(@page).per_page(@per_page).total_pages
@@ -40,7 +40,7 @@ module API
           requires :commissioning,          type: Date, desc: 'Commissioning'
         end
         post do
-          doorkeeper_authorize! :full_edit
+          doorkeeper_authorize! :full
           @params = declared(params, include_missing: false).contract || declared(params, include_missing: false)
           @contract = Contract.new(@params)
           @contract.contracting_party = current_user.contracting_party if current_user.contracting_party
@@ -67,7 +67,7 @@ module API
           optional :commissioning,          type: Date, desc: 'Commissioning'
         end
         put do
-          doorkeeper_authorize! :full_edit
+          doorkeeper_authorize! :full
           @params = declared(params, include_missing: false).contract || declared(params, include_missing: false)
           @contract = Contract.find(@params.id)
           @params.delete('id')
@@ -81,7 +81,7 @@ module API
           requires :id, type: String, desc: 'Contract ID'
         end
         delete ':id' do
-          doorkeeper_authorize! :full_edit
+          doorkeeper_authorize! :full
           Contract.find(params[:id]).destroy
           status 200
         end

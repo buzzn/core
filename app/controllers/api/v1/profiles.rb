@@ -6,7 +6,7 @@ module API
 
         desc "Return all profiles"
         paginate(per_page: per_page=10)
-        oauth2 :full_edit
+        oauth2 :full
         get do
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1

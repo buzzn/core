@@ -34,7 +34,7 @@ describe "Groups API" do
 
   it 'contains CRUD info' do
     Fabricate(:group)
-    access_token = Fabricate(:full_edit_access_token_as_admin)
+    access_token = Fabricate(:full_access_token_as_admin)
 
     get_with_token '/api/v1/groups', access_token.token
     ['readable', 'updateable', 'deletable'].each do |attr|
@@ -79,7 +79,7 @@ describe "Groups API" do
   end
 
   it 'does not create a group with missing name' do
-    access_token  = Fabricate(:full_edit_access_token)
+    access_token  = Fabricate(:full_access_token)
     group = Fabricate.build(:group)
     request_params = {
       # name:  group.name,
@@ -95,7 +95,7 @@ describe "Groups API" do
     metering_point = Fabricate(:out_metering_point_with_manager)
     manager       = metering_point.managers.first
     access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
-    access_token.update_attribute :scopes, 'full_edit'
+    access_token.update_attribute :scopes, 'full'
     group = Fabricate.build(:group)
     request_params = {
       name: group.name,
@@ -110,7 +110,7 @@ describe "Groups API" do
   it 'does update a group' do
     metering_point = Fabricate(:out_metering_point_with_manager)
     manager       = metering_point.managers.first
-    access_token  = Fabricate(:full_edit_access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
     group = Fabricate(:group)
     manager.add_role(:manager, group)
     request_params = {
@@ -129,7 +129,7 @@ describe "Groups API" do
     metering_point = Fabricate(:out_metering_point_with_manager)
     manager       = metering_point.managers.first
     access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
-    access_token.update_attribute :scopes, 'full_edit'
+    access_token.update_attribute :scopes, 'full'
     group = Fabricate(:group)
     manager.add_role(:manager, group)
     delete_with_token "/api/v1/groups/#{group.id}", access_token.token
@@ -284,7 +284,7 @@ describe "Groups API" do
     group           = Fabricate(:group)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
-    admin_token     = Fabricate(:full_edit_access_token_as_admin)
+    admin_token     = Fabricate(:full_access_token_as_admin)
     manager_token   = Fabricate(:public_access_token)
     manager         = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, group)
@@ -314,7 +314,7 @@ describe "Groups API" do
     group           = Fabricate(:group)
     user            = Fabricate(:user)
     user.add_role(:manager, group)
-    admin_token     = Fabricate(:full_edit_access_token_as_admin)
+    admin_token     = Fabricate(:full_access_token_as_admin)
     manager_token   = Fabricate(:public_access_token)
     manager         = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, group)

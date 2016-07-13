@@ -16,7 +16,7 @@ describe "Metering Points API" do
 
   it 'contains CRUD info' do
     metering_point  = Fabricate(:metering_point)
-    access_token    = Fabricate(:full_edit_access_token_as_admin)
+    access_token    = Fabricate(:full_access_token_as_admin)
 
     get_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
     ['readable', 'updateable', 'deletable'].each do |attr|
@@ -91,7 +91,7 @@ describe "Metering Points API" do
 
 
   it 'does gets a metering_point with manager token' do
-    access_token  = Fabricate(:full_edit_access_token_as_admin)
+    access_token  = Fabricate(:full_access_token_as_admin)
     metering_point = Fabricate(:metering_point)
     get_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
     expect(response).to have_http_status(200)
@@ -119,7 +119,7 @@ describe "Metering Points API" do
 
 
   it 'does creates a metering_point with manager token' do
-    access_token = Fabricate(:full_edit_access_token_as_admin)
+    access_token = Fabricate(:full_access_token_as_admin)
     meter        = Fabricate(:meter)
     metering_point = Fabricate.build(:metering_point)
 
@@ -214,7 +214,7 @@ describe "Metering Points API" do
 
   it 'does update a metering_point with manager_token' do
     metering_point = Fabricate(:metering_point_with_manager)
-    access_token  = Fabricate(:full_edit_access_token_as_admin)
+    access_token  = Fabricate(:full_access_token_as_admin)
     meter        = Fabricate(:meter)
 
     request_params = {
@@ -259,7 +259,7 @@ describe "Metering Points API" do
 
   it 'does delete a metering_point with manager_token' do
     metering_point = Fabricate(:metering_point)
-    access_token  = Fabricate(:full_edit_access_token_as_admin)
+    access_token  = Fabricate(:full_access_token_as_admin)
     delete_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
     expect(response).to have_http_status(204)
   end
@@ -345,7 +345,7 @@ describe "Metering Points API" do
     metering_point  = Fabricate(:metering_point_readable_by_world)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
-    admin_token     = Fabricate(:full_edit_access_token_as_admin)
+    admin_token     = Fabricate(:full_access_token_as_admin)
     manager_token   = Fabricate(:public_access_token)
     manager         = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, metering_point)
@@ -371,7 +371,7 @@ describe "Metering Points API" do
 
   it 'creates activity when adding metering point manager' do
     user            = Fabricate(:user)
-    admin_token     = Fabricate(:full_edit_access_token_as_admin)
+    admin_token     = Fabricate(:full_access_token_as_admin)
     admin           = User.find(admin_token.resource_owner_id)
     metering_point  = Fabricate(:metering_point)
     params = {
@@ -383,11 +383,11 @@ describe "Metering Points API" do
     expect(activities.first.key).to eq('user.appointed_metering_point_manager')
   end
 
-  it 'removes metering point manager only for current user or with full_edit token' do
+  it 'removes metering point manager only for current user or with full token' do
     metering_point  = Fabricate(:metering_point_readable_by_world)
     user            = Fabricate(:user)
     user.add_role(:manager, metering_point)
-    admin_token     = Fabricate(:full_edit_access_token_as_admin)
+    admin_token     = Fabricate(:full_access_token_as_admin)
     manager_token   = Fabricate(:public_access_token)
     manager         = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, metering_point)
@@ -416,7 +416,7 @@ describe "Metering Points API" do
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
     user3           = Fabricate(:user)
-    admin_token     = Fabricate(:full_edit_access_token_as_admin)
+    admin_token     = Fabricate(:full_access_token_as_admin)
     manager_token   = Fabricate(:public_access_token)
     manager         = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, metering_point)
@@ -445,7 +445,7 @@ describe "Metering Points API" do
 
   it 'creates activity when adding metering point member' do
     user            = Fabricate(:user)
-    admin_token     = Fabricate(:full_edit_access_token_as_admin)
+    admin_token     = Fabricate(:full_access_token_as_admin)
     metering_point  = Fabricate(:metering_point)
     params = {
       user_id: user.id
@@ -456,13 +456,13 @@ describe "Metering Points API" do
     expect(activities.first.key).to eq('metering_point_user_membership.create')
   end
 
-  it 'removes metering point member only for current user, manager or with full_edit token' do
+  it 'removes metering point member only for current user, manager or with full token' do
     metering_point  = Fabricate(:metering_point_readable_by_world)
     user1           = Fabricate(:user)
     user1.add_role(:member, metering_point)
     user2           = Fabricate(:user)
     user2.add_role(:member, metering_point)
-    admin_token     = Fabricate(:full_edit_access_token_as_admin)
+    admin_token     = Fabricate(:full_access_token_as_admin)
     manager_token   = Fabricate(:public_access_token)
     manager         = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, metering_point)
@@ -490,7 +490,7 @@ describe "Metering Points API" do
 
   it 'creates activity when removing metering point member' do
     user            = Fabricate(:user)
-    admin_token     = Fabricate(:full_edit_access_token_as_admin)
+    admin_token     = Fabricate(:full_access_token_as_admin)
     metering_point  = Fabricate(:metering_point)
 
     delete_with_token "/api/v1/metering-points/#{metering_point.id}/members/#{user.id}", admin_token.token

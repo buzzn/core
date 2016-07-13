@@ -133,7 +133,7 @@ module API
           requires :description,  type: String, desc: "Description of the Organization."
           requires :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
         end
-        oauth2 :full_edit
+        oauth2 :full
         post do
           if Organization.creatable_by?(current_user)
             organization = Organization.new({
@@ -170,7 +170,7 @@ module API
           requires :description,  type: String, desc: "Description of the Organization."
           requires :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
         end
-        oauth2 :full_edit
+        oauth2 :full
         put do
           organization = Organization.find(params[:id])
 
@@ -189,7 +189,7 @@ module API
         params do
           requires :id, type: String, desc: "Organization ID"
         end
-        oauth2 :full_edit
+        oauth2 :full
         delete ':id' do
           organization = Organization.find(params[:id])
           if organization.deletable_by?(current_user)
@@ -205,7 +205,7 @@ module API
         params do
           requires :user_id, type: String, desc: 'User id'
         end
-        oauth2 :full_edit
+        oauth2 :full
         post ':id/managers' do
           organization = Organization.find(params[:id])
           if organization.updatable_by?(current_user)
@@ -218,7 +218,7 @@ module API
 
 
         desc 'Remove user from organization managers'
-        oauth2 :full_edit
+        oauth2 :full
         delete ':id/managers/:user_id' do
           organization = Organization.find(params[:id])
           if organization.updatable_by?(current_user)
@@ -235,7 +235,7 @@ module API
         params do
           requires :user_id, type: String, desc: 'User id'
         end
-        oauth2 :full_edit
+        oauth2 :full
         post ':id/members' do
           organization = Organization.find(params[:id])
           if organization.updatable_by?(current_user)
@@ -248,7 +248,7 @@ module API
 
 
         desc 'Remove user from organization members'
-        oauth2 :full_edit
+        oauth2 :full
         delete ':id/members/:user_id' do
           organization = Organization.find(params[:id])
           if organization.updatable_by?(current_user)

@@ -57,7 +57,7 @@ module API
           requires :name,         type: String, desc: "Name of the Group."
           requires :description,  type: String, desc: "Description of the Group."
         end
-        oauth2 :full_edit
+        oauth2 :full
         post do
           if Group.creatable_by?(current_user)
             @params = params.group || params
@@ -82,7 +82,7 @@ module API
           requires :id, type: String, desc: "Group ID."
           optional :name
         end
-        oauth2 :full_edit
+        oauth2 :full
         put do
           @group = Group.find(params[:id])
           if @group.updatable_by?(current_user)
@@ -103,7 +103,7 @@ module API
         params do
           requires :id, type: String, desc: "Group ID"
         end
-        oauth2 :full_edit
+        oauth2 :full
         delete ':id' do
           if current_user
             group = Group.find(params[:id])

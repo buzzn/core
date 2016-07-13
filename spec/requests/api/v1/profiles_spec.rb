@@ -18,14 +18,14 @@ describe "Profiles API" do
   it 'get all profiles with manager token' do
     Fabricate(:profile)
     Fabricate(:profile)
-    access_token = Fabricate(:full_edit_access_token_as_admin)
+    access_token = Fabricate(:full_access_token_as_admin)
     get_with_token '/api/v1/profiles', {}, access_token.token
     expect(response).to have_http_status(200)
   end
 
   it 'contains CRUD info' do
     Fabricate(:profile)
-    access_token = Fabricate(:full_edit_access_token_as_admin)
+    access_token = Fabricate(:full_access_token_as_admin)
 
     get_with_token '/api/v1/profiles', access_token.token
     ['readable', 'updateable', 'deletable'].each do |attr|
@@ -37,7 +37,7 @@ describe "Profiles API" do
     @page_overload.times do
       Fabricate(:profile)
     end
-    access_token = Fabricate(:full_edit_access_token_as_admin)
+    access_token = Fabricate(:full_access_token_as_admin)
     get_with_token '/api/v1/profiles', {}, access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
@@ -67,7 +67,7 @@ describe "Profiles API" do
 
 
   it 'creates a profile as manager' do
-    access_token = Fabricate(:full_edit_access_token_as_admin)
+    access_token = Fabricate(:full_access_token_as_admin)
     profile = Fabricate.build(:profile)
 
     request_params = {
