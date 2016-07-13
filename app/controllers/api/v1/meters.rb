@@ -10,7 +10,7 @@ module API
           requires :id, type: String, desc: "ID of the meter"
         end
         get ":id" do
-          doorkeeper_authorize! :manager
+          doorkeeper_authorize! :full_edit
           meter = Meter.find(params[:id])
           if current_user
             if meter.readable_by?(current_user)
@@ -33,7 +33,7 @@ module API
           optional :smart, desc: "meter is smart"
         end
         post do
-          doorkeeper_authorize! :manager
+          doorkeeper_authorize! :full_edit
           if current_user
             if Meter.creatable_by?(current_user)
               meter = Meter.new({
@@ -65,7 +65,7 @@ module API
           optional :smart, desc: "meter is smart"
         end
         put do
-          doorkeeper_authorize! :manager
+          doorkeeper_authorize! :full_edit
           if current_user
             meter = Meter.find(params[:id])
             if meter.updatable_by?(current_user)
@@ -91,7 +91,7 @@ module API
           requires :id, type: String, desc: 'Meter ID.'
         end
         delete ':id' do
-          doorkeeper_authorize! :manager
+          doorkeeper_authorize! :full_edit
           if current_user
             meter = Meter.find(params[:id])
             if meter.deletable_by?(current_user)

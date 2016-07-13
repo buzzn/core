@@ -7,25 +7,40 @@ describe "AccessTokens API" do
 
 
   [:public_access_token,
-   :smartmeter_access_token,
-   :manager_access_token].each do |token|
+   :smartmeter_access_token].each do |token|
 
     it "does not creates a AccessToken with #{token}" do
       access_token  = Fabricate(token)
-      post_with_token "/api/v1/access-tokens", {}.to_json, access_token.token
+      post_with_token "/api/v1/access-tokens", {
+      application_id: 123,
+      scopes: 'smartmeter, full_edit, unknown'}.to_json, access_token.token
       expect(response).to have_http_status(403)
     end
 
   end
 
 
-  it 'does not create a AccessToken with unknown scope as admin with manager_access_token' do
-    access_token  = Fabricate(:manager_access_token_as_admin)
+  it 'does not create a AccessToken with full_edit_access_token' do
+    access_token  = Fabricate(:full_edit_access_token)
     application = Fabricate(:application)
 
     request_params = {
       application_id: application.id,
-      scopes: 'smartmeter, manager, unknown'
+      scopes: 'smartmeter, full_edit, unknown'
+    }.to_json
+
+    post_with_token "/api/v1/access-tokens", request_params, access_token.token
+    expect(response).to have_http_status(403)
+  end
+
+
+  it 'does not create a AccessToken with unknown scope as admin with full_edit_access_token' do
+    access_token  = Fabricate(:full_edit_access_token_as_admin)
+    application = Fabricate(:application)
+
+    request_params = {
+      application_id: application.id,
+      scopes: 'smartmeter, full_edit, unknown'
     }.to_json
 
     post_with_token "/api/v1/access-tokens", request_params, access_token.token
@@ -34,12 +49,12 @@ describe "AccessTokens API" do
 
 
   it 'creates a AccessToken with manager token as admin' do
-    access_token  = Fabricate(:manager_access_token_as_admin)
+    access_token  = Fabricate(:full_edit_access_token_as_admin)
     application = Fabricate(:application)
 
     request_params = {
       application_id: application.id,
-      scopes: 'smartmeter, manager'
+      scopes: 'smartmeter, full_edit'
     }.to_json
 
     post_with_token "/api/v1/access-tokens", request_params, access_token.token

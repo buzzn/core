@@ -10,7 +10,7 @@ module API
           requires :application_id, type: String, desc: "Application ID"
           requires :scopes, type: String, desc: "Scopes"
         end
-        oauth2 :manager    
+        oauth2 :full_edit
         post do
           unless Doorkeeper::AccessToken.creatable_by?(current_user)
             return status 403

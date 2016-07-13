@@ -1,7 +1,7 @@
 describe 'Comments API' do
 
   it 'creates a root comment with manager token' do
-    manager_token   = Fabricate(:manager_access_token_as_admin)
+    manager_token   = Fabricate(:full_edit_access_token_as_admin)
     group           = Fabricate(:group)
     comment = {
       resource_id: group.id,
@@ -35,6 +35,7 @@ describe 'Comments API' do
 
   it 'creates a child comment with full_edit token' do
     manager_token   = Fabricate(:manager_access_token_as_admin)
+    manager_token   = Fabricate(:full_edit_access_token_as_admin)
     group           = Fabricate(:group_with_two_comments_readable_by_world)
     comments        = group.comment_threads
     child_comment   = comments.find{|c| !c.parent_id.nil?}
@@ -56,7 +57,7 @@ describe 'Comments API' do
   end
 
   it 'does not create comment with wrong arguments' do
-    manager_token   = Fabricate(:manager_access_token_as_admin)
+    manager_token   = Fabricate(:full_edit_access_token_as_admin)
     group           = Fabricate(:group)
     comment = {
       resource_id: group.id,
@@ -112,7 +113,7 @@ describe 'Comments API' do
   end
 
   it 'does not update comment with wrong arguments' do
-    manager_token   = Fabricate(:manager_access_token_as_admin)
+    manager_token   = Fabricate(:full_edit_access_token_as_admin)
     group           = Fabricate(:group_with_two_comments_readable_by_world)
     comments        = group.comment_threads
     child_comment   = comments.find{|c| !c.parent_id.nil?}
@@ -146,7 +147,7 @@ describe 'Comments API' do
 
   it 'does not allow resource manager or manager to update any resource comment' do
     access_token  = Fabricate(:public_access_token)
-    manager_token = Fabricate(:manager_access_token_as_admin)
+    manager_token = Fabricate(:full_edit_access_token_as_admin)
     user          = User.find(access_token.resource_owner_id)
     group         = Fabricate(:group_with_two_comments_readable_by_world)
     comment       = group.comment_threads.first
@@ -160,7 +161,7 @@ describe 'Comments API' do
   end
 
   it 'removes a child comment with manager token' do
-    manager_token   = Fabricate(:manager_access_token_as_admin)
+    manager_token   = Fabricate(:full_edit_access_token_as_admin)
     group           = Fabricate(:group_with_two_comments_readable_by_world)
     comments        = group.comment_threads
     child_comment   = comments.find{|c| !c.parent_id.nil?}
@@ -174,7 +175,7 @@ describe 'Comments API' do
   end
 
   it 'does not remove a root comment even with manager token' do
-    manager_token   = Fabricate(:manager_access_token_as_admin)
+    manager_token   = Fabricate(:full_edit_access_token_as_admin)
     group           = Fabricate(:group_with_two_comments_readable_by_world)
     comments        = group.comment_threads
     root_comment    = comments.find{|c| c.parent_id.nil?}

@@ -5,14 +5,14 @@ module API
       resource 'users' do
 
         desc "Return me"
-        oauth2 :public, :manager
+        oauth2 :public, :full_edit
         get "me" do
           current_user
         end
 
         desc "Return all Users"
         paginate(per_page: per_page=10)
-        oauth2 :manager
+        oauth2 :full_edit
         get do
           per_page         = params[:per_page] || per_page
           page             = params[:page] || 1
@@ -29,7 +29,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the user"
         end
-        oauth2 :public, :manager
+        oauth2 :public, :full_edit
         get ":id" do
           user = User.find(params[:id])
           if user.readable_by?(current_user)
@@ -47,7 +47,7 @@ module API
           requires :first_name, type: String
           requires :last_name, type: String
         end
-        oauth2 :manager
+        oauth2 :full_edit
         post do
           if User.creatable_by?(current_user)
             User.create!(
@@ -66,7 +66,7 @@ module API
           requires :id, type: String, desc: "ID of the profile"
         end
         paginate(per_page: per_page=10)
-        oauth2 :public, :manager
+        oauth2 :public, :full_edit
         get ":id/groups" do
           user          = User.find(params[:id])
           groups        = Group.where(id: user.accessible_groups.map(&:id))
@@ -96,7 +96,7 @@ module API
           optional :manufacturer_product_serialnumber, type: String, desc: "manufacturer product serialnumber"
         end
         paginate(per_page: per_page=10)
-        oauth2 :manager
+        oauth2 :full_edit
         get ":id/meters" do
           user = User.find(params[:id])
           if params[:manufacturer_product_serialnumber]
@@ -116,7 +116,7 @@ module API
           requires :id, type: String, desc: "ID of the User"
         end
         paginate(per_page: per_page=10)
-        oauth2 :public, :manager
+        oauth2 :public, :full_edit
         get ":id/friends" do
           user = User.find(params[:id])
           @per_page     = params[:per_page] || per_page
@@ -135,7 +135,7 @@ module API
 
 
         desc 'Delete a friend'
-        oauth2 :public, :manager
+        oauth2 :public, :full_edit
         delete ':id/friends/:friend_id' do
           if current_user.id == params[:id]
             user    = User.find(params[:id])
@@ -148,7 +148,7 @@ module API
 
 
         desc 'List of received friendship requests'
-        oauth2 :public, :manager
+        oauth2 :public, :full_edit
         get ':id/friendship-requests' do
           if current_user.id == params[:id]
             User.find(params[:id]).received_friendship_requests
@@ -162,7 +162,7 @@ module API
         params do
           requires :receiver_id, type: String, desc: 'ID of a receiver'
         end
-        oauth2 :public, :manager
+        oauth2 :public, :full_edit
         post ':id/friendship-requests' do
           if current_user.id == params[:id]
             sender    = User.find(params[:id])
@@ -178,7 +178,7 @@ module API
 
 
         desc 'Accept friendship request'
-        oauth2 :public, :manager
+        oauth2 :public, :full_edit
         put ':id/friendship-requests/:request_id' do
           if current_user.id == params[:id]
             friendship_request = FriendshipRequest.where(receiver: params[:id]).find(params[:request_id])
@@ -191,7 +191,7 @@ module API
 
 
         desc 'Reject friendship request'
-        oauth2 :public, :manager
+        oauth2 :public, :full_edit
         delete ':id/friendship-requests/:request_id' do
           if current_user.id == params[:id]
             friendship_request = FriendshipRequest.where(receiver: params[:id]).find(params[:request_id])
@@ -208,7 +208,7 @@ module API
           requires :id, type: String, desc: "ID of the User"
         end
         paginate(per_page: per_page=10)
-        oauth2 :public, :manager
+        oauth2 :public, :full_edit
         get ":id/devices" do
           user = User.find(params[:id])
           @per_page     = params[:per_page] || per_page
@@ -219,7 +219,7 @@ module API
 
 
         desc 'Return user activities'
-        oauth2 :public, :manager
+        oauth2 :public, :full_edit
         get ':id/activities' do
           PublicActivity::Activity.where({ owner_type: 'User', owner_id: params[:id] })
         end

@@ -10,14 +10,14 @@ Fabricator :smartmeter_access_token, class_name: Doorkeeper::AccessToken do
   scopes 'smartmeter'
 end
 
-Fabricator :manager_access_token, from: :public_access_token do
+Fabricator :full_edit_access_token, from: :public_access_token do
   resource_owner_id { Fabricate(:user).id }
-  scopes 'manager'
+  scopes 'full_edit'
 end
 
-Fabricator :manager_access_token_as_admin, from: :public_access_token do
+Fabricator :full_edit_access_token_as_admin, from: :public_access_token do
   resource_owner_id { Fabricate(:admin).id }
-  scopes 'public manager'
+  scopes 'public full_edit'
 end
 
 Fabricator :access_token_received_friendship_request, from: :public_access_token do

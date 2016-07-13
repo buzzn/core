@@ -9,7 +9,7 @@ describe "Readings API" do
   end
 
   it 'does gets a reading as manager' do
-    access_token  = Fabricate(:manager_access_token_as_admin)
+    access_token  = Fabricate(:full_edit_access_token_as_admin)
     reading       = Fabricate(:reading_with_easy_meter_q3d_and_metering_point)
     get_with_token "/api/v1/readings/#{reading.id}", access_token.token
     expect(response).to have_http_status(200)

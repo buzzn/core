@@ -9,12 +9,12 @@ module API
         params do
           requires :id, type: String, desc: "ID of the metering_point"
         end
+        oauth2 false
         get ":id" do
           metering_point = MeteringPoint.where(id: params[:id]).first!
           if metering_point.readable_by_world?
             metering_point
           else
-            doorkeeper_authorize! :public
             if metering_point.readable_by?(current_user)
               metering_point
             else
@@ -198,6 +198,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
+        oauth2 false
         get ':id/members' do
           metering_point  = MeteringPoint.where(id: permitted_params[:id]).first!
           metering_point.members.select do |member|

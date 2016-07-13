@@ -6,8 +6,8 @@ module API
 
         desc "Return all profiles"
         paginate(per_page: per_page=10)
+        oauth2 :full_edit
         get do
-          doorkeeper_authorize! :manager
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
           @total_pages  = Profile.all.page(@page).per_page(@per_page).total_pages
@@ -19,6 +19,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the Profile"
         end
+        oauth2 false
         get ":id" do
           Profile.where(id: permitted_params[:id]).first!
         end
@@ -30,8 +31,8 @@ module API
           requires :first_name, type: String
           requires :last_name, type: String
         end
+        oauth2 :public
         post do
-          doorkeeper_authorize! :public
           if current_user && current_user.can_create?(Profile)
             Profile.create!({
               user_name: params[:user_name],
@@ -49,6 +50,7 @@ module API
           requires :id, type: String, desc: "ID of the Profile"
         end
         paginate(per_page: per_page=10)
+        oauth2 false
         get ':id/groups' do
           profile   = Profile.where(id: permitted_params[:id]).first!
           user      = User.find(profile.user_id)
@@ -81,6 +83,7 @@ module API
           requires :id, type: String, desc: "ID of the Profile"
         end
         paginate(per_page: per_page=10)
+        oauth2 false
         get ':id/friends' do
           profile = Profile.where(id: permitted_params[:id]).first!
 
@@ -100,6 +103,7 @@ module API
           requires :id, type: String, desc: "ID of the Profile"
         end
         paginate(per_page: per_page=10)
+        oauth2 false
         get ':id/metering-points' do
           profile               = Profile.where(id: permitted_params[:id]).first!
           user                  = User.find(profile.user_id)
