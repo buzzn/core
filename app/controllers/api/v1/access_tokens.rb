@@ -5,13 +5,21 @@ module API
       resource 'access-tokens' do
 
 
-        desc "Return the Access Token "
+        desc "Creates an Access Token"
         params do
-          requires :application_id, type: String, desc: "Scopes"
-          requires :scopes, type: String, desc: "Application ID"
+          requires :application_id, type: String, desc: "Application ID"
+          requires :scopes, type: String, desc: "Scopes"
         end
+        oauth2 :full
         post do
-          doorkeeper_authorize! :admin
+          unless Doorkeeper::AccessToken.creatable_by?(current_user)
+            return status 403
+          end
+          params[:scopes].split(/,\s+/).each do |scope|
+            unless Doorkeeper.configuration.scopes.member? scope
+              return status 400
+            end
+          end
           Doorkeeper::AccessToken.create!(
             scopes: params[:scopes],
             resource_owner_id: current_user.id,

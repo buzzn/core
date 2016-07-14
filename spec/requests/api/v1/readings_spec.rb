@@ -8,8 +8,8 @@ describe "Readings API" do
     expect(response).to have_http_status(401)
   end
 
-  it 'does gets a reading as admin' do
-    access_token  = Fabricate(:admin_access_token)
+  it 'does gets a reading as manager' do
+    access_token  = Fabricate(:full_access_token_as_admin)
     reading       = Fabricate(:reading_with_easy_meter_q3d_and_metering_point)
     get_with_token "/api/v1/readings/#{reading.id}", access_token.token
     expect(response).to have_http_status(200)
@@ -18,14 +18,14 @@ describe "Readings API" do
   it 'does get a reading as manager' do
     reading       = Fabricate(:reading_with_easy_meter_q3d_and_manager)
     manager       = reading.meter.managers.first
-    access_token  = Fabricate(:access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
     get_with_token "/api/v1/readings/#{reading.id}", access_token.token
     expect(response).to have_http_status(200)
   end
 
   it 'does not get a reading as stranger' do
     reading       = Fabricate(:reading_with_easy_meter_q3d_and_metering_point)
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
     get_with_token "/api/v1/readings/#{reading.id}", access_token.token
     expect(response).to have_http_status(403)
   end
@@ -35,7 +35,7 @@ describe "Readings API" do
   it 'does creates a reading with token' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
-    access_token  = Fabricate(:access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
     reading       = Fabricate.build(:reading)
     request_params = {
       meter_id: meter.id,
@@ -57,7 +57,7 @@ describe "Readings API" do
   it 'does create a correct reading with token' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
-    access_token  = Fabricate(:access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
 
     timestamp = "Wed Apr 13 2016 14:07:35 GMT+0200 (CEST)"
     energy_a_milliwatt_hour = 80616
@@ -84,7 +84,7 @@ describe "Readings API" do
   it 'does not creates a reading without metering_point_id' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
-    access_token  = Fabricate(:access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
     reading       = Fabricate.build(:reading)
     request_params = {
       # metering_point_id: metering_point.id,
@@ -103,7 +103,7 @@ describe "Readings API" do
   it 'does not creates a reading without timestamp' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
-    access_token  = Fabricate(:access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
     reading       = Fabricate.build(:reading)
     request_params = {
       meter_id: meter.id,
@@ -121,7 +121,7 @@ describe "Readings API" do
   it 'does not creates a reading without energy_a_milliwatt_hour' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
-    access_token  = Fabricate(:access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
     reading       = Fabricate.build(:reading)
     request_params = {
       meter_id: meter.id,
@@ -140,7 +140,7 @@ describe "Readings API" do
   it 'does not creates a reading without milliwatt' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
-    access_token  = Fabricate(:access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
     reading       = Fabricate.build(:reading)
     request_params = {
       meter_id: meter.id,

@@ -9,17 +9,13 @@ module API
         params do
           requires :id, type: String, desc: "ID of the metering_point"
         end
+        oauth2 false
         get ":id" do
           metering_point = MeteringPoint.where(id: params[:id]).first!
-          if metering_point.readable_by_world?
+          if metering_point.readable_by?(current_user)
             metering_point
           else
-            doorkeeper_authorize! :public
-            if metering_point.readable_by?(current_user)
-              metering_point
-            else
-              status 403
-            end
+            status 403
           end
         end
 
@@ -159,6 +155,7 @@ module API
           user            = User.find(params[:user_id])
           if current_user.has_role?(:manager, metering_point) || current_user.has_role?(:admin)
             user.add_role(:manager, metering_point)
+            user.create_activity(key: 'user.appointed_metering_point_manager', owner: current_user, recipient: metering_point)
           else
             status 403
           end
@@ -197,6 +194,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
+        oauth2 false
         get ':id/members' do
           metering_point  = MeteringPoint.where(id: permitted_params[:id]).first!
           metering_point.members.select do |member|
@@ -218,6 +216,7 @@ module API
               current_user.has_role?(:admin))
 
             user.add_role(:member, metering_point)
+            metering_point.create_activity key: 'metering_point_user_membership.create', owner: user
           else
             status 403
           end
@@ -234,6 +233,7 @@ module API
               current_user.has_role?(:manager, metering_point))
 
             user.remove_role(:member, metering_point)
+            metering_point.create_activity(key: 'metering_point_user_membership.cancel', owner: user)
           else
             status 403
           end

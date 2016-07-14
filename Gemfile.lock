@@ -806,6 +806,9 @@ GEM
     wicked (1.3.0)
       railties (>= 3.0.7)
     will_paginate (3.0.7)
+    wine_bouncer (1.0.0)
+      doorkeeper (>= 1.4, < 4.1)
+      grape (~> 0.10, < 1.0)
     xml-simple (1.1.5)
 
 PLATFORMS
@@ -961,6 +964,7 @@ DEPENDENCIES
   whenever
   wicked
   will_paginate (~> 3.0.6)
+  wine_bouncer (~> 1.0)
 
 BUNDLED WITH
-   1.12.4
+   1.12.5

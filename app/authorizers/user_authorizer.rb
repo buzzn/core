@@ -1,11 +1,11 @@
-class OrganizationAuthorizer < ApplicationAuthorizer
+class UserAuthorizer < ApplicationAuthorizer
 
   def self.creatable_by?(user)
     user && user.has_role?(:admin)
   end
 
   def readable_by?(user)
-    true
+    resource.profile.readable_by?(user)
   end
 
   def updatable_by?(user)

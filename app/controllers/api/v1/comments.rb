@@ -22,6 +22,7 @@ module API
           if resource.readable_by?(current_user)
             comment       = Comment.build_from(resource, current_user.id, permitted_params[:body], nil)
             comment.save
+            comment.create_activity key: 'comment.create', owner: current_user
             if permitted_params[:parent_id]
               parent_comment = Comment.find(permitted_params[:parent_id])
               comment.move_to_child_of(parent_comment)

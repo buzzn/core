@@ -10,10 +10,10 @@ describe "Aggregates API" do
 
 
 
-  xit 'does not aggregate to many metering_points at once as admin' do
+  xit 'does not aggregate to many metering_points at once as manager' do
   end
 
-  xit 'does not aggregate many metering_points with different type as admin' do
+  xit 'does not aggregate many metering_points with different type as manager' do
   end
 
 
@@ -30,8 +30,10 @@ describe "Aggregates API" do
   # |_____/|______|_|
 
 
-  it 'does aggregate slp past energy by year_to_months as admin in summertime' do
-    access_token = Fabricate(:admin_access_token)
+
+  it 'does aggregate slp past energy by year_to_months as manager in summertime' do
+    access_token = Fabricate(:full_access_token_as_admin)
+
     metering_point = Fabricate(:metering_point)
 
     energy_a_milliwatt_hour = 0
@@ -84,7 +86,7 @@ describe "Aggregates API" do
       timestamp += 1.hour
     end
 
-    access_token  = Fabricate(:access_token)
+    access_token  = Fabricate(:public_access_token)
 
     request_params = {
       metering_point_ids: metering_point.id,
@@ -108,8 +110,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate slp energy past by month_to_days as admin in sommertime ' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate slp energy past by month_to_days as manager in sommertime ' do
+    access_token = Fabricate(:full_access_token_as_admin)
     metering_point = Fabricate(:metering_point)
 
     energy_a_milliwatt_hour = 0
@@ -149,8 +151,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate slp power past by day_to_minutes as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate slp power past by day_to_minutes as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
     metering_point = Fabricate(:metering_point)
 
     energy_a_milliwatt_hour = 0
@@ -190,8 +192,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate slp power past by hour_to_minutes as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate slp power past by hour_to_minutes as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
     metering_point = Fabricate(:metering_point)
 
     energy_a_milliwatt_hour = 0
@@ -229,8 +231,8 @@ describe "Aggregates API" do
   end
 
 
-  it 'does not aggregate multiple metering_points power past by hour_to_minutes with differend data_sources as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does not aggregate multiple metering_points power past by hour_to_minutes with differend data_sources as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
 
     slp = Fabricate(:metering_point)
     pv = Fabricate(:easymeter_60051599).metering_points.first
@@ -262,8 +264,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does not aggregate more than 5 metering_points as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does not aggregate more than 5 metering_points as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
 
     slp1 = Fabricate(:metering_point)
     slp2 = Fabricate(:metering_point)
@@ -300,8 +302,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate multiple slp power past by hour_to_minutes as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate multiple slp power past by hour_to_minutes as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
     metering_point1 = Fabricate(:metering_point)
     metering_point2 = Fabricate(:metering_point)
 
@@ -341,8 +343,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate multiple slp power past by hour_to_minutes with forecast_kwh_pa as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate multiple slp power past by hour_to_minutes with forecast_kwh_pa as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
     metering_point1 = Fabricate(:metering_point, forecast_kwh_pa: 3000)
     metering_point2 = Fabricate(:metering_point, forecast_kwh_pa: 8000)
 
@@ -384,8 +386,8 @@ describe "Aggregates API" do
   #
   # Last Reading
   #
-  it 'does aggregate slp present as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate slp present as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
     metering_point = Fabricate(:metering_point)
 
     energy_a_milliwatt_hour = 0
@@ -414,8 +416,8 @@ describe "Aggregates API" do
   end
 
 
-  it 'does aggregate slp present with forecast_kwh_pa as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate slp present with forecast_kwh_pa as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
 
     metering_point = Fabricate(:metering_point, forecast_kwh_pa: 3000)
     energy_a_milliwatt_hour = 0
@@ -447,8 +449,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate multiple slp presents with forecast_kwh_pa as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate multiple slp presents with forecast_kwh_pa as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
 
     metering_point1 = Fabricate(:metering_point, forecast_kwh_pa: 3000)
     metering_point2 = Fabricate(:metering_point, forecast_kwh_pa: 8000)
@@ -486,8 +488,8 @@ describe "Aggregates API" do
   #  ____) | |____| |
   # |_____/|______|_|
 
-  it 'does aggregate sep bhkw past energy by year_to_months as admin in sommertime' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate sep bhkw past energy by year_to_months as manager in sommertime' do
+    access_token = Fabricate(:full_access_token_as_admin)
     metering_point = Fabricate(:metering_point, mode: 'out')
 
     energy_a_milliwatt_hour = 0
@@ -523,8 +525,8 @@ describe "Aggregates API" do
     end
   end
 
-  it 'does aggregate sep bhkw energy past by month_to_days as admin in sommertime ' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate sep bhkw energy past by month_to_days as manager in sommertime ' do
+    access_token = Fabricate(:full_access_token_as_admin)
     metering_point = Fabricate(:metering_point, mode: 'out')
 
     energy_a_milliwatt_hour = 0
@@ -570,8 +572,8 @@ describe "Aggregates API" do
    # |_.__/ \__,_/___/___|_| |_| /_/    \_\_|   |_____|
 
 
-   it 'does aggregate buzzn energy past by year_to_months as admin in sommertime' do
-     access_token = Fabricate(:admin_access_token)
+   it 'does aggregate buzzn energy past by year_to_months as manager in sommertime' do
+     access_token = Fabricate(:full_access_token_as_admin)
 
      meter = Fabricate(:easy_meter_q3d_with_metering_point)
 
@@ -629,7 +631,7 @@ describe "Aggregates API" do
         timestamp += 1.hour
       end
 
-      access_token  = Fabricate(:access_token)
+      access_token  = Fabricate(:public_access_token)
 
       request_params = {
         metering_point_ids: metering_point.id,
@@ -653,8 +655,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate buzzn energy past by month_to_days as admin in sommertime ' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate buzzn energy past by month_to_days as manager in sommertime ' do
+    access_token = Fabricate(:full_access_token_as_admin)
 
     meter = Fabricate(:easy_meter_q3d_with_metering_point)
 
@@ -693,8 +695,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate multiple buzzn power past by hour_to_minutes as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate multiple buzzn power past by hour_to_minutes as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
 
     meter1 = Fabricate(:easy_meter_q3d_with_metering_point)
     meter2 = Fabricate(:easy_meter_q3d_with_metering_point)
@@ -742,8 +744,8 @@ describe "Aggregates API" do
   end
 
 
-  it 'does aggregate multiple buzzn present as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate multiple buzzn present as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
 
     meter1 = Fabricate(:easy_meter_q3d_with_metering_point)
     meter2 = Fabricate(:easy_meter_q3d_with_metering_point)
@@ -797,8 +799,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate Discovergy past month_to_days for out metering_point as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate Discovergy past month_to_days for out metering_point as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
 
     meter = Fabricate(:easymeter_60051599)
     metering_point = meter.metering_points.first
@@ -827,8 +829,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate Discovergy past day_to_minutes for out metering_point as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate Discovergy past day_to_minutes for out metering_point as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
     meter = Fabricate(:easymeter_60051560) # BHKW
     metering_point = meter.metering_points.first
 
@@ -855,8 +857,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate Discovergy past day_to_minutes for in metering_point on a two-way meter as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate Discovergy past day_to_minutes for in metering_point on a two-way meter as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
 
     meter = Fabricate(:easymeter_60139082)
     input_metering_point  = meter.metering_points.inputs.first
@@ -885,8 +887,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate Discovergy past day_to_minutes for out metering_point on a two-way meter as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate Discovergy past day_to_minutes for out metering_point on a two-way meter as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
 
     meter = Fabricate(:easymeter_60139082)
     input_metering_point  = meter.metering_points.inputs.first
@@ -917,8 +919,9 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate multiple Discovergy past day_to_minutes metering_point as admin' do
-    access_token = Fabricate(:admin_access_token)
+
+  it 'does aggregate multiple Discovergy past day_to_minutes metering_point as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
 
 
     easymeter_60051599 = Fabricate(:easymeter_60051599) # PV
@@ -983,8 +986,8 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate Discovergy power present for out metering_point as admin' do
-    access_token = Fabricate(:admin_access_token)
+  it 'does aggregate Discovergy power present for out metering_point as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
     meter = Fabricate(:easymeter_60139082) # in_out meter
     input_metering_point  = meter.metering_points.inputs.first
     output_metering_point = meter.metering_points.outputs.first
@@ -1021,8 +1024,9 @@ describe "Aggregates API" do
   # Virtual
   #
 
-  it 'does aggregate Virtual metering_points past month_to_days as admin' do
-    access_token = Fabricate(:admin_access_token)
+
+  it 'does aggregate Virtual metering_points past month_to_days as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
 
     virtual_metering_point = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtual metering_point
 
