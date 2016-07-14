@@ -100,55 +100,6 @@ class MeteringPoint < ActiveRecord::Base
     self.group && self.group.mode == "localpool"
   end
 
-  # TODO remove this
-  def last_power
-    if self.virtual && self.formula_parts.any?
-      operands = get_operands_from_formula
-      operators = get_operators_from_formula
-      result = 0
-      i = 0
-      count_timestamps = 0
-      sum_timestamp = 0
-      operands.each do |metering_point|
-        reading = metering_point.last_power
-        if !reading.nil? #&& reading[:timestamp] >= Time.now - 1.hour
-          if operators[i] == "+"
-            result += reading[:power]
-          elsif operators[i] == "-"
-            result -= reading[:power]
-          end
-          sum_timestamp += reading[:timestamp].to_i*1000
-          count_timestamps += 1
-        else
-          return {:power => 0, :timestamp => 0}
-        end
-        i+=1
-      end
-      if count_timestamps != 0
-        average_timestamp = sum_timestamp / count_timestamps
-        return {:power => result, :timestamp => average_timestamp/1000}
-      end
-      return {:power => 0, :timestamp => 0}
-    elsif self.smart?
-      crawler = Crawler.new(self)
-      return crawler.live
-    else
-      result = self.latest_fake_data
-      if result[:data].nil?
-        return { :power => 0, :timestamp => Time.now.to_i*1000}
-      end
-      return { :power => result[:data].flatten[1] * result[:factor], :timestamp => result[:data].flatten[0]}
-    end
-  end
-
-  # TODO remove this
-  def last_power_each
-    if self.external && self.smart?
-      crawler = Crawler.new(self)
-      return crawler.live_each
-    end
-  end
-
 
 
 
@@ -455,108 +406,11 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-  # TODO remove this
-  def chart_data(resolution_format, containing_timestamp)
-    if self.virtual && self.formula
-      operands = self.get_operands_from_formula
-      operators = self.get_operators_from_formula
-      data = []
-      operands.each do |metering_point|
-        new_data = metering_point.chart_data(resolution_format, containing_timestamp)
-        data << new_data
-      end
-      result = calculate_virtual_metering_point(data, operators, resolution_format)
-      return result
-    else
-      metering_points_hash = Aggregate.sort_metering_points([self])
-      chart_hash = Aggregate.new(metering_points_hash).past({timestamp: Time.at(containing_timestamp.to_i/1000), resolution: resolution_format })
-      convert_to_highchart_array(chart_hash)
-    end
-  end
-
-  # TODO remove this
-  def convert_to_highchart_array(chart_hash)
-    array = []
-    if self.smart?
-      factor = 1000.0
-    else
-      factor = chart_hash.first.keys.last.to_s.starts_with?('power') ? 1000.0 : 1000000.0
-    end
-    chart_hash.each do |item|
-      array << [ item['timestamp'].to_time.to_i*1000, (item[item.keys.last]/factor).abs]
-    end
-    return array
-  end
-
-  # TODO remove this
-  def latest_fake_data
-    if self.slp?
-      return {data: Reading.latest_fake_data('slp'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
-    elsif self.pv?
-      return {data: Reading.latest_fake_data('sep_pv'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
-    elsif self.bhkw_or_else?
-      return {data: Reading.latest_fake_data('sep_bhkw'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
-    else
-      return {data: [[0, 1]], factor: 1}
-    end
-  end
 
   def submitted_readings_by_user
     if self.data_source
       Reading.all_by_metering_point_id(self.id)
     end
-  end
-
-  # TODO remove this
-  def self.fake_data(factor, resolution, containing_timestamp, source)
-    result = []
-    watts = {}
-    watts[:slp] = [108984, 101011, 93392, 86072, 78947, 72471, 66744, 62159, 58923, 56683, 55039, 53943, 52796, 51700, 50704, 49807, 48963, 48316, 47968, 47715, 47715, 47816, 48215, 48711, 49460, 50307, 51452, 52796, 54791, 58028, 63655, 72620, 85423, 101264, 118543, 135731, 151820, 166512, 179811, 191764, 202476, 212336, 221652, 231116, 240727, 249792, 257264, 262243, 263739, 261747, 256416, 247699, 236096, 222547, 208351, 194904, 183047, 172988, 164520, 157547, 151920, 147087, 142952, 138868, 134883, 131896, 131000, 133736, 140611, 150572, 161879, 173087, 182799, 191167, 198888, 206211, 213579, 219659, 223043, 221799, 215324, 205116, 193755, 183448, 176075, 170843, 166512, 161631, 155404, 147683, 138968, 129504, 119791, 110079, 100515, 91152]
-    watts[:sep_pv] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 700, 4019, 11715, 24596, 40755, 59851, 81655, 105892, 132255, 160408, 190000, 220643, 251960, 283535, 314972, 345863, 375812, 404431, 431344, 456212, 478700, 498520, 515408, 529144, 539540, 546460, 549799, 549516, 545591, 538075, 527047, 512639, 495023, 474416, 451063, 425252, 397300, 367544, 336359, 304119, 271228, 238084, 205088, 172648, 141160, 110999, 82531, 56099, 33343, 17183, 6851, 1440, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    watts[:sep_bhkw] = [114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168, 114168]
-    arr = watts[source]
-    watt_hours_per_day = {}
-    watt_hours_per_day[:slp] = 3.3443660000 #kWh
-    watt_hours_per_day[:sep_pv] = 7.730000000
-    watt_hours_per_day[:sep_bhkw] = 2.7839999999
-    days_in_month = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-    if resolution == "year_to_months"
-      time = Time.at(containing_timestamp.to_i/1000).beginning_of_year
-      days_in_month.each do |count_days|
-        result << [time.to_i*1000, factor * watt_hours_per_day[source] * count_days]
-        time = time + count_days.days
-      end
-    elsif resolution == "month_to_days"
-      time = Time.at(containing_timestamp.to_i/1000).beginning_of_month
-      count_days = days_in_month[time.month - 1]
-      count_days.times do
-        result << [time.to_i*1000, factor * watt_hours_per_day[source]]
-        time = time + 1.day
-      end
-    elsif resolution == "day_to_minutes" || resolution == "day_to_hours"
-      time = Time.at(containing_timestamp.to_i/1000).beginning_of_day
-      arr.size.times do |i|
-        time = time + 15.minutes
-        result << [time.to_i*1000, factor * arr[i]/1000]
-      end
-    elsif resolution == "hour_to_minutes" || resolution == "hour_to_seconds"
-      time = Time.at(containing_timestamp.to_i/1000)
-      start_time = time.beginning_of_hour
-      day_beginning = time.beginning_of_day
-      offset = ((start_time - day_beginning)/(60*15)).to_i
-      4.times do |i|
-        time_result = start_time + (i*15).minutes
-        result << [time_result.to_i*1000, factor * arr[offset + i]/1000]
-      end
-    elsif resolution == "latest_fake_data"
-      time = Time.at(containing_timestamp.to_i/1000)
-      hour_beginning = time.beginning_of_hour
-      day_beginning = time.beginning_of_day
-      offset = ((hour_beginning - day_beginning)/(60*15) + (time - hour_beginning)/(60*15)).to_i
-      time_result = day_beginning + (offset*15).minutes
-      result << [time_result.to_i*1000, factor * arr[offset]/1000]
-    end
-    return result
   end
 
   private

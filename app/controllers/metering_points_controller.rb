@@ -206,65 +206,6 @@ class MeteringPointsController < ApplicationController
   authority_actions :remove_manager_update => 'update'
 
 
-
-
-
-
-  def chart
-    @metering_point = MeteringPoint.find(params[:id])
-    params[:containing_timestamp].nil? ? @containing_timestamp = Time.now.to_i*1000 : @containing_timestamp = params[:containing_timestamp]
-
-    data = @metering_point.chart_data(params[:resolution], @containing_timestamp)
-    #@data = @metering_point.chart_data(params[:resolution], @containing_timestamp)
-    @chart_data = []
-    @chart_data << {
-      data: data,
-      name: @metering_point.decorate.long_name
-    }
-
-    render json: @chart_data.to_json
-  end
-
-
-
-
-
-  def latest_fake_data
-    @metering_point = MeteringPoint.find(params[:id])
-    @cache_id = "/metering_points/#{params[:id]}/latest_fake_data"
-    @cache = Rails.cache.fetch(@cache_id)
-    @latest_fake_data = @cache || @metering_point.latest_fake_data
-    render json: @latest_fake_data.to_json
-  end
-
-
-
-
-  def latest_power
-    @metering_point = MeteringPoint.find(params[:id])
-    @cache_id = "/metering_points/#{params[:id]}/latest_power"
-    @cache = Rails.cache.fetch(@cache_id)
-    last_power = @cache || @metering_point.last_power
-    if !last_power.nil?
-      latest_power = last_power[:power]
-      latest_timestamp = last_power[:timestamp]
-    else
-       latest_power = nil
-       latest_timestamp = nil
-    end
-    online = latest_timestamp && latest_timestamp >= (Time.now - 60.seconds).to_i*1000 ? true : false
-    if @cache.nil?
-      Rails.cache.write(@cache_id, last_power, expires_in: 4.seconds)
-    end
-    render json: {
-      latest_power: latest_power,
-      timestamp:    latest_timestamp,
-      smart:        @metering_point.smart?,
-      online:       online,
-      virtual:      @metering_point.virtual
-    }.to_json
-  end
-
   def get_scores
     @metering_point = MeteringPoint.find(params[:id])
     resolution_format = params[:resolution]

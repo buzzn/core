@@ -103,6 +103,9 @@ class Reading
     else
       puts "You gave me #{resolution_format} -- I have no idea what to do with that."
     end
+    if end_time > Time.current
+      end_time = Time.current
+    end
 
     return start_time, end_time, offset
   end

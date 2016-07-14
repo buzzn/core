@@ -19,97 +19,23 @@ $(".metering_points").ready ->
 
     id = $(this).attr('id').split('_')[2]
     width = $("#chart-container-" + id).width()
-    $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_minutes', dataType: 'json'})
-      .success (data) ->
-        if data[0].data[0] == undefined
-          data[0].data[0] = [new Date(), 0] #TODO: Search for last data
-        partial_chart = new Highcharts.Chart(
-          chart:
-            type: 'areaspline'
-            renderTo: 'chart-container-' + id
-            width: width
-            backgroundColor: 'rgba(255, 255, 255, 0.0)'
-            spacingBottom: 5,
-            spacingTop: 0,
-            spacingLeft: 20,
-            spacingRight: 20
-          colors: ['#FFF']
-          exporting:
-            enabled: false
-          legend:
-            enabled: false
-          title:
-            margin: 0
-            text: ""
-          credits:
-            enabled: false
-          xAxis:
-            lineWidth: 0
-            tickWidth: 0
-            type: 'datetime'
-            endOnTick: true
-            min: Chart.Functions.beginningOfDay(data[0].data[0][0])
-            max: Chart.Functions.endOfDay(data[0].data[0][0])
-            labels:
-              enabled: false
-              style:
-                color: '#FFF'
-          yAxis:
-            gridLineWidth: 0
-            labels:
-              enabled: false
-              style:
-                color: '#FFF'
-              format: "{value} W"
-            title:
-              enabled: false
-            minRange: 10
-            min: 0
-          plotOptions:
-            series:
-              fillColor:
-                linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
-                stops: [
-                  [0, "rgba(255, 255, 255, 0.4)"],
-                  [1, "rgba(255, 255, 255, 0.0)"]
-                ]
-              states:
-                hover:
-                  enabled: false
-              turboThreshold: 0
-            areaspline:
-              marker:
-                enabled: false
-                #radius: 2
-          tooltip:
-            enabled: false
-
-          series: data)
-      .error (jqXHR, textStatus, errorThrown) ->
-        console.log textStatus
+    aggregator = new Aggregator([id])
+    $.when(aggregator.past(new Date(), 'day_to_minutes')).done ->
+      data = aggregator.data
+      if data == undefined || data[0] == undefined || data[0][0] == undefined
+        console.log data
+        data = [[]]
         $('#chart-container-' + id).html('error')
-
-
-#code for metering_point.show
-$(".metering_point_detail").ready ->
-  chart = undefined
-  id = $(this).attr('id').split('_')[2]
-  width = $("#chart-container-" + id).width()
-  $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_minutes', dataType: 'json'})
-    .success (data) ->
-      if data[0].data[0] == undefined
-        data[0].data[0] = [new Date(), 0] #TODO: Search for last data
-      chart = new Highcharts.Chart(
+      partial_chart = new Highcharts.Chart(
         chart:
           type: 'areaspline'
           renderTo: 'chart-container-' + id
-          backgroundColor:'rgba(255, 255, 255, 0.0)'
           width: width
-          spacingBottom: 20
-          spacingTop: 10
-          spacingLeft: 20
+          backgroundColor: 'rgba(255, 255, 255, 0.0)'
+          spacingBottom: 5,
+          spacingTop: 0,
+          spacingLeft: 20,
           spacingRight: 20
-          animation: false
         colors: ['#FFF']
         exporting:
           enabled: false
@@ -117,88 +43,169 @@ $(".metering_point_detail").ready ->
           enabled: false
         title:
           margin: 0
-          text: "Heute, " + moment(data[0].data[0][0]).format("DD.MM.YYYY")
-          style: { "color": "#FFF"}
+          text: ""
         credits:
           enabled: false
-        loading:
-          hideDuration: 800
-          showDuration: 800
-          labelStyle:
-            color: 'black'
-            'font-size': '20pt'
         xAxis:
-          lineWidth: 1
-          tickWidth: 1
+          lineWidth: 0
+          tickWidth: 0
           type: 'datetime'
-          startOnTick: false
-          endOnTick: false
-          min: Chart.Functions.beginningOfDay(data[0].data[0][0])
-          max: Chart.Functions.endOfDay(data[0].data[0][0])
+          endOnTick: true
+          min: Chart.Functions.beginningOfDay(data[0][0])
+          max: Chart.Functions.endOfDay(data[0][0])
           labels:
-            enabled: true
+            enabled: false
             style:
               color: '#FFF'
-          title:
-            enabled: true
-            style: { "color": "#FFF", "fontWeight": "bold"}
         yAxis:
           gridLineWidth: 0
-          min: 0
           labels:
-            enabled: true
+            enabled: false
             style:
               color: '#FFF'
             format: "{value} W"
           title:
-            enabled: true
-            text: ""
-            style: { "color": "#FFF", "fontWeight": "bold"}
-          minRange: 1
+            enabled: false
+          minRange: 10
+          min: 0
         plotOptions:
           series:
             fillColor:
               linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
               stops: [
                 [0, "rgba(255, 255, 255, 0.4)"],
-                [1, "rgba(255, 255, 255, 0.1)"]
+                [1, "rgba(255, 255, 255, 0.0)"]
               ]
+            states:
+              hover:
+                enabled: false
             turboThreshold: 0
           areaspline:
-            borderWidth: 0
-            cursor: 'pointer'
-            events:
-              click: (event) ->
-                Chart.Functions.zoomIn(event.point.x)
             marker:
               enabled: false
-          column:
-            borderWidth: 0
-            cursor: 'pointer'
-            events:
-              click: (event) ->
-                Chart.Functions.zoomIn(event.point.x)
-            #pointPlacement: "on"
+              #radius: 2
         tooltip:
-          pointFormat: '<b>{point.y:,.0f} W</b><br/>'
-          dateTimeLabelFormats:
-            millisecond:"%e.%b, %H:%M:%S.%L",
-            second:"%e.%b, %H:%M:%S",
-            minute:"%e.%b, %H:%M",
-            hour:"%e.%b, %H:%M",
-            day:"%e.%b.%Y",
-            week:"Week from %e.%b.%Y",
-            month:"%B %Y",
-            year:"%Y"
-        series: data
+          enabled: false
+
       )
-      chart_data_min_x = chart.series[0].data[0].x
-      createChartTimer([id], 'metering_point')
-      Chart.Functions.activateButtons(true)
-      Chart.Functions.getChartComments('metering_points', id, chart_data_min_x)
-    .error (jqXHR, textStatus, errorThrown) ->
-      console.log textStatus
+      partial_chart.addSeries(
+        name: ''
+        data: data
+      )
+
+
+#code for metering_point.show
+$(".metering_point_detail").ready ->
+  chart = undefined
+  id = $(this).attr('id').split('_')[2]
+  width = $("#chart-container-" + id).width()
+  aggregator = new Aggregator([id])
+  $.when(aggregator.past(new Date(), 'day_to_minutes')).done ->
+    data = aggregator.data
+    if data == undefined || data[0] == undefined || data[0][0] == undefined
+      console.log data
+      data = [[]]
       $('#chart-container-' + id).html('error')
+    chart = new Highcharts.Chart(
+      chart:
+        type: 'areaspline'
+        renderTo: 'chart-container-' + id
+        backgroundColor:'rgba(255, 255, 255, 0.0)'
+        width: width
+        spacingBottom: 20
+        spacingTop: 10
+        spacingLeft: 20
+        spacingRight: 20
+        animation: false
+      colors: ['#FFF']
+      exporting:
+        enabled: false
+      legend:
+        enabled: false
+      title:
+        margin: 0
+        text: "Heute, " + moment(data[0][0]).format("DD.MM.YYYY")
+        style: { "color": "#FFF"}
+      credits:
+        enabled: false
+      loading:
+        hideDuration: 800
+        showDuration: 800
+        labelStyle:
+          color: 'black'
+          'font-size': '20pt'
+      xAxis:
+        lineWidth: 1
+        tickWidth: 1
+        type: 'datetime'
+        startOnTick: false
+        endOnTick: false
+        min: Chart.Functions.beginningOfDay(data[0][0])
+        max: Chart.Functions.endOfDay(data[0][0])
+        labels:
+          enabled: true
+          style:
+            color: '#FFF'
+        title:
+          enabled: true
+          style: { "color": "#FFF", "fontWeight": "bold"}
+      yAxis:
+        gridLineWidth: 0
+        min: 0
+        labels:
+          enabled: true
+          style:
+            color: '#FFF'
+          format: "{value} W"
+        title:
+          enabled: true
+          text: ""
+          style: { "color": "#FFF", "fontWeight": "bold"}
+        minRange: 1
+      plotOptions:
+        series:
+          fillColor:
+            linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
+            stops: [
+              [0, "rgba(255, 255, 255, 0.4)"],
+              [1, "rgba(255, 255, 255, 0.1)"]
+            ]
+          turboThreshold: 0
+        areaspline:
+          borderWidth: 0
+          cursor: 'pointer'
+          events:
+            click: (event) ->
+              Chart.Functions.zoomIn(event.point.x)
+          marker:
+            enabled: false
+        column:
+          borderWidth: 0
+          cursor: 'pointer'
+          events:
+            click: (event) ->
+              Chart.Functions.zoomIn(event.point.x)
+          #pointPlacement: "on"
+      tooltip:
+        pointFormat: '<b>{point.y:,.0f} W</b><br/>'
+        dateTimeLabelFormats:
+          millisecond:"%e.%b, %H:%M:%S.%L",
+          second:"%e.%b, %H:%M:%S",
+          minute:"%e.%b, %H:%M",
+          hour:"%e.%b, %H:%M",
+          day:"%e.%b.%Y",
+          week:"Week from %e.%b.%Y",
+          month:"%B %Y",
+          year:"%Y"
+    )
+    chart.addSeries(
+      name: ''
+      data: data
+    )
+    chart_data_min_x = chart.series[0].data[0].x
+    createChartTimer([id], 'metering_point')
+    Chart.Functions.activateButtons(true)
+    Chart.Functions.getChartComments('metering_points', id, chart_data_min_x)
 
 
 
@@ -321,113 +328,114 @@ $(".dashboard-chart").ready ->
   metering_point_ids = $(this).data('metering_point-ids').toString().split(",")
 
   i = 0
-
   metering_point_ids.forEach (id) ->
     if id != ""
-      $.ajax({url: '/metering_points/' + id + '/chart?resolution=day_to_minutes', async: true, dataType: 'json'})
-        .success (data) ->
-          if data[0].data[0] == undefined
-            data[0].data[0] = [new Date(), 0] #TODO: Search for last data
-          if chart == undefined
-            chart = new Highcharts.Chart(
-              chart:
-                type: 'areaspline'
-                renderTo: 'chart-container-' + dashboard_id
-                backgroundColor:'rgba(255, 255, 255, 0.0)'
-                width: width
-                spacingBottom: 20
-                spacingTop: 10
-                spacingLeft: 20
-                spacingRight: 20
-                animation: false
-              colors: ['#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
-              exporting:
+      aggregator = new Aggregator([id])
+      $.when(aggregator.past(new Date(), 'day_to_minutes')).done ->
+        data = aggregator.data
+        if data == undefined || data[0] == undefined || data[0][0] == undefined
+          console.log data
+          data = [[]]
+          $('#chart-container-' + dashboard_id).html('error')
+        if chart == undefined
+          chart = new Highcharts.Chart(
+            chart:
+              type: 'areaspline'
+              renderTo: 'chart-container-' + dashboard_id
+              backgroundColor:'rgba(255, 255, 255, 0.0)'
+              width: width
+              spacingBottom: 20
+              spacingTop: 10
+              spacingLeft: 20
+              spacingRight: 20
+              animation: false
+            colors: ['#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
+            exporting:
+              enabled: false
+            legend:
+              enabled: true
+            title:
+              margin: 0
+              text: "Heute, " + moment(data[0][0]).format("DD.MM.YYYY")
+              style: { "color": "#000"}
+            credits:
+              enabled: false
+            loading:
+              hideDuration: 800
+              showDuration: 800
+              labelStyle:
+                color: 'black'
+                'font-size': '20pt'
+            xAxis:
+              lineWidth: 1
+              tickWidth: 1
+              type: 'datetime'
+              startOnTick: false
+              endOnTick: false
+              min: Chart.Functions.beginningOfDay(data[0][0])
+              max: Chart.Functions.endOfDay(data[0][0])
+              labels:
+                enabled: true
+                style:
+                  color: '#000'
+              title:
                 enabled: false
-              legend:
+                style: { "color": "#000", "fontWeight": "bold"}
+            yAxis:
+              gridLineWidth: 0
+              min: 0
+              labels:
                 enabled: true
               title:
                 margin: 0
-                text: "Heute, " + moment(data[0].data[0][0]).format("DD.MM.YYYY")
-                style: { "color": "#000"}
+                text: ""
               credits:
                 enabled: false
-              loading:
-                hideDuration: 800
-                showDuration: 800
-                labelStyle:
-                  color: 'black'
-                  'font-size': '20pt'
-              xAxis:
-                lineWidth: 1
-                tickWidth: 1
-                type: 'datetime'
-                startOnTick: false
-                endOnTick: false
-                min: Chart.Functions.beginningOfDay(data[0].data[0][0])
-                max: Chart.Functions.endOfDay(data[0].data[0][0])
-                labels:
-                  enabled: true
-                  style:
-                    color: '#000'
-                title:
+            plotOptions:
+              series:
+                fillOpacity: 0.5
+                turboThreshold: 0
+              areaspline:
+                borderWidth: 0
+                cursor: 'pointer'
+                events:
+                  click: (event) ->
+                    Chart.Functions.zoomInDashboard(event.point.x)
+                marker:
                   enabled: false
-                  style: { "color": "#000", "fontWeight": "bold"}
-              yAxis:
-                gridLineWidth: 0
-                min: 0
-                labels:
-                  enabled: true
-                title:
-                  margin: 0
-                  text: ""
-                credits:
-                  enabled: false
-              plotOptions:
-                series:
-                  fillOpacity: 0.5
-                  turboThreshold: 0
-                areaspline:
-                  borderWidth: 0
-                  cursor: 'pointer'
-                  events:
-                    click: (event) ->
-                      Chart.Functions.zoomInDashboard(event.point.x)
-                  marker:
-                    enabled: false
-                column:
-                  borderWidth: 0
-                  cursor: 'pointer'
-                  events:
-                    click: (event) ->
-                      Chart.Functions.zoomInDashboard(event.point.x)
-              tooltip:
-                pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
-                dateTimeLabelFormats:
-                  millisecond:"%e.%b, %H:%M:%S.%L",
-                  second:"%e.%b, %H:%M:%S",
-                  minute:"%e.%b, %H:%M",
-                  hour:"%e.%b, %H:%M",
-                  day:"%e.%b.%Y",
-                  week:"Week from %e.%b.%Y",
-                  month:"%B %Y",
-                  year:"%Y"
-            )
-            chart.addSeries(
-              name: data[0].name
-              data: data[0].data
-            )
-            chart_data_min_x = chart.series[0].data[0].x
-
-          else
-            chart.addSeries(
-              name: data[0].name
-              data: data[0].data
-            )
-          metering_point_ids_hash[id] = i
-          i += 1
-          Chart.Functions.activateButtons(true)
-        .error (jqXHR, textStatus, errorThrown) ->
-          console.log textStatus
+              column:
+                borderWidth: 0
+                cursor: 'pointer'
+                events:
+                  click: (event) ->
+                    Chart.Functions.zoomInDashboard(event.point.x)
+            tooltip:
+              pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
+              dateTimeLabelFormats:
+                millisecond:"%e.%b, %H:%M:%S.%L",
+                second:"%e.%b, %H:%M:%S",
+                minute:"%e.%b, %H:%M",
+                hour:"%e.%b, %H:%M",
+                day:"%e.%b.%Y",
+                week:"Week from %e.%b.%Y",
+                month:"%B %Y",
+                year:"%Y"
+          )
+          chart.addSeries(
+            data: data
+          )
+          getMeteringPointName(id).success (metering_point_data) ->
+            chart.series[metering_point_ids_hash[id]].update({name: metering_point_data.data.attributes.name})
+          chart_data_min_x = chart.series[0].data[0].x
+        else
+          chart.addSeries(
+            data: data
+          )
+          getMeteringPointName(id).success (metering_point_data) ->
+            chart.series[metering_point_ids_hash[id]].update({name: metering_point_data.data.attributes.name})
+        metering_point_ids_hash[id] = i
+        i += 1
+        Chart.Functions.activateButtons(true)
   createChartTimer(metering_point_ids, 'dashboard')
 
 
@@ -474,7 +482,8 @@ $(".dashboard-chart").ready ->
     containing_timestamp = chart_data_min_x
     Chart.Functions.setChartDataMultiSeries('dashboard', dashboard_id, containing_timestamp)
 
-
+getMeteringPointName = (id) ->
+  $.ajax({url: '/api/v1/metering-points/' + id + '?access_token=' + gon.global.access_token, async: true, dataType: 'json'})
 
 
 #code for group
@@ -776,29 +785,8 @@ namespace 'Chart.Functions', (exports) ->
       Chart.Functions.setChartType(true)
     containing_timestamp = timestamp
 
-    metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
-    numberOfSeries = 0
-    metering_point_ids.forEach (id) ->
-      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
-        .success (data) ->
-          if data[0].data[0] == undefined
-            chart.hideLoading()
-            Chart.Functions.activateButtons(true)
-            return
-          seriesVisible = chart.series[numberOfSeries].visible
-          if !seriesVisible
-            chart.series[numberOfSeries].show()
-          chart.series[numberOfSeries].setData(data[0].data)
-          new_point_width = Chart.Functions.setPointWidth()
-          chart.series[numberOfSeries].update({pointWidth: new_point_width})
-          chart.xAxis[0].update(Chart.Functions.getExtremes(containing_timestamp), true)
-          chart_data_min_x = chart.series[0].data[0].x
-          Chart.Functions.setChartTitle(chart_data_min_x)
-          if !seriesVisible
-            chart.series[numberOfSeries].hide()
-          numberOfSeries += 1
-    chart.hideLoading()
-    Chart.Functions.activateButtons(true)
+    id = $(".dashboard-chart").attr('id')
+    Chart.Functions.setChartDataMultiSeries('dashboard', id, containing_timestamp)
 
   exports.zoomInGroup = (timestamp) ->
     chart.showLoading()
@@ -910,46 +898,48 @@ namespace 'Chart.Functions', (exports) ->
     Chart.Functions.activateButtons(false)
 
   exports.setChartData = (resource, id, containing_timestamp) ->
-    $.ajax({url: '/' + resource + '/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
-      .success (data) ->
-        if data[0].data[0] == undefined
-          data[0].data[0] = [(new Date()).getTime(), 0]
-        chart.series[0].setData(data[0].data)
-        new_point_width = Chart.Functions.setPointWidth()
-        chart.series[0].update({pointWidth: new_point_width})
-        chart.xAxis[0].update(Chart.Functions.getExtremes(containing_timestamp), true)
-        #console.log chart.series[0]
-        chart_data_min_x = chart.series[0].data[0].x
-        Chart.Functions.setChartTitle(chart_data_min_x)
-        Chart.Functions.setChartType(false)
-        chart.hideLoading()
-        Chart.Functions.activateButtons(true)
-        Chart.Functions.setEnergyStats()
-        if $(".metering_point_detail").length > 0
-          Chart.Functions.getChartComments(resource, id, containing_timestamp)
-      .error (jqXHR, textStatus, errorThrown) ->
-        console.log textStatus
+    aggregator = new Aggregator([id])
+    $.when(aggregator.past(containing_timestamp, actual_resolution)).done ->
+      data = aggregator.data
+      if data == undefined || data[0] == undefined || data[0][0] == undefined
+        console.log data
+        data = [[]]
         $('#chart-container-' + id).html('error')
         chart.hideLoading()
         Chart.Functions.activateButtons(true)
+      chart.series[0].setData(data)
+      new_point_width = Chart.Functions.setPointWidth()
+      chart.series[0].update({pointWidth: new_point_width})
+      chart.xAxis[0].update(Chart.Functions.getExtremes(containing_timestamp), true)
+      #console.log chart.series[0]
+      chart_data_min_x = chart.series[0].data[0].x
+      Chart.Functions.setChartTitle(chart_data_min_x)
+      Chart.Functions.setChartType(false)
+      chart.hideLoading()
+      Chart.Functions.activateButtons(true)
+      Chart.Functions.setEnergyStats()
+      if $(".metering_point_detail").length > 0
+        Chart.Functions.getChartComments(resource, id, containing_timestamp)
 
   exports.setChartDataMultiSeries = (resource, id, containing_timestamp) ->
     if resource == 'dashboard'
       metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
       metering_point_ids.forEach (metering_point_id) ->
-        $.ajax({url: '/metering_points/' + metering_point_id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
-          .success (data) ->
-            # chart.addSeries(
-            #   name: data[0].name
-            #   data: data[0].data
-            # )
+        if metering_point_id != ""
+          aggregator = new Aggregator([metering_point_id])
+          $.when(aggregator.past(containing_timestamp, actual_resolution)).done ->
+            data = aggregator.data
+            if data == undefined || data[0] == undefined || data[0][0] == undefined
+              console.log data
+              data = [[]]
+              $('#chart-container-' + id).html('error')
             numberOfSeries = metering_point_ids_hash[metering_point_id]
             seriesVisible = chart.series[numberOfSeries].visible
             if !seriesVisible
               chart.series[numberOfSeries].show()
-            chart.series[numberOfSeries].setData(data[0].data)
+            chart.series[numberOfSeries].setData(data)
             new_point_width = Chart.Functions.setPointWidth()
-            chart.series[numberOfSeries].update({pointWidth: new_point_width, name: data[0].name})
+            chart.series[numberOfSeries].update({pointWidth: new_point_width})
             extremes = Chart.Functions.getExtremes(containing_timestamp)
             chart.xAxis[0].update(extremes, true)
             chart_data_min_x = extremes.min
@@ -957,12 +947,6 @@ namespace 'Chart.Functions', (exports) ->
             Chart.Functions.setChartType(true)
             if !seriesVisible
               chart.series[numberOfSeries].hide()
-          .error (jqXHR, textStatus, errorThrown) ->
-            chart.hideLoading()
-            console.log textStatus
-            $('#chart-container-' + id).html('error')
-            Chart.Functions.activateButtons(true)
-
       chart.hideLoading()
       Chart.Functions.activateButtons(true)
     else
@@ -974,6 +958,12 @@ namespace 'Chart.Functions', (exports) ->
         out_data = out_aggregator.data
         $.when(in_aggregator.past(containing_timestamp, actual_resolution)).done ->
           in_data = in_aggregator.data
+          if in_data == undefined || in_data[0] == undefined || in_data[0][0] == undefined || out_data == undefined || out_data[0] == undefined || out_data[0][0] == undefined
+            console.log data
+            data = [[]]
+            $('#chart-container-' + id).html('error')
+            chart.hideLoading()
+            Chart.Functions.activateButtons(true)
           data = [in_data, out_data]
           numberOfSeries = 0
           data.forEach (d) ->
@@ -995,36 +985,6 @@ namespace 'Chart.Functions', (exports) ->
           Chart.Functions.activateButtons(true)
           Chart.Functions.setEnergyStatsGroup()
           Chart.Functions.getChartComments(resource, id, chart_data_min_x)
-
-      # $.ajax({url: '/' + resource + '/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, async: true, dataType: 'json'})
-      #   .success (data) ->
-      #     if data[0].data[0] == undefined
-      #       chart.hideLoading()
-      #       data[0].data[0] = [new Date(), 0]
-      #     data.forEach (d) ->
-      #       seriesVisible = chart.series[numberOfSeries].visible
-      #       if !seriesVisible
-      #         chart.series[numberOfSeries].show()
-      #       chart.series[numberOfSeries].setData(d.data)
-      #       new_point_width = Chart.Functions.setPointWidth()
-      #       chart.series[numberOfSeries].update({pointWidth: new_point_width})
-      #       extremes = Chart.Functions.getExtremes(containing_timestamp)
-      #       chart.xAxis[0].update(extremes, true)
-      #       chart_data_min_x = extremes.min
-      #       Chart.Functions.setChartTitle(chart_data_min_x)
-      #       if !seriesVisible
-      #         chart.series[numberOfSeries].hide()
-      #       numberOfSeries += 1
-      #     Chart.Functions.setChartType(true)
-      #     chart.hideLoading()
-      #     Chart.Functions.activateButtons(true)
-      #     Chart.Functions.setEnergyStatsGroup()
-      #     Chart.Functions.getChartComments(resource, id, chart_data_min_x)
-      #   .error (jqXHR, textStatus, errorThrown) ->
-      #     chart.hideLoading()
-      #     console.log textStatus
-      #     $('#chart-container-' + id).html('error')
-      #     Chart.Functions.activateButtons(true)
 
 
   exports.endOfDay = (timestamp) ->
@@ -1222,39 +1182,15 @@ updateChart = (resource_ids, mode) ->
   if mode == 'metering_point'
     if resource_ids.length == 0
       return
-    $.ajax({url: '/metering_points/' + resource_ids[0] + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, dataType: 'json'})
-      .success (data) ->
-        if data[0].data[0] == undefined
-          return
-        if chart_data_min_x == data[0].data[0][0]
-          chart.series[0].setData(data[0].data)
-
+    Chart.Functions.setChartData('metering_points', resource_ids[0], chart_data_min_x)
   else if mode == 'dashboard'
     if resource_ids.length == 0
       return
-    resource_ids.forEach (id) ->
-      $.ajax({url: '/metering_points/' + id + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, dataType: 'json'})
-        .success (data) ->
-          if data[0].data[0] == undefined
-            return
-          if chart_data_min_x == data[0].data[0][0]
-            numberOfSeries = metering_point_ids_hash[id]
-            chart.series[numberOfSeries].setData(data[0].data)
-        .error (jqXHR, textStatus, errorThrown) ->
-          console.log textStatus
-
+    Chart.Functions.setChartDataMultiSeries('dashboard', resource_ids, chart_data_min_x)
   else if mode == 'group'
     if resource_ids.length == 0
       return
-    numberOfSeries = 0
-    $.ajax({url: '/groups/' + resource_ids[0] + '/chart?resolution=' + actual_resolution + '&containing_timestamp=' + containing_timestamp, dataType: 'json'})
-      .success (data) ->
-        if data[0].data[0] == undefined
-          return
-        if chart_data_min_x == data[0].data[0][0]
-          data.forEach (d) ->
-            chart.series[numberOfSeries].setData(d.data)
-            numberOfSeries += 1
+    Chart.Functions.setChartDataMultiSeries('groups', resource_ids[0], chart_data_min_x)
 
 
 
@@ -1302,8 +1238,6 @@ getLiveData = (metering_point, metering_point_id) ->
   aggregator = new Aggregator([metering_point_id])
   $.when(aggregator.present(new Date())).done ->
     data = aggregator.data
-  # $.ajax({url: '/metering_points/' + metering_point_id + '/latest_power', async: true, dataType: 'json'})
-  #   .success (data) ->
     metering_point.find(".power-ticker").html(data[0][1])
     if data.timestamp <= Date.now() - 60*1000
       metering_point.find(".power-ticker").css({opacity: 0.3})
@@ -1330,54 +1264,6 @@ getLiveData = (metering_point, metering_point_id) ->
 
     if actual_resolution == 'day_to_minutes'
       window.wwasInactive = false
-
-
-calculate_power = (last_readings) =>
-  if last_readings == undefined || last_readings == null
-    return "?"
-  return Math.round((last_readings[1] - last_readings[3])*3600/((last_readings[0] - last_readings[2])*10000))
-
-
-
-getFakeValue = (metering_point_id, source) ->
-  $.getJSON "/metering_points/" + metering_point_id + "/latest_fake_data", (data) ->
-    if source == 'slp'
-      readingsSLP = data.data
-    else if source == 'sep_pv'
-      readingsSEP_PV = data.data
-    else
-      readingsSEP_BHKW = data.data
-    if !(metering_point_id of factors)
-      factors[metering_point_id] = data.factor
-
-setFakeValue = (metering_point, metering_point_id, source) ->
-  if source == 'slp'
-    if readingsSLP[0][0] < (new Date()).getTime() - 15*60*1000
-      getFakeValue(metering_point_id, 'slp')
-    metering_point.find(".power-ticker").html getRandomPower(readingsSLP[0][1] * factors[metering_point_id]).toFixed(0)
-  else if source == 'sep_pv'
-    if readingsSEP_PV[0][0] < (new Date()).getTime() - 15*60*1000
-      getFakeValue(metering_point_id, 'sep_pv')
-    metering_point.find(".power-ticker").html getRandomPower(readingsSEP_PV[0][1] * factors[metering_point_id]).toFixed(0)
-  else
-    if readingsSEP_BHKW[0][0] < (new Date()).getTime() - 15*60*1000
-      getFakeValue(metering_point_id, 'sep_bhkw')
-    metering_point.find(".power-ticker").html getRandomPower(readingsSEP_BHKW[0][1] * factors[metering_point_id]).toFixed(0)
-
-# interpolateFakekW = (data_arr, factor) ->
-#   firstTimestamp = data_arr[0][0]
-#   firstValue = data_arr[0][1]
-#   lastTimestamp = data_arr[1][0]
-#   lastValue = data_arr[1][1]
-#   averagePower = (lastValue - firstValue)/0.25*1000*factor
-#   return getRandomPower(averagePower)
-
-getRandomPower = (averagePower) ->
-  y = averagePower + Math.random()*10 - 5
-  if y < 0
-    return 0
-  else
-    return y
 
 
 clearTimers = ->
