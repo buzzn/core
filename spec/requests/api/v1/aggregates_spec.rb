@@ -30,7 +30,7 @@ describe "Aggregates API" do
   # |_____/|______|_|
 
 
-  it 'does aggregate slp past energy by year_to_months as admin in sommertime' do
+  it 'does aggregate slp past energy by year_to_months as admin in summertime' do
     access_token = Fabricate(:admin_access_token)
     metering_point = Fabricate(:metering_point)
 
