@@ -491,6 +491,131 @@ describe "Aggregates API" do
     Timecop.return
   end
 
+  it 'does aggregate slp past energy by year_to_months as manager in summertime just until now' do
+    access_token = Fabricate(:full_access_token_as_admin)
+
+    metering_point = Fabricate(:metering_point)
+
+    energy_a_milliwatt_hour = 0
+    timestamp = Time.find_zone('Moscow').local(2015,1,1)
+    (400).times do |i|
+      Fabricate(:reading,
+        source: 'slp',
+        timestamp: timestamp,
+        energy_a_milliwatt_hour: energy_a_milliwatt_hour,
+        power_a_milliwatt: 930*1000
+      )
+      energy_a_milliwatt_hour += 1300*1000
+      timestamp += 1.day
+    end
+
+    Timecop.freeze( Time.find_zone('Moscow').local(2015,7,2, 1,30,1) )
+    request_params = {
+      metering_point_ids: metering_point.id,
+      resolution: 'year_to_months',
+      timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json.count).to eq(7) # 7 month
+
+    timestamp = Time.find_zone('Moscow').local(2015,1,1)
+
+    i = 1
+    json.each do |item|
+      expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
+      if i < 7
+        expect(item['energy_milliwatt_hour']).to eq(1300*1000 * (Time.days_in_month(timestamp.month, timestamp.year)-1)) # -1 day becouse it is in the next day
+      end
+      timestamp += 1.month
+      i+=1
+    end
+    Timecop.return
+  end
+
+  it 'does aggregate slp power past by day_to_minutes as manager just until now' do
+    access_token = Fabricate(:full_access_token_as_admin)
+    metering_point = Fabricate(:metering_point)
+
+    energy_a_milliwatt_hour = 0
+    timestamp = Time.find_zone('Berlin').local(2015,2,1)
+    # 24 hours * 60 minutes * 60/2 seconds
+    (24*60*30).times do |i|
+      Fabricate(:reading,
+        source: 'slp',
+        timestamp: timestamp,
+        energy_a_milliwatt_hour: energy_a_milliwatt_hour,
+        power_a_milliwatt: 930*1000
+      )
+      energy_a_milliwatt_hour += 1300*1000
+      timestamp += 2.second
+    end
+
+    Timecop.freeze( Time.find_zone('Berlin').local(2015,2,1, 11,30,1) )
+    request_params = {
+      metering_point_ids: metering_point.id,
+      resolution: 'day_to_minutes',
+      timestamp: Time.find_zone('Berlin').local(2015,2,1).iso8601
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json.count).to eq(11.5*60 + 1)
+    timestamp = Time.find_zone('Berlin').local(2015,2,1)
+    json.each do |item|
+      expect( Time.parse(item['timestamp']).utc ).to eq(timestamp.utc)
+      expect(item['power_milliwatt']).to eq(930*1000)
+      expect(item['energy_milliwatt_hour']).to eq(nil)
+      expect(item['energy_b_milliwatt_hour']).to eq(nil)
+      timestamp += 1.minutes
+    end
+    Timecop.return
+  end
+
+  it 'does aggregate slp energy past by month_to_days as manager in sommertime just until now' do
+    access_token = Fabricate(:full_access_token_as_admin)
+    metering_point = Fabricate(:metering_point)
+
+    energy_a_milliwatt_hour = 0
+    timestamp = Time.find_zone('Berlin').local(2016,6,1)
+    (24*30).times do |i|
+      Fabricate(:reading,
+        source: 'slp',
+        timestamp: timestamp,
+        energy_a_milliwatt_hour: energy_a_milliwatt_hour,
+        power_a_milliwatt: 930*1000
+      )
+      energy_a_milliwatt_hour += 1300*1000
+      timestamp += 1.hour
+    end
+
+    Timecop.freeze( Time.find_zone('Berlin').local(2016,6,13, 11,30,1) )
+    request_params = {
+      metering_point_ids: metering_point.id,
+      resolution: 'month_to_days',
+      timestamp: Time.find_zone('Berlin').local(2016,6,2)
+    }
+
+    get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json.count).to eq(13)
+    timestamp = Time.find_zone('Berlin').local(2016,6,1)
+    i = 1
+    json.each do |item|
+      expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
+      expect(item['power_milliwatt']).to eq(nil)
+      expect(item['energy_milliwatt_hour']).to eq(23*1300*1000) if i < 13
+      expect(item['energy_b_milliwatt_hour']).to eq(nil)
+      timestamp += 1.day
+      i+=1
+    end
+    Timecop.return
+  end
+
 
   #   _____ ______ _____
   #  / ____|  ____|  __ \
@@ -574,6 +699,8 @@ describe "Aggregates API" do
       timestamp += 1.day
     end
   end
+
+
 
 
 
