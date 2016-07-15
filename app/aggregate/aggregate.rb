@@ -54,9 +54,14 @@ class Aggregate
       end
     end
 
+    # @present = {
+    #   "readings" => @present_items,
+    #   "power_milliwatt_summed" => power_milliwatt_summed
+    # }
     @present = {
-      "readings" => @present_items,
-      "power_milliwatt_summed" => power_milliwatt_summed
+      "timestamp" => @present_items.first['data']['timestamp'],
+      "power_milliwatt" => power_milliwatt_summed,
+      "readings" => @present_items
     }
 
     if seconds_to_process > 2
@@ -110,7 +115,7 @@ class Aggregate
           end
         end
 
-        @past = sum_lists(@past_items)
+        @past = sum_lists_improved(@past_items, @resolution)
 
       end
       if seconds_to_process > 2
@@ -247,21 +252,63 @@ private
 
   def sum_lists(lists)
     if lists.count > 1
-      tamplate_list  = lists.pop
-      keys           = tamplate_list.first.keys
+      template_list  = lists.pop
+      keys           = template_list.first.keys
       keys.delete('timestamp')
       lists.each do |list|
         list.each_with_index do |item, index|
           keys.each do |key|
-            tamplate_list[index][key] += item[key]
+            template_list[index][key] += item[key]
           end
         end
       end
-      return tamplate_list
+      return template_list
 
     else
       return lists.first
 
+    end
+  end
+
+  def sum_lists_improved(lists, resolution)
+    valueKey = :power_milliwatt
+    if resolution == 'year_to_months' || resolution == 'month_to_days'
+      valueKey = :energy_milliwatt_hour
+    end
+    result = []
+    maxLength = 0
+    indexMaxLength = 0
+    index = 0
+    lists.each do |data|
+      if data.length >= maxLength
+        maxLength = data.length
+        indexMaxLength = index
+      end
+      index += 1
+    end
+    for i in 0...maxLength
+      key = lists[indexMaxLength][i].values[0]
+      value = 0
+      for n in 0...lists.length
+        if lists[n][i] != nil && (key == lists[n][i].values[0] || matchesTimestamp(key, lists[n][i].values[0], resolution))
+          value += lists[n][i].values[1]
+        end
+      end
+      result.push({timestamp: key, "#{valueKey}": value})
+    end
+    return result
+  end
+
+  def matchesTimestamp(key, timestamp, resolution)
+    delta = Math.abs(key - timestamp)
+    if resolution == 'year_to_months'
+      return delta < 1296000000
+    elsif resolution == 'month_to_days'
+      return delta < 43200000
+    elsif resolution == 'day_to_minutes' #15 minutes
+      return delta < 450000
+    elsif resolution == 'hour_to_minutes' || resolution == 'present' #2 seconds
+      return delta < 1000
     end
   end
 
