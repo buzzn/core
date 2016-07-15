@@ -1,3 +1,4 @@
+# coding: utf-8
 Fabricator :contract do
   tariff                'localpool'
   status                'running'

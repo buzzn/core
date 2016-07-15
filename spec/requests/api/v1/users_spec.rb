@@ -54,7 +54,7 @@ describe "Users API" do
   end
 
 
-  it 'search users with full acess token as admin' do
+  it 'search users with full access token as admin' do
     user = Fabricate(:user)
     Fabricate(:user)
     Fabricate(:user)

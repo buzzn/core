@@ -1,6 +1,8 @@
 class Meter < ActiveRecord::Base
   resourcify
   include Authority::Abilities
+  include Filterable
+
   has_ancestry
   validates :manufacturer_product_serialnumber, presence: true, uniqueness: true   #, unless: "self.virtual"
   mount_uploader :image, PictureUploader
@@ -91,11 +93,13 @@ class Meter < ActiveRecord::Base
     end
   end
 
+  def self.search_attributes
+    [:manufacturer_name, :manufacturer_product_name]
+  end
 
-
-
-
-
+  def self.filter(value)
+    do_filter(value, *search_attributes)
+  end
 
 private
 

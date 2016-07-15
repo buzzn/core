@@ -41,3 +41,15 @@ end
 Fabricator :metering_service_provider_with_contracting_party, from: :metering_service_provider do
   contracting_party   { Fabricate(:contracting_party) }
 end
+
+# needed for groups fabricator
+Fabricator :buzzn_metering, from: :metering_service_provider do
+  name 'buzzn-metering'
+  mode 'metering_service_provider'
+end
+
+# needed for contracts fabricator
+Fabricator :discovergy, from: :metering_service_provider do
+  name 'discovergy'
+  mode 'metering_service_provider'
+end

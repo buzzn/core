@@ -1,6 +1,6 @@
 class Comment < ActiveRecord::Base
   include Authority::Abilities
-
+  include Filterable
   include PublicActivity::Model
 
   acts_as_nested_set :scope => [:commentable_id, :commentable_type]
@@ -32,6 +32,10 @@ class Comment < ActiveRecord::Base
       :body        => comment,
       :user_id     => user_id,
       :parent_id   => parent_id
+  end
+
+  def self.filter(search)
+    do_filter(search, :title, :subject, :body)
   end
 
   #helper method to check if a comment has children

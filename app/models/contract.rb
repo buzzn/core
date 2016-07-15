@@ -1,6 +1,7 @@
 class Contract < ActiveRecord::Base
   resourcify
   include Authority::Abilities
+  include Filterable
   has_paper_trail
 
   attr_encrypted :password, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
@@ -54,6 +55,14 @@ class Contract < ActiveRecord::Base
     %w{
       metering_point_operator_contract
     }.map(&:to_sym)
+  end
+
+  def self.search_attributes
+    [:tariff, :mode, :signing_user, :username]
+  end
+
+  def self.filter(search)
+    do_filter(search, *search_attributes)
   end
 
   def login_required?

@@ -3,6 +3,19 @@ require "grape-swagger"
 module API
   module V1
     class Base < Grape::API
+      def self.join(attributes, sep = ', ')
+          attributes.collect do |a|
+            case a
+            when Hash
+              a.collect do |k,v|
+                "#{k}:#{v.join(sep)}"
+              end
+            else
+              a
+            end
+          end.flatten.join(sep)
+        end
+
       mount API::V1::Auth
       mount API::V1::AccessTokens
       mount API::V1::Users

@@ -12,7 +12,7 @@ module API
 
         desc "Return all Users"
         params do
-          optional :search, type: String, desc: "Search query for users, looking into firstname and lastname and email"
+          optional :search, type: String, desc: "Search query using #{Base.join(User.search_attributes)}"
         end
         paginate(per_page: per_page=10)
         oauth2 :full

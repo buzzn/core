@@ -6,21 +6,24 @@ module API
       resource :contracts do
 
         desc 'Return all Contracts'
+        params do
+          optional :search, type: String, desc: "Search query using #{Base.join(Contract.search_attributes)}"
+        end
         paginate(per_page: per_page=10)
+        oauth2 :full
         get do
-          doorkeeper_authorize! :full
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
-          @total_pages  = Contract.all.page(@page).per_page(@per_page).total_pages
-          paginate(render(Contract.all, meta: { total_pages: @total_pages }))
+          @total_pages  = Contract.filter(params[:search]).page(@page).per_page(@per_page).total_pages
+          paginate(render(Contract.filter(params[:search]), meta: { total_pages: @total_pages }))
         end
 
         desc 'Return a Contract'
         params do
           requires :id, type: String, desc: 'ID of the Contract'
         end
+        oauth2 :public, :full
         get ':id' do
-          doorkeeper_authorize! :public
           Contract.find(params[:id])
         end
 
@@ -39,8 +42,8 @@ module API
           requires :confirm_pricing_model,  type: Boolean, desc: 'Confirm pricing model'
           requires :commissioning,          type: Date, desc: 'Commissioning'
         end
+        oauth2 :full
         post do
-          doorkeeper_authorize! :full
           @params = declared(params, include_missing: false).contract || declared(params, include_missing: false)
           @contract = Contract.new(@params)
           @contract.contracting_party = current_user.contracting_party if current_user.contracting_party
@@ -66,8 +69,8 @@ module API
           optional :confirm_pricing_model,  type: Boolean, desc: 'Confirm pricing model'
           optional :commissioning,          type: Date, desc: 'Commissioning'
         end
+        oauth2 :full
         put do
-          doorkeeper_authorize! :full
           @params = declared(params, include_missing: false).contract || declared(params, include_missing: false)
           @contract = Contract.find(@params.id)
           @params.delete('id')
@@ -80,8 +83,8 @@ module API
         params do
           requires :id, type: String, desc: 'Contract ID'
         end
+        oauth2 :full
         delete ':id' do
-          doorkeeper_authorize! :full
           Contract.find(params[:id]).destroy
           status 200
         end

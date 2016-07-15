@@ -4,4 +4,6 @@ Fabricator :comment do
   user_id           { |attrs| attrs[:user_id] || Fabricate(:user).id }
   parent_id         { |attrs| attrs[:parent_id] || '' }
   body              { FFaker::Lorem.paragraphs.join('-') }
+  title             { FFaker::Lorem.sentence }
+  subject           { FFaker::Lorem.sentence }
 end
