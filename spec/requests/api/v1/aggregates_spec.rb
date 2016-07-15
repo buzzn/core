@@ -1159,12 +1159,7 @@ describe "Aggregates API" do
 
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(1)
-<<<<<<< 51b8bc4d47ea48271a727a61bcc5effe48e198d5
     expect(json['power_milliwatt']).to eq(6412000)
-=======
-    expect(json['power_milliwatt']).to eq(-6412000)
-    Timecop.return
->>>>>>> cleanup Timecop usage
   end
 
 
