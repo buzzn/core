@@ -1238,7 +1238,7 @@ getLiveData = (metering_point, metering_point_id) ->
   aggregator = new Aggregator([metering_point_id])
   $.when(aggregator.present(new Date())).done ->
     data = aggregator.data
-    metering_point.find(".power-ticker").html(data[0][1])
+    metering_point.find(".power-ticker").html(parseInt(data[0][1]))
     if data.timestamp <= Date.now() - 60*1000
       metering_point.find(".power-ticker").css({opacity: 0.3})
     else
