@@ -55,7 +55,6 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
     }
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
     get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
@@ -89,7 +88,7 @@ describe "Aggregates API" do
 
     access_token  = Fabricate(:public_access_token)
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
     request_params = {
       metering_point_ids: metering_point.id,
       timestamp: Time.find_zone('Berlin').local(2016,1,17),
@@ -129,7 +128,7 @@ describe "Aggregates API" do
       timestamp += 1.hour
     end
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
     request_params = {
       metering_point_ids: metering_point.id,
       resolution: 'month_to_days',
@@ -172,7 +171,7 @@ describe "Aggregates API" do
       timestamp += 2.second
     end
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
     request_params = {
       metering_point_ids: metering_point.id,
       resolution: 'day_to_minutes',
@@ -213,7 +212,7 @@ describe "Aggregates API" do
       timestamp += 15.minutes
     end
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
     request_params = {
       metering_point_ids: metering_point.id,
       resolution: 'hour_to_minutes',
@@ -255,7 +254,7 @@ describe "Aggregates API" do
       timestamp += 1.second
     end
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
     request_params = {
       metering_point_ids: "#{slp.id},#{pv.id}",
       resolution: 'hour_to_minutes',
@@ -293,7 +292,7 @@ describe "Aggregates API" do
       timestamp += 1.second
     end
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
     request_params = {
       metering_point_ids: "#{slp1.id},#{slp2.id},#{slp3.id},#{slp4.id},#{slp5.id},#{slp6.id}",
       resolution: 'hour_to_minutes',
@@ -327,7 +326,7 @@ describe "Aggregates API" do
       timestamp += 1.second
     end
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
     request_params = {
       metering_point_ids: "#{metering_point1.id},#{metering_point2.id}",
       resolution: 'hour_to_minutes',
@@ -369,7 +368,7 @@ describe "Aggregates API" do
       timestamp += 15.minutes
     end
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
     request_params = {
       metering_point_ids: "#{metering_point1.id},#{metering_point2.id}",
       resolution: 'hour_to_minutes',
@@ -422,6 +421,7 @@ describe "Aggregates API" do
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(1)
     expect(json['power_milliwatt']).to eq(930*1000 + 7)
+    Timecop.return
   end
 
 
@@ -452,6 +452,7 @@ describe "Aggregates API" do
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(1)
     expect(json['power_milliwatt']).to eq(900*1000*3)
+    Timecop.return
   end
 
 
@@ -487,6 +488,7 @@ describe "Aggregates API" do
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(2)
     expect(json['power_milliwatt']).to eq(900*1000*(3+8))
+    Timecop.return
   end
 
 
@@ -520,7 +522,7 @@ describe "Aggregates API" do
       timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
     }
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
     get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
     expect(response).to have_http_status(200)
@@ -552,7 +554,7 @@ describe "Aggregates API" do
       timestamp += 1.hour
     end
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
     request_params = {
       metering_point_ids: metering_point.id,
       resolution: 'month_to_days',
@@ -601,7 +603,7 @@ describe "Aggregates API" do
        timestamp += 1.day
      end
 
-     Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
      request_params = {
        metering_point_ids: meter.metering_points.first.id,
        resolution: 'year_to_months',
@@ -651,7 +653,7 @@ describe "Aggregates API" do
         resolution: 'month_to_days'
       }
 
-      Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
       get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
       expect(response).to have_http_status(200)
@@ -686,7 +688,7 @@ describe "Aggregates API" do
       timestamp += 1.hour
     end
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
     request_params = {
       metering_point_ids: meter.metering_points.first.id,
       resolution: 'month_to_days',
@@ -737,7 +739,7 @@ describe "Aggregates API" do
       timestamp += 1.seconds
     end
 
-    Timecop.freeze(Time.find_zone('Berlin').local(2016,7,2))
+
     request_params = {
       metering_point_ids: "#{meter1.metering_points.first.id},#{meter2.metering_points.first.id}",
       resolution: 'hour_to_minutes',
@@ -797,6 +799,7 @@ describe "Aggregates API" do
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(2)
     expect(json['power_milliwatt']).to eq((900*1000)+(800*1000))
+    Timecop.return
   end
 
 
@@ -1029,7 +1032,12 @@ describe "Aggregates API" do
 
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(1)
+<<<<<<< 51b8bc4d47ea48271a727a61bcc5effe48e198d5
     expect(json['power_milliwatt']).to eq(6412000)
+=======
+    expect(json['power_milliwatt']).to eq(-6412000)
+    Timecop.return
+>>>>>>> cleanup Timecop usage
   end
 
 
