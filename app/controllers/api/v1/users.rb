@@ -12,17 +12,14 @@ module API
 
         desc "Return all Users"
         params do
-          optional :first_name, type: String, desc: "Firstname of the user"
-          optional :last_name, type: String, desc: "Lastname of the user"
-          optional :group_name, type: String, desc: "Group name to which the user belongs"
+          optional :search, type: String, desc: "Search query for users, looking into firstname and lastname and email"
         end
         paginate(per_page: per_page=10)
         oauth2 :full
         get do
           per_page         = params[:per_page] || per_page
           page             = params[:page] || 1
-
-          ids = User.filter(params.slice(:first_name, :last_name, :group_name)).select do |obj|
+          ids = User.filter(params[:search]).select do |obj|
             obj.readable_by?(current_user)
           end.collect { |obj| obj.id }
           users = User.where(id: ids)

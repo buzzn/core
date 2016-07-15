@@ -48,25 +48,8 @@ class User < ActiveRecord::Base
   scope :registered, -> { where('invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NOT NULL OR invitation_sent_at IS NULL') }
   scope :unregistered, -> { where('invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL') }
 
-  scope :first_name, ->(name) { joins(:profile).where("first_name ilike ?", "%#{name}%") }
-  scope :last_name, ->(name) { joins(:profile).where("last_name ilike ?", "%#{name}%") }
-  def self.group_name(name)
-    joins(:roles).where("roles.resource_id": Group.where("name ilike ?", "%#{name}%"))
-  end
-
-  class << self
-    alias :_filter :filter
-  end
-  def self.filter(filtering_params)
-    result = _filter(filtering_params)
-    if filtering_params.key?(:group_name)
-      name = filtering_params[:group_name]
-      # need to correct the 'order by' statement as it does not has a
-      # table reference
-      sql = User.joins(:roles).where("roles.resource_id": MeteringPoint.joins(:group).where( "groups.name ilike ?", "%#{name}%")).to_sql.sub(/[^I]*INNER/, 'INNER').sub(' name ', ' groups.name ')
-      result += joins(sql).distinct
-    end
-    result
+  def self.filter(search)
+    do_filter(search, :email, profile: [:first_name, :last_name])
   end
 
   def self.dummy
