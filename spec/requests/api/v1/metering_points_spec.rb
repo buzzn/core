@@ -543,10 +543,12 @@ describe "Metering Points API" do
 
 
   it 'gets meter for the metering point only by managers' do
-    metering_point  = Fabricate(:mp_z3)
-    access_token    = Fabricate(:public_access_token)
-    token_user      = User.find(access_token.resource_owner_id)
-    wrong_token     = Fabricate(:public_access_token)
+    Fabricate(:metering_point_operator, name: 'buzzn Metering')
+    easymeter_60051559  = Fabricate(:easymeter_60051559)
+    metering_point      = easymeter_60051559.metering_points.first
+    access_token        = Fabricate(:public_access_token)
+    token_user          = User.find(access_token.resource_owner_id)
+    wrong_token         = Fabricate(:public_access_token)
     token_user.add_role(:manager, metering_point)
 
     get_with_token "/api/v1/metering-points/#{metering_point.id}/meter", access_token.token
