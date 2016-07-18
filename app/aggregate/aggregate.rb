@@ -44,20 +44,10 @@ class Aggregate
 
     power_milliwatt_summed = 0
     @present_items.each do |present_item|
-      case present_item['operator']
-      when '+'
-        power_milliwatt_summed += present_item['data']['power_a_milliwatt']
-      when '-'
-        power_milliwatt_summed -= present_item['data']['power_a_milliwatt']
-      else
-        "You gave me operator: #{operator} -- I have no idea what to do with that."
-      end
+      power_milliwatt_summed += present_item['data']['power_a_milliwatt']
     end
 
-    # @present = {
-    #   "readings" => @present_items,
-    #   "power_milliwatt_summed" => power_milliwatt_summed
-    # }
+
     @present = {
       "timestamp" => @present_items.first['data']['timestamp'],
       "power_milliwatt" => power_milliwatt_summed,
@@ -411,10 +401,10 @@ private
       when 'in'
         item.merge!('energy_a_milliwatt_hour' => (result[1]*1000).to_i)
       when 'out'
-        item.merge!('energy_b_milliwatt_hour' => (result[1]*1000*-1).to_i)
+        item.merge!('energy_b_milliwatt_hour' => (result[1]*1000).to_i)
       when 'in_out'
         item.merge!('energy_a_milliwatt_hour' => (result[1]*1000).to_i)
-        item.merge!('energy_b_milliwatt_hour' => (result[2]*1000*-1).to_i)
+        item.merge!('energy_b_milliwatt_hour' => (result[2]*1000).to_i)
       end
       items << item
     end

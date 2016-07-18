@@ -962,7 +962,7 @@ describe "Aggregates API" do
     expect(json.count).to eq(29)
     expect(json[15]['power_milliwatt']).to eq(nil)
     expect(json[15]['energy_a_milliwatt_hour']).to eq(nil)
-    expect(json[15]['energy_milliwatt_hour']).to eq(-2146) #TODO: remove negative values!
+    expect(json[15]['energy_milliwatt_hour']).to eq(2146)
 
     timestamp = Time.find_zone('Berlin').local(2016,2,1)
     json.each do |item|
@@ -989,7 +989,7 @@ describe "Aggregates API" do
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(96)
-    expect(json[15]['power_milliwatt']).to eq(-881706)
+    expect(json[15]['power_milliwatt']).to eq(881706)
     expect(json[15]['energy_a_milliwatt_hour']).to eq(nil)
     expect(json[15]['energy_milliwatt_hour']).to eq(nil)
 
@@ -1050,7 +1050,7 @@ describe "Aggregates API" do
     expect(response).to have_http_status(200)
     expect(json.count).to eq(96)
 
-    expect(json[0]['power_milliwatt']).to eq(-109988)
+    expect(json[0]['power_milliwatt']).to eq(109988)
 
     timestamp = Time.find_zone('Berlin').local(2016,4,6)
     json.each do |item|
@@ -1087,7 +1087,7 @@ describe "Aggregates API" do
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(96)
-    expect(json[50]['power_milliwatt']).to eq(-1507120)
+    expect(json[50]['power_milliwatt']).to eq(1507120)
 
 
 
@@ -1103,7 +1103,7 @@ describe "Aggregates API" do
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(96)
-    expect(json[50]['power_milliwatt']).to eq(-907367)
+    expect(json[50]['power_milliwatt']).to eq(907367)
 
 
 
@@ -1118,7 +1118,7 @@ describe "Aggregates API" do
 
     expect(response).to have_http_status(200)
     expect(json.count).to eq(96)
-    expect(json[50]['power_milliwatt']).to eq(-907367 + -1507120)
+    expect(json[50]['power_milliwatt']).to eq(907367 + 1507120)
 
 
 
@@ -1159,8 +1159,7 @@ describe "Aggregates API" do
 
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(1)
-    expect(json['power_milliwatt']).to eq(-6412000)
-    Timecop.return
+    expect(json['power_milliwatt']).to eq(6412000)
   end
 
 
