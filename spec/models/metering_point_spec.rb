@@ -5,9 +5,7 @@ describe "MeteringPoint Model" do
     metering_point = Fabricate(:mp_urbanstr88)
     Fabricate(:mp_pv_karin)
 
-    [metering_point.name,
-     metering_point.address.city,
-     metering_point.address.street_name].each do |val|
+    [metering_point.name].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
         metering_points = MeteringPoint.filter(value)
         expect(metering_points.first).to eq metering_point

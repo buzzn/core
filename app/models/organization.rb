@@ -47,7 +47,7 @@ class Organization < ActiveRecord::Base
   end
 
   def self.search_attributes
-    [:name, :mode, :email, :website, :description, address: [:city, :street_name]]
+    [:name, :mode, :email, :website, :description]
   end
 
   def self.filter(value)

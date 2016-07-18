@@ -6,8 +6,7 @@ describe "Organization Model" do
     2.times { Fabricate(:metering_point_operator) }
 
     [organization.name, organization.mode, organization.email,
-     organization.address.city,
-     organization.address.street_name].each do |val|
+     organization.description, organization.website].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
         organizations = Organization.filter(value)
         expect(organizations.first).to eq organization

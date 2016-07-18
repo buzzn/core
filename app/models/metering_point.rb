@@ -59,7 +59,7 @@ class MeteringPoint < ActiveRecord::Base
   }
 
   def self.search_attributes
-    [:name, address: [:city, :street_name]]
+    [:name]
   end
 
   def self.filter(value)
