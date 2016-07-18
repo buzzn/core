@@ -49,6 +49,10 @@ end
 # Justus Ladestation
 Fabricator :easymeter_60051559, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051559'
+  after_create { |meter|
+    meter.metering_points << Fabricate(:mp_z3)
+    meter.save
+  }
 end
 
 # Justus BHKW
@@ -64,6 +68,10 @@ end
 # Justus Abgrenzung
 Fabricator :easymeter_60051600, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051600'
+  after_create { |meter|
+    meter.metering_points << Fabricate(:mp_z5)
+    meter.save
+  }
 end
 
 # Justus verbrauch
