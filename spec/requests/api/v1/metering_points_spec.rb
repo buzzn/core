@@ -90,7 +90,7 @@ describe "Metering Points API" do
   end
 
 
-  it 'does gets a metering_point with manager token' do
+  it 'does gets a metering_point with full access token as admin' do
     access_token  = Fabricate(:full_access_token_as_admin)
     metering_point = Fabricate(:metering_point)
     get_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
@@ -118,7 +118,7 @@ describe "Metering Points API" do
 
 
 
-  it 'does creates a metering_point with manager token' do
+  it 'does creates a metering_point with full access token as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
     meter        = Fabricate(:meter)
     metering_point = Fabricate.build(:metering_point)
@@ -212,7 +212,7 @@ describe "Metering Points API" do
 
 
 
-  it 'does update a metering_point with manager_token' do
+  it 'does update a metering_point with full access token as admin' do
     metering_point = Fabricate(:metering_point_with_manager)
     access_token  = Fabricate(:full_access_token_as_admin)
     meter        = Fabricate(:meter)
@@ -341,7 +341,7 @@ describe "Metering Points API" do
     expect(response).to have_http_status(401)
   end
 
-  it 'adds metering point manager only with manager or manager token' do
+  it 'adds metering point manager only with manager or admin with full access token' do
     metering_point  = Fabricate(:metering_point_readable_by_world)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
@@ -558,7 +558,7 @@ describe "Metering Points API" do
 
 
 
-  xit 'does add a metering_point to meter with manager_token' do
+  xit 'adds a metering_point to meter with full access token' do
   end
 
 

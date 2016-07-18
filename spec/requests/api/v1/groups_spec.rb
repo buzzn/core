@@ -4,8 +4,9 @@ describe "Groups API" do
     @page_overload = 11
   end
 
-  it 'gets groups filtered by user access level' do
-    Fabricate(:group)
+
+  it 'search groups without token' do
+    group = Fabricate(:group)
     Fabricate(:group_readable_by_community)
     regular_token         = Fabricate(:public_access_token)
     token_with_friend     = Fabricate(:access_token_with_friend)
@@ -18,19 +19,115 @@ describe "Groups API" do
     member_group          = Fabricate(:group_readable_by_members)
     member.add_role(:manager, member_group)
 
+
     get_without_token '/api/v1/groups'
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
+ 
+    request_params = { search: group.name }
+    get_without_token '/api/v1/groups', request_params
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
+
+    request_params = { search: 'hello world' }
+    get_without_token '/api/v1/groups', request_params
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(0)
+  end
+
+
+  it 'search groups with public token' do
+    group = Fabricate(:group)
+    Fabricate(:group_readable_by_community)
+    regular_token         = Fabricate(:public_access_token)
+    token_with_friend     = Fabricate(:access_token_with_friend)
+    token_user            = User.find(token_with_friend.resource_owner_id)
+    friend                = token_user.friends.first
+    member_token          = Fabricate(:public_access_token)
+    member                = User.find(member_token.resource_owner_id)
+    friend_group          = Fabricate(:group_readable_by_friends)
+    friend.add_role(:manager, friend_group)
+    member_group          = Fabricate(:group_readable_by_members)
+    member.add_role(:manager, member_group)
+
+
     get_with_token '/api/v1/groups', regular_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(2)
+ 
+    request_params = { search: group.name }
+    get_with_token '/api/v1/groups', request_params, regular_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
+
+    request_params = { search: 'hello world' }
+    get_with_token '/api/v1/groups', request_params, regular_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(0)
+  end
+
+
+  it 'search groups with public token as friend' do
+    group = Fabricate(:group)
+    Fabricate(:group_readable_by_community)
+    regular_token         = Fabricate(:public_access_token)
+    token_with_friend     = Fabricate(:access_token_with_friend)
+    token_user            = User.find(token_with_friend.resource_owner_id)
+    friend                = token_user.friends.first
+    member_token          = Fabricate(:public_access_token)
+    member                = User.find(member_token.resource_owner_id)
+    friend_group          = Fabricate(:group_readable_by_friends)
+    friend.add_role(:manager, friend_group)
+    member_group          = Fabricate(:group_readable_by_members)
+    member.add_role(:manager, member_group)
+
+
     get_with_token '/api/v1/groups', token_with_friend.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(3)
+ 
+    request_params = { search: friend_group.name }
+    get_with_token '/api/v1/groups', request_params, token_with_friend.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
+
+    request_params = { search: 'hello world' }
+    get_with_token '/api/v1/groups', request_params, token_with_friend.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(0)
+  end
+
+
+  it 'search groups with public token as member' do
+    group = Fabricate(:group)
+    Fabricate(:group_readable_by_community)
+    regular_token         = Fabricate(:public_access_token)
+    token_with_friend     = Fabricate(:access_token_with_friend)
+    token_user            = User.find(token_with_friend.resource_owner_id)
+    friend                = token_user.friends.first
+    member_token          = Fabricate(:public_access_token)
+    member                = User.find(member_token.resource_owner_id)
+    friend_group          = Fabricate(:group_readable_by_friends)
+    friend.add_role(:manager, friend_group)
+    member_group          = Fabricate(:group_readable_by_members)
+    member.add_role(:manager, member_group)
+
+
     get_with_token '/api/v1/groups', member_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(3)
+ 
+    request_params = { search: member_group.name }
+    get_with_token '/api/v1/groups', request_params, member_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
+
+    request_params = { search: 'hello world' }
+    get_with_token '/api/v1/groups', request_params, member_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(0)
   end
+
 
   it 'contains CRUD info' do
     Fabricate(:group)
