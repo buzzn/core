@@ -3,7 +3,7 @@ require 'file_size_validator'
 class Device < ActiveRecord::Base
   resourcify
   include Authority::Abilities
-
+  include Filterable
   include PublicActivity::Model
   #tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
   #tracked recipient: Proc.new{ |controller, model| controller && model }
@@ -27,6 +27,14 @@ class Device < ActiveRecord::Base
     self.with_role(:manager, user)
   }
 
+  def self.search_attributes
+    [:manufacturer_name, :manufacturer_product_name, :mode, :category,
+     :shop_link]
+  end
+
+  def self.filter(search)
+    do_filter(search, *search_attributes)
+  end
 
   def name
     "#{self.manufacturer_name} #{self.manufacturer_product_name}"

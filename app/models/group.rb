@@ -4,6 +4,7 @@ class Group < ActiveRecord::Base
   include Authority::Abilities
   include CalcVirtualMeteringPoint
   include ChartFunctions
+  include Filterable
 
   before_destroy :destroy_content
 
@@ -45,7 +46,15 @@ class Group < ActiveRecord::Base
 
   scope :readable_by_world, -> { where(readable: 'world') }
 
+  def self.search_attributes
+    [:name, :description]
+  end
 
+  def self.filter(search)
+    do_filter(search, *search_attributes)
+  end
+
+  # TODO remove this
   def self.search(search)
     if search
       where('name ILIKE ? or slug ILIKE ?', "%#{search}%", "%#{search}%")

@@ -1,3 +1,4 @@
+# coding: utf-8
 class Address < ActiveRecord::Base
   include Authority::Abilities
 
@@ -53,5 +54,8 @@ class Address < ActiveRecord::Base
     }
   end
 
+  def self.filter(value)
+    do_filter(value, :city, :street_name)
+  end
 
 end

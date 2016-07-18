@@ -4,7 +4,7 @@ describe "Organizations API" do
 
   # RETRIEVE
 
-  it 'gets an organization with full access token' do
+  it 'gets an organization with full access token as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
     organization = Fabricate(:electricity_supplier)
 
@@ -36,7 +36,7 @@ describe "Organizations API" do
   end
 
 
-  it 'gets all organizations with manager token' do
+  it 'gets all organizations with full access token as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
     organization = Fabricate(:electricity_supplier)
     get_with_token "/api/v1/organizations", access_token.token
@@ -46,7 +46,7 @@ describe "Organizations API" do
   end
 
 
-  it 'gets all organizations as manager' do
+  it 'gets all organizations with full access token as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
     organization = Fabricate(:electricity_supplier)
     manager = User.find(access_token.resource_owner_id)
@@ -56,6 +56,19 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq Organization.all.size
     expect(json['data'].last['id']).to eq organization.id
+  end
+
+
+  it 'search organizations with full access token as admin' do
+    organization = Fabricate(:electricity_supplier)
+    Fabricate(:distribution_system_operator)
+    access_token = Fabricate(:full_access_token_as_admin).token
+
+    request_params = { search: organization.email }
+    get_with_token '/api/v1/organizations', request_params, access_token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq 1
+    expect(json['data'].first['id']).to eq organization.id
   end
 
 
@@ -102,7 +115,7 @@ describe "Organizations API" do
     end
   end
 
-  it 'does not create an organization with manager token' do
+  it 'does not create an organization with full access token' do
     access_token = Fabricate(:full_access_token)
     organization = Fabricate.build(:metering_service_provider)
 
@@ -121,7 +134,7 @@ describe "Organizations API" do
     expect(response).to have_http_status(403)
   end
 
-  it 'creates an organization with manager token as admin' do
+  it 'creates an organization with full access token as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
     organization = Fabricate.build(:metering_service_provider)
 
@@ -179,7 +192,7 @@ describe "Organizations API" do
     end
   end
 
-  it 'does not update an organization with manager token' do
+  it 'does not update an organization with full access token' do
     access_token = Fabricate(:full_access_token)
     organization = Fabricate(:metering_service_provider)
 
@@ -199,7 +212,7 @@ describe "Organizations API" do
   end
 
 
-  it 'updates an organization with manager token admin' do
+  it 'updates an organization with full access token admin' do
     access_token = Fabricate(:full_access_token_as_admin)
     organization = Fabricate(:metering_service_provider)
 
@@ -222,7 +235,7 @@ describe "Organizations API" do
   end
 
 
-  it 'updates an organization as manager with manager token' do
+  it 'updates an organization as full access with manager token' do
     organization = Fabricate(:metering_service_provider)
     access_token = Fabricate(:full_access_token)
 
@@ -452,7 +465,7 @@ describe "Organizations API" do
   end
 
 
-  it 'adds organization manager/member with manager token as manager' do
+  it 'adds organization manager/member with full access token as manager' do
     organization     = Fabricate(:distribution_system_operator)
     manager_token = Fabricate(:full_access_token)
     manager = User.find(manager_token.resource_owner_id)
@@ -474,7 +487,7 @@ describe "Organizations API" do
   end
 
 
-  it 'adds organization manager/member with manager token as admin' do
+  it 'adds organization manager/member with full access token as admin' do
     organization     = Fabricate(:distribution_system_operator)
     manager_token = Fabricate(:full_access_token_as_admin)
 
@@ -509,7 +522,7 @@ describe "Organizations API" do
 
   [:public_access_token, :smartmeter_access_token].each do |token|
     [:member, :manager, :admin].each do |role|
-      it "does not delete organization manager/member as {role} with #{token}" do
+      it "does not delete organization manager/member as #{role} with #{token}" do
         organization    = Fabricate(:distribution_system_operator)
         member_token    = Fabricate(token)
         member          = User.find(member_token.resource_owner_id)
@@ -526,7 +539,7 @@ describe "Organizations API" do
 
 
 
-  it 'deletes organization manager/member as manager with manager token' do
+  it 'deletes organization manager/member as manager with full access token' do
     organization     = Fabricate(:distribution_system_operator)
     manager_token = Fabricate(:full_access_token)
     manager = User.find(manager_token.resource_owner_id)
@@ -547,7 +560,7 @@ describe "Organizations API" do
   end
 
 
-  it 'deletes organization manager/member with manager token as admin' do
+  it 'deletes organization manager/member with full access token as admin' do
     organization     = Fabricate(:distribution_system_operator)
     manager_token = Fabricate(:full_access_token_as_admin)
 

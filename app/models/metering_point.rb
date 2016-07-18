@@ -4,6 +4,7 @@ class MeteringPoint < ActiveRecord::Base
   include Authority::Abilities
   include CalcVirtualMeteringPoint
   include ChartFunctions
+  include Filterable
 
   include PublicActivity::Model
   tracked except: :update, owner: Proc.new{ |controller, model| controller && controller.current_user }, recipient: Proc.new{ |controller, model| controller && model }
@@ -56,6 +57,14 @@ class MeteringPoint < ActiveRecord::Base
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
   }
+
+  def self.search_attributes
+    [:name]
+  end
+
+  def self.filter(value)
+    do_filter(value, *search_attributes)
+  end
 
   scope :accessible_by_user, lambda {|user|
     self.with_role([:manager, :member], user).uniq

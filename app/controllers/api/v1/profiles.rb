@@ -31,7 +31,7 @@ module API
           requires :first_name, type: String
           requires :last_name, type: String
         end
-        oauth2 :public
+        oauth2 :public, :full
         post do
           if current_user && current_user.can_create?(Profile)
             Profile.create!({

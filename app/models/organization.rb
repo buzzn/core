@@ -5,6 +5,7 @@ class Organization < ActiveRecord::Base
   friendly_id :name, use: [:slugged, :finders]
 
   include Authority::Abilities
+  include Filterable
 
   acts_as_taggable_on :contract_types
 
@@ -45,4 +46,11 @@ class Organization < ActiveRecord::Base
     }
   end
 
+  def self.search_attributes
+    [:name, :mode, :email, :website, :description]
+  end
+
+  def self.filter(value)
+    do_filter(value, *search_attributes)
+  end
 end

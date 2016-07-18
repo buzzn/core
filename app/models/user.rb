@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   include Authority::Abilities
   include Authority::UserAbilities
   include PublicActivity::Model
+  include Filterable
   tracked except: [:create, :update, :destroy], owner: Proc.new{ |controller, model| controller && controller.current_user }
 
   devise :database_authenticatable, :async, :registerable,
@@ -46,6 +47,14 @@ class User < ActiveRecord::Base
 
   scope :registered, -> { where('invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NOT NULL OR invitation_sent_at IS NULL') }
   scope :unregistered, -> { where('invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL') }
+
+  def self.search_attributes
+    [:email, profile: [:first_name, :last_name]]
+  end
+
+  def self.filter(search)
+    do_filter(search, *search_attributes)
+  end
 
   def self.dummy
     self.where(email: 'sys@buzzn.net').first

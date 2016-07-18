@@ -5,16 +5,19 @@ module API
       resource :groups do
 
         desc "Return all groups"
+        params do
+          optional :search, type: String, desc: "Search query using #{Base.join(Group.search_attributes)}"
+        end
         paginate(per_page: per_page=10)
         oauth2 false
         get root: :groups do
-          group_ids = Group.where(readable: 'world').ids
+          group_ids = Group.filter(params[:search]).where(readable: 'world').ids
           if current_user
-            group_ids << Group.where(readable: 'community').ids
-            group_ids << Group.with_role(:manager, current_user)
+            group_ids << Group.filter(params[:search]).where(readable: 'community').ids
+            group_ids << Group.filter(params[:search]).with_role(:manager, current_user)
             current_user.friends.each do |friend|
               if friend
-                Group.where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
+                Group.filter(params[:search]).where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
                   group_ids << friend_group.id
                 end
               end
@@ -181,8 +184,8 @@ module API
 
 
         desc 'Remove user from group managers'
+        oauth2 :public, :full
         delete ':id/managers/:user_id' do
-          doorkeeper_authorize! :public
           group           = Group.find(params[:id])
           user            = User.find(params[:user_id])
           if current_user.id == user.id || current_user.has_role?(:admin)
@@ -197,8 +200,8 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
+        oauth2 :public, :full
         get ":id/members" do
-          doorkeeper_authorize! :public
           group = Group.where(id: permitted_params[:id]).first!
           if group.readable_by?(current_user)
             group.members
@@ -251,8 +254,8 @@ module API
           requires :id, type: String, desc: 'ID of the group'
         end
         paginate(per_page: per_page=10)
+        oauth2 :public, :full
         get ':id/comments' do
-          doorkeeper_authorize! :public
           group = Group.where(id: permitted_params[:id]).first!
           if group.readable_by?(current_user)
             @per_page     = params[:per_page] || per_page

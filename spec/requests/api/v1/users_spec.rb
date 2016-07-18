@@ -44,12 +44,28 @@ describe "Users API" do
   end
   
 
-  it 'get all users with manager token' do
+  it 'get all users with full access token as admin' do
     Fabricate(:user)
     Fabricate(:user)
-    access_token = Fabricate(:full_access_token).token
+    access_token = Fabricate(:full_access_token_as_admin).token
     get_with_token '/api/v1/users', {}, access_token
     expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq User.all.size
+  end
+
+
+  it 'search users with full access token as admin' do
+    user = Fabricate(:user)
+    Fabricate(:user)
+    Fabricate(:user)
+    access_token = Fabricate(:full_access_token_as_admin).token
+
+    request_params = { search: user.email }
+    get_with_token '/api/v1/users', request_params, access_token
+
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq 1
+    expect(json['data'].first['id']).to eq user.id
   end
 
 

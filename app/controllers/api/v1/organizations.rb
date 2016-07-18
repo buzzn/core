@@ -6,12 +6,15 @@ module API
       resource :organizations do
 
         desc "Return all organizations"
+        params do
+          optional :search, type: String, desc: "Search query using #{Base.join(Organization.search_attributes)}"
+        end
         paginate(per_page: per_page=10)
         oauth2 false
         get do
           per_page         = params[:per_page] || per_page
           page             = params[:page] || 1
-          ids = Organization.all.select do |obj|
+          ids = Organization.filter(params[:search]).select do |obj|
             obj.readable_by?(current_user)
           end.collect { |obj| obj.id }
           organizations = Organization.where(id: ids)
