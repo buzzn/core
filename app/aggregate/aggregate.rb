@@ -44,7 +44,7 @@ class Aggregate
 
     power_milliwatt_summed = 0
     @present_items.each do |present_item|
-      power_milliwatt_summed += present_item['data']['power_a_milliwatt']
+      power_milliwatt_summed += present_item['data']['power_milliwatt']
     end
 
 
@@ -350,7 +350,7 @@ private
       if document[key]
         value = document[key] * factor
         value * -1 if negativ
-        item.merge!(key => value)
+        item.merge!(key.gsub('a_', '').gsub('b_', '') => value)
       end
     end
     return item
@@ -362,7 +362,7 @@ private
     result = crawler.live
     item = {
       'timestamp' => Time.at(result[:timestamp]/1000),
-      'power_a_milliwatt' => (result[:power]*1000).to_i
+      'power_milliwatt' => (result[:power]*1000).to_i
     }
     return item
   end
