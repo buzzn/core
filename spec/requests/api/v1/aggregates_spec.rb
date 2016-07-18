@@ -888,36 +888,55 @@ describe "Aggregates API" do
   end
 
 
-  it 'does aggregate buzzn present as manager' do
+
+  it 'does aggregate in and out metering_point buzzn present as manager' do
     access_token = Fabricate(:full_access_token_as_admin)
 
-    meter = Fabricate(:easy_meter_q3d_with_metering_point)
+    meter = Fabricate(:easy_meter_q3d_with_in_out_metering_point)
+    metering_point_out  = meter.metering_points.outputs.first
+    metering_point_in   = meter.metering_points.inputs.first
 
     energy_a_milliwatt_hour = 0
+    energy_b_milliwatt_hour = 1000
+
     timestamp = Time.new(2016,2,1)
     (60*60).times do |i|
-
       Fabricate(:reading,
         meter_id: meter.id,
         timestamp: timestamp,
         energy_a_milliwatt_hour: energy_a_milliwatt_hour,
-        power_a_milliwatt: 900*1000
+        power_a_milliwatt: 900*1000,
+        energy_b_milliwatt_hour: energy_b_milliwatt_hour,
+        power_b_milliwatt: 70*1000
       )
-
     end
 
     Timecop.freeze(Time.local(2016,2,1, 1,30)) # 6*15 minutes
+
+
     request_params = {
-      metering_point_ids: meter.metering_points.first.id
+      metering_point_ids: metering_point_out.id
     }
-
     get_with_token "/api/v1/aggregates/present", request_params, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['readings'].count).to eq(1)
+    expect(json['power_milliwatt']).to eq(70*1000)
 
+
+
+    request_params = {
+      metering_point_ids: metering_point_in.id
+    }
+    get_with_token "/api/v1/aggregates/present", request_params, access_token.token
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(1)
     expect(json['power_milliwatt']).to eq(900*1000)
+
+
     Timecop.return
   end
+
+
 
 
   it 'does aggregate multiple buzzn present as manager' do

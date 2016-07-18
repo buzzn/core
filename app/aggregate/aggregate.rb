@@ -20,7 +20,7 @@ class Aggregate
           if document
             @present_items << {
               "operator" => (metering_point.mode == 'in' ? '+' : '-'),
-              "data" => document_to_hash(document)
+              "data" => document_to_hash(metering_point, document)
             }
           end
         end
@@ -173,7 +173,7 @@ private
       factor = factor_from_metering_point(metering_point)
       present_items << {
         "operator"  => "+",
-        "data"      => document_to_hash(document, factor)
+        "data"      => document_to_hash(metering_point, document, factor)
       }
     end
     return present_items
@@ -344,13 +344,14 @@ private
   end
 
 
-  def document_to_hash(document, factor=1, negativ=false)
+  def document_to_hash(metering_point, document, factor=1, negativ=false)
     item = {'timestamp' => document['timestamp']}
-    ['energy_a_milliwatt_hour', 'energy_b_milliwatt_hour', 'power_a_milliwatt', 'power_b_milliwatt'].each do |key|
+    x_ = metering_point.input? ? 'a_' : 'b_'
+    ["energy_#{x_}milliwatt_hour", "power_#{x_}milliwatt" ].each do |key|
       if document[key]
         value = document[key] * factor
         value * -1 if negativ
-        item.merge!(key.gsub('a_', '').gsub('b_', '') => value)
+        item.merge!(key.gsub(x_, '') => value)
       end
     end
     return item
