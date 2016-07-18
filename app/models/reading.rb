@@ -103,6 +103,9 @@ class Reading
     else
       puts "You gave me #{resolution_format} -- I have no idea what to do with that."
     end
+    if end_time > Time.current.in_time_zone - (offset/1000).seconds
+      end_time = Time.current.in_time_zone - (offset/1000).seconds
+    end
 
     return start_time, end_time, offset
   end
