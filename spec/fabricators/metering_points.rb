@@ -81,7 +81,7 @@ end
 Fabricator :mp_z3, from: :metering_point do
   name  'Ladestation'
   readable    'world'
-  meter       { Fabricate(:easymeter_60051559) }
+  contracts { [Fabricate(:mpoc_buzzn_metering)] }
 end
 
 
@@ -97,7 +97,7 @@ end
 Fabricator :mp_z5, from: :metering_point do
   name  'Abgrenzung'
   mode        'out'
-  meter       { Fabricate(:easymeter_60051600) }
+  contracts { [Fabricate(:mpoc_buzzn_metering)] }
 end
 
 
