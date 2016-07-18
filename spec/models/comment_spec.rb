@@ -7,7 +7,9 @@ describe "Comment Model" do
 
     [comment.title, comment.subject, comment.body].each do |val|
       
-      [val, val.upcase, val.downcase, val[0..50], val[-50..-1]].each do |value|
+      len = val.size/2
+
+      [val, val.upcase, val.downcase, val[0..len], val[-len..-1]].each do |value|
         comments = Comment.filter(value)
         expect(comments.first).to eq comment
       end

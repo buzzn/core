@@ -7,7 +7,10 @@ describe "Organization Model" do
 
     [organization.name, organization.mode, organization.email,
      organization.description, organization.website].each do |val|
-      [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
+
+      len = (val.size * 2)/3
+      [val, val.upcase, val.downcase, val[0..len], val[-len..-1]].each do |value|
+        p value
         organizations = Organization.filter(value)
         expect(organizations.first).to eq organization
       end
