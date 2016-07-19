@@ -24,8 +24,8 @@ $(".metering_points").ready ->
       data = aggregator.data
       if data == undefined || data[0] == undefined || data[0][0] == undefined
         console.log data
-        data = [[]]
-        $('#chart-container-' + id).html('error')
+        data = [[(new Date()).getTime(), -1]]
+        #$('#chart-container-' + id).html('no data available')
       partial_chart = new Highcharts.Chart(
         chart:
           type: 'areaspline'
@@ -104,8 +104,8 @@ $(".metering_point_detail").ready ->
     data = aggregator.data
     if data == undefined || data[0] == undefined || data[0][0] == undefined
       console.log data
-      data = [[]]
-      $('#chart-container-' + id).html('error')
+      data = [[(new Date()).getTime(), -1]]
+      #$('#chart-container-' + id).html('no data available')
     chart = new Highcharts.Chart(
       chart:
         type: 'areaspline'
@@ -202,7 +202,10 @@ $(".metering_point_detail").ready ->
       name: ''
       data: data
     )
-    chart_data_min_x = chart.series[0].data[0].x
+    if chart.series[0].data[0].x != undefined
+      chart_data_min_x = chart.series[0].data[0].x
+    else
+      chart_data_min_x = (new Date()).getTime()
     createChartTimer([id], 'metering_point')
     Chart.Functions.activateButtons(true)
     Chart.Functions.getChartComments('metering_points', id, chart_data_min_x)
@@ -335,8 +338,8 @@ $(".dashboard-chart").ready ->
         data = aggregator.data
         if data == undefined || data[0] == undefined || data[0][0] == undefined
           console.log data
-          data = [[]]
-          $('#chart-container-' + dashboard_id).html('error')
+          data = [[(new Date()).getTime(), -1]]
+          #$('#chart-container-' + dashboard_id).html('no data available')
         if chart == undefined
           chart = new Highcharts.Chart(
             chart:
@@ -503,12 +506,12 @@ $(".group-chart").ready ->
 
       if out_data == undefined || out_data[0] == undefined || out_data[0][0] == undefined
         console.log out_data
-        out_data = [[]]
-        $('#chart-container-' + group_id).html('error')
+        out_data = [[(new Date()).getTime(), -1]]
+        #$('#chart-container-' + group_id).html('no data available')
       if in_data == undefined || in_data[0] == undefined || in_data[0][0] == undefined
         console.log in_data
-        in_data = [[]]
-        $('#chart-container-' + group_id).html('error')
+        in_data = [[(new Date()).getTime(), -1]]
+        #$('#chart-container-' + group_id).html('no data available')
 
       chart = new Highcharts.Chart(
         chart:
@@ -604,7 +607,7 @@ $(".group-chart").ready ->
 
       chart_data_min_x = chart.series[0].data[0].x
       Chart.Functions.activateButtons(true)
-
+      Chart.Functions.setEnergyStatsGroup()
 
 
   $(".btn-chart-prev").on 'click', ->
@@ -903,8 +906,8 @@ namespace 'Chart.Functions', (exports) ->
       data = aggregator.data
       if data == undefined || data[0] == undefined || data[0][0] == undefined
         console.log data
-        data = [[]]
-        $('#chart-container-' + id).html('error')
+        data = [[containing_timestamp, -1]]
+        #$('#chart-container-' + id).html('no data available')
         chart.hideLoading()
         Chart.Functions.activateButtons(true)
       chart.series[0].setData(data)
@@ -931,8 +934,8 @@ namespace 'Chart.Functions', (exports) ->
             data = aggregator.data
             if data == undefined || data[0] == undefined || data[0][0] == undefined
               console.log data
-              data = [[]]
-              $('#chart-container-' + id).html('error')
+              data = [[containing_timestamp, -1]]
+              #$('#chart-container-' + id).html('no data available')
             numberOfSeries = metering_point_ids_hash[metering_point_id]
             seriesVisible = chart.series[numberOfSeries].visible
             if !seriesVisible
@@ -960,8 +963,8 @@ namespace 'Chart.Functions', (exports) ->
           in_data = in_aggregator.data
           if in_data == undefined || in_data[0] == undefined || in_data[0][0] == undefined || out_data == undefined || out_data[0] == undefined || out_data[0][0] == undefined
             console.log data
-            data = [[]]
-            $('#chart-container-' + id).html('error')
+            data = [[containing_timestamp, -1]]
+            #$('#chart-container-' + id).html('no data available')
             chart.hideLoading()
             Chart.Functions.activateButtons(true)
           data = [in_data, out_data]
@@ -1128,11 +1131,21 @@ namespace 'Chart.Functions', (exports) ->
       else if actual_resolution == 'month_to_days'
         format_string = "DD.MM"
       moment.locale('de')
-      $('.stats-energy-max').html(max.toFixed(2))
+      if max.toFixed(2) != '-1.00'
+        $('.stats-energy-max').html(max.toFixed(2))
+      else
+        $('.stats-energy-max').html('n.a.')
       $('.stats-energy-max-time').html('max (kWh): ' + moment(max_time).format(format_string))
-      $('.stats-energy-min').html(min.toFixed(2))
+      if min.toFixed(2) != '-1.00'
+        $('.stats-energy-min').html(min.toFixed(2))
+      else
+        $('.stats-energy-min').html('n.a.')
       $('.stats-energy-min-time').html('min (kWh): ' + moment(min_time).format(format_string))
-      $('.stats-energy-sum').html(sum.toFixed(2))
+      if sum.toFixed(2) != '-1.00'
+        $('.stats-energy-sum').html(sum.toFixed(2))
+      else
+        $('.stats-energy-sum').html('n.a.')
+
 
       $('.metering_point-stats').show(500);
     else
@@ -1238,7 +1251,10 @@ getLiveData = (metering_point, metering_point_id) ->
   aggregator = new Aggregator([metering_point_id])
   $.when(aggregator.present(new Date())).done ->
     data = aggregator.data
-    metering_point.find(".power-ticker").html(parseInt(data[0][1]))
+    if parseInt(data[0][1]) != -1
+      metering_point.find(".power-ticker").html(parseInt(data[0][1]))
+    else
+      metering_point.find(".power-ticker").html("n.a.")
     if data.timestamp <= Date.now() - 60*1000
       metering_point.find(".power-ticker").css({opacity: 0.3})
     else
