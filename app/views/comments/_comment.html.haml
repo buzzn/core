@@ -13,7 +13,7 @@
         %span.pull-left.set-chart-view{data: {'commentable_type' => comment.commentable_type, 'commentable_id' => comment.commentable_id, 'resolution' => comment.chart_resolution, 'timestamp' => comment.chart_timestamp.to_i*1000}}
           .fa.fa-bar-chart
 
-      %p= auto_link(comment.body, :html => { :target => '_blank' })
+      %p= auto_link(simple_format(comment.body), :html => { :target => '_blank' })
 
 
       %p.speech-time.time
