@@ -125,6 +125,12 @@ Fabricator :mustafa, from: :user do
   contracting_party   { Fabricate(:contracting_party) }
 end
 
+Fabricator :kristian, from: :user do
+  email       'm.kristian@web.de'
+  profile     { Fabricate(:profile_kristian) }
+  contracting_party   { Fabricate(:contracting_party) }
+end
+
 
 #Ab hier: Hopf
 Fabricator :hans_dieter_hopf, from: :user do
