@@ -15,12 +15,17 @@ module RequestsHelper
     }
   end
 
-  def get_with_token(path, params={}, token)
-    get path, params, headers_with_token(token)
+  def get_with_token(path, params, token=nil, opts={})
+    if ! params.is_a?(Hash) && token.nil?
+      token = params
+      params = {}
+    end
+
+    get path, params, headers_with_token(token).merge!(opts)
   end
 
-  def get_without_token(path, params={})
-    get path, params, headers_without_token
+  def get_without_token(path, params={}, opts={})
+    get path, params, headers_without_token.merge!(opts)
   end
 
 
@@ -55,5 +60,13 @@ module RequestsHelper
 
   def json
     JSON.parse(response.body)
+  end
+
+  def to_time(key)
+    DateTime.parse(response[key]).to_time
+  end
+
+  def split(key)
+    response[key].split(/, ?/)
   end
 end

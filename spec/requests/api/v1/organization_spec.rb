@@ -30,9 +30,22 @@ describe "Organizations API" do
 
   it 'gets an organization' do
     organization = Fabricate(:electricity_supplier)
+    
     get_without_token "/api/v1/organizations/#{organization.id}"
+
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq organization.id
+
+    expect(to_time('Expires')).to be > Time.now
+    expect(split('Cache-Control')).to match_array ['public', 'max-age=86400']
+    expect(last = response['Last-Modified']).to eq organization.updated_at.httpdate
+    expect(etag = response['ETag']).not_to be_nil
+
+    get_without_token "/api/v1/organizations/#{organization.id}", {}, 'If-Modified-Since': last
+    expect(response).to have_http_status(304)
+    
+    get_without_token "/api/v1/organizations/#{organization.id}", {}, 'If-None-Match': etag
+    expect(response).to have_http_status(304)
   end
 
 
@@ -80,6 +93,17 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq Organization.all.size
     expect(json['data'].last['id']).to eq organization.id
+
+    expect(last = response['Last-Modified']).to eq organization.updated_at.httpdate
+    expect(etag = response['ETag']).not_to be_nil
+    expect(to_time('Expires')).to be > Time.now
+    expect(split('Cache-Control')).to match_array ['public', 'max-age=86400']
+
+    get_without_token "/api/v1/organizations/#{organization.id}", {}, 'If-Modified-Since': last
+    expect(response).to have_http_status(304)
+    
+    get_without_token "/api/v1/organizations/#{organization.id}", {}, 'If-None-Match': etag
+    expect(response).to have_http_status(304)
   end
 
 
@@ -309,6 +333,13 @@ describe "Organizations API" do
       expect(json['data'].find{ |c| c['id'] == contract.id }['attributes']['mode']).to eq('electricity_supplier_contract')
     end
     expect(json['data'].size).to eq(contracts.size)
+
+    expect(split('Cache-Control')).to(
+      match_array ['private', 'max-age=0', 'no-store', 'no-cache', 'must-revalidate'])
+    expect(response['Pragma']).to eq 'no-cache'
+    expect(to_time('Expires')).to be < Time.now
+    expect(response['Last-Modified']).to be_nil
+    expect(response['ETag']).to be_nil
   end
 
   it 'gets the related contracts of an organization with token' do
@@ -347,6 +378,18 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(address.id)
     expect(json['data']['attributes']['time-zone']).to eq('Berlin')
+    
+    expect(split('Cache-Control')).to match_array ['private', 'max-age=86400']
+    expect(response['Pragma']).to be_nil
+    expect(to_time('Expires')).to be > Time.now
+    expect(last = response['Last-Modified']).to eq organization.updated_at.httpdate
+    expect(etag = response['ETag']).not_to be_nil
+
+    get_without_token "/api/v1/organizations/#{organization.id}/address", {}, 'If-Modified-Since': last
+    expect(response).to have_http_status(304)
+    
+    get_without_token "/api/v1/organizations/#{organization.id}/address", {}, 'If-None-Match': etag
+    expect(response).to have_http_status(304)
   end
 
   it 'gets the related address of an organization with token' do
@@ -373,6 +416,17 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(contracting_party.id)
     expect(json['data']['attributes']['legal-entity']).to eq('natural_person')
+
+    expect(split('Cache-Control')).to match_array ['private', 'max-age=86400']
+    expect(to_time('Expires')).to be > Time.now
+    expect(last = response['Last-Modified']).to eq organization.updated_at.httpdate
+    expect(etag = response['ETag']).not_to be_nil
+
+    get_without_token "/api/v1/organizations/#{organization.id}/contracting_party", {}, 'If-Modified-Since': last
+    expect(response).to have_http_status(304)
+    
+    get_without_token "/api/v1/organizations/#{organization.id}/contracting_party", {}, 'If-None-Match': etag
+    expect(response).to have_http_status(304)
   end
 
   it 'gets the related contracting_party of an organization with token' do
@@ -390,7 +444,7 @@ describe "Organizations API" do
 
   # RETRIEVE manager
 
-  it 'gets the related managers of an organization only with token' do
+  it 'gets the related managers of an organization' do
     access_token  = Fabricate(:public_access_token)
     organization  = Fabricate(:distribution_system_operator)
 
@@ -398,6 +452,13 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     get_without_token "/api/v1/organizations/#{organization.id}/managers"
     expect(response).to have_http_status(200)
+
+    expect(split('Cache-Control')).to(
+      match_array ['private', 'max-age=0', 'no-store', 'no-cache', 'must-revalidate'])
+    expect(response['Pragma']).to eq 'no-cache'
+    expect(to_time('Expires')).to be < Time.now
+    expect(response['Last-Modified']).to be_nil
+    expect(response['ETag']).to be_nil
   end
 
   it 'paginate managers of an organziation' do
@@ -420,6 +481,13 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     get_without_token "/api/v1/organizations/#{organization.id}/members"
     expect(response).to have_http_status(200)
+
+    expect(split('Cache-Control')).to(
+      match_array ['private', 'max-age=0', 'no-store', 'no-cache', 'must-revalidate'])
+    expect(response['Pragma']).to eq 'no-cache'
+    expect(to_time('Expires')).to be < Time.now
+    expect(response['Last-Modified']).to be_nil
+    expect(response['ETag']).to be_nil
   end
 
   it 'paginate members of an organziation' do

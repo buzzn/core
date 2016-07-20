@@ -1,4 +1,5 @@
 require 'doorkeeper/grape/helpers'
+require 'buzzn/grape/caching'
 
 module API
   module V1
@@ -12,6 +13,8 @@ module API
         # https://github.com/cdunn/grape-jsonapi-resources
         formatter :json, Grape::Formatter::JSONAPIResources
         jsonapi_base_url "#{Rails.application.secrets.hostname}/api/v1"
+
+        helpers Buzzn::Grape::Caching
 
         helpers Doorkeeper::Grape::Helpers
 

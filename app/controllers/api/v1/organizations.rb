@@ -14,11 +14,12 @@ module API
         get do
           per_page         = params[:per_page] || per_page
           page             = params[:page] || 1
-          ids = Organization.filter(params[:search]).select do |obj|
+          orgs = Organization.filter(params[:search]).select do |obj|
             obj.readable_by?(current_user)
-          end.collect { |obj| obj.id }
-          organizations = Organization.where(id: ids)
+          end
+          organizations = Organization.where(id: orgs.collect { |obj| obj.id })
           total_pages  = organizations.page(page).per_page(per_page).total_pages
+          public(orgs.collect{ |o| o.updated_at}.max, 1.day)
           paginate(render(organizations, meta: { total_pages: total_pages }))
         end
 
@@ -32,6 +33,7 @@ module API
         get ":id" do
           organization = Organization.find(params[:id])
           if organization.readable_by?(current_user)
+            public(organization.updated_at, 1.day)
             organization
           else
             status 403
@@ -51,6 +53,7 @@ module API
             per_page     = params[:per_page] || per_page
             page         = params[:page] || 1
             total_pages  = organization.contracts.page(page).per_page(per_page).total_pages
+            confidential
             paginate(render(organization.contracts, meta: { total_pages: total_pages }))
           else
             status 403
@@ -70,6 +73,7 @@ module API
             per_page     = params[:per_page] || per_page
             page         = params[:page] || 1
             total_pages  = organization.managers.page(page).per_page(per_page).total_pages
+            confidential
             paginate(render(organization.managers, meta: { total_pages: total_pages }))
           else
             status 403
@@ -89,6 +93,7 @@ module API
             per_page     = params[:per_page] || per_page
             page         = params[:page] || 1
             total_pages  = organization.members.page(page).per_page(per_page).total_pages
+            confidential
             paginate(render(organization.members, meta: { total_pages: total_pages }))
           else
             status 403
@@ -104,6 +109,7 @@ module API
         get ':id/address' do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
+            private(organization.address.updated_at, 1.day)
             organization.address
           else
             status 403
@@ -119,6 +125,7 @@ module API
         get ':id/contracting_party' do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
+            private(organization.contracting_party.updated_at, 1.day)
             organization.contracting_party
           else
             status 403
@@ -151,7 +158,7 @@ module API
 
             if organization.save!
               current_user.add_role(:manager, organization)
-              return organization
+              organization
             else
               error!('error saving organization', 500)
             end
@@ -180,7 +187,7 @@ module API
           if organization.updatable_by?(current_user)
             params.delete(:id)
             organization.update(params)
-            return organization
+            organization
           else
             status 403
           end
