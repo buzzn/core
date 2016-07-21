@@ -44,7 +44,7 @@ class Aggregate
 
     power_milliwatt_summed = 0
     @present_items.each do |present_item|
-      power_milliwatt_summed += present_item['data']['power_milliwatt']
+      power_milliwatt_summed += present_item['data']['power_milliwatt'] if present_item['data']['power_milliwatt'] != nil
     end
 
 
@@ -290,7 +290,7 @@ private
   end
 
   def matchesTimestamp(key, timestamp, resolution)
-    delta = Math.abs(key - timestamp)
+    delta = (key - timestamp).abs
     if resolution == 'year_to_months'
       return delta < 1296000000
     elsif resolution == 'month_to_days'
@@ -371,7 +371,8 @@ private
 
   def external_data(metering_point, resolution, timestamp)
     crawler = Crawler.new(metering_point)
-
+    key = 'power'
+    unit = 'milliwatt'
     case resolution
     when 'hour_to_minutes'
       results = crawler.hour(timestamp)
@@ -379,8 +380,12 @@ private
       results = crawler.day(timestamp)
     when 'month_to_days'
       results = crawler.month(timestamp)
+      key = 'energy'
+      unit = 'milliwatt_hour'
     when 'year_to_months'
       results = crawler.year(timestamp)
+      key = 'energy'
+      unit = 'milliwatt_hour'
     end
 
     if results.empty?
@@ -400,12 +405,12 @@ private
       item = {'timestamp' => Time.at(result[0]/1000) }
       case type_of_meter
       when 'in'
-        item.merge!('energy_a_milliwatt_hour' => (result[1]*1000).to_i)
+        item.merge!("#{key}_a_#{unit}" => (result[1]*1000).to_i)
       when 'out'
-        item.merge!('energy_b_milliwatt_hour' => (result[1]*1000).to_i)
+        item.merge!("#{key}_b_#{unit}" => (result[1]*1000).to_i)
       when 'in_out'
-        item.merge!('energy_a_milliwatt_hour' => (result[1]*1000).to_i)
-        item.merge!('energy_b_milliwatt_hour' => (result[2]*1000).to_i)
+        item.merge!("#{key}_a_#{unit}" => (result[1]*1000).to_i)
+        item.merge!("#{key}_b_#{unit}" => (result[2]*1000).to_i)
       end
       items << item
     end

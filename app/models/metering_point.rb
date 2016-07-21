@@ -109,7 +109,46 @@ class MeteringPoint < ActiveRecord::Base
     self.group && self.group.mode == "localpool"
   end
 
-
+  # TODO remove this when bubbles.js is rewritten
+  def last_power
+    if self.virtual && self.formula_parts.any?
+      operands = get_operands_from_formula
+      operators = get_operators_from_formula
+      result = 0
+      i = 0
+      count_timestamps = 0
+      sum_timestamp = 0
+      operands.each do |metering_point|
+        reading = metering_point.last_power
+        if !reading.nil? #&& reading[:timestamp] >= Time.now - 1.hour
+          if operators[i] == "+"
+            result += reading[:power]
+          elsif operators[i] == "-"
+            result -= reading[:power]
+          end
+          sum_timestamp += reading[:timestamp].to_i*1000
+          count_timestamps += 1
+        else
+          return {:power => 0, :timestamp => 0}
+        end
+        i+=1
+      end
+      if count_timestamps != 0
+        average_timestamp = sum_timestamp / count_timestamps
+        return {:power => result, :timestamp => average_timestamp/1000}
+      end
+      return {:power => 0, :timestamp => 0}
+    elsif self.smart?
+      crawler = Crawler.new(self)
+      return crawler.live
+    else
+      result = self.latest_fake_data
+      if result[:data].nil?
+        return { :power => 0, :timestamp => Time.now.to_i*1000}
+      end
+      return { :power => result[:data].flatten[1] * result[:factor], :timestamp => result[:data].flatten[0]}
+    end
+  end
 
 
 
