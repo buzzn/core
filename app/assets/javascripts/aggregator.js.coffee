@@ -92,13 +92,13 @@ class @Aggregator
   matchesTimestamp: (key, timestamp, resolution) ->
     delta = Math.abs(key - timestamp)
     if resolution == 'year_to_months'
-      return delta < 1296000000
+      return delta <= 1296000000
     else if resolution == 'month_to_days'
-      return delta < 43200000
+      return delta <= 43200000
     else if resolution == 'day_to_minutes' #15 minutes
-      return delta < 450000
+      return delta <= 450000
     else if resolution == 'hour_to_minutes' || resolution == 'present' #2 seconds
-      return delta < 1000
+      return delta <= 1000
 
 Object.values = (object) ->
   values = []
