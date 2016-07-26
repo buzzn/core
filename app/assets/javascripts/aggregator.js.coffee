@@ -55,9 +55,9 @@ class @Aggregator
       timestamp = new Date(timestamp)
     url = ''
     if chartType == 'present'
-      url = '/api/v1/aggregates/present?timestamp=' + timestamp.toISOString() + '&metering_point_ids=' + id + '&access_token=' + gon.global.access_token
+      url = '/api/v1/aggregates/present?timestamp=' + encodeURIComponent(moment(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSSZ')) + '&metering_point_ids=' + id + '&access_token=' + gon.global.access_token
     else
-      url = '/api/v1/aggregates/past?timestamp=' + timestamp.toISOString() + '&resolution=' + resolution + '&metering_point_ids=' + id + '&access_token=' + gon.global.access_token
+      url = '/api/v1/aggregates/past?timestamp=' + encodeURIComponent(moment(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSSZ')) + '&resolution=' + resolution + '&metering_point_ids=' + id + '&access_token=' + gon.global.access_token
 
     ajaxCall = $.ajax({url: url, async: true, dataType: 'json'})
       .success (data) ->
@@ -92,13 +92,13 @@ class @Aggregator
   matchesTimestamp: (key, timestamp, resolution) ->
     delta = Math.abs(key - timestamp)
     if resolution == 'year_to_months'
-      return delta < 1296000000
+      return delta <= 1296000000
     else if resolution == 'month_to_days'
-      return delta < 43200000
+      return delta <= 43200000
     else if resolution == 'day_to_minutes' #15 minutes
-      return delta < 450000
+      return delta <= 450000
     else if resolution == 'hour_to_minutes' || resolution == 'present' #2 seconds
-      return delta < 1000
+      return delta <= 1000
 
 Object.values = (object) ->
   values = []

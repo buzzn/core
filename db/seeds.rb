@@ -96,11 +96,11 @@ buzzn_team_names.each do |user_name|
     user.add_role :admin # felix is admin
     root_mp = Fabricate(:mp_urbanstr88)
     root_mp.devices << @gocycle
-    Fabricate(:application, owner: user, name: 'Buzzn API', scopes: 'public admin', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
-    application = Fabricate(:application, owner: user, name: 'Buzzn RailsView', scopes: 'public admin', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
-    Fabricate(:application, owner: user, name: 'Buzzn Ember', scopes: 'public admin', redirect_uri: 'http://localhost:4200/')
+    Fabricate(:application, owner: user, name: 'Buzzn API', scopes: 'public full', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
+    application = Fabricate(:application, owner: user, name: 'Buzzn RailsView', scopes: 'public full', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
+    Fabricate(:application, owner: user, name: 'Buzzn Ember', scopes: 'public full', redirect_uri: 'http://localhost:4200/')
     # HACK for seed. this is normaly don via after_filter in user
-    Doorkeeper::AccessToken.create(application_id: application.id, resource_owner_id: user.id, scopes: 'public admin' )
+    Doorkeeper::AccessToken.create(application_id: application.id, resource_owner_id: user.id, scopes: 'public full' )
 
   when 'christian'
     root_mp = Fabricate(:mp_60138988)

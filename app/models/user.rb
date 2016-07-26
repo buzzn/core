@@ -286,7 +286,7 @@ private
   def create_rails_view_access_token
     application = Doorkeeper::Application.where(name: 'Buzzn RailsView')
     if application.any?
-      Doorkeeper::AccessToken.create(application_id: application.first.id, resource_owner_id: self.id, scopes: 'public admin' )
+      Doorkeeper::AccessToken.create(application_id: application.first.id, resource_owner_id: user.id, scopes: 'public full' )
     end
   end
 
