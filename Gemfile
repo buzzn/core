@@ -126,6 +126,7 @@ source 'http://rails-assets.org' do
   gem 'rails-assets-bootstrap-tour'
   gem 'rails-assets-jquery-steps'
   gem 'rails-assets-jquery-validation'
+  gem 'rails-assets-fancybox'
 end
 
 group :production, :staging do

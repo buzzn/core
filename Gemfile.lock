@@ -633,6 +633,7 @@ GEM
     rails-assets-d3 (3.5.17)
     rails-assets-dropzone (4.3.0)
     rails-assets-enquire (2.1.2)
+    rails-assets-fancybox (2.1.5)
     rails-assets-fastclick (0.6.11)
     rails-assets-font-awesome (4.3.0)
     rails-assets-highcharts (4.2.5)
@@ -923,6 +924,7 @@ DEPENDENCIES
   rails-assets-d3!
   rails-assets-dropzone!
   rails-assets-enquire!
+  rails-assets-fancybox!
   rails-assets-fastclick!
   rails-assets-font-awesome (= 4.3.0)!
   rails-assets-highcharts!
