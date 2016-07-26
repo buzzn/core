@@ -1003,7 +1003,7 @@ namespace 'Chart.Functions', (exports) ->
   exports.endOfMonth = (timestamp) ->
     tmpDate = new Date(timestamp)
     end = new Date(tmpDate.getFullYear(), tmpDate.getMonth() + 1, 0)
-    end.setHours(23, 59, 59, 999)
+    end.setHours(0, 0, 0, 0) # end.setHours(23, 59, 59, 999)
     return end.getTime()
 
   exports.beginningOfMonth = (timestamp) ->
@@ -1020,8 +1020,8 @@ namespace 'Chart.Functions', (exports) ->
 
   exports.endOfYear = (timestamp) ->
     tmpDate = new Date(timestamp)
-    end = new Date(tmpDate.getFullYear(), 11, 31)
-    end.setHours(23, 59, 59, 999)
+    end = new Date(tmpDate.getFullYear(), 11, 1) # end = new Date(tmpDate.getFullYear(), 11, 31)
+    end.setHours(0, 0, 0, 0) # end.setHours(23, 59, 59, 999)
     return end.getTime()
 
   exports.beginningOfHour = (timestamp) ->
