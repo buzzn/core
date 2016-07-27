@@ -44,6 +44,7 @@
 //= require bootstrap3-typeahead.min
 //= require cookie_alert
 //= reqiure dropzone
+//= require fancybox/source/jquery.fancybox.js
 
 //= require nifty_init
 //= require nifty.min

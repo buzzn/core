@@ -79,6 +79,14 @@ ready = ->
       if !$(this).is(e.target) and $(this).has(e.target).length == 0 and $('.popover').has(e.target).length == 0
         $(this).popover 'hide'
 
+  $('.fancy-image').fancybox(
+    openEffect: 'elastic'
+    closeEffect: 'elastic'
+    helpers:
+      title:
+        type: 'float'
+  )
+
 
   window.addEventListener 'resize:end', (event) ->
     console.log event.type
