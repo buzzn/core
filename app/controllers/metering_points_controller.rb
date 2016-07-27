@@ -309,6 +309,13 @@ class MeteringPointsController < ApplicationController
     #render json: { data: [timestamp: Time.now.to_i*1000, reading: 12345]}
   end
 
+  def latest_fake_data
+    @metering_point = MeteringPoint.find(params[:id])
+    @cache_id = "/metering_points/#{params[:id]}/latest_fake_data"
+    @cache = Rails.cache.fetch(@cache_id)
+    @latest_fake_data = @cache || @metering_point.latest_fake_data
+    render json: @latest_fake_data.to_json
+  end
 
 private
   def metering_point_params

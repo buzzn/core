@@ -150,7 +150,18 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-
+  # TODO remove this
+  def latest_fake_data
+    if self.slp?
+      return {data: Reading.latest_fake_data('slp'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+    elsif self.pv?
+      return {data: Reading.latest_fake_data('sep_pv'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+    elsif self.bhkw_or_else?
+      return {data: Reading.latest_fake_data('sep_bhkw'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
+    else
+      return {data: [[0, 1]], factor: 1}
+    end
+  end
 
   def readable_by_friends?
     self.readable == 'friends'
