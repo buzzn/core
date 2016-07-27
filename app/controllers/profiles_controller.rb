@@ -121,6 +121,14 @@ class ProfilesController < ApplicationController
   end
   #TODO: add authority_actions
 
+  def access_tokens
+    @profile = Profile.find(params[:id])
+    @access_tokens = Doorkeeper::AccessToken.where(
+                          expires_in: nil,
+                          resource_owner_id: @profile.user.id
+                          )
+  end
+
 
 
 private

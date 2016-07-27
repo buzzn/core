@@ -942,6 +942,8 @@ de:
   legal_info: Impressum
   legal_notes: "Ich akzeptiere die %{terms_of_use} und die %{data_protection_guidelines}"
 
+  access_tokens: Access Tokens
+  view_access_tokens: Access Tokens ansehen
 
 
 
