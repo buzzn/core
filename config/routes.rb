@@ -32,9 +32,9 @@ Buzzn::Application.routes.draw do
       put :read_new_badge_notifications
       get :edit_notifications
       put :edit_notifications_update
+      get :access_tokens
     end
   end
-  resources :access_tokens
 
   resources :metering_points do
     member do
