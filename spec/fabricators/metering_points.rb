@@ -12,6 +12,11 @@ Fabricator :metering_point_readable_by_world, from: :metering_point do
   readable    'world'
 end
 
+Fabricator :out_metering_point_readable_by_world, from: :metering_point do
+  readable    'world'
+  mode        'out'
+end
+
 Fabricator :metering_point_readable_by_friends, from: :metering_point do
   readable    'friends'
 end

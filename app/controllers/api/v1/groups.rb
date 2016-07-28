@@ -125,18 +125,23 @@ module API
         paginate(per_page: per_page=10)
         get ":id/metering-points" do
           group               = Group.find(permitted_params[:id])
-          metering_points_ids = []
-          MeteringPoint.by_group(group).without_externals.each do |metering_point|
-            if metering_point.readable_by_world?
-              metering_points_ids << metering_point.id
-            elsif current_user && metering_point.readable_by?(current_user)
-              metering_points_ids << metering_point.id
+          per_page           = params[:per_page] || per_page
+          page               = params[:page] || 1
+
+          if group.readable_by_world?
+            metering_points = MeteringPoint.by_group(group).without_externals
+            total_pages     = metering_points.page(page).per_page(per_page).total_pages
+            paginate(render(metering_points, meta: { total_pages: total_pages }))
+          else
+            doorkeeper_authorize!
+            if group.readable_by?(current_user)
+              metering_points = MeteringPoint.by_group(group).without_externals
+              total_pages     = metering_points.page(page).per_page(per_page).total_pages
+              paginate(render(metering_points, meta: { total_pages: total_pages }))
+            else
+              status 403
             end
           end
-          @per_page     = params[:per_page] || per_page
-          @page         = params[:page] || 1
-          @total_pages  = MeteringPoint.where(id: metering_points_ids).page(@page).per_page(@per_page).total_pages
-          paginate(render(MeteringPoint.where(id: metering_points_ids), meta: { total_pages: @total_pages }))
         end
 
 
