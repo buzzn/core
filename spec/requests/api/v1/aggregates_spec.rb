@@ -1252,6 +1252,8 @@ describe "Aggregates API" do
   end
 
 
+  xit 'does aggregate Virtual metering_points present as manager' do
+  end
 
 
 
