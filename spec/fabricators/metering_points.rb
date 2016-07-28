@@ -934,7 +934,7 @@ Fabricator :mp_forstenried_erzeugung, from: :metering_point do
   formula_parts   {[
                     Fabricate(:fp_plus, operand_id: Fabricate(:mp_60138947).id),
                     Fabricate(:fp_plus, operand_id: Fabricate(:mp_60138943).id),
-                    Fabricate(:fp_plus, operand_id: Fabricate(:mp_1338000816).id)
+                    Fabricate(:fp_minus, operand_id: Fabricate(:mp_1338000816).id)
                   ]}
   mode            'out'
 end
@@ -943,16 +943,4 @@ end
 Fabricator :mp_forstenried_bezug, from: :metering_point do
   name  'Gesamtverbrauch'
   virtual         true
-end
-
-#virtueller Zählpunkt
-Fabricator :mp_forstenried_virtuell, from: :metering_point do
-  name  'Gesamterzeugung'
-  virtual         true
-  formula_parts   {[
-                    Fabricate(:fp_plus, operand_id: Fabricate(:mp_60138947).id), #BHKW
-                    Fabricate(:fp_plus, operand_id: Fabricate(:mp_60138943).id), #BHKW
-                    Fabricate(:fp_minus, operand_id: Fabricate(:mp_1338000816).id) #PV
-                  ]}
-  mode            'out'
 end
