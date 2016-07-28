@@ -159,8 +159,8 @@ Fabricator :mp_60138988, from: :metering_point do
   meter { Fabricate(:easymeter_60138988) }
 end
 
-#Nr. 60232612 ist eigentlich Cohaus WA10 - N36 aber zu Testzwecken für Mustafa
-Fabricator :mp_mustafa, from: :metering_point do
+#Nr. 60232612 ist eigentlich Cohaus WA10 - N36 aber zu Testzwecken für kristian
+Fabricator :mp_kristian, from: :metering_point do
   name  'Wohnung'
   readable    'friends'
   mode        'in'
