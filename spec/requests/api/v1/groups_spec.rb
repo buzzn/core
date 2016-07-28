@@ -23,7 +23,7 @@ describe "Groups API" do
     get_without_token '/api/v1/groups'
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
- 
+
     request_params = { search: group.name }
     get_without_token '/api/v1/groups', request_params
     expect(response).to have_http_status(200)
@@ -54,7 +54,7 @@ describe "Groups API" do
     get_with_token '/api/v1/groups', regular_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(2)
- 
+
     request_params = { search: group.name }
     get_with_token '/api/v1/groups', request_params, regular_token.token
     expect(response).to have_http_status(200)
@@ -85,7 +85,7 @@ describe "Groups API" do
     get_with_token '/api/v1/groups', token_with_friend.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(3)
- 
+
     request_params = { search: friend_group.name }
     get_with_token '/api/v1/groups', request_params, token_with_friend.token
     expect(response).to have_http_status(200)
@@ -116,7 +116,7 @@ describe "Groups API" do
     get_with_token '/api/v1/groups', member_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(3)
- 
+
     request_params = { search: member_group.name }
     get_with_token '/api/v1/groups', request_params, member_token.token
     expect(response).to have_http_status(200)
@@ -286,39 +286,19 @@ describe "Groups API" do
   end
 
 
-  it 'gets the related metering-points for Group restricted by metering points' do
-    regular_token         = Fabricate(:public_access_token)
-    token_with_friend     = Fabricate(:access_token_with_friend)
-    token_user            = User.find(token_with_friend.resource_owner_id)
-    friend                = token_user.friends.first
-    member_token          = Fabricate(:public_access_token)
-    member                = User.find(member_token.resource_owner_id)
-    metering_point1       = Fabricate(:metering_point_readable_by_world)
-    metering_point2       = Fabricate(:metering_point_readable_by_community)
-    metering_point3       = Fabricate(:metering_point_readable_by_friends)
-    metering_point4       = Fabricate(:metering_point_readable_by_members)
-    friend.add_role(:manager, metering_point3)
-    member.add_role(:member, metering_point4)
+  it 'gets the related metering-points for Group' do
     group                 = Fabricate(:group)
     group.metering_points = [
-      metering_point1,
-      metering_point2,
-      metering_point3,
-      metering_point4,
+      Fabricate(:metering_point_readable_by_world),
+      Fabricate(:metering_point_readable_by_community),
+      Fabricate(:metering_point_readable_by_friends),
+      Fabricate(:metering_point_readable_by_members),
+      Fabricate(:out_metering_point_readable_by_world),
     ]
 
     get_without_token "/api/v1/groups/#{group.id}/metering-points"
     expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-    get_with_token "/api/v1/groups/#{group.id}/metering-points", regular_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(2)
-    get_with_token "/api/v1/groups/#{group.id}/metering-points", token_with_friend.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(3)
-    get_with_token "/api/v1/groups/#{group.id}/metering-points", member_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(3)
+    expect(json['data'].size).to eq(5)
   end
 
   it 'paginate metering points' do
