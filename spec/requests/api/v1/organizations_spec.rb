@@ -30,29 +30,32 @@ describe "Organizations API" do
 
   it 'gets an organization' do
     organization = Fabricate(:electricity_supplier)
+    
     get_without_token "/api/v1/organizations/#{organization.id}"
+
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq organization.id
+
   end
 
 
   it 'gets all organizations with full access token as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
     organization = Fabricate(:electricity_supplier)
-    get_with_token "/api/v1/organizations", access_token.token
+    get_with_token "/api/v1/organizations", {}, access_token.token, 'Expect': true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq Organization.all.size
     expect(json['data'].last['id']).to eq organization.id
   end
 
 
-  it 'gets all organizations with full access token as admin' do
+  it 'gets all organizations with full access token as manager' do
     access_token = Fabricate(:full_access_token_as_admin)
     organization = Fabricate(:electricity_supplier)
     manager = User.find(access_token.resource_owner_id)
     manager.add_role(:manager, organization)
 
-    get_with_token "/api/v1/organizations", access_token.token
+    get_with_token "/api/v1/organizations", {}, access_token.token, 'Expect': true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq Organization.all.size
     expect(json['data'].last['id']).to eq organization.id
@@ -75,7 +78,7 @@ describe "Organizations API" do
   it 'gets all organizations' do
     organization = Fabricate(:electricity_supplier)
 
-    get_without_token "/api/v1/organizations"
+    get_without_token "/api/v1/organizations", {}, 'Expect': true
 
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq Organization.all.size
@@ -88,7 +91,7 @@ describe "Organizations API" do
       Fabricate(:distribution_system_operator)
     end
     access_token = Fabricate(:full_access_token_as_admin)
-    get_with_token "/api/v1/organizations", access_token.token
+    get_with_token "/api/v1/organizations?page=1", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
   end
@@ -178,7 +181,7 @@ describe "Organizations API" do
       email:       organization.email
     }.to_json
 
-    put "/api/v1/organizations", request_params
+    put "/api/v1/organizations/#{organization.id}", request_params
 
     expect(response).to have_http_status(401)
   end
@@ -187,7 +190,7 @@ describe "Organizations API" do
   [:public_access_token, :smartmeter_access_token].each do |token|
     it "does not update an organization with #{token}" do
       access_token = Fabricate(token)
-      put_with_token "/api/v1/organizations", {}.to_json, access_token.token
+      put_with_token "/api/v1/organizations/123321", {}.to_json, access_token.token
       expect(response).to have_http_status(403)
     end
   end
@@ -207,12 +210,12 @@ describe "Organizations API" do
       email:       organization.email
     }.to_json
 
-    put_with_token "/api/v1/organizations", request_params, access_token.token
+    put_with_token "/api/v1/organizations/#{organization.id}", request_params, access_token.token
     expect(response).to have_http_status(403)
   end
 
 
-  it 'updates an organization with full access token admin' do
+  it 'updates an organization with full access token as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
     organization = Fabricate(:metering_service_provider)
 
@@ -227,7 +230,7 @@ describe "Organizations API" do
       email:       organization.email
     }.to_json
 
-    put_with_token "/api/v1/organizations", request_params, access_token.token
+    put_with_token "/api/v1/organizations/#{organization.id}", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq organization.id
@@ -235,7 +238,7 @@ describe "Organizations API" do
   end
 
 
-  it 'updates an organization as full access with manager token' do
+  it 'updates an organization with full access token as manager' do
     organization = Fabricate(:metering_service_provider)
     access_token = Fabricate(:full_access_token)
 
@@ -253,7 +256,7 @@ describe "Organizations API" do
       email:       organization.email
     }.to_json
 
-    put_with_token "/api/v1/organizations", request_params, access_token.token
+    put_with_token "/api/v1/organizations/#{organization.id}", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq organization.id
@@ -339,7 +342,7 @@ describe "Organizations API" do
   # RETRIEVE address
 
   it 'gets the related address of an organization without token' do
-    organization    = Fabricate(:transmission_system_operator_with_address)
+    organization  = Fabricate(:transmission_system_operator_with_address)
     address       = organization.address
 
     get_without_token "/api/v1/organizations/#{organization.id}/address"
@@ -390,7 +393,7 @@ describe "Organizations API" do
 
   # RETRIEVE manager
 
-  it 'gets the related managers of an organization only with token' do
+  it 'gets the related managers of an organization' do
     access_token  = Fabricate(:public_access_token)
     organization  = Fabricate(:distribution_system_operator)
 
@@ -412,7 +415,7 @@ describe "Organizations API" do
     expect(json['meta']['total_pages']).to eq(2)
   end
 
-  it 'gets the related members for Organization' do
+  it 'gets the related members of an organization' do
     access_token  = Fabricate(:public_access_token)
     organization  = Fabricate(:distribution_system_operator)
 
@@ -449,7 +452,7 @@ describe "Organizations API" do
 
   [:public_access_token, :smartmeter_access_token].each do |token|
     [:member, :manager, :admin].each do |role|
-      it "does not add organization manager/member as member with #{token} as #{role}" do
+      it "does not add organization manager/member with #{token} as #{role}" do
         organization    = Fabricate(:distribution_system_operator)
         member_token    = Fabricate(token)
         member          = User.find(member_token.resource_owner_id)

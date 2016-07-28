@@ -593,6 +593,8 @@ GEM
     rack (1.6.4)
     rack-accept (0.4.5)
       rack (>= 0.4)
+    rack-cache (1.6.1)
+      rack (>= 0.4)
     rack-cors (0.4.0)
     rack-google-analytics (1.2.0)
       actionpack
@@ -698,6 +700,9 @@ GEM
       redis (~> 3.0, >= 3.0.4)
     redis-rack (1.5.0)
       rack (~> 1.5)
+      redis-store (~> 1.1.0)
+    redis-rack-cache (1.2.4)
+      rack-cache (~> 1.2)
       redis-store (~> 1.1.0)
     redis-rails (4.0.0)
       redis-actionpack (~> 4)
@@ -911,6 +916,7 @@ DEPENDENCIES
   puma
   pusher
   quiet_assets
+  rack-cache
   rack-cors
   rack-google-analytics
   rack-livereload
@@ -944,6 +950,7 @@ DEPENDENCIES
   rails_autolink
   rails_layout
   redis-namespace
+  redis-rack-cache
   redis-rails
   remotipart!
   responders

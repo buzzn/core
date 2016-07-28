@@ -20,17 +20,17 @@ describe "Groups API" do
     member.add_role(:manager, member_group)
 
 
-    get_without_token '/api/v1/groups'
+    get_without_token '/api/v1/groups', {}, Expect: true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
 
     request_params = { search: group.name }
-    get_without_token '/api/v1/groups', request_params
+    get_without_token '/api/v1/groups', request_params, Expect: true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
 
     request_params = { search: 'hello world' }
-    get_without_token '/api/v1/groups', request_params
+    get_without_token '/api/v1/groups', request_params, Expect: true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(0)
   end
@@ -51,17 +51,17 @@ describe "Groups API" do
     member.add_role(:manager, member_group)
 
 
-    get_with_token '/api/v1/groups', regular_token.token
+    get_with_token '/api/v1/groups', {}, regular_token.token, Expect: true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(2)
 
     request_params = { search: group.name }
-    get_with_token '/api/v1/groups', request_params, regular_token.token
+    get_with_token '/api/v1/groups', request_params, regular_token.token, Expect: true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
 
     request_params = { search: 'hello world' }
-    get_with_token '/api/v1/groups', request_params, regular_token.token
+    get_with_token '/api/v1/groups', request_params, regular_token.token, Expect: true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(0)
   end
@@ -82,17 +82,17 @@ describe "Groups API" do
     member.add_role(:manager, member_group)
 
 
-    get_with_token '/api/v1/groups', token_with_friend.token
+    get_with_token '/api/v1/groups', {}, token_with_friend.token, Expect: true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(3)
 
     request_params = { search: friend_group.name }
-    get_with_token '/api/v1/groups', request_params, token_with_friend.token
+    get_with_token '/api/v1/groups', request_params, token_with_friend.token, Expect: true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
 
     request_params = { search: 'hello world' }
-    get_with_token '/api/v1/groups', request_params, token_with_friend.token
+    get_with_token '/api/v1/groups', request_params, token_with_friend.token, Expect: true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(0)
   end
@@ -113,17 +113,17 @@ describe "Groups API" do
     member.add_role(:manager, member_group)
 
 
-    get_with_token '/api/v1/groups', member_token.token
+    get_with_token '/api/v1/groups', {}, member_token.token, Expect: true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(3)
 
     request_params = { search: member_group.name }
-    get_with_token '/api/v1/groups', request_params, member_token.token
+    get_with_token '/api/v1/groups', request_params, member_token.token, Expect: true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
 
     request_params = { search: 'hello world' }
-    get_with_token '/api/v1/groups', request_params, member_token.token
+    get_with_token '/api/v1/groups', request_params, member_token.token, Expect: true
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(0)
   end
@@ -143,7 +143,7 @@ describe "Groups API" do
     @page_overload.times do
       Fabricate(:group)
     end
-    get_without_token '/api/v1/groups'
+    get_without_token '/api/v1/groups', {}, Expect: true
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
   end
@@ -160,7 +160,7 @@ describe "Groups API" do
   it 'does not gets a group readable by community without token' do
     group = Fabricate(:group_readable_by_community)
     get_without_token "/api/v1/groups/#{group.id}"
-    expect(response).to have_http_status(401)
+    expect(response).to have_http_status(403)
   end
 
 
@@ -204,19 +204,18 @@ describe "Groups API" do
   end
 
 
-  it 'does update a group' do
+  it 'updates a group' do
     metering_point = Fabricate(:out_metering_point_with_manager)
     manager       = metering_point.managers.first
     access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
     group = Fabricate(:group)
     manager.add_role(:manager, group)
     request_params = {
-      id: group.id,
       name: "#{group.name} updated",
       readable: group.readable,
       description: group.description
     }.to_json
-    put_with_token "/api/v1/groups", request_params, access_token.token
+    put_with_token "/api/v1/groups/#{group.id}", request_params, access_token.token
     expect(response).to have_http_status(200)
     expect(json['data']['attributes']['name']).to eq("#{group.name} updated")
   end

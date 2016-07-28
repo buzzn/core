@@ -11,22 +11,24 @@ module API
         paginate(per_page: per_page=10)
         oauth2 false
         get root: :groups do
-          group_ids = Group.filter(params[:search]).where(readable: 'world').ids
+          group_ids = Group.filter(params[:search]).where(readable: 'world')
           if current_user
             group_ids << Group.filter(params[:search]).where(readable: 'community').ids
             group_ids << Group.filter(params[:search]).with_role(:manager, current_user)
             current_user.friends.each do |friend|
               if friend
                 Group.filter(params[:search]).where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
-                  group_ids << friend_group.id
+                  group_ids << friend_group
                 end
               end
             end
           end
           @per_page     = params[:per_page] || per_page
           @page         = params[:page] || 1
-          @total_pages  = Group.where(id: group_ids.flatten).page(@page).per_page(@per_page).total_pages
-          paginate(render(Group.where(id: group_ids.flatten), meta: { total_pages: @total_pages }))
+          groups        = Group.where(id: group_ids.flatten)
+          @total_pages  = groups.page(@page).per_page(@per_page).total_pages
+          public(current_user, groups.collect{ |o| o.updated_at}.max, 1.day)
+          paginate(render(groups, meta: { total_pages: @total_pages }))
         end
 
 
@@ -39,16 +41,12 @@ module API
         end
         oauth2 false
         get ":id", root: "group" do
-          group = Group.where(id: permitted_params[:id]).first!
-          if group.readable_by_world?
-            return group
+          group = Group.find(permitted_params[:id])  
+          if group.readable_by?(current_user)
+            public(current_user, group, 1.day)
+            group
           else
-            doorkeeper_authorize!
-            if group.readable_by?(current_user)
-              group
-            else
-              status 403
-            end
+            status 403
           end
         end
 
@@ -63,16 +61,11 @@ module API
         oauth2 :full
         post do
           if Group.creatable_by?(current_user)
-            @params = params.group || params
-            @group = Group.new({
-              name: @params.name,
-              description: @params.description
-              })
-
-            if @group.save!
+            group = Group.new(permitted_params)
+            if group.save!
               current_user.add_role(:manager, @group)
-              return @group
             end
+            group
           else
             error!('you need at least one out-metering_point', 401)
           end
@@ -82,19 +75,15 @@ module API
 
         desc "Update a Group."
         params do
-          requires :id, type: String, desc: "Group ID."
-          optional :name
+          optional :name,         type: String, desc: "Name of the Group."
+          optional :description,  type: String, desc: "Description of the Group."
         end
         oauth2 :full
-        put do
-          @group = Group.find(params[:id])
-          if @group.updatable_by?(current_user)
-            @params = params.group || params
-            @group.update({
-                name:  @params.name,
-                image: @params.image
-              })
-            return @group
+        put ':id' do
+          group = Group.find(params[:id])
+          if group.updatable_by?(current_user)
+            group.update(permitted_params)
+            group
           else
             status 403
           end
@@ -108,16 +97,12 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          if current_user
-            group = Group.find(params[:id])
-            if group.updatable_by?(current_user)
-              group.destroy
-              status 204
-            else
-              status 403
-            end
+          group = Group.find(params[:id])
+          if group.deletable_by?(current_user)
+            group.destroy
+            status 204
           else
-            status 401
+            status 403
           end
         end
 
@@ -153,18 +138,15 @@ module API
 
 
         desc "Return the related managers for Group"
-        params do
-          requires :id, type: String, desc: "ID of the group"
-        end
         paginate(per_page: per_page=10)
-        oauth2 false
+        oauth2 :public, :full
         get ":id/managers" do
-          doorkeeper_authorize! :public
-          group = Group.where(id: permitted_params[:id]).first!
+          group = Group.find(params[:id])
           if group.readable_by?(current_user)
             @per_page     = params[:per_page] || per_page
             @page         = params[:page] || 1
             @total_pages  = group.managers.page(@page).per_page(@per_page).total_pages
+            confidential
             paginate(render(group.managers, meta: { total_pages: @total_pages }))
           else
             status 403
@@ -209,6 +191,7 @@ module API
         get ":id/members" do
           group = Group.where(id: permitted_params[:id]).first!
           if group.readable_by?(current_user)
+            confidential
             group.members
           else
             status 403

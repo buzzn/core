@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'rack-cache'
+gem 'redis-rack-cache'
 gem 'rails'
 gem 'pg'
 gem 'sinatra'

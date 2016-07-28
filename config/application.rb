@@ -59,5 +59,10 @@ module Buzzn
 
     config.middleware.delete Rack::Lock
 
+    config.middleware.insert_before Rack::Head, Rack::Cache,
+      private_headers: [],
+      verbose:         true,
+      metastore:       "redis://localhost:6379/0/metastore",
+      entitystore:     "redis://localhost:6379/0/entitystore"
   end
 end
