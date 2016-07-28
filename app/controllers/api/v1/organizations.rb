@@ -1,8 +1,8 @@
 module API
   module V1
+
     class Organizations < Grape::API
       include API::V1::Defaults
-      
       resource :organizations do
 
         desc "Return all organizations"
@@ -13,13 +13,13 @@ module API
         oauth2 false
         get do
           per_page         = params[:per_page] || per_page
-          page             = params[:page] || 1
+          page             = [params[:page].to_i, 1].max
           orgs = Organization.filter(params[:search]).select do |obj|
             obj.readable_by?(current_user)
           end
           organizations = Organization.where(id: orgs.collect { |obj| obj.id })
           total_pages  = organizations.page(page).per_page(per_page).total_pages
-          public(orgs.collect{ |o| o.updated_at}.max, 1.day)
+          public(current_user, orgs.collect{ |o| o.updated_at}.max, 1.day)
           paginate(render(organizations, meta: { total_pages: total_pages }))
         end
 
@@ -33,7 +33,7 @@ module API
         get ":id" do
           organization = Organization.find(params[:id])
           if organization.readable_by?(current_user)
-            public(organization.updated_at, 1.day)
+            public(current_user, organization, 1.day)
             organization
           else
             status 403
@@ -109,7 +109,9 @@ module API
         get ':id/address' do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
-            private(organization.address.updated_at, 1.day)
+            if organization.address
+              public(current_user, organization.address, 1.day)
+            end
             organization.address
           else
             status 403
@@ -125,7 +127,9 @@ module API
         get ':id/contracting_party' do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
-            private(organization.contracting_party.updated_at, 1.day)
+            if organization.contracting_party
+              public(current_user, organization.contracting_party, 1.day)
+            end
             organization.contracting_party
           else
             status 403
@@ -171,23 +175,26 @@ module API
 
         desc "Update an Organization."
         params do
-          requires :id, type: String, desc: "Organization ID."
-          requires :name,         type: String, desc: "Name of the Organization."
-          requires :phone,        type: String, desc: "Phone number of Organization."
-          requires :fax,          type: String, desc: "Fax number of Organization."
+          optional :id, type: String, desc: "Organization ID."
+          optional :name,         type: String, desc: "Name of the Organization."
+          optional :phone,        type: String, desc: "Phone number of Organization."
+          optional :fax,          type: String, desc: "Fax number of Organization."
           optional :website,      type: String, desc: "Website of Organization."
-          requires :email,        type: String, desc: "Email of Organization."
-          requires :description,  type: String, desc: "Description of the Organization."
-          requires :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
+          optional :email,        type: String, desc: "Email of Organization."
+          optional :description,  type: String, desc: "Description of the Organization."
+          optional :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
         end
         oauth2 :full
-        put do
+        put ':id' do
           organization = Organization.find(params[:id])
 
           if organization.updatable_by?(current_user)
             params.delete(:id)
-            organization.update(params)
-            organization
+            if organization.update(params)
+              organization
+            else
+              error!('error saving organization', 500)
+            end
           else
             status 403
           end

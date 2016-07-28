@@ -83,7 +83,10 @@ RSpec.configure do |config|
   end
 
   config.after(:each) do
-    DatabaseCleaner.clean
+    begin
+      DatabaseCleaner.clean
+    rescue ActiveRecord::StatementInvalid
+    end
     Mongoid.purge!
   end
 

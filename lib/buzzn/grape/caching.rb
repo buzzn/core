@@ -221,10 +221,23 @@ module Buzzn
         #
         # Last-Modified: Mon, 03 Jan 2011 17:45:57 GMT
         # ETag: "15f0fff99ed5aae4edffdd6496d7131f"
-        def conditional(updated_at, opts=OPTS)
-          return unless updated_at
-          last_modified(updated_at)
-          etag(Digest::SHA256.hexdigest(updated_at.httpdate), opts)
+        def conditionals(current_user, resource, opts=OPTS)
+          content = ''
+          if current_user
+            content = current_user.id.to_s
+          end
+          if resource && resource.respond_to?(:updated_at)
+            updated = resource.updated_at
+          elsif resource.respond_to? :to_f
+            updated = resource
+          end
+          if updated
+            content += updated.to_f.to_s
+            # if we have a current_user the last_modified header does not  work
+            # as it is the same for all users and might reproduce wrong results
+            last_modified(updated) if current_user.nil?
+          end
+          etag(Digest::SHA256.hexdigest(content), opts) if content != ''
         end
 
         # Public resource which uses the geven last modified tiemstamp
@@ -232,15 +245,13 @@ module Buzzn
         # expires headers for the given max age. max age of 0 will
         # set the must-revalidate directive on cache-control.
         #
-        # Cache-Control:public, max-age=86400
+        # Cache-Control:public, max-age=86400, :must_revalidate
         # Expires: Mon, 25 Jun 2012 21:31:12 GMT
         # Last-Modified: Mon, 03 Jan 2011 17:45:57 GMT
         # ETag: "15f0fff99ed5aae4edffdd6496d7131f"
-        def public(updated_at = nil, max_age = 86400)
-          conditional(updated_at) if updated_at
-          args = [:public]
-          args += :must_revalidate if max_age == 0
-          expires(max_age, *args)
+        def public(current_user = nil, resource_or_date = nil, max_age = 86400)
+          conditionals(current_user, resource_or_date)
+          expires(max_age, :public, :must_revalidate)
         end
 
         # Private resource which uses the geven last modified tiemstamp
@@ -254,11 +265,9 @@ module Buzzn
         # Expires: Mon, 25 Jun 2012 21:31:12 GMT
         # Last-Modified: Mon, 03 Jan 2011 17:45:57 GMT
         # ETag: "15f0fff99ed5aae4edffdd6496d7131f"
-        def private(updated_at = nil, max_age = 0)
-          conditional(updated_at) if updated_at
-          args = [:private]
-          args += :must_revalidate if max_age == 0
-          expires(max_age, *args)
+        def private(current_user = nil, resource_or_date = nil, max_age = 0)
+           conditionals(current_user, resource_or_date)
+           expires(max_age, :private, :must_revalidate)
         end
 
         # No browser nor proxies are allowed to cache or store the data
