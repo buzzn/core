@@ -101,7 +101,7 @@ de:
     scopes:
       public: 'Lese-Zugriff auf öffentliche Daten'
       smartmeter: 'Schreib-Lese-Zugriff auf MeteringPoint, Meter and Reading'
-      manager: 'Voller Zugriff auf alle Daten'
+      full: 'Voller Zugriff auf alle Daten'
   errors: &errors
     format: ! '%{attribute} %{message}'
     messages:
