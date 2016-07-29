@@ -39,6 +39,31 @@ class Aggregate
           end
         end
 
+        @metering_points_hash[:virtual].each do |metering_point|
+          formula_parts         = FormulaPart.where(metering_point_id: metering_point.id)
+          metering_point_ids    = formula_parts.map(&:operand_id)
+          metering_points       = MeteringPoint.find(metering_point_ids)
+          metering_points_hash  = Aggregate.sort_metering_points(metering_points)
+
+          if metering_points_hash[:data_sources].size > 1
+            return 'error different data_sources'
+          else
+            data_source = metering_points_hash[:data_sources].first
+            metering_points_hash[data_source.to_sym].each do |metering_point|
+              formula_part = formula_parts.find_by(operand_id: metering_point.id)
+              if formula_part.operator == '+'
+                negativ = false
+              elsif formula_part.operator == '-'
+                negativ = true
+              end
+              @present_items << {
+                "operator" => (metering_point.mode == 'in' ? '+' : '-'),
+                "data" => send("present_#{data_source}", metering_point, negativ)
+              }
+            end
+          end
+        end
+
       end
     end
 
@@ -91,7 +116,8 @@ class Aggregate
         end
 
         @metering_points_hash[:virtual].each do |metering_point|
-          metering_point_ids    = FormulaPart.where(metering_point_id: metering_point.id).map(&:operand_id)
+          formula_parts         = FormulaPart.where(metering_point_id: metering_point.id)
+          metering_point_ids    = formula_parts.map(&:operand_id)
           metering_points       = MeteringPoint.find(metering_point_ids)
           metering_points_hash  = Aggregate.sort_metering_points(metering_points)
 
@@ -100,7 +126,13 @@ class Aggregate
           else
             data_source = metering_points_hash[:data_sources].first
             metering_points_hash[data_source.to_sym].each do |metering_point|
-              @past_items << send("past_#{data_source}", metering_point, @resolution, @timestamp)
+              formula_part = formula_parts.find_by(operand_id: metering_point.id)
+              if formula_part.operator == '+'
+                negativ = false
+              elsif formula_part.operator == '-'
+                negativ = true
+              end
+              @past_items << send("past_#{data_source}", metering_point, @resolution, @timestamp, negativ)
             end
           end
         end
@@ -179,6 +211,9 @@ private
     return present_items
   end
 
+  def present_discovergy(metering_point, negativ=false)
+    return external_data_live(metering_point, negativ)
+  end
 
   def past_buzzn_api(metering_point, resolution, timestamp)
     source = { meter_id: { "$in" => [metering_point.meter.id] } }
@@ -187,8 +222,8 @@ private
     return aggregation_to_hash(collection, 1, metering_point.mode == 'in' ? false : true)
   end
 
-  def past_discovergy(metering_point, resolution, timestamp)
-    return external_data(metering_point, resolution, timestamp.to_i*1000)
+  def past_discovergy(metering_point, resolution, timestamp, negativ=false)
+    return external_data(metering_point, resolution, timestamp.to_i*1000, negativ)
   end
 
   def past_fake(fake_type, metering_points_hash, resolution, timestamp)
@@ -358,18 +393,21 @@ private
   end
 
 
-  def external_data_live(metering_point)
+  def external_data_live(metering_point, negativ=false)
     crawler = Crawler.new(metering_point)
     result = crawler.live
+    timestamp = Time.at(result[:timestamp]/1000)
+    power_milliwatt = (result[:power]*1000).to_i
+    power_milliwatt *= -1 if negativ
     item = {
-      'timestamp' => Time.at(result[:timestamp]/1000),
-      'power_milliwatt' => (result[:power]*1000).to_i
+      'timestamp' => timestamp,
+      'power_milliwatt' => power_milliwatt
     }
     return item
   end
 
 
-  def external_data(metering_point, resolution, timestamp)
+  def external_data(metering_point, resolution, timestamp, negativ=false)
     crawler = Crawler.new(metering_point)
     key = 'power'
     unit = 'milliwatt'
@@ -405,12 +443,24 @@ private
       item = {'timestamp' => Time.at(result[0]/1000) }
       case type_of_meter
       when 'in'
-        item.merge!("#{key}_a_#{unit}" => (result[1]*1000).to_i)
+        key_a   = "#{key}_a_#{unit}"
+        value_a = (result[1]*1000).to_i
+        value_a *= -1 if negativ
+        item.merge!(key_a => value_a)
       when 'out'
-        item.merge!("#{key}_b_#{unit}" => (result[1]*1000).to_i)
+        key_b   = "#{key}_b_#{unit}"
+        value_b = (result[1]*1000).to_i
+        value_b *= -1 if negativ
+        item.merge!(key_b => value_b)
       when 'in_out'
-        item.merge!("#{key}_a_#{unit}" => (result[1]*1000).to_i)
-        item.merge!("#{key}_b_#{unit}" => (result[2]*1000).to_i)
+        key_a   = "#{key}_a_#{unit}"
+        value_a = (result[1]*1000).to_i
+        value_a *= -1 if negativ
+        item.merge!(key_a => value_a)
+        key_b   = "#{key}_b_#{unit}"
+        value_b = (result[2]*1000).to_i
+        value_b *= -1 if negativ
+        item.merge!(key_b => value_b)
       end
       items << item
     end

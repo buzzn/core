@@ -464,7 +464,7 @@ describe "Aggregates API" do
 
     metering_point1 = Fabricate(:metering_point, forecast_kwh_pa: 3000)
     metering_point2 = Fabricate(:metering_point, forecast_kwh_pa: 8000)
-
+  
     energy_a_milliwatt_hour = 0
     timestamp = Time.find_zone('Berlin').local(2016,2,1)
     (24*4).times do |i|
@@ -1247,11 +1247,31 @@ describe "Aggregates API" do
     }
 
     get_with_token "/api/v1/aggregates/past", request_params, access_token.token
-
-    expect(json.first['energy_milliwatt_hour']).to eq(single_energy_values.inject(0, :+))
+    sum_value = single_energy_values[0] + single_energy_values[1] - single_energy_values[2] # last single_energy_value is a negativ formulapart metering_point
+    expect(json.first['energy_milliwatt_hour']).to eq(sum_value)
   end
 
 
+
+  it 'does aggregate Virtual metering_points present as manager' do
+    access_token = Fabricate(:full_access_token_as_admin)
+
+    virtual_metering_point = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtual metering_point
+
+    request_params = {
+      metering_point_ids: virtual_metering_point.id,
+      timestamp: Time.find_zone('Berlin').local(2016,4,6)
+    }
+
+    get_with_token "/api/v1/aggregates/present", request_params, access_token.token
+
+    sum_value = 0
+    json['readings'].each do |item|
+      sum_value += item['data']['power_milliwatt']
+    end
+
+    expect(json['power_milliwatt']).to eq(sum_value)
+  end
 
 
 

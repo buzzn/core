@@ -12,6 +12,11 @@ Fabricator :metering_point_readable_by_world, from: :metering_point do
   readable    'world'
 end
 
+Fabricator :out_metering_point_readable_by_world, from: :metering_point do
+  readable    'world'
+  mode        'out'
+end
+
 Fabricator :metering_point_readable_by_friends, from: :metering_point do
   readable    'friends'
 end
@@ -159,8 +164,8 @@ Fabricator :mp_60138988, from: :metering_point do
   meter { Fabricate(:easymeter_60138988) }
 end
 
-#Nr. 60232612 ist eigentlich Cohaus WA10 - N36 aber zu Testzwecken für Mustafa
-Fabricator :mp_mustafa, from: :metering_point do
+#Nr. 60232612 ist eigentlich Cohaus WA10 - N36 aber zu Testzwecken für kristian
+Fabricator :mp_kristian, from: :metering_point do
   name  'Wohnung'
   readable    'friends'
   mode        'in'
@@ -930,12 +935,11 @@ end
 #virtueller Zählpunkt
 Fabricator :mp_forstenried_erzeugung, from: :metering_point do
   name  'Gesamterzeugung'
-  #meter          { Fabricate(:virtual_forstenried_erzeugung) }
   virtual         true
   formula_parts   {[
                     Fabricate(:fp_plus, operand_id: Fabricate(:mp_60138947).id),
                     Fabricate(:fp_plus, operand_id: Fabricate(:mp_60138943).id),
-                    Fabricate(:fp_plus, operand_id: Fabricate(:mp_1338000816).id)
+                    Fabricate(:fp_minus, operand_id: Fabricate(:mp_1338000816).id)
                   ]}
   mode            'out'
 end
@@ -943,6 +947,5 @@ end
 #virtueller Zählpunkt
 Fabricator :mp_forstenried_bezug, from: :metering_point do
   name  'Gesamtverbrauch'
-  #meter          { Fabricate(:virtual_forstenried_bezug) }
   virtual         true
 end
