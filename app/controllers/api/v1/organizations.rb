@@ -254,7 +254,7 @@ module API
         oauth2 :full
         delete ':id/members/:user_id' do
           organization = Organization.find(params[:id])
-          if organization.updatable_by?(current_user)
+          if organization.deletabled_by?(current_user)
             user = User.find(params[:user_id])
             user.remove_role(:member, organization)
             status 204
