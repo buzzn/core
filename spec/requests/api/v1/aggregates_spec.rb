@@ -464,7 +464,7 @@ describe "Aggregates API" do
 
     metering_point1 = Fabricate(:metering_point, forecast_kwh_pa: 3000)
     metering_point2 = Fabricate(:metering_point, forecast_kwh_pa: 8000)
-  
+
     energy_a_milliwatt_hour = 0
     timestamp = Time.find_zone('Berlin').local(2016,2,1)
     (24*4).times do |i|
@@ -1013,7 +1013,7 @@ describe "Aggregates API" do
     expect(json.count).to eq(29)
     expect(json[15]['power_milliwatt']).to eq(nil)
     expect(json[15]['energy_a_milliwatt_hour']).to eq(nil)
-    expect(json[15]['energy_milliwatt_hour']).to eq(2146)
+    expect(json[15]['energy_milliwatt_hour']).to eq(2146232)
 
     timestamp = Time.find_zone('Berlin').local(2016,2,1)
     json.each do |item|

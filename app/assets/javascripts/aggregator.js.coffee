@@ -64,7 +64,7 @@ class @Aggregator
         if chartType == 'past' && Object.prototype.toString.call(data) == '[object Array]'
           highcharts_data = []
           data.forEach (data_point) ->
-            highcharts_data.push([(new Date(Object.values(data_point)[0])).getTime(), Object.values(data_point)[1]/1000])
+            highcharts_data.push([(new Date(Object.values(data_point)[0])).getTime(), Object.values(data_point)[1]/instance.getScaleFactor(resolution)])
           instance.returned_ajax_data.push(highcharts_data)
         else if chartType == 'present'
           instance.returned_ajax_data.push([[(new Date(Object.values(data)[0])).getTime(), Object.values(data)[1]/1000]])
@@ -99,6 +99,12 @@ class @Aggregator
       return delta <= 450000
     else if resolution == 'hour_to_minutes' || resolution == 'present' #2 seconds
       return delta <= 1000
+
+  getScaleFactor: (resolution) ->
+    if resolution == 'day_to_minutes' || resolution == 'hour_to_minutes'
+      return 1000
+    else
+      return 1000000
 
 Object.values = (object) ->
   values = []
