@@ -101,7 +101,6 @@ class MeteringPointsController < ApplicationController
 
   def send_invitations_update
     @metering_point = MeteringPoint.find(params[:id])
-    byebug
     if params[:metering_point][:invite_via_email] == "1"
       if params[:metering_point][:email] == ""
         @metering_point.errors.add(:email, I18n.t("cant_be_blank"))

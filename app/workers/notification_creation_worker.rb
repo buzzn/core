@@ -144,6 +144,7 @@ class NotificationCreationWorker
       #no growl_users
     when 'user.accept_platform_invitation'
       Notifier.send_email_accepted_platform_invitation(@activity.recipient, owner).deliver_now
+      Notifier.send_email_completed_registration(owner).deliver_now
       badge_users = [@activity.recipient]
       @activity.recipient.send_notification('info', I18n.t('accepted_platform_invitation'), I18n.t('user_has_accepted_the_invitation_to_join_the_buzzn_community_and_is_your_friend_now', user: owner.name + ' (' + owner.email + ')'), 0, profile_path(owner))
 
