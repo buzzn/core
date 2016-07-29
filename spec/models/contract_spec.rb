@@ -1,6 +1,31 @@
 # coding: utf-8
 describe "Contract Model" do
 
+  let(:user_with_metering_point) { Fabricate(:user_with_metering_point) }
+  let(:manager_group) {Fabricate(:group)}
+  let(:manager_with_group) do
+    user = Fabricate(:user)
+    user.add_role(:manager, manager_group)
+    user
+  end
+  let(:member_group) {Fabricate(:group)}
+  let(:member_with_group) do
+    user = Fabricate(:user)
+    user.add_role(:member, member_group)
+    user
+  end
+
+  let(:contracts) do
+    c1 = Fabricate(:metering_point_operator_contract)
+    c1.metering_point = user_with_metering_point.roles.first.resource
+    c1.group = member_group
+    c1.save!
+    c2 = Fabricate(:electricity_supplier_contract)
+    c2.group = manager_group
+    c2.save!
+    [c1, c2]
+  end
+
   it 'filters contract' do
     Fabricate(:discovergy)
     contract = Fabricate(:mpoc_stefan)
@@ -32,5 +57,26 @@ describe "Contract Model" do
 
     contracts = Contract.filter(nil)
     expect(contracts.size).to eq 2
+  end
+
+  it 'selects no contracts for anonymous user' do
+    contracts # create contracts
+    expect(Contract.readable_by(nil)).to eq []
+  end
+
+  it 'selects all contracts by admin' do
+    contracts # create contracts
+    expect(Contract.readable_by(Fabricate(:admin))).to eq contracts
+  end
+
+  it 'selects contracts of metering_point manager' do
+    contracts # create contracts
+    expect(Contract.readable_by(user_with_metering_point)).to eq [contracts.first]
+  end
+
+  it 'selects contracts of group manager but not group member' do
+    contracts # create contracts
+    expect(Contract.readable_by(manager_with_group)).to eq [contracts.last]
+    expect(Contract.readable_by(member_with_group)).to eq []
   end
 end

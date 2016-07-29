@@ -10,16 +10,16 @@ module API
 
         desc "Return all Device"
         params do
-          requires :id, type: String, desc: "ID of the Device"
+          requires :search, type: String, desc: "Search query using #{Base.join(Device.search_attributes)}"
         end
+        paginate(per_page: per_page=10)
+        oauth2 false
         get ":id" do
-          @device = Device.find(params[:id])
-          current_user
-          if @device.readable == 'world'
-            return @device
-          elsif current_user
-            current_user.can_read?(@device) ? @device : error_403
-          end
+          per_page     = params[:per_page] || per_page
+          page         = params[:page] || 1
+          devices = Device.filter(params[:search]).readable_by(current_user)
+          total_pages  = devices.page(page).per_page(per_page).total_pages
+          paginate(render(devices, meta: { total_pages: total_pages }))
         end
 
 
@@ -28,13 +28,13 @@ module API
         params do
           requires :id, type: String, desc: "ID of the Device"
         end
+        oauth2 false
         get ":id" do
-          @device = Device.find(params[:id])
-          current_user
-          if @device.readable == 'world'
-            return @device
-          elsif current_user
-            current_user.can_read?(@device) ? @device : error_403
+          device = Device.find(permitted_params[:id])
+          if device.readable_by?(current_user)
+            device
+          else
+            status 403
           end
         end
 
@@ -54,29 +54,16 @@ module API
           optional :commissioning,             type: DateTime
           requires :mobile,                    type: Boolean
         end
+        oauth2 :full
         post do
-          if current_user
-            if Device.creatable_by?(current_user)
-              @params = params.device || params
-              @device = Device.new({
-                manufacturer_name:          @params.manufacturer_name,
-                manufacturer_product_name:  @params.manufacturer_product_name,
-                mode:                       @params.mode,
-                readable:                   @params.readable,
-                category:                   @params.category,
-                watt_peak:                  @params.watt_peak,
-                commissioning:              @params.commissioning,
-                mobile:                     @params.mobile
-                })
-              if @device.save!
-                current_user.add_role(:manager, @device)
-                return @device
-              end
-            else
-              status_403
+          if Device.creatable_by?(current_user)
+            device = Device.new(permitted_params)
+            if device.save!
+              current_user.add_role(:manager, device)
             end
+            device
           else
-            status_401
+            status_403
           end
         end
 
@@ -98,28 +85,14 @@ module API
           optional :commissioning,             type: DateTime
           requires :mobile,                    type: Boolean
         end
+        oauth2 :full
         put ':id' do
-          if current_user
-            @device = Device.find(params[:id])
-            if @device.updatable_by?(current_user)
-              @params = params.device || params
-
-              @device.update({
-                manufacturer_name:          @params.manufacturer_name,
-                manufacturer_product_name:  @params.manufacturer_product_name,
-                mode:                       @params.mode,
-                readable:                   @params.readable,
-                category:                   @params.category,
-                watt_peak:                  @params.watt_peak,
-                commissioning:              @params.commissioning,
-                mobile:                     @params.mobile
-                })
-              return @device
-            else
-              status_403
-            end
+          device = Device.find(permitted_params[:id])
+          if device.updatable_by?(current_user)
+            device.update(permitted_params)
+            device
           else
-            status_401
+            status_403
           end
         end
 
@@ -130,17 +103,14 @@ module API
         params do
           requires :id, type: String, desc: "Device ID"
         end
+        oauth2 :full
         delete ':id' do
-          if current_user
-            @device = Device.find(params[:id])
-            if @device.deletable_by?(current_user)
-              @device.destroy
-              status 200
-            else
-              status_403
-            end
+          device = Device.find(permitted_params[:id])
+          if device.deletable_by?(current_user)
+            device.destroy
+            status 204
           else
-            status_401
+            status_403
           end
         end
 

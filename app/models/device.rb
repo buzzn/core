@@ -27,6 +27,18 @@ class Device < ActiveRecord::Base
     self.with_role(:manager, user)
   }
 
+  scope :readable_by, -> (user) do
+    if user
+      if user.has_role?(:admin)
+        where(nil)
+      else
+        where("metering_points.id = devices.metering_point_id and devices.mode = 'out' and metering_points.group_id is not null or (users_roles.user_id = ? or users_roles.user_id in (?))", user.id, user.friends.select('id')).joins("INNER JOIN roles ON roles.resource_id = devices.id AND roles.resource_type = '#{Device}' INNER JOIN users_roles ON users_roles.role_id = roles.id").joins('LEFT OUTER JOIN metering_points ON metering_points.id = devices.metering_point_id')
+      end
+    else
+      where("1=0") #empty set
+    end
+  end
+
   def self.search_attributes
     [:manufacturer_name, :manufacturer_product_name, :mode, :category,
      :shop_link]
