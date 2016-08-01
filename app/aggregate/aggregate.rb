@@ -381,11 +381,15 @@ private
 
   def document_to_hash(metering_point, document, factor=1, negativ=false)
     item = {'timestamp' => document['timestamp']}
-    x_ = metering_point.input? ? 'a_' : 'b_'
+    if metering_point.smart?
+      x_ = metering_point.input? ? 'a_' : 'b_'
+    else
+      x_ = 'a_'
+    end
     ["energy_#{x_}milliwatt_hour", "power_#{x_}milliwatt" ].each do |key|
       if document[key]
         value = document[key] * factor
-        value * -1 if negativ
+        value *= -1 if negativ
         item.merge!(key.gsub(x_, '') => value)
       end
     end
