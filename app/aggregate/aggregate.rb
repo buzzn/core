@@ -247,7 +247,7 @@ private
 
 
   def factor_from_metering_point(metering_point)
-     metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/1000) : 1
+     metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/1000.0) : 1
   end
 
   def required_register(metering_point)
@@ -381,11 +381,15 @@ private
 
   def document_to_hash(metering_point, document, factor=1, negativ=false)
     item = {'timestamp' => document['timestamp']}
-    x_ = metering_point.input? ? 'a_' : 'b_'
+    if metering_point.smart?
+      x_ = metering_point.input? ? 'a_' : 'b_'
+    else
+      x_ = 'a_'
+    end
     ["energy_#{x_}milliwatt_hour", "power_#{x_}milliwatt" ].each do |key|
       if document[key]
         value = document[key] * factor
-        value * -1 if negativ
+        value *= -1 if negativ
         item.merge!(key.gsub(x_, '') => value)
       end
     end
@@ -444,21 +448,21 @@ private
       case type_of_meter
       when 'in'
         key_a   = "#{key}_a_#{unit}"
-        value_a = (result[1]*1000).to_i
+        value_a = (result[1]).to_i
         value_a *= -1 if negativ
         item.merge!(key_a => value_a)
       when 'out'
         key_b   = "#{key}_b_#{unit}"
-        value_b = (result[1]*1000).to_i
+        value_b = (result[1]).to_i
         value_b *= -1 if negativ
         item.merge!(key_b => value_b)
       when 'in_out'
         key_a   = "#{key}_a_#{unit}"
-        value_a = (result[1]*1000).to_i
+        value_a = (result[1]).to_i
         value_a *= -1 if negativ
         item.merge!(key_a => value_a)
         key_b   = "#{key}_b_#{unit}"
-        value_b = (result[2]*1000).to_i
+        value_b = (result[2]).to_i
         value_b *= -1 if negativ
         item.merge!(key_b => value_b)
       end

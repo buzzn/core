@@ -123,12 +123,13 @@ class ProfilesController < ApplicationController
 
   def access_tokens
     @profile = Profile.find(params[:id])
+    authorize_action_for @profile
     @access_tokens = Doorkeeper::AccessToken.where(
                           expires_in: nil,
                           resource_owner_id: @profile.user.id
                           )
   end
-
+  authority_actions :access_tokens => 'update'
 
 
 private

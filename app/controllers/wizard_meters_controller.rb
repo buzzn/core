@@ -90,7 +90,6 @@ class WizardMetersController  < ApplicationController
       #@meter.metering_points = @metering_point_ids.each{|id| MeteringPoint.find(id)}
 
       if @meter.save
-        byebug
         if params[:meter][:smartmeter] == "1"
           #meter valid, now check contract
 
