@@ -4,17 +4,13 @@ module API
       include API::V1::Defaults
       resource :devices do
 
-        before do
-          doorkeeper_authorize!
-        end
-
         desc "Return all Device"
         params do
-          requires :search, type: String, desc: "Search query using #{Base.join(Device.search_attributes)}"
+          optional :search, type: String, desc: "Search query using #{Base.join(Device.search_attributes)}"
         end
         paginate(per_page: per_page=10)
         oauth2 false
-        get ":id" do
+        get do
           per_page     = params[:per_page] || per_page
           page         = params[:page] || 1
           devices = Device.filter(params[:search]).readable_by(current_user)
@@ -47,8 +43,8 @@ module API
         params do
           requires :manufacturer_name,         type: String
           requires :manufacturer_product_name, type: String
-          requires :mode,                      type: String, values: Device.modes, default: "in"
-          requires :readable,                  type: String, values: Device.readables, default: "world"
+          optional :mode,                      type: String, values: Device.modes, default: "in"
+          optional :readable,                  type: String, values: Device.readables, default: "world"
           requires :category,                  type: String
           requires :watt_peak,                 type: Integer
           optional :commissioning,             type: DateTime
@@ -76,14 +72,14 @@ module API
         desc "Update a Device."
         params do
           requires :id,                        type: String, desc: "Device ID."
-          requires :manufacturer_name,         type: String
-          requires :manufacturer_product_name, type: String
-          requires :mode,                      type: String, values: Device.modes
-          requires :readable,                  type: String, values: Device.readables
-          requires :category,                  type: String
-          requires :watt_peak,                 type: Integer
+          optional :manufacturer_name,         type: String
+          optional :manufacturer_product_name, type: String
+          optional :mode,                      type: String, values: Device.modes
+          optional :readable,                  type: String, values: Device.readables
+          optional :category,                  type: String
+          optional :watt_peak,                 type: Integer
           optional :commissioning,             type: DateTime
-          requires :mobile,                    type: Boolean
+          optional :mobile,                    type: Boolean
         end
         oauth2 :full
         put ':id' do
@@ -92,7 +88,7 @@ module API
             device.update(permitted_params)
             device
           else
-            status_403
+            status 403
           end
         end
 
@@ -110,7 +106,7 @@ module API
             device.destroy
             status 204
           else
-            status_403
+            status 403
           end
         end
 
