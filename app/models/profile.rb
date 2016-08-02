@@ -16,7 +16,7 @@ class Profile < ActiveRecord::Base
   validates :first_name, presence: true, length: { in: 2..30 }
   validates :last_name, presence: true, length: { in: 2..30 }
 
-  #validates_acceptance_of :terms, accept: true
+  validates :terms, acceptance: true
 
   validates :image, :file_size => {
     :maximum => 2.megabytes.to_i

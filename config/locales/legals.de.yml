@@ -1,0 +1,636 @@
+de:
+  data_protection_guidelines_html: "<h3>buzzn Datenschutzrichtlinie (beta)</h3>
+    <p><strong>Pr&auml;ambel</strong></p>
+    <p>buzzn ist eine Social Energy Platform, die Menschen &uuml;ber Strom miteinander verbindet. &Uuml;ber buzzn teilen Menschen elektrische Energie, Kaufkraft, Wissen und das gemeinsame Streben nach einer &bdquo;Energiewende&ldquo;, also einem neuen, dezentralen und &ouml;kologischen Energiesystem. </p>
+    <p>Mit anderen Worten: buzzn soll ein konviviales Werkzeug sein, das es jedem Mitmacher erm&ouml;glicht, gemeinsam mit anderen die Energiewende von unten voranzutreiben. Jenseits der Strukturen der alten, wachstumsorientierten Energieindustrie. Bitte setze uns in Kenntnis, falls Du der Ansicht bist, dass buzzn diesem Anspruch nicht gerecht wird.</p>
+    <p>Die echte, dezentrale Energiewende ist ein Kraftakt, der nur gelingen kann, wenn viele Menschen sich in dezentralen Gemeinschaften (Communities) zusammentun, um Ziele wie energetische Autarkie, Suffizienz, Resilienz etc. zu erreichen.</p>
+    <p>Um effektiv wirken zu k&ouml;nnen, brauchen diese Gemeinschaften Vernetzung. Vernetzung bedeutet, dass die Mitmacher Daten nicht nur empfangen, sondern auch m&ouml;glichst freigiebig mit anderen teilen. buzzn soll dies erm&ouml;glichen. Denn nur so entstehen die n&ouml;tige Motivation, der Mut und das Wissen zum Handeln. </p>
+    <p>Gleichzeitig m&uuml;ssen die Privatsph&auml;re sowie das Recht auf informationelle Selbstbestimmung jedes Mitmachers gewahrt sein. </p>
+    <p>Wie sich bei buzzn die Gratwanderung zwischen Freiheit des Informationsflusses und Sicherheit der Mitmacher gestaltet, dar&uuml;ber soll diese Datenrichtlinie Auskunft geben.</p>
+    <p><strong>Inhaltsverzeichnis</strong></p>
+    <div dir='ltr'>
+    <p>1. Zielsetzung und verantwortliche Stelle</p>
+    <p>3. Grunds&auml;tzliches zur Datenverarbeitung und Datensicherheit</p>
+    <p>4. Erhebung, Nutzung und Weiterleitung personenbezogener Daten</p>
+    <p>5. Erhebung und Verwendung von Energiedaten</p>
+    <p>6. Registrierung und K&uuml;ndigung</p>
+    <p>7. Erhebung von Zugriffsdaten</p>
+    <p>8. Cookies &amp; Reichweitenmessung</p>
+    <p>9. Reichweitenmessung: Google Analytics</p>
+    <p>10. Widerruf, &Auml;nderungen, Berichtigungen und Aktualisierungen</p>
+    <p>11. &Auml;nderungen der Datenschutzrichtlinie</p>
+    <p><br /><br /></p>
+    </div>
+    <ol>
+    <li>
+    <p>Zielsetzung und verantwortliche Stelle</p>
+    <ol>
+    <li>
+    <p>Diese Datenschutzrichtlinie kl&auml;rt auf &uuml;ber die Art, den Umfang und Zweck der Erhebung und Verwendung von personenbezogenen Daten innerhalb von buzzn und der im Rahmen von buzzn angebotenen Websites, Funktionen und Leistungen unabh&auml;ngig von den verwendeten Domains, Systemen, Platformen und Ger&auml;ten (z. B. Desktop oder Mobile), auf denen der Dienst ausgef&uuml;hrt wird.</p>
+    </li>
+    <li>
+    <p>Anbieterin von buzzn und die datenschutzrechtlich verantwortliche Stelle ist die buzzn GmbH, Combinat 56, Adams-Lehmann-Stra&szlig;e 56, 80797 M&uuml;nchen, <u><a href='https://app.buzzn.net/pages/impressum/'>https://app.buzzn.net/pages/impressum/</a></u> (nachfolgend bezeichnet als &bdquo;buzzn GmbH&ldquo;, 'Anbieterin', &bdquo;wir&ldquo; oder &bdquo;uns&ldquo;).</p>
+    </li>
+    <li>
+    <p>Die im Rahmen dieser Datenschutzrichtlinie verwendeten Begrifflichkeiten, wie z. B. &bdquo;Nutzer&ldquo; sind geschlechtsneutral zu verstehen.</p>
+    </li>
+    <li>
+    <p>Neben dieser Datenschutzrichtlinie werden die Beziehungen zwischen der buzzn GmbH und den Nutzern einerseits sowie den Nutzern untereinander andererseits durch die Nutzungsbedingungen von buzzn geregelt: <u><a href='https://app.buzzn.net/pages/terms-of-use/'>https://app.buzzn.net/pages/terms-of-use/</a></u>.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p>Was sind &bdquo;personenbezogene Daten&ldquo; im Sinne dieser Richtlinie?</p>
+    <ol>
+    <li>
+    <p>&bdquo;Daten&ldquo; kommt aus dem Lateinischen und bezeichnet etwas Gegebenes. Mittels Kommunikation wird aus Daten Information. Mit &bdquo;Daten&ldquo; bezeichnen wir allgemein s&auml;mtliche Daten, die jemand bei buzzn abrufen oder &uuml;ber buzzn bereitstellen kann. Dazu z&auml;hlen insbesondere:</p>
+    <ul>
+    <li>
+    <p>Energiedaten, z. B. Leistungs- und Arbeitswerte des Stromverbrauchs;</p>
+    </li>
+    <li>
+    <p>Ger&auml;tedaten, z. B. Hersteller, Typ, Leistung einer Stromerzeugungsanlage;</p>
+    </li>
+    <li>
+    <p>Kontakte und Netzwerke, z. B. Freunde, Z&auml;hlpunkt- und Gruppenzugeh&ouml;rigkeit;</p>
+    </li>
+    <li>
+    <p>Personendaten, z. B. Name, Anschrift, Mailadresse, Kontoverbindung,</p>
+    </li>
+    <li>
+    <p>Benutzerkontodaten, d. h. Benutzername bzw. Mailadresse und Passwort;</p>
+    </li>
+    <li>
+    <p>Meinungen und Vorlieben, z. B. Kommentare, Likes, Posts, Shares;</p>
+    </li>
+    <li>
+    <p>Aktivit&auml;ten, z. B. Bau und Betrieb einer Stromerzeugungsanlage;</p>
+    </li>
+    <li>
+    <p>Zahlungsdaten.</p>
+    </li>
+    </ul>
+    </li>
+    <li>
+    <p>Personenbezogene Daten sind Einzelangaben &uuml;ber pers&ouml;nliche oder sachliche Verh&auml;ltnisse einer bestimmten oder bestimmbaren nat&uuml;rlichen Person, d.h. Daten, die einen R&uuml;ckschluss auf eine Person erlauben. Auf die Art der Daten kommt es hierbei nicht an, so dass z. B. Energiedaten, die einer Person zugeordnet werden k&ouml;nnen, personenbezogene Daten darstellen. Erst wenn ein R&uuml;ckschluss auf eine Person nicht m&ouml;glich ist, z. B. wenn Energiedaten unabh&auml;ngig von der Zuordnung gespeichert werden (z. B. als aggregierte, also zusammengefasste Werte), wird der Personenbezug aufgehoben und es handelt sich um anonyme Daten.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p>Grunds&auml;tzliches zur Datenverarbeitung und Datensicherheit</p>
+    <ol>
+    <li>
+    <p>Die buzzn GmbH erhebt, verarbeitet und nutzt personenbezogene Daten der Nutzer nur unter Einhaltung der einschl&auml;gigen Datenschutzbestimmungen, also nur beim Vorliegen einer gesetzlichen Erlaubnis oder Vorliegen einer Einwilligung. </p>
+    </li>
+    <li>
+    <p>Die Daten der Nutzer werden nur dann an Dritte weitergeleitet, wenn dies gesetzlich erlaubt ist oder ein Nutzer in die Weiterleitung eingewilligt hat. Das ist zum Beispiel der Fall, wenn die Weiterleitung der Daten der Erf&uuml;llung vertraglicher Verpflichtungen gegen&uuml;ber dem Nutzer dient oder falls die Daten von zust&auml;ndigen Stellen wie Strafverfolgungsbeh&ouml;rden angefordert werden.</p>
+    </li>
+    <li>
+    <p>buzzn ist ein Werkzeug f&uuml;r die dezentrale Energiewende und nicht f&uuml;r die Bereicherung einzelner, deshalb wird die buzzn GmbH die Daten der Nutzer niemals aus finanziellen Motiven weitergeben oder verkaufen. </p>
+    </li>
+    <li>
+    <p>Die buzzn GmbH trifft organisatorische, vertragliche und technische Sicherheitsma&szlig;nahmen, um sicher zu stellen, dass die Vorschriften der Datenschutzgesetze eingehalten werden und damit die durch die buzzn GmbH verwalteten Daten gegen zuf&auml;llige oder vors&auml;tzliche Manipulationen, Verlust, Zerst&ouml;rung oder gegen den Zugriff unberechtigter Personen zu sch&uuml;tzen. Ein vollst&auml;ndiger Schutz z. B. gegen Kriminelle und Hacker ist auch bei modernsten Sicherheitssystemen leider nicht garantierbar.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p>Erhebung, Verarbeitung und Nutzung personenbezogener Daten</p>
+    <ol>
+    <li>
+    <p>Die buzzn GmbH erhebt, verarbeitet und nutzt personenbezogene Daten zu dem Zweck, die Nutzer beim Erreichen ihrer energetischen Ziele in einem sozialen Kontext zu unterst&uuml;tzen.</p>
+    </li>
+    <li>
+    <p>Die personenbezogenen Daten werden, neben den ausdr&uuml;cklich in diesem Vertrag genannten Verwendungen, f&uuml;r die folgenden Zwecke verarbeitet und genutzt:</p>
+    <ul>
+    <li>
+    <p>Zurverf&uuml;gungstellung und Ausf&uuml;hrung der Dienst-, Service- und Nutzerleistungen der buzzn GmbH (z. B. zur Stromabrechnung, zur Pflege von Adress- und Kontodaten oder zur Auswertung der Poolauslastung).</p>
+    </li>
+    <li>
+    <p>Gew&auml;hrleistung eines effektiven Kundendienstes und technischen Supports. Bei Kontaktaufnahme mit der buzzn GmbH werden die Angaben zwecks Bearbeitung der Anfrage sowie f&uuml;r den Fall, dass Anschlussfragen entstehen, gespeichert.</p>
+    </li>
+    <li>
+    <p>Technische, community- und gesch&auml;ftsbezogene Benachrichtigungen betreffend das Angebot der buzzn GmbH.</p>
+    </li>
+    </ul>
+    </li>
+    <li>
+    <p>Des Weiteren verwendet die buzzn GmbH die Daten f&uuml;r die Forschung zum Nutzen der dezentralen Energiewende, sofern dies gesetzlich erlaubt ist oder eine Einwilligung der Nutzer vorliegt.</p>
+    </li>
+    <li>
+    <p>Die buzzn GmbH &uuml;bermittelt die Daten der Nutzer an Dritte nur, wenn dies f&uuml;r Abrechnungszwecke notwendig ist (z. B. an einen Zahlungsdienstleister) oder f&uuml;r andere Zwecke, wenn diese notwendig sind, um die vertraglichen Verpflichtungen der buzzn GmbH gegen&uuml;ber den Nutzern zu erf&uuml;llen. Sofern die &Uuml;bermittlung f&uuml;r Nutzer nicht erkennbar sein sollte, wird die buzzn GmbH die Nutzer gesondert darauf hinweisen.</p>
+    </li>
+    <li>
+    <p>Bei der Kontaktaufnahme mit der buzzn GmbH (per Kontaktformular oder E-Mail) werden die Angaben des Nutzers zwecks Bearbeitung der Anfrage sowie f&uuml;r den Fall, dass Anschlussfragen entstehen, gespeichert.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p>Erhebung, Verarbeitung und Verwendung von Energiedaten</p>
+    <ol>
+    <li>
+    <p>Bei den von der buzzn GmbH erhobenen, verarbeiteten und genutzten Daten geht es naturgem&auml;&szlig; vor allem um Messdaten, insbesondere solche Daten, die von sog. intelligenten Messsystemen erzeugt werden.</p>
+    </li>
+    <li>
+    <p>Wie das vom Nutzer verwendete intelligente Messsystem funktioniert und aufgebaut ist, ist bei dessen Anbieter zu erfragen und ist nicht Teil dieser Datenschutzrichtlinie, da buzzn diese Daten nur &uuml;ber eine Schnittstelle ausliest und nicht dauerhaft speichert.</p>
+    </li>
+    <li>
+    <p>Sollte der Nutzer kein intelligentes Messsystem verwenden, hat er die M&ouml;glichkeit, seine Energiedaten manuell einzugeben.</p>
+    </li>
+    <li>
+    <p>buzzn greift auf die Energiedaten des Nutzers zu und liest diese automatisiert in regelm&auml;&szlig;igen Abst&auml;nden aus. Anschlie&szlig;end werden die Energiedaten &uuml;ber die Platform visualisiert oder weiter verarbeitet, z. B. zur Berechnung von Summen oder Statistiken.</p>
+    </li>
+    <li>
+    <p>Verwendet der Nutzer ein intelligentes Messsystem, das die Messwerte aktiv an buzzn sendet, so werden diese dort dauerhaft gespeichert. Diese Datenbank wird in regelm&auml;&szlig;igen Abst&auml;nden gesichert sowie mit den n&ouml;tigen Softwareaktualisierungen auf dem neuesten Stand gehalten. Ein System Monitoring der buzzn GmbH pr&uuml;ft die Server rund um die Uhr, wodurch auf sicherheitsrelevante Vorf&auml;lle sofort reagiert werden kann.</p>
+    </li>
+    <li>
+    <p>Der Nutzer hat die M&ouml;glichkeit sich die Daten mittels der buzzn Platform im pers&ouml;nlichen Bereich, gesch&uuml;tzt durch Nutzernamen und Passwort, anzeigen zu lassen. Die &Uuml;bertragung erfolgt verschl&uuml;sselt per SSL/TLS zwischen Webbrowser und Server. Nur autorisiertes Personal hat Zugriff auf die Datenbank</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p>Registrierung und K&uuml;ndigung</p>
+    <ol>
+    <li>
+    <p>Nutzer entscheiden grunds&auml;tzlich selbst, welche Daten sie &uuml;ber sich preisgeben und wem diese zug&auml;nglich sind. Zum Beispiel, wenn Nutzer in Benutzerprofilen, Kommentarfeldern, o.&auml;. ihren Namen angeben. </p>
+    </li>
+    <li>
+    <p>Im Rahmen der Registrierung durch die Nutzer werden die folgenden Daten erhoben:</p>
+    <ul>
+    <li>
+    <p>Vorname und Nachname</p>
+    </li>
+    <li>
+    <p>Email-Adresse (ist f&uuml;r andere Nutzer nicht sichtbar)</p>
+    </li>
+    <li>
+    <p>Passwort (wird verschl&uuml;sselt gespeichert)</p>
+    </li>
+    </ul>
+    </li>
+    <li>
+    <p>Die buzzn GmbH kann ihren Kunden ferner erm&ouml;glichen, die Vertragsdaten (Stammdaten und Energiedaten) aus dem Stromvertrag mit der buzzn GmbH &uuml;ber die Platform zu verwalten. Hierzu ist eine Einwilligung des Nutzers notwendig, die durch die Angabe seiner Kundennummer oder eine vergleichbare ausdr&uuml;ckliche Erkl&auml;rung erteilt wird.</p>
+    </li>
+    <li>
+    <p>&Uuml;ber diese vorstehend genannten Daten hinaus entscheidet jeder Nutzer selbst &uuml;ber weitere Angaben.</p>
+    </li>
+    <li>
+    <p>Nutzer k&ouml;nnen durch Einstellungen in ihrem Profil entscheiden, welche Daten sie welcher Nutzergruppe zur Verf&uuml;gung stellen wollen.</p>
+    </li>
+    <li>
+    <p>Mit erfolgter K&uuml;ndigung ist die buzzn GmbH berechtigt, die Benutzerprofile der Nutzer zu l&ouml;schen. In Ausnahmef&auml;llen k&ouml;nnen Inhalte der Nutzer auf buzzn verbleiben, wenn dies aus R&uuml;cksicht auf andere Nutzer geboten erscheint. Dies ist zum Beispiel der Fall bei Diskussionen, damit Gespr&auml;che, Ratschl&auml;ge o.&auml;. ihren Sinn nicht verlieren oder umkehren. Die buzzn GmbH wird verbliebene Inhalte der Nutzer anonymisieren, d.h. den Namen des ausgeschiedenen Nutzers entfernen. Die Nutzer k&ouml;nnen dar&uuml;ber hinaus die L&ouml;schung einzelner Inhalte geltend machen. </p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p>Erhebung , Verarbeitung und Nutzung von Zugriffsdaten</p>
+    <ol>
+    <li>
+    <p>Die buzzn GmbH erhebt Daten &uuml;ber jeden Zugriff auf den Server, auf dem sich dieser Dienst befindet (so genannte Serverlogfiles). Zu den Zugriffsdaten geh&ouml;ren Name der abgerufenen Webseite, Datei, Datum und Uhrzeit des Abrufs, &uuml;bertragene Datenmenge, Meldung &uuml;ber erfolgreichen Abruf, Browsertyp nebst Version, das Betriebssystem des Nutzers, Referrer URL (die zuvor besuchte Seite), IP-Adresse und der anfragende Provider.</p>
+    </li>
+    <li>
+    <p>Die buzzn GmbH erhebt, verarbeitet und nutzt die Protokolldaten ohne Zuordnung zur Person des Nutzers oder sonstiger Profilerstellung entsprechend den gesetzlichen Bestimmungen nur f&uuml;r statistische Auswertungen zum Zweck des Betriebs, der Sicherheit und der Optimierung von buzzn. Die buzzn GmbH beh&auml;lt sich jedoch vor, die Protokolldaten nachtr&auml;glich zu &uuml;berpr&uuml;fen, wenn aufgrund konkreter Anhaltspunkte der berechtigte Verdacht einer rechtswidrigen Nutzung besteht.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p>Cookies &amp; Reichweitenmessung</p>
+    <ol>
+    <li>
+    <p>Cookies sind Informationen, die von unserem Webserver oder Webservern Dritter an die Web-Browser der Nutzer &uuml;bertragen und dort f&uuml;r einen sp&auml;teren Abruf gespeichert werden. &Uuml;ber den Einsatz von Cookies im Rahmen pseudonymer Reichweitenmessung werden die Nutzer im Rahmen dieser Datenschutzrichtlinie informiert. </p>
+    </li>
+    <li>
+    <p>Die Betrachtung des Onlineangebotes ist auch unter Ausschluss von Cookies m&ouml;glich. Falls die Nutzer nicht m&ouml;chten, dass Cookies auf ihrem Rechner gespeichert werden, werden sie gebeten, die entsprechende Option in den Systemeinstellungen ihres Browsers zu deaktivieren. Gespeicherte Cookies k&ouml;nnen in den Systemeinstellungen des Browsers gel&ouml;scht werden. Der Ausschluss von Cookies kann zu Funktionseinschr&auml;nkungen des Onlineangebotes f&uuml;hren. </p>
+    </li>
+    <li>
+    <p>Es besteht die M&ouml;glichkeit, viele Online-Anzeigen-Cookies von Unternehmen &uuml;ber die US-amerikanische Seite <u><a href='http://www.aboutads.info/choices/'>http://www.aboutads.info/choices/</a></u> oder die EU-Seite <u><a href='http://www.youronlinechoices.com/uk/your-ad-choices/'>http://www.youronlinechoices.com/uk/your-ad-choices/</a></u> zu verwalten.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p>Reichweitenmessung: Google Analytics </p>
+    <ol>
+    <li>
+    <p>Wir setzen Google Analytics, einen Webanalysedienst der Google Inc. (&bdquo;Google&ldquo;) ein. Google verwendet Cookies, Textdateien, die auf dem Computer der Nutzer gespeichert werden und die eine Analyse der Benutzung dieses Onlineangebotes erm&ouml;glichen. Die durch das Cookie erzeugten Informationen &uuml;ber Benutzung des Onlineangebotes durch die Nutzer werden in der Regel an einen Server von Google in den USA &uuml;bertragen und dort gespeichert.</p>
+    </li>
+    <li>
+    <p>Google wird diese Informationen in unserem Auftrag benutzen, um die Nutzung unseres Onlineangebotes durch die Nutzer auszuwerten, um Reports &uuml;ber die Aktivit&auml;ten innerhalb dieses Onlineangebotes zusammenzustellen und um weitere mit der Nutzung dieses Onlineangebotes und der Internetnutzung verbundene Dienstleistungen uns gegen&uuml;ber zu erbringen.</p>
+    </li>
+    <li>
+    <p>Wir setzen Google Analytics nur mit aktivierter IP-Anonymisierung ein. Das bedeutet, die IP-Adresse der Nutzer wird von Google innerhalb von Mitgliedstaaten der Europ&auml;ischen Union oder in anderen Vertragsstaaten des Abkommens &uuml;ber den Europ&auml;ischen Wirtschaftsraum gek&uuml;rzt. Nur in Ausnahmef&auml;llen wird die volle IP-Adresse an einen Server von Google in den USA &uuml;bertragen und dort gek&uuml;rzt. </p>
+    </li>
+    <li>
+    <p>Die von dem Browser des Nutzers &uuml;bermittelte IP-Adresse wird nicht mit anderen Daten von Google zusammengef&uuml;hrt. Die Nutzer k&ouml;nnen die Speicherung der Cookies durch eine entsprechende Einstellung ihrer Browser-Software verhindern; die Nutzer k&ouml;nnen dar&uuml;ber hinaus die Erfassung der durch das Cookie erzeugten und auf ihre Nutzung des Onlineangebotes bezogenen Daten an Google sowie die Verarbeitung dieser Daten durch Google verhindern, indem sie das unter dem folgenden Link verf&uuml;gbare Browser-Plugin herunterladen und installieren: <u><a href='http://tools.google.com/dlpage/gaoptout?hl=de'>http://tools.google.com/dlpage/gaoptout?hl=de</a></u>.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p>Widerruf, &Auml;nderungen, Berichtigungen und Aktualisierungen</p>
+    <ol>
+    <li>
+    <p>Nutzer haben das Recht, &uuml;ber die personenbezogenen Daten, die von uns &uuml;ber sie gespeichert wurden, auf Antrag unentgeltlich Auskunft zu erhalten. Als Kontaktadresse steht vorrangig die E-Mailadresse <a href='mailto:datenschutz@buzzn.net'>datenschutz &auml;t buzzn.net</a> zur Verf&uuml;gung. Weitere Kontaktdaten sind dem Impressum zu entnehmen.</p>
+    </li>
+    <li>
+    <p>Zus&auml;tzlich haben die Nutzer das Recht auf Berichtigung unrichtiger Daten, Widerruf von Einwilligungen, Sperrung und L&ouml;schung ihrer personenbezogenen Daten, soweit dem keine gesetzliche Aufbewahrungspflicht entgegensteht.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p>&Auml;nderungen der Datenschutzrichtlinie</p>
+    <ol>
+    <li>
+    <p>Die buzzn GmbH beh&auml;lt sich vor, die Datenschutzrichtlinie zu &auml;ndern, um sie an ge&auml;nderte Rechtslagen oder bei &Auml;nderungen von buzzn sowie der Datenverarbeitung anzupassen. </p>
+    </li>
+    <li>
+    <p>Die Nutzer werden daher gebeten, sich regelm&auml;&szlig;ig &uuml;ber den Inhalt der Datenschutzrichlinie zu informieren, insbesondere wenn sie erneut personenbezogene Informationen mitteilen.</p>
+    </li>
+    </ol>
+    </li>
+    </ol>
+    <p>Stand: 25.07.2016</p>"
+  terms_of_use_html: "<h3>buzzn Nutzungsbedingungen (beta)</h3>
+    <p><strong>Pr&auml;ambel</strong></p>
+    <p>buzzn ist eine Social Energy Platform, die Menschen &uuml;ber Strom miteinander verbindet. &Uuml;ber buzzn teilen Menschen elektrische Energie, Kaufkraft, Wissen und das gemeinsame Streben nach einer &bdquo;Energiewende&ldquo;, also einem neuen, dezentralen und &ouml;kologischen Energiesystem.</p>
+    <p>Mit anderen Worten: buzzn soll ein konviviales Werkzeug sein, das es jedem Mitmacher erm&ouml;glicht, gemeinsam mit anderen die Energiewende von unten voranzutreiben. Jenseits der Strukturen der alten, wachstumsorientierten Energieindustrie.</p>
+    <p>Die nachfolgenden Nutzungsbedingungen enthalten Regelungen zur Nutzung der Platform sowie eine Beschreibung der vertraglichen Beziehungen zwischen den Nutzern untereinander und im Verh&auml;ltnis zu der buzzn GmbH. Die Nutzungsbedingungen sollen den n&ouml;tigen Rechtsrahmen und Transparenz bieten, um einen fairen, offenen und sicheren Austausch unter den buzzn Nutzern zu gew&auml;hrleisten.</p>
+    <p><br /><br /></p>
+    <p><strong>Inhaltsverzeichnis</strong></p>
+    <div dir='ltr'>
+    <p>1. Geltung der Nutzungsbedingungen</p>
+    <p>2. Funktion der buzzn Platform und Verh&auml;ltnis zu Stromvertr&auml;gen</p>
+    <p>3. Registrierung und Vertragsschluss</p>
+    <p>4. Pflege von Adress- und Kontaktdaten</p>
+    <p>5. Verantwortung f&uuml;r Inhalte und Informationen</p>
+    <p>6. Pflichten der Nutzer</p>
+    <p>8. Sanktionen</p>
+    <p>9. Freistellung</p>
+    <p>10. Nutzungsberechtigung</p>
+    <p>11. Einr&auml;umung von Nutzungsrechten durch Nutzer</p>
+    <p>12. Verf&uuml;gbarkeit, Systemintegrit&auml;t und Gew&auml;hrleistung</p>
+    <p>13. K&uuml;ndigung</p>
+    <p>15. Haftungsbeschr&auml;nkung</p>
+    <p>16. Vertraulichkeit und Datenschutz</p>
+    <p>17. &Auml;nderung der Nutzungsbedingungen</p>
+    <p>18. Schlussbestimmungen</p>
+    <p><br /><br /></p>
+    </div>
+    <p><br /><br /></p>
+    <ol>
+    <li>
+    <p><strong>Geltung der Nutzungsbedingungen</strong></p>
+    <ol>
+    <li>
+    <p>Gegenstand dieser Nutzungsbedingungen ist die Nutzung der Social Energy Platform &bdquo;buzzn&ldquo; (nachfolgend bezeichnet als &bdquo;buzzn&ldquo;, &bdquo;buzzn Platform&ldquo; oder &bdquo;Platform&ldquo;) und in deren Rahmen angebotene Webseiten, Funktionen und Leistungen, unabh&auml;ngig von den verwendeten Domains, Systemen, Platformen und Ger&auml;ten (z. B. Desktop oder Mobile), auf denen buzzn ausgef&uuml;hrt wird.</p>
+    </li>
+    <li>
+    <p>Anbieter von buzzn ist die buzzn GmbH, Combinat 56, Adams-Lehmann-Stra&szlig;e 56, 80797 M&uuml;nchen, <u><a href='https://www.buzzn.net/impressum/'>https://app.buzzn.net/impressum/</a></u>; (nachfolgend bezeichnet als 'buzzn GmbH', &bdquo;wir&ldquo; oder &bdquo;uns&ldquo;).</p>
+    </li>
+    <li>
+    <p>Diese Nutzungsbedingungen regeln die rechtlichen Beziehungen der buzzn Nutzer untereinander sowie deren Beziehungen im Verh&auml;ltnis zu der buzzn GmbH. Bei den buzzn Nutzern handelt es sich sowohl um die Kunden, d. h. Stromgeber und Stromnehmer der buzzn GmbH, als auch um Nichtkunden, die buzzn nutzen (nachfolgend bezeichnet als &bdquo;Free Accounts&ldquo;).</p>
+    </li>
+    <li>
+    <p>Die im Rahmen dieser Nutzungsbedingungen verwendeten Begrifflichkeiten, wie z. B. &bdquo;Nutzer&ldquo; sind geschlechtsneutral zu verstehen.</p>
+    </li>
+    <li>
+    <p>Mit der Nutzung von buzzn erkl&auml;ren sich die Nutzer mit diesen Nutzungsbedingungen einverstanden. Abweichende Bedingungen der Nutzer werden nicht anerkannt, es sei denn, die buzzn GmbH stimmt ihrer Geltung ausdr&uuml;cklich schriftlich zu.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><strong>Funktion von buzzn und Abgrenzung zu Stromvertr&auml;gen</strong></p>
+    <ol>
+    <li>
+    <p>Der Schwerpunkt von buzzn liegt in der Bildung von Gruppen durch Stromgeber, in denen sie die Produktion von Strom sowie dessen Verbrauch durch die der Gruppe zugeordneten Stromnehmer visualisieren und kommunizieren k&ouml;nnen.</p>
+    </li>
+    <li>
+    <p>Neben dem Betrieb der buzzn Platform schlie&szlig;t die buzzn GmbH als Mittelsmann auch Vertr&auml;ge einerseits mit Stromgebern und andererseits mit Stromnehmern (nachfolgend zusammenfassend bezeichnet als 'Kunden'). buzzn kann von den Kunden der buzzn GmbH genutzt werden, um den Stromaustausch zu visualisieren, durchzuf&uuml;hren und Informationen untereinander auszutauschen. Die buzzn Platform ist jedoch ein von den Stromvertr&auml;gen mit den Kunden unabh&auml;ngiges und selbstst&auml;ndiges Angebot der buzzn GmbH.</p>
+    </li>
+    <li>
+    <p>Die Stromnehmer, die mit ihren Bezugsstellen Gruppen auf der Platform beitreten, beziehen zugleich ihren Strom von dem Stromgeber dieser Gruppe der in der Regel auch der Administrator der Gruppe ist (nachfolgend auch bezeichnet als &bdquo;Gruppen-Administrator&ldquo;). Eine Gruppe kann auch durch mehrere Stromgeber versorgt werden.</p>
+    </li>
+    <li>
+    <p>In Rahmen eines Free Accounts ist es m&ouml;glich, dass Personen buzzn nutzen, ohne ein Stromvertragsverh&auml;ltnis zur buzzn GmbH zu haben. Der Funktionsumfang von Free Accounts kann jedoch eine eingeschr&auml;nkte Funktionalit&auml;t bieten.</p>
+    </li>
+    <li>
+    <p>Sofern innerhalb der buzzn Platform der Abschluss eines Stromvertrages als Stromgeber oder Stromnehmer angebahnt oder abgeschlossen wird, erfolgt dies auf Grundlage der Vertrags-AGB der buzzn GmbH (<u><a href='https://www.buzzn.net/agb-fuer-stromnehmer/'>https://www.buzzn.net/agb </a></u>). D. h. der Vertragsschluss kann zwar in die buzzn Platform eingebunden werden, ist jedoch kein Teil des eigentlichen Platformangebotes, sondern stellt ein selbst&auml;ndiges Vertragsangebot dar. Diese Trennung wird f&uuml;r die Nutzer im Rahmen derartiger Angebote entsprechend den gesetzlichen Informationspflichten erkennbar sein.</p>
+    </li>
+    <li>
+    <p>Die buzzn GmbH beh&auml;lt sich vor, die Leistungen zu &auml;ndern oder abweichende Leistungen anzubieten, soweit dies dem Nutzer zumutbar ist und</p>
+    </li>
+    </ol>
+    </li>
+    </ol>
+    <ul>
+    <ul>
+    <ul>
+    <li>
+    <p>zum Vorteil des Nutzers geschieht; </p>
+    </li>
+    <li>
+    <p>wenn die &Auml;nderung dazu dient, eine &Uuml;bereinstimmung der Leistungen mit dem anwendbaren Recht herzustellen, insbesondere wenn sich die geltende Rechtslage &auml;ndert; </p>
+    </li>
+    <li>
+    <p>wenn die &Auml;nderung dazu dient, zwingenden gerichtlichen oder beh&ouml;rdlichen Entscheidungen nachzukommen; </p>
+    </li>
+    <li>
+    <p>soweit die jeweilige &Auml;nderung notwendig ist, um bestehende Sicherheitsl&uuml;cken zu schlie&szlig;en; </p>
+    </li>
+    <li>
+    <p>wenn die &Auml;nderung rein technischer oder prozessualer Natur ohne wesentliche Auswirkungen f&uuml;r den Nutzer ist. &Auml;nderungen mit lediglich unwesentlichem Einfluss auf bisherige Funktionen stellen keine Leistungs&auml;nderungen in diesem Sinne dar. Dies gilt insbesondere f&uuml;r &Auml;nderungen rein optischer Art und die blo&szlig;e &Auml;nderung der Anordnung von Funktionen.</p>
+    </li>
+    </ul>
+    </ul>
+    </ul>
+    <ol start='3'>
+    <li>
+    <p><strong>Registrierung und Vertragsschluss</strong></p>
+    <ol>
+    <li>
+    <p>Das Vertragsverh&auml;ltnis zwischen den Nutzern und der buzzn GmbH kommt mit dem Abschluss des Registrierungsvorgangs zustande, der eine Best&auml;tigung der Registrierung voraussetzt. Nach Eingabe der Daten wird an die angegebene E-Mailadresse innerhalb von drei Tagen ein Best&auml;tigungslink verschickt, mit dem die Registrierung best&auml;tigt werden kann.</p>
+    </li>
+    <li>
+    <p>Jeder Nutzer darf sich nur einmal registrieren; eine mehrfache Registrierung derselben Person, Personenmehrheit oder eines Unternehmens ist nicht gestattet.</p>
+    </li>
+    <li>
+    <p>Das Vertragsverh&auml;ltnis zur buzzn GmbH ist nicht auf andere Personen oder Unternehmen &uuml;bertragbar.</p>
+    </li>
+    <li>
+    <p>Ein Anspruch auf Registrierung besteht nicht. Die buzzn GmbH beh&auml;lt sich vor, Registrierungen beim Vorliegen sachlicher Gr&uuml;nde ohne vorherige R&uuml;cksprache und ohne Angabe von Gr&uuml;nden abzulehnen. Die Nutzung von buzzn kann ferner an bestimmte Voraussetzungen gekn&uuml;pft werden, z. B. die &Uuml;berpr&uuml;fung der Registrierungsdaten oder der Kontakt- und Adressdaten durch die Vorlage geeigneter Unterlagen.</p>
+    </li>
+    <li>
+    <p>buzzn sendet den Nutzern den Vertragstext, D. h. eine Registrierungs-, bzw. Buchungsbest&auml;tigung nebst den Nutzungsbedingungen sowie der Datenschutzerkl&auml;rung an die von ihnen angegebene E-Mailadresse zu. Dar&uuml;ber hinaus speichert buzzn den Vertragstext, macht ihn jedoch im Internet nicht zug&auml;nglich.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><strong>Pflege von Adress- und Kontaktdaten</strong></p>
+    <ol>
+    <li>
+    <p>Die Nutzer gew&auml;hrleisten, dass alle von ihnen &uuml;bermittelten Daten zur Person der Wahrheit entsprechen sowie dass alle &uuml;bermittelten Daten und Inhalte rechtlich zul&auml;ssig und frei von Rechten Dritter sind. Die Nutzer d&uuml;rfen sich nicht als andere Personen oder Unternehmen ausgeben oder sonst &uuml;ber ihre Identit&auml;t t&auml;uschen.</p>
+    </li>
+    <li>
+    <p>Die Adress- und Kontaktdaten der Nutzer sind stets auf dem aktuellen Stand zu halten. Nachteile, die f&uuml;r Nutzer aufgrund unrichtiger Angaben entstehen, gehen zu deren Lasten. Nachteile, die aufgrund unrichtiger Angaben f&uuml;r die buzzn GmbH entstehen, gehen zu Lasten der Nutzer, wenn die Falschangaben in deren Verantwortungsbereich liegen.</p>
+    </li>
+    <li>
+    <p>Den Nutzern obliegt es, bei der Benutzung ihrer Zugangsdaten gr&ouml;&szlig;tm&ouml;gliche Sorgfalt walten zu lassen und jedwede Ma&szlig;nahme zu ergreifen, welche den vertraulichen, sicheren Umgang mit den Daten gew&auml;hrleistet und deren Bekanntgabe an Dritte verhindert. Die Nutzer sind f&uuml;r den Missbrauch von Zugangsdaten verantwortlich, falls sie nicht darlegen und nachweisen k&ouml;nnen, dass dieser nicht auf ihrem Verschulden basierte. Die Nutzer sind verpflichtet, die buzzn GmbH umgehend zu informieren, wenn Anlass zu der Vermutung besteht, dass ein Dritter Kenntnis von Zugangsdaten hat und/oder ein Nutzerkonto missbraucht.</p>
+    </li>
+    <li>
+    <p>Im Falle einer unvollst&auml;ndigen Registrierung ist die buzzn GmbH berechtigt, das Nutzerkonto innerhalb von einer Woche zu l&ouml;schen.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><strong>Verantwortung f&uuml;r Inhalte und Informationen</strong></p>
+    <ol>
+    <li>
+    <p>Unter dem im Folgenden verwendeten Begriff &bdquo;Inhalte&ldquo; sind alle von den Nutzern eingestellten Inhalte und Informationen, wie zum Beispiel Bilder, Videos, Texte, Bewertungen, Stromverbrauchs- und sonstige Messdaten, Orte und Personen sowie Links zu verstehen.</p>
+    </li>
+    <li>
+    <p>Die buzzn GmbH ist nicht verantwortlich f&uuml;r die von den Nutzern hochgeladenen, mitgeteilten oder verfassten Inhalte und macht sich diese Inhalte nicht zu eigen. Die buzzn GmbH ist ebenfalls nicht verantwortlich f&uuml;r die verlinkten Inhalte und macht sich diese ebenfalls nicht zu eigen.</p>
+    </li>
+    <li>
+    <p>Die buzzn GmbH beh&auml;lt sich vor, Inhalte nicht zu ver&ouml;ffentlichen oder deren Ver&ouml;ffentlichung r&uuml;ckg&auml;ngig zu machen, wenn konkrete Anhaltspunkte daf&uuml;r vorliegen, dass die Inhalte gegen gesetzliche Vorgaben, beh&ouml;rdliche Verbote, Rechte Dritter oder gegen die guten Sitten versto&szlig;en. buzzn GmbH ist jedoch nicht verpflichtet die Inhalte vorab zu &uuml;berpr&uuml;fen.</p>
+    </li>
+    <li>
+    <p>F&uuml;r Nutzermeinungen, -kommentare und -bewertungen ist nicht die buzzn GmbH, sondern der jeweilige Nutzer verantwortlich.</p>
+    </li>
+    <li>
+    <p>Nutzer und sonstige Rechteinhaber k&ouml;nnen Inhalte gegen&uuml;ber der buzzn GmbH unter Angabe des Inhalts und der bem&auml;ngelten Kriterien beanstanden sowie deren Korrektur oder L&ouml;schung beantragen. Die buzzn GmbH darf die Beanstandung an die jeweiligen inhaltsverantwortlichen Nutzer weiterleiten und sie innerhalb einer angemessenen Frist zur Stellungnahme auffordern. Die Ver&ouml;ffentlichung eines als unangemessen gemeldeten Inhalts kann bis zur Pr&uuml;fung r&uuml;ckg&auml;ngig gemacht werden.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><strong>Pflichten der Nutzer</strong></p>
+    <ol>
+    <li>
+    <p>Die Nutzer gew&auml;hrleisten, dass die von ihnen hochgeladenen oder erstellten Inhalte der Wahrheit entsprechen, rechtlich zul&auml;ssig und frei von Rechten Dritter sind.</p>
+    </li>
+    <li>
+    <p>Insbesondere sind die folgenden Inhalte unzul&auml;ssig: Nachstellen (Stalking), Drohungen, Beleidigungen und Behauptung falscher Tatsachen; Inhalte, die Kinder oder Jugendliche in ihrer Entwicklung oder Erziehung beeintr&auml;chtigen oder gef&auml;hrden k&ouml;nnen; Inhalte, die fremde Urheber-, Marken, Wettbewerbs- und Datenschutzrechte verletzen; rassistische, ausl&auml;nderfeindliche, gewaltverherrlichende, volksverhetzende, pornografische, menschenentw&uuml;rdigende und sittenwidrige Inhalte; Inhalte, die die Gesundheit von Personen beeintr&auml;chtigen k&ouml;nnen; Kettenbriefe, Massennachrichten mit oder ohne werbenden Inhalt (Spamming); Links zu Webseiten mit diesen Inhalten; Gewinnspiele, Wettbewerbe, Verlosungen oder vergleichbare Promotionen; Ver&ouml;ffentlichung von privaten Daten (zum Beispiel E‑Mailadressen); kommerzielle Werbung oder anpreisende Verweise auf Konkurrenzangebote von buzzn bzw. der buzzn GmbH.</p>
+    </li>
+    <li>
+    <p>Ebenso unzul&auml;ssig ist es, die im Rahmen von buzzn zug&auml;nglichen Daten der Nutzer oder sonstige Daten der Platform, sofern es sich nicht um die eigenen Daten der Nutzer handelt, f&uuml;r eigene Zwecke zu Erheben und zu verwenden (z. B. die Messdaten f&uuml;r eigene kommerzielle Zwecke oder Adressdaten f&uuml;r Marketingzwecke zu nutzen).</p>
+    </li>
+    <li>
+    <p>Die buzzn GmbH hat das Recht, themenfremde Inhalte, die sich insbesondere nicht auf die rund um das Thema Strom angebotenen Dienste beziehen (zum Beispiel allgemeine politische oder religi&ouml;se Themen), zu entfernen.</p>
+    </li>
+    <li>
+    <p>Sofern Nutzer andere Nutzer direkt kontaktieren k&ouml;nnen, darf diese Kontaktm&ouml;glichkeit nicht f&uuml;r eigene Werbezwecke au&szlig;erhalb von buzzn verwendet werden und die kontaktierten Nutzer d&uuml;rfen sonst nicht bel&auml;stigt werden (zum Beispiel durch wiederholte Anfragen bei ausbleibender Antwort oder ge&auml;u&szlig;ertem Wunsch nicht kontaktiert werden zu wollen). Die buzzn GmbH beh&auml;lt sich vor, die Funktion allgemein und im Einzelfall einzuschr&auml;nken, falls sich Nutzer bel&auml;stigt f&uuml;hlen sollten.</p>
+    </li>
+    <li>
+    <p>Die Nutzer sind verpflichtet, ihren etwaigen gesetzlichen Informationspflichten nachzukommen (z. B. Pflichtangaben zu Unternehmen).</p>
+    </li>
+    <li>
+    <p>Verboten sind Handlungen, die geeignet sind, die Funktionalit&auml;t von buzzn, der Software und Infrastruktur zu beeintr&auml;chtigen (z. B. Skripte, Robots, Crawler). Insbesondere ist eine &uuml;berm&auml;&szlig;ige Belastung verboten, die &uuml;ber der regul&auml;ren, bei normaler Benutzung der Dienste und Schnittstellen zu erwartenden Nutzungsintensit&auml;t und -h&auml;ufigkeit liegt (z. B. Software, die wegen technischer Fehler permanent unn&ouml;tige Zugriffe generiert).</p>
+    </li>
+    <li>
+    <p>Ebenso verboten sind Handlungen die das buzzn Bonus-Berechnungssystem manipulieren oder umgehen.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><strong>Besondere Regeln f&uuml;r Gruppen-Administratoren</strong></p>
+    <ol>
+    <li>
+    <p>Gruppen-Administratoren d&uuml;rfen bei der Bewerbung ihrer Gruppe keine bel&auml;stigenden Ma&szlig;nahmen einsetzen, wie z. B. Nachrichten im Massenverfahren versenden, marktschreierische Methoden einsetzen oder Nutzern finanzielle Vorteile anbieten. Die buzzn GmbH weist darauf hin, dass das Ziel von buzzn nicht die Schaffung eines umk&auml;mpften Marktes unter den Stromgebern ist, sondern die Attraktivit&auml;t einer Gruppe auf passiver Information der Nutzer oder pers&ouml;nlichen Vorlieben der Stromnehmer basieren sollte.</p>
+    </li>
+    <li>
+    <p>Gruppen-Administratoren d&uuml;rfen Mitglieder aus ihrer Gruppe entfernen, die gegen diese Nutzungsbedingungen oder gesetzliche Pflichten versto&szlig;en. In diesem Fall sollten die Mitglieder der buzzn GmbH gemeldet werden.</p>
+    </li>
+    <li>
+    <p>Dar&uuml;ber hinaus d&uuml;rfen Gruppen-Administratoren die Mitglieder auch sonst ohne einen konkreten Anlass aus der Gruppe entfernen, ohne die Entfernung begr&uuml;nden zu m&uuml;ssen. D. h. es besteht kein Anspruch f&uuml;r Nutzer in eine Gruppe aufgenommen zu werden.</p>
+    </li>
+    <li>
+    <p>Gruppen-Administratoren d&uuml;rfen keine eigenen Regeln f&uuml;r die Gruppen aufstellen, die &uuml;ber diese Nutzungsbedingungen oder gesetzlichen Regeln hinausgehen (z. B. d&uuml;rfen keine AGB platziert werden, die Nutzern bestimmte Verhaltensweisen auferlegen).</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><strong>Sanktionen</strong></p>
+    <ol>
+    <li>
+    <p>Da die Integrit&auml;t und Funktionalit&auml;t des Netzwerkes f&uuml;r buzzn von essentieller Bedeutung ist, werden gegen Nutzer Sanktionen verh&auml;ngt, wenn und soweit sich seitens der buzzn GmbH konkrete Anhaltspunkte daf&uuml;r ergeben, dass ein Nutzer gegen gesetzliche Vorschriften, Rechte Dritter, die guten Sitten und/oder diese Nutzungsbedingungen versto&szlig;en.</p>
+    </li>
+    <li>
+    <p>Bei der Wahl der zu verh&auml;ngenden Sanktion wird buzzn GmbH die berechtigten Interessen des betroffenen Nutzers in die Entscheidung einbeziehen und unter anderem auch mitber&uuml;cksichtigen, ob ein nur unverschuldetes Fehlverhalten vorliegt oder der Versto&szlig; schuldhaft begangen wurde. Folgende abgestuften Sanktionen stehen der buzzn GmbH zur Verf&uuml;gung: a) Teilweises und vollst&auml;ndiges L&ouml;schen von Inhalten eines Nutzers, b) Verwarnung eines Nutzers, c) Ein-/Beschr&auml;nkung bei der Nutzung von buzzn, c) tempor&auml;re Sperrung eines Nutzers, d) endg&uuml;ltige Sperrung/K&uuml;ndigung eines Nutzers, gegebenenfalls verbunden mit einem Hausverbot, e) Aberkennung von buzzn Boni, wenn diese unter Widerspruch gegen diese Nutzungsbedingungen oder durch gesetzeswidriges Verhalten erzielt wurden und die Aberkennung nach Billigkeitsgesichtspunkten sachlich gerechtfertigt ist.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><strong>Freistellung</strong></p>
+    <ol>
+    <li>
+    <p>Der Nutzer stellt die buzzn GmbH von s&auml;mtlichen Anspr&uuml;chen frei, die Dritte gegen&uuml;ber der buzzn GmbH aufgrund einer Verletzung ihrer Rechte durch den Nutzer geltend machen.</p>
+    </li>
+    <li>
+    <p>Insoweit hat der Nutzer auch die Kosten einer notwendigen Rechtsverteidigung einschlie&szlig;lich Anwalts- und Gerichtskosten in gesetzlicher H&ouml;he zu tragen. Eine Freistellung durch den Nutzer erfolgt nicht, wenn dieser die Rechtsverletzung nicht zu vertreten hat.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><strong>Nutzungsberechtigung</strong></p>
+    <ol>
+    <li>
+    <p>Die buzzn GmbH weist darauf hin, dass die Nutzer buzzn nur f&uuml;r die individuellen vertragsgem&auml;&szlig;en Zwecke verwenden d&uuml;rfen. Eine entgeltliche oder unentgeltliche &Uuml;berlassung an Dritte ist nicht erlaubt.</p>
+    </li>
+    <li>
+    <p>Nutzer d&uuml;rfen buzzn nur &uuml;ber die zur Verf&uuml;gung gestellten Eingabemasken und Schnittstellen nutzen.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><a name='nutzungsrechte_durch_nutzer'></a> <strong>Einr&auml;umung von Nutzungsrechten durch Nutzer</strong></p>
+    <ol>
+    <li>
+    <p>Die Einr&auml;umung der nachstehend genannten Rechte dient alleine dem Betrieb von buzzn und der Zurverf&uuml;gungstellung der vertraglichen Leistungen.</p>
+    </li>
+    <li>
+    <p>Die Nutzer r&auml;umen der buzzn GmbH unentgeltlich und &ouml;rtlich unbeschr&auml;nkt das einfache Recht ein, die von ihnen eingestellten rechtlich gesch&uuml;tzten Inhalte zu vervielf&auml;ltigen, unter Ber&uuml;cksichtigung ihrer Privatsph&auml;re-Einstellungen &ouml;ffentlich zug&auml;nglich zu machen, zu bearbeiten sowie diese Rechte auf Dritte, wie technische Dienstleister oder andere Nutzer von buzzn weiter zu &uuml;bertragen.</p>
+    </li>
+    <li>
+    <p>Die Einr&auml;umung erfolgt zeitlich unbeschr&auml;nkt bis zum Widerruf durch die Nutzer.</p>
+    </li>
+    <li>
+    <p>Die Nutzer haben vor dem Hochladen und Verfassen von Inhalten sicherzustellen, dass ihnen an den Inhalten die notwendigen Nutzungsrechte zustehen.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><a name='verfuegbarkeit'></a><strong>Verf&uuml;gbarkeit, Systemintegrit&auml;t und Gew&auml;hrleistung</strong></p>
+    <ol>
+    <li>
+    <p>Das Recht zur Inanspruchnahme von buzzn besteht im Rahmen des aktuellen Stands der Technik. Die buzzn GmbH weist den Nutzer ausdr&uuml;cklich darauf hin, dass eine jederzeitige Verf&uuml;gbarkeit von Webseiten und anderen Leistungen technisch nicht zu realisieren ist. Zeitweilige Beschr&auml;nkungen k&ouml;nnen sich beispielsweise aufgrund technischer St&ouml;rungen wie einer Unterbrechung der Stromversorgung, Hardware- oder Softwarefehlern ergeben. Es k&ouml;nnen Einschr&auml;nkungen oder Beeintr&auml;chtigungen von buzzn aufgrund von Umst&auml;nden entstehen, die au&szlig;erhalb des Einflussbereiches der buzzn GmbH liegen. Hierunter fallen insbesondere Handlungen Dritter, die nicht im Auftrag der buzzn GmbH handeln, von der buzzn GmbH nicht beeinflussbare technische Bedingungen des Internets sowie h&ouml;here Gewalt. Soweit derartige Umst&auml;nde Einfluss auf die Verf&uuml;gbarkeit oder Funktionalit&auml;t von buzzn haben, hat dies keine Auswirkung auf die Vertragsgem&auml;&szlig;heit der von der buzzn GmbH erbrachten Leistung.</p>
+    </li>
+    <li>
+    <p>Die buzzn GmbH beschr&auml;nkt ihre Leistungen, wenn dies mit Blick auf Kapazit&auml;tsgrenzen, die Sicherheit oder Integrit&auml;t der Server oder der Software oder zur Durchf&uuml;hrung technischer Ma&szlig;nahmen erforderlich ist, und die Beschr&auml;nkung der ordnungsgem&auml;&szlig;en oder verbesserten Erbringung der Leistungen dient (bspw. Wartungsarbeiten). Die buzzn GmbH ber&uuml;cksichtigt hierbei die berechtigten Interessen der Nutzer in geeigneter Weise, wie beispielsweise &ndash; wenn praktikabel &ndash; durch Vorabinformation. Die buzzn GmbH wird Wartungsarbeiten, soweit dies m&ouml;glich ist, in nutzungsarmen Zeiten durchf&uuml;hren.</p>
+    </li>
+    <li>
+    <p>Im &Uuml;brigen gelten die gesetzlichen Gew&auml;hrleistungsrechte.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><a name='vertragsdauer_und_kuendigung'></a><strong>K&uuml;ndigung</strong></p>
+    <ol>
+    <li>
+    <p>Die K&uuml;ndigung kostenfreier Leistungen ist f&uuml;r die Nutzer von buzzn jederzeit m&ouml;glich, f&uuml;r die buzzn GmbH innerhalb einer Frist von zwei Wochen, jedoch nur in &Uuml;bereinstimmung mit den anwendbaren Verbraucherrechten.</p>
+    </li>
+    <li>
+    <p>Das Recht zur fristlosen K&uuml;ndigung aus wichtigem Grund bleibt beiderseits unber&uuml;hrt. Ein wichtiger Grund zur K&uuml;ndigung durch die buzzn GmbH liegt insbesondere vor, wenn</p>
+    </li>
+    </li>
+    <ul>
+    <li>
+    <p>der Nutzer schwerwiegende Pflichtverletzungen im Sinne dieser Nutzungsbedingungen begeht, wozu insbesondere die nicht vertragsgem&auml;&szlig;e Nutzung von buzzn oder die Nutzung der Daten anderer Nutzer f&uuml;r eigene Werbezwecke geh&ouml;rt.</p>
+    </li>
+    <li>
+    <p>Die buzzn GmbH ihre T&auml;tigkeit einstellt.</p>
+    </li>
+    </ul>
+    <li>
+    <p>Einer au&szlig;erordentlichen K&uuml;ndigung hat grunds&auml;tzlich eine Abmahnung vorherzugehen. Auf die Abmahnung kann verzichtet werden, wenn sie nicht zumutbar ist. Dies ist insbesondere der Fall, wenn das Verhalten des Nutzers Anlass dazu gibt, dass trotz Abmahnung mit weiterem Fehlverhalten zu rechnen ist.</p>
+    </li>
+    <li>
+    <p>Sofern die K&uuml;ndigung nicht innerhalb des Nutzerprofils durch die L&ouml;schung des Nutzerkontos durchgef&uuml;hrt wird, beh&auml;lt sich die buzzn GmbH vor, die Identit&auml;t der Nutzer bei K&uuml;ndigung im angemessenen Rahmen zu &uuml;berpr&uuml;fen, z. B. durch Zusendung einer Best&auml;tigungsmail an die im Verwaltungsbereich des Nutzers angegebene E-Mailadresse.</p>
+    </li>
+    </ol>
+    <li>
+    <p><strong>Folgen und Durchf&uuml;hrung der K&uuml;ndigung</strong></p>
+    <ol>
+    <li>
+    <p>Die von Stromgebern gegebenenfalls gesammelten buzzn Boni erl&ouml;schen nicht durch die K&uuml;ndigung.</p>
+    </li>
+    <li>
+    <p>Vor der K&uuml;ndigung m&uuml;ssen Gruppen-Administratoren die Gruppe auf einen neuen Gruppen-Administrator &uuml;bergeben oder die zur Gruppe geh&ouml;renden Z&auml;hlpunkte entfernen, damit die Gruppe gel&ouml;scht werden kann.</p>
+    </li>
+    <li>
+    <p>Es obliegt den Nutzern, ihre Daten bei erfolgter K&uuml;ndigung vor dem Vertragsende zu sichern. Grunds&auml;tzlich werden alle Inhalte der Nutzer gel&ouml;scht, sofern dem keine vertraglichen oder gesetzlichen Aufbewahrungspflichten entgegenstehen (z. B. der buzzn Bonus an die Stromgeber noch ausgezahlt werden muss). Beitr&auml;ge oder Kommentare k&ouml;nnen davon aus R&uuml;cksicht auf andere Nutzer ausgenommen werden, damit Gespr&auml;che, Ratschl&auml;ge o.&auml;. ihren Sinn nicht verlieren oder umkehren. In diesem Fall werden die Namen der Nutzer anonymisiert. Den Nutzern steht ein Recht zu, die L&ouml;schung der verbliebenen personenbezogenen Daten zu verlangen.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><a name='haftungsbeschraenkung'></a><a name='widerrufsrecht'></a> <strong>Haftungsbeschr&auml;nkung</strong></p>
+    <ol>
+    <li>
+    <p>F&uuml;r eine Haftung der buzzn GmbH auf Schadensersatz gelten unbeschadet der sonstigen gesetzlichen Anspruchsvoraussetzungen folgende Haftungsausschl&uuml;sse und -begrenzungen.</p>
+    </li>
+    <li>
+    <p>Die buzzn GmbH haftet unbeschr&auml;nkt, soweit die Schadensursache auf Vorsatz oder grober Fahrl&auml;ssigkeit beruht.</p>
+    </li>
+    <li>
+    <p>Ferner haftet die buzzn GmbH f&uuml;r die leicht fahrl&auml;ssige Verletzung von wesentlichen Pflichten, deren Verletzung die Erreichung des Vertragszwecks gef&auml;hrdet, oder f&uuml;r die Verletzung von Pflichten, deren Erf&uuml;llung die ordnungsgem&auml;&szlig;e Durchf&uuml;hrung des Vertrages &uuml;berhaupt erst erm&ouml;glicht und auf deren Einhaltung die Nutzer regelm&auml;&szlig;ig vertrauen. In diesem Fall haftet die buzzn GmbH jedoch nur f&uuml;r den vorhersehbaren, vertragstypischen Schaden. Die buzzn GmbH haftet nicht f&uuml;r die leicht fahrl&auml;ssige Verletzung anderer als der in den vorstehenden S&auml;tzen genannten Pflichten.</p>
+    </li>
+    <li>
+    <p>Die vorstehenden Haftungsbeschr&auml;nkungen gelten nicht bei Verletzung von Leben, K&ouml;rper und Gesundheit, f&uuml;r einen Mangel nach &Uuml;bernahme einer Garantie f&uuml;r die Beschaffenheit des Produktes und bei arglistig verschwiegenen M&auml;ngeln. Die Haftung nach dem Produkthaftungsgesetz bleibt unber&uuml;hrt.</p>
+    </li>
+    <li>
+    <p>Soweit die Haftung der buzzn GmbH ausgeschlossen oder beschr&auml;nkt ist, gilt dies auch f&uuml;r die pers&ouml;nliche Haftung von Arbeitnehmern, Vertretern und Erf&uuml;llungsgehilfen.</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><strong>Vertraulichkeit und Datenschutz</strong></p>
+    <ol>
+    <li>
+    <p>Der Schutz von Nutzerdaten hat f&uuml;r die buzzn GmbH oberste Priorit&auml;t und Ausk&uuml;nfte sowie Herausgabe der Nutzerdaten an Dritte wird, soweit es gesetzlich m&ouml;glich ist, verhindert.</p>
+    </li>
+    <li>
+    <p>Die Vertragsparteien verpflichten sich, alle vertraulichen Informationen, die ihnen bei der Durchf&uuml;hrung dieses Vertrages bekannt werden, vertraulich zu behandeln und entsprechend den Datenschutzvorgaben nur f&uuml;r vertraglich vereinbarte Zwecke zu verwenden. Dies gilt insbesondere auch f&uuml;r die Daten anderer Nutzer.</p>
+    </li>
+    <li>
+    <p>Die Rechte und Pflichten nach diesem Abschnitt &uuml;ber Geheimhaltung werden von einer Beendigung dieses Vertrages nicht ber&uuml;hrt.</p>
+    </li>
+    <li>
+    <p>Weitere Datenschutzbestimmungen und -hinweise sind unseren Datenschutzbestimmungen zu entnehmen (http://LINK_ZUR_DSE_EINSETZEN).</p>
+    </li>
+    </ol>
+    </li>
+    <li>
+    <p><a name='aenderung_der_agb'></a> <strong>&Auml;nderung der Nutzungsbedingungen</strong></p>
+    <ol>
+    <li>
+    <p>Die buzzn GmbH beh&auml;lt sich vor, die Nutzungsbedingungen jederzeit mit Wirkung f&uuml;r die Zukunft zu &auml;ndern, es sei denn, das ist f&uuml;r die Nutzer nicht zumutbar. Die &Auml;nderung erfolgt nur beim Vorliegen von folgenden sachlichen Gr&uuml;nden:</p>
+    </li>
+    </li>
+    <ul>
+    <li>
+    <p>wenn die &Auml;nderung dazu dient, eine &Uuml;bereinstimmung der Nutzungsbedingungen mit dem anwendbaren Recht herzustellen, insbesondere wenn sich die geltende Rechtslage &auml;ndert; </p>
+    </li>
+    <li>
+    <p>wenn die &Auml;nderung der buzzn GmbH dazu dient, zwingenden gerichtlichen oder beh&ouml;rdlichen Entscheidungen nachzukommen; </p>
+    </li>
+    <li>
+    <p>wenn g&auml;nzlich neue Leistungen der buzzn GmbH, bzw. Leistungselemente sowie technische oder organisatorische Prozesse der buzzn GmbH einer Beschreibung in den Nutzungsbedingungen erfordern und hieraus das bestehende Vertragsverh&auml;ltnis zum Nutzer nicht zu dessen Lasten beeintr&auml;chtigt wird; </p>
+    </li>
+    <li>
+    <p>wenn die &Auml;nderung lediglich vorteilhaft f&uuml;r die Nutzer ist.</p>
+    </li>
+    </ul>
+    <li>
+    <p>In einem solchen Fall wird die buzzn GmbH die ge&auml;nderten Nutzungsbedingungen mindestens vier Wochen vor ihrem Inkrafttreten an die vom Nutzer bei der buzzn GmbH hinterlegte E-Mailadresse senden.</p>
+    </li>
+    <li>
+    <p>Widerspricht der Nutzer den neuen Nutzungsbedingungen nicht innerhalb einer Frist von vier Wochen nach Empfang der E-Mail, so gelten die ge&auml;nderten Nutzungsbedingungen als von ihm angenommen. Die buzzn GmbH wird den Nutzer mit der &Auml;nderungsmitteilung auf die Folgen eines unterlassenen Widerspruchs hinweisen.</p>
+    </li>
+    <li>
+    <p>Die Nutzer k&ouml;nnen ge&auml;nderten Nutzungsbedingungen ebenfalls durch eine ausdr&uuml;ckliche Einverst&auml;ndniserkl&auml;rung zustimmen.</p>
+    </li>
+    </ol>
+    <li>
+    <p><a name='schlussbestimmungen'></a><strong>Schlussbestimmungen</strong></p>
+    <ol>
+    <li>
+    <p>Die buzzn GmbH kann Informationen und Erkl&auml;rungen, die das Vertragsverh&auml;ltnis zum Nutzer betreffen, an die vom Nutzer bei buzzn hinterlegte E-Mailadresse schicken. Der Nutzer wird diese E-Mailadresse regelm&auml;&szlig;ig abrufen.</p>
+    </li>
+    <li>
+    <p>Es gilt das Recht der Bundesrepublik Deutschland, solange dem keine zwingenden Verbraucherschutzvorschriften entgegenstehen.</p>
+    </li>
+    <li>
+    <p>Gerichtstand ist M&uuml;nchen, sofern der Nutzer Kaufmann, juristische Person des &ouml;ffentlichen Rechts oder &ouml;ffentlich-rechtliches Sonderverm&ouml;gen ist oder der Nutzer in der Bundesrepublik Deutschland keinen allgemeinen Gerichtsstand hat. Das Recht der buzzn GmbH, einen anderen zul&auml;ssigen Gerichtsstand zu w&auml;hlen, bleibt unber&uuml;hrt.</p>
+    </li>
+    <li>
+    <p>Beschwerdeverfahren via Online-Streitbeilegung f&uuml;r Verbraucher (OS): <u><a href='http://ec.europa.eu/consumers/odr/'>http://ec.europa.eu/consumers/odr/</a></u>.</p>
+    </li>
+    </ol>
+    </li>
+    </ol>
+    <p>Stand: 25.07.2016</p>"
