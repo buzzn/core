@@ -292,6 +292,7 @@ private
 
   def invoke_invitation_accepted_activity
     self.create_activity(key: 'user.accept_platform_invitation', owner: self, recipient: self.invited_by)
+    self.update_attributes(:data_protection_guidelines => I18n.t('data_protection_guidelines_html'), :terms_of_use => I18n.t('terms_of_use_html'))
   end
 
   def delete_content

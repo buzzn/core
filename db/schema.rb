@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160622111108) do
+ActiveRecord::Schema.define(version: 20160802083615) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -552,12 +552,12 @@ ActiveRecord::Schema.define(version: 20160622111108) do
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
   create_table "users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                      default: "", null: false
+    t.string   "encrypted_password",         default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",              default: 0,  null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -566,7 +566,7 @@ ActiveRecord::Schema.define(version: 20160622111108) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.integer  "failed_attempts",        default: 0,  null: false
+    t.integer  "failed_attempts",            default: 0,  null: false
     t.string   "unlock_token"
     t.datetime "locked_at"
     t.string   "invitation_token"
@@ -575,7 +575,7 @@ ActiveRecord::Schema.define(version: 20160622111108) do
     t.datetime "invitation_accepted_at"
     t.integer  "invitation_limit"
     t.string   "invited_by_type"
-    t.integer  "invitations_count",      default: 0
+    t.integer  "invitations_count",          default: 0
     t.uuid     "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -583,6 +583,8 @@ ActiveRecord::Schema.define(version: 20160622111108) do
     t.string   "uid"
     t.uuid     "invited_by_id"
     t.text     "invitation_message"
+    t.text     "data_protection_guidelines"
+    t.text     "terms_of_use"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
