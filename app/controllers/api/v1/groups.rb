@@ -39,16 +39,11 @@ module API
         end
         oauth2 false
         get ":id", root: "group" do
-          group = Group.where(id: permitted_params[:id]).first!
-          if group.readable_by_world?
-            return group
+          group = Group.find(permitted_params[:id])
+          if group.readable_by?(current_user)
+            group
           else
-            doorkeeper_authorize!
-            if group.readable_by?(current_user)
-              group
-            else
-              status 403
-            end
+            status 403
           end
         end
 
@@ -63,16 +58,12 @@ module API
         oauth2 :full
         post do
           if Group.creatable_by?(current_user)
-            @params = params.group || params
-            @group = Group.new({
-              name: @params.name,
-              description: @params.description
-              })
+            group = Group.new(permitted_params)
 
-            if @group.save!
-              current_user.add_role(:manager, @group)
-              return @group
+            if group.save!
+              current_user.add_role(:manager, group)
             end
+            group
           else
             error!('you need at least one out-metering_point', 401)
           end
@@ -87,14 +78,10 @@ module API
         end
         oauth2 :full
         put do
-          @group = Group.find(params[:id])
-          if @group.updatable_by?(current_user)
-            @params = params.group || params
-            @group.update({
-                name:  @params.name,
-                image: @params.image
-              })
-            return @group
+          group = Group.find(permitted_params[:id])
+          if group.updatable_by?(current_user)
+            group.update(permitted_params)
+            group
           else
             status 403
           end
@@ -108,16 +95,12 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          if current_user
-            group = Group.find(params[:id])
-            if group.updatable_by?(current_user)
-              group.destroy
-              status 204
-            else
-              status 403
-            end
+          group = Group.find(permitted_params[:id])
+          if group.updatable_by?(current_user)
+            group.destroy
+            status 204
           else
-            status 401
+            status 403
           end
         end
 
@@ -130,23 +113,16 @@ module API
         paginate(per_page: per_page=10)
         oauth2 false
         get ":id/metering-points" do
-          group               = Group.find(permitted_params[:id])
-          per_page           = params[:per_page] || per_page
-          page               = params[:page] || 1
+          group = Group.find(permitted_params[:id])
 
-          if group.readable_by_world?
+          if group.readable_by?(current_user)
+            per_page        = params[:per_page] || per_page
+            page            = params[:page] || 1
             metering_points = MeteringPoint.by_group(group).without_externals
             total_pages     = metering_points.page(page).per_page(per_page).total_pages
             paginate(render(metering_points, meta: { total_pages: total_pages }))
           else
-            doorkeeper_authorize!
-            if group.readable_by?(current_user)
-              metering_points = MeteringPoint.by_group(group).without_externals
-              total_pages     = metering_points.page(page).per_page(per_page).total_pages
-              paginate(render(metering_points, meta: { total_pages: total_pages }))
-            else
-              status 403
-            end
+            status 403
           end
         end
 
@@ -157,15 +133,14 @@ module API
           requires :id, type: String, desc: "ID of the group"
         end
         paginate(per_page: per_page=10)
-        oauth2 false
+        oauth2 :public, :full
         get ":id/managers" do
-          doorkeeper_authorize! :public
-          group = Group.where(id: permitted_params[:id]).first!
+          group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            @per_page     = params[:per_page] || per_page
-            @page         = params[:page] || 1
-            @total_pages  = group.managers.page(@page).per_page(@per_page).total_pages
-            paginate(render(group.managers, meta: { total_pages: @total_pages }))
+            per_page     = params[:per_page] || per_page
+            page         = params[:page] || 1
+            total_pages  = group.managers.page(page).per_page(per_page).total_pages
+            paginate(render(group.managers, meta: { total_pages: total_pages }))
           else
             status 403
           end
@@ -174,12 +149,13 @@ module API
 
         desc 'Add user to group managers'
         params do
+          requires :id, type: String, desc: "ID of the group"
           requires :user_id, type: String, desc: 'User id'
         end
+        oauth2 :full
         post ':id/managers' do
-          doorkeeper_authorize! :public
-          group           = Group.find(params[:id])
-          user            = User.find(params[:user_id])
+          group           = Group.find(permitted_params[:id])
+          user            = User.find(permitted_params[:user_id])
           if current_user.has_role?(:manager, group) || current_user.has_role?(:admin)
             user.add_role(:manager, group)
           else
@@ -189,12 +165,17 @@ module API
 
 
         desc 'Remove user from group managers'
-        oauth2 :public, :full
+        params do
+          requires :id, type: String, desc: "ID of the group"
+          requires :user_id, type: String, desc: 'User id'
+        end
+        oauth2 :full
         delete ':id/managers/:user_id' do
-          group           = Group.find(params[:id])
-          user            = User.find(params[:user_id])
+          group           = Group.find(permitted_params[:id])
+          user            = User.find(permitted_params[:user_id])
           if current_user.id == user.id || current_user.has_role?(:admin)
             user.remove_role(:manager, group)
+            status 204
           else
             status 403
           end
@@ -205,11 +186,16 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
+        paginate(per_page: per_page=10)
         oauth2 :public, :full
         get ":id/members" do
-          group = Group.where(id: permitted_params[:id]).first!
+          group           = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            group.members
+            per_page     = params[:per_page] || per_page
+            page         = params[:page] || 1
+            members      = group.members
+            total_pages  = members.page(page).per_page(per_page).total_pages
+            paginate(render(members, meta: { total_pages: total_pages }))
           else
             status 403
           end
@@ -220,17 +206,13 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
+        oauth2 false
         get ":id/energy-producers" do
-          group = Group.where(id: permitted_params[:id]).first!
-          if group.readable_by_world?
+          group = Group.find(permitted_params[:id])
+          if group.readable_by?(current_user)
             group.energy_producers
           else
-            doorkeeper_authorize! :public
-            if group.readable_by?(current_user)
-              group.energy_producers
-            else
-              status 403
-            end
+            status 403
           end
         end
 
@@ -239,17 +221,13 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
+        oauth2 :public, :full
         get ":id/energy-consumers" do
-          group = Group.where(id: permitted_params[:id]).first!
-          if group.readable_by_world?
+          group = Group.find(permitted_params[:id])
+          if group.readable_by?(current_user)
             group.energy_consumers
           else
-            doorkeeper_authorize! :public
-            if group.readable_by?(current_user)
-              group.energy_consumers
-            else
-              status 403
-            end
+            status 403
           end
         end
 
@@ -261,12 +239,12 @@ module API
         paginate(per_page: per_page=10)
         oauth2 :public, :full
         get ':id/comments' do
-          group = Group.where(id: permitted_params[:id]).first!
+          group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            @per_page     = params[:per_page] || per_page
-            @page         = params[:page] || 1
-            @total_pages  = group.comment_threads.page(@page).per_page(@per_page).total_pages
-            paginate(render(group.comment_threads, meta: { total_pages: @total_pages }))
+            per_page     = params[:per_page] || per_page
+            page         = params[:page] || 1
+            total_pages  = group.comment_threads.page(page).per_page(per_page).total_pages
+            paginate(render(group.comment_threads, meta: { total_pages: total_pages }))
           else
             status 403
           end
