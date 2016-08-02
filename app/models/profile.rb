@@ -12,8 +12,6 @@ class Profile < ActiveRecord::Base
 
   belongs_to :user
 
-  after_commit :registration_completed, on: :create
-
   validates :user_name, uniqueness: true, length: { in: 2..63 }
   validates :first_name, presence: true, length: { in: 2..30 }
   validates :last_name, presence: true, length: { in: 2..30 }
@@ -99,16 +97,6 @@ class Profile < ActiveRecord::Base
 
   def readable_by_community?
     self.readable == 'community'
-  end
-
-
-
-  private
-
-  def registration_completed
-    if self.user
-      Notifier.send_email_completed_registration(self.user).deliver_now
-    end
   end
 
 
