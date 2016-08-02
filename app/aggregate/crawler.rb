@@ -261,7 +261,7 @@ class Crawler
             end
 
             if first_timestamp
-              power = (second_reading - first_reading)/(2500000.0) # convert vsm to power
+              power = (second_reading - first_reading)/(2500.0) # convert vsm to power
               result << [first_timestamp, power]
             end
             first_timestamp = second_timestamp
@@ -329,7 +329,7 @@ class Crawler
               next
             end
             new_value = item[mode]
-            result << [timestamp, (new_value - old_value)/10000000000.0]
+            result << [timestamp, (new_value - old_value)/10000.0] #convert to mWh
             old_value = new_value
             timestamp = item['time']
             i += 1
@@ -394,7 +394,7 @@ class Crawler
 
             if item['time'] == (Time.at(timestamp/1000).in_time_zone.end_of_month + 1.second).to_i*1000
               new_value = item[mode]
-              result << [timestamp, (new_value - old_value)/10000000000.0]
+              result << [timestamp, (new_value - old_value)/10000.0] #convert to mWh
               old_value = new_value
               timestamp = item['time']
             end
