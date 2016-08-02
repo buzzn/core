@@ -1,14 +1,67 @@
 describe "Meters API" do
 
 
-  it 'does not gets a meter without token' do
-    meter = Fabricate(:meter)
-    get_without_token "/api/v1/meters/#{meter.id}"
-    expect(response).to have_http_status(401)
+  [:no_access_token,
+   :public_access_token,
+   :smartmeter_access_token].each do |token|
+    it "does not get a meter with #{token}" do
+      meter = Fabricate(:meter)
+
+      if token == :no_access_token
+        get_without_token "/api/v1/meters/#{meter.id}"
+        expect(response).to have_http_status(401)
+      else
+        access_token = Fabricate(token)
+        get_with_token  "/api/v1/meters/#{meter.id}", access_token.token
+        expect(response).to have_http_status(403)
+      end
+
+    end
+
+    
+
+    it "does not update a meter with #{token}" do
+      meter = Fabricate(:meter)
+
+      request_params = {
+        id:                                 meter.id,
+        manufacturer_name:                  meter.manufacturer_name,
+        manufacturer_product_name:          "#{meter.manufacturer_product_name} updated",
+        manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber
+      }.to_json
+
+      if token == :no_access_token
+        put_without_token "/api/v1/meters", request_params
+        expect(response).to have_http_status(401)
+      else
+        access_token = Fabricate(token)
+        put_with_token  "/api/v1/meters", request_params, access_token.token
+        expect(response).to have_http_status(403)
+      end
+    end
+
+
+    
+    
+
+    it "does not delete a meter with #{token}" do
+      meter = Fabricate(:meter)
+
+      if token == :no_access_token
+        delete_without_token "/api/v1/meters/#{meter.id}"
+        expect(response).to have_http_status(401)
+      else
+        access_token = Fabricate(token)
+        delete_with_token  "/api/v1/meters/#{meter.id}", access_token.token
+        expect(response).to have_http_status(403)
+      end
+    end
+    
   end
 
 
-  it 'does gets a meter with manager token' do
+
+  it 'gets a meter with full accees token as admin' do
     access_token  = Fabricate(:full_access_token_as_admin)
     meter = Fabricate(:meter)
     get_with_token "/api/v1/meters/#{meter.id}", access_token.token
@@ -17,7 +70,7 @@ describe "Meters API" do
 
 
 
-  it 'does creates a meter with manager token' do
+  it 'creates a meter with full access token as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
     meter = Fabricate.build(:meter)
 
@@ -37,7 +90,7 @@ describe "Meters API" do
 
 
 
-  it 'does not creates a already existing meter with manager token' do
+  it 'does not create an already existing meter with full access token as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
     meter = Fabricate(:meter)
 
@@ -56,7 +109,7 @@ describe "Meters API" do
 
 
 
-  it 'does update a meter with manager_token' do
+  it 'updates a meter with full access token as admin' do
     meter = Fabricate(:meter)
     access_token  = Fabricate(:full_access_token_as_admin)
 
@@ -80,25 +133,8 @@ describe "Meters API" do
 
 
 
-  it 'does not update a metering_point without token' do
-    meter = Fabricate(:meter)
 
-    request_params = {
-      id:                                 meter.id,
-      manufacturer_name:                  meter.manufacturer_name,
-      manufacturer_product_name:          "#{meter.manufacturer_product_name} updated",
-      manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber
-    }.to_json
-
-    put_without_token "/api/v1/meters", request_params
-
-    expect(response).to have_http_status(401)
-  end
-
-
-
-
-  it 'does delete a meter with manager_token' do
+  it 'deletes a meter with full access token as admin' do
     meter = Fabricate(:meter)
     access_token  = Fabricate(:full_access_token_as_admin)
     delete_with_token "/api/v1/meters/#{meter.id}", access_token.token
@@ -106,7 +142,7 @@ describe "Meters API" do
   end
 
 
-  xit 'does delete a meter and related metering_points with manager_token' do
+  xit 'does delete a meter and related metering_points with full access token' do
   end
 
 
