@@ -247,7 +247,7 @@ describe "Users API" do
     user.friends << friend
 
     delete_with_token "/api/v1/users/#{user.id}/friends/#{friend.id}", access_token.token
-    expect(response).to have_http_status(200)
+    expect(response).to have_http_status(204)
     get_with_token "/api/v1/users/#{user.id}/friends/#{friend.id}", access_token.token
     expect(response).to have_http_status(404)
   end
@@ -293,7 +293,7 @@ describe "Users API" do
     request       = user.received_friendship_requests.first
 
     put_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", {}, access_token.token
-    expect(response).to have_http_status(200)
+    expect(response).to have_http_status(204)
     modified_user = User.find(access_token.resource_owner_id)
     expect(modified_user.friends.size).to eq(1)
     expect(modified_user.received_friendship_requests.size).to eq(0)
@@ -317,7 +317,7 @@ describe "Users API" do
     request       = user.received_friendship_requests.first
 
     delete_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", access_token.token
-    expect(response).to have_http_status(200)
+    expect(response).to have_http_status(204)
     modified_user = User.find(access_token.resource_owner_id)
     expect(modified_user.friends.size).to eq(0)
     expect(modified_user.received_friendship_requests.size).to eq(0)

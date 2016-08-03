@@ -29,26 +29,16 @@ module API
           requires :meter_id, type: String, desc: "Meter"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
+        oauth2 :public, :full
         post do
-          doorkeeper_authorize! :public
-          if current_user
-            if MeteringPoint.creatable_by?(current_user)
-              metering_point = MeteringPoint.new({
-                name: params[:name],
-                mode: params[:mode],
-                readable: params[:readable],
-                meter_id: params[:meter_id],
-                uid: params[:uid]
-                })
-              if metering_point.save!
-                current_user.add_role(:manager, metering_point)
-                return metering_point
-              end
-            else
-              status 403
+          if MeteringPoint.creatable_by?(current_user)
+            metering_point = MeteringPoint.new(permitted_params)
+            if metering_point.save!
+              current_user.add_role(:manager, metering_point)
             end
+            metering_point
           else
-            status 401
+            status 403
           end
         end
 
@@ -57,30 +47,20 @@ module API
         desc "Update a MeteringPoint."
         params do
           requires :id, type: String, desc: 'MeteringPoint ID.'
-          requires :name, type: String, desc: "name"
-          requires :mode, type: String, desc: "direction of energie", values: MeteringPoint.modes
-          requires :readable, type: String, desc: "readable by?", values: MeteringPoint.readables
-          requires :meter_id, type: String, desc: "Meter"
+          optional :name, type: String, desc: "name"
+          optional :mode, type: String, desc: "direction of energie", values: MeteringPoint.modes
+          optional :readable, type: String, desc: "readable by?", values: MeteringPoint.readables
+          optional :meter_id, type: String, desc: "Meter"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
-        put do
-          doorkeeper_authorize! :public
-          if current_user
-            metering_point = MeteringPoint.find(params[:id])
-            if metering_point.updatable_by?(current_user)
-              metering_point.update({
-                name: params[:name],
-                mode: params[:mode],
-                readable: params[:readable],
-                meter_id: params[:meter_id],
-                uid: params[:uid]
-              })
-              return metering_point
-            else
-              status 403
-            end
+        oauth2 :public, :full
+        put ':id' do
+          metering_point = MeteringPoint.find(permitted_params[:id])
+          if metering_point.updatable_by?(current_user)
+            metering_point.update(permitted_params)
+            metering_point
           else
-            status 401
+            status 403
           end
         end
 
@@ -90,18 +70,14 @@ module API
         params do
           requires :id, type: String, desc: 'MeteringPoint ID.'
         end
+        oauth2 :full
         delete ':id' do
-          doorkeeper_authorize! :public
-          if current_user
-            metering_point = MeteringPoint.find(params[:id])
-            if metering_point.deletable_by?(current_user)
-              metering_point.destroy
-              status 204
-            else
-              status 403
-            end
+          metering_point = MeteringPoint.find(params[:id])
+          if metering_point.deletable_by?(current_user)
+            metering_point.destroy
+            status 204
           else
-            status 401
+            status 403
           end
         end
 
@@ -112,14 +88,14 @@ module API
           requires :id, type: String, desc: 'ID of the MeteringPoint'
         end
         paginate(per_page: per_page=10)
+        oauth2 :public, :full
         get ':id/comments' do
-          doorkeeper_authorize! :public
-          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
-            @per_page     = params[:per_page] || per_page
-            @page         = params[:page] || 1
-            @total_pages  = metering_point.comment_threads.page(@page).per_page(@per_page).total_pages
-            paginate(render(metering_point.comment_threads, meta: { total_pages: @total_pages }))
+            per_page     = params[:per_page] || per_page
+            page         = params[:page] || 1
+            total_pages  = metering_point.comment_threads.page(page).per_page(per_page).total_pages
+            paginate(render(metering_point.comment_threads, meta: { total_pages: total_pages }))
           else
             status 403
           end
@@ -131,14 +107,14 @@ module API
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
         paginate(per_page: per_page=10)
+        oauth2 :public, :full
         get ":id/managers" do
-          doorkeeper_authorize! :public
-          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
-            @per_page     = params[:per_page] || per_page
-            @page         = params[:page] || 1
-            @total_pages  = metering_point.managers.page(@page).per_page(@per_page).total_pages
-            paginate(render(metering_point.managers, meta: { total_pages: @total_pages }))
+            per_page     = params[:per_page] || per_page
+            page         = params[:page] || 1
+            total_pages  = metering_point.managers.page(page).per_page(per_page).total_pages
+            paginate(render(metering_point.managers, meta: { total_pages: total_pages }))
           else
             status 403
           end
@@ -147,13 +123,14 @@ module API
 
         desc 'Add user to metering point managers'
         params do
-          requires :user_id, type: String, desc: 'User id'
+          requires :id, type: String, desc: "ID of the MeteringPoint"
+          requires :user_id, type: String, desc: 'User ID'
         end
+        oauth2 :full
         post ':id/managers' do
-          doorkeeper_authorize! :public
-          metering_point  = MeteringPoint.find(params[:id])
-          user            = User.find(params[:user_id])
-          if current_user.has_role?(:manager, metering_point) || current_user.has_role?(:admin)
+          metering_point  = MeteringPoint.find(permitted_params[:id])
+          user            = User.find(permitted_params[:user_id])
+          if metering_point.updatable_by?(current_user)
             user.add_role(:manager, metering_point)
             user.create_activity(key: 'user.appointed_metering_point_manager', owner: current_user, recipient: metering_point)
           else
@@ -163,12 +140,17 @@ module API
 
 
         desc 'Remove user from metering point managers'
+        params do
+          requires :id, type: String, desc: "ID of the MeteringPoint"
+          requires :user_id, type: String, desc: 'User ID'
+        end
+        oauth2 :full
         delete ':id/managers/:user_id' do
-          doorkeeper_authorize! :public
-          metering_point  = MeteringPoint.find(params[:id])
-          user            = User.find(params[:user_id])
-          if current_user.id == user.id || current_user.has_role?(:admin)
+          metering_point  = MeteringPoint.find(permitted_params[:id])
+          user            = User.find(permitted_params[:user_id])
+          if metering_point.updatable_by?(current_user)
             user.remove_role(:manager, metering_point)
+            status 204
           else
             status 403
           end
@@ -179,9 +161,9 @@ module API
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
+        oauth2 :public, :full
         get ":id/address" do
-          doorkeeper_authorize! :public
-          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
+          metering_point  = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
             metering_point.address
           else
@@ -196,25 +178,33 @@ module API
         end
         oauth2 false
         get ':id/members' do
-          metering_point  = MeteringPoint.where(id: permitted_params[:id]).first!
-          metering_point.members.select do |member|
-            member.profile.readable_by_world? || (current_user && member.profile.readable_by?(current_user))
+          metering_point = MeteringPoint.find(permitted_params[:id])
+          if metering_point.readable_by?(current_user)
+            per_page     = params[:per_page] || per_page
+            page         = params[:page] || 1
+            
+            ids = metering_point.members.select do |member|
+              member.profile.readable_by?(current_user)
+            end
+            members =  metering_point.members.where(id: ids)
+            total_pages  = members.page(page).per_page(per_page).total_pages
+            paginate(render(members, meta: { total_pages: total_pages }))
+          else
+            status 403
           end
         end
 
 
         desc 'Add user to metering point members'
         params do
-          requires :user_id, type: String, desc: 'User id'
+          requires :id, type: String, desc: "ID of the MeteringPoint"
+          requires :user_id, type: String, desc: 'User ID'
         end
+        oauth2 :full
         post ':id/members' do
-          doorkeeper_authorize! :public
-          metering_point  = MeteringPoint.find(params[:id])
-          user            = User.find(params[:user_id])
-          if (current_user.has_role?(:manager, metering_point) ||
-              current_user.has_role?(:member, metering_point) ||
-              current_user.has_role?(:admin))
-
+          metering_point  = MeteringPoint.find(permitted_params[:id])
+          user            = User.find(permitted_params[:user_id])
+          if metering_point.updatable_by?(current_user, :members)
             user.add_role(:member, metering_point)
             metering_point.create_activity key: 'metering_point_user_membership.create', owner: user
           else
@@ -224,14 +214,16 @@ module API
 
 
         desc 'Remove user from metering point members'
+        params do
+          requires :id, type: String, desc: "ID of the MeteringPoint"
+          requires :user_id, type: String, desc: 'User ID'
+        end
+        oauth2 :full
         delete ':id/members/:user_id' do
-          doorkeeper_authorize! :public
-          metering_point  = MeteringPoint.find(params[:id])
-          user            = User.find(params[:user_id])
-          if (current_user.id == user.id ||
-              current_user.has_role?(:admin) ||
-              current_user.has_role?(:manager, metering_point))
-
+          metering_point  = MeteringPoint.find(permitted_params[:id])
+          user            = User.find(permitted_params[:user_id])
+          if (current_user == user ||
+              metering_point.updatable_by?(current_user))
             user.remove_role(:member, metering_point)
             metering_point.create_activity(key: 'metering_point_user_membership.cancel', owner: user)
           else
@@ -244,10 +236,10 @@ module API
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
+        oauth2 :public, :full
         get ':id/meter' do
-          doorkeeper_authorize! :public
-          metering_point = MeteringPoint.where(id: permitted_params[:id]).first!
-          if current_user.has_role?(:manager, metering_point)
+          metering_point  = MeteringPoint.find(permitted_params[:id])
+          if metering_point.readable_by?(current_user, :meter)
             metering_point.meter
           else
             status 403

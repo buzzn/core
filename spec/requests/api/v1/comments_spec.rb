@@ -168,7 +168,7 @@ describe 'Comments API' do
     get_with_token "/api/v1/groups/#{group.id}/comments", manager_token.token
     expect(json['data'].size).to eq(2)
     delete_with_token "/api/v1/comments/#{child_comment.id}", manager_token.token
-    expect(response).to have_http_status(200)
+    expect(response).to have_http_status(204)
     get_with_token "/api/v1/groups/#{group.id}/comments", manager_token.token
     expect(json['data'].size).to eq(1)
   end
@@ -198,7 +198,7 @@ describe 'Comments API' do
     delete_with_token "/api/v1/comments/#{comment.id}", wrong_token.token
     expect(response).to have_http_status(403)
     delete_with_token "/api/v1/comments/#{comment.id}", access_token.token
-    expect(response).to have_http_status(200)
+    expect(response).to have_http_status(204)
   end
 
   it 'allows resource manager to delete resource comment-child' do
@@ -213,7 +213,7 @@ describe 'Comments API' do
     delete_with_token "/api/v1/comments/#{root_comment.id}", access_token.token
     expect(response).to have_http_status(403)
     delete_with_token "/api/v1/comments/#{child_comment.id}", access_token.token
-    expect(response).to have_http_status(200)
+    expect(response).to have_http_status(204)
   end
 
 

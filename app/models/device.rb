@@ -27,6 +27,35 @@ class Device < ActiveRecord::Base
     self.with_role(:manager, user)
   }
 
+  def self.outer_join
+    'LEFT OUTER JOIN metering_points ON metering_points.id = devices.metering_point_id'
+  end
+
+  def self.outer_join_where
+    "metering_points.id = devices.metering_point_id AND " +
+      "devices.mode = 'out' AND " +
+      "metering_points.group_id IS NOT NULL"
+  end
+  
+  scope :readable_by, -> (user) do
+    # TODO user AREL instead of activerecord DSL
+    if user
+      joins("LEFT OUTER JOIN roles ON roles.resource_id = devices.id OR roles.resource_id IS NULL")
+        .joins("LEFT OUTER JOIN users_roles ON users_roles.role_id = roles.id")
+        .joins(outer_join)
+        .where("#{outer_join_where} OR " +
+               "(users_roles.user_id = ? OR users_roles.user_id in (?)) AND " +
+               # manager role
+               "(roles.resource_id = devices.id AND " +
+               "roles.resource_type = '#{Device}' AND " +
+               "roles.name = 'manager' OR " +
+               # or admin role (with out associated resource)
+               "roles.name = 'admin' AND roles.resource_id IS NULL)", user.id, user.friends.select('id'))
+    else
+      joins(outer_join).where(outer_join_where) 
+    end
+  end
+
   def self.search_attributes
     [:manufacturer_name, :manufacturer_product_name, :mode, :category,
      :shop_link]

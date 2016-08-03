@@ -1,6 +1,32 @@
 # coding: utf-8
 describe "Device Model" do
 
+  let(:device_manager) { Fabricate(:user) }
+  let(:out_device_with_manager) do
+    device = Fabricate(:out_device)
+    device_manager.add_role(:manager, device)
+    device
+  end
+
+  let(:out_device_with_metering_point) do
+    Fabricate(:out_device_with_metering_point)
+  end
+
+  let(:out_device_with_metering_point_with_group) do
+    Fabricate(:out_device_with_metering_point_with_group)
+  end
+
+  let(:device_member) { Fabricate(:user) }
+  let(:in_device_with_member) do
+    device = Fabricate(:in_device)
+    device_member.add_role(:member, device)
+    device
+  end
+
+  let(:devices) do
+    [in_device_with_member, out_device_with_manager, out_device_with_metering_point, out_device_with_metering_point_with_group]
+  end
+
   it 'filters device' do
     device = Fabricate(:bhkw_justus)
     Fabricate(:auto_justus)
@@ -28,5 +54,25 @@ describe "Device Model" do
 
     devices = Device.filter(nil)
     expect(devices.size).to eq 2
+  end
+
+  it 'selects worldreadable devices for anonymous user' do
+    devices # create devices
+    expect(Device.readable_by(nil)).to match_array [out_device_with_metering_point_with_group]
+  end
+
+  it 'selects all devices by admin' do
+    devices # create devices
+    expect(Device.readable_by(Fabricate(:admin))).to match_array devices
+  end
+
+  it 'selects devices as manager' do
+    devices # create devices
+    expect(Device.readable_by(device_manager)).to match_array [out_device_with_metering_point_with_group, out_device_with_manager]
+  end
+
+  it 'selects devices as member' do
+    devices # create devices
+    expect(Device.readable_by(device_member)).to match_array [out_device_with_metering_point_with_group]
   end
 end

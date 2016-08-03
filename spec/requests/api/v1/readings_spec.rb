@@ -2,20 +2,31 @@ describe "Readings API" do
 
   # READ
 
-  it 'does not gets a reading without token' do
-    reading = Fabricate(:reading)
-    get_without_token "/api/v1/readings/#{reading.id}"
-    expect(response).to have_http_status(401)
+  [:no_access_token, :public_access_token, :full_access_token, :smartmeter_access_token].each do |token|
+
+    it "does not get a reading with #{token}" do
+      reading = Fabricate(:reading)
+
+      if token == :no_access_token
+        get_without_token "/api/v1/readings/#{reading.id}"
+        expect(response).to have_http_status(401)
+      else
+        access_token = Fabricate(token)
+        get_with_token "/api/v1/readings/#{reading.id}", access_token.token
+        expect(response).to have_http_status(403)
+      end
+    end
+
   end
 
-  it 'does gets a reading as manager' do
+  it 'gets a reading with full access token as admin' do
     access_token  = Fabricate(:full_access_token_as_admin)
     reading       = Fabricate(:reading_with_easy_meter_q3d_and_metering_point)
     get_with_token "/api/v1/readings/#{reading.id}", access_token.token
     expect(response).to have_http_status(200)
   end
 
-  it 'does get a reading as manager' do
+  it 'gets a reading with public access token as manager' do
     reading       = Fabricate(:reading_with_easy_meter_q3d_and_manager)
     manager       = reading.meter.managers.first
     access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
@@ -23,16 +34,10 @@ describe "Readings API" do
     expect(response).to have_http_status(200)
   end
 
-  it 'does not get a reading as stranger' do
-    reading       = Fabricate(:reading_with_easy_meter_q3d_and_metering_point)
-    access_token  = Fabricate(:public_access_token)
-    get_with_token "/api/v1/readings/#{reading.id}", access_token.token
-    expect(response).to have_http_status(403)
-  end
 
   # CREATE
 
-  it 'does creates a reading with token' do
+  it 'create a reading with public access token as manager' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
     access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
@@ -54,7 +59,7 @@ describe "Readings API" do
 
 
 
-  it 'does create a correct reading with token' do
+  it 'creates a correct reading with public access token as manager' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
     access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
@@ -81,7 +86,7 @@ describe "Readings API" do
 
 
 
-  it 'does not creates a reading without metering_point_id' do
+  it 'does not create a reading without metering_point_id' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
     access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
@@ -100,7 +105,7 @@ describe "Readings API" do
 
 
 
-  it 'does not creates a reading without timestamp' do
+  it 'does not create a reading without timestamp' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
     access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
@@ -118,7 +123,7 @@ describe "Readings API" do
   end
 
 
-  it 'does not creates a reading without energy_a_milliwatt_hour' do
+  it 'does not create a reading without energy_a_milliwatt_hour' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
     access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
@@ -137,7 +142,7 @@ describe "Readings API" do
 
 
 
-  it 'does not creates a reading without milliwatt' do
+  it 'does not create a reading without milliwatt' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
     access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)

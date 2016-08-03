@@ -26,6 +26,23 @@ class Contract < ActiveRecord::Base
   scope :electricity_purchases,     -> { where(mode: 'electricity_purchase_contract') }
   scope :servicings,                -> { where(mode: 'servicing_contract') }
 
+  scope :readable_by,               -> (user) do
+    if user
+      joins("INNER JOIN roles ON " +
+            # manager role
+            "roles.name = 'manager' AND " +
+            # on contract.group
+            "(roles.resource_id = contracts.group_id AND roles.resource_type = '#{Group}' OR " +
+            # or on contrat.metering_point
+            "roles.resource_id = contracts.metering_point_id AND roles.resource_type = '#{MeteringPoint}') OR " +
+            # or admin role (with out associated resource)
+            "roles.name = 'admin' AND roles.resource_id IS NULL")
+        .joins("INNER JOIN users_roles ON users_roles.role_id = roles.id")
+        .where('users_roles.user_id = ?', user.id)
+    else
+      where("1=0") #empty set
+    end
+  end
 
   after_save :validates_credentials
 

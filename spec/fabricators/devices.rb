@@ -8,10 +8,29 @@ Fabricator :device do
   shop_link                     'http://www.amazon.com'
 end
 
-
-
-Fabricator :auto_justus, from: :device do
+Fabricator :in_device, from: :device do
   mode                          'in'
+end
+
+Fabricator :out_device, from: :device do
+  mode                          'out'
+end
+
+Fabricator :out_device_with_metering_point, from: :out_device do
+  after_create { |device|
+    device.metering_point = Fabricate(:metering_point)
+    device.save!
+  }
+end
+
+Fabricator :out_device_with_metering_point_with_group, from: :out_device_with_metering_point do
+  after_create { |device|
+    device.metering_point.group = Fabricate(:group)
+    device.metering_point.save!
+  }
+end
+
+Fabricator :auto_justus, from: :in_device do
   manufacturer_name             'Mitsubishi'
   manufacturer_product_name     'i-MiEV'
   category                      'Elektroauto'
@@ -21,9 +40,8 @@ Fabricator :auto_justus, from: :device do
 end
 
 
-Fabricator :bhkw_justus, from: :device do
+Fabricator :bhkw_justus, from: :out_device do
   law                           'kwkg'
-  mode                          'out'
   manufacturer_name             'Honda'
   manufacturer_product_name     'EcoPower 1.0'
   category                      'Blockheizkraftwerk'
@@ -34,9 +52,8 @@ Fabricator :bhkw_justus, from: :device do
   readable    'world'
 end
 
-Fabricator :dach_pv_justus, from: :device do
+Fabricator :dach_pv_justus, from: :out_device do
   law                           'eeg'
-  mode                          'out'
   manufacturer_name             'solarwatt'
   manufacturer_product_name     'PV 8,51'
   category                      'Photovoltaikanlage'
@@ -74,9 +91,8 @@ Fabricator :pv_karin, from: :device do
 end
 
 
-Fabricator :bhkw_stefan, from: :device do
+Fabricator :bhkw_stefan, from: :out_device do
   law                           'kwkg'
-  mode                          'out'
   manufacturer_name             'Senertec'
   manufacturer_product_name     'Dachs'
   category                      'Blockheizkraftwerk'
@@ -88,9 +104,8 @@ end
 
 
 
-Fabricator :hof_butenland_wind, from: :device do
+Fabricator :hof_butenland_wind, from: :out_device do
   law                           'eeg'
-  mode                          'out'
   manufacturer_name             'Enercon'
   manufacturer_product_name     '16'
   category                      'Windkraftanlage'
@@ -105,8 +120,7 @@ end
 
 
 
-Fabricator :gocycle, from: :device do
-  mode                          'in'
+Fabricator :gocycle, from: :in_device do
   manufacturer_name             'Gocycle'
   manufacturer_product_name     'GR2'
   category                      'Pedelec'

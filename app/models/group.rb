@@ -44,6 +44,27 @@ class Group < ActiveRecord::Base
     self.with_role(:manager, user)
   }
 
+  scope :members_for_group, ->(group) do
+    @join ||= begin
+                mp = MeteringPoint.arel_table
+                roles = Role.arel_table
+                users_roles = Arel::Table.new(:users_roles)
+                users = User.arel_table
+
+                users_on = users.create_on(users_roles[:user_id].eq(users[:id]))
+                users_join = users.create_join(users_roles, users_on)
+
+                users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
+                users_roles_join = users_roles.create_join(roles, users_roles_on)
+
+                roles_mp_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(MeteringPoint.to_s).and(roles[:name].eq(:member))))
+                roles_mp_join = roles.create_join(mp, roles_mp_on)
+
+                User.distinct.joins(users_join, users_roles_join, roles_mp_join)
+              end
+    @join.where('metering_points.group_id': group)
+  end
+
   scope :readable_by_world, -> { where(readable: 'world') }
 
   def self.search_attributes
@@ -84,7 +105,7 @@ class Group < ActiveRecord::Base
   end
 
   def members
-    (MeteringPoint.by_group(self).collect(&:members).flatten).uniq
+    self.class.members_for_group(self)
   end
 
   def in_metering_points

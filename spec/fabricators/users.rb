@@ -4,13 +4,13 @@ Fabricator :user do
   email             { FFaker::Internet.email }
   password          '12345678'
   profile           { Fabricate(:profile) }
-  after_create { |user |
+  after_create { |user|
     user.confirm
   }
 end
 
 Fabricator :admin, from: :user do
-  after_create { |user | user.add_role(:admin) }
+  after_create { |user| user.add_role(:admin) }
 end
 
 Fabricator :user_with_metering_point, from: :user do

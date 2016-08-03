@@ -12,10 +12,11 @@ module API
         paginate(per_page: per_page=10)
         oauth2 :full
         get do
-          @per_page     = params[:per_page] || per_page
-          @page         = params[:page] || 1
-          @total_pages  = Contract.filter(params[:search]).page(@page).per_page(@per_page).total_pages
-          paginate(render(Contract.filter(params[:search]), meta: { total_pages: @total_pages }))
+          per_page     = params[:per_page] || per_page
+          page         = params[:page] || 1
+          contracts = Contract.filter(params[:search]).readable_by(current_user)
+          total_pages  = contracts.page(page).per_page(per_page).total_pages
+          paginate(render(contracts, meta: { total_pages: total_pages }))
         end
 
         desc 'Return a Contract'
@@ -24,7 +25,12 @@ module API
         end
         oauth2 :public, :full
         get ':id' do
-          Contract.find(params[:id])
+          contract = Contract.find(permitted_params[:id])
+          if contract.readable_by?(current_user)
+            contract
+          else
+            status 403
+          end
         end
 
 
@@ -44,19 +50,22 @@ module API
         end
         oauth2 :full
         post do
-          @params = declared(params, include_missing: false).contract || declared(params, include_missing: false)
-          @contract = Contract.new(@params)
-          @contract.contracting_party = current_user.contracting_party if current_user.contracting_party
-          if @contract.save!
-            current_user.add_role :manager, @contract
+          if Contract.creatable_by?(current_user)
+            contract = Contract.new(permitted_params)
+            contract.contracting_party = current_user.contracting_party if current_user.contracting_party
+            if contract.save!
+              current_user.add_role :manager, contract
+            end
+            contract
+          else
+            status 403
           end
-          @contract
         end
 
 
         desc 'Update a Contract'
         params do
-          requires :id,           type: String, desc: 'Contract ID'
+          requires :id,                     type: String, desc: 'Contract ID'
           optional :mode,                   type: String, desc: 'Contract description'
           optional :organization_id,        type: String, desc: 'Organization id'
           optional :tariff,                 type: String, desc: 'Tariff'
@@ -70,12 +79,14 @@ module API
           optional :commissioning,          type: Date, desc: 'Commissioning'
         end
         oauth2 :full
-        put do
-          @params = declared(params, include_missing: false).contract || declared(params, include_missing: false)
-          @contract = Contract.find(@params.id)
-          @params.delete('id')
-          @contract.update_attributes(@params)
-          return @contract
+        put ':id' do
+          contract = Contract.find(permitted_params.id)
+          if contract.updatable_by?(current_user)
+            contract.update_attributes(permitted_params)
+            contract
+          else
+            status 403
+          end
         end
 
 
@@ -85,8 +96,13 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          Contract.find(params[:id]).destroy
-          status 200
+          contract = Contract.find(permitted_params[:id])
+          if contract.deletable_by? current_user
+            contract.destroy
+            status 204
+          else
+            status 403
+          end
         end
 
 

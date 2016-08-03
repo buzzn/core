@@ -14,8 +14,8 @@ module API
           requires :metering_point_ids, type: String, desc: "metering_point IDs"
           optional :timestamp, type: DateTime
         end
+        oauth2 false
         get 'present' do
-          doorkeeper_authorize! :public
 
           metering_points = MeteringPoint.where(id: params[:metering_point_ids].split(","))
           metering_points_hash = Aggregate.sort_metering_points(metering_points)
@@ -26,18 +26,9 @@ module API
             if metering_points_hash[:data_sources].size > 1
               error!('it is not possible to sum metering_points with differend data_source', 406)
             else
-              @metering_points = []
               metering_points.each do |metering_point|
-                if metering_point.readable_by_world?
-                  @metering_points << metering_point
-                elsif current_user
-                  if metering_point.readable_by?(current_user)
-                    @metering_points << metering_point
-                  else
-                    error!('Forbidden', 403)
-                  end
-                else
-                  error!('Unauthorized', 401)
+                unless metering_point.readable_by?(current_user)
+                  error!('Forbidden', 403)
                 end
               end
               return Aggregate.new(metering_points_hash).present( { timestamp: params[:timestamp] })
@@ -66,8 +57,8 @@ module API
                                                         minute_to_seconds
                                                         )
         end
+        oauth2 false
         get 'past' do
-          doorkeeper_authorize! :public
 
           metering_points = MeteringPoint.where(id: params[:metering_point_ids].split(","))
           metering_points_hash = Aggregate.sort_metering_points(metering_points)
@@ -78,18 +69,9 @@ module API
             if metering_points_hash[:data_sources].size > 1
               error!('it is not possible to sum metering_points with differend data_source', 406)
             else
-              @metering_points = []
               metering_points.each do |metering_point|
-                if metering_point.readable_by_world?
-                  @metering_points << metering_point
-                elsif current_user
-                  if metering_point.readable_by?(current_user)
-                    @metering_points << metering_point
-                  else
-                    error!('Forbidden', 403)
-                  end
-                else
-                  error!('Unauthorized', 401)
+                unless metering_point.readable_by?(current_user)
+                  error!('Forbidden', 403)
                 end
               end
               return Aggregate.new(metering_points_hash).past( { timestamp: params[:timestamp], resolution: params[:resolution] })
