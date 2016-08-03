@@ -4,18 +4,15 @@ module API
       include API::V1::Defaults
       resource :readings do
 
-        before do
-          doorkeeper_authorize! :full, :public
-        end
-
 
         desc "Return a Reading"
         params do
           requires :id, type: String, desc: "ID of the Device"
         end
+        oauth2 :public, :full
         get ":id" do
-          reading = Reading.find(params[:id])
-          if current_user && reading.readable_by?(current_user)
+          reading = Reading.find(permitted_params[:id])
+          if reading.readable_by?(current_user)
             reading
           else
             status 403
@@ -32,18 +29,11 @@ module API
           requires :power_a_milliwatt,        type: Integer,  desc: "power A(often consumption) in Milliwatt"
           optional :power_b_milliwatt,        type: Integer,  desc: "power B(often production) in Milliwatt"
         end
-
+        oauth2 :public, :full
         post do
-          reading = Reading.new(
-            meter_id:                 params[:meter_id],
-            timestamp:                params[:timestamp],
-            energy_a_milliwatt_hour:  params[:energy_a_milliwatt_hour],
-            energy_b_milliwatt_hour:  params[:energy_b_milliwatt_hour],
-            power_a_milliwatt:        params[:power_a_milliwatt],
-            power_b_milliwatt:        params[:power_b_milliwatt]
-          )
-          if current_user && current_user.can_create?(reading)
-            reading.save!
+          meter = Meter.find(permitted_params[:meter_id])
+          if Reading.creatable_by?(current_user, meter)
+            reading = Reading.create(permitted_params)
 
             # if reading.timestamp > 30.seconds.ago # don't push old readings
             #   Sidekiq::Client.push({
@@ -57,7 +47,7 @@ module API
             #   })
             # end
 
-            return reading
+            reading
           else
             status 403
           end
