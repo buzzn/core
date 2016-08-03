@@ -10,7 +10,7 @@ module API
           requires :authorization_code, type: String, desc: "Authorization Code"
         end
         post 'token' do
-          code   = params[:authorization_code]
+          code   = permitted_params[:authorization_code]
           grant  = Doorkeeper::AccessGrant.by_token(code)
           app    = grant.application
           client = OAuth2::Client.new(app.uid, app.secret, :site => Rails.application.secrets.hostname)

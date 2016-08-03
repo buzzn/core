@@ -17,7 +17,7 @@ module API
         oauth2 false
         get 'present' do
 
-          metering_points = MeteringPoint.where(id: params[:metering_point_ids].split(","))
+          metering_points = MeteringPoint.where(id: permitted_params[:metering_point_ids].split(","))
           metering_points_hash = Aggregate.sort_metering_points(metering_points)
 
           if metering_points.size > 5
@@ -31,7 +31,7 @@ module API
                   error!('Forbidden', 403)
                 end
               end
-              return Aggregate.new(metering_points_hash).present( { timestamp: params[:timestamp] })
+              return Aggregate.new(metering_points_hash).present( { timestamp: permitted_params[:timestamp] })
             end
           end
 
@@ -60,7 +60,7 @@ module API
         oauth2 false
         get 'past' do
 
-          metering_points = MeteringPoint.where(id: params[:metering_point_ids].split(","))
+          metering_points = MeteringPoint.where(id: permitted_params[:metering_point_ids].split(","))
           metering_points_hash = Aggregate.sort_metering_points(metering_points)
 
           if metering_points.size > 5
@@ -74,7 +74,7 @@ module API
                   error!('Forbidden', 403)
                 end
               end
-              return Aggregate.new(metering_points_hash).past( { timestamp: params[:timestamp], resolution: params[:resolution] })
+              return Aggregate.new(metering_points_hash).past( { timestamp: permitted_params[:timestamp], resolution: params[:resolution] })
             end
           end
 

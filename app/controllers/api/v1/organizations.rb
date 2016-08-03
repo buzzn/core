@@ -8,13 +8,15 @@ module API
         desc "Return all organizations"
         params do
           optional :search, type: String, desc: "Search query using #{Base.join(Organization.search_attributes)}"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 false
         get do
-          per_page         = params[:per_page] || per_page
-          page             = params[:page] || 1
-          ids = Organization.filter(params[:search]).select do |obj|
+          per_page         = permitted_params[:per_page]
+          page             = permitted_params[:page]
+          ids = Organization.filter(permitted_params[:search]).select do |obj|
             obj.readable_by?(current_user)
           end.collect { |obj| obj.id }
           organizations = Organization.where(id: ids)
@@ -30,7 +32,7 @@ module API
         end
         oauth2 false
         get ":id" do
-          organization = Organization.find(params[:id])
+          organization = Organization.find(permitted_params[:id])
           if organization.readable_by?(current_user)
             organization
           else
@@ -42,14 +44,16 @@ module API
         desc 'Return the related contracts for an organization'
         params do
           requires :id, type: String, desc: 'ID of the organization'
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 false
         get ':id/contracts' do
-          organization = Organization.where(id: permitted_params[:id]).first!
+          organization = Organization.find(permitted_params[:id])
           if organization.readable_by?(current_user)
-            per_page     = params[:per_page] || per_page
-            page         = params[:page] || 1
+            per_page     = permitted_params[:per_page]
+            page         = permitted_params[:page]
             total_pages  = organization.contracts.page(page).per_page(per_page).total_pages
             paginate(render(organization.contracts, meta: { total_pages: total_pages }))
           else
@@ -61,14 +65,16 @@ module API
         desc 'Return the related managers of an organization'
         params do
           requires :id, type: String, desc: 'ID of the organization'
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 false
         get ':id/managers' do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
-            per_page     = params[:per_page] || per_page
-            page         = params[:page] || 1
+            per_page     = permitted_params[:per_page]
+            page         = permitted_params[:page]
             total_pages  = organization.managers.page(page).per_page(per_page).total_pages
             paginate(render(organization.managers, meta: { total_pages: total_pages }))
           else
@@ -80,14 +86,16 @@ module API
         desc 'Return the related members of an organization'
         params do
           requires :id, type: String, desc: 'ID of the organization'
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 false
         get ':id/members' do
-          organization = Organization.where(id: permitted_params[:id]).first!
+          organization = Organization.find(permitted_params[:id])
           if organization.readable_by?(current_user)
-            per_page     = params[:per_page] || per_page
-            page         = params[:page] || 1
+            per_page     = permitted_params[:per_page]
+            page         = permitted_params[:page]
             total_pages  = organization.members.page(page).per_page(per_page).total_pages
             paginate(render(organization.members, meta: { total_pages: total_pages }))
           else
@@ -102,7 +110,7 @@ module API
         end
         oauth2 false
         get ':id/address' do
-          organization = Organization.where(id: permitted_params[:id]).first!
+          organization = Organization.find(permitted_params[:id])
           if organization.readable_by?(current_user)
             organization.address
           else
@@ -117,7 +125,7 @@ module API
         end
         oauth2 false
         get ':id/contracting_party' do
-          organization = Organization.where(id: permitted_params[:id]).first!
+          organization = Organization.find(permitted_params[:id])
           if organization.readable_by?(current_user)
             organization.contracting_party
           else
@@ -139,16 +147,7 @@ module API
         oauth2 :full
         post do
           if Organization.creatable_by?(current_user)
-            organization = Organization.new({
-                name:        params.name,
-                phone:       params.phone,
-                fax:         params.fax,
-                website:     params.website,
-                description: params.description,
-                mode:        params.mode,
-                email:       params.email
-            })
-
+            organization = Organization.new(permitted_params)
             if organization.save!
               current_user.add_role(:manager, organization)
               return organization
@@ -175,11 +174,10 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          organization = Organization.find(params[:id])
+          organization = Organization.find(permitted_params[:id])
 
           if organization.updatable_by?(current_user)
-            params.delete(:id)
-            organization.update(params)
+            organization.update(permitted_params)
             return organization
           else
             status 403
@@ -194,7 +192,7 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          organization = Organization.find(params[:id])
+          organization = Organization.find(permitted_params[:id])
           if organization.deletable_by?(current_user)
             organization.destroy
             status 204
@@ -206,13 +204,14 @@ module API
 
         desc 'Add user to organization managers'
         params do
+          requires :id, type: String, desc: "Organization ID"
           requires :user_id, type: String, desc: 'User id'
         end
         oauth2 :full
         post ':id/managers' do
-          organization = Organization.find(params[:id])
+          organization = Organization.find(permitted_params[:id])
           if organization.updatable_by?(current_user)
-            user = User.find(params[:user_id])
+            user = User.find(permitted_params[:user_id])
             user.add_role(:manager, organization)
           else
             status 403
@@ -221,11 +220,15 @@ module API
 
 
         desc 'Remove user from organization managers'
+        params do
+          requires :id, type: String, desc: "Organization ID"
+          requires :user_id, type: String, desc: 'User id'
+        end
         oauth2 :full
         delete ':id/managers/:user_id' do
-          organization = Organization.find(params[:id])
+          organization = Organization.find(permitted_params[:id])
           if organization.updatable_by?(current_user)
-            user = User.find(params[:user_id])
+            user = User.find(permitted_params[:user_id])
             user.remove_role(:manager, organization)
             status 204
           else
@@ -236,13 +239,14 @@ module API
 
         desc 'Add user to organization members'
         params do
+          requires :id, type: String, desc: "Organization ID"
           requires :user_id, type: String, desc: 'User id'
         end
         oauth2 :full
         post ':id/members' do
-          organization = Organization.find(params[:id])
+          organization = Organization.find(permitted_params[:id])
           if organization.updatable_by?(current_user)
-            user = User.find(params[:user_id])
+            user = User.find(permitted_params[:user_id])
             user.add_role(:member, organization)
           else
             status 403
@@ -251,11 +255,15 @@ module API
 
 
         desc 'Remove user from organization members'
+        params do
+          requires :id, type: String, desc: "Organization ID"
+          requires :user_id, type: String, desc: 'User id'
+        end
         oauth2 :full
         delete ':id/members/:user_id' do
-          organization = Organization.find(params[:id])
+          organization = Organization.find(permitted_params[:id])
           if organization.updatable_by?(current_user)
-            user = User.find(params[:user_id])
+            user = User.find(permitted_params[:user_id])
             user.remove_role(:member, organization)
             status 204
           else

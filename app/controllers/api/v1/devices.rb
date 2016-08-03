@@ -7,13 +7,16 @@ module API
         desc "Return all Device"
         params do
           optional :search, type: String, desc: "Search query using #{Base.join(Device.search_attributes)}"
+          
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 false
         get do
-          per_page     = params[:per_page] || per_page
-          page         = params[:page] || 1
-          devices = Device.filter(params[:search]).readable_by(current_user)
+          per_page     = permitted_params[:per_page]
+          page         = permitted_params[:page]
+          devices = Device.filter(permitted_params[:search]).readable_by(current_user)
           total_pages  = devices.page(page).per_page(per_page).total_pages
           paginate(render(devices, meta: { total_pages: total_pages }))
         end

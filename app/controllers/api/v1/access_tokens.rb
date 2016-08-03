@@ -15,15 +15,15 @@ module API
           unless Doorkeeper::AccessToken.creatable_by?(current_user)
             return status 403
           end
-          params[:scopes].split(/,\s+/).each do |scope|
+          permitted_params[:scopes].split(/,\s+/).each do |scope|
             unless Doorkeeper.configuration.scopes.member? scope
               return status 400
             end
           end
           Doorkeeper::AccessToken.create!(
-            scopes: params[:scopes],
+            scopes: permitted_params[:scopes],
             resource_owner_id: current_user.id,
-            application_id: params[:application_id]
+            application_id: permitted_params[:application_id]
           )
         end
 
