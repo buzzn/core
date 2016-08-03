@@ -67,7 +67,7 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   scope :accessible_by_user, lambda {|user|
-    self.with_role([:manager, :member], user).uniq
+    self.with_role([:manager, :member], user).distinct
   }
 
   scope :editable_by_user_without_meter_not_virtual, lambda {|user|
