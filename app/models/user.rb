@@ -123,8 +123,12 @@ class User < ActiveRecord::Base
     MeteringPoint.with_role(:member, self).collect(&:decorate)
   end
 
+  def accessible_metering_points_relation
+    MeteringPoint.accessible_by_user(self).distinct
+  end
+
   def accessible_metering_points
-    MeteringPoint.accessible_by_user(self).uniq.collect(&:decorate)
+    accessible_metering_points_relation.collect(&:decorate)
   end
 
   def self.unsubscribed_from_notification(key, resource)

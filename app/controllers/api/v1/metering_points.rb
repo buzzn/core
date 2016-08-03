@@ -11,7 +11,7 @@ module API
         end
         oauth2 false
         get ":id" do
-          metering_point = MeteringPoint.where(id: params[:id]).first!
+          metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
             metering_point
           else
@@ -72,7 +72,7 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          metering_point = MeteringPoint.find(params[:id])
+          metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.deletable_by?(current_user)
             metering_point.destroy
             status 204
@@ -86,14 +86,16 @@ module API
         desc 'Return the related comments for MeteringPoint'
         params do
           requires :id, type: String, desc: 'ID of the MeteringPoint'
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 :public, :full
         get ':id/comments' do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
-            per_page     = params[:per_page] || per_page
-            page         = params[:page] || 1
+            per_page     = permitted_params[:per_page]
+            page         = permitted_params[:page]
             total_pages  = metering_point.comment_threads.page(page).per_page(per_page).total_pages
             paginate(render(metering_point.comment_threads, meta: { total_pages: total_pages }))
           else
@@ -105,14 +107,16 @@ module API
         desc "Return the related managers for MeteringPoint"
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 :public, :full
         get ":id/managers" do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
-            per_page     = params[:per_page] || per_page
-            page         = params[:page] || 1
+            per_page     = permitted_params[:per_page]
+            page         = permitted_params[:page]
             total_pages  = metering_point.managers.page(page).per_page(per_page).total_pages
             paginate(render(metering_point.managers, meta: { total_pages: total_pages }))
           else
@@ -146,9 +150,9 @@ module API
         end
         oauth2 :full
         delete ':id/managers/:user_id' do
-          metering_point  = MeteringPoint.find(permitted_params[:id])
-          user            = User.find(permitted_params[:user_id])
+          metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.updatable_by?(current_user)
+            user = User.find(permitted_params[:user_id])
             user.remove_role(:manager, metering_point)
             status 204
           else
@@ -175,13 +179,16 @@ module API
         desc 'Return members of the MeteringPoint'
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
+        paginate
         oauth2 false
         get ':id/members' do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
-            per_page     = params[:per_page] || per_page
-            page         = params[:page] || 1
+            per_page     = permitted_params[:per_page]
+            page         = permitted_params[:page]
             
             ids = metering_point.members.select do |member|
               member.profile.readable_by?(current_user)

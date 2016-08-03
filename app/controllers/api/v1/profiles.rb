@@ -5,11 +5,15 @@ module API
       resource 'profiles' do
 
         desc "Return all profiles"
-        paginate(per_page: per_page=10)
+        params do
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
+        end
+        paginate
         oauth2 :full
         get do
-          per_page     = params[:per_page] || per_page
-          page         = params[:page] || 1
+          per_page     = permitted_params[:per_page]
+          page         = permitted_params[:page]
           ids  = Profile.all.select { |p| p.readable_by?(current_user) }
           profiles = Profile.where(id: ids)
           total_pages = profiles.page(page).per_page(per_page).total_pages
@@ -51,16 +55,18 @@ module API
         desc 'Return profile groups'
         params do
           requires :id, type: String, desc: "ID of the Profile"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 false
         get ':id/groups' do
           profile   = Profile.find(permitted_params[:id])
-          per_page = params[:per_page] || per_page
-          page     = params[:page] || 1
-          user     = profile.user
 
           if profile.readable_by?(current_user)
+            per_page = permitted_params[:per_page]
+            page     = permitted_params[:page]
+            user     = profile.user
             if current_user.nil?
               filter = [ 'groups.readable = ?', 'world' ]
             elsif current_user.friend?(user)
@@ -80,8 +86,10 @@ module API
         desc 'Return profile friends'
         params do
           requires :id, type: String, desc: "ID of the Profile"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 false
         get ':id/friends' do
           profile = Profile.find(permitted_params[:id])
@@ -90,8 +98,8 @@ module API
             ids          = profile.user.friends.select do |f|
               f.readable_by?(current_user)
             end
-            per_page     = params[:per_page] || per_page
-            page         = params[:page] || 1
+            per_page     = permitted_params[:per_page]
+            page         = permitted_params[:page]
             friends      = User.where(id: ids)
             total_pages  = friends.page(page).per_page(per_page).total_pages
             paginate(render(friends, meta: { total_pages: total_pages }))
@@ -103,15 +111,17 @@ module API
         desc 'Return profile metering points'
         params do
           requires :id, type: String, desc: "ID of the Profile"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 false
         get ':id/metering-points' do
           profile              = Profile.find(permitted_params[:id])
-          per_page             = params[:per_page] || per_page
-          page                 = params[:page] || 1
 
           if profile.readable_by?(current_user)
+            per_page = permitted_params[:per_page]
+            page     = permitted_params[:page]
             if profile.readable_by_world? && current_user.nil?
               filter = [ 'readable = ?', 'world' ]
             elsif current_user.friend?(profile.user)
@@ -126,7 +136,6 @@ module API
             status 403
           end
         end
-
 
       end
     end

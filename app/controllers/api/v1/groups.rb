@@ -7,26 +7,28 @@ module API
         desc "Return all groups"
         params do
           optional :search, type: String, desc: "Search query using #{Base.join(Group.search_attributes)}"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 false
         get root: :groups do
-          group_ids = Group.filter(params[:search]).where(readable: 'world').ids
+          group_ids = Group.filter(permitted_params[:search]).where(readable: 'world').ids
           if current_user
-            group_ids << Group.filter(params[:search]).where(readable: 'community').ids
-            group_ids << Group.filter(params[:search]).with_role(:manager, current_user)
+            group_ids << Group.filter(permitted_params[:search]).where(readable: 'community').ids
+            group_ids << Group.filter(permitted_params[:search]).with_role(:manager, current_user)
             current_user.friends.each do |friend|
               if friend
-                Group.filter(params[:search]).where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
+                Group.filter(permitted_params[:search]).where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
                   group_ids << friend_group.id
                 end
               end
             end
           end
-          @per_page     = params[:per_page] || per_page
-          @page         = params[:page] || 1
-          @total_pages  = Group.where(id: group_ids.flatten).page(@page).per_page(@per_page).total_pages
-          paginate(render(Group.where(id: group_ids.flatten), meta: { total_pages: @total_pages }))
+          per_page     = permitted_params[:per_page]
+          page         = permitted_params[:page]
+          total_pages  = Group.where(id: group_ids.flatten).page(page).per_page(per_page).total_pages
+          paginate(render(Group.where(id: group_ids.flatten), meta: { total_pages: total_pages }))
         end
 
 
@@ -109,15 +111,17 @@ module API
         desc "Return the related metering-points for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 false
         get ":id/metering-points" do
           group = Group.find(permitted_params[:id])
 
           if group.readable_by?(current_user)
-            per_page        = params[:per_page] || per_page
-            page            = params[:page] || 1
+            per_page        = permitted_params[:per_page]
+            page            = permitted_params[:page]
             metering_points = MeteringPoint.by_group(group).without_externals
             total_pages     = metering_points.page(page).per_page(per_page).total_pages
             paginate(render(metering_points, meta: { total_pages: total_pages }))
@@ -131,14 +135,16 @@ module API
         desc "Return the related managers for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 :public, :full
         get ":id/managers" do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            per_page     = params[:per_page] || per_page
-            page         = params[:page] || 1
+            per_page     = permitted_params[:per_page]
+            page         = permitted_params[:page]
             total_pages  = group.managers.page(page).per_page(per_page).total_pages
             paginate(render(group.managers, meta: { total_pages: total_pages }))
           else
@@ -185,14 +191,16 @@ module API
         desc "Return the related members for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 :public, :full
         get ":id/members" do
           group           = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            per_page     = params[:per_page] || per_page
-            page         = params[:page] || 1
+            per_page     = permitted_params[:per_page]
+            page         = permitted_params[:page]
             members      = group.members
             total_pages  = members.page(page).per_page(per_page).total_pages
             paginate(render(members, meta: { total_pages: total_pages }))
@@ -235,14 +243,16 @@ module API
         desc 'Return the related comments for Group'
         params do
           requires :id, type: String, desc: 'ID of the group'
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate(per_page: per_page=10)
+        paginate
         oauth2 :public, :full
         get ':id/comments' do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            per_page     = params[:per_page] || per_page
-            page         = params[:page] || 1
+            per_page     = permitted_params[:per_page]
+            page         = permitted_params[:page]
             total_pages  = group.comment_threads.page(page).per_page(per_page).total_pages
             paginate(render(group.comment_threads, meta: { total_pages: total_pages }))
           else
