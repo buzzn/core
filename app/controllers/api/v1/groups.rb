@@ -77,7 +77,7 @@ module API
           optional :name
         end
         oauth2 :full
-        put do
+        patch ':id' do
           group = Group.find(permitted_params[:id])
           if group.updatable_by?(current_user)
             group.update(permitted_params)

@@ -129,10 +129,10 @@ describe "Devices API" do
 
       if token != :no_access_token
         access_token  = Fabricate(token)
-        put_with_token "/api/v1/devices/#{device.id}", access_token.token
+        patch_with_token "/api/v1/devices/#{device.id}", access_token.token
         expect(response).to have_http_status(403)
       else
-        put_without_token "/api/v1/devices/#{device.id}", request_params
+        patch_without_token "/api/v1/devices/#{device.id}", request_params
         expect(response).to have_http_status(401)
       end
 
@@ -171,7 +171,7 @@ describe "Devices API" do
         manufacturer_product_name:          "#{device.manufacturer_product_name} updated",
       }.to_json
 
-      put_with_token "/api/v1/devices/#{device.id}", request_params, access_token.token
+      patch_with_token "/api/v1/devices/#{device.id}", request_params, access_token.token
 
       expect(response).to have_http_status(200)
       expect(json['data']['attributes']['manufacturer-name']).to eq(device.manufacturer_name)

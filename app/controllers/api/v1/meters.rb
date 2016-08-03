@@ -52,7 +52,7 @@ module API
           optional :smart, desc: "meter is smart"
         end
         oauth2 :full
-        put do
+        patch ':id' do
           meter = Meter.find(permitted_params[:id])
           if meter.updatable_by?(current_user)
             meter.update(permitted_params)

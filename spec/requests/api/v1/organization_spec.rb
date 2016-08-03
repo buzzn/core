@@ -165,21 +165,7 @@ describe "Organizations API" do
   #UPDATE
 
   it 'does not update an organization without token' do
-    organization = Fabricate(:metering_service_provider)
-
-    request_params = {
-      id:          organization.id,
-      name:        'Google',
-      phone:       organization.phone,
-      fax:         organization.fax,
-      website:     organization.website,
-      description: organization.description,
-      mode:        organization.mode,
-      email:       organization.email
-    }.to_json
-
-    put "/api/v1/organizations", request_params
-
+    patch_without_token "/api/v1/organizations/123", {}.to_json
     expect(response).to have_http_status(401)
   end
 
@@ -187,27 +173,15 @@ describe "Organizations API" do
   [:public_access_token, :smartmeter_access_token].each do |token|
     it "does not update an organization with #{token}" do
       access_token = Fabricate(token)
-      put_with_token "/api/v1/organizations", {}.to_json, access_token.token
+      patch_with_token "/api/v1/organizations/321", {}.to_json, access_token.token
       expect(response).to have_http_status(403)
     end
   end
 
   it 'does not update an organization with full access token' do
-    access_token = Fabricate(:full_access_token)
     organization = Fabricate(:metering_service_provider)
-
-    request_params = {
-      id:          organization.id,
-      name:        'Google',
-      phone:       organization.phone,
-      fax:         organization.fax,
-      website:     organization.website,
-      description: organization.description,
-      mode:        organization.mode,
-      email:       organization.email
-    }.to_json
-
-    put_with_token "/api/v1/organizations", request_params, access_token.token
+    access_token = Fabricate(:full_access_token)
+    patch_with_token "/api/v1/organizations/#{organization.id}", {}.to_json, access_token.token
     expect(response).to have_http_status(403)
   end
 
@@ -227,7 +201,7 @@ describe "Organizations API" do
       email:       organization.email
     }.to_json
 
-    put_with_token "/api/v1/organizations", request_params, access_token.token
+    patch_with_token "/api/v1/organizations/#{organization.id}", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq organization.id
@@ -253,7 +227,7 @@ describe "Organizations API" do
       email:       organization.email
     }.to_json
 
-    put_with_token "/api/v1/organizations", request_params, access_token.token
+    patch_with_token "/api/v1/organizations/#{organization.id}", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq organization.id
