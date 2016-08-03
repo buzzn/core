@@ -9,11 +9,12 @@ class UserAuthorizer < ApplicationAuthorizer
   end
 
   def updatable_by?(user)
-    user && (user.has_role?(:admin) || user.has_role?(:manager, resource))
+    # TODO what is the manager of a user ?
+    user && (user == resource || user.has_role?(:admin) || user.has_role?(:manager, resource))
   end
 
   def deletable_by?(user)
-    user && user.has_role?(:admin)
+    user && (user == resource || user.has_role?(:admin))
   end
 
 end
