@@ -35,6 +35,14 @@ module RequestsHelper
 
 
 
+  def patch_with_token(path, params={}, token)
+    patch path, params, headers_with_token(token)
+  end
+
+  def patch_without_token(path, params={})
+    patch path, params, headers_without_token
+  end
+
   def put_with_token(path, params={}, token)
     put path, params, headers_with_token(token)
   end

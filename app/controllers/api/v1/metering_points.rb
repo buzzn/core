@@ -54,7 +54,7 @@ module API
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
         oauth2 :public, :full
-        put ':id' do
+        patch ':id' do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.updatable_by?(current_user)
             metering_point.update(permitted_params)

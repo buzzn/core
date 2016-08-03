@@ -36,7 +36,7 @@ module API
           requires :body,           type: String, desc: 'Comment body'
         end
         oauth2 :public, :full
-        put ':id' do
+        patch ':id' do
           comment = Comment.find(permitted_params[:id])
           if comment.updatable_by?(current_user)
             comment.update({ body: permitted_params[:body] })

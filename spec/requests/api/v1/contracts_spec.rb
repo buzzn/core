@@ -109,7 +109,7 @@ describe 'Contracts API' do
       request_params = {
         mode:  new_contract.mode,
       }.to_json
-      put_with_token "/api/v1/contracts/#{contract.id}", request_params, send(token_name).token
+      patch_with_token "/api/v1/contracts/#{contract.id}", request_params, send(token_name).token
       expect(response).to have_http_status(200)
       expect(json['data']['attributes']['mode']).to eq(new_contract.mode)
     end
@@ -195,7 +195,7 @@ describe 'Contracts API' do
     request_params = {
       mode:  new_contract.mode,
     }.to_json
-    put_without_token "/api/v1/contracts/#{contract_id}", request_params
+    patch_without_token "/api/v1/contracts/#{contract_id}", request_params
     expect(response).to have_http_status(401)
   end
 
@@ -211,7 +211,7 @@ describe 'Contracts API' do
         request_params[param_name] = "unknown"
       end
     end
-    put_with_token "/api/v1/contracts/#{contract_id}", request_params.to_json, access_token
+    patch_with_token "/api/v1/contracts/#{contract_id}", request_params.to_json, access_token
     expect(response).to have_http_status(400)
   end
 
@@ -222,7 +222,7 @@ describe 'Contracts API' do
     request_params = {
       mode:  new_contract.mode,
     }.to_json
-    put_with_token "/api/v1/contracts/#{id}random", request_params, access_token
+    patch_with_token "/api/v1/contracts/#{id}random", request_params, access_token
     expect(response).to have_http_status(404)
   end
 

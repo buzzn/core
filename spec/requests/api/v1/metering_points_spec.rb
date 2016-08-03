@@ -200,7 +200,7 @@ describe "Metering Points API" do
       meter_id: meter.id
     }.to_json
 
-    put_with_token "/api/v1/metering-points/#{metering_point.id}", request_params, access_token.token
+    patch_with_token "/api/v1/metering-points/#{metering_point.id}", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
@@ -225,7 +225,7 @@ describe "Metering Points API" do
       name: "#{metering_point.name} updated",
       meter_id: meter.id
     }.to_json
-    put_with_token "/api/v1/metering-points/#{metering_point.id}", request_params, access_token.token
+    patch_with_token "/api/v1/metering-points/#{metering_point.id}", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
@@ -250,7 +250,7 @@ describe "Metering Points API" do
       meter_id: meter.id
 
     }.to_json
-    put_without_token "/api/v1/metering-points", request_params
+    patch_without_token "/api/v1/metering-points", request_params
 
     expect(response).to have_http_status(401)
   end
