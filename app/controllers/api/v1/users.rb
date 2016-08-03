@@ -199,7 +199,7 @@ module API
 
         desc 'Accept friendship request'
         oauth2 :public, :full
-        put ':id/friendship-requests/:request_id' do
+        patch ':id/friendship-requests/:request_id' do
           user = User.find(params[:id])
           if user.updatable_by?(current_user)
             friendship_request = FriendshipRequest.where(receiver: user.id).find(params[:request_id])

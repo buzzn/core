@@ -204,19 +204,18 @@ describe "Groups API" do
   end
 
 
-  it 'does update a group' do
+  it 'updates a group' do
     metering_point = Fabricate(:out_metering_point_with_manager)
     manager       = metering_point.managers.first
     access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
     group = Fabricate(:group)
     manager.add_role(:manager, group)
     request_params = {
-      id: group.id,
       name: "#{group.name} updated",
       readable: group.readable,
       description: group.description
     }.to_json
-    put_with_token "/api/v1/groups", request_params, access_token.token
+    patch_with_token "/api/v1/groups/#{group.id}", request_params, access_token.token
     expect(response).to have_http_status(200)
     expect(json['data']['attributes']['name']).to eq("#{group.name} updated")
   end

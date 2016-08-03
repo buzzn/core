@@ -31,11 +31,11 @@ describe "Meters API" do
       }.to_json
 
       if token == :no_access_token
-        put_without_token "/api/v1/meters", request_params
+        patch_without_token "/api/v1/meters/#{meter.id}", request_params
         expect(response).to have_http_status(401)
       else
         access_token = Fabricate(token)
-        put_with_token  "/api/v1/meters", request_params, access_token.token
+        patch_with_token  "/api/v1/meters/#{meter.id}", request_params, access_token.token
         expect(response).to have_http_status(403)
       end
     end
@@ -120,7 +120,7 @@ describe "Meters API" do
       manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber
     }.to_json
 
-    put_with_token "/api/v1/meters", request_params, access_token.token
+    patch_with_token "/api/v1/meters/#{meter.id}", request_params, access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['data']['attributes']['manufacturer-name']).to eq(meter.manufacturer_name)

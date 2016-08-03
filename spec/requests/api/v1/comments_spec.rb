@@ -118,9 +118,9 @@ describe 'Comments API' do
     child_comment   = comments.find{|c| !c.parent_id.nil?}
     params = { body: FFaker::Lorem.paragraphs.join('-') }
 
-    put_with_token "/api/v1/comments/xxxxx", params.to_json, manager_token.token
+    patch_with_token "/api/v1/comments/xxxxx", params.to_json, manager_token.token
     expect(response).to have_http_status(404)
-    put_with_token "/api/v1/comments/#{child_comment.id}", {}, manager_token.token
+    patch_with_token "/api/v1/comments/#{child_comment.id}", {}, manager_token.token
     expect(response).to have_http_status(400)
     expect(json['error']).to eq('body is missing')
   end
@@ -138,9 +138,9 @@ describe 'Comments API' do
     comment       = Fabricate(:comment, comment_params)
     request_params = { body: 'xxxx' }
 
-    put_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, wrong_token.token
+    patch_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, wrong_token.token
     expect(response).to have_http_status(403)
-    put_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, access_token.token
+    patch_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, access_token.token
     expect(response).to have_http_status(200)
   end
 
@@ -153,9 +153,9 @@ describe 'Comments API' do
     user.add_role(:manager, group)
 
     request_params = { body: 'xxxx' }
-    put_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, access_token.token
+    patch_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, access_token.token
     expect(response).to have_http_status(403)
-    put_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, manager_token.token
+    patch_with_token "/api/v1/comments/#{comment.id}", request_params.to_json, manager_token.token
     expect(response).to have_http_status(403)
   end
 

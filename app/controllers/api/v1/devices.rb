@@ -82,7 +82,7 @@ module API
           optional :mobile,                    type: Boolean
         end
         oauth2 :full
-        put ':id' do
+        patch ':id' do
           device = Device.find(permitted_params[:id])
           if device.updatable_by?(current_user)
             device.update(permitted_params)

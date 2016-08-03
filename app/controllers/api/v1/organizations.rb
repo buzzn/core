@@ -165,16 +165,16 @@ module API
         desc "Update an Organization."
         params do
           requires :id, type: String, desc: "Organization ID."
-          requires :name,         type: String, desc: "Name of the Organization."
-          requires :phone,        type: String, desc: "Phone number of Organization."
-          requires :fax,          type: String, desc: "Fax number of Organization."
+          optional :name,         type: String, desc: "Name of the Organization."
+          optional :phone,        type: String, desc: "Phone number of Organization."
+          optional :fax,          type: String, desc: "Fax number of Organization."
           optional :website,      type: String, desc: "Website of Organization."
-          requires :email,        type: String, desc: "Email of Organization."
-          requires :description,  type: String, desc: "Description of the Organization."
-          requires :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
+          optional :email,        type: String, desc: "Email of Organization."
+          optional :description,  type: String, desc: "Description of the Organization."
+          optional :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
         end
         oauth2 :full
-        put do
+        patch ':id' do
           organization = Organization.find(params[:id])
 
           if organization.updatable_by?(current_user)

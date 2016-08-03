@@ -79,7 +79,7 @@ module API
           optional :commissioning,          type: Date, desc: 'Commissioning'
         end
         oauth2 :full
-        put ':id' do
+        patch ':id' do
           contract = Contract.find(permitted_params.id)
           if contract.updatable_by?(current_user)
             contract.update_attributes(permitted_params)
