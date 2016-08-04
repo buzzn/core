@@ -110,6 +110,8 @@ describe "Devices API" do
     post_with_token "/api/v1/devices", request_params, access_token.token
 
     expect(response).to have_http_status(201)
+    expect(response.headers['Location']).to eq json['data']['id']
+
     expect(json['data']['attributes']['manufacturer-name']).to eq(device.manufacturer_name)
     expect(json['data']['attributes']['manufacturer-product-name']).to eq(device.manufacturer_product_name)
     expect(json['data']['attributes']['manufacturer-product-serialnumber']).to eq(device.manufacturer_product_serialnumber)

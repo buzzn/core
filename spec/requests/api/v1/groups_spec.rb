@@ -201,6 +201,7 @@ describe "Groups API" do
     }.to_json
     post_with_token "/api/v1/groups", request_params, access_token.token
     expect(response).to have_http_status(201)
+    expect(response.headers['Location']).to eq json['data']['id']
   end
 
 
@@ -388,12 +389,14 @@ describe "Groups API" do
     post_with_token "/api/v1/groups/#{group.id}/managers", params.to_json, public_token.token
     expect(response).to have_http_status(403)
     post_with_token "/api/v1/groups/#{group.id}/managers", params.to_json, manager_token.token
-    expect(response).to have_http_status(201)
+    expect(response).to have_http_status(204)
+
     get_with_token "/api/v1/groups/#{group.id}/managers", admin_token.token
     expect(json['data'].size).to eq(3)
     params[:user_id] = user2.id
     post_with_token "/api/v1/groups/#{group.id}/managers", params.to_json, admin_token.token
-    expect(response).to have_http_status(201)
+    expect(response).to have_http_status(204)
+
     get_with_token "/api/v1/groups/#{group.id}/managers", admin_token.token
     expect(json['data'].size).to eq(4)
   end

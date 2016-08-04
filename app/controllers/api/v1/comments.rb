@@ -24,7 +24,7 @@ module API
               parent_comment = Comment.find(permitted_params[:parent_id])
               comment.move_to_child_of(parent_comment)
             end
-            comment
+            created_response(comment)
           else
             status 403
           end

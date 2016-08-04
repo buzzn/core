@@ -28,6 +28,14 @@ module API
           def logger
             Rails.logger
           end
+
+          def created_response(obj)
+            if obj.persisted?
+              header('Location', obj.id.to_s)
+              status 201
+            end
+            obj
+          end
         end
 
         rescue_from ActiveRecord::RecordNotFound do |e|

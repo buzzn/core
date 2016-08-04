@@ -150,10 +150,8 @@ module API
             organization = Organization.new(permitted_params)
             if organization.save!
               current_user.add_role(:manager, organization)
-              return organization
-            else
-              error!('error saving organization', 500)
             end
+            created_response(organization)
           else
             status 403
           end
@@ -213,6 +211,7 @@ module API
           if organization.updatable_by?(current_user)
             user = User.find(permitted_params[:user_id])
             user.add_role(:manager, organization)
+            status 204
           else
             status 403
           end
@@ -248,6 +247,7 @@ module API
           if organization.updatable_by?(current_user)
             user = User.find(permitted_params[:user_id])
             user.add_role(:member, organization)
+            status 204
           else
             status 403
           end

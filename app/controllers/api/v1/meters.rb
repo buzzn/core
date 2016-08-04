@@ -35,7 +35,7 @@ module API
             if meter.save!
               current_user.add_role(:manager, meter)
             end
-            meter
+            created_response(meter)
           else
             status 403
           end

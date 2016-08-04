@@ -60,7 +60,7 @@ module API
             if device.save!
               current_user.add_role(:manager, device)
             end
-            device
+            created_response(device)
           else
             status_403
           end

@@ -56,11 +56,12 @@ module API
         oauth2 :full
         post do
           if User.creatable_by?(current_user)
-            User.create!(
+            user = User.create!(
               email:    permitted_params[:email],
               password: permitted_params[:password],
               profile:  Profile.new( user_name: permitted_params[:user_name], first_name: permitted_params[:first_name], last_name:  permitted_params[:last_name] )
             )
+            created_response(user)
           else
             status 403
           end
@@ -221,7 +222,7 @@ module API
             if friendship_request.save
               friendship_request.create_activity key: 'friendship_request.create', owner: user, recipient: receiver
             end
-            friendship_request
+            created_response(friendship_request)
           else
             status 403
           end

@@ -65,7 +65,7 @@ module API
             if group.save!
               current_user.add_role(:manager, group)
             end
-            group
+            created_response(group)
           else
             error!('you need at least one out-metering_point', 401)
           end
@@ -164,6 +164,7 @@ module API
           user            = User.find(permitted_params[:user_id])
           if current_user.has_role?(:manager, group) || current_user.has_role?(:admin)
             user.add_role(:manager, group)
+            status 204
           else
             status 403
           end
