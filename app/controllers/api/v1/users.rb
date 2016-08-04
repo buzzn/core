@@ -12,7 +12,7 @@ module API
 
         desc "Return all Users"
         params do
-          optional :search, type: String, desc: "Search query using #{Base.join(User.search_attributes)}"
+          optional :filter, type: String, desc: "Search query using #{Base.join(User.search_attributes)}"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
@@ -21,7 +21,7 @@ module API
         get do
           per_page         = permitted_params[:per_page]
           page             = permitted_params[:page]
-          ids = User.filter(permitted_params[:search]).select do |obj|
+          ids = User.filter(permitted_params[:filter]).select do |obj|
             obj.readable_by?(current_user)
           end.collect { |obj| obj.id }
           users = User.where(id: ids)

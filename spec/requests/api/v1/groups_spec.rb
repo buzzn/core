@@ -24,12 +24,12 @@ describe "Groups API" do
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
 
-    request_params = { search: group.name }
+    request_params = { filter: group.name }
     get_without_token '/api/v1/groups', request_params
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
 
-    request_params = { search: 'hello world' }
+    request_params = { filter: 'hello world' }
     get_without_token '/api/v1/groups', request_params
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(0)
@@ -55,12 +55,12 @@ describe "Groups API" do
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(2)
 
-    request_params = { search: group.name }
+    request_params = { filter: group.name }
     get_with_token '/api/v1/groups', request_params, regular_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
 
-    request_params = { search: 'hello world' }
+    request_params = { filter: 'hello world' }
     get_with_token '/api/v1/groups', request_params, regular_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(0)
@@ -86,12 +86,12 @@ describe "Groups API" do
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(3)
 
-    request_params = { search: friend_group.name }
+    request_params = { filter: friend_group.name }
     get_with_token '/api/v1/groups', request_params, token_with_friend.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
 
-    request_params = { search: 'hello world' }
+    request_params = { filter: 'hello world' }
     get_with_token '/api/v1/groups', request_params, token_with_friend.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(0)
@@ -117,12 +117,12 @@ describe "Groups API" do
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(3)
 
-    request_params = { search: member_group.name }
+    request_params = { filter: member_group.name }
     get_with_token '/api/v1/groups', request_params, member_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
 
-    request_params = { search: 'hello world' }
+    request_params = { filter: 'hello world' }
     get_with_token '/api/v1/groups', request_params, member_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(0)
