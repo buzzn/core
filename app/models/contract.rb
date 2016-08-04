@@ -75,7 +75,7 @@ class Contract < ActiveRecord::Base
   end
 
   def self.search_attributes
-    [:tariff, :mode, :signing_user, :username]
+    [:tariff, :mode, :signing_user, :username, address: [:city, :state, :street_name]]
   end
 
   def self.filter(search)
