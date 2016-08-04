@@ -60,7 +60,7 @@ describe "Users API" do
     Fabricate(:user)
     access_token = Fabricate(:full_access_token_as_admin).token
 
-    request_params = { search: user.email }
+    request_params = { filter: user.email }
     get_with_token '/api/v1/users', request_params, access_token
 
     expect(response).to have_http_status(200)

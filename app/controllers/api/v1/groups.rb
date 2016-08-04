@@ -6,20 +6,20 @@ module API
 
         desc "Return all groups"
         params do
-          optional :search, type: String, desc: "Search query using #{Base.join(Group.search_attributes)}"
+          optional :filter, type: String, desc: "Search query using #{Base.join(Group.search_attributes)}"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
         oauth2 false
         get root: :groups do
-          group_ids = Group.filter(permitted_params[:search]).where(readable: 'world').ids
+          group_ids = Group.filter(permitted_params[:filter]).where(readable: 'world').ids
           if current_user
-            group_ids << Group.filter(permitted_params[:search]).where(readable: 'community').ids
-            group_ids << Group.filter(permitted_params[:search]).with_role(:manager, current_user)
+            group_ids << Group.filter(permitted_params[:filter]).where(readable: 'community').ids
+            group_ids << Group.filter(permitted_params[:filter]).with_role(:manager, current_user)
             current_user.friends.each do |friend|
               if friend
-                Group.filter(permitted_params[:search]).where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
+                Group.filter(permitted_params[:filter]).where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
                   group_ids << friend_group.id
                 end
               end

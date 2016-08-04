@@ -58,7 +58,7 @@ describe 'Contracts API' do
     Fabricate(:mpoc_ferraris_0002_amperix)
     access_token = Fabricate(:full_access_token_as_admin).token
 
-    request_params = { search: contract.signing_user }
+    request_params = { filter: contract.signing_user }
     get_with_token '/api/v1/contracts', request_params, access_token
 
     expect(response).to have_http_status(200)

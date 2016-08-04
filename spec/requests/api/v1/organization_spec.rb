@@ -64,7 +64,7 @@ describe "Organizations API" do
     Fabricate(:distribution_system_operator)
     access_token = Fabricate(:full_access_token_as_admin).token
 
-    request_params = { search: organization.email }
+    request_params = { filter: organization.email }
     get_with_token '/api/v1/organizations', request_params, access_token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq 1

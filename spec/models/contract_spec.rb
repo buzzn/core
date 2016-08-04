@@ -29,10 +29,12 @@ describe "Contract Model" do
   it 'filters contract' do
     Fabricate(:discovergy)
     contract = Fabricate(:mpoc_stefan)
+    contract.address = Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern')
     Fabricate(:mpoc_karin)
 
     [contract.tariff, contract.mode, contract.signing_user,
-     contract.username].each do |val|
+     contract.username, contract.address.state,
+     contract.address.city, contract.address.street_name].each do |val|
       
       [val, val.upcase, val.downcase, val[0..40], val[-40..-1]].each do |value|
         contracts = Contract.filter(value)
