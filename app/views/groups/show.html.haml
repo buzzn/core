@@ -125,7 +125,7 @@
           .panel
             .change-order
               .fa.fa-retweet{'data-content' => t('click_to_change_order_of_all_red_and_blue_bubbles')}
-            .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
+            .bubbles_container{'data-content' => @group.id, 'data-token' => @access_token.try(:token), id: "bubbles_container_" + @group.id.to_s}
               .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
               #dummy
 

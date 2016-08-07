@@ -54,14 +54,14 @@
 //= require aggregator
 //= require addresses
 //= require metering_points
-//= require groups
+// require groups
 //= require bubble_tooltip
 //= require tour
 //= require comments
 //= require users
 
-
+// require github--fetch
+//= require bubbles
 
 
 // don't require libs below this command
-
