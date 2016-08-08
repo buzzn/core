@@ -157,20 +157,21 @@ describe "Users API" do
     expect(response).to have_http_status(200)
   end
 
+  [:full_access_token, :smartmeter_access_token].each do |token|
+    it "gets all related meters with #{token}" do
+      meter1 = Fabricate(:meter)
+      meter2 = Fabricate(:meter)
+      meter3 = Fabricate(:meter)
 
-  it 'gets all related meters for User' do
-    meter1 = Fabricate(:meter)
-    meter2 = Fabricate(:meter)
-    meter3 = Fabricate(:meter)
+      access_token  = Fabricate(token)
+      user = User.find(access_token.resource_owner_id)
+      user.add_role(:manager, meter1)
+      user.add_role(:manager, meter2)
 
-    access_token  = Fabricate(:full_access_token)
-    user = User.find(access_token.resource_owner_id)
-    user.add_role(:manager, meter1)
-    user.add_role(:manager, meter2)
-
-    get_with_token "/api/v1/users/#{user.id}/meters", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(2)
+      get_with_token "/api/v1/users/#{user.id}/meters", access_token.token
+      expect(response).to have_http_status(200)
+      expect(json['data'].size).to eq(2)
+    end
   end
 
   it 'paginate meters' do

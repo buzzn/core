@@ -117,7 +117,7 @@ module API
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
-        oauth2 :full
+        oauth2 :full, :smartmeter
         get ":id/meters" do
           user = User.find(permitted_params[:id])
           meters = Meter.with_role(:manager, user)

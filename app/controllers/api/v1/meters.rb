@@ -21,14 +21,14 @@ module API
 
 
 
-        desc "Create a meter"
+        desc "Create a Meter"
         params do
           requires :manufacturer_name, desc: "name of the manufacturer"
           requires :manufacturer_product_name, desc: "meter produkt name"
           requires :manufacturer_product_serialnumber, desc: "meter produkt serialnumber"
           optional :smart, desc: "meter is smart"
         end
-        oauth2 :full
+        oauth2 :full, :smartmeter
         post do
           if Meter.creatable_by?(current_user)
             meter = Meter.new(permitted_params)
@@ -43,7 +43,7 @@ module API
 
 
 
-        desc "Update a MeteringPoint."
+        desc "Update a Meter."
         params do
           requires :id, type: String, desc: 'Meter ID.'
           optional :manufacturer_name, desc: "name of the manufacturer"

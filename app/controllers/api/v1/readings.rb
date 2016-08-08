@@ -29,7 +29,7 @@ module API
           requires :power_a_milliwatt,        type: Integer,  desc: "power A(often consumption) in Milliwatt"
           optional :power_b_milliwatt,        type: Integer,  desc: "power B(often production) in Milliwatt"
         end
-        oauth2 :public, :full
+        oauth2 :full, :smartmeter
         post do
           meter = Meter.find(permitted_params[:meter_id])
           if Reading.creatable_by?(current_user, meter)
