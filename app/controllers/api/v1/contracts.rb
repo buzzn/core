@@ -58,7 +58,7 @@ module API
             if contract.save!
               current_user.add_role :manager, contract
             end
-            contract
+            created_response(contract)
           else
             status 403
           end

@@ -13,6 +13,8 @@ describe 'Comments API' do
     expect(json['data'].size).to eq(0)
     post_with_token '/api/v1/comments', comment.to_json, manager_token.token
     expect(response).to have_http_status(201)
+    expect(response.headers['Location']).to eq json['data']['id']
+
     expect(json['data']['attributes']['body']).to eq(comment[:body])
     get_with_token "/api/v1/groups/#{group.id}/comments", manager_token.token
     expect(json['data'].size).to eq(1)
@@ -49,6 +51,8 @@ describe 'Comments API' do
     expect(json['data'].size).to eq(2)
     post_with_token '/api/v1/comments', comment.to_json, manager_token.token
     expect(response).to have_http_status(201)
+    expect(response.headers['Location']).to eq json['data']['id']
+
     expect(json['data']['attributes']['body']).to eq(comment[:body])
     expect(json['data']['attributes']['parent-id']).to eq(child_comment.id)
     get_with_token "/api/v1/groups/#{group.id}/comments", manager_token.token
@@ -83,19 +87,23 @@ describe 'Comments API' do
     expect(json['error']).to eq('resource_name does not have a valid value')
   end
 
-  it 'creates a comment only with token' do
-    access_token  = Fabricate(:public_access_token)
-    group         = Fabricate(:group)
-    comment = {
-      resource_id: group.id,
-      resource_name: 'Group',
-      body: FFaker::Lorem.paragraphs.join('-'),
-    }
+  [:public_access_token, :full_access_token].each do |token|
+    it "creates a comment only with #{token}" do
+      access_token  = Fabricate(token)
+      group         = Fabricate(:group)
+      comment = {
+        resource_id: group.id,
+        resource_name: 'Group',
+        body: FFaker::Lorem.paragraphs.join('-'),
+      }
 
-    post_with_token '/api/v1/comments', comment.to_json, access_token.token
-    expect(response).to have_http_status(201)
-    post_without_token '/api/v1/comments', comment.to_json
-    expect(response).to have_http_status(401)
+      post_with_token '/api/v1/comments', comment.to_json, access_token.token
+      expect(response).to have_http_status(201)
+      expect(response.headers['Location']).to eq json['data']['id']
+      
+      post_without_token '/api/v1/comments', comment.to_json
+      expect(response).to have_http_status(401)
+    end
   end
 
   it 'does not create comment for resource not readable by user' do

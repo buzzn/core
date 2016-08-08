@@ -151,6 +151,8 @@ describe "Organizations API" do
     post_with_token "/api/v1/organizations", request_params, access_token.token
 
     expect(response).to have_http_status(201)
+    expect(response.headers['Location']).to eq json['data']['id']
+
     expect(json['data']['id']).not_to eq organization.id
     expect(json['data']['attributes']['name']).to eq organization.name
     expect(json['data']['attributes']['email']).to eq organization.email
@@ -451,10 +453,10 @@ describe "Organizations API" do
     }.to_json
 
     post_with_token "/api/v1/organizations/#{organization.id}/managers", user_params, manager_token.token
-    expect(response).to have_http_status(201)
+    expect(response).to have_http_status(204)
 
     post_with_token "/api/v1/organizations/#{organization.id}/members", user_params, manager_token.token
-    expect(response).to have_http_status(201)
+    expect(response).to have_http_status(204)
 
     expect(organization.managers).to match_array [manager, user]
     expect(organization.members).to eq [user]
@@ -471,10 +473,10 @@ describe "Organizations API" do
     }.to_json
 
     post_with_token "/api/v1/organizations/#{organization.id}/managers", user_params, manager_token.token
-    expect(response).to have_http_status(201)
+    expect(response).to have_http_status(204)
 
     post_with_token "/api/v1/organizations/#{organization.id}/members", user_params, manager_token.token
-    expect(response).to have_http_status(201)
+    expect(response).to have_http_status(204)
 
     expect(organization.managers).to eq [user]
     expect(organization.members).to eq [user]

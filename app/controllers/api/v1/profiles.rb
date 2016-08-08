@@ -45,7 +45,8 @@ module API
         oauth2 :public, :full
         post do
           if Profile.creatable_by?(current_user)
-            Profile.create!(permitted_params)
+            profile = Profile.create!(permitted_params)
+            created_response(profile)
           else
             status 403
           end

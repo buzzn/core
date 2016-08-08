@@ -47,7 +47,7 @@ module API
             #   })
             # end
 
-            reading
+            created_response(reading)
           else
             status 403
           end

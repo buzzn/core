@@ -51,6 +51,8 @@ describe "Readings API" do
     }.to_json
     post_with_token "/api/v1/readings", request_params, access_token.token
     expect(response).to have_http_status(201)
+    expect(response.headers['Location']).to eq json['data']['id']
+
     expect(DateTime.parse(json['data']['attributes']['timestamp'])).to eq(reading.timestamp)
     expect(json['data']['attributes']['energy-a-milliwatt-hour']).to eq(reading.energy_a_milliwatt_hour)
     expect(json['data']['attributes']['energy-b-milliwatt-hour']).to eq(reading.energy_b_milliwatt_hour)
@@ -77,6 +79,7 @@ describe "Readings API" do
 
     post_with_token "/api/v1/readings", request_params, access_token.token
     expect(response).to have_http_status(201)
+    expect(response.headers['Location']).to eq json['data']['id']
 
     expect(DateTime.parse(json['data']['attributes']['timestamp'])).to eq("Wed Apr 13 2016 14:07:35 GMT+0200 (CEST)")
     expect(json['data']['attributes']['energy-a-milliwatt-hour']).to eq(energy_a_milliwatt_hour)

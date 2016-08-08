@@ -36,7 +36,7 @@ module API
             if metering_point.save!
               current_user.add_role(:manager, metering_point)
             end
-            metering_point
+            created_response(metering_point)
           else
             status 403
           end
@@ -137,6 +137,7 @@ module API
           if metering_point.updatable_by?(current_user)
             user.add_role(:manager, metering_point)
             user.create_activity(key: 'user.appointed_metering_point_manager', owner: current_user, recipient: metering_point)
+            status 204
           else
             status 403
           end
@@ -214,6 +215,7 @@ module API
           if metering_point.updatable_by?(current_user, :members)
             user.add_role(:member, metering_point)
             metering_point.create_activity key: 'metering_point_user_membership.create', owner: user
+            status 204
           else
             status 403
           end

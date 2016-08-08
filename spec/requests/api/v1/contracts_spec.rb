@@ -155,6 +155,7 @@ describe 'Contracts API' do
     access_token  = Fabricate(:full_access_token_as_admin).token
     post_with_token "/api/v1/contracts/", request_params.to_json, access_token
     expect(response).to have_http_status(201)
+    expect(response.headers['Location']).to eq json['data']['id']
   end
 
   it 'does not create contract as admin with full access token if some of the params missing' do

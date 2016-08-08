@@ -134,6 +134,8 @@ describe "Metering Points API" do
     post_with_token "/api/v1/metering-points", request_params, access_token.token
 
     expect(response).to have_http_status(201)
+    expect(response.headers['Location']).to eq json['data']['id']
+
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
@@ -176,6 +178,8 @@ describe "Metering Points API" do
     post_with_token "/api/v1/metering-points", request_params, access_token.token
 
     expect(response).to have_http_status(201)
+    expect(response.headers['Location']).to eq json['data']['id']
+
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
@@ -359,12 +363,14 @@ describe "Metering Points API" do
     post_with_token "/api/v1/metering-points/#{metering_point.id}/managers", params.to_json, member_token.token
     expect(response).to have_http_status(403)
     post_with_token "/api/v1/metering-points/#{metering_point.id}/managers", params.to_json, manager_token.token
-    expect(response).to have_http_status(201)
+    expect(response).to have_http_status(204)
+
     get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", admin_token.token
     expect(json['data'].size).to eq(2)
     params[:user_id] = user2.id
     post_with_token "/api/v1/metering-points/#{metering_point.id}/managers", params.to_json, admin_token.token
-    expect(response).to have_http_status(201)
+    expect(response).to have_http_status(204)
+
     get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", admin_token.token
     expect(json['data'].size).to eq(3)
   end
@@ -431,17 +437,20 @@ describe "Metering Points API" do
     }
 
     post_with_token "/api/v1/metering-points/#{metering_point.id}/members", params.to_json, member_token.token
-    expect(response).to have_http_status(201)
+    expect(response).to have_http_status(204)
+
     get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
     expect(json['data'].size).to eq(2)
     params[:user_id] = user2.id
     post_with_token "/api/v1/metering-points/#{metering_point.id}/members", params.to_json, manager_token.token
-    expect(response).to have_http_status(201)
+    expect(response).to have_http_status(204)
+
     get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
     expect(json['data'].size).to eq(3)
     params[:user_id] = user3.id
     post_with_token "/api/v1/metering-points/#{metering_point.id}/members", params.to_json, admin_token.token
-    expect(response).to have_http_status(201)
+    expect(response).to have_http_status(204)
+
     get_with_token "/api/v1/metering-points/#{metering_point.id}/members", admin_token.token
     expect(json['data'].size).to eq(4)
   end
