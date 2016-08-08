@@ -9,9 +9,10 @@ describe "Organization Model" do
      organization.description, organization.website, organization.address.state,
      organization.address.city, organization.address.street_name].each do |val|
 
-      len = (val.size * 2)/3
-      [val, val.upcase, val.downcase, val[0..len], val[-len..-1]].each do |value|
+      len = (val.size * 3)/4
+      [val, val.upcase, val.downcase, val[0..len], val[-(len+1)..-1]].each do |value|
         organizations = Organization.filter(value)
+        p [val, val[0..len], val[-(len+1)..-1]]
         expect(organizations.first).to eq organization
       end
     end

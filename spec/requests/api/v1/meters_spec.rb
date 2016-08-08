@@ -69,23 +69,24 @@ describe "Meters API" do
   end
 
 
+  [:full_access_token, :smartmeter_access_token].each do |token|
+    it "creates a meter with #{token}" do
+      access_token = Fabricate(token)
+      meter = Fabricate.build(:meter)
 
-  it 'creates a meter with full access token as admin' do
-    access_token = Fabricate(:full_access_token_as_admin)
-    meter = Fabricate.build(:meter)
+      request_params = {
+        manufacturer_name:                  meter.manufacturer_name,
+        manufacturer_product_name:          meter.manufacturer_product_name,
+        manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber
+      }.to_json
 
-    request_params = {
-      manufacturer_name:                  meter.manufacturer_name,
-      manufacturer_product_name:          meter.manufacturer_product_name,
-      manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber
-    }.to_json
+      post_with_token "/api/v1/meters", request_params, access_token.token
 
-    post_with_token "/api/v1/meters", request_params, access_token.token
-
-    expect(response).to have_http_status(201)
-    expect(json['data']['attributes']['manufacturer-name']).to eq(meter.manufacturer_name)
-    expect(json['data']['attributes']['manufacturer-product-name']).to eq(meter.manufacturer_product_name)
-    expect(json['data']['attributes']['manufacturer-product-serialnumber']).to eq(meter.manufacturer_product_serialnumber)
+      expect(response).to have_http_status(201)
+      expect(json['data']['attributes']['manufacturer-name']).to eq(meter.manufacturer_name)
+      expect(json['data']['attributes']['manufacturer-product-name']).to eq(meter.manufacturer_product_name)
+      expect(json['data']['attributes']['manufacturer-product-serialnumber']).to eq(meter.manufacturer_product_serialnumber)
+    end
   end
 
 

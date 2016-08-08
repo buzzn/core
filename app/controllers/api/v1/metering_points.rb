@@ -29,7 +29,7 @@ module API
           requires :meter_id, type: String, desc: "Meter"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
-        oauth2 :public, :full
+        oauth2 :public, :full, :smartmeter
         post do
           if MeteringPoint.creatable_by?(current_user)
             metering_point = MeteringPoint.new(permitted_params)

@@ -37,10 +37,10 @@ describe "Readings API" do
 
   # CREATE
 
-  it 'create a reading with public access token as manager' do
+  it 'create a reading with smartmeter access token as manager' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
-    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:smartmeter_access_token, resource_owner_id: manager.id)
     reading       = Fabricate.build(:reading)
     request_params = {
       meter_id: meter.id,
@@ -64,7 +64,7 @@ describe "Readings API" do
   it 'creates a correct reading with public access token as manager' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
-    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
 
     timestamp = "Wed Apr 13 2016 14:07:35 GMT+0200 (CEST)"
     energy_a_milliwatt_hour = 80616
@@ -92,7 +92,7 @@ describe "Readings API" do
   it 'does not create a reading without metering_point_id' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
-    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
     reading       = Fabricate.build(:reading)
     request_params = {
       # metering_point_id: metering_point.id,
@@ -111,7 +111,7 @@ describe "Readings API" do
   it 'does not create a reading without timestamp' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
-    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
     reading       = Fabricate.build(:reading)
     request_params = {
       meter_id: meter.id,
@@ -129,7 +129,7 @@ describe "Readings API" do
   it 'does not create a reading without energy_a_milliwatt_hour' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
-    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
     reading       = Fabricate.build(:reading)
     request_params = {
       meter_id: meter.id,
@@ -148,7 +148,7 @@ describe "Readings API" do
   it 'does not create a reading without milliwatt' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
-    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
     reading       = Fabricate.build(:reading)
     request_params = {
       meter_id: meter.id,
