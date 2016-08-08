@@ -27,15 +27,8 @@ module API
               error!('it is not possible to sum metering_points with differend data_source', 406)
             else
               metering_points.each do |metering_point|
-                if metering_point.group_id
-                  group = Group.find(metering_point.group_id)
-                  unless group.readable_by?(current_user) || metering_point.readable_by?(current_user)
-                    error!('Forbidden', 403)
-                  end
-                else
-                  unless metering_point.readable_by?(current_user)
-                    error!('Forbidden', 403)
-                  end
+                unless metering_point.readable_by?(current_user)
+                  error!('Forbidden', 403)
                 end
               end
               return Aggregate.new(metering_points_hash).present( { timestamp: permitted_params[:timestamp] })
@@ -77,15 +70,8 @@ module API
               error!('it is not possible to sum metering_points with differend data_source', 406)
             else
               metering_points.each do |metering_point|
-                if metering_point.group_id
-                  group = Group.find(metering_point.group_id)
-                  unless group.readable_by?(current_user) || metering_point.readable_by?(current_user)
-                    error!('Forbidden', 403)
-                  end
-                else
-                  unless metering_point.readable_by?(current_user)
-                    error!('Forbidden', 403)
-                  end
+                unless metering_point.readable_by?(current_user)
+                  error!('Forbidden', 403)
                 end
               end
               return Aggregate.new(metering_points_hash).past( { timestamp: permitted_params[:timestamp], resolution: params[:resolution] })

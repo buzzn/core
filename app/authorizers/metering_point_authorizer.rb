@@ -10,11 +10,11 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
       !!user && user.has_role?(:manager, resource)
     when NilClass
       resource.readable_by_world? ||
+        (!resource.group.nil? && (resource.group.updatable_by?(user) || resource.group.readable_by?(user))) ||
         (!!user && (resource.readable_by_community? ||
                     user.has_role?(:member, resource) ||
                     user.has_role?(:manager, resource) ||
                     (resource.readable_by_friends? && resource.managers.map(&:friends).flatten.uniq.include?(user)) ||
-                    (!resource.group.nil? && user.can_update?(resource.group)) ||
                     (!resource.existing_group_request.nil? && user.can_update?(resource.existing_group_request.group)) ||
                     user.has_role?(:admin)))
     else
