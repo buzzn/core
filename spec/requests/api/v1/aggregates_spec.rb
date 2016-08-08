@@ -1214,6 +1214,51 @@ describe "Aggregates API" do
     expect(json['power_milliwatt']).to eq(6412000)
   end
 
+  it 'return data for metering point readable by world which belongs to a group not readable by world without token' do
+    meter                   = Fabricate(:easymeter_60139082)
+    metering_point          = meter.metering_points.inputs.first
+    metering_point.readable = 'world'
+    metering_point.save
+    group                   = Fabricate(:group_readable_by_community)
+    group.metering_points << metering_point
+    request_params = {
+      metering_point_ids: metering_point.id
+    }
+
+    get_without_token '/api/v1/aggregates/present', request_params
+    expect(response).to have_http_status(200)
+  end
+
+  it 'return data for metering point not readable by world which belongs to a group readable by world without token' do
+    meter                   = Fabricate(:easymeter_60139082)
+    metering_point          = meter.metering_points.inputs.first
+    metering_point.readable = 'community'
+    metering_point.save
+    group                   = Fabricate(:group)
+    group.metering_points << metering_point
+    request_params = {
+      metering_point_ids: metering_point.id
+    }
+
+    get_without_token '/api/v1/aggregates/present', request_params
+    expect(response).to have_http_status(200)
+  end
+
+  it 'does not return data for metering point not readable by world which belongs to a group not readable by world without token' do
+    meter                   = Fabricate(:easymeter_60139082)
+    metering_point          = meter.metering_points.inputs.first
+    metering_point.readable = 'community'
+    metering_point.save
+    group                   = Fabricate(:group_readable_by_community)
+    group.metering_points << metering_point
+    request_params = {
+      metering_point_ids: metering_point.id
+    }
+
+    get_without_token '/api/v1/aggregates/present', request_params
+    expect(response).to have_http_status(403)
+  end
+
 
 
 
