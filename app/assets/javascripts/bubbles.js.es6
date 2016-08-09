@@ -9,9 +9,11 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   const pathArr = window.location.href.split('/');
   const url = `${pathArr[0]}//${pathArr[2]}`;
   const svgId = `group-${group}`;
+  const tooltip = d3.select(`#tooltip_${group}`);
   const self = this;
   const token = gon.global.access_token;
 
+  let switchInOnTop = true;
   let svg = null;
   let svgDom = null;
   let fullWidth = null;
@@ -30,6 +32,8 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   let circle = null;
   let outCircle = null;
   let simulation = null;
+  let path = null;
+  let arc = null;
 
   function getJson(response) {
     if (!response.ok) return Promise.reject(`${response.status}: ${response.statusText}`);
@@ -49,9 +53,9 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
         updating: false,
       };
       if (point.attributes.mode === 'in') {
-        inData.push(Object.assign({}, pointObj, { color: inColor }));
+        inData.push(Object.assign({}, pointObj, { color: inColor, outPoint: false }));
       } else {
-        outData.push(Object.assign({}, pointObj, { color: outColor }));
+        outData.push(Object.assign({}, pointObj, { color: outColor, outPoint: true, startAngle: 0, endAngle: 0 }));
       }
     });
   }
@@ -80,7 +84,32 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   }
 
   function outCombined() {
-    return [{ id: 'outBubble', value: _.reduce(outData, (s, d) => s + d.value, 0) }];
+    return [{
+      id: 'outBubble',
+      value: _.reduce(outData, (s, d) => s + d.value, 0),
+      name: 'Power produced',
+      outPoint: true,
+    }];
+  }
+
+  function recalculateAngles() {
+    const totalPower = _.reduce(outData, (s, d) => s + d.value, 0);
+    let startAngle = 0;
+    _.forEach(outData, (data, idx) => {
+      const endAngle = data.value / totalPower * 2 * Math.PI + startAngle;
+      outData[idx].startAngle = startAngle;
+      outData[idx].endAngle = endAngle;
+      startAngle = endAngle;
+    });
+  }
+
+  function calculateArcColor(data) {
+    const totalPower = _.reduce(outData, (s, d) => s + d.value, 0);
+    const hsl = d3.hsl(outColor).darker();
+    hsl.h = d3.scaleLinear()
+      .domain([0, totalPower])
+      .range([hsl.h - 40, hsl.h + 40])(data.value);
+    return d3.hsl(hsl).toString();
   }
 
   function getData() {
@@ -106,6 +135,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
         .then(getJson)
         .then(json => {
           outData[idx].value = Math.abs(json.power_milliwatt) || 0;
+          recalculateAngles();
           outData[idx].seeded = true;
           outData[idx].updating = false;
         })
@@ -121,14 +151,42 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .attr('cy', d => d.y);
   }
 
+  function formatPower(power) {
+    const powerArr = power.toLocaleString('en').split(',');
+    powerArr.pop();
+    return powerArr.join('.');
+  }
+
   function showDetails(data, i, element) {
-    d3.select(element).style('stroke', d3.rgb(inColor).darker().darker());
-    d3.select(element).style('opacity', 0.6);
+    const color = data.outPoint ? outColor : inColor;
+    const opacity = data.outPoint ? 0.8 : 0.6;
+    d3.select(element).style('stroke', d3.rgb(color).darker().darker());
+    d3.select(element).style('opacity', opacity);
+    tooltip.transition()
+      .duration(500)
+      .style('opacity', 1)
+      .style('display', 'block');
+    tooltip.html(`<b>Name: </b>${data.name}<br /><b>Power: </b>${formatPower(data.value)} Watt`)
+      .style('left', `${d3.event.layerX + 20}px`)
+      .style('top', `${d3.event.layerY - 20}px`);
   }
 
   function hideDetails(data, i, element) {
-    d3.select(element).style('stroke', d3.rgb(inColor).darker());
-    d3.select(element).style('opacity', 0.8);
+    const color = data.outPoint ? outColor : inColor;
+    const opacity = data.outPoint ? 1 : 0.8;
+    d3.select(element).style('stroke', d3.rgb(color).darker());
+    d3.select(element).style('opacity', opacity);
+    tooltip.transition()
+      .duration(500)
+      .style('opacity', 0)
+      .style('display', 'none');
+  }
+
+  function scaleCenterForce(val) {
+    const sortedData = _.sortBy(inData, d => d.value);
+    return d3.scaleLinear()
+      .domain([_.first(sortedData).value, _.last(sortedData).value])
+      .range([0.001, 0.0015])(val);
   }
 
   function drawData() {
@@ -174,24 +232,48 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     _.forEach(inData, (node) => {
       node.x = d3.scaleLinear()
         .domain([0, width])
-        .range([width / 100 * 20, width / 100 * 80])(Math.random() * width);
+        .range([width / 100 * 30, width / 100 * 70])(Math.random() * width);
       node.y = d3.scaleLinear()
         .domain([0, width])
-        .range([width / 100 * 20, width / 100 * 80])(Math.random() * height);
+        .range([width / 100 * 30, width / 100 * 70])(Math.random() * height);
     });
+
+    arc = d3.arc()
+      .startAngle(d => d.startAngle)
+      .endAngle(d => d.endAngle)
+      .cornerRadius(16)
+      .innerRadius(() => radius(dataWeight)(outCombined()[0].value))
+      .outerRadius(() => radius(dataWeight)(outCombined()[0].value * 1.1));
+
+    path = svg.selectAll('path')
+      .data(outData)
+      .enter()
+      .append('path')
+      .attr('d', arc)
+      .attr('id', d => `path_${d.id}`)
+      .attr('stroke-width', 4)
+      .style('stroke', 'none')
+      .attr('transform', `translate(${fullWidth / 2}, ${fullHeight / 2})`)
+      .style('fill', d => calculateArcColor(d))
+      .on('mouseover', function mouseShow(d, i) { showDetails(d, i, this); })
+      .on('mouseout', function mouseHide(d, i) { hideDetails(d, i, this); })
+      .on('touchstart', function touchShow(d, i) { showDetails(d, i, this); })
+      .on('touchend', function touchHide(d, i) {
+        const elementSelf = this;
+        setTimeout(() => hideDetails(d, i, elementSelf), 1000);
+      });
 
     simulation = d3.forceSimulation(inData)
       .velocityDecay(0.2)
       // .alphaDecay(0)
-      .force('x', d3.forceX().strength(0.002))
-      .force('y', d3.forceY().strength(0.002))
+      .force('x', d3.forceX(fullWidth / 2).strength(d => scaleCenterForce(d.value)))
+      .force('y', d3.forceY(fullHeight / 2).strength(d => scaleCenterForce(d.value)))
       .force('collide', d3.forceCollide()
         .radius(d => radius(dataWeight)(d.value) + 0.5)
         .strength(0.02)
         .iterations(2))
       .force('charge', d3.forceManyBody()
-        .strength(5))
-      .force('center', d3.forceCenter(fullWidth / 2, fullHeight / 2))
+        .strength(d => d.value * 0.000002))
       .on('tick', ticked);
 
     const nodes = simulation.nodes();
@@ -221,19 +303,24 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .attr('r', d => radius(dataWeight)(d.value));
 
     simulation.alpha(0.8)
-      // .force('x', null)
-      // .force('y', null)
-      .force('x', d3.forceX().strength(0.001))
-      .force('y', d3.forceY().strength(0.001))
-      .force('charge', d3.forceManyBody()
-        .strength(0.5))
       .nodes(inData)
       .restart();
 
     outCircle.data(outCombined(), dataId)
       .transition()
-      .duration(500)
+      .duration(1000)
       .attr('r', d => radius(dataWeight)(d.value));
+
+    arc = d3.arc()
+      .startAngle(d => d.startAngle)
+      .endAngle(d => d.endAngle)
+      .cornerRadius(16)
+      .innerRadius(() => radius(dataWeight)(outCombined()[0].value))
+      .outerRadius(() => radius(dataWeight)(outCombined()[0].value * 1.1));
+
+    path.transition()
+      .duration(1000)
+      .attr('d', arc);
   }
 
   fetch(`${url}/api/v1/groups/${group}/metering-points?per_page=10000`, { headers })
@@ -254,6 +341,16 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     .catch(error => {
       console.log(error);
     });
+
+  $('.change-order').on('click', () => {
+    if (switchInOnTop) {
+      switchInOnTop = false;
+      circle.lower();
+    } else {
+      switchInOnTop = true;
+      circle.raise();
+    }
+  });
 
   $(document).on('page:before-change', () => {
     _.forEach(bubblesTimers, timer => clearInterval(timer));
