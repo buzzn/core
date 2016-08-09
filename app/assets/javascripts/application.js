@@ -54,7 +54,6 @@
 //= require aggregator
 //= require addresses
 //= require metering_points
-// require groups
 //= require bubble_tooltip
 //= require tour
 //= require comments
