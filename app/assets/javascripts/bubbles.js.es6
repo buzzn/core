@@ -10,7 +10,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   const url = `${pathArr[0]}//${pathArr[2]}`;
   const svgId = `group-${group}`;
   const self = this;
-  const token = $(this).attr('data-token');
+  const token = gon.global.access_token;
 
   let svg = null;
   let svgDom = null;

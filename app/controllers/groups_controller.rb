@@ -24,7 +24,6 @@ class GroupsController < ApplicationController
     @out_devices                    = @out_metering_points.collect(&:devices)
     @activities                     = @group.activities.group_joins
     @activities_and_comments        = (@all_comments + @activities).sort_by!(&:created_at).reverse!
-    @access_token                   = current_user.access_tokens.last
 
     authorize_action_for(@group)
   end
