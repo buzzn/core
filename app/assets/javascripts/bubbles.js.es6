@@ -96,20 +96,13 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     const totalPower = _.reduce(outData, (s, d) => s + d.value, 0);
     let startAngle = 0;
     _.forEach(outData, (data, idx) => {
-      const endAngle = (data.value / totalPower * 2 * Math.PI + startAngle) || 0;
+      if (data.value === 0) return;
+      let endAngle = (data.value / totalPower * 2 * Math.PI + startAngle) || 0;
+      if (outData.length > 1 && endAngle > 0.015) endAngle -= 0.015;
       outData[idx].startAngle = startAngle;
       outData[idx].endAngle = endAngle;
-      startAngle = endAngle;
+      startAngle = endAngle + 0.015;
     });
-  }
-
-  function calculateArcColor(data) {
-    const totalPower = _.reduce(outData, (s, d) => s + d.value, 0);
-    const hsl = d3.hsl(outColor).darker();
-    hsl.h = d3.scaleLinear()
-      .domain([0, totalPower])
-      .range([hsl.h - 40, hsl.h + 40])(data.value);
-    return d3.hsl(hsl).toString();
   }
 
   function getData() {
@@ -152,7 +145,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   }
 
   function formatPower(power) {
-    const powerArr = power.toLocaleString('en').split(',');
+    const powerArr = power.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,').split(',');
     powerArr.pop();
     return powerArr.join('.');
   }
@@ -194,13 +187,25 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     const sortedData = _.sortBy(inData, d => d.value);
     return d3.scaleLinear()
       .domain([_.first(sortedData).value, _.last(sortedData).value])
-      .range([0.001, 0.0015])(val);
+      .range([0.0005, 0.001])(val);
+  }
+
+  function setHtmlTickers() {
+    const powerIn = _.reduce(inData, (s, d) => s + d.value, 0);
+    const powerOut = _.reduce(outData, (s, d) => s + d.value, 0);
+    $('#kw-ticker-in').html(`${formatPower(powerIn)} W`);
+    $('#kw-ticker-out').html(`${formatPower(powerOut)} W`);
+    $(`#group-ticker-live-in-${group}`).find('.power-ticker').html(formatPower(powerIn));
+    $(`#group-ticker-live-out-${group}`).find('.power-ticker').html(formatPower(powerOut));
   }
 
   function drawData() {
     $('.waiting-spinner').hide()
     $('.bubbles_container').css('height', $('.bubbles_container').height());
     $('#dummy').remove();
+
+    setHtmlTickers();
+
     d3.select(`#bubbles_container_${group}`)
       .append('svg')
       .attr('id', svgId)
@@ -213,9 +218,9 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     width = fullWidth;
     fullHeight = svgDom.getBoundingClientRect().height;
     height = fullHeight;
-    if (width > height + height / 100 * 20) {
+    if (width > height + height * 0.2) {
       width = height;
-    } else if (height > width + width / 100 * 20) {
+    } else if (height > width + width * 0.2) {
       height = width;
     }
 
@@ -239,11 +244,11 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
 
     _.forEach(inData, (node) => {
       node.x = d3.scaleLinear()
-        .domain([0, width])
-        .range([width / 100 * 30, width / 100 * 70])(Math.random() * width);
+        .domain([0, fullWidth])
+        .range([fullWidth * 0.4, fullWidth * 0.6])(Math.random() * fullWidth);
       node.y = d3.scaleLinear()
-        .domain([0, width])
-        .range([width / 100 * 30, width / 100 * 70])(Math.random() * height);
+        .domain([0, fullHeight])
+        .range([fullHeight * 0.4, fullHeight * 0.6])(Math.random() * fullHeight);
     });
 
     arc = d3.arc()
@@ -262,7 +267,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .attr('stroke-width', 4)
       .style('stroke', 'none')
       .attr('transform', `translate(${fullWidth / 2}, ${fullHeight / 2})`)
-      .style('fill', d => calculateArcColor(d))
+      .style('fill', d3.rgb(outColor).darker())
       .on('mouseover', function mouseShow(d, i) { showDetails(d, i, this); })
       .on('mouseout', function mouseHide(d, i) { hideDetails(d, i, this); })
       .on('touchstart', function touchShow(d, i) { showDetails(d, i, this); })
@@ -281,7 +286,9 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
         .strength(0.02)
         .iterations(2))
       .force('charge', d3.forceManyBody()
-        .strength(d => d.value * 0.000002))
+        .strength(d => d.value * 0.000002 / d3.scaleLinear()
+          .domain([0, 300])
+          .range([1, 100])(inData.length)))
       .on('tick', ticked);
 
     const nodes = simulation.nodes();
@@ -306,6 +313,8 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   }
 
   function redrawData() {
+    setHtmlTickers();
+
     circle.transition()
       .ease(d3.easeExpOut)
       .duration(1000)
@@ -340,12 +349,12 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       if (json.data.length === 0) return Promise.reject('Empty group');
       fillPoints(json.data);
       getData();
-      bubblesTimers.fetchTimer = setInterval(getData, 8000);
+      bubblesTimers.fetchTimer = setInterval(getData, 10000);
       bubblesTimers.seedTimer = setInterval(() => {
         if (!_.find(inData, d => !d.seeded) && !_.find(outData, d => !d.seeded)) {
           clearInterval(bubblesTimers.seedTimer);
           drawData();
-          bubblesTimers.drawTimer = setInterval(redrawData, 8000);
+          bubblesTimers.drawTimer = setInterval(redrawData, 10000);
         }
       }, 2000);
     })

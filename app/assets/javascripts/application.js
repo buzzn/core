@@ -59,7 +59,7 @@
 //= require comments
 //= require users
 
-// require github--fetch
+//= require fetch
 //= require bubbles
 
 

@@ -639,8 +639,8 @@ GEM
     rails-assets-enquire (2.1.2)
     rails-assets-fancybox (2.1.5)
     rails-assets-fastclick (0.6.11)
+    rails-assets-fetch (1.0.0)
     rails-assets-font-awesome (4.3.0)
-    rails-assets-github--fetch (1.0.0)
     rails-assets-highcharts (4.2.5)
     rails-assets-jquery (2.2.4)
     rails-assets-jquery-readyselector (0.1.0)
@@ -935,8 +935,8 @@ DEPENDENCIES
   rails-assets-enquire!
   rails-assets-fancybox!
   rails-assets-fastclick!
+  rails-assets-fetch!
   rails-assets-font-awesome (= 4.3.0)!
-  rails-assets-github--fetch!
   rails-assets-highcharts!
   rails-assets-jquery-readyselector!
   rails-assets-jquery-steps!

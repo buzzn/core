@@ -114,7 +114,7 @@ source 'http://rails-assets.org' do
   gem 'rails-assets-bootstrap-select'
   gem 'rails-assets-sparklines'
   gem 'rails-assets-d3', '~> 4.2.0'
-  gem 'rails-assets-github--fetch'
+  gem 'rails-assets-fetch'
   gem 'rails-assets-switchery'
   gem 'rails-assets-underscore'
   gem 'rails-assets-jquery-readyselector'
