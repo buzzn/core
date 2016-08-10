@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+require 'sprockets/es6'
 
 
 # TODO https://github.com/drapergem/draper/issues/644
