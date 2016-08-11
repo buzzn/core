@@ -40,8 +40,6 @@ describe "Meters API" do
       end
     end
 
-
-    
     
 
     it "does not delete a meter with #{token}" do
@@ -104,9 +102,59 @@ describe "Meters API" do
     post_with_token "/api/v1/meters", request_params, access_token.token
 
     expect(response).to have_http_status(422)
+
+    json['errors'].each do |error|
+      expect(error['source']['pointer']).to eq "/data/attributes/manufacturer_product_serialnumber"
+      expect(error['title']).to eq 'Invalid Attribute'
+      expect(error['detail']).to eq "manufacturer_product_serialnumber has already been taken"
+    end
   end
 
 
+  it 'does not create a meter with missing parameters' do
+    access_token = Fabricate(:full_access_token_as_admin)
+    meter = Fabricate(:meter)
+
+    request_params = {
+      manufacturer_name:                  meter.manufacturer_name,
+      manufacturer_product_name:          meter.manufacturer_product_name,
+      manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber
+    }
+
+    request_params.keys.each do |name|
+
+      params = request_params.reject { |k,v| k == name }
+      post_with_token "/api/v1/meters", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{name} is missing"
+      end
+    end
+  end
+
+
+
+
+
+  it 'does not update a meter with invalid parameters' do
+    meter = Fabricate(:meter)
+    access_token  = Fabricate(:full_access_token_as_admin)
+
+    params = { manufacturer_product_serialnumber: Fabricate(:meter).manufacturer_product_serialnumber }
+
+    patch_with_token "/api/v1/meters/#{meter.id}", params.to_json, access_token.token
+
+    expect(response).to have_http_status(422)
+    json['errors'].each do |error|
+      expect(error['source']['pointer']).to eq "/data/attributes/manufacturer_product_serialnumber"
+      expect(error['title']).to eq 'Invalid Attribute'
+      expect(error['detail']).to eq "manufacturer_product_serialnumber has already been taken"
+    end
+  end
 
 
 

@@ -138,19 +138,17 @@ module API
         params do
           requires :name,         type: String, desc: "Name of the Organization."
           requires :phone,        type: String, desc: "Phone number of Organization."
-          requires :fax,          type: String, desc: "Fax number of Organization."
-          optional :website,      type: String, desc: "Website of Organization."
           requires :email,        type: String, desc: "Email of Organization."
-          requires :description,  type: String, desc: "Description of the Organization."
           requires :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
+          optional :fax,          type: String, desc: "Fax number of Organization."
+          optional :website,      type: String, desc: "Website of Organization."
+          optional :description,  type: String, desc: "Description of the Organization."
         end
         oauth2 :full
         post do
           if Organization.creatable_by?(current_user)
-            organization = Organization.new(permitted_params)
-            if organization.save!
-              current_user.add_role(:manager, organization)
-            end
+            organization = Organization.create!(permitted_params)
+            current_user.add_role(:manager, organization)
             created_response(organization)
           else
             status 403
@@ -175,7 +173,7 @@ module API
           organization = Organization.find(permitted_params[:id])
 
           if organization.updatable_by?(current_user)
-            organization.update(permitted_params)
+            organization.update!(permitted_params)
             return organization
           else
             status 403

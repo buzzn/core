@@ -42,8 +42,81 @@ module API
           error_response(message: e.message, status: 404)
         end
 
+        class ErrorResponse < Rack::Response
+
+          def initialize(status = 500, headers = {})
+            super([], status, headers)
+            @errors = []
+          end
+
+          def add(name, *messages)
+            name = name.to_s
+            if name.include? '.'
+              name = name.sub(/\./, '[') + ']'
+            end
+            messages.each do |msg|
+              @errors << { "source":
+                             { "pointer": "/data/attributes/#{name}" },
+                           "title": "Invalid Attribute",
+                           "detail": "#{name} #{msg}" }
+            end
+          end
+
+          def to_hash
+            { errors: @errors }
+          end
+
+          def finish
+            write to_hash.to_json
+            super
+          end
+        end
+
+        rescue_from Grape::Exceptions::ValidationErrors do |e|
+          errors = ErrorResponse.new(422, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          e.errors.each do |key, value|
+            key.each_with_index do |k, i|
+              errors.add(k, value[i])
+            end
+          end
+
+          errors.finish
+        end
+
         rescue_from ActiveRecord::RecordInvalid do |e|
-          error_response(message: e.message, status: 422)
+          errors = ErrorResponse.new(422, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          e.record.errors.messages.each do |attr, value|
+            errors.add(attr, *value)
+          end
+
+          errors.finish
+        end
+
+        rescue_from :all do |e|
+          eclass = e.class.to_s
+          if eclass.match('WineBouncer::Errors')
+            title = e.response.name.to_s.split('_').collect{|s| s.capitalize}.join(' ')
+            if e.response.name == :invalid_scope
+              message = "Invalid scope. Allowed scopes are: #{e.response.instance_variable_get(:@scopes).join(', ')}"
+            else
+              message = e.to_s
+            end
+          end
+          status = case
+                   when eclass.match('OAuthUnauthorizedError')
+                     401 # forbidden
+                   when eclass.match('OAuthForbiddenError')
+                     403 # no permissions
+                   else
+                     title = 'Internal Error'
+                     message = e.message
+                     (e.respond_to? :status) && e.status || 500
+                   end
+          opts = { errors: [ { title: title, detail: message } ] }
+          unless Rails.env.production?
+            opts.merge!({ meta: { trace: e.backtrace[0, 10] } })
+          end
+          Rack::Response.new(opts.to_json, status, { Grape::Http::Headers::CONTENT_TYPE => content_type }).finish
         end
       end
     end

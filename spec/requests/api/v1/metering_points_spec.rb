@@ -161,6 +161,79 @@ describe "Metering Points API" do
     expect(response).to have_http_status(401)
   end
 
+  it 'does not creates a metering_point with missing parameters' do
+    meter          = Fabricate(:meter)
+    metering_point = Fabricate.build(:metering_point)
+    access_token   = Fabricate(:full_access_token)
+
+    request_params = {
+      mode: metering_point.mode,
+      readable: metering_point.readable,
+      name: metering_point.name,
+      meter_id: meter.id
+    }
+
+    request_params.keys.each do |name|
+      params = request_params.reject { |k,v| k == name }
+
+      post_with_token "/api/v1/metering-points", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{name} is missing"
+      end
+    end
+  end
+
+
+  it 'does not creates a metering_point with invalid parameters' do
+    meter          = Fabricate(:meter)
+    metering_point = Fabricate.build(:metering_point)
+    access_token   = Fabricate(:full_access_token)
+
+    request_params = {
+      mode: metering_point.mode,
+      readable: metering_point.readable,
+      name: metering_point.name,
+      meter_id: meter.id
+    }
+
+    request_params.keys.each do |name|
+      next if name == :meter_id
+
+      params = request_params.dup
+      params[name] = 'a' * 2000
+
+      post_with_token "/api/v1/metering-points", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to match /#{name}/
+      end
+    end
+  end
+
+
+  it 'does not creates a metering_point with invalid meter_id' do
+    metering_point = Fabricate.build(:metering_point)
+    access_token   = Fabricate(:full_access_token)
+
+    request_params = {
+      mode: metering_point.mode,
+      readable: metering_point.readable,
+      name: metering_point.name,
+      meter_id: 'asd-dsa'
+    }
+
+    post_with_token "/api/v1/metering-points", request_params.to_json, access_token.token
+
+    expect(response).to have_http_status(404)
+  end
+
 
   [:public_access_token, :full_access_token,
    :smartmeter_access_token].each do |token|
@@ -187,6 +260,35 @@ describe "Metering Points API" do
       expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
       expect(json['data']['attributes']['meter-id']).to eq(meter.id)
       expect(json['data']['attributes']['name']).to eq(metering_point.name)
+    end
+  end
+
+  it 'does not update a metering_point with invalid meter_id' do
+    metering_point = Fabricate(:metering_point)
+    access_token   = Fabricate(:full_access_token_as_admin)
+
+    patch_with_token "/api/v1/metering-points/#{metering_point.id}", { meter_id: 'asddsa'}.to_json, access_token.token
+
+    expect(response).to have_http_status(404)
+  end
+
+
+
+  it 'does not update a metering_point with invalid parameters' do
+    metering_point = Fabricate(:metering_point)
+    access_token   = Fabricate(:full_access_token_as_admin)
+
+    [:mode, :readable, :name].each do |name|
+      params = { "#{name}": 'a' * 2000 }
+
+      patch_with_token "/api/v1/metering-points/#{metering_point.id}", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to match /#{name}/
+      end
     end
   end
 

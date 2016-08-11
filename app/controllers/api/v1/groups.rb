@@ -60,11 +60,8 @@ module API
         oauth2 :full
         post do
           if Group.creatable_by?(current_user)
-            group = Group.new(permitted_params)
-
-            if group.save!
-              current_user.add_role(:manager, group)
-            end
+            group = Group.create!(permitted_params)
+            current_user.add_role(:manager, group)
             created_response(group)
           else
             error!('you need at least one out-metering_point', 401)
@@ -82,7 +79,7 @@ module API
         patch ':id' do
           group = Group.find(permitted_params[:id])
           if group.updatable_by?(current_user)
-            group.update(permitted_params)
+            group.update!(permitted_params)
             group
           else
             status 403

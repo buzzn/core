@@ -175,35 +175,93 @@ describe "Groups API" do
     expect(response).to have_http_status(401)
   end
 
-  it 'does not create a group with missing name' do
+  it 'does not create a group with missing parameter' do
     access_token  = Fabricate(:full_access_token)
     group = Fabricate.build(:group)
     request_params = {
-      # name:  group.name,
+      name:  group.name,
       readable: group.readable,
       description: group.description
-    }.to_json
-    post_with_token "/api/v1/groups", request_params, access_token.token
-    expect(response).to have_http_status(400)
+    }
+
+    [:name, :description].each do |name|
+      params = request_params.reject {|k,v| k == name}
+
+      post_with_token "/api/v1/groups", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{name} is missing"
+      end
+    end
   end
 
-
-  it 'does create a group' do
+  it 'does not create a group with invalid parameter' do
     metering_point = Fabricate(:out_metering_point_with_manager)
     manager       = metering_point.managers.first
     access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
     group = Fabricate.build(:group)
+
+    request_params = {
+      name:  group.name,
+      description: group.description
+    }
+
+    [:name].each do |name|
+      params = request_params.dup
+      params[name] = 'a' * 2000
+
+      post_with_token "/api/v1/groups", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{name} is too long (maximum is 40 characters)"
+      end
+    end
+  end
+
+
+  it 'creates a group' do
+    metering_point = Fabricate(:out_metering_point_with_manager)
+    manager       = metering_point.managers.first
+    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
+    access_token.update_attribute :scopes, 'full'
+    group = Fabricate.build(:group)
+
     request_params = {
       name: group.name,
-      readable: group.readable,
       description: group.description
     }.to_json
+
     post_with_token "/api/v1/groups", request_params, access_token.token
+
     expect(response).to have_http_status(201)
     expect(response.headers['Location']).to eq json['data']['id']
   end
 
+  it "does not update a group with validation errors" do
+    group = Fabricate(:group)
+
+    access_token = Fabricate(:full_access_token_as_admin)
+
+    [:name].each do |k|
+      params = { "#{k}": 'a' * 2000 }
+
+      patch_with_token "/api/v1/groups/#{group.id}", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{k}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{k} is too long (maximum is 40 characters)"
+      end
+    end
+  end
 
   it 'updates a group' do
     metering_point = Fabricate(:out_metering_point_with_manager)
@@ -212,11 +270,11 @@ describe "Groups API" do
     group = Fabricate(:group)
     manager.add_role(:manager, group)
     request_params = {
-      name: "#{group.name} updated",
-      readable: group.readable,
-      description: group.description
+      name: "#{group.name} updated"
     }.to_json
+
     patch_with_token "/api/v1/groups/#{group.id}", request_params, access_token.token
+
     expect(response).to have_http_status(200)
     expect(json['data']['attributes']['name']).to eq("#{group.name} updated")
   end

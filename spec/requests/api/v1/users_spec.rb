@@ -80,7 +80,7 @@ describe "Users API" do
   end
 
 
-  it 'does not gets a user without token' do
+  it 'does not gets an user without token' do
     user = Fabricate(:user)
     get_without_token "/api/v1/users/#{user.id}"
     expect(response).to have_http_status(401)
@@ -97,7 +97,7 @@ describe "Users API" do
 
  # RETRIEVE users/friend
 
-  it 'gets a user as friend' do
+  it 'gets an user as friend' do
     access_token      = Fabricate(:access_token_with_friend)
     token_user        = User.find(access_token.resource_owner_id)
     token_user_friend = token_user.friends.first
@@ -105,17 +105,108 @@ describe "Users API" do
     expect(response).to have_http_status(200)
   end
 
+  # everything else . . .
 
-  it 'creates a user as manager' do
+  it 'does not create an user with missing parameters' do
     access_token  = Fabricate(:full_access_token_as_admin)
 
     user = Fabricate.build(:user)
     request_params = {
       email:      user.email,
       password:   user.password,
-      user_name:  user.profile.user_name,
-      first_name: user.profile.first_name,
-      last_name:  user.profile.last_name
+      profile:  { user_name:  user.profile.user_name,
+                  first_name: user.profile.first_name,
+                  last_name:  user.profile.last_name }
+    }
+
+    (request_params.keys + request_params[:profile].keys).each do |name|
+      next if name == :profile
+      params = request_params.reject { |k,v| k == name }
+      unless request_params.key? name
+        params[:profile] = request_params[:profile].reject { |k,v| k == name }
+        name = "profile[#{name}]"
+      end
+
+      post_with_token "/api/v1/users", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{name} is missing"
+      end
+    end
+  end
+
+  it 'does not create an user with invalid parameters' do
+    access_token  = Fabricate(:full_access_token_as_admin)
+
+    user = Fabricate.build(:user)
+    request_params = {
+      email:      user.email,
+      password:   user.password,
+      profile:  { user_name:  user.profile.user_name,
+                  first_name: user.profile.first_name,
+                  last_name:  user.profile.last_name }
+    }
+
+    (request_params.keys + request_params[:profile].keys).each do |name|
+      next if name == :profile
+      params = request_params.dup
+      if params.key? name
+        params[name] = 'a' * 2000
+      else
+        profile = params[:profile] = params[:profile].dup
+        profile[name] = 'a' * 2000
+        name = "profile[#{name}]"
+      end
+
+      post_with_token "/api/v1/users", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to match Regexp.new(Regexp.quote(name))
+      end
+    end
+  end
+
+  xit 'does not update an user with invalid parameters' do
+    access_token  = Fabricate(:full_access_token_as_admin)
+    user = Fabricate(:user)
+
+    [:email, :password, :user_name, :first_name, :last_name].each do |name|
+      if name.to_s.end_with? 'name'
+        params = { profile: { "#{name}": 'a' * 2000 } }
+        name = "profile[#{name}]"
+      else
+        params = { "#{name}": 'a' * 2000 }
+      end
+
+      patch_with_token "/api/v1/users/#{user.id}", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to match Regexp.new(Regexp.quote(name))
+      end
+    end
+  end
+
+  it 'creates an user as admin' do
+    access_token  = Fabricate(:full_access_token_as_admin)
+
+    user = Fabricate.build(:user)
+    request_params = {
+      email:      user.email,
+      password:   user.password,
+      profile:  { user_name:  user.profile.user_name,
+                  first_name: user.profile.first_name,
+                  last_name:  user.profile.last_name }
     }.to_json
     post_with_token "/api/v1/users", request_params, access_token.token
     expect(response).to have_http_status(201)
