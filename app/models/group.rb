@@ -367,68 +367,6 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def bubbles_energy_data
-    in_metering_point_energy_data = []
-    out_metering_point_energy_data = []
-
-    if self.metering_points.externals.any?
-      # self.metering_points.externals.each do |external_metering_point| #TODO: enable for more than 1 external metering_point
-
-      #   if external_metering_point.mode == 'in'
-      #     data = external_metering_point.last_power_each
-      #   else
-      #     data = external_metering_point.last_power_each
-      #   end
-      #   data[:result].each do |reading|
-      #     metering_point = self.metering_points.without_externals.joins(:meter).where("meters.manufacturer_product_serialnumber" => (reading[:meter_id]).to_i).first
-      #     if metering_point.nil?
-      #       next
-      #     end
-      #     metering_point_name = metering_point.decorate.name_with_users
-      #     if metering_point.users.any?
-      #       if metering_point.users.include?(requesting_user)
-      #         own_metering_point = true
-      #       else
-      #         own_metering_point = false
-      #       end
-      #     else
-      #       own_metering_point = false
-      #     end
-      #     readable = requesting_user.nil? ? false : metering_point.readable_by?(requesting_user)
-      #     if !readable
-      #       metering_point_name = "anonym"
-      #     end
-      #     if external_metering_point.mode == 'in'
-      #       data_entry = {:metering_point_id => metering_point.id, :latest_power => reading[:power], :name => metering_point_name, :own_metering_point => own_metering_point, :readable => readable}
-      #       in_metering_point_data.push(data_entry)
-      #     else
-      #       data_entry = {:metering_point_id => metering_point.id, :latest_power => reading[:power], :name => metering_point_name, :own_metering_point => own_metering_point, :readable => true}
-      #       out_metering_point_data.push(data_entry)
-      #     end
-      #   end
-      # end
-    else
-      self.metering_points.without_externals.each do |metering_point|
-        energy_data_entry = []
-        personal_data_entry = []
-
-        latest_power = nil
-        virtual = metering_point.virtual
-        latest_power = metering_point.last_power
-
-        energy_data_entry = {:metering_point_id => metering_point.id, :latest_power => (latest_power.nil? || latest_power[:power].nil?) ? 0 : latest_power[:power], :virtual => virtual}
-        if metering_point.mode == "out"
-          out_metering_point_energy_data.push(energy_data_entry)
-        else
-          in_metering_point_energy_data.push(energy_data_entry)
-        end
-      end
-    end
-    out_data = { :name => "Gesamterzeugung", :children => out_metering_point_energy_data}
-    energy_data = {:in => in_metering_point_energy_data, :out => out_data}
-    return energy_data
-  end
-
   def bubbles_personal_data(requesting_user)
     out_metering_point_personal_data = []
     in_metering_point_personal_data = []

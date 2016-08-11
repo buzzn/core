@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_filter :authenticate_user!, except: [:index, :show, :chart, :bubbles_data, :widget, :kiosk]
+  before_filter :authenticate_user!, except: [:index, :show, :chart, :widget, :kiosk]
   respond_to :html, :js, :json
 
   def index
@@ -193,43 +193,6 @@ class GroupsController < ApplicationController
     end
   end
   authority_actions :remove_manager_update => 'update'
-
-
-  def bubbles_data
-    @group = Group.find(params[:id])
-    @cache_id = "/groups/#{params[:id]}/bubbles_data"
-    @cache = Rails.cache.fetch(@cache_id)
-    @energy_data = @cache || @group.bubbles_energy_data
-    @personal_data = @group.bubbles_personal_data(current_user)
-    if @cache.nil?
-      Rails.cache.write(@cache_id, @energy_data, expires_in: 9.seconds)
-    end
-    #merge personal with energy data
-    energy_data_in_arr = @energy_data[:in]
-    personal_data_in_arr = @personal_data[:in]
-    energy_data_out_arr = @energy_data[:out][:children]
-    personal_data_out_arr = @personal_data[:out]
-    result_in = []
-    result_out = []
-    energy_data_in_arr.each do |energy_data_entry|
-      personal_data_in_arr.each do |personal_data_entry|
-        if energy_data_entry[:metering_point_id] == personal_data_entry[:metering_point_id]
-          result_in.push(energy_data_entry.merge(personal_data_entry))
-          break
-        end
-      end
-    end
-    energy_data_out_arr.each do |energy_data_entry|
-      personal_data_out_arr.each do |personal_data_entry|
-        if energy_data_entry[:metering_point_id] == personal_data_entry[:metering_point_id]
-          result_out.push(energy_data_entry.merge(personal_data_entry))
-          break
-        end
-      end
-    end
-    result = {:in => result_in, :out => { :name => "Gesamterzeugung", :children => result_out}}
-    render json: result
-  end
 
 
   def kiosk
