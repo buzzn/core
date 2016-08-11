@@ -1,3 +1,4 @@
+# coding: utf-8
 class Discovergy
 
   # how to use
@@ -40,7 +41,7 @@ class Discovergy
       req.params['user']          = @username
       req.params['password']      = @password
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
 
@@ -59,7 +60,7 @@ class Discovergy
       end
       req.params['numOfSeconds']  = num_of_seconds
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
   def get_live_each( virtual_meter_uid )
@@ -71,7 +72,7 @@ class Discovergy
       #TODO: make this dynamic
       req.params['meterId']       = "VIRTUAL_#{virtual_meter_uid}"
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
   def get_day( meter_uid, timestamp)
@@ -92,7 +93,7 @@ class Discovergy
       req.params['month']         = datetime.month
       req.params['year']          = datetime.year
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
   def get_month( meter_uid, timestamp)
@@ -116,7 +117,7 @@ class Discovergy
       req.params['toMonth']       = datetime_end.month+1
       req.params['toYear']        = datetime_end.year
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
   def get_year( meter_uid, timestamp)
@@ -140,7 +141,7 @@ class Discovergy
       req.params['toMonth']       = datetime_end.month
       req.params['toYear']        = datetime_end.year
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
   def get_hour( meter_uid, timestamp )
@@ -160,7 +161,7 @@ class Discovergy
       req.params['from']          = datetime_from
       req.params['to']            = datetime_to
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
 
@@ -183,7 +184,7 @@ class Discovergy
       req.params['from']          = @datetime_from
       req.params['to']            = @datetime_to
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
 
@@ -207,7 +208,7 @@ class Discovergy
       req.params['from']          = @datetime_from
       req.params['to']            = @datetime_to
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
 

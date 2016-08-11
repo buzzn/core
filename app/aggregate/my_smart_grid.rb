@@ -1,3 +1,4 @@
+# coding: utf-8
 class MySmartGrid
 
   # how to use
@@ -36,7 +37,7 @@ class MySmartGrid
   #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=day&unit=watt'
       req.headers["Accept"] = "application/json"
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
   # This subroutine returns an array of time and work of the requested month on a time-grid of days
@@ -51,7 +52,7 @@ class MySmartGrid
   #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=month&unit=watt'
       req.headers["Accept"] = "application/json"
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
   # This subroutine returns an array of time and power of the requested hour on a time-grid of minutes
@@ -69,7 +70,7 @@ class MySmartGrid
   #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=hour&unit=watt'
       req.headers["Accept"] = "application/json"
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
   # "real time view" with 5 minutes delay!
@@ -89,7 +90,7 @@ class MySmartGrid
     end
     if response['content-length'] != "0"
       Rails.log response.body
-      return JSON.parse(response.body)
+      return MultiJson.load(response.body)
     else
       Rails.log "NO DATA FROM AMPERIX API"
     end
@@ -107,7 +108,7 @@ class MySmartGrid
   #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=month&unit=watt'
       req.headers["Accept"] = "application/json"
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 
   # sensor_id replaces username and x_token the password
@@ -128,6 +129,6 @@ class MySmartGrid
     response = @conn.get do |req|
 
     end
-    return JSON.parse(response.body)
+    return MultiJson.load(response.body)
   end
 end

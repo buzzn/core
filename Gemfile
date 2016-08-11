@@ -103,6 +103,8 @@ gem 'i18n-tasks'
 gem 'will_paginate', '~> 3.0.6'
 gem 'high_voltage'
 gem 'wine_bouncer', '~> 1.0'
+gem 'multi_json', '~> 1.0'
+gem 'oj', '~> 2.0'
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-pace'
