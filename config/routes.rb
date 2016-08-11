@@ -137,7 +137,6 @@ Buzzn::Application.routes.draw do
   resources :groups do
     resources :metering_points, only: [:index]
     member do
-      get :bubbles_data
       get :chart
       get :kiosk
       get :get_scores
