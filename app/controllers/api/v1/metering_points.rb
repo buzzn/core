@@ -32,10 +32,11 @@ module API
         oauth2 :public, :full, :smartmeter
         post do
           if MeteringPoint.creatable_by?(current_user)
-            metering_point = MeteringPoint.new(permitted_params)
-            if metering_point.save!
-              current_user.add_role(:manager, metering_point)
-            end
+            meter = Meter.find(permitted_params[:meter_id])
+            attributes = permitted_params.reject { |k,v| k == :meter_id }
+            attributes[:meter] = meter
+            metering_point = MeteringPoint.create!(attributes)
+            current_user.add_role(:manager, metering_point)
             created_response(metering_point)
           else
             status 403
@@ -57,7 +58,12 @@ module API
         patch ':id' do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.updatable_by?(current_user)
-            metering_point.update(permitted_params)
+            attributes = permitted_params.reject { |k,v| k == :meter_id }
+            if permitted_params[:meter_id]
+              meter = Meter.find(permitted_params[:meter_id])
+              attributes[:meter] = meter
+            end
+            metering_point.update!(attributes)
             metering_point
           else
             status 403

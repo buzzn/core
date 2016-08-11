@@ -168,26 +168,42 @@ describe 'Contracts API' do
     request_params.each do |missing_param, val|
       broken_params = request_params.reject { |key, val| key == missing_param }
       post_with_token "/api/v1/contracts/", broken_params.to_json, access_token
-      expect(response).to have_http_status(400)
-      expect(json['error']).to eq("#{missing_param} is missing")
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{missing_param}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{missing_param} is missing"
+      end
     end
   end
 
   it 'does not create contract as admin with full access token if some params are wrong' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
+    wrong_ones = []
     @contract_param_names.each do |param_name|
       if contract[param_name].is_a?(Date)
+        wrong_ones << param_name
         request_params[param_name] = false
       elsif contract[param_name].is_a?(Boolean)
+        wrong_ones << param_name
         request_params[param_name] = "unknown"
       else
         request_params[param_name] = contract[param_name]
       end
     end
     access_token  = Fabricate(:full_access_token_as_admin).token
+
     post_with_token "/api/v1/contracts/", request_params.to_json, access_token
-    expect(response).to have_http_status(400)
+
+    expect(response).to have_http_status(422)
+    wrong_ones.each do |param_name|
+      error_json = json['errors'].detect do |error|
+        error && error['source']['pointer'] ==  "/data/attributes/#{param_name}"
+      end
+      expect(error_json['title']).to eq 'Invalid Attribute'
+      expect(error_json['detail']).to eq "#{param_name} is invalid"
+    end
   end
 
   it 'does not update contract without token' do
@@ -213,7 +229,12 @@ describe 'Contracts API' do
       end
     end
     patch_with_token "/api/v1/contracts/#{contract_id}", request_params.to_json, access_token
-    expect(response).to have_http_status(400)
+    expect(response).to have_http_status(422)
+    json['errors'].each do |error|
+      expect(error['source']['pointer']).to match %r(/data/attributes/)
+      expect(error['title']).to eq 'Invalid Attribute'
+      expect(error['detail']).not_to be_nil
+    end
   end
 
   it 'does not update contract as admin with full access token and wrong id' do

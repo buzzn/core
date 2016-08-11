@@ -121,6 +121,82 @@ describe "Devices API" do
     expect(user.has_role?(:manager, device)).to eq true
   end
 
+  it "does not create a device with validation errors" do
+    device = Fabricate.build(:device)
+
+    access_token = Fabricate(:full_access_token)
+
+    request_params = {
+      manufacturer_name:                  device.manufacturer_name,
+      manufacturer_product_name:          device.manufacturer_product_name,
+      manufacturer_product_serialnumber:  device.manufacturer_product_serialnumber,
+      category:                           'Elektroauto',
+      watt_peak:                          49000,
+      mobile:                             false,
+    }
+
+    [:manufacturer_name, :manufacturer_product_name].each do |k|
+      params = request_params.dup
+      params[k] = 'a' * 2000
+
+      post_with_token "/api/v1/devices", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{k}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{k} is too long (maximum is 30 characters)"
+      end
+    end
+  end
+
+  it "does not create a device with missing parameters" do
+    device = Fabricate.build(:device)
+
+    access_token = Fabricate(:full_access_token)
+
+    request_params = {
+      manufacturer_name:                  device.manufacturer_name,
+      manufacturer_product_name:          device.manufacturer_product_name,
+      manufacturer_product_serialnumber:  device.manufacturer_product_serialnumber,
+      category:                           'Elektroauto',
+      watt_peak:                          49000,
+      mobile:                             false,
+    }
+
+    [:category, :watt_peak, :mobile].each do |name|
+      params = request_params.dup
+      params.delete(name)
+
+      post_with_token "/api/v1/devices", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{name} is missing"
+      end
+    end
+  end
+
+  it "does not update a device with validation errors" do
+    device = Fabricate(:device)
+
+    access_token = Fabricate(:full_access_token_as_admin)
+
+    [:manufacturer_name, :manufacturer_product_name].each do |k|
+      params = { "#{k}": 'a' * 2000 }
+
+      patch_with_token "/api/v1/devices/#{device.id}", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{k}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{k} is too long (maximum is 30 characters)"
+      end
+    end
+  end
 
   [:no_access_token, :public_access_token, :full_access_token, :smartmeter_access_token].each do |token|
 
@@ -170,14 +246,14 @@ describe "Devices API" do
 
       request_params = {
         id:                                 device.id,
-        manufacturer_product_name:          "#{device.manufacturer_product_name} updated",
+        manufacturer_product_name:          "updated",
       }.to_json
 
       patch_with_token "/api/v1/devices/#{device.id}", request_params, access_token.token
 
       expect(response).to have_http_status(200)
       expect(json['data']['attributes']['manufacturer-name']).to eq(device.manufacturer_name)
-      expect(json['data']['attributes']['manufacturer-product-name']).to eq("#{device.manufacturer_product_name} updated")
+      expect(json['data']['attributes']['manufacturer-product-name']).to eq("updated")
       expect(json['data']['attributes']['manufacturer-product-serialnumber']).to eq(device.manufacturer_product_serialnumber)
     end
 

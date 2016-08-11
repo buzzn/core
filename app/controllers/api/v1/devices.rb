@@ -56,10 +56,8 @@ module API
         oauth2 :full
         post do
           if Device.creatable_by?(current_user)
-            device = Device.new(permitted_params)
-            if device.save!
-              current_user.add_role(:manager, device)
-            end
+            device = Device.create!(permitted_params)
+            current_user.add_role(:manager, device)
             created_response(device)
           else
             status_403
@@ -88,7 +86,7 @@ module API
         patch ':id' do
           device = Device.find(permitted_params[:id])
           if device.updatable_by?(current_user)
-            device.update(permitted_params)
+            device.update!(permitted_params)
             device
           else
             status 403

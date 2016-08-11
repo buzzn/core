@@ -71,8 +71,13 @@ describe 'Comments API' do
     comment.each do |missing_param, val|
       broken_params = comment.reject { |key, val| key == missing_param }
       post_with_token "/api/v1/comments", broken_params.to_json, manager_token.token
-      expect(response).to have_http_status(400)
-      expect(json['error']).to start_with("#{missing_param} is missing")
+      expect(response).to have_http_status(422)
+
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{missing_param}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{missing_param} is missing"
+      end
     end
 
     wrong_resource_id = comment.clone
@@ -83,8 +88,13 @@ describe 'Comments API' do
     wrong_resource_name = comment.clone
     wrong_resource_name[:resource_name] = 'xxxxx'
     post_with_token "/api/v1/comments", wrong_resource_name.to_json, manager_token.token
-    expect(response).to have_http_status(400)
-    expect(json['error']).to eq('resource_name does not have a valid value')
+    expect(response).to have_http_status(422)
+
+    json['errors'].each do |error|
+      expect(error['source']['pointer']).to eq "/data/attributes/resource_name"
+      expect(error['title']).to eq 'Invalid Attribute'
+    end
+    #expect(json['error']).to eq('resource_name does not have a valid value')
   end
 
   [:public_access_token, :full_access_token].each do |token|
@@ -129,8 +139,12 @@ describe 'Comments API' do
     patch_with_token "/api/v1/comments/xxxxx", params.to_json, manager_token.token
     expect(response).to have_http_status(404)
     patch_with_token "/api/v1/comments/#{child_comment.id}", {}, manager_token.token
-    expect(response).to have_http_status(400)
-    expect(json['error']).to eq('body is missing')
+    expect(response).to have_http_status(422)
+    json['errors'].each do |error|
+      expect(error['source']['pointer']).to eq "/data/attributes/body"
+      expect(error['title']).to eq 'Invalid Attribute'
+      expect(error['detail']).to eq 'body is missing'
+    end
   end
 
   it 'allows only update own comment' do

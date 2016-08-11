@@ -31,10 +31,8 @@ module API
         oauth2 :full, :smartmeter
         post do
           if Meter.creatable_by?(current_user)
-            meter = Meter.new(permitted_params)
-            if meter.save!
-              current_user.add_role(:manager, meter)
-            end
+            meter = Meter.create!(permitted_params)
+            current_user.add_role(:manager, meter)
             created_response(meter)
           else
             status 403
@@ -55,7 +53,7 @@ module API
         patch ':id' do
           meter = Meter.find(permitted_params[:id])
           if meter.updatable_by?(current_user)
-            meter.update(permitted_params)
+            meter.update!(permitted_params)
             meter
           else
             status 403

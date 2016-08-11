@@ -65,8 +65,56 @@ describe "Profiles API" do
     expect(response).to have_http_status(403)
   end
 
+  it 'does not create a profile with missing parameters' do
+    access_token = Fabricate(:full_access_token_as_admin)
+    profile = Fabricate.build(:profile)
 
-  it 'creates a profile as manager' do
+    request_params = {
+      user_name:  profile.user_name,
+      first_name: profile.first_name,
+      last_name:  profile.last_name
+    }
+
+    request_params.keys.each do |name|
+      params = request_params.reject { |k,v| k == name }
+      post_with_token "/api/v1/profiles", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{name} is missing"
+      end
+    end
+  end
+
+
+  it 'does not create a profile with invalid parameters' do
+    access_token = Fabricate(:full_access_token_as_admin)
+    profile = Fabricate.build(:profile)
+
+    request_params = {
+      user_name:  profile.user_name,
+      first_name: profile.first_name,
+      last_name:  profile.last_name
+    }
+
+    request_params.keys.each do |name|
+      params = request_params.dup
+      params[name] = 'a' * 2000
+
+      post_with_token "/api/v1/profiles", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to match /#{name}/
+      end
+    end
+  end
+
+  it 'creates a profile as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
     profile = Fabricate.build(:profile)
 
@@ -75,12 +123,33 @@ describe "Profiles API" do
       first_name: profile.first_name,
       last_name:  profile.last_name
     }.to_json
+
     post_with_token "/api/v1/profiles", request_params, access_token.token
 
     expect(response).to have_http_status(201)
     expect(json['data']['attributes']['first-name']).to eq(profile.first_name)
     expect(json['data']['attributes']['last-name']).to eq(profile.last_name)
   end
+
+
+  xit 'does not update a profile with invalid parameters' do
+    access_token = Fabricate(:full_access_token_as_admin)
+    profile = Fabricate(:profile)
+
+    [:user_name, :first_name, :last_name].each do |name|
+      params = { "{name}": 'a' * 2000 }
+
+      patch_with_token "/api/v1/profiles/#{profile.id}", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to match /#{name}/
+      end
+    end
+  end
+
 
   it 'get profile groups readable by world with or without token' do
     access_token      = Fabricate(:public_access_token).token

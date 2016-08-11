@@ -49,18 +49,18 @@ module API
         params do
           requires :email, type: String
           requires :password, type: String
-          requires :user_name, type: String
-          requires :first_name, type: String
-          requires :last_name, type: String
+          requires :profile, type: Hash do
+            requires :user_name, type: String
+            requires :first_name, type: String
+            requires :last_name, type: String
+          end
         end
         oauth2 :full
         post do
           if User.creatable_by?(current_user)
-            user = User.create!(
-              email:    permitted_params[:email],
-              password: permitted_params[:password],
-              profile:  Profile.new( user_name: permitted_params[:user_name], first_name: permitted_params[:first_name], last_name:  permitted_params[:last_name] )
-            )
+            profile = Profile.new(permitted_params.delete(:profile))
+            permitted_params[:profile] = profile
+            user = User.create!(permitted_params)
             created_response(user)
           else
             status 403

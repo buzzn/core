@@ -484,7 +484,6 @@ describe "Aggregates API" do
     }
 
     get_with_token "/api/v1/aggregates/present", request_params, access_token.token
-
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(2)
     expect(json['power_milliwatt']).to eq(900*1000*(3+8))
@@ -973,7 +972,6 @@ describe "Aggregates API" do
     }
 
     get_with_token "/api/v1/aggregates/present", request_params, access_token.token
-
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(2)
     expect(json['power_milliwatt']).to eq((900*1000)+(800*1000))

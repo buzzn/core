@@ -42,11 +42,11 @@ describe "Organizations API" do
     get_with_token "/api/v1/organizations", access_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq Organization.all.size
-    expect(json['data'].last['id']).to eq organization.id
+    expect(json['data'].detect{ |item| item['id'] == organization.id }).not_to be_nil
   end
 
 
-  it 'gets all organizations with full access token as admin' do
+  it 'gets all organizations with full access token as manager' do
     access_token = Fabricate(:full_access_token_as_admin)
     organization = Fabricate(:electricity_supplier)
     manager = User.find(access_token.resource_owner_id)
@@ -55,7 +55,7 @@ describe "Organizations API" do
     get_with_token "/api/v1/organizations", access_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq Organization.all.size
-    expect(json['data'].last['id']).to eq organization.id
+    expect(json['data'].detect{ |item| item['id'] == organization.id }).not_to be_nil
   end
 
 
@@ -134,6 +134,60 @@ describe "Organizations API" do
     expect(response).to have_http_status(403)
   end
 
+  it 'does not create an organization with missing parameters' do
+    access_token = Fabricate(:full_access_token_as_admin)
+    organization = Fabricate.build(:metering_service_provider)
+
+    request_params = {
+      name:        organization.name,
+      phone:       organization.phone,
+      mode:        organization.mode,
+      email:       organization.email
+    }
+
+    request_params.keys.each do |name|
+      params = request_params.reject {|k,v| k == name }
+      post_with_token "/api/v1/organizations", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{name} is missing"
+      end
+    end
+  end
+
+
+  it 'does not create an organization with invalid parameters' do
+    access_token = Fabricate(:full_access_token_as_admin)
+    organization = Fabricate.build(:metering_service_provider)
+
+    request_params = {
+      name:        organization.name,
+      phone:       organization.phone,
+      mode:        organization.mode,
+      email:       organization.email
+    }
+
+    request_params.keys.each do |name|
+      next if name == :phone
+      params = request_params.dup
+      params[name] = 'a' * 2000
+      post_with_token "/api/v1/organizations", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to match /#{name}/
+      end
+    end
+  end
+
+
+
   it 'creates an organization with full access token as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
     organization = Fabricate.build(:metering_service_provider)
@@ -185,6 +239,26 @@ describe "Organizations API" do
     access_token = Fabricate(:full_access_token)
     patch_with_token "/api/v1/organizations/#{organization.id}", {}.to_json, access_token.token
     expect(response).to have_http_status(403)
+  end
+
+
+  it 'does not update an organization with invalid parameters' do
+    access_token = Fabricate(:full_access_token_as_admin)
+    organization = Fabricate(:metering_service_provider)
+
+    [:name, :mode, :email].each do |name|
+      params = { "#{name}": 'a' * 2000 }
+
+      patch_with_token "/api/v1/organizations/#{organization.id}", params.to_json, access_token.token
+
+      expect(response).to have_http_status(422)
+
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to match /#{name}/
+      end
+    end
   end
 
 

@@ -18,7 +18,7 @@ module API
           resource        = resource_class.find(permitted_params[:resource_id])
           if resource.readable_by?(current_user)
             comment       = Comment.build_from(resource, current_user.id, permitted_params[:body], nil)
-            comment.save
+            comment.save!
             comment.create_activity key: 'comment.create', owner: current_user
             if permitted_params[:parent_id]
               parent_comment = Comment.find(permitted_params[:parent_id])
@@ -39,7 +39,7 @@ module API
         patch ':id' do
           comment = Comment.find(permitted_params[:id])
           if comment.updatable_by?(current_user)
-            comment.update({ body: permitted_params[:body] })
+            comment.update!(permitted_params)
             comment
           else
             status 403

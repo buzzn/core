@@ -88,78 +88,29 @@ describe "Readings API" do
 
 
 
+  [:meter_id, :timestamp, :energy_a_milliwatt_hour,
+   :power_a_milliwatt].each do |name|
 
-  it 'does not create a reading without metering_point_id' do
-    meter         = Fabricate(:easy_meter_q3d_with_manager)
-    manager       = meter.managers.first
-    access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
-    reading       = Fabricate.build(:reading)
-    request_params = {
-      # metering_point_id: metering_point.id,
-      timestamp: reading.timestamp,
-      energy_a_milliwatt_hour: reading.energy_a_milliwatt_hour,
-      power_a_milliwatt: reading.power_a_milliwatt
-    }.to_json
+    it "does not create a reading without #{name}" do
+      meter         = Fabricate(:easy_meter_q3d_with_manager)
+      manager       = meter.managers.first
+      access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
+      reading       = Fabricate.build(:reading)
+      request_params = {
+        meter_id: meter.id,
+        timestamp: reading.timestamp,
+        energy_a_milliwatt_hour: reading.energy_a_milliwatt_hour,
+        power_a_milliwatt: reading.power_a_milliwatt
+      }.reject {|k,v| k == name}.to_json
 
-    post_with_token "/api/v1/readings", request_params, access_token.token
-    expect(response).to have_http_status(400)
-    expect(json['error']).to eq("meter_id is missing")
-  end
-
-
-
-  it 'does not create a reading without timestamp' do
-    meter         = Fabricate(:easy_meter_q3d_with_manager)
-    manager       = meter.managers.first
-    access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
-    reading       = Fabricate.build(:reading)
-    request_params = {
-      meter_id: meter.id,
-      # timestamp: reading.timestamp,
-      energy_a_milliwatt_hour: reading.energy_a_milliwatt_hour,
-      power_a_milliwatt: reading.power_a_milliwatt
-    }.to_json
-
-    post_with_token "/api/v1/readings", request_params, access_token.token
-    expect(response).to have_http_status(400)
-    expect(json['error']).to eq("timestamp is missing")
-  end
-
-
-  it 'does not create a reading without energy_a_milliwatt_hour' do
-    meter         = Fabricate(:easy_meter_q3d_with_manager)
-    manager       = meter.managers.first
-    access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
-    reading       = Fabricate.build(:reading)
-    request_params = {
-      meter_id: meter.id,
-      timestamp: reading.timestamp,
-      #energy_a_milliwatt_hour: reading.energy_a_milliwatt_hour,
-      power_a_milliwatt: reading.power_a_milliwatt
-    }.to_json
-
-    post_with_token "/api/v1/readings", request_params, access_token.token
-    expect(response).to have_http_status(400)
-    expect(json['error']).to eq("energy_a_milliwatt_hour is missing")
-  end
-
-
-
-  it 'does not create a reading without milliwatt' do
-    meter         = Fabricate(:easy_meter_q3d_with_manager)
-    manager       = meter.managers.first
-    access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
-    reading       = Fabricate.build(:reading)
-    request_params = {
-      meter_id: meter.id,
-      timestamp: reading.timestamp,
-      energy_a_milliwatt_hour: reading.energy_a_milliwatt_hour,
-      #power_a_milliwatt: reading.power_a_milliwatt
-    }.to_json
-
-    post_with_token "/api/v1/readings", request_params, access_token.token
-    expect(response).to have_http_status(400)
-    expect(json['error']).to eq("power_a_milliwatt is missing")
+      post_with_token "/api/v1/readings", request_params, access_token.token
+      expect(response).to have_http_status(422)
+      json['errors'].each do |error|
+        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
+        expect(error['title']).to eq 'Invalid Attribute'
+        expect(error['detail']).to eq "#{name} is missing"
+      end
+    end
   end
 
 
