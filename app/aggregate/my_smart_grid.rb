@@ -1,4 +1,7 @@
+# coding: utf-8
 class MySmartGrid
+
+  TIMEOUT = 5 # seconds
 
   # how to use
   # # wogeno oberländerstr bhkw
@@ -14,7 +17,7 @@ class MySmartGrid
   def initialize(sensor_id, x_token)
     #sensor_id = "721bcb386c8a4dab2510d40a93a7bf66" #to be removed
     #x_token   = "0b81f58c19135bc01420aa0120ae7693" #dito
-    @conn = Faraday.new(:url => 'https://api.mysmartgrid.de:8443/sensor/'+ sensor_id, ssl: {verify: false}) do |faraday|
+    @conn = Faraday.new(:url => 'https://api.mysmartgrid.de:8443/sensor/'+ sensor_id, ssl: {verify: false}, request: { timeout: TIMEOUT, open_timeout: TIMEOUT }) do |faraday|
       faraday.request  :url_encoded
       faraday.response :logger
       faraday.adapter :net_http
