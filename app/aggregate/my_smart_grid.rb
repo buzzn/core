@@ -19,7 +19,7 @@ class MySmartGrid
     #x_token   = "0b81f58c19135bc01420aa0120ae7693" #dito
     @conn = Faraday.new(:url => 'https://api.mysmartgrid.de:8443/sensor/'+ sensor_id, ssl: {verify: false}, request: { timeout: TIMEOUT, open_timeout: TIMEOUT }) do |faraday|
       faraday.request  :url_encoded
-      faraday.response :logger
+      faraday.response :logger, Rails.logger if Rails.env == 'development'
       faraday.adapter :net_http
       faraday.headers["X-Token"] = x_token
       faraday.headers["X-Version"] = "1.0"
