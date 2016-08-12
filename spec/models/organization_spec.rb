@@ -12,7 +12,6 @@ describe "Organization Model" do
       len = (val.size * 3)/4
       [val, val.upcase, val.downcase, val[0..len], val[-(len+1)..-1]].each do |value|
         organizations = Organization.filter(value)
-        p [val, val[0..len], val[-(len+1)..-1]]
         expect(organizations.first).to eq organization
       end
     end
