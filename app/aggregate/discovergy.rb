@@ -1,6 +1,8 @@
 # coding: utf-8
 class Discovergy
 
+  TIMEOUT = 5 # seconds
+
   # how to use
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').meters
   # Discovergy.new('info@philipp-osswald.de', 'Null8fünfzehn').get_live(60009269)
@@ -26,7 +28,7 @@ class Discovergy
     @username  = username
     @password  = password
 
-    @conn = Faraday.new(:url => 'https://my.discovergy.com', ssl: {verify: false}) do |faraday|
+    @conn = Faraday.new(:url => 'https://my.discovergy.com', ssl: {verify: false}, request: { timeout: TIMEOUT, open_timeout: TIMEOUT }) do |faraday|
       faraday.request  :url_encoded
       faraday.response :logger
       faraday.adapter :net_http
