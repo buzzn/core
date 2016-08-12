@@ -1,3 +1,4 @@
+# coding: utf-8
 class Discovergy
 
   # how to use
@@ -27,7 +28,7 @@ class Discovergy
 
     @conn = Faraday.new(:url => 'https://my.discovergy.com', ssl: {verify: false}) do |faraday|
       faraday.request  :url_encoded
-      faraday.response :logger
+      faraday.response :logger, Rails.logger if Rails.env == 'development'
       faraday.adapter :net_http
     end
   end
