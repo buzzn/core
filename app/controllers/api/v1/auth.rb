@@ -5,10 +5,11 @@ module API
       resource 'auth' do
 
 
-        desc "Return the Access Token"
+        desc "exchange AuthorizationCode to AccessToken"
         params do
           requires :authorization_code, type: String, desc: "Authorization Code"
         end
+        oauth2 false
         post 'token' do
           code   = permitted_params[:authorization_code]
           grant  = Doorkeeper::AccessGrant.by_token(code)
