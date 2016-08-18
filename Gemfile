@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'grape-swagger'
 gem 'rails'
 gem 'pg'
 gem 'sinatra'
