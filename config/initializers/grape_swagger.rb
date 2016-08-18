@@ -3,9 +3,20 @@ GrapeSwaggerRails.options.app_name      = "buzzn api"
 GrapeSwaggerRails.options.app_url       = Rails.application.secrets.hostname
 GrapeSwaggerRails.options.url           = "/api/v1/swagger"
 
-GrapeSwaggerRails.options.api_auth      = 'bearer' # Or 'bearer' for OAuth
-GrapeSwaggerRails.options.api_key_name  = 'Authorization'
-GrapeSwaggerRails.options.api_key_type  = 'header'
+begin
+  swagger_ui = Doorkeeper::Application.where(name: 'Buzzn Swagger UI').first
+  if swagger_ui
+    GrapeSwaggerRails.options.oauth_client_id    = swagger_ui.uid
+    GrapeSwaggerRails.options.oauth_redirect_uri = swagger_ui.redirect_uri
+  end
+rescue
+  # ignore as rake tasks without database might run this initializer
+end
+
+GrapeSwaggerRails.options.hide_api_key_input = true
+# GrapeSwaggerRails.options.api_auth      = 'bearer' # Or 'bearer' for OAuth
+# GrapeSwaggerRails.options.api_key_name  = 'Authorization'
+# GrapeSwaggerRails.options.api_key_type  = 'header'
 
 # GrapeSwaggerRails.options.api_key_name = 'access_token'
 # GrapeSwaggerRails.options.api_key_type = 'query'
@@ -32,14 +43,6 @@ module Grape
           # skip if there is no-authorization
           unless list.delete('false')
             security << {"swagger_ui": list}
-            if list.include? 'smartmeter'
-              security << {"smartmeter": [:smartmeter]}
-            end
-            l = list.dup
-            l.delete 'smartmeter'
-            unless l.empty?
-              security << {"third_party": l}
-            end
             method[:security] = security
             # adds api-key which is configured to use access-token as api-key
             security << { apiKey: [] }

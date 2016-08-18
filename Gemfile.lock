@@ -44,6 +44,14 @@ GIT
   specs:
     attribute_normalizer (1.2.0)
 
+GIT
+  remote: git://github.com/mkristian/grape-swagger-rails.git
+  revision: 94aecb2aa10cd675c06fc5b63b1cb5ad1a622c96
+  branch: oauth
+  specs:
+    grape-swagger-rails (0.2.2)
+      railties (>= 3.2.12)
+
 GEM
   remote: https://rubygems.org/
   remote: http://rails-assets.org/
@@ -388,8 +396,6 @@ GEM
       virtus (>= 1.0.0)
     grape-swagger (0.23.0)
       grape (>= 0.12.0)
-    grape-swagger-rails (0.2.2)
-      railties (>= 3.2.12)
     guard (2.14.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -882,7 +888,7 @@ DEPENDENCIES
   grape
   grape-jsonapi-resources!
   grape-swagger
-  grape-swagger-rails
+  grape-swagger-rails!
   guard
   guard-brakeman
   guard-bundler

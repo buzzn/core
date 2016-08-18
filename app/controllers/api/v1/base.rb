@@ -45,21 +45,6 @@ module API
                            [ scope, I18n.t("doorkeeper.scopes.#{scope}") ]
                          end]
           },
-          third_party: {
-            type: 'oauth2',
-            flow: 'accessCode',
-            authorizationUrl: Rails.application.secrets.hostname + '/oauth/authorize',
-            tokenUrl: Rails.application.secrets.hostname + '/oauth/token',
-            scopes: Hash[Doorkeeper.configuration.scopes.select{|s| s.to_sym != :smartmeter}.collect do |scope|
-                           [ scope, I18n.t("doorkeeper.scopes.#{scope}") ]
-                         end]
-          },
-          smartmeter: {
-            type: 'oauth2',
-            flow: 'password',
-            tokenUrl: Rails.application.secrets.hostname + '/oauth/token',
-            scopes: { smartmeter: I18n.t("doorkeeper.scopes.smartmeter") }
-          },
           apiKey: {
             type: "apiKey",
             in: "header",
