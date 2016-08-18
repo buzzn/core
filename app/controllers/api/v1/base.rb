@@ -34,7 +34,38 @@ module API
         api_version: "v1",
         hide_documentation_path: true,
         mount_path: "/api/v1/swagger",
-        hide_format: true
+        hide_format: true,
+        security_definitions: {
+          # those oauth2 keys need to match config/initializers/grape-swagger.rb
+          swagger_ui: {
+            type: 'oauth2',
+            flow: 'implicit',
+            authorizationUrl: Rails.application.secrets.hostname + '/oauth/authorize',
+            scopes: Hash[Doorkeeper.configuration.scopes.collect do |scope|
+                           [ scope, I18n.t("doorkeeper.scopes.#{scope}") ]
+                         end]
+          },
+          third_party: {
+            type: 'oauth2',
+            flow: 'accessCode',
+            authorizationUrl: Rails.application.secrets.hostname + '/oauth/authorize',
+            tokenUrl: Rails.application.secrets.hostname + '/oauth/token',
+            scopes: Hash[Doorkeeper.configuration.scopes.select{|s| s.to_sym != :smartmeter}.collect do |scope|
+                           [ scope, I18n.t("doorkeeper.scopes.#{scope}") ]
+                         end]
+          },
+          smartmeter: {
+            type: 'oauth2',
+            flow: 'password',
+            tokenUrl: Rails.application.secrets.hostname + '/oauth/token',
+            scopes: { smartmeter: I18n.t("doorkeeper.scopes.smartmeter") }
+          },
+          apiKey: {
+            type: "apiKey",
+            in: "header",
+            name: "Authorization"
+          }
+        }
       )
     end
   end
