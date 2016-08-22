@@ -220,7 +220,7 @@ describe "Groups API" do
       json['errors'].each do |error|
         expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
         expect(error['title']).to eq 'Invalid Attribute'
-        expect(error['detail']).to eq "#{name} is too long (maximum is 40 characters)"
+        expect(error['detail']).to eq "#{name} ist zu lang (mehr als 40 Zeichen)"
       end
     end
   end
@@ -258,7 +258,7 @@ describe "Groups API" do
       json['errors'].each do |error|
         expect(error['source']['pointer']).to eq "/data/attributes/#{k}"
         expect(error['title']).to eq 'Invalid Attribute'
-        expect(error['detail']).to eq "#{k} is too long (maximum is 40 characters)"
+        expect(error['detail']).to eq "#{k} ist zu lang (mehr als 40 Zeichen)"
       end
     end
   end

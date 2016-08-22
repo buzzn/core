@@ -106,7 +106,7 @@ describe "Meters API" do
     json['errors'].each do |error|
       expect(error['source']['pointer']).to eq "/data/attributes/manufacturer_product_serialnumber"
       expect(error['title']).to eq 'Invalid Attribute'
-      expect(error['detail']).to eq "manufacturer_product_serialnumber has already been taken"
+      expect(error['detail']).to eq "manufacturer_product_serialnumber ist bereits vergeben"
     end
   end
 
@@ -152,7 +152,7 @@ describe "Meters API" do
     json['errors'].each do |error|
       expect(error['source']['pointer']).to eq "/data/attributes/manufacturer_product_serialnumber"
       expect(error['title']).to eq 'Invalid Attribute'
-      expect(error['detail']).to eq "manufacturer_product_serialnumber has already been taken"
+      expect(error['detail']).to eq "manufacturer_product_serialnumber ist bereits vergeben"
     end
   end
 

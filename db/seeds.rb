@@ -102,6 +102,7 @@ buzzn_team_names.each do |user_name|
     # HACK for seed. this is normaly don via after_filter in user
     Doorkeeper::AccessToken.create(application_id: application.id, resource_owner_id: user.id, scopes: 'public full' )
 
+    Fabricate(:application, owner: user, name: 'Buzzn Swagger UI', scopes: Doorkeeper.configuration.scopes, redirect_uri: Rails.application.secrets.hostname + '/api/o2c.html')
   when 'christian'
     root_mp = Fabricate(:mp_60138988)
     root_mp.contracts << Fabricate(:mpoc_christian, metering_point: root_mp)

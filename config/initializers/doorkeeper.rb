@@ -7,6 +7,14 @@ Doorkeeper.configure do
     current_user || warden.authenticate!(:scope => :user)
   end
 
+  # needed for password grant flow
+  resource_owner_from_credentials do |routes|
+    user = User.find_for_database_authentication(:email => params[:username])
+    if user && user.valid_for_authentication? { user.valid_password?(params[:password]) }
+      user
+    end
+  end
+
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
   # admin_authenticator do
   #   # Put your admin authentication logic here.
@@ -35,7 +43,7 @@ Doorkeeper.configure do
   # reuse_access_token
 
   # Issue access tokens with refresh token (disabled by default)
-  # use_refresh_token
+  use_refresh_token
 
   # Provide support for an owner to be assigned to each registered application (disabled by default)
   # Optional parameter :confirmation => true (default false) if you want to enforce ownership of
@@ -59,7 +67,7 @@ Doorkeeper.configure do
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then
   # falls back to the `:access_token` or `:bearer_token` params from the `params` object.
   # Check out the wiki for more information on customization
-  # access_token_methods :from_bearer_authorization, :from_access_token_param, :from_bearer_param
+  access_token_methods :from_bearer_authorization, :from_access_token_param, :from_bearer_param, :from_authorization
 
   # Change the native redirect uri for client apps
   # When clients register with the following redirect uri, they won't be redirected to any server and the authorization code will be displayed within the provider
@@ -67,6 +75,7 @@ Doorkeeper.configure do
   # (Similar behaviour: https://developers.google.com/accounts/docs/OAuth2InstalledApp#choosingredirecturi)
   #
   # native_redirect_uri 'urn:ietf:wg:oauth:2.0:oob'
+  native_redirect_uri nil if Rails.env.production?
 
   # Forces the usage of the HTTPS protocol in non-native redirect uris (enabled
   # by default in non-development environments). OAuth2 delegates security in
@@ -90,7 +99,9 @@ Doorkeeper.configure do
   #   http://tools.ietf.org/html/rfc6819#section-4.4.2
   #   http://tools.ietf.org/html/rfc6819#section-4.4.3
   #
-  # grant_flows %w(authorization_code client_credentials)
+
+  # implicit we need for swagger-ui
+  grant_flows %w(authorization_code client_credentials password implicit)
 
   # Under some circumstances you might want to have applications auto-approved,
   # so that the user skips the authorization step.
@@ -99,8 +110,24 @@ Doorkeeper.configure do
   #   client.superapp? or resource_owner.admin?
   # end
 
+  skip_authorization do |resource_owner, client|
+    client.application.name == 'Buzzn RailsView'
+  end
+
   # WWW-Authenticate Realm (default "Doorkeeper").
   # realm "Doorkeeper"
 end
 
 Doorkeeper::Application.send(:include, Authority::Abilities)
+
+module Doorkeeper
+  module OAuth
+    class Token
+      module Methods
+        def from_authorization(request)
+          request.authorization
+        end
+      end
+    end
+  end
+end
