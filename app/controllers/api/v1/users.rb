@@ -13,7 +13,7 @@ module API
         desc "Return all Users"
         params do
           optional :filter, type: String, desc: "Search query using #{Base.join(User.search_attributes)}"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -71,7 +71,7 @@ module API
         desc "Return the related groups for User"
         params do
           requires :id, type: String, desc: "ID of the profile"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -90,7 +90,7 @@ module API
         desc "Return the related metering-points for User"
         params do
           requires :id, type: String, desc: "ID of the User"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -98,11 +98,7 @@ module API
         get ":id/metering-points" do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
-            per_page        = permitted_params[:per_page]
-            page            = permitted_params[:page]
-            metering_points = user.accessible_metering_points_relation
-            total_pages     = metering_points.page(page).per_page(per_page).total_pages
-            paginate(render(metering_points, meta: { total_pages: total_pages }))
+            paginated_response(user.accessible_metering_points_relation)
           else
             status 403
           end
@@ -113,7 +109,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the User"
           optional :manufacturer_product_serialnumber, type: String, desc: "manufacturer product serialnumber"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -124,27 +120,21 @@ module API
           if permitted_params[:manufacturer_product_serialnumber]
             meters = meters.where(manufacturer_product_serialnumber: permitted_params[:manufacturer_product_serialnumber])
           end
-          per_page      = permitted_params[:per_page]
-          page          = permitted_params[:page]
-          total_pages   = meters.page(page).per_page(per_page).total_pages
-          paginate(render(meters, meta: { total_pages: total_pages }))
+          paginated_response(meters)
         end
 
 
         desc "Return the related friends for User"
         params do
           requires :id, type: String, desc: "ID of the User"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
         oauth2 :public, :full
         get ":id/friends" do
           user = User.find(permitted_params[:id])
-          per_page      = permitted_params[:per_page]
-          page          = permitted_params[:page]
-          total_pages   = user.friends.page(page).per_page(per_page).total_pages
-          paginate(render(user.friends, meta: { total_pages: total_pages }))
+          paginated_response(user.friends)
         end
 
 
@@ -190,7 +180,7 @@ module API
         desc 'List of received friendship requests'
         params do
           requires :id, type: String, desc: "ID of the User"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -198,10 +188,7 @@ module API
         get ':id/friendship-requests' do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
-            per_page      = permitted_params[:per_page]
-            page          = permitted_params[:page]
-            total_pages   = user.received_friendship_requests.page(page).per_page(per_page).total_pages
-            paginate(render(user.received_friendship_requests, meta: { total_pages: total_pages }))
+            paginated_response(user.received_friendship_requests)
           else
             status 403
           end
@@ -270,7 +257,7 @@ module API
         desc "Return the related devices for User"
         params do
           requires :id, type: String, desc: "ID of the User"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -278,10 +265,7 @@ module API
         get ":id/devices" do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            total_pages  = Device.with_role(:manager, user).page(page).per_page(per_page).total_pages
-            paginate(render(Device.with_role(:manager, user), meta: { total_pages: total_pages }))
+            paginated_response(Device.with_role(:manager, user))
           else
             status 403
           end
@@ -291,7 +275,7 @@ module API
         desc 'Return user activities'
         params do
           requires :id, type: String, desc: "ID of the User"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -299,11 +283,7 @@ module API
         get ':id/activities' do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            activities   = PublicActivity::Activity.where({ owner_type: 'User', owner_id: permitted_params[:id] })
-            total_pages  = activities.page(page).per_page(per_page).total_pages
-            paginate(render(activities, meta: { total_pages: total_pages }))
+            paginated_response(PublicActivity::Activity.where({ owner_type: 'User', owner_id: permitted_params[:id] }))
           else
             status 204
           end

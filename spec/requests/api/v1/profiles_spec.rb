@@ -1,8 +1,6 @@
 describe "Profiles API" do
 
-  before(:all) do
-    @page_overload = 11
-  end
+  let(:page_overload) { 11 }
 
 
   it 'does not get all profiles with regular token or without token' do
@@ -34,13 +32,16 @@ describe "Profiles API" do
   end
 
   it 'paginate profiles with full access token as admin' do
-    @page_overload.times do
+    page_overload.times do
       Fabricate(:profile)
     end
     access_token = Fabricate(:full_access_token_as_admin)
     get_with_token '/api/v1/profiles', {}, access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/profiles", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
   end
 
 
@@ -252,7 +253,7 @@ describe "Profiles API" do
     profile           = user.profile
     profile.readable  = 'world'
     profile.save
-    @page_overload.times do
+    page_overload.times do
       group             = Fabricate(:group)
       metering_point    = Fabricate(:metering_point_readable_by_world)
       user.add_role(:member, metering_point)
@@ -262,6 +263,9 @@ describe "Profiles API" do
     get_without_token "/api/v1/profiles/#{profile.id}/groups"
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_without_token "/api/v1/profiles/#{profile.id}/groups", {per_page: 200}
+    expect(response).to have_http_status(422)
   end
 
   it 'get friends for world-readable profile with or without token' do
@@ -304,7 +308,7 @@ describe "Profiles API" do
     profile           = user.profile
     profile.readable  = 'world'
     profile.save
-    @page_overload.times do
+    page_overload.times do
       friend                  = Fabricate(:user)
       friend_profile          = friend.profile
       friend_profile.readable = 'world'
@@ -314,6 +318,9 @@ describe "Profiles API" do
     get_without_token "/api/v1/profiles/#{profile.id}/friends"
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_without_token "/api/v1/profiles/#{profile.id}/friends", {per_page: 200}
+    expect(response).to have_http_status(422)
   end
 
   it 'get profile metering points readable by world with or without token' do
@@ -407,13 +414,16 @@ describe "Profiles API" do
     profile           = user.profile
     profile.readable  = 'world'
     profile.save
-    @page_overload.times do
+    page_overload.times do
       metering_point  = Fabricate(:metering_point_readable_by_world)
       user.add_role(:member, metering_point)
     end
     get_without_token "/api/v1/profiles/#{profile.id}/metering-points"
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_without_token "/api/v1/profiles/#{profile.id}/metering-points", {per_page: 200}
+    expect(response).to have_http_status(422)
   end
 
 

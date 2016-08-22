@@ -7,7 +7,7 @@ module API
         desc "Return all groups"
         params do
           optional :filter, type: String, desc: "Search query using #{Base.join(Group.search_attributes)}"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -108,7 +108,7 @@ module API
         desc "Return the related metering-points for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -117,11 +117,7 @@ module API
           group = Group.find(permitted_params[:id])
 
           if group.readable_by?(current_user)
-            per_page        = permitted_params[:per_page]
-            page            = permitted_params[:page]
-            metering_points = MeteringPoint.by_group(group).without_externals
-            total_pages     = metering_points.page(page).per_page(per_page).total_pages
-            paginate(render(metering_points, meta: { total_pages: total_pages }))
+            paginated_response(MeteringPoint.by_group(group).without_externals)
           else
             status 403
           end
@@ -132,7 +128,7 @@ module API
         desc "Return the related managers for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -140,10 +136,7 @@ module API
         get ":id/managers" do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            total_pages  = group.managers.page(page).per_page(per_page).total_pages
-            paginate(render(group.managers, meta: { total_pages: total_pages }))
+            paginated_response(group.managers)
           else
             status 403
           end
@@ -189,7 +182,7 @@ module API
         desc "Return the related members for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -197,11 +190,7 @@ module API
         get ":id/members" do
           group           = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            members      = group.members
-            total_pages  = members.page(page).per_page(per_page).total_pages
-            paginate(render(members, meta: { total_pages: total_pages }))
+            paginated_response(group.members)
           else
             status 403
           end
@@ -241,7 +230,7 @@ module API
         desc 'Return the related comments for Group'
         params do
           requires :id, type: String, desc: 'ID of the group'
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -249,10 +238,7 @@ module API
         get ':id/comments' do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            total_pages  = group.comment_threads.page(page).per_page(per_page).total_pages
-            paginate(render(group.comment_threads, meta: { total_pages: total_pages }))
+            paginated_response(group.comment_threads)
           else
             status 403
           end

@@ -8,17 +8,13 @@ module API
         desc 'Return all Contracts'
         params do
           optional :filter, type: String, desc: "Search query using #{Base.join(Contract.search_attributes)}"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
         oauth2 :full
         get do
-          per_page     = permitted_params[:per_page]
-          page         = permitted_params[:page]
-          contracts = Contract.filter(permitted_params[:filter]).readable_by(current_user)
-          total_pages  = contracts.page(page).per_page(per_page).total_pages
-          paginate(render(contracts, meta: { total_pages: total_pages }))
+          paginated_response(Contract.filter(permitted_params[:filter]).readable_by(current_user))
         end
 
         desc 'Return a Contract'

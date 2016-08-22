@@ -1,5 +1,7 @@
 describe "Devices API" do
 
+  let(:page_overload) { 11 }
+
   [:no_access_token, :public_access_token, :full_access_token, :smartmeter_access_token].each do |token|
 
     it "does not get a device with #{token}" do
@@ -45,6 +47,18 @@ describe "Devices API" do
 
   end
 
+  it 'paginates all contracts as admin with full access token' do
+    page_overload.times do
+      Fabricate(:device)
+    end
+    access_token = Fabricate(:full_access_token_as_admin).token
+    get_with_token '/api/v1/devices', {}, access_token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token '/api/v1/devices', {per_page: 200}, access_token
+    expect(response).to have_http_status(422)
+  end
 
   it "gets a device with full access token as admin" do
     access_token  = Fabricate(:full_access_token_as_admin)

@@ -1,8 +1,6 @@
 describe "Groups API" do
 
-  before(:all) do
-    @page_overload = 11
-  end
+  let(:page_overload) { 11 }
 
 
   it 'search groups without token' do
@@ -140,12 +138,15 @@ describe "Groups API" do
   end
 
   it 'paginate groups' do
-    @page_overload.times do
+    page_overload.times do
       Fabricate(:group)
     end
     get_without_token '/api/v1/groups'
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_without_token '/api/v1/groups', {per_page: 200}
+    expect(response).to have_http_status(422)
   end
 
   it 'does gets a group readable by world with or without token' do
@@ -361,12 +362,15 @@ describe "Groups API" do
 
   it 'paginate metering points' do
     group = Fabricate(:group)
-    @page_overload.times do
+    page_overload.times do
       group.metering_points << Fabricate(:metering_point_readable_by_world)
     end
     get_without_token "/api/v1/groups/#{group.id}/metering-points"
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_without_token "/api/v1/groups/#{group.id}/metering-points", {per_page: 200}
+    expect(response).to have_http_status(422)
   end
 
   it 'gets the related managers for group only with token' do
@@ -382,21 +386,27 @@ describe "Groups API" do
   it 'paginate managers' do
     access_token  = Fabricate(:public_access_token)
     group         = Fabricate(:group)
-    @page_overload.times do
+    page_overload.times do
       user = Fabricate(:user)
       user.add_role(:manager, group)
     end
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/groups/#{group.id}/managers", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
   end
 
   it 'paginate members' do
     access_token  = Fabricate(:public_access_token)
-    group         = Fabricate(:group_with_members_readable_by_world, members: @page_overload)
+    group         = Fabricate(:group_with_members_readable_by_world, members: page_overload)
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/groups/#{group.id}/members", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
   end
 
   it 'gets the related members for group only with token' do
@@ -527,13 +537,16 @@ describe "Groups API" do
       parent_id:          '',
     }
     comment         = Fabricate(:comment, comment_params)
-    @page_overload.times do
+    page_overload.times do
       comment_params[:parent_id] = comment.id
       comment = Fabricate(:comment, comment_params)
     end
     get_with_token "/api/v1/groups/#{group.id}/comments", access_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/groups/#{group.id}/comments", {per_page: 200}, access_token
+    expect(response).to have_http_status(422)
   end
 
 

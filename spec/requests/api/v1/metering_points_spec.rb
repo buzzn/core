@@ -1,8 +1,6 @@
 describe "Metering Points API" do
 
-  before(:all) do
-    @page_overload = 11
-  end
+  let(:page_overload) { 11 }
 
   it 'get world-readable metering point with or without token' do
     access_token      = Fabricate(:public_access_token)
@@ -399,13 +397,16 @@ describe "Metering Points API" do
       parent_id:          '',
     }
     comment         = Fabricate(:comment, comment_params)
-    @page_overload.times do
+    page_overload.times do
       comment_params[:parent_id] = comment.id
       comment = Fabricate(:comment, comment_params)
     end
     get_with_token "/api/v1/metering-points/#{metering_point.id}/comments", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/groups/#{metering_point.id}/comments", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
   end
 
 
@@ -423,13 +424,16 @@ describe "Metering Points API" do
   it 'paginate managers' do
     access_token    = Fabricate(:public_access_token)
     metering_point  = Fabricate(:metering_point_readable_by_world)
-    @page_overload.times do
+    page_overload.times do
       user = Fabricate(:user)
       user.add_role(:manager, metering_point)
     end
     get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/groups/#{metering_point.id}/managers", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
   end
 
   it 'does not add/delete metering point manager or member without token' do
@@ -570,6 +574,21 @@ describe "Metering Points API" do
     post_with_token "/api/v1/metering-points/#{metering_point.id}/members", params.to_json, admin_token.token
     activities      = PublicActivity::Activity.where({ owner_type: 'User', owner_id: user.id })
     expect(activities.first.key).to eq('metering_point_user_membership.create')
+  end
+
+  it 'paginate members' do
+    access_token    = Fabricate(:full_access_token_as_admin)
+    metering_point  = Fabricate(:metering_point_readable_by_world)
+    page_overload.times do
+      user = Fabricate(:user)
+      user.add_role(:member, metering_point)
+    end
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/groups/#{metering_point.id}/members", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
   end
 
   it 'removes metering point member only for current user, manager or with full token' do

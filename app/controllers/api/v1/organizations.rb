@@ -8,20 +8,13 @@ module API
         desc "Return all organizations"
         params do
           optional :filter, type: String, desc: "Search query using #{Base.join(Organization.search_attributes)}"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
         oauth2 false
         get do
-          per_page         = permitted_params[:per_page]
-          page             = permitted_params[:page]
-          ids = Organization.filter(permitted_params[:filter]).select do |obj|
-            obj.readable_by?(current_user)
-          end.collect { |obj| obj.id }
-          organizations = Organization.where(id: ids)
-          total_pages  = organizations.page(page).per_page(per_page).total_pages
-          paginate(render(organizations, meta: { total_pages: total_pages }))
+          paginated_response(Organization.filter(permitted_params[:filter]).readable_by(current_user))
         end
 
 
@@ -44,7 +37,7 @@ module API
         desc 'Return the related contracts for an organization'
         params do
           requires :id, type: String, desc: 'ID of the organization'
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -52,10 +45,7 @@ module API
         get ':id/contracts' do
           organization = Organization.find(permitted_params[:id])
           if organization.readable_by?(current_user)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            total_pages  = organization.contracts.page(page).per_page(per_page).total_pages
-            paginate(render(organization.contracts, meta: { total_pages: total_pages }))
+            paginated_response(organization.contracts)
           else
             status 403
           end
@@ -65,7 +55,7 @@ module API
         desc 'Return the related managers of an organization'
         params do
           requires :id, type: String, desc: 'ID of the organization'
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -73,10 +63,7 @@ module API
         get ':id/managers' do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            total_pages  = organization.managers.page(page).per_page(per_page).total_pages
-            paginate(render(organization.managers, meta: { total_pages: total_pages }))
+            paginated_response(organization.managers)
           else
             status 403
           end
@@ -86,7 +73,7 @@ module API
         desc 'Return the related members of an organization'
         params do
           requires :id, type: String, desc: 'ID of the organization'
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -94,10 +81,7 @@ module API
         get ':id/members' do
           organization = Organization.find(permitted_params[:id])
           if organization.readable_by?(current_user)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            total_pages  = organization.members.page(page).per_page(per_page).total_pages
-            paginate(render(organization.members, meta: { total_pages: total_pages }))
+            paginated_response(organization.members)
           else
             status 403
           end
