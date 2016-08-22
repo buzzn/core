@@ -145,7 +145,7 @@ describe "Devices API" do
       json['errors'].each do |error|
         expect(error['source']['pointer']).to eq "/data/attributes/#{k}"
         expect(error['title']).to eq 'Invalid Attribute'
-        expect(error['detail']).to eq "#{k} is too long (maximum is 30 characters)"
+        expect(error['detail']).to eq "#{k} ist zu lang (mehr als 30 Zeichen)"
       end
     end
   end
@@ -193,7 +193,7 @@ describe "Devices API" do
       json['errors'].each do |error|
         expect(error['source']['pointer']).to eq "/data/attributes/#{k}"
         expect(error['title']).to eq 'Invalid Attribute'
-        expect(error['detail']).to eq "#{k} is too long (maximum is 30 characters)"
+        expect(error['detail']).to eq "#{k} ist zu lang (mehr als 30 Zeichen)"
       end
     end
   end
