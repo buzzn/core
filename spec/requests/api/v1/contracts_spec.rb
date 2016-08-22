@@ -18,9 +18,9 @@ describe 'Contracts API' do
     token
   end
   let(:full_access_token_as_admin) { Fabricate(:full_access_token_as_admin) }
+  let(:page_overload) { 11 }
 
   before(:all) do
-    @page_overload = 11
     @org1 = Fabricate(:metering_point_operator, name: 'buzzn Metering')
     @org2 = Fabricate(:metering_point_operator, name: 'Discovergy')
     @org3 = Fabricate(:metering_point_operator, name: 'MySmartGrid')
@@ -67,13 +67,16 @@ describe 'Contracts API' do
   end
 
   it 'paginates all contracts as admin with full access token' do
-    @page_overload.times do
+    page_overload.times do
       Fabricate(:mpoc_buzzn_metering)
     end
     access_token = Fabricate(:full_access_token_as_admin).token
     get_with_token '/api/v1/contracts', {}, access_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token '/api/v1/contracts', {per_page: 200}, access_token
+    expect(response).to have_http_status(422)
   end
 
   it 'does not get a contract without token' do

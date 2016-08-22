@@ -6,7 +6,7 @@ module API
 
         desc "Return all profiles"
         params do
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -56,7 +56,7 @@ module API
         desc 'Return profile groups'
         params do
           requires :id, type: String, desc: "ID of the Profile"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -87,7 +87,7 @@ module API
         desc 'Return profile friends'
         params do
           requires :id, type: String, desc: "ID of the Profile"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -112,7 +112,7 @@ module API
         desc 'Return profile metering points'
         params do
           requires :id, type: String, desc: "ID of the Profile"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate

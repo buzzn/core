@@ -5,7 +5,7 @@ class OrganizationAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
-    true
+    Organization.readable_by(user).where('organizations.id = ?', resource.id).select('id').size == 1
   end
 
   def updatable_by?(user)

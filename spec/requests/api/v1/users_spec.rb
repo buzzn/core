@@ -1,8 +1,7 @@
 describe "Users API" do
 
-  before(:all) do
-    @page_overload = 11
-  end
+  let(:page_overload) { 11 }
+
 
   # RETRIEVE me
 
@@ -70,13 +69,16 @@ describe "Users API" do
 
 
   it 'paginate users' do
-    @page_overload.times do
+    page_overload.times do
       Fabricate(:user)
     end
     access_token = Fabricate(:full_access_token_as_admin).token
     get_with_token '/api/v1/users', {}, access_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/users", {per_page: 200}, access_token
+    expect(response).to have_http_status(422)
   end
 
 
@@ -228,7 +230,7 @@ describe "Users API" do
   it 'paginate groups' do
     access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
-    @page_overload.times do
+    page_overload.times do
       group             = Fabricate(:group)
       metering_point    = Fabricate(:metering_point_readable_by_world)
       user.add_role(:member, metering_point)
@@ -237,6 +239,9 @@ describe "Users API" do
     get_with_token "/api/v1/users/#{user.id}/groups", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/users/#{user.id}/groups", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
   end
 
   it 'gets related metering points for User' do
@@ -268,13 +273,31 @@ describe "Users API" do
   it 'paginate meters' do
     manager_token = Fabricate(:full_access_token_as_admin).token
     user          = Fabricate(:user)
-    @page_overload.times do
+    page_overload.times do
       meter = Fabricate(:meter)
       user.add_role(:manager, meter)
     end
     get_with_token "/api/v1/users/#{user.id}/meters", manager_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/users/#{user.id}/meters", {per_page: 200}, manager_token
+    expect(response).to have_http_status(422)
+  end
+
+  it 'paginate metering_points' do
+    access_token = Fabricate(:full_access_token_as_admin).token
+    user         = Fabricate(:user)
+    page_overload.times do
+      metering_point  = Fabricate(:metering_point)
+      user.add_role(:member, metering_point)
+    end
+    get_with_token "/api/v1/users/#{user.id}/metering-points", access_token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/users/#{user.id}/metering-points", {per_page: 200}, access_token
+    expect(response).to have_http_status(422)
   end
 
 
@@ -312,13 +335,16 @@ describe "Users API" do
   it 'paginate friends' do
     access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
-    @page_overload.times do
+    page_overload.times do
       user.friends << Fabricate(:user)
     end
 
     get_with_token "/api/v1/users/#{user.id}/friends", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/users/#{user.id}/friends", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
   end
 
   it 'gets specific friend for user' do
@@ -442,7 +468,7 @@ describe "Users API" do
   it 'paginate devices' do
     access_token  = Fabricate(:public_access_token)
     user          = User.find(access_token.resource_owner_id)
-    @page_overload.times do
+    page_overload.times do
       device      = Fabricate(:device)
       user.add_role(:manager, device)
     end
@@ -450,6 +476,9 @@ describe "Users API" do
     get_with_token "/api/v1/users/#{user.id}/devices", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/users/#{user.id}/devices", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
   end
 
   it 'gets user activities' do

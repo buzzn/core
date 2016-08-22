@@ -36,10 +36,25 @@ module API
             end
             obj
           end
+
+          def paginated_response(objs)
+            per_page     = permitted_params[:per_page]
+            page         = permitted_params[:page]
+            total_pages  = objs.page(page).per_page(per_page).total_pages
+            paginate(render(objs, meta: { total_pages: total_pages }))
+          end
         end
 
         rescue_from ActiveRecord::RecordNotFound do |e|
           error_response(message: e.message, status: 404)
+        end
+
+        class Max < Grape::Validations::Base
+          def validate_param!(attr_name, params)
+            unless params[attr_name] <= @option
+              fail Grape::Exceptions::Validation, params: [@scope.full_name(attr_name)], message: "must be at the smaller then #{@option}"
+            end
+          end
         end
 
         class ErrorResponse < Rack::Response

@@ -91,6 +91,9 @@ describe "Organizations API" do
     get_with_token "/api/v1/organizations", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/organizations", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
   end
 
 
@@ -384,6 +387,9 @@ describe "Organizations API" do
     get_with_token "/api/v1/organizations/#{organization.id}/contracts", access_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/organizations/#{organization.id}/contracts", {per_page: 200}, access_token
+    expect(response).to have_http_status(422)
   end
 
   # RETRIEVE address
@@ -460,6 +466,9 @@ describe "Organizations API" do
     get_with_token "/api/v1/organizations/#{organization.id}/managers", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/organizations/#{organization.id}/managers", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
   end
 
   it 'gets the related members for Organization' do
@@ -482,6 +491,9 @@ describe "Organizations API" do
     get_with_token "/api/v1/organizations/#{organization.id}/members", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    get_with_token "/api/v1/organizations/#{organization.id}/members", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
   end
 
   # CREATE manager/member

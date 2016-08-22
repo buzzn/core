@@ -92,7 +92,7 @@ module API
         desc 'Return the related comments for MeteringPoint'
         params do
           requires :id, type: String, desc: 'ID of the MeteringPoint'
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
@@ -100,10 +100,7 @@ module API
         get ':id/comments' do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            total_pages  = metering_point.comment_threads.page(page).per_page(per_page).total_pages
-            paginate(render(metering_point.comment_threads, meta: { total_pages: total_pages }))
+            paginated_response(metering_point.comment_threads)
           else
             status 403
           end
@@ -121,10 +118,7 @@ module API
         get ":id/managers" do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            total_pages  = metering_point.managers.page(page).per_page(per_page).total_pages
-            paginate(render(metering_point.managers, meta: { total_pages: total_pages }))
+            paginated_response(metering_point.managers)
           else
             status 403
           end
@@ -186,7 +180,7 @@ module API
         desc 'Return members of the MeteringPoint'
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
