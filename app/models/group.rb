@@ -44,28 +44,62 @@ class Group < ActiveRecord::Base
     self.with_role(:manager, user)
   }
 
-  scope :members_for_group, ->(group) do
-    @join ||= begin
-                mp = MeteringPoint.arel_table
-                roles = Role.arel_table
-                users_roles = Arel::Table.new(:users_roles)
-                users = User.arel_table
+  def self.members_of_group_joins(user = nil)
+    mp = MeteringPoint.arel_table
+    roles = Role.arel_table
+    users_roles = Arel::Table.new(:users_roles)
+    users = User.arel_table
 
-                users_on = users.create_on(users_roles[:user_id].eq(users[:id]))
-                users_join = users.create_join(users_roles, users_on)
+    user_id = user ? user.id : users[:id]
+    users_on = users.create_on(users_roles[:user_id].eq(user_id))
+    users_join = users.create_join(users_roles, users_on)
 
-                users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
-                users_roles_join = users_roles.create_join(roles, users_roles_on)
+    users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
+    users_roles_join = users_roles.create_join(roles, users_roles_on)
 
-                roles_mp_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(MeteringPoint.to_s).and(roles[:name].eq(:member))))
-                roles_mp_join = roles.create_join(mp, roles_mp_on)
+    roles_mp_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(MeteringPoint.to_s).and(roles[:name].eq(:member))))
+    roles_mp_join = roles.create_join(mp, roles_mp_on)
 
-                User.distinct.joins(users_join, users_roles_join, roles_mp_join)
-              end
-    @join.where('metering_points.group_id': group)
+    [users_join, users_roles_join, roles_mp_join]
+  end
+
+  scope :members_of_group, ->(group) do
+    User.distinct.joins(*members_of_group_joins).where('metering_points.group_id': group)
   end
 
   scope :readable_by_world, -> { where(readable: 'world') }
+
+  scope :readable_by, ->(user) do
+    if user.nil?
+      readable_by_world
+    elsif User.admin?(user)
+      where(nil)
+    else
+      groups = Group.arel_table
+      mp = MeteringPoint.arel_table
+      roles = Role.arel_table
+      users_roles = Arel::Table.new(:users_roles)
+      users = User.arel_table
+      friendships = Friendship.arel_table
+
+      friendships_on = users.create_on(friendships[:friend_id].eq(user.id))
+      friendships_join = friendships.create_join(friendships, friendships_on, Arel::Nodes::OuterJoin)
+
+      users_on = users.create_on(users_roles[:user_id].eq(user.id).or(friendships[:user_id].eq(users_roles[:user_id])))
+      users_join = users.create_join(users_roles, users_on, Arel::Nodes::OuterJoin)
+
+      users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
+      users_roles_join = users_roles.create_join(roles, users_roles_on, Arel::Nodes::OuterJoin)
+
+      groups_mp_on = groups.create_on(mp[:group_id].eq(groups[:id]).and(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(MeteringPoint.to_s).and(roles[:name].eq(:member)))))
+      groups_mp_join = groups.create_join(mp, groups_mp_on, Arel::Nodes::OuterJoin)
+
+         #binding.pry
+
+      joins(friendships_join, users_join, users_roles_join, groups_mp_join)
+        .where("groups.readable in (?) or metering_points.group_id = groups.id and users_roles.user_id = ? or roles.resource_type = ? and roles.name = ? and roles.resource_id = groups.id and (users_roles.user_id = ? or friendships.friend_id = ? and groups.readable = ?)", ['world', 'community'], user.id, Group.to_s, :manager, user.id, user.id, :friends).distinct
+    end
+  end
 
   def self.search_attributes
     [:name, :description]
@@ -105,7 +139,7 @@ class Group < ActiveRecord::Base
   end
 
   def members
-    self.class.members_for_group(self)
+    self.class.members_of_group(self)
   end
 
   def in_metering_points

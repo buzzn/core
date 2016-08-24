@@ -89,7 +89,7 @@ class User < ActiveRecord::Base
       users_friends_join = users.create_join(friendships, users_friends_on,
                                              Arel::Nodes::OuterJoin)
 
-      distinct.joins(users_profiles_join, users_friends_join).where("profiles.readable in (?) or users.id=? or friendships.friend_id = ? or 0 < (#{User.count_admins(user).to_sql})", ['world', 'community'], user.id, user.id)
+      distinct.joins(users_profiles_join, users_friends_join).where("profiles.readable in (?) or users.id = ? or friendships.friend_id = ? or 0 < (#{User.count_admins(user).to_sql})", ['world', 'community'], user.id, user.id)
     else
       distinct.joins(users_profiles_join).where('profiles.readable = ?', 'world')
     end

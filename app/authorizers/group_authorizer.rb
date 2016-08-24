@@ -6,11 +6,9 @@ class GroupAuthorizer < ApplicationAuthorizer
 
   def readable_by?(user)
     resource.readable_by_world? ||
-    !!user && (resource.readable_by_community? ||
-               resource.members.include?(user) ||
-               user.has_role?(:manager, resource) ||
-               resource.readable_by_friends? && resource.managers.map(&:friends).flatten.uniq.include?(user) ||
-               user.has_role?(:admin))
+      !!user && (resource.readable_by_community? ||
+                 User.any_role?(user, admin: nil, manager: resource) ||
+                 resource.readable_by_friends? && resource.managers.map(&:friends).flatten.uniq.include?(user))
   end
 
   def updatable_by?(user)
