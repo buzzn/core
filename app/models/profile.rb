@@ -28,6 +28,21 @@ class Profile < ActiveRecord::Base
   delegate :friendships, to: :user
   delegate :groups, to: :user
 
+  scope :readable_by, -> (user) do
+    if user
+      profiles   = Profile.arel_table
+      friendship = Friendship.arel_table
+      
+      users_friends_on = friendship.create_on(profiles[:user_id].eq(friendship[:user_id]))
+      users_friends_join = profiles.create_join(friendship, users_friends_on, Arel::Nodes::OuterJoin)
+
+      distinct.joins(users_friends_join).where("profiles.readable in (?) or profiles.user_id=? or friendships.friend_id = ? or 0 < (#{User.count_admins(user).to_sql})", ['world', 'community'], user.id, user.id)
+    else
+      where(readable: 'world')
+    end
+  end
+
+
   def generate_username
     if first_name && last_name && user_name.nil?
       new_user_name = first_name.downcase + last_name.downcase

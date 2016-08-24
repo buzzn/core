@@ -5,18 +5,15 @@ class MeterAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
-    !!user && (user.has_role?(:manager, resource) ||
-               user.has_role?(:admin))
+    User.any_role?(user, admin: nil, manager: resource)
   end
 
   def updatable_by?(user)
-     !!user && (user.has_role?(:manager, resource) ||
-                user.has_role?(:admin))
+    User.any_role?(user, admin: nil, manager: resource)
   end
 
   def deletable_by?(user)
-    !!user && (user.has_role?(:manager, resource) ||
-               user.has_role?(:admin))
+    User.any_role?(user, admin: nil, manager: resource)
   end
 
 end

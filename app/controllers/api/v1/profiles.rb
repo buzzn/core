@@ -121,8 +121,6 @@ module API
           profile              = Profile.find(permitted_params[:id])
 
           if profile.readable_by?(current_user)
-            per_page = permitted_params[:per_page]
-            page     = permitted_params[:page]
             if profile.readable_by_world? && current_user.nil?
               filter = [ 'readable = ?', 'world' ]
             elsif current_user.friend?(profile.user)
@@ -130,9 +128,7 @@ module API
             else
               filter = [ 'readable NOT IN (?)', ['friends', 'members'] ]
             end
-            metering_points = MeteringPoint.accessible_by_user(profile.user).where(*filter)
-            total_pages    = metering_points.page(page).per_page(per_page).total_pages
-            paginate(render(metering_points, meta: { total_pages: total_pages }))
+            paginated_response(MeteringPoint.accessible_by_user(profile.user).where(*filter))
           else
             status 403
           end

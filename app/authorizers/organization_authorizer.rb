@@ -1,19 +1,19 @@
 class OrganizationAuthorizer < ApplicationAuthorizer
 
   def self.creatable_by?(user)
-    user && user.has_role?(:admin)
+    User.admin?(user)
   end
 
   def readable_by?(user)
-    Organization.readable_by(user).where('organizations.id = ?', resource.id).select('id').size == 1
+    readable?(Organization, user)
   end
 
   def updatable_by?(user)
-    user && (user.has_role?(:admin) || user.has_role?(:manager, resource))
+    User.any_role?(user, admin: nil, manager: resource)
   end
 
   def deletable_by?(user)
-    user && user.has_role?(:admin)
+    User.admin?(user)
   end
 
 end

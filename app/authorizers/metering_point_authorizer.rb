@@ -7,7 +7,7 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
   def readable_by?(user, variant = nil)
     case variant
     when :meter
-      !!user && user.has_role?(:manager, resource)
+      User.any_role?(user, manager: resource)
     when NilClass
       resource.readable_by_world? ||
         (!resource.group.nil? && (resource.group.updatable_by?(user) || resource.group.readable_by?(user))) ||
@@ -25,13 +25,10 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
   def updatable_by?(user, options = {})
     case options
     when :members
-      !!user && (user.has_role?(:manager, resource) ||
-                 user.has_role?(:member, resource) ||
-                 user.has_role?(:admin))
+      User.any_role?(user, admin: nil, manager: resource, member: resource)
     when Hash
       if options.empty?
-        !!user && (user.has_role?(:manager, resource) ||
-                   user.has_role?(:admin))
+        User.any_role?(user, admin: nil, manager: resource)
       else
         if options[:action] == 'edit_devices' || options[:action] == 'edit_users'
           !!user && (user.has_role?(:manager, resource) ||
@@ -45,8 +42,7 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
   end
 
   def deletable_by?(user)
-    !!user && (user.has_role?(:manager, resource) ||
-               user.has_role?(:admin))
+    User.any_role?(user, admin: nil, manager: resource)
   end
 
 end

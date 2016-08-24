@@ -136,7 +136,7 @@ module API
         get ":id/managers" do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            paginated_response(group.managers)
+            paginated_response(group.managers.readable_by(current_user))
           else
             status 403
           end
@@ -190,7 +190,7 @@ module API
         get ":id/members" do
           group           = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            paginated_response(group.members)
+            paginated_response(group.members.readable_by(current_user))
           else
             status 403
           end

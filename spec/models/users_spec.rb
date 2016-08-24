@@ -79,4 +79,23 @@ describe "User Model" do
     users = User.filter(nil)
     expect(users.size).to eq 5
   end
+
+  it 'is restriciting readable_by' do
+    user = Fabricate(:user)
+    profile = user.profile
+    expect(User.readable_by(nil)).to eq []
+    expect(User.readable_by(user)).to eq [user]
+    profile.update!(readable: 'world')
+    expect(User.readable_by(nil)).to eq [user]
+    profile.update!(readable: 'community')
+    other = Fabricate(:user)
+     expect(User.readable_by(other)).to match_array [user, other]
+    profile.update!(readable: nil)
+    expect(User.readable_by(other)).to match_array [other]
+    other.friends << user
+    expect(User.readable_by(other)).to match_array [user, other]
+    admin = Fabricate(:user)
+    admin.add_role('admin')
+    expect(User.readable_by(admin)).to match_array [user, other, admin]
+  end
 end

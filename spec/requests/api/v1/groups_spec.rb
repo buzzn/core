@@ -388,11 +388,21 @@ describe "Groups API" do
     group         = Fabricate(:group)
     page_overload.times do
       user = Fabricate(:user)
+      user.profile.update!(readable: 'world')
+      user.add_role(:manager, group)
+    end
+    page_overload.times do
+      user = Fabricate(:user)
       user.add_role(:manager, group)
     end
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+    
+    access_token  = Fabricate(:full_access_token_as_admin)
+    get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(3)
 
     get_with_token "/api/v1/groups/#{group.id}/managers", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
@@ -400,10 +410,20 @@ describe "Groups API" do
 
   it 'paginate members' do
     access_token  = Fabricate(:public_access_token)
-    group         = Fabricate(:group_with_members_readable_by_world, members: page_overload)
+    group         = Fabricate(:group_with_members_readable_by_world, members: page_overload * 2)
+
+    group.members[0..page_overload].each do |u|
+      u.profile.update! readable: 'world'
+    end
+
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    access_token  = Fabricate(:full_access_token_as_admin)
+    get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(3)
 
     get_with_token "/api/v1/groups/#{group.id}/members", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)

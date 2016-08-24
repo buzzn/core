@@ -23,7 +23,7 @@ class Reading
   validate :energy_milliwatt_hour_has_to_grow, if: :user_input?
 
   def meter
-    Meter.find(self.meter_id)
+    Meter.find(self.meter_id) if self.meter_id
   end
 
   def energy_milliwatt_hour_has_to_grow

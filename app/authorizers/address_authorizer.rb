@@ -12,13 +12,11 @@ class AddressAuthorizer < ApplicationAuthorizer
   end
 
   def updatable_by?(user)
-     user.has_role?(:manager, resource.metering_point) ||
-     user.has_role?(:admin)
+    User.any_role?(user, admin: nil, manager: resource)
   end
 
   def deletable_by?(user)
-    user.has_role?(:manager, resource.metering_point) ||
-    user.has_role?(:admin)
+    User.any_role?(user, admin: nil, manager: resource)
   end
 
 end
