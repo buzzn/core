@@ -142,6 +142,7 @@ de:
         readable: Sichtbar für
         message: Nachricht
         notify_me_when_comment_create: Email Benachrichtigung wenn neuer Kommentar erstellt wurde
+        add_own_metering_point: Eigenen Zählpunkt hinzufügen
       meter:
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname
