@@ -93,7 +93,7 @@ class WizardMetersController  < ApplicationController
         if params[:meter][:smartmeter] == "1"
           #meter valid, now check contract
 
-          if params[:contract_id] == ""
+          if params[:contract_id] == "" || params[:contract_id] == nil
             @contract = Contract.new(contract_params)
           else
             @contract = Contract.find(params[:contract_id])
