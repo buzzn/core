@@ -343,7 +343,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .attr('d', arc);
   }
 
-  fetch(`${url}/api/v1/groups/${group}/metering-points?per_page=10000`, { headers })
+  fetch(`${url}/api/v1/groups/${group}/metering-points?per_page=100`, { headers })
     .then(getJson)
     .then(json => {
       if (json.data.length === 0) return Promise.reject('Empty group');
