@@ -134,6 +134,24 @@ $(".metering_point_detail").ready ->
         labelStyle:
           color: 'black'
           'font-size': '20pt'
+      exporting:
+        enabled: true
+        filename: 'chart'
+        csv:
+          itemDelimiter: ';'
+        buttons:
+          contextButton:
+            enabled: false
+          exportButton:
+            text: 'Download CSV'
+            onclick: () ->
+              $('<a></a>')
+                .attr('id', 'downloadFile')
+                .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
+                .attr('download', 'chart.csv')
+                .appendTo('body')
+              $('#downloadFile').get(0).click()
+              $('#downloadFile').remove()
       xAxis:
         lineWidth: 1
         tickWidth: 1
@@ -369,6 +387,24 @@ $(".dashboard-chart").ready ->
               labelStyle:
                 color: 'black'
                 'font-size': '20pt'
+            exporting:
+              enabled: true
+              filename: 'chart'
+              csv:
+                itemDelimiter: ';'
+              buttons:
+                contextButton:
+                  enabled: false
+                exportButton:
+                  text: 'Download CSV'
+                  onclick: () ->
+                    $('<a></a>')
+                      .attr('id', 'downloadFile')
+                      .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
+                      .attr('download', 'chart.csv')
+                      .appendTo('body')
+                    $('#downloadFile').get(0).click()
+                    $('#downloadFile').remove()
             xAxis:
               lineWidth: 1
               tickWidth: 1
@@ -541,6 +577,24 @@ $(".group-chart").ready ->
           labelStyle:
             color: 'black'
             'font-size': '20pt'
+        exporting:
+          enabled: true
+          filename: 'chart'
+          csv:
+            itemDelimiter: ';'
+          buttons:
+            contextButton:
+              enabled: false
+            exportButton:
+              text: 'Download CSV'
+              onclick: () ->
+                $('<a></a>')
+                  .attr('id', 'downloadFile')
+                  .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
+                  .attr('download', 'chart.csv')
+                  .appendTo('body')
+                $('#downloadFile').get(0).click()
+                $('#downloadFile').remove()
         xAxis:
           lineWidth: 1
           tickWidth: 1

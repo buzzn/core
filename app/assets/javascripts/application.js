@@ -24,6 +24,7 @@
 //= require nanoscroller
 //= require highcharts
 //= require highcharts_no_utc
+//= require highcharts-export-csv
 //= require sparklines
 //= require tree.jquery
 //= require jquery-readyselector
