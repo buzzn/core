@@ -16,11 +16,11 @@
           %ul#mainnav-menu.list-group
             - if user_signed_in?
 
-              %li.list-header{"data-content" => ''}= t'my_profile'
+              %li.list-header{"data-content" => ''}= t'private_area'
               = mainnav_profile_path(current_user.profile)
+              = mainnav_conversations_path
               - if !current_user.dashboard.nil?
                 = mainnav_dashboard_path(current_user.dashboard)
-                = mainnav_conversations_path
               / = mainnav_stream_path
 
               - if current_user.accessible_metering_points.any?

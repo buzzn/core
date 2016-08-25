@@ -116,6 +116,7 @@ de:
   current_consumption_in_watts: Aktueller Gesamtbezug (Watt)
   current_production_in_watts: Aktuelle Gesamterzeugung (Watt)
   actions: Aktionen
+  private_area: Persönlicher Bereich
 
   add_out_metering: Generatorzähler hinzufügen
   add_in_metering: Verbrauchszähler hinzufügen
@@ -308,6 +309,8 @@ de:
   answer_this_comment: Antworte auf diesen Kommentar
   view_all_answers: Alle Antworten anzeigen
   add_image: Bild hinzufügen
+  images: Bilder
+  posts: Kommentare
 
   contracting_party_properties: Vertragspartner Eigenschaften
   editing_contracting_party: Vertragspartner bearbeiten
