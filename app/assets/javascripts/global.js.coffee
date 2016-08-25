@@ -87,6 +87,11 @@ ready = ->
         type: 'float'
   )
 
+  $('.fancy-gallery').fancybox(
+    openEffect: 'elastic'
+    closeEffect: 'elastic'
+  )
+
 
   window.addEventListener 'resize:end', (event) ->
     console.log event.type
