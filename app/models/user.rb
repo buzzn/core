@@ -45,9 +45,9 @@ class User < ActiveRecord::Base
     count_roles(user, admin: nil)
   end
 
-  def self.count_roles(user, role_map)
-    roles       = Role.arel_table
-    users_roles = Arel::Table.new(:users_roles)
+  def self.roles_query(user, role_map)
+    roles          = Role.arel_table
+    @users_roles ||= Arel::Table.new(:users_roles)
 
     roles_constraint = nil
     role_map.each do |role, resources|
@@ -62,11 +62,14 @@ class User < ActiveRecord::Base
         end
       end
     end
-    users_roles.project(users_roles[:user_id].count)
-      .join(roles)
-      .on(roles[:id].eq(users_roles[:role_id])
+    @users_roles.join(roles)
+      .on(roles[:id].eq(@users_roles[:role_id])
            .and(roles_constraint))
-      .where(users_roles[:user_id].eq(user.id))
+      .where(@users_roles[:user_id].eq(user.id))
+  end
+
+  def self.count_roles(user, role_map)
+    roles_query(user, role_map).project(@users_roles[:user_id].count)
   end
 
   def self.admin?(user)

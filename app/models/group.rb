@@ -94,8 +94,6 @@ class Group < ActiveRecord::Base
       groups_mp_on = groups.create_on(mp[:group_id].eq(groups[:id]).and(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(MeteringPoint.to_s).and(roles[:name].eq(:member)))))
       groups_mp_join = groups.create_join(mp, groups_mp_on, Arel::Nodes::OuterJoin)
 
-         #binding.pry
-
       joins(friendships_join, users_join, users_roles_join, groups_mp_join)
         .where("groups.readable in (?) or metering_points.group_id = groups.id and users_roles.user_id = ? or roles.resource_type = ? and roles.name = ? and roles.resource_id = groups.id and (users_roles.user_id = ? or friendships.friend_id = ? and groups.readable = ?)", ['world', 'community'], user.id, Group.to_s, :manager, user.id, user.id, :friends).distinct
     end

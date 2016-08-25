@@ -170,7 +170,7 @@ module API
         get ":id/address" do
           metering_point  = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
-            metering_point.address
+            metering_point.address.readable_by?(current_user)
           else
             status 403
           end

@@ -1,7 +1,7 @@
 # coding: utf-8
 describe "Profile Model" do
 
-  it 'is restriciting readable_by' do
+  it 'is restricting readable_by' do
     user = Fabricate(:user)
     profile = user.profile
     expect(Profile.readable_by(nil)).to eq []
