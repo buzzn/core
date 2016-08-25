@@ -36,7 +36,7 @@ module ApplicationHelper
         content_tag(:i, image_tag(profile.image.sm, class: 'img-circle', size: '20x20')) :
         content_tag(:i, nil, class: 'fa fa-user')
       ) +
-      content_tag(:span, profile.name, class: "menu-title"),
+      content_tag(:span, current_user.profile == profile ? t('my_profile') : profile.name, class: "menu-title"),
 #       content_tag(:span, "standard", class: "menu-title"),
       profile_path(profile),
 #      "hash",
