@@ -79,7 +79,6 @@ describe "Organizations API" do
 
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq Organization.all.size
-    expect(json['data'].last['id']).to eq organization.id
   end
 
 
