@@ -5,6 +5,7 @@ class UserAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
+    # uses scope User.readable_by(user)
     readable?(User, user)
   end
 

@@ -34,7 +34,7 @@ class Address < ActiveRecord::Base
       contracting_party = ContractingParty.arel_table
       contracting_party_owner = contracting_party.where(contracting_party[:id].eq(address[:addressable_id]).and(contracting_party[:user_id].eq(user.id)))
 
-      users_roles    = Arel::Table.new(:users_roles)
+      users_roles    = Role.users_roles_arel_table
       role           = Role.arel_table
       friendship     = Friendship.arel_table
       metering_point = MeteringPoint.arel_table

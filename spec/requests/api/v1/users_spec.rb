@@ -340,7 +340,6 @@ describe "Users API" do
     end
 
     get_with_token "/api/v1/users/#{user.id}/friends", access_token.token
-    puts response.body
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
 
@@ -355,7 +354,6 @@ describe "Users API" do
     user.friends << friend
 
     get_with_token "/api/v1/users/#{user.id}/friends/#{friend.id}", access_token.token
-    puts response.body
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(friend.id)
   end

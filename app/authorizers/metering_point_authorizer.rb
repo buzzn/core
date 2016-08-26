@@ -9,14 +9,16 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
     when :meter
       User.any_role?(user, manager: resource)
     when NilClass
-      resource.readable_by_world? ||
-        (!resource.group.nil? && (resource.group.updatable_by?(user) || resource.group.readable_by?(user))) ||
-        (!!user && (resource.readable_by_community? ||
-                    user.has_role?(:member, resource) ||
-                    user.has_role?(:manager, resource) ||
-                    (resource.readable_by_friends? && resource.managers.map(&:friends).flatten.uniq.include?(user)) ||
-                    (!resource.existing_group_request.nil? && user.can_update?(resource.existing_group_request.group)) ||
-                    user.has_role?(:admin)))
+      # uses scope MeteringPoint.readable_by(user)
+      readable?(MeteringPoint, user)
+      # resource.readable_by_world? ||
+      #   (!resource.group.nil? && (resource.group.updatable_by?(user) || resource.group.readable_by?(user))) ||
+      #   (!!user && (resource.readable_by_community? ||
+      #               user.has_role?(:member, resource) ||
+      #               user.has_role?(:manager, resource) ||
+      #               (resource.readable_by_friends? && resource.managers.map(&:friends).flatten.uniq.include?(user)) ||
+      #               (!resource.existing_group_request.nil? && user.can_update?(resource.existing_group_request.group)) ||
+      #               user.has_role?(:admin)))
     else
       raise 'wrong argument'
     end

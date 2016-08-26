@@ -5,6 +5,7 @@ class GroupAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
+    # uses scope Group.readable_by(user)
     readable?(Group, user)
   end
 

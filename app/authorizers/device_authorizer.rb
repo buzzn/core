@@ -5,6 +5,7 @@ class DeviceAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
+    # uses scope Device.readable_by(user)
     readable?(Device, user)
   end
 

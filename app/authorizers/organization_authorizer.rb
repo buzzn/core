@@ -5,6 +5,7 @@ class OrganizationAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
+    # uses scope Organization.readable_by(user)
     readable?(Organization, user)
   end
 

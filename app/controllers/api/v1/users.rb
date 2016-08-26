@@ -128,7 +128,7 @@ module API
         oauth2 :public, :full
         get ":id/friends" do
           user = User.find(permitted_params[:id])
-          paginated_response(user.friends)# TODO .readable_by(current_user))
+          paginated_response(user.friends)
         end
 
 

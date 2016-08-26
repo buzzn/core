@@ -96,7 +96,7 @@ module API
         get ':id/address' do
           organization = Organization.find(permitted_params[:id])
           if organization.readable_by?(current_user)
-            organization.address.readable_by?(current_user)
+            organization.address
           else
             status 403
           end

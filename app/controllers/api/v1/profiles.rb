@@ -12,12 +12,7 @@ module API
         paginate
         oauth2 :full
         get do
-          per_page     = permitted_params[:per_page]
-          page         = permitted_params[:page]
-          ids  = Profile.all.select { |p| p.readable_by?(current_user) }
-          profiles = Profile.where(id: ids)
-          total_pages = profiles.page(page).per_page(per_page).total_pages
-          paginate(render(profiles, meta: { total_pages: total_pages }))
+          paginated_response(Profile.readable_by(current_user))
         end
 
 
@@ -65,8 +60,6 @@ module API
           profile   = Profile.find(permitted_params[:id])
 
           if profile.readable_by?(current_user)
-            per_page = permitted_params[:per_page]
-            page     = permitted_params[:page]
             user     = profile.user
             if current_user.nil?
               filter = [ 'groups.readable = ?', 'world' ]
@@ -75,9 +68,8 @@ module API
             else
               filter = [ 'groups.readable NOT IN (?)', ['friends', 'members'] ]
             end
-            groups        = user.accessible_groups_relation.where(*filter)
-            total_pages   = groups.page(page).per_page(per_page).total_pages
-            paginate(render(groups, meta: { total_pages: total_pages }))
+            groups   = user.accessible_groups_relation.where(*filter)
+            paginated_response(groups)
           else
             status 403
           end
@@ -94,16 +86,8 @@ module API
         oauth2 false
         get ':id/friends' do
           profile = Profile.find(permitted_params[:id])
-
           if profile.readable_by?(current_user)
-            ids          = profile.user.friends.select do |f|
-              f.readable_by?(current_user)
-            end
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            friends      = User.where(id: ids)
-            total_pages  = friends.page(page).per_page(per_page).total_pages
-            paginate(render(friends, meta: { total_pages: total_pages }))
+            paginated_response(profile.user.friends.readable_by(current_user))
           else
             status 403
           end
@@ -118,17 +102,23 @@ module API
         paginate
         oauth2 false
         get ':id/metering-points' do
-          profile              = Profile.find(permitted_params[:id])
+          profile = Profile.find(permitted_params[:id])
 
           if profile.readable_by?(current_user)
-            if profile.readable_by_world? && current_user.nil?
-              filter = [ 'readable = ?', 'world' ]
-            elsif current_user.friend?(profile.user)
-              filter = [ 'readable != ?', 'members' ]
-            else
-              filter = [ 'readable NOT IN (?)', ['friends', 'members'] ]
+            types = []
+            if profile.readable_by_world?
+              types << 'world'
             end
-            paginated_response(MeteringPoint.accessible_by_user(profile.user).where(*filter))
+            if current_user
+              types << 'community'
+              if current_user.friend?(profile.user)
+                types << 'friends'
+              end
+            end
+            # TODO
+            # this does not match the Authority for readable_by? and should be:
+            # `accessible_by_user(profile.user).readable_by?(current_user)`
+            paginated_response(MeteringPoint.accessible_by_user(profile.user).where(readable: types))
           else
             status 403
           end

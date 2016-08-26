@@ -66,6 +66,43 @@ class MeteringPoint < ActiveRecord::Base
     do_filter(value, *search_attributes)
   end
 
+  scope :readable_by, ->(user) do
+    metering_point = MeteringPoint.arel_table
+    group = Group.arel_table
+    belongs_to_readable_group = Group.readable_by(user).where(group[:id].eq(metering_point[:group_id]))
+    if user.nil?
+      sqls =
+        [
+          belongs_to_readable_group.project(1).exists,
+          metering_point[:readable].eq('world')
+        ]
+    else
+      world_or_community = metering_point[:readable].in(['world','community'])
+
+      admin_or_manager_or_member = User.roles_query(user, manager: metering_point[:id], member: metering_point[:id], admin: nil)
+
+      users_roles    = Role.users_roles_arel_table
+      role           = Role.arel_table
+      friendship     = Friendship.arel_table
+      managers = users_roles
+                      .join(role)
+                      .on(role[:id].eq(users_roles[:role_id]).and(role[:resource_id].eq(metering_point[:id])).and(role[:name].eq('manager')))
+                      .where(users_roles[:user_id].eq(friendship[:user_id]))
+      manager_friends = friendship.where(friendship[:friend_id].eq(user.id)
+                                          .and(managers.project(1).exists))
+
+      sqls =
+        [
+          admin_or_manager_or_member.project(1).exists,
+          belongs_to_readable_group.project(1).exists,
+          manager_friends.project(1).exists.and(metering_point[:readable].eq('friends')),
+          world_or_community
+        ]
+    end
+    # TODO remove hack to clean SQL until the Group offers a clean AREL query
+    where(sqls.map(&:to_sql).join(' OR ').sub('DISTINCT "groups".*, ', '').sub('ORDER BY created_at ASC)',')'))
+  end
+
   scope :accessible_by_user, lambda {|user|
     self.with_role([:manager, :member], user).distinct
   }

@@ -5,6 +5,7 @@ class ContractAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
+    # uses scope Contract.readable_by(user)
     readable?(Contract, user)
   end
 

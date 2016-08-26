@@ -5,6 +5,7 @@ class ProfileAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
+    # uses scope Profile.readable_by(user)
     readable?(Profile, user)
   end
 

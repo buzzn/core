@@ -67,7 +67,8 @@ class Group < ActiveRecord::Base
     User.distinct.joins(*members_of_group_joins).where('metering_points.group_id': group)
   end
 
-  scope :readable_by_world, -> { where(readable: 'world') }
+  # keeps this notation so it can be chained with Arel table where clauses
+  scope :readable_by_world, -> { where("groups.readable = 'world'") }
 
   scope :readable_by, ->(user) do
     if user.nil?
@@ -91,11 +92,11 @@ class Group < ActiveRecord::Base
       users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
       users_roles_join = users_roles.create_join(roles, users_roles_on, Arel::Nodes::OuterJoin)
 
-      groups_mp_on = groups.create_on(mp[:group_id].eq(groups[:id]).and(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(MeteringPoint.to_s).and(roles[:name].eq(:member)))))
-      groups_mp_join = groups.create_join(mp, groups_mp_on, Arel::Nodes::OuterJoin)
+      groups_mp_on = groups.create_on(mp.alias[:group_id].eq(groups[:id]).and(roles[:resource_id].eq(mp.alias[:id]).and(roles[:resource_type].eq(MeteringPoint.to_s).and(roles[:name].eq(:member)))))
+      groups_mp_join = groups.create_join(mp.alias, groups_mp_on, Arel::Nodes::OuterJoin)
 
       joins(friendships_join, users_join, users_roles_join, groups_mp_join)
-        .where("groups.readable in (?) or metering_points.group_id = groups.id and users_roles.user_id = ? or roles.resource_type = ? and roles.name = ? and roles.resource_id = groups.id and (users_roles.user_id = ? or friendships.friend_id = ? and groups.readable = ?)", ['world', 'community'], user.id, Group.to_s, :manager, user.id, user.id, :friends).distinct
+        .where("groups.readable in (?) or metering_points_2.group_id = groups.id and users_roles.user_id = ? or roles.resource_type = ? and roles.name = ? and roles.resource_id = groups.id and (users_roles.user_id = ? or friendships.friend_id = ? and groups.readable = ?)", ['world', 'community'], user.id, Group.to_s, :manager, user.id, user.id, :friends).distinct
     end
   end
 
