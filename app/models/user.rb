@@ -154,7 +154,7 @@ class User < ActiveRecord::Base
     role = Role.arel_table
     role_on = role.create_on(role['resource_id'].eq(mp['id']).and(role['resource_type'].eq(MeteringPoint.to_s)).and(role['name'].in([:manager, :member])).or(role['resource_id'].eq(group['id']).and(role['resource_type'].eq(Group.to_s)).and(role['name'].eq(:manager))))
     role_join = role.create_join(role, role_on)
-    
+
     users_roles = Arel::Table.new(:users_roles)
     users_roles_on = users_roles.create_on(users_roles[:role_id].eq(role[:id]))
     users_roles_join = users_roles.create_join(users_roles, users_roles_on)
@@ -174,8 +174,8 @@ class User < ActiveRecord::Base
     self.friends.each do |friend|
       result << friend.non_private_editable_metering_points
     end
-    editable_metering_points_without_meter_not_virtual
-    return result.flatten.uniq
+    result << editable_metering_points_without_meter_not_virtual
+    return result.flatten.uniq.sort! { |a,b| a.name.downcase <=> b.name.downcase }
   end
 
   def invitable_users(metering_point)
