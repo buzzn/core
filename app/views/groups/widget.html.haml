@@ -8,7 +8,7 @@
 
 #page-content
   .row
-    .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id}
+    .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id, metering_point_ids: {in: @group.in_metering_points.collect(&:id).join(","), out: @group.out_metering_points.collect(&:id).join(",")}}
       %h1.page-header.text-overflow
         %span
           = @group.name

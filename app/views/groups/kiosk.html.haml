@@ -51,6 +51,7 @@
             .bubbles_container{'data-content' => @group.id, id: "bubbles_container_" + @group.id.to_s}
               .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
               #dummy
+              .bubble_tooltip{id: "tooltip_" + @group.id.to_s}
 
 
     .col-sm-12.col-md-6.col-lg-6
@@ -69,7 +70,7 @@
 
 
       .row
-        .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id}
+        .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id, metering_point_ids: {in: @group.in_metering_points.collect(&:id).join(","), out: @group.out_metering_points.collect(&:id).join(",")}}
           .panel
             .panel-body.panel-colorful
 
