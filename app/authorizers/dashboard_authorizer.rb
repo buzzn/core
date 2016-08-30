@@ -5,18 +5,15 @@ class DashboardAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
-    user == resource.user ||
-    user.has_role?(:admin)
+    user == resource.user || User.admin?(user)
   end
 
   def updatable_by?(user)
-    user == resource.user ||
-    user.has_role?(:admin)
+    user == resource.user || User.admin?(user)
   end
 
   def deletable_by?(user)
-    user == resource.user ||
-    user.has_role?(:admin)
+    user == resource.user || User.admin?(user)
   end
 
 end

@@ -19,14 +19,8 @@ module API
         paginate
         oauth2 :full
         get do
-          per_page         = permitted_params[:per_page]
-          page             = permitted_params[:page]
-          ids = User.filter(permitted_params[:filter]).select do |obj|
-            obj.readable_by?(current_user)
-          end.collect { |obj| obj.id }
-          users = User.where(id: ids)
-          total_pages  = users.page(page).per_page(per_page).total_pages
-          paginate(render(users, meta: { total_pages: total_pages }))
+          users = User.filter(permitted_params[:filter]).readable_by(current_user)
+          paginated_response(users)
         end
 
 

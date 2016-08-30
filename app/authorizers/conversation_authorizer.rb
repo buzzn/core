@@ -5,13 +5,15 @@ class ConversationAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
+    # you can be part of a Conversation by being a member
     User.with_role(:member, resource) ||
-    user.has_role?(:admin)
+      user.has_role?(:admin)
   end
 
   def updatable_by?(user)
-     user.has_role?(:admin) ||
-     User.with_role(:member, resource)
+    # you can be part of a Conversation by being a member
+    user.has_role?(:admin) ||
+      User.with_role(:member, resource)
   end
 
   def deletable_by?(user)

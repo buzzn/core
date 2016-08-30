@@ -13,9 +13,7 @@ class CommentAuthorizer < ApplicationAuthorizer
   end
 
   def deletable_by?(user)
-    user.has_role?(:manager, resource.commentable) ||
-    user == resource.user ||
-    user.has_role?(:admin)
+    user == resource.user || User.any_role?(user, admin: nil, manager: resource.commentable)
   end
 
 end

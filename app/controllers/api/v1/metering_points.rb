@@ -188,15 +188,7 @@ module API
         get ':id/members' do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            
-            ids = metering_point.members.select do |member|
-              member.profile.readable_by?(current_user)
-            end
-            members =  metering_point.members.where(id: ids)
-            total_pages  = members.page(page).per_page(per_page).total_pages
-            paginate(render(members, meta: { total_pages: total_pages }))
+            paginated_response(metering_point.members.readable_by(current_user))
           else
             status 403
           end

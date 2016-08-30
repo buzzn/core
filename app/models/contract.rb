@@ -28,17 +28,28 @@ class Contract < ActiveRecord::Base
 
   scope :readable_by,               -> (user) do
     if user
-      joins("INNER JOIN roles ON " +
-            # manager role
-            "roles.name = 'manager' AND " +
-            # on contract.group
-            "(roles.resource_id = contracts.group_id AND roles.resource_type = '#{Group}' OR " +
-            # or on contrat.metering_point
-            "roles.resource_id = contracts.metering_point_id AND roles.resource_type = '#{MeteringPoint}') OR " +
-            # or admin role (with out associated resource)
-            "roles.name = 'admin' AND roles.resource_id IS NULL")
-        .joins("INNER JOIN users_roles ON users_roles.role_id = roles.id")
-        .where('users_roles.user_id = ?', user.id)
+      contracts = Contract.arel_table
+      roles = Role.arel_table
+      users_roles = Arel::Table.new(:users_roles)
+
+      users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id])).and(users_roles[:user_id].eq(user.id))
+      users_roles_join = users_roles.create_join(users_roles, users_roles_on)
+
+      # manager role with group, metering_pointm organization resource
+      # or admin role for any resource
+      roles_contracts_on = roles
+        .create_on(roles[:name].eq('manager')
+                    .and(
+                      roles[:resource_id].eq(contracts[:group_id]).and(roles[:resource_type].eq(Group.to_s))
+                      .or(roles[:resource_id].eq(contracts[:metering_point_id]).and(roles[:resource_type].eq(MeteringPoint.to_s)))
+                      .or(roles[:resource_id].eq(contracts[:organization_id]).and(roles[:resource_type].eq(Organization.to_s)))
+                    )
+                    .or(roles[:name].eq('admin')
+                         .and(roles[:resource_id].eq(nil))))
+
+      roles_contracts_join = roles.create_join(roles, roles_contracts_on)
+
+      joins(roles_contracts_join, users_roles_join)
     else
       where("1=0") #empty set
     end

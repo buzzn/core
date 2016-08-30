@@ -45,7 +45,7 @@ module API
         get ':id/contracts' do
           organization = Organization.find(permitted_params[:id])
           if organization.readable_by?(current_user)
-            paginated_response(organization.contracts)
+            paginated_response(organization.contracts.readable_by(current_user))
           else
             status 403
           end

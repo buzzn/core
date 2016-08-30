@@ -7,16 +7,12 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
   def readable_by?(user, variant = nil)
     case variant
     when :meter
-      !!user && user.has_role?(:manager, resource)
+      User.any_role?(user, manager: resource)
     when NilClass
-      resource.readable_by_world? ||
-        (!resource.group.nil? && (resource.group.updatable_by?(user) || resource.group.readable_by?(user))) ||
-        (!!user && (resource.readable_by_community? ||
-                    user.has_role?(:member, resource) ||
-                    user.has_role?(:manager, resource) ||
-                    (resource.readable_by_friends? && resource.managers.map(&:friends).flatten.uniq.include?(user)) ||
-                    (!resource.existing_group_request.nil? && user.can_update?(resource.existing_group_request.group)) ||
-                    user.has_role?(:admin)))
+      # uses scope MeteringPoint.readable_by(user)
+      readable?(MeteringPoint, user) ||
+        # TODO get this into MeteringPoint.readable_by(user)
+        (!resource.existing_group_request.nil? && user.can_update?(resource.existing_group_request.group))
     else
       raise 'wrong argument'
     end
@@ -25,13 +21,10 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
   def updatable_by?(user, options = {})
     case options
     when :members
-      !!user && (user.has_role?(:manager, resource) ||
-                 user.has_role?(:member, resource) ||
-                 user.has_role?(:admin))
+      User.any_role?(user, admin: nil, manager: resource, member: resource)
     when Hash
       if options.empty?
-        !!user && (user.has_role?(:manager, resource) ||
-                   user.has_role?(:admin))
+        User.any_role?(user, admin: nil, manager: resource)
       else
         if options[:action] == 'edit_devices' || options[:action] == 'edit_users'
           !!user && (user.has_role?(:manager, resource) ||
@@ -45,8 +38,7 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
   end
 
   def deletable_by?(user)
-    !!user && (user.has_role?(:manager, resource) ||
-               user.has_role?(:admin))
+    User.any_role?(user, admin: nil, manager: resource)
   end
 
 end

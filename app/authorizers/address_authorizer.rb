@@ -5,20 +5,16 @@ class AddressAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
-    resource.metering_point.readable_by_friends? ||
-    user.has_role?(:manager, resource.metering_point) ||
-    User.with_role(:manager, resource.metering_point).first.friend?(user) ||
-    user.has_role?(:admin)
+    # uses scope Address.readable_by(user)
+    readable?(Address, user)
   end
 
   def updatable_by?(user)
-     user.has_role?(:manager, resource.metering_point) ||
-     user.has_role?(:admin)
+    User.any_role?(user, admin: nil, manager: resource)
   end
 
   def deletable_by?(user)
-    user.has_role?(:manager, resource.metering_point) ||
-    user.has_role?(:admin)
+    User.any_role?(user, admin: nil, manager: resource)
   end
 
 end

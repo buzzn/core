@@ -41,6 +41,63 @@ class User < ActiveRecord::Base
 
   after_invitation_accepted :invoke_invitation_accepted_activity
 
+  def self.count_admins(user)
+    count_roles(user, admin: nil)
+  end
+
+  def self.roles_query(user, role_map)
+    roles          = Role.arel_table
+    @users_roles ||= Arel::Table.new(:users_roles)
+
+    roles_constraint = nil
+    role_map.each do |role, resources|
+      resources = [resources] unless resources.is_a? Array
+      resources.each do |resource|
+        if roles_constraint
+          roles_constraint = roles_constraint.or(roles[:name].eq(role)
+                               .and(roles[:resource_id].eq(resource)))
+        else
+          roles_constraint = roles[:name].eq(role)
+                             .and(roles[:resource_id].eq(resource))
+        end
+      end
+    end
+    @users_roles.join(roles)
+      .on(roles[:id].eq(@users_roles[:role_id])
+           .and(roles_constraint))
+      .where(@users_roles[:user_id].eq(user.id))
+  end
+
+  def self.count_roles(user, role_map)
+    roles_query(user, role_map).project(@users_roles[:user_id].count)
+  end
+
+  def self.admin?(user)
+    !!user && ActiveRecord::Base.connection.exec_query(count_admins(user).to_sql).first['count'].to_i > 0
+  end
+
+  def self.any_role?(user, roles_map)  
+    !!user && ActiveRecord::Base.connection.exec_query(count_roles(user, roles_map).to_sql).first['count'].to_i > 0
+  end
+
+  scope :readable_by, -> (user) do
+    users               = User.arel_table
+    profiles            = Profile.arel_table
+    users_profiles_on   = users.create_on(users[:id].eq(profiles[:user_id]))
+    users_profiles_join = users.create_join(profiles, users_profiles_on)
+
+    if user
+      friendships        = Friendship.arel_table
+      users_friends_on   = friendships.create_on(users[:id].eq(friendships.alias[:user_id]))
+      users_friends_join = users.create_join(friendships.alias, users_friends_on,
+                                             Arel::Nodes::OuterJoin)
+
+      distinct.joins(users_profiles_join, users_friends_join).where("profiles.readable in (?) or users.id = ? or friendships_2.friend_id = ? or 0 < (#{User.count_admins(user).to_sql})", ['world', 'community'], user.id, user.id)
+    else
+      distinct.joins(users_profiles_join).where('profiles.readable = ?', 'world')
+    end
+  end
+
   scope :exclude_user, lambda {|user|
     where('user_id NOT IN (?)', [user.id])
   }
@@ -124,7 +181,7 @@ class User < ActiveRecord::Base
   end
 
   def accessible_metering_points_relation
-    MeteringPoint.accessible_by_user(self).distinct
+    MeteringPoint.accessible_by_user(self)
   end
 
   def accessible_metering_points

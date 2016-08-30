@@ -79,7 +79,6 @@ describe "Organizations API" do
 
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq Organization.all.size
-    expect(json['data'].last['id']).to eq organization.id
   end
 
 
@@ -358,14 +357,11 @@ describe "Organizations API" do
 
     get_without_token "/api/v1/organizations/#{organization.id}/contracts"
     expect(response).to have_http_status(200)
-    contracts.each do |contract|
-      expect(json['data'].find{ |c| c['id'] == contract.id }['attributes']['mode']).to eq('electricity_supplier_contract')
-    end
-    expect(json['data'].size).to eq(contracts.size)
+    expect(json['data'].size).to eq(0)
   end
 
   it 'gets the related contracts of an organization with token' do
-    access_token    = Fabricate(:public_access_token)
+    access_token    = Fabricate(:full_access_token_as_admin)
     organization    = Fabricate(:electricity_supplier_with_contracts)
     contracts       = organization.contracts
 
@@ -378,7 +374,7 @@ describe "Organizations API" do
   end
 
   it 'paginate contracts' do
-    access_token    = Fabricate(:public_access_token).token
+    access_token    = Fabricate(:full_access_token_as_admin).token
     organization    = Fabricate(:electricity_supplier)
 
     page_overload.times do

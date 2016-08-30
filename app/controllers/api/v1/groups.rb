@@ -13,22 +13,7 @@ module API
         paginate
         oauth2 false
         get root: :groups do
-          group_ids = Group.filter(permitted_params[:filter]).where(readable: 'world').ids
-          if current_user
-            group_ids << Group.filter(permitted_params[:filter]).where(readable: 'community').ids
-            group_ids << Group.filter(permitted_params[:filter]).with_role(:manager, current_user)
-            current_user.friends.each do |friend|
-              if friend
-                Group.filter(permitted_params[:filter]).where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
-                  group_ids << friend_group.id
-                end
-              end
-            end
-          end
-          per_page     = permitted_params[:per_page]
-          page         = permitted_params[:page]
-          total_pages  = Group.where(id: group_ids.flatten).page(page).per_page(per_page).total_pages
-          paginate(render(Group.where(id: group_ids.flatten), meta: { total_pages: total_pages }))
+          paginated_response(Group.filter(permitted_params[:filter]).readable_by(current_user))
         end
 
 

@@ -32,4 +32,34 @@ describe "Group Model" do
     groups = Group.filter(nil)
     expect(groups.size).to eq 3
   end
+
+  it 'limits readable_by' do
+    Fabricate(:buzzn_metering)
+    wagnis4 = Fabricate(:group_wagnis4, readable: 'world')
+    butenland = Fabricate(:group_hof_butenland, readable: 'community')
+    karin = Fabricate(:group_karins_pv_strom, readable: 'friends')
+    group = Fabricate(:group_with_members_readable_by_world, readable: 'members')
+    manager = Fabricate(:user)
+    manager.add_role(:manager, karin)
+
+    expect(Group.readable_by(nil).collect{|c| c}).to eq [wagnis4]
+    user = Fabricate(:user)
+    expect(Group.readable_by(user).collect{|c| c}).to match_array [wagnis4, butenland]
+
+    user.add_role(:admin, nil)
+    expect(Group.readable_by(user).collect{|c| c }).to match_array [wagnis4, butenland, group, karin]
+
+    expect(Group.readable_by(group.members.first).collect{|c| c }).to match_array [wagnis4, butenland, group]
+    expect(Group.readable_by(karin.managers.first).collect{|c| c }).to match_array [wagnis4, butenland, karin]
+
+    manager.friends << Fabricate(:user)
+    expect(Group.readable_by(karin.managers.first.friends.first).collect{|c| c }).to match_array [wagnis4, butenland, karin]
+
+    manager.add_role(:manager, group)
+    expect(Group.readable_by(group.managers.first.friends.first).collect{|c| c }).to match_array [wagnis4, butenland, karin]
+    
+    friend = Fabricate(:user)
+    group.members.first.friends << friend
+    expect(Group.readable_by(friend).collect{|c| c }).to match_array [wagnis4, butenland]
+  end
 end

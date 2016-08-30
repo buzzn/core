@@ -3,18 +3,28 @@ describe "Contract Model" do
 
   let(:user_with_metering_point) { Fabricate(:user_with_metering_point) }
   let(:manager_group) {Fabricate(:group)}
-  let(:manager_with_group) do
+  let(:manager_of_group) do
     user = Fabricate(:user)
     user.add_role(:manager, manager_group)
     user
   end
   let(:member_group) {Fabricate(:group)}
-  let(:member_with_group) do
+  let(:member_of_group) do
     user = Fabricate(:user)
     user.add_role(:member, member_group)
     user
   end
-
+  let(:manager_of_organization) do
+    user = Fabricate(:user)
+    user.add_role(:manager, contracts.last.organization)
+    user
+  end
+  let(:member_of_organization) do
+    user = Fabricate(:user)
+    user.add_role(:member, contracts.last.organization)
+    user
+  end
+  
   let(:contracts) do
     c1 = Fabricate(:metering_point_operator_contract)
     c1.metering_point = user_with_metering_point.roles.first.resource
@@ -76,9 +86,15 @@ describe "Contract Model" do
     expect(Contract.readable_by(user_with_metering_point)).to eq [contracts.first]
   end
 
+  it 'selects contracts of organization manager but not organization member' do
+    contracts # create contracts
+    expect(Contract.readable_by(manager_of_organization)).to eq [contracts.last]
+    expect(Contract.readable_by(member_of_organization)).to eq []
+  end
+
   it 'selects contracts of group manager but not group member' do
     contracts # create contracts
-    expect(Contract.readable_by(manager_with_group)).to eq [contracts.last]
-    expect(Contract.readable_by(member_with_group)).to eq []
+    expect(Contract.readable_by(manager_of_group)).to eq [contracts.last]
+    expect(Contract.readable_by(member_of_group)).to eq []
   end
 end
