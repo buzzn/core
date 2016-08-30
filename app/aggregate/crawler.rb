@@ -174,14 +174,14 @@ class Crawler
           request['result'].each do |item|
             if @metering_points_size > 1
               if item['power'] > 0 && @metering_point_input
-                power = item['power']/1000
+                power = item['power']
               elsif item['power'] < 0 && @metering_point_output
-                power = item['power'].abs/1000
+                power = item['power'].abs
               else
                 power = 0
               end
             else
-              power = item['power'] > 0 ? item['power'].abs/1000 : 0
+              power = item['power'] > 0 ? item['power'].abs : 0
             end
             timestamp = item['time']
             result << [timestamp, power]
