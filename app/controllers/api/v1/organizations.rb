@@ -60,7 +60,7 @@ module API
         end
         paginate
         oauth2 false
-        get ':id/managers' do
+        get [':id/managers', ':id/relationships/managers'] do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
             paginated_response(organization.managers)
@@ -78,7 +78,7 @@ module API
         end
         paginate
         oauth2 false
-        get ':id/members' do
+        get [':id/members', ':id/relationships/members'] do
           organization = Organization.find(permitted_params[:id])
           if organization.readable_by?(current_user)
             paginated_response(organization.members)
@@ -185,15 +185,36 @@ module API
         desc 'Add user to organization managers'
         params do
           requires :id, type: String, desc: "Organization ID"
-          requires :user_id, type: String, desc: 'User id'
+          requires :data, type: Hash do
+            requires :id, type: String, desc: "ID of the user"
+          end
         end
         oauth2 :full
-        post ':id/managers' do
+        post ':id/relationships/managers' do
           organization = Organization.find(permitted_params[:id])
           if organization.updatable_by?(current_user)
-            user = User.find(permitted_params[:user_id])
+            user = User.find(permitted_params[:data][:id])
             user.add_role(:manager, organization)
             status 204
+          else
+            status 403
+          end
+        end
+
+
+        desc 'Replace organization managers'
+        params do
+          requires :id, type: String, desc: "ID of the organization"
+          requires :data, type: Array do
+            requires :id, type: String, desc: "ID of the user"
+          end
+        end
+        oauth2 :full
+        patch ':id/relationships/managers' do
+          organization = Organization.find(permitted_params[:id])
+          if organization.updatable_by?(current_user)
+            ids = permitted_params[:data].collect{ |d| d[:id] }
+            organization.replace_managers(ids)
           else
             status 403
           end
@@ -203,13 +224,15 @@ module API
         desc 'Remove user from organization managers'
         params do
           requires :id, type: String, desc: "Organization ID"
-          requires :user_id, type: String, desc: 'User id'
+          requires :data, type: Hash do
+            requires :id, type: String, desc: "ID of the user"
+          end
         end
         oauth2 :full
-        delete ':id/managers/:user_id' do
+        delete ':id/relationships/managers' do
           organization = Organization.find(permitted_params[:id])
           if organization.updatable_by?(current_user)
-            user = User.find(permitted_params[:user_id])
+            user = User.find(permitted_params[:data][:id])
             user.remove_role(:manager, organization)
             status 204
           else
@@ -221,15 +244,36 @@ module API
         desc 'Add user to organization members'
         params do
           requires :id, type: String, desc: "Organization ID"
-          requires :user_id, type: String, desc: 'User id'
+          requires :data, type: Hash do
+            requires :id, type: String, desc: "ID of the user"
+          end
         end
         oauth2 :full
-        post ':id/members' do
+        post ':id/relationships/members' do
           organization = Organization.find(permitted_params[:id])
           if organization.updatable_by?(current_user)
-            user = User.find(permitted_params[:user_id])
+            user = User.find(permitted_params[:data][:id])
             user.add_role(:member, organization)
             status 204
+          else
+            status 403
+          end
+        end
+
+
+        desc 'Replace organization members'
+        params do
+          requires :id, type: String, desc: "ID of the organization"
+          requires :data, type: Array do
+            requires :id, type: String, desc: "ID of the user"
+          end
+        end
+        oauth2 :full
+        patch ':id/relationships/members' do
+          organization = Organization.find(permitted_params[:id])
+          if organization.updatable_by?(current_user)
+            ids = permitted_params[:data].collect{ |d| d[:id] }
+            organization.replace_members(ids)
           else
             status 403
           end
@@ -239,13 +283,16 @@ module API
         desc 'Remove user from organization members'
         params do
           requires :id, type: String, desc: "Organization ID"
-          requires :user_id, type: String, desc: 'User id'
+          requires :data, type: Hash do
+            optional :type, type: String, values: [Organization.to_s], default: Organization.to_s
+            requires :id, type: String, desc: "ID of the user"
+          end
         end
         oauth2 :full
-        delete ':id/members/:user_id' do
+        delete ':id/relationships/members' do
           organization = Organization.find(permitted_params[:id])
           if organization.updatable_by?(current_user)
-            user = User.find(permitted_params[:user_id])
+            user = User.find(permitted_params[:data][:id])
             user.remove_role(:member, organization)
             status 204
           else
