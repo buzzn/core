@@ -1,6 +1,15 @@
 class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
   before_filter :authenticate_user!
 
+  # used for authority to make it possible to deal with logged out users
+  def current_or_null_user
+    if current_user == nil
+      User.new
+    else
+      current_user
+    end
+  end
+
   def index
     if current_user.has_role?(:admin)
       @applications = Doorkeeper::Application.all
