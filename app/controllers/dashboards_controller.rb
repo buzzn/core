@@ -20,10 +20,12 @@ class DashboardsController < ApplicationController
 
   def add_metering_point_update
     @dashboard = Dashboard.find(params[:id])
-    @metering_point = MeteringPoint.find(params[:dashboard][:metering_point_id])
-    if !@dashboard.metering_points.include?(@metering_point)
-      @dashboard.metering_points << @metering_point
-      @dashboard.save
+    @metering_points = MeteringPoint.find(params[:dashboard][:metering_points].reject{|id| id.empty?})
+    @metering_points.each do |metering_point|
+      if !@dashboard.metering_points.include?(metering_point)
+        @dashboard.metering_points << metering_point
+        @dashboard.save
+      end
     end
     authorize_action_for(@dashboard)
   end
