@@ -1327,10 +1327,10 @@ getLiveData = (metering_point, metering_point_id) ->
         chart.xAxis[0].update(Chart.Functions.getExtremes(data[0][0]), true)
         Chart.Functions.setChartTitle(data[0][0])
         Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
-      if window.wisActive && window.wwasInactive # eigentlich nur, wenn neu aktiv oder wenn delta t zu groß
-        window.wwasInactive = false
-        Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
-        # console.log("neuer Chart " + data.timestamp + " power " + data.latest_power)
+      # if window.wisActive && window.wwasInactive # eigentlich nur, wenn neu aktiv oder wenn delta t zu groß
+      #   window.wwasInactive = false
+      #   Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
+      #   # console.log("neuer Chart " + data.timestamp + " power " + data.latest_power)
 
     if actual_resolution == 'day_to_minutes'
       window.wwasInactive = false
