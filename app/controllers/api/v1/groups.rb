@@ -12,7 +12,7 @@ module API
         end
         paginate
         oauth2 false
-        get root: :groups do
+        get do
           paginated_response(Group.filter(permitted_params[:filter]).readable_by(current_user))
         end
 
@@ -25,7 +25,7 @@ module API
           requires :id, type: String, desc: "ID of the group"
         end
         oauth2 false
-        get ":id", root: "group" do
+        get ":id" do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
             group
@@ -119,7 +119,7 @@ module API
         end
         paginate
         oauth2 :public, :full
-        get ":id/managers" do
+        get [':id/managers', ':id/relationships/managers'] do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
             paginated_response(group.managers)
@@ -132,13 +132,15 @@ module API
         desc 'Add user to group managers'
         params do
           requires :id, type: String, desc: "ID of the group"
-          requires :user_id, type: String, desc: 'User id'
+          requires :data, type: Hash do
+            requires :id, type: String, desc: "ID of the user"
+          end
         end
         oauth2 :full
-        post ':id/managers' do
+        post ':id/relationships/managers' do
           group           = Group.find(permitted_params[:id])
-          user            = User.find(permitted_params[:user_id])
-          if current_user.has_role?(:manager, group) || current_user.has_role?(:admin)
+          user            = User.find(permitted_params[:data][:id])
+          if group.updatable_by?(current_user)
             user.add_role(:manager, group)
             status 204
           else
@@ -146,17 +148,36 @@ module API
           end
         end
 
+        desc 'Replace group managers'
+        params do
+          requires :id, type: String, desc: "ID of the group"
+          requires :data, type: Array do
+            requires :id, type: String, desc: "ID of the user"
+          end
+        end
+        oauth2 :full
+        patch ':id/relationships/managers' do
+          group    = Group.find(permitted_params[:id])
+          if group.updatable_by?(current_user, :replace_managers)
+            ids = permitted_params[:data].collect{ |d| d[:id] }
+            group.replace_managers(ids)
+          else
+            status 403
+          end
+        end
 
         desc 'Remove user from group managers'
         params do
           requires :id, type: String, desc: "ID of the group"
-          requires :user_id, type: String, desc: 'User id'
+          requires :data, type: Hash do
+            requires :id, type: String, desc: "ID of the user"
+          end
         end
         oauth2 :full
-        delete ':id/managers/:user_id' do
+        delete ':id/relationships/managers' do
           group           = Group.find(permitted_params[:id])
-          user            = User.find(permitted_params[:user_id])
-          if current_user.id == user.id || current_user.has_role?(:admin)
+          user            = User.find(permitted_params[:data][:id])
+          if group.updatable_by?(current_user, user)
             user.remove_role(:manager, group)
             status 204
           else
@@ -173,7 +194,7 @@ module API
         end
         paginate
         oauth2 :public, :full
-        get ":id/members" do
+        get [':id/members', ':id/relationships/members'] do
           group           = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
             paginated_response(group.members)

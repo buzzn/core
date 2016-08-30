@@ -52,12 +52,12 @@ module RequestsHelper
   end
 
 
-  def delete_with_token(path, token)
-    delete path, {}, headers_with_token(token)
+  def delete_with_token(path, params={}, token)
+    delete path, params, headers_with_token(token)
   end
 
-  def delete_without_token(path)
-    delete path, {}, headers_without_token
+  def delete_without_token(path, params={})
+    delete path, params, headers_without_token
   end
 
 
