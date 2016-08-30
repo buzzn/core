@@ -5,6 +5,7 @@ class MeteringPoint < ActiveRecord::Base
   include CalcVirtualMeteringPoint
   include ChartFunctions
   include Filterable
+  include ReplacableRoles
 
   include PublicActivity::Model
   tracked except: :update, owner: Proc.new{ |controller, model| controller && controller.current_user }, recipient: Proc.new{ |controller, model| controller && model }

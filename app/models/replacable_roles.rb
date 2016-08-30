@@ -1,16 +1,39 @@
 module ReplacableRoles
 
-  def replace_managers(ids, current_user = nil, public_activity = nil)
-    new_managers = User.where(id: ids)
-    old_managers = managers.dup
-    (old_managers - new_managers).each do |user|
-      user.remove_role(:manager, self)
+  def replace_managers(ids, options = {})
+    replace_role_users(ids, self.managers.dup, :manager, options)
+  end
+
+  def replace_members(ids, options = {})
+    replace_role_users(ids, self.members.dup, :member, options)
+  end
+
+  def replace_role_users(ids, old_ones, role, options)
+    new_ones = User.where(id: ids)
+    (old_ones - new_ones).each do |user|
+      user.remove_role(role, self)
+      if options[:cancel_key]
+        if options[:owner]
+          user.create_activity(key: options[:cancel_key],
+                               owner: options[:owner],
+                               recipient: self)
+        else
+          self.create_activity(key: options[:cancel_key], owner: user)
+        end
+      end
     end
-    (new_managers - old_managers).each do |user|
-      user.add_role(:manager, self)
-      if public_activity && current_user
-        user.create_activity(key: public_activity, owner: current_user, recipient: self)
+    (new_ones - old_ones).each do |user|
+      user.add_role(role, self)
+      if options[:create_key]
+        if options[:owner]
+          user.create_activity(key: options[:create_key],
+                               owner: options[:owner],
+                               recipient: self)
+        else
+          self.create_activity(key: options[:create_key], owner: user)
+        end
       end
     end
   end
+  private :replace_role_users
 end
