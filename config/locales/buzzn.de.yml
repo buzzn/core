@@ -691,7 +691,7 @@ de:
   cannot_delete_group_while_running_contracts_exists: "Die Gruppe kann nicht gelöscht werden, solange sie noch laufende Verträge besitzt."
   enter_your_text: Text hier eingeben
   out_metering_points: Produktionszählpunkte
-  create_comment: Kommentar erstellen
+  create_comment: Abschicken
   create_new_comment_here: Neuen Kommentar hier erstellen
   friend_request: Freundschaftsanfrage
   create_contract: Vertrag erstellen
