@@ -199,6 +199,20 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     $(`#group-ticker-live-out-${group}`).find('.power-ticker').html(formatPower(powerOut));
   }
 
+  function setSize() {
+    svgDom = document.querySelector(`#group-${group}`);
+    if (!svgDom) return;
+    fullWidth = svgDom.getBoundingClientRect().width;
+    width = fullWidth;
+    fullHeight = svgDom.getBoundingClientRect().height;
+    height = fullHeight;
+    if (width > height + height * 0.2) {
+      width = height;
+    } else if (height > width + width * 0.2) {
+      height = width;
+    }
+  }
+
   function drawData() {
     $('.waiting-spinner').hide()
     $('.bubbles_container').css('height', $('.bubbles_container').height());
@@ -213,16 +227,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .attr('height', '100%');
 
     svg = d3.select(`#group-${group}`);
-    svgDom = document.querySelector(`#group-${group}`);
-    fullWidth = svgDom.getBoundingClientRect().width;
-    width = fullWidth;
-    fullHeight = svgDom.getBoundingClientRect().height;
-    height = fullHeight;
-    if (width > height + height * 0.2) {
-      width = height;
-    } else if (height > width + width * 0.2) {
-      height = width;
-    }
+    setSize();
 
     outCircle = svg.selectAll('circle')
       .data(outCombined(), dataId)
@@ -268,6 +273,8 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .style('stroke', 'none')
       .attr('transform', `translate(${fullWidth / 2}, ${fullHeight / 2})`)
       .style('fill', d3.rgb(outColor).darker())
+      .attr('id', d => d.id)
+      .on('click', d => window.location.href = `${url}/metering_points/${d.id}`)
       .on('mouseover', function mouseShow(d, i) { showDetails(d, i, this); })
       .on('mouseout', function mouseHide(d, i) { hideDetails(d, i, this); })
       .on('touchstart', function touchShow(d, i) { showDetails(d, i, this); })
@@ -303,6 +310,8 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .style('stroke-width', borderWidth)
       .style('opacity', 0.9)
       .attr('r', d => radius(dataWeight)(d.value))
+      .attr('id', d => d.id)
+      .on('click', d => window.location.href = `${url}/metering_points/${d.id}`)
       .on('mouseover', function mouseShow(d, i) { showDetails(d, i, this); })
       .on('mouseout', function mouseHide(d, i) { hideDetails(d, i, this); })
       .on('touchstart', function touchShow(d, i) { showDetails(d, i, this); })
@@ -320,7 +329,14 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .duration(1000)
       .attr('r', d => radius(dataWeight)(d.value));
 
+    // Need to reset params after onResize
     simulation.alpha(0.8)
+      .force('x', d3.forceX(fullWidth / 2).strength(d => scaleCenterForce(d.value)))
+      .force('y', d3.forceY(fullHeight / 2).strength(d => scaleCenterForce(d.value)))
+      .force('charge', d3.forceManyBody()
+        .strength(d => d.value * 0.000002 / d3.scaleLinear()
+          .domain([0, 300])
+          .range([1, 100])(inData.length)))
       .nodes(inData)
       .restart();
 
@@ -341,6 +357,43 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .ease(d3.easeExpOut)
       .duration(1000)
       .attr('d', arc);
+  }
+
+  function onResize() {
+    if (!outCircle || !arc || !path || !circle || !simulation) return;
+
+    setSize();
+
+    outCircle.attr('cx', () => fullWidth / 2)
+      .attr('cy', () => fullHeight / 2)
+      .transition()
+      .ease(d3.easeExpOut)
+      .duration(1000)
+      .attr('r', d => radius(dataWeight)(d.value));
+
+    arc.innerRadius(() => radius(dataWeight)(outCombined()[0].value))
+      .outerRadius(() => radius(dataWeight)(outCombined()[0].value * 1.1));
+
+    path.attr('transform', `translate(${fullWidth / 2}, ${fullHeight / 2})`)
+      .transition()
+      .ease(d3.easeExpOut)
+      .duration(1000)
+      .attr('d', arc);
+
+    circle.transition()
+      .ease(d3.easeExpOut)
+      .duration(1000)
+      .attr('r', d => radius(dataWeight)(d.value));
+
+    // Params are different from draw/redraw
+    simulation.force('x', d3.forceX(fullWidth / 2).strength(d => scaleCenterForce(d.value * 100)))
+      .force('y', d3.forceY(fullHeight / 2).strength(d => scaleCenterForce(d.value * 100)))
+      .force('charge', d3.forceManyBody()
+        .strength(d => d.value * 0.0002 / d3.scaleLinear()
+          .domain([0, 300])
+          .range([1, 100])(inData.length)))
+      .alpha(1)
+      .restart();
   }
 
   fetch(`${url}/api/v1/groups/${group}/metering-points?per_page=100`, { headers })
@@ -374,6 +427,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
 
   $(document).on('page:before-change', () => {
     _.forEach(bubblesTimers, timer => clearInterval(timer));
-  })
-  $(document).on('page:before-change', $('.bubbles_container').stop())
+  });
+  $(document).on('page:before-change', $('.bubbles_container').stop());
+  $(window).on('resize:end', onResize);
 });
