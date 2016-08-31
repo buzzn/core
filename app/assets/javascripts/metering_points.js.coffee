@@ -1319,14 +1319,14 @@ getLiveData = (metering_point, metering_point_id) ->
     if $(".metering_point_detail").length != 0 && chart != undefined && actual_resolution == 'hour_to_minutes'
       if chart_data_min_x > data[0][0] - 60*60*1000
         chart.series[0].addPoint([data[0][0], data[0][1]])
-      if data[0][0] > chart_data_min_x +  60 *60 *1000 && data[0][0] < chart_data_min_x +  60 *60 *1011
-        # TODO: if 1 hour is over toggle to next hour, but only if displayed
-        # macht getExtremes oder?
-        chart_data_min_x = data[0][0]
-        # console.log("aktualisiere Chart " + data.timestamp + " power " + data.latest_power)
-        chart.xAxis[0].update(Chart.Functions.getExtremes(data[0][0]), true)
-        Chart.Functions.setChartTitle(data[0][0])
-        Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
+      # if data[0][0] > chart_data_min_x +  60 *60 *1000 && data[0][0] < chart_data_min_x +  60 *60 *1011
+      #   # TODO: if 1 hour is over toggle to next hour, but only if displayed
+      #   # macht getExtremes oder?
+      #   chart_data_min_x = data[0][0]
+      #   # console.log("aktualisiere Chart " + data.timestamp + " power " + data.latest_power)
+      #   chart.xAxis[0].update(Chart.Functions.getExtremes(data[0][0]), true)
+      #   Chart.Functions.setChartTitle(data[0][0])
+      #   Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
       # if window.wisActive && window.wwasInactive # eigentlich nur, wenn neu aktiv oder wenn delta t zu groß
       #   window.wwasInactive = false
       #   Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
