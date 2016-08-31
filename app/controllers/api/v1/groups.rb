@@ -102,7 +102,7 @@ module API
           group = Group.find(permitted_params[:id])
 
           if group.readable_by?(current_user)
-            paginated_response(MeteringPoint.by_group(group).without_externals)
+            paginated_response(MeteringPoint.by_group(group).without_externals.anonymous)
           else
             status 403
           end

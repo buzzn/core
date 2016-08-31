@@ -66,16 +66,24 @@ class MeteringPoint < ActiveRecord::Base
     do_filter(value, *search_attributes)
   end
 
-  scope :readable_by, ->(user) do
+  # replaces the name with 'anonymous' for all metering_points which are
+  # not readable_by without delegating the check to the underlying group
+  scope :anonymous, -> (user) do
+    cols = MeteringPoint.columns.collect {|c| c.name }.reject{|c| c == 'name'}.join(', ')
+    sql = MeteringPoint.readable_by(user, false).select("id").to_sql
+    select("#{cols}, CASE WHEN id NOT IN (#{sql}) THEN 'anonymous' ELSE name END AS name")
+  end
+
+  scope :readable_by, ->(user, group_check = true) do
     metering_point = MeteringPoint.arel_table
-    group = Group.arel_table
-    belongs_to_readable_group = Group.readable_by(user).where(group[:id].eq(metering_point[:group_id]))
+    sqls = []
+    if group_check
+      group = Group.arel_table
+      belongs_to_readable_group = Group.readable_by(user).where(group[:id].eq(metering_point[:group_id]))
+      sqls << belongs_to_readable_group.project(1).exists
+    end
     if user.nil?
-      sqls =
-        [
-          belongs_to_readable_group.project(1).exists,
-          metering_point[:readable].eq('world')
-        ]
+      sqls << metering_point[:readable].eq('world')
     else
       world_or_community = metering_point[:readable].in(['world','community'])
 
@@ -91,10 +99,9 @@ class MeteringPoint < ActiveRecord::Base
       manager_friends = friendship.where(friendship[:friend_id].eq(user.id)
                                           .and(managers.project(1).exists))
 
-      sqls =
+      sqls +=
         [
           admin_or_manager_or_member.project(1).exists,
-          belongs_to_readable_group.project(1).exists,
           manager_friends.project(1).exists.and(metering_point[:readable].eq('friends')),
           world_or_community
         ]
