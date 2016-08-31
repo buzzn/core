@@ -74,7 +74,11 @@ class MeteringPoint < ActiveRecord::Base
     select("#{cols}, CASE WHEN id NOT IN (#{sql}) THEN 'anonymous' ELSE name END AS name")
   end
 
-  scope :readable_by, ->(user, group_check = true) do
+  scope :anonymized_readable_by, ->(user) do
+    readable_by(user, true).anonymous(user)
+  end
+
+  scope :readable_by, ->(user, group_check = false) do
     metering_point = MeteringPoint.arel_table
     sqls = []
     if group_check
@@ -107,7 +111,7 @@ class MeteringPoint < ActiveRecord::Base
         ]
     end
     # TODO remove hack to clean SQL until the Group offers a clean AREL query
-    where(sqls.map(&:to_sql).join(' OR ').sub('DISTINCT "groups".*, ', '').sub('ORDER BY created_at ASC)',')'))
+    where(sqls.map(&:to_sql).join(' OR ').sub('DISTINCT "groups".*, ', '').sub('"groups".*, ', '').sub('ORDER BY created_at ASC)',')'))
   end
 
   scope :accessible_by_user, lambda {|user|

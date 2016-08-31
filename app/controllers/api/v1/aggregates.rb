@@ -27,7 +27,8 @@ module API
               error!('it is not possible to sum metering_points with differend data_source', 406)
             else
               metering_points.each do |metering_point|
-                unless metering_point.readable_by?(current_user)
+                unless metering_point.readable_by?(current_user,
+                                                   :group_inheritance)
                   error!('Forbidden', 403)
                 end
               end
@@ -70,7 +71,8 @@ module API
               error!('it is not possible to sum metering_points with differend data_source', 406)
             else
               metering_points.each do |metering_point|
-                unless metering_point.readable_by?(current_user)
+                unless metering_point.readable_by?(current_user,
+                                                  :group_inheritance)
                   error!('Forbidden', 403)
                 end
               end
