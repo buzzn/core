@@ -15,7 +15,7 @@ class MeteringPointObserveWorker
     else
       @metering_point.last_observed_timestamp = Time.at(@last_reading[:timestamp]/1000).in_time_zone
       @metering_point.save
-      if @current_power < @metering_point.min_watt
+      if @current_power < @metering_point.min_watt && @current_power >= 0
         message = I18n.t('metering_point_undershot_min_watt', min_watt: @metering_point.min_watt)
         mode = 'undershoots'
       elsif @current_power >= @metering_point.max_watt
