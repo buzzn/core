@@ -143,6 +143,7 @@ private
         copy_contract(:group) if self.group
         if self.metering_point && self.metering_point.meter
           copy_contract(:metering_point)
+          self.metering_point.meter.update_columns(smart: true)
           self.metering_point.meter.save
         end
       else
