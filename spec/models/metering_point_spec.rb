@@ -64,52 +64,70 @@ let(:admin) do
 
 
   it 'restricts readable_by for anonymous users' do
-    expect(MeteringPoint.readable_by(nil)).to match_array [butenland]
+    expect(MeteringPoint.readable_by(nil)).to match_array []
+    expect(MeteringPoint.readable_by(nil, :group_inheritance)).to match_array [butenland]
     urban.update!(readable: 'world')
     [:members, :friends, :community].each do |readable|
       karin.update!(readable: readable)
-      expect(MeteringPoint.readable_by(nil)).to match_array [urban, butenland]
+      expect(MeteringPoint.readable_by(nil)).to match_array [urban]
+      expect(MeteringPoint.readable_by(nil, :group_inheritance)).to match_array [urban, butenland]
     end
     karin.update!(readable: 'world')
-    expect(MeteringPoint.readable_by(nil)).to match_array [karin, urban, butenland]
+    expect(MeteringPoint.readable_by(nil)).to match_array [karin, urban]
+    expect(MeteringPoint.readable_by(nil, :group_inheritance)).to match_array [karin, urban, butenland]
   end
 
 
   it 'restricts readable_by for community users' do
     user = Fabricate(:user)
-    expect(MeteringPoint.readable_by(user)).to match_array [butenland]
+    expect(MeteringPoint.readable_by(user)).to match_array []
     urban.update!(readable: 'community')
     [:members, :friends].each do |readable|
       karin.update!(readable: readable)
-      expect(MeteringPoint.readable_by(user)).to match_array [urban, butenland]
+      expect(MeteringPoint.readable_by(user)).to match_array [urban]
+      expect(MeteringPoint.readable_by(user, :group_inheritance)).to match_array [urban, butenland]
     end
     karin.update!(readable: 'community')
-    expect(MeteringPoint.readable_by(user)).to match_array [karin, urban, butenland]
+    expect(MeteringPoint.readable_by(user)).to match_array [karin, urban]
+    expect(MeteringPoint.readable_by(user, :group_inheritance)).to match_array [karin, urban, butenland]
   end
 
 
   it 'restricts readable_by for metering_point members or manager' do
-    expect(MeteringPoint.readable_by(member)).to match_array [urban, butenland]
-    expect(MeteringPoint.readable_by(manager)).to match_array [urban, butenland]
+    expect(MeteringPoint.readable_by(member)).to match_array [urban]
+    expect(MeteringPoint.readable_by(member, :group_inheritance)).to match_array [urban, butenland]
+    expect(MeteringPoint.readable_by(manager)).to match_array [urban]
+    expect(MeteringPoint.readable_by(manager, :group_inheritance)).to match_array [urban, butenland]
   end
 
 
   it 'restricts readable_by for metering_point for friends of manager' do
-    expect(MeteringPoint.readable_by(member.friends.first)).to match_array [butenland]
-    expect(MeteringPoint.readable_by(admin.friends.first)).to eq [butenland]
-    expect(MeteringPoint.readable_by(manager.friends.first)).to match_array [urban, butenland]
+    expect(MeteringPoint.readable_by(member.friends.first)).to match_array []
+    expect(MeteringPoint.readable_by(member.friends.first, :group_inheritance)).to match_array [butenland]
+    expect(MeteringPoint.readable_by(admin.friends.first)).to eq []
+    expect(MeteringPoint.readable_by(admin.friends.first, :group_inheritance)).to eq [butenland]
+    expect(MeteringPoint.readable_by(manager.friends.first)).to match_array [urban]
+    expect(MeteringPoint.readable_by(manager.friends.first, :group_inheritance)).to match_array [urban, butenland]
     urban.update! readable: :members
-    expect(MeteringPoint.readable_by(manager.friends.first)).to eq [butenland]
-    expect(MeteringPoint.readable_by(member.friends.first)).to eq [butenland]
-    expect(MeteringPoint.readable_by(admin.friends.first)).to eq [butenland]
+    expect(MeteringPoint.readable_by(manager.friends.first)).to eq []
+    expect(MeteringPoint.readable_by(manager.friends.first, :group_inheritance)).to eq [butenland]
+    expect(MeteringPoint.readable_by(member.friends.first)).to eq []
+    expect(MeteringPoint.readable_by(member.friends.first, :group_inheritance)).to eq [butenland]
+    expect(MeteringPoint.readable_by(admin.friends.first)).to eq []
+    expect(MeteringPoint.readable_by(admin.friends.first, :group_inheritance)).to eq [butenland]
   end
 
 
   it 'restricts readable_by for metering_point belonging to readable group' do
-    expect(MeteringPoint.readable_by(member.friends.first)).to match_array [butenland]
-    expect(MeteringPoint.readable_by(admin.friends.first)).to eq [butenland]
-    expect(MeteringPoint.readable_by(manager.friends.first)).to match_array [urban, butenland]
-    expect(MeteringPoint.readable_by(nil)).to match_array [butenland]
+    expect(MeteringPoint.readable_by(member.friends.first)).to match_array []
+    expect(MeteringPoint.readable_by(member.friends.first, :group_inheritance)).to match_array [butenland]
+    expect(MeteringPoint.readable_by(admin.friends.first)).to eq []
+    
+    expect(MeteringPoint.readable_by(admin.friends.first, :group_inheritance)).to eq [butenland]
+    expect(MeteringPoint.readable_by(manager.friends.first)).to match_array [urban]
+    expect(MeteringPoint.readable_by(manager.friends.first, :group_inheritance)).to match_array [urban, butenland]
+    expect(MeteringPoint.readable_by(nil)).to match_array []
+    expect(MeteringPoint.readable_by(nil, :group_inheritance)).to match_array [butenland]
 
     butenland.group.update! readable: :members
     expect(MeteringPoint.readable_by(manager.friends.first)).to eq [urban]

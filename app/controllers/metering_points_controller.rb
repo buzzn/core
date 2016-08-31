@@ -5,7 +5,8 @@ class MeteringPointsController < ApplicationController
 
 
   def show
-    @metering_point                 = MeteringPoint.find(params[:id]).decorate
+    # the MeteringPoint.find is just to raise NotFoundError
+    @metering_point                 = (MeteringPoint.where(id: params[:id]).anonymous(current_user).first || MeteringPoint.find(params[:id])).decorate
     @members                        = @metering_point.members.registered
     @managers                       = @metering_point.managers.registered
     @devices                        = @metering_point.devices
@@ -19,7 +20,7 @@ class MeteringPointsController < ApplicationController
     Browser.modern_rules << -> b { b.firefox? && b.version.to_i >= 41 }
     browser = Browser.new(ua: request.user_agent, accept_language: request.accept_language)
 
-    authorize_action_for(@metering_point)
+    authorize_action_for(@metering_point, :group_inheritance)
   end
 
 
