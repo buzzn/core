@@ -294,6 +294,7 @@ $(".metering_point_detail").ready ->
     switch $(this).attr('data-action')
       when 'comment'
         $('.chart-comment-form').finish().toggle(100)
+        $('.chart-comment-form').find('#comment_body').focus()
       # when 'zoom_in'
       #   zoomIn($('.chart-comment-form').find('#comment_chart_timestamp').attr('value'))
     $(".chart-context-menu").hide 100

@@ -4,7 +4,7 @@
     %h4.modal-title= t'add_metering_point_to_dashboard'
   .modal-body
     = simple_form_for @dashboard, remote: true,  url: add_metering_point_update_dashboard_path, method: 'put'  do |f|
-      = f.input :metering_point_id, collection: @dashboard.user.usable_metering_points, input_html: { class: 'select2', 'data-placeholder': t('add_metering_point')}, label: false, selected: '', include_blank: true, :label_method => lambda { |m| m.decorate.name_with_users }
+      = f.input :metering_points, collection: @dashboard.user.usable_metering_points - @dashboard.metering_points.decorate, input_html: { class: 'select2', 'data-placeholder': t('add_metering_point'), :multiple => true}, label: false, include_blank: false, :label_method => lambda { |m| m.decorate.name_with_users }
       .modal-footer
         .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
           = t'cancel'
