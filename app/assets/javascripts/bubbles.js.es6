@@ -396,24 +396,32 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .restart();
   }
 
-  fetch(`${url}/api/v1/groups/${group}/metering-points?per_page=100`, { headers })
-    .then(getJson)
-    .then(json => {
-      if (json.data.length === 0) return Promise.reject('Empty group');
-      fillPoints(json.data);
-      getData();
-      bubblesTimers.fetchTimer = setInterval(getData, 10000);
-      bubblesTimers.seedTimer = setInterval(() => {
-        if (!_.find(inData, d => !d.seeded) && !_.find(outData, d => !d.seeded)) {
-          clearInterval(bubblesTimers.seedTimer);
-          drawData();
-          bubblesTimers.drawTimer = setInterval(redrawData, 10000);
+  function getMeteringPoints(page = 1) {
+    fetch(`${url}/api/v1/groups/${group}/metering-points?per_page=10&page=${page}`, { headers })
+      .then(getJson)
+      .then(json => {
+        if (json.data.length === 0) return Promise.reject('Empty group');
+        fillPoints(json.data);
+        if (json.meta.total_pages > page) {
+          getMeteringPoints(page + 1);
+        } else {
+          getData();
+          bubblesTimers.fetchTimer = setInterval(getData, 10000);
+          bubblesTimers.seedTimer = setInterval(() => {
+            if (!_.find(inData, d => !d.seeded) && !_.find(outData, d => !d.seeded)) {
+              clearInterval(bubblesTimers.seedTimer);
+              drawData();
+              bubblesTimers.drawTimer = setInterval(redrawData, 10000);
+            }
+          }, 2000);
         }
-      }, 2000);
-    })
-    .catch(error => {
-      console.log(error);
-    });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  getMeteringPoints();
 
   $('.change-order').on('click', () => {
     if (switchInOnTop) {
