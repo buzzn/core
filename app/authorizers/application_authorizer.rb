@@ -30,8 +30,8 @@ class ApplicationAuthorizer < Authority::Authorizer
 
 
   # helper method
-  def readable?(model_class, user)
-    model_class.readable_by(user)
+  def readable?(model_class, user, *args)
+    model_class.readable_by(user, *args)
       .where(model_class.table_name + '.id = ?', resource.id)
       .select('id').size == 1
   end

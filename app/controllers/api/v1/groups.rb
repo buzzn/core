@@ -101,6 +101,7 @@ module API
         get ":id/metering-points" do
           group = Group.find(permitted_params[:id])
 
+          # TODO paginated_response(MeteringPoint.by_group(group).without_externals.anonymous_readable_by(cunrret_user)
           if group.readable_by?(current_user)
             paginated_response(MeteringPoint.by_group(group).without_externals.anonymous(current_user))
           else

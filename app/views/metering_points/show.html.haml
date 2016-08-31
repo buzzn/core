@@ -1,4 +1,4 @@
-- meta title: @metering_point.long_name
+- meta title: @metering_point.readable_by?(current_user) ? @metering_point.long_name : @metering_point.name
 
 
 
@@ -16,7 +16,7 @@
           %p.text-3x.mar-no= @metering_point.name + " (" + t('virtual') + ")"
         - else
           %p.text-3x.mar-no= @metering_point.name
-        %p.text-2x.mar-no.text-thin= @metering_point.address ? @metering_point.address.short_name : t('no_address')
+        %p.text-2x.mar-no.text-thin= @metering_point.address ? (@metering_point.readable_by?(current_user) ? @metering_point.address.short_name : @metering_point.name) : t('no_address')
         %ul.list-group.bg-trans
           %li.list-group-item.list-item-sm.readability{class: "fa fa-#{@metering_point.readable_icon}", 'data-title' => t('readable_by') + ': ' + t("#{@metering_point.readable}")}
           %li.list-group-item.list-item-sm.text-primary.embed{class: "fa fa-share"}
@@ -260,7 +260,7 @@
 
     .col-md-6.col-lg-6
 
-      - if user_signed_in?
+      - if @metering_point.readable_by?(current_user)
         /.col-sm-6.col-md-6.col-lg-6
         %h1.page-header.text-overflow
           %span
@@ -293,7 +293,7 @@
               - @all_comments.map(&:image).each do |image|
                 = link_to(image_tag(image.sm), image_path(image), class: 'fancy-gallery', rel: "gallery_#{@metering_point.id}") if image.present?
 
-        - if @managers.any?
+        - if @managers.any? && @metering_point.readable_by?(current_user)
           %hr
           %h1.page-header.text-overflow
             %span
@@ -309,8 +309,7 @@
 
 
 
-      / - if user_signed_in? && current_user.can_update?(@metering_point)
-
+      / - if user_signed_in? && @metering_point.readable_by?(current_user)
       /   %h1.page-header.text-overflow
       /     %span
       /       = t('data_connection')

@@ -92,6 +92,7 @@ module API
         get ":id/metering-points" do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
+            # TODO MeteringPoint.readable_by(user, true).anonymized_readable_by(current_user)
             paginated_response(user.accessible_metering_points_relation)
           else
             status 403

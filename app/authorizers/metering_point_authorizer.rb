@@ -5,17 +5,22 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user, variant = nil)
+    args = [user]
     case variant
     when :meter
-      User.any_role?(user, manager: resource)
+      return User.any_role?(user, manager: resource)
     when NilClass
-      # uses scope MeteringPoint.readable_by(user)
-      readable?(MeteringPoint, user) ||
-        # TODO get this into MeteringPoint.readable_by(user)
-        (!resource.existing_group_request.nil? && user.can_update?(resource.existing_group_request.group))
+    when :no_group_inheritance
+      args << false
+    when :group_inheritance
+      args << true
     else
       raise 'wrong argument'
     end
+    # uses scope MeteringPoint.readable_by(user)
+    readable?(MeteringPoint, *args) ||
+      # TODO get this into MeteringPoint.readable_by(user)
+      (!resource.existing_group_request.nil? && user.can_update?(resource.existing_group_request.group))
   end
 
   def updatable_by?(user, options = {})
