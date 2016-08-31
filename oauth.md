@@ -39,6 +39,7 @@ see also: http://technotes.iangreenleaf.com/posts/closing-a-nasty-security-hole-
 * not clear who is the resource_owner in the client credential flow
 * all tokens have an expires_in field set
 
+
 ## oauth via curl
 
 ### create token via password grant flow
