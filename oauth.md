@@ -39,17 +39,16 @@ see also: http://technotes.iangreenleaf.com/posts/closing-a-nasty-security-hole-
 * not clear who is the resource_owner in the client credential flow
 * all tokens have an expires_in field set
 
-
 ## oauth via curl
 
 ### create token via password grant flow
-    curl -X POST https://app.buzzn.net/oauth/token \
-    -d 'grant_type=password&username=ffaerber@gmail.com&password=xxxxxxxx&scope=full'
+  curl -X POST https://app.buzzn.net/oauth/token \
+  -d 'grant_type=password&username=ffaerber@gmail.com&password=xxxxxxxx&scope=full'
 
 ### get token user
-    curl -H "Authorization: Bearer 179ba33b239314fc5121b0f5e6c522f3e067403ee8d8f6541b1e114778371f31" \ 
-    https://app.buzzn.net/api/v1/users/me
-    
+  curl -H "Authorization: Bearer 179ba33b239314fc5121b0f5e6c522f3e067403ee8d8f6541b1e114778371f31" \
+  https://app.buzzn.net/api/v1/users/me
+
 ### get current token info
 	curl -H "Authorization: Bearer 179ba33b239314fc5121b0f5e6c522f3e067403ee8d8f6541b1e114778371f31" \
 	https://app.buzzn.net/oauth/token/info
@@ -58,7 +57,3 @@ see also: http://technotes.iangreenleaf.com/posts/closing-a-nasty-security-hole-
 	curl -F grant_type=refresh_token \
 	-F refresh_token=0231fe0325bb11cc7d0c3b5b03c5beb7653bba1db0ffc4147bdb6d6f343d8bdc \
 	-X POST https://app.buzzn.net/oauth/token
-
-
-
-
