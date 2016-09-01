@@ -379,7 +379,11 @@ describe "Groups API" do
     group.metering_points << Fabricate(:metering_point)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
+    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", access_token.token
+    expect(response).to have_http_status(200)
     get_without_token "/api/v1/groups/#{group.id}/managers"
+    expect(response).to have_http_status(401)
+    get_without_token "/api/v1/groups/#{group.id}/relationships/managers"
     expect(response).to have_http_status(401)
   end
 
@@ -439,16 +443,18 @@ describe "Groups API" do
     expect(response).to have_http_status(401)
   end
 
-  it 'does not add/delete group manager without token' do
+  it 'does not add/replace/delete group manager without token' do
     group  = Fabricate(:group)
     user   = Fabricate(:user)
     params = {
-      user_id: user.id
+      data: { id: user.id }
     }
 
-    post_without_token "/api/v1/groups/#{group.id}/managers", params.to_json
+    post_without_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json
     expect(response).to have_http_status(401)
-    delete_without_token "/api/v1/groups/#{group.id}/managers/#{user.id}"
+    patch_without_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json
+    expect(response).to have_http_status(401)
+    delete_without_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json
     expect(response).to have_http_status(401)
   end
 
@@ -469,24 +475,51 @@ describe "Groups API" do
     member.add_role(:member, metering_point)
     group.metering_points << metering_point
     params = {
-      user_id: user1.id
+      data: { id: user1.id }
     }
 
-    post_with_token "/api/v1/groups/#{group.id}/managers", params.to_json, member_token.token
+    post_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, member_token.token
     expect(response).to have_http_status(403)
-    post_with_token "/api/v1/groups/#{group.id}/managers", params.to_json, public_token.token
+    post_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, public_token.token
     expect(response).to have_http_status(403)
-    post_with_token "/api/v1/groups/#{group.id}/managers", params.to_json, manager_token.token
+    post_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
     expect(response).to have_http_status(204)
 
-    get_with_token "/api/v1/groups/#{group.id}/managers", admin_token.token
+    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", admin_token.token
     expect(json['data'].size).to eq(3)
-    params[:user_id] = user2.id
-    post_with_token "/api/v1/groups/#{group.id}/managers", params.to_json, admin_token.token
+    params[:data][:id] = user2.id
+    post_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, admin_token.token
     expect(response).to have_http_status(204)
 
-    get_with_token "/api/v1/groups/#{group.id}/managers", admin_token.token
+    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", admin_token.token
     expect(json['data'].size).to eq(4)
+  end
+
+  it 'replaces group managers' do
+    group           = Fabricate(:group)
+    user            = Fabricate(:user)
+    user1           = Fabricate(:user)
+    user2           = Fabricate(:user)
+    user1.add_role(:manager, group)
+    user2.add_role(:manager, group)
+    public_token    = Fabricate(:public_access_token)
+    admin_token     = Fabricate(:full_access_token_as_admin)
+    manager_token   = Fabricate(:full_access_token)
+    manager         = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, group)
+    params = {
+      data: [{ id: user.id }]
+    }
+    patch_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, public_token.token
+    expect(response).to have_http_status(403)
+    patch_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
+    expect(response).to have_http_status(403)
+    patch_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, admin_token.token
+    expect(response).to have_http_status(200)
+
+    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
+    expect(json['data'].size).to eq 1
+    expect(json['data'].first['id']).to eq user.id
   end
 
   it 'removes group manager only for current user or with manager token' do
@@ -505,22 +538,29 @@ describe "Groups API" do
     member          = User.find(member_token.resource_owner_id)
     member.add_role(:member, metering_point)
     group.metering_points << metering_point
+    params = {
+      data: { id: user.id }
+    }
 
-    get_with_token "/api/v1/groups/#{group.id}/managers", admin_token.token
+    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", admin_token.token
     expect(json['data'].size).to eq(3)
-    delete_with_token "/api/v1/groups/#{group.id}/managers/#{user.id}", member_token.token
+    delete_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, member_token.token
     expect(response).to have_http_status(403)
-    delete_with_token "/api/v1/groups/#{group.id}/managers/#{user.id}", public_token.token
+    delete_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, public_token.token
     expect(response).to have_http_status(403)
-    delete_with_token "/api/v1/groups/#{group.id}/managers/#{user.id}", manager_token.token
+    delete_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
     expect(response).to have_http_status(403)
-    delete_with_token "/api/v1/groups/#{group.id}/managers/#{user.id}", admin_token.token
+    delete_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, admin_token.token
     expect(response).to have_http_status(204)
-    get_with_token "/api/v1/groups/#{group.id}/managers", admin_token.token
+    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", admin_token.token
     expect(json['data'].size).to eq(2)
-    delete_with_token "/api/v1/groups/#{group.id}/managers/#{manager.id}", manager_token.token
+
+    params = {
+      data: { id: manager.id }
+    }
+    delete_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
     expect(response).to have_http_status(204)
-    get_with_token "/api/v1/groups/#{group.id}/managers", admin_token.token
+    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", admin_token.token
     expect(json['data'].size).to eq(1)
   end
 

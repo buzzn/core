@@ -5,6 +5,7 @@ class Group < ActiveRecord::Base
   include CalcVirtualMeteringPoint
   include ChartFunctions
   include Filterable
+  include ReplacableRoles
 
   before_destroy :destroy_content
 

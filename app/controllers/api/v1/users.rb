@@ -127,7 +127,7 @@ module API
         end
         paginate
         oauth2 :public, :full
-        get ":id/friends" do
+        get [':id/friends', ':id/relationships/friends'] do
           user = User.find(permitted_params[:id])
           paginated_response(user.friends)
         end
@@ -138,7 +138,7 @@ module API
           requires :id, type: String, desc: "ID of the User"
           requires :friend_id, type: String, desc: 'ID of the friend'
         end
-        oauth2 :public
+        oauth2 :public, :full
         get ':id/friends/:friend_id' do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
@@ -157,13 +157,15 @@ module API
         desc 'Delete a friend'
         params do
           requires :id, type: String, desc: "ID of the User"
-          requires :friend_id, type: String, desc: 'ID of the friend'
+          requires :data, type: Hash do
+            requires :id, type: String, desc: 'ID of the friend'
+          end
         end
-        oauth2 :public, :full
-        delete ':id/friends/:friend_id' do
+        oauth2 :full
+        delete ':id/relationships/friends' do
           user = User.find(permitted_params[:id])
           if user.updatable_by?(current_user)
-            friend = user.friends.find(permitted_params[:friend_id])
+            friend = user.friends.find(permitted_params[:data][:id])
             user.friends.delete(friend)
             status 204
           else
@@ -180,7 +182,8 @@ module API
         end
         paginate
         oauth2 :public, :full
-        get ':id/friendship-requests' do
+        get [':id/friendship-requests',
+             ':id/relationships/friendship-requests'] do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
             paginated_response(user.received_friendship_requests)
@@ -193,13 +196,15 @@ module API
         desc 'Create friendship request'
         params do
           requires :id, type: String, desc: "ID of the User"
-          requires :receiver_id, type: String, desc: 'ID of a receiver'
+          requires :data, type: Hash do
+            requires :id, type: String, desc: "ID of friendship request"
+          end
         end
         oauth2 :public, :full
-        post ':id/friendship-requests' do
+        post ':id/relationships/friendship-requests' do
           user = User.find(permitted_params[:id])
           if user.updatable_by?(current_user)
-            receiver  = User.find(permitted_params[:receiver_id])
+            receiver  = User.find(permitted_params[:data][:id])
             friendship_request = FriendshipRequest.new(sender: user, receiver: receiver)
             if friendship_request.save
               friendship_request.create_activity key: 'friendship_request.create', owner: user, recipient: receiver
@@ -217,7 +222,7 @@ module API
           requires :request_id, type: String, desc: "ID of friendship request"
         end
         oauth2 :public, :full
-        patch ':id/friendship-requests/:request_id' do
+        post ':id/friendship-requests/:request_id' do
           user = User.find(permitted_params[:id])
           if user.updatable_by?(current_user)
             friendship_request = FriendshipRequest.where(receiver: user.id).find(permitted_params[:request_id])
@@ -233,13 +238,15 @@ module API
         desc 'Reject friendship request'
         params do
           requires :id, type: String, desc: "ID of the User"
-          requires :request_id, type: String, desc: "ID of friendship request"
+          requires :data, type: Hash do
+            requires :id, type: String, desc: "ID of friendship request"
+          end
         end
         oauth2 :public, :full
-        delete ':id/friendship-requests/:request_id' do
+        delete ':id/relationships/friendship-requests' do
           user = User.find(permitted_params[:id])
           if user.updatable_by?(current_user)
-            friendship_request = FriendshipRequest.where(receiver: user.id).find(permitted_params[:request_id])
+            friendship_request = FriendshipRequest.where(receiver: user.id).find(permitted_params[:data][:id])
             friendship_request.create_activity key: 'friendship_request.reject', owner: current_user, recipient: friendship_request.sender
             friendship_request.reject
             status 204

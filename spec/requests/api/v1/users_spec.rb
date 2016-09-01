@@ -329,6 +329,10 @@ describe "Users API" do
     get_with_token "/api/v1/users/#{user.id}/friends", access_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
+
+    get_with_token "/api/v1/users/#{user.id}/relationships/friends", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
   end
 
 
@@ -359,12 +363,16 @@ describe "Users API" do
   end
 
   it 'deletes specific friend for user' do
-    access_token  = Fabricate(:public_access_token)
+    access_token  = Fabricate(:full_access_token)
     user          = User.find(access_token.resource_owner_id)
     friend        = Fabricate(:user)
     user.friends << friend
 
-    delete_with_token "/api/v1/users/#{user.id}/friends/#{friend.id}", access_token.token
+    params = {
+      data: { id: friend.id }
+    }.to_json
+
+    delete_with_token "/api/v1/users/#{user.id}/relationships/friends", params, access_token.token
     expect(response).to have_http_status(204)
     get_with_token "/api/v1/users/#{user.id}/friends/#{friend.id}", access_token.token
     expect(response).to have_http_status(404)
@@ -378,6 +386,10 @@ describe "Users API" do
     get_with_token "/api/v1/users/#{user.id}/friendship-requests", access_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
+
+    get_with_token "/api/v1/users/#{user.id}/relationships/friendship-requests", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
   end
 
   it 'creates a new friendship request' do
@@ -385,10 +397,10 @@ describe "Users API" do
     user          = User.find(access_token.resource_owner_id)
     target_user   = Fabricate(:user)
     params = {
-      receiver_id: target_user.id
-    }
+      data: {id: target_user.id}
+    }.to_json
 
-    post_with_token "/api/v1/users/#{user.id}/friendship-requests", params.to_json, access_token.token
+    post_with_token "/api/v1/users/#{user.id}/relationships/friendship-requests", params, access_token.token
     expect(response).to have_http_status(201)
   end
 
@@ -397,10 +409,10 @@ describe "Users API" do
     user          = User.find(access_token.resource_owner_id)
     target_user   = Fabricate(:user)
     params = {
-      receiver_id: target_user.id
-    }
+      data: {id: target_user.id}
+    }.to_json
 
-    post_with_token "/api/v1/users/#{user.id}/friendship-requests", params.to_json, access_token.token
+    post_with_token "/api/v1/users/#{user.id}/relationships/friendship-requests", params, access_token.token
     activities = PublicActivity::Activity.where({ owner_type: 'User', owner_id: user.id })
     expect(activities.first.key).to eq('friendship_request.create')
   end
@@ -410,7 +422,7 @@ describe "Users API" do
     user          = User.find(access_token.resource_owner_id)
     request       = user.received_friendship_requests.first
 
-    patch_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", {}, access_token.token
+    post_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", {}, access_token.token
     expect(response).to have_http_status(204)
     modified_user = User.find(access_token.resource_owner_id)
     expect(modified_user.friends.size).to eq(1)
@@ -423,7 +435,7 @@ describe "Users API" do
     user          = User.find(access_token.resource_owner_id)
     request       = user.received_friendship_requests.first
 
-    patch_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", {}, access_token.token
+    post_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", {}, access_token.token
     activities = PublicActivity::Activity.where({ owner_type: 'User', owner_id: user.id })
     expect(activities.first.key).to eq('friendship.create')
   end
@@ -433,8 +445,11 @@ describe "Users API" do
     access_token  = Fabricate(:access_token_received_friendship_request)
     user          = User.find(access_token.resource_owner_id)
     request       = user.received_friendship_requests.first
+    params = {
+      data: {id: request.id}
+    }.to_json
 
-    delete_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", access_token.token
+    delete_with_token "/api/v1/users/#{user.id}/relationships/friendship-requests", params, access_token.token
     expect(response).to have_http_status(204)
     modified_user = User.find(access_token.resource_owner_id)
     expect(modified_user.friends.size).to eq(0)
@@ -446,8 +461,11 @@ describe "Users API" do
     access_token  = Fabricate(:access_token_received_friendship_request)
     user          = User.find(access_token.resource_owner_id)
     request       = user.received_friendship_requests.first
+    params = {
+      data: {id: request.id}
+    }.to_json
 
-    delete_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", access_token.token
+    delete_with_token "/api/v1/users/#{user.id}/relationships/friendship-requests", params, access_token.token
     activities = PublicActivity::Activity.where({ owner_type: 'User', owner_id: user.id })
     expect(activities.first.key).to eq('friendship_request.reject')
   end

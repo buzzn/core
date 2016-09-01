@@ -115,7 +115,7 @@ module API
         end
         paginate
         oauth2 :public, :full
-        get ":id/managers" do
+        get [':id/managers', ':id/relationships/managers'] do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
             paginated_response(metering_point.managers)
@@ -128,12 +128,14 @@ module API
         desc 'Add user to metering point managers'
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
-          requires :user_id, type: String, desc: 'User ID'
+          requires :data, type: Hash do
+            requires :id, type: String, desc: "ID of the user"
+          end
         end
         oauth2 :full
-        post ':id/managers' do
+        post ':id/relationships/managers' do
           metering_point  = MeteringPoint.find(permitted_params[:id])
-          user            = User.find(permitted_params[:user_id])
+          user            = User.find(permitted_params[:data][:id])
           if metering_point.updatable_by?(current_user)
             user.add_role(:manager, metering_point)
             user.create_activity(key: 'user.appointed_metering_point_manager', owner: current_user, recipient: metering_point)
@@ -144,16 +146,40 @@ module API
         end
 
 
+
+        desc 'Replace metering point managers'
+        params do
+          requires :id, type: String, desc: "ID of the group"
+          requires :data, type: Array do
+            requires :id, type: String, desc: "ID of the user"
+          end
+        end
+        oauth2 :full
+        patch ':id/relationships/managers' do
+          metering_point = MeteringPoint.find(permitted_params[:id])
+          if metering_point.updatable_by?(current_user)
+            ids = permitted_params[:data].collect{ |d| d[:id] }
+            metering_point.replace_managers(ids, owner: current_user,
+                                            create_key: 'user.appointed_metering_point_manager')
+          else
+            status 403
+          end
+        end
+
+
+
         desc 'Remove user from metering point managers'
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
-          requires :user_id, type: String, desc: 'User ID'
+          requires :data, type: Hash do
+            requires :id, type: String, desc: "ID of the user"
+          end
         end
         oauth2 :full
-        delete ':id/managers/:user_id' do
+        delete ':id/relationships/managers' do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.updatable_by?(current_user)
-            user = User.find(permitted_params[:user_id])
+            user = User.find(permitted_params[:data][:id])
             user.remove_role(:manager, metering_point)
             status 204
           else
@@ -185,7 +211,7 @@ module API
         end
         paginate
         oauth2 false
-        get ':id/members' do
+        get [':id/members', ':id/relationships/members'] do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
             paginated_response(metering_point.members.readable_by(current_user))
@@ -198,12 +224,14 @@ module API
         desc 'Add user to metering point members'
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
-          requires :user_id, type: String, desc: 'User ID'
+          requires :data, type: Hash do
+            requires :id, type: String, desc: "ID of the user"
+          end
         end
         oauth2 :full
-        post ':id/members' do
+        post ':id/relationships/members' do
           metering_point  = MeteringPoint.find(permitted_params[:id])
-          user            = User.find(permitted_params[:user_id])
+          user            = User.find(permitted_params[:data][:id])
           if metering_point.updatable_by?(current_user, :members)
             user.add_role(:member, metering_point)
             metering_point.create_activity key: 'metering_point_user_membership.create', owner: user
@@ -214,15 +242,38 @@ module API
         end
 
 
+        desc 'Replace metering point members'
+        params do
+          requires :id, type: String, desc: "ID of the group"
+          requires :data, type: Array do
+            requires :id, type: String, desc: "ID of the user"
+          end
+        end
+        oauth2 :full
+        patch ':id/relationships/members' do
+          metering_point = MeteringPoint.find(permitted_params[:id])
+          if metering_point.updatable_by?(current_user)
+            ids = permitted_params[:data].collect{ |d| d[:id] }
+            metering_point.replace_members(ids,
+                                           create_key: 'metering_point_user_membership.create',
+                                           cancel_key: 'metering_point_user_membership.cancel')
+          else
+            status 403
+          end
+        end
+
+
         desc 'Remove user from metering point members'
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
-          requires :user_id, type: String, desc: 'User ID'
+          requires :data, type: Hash do
+            requires :id, type: String, desc: "ID of the user"
+          end
         end
         oauth2 :full
-        delete ':id/members/:user_id' do
+        delete ':id/relationships/members' do
           metering_point  = MeteringPoint.find(permitted_params[:id])
-          user            = User.find(permitted_params[:user_id])
+          user            = User.find(permitted_params[:data][:id])
           if (current_user == user ||
               metering_point.updatable_by?(current_user))
             user.remove_role(:member, metering_point)

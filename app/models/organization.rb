@@ -6,6 +6,7 @@ class Organization < ActiveRecord::Base
 
   include Authority::Abilities
   include Filterable
+  include ReplacableRoles
 
   acts_as_taggable_on :contract_types
 

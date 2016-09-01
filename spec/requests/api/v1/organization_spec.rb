@@ -450,6 +450,8 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     get_without_token "/api/v1/organizations/#{organization.id}/managers"
     expect(response).to have_http_status(200)
+    get_without_token "/api/v1/organizations/#{organization.id}/relationships/managers"
+    expect(response).to have_http_status(200)
   end
 
   it 'paginate managers of an organziation' do
@@ -475,6 +477,8 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     get_without_token "/api/v1/organizations/#{organization.id}/members"
     expect(response).to have_http_status(200)
+    get_without_token "/api/v1/organizations/#{organization.id}/relationships/members"
+    expect(response).to have_http_status(200)
   end
 
   it 'paginate members of an organziation' do
@@ -497,10 +501,10 @@ describe "Organizations API" do
   it 'does not add organization manager/member without token' do
     organization  = Fabricate(:distribution_system_operator)
 
-    post_without_token "/api/v1/organizations/#{organization.id}/managers", {}.to_json
+    post_without_token "/api/v1/organizations/#{organization.id}/relationships/managers", {}.to_json
     expect(response).to have_http_status(401)
 
-    post_without_token "/api/v1/organizations/#{organization.id}/members", {}.to_json
+    post_without_token "/api/v1/organizations/#{organization.id}/relationships/members", {}.to_json
     expect(response).to have_http_status(401)
   end
 
@@ -513,10 +517,10 @@ describe "Organizations API" do
         member          = User.find(member_token.resource_owner_id)
         member.add_role(role, organization)
 
-        post_with_token "/api/v1/organizations/#{organization.id}/managers", {}.to_json, member_token.token
+        post_with_token "/api/v1/organizations/#{organization.id}/relationships/managers", {}.to_json, member_token.token
         expect(response).to have_http_status(403)
 
-        post_with_token "/api/v1/organizations/#{organization.id}/members", {}.to_json, member_token.token
+        post_with_token "/api/v1/organizations/#{organization.id}/relationships/members", {}.to_json, member_token.token
         expect(response).to have_http_status(403)
         end
     end
@@ -531,13 +535,13 @@ describe "Organizations API" do
 
     user = Fabricate(:user)
     user_params = {
-      user_id: user.id
+      data: {id: user.id}
     }.to_json
 
-    post_with_token "/api/v1/organizations/#{organization.id}/managers", user_params, manager_token.token
+    post_with_token "/api/v1/organizations/#{organization.id}/relationships/managers", user_params, manager_token.token
     expect(response).to have_http_status(204)
 
-    post_with_token "/api/v1/organizations/#{organization.id}/members", user_params, manager_token.token
+    post_with_token "/api/v1/organizations/#{organization.id}/relationships/members", user_params, manager_token.token
     expect(response).to have_http_status(204)
 
     expect(organization.managers).to match_array [manager, user]
@@ -551,13 +555,13 @@ describe "Organizations API" do
 
     user = Fabricate(:user)
     user_params = {
-      user_id: user.id
+      data: {id: user.id}
     }.to_json
 
-    post_with_token "/api/v1/organizations/#{organization.id}/managers", user_params, manager_token.token
+    post_with_token "/api/v1/organizations/#{organization.id}/relationships/managers", user_params, manager_token.token
     expect(response).to have_http_status(204)
 
-    post_with_token "/api/v1/organizations/#{organization.id}/members", user_params, manager_token.token
+    post_with_token "/api/v1/organizations/#{organization.id}/relationships/members", user_params, manager_token.token
     expect(response).to have_http_status(204)
 
     expect(organization.managers).to eq [user]
@@ -565,15 +569,57 @@ describe "Organizations API" do
   end
 
 
+  # REPLACE manager/member
+  
+
+  it 'replaces organization managers/members' do
+    organization  = Fabricate(:distribution_system_operator)
+    public_token  = Fabricate(:public_access_token)
+    manager_token = Fabricate(:full_access_token)
+    manager = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, organization)
+
+    [user1 = Fabricate(:user), user2 = Fabricate(:user)].each do |u|
+      u.add_role(:manager, organization)
+      u.add_role(:member, organization)
+    end
+
+    user = Fabricate(:user)
+    params = {
+      data: [{ id: user.id }]
+    }
+
+    patch_with_token "/api/v1/organizations/#{organization.id}/relationships/managers", params.to_json, public_token.token
+    expect(response).to have_http_status(403)
+    patch_with_token "/api/v1/organizations/#{organization.id}/relationships/members", params.to_json, public_token.token
+    expect(response).to have_http_status(403)
+    patch_with_token "/api/v1//organizations/#{organization.id}/relationships/members", params.to_json, manager_token.token
+    expect(response).to have_http_status(200)
+    patch_with_token "/api/v1//organizations/#{organization.id}/relationships/managers", params.to_json, manager_token.token
+    expect(response).to have_http_status(200)
+
+    get_with_token "/api/v1//organizations/#{organization.id}/relationships/managers", params.to_json, manager_token.token
+    expect(json['data'].size).to eq 1
+    expect(json['data'].first['id']).to eq user.id
+    get_with_token "/api/v1//organizations/#{organization.id}/relationships/members", params.to_json, manager_token.token
+    expect(json['data'].size).to eq 1
+    expect(json['data'].first['id']).to eq user.id
+  end
+
+
+
   # REMOVE manager/member
 
   it 'does not delete organization manager/member without token' do
     organization  = Fabricate(:distribution_system_operator)
+    params = {
+      data: {id: 123}
+    }.to_json
 
-    delete_without_token "/api/v1/organizations/#{organization.id}/managers/123"
+    delete_without_token "/api/v1/organizations/#{organization.id}/relationships/managers", params
     expect(response).to have_http_status(401)
 
-    delete_without_token "/api/v1/organizations/#{organization.id}/members/123"
+    delete_without_token "/api/v1/organizations/#{organization.id}/relationships/members", params
     expect(response).to have_http_status(401)
   end
  
@@ -585,11 +631,14 @@ describe "Organizations API" do
         member_token    = Fabricate(token)
         member          = User.find(member_token.resource_owner_id)
         member.add_role(role, organization)
+        params = {
+          data: {id: 123}
+        }.to_json
 
-        delete_with_token "/api/v1/organizations/#{organization.id}/managers/123", member_token.token
+        delete_with_token "/api/v1/organizations/#{organization.id}/relationships/managers", params, member_token.token
         expect(response).to have_http_status(403)
 
-        delete_with_token "/api/v1/organizations/#{organization.id}/members/123", member_token.token
+        delete_with_token "/api/v1/organizations/#{organization.id}/relationships/members", params, member_token.token
         expect(response).to have_http_status(403)
       end
     end
@@ -607,10 +656,14 @@ describe "Organizations API" do
     user.add_role(:manager, organization)
     user.add_role(:member, organization)
 
-    delete_with_token "/api/v1/organizations/#{organization.id}/managers/#{user.id}", manager_token.token
+    params = {
+      data: {id: user.id}
+    }.to_json
+
+    delete_with_token "/api/v1/organizations/#{organization.id}/relationships/managers", params, manager_token.token
     expect(response).to have_http_status(204)
 
-    delete_with_token "/api/v1/organizations/#{organization.id}/members/#{user.id}", manager_token.token
+    delete_with_token "/api/v1/organizations/#{organization.id}/relationships/members", params, manager_token.token
     expect(response).to have_http_status(204)
 
     expect(organization.managers).to eq [manager]
@@ -619,17 +672,21 @@ describe "Organizations API" do
 
 
   it 'deletes organization manager/member with full access token as admin' do
-    organization     = Fabricate(:distribution_system_operator)
+    organization  = Fabricate(:distribution_system_operator)
     manager_token = Fabricate(:full_access_token_as_admin)
 
     user = Fabricate(:user)
     user.add_role(:manager, organization)
     user.add_role(:member, organization)
 
-    delete_with_token "/api/v1/organizations/#{organization.id}/managers/#{user.id}", manager_token.token
+    params = {
+      data: {id: user.id}
+    }.to_json
+
+    delete_with_token "/api/v1/organizations/#{organization.id}/relationships/managers", params, manager_token.token
     expect(response).to have_http_status(204)
 
-    delete_with_token "/api/v1/organizations/#{organization.id}/members/#{user.id}", manager_token.token
+    delete_with_token "/api/v1/organizations/#{organization.id}/relationships/members", params, manager_token.token
     expect(response).to have_http_status(204)
 
     expect(organization.managers).to eq []

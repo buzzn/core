@@ -9,8 +9,15 @@ class GroupAuthorizer < ApplicationAuthorizer
     readable?(Group, user)
   end
 
-  def updatable_by?(user)
-    User.any_role?(user, admin: nil, manager: resource)
+  def updatable_by?(user, variant = nil)
+    case variant
+    when :replace_managers
+      !!user && (resource.managers == [user] || user.has_role?(:admin))
+    when User
+      !!user && (variant == user || user.has_role?(:admin))
+    else
+      User.any_role?(user, admin: nil, manager: resource)
+    end
   end
 
   def deletable_by?(user)
