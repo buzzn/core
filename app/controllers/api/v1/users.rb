@@ -49,7 +49,7 @@ module API
             requires :last_name, type: String
           end
         end
-        oauth2 :full
+        oauth2 false
         post do
           if User.creatable_by?(current_user)
             profile = Profile.new(permitted_params.delete(:profile))

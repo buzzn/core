@@ -1,7 +1,7 @@
 class UserAuthorizer < ApplicationAuthorizer
 
   def self.creatable_by?(user)
-    User.admin?(user)
+    true
   end
 
   def readable_by?(user)
