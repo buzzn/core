@@ -157,7 +157,7 @@
 
           .chart{id: "chart-container-#{@metering_point.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
             .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
-          - if user_signed_in?
+          - if user_signed_in? && current_user.can_read?(@metering_point)
             %ul.chart-context-menu
               %li{"data-action" => "comment"}= t('create_new_comment_here')
               /%li{"data-action" => "zoom_in"}= t('zoom_in_here_if_possible')
