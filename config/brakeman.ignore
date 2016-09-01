@@ -20,6 +20,25 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "9f18c3fcdb38521e08b8f305ef97f92a6c826f3545bf650758b9ab4a595147bc",
+      "message": "Possible SQL injection",
+      "file": "app/models/metering_point.rb",
+      "line": 75,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "select(\"#{MeteringPoint.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{MeteringPoint.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MeteringPoint",
+        "method": "anonymous"
+      },
+      "user_input": "MeteringPoint.columns.collect",
+      "confidence": "High",
+      "note": ""
+    },
+    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "cf4a97d13b586beb71b1042d60a672cef9df01b0394186abba8493fe5fc29233",
@@ -54,7 +73,15 @@
       "line": 16,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => Group.where(:id => Group.readable_group_ids_by_user(current_user)).search(params[:search]).paginate(:page => params[:page], :per_page => 3), {})",
-      "render_path": [{"type":"controller","class":"GroupsController","method":"index","line":8,"file":"app/controllers/groups_controller.rb"}],
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "GroupsController",
+          "method": "index",
+          "line": 8,
+          "file": "app/controllers/groups_controller.rb"
+        }
+      ],
       "location": {
         "type": "template",
         "template": "groups/index"
@@ -83,6 +110,6 @@
       "note": ""
     }
   ],
-  "updated": "2016-06-01 15:42:58 +0200",
-  "brakeman_version": "3.3.0"
+  "updated": "2016-09-01 10:34:44 +0200",
+  "brakeman_version": "3.3.1"
 }
