@@ -61,7 +61,7 @@
             - if @requests.any? && @requests.collect(&:user).include?(current_user)
               %li= t'waiting_for_accepting'
             - else
-              - if !@members.include?(current_user.profile)
+              - if !@members.include?(current_user)
                 - if current_user.friend?(@metering_point.managers.first) || current_user.can_update?(@metering_point)
                   %li= link_to(t('join_this_metering_point'), metering_point_user_requests_path(user_id: current_user.id, metering_point_id: @metering_point.id, mode: 'request'), method: :post)
               - else
