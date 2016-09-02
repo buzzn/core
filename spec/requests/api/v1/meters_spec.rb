@@ -2,7 +2,7 @@ describe "Meters API" do
 
 
   [:no_access_token,
-   :public_access_token,
+   :simple_access_token,
    :smartmeter_access_token].each do |token|
     it "does not get a meter with #{token}" do
       meter = Fabricate(:meter)

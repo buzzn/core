@@ -2,7 +2,7 @@ describe "Devices API" do
 
   let(:page_overload) { 11 }
 
-  [:no_access_token, :public_access_token, :full_access_token, :smartmeter_access_token].each do |token|
+  [:no_access_token, :simple_access_token, :full_access_token, :smartmeter_access_token].each do |token|
 
     it "does not get a device with #{token}" do
       device = Fabricate(:device)
@@ -90,7 +90,7 @@ describe "Devices API" do
   end
 
 
-  [:no_access_token, :public_access_token, :smartmeter_access_token].each do |token|
+  [:no_access_token, :simple_access_token, :smartmeter_access_token].each do |token|
   
     it "does not creates a device with #{token}" do
       request_params = {}.to_json
@@ -212,7 +212,7 @@ describe "Devices API" do
     end
   end
 
-  [:no_access_token, :public_access_token, :full_access_token, :smartmeter_access_token].each do |token|
+  [:no_access_token, :simple_access_token, :full_access_token, :smartmeter_access_token].each do |token|
 
     it "does not update a device with #{token}" do
       device = Fabricate(:device)

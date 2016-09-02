@@ -21,7 +21,7 @@ module API
         params do
           requires :id, type: String, desc: 'ID of the Contract'
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get ':id' do
           contract = Contract.find(permitted_params[:id])
           if contract.readable_by?(current_user)

@@ -5,7 +5,7 @@ module API
       resource 'users' do
 
         desc "Return me"
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get "me" do
           current_user
         end
@@ -28,7 +28,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the user"
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get ":id" do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
@@ -69,7 +69,7 @@ module API
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get ":id/groups" do
           user          = User.find(permitted_params[:id])
           groups        = Group.where(id: user.accessible_groups.map(&:id))
@@ -88,7 +88,7 @@ module API
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get ":id/metering-points" do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
@@ -126,7 +126,7 @@ module API
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get [':id/friends', ':id/relationships/friends'] do
           user = User.find(permitted_params[:id])
           paginated_response(user.friends)
@@ -138,7 +138,7 @@ module API
           requires :id, type: String, desc: "ID of the User"
           requires :friend_id, type: String, desc: 'ID of the friend'
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get ':id/friends/:friend_id' do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
@@ -181,7 +181,7 @@ module API
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get [':id/friendship-requests',
              ':id/relationships/friendship-requests'] do
           user = User.find(permitted_params[:id])
@@ -200,7 +200,7 @@ module API
             requires :id, type: String, desc: "ID of friendship request"
           end
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         post ':id/relationships/friendship-requests' do
           user = User.find(permitted_params[:id])
           if user.updatable_by?(current_user)
@@ -221,7 +221,7 @@ module API
           requires :id, type: String, desc: "ID of the User"
           requires :request_id, type: String, desc: "ID of friendship request"
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         post ':id/friendship-requests/:request_id' do
           user = User.find(permitted_params[:id])
           if user.updatable_by?(current_user)
@@ -242,7 +242,7 @@ module API
             requires :id, type: String, desc: "ID of friendship request"
           end
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         delete ':id/relationships/friendship-requests' do
           user = User.find(permitted_params[:id])
           if user.updatable_by?(current_user)
@@ -263,7 +263,7 @@ module API
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get ":id/devices" do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
@@ -281,7 +281,7 @@ module API
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get ':id/activities' do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)

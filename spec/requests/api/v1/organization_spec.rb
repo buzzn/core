@@ -16,7 +16,7 @@ describe "Organizations API" do
 
 
   it 'gets an organization as manager' do
-    access_token = Fabricate(:public_access_token)
+    access_token = Fabricate(:simple_access_token)
     organization = Fabricate(:electricity_supplier)
     manager = User.find(access_token.resource_owner_id)
     manager.add_role(:manager, organization)
@@ -107,7 +107,7 @@ describe "Organizations API" do
   end
 
 
-  [:public_access_token, :smartmeter_access_token].each do |token|
+  [:simple_access_token, :smartmeter_access_token].each do |token|
     it "does not create an organization with #{token}" do
       access_token = Fabricate(token)
 
@@ -228,7 +228,7 @@ describe "Organizations API" do
   end
 
 
-  [:public_access_token, :smartmeter_access_token].each do |token|
+  [:simple_access_token, :smartmeter_access_token].each do |token|
     it "does not update an organization with #{token}" do
       access_token = Fabricate(token)
       patch_with_token "/api/v1/organizations/321", {}.to_json, access_token.token
@@ -325,7 +325,7 @@ describe "Organizations API" do
   end
 
 
-  [:public_access_token,
+  [:simple_access_token,
    :smartmeter_access_token,
    :full_access_token].each do |token|
     it "does not delete an organization with #{token}" do
@@ -402,7 +402,7 @@ describe "Organizations API" do
   end
 
   it 'gets the related address of an organization with token' do
-    access_token    = Fabricate(:public_access_token)
+    access_token    = Fabricate(:simple_access_token)
     organization    = Fabricate(:transmission_system_operator_with_address)
     address         = organization.address
 
@@ -428,7 +428,7 @@ describe "Organizations API" do
   end
 
   it 'gets the related contracting_party of an organization with token' do
-    access_token    = Fabricate(:public_access_token)
+    access_token    = Fabricate(:simple_access_token)
     organization    = Fabricate(:metering_service_provider_with_contracting_party)
     party           = organization.contracting_party
 
@@ -443,7 +443,7 @@ describe "Organizations API" do
   # RETRIEVE manager
 
   it 'gets the related managers of an organization only with token' do
-    access_token  = Fabricate(:public_access_token)
+    access_token  = Fabricate(:simple_access_token)
     organization  = Fabricate(:distribution_system_operator)
 
     get_with_token "/api/v1/organizations/#{organization.id}/managers", access_token.token
@@ -455,7 +455,7 @@ describe "Organizations API" do
   end
 
   it 'paginate managers of an organziation' do
-    access_token  = Fabricate(:public_access_token)
+    access_token  = Fabricate(:simple_access_token)
     organization  = Fabricate(:distribution_system_operator)
     page_overload.times do
       user = Fabricate(:user)
@@ -470,7 +470,7 @@ describe "Organizations API" do
   end
 
   it 'gets the related members for Organization' do
-    access_token  = Fabricate(:public_access_token)
+    access_token  = Fabricate(:simple_access_token)
     organization  = Fabricate(:distribution_system_operator)
 
     get_with_token "/api/v1/organizations/#{organization.id}/members", access_token.token
@@ -482,7 +482,7 @@ describe "Organizations API" do
   end
 
   it 'paginate members of an organziation' do
-    access_token  = Fabricate(:public_access_token)
+    access_token  = Fabricate(:simple_access_token)
     organization  = Fabricate(:distribution_system_operator)
     page_overload.times do
       user = Fabricate(:user)
@@ -509,7 +509,7 @@ describe "Organizations API" do
   end
 
 
-  [:public_access_token, :smartmeter_access_token].each do |token|
+  [:simple_access_token, :smartmeter_access_token].each do |token|
     [:member, :manager, :admin].each do |role|
       it "does not add organization manager/member as member with #{token} as #{role}" do
         organization    = Fabricate(:distribution_system_operator)
@@ -574,7 +574,7 @@ describe "Organizations API" do
 
   it 'replaces organization managers/members' do
     organization  = Fabricate(:distribution_system_operator)
-    public_token  = Fabricate(:public_access_token)
+    simple_token  = Fabricate(:simple_access_token)
     manager_token = Fabricate(:full_access_token)
     manager = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, organization)
@@ -589,9 +589,9 @@ describe "Organizations API" do
       data: [{ id: user.id }]
     }
 
-    patch_with_token "/api/v1/organizations/#{organization.id}/relationships/managers", params.to_json, public_token.token
+    patch_with_token "/api/v1/organizations/#{organization.id}/relationships/managers", params.to_json, simple_token.token
     expect(response).to have_http_status(403)
-    patch_with_token "/api/v1/organizations/#{organization.id}/relationships/members", params.to_json, public_token.token
+    patch_with_token "/api/v1/organizations/#{organization.id}/relationships/members", params.to_json, simple_token.token
     expect(response).to have_http_status(403)
     patch_with_token "/api/v1//organizations/#{organization.id}/relationships/members", params.to_json, manager_token.token
     expect(response).to have_http_status(200)
@@ -624,7 +624,7 @@ describe "Organizations API" do
   end
  
 
-  [:public_access_token, :smartmeter_access_token].each do |token|
+  [:simple_access_token, :smartmeter_access_token].each do |token|
     [:member, :manager, :admin].each do |role|
       it "does not delete organization manager/member as #{role} with #{token}" do
         organization    = Fabricate(:distribution_system_operator)

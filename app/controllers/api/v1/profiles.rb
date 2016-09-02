@@ -37,7 +37,7 @@ module API
           requires :first_name, type: String
           requires :last_name, type: String
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         post do
           if Profile.creatable_by?(current_user)
             profile = Profile.create!(permitted_params)

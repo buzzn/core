@@ -6,7 +6,7 @@ describe "Profiles API" do
   it 'does not get all profiles with regular token or without token' do
     Fabricate(:profile)
     Fabricate(:profile)
-    access_token = Fabricate(:public_access_token)
+    access_token = Fabricate(:simple_access_token)
     get_with_token '/api/v1/profiles', {}, access_token.token
     expect(response).to have_http_status(403)
     get_without_token '/api/v1/profiles'
@@ -53,7 +53,7 @@ describe "Profiles API" do
 
 
   it 'does not creates a profile as simple user' do
-    access_token = Fabricate(:public_access_token)
+    access_token = Fabricate(:simple_access_token)
     profile = Fabricate.build(:profile)
 
     request_params = {
@@ -153,7 +153,7 @@ describe "Profiles API" do
 
 
   it 'get profile groups readable by world with or without token' do
-    access_token      = Fabricate(:public_access_token).token
+    access_token      = Fabricate(:simple_access_token).token
     user              = Fabricate(:user)
     profile           = user.profile
     profile.readable  = 'world'
@@ -172,7 +172,7 @@ describe "Profiles API" do
   end
 
   it 'get community-readable groups for world-readable profile only with token' do
-    access_token      = Fabricate(:public_access_token)
+    access_token      = Fabricate(:simple_access_token)
     user              = Fabricate(:user)
     profile           = user.profile
     profile.readable  = 'world'
@@ -192,7 +192,7 @@ describe "Profiles API" do
 
   it 'get friends-readable groups for world-readable profile only with friend token' do
     access_token      = Fabricate(:access_token_with_friend)
-    wrong_token       = Fabricate(:public_access_token).token
+    wrong_token       = Fabricate(:simple_access_token).token
     token_user        = User.find(access_token.resource_owner_id)
     token_user_friend = token_user.friends.first
     profile           = token_user_friend.profile
@@ -229,8 +229,8 @@ describe "Profiles API" do
   end
 
   it 'does not get friends-readable groups for world-readable profile with or without token' do
-    access_token      = Fabricate(:public_access_token)
-    wrong_token       = Fabricate(:public_access_token).token
+    access_token      = Fabricate(:simple_access_token)
+    wrong_token       = Fabricate(:simple_access_token).token
     token_user        = User.find(access_token.resource_owner_id)
     profile           = token_user.profile
     profile.readable  = 'world'
@@ -276,7 +276,7 @@ describe "Profiles API" do
     friend            = user.friends.first
     friend.profile.readable = 'world'
     friend.profile.save
-    access_token      = Fabricate(:public_access_token).token
+    access_token      = Fabricate(:simple_access_token).token
 
     get_with_token "/api/v1/profiles/#{profile.id}/friends", access_token
     expect(response).to have_http_status(200)
@@ -294,7 +294,7 @@ describe "Profiles API" do
     friend            = user.friends.first
     friend.profile.readable = 'world'
     friend.profile.save
-    access_token      = Fabricate(:public_access_token).token
+    access_token      = Fabricate(:simple_access_token).token
 
     get_with_token "/api/v1/profiles/#{profile.id}/friends", access_token
     expect(response).to have_http_status(200)
@@ -324,7 +324,7 @@ describe "Profiles API" do
   end
 
   it 'get profile metering points readable by world with or without token' do
-    access_token      = Fabricate(:public_access_token).token
+    access_token      = Fabricate(:simple_access_token).token
     user              = Fabricate(:user)
     profile           = user.profile
     profile.readable  = 'world'
@@ -341,7 +341,7 @@ describe "Profiles API" do
   end
 
   it 'get community-readable metering points for world-readable profile only with token' do
-    access_token      = Fabricate(:public_access_token)
+    access_token      = Fabricate(:simple_access_token)
     user              = Fabricate(:user)
     profile           = user.profile
     profile.readable  = 'world'
@@ -359,7 +359,7 @@ describe "Profiles API" do
 
   it 'get friends-readable metering points for world-readable profile only with friend token' do
     access_token      = Fabricate(:access_token_with_friend)
-    wrong_token       = Fabricate(:public_access_token).token
+    wrong_token       = Fabricate(:simple_access_token).token
     token_user        = User.find(access_token.resource_owner_id)
     token_user_friend = token_user.friends.first
     profile           = token_user_friend.profile
@@ -392,8 +392,8 @@ describe "Profiles API" do
   end
 
   it 'does not get friends-readable metering points for world-readable profile with or without token' do
-    access_token      = Fabricate(:public_access_token)
-    wrong_token       = Fabricate(:public_access_token).token
+    access_token      = Fabricate(:simple_access_token)
+    wrong_token       = Fabricate(:simple_access_token).token
     token_user        = User.find(access_token.resource_owner_id)
     profile           = token_user.profile
     profile.readable  = 'world'

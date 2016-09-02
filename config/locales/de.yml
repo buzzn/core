@@ -99,7 +99,7 @@ de:
       year: Jahr
   doorkeeper:
     scopes:
-      public: 'Lese-Zugriff auf öffentliche Daten'
+      simple: 'Lese-Zugriff auf öffentliche Daten'
       smartmeter: 'Schreib-Lese-Zugriff auf MeteringPoint, Meter and Reading'
       full: 'Voller Zugriff auf alle Daten'
   errors: &errors

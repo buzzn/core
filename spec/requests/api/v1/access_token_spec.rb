@@ -6,7 +6,7 @@ describe "AccessTokens API" do
   end
 
 
-  [:public_access_token,
+  [:simple_access_token,
    :smartmeter_access_token].each do |token|
 
     it "does not create an AccessToken with #{token}" do

@@ -86,7 +86,7 @@ describe "Aggregates API" do
       timestamp += 1.hour
     end
 
-    access_token  = Fabricate(:public_access_token)
+    access_token  = Fabricate(:simple_access_token)
 
 
     request_params = {
@@ -771,7 +771,7 @@ describe "Aggregates API" do
         timestamp += 1.hour
       end
 
-      access_token  = Fabricate(:public_access_token)
+      access_token  = Fabricate(:simple_access_token)
 
       request_params = {
         metering_point_ids: metering_point.id,
