@@ -45,6 +45,8 @@ module API
           requires :power_of_attorney,      type: Boolean, desc: 'Power of attorney'
           requires :confirm_pricing_model,  type: Boolean, desc: 'Confirm pricing model'
           requires :commissioning,          type: Date, desc: 'Commissioning'
+          optional :username,               type: String, desc: 'Username'
+          optional :password,               type: String, desc: 'Password'
         end
         oauth2 :full
         post do
@@ -75,6 +77,8 @@ module API
           optional :power_of_attorney,      type: Boolean, desc: 'Power of attorney'
           optional :confirm_pricing_model,  type: Boolean, desc: 'Confirm pricing model'
           optional :commissioning,          type: Date, desc: 'Commissioning'
+          optional :username,               type: String, desc: 'Username'
+          optional :password,               type: String, desc: 'Password'
         end
         oauth2 :full
         patch ':id' do

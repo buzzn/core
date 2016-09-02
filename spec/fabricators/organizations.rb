@@ -53,3 +53,9 @@ Fabricator :discovergy, from: :metering_service_provider do
   name 'discovergy'
   mode 'metering_service_provider'
 end
+
+# needed for contracts fabricator
+Fabricator :mysmartgrid, from: :metering_service_provider do
+  name 'my_smart_grid'
+  mode 'metering_service_provider'
+end
