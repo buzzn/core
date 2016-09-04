@@ -12,7 +12,7 @@ module API
           requires :body,           type: String, desc: 'Comment body'
           optional :parent_id,      type: String, desc: 'Parent comment id'
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         post do
           resource_class  = Object.const_get(permitted_params[:resource_name])
           resource        = resource_class.find(permitted_params[:resource_id])
@@ -35,7 +35,7 @@ module API
           requires :id,             type: String, desc: 'Comment ID'
           requires :body,           type: String, desc: 'Comment body'
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         patch ':id' do
           comment = Comment.find(permitted_params[:id])
           if comment.updatable_by?(current_user)
@@ -50,7 +50,7 @@ module API
         params do
           requires :id, type: String, desc: 'Comment ID'
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         delete ':id' do
           comment = Comment.find(permitted_params[:id])
           if comment.deletable_by?(current_user) && !comment.has_children?

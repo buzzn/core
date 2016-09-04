@@ -134,7 +134,7 @@ describe 'Contracts API' do
   end
 
   it 'does not get contract with token for wrong id' do
-    access_token  = Fabricate(:public_access_token).token
+    access_token  = Fabricate(:simple_access_token).token
     get_with_token "/api/v1/contracts/xxrandomxx", {}, access_token
     expect(response).to have_http_status(404)
   end

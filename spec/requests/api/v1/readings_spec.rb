@@ -2,7 +2,7 @@ describe "Readings API" do
 
   # READ
 
-  [:no_access_token, :public_access_token, :full_access_token, :smartmeter_access_token].each do |token|
+  [:no_access_token, :simple_access_token, :full_access_token, :smartmeter_access_token].each do |token|
 
     it "does not get a reading with #{token}" do
       reading = Fabricate(:reading)
@@ -26,10 +26,10 @@ describe "Readings API" do
     expect(response).to have_http_status(200)
   end
 
-  it 'gets a reading with public access token as manager' do
+  it 'gets a reading with simple access token as manager' do
     reading       = Fabricate(:reading_with_easy_meter_q3d_and_manager)
     manager       = reading.meter.managers.first
-    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     get_with_token "/api/v1/readings/#{reading.id}", access_token.token
     expect(response).to have_http_status(200)
   end
@@ -61,7 +61,7 @@ describe "Readings API" do
 
 
 
-  it 'creates a correct reading with public access token as manager' do
+  it 'creates a correct reading with simple access token as manager' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
     manager       = meter.managers.first
     access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)

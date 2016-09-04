@@ -29,7 +29,7 @@ module API
           requires :meter_id, type: String, desc: "Meter"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
-        oauth2 :public, :full, :smartmeter
+        oauth2 :simple, :full, :smartmeter
         post do
           if MeteringPoint.creatable_by?(current_user)
             meter = Meter.find(permitted_params[:meter_id])
@@ -54,7 +54,7 @@ module API
           optional :meter_id, type: String, desc: "Meter"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         patch ':id' do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.updatable_by?(current_user)
@@ -96,7 +96,7 @@ module API
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get ':id/comments' do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
@@ -114,7 +114,7 @@ module API
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get [':id/managers', ':id/relationships/managers'] do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
@@ -192,7 +192,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get ":id/address" do
           metering_point  = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
@@ -288,7 +288,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get ':id/meter' do
           metering_point  = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user, :meter)

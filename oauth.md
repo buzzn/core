@@ -5,7 +5,7 @@
     # this works only in development
     client_redirect_url = 'urn:ietf:wg:oauth:2.0:oob'
     client = OAuth2::Client.new(app.uid, app.secret, site: "http://localhost:3000")
-    client.auth_code.authorize_url(scope: app.scopes, redirect_uri: client_redirect_url)
+    client.auth_code.authorize_url(scope: app.scopes, redirect_uri: client_redirect_url,state:'my_csrf_token')
 
 copy this url into your browser and then copy the access-code to
 

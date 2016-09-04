@@ -3,7 +3,7 @@ describe "Metering Points API" do
   let(:page_overload) { 11 }
 
   it 'get world-readable metering point with or without token' do
-    access_token      = Fabricate(:public_access_token)
+    access_token      = Fabricate(:simple_access_token)
     metering_point    = Fabricate(:metering_point_readable_by_world)
 
     get_without_token "/api/v1/metering-points/#{metering_point.id}"
@@ -38,7 +38,7 @@ describe "Metering Points API" do
 
   it 'get community-readable metering point with community token' do
     metering_point_id = Fabricate(:metering_point_readable_by_community).id
-    access_token      = Fabricate(:public_access_token)
+    access_token      = Fabricate(:simple_access_token)
 
     get_with_token "/api/v1/metering-points/#{metering_point_id}", access_token.token
     expect(response).to have_http_status(200)
@@ -47,7 +47,7 @@ describe "Metering Points API" do
   it 'does not get friends or members readable metering point with community token' do
     metering_point_id1  = Fabricate(:metering_point_readable_by_friends).id
     metering_point_id2  = Fabricate(:metering_point_readable_by_members).id
-    access_token        = Fabricate(:public_access_token)
+    access_token        = Fabricate(:simple_access_token)
 
     get_with_token "/api/v1/metering-points/#{metering_point_id1}", access_token.token
     expect(response).to have_http_status(403)
@@ -57,7 +57,7 @@ describe "Metering Points API" do
 
   it 'get friends-readable metering point by manager friends or by members' do
     metering_point    = Fabricate(:metering_point_readable_by_friends)
-    member_token      = Fabricate(:public_access_token)
+    member_token      = Fabricate(:simple_access_token)
     member_user       = User.find(member_token.resource_owner_id)
     access_token      = Fabricate(:access_token_with_friend)
     token_user        = User.find(access_token.resource_owner_id)
@@ -73,7 +73,7 @@ describe "Metering Points API" do
 
   it 'get members-readable metering point by members but not by manager friends' do
     metering_point    = Fabricate(:metering_point_readable_by_members)
-    member_token      = Fabricate(:public_access_token)
+    member_token      = Fabricate(:simple_access_token)
     member_user       = User.find(member_token.resource_owner_id)
     access_token      = Fabricate(:access_token_with_friend)
     token_user        = User.find(access_token.resource_owner_id)
@@ -233,7 +233,7 @@ describe "Metering Points API" do
   end
 
 
-  [:public_access_token, :full_access_token,
+  [:simple_access_token, :full_access_token,
    :smartmeter_access_token].each do |token|
     it "creates a metering_point with #{token}" do
       access_token = Fabricate(token)
@@ -295,7 +295,7 @@ describe "Metering Points API" do
     metering_point = Fabricate(:metering_point_with_manager)
     meter        = Fabricate(:meter)
     manager       = metering_point.managers.first
-    access_token  = Fabricate(:public_access_token, resource_owner_id: manager.id)
+    access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
 
     request_params = {
       id: metering_point.id,
@@ -372,7 +372,7 @@ describe "Metering Points API" do
 
 
   it 'gets the related comments for the metering point only with token' do
-    access_token    = Fabricate(:public_access_token)
+    access_token    = Fabricate(:simple_access_token)
     metering_point  = Fabricate(:world_metering_point_with_two_comments)
     user            = Fabricate(:user)
     comments        = metering_point.comment_threads
@@ -387,7 +387,7 @@ describe "Metering Points API" do
   end
 
   it 'paginate comments' do
-    access_token    = Fabricate(:public_access_token)
+    access_token    = Fabricate(:simple_access_token)
     metering_point  = Fabricate(:metering_point_readable_by_world)
     user            = Fabricate(:user)
     comment_params  = {
@@ -411,7 +411,7 @@ describe "Metering Points API" do
 
 
   it 'gets the related managers for the metering point only with token' do
-    access_token    = Fabricate(:public_access_token)
+    access_token    = Fabricate(:simple_access_token)
     metering_point  = Fabricate(:metering_point_with_manager, readable: 'world')
     manager         = metering_point.managers.first
     get_without_token "/api/v1/metering-points/#{metering_point.id}/managers"
@@ -422,7 +422,7 @@ describe "Metering Points API" do
   end
 
   it 'paginate managers' do
-    access_token    = Fabricate(:public_access_token)
+    access_token    = Fabricate(:simple_access_token)
     metering_point  = Fabricate(:metering_point_readable_by_world)
     page_overload.times do
       user = Fabricate(:user)
@@ -503,13 +503,13 @@ describe "Metering Points API" do
   it 'replaces metering point managers' do
     metering_point  = Fabricate(:metering_point_readable_by_world)
     user            = Fabricate(:user)
-    public_token    = Fabricate(:public_access_token)
-    public_manager  = User.find(public_token.resource_owner_id)
+    simple_token    = Fabricate(:simple_access_token)
+    simple_manager  = User.find(simple_token.resource_owner_id)
     manager_token   = Fabricate(:full_access_token)
     manager         = User.find(manager_token.resource_owner_id)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
-    public_manager.add_role(:manager, metering_point)
+    simple_manager.add_role(:manager, metering_point)
     manager.add_role(:manager, metering_point)
     user1.add_role(:manager, metering_point)
     user2.add_role(:manager, metering_point)
@@ -518,7 +518,7 @@ describe "Metering Points API" do
       data: [{ id: user.id }]
     }
 
-    patch_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/managers", params.to_json, public_token.token
+    patch_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/managers", params.to_json, simple_token.token
     expect(response).to have_http_status(403)
     patch_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/managers", params.to_json, manager_token.token
     expect(response).to have_http_status(200)
@@ -535,9 +535,9 @@ describe "Metering Points API" do
     user            = Fabricate(:user)
     user.add_role(:manager, metering_point)
     admin_token     = Fabricate(:full_access_token_as_admin)
-    public_token   = Fabricate(:public_access_token)
-    public_manager = User.find(public_token.resource_owner_id)
-    public_manager.add_role(:manager, metering_point)
+    simple_token   = Fabricate(:simple_access_token)
+    simple_manager = User.find(simple_token.resource_owner_id)
+    simple_manager.add_role(:manager, metering_point)
     manager_token   = Fabricate(:full_access_token)
     manager         = User.find(manager_token.resource_owner_id)
     manager.add_role(:manager, metering_point)
@@ -552,7 +552,7 @@ describe "Metering Points API" do
     expect(json['data'].size).to eq(3)
     delete_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/managers", params.to_json, member_token.token
     expect(response).to have_http_status(403)
-    delete_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/managers", params.to_json, public_token.token
+    delete_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/managers", params.to_json, simple_token.token
     expect(response).to have_http_status(403)
     delete_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/managers", params.to_json, admin_token.token
     expect(response).to have_http_status(204)
@@ -632,14 +632,14 @@ describe "Metering Points API" do
   it 'replaces metering point members' do
     metering_point  = Fabricate(:metering_point_readable_by_world)
     user            = Fabricate(:user)
-    public_token    = Fabricate(:public_access_token)
-    public_member   = User.find(public_token.resource_owner_id)
+    simple_token    = Fabricate(:simple_access_token)
+    simple_member   = User.find(simple_token.resource_owner_id)
     manager_token   = Fabricate(:full_access_token)
     manager         = User.find(manager_token.resource_owner_id)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
     manager.add_role(:manager, metering_point)
-    public_member.add_role(:member, metering_point)
+    simple_member.add_role(:member, metering_point)
     user1.add_role(:member, metering_point)
     user2.add_role(:member, metering_point)
     user.profile.update!(readable: 'world')
@@ -648,12 +648,12 @@ describe "Metering Points API" do
       data: [{ id: user.id }]
     }
 
-    patch_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/members", params.to_json, public_token.token
+    patch_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/members", params.to_json, simple_token.token
     expect(response).to have_http_status(403)
     patch_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/members", params.to_json, manager_token.token
     expect(response).to have_http_status(200)
 
-    get_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/members", params.to_json, public_token.token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/members", params.to_json, simple_token.token
     expect(json['data'].size).to eq 1
     expect(json['data'].first['id']).to eq user.id
   end
@@ -715,7 +715,7 @@ describe "Metering Points API" do
 
 
   it 'gets address of the metering point only with token' do
-    access_token    = Fabricate(:public_access_token)
+    access_token    = Fabricate(:simple_access_token)
     metering_point  = Fabricate(:mp_urbanstr88, readable: 'world')
     address         = metering_point.address
     get_without_token "/api/v1/metering-points/#{metering_point.id}/address"
@@ -734,7 +734,7 @@ describe "Metering Points API" do
     token_user_friend = token_user.friends.first
     token_user_friend.profile.readable = 'friends'
     token_user_friend.profile.save
-    community_token   = Fabricate(:public_access_token)
+    community_token   = Fabricate(:simple_access_token)
     community_user    = Fabricate(:user)
     community_user.profile.readable = 'community'
     community_user.profile.save
@@ -761,9 +761,9 @@ describe "Metering Points API" do
     Fabricate(:metering_point_operator, name: 'buzzn Metering')
     easymeter_60051559  = Fabricate(:easymeter_60051559)
     metering_point      = easymeter_60051559.metering_points.first
-    access_token        = Fabricate(:public_access_token)
+    access_token        = Fabricate(:simple_access_token)
     token_user          = User.find(access_token.resource_owner_id)
-    wrong_token         = Fabricate(:public_access_token)
+    wrong_token         = Fabricate(:simple_access_token)
     token_user.add_role(:manager, metering_point)
 
     get_with_token "/api/v1/metering-points/#{metering_point.id}/meter", access_token.token

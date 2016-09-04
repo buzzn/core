@@ -118,7 +118,7 @@ module API
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get [':id/managers', ':id/relationships/managers'] do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
@@ -193,7 +193,7 @@ module API
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get [':id/members', ':id/relationships/members'] do
           group           = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
@@ -223,7 +223,7 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get ":id/energy-consumers" do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
@@ -241,7 +241,7 @@ module API
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
-        oauth2 :public, :full
+        oauth2 :simple, :full
         get ':id/comments' do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
