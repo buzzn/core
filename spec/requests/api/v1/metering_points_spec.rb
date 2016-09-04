@@ -249,7 +249,6 @@ describe "Metering Points API" do
       }.to_json
 
       post_with_token "/api/v1/metering-points", request_params, access_token.token
-
       expect(response).to have_http_status(201)
       expect(response.headers['Location']).to eq json['data']['id']
 
@@ -258,6 +257,34 @@ describe "Metering Points API" do
       expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
       expect(json['data']['attributes']['meter-id']).to eq(meter.id)
       expect(json['data']['attributes']['name']).to eq(metering_point.name)
+    end
+
+    { discovergy: { contract: :mpoc_justus, meter: :easymeter_1124001747 },
+      # TODO mysmartgrid: { contract: :mpoc_ferraris_0001_amperix, meter: :ferraris_001_amperix }
+      # TODO add mpoc_buzzn_metering
+    }.each do |organization, keys|
+
+      it "creates a metering_point for #{organization} contract with #{token}" do
+        Fabricate(organization)
+        access_token   = Fabricate(token)
+        meter          = Fabricate(keys[:meter])
+        contract       = Fabricate(keys[:contract])
+        metering_point = Fabricate.build(:metering_point)
+
+        request_params = {
+          uid:  metering_point.uid,
+          mode: metering_point.mode,
+          readable: metering_point.readable,
+          name: metering_point.name,
+          meter_id: meter.id,
+          contract_id: contract.id
+        }.to_json
+
+        post_with_token "/api/v1/metering-points", request_params, access_token.token
+        expect(response).to have_http_status(201)
+        metering_point = MeteringPoint.find(json['data']['id'])
+        expect(Crawler.new(metering_point).valid_credential?).to eq true
+      end
     end
   end
 
