@@ -6,18 +6,23 @@ class CalculateGroupScoreAutarchyWorker
     if resolution_format == 'day'
       @group = Group.find(group_id)
       resolution_format = 'day_to_minutes'
-      chart_data = @group.chart(resolution_format, containing_timestamp)
-      data_in = chart_data[0][:data]
-      data_out = chart_data[1][:data]
+
+      metering_points_hash_in = Aggregate.sort_metering_points(@group.in_metering_points)
+      aggregator_in = Aggregate.new(metering_points_hash_in)
+      data_in = aggregator_in.past(timestamp: Time.now - 1.day, resolution: 'day_to_minutes')
+      metering_points_hash_out = Aggregate.sort_metering_points(@group.out_metering_points)
+      aggregator_out = Aggregate.new(metering_points_hash_out)
+      data_out = aggregator_out.past(timestamp: Time.now - 1.day, resolution: 'day_to_minutes')
+
       i = 0
       own_consumption = 0
       foreign_consumption = 0
       while i < data_in.count && i < data_out.count do
-        if data_in[i][1] > data_out[i][1]
-          foreign_consumption += (data_in[i][1] - data_out[i][1])
-          own_consumption += data_out[i][1]
+        if data_in[i][:power_milliwatt] > data_out[i][:power_milliwatt]
+          foreign_consumption += (data_in[i][:power_milliwatt] - data_out[i][:power_milliwatt])
+          own_consumption += data_out[i][:power_milliwatt]
         else
-          own_consumption += data_in[i][1]
+          own_consumption += data_in[i][:power_milliwatt]
         end
         i+=1
       end
