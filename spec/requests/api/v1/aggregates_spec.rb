@@ -1,6 +1,6 @@
 describe "Aggregates API" do
 
-  before(:all) do
+  before do
     Fabricate(:metering_point_operator, name: 'buzzn Metering')
     Fabricate(:metering_point_operator, name: 'Discovergy')
     Fabricate(:metering_point_operator, name: 'MySmartGrid')

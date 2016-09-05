@@ -27,29 +27,15 @@ module API
           requires :mode, type: String, desc: "direction of energie", values: MeteringPoint.modes
           requires :readable, type: String, desc: "readable by?", values: MeteringPoint.readables
           requires :meter_id, type: String, desc: "Meter"
-          optional :contract_id, type: String, desc: 'Operator Contract'
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
         oauth2 :simple, :full, :smartmeter
         post do
           if MeteringPoint.creatable_by?(current_user)
             meter      = Meter.find(permitted_params[:meter_id])
-            contract   = Contract.where(id: permitted_params[:contract_id]).first
-            attributes = permitted_params.reject do |k,v|
-              k == :meter_id || k == :contract_id
-            end
+            attributes = permitted_params.reject { |k,v| k == :meter_id }
             attributes[:meter] = meter
             metering_point     = MeteringPoint.create!(attributes)
-            if contract
-              metering_point.contracts << contract
-              case Crawler.new(metering_point).valid_credential?
-              when FalseClass
-                error! 'invalid credentials from contract', 422
-              when TrueClass
-              else
-                # unknown metering_point operator
-              end
-            end
             current_user.add_role(:manager, metering_point)
             created_response(metering_point)
           else

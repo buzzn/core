@@ -27,10 +27,16 @@ module RequestsHelper
 
   def post_with_token(path, params={}, token)
     post path, params, headers_with_token(token)
+    if response.status == 500
+      puts response.body
+    end
   end
 
   def post_without_token(path, params={})
     post path, params, headers_without_token
+    if response.status == 500
+      puts response.body
+    end
   end
 
 

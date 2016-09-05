@@ -34,28 +34,27 @@ module API
 
         desc 'Create a Contract'
         params do
-          requires :mode,                   type: String, desc: 'Contract description'
-          requires :organization_id,        type: String, desc: 'Organization id'
-          requires :tariff,                 type: String, desc: 'Tariff'
-          requires :status,                 type: String, desc: 'Status'
-          requires :customer_number,        type: String, desc: 'Customer number'
-          requires :contract_number,        type: String, desc: 'Contract number'
-          requires :signing_user,           type: String, desc: 'Signing user'
+          requires :mode,                   type: String,  desc: 'Contract description'
+          requires :organization_id,        type: String,  desc: 'Organization id'
+          requires :tariff,                 type: String,  desc: 'Tariff'
+          requires :status,                 type: String,  desc: 'Status'
+          requires :customer_number,        type: String,  desc: 'Customer number'
+          requires :contract_number,        type: String,  desc: 'Contract number'
+          requires :signing_user,           type: String,  desc: 'Signing user'
           requires :terms,                  type: Boolean, desc: 'Terms'
           requires :power_of_attorney,      type: Boolean, desc: 'Power of attorney'
           requires :confirm_pricing_model,  type: Boolean, desc: 'Confirm pricing model'
-          requires :commissioning,          type: Date, desc: 'Commissioning'
-          optional :username,               type: String, desc: 'Username'
-          optional :password,               type: String, desc: 'Password'
+          requires :commissioning,          type: Date,    desc: 'Commissioning'
+          optional :metering_point_id,      type: String,  desc: 'MeteringPoint ID'
+          optional :username,               type: String,  desc: 'Username'
+          optional :password,               type: String,  desc: 'Password'
         end
-        oauth2 :full
+        oauth2 :full, :smartmeter
         post do
           if Contract.creatable_by?(current_user)
-            contract = Contract.new(permitted_params)
-            contract.contracting_party = current_user.contracting_party if current_user.contracting_party
-            if contract.save!
-              current_user.add_role :manager, contract
-            end
+            permitted_params[:contracting_party] = current_user.contracting_party if current_user.contracting_party
+            contract = Contract.create!(permitted_params)
+            current_user.add_role :manager, contract
             created_response(contract)
           else
             status 403
