@@ -6,6 +6,5 @@ class ProfileResource < ApplicationResource
               :last_name,
               :about_me,
               :md_img,
-              :readable, :updateable, :deletable
-
+              :readable
 end

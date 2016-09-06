@@ -98,6 +98,10 @@ class Profile < ActiveRecord::Base
     end
   end
 
+  def self.readables
+    ['friends', 'world', 'members', 'community']
+  end
+
   def readable_by_friends?
     self.readable == 'friends'
   end

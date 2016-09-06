@@ -127,16 +127,6 @@ describe "Groups API" do
   end
 
 
-  it 'contains CRUD info' do
-    Fabricate(:group)
-    access_token = Fabricate(:full_access_token_as_admin)
-
-    get_with_token '/api/v1/groups', access_token.token
-    ['readable', 'updateable', 'deletable'].each do |attr|
-      expect(json['data'].first['attributes']).to include(attr)
-    end
-  end
-
   it 'paginate groups' do
     page_overload.times do
       Fabricate(:group)
