@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
     #   stored_location_for(resource) || request.referer || root_path
     # end
 
-    profile_path(resource.profile)
+    stored_location_for(resource) || request.referer || profile_path(resource.profile)
   end
 
   def current_user
