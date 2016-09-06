@@ -16,8 +16,6 @@ module API
           end.flatten.join(sep)
         end
 
-      mount API::V1::Auth
-      mount API::V1::AccessTokens
       mount API::V1::Users
       mount API::V1::Profiles
       mount API::V1::Meters
