@@ -20,11 +20,14 @@ describe 'Contracts API' do
   let(:full_access_token_as_admin) { Fabricate(:full_access_token_as_admin) }
   let(:page_overload) { 11 }
 
-  before(:all) do
-    @org1 = Fabricate(:metering_point_operator, name: 'buzzn Metering')
-    @org2 = Fabricate(:metering_point_operator, name: 'Discovergy')
-    @org3 = Fabricate(:metering_point_operator, name: 'MySmartGrid')
-    @contract_param_names = [
+  before do
+    Fabricate(:metering_point_operator, name: 'buzzn Metering')
+    Fabricate(:metering_point_operator, name: 'Discovergy')
+    Fabricate(:metering_point_operator, name: 'MySmartGrid')
+  end
+  
+  let(:contract_param_names) do
+    [
       'tariff',
       'status',
       'customer_number',
@@ -133,7 +136,7 @@ describe 'Contracts API' do
   it 'does not create contract without token' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
-    @contract_param_names.each do |param_name|
+    contract_param_names.each do |param_name|
       request_params[param_name] = contract[param_name]
     end
     post_without_token "/api/v1/contracts/", request_params.to_json
@@ -143,7 +146,7 @@ describe 'Contracts API' do
   it 'creates contract as admin with full access token' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
-    @contract_param_names.each do |param_name|
+    contract_param_names.each do |param_name|
       request_params[param_name] = contract[param_name]
     end
     access_token  = Fabricate(:full_access_token_as_admin).token
@@ -155,7 +158,7 @@ describe 'Contracts API' do
   it 'does not create contract as admin with full access token if some of the params missing' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
-    @contract_param_names.each do |param_name|
+    contract_param_names.each do |param_name|
       request_params[param_name] = contract[param_name]
     end
     access_token  = Fabricate(:full_access_token_as_admin).token
@@ -175,7 +178,7 @@ describe 'Contracts API' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
     wrong_ones = []
-    @contract_param_names.each do |param_name|
+    contract_param_names.each do |param_name|
       if contract[param_name].is_a?(Date)
         wrong_ones << param_name
         request_params[param_name] = false
@@ -215,7 +218,7 @@ describe 'Contracts API' do
     new_contract = Fabricate.build(:mpoc_ferraris_0002_amperix)
     access_token  = Fabricate(:full_access_token_as_admin).token
     request_params = { id: contract_id }
-    @contract_param_names.each do |param_name|
+    contract_param_names.each do |param_name|
       if new_contract[param_name].is_a?(Date)
         request_params[param_name] = false
       elsif new_contract[param_name].is_a?(Boolean)
