@@ -45,14 +45,13 @@ class Group < ActiveRecord::Base
     self.with_role(:manager, user)
   }
 
-  def self.members_of_group_joins(user = nil)
+  scope :members_of_group, ->(group) do
     mp = MeteringPoint.arel_table
     roles = Role.arel_table
     users_roles = Arel::Table.new(:users_roles)
     users = User.arel_table
 
-    user_id = user ? user.id : users[:id]
-    users_on = users.create_on(users_roles[:user_id].eq(user_id))
+    users_on = users.create_on(users_roles[:user_id].eq(users[:id]))
     users_join = users.create_join(users_roles, users_on)
 
     users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
@@ -61,11 +60,10 @@ class Group < ActiveRecord::Base
     roles_mp_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(MeteringPoint.to_s).and(roles[:name].eq(:member))))
     roles_mp_join = roles.create_join(mp, roles_mp_on)
 
-    [users_join, users_roles_join, roles_mp_join]
-  end
 
-  scope :members_of_group, ->(group) do
-    User.distinct.joins(*members_of_group_joins).where('metering_points.group_id': group)
+    User.distinct
+      .joins(users_join, users_roles_join, roles_mp_join)
+      .where('metering_points.group_id': group)
   end
 
   # keeps this notation so it can be chained with Arel table where clauses
