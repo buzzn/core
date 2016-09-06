@@ -12,16 +12,6 @@ describe "Metering Points API" do
     expect(response).to have_http_status(200)
   end
 
-  it 'contains CRUD info' do
-    metering_point  = Fabricate(:metering_point)
-    access_token    = Fabricate(:full_access_token_as_admin)
-
-    get_with_token "/api/v1/metering-points/#{metering_point.id}", access_token.token
-    ['readable', 'updateable', 'deletable'].each do |attr|
-      expect(json['data']['attributes']).to include(attr)
-    end
-  end
-
 
   it 'does not get a world-unreadable metering point without token' do
     metering_point_id1 = Fabricate(:metering_point_readable_by_friends).id

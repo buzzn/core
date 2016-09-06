@@ -4,7 +4,7 @@ class MeteringPointResource < ApplicationResource
               :name,
               :mode,
               :meter_id,
-              :readable, :updateable, :deletable
+              :readable
 
   has_many :devices
   has_many :users

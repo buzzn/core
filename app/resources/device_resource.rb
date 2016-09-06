@@ -15,7 +15,6 @@ class DeviceResource < ApplicationResource
               :mobile,
               :readable,
 
-              :big_tumb,
-              :updateable, :deletable
+              :big_tumb
 
 end

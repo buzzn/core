@@ -21,15 +21,6 @@ describe "Profiles API" do
     expect(response).to have_http_status(200)
   end
 
-  it 'contains CRUD info' do
-    Fabricate(:profile)
-    access_token = Fabricate(:full_access_token_as_admin)
-
-    get_with_token '/api/v1/profiles', access_token.token
-    ['readable', 'updateable', 'deletable'].each do |attr|
-      expect(json['data'].first['attributes']).to include(attr)
-    end
-  end
 
   it 'paginate profiles with full access token as admin' do
     page_overload.times do

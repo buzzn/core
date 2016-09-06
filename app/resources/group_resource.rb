@@ -5,7 +5,7 @@ class GroupResource < ApplicationResource
               :big_tumb,
               :md_img,
               :description,
-              :readable, :updateable, :deletable
+              :readable
 
 
   has_many :metering_points
