@@ -326,14 +326,6 @@ class Group < ActiveRecord::Base
     return [ { :name => I18n.t('total_consumption'), :data => result_in}, { :name => I18n.t('total_production'), :data => result_out} ]
   end
 
-  def calculate_closeness
-    Sidekiq::Client.push({
-      'class' => CalculateGroupScoreClosenessWorker,
-      'queue' => :default,
-      'args' => [ self.id ]
-    })
-  end
-
   def set_score_interval(resolution_format, containing_timestamp)
     if resolution_format == 'year_to_minutes' || resolution_format == 'year'
       return ['year', Time.at(containing_timestamp).in_time_zone.beginning_of_year, Time.at(containing_timestamp).in_time_zone.end_of_year]
@@ -381,24 +373,16 @@ class Group < ActiveRecord::Base
 
   def self.calculate_scores
     Group.all.select(:id).each.each do |group|
-      # Sidekiq::Client.push({
-      #  'class' => CalculateGroupScoreSufficiencyWorker,
-      #  'queue' => :default,
-      #  'args' => [ group.id, 'day', Time.now.to_i*1000]
-      # })
-
-      Sidekiq::Client.push({
-       'class' => CalculateGroupScoreAutarchyWorker,
-       'queue' => :default,
-       'args' => [ group.id, 'day', (Time.now - 1.day).to_i*1000]
-      })
-
-      # Sidekiq::Client.push({
-      #  'class' => CalculateGroupScoreFittingWorker,
-      #  'queue' => :default,
-      #  'args' => [ group.id, 'day', Time.now.to_i*1000]
-      # })
+      group.calculate_scores
     end
+  end
+
+  def calculate_scores
+    Sidekiq::Client.push({
+     'class' => CalculateGroupScoresWorker,
+     'queue' => :default,
+     'args' => [ self.id, 'day', (Time.now - 1.day).to_i]
+    })
   end
 
   def bubbles_personal_data(requesting_user)
