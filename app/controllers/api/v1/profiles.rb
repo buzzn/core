@@ -86,6 +86,7 @@ module API
         oauth2 false
         get ':id/friends' do
           profile = Profile.find(permitted_params[:id])
+          # we need to check the profile before filtering the friends
           if profile.readable_by?(current_user)
             paginated_response(profile.user.friends.readable_by(current_user))
           else

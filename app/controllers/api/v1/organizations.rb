@@ -131,6 +131,7 @@ module API
         oauth2 :full
         post do
           if Organization.creatable_by?(current_user)
+            # TODO move logic into MeteringPoint and ensure at least ONE manager
             organization = Organization.create!(permitted_params)
             current_user.add_role(:manager, organization)
             created_response(organization)

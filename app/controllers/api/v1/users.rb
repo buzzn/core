@@ -86,6 +86,7 @@ module API
         oauth2 :simple, :full
         get ":id/groups" do
           user          = User.find(permitted_params[:id])
+          #TODO
           groups        = Group.where(id: user.accessible_groups.map(&:id))
           per_page      = permitted_params[:per_page]
           page          = permitted_params[:page]
