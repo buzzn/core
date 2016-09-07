@@ -27,10 +27,22 @@ class CalculateGroupScoresWorker
         end
         i+=1
       end
+      autarchy = 0
       if own_consumption + foreign_consumption != 0
-        autarchy = own_consumption * 1.0 / (own_consumption + foreign_consumption)
-      else
-        autarchy = -1
+        autarchy_percentage = own_consumption * 1.0 / (own_consumption + foreign_consumption)
+        if autarchy_percentage <= 0.1
+          autarchy = 0
+        elsif autarchy_percentage <= 0.3
+          autarchy = 1
+        elsif autarchy_percentage <= 0.5
+          autarchy = 2
+        elsif autarchy_percentage <= 0.7
+          autarchy = 3
+        elsif autarchy_percentage <= 0.9
+          autarchy = 4
+        elsif autarchy_percentage <= 1.0
+          autarchy = 5
+        end
       end
       interval_information = @group.set_score_interval(resolution_format, containing_timestamp)
 
@@ -132,31 +144,7 @@ class CalculateGroupScoresWorker
 
 
       #closeness
-      addresses_out = @group.metering_points.without_externals.where(mode: 'out').collect(&:address).compact
-      addresses_in = @group.metering_points.without_externals.where(mode: 'in').collect(&:address).compact
-      sum_distances = 0
-      addresses_in.each do |address_in|
-        addresses_out.each do |address_out|
-          sum_distances += address_in.distance_to(address_out)
-        end
-      end
-      closeness = 0
-      if addresses_out.count * addresses_in.count != 0
-        average_distance = sum_distances / (addresses_out.count * addresses_in.count)
-        if average_distance < 10
-          closeness = 5
-        elsif average_distance < 20
-          closeness = 4
-        elsif average_distance < 50
-          closeness = 3
-        elsif average_distance < 200
-          closeness = 2
-        elsif average_distance >= 200
-          closeness = 1
-        else
-          closeness = 0
-        end
-      end
+      closeness = @group.calculate_current_closeness
       Score.create(mode: 'closeness', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: closeness, scoreable_type: 'Group', scoreable_id: group_id)
 
       monthly_score = 0
@@ -182,7 +170,7 @@ class CalculateGroupScoresWorker
 
 
       #sufficiency
-      count_sn_in_group = @group.members.uniq.size
+      count_sn_in_group = @group.energy_consumers.size
       if count_sn_in_group != 0
         sufficiency = @group.extrapolate_kwh_pa(sum_in/4000000.0, resolution_format, containing_timestamp)/count_sn_in_group
       else

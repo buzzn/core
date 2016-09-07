@@ -812,6 +812,10 @@ de:
   add_group_manager_info: "Du kannst hier weiteren Benutzern ermöglichen diese Gruppe zu verwalten. Diese Benutzer können dann alles einsehen, was Du siehst und können z.B. weitere Zählpunkte zu dieser Gruppe hinzufügen oder bestehende davon entfernen."
   delete_account_confirmation_info: "Bist du Dir sicher, dass du Dein Konto vollständig löschen willst? Alle von Dir erzeugten Daten werden dabei gelöscht, sofern sie nicht von Dir für andere Nutzer zur Verwaltung freigegeben worden sind."
   autarchy_info: "Die Autarkie gibt an, wieviel Prozent des Strombedarfs in dieser Gruppe vom Stromgeber zur Verfügung gestellt wird. Es sollte also die blaue Kurve immer unterhalb der roten Kurve liegen, um eine größtmögliche Autarkie zu erreichen."
+  sufficiency_info: "Die Sparsamkeit gibt an, wie niedrig der Pro-Kopf Stromverbrauch in dieser Gruppe ist. Das Ziel sollte sein, weniger als 500 kWh im Jahr pro Kopf zu verbrauchen."
+  fitting_info: "Die Passung gibt an, ob der Verlauf der Kurve des Gesamtverbrauchs mit der der Gesamterzeugung übereinstimmt. Hier wird belohnt, wer mit seinem Stromverbrauch versucht, den qualitativen Verlauf der Stromerzeugungsanlage nachzubilden."
+  closeness_info: "Die Lokalität gibt an, wie nah die Gruppenmitglieder beieinander wohnen. Gruppen im gleichen Haus, Viertel etc. sind anzustreben, währen über hunderte Kilometer verteilte Gruppen benachteiligt werden."
+
 
   possible_reasons_are_a_broken_internet_connection_or_a_failure_in_your_hardware: "Mögliche Gründe sind eine unterbrochene Internetverbindung oder ein Fehler in deiner Hardware."
   to_get_the_latest_data_in_your_app_you_should_try_to_fix_this_issue: "Um die neusten Daten in Deiner buzzn App verfügbar zu haben solltest Du dieses Problem schnellstmöglich beheben."

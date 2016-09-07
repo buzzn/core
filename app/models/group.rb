@@ -123,11 +123,11 @@ class Group < ActiveRecord::Base
   end
 
   def energy_producers
-    MeteringPoint.by_group(self).outputs.collect(&:users).flatten
+    MeteringPoint.by_group(self).outputs.collect(&:members).flatten.uniq
   end
 
   def energy_consumers
-    MeteringPoint.by_group(self).inputs.collect(&:users).flatten
+    MeteringPoint.by_group(self).inputs.collect(&:members).flatten.uniq
   end
 
   def member?(metering_point)
@@ -385,6 +385,35 @@ class Group < ActiveRecord::Base
     })
   end
 
+  def calculate_current_closeness
+    addresses_out = self.metering_points.without_externals.outputs.collect(&:address).compact
+    addresses_in = self.metering_points.without_externals.inputs.collect(&:address).compact
+    sum_distances = 0
+    addresses_in.each do |address_in|
+      addresses_out.each do |address_out|
+        sum_distances += address_in.distance_to(address_out)
+      end
+    end
+    closeness = -1
+    if addresses_out.count * addresses_in.count != 0
+      average_distance = sum_distances / (addresses_out.count * addresses_in.count)
+      if average_distance < 5
+        closeness = 5
+      elsif average_distance < 10
+        closeness = 4
+      elsif average_distance < 20
+        closeness = 3
+      elsif average_distance < 50
+        closeness = 2
+      elsif average_distance < 200
+        closeness = 1
+      elsif average_distance >= 200
+        closeness = 0
+      end
+    end
+    return closeness
+  end
+
   def bubbles_personal_data(requesting_user)
     out_metering_point_personal_data = []
     in_metering_point_personal_data = []
@@ -426,19 +455,23 @@ class Group < ActiveRecord::Base
       sufficiency = self.scores.sufficiencies.dayly.at(containing_timestamp).first
       autarchy = self.scores.autarchies.dayly.at(containing_timestamp).first
       fitting = self.scores.fittings.dayly.at(containing_timestamp).first
+      closeness = self.scores.closenesses.dayly.at(containing_timestamp).first
     elsif resolution == 'month_to_days'
       sufficiency = self.scores.sufficiencies.monthly.at(containing_timestamp).first
       autarchy = self.scores.autarchies.monthly.at(containing_timestamp).first
       fitting = self.scores.fittings.monthly.at(containing_timestamp).first
+      closeness = self.scores.closenesses.monthly.at(containing_timestamp).first
     elsif resolution == 'year_to_months'
       sufficiency = self.scores.sufficiencies.yearly.at(containing_timestamp).first
       autarchy = self.scores.autarchies.yearly.at(containing_timestamp).first
       fitting = self.scores.fittings.yearly.at(containing_timestamp).first
+      closeness = self.scores.closenesses.yearly.at(containing_timestamp).first
     end
     sufficiency.nil? ? sufficiency_value = -1 : sufficiency_value = sufficiency.value
     autarchy.nil? ? autarchy_value = -1 : autarchy_value = autarchy.value
     fitting.nil? ? fitting_value = -1 : fitting_value = fitting.value
-    return { sufficiency: sufficiency_value, closeness: self.closeness, autarchy: autarchy_value, fitting: fitting_value }
+    closeness.nil? ? closeness_value = -1 : closeness_value = closeness.value
+    return { sufficiency: sufficiency_value, closeness: closeness_value, autarchy: autarchy_value, fitting: fitting_value }
   end
 
 
