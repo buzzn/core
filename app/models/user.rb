@@ -45,6 +45,19 @@ class User < ActiveRecord::Base
     count_roles(user, admin: nil)
   end
 
+  def self.users_of(parent, *role_names)
+    roles          = Role.arel_table
+    @users_roles ||= Arel::Table.new(:users_roles)
+
+    map = {}
+    role_names.each do |role|
+      map[role] = parent
+    end
+
+    # sql fragment 'exists select 1 where .....'
+    where(roles_query(nil, map).project(1).exists.to_sql)
+  end
+
   def self.roles_query(user, role_map)
     roles          = Role.arel_table
     @users_roles ||= Arel::Table.new(:users_roles)
@@ -62,10 +75,16 @@ class User < ActiveRecord::Base
         end
       end
     end
+    user_id = if user
+                user.id
+              else
+                users = User.arel_table
+                users[:id]
+              end
     @users_roles.join(roles)
       .on(roles[:id].eq(@users_roles[:role_id])
            .and(roles_constraint))
-      .where(@users_roles[:user_id].eq(user.id))
+      .where(@users_roles[:user_id].eq(user_id))
   end
 
   def self.count_roles(user, role_map)

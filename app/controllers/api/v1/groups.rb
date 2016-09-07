@@ -13,7 +13,8 @@ module API
         paginate
         oauth2 false
         get do
-          paginated_response(Group.filter(permitted_params[:filter]).readable_by(current_user))
+          paginated_response(Group.filter(permitted_params[:filter])
+                               .readable_by(current_user))
         end
 
 
@@ -44,6 +45,8 @@ module API
         end
         oauth2 :full
         post do
+          # TODO cleanup move logic into Group and ensure manager
+          # and handle the ONE metering-point as validation error
           if Group.creatable_by?(current_user)
             group = Group.create!(permitted_params)
             current_user.add_role(:manager, group)
@@ -80,7 +83,7 @@ module API
         oauth2 :full
         delete ':id' do
           group = Group.find(permitted_params[:id])
-          if group.updatable_by?(current_user)
+          if group.deletable_by?(current_user)
             group.destroy
             status 204
           else
@@ -101,12 +104,8 @@ module API
         get ":id/metering-points" do
           group = Group.find(permitted_params[:id])
 
-          # TODO paginated_response(MeteringPoint.by_group(group).without_externals.anonymous_readable_by(cunrret_user)
-          if group.readable_by?(current_user)
-            paginated_response(MeteringPoint.by_group(group).without_externals.anonymous(current_user))
-          else
-            status 403
-          end
+          # metering_points do consider group relation for readable_by
+          paginated_response(MeteringPoint.by_group(group).without_externals.anonymized_readable_by(current_user))
         end
 
 
@@ -122,7 +121,7 @@ module API
         get [':id/managers', ':id/relationships/managers'] do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            paginated_response(group.managers)
+            paginated_response(group.managers.readable_by(current_user))
           else
             status 403
           end
@@ -195,9 +194,9 @@ module API
         paginate
         oauth2 :simple, :full
         get [':id/members', ':id/relationships/members'] do
-          group           = Group.find(permitted_params[:id])
+          group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            paginated_response(group.members)
+            paginated_response(group.members.readable_by(current_user))
           else
             status 403
           end
@@ -212,7 +211,7 @@ module API
         get ":id/energy-producers" do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            group.energy_producers
+            group.energy_producers.readable_by(current_user)
           else
             status 403
           end
@@ -227,7 +226,7 @@ module API
         get ":id/energy-consumers" do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            group.energy_consumers
+            group.energy_consumers.readable_by(current_user)
           else
             status 403
           end
@@ -245,7 +244,7 @@ module API
         get ':id/comments' do
           group = Group.find(permitted_params[:id])
           if group.readable_by?(current_user)
-            paginated_response(group.comment_threads)
+            paginated_response(group.comment_threads.readable_by(current_user))
           else
             status 403
           end

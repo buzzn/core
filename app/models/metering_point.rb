@@ -83,17 +83,23 @@ class MeteringPoint < ActiveRecord::Base
     metering_point = MeteringPoint.arel_table
     sqls = []
     if group_check
+      # metering_point belongs to readable group
       group = Group.arel_table
-      belongs_to_readable_group = Group.readable_by(user).where(group[:id].eq(metering_point[:group_id]))
+      belongs_to_readable_group =
+        Group.readable_by(user).where(group[:id].eq(metering_point[:group_id]))
+      # sql fragment 'exists select 1 where .....'
       sqls << belongs_to_readable_group.project(1).exists
     end
     if user.nil?
       sqls << metering_point[:readable].eq('world')
     else
+      # world or community query
       world_or_community = metering_point[:readable].in(['world','community'])
 
+      # admin or manager or member query
       admin_or_manager_or_member = User.roles_query(user, manager: metering_point[:id], member: metering_point[:id], admin: nil)
 
+      # friends of manager query
       users_roles    = Role.users_roles_arel_table
       role           = Role.arel_table
       friendship     = Friendship.arel_table
@@ -106,7 +112,9 @@ class MeteringPoint < ActiveRecord::Base
 
       sqls +=
         [
+          # sql fragment 'exists select 1 where .....'
           admin_or_manager_or_member.project(1).exists,
+          # friends of managers needs metering_point to be readable by friends
           manager_friends.project(1).exists.and(metering_point[:readable].eq('friends')),
           world_or_community
         ]
@@ -133,8 +141,9 @@ class MeteringPoint < ActiveRecord::Base
   #default_scope { where(external: false) }
 
   def users
-    members + managers
+    User.users_of(self, :manager, :member)
   end
+  alias :involved :users
 
   def profiles
     Profile.where(user_id: users.collect(&:id))
@@ -242,10 +251,6 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-
-  def involved
-    (self.managers + self.members).uniq
-  end
 
   def output?
     self.mode == 'out'

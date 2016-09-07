@@ -120,12 +120,27 @@ class Group < ActiveRecord::Base
     slug.blank? || name_changed?
   end
 
+  def metering_point_users(mode)
+    mp             = MeteringPoint.arel_table
+    roles          = Role.arel_table
+    users_roles    = Arel::Table.new(:users_roles)
+    users          = User.arel_table
+    role_names     = [:manager, :member]
+
+    sql = users_roles.join(mp)
+      .on(mp[:group_id].eq(self.id).and(mp[:mode].eq(mode)))
+      .join(roles)
+      .on(roles[:id].eq(users_roles[:role_id])
+           .and(roles[:name].in(role_names).and(roles[:resource_id].eq(mp[:id]))))
+      .where(users_roles[:user_id].eq(users[:id]))
+  end
+
   def energy_producers
-    MeteringPoint.by_group(self).outputs.collect(&:members).flatten.uniq
+    User.where(metering_point_users('out').project(1).exists.to_sql)
   end
 
   def energy_consumers
-    MeteringPoint.by_group(self).inputs.collect(&:members).flatten.uniq
+    User.where(metering_point_users('in').project(1).exists.to_sql)
   end
 
   def member?(metering_point)

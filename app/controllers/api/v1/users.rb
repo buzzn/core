@@ -61,7 +61,7 @@ module API
           end
         end
 
-        desc "Return user profile"
+        desc "Return the related profile for User"
         params do
           requires :id, type: String, desc: "ID of the user"
         end
