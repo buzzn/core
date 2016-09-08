@@ -6,7 +6,7 @@ class MeteringPointsController < ApplicationController
 
   def show
     # the MeteringPoint.find is just to raise NotFoundError
-    @metering_point                 = (MeteringPoint.where(id: params[:id]).anonymous(current_user).first || MeteringPoint.find(params[:id])).decorate
+    @metering_point                 = (MeteringPoint.where(id: params[:id]).anonymized(current_user).first || MeteringPoint.find(params[:id])).decorate
     @members                        = @metering_point.members.registered
     @managers                       = @metering_point.managers.registered
     @devices                        = @metering_point.devices

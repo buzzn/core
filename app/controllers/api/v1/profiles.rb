@@ -12,7 +12,7 @@ module API
         paginate
         oauth2 :full
         get do
-          paginated_response(Profile.readable_by(current_user))
+          paginated_response(Profile.anonymized_readable_by(current_user))
         end
 
 
@@ -22,12 +22,8 @@ module API
         end
         oauth2 false
         get ":id" do
-          profile = Profile.find(permitted_params[:id])
-          if profile.readable_by?(current_user)
-            profile
-          else
-            status 403
-          end
+          Profile.anonymized_get(permitted_params[:id], current_user) ||
+            status(403)
         end
 
 

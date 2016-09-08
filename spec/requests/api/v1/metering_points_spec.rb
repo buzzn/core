@@ -405,9 +405,34 @@ describe "Metering Points API" do
     manager         = metering_point.managers.first
     get_without_token "/api/v1/metering-points/#{metering_point.id}/managers"
     expect(response).to have_http_status(401)
+
     get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token.token
-    expect(json['data'].first['id']).to eq(manager.id)
     expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(0)
+
+    user            = User.find(access_token.resource_owner_id)
+    user.add_role(:manager, metering_point)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
+    expect(json['data'].collect {|d| d['id']})
+      .to match_array([user.id])
+
+    manager_ids = metering_point.managers.collect(&:id)
+    ['world', 'community', 'friends'].each do |readable|
+      manager.profile.update! readable: readable
+      manager.friends << user if readable == 'friends'
+      get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token.token
+      expect(response).to have_http_status(200)
+      expect(json['data'].size).to eq(2)
+      expect(json['data'].collect {|d| d['id']}).to match_array(manager_ids)
+    end
+
+    access_token    = Fabricate(:full_access_token_as_admin)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(2)
+    expect(json['data'].collect {|d| d['id']}).to match_array(manager_ids)
   end
 
   it 'paginate managers' do
@@ -415,11 +440,21 @@ describe "Metering Points API" do
     metering_point  = Fabricate(:metering_point_readable_by_world)
     page_overload.times do
       user = Fabricate(:user)
+      user.profile.update! readable: 'world'
+      user.add_role(:manager, metering_point)
+    end
+    page_overload.times do
+      user = Fabricate(:user)
       user.add_role(:manager, metering_point)
     end
     get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
+
+    access_token    = Fabricate(:full_access_token_as_admin)
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(3)
 
     get_with_token "/api/v1/groups/#{metering_point.id}/managers", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
@@ -509,12 +544,20 @@ describe "Metering Points API" do
 
     patch_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/managers", params.to_json, simple_token.token
     expect(response).to have_http_status(403)
+
+    # TODO manager should be able to read user which s/he adds as manager
     patch_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/managers", params.to_json, manager_token.token
     expect(response).to have_http_status(200)
 
-    get_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/managers", params.to_json, manager_token.token
-    expect(json['data'].size).to eq 1
-    expect(json['data'].first['id']).to eq user.id
+    # TODO add members here
+    ['community', 'world', 'friends'].each do |readable|   
+      user.profile.update! readable: readable
+      user.friends << manager if readable == 'friends'
+
+      get_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/managers", params.to_json, manager_token.token
+      expect(json['data'].size).to eq 1 
+      expect(json['data'].first['id']).to eq user.id
+    end
   end
 
 
@@ -707,8 +750,15 @@ describe "Metering Points API" do
     access_token    = Fabricate(:simple_access_token)
     metering_point  = Fabricate(:mp_urbanstr88, readable: 'world')
     address         = metering_point.address
+    user            = User.find(access_token.resource_owner_id)
+
     get_without_token "/api/v1/metering-points/#{metering_point.id}/address"
     expect(response).to have_http_status(401)
+
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/address", access_token.token
+    expect(response).to have_http_status(403)
+
+    user.add_role(:manager, metering_point)
     get_with_token "/api/v1/metering-points/#{metering_point.id}/address", access_token.token
     expect(json['data']['id']).to eq(address.id)
     expect(response).to have_http_status(200)

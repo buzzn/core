@@ -69,14 +69,14 @@ class MeteringPoint < ActiveRecord::Base
 
   # replaces the name with 'anonymous' for all metering_points which are
   # not readable_by without delegating the check to the underlying group
-  scope :anonymous, -> (user) do
+  scope :anonymized, -> (user) do
     cols = MeteringPoint.columns.collect {|c| c.name }.reject{|c| c == 'name'}.join(', ')
     sql = MeteringPoint.readable_by(user, false).select("id").to_sql
     select("#{cols}, CASE WHEN id NOT IN (#{sql}) THEN 'anonymous' ELSE name END AS name")
   end
 
   scope :anonymized_readable_by, ->(user) do
-    readable_by(user, true).anonymous(user)
+    readable_by(user, true).anonymized(user)
   end
 
   scope :readable_by, ->(user, group_check = false) do
