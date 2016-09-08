@@ -41,7 +41,7 @@ describe "Users API" do
       expect(response).to have_http_status(403)
     end
   end
-  
+
 
   it 'get all users with full access token as admin' do
     Fabricate(:user)
@@ -213,6 +213,17 @@ describe "Users API" do
     post_with_token "/api/v1/users", request_params, access_token.token
     expect(response).to have_http_status(201)
     expect(json['data']['attributes']['email']).to eq(user.email)
+  end
+
+
+  it 'gets user profile only with token' do
+    access_token  = Fabricate(:simple_access_token)
+    user          = User.find(access_token.resource_owner_id)
+
+    get_without_token "/api/v1/users/#{user.id}/profile"
+    expect(response).to have_http_status(401)
+    get_with_token "/api/v1/users/#{user.id}/profile", access_token.token
+    expect(response).to have_http_status(200)
   end
 
 
