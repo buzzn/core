@@ -216,17 +216,6 @@ describe "Users API" do
   end
 
 
-  it 'gets user profile only with token' do
-    access_token  = Fabricate(:simple_access_token)
-    user          = User.find(access_token.resource_owner_id)
-
-    get_without_token "/api/v1/users/#{user.id}/profile"
-    expect(response).to have_http_status(401)
-    get_with_token "/api/v1/users/#{user.id}/profile", access_token.token
-    expect(response).to have_http_status(200)
-  end
-
-
   it 'gets the related groups for User' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:group_readable_by_members)
