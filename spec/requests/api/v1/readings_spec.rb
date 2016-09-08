@@ -28,7 +28,7 @@ describe "Readings API" do
 
   it 'gets a reading with simple access token as manager' do
     reading       = Fabricate(:reading_with_easy_meter_q3d_and_manager)
-    manager       = reading.meter.managers.first
+    manager       = reading.meter.metering_points.first.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     get_with_token "/api/v1/readings/#{reading.id}", access_token.token
     expect(response).to have_http_status(200)
@@ -39,7 +39,7 @@ describe "Readings API" do
 
   it 'create a reading with smartmeter access token as manager' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
-    manager       = meter.managers.first
+    manager       = meter.metering_points.first.managers.first
     access_token  = Fabricate(:smartmeter_access_token, resource_owner_id: manager.id)
     reading       = Fabricate.build(:reading)
     request_params = {
@@ -63,7 +63,7 @@ describe "Readings API" do
 
   it 'creates a correct reading with simple access token as manager' do
     meter         = Fabricate(:easy_meter_q3d_with_manager)
-    manager       = meter.managers.first
+    manager       = meter.metering_points.first.managers.first
     access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
 
     timestamp = "Wed Apr 13 2016 14:07:35 GMT+0200 (CEST)"
@@ -93,7 +93,7 @@ describe "Readings API" do
 
     it "does not create a reading without #{name}" do
       meter         = Fabricate(:easy_meter_q3d_with_manager)
-      manager       = meter.managers.first
+      manager       = meter.metering_points.first.managers.first
       access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
       reading       = Fabricate.build(:reading)
       request_params = {

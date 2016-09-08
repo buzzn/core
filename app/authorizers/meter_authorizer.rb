@@ -5,15 +5,16 @@ class MeterAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
-    User.any_role?(user, admin: nil, manager: resource)
+    # uses scope Meter.readable_by(user)
+    readable?(Meter, user)
   end
 
   def updatable_by?(user)
-    User.any_role?(user, admin: nil, manager: resource)
+    readable_by?(user)
   end
 
   def deletable_by?(user)
-    User.any_role?(user, admin: nil, manager: resource)
+    readable_by?(user)
   end
 
 end

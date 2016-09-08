@@ -31,9 +31,7 @@ module API
         oauth2 :full, :smartmeter
         post do
           if Meter.creatable_by?(current_user)
-            # TODO move logic into MeteringPoint and ensure at least ONE manager
             meter = Meter.create!(permitted_params)
-            current_user.add_role(:manager, meter)
             created_response(meter)
           else
             status 403

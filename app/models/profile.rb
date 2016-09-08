@@ -41,7 +41,31 @@ class Profile < ActiveRecord::Base
       where(readable: 'world')
     end
   end
+  # replaces the email with 'hidden@buzzn.net' for all metering_points which are
+  # not readable_by without delegating the check to the underlying group
+  scope :anonymized, -> (user) do
+    if user.nil?
+      where('1=0')
+    else
+      # admins
+      admins = User.roles_query(user, admin: nil).project(1).exists
 
+      sql = Profile.select(:id).where(admins.or(profile[:user_id].eq(user.id)).to_sql).to_sql
+      select("*, CASE WHEN profiles.id NOT IN (#{sql}) THEN 'hidden@buzzn.net' ELSE users.email END AS anonymized_email").joins(:user)
+    end
+  end
+
+  def email
+    if attribute_names.include? 'anonymized_email'
+      anonymized_email
+    elsif user
+      user.email
+    end
+  end
+
+  def email=(val)
+    user.email = val if user
+  end
 
   def generate_username
     if first_name && last_name && user_name.nil?

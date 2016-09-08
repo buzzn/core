@@ -176,29 +176,6 @@ describe "Users API" do
     end
   end
 
-  xit 'does not update an user with invalid parameters' do
-    access_token  = Fabricate(:full_access_token_as_admin)
-    user = Fabricate(:user)
-
-    [:email, :password, :user_name, :first_name, :last_name].each do |name|
-      if name.to_s.end_with? 'name'
-        params = { profile: { "#{name}": 'a' * 2000 } }
-        name = "profile[#{name}]"
-      else
-        params = { "#{name}": 'a' * 2000 }
-      end
-
-      patch_with_token "/api/v1/users/#{user.id}", params.to_json, access_token.token
-
-      expect(response).to have_http_status(422)
-      json['errors'].each do |error|
-        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
-        expect(error['title']).to eq 'Invalid Attribute'
-        expect(error['detail']).to match Regexp.new(Regexp.quote(name))
-      end
-    end
-  end
-
   it 'creates an user as admin' do
     access_token  = Fabricate(:full_access_token_as_admin)
 
@@ -212,7 +189,7 @@ describe "Users API" do
     }.to_json
     post_with_token "/api/v1/users", request_params, access_token.token
     expect(response).to have_http_status(201)
-    expect(json['data']['attributes']['email']).to eq(user.email)
+    expect(json['data']['attributes']).to be_nil
   end
 
 

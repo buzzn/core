@@ -102,7 +102,7 @@ module API
         get ':id/comments' do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
-            paginated_response(metering_point.comment_threads)
+            paginated_response(metering_point.comment_threads.readable_by(current_user))
           else
             status 403
           end
@@ -120,7 +120,7 @@ module API
         get [':id/managers', ':id/relationships/managers'] do
           metering_point = MeteringPoint.find(permitted_params[:id])
           if metering_point.readable_by?(current_user)
-            paginated_response(metering_point.managers)
+            paginated_response(metering_point.managers.readable_by(current_user))
           else
             status 403
           end
@@ -199,7 +199,7 @@ module API
         oauth2 :simple, :full
         get ":id/address" do
           metering_point  = MeteringPoint.find(permitted_params[:id])
-          if metering_point.readable_by?(current_user)
+          if metering_point.address.readable_by?(current_user)
             metering_point.address
           else
             status 403
@@ -296,7 +296,7 @@ module API
         oauth2 :simple, :full
         get ':id/meter' do
           metering_point  = MeteringPoint.find(permitted_params[:id])
-          if metering_point.readable_by?(current_user, :meter)
+          if metering_point.meter.readable_by?(current_user)
             metering_point.meter
           else
             status 403

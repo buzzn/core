@@ -10,7 +10,7 @@ describe "Profile Model" do
     expect(Profile.readable_by(nil)).to eq [profile]
     profile.update!(readable: 'community')
     other = Fabricate(:user)
-     expect(Profile.readable_by(other)).to match_array [profile, other.profile]
+    expect(Profile.readable_by(other)).to match_array [profile, other.profile]
     profile.update!(readable: nil)
     expect(Profile.readable_by(other)).to match_array [other.profile]
     other.friends << user

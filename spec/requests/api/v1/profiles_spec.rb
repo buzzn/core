@@ -124,7 +124,7 @@ describe "Profiles API" do
   end
 
 
-  xit 'does not update a profile with invalid parameters' do
+  xit 'TODO does not update a profile with invalid parameters' do
     access_token = Fabricate(:full_access_token_as_admin)
     profile = Fabricate(:profile)
 

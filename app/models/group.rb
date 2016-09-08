@@ -120,14 +120,14 @@ class Group < ActiveRecord::Base
     slug.blank? || name_changed?
   end
 
-  def metering_point_users(mode)
+  def metering_point_users_query(mode)
     mp             = MeteringPoint.arel_table
     roles          = Role.arel_table
     users_roles    = Arel::Table.new(:users_roles)
     users          = User.arel_table
     role_names     = [:manager, :member]
 
-    sql = users_roles.join(mp)
+    users_roles.join(mp)
       .on(mp[:group_id].eq(self.id).and(mp[:mode].eq(mode)))
       .join(roles)
       .on(roles[:id].eq(users_roles[:role_id])
@@ -136,11 +136,11 @@ class Group < ActiveRecord::Base
   end
 
   def energy_producers
-    User.where(metering_point_users('out').project(1).exists.to_sql)
+    User.where(metering_point_users_query('in').project(1).exists.to_sql)
   end
 
   def energy_consumers
-    User.where(metering_point_users('in').project(1).exists.to_sql)
+    User.where(metering_point_users_query('out').project(1).exists.to_sql)
   end
 
   def member?(metering_point)
