@@ -62,6 +62,21 @@ module API
         end
 
 
+        desc "Return user profile"
+        params do
+          requires :id, type: String, desc: "ID of the user"
+        end
+        oauth2 :simple, :full
+        get ":id/profile" do
+          user = User.find(permitted_params[:id])
+          if user.readable_by?(current_user) && user.profile.readable_by?(current_user)
+            user.profile
+          else
+            status 403
+          end
+        end
+
+
         desc "Return the related groups for User"
         params do
           requires :id, type: String, desc: "ID of the profile"
