@@ -13,5 +13,4 @@ class UserResource < ApplicationResource
   has_many :friends
   has_many :metering_points
   has_many :devices
-  has_many :meters
 end
