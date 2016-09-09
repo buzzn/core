@@ -1,7 +1,7 @@
 # coding: utf-8
 describe "Organization Model" do
 
-  it 'filters organization' do
+  it 'filters organization', :retry => 3 do
     organization = Fabricate(:transmission_system_operator_with_address)
     2.times { Fabricate(:metering_point_operator) }
 

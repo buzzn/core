@@ -111,7 +111,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate slp energy past by month_to_days as admin in sommertime ' do
+  it 'does aggregate slp energy past by month_to_days as admin in summertime ' do
     access_token = Fabricate(:full_access_token_as_admin)
     metering_point = Fabricate(:metering_point)
 
@@ -574,7 +574,7 @@ describe "Aggregates API" do
     Timecop.return
   end
 
-  it 'does aggregate slp energy past by month_to_days as admin in sommertime just until now' do
+  it 'does aggregate slp energy past by month_to_days as admin in summertime just until now' do
     access_token = Fabricate(:full_access_token_as_admin)
     metering_point = Fabricate(:metering_point)
 
@@ -623,7 +623,7 @@ describe "Aggregates API" do
   #  ____) | |____| |
   # |_____/|______|_|
 
-  it 'does aggregate sep bhkw past energy by year_to_months as admin in sommertime' do
+  it 'does aggregate sep bhkw past energy by year_to_months as admin in summertime' do
     access_token = Fabricate(:full_access_token_as_admin)
     metering_point = Fabricate(:metering_point, mode: 'out')
 
@@ -661,7 +661,7 @@ describe "Aggregates API" do
     end
   end
 
-  it 'does aggregate sep bhkw energy past by month_to_days as admin in sommertime ' do
+  it 'does aggregate sep bhkw energy past by month_to_days as admin in summertime ' do
     access_token = Fabricate(:full_access_token_as_admin)
     metering_point = Fabricate(:metering_point, mode: 'out')
 
@@ -711,7 +711,7 @@ describe "Aggregates API" do
    # |_.__/ \__,_/___/___|_| |_| /_/    \_\_|   |_____|
 
 
-   it 'does aggregate buzzn energy past by year_to_months as admin in sommertime' do
+   it 'does aggregate buzzn energy past by year_to_months as admin in summertime' do
      access_token = Fabricate(:full_access_token_as_admin)
 
      meter = Fabricate(:easy_meter_q3d_with_metering_point)
@@ -796,7 +796,7 @@ describe "Aggregates API" do
 
 
 
-  it 'does aggregate buzzn energy past by month_to_days as admin in sommertime ' do
+  it 'does aggregate buzzn energy past by month_to_days as admin in summertime ' do
     access_token = Fabricate(:full_access_token_as_admin)
 
     meter = Fabricate(:easy_meter_q3d_with_metering_point)
@@ -1210,6 +1210,7 @@ describe "Aggregates API" do
     expect(response).to have_http_status(200)
     expect(json['readings'].count).to eq(1)
     expect(json['power_milliwatt']).to eq(6412000)
+    Timecop.return
   end
 
   it 'return data for metering point readable by world which belongs to a group not readable by world without token' do
