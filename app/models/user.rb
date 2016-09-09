@@ -47,7 +47,7 @@ class User < ActiveRecord::Base
 
   def self.users_of(parent, *role_names)
     roles          = Role.arel_table
-    @users_roles ||= Arel::Table.new(:users_roles)
+    users_roles    = Role.users_roles_arel_table
 
     map = {}
     role_names.each do |role|
@@ -60,7 +60,7 @@ class User < ActiveRecord::Base
 
   def self.roles_query(user, role_map)
     roles          = Role.arel_table
-    @users_roles ||= Arel::Table.new(:users_roles)
+    users_roles    = Role.users_roles_arel_table
 
     roles_constraint = nil
     role_map.each do |role, resources|
@@ -81,14 +81,15 @@ class User < ActiveRecord::Base
                 users = User.arel_table
                 users[:id]
               end
-    @users_roles.join(roles)
-      .on(roles[:id].eq(@users_roles[:role_id])
+    users_roles.join(roles)
+      .on(roles[:id].eq(users_roles[:role_id])
            .and(roles_constraint))
-      .where(@users_roles[:user_id].eq(user_id))
+      .where(users_roles[:user_id].eq(user_id))
   end
 
   def self.count_roles(user, role_map)
-    roles_query(user, role_map).project(@users_roles[:user_id].count)
+    users_roles    = Role.users_roles_arel_table
+    roles_query(user, role_map).project(users_roles[:user_id].count)
   end
 
   def self.admin?(user)
@@ -114,6 +115,19 @@ class User < ActiveRecord::Base
       distinct.joins(users_profiles_join, users_friends_join).where("profiles.readable in (?) or users.id = ? or friendships_2.friend_id = ? or 0 < (#{User.count_admins(user).to_sql})", ['world', 'community'], user.id, user.id)
     else
       distinct.joins(users_profiles_join).where('profiles.readable = ?', 'world')
+    end
+  end
+
+  def self.get(id, user)
+    result = self.where(id: id).readable_by(user).first
+    if result
+      result
+    elsif self.where(id: id).first
+      # we have record but is not readable by user
+      nil #TODO make an exception instead and catch in grape
+    else
+      # no such record
+      raise(ActiveRecord::RecordNotFound.new "#{self} not found for id #{id}")
     end
   end
 
@@ -214,24 +228,6 @@ class User < ActiveRecord::Base
 
   def wants_to_get_notified_by_email?(key, resource)
     NotificationUnsubscriber.by_user(self).by_resource(resource).by_key(key).empty?
-  end
-
-  def accessible_groups_query
-    group = Group.arel_table
-
-    mp = MeteringPoint.arel_table
-    mp_on = mp.create_on(mp['group_id'].eq(group['id']))
-    mp_join = mp.create_join(mp, mp_on, Arel::Nodes::OuterJoin)
-
-    role = Role.arel_table
-    role_on = role.create_on(role.alias['resource_id'].eq(mp['id']).and(role.alias['resource_type'].eq(MeteringPoint.to_s)).and(role.alias['name'].in([:manager, :member])).or(role.alias['resource_id'].eq(group['id']).and(role.alias['resource_type'].eq(Group.to_s)).and(role.alias['name'].eq(:manager))))
-    role_join = role.create_join(role.alias, role_on)
-
-    users_roles = Arel::Table.new(:users_roles)
-    users_roles_on = users_roles.create_on(users_roles.alias[:role_id].eq(role.alias[:id]))
-    users_roles_join = users_roles.create_join(users_roles.alias, users_roles_on)
-
-    Group.distinct.joins(mp_join, role_join, users_roles_join).where(users_roles.alias[:user_id].eq(self))
   end
 
   def accessible_groups

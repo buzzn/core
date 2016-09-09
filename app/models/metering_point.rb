@@ -114,9 +114,12 @@ class MeteringPoint < ActiveRecord::Base
     where(sqls.map(&:to_sql).join(' OR '))
   end
 
-  scope :accessible_by_user, lambda {|user|
-    self.with_role([:manager, :member], user).distinct
-  }
+  scope :accessible_by_user, ->(user) do
+    metering_point = MeteringPoint.arel_table
+    where(User.roles_query(user,
+                           manager: metering_point[:id],
+                           member: metering_point[:id]).project(1).exists)
+  end
 
   scope :editable_by_user_without_meter_not_virtual, lambda {|user|
     self.with_role(:manager, user).where(meter: nil).where(virtual: false)

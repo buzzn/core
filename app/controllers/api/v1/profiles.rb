@@ -103,7 +103,7 @@ module API
                 types << 'friends'
               end
             end
-            # TODO
+            # TODO move this permission logic into Authority
             # this does not match the Authority for readable_by? and should be:
             # `accessible_by_user(profile.user).readable_by?(current_user)`
             # maybe it is just adjusting the test

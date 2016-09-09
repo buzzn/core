@@ -58,7 +58,7 @@ class Device < ActiveRecord::Base
   end
 
   def self.accessible_by_user(user)
-    device = Device.arel_table
+    device  = Device.arel_table
     manager = User.roles_query(user, manager: device[:id])
     where(manager.project(1).exists)
   end

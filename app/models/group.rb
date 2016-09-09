@@ -122,7 +122,14 @@ class Group < ActiveRecord::Base
   end
 
   def self.accessible_by_user(user)
-    user.accessible_groups_query
+    metering_point = MeteringPoint.arel_table
+    group          = Group.arel_table
+    users          = User.roles_query(user, manager: [group[:id], metering_point[:id]], member: metering_point[:id])
+
+    # need to make join manually to get the reference name right
+    mp_on   = group.create_on(group[:id].eq(metering_point[:group_id]))
+    mp_join = group.create_join(metering_point, mp_on)
+    joins(mp_join).where(users.project(1).exists)
   end
 
   def should_generate_new_friendly_id?

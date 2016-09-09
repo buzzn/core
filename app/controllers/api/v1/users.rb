@@ -52,6 +52,7 @@ module API
         oauth2 false
         post do
           if User.creatable_by?(current_user)
+            # TODO move this create logic into user
             profile = Profile.new(permitted_params.delete(:profile))
             permitted_params[:profile] = profile
             user = User.create!(permitted_params)
@@ -121,7 +122,7 @@ module API
         paginate
         oauth2 :full, :smartmeter
         get ":id/meters" do
-          user = User.find(permitted_params[:id])
+          user   = User.find(permitted_params[:id])
           meters = Meter.accessible_by_user(user, permitted_params[:manufacturer_product_serialnumber])
           paginated_response(meters.readable_by(current_user))
         end
@@ -295,7 +296,7 @@ module API
         get ':id/activities' do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
-            # TODO
+            # TODO readable_by
             paginated_response(PublicActivity::Activity.where({ owner_type: 'User', owner_id: permitted_params[:id] }))
           else
             status 403
