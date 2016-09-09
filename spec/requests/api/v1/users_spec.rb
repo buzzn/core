@@ -41,7 +41,7 @@ describe "Users API" do
       expect(response).to have_http_status(403)
     end
   end
-  
+
 
   it 'get all users with full access token as admin' do
     Fabricate(:user)

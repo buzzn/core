@@ -1,0 +1,1 @@
+require 'module_extensions/jsonapi/resource_serializer_decorator'
