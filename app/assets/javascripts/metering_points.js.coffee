@@ -1207,31 +1207,131 @@ namespace 'Chart.Functions', (exports) ->
       $('.metering_point-stats').hide(500);
 
   exports.setEnergyStatsGroup = () ->
+    $(".stats").html('')
+    #$(".stats").find("i").remove()
+
     if chart && chart.series.length != 0 && chart.series[0].data.length != 0
       if actual_resolution == "day_to_minutes" && chart_data_min_x >= Chart.Functions.beginningOfDay((new Date()).getTime()) || actual_resolution == "hour_to_minutes"
+        #autarchy
         own_consumption = 0
         foreign_consumption = 0
+        total_consumption = 0
+        total_production = 0
         for i in [0...chart.series[0].data.length]
+          total_consumption += chart.series[0].data[i].y
           if chart.series[1].data[i]
+            total_production += chart.series[1].data[i].y
             if chart.series[1].data[i].y >= chart.series[0].data[i].y
               own_consumption += chart.series[0].data[i].y
             else
               own_consumption += chart.series[1].data[i].y
               foreign_consumption += chart.series[0].data[i].y - chart.series[1].data[i].y
         if foreign_consumption + own_consumption != 0
-          autarchy = (own_consumption*100 / (foreign_consumption + own_consumption)).toFixed(2)
+          autarchy_percentage = (own_consumption*1.0 / (foreign_consumption + own_consumption)).toFixed(2)
+          if autarchy_percentage <= 0.1
+            autarchy = 0
+          else if autarchy_percentage <= 0.3
+            autarchy = 1
+          else if autarchy_percentage <= 0.5
+            autarchy = 2
+          else if autarchy_percentage <= 0.7
+            autarchy = 3
+          else if autarchy_percentage <= 0.9
+            autarchy = 4
+          else if autarchy_percentage <= 1.0
+            autarchy = 5
+          autarchy_number = Number((autarchy).toFixed(0))
+          convert_values_to_stars(".stats-autarchy", autarchy_number)
         else
           autarchy = "n.a."
-        $('.stats-autarchy').html(autarchy)
+          $(".stats-autarchy").html(autarchy)
+
+
+        #fitting
+        sum_variation = 0
+        if total_consumption == 0
+          total_consumption = 1
+        if total_production == 0
+          total_production = 1
+        for i in [0...chart.series[0].data.length]
+          if i >= chart.series[1].data.length
+            break
+          power_in = chart.series[0].data[i].y / (total_consumption*1.0)
+          power_out = chart.series[1].data[i].y / (total_production*1.0)
+          sum_variation += (power_in - power_out)**2
+        fitting = Math.sqrt(sum_variation)
+        if fitting <= 0
+          fitting_score = 0
+        else if fitting < 0.005
+          fitting_score = 5
+        else if fitting < 0.01
+          fitting_score = 4
+        else if fitting < 0.03
+          fitting_score = 3
+        else if fitting < 0.2
+          fitting_score = 2
+        else if fitting >= 0.2
+          fitting_score = 1
+        fitting_number = Number((fitting_score).toFixed(0))
+        convert_values_to_stars(".stats-fitting", fitting_number)
+
+
+        #closeness
+        current_closeness = $('.stats-closeness').attr('data-current-closeness')
+        if current_closeness != null && current_closeness != "-1"
+          convert_values_to_stars(".stats-closeness", current_closeness)
+        else
+          $('.stats-closeness').html('n.a.')
+
+
+        #sufficiency
+        count_sn_in_group = $('.stats-sufficiency').attr('data-count-sn-in-group')
+        if count_sn_in_group != 0
+          #TODO when switching from 15-minutes-values to minutes-values change the scaling of /4000.0!!!
+          consumption_per_member = total_consumption/(4000.0*count_sn_in_group*(chart.series[0].data[chart.series[0].data.length - 1].x - chart_data_min_x)/86400000.0)
+        else
+          consumption_per_member = 0
+        if consumption_per_member <= 0
+          sufficiency = 0
+        else if consumption_per_member < 1.37
+          sufficiency = 5
+        else if consumption_per_member < 2.47
+          sufficiency = 4
+        else if consumption_per_member < 4.11
+          sufficiency = 3
+        else if consumption_per_member < 6.30
+          sufficiency = 2
+        else if consumption_per_member >= 6.30
+          sufficiency = 1
+        sufficiency_number = Number((sufficiency).toFixed(0))
+        convert_values_to_stars(".stats-sufficiency", sufficiency_number)
+
+      # set values for other views than the current day
       else
         url = window.location.href
         resource_id = url.toString().split('/')[4]
         $.ajax({url: '/groups/' + resource_id + '/get_scores?resolution=' + actual_resolution + '&containing_timestamp=' + chart_data_min_x, dataType: 'json'})
           .success (data) ->
             if data.autarchy != null && data.autarchy != -1
-              $('.stats-autarchy').html((data.autarchy*100).toFixed(2))
+              autarchy = Number((data.autarchy).toFixed(0))
+              convert_values_to_stars(".stats-autarchy", autarchy)
             else
               $('.stats-autarchy').html('n.a.')
+            if data.fitting != null && data.fitting != -1
+              fitting = Number((data.fitting).toFixed(0))
+              convert_values_to_stars(".stats-fitting", fitting)
+            else
+              $('.stats-fitting').html('n.a.')
+            if data.closeness != null && data.closeness != -1
+              closeness = Number((data.closeness).toFixed(0))
+              convert_values_to_stars(".stats-closeness", closeness)
+            else
+              $('.stats-closeness').html('n.a.')
+            if data.sufficiency != null && data.sufficiency != -1
+              sufficiency = Number((data.sufficiency).toFixed(0))
+              convert_values_to_stars(".stats-sufficiency", sufficiency)
+            else
+              $('.stats-sufficiency').html('n.a.')
 
 #  ****** Chart Update Timers ******
 
@@ -1265,20 +1365,13 @@ updateChart = (resource_ids, mode) ->
 
 # ******* scores ********
 
-# $(".metering_point_scores").ready ->
-#   group_id = $(this).attr('data-content')
-#   $.ajax({url: '/metering_points/' + group_id + '/get_scores'})
-#     .success (data) ->
-#       sufficiency = Number((data.sufficiency).toFixed(0))
-#       $(".score_sufficiency").append("<div class=circle-filled></div>") for [1..sufficiency] if sufficiency
-#       $(".score_sufficiency").append("<div class=circle-empty></div>") for [1..(5 - sufficiency)] if (5 - sufficiency)
-
-#       fitting = Number((data.fitting).toFixed(0))
-#       $(".score_fitting").append("<div class=circle-filled></div>") for [1..fitting] if fitting
-#       $(".score_fitting").append("<div class=circle-empty></div>") for [1..(5 - fitting)] if (5 - fitting)
-#       $(".circle-filled").addClass("fa fa-circle")
-#       $(".circle-empty").addClass("fa fa-circle-o")
-
+convert_values_to_stars = (target_div_class, score) ->
+  if score != 0 && score != "0"
+    for i in [1..score]
+      $(target_div_class).append("<i class='fa fa-star'></i>")
+  if score != 5 && score != "5"
+    for i in [1..(5 - score)]
+      $(target_div_class).append("<i class='fa fa-star-o'></i>")
 
 
 
