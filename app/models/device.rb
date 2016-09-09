@@ -39,6 +39,7 @@ class Device < ActiveRecord::Base
   
   scope :readable_by, -> (user) do
     # TODO user AREL instead of activerecord DSL
+    #      and EXISTS SELECT 1 WHERE ...
     if user
       joins("LEFT OUTER JOIN roles ON roles.resource_id = devices.id OR roles.resource_id IS NULL")
         .joins("LEFT OUTER JOIN users_roles ON users_roles.role_id = roles.id")
@@ -54,6 +55,12 @@ class Device < ActiveRecord::Base
     else
       joins(outer_join).where(outer_join_where) 
     end
+  end
+
+  def self.accessible_by_user(user)
+    device = Device.arel_table
+    manager = User.roles_query(user, manager: device[:id])
+    where(manager.project(1).exists)
   end
 
   def self.search_attributes

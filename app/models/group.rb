@@ -72,30 +72,35 @@ class Group < ActiveRecord::Base
   scope :readable_by, ->(user) do
     if user.nil?
       readable_by_world
-    elsif User.admin?(user)
-      where(nil)
     else
-      groups = Group.arel_table
-      mp = MeteringPoint.arel_table
-      roles = Role.arel_table
-      users_roles = Arel::Table.new(:users_roles)
-      users = User.arel_table
-      friendships = Friendship.arel_table
+      # world or community query
+      group = Group.arel_table
+      world_or_community = group[:readable].in(['world','community'])
 
-      friendships_on = users.create_on(friendships[:friend_id].eq(user.id))
-      friendships_join = friendships.create_join(friendships, friendships_on, Arel::Nodes::OuterJoin)
+      # admin or manager or member query
+      metering_point = MeteringPoint.arel_table
+      admin_or_manager_or_member = User.roles_query(user, manager: group[:id], member: metering_point.alias[:id], admin: nil).project(1).exists
 
-      users_on = users.create_on(users_roles[:user_id].eq(user.id).or(friendships[:user_id].eq(users_roles[:user_id])))
-      users_join = users.create_join(users_roles, users_on, Arel::Nodes::OuterJoin)
+      # friends of manager and member of metering-point
+      mp_friends = Friendship.friend_of_roles_query(user, metering_point.alias, :member, :manager).and(group[:readable].eq('friends'))
 
-      users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
-      users_roles_join = users_roles.create_join(roles, users_roles_on, Arel::Nodes::OuterJoin)
+      # friends of manager of group
+      manager_friends = Friendship.friend_of_roles_query(user, group, :manager).and(group[:readable].eq('friends'))
 
-      groups_mp_on = groups.create_on(mp.alias[:group_id].eq(groups[:id]).and(roles[:resource_id].eq(mp.alias[:id]).and(roles[:resource_type].eq(MeteringPoint.to_s).and(roles[:name].eq(:member)))))
-      groups_mp_join = groups.create_join(mp.alias, groups_mp_on, Arel::Nodes::OuterJoin)
+      sqls = [
+        world_or_community,
+        admin_or_manager_or_member,
+        mp_friends,
+        manager_friends
+      ]
 
-      joins(friendships_join, users_join, users_roles_join, groups_mp_join)
-        .where("groups.readable in (?) or metering_points_2.group_id = groups.id and users_roles.user_id = ? or roles.resource_type = ? and roles.name = ? and roles.resource_id = groups.id and (users_roles.user_id = ? or friendships.friend_id = ? and groups.readable = ?)", ['world', 'community'], user.id, Group.to_s, :manager, user.id, user.id, :friends).distinct
+      # with AR5 you can use left_outer_joins directly
+      # `left_outer_joins(:metering_points)` instead of
+      # this mp_on and mp_join
+      mp_on   = metering_point.create_on(group[:id].eq(metering_point.alias[:group_id]))
+      mp_join = metering_point.create_join(metering_point.alias, mp_on, Arel::Nodes::OuterJoin)
+
+      joins(mp_join).where(sqls.map(&:to_sql).join(' OR '))
     end
   end
 
@@ -114,6 +119,10 @@ class Group < ActiveRecord::Base
     else
       all
     end
+  end
+
+  def self.accessible_by_user(user)
+    user.accessible_groups_query
   end
 
   def should_generate_new_friendly_id?

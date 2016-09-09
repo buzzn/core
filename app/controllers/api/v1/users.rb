@@ -19,8 +19,8 @@ module API
         paginate
         oauth2 :full
         get do
-          users = User.filter(permitted_params[:filter]).readable_by(current_user)
-          paginated_response(users)
+          users = User.filter(permitted_params[:filter])
+          paginated_response(users.readable_by(current_user))
         end
 
 
@@ -86,12 +86,8 @@ module API
         oauth2 :simple, :full
         get ":id/groups" do
           user          = User.find(permitted_params[:id])
-          #TODO
-          groups        = Group.where(id: user.accessible_groups.map(&:id))
-          per_page      = permitted_params[:per_page]
-          page          = permitted_params[:page]
-          total_pages   = groups.page(page).per_page(per_page).total_pages
-          paginate(render(groups, meta: { total_pages: total_pages }))
+          groups        = Group.accessible_by_user(user)
+          paginated_response(groups.readable_by(current_user))
         end
 
 
@@ -107,8 +103,8 @@ module API
         get ":id/metering-points" do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
-            # TODO MeteringPoint.readable_by(user, true).anonymized_readable_by(current_user)
-            paginated_response(user.accessible_metering_points_relation)
+            metering_points = MeteringPoint.accessible_by_user(user)
+            paginated_response(metering_points.anonymized_readable_by(current_user))
           else
             status 403
           end
@@ -126,11 +122,8 @@ module API
         oauth2 :full, :smartmeter
         get ":id/meters" do
           user = User.find(permitted_params[:id])
-          meters = Meter.with_role(:manager, user)
-          if permitted_params[:manufacturer_product_serialnumber]
-            meters = meters.where(manufacturer_product_serialnumber: permitted_params[:manufacturer_product_serialnumber])
-          end
-          paginated_response(meters)
+          meters = Meter.accessible_by_user(user, permitted_params[:manufacturer_product_serialnumber])
+          paginated_response(meters.readable_by(current_user))
         end
 
 
@@ -144,7 +137,7 @@ module API
         oauth2 :simple, :full
         get [':id/friends', ':id/relationships/friends'] do
           user = User.find(permitted_params[:id])
-          paginated_response(user.friends)
+          paginated_response(user.friends.readable_by(current_user))
         end
 
 
@@ -201,6 +194,7 @@ module API
              ':id/relationships/friendship-requests'] do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
+            # TODO readable_by
             paginated_response(user.received_friendship_requests)
           else
             status 403
@@ -282,7 +276,8 @@ module API
         get ":id/devices" do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
-            paginated_response(Device.with_role(:manager, user))
+            devices = Device.accessible_by_user(user).readable_by(current_user)
+            paginated_response(devices)
           else
             status 403
           end
@@ -300,9 +295,10 @@ module API
         get ':id/activities' do
           user = User.find(permitted_params[:id])
           if user.readable_by?(current_user)
+            # TODO
             paginated_response(PublicActivity::Activity.where({ owner_type: 'User', owner_id: permitted_params[:id] }))
           else
-            status 204
+            status 403
           end
         end
 

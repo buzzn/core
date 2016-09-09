@@ -217,12 +217,19 @@ describe "Profiles API" do
     token_user_friend.add_role(:member, metering_point)
     group.metering_points << metering_point
 
-    get_with_token "/api/v1/profiles/#{profile.id}/groups", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].first['id']).to eq(group.id)
     get_with_token "/api/v1/profiles/#{profile.id}/groups", wrong_token
     expect(response).to have_http_status(200)
     expect(json['data']).to eq([])
+    get_with_token "/api/v1/profiles/#{profile.id}/groups", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].first['id']).to eq(group.id)
+
+    token_user_friend.remove_role(:member, metering_point)
+    token_user_friend.add_role(:manager, metering_point)
+
+    get_with_token "/api/v1/profiles/#{profile.id}/groups", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].first['id']).to eq(group.id)
   end
 
   it 'does not get members-readable groups for world-readable profile even with friend token' do

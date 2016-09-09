@@ -37,6 +37,16 @@ class Meter < ActiveRecord::Base
     end
   end
 
+  def self.accessible_by_user(user, serialnumber)
+    metering_point = MeteringPoint.arel_table
+    manager = User.roles_query(user, manager: metering_point[:id])
+    meters = joins(:metering_points).where(manager.project(1).exists)
+    if serialnumber
+      meters = meters.where(manufacturer_product_serialnumber: serialnumber)
+    end
+    meters
+  end
+
   def name
     "#{manufacturer_name} #{manufacturer_product_serialnumber}"
   end

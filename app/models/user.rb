@@ -199,12 +199,8 @@ class User < ActiveRecord::Base
     MeteringPoint.with_role(:member, self).collect(&:decorate)
   end
 
-  def accessible_metering_points_relation
-    MeteringPoint.accessible_by_user(self)
-  end
-
   def accessible_metering_points
-    accessible_metering_points_relation.collect(&:decorate)
+    MeteringPoint.accessible_by_user(self).collect(&:decorate)
   end
 
   def self.unsubscribed_from_notification(key, resource)
@@ -220,7 +216,7 @@ class User < ActiveRecord::Base
     NotificationUnsubscriber.by_user(self).by_resource(resource).by_key(key).empty?
   end
 
-  def accessible_groups_relation
+  def accessible_groups_query
     group = Group.arel_table
 
     mp = MeteringPoint.arel_table
@@ -228,14 +224,14 @@ class User < ActiveRecord::Base
     mp_join = mp.create_join(mp, mp_on, Arel::Nodes::OuterJoin)
 
     role = Role.arel_table
-    role_on = role.create_on(role['resource_id'].eq(mp['id']).and(role['resource_type'].eq(MeteringPoint.to_s)).and(role['name'].in([:manager, :member])).or(role['resource_id'].eq(group['id']).and(role['resource_type'].eq(Group.to_s)).and(role['name'].eq(:manager))))
-    role_join = role.create_join(role, role_on)
+    role_on = role.create_on(role.alias['resource_id'].eq(mp['id']).and(role.alias['resource_type'].eq(MeteringPoint.to_s)).and(role.alias['name'].in([:manager, :member])).or(role.alias['resource_id'].eq(group['id']).and(role.alias['resource_type'].eq(Group.to_s)).and(role.alias['name'].eq(:manager))))
+    role_join = role.create_join(role.alias, role_on)
 
     users_roles = Arel::Table.new(:users_roles)
-    users_roles_on = users_roles.create_on(users_roles[:role_id].eq(role[:id]))
-    users_roles_join = users_roles.create_join(users_roles, users_roles_on)
+    users_roles_on = users_roles.create_on(users_roles.alias[:role_id].eq(role.alias[:id]))
+    users_roles_join = users_roles.create_join(users_roles.alias, users_roles_on)
 
-    Group.distinct.joins(mp_join, role_join, users_roles_join).where('users_roles.user_id': self)
+    Group.distinct.joins(mp_join, role_join, users_roles_join).where(users_roles.alias[:user_id].eq(self))
   end
 
   def accessible_groups

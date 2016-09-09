@@ -100,27 +100,18 @@ class MeteringPoint < ActiveRecord::Base
       admin_or_manager_or_member = User.roles_query(user, manager: metering_point[:id], member: metering_point[:id], admin: nil)
 
       # friends of manager query
-      users_roles    = Role.users_roles_arel_table
-      role           = Role.arel_table
-      friendship     = Friendship.arel_table
-      managers = users_roles
-                      .join(role)
-                      .on(role[:id].eq(users_roles[:role_id]).and(role[:resource_id].eq(metering_point[:id])).and(role[:name].eq('manager')))
-                      .where(users_roles[:user_id].eq(friendship[:user_id]))
-      manager_friends = friendship.where(friendship[:friend_id].eq(user.id)
-                                          .and(managers.project(1).exists))
+      manager_friends = Friendship.friend_of_roles_query(user, metering_point, :manager)
 
       sqls +=
         [
           # sql fragment 'exists select 1 where .....'
           admin_or_manager_or_member.project(1).exists,
           # friends of managers needs metering_point to be readable by friends
-          manager_friends.project(1).exists.and(metering_point[:readable].eq('friends')),
+          manager_friends.and(metering_point[:readable].eq('friends')),
           world_or_community
         ]
     end
-    # TODO remove hack to clean SQL until the Group offers a clean AREL query
-    where(sqls.map(&:to_sql).join(' OR ').sub('DISTINCT "groups".*, ', '').sub('"groups".*, ', '').sub('ORDER BY created_at ASC)',')'))
+    where(sqls.map(&:to_sql).join(' OR '))
   end
 
   scope :accessible_by_user, lambda {|user|
