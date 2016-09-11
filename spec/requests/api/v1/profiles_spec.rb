@@ -142,8 +142,15 @@ describe "Profiles API" do
     access_token = Fabricate(:full_access_token_as_admin)
     profile = Fabricate(:profile)
 
-    [:user_name, :first_name, :last_name].each do |name|
-      params = { "#{name}" => 'a' * 2000 }
+    request_params = {
+      user_name:  profile.user_name,
+      first_name: profile.first_name,
+      last_name:  profile.last_name
+    }
+
+    request_params.keys.each do |name|
+      params = request_params.dup
+      params[name] = 'a' * 2000
 
       patch_with_token "/api/v1/profiles/#{profile.id}", params.to_json, access_token.token
 
