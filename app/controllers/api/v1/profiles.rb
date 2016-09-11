@@ -36,12 +36,49 @@ module API
           requires :user_name, type: String
           requires :first_name, type: String
           requires :last_name, type: String
+          optional :title, type: String
+          optional :about_me, type: String
+          optional :website, type: String
+          optional :facebook, type: String
+          optional :twitter, type: String
+          optional :xing, type: String
+          optional :linkedin, type: String
+          optional :gender, type: String, values: Profile.genders.map(&:to_s)
+          optional :phone, type: String
         end
         oauth2 :simple, :full
         post do
           if Profile.creatable_by?(current_user)
             profile = Profile.create!(permitted_params)
             created_response(profile)
+          else
+            status 403
+          end
+        end
+
+
+        desc "Update a Profile"
+        params do
+          requires :id, type: String, desc: 'ID of the Profile'
+          requires :user_name, type: String
+          requires :first_name, type: String
+          requires :last_name, type: String
+          optional :title, type: String
+          optional :about_me, type: String
+          optional :website, type: String
+          optional :facebook, type: String
+          optional :twitter, type: String
+          optional :xing, type: String
+          optional :linkedin, type: String
+          optional :gender, type: String, values: Profile.genders.map(&:to_s)
+          optional :phone, type: String
+        end
+        oauth2 :simple, :full
+        patch ':id' do
+          profile = Profile.find(permitted_params[:id])
+          if profile.updatable_by?(current_user)
+            profile.update!(permitted_params)
+            profile
           else
             status 403
           end

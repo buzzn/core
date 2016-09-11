@@ -124,12 +124,26 @@ describe "Profiles API" do
   end
 
 
-  xit 'does not update a profile with invalid parameters' do
+  it 'updates profile as admin' do
+    access_token  = Fabricate(:full_access_token_as_admin)
+    profile       = Fabricate(:profile)
+
+    params = { first_name: 'fName', last_name: 'lName', user_name: 'uName' }
+
+    patch_with_token "/api/v1/profiles/#{profile.id}", params.to_json, access_token.token
+    expect(response).to have_http_status(200)
+    params.each do |key, val|
+      expect(json['data']['attributes'][key.to_s.dasherize]).to eq(val)
+    end
+  end
+
+
+  it 'does not update a profile with invalid parameters' do
     access_token = Fabricate(:full_access_token_as_admin)
     profile = Fabricate(:profile)
 
     [:user_name, :first_name, :last_name].each do |name|
-      params = { "{name}": 'a' * 2000 }
+      params = { "#{name}" => 'a' * 2000 }
 
       patch_with_token "/api/v1/profiles/#{profile.id}", params.to_json, access_token.token
 

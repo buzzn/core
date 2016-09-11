@@ -9,5 +9,10 @@ class ProfileResource < ApplicationResource
               :phone,
               :about_me,
               :md_img,
-              :readable
+              :readable,
+              :website,
+              :facebook,
+              :twitter,
+              :xing,
+              :linkedin
 end
