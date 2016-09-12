@@ -1,6 +1,25 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "0e37649679b245cd5e6f693ab6bb87bf2612469f0dbc70e67fcf8d0ab940ae7c",
+      "message": "Possible SQL injection",
+      "file": "app/models/metering_point.rb",
+      "line": 75,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "select(\"#{MeteringPoint.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{MeteringPoint.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MeteringPoint",
+        "method": "anonymized"
+      },
+      "user_input": "MeteringPoint.columns.collect",
+      "confidence": "High",
+      "note": ""
+    },
+    {
       "warning_type": "Remote Code Execution",
       "warning_code": 24,
       "fingerprint": "4f3abc029bf48f05677b3c5cbfc807354b83fc5c7f0e108dd11d1dc4a31f0117",
@@ -16,25 +35,6 @@
         "method": "create"
       },
       "user_input": "params[:comment][:commentable_type]",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "9f18c3fcdb38521e08b8f305ef97f92a6c826f3545bf650758b9ab4a595147bc",
-      "message": "Possible SQL injection",
-      "file": "app/models/metering_point.rb",
-      "line": 75,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "select(\"#{MeteringPoint.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{MeteringPoint.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "MeteringPoint",
-        "method": "anonymous"
-      },
-      "user_input": "MeteringPoint.columns.collect",
       "confidence": "High",
       "note": ""
     },
@@ -110,6 +110,6 @@
       "note": ""
     }
   ],
-  "updated": "2016-09-01 10:34:44 +0200",
+  "updated": "2016-09-12 09:14:20 +0200",
   "brakeman_version": "3.3.1"
 }
