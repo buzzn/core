@@ -127,7 +127,7 @@ describe "Groups API" do
   end
 
 
-  it 'paginate groups' do
+  it 'paginates groups' do
     page_overload.times do
       Fabricate(:group)
     end
@@ -350,7 +350,8 @@ describe "Groups API" do
     expect(json['data'].size).to eq(5)
   end
 
-  it 'paginate metering points' do
+
+  it 'paginates metering points' do
     group = Fabricate(:group)
     page_overload.times do
       group.metering_points << Fabricate(:metering_point_readable_by_world)
@@ -362,6 +363,35 @@ describe "Groups API" do
     get_without_token "/api/v1/groups/#{group.id}/metering-points", {per_page: 200}
     expect(response).to have_http_status(422)
   end
+
+
+  it 'gets the related scores for Group' do
+    group                 = Fabricate(:group)
+    interval_information  = group.set_score_interval('day', Time.now.to_i)
+    5.times do
+      Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group', scoreable_id: group.id)
+    end
+
+    get_without_token "/api/v1/groups/#{group.id}/scores"
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(5)
+  end
+
+
+  it 'paginates scores' do
+    group                 = Fabricate(:group)
+    interval_information  = group.set_score_interval('day', Time.now.to_i)
+    page_overload.times do
+      Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group', scoreable_id: group.id)
+    end
+    get_without_token "/api/v1/groups/#{group.id}/scores"
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(2)
+
+    get_without_token "/api/v1/groups/#{group.id}/scores", {per_page: 200}
+    expect(response).to have_http_status(422)
+  end
+
 
   it 'gets the related managers for group only with token' do
     access_token  = Fabricate(:simple_access_token)
@@ -377,7 +407,7 @@ describe "Groups API" do
     expect(response).to have_http_status(401)
   end
 
-  it 'paginate managers' do
+  it 'paginates managers' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:group)
     page_overload.times do
@@ -402,7 +432,7 @@ describe "Groups API" do
     expect(response).to have_http_status(422)
   end
 
-  it 'paginate members' do
+  it 'paginates members' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:group_with_members_readable_by_world, members: page_overload * 2)
 
@@ -608,7 +638,7 @@ describe "Groups API" do
     end
   end
 
-  it 'paginate comments' do
+  it 'paginates comments' do
     access_token    = Fabricate(:simple_access_token).token
     group           = Fabricate(:group)
     user            = Fabricate(:user)

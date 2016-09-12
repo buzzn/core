@@ -109,6 +109,20 @@ module API
         end
 
 
+        desc "Return the related scores for Group"
+        params do
+          requires :id, type: String, desc: "ID of the group"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
+          optional :page, type: Fixnum, desc: "Page number", default: 1
+        end
+        paginate
+        oauth2 false
+        get ":id/scores" do
+          group = Group.find(permitted_params[:id])
+          paginated_response(group.scores.readable_by(current_user))
+        end
+
+
 
         desc "Return the related managers for Group"
         params do
