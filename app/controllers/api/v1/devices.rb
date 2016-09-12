@@ -14,7 +14,8 @@ module API
         paginate
         oauth2 false
         get do
-          paginated_response(Device.filter(permitted_params[:filter]).readable_by(current_user))
+          paginated_response(Device.filter(permitted_params[:filter])
+                              .readable_by(current_user))
         end
 
 
@@ -52,6 +53,7 @@ module API
         oauth2 :full
         post do
           if Device.creatable_by?(current_user)
+            # TODO cleanup move logic into Device and ensure manager (via validation)
             device = Device.create!(permitted_params)
             current_user.add_role(:manager, device)
             created_response(device)

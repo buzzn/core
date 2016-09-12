@@ -12,7 +12,7 @@ module API
         paginate
         oauth2 :full
         get do
-          paginated_response(Profile.readable_by(current_user))
+          paginated_response(Profile.anonymized_readable_by(current_user))
         end
 
 
@@ -22,12 +22,8 @@ module API
         end
         oauth2 false
         get ":id" do
-          profile = Profile.find(permitted_params[:id])
-          if profile.readable_by?(current_user)
-            profile
-          else
-            status 403
-          end
+          Profile.anonymized_get(permitted_params[:id], current_user) ||
+            status(403)
         end
 
 
@@ -95,18 +91,9 @@ module API
         oauth2 false
         get ':id/groups' do
           profile   = Profile.find(permitted_params[:id])
-
           if profile.readable_by?(current_user)
-            user     = profile.user
-            if current_user.nil?
-              filter = [ 'groups.readable = ?', 'world' ]
-            elsif current_user.friend?(user)
-              filter = [ 'groups.readable != ?', 'members' ]
-            else
-              filter = [ 'groups.readable NOT IN (?)', ['friends', 'members'] ]
-            end
-            groups   = user.accessible_groups_relation.where(*filter)
-            paginated_response(groups)
+            groups = Group.accessible_by_user(profile.user)
+            paginated_response(groups.readable_by(current_user))
           else
             status 403
           end
@@ -123,6 +110,7 @@ module API
         oauth2 false
         get ':id/friends' do
           profile = Profile.find(permitted_params[:id])
+          # we need to check the profile before filtering the friends
           if profile.readable_by?(current_user)
             paginated_response(profile.user.friends.readable_by(current_user))
           else
@@ -152,9 +140,10 @@ module API
                 types << 'friends'
               end
             end
-            # TODO
+            # TODO move this permission logic into Authority
             # this does not match the Authority for readable_by? and should be:
             # `accessible_by_user(profile.user).readable_by?(current_user)`
+            # maybe it is just adjusting the test
             paginated_response(MeteringPoint.accessible_by_user(profile.user).where(readable: types))
           else
             status 403

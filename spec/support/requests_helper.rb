@@ -17,10 +17,16 @@ module RequestsHelper
 
   def get_with_token(path, params={}, token)
     get path, params, headers_with_token(token)
+    if response.status == 500
+      puts response.body
+    end
   end
 
   def get_without_token(path, params={})
     get path, params, headers_without_token
+    if response.status == 500
+      puts response.body
+    end
   end
 
 
@@ -43,27 +49,45 @@ module RequestsHelper
 
   def patch_with_token(path, params={}, token)
     patch path, params, headers_with_token(token)
+    if response.status == 500
+      puts response.body
+    end
   end
 
   def patch_without_token(path, params={})
     patch path, params, headers_without_token
+    if response.status == 500
+      puts response.body
+    end
   end
 
   def put_with_token(path, params={}, token)
     put path, params, headers_with_token(token)
+    if response.status == 500
+      puts response.body
+    end
   end
 
   def put_without_token(path, params={})
     put path, params, headers_without_token
+    if response.status == 500
+      puts response.body
+    end
   end
 
 
   def delete_with_token(path, params={}, token)
     delete path, params, headers_with_token(token)
+    if response.status == 500
+      puts response.body
+    end
   end
 
   def delete_without_token(path, params={})
     delete path, params, headers_without_token
+    if response.status == 500
+      puts response.body
+    end
   end
 
 

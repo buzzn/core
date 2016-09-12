@@ -391,7 +391,7 @@ describe "Groups API" do
     end
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(3)
+    expect(json['meta']['total_pages']).to eq(2)
     
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
@@ -412,7 +412,7 @@ describe "Groups API" do
 
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(3)
+    expect(json['meta']['total_pages']).to eq(2)
 
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
@@ -503,11 +503,12 @@ describe "Groups API" do
     patch_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, simple_token.token
     expect(response).to have_http_status(403)
     patch_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
-    expect(response).to have_http_status(403)
-    patch_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, admin_token.token
     expect(response).to have_http_status(200)
 
     get_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
+    # we patched the managers, 'manager' is no more manager
+    expect(json['data'].size).to eq 0
+    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, admin_token.token
     expect(json['data'].size).to eq 1
     expect(json['data'].first['id']).to eq user.id
   end
@@ -554,12 +555,43 @@ describe "Groups API" do
     expect(json['data'].size).to eq(1)
   end
 
-  it 'gets the related energy-producers for Group' do
+  it 'gets the related energy-producers/energy-consumers for group' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:group)
-    group.metering_points << Fabricate(:metering_point)
+    user          = Fabricate(:user)
+    consumer      = Fabricate(:user)
+    producer      = Fabricate(:user)
+    mp_in         = Fabricate(:metering_point, mode: 'in')
+    mp_out        = Fabricate(:metering_point, mode: 'out')
+    user.add_role(:member, mp_in)
+    user.add_role(:manager, mp_in)
+    user.add_role(:member, mp_out)
+    user.add_role(:manager, mp_out)
+    producer.add_role(:manager, mp_in)
+    consumer.add_role(:member, mp_in)
+    producer.add_role(:member, mp_out)
+    consumer.add_role(:manager, mp_out)
+    group.metering_points += [mp_in, mp_out]
+
     get_with_token "/api/v1/groups/#{group.id}/energy-producers", access_token.token
     expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(0)
+
+    get_with_token "/api/v1/groups/#{group.id}/energy-consumers", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(0)
+
+    manager = User.find(access_token.resource_owner_id)
+    manager.add_role(:manager, mp_in)
+    manager.add_role(:member, mp_out)
+
+    get_with_token "/api/v1/groups/#{group.id}/energy-producers", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
+
+    get_with_token "/api/v1/groups/#{group.id}/energy-consumers", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
   end
 
   it 'gets the related comments for the group only with token' do

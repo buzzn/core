@@ -1,12 +1,6 @@
 class UserResource < ApplicationResource
 
-  attributes  :slug,
-              :email,
-              :user_name,
-              :first_name,
-              :last_name,
-              :about_me,
-              :md_img
+  # no attributes they will accessible via profile
 
   has_one :profile
   has_many :groups

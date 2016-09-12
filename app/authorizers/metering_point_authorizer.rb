@@ -7,9 +7,8 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
   def readable_by?(user, variant = nil)
     args = [user]
     case variant
-    when :meter
-      return User.any_role?(user, manager: resource)
     when NilClass
+      # no extra args
     when :no_group_inheritance
       args << false
     when :group_inheritance

@@ -11,14 +11,7 @@ describe "Users API" do
   end
 
 
-  it "does not get me with smartmeter_access_token" do
-    access_token = Fabricate(:smartmeter_access_token)
-    get_with_token "/api/v1/users/me", access_token.token
-    expect(response).to have_http_status(403)
-  end
-
-
-  [:simple_access_token, :full_access_token].each do |token|
+  [:simple_access_token, :full_access_token, :smartmeter_access_token].each do |token|
     it "gets me with #{token}" do
       access_token = Fabricate(token)
       get_with_token "/api/v1/users/me", access_token.token
@@ -176,29 +169,6 @@ describe "Users API" do
     end
   end
 
-  xit 'does not update an user with invalid parameters' do
-    access_token  = Fabricate(:full_access_token_as_admin)
-    user = Fabricate(:user)
-
-    [:email, :password, :user_name, :first_name, :last_name].each do |name|
-      if name.to_s.end_with? 'name'
-        params = { profile: { "#{name}": 'a' * 2000 } }
-        name = "profile[#{name}]"
-      else
-        params = { "#{name}": 'a' * 2000 }
-      end
-
-      patch_with_token "/api/v1/users/#{user.id}", params.to_json, access_token.token
-
-      expect(response).to have_http_status(422)
-      json['errors'].each do |error|
-        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
-        expect(error['title']).to eq 'Invalid Attribute'
-        expect(error['detail']).to match Regexp.new(Regexp.quote(name))
-      end
-    end
-  end
-
   it 'creates an user as admin' do
     access_token  = Fabricate(:full_access_token_as_admin)
 
@@ -212,7 +182,7 @@ describe "Users API" do
     }.to_json
     post_with_token "/api/v1/users", request_params, access_token.token
     expect(response).to have_http_status(201)
-    expect(json['data']['attributes']['email']).to eq(user.email)
+    expect(json['data']['attributes']).to be_nil
   end
 
 
@@ -269,11 +239,13 @@ describe "Users API" do
       meter1 = Fabricate(:meter)
       meter2 = Fabricate(:meter)
       meter3 = Fabricate(:meter)
+      mp1    = Fabricate(:metering_point, meter: meter1)
+      mp2    = Fabricate(:metering_point, meter: meter2)
 
-      access_token  = Fabricate(token)
-      user = User.find(access_token.resource_owner_id)
-      user.add_role(:manager, meter1)
-      user.add_role(:manager, meter2)
+      access_token = Fabricate(token)
+      user         = User.find(access_token.resource_owner_id)
+      user.add_role(:manager, mp1)
+      user.add_role(:manager, mp2)
 
       get_with_token "/api/v1/users/#{user.id}/meters", access_token.token
       expect(response).to have_http_status(200)
@@ -286,7 +258,8 @@ describe "Users API" do
     user          = Fabricate(:user)
     page_overload.times do
       meter = Fabricate(:meter)
-      user.add_role(:manager, meter)
+      mp    = Fabricate(:metering_point, meter: meter)
+      user.add_role(:manager, mp)
     end
     get_with_token "/api/v1/users/#{user.id}/meters", manager_token
     expect(response).to have_http_status(200)
@@ -312,15 +285,17 @@ describe "Users API" do
   end
 
 
-  it 'gets the related meters for User but filtert by manufacturer_product_serialnumber' do
+  it 'gets the related meters for User but filtered by manufacturer_product_serialnumber' do
     meter1 = Fabricate(:meter)
     meter2 = Fabricate(:meter)
     meter3 = Fabricate(:meter)
+    mp1    = Fabricate(:metering_point, meter: meter1)
+    mp2    = Fabricate(:metering_point, meter: meter2)
 
     access_token  = Fabricate(:full_access_token)
     user          = User.find(access_token.resource_owner_id)
-    user.add_role(:manager, meter1)
-    user.add_role(:manager, meter2)
+    user.add_role(:manager, mp1)
+    user.add_role(:manager, mp2)
 
     request_params = {
       manufacturer_product_serialnumber: meter1.manufacturer_product_serialnumber

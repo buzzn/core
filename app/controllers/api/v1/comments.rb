@@ -17,6 +17,7 @@ module API
           resource_class  = Object.const_get(permitted_params[:resource_name])
           resource        = resource_class.find(permitted_params[:resource_id])
           if resource.readable_by?(current_user)
+            # TODO cleanup move logic into Comment
             comment       = Comment.build_from(resource, current_user.id, permitted_params[:body], nil)
             comment.save!
             comment.create_activity key: 'comment.create', owner: current_user
