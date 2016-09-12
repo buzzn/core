@@ -375,7 +375,38 @@ describe "Metering Points API" do
     end
   end
 
-  it 'paginate comments' do
+
+  it 'gets the related scores for MeteringPoint' do
+    group                 = Fabricate(:group)
+    metering_point        = Fabricate(:metering_point_readable_by_world, group: group)
+    interval_information  = metering_point.group.set_score_interval('day', Time.now.to_i)
+    5.times do
+      Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'MeteringPoint', scoreable_id: metering_point.id)
+    end
+
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/scores"
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(5)
+  end
+
+
+  it 'paginates scores' do
+    group                 = Fabricate(:group)
+    metering_point        = Fabricate(:metering_point_readable_by_world, group: group)
+    interval_information  = metering_point.group.set_score_interval('day', Time.now.to_i)
+    page_overload.times do
+      Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'MeteringPoint', scoreable_id: metering_point.id)
+    end
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/scores"
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(2)
+
+    get_without_token "/api/v1/metering-points/#{metering_point.id}/scores", {per_page: 200}
+    expect(response).to have_http_status(422)
+  end
+
+
+  it 'paginates comments' do
     access_token    = Fabricate(:simple_access_token)
     metering_point  = Fabricate(:metering_point_readable_by_world)
     user            = Fabricate(:user)
@@ -394,7 +425,7 @@ describe "Metering Points API" do
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
 
-    get_with_token "/api/v1/groups/#{metering_point.id}/comments", {per_page: 200}, access_token.token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/comments", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
   end
 
@@ -435,7 +466,7 @@ describe "Metering Points API" do
     expect(json['data'].collect {|d| d['id']}).to match_array(manager_ids)
   end
 
-  it 'paginate managers' do
+  it 'paginates managers' do
     access_token    = Fabricate(:simple_access_token)
     metering_point  = Fabricate(:metering_point_readable_by_world)
     page_overload.times do
@@ -456,7 +487,7 @@ describe "Metering Points API" do
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(3)
 
-    get_with_token "/api/v1/groups/#{metering_point.id}/managers", {per_page: 200}, access_token.token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/managers", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
   end
 
@@ -645,7 +676,7 @@ describe "Metering Points API" do
     expect(activities.first.key).to eq('metering_point_user_membership.create')
   end
 
-  it 'paginate members' do
+  it 'paginates members' do
     access_token    = Fabricate(:full_access_token_as_admin)
     metering_point  = Fabricate(:metering_point_readable_by_world)
     page_overload.times do
@@ -656,7 +687,7 @@ describe "Metering Points API" do
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
 
-    get_with_token "/api/v1/groups/#{metering_point.id}/members", {per_page: 200}, access_token.token
+    get_with_token "/api/v1/metering-points/#{metering_point.id}/members", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
   end
 

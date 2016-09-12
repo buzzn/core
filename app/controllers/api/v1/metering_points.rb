@@ -91,6 +91,21 @@ module API
 
 
 
+        desc "Return the related scores for MeteringPoint"
+        params do
+          requires :id, type: String, desc: "ID of the metering-point"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
+          optional :page, type: Fixnum, desc: "Page number", default: 1
+        end
+        paginate
+        oauth2 false
+        get ":id/scores" do
+          metering_point = MeteringPoint.find(permitted_params[:id])
+          paginated_response(metering_point.scores.readable_by(current_user))
+        end
+
+
+
         desc 'Return the related comments for MeteringPoint'
         params do
           requires :id, type: String, desc: 'ID of the MeteringPoint'
@@ -112,7 +127,7 @@ module API
         desc "Return the related managers for MeteringPoint"
         params do
           requires :id, type: String, desc: "ID of the MeteringPoint"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
