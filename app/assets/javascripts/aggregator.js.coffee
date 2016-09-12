@@ -104,7 +104,7 @@ class @Aggregator
     if resolution == 'day_to_minutes' || resolution == 'hour_to_minutes'
       return 1000
     else
-      return 1000000
+      return 1000
 
 Object.values = (object) ->
   values = []

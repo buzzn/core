@@ -63,7 +63,8 @@ $(".metering_points").ready ->
             enabled: false
             style:
               color: '#FFF'
-            format: "{value} W"
+            formatter: ->
+              return format_label(this.value, 'axis')
           title:
             enabled: false
           minRange: 10
@@ -174,7 +175,8 @@ $(".metering_point_detail").ready ->
           enabled: true
           style:
             color: '#FFF'
-          format: "{value} W"
+          formatter: ->
+            return format_label(this.value, 'axis')
         title:
           enabled: true
           text: ""
@@ -205,7 +207,8 @@ $(".metering_point_detail").ready ->
               Chart.Functions.zoomIn(event.point.x)
           #pointPlacement: "on"
       tooltip:
-        pointFormat: '<b>{point.y:,.0f} W</b><br/>'
+        pointFormatter: ->
+          return '<b>' + format_label(this.y, 'tooltip') + '</b><br/>'
         dateTimeLabelFormats:
           millisecond:"%e.%b, %H:%M:%S.%L",
           second:"%e.%b, %H:%M:%S",
@@ -426,6 +429,8 @@ $(".dashboard-chart").ready ->
               min: 0
               labels:
                 enabled: true
+                formatter: ->
+                  return format_label(this.value, 'axis')
               title:
                 margin: 0
                 text: ""
@@ -450,7 +455,9 @@ $(".dashboard-chart").ready ->
                   click: (event) ->
                     Chart.Functions.zoomInDashboard(event.point.x)
             tooltip:
-              pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
+              shared: true
+              pointFormatter: ->
+                return this.series.name + ': <b>' + format_label(this.y, 'tooltip') + '</b><br/>'
               dateTimeLabelFormats:
                 millisecond:"%e.%b, %H:%M:%S.%L",
                 second:"%e.%b, %H:%M:%S",
@@ -616,6 +623,8 @@ $(".group-chart").ready ->
           min: 0
           labels:
             enabled: true
+            formatter: ->
+              return format_label(this.value, 'axis')
           title:
             margin: 0
             text: ""
@@ -640,7 +649,9 @@ $(".group-chart").ready ->
                 Chart.Functions.zoomInGroup(event.point.x)
             #stacking: 'normal'
         tooltip:
-          pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
+          shared: true
+          pointFormatter: ->
+            return this.series.name + ': <b>' + format_label(this.y, 'tooltip') + '</b><br/>'
           dateTimeLabelFormats:
             millisecond:"%e.%b, %H:%M:%S.%L",
             second:"%e.%b, %H:%M:%S",
@@ -880,40 +891,23 @@ namespace 'Chart.Functions', (exports) ->
         chart.series.forEach (series) ->
           series.update({
             type: 'column'
-            tooltip:
-              pointFormat: '{series.name}: <b>{point.y:.2f} kWh</b><br/>'
           })
       else
         chart.series.forEach (series) ->
           series.update({
             type: 'column'
-            tooltip:
-              pointFormat: '<b>{point.y:.2f} kWh</b><br/>'
           })
-      chart.yAxis[0].update({
-        labels:
-          format: "{value} kWh"
-      })
     else
       if displaySeriesName
         chart.series.forEach (chartSeries) ->
           chartSeries.update({
             type: 'areaspline'
-            tooltip:
-              pointFormat: '{series.name}: <b>{point.y:,.0f} W</b><br/>'
           })
       else
         chart.series.forEach (series) ->
           series.update({
             type: 'areaspline'
-            tooltip:
-              pointFormat: '<b>{point.y:,.0f} W</b><br/>'
           })
-      chart.yAxis[0].update({
-        labels:
-          format: "{value} W"
-      })
-
 
   exports.setChartTitle = (containing_timestamp) ->
     moment.locale('de')
@@ -1187,17 +1181,17 @@ namespace 'Chart.Functions', (exports) ->
         format_string = "DD.MM"
       moment.locale('de')
       if max.toFixed(2) != '-1.00'
-        $('.stats-energy-max').html(max.toFixed(2))
+        $('.stats-energy-max').html((max/1000).toFixed(2))
       else
         $('.stats-energy-max').html('n.a.')
       $('.stats-energy-max-time').html('max (kWh): ' + moment(max_time).format(format_string))
       if min.toFixed(2) != '-1.00'
-        $('.stats-energy-min').html(min.toFixed(2))
+        $('.stats-energy-min').html((min/1000).toFixed(2))
       else
         $('.stats-energy-min').html('n.a.')
       $('.stats-energy-min-time').html('min (kWh): ' + moment(min_time).format(format_string))
       if sum.toFixed(2) != '-1.00'
-        $('.stats-energy-sum').html(sum.toFixed(2))
+        $('.stats-energy-sum').html((sum/1000).toFixed(2))
       else
         $('.stats-energy-sum').html('n.a.')
 
@@ -1428,6 +1422,64 @@ getLiveData = (metering_point, metering_point_id) ->
 
     if actual_resolution == 'day_to_minutes'
       window.wwasInactive = false
+
+format_label = (value, mode) ->
+  if actual_resolution == "month_to_days" || actual_resolution == "year_to_months"
+    base_unit = 'Wh'
+  else
+    base_unit = 'W'
+  if mode == 'tooltip'
+    precision = 2
+  else
+    precision = 0
+
+  number = format_number(value, precision)
+  if value >= 1000
+    result = number + ' k' + base_unit
+  else if value >= 1000000
+    result = number + ' M' + base_unit
+  else if value >= 1000000000
+    result = number + ' G' + base_unit
+  else if value >= 1000000000000
+    result = number + ' T' + base_unit
+  else if value >= 1000000000000000
+    result = number + ' P' + base_unit
+  else
+    result = number + ' ' + base_unit
+  return result
+
+format_number = (value, precision) ->
+  decimal_point = ','
+  if value >= 1000
+    remainder = (value%1000).toFixed(0)
+    leading_number = Math.floor(value/1000)
+  else if value >= 1000000
+    remainder = (value%1000000).toFixed(0)
+    leading_number = Math.floor(value/1000000)
+  else if value >= 1000000000
+    remainder = (value%1000000000).toFixed(0)
+    leading_number = Math.floor(value/1000000000)
+  else if value >= 1000000000000
+    remainder = (value%1000000000000).toFixed(0)
+    leading_number = Math.floor(value/1000000000000)
+  else if value >= 1000000000000000
+    remainder = (value%1000000000000000).toFixed(0)
+    leading_number = Math.floor(value/1000000000000000)
+  else
+    remainder = 0
+    leading_number = value.toFixed(0)
+  if remainder != 0
+    if remainder < 1
+      return leading_number.toString()
+    else if remainder < 10
+      return leading_number.toString() + decimal_point + '00'
+    else if remainder < 100
+      return leading_number.toString() + decimal_point + '0' + ((remainder/10).toFixed(0)).toString()
+    else if remainder < 1000
+      return leading_number.toString() + decimal_point + ((remainder/10).toFixed(0)).toString()
+  else
+    return leading_number.toString()
+
 
 
 clearTimers = ->
