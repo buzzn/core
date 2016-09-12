@@ -44,11 +44,7 @@ module API
         oauth2 false
         get ':id/contracts' do
           organization = Organization.find(permitted_params[:id])
-          if organization.readable_by?(current_user)
-            paginated_response(organization.contracts.readable_by(current_user))
-          else
-            status 403
-          end
+          paginated_response(organization.contracts.readable_by(current_user))
         end
 
 
@@ -63,7 +59,7 @@ module API
         get [':id/managers', ':id/relationships/managers'] do
           organization = Organization.where(id: permitted_params[:id]).first!
           if organization.readable_by?(current_user)
-            paginated_response(organization.managers)
+            paginated_response(organization.managers.readable_by(current_user))
           else
             status 403
           end
@@ -81,7 +77,7 @@ module API
         get [':id/members', ':id/relationships/members'] do
           organization = Organization.find(permitted_params[:id])
           if organization.readable_by?(current_user)
-            paginated_response(organization.members)
+            paginated_response(organization.members.readable_by(current_user))
           else
             status 403
           end
@@ -95,7 +91,7 @@ module API
         oauth2 false
         get ':id/address' do
           organization = Organization.find(permitted_params[:id])
-          if organization.readable_by?(current_user)
+          if organization.address.readable_by?(current_user)
             organization.address
           else
             status 403
@@ -110,6 +106,7 @@ module API
         oauth2 false
         get ':id/contracting_party' do
           organization = Organization.find(permitted_params[:id])
+          # TODO readable_by
           if organization.readable_by?(current_user)
             organization.contracting_party
           else
@@ -131,6 +128,7 @@ module API
         oauth2 :full
         post do
           if Organization.creatable_by?(current_user)
+            # TODO move logic into MeteringPoint and ensure at least ONE manager
             organization = Organization.create!(permitted_params)
             current_user.add_role(:manager, organization)
             created_response(organization)

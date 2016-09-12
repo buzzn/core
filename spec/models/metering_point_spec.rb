@@ -141,47 +141,47 @@ let(:admin) do
     expect(MeteringPoint.readable_by(admin)).to match_array MeteringPoint.all
   end
 
-  it 'replaces the name when MP is not readable without group inhereted readablity' do
+  it 'anonymizes the name when MP is not readable without group inhereted readablity' do
     user = Fabricate(:user)
     [nil, user, member, member.friends.first, manager, manager.friends.first].each do |u|
       expect(
-        MeteringPoint.by_group(group).anonymous(u).collect{ |mp| mp.name }
+        MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
       ).to eq ['anonymous']
     end
 
     urban.update! group: group
     [nil, user, member.friends.first].each do |u|
       expect(
-        MeteringPoint.by_group(group).anonymous(u).collect{ |mp| mp.name }
+        MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
       ).to eq ['anonymous', 'anonymous']
     end
     [member, manager, manager.friends.first].each do |u|
       expect(
-        MeteringPoint.by_group(group).anonymous(u).collect{ |mp| mp.name }
+        MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
       ).to match_array ['Wohnung', 'anonymous']
     end
 
     karin.update! group: group
     [nil, user, member.friends.first].each do |u|
       expect(
-        MeteringPoint.by_group(group).anonymous(u).collect{ |mp| mp.name }
+        MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
       ).to match_array ['anonymous', 'anonymous', 'anonymous']
     end
     [member, manager, manager.friends.first].each do |u|
       expect(
-        MeteringPoint.by_group(group).anonymous(u).collect{ |mp| mp.name }
+        MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
       ).to match_array ['Wohnung', 'anonymous', 'anonymous']
     end
 
     butenland.update! readable: 'world'
     [nil, user, member.friends.first].each do |u|
       expect(
-        MeteringPoint.by_group(group).anonymous(u).collect{ |mp| mp.name }
+        MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
       ).to match_array ['Windanlage', 'anonymous', 'anonymous']
     end
     [member, manager, manager.friends.first].each do |u|
       expect(
-        MeteringPoint.by_group(group).anonymous(u).collect{ |mp| mp.name }
+        MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
       ).to match_array ['Wohnung', 'Windanlage', 'anonymous']
     end
   end

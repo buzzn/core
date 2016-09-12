@@ -32,7 +32,6 @@ module API
         post do
           if Meter.creatable_by?(current_user)
             meter = Meter.create!(permitted_params)
-            current_user.add_role(:manager, meter)
             created_response(meter)
           else
             status 403

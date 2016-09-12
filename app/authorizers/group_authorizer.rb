@@ -12,7 +12,7 @@ class GroupAuthorizer < ApplicationAuthorizer
   def updatable_by?(user, variant = nil)
     case variant
     when :replace_managers
-      !!user && (resource.managers == [user] || user.has_role?(:admin))
+      !!user && (resource.managers.include?(user) || user.has_role?(:admin))
     when User
       !!user && (variant == user || user.has_role?(:admin))
     else

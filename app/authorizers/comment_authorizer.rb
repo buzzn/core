@@ -5,7 +5,8 @@ class CommentAuthorizer < ApplicationAuthorizer
   end
 
   def readable_by?(user)
-    true
+    # uses scope Comment.readable_by(user)
+    readable?(Comment, user)
   end
 
   def updatable_by?(user)

@@ -13,16 +13,39 @@ describe "Profiles API" do
     expect(response).to have_http_status(401)
   end
 
-  it 'get all profiles with manager token' do
-    Fabricate(:profile)
-    Fabricate(:profile)
+  it 'get all profiles with full access token' do
+    5.times.each { Fabricate(:profile) }
     access_token = Fabricate(:full_access_token_as_admin)
     get_with_token '/api/v1/profiles', {}, access_token.token
     expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(Profile.all.count)
+    json['data'].each do |data|
+      expect(data['attributes']['email']).not_to eq 'hidden@buzzn.net'
+    end
+
+    access_token = Fabricate(:full_access_token)
+    token_profile = Profile.where(user_id: access_token.resource_owner_id).first
+    get_with_token '/api/v1/profiles', {}, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(1)
+    expect(json['data'].first['id']).to eq token_profile.id
+    expect(json['data'].first['attributes']['email']).to eq User.find(access_token.resource_owner_id).email
+
+    Profile.all.each {|p| p.update! readable: 'world' }
+    get_with_token '/api/v1/profiles', {}, access_token.token
+    expect(response).to have_http_status(200)
+    json['data'].each do |data|
+      if data['id'] != token_profile.id
+        expect(data['attributes']['email']).to eq 'hidden@buzzn.net'
+      else
+        expect(data['attributes']['email']).to eq User.find(access_token.resource_owner_id).email
+      end
+    end
+
   end
 
 
-  it 'paginate profiles with full access token as admin' do
+  it 'paginate profiles with full access token' do
     page_overload.times do
       Fabricate(:profile)
     end
@@ -32,7 +55,7 @@ describe "Profiles API" do
     expect(json['meta']['total_pages']).to eq(2)
 
     get_with_token "/api/v1/profiles", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
+    expect(response).to have_http_status(422)    
   end
 
 
@@ -124,7 +147,7 @@ describe "Profiles API" do
   end
 
 
-  xit 'does not update a profile with invalid parameters' do
+  xit 'TODO does not update a profile with invalid parameters' do
     access_token = Fabricate(:full_access_token_as_admin)
     profile = Fabricate(:profile)
 
@@ -194,12 +217,19 @@ describe "Profiles API" do
     token_user_friend.add_role(:member, metering_point)
     group.metering_points << metering_point
 
-    get_with_token "/api/v1/profiles/#{profile.id}/groups", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].first['id']).to eq(group.id)
     get_with_token "/api/v1/profiles/#{profile.id}/groups", wrong_token
     expect(response).to have_http_status(200)
     expect(json['data']).to eq([])
+    get_with_token "/api/v1/profiles/#{profile.id}/groups", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].first['id']).to eq(group.id)
+
+    token_user_friend.remove_role(:member, metering_point)
+    token_user_friend.add_role(:manager, metering_point)
+
+    get_with_token "/api/v1/profiles/#{profile.id}/groups", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].first['id']).to eq(group.id)
   end
 
   it 'does not get members-readable groups for world-readable profile even with friend token' do
@@ -400,7 +430,7 @@ describe "Profiles API" do
     expect(json['data']).to eq([])
   end
 
-  it 'paginate metereing points' do
+  it 'paginate metering points' do
     user              = Fabricate(:user)
     profile           = user.profile
     profile.readable  = 'world'

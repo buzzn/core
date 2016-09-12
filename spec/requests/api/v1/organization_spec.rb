@@ -82,7 +82,7 @@ describe "Organizations API" do
   end
 
 
-  it 'paginate organizations' do
+  it 'paginates organizations' do
     page_overload.times do
       Fabricate(:distribution_system_operator)
     end
@@ -373,7 +373,7 @@ describe "Organizations API" do
     expect(json['data'].size).to eq(contracts.size)
   end
 
-  it 'paginate contracts' do
+  it 'paginates contracts' do
     access_token    = Fabricate(:full_access_token_as_admin).token
     organization    = Fabricate(:electricity_supplier)
 
@@ -454,13 +454,20 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
   end
 
-  it 'paginate managers of an organziation' do
-    access_token  = Fabricate(:simple_access_token)
+  it 'paginates managers of an organziation' do
+    access_token  = Fabricate(:full_access_token_as_admin)
     organization  = Fabricate(:distribution_system_operator)
     page_overload.times do
       user = Fabricate(:user)
       user.add_role(:manager, organization)
     end
+
+    get_with_token "/api/v1/organizations/#{organization.id}/managers", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(2)
+
+    User.all.each {|u| u.profile.update! readable: 'world'}
+    access_token  = Fabricate(:simple_access_token)
     get_with_token "/api/v1/organizations/#{organization.id}/managers", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
@@ -481,17 +488,20 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
   end
 
-  it 'paginate members of an organziation' do
-    access_token  = Fabricate(:simple_access_token)
+  it 'paginates members of an organziation' do
+    access_token  = Fabricate(:full_access_token_as_admin)
     organization  = Fabricate(:distribution_system_operator)
     page_overload.times do
       user = Fabricate(:user)
       user.add_role(:member, organization)
     end
+
     get_with_token "/api/v1/organizations/#{organization.id}/members", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
 
+    User.all.each {|u| u.profile.update! readable: 'world'}
+    access_token  = Fabricate(:simple_access_token)
     get_with_token "/api/v1/organizations/#{organization.id}/members", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
   end
@@ -573,6 +583,7 @@ describe "Organizations API" do
   
 
   it 'replaces organization managers/members' do
+    admin_token   = Fabricate(:full_access_token_as_admin)
     organization  = Fabricate(:distribution_system_operator)
     simple_token  = Fabricate(:simple_access_token)
     manager_token = Fabricate(:full_access_token)
@@ -598,12 +609,24 @@ describe "Organizations API" do
     patch_with_token "/api/v1//organizations/#{organization.id}/relationships/managers", params.to_json, manager_token.token
     expect(response).to have_http_status(200)
 
+    get_with_token "/api/v1//organizations/#{organization.id}/relationships/managers", params.to_json, admin_token.token
+    expect(json['data'].size).to eq 1
+    expect(json['data'].first['id']).to eq user.id
+    get_with_token "/api/v1//organizations/#{organization.id}/relationships/members", params.to_json, admin_token.token
+    expect(json['data'].size).to eq 1
+    expect(json['data'].first['id']).to eq user.id
+
+    # manager is not manager of organization anymore, i.e. just community user
+    get_with_token "/api/v1//organizations/#{organization.id}/relationships/managers", params.to_json, manager_token.token
+    expect(json['data'].size).to eq 0
+    get_with_token "/api/v1//organizations/#{organization.id}/relationships/members", params.to_json, manager_token.token
+    expect(json['data'].size).to eq 0
+
+    User.all.each {|u| u.profile.update! readable: 'world'}
     get_with_token "/api/v1//organizations/#{organization.id}/relationships/managers", params.to_json, manager_token.token
     expect(json['data'].size).to eq 1
-    expect(json['data'].first['id']).to eq user.id
     get_with_token "/api/v1//organizations/#{organization.id}/relationships/members", params.to_json, manager_token.token
     expect(json['data'].size).to eq 1
-    expect(json['data'].first['id']).to eq user.id
   end
 
 

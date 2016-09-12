@@ -41,7 +41,55 @@ class Profile < ActiveRecord::Base
       where(readable: 'world')
     end
   end
+  # replaces the email with 'hidden@buzzn.net' for all metering_points which are
+  # not readable_by without delegating the check to the underlying group
+  scope :anonymized, -> (user) do
+    if user.nil?
+      select("profiles.*, 'hidden@buzzn.net' AS anonymized_email").joins(:user)
+    else
+      # admins
+      admins    = User.roles_query(user, admin: nil).project(1).exists
 
+      profile   = Profile.arel_table
+      sql       = Profile.select(:id).where(admins.or(profile[:user_id].eq(user.id)).to_sql).to_sql
+
+      # with AR5 you can use left_outer_joins directly
+      # `left_outer_joins(:user)` instead of this user_on and user_join
+      user      = User.arel_table
+      user_on   = user.create_on(user[:id].eq(profile[:user_id]))
+      user_join = user.create_join(user, user_on, Arel::Nodes::OuterJoin)
+      select("profiles.*, CASE WHEN profiles.id NOT IN (#{sql}) THEN 'hidden@buzzn.net' ELSE users.email END AS anonymized_email").joins(user_join)
+    end
+  end
+
+  scope :anonymized_readable_by, ->(user) do
+    readable_by(user).anonymized(user)
+  end
+
+  def self.anonymized_get(id, user)
+    result = self.where(id: id).anonymized_readable_by(user).first
+    if result
+      result
+    elsif self.where(id: id).first
+      # we have record but is not readable by user
+      nil #TODO make an exception instead and catch in grape
+    else
+      # no such record
+      raise(ActiveRecord::RecordNotFound.new "#{self} not found for id #{id}")
+    end
+  end
+
+  def email
+    if attribute_names.include? 'anonymized_email'
+      anonymized_email
+    elsif user
+      user.email
+    end
+  end
+
+  def email=(val)
+    user.email = val if user
+  end
 
   def generate_username
     if first_name && last_name && user_name.nil?

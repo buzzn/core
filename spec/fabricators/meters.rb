@@ -1,3 +1,4 @@
+# coding: utf-8
 Fabricator :meter do
   manufacturer_name           'ferraris'
   manufacturer_product_name    'AS 1440'
@@ -29,8 +30,9 @@ end
 
 Fabricator :easy_meter_q3d_with_manager, from: :easy_meter_q3d do
   after_create { |meter|
+    mp = Fabricate(:metering_point, meter: meter)
     user = Fabricate(:user)
-    user.add_role(:manager, meter)
+    user.add_role(:manager, mp)
   }
 end
 

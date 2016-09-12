@@ -52,6 +52,7 @@ module API
         oauth2 :full, :smartmeter
         post do
           if Contract.creatable_by?(current_user)
+            # TODO move logic into Contract and ensure manager on creation (validation)
             permitted_params[:contracting_party] = current_user.contracting_party if current_user.contracting_party
             contract = Contract.create!(permitted_params)
             current_user.add_role :manager, contract
@@ -83,7 +84,7 @@ module API
         patch ':id' do
           contract = Contract.find(permitted_params.id)
           if contract.updatable_by?(current_user)
-            contract.update_attributes(permitted_params)
+            contract.update!(permitted_params)
             contract
           else
             status 403
