@@ -11,14 +11,7 @@ describe "Users API" do
   end
 
 
-  it "does not get me with smartmeter_access_token" do
-    access_token = Fabricate(:smartmeter_access_token)
-    get_with_token "/api/v1/users/me", access_token.token
-    expect(response).to have_http_status(403)
-  end
-
-
-  [:simple_access_token, :full_access_token].each do |token|
+  [:simple_access_token, :full_access_token, :smartmeter_access_token].each do |token|
     it "gets me with #{token}" do
       access_token = Fabricate(token)
       get_with_token "/api/v1/users/me", access_token.token

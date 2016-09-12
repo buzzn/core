@@ -5,7 +5,7 @@ module API
       resource 'users' do
 
         desc "Return me"
-        oauth2 :simple, :full
+        oauth2 :simple, :full, :smartmeter
         get "me" do
           current_user
         end
