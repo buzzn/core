@@ -60,9 +60,9 @@ module API
         desc "Update a Profile"
         params do
           requires :id, type: String, desc: 'ID of the Profile'
-          optional :user_name, type: String
-          optional :first_name, type: String
-          optional :last_name, type: String
+          optional :user_name, type: String, allow_blank: false
+          optional :first_name, type: String, allow_blank: false
+          optional :last_name, type: String, allow_blank: false
           optional :title, type: String
           optional :about_me, type: String
           optional :website, type: String
@@ -75,6 +75,7 @@ module API
         end
         oauth2 :simple, :full
         patch ':id' do
+          puts permitted_params.inspect
           profile = Profile.find(permitted_params[:id])
           if profile.updatable_by?(current_user)
             profile.update!(permitted_params)
