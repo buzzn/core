@@ -75,7 +75,6 @@ module API
         end
         oauth2 :simple, :full
         patch ':id' do
-          puts permitted_params.inspect
           profile = Profile.find(permitted_params[:id])
           if profile.updatable_by?(current_user)
             profile.update!(permitted_params)

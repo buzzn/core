@@ -150,7 +150,6 @@ describe "Profiles API" do
 
     request_params.keys.each do |name|
       params = request_params.dup
-      # params[name] = 'a' * 2000
       params[name] = ''
 
       patch_with_token "/api/v1/profiles/#{profile.id}", params.to_json, access_token.token
