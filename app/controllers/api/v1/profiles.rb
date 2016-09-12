@@ -33,9 +33,9 @@ module API
 
         desc "Create a Profile"
         params do
-          requires :user_name, type: String
-          requires :first_name, type: String
-          requires :last_name, type: String
+          requires :user_name, type: String, allow_blank: false
+          requires :first_name, type: String, allow_blank: false
+          requires :last_name, type: String, allow_blank: false
           optional :title, type: String
           optional :about_me, type: String
           optional :website, type: String
