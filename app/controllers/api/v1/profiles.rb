@@ -33,9 +33,9 @@ module API
 
         desc "Create a Profile"
         params do
-          requires :user_name, type: String, allow_blank: false
-          requires :first_name, type: String, allow_blank: false
-          requires :last_name, type: String, allow_blank: false
+          requires :user_name, type: String
+          requires :first_name, type: String
+          requires :last_name, type: String
           optional :title, type: String
           optional :about_me, type: String
           optional :website, type: String
@@ -60,9 +60,9 @@ module API
         desc "Update a Profile"
         params do
           requires :id, type: String, desc: 'ID of the Profile'
-          requires :user_name, type: String
-          requires :first_name, type: String
-          requires :last_name, type: String
+          optional :user_name, type: String
+          optional :first_name, type: String
+          optional :last_name, type: String
           optional :title, type: String
           optional :about_me, type: String
           optional :website, type: String
