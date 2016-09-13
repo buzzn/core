@@ -105,7 +105,7 @@ class NotificationCreationWorker
       badge_users = @activity.trackable.involved
       growl_users = @activity.trackable.involved
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('metering_point_exceeded_max_watt', max_watt: @activity.trackable.max_watt), @activity.trackable.name, 0, metering_point_path(@activity.trackable))
+        user.send_notification('info', I18n.t('metering_point_exceeded_max_watt', metering_point_name: @activity.trackable.name, max_watt: @activity.trackable.max_watt), @activity.trackable.name, 0, metering_point_path(@activity.trackable))
       end
     when 'metering_point.undershoots'
       email_users = @activity.trackable.involved - User.unsubscribed_from_notification(@activity.key, @activity.trackable)
@@ -115,7 +115,7 @@ class NotificationCreationWorker
       badge_users = @activity.trackable.involved
       growl_users = @activity.trackable.involved
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('metering_point_undershot_min_watt', min_watt: @activity.trackable.min_watt), @activity.trackable.name, 0, metering_point_path(@activity.trackable))
+        user.send_notification('info', I18n.t('metering_point_undershot_min_watt', metering_point_name: @activity.trackable.name, min_watt: @activity.trackable.min_watt), @activity.trackable.name, 0, metering_point_path(@activity.trackable))
       end
     when 'metering_point.offline'
       email_users = @activity.trackable.involved - User.unsubscribed_from_notification(@activity.key, @activity.trackable)

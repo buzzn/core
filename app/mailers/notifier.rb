@@ -137,9 +137,9 @@ class Notifier < ActionMailer::Base
     @metering_point = metering_point
     @mode = mode
     if @mode == 'exceeds'
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('metering_point_exceeded_max_watt', max_watt: @metering_point.max_watt))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('metering_point_exceeded_max_watt', metering_point_name: @metering_point.name, max_watt: @metering_point.max_watt))
     else
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('metering_point_undershot_min_watt', min_watt: @metering_point.min_watt))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('metering_point_undershot_min_watt', metering_point_name: @metering_point.name, min_watt: @metering_point.min_watt))
     end
   end
 
