@@ -19,7 +19,6 @@
   .row
     .col-sm-12.col-md-6.col-lg-6
       .row
-
         .col-sm-12.col-md-6.col-lg-6
           .panel.media.pad-all
             .media-left
@@ -52,8 +51,6 @@
               .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
               #dummy
               .bubble_tooltip{id: "tooltip_" + @group.id.to_s}
-
-
     .col-sm-12.col-md-6.col-lg-6
       .row
         .col-sm-12.col-md-6.col-lg-6
@@ -64,10 +61,21 @@
             .media-body
               = content_tag :div, class: "number" do
                 %span.text-2x.text-thin
-                  .stats-autarchy
+                  .stats.stats-autarchy
                     = t('loading') + '...'
-              %p= t('autarchy') + ' (%)'
+              %p= t('autarchy')
 
+        .col-sm-12.col-md-6.col-lg-6
+          .panel.media.pad-all
+            .media-left
+              %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful.panel-mint
+                %i.fa.fa-power-off.fa-2x
+            .media-body
+              = content_tag :div, class: "number" do
+                %span.text-2x.text-thin
+                  .stats.stats-sufficiency{"data" => {"count-sn-in-group" => @group.energy_consumers.size}}
+                    = t('loading') + '...'
+              %p= t('sufficiency')
 
       .row
         .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id, metering_point_ids: {in: @group.in_metering_points.collect(&:id).join(","), out: @group.out_metering_points.collect(&:id).join(",")}}
@@ -95,3 +103,29 @@
                   %li{"data-action" => "comment"}= t('create_new_comment_here')
                   /%li{"data-action" => "zoom_in"}= t('zoom_in_here_if_possible')
                 .chart-comments
+
+
+      .row
+        .col-sm-12.col-md-6.col-lg-6
+          .panel.media.pad-all
+            .media-left
+              %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful.panel-mint
+                %i.fa.fa-line-chart.fa-2x
+            .media-body
+              = content_tag :div, class: "number" do
+                %span.text-2x.text-thin
+                  .stats.stats-fitting
+                    = t('loading') + '...'
+              %p= t('fitting')
+
+        .col-sm-12.col-md-6.col-lg-6
+          .panel.media.pad-all
+            .media-left
+              %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful.panel-mint
+                %i.fa.fa-map-marker.fa-2x
+            .media-body
+              = content_tag :div, class: "number" do
+                %span.text-2x.text-thin
+                  .stats.stats-closeness{"data" => {"current-closeness" => @group.calculate_current_closeness}}
+                    = t('loading') + '...'
+              %p= t('closeness')
