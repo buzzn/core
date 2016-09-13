@@ -112,7 +112,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       fetch(`${url}/api/v1/aggregates/present?metering_point_ids=${point.id}`, { headers })
         .then(getJson)
         .then(json => {
-          inData[idx].value = Math.abs(json.power_milliwatt) || 0;
+          inData[idx].value = Math.floor(Math.abs(json.power_milliwatt)) || 0;
           inData[idx].seeded = true;
           inData[idx].updating = false;
         })
@@ -127,7 +127,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       fetch(`${url}/api/v1/aggregates/present?metering_point_ids=${point.id}`, { headers })
         .then(getJson)
         .then(json => {
-          outData[idx].value = Math.abs(json.power_milliwatt) || 0;
+          outData[idx].value = Math.floor(Math.abs(json.power_milliwatt)) || 0;
           recalculateAngles();
           outData[idx].seeded = true;
           outData[idx].updating = false;
