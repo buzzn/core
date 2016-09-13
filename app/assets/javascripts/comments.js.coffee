@@ -100,6 +100,8 @@ $(".comments-panel").ready ->
 
       $(".likes").tooltip({html: true})
 
+      Chart.Functions.refreshChartComments()
+
     channel.bind "likes_changed", (data) ->
       if pusher.connection.socket_id != data.socket_id
         $("##{data.div}").find(".likes").first().find(".likes-count").html(data.likes)

@@ -673,6 +673,7 @@ $(".group-chart").ready ->
 
       chart_data_min_x = chart.series[0].data[0].x
       Chart.Functions.activateButtons(true)
+      Chart.Functions.getChartComments('groups', group_id, chart_data_min_x)
       Chart.Functions.setEnergyStatsGroup()
 
 
@@ -1116,17 +1117,19 @@ namespace 'Chart.Functions', (exports) ->
   exports.resizeChartComments = (initializing, resource_id) ->
     if $(".chart-comments").length == 0
       return
-    firstDataX = parseInt($('.highcharts-series-group').find('.highcharts-series').first().children().first().attr('x')) || 0
-    pointWidth = parseInt($('.highcharts-series-group').find('.highcharts-series').first().children().first().attr('width')) || 0
-    xAxisWidth = $('.highcharts-axis').first()[0].getBoundingClientRect().width || $('.highcharts-axis').first().children().last()[0].getBoundingClientRect().width
-    xAxisOffset = 2*firstDataX + pointWidth
-    xAxisWidth -= xAxisOffset
-    if $('.highcharts-axis').first()[0].getBoundingClientRect().x && $('.highcharts-axis').first()[0].getBoundingClientRect().x != 0
-      xAxisLeftMargin = $('.highcharts-axis').first()[0].getBoundingClientRect().x
+    firstDataX = parseInt($('.highcharts-series-group').find('.highcharts-series').first().children()[0].getBoundingClientRect().left) || 0
+    if $('.highcharts-series-group').find('.highcharts-series').first().children()[0].width
+      pointWidth = parseInt($('.highcharts-series-group').find('.highcharts-series').first().children()[0].width.baseVal.value)
     else
-      xAxisLeftMargin = $('.highcharts-axis').first()[0].getBoundingClientRect().left || $('.highcharts-axis').first().children().first()[0].getBoundingClientRect().left
-    xAxisLeftMarginOffset = firstDataX + 0.5 * pointWidth
-    xAxisLeftMargin += xAxisLeftMarginOffset
+      pointWidth = 0
+    if $('.highcharts-axis').first()[0].getBoundingClientRect().width != 0
+      xAxisWidth = $('.highcharts-axis').first()[0].getBoundingClientRect().width
+      xAxisLeftMargin = $('.highcharts-axis').first()[0].getBoundingClientRect().left
+    else
+      xAxisWidth = $('.highcharts-axis').last()[0].getBoundingClientRect().width
+      xAxisLeftMargin = $('.highcharts-axis').last()[0].getBoundingClientRect().left
+    xAxisWidth -= 2*pointWidth
+    xAxisLeftMargin += pointWidth
     min_max = Chart.Functions.getExtremes(chart_data_min_x)
     x_min = min_max.min
     x_max = min_max.max
@@ -1156,6 +1159,8 @@ namespace 'Chart.Functions', (exports) ->
     url = window.location.href
     resource = url.toString().split('/')[3]
     resource_id = url.toString().split('/')[4]
+    if resource == 'conversations'
+      return
     Chart.Functions.getChartComments(resource, resource_id, chart_data_min_x)
 
   exports.setEnergyStats = () ->
