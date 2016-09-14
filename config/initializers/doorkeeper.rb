@@ -110,10 +110,6 @@ Doorkeeper.configure do
   #   client.superapp? or resource_owner.admin?
   # end
 
-  skip_authorization do |resource_owner, client|
-    client.application.name == 'Buzzn RailsView'
-  end
-
   # WWW-Authenticate Realm (default "Doorkeeper").
   # realm "Doorkeeper"
 end
