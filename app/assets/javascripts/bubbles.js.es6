@@ -11,8 +11,9 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   const svgId = `group-${group}`;
   const tooltip = d3.select(`#tooltip_${group}`);
   const self = this;
-  const token = gon.global.access_token;
-
+  let oauth = gon.global.oauth;
+  let token = null;
+  let token_expires_at = null;
   let switchInOnTop = true;
   let svg = null;
   let svgDom = null;
@@ -28,7 +29,6 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   const headers = {
     Accept: 'application/json',
   };
-  if (token && token.length > 0) headers.Authorization = `Bearer ${token}`;
   let circle = null;
   let outCircle = null;
   let simulation = null;
@@ -38,6 +38,42 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   function getJson(response) {
     if (!response.ok) return Promise.reject(`${response.status}: ${response.statusText}`);
     return response.json();
+  }
+
+  function setupOAuth(data) {
+      if (data) {
+	  oauth = data
+	  // refresh the token a bit earlier to avoid 403 responses
+	  token_expires_at = new Date((oauth['created_at'] + oauth['expires_in'] - 120) * 1000);
+	  token = oauth['access_token'];
+	  if (token && token.length > 0) {
+	      headers.Authorization = `Bearer ${token}`;
+	  }
+      }
+  }
+  setupOAuth(oauth);
+
+  function checkToken() {
+      if (token_expires_at != null && token_expires_at < new Date()) {
+	  console.log('access token expired');
+	  token_expires_at = null;
+	  fetch(`${url}/oauth/token?grant_type=refresh_token&refresh_token=${oauth['refresh_token']}`, {
+	          method: 'post',
+		  headers: {
+		      'Accept': 'application/json',
+		      'Content-Type': 'x-www-form-urlencoded'
+	          }
+	      })
+	      .then(function (response) {
+		  response.json().then(setupOAuth)
+	      })
+	      .catch (function (error) {
+		  console.log('Refresh of access-token failed - reload page:',
+			      error);
+		  // reload the page and let the server handle the oauth bits
+		  location.reload();
+	      });
+      }
   }
 
   function fillPoints(pointsArr) {
@@ -109,6 +145,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     _.forEach(inData, (point, idx) => {
       if (inData[idx].updating) return;
       inData[idx].updating = true;
+      checkToken();
       fetch(`${url}/api/v1/aggregates/present?metering_point_ids=${point.id}`, { headers })
         .then(getJson)
         .then(json => {
@@ -124,6 +161,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     _.forEach(outData, (point, idx) => {
       if (outData[idx].updating) return;
       outData[idx].updating = true;
+      checkToken();
       fetch(`${url}/api/v1/aggregates/present?metering_point_ids=${point.id}`, { headers })
         .then(getJson)
         .then(json => {
@@ -397,6 +435,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   }
 
   function getMeteringPoints(page = 1) {
+    checkToken();
     fetch(`${url}/api/v1/groups/${group}/metering-points?per_page=10&page=${page}`, { headers })
       .then(getJson)
       .then(json => {
