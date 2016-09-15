@@ -67,7 +67,7 @@ class ApplicationController < ActionController::Base
       oauth = OAuthHelper.new(current_user)
       # if the user just logged in we have username + password and need to use it
       user = params['user'] || {}
-      token = oauth.token(user['email'], user['password'])
+      token = oauth.token(user['password'])
       if token
         gon_access_token = token.token
         # use the same structure as /oauth/token will return

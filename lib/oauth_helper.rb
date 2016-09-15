@@ -17,16 +17,12 @@ class OAuthHelper
     @client ||= OAuth2::Client.new(rails_view.uid, rails_view.secret, site: Rails.application.secrets.hostname)
   end
 
-  def token(username, password)
+  def token(password)
     # if we have a token with refresh-token then take it
     token = access_token
     # if no refresh-token but username/password then login with password grant
-    if username && token.refresh_token.nil?
-      # TODO remove this hard-coded scope and use rails_view.scopes.to_s
-      token = client.password.get_token(username, password, scope: 'full')
-      # as the password grant does not register the right application we do it here
-      ac = Doorkeeper::AccessToken.where(token: token.token).first
-      ac.update!(application_id: rails_view.id)
+    if password && token.refresh_token.nil?
+      token = client.password.get_token(@user.email, password, scope: rails_view.scopes.to_s)
     end
     token
   end
