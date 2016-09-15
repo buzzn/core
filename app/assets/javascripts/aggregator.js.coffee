@@ -55,11 +55,12 @@ class @Aggregator
       timestamp = new Date(timestamp)
     url = ''
     if chartType == 'present'
-      url = '/api/v1/aggregates/present?timestamp=' + encodeURIComponent(moment(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSSZ')) + '&metering_point_ids=' + id + '&access_token=' + gon.global.access_token
+      url = '/api/v1/aggregates/present?timestamp=' + encodeURIComponent(moment(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSSZ')) + '&metering_point_ids=' + id
     else
-      url = '/api/v1/aggregates/past?timestamp=' + encodeURIComponent(moment(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSSZ')) + '&resolution=' + resolution + '&metering_point_ids=' + id + '&access_token=' + gon.global.access_token
+      url = '/api/v1/aggregates/past?timestamp=' + encodeURIComponent(moment(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSSZ')) + '&resolution=' + resolution + '&metering_point_ids=' + id
 
-    ajaxCall = $.ajax({url: url, async: true, dataType: 'json'})
+    checkToken();
+    ajaxCall = $.ajax({url: url, headers: headers, async: true, dataType: 'json'})
       .success (data) ->
         if chartType == 'past' && Object.prototype.toString.call(data) == '[object Array]'
           highcharts_data = []

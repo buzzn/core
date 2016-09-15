@@ -532,7 +532,8 @@ $(".dashboard-chart").ready ->
     Chart.Functions.setChartDataMultiSeries('dashboard', dashboard_id, containing_timestamp)
 
 getMeteringPointName = (id) ->
-  $.ajax({url: '/api/v1/metering-points/' + id + '?access_token=' + gon.global.access_token, async: true, dataType: 'json'})
+  checkToken();
+  $.ajax({url: '/api/v1/metering-points/' + id, headers: headers, async: true, dataType: 'json'})
 
 
 #code for group

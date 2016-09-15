@@ -11,9 +11,6 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   const svgId = `group-${group}`;
   const tooltip = d3.select(`#tooltip_${group}`);
   const self = this;
-  let oauth = gon.global.oauth;
-  let token = null;
-  let token_expires_at = null;
   let switchInOnTop = true;
   let svg = null;
   let svgDom = null;
@@ -26,9 +23,6 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   const borderWidth = '3px';
   const inData = [];
   const outData = [];
-  const headers = {
-    Accept: 'application/json',
-  };
   let circle = null;
   let outCircle = null;
   let simulation = null;
@@ -38,42 +32,6 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   function getJson(response) {
     if (!response.ok) return Promise.reject(`${response.status}: ${response.statusText}`);
     return response.json();
-  }
-
-  function setupOAuth(data) {
-      if (data) {
-	  oauth = data
-	  // refresh the token a bit earlier to avoid 403 responses
-	  token_expires_at = new Date((oauth['created_at'] + oauth['expires_in'] - 120) * 1000);
-	  token = oauth['access_token'];
-	  if (token && token.length > 0) {
-	      headers.Authorization = `Bearer ${token}`;
-	  }
-      }
-  }
-  setupOAuth(oauth);
-
-  function checkToken() {
-      if (token_expires_at != null && token_expires_at < new Date()) {
-	  console.log('access token expired');
-	  token_expires_at = null;
-	  fetch(`${url}/oauth/token?grant_type=refresh_token&refresh_token=${oauth['refresh_token']}`, {
-	          method: 'post',
-		  headers: {
-		      'Accept': 'application/json',
-		      'Content-Type': 'x-www-form-urlencoded'
-	          }
-	      })
-	      .then(function (response) {
-		  response.json().then(setupOAuth)
-	      })
-	      .catch (function (error) {
-		  console.log('Refresh of access-token failed - reload page:',
-			      error);
-		  // reload the page and let the server handle the oauth bits
-		  location.reload();
-	      });
-      }
   }
 
   function fillPoints(pointsArr) {
