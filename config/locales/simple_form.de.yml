@@ -234,8 +234,8 @@ de:
           out: 'Erzeuger'
       metering_point:
         mode:
-          in: 'Verbrauch'
-          out: 'Produktion'
+          in: 'Verbrauch oder Bezug'
+          out: 'Produktion oder Einspeisung'
         readable:
           me: Nur mich
           members: Mitglieder des Zählpunkts

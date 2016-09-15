@@ -167,8 +167,8 @@ de:
 
   close: Schließen
   close_without_save: Schliessen ohne zu speichern
-  out: Produktion
-  in: Verbrauch
+  out: Produktion oder Einspeisung
+  in: Verbrauch oder Bezug
   in_out: Verbrauch/Produktion
   diff: Abgrenzung
   total_consumption: Gesamtverbrauch
@@ -701,7 +701,8 @@ de:
   zoom_in_here_if_possible: Hineinzoomen wenn möglich
   help: Hilfe
   remove_from_dashboard: Vom Dashboard entfernen
-  add_metering_point_to_dashboard: Zählpunkt zum Dashboard hinzufügen
+  add_metering_points_to_dashboard: Zählpunkte zum Dashboard hinzufügen
+  type_in_metering_point_name_or_choose_from_dropdown: "Hier Zählpunktname eingeben oder Zählpunkt(e) aus Dropdown auswählen"
   display_in_series: Im Diagramm anzeigen
   series: Graph
   my_dashboard: Mein Dashboard
