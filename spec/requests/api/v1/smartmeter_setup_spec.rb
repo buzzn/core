@@ -1,15 +1,16 @@
-describe "Discovergy setup using API" do
+describe "MySmartGrid setup using API" do
 
   [:full_access_token, :smartmeter_access_token].each do |token|
 
     { discovergy: { contract: :mpoc_justus, meter: :easymeter_1124001747 },
       wrong_password: { orga: :discovergy, meter: :meter},
-      # TODO mysmartgrid: { contract: :mpoc_ferraris_0001_amperix, meter: :ferraris_001_amperix }
+      mysmartgrid: { contract: :mpoc_ferraris_0001_amperix, meter: :ferraris_001_amperix },
+      wrong_password: { orga: :mysmartgrid, meter: :meter},
       # TODO add mpoc_buzzn_metering
     }.each do |organization, meta|
 
       it "creates a metering_point for #{meta[:orga] || organization} with #{meta[:contract] || 'no' } contract and #{token}" do
-        orga         = Organization.where(name: 'Discovergy').first || Fabricate(meta[:orga] || organization)
+        orga         = Fabricate(meta[:orga] || organization)
         access_token = Fabricate(token)
 
         # create meter
@@ -46,7 +47,7 @@ describe "Discovergy setup using API" do
         post_with_token "/api/v1/contracts", request_params.to_json, access_token.token
         expect(response).to have_http_status(201)
         contract = Contract.find(json['data']['id'])
-        expect(contract.valid_credentials).to eq meta[:contract] == :mpoc_justus
+        expect(contract.valid_credentials).to eq !!(meta[:contract].to_s =~ /^mpoc_/)
       end
     end
   end

@@ -47,8 +47,8 @@ class MySmartGrid
   def get_month(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_month.to_time.to_i
     datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_month.to_time.to_i
-    Rails.log datetime_end
-    Rails.log datetime_start
+    #Rails.log datetime_end
+    #Rails.log datetime_start
     response = @conn.get do |req|
       req.url '?start='+datetime_start.to_s+'&end='+datetime_end.to_s+'&resolution=day&unit=kwhperyear'
   #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=month&unit=watt'
@@ -91,10 +91,10 @@ class MySmartGrid
       req.headers["Accept"] = "application/json"
     end
     if response['content-length'] != "0"
-      Rails.log response.body
+      #Rails.log response.body
       return MultiJson.load(response.body)
     else
-      Rails.log "NO DATA FROM AMPERIX API"
+      #Rails.log "NO DATA FROM AMPERIX API"
     end
   end
 
@@ -103,8 +103,8 @@ class MySmartGrid
   def get_year(time)
     datetime_start = Time.at(time.to_i/1000).in_time_zone.beginning_of_year.to_time.to_i
     datetime_end   = Time.at(time.to_i/1000).in_time_zone.end_of_year.to_time.to_i
-    Rails.log datetime_end
-    Rails.log datetime_start
+    #Rails.log datetime_end
+    #Rails.log datetime_start
     response = @conn.get do |req|
       req.url '?start='+datetime_start.to_s+'&end='+datetime_end.to_s+'&resolution=month&unit=kwhperyear'
   #      req.url 'sensor/721bcb386c8a4dab2510d40a93a7bf66?interval=month&unit=watt'
@@ -119,7 +119,7 @@ class MySmartGrid
     #x_token   = "0b81f58c19135bc01420aa0120ae7693" #dito
     @conn = Faraday.new(:url => 'https://api.mysmartgrid.de:8443/sensor/'+ sensor_id, ssl: {verify: false}) do |faraday|
       faraday.request  :url_encoded
-      faraday.response :logger
+      faraday.response :logger, Rails.logger if Rails.env == 'development'
       faraday.adapter :net_http
       faraday.headers["X-Token"] = x_token
       faraday.headers["X-Version"] = "1.0"
