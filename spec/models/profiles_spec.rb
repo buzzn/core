@@ -1,7 +1,7 @@
 # coding: utf-8
 describe "Profile Model" do
 
-  it 'is restricting readable_by' do
+  it 'is restricting readable_by', :retry => 3 do
     user = Fabricate(:user)
     profile = user.profile
     expect(Profile.readable_by(nil)).to eq []
@@ -20,7 +20,7 @@ describe "Profile Model" do
     expect(Profile.readable_by(admin)).to match_array [profile, other.profile, admin.profile]
   end
 
-  it 'anonymizes email on collections' do
+  it 'anonymizes email on collections', :retry => 3 do
     user = Fabricate(:user)
     Fabricate(:user)
     Fabricate(:user)
@@ -37,8 +37,8 @@ describe "Profile Model" do
     expect(Profile.anonymized_readable_by(user).collect(&:email).include?('hidden@buzzn.net')).to eq false
   end
 
-  
-  it 'anonymizes email on get' do
+
+  it 'anonymizes email on get', :retry => 3 do
     user   = Fabricate(:user)
     other  = Fabricate(:user)
     other.profile.update! readable: 'world'
@@ -53,7 +53,7 @@ describe "Profile Model" do
     # has some warning - not sure how to avoid
     expect(Profile.anonymized_get(other.profile.id, nil).email).to eq 'hidden@buzzn.net'
 
-    # not readable by user 
+    # not readable by user
     expect(Profile.anonymized_get(hidden.profile.id, user)).to be_nil
 
     # unknown id
@@ -66,7 +66,7 @@ describe "Profile Model" do
     expect(Profile.anonymized_get(hidden.profile.id, user).email).to eq hidden.email
   end
 
-  it 'gets all profiles without attached user as admin' do
+  it 'gets all profiles without attached user as admin', :retry => 3 do
     user = Fabricate(:user)
     user.add_role(:admin, nil)
     Fabricate(:profile)

@@ -1,7 +1,7 @@
 # coding: utf-8
 describe "Meter Model" do
 
-  it 'filters meter' do
+  it 'filters meter', :retry => 3 do
     meter = Fabricate(:easy_meter_q3d)
     Fabricate(:meter)
 
@@ -14,14 +14,14 @@ describe "Meter Model" do
   end
 
 
-  it 'can not find anything' do
+  it 'can not find anything', :retry => 3 do
     Fabricate(:easy_meter_q3d)
     meters = Meter.filter('Der Clown ist müde und geht nach Hause.')
     expect(meters.size).to eq 0
   end
 
 
-  it 'filters meter with no params' do
+  it 'filters meter with no params', :retry => 3 do
     Fabricate(:easy_meter_q3d)
     Fabricate(:meter)
 
@@ -49,7 +49,7 @@ describe "Meter Model" do
   end
   let(:orphand) { Fabricate(:meter) }
 
-  it 'is restricting readable_by' do
+  it 'is restricting readable_by', :retry => 3 do
      # orphand without metering_point
     expect(Meter.all.readable_by(nil)).to eq []
     expect(Meter.all.readable_by(user)).to eq []

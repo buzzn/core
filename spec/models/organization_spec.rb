@@ -18,14 +18,14 @@ describe "Organization Model" do
   end
 
 
-  it 'can not find anything' do
+  it 'can not find anything', :retry => 3 do
     Fabricate(:electricity_supplier)
     organizations = Organization.filter('Der Clown ist müde und geht nach Hause.')
     expect(organizations.size).to eq 0
   end
 
 
-  it 'filters organization with no params' do
+  it 'filters organization with no params', :retry => 3 do
     5.times { Fabricate(:metering_service_provider) }
 
     organizations = Organization.filter(nil)
