@@ -56,10 +56,10 @@ class Crawler
       request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
       return request['status'] == 'ok'
 
-    when 'my_smart_grid'
+    when 'mysmartgrid'
       my_smart_grid = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request = my_smart_grid.get_live
-      return request != ""
+      return request != "" && !request.nil?
 
     else
       "You gave me #{@metering_point_operator} -- I have no idea what to do with that."
