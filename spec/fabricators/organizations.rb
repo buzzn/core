@@ -56,6 +56,6 @@ end
 
 # needed for contracts fabricator
 Fabricator :mysmartgrid, from: :metering_service_provider do
-  name 'my_smart_grid'
+  name 'mysmartgrid'
   mode 'metering_service_provider'
 end
