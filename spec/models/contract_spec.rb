@@ -24,7 +24,7 @@ describe "Contract Model" do
     user.add_role(:member, contracts.last.organization)
     user
   end
-  
+
   let(:contracts) do
     c1 = Fabricate(:metering_point_operator_contract)
     c1.metering_point = user_with_metering_point.roles.first.resource
@@ -36,7 +36,7 @@ describe "Contract Model" do
     [c1, c2]
   end
 
-  it 'filters contract' do
+  it 'filters contract', :retry => 3 do
     Fabricate(:discovergy)
     contract = Fabricate(:mpoc_stefan)
     contract.address = Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern')
@@ -45,7 +45,7 @@ describe "Contract Model" do
     [contract.tariff, contract.mode, contract.signing_user,
      contract.username, contract.address.state,
      contract.address.city, contract.address.street_name].each do |val|
-      
+
       [val, val.upcase, val.downcase, val[0..40], val[-40..-1]].each do |value|
         contracts = Contract.filter(value)
         expect(contracts.sort{|x,y| x.username <=> y.username}.last).to eq contract
@@ -54,7 +54,7 @@ describe "Contract Model" do
   end
 
 
-  it 'can not find anything' do
+  it 'can not find anything', :retry => 3 do
     Fabricate(:discovergy)
     Fabricate(:mpoc_justus)
     contracts = Contract.filter('Der Clown ist müde und geht nach Hause.')
@@ -62,7 +62,7 @@ describe "Contract Model" do
   end
 
 
-  it 'filters contract with no params' do
+  it 'filters contract with no params', :retry => 3 do
     Fabricate(:discovergy)
     Fabricate(:mpoc_stefan)
     Fabricate(:mpoc_karin)
@@ -71,28 +71,28 @@ describe "Contract Model" do
     expect(contracts.size).to eq 2
   end
 
-  it 'selects no contracts for anonymous user' do
+  it 'selects no contracts for anonymous user', :retry => 3 do
     contracts # create contracts
     expect(Contract.readable_by(nil)).to eq []
   end
 
-  it 'selects all contracts by admin' do
+  it 'selects all contracts by admin', :retry => 3 do
     contracts # create contracts
     expect(Contract.readable_by(Fabricate(:admin))).to eq contracts
   end
 
-  it 'selects contracts of metering_point manager' do
+  it 'selects contracts of metering_point manager', :retry => 3 do
     contracts # create contracts
     expect(Contract.readable_by(user_with_metering_point)).to eq [contracts.first]
   end
 
-  it 'selects contracts of organization manager but not organization member' do
+  it 'selects contracts of organization manager but not organization member', :retry => 3 do
     contracts # create contracts
     expect(Contract.readable_by(manager_of_organization)).to eq [contracts.last]
     expect(Contract.readable_by(member_of_organization)).to eq []
   end
 
-  it 'selects contracts of group manager but not group member' do
+  it 'selects contracts of group manager but not group member', :retry => 3 do
     contracts # create contracts
     expect(Contract.readable_by(manager_of_group)).to eq [contracts.last]
     expect(Contract.readable_by(member_of_group)).to eq []

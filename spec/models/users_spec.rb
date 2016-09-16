@@ -1,7 +1,7 @@
 # coding: utf-8
 describe "User Model" do
 
-  it 'filters user with given email' do
+  it 'filters user with given email', :retry => 3 do
     user = Fabricate(:user)
     2.times { Fabricate(:user) }
 
@@ -15,7 +15,7 @@ describe "User Model" do
     expect(users.size).to eq 0
   end
 
-  it 'filters user with given firstname' do
+  it 'filters user with given firstname', :retry => 3 do
     user = Fabricate(:user)
     2.times { Fabricate(:user) }
 
@@ -30,7 +30,7 @@ describe "User Model" do
   end
 
 
-  it 'filters user with given lastname' do
+  it 'filters user with given lastname', :retry => 3 do
     user = Fabricate(:user)
     2.times { Fabricate(:user) }
 
@@ -45,7 +45,7 @@ describe "User Model" do
   end
 
 
-  it 'filters user by last_name and first_name' do
+  it 'filters user by last_name and first_name', :retry => 3 do
     user = Fabricate(:user)
     2.times { Fabricate(:user) }
 
@@ -59,7 +59,7 @@ describe "User Model" do
   end
 
 
-  it 'filters user by last_name and first_name and email' do
+  it 'filters user by last_name and first_name and email', :retry => 3 do
     user = Fabricate(:user)
     2.times { Fabricate(:user) }
 
@@ -73,14 +73,14 @@ describe "User Model" do
   end
 
 
-  it 'filters user with no params' do
+  it 'filters user with no params', :retry => 3 do
     5.times { Fabricate(:user) }
 
     users = User.filter(nil)
     expect(users.size).to eq 5
   end
 
-  it 'is restriciting readable_by' do
+  it 'is restriciting readable_by', :retry => 3 do
     user = Fabricate(:user)
     profile = user.profile
     expect(User.readable_by(nil)).to eq []

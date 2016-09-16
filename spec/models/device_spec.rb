@@ -27,7 +27,7 @@ describe "Device Model" do
     [in_device_with_member, out_device_with_manager, out_device_with_metering_point, out_device_with_metering_point_with_group]
   end
 
-  it 'filters device' do
+  it 'filters device', :retry => 3 do
     device = Fabricate(:bhkw_justus)
     Fabricate(:auto_justus)
 
@@ -41,14 +41,14 @@ describe "Device Model" do
   end
 
 
-  it 'can not find anything' do
+  it 'can not find anything', :retry => 3 do
     Fabricate(:dach_pv_justus)
     devices = Device.filter('Der Clown ist müde und geht nach Hause.')
     expect(devices.size).to eq 0
   end
 
 
-  it 'filters device with no params' do
+  it 'filters device with no params', :retry => 3 do
     Fabricate(:pv_karin)
     Fabricate(:bhkw_stefan)
 
@@ -56,22 +56,22 @@ describe "Device Model" do
     expect(devices.size).to eq 2
   end
 
-  it 'selects worldreadable devices for anonymous user' do
+  it 'selects worldreadable devices for anonymous user', :retry => 3 do
     devices # create devices
     expect(Device.readable_by(nil)).to match_array [out_device_with_metering_point_with_group]
   end
 
-  it 'selects all devices by admin' do
+  it 'selects all devices by admin', :retry => 3 do
     devices # create devices
     expect(Device.readable_by(Fabricate(:admin))).to match_array devices
   end
 
-  it 'selects devices as manager' do
+  it 'selects devices as manager', :retry => 3 do
     devices # create devices
     expect(Device.readable_by(device_manager)).to match_array [out_device_with_metering_point_with_group, out_device_with_manager]
   end
 
-  it 'selects devices as member' do
+  it 'selects devices as member', :retry => 3 do
     devices # create devices
     expect(Device.readable_by(device_member)).to match_array [out_device_with_metering_point_with_group]
   end

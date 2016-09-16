@@ -37,7 +37,7 @@ let(:admin) do
   end
 
 
-  it 'filters metering_point' do
+  it 'filters metering_point', :retry => 3 do
     metering_point = urban
 
     [metering_point.name, metering_point.address.city,
@@ -51,19 +51,19 @@ let(:admin) do
   end
 
 
-  it 'can not find anything' do
+  it 'can not find anything', :retry => 3 do
     metering_points = MeteringPoint.filter('Der Clown ist müde und geht nach Hause.')
     expect(metering_points.size).to eq 0
   end
 
 
-  it 'filters metering_point with no params' do
+  it 'filters metering_point with no params', :retry => 3 do
     metering_points = MeteringPoint.filter(nil)
     expect(metering_points).to match_array MeteringPoint.all
   end
 
 
-  it 'restricts readable_by for anonymous users' do
+  it 'restricts readable_by for anonymous users', :retry => 3 do
     expect(MeteringPoint.readable_by(nil)).to match_array []
     expect(MeteringPoint.readable_by(nil, :group_inheritance)).to match_array [butenland]
     urban.update!(readable: 'world')
@@ -78,7 +78,7 @@ let(:admin) do
   end
 
 
-  it 'restricts readable_by for community users' do
+  it 'restricts readable_by for community users', :retry => 3 do
     user = Fabricate(:user)
     expect(MeteringPoint.readable_by(user)).to match_array []
     urban.update!(readable: 'community')
@@ -93,7 +93,7 @@ let(:admin) do
   end
 
 
-  it 'restricts readable_by for metering_point members or manager' do
+  it 'restricts readable_by for metering_point members or manager', :retry => 3 do
     expect(MeteringPoint.readable_by(member)).to match_array [urban]
     expect(MeteringPoint.readable_by(member, :group_inheritance)).to match_array [urban, butenland]
     expect(MeteringPoint.readable_by(manager)).to match_array [urban]
@@ -101,7 +101,7 @@ let(:admin) do
   end
 
 
-  it 'restricts readable_by for metering_point for friends of manager' do
+  it 'restricts readable_by for metering_point for friends of manager', :retry => 3 do
     expect(MeteringPoint.readable_by(member.friends.first)).to match_array []
     expect(MeteringPoint.readable_by(member.friends.first, :group_inheritance)).to match_array [butenland]
     expect(MeteringPoint.readable_by(admin.friends.first)).to eq []
@@ -118,11 +118,11 @@ let(:admin) do
   end
 
 
-  it 'restricts readable_by for metering_point belonging to readable group' do
+  it 'restricts readable_by for metering_point belonging to readable group', :retry => 3 do
     expect(MeteringPoint.readable_by(member.friends.first)).to match_array []
     expect(MeteringPoint.readable_by(member.friends.first, :group_inheritance)).to match_array [butenland]
     expect(MeteringPoint.readable_by(admin.friends.first)).to eq []
-    
+
     expect(MeteringPoint.readable_by(admin.friends.first, :group_inheritance)).to eq [butenland]
     expect(MeteringPoint.readable_by(manager.friends.first)).to match_array [urban]
     expect(MeteringPoint.readable_by(manager.friends.first, :group_inheritance)).to match_array [urban, butenland]
@@ -137,11 +137,11 @@ let(:admin) do
   end
 
 
-  it 'does not restrict readable_by for admins' do
+  it 'does not restrict readable_by for admins', :retry => 3 do
     expect(MeteringPoint.readable_by(admin)).to match_array MeteringPoint.all
   end
 
-  it 'anonymizes the name when MP is not readable without group inhereted readablity' do
+  it 'anonymizes the name when MP is not readable without group inhereted readablity', :retry => 3 do
     user = Fabricate(:user)
     [nil, user, member, member.friends.first, manager, manager.friends.first].each do |u|
       expect(

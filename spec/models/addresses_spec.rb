@@ -8,14 +8,14 @@ describe "Address Model" do
     admin
   end
 
-  let(:mp_manager) do  
+  let(:mp_manager) do
     manager = Fabricate(:user)
     manager.add_role(:manager, urban)
     manager.friends << Fabricate(:user)
     manager
   end
 
-  let(:orga_manager) do  
+  let(:orga_manager) do
     manager = Fabricate(:user)
     manager.add_role(:manager, organization)
     manager
@@ -40,16 +40,16 @@ describe "Address Model" do
     contracting_party
   end
 
-  it 'restricts readable_by for anonymous users' do  
+  it 'restricts readable_by for anonymous users', :retry => 3 do
     expect(Address.readable_by(nil)).to eq [organization.address]
   end
 
-  it 'restricts readable_by for managers of metering_points' do
+  it 'restricts readable_by for managers of metering_points', :retry => 3 do
     expect(Address.readable_by(mp_manager)).to eq [urban.address, organization.address]
     expect(Address.readable_by(admin.friends.first)).to eq [organization.address]
   end
 
-  it 'restricts readable_by for friends of a manager of a metering_points' do
+  it 'restricts readable_by for friends of a manager of a metering_points', :retry => 3 do
     expect(Address.readable_by(mp_manager.friends.first)).to match_array [urban.address, organization.address]
 
     [:members, :community].each do |readable|
@@ -59,15 +59,15 @@ describe "Address Model" do
     end
   end
 
-  it 'restricts readable_by for contracting_party users' do
+  it 'restricts readable_by for contracting_party users', :retry => 3 do
     expect(Address.readable_by(contracting_party.user)).to match_array [contracting_party.address, organization.address]
   end
 
-  it 'restricts readable_by for contracting_party address to organization manager' do
+  it 'restricts readable_by for contracting_party address to organization manager', :retry => 3 do
     expect(Address.readable_by(orga_manager)).to match_array [contracting_party.address, organization.address]
   end
 
-  it 'does not restrict readable_by for admins' do
+  it 'does not restrict readable_by for admins', :retry => 3 do
     expect(Address.readable_by(admin)).to match_array Address.all
   end
 
