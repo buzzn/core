@@ -26,10 +26,13 @@
               %small= t'metering_points'
 
           %li.col-xs-4
-            %span.text-xxs
-              - group.scores.autarchies.yearly.last.value.to_i.times do
-                %i{class: 'fa fa-star'}
-              - (5 - group.scores.autarchies.yearly.last.value.to_i).times do
-                %i{class: 'fa fa-star-o'}
+            - if group.scores.autarchies.yearly.last
+              %span.text-xxs
+                - group.scores.autarchies.yearly.last.value.to_i.times do
+                  %i{class: 'fa fa-star'}
+                - (5 - group.scores.autarchies.yearly.last.value.to_i).times do
+                  %i{class: 'fa fa-star-o'}
+            - else
+              %span.text-lg= 'n.a.'
             %p.text-muted.text-uppercase
               %small= t'autarchy'
