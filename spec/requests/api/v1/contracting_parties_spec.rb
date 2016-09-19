@@ -66,18 +66,19 @@ describe 'Contracting parties API' do
   end
 
   it 'updates contracting party using full token' do
+    contracting_party = Fabricate(:contracting_party)
     full_access_token = Fabricate(:full_access_token_as_admin)
     access_token      = Fabricate(:simple_access_token)
     params = {
       legal_entity: 'natural_person',
     }
 
-    post_without_token '/api/v1/contracting_parties', params.to_json
+    patch_without_token "/api/v1/contracting_parties/#{contracting_party.id}", params.to_json
     expect(response).to have_http_status(401)
-    post_with_token '/api/v1/contracting_parties', params.to_json, access_token.token
+    patch_with_token "/api/v1/contracting_parties/#{contracting_party.id}", params.to_json, access_token.token
     expect(response).to have_http_status(403)
-    post_with_token '/api/v1/contracting_parties', params.to_json, full_access_token.token
-    expect(response).to have_http_status(201)
+    patch_with_token "/api/v1/contracting_parties/#{contracting_party.id}", params.to_json, full_access_token.token
+    expect(response).to have_http_status(200)
   end
 
   it 'deletes contracting party using full token' do

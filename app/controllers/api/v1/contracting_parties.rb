@@ -53,7 +53,7 @@ module API
         desc 'Update contracting party'
         params do
           requires :id, type: String, desc: 'ContractingParty id'
-          requires :legal_entity, type: String, values: ContractingParty.legal_entities.map(&:to_s)
+          optional :legal_entity, type: String, values: ContractingParty.legal_entities.map(&:to_s)
           optional :sales_tax_number, type: Fixnum
           optional :tax_rate, type: Float
           optional :tax_number, type: Fixnum
