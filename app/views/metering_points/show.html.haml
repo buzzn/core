@@ -172,11 +172,6 @@
 
                   = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@metering_point, current_user.id, "", nil) }
 
-
-
-
-                /= @metering_point.edit_readings
-
             / - else
             /   .get-reading
             /     = @metering_point.get_reading
