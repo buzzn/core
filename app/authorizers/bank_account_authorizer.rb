@@ -10,11 +10,11 @@ class BankAccountAuthorizer < ApplicationAuthorizer
   end
 
   def updatable_by?(user)
-    resource.bank_accountable.updatable_by?(user)
+    resource.bank_accountable && resource.bank_accountable.updatable_by?(user)
   end
 
   def deletable_by?(user)
-    resource.bank_accountable.updatable_by?(user)
+    resource.bank_accountable && resource.bank_accountable.updatable_by?(user)
   end
 
 end
