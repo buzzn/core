@@ -156,9 +156,7 @@ describe "BankAccount API" do
       end
 
       data.each do |k,v|
-        p k
         patch_with_token "/api/v1/bank-accounts/#{account.id}", { "#{k}": 'a' * 200}.to_json, access_token.token
-        p response
         expect(response).to have_http_status(422)
         expect(json['errors'].first['source']['pointer']).to eq "/data/attributes/#{k}"
       end

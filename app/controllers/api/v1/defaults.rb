@@ -1,5 +1,5 @@
 require 'doorkeeper/grape/helpers'
-require 'guarded_crud'
+require 'buzzn/guarded_crud'
 
 module API
   module V1
@@ -54,11 +54,11 @@ module API
           error_response(message: e.message, status: 404)
         end
 
-        rescue_from RecordNotFound do |e|
+        rescue_from Buzzn::RecordNotFound do |e|
           error_response(message: e.message, status: 404)
         end
 
-        rescue_from PermissionDenied do |e|
+        rescue_from Buzzn::PermissionDenied do |e|
           error_response(status: 403)
         end
 

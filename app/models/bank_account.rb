@@ -1,7 +1,7 @@
 class BankAccount < ActiveRecord::Base
   include Authority::Abilities
   include Filterable
-  include GuardedCrud
+  include Buzzn::GuardedCrud
 
   belongs_to :bank_accountable, polymorphic: true
 
@@ -19,6 +19,10 @@ class BankAccount < ActiveRecord::Base
     contracting_party = ContractingParty.arel_table
     contract          = Contract.arel_table
     bank_account      = BankAccount.arel_table
+
+    # workaround to produce false always
+    return bank_account[:id].eq(bank_account[:id]).not if user.nil?
+
     sqls = [
       contracting_party.where(ContractingParty.readable_by_query(user)
                                .and(contracting_party[:id].eq(bank_account[:bank_accountable_id]))),

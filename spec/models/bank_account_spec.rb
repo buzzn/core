@@ -24,6 +24,7 @@ describe "BankAccount Model" do
   let(:admin) { Fabricate(:admin) }
   let(:params) do
     { holder: 'Me And The Corner', iban: 'DE23100000001234567890',
+      bic: '123456789', bank_name: 'Yellow Submarine',
       bank_accountable_type: Contract.to_s,
       bank_accountable_id: contract.id }
   end
@@ -53,7 +54,7 @@ describe "BankAccount Model" do
       account = BankAccount.guarded_retrieve(user, bank_account.id)
       expect(account.id).to eq bank_account.id
       
-      expect {BankAccount.guarded_retrieve(user, 'some-unknown-id') }.to raise_error RecordNotFound
+      expect {BankAccount.guarded_retrieve(user, 'some-unknown-id') }.to raise_error Buzzn::RecordNotFound
     end
 
     it "updates BankAccount of contract with #{u}" do
@@ -64,7 +65,7 @@ describe "BankAccount Model" do
       account = BankAccount.guarded_update(user, id: bank_account.id, holder: 'Me')
       expect(BankAccount.find(account.id).holder).to eq 'Me'
       
-      expect {BankAccount.guarded_update(user, id: 'some-unknown-id') }.to raise_error RecordNotFound
+      expect {BankAccount.guarded_update(user, id: 'some-unknown-id') }.to raise_error Buzzn::RecordNotFound
     end
 
     it "deletes BankAccount of contract with #{u}" do
@@ -75,7 +76,7 @@ describe "BankAccount Model" do
       BankAccount.guarded_delete(user, bank_account.id)
       expect(BankAccount.where(id: bank_account.id)).to eq []
 
-      expect {BankAccount.guarded_delete(user, 'some-unknown-id') }.to raise_error RecordNotFound
+      expect {BankAccount.guarded_delete(user, 'some-unknown-id') }.to raise_error Buzzn::RecordNotFound
     end
   end
 
@@ -86,7 +87,7 @@ describe "BankAccount Model" do
       contract.save!
       
       expect { BankAccount.guarded_create(user, params,
-                                          contract) }.to raise_error PermissionDenied
+                                          contract) }.to raise_error Buzzn::PermissionDenied
     end
 
     it "does not retrieve BankAccount of contract with #{u}" do
@@ -94,7 +95,7 @@ describe "BankAccount Model" do
       contract.group = member_group
       contract.save!
       
-      expect { BankAccount.guarded_retrieve(user, bank_account.id) }.to raise_error PermissionDenied
+      expect { BankAccount.guarded_retrieve(user, bank_account.id) }.to raise_error Buzzn::PermissionDenied
     end
 
     it "does not update BankAccount of contract with #{u}" do
@@ -103,7 +104,7 @@ describe "BankAccount Model" do
       contract.save!
       
       expect { BankAccount.guarded_update(user, bank_account.id,
-                                          holder: 'Me') }.to raise_error PermissionDenied
+                                          holder: 'Me') }.to raise_error Buzzn::PermissionDenied
     end
  
     it "does not delete BankAccount of contract with #{u}" do
@@ -111,7 +112,7 @@ describe "BankAccount Model" do
       contract.group = member_group
       contract.save!
       
-      expect { BankAccount.guarded_delete(user, bank_account.id) }.to raise_error PermissionDenied
+      expect { BankAccount.guarded_delete(user, bank_account.id) }.to raise_error Buzzn::PermissionDenied
     end
   end
 
