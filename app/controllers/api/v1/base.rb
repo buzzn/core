@@ -27,6 +27,7 @@ module API
       mount API::V1::Contracts
       mount API::V1::Comments
       mount API::V1::Organizations
+      mount API::V1::BankAccounts
 
       add_swagger_documentation(
         api_version: "v1",

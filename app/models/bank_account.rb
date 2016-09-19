@@ -10,7 +10,9 @@ class BankAccount < ActiveRecord::Base
 
   attr_encrypted :iban, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
-  validates :holder,        presence: true
+  validates :bank_name,     length: { in: 2..63 }
+  validates :bic,           length: { in: 8..11 } # iso-9362
+  validates :holder,        presence: true, length: { in: 2..63 }
   validates :iban,          presence: true
 
   def self.readable_by_query(user)
@@ -21,10 +23,11 @@ class BankAccount < ActiveRecord::Base
       contracting_party.where(ContractingParty.readable_by_query(user)
                                .and(contracting_party[:id].eq(bank_account[:bank_accountable_id]))),
       contract.where(Contract.readable_by_query(user)
-                      .and(contract[:id].eq(bank_account[:bank_accountable_id])))
+                      .and(contract[:id].eq(bank_account[:bank_accountable_id]))),
+      User.roles_query(user, admin: nil)
     ]
     sqls = sqls.collect{|s| s.project(1).exists}
-    sqls[0].or(sqls[1])
+    sqls[0].or(sqls[1]).or(sqls[2])
   end
 
   scope :readable_by, -> (user) do

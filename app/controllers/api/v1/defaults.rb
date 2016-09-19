@@ -1,4 +1,5 @@
 require 'doorkeeper/grape/helpers'
+require 'guarded_crud'
 
 module API
   module V1
@@ -37,6 +38,10 @@ module API
             obj
           end
 
+          def deleted_response(obj)
+            status 204
+          end
+
           def paginated_response(objs)
             per_page     = permitted_params[:per_page]
             page         = permitted_params[:page]
@@ -47,6 +52,14 @@ module API
 
         rescue_from ActiveRecord::RecordNotFound do |e|
           error_response(message: e.message, status: 404)
+        end
+
+        rescue_from RecordNotFound do |e|
+          error_response(message: e.message, status: 404)
+        end
+
+        rescue_from PermissionDenied do |e|
+          error_response(status: 403)
         end
 
         class Max < Grape::Validations::Base
