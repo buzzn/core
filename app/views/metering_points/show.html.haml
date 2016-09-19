@@ -213,6 +213,18 @@
             = render member.profile
 
 
+      - if @group && user_signed_in? && current_user.can_read?(@group)
+        %hr
+        %h1.page-header.text-overflow
+          %span
+            = t('group')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('group_info_metering_point')}
+        .row
+          .groups
+            .col-xs-12.col-sm-6.col-md-6.col-lg-6= render @group.decorate
+
+
       - if user_signed_in? && ((@metering_point.address && current_user.can_read?(@metering_point.address)) || @metering_point.address.nil?)
         %hr
         %h1.page-header.text-overflow
