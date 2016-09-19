@@ -13,7 +13,7 @@ module API
         paginate
         oauth2 :full
         get do
-          paginated_response(Address.all)
+          paginated_response(Address.readable_by(current_user))
         end
 
         desc 'Return address'
@@ -36,12 +36,9 @@ module API
           requires :street_name, type: String
           requires :street_number, type: String
           requires :city, type: String
-          requires :state, type: String
+          requires :state, type: String, values: Address.states(&:to_s)
           requires :zip, type: Fixnum
           requires :country, type: String
-          optional :longitude, type: Float
-          optional :latitude, type: Float
-          optional :time_zone, type: String
         end
         oauth2 :full
         post do
@@ -56,16 +53,13 @@ module API
         desc 'Update address'
         params do
           requires :id, type: String, desc: 'Address id'
-          requires :address, type: String
-          requires :street_name, type: String
-          requires :street_number, type: String
-          requires :city, type: String
-          requires :state, type: String
-          requires :zip, type: Fixnum
-          requires :country, type: String
-          optional :longitude, type: Float
-          optional :latitude, type: Float
-          optional :time_zone, type: String
+          optional :address, type: String
+          optional :street_name, type: String
+          optional :street_number, type: String
+          optional :city, type: String
+          optional :state, type: String, values: Address.states(&:to_s)
+          optional :zip, type: Fixnum
+          optional :country, type: String
         end
         oauth2 :full
         patch ':id' do

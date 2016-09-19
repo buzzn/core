@@ -58,7 +58,7 @@ describe 'Addresses API' do
       street_name: '*****',
       street_number: '*****',
       city: '*****',
-      state: '*****',
+      state: Address.states.first.to_s,
       zip: 88888,
       country: '*****',
     }
@@ -72,24 +72,19 @@ describe 'Addresses API' do
   end
 
   it 'updates address using full token' do
+    address           = Fabricate(:address)
     full_access_token = Fabricate(:full_access_token_as_admin)
     access_token      = Fabricate(:simple_access_token)
     params = {
       address: '*****',
-      street_name: '*****',
-      street_number: '*****',
-      city: '*****',
-      state: '*****',
-      zip: 88888,
-      country: '*****',
     }
 
-    post_without_token '/api/v1/addresses', params.to_json
+    patch_without_token "/api/v1/addresses/#{address.id}", params.to_json
     expect(response).to have_http_status(401)
-    post_with_token '/api/v1/addresses', params.to_json, access_token.token
+    patch_with_token "/api/v1/addresses/#{address.id}", params.to_json, access_token.token
     expect(response).to have_http_status(403)
-    post_with_token '/api/v1/addresses', params.to_json, full_access_token.token
-    expect(response).to have_http_status(201)
+    patch_with_token "/api/v1/addresses/#{address.id}", params.to_json, full_access_token.token
+    expect(response).to have_http_status(200)
   end
 
   it 'deletes address using full token' do
