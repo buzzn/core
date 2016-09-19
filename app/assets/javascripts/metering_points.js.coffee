@@ -114,7 +114,7 @@ $(".metering_point_detail").ready ->
         backgroundColor:'rgba(255, 255, 255, 0.0)'
         width: width
         spacingBottom: 20
-        spacingTop: 10
+        spacingTop: 30
         spacingLeft: 20
         spacingRight: 20
         animation: false
@@ -142,17 +142,18 @@ $(".metering_point_detail").ready ->
           itemDelimiter: ';'
         buttons:
           contextButton:
-            enabled: false
-          exportButton:
-            text: 'Download CSV'
-            onclick: () ->
-              $('<a></a>')
-                .attr('id', 'downloadFile')
-                .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
-                .attr('download', 'chart.csv')
-                .appendTo('body')
-              $('#downloadFile').get(0).click()
-              $('#downloadFile').remove()
+            enabled: true
+            menuItems: [
+              text: 'Download CSV'
+              onclick: () ->
+                $('<a></a>')
+                  .attr('id', 'downloadFile')
+                  .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
+                  .attr('download', 'chart.csv')
+                  .appendTo('body')
+                $('#downloadFile').get(0).click()
+                $('#downloadFile').remove()
+            ]
       xAxis:
         lineWidth: 1
         tickWidth: 1
