@@ -25,7 +25,7 @@ describe 'Contracts API' do
     Fabricate(:metering_point_operator, name: 'Discovergy')
     Fabricate(:metering_point_operator, name: 'MySmartGrid')
   end
-  
+
   let(:contract_param_names) do
     [
       'tariff',
@@ -39,6 +39,17 @@ describe 'Contracts API' do
       'commissioning',
       'mode',
       'organization_id',
+    ]
+  end
+
+  let(:required_contract_param_names) do
+    [
+      'tariff',
+      'terms',
+      'power_of_attorney',
+      'confirm_pricing_model',
+      'commissioning',
+      'mode',
     ]
   end
 
@@ -109,7 +120,7 @@ describe 'Contracts API' do
       get_with_token "/api/v1/contracts/#{contract.id}", {}, send(token_name).token
       expect(response).to have_http_status(200)
     end
-    
+
     it 'updates contract as admin with full access token' do
       new_contract = Fabricate.build(:mpoc_ferraris_0002_amperix)
       request_params = {
@@ -155,10 +166,10 @@ describe 'Contracts API' do
     expect(response.headers['Location']).to eq json['data']['id']
   end
 
-  it 'does not create contract as admin with full access token if some of the params missing' do
+  it 'does not create contract as admin with full access token if some of the required params missing' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
-    contract_param_names.each do |param_name|
+    required_contract_param_names.each do |param_name|
       request_params[param_name] = contract[param_name]
     end
     access_token  = Fabricate(:full_access_token_as_admin).token
