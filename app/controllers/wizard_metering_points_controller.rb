@@ -56,44 +56,44 @@ class WizardMeteringPointsController  < ApplicationController
               if @contract.save! && @metering_point.meter.save!
                 if @metering_point.smart?
                   flash[:notice] = t("your_credentials_have_been_checked_and_are_valid", metering_point: @metering_point.name)
-                  render action: 'update'
+                  respond_with @metering_point
                 else
                   if @contract.organization.slug == 'buzzn-metering'
                     flash[:error] = t("your_credentials_have_been_checked_and_are_invalid", metering_point: @metering_point.name)
-                    render action: 'update'
+                    respond_with @metering_point
                   else
                     # @contract.errors.add(:password, I18n.t("wrong_username_and_or_password"))
                     # @contract.errors.add(:username, I18n.t("wrong_username_and_or_password"))
                     # @contract.destroy
                     # render action: 'wizard'
                     flash[:error] = t("your_credentials_have_been_checked_and_are_invalid", metering_point: @metering_point.name)
-                    render action: 'update'
+                    respond_with @metering_point
                     #TODO: check via ajax
                   end
                 end
               else
                 raise ActiveRecord::Rollback
                 flash[:error] = 'Error'
-                render action: 'update'
+                render action: 'reload'
               end
 
-            else
+            else #@metering_point.smart == false
               flash[:notice] = I18n.t('metering_point_created_successfully')
-              render action: 'update'
+              respond_with @metering_point
             end
           else
             raise ActiveRecord::Rollback
             flash[:error] = 'Error'
-            render action: 'update'
+            render action: 'reload'
           end
-        else #@metering_point.virtual
+        else #@metering_point.virtual == true
           flash[:notice] = I18n.t('metering_point_created_successfully')
-          render action: 'update'
+          respond_with @metering_point
         end
       else
         raise ActiveRecord::Rollback
         flash[:error] = 'Error'
-        render action: 'update'
+        render action: 'reload'
       end
     end
   end
