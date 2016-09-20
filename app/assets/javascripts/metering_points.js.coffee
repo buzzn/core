@@ -142,17 +142,18 @@ $(".metering_point_detail").ready ->
           itemDelimiter: ';'
         buttons:
           contextButton:
-            enabled: false
-          exportButton:
-            text: 'Download CSV'
-            onclick: () ->
-              $('<a></a>')
-                .attr('id', 'downloadFile')
-                .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
-                .attr('download', 'chart.csv')
-                .appendTo('body')
-              $('#downloadFile').get(0).click()
-              $('#downloadFile').remove()
+            enabled: true
+            menuItems: [
+              text: 'Download CSV'
+              onclick: () ->
+                $('<a></a>')
+                  .attr('id', 'downloadFile')
+                  .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
+                  .attr('download', 'chart.csv')
+                  .appendTo('body')
+                $('#downloadFile').get(0).click()
+                $('#downloadFile').remove()
+            ]
       xAxis:
         lineWidth: 1
         tickWidth: 1
@@ -398,17 +399,18 @@ $(".dashboard-chart").ready ->
                 itemDelimiter: ';'
               buttons:
                 contextButton:
-                  enabled: false
-                exportButton:
-                  text: 'Download CSV'
-                  onclick: () ->
-                    $('<a></a>')
-                      .attr('id', 'downloadFile')
-                      .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
-                      .attr('download', 'chart.csv')
-                      .appendTo('body')
-                    $('#downloadFile').get(0).click()
-                    $('#downloadFile').remove()
+                  enabled: true
+                  menuItems: [
+                    text: 'Download CSV'
+                    onclick: () ->
+                      $('<a></a>')
+                        .attr('id', 'downloadFile')
+                        .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
+                        .attr('download', 'chart.csv')
+                        .appendTo('body')
+                      $('#downloadFile').get(0).click()
+                      $('#downloadFile').remove()
+                  ]
             xAxis:
               lineWidth: 1
               tickWidth: 1
@@ -592,17 +594,18 @@ $(".group-chart").ready ->
             itemDelimiter: ';'
           buttons:
             contextButton:
-              enabled: false
-            exportButton:
-              text: 'Download CSV'
-              onclick: () ->
-                $('<a></a>')
-                  .attr('id', 'downloadFile')
-                  .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
-                  .attr('download', 'chart.csv')
-                  .appendTo('body')
-                $('#downloadFile').get(0).click()
-                $('#downloadFile').remove()
+              enabled: true
+              menuItems: [
+                text: 'Download CSV'
+                onclick: () ->
+                  $('<a></a>')
+                    .attr('id', 'downloadFile')
+                    .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
+                    .attr('download', 'chart.csv')
+                    .appendTo('body')
+                  $('#downloadFile').get(0).click()
+                  $('#downloadFile').remove()
+              ]
         xAxis:
           lineWidth: 1
           tickWidth: 1
