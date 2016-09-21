@@ -2,10 +2,10 @@ development:
   adapter: postgresql
   encoding: unicode
   database: buzzn_development
-  pool: 5
+  pool: 15
 
 test:
   adapter: postgresql
   encoding: unicode
   database: buzzn_test
-  pool: 5
+  pool: 15
