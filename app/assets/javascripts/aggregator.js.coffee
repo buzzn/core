@@ -86,7 +86,7 @@ class @Aggregator
       for n in [0...@returned_ajax_data.length]
         if @returned_ajax_data[n][i] != undefined && (key == @returned_ajax_data[n][i][0] || @matchesTimestamp(key, @returned_ajax_data[n][i][0], resolution))
           value += @returned_ajax_data[n][i][1]
-      @data.push([key, value])
+      @data.push([key, parseFloat(value.toFixed(3))])
 
 
   matchesTimestamp: (key, timestamp, resolution) ->

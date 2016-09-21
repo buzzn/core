@@ -816,7 +816,7 @@ de:
   sufficiency_info: "Die Sparsamkeit gibt an, wie niedrig der Pro-Kopf Stromverbrauch in dieser Gruppe ist. Das Ziel sollte sein, weniger als 500 kWh im Jahr pro Kopf zu verbrauchen."
   fitting_info: "Die Passung gibt an, ob der Verlauf der Kurve des Gesamtverbrauchs mit der der Gesamterzeugung übereinstimmt. Hier wird belohnt, wer mit seinem Stromverbrauch versucht, den qualitativen Verlauf der Stromerzeugungsanlage nachzubilden."
   closeness_info: "Die Lokalität gibt an, wie nah die Gruppenmitglieder beieinander wohnen. Gruppen im gleichen Haus, Viertel etc. sind anzustreben, währen über hunderte Kilometer verteilte Gruppen benachteiligt werden."
-
+  group_info_metering_point: "Die Gruppe, zu der dieser Zählpunkt zugeordnet ist. Bezugszählpunkte beziehen ihren Strom über diese Gruppe und Produktionszählpunkte speisen ihren Strom in diese Gruppe ein."
 
   possible_reasons_are_a_broken_internet_connection_or_a_failure_in_your_hardware: "Mögliche Gründe sind eine unterbrochene Internetverbindung oder ein Fehler in deiner Hardware."
   to_get_the_latest_data_in_your_app_you_should_try_to_fix_this_issue: "Um die neusten Daten in Deiner buzzn App verfügbar zu haben solltest Du dieses Problem schnellstmöglich beheben."
@@ -898,6 +898,9 @@ de:
   you_have_count_messages: "Du hast %{count} Nachrichten"
   no_smartmeter_means_you_get_dummy_data: "Da das Messgerät kein Smartmeter ist werden die Messwerte mit Standard-Daten dargestellt. Dies kann jederzeit geändert werden."
   the_metering_point_will_get_its_data_via_the_connection_established_by_the_selected_meter: "Der Zählpunkt wird seine Daten über die Datenverbindung beziehen, die mit dem ausgewählten Messgerät eingerichtet wurde."
+  as_this_metering_point_is_virtual_it_will_not_have_a_meter: Da dieser Zählpunkt virtuell ist, kann er keinen Zähler besitzen.
+  instead_you_can_define_the_formula_to_calculate_the_data_for_this_metering_point: Stattdessen kannst Du eine Formel angeben, durch die die Energiedaten für diesen Zählpunkt errechnet werden.
+  virtual_metering_point_means_you_get_the_data_out_of_others_so_no_seperatate_data_conncection_is_needed: Da der Zählpunkt virtuell ist und seine Daten aus anderen Zählpunkten errechnet werden ist keine separate Datenverbindung nötig.
 
   the_requested_content_is_not_public: Der angefragte Inhalt ist nicht öffentlich
   embed: Einbetten
@@ -947,6 +950,7 @@ de:
   these_settings_are_valid_globally_and_override_the_settings_for_each_of_your_groups_and_metering_points: Diese Einstellungen gelten global und überschreiben die Einstellungen von deinen Zählpunkten und Gruppen.
   this_setting_is_overridden_by_your_global_settings_so_you_have_to_change_these_first: "Diese Einstellung wird von Deinen globalen Einstellungen überschrieben. Du solltest also die globalen Einstellungen zuerst ändern."
 
+  legals: Rechtliches
   terms_of_use: Nutzungsbedingungen
   legal_info: Impressum
   legal_notes: "Ich akzeptiere die %{terms_of_use} und die %{data_protection_guidelines}"

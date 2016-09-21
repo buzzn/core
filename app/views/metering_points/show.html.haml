@@ -55,6 +55,8 @@
             %li= link_to(t('add_metering_point_manager'), add_manager_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
             - if @managers.include?(current_user)
               %li= link_to(t('remove_me_as_metering_point_manager'), remove_manager_update_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal', :method => 'put', 'data-confirm' => t('are_you_sure') + ' ' + t('you_will_no_longer_be_able_to_edit_this_metering_point')})
+            - if !@metering_point.smart?
+              %li= link_to(t("submit_reading"), new_reading_path(metering_point_id: @metering_point.id), {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
           - if user_signed_in?
             - if @members.include?(current_user)
               %li= link_to(t('edit_notifications'), edit_notifications_metering_point_path(@metering_point),{:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal'})
@@ -170,14 +172,6 @@
 
                   = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@metering_point, current_user.id, "", nil) }
 
-
-
-          .text-center
-            - if !@metering_point.smart?
-              .new-reading
-                = @metering_point.submit_reading
-                /= @metering_point.edit_readings
-
             / - else
             /   .get-reading
             /     = @metering_point.get_reading
@@ -211,6 +205,18 @@
         .row
           - @members.each do |member|
             = render member.profile
+
+
+      - if @group && user_signed_in? && current_user.can_read?(@group)
+        %hr
+        %h1.page-header.text-overflow
+          %span
+            = t('group')
+            %small
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('group_info_metering_point')}
+        .row
+          .groups
+            .col-xs-12.col-sm-6.col-md-6.col-lg-6= render @group.decorate
 
 
       - if user_signed_in? && ((@metering_point.address && current_user.can_read?(@metering_point.address)) || @metering_point.address.nil?)
