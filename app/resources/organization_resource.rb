@@ -6,7 +6,10 @@ class OrganizationResource < ApplicationResource
               :website,
               :email,
               :description,
-              :mode
+              :mode,
+              :authority,
+              :retailer,
+              :provider_permission
 
   has_one :address
   has_one :contracting_party

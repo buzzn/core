@@ -1,11 +1,14 @@
 # coding: utf-8
 Fabricator :organization do
-  name        { FFaker::Company.name }
-  phone       { FFaker::PhoneNumber.phone_number }
-  fax         { FFaker::PhoneNumber.phone_number }
-  email       { FFaker::Internet.email }
-  description { FFaker::Company.catch_phrase }
-  website     { "http://www.#{FFaker::Internet.domain_name}" }
+  name                { FFaker::Company.name }
+  phone               { FFaker::PhoneNumber.phone_number }
+  fax                 { FFaker::PhoneNumber.phone_number }
+  email               { FFaker::Internet.email }
+  description         { FFaker::Company.catch_phrase }
+  website             { "http://www.#{FFaker::Internet.domain_name}" }
+  authority           { FFaker::Boolean.maybe }
+  retailer            { FFaker::Boolean.maybe }
+  provider_permission { FFaker::Boolean.maybe }
 end
 
 
