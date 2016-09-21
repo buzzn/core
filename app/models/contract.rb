@@ -26,33 +26,17 @@ class Contract < ActiveRecord::Base
   scope :electricity_purchases,     -> { where(mode: 'electricity_purchase_contract') }
   scope :servicings,                -> { where(mode: 'servicing_contract') }
 
-  scope :readable_by,               -> (user) do
+  def self.readable_by_query(user)
+    contract           = Contract.arel_table
     if user
-      contracts = Contract.arel_table
-      roles = Role.arel_table
-      users_roles = Arel::Table.new(:users_roles)
-
-      users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id])).and(users_roles[:user_id].eq(user.id))
-      users_roles_join = users_roles.create_join(users_roles, users_roles_on)
-
-      # manager role with group, metering_pointm organization resource
-      # or admin role for any resource
-      roles_contracts_on = roles
-        .create_on(roles[:name].eq('manager')
-                    .and(
-                      roles[:resource_id].eq(contracts[:group_id]).and(roles[:resource_type].eq(Group.to_s))
-                      .or(roles[:resource_id].eq(contracts[:metering_point_id]).and(roles[:resource_type].eq(MeteringPoint.to_s)))
-                      .or(roles[:resource_id].eq(contracts[:organization_id]).and(roles[:resource_type].eq(Organization.to_s)))
-                    )
-                    .or(roles[:name].eq('admin')
-                         .and(roles[:resource_id].eq(nil))))
-
-      roles_contracts_join = roles.create_join(roles, roles_contracts_on)
-
-      joins(roles_contracts_join, users_roles_join)
+      User.roles_query(user, manager: [contract[:metering_point_id], contract[:group_id], contract[:organization_id]], admin: nil).project(1).exists
     else
-      where("1=0") #empty set
+      contract[:id].eq(contract[:id]).not
     end
+  end
+
+  scope :readable_by, -> (user) do
+    where(readable_by_query(user))
   end
 
   after_save :validates_credentials

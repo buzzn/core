@@ -1,0 +1,82 @@
+module Buzzn
+  class PermissionDenied < StandardError; end
+  class RecordNotFound < StandardError; end
+  module GuardedCrud
+
+    def self.included(model)
+      model.extend ClassMethods
+    end
+
+    module ClassMethods
+
+      def guarded_create(user, params, *args)
+        if creatable_by?(user, *args)
+          create!(params)
+        else
+          raise PermissionDenied.new
+        end
+      end
+
+      def guarded_retrieve(user, id)
+        if id.is_a?(Hash)
+          id = id[:id]
+        end
+        _guarded_check(where(id: id).readable_by(user).first, user, id)
+      end
+
+      def anonymized_guarded_retrieve(user, id)
+        if id.is_a?(Hash)
+          id = id[:id]
+        end
+        _guarded_check(where(id: id).anonymized_readable_by(user).first, user, id)
+      end
+
+      def guarded_update(user, id = nil, params = nil)
+        if params.nil?
+          params = id
+          id = params[:id]
+        end
+        result = _guarded_get(user, id)
+        if result.updatable_by?(user)
+          result.update!(params)
+          result
+        else
+          raise PermissionDenied.new
+        end
+      end
+
+      def guarded_delete(user, id)
+        if id.is_a?(Hash)
+          id = id[:id]
+        end
+        result = _guarded_get(user, id)
+        if result.deletable_by?(user)
+          result.destroy
+          result
+        else
+          raise PermissionDenied.new
+        end
+      end
+
+      private
+
+      def _guarded_check(result, user, id)
+        if result.nil?
+          if where(id: id).size == 0
+            raise RecordNotFound.new("#{self} with id=#{id} not found#{user ? ' by user_id=' + user.id : ''}")
+          end
+          raise PermissionDenied.new
+        end
+        result
+      end
+
+      def _guarded_get(user, id)
+        result = where(id: id).first
+        if result.nil?
+          raise RecordNotFound.new("#{self} with id=#{id} not found#{user ? ' by user_id=' + user.id : ''}")
+        end
+        result
+      end
+    end
+  end
+end

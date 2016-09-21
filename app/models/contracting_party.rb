@@ -18,7 +18,18 @@ class ContractingParty < ActiveRecord::Base
 
   validates :legal_entity, presence: true
 
+  def self.readable_by_query(user)
+    contracting_party = ContractingParty.arel_table
+    if user
+      contracting_party[:id].eq(contracting_party[:id])
+    else
+      contracting_party[:id].eq(contracting_party[:id]).not
+    end
+  end
 
+  scope :readable_by, -> (user) do
+    where(readable_by_query(user))
+  end
 
   def self.legal_entities
     %w{
