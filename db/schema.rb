@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160802083615) do
+ActiveRecord::Schema.define(version: 20160921155654) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 20160802083615) do
     t.string   "bank_accountable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "mandate"
   end
 
   add_index "bank_accounts", ["bank_accountable_id", "bank_accountable_type"], name: "index_accountable", using: :btree
