@@ -1,3 +1,4 @@
+require 'buzzn/guarded_crud'
 class BankAccount < ActiveRecord::Base
   include Authority::Abilities
   include Filterable
