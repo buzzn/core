@@ -121,9 +121,12 @@ module API
           requires :phone,        type: String, desc: "Phone number of Organization."
           requires :email,        type: String, desc: "Email of Organization."
           requires :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
+          optional :authority,    type: Boolean, desc: 'Is Organization an Authority', default: false
+          optional :retailer,     type: Boolean, desc: 'Is Retailer'
           optional :fax,          type: String, desc: "Fax number of Organization."
           optional :website,      type: String, desc: "Website of Organization."
           optional :description,  type: String, desc: "Description of the Organization."
+          optional :provider_permission, type: Boolean, desc: 'Provider Permission given', default: false
         end
         oauth2 :full
         post do
@@ -149,6 +152,9 @@ module API
           optional :email,        type: String, desc: "Email of Organization."
           optional :description,  type: String, desc: "Description of the Organization."
           optional :mode,         type: String, desc: 'Mode of Organization', values: Organization.modes
+          optional :authority,    type: Boolean, desc: 'Is Organization an Authority', default: false
+          optional :retailer,     type: Boolean, desc: 'Is Retailer', default: false
+          optional :provider_permission, type: Boolean, desc: 'Provider Permission given', default: false
         end
         oauth2 :full
         patch ':id' do
