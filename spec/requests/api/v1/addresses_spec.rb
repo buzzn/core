@@ -68,6 +68,7 @@ describe 'Addresses API' do
     expect(response).to have_http_status(403)
     post_with_token '/api/v1/addresses', params.to_json, full_access_token.token
     expect(response).to have_http_status(201)
+    expect(json['data']['attributes']['longitude']).not_to eq(nil)
   end
 
   it 'updates address using full token' do
