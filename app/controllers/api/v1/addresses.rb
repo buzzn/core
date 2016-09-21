@@ -32,7 +32,6 @@ module API
 
         desc 'Create address'
         params do
-          requires :address, type: String
           requires :street_name, type: String
           requires :street_number, type: String
           requires :city, type: String
@@ -53,7 +52,6 @@ module API
         desc 'Update address'
         params do
           requires :id, type: String, desc: 'Address id'
-          optional :address, type: String
           optional :street_name, type: String
           optional :street_number, type: String
           optional :city, type: String

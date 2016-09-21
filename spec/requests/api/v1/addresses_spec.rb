@@ -54,7 +54,6 @@ describe 'Addresses API' do
     full_access_token = Fabricate(:full_access_token_as_admin)
     access_token      = Fabricate(:simple_access_token)
     params = {
-      address: 'Berlin',
       street_name: 'Lützowplatz',
       street_number: '17',
       city: 'Berlin',
@@ -76,7 +75,7 @@ describe 'Addresses API' do
     full_access_token = Fabricate(:full_access_token_as_admin)
     access_token      = Fabricate(:simple_access_token)
     params = {
-      address: 'Berlin',
+      city: 'Berlin',
     }
 
     patch_without_token "/api/v1/addresses/#{address.id}", params.to_json
