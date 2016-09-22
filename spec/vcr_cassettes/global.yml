@@ -14,7 +14,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -39,7 +39,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1466586557857,"power":894660},{"time":1466586559857,"power":886480},{"time":1466586561857,"power":889140}]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Feb 2016 00:30:01 GMT
 - request:
     method: get
@@ -55,7 +55,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -80,7 +80,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1466587377957,"power":-6412950},{"time":1466587379957,"power":-6415350},{"time":1466587381957,"power":-6401460}]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Feb 2016 00:30:01 GMT
 - request:
     method: get
@@ -96,7 +96,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -121,7 +121,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Feb 2016 00:30:00 GMT
 - request:
     method: get
@@ -137,7 +137,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -162,7 +162,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1459893600000,"energy":116753673190000,"energyOut":0},{"time":1459894500000,"energy":116753673190000,"energyOut":0},{"time":1459895400000,"energy":116753673190000,"energyOut":0},{"time":1459896300000,"energy":116753673190000,"energyOut":0},{"time":1459897200000,"energy":116753673190000,"energyOut":0},{"time":1459898100000,"energy":116753673190000,"energyOut":0},{"time":1459899000000,"energy":116753673190000,"energyOut":0},{"time":1459899900000,"energy":116753673190000,"energyOut":0},{"time":1459900800000,"energy":116753673190000,"energyOut":0},{"time":1459901700000,"energy":116753673190000,"energyOut":0},{"time":1459902600000,"energy":116753673190000,"energyOut":0},{"time":1459903500000,"energy":116753673190000,"energyOut":0},{"time":1459904400000,"energy":116753673190000,"energyOut":0},{"time":1459905300000,"energy":116753673190000,"energyOut":0},{"time":1459906200000,"energy":116753673190000,"energyOut":0},{"time":1459907100000,"energy":116753673190000,"energyOut":0},{"time":1459908000000,"energy":116753673190000,"energyOut":0},{"time":1459908900000,"energy":116753673190000,"energyOut":0},{"time":1459909800000,"energy":116753673190000,"energyOut":0},{"time":1459910700000,"energy":116753673190000,"energyOut":0},{"time":1459911600000,"energy":116753673190000,"energyOut":0},{"time":1459912500000,"energy":116753673190000,"energyOut":0},{"time":1459913400000,"energy":116753673190000,"energyOut":0},{"time":1459914300000,"energy":116753673190000,"energyOut":0},{"time":1459915200000,"energy":116753673190000,"energyOut":0},{"time":1459916100000,"energy":116753673190000,"energyOut":0},{"time":1459917000000,"energy":116753673190000,"energyOut":0},{"time":1459917900000,"energy":116753673190000,"energyOut":0},{"time":1459918800000,"energy":116753673190000,"energyOut":0},{"time":1459919700000,"energy":116753673190000,"energyOut":0},{"time":1459920600000,"energy":116753673190000,"energyOut":0},{"time":1459921500000,"energy":116753769611856,"energyOut":0},{"time":1459922400000,"energy":116753910309628,"energyOut":0},{"time":1459923300000,"energy":116754140984123,"energyOut":0},{"time":1459924200000,"energy":116754547349867,"energyOut":0},{"time":1459925100000,"energy":116755269767083,"energyOut":0},{"time":1459926000000,"energy":116756102407276,"energyOut":0},{"time":1459926900000,"energy":116756953142348,"energyOut":0},{"time":1459927800000,"energy":116757895939937,"energyOut":0},{"time":1459928700000,"energy":116759096770720,"energyOut":0},{"time":1459929600000,"energy":116760381571684,"energyOut":0},{"time":1459930500000,"energy":116761987934956,"energyOut":0},{"time":1459931400000,"energy":116764044164020,"energyOut":0},{"time":1459932300000,"energy":116767088213282,"energyOut":0},{"time":1459933200000,"energy":116770261712180,"energyOut":0},{"time":1459934100000,"energy":116774443160572,"energyOut":0},{"time":1459935000000,"energy":116779929564103,"energyOut":0},{"time":1459935900000,"energy":116785544002223,"energyOut":0},{"time":1459936800000,"energy":116791953060400,"energyOut":0},{"time":1459937700000,"energy":116796249433072,"energyOut":0},{"time":1459938600000,"energy":116798807644037,"energyOut":0},{"time":1459939500000,"energy":116802575445639,"energyOut":0},{"time":1459940400000,"energy":116807124452523,"energyOut":0},{"time":1459941300000,"energy":116814689748032,"energyOut":0},{"time":1459942200000,"energy":116820431996059,"energyOut":0},{"time":1459943100000,"energy":116823614311424,"energyOut":0},{"time":1459944000000,"energy":116826587750655,"energyOut":0},{"time":1459944900000,"energy":116828973939363,"energyOut":0},{"time":1459945800000,"energy":116831157088806,"energyOut":0},{"time":1459946700000,"energy":116833472526360,"energyOut":0},{"time":1459947600000,"energy":116837300354214,"energyOut":0},{"time":1459948500000,"energy":116842416837120,"energyOut":0},{"time":1459949400000,"energy":116848241253288,"energyOut":0},{"time":1459950300000,"energy":116855134163296,"energyOut":0},{"time":1459951200000,"energy":116862878936482,"energyOut":0},{"time":1459952100000,"energy":116869403450599,"energyOut":0},{"time":1459953000000,"energy":116885370952410,"energyOut":0},{"time":1459953900000,"energy":116900563222160,"energyOut":0},{"time":1459954800000,"energy":116912981520568,"energyOut":0},{"time":1459955700000,"energy":116921291483605,"energyOut":0},{"time":1459956600000,"energy":116925868035106,"energyOut":0},{"time":1459957500000,"energy":116928317825665,"energyOut":0},{"time":1459958400000,"energy":116930106582423,"energyOut":0},{"time":1459959300000,"energy":116931198997632,"energyOut":0},{"time":1459960200000,"energy":116932724809968,"energyOut":0},{"time":1459961100000,"energy":116933558575161,"energyOut":0},{"time":1459962000000,"energy":116934307783795,"energyOut":0},{"time":1459962900000,"energy":116935462460429,"energyOut":0},{"time":1459963800000,"energy":116936178429439,"energyOut":0},{"time":1459964700000,"energy":116936295108395,"energyOut":0},{"time":1459965600000,"energy":116936296592000,"energyOut":0},{"time":1459966500000,"energy":116936296592000,"energyOut":0},{"time":1459967400000,"energy":116936296592000,"energyOut":0},{"time":1459968300000,"energy":116936296592000,"energyOut":0},{"time":1459969200000,"energy":116936296592000,"energyOut":0},{"time":1459970100000,"energy":116936296592000,"energyOut":0},{"time":1459971000000,"energy":116936296592000,"energyOut":0},{"time":1459971900000,"energy":116936296592000,"energyOut":0},{"time":1459972800000,"energy":116936296592000,"energyOut":0},{"time":1459973700000,"energy":116936296592000,"energyOut":0},{"time":1459974600000,"energy":116936296592000,"energyOut":0},{"time":1459975500000,"energy":116936296592000,"energyOut":0},{"time":1459976400000,"energy":116936296592000,"energyOut":0},{"time":1459977300000,"energy":116936296592000,"energyOut":0},{"time":1459978200000,"energy":116936296592000,"energyOut":0},{"time":1459979100000,"energy":116936296592000,"energyOut":0},{"time":1459980000000,"energy":116936296592000,"energyOut":0}]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Feb 2016 00:30:00 GMT
 - request:
     method: get
@@ -178,7 +178,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -203,7 +203,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1459893600000,"energy":97454877650016,"energyOut":0},{"time":1459894500000,"energy":97457173492716,"energyOut":0},{"time":1459895400000,"energy":97459470031914,"energyOut":0},{"time":1459896300000,"energy":97461766845280,"energyOut":0},{"time":1459897200000,"energy":97463117001092,"energyOut":0},{"time":1459898100000,"energy":97465396959976,"energyOut":0},{"time":1459899000000,"energy":97467672741110,"energyOut":0},{"time":1459899900000,"energy":97469949124990,"energyOut":0},{"time":1459900800000,"energy":97472228429680,"energyOut":0},{"time":1459901700000,"energy":97474504494520,"energyOut":0},{"time":1459902600000,"energy":97476778681792,"energyOut":0},{"time":1459903500000,"energy":97479059679346,"energyOut":0},{"time":1459904400000,"energy":97481337779207,"energyOut":0},{"time":1459905300000,"energy":97483614959527,"energyOut":0},{"time":1459906200000,"energy":97485892404135,"energyOut":0},{"time":1459907100000,"energy":97488170459140,"energyOut":0},{"time":1459908000000,"energy":97490447705455,"energyOut":0},{"time":1459908900000,"energy":97492725186346,"energyOut":0},{"time":1459909800000,"energy":97495001914931,"energyOut":0},{"time":1459910700000,"energy":97497276977345,"energyOut":0},{"time":1459911600000,"energy":97499551144676,"energyOut":0},{"time":1459912500000,"energy":97501821534717,"energyOut":0},{"time":1459913400000,"energy":97504090832415,"energyOut":0},{"time":1459914300000,"energy":97506360426625,"energyOut":0},{"time":1459915200000,"energy":97508630578711,"energyOut":0},{"time":1459916100000,"energy":97510897545552,"energyOut":0},{"time":1459917000000,"energy":97513158409654,"energyOut":0},{"time":1459917900000,"energy":97515426719476,"energyOut":0},{"time":1459918800000,"energy":97517693710998,"energyOut":0},{"time":1459919700000,"energy":97519958731061,"energyOut":0},{"time":1459920600000,"energy":97522218454500,"energyOut":0},{"time":1459921500000,"energy":97524482576428,"energyOut":0},{"time":1459922400000,"energy":97526740762064,"energyOut":0},{"time":1459923300000,"energy":97529007945513,"energyOut":0},{"time":1459924200000,"energy":97531273490682,"energyOut":0},{"time":1459925100000,"energy":97533538545223,"energyOut":0},{"time":1459926000000,"energy":97535805383477,"energyOut":0},{"time":1459926900000,"energy":97538074327036,"energyOut":0},{"time":1459927800000,"energy":97540344196610,"energyOut":0},{"time":1459928700000,"energy":97542613387334,"energyOut":0},{"time":1459929600000,"energy":97544881607923,"energyOut":0},{"time":1459930500000,"energy":97547150168067,"energyOut":0},{"time":1459931400000,"energy":97549421103217,"energyOut":0},{"time":1459932300000,"energy":97551688013852,"energyOut":0},{"time":1459933200000,"energy":97553954302350,"energyOut":0},{"time":1459934100000,"energy":97556215588531,"energyOut":0},{"time":1459935000000,"energy":97558481535000,"energyOut":0},{"time":1459935900000,"energy":97560745157883,"energyOut":0},{"time":1459936800000,"energy":97563005138761,"energyOut":0},{"time":1459937700000,"energy":97565272522579,"energyOut":0},{"time":1459938600000,"energy":97567533015024,"energyOut":0},{"time":1459939500000,"energy":97569801432776,"energyOut":0},{"time":1459940400000,"energy":97572060738846,"energyOut":0},{"time":1459941300000,"energy":97574323704224,"energyOut":0},{"time":1459942200000,"energy":97576593273015,"energyOut":0},{"time":1459943100000,"energy":97578861610924,"energyOut":0},{"time":1459944000000,"energy":97581126293660,"energyOut":0},{"time":1459944900000,"energy":97583385087807,"energyOut":0},{"time":1459945800000,"energy":97585643098004,"energyOut":0},{"time":1459946700000,"energy":97587911029109,"energyOut":0},{"time":1459947600000,"energy":97590175766056,"energyOut":0},{"time":1459948500000,"energy":97592432907337,"energyOut":0},{"time":1459949400000,"energy":97594703041197,"energyOut":0},{"time":1459950300000,"energy":97596974189856,"energyOut":0},{"time":1459951200000,"energy":97599243477927,"energyOut":0},{"time":1459952100000,"energy":97601511529740,"energyOut":0},{"time":1459953000000,"energy":97603771210343,"energyOut":0},{"time":1459953900000,"energy":97606029162768,"energyOut":0},{"time":1459954800000,"energy":97608285639385,"energyOut":0},{"time":1459955700000,"energy":97610600617870,"energyOut":0},{"time":1459956600000,"energy":97612939417131,"energyOut":0},{"time":1459957500000,"energy":97615276664386,"energyOut":0},{"time":1459958400000,"energy":97617613767258,"energyOut":0},{"time":1459959300000,"energy":97619951188620,"energyOut":0},{"time":1459960200000,"energy":97622288811520,"energyOut":0},{"time":1459961100000,"energy":97624626471124,"energyOut":0},{"time":1459962000000,"energy":97626966646143,"energyOut":0},{"time":1459962900000,"energy":97629306813562,"energyOut":0},{"time":1459963800000,"energy":97631645071167,"energyOut":0},{"time":1459964700000,"energy":97633983366035,"energyOut":0},{"time":1459965600000,"energy":97636318662659,"energyOut":0},{"time":1459966500000,"energy":97638654166150,"energyOut":0},{"time":1459967400000,"energy":97640990075137,"energyOut":0},{"time":1459968300000,"energy":97643328458171,"energyOut":0},{"time":1459969200000,"energy":97645667302917,"energyOut":0},{"time":1459970100000,"energy":97648004885080,"energyOut":0},{"time":1459971000000,"energy":97648092830000,"energyOut":0},{"time":1459971900000,"energy":97648092830000,"energyOut":0},{"time":1459972800000,"energy":97648092830000,"energyOut":0},{"time":1459973700000,"energy":97648092830000,"energyOut":0},{"time":1459974600000,"energy":97648092830000,"energyOut":0},{"time":1459975500000,"energy":97648092830000,"energyOut":0},{"time":1459976400000,"energy":97648092830000,"energyOut":0},{"time":1459977300000,"energy":97648092830000,"energyOut":0},{"time":1459978200000,"energy":97648092830000,"energyOut":0},{"time":1459979100000,"energy":97648092830000,"energyOut":0},{"time":1459980000000,"energy":97648092830000,"energyOut":0}]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Feb 2016 00:30:00 GMT
 - request:
     method: get
@@ -219,7 +219,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -244,7 +244,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1462485600000,"energy":100176386483202,"energyOut":0},{"time":1462486500000,"energy":100178592821060,"energyOut":0},{"time":1462487400000,"energy":100180798449860,"energyOut":0},{"time":1462488300000,"energy":100183004010668,"energyOut":0},{"time":1462489200000,"energy":100185208333450,"energyOut":0},{"time":1462490100000,"energy":100187413747757,"energyOut":0},{"time":1462491000000,"energy":100189619275873,"energyOut":0},{"time":1462491900000,"energy":100191823983875,"energyOut":0},{"time":1462492800000,"energy":100194027829670,"energyOut":0},{"time":1462493700000,"energy":100196231012504,"energyOut":0},{"time":1462494600000,"energy":100198436427555,"energyOut":0},{"time":1462495500000,"energy":100200644245176,"energyOut":0},{"time":1462496400000,"energy":100202850741521,"energyOut":0},{"time":1462497300000,"energy":100205053905550,"energyOut":0},{"time":1462498200000,"energy":100207261245052,"energyOut":0},{"time":1462499100000,"energy":100209468291560,"energyOut":0},{"time":1462500000000,"energy":100211672556730,"energyOut":0},{"time":1462500900000,"energy":100213877884672,"energyOut":0},{"time":1462501800000,"energy":100216083198523,"energyOut":0},{"time":1462502700000,"energy":100218288923343,"energyOut":0},{"time":1462503600000,"energy":100220493831851,"energyOut":0},{"time":1462504500000,"energy":100222686270016,"energyOut":0},{"time":1462505400000,"energy":100224876681080,"energyOut":0},{"time":1462506300000,"energy":100227066315294,"energyOut":0},{"time":1462507200000,"energy":100229256374854,"energyOut":0},{"time":1462508100000,"energy":100231448771128,"energyOut":0},{"time":1462509000000,"energy":100233639912926,"energyOut":0},{"time":1462509900000,"energy":100235832074442,"energyOut":0},{"time":1462510800000,"energy":100238024935378,"energyOut":0},{"time":1462511700000,"energy":100240216907219,"energyOut":0},{"time":1462512600000,"energy":100242409713555,"energyOut":0},{"time":1462513500000,"energy":100244600178190,"energyOut":0},{"time":1462514400000,"energy":100246792304985,"energyOut":0},{"time":1462515300000,"energy":100248982049366,"energyOut":0},{"time":1462516200000,"energy":100251170913885,"energyOut":0},{"time":1462517100000,"energy":100253360914127,"energyOut":0},{"time":1462518000000,"energy":100255552164536,"energyOut":0},{"time":1462518900000,"energy":100257742167542,"energyOut":0},{"time":1462519800000,"energy":100259930935708,"energyOut":0},{"time":1462520700000,"energy":100262120249780,"energyOut":0},{"time":1462521600000,"energy":100264309883186,"energyOut":0},{"time":1462522500000,"energy":100266498314947,"energyOut":0},{"time":1462523400000,"energy":100268686574524,"energyOut":0},{"time":1462524300000,"energy":100270872594745,"energyOut":0},{"time":1462525200000,"energy":100273058054700,"energyOut":0},{"time":1462526100000,"energy":100275242364912,"energyOut":0},{"time":1462527000000,"energy":100277195131000,"energyOut":0},{"time":1462527900000,"energy":100278721992231,"energyOut":0},{"time":1462528800000,"energy":100280916627607,"energyOut":0},{"time":1462529700000,"energy":100283108447887,"energyOut":0},{"time":1462530600000,"energy":100285297898657,"energyOut":0},{"time":1462531500000,"energy":100287486064300,"energyOut":0},{"time":1462532400000,"energy":100289673501370,"energyOut":0},{"time":1462533300000,"energy":100291861533457,"energyOut":0},{"time":1462534200000,"energy":100294049709286,"energyOut":0},{"time":1462535100000,"energy":100296236534456,"energyOut":0},{"time":1462536000000,"energy":100298422874431,"energyOut":0},{"time":1462536900000,"energy":100300610629246,"energyOut":0},{"time":1462537800000,"energy":100302798650044,"energyOut":0},{"time":1462538700000,"energy":100304984787051,"energyOut":0},{"time":1462539600000,"energy":100307169923147,"energyOut":0},{"time":1462540500000,"energy":100309353865332,"energyOut":0},{"time":1462541400000,"energy":100311546822825,"energyOut":0},{"time":1462542300000,"energy":100313743462920,"energyOut":0},{"time":1462543200000,"energy":100315938659970,"energyOut":0},{"time":1462544100000,"energy":100318134398530,"energyOut":0},{"time":1462545000000,"energy":100320327966660,"energyOut":0},{"time":1462545900000,"energy":100322522515424,"energyOut":0},{"time":1462546800000,"energy":100324717403857,"energyOut":0},{"time":1462547700000,"energy":100326909718887,"energyOut":0},{"time":1462548600000,"energy":100329103699732,"energyOut":0},{"time":1462549500000,"energy":100331295245412,"energyOut":0},{"time":1462550400000,"energy":100333486775515,"energyOut":0},{"time":1462551300000,"energy":100335679279910,"energyOut":0},{"time":1462552200000,"energy":100337873162772,"energyOut":0},{"time":1462553100000,"energy":100340065806176,"energyOut":0},{"time":1462554000000,"energy":100342243706346,"energyOut":0},{"time":1462554900000,"energy":100344421729642,"energyOut":0},{"time":1462555800000,"energy":100346600686504,"energyOut":0},{"time":1462556700000,"energy":100348778966877,"energyOut":0},{"time":1462557600000,"energy":100350955582040,"energyOut":0},{"time":1462558500000,"energy":100353132415992,"energyOut":0},{"time":1462559400000,"energy":100355308539054,"energyOut":0},{"time":1462560300000,"energy":100357485375705,"energyOut":0},{"time":1462561200000,"energy":100359662152770,"energyOut":0},{"time":1462562100000,"energy":100361838619397,"energyOut":0},{"time":1462563000000,"energy":100364014644480,"energyOut":0},{"time":1462563900000,"energy":100366187998695,"energyOut":0},{"time":1462564800000,"energy":100368363181300,"energyOut":0},{"time":1462565700000,"energy":100370537545541,"energyOut":0},{"time":1462566600000,"energy":100372712379200,"energyOut":0},{"time":1462567500000,"energy":100374885931703,"energyOut":0},{"time":1462568400000,"energy":100377060389167,"energyOut":0},{"time":1462569300000,"energy":100379250283336,"energyOut":0},{"time":1462570200000,"energy":100381441002242,"energyOut":0},{"time":1462571100000,"energy":100383629200537,"energyOut":0},{"time":1462572000000,"energy":100385817721612,"energyOut":0}]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Feb 2016 00:30:01 GMT
 - request:
     method: get
@@ -260,7 +260,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -285,7 +285,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1454281200000,"energy":103580316223000,"energyOut":0},{"time":1454367600000,"energy":103691283994000,"energyOut":0},{"time":1454454000000,"energy":103903365395000,"energyOut":0},{"time":1454540400000,"energy":103930776946000,"energyOut":0},{"time":1454626800000,"energy":103934715590000,"energyOut":0},{"time":1454713200000,"energy":104034213075000,"energyOut":0},{"time":1454799600000,"energy":104297830307000,"energyOut":0},{"time":1454886000000,"energy":104361475048000,"energyOut":0},{"time":1454972400000,"energy":104540506586000,"energyOut":0},{"time":1455058800000,"energy":104677150259000,"energyOut":0},{"time":1455145200000,"energy":104723985942000,"energyOut":0},{"time":1455231600000,"energy":104985480927000,"energyOut":0},{"time":1455318000000,"energy":105298178999000,"energyOut":0},{"time":1455404400000,"energy":105409649060000,"energyOut":0},{"time":1455490800000,"energy":105582794970000,"energyOut":0},{"time":1455577200000,"energy":105680236531000,"energyOut":0},{"time":1455663600000,"energy":105701698858000,"energyOut":0},{"time":1455750000000,"energy":105760148020000,"energyOut":0},{"time":1455836400000,"energy":105811589897000,"energyOut":0},{"time":1455922800000,"energy":105865141575000,"energyOut":0},{"time":1456009200000,"energy":105941889202000,"energyOut":0},{"time":1456095600000,"energy":106061857081000,"energyOut":0},{"time":1456182000000,"energy":106366689031000,"energyOut":0},{"time":1456268400000,"energy":106448659402000,"energyOut":0},{"time":1456354800000,"energy":106674897106000,"energyOut":0},{"time":1456441200000,"energy":106674897106000,"energyOut":0},{"time":1456527600000,"energy":106941426025000,"energyOut":0},{"time":1456614000000,"energy":107264890586000,"energyOut":0},{"time":1456700400000,"energy":107354635417000,"energyOut":0},{"time":1456786800000,"energy":107372481224000,"energyOut":0}]}'
-    http_version: 
+    http_version:
   recorded_at: Wed, 31 Dec 2014 23:30:00 GMT
 - request:
     method: get
@@ -301,7 +301,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -326,7 +326,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1459893600000,"energy":21173964546739,"energyOut":132690731033000},{"time":1459894500000,"energy":21173990308000,"energyOut":132691006005321},{"time":1459895400000,"energy":21173999961805,"energyOut":132691540830000},{"time":1459896300000,"energy":21174014076000,"energyOut":132692347249125},{"time":1459897200000,"energy":21175022935014,"energyOut":132692354964000},{"time":1459898100000,"energy":21175032990615,"energyOut":132693196865000},{"time":1459899000000,"energy":21175069113000,"energyOut":132693579336844},{"time":1459899900000,"energy":21175082471572,"energyOut":132694005258000},{"time":1459900800000,"energy":21175093957000,"energyOut":132694716754983},{"time":1459901700000,"energy":21175095848000,"energyOut":132694860471625},{"time":1459902600000,"energy":21175095848000,"energyOut":132695900835172},{"time":1459903500000,"energy":21175110081000,"energyOut":132696525798045},{"time":1459904400000,"energy":21175110081000,"energyOut":132697075841141},{"time":1459905300000,"energy":21175110081000,"energyOut":132698115571386},{"time":1459906200000,"energy":21175117516000,"energyOut":132698302599546},{"time":1459907100000,"energy":21175117516000,"energyOut":132699304867165},{"time":1459908000000,"energy":21175117516000,"energyOut":132700081903133},{"time":1459908900000,"energy":21175183680191,"energyOut":132700298984349},{"time":1459909800000,"energy":21175204530000,"energyOut":132701112984654},{"time":1459910700000,"energy":21175379245000,"energyOut":132701267830412},{"time":1459911600000,"energy":21175390584000,"energyOut":132701903420420},{"time":1459912500000,"energy":21175391426000,"energyOut":132702710835504},{"time":1459913400000,"energy":21175464676088,"energyOut":132702792669000},{"time":1459914300000,"energy":21175488953000,"energyOut":132703560539680},{"time":1459915200000,"energy":21175559432000,"energyOut":132703849247712},{"time":1459916100000,"energy":21175583900000,"energyOut":132704386267612},{"time":1459917000000,"energy":21175679319742,"energyOut":132705026334000},{"time":1459917900000,"energy":21176222132820,"energyOut":132705026334000},{"time":1459918800000,"energy":21176308875782,"energyOut":132705562363000},{"time":1459919700000,"energy":21176466691000,"energyOut":132705819788546},{"time":1459920600000,"energy":21176701073584,"energyOut":132706120931000},{"time":1459921500000,"energy":21176806387850,"energyOut":132706794856000},{"time":1459922400000,"energy":21177229489312,"energyOut":132706794856000},{"time":1459923300000,"energy":21177239709000,"energyOut":132707460663167},{"time":1459924200000,"energy":21177239709000,"energyOut":132708137249797},{"time":1459925100000,"energy":21177579882687,"energyOut":132708858387000},{"time":1459926000000,"energy":21178826873000,"energyOut":132710293550285},{"time":1459926900000,"energy":21179014093737,"energyOut":132710911514000},{"time":1459927800000,"energy":21180134341000,"energyOut":132711010074954},{"time":1459928700000,"energy":21180521544263,"energyOut":132711343163000},{"time":1459929600000,"energy":21180916748000,"energyOut":132711795179910},{"time":1459930500000,"energy":21181094964000,"energyOut":132711851974699},{"time":1459931400000,"energy":21181094971000,"energyOut":132712768964561},{"time":1459932300000,"energy":21181094971000,"energyOut":132714549988009},{"time":1459933200000,"energy":21181094971000,"energyOut":132716558585547},{"time":1459934100000,"energy":21181094971000,"energyOut":132720107661277},{"time":1459935000000,"energy":21181094971000,"energyOut":132724325719630},{"time":1459935900000,"energy":21181094971000,"energyOut":132728565339672},{"time":1459936800000,"energy":21181094971000,"energyOut":132733696614508},{"time":1459937700000,"energy":21181098311000,"energyOut":132736126991490},{"time":1459938600000,"energy":21181098531000,"energyOut":132737629818572},{"time":1459939500000,"energy":21181098531000,"energyOut":132739630295525},{"time":1459940400000,"energy":21181098531000,"energyOut":132743174900592},{"time":1459941300000,"energy":21181098531000,"energyOut":132749541197582},{"time":1459942200000,"energy":21181098531000,"energyOut":132753999863576},{"time":1459943100000,"energy":21181098531000,"energyOut":132756573518658},{"time":1459944000000,"energy":21181098531000,"energyOut":132758204328307},{"time":1459944900000,"energy":21181099006000,"energyOut":132759433218238},{"time":1459945800000,"energy":21182301904389,"energyOut":132759780085000},{"time":1459946700000,"energy":21184671325000,"energyOut":132759989467948},{"time":1459947600000,"energy":21184671325000,"energyOut":132762784878768},{"time":1459948500000,"energy":21184671325000,"energyOut":132766243720196},{"time":1459949400000,"energy":21184671325000,"energyOut":132771122180987},{"time":1459950300000,"energy":21184717950000,"energyOut":132772830727031},{"time":1459951200000,"energy":21184717950000,"energyOut":132777773620411},{"time":1459952100000,"energy":21184717950000,"energyOut":132783619881381},{"time":1459953000000,"energy":21184717950000,"energyOut":132798402967251},{"time":1459953900000,"energy":21184717950000,"energyOut":132812696010684},{"time":1459954800000,"energy":21184717950000,"energyOut":132824301839729},{"time":1459955700000,"energy":21184717950000,"energyOut":132831000769823},{"time":1459956600000,"energy":21184717950000,"energyOut":132834780290926},{"time":1459957500000,"energy":21184717950000,"energyOut":132836011423610},{"time":1459958400000,"energy":21184728295076,"energyOut":132836862558000},{"time":1459959300000,"energy":21185151566000,"energyOut":132837731119836},{"time":1459960200000,"energy":21185782426064,"energyOut":132837920455000},{"time":1459961100000,"energy":21186237194449,"energyOut":132838468475000},{"time":1459962000000,"energy":21186571544000,"energyOut":132838820128294},{"time":1459962900000,"energy":21186801477906,"energyOut":132839072009000},{"time":1459963800000,"energy":21187350898916,"energyOut":132839486705000},{"time":1459964700000,"energy":21188708379000,"energyOut":132839493138151},{"time":1459965600000,"energy":21189289089672,"energyOut":132839606572000},{"time":1459966500000,"energy":21190279705735,"energyOut":132839606572000},{"time":1459967400000,"energy":21191654623542,"energyOut":132839607830000},{"time":1459968300000,"energy":21192643893464,"energyOut":132839607830000},{"time":1459969200000,"energy":21194324752908,"energyOut":132839607830000},{"time":1459970100000,"energy":21195338433083,"energyOut":132839607830000},{"time":1459971000000,"energy":21198872746048,"energyOut":132839607830000},{"time":1459971900000,"energy":21203045116419,"energyOut":132839607830000},{"time":1459972800000,"energy":21206604498861,"energyOut":132839607830000},{"time":1459973700000,"energy":21210287196561,"energyOut":132839607830000},{"time":1459974600000,"energy":21213484827449,"energyOut":132839607830000},{"time":1459975500000,"energy":21216599177322,"energyOut":132839607830000},{"time":1459976400000,"energy":21220391937514,"energyOut":132839607830000},{"time":1459977300000,"energy":21223230313152,"energyOut":132839607830000},{"time":1459978200000,"energy":21226790982347,"energyOut":132839607830000},{"time":1459979100000,"energy":21230271856055,"energyOut":132839607830000},{"time":1459980000000,"energy":21233257069027,"energyOut":132839607830000}]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Sep 2014 08:05:03 GMT
 - request:
     method: get
@@ -342,7 +342,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -367,7 +367,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1467105862401,"power":16722040},{"time":1467105864401,"power":16708340},{"time":1467105866401,"power":16677030}]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Sep 2014 08:05:03 GMT
 - request:
     method: get
@@ -383,7 +383,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -408,7 +408,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1467105861166,"power":-42690},{"time":1467105863165,"power":-42880},{"time":1467105865165,"power":-42780}]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Sep 2014 08:05:03 GMT
 - request:
     method: get
@@ -424,7 +424,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -449,7 +449,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1467105862773,"power":25319950},{"time":1467105864773,"power":25185200},{"time":1467105866773,"power":24930840}]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Sep 2014 08:05:04 GMT
 - request:
     method: get
@@ -465,7 +465,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -490,7 +490,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1459461600000,"energy":1638014269281481,"energyOut":0},{"time":1459548000000,"energy":1642518090992160,"energyOut":0},{"time":1459634400000,"energy":1646839992431225,"energyOut":0},{"time":1459720800000,"energy":1650743008576377,"energyOut":0},{"time":1459807200000,"energy":1655333881446304,"energyOut":0},{"time":1459893600000,"energy":1659182634246386,"energyOut":0},{"time":1459980000000,"energy":1663568216391647,"energyOut":0},{"time":1460066400000,"energy":1668165712168312,"energyOut":0},{"time":1460152800000,"energy":1672837456455536,"energyOut":0},{"time":1460239200000,"energy":1677488546977684,"energyOut":0},{"time":1460325600000,"energy":1682168390755621,"energyOut":0},{"time":1460412000000,"energy":1686739773420618,"energyOut":0},{"time":1460498400000,"energy":1691024199146758,"energyOut":0},{"time":1460584800000,"energy":1695671060397084,"energyOut":0},{"time":1460671200000,"energy":1700259802271505,"energyOut":0},{"time":1460757600000,"energy":1704984486777307,"energyOut":0},{"time":1460844000000,"energy":1709603562947840,"energyOut":0},{"time":1460930400000,"energy":1714300484612038,"energyOut":0},{"time":1461016800000,"energy":1718688089248949,"energyOut":0},{"time":1461103200000,"energy":1723186229962883,"energyOut":0},{"time":1461189600000,"energy":1727469230546147,"energyOut":0},{"time":1461276000000,"energy":1731968503499204,"energyOut":0},{"time":1461362400000,"energy":1736183058425098,"energyOut":0},{"time":1461448800000,"energy":1740679392296740,"energyOut":0},{"time":1461535200000,"energy":1744874549403823,"energyOut":0},{"time":1461621600000,"energy":1749598988973413,"energyOut":0},{"time":1461708000000,"energy":1754282845640080,"energyOut":0},{"time":1461794400000,"energy":1759008368231437,"energyOut":0},{"time":1461880800000,"energy":1763733872259735,"energyOut":0},{"time":1461967200000,"energy":1768356927964359,"energyOut":0},{"time":1462053600000,"energy":1773070659416288,"energyOut":0}]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Sep 2014 08:05:04 GMT
 - request:
     method: get
@@ -506,7 +506,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -531,7 +531,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1459461600000,"energy":1404677093636000,"energyOut":0},{"time":1459548000000,"energy":1407524440394097,"energyOut":0},{"time":1459634400000,"energy":1411782112881005,"energyOut":0},{"time":1459720800000,"energy":1414133050833000,"energyOut":0},{"time":1459807200000,"energy":1414133050833000,"energyOut":0},{"time":1459893600000,"energy":1415361674026000,"energyOut":0},{"time":1459980000000,"energy":1417501943454094,"energyOut":0},{"time":1460066400000,"energy":1420753089349937,"energyOut":0},{"time":1460152800000,"energy":1425348554073928,"energyOut":0},{"time":1460239200000,"energy":1429957410947492,"energyOut":0},{"time":1460325600000,"energy":1434228181623864,"energyOut":0},{"time":1460412000000,"energy":1438738295337336,"energyOut":0},{"time":1460498400000,"energy":1442462863860191,"energyOut":0},{"time":1460584800000,"energy":1444959142625000,"energyOut":0},{"time":1460671200000,"energy":1447765830582000,"energyOut":0},{"time":1460757600000,"energy":1451151386545528,"energyOut":0},{"time":1460844000000,"energy":1454128830258000,"energyOut":0},{"time":1460930400000,"energy":1456134439131680,"energyOut":0},{"time":1461016800000,"energy":1460272930099581,"energyOut":0},{"time":1461103200000,"energy":1464643163709871,"energyOut":0},{"time":1461189600000,"energy":1468512853255000,"energyOut":0},{"time":1461276000000,"energy":1471162756290445,"energyOut":0},{"time":1461362400000,"energy":1473183339796680,"energyOut":0},{"time":1461448800000,"energy":1475677004066910,"energyOut":0},{"time":1461535200000,"energy":1478494075508080,"energyOut":0},{"time":1461621600000,"energy":1483189966902532,"energyOut":0},{"time":1461708000000,"energy":1487841006212697,"energyOut":0},{"time":1461794400000,"energy":1492542828940910,"energyOut":0},{"time":1461880800000,"energy":1497244836765265,"energyOut":0},{"time":1461967200000,"energy":1500957521771000,"energyOut":0},{"time":1462053600000,"energy":1501909563241000,"energyOut":0}]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Sep 2014 08:05:05 GMT
 - request:
     method: get
@@ -547,7 +547,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -572,7 +572,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1459461600000,"energy":605752622037000,"energyOut":0},{"time":1459548000000,"energy":606645881120000,"energyOut":0},{"time":1459634400000,"energy":608396561147000,"energyOut":0},{"time":1459720800000,"energy":610884624073000,"energyOut":0},{"time":1459807200000,"energy":613422785613000,"energyOut":0},{"time":1459893600000,"energy":615242896451000,"energyOut":0},{"time":1459980000000,"energy":616618476071000,"energyOut":0},{"time":1460066400000,"energy":617310667618000,"energyOut":0},{"time":1460152800000,"energy":617851882118000,"energyOut":0},{"time":1460239200000,"energy":618647326295000,"energyOut":0},{"time":1460325600000,"energy":620410134735000,"energyOut":0},{"time":1460412000000,"energy":623092608469000,"energyOut":0},{"time":1460498400000,"energy":625170684845000,"energyOut":0},{"time":1460584800000,"energy":627284636176000,"energyOut":0},{"time":1460671200000,"energy":628792873597000,"energyOut":0},{"time":1460757600000,"energy":629552069934000,"energyOut":0},{"time":1460844000000,"energy":631081983147000,"energyOut":0},{"time":1460930400000,"energy":631552762892000,"energyOut":0},{"time":1461016800000,"energy":632382745284000,"energyOut":0},{"time":1461103200000,"energy":634295500355000,"energyOut":0},{"time":1461189600000,"energy":637259274747000,"energyOut":0},{"time":1461276000000,"energy":640126685428000,"energyOut":0},{"time":1461362400000,"energy":642522803774000,"energyOut":0},{"time":1461448800000,"energy":643604990848000,"energyOut":0},{"time":1461535200000,"energy":644919562271000,"energyOut":0},{"time":1461621600000,"energy":646347766491000,"energyOut":0},{"time":1461708000000,"energy":647034768928000,"energyOut":0},{"time":1461794400000,"energy":648530849063000,"energyOut":0},{"time":1461880800000,"energy":650997922442000,"energyOut":0},{"time":1461967200000,"energy":653711124362000,"energyOut":0},{"time":1462053600000,"energy":656592678867000,"energyOut":0}]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Sep 2014 08:05:06 GMT
 - request:
     method: get
@@ -588,7 +588,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -613,7 +613,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[]}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Feb 2016 00:30:55 GMT
 - request:
     method: get
@@ -629,7 +629,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -654,7 +654,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid permissions"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:12 GMT
 - request:
     method: get
@@ -670,7 +670,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -695,7 +695,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid permissions"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:20 GMT
 - request:
     method: get
@@ -711,7 +711,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -736,7 +736,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid permissions"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:22 GMT
 - request:
     method: get
@@ -752,7 +752,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -777,7 +777,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid permissions"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:24 GMT
 - request:
     method: get
@@ -793,7 +793,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -818,7 +818,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid permissions"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:50 GMT
 - request:
     method: get
@@ -834,7 +834,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -859,7 +859,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid permissions"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:50 GMT
 - request:
     method: get
@@ -875,7 +875,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -900,7 +900,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid permissions"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:53 GMT
 - request:
     method: get
@@ -916,7 +916,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -941,7 +941,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid permissions"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:55 GMT
 - request:
     method: get
@@ -957,7 +957,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -982,7 +982,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid permissions"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:06:26 GMT
 - request:
     method: get
@@ -998,7 +998,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1023,7 +1023,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid permissions"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:04 GMT
 - request:
     method: get
@@ -1039,7 +1039,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1064,7 +1064,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid permissions"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
 - request:
     method: get
@@ -1080,7 +1080,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1105,7 +1105,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid permissions"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:18 GMT
 - request:
     method: get
@@ -1121,7 +1121,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1146,7 +1146,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1472798374607,"power":121840},{"time":1472798376608,"power":121930},{"time":1472798378610,"power":121930}]}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:04 GMT
 - request:
     method: get
@@ -1162,7 +1162,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1187,7 +1187,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"ok","result":[{"time":1472798560791,"power":920300},{"time":1472798562792,"power":920300},{"time":1472798564794,"power":919960}]}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:08 GMT
 - request:
     method: get
@@ -1207,7 +1207,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -1224,7 +1224,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[[1467446400,522.875000016],[1467450000,562.624999992]]"
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:22 GMT
 - request:
     method: get
@@ -1240,7 +1240,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1265,7 +1265,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid credentials"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:07:51 GMT
 - request:
     method: get
@@ -1281,7 +1281,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1306,7 +1306,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid credentials"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:04 GMT
 - request:
     method: get
@@ -1322,7 +1322,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1347,7 +1347,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid credentials"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:04 GMT
 - request:
     method: get
@@ -1363,7 +1363,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1388,7 +1388,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid credentials"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:08 GMT
 - request:
     method: get
@@ -1404,7 +1404,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1429,7 +1429,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid credentials"}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Feb 2016 00:30:01 GMT
 - request:
     method: get
@@ -1445,7 +1445,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1470,7 +1470,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid credentials"}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Feb 2016 00:30:01 GMT
 - request:
     method: get
@@ -1486,7 +1486,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1511,7 +1511,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid credentials"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:08:22 GMT
 - request:
     method: get
@@ -1527,7 +1527,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1552,7 +1552,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid credentials"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:08:25 GMT
 - request:
     method: get
@@ -1568,7 +1568,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1593,7 +1593,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid credentials"}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:07:09 GMT
 - request:
     method: get
@@ -1609,7 +1609,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -1634,7 +1634,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","reason":"Invalid credentials"}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 01 Feb 2016 00:30:01 GMT
 - request:
     method: get
@@ -1654,7 +1654,7 @@ http_interactions:
   response:
     status:
       code: 474
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -1667,7 +1667,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:08:58 GMT
 - request:
     method: get
@@ -1687,7 +1687,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -1704,7 +1704,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[[1467504000,472.871017152]]"
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:09:21 GMT
 - request:
     method: get
@@ -1724,7 +1724,7 @@ http_interactions:
   response:
     status:
       code: 474
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -1737,7 +1737,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:09:24 GMT
 - request:
     method: get
@@ -1757,7 +1757,7 @@ http_interactions:
   response:
     status:
       code: 474
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -1770,7 +1770,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
 - request:
     method: get
@@ -1790,7 +1790,7 @@ http_interactions:
   response:
     status:
       code: 474
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -1803,7 +1803,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:17:32 GMT
 - request:
     method: get
@@ -1823,7 +1823,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -1840,7 +1840,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[[1467504000,472.871017152]]"
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:14 GMT
 - request:
     method: get
@@ -1860,7 +1860,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -1877,7 +1877,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[[1467504000,472.871017152]]"
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:11 GMT
 - request:
     method: get
@@ -1897,7 +1897,7 @@ http_interactions:
   response:
     status:
       code: 474
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -1910,7 +1910,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:17 GMT
 - request:
     method: get
@@ -1930,7 +1930,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -1947,7 +1947,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[[1467504000,472.871017152]]"
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:20 GMT
 - request:
     method: get
@@ -1967,7 +1967,7 @@ http_interactions:
   response:
     status:
       code: 474
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -1980,7 +1980,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:06:04 GMT
 - request:
     method: get
@@ -2000,7 +2000,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -2017,7 +2017,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[[1467504000,472.871017152]]"
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:07:00 GMT
 - request:
     method: get
@@ -2037,7 +2037,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -2054,7 +2054,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[[1467504000,472.871017152]]"
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:27 GMT
 - request:
     method: get
@@ -2074,7 +2074,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -2091,7 +2091,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[[1467504000,472.871017152]]"
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:43 GMT
 - request:
     method: get
@@ -2111,7 +2111,7 @@ http_interactions:
   response:
     status:
       code: 474
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -2124,7 +2124,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:57 GMT
 - request:
     method: get
@@ -2144,7 +2144,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -2161,7 +2161,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[[1467504000,472.871017152]]"
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
 - request:
     method: get
@@ -2181,7 +2181,7 @@ http_interactions:
   response:
     status:
       code: 474
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -2194,7 +2194,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:15 GMT
 - request:
     method: get
@@ -2214,7 +2214,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -2231,7 +2231,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[[1467504000,472.871017152]]"
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:06:26 GMT
 - request:
     method: get
@@ -2251,7 +2251,7 @@ http_interactions:
   response:
     status:
       code: 474
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -2264,7 +2264,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:05 GMT
 - request:
     method: get
@@ -2284,7 +2284,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -2301,7 +2301,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[[1467504000,472.871017152]]"
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:10 GMT
 - request:
     method: get
@@ -2321,7 +2321,7 @@ http_interactions:
   response:
     status:
       code: 474
-      message: 
+      message:
     headers:
       server:
       - nginx
@@ -2334,11 +2334,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:11 GMT
 - request:
     method: get
-    uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1474873568&resolution=minute&start=1474873228&unit=watt
+    uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1474533868&resolution=minute&start=1474533528&unit=watt
     body:
       encoding: US-ASCII
       string: ''
@@ -2354,12 +2354,12 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
       date:
-      - Mon, 26 Sep 2016 07:06:08 GMT
+      - Thu, 22 Sep 2016 08:44:31 GMT
       content-type:
       - application/json
       transfer-encoding:
@@ -2370,12 +2370,78 @@ http_interactions:
       - Accept-Encoding
     body:
       encoding: ASCII-8BIT
-      string: '[[1474873260,"-nan"],[1474873320,"-nan"],[1474873380,"-nan"],[1474873440,"-nan"],[1474873500,"-nan"],[1474873560,"-nan"],[1474873620,"-nan"]]'
-    http_version: 
-  recorded_at: Mon, 26 Sep 2016 07:06:08 GMT
+      string: '[[1474533540,"-nan"],[1474533600,"-nan"],[1474533660,"-nan"],[1474533720,"-nan"],[1474533780,"-nan"],[1474533840,"-nan"],[1474533900,"-nan"]]'
+    http_version:
+  recorded_at: Thu, 22 Sep 2016 08:44:29 GMT
 - request:
     method: get
-    uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1474873570&resolution=minute&start=1474873230&unit=watt
+    uri: https://api.mysmartgrid.de:8443/sensor/user?end=1474533869&resolution=minute&start=1474533529&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - pwd
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 474
+      message:
+    headers:
+      server:
+      - nginx
+      date:
+      - Thu, 22 Sep 2016 08:44:32 GMT
+      content-length:
+      - '0'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version:
+  recorded_at: Thu, 22 Sep 2016 08:44:30 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/user?end=1474533870&resolution=minute&start=1474533530&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - pwd
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 474
+      message:
+    headers:
+      server:
+      - nginx
+      date:
+      - Thu, 22 Sep 2016 08:44:33 GMT
+      content-length:
+      - '0'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version:
+  recorded_at: Thu, 22 Sep 2016 08:44:31 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1474533872&resolution=minute&start=1474533532&unit=watt
     body:
       encoding: US-ASCII
       string: ''
@@ -2391,12 +2457,12 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx
       date:
-      - Mon, 26 Sep 2016 07:06:10 GMT
+      - Thu, 22 Sep 2016 08:44:34 GMT
       content-type:
       - application/json
       transfer-encoding:
@@ -2407,12 +2473,86 @@ http_interactions:
       - Accept-Encoding
     body:
       encoding: ASCII-8BIT
-      string: '[[1474873260,"-nan"],[1474873320,"-nan"],[1474873380,"-nan"],[1474873440,"-nan"],[1474873500,"-nan"],[1474873560,"-nan"],[1474873620,"-nan"]]'
-    http_version: 
-  recorded_at: Mon, 26 Sep 2016 07:06:10 GMT
+      string: '[[1474533540,"-nan"],[1474533600,"-nan"],[1474533660,"-nan"],[1474533720,"-nan"],[1474533780,"-nan"],[1474533840,"-nan"],[1474533900,"-nan"]]'
+    http_version:
+  recorded_at: Thu, 22 Sep 2016 08:44:32 GMT
 - request:
     method: get
-    uri: https://api.mysmartgrid.de:8443/sensor/user?end=1474873572&resolution=minute&start=1474873232&unit=watt
+    uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1467446704&resolution=minute&start=1467446364&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - 1a875e34e291c28db95ecbda015ad433
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx
+      date:
+      - Thu, 22 Sep 2016 08:58:46 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "[[1467504000,472.871017152]]"
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:05 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1467446705&resolution=minute&start=1467446365&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - 1a875e34e291c28db95ecbda015ad433
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx
+      date:
+      - Thu, 22 Sep 2016 08:58:47 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "[[1467504000,472.871017152]]"
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:06 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/user?end=1467446707&resolution=minute&start=1467446367&unit=watt
     body:
       encoding: US-ASCII
       string: ''
@@ -2428,12 +2568,12 @@ http_interactions:
   response:
     status:
       code: 474
-      message: 
+      message:
     headers:
       server:
       - nginx
       date:
-      - Mon, 26 Sep 2016 07:06:12 GMT
+      - Thu, 22 Sep 2016 08:58:49 GMT
       content-length:
       - '0'
       connection:
@@ -2441,39 +2581,6 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-    http_version: 
-  recorded_at: Mon, 26 Sep 2016 07:06:12 GMT
-- request:
-    method: get
-    uri: https://api.mysmartgrid.de:8443/sensor/user?end=1474873575&resolution=minute&start=1474873235&unit=watt
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      X-Token:
-      - pwd
-      X-Version:
-      - '1.0'
-      User-Agent:
-      - Faraday v0.9.2
-      Accept:
-      - application/json
-  response:
-    status:
-      code: 474
-      message: 
-    headers:
-      server:
-      - nginx
-      date:
-      - Mon, 26 Sep 2016 07:06:15 GMT
-      content-length:
-      - '0'
-      connection:
-      - close
-    body:
-      encoding: UTF-8
-      string: ''
-    http_version: 
-  recorded_at: Mon, 26 Sep 2016 07:06:15 GMT
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:07 GMT
 recorded_with: VCR 3.0.3
