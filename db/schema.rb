@@ -168,6 +168,7 @@ ActiveRecord::Schema.define(version: 20160922163350) do
     t.uuid     "group_id"
     t.datetime "created_at",                                      null: false
     t.datetime "updated_at",                                      null: false
+    t.boolean  "retailer"
   end
 
   add_index "contracts", ["contracting_party_id"], name: "index_contracts_on_contracting_party_id", using: :btree

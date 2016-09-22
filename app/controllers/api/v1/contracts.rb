@@ -46,6 +46,7 @@ module API
           requires :confirm_pricing_model,  type: Boolean, desc: 'Confirm pricing model'
           requires :commissioning,          type: Date,    desc: 'Commissioning'
           optional :metering_point_id,      type: String,  desc: 'MeteringPoint ID'
+          optional :retailer,               type: Boolean, desc: 'Is a Retailer', default: false
           # TODO: Should username/password be here?
           optional :username,               type: String,  desc: 'Username'
           optional :password,               type: String,  desc: 'Password'
@@ -78,6 +79,7 @@ module API
           optional :power_of_attorney,      type: Boolean, desc: 'Power of attorney'
           optional :confirm_pricing_model,  type: Boolean, desc: 'Confirm pricing model'
           optional :commissioning,          type: Date, desc: 'Commissioning'
+          optional :retailer,               type: Boolean, desc: 'Is a Retailer'
           optional :username,               type: String, desc: 'Username'
           optional :password,               type: String, desc: 'Password'
         end

@@ -9,6 +9,7 @@ class ContractResource < ApplicationResource
               :power_of_attorney,
               :confirm_pricing_model,
               :commissioning,
+              :retailer,
               :mode
 
   has_one :address
