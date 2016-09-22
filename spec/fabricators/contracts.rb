@@ -8,6 +8,7 @@ Fabricator :contract do
   terms                 true
   power_of_attorney     true
   confirm_pricing_model true
+  retailer              false
   commissioning         Date.new(2013,9,1)
 end
 
