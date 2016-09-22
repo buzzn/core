@@ -38,6 +38,7 @@ module API
           requires :state, type: String, values: Address.states(&:to_s)
           requires :zip, type: Fixnum
           requires :country, type: String
+          optional :addition, type: String
         end
         oauth2 :full
         post do
@@ -58,6 +59,7 @@ module API
           optional :state, type: String, values: Address.states(&:to_s)
           optional :zip, type: Fixnum
           optional :country, type: String
+          optional :addition, type: String
         end
         oauth2 :full
         patch ':id' do
