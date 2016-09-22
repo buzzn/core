@@ -1,7 +1,18 @@
+# coding: utf-8
 describe 'Addresses API' do
 
   let(:page_overload) { 11 }
-
+  let(:params) do
+    {
+      street_name: 'Lützowplatz',
+      street_number: '17',
+      city: 'Berlin',
+      state: Address.states.first.to_s,
+      zip: 10785,
+      country: 'Germany',
+      addition: 'HH'
+    }
+  end
 
   it 'does not get all addresses with regular token or without token' do
     Fabricate(:address)
@@ -53,14 +64,6 @@ describe 'Addresses API' do
   it 'creates address using full token' do
     full_access_token = Fabricate(:full_access_token_as_admin)
     access_token      = Fabricate(:simple_access_token)
-    params = {
-      street_name: 'Lützowplatz',
-      street_number: '17',
-      city: 'Berlin',
-      state: Address.states.first.to_s,
-      zip: 10785,
-      country: 'Germany',
-    }
 
     post_without_token '/api/v1/addresses', params.to_json
     expect(response).to have_http_status(401)
@@ -68,6 +71,10 @@ describe 'Addresses API' do
     expect(response).to have_http_status(403)
     post_with_token '/api/v1/addresses', params.to_json, full_access_token.token
     expect(response).to have_http_status(201)
+    params.each do |k,v|
+      expect(json['data']['attributes'][k]).not_to eq(v)
+    end
+    expect(json['data']['attributes']['latitude']).not_to eq(nil)
     expect(json['data']['attributes']['longitude']).not_to eq(nil)
   end
 
@@ -75,16 +82,19 @@ describe 'Addresses API' do
     address           = Fabricate(:address)
     full_access_token = Fabricate(:full_access_token_as_admin)
     access_token      = Fabricate(:simple_access_token)
-    params = {
-      city: 'Berlin',
-    }
 
-    patch_without_token "/api/v1/addresses/#{address.id}", params.to_json
+    patch_without_token "/api/v1/addresses/#{address.id}", {}.to_json
     expect(response).to have_http_status(401)
-    patch_with_token "/api/v1/addresses/#{address.id}", params.to_json, access_token.token
+    patch_with_token "/api/v1/addresses/#{address.id}", {}.to_json, access_token.token
     expect(response).to have_http_status(403)
-    patch_with_token "/api/v1/addresses/#{address.id}", params.to_json, full_access_token.token
-    expect(response).to have_http_status(200)
+
+    params.each do |k,v|
+      request_params = { "#{k}": v }
+
+      patch_with_token "/api/v1/addresses/#{address.id}", request_params.to_json, full_access_token.token
+      expect(response).to have_http_status(200)
+      expect(json['data']['attributes'][k.to_s.gsub('_','-')]).to eq(v)
+    end
   end
 
   it 'deletes address using full token' do

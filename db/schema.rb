@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160921155654) do
+ActiveRecord::Schema.define(version: 20160922163350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 20160921155654) do
     t.string   "addressable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "addition"
   end
 
   add_index "addresses", ["addressable_id", "addressable_type"], name: "index_addressable", using: :btree

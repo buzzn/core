@@ -9,6 +9,7 @@ class AddressResource < ApplicationResource
               :country,
               :longitude,
               :latitude,
+              :addition,
               :time_zone
 
 end
