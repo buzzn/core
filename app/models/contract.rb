@@ -22,8 +22,8 @@ class Contract < ActiveRecord::Base
 
   scope :running,                   -> { where(running: :true) }
   scope :metering_point_operators,  -> { where(mode: 'metering_point_operator_contract') }
-  scope :electricity_suppliers,     -> { where(mode: 'electricity_supplier_contract') }
-  scope :electricity_purchases,     -> { where(mode: 'electricity_purchase_contract') }
+  scope :power_givers,              -> { where(mode: 'power_giver_contract') }
+  scope :power_takers,              -> { where(mode: 'power_taker_contract') }
   scope :servicings,                -> { where(mode: 'servicing_contract') }
 
   def self.readable_by_query(user)
@@ -56,8 +56,8 @@ class Contract < ActiveRecord::Base
 
   # def self.modes
   #   %w{
-  #     electricity_supplier_contract
-  #     electricity_purchase_contract
+  #     power_giver_contract
+  #     power_taker_contract
   #     metering_point_operator_contract
   #     servicing_contract
   #   }.map(&:to_sym)

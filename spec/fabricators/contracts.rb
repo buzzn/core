@@ -25,8 +25,8 @@ end
 
 
 
-Fabricator :electricity_supplier_contract, from: :contract do
-  mode                  'electricity_supplier_contract'
+Fabricator :power_taker_contract, from: :contract do
+  mode                  'power_taker_contract'
   tariff                'Öko Strom XXL'
   forecast_watt_hour_pa 1700000
   price_cents           2995
@@ -34,7 +34,20 @@ Fabricator :electricity_supplier_contract, from: :contract do
   bank_account          { Fabricate(:bank_account) }
 end
 
-Fabricator :electricity_supplier_contract_with_address, from: :electricity_supplier_contract do
+Fabricator :power_taker_contract_with_address, from: :power_taker_contract do
+  address               { Fabricate(:address) }
+end
+
+Fabricator :power_giver_contract, from: :contract do
+  mode                  'power_giver_contract'
+  tariff                'Marktprämienmodell'
+  forecast_watt_hour_pa 1700000
+  price_cents           3
+  organization          { Fabricate(:electricity_supplier) }
+  bank_account          { Fabricate(:bank_account) }
+end
+
+Fabricator :power_giver_contract_with_address, from: :power_giver_contract do
   address               { Fabricate(:address) }
 end
 

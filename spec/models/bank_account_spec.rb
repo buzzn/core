@@ -15,7 +15,7 @@ describe "BankAccount Model" do
     user
   end
   let(:contract) do
-    contract = Fabricate(:electricity_supplier_contract)
+    contract = Fabricate(:power_giver_contract)
     contract.metering_point = user_with_metering_point.roles.first.resource
     contract.save!
     contract
@@ -53,7 +53,7 @@ describe "BankAccount Model" do
 
       account = BankAccount.guarded_retrieve(user, bank_account.id)
       expect(account.id).to eq bank_account.id
-      
+
       expect {BankAccount.guarded_retrieve(user, 'some-unknown-id') }.to raise_error Buzzn::RecordNotFound
     end
 
@@ -64,7 +64,7 @@ describe "BankAccount Model" do
 
       account = BankAccount.guarded_update(user, id: bank_account.id, holder: 'Me')
       expect(BankAccount.find(account.id).holder).to eq 'Me'
-      
+
       expect {BankAccount.guarded_update(user, id: 'some-unknown-id') }.to raise_error Buzzn::RecordNotFound
     end
 
@@ -85,7 +85,7 @@ describe "BankAccount Model" do
       user = send(u) if u != :anonymous
       contract.group = member_group
       contract.save!
-      
+
       expect { BankAccount.guarded_create(user, params,
                                           contract) }.to raise_error Buzzn::PermissionDenied
     end
@@ -94,7 +94,7 @@ describe "BankAccount Model" do
       user = send(u) if u != :anonymous
       contract.group = member_group
       contract.save!
-      
+
       expect { BankAccount.guarded_retrieve(user, bank_account.id) }.to raise_error Buzzn::PermissionDenied
     end
 
@@ -102,16 +102,16 @@ describe "BankAccount Model" do
       user = send(u) if u != :anonymous
       contract.group = member_group
       contract.save!
-      
+
       expect { BankAccount.guarded_update(user, bank_account.id,
                                           holder: 'Me') }.to raise_error Buzzn::PermissionDenied
     end
- 
+
     it "does not delete BankAccount of contract with #{u}" do
       user = send(u) if u != :anonymous
       contract.group = member_group
       contract.save!
-      
+
       expect { BankAccount.guarded_delete(user, bank_account.id) }.to raise_error Buzzn::PermissionDenied
     end
   end
@@ -120,7 +120,7 @@ describe "BankAccount Model" do
     3.times { Fabricate(:bank_account) }
 
     [bank_account.holder, bank_account.bank_name, bank_account.bic].each do |val|
-      
+
       len = val.size/2
 
       [val, val.upcase, val.downcase, val[0..len], val[-len..-1]].each do |value|
