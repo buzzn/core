@@ -59,12 +59,14 @@ module API
           # TODO: Should username/password be here?
           optional :username,               type: String,  desc: 'Username'
           optional :password,               type: String,  desc: 'Password'
+          optional :contract_owner_id,      type: String,  desc: 'ContractingParty Owner ID'
+          optional :contract_beneficiary_id,type: String,  desc: 'ContractingParty Beneficiary ID'
         end
         oauth2 :full, :smartmeter
         post do
           if Contract.creatable_by?(current_user)
             # TODO move logic into Contract and ensure manager on creation (validation)
-            permitted_params[:contracting_party] = current_user.contracting_party if current_user.contracting_party
+            permitted_params[:contracting_party] = current_user.contracting_party if current_user.contracting_parties.any?
             contract = Contract.create!(permitted_params)
             current_user.add_role :manager, contract
             created_response(contract)
@@ -100,6 +102,8 @@ module API
           optional :attention_by,             type: String, desc: 'Attention by'
           optional :username,                 type: String, desc: 'Username'
           optional :password,                 type: String, desc: 'Password'
+          optional :contract_owner_id,      type: String,  desc: 'ContractingParty Owner ID'
+          optional :contract_beneficiary_id,type: String,  desc: 'ContractingParty Beneficiary ID'
         end
         oauth2 :full
         patch ':id' do

@@ -37,6 +37,7 @@ class Organization < ActiveRecord::Base
   scope :metering_point_operators,      -> { where(mode: 'metering_point_operator') }
   scope :distribution_system_operators, -> { where(mode: 'distribution_system_operator') }
   scope :transmission_system_operators, -> { where(mode: 'transmission_system_operator') }
+  scope :others,                        -> { where(mode: 'other') }
   scope :readable_by,                   -> (user) { where(nil) }
 
   def self.modes
@@ -48,6 +49,7 @@ class Organization < ActiveRecord::Base
       metering_point_operator
       distribution_system_operator
       transmission_system_operator
+      other
     }
   end
 
