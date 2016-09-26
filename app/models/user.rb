@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
 
   acts_as_voter
 
-  has_one :contracting_party
+  has_many :contracting_parties
   has_one :dashboard
   has_one :profile, :dependent => :destroy
   accepts_nested_attributes_for :profile
@@ -96,7 +96,7 @@ class User < ActiveRecord::Base
     !!user && ActiveRecord::Base.connection.exec_query(count_admins(user).to_sql).first['count'].to_i > 0
   end
 
-  def self.any_role?(user, roles_map)  
+  def self.any_role?(user, roles_map)
     !!user && ActiveRecord::Base.connection.exec_query(count_roles(user, roles_map).to_sql).first['count'].to_i > 0
   end
 
@@ -371,6 +371,7 @@ private
 
   def create_dashboard
     self.dashboard = Dashboard.create(user_id: self.id)
+    ContractingParty.create(user_id: self.id, legal_entity: 'natural_person')
   end
 
   def create_rails_view_access_token

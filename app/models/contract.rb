@@ -8,7 +8,8 @@ class Contract < ActiveRecord::Base
 
   monetize :price_cents
 
-  belongs_to :contracting_party
+  belongs_to :contract_owner, class_name: 'ContractingParty', foreign_key: "contract_owner_id"
+  belongs_to :contract_benficiary, class_name: 'ContractingParty', foreign_key: "contract_benficiary_id"
   belongs_to :organization
   belongs_to :metering_point
   belongs_to :group
