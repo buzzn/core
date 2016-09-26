@@ -39,6 +39,15 @@ describe 'Contracts API' do
       'commissioning',
       'mode',
       'retailer',
+      'price-cents-per-kwh',
+      'price-cents-per-month',
+      'discount-cents-per-month',
+      'other-contract',
+      'move-in',
+      'beginning',
+      'authorization',
+      'feedback',
+      'attention-by',
       'organization-id',
     ]
   end
@@ -125,7 +134,7 @@ describe 'Contracts API' do
     it "updates contract with #{token_name}" do
       new_contract = Fabricate.build(:mpoc_ferraris_0002_amperix)
       contract_param_names.each do |param_name|
-        next if param_name == 'commissioning' || param_name == 'organization-id'
+        next if ['commissioning', 'beginning', 'organization-id'].include? param_name
         name = param_name.gsub(/-/, '_')
         request_params = {
           "#{name}":  new_contract[param_name],
@@ -171,7 +180,7 @@ describe 'Contracts API' do
     expect(response).to have_http_status(201)
     expect(response.headers['Location']).to eq json['data']['id']
     contract_param_names.each do |param_name|
-      next if param_name == 'commissioning' || param_name == 'organization-id'
+      next if ['commissioning', 'beginning', 'organization-id'].include? param_name
       name = param_name.gsub(/-/, '_')
       expect(json['data']['attributes'][param_name]).to eq request_params[name]
     end
