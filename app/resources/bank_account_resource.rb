@@ -4,6 +4,7 @@ class BankAccountResource < ApplicationResource
               :bank_name,
               :bic,
               :iban,
-              :direct_debit
+              :direct_debit,
+              :mandate
 
 end

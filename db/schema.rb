@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160922130534) do
+
+ActiveRecord::Schema.define(version: 20160926060807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +52,7 @@ ActiveRecord::Schema.define(version: 20160922130534) do
     t.string   "addressable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "addition"
   end
 
   add_index "addresses", ["addressable_id", "addressable_type"], name: "index_addressable", using: :btree
@@ -96,6 +98,7 @@ ActiveRecord::Schema.define(version: 20160922130534) do
     t.string   "bank_accountable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "mandate"
   end
 
   add_index "bank_accounts", ["bank_accountable_id", "bank_accountable_type"], name: "index_accountable", using: :btree
@@ -144,10 +147,10 @@ ActiveRecord::Schema.define(version: 20160922130534) do
     t.string   "slug"
     t.string   "mode"
     t.string   "tariff"
-    t.integer  "price_cents",                       default: 0,     null: false
-    t.string   "price_currency",                    default: "EUR", null: false
+    t.integer  "price_cents",                        default: 0,     null: false
+    t.string   "price_currency",                     default: "EUR", null: false
     t.string   "status"
-    t.integer  "forecast_watt_hour_pa",   limit: 8
+    t.integer  "forecast_watt_hour_pa",    limit: 8
     t.date     "commissioning"
     t.date     "termination"
     t.boolean  "terms"
@@ -158,13 +161,24 @@ ActiveRecord::Schema.define(version: 20160922130534) do
     t.string   "contract_number"
     t.string   "username"
     t.string   "encrypted_password"
-    t.boolean  "valid_credentials",                 default: false
-    t.boolean  "running",                           default: true
+    t.boolean  "valid_credentials",                  default: false
+    t.boolean  "running",                            default: true
+    t.uuid     "contracting_party_id"
     t.uuid     "metering_point_id"
     t.uuid     "organization_id"
     t.uuid     "group_id"
-    t.datetime "created_at",                                        null: false
-    t.datetime "updated_at",                                        null: false
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
+    t.boolean  "retailer"
+    t.float    "price_cents_per_kwh"
+    t.integer  "price_cents_per_month"
+    t.integer  "discount_cents_per_month"
+    t.boolean  "other_contract"
+    t.boolean  "move_in"
+    t.date     "beginning"
+    t.boolean  "authorization"
+    t.text     "feedback"
+    t.text     "attention_by"
     t.uuid     "contract_owner_id"
     t.uuid     "contract_beneficiary_id"
   end
@@ -467,6 +481,9 @@ ActiveRecord::Schema.define(version: 20160922130534) do
     t.string   "mode"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "authority"
+    t.boolean  "provider_permission"
+    t.boolean  "retailer"
   end
 
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree

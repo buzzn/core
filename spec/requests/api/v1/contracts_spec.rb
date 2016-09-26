@@ -30,15 +30,25 @@ describe 'Contracts API' do
     [
       'tariff',
       'status',
-      'customer_number',
-      'contract_number',
-      'signing_user',
+      'customer-number',
+      'contract-number',
+      'signing-user',
       'terms',
-      'power_of_attorney',
-      'confirm_pricing_model',
+      'power-of-attorney',
+      'confirm-pricing-model',
       'commissioning',
       'mode',
-      'organization_id',
+      'retailer',
+      'price-cents-per-kwh',
+      'price-cents-per-month',
+      'discount-cents-per-month',
+      'other-contract',
+      'move-in',
+      'beginning',
+      'authorization',
+      'feedback',
+      'attention-by',
+      'organization-id',
     ]
   end
 
@@ -121,14 +131,18 @@ describe 'Contracts API' do
       expect(response).to have_http_status(200)
     end
 
-    it 'updates contract as admin with full access token' do
+    it "updates contract with #{token_name}" do
       new_contract = Fabricate.build(:mpoc_ferraris_0002_amperix)
-      request_params = {
-        mode:  new_contract.mode,
-      }.to_json
-      patch_with_token "/api/v1/contracts/#{contract.id}", request_params, send(token_name).token
-      expect(response).to have_http_status(200)
-      expect(json['data']['attributes']['mode']).to eq(new_contract.mode)
+      contract_param_names.each do |param_name|
+        next if ['commissioning', 'beginning', 'organization-id'].include? param_name
+        name = param_name.gsub(/-/, '_')
+        request_params = {
+          "#{name}":  new_contract[param_name],
+        }
+        patch_with_token "/api/v1/contracts/#{contract.id}", request_params.to_json, send(token_name).token
+        expect(response).to have_http_status(200)
+        expect(json['data']['attributes'][param_name]).to eq request_params[name.to_sym]
+      end
     end
 
     it "delete contract with #{token_name}" do
@@ -158,12 +172,18 @@ describe 'Contracts API' do
     contract = Fabricate.build(:mpoc_buzzn_metering)
     request_params = Hash.new
     contract_param_names.each do |param_name|
-      request_params[param_name] = contract[param_name]
+      name = param_name.gsub(/-/, '_')
+      request_params[name] = contract[name]
     end
     access_token  = Fabricate(:full_access_token_as_admin).token
     post_with_token "/api/v1/contracts/", request_params.to_json, access_token
     expect(response).to have_http_status(201)
     expect(response.headers['Location']).to eq json['data']['id']
+    contract_param_names.each do |param_name|
+      next if ['commissioning', 'beginning', 'organization-id'].include? param_name
+      name = param_name.gsub(/-/, '_')
+      expect(json['data']['attributes'][param_name]).to eq request_params[name]
+    end
   end
 
   it 'does not create contract as admin with full access token if some of the required params missing' do

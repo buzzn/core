@@ -1,14 +1,24 @@
 # coding: utf-8
 Fabricator :contract do
-  tariff                'localpool'
-  status                'running'
-  customer_number       { sequence(:customer_number, 9261502) }
-  contract_number       'xl245245235'
-  signing_user          { "#{FFaker::Name.first_name} #{FFaker::Name.last_name}" }
-  terms                 true
-  power_of_attorney     true
-  confirm_pricing_model true
-  commissioning         Date.new(2013,9,1)
+  tariff                   'localpool'
+  status                   'running'
+  customer_number          { sequence(:customer_number, 9261502) }
+  contract_number          'xl245245235'
+  signing_user             { "#{FFaker::Name.first_name} #{FFaker::Name.last_name}" }
+  terms                    true
+  power_of_attorney        true
+  confirm_pricing_model    true
+  retailer                 false
+  price_cents_per_kwh      { rand * 10 }
+  price_cents_per_month    { rand(100) }
+  discount_cents_per_month { rand(10) }
+  other_contract           { FFaker::Boolean.maybe }
+  move_in                  { FFaker::Boolean.maybe }
+  beginning                { FFaker::Time.date }
+  authorization            { FFaker::Boolean.maybe }
+  feedback                 { FFaker::Lorem.sentence }
+  attention_by             { FFaker::Lorem.sentence }
+  commissioning            Date.new(2013,9,1)
 end
 
 
