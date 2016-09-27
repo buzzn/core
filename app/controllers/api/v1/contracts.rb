@@ -66,7 +66,6 @@ module API
         post do
           if Contract.creatable_by?(current_user)
             # TODO move logic into Contract and ensure manager on creation (validation)
-            permitted_params[:contracting_party] = current_user.contracting_party if current_user.contracting_parties.any?
             contract = Contract.create!(permitted_params)
             current_user.add_role :manager, contract
             created_response(contract)

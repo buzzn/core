@@ -104,8 +104,12 @@ class Contract < ActiveRecord::Base
 
   def send_notification_credentials(valid)
     contract = self
-    if contract && contract.contracting_party
-      user = contract.contracting_party.user
+    if contract
+      if contract.contract_owner
+        user = contract.contract_owner.user
+      elsif contract.contract_beneficiary
+        user = contract.beneficiary.user
+      end
       if valid
         user.send_notification("success", I18n.t("valid_credentials"), I18n.t("your_credentials_have_been_checked_and_are_valid", contract: contract.mode), contract_path(self))
       else
