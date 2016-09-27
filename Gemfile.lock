@@ -551,7 +551,6 @@ GEM
     notiffany (0.1.0)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    oauth (0.5.1)
     oauth2 (1.1.0)
       faraday (>= 0.8, < 0.10)
       jwt (~> 1.0, < 1.5.2)
@@ -923,7 +922,6 @@ DEPENDENCIES
   moped
   multi_json (~> 1.0)
   newrelic_rpm
-  oauth
   oj (~> 2.0)
   omniauth-facebook
   paper_trail

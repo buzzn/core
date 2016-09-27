@@ -151,6 +151,25 @@ ActiveRecord::Schema.define(version: 20160926060807) do
     t.string   "price_currency",                    default: "EUR", null: false
     t.string   "status"
     t.integer  "forecast_watt_hour_pa",   limit: 8
+
+This reverts commit 10617fb7a5563bea5d9c5318d39defacb8c46195, reversing
+changes made to e1486df54485bb7fb9b0e6d413f60008db7fabf5.
+
+# Bitte geben Sie eine Commit-Beschreibung für Ihre Änderungen ein. Zeilen,
+# die mit '#' beginnen, werden ignoriert, und eine leere Beschreibung
+# bricht den Commit ab.
+# Auf Branch 393-contract-mode-rename
+# Ihr Branch ist auf dem selben Stand wie 'origin/393-contract-mode-rename'.
+#
+# zum Commit vorgemerkte Änderungen:
+#	geändert:               Gemfile
+#	geändert:               Gemfile.lock
+#	gelöscht:               app/aggregate/discovergy_oauth1.rb
+#	geändert:               app/models/contract.rb
+#	gelöscht:               db/migrate/20160927123121_add_access_token_to_contract.rb
+#	geändert:               db/schema.rb
+#
+revert merge of oauth lib
     t.date     "commissioning"
     t.date     "termination"
     t.boolean  "terms"
