@@ -106,7 +106,6 @@ gem 'high_voltage'
 gem 'wine_bouncer', '~> 1.0'
 gem 'multi_json', '~> 1.0'
 gem 'oj', '~> 2.0'
-gem 'oauth'
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-pace'
