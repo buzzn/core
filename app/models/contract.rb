@@ -5,6 +5,9 @@ class Contract < ActiveRecord::Base
   has_paper_trail
 
   attr_encrypted :password, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
+  attr_encrypted :external_access_token, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
+  attr_encrypted :external_access_token_secret, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
+
 
   monetize :price_cents
 
