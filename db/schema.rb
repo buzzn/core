@@ -146,10 +146,10 @@ ActiveRecord::Schema.define(version: 20160926060807) do
     t.string   "slug"
     t.string   "mode"
     t.string   "tariff"
-    t.integer  "price_cents",                        default: 0,     null: false
-    t.string   "price_currency",                     default: "EUR", null: false
+    t.integer  "price_cents",                                      default: 0,     null: false
+    t.string   "price_currency",                                   default: "EUR", null: false
     t.string   "status"
-    t.integer  "forecast_watt_hour_pa",    limit: 8
+    t.integer  "forecast_watt_hour_pa",                  limit: 8
     t.date     "commissioning"
     t.date     "termination"
     t.boolean  "terms"
@@ -178,7 +178,9 @@ ActiveRecord::Schema.define(version: 20160926060807) do
     t.date     "beginning"
     t.boolean  "authorization"
     t.text     "feedback"
-    t.text     "attention_by"
+    t.text     "attention_by"                                                       null: false
+    t.string   "encrypted_external_access_token"
+    t.string   "encrypted_external_access_token_secret"
   end
 
   add_index "contracts", ["group_id"], name: "index_contracts_on_group_id", using: :btree
