@@ -408,7 +408,8 @@ ActiveRecord::Schema.define(version: 20160926140754) do
   add_index "meters", ["ancestry"], name: "index_meters_on_ancestry", using: :btree
   add_index "meters", ["slug"], name: "index_meters_on_slug", unique: true, using: :btree
 
-  create_table "nne_vnbs", primary_key: "verbandsnummer", force: :cascade do |t|
+  create_table "nne_vnbs", id: false, force: :cascade do |t|
+    t.string  "verbandsnummer", null: false
     t.string  "typ"
     t.float   "messung_et"
     t.float   "abrechnung_et"
@@ -422,6 +423,8 @@ ActiveRecord::Schema.define(version: 20160926140754) do
     t.float   "grundpreis"
     t.boolean "vorlaeufig"
   end
+
+  add_index "nne_vnbs", ["verbandsnummer"], name: "index_nne_vnbs_on_verbandsnummer", unique: true, using: :btree
 
   create_table "notification_unsubscribers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "notification_key"
@@ -663,9 +666,12 @@ ActiveRecord::Schema.define(version: 20160926140754) do
     t.uuid     "voter_id"
   end
 
-  create_table "zip_kas", primary_key: "zip", force: :cascade do |t|
-    t.float "ka"
+  create_table "zip_kas", id: false, force: :cascade do |t|
+    t.string "zip", null: false
+    t.float  "ka"
   end
+
+  add_index "zip_kas", ["zip"], name: "index_zip_kas_on_zip", unique: true, using: :btree
 
   create_table "zip_vnbs", force: :cascade do |t|
     t.string "zip"

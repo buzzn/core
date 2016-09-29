@@ -1,7 +1,7 @@
 class CreateNneVnbs < ActiveRecord::Migration
   def change
     create_table :nne_vnbs, id: false do |t|
-      t.string :verbandsnummer
+      t.string :verbandsnummer, null: false
       t.string :typ
       t.float :messung_et
       t.float :abrechnung_et
@@ -15,6 +15,6 @@ class CreateNneVnbs < ActiveRecord::Migration
       t.float :grundpreis
       t.boolean :vorlaeufig
     end
-    execute "ALTER TABLE nne_vnbs ADD PRIMARY KEY (verbandsnummer);"
+    add_index :nne_vnbs, :verbandsnummer, unique: true
   end
 end
