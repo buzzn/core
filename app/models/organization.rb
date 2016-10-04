@@ -1,5 +1,7 @@
+require 'buzzn/guarded_crud'
 class Organization < ActiveRecord::Base
   resourcify
+  include Buzzn::GuardedCrud
   extend FriendlyId
 
   friendly_id :name, use: [:slugged, :finders]

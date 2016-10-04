@@ -26,12 +26,7 @@ module API
         end
         oauth2 false
         get ":id" do
-          device = Device.find(permitted_params[:id])
-          if device.readable_by?(current_user)
-            device
-          else
-            status 403
-          end
+          Device.guarded_retrieve(current_user, permitted_params)
         end
 
 
@@ -82,7 +77,7 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          device = Device.find(permitted_params[:id])
+          device = Device.guarded_retrieve(current_user, permitted_params)
           if device.updatable_by?(current_user)
             device.update!(permitted_params)
             device
@@ -100,7 +95,7 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          device = Device.find(permitted_params[:id])
+          device = Device.guarded_retrieve(current_user, permitted_params)
           if device.deletable_by?(current_user)
             device.destroy
             status 204

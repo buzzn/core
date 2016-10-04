@@ -19,7 +19,7 @@ module API
         helpers do
 
           def current_user
-            User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+            User.unguarded_retrieve(doorkeeper_token.resource_owner_id) if doorkeeper_token
           end
 
           def permitted_params

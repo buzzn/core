@@ -1,7 +1,9 @@
+require 'buzzn/guarded_crud'
 class Comment < ActiveRecord::Base
   include Authority::Abilities
   include Filterable
   include PublicActivity::Model
+  include Buzzn::GuardedCrud
 
   acts_as_nested_set :scope => [:commentable_id, :commentable_type]
 

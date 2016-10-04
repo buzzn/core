@@ -22,12 +22,7 @@ module API
         end
         oauth2 :full
         get ':id' do
-          contracting_party = ContractingParty.find(permitted_params[:id])
-          if contracting_party.readable_by?(current_user)
-            contracting_party
-          else
-            status 403
-          end
+          ContractingParty.guarded_retrieve(current_user, permitted_params)
         end
 
         desc 'Create contracting party'
@@ -63,7 +58,7 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          contracting_party = ContractingParty.find(permitted_params[:id])
+          contracting_party = ContractingParty.guarded_retrieve(current_user, permitted_params)
           if contracting_party.updatable_by?(current_user)
             contracting_party.update!(permitted_params)
             contracting_party
@@ -78,7 +73,7 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          contracting_party = ContractingParty.find(permitted_params[:id])
+          contracting_party = ContractingParty.guarded_retrieve(current_user, permitted_params)
           if contracting_party.deletable_by?(current_user)
             contracting_party.destroy
             status 204

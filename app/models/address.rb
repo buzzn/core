@@ -1,6 +1,8 @@
 # coding: utf-8
+require 'buzzn/guarded_crud'
 class Address < ActiveRecord::Base
   include Authority::Abilities
+  include Buzzn::GuardedCrud
 
   belongs_to :addressable, polymorphic: true
 

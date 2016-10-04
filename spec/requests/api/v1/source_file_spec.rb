@@ -12,5 +12,14 @@ describe "Source File" do
         end
       end
     end
+
+    if !file.end_with?('users.rb')
+      it "#{file.sub(/.*api/, 'api')} only guarded/unguarded retrieve" do
+        content = File.read(file)
+        content.each_line do |line|
+          expect(line).not_to match /find/
+        end
+      end
+    end
   end
 end

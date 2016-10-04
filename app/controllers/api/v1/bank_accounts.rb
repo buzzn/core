@@ -48,7 +48,8 @@ module API
         oauth2 :full
         post do
           resource = Object.const_get(permitted_params[:bank_accountable_type])
-          parent = resource.find(permitted_params[:bank_accountable_id])
+          # TODO really unguarded ?
+          parent = resource.unguarded_retrieve(permitted_params[:bank_accountable_id])
           created_response(BankAccount.guarded_create(current_user,
                                                       permitted_params,
                                                       parent))
