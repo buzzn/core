@@ -376,9 +376,6 @@ GEM
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     gmaps4rails (2.1.2)
-    goldiloader (0.0.10)
-      activerecord (>= 3.2, < 5.1)
-      activesupport (>= 3.2, < 5.1)
     gon (6.0.1)
       actionpack (>= 3.0)
       json
@@ -885,7 +882,6 @@ DEPENDENCIES
   friendly_id
   geocoder
   gmaps4rails
-  goldiloader
   gon
   grape
   grape-jsonapi-resources!
