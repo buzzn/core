@@ -2,3 +2,4 @@
 --require spec_helper
 --backtrace
 --format documentation
+--tag ~slow
