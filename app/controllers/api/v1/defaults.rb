@@ -26,6 +26,10 @@ module API
             @permitted_params ||= declared(params, include_missing: false)
           end
 
+          def id_array
+            permitted_params[:data].collect{ |d| d[:id] }
+          end
+
           def logger
             Rails.logger
           end

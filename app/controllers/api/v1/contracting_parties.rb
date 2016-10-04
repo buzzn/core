@@ -37,12 +37,9 @@ module API
         end
         oauth2 :full
         post do
-          if ContractingParty.creatable_by?(current_user)
-            contracting_party = ContractingParty.create!(permitted_params)
-            created_response(contracting_party)
-          else
-            status 403
-          end
+          contracting_party = ContractingParty.guarded_create(current_user,
+                                                              permitted_params)
+          created_response(contracting_party)
         end
 
         desc 'Update contracting party'
@@ -59,12 +56,7 @@ module API
         oauth2 :full
         patch ':id' do
           contracting_party = ContractingParty.guarded_retrieve(current_user, permitted_params)
-          if contracting_party.updatable_by?(current_user)
-            contracting_party.update!(permitted_params)
-            contracting_party
-          else
-            status 403
-          end
+          contracting_party.guarded_update(current_user, permitted_params)
         end
 
         desc 'Delete contracting party'
@@ -73,13 +65,9 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          contracting_party = ContractingParty.guarded_retrieve(current_user, permitted_params)
-          if contracting_party.deletable_by?(current_user)
-            contracting_party.destroy
-            status 204
-          else
-            status 403
-          end
+          contracting_party = ContractingParty.guarded_retrieve(current_user,
+                                                                permitted_params)
+          deleted_response(contracting_party.guarded_delete(current_user))
         end
 
       end

@@ -70,7 +70,9 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          BankAccount.guarded_update(current_user, permitted_params)
+          bank_account = BankAccount.guarded_retrieve(current_user,
+                                                      permitted_params)
+          bank_account.guarded_update(current_user, permitted_params)
         end
 
 
@@ -82,8 +84,9 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          deleted_response(BankAccount.guarded_delete(current_user,
-                                                      permitted_params))
+          bank_account = BankAccount.guarded_retrieve(current_user,
+                                                      permitted_params)
+          deleted_response(bank_account.guarded_delete(current_user))
         end
 
 

@@ -47,14 +47,10 @@ module API
         end
         oauth2 :full
         post do
-          if Device.creatable_by?(current_user)
-            # TODO cleanup move logic into Device and ensure manager (via validation)
-            device = Device.create!(permitted_params)
-            current_user.add_role(:manager, device)
-            created_response(device)
-          else
-            status_403
-          end
+          # TODO move logic into Device and ensure manager (via validation)
+          device = Device.guarded_create(current_user, permitted_params)
+          current_user.add_role(:manager, device)
+          created_response(device)
         end
 
 
@@ -78,12 +74,7 @@ module API
         oauth2 :full
         patch ':id' do
           device = Device.guarded_retrieve(current_user, permitted_params)
-          if device.updatable_by?(current_user)
-            device.update!(permitted_params)
-            device
-          else
-            status 403
-          end
+          device.guarded_update(current_user, permitted_params)
         end
 
 
@@ -96,12 +87,7 @@ module API
         oauth2 :full
         delete ':id' do
           device = Device.guarded_retrieve(current_user, permitted_params)
-          if device.deletable_by?(current_user)
-            device.destroy
-            status 204
-          else
-            status 403
-          end
+          deleted_response(device.guarded_delete(current_user))
         end
 
 

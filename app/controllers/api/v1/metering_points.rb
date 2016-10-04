@@ -26,17 +26,14 @@ module API
         end
         oauth2 :simple, :full, :smartmeter
         post do
-          if MeteringPoint.creatable_by?(current_user)
-            # TODO move logic into MeteringPoint and validate existence of manager
-            meter      = Meter.unguarded_retrieve(permitted_params[:meter_id])
-            attributes = permitted_params.reject { |k,v| k == :meter_id }
-            attributes[:meter] = meter
-            metering_point     = MeteringPoint.create!(attributes)
-            current_user.add_role(:manager, metering_point)
-            created_response(metering_point)
-          else
-            status 403
-          end
+          # TODO move logic into MeteringPoint and validate existence of manager
+          meter              = Meter.unguarded_retrieve(permitted_params[:meter_id])
+          attributes         = permitted_params.reject { |k,v| k == :meter_id }
+          attributes[:meter] = meter
+          metering_point     = MeteringPoint.guarded_create(current_user,
+                                                            attributes)
+          current_user.add_role(:manager, metering_point)
+          created_response(metering_point)
         end
 
 
@@ -54,18 +51,13 @@ module API
         patch ':id' do
           metering_point = MeteringPoint.guarded_retrieve(current_user,
                                                           permitted_params)
-          if metering_point.updatable_by?(current_user)
-            # TODO move logic into MeteringPoint 
-            attributes = permitted_params.reject { |k,v| k == :meter_id }
-            if permitted_params[:meter_id]
-              meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
-              attributes[:meter] = meter
-            end
-            metering_point.update!(attributes)
-            metering_point
-          else
-            status 403
+          # TODO move logic into MeteringPoint 
+          attributes = permitted_params.reject { |k,v| k == :meter_id }
+          if permitted_params[:meter_id]
+            meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
+            attributes[:meter] = meter
           end
+          metering_point.guarded_update(current_user, attributes)
         end
 
 
@@ -78,12 +70,7 @@ module API
         delete ':id' do
           metering_point = MeteringPoint.guarded_retrieve(current_user,
                                                           permitted_params)
-          if metering_point.deletable_by?(current_user)
-            metering_point.destroy
-            status 204
-          else
-            status 403
-          end
+          deleted_response(metering_point.guarded_delete(current_user))
         end
 
 
@@ -169,9 +156,8 @@ module API
           metering_point = MeteringPoint.guarded_retrieve(current_user,
                                                           permitted_params)
           if metering_point.updatable_by?(current_user)
-            ids = permitted_params[:data].collect{ |d| d[:id] }
             # TODO ensure at least ONE manager
-            metering_point.replace_managers(ids, owner: current_user,
+            metering_point.replace_managers(id_array, owner: current_user,
                                             create_key: 'user.appointed_metering_point_manager')
           else
             status 403
@@ -264,8 +250,7 @@ module API
           metering_point = MeteringPoint.guarded_retrieve(current_user,
                                                           permitted_params)
           if metering_point.updatable_by?(current_user)
-            ids = permitted_params[:data].collect{ |d| d[:id] }
-            metering_point.replace_members(ids,
+            metering_point.replace_members(id_array,
                                            create_key: 'metering_point_user_membership.create',
                                            cancel_key: 'metering_point_user_membership.cancel')
           else
@@ -286,6 +271,7 @@ module API
           metering_point = MeteringPoint.guarded_retrieve(current_user,
                                                           permitted_params)
           user           = User.unguarded_retrieve(permitted_params[:data][:id])
+          # TODO move logic into ManagerMembers module
           if (current_user == user ||
               metering_point.updatable_by?(current_user))
             user.remove_role(:member, metering_point)

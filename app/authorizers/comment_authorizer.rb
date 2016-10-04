@@ -14,7 +14,7 @@ class CommentAuthorizer < ApplicationAuthorizer
   end
 
   def deletable_by?(user)
-    user == resource.user || User.any_role?(user, admin: nil, manager: resource.commentable)
+    !resource.has_children? && (user == resource.user || User.any_role?(user, admin: nil, manager: resource.commentable))
   end
 
 end
