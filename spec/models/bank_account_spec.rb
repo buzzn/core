@@ -116,7 +116,7 @@ describe "BankAccount Model" do
     end
   end
 
-  it 'filters' do
+  it 'filters', :retry => 3 do
     3.times { Fabricate(:bank_account) }
 
     [bank_account.holder, bank_account.bank_name, bank_account.bic].each do |val|
