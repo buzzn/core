@@ -1064,6 +1064,23 @@ describe "Aggregates API" do
 
 
 
+    it 'does not aggregate on http error with discovergy' do
+      access_token = Fabricate(:full_access_token_as_admin)
+      meter = Fabricate(:easymeter_60051560) # BHKW
+      metering_point = meter.metering_points.first
+
+      request_params = {
+        metering_point_ids: metering_point.id,
+        resolution: 'day_to_minutes',
+        timestamp: Time.find_zone('Berlin').local(2016,6,6)
+      }
+
+      get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+      expect(response).to have_http_status(200)
+    end
+
+
 
     it 'does aggregate Discovergy past day_to_minutes for out metering_point as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
