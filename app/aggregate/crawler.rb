@@ -30,6 +30,8 @@
 
 class Crawler
 
+  class CrawlerError < StandardError; end
+
   def initialize(metering_point)
     @unixtime_now                     = Time.now.in_time_zone.utc.to_i*1000
     @metering_point                   = metering_point
@@ -108,8 +110,7 @@ class Crawler
           return {:power => -1, :timestamp => Time.now.to_i*1000}
         end
       else
-        request.inspect
-        return {:power => -1, :timestamp => Time.now.to_i*1000}
+        raise CrawlerError.new(request['reason'])
       end
     end
     "this aint neither Discovergy or MySmartGrid"
@@ -136,7 +137,7 @@ class Crawler
           Rails.logger.info request.inspect
         end
       else
-        Rails.logger.info request.inspect
+        raise CrawlerError.new(request['reason'])
       end
     end
   end
@@ -190,7 +191,7 @@ class Crawler
           Rails.logger.info request.inspect
        end
       else
-        Rails.logger.info request.inspect
+        raise CrawlerError.new(request['reason'])
       end
     end
     return result
@@ -271,7 +272,7 @@ class Crawler
           Rails.logger.info request.inspect
         end
       else
-        Rails.logger.info request.inspect
+        raise CrawlerError.new(request['reason'])
       end
     end
     return result
@@ -338,7 +339,7 @@ class Crawler
           Rails.logger.info request.inspect
         end
       else
-        Rails.logger.info request.inspect
+        raise CrawlerError.new(request['reason'])
       end
     end
 
@@ -405,7 +406,7 @@ class Crawler
           Rails.logger.info request.inspect
         end
       else
-        Rails.logger.info request.inspect
+        raise CrawlerError.new(request['reason'])
       end
     end
 

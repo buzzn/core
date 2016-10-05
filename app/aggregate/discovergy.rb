@@ -35,6 +35,14 @@ class Discovergy
     end
   end
 
+  def parse(response)
+    if response.status < 300
+      MultiJson.load(response.body)
+    else
+      { 'status' => 'error',
+        'reason' => "discovergy http status #{response.status}: #{response.body}" }
+    end
+  end
 
   def meters
     response = @conn.get do |req|
@@ -43,7 +51,7 @@ class Discovergy
       req.params['user']          = @username
       req.params['password']      = @password
     end
-    return MultiJson.load(response.body)
+    parse response
   end
 
 
@@ -62,7 +70,7 @@ class Discovergy
       end
       req.params['numOfSeconds']  = num_of_seconds
     end
-    return MultiJson.load(response.body)
+    parse response
   end
 
   def get_live_each( virtual_meter_uid )
@@ -95,7 +103,7 @@ class Discovergy
       req.params['month']         = datetime.month
       req.params['year']          = datetime.year
     end
-    return MultiJson.load(response.body)
+    parse response
   end
 
   def get_month( meter_uid, timestamp)
@@ -119,7 +127,7 @@ class Discovergy
       req.params['toMonth']       = datetime_end.month+1
       req.params['toYear']        = datetime_end.year
     end
-    return MultiJson.load(response.body)
+    parse response
   end
 
   def get_year( meter_uid, timestamp)
@@ -143,7 +151,7 @@ class Discovergy
       req.params['toMonth']       = datetime_end.month
       req.params['toYear']        = datetime_end.year
     end
-    return MultiJson.load(response.body)
+    parse response
   end
 
   def get_hour( meter_uid, timestamp )
@@ -163,7 +171,7 @@ class Discovergy
       req.params['from']          = datetime_from
       req.params['to']            = datetime_to
     end
-    return MultiJson.load(response.body)
+    parse response
   end
 
 
@@ -186,7 +194,7 @@ class Discovergy
       req.params['from']          = @datetime_from
       req.params['to']            = @datetime_to
     end
-    return MultiJson.load(response.body)
+    parse response
   end
 
 
@@ -210,7 +218,7 @@ class Discovergy
       req.params['from']          = @datetime_from
       req.params['to']            = @datetime_to
     end
-    return MultiJson.load(response.body)
+    parse response
   end
 
 
