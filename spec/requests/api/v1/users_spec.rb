@@ -298,7 +298,7 @@ describe "Users API" do
     user.add_role(:manager, mp2)
 
     request_params = {
-      manufacturer_product_serialnumber: meter1.manufacturer_product_serialnumber
+      filter: meter1.manufacturer_product_serialnumber
     }
 
     get_with_token "/api/v1/users/#{user.id}/meters", request_params, access_token.token
