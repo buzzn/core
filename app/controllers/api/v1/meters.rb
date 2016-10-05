@@ -25,12 +25,8 @@ module API
         end
         oauth2 :full, :smartmeter
         post do
-          if Meter.creatable_by?(current_user)
-            meter = Meter.create!(permitted_params)
-            created_response(meter)
-          else
-            status 403
-          end
+          meter = Meter.guarded_create(current_user, permitted_params)
+          created_response(meter)
         end
 
 
@@ -46,12 +42,7 @@ module API
         oauth2 :full
         patch ':id' do
           meter = Meter.guarded_retrieve(current_user, permitted_params)
-          if meter.updatable_by?(current_user)
-            meter.update!(permitted_params)
-            meter
-          else
-            status 403
-          end
+          meter.guarded_update(current_user, permitted_params)
         end
 
 
@@ -63,12 +54,7 @@ module API
         oauth2 :full
         delete ':id' do
           meter = Meter.guarded_retrieve(current_user, permitted_params)
-          if meter.deletable_by?(current_user)
-            meter.destroy
-            status 204
-          else
-            status 403
-          end
+          deleted_response(meter.guarded_delete(current_user))
         end
 
 

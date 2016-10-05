@@ -110,14 +110,11 @@ module API
         end
         oauth2 :full
         post do
-          if Organization.creatable_by?(current_user)
-            # TODO move logic into MeteringPoint and ensure at least ONE manager
-            organization = Organization.create!(permitted_params)
-            current_user.add_role(:manager, organization)
-            created_response(organization)
-          else
-            status 403
-          end
+          # TODO move logic into MeteringPoint and ensure at least ONE manager
+          organization = Organization.guarded_create(current_user,
+                                                     permitted_params)
+          current_user.add_role(:manager, organization)
+          created_response(organization)
         end
 
 
@@ -137,13 +134,7 @@ module API
         patch ':id' do
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
-
-          if organization.updatable_by?(current_user)
-            organization.update!(permitted_params)
-            return organization
-          else
-            status 403
-          end
+          organization.guarded_update(current_user, permitted_params)
         end
 
 
@@ -198,8 +189,7 @@ module API
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
           if organization.updatable_by?(current_user)
-            ids = permitted_params[:data].collect{ |d| d[:id] }
-            organization.replace_managers(ids)
+            organization.replace_managers(id_array)
           else
             status 403
           end
@@ -260,8 +250,7 @@ module API
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
           if organization.updatable_by?(current_user)
-            ids = permitted_params[:data].collect{ |d| d[:id] }
-            organization.replace_members(ids)
+            organization.replace_members(id_array)
           else
             status 403
           end

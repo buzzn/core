@@ -42,13 +42,9 @@ module API
         post do
           # TODO cleanup move logic into Group and ensure manager
           # and handle the ONE metering-point as validation error
-          if Group.creatable_by?(current_user)
-            group = Group.create!(permitted_params)
-            current_user.add_role(:manager, group)
-            created_response(group)
-          else
-            error!('you need at least one out-metering_point', 401)
-          end
+          group = Group.guarded_create(current_user, permitted_params)
+          current_user.add_role(:manager, group)
+          created_response(group)
         end
 
 
@@ -61,12 +57,7 @@ module API
         oauth2 :full
         patch ':id' do
           group = Group.guarded_retrieve(current_user, permitted_params)
-          if group.updatable_by?(current_user)
-            group.update!(permitted_params)
-            group
-          else
-            status 403
-          end
+          group.guarded_update(current_user, permitted_params)
         end
 
 
@@ -78,12 +69,7 @@ module API
         oauth2 :full
         delete ':id' do
           group = Group.guarded_retrieve(current_user, permitted_params)
-          if group.deletable_by?(current_user)
-            group.destroy
-            status 204
-          else
-            status 403
-          end
+          deleted_response(group.guarded_delete(current_user))
         end
 
 
@@ -129,11 +115,7 @@ module API
         oauth2 :simple, :full
         get [':id/managers', ':id/relationships/managers'] do
           group = Group.guarded_retrieve(current_user, permitted_params)
-          if group.readable_by?(current_user)
-            paginated_response(group.managers.readable_by(current_user))
-          else
-            status 403
-          end
+          paginated_response(group.managers.readable_by(current_user))
         end
 
 
@@ -148,6 +130,7 @@ module API
         post ':id/relationships/managers' do
           group = Group.guarded_retrieve(current_user, permitted_params)
           user  = User.unguarded_retrieve(permitted_params[:data][:id])
+          # TODO move logic into ManagerMembers module
           if group.updatable_by?(current_user)
             user.add_role(:manager, group)
             status 204
@@ -166,9 +149,9 @@ module API
         oauth2 :full
         patch ':id/relationships/managers' do
           group = Group.guarded_retrieve(current_user, permitted_params)
+          # TODO move logic into ManagerMembers module
           if group.updatable_by?(current_user, :replace_managers)
-            ids = permitted_params[:data].collect{ |d| d[:id] }
-            group.replace_managers(ids)
+            group.replace_managers(id_array)
           else
             status 403
           end
@@ -185,6 +168,7 @@ module API
         delete ':id/relationships/managers' do
           group = Group.guarded_retrieve(current_user, permitted_params)
           user  = User.unguarded_retrieve(permitted_params[:data][:id])
+          # TODO move logic into ManagerMembers module
           if group.updatable_by?(current_user, user)
             user.remove_role(:manager, group)
             status 204

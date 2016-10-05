@@ -2476,4 +2476,424 @@ http_interactions:
       string: ''
     http_version: 
   recorded_at: Mon, 26 Sep 2016 07:06:15 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1475578540&resolution=minute&start=1475578200&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - 1a875e34e291c28db95ecbda015ad433
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx
+      date:
+      - Tue, 04 Oct 2016 10:55:40 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '[[1475578260,2999.999999988],[1475578320,1879.9999999920003],[1475578380,1779.9999999840002],[1475578440,2279.999999988],[1475578500,2400.000000012],[1475578560,"-nan"]]'
+    http_version: 
+  recorded_at: Tue, 04 Oct 2016 10:55:40 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/user?end=1475578543&resolution=minute&start=1475578203&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - pwd
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 474
+      message: 
+    headers:
+      server:
+      - nginx
+      date:
+      - Tue, 04 Oct 2016 10:55:43 GMT
+      content-length:
+      - '0'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Tue, 04 Oct 2016 10:55:43 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1475578546&resolution=minute&start=1475578206&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - 1a875e34e291c28db95ecbda015ad433
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx
+      date:
+      - Tue, 04 Oct 2016 10:55:46 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '[[1475578260,2999.999999988],[1475578320,1879.9999999920003],[1475578380,1779.9999999840002],[1475578440,2279.999999988],[1475578500,2400.000000012],[1475578560,"-nan"]]'
+    http_version: 
+  recorded_at: Tue, 04 Oct 2016 10:55:46 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/user?end=1475578548&resolution=minute&start=1475578208&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - pwd
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 474
+      message: 
+    headers:
+      server:
+      - nginx
+      date:
+      - Tue, 04 Oct 2016 10:55:48 GMT
+      content-length:
+      - '0'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Tue, 04 Oct 2016 10:55:48 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1475587860&resolution=minute&start=1475587520&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - 1a875e34e291c28db95ecbda015ad433
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx
+      date:
+      - Tue, 04 Oct 2016 13:31:01 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '[[1475587560,1440.0],[1475587620,1350.0],[1475587680,"-nan"],[1475587740,"-nan"],[1475587800,"-nan"],[1475587860,"-nan"],[1475587920,"-nan"]]'
+    http_version: 
+  recorded_at: Tue, 04 Oct 2016 13:31:01 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1475587862&resolution=minute&start=1475587522&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - 1a875e34e291c28db95ecbda015ad433
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx
+      date:
+      - Tue, 04 Oct 2016 13:31:03 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '[[1475587560,1440.0],[1475587620,1350.0],[1475587680,"-nan"],[1475587740,"-nan"],[1475587800,"-nan"],[1475587860,"-nan"],[1475587920,"-nan"]]'
+    http_version: 
+  recorded_at: Tue, 04 Oct 2016 13:31:03 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/user?end=1475587866&resolution=minute&start=1475587526&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - pwd
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 474
+      message: 
+    headers:
+      server:
+      - nginx
+      date:
+      - Tue, 04 Oct 2016 13:31:06 GMT
+      content-length:
+      - '0'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Tue, 04 Oct 2016 13:31:06 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/user?end=1475587867&resolution=minute&start=1475587527&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - pwd
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 474
+      message: 
+    headers:
+      server:
+      - nginx
+      date:
+      - Tue, 04 Oct 2016 13:31:08 GMT
+      content-length:
+      - '0'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Tue, 04 Oct 2016 13:31:08 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/user?end=1467446900&resolution=minute&start=1467446560&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - pwd
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 474
+      message: 
+    headers:
+      server:
+      - nginx
+      date:
+      - Tue, 04 Oct 2016 13:38:26 GMT
+      content-length:
+      - '0'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:08:20 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1467446901&resolution=minute&start=1467446561&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - 1a875e34e291c28db95ecbda015ad433
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx
+      date:
+      - Tue, 04 Oct 2016 13:38:28 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "[[1467504000,472.871017152]]"
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:08:22 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1467446904&resolution=minute&start=1467446564&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - 1a875e34e291c28db95ecbda015ad433
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx
+      date:
+      - Tue, 04 Oct 2016 13:38:31 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "[[1467504000,472.871017152]]"
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:08:25 GMT
+- request:
+    method: get
+    uri: https://api.mysmartgrid.de:8443/sensor/user?end=1467446906&resolution=minute&start=1467446566&unit=watt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Token:
+      - pwd
+      X-Version:
+      - '1.0'
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 474
+      message: 
+    headers:
+      server:
+      - nginx
+      date:
+      - Tue, 04 Oct 2016 13:38:32 GMT
+      content-length:
+      - '0'
+      connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:08:26 GMT
 recorded_with: VCR 3.0.3

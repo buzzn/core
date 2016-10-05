@@ -46,15 +46,10 @@ module API
         end
         oauth2 false
         post do
-          if User.creatable_by?(current_user)
-            # TODO move this create logic into user
-            profile = Profile.new(permitted_params.delete(:profile))
-            permitted_params[:profile] = profile
-            user = User.create!(permitted_params)
-            created_response(user)
-          else
-            status 403
-          end
+          profile = Profile.new(permitted_params.delete(:profile))
+          permitted_params[:profile] = profile
+          user = User.guarded_create(current_user, permitted_params)
+          created_response(user)
         end
 
         desc "Return the related profile for User"

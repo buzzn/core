@@ -43,12 +43,8 @@ module API
         end
         oauth2 :simple, :full
         post do
-          if Profile.creatable_by?(current_user)
-            profile = Profile.create!(permitted_params)
-            created_response(profile)
-          else
-            status 403
-          end
+          profile = Profile.guarded_create(current_user, permitted_params)
+          created_response(profile)
         end
 
 
@@ -71,12 +67,7 @@ module API
         oauth2 :simple, :full
         patch ':id' do
           profile = Profile.guarded_retrieve(current_user, permitted_params)
-          if profile.updatable_by?(current_user)
-            profile.update!(permitted_params)
-            profile
-          else
-            status 403
-          end
+          profile.guarded_update(current_user, permitted_params)
         end
 
 
