@@ -40,7 +40,7 @@ class Discovergy
       MultiJson.load(response.body)
     else
       { 'status' => 'error',
-        'reason' => "http status #{response.status} #{response.body}" }
+        'reason' => "discovergy http status #{response.status}: #{response.body}" }
     end
   end
 

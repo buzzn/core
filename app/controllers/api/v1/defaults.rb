@@ -62,6 +62,11 @@ module API
           error_response(status: 403)
         end
 
+        rescue_from Crawler::CrawlerError do |e|
+          # assuming that any remote error is only of temporary nature
+          error_response(message: e.message, status: 503)
+        end
+
         class Max < Grape::Validations::Base
           def validate_param!(attr_name, params)
             unless params[attr_name] <= @option
