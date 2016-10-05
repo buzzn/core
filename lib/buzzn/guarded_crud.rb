@@ -7,6 +7,32 @@ module Buzzn
       model.extend ClassMethods
     end
 
+    def guarded_read(user, *args)
+      if readable_by?(user, *args)
+        self
+      else
+        raise PermissionDenied.new
+      end
+    end
+
+    def guarded_update(user, params)
+      if updatable_by?(user)
+        update!(params)
+        self
+      else
+        raise PermissionDenied.new
+      end
+    end
+
+    def guarded_delete(user)
+      if deletable_by?(user)
+        destroy
+        self
+      else
+        raise PermissionDenied.new
+      end
+    end
+
     module ClassMethods
 
       def guarded_create(user, params, *args)
@@ -24,6 +50,17 @@ module Buzzn
         _guarded_check(where(id: id).readable_by(user).first, user, id)
       end
 
+      def unguarded_retrieve(id)
+        if id.is_a?(Hash)
+          id = id[:id]
+        end
+        result = where(id: id).first
+        if result.nil?
+          raise RecordNotFound.new("#{self} with id=#{id} not found")
+        end
+        result
+      end
+
       def anonymized_guarded_retrieve(user, id)
         if id.is_a?(Hash)
           id = id[:id]
@@ -36,26 +73,14 @@ module Buzzn
           params = id
           id = params[:id]
         end
-        result = _guarded_get(user, id)
-        if result.updatable_by?(user)
-          result.update!(params)
-          result
-        else
-          raise PermissionDenied.new
-        end
+        _guarded_get(user, id).guarded_update(user, params)
       end
 
       def guarded_delete(user, id)
         if id.is_a?(Hash)
           id = id[:id]
         end
-        result = _guarded_get(user, id)
-        if result.deletable_by?(user)
-          result.destroy
-          result
-        else
-          raise PermissionDenied.new
-        end
+        _guarded_get(user, id).guarded_delete(user)
       end
 
       private

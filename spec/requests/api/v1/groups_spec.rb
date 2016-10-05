@@ -478,7 +478,7 @@ describe "Groups API" do
     expect(response).to have_http_status(401)
   end
 
-  it 'adds group manager only with manager or manager token' do
+  it 'adds manager only with manager token or admin token' do
     metering_point  = Fabricate(:metering_point_readable_by_world)
     group           = Fabricate(:group)
     user1           = Fabricate(:user)

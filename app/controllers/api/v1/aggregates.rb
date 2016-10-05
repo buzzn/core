@@ -27,10 +27,7 @@ module API
               error!('it is not possible to sum metering_points with differend data_source', 406)
             else
               metering_points.each do |metering_point|
-                unless metering_point.readable_by?(current_user,
-                                                   :group_inheritance)
-                  error!('Forbidden', 403)
-                end
+                metering_point.guarded_read(current_user, :group_inheritance)
               end
               return Aggregate.new(metering_points_hash).present( { timestamp: permitted_params[:timestamp] })
             end
@@ -71,10 +68,7 @@ module API
               error!('it is not possible to sum metering_points with differend data_source', 406)
             else
               metering_points.each do |metering_point|
-                unless metering_point.readable_by?(current_user,
-                                                  :group_inheritance)
-                  error!('Forbidden', 403)
-                end
+                metering_point.guarded_read(current_user, :group_inheritance)
               end
               return Aggregate.new(metering_points_hash).past( { timestamp: permitted_params[:timestamp], resolution: params[:resolution] })
             end

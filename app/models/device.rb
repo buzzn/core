@@ -1,10 +1,11 @@
 require 'file_size_validator'
-
+require 'buzzn/guarded_crud'
 class Device < ActiveRecord::Base
   resourcify
   include Authority::Abilities
   include Filterable
   include PublicActivity::Model
+  include Buzzn::GuardedCrud
   #tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
   #tracked recipient: Proc.new{ |controller, model| controller && model }
 

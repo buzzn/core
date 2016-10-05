@@ -1,3 +1,4 @@
+require 'buzzn/guarded_crud'
 class MeteringPoint < ActiveRecord::Base
   resourcify
   acts_as_commentable
@@ -6,6 +7,7 @@ class MeteringPoint < ActiveRecord::Base
   include ChartFunctions
   include Filterable
   include ReplacableRoles
+  include Buzzn::GuardedCrud
 
   include PublicActivity::Model
   tracked except: :update, owner: Proc.new{ |controller, model| controller && controller.current_user }, recipient: Proc.new{ |controller, model| controller && model }

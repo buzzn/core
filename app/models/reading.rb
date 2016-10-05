@@ -1,3 +1,4 @@
+require 'buzzn/guarded_crud'
 class Reading
   include Mongoid::Document
   include Authority::Abilities
@@ -21,6 +22,15 @@ class Reading
   index({ meter_id: 1, source: 1 })
 
   validate :energy_milliwatt_hour_has_to_grow, if: :user_input?
+
+  # methods from Buzzn:GuardedCrud
+  def self.guarded_retrieve(user, id)
+    result = find(id)
+    unless result.readable_by?(user)
+      raise Buzzn::PermissionDenied.new
+    end
+    result
+  end
 
   def meter
     Meter.find(self.meter_id) if self.meter_id

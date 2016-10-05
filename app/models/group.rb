@@ -1,3 +1,4 @@
+require 'buzzn/guarded_crud'
 class Group < ActiveRecord::Base
   resourcify
   acts_as_commentable
@@ -6,6 +7,7 @@ class Group < ActiveRecord::Base
   include ChartFunctions
   include Filterable
   include ReplacableRoles
+  include Buzzn::GuardedCrud
 
   before_destroy :destroy_content
 

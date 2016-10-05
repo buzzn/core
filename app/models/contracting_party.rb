@@ -1,6 +1,8 @@
+require 'buzzn/guarded_crud'
 class ContractingParty < ActiveRecord::Base
   resourcify
   include Authority::Abilities
+  include Buzzn::GuardedCrud
 
   belongs_to :user
   belongs_to :metering_point

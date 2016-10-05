@@ -11,12 +11,7 @@ module API
         end
         oauth2 :full
         get ":id" do
-          meter = Meter.find(permitted_params[:id])
-          if meter.readable_by?(current_user)
-            meter
-          else
-            status 403
-          end
+          Meter.guarded_retrieve(current_user, permitted_params)
         end
 
 
@@ -50,7 +45,7 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          meter = Meter.find(permitted_params[:id])
+          meter = Meter.guarded_retrieve(current_user, permitted_params)
           if meter.updatable_by?(current_user)
             meter.update!(permitted_params)
             meter
@@ -67,7 +62,7 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          meter = Meter.find(permitted_params[:id])
+          meter = Meter.guarded_retrieve(current_user, permitted_params)
           if meter.deletable_by?(current_user)
             meter.destroy
             status 204

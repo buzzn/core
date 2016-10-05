@@ -11,12 +11,7 @@ module API
         end
         oauth2 false
         get ":id" do
-          metering_point = MeteringPoint.find(permitted_params[:id])
-          if metering_point.readable_by?(current_user)
-            metering_point
-          else
-            status 403
-          end
+          MeteringPoint.guarded_retrieve(current_user, permitted_params)
         end
 
 
@@ -33,7 +28,7 @@ module API
         post do
           if MeteringPoint.creatable_by?(current_user)
             # TODO move logic into MeteringPoint and validate existence of manager
-            meter      = Meter.find(permitted_params[:meter_id])
+            meter      = Meter.unguarded_retrieve(permitted_params[:meter_id])
             attributes = permitted_params.reject { |k,v| k == :meter_id }
             attributes[:meter] = meter
             metering_point     = MeteringPoint.create!(attributes)
@@ -57,12 +52,13 @@ module API
         end
         oauth2 :simple, :full
         patch ':id' do
-          metering_point = MeteringPoint.find(permitted_params[:id])
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
           if metering_point.updatable_by?(current_user)
             # TODO move logic into MeteringPoint 
             attributes = permitted_params.reject { |k,v| k == :meter_id }
             if permitted_params[:meter_id]
-              meter = Meter.find(permitted_params[:meter_id])
+              meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
               attributes[:meter] = meter
             end
             metering_point.update!(attributes)
@@ -80,7 +76,8 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          metering_point = MeteringPoint.find(permitted_params[:id])
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
           if metering_point.deletable_by?(current_user)
             metering_point.destroy
             status 204
@@ -100,7 +97,8 @@ module API
         paginate
         oauth2 false
         get ":id/scores" do
-          metering_point = MeteringPoint.find(permitted_params[:id])
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
           paginated_response(metering_point.scores.readable_by(current_user))
         end
 
@@ -115,12 +113,9 @@ module API
         paginate
         oauth2 :simple, :full
         get ':id/comments' do
-          metering_point = MeteringPoint.find(permitted_params[:id])
-          if metering_point.readable_by?(current_user)
-            paginated_response(metering_point.comment_threads.readable_by(current_user))
-          else
-            status 403
-          end
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
+          paginated_response(metering_point.comment_threads.readable_by(current_user))
         end
 
 
@@ -133,12 +128,9 @@ module API
         paginate
         oauth2 :simple, :full
         get [':id/managers', ':id/relationships/managers'] do
-          metering_point = MeteringPoint.find(permitted_params[:id])
-          if metering_point.readable_by?(current_user)
-            paginated_response(metering_point.managers.readable_by(current_user))
-          else
-            status 403
-          end
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
+          paginated_response(metering_point.managers.readable_by(current_user))
         end
 
 
@@ -151,8 +143,9 @@ module API
         end
         oauth2 :full
         post ':id/relationships/managers' do
-          metering_point  = MeteringPoint.find(permitted_params[:id])
-          user            = User.find(permitted_params[:data][:id])
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
+          user           = User.unguarded_retrieve(permitted_params[:data][:id])
           if metering_point.updatable_by?(current_user)
             user.add_role(:manager, metering_point)
             user.create_activity(key: 'user.appointed_metering_point_manager', owner: current_user, recipient: metering_point)
@@ -173,7 +166,8 @@ module API
         end
         oauth2 :full
         patch ':id/relationships/managers' do
-          metering_point = MeteringPoint.find(permitted_params[:id])
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
           if metering_point.updatable_by?(current_user)
             ids = permitted_params[:data].collect{ |d| d[:id] }
             # TODO ensure at least ONE manager
@@ -195,10 +189,11 @@ module API
         end
         oauth2 :full
         delete ':id/relationships/managers' do
-          metering_point = MeteringPoint.find(permitted_params[:id])
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
+          user           = User.unguarded_retrieve(permitted_params[:data][:id])
           if metering_point.updatable_by?(current_user)
             # TODO move logic into MeteringPoint and ensure at least ONE manager
-            user = User.find(permitted_params[:data][:id])
             user.remove_role(:manager, metering_point)
             status 204
           else
@@ -213,12 +208,9 @@ module API
         end
         oauth2 :simple, :full
         get ":id/address" do
-          metering_point  = MeteringPoint.find(permitted_params[:id])
-          if metering_point.address.readable_by?(current_user)
-            metering_point.address
-          else
-            status 403
-          end
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
+          metering_point.address.guarded_read(current_user)
         end
 
 
@@ -231,12 +223,9 @@ module API
         paginate
         oauth2 false
         get [':id/members', ':id/relationships/members'] do
-          metering_point = MeteringPoint.find(permitted_params[:id])
-          if metering_point.readable_by?(current_user)
-            paginated_response(metering_point.members.readable_by(current_user))
-          else
-            status 403
-          end
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
+          paginated_response(metering_point.members.readable_by(current_user))
         end
 
 
@@ -249,8 +238,9 @@ module API
         end
         oauth2 :full
         post ':id/relationships/members' do
-          metering_point  = MeteringPoint.find(permitted_params[:id])
-          user            = User.find(permitted_params[:data][:id])
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
+          user           = User.unguarded_retrieve(permitted_params[:data][:id])
           if metering_point.updatable_by?(current_user, :members)
             # TODO move logic into MeteringPoint
             user.add_role(:member, metering_point)
@@ -271,7 +261,8 @@ module API
         end
         oauth2 :full
         patch ':id/relationships/members' do
-          metering_point = MeteringPoint.find(permitted_params[:id])
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
           if metering_point.updatable_by?(current_user)
             ids = permitted_params[:data].collect{ |d| d[:id] }
             metering_point.replace_members(ids,
@@ -292,8 +283,9 @@ module API
         end
         oauth2 :full
         delete ':id/relationships/members' do
-          metering_point  = MeteringPoint.find(permitted_params[:id])
-          user            = User.find(permitted_params[:data][:id])
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
+          user           = User.unguarded_retrieve(permitted_params[:data][:id])
           if (current_user == user ||
               metering_point.updatable_by?(current_user))
             user.remove_role(:member, metering_point)
@@ -310,12 +302,9 @@ module API
         end
         oauth2 :simple, :full
         get ':id/meter' do
-          metering_point  = MeteringPoint.find(permitted_params[:id])
-          if metering_point.meter.readable_by?(current_user)
-            metering_point.meter
-          else
-            status 403
-          end
+          metering_point = MeteringPoint.guarded_retrieve(current_user,
+                                                          permitted_params)
+          metering_point.meter.guarded_read(current_user)
         end
 
 

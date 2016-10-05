@@ -1,8 +1,9 @@
 require 'file_size_validator'
-
+require 'buzzn/guarded_crud'
 class Profile < ActiveRecord::Base
   resourcify
   include Authority::Abilities
+  include Buzzn::GuardedCrud
 
   extend FriendlyId
   friendly_id :user_name, use: [:slugged, :history, :finders]

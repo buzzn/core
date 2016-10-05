@@ -22,8 +22,7 @@ module API
         end
         oauth2 false
         get ":id" do
-          Profile.anonymized_get(permitted_params[:id], current_user) ||
-            status(403)
+          Profile.anonymized_guarded_retrieve(current_user, permitted_params)
         end
 
 
@@ -71,7 +70,7 @@ module API
         end
         oauth2 :simple, :full
         patch ':id' do
-          profile = Profile.find(permitted_params[:id])
+          profile = Profile.guarded_retrieve(current_user, permitted_params)
           if profile.updatable_by?(current_user)
             profile.update!(permitted_params)
             profile
@@ -90,13 +89,9 @@ module API
         paginate
         oauth2 false
         get ':id/groups' do
-          profile   = Profile.find(permitted_params[:id])
-          if profile.readable_by?(current_user)
-            groups = Group.accessible_by_user(profile.user)
-            paginated_response(groups.readable_by(current_user))
-          else
-            status 403
-          end
+          profile = Profile.guarded_retrieve(current_user, permitted_params)
+          groups = Group.accessible_by_user(profile.user)
+          paginated_response(groups.readable_by(current_user))
         end
 
 
@@ -109,13 +104,8 @@ module API
         paginate
         oauth2 false
         get ':id/friends' do
-          profile = Profile.find(permitted_params[:id])
-          # we need to check the profile before filtering the friends
-          if profile.readable_by?(current_user)
-            paginated_response(profile.user.friends.readable_by(current_user))
-          else
-            status 403
-          end
+          profile = Profile.guarded_retrieve(current_user, permitted_params)
+          paginated_response(profile.user.friends.readable_by(current_user))
         end
 
         desc 'Return profile metering points'
@@ -127,27 +117,22 @@ module API
         paginate
         oauth2 false
         get ':id/metering-points' do
-          profile = Profile.find(permitted_params[:id])
-
-          if profile.readable_by?(current_user)
-            types = []
-            if profile.readable_by_world?
-              types << 'world'
-            end
-            if current_user
-              types << 'community'
-              if current_user.friend?(profile.user)
-                types << 'friends'
-              end
-            end
-            # TODO move this permission logic into Authority
-            # this does not match the Authority for readable_by? and should be:
-            # `accessible_by_user(profile.user).readable_by?(current_user)`
-            # maybe it is just adjusting the test
-            paginated_response(MeteringPoint.accessible_by_user(profile.user).where(readable: types))
-          else
-            status 403
+          profile = Profile.guarded_retrieve(current_user, permitted_params)
+          types = []
+          if profile.readable_by_world?
+            types << 'world'
           end
+          if current_user
+            types << 'community'
+            if current_user.friend?(profile.user)
+              types << 'friends'
+            end
+          end
+          # TODO move this permission logic into Authority
+          # this does not match the Authority for readable_by? and should be:
+          # `accessible_by_user(profile.user).readable_by?(current_user)`
+          # maybe it is just adjusting the test
+          paginated_response(MeteringPoint.accessible_by_user(profile.user).where(readable: types))
         end
 
       end

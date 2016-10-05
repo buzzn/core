@@ -1,7 +1,9 @@
+require 'buzzn/guarded_crud'
 class Meter < ActiveRecord::Base
   resourcify
   include Authority::Abilities
   include Filterable
+  include Buzzn::GuardedCrud
 
   has_ancestry
   validates :manufacturer_product_serialnumber, presence: true, uniqueness: true   #, unless: "self.virtual"

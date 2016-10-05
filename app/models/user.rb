@@ -1,9 +1,11 @@
+require 'buzzn/guarded_crud'
 class User < ActiveRecord::Base
   rolify
   include Authority::Abilities
   include Authority::UserAbilities
   include PublicActivity::Model
   include Filterable
+  include Buzzn::GuardedCrud
   tracked except: [:create, :update, :destroy], owner: Proc.new{ |controller, model| controller && controller.current_user }
 
   devise :database_authenticatable, :async, :registerable,

@@ -1,7 +1,10 @@
+require 'buzzn/guarded_crud'
 class Contract < ActiveRecord::Base
   resourcify
   include Authority::Abilities
   include Filterable
+  include Buzzn::GuardedCrud
+
   has_paper_trail
 
   attr_encrypted :password, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
