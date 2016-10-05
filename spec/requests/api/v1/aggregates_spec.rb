@@ -711,7 +711,41 @@ describe "Aggregates API" do
    # |_.__/ \__,_/___/___|_| |_| /_/    \_\_|   |_____|
 
 
-   it 'does aggregate buzzn energy past by year_to_months as admin in summertime' do
+
+  it 'handles empty readings' do
+    access_token = Fabricate(:full_access_token_as_admin)
+    meter = Fabricate(:easymeter_fixed_serial) # in_out meter
+    input_metering_point  = meter.metering_points.inputs.first
+    output_metering_point = meter.metering_points.outputs.first
+
+    request_params = {
+      metering_point_ids: input_metering_point.id
+    }
+
+    get_with_token "/api/v1/aggregates/present", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json['readings'].count).to eq(0)
+    expect(json['power_milliwatt']).to eq(0)
+    expect(json['timestamp']).to eq("0000-01-01T00:00:00.000Z")
+
+
+
+    request_params = {
+      metering_point_ids: output_metering_point.id
+    }
+
+    get_with_token "/api/v1/aggregates/present", request_params, access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json['readings'].count).to eq(0)
+    expect(json['power_milliwatt']).to eq(0)
+    expect(json['timestamp']).to eq("0000-01-01T00:00:00.000Z")
+  end
+
+
+
+  it 'does aggregate buzzn energy past by year_to_months as admin in summertime' do
      access_token = Fabricate(:full_access_token_as_admin)
 
      meter = Fabricate(:easy_meter_q3d_with_metering_point)
@@ -1177,7 +1211,6 @@ describe "Aggregates API" do
       timestamp += 15.minute
     end
   end
-
 
 
   it 'does aggregate Discovergy power present for out metering_point as admin' do

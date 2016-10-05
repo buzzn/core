@@ -74,11 +74,14 @@ class Aggregate
 
 
     @present = {
-      "timestamp" => @present_items.first['data']['timestamp'],
       "power_milliwatt" => power_milliwatt_summed,
       "readings" => @present_items
     }
-
+    if @present_items.empty?
+      @present["timestamp"] = Time.utc(0)
+    else
+      @present["timestamp"] = @present_items.first['data']['timestamp']
+    end
     if seconds_to_process > 2
       Rails.cache.write(@cache_id, @present, expires_in: 5.seconds)
     end
