@@ -67,7 +67,7 @@ class @Aggregator
             highcharts_data.push([(new Date(Object.values(data_point)[0])).getTime(), Object.values(data_point)[1]/instance.getScaleFactor(resolution)])
           instance.returned_ajax_data.push(highcharts_data)
         else if chartType == 'present'
-          instance.returned_ajax_data.push([[(new Date(Object.values(data)[0])).getTime(), Object.values(data)[1]/1000]])
+          instance.returned_ajax_data.push([[(new Date(data.timestamp)).getTime(), data.power_milliwatt/1000]])
     return ajaxCall
 
   sumData: (resolution) ->
