@@ -497,6 +497,9 @@ ActiveRecord::Schema.define(version: 20160926140754) do
     t.string   "mode"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "authority"
+    t.boolean  "provider_permission"
+    t.boolean  "retailer"
   end
 
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
