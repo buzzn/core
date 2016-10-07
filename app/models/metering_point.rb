@@ -480,13 +480,11 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def self.observe
-    MeteringPoint.where("observe = ? OR observe_offline = ?", true, true).each do |metering_point|
-      Sidekiq::Client.push({
+    Sidekiq::Client.push({
        'class' => MeteringPointObserveWorker,
        'queue' => :default,
-       'args' => [metering_point.id]
+       'args' => []
       })
-    end
   end
 
 
