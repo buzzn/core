@@ -2,9 +2,15 @@ class CalculateGroupScoresWorker
   include Sidekiq::Worker
   sidekiq_options :retry => false, :dead => false
 
-  def perform(group_id, resolution_format, containing_timestamp)
+  def perform(containing_timestamp)
+    Group.all.each do |group|
+      group.calculate_scores(containing_timestamp)
+      #old_perform(group, 'day', containing_timestamp)
+    end
+  end
+
+  def old_perform(group, resolution_format, containing_timestamp)
     if resolution_format == 'day'
-      @group = Group.find(group_id)
       resolution = 'day_to_minutes'
 
       metering_points_hash_in = Aggregate.sort_metering_points(@group.in_metering_points)
