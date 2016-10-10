@@ -1076,7 +1076,7 @@ describe "Aggregates API" do
 
       get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
-      expect(response).to have_http_status(503)
+      expect(response).to have_http_status(504)
       expect(json['error']).not_to be_nil
     end
 
