@@ -1,4 +1,12 @@
 require 'benchmark'
+
+#### Usage
+# mp = MeteringPoint.find('some-id')
+# hash = Aggregate.sort([mp])
+# a = Aggregate.new(hash)
+# a.past
+# a.past(timestamp: Time.current, resolution: 'year_to_months')
+
 class Aggregate
 
   def initialize(metering_points_hash)
@@ -140,7 +148,7 @@ class Aggregate
           end
         end
 
-        past = sum_lists_improved(past_items, resolution)
+        past = sum_lists(past_items, resolution)
 
       end
       if seconds_to_process > 2
@@ -278,66 +286,55 @@ private
 
 
 
-  def sum_lists(lists)
-    if lists.count > 1
-      template_list  = lists.pop
-      keys           = template_list.first.keys
-      keys.delete('timestamp')
-      lists.each do |list|
-        list.each_with_index do |item, index|
-          keys.each do |key|
-            template_list[index][key] += item[key]
-          end
-        end
-      end
-      return template_list
-
-    else
-      return lists.first
-
-    end
-  end
-
-  def sum_lists_improved(lists, resolution)
+  def sum_lists(lists, resolution)
+    return [] if lists.empty?
     valueKey = :power_milliwatt
     if resolution == 'year_to_months' || resolution == 'month_to_days'
       valueKey = :energy_milliwatt_hour
     end
     result = []
-    maxLength = 0
-    indexMaxLength = 0
-    index = 0
-    lists.each do |data|
-      if data.length >= maxLength
-        maxLength = data.length
-        indexMaxLength = index
-      end
-      index += 1
-    end
-    for i in 0...maxLength
-      key = lists[indexMaxLength][i].values[0]
-      value = 0
-      for n in 0...lists.length
-        if lists[n][i] != nil && (key == lists[n][i].values[0] || matchesTimestamp(key, lists[n][i].values[0], resolution))
-          value += lists[n][i].values[1]
+    for i in 0...lists.size
+      for j in 0...lists[i].size
+        if lists[i][j]
+          key = lists[i][j].values[0]
+          value = lists[i][j].values[1]
+          if i > 0
+            timestampIndex = findMatchingTimestamp(key, result, resolution)
+            if timestampIndex == -1
+              result.push({timestamp: key, "#{valueKey}": value})
+            else
+              result[timestampIndex][valueKey] += value
+            end
+          else
+            result.push({timestamp: key, "#{valueKey}": value})
+          end
         end
       end
-      result.push({timestamp: key, "#{valueKey}": value})
     end
     return result
   end
 
-  def matchesTimestamp(key, timestamp, resolution)
-    delta = (key - timestamp).abs
-    if resolution == 'year_to_months'
-      return delta < 1296000000
-    elsif resolution == 'month_to_days'
-      return delta < 43200000
-    elsif resolution == 'day_to_minutes' #15 minutes
-      return delta < 450000
-    elsif resolution == 'hour_to_minutes' || resolution == 'present' #2 seconds
-      return delta < 1000
+  def findMatchingTimestamp(key, arr, resolution)
+    for i in 0...arr.size
+      if resolution == 'year_to_months'
+        if key >= arr[i][:timestamp].beginning_of_month && key <= arr[i][:timestamp].end_of_month
+          return i
+        end
+      elsif resolution == 'month_to_days'
+        if key >= arr[i][:timestamp].beginning_of_day && key <= arr[i][:timestamp].end_of_day
+          return i
+        end
+      elsif resolution == 'day_to_minutes' #15 minutes
+        if (key - arr[i][:timestamp]).abs < 450
+          return i
+        end
+      elsif resolution == 'hour_to_minutes' || resolution == 'present' #2 seconds
+        if key >= arr[i][:timestamp].beginning_of_hour && key <= arr[i][:timestamp].end_of_hour
+          return i
+        end
+      end
     end
+    return -1
   end
 
 
