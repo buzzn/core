@@ -67,8 +67,9 @@ module API
         end
 
         rescue_from Crawler::CrawlerError do |e|
-          # assuming that any remote error is only of temporary nature
-          error_response(message: e.message, status: 503)
+          # Gateway Timeout -
+          #         did not receive a timely response from the upstream server.
+          error_response(message: e.message, status: 504)
         end
 
         class Max < Grape::Validations::Base
