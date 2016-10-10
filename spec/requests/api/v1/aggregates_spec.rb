@@ -380,7 +380,6 @@ describe "Aggregates API" do
 
       expect(response).to have_http_status(200)
       expect(json.count).to eq(4)
-
       timestamp = Time.find_zone('Berlin').local(2015,2,1)
       json.each do |item|
         expect(Time.parse(item['timestamp'])).to eq(timestamp.utc)

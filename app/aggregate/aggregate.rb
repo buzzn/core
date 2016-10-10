@@ -311,7 +311,7 @@ private
         end
       end
     end
-    return result
+    return result.sort! {|a, b| a[:timestamp] <=> b[:timestamp]}
   end
 
   def findMatchingTimestamp(key, arr, resolution)
@@ -329,7 +329,7 @@ private
           return i
         end
       elsif resolution == 'hour_to_minutes' || resolution == 'present' #2 seconds
-        if key >= arr[i][:timestamp].beginning_of_hour && key <= arr[i][:timestamp].end_of_hour
+        if (key - arr[i][:timestamp]).abs < 2
           return i
         end
       end

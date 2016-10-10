@@ -1477,9 +1477,6 @@ format_number = (value, precision) ->
     remainder = 0
     leading_number = value.toFixed(0)
   if remainder != 0
-    console.log value
-    console.log remainder
-    console.log '-------'
     if remainder < 1
       return leading_number.toString()
     else if remainder < 10
