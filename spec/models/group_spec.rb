@@ -15,7 +15,7 @@ describe "Group Model" do
   end
 
 
-  it 'can not find anything', :retry => 3 do
+  it 'can not find anything' do
     Fabricate(:buzzn_metering)
     Fabricate(:group_hof_butenland)
     groups = Group.filter('Der Clown ist müde und geht nach Hause.')
@@ -23,7 +23,7 @@ describe "Group Model" do
   end
 
 
-  it 'filters group with no params', :retry => 3 do
+  it 'filters group with no params' do
     Fabricate(:buzzn_metering)
     Fabricate(:group_wagnis4)
     Fabricate(:group_hof_butenland)
@@ -33,7 +33,7 @@ describe "Group Model" do
     expect(groups.size).to eq 3
   end
 
-  it 'limits readable_by', :retry => 3 do
+  it 'limits readable_by' do
     Fabricate(:buzzn_metering)
     wagnis4 = Fabricate(:group_wagnis4, readable: 'world')
     butenland = Fabricate(:group_hof_butenland, readable: 'community')
@@ -63,7 +63,7 @@ describe "Group Model" do
     expect(Group.readable_by(friend).collect{|c| c }).to match_array [wagnis4, butenland]
   end
 
-  it 'selects the energy producers/consumers of a group', :retry => 3 do
+  it 'selects the energy producers/consumers and involved users of a group' do
     group         = Fabricate(:group)
     user          = Fabricate(:user)
     consumer      = Fabricate(:user)
@@ -75,26 +75,32 @@ describe "Group Model" do
 
     expect(group.energy_producers).to match_array []
     expect(group.energy_consumers).to match_array []
+    expect(group.involved).to match_array []
 
     producer.add_role(:manager, mp_in)
     expect(group.energy_producers).to match_array [producer]
     expect(group.energy_consumers).to match_array []
+    expect(group.involved).to match_array [producer]
 
     consumer.add_role(:member, mp_out)
     expect(group.energy_producers).to match_array [producer]
     expect(group.energy_consumers).to match_array [consumer]
+    expect(group.involved).to match_array [producer, consumer]
 
     consumer.add_role(:member, mp_in)
     producer.add_role(:member, mp_out)
     expect(group.energy_producers).to match_array [producer, consumer]
     expect(group.energy_consumers).to match_array [consumer, producer]
+    expect(group.involved).to match_array [producer, consumer]
 
     user.add_role(:member, mp_in)
     expect(group.energy_producers).to match_array [user, producer, consumer]
     expect(group.energy_consumers).to match_array [consumer, producer]
+    expect(group.involved).to match_array [producer, consumer, user]
 
     user.add_role(:manager, mp_out)
     expect(group.energy_producers).to match_array [user, producer, consumer]
     expect(group.energy_consumers).to match_array [user, consumer, producer]
+    expect(group.involved).to match_array [producer, consumer, user]
   end
 end

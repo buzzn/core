@@ -225,7 +225,7 @@ class User < ActiveRecord::Base
     if resource.is_a?(Group) || resource.is_a?(MeteringPoint)
       result << NotificationUnsubscriber.within_users(resource.involved).by_key(key).collect(&:user)
     end
-    return result.flatten
+    return result.flatten.uniq
   end
 
   def wants_to_get_notified_by_email?(key, resource)
