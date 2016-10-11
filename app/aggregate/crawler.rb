@@ -401,7 +401,7 @@ class Crawler
             end
           end
           new_value = request['result'][request['result'].size - 1][mode]
-          new_value != old_value ? result << [(Time.at(timestamp/1000).in_time_zone.beginning_of_month).to_i*1000, (new_value - old_value)/10000000000.0] : nil
+          new_value != old_value ? result << [(Time.at(timestamp/1000).in_time_zone.beginning_of_month).to_i*1000, (new_value - old_value)/10000.0] : nil
         else
           Rails.logger.info request.inspect
         end
