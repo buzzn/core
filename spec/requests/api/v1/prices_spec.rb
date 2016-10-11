@@ -4,10 +4,8 @@ describe "Prices API" do
   
   let(:expected) do
     { "data" =>
-      { "attributes" =>
-        { "energyprice_cents" => 4.88,
-          "baseprice_cents" => 51.24
-        } } }
+      { "attributes" => {} }
+    }
   end
 
   before(:all) do
