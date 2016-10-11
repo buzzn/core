@@ -146,10 +146,10 @@ ActiveRecord::Schema.define(version: 20160926140754) do
     t.string   "slug"
     t.string   "mode"
     t.string   "tariff"
-    t.integer  "price_cents",                       default: 0,     null: false
-    t.string   "price_currency",                    default: "EUR", null: false
+    t.integer  "price_cents",                        default: 0,     null: false
+    t.string   "price_currency",                     default: "EUR", null: false
     t.string   "status"
-    t.integer  "forecast_watt_hour_pa",   limit: 8
+    t.integer  "forecast_watt_hour_pa",    limit: 8
     t.date     "commissioning"
     t.date     "termination"
     t.boolean  "terms"
@@ -162,13 +162,12 @@ ActiveRecord::Schema.define(version: 20160926140754) do
     t.string   "encrypted_password"
     t.boolean  "valid_credentials",                  default: false
     t.boolean  "running",                            default: true
+    t.uuid     "contracting_party_id"
     t.uuid     "metering_point_id"
     t.uuid     "organization_id"
     t.uuid     "group_id"
     t.datetime "created_at",                                         null: false
     t.datetime "updated_at",                                         null: false
-    t.uuid     "contract_owner_id"
-    t.uuid     "contract_beneficiary_id"
     t.boolean  "retailer"
     t.float    "price_cents_per_kwh"
     t.integer  "price_cents_per_month"
@@ -181,6 +180,7 @@ ActiveRecord::Schema.define(version: 20160926140754) do
     t.text     "attention_by"
   end
 
+  add_index "contracts", ["contracting_party_id"], name: "index_contracts_on_contracting_party_id", using: :btree
   add_index "contracts", ["group_id"], name: "index_contracts_on_group_id", using: :btree
   add_index "contracts", ["metering_point_id"], name: "index_contracts_on_metering_point_id", using: :btree
   add_index "contracts", ["mode"], name: "index_contracts_on_mode", using: :btree
@@ -497,6 +497,9 @@ ActiveRecord::Schema.define(version: 20160926140754) do
     t.string   "mode"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "authority"
+    t.boolean  "provider_permission"
+    t.boolean  "retailer"
   end
 
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree

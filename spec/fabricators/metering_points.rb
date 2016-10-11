@@ -5,7 +5,7 @@ Fabricator :metering_point do
   uid         { sequence(:uid, 10688251510000000000002677114) }
   mode        'in'
   readable    'friends'
-  #contracts   { [ Fabricate(:power_taker_contract)] }
+  #contracts   { [ Fabricate(:electricity_supplier_contract)] }
 end
 
 Fabricator :metering_point_readable_by_world, from: :metering_point do

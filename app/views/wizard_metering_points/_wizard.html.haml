@@ -4,7 +4,6 @@
     %h4.modal-title= t'new_metering_point'
   .modal-body
     = simple_form_for @metering_point, remote: true, url: wizard_update_wizard_metering_points_path, method: 'put'  do |f|
-      - any_editable_metering_points = current_user.editable_metering_points.collect(&:meter).uniq.compact.any?
       %h3=t('define_metering_point')
       %fieldset
         = f.input :mode, collection: MeteringPoint.modes.map(&:to_sym), include_blank: false, as: :radio_buttons, label: t("metering_point_mode"), checked: MeteringPoint.modes.first
@@ -37,7 +36,7 @@
               = link_to_add_association t('add_formula_part'), f, :formula_parts, class: "btn btn-xs btn-default btn-rounded btn-labeled fa fa-plus"
         .js-dependent-fields{data: {checkbox: {id: 'metering_point_virtual', value: 'false'}}}
           = f.simple_fields_for @meter do |ff|
-            - if any_editable_metering_points
+            - if current_user.editable_metering_points.collect(&:meter).uniq.compact.any?
               = ff.input :existing_meter, as: :radio_buttons, collection: [t("create_new_meter"), t("add_existing_meter")], checked: t("create_new_meter"), label: false
               .js-dependent-fields{data: {radio: {name: 'metering_point[meter][existing_meter]', value: t("add_existing_meter")}}}
                 = ff.input :meter_id, collection: current_user.editable_metering_points.collect(&:meter).uniq.compact, :label_method => lambda { |m| m.name }, include_blank: false, input_html: { class: 'select2'}, label: false, selected: current_user.editable_metering_points.collect(&:meter).uniq.compact.first
@@ -61,8 +60,7 @@
                 = ff.input :sensor_id, as: :text, :input_html => {value: ''}, label_method: :sensor_id
                 = ff.input :x_token, as: :text, :input_html => {value: ''}, label_method: :x_token
             .js-dependent-fields{data: {radio: {name: 'metering_point[meter][existing_meter]', value: t("add_existing_meter")}}}
-              - if any_editable_metering_points
-                = t('the_metering_point_will_get_its_data_via_the_connection_established_by_the_selected_meter')
+              = t('the_metering_point_will_get_its_data_via_the_connection_established_by_the_selected_meter')
             .js-dependent-fields{data: {radio: {name: 'metering_point[meter][existing_meter]', value: t("create_new_meter")}}}
               .js-dependent-fields{data: {checkbox: {id: 'metering_point_meter_smartmeter', value: 'false'}}}
                 = t('no_smartmeter_means_you_get_dummy_data')

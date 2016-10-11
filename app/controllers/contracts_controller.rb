@@ -17,6 +17,7 @@ class ContractsController < ApplicationController
   def create
     @contract = Contract.new(contract_params)
     authorize_action_for @contract
+    @contract.contracting_party = current_user.contracting_party if current_user.contracting_party
     if @contract.organization.slug == 'buzzn-metering'
       @contract.username = 'team@localpool.de'
       @contract.password = 'Zebulon_4711'
@@ -77,9 +78,7 @@ private
       :password,
       :metering_point_id,
       :organization_id,
-      :group_id,
-      :contract_owner_id,
-      :contract_beneficiary_id
+      :group_id
       )
   end
 

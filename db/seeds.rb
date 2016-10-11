@@ -6,10 +6,10 @@ require 'rubygems' #so it can load gems
 
 def user_with_metering_point
   metering_point              = Fabricate(:metering_point)
+  contracting_party           = Fabricate(:contracting_party)
   user                        = Fabricate(:user)
-  metering_point.contracts.each do |contract|
-    user.contracting_parties.first.owned_contracts << contract
-  end
+  user.contracting_party      = contracting_party
+  user.contracting_party.contracts << metering_point.contracts
 
   user.add_role(:member, metering_point)
   user.add_role :manager, metering_point
@@ -44,7 +44,7 @@ Fabricate(:metering_point_operator, name: 'Discovergy')
 Fabricate(:metering_point_operator, name: 'MySmartGrid')
 
 
-buzzn_team_names = %w[ felix justus danusch thomas stefan philipp christian kristian pavel eva ]
+buzzn_team_names = %w[ felix justus danusch thomas martina stefan ole philipp christian mustafa kristian ]
 buzzn_team = []
 buzzn_team_names.each do |user_name|
   puts "  #{user_name}"
@@ -57,38 +57,25 @@ buzzn_team_names.each do |user_name|
     @fichtenweg8 = root_mp = mp_z1a
     user.add_role :manager, mp_z1a
     user.add_role :manager, mp_z1b
-    mp_z1a.contracts.each do |contract|
-      user.contracting_parties.first.owned_contracts << contract
-      contract.save
-    end
-    mp_z1b.contracts.each do |contract|
-      user.contracting_parties.first.owned_contracts << contract
-    end
+    user.contracting_party.contracts << mp_z1a.contracts
+    user.contracting_party.contracts << mp_z1b.contracts
 
     easymeter_60051599 = Fabricate(:easymeter_60051599)
     @mp_z2 = easymeter_60051599.metering_points.first
     user.add_role :manager, @mp_z2
-    @mp_z2.contracts.each do |contract|
-      user.contracting_parties.first.owned_contracts << contract
-    end
+    user.contracting_party.contracts << @mp_z2.contracts
     easymeter_60051559 = Fabricate(:easymeter_60051559)
     @mp_z3 = easymeter_60051559.metering_points.first
     user.add_role :manager, @mp_z3
-    @mp_z3.contracts.each do |contract|
-      user.contracting_parties.first.owned_contracts << contract
-    end
+    user.contracting_party.contracts << @mp_z3.contracts
     easymeter_60051560 = Fabricate(:easymeter_60051560)
     @mp_z4 = easymeter_60051560.metering_points.first
     user.add_role :manager, @mp_z4
-    @mp_z4.contracts.each do |contract|
-      user.contracting_parties.first.owned_contracts << contract
-    end
+    user.contracting_party.contracts << @mp_z4.contracts
     easymeter_60051600 = Fabricate(:easymeter_60051600)
     @mp_z5 = easymeter_60051600.metering_points.first
     user.add_role :manager, @mp_z5
-    @mp_z5.contracts.each do |contract|
-      user.contracting_parties.first.owned_contracts << contract
-    end
+    user.contracting_party.contracts << @mp_z5.contracts
 
 
     dach_pv_justus = Fabricate(:dach_pv_justus)
@@ -144,11 +131,7 @@ buzzn_team_names.each do |user_name|
     user.add_role :manager, root_mp
     user.add_role(:member, root_mp)
   end
-  root_mp.contracts.each do |contract|
-    user.contracting_parties.first.owned_contracts << contract
-    contract.save
-  end
-
+  user.contracting_party.contracts << root_mp.contracts
 end
 
 puts 'friendships for buzzn team ...'
@@ -184,7 +167,7 @@ karin.add_role :manager, mp_pv_karin
 pv_karin = Fabricate(:pv_karin)
 karin.add_role :manager, pv_karin
 mp_pv_karin.devices << pv_karin
-mp_pv_karin.contracts.metering_point_operators.first.contract_owner = karin.contracting_parties.first
+mp_pv_karin.contracts.metering_point_operators.first.contracting_party = karin.contracting_party
 mp_pv_karin.contracts.metering_point_operators.first.save
 
 karin.add_role :member, @forstenrieder_weg_mp
@@ -206,7 +189,7 @@ christian_schuetze = Fabricate(:christian_schuetze)
 christian_schuetze.add_role :manager, mp_cs_1
 mp_cs_1.contracts << Fabricate(:mpoc_justus, metering_point: mp_cs_1)
 christian_schuetze.add_role :member, mp_cs_1
-mp_cs_1.contracts.metering_point_operators.first.contract_owner = christian_schuetze.contracting_parties.first
+mp_cs_1.contracts.metering_point_operators.first.contracting_party = christian_schuetze.contracting_party
 mp_cs_1.contracts.metering_point_operators.first.save
 
 

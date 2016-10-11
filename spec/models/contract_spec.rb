@@ -30,7 +30,7 @@ describe "Contract Model" do
     c1.metering_point = user_with_metering_point.roles.first.resource
     c1.group = member_group
     c1.save!
-    c2 = Fabricate(:power_giver_contract)
+    c2 = Fabricate(:electricity_supplier_contract)
     c2.group = manager_group
     c2.save!
     [c1, c2]

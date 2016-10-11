@@ -1,6 +1,6 @@
 .col-xs-12.col-sm-12.col-md-12.col-lg-12.contract{id: "contract_#{contract.id}"}
   = link_to edit_contract_path(contract),{:remote => true, :class => 'start_modal','data-toggle' => "modal",'data-target' => "#myModal"} do
-    - if contract.mode == 'power_giver_contract'
+    - if contract.mode == 'electricity_supplier_contract'
       .panel
         .pad-all.media.panel-mint.panel-colorful
           .media-left

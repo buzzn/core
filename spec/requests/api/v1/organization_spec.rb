@@ -352,7 +352,7 @@ describe "Organizations API" do
   # RETRIEVE contracts
 
   it 'gets the related contracts of an organization without token' do
-    organization    = Fabricate(:power_giver_with_contracts)
+    organization    = Fabricate(:electricity_supplier_with_contracts)
     contracts       = organization.contracts
 
     get_without_token "/api/v1/organizations/#{organization.id}/contracts"
@@ -362,23 +362,23 @@ describe "Organizations API" do
 
   it 'gets the related contracts of an organization with token' do
     access_token    = Fabricate(:full_access_token_as_admin)
-    organization    = Fabricate(:power_giver_with_contracts)
+    organization    = Fabricate(:electricity_supplier_with_contracts)
     contracts       = organization.contracts
 
     get_with_token "/api/v1/organizations/#{organization.id}/contracts", access_token.token
     expect(response).to have_http_status(200)
     contracts.each do |contract|
-      expect(json['data'].find{ |c| c['id'] == contract.id }['attributes']['mode']).to eq('power_giver_contract')
+      expect(json['data'].find{ |c| c['id'] == contract.id }['attributes']['mode']).to eq('electricity_supplier_contract')
     end
     expect(json['data'].size).to eq(contracts.size)
   end
 
   it 'paginates contracts' do
     access_token    = Fabricate(:full_access_token_as_admin).token
-    organization    = Fabricate(:power_giver)
+    organization    = Fabricate(:electricity_supplier)
 
     page_overload.times do
-      organization.contracts << Fabricate(:power_giver_contract)
+      organization.contracts << Fabricate(:electricity_supplier_contract)
     end
     get_with_token "/api/v1/organizations/#{organization.id}/contracts", access_token
     expect(response).to have_http_status(200)
@@ -580,7 +580,7 @@ describe "Organizations API" do
 
 
   # REPLACE manager/member
-
+  
 
   it 'replaces organization managers/members' do
     admin_token   = Fabricate(:full_access_token_as_admin)
@@ -645,7 +645,7 @@ describe "Organizations API" do
     delete_without_token "/api/v1/organizations/#{organization.id}/relationships/members", params
     expect(response).to have_http_status(401)
   end
-
+ 
 
   [:simple_access_token, :smartmeter_access_token].each do |token|
     [:member, :manager, :admin].each do |role|

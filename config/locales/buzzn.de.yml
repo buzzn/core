@@ -614,8 +614,8 @@ de:
   distribution_system_operator: Verteilnetzbetreiber
   transmission_system_operator: Übertragungsnetzbetreiber
 
-  power_giver_contract: Vertrag für Stromlieferung
-  power_taker_contract: Vertrag für Stromabnahme
+  electricity_supplier_contract: Stromlieferantenvertrag
+  electricity_purchase_contract: Stromabnahmevertrag
   metering_service_provider_contract: Messdienstleistungsvertrag
   metering_point_operator_contract: Messstellenbetreiber Vertrag
   distribution_system_operator_contract: Verteilnetzbetreiber Vertrag

@@ -11,8 +11,7 @@ class Contract < ActiveRecord::Base
 
   monetize :price_cents
 
-  belongs_to :contract_owner, class_name: 'ContractingParty', foreign_key: "contract_owner_id"
-  belongs_to :contract_benficiary, class_name: 'ContractingParty', foreign_key: "contract_benficiary_id"
+  belongs_to :contracting_party
   belongs_to :organization
   belongs_to :metering_point
   belongs_to :group
@@ -26,8 +25,8 @@ class Contract < ActiveRecord::Base
 
   scope :running,                   -> { where(running: :true) }
   scope :metering_point_operators,  -> { where(mode: 'metering_point_operator_contract') }
-  scope :power_givers,              -> { where(mode: 'power_giver_contract') }
-  scope :power_takers,              -> { where(mode: 'power_taker_contract') }
+  scope :electricity_suppliers,     -> { where(mode: 'electricity_supplier_contract') }
+  scope :electricity_purchases,     -> { where(mode: 'electricity_purchase_contract') }
   scope :servicings,                -> { where(mode: 'servicing_contract') }
 
   def self.readable_by_query(user)
@@ -60,8 +59,8 @@ class Contract < ActiveRecord::Base
 
   # def self.modes
   #   %w{
-  #     power_giver_contract
-  #     power_taker_contract
+  #     electricity_supplier_contract
+  #     electricity_purchase_contract
   #     metering_point_operator_contract
   #     servicing_contract
   #   }.map(&:to_sym)
@@ -107,12 +106,8 @@ class Contract < ActiveRecord::Base
 
   def send_notification_credentials(valid)
     contract = self
-    if contract
-      if contract.contract_owner
-        user = contract.contract_owner.user
-      elsif contract.contract_beneficiary
-        user = contract.beneficiary.user
-      end
+    if contract && contract.contracting_party
+      user = contract.contracting_party.user
       if valid
         user.send_notification("success", I18n.t("valid_credentials"), I18n.t("your_credentials_have_been_checked_and_are_valid", contract: contract.mode), contract_path(self))
       else
