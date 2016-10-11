@@ -22,8 +22,10 @@
 
               %li.list-group-item.list-item-sm
                 %i.fa.fa-pencil.fa-fw
-                - if !@contract.contracting_party.nil?
-                  = link_to @contract.contracting_party.name
+                - if !@contract.contract_owner.nil?
+                  = link_to @contract.contract_owner.name
+                - if !@contract.contract_beneficiary.nil?
+                  = link_to @contract.contract_beneficiary.name
 
 
           %hr

@@ -55,9 +55,9 @@ Fabricator :profile_thomas, from: :profile do
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'thomas.jpg')) }
 end
 
-Fabricator :profile_martina, from: :profile do
-  first_name  'Martina'
-  last_name   'Raschke'
+Fabricator :profile_eva, from: :profile do
+  first_name  'Eva'
+  last_name   'Klopp'
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'martina.jpg')) }
 end
 
@@ -73,9 +73,9 @@ Fabricator :profile_karin, from: :profile do
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'karin.jpg')) }
 end
 
-Fabricator :profile_ole, from: :profile do
-  first_name  'Ole'
-  last_name   'Vörsmann'
+Fabricator :profile_pavel, from: :profile do
+  first_name  'Pavel'
+  last_name   'Gorbachev'
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'ole.jpg')) }
 end
 
