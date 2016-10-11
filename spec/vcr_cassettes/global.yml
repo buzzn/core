@@ -2370,15 +2370,9 @@ http_interactions:
       - Accept-Encoding
     body:
       encoding: ASCII-8BIT
-<<<<<<< HEAD
-      string: '[[1474533540,"-nan"],[1474533600,"-nan"],[1474533660,"-nan"],[1474533720,"-nan"],[1474533780,"-nan"],[1474533840,"-nan"],[1474533900,"-nan"]]'
-    http_version:
-  recorded_at: Thu, 22 Sep 2016 08:44:29 GMT
-=======
       string: '[[1474873260,"-nan"],[1474873320,"-nan"],[1474873380,"-nan"],[1474873440,"-nan"],[1474873500,"-nan"],[1474873560,"-nan"],[1474873620,"-nan"]]'
     http_version:
   recorded_at: Mon, 26 Sep 2016 07:06:08 GMT
->>>>>>> fix tests after merging
 - request:
     method: get
     uri: https://api.mysmartgrid.de:8443/sensor/user?end=1474533869&resolution=minute&start=1474533529&unit=watt
@@ -2479,15 +2473,9 @@ http_interactions:
       - Accept-Encoding
     body:
       encoding: ASCII-8BIT
-<<<<<<< HEAD
-      string: '[[1474533540,"-nan"],[1474533600,"-nan"],[1474533660,"-nan"],[1474533720,"-nan"],[1474533780,"-nan"],[1474533840,"-nan"],[1474533900,"-nan"]]'
-    http_version:
-  recorded_at: Thu, 22 Sep 2016 08:44:32 GMT
-=======
       string: '[[1474873260,"-nan"],[1474873320,"-nan"],[1474873380,"-nan"],[1474873440,"-nan"],[1474873500,"-nan"],[1474873560,"-nan"],[1474873620,"-nan"]]'
     http_version:
   recorded_at: Mon, 26 Sep 2016 07:06:10 GMT
->>>>>>> fix tests after merging
 - request:
     method: get
     uri: https://api.mysmartgrid.de:8443/sensor/6ed89edf81be48586afc19f9006feb8b?end=1467446704&resolution=minute&start=1467446364&unit=watt
