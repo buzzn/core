@@ -1,22 +1,26 @@
 module Buzzn
 
   class Price
-    attr_reader :workprice, :baseprice, :total
+    attr_reader :energyprice_cents, :baseprice_cents, :total_cents
 
-    def initialize(nne, total)
-      if nne
-        @workprice   = nne.arbeitspreis
-        @baseprice   = nne.grundpreis
-      end
-      @total = total
+    def initialize(baseprice_cents, energyprice_cents, total_cents)
+      @energyprice_cents = energyprice_cents.to_i
+      @baseprice_cents   = baseprice_cents.to_i
+      @total_cents       = total_cents.to_i
     end
 
     def to_f
-      @total
+      @total_cents
     end
 
     def to_h
-      { workprice: @workprice, baseprice: @baseprice, total: @total }
+      { energyprice_cents: @energyprice_cents,
+        baseprice_cents: @baseprice_cents,
+        total_cents: @total_cents }
+    end
+
+    def <=>(other)
+      self.to_f <=> other.to_f
     end
   end
 
@@ -68,18 +72,22 @@ module Buzzn
     def calculate(verbandsnummer)
       # verbandsnummer is primary-key
       if nne = NneVnb.where(verbandsnummer: verbandsnummer).first
-        ap_netto = KWKG_AUFSCHLAG + STROM_NEV + AB_LA_V + STROMSTEUER +
-                   EEG_UMLAGE + OFFSHORE_HAFTUNG + DECKUNGSBEITRAG +
-                   ENERGIEPREIS +
-                   (@ka ? @ka.ka : DEFAULT_KA) +
-                   nne.arbeitspreis
-        gp_netto = send(self.class.type_to_method[@type.to_sym], nne)
+        energyprice_netto = KWKG_AUFSCHLAG + STROM_NEV + AB_LA_V + STROMSTEUER +
+                          EEG_UMLAGE + OFFSHORE_HAFTUNG + DECKUNGSBEITRAG +
+                          ENERGIEPREIS +
+                          (@ka ? @ka.ka : DEFAULT_KA) +
+                          nne.arbeitspreis
+        baseprice_netto = send(self.class.type_to_method[@type.to_sym], nne)
 
-        total = ((gp_netto * MWST / 12 + 0.04999).round(1) +
-                 @kwh * (ap_netto * MWST + 0.04999).round(1) / 1200).round(2)
-        Price.new(nne, total)
+        # using cent prices from here and round as the legacy code did:
+        # base- and energy prices are round up to the next 10 cents
+        # totalprice rounds the regular way
+        baseprice_cents   = (baseprice_netto * MWST / 1.2).ceil * 10.0
+        energyprice_cents = (energyprice_netto * MWST * 10.0).ceil * 10.0
+        total_cents       = (baseprice_cents + @kwh * energyprice_cents / 1200.0).round
+        Price.new(baseprice_cents, energyprice_cents, total_cents)
       else
-        Price.new(nil, 0)
+        Price.new(0, 0, 0)
       end
     end
     private :calculate
@@ -101,9 +109,11 @@ module Buzzn
       entries = ZipVnb.where(zip: @zip).collect do |vbn|
         calculate(vbn.verbandsnummer)
       end
-      result = entries.max if entries.size > 0
-      UsedZipSn.create!(zip: @zip, kwh: @kwh, price: result)
-      result
+      if entries.size > 0
+        result = entries.max
+        UsedZipSn.create!(zip: @zip, kwh: @kwh, price: result.total_cents)
+        result
+      end
     end
   end
 end

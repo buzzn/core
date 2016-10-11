@@ -5,8 +5,8 @@ describe "Prices API" do
   let(:expected) do
     { "data" =>
       { "attributes" =>
-        { "workprice" => 4.88,
-          "baseprice" => 51.24
+        { "energyprice_cents" => 4.88,
+          "baseprice_cents" => 51.24
         } } }
   end
 
@@ -27,20 +27,25 @@ describe "Prices API" do
     expect(json['errors'].size).to eq 3
   end
 
-  it 'does get a price' do
+  it 'gets a price' do
     Buzzn::Zip2Price.types
-      .zip([33.03, 34.63, 30.43, 33.03, 33.03]).each do |type, total|
+      .zip([[1170, 2560, 3303],
+            [1330, 2560, 3463],
+            [910, 2560, 3043],
+            [1170, 2560, 3303],
+            [1170, 2560, 3303]]).each do |type, exp|
       params = { zip: '86916', kwh: '1000', tarif_type: type }
                                                    
       get_without_token "/api/v1/prices", params
-
       expect(response).to have_http_status(200)
-      expected['data']['attributes']['total'] = total
+      expected['data']['attributes']['baseprice_cents'] = exp[0]
+      expected['data']['attributes']['energyprice_cents'] = exp[1]
+      expected['data']['attributes']['total_cents'] = exp[2]
       expect(json).to eq expected
     end
   end
 
-  it 'does gives unknown zip' do
+  it 'gives unknown zip' do
     params = { zip: '98765', kwh: '1000', tarif_type: 'other' }
 
     get_without_token "/api/v1/prices", params
