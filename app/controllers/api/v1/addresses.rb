@@ -22,12 +22,7 @@ module API
         end
         oauth2 :full
         get ':id' do
-          address = Address.find(permitted_params[:id])
-          if address.readable_by?(current_user)
-            address
-          else
-            status 403
-          end
+          Address.guarded_retrieve(current_user, permitted_params)
         end
 
         desc 'Create address'
@@ -42,12 +37,8 @@ module API
         end
         oauth2 :full
         post do
-          if Address.creatable_by?(current_user)
-            address = Address.create!(permitted_params)
-            created_response(address)
-          else
-            status 403
-          end
+          created_response(Address.guarded_create(current_user,
+                                                  permitted_params))
         end
 
         desc 'Update address'
@@ -63,13 +54,8 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          address = Address.find(permitted_params[:id])
-          if address.updatable_by?(current_user)
-            address.update!(permitted_params)
-            address
-          else
-            status 403
-          end
+          address = Address.guarded_retrieve(current_user, permitted_params)
+          address.guarded_update(current_user, permitted_params)
         end
 
         desc 'Delete address'
@@ -78,13 +64,8 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          address = Address.find(permitted_params[:id])
-          if address.deletable_by?(current_user)
-            address.destroy
-            status 204
-          else
-            status 403
-          end
+          address = Address.guarded_retrieve(current_user, permitted_params)
+          deleted_response(address.guarded_delete(current_user))
         end
 
       end

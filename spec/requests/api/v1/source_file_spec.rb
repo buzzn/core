@@ -12,5 +12,23 @@ describe "Source File" do
         end
       end
     end
+
+    if !file.end_with?('users.rb')
+      it "#{file.sub(/.*api/, 'api')} only guarded/unguarded retrieve/delete" do
+        content = File.read(file)
+        content.each_line do |line|
+          expect(line).not_to match /find/
+          if line =~ /delete/
+            expect(line).to match /(delete.*do)|(guarded_delete)|(deleted_response)/
+          end
+        end
+      end
+    end
+    it "#{file.sub(/.*api/, 'api')} only guarded create/update" do
+      content = File.read(file)
+      content.each_line do |line|
+        expect(line).not_to match /(cre|upd)ate\!/
+      end
+    end
   end
 end

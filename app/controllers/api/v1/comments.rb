@@ -15,14 +15,15 @@ module API
         oauth2 :simple, :full
         post do
           resource_class  = Object.const_get(permitted_params[:resource_name])
-          resource        = resource_class.find(permitted_params[:resource_id])
+          resource        = resource_class.guarded_retrieve(current_user,
+                                                            permitted_params[:resource_id])
           if resource.readable_by?(current_user)
             # TODO cleanup move logic into Comment
             comment       = Comment.build_from(resource, current_user.id, permitted_params[:body], nil)
             comment.save!
             comment.create_activity key: 'comment.create', owner: current_user
             if permitted_params[:parent_id]
-              parent_comment = Comment.find(permitted_params[:parent_id])
+              parent_comment = Comment.unguarded_retrieve(permitted_params[:parent_id])
               comment.move_to_child_of(parent_comment)
             end
             created_response(comment)
@@ -38,13 +39,8 @@ module API
         end
         oauth2 :simple, :full
         patch ':id' do
-          comment = Comment.find(permitted_params[:id])
-          if comment.updatable_by?(current_user)
-            comment.update!(permitted_params)
-            comment
-          else
-            status 403
-          end
+          comment = Comment.guarded_retrieve(current_user, permitted_params)
+          comment.guarded_update(current_user, permitted_params)
         end
 
         desc 'Remove a comment'
@@ -53,13 +49,8 @@ module API
         end
         oauth2 :simple, :full
         delete ':id' do
-          comment = Comment.find(permitted_params[:id])
-          if comment.deletable_by?(current_user) && !comment.has_children?
-            comment.destroy
-            status 204
-          else
-            status 403
-          end
+          comment = Comment.guarded_retrieve(current_user, permitted_params)
+          deleted_response(comment.guarded_delete(current_user))
         end
 
       end

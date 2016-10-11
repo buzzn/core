@@ -7,16 +7,11 @@ module API
 
         desc "Return a Reading"
         params do
-          requires :id, type: String, desc: "ID of the Device"
+          requires :id, type: String, desc: "ID of the Reading"
         end
         oauth2 :simple, :full
         get ":id" do
-          reading = Reading.find(permitted_params[:id])
-          if reading.readable_by?(current_user)
-            reading
-          else
-            status 403
-          end
+          Reading.guarded_retrieve(current_user, permitted_params)
         end
 
 
@@ -31,7 +26,7 @@ module API
         end
         oauth2 :full, :smartmeter
         post do
-          meter = Meter.find(permitted_params[:meter_id])
+          meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
           if Reading.creatable_by?(current_user, meter)
             reading = Reading.create(permitted_params)
 

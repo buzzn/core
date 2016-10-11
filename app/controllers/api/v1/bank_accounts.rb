@@ -48,7 +48,8 @@ module API
         oauth2 :full
         post do
           resource = Object.const_get(permitted_params[:bank_accountable_type])
-          parent = resource.find(permitted_params[:bank_accountable_id])
+          # TODO really unguarded ?
+          parent = resource.unguarded_retrieve(permitted_params[:bank_accountable_id])
           created_response(BankAccount.guarded_create(current_user,
                                                       permitted_params,
                                                       parent))
@@ -69,7 +70,9 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          BankAccount.guarded_update(current_user, permitted_params)
+          bank_account = BankAccount.guarded_retrieve(current_user,
+                                                      permitted_params)
+          bank_account.guarded_update(current_user, permitted_params)
         end
 
 
@@ -81,8 +84,9 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          deleted_response(BankAccount.guarded_delete(current_user,
-                                                      permitted_params))
+          bank_account = BankAccount.guarded_retrieve(current_user,
+                                                      permitted_params)
+          deleted_response(bank_account.guarded_delete(current_user))
         end
 
 

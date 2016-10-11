@@ -6,19 +6,19 @@ class Aggregate
   end
 
   def present(params = {})
-    @timestamp = params.fetch(:timestamp, Time.current) || Time.current
-    @present_items = []
+    timestamp = params.fetch(:timestamp, Time.current) || Time.current
+    present_items = []
 
-    @cache_id = "/aggregate/present?metering_point_ids=#{@metering_points_hash[:ids].join(',')}"
-    if false #Rails.cache.exist?(@cache_id)
-      @present = Rails.cache.fetch(@cache_id)
+    cache_id = "/aggregate/present?metering_point_ids=#{@metering_points_hash[:ids].join(',')}"
+    if false #Rails.cache.exist?(cache_id)
+      present = Rails.cache.fetch(cache_id)
     else
       seconds_to_process = Benchmark.realtime do
 
         @metering_points_hash[:buzzn_api].each do |metering_point|
           document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
           if document
-            @present_items << {
+            present_items << {
               "operator" => (metering_point.mode == 'in' ? '+' : '-'),
               "data" => document_to_hash(metering_point, document)
             }
@@ -27,7 +27,7 @@ class Aggregate
 
         # discovergy
         @metering_points_hash[:discovergy].each do |metering_point|
-          @present_items << {
+          present_items << {
             "operator" => (metering_point.mode == 'in' ? '+' : '-'),
             "data" => external_data_live(metering_point)
           }
@@ -35,7 +35,7 @@ class Aggregate
 
         ['slp', 'sep_bhkw', 'sep_pv'].each do |fake_type|
           if @metering_points_hash[fake_type.to_sym].any?
-            @present_items.concat(present_fake(fake_type, @metering_points_hash, @timestamp ))
+            present_items.concat(present_fake(fake_type, @metering_points_hash, timestamp ))
           end
         end
 
@@ -56,7 +56,7 @@ class Aggregate
               elsif formula_part.operator == '-'
                 negativ = true
               end
-              @present_items << {
+              present_items << {
                 "operator" => (metering_point.mode == 'in' ? '+' : '-'),
                 "data" => send("present_#{data_source}", metering_point, negativ)
               }
@@ -68,21 +68,24 @@ class Aggregate
     end
 
     power_milliwatt_summed = 0
-    @present_items.each do |present_item|
+    present_items.each do |present_item|
       power_milliwatt_summed += present_item['data']['power_milliwatt'] if present_item['data']['power_milliwatt'] != nil
     end
 
 
-    @present = {
-      "timestamp" => @present_items.first['data']['timestamp'],
+    present = {
       "power_milliwatt" => power_milliwatt_summed,
-      "readings" => @present_items
+      "readings" => present_items
     }
-
-    if seconds_to_process > 2
-      Rails.cache.write(@cache_id, @present, expires_in: 5.seconds)
+    if present_items.empty?
+      present["timestamp"] = Time.utc(0)
+    else
+      present["timestamp"] = present_items.first['data']['timestamp']
     end
-    return @present
+    if seconds_to_process > 2
+      Rails.cache.write(cache_id, present, expires_in: 5.seconds)
+    end
+    return present
   end
 
 
@@ -90,28 +93,28 @@ class Aggregate
 
 
   def past(params = {})
-    @timestamp  = params.fetch(:timestamp, Time.current) || Time.current
-    @resolution = params.fetch(:resolution, 'day_to_minutes') || 'day_to_minutes'
-    @past_items = []
-    @cache_id = "/aggregate/past?metering_point_ids=#{@metering_points_hash[:ids].join(',')}&timestamp=#{@timestamp}&resolution=#{@resolution}"
-    if Rails.cache.exist?(@cache_id)
-      @past = Rails.cache.fetch(@cache_id)
+    timestamp  = params.fetch(:timestamp, Time.current) || Time.current
+    resolution = params.fetch(:resolution, 'day_to_minutes') || 'day_to_minutes'
+    past_items = []
+    cache_id = "/aggregate/past?metering_point_ids=#{@metering_points_hash[:ids].join(',')}&timestamp=#{timestamp}&resolution=#{resolution}"
+    if Rails.cache.exist?(cache_id)
+      past = Rails.cache.fetch(cache_id)
     else
       seconds_to_process = Benchmark.realtime do
 
         # buzzn_api
         @metering_points_hash[:buzzn_api].each do |metering_point|
-          @past_items << past_buzzn_api(metering_point, @resolution, @timestamp)
+          past_items << past_buzzn_api(metering_point, resolution, timestamp)
         end
 
         # discovergy
         @metering_points_hash[:discovergy].each do |metering_point|
-          @past_items << past_discovergy(metering_point, @resolution, @timestamp)
+          past_items << past_discovergy(metering_point, resolution, timestamp)
         end
 
         ['slp', 'sep_bhkw', 'sep_pv'].each do |fake_type|
           if @metering_points_hash[fake_type.to_sym].any?
-            @past_items.concat( past_fake(fake_type, @metering_points_hash, @resolution, @timestamp) )
+            past_items.concat( past_fake(fake_type, @metering_points_hash, resolution, timestamp) )
           end
         end
 
@@ -132,19 +135,19 @@ class Aggregate
               elsif formula_part.operator == '-'
                 negativ = true
               end
-              @past_items << send("past_#{data_source}", metering_point, @resolution, @timestamp, negativ)
+              past_items << send("past_#{data_source}", metering_point, resolution, timestamp, negativ)
             end
           end
         end
 
-        @past = sum_lists_improved(@past_items, @resolution)
+        past = sum_lists_improved(past_items, resolution)
 
       end
       if seconds_to_process > 2
-        Rails.cache.write(@cache_id, @past, expires_in: 1.minute)
+        Rails.cache.write(cache_id, past, expires_in: 1.minute)
       end
     end
-    return @past
+    return past
   end
 
 
@@ -228,12 +231,12 @@ private
 
   def past_fake(fake_type, metering_points_hash, resolution, timestamp)
     source = { source: { "$in" => [fake_type] } }
-    if Reading.energy_resolutions.include?(@resolution)
+    if Reading.energy_resolutions.include?(resolution)
       keys = ['energy_a_milliwatt_hour']
-    elsif Reading.power_resolutions.include?(@resolution)
+    elsif Reading.power_resolutions.include?(resolution)
       keys = ['power_a_milliwatt']
     end
-    collection = Reading.aggregate(@resolution, source, @timestamp, keys)
+    collection = Reading.aggregate(resolution, source, timestamp, keys)
     past_items = []
     metering_points_hash[fake_type.to_sym].each do |metering_point|
       factor = factor_from_metering_point(metering_point)

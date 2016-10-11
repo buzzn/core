@@ -23,12 +23,7 @@ module API
         end
         oauth2 :simple, :full
         get ':id' do
-          contract = Contract.find(permitted_params[:id])
-          if contract.readable_by?(current_user)
-            contract
-          else
-            status 403
-          end
+          Contract.guarded_retrieve(current_user, permitted_params)
         end
 
 
@@ -64,14 +59,10 @@ module API
         end
         oauth2 :full, :smartmeter
         post do
-          if Contract.creatable_by?(current_user)
-            # TODO move logic into Contract and ensure manager on creation (validation)
-            contract = Contract.create!(permitted_params)
-            current_user.add_role :manager, contract
-            created_response(contract)
-          else
-            status 403
-          end
+          # TODO move logic into Contract and ensure manager on creation (validation)
+          contract = Contract.guarded_create(current_user, permitted_params)
+          current_user.add_role :manager, contract
+          created_response(contract)
         end
 
 
@@ -106,13 +97,8 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          contract = Contract.find(permitted_params.id)
-          if contract.updatable_by?(current_user)
-            contract.update!(permitted_params)
-            contract
-          else
-            status 403
-          end
+          contract = Contract.guarded_retrieve(current_user, permitted_params)
+          contract.guarded_update(current_user, permitted_params)
         end
 
 
@@ -122,13 +108,8 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          contract = Contract.find(permitted_params[:id])
-          if contract.deletable_by? current_user
-            contract.destroy
-            status 204
-          else
-            status 403
-          end
+          contract = Contract.guarded_retrieve(current_user, permitted_params)
+          deleted_response(contract.guarded_delete(current_user))
         end
 
 

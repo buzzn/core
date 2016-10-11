@@ -25,12 +25,7 @@ module API
         end
         oauth2 false
         get ":id" do
-          organization = Organization.find(permitted_params[:id])
-          if organization.readable_by?(current_user)
-            organization
-          else
-            status 403
-          end
+          Organization.guarded_retrieve(current_user, permitted_params)
         end
 
 
@@ -43,7 +38,8 @@ module API
         paginate
         oauth2 false
         get ':id/contracts' do
-          organization = Organization.find(permitted_params[:id])
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
           paginated_response(organization.contracts.readable_by(current_user))
         end
 
@@ -57,12 +53,9 @@ module API
         paginate
         oauth2 false
         get [':id/managers', ':id/relationships/managers'] do
-          organization = Organization.where(id: permitted_params[:id]).first!
-          if organization.readable_by?(current_user)
-            paginated_response(organization.managers.readable_by(current_user))
-          else
-            status 403
-          end
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
+          paginated_response(organization.managers.readable_by(current_user))
         end
 
 
@@ -75,12 +68,9 @@ module API
         paginate
         oauth2 false
         get [':id/members', ':id/relationships/members'] do
-          organization = Organization.find(permitted_params[:id])
-          if organization.readable_by?(current_user)
-            paginated_response(organization.members.readable_by(current_user))
-          else
-            status 403
-          end
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
+          paginated_response(organization.members.readable_by(current_user))
         end
 
 
@@ -90,12 +80,9 @@ module API
         end
         oauth2 false
         get ':id/address' do
-          organization = Organization.find(permitted_params[:id])
-          if organization.address.readable_by?(current_user)
-            organization.address
-          else
-            status 403
-          end
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
+          organization.address.guarded_read(current_user)
         end
 
 
@@ -105,13 +92,9 @@ module API
         end
         oauth2 false
         get ':id/contracting_party' do
-          organization = Organization.find(permitted_params[:id])
-          # TODO readable_by
-          if organization.readable_by?(current_user)
-            organization.contracting_party
-          else
-            status 403
-          end
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
+          organization.contracting_party.guarded_read(current_user)
         end
 
 
@@ -127,14 +110,11 @@ module API
         end
         oauth2 :full
         post do
-          if Organization.creatable_by?(current_user)
-            # TODO move logic into MeteringPoint and ensure at least ONE manager
-            organization = Organization.create!(permitted_params)
-            current_user.add_role(:manager, organization)
-            created_response(organization)
-          else
-            status 403
-          end
+          # TODO move logic into MeteringPoint and ensure at least ONE manager
+          organization = Organization.guarded_create(current_user,
+                                                     permitted_params)
+          current_user.add_role(:manager, organization)
+          created_response(organization)
         end
 
 
@@ -152,14 +132,9 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          organization = Organization.find(permitted_params[:id])
-
-          if organization.updatable_by?(current_user)
-            organization.update!(permitted_params)
-            return organization
-          else
-            status 403
-          end
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
+          organization.guarded_update(current_user, permitted_params)
         end
 
 
@@ -170,7 +145,8 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          organization = Organization.find(permitted_params[:id])
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
           if organization.deletable_by?(current_user)
             organization.destroy
             status 204
@@ -189,9 +165,10 @@ module API
         end
         oauth2 :full
         post ':id/relationships/managers' do
-          organization = Organization.find(permitted_params[:id])
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
+          user         = User.unguarded_retrieve(permitted_params[:data][:id])
           if organization.updatable_by?(current_user)
-            user = User.find(permitted_params[:data][:id])
             user.add_role(:manager, organization)
             status 204
           else
@@ -209,10 +186,10 @@ module API
         end
         oauth2 :full
         patch ':id/relationships/managers' do
-          organization = Organization.find(permitted_params[:id])
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
           if organization.updatable_by?(current_user)
-            ids = permitted_params[:data].collect{ |d| d[:id] }
-            organization.replace_managers(ids)
+            organization.replace_managers(id_array)
           else
             status 403
           end
@@ -228,9 +205,10 @@ module API
         end
         oauth2 :full
         delete ':id/relationships/managers' do
-          organization = Organization.find(permitted_params[:id])
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
+          user         = User.unguarded_retrieve(permitted_params[:data][:id])
           if organization.updatable_by?(current_user)
-            user = User.find(permitted_params[:data][:id])
             user.remove_role(:manager, organization)
             status 204
           else
@@ -248,9 +226,10 @@ module API
         end
         oauth2 :full
         post ':id/relationships/members' do
-          organization = Organization.find(permitted_params[:id])
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
+          user         = User.unguarded_retrieve(permitted_params[:data][:id])
           if organization.updatable_by?(current_user)
-            user = User.find(permitted_params[:data][:id])
             user.add_role(:member, organization)
             status 204
           else
@@ -268,10 +247,10 @@ module API
         end
         oauth2 :full
         patch ':id/relationships/members' do
-          organization = Organization.find(permitted_params[:id])
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
           if organization.updatable_by?(current_user)
-            ids = permitted_params[:data].collect{ |d| d[:id] }
-            organization.replace_members(ids)
+            organization.replace_members(id_array)
           else
             status 403
           end
@@ -288,9 +267,10 @@ module API
         end
         oauth2 :full
         delete ':id/relationships/members' do
-          organization = Organization.find(permitted_params[:id])
+          organization = Organization.guarded_retrieve(current_user,
+                                                       permitted_params)
+          user         = User.unguarded_retrieve(permitted_params[:data][:id])
           if organization.updatable_by?(current_user)
-            user = User.find(permitted_params[:data][:id])
             user.remove_role(:member, organization)
             status 204
           else

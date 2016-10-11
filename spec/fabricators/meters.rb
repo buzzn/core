@@ -36,6 +36,14 @@ Fabricator :easy_meter_q3d_with_manager, from: :easy_meter_q3d do
   }
 end
 
+Fabricator :easymeter_fixed_serial, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber '1234567890'
+  after_create { |meter|
+    meter.metering_points << Fabricate(:metering_point)
+    meter.metering_points << Fabricate(:out_metering_point_readable_by_world)
+    meter.save
+  }
+end
 
 # Justus Übergabe
 Fabricator :easymeter_60139082, from: :easy_meter_q3d do

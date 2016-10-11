@@ -19,11 +19,15 @@ module API
         helpers do
 
           def current_user
-            User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+            User.unguarded_retrieve(doorkeeper_token.resource_owner_id) if doorkeeper_token
           end
 
           def permitted_params
             @permitted_params ||= declared(params, include_missing: false)
+          end
+
+          def id_array
+            permitted_params[:data].collect{ |d| d[:id] }
           end
 
           def logger
@@ -60,6 +64,11 @@ module API
 
         rescue_from Buzzn::PermissionDenied do |e|
           error_response(status: 403)
+        end
+
+        rescue_from Crawler::CrawlerError do |e|
+          # assuming that any remote error is only of temporary nature
+          error_response(message: e.message, status: 503)
         end
 
         class Max < Grape::Validations::Base

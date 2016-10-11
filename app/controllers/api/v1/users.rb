@@ -30,12 +30,7 @@ module API
         end
         oauth2 :simple, :full
         get ":id" do
-          user = User.find(permitted_params[:id])
-          if user.readable_by?(current_user)
-            user
-          else
-            status 403
-          end
+          User.guarded_retrieve(current_user, permitted_params)
         end
 
 
@@ -51,15 +46,10 @@ module API
         end
         oauth2 false
         post do
-          if User.creatable_by?(current_user)
-            # TODO move this create logic into user
-            profile = Profile.new(permitted_params.delete(:profile))
-            permitted_params[:profile] = profile
-            user = User.create!(permitted_params)
-            created_response(user)
-          else
-            status 403
-          end
+          profile = Profile.new(permitted_params.delete(:profile))
+          permitted_params[:profile] = profile
+          user = User.guarded_create(current_user, permitted_params)
+          created_response(user)
         end
 
         desc "Return the related profile for User"
@@ -68,12 +58,8 @@ module API
         end
         oauth2 :simple, :full
         get ":id/profile" do
-          user = User.find(permitted_params[:id])
-          if user.readable_by?(current_user) && user.profile.readable_by?(current_user)
-            user.profile
-          else
-            status 403
-          end
+          user = User.guarded_retrieve(current_user, permitted_params)
+          user.profile.guarded_read(current_user)
         end
 
 
@@ -86,8 +72,8 @@ module API
         paginate
         oauth2 :simple, :full
         get ":id/groups" do
-          user          = User.find(permitted_params[:id])
-          groups        = Group.accessible_by_user(user)
+          user   = User.guarded_retrieve(current_user, permitted_params)
+          groups = Group.accessible_by_user(user)
           paginated_response(groups.readable_by(current_user))
         end
 
@@ -102,28 +88,24 @@ module API
         paginate
         oauth2 :simple, :full
         get ":id/metering-points" do
-          user = User.find(permitted_params[:id])
-          if user.readable_by?(current_user)
-            metering_points = MeteringPoint.accessible_by_user(user)
-            paginated_response(metering_points.anonymized_readable_by(current_user))
-          else
-            status 403
-          end
+          user = User.guarded_retrieve(current_user, permitted_params)
+          metering_points = MeteringPoint.accessible_by_user(user)
+          paginated_response(metering_points.anonymized_readable_by(current_user))
         end
 
 
         desc "Return the related meters for User"
         params do
           requires :id, type: String, desc: "ID of the User"
-          optional :manufacturer_product_serialnumber, type: String, desc: "manufacturer product serialnumber"
+          optional :filter, type: String, desc: "Search query using #{Base.join(Meter.search_attributes)}"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
         oauth2 :full, :smartmeter
         get ":id/meters" do
-          user   = User.find(permitted_params[:id])
-          meters = Meter.accessible_by_user(user, permitted_params[:manufacturer_product_serialnumber])
+          user = User.guarded_retrieve(current_user, permitted_params)
+          meters = Meter.filter(permitted_params[:filter]).accessible_by_user(user)
           paginated_response(meters.readable_by(current_user))
         end
 
@@ -137,7 +119,7 @@ module API
         paginate
         oauth2 :simple, :full
         get [':id/friends', ':id/relationships/friends'] do
-          user = User.find(permitted_params[:id])
+          user = User.guarded_retrieve(current_user, permitted_params)
           paginated_response(user.friends.readable_by(current_user))
         end
 
@@ -149,17 +131,9 @@ module API
         end
         oauth2 :simple, :full
         get ':id/friends/:friend_id' do
-          user = User.find(permitted_params[:id])
-          if user.readable_by?(current_user)
-            friend = user.friends.find(permitted_params[:friend_id])
-            if friend.readable_by?(current_user)
-              friend
-            else
-              status 403
-            end
-          else
-            status 403
-          end
+          user = User.guarded_retrieve(current_user, permitted_params)
+          friend = user.friends.find(permitted_params[:friend_id])
+          friend.guarded_read(current_user)
         end
 
 
@@ -172,7 +146,7 @@ module API
         end
         oauth2 :full
         delete ':id/relationships/friends' do
-          user = User.find(permitted_params[:id])
+          user = User.guarded_retrieve(current_user, permitted_params)
           if user.updatable_by?(current_user)
             friend = user.friends.find(permitted_params[:data][:id])
             user.friends.delete(friend)
@@ -193,13 +167,9 @@ module API
         oauth2 :simple, :full
         get [':id/friendship-requests',
              ':id/relationships/friendship-requests'] do
-          user = User.find(permitted_params[:id])
-          if user.readable_by?(current_user)
-            # TODO readable_by
-            paginated_response(user.received_friendship_requests)
-          else
-            status 403
-          end
+          user = User.guarded_retrieve(current_user, permitted_params)
+          # TODO readable_by
+          paginated_response(user.received_friendship_requests)
         end
 
 
@@ -212,9 +182,10 @@ module API
         end
         oauth2 :simple, :full
         post ':id/relationships/friendship-requests' do
-          user = User.find(permitted_params[:id])
+          user = User.guarded_retrieve(current_user, permitted_params)
           if user.updatable_by?(current_user)
-            receiver  = User.find(permitted_params[:data][:id])
+            # TODO really unguarded ?
+            receiver  = User.unguarded_retrieve(permitted_params[:data][:id])
             friendship_request = FriendshipRequest.new(sender: user, receiver: receiver)
             if friendship_request.save
               friendship_request.create_activity key: 'friendship_request.create', owner: user, recipient: receiver
@@ -233,7 +204,7 @@ module API
         end
         oauth2 :simple, :full
         post ':id/friendship-requests/:request_id' do
-          user = User.find(permitted_params[:id])
+          user = User.guarded_retrieve(current_user, permitted_params)
           if user.updatable_by?(current_user)
             friendship_request = FriendshipRequest.where(receiver: user.id).find(permitted_params[:request_id])
             friendship_request.create_activity key: 'friendship.create', owner: current_user, recipient: friendship_request.sender
@@ -254,7 +225,7 @@ module API
         end
         oauth2 :simple, :full
         delete ':id/relationships/friendship-requests' do
-          user = User.find(permitted_params[:id])
+          user = User.guarded_retrieve(current_user, permitted_params)
           if user.updatable_by?(current_user)
             friendship_request = FriendshipRequest.where(receiver: user.id).find(permitted_params[:data][:id])
             friendship_request.create_activity key: 'friendship_request.reject', owner: current_user, recipient: friendship_request.sender
@@ -275,13 +246,9 @@ module API
         paginate
         oauth2 :simple, :full
         get ":id/devices" do
-          user = User.find(permitted_params[:id])
-          if user.readable_by?(current_user)
-            devices = Device.accessible_by_user(user).readable_by(current_user)
-            paginated_response(devices)
-          else
-            status 403
-          end
+          user = User.guarded_retrieve(current_user, permitted_params)
+          devices = Device.accessible_by_user(user).readable_by(current_user)
+          paginated_response(devices)
         end
 
 
@@ -294,13 +261,9 @@ module API
         paginate
         oauth2 :simple, :full
         get ':id/activities' do
-          user = User.find(permitted_params[:id])
-          if user.readable_by?(current_user)
-            # TODO readable_by
-            paginated_response(PublicActivity::Activity.where({ owner_type: 'User', owner_id: permitted_params[:id] }))
-          else
-            status 403
-          end
+          user = User.guarded_retrieve(current_user, permitted_params)
+          # TODO readable_by
+          paginated_response(PublicActivity::Activity.where({ owner_type: 'User', owner_id: permitted_params[:id] }))
         end
 
 
