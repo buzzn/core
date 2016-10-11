@@ -480,13 +480,11 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def self.observe
-    MeteringPoint.where("observe = ? OR observe_offline = ?", true, true).each do |metering_point|
-      Sidekiq::Client.push({
+    Sidekiq::Client.push({
        'class' => MeteringPointObserveWorker,
        'queue' => :default,
-       'args' => [metering_point.id]
+       'args' => []
       })
-    end
   end
 
 
@@ -519,6 +517,32 @@ class MeteringPoint < ActiveRecord::Base
   def submitted_readings_by_user
     if self.data_source
       Reading.all_by_metering_point_id(self.id)
+    end
+  end
+
+  def create_observer_activity
+    last_reading    = Crawler.new(self).live
+    current_power   = last_reading[:power] if last_reading
+
+    if current_power.nil?
+      if observe_offline && last_observed_timestamp
+        if Time.now.utc >= last_observed_timestamp && Time.now.utc <= last_observed_timestamp + 3.minutes
+          return create_activity(key: 'metering_point.offline', owner: self)
+        end
+      end
+    else
+      update(last_observed_timestamp: Time.at(last_reading[:timestamp]/1000.0).utc)
+      if current_power < min_watt && current_power >= 0
+        mode = 'undershoots'
+      elsif current_power >= max_watt
+        mode = 'exceeds'
+      else
+        mode = nil
+      end
+    end
+
+    if observe && mode
+      create_activity(key: "metering_point.#{mode}", owner: self)
     end
   end
 
