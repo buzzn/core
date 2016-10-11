@@ -238,7 +238,7 @@ describe "Aggregates API" do
 
     it 'does not aggregate multiple metering_points power past by hour_to_minutes with differend data_sources as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      
+
       slp = Fabricate(:metering_point)
       pv = Fabricate(:easymeter_60051599).metering_points.first
 
@@ -313,7 +313,7 @@ describe "Aggregates API" do
       access_token = Fabricate(:full_access_token_as_admin)
       metering_point1 = Fabricate(:metering_point)
       metering_point2 = Fabricate(:metering_point)
-      
+
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Sydney').local(2015,2,1)
       (60*60).times do |i|
@@ -380,7 +380,6 @@ describe "Aggregates API" do
 
       expect(response).to have_http_status(200)
       expect(json.count).to eq(4)
-
       timestamp = Time.find_zone('Berlin').local(2015,2,1)
       json.each do |item|
         expect(Time.parse(item['timestamp'])).to eq(timestamp.utc)
@@ -618,7 +617,7 @@ describe "Aggregates API" do
 
   end
 
-  
+
   #   _____ ______ _____
   #  / ____|  ____|  __ \
   # | (___ | |__  | |__) |
@@ -628,7 +627,7 @@ describe "Aggregates API" do
 
 
   describe 'SEP' do
-  
+
     it 'does aggregate sep bhkw past energy by year_to_months as admin in summertime' do
       access_token = Fabricate(:full_access_token_as_admin)
       metering_point = Fabricate(:metering_point, mode: 'out')
@@ -704,7 +703,7 @@ describe "Aggregates API" do
         timestamp += 1.day
       end
     end
-    
+
   end
 
 
@@ -1077,7 +1076,7 @@ describe "Aggregates API" do
 
       get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
-      expect(response).to have_http_status(503)
+      expect(response).to have_http_status(504)
       expect(json['error']).not_to be_nil
     end
 

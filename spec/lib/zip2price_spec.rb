@@ -54,6 +54,13 @@ describe Buzzn::Zip2Price do
     expect(NneVnb.count).to eq nne_vnb.split("\n").size - 1
   end
 
+  it 'finds max of array of Prices' do
+    array = [Buzzn::Price.new(0, 0, 23),
+             Buzzn::Price.new(0, 0, 123),
+             Buzzn::Price.new(0, 0, 3)]
+    expect(array.max).to eq array[1]
+  end
+
   it 'converts zip to price' do
     ZipKa.from_csv(zip_ka)
     ZipVnb.from_csv(zip_vnb)
@@ -70,29 +77,41 @@ describe Buzzn::Zip2Price do
       expect(zip_2_price.ka?).to be false
     end
 
-    zip_2_price = Buzzn::Zip2Price.new(1000, 98765, 'unknown')#.to_price
+    zip_2_price = Buzzn::Zip2Price.new(1000, 98765, 'unknown')
     expect(zip_2_price.to_price).to be_nil
     expect(zip_2_price.known_type?).to be false
     expect(zip_2_price.ka?).to be false
 
-    zip_2_price = Buzzn::Zip2Price.new(1000, 12345, 'unknown')#.to_price
+    zip_2_price = Buzzn::Zip2Price.new(1000, 12345, 'unknown')
     expect(zip_2_price.to_price).to be_nil
     expect(zip_2_price.known_type?).to be false
     expect(zip_2_price.ka?).to be true
 
     Hash[Buzzn::Zip2Price.types
-          .zip([33.03, 34.63, 30.43, 33.03, 33.03])].each do |type, expected|
+          .zip([[1170, 2560, 3303],
+                [1330, 2560, 3463],
+                [910, 2560, 3043],
+                [1170, 2560, 3303],
+                [1170, 2560, 3303]])].each do |type, expected|
       zip_2_price = Buzzn::Zip2Price.new(1000, 86916, type)
-      expect(zip_2_price.to_price.total).to eq expected
+      expect(zip_2_price.to_price.baseprice_cents).to eq expected[0]
+      expect(zip_2_price.to_price.energyprice_cents).to eq expected[1]
+      expect(zip_2_price.to_price.total_cents).to eq expected[2]
       expect(zip_2_price.known_type?).to be true
       expect(zip_2_price.ka?).to be true
     end
 
 
     Hash[Buzzn::Zip2Price.types
-          .zip([230.67, 231.97, 228.57, 230.67, 230.67])].each do |type, exp|
+          .zip([[1150, 2630, 23067],
+                [1280, 2630, 23197],
+                [940, 2630, 22857],
+                [1150, 2630, 23067],
+                [1150, 2630, 23067]])].each do |type, exp|
       zip_2_price = Buzzn::Zip2Price.new(10000, 37181, type)
-      expect(zip_2_price.to_price.total).to eq exp
+      expect(zip_2_price.to_price.baseprice_cents).to eq exp[0]
+      expect(zip_2_price.to_price.energyprice_cents).to eq exp[1]
+      expect(zip_2_price.to_price.total_cents).to eq exp[2]
       expect(zip_2_price.known_type?).to be true
       expect(zip_2_price.ka?).to be true
     end

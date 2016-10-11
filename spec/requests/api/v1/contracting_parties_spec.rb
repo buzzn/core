@@ -7,9 +7,9 @@ describe 'Contracting parties API' do
     Fabricate(:contracting_party)
     access_token = Fabricate(:simple_access_token)
 
-    get_with_token '/api/v1/contracting_parties', {}, access_token.token
+    get_with_token '/api/v1/contracting-parties', {}, access_token.token
     expect(response).to have_http_status(403)
-    get_without_token '/api/v1/contracting_parties'
+    get_without_token '/api/v1/contracting-parties'
     expect(response).to have_http_status(401)
   end
 
@@ -17,7 +17,7 @@ describe 'Contracting parties API' do
     contracting_party = Fabricate(:contracting_party)
     access_token      = Fabricate(:full_access_token_as_admin)
 
-    get_with_token '/api/v1/contracting_parties', {}, access_token.token
+    get_with_token '/api/v1/contracting-parties', {}, access_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(1)
     expect(json['data'].first['attributes']['legal-entity']).to eq(contracting_party['legal_entity'])
@@ -30,10 +30,10 @@ describe 'Contracting parties API' do
     end
     access_token = Fabricate(:full_access_token_as_admin)
 
-    get_with_token '/api/v1/contracting_parties', {}, access_token.token
+    get_with_token '/api/v1/contracting-parties', {}, access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
-    get_with_token '/api/v1/contracting_parties', {per_page: 200}, access_token.token
+    get_with_token '/api/v1/contracting-parties', {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
   end
 
@@ -42,11 +42,11 @@ describe 'Contracting parties API' do
     full_access_token = Fabricate(:full_access_token_as_admin)
     access_token      = Fabricate(:simple_access_token)
 
-    get_without_token "/api/v1/contracting_parties/#{contracting_party.id}"
+    get_without_token "/api/v1/contracting-parties/#{contracting_party.id}"
     expect(response).to have_http_status(401)
-    get_with_token "/api/v1/contracting_parties/#{contracting_party.id}", {}, access_token.token
+    get_with_token "/api/v1/contracting-parties/#{contracting_party.id}", {}, access_token.token
     expect(response).to have_http_status(403)
-    get_with_token "/api/v1/contracting_parties/#{contracting_party.id}", {}, full_access_token.token
+    get_with_token "/api/v1/contracting-parties/#{contracting_party.id}", {}, full_access_token.token
     expect(response).to have_http_status(200)
   end
 
@@ -57,11 +57,11 @@ describe 'Contracting parties API' do
       legal_entity: 'natural_person',
     }
 
-    post_without_token '/api/v1/contracting_parties', params.to_json
+    post_without_token '/api/v1/contracting-parties', params.to_json
     expect(response).to have_http_status(401)
-    post_with_token '/api/v1/contracting_parties', params.to_json, access_token.token
+    post_with_token '/api/v1/contracting-parties', params.to_json, access_token.token
     expect(response).to have_http_status(403)
-    post_with_token '/api/v1/contracting_parties', params.to_json, full_access_token.token
+    post_with_token '/api/v1/contracting-parties', params.to_json, full_access_token.token
     expect(response).to have_http_status(201)
   end
 
@@ -73,11 +73,11 @@ describe 'Contracting parties API' do
       legal_entity: 'natural_person',
     }
 
-    patch_without_token "/api/v1/contracting_parties/#{contracting_party.id}", params.to_json
+    patch_without_token "/api/v1/contracting-parties/#{contracting_party.id}", params.to_json
     expect(response).to have_http_status(401)
-    patch_with_token "/api/v1/contracting_parties/#{contracting_party.id}", params.to_json, access_token.token
+    patch_with_token "/api/v1/contracting-parties/#{contracting_party.id}", params.to_json, access_token.token
     expect(response).to have_http_status(403)
-    patch_with_token "/api/v1/contracting_parties/#{contracting_party.id}", params.to_json, full_access_token.token
+    patch_with_token "/api/v1/contracting-parties/#{contracting_party.id}", params.to_json, full_access_token.token
     expect(response).to have_http_status(200)
   end
 
@@ -86,11 +86,11 @@ describe 'Contracting parties API' do
     full_access_token = Fabricate(:full_access_token_as_admin)
     access_token      = Fabricate(:simple_access_token)
 
-    delete_without_token "/api/v1/contracting_parties/#{contracting_party.id}"
+    delete_without_token "/api/v1/contracting-parties/#{contracting_party.id}"
     expect(response).to have_http_status(401)
-    delete_with_token "/api/v1/contracting_parties/#{contracting_party.id}", access_token.token
+    delete_with_token "/api/v1/contracting-parties/#{contracting_party.id}", access_token.token
     expect(response).to have_http_status(403)
-    delete_with_token "/api/v1/contracting_parties/#{contracting_party.id}", full_access_token.token
+    delete_with_token "/api/v1/contracting-parties/#{contracting_party.id}", full_access_token.token
     expect(response).to have_http_status(204)
   end
 

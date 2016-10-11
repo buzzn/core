@@ -3,7 +3,7 @@ module API
     class ContractingParties < Grape::API
       include API::V1::Defaults
 
-      resource :contracting_parties do
+      resource 'contracting-parties' do
 
         desc 'Return all contracting parties'
         params do

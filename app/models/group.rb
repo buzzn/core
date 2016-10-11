@@ -366,6 +366,7 @@ class Group < ActiveRecord::Base
       return ['day', Time.at(containing_timestamp).in_time_zone.beginning_of_day, Time.at(containing_timestamp).in_time_zone.end_of_day]
     end
   end
+  alias :get_score_interval :set_score_interval
 
   def extrapolate_kwh_pa(kwh_ago, resolution_format, containing_timestamp)
     days_ago = 0
@@ -382,10 +383,10 @@ class Group < ActiveRecord::Base
         days_ago = Time.now.day
       end
     elsif resolution_format == 'day'
-      if Time.at(containing_timestamp).end_of_day < Time.now
+      if Time.at(containing_timestamp).in_time_zone.end_of_day < Time.now
         days_ago = 1
       else
-        days_ago = (Time.now - Time.now.beginning_of_day)/(3600*24.0)
+        days_ago = (Time.now - Time.now.in_time_zone.beginning_of_day)/(3600*24.0)
       end
     end
     return kwh_ago / (days_ago*1.0) * 365
@@ -403,17 +404,15 @@ class Group < ActiveRecord::Base
   end
 
   def self.calculate_scores
-    Group.all.select(:id).each.each do |group|
-      group.calculate_scores
-    end
-  end
-
-  def calculate_scores
-    Sidekiq::Client.push({
+        Sidekiq::Client.push({
      'class' => CalculateGroupScoresWorker,
      'queue' => :default,
-     'args' => [ self.id, 'day', (Time.now - 1.day).to_i]
+     'args' => [ (Time.now - 1.day).to_i ]
     })
+  end
+
+  def calculate_scores(containing_timestamp)
+    ScoreCalculator.new(self, containing_timestamp).caculate_all_scores
   end
 
   def calculate_current_closeness
@@ -535,10 +534,4 @@ class Group < ActiveRecord::Base
         end
       end
     end
-
-
-
-
-
-
 end
