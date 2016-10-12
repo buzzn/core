@@ -138,15 +138,17 @@ class Group < ActiveRecord::Base
     slug.blank? || name_changed?
   end
 
-  def metering_point_users_query(mode)
+  def metering_point_users_query(mode = nil)
     mp             = MeteringPoint.arel_table
     roles          = Role.arel_table
     users_roles    = Arel::Table.new(:users_roles)
     users          = User.arel_table
     role_names     = [:manager, :member]
 
+    mp_on = mp[:group_id].eq(self.id)
+    mp_on = mp_on.and(mp[:mode].eq(mode)) if mode
     users_roles.join(mp)
-      .on(mp[:group_id].eq(self.id).and(mp[:mode].eq(mode)))
+      .on(mp_on)
       .join(roles)
       .on(roles[:id].eq(users_roles[:role_id])
            .and(roles[:name].in(role_names).and(roles[:resource_id].eq(mp[:id]))))
@@ -166,7 +168,9 @@ class Group < ActiveRecord::Base
   end
 
   def involved
-    (self.managers + MeteringPoint.by_group(self).collect(&:involved).flatten).uniq
+    managers = User.roles_query(nil, manager: self).project(1).exists.to_sql
+    metering_point_users = metering_point_users_query.project(1).exists.to_sql
+    User.where([managers, metering_point_users].join(' OR '))
   end
 
   def members
