@@ -1,4 +1,5 @@
 require 'buzzn/guarded_crud'
+require 'buzzn/score_calculator'
 class Group < ActiveRecord::Base
   resourcify
   acts_as_commentable
@@ -408,15 +409,15 @@ class Group < ActiveRecord::Base
   end
 
   def self.calculate_scores
-        Sidekiq::Client.push({
+    Sidekiq::Client.push({
      'class' => CalculateGroupScoresWorker,
      'queue' => :default,
-     'args' => [ (Time.now - 1.day).to_i ]
+     'args' => [ (Time.current - 1.day).to_i ]
     })
   end
 
   def calculate_scores(containing_timestamp)
-    ScoreCalculator.new(self, containing_timestamp).caculate_all_scores
+    Buzzn::ScoreCalculator.new(self, containing_timestamp).calculate_all_scores
   end
 
   def calculate_current_closeness
