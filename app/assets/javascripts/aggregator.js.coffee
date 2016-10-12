@@ -31,7 +31,7 @@ class @Aggregator
     ajax_calls = []
     @metering_point_ids.forEach (id) ->
       ajax_calls.push(instance.fetchData(id, timestamp, 'present', 'present'))
-    return $.when.apply($, ajax_calls).done( ->
+    return $.when.apply($, ajax_calls).always( ->
       instance.sumData('present')
     ).promise()
 
@@ -44,7 +44,7 @@ class @Aggregator
     ajax_calls = []
     @metering_point_ids.forEach (id) ->
       ajax_calls.push(instance.fetchData(id, timestamp, resolution, 'past'))
-    return $.when.apply($, ajax_calls).done( ->
+    return $.when.apply($, ajax_calls).always( ->
       instance.sumData(resolution)
     ).promise()
 
@@ -68,6 +68,8 @@ class @Aggregator
           instance.returned_ajax_data.push(highcharts_data)
         else if chartType == 'present'
           instance.returned_ajax_data.push([[(new Date(data.timestamp)).getTime(), data.power_milliwatt/1000]])
+      .error (jqXHR, textStatus, errorThrown) ->
+        instance.returned_ajax_data.push([[new Date(timestamp), 0]])
     return ajaxCall
 
   sumData: (resolution) ->
