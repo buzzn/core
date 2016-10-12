@@ -15,6 +15,7 @@ module Filterable
     #       join
     def do_filter(value, *filtering_params)
       return self.all if value.nil?
+      value = value[:filter] if value.is_a?(Hash)
       sql = []
       result = nested(sql, self.where(nil), # create an anonymous scope
                       table_name, *filtering_params)
