@@ -94,20 +94,32 @@ describe "MeteringPoint Model" do
       Crawler.offline(false)
     end
 
+    it 'creates all observer activities' do
+      subject.update observe: true, max_watt: 200
+      MeteringPoint.create_all_observer_activities
+      expect(PublicActivity::Activity.count).to eq 2
+    end
+
+    it 'creates observer activities via sidekiq' do
+      expect {
+        MeteringPoint.observe
+      }.to change(MeteringPointObserveWorker.jobs, :size).by(1)
+    end
+
     it 'observe nothing' do
-      result = subject.create_observer_activity
+      result = subject.create_observer_activities
       expect(result).to be_nil
     end
 
     it 'observe exceeds' do
       subject.update observe: true, max_watt: 200
-      result = subject.create_observer_activity
+      result = subject.create_observer_activities
       expect(result.key).to eq 'metering_point.exceeds'
     end
 
     it 'observe undershoots' do
       subject.update observe: true, min_watt: 1000
-      result = subject.create_observer_activity
+      result = subject.create_observer_activities
       expect(result.key).to eq 'metering_point.undershoots'
     end
 
@@ -117,13 +129,13 @@ describe "MeteringPoint Model" do
       Timecop.freeze(now)
       Crawler.offline(true)
       subject.update observe_offline: true, last_observed_timestamp: now.utc
-      result = subject.create_observer_activity
+      result = subject.create_observer_activities
       expect(result.key).to eq 'metering_point.offline'
 
       Timecop.return
       now += 5.minutes
       Timecop.freeze(now)
-      result = subject.create_observer_activity
+      result = subject.create_observer_activities
       expect(result).to be_nil
     end
   end

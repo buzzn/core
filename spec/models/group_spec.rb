@@ -103,4 +103,17 @@ describe "Group Model" do
     expect(group.energy_consumers).to match_array [user, consumer, producer]
     expect(group.involved).to match_array [producer, consumer, user]
   end
+
+  it 'calculates its scores on given group' do
+    group = Fabricate(:group)
+    group.calculate_scores(Time.find_zone('Berlin').local(2016,2,2, 1,30,1))
+
+    expect(Score.count).to eq 12
+  end
+
+  it 'calculates scores of all groups via sidekiq' do
+    expect {
+      Group.calculate_scores
+    }.to change(CalculateGroupScoresWorker.jobs, :size).by(1)
+  end
 end
