@@ -2,9 +2,7 @@ class MeteringPointObserveWorker
   include Sidekiq::Worker
 
   def perform
-    MeteringPoint.where("observe = ? OR observe_offline = ?", true, true).each do |metering_point|
-      metering_point.create_observer_activity
-    end
+    MeteringPoint.create_all_observer_activities
   end
 
 end
