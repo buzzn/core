@@ -520,7 +520,13 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-  def create_observer_activity
+  def self.create_all_observer_activities
+    where("observe = ? OR observe_offline = ?", true, true).each do |metering_point|
+      metering_point.create_observer_activities
+    end
+  end
+
+  def create_observer_activities
     last_reading    = Crawler.new(self).live
     current_power   = last_reading[:power] if last_reading
 
