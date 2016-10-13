@@ -57,16 +57,9 @@
     delete folder vendor/bundle
     bundle install
 
-## API
-  - All endpoints can be found under [/api](http://localhost:3000/api)
-  - The JSON is follows the [JSONAPI](http://jsonapi.org/) Specification.
-  - Auth is implementet via [OAuth2](https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2).
-  - Under [/oauth/applications](http://localhost:3000/oauth/applications) you can register a new OAuth Client/Application.
-  - [Test the Auth with OAuth2.gem Client](https://github.com/doorkeeper-gem/doorkeeper/wiki/Testing-your-provider-with-OAuth2-gem).
-  - To build a Application without Client Secret Key (for example a JavaScript [SPA](https://en.wikipedia.org/wiki/Single-page_application) you can use the [/api/v1/auth/token](http://localhost:3000/api#!/v1/postApiV1AuthToken) endpoint to exchange a AuthorizationCode to an AccessToken.
-
 ## Docs
-  - [KanBan Board](https://waffle.io/buzzn/buzzn)
+  - [Buzzn OAuth2](https://github.com/buzzn/buzzn/blob/master/docs/auth.md)
+  - [Buzzn API](https://github.com/buzzn/buzzn/blob/master/docs/api.md)
   - [NewRelic](https://rpm.newrelic.com/accounts/791323/servers)
   - [Data Model](https://www.lucidchart.com/documents/edit/023ef2a3-0b1d-4740-a202-4ad868f3c098)
   - [Overview over Groups, MeteringPoints, their User's roles and Invitation flow](https://www.lucidchart.com/documents/edit/0a16d140-934c-4f50-b730-7d6684162232/0)
