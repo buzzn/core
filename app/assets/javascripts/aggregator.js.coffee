@@ -69,44 +69,54 @@ class @Aggregator
         else if chartType == 'present'
           instance.returned_ajax_data.push([[(new Date(data.timestamp)).getTime(), data.power_milliwatt/1000]])
       .error (jqXHR, textStatus, errorThrown) ->
-        instance.returned_ajax_data.push([[new Date(timestamp), 0]])
+        if chartType == 'present'
+          instance.returned_ajax_data.push([[(new Date(timestamp)).getTime(), 0]])
     return ajaxCall
 
+
   sumData: (resolution) ->
+    instance = this
     @data = []
-    maxLength = 0
-    indexMaxLength = 0
-    index = 0
-    @returned_ajax_data.forEach (data) ->
-      if data.length >= maxLength
-        maxLength = data.length
-        indexMaxLength = index
-      index++
-    for i in [0...maxLength]
-      key = @returned_ajax_data[indexMaxLength][i][0]
-      value = 0
-      for n in [0...@returned_ajax_data.length]
-        if @returned_ajax_data[n][i] != undefined && (key == @returned_ajax_data[n][i][0] || @matchesTimestamp(key, @returned_ajax_data[n][i][0], resolution))
-          value += @returned_ajax_data[n][i][1]
-      @data.push([key, parseFloat(value.toFixed(3))])
+    for i in [0...@returned_ajax_data.length]
+      for j in [0...@returned_ajax_data[i].length]
+        if @returned_ajax_data[i][j] != undefined
+          key = @returned_ajax_data[i][j][0]
+          value = @returned_ajax_data[i][j][1]
+          if i > 0
+            timestampIndex = instance.findMatchingTimestamp(key, @data, resolution)
+            if timestampIndex == -1
+              @data.push([key, parseFloat(value.toFixed(3))])
+            else
+              @data[timestampIndex][1] += value
+          else
+            @data.push([key, parseFloat(value.toFixed(3))])
+    @data.sort (a, b) ->
+      return (a[0] - b[0])
 
 
-  matchesTimestamp: (key, timestamp, resolution) ->
-    delta = Math.abs(key - timestamp)
-    if resolution == 'year_to_months'
-      return delta <= 1296000000
-    else if resolution == 'month_to_days'
-      return delta <= 43200000
-    else if resolution == 'day_to_minutes' #15 minutes
-      return delta <= 450000
-    else if resolution == 'hour_to_minutes' || resolution == 'present' #2 seconds
-      return delta <= 1000
+  findMatchingTimestamp: (key, arr, resolution) ->
+    for i in [0...arr.length]
+      if resolution == 'year_to_months'
+        if key >= Chart.Functions.beginningOfMonth(arr[i][0]) && key <= Chart.Functions.endOfMonth(arr[i][0])
+          return i
+      else if resolution == 'month_to_days'
+        if key >= Chart.Functions.beginningOfDay(arr[i][0]) && key <= Chart.Functions.endOfDay(arr[i][0])
+          return i
+      else if resolution == 'day_to_minutes' #15 minutes
+        if Math.abs(key - arr[i][0]) < 450000
+          return i
+      else if resolution == 'hour_to_minutes' || resolution == 'present' #2 seconds
+        if Math.abs(key - arr[i][0]) < 2000
+          return i
+    return -1
+
 
   getScaleFactor: (resolution) ->
     if resolution == 'day_to_minutes' || resolution == 'hour_to_minutes'
       return 1000
     else
       return 1000
+
 
 Object.values = (object) ->
   values = []
