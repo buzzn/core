@@ -1,6 +1,22 @@
 # coding: utf-8
 describe "User Model" do
 
+  let(:organization) { Fabricate(:organization, mode: :electricity_supplier) }
+  let(:group) do
+    g = Fabricate(:group)
+    manager_g.add_role(:manager, g)
+    g
+  end
+  let(:metering_point) do
+    mp = Fabricate(:metering_point, mode: :out)
+    manager_mp.add_role(:manager, mp)
+    mp.update! group: group
+    mp
+  end
+  let(:user) { Fabricate(:user) }
+  let(:manager_mp) { Fabricate(:user) }
+  let(:manager_g) { Fabricate(:user) }
+                            
   it 'filters user with given email', :retry => 3 do
     user = Fabricate(:user)
     2.times { Fabricate(:user) }
@@ -73,14 +89,14 @@ describe "User Model" do
   end
 
 
-  it 'filters user with no params', :retry => 3 do
+  it 'filters user with no params' do
     5.times { Fabricate(:user) }
 
     users = User.filter(nil)
     expect(users.size).to eq 5
   end
 
-  it 'is restriciting readable_by', :retry => 3 do
+  it 'is restriciting readable_by' do
     user = Fabricate(:user)
     profile = user.profile
     expect(User.readable_by(nil)).to eq []
@@ -97,5 +113,26 @@ describe "User Model" do
     admin = Fabricate(:user)
     admin.add_role('admin')
     expect(User.readable_by(admin)).to match_array [user, other, admin]
+  end
+
+  it 'gives no unsubscribed from notification users' do 
+    [organization, group, metering_point].each do |resource|
+      expect(User.unsubscribed_from_notification('some.key', resource)).to eq []
+    end
+  end
+
+  it 'gives unsubscribed from notification users' do 
+    [organization, group, metering_point].each do |resource|
+      NotificationUnsubscriber.create(trackable: resource, user: user, notification_key: 'some.key', channel: 'email')
+      expect(User.unsubscribed_from_notification('some.key', resource)).to eq [user]
+    end
+
+    [group, metering_point].each do |resource|
+      NotificationUnsubscriber.create(trackable: resource, user: resource.managers.first, notification_key: 'other.key', channel: 'email')
+    end
+
+    expect(User.unsubscribed_from_notification('other.key', group)).to eq [manager_g, manager_mp]
+    expect(User.unsubscribed_from_notification('other.key', metering_point)).to eq [manager_mp]
+    expect(User.unsubscribed_from_notification('other.key', organization)).to eq []
   end
 end

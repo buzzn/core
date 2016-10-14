@@ -112,6 +112,8 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
           inData[idx].updating = false;
         })
         .catch(error => {
+          inData[idx].value = 0;
+          inData[idx].seeded = true;
           inData[idx].updating = false;
           console.log(error);
         });
@@ -129,6 +131,8 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
           outData[idx].updating = false;
         })
         .catch(error => {
+          inData[idx].value = 0;
+          inData[idx].seeded = true;
           outData[idx].updating = false;
           console.log(error);
         });
@@ -403,12 +407,12 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
           getMeteringPoints(page + 1);
         } else {
           getData();
-          bubblesTimers.fetchTimer = setInterval(getData, 10000);
+          bubblesTimers.fetchTimer = setInterval(getData, 15000);
           bubblesTimers.seedTimer = setInterval(() => {
             if (!_.find(inData, d => !d.seeded) && !_.find(outData, d => !d.seeded)) {
               clearInterval(bubblesTimers.seedTimer);
               drawData();
-              bubblesTimers.drawTimer = setInterval(redrawData, 10000);
+              bubblesTimers.drawTimer = setInterval(redrawData, 15000);
             }
           }, 2000);
         }

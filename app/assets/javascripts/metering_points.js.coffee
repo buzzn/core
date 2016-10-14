@@ -20,79 +20,83 @@ $(".metering_points").ready ->
     id = $(this).attr('id').split('_')[2]
     width = $("#chart-container-" + id).width()
     aggregator = new Aggregator([id])
-    $.when(aggregator.past(new Date(), 'day_to_minutes')).done ->
-      data = aggregator.data
-      if data == undefined || data[0] == undefined || data[0][0] == undefined
-        console.log data
-        data = [[(new Date()).getTime(), -1]]
-        #$('#chart-container-' + id).html('no data available')
-      partial_chart = new Highcharts.Chart(
-        chart:
-          type: 'areaspline'
-          renderTo: 'chart-container-' + id
-          width: width
-          backgroundColor: 'rgba(255, 255, 255, 0.0)'
-          spacingBottom: 5,
-          spacingTop: 0,
-          spacingLeft: 20,
-          spacingRight: 20
-        colors: ['#FFF']
-        exporting:
-          enabled: false
-        legend:
-          enabled: false
-        title:
-          margin: 0
-          text: ""
-        credits:
-          enabled: false
-        xAxis:
-          lineWidth: 0
-          tickWidth: 0
-          type: 'datetime'
-          endOnTick: true
-          min: Chart.Functions.beginningOfDay(data[0][0])
-          max: Chart.Functions.endOfDay(data[0][0])
-          labels:
+    $.when(aggregator.past(new Date(), 'day_to_minutes'))
+      .done ->
+        data = aggregator.data
+        if data == undefined || data[0] == undefined || data[0][0] == undefined
+          console.log data
+          data = [[(new Date()).getTime(), -1]]
+          #$('#chart-container-' + id).html('no data available')
+        partial_chart = new Highcharts.Chart(
+          chart:
+            type: 'areaspline'
+            renderTo: 'chart-container-' + id
+            width: width
+            backgroundColor: 'rgba(255, 255, 255, 0.0)'
+            spacingBottom: 5,
+            spacingTop: 0,
+            spacingLeft: 20,
+            spacingRight: 20
+          colors: ['#FFF']
+          exporting:
             enabled: false
-            style:
-              color: '#FFF'
-        yAxis:
-          gridLineWidth: 0
-          labels:
+          legend:
             enabled: false
-            style:
-              color: '#FFF'
-            formatter: ->
-              return format_label(this.value, 'axis')
           title:
+            margin: 0
+            text: ""
+          credits:
             enabled: false
-          minRange: 10
-          min: 0
-        plotOptions:
-          series:
-            fillColor:
-              linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
-              stops: [
-                [0, "rgba(255, 255, 255, 0.4)"],
-                [1, "rgba(255, 255, 255, 0.0)"]
-              ]
-            states:
-              hover:
-                enabled: false
-            turboThreshold: 0
-          areaspline:
-            marker:
+          xAxis:
+            lineWidth: 0
+            tickWidth: 0
+            type: 'datetime'
+            endOnTick: true
+            min: Chart.Functions.beginningOfDay(data[0][0])
+            max: Chart.Functions.endOfDay(data[0][0])
+            labels:
               enabled: false
-              #radius: 2
-        tooltip:
-          enabled: false
+              style:
+                color: '#FFF'
+          yAxis:
+            gridLineWidth: 0
+            labels:
+              enabled: false
+              style:
+                color: '#FFF'
+              formatter: ->
+                return format_label(this.value, 'axis')
+            title:
+              enabled: false
+            minRange: 10
+            min: 0
+          plotOptions:
+            series:
+              fillColor:
+                linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
+                stops: [
+                  [0, "rgba(255, 255, 255, 0.4)"],
+                  [1, "rgba(255, 255, 255, 0.0)"]
+                ]
+              states:
+                hover:
+                  enabled: false
+              turboThreshold: 0
+            areaspline:
+              marker:
+                enabled: false
+                #radius: 2
+          tooltip:
+            enabled: false
 
-      )
-      partial_chart.addSeries(
-        name: ''
-        data: data
-      )
+        )
+        partial_chart.addSeries(
+          name: ''
+          data: data
+        )
+      .fail ->
+        $('#chart-container-' + id).html('n.a.')
+        $('#chart-container-' + id).css('text-align', 'center')
 
 
 #code for metering_point.show
@@ -101,136 +105,140 @@ $(".metering_point_detail").ready ->
   id = $(this).attr('id').split('_')[2]
   width = $("#chart-container-" + id).width()
   aggregator = new Aggregator([id])
-  $.when(aggregator.past(new Date(), 'day_to_minutes')).done ->
-    data = aggregator.data
-    if data == undefined || data[0] == undefined || data[0][0] == undefined
-      console.log data
-      data = [[(new Date()).getTime(), -1]]
-      #$('#chart-container-' + id).html('no data available')
-    chart = new Highcharts.Chart(
-      chart:
-        type: 'areaspline'
-        renderTo: 'chart-container-' + id
-        backgroundColor:'rgba(255, 255, 255, 0.0)'
-        width: width
-        spacingBottom: 20
-        spacingTop: 10
-        spacingLeft: 20
-        spacingRight: 20
-        animation: false
-      colors: ['#FFF']
-      exporting:
-        enabled: false
-      legend:
-        enabled: false
-      title:
-        margin: 0
-        text: "Heute, " + moment(data[0][0]).format("DD.MM.YYYY")
-        style: { "color": "#FFF"}
-      credits:
-        enabled: false
-      loading:
-        hideDuration: 800
-        showDuration: 800
-        labelStyle:
-          color: 'black'
-          'font-size': '20pt'
-      exporting:
-        enabled: true
-        filename: 'chart'
-        csv:
-          itemDelimiter: ';'
-        buttons:
-          contextButton:
+  $.when(aggregator.past(new Date(), 'day_to_minutes'))
+    .done ->
+      data = aggregator.data
+      if data == undefined || data[0] == undefined || data[0][0] == undefined
+        console.log data
+        data = [[(new Date()).getTime(), -1]]
+        #$('#chart-container-' + id).html('no data available')
+      chart = new Highcharts.Chart(
+        chart:
+          type: 'areaspline'
+          renderTo: 'chart-container-' + id
+          backgroundColor:'rgba(255, 255, 255, 0.0)'
+          width: width
+          spacingBottom: 20
+          spacingTop: 10
+          spacingLeft: 20
+          spacingRight: 20
+          animation: false
+        colors: ['#FFF']
+        exporting:
+          enabled: false
+        legend:
+          enabled: false
+        title:
+          margin: 0
+          text: "Heute, " + moment(data[0][0]).format("DD.MM.YYYY")
+          style: { "color": "#FFF"}
+        credits:
+          enabled: false
+        loading:
+          hideDuration: 800
+          showDuration: 800
+          labelStyle:
+            color: 'black'
+            'font-size': '20pt'
+        exporting:
+          enabled: true
+          filename: 'chart'
+          csv:
+            itemDelimiter: ';'
+          buttons:
+            contextButton:
+              enabled: true
+              menuItems: [
+                text: 'Download CSV'
+                onclick: () ->
+                  $('<a></a>')
+                    .attr('id', 'downloadFile')
+                    .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
+                    .attr('download', 'chart.csv')
+                    .appendTo('body')
+                  $('#downloadFile').get(0).click()
+                  $('#downloadFile').remove()
+              ]
+        xAxis:
+          lineWidth: 1
+          tickWidth: 1
+          type: 'datetime'
+          startOnTick: false
+          endOnTick: false
+          min: Chart.Functions.beginningOfDay(data[0][0])
+          max: Chart.Functions.endOfDay(data[0][0])
+          labels:
             enabled: true
-            menuItems: [
-              text: 'Download CSV'
-              onclick: () ->
-                $('<a></a>')
-                  .attr('id', 'downloadFile')
-                  .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
-                  .attr('download', 'chart.csv')
-                  .appendTo('body')
-                $('#downloadFile').get(0).click()
-                $('#downloadFile').remove()
-            ]
-      xAxis:
-        lineWidth: 1
-        tickWidth: 1
-        type: 'datetime'
-        startOnTick: false
-        endOnTick: false
-        min: Chart.Functions.beginningOfDay(data[0][0])
-        max: Chart.Functions.endOfDay(data[0][0])
-        labels:
-          enabled: true
-          style:
-            color: '#FFF'
-        title:
-          enabled: true
-          style: { "color": "#FFF", "fontWeight": "bold"}
-      yAxis:
-        gridLineWidth: 0
-        min: 0
-        labels:
-          enabled: true
-          style:
-            color: '#FFF'
-          formatter: ->
-            return format_label(this.value, 'axis')
-        title:
-          enabled: true
-          text: ""
-          style: { "color": "#FFF", "fontWeight": "bold"}
-        minRange: 1
-      plotOptions:
-        series:
-          fillColor:
-            linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
-            stops: [
-              [0, "rgba(255, 255, 255, 0.4)"],
-              [1, "rgba(255, 255, 255, 0.1)"]
-            ]
-          turboThreshold: 0
-        areaspline:
-          borderWidth: 0
-          cursor: 'pointer'
-          events:
-            click: (event) ->
-              Chart.Functions.zoomIn(event.point.x)
-          marker:
-            enabled: false
-        column:
-          borderWidth: 0
-          cursor: 'pointer'
-          events:
-            click: (event) ->
-              Chart.Functions.zoomIn(event.point.x)
-          #pointPlacement: "on"
-      tooltip:
-        pointFormatter: ->
-          return '<b>' + format_label(this.y, 'tooltip') + '</b><br/>'
-        dateTimeLabelFormats:
-          millisecond:"%e.%b, %H:%M:%S.%L",
-          second:"%e.%b, %H:%M:%S",
-          minute:"%e.%b, %H:%M",
-          hour:"%e.%b, %H:%M",
-          day:"%e.%b.%Y",
-          week:"Week from %e.%b.%Y",
-          month:"%B %Y",
-          year:"%Y"
-    )
-    chart.addSeries(
-      name: ''
-      data: data
-    )
-    if chart.series[0].data[0].x != undefined
-      chart_data_min_x = chart.series[0].data[0].x
-    else
-      chart_data_min_x = (new Date()).getTime()
-    createChartTimer([id], 'metering_point')
-    Chart.Functions.activateButtons(true)
-    Chart.Functions.getChartComments('metering_points', id, chart_data_min_x)
+            style:
+              color: '#FFF'
+          title:
+            enabled: true
+            style: { "color": "#FFF", "fontWeight": "bold"}
+        yAxis:
+          gridLineWidth: 0
+          min: 0
+          labels:
+            enabled: true
+            style:
+              color: '#FFF'
+            formatter: ->
+              return format_label(this.value, 'axis')
+          title:
+            enabled: true
+            text: ""
+            style: { "color": "#FFF", "fontWeight": "bold"}
+          minRange: 1
+        plotOptions:
+          series:
+            fillColor:
+              linearGradient: { x1: 1, y1: 0, x2: 1, y2: 1 }
+              stops: [
+                [0, "rgba(255, 255, 255, 0.4)"],
+                [1, "rgba(255, 255, 255, 0.1)"]
+              ]
+            turboThreshold: 0
+          areaspline:
+            borderWidth: 0
+            cursor: 'pointer'
+            events:
+              click: (event) ->
+                Chart.Functions.zoomIn(event.point.x)
+            marker:
+              enabled: false
+          column:
+            borderWidth: 0
+            cursor: 'pointer'
+            events:
+              click: (event) ->
+                Chart.Functions.zoomIn(event.point.x)
+            #pointPlacement: "on"
+        tooltip:
+          pointFormatter: ->
+            return '<b>' + format_label(this.y, 'tooltip') + '</b><br/>'
+          dateTimeLabelFormats:
+            millisecond:"%e.%b, %H:%M:%S.%L",
+            second:"%e.%b, %H:%M:%S",
+            minute:"%e.%b, %H:%M",
+            hour:"%e.%b, %H:%M",
+            day:"%e.%b.%Y",
+            week:"Week from %e.%b.%Y",
+            month:"%B %Y",
+            year:"%Y"
+      )
+      chart.addSeries(
+        name: ''
+        data: data
+      )
+      if chart.series[0].data[0].x != undefined
+        chart_data_min_x = chart.series[0].data[0].x
+      else
+        chart_data_min_x = (new Date()).getTime()
+      createChartTimer([id], 'metering_point')
+      Chart.Functions.activateButtons(true)
+      Chart.Functions.getChartComments('metering_points', id, chart_data_min_x)
+    .fail ->
+      $('#chart-container-' + id).html('n.a.')
+      $('#chart-container-' + id).css('text-align', 'center')
 
 
 
@@ -354,137 +362,144 @@ $(".dashboard-chart").ready ->
   metering_point_ids = $(this).data('metering_point-ids').toString().split(",")
 
   i = 0
+  countErrors = 0
   metering_point_ids.forEach (id) ->
     if id != ""
       aggregator = new Aggregator([id])
-      $.when(aggregator.past(new Date(), 'day_to_minutes')).done ->
-        data = aggregator.data
-        if data == undefined || data[0] == undefined || data[0][0] == undefined
-          console.log data
-          data = [[(new Date()).getTime(), -1]]
-          #$('#chart-container-' + dashboard_id).html('no data available')
-        if chart == undefined
-          chart = new Highcharts.Chart(
-            chart:
-              type: 'areaspline'
-              renderTo: 'chart-container-' + dashboard_id
-              backgroundColor:'rgba(255, 255, 255, 0.0)'
-              width: width
-              spacingBottom: 20
-              spacingTop: 10
-              spacingLeft: 20
-              spacingRight: 20
-              animation: false
-            colors: ['#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
-            exporting:
-              enabled: false
-            legend:
-              enabled: true
-            title:
-              margin: 0
-              text: "Heute, " + moment(data[0][0]).format("DD.MM.YYYY")
-              style: { "color": "#000"}
-            credits:
-              enabled: false
-            loading:
-              hideDuration: 800
-              showDuration: 800
-              labelStyle:
-                color: 'black'
-                'font-size': '20pt'
-            exporting:
-              enabled: true
-              filename: 'chart'
-              csv:
-                itemDelimiter: ';'
-              buttons:
-                contextButton:
-                  enabled: true
-                  menuItems: [
-                    text: 'Download CSV'
-                    onclick: () ->
-                      $('<a></a>')
-                        .attr('id', 'downloadFile')
-                        .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
-                        .attr('download', 'chart.csv')
-                        .appendTo('body')
-                      $('#downloadFile').get(0).click()
-                      $('#downloadFile').remove()
-                  ]
-            xAxis:
-              lineWidth: 1
-              tickWidth: 1
-              type: 'datetime'
-              startOnTick: false
-              endOnTick: false
-              min: Chart.Functions.beginningOfDay(data[0][0])
-              max: Chart.Functions.endOfDay(data[0][0])
-              labels:
-                enabled: true
-                style:
-                  color: '#000'
-              title:
+      $.when(aggregator.past(new Date(), 'day_to_minutes'))
+        .done ->
+          data = aggregator.data
+          if data == undefined || data[0] == undefined || data[0][0] == undefined
+            console.log data
+            data = [[(new Date()).getTime(), -1]]
+            #$('#chart-container-' + dashboard_id).html('no data available')
+          if chart == undefined
+            chart = new Highcharts.Chart(
+              chart:
+                type: 'areaspline'
+                renderTo: 'chart-container-' + dashboard_id
+                backgroundColor:'rgba(255, 255, 255, 0.0)'
+                width: width
+                spacingBottom: 20
+                spacingTop: 10
+                spacingLeft: 20
+                spacingRight: 20
+                animation: false
+              colors: ['#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
+              exporting:
                 enabled: false
-                style: { "color": "#000", "fontWeight": "bold"}
-            yAxis:
-              gridLineWidth: 0
-              min: 0
-              labels:
+              legend:
                 enabled: true
-                formatter: ->
-                  return format_label(this.value, 'axis')
               title:
                 margin: 0
-                text: ""
+                text: "Heute, " + moment(data[0][0]).format("DD.MM.YYYY")
+                style: { "color": "#000"}
               credits:
                 enabled: false
-            plotOptions:
-              series:
-                fillOpacity: 0.5
-                turboThreshold: 0
-              areaspline:
-                borderWidth: 0
-                cursor: 'pointer'
-                events:
-                  click: (event) ->
-                    Chart.Functions.zoomInDashboard(event.point.x)
-                marker:
+              loading:
+                hideDuration: 800
+                showDuration: 800
+                labelStyle:
+                  color: 'black'
+                  'font-size': '20pt'
+              exporting:
+                enabled: true
+                filename: 'chart'
+                csv:
+                  itemDelimiter: ';'
+                buttons:
+                  contextButton:
+                    enabled: true
+                    menuItems: [
+                      text: 'Download CSV'
+                      onclick: () ->
+                        $('<a></a>')
+                          .attr('id', 'downloadFile')
+                          .attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.getCSV()))
+                          .attr('download', 'chart.csv')
+                          .appendTo('body')
+                        $('#downloadFile').get(0).click()
+                        $('#downloadFile').remove()
+                    ]
+              xAxis:
+                lineWidth: 1
+                tickWidth: 1
+                type: 'datetime'
+                startOnTick: false
+                endOnTick: false
+                min: Chart.Functions.beginningOfDay(data[0][0])
+                max: Chart.Functions.endOfDay(data[0][0])
+                labels:
+                  enabled: true
+                  style:
+                    color: '#000'
+                title:
                   enabled: false
-              column:
-                borderWidth: 0
-                cursor: 'pointer'
-                events:
-                  click: (event) ->
-                    Chart.Functions.zoomInDashboard(event.point.x)
-            tooltip:
-              shared: true
-              pointFormatter: ->
-                return this.series.name + ': <b>' + format_label(this.y, 'tooltip') + '</b><br/>'
-              dateTimeLabelFormats:
-                millisecond:"%e.%b, %H:%M:%S.%L",
-                second:"%e.%b, %H:%M:%S",
-                minute:"%e.%b, %H:%M",
-                hour:"%e.%b, %H:%M",
-                day:"%e.%b.%Y",
-                week:"Week from %e.%b.%Y",
-                month:"%B %Y",
-                year:"%Y"
-          )
-          chart.addSeries(
-            data: data
-          )
-          getMeteringPointName(id).success (metering_point_data) ->
-            chart.series[metering_point_ids_hash[id]].update({name: metering_point_data.data.attributes.name})
-          chart_data_min_x = chart.series[0].data[0].x
-        else
-          chart.addSeries(
-            data: data
-          )
-          getMeteringPointName(id).success (metering_point_data) ->
-            chart.series[metering_point_ids_hash[id]].update({name: metering_point_data.data.attributes.name})
-        metering_point_ids_hash[id] = i
-        i += 1
-        Chart.Functions.activateButtons(true)
+                  style: { "color": "#000", "fontWeight": "bold"}
+              yAxis:
+                gridLineWidth: 0
+                min: 0
+                labels:
+                  enabled: true
+                  formatter: ->
+                    return format_label(this.value, 'axis')
+                title:
+                  margin: 0
+                  text: ""
+                credits:
+                  enabled: false
+              plotOptions:
+                series:
+                  fillOpacity: 0.5
+                  turboThreshold: 0
+                areaspline:
+                  borderWidth: 0
+                  cursor: 'pointer'
+                  events:
+                    click: (event) ->
+                      Chart.Functions.zoomInDashboard(event.point.x)
+                  marker:
+                    enabled: false
+                column:
+                  borderWidth: 0
+                  cursor: 'pointer'
+                  events:
+                    click: (event) ->
+                      Chart.Functions.zoomInDashboard(event.point.x)
+              tooltip:
+                shared: true
+                pointFormatter: ->
+                  return this.series.name + ': <b>' + format_label(this.y, 'tooltip') + '</b><br/>'
+                dateTimeLabelFormats:
+                  millisecond:"%e.%b, %H:%M:%S.%L",
+                  second:"%e.%b, %H:%M:%S",
+                  minute:"%e.%b, %H:%M",
+                  hour:"%e.%b, %H:%M",
+                  day:"%e.%b.%Y",
+                  week:"Week from %e.%b.%Y",
+                  month:"%B %Y",
+                  year:"%Y"
+            )
+            chart.addSeries(
+              data: data
+            )
+            getMeteringPointName(id).success (metering_point_data) ->
+              chart.series[metering_point_ids_hash[id]].update({name: metering_point_data.data.attributes.name})
+            chart_data_min_x = chart.series[0].data[0].x
+          else
+            chart.addSeries(
+              data: data
+            )
+            getMeteringPointName(id).success (metering_point_data) ->
+              chart.series[metering_point_ids_hash[id]].update({name: metering_point_data.data.attributes.name})
+          metering_point_ids_hash[id] = i
+          i += 1
+          Chart.Functions.activateButtons(true)
+        .fail ->
+          countErrors += 1
+          if countErrors == metering_point_ids.length
+            $('#chart-container-' + dashboard_id).html('n.a.')
+            $('#chart-container-' + dashboard_id).css('text-align', 'center')
   createChartTimer(metering_point_ids, 'dashboard')
 
 
@@ -546,9 +561,9 @@ $(".group-chart").ready ->
 
   out_aggregator = new Aggregator(out_ids)
   in_aggregator = new Aggregator(in_ids)
-  $.when(out_aggregator.past(new Date(), 'day_to_minutes')).done ->
+  $.when(out_aggregator.past(new Date(), 'day_to_minutes')).always ->
     out_data = out_aggregator.data
-    $.when(in_aggregator.past(new Date(), 'day_to_minutes')).done ->
+    $.when(in_aggregator.past(new Date(), 'day_to_minutes')).always ->
       in_data = in_aggregator.data
 
       if out_data == undefined || out_data[0] == undefined || out_data[0][0] == undefined
@@ -956,27 +971,32 @@ namespace 'Chart.Functions', (exports) ->
 
   exports.setChartData = (resource, id, containing_timestamp) ->
     aggregator = new Aggregator([id])
-    $.when(aggregator.past(containing_timestamp, actual_resolution)).done ->
-      data = aggregator.data
-      if data == undefined || data[0] == undefined || data[0][0] == undefined
-        console.log data
-        data = [[containing_timestamp, -1]]
-        #$('#chart-container-' + id).html('no data available')
+    $.when(aggregator.past(containing_timestamp, actual_resolution))
+      .done ->
+        data = aggregator.data
+        if data == undefined || data[0] == undefined || data[0][0] == undefined
+          console.log data
+          data = [[containing_timestamp, -1]]
+          #$('#chart-container-' + id).html('no data available')
+          chart.hideLoading()
+          Chart.Functions.activateButtons(true)
+        chart.series[0].setData(data)
+        new_point_width = Chart.Functions.setPointWidth()
+        chart.series[0].update({pointWidth: new_point_width})
+        chart.xAxis[0].update(Chart.Functions.getExtremes(containing_timestamp), true)
+        #console.log chart.series[0]
+        chart_data_min_x = chart.series[0].data[0].x
+        Chart.Functions.setChartTitle(chart_data_min_x)
+        Chart.Functions.setChartType(false)
         chart.hideLoading()
         Chart.Functions.activateButtons(true)
-      chart.series[0].setData(data)
-      new_point_width = Chart.Functions.setPointWidth()
-      chart.series[0].update({pointWidth: new_point_width})
-      chart.xAxis[0].update(Chart.Functions.getExtremes(containing_timestamp), true)
-      #console.log chart.series[0]
-      chart_data_min_x = chart.series[0].data[0].x
-      Chart.Functions.setChartTitle(chart_data_min_x)
-      Chart.Functions.setChartType(false)
-      chart.hideLoading()
-      Chart.Functions.activateButtons(true)
-      Chart.Functions.setEnergyStats()
-      if $(".metering_point_detail").length > 0
-        Chart.Functions.getChartComments(resource, id, containing_timestamp)
+        Chart.Functions.setEnergyStats()
+        if $(".metering_point_detail").length > 0
+          Chart.Functions.getChartComments(resource, id, containing_timestamp)
+      .fail ->
+        $('#chart-container-' + id).html('n.a.')
+        $('#chart-container-' + id).css('text-align', 'center')
+
 
   exports.setChartDataMultiSeries = (resource, id, containing_timestamp) ->
     if resource == 'dashboard'
@@ -984,26 +1004,29 @@ namespace 'Chart.Functions', (exports) ->
       metering_point_ids.forEach (metering_point_id) ->
         if metering_point_id != ""
           aggregator = new Aggregator([metering_point_id])
-          $.when(aggregator.past(containing_timestamp, actual_resolution)).done ->
-            data = aggregator.data
-            if data == undefined || data[0] == undefined || data[0][0] == undefined
-              console.log data
-              data = [[containing_timestamp, -1]]
-              #$('#chart-container-' + id).html('no data available')
-            numberOfSeries = metering_point_ids_hash[metering_point_id]
-            seriesVisible = chart.series[numberOfSeries].visible
-            if !seriesVisible
-              chart.series[numberOfSeries].show()
-            chart.series[numberOfSeries].setData(data)
-            new_point_width = Chart.Functions.setPointWidth()
-            chart.series[numberOfSeries].update({pointWidth: new_point_width})
-            extremes = Chart.Functions.getExtremes(containing_timestamp)
-            chart.xAxis[0].update(extremes, true)
-            chart_data_min_x = extremes.min
-            Chart.Functions.setChartTitle(chart_data_min_x)
-            Chart.Functions.setChartType(true)
-            if !seriesVisible
-              chart.series[numberOfSeries].hide()
+          $.when(aggregator.past(containing_timestamp, actual_resolution))
+            .done ->
+              data = aggregator.data
+              if data == undefined || data[0] == undefined || data[0][0] == undefined
+                console.log data
+                data = [[containing_timestamp, -1]]
+                #$('#chart-container-' + id).html('no data available')
+              numberOfSeries = metering_point_ids_hash[metering_point_id]
+              seriesVisible = chart.series[numberOfSeries].visible
+              if !seriesVisible
+                chart.series[numberOfSeries].show()
+              chart.series[numberOfSeries].setData(data)
+              new_point_width = Chart.Functions.setPointWidth()
+              chart.series[numberOfSeries].update({pointWidth: new_point_width})
+              extremes = Chart.Functions.getExtremes(containing_timestamp)
+              chart.xAxis[0].update(extremes, true)
+              chart_data_min_x = extremes.min
+              Chart.Functions.setChartTitle(chart_data_min_x)
+              Chart.Functions.setChartType(true)
+              if !seriesVisible
+                chart.series[numberOfSeries].hide()
+            .fail ->
+              console.log 'unable to load data for metering_point ' + metering_point_id
       chart.hideLoading()
       Chart.Functions.activateButtons(true)
     else
@@ -1011,9 +1034,9 @@ namespace 'Chart.Functions', (exports) ->
       out_ids = $(".group-chart").attr('metering_point_ids-out').split(",")
       out_aggregator = new Aggregator(out_ids)
       in_aggregator = new Aggregator(in_ids)
-      $.when(out_aggregator.past(containing_timestamp, actual_resolution)).done ->
+      $.when(out_aggregator.past(containing_timestamp, actual_resolution)).always ->
         out_data = out_aggregator.data
-        $.when(in_aggregator.past(containing_timestamp, actual_resolution)).done ->
+        $.when(in_aggregator.past(containing_timestamp, actual_resolution)).always ->
           in_data = in_aggregator.data
           if in_data == undefined || in_data[0] == undefined || in_data[0][0] == undefined || out_data == undefined || out_data[0] == undefined || out_data[0][0] == undefined
             console.log data
@@ -1400,37 +1423,41 @@ $(".metering_point").ready ->
 
 getLiveData = (metering_point, metering_point_id) ->
   aggregator = new Aggregator([metering_point_id])
-  $.when(aggregator.present(new Date())).done ->
-    data = aggregator.data
-    if parseInt(data[0][1]) != -1
-      metering_point.find(".power-ticker").html(parseInt(data[0][1]))
-    else
-      metering_point.find(".power-ticker").html("n.a.")
-    if data.timestamp <= Date.now() - 60*1000
-      metering_point.find(".power-ticker").css({opacity: 0.3})
-    else
-      metering_point.find(".power-ticker").css({opacity: 1})
-    metering_point.find(".power-ticker").data('content', moment(data[0][0]).format("DD.MM.YYYY HH:mm:ss"))
-    metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
-    metering_point.find(".power-ticker").data('bs.popover').options.content = moment(data[0][0]).format("DD.MM.YYYY HH:mm:ss")
-    if $(".metering_point_detail").length != 0 && chart != undefined && actual_resolution == 'hour_to_minutes'
-      if chart_data_min_x > data[0][0] - 60*60*1000
-        chart.series[0].addPoint([data[0][0], data[0][1]])
-      # if data[0][0] > chart_data_min_x +  60 *60 *1000 && data[0][0] < chart_data_min_x +  60 *60 *1011
-      #   # TODO: if 1 hour is over toggle to next hour, but only if displayed
-      #   # macht getExtremes oder?
-      #   chart_data_min_x = data[0][0]
-      #   # console.log("aktualisiere Chart " + data.timestamp + " power " + data.latest_power)
-      #   chart.xAxis[0].update(Chart.Functions.getExtremes(data[0][0]), true)
-      #   Chart.Functions.setChartTitle(data[0][0])
-      #   Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
-      # if window.wisActive && window.wwasInactive # eigentlich nur, wenn neu aktiv oder wenn delta t zu groß
-      #   window.wwasInactive = false
-      #   Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
-      #   # console.log("neuer Chart " + data.timestamp + " power " + data.latest_power)
+  $.when(aggregator.present(new Date()))
+    .done ->
+      data = aggregator.data
+      if parseInt(data[0][1]) != -1
+        metering_point.find(".power-ticker").html(parseInt(data[0][1]))
+      else
+        metering_point.find(".power-ticker").html("n.a.")
+      if data.timestamp <= Date.now() - 60*1000
+        metering_point.find(".power-ticker").css({opacity: 0.3})
+      else
+        metering_point.find(".power-ticker").css({opacity: 1})
+      metering_point.find(".power-ticker").data('content', moment(data[0][0]).format("DD.MM.YYYY HH:mm:ss"))
+      metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
+      metering_point.find(".power-ticker").data('bs.popover').options.content = moment(data[0][0]).format("DD.MM.YYYY HH:mm:ss")
+      if $(".metering_point_detail").length != 0 && chart != undefined && actual_resolution == 'hour_to_minutes'
+        if chart_data_min_x > data[0][0] - 60*60*1000
+          chart.series[0].addPoint([data[0][0], data[0][1]])
+        # if data[0][0] > chart_data_min_x +  60 *60 *1000 && data[0][0] < chart_data_min_x +  60 *60 *1011
+        #   # TODO: if 1 hour is over toggle to next hour, but only if displayed
+        #   # macht getExtremes oder?
+        #   chart_data_min_x = data[0][0]
+        #   # console.log("aktualisiere Chart " + data.timestamp + " power " + data.latest_power)
+        #   chart.xAxis[0].update(Chart.Functions.getExtremes(data[0][0]), true)
+        #   Chart.Functions.setChartTitle(data[0][0])
+        #   Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
+        # if window.wisActive && window.wwasInactive # eigentlich nur, wenn neu aktiv oder wenn delta t zu groß
+        #   window.wwasInactive = false
+        #   Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
+        #   # console.log("neuer Chart " + data.timestamp + " power " + data.latest_power)
 
-    if actual_resolution == 'day_to_minutes'
-      window.wwasInactive = false
+      if actual_resolution == 'day_to_minutes'
+        window.wwasInactive = false
+    .fail ->
+      metering_point.find(".power-ticker").html("n.a.")
+
 
 format_label = (value, mode) ->
   if actual_resolution == "month_to_days" || actual_resolution == "year_to_months"

@@ -1,5 +1,23 @@
 describe "Meters API" do
 
+  let(:page_overload) { 11 }
+
+  [:no_access_token,
+   :simple_access_token].each do |token|
+    it "does not get a metering-points with #{token}" do
+      meter = Fabricate(:meter)
+
+      if token == :no_access_token
+        get_without_token "/api/v1/meters/#{meter.id}/metering-points"
+        expect(response).to have_http_status(401)
+      else
+        access_token = Fabricate(token)
+        get_with_token  "/api/v1/meters/#{meter.id}/metering-points", access_token.token
+        expect(response).to have_http_status(403)
+      end
+
+    end
+  end
 
   [:no_access_token,
    :simple_access_token,
@@ -54,7 +72,7 @@ describe "Meters API" do
         expect(response).to have_http_status(403)
       end
     end
-    
+
   end
 
 
@@ -85,6 +103,56 @@ describe "Meters API" do
       expect(json['data']['attributes']['manufacturer-product-name']).to eq(meter.manufacturer_product_name)
       expect(json['data']['attributes']['manufacturer-product-serialnumber']).to eq(meter.manufacturer_product_serialnumber)
     end
+
+
+    it "gets related metering points for Meter with #{token}" do
+      access_token = Fabricate(token)
+      user            = User.find(access_token.resource_owner_id)
+      meter           = Fabricate(:meter)
+      metering_point  = Fabricate(:metering_point, meter: meter)
+      user.add_role(:manager, metering_point)
+
+      get_with_token "/api/v1/meters/#{meter.id}/metering-points", access_token.token
+      expect(response).to have_http_status(200)
+    end
+
+    it "gets the filtered metering-points for Meter with #{token}" do
+      meter  = Fabricate(:meter)
+      mp1    = Fabricate(:metering_point, meter: meter, mode: 'in')
+      mp2    = Fabricate(:metering_point, meter: meter, mode: 'out')
+
+      access_token  = Fabricate(token)
+      user          = User.find(access_token.resource_owner_id)
+      user.add_role(:manager, mp1)
+      user.add_role(:manager, mp2)
+
+      request_params = {
+        filter: mp1.mode
+      }
+
+      get_with_token "/api/v1/meters/#{meter.id}/metering-points", request_params, access_token.token
+      expect(response).to have_http_status(200)
+      expect(json['data'].size).to eq(1)
+      expect(json['data'].first['attributes']['mode']).to eq(mp1.mode)
+    end
+
+    it "paginates metering-points #{token}" do
+      meter         = Fabricate(:meter)
+      access_token  = Fabricate(token)
+      user          = User.find(access_token.resource_owner_id)
+      page_overload.times do
+        mp = Fabricate(:metering_point, meter: meter)
+        user.add_role(:manager, mp)
+      end
+
+      get_with_token "/api/v1/meters/#{meter.id}/metering-points", access_token.token
+      expect(response).to have_http_status(200)
+      expect(json['meta']['total_pages']).to eq(2)
+
+      get_with_token "/api/v1/meters/#{meter.id}/metering-points", {per_page: 200}, access_token.token
+      expect(response).to have_http_status(422)
+    end
+
   end
 
 

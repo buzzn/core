@@ -59,6 +59,20 @@ module API
 
 
 
+        desc "Return the related metering-points for Meter"
+        params do
+          requires :id, type: String, desc: "ID of the Meter"
+          optional :filter, type: String, desc: "Search query using #{Base.join(MeteringPoint.search_attributes)}"
+          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
+          optional :page, type: Fixnum, desc: "Page number", default: 1
+        end
+        paginate
+        oauth2 :full, :smartmeter
+        get ":id/metering-points" do
+          meter = Meter.guarded_retrieve(current_user, permitted_params)
+          paginated_response(meter.metering_points.filter(permitted_params).readable_by(current_user))
+        end
+
 
 
 
