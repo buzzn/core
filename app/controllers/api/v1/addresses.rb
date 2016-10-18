@@ -27,13 +27,13 @@ module API
 
         desc 'Create address'
         params do
-          requires :street_name, type: String
-          requires :street_number, type: String
-          requires :city, type: String
-          requires :state, type: String, values: Address.states(&:to_s)
-          requires :zip, type: Fixnum
-          requires :country, type: String
-          optional :addition, type: String
+          requires :street_name, type: String, desc: 'street name'
+          requires :street_number, type: String, desc: 'street number'
+          requires :city, type: String, desc: 'city'
+          requires :state, type: String, values: Address.states(&:to_s), desc: 'state'
+          requires :zip, type: Fixnum, desc: 'zip'
+          requires :country, type: String, desc: 'country'
+          optional :addition, type: String, desc: 'additional info'
         end
         oauth2 :full
         post do
@@ -44,13 +44,13 @@ module API
         desc 'Update address'
         params do
           requires :id, type: String, desc: 'Address id'
-          optional :street_name, type: String
-          optional :street_number, type: String
-          optional :city, type: String
-          optional :state, type: String, values: Address.states(&:to_s)
-          optional :zip, type: Fixnum
-          optional :country, type: String
-          optional :addition, type: String
+          optional :street_name, type: String, desc: 'street name'
+          optional :street_number, type: String, desc: 'street number'
+          optional :city, type: String, desc: 'city'
+          optional :state, type: String, values: Address.states(&:to_s), desc: 'state'
+          optional :zip, type: Fixnum, desc: 'zip'
+          optional :country, type: String, desc: 'country'
+          optional :addition, type: String, desc: 'additional info'
         end
         oauth2 :full
         patch ':id' do
