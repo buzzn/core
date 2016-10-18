@@ -424,7 +424,15 @@ describe "Organizations API" do
 
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(contracting_party.id)
-    expect(json['data']['attributes']['legal-entity']).to eq('natural_person')
+    expect(json['data']['attributes']['legal-entity']).to eq('company')
+
+    # no contracting_party
+    organization    = Fabricate(:metering_point_operator)
+
+    get_without_token "/api/v1/organizations/#{organization.id}/contracting_party"
+
+    expect(response).to have_http_status(200)
+    expect(json['data']).to eq({})
   end
 
   it 'gets the related contracting_party of an organization with token' do
@@ -436,7 +444,15 @@ describe "Organizations API" do
 
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(party.id)
-    expect(json['data']['attributes']['legal-entity']).to eq('natural_person')
+    expect(json['data']['attributes']['legal-entity']).to eq('company')
+
+    # no contracting_party
+    organization    = Fabricate(:metering_point_operator)
+
+    get_with_token "/api/v1/organizations/#{organization.id}/contracting_party", access_token.token
+
+    expect(response).to have_http_status(200)
+    expect(json['data']).to eq({})
   end
 
 

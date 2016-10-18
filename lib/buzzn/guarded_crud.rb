@@ -17,7 +17,7 @@ module Buzzn
 
     def guarded_update(user, params)
       if updatable_by?(user)
-        update!(params)
+        update!(self.class.guarded_prepare(user, params))
         self
       else
         raise PermissionDenied.new
@@ -34,10 +34,13 @@ module Buzzn
     end
 
     module ClassMethods
+      def guarded_prepare(user, params)
+        params
+      end
 
       def guarded_create(user, params, *args)
         if creatable_by?(user, *args)
-          create!(params)
+          create!(guarded_prepare(user, params))
         else
           raise PermissionDenied.new
         end

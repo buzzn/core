@@ -94,7 +94,9 @@ module API
         get ':id/contracting_party' do
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
-          organization.contracting_party.guarded_read(current_user)
+          if organization.contracting_party
+            organization.contracting_party.guarded_read(current_user)
+          end
         end
 
 

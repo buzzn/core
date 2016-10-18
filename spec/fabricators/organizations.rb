@@ -39,7 +39,9 @@ Fabricator :electricity_supplier_with_contracts, from: :electricity_supplier do
 end
 
 Fabricator :metering_service_provider_with_contracting_party, from: :metering_service_provider do
-  contracting_party   { Fabricate(:contracting_party) }
+  after_create do |organization|
+    organization.update contracting_party: Fabricate(:contracting_party, legal_entity: 'company', organization: organization)
+  end
 end
 
 # needed for groups fabricator
