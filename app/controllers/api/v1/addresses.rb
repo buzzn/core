@@ -31,7 +31,7 @@ module API
           requires :street_number, type: String, desc: 'street number'
           requires :city, type: String, desc: 'city'
           requires :state, type: String, values: Address.states(&:to_s), desc: 'state'
-          requires :zip, type: Fixnum, desc: 'zip'
+          requires :zip, type: String, desc: 'zip'
           requires :country, type: String, desc: 'country'
           optional :addition, type: String, desc: 'additional info'
         end
@@ -48,7 +48,7 @@ module API
           optional :street_number, type: String, desc: 'street number'
           optional :city, type: String, desc: 'city'
           optional :state, type: String, values: Address.states(&:to_s), desc: 'state'
-          optional :zip, type: Fixnum, desc: 'zip'
+          optional :zip, type: String, desc: 'zip'
           optional :country, type: String, desc: 'country'
           optional :addition, type: String, desc: 'additional info'
         end
