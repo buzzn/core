@@ -20,6 +20,16 @@ class ContractingParty < ActiveRecord::Base
 
   validates :legal_entity, presence: true
 
+  validate :validates_organization
+
+  def validates_organization
+    if legal_entity == 'company' || organization
+      unless legal_entity == 'company' && organization
+        errors.add(:legal_entity, "an #{self.class} for a company needs an Organization")
+      end
+    end
+  end
+
   def self.readable_by_query(user)
     contracting_party = ContractingParty.arel_table
     if user
