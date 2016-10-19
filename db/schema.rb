@@ -97,7 +97,6 @@ ActiveRecord::Schema.define(version: 20161020085343) do
     t.string   "bank_accountable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "mandate"
   end
 
   add_index "bank_accounts", ["bank_accountable_id", "bank_accountable_type"], name: "index_accountable", using: :btree
@@ -179,8 +178,6 @@ ActiveRecord::Schema.define(version: 20161020085343) do
     t.uuid     "group_id"
     t.datetime "created_at",                                         null: false
     t.datetime "updated_at",                                         null: false
-    t.uuid     "contract_owner_id"
-    t.uuid     "contract_beneficiary_id"
     t.boolean  "retailer"
     t.float    "price_cents_per_kwh"
     t.integer  "price_cents_per_month"
@@ -191,6 +188,8 @@ ActiveRecord::Schema.define(version: 20161020085343) do
     t.boolean  "authorization"
     t.text     "feedback"
     t.text     "attention_by"
+    t.uuid     "contract_owner_id"
+    t.uuid     "contract_beneficiary_id"
   end
 
   add_index "contracts", ["group_id"], name: "index_contracts_on_group_id", using: :btree

@@ -107,7 +107,7 @@ describe "BankAccount API" do
       expect(response).to have_http_status(201)
       expect(json['data']['id']).not_to be_nil
 
-      # too long check
+      # too long
       data.each do |k,v|
         next if k.to_s =~ /bank_accountable/
         invalid = data.dup
@@ -118,7 +118,7 @@ describe "BankAccount API" do
         expect(json['errors'].first['source']['pointer']).to eq "/data/attributes/#{k}"
       end
 
-      # missing check
+      # missing
       data.each do |k,v|
         next if k.to_s =~ /bank_accountable/
         invalid = data.dup
