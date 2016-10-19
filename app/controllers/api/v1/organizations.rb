@@ -91,7 +91,7 @@ module API
           requires :id, type: String, desc: 'ID of the organization'
         end
         oauth2 false
-        get ':id/contracting_party' do
+        get ':id/contracting-party' do
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
           organization.contracting_party.guarded_read(current_user)
