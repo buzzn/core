@@ -2,7 +2,7 @@ CarrierWave.configure do |config|
 
   config.asset_host = Rails.application.secrets.asset_host
 
-  if Rails.env.production? && Rails.env.staging?
+  if Rails.env.production? || Rails.env.staging?
     config.storage = :fog
     config.fog_credentials  = {
       provider:               'AWS',
