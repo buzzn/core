@@ -135,10 +135,6 @@ end
 
 group :production, :staging do
   gem 'newrelic_rpm'
-end
-
-
-group :production do
   gem 'asset_sync'
 end
 
