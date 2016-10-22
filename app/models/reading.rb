@@ -78,6 +78,7 @@ class Reading
     when :month_to_days
       start_time = timestamp.beginning_of_month
       end_time   = start_time.next_month
+      end_time   += 1.day # we need a day overlap
     when :week_to_days
       start_time = timestamp.beginning_of_week
       end_time   = start_time.next_week
@@ -200,8 +201,8 @@ class Reading
             }
 
     if keys.include?('energy_a_milliwatt_hour')
-      group["$group"].merge!(firstEnergyAMilliwattHour: { "$first" => "$energy_a_milliwatt_hour" })
-      group["$group"].merge!(lastEnergyAMilliwattHour:  { "$last"  => "$energy_a_milliwatt_hour" })
+      group["$group"].merge!(firstEnergyAMilliwattHour: { "$min" => "$energy_a_milliwatt_hour" })
+      group["$group"].merge!(lastEnergyAMilliwattHour:  { "$max"  => "$energy_a_milliwatt_hour" })
     end
 
     if keys.include?('energy_b_milliwatt_hour')
@@ -246,6 +247,7 @@ class Reading
 
     if keys.include?('energy_a_milliwatt_hour')
       project["$project"].merge!(sumEnergyAMilliwattHour: { "$subtract" => [ "$lastEnergyAMilliwattHour", "$firstEnergyAMilliwattHour" ] })
+      project["$project"].merge!(first:  "$firstEnergyAMilliwattHour")
     end
 
     if keys.include?('energy_b_milliwatt_hour')
@@ -316,8 +318,22 @@ class Reading
     pipe << sort
 
 
+    result = Reading.collection.aggregate(pipe)
 
-    return Reading.collection.aggregate(pipe)
+    if keys.include?('energy_a_milliwatt_hour') && resolution_format.to_sym == :month_to_days
+      entries = result.collect { |entry| entry }
+      entries[0..-2].each_with_index do |current,i|
+        current['sumEnergyAMilliwattHour'] = entries[i + 1]['first'] - current['first']
+      end
+      id = entries.first['_id']
+      if entries.last['_id'].to_a[0..-2] == id.to_a[0..-2]
+        entries
+      else
+        entries[0..-2]
+      end
+    else
+      result
+    end
   end
 
 
