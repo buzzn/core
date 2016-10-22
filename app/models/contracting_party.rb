@@ -7,7 +7,8 @@ class ContractingParty < ActiveRecord::Base
   belongs_to :user
   belongs_to :metering_point
 
-  has_many :contracts
+  has_many :owned_contracts, class_name: 'Contract', foreign_key: 'contract_owner_id'
+  has_many :assigned_contracts, class_name: 'Contract', foreign_key: 'contract_beneficiary_id'
 
   has_one :address, as: :addressable, dependent: :destroy
 
@@ -19,6 +20,10 @@ class ContractingParty < ActiveRecord::Base
 
 
   validates :legal_entity, presence: true
+
+  def contracts
+    Contract.where("contract_owner_id = ? OR contract_beneficiary_id = ?", self.id, self.id)
+  end
 
   def self.readable_by_query(user)
     contracting_party = ContractingParty.arel_table

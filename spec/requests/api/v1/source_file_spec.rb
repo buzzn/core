@@ -17,7 +17,7 @@ describe "Source File" do
       it "#{file.sub(/.*api/, 'api')} only guarded/unguarded retrieve/delete" do
         content = File.read(file)
         content.each_line do |line|
-          expect(line).not_to match /find/
+          expect(line).not_to match /find[^_]/
           if line =~ /delete/
             expect(line).to match /(delete.*do)|(guarded_delete)|(deleted_response)/
           end
