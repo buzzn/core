@@ -4,7 +4,7 @@ describe "BankAccount API" do
 
   let(:user_with_metering_point) { Fabricate(:user_with_metering_point) }
   let(:contract) do
-    contract = Fabricate(:electricity_supplier_contract)
+    contract = Fabricate(:power_giver_contract)
     contract.metering_point = user_with_metering_point.roles.first.resource
     contract.save!
     contract
@@ -65,7 +65,7 @@ describe "BankAccount API" do
       delete_with_token "/api/v1/bank-accounts/#{account.id}", access_token.token
       expect(response).to have_http_status(403)
     end
-    
+
     it "does not get any bank-account with #{token}" do
       3.times { Fabricate(:bank_account) }
       access_token  = send(token)
@@ -86,7 +86,7 @@ describe "BankAccount API" do
         Fabricate(:bank_account, bank_accountable: contract)
       end
       access_token  = send(token)
-      
+
       get_with_token '/api/v1/bank-accounts', {}, access_token.token
       expect(response).to have_http_status(200)
       expect(json['meta']['total_pages']).to eq(2)

@@ -21,7 +21,7 @@ module API
           requires :name, type: String, desc: "name"
           requires :mode, type: String, desc: "direction of energie", values: MeteringPoint.modes
           requires :readable, type: String, desc: "readable by?", values: MeteringPoint.readables
-          requires :meter_id, type: String, desc: "Meter"
+          requires :meter_id, type: String, desc: "Meter ID"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
         oauth2 :simple, :full, :smartmeter
@@ -44,7 +44,7 @@ module API
           optional :name, type: String, desc: "name"
           optional :mode, type: String, desc: "direction of energie", values: MeteringPoint.modes
           optional :readable, type: String, desc: "readable by?", values: MeteringPoint.readables
-          optional :meter_id, type: String, desc: "Meter"
+          optional :meter_id, type: String, desc: "Meter ID"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
         oauth2 :simple, :full

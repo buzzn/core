@@ -83,7 +83,7 @@ class Crawler
           return {:power => power, :timestamp => timestamp}
         end
       else
-        Rails.logger.info request.inspect
+        raise CrawlerError.new("empty array from my-smart-grid")
       end
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -106,8 +106,7 @@ class Crawler
             return {:power => power, :timestamp => timestamp}
           end
         else
-          request.inspect
-          return {:power => -1, :timestamp => Time.now.to_i*1000}
+          raise CrawlerError.new("empty array from discovergy")
         end
       else
         raise CrawlerError.new(request['reason'])
@@ -134,7 +133,7 @@ class Crawler
           end
           return {:result => result}
         else
-          Rails.logger.info request.inspect
+          raise CrawlerError.new("empty array from discovergy")
         end
       else
         raise CrawlerError.new(request['reason'])
@@ -165,7 +164,7 @@ class Crawler
           end
         end
       else
-        Rails.logger.info request.inspect
+        raise CrawlerError.new("empty array from my-smart-grid")
       end
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -188,8 +187,8 @@ class Crawler
             result << [timestamp, power]
           end
         else
-          Rails.logger.info request.inspect
-       end
+          raise CrawlerError.new("empty array from discovergy")
+        end
       else
         raise CrawlerError.new(request['reason'])
       end
@@ -218,7 +217,7 @@ class Crawler
           end
         end
       else
-        Rails.logger.info request.inspect
+        raise CrawlerError.new("empty array from my-smart-grid")
       end
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -269,7 +268,7 @@ class Crawler
             first_reading = second_reading
           end
         else
-          Rails.logger.info request.inspect
+          raise CrawlerError.new("empty array from discovergy")
         end
       else
         raise CrawlerError.new(request['reason'])
@@ -302,7 +301,7 @@ class Crawler
         end
       end
       else
-        Rails.logger.info request.inspect
+        raise CrawlerError.new("empty array from my-smart-grid")
       end
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -336,7 +335,7 @@ class Crawler
             i += 1
           end
         else
-          Rails.logger.info request.inspect
+          raise CrawlerError.new("empty array from discovergy")
         end
       else
         raise CrawlerError.new(request['reason'])
@@ -348,7 +347,7 @@ class Crawler
 
 
   def year(containing_timestamp=@unixtime_now)
-  result = []
+    result = []
     if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
       my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request  = my_smart_grid.get_year(containing_timestamp)
@@ -364,7 +363,7 @@ class Crawler
           end
         end
       else
-        Rails.logger.info request.inspect
+        raise CrawlerError.new("empty array from my-smart-grid")
       end
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -403,7 +402,7 @@ class Crawler
           new_value = request['result'][request['result'].size - 1][mode]
           new_value != old_value ? result << [(Time.at(timestamp/1000).in_time_zone.beginning_of_month).to_i*1000, (new_value - old_value)/10000.0] : nil
         else
-          Rails.logger.info request.inspect
+          raise CrawlerError.new("empty array from discovergy")
         end
       else
         raise CrawlerError.new(request['reason'])

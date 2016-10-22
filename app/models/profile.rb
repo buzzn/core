@@ -13,7 +13,7 @@ class Profile < ActiveRecord::Base
 
   belongs_to :user
 
-  validates :user_name, uniqueness: true, length: { in: 2..63 }
+  validates :user_name, presence: true, uniqueness: true, length: { in: 2..63 }
   validates :first_name, presence: true, length: { in: 2..30 }
   validates :last_name, presence: true, length: { in: 2..30 }
 

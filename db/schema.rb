@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160926140754) do
+ActiveRecord::Schema.define(version: 20161020085343) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,18 @@ ActiveRecord::Schema.define(version: 20160926140754) do
   add_index "bank_accounts", ["bank_accountable_id", "bank_accountable_type"], name: "index_accountable", using: :btree
   add_index "bank_accounts", ["slug"], name: "index_bank_accounts_on_slug", unique: true, using: :btree
 
+  create_table "banks", force: :cascade do |t|
+    t.string "blz"
+    t.string "description"
+    t.string "zip"
+    t.string "place"
+    t.string "name"
+    t.string "bic"
+  end
+
+  add_index "banks", ["bic"], name: "index_banks_on_bic", using: :btree
+  add_index "banks", ["blz"], name: "index_banks_on_blz", unique: true, using: :btree
+
   create_table "comments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.uuid     "commentable_id"
     t.string   "commentable_type"
@@ -162,12 +174,13 @@ ActiveRecord::Schema.define(version: 20160926140754) do
     t.string   "encrypted_password"
     t.boolean  "valid_credentials",                  default: false
     t.boolean  "running",                            default: true
-    t.uuid     "contracting_party_id"
     t.uuid     "metering_point_id"
     t.uuid     "organization_id"
     t.uuid     "group_id"
     t.datetime "created_at",                                         null: false
     t.datetime "updated_at",                                         null: false
+    t.uuid     "contract_owner_id"
+    t.uuid     "contract_beneficiary_id"
     t.boolean  "retailer"
     t.float    "price_cents_per_kwh"
     t.integer  "price_cents_per_month"
@@ -180,7 +193,6 @@ ActiveRecord::Schema.define(version: 20160926140754) do
     t.text     "attention_by"
   end
 
-  add_index "contracts", ["contracting_party_id"], name: "index_contracts_on_contracting_party_id", using: :btree
   add_index "contracts", ["group_id"], name: "index_contracts_on_group_id", using: :btree
   add_index "contracts", ["metering_point_id"], name: "index_contracts_on_metering_point_id", using: :btree
   add_index "contracts", ["mode"], name: "index_contracts_on_mode", using: :btree

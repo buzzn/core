@@ -18,7 +18,7 @@ module API
 
         desc 'Return contractig party'
         params do
-          requires :id, type: String, desc: 'ContractingParty id'
+          requires :id, type: String, desc: 'ContractingParty ID'
         end
         oauth2 :full
         get ':id' do
@@ -27,13 +27,13 @@ module API
 
         desc 'Create contracting party'
         params do
-          requires :legal_entity, type: String, values: ContractingParty.legal_entities.map(&:to_s)
-          optional :sales_tax_number, type: Fixnum
-          optional :tax_rate, type: Float
-          optional :tax_number, type: Fixnum
-          optional :organization_id, type: String
-          optional :metering_point_id, type: String
-          optional :user_id, type: String
+          requires :legal_entity, type: String, values: ContractingParty.legal_entities.map(&:to_s), desc: 'legal entity'
+          optional :sales_tax_number, type: Fixnum, desc: 'sales tax number'
+          optional :tax_rate, type: Float, desc: 'tax rate'
+          optional :tax_number, type: Fixnum, desc: 'tax number'
+          optional :organization_id, type: String, desc: 'Organization ID'
+          optional :metering_point_id, type: String, desc: 'MeteringPoint ID'
+          optional :user_id, type: String, desc: 'User ID'
         end
         oauth2 :full
         post do
@@ -44,14 +44,14 @@ module API
 
         desc 'Update contracting party'
         params do
-          requires :id, type: String, desc: 'ContractingParty id'
-          optional :legal_entity, type: String, values: ContractingParty.legal_entities.map(&:to_s)
-          optional :sales_tax_number, type: Fixnum
-          optional :tax_rate, type: Float
-          optional :tax_number, type: Fixnum
-          optional :organization_id, type: String
-          optional :metering_point_id, type: String
-          optional :user_id, type: String
+          requires :id, type: String, desc: 'ContractingParty ID'
+          optional :legal_entity, type: String, values: ContractingParty.legal_entities.map(&:to_s), desc: 'legal entity'
+          optional :sales_tax_number, type: Fixnum, desc: 'sales tax number'
+          optional :tax_rate, type: Float, desc: 'tax rate'
+          optional :tax_number, type: Fixnum, desc: 'tax number'
+          optional :organization_id, type: String, desc: 'Organization ID'
+          optional :metering_point_id, type: String, desc: 'MeteringPoint ID'
+          optional :user_id, type: String, desc: 'User ID'
         end
         oauth2 :full
         patch ':id' do
@@ -61,7 +61,7 @@ module API
 
         desc 'Delete contracting party'
         params do
-          requires :id, type: String, desc: 'ContractingParty id'
+          requires :id, type: String, desc: 'ContractingParty ID'
         end
         oauth2 :full
         delete ':id' do
