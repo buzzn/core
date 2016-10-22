@@ -51,7 +51,9 @@
 //= require nifty.min
 //= require jquery-validator-messages
 
+
 //= require global
+//= require token
 //= require aggregator
 //= require addresses
 //= require metering_points

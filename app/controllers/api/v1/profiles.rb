@@ -28,18 +28,18 @@ module API
 
         desc "Create a Profile"
         params do
-          requires :user_name, type: String
-          requires :first_name, type: String
-          requires :last_name, type: String
-          optional :title, type: String
-          optional :about_me, type: String
-          optional :website, type: String
-          optional :facebook, type: String
-          optional :twitter, type: String
-          optional :xing, type: String
-          optional :linkedin, type: String
-          optional :gender, type: String, values: Profile.genders.map(&:to_s)
-          optional :phone, type: String
+          requires :user_name, type: String, desc: 'username'
+          requires :first_name, type: String, desc: 'first name'
+          requires :last_name, type: String, desc: 'last name'
+          optional :title, type: String, desc: 'title'
+          optional :about_me, type: String, desc: 'about me'
+          optional :website, type: String, desc: 'personal website'
+          optional :facebook, type: String, desc: 'facebook profile url'
+          optional :twitter, type: String, desc: 'twitter profle url'
+          optional :xing, type: String, desc: 'xing profile url'
+          optional :linkedin, type: String, desc: 'linkedin profile url'
+          optional :gender, type: String, values: Profile.genders.map(&:to_s), desc: 'gender'
+          optional :phone, type: String, desc: 'phone'
         end
         oauth2 :simple, :full
         post do
@@ -51,18 +51,18 @@ module API
         desc "Update a Profile"
         params do
           requires :id, type: String, desc: 'ID of the Profile'
-          optional :user_name, type: String, allow_blank: false
-          optional :first_name, type: String, allow_blank: false
-          optional :last_name, type: String, allow_blank: false
-          optional :title, type: String
-          optional :about_me, type: String
-          optional :website, type: String
-          optional :facebook, type: String
-          optional :twitter, type: String
-          optional :xing, type: String
-          optional :linkedin, type: String
-          optional :gender, type: String, values: Profile.genders.map(&:to_s)
-          optional :phone, type: String
+          optional :user_name, type: String, desc: 'username'
+          optional :first_name, type: String, desc: 'first name'
+          optional :last_name, type: String, desc: 'last name'
+          optional :title, type: String, desc: 'title'
+          optional :about_me, type: String, desc: 'about me'
+          optional :website, type: String, desc: 'personal website'
+          optional :facebook, type: String, desc: 'facebook profile url'
+          optional :twitter, type: String, desc: 'twitter profle url'
+          optional :xing, type: String, desc: 'xing profile url'
+          optional :linkedin, type: String, desc: 'linkedin profile url'
+          optional :gender, type: String, values: Profile.genders.map(&:to_s), desc: 'gender'
+          optional :phone, type: String, desc: 'phone'
         end
         oauth2 :simple, :full
         patch ':id' do
