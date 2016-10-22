@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160926140754) do
+ActiveRecord::Schema.define(version: 20161020085343) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,18 @@ ActiveRecord::Schema.define(version: 20160926140754) do
   add_index "bank_accounts", ["bank_accountable_id", "bank_accountable_type"], name: "index_accountable", using: :btree
   add_index "bank_accounts", ["slug"], name: "index_bank_accounts_on_slug", unique: true, using: :btree
 
+  create_table "banks", force: :cascade do |t|
+    t.string "blz"
+    t.string "description"
+    t.string "zip"
+    t.string "place"
+    t.string "name"
+    t.string "bic"
+  end
+
+  add_index "banks", ["bic"], name: "index_banks_on_bic", using: :btree
+  add_index "banks", ["blz"], name: "index_banks_on_blz", unique: true, using: :btree
+
   create_table "comments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.uuid     "commentable_id"
     t.string   "commentable_type"
@@ -146,10 +158,10 @@ ActiveRecord::Schema.define(version: 20160926140754) do
     t.string   "slug"
     t.string   "mode"
     t.string   "tariff"
-    t.integer  "price_cents",                       default: 0,     null: false
-    t.string   "price_currency",                    default: "EUR", null: false
+    t.integer  "price_cents",                        default: 0,     null: false
+    t.string   "price_currency",                     default: "EUR", null: false
     t.string   "status"
-    t.integer  "forecast_watt_hour_pa",   limit: 8
+    t.integer  "forecast_watt_hour_pa",    limit: 8
     t.date     "commissioning"
     t.date     "termination"
     t.boolean  "terms"
