@@ -76,7 +76,7 @@ describe "Aggregates API" do
 
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,1,1)
-      (24*30).times do |i|
+      (24*32).times do |i|
         Fabricate(:reading,
                   source: 'slp',
                   timestamp: timestamp,
@@ -99,12 +99,12 @@ describe "Aggregates API" do
       get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
       expect(response).to have_http_status(200)
-      expect(json.count).to eq(30)
+      expect(json.count).to eq(31)
       timestamp = Time.find_zone('Berlin').local(2016,1,1)
       json.each do |item|
         expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
         expect(item['power_milliwatt']).to eq(nil)
-        expect(item['energy_milliwatt_hour']).to eq(23*1300*1000)
+        expect(item['energy_milliwatt_hour']).to eq(24*1300*1000)
         expect(item['energy_b_milliwatt_hour']).to eq(nil)
         timestamp += 1.day
       end
@@ -118,7 +118,7 @@ describe "Aggregates API" do
 
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,6,1)
-      (24*30).times do |i|
+      (24*31).times do |i|
         Fabricate(:reading,
                   source: 'slp',
                   timestamp: timestamp,
@@ -144,7 +144,7 @@ describe "Aggregates API" do
       json.each do |item|
         expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
         expect(item['power_milliwatt']).to eq(nil)
-        expect(item['energy_milliwatt_hour']).to eq(23*1300*1000)
+        expect(item['energy_milliwatt_hour']).to eq(24*1300*1000)
         expect(item['energy_b_milliwatt_hour']).to eq(nil)
         timestamp += 1.day
       end
@@ -607,7 +607,7 @@ describe "Aggregates API" do
       json.each do |item|
         expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
         expect(item['power_milliwatt']).to eq(nil)
-        expect(item['energy_milliwatt_hour']).to eq(23*1300*1000) if i < 13
+        expect(item['energy_milliwatt_hour']).to eq(24*1300*1000) if i < 13
         expect(item['energy_b_milliwatt_hour']).to eq(nil)
         timestamp += 1.day
         i+=1
@@ -671,8 +671,8 @@ describe "Aggregates API" do
       metering_point = Fabricate(:metering_point, mode: 'out')
 
       energy_a_milliwatt_hour = 0
-      timestamp = Time.find_zone('Berlin').local(2016,6,1)
-      (24*30).times do |i|
+      timestamp = Time.find_zone('UTC').local(2016,6,1) - 1.day
+      (24*32).times do |i|
         Fabricate(:reading,
                   source: 'sep_bhkw',
                   timestamp: timestamp,
@@ -684,23 +684,25 @@ describe "Aggregates API" do
       end
 
 
-      request_params = {
-        metering_point_ids: metering_point.id,
-        resolution: 'month_to_days',
-        timestamp: Time.find_zone('Berlin').local(2016,6,2)
-      }
+      ['UTC', 'Berlin', 'Moscow', 'Greenland', 'Iceland'].each do |zone|
+        request_params = {
+          metering_point_ids: metering_point.id,
+          resolution: 'month_to_days',
+          timestamp: Time.find_zone(zone).local(2016,6,2)
+        }
 
-      get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+        get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
-      expect(response).to have_http_status(200)
-      expect(json.count).to eq(30)
-      timestamp = Time.find_zone('Berlin').local(2016,6,1)
-      json.each do |item|
-        expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
-        expect(item['power_milliwatt']).to eq(nil)
-        expect(item['energy_milliwatt_hour']).to eq(23*1300*1000)
-        expect(item['energy_b_milliwatt_hour']).to eq(nil)
-        timestamp += 1.day
+        expect(response).to have_http_status(200)
+        expect(json.count).to eq(30)
+        timestamp = Time.find_zone(zone).local(2016,6,1)
+        json.each do |item|
+          expect(Time.parse(item['timestamp'])).to eq(timestamp)
+          expect(item['power_milliwatt']).to eq(nil)
+          expect(item['energy_milliwatt_hour']).to eq(24*1300*1000)
+          expect(item['energy_b_milliwatt_hour']).to eq(nil)
+          timestamp += 1.day
+        end
       end
     end
 
@@ -800,7 +802,7 @@ describe "Aggregates API" do
 
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,1,1)
-      (24*30).times do |i|
+      (24*32).times do |i|
         Fabricate(:reading,
                   meter_id: meter.id,
                   timestamp: timestamp,
@@ -823,12 +825,12 @@ describe "Aggregates API" do
       get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
       expect(response).to have_http_status(200)
-      expect(json.count).to eq(30)
+      expect(json.count).to eq(31)
       timestamp = Time.find_zone('Berlin').local(2016,1,1)
       json.each do |item|
         expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
         expect(item['power_milliwatt']).to eq(nil)
-        expect(item['energy_milliwatt_hour']).to eq(23*1300*1000)
+        expect(item['energy_milliwatt_hour']).to eq(24*1300*1000)
         expect(item['energy_b_milliwatt_hour']).to eq(nil)
         timestamp += 1.day
       end
@@ -843,7 +845,7 @@ describe "Aggregates API" do
 
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,6,1)
-      (24*30).times do |i|
+      (24*31).times do |i|
         Fabricate(:reading,
                   meter_id: meter.id,
                   timestamp: timestamp,
@@ -869,7 +871,7 @@ describe "Aggregates API" do
       json.each do |item|
         expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
         expect(item['power_milliwatt']).to eq(nil)
-        expect(item['energy_milliwatt_hour']).to eq(23*1300*1000)
+        expect(item['energy_milliwatt_hour']).to eq(24*1300*1000)
         expect(item['energy_b_milliwatt_hour']).to eq(nil)
         timestamp += 1.day
       end
