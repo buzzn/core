@@ -36,12 +36,12 @@ module API
 
         desc "Create a User"
         params do
-          requires :email, type: String
-          requires :password, type: String
+          requires :email, type: String, desc: 'email'
+          requires :password, type: String, desc: 'password'
           requires :profile, type: Hash do
-            requires :user_name, type: String
-            requires :first_name, type: String
-            requires :last_name, type: String
+            requires :user_name, type: String, desc: 'username'
+            requires :first_name, type: String, desc: 'first-name'
+            requires :last_name, type: String, desc: 'last-name'
           end
         end
         oauth2 false

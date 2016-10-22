@@ -3,7 +3,7 @@ if defined?(AssetSync)
     config.fog_provider          = 'AWS'
     config.aws_access_key_id     = Rails.application.secrets.aws_access_key
     config.aws_secret_access_key = Rails.application.secrets.aws_secret_access_key
-    config.fog_directory         = 'buzzn-production'
+    config.fog_directory         = Rails.application.secrets.aws_bucket
 
     # Increase upload performance by configuring your region
     config.fog_region            = Rails.application.secrets.aws_region
