@@ -62,7 +62,6 @@ Buzzn::Application.configure do
                                         :namespace => "cache"
                                       }
 
-
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   config.action_controller.asset_host = Rails.application.secrets.asset_host
 
@@ -91,5 +90,4 @@ Buzzn::Application.configure do
   ## config.log_formatter = ::Logger::Formatter.new
   config.lograge.enabled = true
   config.lograge.formatter = Lograge::Formatters::KeyValue.new
-
 end

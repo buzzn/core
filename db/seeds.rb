@@ -109,11 +109,14 @@ buzzn_team_names.each do |user_name|
     user.add_role :admin # felix is admin
     root_mp = Fabricate(:mp_urbanstr88)
     root_mp.devices << @gocycle
-    Fabricate(:application, owner: user, name: 'Buzzn API', scopes: 'simple full', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
-    application = Fabricate(:application, owner: user, name: 'Buzzn RailsView', scopes: 'simple full', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
-    Fabricate(:application, owner: user, name: 'Buzzn Ember', scopes: 'simple full', redirect_uri: 'http://localhost:4200/')
-    # HACK for seed. this is normaly don via after_filter in user
-    Doorkeeper::AccessToken.create(application_id: application.id, resource_owner_id: user.id, scopes: 'simple full' )
+
+    if Rails.env.development?
+      Fabricate(:application, owner: user, name: 'Buzzn API', scopes: 'simple full', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
+      application = Fabricate(:application, owner: user, name: 'Buzzn RailsView', scopes: 'simple full', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
+      Fabricate(:application, owner: user, name: 'Buzzn Ember', scopes: 'simple full', redirect_uri: 'http://localhost:4200/')
+      # HACK for seed. this is normaly don via after_filter in user
+      Doorkeeper::AccessToken.create(application_id: application.id, resource_owner_id: user.id, scopes: 'simple full' )
+    end
 
     Fabricate(:application, owner: user, name: 'Buzzn Swagger UI', scopes: Doorkeeper.configuration.scopes, redirect_uri: Rails.application.secrets.hostname + '/api/o2c.html')
   when 'christian'
