@@ -36,14 +36,14 @@ module API
 
         desc "Create a Device"
         params do
-          requires :manufacturer_name,         type: String
-          requires :manufacturer_product_name, type: String
-          optional :mode,                      type: String, values: Device.modes, default: "in"
-          optional :readable,                  type: String, values: Device.readables, default: "world"
-          requires :category,                  type: String
-          requires :watt_peak,                 type: Integer
-          optional :commissioning,             type: DateTime
-          requires :mobile,                    type: Boolean
+          requires :manufacturer_name,         type: String, desc: 'manufacturer name'
+          requires :manufacturer_product_name, type: String, desc: 'manufacturer product name'
+          optional :mode,                      type: String, values: Device.modes, default: "in", desc: 'mode'
+          optional :readable,                  type: String, values: Device.readables, default: "world", desc: 'readable permission'
+          requires :category,                  type: String, desc: 'category'
+          requires :watt_peak,                 type: Integer, desc: 'peak watt'
+          optional :commissioning,             type: DateTime, desc: 'date when commissioning began'
+          requires :mobile,                    type: Boolean, desc: 'is mobile'
         end
         oauth2 :full
         post do
@@ -62,14 +62,14 @@ module API
         desc "Update a Device."
         params do
           requires :id,                        type: String, desc: "Device ID."
-          optional :manufacturer_name,         type: String
-          optional :manufacturer_product_name, type: String
-          optional :mode,                      type: String, values: Device.modes
-          optional :readable,                  type: String, values: Device.readables
-          optional :category,                  type: String
-          optional :watt_peak,                 type: Integer
-          optional :commissioning,             type: DateTime
-          optional :mobile,                    type: Boolean
+          optional :manufacturer_name,         type: String, desc: 'manufacturer name'
+          optional :manufacturer_product_name, type: String, desc: 'manufacturer product name'
+          optional :mode,                      type: String, values: Device.modes, desc: 'mode'
+          optional :readable,                  type: String, values: Device.readables, desc: 'readable permission'
+          optional :category,                  type: String, desc: 'category'
+          optional :watt_peak,                 type: Integer, desc: 'peak watt'
+          optional :commissioning,             type: DateTime, desc: 'date when commissioning began'
+          optional :mobile,                    type: Boolean, desc: 'is mobile'
         end
         oauth2 :full
         patch ':id' do
