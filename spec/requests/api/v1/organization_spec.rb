@@ -420,7 +420,7 @@ describe "Organizations API" do
     organization      = Fabricate(:metering_service_provider_with_contracting_party)
     contracting_party = organization.contracting_party
 
-    get_without_token "/api/v1/organizations/#{organization.id}/contracting_party"
+    get_without_token "/api/v1/organizations/#{organization.id}/contracting-party"
 
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(contracting_party.id)
@@ -432,7 +432,7 @@ describe "Organizations API" do
     organization    = Fabricate(:metering_service_provider_with_contracting_party)
     party           = organization.contracting_party
 
-    get_with_token "/api/v1/organizations/#{organization.id}/contracting_party", access_token.token
+    get_with_token "/api/v1/organizations/#{organization.id}/contracting-party", access_token.token
 
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(party.id)
