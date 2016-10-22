@@ -11,8 +11,6 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   const svgId = `group-${group}`;
   const tooltip = d3.select(`#tooltip_${group}`);
   const self = this;
-  const token = gon.global.access_token;
-
   let switchInOnTop = true;
   let svg = null;
   let svgDom = null;
@@ -25,10 +23,6 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   const borderWidth = '3px';
   const inData = [];
   const outData = [];
-  const headers = {
-    Accept: 'application/json',
-  };
-  if (token && token.length > 0) headers.Authorization = `Bearer ${token}`;
   let circle = null;
   let outCircle = null;
   let simulation = null;
@@ -109,6 +103,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     _.forEach(inData, (point, idx) => {
       if (inData[idx].updating) return;
       inData[idx].updating = true;
+      checkToken();
       fetch(`${url}/api/v1/aggregates/present?metering_point_ids=${point.id}`, { headers })
         .then(getJson)
         .then(json => {
@@ -126,6 +121,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     _.forEach(outData, (point, idx) => {
       if (outData[idx].updating) return;
       outData[idx].updating = true;
+      checkToken();
       fetch(`${url}/api/v1/aggregates/present?metering_point_ids=${point.id}`, { headers })
         .then(getJson)
         .then(json => {
@@ -401,6 +397,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   }
 
   function getMeteringPoints(page = 1) {
+    checkToken();
     fetch(`${url}/api/v1/groups/${group}/metering-points?per_page=10&page=${page}`, { headers })
       .then(getJson)
       .then(json => {
