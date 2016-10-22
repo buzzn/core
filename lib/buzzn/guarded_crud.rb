@@ -50,14 +50,14 @@ module Buzzn
         if id.is_a?(Hash)
           id = id[:id]
         end
-        _guarded_check(where(id: id).readable_by(user).first, user, id)
+        _guarded_check(where(id: id).readable_by(user).limit(1).first, user, id)
       end
 
       def unguarded_retrieve(id)
         if id.is_a?(Hash)
           id = id[:id]
         end
-        result = where(id: id).first
+        result = where(id: id).limit(1).first
         if result.nil?
           raise RecordNotFound.new("#{self} with id=#{id} not found")
         end
@@ -68,7 +68,7 @@ module Buzzn
         if id.is_a?(Hash)
           id = id[:id]
         end
-        _guarded_check(where(id: id).anonymized_readable_by(user).first, user, id)
+        _guarded_check(where(id: id).anonymized_readable_by(user).limit(1).first, user, id)
       end
 
       def guarded_update(user, id = nil, params = nil)
@@ -99,7 +99,7 @@ module Buzzn
       end
 
       def _guarded_get(user, id)
-        result = where(id: id).first
+        result = where(id: id).limit(1).first
         if result.nil?
           raise RecordNotFound.new("#{self} with id=#{id} not found#{user ? ' by user_id=' + user.id : ''}")
         end

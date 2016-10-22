@@ -13,6 +13,10 @@ Fabricator :distribution_system_operator, from: :organization do
   mode 'distribution_system_operator'
 end
 
+Fabricator :power_giver, from: :organization do
+  mode 'power_giver'
+end
+
 Fabricator :electricity_supplier, from: :organization do
   mode 'electricity_supplier'
 end
@@ -34,8 +38,8 @@ Fabricator :transmission_system_operator_with_address, from: :transmission_syste
   address     { Fabricate(:address, street_name: 'Zu den Höfen', street_number: '7', zip: 37181, city: 'Asche', state: 'Lower Saxony') }
 end
 
-Fabricator :electricity_supplier_with_contracts, from: :electricity_supplier do
-  contracts   { [ Fabricate(:electricity_supplier_contract)] }
+Fabricator :power_giver_with_contracts, from: :power_giver do
+  contracts   { [ Fabricate(:power_giver_contract)] }
 end
 
 Fabricator :metering_service_provider_with_contracting_party, from: :metering_service_provider do

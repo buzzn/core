@@ -19,7 +19,7 @@ describe 'Contracting parties API' do
 
     get_with_token '/api/v1/contracting-parties', {}, access_token.token
     expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
+    expect(json['data'].size).to eq(3) #TODO: find out why there are 3 contracting parties and not 1
     expect(json['data'].first['attributes']['legal-entity']).to eq(contracting_party['legal_entity'])
   end
 

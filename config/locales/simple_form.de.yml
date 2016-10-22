@@ -244,8 +244,8 @@ de:
           world: Alle Internet-Nutzer
       contract:
         mode:
-          electricity_supplier_contract: Stromliefervertrag
-          electricity_purchase_contract: Stromabnahmevertrag
+          power_giver_contract: Vertrag für Stromlieferung
+          power_taker_contract: Vertrag für Stromabnahme
           metering_point_operator_contract: Messstellenbetreiber Vertrag
           servicing_contract: Abwicklungsvertrag
       contracting_party:
