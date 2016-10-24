@@ -522,7 +522,7 @@ class MeteringPoint < ActiveRecord::Base
 
   def self.create_all_observer_activities
     where("observe = ? OR observe_offline = ?", true, true).each do |metering_point|
-      metering_point.create_observer_activities
+      metering_point.create_observer_activities rescue nil
     end
   end
 
