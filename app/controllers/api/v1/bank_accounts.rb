@@ -41,7 +41,6 @@ module API
           requires :iban, type: String, desc: "IBAN"
           requires :bic, type: String, desc: "BIC"
           requires :direct_debit, type: Boolean, desc: "Is direct debit"
-          requires :mandate, type: Boolean, desc: "Has mandate"
           requires :bank_accountable_id, type:String, desc: 'ID of Contract or Contracting-Party'
           requires :bank_accountable_type, type:String, values:[Contract.to_s, ContractingParty.to_s], desc: 'Owner Type'
         end
@@ -66,7 +65,6 @@ module API
           optional :iban, type: String, desc: "IBAN"
           optional :bic, type: String, desc: "BIC"
           optional :direct_debit, type: Boolean, desc: "Is direct debit"
-          optional :mandate, type: Boolean, desc: "Has mandate"
         end
         oauth2 :full
         patch ':id' do
