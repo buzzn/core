@@ -119,16 +119,6 @@ ready = ->
     $('.chart-comment-form').hide 100
     $('.chart-comment-form').find('#comment_body').val('')
 
-  if !window.location.host.includes("localhost")
-    do ->
-      s = document.createElement('script')
-      s.type = 'text/javascript'
-      s.async = true
-      s.src = '//api.usersnap.com/load/' + '0f210995-ac9d-4ff8-af0d-48d32a0420c2.js'
-      x = document.getElementsByTagName('script')[0]
-      x.parentNode.insertBefore s, x
-      return
-
 $(".error-not-found").ready ->
   $("#container").css("background-color", "black")
   $("#content-container").css("background-color", "black")
