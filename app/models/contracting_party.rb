@@ -19,7 +19,24 @@ class ContractingParty < ActiveRecord::Base
   accepts_nested_attributes_for :organization, :reject_if => :all_blank
 
 
-  validates :legal_entity, presence: true
+  def self.legal_entities
+    %w{
+      natural_person
+      company
+    }.map(&:to_sym)
+  end
+
+  validates :legal_entity, :inclusion => {:in => legal_entities.collect(&:to_s)}
+
+  validate :validates_organization
+
+  def validates_organization
+    if legal_entity == 'company' || organization
+      unless legal_entity == 'company' && organization
+        errors.add(:legal_entity, "an #{self.class} for a company needs an Organization")
+      end
+    end
+  end
 
   def contracts
     Contract.where("contract_owner_id = ? OR contract_beneficiary_id = ?", self.id, self.id)
@@ -38,13 +55,6 @@ class ContractingParty < ActiveRecord::Base
     where(readable_by_query(user))
   end
 
-  def self.legal_entities
-    %w{
-      natural_person
-      company
-    }.map(&:to_sym)
-  end
-
 
 
   def natural_person?
@@ -59,5 +69,18 @@ class ContractingParty < ActiveRecord::Base
     end
   end
 
-
+  def self.guarded_prepare(current_user, params)
+    if user_id = params.delete(:user_id)
+      params[:user] = User.guarded_retrieve(current_user, user_id)
+    end
+    if organization_id = params.delete(:organization_id)
+      params[:organization] = Organization.guarded_retrieve(current_user,
+                                                            organization_id)
+    end
+    if metering_point_id = params.delete(:metering_point_id)
+      params[:metering_point] = MeteringPoint.guarded_retrieve(current_user,
+                                                               metering_point_id)
+    end
+    params
+  end
 end
