@@ -439,6 +439,7 @@ describe "Organizations API" do
     access_token    = Fabricate(:simple_access_token)
     organization    = Fabricate(:metering_service_provider_with_contracting_party)
     party           = organization.contracting_party
+    party.update(user_id: access_token.resource_owner_id)
 
     get_with_token "/api/v1/organizations/#{organization.id}/contracting-party", access_token.token
 
