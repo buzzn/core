@@ -12,7 +12,7 @@ function setupOAuth(data) {
     if (data) {
 	oauth = data;
 	// refresh the token a bit earlier to avoid 403 responses
-	tokenExpiresAt = new Date((oauth['created_at'] + oauth['expires_in'] - 120) * 1000);
+	tokenExpiresAt = new Date((oauth['expires_at'] - 120) * 1000);
 	token = oauth['access_token'];
 	if (token && token.length > 0) {
 	    headers.Authorization = `Bearer ${token}`;

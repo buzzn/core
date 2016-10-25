@@ -40,7 +40,7 @@ class OAuthHelper
       access_token
     end
   end
-      
+
   def access_token
     # find the token which does expire for the rails view
     token = @user.access_tokens.where('application_id = ? AND expires_in IS NOT NULL AND revoked_at IS NULL', rails_view.id).first

@@ -71,8 +71,7 @@ class ApplicationController < ActionController::Base
       if token
         gon_access_token = token.token
         # use the same structure as /oauth/token will return
-        gon_oauth = { created_at: (token.expires_at.to_i - token.expires_in),
-                      expires_in: token.expires_in,
+        gon_oauth = { expires_at: token.expires_at,
                       refresh_token: token.refresh_token,
                       access_token: token.token }
         logger.debug("[GON] #{current_user.email} using #{token.token} until #{Time.at token.expires_at}#{' via password login' if user['password']}")
