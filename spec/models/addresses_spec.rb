@@ -29,7 +29,7 @@ describe "Address Model" do
   end
 
   let(:contracting_party) do
-    cp = Fabricate(:contracting_party, address: Fabricate(:address, street_name: 'Sachsenstr.', street_number: '8', zip: 86916, city: 'Kaufering', state: 'Bayern'), user: Fabricate(:user), organization: organization)
+    cp = Fabricate(:company_contracting_party, address: Fabricate(:address, street_name: 'Sachsenstr.', street_number: '8', zip: 86916, city: 'Kaufering', state: 'Bayern'), user: Fabricate(:user), organization: organization)
   end
 
   before do
