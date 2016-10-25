@@ -135,4 +135,15 @@ describe "User Model" do
     expect(User.unsubscribed_from_notification('other.key', metering_point)).to eq [manager_mp]
     expect(User.unsubscribed_from_notification('other.key', organization)).to eq []
   end
+
+  it 'validates roles and profile' do
+    user.add_role(:admin, nil)
+    expect(user.valid?).to be true
+
+    user.profile = nil
+    expect(user.errors['roles']).not_to be_nil
+
+    user.roles.delete_all
+    expect(user.valid?).to be true
+  end
 end

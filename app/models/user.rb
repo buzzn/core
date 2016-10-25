@@ -43,6 +43,13 @@ class User < ActiveRecord::Base
 
   after_invitation_accepted :invoke_invitation_accepted_activity
 
+  validate :nil_profile
+  def nil_profile
+    if profile.nil? && !roles.empty?
+      errors['roles'] = 'without profile the user can not have roles'
+    end
+  end
+
   def self.count_admins(user)
     count_roles(user, admin: nil)
   end

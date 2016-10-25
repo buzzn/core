@@ -6,6 +6,7 @@ class Notifier < ActionMailer::Base
   end
 
   def send_email_completed_registration(user)
+    return user.profile.nil?
     @user = user
     mail(to: @user.email, subject: t('welcome_to_the_buzzn_community'))
   end
@@ -13,12 +14,16 @@ class Notifier < ActionMailer::Base
 
 
   def send_email_notification_new_friendship_request(receiver, sender)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     mail(to: receiver.email, subject: 'buzzn: ' + t('new_friendship_request_from', sender: sender.name))
   end
 
   def send_email_notification_accepted_friendship_request(receiver, sender)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     mail(to: receiver.email, subject: 'buzzn: ' + t('accepted_friendship_request'))
@@ -31,6 +36,8 @@ class Notifier < ActionMailer::Base
   end
 
   def send_email_notification_cancelled_friendship(receiver, sender)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     mail(to: receiver.email, subject: 'buzzn: ' + t('cancelled_friendship'))
@@ -41,6 +48,8 @@ class Notifier < ActionMailer::Base
 
 
   def send_email_notification_new_metering_point_user_request(receiver, sender, metering_point, mode)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     @metering_point = metering_point
@@ -53,6 +62,8 @@ class Notifier < ActionMailer::Base
   end
 
   def send_email_notification_new_metering_point_user_membership(receiver, sender, metering_point)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     @metering_point = metering_point
@@ -72,6 +83,8 @@ class Notifier < ActionMailer::Base
   end
 
   def send_email_notification_cancelled_metering_point_user_membership(receiver, sender, metering_point)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     @metering_point = metering_point
@@ -86,6 +99,8 @@ class Notifier < ActionMailer::Base
 
 
   def send_email_new_group_metering_point_request(receiver, sender, metering_point, group, mode)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     @metering_point = metering_point
@@ -99,6 +114,8 @@ class Notifier < ActionMailer::Base
   end
 
   def send_email_rejected_group_metering_point_request(receiver, sender, metering_point, group, mode)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     @metering_point = metering_point
@@ -112,6 +129,8 @@ class Notifier < ActionMailer::Base
   end
 
   def send_email_new_group_metering_point_membership(receiver, sender, metering_point, group)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     @metering_point = metering_point
@@ -120,6 +139,8 @@ class Notifier < ActionMailer::Base
   end
 
   def send_email_cancelled_group_metering_point_membership(receiver, sender, metering_point, group)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     @metering_point = metering_point
@@ -133,6 +154,7 @@ class Notifier < ActionMailer::Base
 
 
   def send_email_metering_point_exceeds_or_undershoots(receiver, metering_point, mode)
+    return receiver.profile.nil?
     @receiver = receiver
     @metering_point = metering_point
     @mode = mode
@@ -144,6 +166,7 @@ class Notifier < ActionMailer::Base
   end
 
   def send_email_notification_meter_offline(user, metering_point)
+    return user.profile.nil?
     @user = user
     @metering_point = metering_point
     mail(to: user.email, subject: t('your_metering_point_is_offline_now', metering_point_name: metering_point.name))
@@ -153,6 +176,8 @@ class Notifier < ActionMailer::Base
 
 
   def send_email_accepted_platform_invitation(receiver, sender)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     mail(to: @receiver.email, subject: 'buzzn: ' + t('accepted_platform_invitation'))
@@ -162,6 +187,8 @@ class Notifier < ActionMailer::Base
 
 
   def send_email_appointed_metering_point_manager(receiver, sender, metering_point)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     @metering_point = metering_point
@@ -169,6 +196,8 @@ class Notifier < ActionMailer::Base
   end
 
   def send_email_appointed_group_manager(receiver, sender, group)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     @group = group
@@ -180,6 +209,8 @@ class Notifier < ActionMailer::Base
 
 
   def send_email_new_comment(receiver, sender, commentable, message)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     @commentable = commentable
@@ -188,6 +219,8 @@ class Notifier < ActionMailer::Base
   end
 
   def send_email_comment_liked(receiver, sender, message)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     @message = message
@@ -197,6 +230,7 @@ class Notifier < ActionMailer::Base
 
 
   def send_email_to_user_variable_content(receiver, subject, message)
+    return receiver.profile.nil?
     @receiver = receiver
     @subject = subject
     @message = message
@@ -206,6 +240,8 @@ class Notifier < ActionMailer::Base
 
 
   def send_email_removed_user_from_conversation(receiver, sender)
+    return receiver.profile.nil?
+    return sender.profile.nil?
     @receiver = receiver
     @sender = sender
     mail(to: @receiver.email, subject: 'buzzn: ' + t('user_removed_from_conversation'))

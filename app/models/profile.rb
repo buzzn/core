@@ -29,6 +29,11 @@ class Profile < ActiveRecord::Base
   delegate :friendships, to: :user
   delegate :groups, to: :user
 
+  after_destroy do
+    user.roles.delete_all
+    user.update(profile: nil)
+  end
+
   scope :readable_by, -> (user) do
     if user
       profiles   = Profile.arel_table
