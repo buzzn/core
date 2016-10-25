@@ -4,7 +4,8 @@ class CalculateGroupScoresWorker
 
   def perform(containing_timestamp)
     Group.all.each do |group|
-      group.calculate_scores(containing_timestamp)
+      # be failsafe so we do run over all the groups
+      group.calculate_scores(containing_timestamp) rescue nil
     end
   end
 end
