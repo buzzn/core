@@ -75,4 +75,13 @@ describe "Profile Model" do
     expect(Profile.readable_by(user).size).to eq Profile.count
     expect(Profile.anonymized_readable_by(user).size).to eq Profile.count
   end
+
+  it 'clears the user when it gets deleted' do
+    user = Fabricate(:user)
+    user.add_role(:admin, nil)
+    user.profile.destroy
+    user.reload
+    expect(user.roles).to eq []
+    expect(user.profile).to be_nil
+  end
 end
