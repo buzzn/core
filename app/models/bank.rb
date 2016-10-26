@@ -112,14 +112,14 @@ class Bank < ActiveRecord::Base
   end
 
   def self.get_by_bic(bic)
-    if bic.size < 11     
+    if bic && bic.size < 11     
       bic += 'X' * (11 - bic.size)
     end
     where(bic: bic).limit(1).first
   end
 
   def self.get_by_iban(iban)
-    if iban.start_with?('DE')
+    if iban && iban.start_with?('DE')
       where(blz: iban[4..11]).limit(1).first
     end       
   end

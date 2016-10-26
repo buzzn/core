@@ -26,7 +26,7 @@ class Organization < ActiveRecord::Base
 
   has_one :iln
 
-  validates :name, presence: true, length: { in: 3..40 }
+  validates :name, presence: true, length: { in: 3..40 }, uniqueness: true
   validates :email, presence: true
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
   validates :phone, presence: true
@@ -41,6 +41,34 @@ class Organization < ActiveRecord::Base
   scope :transmission_system_operators, -> { where(mode: 'transmission_system_operator') }
   scope :others,                        -> { where(mode: 'other') }
   scope :readable_by,                   -> (user) { where(nil) }
+
+  BUZZN_ENERGY   = 'buzzn GmbH'
+  BUZZN_READER   = 'buzzn Reader'
+  BUZZN_METERING = 'buzzn systems UG'
+
+  def self.buzzn_energy
+    where(name: BUZZN_ENERGY).first
+  end
+
+  def self.buzzn_reader
+    where(name: BUZZN_READER).first
+  end
+
+  def self.buzzn_metering
+    where(name: BUZZN_METERING).first
+  end
+
+  def buzzn_energy?
+    name == BUZZN_ENERGY
+  end
+
+  def buzzn_reader?
+    name == BUZZN_READER
+  end
+
+  def buzzn_metering?
+    name == BUZZN_METERING
+  end
 
   def self.modes
     %w{

@@ -48,7 +48,8 @@ class WizardMeteringPointsController  < ApplicationController
               @contract.price_cents = 0
               @contract.metering_point = @metering_point
               @contract.contract_owner_id = current_user.contracting_parties.first.id
-              if @contract.organization.slug == 'buzzn-metering'
+              if @contract.organization.slug == 'buzzn-metering' ||
+                 @contract.organization.buzzn_metering?
                 @contract.username = 'team@localpool.de'
                 @contract.password = 'Zebulon_4711'
               elsif @contract.organization.slug == 'mysmartgrid'
@@ -60,7 +61,8 @@ class WizardMeteringPointsController  < ApplicationController
                   flash[:notice] = t("your_credentials_have_been_checked_and_are_valid", metering_point: @metering_point.name)
                   respond_with @metering_point
                 else
-                  if @contract.organization.slug == 'buzzn-metering'
+                  if @contract.organization.slug == 'buzzn-metering' ||
+                     @contract.organization.buzzn_metering?
                     flash[:error] = t("your_credentials_have_been_checked_and_are_invalid", metering_point: @metering_point.name)
                     respond_with @metering_point
                   else

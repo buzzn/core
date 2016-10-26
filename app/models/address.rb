@@ -6,9 +6,9 @@ class Address < ActiveRecord::Base
 
   belongs_to :addressable, polymorphic: true
 
-  validates :street_name,     presence: true
-  validates :street_number,   presence: true
-  validates :city,            presence: true
+  validates :street_name,     presence: true, length: { in: 2..128 }
+  validates :street_number,   presence: true, length: { in: 1..32 }
+  validates :city,            presence: true, length: { in: 2..128 }
   #validates :state,           presence: true
   validates :zip,             presence: true, numericality: { only_integer: true }
 

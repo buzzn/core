@@ -33,7 +33,6 @@ Fabricator :transmission_system_operator, from: :organization do
   mode 'transmission_system_operator'
 end
 
-
 Fabricator :transmission_system_operator_with_address, from: :transmission_system_operator do
   address     { Fabricate(:address, street_name: 'Zu den Höfen', street_number: '7', zip: 37181, city: 'Asche', state: 'Lower Saxony') }
 end
@@ -50,18 +49,24 @@ end
 
 # needed for groups fabricator
 Fabricator :buzzn_metering, from: :metering_service_provider do
-  name 'buzzn-metering'
-  mode 'metering_service_provider'
+  name Organization::BUZZN_METERING
 end
 
 # needed for contracts fabricator
 Fabricator :discovergy, from: :metering_service_provider do
-  name 'discovergy'
-  mode 'metering_service_provider'
+  name 'Discovergy'
 end
 
 # needed for contracts fabricator
 Fabricator :mysmartgrid, from: :metering_service_provider do
-  name 'mysmartgrid'
-  mode 'metering_service_provider'
+  name 'MySmartGrid'
+end
+
+
+Fabricator :buzzn_energy, from: :electricity_supplier do
+  name Organization::BUZZN_ENERGY
+end
+
+Fabricator :buzzn_reader, from: :metering_point_operator do
+  name Organization::BUZZN_READER
 end

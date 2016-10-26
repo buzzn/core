@@ -5,7 +5,7 @@ Fabricator :bank_account do
   bank_name    { FFaker::Company.name.slice(0...63) }
   direct_debit { FFaker::Boolean.maybe }
 end
-Fabricator :bank_account_mustermann do
+Fabricator :bank_account_mustermann, from: :bank_account do
   holder      'Max Musterman'
   iban        'DE23100000001234567890'
   bic         'BELADEBE'

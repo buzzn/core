@@ -17,7 +17,8 @@ class ContractsController < ApplicationController
   def create
     @contract = Contract.new(contract_params)
     authorize_action_for @contract
-    if @contract.organization.slug == 'buzzn-metering'
+    if @contract.organization.slug == 'buzzn-metering' ||
+       @contract.organization.buzzn_metering?
       @contract.username = 'team@localpool.de'
       @contract.password = 'Zebulon_4711'
     end

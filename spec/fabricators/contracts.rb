@@ -27,7 +27,7 @@ end
 
 
 Fabricator :servicing_contract, from: :contract do
-  organization  { Organization.find('buzzn-metering') }
+  organization  { Organization.buzzn_metering }
   mode  'servicing_contract'
 end
 
@@ -60,14 +60,14 @@ end
 
 
 Fabricator :mpoc_buzzn_metering, from: :metering_point_operator_contract do
-  organization  { Organization.find('buzzn-metering') }
+  organization  { Organization.buzzn_metering }
   username      'team@localpool.de'
   password      'Zebulon_4711'
 end
 
 
 Fabricator :mpoc_justus, from: :metering_point_operator_contract do
-  organization  { Organization.find('discovergy') }
+  organization  { Organization.buzzn_metering }
   username      'justus@buzzn.net'
   password      'PPf93TcR'
 end
