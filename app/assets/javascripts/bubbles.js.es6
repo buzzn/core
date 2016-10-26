@@ -187,7 +187,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     const sortedData = _.sortBy(inData, d => d.value);
     return d3.scaleLinear()
       .domain([_.first(sortedData).value, _.last(sortedData).value])
-      .range([0.0005, 0.001])(val);
+      .range([0.004, 0.0005]).clamp(true)(val);
   }
 
   function setHtmlTickers() {
@@ -386,10 +386,10 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .attr('r', d => radius(dataWeight)(d.value));
 
     // Params are different from draw/redraw
-    simulation.force('x', d3.forceX(fullWidth / 2).strength(d => scaleCenterForce(d.value * 100)))
-      .force('y', d3.forceY(fullHeight / 2).strength(d => scaleCenterForce(d.value * 100)))
+    simulation.force('x', d3.forceX(fullWidth / 2).strength(d => scaleCenterForce(d.value * 10)))
+      .force('y', d3.forceY(fullHeight / 2).strength(d => scaleCenterForce(d.value * 10)))
       .force('charge', d3.forceManyBody()
-        .strength(d => d.value * 0.0002 / d3.scaleLinear()
+        .strength(d => d.value * 0.00002 / d3.scaleLinear()
           .domain([0, 300])
           .range([1, 100])(inData.length)))
       .alpha(1)
