@@ -27,6 +27,12 @@ describe "ContractingParty Model" do
 
   describe 'validation' do
 
+    it 'checks readability' do
+      expect(subject.readable_by?(current_user)).to be false
+      expect(subject.readable_by?(subject.user)).to be true
+      expect(subject.readable_by?(admin)).to be true
+    end
+
     it 'checks legal entity on create' do
       subject = ContractingParty.create legal_entity: 'natural_person'
       expect(subject.valid?).to eq true
@@ -60,13 +66,17 @@ describe "ContractingParty Model" do
     end
 
     it 'checks the existence of the associated organization on update' do
-      subject.guarded_update(current_user, organization_id: other_organization.id)
+      subject.guarded_update(admin, organization_id: other_organization.id)
       expect(subject.reload.organization).to eq(other_organization)
 
       expect {
-        subject.guarded_update(current_user,
+        subject.guarded_update(admin,
                                organization_id: "74aa64f4-5262-49c5-bba0-f15eeb063741")
       }.to raise_error Buzzn::RecordNotFound
+      expect {
+        subject.guarded_update(current_user,
+                               organization_id: "74aa64f4-5262-49c5-bba0-f15eeb063741")
+      }.to raise_error Buzzn::PermissionDenied
     end
 
     it 'checks the existence of the associated organization on create' do
@@ -88,7 +98,7 @@ describe "ContractingParty Model" do
       }.to raise_error Buzzn::PermissionDenied
 
       expect {
-        subject.guarded_update(current_user,
+        subject.guarded_update(admin,
                                user_id: "74aa64f4-5262-49c5-bba0-f15eeb063741")
       }.to raise_error Buzzn::RecordNotFound
 
@@ -118,7 +128,7 @@ describe "ContractingParty Model" do
       }.to raise_error Buzzn::PermissionDenied
 
       expect {
-        subject.guarded_update(current_user,
+        subject.guarded_update(admin,
                                metering_point_id: "74aa64f4-5262-49c5-bba0-f15eeb063741")
       }.to raise_error Buzzn::RecordNotFound
 
