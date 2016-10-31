@@ -105,59 +105,59 @@ class Aggregate
     resolution = params.fetch(:resolution, 'day_to_minutes') || 'day_to_minutes'
     past_items = []
     cache_id = "/aggregate/past?metering_point_ids=#{@metering_points_hash[:ids].join(',')}&timestamp=#{timestamp}&resolution=#{resolution}"
+
     if Rails.cache.exist?(cache_id)
       past = Rails.cache.fetch(cache_id)
     else
-      seconds_to_process = Benchmark.realtime do
+      # buzzn_api
+      @metering_points_hash[:buzzn_api].each do |metering_point|
+        past_items << past_buzzn_api(metering_point, resolution, timestamp)
+      end
 
-        # buzzn_api
-        @metering_points_hash[:buzzn_api].each do |metering_point|
-          past_items << past_buzzn_api(metering_point, resolution, timestamp)
+      # discovergy
+      @metering_points_hash[:discovergy].each do |metering_point|
+        past_items << past_discovergy(metering_point, resolution, timestamp)
+      end
+
+      ['slp', 'sep_bhkw', 'sep_pv'].each do |fake_type|
+        if @metering_points_hash[fake_type.to_sym].any?
+          past_items.concat( past_fake(fake_type, @metering_points_hash, resolution, timestamp) )
         end
+      end
 
-        # discovergy
-        @metering_points_hash[:discovergy].each do |metering_point|
-          past_items << past_discovergy(metering_point, resolution, timestamp)
-        end
+      @metering_points_hash[:virtual].each do |metering_point|
+        formula_parts         = FormulaPart.where(metering_point_id: metering_point.id)
+        metering_point_ids    = formula_parts.map(&:operand_id)
+        metering_points       = MeteringPoint.find(metering_point_ids)
+        metering_points_hash  = Aggregate.sort_metering_points(metering_points)
 
-        ['slp', 'sep_bhkw', 'sep_pv'].each do |fake_type|
-          if @metering_points_hash[fake_type.to_sym].any?
-            past_items.concat( past_fake(fake_type, @metering_points_hash, resolution, timestamp) )
-          end
-        end
-
-        @metering_points_hash[:virtual].each do |metering_point|
-          formula_parts         = FormulaPart.where(metering_point_id: metering_point.id)
-          metering_point_ids    = formula_parts.map(&:operand_id)
-          metering_points       = MeteringPoint.find(metering_point_ids)
-          metering_points_hash  = Aggregate.sort_metering_points(metering_points)
-
-          if metering_points_hash[:data_sources].size > 1
-            return 'error different data_sources'
-          else
-            data_source = metering_points_hash[:data_sources].first
-            metering_points_hash[data_source.to_sym].each do |metering_point|
-              formula_part = formula_parts.find_by(operand_id: metering_point.id)
-              if formula_part.operator == '+'
-                negativ = false
-              elsif formula_part.operator == '-'
-                negativ = true
-              end
-              past_items << send("past_#{data_source}", metering_point, resolution, timestamp, negativ)
+        if metering_points_hash[:data_sources].size > 1
+          return 'error different data_sources'
+        else
+          data_source = metering_points_hash[:data_sources].first
+          metering_points_hash[data_source.to_sym].each do |metering_point|
+            formula_part = formula_parts.find_by(operand_id: metering_point.id)
+            if formula_part.operator == '+'
+              negativ = false
+            elsif formula_part.operator == '-'
+              negativ = true
             end
+            past_items << send("past_#{data_source}", metering_point, resolution, timestamp, negativ)
           end
         end
-
-        past = sum_lists(past_items, resolution)
-
       end
-      if seconds_to_process > 2
-        Rails.cache.write(cache_id, past, expires_in: 1.minute)
-      end
+
+      past = sum_lists(past_items, resolution)
+
+      Rails.cache.write(
+        cache_id,
+        past,
+        expires_in: cache_expires_in(resolution, timestamp)
+      )
     end
+
     return past
   end
-
 
 
   def self.sort_metering_points(metering_points)
@@ -208,6 +208,22 @@ class Aggregate
 
 
 private
+
+  def cache_expires_in(resolution, timestamp)
+    immutable = 5.days
+    case resolution
+    when 'hour_to_minutes'
+      timestamp.hour < Time.current.hour ? immutable : 1.hour
+    when 'day_to_minutes'
+      timestamp.day < Time.current.day ? immutable : 1.day
+    when 'month_to_days'
+      timestamp.month < Time.current.month ? immutable : 1.day
+    when 'year_to_months'
+      timestamp.year < Time.current.year ? immutable : 1.day
+    end
+    binding.pry
+  end
+
 
   def present_fake(fake_type, metering_points_hash, timestamp )
     document = Reading.where(:timestamp.gte => timestamp, source: fake_type).first
