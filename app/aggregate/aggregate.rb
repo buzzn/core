@@ -17,63 +17,57 @@ class Aggregate
     timestamp = params.fetch(:timestamp, Time.current) || Time.current
     present_items = []
 
-    cache_id = "/aggregate/present?metering_point_ids=#{@metering_points_hash[:ids].join(',')}"
-    if false #Rails.cache.exist?(cache_id)
-      present = Rails.cache.fetch(cache_id)
-    else
-      seconds_to_process = Benchmark.realtime do
 
-        @metering_points_hash[:buzzn_api].each do |metering_point|
-          document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
-          if document
-            present_items << {
-              "operator" => (metering_point.mode == 'in' ? '+' : '-'),
-              "data" => document_to_hash(metering_point, document)
-            }
-          end
-        end
 
-        # discovergy
-        @metering_points_hash[:discovergy].each do |metering_point|
-          present_items << {
-            "operator" => (metering_point.mode == 'in' ? '+' : '-'),
-            "data" => external_data_live(metering_point)
-          }
-        end
-
-        ['slp', 'sep_bhkw', 'sep_pv'].each do |fake_type|
-          if @metering_points_hash[fake_type.to_sym].any?
-            present_items.concat(present_fake(fake_type, @metering_points_hash, timestamp ))
-          end
-        end
-
-        @metering_points_hash[:virtual].each do |metering_point|
-          formula_parts         = FormulaPart.where(metering_point_id: metering_point.id)
-          metering_point_ids    = formula_parts.map(&:operand_id)
-          metering_points       = MeteringPoint.find(metering_point_ids)
-          metering_points_hash  = Aggregate.sort_metering_points(metering_points)
-
-          if metering_points_hash[:data_sources].size > 1
-            return 'error different data_sources'
-          else
-            data_source = metering_points_hash[:data_sources].first
-            metering_points_hash[data_source.to_sym].each do |metering_point|
-              formula_part = formula_parts.find_by(operand_id: metering_point.id)
-              if formula_part.operator == '+'
-                negativ = false
-              elsif formula_part.operator == '-'
-                negativ = true
-              end
-              present_items << {
-                "operator" => (metering_point.mode == 'in' ? '+' : '-'),
-                "data" => send("present_#{data_source}", metering_point, negativ)
-              }
-            end
-          end
-        end
-
+    @metering_points_hash[:buzzn_api].each do |metering_point|
+      document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
+      if document
+        present_items << {
+          "operator" => (metering_point.mode == 'in' ? '+' : '-'),
+          "data" => document_to_hash(metering_point, document)
+        }
       end
     end
+
+    # discovergy
+    @metering_points_hash[:discovergy].each do |metering_point|
+      present_items << {
+        "operator" => (metering_point.mode == 'in' ? '+' : '-'),
+        "data" => external_data_live(metering_point)
+      }
+    end
+
+    ['slp', 'sep_bhkw', 'sep_pv'].each do |fake_type|
+      if @metering_points_hash[fake_type.to_sym].any?
+        present_items.concat(present_fake(fake_type, @metering_points_hash, timestamp ))
+      end
+    end
+
+    @metering_points_hash[:virtual].each do |metering_point|
+      formula_parts         = FormulaPart.where(metering_point_id: metering_point.id)
+      metering_point_ids    = formula_parts.map(&:operand_id)
+      metering_points       = MeteringPoint.find(metering_point_ids)
+      metering_points_hash  = Aggregate.sort_metering_points(metering_points)
+
+      if metering_points_hash[:data_sources].size > 1
+        return 'error different data_sources'
+      else
+        data_source = metering_points_hash[:data_sources].first
+        metering_points_hash[data_source.to_sym].each do |metering_point|
+          formula_part = formula_parts.find_by(operand_id: metering_point.id)
+          if formula_part.operator == '+'
+            negativ = false
+          elsif formula_part.operator == '-'
+            negativ = true
+          end
+          present_items << {
+            "operator" => (metering_point.mode == 'in' ? '+' : '-'),
+            "data" => send("present_#{data_source}", metering_point, negativ)
+          }
+        end
+      end
+    end
+
 
     power_milliwatt_summed = 0
     present_items.each do |present_item|
@@ -90,9 +84,7 @@ class Aggregate
     else
       present["timestamp"] = present_items.first['data']['timestamp']
     end
-    if seconds_to_process > 2
-      Rails.cache.write(cache_id, present, expires_in: 5.seconds)
-    end
+
     return present
   end
 
@@ -221,7 +213,6 @@ private
     when 'year_to_months'
       timestamp.year < Time.current.year ? immutable : 1.day
     end
-    binding.pry
   end
 
 
