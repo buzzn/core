@@ -65,8 +65,6 @@ RSpec.configure do |config|
     ActionMailer::Base.deliveries.last
   end
 
-
-
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
   end
@@ -84,6 +82,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each) do
+    Rails.cache.clear
     DatabaseCleaner.clean
     Mongoid.purge!
   end

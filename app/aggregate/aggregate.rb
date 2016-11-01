@@ -1,5 +1,4 @@
-require 'benchmark'
-
+require 'uri'
 #### Usage
 # mp = MeteringPoint.find('some-id')
 # hash = Aggregate.sort([mp])
@@ -96,7 +95,14 @@ class Aggregate
     timestamp  = params.fetch(:timestamp, Time.current) || Time.current
     resolution = params.fetch(:resolution, 'day_to_minutes') || 'day_to_minutes'
     past_items = []
-    cache_id = "/aggregate/past?metering_point_ids=#{@metering_points_hash[:ids].join(',')}&timestamp=#{timestamp}&resolution=#{resolution}"
+    api_endpoint = '/aggregates/past'
+    metering_point_ids = @metering_points_hash[:ids].join(',')
+    request_params = {
+      metering_point_ids: metering_point_ids,
+      timestamp: timestamp,
+      resolution: resolution
+    }
+    cache_id = "#{api_endpoint}?#{request_params.to_param}"
 
     if Rails.cache.exist?(cache_id)
       past = Rails.cache.fetch(cache_id)
@@ -205,9 +211,9 @@ private
     immutable = 5.days
     case resolution
     when 'hour_to_minutes'
-      timestamp.hour < Time.current.hour ? immutable : 1.hour
+      timestamp.hour < Time.current.hour ? immutable : 1.minute
     when 'day_to_minutes'
-      timestamp.day < Time.current.day ? immutable : 1.day
+      timestamp.day < Time.current.day ? immutable : 1.minute
     when 'month_to_days'
       timestamp.month < Time.current.month ? immutable : 1.day
     when 'year_to_months'
@@ -303,7 +309,7 @@ private
     for i in 0...lists.size
       for j in 0...lists[i].size
         if lists[i][j]
-          key = lists[i][j].values[0]
+          key = lists[i][j].values[0] #TODO the key is a value. please rename key
           value = lists[i][j].values[1]
           if i > 0
             timestampIndex = findMatchingTimestamp(key, result, resolution)
