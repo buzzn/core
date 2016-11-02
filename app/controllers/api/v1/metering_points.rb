@@ -51,7 +51,7 @@ module API
         patch ':id' do
           metering_point = MeteringPoint.guarded_retrieve(current_user,
                                                           permitted_params)
-          # TODO move logic into MeteringPoint 
+          # TODO move logic into MeteringPoint
           attributes = permitted_params.reject { |k,v| k == :meter_id }
           if permitted_params[:meter_id]
             meter = Meter.unguarded_retrieve(permitted_params[:meter_id])

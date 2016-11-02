@@ -10,7 +10,7 @@ class Meter < ActiveRecord::Base
   mount_uploader :image, PictureUploader
   before_destroy :release_metering_points
   has_many :equipments
-  has_many :metering_points
+  has_many :registers
   default_scope { order('created_at ASC') }
 
   scope :editable_by_user, lambda {|user|
@@ -37,6 +37,10 @@ class Meter < ActiveRecord::Base
       # sql fragment 'exists select 1 where .....'
       joins(mp_join).where(admin_or_manager.project(1).exists)
     end
+  end
+
+  def metering_points
+    self.registers.collect(&:metering_point).uniq.compact
   end
 
   def self.accessible_by_user(user)

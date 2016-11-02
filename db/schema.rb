@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161020085343) do
+ActiveRecord::Schema.define(version: 20161102093701) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -178,6 +178,8 @@ ActiveRecord::Schema.define(version: 20161020085343) do
     t.uuid     "group_id"
     t.datetime "created_at",                                         null: false
     t.datetime "updated_at",                                         null: false
+    t.uuid     "contract_owner_id"
+    t.uuid     "contract_beneficiary_id"
     t.boolean  "retailer"
     t.float    "price_cents_per_kwh"
     t.integer  "price_cents_per_month"
@@ -188,8 +190,6 @@ ActiveRecord::Schema.define(version: 20161020085343) do
     t.boolean  "authorization"
     t.text     "feedback"
     t.text     "attention_by"
-    t.uuid     "contract_owner_id"
-    t.uuid     "contract_beneficiary_id"
   end
 
   add_index "contracts", ["group_id"], name: "index_contracts_on_group_id", using: :btree
@@ -545,6 +545,25 @@ ActiveRecord::Schema.define(version: 20161020085343) do
   add_index "profiles", ["slug"], name: "index_profiles_on_slug", unique: true, using: :btree
   add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
   add_index "profiles", ["user_name"], name: "index_profiles_on_user_name", unique: true, using: :btree
+
+  create_table "registers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.string   "obis"
+    t.string   "label"
+    t.boolean  "low_load_ability"
+    t.integer  "digits_before_comma"
+    t.integer  "decimal_digits"
+    t.boolean  "virtual"
+    t.string   "metering_point_id"
+    t.string   "meter_id"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+  end
+
+  add_index "registers", ["id"], name: "index_registers_on_id", using: :btree
+  add_index "registers", ["meter_id"], name: "index_registers_on_meter_id", using: :btree
+  add_index "registers", ["metering_point_id", "meter_id", "id"], name: "index_registers_on_metering_point_id_and_meter_id_and_id", using: :btree
+  add_index "registers", ["metering_point_id", "meter_id"], name: "index_registers_on_metering_point_id_and_meter_id", using: :btree
+  add_index "registers", ["metering_point_id"], name: "index_registers_on_metering_point_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
