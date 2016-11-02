@@ -211,9 +211,9 @@ private
     immutable = 5.days
     case resolution
     when 'hour_to_minutes'
-      timestamp.hour < Time.current.hour ? immutable : 1.minute
+      timestamp.hour < Time.current.hour ? immutable : 15.minute
     when 'day_to_minutes'
-      timestamp.day < Time.current.day ? immutable : 1.minute
+      timestamp.day < Time.current.day ? immutable : 15.minute
     when 'month_to_days'
       timestamp.month < Time.current.month ? immutable : 1.day
     when 'year_to_months'
