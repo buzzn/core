@@ -553,8 +553,8 @@ ActiveRecord::Schema.define(version: 20161102093701) do
     t.integer  "digits_before_comma"
     t.integer  "decimal_digits"
     t.boolean  "virtual"
-    t.string   "metering_point_id"
-    t.string   "meter_id"
+    t.uuid     "metering_point_id"
+    t.uuid     "meter_id"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
   end

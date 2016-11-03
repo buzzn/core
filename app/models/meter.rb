@@ -23,24 +23,24 @@ class Meter < ActiveRecord::Base
     else
       # admin or manager query
       meter          = Meter.arel_table
-      metering_point = MeteringPoint.arel_table
+      register       = Register.arel_table
       users_roles    = Arel::Table.new(:users_roles)
-      admin_or_manager = User.roles_query(user, manager: metering_point[:id], admin: nil)
+      admin_or_manager = User.roles_query(user, manager: register[:metering_point_id], admin: nil)
 
       # with AR5 you can use left_outer_joins directly
       # `left_outer_joins(:metering_points)` instead of this mp_on and mp_join
-      mp_on   = meter.create_on(meter[:id].eq(metering_point[:meter_id]))
-      mp_join = meter.create_join(metering_point, mp_on,
-                                  Arel::Nodes::OuterJoin)
+      register_on   = meter.create_on(meter[:id].eq(register[:meter_id]))
+      register_join = meter.create_join(register, register_on,
+                                        Arel::Nodes::OuterJoin)
 
       # need left outer join to get all meters without metering_point as well
       # sql fragment 'exists select 1 where .....'
-      joins(mp_join).where(admin_or_manager.project(1).exists)
+      joins(register_join).where(admin_or_manager.project(1).exists)
     end
   end
 
   def metering_points
-    self.registers.collect(&:metering_point).uniq.compact
+    MeteringPoint.joins(:registers).where('registers.meter_id = ?', self).distinct
   end
 
   def self.accessible_by_user(user)

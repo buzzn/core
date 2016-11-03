@@ -9,8 +9,8 @@ class CreateRegisters < ActiveRecord::Migration
       t.integer :decimal_digits
       t.boolean :virtual
 
-      t.string :metering_point_id, type: :uuid
-      t.string :meter_id, type: :uuid
+      t.belongs_to :metering_point, type: :uuid
+      t.belongs_to :meter, type: :uuid
 
       t.timestamps null: false
     end
