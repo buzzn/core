@@ -29,13 +29,8 @@ describe "Meter Model" do
     expect(meters.size).to eq 2
   end
 
-  let(:meter) { Fabricate(:meter) }
-  let(:second) do
-    second = Fabricate(:meter)
-    Fabricate(:metering_point, meter: second)
-    second
-  end
-  let(:metering_point) { Fabricate(:metering_point, meter: meter) }
+  let(:meter) { meter = Fabricate(:easy_meter_q3d_with_metering_point) }
+  let(:second) { Fabricate(:easy_meter_q3d_with_metering_point) }
   let(:user) { Fabricate(:user) }
   let(:admin) do
     admin = Fabricate(:user)
@@ -44,7 +39,7 @@ describe "Meter Model" do
   end
   let(:manager) do
     manager = Fabricate(:user)
-    manager.add_role(:manager, metering_point)
+    manager.add_role(:manager, meter.metering_points.first)
     manager
   end
   let(:orphand) { Fabricate(:meter) }
