@@ -68,7 +68,8 @@ class Reading
     }
   end
 
-  def self.time_range_from_timestamp_and_resolution(timestamp, resolution)
+  def self.time_range_from_timestamp_and_resolution(raw_timestamp, resolution)
+    timestamp = raw_timestamp.to_datetime
     offset = timestamp.utc_offset*1000
     case resolution.to_sym
     when :year_to_months

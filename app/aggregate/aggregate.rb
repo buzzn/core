@@ -8,6 +8,16 @@ require 'uri'
 
 class Aggregate
 
+  def self.build_cache_id(api_endpoint, metering_point_ids, timestamp, resolution)
+    timehash = Reading.time_range_from_timestamp_and_resolution(timestamp, resolution)
+    params = {
+      metering_point_ids: metering_point_ids,
+      time: timehash
+    }.to_param
+    return "#{api_endpoint}?#{params}"
+  end
+
+
   def initialize(metering_points_hash)
     @metering_points_hash = metering_points_hash
   end
@@ -95,18 +105,13 @@ class Aggregate
     timestamp  = params.fetch(:timestamp, Time.current) || Time.current
     resolution = params.fetch(:resolution, 'day_to_minutes') || 'day_to_minutes'
     past_items = []
-    api_endpoint = '/aggregates/past'
     metering_point_ids = @metering_points_hash[:ids].join(',')
-    request_params = {
-      metering_point_ids: metering_point_ids,
-      timestamp: timestamp,
-      resolution: resolution
-    }
-    cache_id = "#{api_endpoint}?#{request_params.to_param}"
+    cache_id = Aggregate.build_cache_id('/aggregates/past', metering_point_ids, timestamp, resolution)
 
     if Rails.cache.exist?(cache_id)
       past = Rails.cache.fetch(cache_id)
     else
+
       # buzzn_api
       @metering_points_hash[:buzzn_api].each do |metering_point|
         past_items << past_buzzn_api(metering_point, resolution, timestamp)

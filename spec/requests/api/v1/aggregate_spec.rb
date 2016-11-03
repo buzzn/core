@@ -33,7 +33,12 @@ describe '/api/v1/aggregates' do
         resolution: 'year_to_months',
         timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -69,7 +74,12 @@ describe '/api/v1/aggregates' do
         timestamp: Time.find_zone('Berlin').local(2016,1,17).iso8601,
         resolution: 'month_to_days'
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -107,7 +117,12 @@ describe '/api/v1/aggregates' do
         resolution: 'month_to_days',
         timestamp: Time.find_zone('Berlin').local(2016,6,2).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -147,7 +162,12 @@ describe '/api/v1/aggregates' do
         resolution: 'day_to_minutes',
         timestamp: Time.find_zone('Berlin').local(2015,2,1).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -184,7 +204,12 @@ describe '/api/v1/aggregates' do
         resolution: 'hour_to_minutes',
         timestamp: Time.find_zone('Bangkok').local(2015,2,1, 0,30).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -223,7 +248,12 @@ describe '/api/v1/aggregates' do
         resolution: 'hour_to_minutes',
         timestamp: Time.find_zone('Sydney').local(2015,2,1, 0,30).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(406)
@@ -257,11 +287,14 @@ describe '/api/v1/aggregates' do
         resolution: 'hour_to_minutes',
         timestamp: Time.find_zone('Sydney').local(2015,2,1, 0,30).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
-
       get_with_token api_endpoint, request_params, access_token.token
-
       expect(response).to have_http_status(413)
       expect(Rails.cache.exist?(cache_id)).to be false
     end
@@ -290,7 +323,12 @@ describe '/api/v1/aggregates' do
         resolution: 'hour_to_minutes',
         timestamp: Time.find_zone('Sydney').local(2015,2,1, 0,30).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -329,7 +367,12 @@ describe '/api/v1/aggregates' do
         resolution: 'hour_to_minutes',
         timestamp: Time.find_zone('Berlin').local(2015,2,1,0,30).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -367,7 +410,12 @@ describe '/api/v1/aggregates' do
         resolution: 'year_to_months',
         timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -409,7 +457,12 @@ describe '/api/v1/aggregates' do
         resolution: 'day_to_minutes',
         timestamp: Time.find_zone('Berlin').local(2015,2,1).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -448,7 +501,12 @@ describe '/api/v1/aggregates' do
         resolution: 'month_to_days',
         timestamp: Time.find_zone('Berlin').local(2016,6,2).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -489,7 +547,12 @@ describe '/api/v1/aggregates' do
         resolution: 'year_to_months',
         timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -523,9 +586,14 @@ describe '/api/v1/aggregates' do
         request_params = {
           metering_point_ids: metering_point.id,
           resolution: 'month_to_days',
-          timestamp: Time.find_zone(zone).local(2016,6,2).iso8601
+          timestamp: Time.find_zone(zone).local(2016,6,2)
         }
-        cache_id = "#{api_controller}/past?#{request_params.to_param}"
+        cache_id = Aggregate.build_cache_id(
+                      api_controller + '/past',
+                      request_params[:metering_point_ids],
+                      request_params[:timestamp],
+                      request_params[:resolution]
+                    )
         expect(Rails.cache.exist?(cache_id)).to be false
         get_with_token api_endpoint, request_params, access_token.token
         expect(response).to have_http_status(200)
@@ -533,7 +601,7 @@ describe '/api/v1/aggregates' do
         expect(Rails.cache.exist?(cache_id)).to be true
         timestamp = Time.find_zone(zone).local(2016,6,1)
         json.each do |item|
-          expect(Time.parse(item['timestamp'])).to eq(timestamp)
+          expect(Time.parse(item['timestamp'])).to eq(timestamp.utc)
           expect(item['power_milliwatt']).to eq(nil)
           expect(item['energy_milliwatt_hour']).to eq(24*1300*1000)
           expect(item['energy_b_milliwatt_hour']).to eq(nil)
@@ -562,7 +630,12 @@ describe '/api/v1/aggregates' do
         resolution: 'year_to_months',
         timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -602,7 +675,12 @@ describe '/api/v1/aggregates' do
         timestamp: Time.find_zone('Berlin').local(2016,1,17).iso8601,
         resolution: 'month_to_days'
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -639,7 +717,12 @@ describe '/api/v1/aggregates' do
         resolution: 'month_to_days',
         timestamp: Time.find_zone('Berlin').local(2016,6,2).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -681,7 +764,12 @@ describe '/api/v1/aggregates' do
         resolution: 'hour_to_minutes',
         timestamp: Time.find_zone('Fiji').local(2015,2,1, 0,30).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -708,7 +796,12 @@ describe '/api/v1/aggregates' do
         resolution: 'month_to_days',
         timestamp: Time.find_zone('Berlin').local(2016,2,1).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -733,7 +826,12 @@ describe '/api/v1/aggregates' do
         resolution: 'day_to_minutes',
         timestamp: Time.find_zone('Berlin').local(2016,6,6).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(504)
@@ -751,7 +849,12 @@ describe '/api/v1/aggregates' do
         resolution: 'day_to_minutes',
         timestamp: Time.find_zone('Berlin').local(2016,5,6).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -778,7 +881,12 @@ describe '/api/v1/aggregates' do
         resolution: 'day_to_minutes',
         timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -803,7 +911,12 @@ describe '/api/v1/aggregates' do
         resolution: 'day_to_minutes',
         timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -831,7 +944,12 @@ describe '/api/v1/aggregates' do
         resolution: 'day_to_minutes',
         timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -865,7 +983,12 @@ describe '/api/v1/aggregates' do
         resolution: 'month_to_days',
         timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
       }
-      cache_id = "#{api_controller}/past?#{request_params.to_param}"
+      cache_id = Aggregate.build_cache_id(
+          api_controller + '/past',
+          request_params[:metering_point_ids],
+          request_params[:timestamp],
+          request_params[:resolution]
+        )
       expect(Rails.cache.exist?(cache_id)).to be false
       get_with_token "/api/v1/aggregates/past", request_params, access_token.token
       expect(Rails.cache.exist?(cache_id)).to be true
@@ -883,7 +1006,6 @@ describe '/api/v1/aggregates' do
 
   describe '/present' do
     api_endpoint = api_version + api_controller + '/present'
-
 
     it 'does aggregate Virtual metering_points present as manager' do
       access_token = Fabricate(:full_access_token_as_admin)
