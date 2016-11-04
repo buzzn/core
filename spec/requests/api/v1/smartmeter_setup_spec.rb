@@ -11,7 +11,7 @@ describe "MySmartGrid setup using API" do
     }.each do |organization, meta|
 
       it "creates a metering_point for #{meta[:orga] || organization} with #{meta[:contract] || 'no' } contract and #{token}", retry: 3, retry_wait: 10 do |spec|
-        VCR.use_cassette("api/v1/metering-points/#{spec.metadata[:description].downcase}") do
+        VCR.use_cassette("api/v1/smartmeter_setup/#{spec.metadata[:description].downcase}") do
           orga         = Fabricate(meta[:orga] || organization)
           access_token = Fabricate(token)
 
