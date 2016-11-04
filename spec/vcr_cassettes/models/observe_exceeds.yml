@@ -1,0 +1,44 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getLive?meterId=EASYMETER_60051560&numOfSeconds=6&password=Zebulon_4711&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 18:47:59 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 18:47:59 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 18:47:58 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1466586557857,"power":894660},{"time":1466586559857,"power":886480},{"time":1466586561857,"power":889140}]}'
+    http_version: 
+  recorded_at: Mon, 01 Feb 2016 00:30:01 GMT
+recorded_with: VCR 3.0.3
