@@ -13,6 +13,49 @@ describe '/api/v1/aggregates' do
     api_endpoint = api_version + api_controller + '/past'
 
 
+
+    it 'return the same cache for diffentend datetime formats' do
+      access_token = Fabricate(:full_access_token_as_admin)
+      metering_point = Fabricate(:metering_point)
+      energy_a_milliwatt_hour = 0
+      timestamp = Time.find_zone('Iceland').local(2015,2,1)
+      (3*60*30).times do |i|
+        Fabricate(:reading,
+                  source: 'slp',
+                  timestamp: timestamp,
+                  energy_a_milliwatt_hour: energy_a_milliwatt_hour,
+                  power_a_milliwatt: 930*1000
+                 )
+        energy_a_milliwatt_hour += 1300*1000
+        timestamp += 2.second
+      end
+
+      [ "2015-02-01T01:30:00Z",
+        "2015-02-01T23:59:00+00:00",
+        "Sun, 01 Feb 2015 00:03:00 GMT +00:00",
+        "Sun, 01 Feb 2015 23:59:59 UTC +00:00"
+      ].each_with_index do |timestamp, index|
+        request_params = {
+          metering_point_ids: metering_point.id,
+          resolution: 'day_to_minutes',
+          timestamp: timestamp
+        }
+        cache_id = Aggregate.build_cache_id(
+            api_controller + '/past',
+            request_params[:metering_point_ids],
+            request_params[:timestamp],
+            request_params[:resolution]
+          )
+        expect(Rails.cache.exist?(cache_id)).to be false if index == 0
+        get_with_token api_endpoint, request_params, access_token.token
+        expect(response).to have_http_status(200)
+        expect(Rails.cache.exist?(cache_id)).to be true
+      end
+    end
+
+
+
+
     it 'slp energy by year_to_months as admin in summertime' do
       access_token = Fabricate(:full_access_token_as_admin)
       metering_point = Fabricate(:metering_point)
