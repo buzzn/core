@@ -44,9 +44,15 @@ class Meter < ActiveRecord::Base
   end
 
   def self.accessible_by_user(user)
-    metering_point = MeteringPoint.arel_table
-    manager = User.roles_query(user, manager: metering_point[:id])
-    meters = joins(:metering_points).where(manager.project(1).exists)
+    meter    = Meter.arel_table
+    register = Register.arel_table
+    manager = User.roles_query(user, manager: register[:metering_point_id])
+
+    register_on   = meter.create_on(meter[:id].eq(register[:meter_id]))
+    register_join = meter.create_join(register, register_on,
+                                        Arel::Nodes::OuterJoin)
+
+    meters = joins(register_join).where(manager.project(1).exists)
     meters
   end
 

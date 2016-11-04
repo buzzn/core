@@ -108,15 +108,13 @@ describe "Metering Points API" do
 
   it 'does creates a metering_point with full access token as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
-    meter        = Fabricate(:meter)
     metering_point = Fabricate.build(:metering_point)
 
     request_params = {
       uid:  metering_point.uid,
       mode: metering_point.mode,
       readable: metering_point.readable,
-      name: metering_point.name,
-      meter_id: meter.id
+      name: metering_point.name
     }.to_json
 
     post_with_token "/api/v1/metering-points", request_params, access_token.token
@@ -127,13 +125,11 @@ describe "Metering Points API" do
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
-    expect(json['data']['attributes']['meter-id']).to eq(meter.id)
     expect(json['data']['attributes']['name']).to eq(metering_point.name)
   end
 
 
   it 'does not creates a metering_point without token' do
-    meter        = Fabricate.build(:meter)
     metering_point = Fabricate.build(:metering_point)
 
     request_params = {
@@ -141,7 +137,6 @@ describe "Metering Points API" do
       mode: metering_point.mode,
       readable: metering_point.readable,
       name: metering_point.name,
-      meter_id: meter.id
     }.to_json
 
     post_without_token "/api/v1/metering-points", request_params
@@ -150,7 +145,6 @@ describe "Metering Points API" do
   end
 
   it 'does not creates a metering_point with missing parameters' do
-    meter          = Fabricate(:meter)
     metering_point = Fabricate.build(:metering_point)
     access_token   = Fabricate(:full_access_token)
 
@@ -158,7 +152,6 @@ describe "Metering Points API" do
       mode: metering_point.mode,
       readable: metering_point.readable,
       name: metering_point.name,
-      meter_id: meter.id
     }
 
     request_params.keys.each do |name|
@@ -177,7 +170,6 @@ describe "Metering Points API" do
 
 
   it 'does not creates a metering_point with invalid parameters' do
-    meter          = Fabricate(:meter)
     metering_point = Fabricate.build(:metering_point)
     access_token   = Fabricate(:full_access_token)
 
@@ -185,7 +177,6 @@ describe "Metering Points API" do
       mode: metering_point.mode,
       readable: metering_point.readable,
       name: metering_point.name,
-      meter_id: meter.id
     }
 
     request_params.keys.each do |name|
@@ -206,28 +197,10 @@ describe "Metering Points API" do
   end
 
 
-  it 'does not creates a metering_point with invalid meter_id' do
-    metering_point = Fabricate.build(:metering_point)
-    access_token   = Fabricate(:full_access_token)
-
-    request_params = {
-      mode: metering_point.mode,
-      readable: metering_point.readable,
-      name: metering_point.name,
-      meter_id: 'asd-dsa'
-    }
-
-    post_with_token "/api/v1/metering-points", request_params.to_json, access_token.token
-
-    expect(response).to have_http_status(404)
-  end
-
-
   [:simple_access_token, :full_access_token,
    :smartmeter_access_token].each do |token|
     it "creates a metering_point with #{token}" do
       access_token = Fabricate(token)
-      meter        = Fabricate(:meter)
       metering_point = Fabricate.build(:metering_point)
 
       request_params = {
@@ -235,7 +208,6 @@ describe "Metering Points API" do
         mode: metering_point.mode,
         readable: metering_point.readable,
         name: metering_point.name,
-        meter_id: meter.id
       }.to_json
 
       post_with_token "/api/v1/metering-points", request_params, access_token.token
@@ -245,20 +217,9 @@ describe "Metering Points API" do
       expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
       expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
       expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
-      expect(json['data']['attributes']['meter-id']).to eq(meter.id)
       expect(json['data']['attributes']['name']).to eq(metering_point.name)
     end
   end
-
-  it 'does not update a metering_point with invalid meter_id' do
-    metering_point = Fabricate(:metering_point)
-    access_token   = Fabricate(:full_access_token_as_admin)
-
-    patch_with_token "/api/v1/metering-points/#{metering_point.id}", { meter_id: 'asddsa'}.to_json, access_token.token
-
-    expect(response).to have_http_status(404)
-  end
-
 
 
   it 'does not update a metering_point with invalid parameters' do
@@ -282,7 +243,6 @@ describe "Metering Points API" do
 
   it 'updates a metering_point with token' do
     metering_point = Fabricate(:metering_point_with_manager)
-    meter        = Fabricate(:meter)
     manager       = metering_point.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
 
@@ -292,7 +252,6 @@ describe "Metering Points API" do
       mode: metering_point.mode,
       readable: metering_point.readable,
       name: "#{metering_point.name} updated",
-      meter_id: meter.id
     }.to_json
 
     patch_with_token "/api/v1/metering-points/#{metering_point.id}", request_params, access_token.token
@@ -301,7 +260,6 @@ describe "Metering Points API" do
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
-    expect(json['data']['attributes']['meter-id']).to eq(meter.id)
     expect(json['data']['attributes']['name']).to eq("#{metering_point.name} updated")
   end
 
@@ -310,7 +268,6 @@ describe "Metering Points API" do
   it 'does update a metering_point with full access token as admin' do
     metering_point = Fabricate(:metering_point_with_manager)
     access_token  = Fabricate(:full_access_token_as_admin)
-    meter        = Fabricate(:meter)
 
     request_params = {
       id: metering_point.id,
@@ -318,7 +275,6 @@ describe "Metering Points API" do
       mode: metering_point.mode,
       readable: metering_point.readable,
       name: "#{metering_point.name} updated",
-      meter_id: meter.id
     }.to_json
     patch_with_token "/api/v1/metering-points/#{metering_point.id}", request_params, access_token.token
 
@@ -326,7 +282,6 @@ describe "Metering Points API" do
     expect(json['data']['attributes']['uid']).to eq(metering_point.uid)
     expect(json['data']['attributes']['mode']).to eq(metering_point.mode)
     expect(json['data']['attributes']['readable']).to eq(metering_point.readable)
-    expect(json['data']['attributes']['meter-id']).to eq(meter.id)
     expect(json['data']['attributes']['name']).to eq("#{metering_point.name} updated")
   end
 
@@ -334,7 +289,6 @@ describe "Metering Points API" do
 
   it 'does not update a metering_point without token' do
     metering_point = Fabricate(:metering_point_with_manager)
-    meter          = Fabricate(:meter)
 
     request_params = {
       id: metering_point.id,
@@ -342,7 +296,6 @@ describe "Metering Points API" do
       mode: metering_point.mode,
       readable: metering_point.readable,
       name: "#{metering_point.name} updated",
-      meter_id: meter.id
 
     }.to_json
     patch_without_token "/api/v1/metering-points", request_params
@@ -581,12 +534,12 @@ describe "Metering Points API" do
     expect(response).to have_http_status(200)
 
     # TODO add members here
-    ['community', 'world', 'friends'].each do |readable|   
+    ['community', 'world', 'friends'].each do |readable|
       user.profile.update! readable: readable
       user.friends << manager if readable == 'friends'
 
       get_with_token "/api/v1/metering-points/#{metering_point.id}/relationships/managers", params.to_json, manager_token.token
-      expect(json['data'].size).to eq 1 
+      expect(json['data'].size).to eq 1
       expect(json['data'].first['id']).to eq user.id
     end
   end

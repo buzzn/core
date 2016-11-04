@@ -239,8 +239,10 @@ describe "Users API" do
       meter1 = Fabricate(:meter)
       meter2 = Fabricate(:meter)
       meter3 = Fabricate(:meter)
-      mp1    = Fabricate(:metering_point, meter: meter1)
-      mp2    = Fabricate(:metering_point, meter: meter2)
+      mp1    = Fabricate(:metering_point)
+      mp2    = Fabricate(:metering_point)
+      register1 = Fabricate(:in_register, meter: meter1, metering_point: mp1)
+      register2 = Fabricate(:in_register, meter: meter2, metering_point: mp2)
 
       access_token = Fabricate(token)
       user         = User.find(access_token.resource_owner_id)
@@ -258,7 +260,8 @@ describe "Users API" do
     user          = Fabricate(:user)
     page_overload.times do
       meter = Fabricate(:meter)
-      mp    = Fabricate(:metering_point, meter: meter)
+      mp    = Fabricate(:metering_point)
+      register = Fabricate(:in_register, meter: meter, metering_point: mp)
       user.add_role(:manager, mp)
     end
     get_with_token "/api/v1/users/#{user.id}/meters", manager_token
@@ -289,8 +292,10 @@ describe "Users API" do
     meter1 = Fabricate(:meter)
     meter2 = Fabricate(:meter)
     meter3 = Fabricate(:meter)
-    mp1    = Fabricate(:metering_point, meter: meter1)
-    mp2    = Fabricate(:metering_point, meter: meter2)
+    mp1    = Fabricate(:metering_point)
+    mp2    = Fabricate(:metering_point)
+    reg1   = Fabricate(:in_register, metering_point: mp1, meter: meter1)
+    reg2   = Fabricate(:in_register, metering_point: mp2, meter: meter2)
 
     access_token  = Fabricate(:full_access_token)
     user          = User.find(access_token.resource_owner_id)

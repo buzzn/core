@@ -38,9 +38,9 @@ Fabricator :easy_meter_q3d_with_in_out_metering_point, from: :easy_meter_q3d  do
 end
 
 Fabricator :easy_meter_q3d_with_manager, from: :easy_meter_q3d do
-  registers {[Fabricate(:in_register)]}
+  registers {[Fabricate(:in_register_with_metering_point)]}
   after_create { |meter|
-    mp = Fabricate(:metering_point, register: meter.registers.first)
+    mp = registers.first.metering_point
     user = Fabricate(:user)
     user.add_role(:manager, mp)
   }
@@ -62,7 +62,7 @@ end
 # Justus PV
 Fabricator :easymeter_60051599, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051599'
-  registers {[Fabricate(:in_register, metering_point: Fabricate(:mp_z2))]}
+  registers {[Fabricate(:out_register, metering_point: Fabricate(:mp_z2))]}
 end
 
 # Justus Ladestation
@@ -74,14 +74,14 @@ end
 # Justus BHKW
 Fabricator :easymeter_60051560, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051560'
-  registers {[Fabricate(:in_register, metering_point: Fabricate(:mp_z4))]}
+  registers {[Fabricate(:out_register, metering_point: Fabricate(:mp_z4))]}
 end
 
 
 # Justus Abgrenzung
 Fabricator :easymeter_60051600, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051600'
-  registers {[Fabricate(:in_register, metering_point: Fabricate(:mp_z5))]}
+  registers {[Fabricate(:out_register, metering_point: Fabricate(:mp_z5))]}
 end
 
 # Justus verbrauch

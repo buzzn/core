@@ -723,8 +723,8 @@ describe "Aggregates API" do
     it 'handles empty readings' do
       access_token = Fabricate(:full_access_token_as_admin)
       meter = Fabricate(:easymeter_fixed_serial) # in_out meter
-      input_metering_point  = meter.metering_points.inputs.first
-      output_metering_point = meter.metering_points.outputs.first
+      input_metering_point  = meter.registers.inputs.first.metering_point
+      output_metering_point = meter.registers.outputs.first.metering_point
 
       request_params = {
         metering_point_ids: input_metering_point.id
@@ -934,8 +934,8 @@ describe "Aggregates API" do
       access_token = Fabricate(:full_access_token_as_admin)
 
       meter = Fabricate(:easy_meter_q3d_with_in_out_metering_point)
-      metering_point_out  = meter.metering_points.outputs.first
-      metering_point_in   = meter.metering_points.inputs.first
+      metering_point_out  = meter.registers.outputs.first.metering_point
+      metering_point_in   = meter.registers.inputs.first.metering_point
 
       energy_a_milliwatt_hour = 0
       energy_b_milliwatt_hour = 1000
@@ -1116,8 +1116,8 @@ describe "Aggregates API" do
       access_token = Fabricate(:full_access_token_as_admin)
 
       meter = Fabricate(:easymeter_60139082)
-      input_metering_point  = meter.metering_points.inputs.first
-      output_metering_point = meter.metering_points.outputs.first
+      input_metering_point  = meter.registers.inputs.first.metering_point
+      output_metering_point = meter.registers.outputs.first.metering_point
 
 
       request_params = {
@@ -1146,8 +1146,8 @@ describe "Aggregates API" do
       access_token = Fabricate(:full_access_token_as_admin)
 
       meter = Fabricate(:easymeter_60139082)
-      input_metering_point  = meter.metering_points.inputs.first
-      output_metering_point = meter.metering_points.outputs.first
+      input_metering_point  = meter.registers.inputs.first.metering_point
+      output_metering_point = meter.registers.outputs.first.metering_point
 
       request_params = {
         metering_point_ids: output_metering_point.id,
@@ -1182,8 +1182,8 @@ describe "Aggregates API" do
       easymeter_60051599 = Fabricate(:easymeter_60051599) # PV
       easymeter_60051560 = Fabricate(:easymeter_60051560) # BHKW
 
-      mp_z2 = easymeter_60051599.metering_points.outputs.first
-      mp_z4 = easymeter_60051560.metering_points.outputs.first
+      mp_z2 = easymeter_60051599.registers.outputs.first.metering_point
+      mp_z4 = easymeter_60051560.registers.outputs.first.metering_point
 
 
 
@@ -1243,8 +1243,8 @@ describe "Aggregates API" do
     it 'does aggregate Discovergy power present for out metering_point as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
       meter = Fabricate(:easymeter_60139082) # in_out meter
-      input_metering_point  = meter.metering_points.inputs.first
-      output_metering_point = meter.metering_points.outputs.first
+      input_metering_point  = meter.registers.inputs.first.metering_point
+      output_metering_point = meter.registers.outputs.first.metering_point
 
       Timecop.freeze(Time.find_zone('Berlin').local(2016,2,1, 1,30,1)) # 6*15 minutes and 1 seconds
 
@@ -1275,7 +1275,7 @@ describe "Aggregates API" do
 
     it 'return data for metering point readable by world which belongs to a group not readable by world without token' do
       meter                   = Fabricate(:easymeter_60139082)
-      metering_point          = meter.metering_points.inputs.first
+      metering_point          = meter.registers.inputs.first.metering_point
       metering_point.readable = 'world'
       metering_point.save
       group                   = Fabricate(:group_readable_by_community)
@@ -1290,7 +1290,7 @@ describe "Aggregates API" do
 
     it 'return data for metering point not readable by world which belongs to a group readable by world without token' do
       meter                   = Fabricate(:easymeter_60139082)
-      metering_point          = meter.metering_points.inputs.first
+      metering_point          = meter.registers.inputs.first.metering_point
       metering_point.readable = 'community'
       metering_point.save
       group                   = Fabricate(:group)
@@ -1305,7 +1305,7 @@ describe "Aggregates API" do
 
     it 'does not return data for metering point not readable by world which belongs to a group not readable by world without token' do
       meter                   = Fabricate(:easymeter_60139082)
-      metering_point          = meter.metering_points.inputs.first
+      metering_point          = meter.registers.inputs.first.metering_point
       metering_point.readable = 'community'
       metering_point.save
       group                   = Fabricate(:group_readable_by_community)
