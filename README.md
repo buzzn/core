@@ -1,6 +1,6 @@
 [![Codeship Status for buzzn/buzzn](https://codeship.com/projects/9ea4e2c0-381a-0132-1daa-26b918746a8c/status)](https://codeship.com/projects/41893)
 
-# buzzn.net
+# app.buzzn.net
 
 ## Setup Ruby with rbenv
     https://github.com/sstephenson/rbenv#installation
