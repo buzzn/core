@@ -785,217 +785,228 @@ describe '/api/v1/aggregates' do
       end
     end
 
-
-
-    it 'discovergy out month_to_days as admin' do
-      access_token = Fabricate(:full_access_token_as_admin)
-      meter = Fabricate(:easymeter_60051599)
-      metering_point = meter.metering_points.first
-      request_params = {
-        metering_point_ids: metering_point.id,
-        resolution: 'month_to_days',
-        timestamp: Time.find_zone('Berlin').local(2016,2,1).iso8601
-      }
-      cache_id = Aggregate.build_cache_id(
-          api_controller + '/past',
-          request_params[:metering_point_ids],
-          request_params[:timestamp],
-          request_params[:resolution]
-        )
-      expect(Rails.cache.exist?(cache_id)).to be false
-      get_with_token api_endpoint, request_params, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json.count).to eq(29)
-      expect(json[15]['power_milliwatt']).to eq(nil)
-      expect(json[15]['energy_a_milliwatt_hour']).to eq(nil)
-      expect(json[15]['energy_milliwatt_hour']).to eq(2146232)
-      timestamp = Time.find_zone('Berlin').local(2016,2,1)
-      json.each do |item|
-        expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
-        timestamp += 1.day
-      end
-    end
-
-
-    it 'discovergy not on http error' do
-      access_token = Fabricate(:full_access_token_as_admin)
-      meter = Fabricate(:easymeter_60051560) # BHKW
-      metering_point = meter.metering_points.first
-      request_params = {
-        metering_point_ids: metering_point.id,
-        resolution: 'day_to_minutes',
-        timestamp: Time.find_zone('Berlin').local(2016,6,6).iso8601
-      }
-      cache_id = Aggregate.build_cache_id(
-          api_controller + '/past',
-          request_params[:metering_point_ids],
-          request_params[:timestamp],
-          request_params[:resolution]
-        )
-      expect(Rails.cache.exist?(cache_id)).to be false
-      get_with_token api_endpoint, request_params, access_token.token
-      expect(response).to have_http_status(504)
-      expect(Rails.cache.exist?(cache_id)).to be false
-      expect(json['error']).not_to be_nil
-    end
-
-
-    it 'Discovergy out day_to_minutes as admin' do
-      access_token = Fabricate(:full_access_token_as_admin)
-      meter = Fabricate(:easymeter_60051560) # BHKW
-      metering_point = meter.metering_points.first
-      request_params = {
-        metering_point_ids: metering_point.id,
-        resolution: 'day_to_minutes',
-        timestamp: Time.find_zone('Berlin').local(2016,5,6).iso8601
-      }
-      cache_id = Aggregate.build_cache_id(
-          api_controller + '/past',
-          request_params[:metering_point_ids],
-          request_params[:timestamp],
-          request_params[:resolution]
-        )
-      expect(Rails.cache.exist?(cache_id)).to be false
-      get_with_token api_endpoint, request_params, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json.count).to eq(96)
-      expect(Rails.cache.exist?(cache_id)).to be true
-      expect(json[15]['power_milliwatt']).to eq(881706)
-      expect(json[15]['energy_a_milliwatt_hour']).to eq(nil)
-      expect(json[15]['energy_milliwatt_hour']).to eq(nil)
-      timestamp = Time.find_zone('Berlin').local(2016,5,6)
-      json.each do |item|
-        expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
-        timestamp += 15.minute
-      end
-    end
-
-
-    it 'Discovergy in two-way meter day_to_minutes as admin' do
-      access_token = Fabricate(:full_access_token_as_admin)
-      meter = Fabricate(:easymeter_60139082)
-      input_metering_point  = meter.metering_points.inputs.first
-      output_metering_point = meter.metering_points.outputs.first
-      request_params = {
-        metering_point_ids: input_metering_point.id,
-        resolution: 'day_to_minutes',
-        timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
-      }
-      cache_id = Aggregate.build_cache_id(
-          api_controller + '/past',
-          request_params[:metering_point_ids],
-          request_params[:timestamp],
-          request_params[:resolution]
-        )
-      expect(Rails.cache.exist?(cache_id)).to be false
-      get_with_token api_endpoint, request_params, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json.count).to eq(96)
-      expect(Rails.cache.exist?(cache_id)).to be true
-      expect(json[0]['power_milliwatt']).to eq(10304)
-      timestamp = Time.find_zone('Berlin').local(2016,4,6)
-      json.each do |item|
-        expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
-        timestamp += 15.minute
-      end
-    end
-
-
-    it 'Discovergy out two-way meter day_to_minutes as admin' do
-      access_token = Fabricate(:full_access_token_as_admin)
-      meter = Fabricate(:easymeter_60139082)
-      input_metering_point  = meter.metering_points.inputs.first
-      output_metering_point = meter.metering_points.outputs.first
-      request_params = {
-        metering_point_ids: output_metering_point.id,
-        resolution: 'day_to_minutes',
-        timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
-      }
-      cache_id = Aggregate.build_cache_id(
-          api_controller + '/past',
-          request_params[:metering_point_ids],
-          request_params[:timestamp],
-          request_params[:resolution]
-        )
-      expect(Rails.cache.exist?(cache_id)).to be false
-      get_with_token api_endpoint, request_params, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json.count).to eq(96)
-      expect(Rails.cache.exist?(cache_id)).to be true
-      expect(json[0]['power_milliwatt']).to eq(109988)
-
-      timestamp = Time.find_zone('Berlin').local(2016,4,6)
-      json.each do |item|
-        expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
-        timestamp += 15.minute
-      end
-    end
-
-
-
-    it 'multiple Discovergy day_to_minutes as admin' do
-      access_token = Fabricate(:full_access_token_as_admin)
-      easymeter_60051599 = Fabricate(:easymeter_60051599) # PV
-      easymeter_60051560 = Fabricate(:easymeter_60051560) # BHKW
-      mp_z2 = easymeter_60051599.metering_points.outputs.first
-      mp_z4 = easymeter_60051560.metering_points.outputs.first
-      request_params = {
-        metering_point_ids: "#{mp_z4.id},#{mp_z2.id}",
-        resolution: 'day_to_minutes',
-        timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
-      }
-      cache_id = Aggregate.build_cache_id(
-          api_controller + '/past',
-          request_params[:metering_point_ids],
-          request_params[:timestamp],
-          request_params[:resolution]
-        )
-      expect(Rails.cache.exist?(cache_id)).to be false
-      get_with_token api_endpoint, request_params, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json.count).to eq(96)
-      expect(Rails.cache.exist?(cache_id)).to be true
-      expect(json[50]['power_milliwatt']).to eq(907367 + 1507120)
-      timestamp = Time.find_zone('Berlin').local(2016,4,6)
-      json.each do |item|
-        expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
-        timestamp += 15.minute
-      end
-    end
-
-
-    it 'virtual past month_to_days as admin' do
-      access_token = Fabricate(:full_access_token_as_admin)
-      virtual_metering_point = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtual metering_point
-      single_energy_values = []
-      virtual_metering_point.formula_parts.each do |formula_part|
-        metering_point = MeteringPoint.find(formula_part.operand_id)
+    it 'discovergy out month_to_days as admin' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
+        access_token = Fabricate(:full_access_token_as_admin)
+        meter = Fabricate(:easymeter_60051599)
+        metering_point = meter.metering_points.first
         request_params = {
           metering_point_ids: metering_point.id,
           resolution: 'month_to_days',
-          timestamp: Time.find_zone('Berlin').local(2016,4,6)
+          timestamp: Time.find_zone('Berlin').local(2016,2,1).iso8601
         }
+        cache_id = Aggregate.build_cache_id(
+            api_controller + '/past',
+            request_params[:metering_point_ids],
+            request_params[:timestamp],
+            request_params[:resolution]
+          )
+        expect(Rails.cache.exist?(cache_id)).to be false
         get_with_token api_endpoint, request_params, access_token.token
-        single_energy_values << json.first['energy_milliwatt_hour']
+        expect(response).to have_http_status(200)
+        expect(json.count).to eq(29)
+        expect(json[15]['power_milliwatt']).to eq(nil)
+        expect(json[15]['energy_a_milliwatt_hour']).to eq(nil)
+        expect(json[15]['energy_milliwatt_hour']).to eq(2146232)
+        timestamp = Time.find_zone('Berlin').local(2016,2,1)
+        json.each do |item|
+          expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
+          timestamp += 1.day
+        end
       end
-      request_params = {
-        metering_point_ids: virtual_metering_point.id,
-        resolution: 'month_to_days',
-        timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
-      }
-      cache_id = Aggregate.build_cache_id(
-          api_controller + '/past',
-          request_params[:metering_point_ids],
-          request_params[:timestamp],
-          request_params[:resolution]
-        )
-      expect(Rails.cache.exist?(cache_id)).to be false
-      get_with_token "/api/v1/aggregates/past", request_params, access_token.token
-      expect(Rails.cache.exist?(cache_id)).to be true
-      sum_value = single_energy_values[0] + single_energy_values[1] - single_energy_values[2] # last single_energy_value is a negativ formulapart metering_point
-      expect(json.first['energy_milliwatt_hour']).to eq(sum_value)
     end
 
+
+    it 'Discovergy not on http error' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
+        access_token = Fabricate(:full_access_token_as_admin)
+        meter = Fabricate(:easymeter_60051560) # BHKW
+        metering_point = meter.metering_points.first
+        request_params = {
+          metering_point_ids: metering_point.id,
+          resolution: 'day_to_minutes',
+          timestamp: Time.find_zone('Berlin').local(2016,6,6).iso8601
+        }
+        cache_id = Aggregate.build_cache_id(
+            api_controller + '/past',
+            request_params[:metering_point_ids],
+            request_params[:timestamp],
+            request_params[:resolution]
+          )
+        expect(Rails.cache.exist?(cache_id)).to be false
+        get_with_token api_endpoint, request_params, access_token.token
+        expect(response).to have_http_status(504)
+        expect(Rails.cache.exist?(cache_id)).to be false
+        expect(json['error']).not_to be_nil
+      end
+    end
+
+
+
+    it 'Discovergy out day_to_minutes as admin' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
+        access_token = Fabricate(:full_access_token_as_admin)
+        meter = Fabricate(:easymeter_60051560) # BHKW
+        metering_point = meter.metering_points.first
+        request_params = {
+          metering_point_ids: metering_point.id,
+          resolution: 'day_to_minutes',
+          timestamp: Time.find_zone('Berlin').local(2016,5,6).iso8601
+        }
+        cache_id = Aggregate.build_cache_id(
+            api_controller + '/past',
+            request_params[:metering_point_ids],
+            request_params[:timestamp],
+            request_params[:resolution]
+          )
+        expect(Rails.cache.exist?(cache_id)).to be false
+        get_with_token api_endpoint, request_params, access_token.token
+        expect(response).to have_http_status(200)
+        expect(json.count).to eq(96)
+        expect(Rails.cache.exist?(cache_id)).to be true
+        expect(json[15]['power_milliwatt']).to eq(881706)
+        expect(json[15]['energy_a_milliwatt_hour']).to eq(nil)
+        expect(json[15]['energy_milliwatt_hour']).to eq(nil)
+        timestamp = Time.find_zone('Berlin').local(2016,5,6)
+        json.each do |item|
+          expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
+          timestamp += 15.minute
+        end
+      end
+    end
+
+
+    it 'Discovergy in two-way meter day_to_minutes as admin' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
+        access_token = Fabricate(:full_access_token_as_admin)
+        meter = Fabricate(:easymeter_60139082)
+        input_metering_point  = meter.metering_points.inputs.first
+        output_metering_point = meter.metering_points.outputs.first
+        request_params = {
+          metering_point_ids: input_metering_point.id,
+          resolution: 'day_to_minutes',
+          timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
+        }
+        cache_id = Aggregate.build_cache_id(
+            api_controller + '/past',
+            request_params[:metering_point_ids],
+            request_params[:timestamp],
+            request_params[:resolution]
+          )
+        expect(Rails.cache.exist?(cache_id)).to be false
+        get_with_token api_endpoint, request_params, access_token.token
+        expect(response).to have_http_status(200)
+        expect(json.count).to eq(96)
+        expect(Rails.cache.exist?(cache_id)).to be true
+        expect(json[0]['power_milliwatt']).to eq(10304)
+        timestamp = Time.find_zone('Berlin').local(2016,4,6)
+        json.each do |item|
+          expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
+          timestamp += 15.minute
+        end
+      end
+    end
+
+
+    it 'Discovergy out two-way meter day_to_minutes as admin' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
+        access_token = Fabricate(:full_access_token_as_admin)
+        meter = Fabricate(:easymeter_60139082)
+        input_metering_point  = meter.metering_points.inputs.first
+        output_metering_point = meter.metering_points.outputs.first
+        request_params = {
+          metering_point_ids: output_metering_point.id,
+          resolution: 'day_to_minutes',
+          timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
+        }
+        cache_id = Aggregate.build_cache_id(
+            api_controller + '/past',
+            request_params[:metering_point_ids],
+            request_params[:timestamp],
+            request_params[:resolution]
+          )
+        expect(Rails.cache.exist?(cache_id)).to be false
+        get_with_token api_endpoint, request_params, access_token.token
+        expect(response).to have_http_status(200)
+        expect(json.count).to eq(96)
+        expect(Rails.cache.exist?(cache_id)).to be true
+        expect(json[0]['power_milliwatt']).to eq(109988)
+        timestamp = Time.find_zone('Berlin').local(2016,4,6)
+        json.each do |item|
+          expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
+          timestamp += 15.minute
+        end
+      end
+    end
+
+
+
+    it 'Multiple Discovergy day_to_minutes as admin' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
+        access_token = Fabricate(:full_access_token_as_admin)
+        easymeter_60051599 = Fabricate(:easymeter_60051599) # PV
+        easymeter_60051560 = Fabricate(:easymeter_60051560) # BHKW
+        mp_z2 = easymeter_60051599.metering_points.outputs.first
+        mp_z4 = easymeter_60051560.metering_points.outputs.first
+        request_params = {
+          metering_point_ids: "#{mp_z4.id},#{mp_z2.id}",
+          resolution: 'day_to_minutes',
+          timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
+        }
+        cache_id = Aggregate.build_cache_id(
+            api_controller + '/past',
+            request_params[:metering_point_ids],
+            request_params[:timestamp],
+            request_params[:resolution]
+          )
+        expect(Rails.cache.exist?(cache_id)).to be false
+        get_with_token api_endpoint, request_params, access_token.token
+        expect(response).to have_http_status(200)
+        expect(json.count).to eq(96)
+        expect(Rails.cache.exist?(cache_id)).to be true
+        expect(json[50]['power_milliwatt']).to eq(907367 + 1507120)
+        timestamp = Time.find_zone('Berlin').local(2016,4,6)
+        json.each do |item|
+          expect(Time.parse(item['timestamp']).utc).to eq(timestamp.utc)
+          timestamp += 15.minute
+        end
+      end
+    end
+
+
+    it 'Virtual past month_to_days as admin' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
+        access_token = Fabricate(:full_access_token_as_admin)
+        virtual_metering_point = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtual metering_point
+        single_energy_values = []
+        virtual_metering_point.formula_parts.each do |formula_part|
+          metering_point = MeteringPoint.find(formula_part.operand_id)
+          request_params = {
+            metering_point_ids: metering_point.id,
+            resolution: 'month_to_days',
+            timestamp: Time.find_zone('Berlin').local(2016,4,6)
+          }
+          get_with_token api_endpoint, request_params, access_token.token
+          single_energy_values << json.first['energy_milliwatt_hour']
+        end
+        request_params = {
+          metering_point_ids: virtual_metering_point.id,
+          resolution: 'month_to_days',
+          timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
+        }
+        cache_id = Aggregate.build_cache_id(
+            api_controller + '/past',
+            request_params[:metering_point_ids],
+            request_params[:timestamp],
+            request_params[:resolution]
+          )
+        expect(Rails.cache.exist?(cache_id)).to be false
+        get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+        expect(Rails.cache.exist?(cache_id)).to be true
+        sum_value = single_energy_values[0] + single_energy_values[1] - single_energy_values[2] # last single_energy_value is a negativ formulapart metering_point
+        expect(json.first['energy_milliwatt_hour']).to eq(sum_value)
+      end
+    end
   end
 
 
@@ -1007,82 +1018,92 @@ describe '/api/v1/aggregates' do
   describe '/present' do
     api_endpoint = api_version + api_controller + '/present'
 
-    it 'does aggregate Virtual metering_points present as manager' do
-      access_token = Fabricate(:full_access_token_as_admin)
-      virtual_metering_point = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtual metering_point
-      request_params = {
-        metering_point_ids: virtual_metering_point.id,
-        timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
-      }
-      get_with_token api_endpoint, request_params, access_token.token
-      sum_value = 0
-      json['readings'].each do |item|
-        sum_value += item['data']['power_milliwatt']
+    it 'Does aggregate Virtual metering_points present as manager' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
+        access_token = Fabricate(:full_access_token_as_admin)
+        virtual_metering_point = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtual metering_point
+        request_params = {
+          metering_point_ids: virtual_metering_point.id,
+          timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
+        }
+        get_with_token api_endpoint, request_params, access_token.token
+        sum_value = 0
+        json['readings'].each do |item|
+          sum_value += item['data']['power_milliwatt']
+        end
+        expect(json['power_milliwatt']).to eq(sum_value)
       end
-      expect(json['power_milliwatt']).to eq(sum_value)
     end
 
 
-    it 'return data for metering point readable by world which belongs to a group not readable by world without token' do
-      meter                   = Fabricate(:easymeter_60139082)
-      metering_point          = meter.metering_points.inputs.first
-      metering_point.readable = 'world'
-      metering_point.save
-      group                   = Fabricate(:group_readable_by_community)
-      group.metering_points << metering_point
-      request_params = {
-        metering_point_ids: metering_point.id
-      }
-      get_without_token '/api/v1/aggregates/present', request_params
-      expect(response).to have_http_status(200)
+    it 'power readable by world which belongs to a group not readable by world without token' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
+        meter                   = Fabricate(:easymeter_60139082)
+        metering_point          = meter.metering_points.inputs.first
+        metering_point.readable = 'world'
+        metering_point.save
+        group                   = Fabricate(:group_readable_by_community)
+        group.metering_points << metering_point
+        request_params = {
+          metering_point_ids: metering_point.id
+        }
+        get_without_token '/api/v1/aggregates/present', request_params
+        expect(response).to have_http_status(200)
+      end
     end
 
-    it 'return data for metering point not readable by world which belongs to a group readable by world without token' do
-      meter                   = Fabricate(:easymeter_60139082)
-      metering_point          = meter.metering_points.inputs.first
-      metering_point.readable = 'community'
-      metering_point.save
-      group                   = Fabricate(:group)
-      group.metering_points << metering_point
-      request_params = {
-        metering_point_ids: metering_point.id
-      }
-      get_without_token '/api/v1/aggregates/present', request_params
-      expect(response).to have_http_status(200)
+    it 'power not readable by world which belongs to a group readable by world without token' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
+        meter                   = Fabricate(:easymeter_60139082)
+        metering_point          = meter.metering_points.inputs.first
+        metering_point.readable = 'community'
+        metering_point.save
+        group                   = Fabricate(:group)
+        group.metering_points << metering_point
+        request_params = {
+          metering_point_ids: metering_point.id
+        }
+        get_without_token '/api/v1/aggregates/present', request_params
+        expect(response).to have_http_status(200)
+      end
     end
 
-    it 'does not return data for metering point not readable by world which belongs to a group not readable by world without token' do
-      meter                   = Fabricate(:easymeter_60139082)
-      metering_point          = meter.metering_points.inputs.first
-      metering_point.readable = 'community'
-      metering_point.save
-      group                   = Fabricate(:group_readable_by_community)
-      group.metering_points << metering_point
-      request_params = {
-        metering_point_ids: metering_point.id
-      }
-      get_without_token '/api/v1/aggregates/present', request_params
-      expect(response).to have_http_status(403)
+    it 'power not readable by world which belongs to a group not readable by world without token' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
+        meter                   = Fabricate(:easymeter_60139082)
+        metering_point          = meter.metering_points.inputs.first
+        metering_point.readable = 'community'
+        metering_point.save
+        group                   = Fabricate(:group_readable_by_community)
+        group.metering_points << metering_point
+        request_params = {
+          metering_point_ids: metering_point.id
+        }
+        get_without_token '/api/v1/aggregates/present', request_params
+        expect(response).to have_http_status(403)
+      end
     end
 
 
-    it 'Discovergy power out as admin' do
-      access_token = Fabricate(:full_access_token_as_admin)
-      meter = Fabricate(:easymeter_60139082) # in_out meter
-      input_metering_point  = meter.metering_points.inputs.first
-      output_metering_point = meter.metering_points.outputs.first
-      Timecop.freeze(Time.find_zone('Berlin').local(2016,2,1, 1,30,1)) # 6*15 minutes and 1 seconds
-      request_params = { metering_point_ids: input_metering_point.id }
-      get_with_token api_endpoint, request_params, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json['readings'].count).to eq(1)
-      expect(json['power_milliwatt']).to eq(0)
-      request_params = { metering_point_ids: output_metering_point.id }
-      get_with_token api_endpoint, request_params, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json['readings'].count).to eq(1)
-      expect(json['power_milliwatt']).to eq(6412000)
-      Timecop.return
+    it 'Discovergy power out as admin' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
+        access_token = Fabricate(:full_access_token_as_admin)
+        meter = Fabricate(:easymeter_60139082) # in_out meter
+        input_metering_point  = meter.metering_points.inputs.first
+        output_metering_point = meter.metering_points.outputs.first
+        Timecop.freeze(Time.find_zone('Berlin').local(2016,2,1, 1,30,1)) # 6*15 minutes and 1 seconds
+        request_params = { metering_point_ids: input_metering_point.id }
+        get_with_token api_endpoint, request_params, access_token.token
+        expect(response).to have_http_status(200)
+        expect(json['readings'].count).to eq(1)
+        expect(json['power_milliwatt']).to eq(0)
+        request_params = { metering_point_ids: output_metering_point.id }
+        get_with_token api_endpoint, request_params, access_token.token
+        expect(response).to have_http_status(200)
+        expect(json['readings'].count).to eq(1)
+        expect(json['power_milliwatt']).to eq(113000)
+        Timecop.return
+      end
     end
 
 
@@ -1152,27 +1173,29 @@ describe '/api/v1/aggregates' do
     end
 
 
-    it 'discovergy handles empty readings as admin' do
-      access_token = Fabricate(:full_access_token_as_admin)
-      meter = Fabricate(:easymeter_fixed_serial) # in_out meter
-      input_metering_point  = meter.metering_points.inputs.first
-      output_metering_point = meter.metering_points.outputs.first
-      request_params = {
-        metering_point_ids: input_metering_point.id
-      }
-      get_with_token api_endpoint, request_params, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json['readings'].count).to eq(0)
-      expect(json['power_milliwatt']).to eq(0)
-      expect(json['timestamp']).to eq("0000-01-01T00:00:00.000Z")
-      request_params = {
-        metering_point_ids: output_metering_point.id
-      }
-      get_with_token "/api/v1/aggregates/present", request_params, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json['readings'].count).to eq(0)
-      expect(json['power_milliwatt']).to eq(0)
-      expect(json['timestamp']).to eq("0000-01-01T00:00:00.000Z")
+    it 'discovergy handles empty readings as admin' do |spec|
+      VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description]}") do
+        access_token = Fabricate(:full_access_token_as_admin)
+        meter = Fabricate(:easymeter_fixed_serial) # in_out meter
+        input_metering_point  = meter.metering_points.inputs.first
+        output_metering_point = meter.metering_points.outputs.first
+        request_params = {
+          metering_point_ids: input_metering_point.id
+        }
+        get_with_token api_endpoint, request_params, access_token.token
+        expect(response).to have_http_status(200)
+        expect(json['readings'].count).to eq(0)
+        expect(json['power_milliwatt']).to eq(0)
+        expect(json['timestamp']).to eq("0000-01-01T00:00:00.000Z")
+        request_params = {
+          metering_point_ids: output_metering_point.id
+        }
+        get_with_token "/api/v1/aggregates/present", request_params, access_token.token
+        expect(response).to have_http_status(200)
+        expect(json['readings'].count).to eq(0)
+        expect(json['power_milliwatt']).to eq(0)
+        expect(json['timestamp']).to eq("0000-01-01T00:00:00.000Z")
+      end
     end
 
     it 'slp as admin' do
@@ -1260,6 +1283,6 @@ describe '/api/v1/aggregates' do
 
 
 
-
   end
+
 end

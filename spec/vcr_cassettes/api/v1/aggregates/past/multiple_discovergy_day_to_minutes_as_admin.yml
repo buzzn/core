@@ -1,0 +1,85 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getDayEveryFifteenMinutes?day=6&meterId=EASYMETER_60051560&month=4&password=Zebulon_4711&user=team%40localpool.de&year=2016
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:49 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:49 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:49 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1459893600000,"energy":97454877650016,"energyOut":0},{"time":1459894500000,"energy":97457173492716,"energyOut":0},{"time":1459895400000,"energy":97459470031914,"energyOut":0},{"time":1459896300000,"energy":97461766845280,"energyOut":0},{"time":1459897200000,"energy":97463117001092,"energyOut":0},{"time":1459898100000,"energy":97465396959976,"energyOut":0},{"time":1459899000000,"energy":97467672741110,"energyOut":0},{"time":1459899900000,"energy":97469949124990,"energyOut":0},{"time":1459900800000,"energy":97472228429680,"energyOut":0},{"time":1459901700000,"energy":97474504494520,"energyOut":0},{"time":1459902600000,"energy":97476778681792,"energyOut":0},{"time":1459903500000,"energy":97479059679346,"energyOut":0},{"time":1459904400000,"energy":97481337779207,"energyOut":0},{"time":1459905300000,"energy":97483614959527,"energyOut":0},{"time":1459906200000,"energy":97485892404135,"energyOut":0},{"time":1459907100000,"energy":97488170459140,"energyOut":0},{"time":1459908000000,"energy":97490447705455,"energyOut":0},{"time":1459908900000,"energy":97492725186346,"energyOut":0},{"time":1459909800000,"energy":97495001914931,"energyOut":0},{"time":1459910700000,"energy":97497276977345,"energyOut":0},{"time":1459911600000,"energy":97499551144676,"energyOut":0},{"time":1459912500000,"energy":97501821534717,"energyOut":0},{"time":1459913400000,"energy":97504090832415,"energyOut":0},{"time":1459914300000,"energy":97506360426625,"energyOut":0},{"time":1459915200000,"energy":97508630578711,"energyOut":0},{"time":1459916100000,"energy":97510897545552,"energyOut":0},{"time":1459917000000,"energy":97513158409654,"energyOut":0},{"time":1459917900000,"energy":97515426719476,"energyOut":0},{"time":1459918800000,"energy":97517693710998,"energyOut":0},{"time":1459919700000,"energy":97519958731061,"energyOut":0},{"time":1459920600000,"energy":97522218454500,"energyOut":0},{"time":1459921500000,"energy":97524482576428,"energyOut":0},{"time":1459922400000,"energy":97526740762064,"energyOut":0},{"time":1459923300000,"energy":97529007945513,"energyOut":0},{"time":1459924200000,"energy":97531273490682,"energyOut":0},{"time":1459925100000,"energy":97533538545223,"energyOut":0},{"time":1459926000000,"energy":97535805383477,"energyOut":0},{"time":1459926900000,"energy":97538074327036,"energyOut":0},{"time":1459927800000,"energy":97540344196610,"energyOut":0},{"time":1459928700000,"energy":97542613387334,"energyOut":0},{"time":1459929600000,"energy":97544881607923,"energyOut":0},{"time":1459930500000,"energy":97547150168067,"energyOut":0},{"time":1459931400000,"energy":97549421103217,"energyOut":0},{"time":1459932300000,"energy":97551688013852,"energyOut":0},{"time":1459933200000,"energy":97553954302350,"energyOut":0},{"time":1459934100000,"energy":97556215588531,"energyOut":0},{"time":1459935000000,"energy":97558481535000,"energyOut":0},{"time":1459935900000,"energy":97560745157883,"energyOut":0},{"time":1459936800000,"energy":97563005138761,"energyOut":0},{"time":1459937700000,"energy":97565272522579,"energyOut":0},{"time":1459938600000,"energy":97567533015024,"energyOut":0},{"time":1459939500000,"energy":97569801432776,"energyOut":0},{"time":1459940400000,"energy":97572060738846,"energyOut":0},{"time":1459941300000,"energy":97574323704224,"energyOut":0},{"time":1459942200000,"energy":97576593273015,"energyOut":0},{"time":1459943100000,"energy":97578861610924,"energyOut":0},{"time":1459944000000,"energy":97581126293660,"energyOut":0},{"time":1459944900000,"energy":97583385087807,"energyOut":0},{"time":1459945800000,"energy":97585643098004,"energyOut":0},{"time":1459946700000,"energy":97587911029109,"energyOut":0},{"time":1459947600000,"energy":97590175766056,"energyOut":0},{"time":1459948500000,"energy":97592432907337,"energyOut":0},{"time":1459949400000,"energy":97594703041197,"energyOut":0},{"time":1459950300000,"energy":97596974189856,"energyOut":0},{"time":1459951200000,"energy":97599243477927,"energyOut":0},{"time":1459952100000,"energy":97601511529740,"energyOut":0},{"time":1459953000000,"energy":97603771210343,"energyOut":0},{"time":1459953900000,"energy":97606029162768,"energyOut":0},{"time":1459954800000,"energy":97608285639385,"energyOut":0},{"time":1459955700000,"energy":97610600617870,"energyOut":0},{"time":1459956600000,"energy":97612939417131,"energyOut":0},{"time":1459957500000,"energy":97615276664386,"energyOut":0},{"time":1459958400000,"energy":97617613767258,"energyOut":0},{"time":1459959300000,"energy":97619951188620,"energyOut":0},{"time":1459960200000,"energy":97622288811520,"energyOut":0},{"time":1459961100000,"energy":97624626471124,"energyOut":0},{"time":1459962000000,"energy":97626966646143,"energyOut":0},{"time":1459962900000,"energy":97629306813562,"energyOut":0},{"time":1459963800000,"energy":97631645071167,"energyOut":0},{"time":1459964700000,"energy":97633983366035,"energyOut":0},{"time":1459965600000,"energy":97636318662659,"energyOut":0},{"time":1459966500000,"energy":97638654166150,"energyOut":0},{"time":1459967400000,"energy":97640990075137,"energyOut":0},{"time":1459968300000,"energy":97643328458171,"energyOut":0},{"time":1459969200000,"energy":97645667302917,"energyOut":0},{"time":1459970100000,"energy":97648004885080,"energyOut":0},{"time":1459971000000,"energy":97648092830000,"energyOut":0},{"time":1459971900000,"energy":97648092830000,"energyOut":0},{"time":1459972800000,"energy":97648092830000,"energyOut":0},{"time":1459973700000,"energy":97648092830000,"energyOut":0},{"time":1459974600000,"energy":97648092830000,"energyOut":0},{"time":1459975500000,"energy":97648092830000,"energyOut":0},{"time":1459976400000,"energy":97648092830000,"energyOut":0},{"time":1459977300000,"energy":97648092830000,"energyOut":0},{"time":1459978200000,"energy":97648092830000,"energyOut":0},{"time":1459979100000,"energy":97648092830000,"energyOut":0},{"time":1459980000000,"energy":97648092830000,"energyOut":0}]}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:08 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getDayEveryFifteenMinutes?day=6&meterId=EASYMETER_60051599&month=4&password=Zebulon_4711&user=team%40localpool.de&year=2016
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:50 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:50 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:49 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1459893600000,"energy":116753673190000,"energyOut":0},{"time":1459894500000,"energy":116753673190000,"energyOut":0},{"time":1459895400000,"energy":116753673190000,"energyOut":0},{"time":1459896300000,"energy":116753673190000,"energyOut":0},{"time":1459897200000,"energy":116753673190000,"energyOut":0},{"time":1459898100000,"energy":116753673190000,"energyOut":0},{"time":1459899000000,"energy":116753673190000,"energyOut":0},{"time":1459899900000,"energy":116753673190000,"energyOut":0},{"time":1459900800000,"energy":116753673190000,"energyOut":0},{"time":1459901700000,"energy":116753673190000,"energyOut":0},{"time":1459902600000,"energy":116753673190000,"energyOut":0},{"time":1459903500000,"energy":116753673190000,"energyOut":0},{"time":1459904400000,"energy":116753673190000,"energyOut":0},{"time":1459905300000,"energy":116753673190000,"energyOut":0},{"time":1459906200000,"energy":116753673190000,"energyOut":0},{"time":1459907100000,"energy":116753673190000,"energyOut":0},{"time":1459908000000,"energy":116753673190000,"energyOut":0},{"time":1459908900000,"energy":116753673190000,"energyOut":0},{"time":1459909800000,"energy":116753673190000,"energyOut":0},{"time":1459910700000,"energy":116753673190000,"energyOut":0},{"time":1459911600000,"energy":116753673190000,"energyOut":0},{"time":1459912500000,"energy":116753673190000,"energyOut":0},{"time":1459913400000,"energy":116753673190000,"energyOut":0},{"time":1459914300000,"energy":116753673190000,"energyOut":0},{"time":1459915200000,"energy":116753673190000,"energyOut":0},{"time":1459916100000,"energy":116753673190000,"energyOut":0},{"time":1459917000000,"energy":116753673190000,"energyOut":0},{"time":1459917900000,"energy":116753673190000,"energyOut":0},{"time":1459918800000,"energy":116753673190000,"energyOut":0},{"time":1459919700000,"energy":116753673190000,"energyOut":0},{"time":1459920600000,"energy":116753673190000,"energyOut":0},{"time":1459921500000,"energy":116753769611856,"energyOut":0},{"time":1459922400000,"energy":116753910309628,"energyOut":0},{"time":1459923300000,"energy":116754140984123,"energyOut":0},{"time":1459924200000,"energy":116754547349867,"energyOut":0},{"time":1459925100000,"energy":116755269767083,"energyOut":0},{"time":1459926000000,"energy":116756102407276,"energyOut":0},{"time":1459926900000,"energy":116756953142348,"energyOut":0},{"time":1459927800000,"energy":116757895939937,"energyOut":0},{"time":1459928700000,"energy":116759096770720,"energyOut":0},{"time":1459929600000,"energy":116760381571684,"energyOut":0},{"time":1459930500000,"energy":116761987934956,"energyOut":0},{"time":1459931400000,"energy":116764044164020,"energyOut":0},{"time":1459932300000,"energy":116767088213282,"energyOut":0},{"time":1459933200000,"energy":116770261712180,"energyOut":0},{"time":1459934100000,"energy":116774443160572,"energyOut":0},{"time":1459935000000,"energy":116779929564103,"energyOut":0},{"time":1459935900000,"energy":116785544002223,"energyOut":0},{"time":1459936800000,"energy":116791953060400,"energyOut":0},{"time":1459937700000,"energy":116796249433072,"energyOut":0},{"time":1459938600000,"energy":116798807644037,"energyOut":0},{"time":1459939500000,"energy":116802575445639,"energyOut":0},{"time":1459940400000,"energy":116807124452523,"energyOut":0},{"time":1459941300000,"energy":116814689748032,"energyOut":0},{"time":1459942200000,"energy":116820431996059,"energyOut":0},{"time":1459943100000,"energy":116823614311424,"energyOut":0},{"time":1459944000000,"energy":116826587750655,"energyOut":0},{"time":1459944900000,"energy":116828973939363,"energyOut":0},{"time":1459945800000,"energy":116831157088806,"energyOut":0},{"time":1459946700000,"energy":116833472526360,"energyOut":0},{"time":1459947600000,"energy":116837300354214,"energyOut":0},{"time":1459948500000,"energy":116842416837120,"energyOut":0},{"time":1459949400000,"energy":116848241253288,"energyOut":0},{"time":1459950300000,"energy":116855134163296,"energyOut":0},{"time":1459951200000,"energy":116862878936482,"energyOut":0},{"time":1459952100000,"energy":116869403450599,"energyOut":0},{"time":1459953000000,"energy":116885370952410,"energyOut":0},{"time":1459953900000,"energy":116900563222160,"energyOut":0},{"time":1459954800000,"energy":116912981520568,"energyOut":0},{"time":1459955700000,"energy":116921291483605,"energyOut":0},{"time":1459956600000,"energy":116925868035106,"energyOut":0},{"time":1459957500000,"energy":116928317825665,"energyOut":0},{"time":1459958400000,"energy":116930106582423,"energyOut":0},{"time":1459959300000,"energy":116931198997632,"energyOut":0},{"time":1459960200000,"energy":116932724809968,"energyOut":0},{"time":1459961100000,"energy":116933558575161,"energyOut":0},{"time":1459962000000,"energy":116934307783795,"energyOut":0},{"time":1459962900000,"energy":116935462460429,"energyOut":0},{"time":1459963800000,"energy":116936178429439,"energyOut":0},{"time":1459964700000,"energy":116936295108395,"energyOut":0},{"time":1459965600000,"energy":116936296592000,"energyOut":0},{"time":1459966500000,"energy":116936296592000,"energyOut":0},{"time":1459967400000,"energy":116936296592000,"energyOut":0},{"time":1459968300000,"energy":116936296592000,"energyOut":0},{"time":1459969200000,"energy":116936296592000,"energyOut":0},{"time":1459970100000,"energy":116936296592000,"energyOut":0},{"time":1459971000000,"energy":116936296592000,"energyOut":0},{"time":1459971900000,"energy":116936296592000,"energyOut":0},{"time":1459972800000,"energy":116936296592000,"energyOut":0},{"time":1459973700000,"energy":116936296592000,"energyOut":0},{"time":1459974600000,"energy":116936296592000,"energyOut":0},{"time":1459975500000,"energy":116936296592000,"energyOut":0},{"time":1459976400000,"energy":116936296592000,"energyOut":0},{"time":1459977300000,"energy":116936296592000,"energyOut":0},{"time":1459978200000,"energy":116936296592000,"energyOut":0},{"time":1459979100000,"energy":116936296592000,"energyOut":0},{"time":1459980000000,"energy":116936296592000,"energyOut":0}]}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:08 GMT
+recorded_with: VCR 3.0.3
