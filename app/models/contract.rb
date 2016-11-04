@@ -151,7 +151,6 @@ private
       @metering_points = self.metering_point.meter.metering_points
     end
     @metering_points.each do |metering_point|
-      puts metering_point.id
       if metering_point.contracts.metering_point_operators.empty?
         @contract = self
         @contract2 = Contract.new(mode: @contract.mode, price_cents: @contract.price_cents, organization: @contract.organization, username: @contract.username, password: @contract.password)

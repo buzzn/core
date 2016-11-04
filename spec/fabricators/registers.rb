@@ -1,4 +1,6 @@
 Fabricator :register do
+  obis "1-0:6.7.8"
+  label "test"
   low_load_ability    false
   digits_before_comma 6
   decimal_digits      3

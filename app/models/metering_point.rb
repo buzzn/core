@@ -135,8 +135,9 @@ class MeteringPoint < ActiveRecord::Base
 
   #default_scope { where(external: false) }
 
+  # TODO: enable multiple meters instead of one meter
   def meter
-    self.registers.collect(&:meter).uniq.compact.first
+    Meter.joins(:registers).where('registers.metering_point_id = ?', self).distinct.first
   end
 
   def users

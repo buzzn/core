@@ -46,7 +46,6 @@ module API
         patch ':id' do
           metering_point = MeteringPoint.guarded_retrieve(current_user,
                                                           permitted_params)
-          # TODO move logic into MeteringPoint
           metering_point.guarded_update(current_user, permitted_params)
         end
 
