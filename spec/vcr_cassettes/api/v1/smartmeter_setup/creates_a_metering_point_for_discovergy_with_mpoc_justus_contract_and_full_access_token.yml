@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://my.discovergy.com/json/Api.getLive?meterId=EASYMETER_60051560&numOfSeconds=6&password=Zebulon_4711&user=team%40localpool.de
+    uri: https://my.discovergy.com/json/Api.getLive?meterId=EASYMETER_1124001747&numOfSeconds=6&password=PPf93TcR&user=justus%40buzzn.net
     body:
       encoding: US-ASCII
       string: ''
@@ -14,12 +14,12 @@ http_interactions:
   response:
     status:
       code: 200
-      message:
+      message: 
     headers:
       server:
       - nginx/1.10.0
       date:
-      - Thu, 03 Nov 2016 18:47:58 GMT
+      - Fri, 04 Nov 2016 09:18:47 GMT
       content-type:
       - application/json;charset=utf-8
       transfer-encoding:
@@ -27,7 +27,7 @@ http_interactions:
       connection:
       - close
       expires:
-      - Fri, 03 Nov 2017 18:47:58 GMT
+      - Sat, 04 Nov 2017 09:18:47 GMT
       pragma:
       - cache
       cache-control:
@@ -35,10 +35,10 @@ http_interactions:
       content-disposition:
       - inline
       last-modified:
-      - Thu, 03 Nov 2016 18:47:58 GMT
+      - Fri, 04 Nov 2016 09:18:47 GMT
     body:
       encoding: ASCII-8BIT
-      string: '{"status":"ok","result":[{"time":1466586557857,"power":894660},{"time":1466586559857,"power":886480},{"time":1466586561857,"power":889140}]}'
+      string: '{"status":"ok","result":[]}'
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 00:30:01 GMT
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
 recorded_with: VCR 3.0.3

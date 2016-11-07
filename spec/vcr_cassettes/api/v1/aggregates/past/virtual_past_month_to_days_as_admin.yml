@@ -1,0 +1,372 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getLive?meterId=EASYMETER_60138947&numOfSeconds=6&password=Zebulon_4711&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:51 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:51 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:51 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1478190347914,"power":19564790},{"time":1478190349913,"power":19597300},{"time":1478190351913,"power":19578510}]}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:10 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getLive?meterId=EASYMETER_60138943&numOfSeconds=6&password=Zebulon_4711&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:52 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:52 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:52 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1478190346678,"power":19592480},{"time":1478190348678,"power":19592740},{"time":1478190350678,"power":19591920}]}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:10 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getLive?meterId=EASYMETER_1338000816&numOfSeconds=6&password=Zebulon_4711&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:53 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:53 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:52 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1478190348919,"power":-29120},{"time":1478190350919,"power":-29220},{"time":1478190352919,"power":-29310}]}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:11 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getDataEveryDay?fromDay=1&fromMonth=4&fromYear=2016&meterId=EASYMETER_60138947&password=Zebulon_4711&toDay=2&toMonth=5&toYear=2016&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:53 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:53 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:53 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1459461600000,"energy":1638014269281481,"energyOut":0},{"time":1459548000000,"energy":1642518090992160,"energyOut":0},{"time":1459634400000,"energy":1646839992431225,"energyOut":0},{"time":1459720800000,"energy":1650743008576377,"energyOut":0},{"time":1459807200000,"energy":1655333881446304,"energyOut":0},{"time":1459893600000,"energy":1659182634246386,"energyOut":0},{"time":1459980000000,"energy":1663568216391647,"energyOut":0},{"time":1460066400000,"energy":1668165712168312,"energyOut":0},{"time":1460152800000,"energy":1672837456455536,"energyOut":0},{"time":1460239200000,"energy":1677488546977684,"energyOut":0},{"time":1460325600000,"energy":1682168390755621,"energyOut":0},{"time":1460412000000,"energy":1686739773420618,"energyOut":0},{"time":1460498400000,"energy":1691024199146758,"energyOut":0},{"time":1460584800000,"energy":1695671060397084,"energyOut":0},{"time":1460671200000,"energy":1700259802271505,"energyOut":0},{"time":1460757600000,"energy":1704984486777307,"energyOut":0},{"time":1460844000000,"energy":1709603562947840,"energyOut":0},{"time":1460930400000,"energy":1714300484612038,"energyOut":0},{"time":1461016800000,"energy":1718688089248949,"energyOut":0},{"time":1461103200000,"energy":1723186229962883,"energyOut":0},{"time":1461189600000,"energy":1727469230546147,"energyOut":0},{"time":1461276000000,"energy":1731968503499204,"energyOut":0},{"time":1461362400000,"energy":1736183058425098,"energyOut":0},{"time":1461448800000,"energy":1740679392296740,"energyOut":0},{"time":1461535200000,"energy":1744874549403823,"energyOut":0},{"time":1461621600000,"energy":1749598988973413,"energyOut":0},{"time":1461708000000,"energy":1754282845640080,"energyOut":0},{"time":1461794400000,"energy":1759008368231437,"energyOut":0},{"time":1461880800000,"energy":1763733872259735,"energyOut":0},{"time":1461967200000,"energy":1768356927964359,"energyOut":0},{"time":1462053600000,"energy":1773070659416288,"energyOut":0}]}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:11 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getDataEveryDay?fromDay=1&fromMonth=4&fromYear=2016&meterId=EASYMETER_60138943&password=Zebulon_4711&toDay=2&toMonth=5&toYear=2016&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:54 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:54 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:53 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1459461600000,"energy":1404677093636000,"energyOut":0},{"time":1459548000000,"energy":1407524440394097,"energyOut":0},{"time":1459634400000,"energy":1411782112881005,"energyOut":0},{"time":1459720800000,"energy":1414133050833000,"energyOut":0},{"time":1459807200000,"energy":1414133050833000,"energyOut":0},{"time":1459893600000,"energy":1415361674026000,"energyOut":0},{"time":1459980000000,"energy":1417501943454094,"energyOut":0},{"time":1460066400000,"energy":1420753089349937,"energyOut":0},{"time":1460152800000,"energy":1425348554073928,"energyOut":0},{"time":1460239200000,"energy":1429957410947492,"energyOut":0},{"time":1460325600000,"energy":1434228181623864,"energyOut":0},{"time":1460412000000,"energy":1438738295337336,"energyOut":0},{"time":1460498400000,"energy":1442462863860191,"energyOut":0},{"time":1460584800000,"energy":1444959142625000,"energyOut":0},{"time":1460671200000,"energy":1447765830582000,"energyOut":0},{"time":1460757600000,"energy":1451151386545528,"energyOut":0},{"time":1460844000000,"energy":1454128830258000,"energyOut":0},{"time":1460930400000,"energy":1456134439131680,"energyOut":0},{"time":1461016800000,"energy":1460272930099581,"energyOut":0},{"time":1461103200000,"energy":1464643163709871,"energyOut":0},{"time":1461189600000,"energy":1468512853255000,"energyOut":0},{"time":1461276000000,"energy":1471162756290445,"energyOut":0},{"time":1461362400000,"energy":1473183339796680,"energyOut":0},{"time":1461448800000,"energy":1475677004066910,"energyOut":0},{"time":1461535200000,"energy":1478494075508080,"energyOut":0},{"time":1461621600000,"energy":1483189966902532,"energyOut":0},{"time":1461708000000,"energy":1487841006212697,"energyOut":0},{"time":1461794400000,"energy":1492542828940910,"energyOut":0},{"time":1461880800000,"energy":1497244836765265,"energyOut":0},{"time":1461967200000,"energy":1500957521771000,"energyOut":0},{"time":1462053600000,"energy":1501909563241000,"energyOut":0}]}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:12 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getDataEveryDay?fromDay=1&fromMonth=4&fromYear=2016&meterId=EASYMETER_1338000816&password=Zebulon_4711&toDay=2&toMonth=5&toYear=2016&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:54 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:54 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:54 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1459461600000,"energy":605752622037000,"energyOut":0},{"time":1459548000000,"energy":606645881120000,"energyOut":0},{"time":1459634400000,"energy":608396561147000,"energyOut":0},{"time":1459720800000,"energy":610884624073000,"energyOut":0},{"time":1459807200000,"energy":613422785613000,"energyOut":0},{"time":1459893600000,"energy":615242896451000,"energyOut":0},{"time":1459980000000,"energy":616618476071000,"energyOut":0},{"time":1460066400000,"energy":617310667618000,"energyOut":0},{"time":1460152800000,"energy":617851882118000,"energyOut":0},{"time":1460239200000,"energy":618647326295000,"energyOut":0},{"time":1460325600000,"energy":620410134735000,"energyOut":0},{"time":1460412000000,"energy":623092608469000,"energyOut":0},{"time":1460498400000,"energy":625170684845000,"energyOut":0},{"time":1460584800000,"energy":627284636176000,"energyOut":0},{"time":1460671200000,"energy":628792873597000,"energyOut":0},{"time":1460757600000,"energy":629552069934000,"energyOut":0},{"time":1460844000000,"energy":631081983147000,"energyOut":0},{"time":1460930400000,"energy":631552762892000,"energyOut":0},{"time":1461016800000,"energy":632382745284000,"energyOut":0},{"time":1461103200000,"energy":634295500355000,"energyOut":0},{"time":1461189600000,"energy":637259274747000,"energyOut":0},{"time":1461276000000,"energy":640126685428000,"energyOut":0},{"time":1461362400000,"energy":642522803774000,"energyOut":0},{"time":1461448800000,"energy":643604990848000,"energyOut":0},{"time":1461535200000,"energy":644919562271000,"energyOut":0},{"time":1461621600000,"energy":646347766491000,"energyOut":0},{"time":1461708000000,"energy":647034768928000,"energyOut":0},{"time":1461794400000,"energy":648530849063000,"energyOut":0},{"time":1461880800000,"energy":650997922442000,"energyOut":0},{"time":1461967200000,"energy":653711124362000,"energyOut":0},{"time":1462053600000,"energy":656592678867000,"energyOut":0}]}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:12 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getDataEveryDay?fromDay=1&fromMonth=4&fromYear=2016&meterId=EASYMETER_60138947&password=Zebulon_4711&toDay=2&toMonth=5&toYear=2016&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:55 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:55 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:54 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1459461600000,"energy":1638014269281481,"energyOut":0},{"time":1459548000000,"energy":1642518090992160,"energyOut":0},{"time":1459634400000,"energy":1646839992431225,"energyOut":0},{"time":1459720800000,"energy":1650743008576377,"energyOut":0},{"time":1459807200000,"energy":1655333881446304,"energyOut":0},{"time":1459893600000,"energy":1659182634246386,"energyOut":0},{"time":1459980000000,"energy":1663568216391647,"energyOut":0},{"time":1460066400000,"energy":1668165712168312,"energyOut":0},{"time":1460152800000,"energy":1672837456455536,"energyOut":0},{"time":1460239200000,"energy":1677488546977684,"energyOut":0},{"time":1460325600000,"energy":1682168390755621,"energyOut":0},{"time":1460412000000,"energy":1686739773420618,"energyOut":0},{"time":1460498400000,"energy":1691024199146758,"energyOut":0},{"time":1460584800000,"energy":1695671060397084,"energyOut":0},{"time":1460671200000,"energy":1700259802271505,"energyOut":0},{"time":1460757600000,"energy":1704984486777307,"energyOut":0},{"time":1460844000000,"energy":1709603562947840,"energyOut":0},{"time":1460930400000,"energy":1714300484612038,"energyOut":0},{"time":1461016800000,"energy":1718688089248949,"energyOut":0},{"time":1461103200000,"energy":1723186229962883,"energyOut":0},{"time":1461189600000,"energy":1727469230546147,"energyOut":0},{"time":1461276000000,"energy":1731968503499204,"energyOut":0},{"time":1461362400000,"energy":1736183058425098,"energyOut":0},{"time":1461448800000,"energy":1740679392296740,"energyOut":0},{"time":1461535200000,"energy":1744874549403823,"energyOut":0},{"time":1461621600000,"energy":1749598988973413,"energyOut":0},{"time":1461708000000,"energy":1754282845640080,"energyOut":0},{"time":1461794400000,"energy":1759008368231437,"energyOut":0},{"time":1461880800000,"energy":1763733872259735,"energyOut":0},{"time":1461967200000,"energy":1768356927964359,"energyOut":0},{"time":1462053600000,"energy":1773070659416288,"energyOut":0}]}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:13 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getDataEveryDay?fromDay=1&fromMonth=4&fromYear=2016&meterId=EASYMETER_60138943&password=Zebulon_4711&toDay=2&toMonth=5&toYear=2016&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:55 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:55 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:55 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1459461600000,"energy":1404677093636000,"energyOut":0},{"time":1459548000000,"energy":1407524440394097,"energyOut":0},{"time":1459634400000,"energy":1411782112881005,"energyOut":0},{"time":1459720800000,"energy":1414133050833000,"energyOut":0},{"time":1459807200000,"energy":1414133050833000,"energyOut":0},{"time":1459893600000,"energy":1415361674026000,"energyOut":0},{"time":1459980000000,"energy":1417501943454094,"energyOut":0},{"time":1460066400000,"energy":1420753089349937,"energyOut":0},{"time":1460152800000,"energy":1425348554073928,"energyOut":0},{"time":1460239200000,"energy":1429957410947492,"energyOut":0},{"time":1460325600000,"energy":1434228181623864,"energyOut":0},{"time":1460412000000,"energy":1438738295337336,"energyOut":0},{"time":1460498400000,"energy":1442462863860191,"energyOut":0},{"time":1460584800000,"energy":1444959142625000,"energyOut":0},{"time":1460671200000,"energy":1447765830582000,"energyOut":0},{"time":1460757600000,"energy":1451151386545528,"energyOut":0},{"time":1460844000000,"energy":1454128830258000,"energyOut":0},{"time":1460930400000,"energy":1456134439131680,"energyOut":0},{"time":1461016800000,"energy":1460272930099581,"energyOut":0},{"time":1461103200000,"energy":1464643163709871,"energyOut":0},{"time":1461189600000,"energy":1468512853255000,"energyOut":0},{"time":1461276000000,"energy":1471162756290445,"energyOut":0},{"time":1461362400000,"energy":1473183339796680,"energyOut":0},{"time":1461448800000,"energy":1475677004066910,"energyOut":0},{"time":1461535200000,"energy":1478494075508080,"energyOut":0},{"time":1461621600000,"energy":1483189966902532,"energyOut":0},{"time":1461708000000,"energy":1487841006212697,"energyOut":0},{"time":1461794400000,"energy":1492542828940910,"energyOut":0},{"time":1461880800000,"energy":1497244836765265,"energyOut":0},{"time":1461967200000,"energy":1500957521771000,"energyOut":0},{"time":1462053600000,"energy":1501909563241000,"energyOut":0}]}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:13 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getDataEveryDay?fromDay=1&fromMonth=4&fromYear=2016&meterId=EASYMETER_1338000816&password=Zebulon_4711&toDay=2&toMonth=5&toYear=2016&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:56 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:56 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:55 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1459461600000,"energy":605752622037000,"energyOut":0},{"time":1459548000000,"energy":606645881120000,"energyOut":0},{"time":1459634400000,"energy":608396561147000,"energyOut":0},{"time":1459720800000,"energy":610884624073000,"energyOut":0},{"time":1459807200000,"energy":613422785613000,"energyOut":0},{"time":1459893600000,"energy":615242896451000,"energyOut":0},{"time":1459980000000,"energy":616618476071000,"energyOut":0},{"time":1460066400000,"energy":617310667618000,"energyOut":0},{"time":1460152800000,"energy":617851882118000,"energyOut":0},{"time":1460239200000,"energy":618647326295000,"energyOut":0},{"time":1460325600000,"energy":620410134735000,"energyOut":0},{"time":1460412000000,"energy":623092608469000,"energyOut":0},{"time":1460498400000,"energy":625170684845000,"energyOut":0},{"time":1460584800000,"energy":627284636176000,"energyOut":0},{"time":1460671200000,"energy":628792873597000,"energyOut":0},{"time":1460757600000,"energy":629552069934000,"energyOut":0},{"time":1460844000000,"energy":631081983147000,"energyOut":0},{"time":1460930400000,"energy":631552762892000,"energyOut":0},{"time":1461016800000,"energy":632382745284000,"energyOut":0},{"time":1461103200000,"energy":634295500355000,"energyOut":0},{"time":1461189600000,"energy":637259274747000,"energyOut":0},{"time":1461276000000,"energy":640126685428000,"energyOut":0},{"time":1461362400000,"energy":642522803774000,"energyOut":0},{"time":1461448800000,"energy":643604990848000,"energyOut":0},{"time":1461535200000,"energy":644919562271000,"energyOut":0},{"time":1461621600000,"energy":646347766491000,"energyOut":0},{"time":1461708000000,"energy":647034768928000,"energyOut":0},{"time":1461794400000,"energy":648530849063000,"energyOut":0},{"time":1461880800000,"energy":650997922442000,"energyOut":0},{"time":1461967200000,"energy":653711124362000,"energyOut":0},{"time":1462053600000,"energy":656592678867000,"energyOut":0}]}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:14 GMT
+recorded_with: VCR 3.0.3
