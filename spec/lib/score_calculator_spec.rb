@@ -31,7 +31,7 @@ describe Buzzn::ScoreCalculator do
   end
 
   describe 'for new group' do
-    
+
     before do
       Timecop.freeze(now)
       subject.instance_variable_set(:@data_in, [])
@@ -48,16 +48,16 @@ describe Buzzn::ScoreCalculator do
       Score.all.each do |score|
         expect(score.value).to eq 0.0
         expect(score.mode).to eq 'autarchy'
-      end     
+      end
     end
-    
+
     it 'calculates fitting' do
       subject.calculate_fitting_scores
       expect(Score.count).to eq 3
       Score.all.each do |score|
         expect(score.value).to eq 0.0
         expect(score.mode).to eq 'fitting'
-      end     
+      end
     end
 
     it 'calculates sufficiency' do
@@ -66,7 +66,7 @@ describe Buzzn::ScoreCalculator do
       Score.all.each do |score|
         expect(score.value).to eq 0.0
         expect(score.mode).to eq 'sufficiency'
-      end     
+      end
     end
 
     it 'calculates closeness now' do
@@ -77,7 +77,7 @@ describe Buzzn::ScoreCalculator do
         expect(score.mode).to eq 'closeness'
       end
     end
-    
+
     it 'calculates closeness in the past' do
       time = Time.find_zone('Berlin').local(2012,2,1, 1,30,1)
       subject.instance_variable_set(:@now, time)
@@ -123,7 +123,7 @@ describe Buzzn::ScoreCalculator do
     after do
       Timecop.return
     end
-       
+
     it 'calculates fitting' do
       subject.calculate_fitting_scores
       expect(Score.count).to eq 3
@@ -132,7 +132,7 @@ describe Buzzn::ScoreCalculator do
         expect(score.mode).to eq 'fitting'
       end
     end
-    
+
     it 'calculates autarchy' do
       subject.calculate_autarchy_scores
       expect(Score.count).to eq 3
@@ -141,7 +141,7 @@ describe Buzzn::ScoreCalculator do
         expect(score.mode).to eq 'autarchy'
       end
     end
-    
+
     it 'calculates sufficiency' do
       subject.calculate_sufficiency_scores
       expect(Score.count).to eq 3
@@ -154,7 +154,6 @@ describe Buzzn::ScoreCalculator do
   end
 
   describe 'group Home-Of-The-Brave' do
-
     let(:now) { Time.find_zone('Berlin').local(2016,10,5, 18,30,1)  }
     let(:group) do
       Fabricate(:buzzn_metering)
@@ -171,30 +170,36 @@ describe Buzzn::ScoreCalculator do
       group
     end
 
-    it 'calculates autarchy' do
-      subject.calculate_autarchy_scores
-      expect(Score.count).to eq 3
-      Score.all.each do |score|
-        expect(score.value).to eq 5.0
-        expect(score.mode).to eq 'autarchy'
+    it 'calculates autarchy' do |spec|
+      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do
+        subject.calculate_autarchy_scores
+        expect(Score.count).to eq 3
+        Score.all.each do |score|
+          expect(score.value).to eq 5.0
+          expect(score.mode).to eq 'autarchy'
+        end
       end
     end
 
-    it 'calculates sufficiency' do
-      subject.calculate_sufficiency_scores
-      expect(Score.count).to eq 3
-      Score.all.each do |score|
-        expect(score.value).to eq 1.0
-        expect(score.mode).to eq 'sufficiency'
+    it 'calculates sufficiency' do |spec|
+      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do
+        subject.calculate_sufficiency_scores
+        expect(Score.count).to eq 3
+        Score.all.each do |score|
+          expect(score.value).to eq 1.0
+          expect(score.mode).to eq 'sufficiency'
+        end
       end
     end
 
-    it 'calculates fitting' do
-      subject.calculate_fitting_scores
-      expect(Score.count).to eq 3
-      Score.all.each do |score|
-        expect(score.value).to eq 1.0
-        expect(score.mode).to eq 'fitting'
+    it 'calculates fitting' do |spec|
+      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do
+        subject.calculate_fitting_scores
+        expect(Score.count).to eq 3
+        Score.all.each do |score|
+          expect(score.value).to eq 1.0
+          expect(score.mode).to eq 'fitting'
+        end
       end
     end
 
@@ -207,6 +212,6 @@ describe Buzzn::ScoreCalculator do
       end
     end
 
-    
+
   end
 end
