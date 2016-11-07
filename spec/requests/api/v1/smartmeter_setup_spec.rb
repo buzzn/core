@@ -26,12 +26,14 @@ describe "MySmartGrid setup using API" do
           uid:  metering_point.uid,
           mode: metering_point.mode,
           readable: metering_point.readable,
-          name: metering_point.name,
-          meter_id: meter_id,
+          name: metering_point.name
         }.to_json
         post_with_token "/api/v1/metering-points", request_params, access_token.token
         expect(response).to have_http_status(201)
         metering_point_id = json['data']['id']
+
+        ## TODO: create register with meter_id and metering_point_id via API!!!
+        register = Fabricate(:in_register, meter_id: meter_id, metering_point_id: metering_point_id)
 
         # create contract
         contract          = Fabricate.build(meta[:contract] || :contract)

@@ -121,11 +121,11 @@ buzzn_team_names.each do |user_name|
     Fabricate(:application, owner: user, name: 'Buzzn Swagger UI', scopes: Doorkeeper.configuration.scopes, redirect_uri: Rails.application.secrets.hostname + '/api/o2c.html')
   when 'christian'
     root_mp = Fabricate(:mp_60138988)
-    root_mp.contracts << Fabricate(:mpoc_christian, metering_point: root_mp)
+    Fabricate(:mpoc_christian, metering_point: root_mp)
     user.add_role :admin # christian is admin
   when 'philipp'
     root_mp = Fabricate(:mp_60009269)
-    root_mp.contracts << Fabricate(:mpoc_philipp, metering_point: root_mp)
+    Fabricate(:mpoc_philipp, metering_point: root_mp)
   when 'stefan'
     @bhkw_stefan       = Fabricate(:bhkw_stefan)
     @forstenrieder_weg_mp = root_mp = Fabricate(:mp_stefans_bhkw)

@@ -14,7 +14,7 @@ class MeteringPoint < ActiveRecord::Base
 
 
   belongs_to :group
-  belongs_to :meter
+  has_many :registers, dependent: :destroy
 
   has_many :formula_parts, dependent: :destroy
   accepts_nested_attributes_for :formula_parts, reject_if: :all_blank, :allow_destroy => true
@@ -28,7 +28,6 @@ class MeteringPoint < ActiveRecord::Base
   has_many :members, -> { where roles:  { name: 'member'} }, through: :roles, source: :users
   has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
 
-  accepts_nested_attributes_for :meter
   accepts_nested_attributes_for :contracts
 
   validates :readable, presence: true
@@ -135,6 +134,11 @@ class MeteringPoint < ActiveRecord::Base
   scope :without_externals, -> { where(external: false) }
 
   #default_scope { where(external: false) }
+
+  # TODO: enable multiple meters instead of one meter
+  def meter
+    Meter.joins(:registers).where('registers.metering_point_id = ?', self).distinct.first
+  end
 
   def users
     User.users_of(self, :manager, :member)
