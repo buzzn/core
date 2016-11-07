@@ -94,10 +94,12 @@ describe "MeteringPoint Model" do
       Crawler.offline(false)
     end
 
-    it 'creates all observer activities' do
-      subject.update observe: true, max_watt: 200
-      MeteringPoint.create_all_observer_activities
-      expect(PublicActivity::Activity.count).to eq 2
+    it 'creates all observer activities' do |spec|
+      VCR.use_cassette("models/#{spec.metadata[:description].downcase}") do
+        subject.update observe: true, max_watt: 200
+        MeteringPoint.create_all_observer_activities
+        expect(PublicActivity::Activity.count).to eq 2
+      end
     end
 
     it 'creates observer activities via sidekiq' do
@@ -106,21 +108,27 @@ describe "MeteringPoint Model" do
       }.to change(MeteringPointObserveWorker.jobs, :size).by(1)
     end
 
-    it 'observe nothing' do
-      result = subject.create_observer_activities
-      expect(result).to be_nil
+    it 'observe nothing' do |spec|
+      VCR.use_cassette("models/#{spec.metadata[:description].downcase}") do
+        result = subject.create_observer_activities
+        expect(result).to be_nil
+      end
     end
 
-    it 'observe exceeds' do
-      subject.update observe: true, max_watt: 200
-      result = subject.create_observer_activities
-      expect(result.key).to eq 'metering_point.exceeds'
+    it 'observe exceeds' do |spec|
+      VCR.use_cassette("models/#{spec.metadata[:description].downcase}") do
+        subject.update observe: true, max_watt: 200
+        result = subject.create_observer_activities
+        expect(result.key).to eq 'metering_point.exceeds'
+      end
     end
 
-    it 'observe undershoots' do
-      subject.update observe: true, min_watt: 1000
-      result = subject.create_observer_activities
-      expect(result.key).to eq 'metering_point.undershoots'
+    it 'observe undershoots' do |spec|
+      VCR.use_cassette("models/#{spec.metadata[:description].downcase}") do
+        subject.update observe: true, min_watt: 1000
+        result = subject.create_observer_activities
+        expect(result.key).to eq 'metering_point.undershoots'
+      end
     end
 
     it 'observe offline' do
