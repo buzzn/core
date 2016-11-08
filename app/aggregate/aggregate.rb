@@ -109,7 +109,7 @@ class Aggregate
     metering_point_ids = @metering_points_hash[:ids].join(',')
     cache_id = Aggregate.build_cache_id('/aggregates/past', metering_point_ids, timestamp, resolution)
 
-    if Rails.cache.exist?(cache_id) || !refresh_cache
+    if Rails.cache.exist?(cache_id) && !refresh_cache
       past = Rails.cache.fetch(cache_id)
     else
 
