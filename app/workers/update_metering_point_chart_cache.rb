@@ -6,7 +6,7 @@ class UpdateMeteringPointChartCache
     if MeteringPoint.exists?(id: metering_point_id)
       metering_points_hash = Aggregate.sort_metering_points([MeteringPoint.find(metering_point_id)])
       aggregate = Aggregate.new(metering_points_hash)
-      aggregate.past(timestamp: timestamp, resolution: resolution, refresh_cache: true)
+      aggregate.past(timestamp: timestamp.to_datetime, resolution: resolution, refresh_cache: true)
     end
   end
 end
