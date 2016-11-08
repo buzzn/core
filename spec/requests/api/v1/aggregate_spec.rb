@@ -12,9 +12,6 @@ describe '/api/v1/aggregates' do
   describe '/past' do
     api_endpoint = api_version + api_controller + '/past'
 
-
-
-
     it 'slp energy by year_to_months as admin in summertime' do
       access_token = Fabricate(:full_access_token_as_admin)
       metering_point = Fabricate(:metering_point)
@@ -842,7 +839,7 @@ describe '/api/v1/aggregates' do
           resolution: 'month_to_days',
           timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
         }
-        
+
         get_with_token "/api/v1/aggregates/past", request_params, access_token.token
 
         sum_value = single_energy_values[0] + single_energy_values[1] - single_energy_values[2] # last single_energy_value is a negativ formulapart metering_point
@@ -1019,25 +1016,16 @@ describe '/api/v1/aggregates' do
     it 'discovergy handles empty readings as admin' do |spec|
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description]}") do
         access_token = Fabricate(:full_access_token_as_admin)
-        meter = Fabricate(:easymeter_fixed_serial) # in_out meter
+        meter = Fabricate(:easymeter_60139082) # in_out meter
         input_metering_point  = meter.metering_points.inputs.first
         output_metering_point = meter.metering_points.outputs.first
+
+        Timecop.freeze(Time.find_zone('Berlin').local(2016,2,1, 1,30,1))
         request_params = {
           metering_point_ids: input_metering_point.id
         }
         get_with_token api_endpoint, request_params, access_token.token
-        expect(response).to have_http_status(200)
-        expect(json['readings'].count).to eq(0)
-        expect(json['power_milliwatt']).to eq(0)
-        expect(json['timestamp']).to eq("0000-01-01T00:00:00.000Z")
-        request_params = {
-          metering_point_ids: output_metering_point.id
-        }
-        get_with_token "/api/v1/aggregates/present", request_params, access_token.token
-        expect(response).to have_http_status(200)
-        expect(json['readings'].count).to eq(0)
-        expect(json['power_milliwatt']).to eq(0)
-        expect(json['timestamp']).to eq("0000-01-01T00:00:00.000Z")
+        expect(response).to have_http_status(504)
       end
     end
 
