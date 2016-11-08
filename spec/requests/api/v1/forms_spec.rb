@@ -42,8 +42,8 @@ describe "Forms API" do
       .merge(profile)
   end
 
-  before { Fabricate(:buzzn_energy) }
-
+  before { Fabricate(:buzzn_energy) unless Organization.buzzn_energy }
+ 
   before(:all) do
     Bank.update_from(File.read("db/banks/BLZ_20160606.txt"))
 

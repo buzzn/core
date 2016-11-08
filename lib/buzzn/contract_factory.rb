@@ -57,8 +57,10 @@ module Buzzn
                                   name: 'Wohnung',
                                   mode: 'in',
                                   readable: 'friends',
-                                  meter: meter,
                                   address: other || address)
+
+          create(Register, {}, obis: '1-0:1.8.0', label: 'consumption',
+                 meter: meter, metering_point: metering_point)
 
           bank = Bank.find_by_iban(self.bank_account[:iban])
           bank_account = build(BankAccount,

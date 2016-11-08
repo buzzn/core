@@ -125,9 +125,9 @@ class Contract < ActiveRecord::Base
                                     metering_point.address.zip,
                                     tariff)
       if price = prices.to_price
-        self.price_cents_per_kwh = price.energyprice_cents#_per_kilowatt_hour
-        self.price_cents_per_month = price.baseprice_cents#_per_month
-        self.price_cents = price.total_cents#_per_month
+        self.price_cents_per_kwh   = price.energyprice_cents_per_kilowatt_hour
+        self.price_cents_per_month = price.baseprice_cents_per_month
+        self.price_cents           = price.total_cents_per_month
       else
         # TODO some validation or errors or something
       end
