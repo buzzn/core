@@ -36,9 +36,9 @@ describe "Prices API" do
                                                    
       get_without_token "/api/v1/prices", params
       expect(response).to have_http_status(200)
-      expected['data']['attributes']['baseprice_cents'] = exp[0]
-      expected['data']['attributes']['energyprice_cents'] = exp[1]
-      expected['data']['attributes']['total_cents'] = exp[2]
+      expected['data']['attributes']['baseprice_cents_per_month'] = exp[0]
+      expected['data']['attributes']['energyprice_cents_per_kilowatt_hour'] = exp[1]
+      expected['data']['attributes']['total_cents_per_month'] = exp[2]
       expect(json).to eq expected
     end
   end

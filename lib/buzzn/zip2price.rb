@@ -1,22 +1,22 @@
 module Buzzn
 
   class Price
-    attr_reader :energyprice_cents, :baseprice_cents, :total_cents
+    attr_reader :energyprice_cents_per_kilowatt_hour, :baseprice_cents_per_month, :total_cents_per_month
 
-    def initialize(baseprice_cents, energyprice_cents, total_cents)
-      @energyprice_cents = energyprice_cents.to_i
-      @baseprice_cents   = baseprice_cents.to_i
-      @total_cents       = total_cents.to_i
+    def initialize(baseprice_cents_per_month, energyprice_cents_per_kilowatt_hour, total_cents_per_month)
+      @energyprice_cents_per_kilowatt_hour = energyprice_cents_per_kilowatt_hour.to_i
+      @baseprice_cents_per_month   = baseprice_cents_per_month.to_i
+      @total_cents_per_month       = total_cents_per_month.to_i
     end
 
     def to_f
-      @total_cents
+      @total_cents_per_month
     end
 
     def to_h
-      { energyprice_cents: @energyprice_cents,
-        baseprice_cents: @baseprice_cents,
-        total_cents: @total_cents }
+      { energyprice_cents_per_kilowatt_hour: @energyprice_cents_per_kilowatt_hour,
+        baseprice_cents_per_month: @baseprice_cents_per_month,
+        total_cents_per_month: @total_cents_per_month }
     end
 
     def <=>(other)
@@ -82,10 +82,10 @@ module Buzzn
         # using cent prices from here and round as the legacy code did:
         # base- and energy prices are round up to the next 10 cents
         # totalprice rounds the regular way
-        baseprice_cents   = (baseprice_netto * MWST / 1.2).ceil * 10.0
-        energyprice_cents = (energyprice_netto * MWST * 10.0).ceil * 10.0
-        total_cents       = (baseprice_cents + @kwh * energyprice_cents / 1200.0).round
-        Price.new(baseprice_cents, energyprice_cents, total_cents)
+        baseprice_cents_per_month   = (baseprice_netto * MWST / 1.2).ceil * 10.0
+        energyprice_cents_per_kilowatt_hour = (energyprice_netto * MWST * 10.0).ceil * 10.0
+        total_cents_per_month       = (baseprice_cents_per_month + @kwh * energyprice_cents_per_kilowatt_hour / 1200.0).round
+        Price.new(baseprice_cents_per_month, energyprice_cents_per_kilowatt_hour, total_cents_per_month)
       else
         Price.new(0, 0, 0)
       end
@@ -111,7 +111,7 @@ module Buzzn
       end
       if entries.size > 0
         result = entries.max
-        UsedZipSn.create!(zip: @zip, kwh: @kwh, price: result.total_cents)
+        UsedZipSn.create!(zip: @zip, kwh: @kwh, price: result.total_cents_per_month)
         result
       end
     end
