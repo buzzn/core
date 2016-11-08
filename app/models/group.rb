@@ -362,7 +362,7 @@ class Group < ActiveRecord::Base
     return [ { :name => I18n.t('total_consumption'), :data => result_in}, { :name => I18n.t('total_production'), :data => result_out} ]
   end
 
-  def set_score_interval(resolution_format, containing_timestamp)
+  def self.score_interval(resolution_format, containing_timestamp)
     if resolution_format == 'year_to_minutes' || resolution_format == 'year'
       return ['year', Time.at(containing_timestamp).in_time_zone.beginning_of_year, Time.at(containing_timestamp).in_time_zone.end_of_year]
     elsif resolution_format == 'month_to_minutes' || resolution_format == 'month'
@@ -370,6 +370,9 @@ class Group < ActiveRecord::Base
     elsif resolution_format == 'day_to_minutes' || resolution_format == 'day'
       return ['day', Time.at(containing_timestamp).in_time_zone.beginning_of_day, Time.at(containing_timestamp).in_time_zone.end_of_day]
     end
+  end
+  def set_score_interval(resolution_format, containing_timestamp)
+    self.class.score_interval(resolution_format, containing_timestamp)
   end
   alias :get_score_interval :set_score_interval
 

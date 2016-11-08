@@ -93,6 +93,9 @@ module API
         desc "Return the related scores for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
+          requires :interval, type: Symbol, values: [:day, :month, :year]
+          requires :timestamp, type: DateTime
+          optional :mode, type: Symbol, values: [:sufficiency, :closeness, :autarchy, :fitting]
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
@@ -100,7 +103,17 @@ module API
         oauth2 false
         get ":id/scores" do
           group = Group.guarded_retrieve(current_user, permitted_params)
-          paginated_response(group.scores.readable_by(current_user))
+          result = group.scores
+          if interval = permitted_params[:interval]
+            result = result.send("#{interval}ly".to_sym)
+          end
+          if timestamp = permitted_params[:timestamp]
+            result.at(timestamp)
+          end
+          if mode = permitted_params[:mode]
+            result = result.send(mode.to_s.pluralize.to_sym)
+          end
+          paginated_response(result.readable_by(current_user))
         end
 
 
