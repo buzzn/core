@@ -1,10 +1,11 @@
 class UpdateMeteringPointChartCache
   include Sidekiq::Worker
 
-  def perform(metering_point_id, resolution)
-    @cache_id = "/metering_points/#{metering_point_id}/chart?resolution=#{resolution}&containing_timestamp="
-    @now = (Time.current.utc).to_i * 1000
-    @fresh_chart = MeteringPoint.find(metering_point_id).send(resolution.to_sym, @now)
-    Rails.cache.write(@cache_id, @fresh_chart, expires_in: 10.minute)
+  def perform(timestamp, resolution)
+    MeteringPoint.all.each do |metering_point|
+      metering_points_hash = Aggregate.sort_metering_points([metering_point])
+      aggregate = Aggregate.new(metering_points_hash, true)
+      aggregate.past(timestamp: timestamp, resolution: resolution, refresh_cache: true)
+    end
   end
 end
