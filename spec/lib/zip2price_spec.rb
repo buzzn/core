@@ -94,9 +94,9 @@ describe Buzzn::Zip2Price do
   #               [1170, 2560, 3303],
   #               [1170, 2560, 3303]])].each do |type, expected|
   #     zip_2_price = Buzzn::Zip2Price.new(1000, 86916, type)
-  #     expect(zip_2_price.to_price.baseprice_cents).to eq expected[0]
-  #     expect(zip_2_price.to_price.energyprice_cents).to eq expected[1]
-  #     expect(zip_2_price.to_price.total_cents).to eq expected[2]
+  #     expect(zip_2_price.to_price.baseprice_cents_per_month).to eq expected[0]
+  #     expect(zip_2_price.to_price.energyprice_cents_per_kilowatt_hour).to eq expected[1]
+  #     expect(zip_2_price.to_price.total_cents_per_month).to eq expected[2]
   #     expect(zip_2_price.known_type?).to be true
   #     expect(zip_2_price.ka?).to be true
   #   end
@@ -109,9 +109,9 @@ describe Buzzn::Zip2Price do
   #               [1150, 2630, 23067],
   #               [1150, 2630, 23067]])].each do |type, exp|
   #     zip_2_price = Buzzn::Zip2Price.new(10000, 37181, type)
-  #     expect(zip_2_price.to_price.baseprice_cents).to eq exp[0]
-  #     expect(zip_2_price.to_price.energyprice_cents).to eq exp[1]
-  #     expect(zip_2_price.to_price.total_cents).to eq exp[2]
+  #     expect(zip_2_price.to_price.baseprice_cents_per_month).to eq exp[0]
+  #     expect(zip_2_price.to_price.energyprice_cents_per_kilowatt_hour).to eq exp[1]
+  #     expect(zip_2_price.to_price.total_cents_per_month).to eq exp[2]
   #     expect(zip_2_price.known_type?).to be true
   #     expect(zip_2_price.ka?).to be true
   #   end

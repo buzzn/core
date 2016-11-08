@@ -83,6 +83,7 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
     Mongoid.purge!
+    Rails.cache.clear
   end
 
   # show retry status in spec process
