@@ -16,7 +16,7 @@ class Discovergy
 
 
   # discovergy  = Discovergy.new('team@localpool.de', 'Zebulon_4711')
-  # date        = Time.now.in_time_zone
+  # date        = Time.current
   # start       = date.beginning_of_hour
   # ending      = start + 1.minute
   # request     = discovergy.raw('60009316', start.to_i*1000, ending.to_i*1000)
@@ -176,8 +176,8 @@ class Discovergy
 
 
   def raw( meter_uid,
-           datetime_from = (Time.now.in_time_zone.utc- 1.minute).to_i * 1000,
-           datetime_to   = Time.now.in_time_zone.utc.to_i * 1000 )
+           datetime_from = (Time.current.utc- 1.minute).to_i * 1000,
+           datetime_to   = Time.current.utc.to_i * 1000 )
     @datetime_from  = datetime_from
     @datetime_to    = datetime_to
     response = @conn.get do |req|
@@ -200,8 +200,8 @@ class Discovergy
 
 
   def raw_with_power(  meter_uid,
-                       datetime_from = (Time.now.in_time_zone.utc- 1.minute).to_i * 1000,
-                       datetime_to   = Time.now.in_time_zone.utc.to_i * 1000 )
+                       datetime_from = (Time.current.utc- 1.minute).to_i * 1000,
+                       datetime_to   = Time.current.utc.to_i * 1000 )
     @datetime_from  = datetime_from
     @datetime_to    = datetime_to
     response = @conn.get do |req|

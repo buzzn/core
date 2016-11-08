@@ -332,7 +332,7 @@ describe "Metering Points API" do
   it 'gets the related scores for MeteringPoint' do
     group                 = Fabricate(:group)
     metering_point        = Fabricate(:metering_point_readable_by_world, group: group)
-    interval_information  = metering_point.group.set_score_interval('day', Time.now.to_i)
+    interval_information  = metering_point.group.set_score_interval('day', Time.current.to_i)
     5.times do
       Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'MeteringPoint', scoreable_id: metering_point.id)
     end
@@ -346,7 +346,7 @@ describe "Metering Points API" do
   it 'paginates scores' do
     group                 = Fabricate(:group)
     metering_point        = Fabricate(:metering_point_readable_by_world, group: group)
-    interval_information  = metering_point.group.set_score_interval('day', Time.now.to_i)
+    interval_information  = metering_point.group.set_score_interval('day', Time.current.to_i)
     page_overload.times do
       Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'MeteringPoint', scoreable_id: metering_point.id)
     end

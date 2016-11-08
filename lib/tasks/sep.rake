@@ -6,7 +6,7 @@ namespace :sep do
   task :import_pv_bhkw, [:year] => :environment do |t, args|
     puts "Creating SEP"
     if args[:year].nil?
-      year = Time.now.year.to_s
+      year = Time.current.year.to_s
     else
       year = args[:year].to_s
     end

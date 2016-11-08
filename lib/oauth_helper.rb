@@ -34,7 +34,7 @@ class OAuthHelper
                                            expires_at: token.created_at.to_i + token.expires_in.to_i,
                                            refresh_token: token.refresh_token)
     # refresh access_token if it is about to expire and return the new one
-    if access_token.refresh_token && (access_token.expires_at - Time.now.to_i < 120)
+    if access_token.refresh_token && (access_token.expires_at - Time.current.to_i < 120)
       access_token.refresh!
     else
       access_token

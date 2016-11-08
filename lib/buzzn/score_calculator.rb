@@ -6,7 +6,7 @@ module Buzzn
       @group                = group
       @containing_timestamp = containing_timestamp
       @containing           = Time.at(containing_timestamp).in_time_zone
-      @now                  = Time.now.in_time_zone
+      @now                  = Time.current
     end
 
     def calculate_autarchy_scores

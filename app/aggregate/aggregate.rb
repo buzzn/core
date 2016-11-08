@@ -89,7 +89,7 @@ class Aggregate
       "readings" => present_items
     }
     if present_items.empty?
-      present["timestamp"] = Time.utc(0)
+      present["timestamp"] = Time.current.utc(0)
     else
       present["timestamp"] = present_items.first['data']['timestamp']
     end

@@ -33,7 +33,7 @@ class Crawler
   class CrawlerError < StandardError; end
 
   def initialize(metering_point)
-    @unixtime_now                     = Time.now.in_time_zone.utc.to_i*1000
+    @unixtime_now                     = Time.current.utc.to_i*1000
     @metering_point                   = metering_point
     raise ArgumentError.new("no metering_point_operator_contract on metering_point") unless @metering_point.metering_point_operator_contract
     @metering_point_operator_contract = @metering_point.metering_point_operator_contract

@@ -178,7 +178,7 @@ class MeteringPoint < ActiveRecord::Base
       sum_timestamp = 0
       operands.each do |metering_point|
         reading = metering_point.last_power
-        if !reading.nil? #&& reading[:timestamp] >= Time.now - 1.hour
+        if !reading.nil? #&& reading[:timestamp] >= Time.current - 1.hour
           if operators[i] == "+"
             result += reading[:power]
           elsif operators[i] == "-"
@@ -202,7 +202,7 @@ class MeteringPoint < ActiveRecord::Base
     else
       result = self.latest_fake_data
       if result[:data].nil?
-        return { :power => 0, :timestamp => Time.now.to_i*1000}
+        return { :power => 0, :timestamp => Time.current.to_i*1000}
       end
       return { :power => result[:data].flatten[1] * result[:factor], :timestamp => result[:data].flatten[0]}
     end
@@ -498,13 +498,13 @@ class MeteringPoint < ActiveRecord::Base
         Sidekiq::Client.push({
          'class' => CalculateMeteringPointScoreSufficiencyWorker,
          'queue' => :default,
-         'args' => [ metering_point.id, 'day', Time.now.to_i*1000]
+         'args' => [ metering_point.id, 'day', Time.current.to_i*1000]
         })
 
         Sidekiq::Client.push({
          'class' => CalculateMeteringPointScoreFittingWorker,
          'queue' => :default,
-         'args' => [ metering_point.id, 'day', Time.now.to_i*1000]
+         'args' => [ metering_point.id, 'day', Time.current.to_i*1000]
         })
       end
     end
@@ -536,7 +536,7 @@ class MeteringPoint < ActiveRecord::Base
 
     if current_power.nil?
       if observe_offline && last_observed_timestamp
-        if Time.now.utc >= last_observed_timestamp && Time.now.utc <= last_observed_timestamp + 3.minutes
+        if Time.current.utc >= last_observed_timestamp && Time.current.utc <= last_observed_timestamp + 3.minutes
           return create_activity(key: 'metering_point.offline', owner: self)
         end
       end

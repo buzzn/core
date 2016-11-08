@@ -40,11 +40,11 @@ class CalculateMeteringPointScoreSufficiencyWorker
         count_yearly_sufficiencies = 0
         all_scores = @metering_point.scores.sufficiencies.dayly
         all_scores.each do |score|
-          if score.interval_beginning >= Time.now.beginning_of_month && score.interval_end <= Time.now.end_of_month
+          if score.interval_beginning >= Time.current.beginning_of_month && score.interval_end <= Time.current.end_of_month
             monthly_score += score.value
             count_monthly_sufficiencies += 1
           end
-          if score.interval_beginning >= Time.now.beginning_of_year && score.interval_end <= Time.now.end_of_year
+          if score.interval_beginning >= Time.current.beginning_of_year && score.interval_end <= Time.current.end_of_year
             yearly_score += score.value
             count_yearly_sufficiencies += 1
           end
