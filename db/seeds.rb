@@ -8,7 +8,7 @@ def user_with_register
   register              = Fabricate(:register)
   user                        = Fabricate(:user)
   metering_point.contracts.each do |contract|
-    #user.contracting_parties.first.owned_contracts << contract
+    #user.contracting_parties.first.assigned_contracts << contract
   end
 
   user.add_role(:member, register)
@@ -59,36 +59,35 @@ buzzn_team_names.each do |user_name|
     user.add_role :manager, register_z1a
     user.add_role :manager, register_z1b
     register_z1a.contracts.each do |contract|
-      #user.contracting_parties.first.owned_contracts << contract
+      #user.contracting_parties.first.assigned_contracts << contract
       contract.save
     end
     register_z1b.contracts.each do |contract|
-      #user.contracting_parties.first.owned_contracts << contract
+      #user.contracting_parties.first.assigned_contracts << contract
     end
-
     easymeter_60051599 = Fabricate(:easymeter_60051599)
     @register_z2 = easymeter_60051599.registers.first
     user.add_role :manager, @register_z2
     @register_z2.contracts.each do |contract|
-      #user.contracting_parties.first.owned_contracts << contract
+      #user.contracting_parties.first.assigned_contracts << contract
     end
     easymeter_60051559 = Fabricate(:easymeter_60051559)
     @register_z3 = easymeter_60051559.registers.first
     user.add_role :manager, @register_z3
     @register_z3.contracts.each do |contract|
-      #user.contracting_parties.first.owned_contracts << contract
+      #user.contracting_parties.first.assigned_contracts << contract
     end
     easymeter_60051560 = Fabricate(:easymeter_60051560)
     @register_z4 = easymeter_60051560.registers.first
     user.add_role :manager, @register_z4
     @register_z4.contracts.each do |contract|
-      #user.contracting_parties.first.owned_contracts << contract
+      #user.contracting_parties.first.assigned_contracts << contract
     end
     easymeter_60051600 = Fabricate(:easymeter_60051600)
     @register_z5 = easymeter_60051600.registers.first
     user.add_role :manager, @register_z5
     @register_z5.contracts.each do |contract|
-      #user.contracting_parties.first.owned_contracts << contract
+      #user.contracting_parties.first.assigned_contracts << contract
     end
 
 
@@ -149,7 +148,7 @@ buzzn_team_names.each do |user_name|
     user.add_role(:member, root_mp)
   end
   root_mp.contracts.each do |contract|
-    #user.contracting_parties.first.owned_contracts << contract
+    #user.contracting_parties.first.assigned_contracts << contract
     contract.save
   end
 
@@ -188,7 +187,7 @@ karin.add_role :manager, register_pv_karin
 pv_karin = Fabricate(:pv_karin)
 karin.add_role :manager, pv_karin
 register_pv_karin.devices << pv_karin
-register_pv_karin.contracts.register_operators.first.contract_owner = karin.contracting_parties.first
+register_pv_karin.contracts.register_operators.first.contract_beneficiary = karin.contracting_parties.first
 register_pv_karin.contracts.register_operators.first.save
 
 karin.add_role :member, @forstenrieder_weg_mp
@@ -210,7 +209,7 @@ christian_schuetze = Fabricate(:christian_schuetze)
 christian_schuetze.add_role :manager, register_cs_1
 register_cs_1.contracts << Fabricate(:mpoc_justus, register: register_cs_1)
 christian_schuetze.add_role :member, register_cs_1
-register_cs_1.contracts.register_operators.first.contract_owner = christian_schuetze.contracting_parties.first
+register_cs_1.contracts.register_operators.first.contract_beneficiary = christian_schuetze.contracting_parties.first
 register_cs_1.contracts.register_operators.first.save
 
 

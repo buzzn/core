@@ -16,8 +16,6 @@ class Organization < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
-  has_many :contracts
-
   has_one  :contracting_party
 
   has_one :address, as: :addressable, dependent: :destroy
@@ -30,6 +28,10 @@ class Organization < ActiveRecord::Base
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
   validates :phone, presence: true
   validates :mode, presence: true
+
+  delegate :contracts, to: :contracting_party, allow_nil: true
+
+  after_create :create_contracting_party
 
   scope :power_givers,                  -> { where(mode: 'power_giver') }
   scope :power_takers,                  -> { where(mode: 'power_taker') }
@@ -94,5 +96,11 @@ class Organization < ActiveRecord::Base
   def self.filter(value)
     do_filter(value, *search_attributes)
   end
-  
+
+  private
+
+  def create_contracting_party
+    ContractingParty.create(legal_entity: 'company', organization: self)
+  end
+
 end

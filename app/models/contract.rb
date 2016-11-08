@@ -13,7 +13,6 @@ class Contract < ActiveRecord::Base
 
   belongs_to :contract_owner, class_name: 'ContractingParty', foreign_key: "contract_owner_id"
   belongs_to :contract_beneficiary, class_name: 'ContractingParty', foreign_key: "contract_beneficiary_id"
-  belongs_to :organization
   belongs_to :register
   belongs_to :group
 
