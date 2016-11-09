@@ -104,11 +104,12 @@ class Aggregate
   def past(params = {})
     timestamp  = params.fetch(:timestamp, Time.current) || Time.current
     resolution = params.fetch(:resolution, 'day_to_minutes') || 'day_to_minutes'
+    refresh_cache = params.fetch(:refresh_cache, false) || false
     past_items = []
     metering_point_ids = @metering_points_hash[:ids].join(',')
     cache_id = Aggregate.build_cache_id('/aggregates/past', metering_point_ids, timestamp, resolution)
 
-    if Rails.cache.exist?(cache_id)
+    if Rails.cache.exist?(cache_id) && !refresh_cache
       past = Rails.cache.fetch(cache_id)
     else
 
