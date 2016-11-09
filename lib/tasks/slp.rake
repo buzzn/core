@@ -6,7 +6,7 @@ namespace :slp do
   task :import_h0, [:year] => :environment do |t, args|
     puts "Creating SLP"
     if args[:year].nil?
-      year = Time.now.year.to_s
+      year = Time.current.year.to_s
     else
       year = args[:year].to_s
     end

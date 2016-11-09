@@ -463,7 +463,7 @@ class Reading
 
   def self.latest_fake_data(source)
     values = []
-    readings = Reading.where(:timestamp.gte => (Time.now - 15.minutes), :timestamp.lt => (Time.now + 15.minutes), source: source)
+    readings = Reading.where(:timestamp.gte => (Time.current - 15.minutes), :timestamp.lt => (Time.current + 15.minutes), source: source)
     if readings.any?
       firstTimestamp = readings.first.timestamp.to_i*1000
       firstValue = readings.first.power_a_milliwatt/1000

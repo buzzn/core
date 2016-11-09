@@ -31,4 +31,13 @@ describe "Source File" do
       end
     end
   end
+
+  it "source code files do not use Time.now" do
+    Dir['lib/**/*rb'].each do |file|
+      content = File.read(file)
+      content.each_line do |line|
+        expect(line).not_to match /Time.now/
+      end      
+    end
+  end
 end

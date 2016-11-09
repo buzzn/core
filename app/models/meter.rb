@@ -85,7 +85,7 @@ class Meter < ActiveRecord::Base
       meter.metering_points.each do |metering_point|
         mpoc  = metering_point.metering_point_operator_contract
         last  = Reading.last_by_metering_point_id(metering_point.id)[:timestamp]
-        now   = Time.now.in_time_zone.utc
+        now   = Time.current.utc
         range = (last.to_i .. now.to_i)
         if range.count < 1.hour
           Sidekiq::Client.push({

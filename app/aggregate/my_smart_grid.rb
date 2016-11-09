@@ -10,7 +10,7 @@ class MySmartGrid
   #
 
   # mysmartgrid  = MySmartGrid.new('721bcb386c8a4dab2510d40a93a7bf66', '0b81f58c19135bc01420aa0120ae7693')
-  # unixtime = Time.now.to_i
+  # unixtime = Time.current.to_i
   # request  = mysmartgrid.get_day(unixtime)
 
   # sensor_id replaces username and x_token the password
@@ -82,8 +82,8 @@ class MySmartGrid
   # Taking the first value of the return lead therefore to a value change every minute and you always
   # have a delay of 5 minutes in "real time view"
   def get_live
-    datetime_start = Time.now.to_i - 300
-    datetime_end   = Time.now.to_i
+    datetime_start = Time.current.to_i - 300
+    datetime_end   = Time.current.to_i
     # Rails.log datetime_end
     # Rails.log datetime_start
     response = @conn.get do |req|

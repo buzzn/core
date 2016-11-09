@@ -262,7 +262,7 @@ class Group < ActiveRecord::Base
 
   def chart(resolution_format, containing_timestamp=nil)
     if containing_timestamp == nil
-      containing_timestamp = Time.now.to_i * 1000
+      containing_timestamp = Time.current.to_i * 1000
     end
 
     data_in = []
@@ -339,7 +339,7 @@ class Group < ActiveRecord::Base
     end
 
     if containing_timestamp == nil
-      containing_timestamp = Time.now.to_i * 1000
+      containing_timestamp = Time.current.to_i * 1000
     end
 
     data_in = []
@@ -379,22 +379,22 @@ class Group < ActiveRecord::Base
   def extrapolate_kwh_pa(kwh_ago, resolution_format, containing_timestamp)
     days_ago = 0
     if resolution_format == 'year'
-      if Time.at(containing_timestamp).end_of_year < Time.now
+      if Time.at(containing_timestamp).end_of_year < Time.current
         days_ago = 365
       else
-        days_ago = ((Time.now - Time.now.beginning_of_year)/(3600*24.0)).to_i
+        days_ago = ((Time.current - Time.current.beginning_of_year)/(3600*24.0)).to_i
       end
     elsif resolution_format == 'month'
-      if Time.at(containing_timestamp).end_of_month < Time.now
+      if Time.at(containing_timestamp).end_of_month < Time.current
         days_ago = Time.at(containing_timestamp).days_in_month
       else
-        days_ago = Time.now.day
+        days_ago = Time.current.day
       end
     elsif resolution_format == 'day'
-      if Time.at(containing_timestamp).in_time_zone.end_of_day < Time.now
+      if Time.at(containing_timestamp).in_time_zone.end_of_day < Time.current
         days_ago = 1
       else
-        days_ago = (Time.now - Time.now.in_time_zone.beginning_of_day)/(3600*24.0)
+        days_ago = (Time.current - Time.current.beginning_of_day)/(3600*24.0)
       end
     end
     return kwh_ago / (days_ago*1.0) * 365
@@ -486,7 +486,7 @@ class Group < ActiveRecord::Base
       resolution = "year_to_months"
     end
     if containing_timestamp.nil?
-      containing_timestamp = Time.now.to_i * 1000
+      containing_timestamp = Time.current.to_i * 1000
     end
 
     if resolution == 'day_to_minutes'

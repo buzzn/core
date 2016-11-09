@@ -214,7 +214,7 @@ class MeteringPointsController < ApplicationController
       resolution_format = "year"
     end
     if containing_timestamp.nil?
-      containing_timestamp = Time.now.to_i * 1000
+      containing_timestamp = Time.current.to_i * 1000
     end
 
     if resolution_format == 'day'
@@ -306,7 +306,7 @@ class MeteringPointsController < ApplicationController
 
   def get_reading_update
     render :get_reading_update
-    #render json: { data: [timestamp: Time.now.to_i*1000, reading: 12345]}
+    #render json: { data: [timestamp: Time.current.to_i*1000, reading: 12345]}
   end
 
   def latest_fake_data
