@@ -12,13 +12,7 @@ every 1.day, :at => '5:00 am' do
 end
 
 every 10.minutes do
-  MeteringPoint.ids.each do |metering_point_id|
-    Sidekiq::Client.push(
-      'class' => UpdateMeteringPointChartCache,
-      'queue' => :low,
-      'args' => [metering_point_id, Time.current, 'day_to_minutes']
-      )
-  end
+  runner "MeteringPoint.update_chart_cache"
 end
 
 # every 1.minute do

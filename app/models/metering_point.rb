@@ -510,6 +510,16 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
+  def self.update_chart_cache
+    MeteringPoint.ids.each do |metering_point_id|
+      Sidekiq::Client.push(
+        'class' => UpdateMeteringPointChartCache,
+        'queue' => :low,
+        'args' => [metering_point_id, Time.current, 'day_to_minutes']
+        )
+    end
+  end
+
 
   def get_operators_from_formula
     if self.virtual && self.formula_parts.any?
