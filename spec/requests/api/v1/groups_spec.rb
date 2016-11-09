@@ -365,26 +365,56 @@ describe "Groups API" do
   end
 
 
-  it 'gets the related scores for Group' do
-    group                 = Fabricate(:group)
-    interval_information  = group.set_score_interval('day', Time.now.to_i)
-    5.times do
-      Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group', scoreable_id: group.id)
+  [nil, :sufficiency, :closeness, :autarchy, :fitting].each do |mode|
+
+    it "fails the related scores without interval using mode #{mode}" do
+      group                 = Fabricate(:group)
+      now                   = Time.current
+      params = { mode: mode, timestamp: now }
+      get_without_token "/api/v1/groups/#{group.id}/scores", params
+      expect(response).to have_http_status(422)
+      expect(json['errors'].first['source']['pointer']).to eq '/data/attributes/interval'
     end
 
-    get_without_token "/api/v1/groups/#{group.id}/scores"
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(5)
+    [:day, :month, :year].each do |interval|
+      it "fails the related #{interval}ly scores without timestamp using mode #{mode}" do
+        group                 = Fabricate(:group)
+        params = { mode: mode, interval: interval }
+        get_without_token "/api/v1/groups/#{group.id}/scores", params
+        expect(response).to have_http_status(422)
+        expect(json['errors'].first['source']['pointer']).to eq '/data/attributes/timestamp'
+      end
+
+      it "gets the related #{interval}ly scores with mode '#{mode}'" do
+        group                 = Fabricate(:group)
+        now                   = Time.current
+        interval_information  = Group.score_interval(interval.to_s, now.to_i)
+        5.times do
+          Score.create(mode: mode || 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group', scoreable_id: group.id)
+        end
+
+        params = { mode: mode, interval: interval, timestamp: now }
+        get_without_token "/api/v1/groups/#{group.id}/scores", params
+        expect(response).to have_http_status(200)
+        expect(json['data'].size).to eq(5)
+        sample = json['data'].first['attributes']
+        expect(sample['mode']).to eq((mode || 'autarchy').to_s)
+        expect(sample['interval']).to eq(interval.to_s)
+        expect(sample['interval-beginning'] < now.as_json && now.as_json < sample['interval-end']).to eq true
+      end
+    end
   end
 
 
   it 'paginates scores' do
     group                 = Fabricate(:group)
-    interval_information  = group.set_score_interval('day', Time.now.to_i)
+    now                   = Time.current
+    interval_information  = group.set_score_interval('day', now.to_i)
     page_overload.times do
       Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group', scoreable_id: group.id)
     end
-    get_without_token "/api/v1/groups/#{group.id}/scores"
+    params = { interval: 'day', timestamp: now }
+    get_without_token "/api/v1/groups/#{group.id}/scores", params
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
 
