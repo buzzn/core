@@ -11,9 +11,9 @@ every 1.day, :at => '5:00 am' do
   rake "sitemap:refresh"
 end
 
-every 10.minutes do
-  runner "MeteringPoint.update_chart_cache"
-end
+# every 10.minutes do
+#   runner "MeteringPoint.update_chart_cache"
+# end
 
 # every 1.minute do
 #   runner "Meter.pull_readings"
