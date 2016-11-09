@@ -38,13 +38,10 @@ Fabricator :transmission_system_operator_with_address, from: :transmission_syste
 end
 
 Fabricator :power_giver_with_contracts, from: :power_giver do
-  contracts   { [ Fabricate(:power_giver_contract)] }
-end
-
-Fabricator :metering_service_provider_with_contracting_party, from: :metering_service_provider do
   after_create do |organization|
-    organization.update contracting_party: Fabricate(:contracting_party, legal_entity: 'company', organization: organization)
+    Fabricate(:power_giver_contract, contract_beneficiary: organization.contracting_party)
   end
+
 end
 
 # needed for groups fabricator

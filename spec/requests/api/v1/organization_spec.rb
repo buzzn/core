@@ -417,7 +417,7 @@ describe "Organizations API" do
   # RETRIEVE contracting_party
 
   it 'gets the related contracting_party of an organization without token' do
-    organization      = Fabricate(:metering_service_provider_with_contracting_party)
+    organization      = Fabricate(:metering_service_provider)
     contracting_party = organization.contracting_party
 
     get_without_token "/api/v1/organizations/#{organization.id}/contracting-party"
@@ -437,7 +437,8 @@ describe "Organizations API" do
 
   it 'gets the related contracting_party of an organization with token' do
     access_token    = Fabricate(:simple_access_token)
-    organization    = Fabricate(:metering_service_provider_with_contracting_party)
+    organization    = Fabricate(:metering_service_provider)
+    User.find(access_token.resource_owner_id).add_role :manager, organization
     party           = organization.contracting_party
     party.update(user_id: access_token.resource_owner_id)
 

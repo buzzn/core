@@ -75,7 +75,7 @@ class Crawler
   end
 
   def live
-    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid"
+    if @metering_point_operator ==  "mysmartgrid"
       my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request  = my_smart_grid.get_live
       if request.any?
@@ -123,7 +123,7 @@ class Crawler
 
 
   def live_each
-    if @metering_point_operator_contract.organization.slug == "mysmartgrid"
+    if @metering_point_operator == "mysmartgrid"
       #do something?
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -155,7 +155,7 @@ class Crawler
 
   def hour(containing_timestamp=@unixtime_now)
     result = []
-    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
+    if @metering_point_operator ==  "mysmartgrid" # meter.name== 'MySmartGrid'
       my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request     = my_smart_grid.get_hour(containing_timestamp)
       if request.any?
@@ -208,7 +208,7 @@ class Crawler
   # returns array with 96 quarter hour values
   def day(containing_timestamp=@unixtime_now)
     result = []
-    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
+    if @metering_point_operator ==  "mysmartgrid" # meter.name== 'MySmartGrid'
       my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request  = my_smart_grid.get_day(containing_timestamp)
       if request.any?
@@ -292,7 +292,7 @@ class Crawler
 
   def month(containing_timestamp=@unixtime_now)
   result = []
-    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
+    if @metering_point_operator ==  "mysmartgrid" # meter.name== 'MySmartGrid'
       my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request  = my_smart_grid.get_month(containing_timestamp)
       if request.any?
@@ -354,7 +354,7 @@ class Crawler
 
   def year(containing_timestamp=@unixtime_now)
     result = []
-    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
+    if @metering_point_operator ==  "mysmartgrid" # meter.name== 'MySmartGrid'
       my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request  = my_smart_grid.get_year(containing_timestamp)
       if request.any?

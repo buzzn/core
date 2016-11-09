@@ -24,8 +24,10 @@ class Contract < ActiveRecord::Base
   validate :resource_cannot_have_same_contracts
   validate :validate_invariants
 
-  scope :running,                   -> { where(running: :true) }
-  scope :register_operators,  -> { where(mode: 'metering_point_operator_contract') }
+  scope :running,                   -> { where(status: 'running') }
+  scope :queued,                    -> { where(status: 'waiting_for_approval') }
+  scope :cancelled,                 -> { where(status: 'cancelled') }
+  scope :metering_point_operators,  -> { where(mode: 'metering_point_operator_contract') }
   scope :power_givers,              -> { where(mode: 'power_giver_contract') }
   scope :power_takers,              -> { where(mode: 'power_taker_contract') }
   scope :servicings,                -> { where(mode: 'servicing_contract') }
@@ -81,19 +83,31 @@ class Contract < ActiveRecord::Base
     "#{organization.name} #{tariff}"
   end
 
+  def self.modes
+    %w{
+      power_giver_contract
+      power_taker_contract
+      metering_point_operator_contract
+      servicing_contract
+      localpool_power_taker_contract
+      localpool_processing_contract
+    }.map(&:to_sym)
+  end
+
+
+
   # def self.modes
   #   %w{
-  #     power_giver_contract
-  #     power_taker_contract
   #     metering_point_operator_contract
-  #     servicing_contract
   #   }.map(&:to_sym)
   # end
 
-  def self.modes
+  def self.statusses
     %w{
-      metering_point_operator_contract
-    }.map(&:to_sym)
+      waiting_for_approval
+      running
+      cancelled
+    }
   end
 
   def self.search_attributes

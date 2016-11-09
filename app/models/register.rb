@@ -323,15 +323,15 @@ class Register < ActiveRecord::Base
   def mysmartgrid?
     self.smart? &&
     !metering_point_operator_contract.nil? &&
-    metering_point_operator_contract.organization.slug == "mysmartgrid"
+    metering_point_operator_contract.contract_owner.organization.slug == "mysmartgrid"
   end
 
   def discovergy?
     self.smart? &&
     !metering_point_operator_contract.nil? &&
-    (metering_point_operator_contract.organization.slug == "discovergy" ||
-     metering_point_operator_contract.organization.slug == "buzzn-metering" ||
-     metering_point_operator_contract.organization.buzzn_metering?)
+    (metering_point_operator_contract.contract_owner.organization.slug == "discovergy" ||
+     metering_point_operator_contract.contract_owner.organization.slug == "buzzn-metering" ||
+     metering_point_operator_contract.contract_owner.organization.buzzn_metering?)
   end
 
   def buzzn_api?
