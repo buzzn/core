@@ -133,8 +133,7 @@ module API
                                                           permitted_params)
           user           = User.unguarded_retrieve(permitted_params[:data][:id])
           if register.updatable_by?(current_user)
-            user.add_role(:manager, register)
-            user.create_activity(key: 'user.appointed_register_manager', owner: current_user, recipient: register)
+            metering_point.managers.add(user, create_key: 'user.appointed_metering_point_manager', owner: current_user)
             status 204
           else
             status 403
@@ -155,9 +154,8 @@ module API
           register = Register.guarded_retrieve(current_user,
                                                           permitted_params)
           if register.updatable_by?(current_user)
-            # TODO ensure at least ONE manager
-            register.replace_managers(id_array, owner: current_user,
-                                            create_key: 'user.appointed_register_manager')
+            register.managers.replace(id_array, owner: current_user,
+                                      create_key: 'user.appointed_register_manager')
           else
             status 403
           end
@@ -224,12 +222,11 @@ module API
         oauth2 :full
         post ':id/relationships/members' do
           register = Register.guarded_retrieve(current_user,
-                                                          permitted_params)
+                                               permitted_params)
           user           = User.unguarded_retrieve(permitted_params[:data][:id])
           if register.updatable_by?(current_user, :members)
-            # TODO move logic into Register
-            user.add_role(:member, register)
-            register.create_activity key: 'register_user_membership.create', owner: user
+            # TODO move logic into MeteringPoint
+            register.members.add(user, create_key: 'metering_point_user_membership.create')
             status 204
           else
             status 403
@@ -247,11 +244,11 @@ module API
         oauth2 :full
         patch ':id/relationships/members' do
           register = Register.guarded_retrieve(current_user,
-                                                          permitted_params)
+                                               permitted_params)
           if register.updatable_by?(current_user)
-            register.replace_members(id_array,
-                                           create_key: 'register_user_membership.create',
-                                           cancel_key: 'register_user_membership.cancel')
+            register.members.replace(id_array,
+                                     create_key: 'register_user_membership.create',
+                                     cancel_key: 'register_user_membership.cancel')
           else
             status 403
           end
@@ -273,8 +270,7 @@ module API
           # TODO move logic into ManagerMembers module
           if (current_user == user ||
               register.updatable_by?(current_user))
-            user.remove_role(:member, register)
-            register.create_activity(key: 'register_user_membership.cancel', owner: user)
+            register.members.remove(user, cancel_key: 'register_user_membership.cancel')
           else
             status 403
           end

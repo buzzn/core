@@ -164,7 +164,7 @@ module API
           group = Group.guarded_retrieve(current_user, permitted_params)
           # TODO move logic into ManagerMembers module
           if group.updatable_by?(current_user, :replace_managers)
-            group.replace_managers(id_array)
+            group.managers.replace(id_array)
           else
             status 403
           end
