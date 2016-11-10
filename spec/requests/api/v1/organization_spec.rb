@@ -572,7 +572,7 @@ describe "Organizations API" do
     expect(response).to have_http_status(204)
 
     expect(organization.managers).to match_array [manager, user]
-    expect(organization.members).to eq [user]
+    expect(organization.members).to match_array [user]
   end
 
 
@@ -591,8 +591,8 @@ describe "Organizations API" do
     post_with_token "/api/v1/organizations/#{organization.id}/relationships/members", user_params, manager_token.token
     expect(response).to have_http_status(204)
 
-    expect(organization.managers).to eq [user]
-    expect(organization.members).to eq [user]
+    expect(organization.managers).to match_array [user]
+    expect(organization.members).to match_array [user]
   end
 
 
@@ -706,8 +706,8 @@ describe "Organizations API" do
     delete_with_token "/api/v1/organizations/#{organization.id}/relationships/members", params, manager_token.token
     expect(response).to have_http_status(204)
 
-    expect(organization.managers).to eq [manager]
-    expect(organization.members).to eq []
+    expect(organization.managers).to match_array [manager]
+    expect(organization.members).to match_array []
   end
 
 
@@ -723,13 +723,18 @@ describe "Organizations API" do
       data: {id: user.id}
     }.to_json
 
-    delete_with_token "/api/v1/organizations/#{organization.id}/relationships/managers", params, manager_token.token
-    expect(response).to have_http_status(204)
-
     delete_with_token "/api/v1/organizations/#{organization.id}/relationships/members", params, manager_token.token
     expect(response).to have_http_status(204)
+    expect(organization.members).to match_array []
 
-    expect(organization.managers).to eq []
-    expect(organization.members).to eq []
+    delete_with_token "/api/v1/organizations/#{organization.id}/relationships/managers", params, manager_token.token
+    expect(json['errors'].first['detail']).to eq 'Organization needs to have at least one manager'
+    expect(response).to have_http_status(422)
+
+    manager = User.find(manager_token.resource_owner_id)
+    manager.add_role(:manager, organization)
+    delete_with_token "/api/v1/organizations/#{organization.id}/relationships/managers", params, manager_token.token
+    expect(response).to have_http_status(204)
+    expect(organization.managers).to match_array [manager]
   end
 end

@@ -1,4 +1,5 @@
 require 'buzzn/guarded_crud'
+require 'buzzn/managed_roles'
 class Register < ActiveRecord::Base
   resourcify
   acts_as_commentable
@@ -6,7 +7,8 @@ class Register < ActiveRecord::Base
   include CalcVirtualRegister
   include ChartFunctions
   include Filterable
-  include ReplacableRoles
+  include Buzzn::ManagerRole
+  include Buzzn::MemberRole
   include Buzzn::GuardedCrud
 
   include PublicActivity::Model
@@ -25,9 +27,6 @@ class Register < ActiveRecord::Base
   has_one :address, as: :addressable, dependent: :destroy
 
   has_many :scores, as: :scoreable
-
-  has_many :members, -> { where roles:  { name: 'member'} }, through: :roles, source: :users
-  has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
 
   accepts_nested_attributes_for :contracts
 

@@ -1,5 +1,6 @@
 require 'buzzn/guarded_crud'
 require 'buzzn/score_calculator'
+require 'buzzn/managed_roles'
 class Group < ActiveRecord::Base
   resourcify
   acts_as_commentable
@@ -7,7 +8,7 @@ class Group < ActiveRecord::Base
   include CalcVirtualRegister
   include ChartFunctions
   include Filterable
-  include ReplacableRoles
+  include Buzzn::ManagerRole
   include Buzzn::GuardedCrud
 
   before_destroy :destroy_content

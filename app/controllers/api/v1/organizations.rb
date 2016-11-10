@@ -115,7 +115,7 @@ module API
           # TODO move logic into Register and ensure at least ONE manager
           organization = Organization.guarded_create(current_user,
                                                      permitted_params)
-          current_user.add_role(:manager, organization)
+          organization.managers.add(current_user)
           created_response(organization)
         end
 
@@ -171,7 +171,7 @@ module API
                                                        permitted_params)
           user         = User.unguarded_retrieve(permitted_params[:data][:id])
           if organization.updatable_by?(current_user)
-            user.add_role(:manager, organization)
+            organization.managers.add(user)
             status 204
           else
             status 403
@@ -191,7 +191,7 @@ module API
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
           if organization.updatable_by?(current_user)
-            organization.replace_managers(id_array)
+            organization.managers.replace(id_array)
           else
             status 403
           end
@@ -211,7 +211,7 @@ module API
                                                        permitted_params)
           user         = User.unguarded_retrieve(permitted_params[:data][:id])
           if organization.updatable_by?(current_user)
-            user.remove_role(:manager, organization)
+            organization.managers.remove(user)
             status 204
           else
             status 403
@@ -252,7 +252,7 @@ module API
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
           if organization.updatable_by?(current_user)
-            organization.replace_members(id_array)
+            organization.members.replace(id_array)
           else
             status 403
           end
