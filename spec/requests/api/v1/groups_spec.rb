@@ -392,6 +392,8 @@ describe "Groups API" do
         5.times do
           Score.create(mode: mode || 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group', scoreable_id: group.id)
         end
+        interval_information  = Group.score_interval(interval.to_s, 123123)
+        Score.create(mode: mode || 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group', scoreable_id: group.id)
 
         params = { mode: mode, interval: interval, timestamp: now }
         get_without_token "/api/v1/groups/#{group.id}/scores", params
