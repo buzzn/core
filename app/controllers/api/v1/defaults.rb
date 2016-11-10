@@ -27,7 +27,11 @@ module API
             @permitted_params ||= declared(params, include_missing: false)
           end
 
-          def id_array
+          def data_id
+            permitted_params[:data][:id]
+          end
+
+          def data_id_array
             permitted_params[:data].collect{ |d| d[:id] }
           end
 

@@ -28,7 +28,6 @@ class RegisterUserRequest < ActiveRecord::Base
   private
     def created_membership
       if status == 'accepted'
-        user.add_role(:member, register)
         self.delete
       elsif status == 'rejected'
         self.delete

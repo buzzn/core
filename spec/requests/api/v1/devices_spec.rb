@@ -129,10 +129,6 @@ describe "Devices API" do
     expect(json['data']['attributes']['manufacturer-name']).to eq(device.manufacturer_name)
     expect(json['data']['attributes']['manufacturer-product-name']).to eq(device.manufacturer_product_name)
     expect(json['data']['attributes']['manufacturer-product-serialnumber']).to eq(device.manufacturer_product_serialnumber)
-
-    user = User.find(access_token.resource_owner_id)
-    device = Device.find(json['data']['id'])
-    expect(user.has_role?(:manager, device)).to eq true
   end
 
   it "does not create a device with validation errors" do

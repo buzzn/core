@@ -26,13 +26,8 @@ module API
         end
         oauth2 :simple, :full, :smartmeter
         post do
-          # TODO move logic into Register and validate existence of manager
-          meter              = Meter.unguarded_retrieve(permitted_params[:meter_id])
-          attributes         = permitted_params.reject { |k,v| k == :meter_id }
-          attributes[:meter] = meter
-          register     = Register.guarded_create(current_user,
-                                                            attributes)
-          current_user.add_role(:manager, register)
+          register = Register.guarded_create(current_user,
+                                             permitted_params)
           created_response(register)
         end
 
@@ -130,14 +125,11 @@ module API
         oauth2 :full
         post ':id/relationships/managers' do
           register = Register.guarded_retrieve(current_user,
-                                                          permitted_params)
-          user           = User.unguarded_retrieve(permitted_params[:data][:id])
-          if register.updatable_by?(current_user)
-            metering_point.managers.add(user, create_key: 'user.appointed_metering_point_manager', owner: current_user)
-            status 204
-          else
-            status 403
-          end
+                                               permitted_params)
+          user     = User.unguarded_retrieve(data_id)
+          register.managers.add(current_user, user,
+                                create_key: 'user.appointed_register_manager', owner: current_user)
+          status 204
         end
 
 
@@ -152,13 +144,12 @@ module API
         oauth2 :full
         patch ':id/relationships/managers' do
           register = Register.guarded_retrieve(current_user,
-                                                          permitted_params)
-          if register.updatable_by?(current_user)
-            register.managers.replace(id_array, owner: current_user,
-                                      create_key: 'user.appointed_register_manager')
-          else
-            status 403
-          end
+                                               permitted_params)
+          # TODO move 'key' logic into metering_point/ManagedRoles
+          register.managers.replace(current_user,
+                                    data_id_array,
+                                    owner: current_user,
+                                    create_key: 'user.appointed_register_manager')
         end
 
 
@@ -173,15 +164,10 @@ module API
         oauth2 :full
         delete ':id/relationships/managers' do
           register = Register.guarded_retrieve(current_user,
-                                                          permitted_params)
-          user           = User.unguarded_retrieve(permitted_params[:data][:id])
-          if register.updatable_by?(current_user)
-            # TODO move logic into Register and ensure at least ONE manager
-            user.remove_role(:manager, register)
-            status 204
-          else
-            status 403
-          end
+                                               permitted_params)
+          user     = User.unguarded_retrieve(data_id)
+          register.managers.remove(current_user, user)
+          status 204
         end
 
 
@@ -223,14 +209,12 @@ module API
         post ':id/relationships/members' do
           register = Register.guarded_retrieve(current_user,
                                                permitted_params)
-          user           = User.unguarded_retrieve(permitted_params[:data][:id])
-          if register.updatable_by?(current_user, :members)
-            # TODO move logic into MeteringPoint
-            register.members.add(user, create_key: 'metering_point_user_membership.create')
-            status 204
-          else
-            status 403
-          end
+          user     = User.unguarded_retrieve(data_id)
+          # TODO move 'key' logic into metering_point/ManagedRoles
+          register.members.add(current_user, user, 
+                               update: :members,
+                               create_key: 'register_user_membership.create')
+          status 204
         end
 
 
@@ -243,15 +227,14 @@ module API
         end
         oauth2 :full
         patch ':id/relationships/members' do
-          register = Register.guarded_retrieve(current_user,
+          register = register.guarded_retrieve(current_user,
                                                permitted_params)
-          if register.updatable_by?(current_user)
-            register.members.replace(id_array,
-                                     create_key: 'register_user_membership.create',
-                                     cancel_key: 'register_user_membership.cancel')
-          else
-            status 403
-          end
+          # TODO move 'key' logic into metering_point/ManagedRoles
+          register.members.replace(current_user,
+                                   data_id_array,
+                                   update: :members,
+                                   create_key: 'register_user_membership.create',
+                                   cancel_key: 'register_user_membership.cancel')
         end
 
 
@@ -266,14 +249,10 @@ module API
         delete ':id/relationships/members' do
           register = Register.guarded_retrieve(current_user,
                                                           permitted_params)
-          user           = User.unguarded_retrieve(permitted_params[:data][:id])
-          # TODO move logic into ManagerMembers module
-          if (current_user == user ||
-              register.updatable_by?(current_user))
-            register.members.remove(user, cancel_key: 'register_user_membership.cancel')
-          else
-            status 403
-          end
+          user           = User.unguarded_retrieve(data_id)
+          # TODO move 'key' logic into metering_point/ManagedRoles
+          register.members.remove(current_user, user,
+                                  cancel_key: 'register_user_membership.cancel')
         end
 
 
