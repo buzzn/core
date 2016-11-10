@@ -58,9 +58,7 @@ module API
         end
         oauth2 :full, :smartmeter
         post do
-          # TODO move logic into Contract and ensure manager on creation (validation)
           contract = Contract.guarded_create(current_user, permitted_params)
-          current_user.add_role :manager, contract
           created_response(contract)
         end
 

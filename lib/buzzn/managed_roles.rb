@@ -21,12 +21,20 @@ module Buzzn
       @roles.respond_to?(method) || super
     end
 
+    def check_updatable(current_user, user, options)
+      unless @parent.updatable_by?(*[current_user, options[:update]].compact) || current_user == user
+        raise PermissionDenied.new
+      end
+    end
+    private :check_updatable
+    
     def include?(user)
       User.users_of(@parent, @role).where(id: user).limit(1).size == 1
     end
     alias :member? :include?
 
-    def replace(user_ids, options = {})
+    def replace(current_user, user_ids, options = {})
+      check_updatable(current_user, nil, options)
       User.transaction do
         replace_users(user_ids, @participants.collect { |i| i }, options)
       end
@@ -45,7 +53,8 @@ module Buzzn
     end
     private :replace_users
 
-    def delete(user, options = {})
+    def delete(current_user, user, options = {})
+      check_updatable(current_user, user, options)
       User.transaction do
         do_delete(user, options)
       end
@@ -71,7 +80,8 @@ module Buzzn
     end
     private :do_delete, :do_delete_without_check
 
-    def add(user, options = {})
+    def add(current_user, user, options = {})
+      check_updatable(current_user, user, options)
       User.transaction do
         do_add(user, options)
       end
@@ -135,6 +145,23 @@ module Buzzn
 
     def manager?(user)
       managers.include?(user)
+    end
+
+    class CreateMethod
+      def guarded_create_with_manager(user, params)
+        transaction do
+          result = old_guarded_create(user, params)
+          user.add_role(result, :manager)
+          result
+        end
+      end
+    end
+
+    def included(model)
+      model.extend CreateMethod
+      model.class_eval do
+        alias :old_guarded_create :guarded_create
+      end
     end
   end
 

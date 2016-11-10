@@ -112,10 +112,8 @@ module API
         end
         oauth2 :full
         post do
-          # TODO move logic into Register and ensure at least ONE manager
           organization = Organization.guarded_create(current_user,
                                                      permitted_params)
-          organization.managers.add(current_user)
           created_response(organization)
         end
 
@@ -170,12 +168,8 @@ module API
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
           user         = User.unguarded_retrieve(permitted_params[:data][:id])
-          if organization.updatable_by?(current_user)
-            organization.managers.add(user)
-            status 204
-          else
-            status 403
-          end
+          organization.managers.add(current_user, user)
+          status 204
         end
 
 
@@ -190,11 +184,7 @@ module API
         patch ':id/relationships/managers' do
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
-          if organization.updatable_by?(current_user)
-            organization.managers.replace(id_array)
-          else
-            status 403
-          end
+          organization.managers.replace(current_user, data_id_array)
         end
 
 
@@ -210,12 +200,8 @@ module API
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
           user         = User.unguarded_retrieve(permitted_params[:data][:id])
-          if organization.updatable_by?(current_user)
-            organization.managers.remove(user)
-            status 204
-          else
-            status 403
-          end
+          organization.managers.remove(current_user, user)
+          status 204
         end
 
 
@@ -231,12 +217,8 @@ module API
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
           user         = User.unguarded_retrieve(permitted_params[:data][:id])
-          if organization.updatable_by?(current_user)
-            user.add_role(:member, organization)
-            status 204
-          else
-            status 403
-          end
+          organization.members.add(current_user, user)
+          status 204
         end
 
 
@@ -251,11 +233,7 @@ module API
         patch ':id/relationships/members' do
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
-          if organization.updatable_by?(current_user)
-            organization.members.replace(id_array)
-          else
-            status 403
-          end
+          organization.members.replace(current_user, data_id_array)
         end
 
 
@@ -272,12 +250,8 @@ module API
           organization = Organization.guarded_retrieve(current_user,
                                                        permitted_params)
           user         = User.unguarded_retrieve(permitted_params[:data][:id])
-          if organization.updatable_by?(current_user)
-            user.remove_role(:member, organization)
-            status 204
-          else
-            status 403
-          end
+          organization.members.remove(current_user, user)
+          status 204
         end
       end
     end
