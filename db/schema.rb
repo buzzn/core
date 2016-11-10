@@ -142,10 +142,14 @@ ActiveRecord::Schema.define(version: 20161116143900) do
     t.float    "tax_rate"
     t.integer  "tax_number"
     t.uuid     "organization_id"
-    t.uuid     "register_id"
     t.uuid     "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "retailer"
+    t.boolean  "provider_permission"
+    t.boolean  "subject_to_tax"
+    t.string   "mandate_reference"
+    t.string   "creditor_id"
   end
 
   add_index "contracting_parties", ["organization_id"], name: "index_contracting_parties_on_organization_id", using: :btree
@@ -156,11 +160,8 @@ ActiveRecord::Schema.define(version: 20161116143900) do
   create_table "contracts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "mode"
-    t.string   "tariff"
-    t.integer  "price_cents",                        default: 0,     null: false
-    t.string   "price_currency",                     default: "EUR", null: false
     t.string   "status"
-    t.integer  "forecast_watt_hour_pa",    limit: 8
+    t.integer  "forecast_watt_hour_pa",         limit: 8
     t.date     "commissioning"
     t.date     "termination"
     t.boolean  "terms"
@@ -172,24 +173,26 @@ ActiveRecord::Schema.define(version: 20161116143900) do
     t.string   "username"
     t.string   "encrypted_password"
     t.boolean  "valid_credentials",                  default: false
-    t.boolean  "running",                            default: true
     t.uuid     "register_id"
     t.uuid     "organization_id"
     t.uuid     "group_id"
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
     t.uuid     "contract_owner_id"
     t.uuid     "contract_beneficiary_id"
-    t.boolean  "retailer"
-    t.float    "price_cents_per_kwh"
-    t.integer  "price_cents_per_month"
-    t.integer  "discount_cents_per_month"
     t.boolean  "other_contract"
     t.boolean  "move_in"
     t.date     "beginning"
     t.boolean  "authorization"
     t.text     "feedback"
     t.text     "attention_by"
+    t.string   "renewable_energy_law_taxation"
+    t.string   "third_party_billing_number"
+    t.string   "third_party_renter_number"
+    t.string   "first_master_uid"
+    t.string   "second_master_uid"
+    t.string   "metering_point_operator_name"
+    t.string   "old_electricity_supplier_name"
   end
 
   add_index "contracts", ["group_id"], name: "index_contracts_on_group_id", using: :btree
@@ -465,6 +468,8 @@ ActiveRecord::Schema.define(version: 20161116143900) do
     t.string   "mode"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "market_place_id"
+    t.string   "represented_by"
   end
 
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree

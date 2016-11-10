@@ -8,7 +8,7 @@ namespace :migrationscripts do
         if contract.organization_id
           organization = Organization.find(contract.organization_id)
           if organization.contracting_party.nil?
-            contracting_party = ContractingParty.create(legal_entity: 'organization', organization: organization)
+            contracting_party = ContractingParty.create(legal_entity: 'company', organization: organization)
           else
             contracting_party = organization.contracting_party
           end
