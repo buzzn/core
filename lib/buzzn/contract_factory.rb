@@ -12,11 +12,11 @@ module Buzzn
     def initialize(user, params)
       @user = user
       @params = params
-      [:user, :profile, :other_address, :legal_entity,
+      [:user, :profile, :other_address,
        :old_contract].each do |key|
         @params[key] ||= nil
       end
-      [:address, :meter, :metering_point, :contract,
+      [:address, :meter, :metering_point, :contract, :contracting_party,
        :bank_account].each do |key|
         @params[key] ||= {}
       end
@@ -33,9 +33,12 @@ module Buzzn
     def create_power_taker_contract
       begin
         User.transaction do
-          user = get_or_create_user
+          get_or_create_user
           address = Address.create!(self.address)
-          if legal_entity == 'company'
+          # TODO add to DB migration
+          self.contracting_party.delete(:provider_permission)
+          party_params = self.contracting_party
+          if party_params[:legal_entity] == 'company'
             unless self.company
               raise Buzzn::ValidationError.new(company: 'missing company data')
             end
@@ -43,22 +46,20 @@ module Buzzn
             orga = create(Organization,
                           self.company[:organization] || {},
                           address: address)
-            party_params = self.company[:contracting_party]
-          else
-            party_params = {}
+            party_params.merge!(self.company[:contracting_party] || {})
           end
           if self.other_address
             other = create!(:other_address, Address, self.other_address)
           end
-          meter = Meter.create!(self.meter)
 
+          # TODO create all three in one go
+          meter = Meter.create!(self.meter)
           metering_point = create(MeteringPoint,
                                   self.metering_point,
                                   name: 'Wohnung',
                                   mode: 'in',
                                   readable: 'friends',
                                   address: other || address)
-
           create(Register, {}, obis: '1-0:1.8.0', label: 'consumption',
                  meter: meter, metering_point: metering_point)
 
@@ -70,22 +71,32 @@ module Buzzn
 
           beneficiary_party = create(ContractingParty,
                                      party_params,
-                                     legal_entity: legal_entity,
                                      organization: orga,
                                      address: address,
                                      bank_account: bank_account,
-                                     user: user)
+                                     user: @user)
           if self.old_contract
             # TODO contract_owner ?
+            name = self.old_contract.delete(:old_electricity_supplier_name)
             old = create!(:old_contract, Contract,
-                         self.old_contract,
-                         mode: 'other',
-                         contract_beneficiary: beneficiary_party,
-                         contract_owner: nil)
+                          self.old_contract,
+                          #TODOorganization_name_from_form: name,
+                          mode: 'electricity_supplier_contract',
+                          contract_beneficiary: beneficiary_party,
+                          contract_owner: Organization.dummy_energy.contracting_party)
           end
 
-          if old && !self.contract[:beginning]
-            raise Buzzn::ValidationError.new(contract: 'missing beginning on contract as there is an old contract')
+          # TODO move validation into model if possible
+          if !old
+            if !self.contract[:move_in]
+              raise Buzzn::ValidationError.new(contract: 'not moved in needs an old contract')
+            elsif !self.contract[:beginning]
+              raise Buzzn::ValidationError.new(contract: 'needs beginning')
+            end
+          else
+            if self.contract[:move_in]
+              raise Buzzn::ValidationError.new(contract: 'moved in has no old contract')
+            end
           end
 
           owner_party = Organization.buzzn_energy.contracting_party
@@ -97,18 +108,16 @@ module Buzzn
                                 organization: Organization.buzzn_energy)
           end
 
-          contract = create(Contract,
-                            self.contract,
-                            mode: 'power_taker_contract',
-                            authorization: authorization,
-                            metering_point: metering_point,
-                            other_contract: !! old,
-                            contract_beneficiary: beneficiary_party,
-                            contract_owner: owner_party,
-                            bank_account: bank_account)
-          # TODO this manager needs a test
-          user.add_role(:manager, contract)
-          contract
+          metering_point_operator_name =  self.contract.delete(:metering_point_operator_name)
+          create(Contract,
+                 self.contract,
+                 mode: 'power_taker_contract',
+                 authorization: authorization,
+                 metering_point: metering_point,
+                 other_contract: !! old,
+                 contract_beneficiary: beneficiary_party,
+                 contract_owner: owner_party,
+                 bank_account: bank_account)
         end
       rescue ActiveRecord::RecordInvalid => e
         raise NestedValidationError.new(e)
@@ -134,16 +143,20 @@ module Buzzn
     def get_or_create_user
       if @user
         if self.user
-          raise Buzzn::ValidationError.new(user: 'is missing')
+          raise Buzzn::ValidationError.new(user: 'is already there')
         end
         if self.profile && @user.profile
-          raise Buzzn::ValidationError.new(profile: 'exists already for user')
+          @user.profile.update(self.profile)
         end
-        @user
+      elsif self.user && !self.profile
+        raise Buzzn::ValidationError.new(profile: 'is missing')
       else
-        user = User.create!(self.user)
-        create(Profile, self.profile, user: user)
-        user
+        @user = User.create!(self.user)
+        create(Profile, self.profile, user: @user)
+      end
+      # TODO move into profile
+      if @user.profile.phone.nil?
+        raise Buzzn::ValidationError.new('profile.phone': 'is missing')
       end
     end
   end

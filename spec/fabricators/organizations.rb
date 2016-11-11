@@ -67,6 +67,10 @@ Fabricator :buzzn_energy, from: :electricity_supplier do
   name Organization::BUZZN_ENERGY
 end
 
+Fabricator :dummy_energy, from: :electricity_supplier do
+  name Organization::DUMMY_ENERGY
+end
+
 Fabricator :buzzn_reader, from: :metering_point_operator do
   name Organization::BUZZN_READER
 end

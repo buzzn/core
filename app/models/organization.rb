@@ -42,9 +42,14 @@ class Organization < ActiveRecord::Base
   scope :others,                        -> { where(mode: 'other') }
   scope :readable_by,                   -> (user) { where(nil) }
 
+  DUMMY_ENERGY   = 'dummy energy supplier'
   BUZZN_ENERGY   = 'buzzn GmbH'
   BUZZN_READER   = 'buzzn Reader'
   BUZZN_METERING = 'buzzn systems UG'
+
+  def self.dummy_energy
+    where(name: DUMMY_ENERGY).first
+  end
 
   def self.buzzn_energy
     where(name: BUZZN_ENERGY).first

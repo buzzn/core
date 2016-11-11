@@ -67,7 +67,7 @@ end
 
 
 Fabricator :mpoc_justus, from: :metering_point_operator_contract do
-  organization  { Organization.buzzn_metering }
+  organization  { Organization.find('discovergy') }
   username      'justus@buzzn.net'
   password      'PPf93TcR'
 end

@@ -2,7 +2,10 @@
 describe "Forms API" do
 
   let(:params_without_user) do
-    {:legal_entity=>"natural_person",
+    {contracting_party: {
+       legal_entity: "natural_person",
+       provider_permission: true
+     },
      :address=> {"street_name"=>"Lützowplatz",
                  "street_number"=>"17",
                  "city"=>"Berlin",
@@ -10,11 +13,19 @@ describe "Forms API" do
                  "country"=>"Germany",
                  "state"=>"Berlin",
                  "addition"=>"HH"},
-     :meter=> {"manufacturer_name"=>"ferraris",
+     :meter=> {:metering_type=>"single_tarif_meter",
+               "manufacturer_name"=>"ferraris",
                "manufacturer_product_name"=>"AS 1440",
                "manufacturer_product_serialnumber"=>"3353987"},
      :metering_point=> {"uid"=>"10688251510000000000002677117"},
-     :contract=>{:yearly_kilo_watt_per_hour=>1000, :tariff=>"single_tarif_meter"},
+     :contract=>{
+       terms: true,
+       power_of_attorney: true,
+       move_in: true,
+       other_contract: true,
+       yearly_kilowatt_hour: 1000,
+       beginning: Time.now
+     },
      :bank_account=> {:holder=>"Leora Deckow",
                       :iban=>"DE23100000001234567890",
                       :direct_debit=>false}
@@ -30,11 +41,16 @@ describe "Forms API" do
                          "state"=>"Berlin" } }
   end
 
-  let(:profile) do
+  let(:profile_without_phone) do
     { :profile=> {"user_name"=>"Paula Braun",
                   "first_name"=>"Teagan",
                   "last_name"=>"Smitham",
                   "about_me"=>"Aliquam molestiae amet."} }
+  end
+  let(:profile) do
+    profile = profile_without_phone.dup
+    profile[:profile]["phone"] = '087123321'
+    profile
   end
   let(:params) do
     params_without_user.merge(:user=>{:email=>"alexandria_west@boyle.ca",
@@ -58,11 +74,13 @@ describe "Forms API" do
 
   it 'fails without params' do
     post_without_token '/api/v1/forms/power-taker', {}.to_json
+
     expect(response).to have_http_status(422)
   end
 
   it 'succeeds with valid params' do
     post_without_token '/api/v1/forms/power-taker', params.to_json
+
     expect(response).to have_http_status(201)
   end
 
@@ -70,16 +88,23 @@ describe "Forms API" do
     access_token      = Fabricate(:simple_access_token)
 
     post_with_token '/api/v1/forms/power-taker', params_without_user.to_json, access_token.token
+
     expect(response).to have_http_status(201)
   end
 
-  it 'fails with existing user and extra profile' do
+  it 'updates profile of existing user' do
     access_token      = Fabricate(:simple_access_token)
+    User.find(access_token.resource_owner_id).profile.update!(phone: nil)
+    
+    post_with_token '/api/v1/forms/power-taker', params_without_user.merge(profile_without_phone).to_json, access_token.token
 
-    post_with_token '/api/v1/forms/power-taker', params_without_user.merge(profile).to_json, access_token.token
     expect(response).to have_http_status(422)
     expect(json['errors'].size).to eq 1
-    expect(json['errors'].first['source']['pointer']).to eq "/data/attributes/profile"
+    expect(json['errors'].first['source']['pointer']).to eq "/data/attributes/profile[phone]"
+  
+    post_with_token '/api/v1/forms/power-taker', params_without_user.merge(profile).to_json, access_token.token
+
+    expect(response).to have_http_status(201)
   end
 
   it 'fails with invalid nested attribtue' do
