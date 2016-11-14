@@ -54,6 +54,8 @@ module Buzzn
 
           # TODO create all three in one go
           meter = Meter.create!(self.meter)
+          # TODO d osomething with this counting_point
+          counting_poing = self.metering_point.delete(:counting_point)
           metering_point = create(MeteringPoint,
                                   self.metering_point,
                                   name: 'Wohnung',

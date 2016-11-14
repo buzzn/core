@@ -56,7 +56,8 @@ module API
             requires :manufacturer_product_name, desc: "Meter product name"
             requires :manufacturer_product_serialnumber, desc: "Meter product serialnumber"
           end
-          requires :metering_point, type: Hash do
+          optional :metering_point, type: Hash do
+            optional :counting_point, type: String, desc: 'Counting Point'
             optional :uid,  type: String, desc: "UID(DE00...)"
           end
           optional :other_address, type: Hash do

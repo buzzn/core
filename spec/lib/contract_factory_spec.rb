@@ -138,7 +138,7 @@ describe Buzzn::ContractFactory do
       expect { subject.create_power_taker_contract(nil, params) }.to raise_error Buzzn::NestedValidationError
 
       params.merge!(new_user)
-      expect { subject.create_power_taker_contract(nil, params) }.to raise_error Buzzn::NestedValidationError
+      expect { subject.create_power_taker_contract(nil, params) }.to raise_error Buzzn::ValidationError
 
       # now we have am user and merge the rest and get a valid contract
       params.merge!(profile)
