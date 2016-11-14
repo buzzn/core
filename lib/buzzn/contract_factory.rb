@@ -65,7 +65,12 @@ module Buzzn
           create(Register, {}, obis: '1-0:1.8.0', label: 'consumption',
                  meter: meter, metering_point: metering_point)
 
-          bank = Bank.find_by_iban(self.bank_account[:iban])
+          begin
+            bank = Bank.find_by_iban(self.bank_account[:iban])
+          rescue Buzzn::RecordNotFound => e
+            raise  Buzzn::ValidationError.new('bank.iban': e.message)
+          end
+
           bank_account = build(BankAccount,
                                self.bank_account,
                                bic: bank.bic,
@@ -91,9 +96,9 @@ module Buzzn
           # TODO move validation into model if possible
           if !old
             if !self.contract[:move_in]
-              raise Buzzn::ValidationError.new(contract: 'not moved in needs an old contract')
+              raise Buzzn::ValidationError.new(contract: 'needs an old contract if not moved in')
             elsif !self.contract[:beginning]
-              raise Buzzn::ValidationError.new(contract: 'needs beginning')
+              raise Buzzn::ValidationError.new(contract: 'needs beginning if moved in')
             end
           else
             if self.contract[:move_in]

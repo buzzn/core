@@ -1,6 +1,5 @@
+require 'buzzn'
 module Buzzn
-  class PermissionDenied < StandardError; end
-  class RecordNotFound < StandardError; end
   module GuardedCrud
 
     def self.included(model)

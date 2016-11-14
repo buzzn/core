@@ -99,10 +99,10 @@ describe Buzzn::ContractFactory do
       expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::NestedValidationError
 
       params.merge!(meter)
-      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::RecordNotFound
+      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
 
       params.merge!(metering_point)
-      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::RecordNotFound
+      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
 
       params.merge!(contracting_party)
       params.merge!(bank_account)
@@ -219,7 +219,7 @@ describe Buzzn::ContractFactory do
       params.merge!(metering_point)
       params.merge!(contracting_party)
       params.merge!(old_contract)
-      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::RecordNotFound
+      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
       params.merge!(bank_account)
       expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
 
