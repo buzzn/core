@@ -139,7 +139,7 @@ describe "BankAccount Model" do
   end
 
 
-  it 'filters gives all with no params' do
+  it 'filters gives all with no params', :retry => 3 do
     Fabricate(:bank_account)
     Fabricate(:bank_account)
 
