@@ -32,6 +32,11 @@ describe "Forms API" do
     }
   end
 
+  let(:invalid_old_contract) do
+    { old_contract: { customer_number: FFaker::Product.letters(10),
+                      contract_number: FFaker::Product.letters(16) } }
+  end
+
   let(:invalid_other_address) do
     { :other_address => {"street_name"=>"Lützowplatz" * 200,
                          "street_number"=>"17" * 200,
@@ -114,6 +119,26 @@ describe "Forms API" do
     expect(json['errors'].size).to eq 3
     json['errors'].each do |item|
       expect(item['source']['pointer']).to match /\/data\/attributes\/other_address\[.*\]/
+    end
+  end
+
+  it 'fails with invalid nested old contract' do
+    params[:contract][:move_in] = false
+    post_without_token '/api/v1/forms/power-taker', params.to_json
+
+    expect(response).to have_http_status(422)
+    expect(json['errors'].size).to eq 1
+    json['errors'].each do |item|
+      expect(item['source']['pointer']).to match /\/data\/attributes\/old_contract\[.*\]/
+    end
+
+    params.merge!(invalid_old_contract)
+    post_without_token '/api/v1/forms/power-taker', params.to_json
+
+    expect(response).to have_http_status(422)
+    expect(json['errors'].size).to eq 1
+    json['errors'].each do |item|
+      expect(item['source']['pointer']).to match /\/data\/attributes\/old_contract\[.*\]/
     end
   end
 end

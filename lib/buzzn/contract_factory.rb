@@ -96,15 +96,15 @@ module Buzzn
           # TODO move validation into model if possible
           if !old
             if !self.contract[:move_in]
-              raise Buzzn::ValidationError.new(contract: 'needs an old contract if not moved in')
+              raise Buzzn::ValidationError.new('old_contract.old_electricity_supplier_name': 'needs an old contract if not moved in')
             elsif !self.contract[:beginning]
-              raise Buzzn::ValidationError.new(contract: 'needs beginning if moved in')
+              raise Buzzn::ValidationError.new('contract.beginning': 'needs beginning if moved in')
             end
           else
             if self.contract[:move_in]
-              raise Buzzn::ValidationError.new(contract: 'can not have old contract if moved in')
+              raise Buzzn::ValidationError.new('old_contract.old_electricity_supplier_name': 'can not have old contract if moved in')
             elsif self.contract[:beginning]
-              raise Buzzn::ValidationError.new(contract: 'can not have beginning if not moved in')
+              raise Buzzn::ValidationError.new('contract.beginning': 'can not have beginning if not moved in')
             end
           end
 
