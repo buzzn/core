@@ -47,6 +47,7 @@ describe Buzzn::ContractFactory do
     let(:second_contract) do
       second = first_contract.dup
       second[:contract][:move_in] = false
+      second[:contract][:beginning] = nil
       second[:metering_point_operator_name] = FFaker::Name.name
       second
     end
@@ -150,6 +151,55 @@ describe Buzzn::ContractFactory do
       params.merge!(bank_account)
       contract = subject.create_power_taker_contract(nil, params)
       expect(contract.valid?).to be true
+    end
+
+    it 'does not create minimal first contract, natural_person, same address for existing user' do
+      params = {}
+      params.merge!(address)
+      params.merge!(meter)
+      params.merge!(metering_point)
+      params.merge!(contracting_party)
+      params.merge!(first_contract)
+      params.merge!(bank_account)
+
+      params[:contract][:beginning] = nil
+      params[:contract][:move_in] = true
+      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
+
+      params[:contract][:move_in] = false
+      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
+
+      params[:contract][:beginning] = FFaker::Time.date
+      params[:contract][:move_in] = false
+      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
+
+      params[:contract][:move_in] = true
+      expect(subject.create_power_taker_contract(user, params).valid?).to eq true
+    end
+
+    it 'does not create with old contract, natural_person, same address for existing user' do
+      params = {}
+      params.merge!(address)
+      params.merge!(meter)
+      params.merge!(metering_point)
+      params.merge!(contracting_party)
+      params.merge!(first_contract)
+      params.merge!(bank_account)
+      params.merge!(old_contract)
+
+      params[:contract][:beginning] = FFaker::Time.date
+      params[:contract][:move_in] = true
+      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
+
+      params[:contract][:move_in] = false
+      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
+
+      params[:contract][:beginning] = nil
+      params[:contract][:move_in] = true
+      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
+
+      params[:contract][:move_in] = false
+      expect(subject.create_power_taker_contract(user, params).valid?).to eq true
     end
 
     

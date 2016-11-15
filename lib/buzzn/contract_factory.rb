@@ -102,7 +102,9 @@ module Buzzn
             end
           else
             if self.contract[:move_in]
-              raise Buzzn::ValidationError.new(contract: 'moved in has no old contract')
+              raise Buzzn::ValidationError.new(contract: 'can not have old contract if moved in')
+            elsif self.contract[:beginning]
+              raise Buzzn::ValidationError.new(contract: 'can not have beginning if not moved in')
             end
           end
 
