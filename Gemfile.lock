@@ -367,8 +367,6 @@ GEM
     fog-xml (0.1.2)
       fog-core
       nokogiri (~> 1.5, >= 1.5.11)
-    foreigner (1.7.4)
-      activerecord (>= 3.0.0)
     formatador (0.2.5)
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
@@ -876,7 +874,6 @@ DEPENDENCIES
   faraday
   ffaker
   fog
-  foreigner
   friendly_id
   geocoder
   gmaps4rails
