@@ -28,7 +28,6 @@ describe 'Contracts API' do
 
   let(:contract_param_names) do
     [
-      'tariff',
       'status',
       'customer-number',
       'contract-number',
@@ -54,7 +53,6 @@ describe 'Contracts API' do
 
   let(:required_contract_param_names) do
     [
-      'tariff',
       'terms',
       'power_of_attorney',
       'confirm_pricing_model',

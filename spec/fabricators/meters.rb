@@ -11,36 +11,25 @@ Fabricator :easy_meter_q3d, from: :meter  do
   smart true
 end
 
-Fabricator :easy_meter_q3d_with_in_register, from: :easy_meter_q3d  do
-  registers {[Fabricate(:in_register)]}
-end
-
-Fabricator :easy_meter_q3d_with_out_register, from: :easy_meter_q3d  do
-  registers {[Fabricate(:out_register)]}
-end
-
 Fabricator :easy_meter_q3d_with_metering_point, from: :easy_meter_q3d  do
-  registers {[Fabricate(:in_register_with_metering_point)]}
+  metering_points {[Fabricate(:metering_point)]}
 end
 
 Fabricator :easy_meter_q3d_with_out_metering_point, from: :easy_meter_q3d  do
-  registers {[Fabricate(:out_register_with_metering_point)]}
-end
-
-Fabricator :easy_meter_q3d_with_two_register, from: :easy_meter_q3d  do
-  registers {[Fabricate(:in_register),
-              Fabricate(:out_register)]}
+  metering_points {[Fabricate(:out_metering_point_with_manager)]}
 end
 
 Fabricator :easy_meter_q3d_with_in_out_metering_point, from: :easy_meter_q3d  do
-  registers {[Fabricate(:in_register_with_metering_point),
-              Fabricate(:out_register_with_metering_point)]}
+  after_create { |meter|
+    meter.metering_points << Fabricate(:metering_point)
+    meter.metering_points << Fabricate(:out_metering_point_with_manager)
+    meter.save
+  }
 end
 
 Fabricator :easy_meter_q3d_with_manager, from: :easy_meter_q3d do
-  registers {[Fabricate(:in_register_with_metering_point)]}
   after_create { |meter|
-    mp = registers.first.metering_point
+    mp = Fabricate(:metering_point, meter: meter)
     user = Fabricate(:user)
     user.add_role(:manager, mp)
   }
@@ -48,61 +37,79 @@ end
 
 Fabricator :easymeter_fixed_serial, from: :easy_meter_q3d do
   manufacturer_product_serialnumber '1234567890'
-  registers {[Fabricate(:in_register_with_metering_point),
-              Fabricate(:out_register_with_metering_point_readable_by_world)]}
+  after_create { |meter|
+    meter.metering_points << Fabricate(:metering_point)
+    meter.metering_points << Fabricate(:out_metering_point_readable_by_world)
+    meter.save
+  }
 end
 
 # Justus Übergabe
 Fabricator :easymeter_60139082, from: :easy_meter_q3d do
   manufacturer_product_serialnumber '60139082'
-  registers {[Fabricate(:in_register, metering_point: Fabricate(:mp_z1a)),
-              Fabricate(:out_register, metering_point: Fabricate(:mp_z1b))]}
+  after_create { |meter|
+    meter.metering_points << Fabricate(:mp_z1a)
+    meter.metering_points << Fabricate(:mp_z1b)
+    meter.save
+  }
 end
 
 # Justus PV
 Fabricator :easymeter_60051599, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051599'
-  registers {[Fabricate(:out_register, metering_point: Fabricate(:mp_z2))]}
+  after_create { |meter|
+    meter.metering_points << Fabricate(:mp_z2)
+    meter.save
+  }
 end
 
 # Justus Ladestation
 Fabricator :easymeter_60051559, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051559'
-  registers {[Fabricate(:in_register, metering_point: Fabricate(:mp_z3))]}
+  after_create { |meter|
+    meter.metering_points << Fabricate(:mp_z3)
+    meter.save
+  }
 end
 
 # Justus BHKW
 Fabricator :easymeter_60051560, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051560'
-  registers {[Fabricate(:out_register, metering_point: Fabricate(:mp_z4))]}
+  after_create { |meter|
+    meter.metering_points << Fabricate(:mp_z4)
+    meter.save
+  }
 end
 
 
 # Justus Abgrenzung
 Fabricator :easymeter_60051600, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051600'
-  registers {[Fabricate(:out_register, metering_point: Fabricate(:mp_z5))]}
+  after_create { |meter|
+    meter.metering_points << Fabricate(:mp_z5)
+    meter.save
+  }
 end
 
 # Justus verbrauch
-Fabricator :easymeter_1124001747, from: :easy_meter_q3d_with_in_register do
+Fabricator :easymeter_1124001747, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '1124001747'
 end
 
 
 # Mustafa verbrauch
-Fabricator :easymeter_60232612, from: :easy_meter_q3d_with_in_register do
+Fabricator :easymeter_60232612, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60232612'
 end
 
 # Stefan easymeter fur verbrauch
-Fabricator :easymeter_1024000034, from: :easy_meter_q3d_with_in_register do
+Fabricator :easymeter_1024000034, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '1024000034'
 end
 
 
 # karins meter fur die pv anlange
-Fabricator :easymeter_60051431, from: :easy_meter_q3d_with_out_register do
+Fabricator :easymeter_60051431, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051431'
 end
 
@@ -110,22 +117,22 @@ end
 
 
 # Z1  Nr. 60118470 für Hans-Dieter Hopf  (Zweirichtungszähler)
-Fabricator :easymeter_60118470, from: :easy_meter_q3d_with_two_register do
+Fabricator :easymeter_60118470, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60118470'
 end
 
 # Z2   Nr. 60009316 für BHKW Erzeugung (Einrichtungszähler Einspeisung)
-Fabricator :easymeter_60009316, from: :easy_meter_q3d_with_out_register do
+Fabricator :easymeter_60009316, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009316'
 end
 
 # ZN1 Nr. 60009272 für Thomas Hopf  (Einrichtungszähler Bezug)
-Fabricator :easymeter_60009272, from: :easy_meter_q3d_with_in_register do
+Fabricator :easymeter_60009272, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009272'
 end
 
 # ZN2 Nr. 60009348 für Mauela Beier (Einrichtungszähler Bezug)
-Fabricator :easymeter_60009348, from: :easy_meter_q3d_with_in_register do
+Fabricator :easymeter_60009348, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009348'
 end
 
@@ -133,16 +140,16 @@ end
 
 
 # Nr. 60138988 für Christian Widmann (Einrichtungszähler Bezug)
-Fabricator :easymeter_60138988, from: :easy_meter_q3d_with_in_register do
+Fabricator :easymeter_60138988, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60138988'
 end
 
 # Nr. 60009269 für Philipp Oßwald (Einrichtungszähler Bezug)
-Fabricator :easymeter_60009269, from: :easy_meter_q3d_with_in_register do
+Fabricator :easymeter_60009269, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009269'
 end
 
-Fabricator :easymeter_60232499, from: :easy_meter_q3d_with_in_register do
+Fabricator :easymeter_60232499, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60232499'
 end
 
@@ -163,15 +170,15 @@ end
 
 
 # wagnis 4
-Fabricator :easymeter_60009416, from: :easy_meter_q3d_with_in_register do
+Fabricator :easymeter_60009416, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009416'
 end
 # wagnis 4
-Fabricator :easymeter_60009419, from: :easy_meter_q3d_with_in_register do
+Fabricator :easymeter_60009419, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009419'
 end
 # wagnis 4
-Fabricator :easymeter_60009415, from: :easy_meter_q3d_with_in_register do
+Fabricator :easymeter_60009415, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009415'
 end
 # wagnis 4
