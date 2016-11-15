@@ -113,7 +113,7 @@ class Bank < ActiveRecord::Base
 
   def self.get_by_bic(bic)
     if bic
-      bic.strip!
+      bic.gsub!(/\s/, '')
       if bic.size < 11     
         bic += 'X' * (11 - bic.size)
       end
@@ -123,7 +123,7 @@ class Bank < ActiveRecord::Base
 
   def self.get_by_iban(iban)
     if iban
-      iban.strip!
+      iban.gsub!(/\s/, '')
       if iban.start_with?('DE')
         where(blz: iban[4..11]).limit(1).first
       end

@@ -38,7 +38,7 @@ describe "Bank Model" do
     second = Bank.find_by_iban('DE2770022200123456789')
     expect(second).to eq bank
     
-    second = Bank.find_by_iban('DE2770022200123456789 ')
+    second = Bank.find_by_iban('DE27 7002 2200123456789 ')
     expect(second).to eq bank
     
     # mutliple bic entries
