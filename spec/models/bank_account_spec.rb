@@ -139,11 +139,11 @@ describe "BankAccount Model" do
   end
 
 
-  it 'filters gives all with no params', :retry => 3 do
+  it 'filters gives all with no params' do
     Fabricate(:bank_account)
     Fabricate(:bank_account)
 
     bank_accounts = BankAccount.filter(nil)
-    expect(bank_accounts.size).to eq 2
+    expect(bank_accounts.size).to eq BankAccount.count
   end
 end
