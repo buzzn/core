@@ -22,6 +22,7 @@ puts '-- seed development database --'
 
 puts '  organizations'
 Fabricate(:buzzn_energy)
+Fabricate(:dummy_energy)
 Fabricate(:electricity_supplier, name: 'E.ON')
 Fabricate(:electricity_supplier, name: 'RWE')
 Fabricate(:electricity_supplier, name: 'EnBW')
