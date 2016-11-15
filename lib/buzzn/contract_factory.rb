@@ -68,7 +68,7 @@ module Buzzn
           begin
             bank = Bank.find_by_iban(self.bank_account[:iban])
           rescue Buzzn::RecordNotFound => e
-            raise  Buzzn::ValidationError.new('bank.iban': e.message)
+            raise  Buzzn::ValidationError.new('bank_account.iban': e.message)
           end
 
           bank_account = build(BankAccount,
