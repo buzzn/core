@@ -60,10 +60,9 @@ module Buzzn
                                   self.metering_point,
                                   name: 'Wohnung',
                                   mode: 'in',
+                                  meter: meter,
                                   readable: 'friends',
                                   address: other || address)
-          create(Register, {}, obis: '1-0:1.8.0', label: 'consumption',
-                 meter: meter, metering_point: metering_point)
 
           begin
             bank = Bank.find_by_iban(self.bank_account[:iban])
