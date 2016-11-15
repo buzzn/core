@@ -30,7 +30,6 @@ module API
         desc 'Create a Contract'
         params do
           requires :mode,                     type: String,  desc: 'Contract description'
-          optional :organization_id,          type: String,  desc: 'Organization id'
           optional :status,                   type: String,  desc: 'Status'
           optional :customer_number,          type: String,  desc: 'Customer number'
           optional :contract_number,          type: String,  desc: 'Contract number'
@@ -40,10 +39,6 @@ module API
           requires :confirm_pricing_model,    type: Boolean, desc: 'Confirm pricing model'
           requires :commissioning,            type: Date,    desc: 'Commissioning'
           optional :register_id,        type: String,  desc: 'Register ID'
-          optional :retailer,                 type: Boolean, desc: 'Is a Retailer', default: false
-          optional :price_cents_per_kwh,      type: Float, desc: 'Price per KWH incents'
-          optional :price_cents_per_month,    type: Integer, desc: 'Price per month in cents'
-          optional :discount_cents_per_month, type: Integer, desc: 'Discount per month in cents'
           optional :other_contract,           type: Boolean, desc: 'Has other contract'
           optional :move_in,                  type: Boolean, desc: 'Move in'
           optional :beginning,                type: Date, desc: 'Begin date'

@@ -133,7 +133,7 @@ describe "ContractingParty Model" do
       expect(subject.reload.user).to eq(other_user)
     end
 
-    it 'checks the existence of the associated register on update' do
+    xit 'checks the existence of the associated register on update' do
       expect {
         subject.guarded_update(current_user,
                                register_id: other_register.id)
@@ -148,7 +148,7 @@ describe "ContractingParty Model" do
       expect(subject.reload.register).to eq(other_register)
     end
 
-    it 'checks the existence of the associated register on create' do
+    xit 'checks the existence of the associated register on create' do
       expect {
         ContractingParty.guarded_create(current_user,
                                         bank_account: bank_account,

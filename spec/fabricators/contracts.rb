@@ -7,10 +7,6 @@ Fabricator :contract do
   terms                    true
   power_of_attorney        true
   confirm_pricing_model    true
-  retailer                 false
-  price_cents_per_kwh      { rand * 10 }
-  price_cents_per_month    { rand(100) }
-  discount_cents_per_month { rand(10) }
   other_contract           { FFaker::Boolean.maybe }
   move_in                  { FFaker::Boolean.maybe }
   beginning                { FFaker::Time.date }
@@ -40,8 +36,9 @@ end
 
 Fabricator :power_taker_contract, from: :contract do
   mode                  'power_taker_contract'
+  #tariff                'Öko Strom XXL'
   forecast_watt_hour_pa 1700000
-  price_cents           2995
+  #price_cents           2995
   bank_account          { Fabricate(:bank_account) }
   after_create { |contract|
     organization = Fabricate(:electricity_supplier)
@@ -56,8 +53,9 @@ end
 
 Fabricator :power_giver_contract, from: :contract do
   mode                  'power_giver_contract'
+  #tariff                'Marktprämienmodell'
   forecast_watt_hour_pa 1700000
-  price_cents           3
+  #price_cents           3
   after_create { |contract|
     organization = Fabricate(:electricity_supplier)
     contracting_party = organization.contracting_party

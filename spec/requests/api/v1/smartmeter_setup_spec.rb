@@ -1,9 +1,9 @@
-describe "MySmartGrid setup using API" do
+describe "smartmeter setup using API" do
 
   [:full_access_token, :smartmeter_access_token].each do |token|
 
     {
-      discovergy: { contract: :mpoc_justus, meter: :easymeter_1124001747 },
+      #discovergy: { contract: :mpoc_justus, meter: :easymeter_1124001747 },
       # wrong_password: { orga: :discovergy, meter: :meter},
       # mysmartgrid: { contract: :mpoc_ferraris_0001_amperix, meter: :ferraris_001_amperix },
       # wrong_password: { orga: :mysmartgrid, meter: :meter},

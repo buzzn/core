@@ -349,44 +349,6 @@ describe "Organizations API" do
     expect(response).to have_http_status(204)
   end
 
-  # RETRIEVE contracts
-
-  it 'gets the related contracts of an organization without token' do
-    organization    = Fabricate(:power_giver_with_contracts)
-    contracts       = organization.contracts
-
-    get_without_token "/api/v1/organizations/#{organization.id}/contracts"
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(0)
-  end
-
-  it 'gets the related contracts of an organization with token' do
-    access_token    = Fabricate(:full_access_token_as_admin)
-    organization    = Fabricate(:power_giver_with_contracts)
-    contracts       = organization.contracts
-
-    get_with_token "/api/v1/organizations/#{organization.id}/contracts", access_token.token
-    expect(response).to have_http_status(200)
-    contracts.each do |contract|
-      expect(json['data'].find{ |c| c['id'] == contract.id }['attributes']['mode']).to eq('power_giver_contract')
-    end
-    expect(json['data'].size).to eq(contracts.size)
-  end
-
-  it 'paginates contracts' do
-    access_token    = Fabricate(:full_access_token_as_admin).token
-    organization    = Fabricate(:power_giver)
-
-    page_overload.times do
-      organization.contracts << Fabricate(:power_giver_contract)
-    end
-    get_with_token "/api/v1/organizations/#{organization.id}/contracts", access_token
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
-
-    get_with_token "/api/v1/organizations/#{organization.id}/contracts", {per_page: 200}, access_token
-    expect(response).to have_http_status(422)
-  end
 
   # RETRIEVE address
 
@@ -425,14 +387,6 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(contracting_party.id)
     expect(json['data']['attributes']['legal-entity']).to eq('company')
-
-    # no contracting_party
-    organization    = Fabricate(:register_operator)
-
-    get_without_token "/api/v1/organizations/#{organization.id}/contracting-party"
-
-    expect(response).to have_http_status(200)
-    expect(json['data']).to eq({})
   end
 
   it 'gets the related contracting_party of an organization with token' do
@@ -447,14 +401,6 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(party.id)
     expect(json['data']['attributes']['legal-entity']).to eq('company')
-
-    # no contracting_party
-    organization    = Fabricate(:register_operator)
-
-    get_with_token "/api/v1/organizations/#{organization.id}/contracting-party", access_token.token
-
-    expect(response).to have_http_status(200)
-    expect(json['data']).to eq({})
   end
 
 

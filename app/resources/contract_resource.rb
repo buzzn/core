@@ -1,7 +1,6 @@
 class ContractResource < ApplicationResource
 
-  attributes  :tariff,
-              :status,
+  attributes  :status,
               :customer_number,
               :contract_number,
               :signing_user,
@@ -9,10 +8,6 @@ class ContractResource < ApplicationResource
               :power_of_attorney,
               :confirm_pricing_model,
               :commissioning,
-              :retailer,
-              :price_cents_per_kwh,
-              :price_cents_per_month,
-              :discount_cents_per_month,
               :other_contract,
               :move_in,
               :beginning,

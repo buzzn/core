@@ -9,7 +9,7 @@ class Contract < ActiveRecord::Base
 
   attr_encrypted :password, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
-  monetize :price_cents
+#  monetize :price_cents
 
   belongs_to :contract_owner, class_name: 'ContractingParty', foreign_key: "contract_owner_id"
   belongs_to :contract_beneficiary, class_name: 'ContractingParty', foreign_key: "contract_beneficiary_id"
@@ -80,7 +80,7 @@ class Contract < ActiveRecord::Base
   end
 
   def name
-    "#{organization.name} #{tariff}"
+    "TODO {organization.name} {tariff}"
   end
 
   def self.modes
@@ -111,7 +111,7 @@ class Contract < ActiveRecord::Base
   end
 
   def self.search_attributes
-    [:tariff, :mode, :signing_user, :username, address: [:city, :state, :street_name]]
+    [:mode, :signing_user, :username, address: [:city, :state, :street_name]]
   end
 
   def self.filter(search)
