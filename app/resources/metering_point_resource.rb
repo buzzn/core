@@ -8,7 +8,6 @@ class MeteringPointResource < ApplicationResource
 
   has_many :devices
   has_many :users
-  has_many :registers
   has_one  :address
 
 end

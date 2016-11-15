@@ -21,13 +21,17 @@ module API
           requires :name, type: String, desc: "name"
           requires :mode, type: String, desc: "direction of energie", values: MeteringPoint.modes
           requires :readable, type: String, desc: "readable by?", values: MeteringPoint.readables
+          requires :meter_id, type: String, desc: "Meter ID"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
         oauth2 :simple, :full, :smartmeter
         post do
           # TODO move logic into MeteringPoint and validate existence of manager
+          meter              = Meter.unguarded_retrieve(permitted_params[:meter_id])
+          attributes         = permitted_params.reject { |k,v| k == :meter_id }
+          attributes[:meter] = meter
           metering_point     = MeteringPoint.guarded_create(current_user,
-                                                            permitted_params)
+                                                            attributes)
           current_user.add_role(:manager, metering_point)
           created_response(metering_point)
         end
@@ -40,13 +44,19 @@ module API
           optional :name, type: String, desc: "name"
           optional :mode, type: String, desc: "direction of energie", values: MeteringPoint.modes
           optional :readable, type: String, desc: "readable by?", values: MeteringPoint.readables
+          optional :meter_id, type: String, desc: "Meter ID"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
         oauth2 :simple, :full
         patch ':id' do
           metering_point = MeteringPoint.guarded_retrieve(current_user,
                                                           permitted_params)
-          metering_point.guarded_update(current_user, permitted_params)
+          attributes = permitted_params.reject { |k,v| k == :meter_id }
+          if permitted_params[:meter_id]
+            meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
+            attributes[:meter] = meter
+          end
+          metering_point.guarded_update(current_user, attributes)
         end
 
 
