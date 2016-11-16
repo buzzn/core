@@ -1,4 +1,4 @@
-class MeteringPointAuthorizer < ApplicationAuthorizer
+class RegisterAuthorizer < ApplicationAuthorizer
 
   def self.creatable_by?(user)
     !!user
@@ -16,9 +16,9 @@ class MeteringPointAuthorizer < ApplicationAuthorizer
     else
       raise 'wrong argument'
     end
-    # uses scope MeteringPoint.readable_by(user)
-    readable?(MeteringPoint, *args) ||
-      # TODO get this into MeteringPoint.readable_by(user)
+    # uses scope Register.readable_by(user)
+    readable?(Register, *args) ||
+      # TODO get this into Register.readable_by(user)
       (!resource.existing_group_request.nil? && user.can_update?(resource.existing_group_request.group))
   end
 
