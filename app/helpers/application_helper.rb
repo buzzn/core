@@ -45,10 +45,10 @@ module ApplicationHelper
     )
   end
 
-  def mainnav_metering_point_path(metering_point)
+  def mainnav_register_path(register)
     active_link_to(
-      truncate(metering_point.name, length: 23),
-      metering_point_path(metering_point), class: 'button white',
+      truncate(register.name, length: 23),
+      register_path(register), class: 'button white',
       :wrap_tag => :li, :class_active => 'active-link'
     )
   end
@@ -168,10 +168,10 @@ module ApplicationHelper
   end
 
 
-  def new_metering_point
+  def new_register
     link_to(
-      content_tag(:i, t("create_metering_point"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus new_metering_point'),
-      wizard_wizard_metering_points_path,
+      content_tag(:i, t("create_register"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus new_register'),
+      wizard_wizard_registers_path,
       {
         :remote         => true,
         :class          => 'start_modal',

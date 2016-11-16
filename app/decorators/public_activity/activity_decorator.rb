@@ -7,7 +7,7 @@ class PublicActivity::ActivityDecorator < Draper::Decorator
   decorates_association :recipient
   decorates_association :group
   decorates_association :profile
-  decorates_association :metering_point
+  decorates_association :register
   decorates_association :location
 
 
@@ -31,24 +31,24 @@ class PublicActivity::ActivityDecorator < Draper::Decorator
       end
 
 
-    when 'metering_point.create'
+    when 'register.create'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-plus-square fa-2x timeline-circle")
       end
 
-    when 'metering_point.update'
+    when 'register.update'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-refresh fa-2x timeline-circle")
       end
 
-    when 'metering_point.destroy'
+    when 'register.destroy'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-minus-square fa-2x timeline-circle")
       end
 
 
 
-    when 'user.appointed_metering_point_manager'
+    when 'user.appointed_register_manager'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-key fa-2x timeline-circle")
       end
@@ -60,32 +60,32 @@ class PublicActivity::ActivityDecorator < Draper::Decorator
 
 
 
-    when 'metering_point_user_request.create'
+    when 'register_user_request.create'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-question fa-2x timeline-circle")
       end
 
-    when 'metering_point_user_request.reject'
+    when 'register_user_request.reject'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-remove fa-2x timeline-circle")
       end
 
-    when 'metering_point_user_invitation.create'
+    when 'register_user_invitation.create'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-question fa-2x timeline-circle")
       end
 
-    when 'metering_point_user_invitation.reject'
+    when 'register_user_invitation.reject'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-remove fa-2x timeline-circle")
       end
 
-    when 'metering_point_user_membership.create'
+    when 'register_user_membership.create'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-chain fa-2x timeline-circle")
       end
 
-    when 'metering_point_user_membership.cancel'
+    when 'register_user_membership.cancel'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-chain-broken fa-2x timeline-circle")
       end
@@ -121,27 +121,27 @@ class PublicActivity::ActivityDecorator < Draper::Decorator
 
 
 
-    when 'group_metering_point_request.create'
+    when 'group_register_request.create'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-question fa-2x timeline-circle")
       end
-    when 'group_metering_point_request.reject'
+    when 'group_register_request.reject'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-remove fa-2x timeline-circle")
       end
-    when 'group_metering_point_invitation.create'
+    when 'group_register_invitation.create'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-question fa-2x timeline-circle")
       end
-    when 'group_metering_point_invitation.reject'
+    when 'group_register_invitation.reject'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-remove fa-2x timeline-circle")
       end
-    when 'group_metering_point_membership.create'
+    when 'group_register_membership.create'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-chain fa-2x timeline-circle")
       end
-    when 'group_metering_point_membership.cancel'
+    when 'group_register_membership.cancel'
       h.content_tag :div, :class => "timeline-icon bg-info" do
         h.content_tag(:i, '', :class => "fa fa-chain-broken fa-2x timeline-circle")
       end
