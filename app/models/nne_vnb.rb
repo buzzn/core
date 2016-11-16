@@ -1,6 +1,6 @@
 class NneVnb < ActiveRecord::Base
 
-  
+
   def self.from_csv(data)
     delete_all
     CSV.parse(data.gsub(/\r\n?/, "\n"), col_sep: ';', headers: true) do |row|
@@ -9,18 +9,18 @@ class NneVnb < ActiveRecord::Base
               messung_et:     row[2],
               abrechnung_et:  row[3],
               zaehler_et:     row[4],
-              register_et:          row[5],
+              mp_et:          row[5],
               messung_dt:     row[6],
               abrechnung_dt:  row[7],
               zaehler_dt:     row[8],
-              register_dt:          row[9],
+              mp_dt:          row[9],
               arbeitspreis:   row[10],
               grundpreis:     row[11],
               vorlaeufig:     'WAHR' == row[12])
     end
   end
 
-  
+
   def self.to_csv(io)
     io << "verbandsnummer;typ;messung_et;abrechnung_et;zaehler_et;mp_et;messung_dt;abrechnung_dt;zaehler_dt;mp_dt;arbeitspreis;grundpreis;vorlaeufig\n"
     NneVnb.all.each do |i|
