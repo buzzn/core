@@ -66,10 +66,10 @@ class Contract < ActiveRecord::Base
 
   def validate_register_address
     unless register
-      errors.add(:register, 'missing MeteringPoint')
+      errors.add(:register, 'missing Register')
     end
     unless register.address
-      errors.add(:register, 'missing MeteringPoint Address')
+      errors.add(:register, 'missing Register Address')
     end
   end
 
