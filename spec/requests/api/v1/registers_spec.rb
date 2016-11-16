@@ -1,8 +1,8 @@
-describe "Metering Points API" do
+describe "Registers API" do
 
   let(:page_overload) { 11 }
 
-  it 'get world-readable metering point with or without token' do
+  it 'get world-readable register with or without token' do
     access_token      = Fabricate(:simple_access_token)
     register    = Fabricate(:register_readable_by_world)
 
@@ -13,7 +13,7 @@ describe "Metering Points API" do
   end
 
 
-  it 'does not get a world-unreadable metering point without token' do
+  it 'does not get a world-unreadable register without token' do
     register_id1 = Fabricate(:register_readable_by_friends).id
     register_id2 = Fabricate(:register_readable_by_community).id
     register_id3 = Fabricate(:register_readable_by_members).id
@@ -26,7 +26,7 @@ describe "Metering Points API" do
     expect(response).to have_http_status(403)
   end
 
-  it 'get community-readable metering point with community token' do
+  it 'get community-readable register with community token' do
     register_id = Fabricate(:register_readable_by_community).id
     access_token      = Fabricate(:simple_access_token)
 
@@ -34,7 +34,7 @@ describe "Metering Points API" do
     expect(response).to have_http_status(200)
   end
 
-  it 'does not get friends or members readable metering point with community token' do
+  it 'does not get friends or members readable register with community token' do
     register_id1  = Fabricate(:register_readable_by_friends).id
     register_id2  = Fabricate(:register_readable_by_members).id
     access_token        = Fabricate(:simple_access_token)
@@ -45,7 +45,7 @@ describe "Metering Points API" do
     expect(response).to have_http_status(403)
   end
 
-  it 'get friends-readable metering point by manager friends or by members' do
+  it 'get friends-readable register by manager friends or by members' do
     register    = Fabricate(:register_readable_by_friends)
     member_token      = Fabricate(:simple_access_token)
     member_user       = User.find(member_token.resource_owner_id)
@@ -61,7 +61,7 @@ describe "Metering Points API" do
     expect(response).to have_http_status(200)
   end
 
-  it 'get members-readable metering point by members but not by manager friends' do
+  it 'get members-readable register by members but not by manager friends' do
     register    = Fabricate(:register_readable_by_members)
     member_token      = Fabricate(:simple_access_token)
     member_user       = User.find(member_token.resource_owner_id)
@@ -353,7 +353,7 @@ describe "Metering Points API" do
   end
 
 
-  it 'gets the related comments for the metering point only with token' do
+  it 'gets the related comments for the register only with token' do
     access_token    = Fabricate(:simple_access_token)
     register  = Fabricate(:world_register_with_two_comments)
     user            = Fabricate(:user)
@@ -423,7 +423,7 @@ describe "Metering Points API" do
   end
 
 
-  it 'gets the related managers for the metering point only with token' do
+  it 'gets the related managers for the register only with token' do
     access_token    = Fabricate(:simple_access_token)
     register  = Fabricate(:register_with_manager, readable: 'world')
     manager         = register.managers.first
@@ -484,7 +484,7 @@ describe "Metering Points API" do
     expect(response).to have_http_status(422)
   end
 
-  it 'does not add/repalce/delete metering point manager or member without token' do
+  it 'does not add/repalce/delete register manager or member without token' do
     register  = Fabricate(:register_readable_by_world)
     user            = Fabricate(:user)
     params = {
@@ -503,7 +503,7 @@ describe "Metering Points API" do
     expect(response).to have_http_status(401)
   end
 
-  it 'adds metering point manager only with manager or admin with full access token' do
+  it 'adds register manager only with manager or admin with full access token' do
     register  = Fabricate(:register_readable_by_world)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
@@ -533,7 +533,7 @@ describe "Metering Points API" do
     expect(json['data'].size).to eq(3)
   end
 
-  it 'creates activity when adding metering point manager' do
+  it 'creates activity when adding register manager' do
     user            = Fabricate(:user)
     admin_token     = Fabricate(:full_access_token_as_admin)
     admin           = User.find(admin_token.resource_owner_id)
@@ -548,7 +548,7 @@ describe "Metering Points API" do
   end
 
 
-  it 'replaces metering point managers' do
+  it 'replaces register managers' do
     register  = Fabricate(:register_readable_by_world)
     user            = Fabricate(:user)
     simple_token    = Fabricate(:simple_access_token)
@@ -586,7 +586,7 @@ describe "Metering Points API" do
 
 
 
-  it 'removes metering point manager only for current user or with full access token' do
+  it 'removes register manager only for current user or with full access token' do
     register  = Fabricate(:register_readable_by_world)
     user            = Fabricate(:user)
     user.add_role(:manager, register)
@@ -621,7 +621,7 @@ describe "Metering Points API" do
     expect(json['data'].size).to eq(1)
   end
 
-  it 'adds metering point member with member, manager or manager token' do
+  it 'adds register member with member, manager or manager token' do
     register  = Fabricate(:register_readable_by_world)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
@@ -656,7 +656,7 @@ describe "Metering Points API" do
     expect(json['data'].size).to eq(4)
   end
 
-  it 'creates activity when adding metering point member' do
+  it 'creates activity when adding register member' do
     user            = Fabricate(:user)
     admin_token     = Fabricate(:full_access_token_as_admin)
     register  = Fabricate(:register)
@@ -685,7 +685,7 @@ describe "Metering Points API" do
   end
 
 
-  it 'replaces metering point members' do
+  it 'replaces register members' do
     register  = Fabricate(:register_readable_by_world)
     user            = Fabricate(:user)
     simple_token    = Fabricate(:simple_access_token)
@@ -715,7 +715,7 @@ describe "Metering Points API" do
   end
 
 
-  it 'removes metering point member only for current user, manager or with full token' do
+  it 'removes register member only for current user, manager or with full token' do
     register  = Fabricate(:register_readable_by_world)
     user1           = Fabricate(:user)
     user1.add_role(:member, register)
@@ -756,7 +756,7 @@ describe "Metering Points API" do
     expect(json['data'].size).to eq(0)
   end
 
-  it 'creates activity when removing metering point member' do
+  it 'creates activity when removing register member' do
     user            = Fabricate(:user)
     admin_token     = Fabricate(:full_access_token_as_admin)
     register  = Fabricate(:register)
@@ -770,7 +770,7 @@ describe "Metering Points API" do
   end
 
 
-  it 'gets address of the metering point only with token' do
+  it 'gets address of the register only with token' do
     access_token    = Fabricate(:simple_access_token)
     register  = Fabricate(:register_urbanstr88, readable: 'world')
     address         = register.address
@@ -790,7 +790,7 @@ describe "Metering Points API" do
 
 
 
-  it 'gets only accessible profiles for the metering point' do
+  it 'gets only accessible profiles for the register' do
     register    = Fabricate(:register_readable_by_world)
     access_token      = Fabricate(:access_token_with_friend)
     token_user        = User.find(access_token.resource_owner_id)
@@ -820,7 +820,7 @@ describe "Metering Points API" do
   end
 
 
-  it 'gets meter for the metering point only by managers' do
+  it 'gets meter for the register only by managers' do
     Fabricate(:register_operator, name: 'buzzn Metering')
     easymeter_60051559  = Fabricate(:easymeter_60051559)
     register      = easymeter_60051559.registers.first

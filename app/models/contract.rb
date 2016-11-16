@@ -64,17 +64,17 @@ class Contract < ActiveRecord::Base
     end
   end
 
-  def validate_metering_point_address
-    unless metering_point
-      errors.add(:metering_point, 'missing MeteringPoint')
+  def validate_register_address
+    unless register
+      errors.add(:register, 'missing MeteringPoint')
     end
-    unless metering_point.address
-      errors.add(:metering_point, 'missing MeteringPoint Address')
+    unless register.address
+      errors.add(:register, 'missing MeteringPoint Address')
     end
   end
 
   def validate_power_toker_invariant
-    validate_metering_point_address
+    validate_register_address
     #errors.add(:tariff, 'missing tariff') unless tariff
     errors.add(:yearly_kilowatt_hour, 'missing yearly kilo watt per hour') unless forecast_watt_hour_pa
   end
@@ -119,14 +119,14 @@ class Contract < ActiveRecord::Base
   end
 
   def calculate_price
-    if metering_point && forecast_watt_hour_pa && metering_point.address &&
-       metering_point.meter
+    if register && forecast_watt_hour_pa && register.address &&
+       register.meter
       # TODO some validation or errors or something
       # TODO about when we have two meters or is this a power-taker-contract
       #      only feature ?
       prices = Buzzn::Zip2Price.new(forecast_watt_hour_pa / 1000.0,
-                                    metering_point.address.zip,
-                                    metering_point.meter.metering_type)
+                                    register.address.zip,
+                                    register.meter.metering_type)
       if price = prices.to_price
         self.price_cents_per_kwh   = price.energyprice_cents_per_kilowatt_hour
         self.price_cents_per_month = price.baseprice_cents_per_month

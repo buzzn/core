@@ -16,7 +16,7 @@ module Buzzn
        :old_contract].each do |key|
         @params[key] ||= nil
       end
-      [:address, :meter, :metering_point, :contract, :contracting_party,
+      [:address, :meter, :register, :contract, :contracting_party,
        :bank_account].each do |key|
         @params[key] ||= {}
       end
@@ -55,9 +55,9 @@ module Buzzn
           # TODO create all three in one go
           meter = Meter.create!(self.meter)
           # TODO d osomething with this counting_point
-          counting_poing = self.metering_point.delete(:counting_point)
-          metering_point = create(MeteringPoint,
-                                  self.metering_point,
+          counting_poing = self.register.delete(:counting_point)
+          register = create(MeteringPoint,
+                                  self.register,
                                   name: 'Wohnung',
                                   mode: 'in',
                                   meter: meter,
@@ -121,7 +121,7 @@ module Buzzn
                  self.contract,
                  mode: 'power_taker_contract',
                  authorization: authorization,
-                 metering_point: metering_point,
+                 register: register,
                  other_contract: !! old,
                  contract_beneficiary: beneficiary_party,
                  contract_owner: owner_party,

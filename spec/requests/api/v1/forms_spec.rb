@@ -17,7 +17,7 @@ describe "Forms API" do
                "manufacturer_name"=>"ferraris",
                "manufacturer_product_name"=>"AS 1440",
                "manufacturer_product_serialnumber"=>"3353987"},
-     :metering_point=> {"uid"=>"10688251510000000000002677117"},
+     :register=> {"uid"=>"10688251510000000000002677117"},
      :contract=>{
        terms: true,
        power_of_attorney: true,
