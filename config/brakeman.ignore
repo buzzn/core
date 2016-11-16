@@ -5,17 +5,17 @@
       "warning_code": 0,
       "fingerprint": "0e37649679b245cd5e6f693ab6bb87bf2612469f0dbc70e67fcf8d0ab940ae7c",
       "message": "Possible SQL injection",
-      "file": "app/models/metering_point.rb",
+      "file": "app/models/register.rb",
       "line": 75,
       "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "select(\"#{MeteringPoint.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{MeteringPoint.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
+      "code": "select(\"#{Register.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{Register.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "MeteringPoint",
+        "class": "Register",
         "method": "anonymized"
       },
-      "user_input": "MeteringPoint.columns.collect",
+      "user_input": "Register.columns.collect",
       "confidence": "High",
       "note": ""
     },
