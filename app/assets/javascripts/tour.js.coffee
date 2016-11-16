@@ -5,7 +5,7 @@ $(".show_global_tour").ready ->
     container: '#page-content'
     steps: [
       {
-        element: ".new_metering_point"
+        element: ".new_register"
         title: "Create your Metering Point"
         content: "Here you can create your Metering Point, which you need to view your energy-related data. "
         placement: "top"

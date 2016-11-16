@@ -1,7 +1,7 @@
 actual_resolution = "day_to_minutes"
 chart_data_min_x = 0
 chart = undefined
-metering_point_ids_hash = {}
+register_ids_hash = {}
 
 namespace = (target, name, block) ->
   [target, name, block] = [(if typeof exports isnt 'undefined' then exports else window), arguments...] if arguments.length < 3
@@ -11,9 +11,9 @@ namespace = (target, name, block) ->
 
 
 
-#code for partial: _metering_point.html.haml
-$(".metering_points").ready ->
-  $(this).find(".metering_point").each ->
+#code for partial: _register.html.haml
+$(".registers").ready ->
+  $(this).find(".register").each ->
     #smart = $(this).attr('data-smart')
     #online = $(this).attr('data-online')
 
@@ -99,8 +99,8 @@ $(".metering_points").ready ->
         $('#chart-container-' + id).css('text-align', 'center')
 
 
-#code for metering_point.show
-$(".metering_point_detail").ready ->
+#code for register.show
+$(".register_detail").ready ->
   chart = undefined
   id = $(this).attr('id').split('_')[2]
   width = $("#chart-container-" + id).width()
@@ -233,9 +233,9 @@ $(".metering_point_detail").ready ->
         chart_data_min_x = chart.series[0].data[0].x
       else
         chart_data_min_x = (new Date()).getTime()
-      createChartTimer([id], 'metering_point')
+      createChartTimer([id], 'register')
       Chart.Functions.activateButtons(true)
-      Chart.Functions.getChartComments('metering_points', id, chart_data_min_x)
+      Chart.Functions.getChartComments('registers', id, chart_data_min_x)
     .fail ->
       $('#chart-container-' + id).html('n.a.')
       $('#chart-container-' + id).css('text-align', 'center')
@@ -246,7 +246,7 @@ $(".metering_point_detail").ready ->
     chart.showLoading()
     Chart.Functions.activateButtons(false)
     containing_timestamp = Chart.Functions.getPreviousTimestamp()
-    Chart.Functions.setChartData('metering_points', id, containing_timestamp)
+    Chart.Functions.setChartData('registers', id, containing_timestamp)
 
   $(".btn-chart-next").on 'click', ->
     chart.showLoading()
@@ -256,21 +256,21 @@ $(".metering_point_detail").ready ->
       chart.hideLoading()
       Chart.Functions.activateButtons(true)
       return
-    Chart.Functions.setChartData('metering_points', id, containing_timestamp)
+    Chart.Functions.setChartData('registers', id, containing_timestamp)
 
   $(".btn-chart-zoom-year").on 'click', ->
     chart.showLoading()
     Chart.Functions.activateButtons(false)
     actual_resolution = "year_to_months"
     containing_timestamp = chart_data_min_x
-    Chart.Functions.setChartData('metering_points', id, containing_timestamp)
+    Chart.Functions.setChartData('registers', id, containing_timestamp)
 
   $(".btn-chart-zoom-month").on 'click', ->
     chart.showLoading()
     Chart.Functions.activateButtons(false)
     actual_resolution = "month_to_days"
     containing_timestamp = chart_data_min_x
-    Chart.Functions.setChartData('metering_points', id, containing_timestamp)
+    Chart.Functions.setChartData('registers', id, containing_timestamp)
 
 
   $(".btn-chart-zoom-day").on 'click', ->
@@ -278,7 +278,7 @@ $(".metering_point_detail").ready ->
     Chart.Functions.activateButtons(false)
     containing_timestamp = chart_data_min_x
     actual_resolution = "day_to_minutes"
-    Chart.Functions.setChartData('metering_points', id, containing_timestamp)
+    Chart.Functions.setChartData('registers', id, containing_timestamp)
 
 
   $(".btn-chart-zoom-hour").on 'click', ->
@@ -286,7 +286,7 @@ $(".metering_point_detail").ready ->
     Chart.Functions.activateButtons(false)
     actual_resolution = "hour_to_minutes"
     containing_timestamp = chart_data_min_x
-    Chart.Functions.setChartData('metering_points', id, containing_timestamp)
+    Chart.Functions.setChartData('registers', id, containing_timestamp)
 
 
   $(".btn-chart-zoom-live").on 'click', ->
@@ -294,7 +294,7 @@ $(".metering_point_detail").ready ->
     Chart.Functions.activateButtons(false)
     actual_resolution = "hour_to_minutes"
     containing_timestamp = (new Date()).getTime()
-    Chart.Functions.setChartData('metering_points', id, containing_timestamp)
+    Chart.Functions.setChartData('registers', id, containing_timestamp)
 
 
   $(window).on "resize", ->
@@ -359,11 +359,11 @@ $(".dashboard-chart").ready ->
   chart = undefined
   dashboard_id = $(this).attr('id')
   width = $("#chart-container-" + dashboard_id).width()
-  metering_point_ids = $(this).data('metering_point-ids').toString().split(",")
+  register_ids = $(this).data('register-ids').toString().split(",")
 
   i = 0
   countErrors = 0
-  metering_point_ids.forEach (id) ->
+  register_ids.forEach (id) ->
     if id != ""
       aggregator = new Aggregator([id])
       $.when(aggregator.past(new Date(), 'day_to_minutes'))
@@ -483,24 +483,24 @@ $(".dashboard-chart").ready ->
             chart.addSeries(
               data: data
             )
-            getMeteringPointName(id).success (metering_point_data) ->
-              chart.series[metering_point_ids_hash[id]].update({name: metering_point_data.data.attributes.name})
+            getRegisterName(id).success (register_data) ->
+              chart.series[register_ids_hash[id]].update({name: register_data.data.attributes.name})
             chart_data_min_x = chart.series[0].data[0].x
           else
             chart.addSeries(
               data: data
             )
-            getMeteringPointName(id).success (metering_point_data) ->
-              chart.series[metering_point_ids_hash[id]].update({name: metering_point_data.data.attributes.name})
-          metering_point_ids_hash[id] = i
+            getRegisterName(id).success (register_data) ->
+              chart.series[register_ids_hash[id]].update({name: register_data.data.attributes.name})
+          register_ids_hash[id] = i
           i += 1
           Chart.Functions.activateButtons(true)
         .fail ->
           countErrors += 1
-          if countErrors == metering_point_ids.length
+          if countErrors == register_ids.length
             $('#chart-container-' + dashboard_id).html('n.a.')
             $('#chart-container-' + dashboard_id).css('text-align', 'center')
-  createChartTimer(metering_point_ids, 'dashboard')
+  createChartTimer(register_ids, 'dashboard')
 
 
 
@@ -546,17 +546,17 @@ $(".dashboard-chart").ready ->
     containing_timestamp = chart_data_min_x
     Chart.Functions.setChartDataMultiSeries('dashboard', dashboard_id, containing_timestamp)
 
-getMeteringPointName = (id) ->
+getRegisterName = (id) ->
   checkToken();
-  $.ajax({url: '/api/v1/metering-points/' + id, headers: headers, async: true, dataType: 'json'})
+  $.ajax({url: '/api/v1/registers/' + id, headers: headers, async: true, dataType: 'json'})
 
 
 #code for group
 $(".group-chart").ready ->
   chart = undefined
   group_id = $(this).attr('id')
-  in_ids = $(this).attr('metering_point_ids-in').split(",")
-  out_ids = $(this).attr('metering_point_ids-out').split(",")
+  in_ids = $(this).attr('register_ids-in').split(",")
+  out_ids = $(this).attr('register_ids-out').split(",")
   width = $("#chart-container-" + group_id).width()
 
   out_aggregator = new Aggregator(out_ids)
@@ -836,7 +836,7 @@ namespace 'Chart.Functions', (exports) ->
   exports.zoomIn = (timestamp) ->
     Chart.Functions.activateButtons(false)
     chart.showLoading()
-    $(".metering_point_detail").each (div) ->
+    $(".register_detail").each (div) ->
       id = $(this).attr('id').split('_')[2]
       if actual_resolution == "hour_to_minutes"
         Chart.Functions.setChartType(false)
@@ -853,7 +853,7 @@ namespace 'Chart.Functions', (exports) ->
         actual_resolution = "month_to_days"
         Chart.Functions.setChartType()
       containing_timestamp = timestamp
-      Chart.Functions.setChartData('metering_points', id, containing_timestamp)
+      Chart.Functions.setChartData('registers', id, containing_timestamp)
 
   exports.zoomInDashboard = (timestamp) ->
     chart.showLoading()
@@ -991,7 +991,7 @@ namespace 'Chart.Functions', (exports) ->
         chart.hideLoading()
         Chart.Functions.activateButtons(true)
         Chart.Functions.setEnergyStats()
-        if $(".metering_point_detail").length > 0
+        if $(".register_detail").length > 0
           Chart.Functions.getChartComments(resource, id, containing_timestamp)
       .fail ->
         $('#chart-container-' + id).html('n.a.')
@@ -1000,10 +1000,10 @@ namespace 'Chart.Functions', (exports) ->
 
   exports.setChartDataMultiSeries = (resource, id, containing_timestamp) ->
     if resource == 'dashboard'
-      metering_point_ids = $(".dashboard-chart").data('metering_point-ids').toString().split(",")
-      metering_point_ids.forEach (metering_point_id) ->
-        if metering_point_id != ""
-          aggregator = new Aggregator([metering_point_id])
+      register_ids = $(".dashboard-chart").data('register-ids').toString().split(",")
+      register_ids.forEach (register_id) ->
+        if register_id != ""
+          aggregator = new Aggregator([register_id])
           $.when(aggregator.past(containing_timestamp, actual_resolution))
             .done ->
               data = aggregator.data
@@ -1011,7 +1011,7 @@ namespace 'Chart.Functions', (exports) ->
                 console.log data
                 data = [[containing_timestamp, -1]]
                 #$('#chart-container-' + id).html('no data available')
-              numberOfSeries = metering_point_ids_hash[metering_point_id]
+              numberOfSeries = register_ids_hash[register_id]
               seriesVisible = chart.series[numberOfSeries].visible
               if !seriesVisible
                 chart.series[numberOfSeries].show()
@@ -1026,12 +1026,12 @@ namespace 'Chart.Functions', (exports) ->
               if !seriesVisible
                 chart.series[numberOfSeries].hide()
             .fail ->
-              console.log 'unable to load data for metering_point ' + metering_point_id
+              console.log 'unable to load data for register ' + register_id
       chart.hideLoading()
       Chart.Functions.activateButtons(true)
     else
-      in_ids = $(".group-chart").attr('metering_point_ids-in').split(",")
-      out_ids = $(".group-chart").attr('metering_point_ids-out').split(",")
+      in_ids = $(".group-chart").attr('register_ids-in').split(",")
+      out_ids = $(".group-chart").attr('register_ids-out').split(",")
       out_aggregator = new Aggregator(out_ids)
       in_aggregator = new Aggregator(in_ids)
       $.when(out_aggregator.past(containing_timestamp, actual_resolution)).always ->
@@ -1228,9 +1228,9 @@ namespace 'Chart.Functions', (exports) ->
         $('.stats-energy-sum').html('n.a.')
 
 
-      $('.metering_point-stats').show(500);
+      $('.register-stats').show(500);
     else
-      $('.metering_point-stats').hide(500);
+      $('.register-stats').hide(500);
 
   exports.setEnergyStatsGroup = () ->
     $(".stats").html('')
@@ -1373,10 +1373,10 @@ updateChart = (resource_ids, mode) ->
   containing_timestamp = new Date().getTime()
   #if actual_resolution == 'hour_to_minutes'
   #  return
-  if mode == 'metering_point'
+  if mode == 'register'
     if resource_ids.length == 0
       return
-    Chart.Functions.setChartData('metering_points', resource_ids[0], chart_data_min_x)
+    Chart.Functions.setChartData('registers', resource_ids[0], chart_data_min_x)
   else if mode == 'dashboard'
     if resource_ids.length == 0
       return
@@ -1411,33 +1411,33 @@ factors = {}
 timers = []
 
 
-$(".metering_point").ready ->
-  metering_point_id = $(this).attr('id').split('_')[2]
-  metering_point = $(this)
-  if $(this).find(".metering_point-ticker").length != 0
+$(".register").ready ->
+  register_id = $(this).attr('id').split('_')[2]
+  register = $(this)
+  if $(this).find(".register-ticker").length != 0
     timers.push(window.setInterval(->
-      getLiveData(metering_point, metering_point_id)
+      getLiveData(register, register_id)
       return
     , 1000*5)
     )
 
-getLiveData = (metering_point, metering_point_id) ->
-  aggregator = new Aggregator([metering_point_id])
+getLiveData = (register, register_id) ->
+  aggregator = new Aggregator([register_id])
   $.when(aggregator.present(new Date()))
     .done ->
       data = aggregator.data
       if parseInt(data[0][1]) != -1
-        metering_point.find(".power-ticker").html(parseInt(data[0][1]))
+        register.find(".power-ticker").html(parseInt(data[0][1]))
       else
-        metering_point.find(".power-ticker").html("n.a.")
+        register.find(".power-ticker").html("n.a.")
       if data.timestamp <= Date.now() - 60*1000
-        metering_point.find(".power-ticker").css({opacity: 0.3})
+        register.find(".power-ticker").css({opacity: 0.3})
       else
-        metering_point.find(".power-ticker").css({opacity: 1})
-      metering_point.find(".power-ticker").data('content', moment(data[0][0]).format("DD.MM.YYYY HH:mm:ss"))
-      metering_point.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
-      metering_point.find(".power-ticker").data('bs.popover').options.content = moment(data[0][0]).format("DD.MM.YYYY HH:mm:ss")
-      if $(".metering_point_detail").length != 0 && chart != undefined && actual_resolution == 'hour_to_minutes'
+        register.find(".power-ticker").css({opacity: 1})
+      register.find(".power-ticker").data('content', moment(data[0][0]).format("DD.MM.YYYY HH:mm:ss"))
+      register.find(".power-ticker").popover(placement: 'top', trigger: 'hover')
+      register.find(".power-ticker").data('bs.popover').options.content = moment(data[0][0]).format("DD.MM.YYYY HH:mm:ss")
+      if $(".register_detail").length != 0 && chart != undefined && actual_resolution == 'hour_to_minutes'
         if chart_data_min_x > data[0][0] - 60*60*1000
           chart.series[0].addPoint([data[0][0], data[0][1]])
         # if data[0][0] > chart_data_min_x +  60 *60 *1000 && data[0][0] < chart_data_min_x +  60 *60 *1011
@@ -1447,16 +1447,16 @@ getLiveData = (metering_point, metering_point_id) ->
         #   # console.log("aktualisiere Chart " + data.timestamp + " power " + data.latest_power)
         #   chart.xAxis[0].update(Chart.Functions.getExtremes(data[0][0]), true)
         #   Chart.Functions.setChartTitle(data[0][0])
-        #   Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
+        #   Chart.Functions.setChartData('registers', register_id, data[0][0])
         # if window.wisActive && window.wwasInactive # eigentlich nur, wenn neu aktiv oder wenn delta t zu groß
         #   window.wwasInactive = false
-        #   Chart.Functions.setChartData('metering_points', metering_point_id, data[0][0])
+        #   Chart.Functions.setChartData('registers', register_id, data[0][0])
         #   # console.log("neuer Chart " + data.timestamp + " power " + data.latest_power)
 
       if actual_resolution == 'day_to_minutes'
         window.wwasInactive = false
     .fail ->
-      metering_point.find(".power-ticker").html("n.a.")
+      register.find(".power-ticker").html("n.a.")
 
 
 format_label = (value, mode) ->
