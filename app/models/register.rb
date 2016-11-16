@@ -1,9 +1,9 @@
 require 'buzzn/guarded_crud'
-class MeteringPoint < ActiveRecord::Base
+class Register < ActiveRecord::Base
   resourcify
   acts_as_commentable
   include Authority::Abilities
-  include CalcVirtualMeteringPoint
+  include CalcVirtualRegister
   include ChartFunctions
   include Filterable
   include ReplacableRoles
@@ -32,9 +32,9 @@ class MeteringPoint < ActiveRecord::Base
   accepts_nested_attributes_for :contracts
 
   validates :readable, presence: true
-  validates :mode, presence: true#, if: :no_dashboard_metering_point?
+  validates :mode, presence: true#, if: :no_dashboard_register?
   validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
-  validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_metering_point?
+  validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_register?
   validates :meter, presence: false, if: :virtual
   validate :validate_invariants
 
@@ -43,8 +43,8 @@ class MeteringPoint < ActiveRecord::Base
   before_destroy :delete_meter
   before_destroy :destroy_content
 
-  has_many :dashboard_metering_points
-  has_many :dashboards, :through => :dashboard_metering_points
+  has_many :dashboard_registers
+  has_many :dashboards, :through => :dashboard_registers
 
   # TODO remove this as it takes an extra ordering plan even when finding
   #      a single entity via the find method
@@ -72,11 +72,11 @@ class MeteringPoint < ActiveRecord::Base
     do_filter(value, *search_attributes)
   end
 
-  # replaces the name with 'anonymous' for all metering_points which are
+  # replaces the name with 'anonymous' for all registers which are
   # not readable_by without delegating the check to the underlying group
   scope :anonymized, -> (user) do
-    cols = MeteringPoint.columns.collect {|c| c.name }.reject{|c| c == 'name'}.join(', ')
-    sql = MeteringPoint.readable_by(user, false).select("id").to_sql
+    cols = Register.columns.collect {|c| c.name }.reject{|c| c == 'name'}.join(', ')
+    sql = Register.readable_by(user, false).select("id").to_sql
     select("#{cols}, CASE WHEN id NOT IN (#{sql}) THEN 'anonymous' ELSE name END AS name")
   end
 
@@ -85,34 +85,34 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   scope :readable_by, ->(user, group_check = false) do
-    metering_point = MeteringPoint.arel_table
+    register = Register.arel_table
     sqls = []
     if group_check
-      # metering_point belongs to readable group
+      # register belongs to readable group
       group = Group.arel_table
       belongs_to_readable_group =
-        Group.readable_by(user).where(group[:id].eq(metering_point[:group_id]))
+        Group.readable_by(user).where(group[:id].eq(register[:group_id]))
       # sql fragment 'exists select 1 where .....'
       sqls << belongs_to_readable_group.project(1).exists
     end
     if user.nil?
-      sqls << metering_point[:readable].eq('world')
+      sqls << register[:readable].eq('world')
     else
       # world or community query
-      world_or_community = metering_point[:readable].in(['world','community'])
+      world_or_community = register[:readable].in(['world','community'])
 
       # admin or manager or member query
-      admin_or_manager_or_member = User.roles_query(user, manager: metering_point[:id], member: metering_point[:id], admin: nil)
+      admin_or_manager_or_member = User.roles_query(user, manager: register[:id], member: register[:id], admin: nil)
 
       # friends of manager query
-      manager_friends = Friendship.friend_of_roles_query(user, metering_point, :manager)
+      manager_friends = Friendship.friend_of_roles_query(user, register, :manager)
 
       sqls +=
         [
           # sql fragment 'exists select 1 where .....'
           admin_or_manager_or_member.project(1).exists,
-          # friends of managers needs metering_point to be readable by friends
-          manager_friends.and(metering_point[:readable].eq('friends')),
+          # friends of managers needs register to be readable by friends
+          manager_friends.and(register[:readable].eq('friends')),
           world_or_community
         ]
     end
@@ -120,10 +120,10 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   scope :accessible_by_user, ->(user) do
-    metering_point = MeteringPoint.arel_table
+    register = Register.arel_table
     where(User.roles_query(user,
-                           manager: metering_point[:id],
-                           member: metering_point[:id]).project(1).exists)
+                           manager: register[:id],
+                           member: register[:id]).project(1).exists)
   end
 
   scope :editable_by_user_without_meter_not_virtual, lambda {|user|
@@ -155,17 +155,17 @@ class MeteringPoint < ActiveRecord::Base
   end
 
   def dashboard
-    if self.is_dashboard_metering_point
-      self.dashboards.collect{|d| d if d.dashboard_metering_points.include?(self)}.first
+    if self.is_dashboard_register
+      self.dashboards.collect{|d| d if d.dashboard_registers.include?(self)}.first
     end
   end
 
   def existing_group_request
-    GroupMeteringPointRequest.where(metering_point_id: self.id).first
+    GroupRegisterRequest.where(register_id: self.id).first
   end
 
   def received_user_requests
-    MeteringPointUserRequest.where(metering_point: self).requests
+    RegisterUserRequest.where(register: self).requests
   end
 
   def in_localpool?
@@ -181,8 +181,8 @@ class MeteringPoint < ActiveRecord::Base
       i = 0
       count_timestamps = 0
       sum_timestamp = 0
-      operands.each do |metering_point|
-        reading = metering_point.last_power
+      operands.each do |register|
+        reading = register.last_power
         if !reading.nil? #&& reading[:timestamp] >= Time.current - 1.hour
           if operators[i] == "+"
             result += reading[:power]
@@ -300,8 +300,8 @@ class MeteringPoint < ActiveRecord::Base
     end
   end
 
-  def no_dashboard_metering_point?
-    !self.is_dashboard_metering_point
+  def no_dashboard_register?
+    !self.is_dashboard_register
   end
 
   def slp?
@@ -323,21 +323,20 @@ class MeteringPoint < ActiveRecord::Base
 
   def mysmartgrid?
     self.smart? &&
-    !metering_point_operator_contract.nil? &&
-    metering_point_operator_contract.organization.slug == "mysmartgrid"
+    !register_operator_contract.nil? &&
+    register_operator_contract.organization.slug == "mysmartgrid"
   end
 
   def discovergy?
     self.smart? &&
-    !metering_point_operator_contract.nil? &&
-    (metering_point_operator_contract.organization.slug == "discovergy" ||
-     metering_point_operator_contract.organization.slug == "buzzn-metering" ||
-     metering_point_operator_contract.organization.buzzn_metering?)
+    !register_operator_contract.nil? &&
+    (register_operator_contract.organization.slug == "discovergy" ||
+    register_operator_contract.organization.slug == "buzzn-metering")
   end
 
   def buzzn_api?
     self.smart? &&
-    metering_point_operator_contract.nil?
+    register_operator_contract.nil?
   end
 
   def data_source
@@ -368,12 +367,12 @@ class MeteringPoint < ActiveRecord::Base
     (@users).flatten.uniq.collect{|user| user.editable_devices.collect{|device| device if device.mode == self.mode} }.flatten.compact
   end
 
-  def metering_point_operator_contract
-    if self.contracts.metering_point_operators.running.any?
-      return self.contracts.metering_point_operators.running.first
+  def register_operator_contract
+    if self.contracts.register_operators.running.any?
+      return self.contracts.register_operators.running.first
     elsif self.group
-      if self.group.contracts.metering_point_operators.running.any?
-        return self.group.contracts.metering_point_operators.running.first
+      if self.group.contracts.register_operators.running.any?
+        return self.group.contracts.register_operators.running.first
       end
     end
   end
@@ -491,7 +490,7 @@ class MeteringPoint < ActiveRecord::Base
 
   def self.observe
     Sidekiq::Client.push({
-       'class' => MeteringPointObserveWorker,
+       'class' => RegisterObserveWorker,
        'queue' => :default,
        'args' => []
       })
@@ -499,29 +498,29 @@ class MeteringPoint < ActiveRecord::Base
 
 
   def self.calculate_scores
-    MeteringPoint.all.select(:id, :mode).each.each do |metering_point|
-      if metering_point.input?
+    Register.all.select(:id, :mode).each.each do |register|
+      if register.input?
         Sidekiq::Client.push({
-         'class' => CalculateMeteringPointScoreSufficiencyWorker,
+         'class' => CalculateRegisterScoreSufficiencyWorker,
          'queue' => :default,
-         'args' => [ metering_point.id, 'day', Time.current.to_i*1000]
+         'args' => [ register.id, 'day', Time.current.to_i*1000]
         })
 
         Sidekiq::Client.push({
-         'class' => CalculateMeteringPointScoreFittingWorker,
+         'class' => CalculateRegisterScoreFittingWorker,
          'queue' => :default,
-         'args' => [ metering_point.id, 'day', Time.current.to_i*1000]
+         'args' => [ register.id, 'day', Time.current.to_i*1000]
         })
       end
     end
   end
 
   def self.update_chart_cache
-    MeteringPoint.ids.each do |metering_point_id|
+    Register.ids.each do |register_id|
       Sidekiq::Client.push(
-        'class' => UpdateMeteringPointChartCache,
+        'class' => UpdateRegisterChartCache,
         'queue' => :low,
-        'args' => [metering_point_id, Time.current, 'day_to_minutes']
+        'args' => [register_id, Time.current, 'day_to_minutes']
         )
     end
   end
@@ -536,13 +535,13 @@ class MeteringPoint < ActiveRecord::Base
 
   def submitted_readings_by_user
     if self.data_source
-      Reading.all_by_metering_point_id(self.id)
+      Reading.all_by_register_id(self.id)
     end
   end
 
   def self.create_all_observer_activities
-    where("observe = ? OR observe_offline = ?", true, true).each do |metering_point|
-      metering_point.create_observer_activities rescue nil
+    where("observe = ? OR observe_offline = ?", true, true).each do |register|
+      register.create_observer_activities rescue nil
     end
   end
 
@@ -553,7 +552,7 @@ class MeteringPoint < ActiveRecord::Base
     if current_power.nil?
       if observe_offline && last_observed_timestamp
         if Time.current.utc >= last_observed_timestamp && Time.current.utc <= last_observed_timestamp + 3.minutes
-          return create_activity(key: 'metering_point.offline', owner: self)
+          return create_activity(key: 'register.offline', owner: self)
         end
       end
     else
@@ -568,7 +567,7 @@ class MeteringPoint < ActiveRecord::Base
     end
 
     if observe && mode
-      create_activity(key: "metering_point.#{mode}", owner: self)
+      create_activity(key: "register.#{mode}", owner: self)
     end
   end
 
@@ -576,7 +575,7 @@ class MeteringPoint < ActiveRecord::Base
 
     def delete_meter
       if self.meter
-        if self.meter.metering_points.size == 1
+        if self.meter.registers.size == 1
           self.meter.destroy
         end
       end
@@ -586,8 +585,8 @@ class MeteringPoint < ActiveRecord::Base
     end
 
     def destroy_content
-      MeteringPointUserRequest.where(metering_point: self).each{|request| request.destroy}
-      GroupMeteringPointRequest.where(metering_point: self).each{|request| request.destroy}
+      RegisterUserRequest.where(register: self).each{|request| request.destroy}
+      GroupRegisterRequest.where(register: self).each{|request| request.destroy}
       self.root_comments.each{|comment| comment.destroy}
       #self.activities.each{|activity| activity.destroy}
     end

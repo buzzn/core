@@ -1,10 +1,9 @@
-class GroupMeteringPointRequest < ActiveRecord::Base
+class RegisterUserRequest < ActiveRecord::Base
   #include PublicActivity::Model
-  #tracked
+  #tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
 
   belongs_to :user
-  belongs_to :metering_point
-  belongs_to :group
+  belongs_to :register
 
   after_save :created_membership, :unless => :skip_callbacks
 
@@ -14,25 +13,22 @@ class GroupMeteringPointRequest < ActiveRecord::Base
   scope :invitations, -> { where(mode: 'invitation') }
 
   def accept
-    GroupMeteringPointRequest.skip_callbacks = true
+    RegisterUserRequest.skip_callbacks = true
     update_attributes(:status  => 'accepted')
-    GroupMeteringPointRequest.skip_callbacks = false
+    RegisterUserRequest.skip_callbacks = false
   end
 
   def reject
-    GroupMeteringPointRequest.skip_callbacks = true
+    RegisterUserRequest.skip_callbacks = true
     update_attributes(:status => 'rejected')
-    GroupMeteringPointRequest.skip_callbacks = false
+    RegisterUserRequest.skip_callbacks = false
   end
 
 
   private
     def created_membership
       if status == 'accepted'
-        metering_point.group = group
-        group.metering_points << metering_point
-        group.save
-        #group.calculate_closeness
+        user.add_role(:member, register)
         self.delete
       elsif status == 'rejected'
         self.delete

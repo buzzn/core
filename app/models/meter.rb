@@ -8,9 +8,9 @@ class Meter < ActiveRecord::Base
   has_ancestry
   validates :manufacturer_product_serialnumber, presence: true, uniqueness: true   #, unless: "self.virtual"
   mount_uploader :image, PictureUploader
-  before_destroy :release_metering_points
+  before_destroy :release_registers
   has_many :equipments
-  has_many :metering_points
+  has_many :registers
   default_scope { order('created_at ASC') }
 
   scope :editable_by_user, lambda {|user|
@@ -23,26 +23,26 @@ class Meter < ActiveRecord::Base
     else
       # admin or manager query
       meter          = Meter.arel_table
-      metering_point = MeteringPoint.arel_table
+      register = Register.arel_table
       users_roles    = Arel::Table.new(:users_roles)
-      admin_or_manager = User.roles_query(user, manager: metering_point[:id], admin: nil)
+      admin_or_manager = User.roles_query(user, manager: register[:id], admin: nil)
 
       # with AR5 you can use left_outer_joins directly
-      # `left_outer_joins(:metering_points)` instead of this mp_on and mp_join
-      mp_on   = meter.create_on(meter[:id].eq(metering_point[:meter_id]))
-      mp_join = meter.create_join(metering_point, mp_on,
+      # `left_outer_joins(:registers)` instead of this register_on and register_join
+      register_on   = meter.create_on(meter[:id].eq(register[:meter_id]))
+      register_join = meter.create_join(register, register_on,
                                   Arel::Nodes::OuterJoin)
 
-      # need left outer join to get all meters without metering_point as well
+      # need left outer join to get all meters without register as well
       # sql fragment 'exists select 1 where .....'
-      joins(mp_join).where(admin_or_manager.project(1).exists)
+      joins(register_join).where(admin_or_manager.project(1).exists)
     end
   end
 
   def self.accessible_by_user(user)
-    metering_point = MeteringPoint.arel_table
-    manager = User.roles_query(user, manager: metering_point[:id])
-    meters = joins(:metering_points).where(manager.project(1).exists)
+    register = Register.arel_table
+    manager = User.roles_query(user, manager: register[:id])
+    meters = joins(:registers).where(manager.project(1).exists)
     meters
   end
 
@@ -51,12 +51,12 @@ class Meter < ActiveRecord::Base
   end
 
 
-  def metering_points_modes_and_ids
-    metering_point_mode_and_ids = {}
-    self.metering_points.each do |metering_point|
-      metering_point_mode_and_ids.merge!({"#{metering_point.mode}" => metering_point.id})
+  def registers_modes_and_ids
+    register_mode_and_ids = {}
+    self.registers.each do |register|
+      register_mode_and_ids.merge!({"#{register.mode}" => register.id})
     end
-    return metering_point_mode_and_ids
+    return register_mode_and_ids
   end
 
   def self.manufacturer_names
@@ -72,9 +72,9 @@ class Meter < ActiveRecord::Base
   def self.pull_readings
     update_info = []
     Meter.where(init_reading: true, smart: true, online: true).each do |meter|
-      meter.metering_points.each do |metering_point|
-        mpoc  = metering_point.metering_point_operator_contract
-        last  = Reading.last_by_metering_point_id(metering_point.id)[:timestamp]
+      meter.registers.each do |register|
+        mpoc  = register.register_operator_contract
+        last  = Reading.last_by_register_id(register.id)[:timestamp]
         now   = Time.current.utc
         range = (last.to_i .. now.to_i)
         if range.count < 1.hour
@@ -82,7 +82,7 @@ class Meter < ActiveRecord::Base
            'class' => GetReadingWorker,
            'queue' => :low,
            'args' => [
-                      meter.metering_points_modes_and_ids,
+                      meter.registers_modes_and_ids,
                       meter.manufacturer_product_serialnumber,
                       mpoc.organization.slug,
                       mpoc.username,
@@ -91,9 +91,9 @@ class Meter < ActiveRecord::Base
                       now.to_i * 1000
                      ]
           })
-          update_info << "metering_point_id: #{metering_point.id} | from: #{Time.at(last)}, to: #{Time.at(now)}, #{range.count} seconds"
+          update_info << "register_id: #{register.id} | from: #{Time.at(last)}, to: #{Time.at(now)}, #{range.count} seconds"
         else
-          metering_point.meter.update_columns(online: false)
+          register.meter.update_columns(online: false)
           #self.send_notification_meter_offline(meter)
         end
       end
@@ -113,10 +113,10 @@ class Meter < ActiveRecord::Base
   end
 
   def self.send_notification_meter_offline(meter)
-    meter.metering_points.each do |metering_point|
-      metering_point.managers.each do |user|
-        user.send_notification("warning", I18n.t("metering_point_offline"), I18n.t("your_metering_point_is_offline_now", metering_point_name: metering_point.name))
-        Notifier.send_email_notification_meter_offline(user, metering_point).deliver_now if user.profile.email_notification_meter_offline
+    meter.registers.each do |register|
+      register.managers.each do |user|
+        user.send_notification("warning", I18n.t("register_offline"), I18n.t("your_register_is_offline_now", register_name: register.name))
+        Notifier.send_email_notification_meter_offline(user, register).deliver_now if user.profile.email_notification_meter_offline
       end
     end
   end
@@ -131,13 +131,13 @@ class Meter < ActiveRecord::Base
 
 private
 
-  def release_metering_points
-    self.metering_points.each do |metering_point|
-      metering_point.contracts.metering_point_operators.each do |contract|
+  def release_registers
+    self.registers.each do |register|
+      register.contracts.register_operators.each do |contract|
         contract.destroy
       end
-      metering_point.meter = nil
-      metering_point.save
+      register.meter = nil
+      register.save
     end
   end
 
