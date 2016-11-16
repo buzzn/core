@@ -1,7 +1,7 @@
 # coding: utf-8
 describe "Contract Model" do
 
-  let(:user_with_metering_point) { Fabricate(:user_with_metering_point) }
+  let(:user_with_register) { Fabricate(:user_with_register) }
   let(:manager_group) {Fabricate(:group)}
   let(:manager_of_group) do
     user = Fabricate(:user)
@@ -26,8 +26,8 @@ describe "Contract Model" do
   end
 
   let(:contracts) do
-    c1 = Fabricate(:metering_point_operator_contract)
-    c1.metering_point = user_with_metering_point.roles.first.resource
+    c1 = Fabricate(:register_operator_contract)
+    c1.register = user_with_register.roles.first.resource
     c1.group = member_group
     c1.save!
     c2 = Fabricate(:power_giver_contract)
@@ -81,9 +81,9 @@ describe "Contract Model" do
     expect(Contract.readable_by(Fabricate(:admin))).to eq contracts
   end
 
-  it 'selects contracts of metering_point manager', :retry => 3 do
+  it 'selects contracts of register manager', :retry => 3 do
     contracts # create contracts
-    expect(Contract.readable_by(user_with_metering_point)).to eq [contracts.first]
+    expect(Contract.readable_by(user_with_register)).to eq [contracts.first]
   end
 
   it 'selects contracts of organization manager but not organization member', :retry => 3 do

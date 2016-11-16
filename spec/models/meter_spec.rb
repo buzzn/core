@@ -32,10 +32,10 @@ describe "Meter Model" do
   let(:meter) { Fabricate(:meter) }
   let(:second) do
     second = Fabricate(:meter)
-    Fabricate(:metering_point, meter: second)
+    Fabricate(:register, meter: second)
     second
   end
-  let(:metering_point) { Fabricate(:metering_point, meter: meter) }
+  let(:register) { Fabricate(:register, meter: meter) }
   let(:user) { Fabricate(:user) }
   let(:admin) do
     admin = Fabricate(:user)
@@ -44,13 +44,13 @@ describe "Meter Model" do
   end
   let(:manager) do
     manager = Fabricate(:user)
-    manager.add_role(:manager, metering_point)
+    manager.add_role(:manager, register)
     manager
   end
   let(:orphand) { Fabricate(:meter) }
 
   it 'is restricting readable_by' do
-     # orphand without metering_point
+     # orphand without register
     expect(Meter.all.readable_by(nil)).to eq []
     expect(Meter.all.readable_by(user)).to eq []
     expect(Meter.all.readable_by(manager)).to eq [meter]

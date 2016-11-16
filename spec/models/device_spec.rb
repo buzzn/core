@@ -8,12 +8,12 @@ describe "Device Model" do
     device
   end
 
-  let(:out_device_with_metering_point) do
-    Fabricate(:out_device_with_metering_point)
+  let(:out_device_with_register) do
+    Fabricate(:out_device_with_register)
   end
 
-  let(:out_device_with_metering_point_with_group) do
-    Fabricate(:out_device_with_metering_point_with_group)
+  let(:out_device_with_register_with_group) do
+    Fabricate(:out_device_with_register_with_group)
   end
 
   let(:device_member) { Fabricate(:user) }
@@ -24,7 +24,7 @@ describe "Device Model" do
   end
 
   let(:devices) do
-    [in_device_with_member, out_device_with_manager, out_device_with_metering_point, out_device_with_metering_point_with_group]
+    [in_device_with_member, out_device_with_manager, out_device_with_register, out_device_with_register_with_group]
   end
 
   it 'filters device', :retry => 3 do
@@ -58,7 +58,7 @@ describe "Device Model" do
 
   it 'selects worldreadable devices for anonymous user', :retry => 3 do
     devices # create devices
-    expect(Device.readable_by(nil)).to match_array [out_device_with_metering_point_with_group]
+    expect(Device.readable_by(nil)).to match_array [out_device_with_register_with_group]
   end
 
   it 'selects all devices by admin', :retry => 3 do
@@ -68,11 +68,11 @@ describe "Device Model" do
 
   it 'selects devices as manager', :retry => 3 do
     devices # create devices
-    expect(Device.readable_by(device_manager)).to match_array [out_device_with_metering_point_with_group, out_device_with_manager]
+    expect(Device.readable_by(device_manager)).to match_array [out_device_with_register_with_group, out_device_with_manager]
   end
 
   it 'selects devices as member', :retry => 3 do
     devices # create devices
-    expect(Device.readable_by(device_member)).to match_array [out_device_with_metering_point_with_group]
+    expect(Device.readable_by(device_member)).to match_array [out_device_with_register_with_group]
   end
 end

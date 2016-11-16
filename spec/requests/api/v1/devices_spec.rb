@@ -31,8 +31,8 @@ describe "Devices API" do
       expect(json['data'].size).to eq 0
     end
 
-    it "gets a device with metering_point with group with #{token}" do
-      device = Fabricate(:out_device_with_metering_point_with_group)
+    it "gets a device with register with group with #{token}" do
+      device = Fabricate(:out_device_with_register_with_group)
 
       if token != :no_access_token
         access_token  = Fabricate(token)

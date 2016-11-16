@@ -13,9 +13,9 @@ Fabricator :admin, from: :user do
   after_create { |user| user.add_role(:admin) }
 end
 
-Fabricator :user_with_metering_point, from: :user do
+Fabricator :user_with_register, from: :user do
   after_create { |user|
-    user.add_role(:manager, Fabricate(:metering_point))
+    user.add_role(:manager, Fabricate(:register))
   }
 end
 
@@ -34,9 +34,9 @@ Fabricator :user_with_friend, from: :user do
   }
 end
 
-Fabricator :user_with_friend_and_metering_point, from: :user do
+Fabricator :user_with_friend_and_register, from: :user do
   after_create { |user |
-    friend = Fabricate(:user_with_metering_point)
+    friend = Fabricate(:user_with_register)
     user.friendships.create(friend: friend)
     friend.friendships.create(friend: user)
   }
