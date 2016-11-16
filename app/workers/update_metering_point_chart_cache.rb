@@ -1,11 +1,11 @@
-class UpdateMeteringPointChartCache
+class UpdateRegisterChartCache
   include Sidekiq::Worker
   sidekiq_options retry: false
 
-  def perform(metering_point_id, timestamp, resolution)
-    if MeteringPoint.exists?(id: metering_point_id)
-      metering_points_hash = Aggregate.sort_metering_points([MeteringPoint.find(metering_point_id)])
-      aggregate = Aggregate.new(metering_points_hash)
+  def perform(register_id, timestamp, resolution)
+    if Register.exists?(id: register_id)
+      registers_hash = Aggregate.sort_registers([Register.find(register_id)])
+      aggregate = Aggregate.new(registers_hash)
       aggregate.past(timestamp: timestamp.to_datetime, resolution: resolution, refresh_cache: true)
     end
   end

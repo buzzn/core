@@ -1,4 +1,4 @@
-- meta title: @metering_point.long_name
+- meta title: @register.long_name
 
 
 
@@ -9,13 +9,13 @@
     .col-sm-12.col-md-12.col-lg-12
       %h1.page-header.text-overflow
         %span
-          = @metering_point.name
-      .metering_point_detail{id: "metering_point_#{@metering_point.id}"}
-        - if !@metering_point.smart?
+          = @register.name
+      .register_detail{id: "register_#{@register.id}"}
+        - if !@register.smart?
           .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("dummy"), "data-content" => t("you_dont_have_a_smart_meter_so_your_energy_data_is_estimated_as_shown")}
             .ribbon-green= t('dummy')
         .panel
-          .panel-body.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+          .panel-body.panel-colorful{class: "panel-#{@register.mode_class}"}
 
             .text-center
               /.btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-zoomout.fa.fa-search-minus.fa-2x{disabled: "disabled"}
@@ -32,5 +32,5 @@
             .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-prev.fa.fa-chevron-left.fa-2x{disabled: "disabled"}
             .btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-next.pull-right.fa.fa-chevron-right.fa-2x{disabled: "disabled"}
 
-            .chart{id: "chart-container-#{@metering_point.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
+            .chart{id: "chart-container-#{@register.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
               .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin

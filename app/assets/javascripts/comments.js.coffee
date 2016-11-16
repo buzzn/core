@@ -89,10 +89,10 @@ $(".comments-panel").ready ->
         id = $(this).data('commentable-id')
         Chart.Functions.setResolution(resolution)
         Chart.Functions.showLoadingBlockButtons()
-        if type == 'MeteringPoint'
-          type = 'metering_points'
+        if type == 'Register'
+          type = 'registers'
           Chart.Functions.setChartData(type, id, timestamp)
-          $('html, body').animate({ scrollTop: $('.metering_point_detail').offset().top}, 1000)
+          $('html, body').animate({ scrollTop: $('.register_detail').offset().top}, 1000)
         else if type == 'Group'
           type = 'groups'
           Chart.Functions.setChartDataMultiSeries(type, id, timestamp)
@@ -147,10 +147,10 @@ $(".comments-panel").ready ->
       id = $(this).data('commentable-id')
       Chart.Functions.setResolution(resolution)
       Chart.Functions.showLoadingBlockButtons()
-      if type == 'MeteringPoint'
-        type = 'metering_points'
+      if type == 'Register'
+        type = 'registers'
         Chart.Functions.setChartData(type, id, timestamp)
-        $('html, body').animate({ scrollTop: $('.metering_point_detail').offset().top}, 1000)
+        $('html, body').animate({ scrollTop: $('.register_detail').offset().top}, 1000)
       else if type == 'Group'
         type = 'groups'
         Chart.Functions.setChartDataMultiSeries(type, id, timestamp)

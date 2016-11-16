@@ -3,7 +3,7 @@
     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
     %h4.modal-title= t'get_reading'
   .modal-body
-    = simple_form_for @metering_point, remote: true, url: get_reading_update_metering_point_path(metering_point_id: @metering_point.id), method: 'get' do |f|
+    = simple_form_for @register, remote: true, url: get_reading_update_register_path(register_id: @register.id), method: 'get' do |f|
 
       .date
         = f.input :timestamp, as: :string, input_html: { class: "datepicker", value: Time.current, format: :long }

@@ -2,10 +2,10 @@ describe "BankAccount API" do
 
   let(:page_overload) { 11 }
 
-  let(:user_with_metering_point) { Fabricate(:user_with_metering_point) }
+  let(:user_with_register) { Fabricate(:user_with_register) }
   let(:contract) do
     contract = Fabricate(:power_giver_contract)
-    contract.metering_point = user_with_metering_point.roles.first.resource
+    contract.register = user_with_register.roles.first.resource
     contract.save!
     contract
   end
@@ -18,18 +18,18 @@ describe "BankAccount API" do
   let(:admin_token) { Fabricate(:full_access_token_as_admin) }
   let(:simple_token) do
     Fabricate(:simple_access_token,
-              resource_owner_id: user_with_metering_point.id)
+              resource_owner_id: user_with_register.id)
   end
   let(:full_token_community) do
     Fabricate(:full_access_token)
   end
   let(:full_token) do
     Fabricate(:full_access_token,
-              resource_owner_id: user_with_metering_point.id)
+              resource_owner_id: user_with_register.id)
   end
   let(:smartmeter_token) do
     Fabricate(:smartmeter_access_token,
-              resource_owner_id: user_with_metering_point.id)
+              resource_owner_id: user_with_register.id)
   end
 
   it 'denies access without token' do

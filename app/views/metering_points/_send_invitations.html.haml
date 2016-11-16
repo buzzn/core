@@ -1,13 +1,13 @@
 .modal-content
   .modal-header
     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
-    %h4.modal-title= t'invite_somebody_to_join_this_metering_point'
+    %h4.modal-title= t'invite_somebody_to_join_this_register'
   .modal-body
-    = simple_form_for @metering_point, remote: true,  url: send_invitations_update_metering_point_path, method: 'put'  do |f|
-      .js-dependent-fields{data: {checkbox: {id: 'metering_point_invite_via_email', value: "false"}}}
-        = f.input :new_users, collection: current_user.invitable_users(@metering_point), input_html: { class: 'select2', 'data-placeholder': t('search_friends')}, label: false, selected: '', include_blank: true
-      = f.input :invite_via_email, as: :boolean, wrapper: :vertical_boolean, input_html: { checked: (params[:metering_point].nil? || params[:metering_point][:invite_via_email].nil?) ? false : true }
-      .js-dependent-fields{data: {checkbox: {id: 'metering_point_invite_via_email', value: "true"}}}
+    = simple_form_for @register, remote: true,  url: send_invitations_update_register_path, method: 'put'  do |f|
+      .js-dependent-fields{data: {checkbox: {id: 'register_invite_via_email', value: "false"}}}
+        = f.input :new_users, collection: current_user.invitable_users(@register), input_html: { class: 'select2', 'data-placeholder': t('search_friends')}, label: false, selected: '', include_blank: true
+      = f.input :invite_via_email, as: :boolean, wrapper: :vertical_boolean, input_html: { checked: (params[:register].nil? || params[:register][:invite_via_email].nil?) ? false : true }
+      .js-dependent-fields{data: {checkbox: {id: 'register_invite_via_email', value: "true"}}}
         = f.input :email, input_html: { value: ''}
         = f.input :message, input_html: { value: ''}
       .modal-footer

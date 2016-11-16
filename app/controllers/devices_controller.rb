@@ -5,10 +5,10 @@ class DevicesController < ApplicationController
 
   def show
     @device         = Device.find(params[:id]).decorate
-    if @device.metering_point
-      @metering_point = @device.metering_point
-      @users          = @metering_point.users
-      @group          = @metering_point.group
+    if @device.register
+      @register = @device.register
+      @users          = @register.users
+      @group          = @register.group
     end
     @manager        = @device.editable_users
     authorize_action_for(@device)
@@ -74,7 +74,7 @@ private
       :watt_hour_pa,
       :watt_peak,
       :commissioning,
-      :metering_point_id
+      :register_id
       )
   end
 

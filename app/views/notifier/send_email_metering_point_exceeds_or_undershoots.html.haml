@@ -1,10 +1,10 @@
 %p
   = t('hello') + " #{@receiver.name}!"
 - if @mode == 'exceeds'
-  %p= t('your_metering_point_exceeded_the_maximum_value_of', metering_point_name: @metering_point.name, max_watt: @metering_point.max_watt)
+  %p= t('your_register_exceeded_the_maximum_value_of', register_name: @register.name, max_watt: @register.max_watt)
 - else
-  %p= t('your_metering_point_undershot_the_minimum_value_of', metering_point_name: @metering_point.name, min_watt: @metering_point.min_watt)
+  %p= t('your_register_undershot_the_minimum_value_of', register_name: @register.name, min_watt: @register.min_watt)
 %p= t('you_receive_this_message_because_you_subscribed_to_this_event')
-%p= t('to_unsubscribe_this_event_please_visit_your_metering_point_and_change_this_setting')
-%p= link_to @metering_point.name, metering_point_url(@metering_point)
+%p= t('to_unsubscribe_this_event_please_visit_your_register_and_change_this_setting')
+%p= link_to @register.name, register_url(@register)
 %p= t('your_buzzn_team')

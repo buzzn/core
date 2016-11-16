@@ -1,8 +1,8 @@
 .nested-fields
   .row
     = f.input :operator, collection: ["+", "-"], wrapper_html: { class: 'col-md-2' }, include_blank: false, label: false
-    - @collection = current_user.usable_metering_points
-    - @collection.delete(@metering_point)
+    - @collection = current_user.usable_registers
+    - @collection.delete(@register)
     = f.input :operand_id, collection: @collection, :label_method => lambda { |mp| mp.long_name }, include_blank: false, input_html: { class: 'select2'}, wrapper_html: { class: 'col-md-4' }, label: false
     = link_to_remove_association f, :class => "btn btn-xs btn-rounded btn-default fa fa-times" do
       .link_to_remove_association

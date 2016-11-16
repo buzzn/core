@@ -9,11 +9,11 @@ class NneVnb < ActiveRecord::Base
               messung_et:     row[2],
               abrechnung_et:  row[3],
               zaehler_et:     row[4],
-              mp_et:          row[5],
+              register_et:          row[5],
               messung_dt:     row[6],
               abrechnung_dt:  row[7],
               zaehler_dt:     row[8],
-              mp_dt:          row[9],
+              register_dt:          row[9],
               arbeitspreis:   row[10],
               grundpreis:     row[11],
               vorlaeufig:     'WAHR' == row[12])

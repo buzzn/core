@@ -1,5 +1,5 @@
 # coding: utf-8
-describe "MeteringPoint Model" do
+describe "Register Model" do
 
   let(:admin) do
     admin = Fabricate(:user)
@@ -31,29 +31,29 @@ describe "MeteringPoint Model" do
   end
 
 
-  it 'filters metering_point', :retry => 3 do
-    metering_point = urban
+  it 'filters register', :retry => 3 do
+    register = urban
 
-    [metering_point.name, metering_point.address.city,
-     metering_point.address.state,
-     metering_point.address.street_name].each do |val|
+    [register.name, register.address.city,
+     register.address.state,
+     register.address.street_name].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
-        metering_points = MeteringPoint.filter(value)
-        expect(metering_points.first).to eq metering_point
+        registers = Register.filter(value)
+        expect(registers.first).to eq register
       end
     end
   end
 
 
   it 'can not find anything', :retry => 3 do
-    metering_points = MeteringPoint.filter('Der Clown ist müde und geht nach Hause.')
-    expect(metering_points.size).to eq 0
+    registers = Register.filter('Der Clown ist müde und geht nach Hause.')
+    expect(registers.size).to eq 0
   end
 
 
-  it 'filters metering_point with no params', :retry => 3 do
-    metering_points = MeteringPoint.filter(nil)
-    expect(metering_points).to match_array MeteringPoint.all
+  it 'filters register with no params', :retry => 3 do
+    registers = Register.filter(nil)
+    expect(registers).to match_array Register.all
   end
 
   describe 'observers' do
@@ -82,7 +82,7 @@ describe "MeteringPoint Model" do
     subject do
       Fabricate(:buzzn_metering)
       easymeter_60051560 = Fabricate(:easymeter_60051560)
-      easymeter_60051560.metering_points.first
+      easymeter_60051560.registers.first
     end
 
     before do
@@ -97,15 +97,15 @@ describe "MeteringPoint Model" do
     it 'creates all observer activities' do |spec|
       VCR.use_cassette("models/#{spec.metadata[:description].downcase}") do
         subject.update observe: true, max_watt: 200
-        MeteringPoint.create_all_observer_activities
+        Register.create_all_observer_activities
         expect(PublicActivity::Activity.count).to eq 2
       end
     end
 
     it 'creates observer activities via sidekiq' do
       expect {
-        MeteringPoint.observe
-      }.to change(MeteringPointObserveWorker.jobs, :size).by(1)
+        Register.observe
+      }.to change(RegisterObserveWorker.jobs, :size).by(1)
     end
 
     it 'observe nothing' do |spec|
@@ -119,7 +119,7 @@ describe "MeteringPoint Model" do
       VCR.use_cassette("models/#{spec.metadata[:description].downcase}") do
         subject.update observe: true, max_watt: 200
         result = subject.create_observer_activities
-        expect(result.key).to eq 'metering_point.exceeds'
+        expect(result.key).to eq 'register.exceeds'
       end
     end
 
@@ -127,7 +127,7 @@ describe "MeteringPoint Model" do
       VCR.use_cassette("models/#{spec.metadata[:description].downcase}") do
         subject.update observe: true, min_watt: 1000
         result = subject.create_observer_activities
-        expect(result.key).to eq 'metering_point.undershoots'
+        expect(result.key).to eq 'register.undershoots'
       end
     end
 
@@ -138,7 +138,7 @@ describe "MeteringPoint Model" do
       Crawler.offline(true)
       subject.update observe_offline: true, last_observed_timestamp: now.utc
       result = subject.create_observer_activities
-      expect(result.key).to eq 'metering_point.offline'
+      expect(result.key).to eq 'register.offline'
 
       Timecop.return
       now += 5.minutes
@@ -151,131 +151,131 @@ describe "MeteringPoint Model" do
   describe 'permissions' do
 
     before do
-      # get all metering_points in place
+      # get all registers in place
       karin
       urban
       butenland
     end
 
     it 'restricts readable_by for anonymous users', :retry => 3 do
-      expect(MeteringPoint.readable_by(nil)).to match_array []
-      expect(MeteringPoint.readable_by(nil, :group_inheritance)).to match_array [butenland]
+      expect(Register.readable_by(nil)).to match_array []
+      expect(Register.readable_by(nil, :group_inheritance)).to match_array [butenland]
       urban.update!(readable: 'world')
       [:members, :friends, :community].each do |readable|
         karin.update!(readable: readable)
-        expect(MeteringPoint.readable_by(nil)).to match_array [urban]
-        expect(MeteringPoint.readable_by(nil, :group_inheritance)).to match_array [urban, butenland]
+        expect(Register.readable_by(nil)).to match_array [urban]
+        expect(Register.readable_by(nil, :group_inheritance)).to match_array [urban, butenland]
       end
       karin.update!(readable: 'world')
-      expect(MeteringPoint.readable_by(nil)).to match_array [karin, urban]
-      expect(MeteringPoint.readable_by(nil, :group_inheritance)).to match_array [karin, urban, butenland]
+      expect(Register.readable_by(nil)).to match_array [karin, urban]
+      expect(Register.readable_by(nil, :group_inheritance)).to match_array [karin, urban, butenland]
     end
 
 
     it 'restricts readable_by for community users', :retry => 3 do
       user = Fabricate(:user)
-      expect(MeteringPoint.readable_by(user)).to match_array []
+      expect(Register.readable_by(user)).to match_array []
       urban.update!(readable: 'community')
       [:members, :friends].each do |readable|
         karin.update!(readable: readable)
-        expect(MeteringPoint.readable_by(user)).to match_array [urban]
-        expect(MeteringPoint.readable_by(user, :group_inheritance)).to match_array [urban, butenland]
+        expect(Register.readable_by(user)).to match_array [urban]
+        expect(Register.readable_by(user, :group_inheritance)).to match_array [urban, butenland]
       end
       karin.update!(readable: 'community')
-      expect(MeteringPoint.readable_by(user)).to match_array [karin, urban]
-      expect(MeteringPoint.readable_by(user, :group_inheritance)).to match_array [karin, urban, butenland]
+      expect(Register.readable_by(user)).to match_array [karin, urban]
+      expect(Register.readable_by(user, :group_inheritance)).to match_array [karin, urban, butenland]
     end
 
 
-    it 'restricts readable_by for metering_point members or manager', :retry => 3 do
-      expect(MeteringPoint.readable_by(member)).to match_array [urban]
-      expect(MeteringPoint.readable_by(member, :group_inheritance)).to match_array [urban, butenland]
-      expect(MeteringPoint.readable_by(manager)).to match_array [urban]
-      expect(MeteringPoint.readable_by(manager, :group_inheritance)).to match_array [urban, butenland]
+    it 'restricts readable_by for register members or manager', :retry => 3 do
+      expect(Register.readable_by(member)).to match_array [urban]
+      expect(Register.readable_by(member, :group_inheritance)).to match_array [urban, butenland]
+      expect(Register.readable_by(manager)).to match_array [urban]
+      expect(Register.readable_by(manager, :group_inheritance)).to match_array [urban, butenland]
     end
 
 
-    it 'restricts readable_by for metering_point for friends of manager', :retry => 3 do
-      expect(MeteringPoint.readable_by(member.friends.first)).to match_array []
-      expect(MeteringPoint.readable_by(member.friends.first, :group_inheritance)).to match_array [butenland]
-      expect(MeteringPoint.readable_by(admin.friends.first)).to eq []
-      expect(MeteringPoint.readable_by(admin.friends.first, :group_inheritance)).to eq [butenland]
-      expect(MeteringPoint.readable_by(manager.friends.first)).to match_array [urban]
-      expect(MeteringPoint.readable_by(manager.friends.first, :group_inheritance)).to match_array [urban, butenland]
+    it 'restricts readable_by for register for friends of manager', :retry => 3 do
+      expect(Register.readable_by(member.friends.first)).to match_array []
+      expect(Register.readable_by(member.friends.first, :group_inheritance)).to match_array [butenland]
+      expect(Register.readable_by(admin.friends.first)).to eq []
+      expect(Register.readable_by(admin.friends.first, :group_inheritance)).to eq [butenland]
+      expect(Register.readable_by(manager.friends.first)).to match_array [urban]
+      expect(Register.readable_by(manager.friends.first, :group_inheritance)).to match_array [urban, butenland]
       urban.update! readable: :members
-      expect(MeteringPoint.readable_by(manager.friends.first)).to eq []
-      expect(MeteringPoint.readable_by(manager.friends.first, :group_inheritance)).to eq [butenland]
-      expect(MeteringPoint.readable_by(member.friends.first)).to eq []
-      expect(MeteringPoint.readable_by(member.friends.first, :group_inheritance)).to eq [butenland]
-      expect(MeteringPoint.readable_by(admin.friends.first)).to eq []
-      expect(MeteringPoint.readable_by(admin.friends.first, :group_inheritance)).to eq [butenland]
+      expect(Register.readable_by(manager.friends.first)).to eq []
+      expect(Register.readable_by(manager.friends.first, :group_inheritance)).to eq [butenland]
+      expect(Register.readable_by(member.friends.first)).to eq []
+      expect(Register.readable_by(member.friends.first, :group_inheritance)).to eq [butenland]
+      expect(Register.readable_by(admin.friends.first)).to eq []
+      expect(Register.readable_by(admin.friends.first, :group_inheritance)).to eq [butenland]
     end
 
 
-    it 'restricts readable_by for metering_point belonging to readable group', :retry => 3 do
-      expect(MeteringPoint.readable_by(member.friends.first)).to match_array []
-      expect(MeteringPoint.readable_by(member.friends.first, :group_inheritance)).to match_array [butenland]
-      expect(MeteringPoint.readable_by(admin.friends.first)).to eq []
+    it 'restricts readable_by for register belonging to readable group', :retry => 3 do
+      expect(Register.readable_by(member.friends.first)).to match_array []
+      expect(Register.readable_by(member.friends.first, :group_inheritance)).to match_array [butenland]
+      expect(Register.readable_by(admin.friends.first)).to eq []
 
-      expect(MeteringPoint.readable_by(admin.friends.first, :group_inheritance)).to eq [butenland]
-      expect(MeteringPoint.readable_by(manager.friends.first)).to match_array [urban]
-      expect(MeteringPoint.readable_by(manager.friends.first, :group_inheritance)).to match_array [urban, butenland]
-      expect(MeteringPoint.readable_by(nil)).to match_array []
-      expect(MeteringPoint.readable_by(nil, :group_inheritance)).to match_array [butenland]
+      expect(Register.readable_by(admin.friends.first, :group_inheritance)).to eq [butenland]
+      expect(Register.readable_by(manager.friends.first)).to match_array [urban]
+      expect(Register.readable_by(manager.friends.first, :group_inheritance)).to match_array [urban, butenland]
+      expect(Register.readable_by(nil)).to match_array []
+      expect(Register.readable_by(nil, :group_inheritance)).to match_array [butenland]
 
       butenland.group.update! readable: :members
-      expect(MeteringPoint.readable_by(manager.friends.first)).to eq [urban]
-      expect(MeteringPoint.readable_by(member.friends.first)).to eq []
-      expect(MeteringPoint.readable_by(admin.friends.first)).to eq []
-      expect(MeteringPoint.readable_by(nil)).to eq []
+      expect(Register.readable_by(manager.friends.first)).to eq [urban]
+      expect(Register.readable_by(member.friends.first)).to eq []
+      expect(Register.readable_by(admin.friends.first)).to eq []
+      expect(Register.readable_by(nil)).to eq []
     end
 
 
     it 'does not restrict readable_by for admins', :retry => 3 do
-      expect(MeteringPoint.readable_by(admin)).to match_array MeteringPoint.all
+      expect(Register.readable_by(admin)).to match_array Register.all
     end
 
     it 'anonymizes the name when MP is not readable without group inhereted readablity', :retry => 3 do
       user = Fabricate(:user)
       [nil, user, member, member.friends.first, manager, manager.friends.first].each do |u|
         expect(
-          MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
+          Register.by_group(group).anonymized(u).collect{ |mp| mp.name }
         ).to eq ['anonymous']
       end
 
       urban.update! group: group
       [nil, user, member.friends.first].each do |u|
         expect(
-          MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
+          Register.by_group(group).anonymized(u).collect{ |mp| mp.name }
         ).to eq ['anonymous', 'anonymous']
       end
       [member, manager, manager.friends.first].each do |u|
         expect(
-          MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
+          Register.by_group(group).anonymized(u).collect{ |mp| mp.name }
         ).to match_array ['Wohnung', 'anonymous']
       end
 
       karin.update! group: group
       [nil, user, member.friends.first].each do |u|
         expect(
-          MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
+          Register.by_group(group).anonymized(u).collect{ |mp| mp.name }
         ).to match_array ['anonymous', 'anonymous', 'anonymous']
       end
       [member, manager, manager.friends.first].each do |u|
         expect(
-          MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
+          Register.by_group(group).anonymized(u).collect{ |mp| mp.name }
         ).to match_array ['Wohnung', 'anonymous', 'anonymous']
       end
 
       butenland.update! readable: 'world'
       [nil, user, member.friends.first].each do |u|
         expect(
-          MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
+          Register.by_group(group).anonymized(u).collect{ |mp| mp.name }
         ).to match_array ['Windanlage', 'anonymous', 'anonymous']
       end
       [member, manager, manager.friends.first].each do |u|
         expect(
-          MeteringPoint.by_group(group).anonymized(u).collect{ |mp| mp.name }
+          Register.by_group(group).anonymized(u).collect{ |mp| mp.name }
         ).to match_array ['Wohnung', 'Windanlage', 'anonymous']
       end
     end

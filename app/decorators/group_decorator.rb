@@ -2,7 +2,7 @@ class GroupDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
 
-  decorates_association :metering_points
+  decorates_association :registers
   decorates_association :profile
   decorates_association :user
   decorates_association :metering_point_operator_contract

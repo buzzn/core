@@ -1,4 +1,4 @@
-class MeteringPointResource < ApplicationResource
+class RegisterResource < ApplicationResource
 
   attributes  :uid,
               :name,

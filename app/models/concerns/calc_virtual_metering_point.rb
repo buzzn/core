@@ -1,21 +1,21 @@
-module CalcVirtualMeteringPoint
+module CalcVirtualRegister
   extend ActiveSupport::Concern
 
 
 
-  def calculate_virtual_metering_point(data, operators, resolution)
+  def calculate_virtual_register(data, operators, resolution)
 
     timestamps = []
     watts = []
     i = 0
-    data.each do |metering_point|
+    data.each do |register|
       j = 0
-      if metering_point.empty?
+      if register.empty?
         i += 1
         next
       end
-      metering_point = insert_new_mesh(metering_point, resolution)
-      metering_point.each do |reading|
+      register = insert_new_mesh(register, resolution)
+      register.each do |reading|
         if i == 0
           timestamps << reading[0]
           watts << reading[1]

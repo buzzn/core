@@ -14,7 +14,7 @@ describe '/api/v1/aggregates' do
 
     it 'return the same cache for diffentend datetime formats' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point = Fabricate(:metering_point)
+      register = Fabricate(:register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Iceland').local(2015,2,1)
       (3*60*30).times do |i|
@@ -34,13 +34,13 @@ describe '/api/v1/aggregates' do
         "Sun, 01 Feb 2015 23:59:59 UTC +00:00"
       ].each_with_index do |timestamp, index|
         request_params = {
-          metering_point_ids: metering_point.id,
+          register_ids: register.id,
           resolution: 'day_to_minutes',
           timestamp: timestamp
         }
         cache_id = Aggregate.build_cache_id(
             api_controller + '/past',
-            request_params[:metering_point_ids],
+            request_params[:register_ids],
             request_params[:timestamp],
             request_params[:resolution]
           )
@@ -54,7 +54,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp energy by year_to_months as admin in summertime' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point = Fabricate(:metering_point)
+      register = Fabricate(:register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Moscow').local(2015,1,1)
       (400).times do |i|
@@ -68,13 +68,13 @@ describe '/api/v1/aggregates' do
         timestamp += 1.day
       end
       request_params = {
-        metering_point_ids: metering_point.id,
+        register_ids: register.id,
         resolution: 'year_to_months',
         timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -94,7 +94,7 @@ describe '/api/v1/aggregates' do
 
 
     it 'slp energy by month_to_days as stranger in wintertime' do
-      metering_point = Fabricate(:metering_point, readable: 'world')
+      register = Fabricate(:register, readable: 'world')
       access_token  = Fabricate(:simple_access_token)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,1,1)
@@ -109,13 +109,13 @@ describe '/api/v1/aggregates' do
         timestamp += 1.hour
       end
       request_params = {
-        metering_point_ids: metering_point.id,
+        register_ids: register.id,
         timestamp: Time.find_zone('Berlin').local(2016,1,17).iso8601,
         resolution: 'month_to_days'
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -138,7 +138,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp energy by month_to_days as admin in summertime ' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point = Fabricate(:metering_point)
+      register = Fabricate(:register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,6,1)
       (24*31).times do |i|
@@ -152,13 +152,13 @@ describe '/api/v1/aggregates' do
         timestamp += 1.hour
       end
       request_params = {
-        metering_point_ids: metering_point.id,
+        register_ids: register.id,
         resolution: 'month_to_days',
         timestamp: Time.find_zone('Berlin').local(2016,6,2).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -182,7 +182,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp power by day_to_minutes as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point = Fabricate(:metering_point)
+      register = Fabricate(:register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2015,2,1)
       # 3 hours * 60 minutes * 60/2 seconds
@@ -197,13 +197,13 @@ describe '/api/v1/aggregates' do
         timestamp += 2.second
       end
       request_params = {
-        metering_point_ids: metering_point.id,
+        register_ids: register.id,
         resolution: 'day_to_minutes',
         timestamp: Time.find_zone('Berlin').local(2015,2,1).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -225,7 +225,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp power by hour_to_minutes as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point = Fabricate(:metering_point)
+      register = Fabricate(:register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Bangkok').local(2015,2,1)
       4.times do |i|
@@ -239,13 +239,13 @@ describe '/api/v1/aggregates' do
         timestamp += 15.minutes
       end
       request_params = {
-        metering_point_ids: metering_point.id,
+        register_ids: register.id,
         resolution: 'hour_to_minutes',
         timestamp: Time.find_zone('Bangkok').local(2015,2,1, 0,30).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -268,8 +268,8 @@ describe '/api/v1/aggregates' do
 
     it 'error on differend power by hour_to_minutes as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      slp = Fabricate(:metering_point)
-      pv = Fabricate(:easymeter_60051599).metering_points.first
+      slp = Fabricate(:register)
+      pv = Fabricate(:easymeter_60051599).registers.first
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Sydney').local(2015,2,1)
       (60*60).times do |i|
@@ -283,13 +283,13 @@ describe '/api/v1/aggregates' do
         timestamp += 1.second
       end
       request_params = {
-        metering_point_ids: "#{slp.id},#{pv.id}",
+        register_ids: "#{slp.id},#{pv.id}",
         resolution: 'hour_to_minutes',
         timestamp: Time.find_zone('Sydney').local(2015,2,1, 0,30).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -301,14 +301,14 @@ describe '/api/v1/aggregates' do
 
 
 
-    it 'no more than 5 metering_points as admin' do
+    it 'no more than 5 registers as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      slp1 = Fabricate(:metering_point)
-      slp2 = Fabricate(:metering_point)
-      slp3 = Fabricate(:metering_point)
-      slp4 = Fabricate(:metering_point)
-      slp5 = Fabricate(:metering_point)
-      slp6 = Fabricate(:metering_point)
+      slp1 = Fabricate(:register)
+      slp2 = Fabricate(:register)
+      slp3 = Fabricate(:register)
+      slp4 = Fabricate(:register)
+      slp5 = Fabricate(:register)
+      slp6 = Fabricate(:register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Sydney').local(2015,2,1)
       (60*60).times do |i|
@@ -322,13 +322,13 @@ describe '/api/v1/aggregates' do
         timestamp += 1.second
       end
       request_params = {
-        metering_point_ids: "#{slp1.id},#{slp2.id},#{slp3.id},#{slp4.id},#{slp5.id},#{slp6.id}",
+        register_ids: "#{slp1.id},#{slp2.id},#{slp3.id},#{slp4.id},#{slp5.id},#{slp6.id}",
         resolution: 'hour_to_minutes',
         timestamp: Time.find_zone('Sydney').local(2015,2,1, 0,30).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -343,8 +343,8 @@ describe '/api/v1/aggregates' do
 
     it 'multiple slp power by hour_to_minutes as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point1 = Fabricate(:metering_point)
-      metering_point2 = Fabricate(:metering_point)
+      register1 = Fabricate(:register)
+      register2 = Fabricate(:register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Sydney').local(2015,2,1)
       (60*60).times do |i|
@@ -358,13 +358,13 @@ describe '/api/v1/aggregates' do
         timestamp += 1.second
       end
       request_params = {
-        metering_point_ids: "#{metering_point1.id},#{metering_point2.id}",
+        register_ids: "#{register1.id},#{register2.id}",
         resolution: 'hour_to_minutes',
         timestamp: Time.find_zone('Sydney').local(2015,2,1, 0,30).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -387,8 +387,8 @@ describe '/api/v1/aggregates' do
 
     it 'multiple slp power by hour_to_minutes with forecast_kwh_pa as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point1 = Fabricate(:metering_point, forecast_kwh_pa: 3000)
-      metering_point2 = Fabricate(:metering_point, forecast_kwh_pa: 8000)
+      register1 = Fabricate(:register, forecast_kwh_pa: 3000)
+      register2 = Fabricate(:register, forecast_kwh_pa: 8000)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2015,2,1)
       4.times do |i|
@@ -402,13 +402,13 @@ describe '/api/v1/aggregates' do
         timestamp += 15.minutes
       end
       request_params = {
-        metering_point_ids: "#{metering_point1.id},#{metering_point2.id}",
+        register_ids: "#{register1.id},#{register2.id}",
         resolution: 'hour_to_minutes',
         timestamp: Time.find_zone('Berlin').local(2015,2,1,0,30).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -430,7 +430,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp energy by year_to_months in summertime just until now as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point = Fabricate(:metering_point)
+      register = Fabricate(:register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Moscow').local(2015,1,1)
       (400).times do |i|
@@ -445,13 +445,13 @@ describe '/api/v1/aggregates' do
       end
       Timecop.freeze( Time.find_zone('Moscow').local(2015,7,2, 1,30,1) )
       request_params = {
-        metering_point_ids: metering_point.id,
+        register_ids: register.id,
         resolution: 'year_to_months',
         timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -476,7 +476,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp power by day_to_minutes just until now as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point = Fabricate(:metering_point)
+      register = Fabricate(:register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2015,2,1)
       # 24 hours * 60 minutes * 60/2 seconds
@@ -492,13 +492,13 @@ describe '/api/v1/aggregates' do
       end
       Timecop.freeze( Time.find_zone('Berlin').local(2015,2,1, 11,30,1) )
       request_params = {
-        metering_point_ids: metering_point.id,
+        register_ids: register.id,
         resolution: 'day_to_minutes',
         timestamp: Time.find_zone('Berlin').local(2015,2,1).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -521,7 +521,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp energy by month_to_days in summertime just until now as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point = Fabricate(:metering_point)
+      register = Fabricate(:register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,6,1)
       (24*30).times do |i|
@@ -536,13 +536,13 @@ describe '/api/v1/aggregates' do
       end
       Timecop.freeze( Time.find_zone('Berlin').local(2016,6,13, 11,30,1) )
       request_params = {
-        metering_point_ids: metering_point.id,
+        register_ids: register.id,
         resolution: 'month_to_days',
         timestamp: Time.find_zone('Berlin').local(2016,6,2).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -568,7 +568,7 @@ describe '/api/v1/aggregates' do
 
     it 'sep bhkw energy by year_to_months in summertime as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point = Fabricate(:metering_point, mode: 'out')
+      register = Fabricate(:register, mode: 'out')
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Moscow').local(2015,1,1)
       (400).times do |i|
@@ -582,13 +582,13 @@ describe '/api/v1/aggregates' do
         timestamp += 1.day
       end
       request_params = {
-        metering_point_ids: metering_point.id,
+        register_ids: register.id,
         resolution: 'year_to_months',
         timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -608,7 +608,7 @@ describe '/api/v1/aggregates' do
 
     it 'sep bhkw energy by month_to_days in summertime as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point = Fabricate(:metering_point, mode: 'out')
+      register = Fabricate(:register, mode: 'out')
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('UTC').local(2016,6,1) - 1.day
       (24*32).times do |i|
@@ -623,13 +623,13 @@ describe '/api/v1/aggregates' do
       end
       ['Berlin', 'Moscow', 'Greenland', 'Iceland'].each do |zone|
         request_params = {
-          metering_point_ids: metering_point.id,
+          register_ids: register.id,
           resolution: 'month_to_days',
           timestamp: Time.find_zone(zone).local(2016,6,2)
         }
         cache_id = Aggregate.build_cache_id(
             api_controller + '/past',
-            request_params[:metering_point_ids],
+            request_params[:register_ids],
             request_params[:timestamp],
             request_params[:resolution]
           )
@@ -651,7 +651,7 @@ describe '/api/v1/aggregates' do
 
     it 'buzzn energy by year_to_months in summertime as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      meter = Fabricate(:easy_meter_q3d_with_metering_point)
+      meter = Fabricate(:easy_meter_q3d_with_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Moscow').local(2015,1,1)
       (400).times do |i|
@@ -665,13 +665,13 @@ describe '/api/v1/aggregates' do
         timestamp += 1.day
       end
       request_params = {
-        metering_point_ids: meter.metering_points.first.id,
+        register_ids: meter.registers.first.id,
         resolution: 'year_to_months',
         timestamp: Time.find_zone('Moscow').local(2015,6).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -693,9 +693,9 @@ describe '/api/v1/aggregates' do
 
 
     it 'buzzn energy by month_to_days in wintertime as stranger' do
-      meter = Fabricate(:easy_meter_q3d_with_metering_point)
-      metering_point = meter.metering_points.first
-      metering_point.update(readable: 'world')
+      meter = Fabricate(:easy_meter_q3d_with_register)
+      register = meter.registers.first
+      register.update(readable: 'world')
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,1,1)
       (24*32).times do |i|
@@ -710,13 +710,13 @@ describe '/api/v1/aggregates' do
       end
       access_token  = Fabricate(:simple_access_token)
       request_params = {
-        metering_point_ids: metering_point.id,
+        register_ids: register.id,
         timestamp: Time.find_zone('Berlin').local(2016,1,17).iso8601,
         resolution: 'month_to_days'
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -738,7 +738,7 @@ describe '/api/v1/aggregates' do
 
     it 'buzzn energy by month_to_days in summertime as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      meter = Fabricate(:easy_meter_q3d_with_metering_point)
+      meter = Fabricate(:easy_meter_q3d_with_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,6,1)
       (24*31).times do |i|
@@ -752,13 +752,13 @@ describe '/api/v1/aggregates' do
         timestamp += 1.hour
       end
       request_params = {
-        metering_point_ids: meter.metering_points.first.id,
+        register_ids: meter.registers.first.id,
         resolution: 'month_to_days',
         timestamp: Time.find_zone('Berlin').local(2016,6,2).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -780,8 +780,8 @@ describe '/api/v1/aggregates' do
 
     it 'multiple buzzn power by hour_to_minutes as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      meter1 = Fabricate(:easy_meter_q3d_with_metering_point)
-      meter2 = Fabricate(:easy_meter_q3d_with_metering_point)
+      meter1 = Fabricate(:easy_meter_q3d_with_register)
+      meter2 = Fabricate(:easy_meter_q3d_with_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Fiji').local(2015,2,1)
       (60*60).times do |i|
@@ -799,13 +799,13 @@ describe '/api/v1/aggregates' do
         timestamp += 1.seconds
       end
       request_params = {
-        metering_point_ids: "#{meter1.metering_points.first.id},#{meter2.metering_points.first.id}",
+        register_ids: "#{meter1.registers.first.id},#{meter2.registers.first.id}",
         resolution: 'hour_to_minutes',
         timestamp: Time.find_zone('Fiji').local(2015,2,1, 0,30).iso8601
       }
       cache_id = Aggregate.build_cache_id(
           api_controller + '/past',
-          request_params[:metering_point_ids],
+          request_params[:register_ids],
           request_params[:timestamp],
           request_params[:resolution]
         )
@@ -828,15 +828,15 @@ describe '/api/v1/aggregates' do
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         access_token = Fabricate(:full_access_token_as_admin)
         meter = Fabricate(:easymeter_60051599)
-        metering_point = meter.metering_points.first
+        register = meter.registers.first
         request_params = {
-          metering_point_ids: metering_point.id,
+          register_ids: register.id,
           resolution: 'month_to_days',
           timestamp: Time.find_zone('Berlin').local(2016,2,1).iso8601
         }
         cache_id = Aggregate.build_cache_id(
             api_controller + '/past',
-            request_params[:metering_point_ids],
+            request_params[:register_ids],
             request_params[:timestamp],
             request_params[:resolution]
           )
@@ -861,15 +861,15 @@ describe '/api/v1/aggregates' do
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         access_token = Fabricate(:full_access_token_as_admin)
         meter = Fabricate(:easymeter_60051560) # BHKW
-        metering_point = meter.metering_points.first
+        register = meter.registers.first
         request_params = {
-          metering_point_ids: metering_point.id,
+          register_ids: register.id,
           resolution: 'day_to_minutes',
           timestamp: Time.find_zone('Berlin').local(2016,6,6).iso8601
         }
         cache_id = Aggregate.build_cache_id(
             api_controller + '/past',
-            request_params[:metering_point_ids],
+            request_params[:register_ids],
             request_params[:timestamp],
             request_params[:resolution]
           )
@@ -887,15 +887,15 @@ describe '/api/v1/aggregates' do
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         access_token = Fabricate(:full_access_token_as_admin)
         meter = Fabricate(:easymeter_60051560) # BHKW
-        metering_point = meter.metering_points.first
+        register = meter.registers.first
         request_params = {
-          metering_point_ids: metering_point.id,
+          register_ids: register.id,
           resolution: 'day_to_minutes',
           timestamp: Time.find_zone('Berlin').local(2016,5,6).iso8601
         }
         cache_id = Aggregate.build_cache_id(
             api_controller + '/past',
-            request_params[:metering_point_ids],
+            request_params[:register_ids],
             request_params[:timestamp],
             request_params[:resolution]
           )
@@ -920,16 +920,16 @@ describe '/api/v1/aggregates' do
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         access_token = Fabricate(:full_access_token_as_admin)
         meter = Fabricate(:easymeter_60139082)
-        input_metering_point  = meter.metering_points.inputs.first
-        output_metering_point = meter.metering_points.outputs.first
+        input_register  = meter.registers.inputs.first
+        output_register = meter.registers.outputs.first
         request_params = {
-          metering_point_ids: input_metering_point.id,
+          register_ids: input_register.id,
           resolution: 'day_to_minutes',
           timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
         }
         cache_id = Aggregate.build_cache_id(
             api_controller + '/past',
-            request_params[:metering_point_ids],
+            request_params[:register_ids],
             request_params[:timestamp],
             request_params[:resolution]
           )
@@ -952,16 +952,16 @@ describe '/api/v1/aggregates' do
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         access_token = Fabricate(:full_access_token_as_admin)
         meter = Fabricate(:easymeter_60139082)
-        input_metering_point  = meter.metering_points.inputs.first
-        output_metering_point = meter.metering_points.outputs.first
+        input_register  = meter.registers.inputs.first
+        output_register = meter.registers.outputs.first
         request_params = {
-          metering_point_ids: output_metering_point.id,
+          register_ids: output_register.id,
           resolution: 'day_to_minutes',
           timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
         }
         cache_id = Aggregate.build_cache_id(
             api_controller + '/past',
-            request_params[:metering_point_ids],
+            request_params[:register_ids],
             request_params[:timestamp],
             request_params[:resolution]
           )
@@ -986,16 +986,16 @@ describe '/api/v1/aggregates' do
         access_token = Fabricate(:full_access_token_as_admin)
         easymeter_60051599 = Fabricate(:easymeter_60051599) # PV
         easymeter_60051560 = Fabricate(:easymeter_60051560) # BHKW
-        mp_z2 = easymeter_60051599.metering_points.outputs.first
-        mp_z4 = easymeter_60051560.metering_points.outputs.first
+        register_z2 = easymeter_60051599.registers.outputs.first
+        register_z4 = easymeter_60051560.registers.outputs.first
         request_params = {
-          metering_point_ids: "#{mp_z4.id},#{mp_z2.id}",
+          register_ids: "#{mp_z4.id},#{mp_z2.id}",
           resolution: 'day_to_minutes',
           timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
         }
         cache_id = Aggregate.build_cache_id(
             api_controller + '/past',
-            request_params[:metering_point_ids],
+            request_params[:register_ids],
             request_params[:timestamp],
             request_params[:resolution]
           )
@@ -1017,12 +1017,12 @@ describe '/api/v1/aggregates' do
     it 'Virtual past month_to_days as admin' do |spec|
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         access_token = Fabricate(:full_access_token_as_admin)
-        virtual_metering_point = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtual metering_point
+        virtual_register = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtual register
         single_energy_values = []
-        virtual_metering_point.formula_parts.each do |formula_part|
-          metering_point = MeteringPoint.find(formula_part.operand_id)
+        virtual_register.formula_parts.each do |formula_part|
+          register = Register.find(formula_part.operand_id)
           request_params = {
-            metering_point_ids: metering_point.id,
+            register_ids: register.id,
             resolution: 'month_to_days',
             timestamp: Time.find_zone('Berlin').local(2016,4,6)
           }
@@ -1030,20 +1030,20 @@ describe '/api/v1/aggregates' do
           single_energy_values << json.first['energy_milliwatt_hour']
         end
         request_params = {
-          metering_point_ids: virtual_metering_point.id,
+          register_ids: virtual_register.id,
           resolution: 'month_to_days',
           timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
         }
         cache_id = Aggregate.build_cache_id(
             api_controller + '/past',
-            request_params[:metering_point_ids],
+            request_params[:register_ids],
             request_params[:timestamp],
             request_params[:resolution]
           )
         expect(Rails.cache.exist?(cache_id)).to be false
         get_with_token "/api/v1/aggregates/past", request_params, access_token.token
         expect(Rails.cache.exist?(cache_id)).to be true
-        sum_value = single_energy_values[0] + single_energy_values[1] - single_energy_values[2] # last single_energy_value is a negativ formulapart metering_point
+        sum_value = single_energy_values[0] + single_energy_values[1] - single_energy_values[2] # last single_energy_value is a negativ formulapart register
         expect(json.first['energy_milliwatt_hour']).to eq(sum_value)
       end
     end
@@ -1059,12 +1059,12 @@ describe '/api/v1/aggregates' do
   describe '/present' do
     api_endpoint = api_version + api_controller + '/present'
 
-    it 'Does aggregate Virtual metering_points present as manager' do |spec|
+    it 'Does aggregate Virtual registers present as manager' do |spec|
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         access_token = Fabricate(:full_access_token_as_admin)
-        virtual_metering_point = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtual metering_point
+        virtual_register = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtual register
         request_params = {
-          metering_point_ids: virtual_metering_point.id,
+          register_ids: virtual_register.id,
           timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
         }
         get_with_token api_endpoint, request_params, access_token.token
@@ -1080,13 +1080,13 @@ describe '/api/v1/aggregates' do
     it 'power readable by world which belongs to a group not readable by world without token' do |spec|
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         meter                   = Fabricate(:easymeter_60139082)
-        metering_point          = meter.metering_points.inputs.first
-        metering_point.readable = 'world'
-        metering_point.save
+        register          = meter.registers.inputs.first
+        register.readable = 'world'
+        register.save
         group                   = Fabricate(:group_readable_by_community)
-        group.metering_points << metering_point
+        group.registers << register
         request_params = {
-          metering_point_ids: metering_point.id
+          register_ids: register.id
         }
         get_without_token '/api/v1/aggregates/present', request_params
         expect(response).to have_http_status(200)
@@ -1096,13 +1096,13 @@ describe '/api/v1/aggregates' do
     it 'power not readable by world which belongs to a group readable by world without token' do |spec|
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         meter                   = Fabricate(:easymeter_60139082)
-        metering_point          = meter.metering_points.inputs.first
-        metering_point.readable = 'community'
-        metering_point.save
+        register          = meter.registers.inputs.first
+        register.readable = 'community'
+        register.save
         group                   = Fabricate(:group)
-        group.metering_points << metering_point
+        group.registers << register
         request_params = {
-          metering_point_ids: metering_point.id
+          register_ids: register.id
         }
         get_without_token '/api/v1/aggregates/present', request_params
         expect(response).to have_http_status(200)
@@ -1112,13 +1112,13 @@ describe '/api/v1/aggregates' do
     it 'power not readable by world which belongs to a group not readable by world without token' do |spec|
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         meter                   = Fabricate(:easymeter_60139082)
-        metering_point          = meter.metering_points.inputs.first
-        metering_point.readable = 'community'
-        metering_point.save
+        register          = meter.registers.inputs.first
+        register.readable = 'community'
+        register.save
         group                   = Fabricate(:group_readable_by_community)
-        group.metering_points << metering_point
+        group.registers << register
         request_params = {
-          metering_point_ids: metering_point.id
+          register_ids: register.id
         }
         get_without_token '/api/v1/aggregates/present', request_params
         expect(response).to have_http_status(403)
@@ -1130,15 +1130,15 @@ describe '/api/v1/aggregates' do
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         access_token = Fabricate(:full_access_token_as_admin)
         meter = Fabricate(:easymeter_60139082) # in_out meter
-        input_metering_point  = meter.metering_points.inputs.first
-        output_metering_point = meter.metering_points.outputs.first
+        input_register  = meter.registers.inputs.first
+        output_register = meter.registers.outputs.first
         Timecop.freeze(Time.find_zone('Berlin').local(2016,2,1, 1,30,1)) # 6*15 minutes and 1 seconds
-        request_params = { metering_point_ids: input_metering_point.id }
+        request_params = { register_ids: input_register.id }
         get_with_token api_endpoint, request_params, access_token.token
         expect(response).to have_http_status(200)
         expect(json['readings'].count).to eq(1)
         expect(json['power_milliwatt']).to eq(0)
-        request_params = { metering_point_ids: output_metering_point.id }
+        request_params = { register_ids: output_register.id }
         get_with_token api_endpoint, request_params, access_token.token
         expect(response).to have_http_status(200)
         expect(json['readings'].count).to eq(1)
@@ -1150,8 +1150,8 @@ describe '/api/v1/aggregates' do
 
     it 'multiple buzzn as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      meter1 = Fabricate(:easy_meter_q3d_with_metering_point)
-      meter2 = Fabricate(:easy_meter_q3d_with_metering_point)
+      meter1 = Fabricate(:easy_meter_q3d_with_register)
+      meter2 = Fabricate(:easy_meter_q3d_with_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.new(2016,2,1)
       (60*60).times do |i|
@@ -1172,7 +1172,7 @@ describe '/api/v1/aggregates' do
       end
       Timecop.freeze(Time.local(2016,2,1, 1,30)) # 6*15 minutes
       request_params = {
-        metering_point_ids: "#{meter1.metering_points.first.id},#{meter2.metering_points.first.id}"
+        register_ids: "#{meter1.registers.first.id},#{meter2.registers.first.id}"
       }
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -1184,9 +1184,9 @@ describe '/api/v1/aggregates' do
 
     it 'buzzn in and out as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      meter = Fabricate(:easy_meter_q3d_with_in_out_metering_point)
-      metering_point_out  = meter.metering_points.outputs.first
-      metering_point_in   = meter.metering_points.inputs.first
+      meter = Fabricate(:easy_meter_q3d_with_in_out_register)
+      register_out  = meter.registers.outputs.first
+      register_in   = meter.registers.inputs.first
       energy_a_milliwatt_hour = 0
       energy_b_milliwatt_hour = 1000
       timestamp = Time.new(2016,2,1)
@@ -1200,12 +1200,12 @@ describe '/api/v1/aggregates' do
                   power_b_milliwatt: 70*1000)
       end
       Timecop.freeze(Time.local(2016,2,1, 1,30)) # 6*15 minutes
-      request_params = { metering_point_ids: metering_point_out.id }
+      request_params = { register_ids: register_out.id }
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
       expect(json['readings'].count).to eq(1)
       expect(json['power_milliwatt']).to eq(70*1000)
-      request_params = { metering_point_ids: metering_point_in.id }
+      request_params = { register_ids: register_in.id }
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
       expect(json['readings'].count).to eq(1)
@@ -1218,12 +1218,12 @@ describe '/api/v1/aggregates' do
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description]}") do
         access_token = Fabricate(:full_access_token_as_admin)
         meter = Fabricate(:easymeter_60139082) # in_out meter
-        input_metering_point  = meter.metering_points.inputs.first
-        output_metering_point = meter.metering_points.outputs.first
+        input_register  = meter.registers.inputs.first
+        output_register = meter.registers.outputs.first
 
         Timecop.freeze(Time.find_zone('Berlin').local(2016,2,1, 1,30,1))
         request_params = {
-          metering_point_ids: input_metering_point.id
+          register_ids: input_register.id
         }
         get_with_token api_endpoint, request_params, access_token.token
         expect(response).to have_http_status(504)
@@ -1232,7 +1232,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point = Fabricate(:metering_point)
+      register = Fabricate(:register)
 
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,2,1)
@@ -1249,7 +1249,7 @@ describe '/api/v1/aggregates' do
 
       Timecop.freeze(Time.find_zone('Berlin').local(2016,2,1, 1,30,1)) # 6*15 minutes and 1 seconds
       request_params = {
-        metering_point_ids: metering_point.id
+        register_ids: register.id
       }
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -1261,7 +1261,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp with forecast_kwh_pa as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point = Fabricate(:metering_point, forecast_kwh_pa: 3000)
+      register = Fabricate(:register, forecast_kwh_pa: 3000)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,2,1)
       (24*4).times do |i|
@@ -1276,7 +1276,7 @@ describe '/api/v1/aggregates' do
       end
       Timecop.freeze(Time.find_zone('Berlin').local(2016,2,1, 1,30,55)) # 6*15 minutes and 55 seconds
       request_params = {
-        metering_point_ids: metering_point.id
+        register_ids: register.id
       }
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)
@@ -1288,8 +1288,8 @@ describe '/api/v1/aggregates' do
 
     it 'multiple slp with forecast_kwh_pa as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      metering_point1 = Fabricate(:metering_point, forecast_kwh_pa: 3000)
-      metering_point2 = Fabricate(:metering_point, forecast_kwh_pa: 8000)
+      register1 = Fabricate(:register, forecast_kwh_pa: 3000)
+      register2 = Fabricate(:register, forecast_kwh_pa: 8000)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,2,1)
       (24*4).times do |i|
@@ -1304,7 +1304,7 @@ describe '/api/v1/aggregates' do
       end
       Timecop.freeze( Time.find_zone('Berlin').local(2016,2,1, 1,30,1) ) # 6*15 minutes and 1 seconds
       request_params = {
-        metering_point_ids: "#{metering_point1.id},#{metering_point2.id}"
+        register_ids: "#{register1.id},#{register2.id}"
       }
       get_with_token api_endpoint, request_params, access_token.token
       expect(response).to have_http_status(200)

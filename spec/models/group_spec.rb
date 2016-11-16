@@ -68,37 +68,37 @@ describe "Group Model" do
     user          = Fabricate(:user)
     consumer      = Fabricate(:user)
     producer      = Fabricate(:user)
-    mp_in         = Fabricate(:metering_point, mode: 'in')
-    mp_out        = Fabricate(:metering_point, mode: 'out')
+    register_in         = Fabricate(:register, mode: 'in')
+    register_out        = Fabricate(:register, mode: 'out')
 
-    group.metering_points += [mp_in, mp_out]
+    group.registers += [mp_in, register_out]
 
     expect(group.energy_producers).to match_array []
     expect(group.energy_consumers).to match_array []
     expect(group.involved).to match_array []
 
-    producer.add_role(:manager, mp_in)
+    producer.add_role(:manager, register_in)
     expect(group.energy_producers).to match_array [producer]
     expect(group.energy_consumers).to match_array []
     expect(group.involved).to match_array [producer]
 
-    consumer.add_role(:member, mp_out)
+    consumer.add_role(:member, register_out)
     expect(group.energy_producers).to match_array [producer]
     expect(group.energy_consumers).to match_array [consumer]
     expect(group.involved).to match_array [producer, consumer]
 
-    consumer.add_role(:member, mp_in)
-    producer.add_role(:member, mp_out)
+    consumer.add_role(:member, register_in)
+    producer.add_role(:member, register_out)
     expect(group.energy_producers).to match_array [producer, consumer]
     expect(group.energy_consumers).to match_array [consumer, producer]
     expect(group.involved).to match_array [producer, consumer]
 
-    user.add_role(:member, mp_in)
+    user.add_role(:member, register_in)
     expect(group.energy_producers).to match_array [user, producer, consumer]
     expect(group.energy_consumers).to match_array [consumer, producer]
     expect(group.involved).to match_array [producer, consumer, user]
 
-    user.add_role(:manager, mp_out)
+    user.add_role(:manager, register_out)
     expect(group.energy_producers).to match_array [user, producer, consumer]
     expect(group.energy_consumers).to match_array [user, consumer, producer]
     expect(group.involved).to match_array [producer, consumer, user]

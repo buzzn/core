@@ -104,7 +104,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       if (inData[idx].updating) return;
       inData[idx].updating = true;
       checkToken();
-      fetch(`${url}/api/v1/aggregates/present?metering_point_ids=${point.id}`, { headers })
+      fetch(`${url}/api/v1/aggregates/present?register_ids=${point.id}`, { headers })
         .then(getJson)
         .then(json => {
           inData[idx].value = Math.floor(Math.abs(json.power_milliwatt)) || 0;
@@ -122,7 +122,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       if (outData[idx].updating) return;
       outData[idx].updating = true;
       checkToken();
-      fetch(`${url}/api/v1/aggregates/present?metering_point_ids=${point.id}`, { headers })
+      fetch(`${url}/api/v1/aggregates/present?register_ids=${point.id}`, { headers })
         .then(getJson)
         .then(json => {
           outData[idx].value = Math.floor(Math.abs(json.power_milliwatt)) || 0;
@@ -274,7 +274,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .attr('transform', `translate(${fullWidth / 2}, ${fullHeight / 2})`)
       .style('fill', d3.rgb(outColor).darker())
       .attr('id', d => d.id)
-      .on('click', d => window.location.href = `${url}/metering_points/${d.id}`)
+      .on('click', d => window.location.href = `${url}/registers/${d.id}`)
       .on('mouseover', function mouseShow(d, i) { showDetails(d, i, this); })
       .on('mouseout', function mouseHide(d, i) { hideDetails(d, i, this); })
       .on('touchstart', function touchShow(d, i) { showDetails(d, i, this); })
@@ -311,7 +311,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .style('opacity', 0.9)
       .attr('r', d => radius(dataWeight)(d.value))
       .attr('id', d => d.id)
-      .on('click', d => window.location.href = `${url}/metering_points/${d.id}`)
+      .on('click', d => window.location.href = `${url}/registers/${d.id}`)
       .on('mouseover', function mouseShow(d, i) { showDetails(d, i, this); })
       .on('mouseout', function mouseHide(d, i) { hideDetails(d, i, this); })
       .on('touchstart', function touchShow(d, i) { showDetails(d, i, this); })
@@ -396,15 +396,15 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .restart();
   }
 
-  function getMeteringPoints(page = 1) {
+  function getRegisters(page = 1) {
     checkToken();
-    fetch(`${url}/api/v1/groups/${group}/metering-points?per_page=10&page=${page}`, { headers })
+    fetch(`${url}/api/v1/groups/${group}/registers?per_page=10&page=${page}`, { headers })
       .then(getJson)
       .then(json => {
         if (json.data.length === 0) return Promise.reject('Empty group');
         fillPoints(json.data);
         if (json.meta.total_pages > page) {
-          getMeteringPoints(page + 1);
+          getRegisters(page + 1);
         } else {
           getData();
           bubblesTimers.fetchTimer = setInterval(getData, 15000);
@@ -422,7 +422,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       });
   }
 
-  getMeteringPoints();
+  getRegisters();
 
   $('.change-order').on('click', () => {
     if (switchInOnTop) {

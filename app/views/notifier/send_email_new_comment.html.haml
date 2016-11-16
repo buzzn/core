@@ -8,14 +8,14 @@
   %p= t('you_receive_this_message_because_you_subscribed_to_this_event')
   %p= t('to_unsubscribe_this_event_please_visit_your_group_and_change_this_setting')
   %p= link_to @commentable.name, group_url(@commentable)
-- elsif @commentable.is_a?(MeteringPoint)
-  %p= t('user_wrote_a_new_comment_at_the_metering_point', username: @sender.name, metering_point_name: @commentable.name)
+- elsif @commentable.is_a?(Register)
+  %p= t('user_wrote_a_new_comment_at_the_register', username: @sender.name, register_name: @commentable.name)
   %p= '----------------'
   %p= @message
   %p= '----------------'
   %p= t('you_receive_this_message_because_you_subscribed_to_this_event')
-  %p= t('to_unsubscribe_this_event_please_visit_your_metering_point_and_change_this_setting')
-  %p= link_to @commentable.name, metering_point_url(@commentable)
+  %p= t('to_unsubscribe_this_event_please_visit_your_register_and_change_this_setting')
+  %p= link_to @commentable.name, register_url(@commentable)
 - elsif @commentable.is_a?(Conversation)
   %p= t('user_wrote_a_new_comment_at_your_conversation', user: @sender.name)
   %p= '----------------'

@@ -1,4 +1,4 @@
-class DashboardMeteringPoint < ActiveRecord::Base
+class DashboardRegister < ActiveRecord::Base
   belongs_to :dashboard
-  belongs_to :metering_point
+  belongs_to :register
 end

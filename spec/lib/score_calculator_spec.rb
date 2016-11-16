@@ -98,11 +98,11 @@ describe Buzzn::ScoreCalculator do
       user          = Fabricate(:user)
       consumer      = Fabricate(:user)
       producer      = Fabricate(:user)
-      mp_in         = Fabricate(:metering_point, mode: 'in')
-      mp_out        = Fabricate(:metering_point, mode: 'out')
+      register_in         = Fabricate(:register, mode: 'in')
+      register_out        = Fabricate(:register, mode: 'out')
 
-      group.metering_points += [mp_in, mp_out]
-      consumer.add_role(:member, mp_out)
+      group.registers += [mp_in, register_out]
+      consumer.add_role(:member, register_out)
 
       group
     end
@@ -158,15 +158,15 @@ describe Buzzn::ScoreCalculator do
     let(:group) do
       Fabricate(:buzzn_metering)
       easymeter_60051599 = Fabricate(:easymeter_60051599)
-      mp_z2 = easymeter_60051599.metering_points.first
+      register_z2 = easymeter_60051599.registers.first
       easymeter_60051559 = Fabricate(:easymeter_60051559)
-      mp_z3 = easymeter_60051559.metering_points.first
+      register_z3 = easymeter_60051559.registers.first
       easymeter_60051560 = Fabricate(:easymeter_60051560)
-      mp_z4 = easymeter_60051560.metering_points.first
+      register_z4 = easymeter_60051560.registers.first
       group = Fabricate(:group_home_of_the_brave,
-                        metering_points: [mp_z2, mp_z3, mp_z4])
+                        registers: [mp_z2, register_z3, register_z4])
       consumer = Fabricate(:user)
-      consumer.add_role(:member, mp_z2)
+      consumer.add_role(:member, register_z2)
       group
     end
 

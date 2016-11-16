@@ -1,4 +1,4 @@
-.col-xs-12.col-sm-12.col-md-6.col-lg-6.fomula_part.metering_point{id: "metering_point_#{formula_part.operand.id}", data: {smart: "#{formula_part.operand.smart?}", online: "#{formula_part.operand.online?}"} }
+.col-xs-12.col-sm-12.col-md-6.col-lg-6.fomula_part.register{id: "register_#{formula_part.operand.id}", data: {smart: "#{formula_part.operand.smart?}", online: "#{formula_part.operand.online?}"} }
   = link_to formula_part.operand do
     .panel.panel-info.panel-colorful.text-center
 
@@ -12,4 +12,4 @@
         %h4.mar-no.text-thin
           =formula_part.operand.decorate.long_name
 
-    /= render partial: "metering_points/metering_point_small", collection: [formula_part.operand.decorate], as: :metering_point
+    /= render partial: "registers/register_small", collection: [formula_part.operand.decorate], as: :register

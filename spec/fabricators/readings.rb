@@ -4,8 +4,8 @@ Fabricator :reading do
   power_a_milliwatt { 900*1000 }
 end
 
-Fabricator :reading_with_easy_meter_q3d_and_metering_point, from: :reading do
-  meter_id { Fabricate(:easy_meter_q3d_with_metering_point).id  }
+Fabricator :reading_with_easy_meter_q3d_and_register, from: :reading do
+  meter_id { Fabricate(:easy_meter_q3d_with_register).id  }
 end
 
 Fabricator :reading_with_easy_meter_q3d_and_manager, from: :reading do

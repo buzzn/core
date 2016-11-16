@@ -4,9 +4,9 @@ en:
   sent_friendship_request: Sent Friendship Request
   accepted_friendship_request: Accepted Friendship Request
   rejected_friendship_request: Rejected Friendship Request
-  sent_group_metering_point_request: Sent Group Metering Point Request
-  accepted_group_metering_point_request: Accepted Group Metering Point Request
-  rejected_group_metering_point_request: Rejected Group Metering Point Request
+  sent_group_register_request: Sent Group register Request
+  accepted_group_register_request: Accepted Group register Request
+  rejected_group_register_request: Rejected Group register Request
   are_you_sure: Are you sure
   cookie_text: "We use cookies to help personalise and improve your web experience. By using our website you consent to our use of cookies, some of which may have already been set on your device. View our Cookie Policy to learn more. "
 
@@ -24,7 +24,7 @@ en:
   if_this_link_shouldnt_work_try_to_copy_and_paste_this_one_directly_in_your_browser: "If this link shouldn't work try to copy and paste this one directly in your browser:"
 
   sign_up: Sign up
-  create_metering_point: Create Metering Point
+  create_register: Create register
   create_contract: Create contract
   edit: Edit
   logout: Logout

@@ -44,12 +44,12 @@ describe "Address Model" do
     expect(Address.readable_by(nil)).to eq [organization.address]
   end
 
-  it 'restricts readable_by for managers of metering_points', :retry => 3 do
+  it 'restricts readable_by for managers of registers', :retry => 3 do
     expect(Address.readable_by(mp_manager)).to eq [urban.address, organization.address]
     expect(Address.readable_by(admin.friends.first)).to eq [organization.address]
   end
 
-  it 'restricts readable_by for friends of a manager of a metering_points', :retry => 3 do
+  it 'restricts readable_by for friends of a manager of a registers', :retry => 3 do
     expect(Address.readable_by(mp_manager.friends.first)).to match_array [urban.address, organization.address]
 
     [:members, :community].each do |readable|

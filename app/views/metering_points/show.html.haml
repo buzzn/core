@@ -1,4 +1,4 @@
-- meta title: @metering_point.readable_by?(current_user) ? @metering_point.long_name : @metering_point.name
+- meta title: @register.readable_by?(current_user) ? @register.long_name : @register.name
 
 
 
@@ -8,23 +8,23 @@
       / %span.fa-stack.fa-lg.fa-4x
       /   %i.fa.fa-circle.fa-stack-2x
       /   %i.fa.fa-bolt.fa-stack-1x.fa-inverse
-      = @metering_point.picture('lg')
+      = @register.picture('lg')
 
     .col-lg-4.col-md-4.col-sm-4.col-xs-5
       .media-body.pad-lft
-        - if @metering_point.virtual
-          %p.text-3x.mar-no= @metering_point.name + " (" + t('virtual') + ")"
+        - if @register.virtual
+          %p.text-3x.mar-no= @register.name + " (" + t('virtual') + ")"
         - else
-          %p.text-3x.mar-no= @metering_point.name
-        %p.text-2x.mar-no.text-thin= @metering_point.address ? (@metering_point.readable_by?(current_user) ? @metering_point.address.short_name : @metering_point.name) : t('no_address')
+          %p.text-3x.mar-no= @register.name
+        %p.text-2x.mar-no.text-thin= @register.address ? (@register.readable_by?(current_user) ? @register.address.short_name : @register.name) : t('no_address')
         %ul.list-group.bg-trans
-          %li.list-group-item.list-item-sm.readability{class: "fa fa-#{@metering_point.readable_icon}", 'data-title' => t('readable_by') + ': ' + t("#{@metering_point.readable}")}
+          %li.list-group-item.list-item-sm.readability{class: "fa fa-#{@register.readable_icon}", 'data-title' => t('readable_by') + ': ' + t("#{@register.readable}")}
           %li.list-group-item.list-item-sm.text-primary.embed{class: "fa fa-share"}
             = t('embed')
           .embed-code= "<iframe width='100%' height='580' src='#{request.original_url}/widget' frameborder='0' scrolling: 'no'>Error loading iFrame</iframe>"
 
-    / - if @metering_point.input?
-    /   .metering_point_scores{'data-content' => @metering_point.id}
+    / - if @register.input?
+    /   .register_scores{'data-content' => @register.id}
 
     /     %table
     /       %tbody
@@ -39,40 +39,40 @@
 
     .panel-control
 
-      / - if @metering_point.smart?
+      / - if @register.smart?
       /   .add-to-dashboard
-      /     - if user_signed_in? && (current_user.dashboard.nil? || !current_user.dashboard.metering_points.include?(@metering_point))
-      /       = @metering_point.add_to_dashboard
+      /     - if user_signed_in? && (current_user.dashboard.nil? || !current_user.dashboard.registers.include?(@register))
+      /       = @register.add_to_dashboard
       .btn-group
         %button.btn.btn-block.btn-success.btn-labeled.fa.fa-bars.dropdown-toggle{"data-toggle" => "dropdown", type: "button"}
           = t('actions')
         %ul.dropdown-menu.dropdown-menu-right{role: "menu"}
-          - if user_signed_in? && current_user.can_update?(@metering_point)
-            %li= link_to(t('edit_metering_point'), edit_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
-            %li= link_to(t("invite_somebody_to_join_this_metering_point"),send_invitations_metering_point_path, {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
-            %li= link_to(t('remove_members'), remove_members_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
+          - if user_signed_in? && current_user.can_update?(@register)
+            %li= link_to(t('edit_register'), edit_register_path(@register),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
+            %li= link_to(t("invite_somebody_to_join_this_register"),send_invitations_register_path, {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
+            %li= link_to(t('remove_members'), remove_members_register_path(@register),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
 
-            %li= link_to(t('add_metering_point_manager'), add_manager_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
+            %li= link_to(t('add_register_manager'), add_manager_register_path(@register),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
             - if @managers.include?(current_user)
-              %li= link_to(t('remove_me_as_metering_point_manager'), remove_manager_update_metering_point_path(@metering_point),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal', :method => 'put', 'data-confirm' => t('are_you_sure') + ' ' + t('you_will_no_longer_be_able_to_edit_this_metering_point')})
-            - if !@metering_point.smart?
-              %li= link_to(t("submit_reading"), new_reading_path(metering_point_id: @metering_point.id), {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
+              %li= link_to(t('remove_me_as_register_manager'), remove_manager_update_register_path(@register),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal', :method => 'put', 'data-confirm' => t('are_you_sure') + ' ' + t('you_will_no_longer_be_able_to_edit_this_register')})
+            - if !@register.smart?
+              %li= link_to(t("submit_reading"), new_reading_path(register_id: @register.id), {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
           - if user_signed_in?
             - if @members.include?(current_user)
-              %li= link_to(t('edit_notifications'), edit_notifications_metering_point_path(@metering_point),{:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal'})
+              %li= link_to(t('edit_notifications'), edit_notifications_register_path(@register),{:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal'})
             - if @requests.any? && @requests.collect(&:user).include?(current_user)
               %li= t'waiting_for_accepting'
             - else
               - if !@members.include?(current_user)
-                - if current_user.friend?(@metering_point.managers.first) || current_user.can_update?(@metering_point)
-                  %li= link_to(t('join_this_metering_point'), metering_point_user_requests_path(user_id: current_user.id, metering_point_id: @metering_point.id, mode: 'request'), method: :post)
+                - if current_user.friend?(@register.managers.first) || current_user.can_update?(@register)
+                  %li= link_to(t('join_this_register'), register_user_requests_path(user_id: current_user.id, register_id: @register.id, mode: 'request'), method: :post)
               - else
-                %li= link_to(t('leave_this_metering_point'), remove_members_update_metering_point_path(user_id: current_user.id), method: :put, :data => {:confirm => t('are_you_sure')})
+                %li= link_to(t('leave_this_register'), remove_members_update_register_path(user_id: current_user.id), method: :put, :data => {:confirm => t('are_you_sure')})
 
 
 
 
-- if user_signed_in? && current_user.can_update?(@metering_point)
+- if user_signed_in? && current_user.can_update?(@register)
   - if @requests.any?
     .friendship_requests
       = render @requests
@@ -85,19 +85,19 @@
     .col-sm-6.col-md-3.col-lg-3
       .panel.media.pad-all
         .media-left
-          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@register.mode_class}"}
             %i.fa.fa-arrow-circle-o-right.fa-2x
-        .media-body.metering_point{ id: "metering_point_#{@metering_point.id}"}
-          = content_tag :div, id: "metering_point-ticker-#{@metering_point.id}", class: "metering_point-ticker", data: { fake: !@metering_point.smart? && !@metering_point.virtual, source: @metering_point.data_source } do
+        .media-body.register{ id: "register_#{@register.id}"}
+          = content_tag :div, id: "register-ticker-#{@register.id}", class: "register-ticker", data: { fake: !@register.smart? && !@register.virtual, source: @register.data_source } do
             %span.text-2x.text-thin
               .power-ticker
                 = t('loading') + '...'
           %p= t('current_power_in_watts')
 
-    .col-sm-6.col-md-3.col-lg-3.metering_point-stats
+    .col-sm-6.col-md-3.col-lg-3.register-stats
       .panel.media.pad-all
         .media-left
-          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@register.mode_class}"}
             %i.fa.fa-arrow-circle-o-up.fa-2x
         .media-body
           = content_tag :div, class: "number" do
@@ -107,10 +107,10 @@
           %p.stats-energy-max-time
 
 
-    .col-sm-6.col-md-3.col-lg-3.metering_point-stats
+    .col-sm-6.col-md-3.col-lg-3.register-stats
       .panel.media.pad-all
         .media-left
-          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@register.mode_class}"}
             %i.fa.fa-arrow-circle-o-down.fa-2x
         .media-body
           = content_tag :div, class: "number" do
@@ -119,10 +119,10 @@
                 = t('loading') + '...'
           %p.stats-energy-min-time
 
-    .col-sm-6.col-md-3.col-lg-3.metering_point-stats
+    .col-sm-6.col-md-3.col-lg-3.register-stats
       .panel.media.pad-all
         .media-left
-          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+          %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@register.mode_class}"}
             %i.fa.fa-tachometer.fa-2x
         .media-body
           = content_tag :div, class: "number" do
@@ -133,12 +133,12 @@
 
 
   .row
-    .metering_point_detail{id: "metering_point_#{@metering_point.id}"}
-      - if !@metering_point.smart?
-        .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("#{@metering_point.fake_label}_abbreviation"), "data-content" => t("dummy_description")}
-          .ribbon-green= t("#{@metering_point.fake_label}")
+    .register_detail{id: "register_#{@register.id}"}
+      - if !@register.smart?
+        .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("#{@register.fake_label}_abbreviation"), "data-content" => t("dummy_description")}
+          .ribbon-green= t("#{@register.fake_label}")
       .panel
-        .panel-body.panel-colorful{class: "panel-#{@metering_point.mode_class}"}
+        .panel-body.panel-colorful{class: "panel-#{@register.mode_class}"}
 
           .text-center
             /.btn.btn-default.btn-icon.btn-circle.icon-lg.btn-chart-zoomout.fa.fa-search-minus.fa-2x{disabled: "disabled"}
@@ -157,9 +157,9 @@
 
 
 
-          .chart{id: "chart-container-#{@metering_point.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
+          .chart{id: "chart-container-#{@register.id}", style: "width: 94%; height: 300px; margin-left: 3%;"}
             .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
-          - if user_signed_in? && current_user.can_read?(@metering_point)
+          - if user_signed_in? && current_user.can_read?(@register)
             %ul.chart-context-menu
               %li{"data-action" => "comment"}= t('create_new_comment_here')
               /%li{"data-action" => "zoom_in"}= t('zoom_in_here_if_possible')
@@ -167,41 +167,41 @@
             .chart-comment-form
               .chart-comment-form-close
                 %button.close{"aria-hidden" => "true", type: "button"} ×
-              .comments-panel{data: {commentable_type: 'MeteringPoint', commentable_id: @metering_point.id} }
+              .comments-panel{data: {commentable_type: 'Register', commentable_id: @register.id} }
                 .comment-form-container
 
-                  = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@metering_point, current_user.id, "", nil) }
+                  = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@register, current_user.id, "", nil) }
 
             / - else
             /   .get-reading
-            /     = @metering_point.get_reading
+            /     = @register.get_reading
 
 
   .row
     .col-md-6.col-lg-6
-      / - if user_signed_in? && current_user.can_update?(@metering_point) || @devices.size != 0
+      / - if user_signed_in? && current_user.can_update?(@register) || @devices.size != 0
       /   %h1.page-header.text-overflow
       /     %span
       /       = t('devices')
       /       %small
-      /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info_metering_point')}
+      /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('devices_info_register')}
       /   .row
       /     .devices
       /       = render @devices
       /   .row
-      /     - if user_signed_in? && current_user.can_update?(@metering_point)
+      /     - if user_signed_in? && current_user.can_update?(@register)
       /       .row
       /         .col-lg-12.text-center
-      /           = @metering_point.edit_devices
+      /           = @register.edit_devices
 
 
-      - if user_signed_in? && current_user.can_read?(@metering_point)
+      - if user_signed_in? && current_user.can_read?(@register)
         /%hr
         %h1.page-header.text-overflow
           %span
             = t('members')
             %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('members_info_metering_point')}
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('members_info_register')}
         .row
           - @members.each do |member|
             = render member.profile
@@ -213,13 +213,13 @@
           %span
             = t('group')
             %small
-              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('group_info_metering_point')}
+              %i.small-info-circle.fa.fa-info-circle{'data-content' => t('group_info_register')}
         .row
           .groups
             .col-xs-12.col-sm-6.col-md-6.col-lg-6= render @group.decorate
 
 
-      - if user_signed_in? && ((@metering_point.address && current_user.can_read?(@metering_point.address)) || @metering_point.address.nil?)
+      - if user_signed_in? && ((@register.address && current_user.can_read?(@register.address)) || @register.address.nil?)
         %hr
         %h1.page-header.text-overflow
           %span
@@ -228,16 +228,16 @@
               %i.small-info-circle.fa.fa-info-circle{'data-content' => t('address_info')}
         .row
           .addresses
-            = render @metering_point.address if @metering_point.address
+            = render @register.address if @register.address
         .row
-          - if @metering_point.address.nil? && current_user.can_update?(@metering_point)
+          - if @register.address.nil? && current_user.can_update?(@register)
             .row
               .col-lg-12.text-center
-                = @metering_point.new_address
+                = @register.new_address
 
-      - if user_signed_in? && current_user.can_update?(@metering_point)
+      - if user_signed_in? && current_user.can_update?(@register)
         %hr
-        - if !@metering_point.virtual
+        - if !@register.virtual
           %h1.page-header.text-overflow
             %span
               = t('meters')
@@ -245,13 +245,13 @@
                 %i.small-info-circle.fa.fa-info-circle{'data-content' => t('meters_info')}
           .row
             .meters
-              - if @metering_point.meter
-                = render @metering_point.meter, locals: { metering_point: @metering_point }
+              - if @register.meter
+                = render @register.meter, locals: { register: @register }
               - else
                 .new_meter.show_meter_tour
                   .row
                     .col-lg-12.text-center
-                      = @metering_point.new_meter
+                      = @register.new_meter
         - else
           %h1.page-header.text-overflow
             %span
@@ -259,14 +259,14 @@
               %small
                 %i.small-info-circle.fa.fa-info-circle{'data-content' => t('formula_parts_info')}
           .row
-            .formula_parts.metering_points
-              = render @metering_point.formula_parts if @metering_point.formula_parts.any?
+            .formula_parts.registers
+              = render @register.formula_parts if @register.formula_parts.any?
 
 
 
     .col-md-6.col-lg-6
 
-      - if @metering_point.readable_by?(current_user) && user_signed_in?
+      - if @register.readable_by?(current_user) && user_signed_in?
         /.col-sm-6.col-md-6.col-lg-6
         %h1.page-header.text-overflow
           %span
@@ -283,11 +283,11 @@
           / Tabs Content
           .tab-content
             #posts.tab-pane.fade.active.in
-              .panel.comments-panel{data: {commentable_type: 'MeteringPoint', commentable_id: @metering_point.id} }
+              .panel.comments-panel{data: {commentable_type: 'Register', commentable_id: @register.id} }
                 #demo-chat-body.collapse.in
                   .nano{:style => "height:610px"}
                     .comment-form-container
-                      = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@metering_point, current_user.id, "", nil) }
+                      = render :partial => 'comments/form', :locals => { :comment => Comment.build_from(@register, current_user.id, "", nil) }
                     .nano-content.pad-all.comments-content
                       %ul.list-unstyled.media-block.comments-all
                         - @activities_and_comments.each do |object|
@@ -297,15 +297,15 @@
                             = render_activity object, locals: {decorator: object.decorate} , layout: "layouts/activity_wrapper"
             #images.tab-pane.fade
               - @all_comments.map(&:image).each do |image|
-                = link_to(image_tag(image.sm), image_path(image), class: 'fancy-gallery', rel: "gallery_#{@metering_point.id}") if image.present?
+                = link_to(image_tag(image.sm), image_path(image), class: 'fancy-gallery', rel: "gallery_#{@register.id}") if image.present?
 
-        - if @managers.any? && @metering_point.readable_by?(current_user)
+        - if @managers.any? && @register.readable_by?(current_user)
           %hr
           %h1.page-header.text-overflow
             %span
-              = t('metering_point_managers')
+              = t('register_managers')
               %small
-                %i.small-info-circle.fa.fa-info-circle{'data-content' => t('metering_point_manager_info')}
+                %i.small-info-circle.fa.fa-info-circle{'data-content' => t('register_manager_info')}
           .row
             - @managers.each do |user|
               = render user.profile if user.profile
@@ -315,7 +315,7 @@
 
 
 
-      / - if user_signed_in? && @metering_point.readable_by?(current_user)
+      / - if user_signed_in? && @register.readable_by?(current_user)
       /   %h1.page-header.text-overflow
       /     %span
       /       = t('data_connection')
@@ -323,10 +323,10 @@
       /         %i.small-info-circle.fa.fa-info-circle{'data-content' => t('data_connection_info')}
       /   .row
       /     .contracts
-      /       = render @metering_point.contracts
+      /       = render @register.contracts
 
       /     .row
       /       .col-lg-12.text-center
-      /         = @metering_point.new_contract
+      /         = @register.new_contract
 
 

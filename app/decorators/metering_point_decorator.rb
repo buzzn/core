@@ -1,4 +1,4 @@
-class MeteringPointDecorator < Draper::Decorator
+class RegisterDecorator < Draper::Decorator
   include Draper::LazyHelpers
 
   delegate_all
@@ -122,8 +122,8 @@ class MeteringPointDecorator < Draper::Decorator
 
   def link_to_edit
     link_to(
-      t('edit_metering_point'),
-      edit_metering_point_path(model),
+      t('edit_register'),
+      edit_register_path(model),
       {
         :remote       => true,
         :class        => 'start_modal btn btn-primary btn-labeled fa fa-cog',
@@ -137,7 +137,7 @@ class MeteringPointDecorator < Draper::Decorator
   def edit_devices
     link_to(
       content_tag(:i, t("add_or_remove_devices"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
-      edit_devices_metering_point_path(model),
+      edit_devices_register_path(model),
       {
         :remote         => true,
         :class          => 'btn start_modal',
@@ -150,7 +150,7 @@ class MeteringPointDecorator < Draper::Decorator
   def edit_users
     link_to(
       content_tag(:i, t("add_or_remove_users"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
-      edit_users_metering_point_path(model),
+      edit_users_register_path(model),
       {
         :remote         => true,
         :class          => 'btn start_modal',
@@ -162,7 +162,7 @@ class MeteringPointDecorator < Draper::Decorator
   def edit_readings
     link_to(
       content_tag(:i, t("edit_readings"), class: 'btn btn-default btn-rounded btn-labeled fa fa-link'),
-      edit_readings_metering_point_path(model),
+      edit_readings_register_path(model),
       {
         :remote         => true,
         :class          => 'btn start_modal',
@@ -175,7 +175,7 @@ class MeteringPointDecorator < Draper::Decorator
   def new_address
     link_to(
       content_tag(:i, t("create_address"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
-      new_address_path(addressable_id: model.id, addressable_type: 'MeteringPoint'),
+      new_address_path(addressable_id: model.id, addressable_type: 'Register'),
       {
         :remote         => true,
         :class          => 'btn start_modal',
@@ -189,7 +189,7 @@ class MeteringPointDecorator < Draper::Decorator
   def new_meter
     link_to(
       content_tag(:i, t("create_meter"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
-      wizard_wizard_meters_path(metering_point_id: model.id),
+      wizard_wizard_meters_path(register_id: model.id),
       {
         :remote         => true,
         :class          => 'btn start_modal',
@@ -203,7 +203,7 @@ class MeteringPointDecorator < Draper::Decorator
   def new_contract
     link_to(
       content_tag(:i, t("establish_data_connection"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
-      new_contract_path(metering_point_id: model.id),
+      new_contract_path(register_id: model.id),
       {
         :remote         => true,
         :class          => 'btn start_modal',
@@ -215,7 +215,7 @@ class MeteringPointDecorator < Draper::Decorator
   def add_to_dashboard
     link_to(
       content_tag(:i, t("add_to_dashboard"), class: 'btn btn-purple btn-labeled fa fa-link'),
-      add_metering_point_dashboard_path(metering_point_id: model.id, dashboard_id: current_user.dashboard.id),
+      add_register_dashboard_path(register_id: model.id, dashboard_id: current_user.dashboard.id),
       {
         :remote         => true,
       })
@@ -224,7 +224,7 @@ class MeteringPointDecorator < Draper::Decorator
   def remove_from_dashboard
     link_to(
       content_tag(:i, t("remove_from_dashboard"), class: 'btn btn-default btn-rounded btn-labeled fa fa-remove'),
-      remove_metering_point_dashboard_path(metering_point_id: model.id, dashboard_id: current_user.dashboard.id),
+      remove_register_dashboard_path(register_id: model.id, dashboard_id: current_user.dashboard.id),
       {
         :remote         => true,
       })
@@ -233,7 +233,7 @@ class MeteringPointDecorator < Draper::Decorator
   def display_in_series
     link_to(
       content_tag(:i, t('start_display'), class: 'btn btn-success btn-labeled fa fa-bar-chart'),
-      display_metering_point_in_series_dashboard_path(metering_point_id: model.id, dashboard_id: current_user.dashboard.id),
+      display_register_in_series_dashboard_path(register_id: model.id, dashboard_id: current_user.dashboard.id),
       {
         :remote         => true,
       })
@@ -242,7 +242,7 @@ class MeteringPointDecorator < Draper::Decorator
   def remove_from_series
     link_to(
       content_tag(:i, t('stop_display'), class: 'btn btn-danger btn-labeled fa fa-bar-chart'),
-      remove_metering_point_from_series_dashboard_path(metering_point_id: model.id, dashboard_id: current_user.dashboard.id),
+      remove_register_from_series_dashboard_path(register_id: model.id, dashboard_id: current_user.dashboard.id),
       {
         :remote         => true,
       })
@@ -251,7 +251,7 @@ class MeteringPointDecorator < Draper::Decorator
   def submit_reading
     link_to(
       content_tag(:i, t("submit_reading"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
-      new_reading_path(metering_point_id: model.id),
+      new_reading_path(register_id: model.id),
       {
         :remote         => true,
         :class          => 'btn start_modal',
@@ -263,7 +263,7 @@ class MeteringPointDecorator < Draper::Decorator
   def get_reading
     link_to(
       content_tag(:i, t("get_reading"), class: 'btn btn-default btn-rounded btn-labeled fa fa-database'),
-      get_reading_metering_point_path(metering_point_id: model.id),
+      get_reading_register_path(register_id: model.id),
       {
         :remote         => true,
         :class          => 'btn start_modal',
@@ -274,8 +274,8 @@ class MeteringPointDecorator < Draper::Decorator
 
   def new_invitations
     link_to(
-      t("invite_friends_to_join_this_metering_point"),
-      send_invitations_metering_point_path,
+      t("invite_friends_to_join_this_register"),
+      send_invitations_register_path,
       {
         :remote         => true,
         :class          => 'btn start_modal btn-success btn-labeled fa fa-user-plus',

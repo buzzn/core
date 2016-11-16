@@ -47,7 +47,7 @@ class Profile < ActiveRecord::Base
       where(readable: 'world')
     end
   end
-  # replaces the email with 'hidden@buzzn.net' for all metering_points which are
+  # replaces the email with 'hidden@buzzn.net' for all registers which are
   # not readable_by without delegating the check to the underlying group
   scope :anonymized, -> (user) do
     if user.nil?
@@ -120,11 +120,11 @@ class Profile < ActiveRecord::Base
     slug.blank? || user_name_changed?
   end
 
-  # def metering_points
-  #   metering_points = []
-  #   metering_points << self.user.metering_points # as member
-  #   metering_points << MeteringPoint.editable_by_user(self.user) # as manager
-  #   metering_points.compact.flatten.uniq
+  # def registers
+  #   registers = []
+  #   registers << self.user.registers # as member
+  #   registers << Register.editable_by_user(self.user) # as manager
+  #   registers.compact.flatten.uniq
   # end
 
   def self.genders

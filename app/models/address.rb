@@ -30,8 +30,8 @@ class Address < ActiveRecord::Base
       where(orga_address.project(1).exists)
     else
       address = Address.arel_table
-      # assume metering_point.id and contracting_party.id are unique overall
-      admin_or_manager_of_metering_point = User.roles_query(user, manager: address[:addressable_id], admin: nil)
+      # assume register.id and contracting_party.id are unique overall
+      admin_or_manager_of_register = User.roles_query(user, manager: address[:addressable_id], admin: nil)
 
       contracting_party = ContractingParty.arel_table
       contracting_party_owner = contracting_party.where(contracting_party[:id].eq(address[:addressable_id]).and(contracting_party[:user_id].eq(user.id)))
@@ -39,19 +39,19 @@ class Address < ActiveRecord::Base
       users_roles    = Role.users_roles_arel_table
       role           = Role.arel_table
       friendship     = Friendship.arel_table
-      metering_point = MeteringPoint.arel_table
+      register = Register.arel_table
 
-      # assume address[:addressable_id] is the metering_point
-      mp_managers = users_roles
+      # assume address[:addressable_id] is the register
+      register_managers = users_roles
                       .join(role)
                       .on(role[:id].eq(users_roles[:role_id]).and(role[:resource_id].eq(address[:addressable_id])).and(role[:name].eq('manager')))
                       .where(users_roles[:user_id].eq(friendship[:user_id]))
       manager_friends =
         friendship.where(friendship[:friend_id].eq(user.id)
                           .and(mp_managers.project(1).exists)
-                          .and(metering_point
-                                .where(metering_point[:id].eq(address[:addressable_id])
-                                        .and(metering_point[:readable].eq(:friends))).project(1).exists))
+                          .and(register
+                                .where(register[:id].eq(address[:addressable_id])
+                                        .and(register[:readable].eq(:friends))).project(1).exists))
 
       organization = Organization.arel_table
       orga_managers = users_roles
@@ -63,7 +63,7 @@ class Address < ActiveRecord::Base
                             .and(orga_managers.project(1).exists))
 
 
-      sqls = [admin_or_manager_of_metering_point,
+      sqls = [admin_or_manager_of_register,
               contracting_party_owner,
               orga_address,
               orga_contracting_party,
@@ -75,8 +75,8 @@ class Address < ActiveRecord::Base
     end
   end
 
-  def metering_point
-    MeteringPoint.find(addressable_id)
+  def register
+    Register.find(addressable_id)
   end
 
   def full_name

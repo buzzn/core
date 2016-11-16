@@ -203,19 +203,19 @@ module Buzzn
       score.interval_beginning >= @containing.beginning_of_month && score.interval_end <= @containing.end_of_month
     end
 
-    def retrieve_date(metering_points)
-      metering_points_hash = Aggregate.sort_metering_points(metering_points)
-      aggregator = Aggregate.new(metering_points_hash)
+    def retrieve_date(registers)
+      registers_hash = Aggregate.sort_registers(registers)
+      aggregator = Aggregate.new(registers_hash)
       aggregator.past(timestamp: @containing,
                       resolution: 'day_to_minutes')
     end
 
     def data_in
-      @data_in ||= retrieve_date(@group.in_metering_points)
+      @data_in ||= retrieve_date(@group.in_registers)
     end
 
     def data_out
-      @data_out ||= retrieve_date(@group.out_metering_points)
+      @data_out ||= retrieve_date(@group.out_registers)
     end
 
     def data_size

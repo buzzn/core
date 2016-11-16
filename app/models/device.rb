@@ -9,7 +9,7 @@ class Device < ActiveRecord::Base
   #tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
   #tracked recipient: Proc.new{ |controller, model| controller && model }
 
-  belongs_to :metering_point
+  belongs_to :register
 
   mount_uploader :image, PictureUploader
 
@@ -29,13 +29,13 @@ class Device < ActiveRecord::Base
   }
 
   def self.outer_join
-    'LEFT OUTER JOIN metering_points ON metering_points.id = devices.metering_point_id'
+    'LEFT OUTER JOIN registers ON registers.id = devices.register_id'
   end
 
   def self.outer_join_where
-    "metering_points.id = devices.metering_point_id AND " +
+    "registers.id = devices.register_id AND " +
       "devices.mode = 'out' AND " +
-      "metering_points.group_id IS NOT NULL"
+      "registers.group_id IS NOT NULL"
   end
   
   scope :readable_by, -> (user) do
