@@ -28,14 +28,34 @@ class ContractingParty < ActiveRecord::Base
 
   validates :legal_entity, :inclusion => {:in => legal_entities.collect(&:to_s)}
 
-  validate :validates_organization
+  validate :validate_invariants
 
-  def validates_organization
-    if legal_entity == 'company' || organization
-      unless legal_entity == 'company' && organization
-        errors.add(:legal_entity, "an #{self.class} for a company needs an Organization")
-      end
+  def validate_invariants
+    case legal_entity 
+    when 'company'
+      validate_organization
+    when 'natural_person'
+      validate_natural_person
+    else
+      errors.add(:legal_entity, "unknown legal entity '#{legal_entity}'")
     end
+  end
+
+  def validate_natural_person
+    if bank_account.nil?
+      errors.add(:bank_account, 'Missing bank-account')
+    end
+    # errors.add(:sales_tax_number, 'a natural person has no sales tax number') if sales_tax_number
+    # errors.add(:sales_tax_number, 'a natural person has no tax rate') if tax_rate
+    # errors.add(:sales_tax_number, 'a natural person has no tax number') if tax_number
+    errors.add(:organization, "a natural person has no Organization") if organization
+  end
+
+  def validate_organization
+    #errors.add(:sales_tax_number, 'a company needs a sales tax number') if sales_tax_number
+    #errors.add(:sales_tax_number, 'a company needs a tax rate') if tax_rate
+    #errors.add(:sales_tax_number, 'a company needs a tax number') if tax_number
+    errors.add(:organization, "a company needs an Organization") unless organization
   end
 
   def contracts

@@ -31,8 +31,14 @@ describe "Bank Model" do
     expect(bank.zip).to eq "80335"
     expect(bank.place).to eq "München"
 
+    second = Bank.find_by_bic(' FDDODEMM')
+    expect(second).to eq bank
+
     # via iban
     second = Bank.find_by_iban('DE2770022200123456789')
+    expect(second).to eq bank
+    
+    second = Bank.find_by_iban('DE27 7002 2200123456789 ')
     expect(second).to eq bank
     
     # mutliple bic entries

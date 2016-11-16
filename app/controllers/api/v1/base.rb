@@ -32,6 +32,7 @@ module API
       mount API::V1::BankAccounts
       mount API::V1::Prices
       mount API::V1::Banks
+      mount API::V1::Forms
 
       add_swagger_documentation(
         api_version: "v1",

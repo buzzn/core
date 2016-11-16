@@ -1,5 +1,6 @@
 require 'doorkeeper/grape/helpers'
 require 'buzzn/guarded_crud'
+require 'buzzn/contract_factory'
 
 module API
   module V1
@@ -124,6 +125,15 @@ module API
         rescue_from ActiveRecord::RecordInvalid do |e|
           errors = ErrorResponse.new(422, { Grape::Http::Headers::CONTENT_TYPE => content_type })
           e.record.errors.messages.each do |attr, value|
+            errors.add(attr, *value)
+          end
+
+          errors.finish
+        end
+
+        rescue_from Buzzn::ValidationError do |e|
+          errors = ErrorResponse.new(422, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          e.errors.each do |attr, value|
             errors.add(attr, *value)
           end
 

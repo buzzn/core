@@ -1,3 +1,4 @@
+# coding: utf-8
 
 
 Fabricator :metering_point do
@@ -64,6 +65,7 @@ end
 Fabricator :mp_z1a, from: :metering_point do
   name      'Netzanschluss Bezug'
   contracts { [Fabricate(:mpoc_buzzn_metering)] }
+  address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
 end
 
 
@@ -71,6 +73,7 @@ Fabricator :mp_z1b, from: :metering_point do
   name        'Netzanschluss Einspeisung'
   mode        'out'
   contracts   { [Fabricate(:mpoc_buzzn_metering)] }
+  address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
 end
 
 
@@ -79,6 +82,7 @@ Fabricator :mp_z2, from: :metering_point do
   readable    'world'
   mode        'out'
   contracts { [Fabricate(:mpoc_buzzn_metering)] }
+  address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
 end
 
 
@@ -87,6 +91,7 @@ Fabricator :mp_z3, from: :metering_point do
   name  'Ladestation'
   readable    'world'
   contracts { [Fabricate(:mpoc_buzzn_metering)] }
+  address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
 end
 
 
@@ -95,6 +100,7 @@ Fabricator :mp_z4, from: :metering_point do
   readable    'world'
   mode        'out'
   contracts { [Fabricate(:mpoc_buzzn_metering)] }
+  address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
 end
 
 
@@ -103,6 +109,7 @@ Fabricator :mp_z5, from: :metering_point do
   name  'Abgrenzung'
   mode        'out'
   contracts { [Fabricate(:mpoc_buzzn_metering)] }
+  address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
 end
 
 

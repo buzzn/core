@@ -4,6 +4,7 @@ class Contract < ActiveRecord::Base
   include Authority::Abilities
   include Filterable
   include Buzzn::GuardedCrud
+  include ReplacableRoles
 
   has_paper_trail
 
@@ -12,7 +13,7 @@ class Contract < ActiveRecord::Base
   monetize :price_cents
 
   belongs_to :contract_owner, class_name: 'ContractingParty', foreign_key: "contract_owner_id"
-  belongs_to :contract_benficiary, class_name: 'ContractingParty', foreign_key: "contract_benficiary_id"
+  belongs_to :contract_beneficiary, class_name: 'ContractingParty', foreign_key: "contract_beneficiary_id"
   belongs_to :organization
   belongs_to :metering_point
   belongs_to :group
@@ -23,12 +24,15 @@ class Contract < ActiveRecord::Base
   # validates :password, presence: true, if: :login_required?
   #validates :price_cents, presence: true, :numericality => { :only_integer => false, :greater_than_or_equal_to => 0 }
   validate :resource_cannot_have_same_contracts
+  validate :validate_invariants
 
   scope :running,                   -> { where(running: :true) }
   scope :metering_point_operators,  -> { where(mode: 'metering_point_operator_contract') }
   scope :power_givers,              -> { where(mode: 'power_giver_contract') }
   scope :power_takers,              -> { where(mode: 'power_taker_contract') }
   scope :servicings,                -> { where(mode: 'servicing_contract') }
+
+  before_save :calculate_price
 
   def self.readable_by_query(user)
     contract           = Contract.arel_table
@@ -51,8 +55,29 @@ class Contract < ActiveRecord::Base
   has_one :bank_account, as: :bank_accountable
   accepts_nested_attributes_for :bank_account, :reject_if => :all_blank
 
+  def validate_invariants
+    case mode
+    when 'power_taker_contract'
+      validate_power_toker_invariant
+    else
+      
+    end
+  end
 
+  def validate_metering_point_address
+    unless metering_point
+      errors.add(:metering_point, 'missing MeteringPoint')
+    end
+    unless metering_point.address
+      errors.add(:metering_point, 'missing MeteringPoint Address')
+    end
+  end
 
+  def validate_power_toker_invariant
+    validate_metering_point_address
+    #errors.add(:tariff, 'missing tariff') unless tariff
+    errors.add(:yearly_kilowatt_hour, 'missing yearly kilo watt per hour') unless forecast_watt_hour_pa
+  end
 
   def name
     "#{organization.name} #{tariff}"
@@ -88,6 +113,30 @@ class Contract < ActiveRecord::Base
       false
     end
   end
+
+  def yearly_kilowatt_hour=(val)
+    self.forecast_watt_hour_pa = val * 1000
+  end
+
+  def calculate_price
+    if metering_point && forecast_watt_hour_pa && metering_point.address &&
+       metering_point.meter
+      # TODO some validation or errors or something
+      # TODO about when we have two meters or is this a power-taker-contract
+      #      only feature ?
+      prices = Buzzn::Zip2Price.new(forecast_watt_hour_pa / 1000.0,
+                                    metering_point.address.zip,
+                                    metering_point.meter.metering_type)
+      if price = prices.to_price
+        self.price_cents_per_kwh   = price.energyprice_cents_per_kilowatt_hour
+        self.price_cents_per_month = price.baseprice_cents_per_month
+        self.price_cents           = price.total_cents_per_month
+      else
+        # TODO some validation or errors or something
+      end
+    end
+  end
+  private :calculate_price
 
   def resource_cannot_have_same_contracts
     if metering_point && metering_point.contracts.any?

@@ -21,7 +21,8 @@ end
 puts '-- seed development database --'
 
 puts '  organizations'
-Fabricate(:electricity_supplier, name: 'buzzn Energy')
+Fabricate(:buzzn_energy)
+Fabricate(:dummy_energy)
 Fabricate(:electricity_supplier, name: 'E.ON')
 Fabricate(:electricity_supplier, name: 'RWE')
 Fabricate(:electricity_supplier, name: 'EnBW')
@@ -38,8 +39,8 @@ Fabricate(:distribution_system_operator, name: 'E.ON Bayern AG')
 Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
 
 # Messdienstleistung (Ablesung und Messung)
-Fabricate(:metering_point_operator, name: 'buzzn Metering')
-Fabricate(:metering_point_operator, name: 'buzzn Reader')
+Fabricate(:buzzn_metering)
+Fabricate(:buzzn_reader)
 Fabricate(:metering_point_operator, name: 'Discovergy')
 Fabricate(:metering_point_operator, name: 'MySmartGrid')
 

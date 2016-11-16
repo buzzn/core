@@ -19,8 +19,7 @@ describe 'Contracting parties API' do
 
     get_with_token '/api/v1/contracting-parties', {}, access_token.token
     expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(3) #TODO: find out why there are 3 contracting parties and not 1
-    expect(json['data'].first['attributes']['legal-entity']).to eq(contracting_party['legal_entity'])
+    expect(json['data'].size).to eq(ContractingParty.count)
   end
 
 
@@ -52,9 +51,11 @@ describe 'Contracting parties API' do
 
   it 'creates contracting party using full token' do
     full_access_token = Fabricate(:full_access_token_as_admin)
+    organization      = Fabricate(:organization, mode: :other)
     access_token      = Fabricate(:simple_access_token)
     params = {
-      legal_entity: 'natural_person',
+      legal_entity:    'company',
+      organization_id: organization.id
     }
 
     post_without_token '/api/v1/contracting-parties', params.to_json
