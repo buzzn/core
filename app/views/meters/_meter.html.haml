@@ -1,5 +1,5 @@
 .col-xs-12.col-sm-12.col-md-12.col-lg-6.meter{id: "meter_#{meter.id}"}
-  = link_to edit_wizard_wizard_meters_path(meter_id: meter.id, metering_point_id: @metering_point.id),{:remote => true, :class => 'start_modal','data-toggle' => "modal",'data-target' => "#myModal", 'data-backdrop' => 'static'} do
+  = link_to edit_wizard_wizard_meters_path(meter_id: meter.id, register_id: @register.id),{:remote => true, :class => 'start_modal','data-toggle' => "modal",'data-target' => "#myModal", 'data-backdrop' => 'static'} do
     .panel.panel-colorful
       .panel-body.text-center
         %p.text-uppercase.mar-btm.text-sm

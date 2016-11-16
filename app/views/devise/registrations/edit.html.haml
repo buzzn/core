@@ -20,12 +20,12 @@
     - deletable = true
     - hints = []
     - resource.editable_groups.each do |group|
-      - if (group.managers.count == 1 && group.in_metering_points.collect{|metering_point| resource.can_update?(metering_point)}.include?(false))
+      - if (group.managers.count == 1 && group.in_registers.collect{|register| resource.can_update?(register)}.include?(false))
         - hints << link_to(group.name, group_path(group))
         - deletable = false
-    - resource.editable_metering_points.each do |metering_point|
-      - if (metering_point.managers.count == 1 && metering_point.users.count > 1)
-        - hints << link_to(metering_point.name, metering_point_path(metering_point))
+    - resource.editable_registers.each do |register|
+      - if (register.managers.count == 1 && register.users.count > 1)
+        - hints << link_to(register.name, register_path(register))
         - deletable = false
     - if deletable
       %p= link_to t('delete_account'), registration_path(resource_name), data: { confirm: t('delete_account_confirmation_info') }, method: :delete, class: 'btn btn-danger btn-labeled fa fa-trash'
@@ -34,9 +34,9 @@
       %legend= t'delete_account'
       %p= t('you_can_not_delete_your_account_right_now_due_to_data_others_rely_on')
       %p= t('before_you_delete_your_account_please_make_sure')
-      %p= t('a_add_managers_to_your_metering_points_or_groups')
-      %p= t('b_remove_all_members_of_your_metering_points_or_groups')
-      %p= t('these_metering_points_and_groups_are_not_deletable_at_the_moment')
+      %p= t('a_add_managers_to_your_registers_or_groups')
+      %p= t('b_remove_all_members_of_your_registers_or_groups')
+      %p= t('these_registers_and_groups_are_not_deletable_at_the_moment')
       - hints.each do |hint|
         %p= hint
 
