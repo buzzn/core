@@ -60,12 +60,12 @@ class Group < ActiveRecord::Base
     users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
     users_roles_join = users_roles.create_join(roles, users_roles_on)
 
-    roles_mp_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(Register.to_s).and(roles[:name].eq(:member))))
-    roles_mp_join = roles.create_join(mp, roles_mp_on)
+    roles_register_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(Register.to_s).and(roles[:name].eq(:member))))
+    roles_register_join = roles.create_join(mp, roles_register_on)
 
 
     User.distinct
-      .joins(users_join, users_roles_join, roles_mp_join)
+      .joins(users_join, users_roles_join, roles_register_join)
       .where('registers.group_id': group)
   end
 
@@ -103,7 +103,7 @@ class Group < ActiveRecord::Base
       register_on   = register.create_on(group[:id].eq(register.alias[:group_id]))
       register_join = register.create_join(register.alias, register_on, Arel::Nodes::OuterJoin)
 
-      joins(mp_join).where(sqls.map(&:to_sql).join(' OR '))
+      joins(register_join).where(sqls.map(&:to_sql).join(' OR '))
     end
   end
 
@@ -132,7 +132,7 @@ class Group < ActiveRecord::Base
     # need to make join manually to get the reference name right
     register_on   = group.create_on(group[:id].eq(register[:group_id]))
     register_join = group.create_join(register, register_on)
-    joins(mp_join).where(users.project(1).exists)
+    joins(register_join).where(users.project(1).exists)
   end
 
   def should_generate_new_friendly_id?
@@ -149,7 +149,7 @@ class Group < ActiveRecord::Base
     register_on = mp[:group_id].eq(self.id)
     register_on = register_on.and(mp[:mode].eq(mode)) if mode
     users_roles.join(mp)
-      .on(mp_on)
+      .on(register_on)
       .join(roles)
       .on(roles[:id].eq(users_roles[:role_id])
            .and(roles[:name].in(role_names).and(roles[:resource_id].eq(mp[:id]))))
