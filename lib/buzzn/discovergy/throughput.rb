@@ -1,22 +1,26 @@
 module Buzzn::Discovergy
   class Throughput
 
-    # TODO use redis instead and make thread-safe
+    NAME = 'discovergy.throughput'
 
     def initialize
-      @counter = 0
+      @redis = Redis.current
     end
 
     def increment
-      @counter += 1
+      @redis.incr(NAME)
     end
 
     def decrement
-      @counter -= 1
+      @redis.decr(NAME)
     end
 
     def current
-      @counter
+      @redis.get(NAME)
+    end
+
+    def clear
+      @redisset(NAME, 0)
     end
   end
 end
