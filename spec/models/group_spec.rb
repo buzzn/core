@@ -71,7 +71,7 @@ describe "Group Model" do
     register_in         = Fabricate(:register, mode: 'in')
     register_out        = Fabricate(:register, mode: 'out')
 
-    group.registers += [mp_in, register_out]
+    group.registers += [register_in, register_out]
 
     expect(group.energy_producers).to match_array []
     expect(group.energy_consumers).to match_array []

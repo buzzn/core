@@ -631,7 +631,7 @@ describe "Groups API" do
     consumer.add_role(:member, register_in)
     producer.add_role(:member, register_out)
     consumer.add_role(:manager, register_out)
-    group.registers += [mp_in, register_out]
+    group.registers += [register_in, register_out]
 
     get_with_token "/api/v1/groups/#{group.id}/energy-producers", access_token.token
     expect(response).to have_http_status(200)

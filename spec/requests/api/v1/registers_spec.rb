@@ -772,7 +772,7 @@ describe "registers API" do
 
   it 'gets address of the register only with token' do
     access_token    = Fabricate(:simple_access_token)
-    register  = Fabricate(:mp_urbanstr88, readable: 'world')
+    register  = Fabricate(:register_urbanstr88, readable: 'world')
     address         = register.address
     user            = User.find(access_token.resource_owner_id)
 

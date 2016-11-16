@@ -989,7 +989,7 @@ describe '/api/v1/aggregates' do
         register_z2 = easymeter_60051599.registers.outputs.first
         register_z4 = easymeter_60051560.registers.outputs.first
         request_params = {
-          register_ids: "#{mp_z4.id},#{mp_z2.id}",
+          register_ids: "#{register_z4.id},#{register_z2.id}",
           resolution: 'day_to_minutes',
           timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601
         }
@@ -1017,7 +1017,7 @@ describe '/api/v1/aggregates' do
     it 'Virtual past month_to_days as admin' do |spec|
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         access_token = Fabricate(:full_access_token_as_admin)
-        virtual_register = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtual register
+        virtual_register = Fabricate(:register_forstenried_erzeugung) # discovergy Virtual register
         single_energy_values = []
         virtual_register.formula_parts.each do |formula_part|
           register = Register.find(formula_part.operand_id)
@@ -1062,7 +1062,7 @@ describe '/api/v1/aggregates' do
     it 'Does aggregate Virtual registers present as manager' do |spec|
       VCR.use_cassette("#{api_endpoint}/#{spec.metadata[:description].downcase}") do
         access_token = Fabricate(:full_access_token_as_admin)
-        virtual_register = Fabricate(:mp_forstenried_erzeugung) # discovergy Virtual register
+        virtual_register = Fabricate(:register_forstenried_erzeugung) # discovergy Virtual register
         request_params = {
           register_ids: virtual_register.id,
           timestamp: Time.find_zone('Berlin').local(2016,4,6).iso8601

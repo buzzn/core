@@ -101,7 +101,7 @@ describe Buzzn::ScoreCalculator do
       register_in         = Fabricate(:register, mode: 'in')
       register_out        = Fabricate(:register, mode: 'out')
 
-      group.registers += [mp_in, register_out]
+      group.registers += [register_in, register_out]
       consumer.add_role(:member, register_out)
 
       group
@@ -164,7 +164,7 @@ describe Buzzn::ScoreCalculator do
       easymeter_60051560 = Fabricate(:easymeter_60051560)
       register_z4 = easymeter_60051560.registers.first
       group = Fabricate(:group_home_of_the_brave,
-                        registers: [mp_z2, register_z3, register_z4])
+                        registers: [register_z2, register_z3, register_z4])
       consumer = Fabricate(:user)
       consumer.add_role(:member, register_z2)
       group

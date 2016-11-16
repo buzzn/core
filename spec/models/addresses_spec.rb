@@ -8,7 +8,7 @@ describe "Address Model" do
     admin
   end
 
-  let(:mp_manager) do
+  let(:register_manager) do
     manager = Fabricate(:user)
     manager.add_role(:manager, urban)
     manager.friends << Fabricate(:user)
@@ -21,8 +21,8 @@ describe "Address Model" do
     manager
   end
 
-  let(:karin) { Fabricate(:mp_pv_karin) }
-  let(:urban) { Fabricate(:mp_urbanstr88) }
+  let(:karin) { Fabricate(:register_pv_karin) }
+  let(:urban) { Fabricate(:register_urbanstr88) }
 
   let(:organization) do
     Fabricate(:transmission_system_operator_with_address)
@@ -45,16 +45,16 @@ describe "Address Model" do
   end
 
   it 'restricts readable_by for managers of registers', :retry => 3 do
-    expect(Address.readable_by(mp_manager)).to eq [urban.address, organization.address]
+    expect(Address.readable_by(register_manager)).to eq [urban.address, organization.address]
     expect(Address.readable_by(admin.friends.first)).to eq [organization.address]
   end
 
   it 'restricts readable_by for friends of a manager of a registers', :retry => 3 do
-    expect(Address.readable_by(mp_manager.friends.first)).to match_array [urban.address, organization.address]
+    expect(Address.readable_by(register_manager.friends.first)).to match_array [urban.address, organization.address]
 
     [:members, :community].each do |readable|
       urban.update! readable: readable
-      expect(Address.readable_by(mp_manager.friends.first)).to eq [organization.address]
+      expect(Address.readable_by(register_manager.friends.first)).to eq [organization.address]
       expect(Address.readable_by(admin.friends.first)).to eq [organization.address]
     end
   end

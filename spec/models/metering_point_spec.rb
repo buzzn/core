@@ -23,10 +23,10 @@ describe "Register Model" do
   end
 
   let(:group) { Fabricate(:group) }
-  let(:karin) { Fabricate(:mp_pv_karin) }
-  let(:urban) { Fabricate(:mp_urbanstr88) }
+  let(:karin) { Fabricate(:register_pv_karin) }
+  let(:urban) { Fabricate(:register_urbanstr88) }
   let(:butenland) do
-    Fabricate(:mp_hof_butenland_wind,
+    Fabricate(:register_hof_butenland_wind,
               readable: :members, group: group)
   end
 

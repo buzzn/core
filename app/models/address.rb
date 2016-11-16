@@ -48,7 +48,7 @@ class Address < ActiveRecord::Base
                       .where(users_roles[:user_id].eq(friendship[:user_id]))
       manager_friends =
         friendship.where(friendship[:friend_id].eq(user.id)
-                          .and(mp_managers.project(1).exists)
+                          .and(register_managers.project(1).exists)
                           .and(register
                                 .where(register[:id].eq(address[:addressable_id])
                                         .and(register[:readable].eq(:friends))).project(1).exists))
