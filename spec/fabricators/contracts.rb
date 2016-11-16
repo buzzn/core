@@ -60,7 +60,7 @@ end
 
 
 Fabricator :mpoc_buzzn_metering, from: :register_operator_contract do
-  organization  { Organization.find('buzzn-metering') }
+  organization  { Organization.buzzn_metering }
   username      'team@localpool.de'
   password      'Zebulon_4711'
 end
@@ -116,15 +116,3 @@ Fabricator :mpoc_ferraris_0002_amperix, from: :register_operator_contract do
   username      '721bcb386c8a4dab2510d40a93a7bf66'
   password      '0b81f58c19135bc01420aa0120ae7693'
 end
-
-
-
-
-
-
-
-
-
-
-
-
