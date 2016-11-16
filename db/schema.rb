@@ -592,18 +592,6 @@ ActiveRecord::Schema.define(version: 20161020085343) do
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
-  create_table "tariffs", force: :cascade do |t|
-    t.string  "tariff"
-    t.string  "name"
-    t.date    "beginning"
-    t.date    "termination"
-    t.integer "energyprice_cents_per_kwh"
-    t.integer "baseprice_cents_per_month"
-    t.uuid    "contract_id"
-  end
-
-  add_index "tariffs", ["contract_id"], name: "index_tariffs_on_contract_id", using: :btree
-
   create_table "used_zip_sns", force: :cascade do |t|
     t.string   "zip"
     t.integer  "kwh"
@@ -700,4 +688,5 @@ ActiveRecord::Schema.define(version: 20161020085343) do
   end
 
   add_index "zip_vnbs", ["zip"], name: "index_zip_vnbs_on_zip", using: :btree
+
 end
