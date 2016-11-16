@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161116140032) do
+ActiveRecord::Schema.define(version: 20161116143900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -204,15 +204,15 @@ ActiveRecord::Schema.define(version: 20161116140032) do
   end
 
   create_table "dashboard_registers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.boolean  "displayed",         default: false
+    t.boolean  "displayed",    default: false
     t.uuid     "dashboard_id"
-    t.uuid     "metering_point_id"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.uuid     "register_id"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
   end
 
   add_index "dashboard_registers", ["dashboard_id"], name: "index_dashboard_registers_on_dashboard_id", using: :btree
-  add_index "dashboard_registers", ["metering_point_id"], name: "index_dashboard_registers_on_metering_point_id", using: :btree
+  add_index "dashboard_registers", ["register_id"], name: "index_dashboard_registers_on_register_id", using: :btree
 
   create_table "dashboards", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "name"
@@ -319,7 +319,7 @@ ActiveRecord::Schema.define(version: 20161116140032) do
   create_table "group_register_requests", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.uuid     "user_id"
     t.uuid     "group_id"
-    t.uuid     "metering_point_id"
+    t.uuid     "register_id"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -328,7 +328,7 @@ ActiveRecord::Schema.define(version: 20161116140032) do
 
   add_index "group_register_requests", ["group_id", "user_id"], name: "index_group_register_requests_on_group_id_and_user_id", using: :btree
   add_index "group_register_requests", ["group_id"], name: "index_group_register_requests_on_group_id", using: :btree
-  add_index "group_register_requests", ["metering_point_id"], name: "index_group_register_requests_on_register_id", using: :btree
+  add_index "group_register_requests", ["register_id"], name: "index_group_register_requests_on_register_id", using: :btree
   add_index "group_register_requests", ["user_id"], name: "index_group_register_requests_on_user_id", using: :btree
 
   create_table "groups", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
@@ -505,15 +505,15 @@ ActiveRecord::Schema.define(version: 20161116140032) do
 
   create_table "register_user_requests", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.uuid     "user_id"
-    t.uuid     "metering_point_id"
+    t.uuid     "register_id"
     t.string   "mode"
     t.string   "status"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
-  add_index "register_user_requests", ["metering_point_id"], name: "index_register_user_requests_on_register_id", using: :btree
   add_index "register_user_requests", ["mode"], name: "index_register_user_requests_on_mode", using: :btree
+  add_index "register_user_requests", ["register_id"], name: "index_register_user_requests_on_register_id", using: :btree
   add_index "register_user_requests", ["user_id"], name: "index_register_user_requests_on_user_id", using: :btree
 
   create_table "registers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
@@ -524,8 +524,8 @@ ActiveRecord::Schema.define(version: 20161116140032) do
     t.string   "voltage_level"
     t.date     "regular_reeding"
     t.string   "regular_interval"
-    t.boolean  "virtual",                     default: false
-    t.boolean  "is_dashboard_metering_point", default: false
+    t.boolean  "virtual",                 default: false
+    t.boolean  "is_dashboard_register",   default: false
     t.string   "readable"
     t.uuid     "meter_id"
     t.uuid     "contract_id"
@@ -533,12 +533,12 @@ ActiveRecord::Schema.define(version: 20161116140032) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "forecast_kwh_pa"
-    t.boolean  "observe",                     default: false
-    t.integer  "min_watt",                    default: 100
-    t.integer  "max_watt",                    default: 5000
+    t.boolean  "observe",                 default: false
+    t.integer  "min_watt",                default: 100
+    t.integer  "max_watt",                default: 5000
     t.datetime "last_observed_timestamp"
-    t.boolean  "observe_offline",             default: false
-    t.boolean  "external",                    default: false
+    t.boolean  "observe_offline",         default: false
+    t.boolean  "external",                default: false
   end
 
   add_index "registers", ["contract_id"], name: "index_registers_on_contract_id", using: :btree
