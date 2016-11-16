@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161116135219) do
+ActiveRecord::Schema.define(version: 20161116135725) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,14 +142,14 @@ ActiveRecord::Schema.define(version: 20161116135219) do
     t.float    "tax_rate"
     t.integer  "tax_number"
     t.uuid     "organization_id"
-    t.uuid     "metering_point_id"
+    t.uuid     "register_id"
     t.uuid     "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "contracting_parties", ["metering_point_id"], name: "index_contracting_parties_on_metering_point_id", using: :btree
   add_index "contracting_parties", ["organization_id"], name: "index_contracting_parties_on_organization_id", using: :btree
+  add_index "contracting_parties", ["register_id"], name: "index_contracting_parties_on_register_id", using: :btree
   add_index "contracting_parties", ["slug"], name: "index_contracting_parties_on_slug", unique: true, using: :btree
   add_index "contracting_parties", ["user_id"], name: "index_contracting_parties_on_user_id", using: :btree
 
@@ -173,7 +173,7 @@ ActiveRecord::Schema.define(version: 20161116135219) do
     t.string   "encrypted_password"
     t.boolean  "valid_credentials",                  default: false
     t.boolean  "running",                            default: true
-    t.uuid     "metering_point_id"
+    t.uuid     "register_id"
     t.uuid     "organization_id"
     t.uuid     "group_id"
     t.datetime "created_at",                                         null: false
@@ -193,9 +193,9 @@ ActiveRecord::Schema.define(version: 20161116135219) do
   end
 
   add_index "contracts", ["group_id"], name: "index_contracts_on_group_id", using: :btree
-  add_index "contracts", ["metering_point_id"], name: "index_contracts_on_metering_point_id", using: :btree
   add_index "contracts", ["mode"], name: "index_contracts_on_mode", using: :btree
   add_index "contracts", ["organization_id"], name: "index_contracts_on_organization_id", using: :btree
+  add_index "contracts", ["register_id"], name: "index_contracts_on_register_id", using: :btree
   add_index "contracts", ["slug"], name: "index_contracts_on_slug", unique: true, using: :btree
 
   create_table "conversations", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
@@ -270,14 +270,14 @@ ActiveRecord::Schema.define(version: 20161116135219) do
 
   create_table "formula_parts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "operator"
-    t.uuid     "metering_point_id"
+    t.uuid     "register_id"
     t.uuid     "operand_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
-  add_index "formula_parts", ["metering_point_id"], name: "index_formula_parts_on_metering_point_id", using: :btree
   add_index "formula_parts", ["operand_id"], name: "index_formula_parts_on_operand_id", using: :btree
+  add_index "formula_parts", ["register_id"], name: "index_formula_parts_on_register_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
