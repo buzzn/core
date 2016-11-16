@@ -32,7 +32,7 @@ module API
           optional :tax_rate, type: Float, desc: 'tax rate'
           optional :tax_number, type: Fixnum, desc: 'tax number'
           optional :organization_id, type: String, desc: 'Organization ID'
-          optional :metering_point_id, type: String, desc: 'MeteringPoint ID'
+          optional :register_id, type: String, desc: 'Register ID'
           optional :user_id, type: String, desc: 'User ID'
         end
         oauth2 :full
@@ -50,7 +50,7 @@ module API
           optional :tax_rate, type: Float, desc: 'tax rate'
           optional :tax_number, type: Fixnum, desc: 'tax number'
           optional :organization_id, type: String, desc: 'Organization ID'
-          optional :metering_point_id, type: String, desc: 'MeteringPoint ID'
+          optional :register_id, type: String, desc: 'Register ID'
           optional :user_id, type: String, desc: 'User ID'
         end
         oauth2 :full

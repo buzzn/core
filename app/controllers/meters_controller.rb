@@ -52,7 +52,7 @@ class MetersController < ApplicationController
   end
 
   def validate
-    @serial = params[:metering_point][:meter][:manufacturer_product_serialnumber] || params[:meter][:manufacturer_product_serialnumber]
+    @serial = params[:register][:meter][:manufacturer_product_serialnumber] || params[:meter][:manufacturer_product_serialnumber]
     render json: Meter.where(manufacturer_product_serialnumber: @serial).empty?
   end
 
@@ -67,7 +67,7 @@ private
       :manufacturer_product_name,
       :manufacturer_product_serialnumber,
       :virtual,
-      :metering_point_ids => []
+      :register_ids => []
     )
   end
 

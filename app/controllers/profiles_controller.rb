@@ -11,10 +11,10 @@ class ProfilesController < ApplicationController
   def show
     @profile              = Profile.find(params[:id]).decorate
     @friends              = @profile.user.friends.decorate
-    @metering_points      = MeteringPoint.where(id: @profile.user.accessible_metering_points.map(&:id)).paginate(:page => params[:metering_point_page], :per_page => 10)
+    @registers      = Register.where(id: @profile.user.accessible_registers.map(&:id)).paginate(:page => params[:register_page], :per_page => 10)
     @friendship_requests  = @profile.user.received_friendship_requests
-    @metering_point_invitations = @profile.user.received_metering_point_user_requests
-    @group_invitations    = @profile.user.received_group_metering_point_requests
+    @register_invitations = @profile.user.received_register_user_requests
+    @group_invitations    = @profile.user.received_group_register_requests
     @groups               = Group.where(id: @profile.user.accessible_groups.map(&:id)).paginate(:page => params[:group_page], :per_page => 3) # TODO also include group interested
     @devices              = Device.with_role(:manager, @profile.user).decorate
     @activities           = PublicActivity::Activity
@@ -72,15 +72,15 @@ class ProfilesController < ApplicationController
     @profile = Profile.find(params[:id])
     notify_when_comment_create = params[:profile][:notify_me_when_comment_create]
     notify_when_comment_liked = params[:profile][:notify_me_when_comment_liked]
-    notify_when_metering_point_exceeds = params[:profile][:notify_me_when_metering_point_exceeds]
-    notify_when_metering_point_undershoots = params[:profile][:notify_me_when_metering_point_undershoots]
-    notify_when_metering_point_offline = params[:profile][:notify_me_when_metering_point_offline]
+    notify_when_register_exceeds = params[:profile][:notify_me_when_register_exceeds]
+    notify_when_register_undershoots = params[:profile][:notify_me_when_register_undershoots]
+    notify_when_register_offline = params[:profile][:notify_me_when_register_offline]
 
     notification_unsubscriber_comment_create = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('comment.create').first
     notification_unsubscriber_comment_liked = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('comment.liked').first
-    notification_unsubscriber_metering_point_exceeds = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('metering_point.exceeds').first
-    notification_unsubscriber_metering_point_undershoots = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('metering_point.undershoots').first
-    notification_unsubscriber_metering_point_offline = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('metering_point.offline').first
+    notification_unsubscriber_register_exceeds = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('register.exceeds').first
+    notification_unsubscriber_register_undershoots = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('register.undershoots').first
+    notification_unsubscriber_register_offline = NotificationUnsubscriber.by_user(current_user).by_resource(nil).by_key('register.offline').first
 
     if notify_when_comment_create == "0"
       if !notification_unsubscriber_comment_create
@@ -96,26 +96,26 @@ class ProfilesController < ApplicationController
     else
       notification_unsubscriber_comment_liked.destroy if notification_unsubscriber_comment_liked
     end
-    if notify_when_metering_point_exceeds == "0"
-      if !notification_unsubscriber_metering_point_exceeds
-        NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'metering_point.exceeds', channel: 'email')
+    if notify_when_register_exceeds == "0"
+      if !notification_unsubscriber_register_exceeds
+        NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'register.exceeds', channel: 'email')
       end
     else
-      notification_unsubscriber_metering_point_exceeds.destroy if notification_unsubscriber_metering_point_exceeds
+      notification_unsubscriber_register_exceeds.destroy if notification_unsubscriber_register_exceeds
     end
-    if notify_when_metering_point_undershoots == "0"
-      if !notification_unsubscriber_metering_point_undershoots
-        NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'metering_point.undershoots', channel: 'email')
+    if notify_when_register_undershoots == "0"
+      if !notification_unsubscriber_register_undershoots
+        NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'register.undershoots', channel: 'email')
       end
     else
-     notification_unsubscriber_metering_point_undershoots .destroy if notification_unsubscriber_metering_point_undershoots
+     notification_unsubscriber_register_undershoots .destroy if notification_unsubscriber_register_undershoots
     end
-    if notify_when_metering_point_offline == "0"
-      if !notification_unsubscriber_metering_point_offline
-        NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'metering_point.offline', channel: 'email')
+    if notify_when_register_offline == "0"
+      if !notification_unsubscriber_register_offline
+        NotificationUnsubscriber.create(trackable: nil, user: current_user, notification_key: 'register.offline', channel: 'email')
       end
     else
-      notification_unsubscriber_metering_point_offline.destroy if notification_unsubscriber_metering_point_offline
+      notification_unsubscriber_register_offline.destroy if notification_unsubscriber_register_offline
     end
     flash[:notice] = t('settings_saved')
   end
