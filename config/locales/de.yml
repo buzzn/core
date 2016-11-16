@@ -100,7 +100,7 @@ de:
   doorkeeper:
     scopes:
       simple: 'Lese-Zugriff auf öffentliche Daten'
-      smartmeter: 'Schreib-Lese-Zugriff auf MeteringPoint, Meter and Reading'
+      smartmeter: 'Schreib-Lese-Zugriff auf Register, Meter and Reading'
       full: 'Voller Zugriff auf alle Daten'
   errors: &errors
     format: ! '%{attribute} %{message}'
@@ -226,7 +226,7 @@ de:
       <<: *errors
     models:
       location: Standort
-      metering_point: Zählpunkt
+      register: Zählwerk
       device: Gerät
       contracting_party: Vertragspartner
       comment: Kommentar

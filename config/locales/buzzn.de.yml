@@ -24,87 +24,87 @@ de:
   only_invited_members_can_use_this_app_now: "Nur eingeladene Mitglieder können die App nutzen."
   if_the_beta_test_is_over_you_can_register_without_invitation: Sobald der Beta Test vorüber ist kannst Du Dich auch ohne Einladung registrieren.
 
-  metering_point: Zählpunkt
-  add_me_to_this_metering_point: Füge mich dem Zählpunkt hinzu
-  dont_add_me_to_this_metering_point: Füge mich dem Zählpunkt NICHT hinzu
-  you_need_a_metering_point_to_join_this_group: Du benötigst einen Zählpunkt um dieser Gruppe beizutreten
-  edit_metering_point: Zählpunkt bearbeiten
-  new_metering_point: Neuer Zählpunkt
+  register: Zählwerk
+  add_me_to_this_register: Füge mich dem Zählwerk hinzu
+  dont_add_me_to_this_register: Füge mich dem Zählwerk NICHT hinzu
+  you_need_a_register_to_join_this_group: Du benötigst einen Zählwerk um dieser Gruppe beizutreten
+  edit_register: Zählwerk bearbeiten
+  new_register: Neues Zählwerk
   new_down_device: Neues Bezugsgerät
-  metering_point_offline: Zählpunkt offline
-  your_metering_point_is_offline_now: "Dein Zählpunkt '%{metering_point_name}' ist offline."
+  register_offline: Zählwerk offline
+  your_register_is_offline_now: "Dein Zählwerk '%{register_name}' ist offline."
   is_offline_now: ist jetzt offline
-  define_metering_point: Zählpunkt definieren
+  define_register: Zählwerk definieren
   smart_metering_provider: Smart Metering Anbieter
-  join_this_metering_point: Diesem Zählpunkt beitreten
-  leave_this_metering_point: Diesen Zählpunkt verlassen
-  new_metering_point_user_invitation: Neue Zählpunkteinladung
-  do_you_want_to_join_the_metering_point: "Möchtest Du dem Zählpunkt %{metering_point} beitreten"
-  sent_metering_point_user_invitation_successfully: Die Zählpunkteinladung wurde erfolgreich versendet.
-  unable_to_send_metering_point_user_invitation: Das Senden der Zählpunkteinladung ist nicht möglich.
-  invite_somebody_to_join_this_metering_point: Jemanden zu diesem Zählpunkt einladen
-  accepted_metering_point_user_request: Zählpunktanfrage akzeptiert
-  rejected_metering_point_user_request: Zählpunkteinladung abgelehnt
-  sent_metering_point_user_request: Zählpunktanfrage gesendet
-  new_metering_point_user_request: Neue Zählpunktanfrage
-  has_sent_a_metering_point_user_request_to_metering_point: "hat eine neue Zählpunktanfrage an %{metering_point_name} gesendet."
-  rejected_a_metering_point_user_invitation_to_the_metering_point: "lehnte eine Zählpunkteinladung zum Zählpunkt %{metering_point_name} ab."
-  do_you_want_to_admit_user_to_this_metering_point: "Möchtest Du %{user} in diesen Zählpunkt aufnehmen"
-  do_you_want_to_admit_user_to_your_metering_point: "Möchtest Du %{user} in Deinen Zählpunkt %{metering_point} aufnehmen?"
-  sent_group_metering_point_request_successfully: "Zählpunkteinladung erfolgreich gesendet. Warten auf Annahme."
-  metering_point_user_invitation_already_sent: "Zählpunkteinladung wurde bereits gesendet"
-  group_metering_point_invitation_already_sent: "Gruppeneinladung wurde bereits gesendet"
-  unable_to_send_group_metering_point_invitation: "Das Senden der Gruppeneinladung ist nicht möglich."
-  sent_group_metering_point_invitation_successfully: "Die Gruppeneinladung wurde erfolgreich versendet."
-  rejected_group_metering_point_request: Die Gruppenanfrage wurde abgelehnt.
-  metering_point_added_successfully: Der Zählpunkt wurde hinzugefügt.
+  join_this_register: Diesem Zählwerk beitreten
+  leave_this_register: Diesen Zählwerk verlassen
+  new_register_user_invitation: Neue Zählwerkeinladung
+  do_you_want_to_join_the_register: "Möchtest Du dem Zählwerk %{register} beitreten"
+  sent_register_user_invitation_successfully: Die Zählwerkeinladung wurde erfolgreich versendet.
+  unable_to_send_register_user_invitation: Das Senden der Zählwerkeinladung ist nicht möglich.
+  invite_somebody_to_join_this_register: Jemanden zu diesem Zählwerk einladen
+  accepted_register_user_request: Zählwerkanfrage akzeptiert
+  rejected_register_user_request: Zählwerkeinladung abgelehnt
+  sent_register_user_request: Zählwerkanfrage gesendet
+  new_register_user_request: Neue Zählwerkanfrage
+  has_sent_a_register_user_request_to_register: "hat eine neue Zählwerkanfrage an %{register_name} gesendet."
+  rejected_a_register_user_invitation_to_the_register: "lehnte eine Zählwerkeinladung zum Zählwerk %{register_name} ab."
+  do_you_want_to_admit_user_to_this_register: "Möchtest Du %{user} in diesen Zählwerk aufnehmen"
+  do_you_want_to_admit_user_to_your_register: "Möchtest Du %{user} in Deinen Zählwerk %{register} aufnehmen?"
+  sent_group_register_request_successfully: "Zählwerkeinladung erfolgreich gesendet. Warten auf Annahme."
+  register_user_invitation_already_sent: "Zählwerkeinladung wurde bereits gesendet"
+  group_register_invitation_already_sent: "Gruppeneinladung wurde bereits gesendet"
+  unable_to_send_group_register_invitation: "Das Senden der Gruppeneinladung ist nicht möglich."
+  sent_group_register_invitation_successfully: "Die Gruppeneinladung wurde erfolgreich versendet."
+  rejected_group_register_request: Die Gruppenanfrage wurde abgelehnt.
+  register_added_successfully: Der Zählwerk wurde hinzugefügt.
   you_were_added_successfully: Du wurdest erfolgreich hinzugefügt.
-  metering_point_removed_successfully: Der Zählpunkt wurde erfolgreich entfernt.
-  unable_to_remove_metering_point: Das Entfernen des Zählpunkts ist fehlgeschlagen.
-  is_no_longer_member_of_metering_point_anymore: "ist nicht mehr Mitglied des Zählpunktes %{metering_point_name}"
-  rejected_a_metering_point_user_request_from_user: "lehnte die Zählpunktanfrage von %{user} ab."
-  invited_user_to_join_the_metering_point: "hat %{user} eingeladen dem Zählpunkt %{metering_point_name} beizutreten."
-  invited_user_to_join_a_metering_point_which_has_been_removed: "hat %{user} eingeladen einem bereits gelöschten Zählpunkt beizutreten."
-  rejected_a_metering_point_user_invitation_to_a_metering_point_which_has_been_removed: "hat eine Zählpunkteinladung zu einem bereits gelöschten Zählpunkt abgelehnt."
-  is_no_longer_member_of_a_metering_point_which_has_been_removed_anymore: "ist nicht mehr Mitglied eines Zählpunktes, welcher bereits gelöscht wurde."
-  has_joined_a_metering_point_which_has_been_removed: "ist einem Zählpunkt beigetreten, welcher bereits gelöscht wurde."
-  has_sent_a_metering_point_user_request_to_a_metering_point_which_has_been_removed: "hat eine Zählpunktanfrage an einen bereits gelöschten Zählpunkt gesendet."
-  rejected_a_metering_point_user_request_from_an_unknown_user: hat die Zählpunktanfrage eines unbekannten Nutzers abgelehnt.
-  user_is_no_longer_a_member_of_your_metering_point: "%{user} ist nicht länger Mitglied Deines Zählpunktes %{metering_point}."
-  user_joined_your_metering_point: "%{user} ist ab jetzt Mitglied Deines Zählpunktes %{metering_point}."
-  you_are_now_a_member_of_the_metering_point: "Du bist ab jetzt Mitglied des Zählpunktes %{metering_point}."
-  user_invited_you_to_join_the_metering_point: "%{user} hat Dich eingeladen dem Zählpunkt %{metering_point} beizutreten."
-  user_rejected_your_metering_point_user_invitation_for_metering_point: "%{user} hat Deine Zählpunkteinladung zum Zählpunkt %{metering_point} abgelehnt."
-  to_invite_user_again_please_visit_your_metering_point: "Um %{user} erneut einzuladen besuche bitte Deinen Zählpunkt %{metering_point}."
-  rejected_metering_point_user_invitation: Zählpunkteinladung wurde abgelehnt
-  user_wants_to_join_your_metering_point: "%{user} würde gerne Deinem Zählpunkt %{metering_point} beitreten."
-  user_rejected_your_metering_point_user_request_for_metering_point: "%{user} hat Deine Zählpunktanfrage an den Zählpunkt %{metering_point} abgelehnt."
-  to_ask_again_for_membership_please_visit_the_metering_point: "Um nochmal eine Anfrage zu senden besuche bitte den Zählpunkt %{metering_point}."
-  new_metering_point_user_membership: Neues Zählpunktmitglied
-  user_rejected_the_request_with_your_metering_point_to_join_the_group: "%{user} lehnte die Anfrage von Deinem Zählpunkt %{metering_point} bei der Gruppe %{group} ab."
-  the_group_metering_point_request_with_your_metering_point_for_the_group_has_been_rejected: "Die Gruppenanfrage mit Deinem Zählpunkt %{metering_point_name} bei der Gruppe %{group_name} wurde abgelehnt."
-  has_invited_the_metering_point_to_join_the_group: "hat den Zählpunkt %{metering_point_name} eingeladen der Gruppe %{group_name} beizutreten."
-  has_rejected_the_group_metering_point_invitation_from_group_with_metering_point: "hat die Gruppeneinladung für den Zählpunkt %{metering_point_name} der Gruppe %{group_name} abgelehnt."
+  register_removed_successfully: Der Zählwerk wurde erfolgreich entfernt.
+  unable_to_remove_register: Das Entfernen des Zählwerks ist fehlgeschlagen.
+  is_no_longer_member_of_register_anymore: "ist nicht mehr Mitglied des Zählwerkes %{register_name}"
+  rejected_a_register_user_request_from_user: "lehnte die Zählwerkanfrage von %{user} ab."
+  invited_user_to_join_the_register: "hat %{user} eingeladen dem Zählwerk %{register_name} beizutreten."
+  invited_user_to_join_a_register_which_has_been_removed: "hat %{user} eingeladen einem bereits gelöschten Zählwerk beizutreten."
+  rejected_a_register_user_invitation_to_a_register_which_has_been_removed: "hat eine Zählwerkeinladung zu einem bereits gelöschten Zählwerk abgelehnt."
+  is_no_longer_member_of_a_register_which_has_been_removed_anymore: "ist nicht mehr Mitglied eines Zählwerkes, welcher bereits gelöscht wurde."
+  has_joined_a_register_which_has_been_removed: "ist einem Zählwerk beigetreten, welcher bereits gelöscht wurde."
+  has_sent_a_register_user_request_to_a_register_which_has_been_removed: "hat eine Zählwerkanfrage an einen bereits gelöschten Zählwerk gesendet."
+  rejected_a_register_user_request_from_an_unknown_user: hat die Zählwerkanfrage eines unbekannten Nutzers abgelehnt.
+  user_is_no_longer_a_member_of_your_register: "%{user} ist nicht länger Mitglied Deines Zählwerkes %{register}."
+  user_joined_your_register: "%{user} ist ab jetzt Mitglied Deines Zählwerkes %{register}."
+  you_are_now_a_member_of_the_register: "Du bist ab jetzt Mitglied des Zählwerkes %{register}."
+  user_invited_you_to_join_the_register: "%{user} hat Dich eingeladen dem Zählwerk %{register} beizutreten."
+  user_rejected_your_register_user_invitation_for_register: "%{user} hat Deine Zählwerkeinladung zum Zählwerk %{register} abgelehnt."
+  to_invite_user_again_please_visit_your_register: "Um %{user} erneut einzuladen besuche bitte Deinen Zählwerk %{register}."
+  rejected_register_user_invitation: Zählwerkeinladung wurde abgelehnt
+  user_wants_to_join_your_register: "%{user} würde gerne Deinem Zählwerk %{register} beitreten."
+  user_rejected_your_register_user_request_for_register: "%{user} hat Deine Zählwerkanfrage an den Zählwerk %{register} abgelehnt."
+  to_ask_again_for_membership_please_visit_the_register: "Um nochmal eine Anfrage zu senden besuche bitte den Zählwerk %{register}."
+  new_register_user_membership: Neues Zählwerkmitglied
+  user_rejected_the_request_with_your_register_to_join_the_group: "%{user} lehnte die Anfrage von Deinem Zählwerk %{register} bei der Gruppe %{group} ab."
+  the_group_register_request_with_your_register_for_the_group_has_been_rejected: "Die Gruppenanfrage mit Deinem Zählwerk %{register_name} bei der Gruppe %{group_name} wurde abgelehnt."
+  has_invited_the_register_to_join_the_group: "hat den Zählwerk %{register_name} eingeladen der Gruppe %{group_name} beizutreten."
+  has_rejected_the_group_register_invitation_from_group_with_register: "hat die Gruppeneinladung für den Zählwerk %{register_name} der Gruppe %{group_name} abgelehnt."
   is_not_a_part_of_the_group_anymore: "ist nicht mehr Teil der Gruppe %{group_name}."
-  has_joined_the_group_with_the_metering_point: "ist der Gruppe %{group_name} mit dem Zählpunkt %{metering_point_name} beigetreten."
-  has_requested_to_join_the_group_with_the_metering_point: "hat eine Anfrage gestellt der Gruppe %{group_name} mit dem Zählpunkt %{metering_point_name} beizutreten."
-  has_rejected_the_group_metering_point_request_from_metering_point_at_group: "hat die Anfrage des Zählpunktes %{metering_point_name} der Gruppe %{group_name} beizutreten abgelehnt."
-  cancelled_group_metering_point_membership: "Gruppenmitgliedschaft beendet"
-  metering_point_is_not_a_part_of_the_group_anymore: "Der Zählpunkt %{metering_point_name} ist nicht mehr Teil der Gruppe %{group_name}."
+  has_joined_the_group_with_the_register: "ist der Gruppe %{group_name} mit dem Zählwerk %{register_name} beigetreten."
+  has_requested_to_join_the_group_with_the_register: "hat eine Anfrage gestellt der Gruppe %{group_name} mit dem Zählwerk %{register_name} beizutreten."
+  has_rejected_the_group_register_request_from_register_at_group: "hat die Anfrage des Zählwerkes %{register_name} der Gruppe %{group_name} beizutreten abgelehnt."
+  cancelled_group_register_membership: "Gruppenmitgliedschaft beendet"
+  register_is_not_a_part_of_the_group_anymore: "Der Zählwerk %{register_name} ist nicht mehr Teil der Gruppe %{group_name}."
   visit_the_group_page_to_see_how_the_energy_data_has_changed_now: "Besuche bitte die Gruppenseite um zu sehen, was sich verändert hat."
-  new_group_metering_point_membership: Neue Gruppenmitgliedschaft
-  metering_point_is_now_a_part_of_the_group: "Der Zählpunkt %{metering_point_name} ist ab jetzt Mitglied der Gruppe %{group_name}."
+  new_group_register_membership: Neue Gruppenmitgliedschaft
+  register_is_now_a_part_of_the_group: "Der Zählwerk %{register_name} ist ab jetzt Mitglied der Gruppe %{group_name}."
   accepted_platform_invitation: Einladung zu buzzn akzeptiert
 
-  appointed_metering_point_manager: Zum Zählpunktadmin ernannt
+  appointed_register_manager: Zum Zählwerkadmin ernannt
   appointed_group_manager: Zum Gruppenadmin ernannt
-  user_appointed_you_metering_point_manager_of_the_metering_point: "%{user} hat Dich zum Zählpunktadmin vom Zählpunkt %{metering_point} ernannt."
+  user_appointed_you_register_manager_of_the_register: "%{user} hat Dich zum Zählwerkadmin vom Zählwerk %{register} ernannt."
   user_appointed_you_group_manager_of_the_group: "%{user} hat Dich zum Gruppenadmin der Gruppe %{group} ernannt."
   you_are_now_able_to_edit_everything_that_deals_with_this_group: "Du kannst jetzt alles bearbeiten was mit dieser Gruppe zu tun hat."
   visit_the_group_page_to_see_your_new_options: "Besuche die Gruppenseite um Deine neuen Optionen zu prüfen."
-  you_are_now_able_to_edit_everything_that_deals_with_this_metering_point: "Du kannst jetzt alles bearbeiten was mit diesem Zählpunkt zu tun hat."
-  visit_the_metering_point_page_to_see_your_new_options: "Besuche die Zählpunktseite um Deine neuen Optionen zu prüfen."
-  has_appointed_user_metering_point_manager_for_metering_point: "hat %{user} zum Zählpunktadmin des Zählpunktes %{metering_point} ernannt."
+  you_are_now_able_to_edit_everything_that_deals_with_this_register: "Du kannst jetzt alles bearbeiten was mit diesem Zählwerk zu tun hat."
+  visit_the_register_page_to_see_your_new_options: "Besuche die Zählwerkseite um Deine neuen Optionen zu prüfen."
+  has_appointed_user_register_manager_for_register: "hat %{user} zum Zählwerkadmin des Zählwerkes %{register} ernannt."
   has_appointed_user_group_manager_for_group: "hat %{user} zum Gruppenadmin der Gruppe %{group} ernannt."
 
   out_metering: Generatorzähler
@@ -123,19 +123,19 @@ de:
   add_in_out_metering: Einspeisezähler hinzufügen
   add_diff_metering: Abgrenzungszähler hinzufügen
 
-  add_out_metering_point: Zählpunkt für Generatorzähler hinzufügen
-  add_in_metering_point: Zählpunkt für Verbrauchszähler hinzufügen
-  add_in_out_metering_point: Zählpunkt für Einspeisezähler hinzufügen
-  add_diff_metering_point: Zählpunkt für Abgrenzungszähler hinzufügen
+  add_out_register: Zählwerk für Generatorzähler hinzufügen
+  add_in_register: Zählwerk für Verbrauchszähler hinzufügen
+  add_in_out_register: Zählwerk für Einspeisezähler hinzufügen
+  add_diff_register: Zählwerk für Abgrenzungszähler hinzufügen
 
-  out_root_metering_point: Einspeisung
-  in_root_metering_point: Bezug
-  in_metering_point: Bezug
+  out_root_register: Einspeisung
+  in_root_register: Bezug
+  in_register: Bezug
 
-  create_metering_point: Zählpunkt erstellen
+  create_register: Zählwerk erstellen
 
-  metering_point_undershot_min_watt: "%{metering_point_name} hat %{min_watt} watt unterschritten"
-  metering_point_exceeded_max_watt: "%{metering_point_name} hat %{max_watt} watt überschritten"
+  register_undershot_min_watt: "%{register_name} hat %{min_watt} watt unterschritten"
+  register_exceeded_max_watt: "%{register_name} hat %{max_watt} watt überschritten"
 
   create_device: Gerät erstellen
   out_device: Erzeuger
@@ -175,12 +175,12 @@ de:
   total_production: Gesamterzeugung
   reply: Antworten
 
-  my_metering_points: Meine Zählpunkte
-  metering_points: Zählpunkte
-  add_metering_point: Zählpunkt hinzufügen
-  add_metering_points: Zählpunkte hinzufügen
-  metering_point_mode: Art des Zählpunkts
-  remove_metering_points: Zählpunkte entfernen
+  my_registers: Meine Zählwerke
+  registers: Zählwerke
+  add_register: Zählwerk hinzufügen
+  add_registers: Zählwerke hinzufügen
+  register_mode: Art des Zählwerks
+  remove_registers: Zählwerke entfernen
 
   yes: Ja
   no: Nein
@@ -213,9 +213,9 @@ de:
   other: Anderer
 
   valid_credentials: Zugangsdaten gültig
-  your_credentials_have_been_checked_and_are_valid: "Die Zugangsdaten von Deinem Zählpunkt %{metering_point} sind überprüft worden und sind gültig."
+  your_credentials_have_been_checked_and_are_valid: "Die Zugangsdaten von Deinem Zählwerk %{register} sind überprüft worden und sind gültig."
   invalid_credentials: Zugangsdaten ungültig
-  your_credentials_have_been_checked_and_are_invalid: "Die Zugangsdaten von Deinem Zählpunkt %{metering_point} sind überprüft worden und sind ungültig. Bitte Zählernummer und Datenverbindung prüfen. "
+  your_credentials_have_been_checked_and_are_invalid: "Die Zugangsdaten von Deinem Zählwerk %{register} sind überprüft worden und sind ungültig. Bitte Zählernummer und Datenverbindung prüfen. "
 
   member_since: Mitglied seit
 
@@ -514,11 +514,11 @@ de:
   complete_contract: Vertragsabschluss
   has_deleted: löschte
   has_created: erstellte
-  metering_point_current_supplier: Aktueller Stromlieferant am Zählpunkt
-  a_metering_point_which_has_been_removed: "einen Zählpunkt, der bereits gelöscht wurde"
+  register_current_supplier: Aktueller Stromlieferant am Zählwerk
+  a_register_which_has_been_removed: "einen Zählwerk, der bereits gelöscht wurde"
   a_device_which_has_been_removed: "ein Gerät, das bereits gelöscht wurde"
-  has_created_the_metering_point: "erstellte den Zählpunkt %{metering_point_name}"
-  has_updated_the_metering_point: "aktualisierte den Zählpunkt %{metering_point_name}"
+  has_created_the_register: "erstellte den Zählwerk %{register_name}"
+  has_updated_the_register: "aktualisierte den Zählwerk %{register_name}"
 
 
   organization: Organisation
@@ -543,17 +543,17 @@ de:
   more_groups: Weitere Gruppen
   add_new_group: Neue Gruppe hinzufügen
   membership: Mitgliedschaft
-  send_group_metering_point_request: Mitgliedschaftsanfrage senden
+  send_group_register_request: Mitgliedschaftsanfrage senden
   description: Beschreibung
-  sent_group_metering_point_request: Mitgliedschaftsanfrage gesendet
+  sent_group_register_request: Mitgliedschaftsanfrage gesendet
   waiting_for_accepting: Warten auf Annahme
   cancel_membership: Mitgliedschaft beenden
   forgot_your_password: Passwort vergessen
   didnt_receive_confirmation_instructions: Bestätigungs-Email nicht erhalten
   didnt_receive_unlock_instructions: Entsperrungs-Email nicht erhalten
   no_devices_available: Keine Geräte vorhanden
-  no_metering_points_available: Kein Zählpunkt vorhanden
-  the_metering_point: Der Zählpunkt
+  no_registers_available: Kein Zählwerk vorhanden
+  the_register: Der Zählwerk
   the_group: die Gruppe
   and: und
   are_now_friends: sind jetzt befreundet
@@ -564,9 +564,9 @@ de:
   friendship: Freundschaft
   change_password: Passwort ändern
   belongs_to_group: Gehört zur Gruppe
-  has_joined_the_group_with_metering_point_html: "ist der Gruppe %{group_name} mit dem Zählpunkt %{metering_point_name} beigetreten"
-  has_joined_the_group_with_a_metering_point_html: "ist der Gruppe %{group_name} mit einem Zählpunkt beigetreten"
-  has_joined_the_metering_point_html: "ist dem Zählpunkt %{metering_point_name} beigetreten"
+  has_joined_the_group_with_register_html: "ist der Gruppe %{group_name} mit dem Zählwerk %{register_name} beigetreten"
+  has_joined_the_group_with_a_register_html: "ist der Gruppe %{group_name} mit einem Zählwerk beigetreten"
+  has_joined_the_register_html: "ist dem Zählwerk %{register_name} beigetreten"
   energy_producers: Stromgeber
   energy_consumers: Stromnehmer
   device_properties: Geräteeigenschaften
@@ -589,40 +589,40 @@ de:
   display: Übersicht
   asset: Bild
   assets: Bilder
-  metering_points: Zählpunkte
+  registers: Zählwerke
   show: Anzeigen
   new_group: Neue Gruppe
-  belongs_to_metering_point: Gehört zum Zählpunkt
+  belongs_to_register: Gehört zum Zählwerk
   new_asset: Neues Bild
-  a_metering_point: einen Zählpunkt
+  a_register: einen Zählwerk
   meter: Messgerät
   register: Zählwerk
   registers: Zählwerke
   add_register: Zählwerk hinzufügen
   remove_register: Zählwerk löschen
   device: Gerät
-  you_have_no_metering_point: Dieser Standort hat noch keinen Zählpunkt
-  create_new_metering_point: Neuen Zählpunkt hinzufügen
+  you_have_no_register: Dieser Standort hat noch keinen Zählwerk
+  create_new_register: Neuen Zählwerk hinzufügen
   take_current: Strom nehmen
-  add_metering_point_operator_contract: Vertrag mit Messstellenbetreiber hinzufügen
+  add_register_operator_contract: Vertrag mit Messstellenbetreiber hinzufügen
   sent_friendship_request: Freundschaftsanfrage gesendet
 
   electricity_supplier: Stromlieferant
   electricity_purchaser: Stromabnehmer
   metering_service_provider: Messdienstleister
-  metering_point_operator: Messstellenbetreiber
+  register_operator: Messstellenbetreiber
   distribution_system_operator: Verteilnetzbetreiber
   transmission_system_operator: Übertragungsnetzbetreiber
 
   power_giver_contract: Vertrag für Stromlieferung
   power_taker_contract: Vertrag für Stromabnahme
   metering_service_provider_contract: Messdienstleistungsvertrag
-  metering_point_operator_contract: Messstellenbetreiber Vertrag
+  register_operator_contract: Messstellenbetreiber Vertrag
   distribution_system_operator_contract: Verteilnetzbetreiber Vertrag
   transmission_system_operator_contract: Übertragungsnetzbetreiber Vertrag
 
   virtual: Virtuell
-  virtual_metering_point: Virtueller Zählpunkt
+  virtual_register: Virtueller Zählwerk
   image: Bild
   owner: Eigentümer
   meter_size: Zählergröße
@@ -632,11 +632,11 @@ de:
   build_year: Herstellungsjahr
   calibrated_till: Geeicht bis
   add_group_manager: Neuen Gruppenadmin festlegen
-  add_metering_point_manager: Neuen Zählpunktadmin festlegen
+  add_register_manager: Neuen Zählwerkadmin festlegen
   user_is_now_a_new_group_manager: "%{username} ist jetzt ein neuer Gruppenadmin."
-  user_is_now_a_new_metering_point_manager: "%{username} ist jetzt ein neuer Zählpunktadmin."
+  user_is_now_a_new_register_manager: "%{username} ist jetzt ein Neues Zählwerkadmin."
   user_is_already_group_manager: "%{username} ist bereits Gruppenadmin."
-  user_is_already_metering_point_manager: "%{username} ist bereits Zählpunktadmin."
+  user_is_already_register_manager: "%{username} ist bereits Zählwerkadmin."
 
   obis_index: OBIS Kennzahlen
   variable_tariff: Variabler Tarif
@@ -661,7 +661,7 @@ de:
   contract_number: Vertragsnummer
   password: Passwort
   username: Login
-  edit_metering_point_operator_contract: Vertrag mit Messstellenbetreiber bearbeiten
+  edit_register_operator_contract: Vertrag mit Messstellenbetreiber bearbeiten
   tariff: Tarif
   edit_servicing_contract: Abwicklungsvertrag bearbeiten
   servicing_contract: Abwicklungsvertrag
@@ -669,28 +669,28 @@ de:
   add_servicing_contract: Abwicklungsvertrag hinzufügen
   a_group_which_has_been_removed: 'eine Gruppe, die bereits gelöscht wurde'
   a_group: eine Gruppe
-  join_this_group_with_metering_point: "+ %{metering_point_name}"
-  join_this_group_with_metering_point_and_leave_group: "+ %{metering_point_name} und Gruppe %{group_name} verlassen"
+  join_this_group_with_register: "+ %{register_name}"
+  join_this_group_with_register_and_leave_group: "+ %{register_name} und Gruppe %{group_name} verlassen"
   join_this_group_and_leave_group: "Beitreten und Gruppe %{group_name} verlassen"
-  leave_this_group_with_metering_point: "- %{metering_point_name}"
+  leave_this_group_with_register: "- %{register_name}"
   join_this_group: "Beitreten"
-  new_group_metering_point_request: "Neue Mitgliedschaftsanfrage"
+  new_group_register_request: "Neue Mitgliedschaftsanfrage"
   group_requests: Gruppenanfragen
-  accepted_group_metering_point_request: Gruppenanfrage akzeptiert
+  accepted_group_register_request: Gruppenanfrage akzeptiert
   add_new_in_device: Neues Bezugsgerät hinzufügen
   add_new_out_device: Neue Stromerzeugungsanlage hinzufügen
-  sent_request_with_metering_point: "Anfrage mit Zählpunkt %{metering_point_name} gesendet"
-  metering_point_tree: Zählpunktanordnung
-  metering_point_created_successfully: Der Zählpunkt wurde erfolgreich erstellt
-  metering_point_deleted_successfully: Der Zählpunkt wurde erfolgreich gelöscht
+  sent_request_with_register: "Anfrage mit Zählwerk %{register_name} gesendet"
+  register_tree: Zählwerkanordnung
+  register_created_successfully: Der Zählwerk wurde erfolgreich erstellt
+  register_deleted_successfully: Der Zählwerk wurde erfolgreich gelöscht
   manufacturer: Hersteller
   slp: SLP
   edit_contract: Vertrag bearbeiten
   hour_to_minutes: Stunde in Minuten
-  cannot_delete_metering_point_while_running_contract_exists: "Der Zählpunkt kann nicht gelöscht werden, solange er noch laufende Verträge besitzt."
+  cannot_delete_register_while_running_contract_exists: "Der Zählwerk kann nicht gelöscht werden, solange er noch laufende Verträge besitzt."
   cannot_delete_group_while_running_contracts_exists: "Die Gruppe kann nicht gelöscht werden, solange sie noch laufende Verträge besitzt."
   enter_your_text: Text hier eingeben
-  out_metering_points: Produktionszählpunkte
+  out_registers: ProduktionsZählwerke
   create_comment: Abschicken
   create_new_comment_here: Neuen Kommentar hier erstellen
   friend_request: Freundschaftsanfrage
@@ -701,8 +701,8 @@ de:
   zoom_in_here_if_possible: Hineinzoomen wenn möglich
   help: Hilfe
   remove_from_dashboard: Vom Dashboard entfernen
-  add_metering_points_to_dashboard: Zählpunkte zum Dashboard hinzufügen
-  type_in_metering_point_name_or_choose_from_dropdown: "Hier Zählpunktname eingeben oder Zählpunkt(e) aus Dropdown auswählen"
+  add_registers_to_dashboard: Zählwerke zum Dashboard hinzufügen
+  type_in_register_name_or_choose_from_dropdown: "Hier Zählwerkname eingeben oder Zählwerk(e) aus Dropdown auswählen"
   display_in_series: Im Diagramm anzeigen
   series: Graph
   my_dashboard: Mein Dashboard
@@ -711,10 +711,10 @@ de:
   stop_display: Graph entfernen
   my_groups: Meine Gruppen
   loading: lädt
-  metering_point_admin: Zählpunkt Admin
+  register_admin: Zählwerk Admin
   removed_role_successfully: "Du bist ab jetzt nicht länger %{role} von %{resource}."
-  remove_me_as_metering_point_manager: "Als Zählpunktadmin zurückziehen"
-  you_will_no_longer_be_able_to_edit_this_metering_point: "Du wirst diesen Zählpunkt nicht länger bearbeiten können."
+  remove_me_as_register_manager: "Als Zählwerkadmin zurückziehen"
+  you_will_no_longer_be_able_to_edit_this_register: "Du wirst diesen Zählwerk nicht länger bearbeiten können."
   readable_by: Sichtbar für
   leave_this_group: Diese Gruppe verlassen
   trend_chart: Verlaufs-Chart
@@ -723,7 +723,7 @@ de:
   now: Jetzt
   out_devices: Stromerzeugungsanlagen
   group_managers: Gruppenadmins
-  metering_point_managers: Zählpunktadmins
+  register_managers: Zählwerkadmins
   not_deletable: Nicht löschbar
   other_organization: Andere Firma
   no_address: Ohne Adresse
@@ -732,7 +732,7 @@ de:
   somebody: Jemand
   the_comment_by: den Kommentar von
   at_the_group: bei der Gruppe
-  at_the_metering_point: bei dem Zählpunkt
+  at_the_register: bei dem Zählwerk
   are_no_friends_anymore: sind nicht mehr befreundet
   sent_a_friendship_request_to_user: "hat eine Freundschaftsanfrage an %{user} gesendet"
   rejected_the_friendship_request_from_user: "hat eine Freundschaftsanfrage von %{user} abgelehnt"
@@ -744,141 +744,141 @@ de:
   you_are_not_able_to_view_users_not_public_content_anymore: "Du kannst die nicht-öffentlichen Inhalte von %{user} ab jetzt nicht mehr sehen."
   cancelled_friendship: "Freundschaft beendet"
 
-  new_group_metering_point_invitation: Neue Gruppeneinladung
-  do_you_want_to_join_the_group_with_your_metering_point: "Möchtest Du der Gruppe %{group} mit deinem Zählpunkt %{metering_point} beitreten"
+  new_group_register_invitation: Neue Gruppeneinladung
+  do_you_want_to_join_the_group_with_your_register: "Möchtest Du der Gruppe %{group} mit deinem Zählwerk %{register} beitreten"
   do_you_want_to_get_friends_with: "Möchtest Du %{user} zu Deinen Freunden hinzufügen"
-  do_you_want_to_admit_user_with_the_metering_point_to_this_group: "Möchtest Du %{user} mit dem Zählpunkt %{metering_point} in diese Gruppe aufnehmen"
+  do_you_want_to_admit_user_with_the_register_to_this_group: "Möchtest Du %{user} mit dem Zählwerk %{register} in diese Gruppe aufnehmen"
 
   dummy: Dummy
   slp: SLP
   sep: SEP
   slp_abbreviation: SLP (Standardlastprofil)
   sep_abbreviation: SEP (Standardeinspeiseprofil)
-  you_dont_have_a_smart_meter_so_your_energy_data_is_estimated_as_shown: "Du hast keinen Smart Meter an diesem Zählpunkt, also werden die Energiedaten wie gezeigt geschätzt."
-  dummy_description: "Ein Standardprofil ist die berechnete (nicht gemessene) Stromkurve eines Zählpunkts ohne sog. Smart Meter. In die Berechnung fließen ein: (a) eine über viele vergleichbare Zählpunkte ermittelte Normkurve, (b) die voraussichtlichen Kilowattstunden, die an Deinem Zählpunkt entweder bezogen/verbraucht (Standardlastprofil) oder eingespeist/produziert (Standardeinspeiseprofil) werden.  "
+  you_dont_have_a_smart_meter_so_your_energy_data_is_estimated_as_shown: "Du hast keinen Smart Meter an diesem Zählwerk, also werden die Energiedaten wie gezeigt geschätzt."
+  dummy_description: "Ein Standardprofil ist die berechnete (nicht gemessene) Stromkurve eines Zählwerks ohne sog. Smart Meter. In die Berechnung fließen ein: (a) eine über viele vergleichbare Zählwerke ermittelte Normkurve, (b) die voraussichtlichen Kilowattstunden, die an Deinem Zählwerk entweder bezogen/verbraucht (Standardlastprofil) oder eingespeist/produziert (Standardeinspeiseprofil) werden.  "
 
 
   group_not_deletable: "Die Gruppe %{group_name} ist momentan nicht löschbar."
-  metering_point_not_deletable: "Der Zählpunkt %{metering_point_name} ist momentan nicht löschbar."
+  register_not_deletable: "Der Zählwerk %{register_name} ist momentan nicht löschbar."
   your_data_has_been_checked_and_you_can_now_delete_all_of_it: Deine Daten wurden überprüft und Du kannst Dein Konto nun vollständig löschen.
-  you_can_not_delete_your_account_right_now_due_to_data_others_rely_on: "Du kannst Dein Konto noch nicht löschen da sich andere Benutzer auf Deine Zählpunkte oder Gruppen stützen."
+  you_can_not_delete_your_account_right_now_due_to_data_others_rely_on: "Du kannst Dein Konto noch nicht löschen da sich andere Benutzer auf Deine Zählwerke oder Gruppen stützen."
   before_you_delete_your_account_please_make_sure: "Bevor Du Dein Konto löschst stelle bitte sicher, dass Du"
-  a_add_managers_to_your_metering_points_or_groups: "(a) für Deine Zählpunkte und Gruppen neue Administratoren ernennst, oder"
-  b_remove_all_members_of_your_metering_points_or_groups: "(b) alle Zählpunkt-Mitglieder und Gruppen-Zählpunkte entfernst."
-  please_make_sure_to_add_managers_to_your_group_or_release_all_of_its_metering_points: "Stelle bitte sicher dass du weitere Gruppenadmins ernennst oder entferne alle Zählpunkte aus der Gruppe."
-  please_make_sure_to_add_managers_to_your_metering_point_or_release_all_of_its_members: "Stelle bitte sicher dass du weitere Zählpunktadmins ernennst oder entferne alle Mitglieder aus der Gruppe."
-  these_metering_points_and_groups_are_not_deletable_at_the_moment: "Diese Zählpunkte und Gruppen sind davon betroffen:"
+  a_add_managers_to_your_registers_or_groups: "(a) für Deine Zählwerke und Gruppen neue Administratoren ernennst, oder"
+  b_remove_all_members_of_your_registers_or_groups: "(b) alle Zählwerk-Mitglieder und Gruppen-Zählwerke entfernst."
+  please_make_sure_to_add_managers_to_your_group_or_release_all_of_its_registers: "Stelle bitte sicher dass du weitere Gruppenadmins ernennst oder entferne alle Zählwerke aus der Gruppe."
+  please_make_sure_to_add_managers_to_your_register_or_release_all_of_its_members: "Stelle bitte sicher dass du weitere Zählwerkadmins ernennst oder entferne alle Mitglieder aus der Gruppe."
+  these_registers_and_groups_are_not_deletable_at_the_moment: "Diese Zählwerke und Gruppen sind davon betroffen:"
   this_manufacturer_product_serialnumber_is_not_known: Diese Zählernummer ist buzzn noch nicht bekannt.
   please_use_this_input_field_to_invite_the_owner_of_the_meter: "Nutze folgendes Eingabefeld, um die Person, der der Zähler gehört, per E-Mail einzuladen."
-  the_created_metering_point_will_be_added_to_this_group_immediatly_after_sending_the_invitation: "Mit der Einladung wird ein anonymer Zählpunkt angelegt, den Du in Deiner Gruppe sehen kannst."
-  the_invitee_will_take_control_of_this_metering_point_after_registration: "Sobald die von Dir eingeladene Person die Einladung angenommen hat, übernimmt sie die Kontrolle über den Zählpunkt. Das heißt, sie kann z.B. den Zählpunkt umbenennen oder anderweitig bearbeiten, sich als Nutzer vom Zählpunkt abmelden, andere Nutzer dem Zählpunkt hinzufügen oder auch den Zählpunkt wieder löschen."
+  the_created_register_will_be_added_to_this_group_immediatly_after_sending_the_invitation: "Mit der Einladung wird ein anonymer Zählwerk angelegt, den Du in Deiner Gruppe sehen kannst."
+  the_invitee_will_take_control_of_this_register_after_registration: "Sobald die von Dir eingeladene Person die Einladung angenommen hat, übernimmt sie die Kontrolle über den Zählwerk. Das heißt, sie kann z.B. den Zählwerk umbenennen oder anderweitig bearbeiten, sich als Nutzer vom Zählwerk abmelden, andere Nutzer dem Zählwerk hinzufügen oder auch den Zählwerk wieder löschen."
 
-  contracts_info: "Um mit diesem Zählpunkt am Stromgeschehen teilnehmen zu können, benötigst Du Verträge mit verschiedenen Anbietern. Zum Beispiel mit einem Lieferanten (buzzn.net oder anderer), um überhaupt Strom zu bekommen. Oder zusätzlich mit einem Messstellenbetreiber (Discovergy oder anderer), der sich um Deinen Stromzähler kümmert. Hier siehst Du alle Verträge, die diesem Vertragspartner zugeordnet sind."
+  contracts_info: "Um mit diesem Zählwerk am Stromgeschehen teilnehmen zu können, benötigst Du Verträge mit verschiedenen Anbietern. Zum Beispiel mit einem Lieferanten (buzzn.net oder anderer), um überhaupt Strom zu bekommen. Oder zusätzlich mit einem Messstellenbetreiber (Discovergy oder anderer), der sich um Deinen Stromzähler kümmert. Hier siehst Du alle Verträge, die diesem Vertragspartner zugeordnet sind."
   data_connection_info: "Um Deine Ernergie-Daten in der App in Echtzeit ansehen zu können, musst Du Deine Zugangsdaten zu Deinem Smart Metering Anbieter hier eingeben."
-  bank_account_info: "Sofern Du als Stromgeber oder Stromnehmer an diesem Zählpunkt einen Vertrag mit buzzn.net hast, kannst Du hier Deine Bankverbindung hinterlegen. Sofern erforderlich, kannst Du sie zu einem späteren Zeitpunkt ändern, z. B. wenn Du die Bank wechselst. "
-  invoice_address_info: "Die buzzn Rechnungen für diesen Zählpunkt werden standardmäßig auf die Adresse des Vertragspartners (Du oder Deine Organisation) ausgestellt. Soll eine andere Rechnungsadresse verwendet werden, kannst Du diese hier ändern. "
+  bank_account_info: "Sofern Du als Stromgeber oder Stromnehmer an diesem Zählwerk einen Vertrag mit buzzn.net hast, kannst Du hier Deine Bankverbindung hinterlegen. Sofern erforderlich, kannst Du sie zu einem späteren Zeitpunkt ändern, z. B. wenn Du die Bank wechselst. "
+  invoice_address_info: "Die buzzn Rechnungen für diesen Zählwerk werden standardmäßig auf die Adresse des Vertragspartners (Du oder Deine Organisation) ausgestellt. Soll eine andere Rechnungsadresse verwendet werden, kannst Du diese hier ändern. "
   live_chart_info: "In der Gruppe repräsentiert jeder blaue Kreis die aktuell bezogene Leistung eines Stromnehmers. Der rote Kreis die aktuell zur Verfügung gestellte Leistung des Stromgebers. Sind alle blauen Kreise kleiner als der rote Kreis, ist die Gruppe autark, d. h. sie versorgt sich aus eigener Kraft. Sind alle blauen Kreise größer als der rote Kreis, benötigt die Gruppe Strom von außen."
   energy_producers_info: "Ein Stromgeber ist eine Person, die über ihre Stromerzeugungsanlage (z. B. Blockheizkraftwerk, Photovoltaikanlage) Strom an andere Personen liefert. Hier siehst Du eine Übersicht aller Stromgeber, die ihren Strom mit dieser Gruppe teilen."
   energy_consumers_info: "Ein Stromnehmer ist eine Person, die über ihren Stromzähler Strom von einer anderen Person bezieht. Hier siehst Du eine Übersicht aller Stromnehmer, die aus dieser Gruppe Strom beziehen."
   interested_members_info: "Ein Interessent ist eine Person, die sich gerne am Geschehen in der Gruppe beteiligen möchte, ohne konkret Strom mit dieser Gruppe zu teilen oder aus ihr zu nehmen."
   contracts_info_group: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die dieser Gruppe zugeordnet sind."
   devices_info: "Hier kannst Du Deine Geräte, die mit Strom zu tun haben, anlegen und Deinem Strombezug bzw. Deiner Stromerzeugung hinzufügen."
-  devices_info_metering_point: "Hier kannst Du Deine elektrischen Geräte (z. B. Geschirrspüler, Stromerzeugungsanlage) verwalten, diesem Zählpunkt hinzufügen oder von ihm entfernen."
-  members_info_metering_point: "Mitglieder sind alle Personen, die diesem Zählpunkt zugeordnet sind und Einfluss auf ihn haben, z. B. Mitbewohner einer Wohnung oder Mitinhaber einer Stromerzeugungsanlage."
-  address_info: "Jeder Zählpunkt hat eine Adresse, z. B. die Adresse des Hauses oder der Wohnung, in der sich der Zählpunkt befindet."
-  meters_info: "Das Messgerät (umgangssprachlich „Zähler“) ist das Gerät, das am Zählpunkt den Strom misst. Sei es den Stromverbrauch oder die Stromproduktion."
-  contracts_info_metering_point: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst Du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Zählpunkt zugeordnet sind."
-  groups_info: "Eine Gruppe ist ein Zusammenschluss der Produktions- und Verbrauchszählpunkte von Stromgebern und Stromnehmern. Als Stromnehmer kannst Du Deinen Stromverbrauch einer Gruppe, die Dir gefällt, zuordnen."
-  metering_points_info: "Ein Zählpunkt ist die Bezeichnung für die Messstelle, für die der Strom gemessen wird, z. B. „Keller“ oder „Dachboden“. In den meisten Fällen ist der Zählpunkt gleichbedeutend mit dem Haus oder der Wohnung, in der er sich befindet."
+  devices_info_register: "Hier kannst Du Deine elektrischen Geräte (z. B. Geschirrspüler, Stromerzeugungsanlage) verwalten, diesem Zählwerk hinzufügen oder von ihm entfernen."
+  members_info_register: "Mitglieder sind alle Personen, die diesem Zählwerk zugeordnet sind und Einfluss auf ihn haben, z. B. Mitbewohner einer Wohnung oder Mitinhaber einer Stromerzeugungsanlage."
+  address_info: "Jeder Zählwerk hat eine Adresse, z. B. die Adresse des Hauses oder der Wohnung, in der sich der Zählwerk befindet."
+  meters_info: "Das Messgerät (umgangssprachlich „Zähler“) ist das Gerät, das am Zählwerk den Strom misst. Sei es den Stromverbrauch oder die Stromproduktion."
+  contracts_info_register: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst Du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Zählwerk zugeordnet sind."
+  groups_info: "Eine Gruppe ist ein Zusammenschluss der Produktions- und VerbrauchsZählwerke von Stromgebern und Stromnehmern. Als Stromnehmer kannst Du Deinen Stromverbrauch einer Gruppe, die Dir gefällt, zuordnen."
+  registers_info: "Ein Zählwerk ist die Bezeichnung für die Messstelle, für die der Strom gemessen wird, z. B. „Keller“ oder „Dachboden“. In den meisten Fällen ist der Zählwerk gleichbedeutend mit dem Haus oder der Wohnung, in der er sich befindet."
   friends_info: "Durch die Freundschaft mit anderen Usern erhältst Du tiefere Einblicke in deren Stromverhalten. So kannst Du z. B. deren Stromkurven sehen und mit Deinen vergleichen."
-  trend_chart_info: "Eine Gruppe ist ein Zusammenschluss der Produktions- und Verbrauchszählpunkte von Stromgebern und Stromnehmern. Hier siehst Du die Summe aller Produktionszählpunkte (rote Linie) sowie die Summe aller Verbrauchszählpunkte (blaue Linie). "
-  dashboard_info: "Das Dashboard ist eine Ansicht von Zählpunkten, die Du selbst zusammengestellt hast. Zum Beispiel kannst Du hier die Verbrauchszählpunkte Deiner Freunde anzeigen lassen, um einen Vergleich mit Deinem Verbrauch zu starten. Oder Du lädst hier den Produktionszählpunkt Deiner Stromerzeugungsanlage, um sie zu überwachen."
+  trend_chart_info: "Eine Gruppe ist ein Zusammenschluss der Produktions- und VerbrauchsZählwerke von Stromgebern und Stromnehmern. Hier siehst Du die Summe aller ProduktionsZählwerke (rote Linie) sowie die Summe aller VerbrauchsZählwerke (blaue Linie). "
+  dashboard_info: "Das Dashboard ist eine Ansicht von Zählwerken, die Du selbst zusammengestellt hast. Zum Beispiel kannst Du hier die VerbrauchsZählwerke Deiner Freunde anzeigen lassen, um einen Vergleich mit Deinem Verbrauch zu starten. Oder Du lädst hier den ProduktionsZählwerk Deiner Stromerzeugungsanlage, um sie zu überwachen."
   stream_info: "Hier findest Du alle Aktivitäten Deiner Freunde sowie Deine persönlichen Benachrichtigungen bzgl. Deines Energieverhaltens."
   stream_info_profile: "Hier findest Du alle Aktivitäten und persönlichen Benachrichtigungen bzgl. des Energieverhaltens des angezeigten Benutzers."
   out_devices_info_group: "Hier siehst Du alle Geräte, die für diese Gruppe den Strom erzeugen."
   group_manager_info: "Eine Gruppe wird von Administratoren verwaltet. Diese entscheiden z. B. wer in die Gruppe aufgenommen wird."
-  metering_point_manager_info: "Ein Zählpunkt wird von Administratoren verwaltet. Diese entscheiden z. B. wer zum Zählpunkt aufgenommen wird und können diesen konfigurieren."
+  register_manager_info: "Ein Zählwerk wird von Administratoren verwaltet. Diese entscheiden z. B. wer zum Zählwerk aufgenommen wird und können diesen konfigurieren."
   contracts_info_contracting_party: "Um am Stromgeschehen teilnehmen zu können benötigst Du verschiedene Verträge. Zum Beispiel brauchst Du einen Vertrag mit einem Stromlieferanten, um überhaupt Strom bekommen zu können. Du siehst hier alle Verträge, die diesem Vertragspartner zugeordnet sind."
-  metering_point_formula_info: "Hier erstellst Du die Formel, mithilfe derer der virtuelle Zähler berechnet wird. Jede Formel besteht aus einzelnen Summanden. Jeder Summand besteht aus Vorzeichen (Operator) und Zählpunkt (Operand)."
-  formula_parts_info: "Ein virtueller Zählpunkt besitzt kein direkt ablesbares Messgerät. Stattdessen wird sein Strom aus den Daten anderer Zählpunkte berechnet. Hier findest Du die Zählpunkte, aus denen sich der virtuelle Zählpunkt zusammensetzt."
-  metering_point_wizard_users_info: "Wenn Dein persönliches Stromverhalten Einfluss auf diesen Zählpunkt hat, z. B. weil Dein Verbrauch oder die Produktion Deine Erzeugungsanlage an ihm erfasst wird, solltest Du Dich hier als Mitglied dem Zählpunkt hinzufügen. Es können dem Zählpunkt auch weitere Personen, z. B. Deine Familienmitglieder oder Mitinhaber einer Stromerzeugungsanlage, hinzugefügt werden. Falls Du diesen Zählpunkt nur verwaltest aber dort persönlich keinen Strom beziehst bzw. produzierst, solltest Du Dich NICHT dem Zählpunkt zuordnen."
-  metering_point_virtual_info: "Ein virtueller Zählpunkt besitzt kein direkt ablesbares Messgerät. Stattdessen werden seinde Energiedaten aus den Daten anderer Zählpunkte berechnet. Die Formel zur Berechnung kann auf der nächsten Seite eingegeben werden."
-  group_metering_points_info: "Hier findest Du eine Übersicht über alle Zählpunkte, die bei dieser Gruppe mitmachen."
+  register_formula_info: "Hier erstellst Du die Formel, mithilfe derer der virtuelle Zähler berechnet wird. Jede Formel besteht aus einzelnen Summanden. Jeder Summand besteht aus Vorzeichen (Operator) und Zählwerk (Operand)."
+  formula_parts_info: "Ein virtueller Zählwerk besitzt kein direkt ablesbares Messgerät. Stattdessen wird sein Strom aus den Daten anderer Zählwerke berechnet. Hier findest Du die Zählwerke, aus denen sich der virtuelle Zählwerk zusammensetzt."
+  register_wizard_users_info: "Wenn Dein persönliches Stromverhalten Einfluss auf diesen Zählwerk hat, z. B. weil Dein Verbrauch oder die Produktion Deine Erzeugungsanlage an ihm erfasst wird, solltest Du Dich hier als Mitglied dem Zählwerk hinzufügen. Es können dem Zählwerk auch weitere Personen, z. B. Deine Familienmitglieder oder Mitinhaber einer Stromerzeugungsanlage, hinzugefügt werden. Falls Du diesen Zählwerk nur verwaltest aber dort persönlich keinen Strom beziehst bzw. produzierst, solltest Du Dich NICHT dem Zählwerk zuordnen."
+  register_virtual_info: "Ein virtueller Zählwerk besitzt kein direkt ablesbares Messgerät. Stattdessen werden seinde Energiedaten aus den Daten anderer Zählwerke berechnet. Die Formel zur Berechnung kann auf der nächsten Seite eingegeben werden."
+  group_registers_info: "Hier findest Du eine Übersicht über alle Zählwerke, die bei dieser Gruppe mitmachen."
   click_to_change_order_of_all_red_and_blue_bubbles: Klicke hier um die Reihenfolge der roten und blauen Kreise zu ändern
   cookie_text: "Wir verwenden Cookies, um unseren Service zu verbessern und zu personalisieren. Wenn Du unsere Website nutzt erklärst Du Dich mit der Verwendung von Cookies einverstanden. Es kann sein, dass schon jetzt Cookies gespeichert wurden. In unserer Cookie Richtlinie findest Du mehr Informationen. "
   must_be_a_GIF_JPG_or_PNG: "Muss vom Typ GIF, JPG oder PNG sein."
-  localpool_invite_metering_points_info: "Auf jedem Zählpunkt sitzt ein Zähler. Dieser Zähler hat eine Nummer (meistens 6 - 10 Stellen). Gib hier diese Zählernummer ein, um den Zählpunkt hinzuzufügen. Wenn Du den Zählpunkt eines neuen Benutzers zu dieser Gruppe einladen möchtest, kannst Du im zweiten Schritt dessen E-Mail Adresse eingeben und er wird eine Einladung erhalten."
-  add_metering_point_manager_info: "Du kannst hier weiteren Benutzern ermöglichen, diesen Zählpunkt zu verwalten. Diese Benutzer können dann alles einsehen, was Du siehst und können z.B. weitere Benutzer zu diesem Zählpunkt einladen oder den Zählpunkt einer Gruppe zuordnen."
+  localpool_invite_registers_info: "Auf jedem Zählwerk sitzt ein Zähler. Dieser Zähler hat eine Nummer (meistens 6 - 10 Stellen). Gib hier diese Zählernummer ein, um den Zählwerk hinzuzufügen. Wenn Du den Zählwerk eines neuen Benutzers zu dieser Gruppe einladen möchtest, kannst Du im zweiten Schritt dessen E-Mail Adresse eingeben und er wird eine Einladung erhalten."
+  add_register_manager_info: "Du kannst hier weiteren Benutzern ermöglichen, diesen Zählwerk zu verwalten. Diese Benutzer können dann alles einsehen, was Du siehst und können z.B. weitere Benutzer zu diesem Zählwerk einladen oder den Zählwerk einer Gruppe zuordnen."
   add_manager_careful_info: "Überlege also genau, wem du hier diese Rechte zukommen lässt!"
-  add_group_manager_info: "Du kannst hier weiteren Benutzern ermöglichen diese Gruppe zu verwalten. Diese Benutzer können dann alles einsehen, was Du siehst und können z.B. weitere Zählpunkte zu dieser Gruppe hinzufügen oder bestehende davon entfernen."
+  add_group_manager_info: "Du kannst hier weiteren Benutzern ermöglichen diese Gruppe zu verwalten. Diese Benutzer können dann alles einsehen, was Du siehst und können z.B. weitere Zählwerke zu dieser Gruppe hinzufügen oder bestehende davon entfernen."
   delete_account_confirmation_info: "Bist du Dir sicher, dass du Dein Konto vollständig löschen willst? Alle von Dir erzeugten Daten werden dabei gelöscht, sofern sie nicht von Dir für andere Nutzer zur Verwaltung freigegeben worden sind."
   autarchy_info: "Die Autarkie gibt an, wieviel Prozent des Strombedarfs in dieser Gruppe vom Stromgeber zur Verfügung gestellt wird. Es sollte also die blaue Kurve immer unterhalb der roten Kurve liegen, um eine größtmögliche Autarkie zu erreichen."
   sufficiency_info: "Die Sparsamkeit gibt an, wie niedrig der Pro-Kopf Stromverbrauch in dieser Gruppe ist. Das Ziel sollte sein, weniger als 500 kWh im Jahr pro Kopf zu verbrauchen."
   fitting_info: "Die Passung gibt an, ob der Verlauf der Kurve des Gesamtverbrauchs mit der der Gesamterzeugung übereinstimmt. Hier wird belohnt, wer mit seinem Stromverbrauch versucht, den qualitativen Verlauf der Stromerzeugungsanlage nachzubilden."
   closeness_info: "Die Lokalität gibt an, wie nah die Gruppenmitglieder beieinander wohnen. Gruppen im gleichen Haus, Viertel etc. sind anzustreben, währen über hunderte Kilometer verteilte Gruppen benachteiligt werden."
-  group_info_metering_point: "Die Gruppe, zu der dieser Zählpunkt zugeordnet ist. Bezugszählpunkte beziehen ihren Strom über diese Gruppe und Produktionszählpunkte speisen ihren Strom in diese Gruppe ein."
+  group_info_register: "Die Gruppe, zu der dieser Zählwerk zugeordnet ist. BezugsZählwerke beziehen ihren Strom über diese Gruppe und ProduktionsZählwerke speisen ihren Strom in diese Gruppe ein."
 
   possible_reasons_are_a_broken_internet_connection_or_a_failure_in_your_hardware: "Mögliche Gründe sind eine unterbrochene Internetverbindung oder ein Fehler in deiner Hardware."
   to_get_the_latest_data_in_your_app_you_should_try_to_fix_this_issue: "Um die neusten Daten in Deiner buzzn App verfügbar zu haben solltest Du dieses Problem schnellstmöglich beheben."
   if_you_can_not_fix_this_problem_on_your_own_contact_the_manufacturer_of_your_hardware: "Wenn Du dieses Problem nicht selbst lösen kannst kontaktiere bitte den Hersteller Deiner Hardware."
-  this_is_the_concerned_metering_point: "Das ist der betroffene Zählpunkt:"
+  this_is_the_concerned_register: "Das ist der betroffene Zählwerk:"
   new_friendship_request_from: "Neue Freundschaftsanfrage von %{sender}"
   sent_a_friendship_request_to_you: hat Dir eine Freundschaftsanfrage gesendet.
   sent_a_friendship_request_to_user: "hat eine Freundschaftsanfrage an %{user} gesendet."
   to_accept_or_reject_the_friendship_request_please_visit_your_profile: Um die Anfrage zu akzeptieren oder abzulehnen besuche bitte Dein Profil.
-  to_accept_or_reject_this_request_please_visit_your_metering_point: Um die Anfrage zu akzeptieren oder abzulehnen besuche bitte Deinen Zählpunkt.
+  to_accept_or_reject_this_request_please_visit_your_register: Um die Anfrage zu akzeptieren oder abzulehnen besuche bitte Deinen Zählwerk.
   to_accept_or_reject_this_invitation_please_visit_your_profile: Um diese Einladung anzunehmen oder abzulehnen besuche bitte Dein Profil.
-  metering_point_left_successfully: "Du hast den Zählpunkt '%{metering_point_name}' erfolgreich verlassen."
-  user_removed_successfully: "Du hast den Benutzer '%{username}' erfolgreich von disem Zählpunkt entfernt."
-  user_removed_you_from_metering_point: "%{username} hat Dich vom Zählpunkt %{metering_point_name} entfernt"
-  to_join_this_metering_point_again_visit_this_link_and_ask_for_permission: "Du kannst den folgenden Link besuchen, um für die Erlaubnis, dem Zählpunkt wieder beizutreten, zu bitten."
+  register_left_successfully: "Du hast den Zählwerk '%{register_name}' erfolgreich verlassen."
+  user_removed_successfully: "Du hast den Benutzer '%{username}' erfolgreich von disem Zählwerk entfernt."
+  user_removed_you_from_register: "%{username} hat Dich vom Zählwerk %{register_name} entfernt"
+  to_join_this_register_again_visit_this_link_and_ask_for_permission: "Du kannst den folgenden Link besuchen, um für die Erlaubnis, dem Zählwerk wieder beizutreten, zu bitten."
   group_created_successfully: Die Gruppe wurde erfolgreich erstellt
   failed_to_create_group: Beim Erstellen der Gruppe ist ein Fehler aufgetreten
   group_destroyed_successfully: Die Gruppe wurde erfolgreich gelöscht
   failed_to_destroy_group: Beim Löschen der Gruppe ist ein Fehler aufgetreten
   new_comment_from_user: "Neuer Kommentar von %{username}"
   at_your_group: "Bei Deiner Gruppe %{group_name}"
-  at_your_metering_point: "Bei Deinem Zählpunkt %{metering_point_name}"
+  at_your_register: "Bei Deinem Zählwerk %{register_name}"
   user_liked_your_comment: "%{username} gefällt Dein Kommentar."
   at_resource: "Bei %{resource_type} '%{resource_name}'"
-  user_wants_to_join_your_group_with_the_metering_point: "%{username} möchte Deiner Gruppe '%{group_name}' mit dem Zählpunkt '%{metering_point_name}' beitreten."
+  user_wants_to_join_your_group_with_the_register: "%{username} möchte Deiner Gruppe '%{group_name}' mit dem Zählwerk '%{register_name}' beitreten."
   to_accept_or_reject_this_request_please_visit_your_group_page: "Um diese Anfrage anzunehmen oder abzulehnen besuche bitte Deine Gruppenseite."
-  user_invited_you_to_join_the_group_with_your_metering_point: "%{username} hat Dich dazu eingeladen der Gruppe '%{group_name}' mit Deinem Zählpunkt '%{metering_point_name}' beizutreten."
+  user_invited_you_to_join_the_group_with_your_register: "%{username} hat Dich dazu eingeladen der Gruppe '%{group_name}' mit Deinem Zählwerk '%{register_name}' beizutreten."
   visit_the_group_page_to_see_the_energy_data_that_is_visible_for_you_now: "Besuche die Gruppenseite um die Energiedaten einzusehen, die für Dich jetzt sichtbar sind."
-  you_are_now_a_member_of_the_group_with_your_metering_point: "Du bist jetzt mit Deinem Zählpunkt '%{metering_point_name}' Mitglied der Gruppe '%{group_name}'."
-  user_is_now_a_member_of_your_group_with_the_metering_point: "%{username} ist jetzt mit dem Zählpunkt '%{metering_point_name}' ein Mitglied Deiner Gruppe '%{group_name}'."
+  you_are_now_a_member_of_the_group_with_your_register: "Du bist jetzt mit Deinem Zählwerk '%{register_name}' Mitglied der Gruppe '%{group_name}'."
+  user_is_now_a_member_of_your_group_with_the_register: "%{username} ist jetzt mit dem Zählwerk '%{register_name}' ein Mitglied Deiner Gruppe '%{group_name}'."
   visit_the_group_page_to_see_the_how_the_energy_data_has_changed_now: "Besuche die Gruppenseite um zu sehen, wie sich die Energiedaten nun verändert haben."
   new_group_member: Neues Gruppenmitglied
-  your_group_metering_point_request_has_been_accepted: "Deine Gruppenanfrage wurde akzeptiert."
-  your_group_metering_point_invitation_has_been_accepted: "Deine Gruppeneinladung wurde akzeptiert."
-  your_group_metering_point_request_for_the_group_has_been_rejected: "Deine Gruppenanfrage an die Gruppe '%{group_name}' wurde abgelehnt."
+  your_group_register_request_has_been_accepted: "Deine Gruppenanfrage wurde akzeptiert."
+  your_group_register_invitation_has_been_accepted: "Deine Gruppeneinladung wurde akzeptiert."
+  your_group_register_request_for_the_group_has_been_rejected: "Deine Gruppenanfrage an die Gruppe '%{group_name}' wurde abgelehnt."
   to_look_for_another_group_please_visit_the_groups_index_page: "Um eine andere Gruppe zu finden besuche bitte die Gruppenübersicht."
   index_page: Übersichtsseite
-  your_group_metering_point_invitation_for_metering_point_has_been_rejected: "Deine Gruppeneinladung an den Zählpunkt '%{metering_point_name}' wurde abgelehnt."
+  your_group_register_invitation_for_register_has_been_rejected: "Deine Gruppeneinladung an den Zählwerk '%{register_name}' wurde abgelehnt."
   to_invite_more_users_please_visit_the_group_page: "Um weitere Benutzer einzuladen besuche bitte Deine Gruppe."
-  your_metering_point_exceeded_the_maximum_value_of: "Dein Zählpunkt %{metering_point_name} hat den Wert von %{max_watt} Watt überschritten."
+  your_register_exceeded_the_maximum_value_of: "Dein Zählwerk %{register_name} hat den Wert von %{max_watt} Watt überschritten."
   exceeded_the_maximum_value_of: "hat den Wert von %{max_watt} überschritten."
   exceeded_the_maximum_value: "hat den maximalen Wert überschritten."
   you_receive_this_message_because_you_subscribed_to_this_event: "Du erhälst diese Nachricht, da Du angegeben hast, bei dem eingetretenen Ereignis benachrichtigt zu werden."
-  to_unsubscribe_this_event_please_visit_your_metering_point_and_change_this_setting: "Um keine Benachrichtigungen mehr bei diesem Ereignis zu erhalten besuche bitte Deinen Zählpunkt und ändere die Einstellungen."
-  your_metering_point_undershot_the_minimum_value_of: "Dein Zählpunkt %{metering_point_name} hat den Wert von %{min_watt} Watt unterschritten."
+  to_unsubscribe_this_event_please_visit_your_register_and_change_this_setting: "Um keine Benachrichtigungen mehr bei diesem Ereignis zu erhalten besuche bitte Deinen Zählwerk und ändere die Einstellungen."
+  your_register_undershot_the_minimum_value_of: "Dein Zählwerk %{register_name} hat den Wert von %{min_watt} Watt unterschritten."
   undershot_the_minimum_value_of: "hat den Wert von %{min_watt} unterschritten."
   undershot_the_minimum_value: "hat den minimalen Wert unterschritten."
   to_unsubscribe_this_event_please_visit_your_group_and_change_this_setting: "Um keine Benachrichtigungen mehr bei diesem Ereignis zu erhalten besuche bitte Deine Gruppe und ändere die Einstellungen."
   to_unsubscribe_this_event_please_visit_your_profile_and_change_this_setting: "Um keine Benachrichtigungen mehr bei diesem Ereignis zu erhalten besuche bitte Dein Profil und ändere die Einstellungen."
   user_wrote_a_new_comment_at_the_group: "%{username} hat einen neuen Kommentar bei der Gruppe %{group_name} geschrieben."
-  user_wrote_a_new_comment_at_the_metering_point: "%{username} hat einen neuen Kommentar beim Zählpunkt %{metering_point_name} geschrieben."
-  accepted_metering_point_user_invitation: Zählpunkteinladung akzeptiert
-  your_metering_point_user_request_has_been_accepted: "Deine Zählpunktanfrage wurde akzeptiert."
-  you_are_now_a_member_of_the_metering_point: "Du bist ein Mitglied des Zählpunktes '%{metering_point_name}'."
-  visit_the_metering_point_page_to_see_the_energy_data_that_is_visible_for_you_now: "Besuche die Seite des Zählpunktes um die Energiedaten einzusehen, die für Dich jetzt sichtbar sind."
-  your_metering_point_user_invitation_has_been_accepted: "Deine Zählpunkteinladung wurde angenommen."
-  user_is_now_a_member_of_your_metering_point: "%{username} ist jetzt ein Mitglied deines Zählpunktes '%{metering_point_name}'."
-  visit_the_metering_point_page_to_see_the_how_the_energy_data_has_changed_now: "Besuche die Seite des Zählpunktes um zu sehen, wie sich die Energiedaten nun verändert haben."
-  rejected_group_metering_point_invitation: "Abgelehnte Gruppeneinladung"
-  the_group_metering_point_invitation_for_metering_point_at_group_has_been_rejected: "Die Gruppeneinladung an den Zählpunkt %{metering_point_name} der Gruppe %{group_name} beizutreten ist abgelehnt worden."
-  user_rejected_the_invitation_to_group_with_metering_point: "%{user} hat die Einladung der Gruppe %{group} mit dem Zählpunkt %{metering_point} beizutreten abgelehnt."
-  cancelled_metering_point_user_membership: "Mitgliedschaft beim Zählpunkt beendet"
+  user_wrote_a_new_comment_at_the_register: "%{username} hat einen neuen Kommentar beim Zählwerk %{register_name} geschrieben."
+  accepted_register_user_invitation: Zählwerkeinladung akzeptiert
+  your_register_user_request_has_been_accepted: "Deine Zählwerkanfrage wurde akzeptiert."
+  you_are_now_a_member_of_the_register: "Du bist ein Mitglied des Zählwerkes '%{register_name}'."
+  visit_the_register_page_to_see_the_energy_data_that_is_visible_for_you_now: "Besuche die Seite des Zählwerkes um die Energiedaten einzusehen, die für Dich jetzt sichtbar sind."
+  your_register_user_invitation_has_been_accepted: "Deine Zählwerkeinladung wurde angenommen."
+  user_is_now_a_member_of_your_register: "%{username} ist jetzt ein Mitglied deines Zählwerkes '%{register_name}'."
+  visit_the_register_page_to_see_the_how_the_energy_data_has_changed_now: "Besuche die Seite des Zählwerkes um zu sehen, wie sich die Energiedaten nun verändert haben."
+  rejected_group_register_invitation: "Abgelehnte Gruppeneinladung"
+  the_group_register_invitation_for_register_at_group_has_been_rejected: "Die Gruppeneinladung an den Zählwerk %{register_name} der Gruppe %{group_name} beizutreten ist abgelehnt worden."
+  user_rejected_the_invitation_to_group_with_register: "%{user} hat die Einladung der Gruppe %{group} mit dem Zählwerk %{register} beizutreten abgelehnt."
+  cancelled_register_user_membership: "Mitgliedschaft beim Zählwerk beendet"
 
   has_accepted_the_platform_invitation_and_is_now_a_member_of_the_buzzn_community: "hat die Einladung akzeptiert und ist nun Mitglied der buzzn Community."
   has_invited_user_to_join_the_buzzn_community: "hat %{user} eingeladen der buzzn Community beizutreten."
@@ -897,10 +897,10 @@ de:
   error_forbidden: "Uups, Du hast nicht die nötigen Rechte, um diese Seite anzusehen!"
   you_have_count_messages: "Du hast %{count} Nachrichten"
   no_smartmeter_means_you_get_dummy_data: "Da das Messgerät kein Smartmeter ist werden die Messwerte mit Standard-Daten dargestellt. Dies kann jederzeit geändert werden."
-  the_metering_point_will_get_its_data_via_the_connection_established_by_the_selected_meter: "Der Zählpunkt wird seine Daten über die Datenverbindung beziehen, die mit dem ausgewählten Messgerät eingerichtet wurde."
-  as_this_metering_point_is_virtual_it_will_not_have_a_meter: Da dieser Zählpunkt virtuell ist, kann er keinen Zähler besitzen.
-  instead_you_can_define_the_formula_to_calculate_the_data_for_this_metering_point: Stattdessen kannst Du eine Formel angeben, durch die die Energiedaten für diesen Zählpunkt errechnet werden.
-  virtual_metering_point_means_you_get_the_data_out_of_others_so_no_seperatate_data_conncection_is_needed: Da der Zählpunkt virtuell ist und seine Daten aus anderen Zählpunkten errechnet werden ist keine separate Datenverbindung nötig.
+  the_register_will_get_its_data_via_the_connection_established_by_the_selected_meter: "Der Zählwerk wird seine Daten über die Datenverbindung beziehen, die mit dem ausgewählten Messgerät eingerichtet wurde."
+  as_this_register_is_virtual_it_will_not_have_a_meter: Da dieser Zählwerk virtuell ist, kann er keinen Zähler besitzen.
+  instead_you_can_define_the_formula_to_calculate_the_data_for_this_register: Stattdessen kannst Du eine Formel angeben, durch die die Energiedaten für diesen Zählwerk errechnet werden.
+  virtual_register_means_you_get_the_data_out_of_others_so_no_seperatate_data_conncection_is_needed: Da der Zählwerk virtuell ist und seine Daten aus anderen Zählwerken errechnet werden ist keine separate Datenverbindung nötig.
 
   the_requested_content_is_not_public: Der angefragte Inhalt ist nicht öffentlich
   embed: Einbetten
@@ -944,10 +944,10 @@ de:
   the_conversation: die Unterhaltung
 
   edit_notifications: Benachrichtigungen bearbeiten
-  these_settings_are_just_valid_for_this_metering_point: "Diese Einstellungen gelten nur für diesen Zählpunkt."
+  these_settings_are_just_valid_for_this_register: "Diese Einstellungen gelten nur für diesen Zählwerk."
   to_change_your_global_notification_settings_please_visit_your_profile: "Um Deine Benachrichtigungen global zu verwalten besuche bitte %{your_profile}."
   these_settings_are_just_valid_for_this_group: Diese Einstellungen gelten nur für diese Gruppe.
-  these_settings_are_valid_globally_and_override_the_settings_for_each_of_your_groups_and_metering_points: Diese Einstellungen gelten global und überschreiben die Einstellungen von deinen Zählpunkten und Gruppen.
+  these_settings_are_valid_globally_and_override_the_settings_for_each_of_your_groups_and_registers: Diese Einstellungen gelten global und überschreiben die Einstellungen von deinen Zählwerken und Gruppen.
   this_setting_is_overridden_by_your_global_settings_so_you_have_to_change_these_first: "Diese Einstellung wird von Deinen globalen Einstellungen überschrieben. Du solltest also die globalen Einstellungen zuerst ändern."
 
   legals: Rechtliches

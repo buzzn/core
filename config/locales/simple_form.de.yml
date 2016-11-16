@@ -47,15 +47,15 @@ de:
         email_notification_meter_offline: Email Benachrichtigung wenn Messgerät offline ist
         notify_me_when_comment_create: Email Benachrichtigung wenn neuer Kommentar erstellt wurde
         notify_me_when_comment_liked: Email Benachrichtigung wenn mein Kommentar geliked wurde
-        notify_me_when_metering_point_exceeds: Email Benachrichtigung wenn ein Zählpunkt seine Leistungsgrenze übersteigt
-        notify_me_when_metering_point_undershoots: Email Benachrichtigung wenn ein Zählpunkt seine Leistungsgrenze unterschreitet
-        notify_me_when_metering_point_offline: Email Benachrichtigung wenn ein Zählpunkt offline ist
-      metering_point:
-        uid: Zählpunkt-ID
+        notify_me_when_register_exceeds: Email Benachrichtigung wenn ein Zählwerk seine Leistungsgrenze übersteigt
+        notify_me_when_register_undershoots: Email Benachrichtigung wenn ein Zählwerk seine Leistungsgrenze unterschreitet
+        notify_me_when_register_offline: Email Benachrichtigung wenn ein Zählwerk offline ist
+      register:
+        uid: Zählwerk-ID
         address_addition: Addresszusatz
-        mode: Art des Zählpunkts
+        mode: Art des Zählwerks
         meter_type: Zählertyp
-        virtual: Virtueller Zählpunkt
+        virtual: Virtueller Zählwerk
         group: Zu eigener Gruppe hinzufügen
         readable: Sichtbar für
         forecast_kwh_pa: Jahresprognose (kWh)
@@ -65,12 +65,12 @@ de:
         observe: Leistungsüberwachung
         min_watt: Email Benachrichtigung wenn Leistung diesen Wert unterschreitet (Watt)
         max_watt: Email Benachrichtigung wenn Leistung diesen Wert überschreitet (Watt)
-        observe_offline: Email Benachrichtigung wenn Zählpunkt offline ist
+        observe_offline: Email Benachrichtigung wenn Zählwerk offline ist
         message: Nachricht
         notify_me_when_comment_create: Email Benachrichtigung wenn neuer Kommentar erstellt wurde
-        notify_me_when_metering_point_exceeds: Email Benachrichtigung wenn der Zählpunkt seine Leistungsgrenze übersteigt
-        notify_me_when_metering_point_undershoots: Email Benachrichtigung wenn der Zählpunkt seine Leistungsgrenze unterschreitet
-        notify_me_when_metering_point_offline: Email Benachrichtigung wenn der Zählpunkt offline ist
+        notify_me_when_register_exceeds: Email Benachrichtigung wenn der Zählwerk seine Leistungsgrenze übersteigt
+        notify_me_when_register_undershoots: Email Benachrichtigung wenn der Zählwerk seine Leistungsgrenze unterschreitet
+        notify_me_when_register_offline: Email Benachrichtigung wenn der Zählwerk offline ist
       device:
         image: Bild
         mode: Modus
@@ -133,7 +133,7 @@ de:
         name: Name
         website: Webseite
         description: Beschreibung
-        metering_points: Zählpunkte
+        registers: Zählwerke
         mode: Art
         new_meters: "Hier Zählernummer eingeben:"
         manufacturer_product_serialnumber: "Zählernummer, die hinzugefügt werden soll"
@@ -142,7 +142,7 @@ de:
         readable: Sichtbar für
         message: Nachricht
         notify_me_when_comment_create: Email Benachrichtigung wenn neuer Kommentar erstellt wurde
-        add_own_metering_point: Eigenen Zählpunkt hinzufügen
+        add_own_register: Eigenen Zählwerk hinzufügen
       meter:
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname
@@ -156,14 +156,14 @@ de:
         mounting_method: Befestigungsmethode
         build_year: Herstellungsjahr
         calibrated_till: Geeicht bis
-        metering_points: Zählpunkte
+        registers: Zählwerke
         smartmeter: Smart Meter
         existing_meter: Ein vorhandenes Messgerät hinzufügen
       registers:
         mode: Richtung
         obis_index: OBIS Kennzahlen
         variable_tariff: Variabler Tarif
-      metering_point_operator_contract:
+      register_operator_contract:
         organization: Firma
         customer_number: Kundennummer
         contract_number: Vertragsnummer
@@ -194,10 +194,10 @@ de:
         image: Bild
 
     placeholders:
-      metering_point:
+      register:
         name: "Frei wählbar, z.B. 'Wohnung' oder 'Solaranlage' - KEINE Adressangaben!"
         uid: "DE1234567890123456789012345678901"
-      metering_point_operator_contract:
+      register_operator_contract:
         username: "jemand@beispiel.de"
       meter:
         manufacturer_product_serialnumber: "12345678"
@@ -210,9 +210,9 @@ de:
     hints:
       defaults:
         username: 'Benutzername, mit dem Du Dich einloggen kannst.'
-      metering_point:
-        #uid: "Zählpunkt ist die Bezeichnung in der Energiewirtschaft für den Punkt, an dem Versorgungsleistungen an Verbraucher geleistet oder von Erzeugern bezogen werden. z.B. DE 000562 66802 AO6G56M11SN51G21M24S"
-      metering_point_operator_contract:
+      register:
+        #uid: "Zählwerk ist die Bezeichnung in der Energiewirtschaft für den Punkt, an dem Versorgungsleistungen an Verbraucher geleistet oder von Erzeugern bezogen werden. z.B. DE 000562 66802 AO6G56M11SN51G21M24S"
+      register_operator_contract:
         username: 'Benutzername, mit dem du dich beim Messstellenbetreiber einloggen kannst.'
       device:
         image: "Ein Bild von Deinem Gerät darf maximal 2 MB groß und nur vom Typ GIF, JPG und PNG sein."
@@ -232,13 +232,13 @@ de:
         mode:
           in: 'Verbraucher'
           out: 'Erzeuger'
-      metering_point:
+      register:
         mode:
           in: 'Verbrauch oder Bezug'
           out: 'Produktion oder Einspeisung'
         readable:
           me: Nur mich
-          members: Mitglieder des Zählpunkts
+          members: Mitglieder des Zählwerks
           friends: Meine Freunde
           community: Alle angemeldeten Nutzer
           world: Alle Internet-Nutzer
@@ -246,7 +246,7 @@ de:
         mode:
           power_giver_contract: Vertrag für Stromlieferung
           power_taker_contract: Vertrag für Stromabnahme
-          metering_point_operator_contract: Messstellenbetreiber Vertrag
+          register_operator_contract: Messstellenbetreiber Vertrag
           servicing_contract: Abwicklungsvertrag
       contracting_party:
         legal_entity:
