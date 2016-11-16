@@ -160,6 +160,7 @@ describe "ContractingParty Model" do
       }.to raise_error Buzzn::RecordNotFound
 
       subject = ContractingParty.guarded_create(admin,
+                                                bank_account: bank_account,
                                                 register_id: other_register.id,
                                                 legal_entity: 'natural_person')
       expect(subject.reload.register).to eq(other_register)
