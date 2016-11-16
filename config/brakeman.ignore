@@ -5,17 +5,17 @@
       "warning_code": 0,
       "fingerprint": "0e37649679b245cd5e6f693ab6bb87bf2612469f0dbc70e67fcf8d0ab940ae7c",
       "message": "Possible SQL injection",
-      "file": "app/models/metering_point.rb",
+      "file": "app/models/register.rb",
       "line": 75,
       "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "select(\"#{MeteringPoint.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{MeteringPoint.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
+      "code": "select(\"#{Register.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{Register.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "MeteringPoint",
+        "class": "Register",
         "method": "anonymized"
       },
-      "user_input": "MeteringPoint.columns.collect",
+      "user_input": "Register.columns.collect",
       "confidence": "High",
       "note": ""
     },
@@ -35,6 +35,25 @@
         "method": "create"
       },
       "user_input": "params[:comment][:commentable_type]",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "8219193545ae4c18520bff72d9d8283ed3854c51547baa10ff78d225d3ec225f",
+      "message": "Possible SQL injection",
+      "file": "app/models/register.rb",
+      "line": 77,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "select(\"#{Register.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{Register.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Register",
+        "method": "anonymized"
+      },
+      "user_input": "Register.columns.collect",
       "confidence": "High",
       "note": ""
     },
@@ -96,7 +115,7 @@
       "fingerprint": "f45fd07be0135c148b61e9f9f282031eaa5be455fe8806933385a15fee02b6a0",
       "message": "Basic authentication password stored in source code",
       "file": "app/controllers/application_controller.rb",
-      "line": 16,
+      "line": 17,
       "link": "http://brakemanscanner.org/docs/warning_types/basic_auth/",
       "code": "(password == \"sonnenaufgang\")",
       "render_path": null,
@@ -110,6 +129,6 @@
       "note": ""
     }
   ],
-  "updated": "2016-09-12 09:14:20 +0200",
-  "brakeman_version": "3.3.1"
+  "updated": "2016-11-16 15:59:07 +0100",
+  "brakeman_version": "3.3.3"
 }

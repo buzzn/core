@@ -1,12 +1,12 @@
 # USAGE:
 #
-# For a single metering_point, only latest power:
+# For a single register, only latest power:
 #
-#  aggregator = new Aggregator([metering_point_id])
+#  aggregator = new Aggregator([register_id])
 #  $.when(aggregator.present(new Date())).done ->
 #    data = aggregator.data
 #
-# For multiple metering_points, only chart data:
+# For multiple registers, only chart data:
 #
 # out_aggregator = new Aggregator(out_ids)
 # in_aggregator = new Aggregator(in_ids)
@@ -19,17 +19,17 @@
 #################################################################################################
 
 class @Aggregator
-  constructor: (metering_point_ids) ->
+  constructor: (register_ids) ->
     @returned_ajax_data = []
     @data = []
-    @metering_point_ids = metering_point_ids
+    @register_ids = register_ids
 
   present: (timestamp) ->
     if timestamp == undefined
       timestamp = new Date()
     instance = this
     ajax_calls = []
-    @metering_point_ids.forEach (id) ->
+    @register_ids.forEach (id) ->
       ajax_calls.push(instance.fetchData(id, timestamp, 'present', 'present'))
     return $.when.apply($, ajax_calls).always( ->
       instance.sumData('present')
@@ -42,7 +42,7 @@ class @Aggregator
       resolution = 'day_to_minutes'
     instance = this
     ajax_calls = []
-    @metering_point_ids.forEach (id) ->
+    @register_ids.forEach (id) ->
       ajax_calls.push(instance.fetchData(id, timestamp, resolution, 'past'))
     return $.when.apply($, ajax_calls).always( ->
       instance.sumData(resolution)
@@ -55,9 +55,9 @@ class @Aggregator
       timestamp = new Date(timestamp)
     url = ''
     if chartType == 'present'
-      url = '/api/v1/aggregates/present?timestamp=' + encodeURIComponent(moment(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSSZ')) + '&metering_point_ids=' + id
+      url = '/api/v1/aggregates/present?timestamp=' + encodeURIComponent(moment(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSSZ')) + '&register_ids=' + id
     else
-      url = '/api/v1/aggregates/past?timestamp=' + encodeURIComponent(moment(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSSZ')) + '&resolution=' + resolution + '&metering_point_ids=' + id
+      url = '/api/v1/aggregates/past?timestamp=' + encodeURIComponent(moment(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSSZ')) + '&resolution=' + resolution + '&register_ids=' + id
 
     checkToken();
     ajaxCall = $.ajax({url: url, headers: headers, async: true, dataType: 'json'})

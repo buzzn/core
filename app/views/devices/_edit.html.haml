@@ -6,7 +6,7 @@
     = simple_form_for @device, remote: true, html: { multipart: true } do |f|
       = render 'devices/form_fields', f: f
       .modal-footer
-        - if @device.metering_point && @device.metering_point.group && @device.mode == "out"
+        - if @device.register && @device.register.group && @device.mode == "out"
           .float-left
             %button.btn.btn-danger.btn-labeled.fa.fa-trash{:disabled => "disabled"}= t('not_deletable')
         - else

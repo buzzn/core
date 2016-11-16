@@ -23,7 +23,7 @@ window.addEventListener 'focus', (event)->
   window.wisActive = true
 #  actual_resolution = "hour_to_minutes"
 #  containing_timestamp = chart_data_min_x
-#  setChartData('metering_points', id, containing_timestamp)
+#  setChartData('registers', id, containing_timestamp)
 
 
 window.addEventListener 'blur', (event)->

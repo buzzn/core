@@ -171,16 +171,16 @@ class User < ActiveRecord::Base
     FriendshipRequest.where(sender: self)
   end
 
-  def sent_group_metering_point_requests
-    GroupMeteringPointRequest.where(user: self).requests
+  def sent_group_register_requests
+    GroupRegisterRequest.where(user: self).requests
   end
 
-  def received_group_metering_point_requests
-    GroupMeteringPointRequest.where(user: self).invitations
+  def received_group_register_requests
+    GroupRegisterRequest.where(user: self).invitations
   end
 
-  def received_metering_point_user_requests
-    MeteringPointUserRequest.where(user: self).invitations
+  def received_register_user_requests
+    RegisterUserRequest.where(user: self).invitations
   end
 
   def old_badge_notifications
@@ -194,8 +194,8 @@ class User < ActiveRecord::Base
 
 
 
-  def editable_metering_points
-    MeteringPoint.editable_by_user(self).collect(&:decorate)
+  def editable_registers
+    Register.editable_by_user(self).collect(&:decorate)
   end
 
   def editable_meters
@@ -211,25 +211,25 @@ class User < ActiveRecord::Base
   end
 
   def editable_addresses
-    self.editable_metering_points.collect(&:address).compact.uniq{|address| address.longitude && address.latitude}
+    self.editable_registers.collect(&:address).compact.uniq{|address| address.longitude && address.latitude}
   end
 
-  def non_private_editable_metering_points
-    MeteringPoint.editable_by_user(self).non_privates.collect(&:decorate)
+  def non_private_editable_registers
+    Register.editable_by_user(self).non_privates.collect(&:decorate)
   end
 
-  def metering_points_as_member
-    MeteringPoint.with_role(:member, self).collect(&:decorate)
+  def registers_as_member
+    Register.with_role(:member, self).collect(&:decorate)
   end
 
-  def accessible_metering_points
-    MeteringPoint.accessible_by_user(self).collect(&:decorate)
+  def accessible_registers
+    Register.accessible_by_user(self).collect(&:decorate)
   end
 
   def self.unsubscribed_from_notification(key, resource)
     result = []
     result << NotificationUnsubscriber.by_resource(resource).by_key(key).collect(&:user)
-    if resource.is_a?(Group) || resource.is_a?(MeteringPoint)
+    if resource.is_a?(Group) || resource.is_a?(Register)
       result << NotificationUnsubscriber.within_users(resource.involved).by_key(key).collect(&:user)
     end
     return result.flatten.uniq
@@ -242,64 +242,64 @@ class User < ActiveRecord::Base
   def accessible_groups
     result = []
     result << Group.editable_by_user(self).collect(&:decorate)
-    result << self.accessible_metering_points.collect(&:group).compact.collect(&:decorate)
+    result << self.accessible_registers.collect(&:group).compact.collect(&:decorate)
     return result.flatten.uniq
   end
 
-  def usable_metering_points
-    result = self.editable_metering_points
+  def usable_registers
+    result = self.editable_registers
     self.friends.each do |friend|
-      result << friend.non_private_editable_metering_points
+      result << friend.non_private_editable_registers
     end
-    result << editable_metering_points_without_meter_not_virtual
+    result << editable_registers_without_meter_not_virtual
     return result.flatten.uniq.sort! { |a,b| a.name.downcase <=> b.name.downcase }
   end
 
-  def invitable_users(metering_point)
+  def invitable_users(register)
     result = self.friends.collect(&:profile).compact.collect(&:user)
     not_invitable = []
 
-    metering_point.users.each do |user|
+    register.users.each do |user|
       user.profile.nil? ? nil : not_invitable << user
     end
     return result - not_invitable
   end
 
-  def accessible_metering_points_by_address
+  def accessible_registers_by_address
     result = []
     without_address = []
-    all_metering_points = MeteringPoint.accessible_by_user(self)
-    all_addresses = all_metering_points.collect(&:address).compact.uniq{|address| address.longitude && address.latitude}
-    result << {:address => nil, :metering_points => all_metering_points} if all_addresses.empty?
+    all_registers = Register.accessible_by_user(self)
+    all_addresses = all_registers.collect(&:address).compact.uniq{|address| address.longitude && address.latitude}
+    result << {:address => nil, :registers => all_registers} if all_addresses.empty?
 
     all_addresses.each do |address|
-      metering_points_for_one_address = []
-      all_metering_points.each do |metering_point|
-        metering_point_address = metering_point.address
-        if metering_point_address == nil
-          if !without_address.include?(metering_point)
-            without_address << metering_point
+      registers_for_one_address = []
+      all_registers.each do |register|
+        register_address = register.address
+        if register_address == nil
+          if !without_address.include?(register)
+            without_address << register
           end
           next
-        elsif metering_point_address.longitude == address.longitude && metering_point_address.latitude == address.latitude
-          metering_points_for_one_address << metering_point
+        elsif register_address.longitude == address.longitude && register_address.latitude == address.latitude
+          registers_for_one_address << register
         end
       end
-      result << {:address => address, :metering_points => metering_points_for_one_address}
+      result << {:address => address, :registers => registers_for_one_address}
     end
-    result << {:address => nil, :metering_points => without_address} if without_address.any?
+    result << {:address => nil, :registers => without_address} if without_address.any?
     #coordinates = all_addresses.compact.collect{|address| [address.longitude, address.latitude]}.uniq
     #coordinates.each do |coordinate|
     #  addresses = Address.where(longitude: coordinate[0]).where(latitude: coordinate[1])
-    #  result << {:address => addresses.first, :metering_points => addresses.collect(&:metering_point)}
+    #  result << {:address => addresses.first, :registers => addresses.collect(&:register)}
     #end
-    #without_address = all_metering_points.collect{|metering_point| metering_point if metering_point.address.nil?}.compact
-    #result << {:address => nil, :metering_points => without_address} if without_address.any?
+    #without_address = all_registers.collect{|register| register if register.address.nil?}.compact
+    #result << {:address => nil, :registers => without_address} if without_address.any?
     return result
   end
 
-  def editable_metering_points_without_meter_not_virtual
-    MeteringPoint.editable_by_user_without_meter_not_virtual(self)
+  def editable_registers_without_meter_not_virtual
+    Register.editable_by_user_without_meter_not_virtual(self)
   end
 
   #defined types: primary, info, success, warning, danger, mint, purple, pink, dark
@@ -397,16 +397,16 @@ private
 
   def delete_content
     self.editable_groups.each do |group|
-      if (group.managers.count == 1 && !group.in_metering_points.collect{|metering_point| self.can_update?(metering_point)}.include?(false))
+      if (group.managers.count == 1 && !group.in_registers.collect{|register| self.can_update?(register)}.include?(false))
         group.destroy
       end
     end
-    self.editable_metering_points.each do |metering_point|
-      if metering_point.managers.count == 1 && (metering_point.users.count <= 1 && (metering_point.users.include?(self) || metering_point.users.empty?))
-        metering_point.destroy
+    self.editable_registers.each do |register|
+      if register.managers.count == 1 && (register.users.count <= 1 && (register.users.include?(self) || register.users.empty?))
+        register.destroy
       end
     end
-    MeteringPointUserRequest.where(user: self).each{|request| request.destroy}
+    RegisterUserRequest.where(user: self).each{|request| request.destroy}
     FriendshipRequest.where(sender: self).each{|request| request.destroy}
     FriendshipRequest.where(receiver: self).each{|request| request.destroy}
     dummy_user = User.dummy

@@ -21,8 +21,8 @@ Fabricator :contract do
 end
 
 
-Fabricator :metering_point_operator_contract, from: :contract do
-  mode  'metering_point_operator_contract'
+Fabricator :register_operator_contract, from: :contract do
+  mode  'register_operator_contract'
 end
 
 
@@ -59,72 +59,60 @@ Fabricator :power_giver_contract_with_address, from: :power_giver_contract do
 end
 
 
-Fabricator :mpoc_buzzn_metering, from: :metering_point_operator_contract do
+Fabricator :mpoc_buzzn_metering, from: :register_operator_contract do
   organization  { Organization.buzzn_metering }
   username      'team@localpool.de'
   password      'Zebulon_4711'
 end
 
 
-Fabricator :mpoc_justus, from: :metering_point_operator_contract do
+Fabricator :mpoc_justus, from: :register_operator_contract do
   organization  { Organization.find('discovergy') }
   username      'justus@buzzn.net'
   password      'PPf93TcR'
 end
 
-Fabricator :mpoc_stefan, from: :metering_point_operator_contract do
+Fabricator :mpoc_stefan, from: :register_operator_contract do
   organization  { Organization.find('discovergy') }
   username      'stefan@buzzn.net'
   password      '19200buzzn'
 end
 
-Fabricator :mpoc_karin, from: :metering_point_operator_contract do
+Fabricator :mpoc_karin, from: :register_operator_contract do
   organization  { Organization.find('discovergy') }
   username      'karin.smith@solfux.de'
   password      '19200buzzn'
 end
 
 
-Fabricator :mpoc_christian, from: :metering_point_operator_contract do
+Fabricator :mpoc_christian, from: :register_operator_contract do
   organization  { Organization.find('discovergy') }
   username      'christian@buzzn.net'
   password      'Roentgen11smartmeter'
 end
 
-Fabricator :mpoc_philipp, from: :metering_point_operator_contract do
+Fabricator :mpoc_philipp, from: :register_operator_contract do
   organization  { Organization.find('discovergy') }
   username      'info@philipp-osswald.de'
   password      'Null8fünfzehn'
 end
 
-Fabricator :mpoc_thomas, from: :metering_point_operator_contract do
+Fabricator :mpoc_thomas, from: :register_operator_contract do
   organization  { Organization.find('discovergy') }
   username      'thomas@buzzn.net'
   password      'DSivKK1980'
 end
 
 # thomas wohnung
-Fabricator :mpoc_ferraris_0001_amperix, from: :metering_point_operator_contract do
+Fabricator :mpoc_ferraris_0001_amperix, from: :register_operator_contract do
   organization  { Organization.find('mysmartgrid') }
   username      '6ed89edf81be48586afc19f9006feb8b'
   password      '1a875e34e291c28db95ecbda015ad433'
 end
 
 # wogeno oberländerstr bhkw
-Fabricator :mpoc_ferraris_0002_amperix, from: :metering_point_operator_contract do
+Fabricator :mpoc_ferraris_0002_amperix, from: :register_operator_contract do
   organization  { Organization.find('mysmartgrid') }
   username      '721bcb386c8a4dab2510d40a93a7bf66'
   password      '0b81f58c19135bc01420aa0120ae7693'
 end
-
-
-
-
-
-
-
-
-
-
-
-

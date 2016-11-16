@@ -34,8 +34,8 @@ describe Buzzn::ContractFactory do
       meter
     end
 
-    let(:metering_point) do
-      { metering_point: Fabricate.build(:metering_point).attributes }
+    let(:register) do
+      { register: Fabricate.build(:register).attributes }
     end
 
     let(:first_contract) do
@@ -102,7 +102,7 @@ describe Buzzn::ContractFactory do
       params.merge!(meter)
       expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
 
-      params.merge!(metering_point)
+      params.merge!(register)
       expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
 
       params.merge!(contracting_party)
@@ -119,10 +119,10 @@ describe Buzzn::ContractFactory do
       expect(party.legal_entity).to eq 'natural_person'
       expect(party.organization).to be_nil
       expect(party.bank_account).not_to be_nil
-      expect(contract.metering_point).not_to be_nil
-      expect(contract.metering_point.address).not_to be_nil
-      expect(contract.metering_point.meter).not_to be_nil
-      expect(contract.metering_point.address).to eq party.address
+      expect(contract.register).not_to be_nil
+      expect(contract.register.address).not_to be_nil
+      expect(contract.register.meter).not_to be_nil
+      expect(contract.register.address).to eq party.address
       expect(contract.organization).to be_nil
       expect(contract.address).to be_nil
       expect(contract.bank_account).not_to be_nil
@@ -145,7 +145,7 @@ describe Buzzn::ContractFactory do
       params.merge!(profile)
       params.merge!(address)
       params.merge!(meter)
-      params.merge!(metering_point)
+      params.merge!(register)
       params.merge!(contracting_party)
       params.merge!(first_contract)
       params.merge!(bank_account)
@@ -157,7 +157,7 @@ describe Buzzn::ContractFactory do
       params = {}
       params.merge!(address)
       params.merge!(meter)
-      params.merge!(metering_point)
+      params.merge!(register)
       params.merge!(contracting_party)
       params.merge!(first_contract)
       params.merge!(bank_account)
@@ -181,7 +181,7 @@ describe Buzzn::ContractFactory do
       params = {}
       params.merge!(address)
       params.merge!(meter)
-      params.merge!(metering_point)
+      params.merge!(register)
       params.merge!(contracting_party)
       params.merge!(first_contract)
       params.merge!(bank_account)
@@ -207,7 +207,7 @@ describe Buzzn::ContractFactory do
       params = {}
       params.merge!(address)
       params.merge!(meter)
-      params.merge!(metering_point)
+      params.merge!(register)
       params.merge!(contracting_party)
       params.merge!(other_address)
       params.merge!(first_contract)
@@ -220,10 +220,10 @@ describe Buzzn::ContractFactory do
       expect(party.legal_entity).to eq 'natural_person'
       expect(party.organization).to be_nil
       expect(party.bank_account).not_to be_nil
-      expect(contract.metering_point).not_to be_nil
-      expect(contract.metering_point.address).not_to be_nil
-      expect(contract.metering_point.meter).not_to be_nil
-      expect(contract.metering_point.address).not_to eq contract.address
+      expect(contract.register).not_to be_nil
+      expect(contract.register.address).not_to be_nil
+      expect(contract.register.meter).not_to be_nil
+      expect(contract.register.address).not_to eq contract.address
       owner = contract.contract_owner
       expect(owner.organization).to eq(Organization.buzzn_energy)
       expect(contract.price_cents_per_kwh).to eq 2630.0
@@ -236,7 +236,7 @@ describe Buzzn::ContractFactory do
       params = {}
       params.merge!(address)
       params.merge!(meter)
-      params.merge!(metering_point)
+      params.merge!(register)
       params.merge!(company)
       expect { subject.create_power_taker_contract(nil, params) }.to raise_error Buzzn::NestedValidationError
       params.merge!(first_contract)
@@ -249,10 +249,10 @@ describe Buzzn::ContractFactory do
       expect(party.legal_entity).to eq 'company'
       expect(party.organization).not_to be_nil
       expect(party.bank_account).not_to be_nil
-      expect(contract.metering_point).not_to be_nil
-      expect(contract.metering_point.address).not_to be_nil
-      expect(contract.metering_point.meter).not_to be_nil
-      expect(contract.metering_point.address).not_to eq contract.address
+      expect(contract.register).not_to be_nil
+      expect(contract.register.address).not_to be_nil
+      expect(contract.register.meter).not_to be_nil
+      expect(contract.register.address).not_to eq contract.address
       owner = contract.contract_owner
       expect(owner.organization).to eq(Organization.buzzn_energy)
       expect(contract.price_cents_per_kwh).to eq 2560.0
@@ -266,7 +266,7 @@ describe Buzzn::ContractFactory do
       params = {}
       params.merge!(address)
       params.merge!(meter)
-      params.merge!(metering_point)
+      params.merge!(register)
       params.merge!(contracting_party)
       params.merge!(old_contract)
       expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
@@ -284,10 +284,10 @@ describe Buzzn::ContractFactory do
       expect(party.legal_entity).to eq 'natural_person'
       expect(party.organization).to be_nil
       expect(party.bank_account).not_to be_nil
-      expect(contract.metering_point).not_to be_nil
-      expect(contract.metering_point.address).not_to be_nil
-      expect(contract.metering_point.meter).not_to be_nil
-      expect(contract.metering_point.address).not_to eq contract.address
+      expect(contract.register).not_to be_nil
+      expect(contract.register.address).not_to be_nil
+      expect(contract.register.meter).not_to be_nil
+      expect(contract.register.address).not_to eq contract.address
       owner = contract.contract_owner
       expect(owner.organization).to eq(Organization.buzzn_energy)
       expect(contract.price_cents_per_kwh).to eq 2560.0

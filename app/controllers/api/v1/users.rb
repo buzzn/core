@@ -79,7 +79,7 @@ module API
 
 
 
-        desc "Return the related metering-points for User"
+        desc "Return the related registers for User"
         params do
           requires :id, type: String, desc: "ID of the User"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
@@ -87,10 +87,10 @@ module API
         end
         paginate
         oauth2 :simple, :full
-        get ":id/metering-points" do
+        get ":id/registers" do
           user = User.guarded_retrieve(current_user, permitted_params)
-          metering_points = MeteringPoint.accessible_by_user(user)
-          paginated_response(metering_points.anonymized_readable_by(current_user))
+          registers = Register.accessible_by_user(user)
+          paginated_response(registers.anonymized_readable_by(current_user))
         end
 
 

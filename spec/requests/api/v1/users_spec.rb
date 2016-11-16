@@ -201,9 +201,9 @@ describe "Users API" do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:group_readable_by_members)
     user          = User.find(access_token.resource_owner_id)
-    metering_point    = Fabricate(:metering_point_readable_by_world)
-    user.add_role(:member, metering_point)
-    group.metering_points << metering_point
+    register    = Fabricate(:register_readable_by_world)
+    user.add_role(:member, register)
+    group.registers << register
     get_with_token "/api/v1/users/#{user.id}/groups", access_token.token
     expect(response).to have_http_status(200)
   end
@@ -213,9 +213,9 @@ describe "Users API" do
     user          = User.find(access_token.resource_owner_id)
     page_overload.times do
       group             = Fabricate(:group)
-      metering_point    = Fabricate(:metering_point_readable_by_world)
-      user.add_role(:member, metering_point)
-      group.metering_points << metering_point
+      register    = Fabricate(:register_readable_by_world)
+      user.add_role(:member, register)
+      group.registers << register
     end
     get_with_token "/api/v1/users/#{user.id}/groups", access_token.token
     expect(response).to have_http_status(200)
@@ -228,9 +228,9 @@ describe "Users API" do
   it 'gets related metering points for User' do
     access_token    = Fabricate(:simple_access_token)
     user            = User.find(access_token.resource_owner_id)
-    metering_point  = Fabricate(:metering_point)
-    user.add_role(:member, metering_point)
-    get_with_token "/api/v1/users/#{user.id}/metering-points", access_token.token
+    register  = Fabricate(:register)
+    user.add_role(:member, register)
+    get_with_token "/api/v1/users/#{user.id}/registers", access_token.token
     expect(response).to have_http_status(200)
   end
 
@@ -239,8 +239,8 @@ describe "Users API" do
       meter1 = Fabricate(:meter)
       meter2 = Fabricate(:meter)
       meter3 = Fabricate(:meter)
-      mp1    = Fabricate(:metering_point, meter: meter1)
-      mp2    = Fabricate(:metering_point, meter: meter2)
+      mp1    = Fabricate(:register, meter: meter1)
+      mp2    = Fabricate(:register, meter: meter2)
 
       access_token = Fabricate(token)
       user         = User.find(access_token.resource_owner_id)
@@ -258,7 +258,7 @@ describe "Users API" do
     user          = Fabricate(:user)
     page_overload.times do
       meter = Fabricate(:meter)
-      mp    = Fabricate(:metering_point, meter: meter)
+      mp    = Fabricate(:register, meter: meter)
       user.add_role(:manager, mp)
     end
     get_with_token "/api/v1/users/#{user.id}/meters", manager_token
@@ -269,18 +269,18 @@ describe "Users API" do
     expect(response).to have_http_status(422)
   end
 
-  it 'paginate metering_points' do
+  it 'paginate registers' do
     access_token = Fabricate(:full_access_token_as_admin).token
     user         = Fabricate(:user)
     page_overload.times do
-      metering_point  = Fabricate(:metering_point)
-      user.add_role(:member, metering_point)
+      register  = Fabricate(:register)
+      user.add_role(:member, register)
     end
-    get_with_token "/api/v1/users/#{user.id}/metering-points", access_token
+    get_with_token "/api/v1/users/#{user.id}/registers", access_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
 
-    get_with_token "/api/v1/users/#{user.id}/metering-points", {per_page: 200}, access_token
+    get_with_token "/api/v1/users/#{user.id}/registers", {per_page: 200}, access_token
     expect(response).to have_http_status(422)
   end
 
@@ -289,8 +289,8 @@ describe "Users API" do
     meter1 = Fabricate(:meter)
     meter2 = Fabricate(:meter)
     meter3 = Fabricate(:meter)
-    mp1    = Fabricate(:metering_point, meter: meter1)
-    mp2    = Fabricate(:metering_point, meter: meter2)
+    mp1    = Fabricate(:register, meter: meter1)
+    mp2    = Fabricate(:register, meter: meter2)
 
     access_token  = Fabricate(:full_access_token)
     user          = User.find(access_token.resource_owner_id)

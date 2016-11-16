@@ -107,7 +107,7 @@ module API
         end
         paginate
         oauth2 false
-        get ':id/metering-points' do
+        get ':id/registers' do
           profile = Profile.guarded_retrieve(current_user, permitted_params)
           types = []
           if profile.readable_by_world?
@@ -123,7 +123,7 @@ module API
           # this does not match the Authority for readable_by? and should be:
           # `accessible_by_user(profile.user).readable_by?(current_user)`
           # maybe it is just adjusting the test
-          paginated_response(MeteringPoint.accessible_by_user(profile.user).where(readable: types))
+          paginated_response(Register.accessible_by_user(profile.user).where(readable: types))
         end
 
       end

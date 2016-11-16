@@ -39,7 +39,7 @@ module API
           requires :power_of_attorney,        type: Boolean, desc: 'Power of attorney'
           requires :confirm_pricing_model,    type: Boolean, desc: 'Confirm pricing model'
           requires :commissioning,            type: Date,    desc: 'Commissioning'
-          optional :metering_point_id,        type: String,  desc: 'MeteringPoint ID'
+          optional :register_id,        type: String,  desc: 'Register ID'
           optional :retailer,                 type: Boolean, desc: 'Is a Retailer', default: false
           optional :price_cents_per_kwh,      type: Float, desc: 'Price per KWH incents'
           optional :price_cents_per_month,    type: Integer, desc: 'Price per month in cents'

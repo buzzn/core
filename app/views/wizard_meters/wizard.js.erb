@@ -26,7 +26,7 @@ form.steps({
     //validate the uniqueness of the serialnnumber via ajax-call
     if (newIndex == 1){
       if ($(".js-dependent-fields[style='display: none;'][data-radio-name='meter[existing_meter]']").find("#meter_manufacturer_product_serialnumber").length == 0) {
-        var serialnumber_valid = ($.ajax({url: "/meters/validate?metering_point[meter][manufacturer_product_serialnumber]=" + $("#meter_manufacturer_product_serialnumber").val(), dataType: 'json', async: false}).responseText == 'true');
+        var serialnumber_valid = ($.ajax({url: "/meters/validate?register[meter][manufacturer_product_serialnumber]=" + $("#meter_manufacturer_product_serialnumber").val(), dataType: 'json', async: false}).responseText == 'true');
         if (!serialnumber_valid) {
           form.validate().showErrors({
             "meter[manufacturer_product_serialnumber]": "<%= escape_javascript( t('errors.messages.already_exists'))%>"

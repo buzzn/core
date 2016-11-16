@@ -2,10 +2,10 @@ class GroupDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
 
-  decorates_association :metering_points
+  decorates_association :registers
   decorates_association :profile
   decorates_association :user
-  decorates_association :metering_point_operator_contract
+  decorates_association :register_operator_contract
   decorates_association :servicing_contract
 
   def picture(size=nil)

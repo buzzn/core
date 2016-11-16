@@ -11,6 +11,6 @@ de:
         notice: "%{resource_name} erfolgreich gelöscht."
         error: "%{resource_name} konnte nicht gelöscht werden."
     dashboard:
-      add_metering_point:
-        notice: "Der Zählpunkt wurde erfolgreich hinzugefügt."
-        error: "Der Zählpunkt konnte nicht hinzugefügt werden."
+      add_register:
+        notice: "Der Zählwerk wurde erfolgreich hinzugefügt."
+        error: "Der Zählwerk konnte nicht hinzugefügt werden."

@@ -4,7 +4,7 @@ class Group < ActiveRecord::Base
   resourcify
   acts_as_commentable
   include Authority::Abilities
-  include CalcVirtualMeteringPoint
+  include CalcVirtualRegister
   include ChartFunctions
   include Filterable
   include ReplacableRoles
@@ -30,13 +30,13 @@ class Group < ActiveRecord::Base
 
   has_many :contracts, dependent: :destroy
   has_one  :area
-  has_many :metering_points
+  has_many :registers
 
   has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
 
   has_many :scores, as: :scoreable
 
-  # validates :metering_points, presence: true
+  # validates :registers, presence: true
 
   after_save :validate_localpool
 
@@ -49,7 +49,7 @@ class Group < ActiveRecord::Base
   }
 
   scope :members_of_group, ->(group) do
-    mp = MeteringPoint.arel_table
+    mp = Register.arel_table
     roles = Role.arel_table
     users_roles = Arel::Table.new(:users_roles)
     users = User.arel_table
@@ -60,13 +60,13 @@ class Group < ActiveRecord::Base
     users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
     users_roles_join = users_roles.create_join(roles, users_roles_on)
 
-    roles_mp_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(MeteringPoint.to_s).and(roles[:name].eq(:member))))
-    roles_mp_join = roles.create_join(mp, roles_mp_on)
+    roles_register_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(Register.to_s).and(roles[:name].eq(:member))))
+    roles_register_join = roles.create_join(mp, roles_register_on)
 
 
     User.distinct
-      .joins(users_join, users_roles_join, roles_mp_join)
-      .where('metering_points.group_id': group)
+      .joins(users_join, users_roles_join, roles_register_join)
+      .where('registers.group_id': group)
   end
 
   # keeps this notation so it can be chained with Arel table where clauses
@@ -81,11 +81,11 @@ class Group < ActiveRecord::Base
       world_or_community = group[:readable].in(['world','community'])
 
       # admin or manager or member query
-      metering_point = MeteringPoint.arel_table
-      admin_or_manager_or_member = User.roles_query(user, manager: group[:id], member: metering_point.alias[:id], admin: nil).project(1).exists
+      register = Register.arel_table
+      admin_or_manager_or_member = User.roles_query(user, manager: group[:id], member: register.alias[:id], admin: nil).project(1).exists
 
-      # friends of manager and member of metering-point
-      mp_friends = Friendship.friend_of_roles_query(user, metering_point.alias, :member, :manager).and(group[:readable].eq('friends'))
+      # friends of manager and member of register
+      register_friends = Friendship.friend_of_roles_query(user, register.alias, :member, :manager).and(group[:readable].eq('friends'))
 
       # friends of manager of group
       manager_friends = Friendship.friend_of_roles_query(user, group, :manager).and(group[:readable].eq('friends'))
@@ -93,17 +93,17 @@ class Group < ActiveRecord::Base
       sqls = [
         world_or_community,
         admin_or_manager_or_member,
-        mp_friends,
+        register_friends,
         manager_friends
       ]
 
       # with AR5 you can use left_outer_joins directly
-      # `left_outer_joins(:metering_points)` instead of
-      # this mp_on and mp_join
-      mp_on   = metering_point.create_on(group[:id].eq(metering_point.alias[:group_id]))
-      mp_join = metering_point.create_join(metering_point.alias, mp_on, Arel::Nodes::OuterJoin)
+      # `left_outer_joins(:registers)` instead of
+      # this register_on and register_join
+      register_on   = register.create_on(group[:id].eq(register.alias[:group_id]))
+      register_join = register.create_join(register.alias, register_on, Arel::Nodes::OuterJoin)
 
-      joins(mp_join).where(sqls.map(&:to_sql).join(' OR '))
+      joins(register_join).where(sqls.map(&:to_sql).join(' OR '))
     end
   end
 
@@ -125,31 +125,31 @@ class Group < ActiveRecord::Base
   end
 
   def self.accessible_by_user(user)
-    metering_point = MeteringPoint.arel_table
+    register = Register.arel_table
     group          = Group.arel_table
-    users          = User.roles_query(user, manager: [group[:id], metering_point[:id]], member: metering_point[:id])
+    users          = User.roles_query(user, manager: [group[:id], register[:id]], member: register[:id])
 
     # need to make join manually to get the reference name right
-    mp_on   = group.create_on(group[:id].eq(metering_point[:group_id]))
-    mp_join = group.create_join(metering_point, mp_on)
-    joins(mp_join).where(users.project(1).exists)
+    register_on   = group.create_on(group[:id].eq(register[:group_id]))
+    register_join = group.create_join(register, register_on)
+    joins(register_join).where(users.project(1).exists)
   end
 
   def should_generate_new_friendly_id?
     slug.blank? || name_changed?
   end
 
-  def metering_point_users_query(mode = nil)
-    mp             = MeteringPoint.arel_table
+  def register_users_query(mode = nil)
+    mp             = Register.arel_table
     roles          = Role.arel_table
     users_roles    = Arel::Table.new(:users_roles)
     users          = User.arel_table
     role_names     = [:manager, :member]
 
-    mp_on = mp[:group_id].eq(self.id)
-    mp_on = mp_on.and(mp[:mode].eq(mode)) if mode
+    register_on = mp[:group_id].eq(self.id)
+    register_on = register_on.and(mp[:mode].eq(mode)) if mode
     users_roles.join(mp)
-      .on(mp_on)
+      .on(register_on)
       .join(roles)
       .on(roles[:id].eq(users_roles[:role_id])
            .and(roles[:name].in(role_names).and(roles[:resource_id].eq(mp[:id]))))
@@ -157,38 +157,38 @@ class Group < ActiveRecord::Base
   end
 
   def energy_producers
-    User.where(metering_point_users_query('in').project(1).exists.to_sql)
+    User.where(register_users_query('in').project(1).exists.to_sql)
   end
 
   def energy_consumers
-    User.where(metering_point_users_query('out').project(1).exists.to_sql)
+    User.where(register_users_query('out').project(1).exists.to_sql)
   end
 
-  def member?(metering_point)
-    self.metering_points.include?(metering_point) ? true : false
+  def member?(register)
+    self.registers.include?(register) ? true : false
   end
 
   def involved
     managers = User.roles_query(nil, manager: self).project(1).exists.to_sql
-    metering_point_users = metering_point_users_query.project(1).exists.to_sql
-    User.where([managers, metering_point_users].join(' OR '))
+    register_users = register_users_query.project(1).exists.to_sql
+    User.where([managers, register_users].join(' OR '))
   end
 
   def members
     self.class.members_of_group(self)
   end
 
-  def in_metering_points
-    MeteringPoint.where(group: self).where(mode: 'in')
+  def in_registers
+    Register.where(group: self).where(mode: 'in')
   end
 
-  def out_metering_points
-    MeteringPoint.where(group: self).where(mode: 'out')
+  def out_registers
+    Register.where(group: self).where(mode: 'out')
   end
 
 
-  def received_group_metering_point_requests
-    GroupMeteringPointRequest.where(group: self).requests
+  def received_group_register_requests
+    GroupRegisterRequest.where(group: self).requests
   end
 
   def keywords
@@ -243,7 +243,7 @@ class Group < ActiveRecord::Base
     else
       group_ids << Group.where(readable: 'community').collect(&:id)
       group_ids << Group.with_role(:manager, user).collect(&:id)
-      group_ids << user.accessible_metering_points.collect(&:group).compact.collect(&:id)
+      group_ids << user.accessible_registers.collect(&:group).compact.collect(&:id)
 
       user.friends.each do |friend|
         if friend
@@ -257,7 +257,7 @@ class Group < ActiveRecord::Base
   end
 
   def calculate_total_energy_data(data, operators, resolution)
-    calculate_virtual_metering_point(data, operators, resolution)
+    calculate_virtual_register(data, operators, resolution)
   end
 
   def chart(resolution_format, containing_timestamp=nil)
@@ -268,22 +268,22 @@ class Group < ActiveRecord::Base
     data_in = []
     data_out = []
 
-    metering_points_in = self.metering_points.without_externals.where(mode: 'in')
-    metering_points_out = self.metering_points.without_externals.where(mode: 'out')
+    registers_in = self.registers.without_externals.where(mode: 'in')
+    registers_out = self.registers.without_externals.where(mode: 'out')
     operators = []
-    metering_points_in.each do |metering_point|
-      data_in << metering_point.chart_data(resolution_format, containing_timestamp)
+    registers_in.each do |register|
+      data_in << register.chart_data(resolution_format, containing_timestamp)
       operators << "+"
     end
-    result_in = calculate_virtual_metering_point(data_in, operators, resolution_format)
+    result_in = calculate_virtual_register(data_in, operators, resolution_format)
 
     operators = []
 
-    metering_points_out.each do |metering_point|
-      data_out << metering_point.chart_data(resolution_format, containing_timestamp)
+    registers_out.each do |register|
+      data_out << register.chart_data(resolution_format, containing_timestamp)
       operators << "+"
     end
-    result_out = calculate_virtual_metering_point(data_out, operators, resolution_format)
+    result_out = calculate_virtual_register(data_out, operators, resolution_format)
 
     #TODO: Aus irgend einem Grund gibt es bei manchen Gruppen einen falschen Zeitstempel
     if resolution_format == 'month_to_days'
@@ -308,32 +308,32 @@ class Group < ActiveRecord::Base
 
 
   def chart_without_discovergy(resolution_format, containing_timestamp=nil)
-    metering_points_in_plus = []
-    metering_points_in_minus = []
-    metering_points_out_plus = []
-    metering_points_out_minus = []
-    self.metering_points.without_externals.each do |metering_point|
-      if metering_point.virtual
-        if metering_point.input?
-          metering_point.formula_parts.where(operator: "+").collect(&:operand).each do |metering_point_plus|
-            metering_points_in_plus << metering_point_plus.id
+    registers_in_plus = []
+    registers_in_minus = []
+    registers_out_plus = []
+    registers_out_minus = []
+    self.registers.without_externals.each do |register|
+      if register.virtual
+        if register.input?
+          register.formula_parts.where(operator: "+").collect(&:operand).each do |register_plus|
+            registers_in_plus << register_plus.id
           end
-          metering_point.formula_parts.where(operator: "-").collect(&:operand).each do |metering_point_minus|
-            metering_points_in_minus << metering_point_minus.id
+          register.formula_parts.where(operator: "-").collect(&:operand).each do |register_minus|
+            registers_in_minus << register_minus.id
           end
         else
-          metering_point.formula_parts.where(operator: "+").collect(&:operand).each do |metering_point_plus|
-            metering_points_out_plus << metering_point_plus.id
+          register.formula_parts.where(operator: "+").collect(&:operand).each do |register_plus|
+            registers_out_plus << register_plus.id
           end
-          metering_point.formula_parts.where(operator: "-").collect(&:operand).each do |metering_point_minus|
-            metering_points_out_minus << metering_point_minus.id
+          register.formula_parts.where(operator: "-").collect(&:operand).each do |register_minus|
+            registers_out_minus << register_minus.id
           end
         end
       else
-        if metering_point.input?
-          metering_points_in_plus << metering_point.id
+        if register.input?
+          registers_in_plus << register.id
         else
-          metering_points_out_plus << metering_point.id
+          registers_out_plus << register.id
         end
       end
     end
@@ -345,17 +345,17 @@ class Group < ActiveRecord::Base
     data_in = []
     data_out = []
     operators = ["+", "-"]
-    data_in << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, metering_points_in_plus, containing_timestamp), resolution_format, containing_timestamp)
-    if metering_points_in_minus.any?
-      data_in << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, metering_points_in_minus, containing_timestamp), resolution_format, containing_timestamp)
-      result_in = calculate_virtual_metering_point(data_in, operators, resolution_format)
+    data_in << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, registers_in_plus, containing_timestamp), resolution_format, containing_timestamp)
+    if registers_in_minus.any?
+      data_in << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, registers_in_minus, containing_timestamp), resolution_format, containing_timestamp)
+      result_in = calculate_virtual_register(data_in, operators, resolution_format)
     else
       result_in = data_in[0]
     end
-    data_out << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, metering_points_out_plus, containing_timestamp), resolution_format, containing_timestamp)
-    if metering_points_out_minus.any?
-      data_out << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, metering_points_out_minus, containing_timestamp), resolution_format, containing_timestamp)
-      result_out = calculate_virtual_metering_point(data_out, operators, resolution_format)
+    data_out << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, registers_out_plus, containing_timestamp), resolution_format, containing_timestamp)
+    if registers_out_minus.any?
+      data_out << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, registers_out_minus, containing_timestamp), resolution_format, containing_timestamp)
+      result_out = calculate_virtual_register(data_out, operators, resolution_format)
     else
       result_out = data_out[0]
     end
@@ -424,8 +424,8 @@ class Group < ActiveRecord::Base
   end
 
   def calculate_current_closeness
-    addresses_out = self.metering_points.without_externals.outputs.collect(&:address).compact
-    addresses_in = self.metering_points.without_externals.inputs.collect(&:address).compact
+    addresses_out = self.registers.without_externals.outputs.collect(&:address).compact
+    addresses_in = self.registers.without_externals.inputs.collect(&:address).compact
     sum_distances = 0
     addresses_in.each do |address_in|
       addresses_out.each do |address_out|
@@ -453,31 +453,31 @@ class Group < ActiveRecord::Base
   end
 
   def bubbles_personal_data(requesting_user)
-    out_metering_point_personal_data = []
-    in_metering_point_personal_data = []
-    self.metering_points.without_externals.each do |metering_point|
-      metering_point_name = metering_point.decorate.name_with_users
-      if metering_point.involved.any?
-        if metering_point.involved.include?(requesting_user)
-          own_metering_point = true
+    out_register_personal_data = []
+    in_register_personal_data = []
+    self.registers.without_externals.each do |register|
+      register_name = register.decorate.name_with_users
+      if register.involved.any?
+        if register.involved.include?(requesting_user)
+          own_register = true
         else
-          own_metering_point = false
+          own_register = false
         end
       else
-        own_metering_point = false
+        own_register = false
       end
-      readable = requesting_user.nil? ? false : metering_point.readable_by?(requesting_user)
+      readable = requesting_user.nil? ? false : register.readable_by?(requesting_user)
       if !readable
-        metering_point_name = "anonym"
+        register_name = "anonym"
       end
-      personal_data_entry = {:metering_point_id => metering_point.id, :name => metering_point_name, :own_metering_point => own_metering_point, :readable => readable}
-      if metering_point.mode == 'out'
-        out_metering_point_personal_data.push(personal_data_entry)
+      personal_data_entry = {:register_id => register.id, :name => register_name, :own_register => own_register, :readable => readable}
+      if register.mode == 'out'
+        out_register_personal_data.push(personal_data_entry)
       else
-        in_metering_point_personal_data.push(personal_data_entry)
+        in_register_personal_data.push(personal_data_entry)
       end
     end
-    personal_data = {:in => in_metering_point_personal_data, :out => out_metering_point_personal_data}
+    personal_data = {:in => in_register_personal_data, :out => out_register_personal_data}
     return personal_data
   end
 
@@ -516,21 +516,21 @@ class Group < ActiveRecord::Base
   private
 
     def destroy_content
-      self.metering_points.each do |metering_point|
-        metering_point.group = nil
-        metering_point.save
-        metering_point.meter.save if metering_point.meter
+      self.registers.each do |register|
+        register.group = nil
+        register.save
+        register.meter.save if register.meter
       end
-      GroupMeteringPointRequest.where(group: self).each{|request| request.destroy}
+      GroupRegisterRequest.where(group: self).each{|request| request.destroy}
       self.root_comments.each{|comment| comment.destroy}
     end
 
     def validate_localpool
       if self.mode == 'localpool'
-        if self.contracts.metering_point_operators.empty?
-          @contract = Contract.new(mode: 'metering_point_operator_contract', price_cents: 0, group: self, organization: Organization.buzzn_metering, username: 'team@localpool.de', password: 'Zebulon_4711')
+        if self.contracts.register_operators.empty?
+          @contract = Contract.new(mode: 'register_operator_contract', price_cents: 0, group: self, organization: Organization.buzzn_metering, username: 'team@localpool.de', password: 'Zebulon_4711')
         else
-          @contract = self.contracts.metering_point_operators.first
+          @contract = self.contracts.register_operators.first
         end
         @contract.save
       else

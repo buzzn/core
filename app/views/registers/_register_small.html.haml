@@ -1,0 +1,26 @@
+.col-sm-6.col-md-6.col-lg-3.register{id: "register_#{register.id}", data: {smart: "#{register.smart?}", online: "#{register.online?}"} }
+
+  = link_to register do
+    .panel.panel-info.panel-colorful.text-center
+      - if !register.smart?
+        .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("#{register.fake_label}_abbreviation"), "data-content" => t("dummy_description")}
+          .ribbon-green= t("#{register.fake_label}")
+      .panel-body{class: "bg-#{register.mode_class}" }
+
+        .chart{id: "chart-container-#{register.id}", style: "width: 100%; height: 70px;"}
+          .waiting-spinner.fa.fa-spinner.fa-2x.fa-spin
+
+      .bg-light.pad-ver
+        %h4.mar-no.text-thin
+          =register.long_name
+        - if request.original_url.include?("dashboard")
+          .remove-from-dashboard
+            = register.remove_from_dashboard
+        / - else
+        /   %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
+
+        /     = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { fake: !register.smart? && !register.virtual, source: register.data_source } do
+        /       %span.text-2x
+        /         .power-ticker
+        /           = t('loading') + '...'
+        /     %p.text-muted Watt

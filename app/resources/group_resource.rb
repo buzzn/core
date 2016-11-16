@@ -8,7 +8,7 @@ class GroupResource < ApplicationResource
               :readable
 
 
-  has_many :metering_points
+  has_many :registers
   has_many :devices
   has_many :managers
   has_many :energy_producers

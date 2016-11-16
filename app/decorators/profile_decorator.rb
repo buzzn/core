@@ -7,7 +7,7 @@ class ProfileDecorator < Draper::Decorator
   decorates_association :user
   decorates_association :users
   decorates_association :device
-  decorates_association :metering_points
+  decorates_association :registers
   decorates_association :groups
   decorates_association :residents
 

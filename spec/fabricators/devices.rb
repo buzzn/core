@@ -16,17 +16,17 @@ Fabricator :out_device, from: :device do
   mode                          'out'
 end
 
-Fabricator :out_device_with_metering_point, from: :out_device do
+Fabricator :out_device_with_register, from: :out_device do
   after_create { |device|
-    device.metering_point = Fabricate(:metering_point)
+    device.register = Fabricate(:register)
     device.save!
   }
 end
 
-Fabricator :out_device_with_metering_point_with_group, from: :out_device_with_metering_point do
+Fabricator :out_device_with_register_with_group, from: :out_device_with_register do
   after_create { |device|
-    device.metering_point.group = Fabricate(:group)
-    device.metering_point.save!
+    device.register.group = Fabricate(:group)
+    device.register.save!
   }
 end
 

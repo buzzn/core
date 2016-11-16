@@ -41,8 +41,8 @@
           - if user_signed_in? && current_user.can_update?(@group)
             %li= link_to(t('edit_group'), edit_group_path(@group), {:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal'})
             - if @group.mode == 'localpool'
-              %li= link_to(t("add_metering_points"), send_invitations_group_path, {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
-            %li= link_to(t('remove_metering_points'), remove_members_group_path(@group),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
+              %li= link_to(t("add_registers"), send_invitations_group_path, {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
+            %li= link_to(t('remove_registers'), remove_members_group_path(@group),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
             %li= link_to(t('add_group_manager'), add_manager_group_path(@group),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
             - if @group.managers.include?(current_user)
               %li= link_to(t('remove_me_as_group_manager'), remove_manager_update_group_path(@group),{:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal', :method => :put, 'data-confirm' => t('are_you_sure') + ' ' + t('you_will_no_longer_be_able_to_edit_this_group')})
@@ -50,37 +50,37 @@
             - if @group.members.include?(current_user)
               %li= link_to(t('edit_notifications'), edit_notifications_group_path(@group),{:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal'})
             %li.dropdown-header= t('membership')
-            - if current_user.editable_metering_points.flatten.count != 0
-              - if current_user.editable_metering_points.flatten.count == 1
-                - if current_user.editable_metering_points.flatten.first.mode == "in"
-                  - if @group.received_group_metering_point_requests.any? && @group.received_group_metering_point_requests.collect(&:metering_point).include?(current_user.editable_metering_points.flatten.first)
-                    %li= t('sent_request_with_metering_point', metering_point_name: current_user.editable_metering_points.flatten.first.decorate.name)
-                  - elsif current_user.editable_metering_points.flatten.first.group == nil
-                    %li= link_to t('join_this_group'), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id, mode: 'request'), method: :post
-                  - elsif current_user.editable_metering_points.flatten.first.group == @group
-                    %li= link_to(t('leave_this_group'), remove_members_update_group_path(metering_point_id: current_user.editable_metering_points.flatten.first.id), :data => {:confirm => t('are_you_sure')}, :method => :put)
+            - if current_user.editable_registers.flatten.count != 0
+              - if current_user.editable_registers.flatten.count == 1
+                - if current_user.editable_registers.flatten.first.mode == "in"
+                  - if @group.received_group_register_requests.any? && @group.received_group_register_requests.collect(&:register).include?(current_user.editable_registers.flatten.first)
+                    %li= t('sent_request_with_register', register_name: current_user.editable_registers.flatten.first.decorate.name)
+                  - elsif current_user.editable_registers.flatten.first.group == nil
+                    %li= link_to t('join_this_group'), group_register_requests_path( group_id: @group, register_id: current_user.editable_registers.flatten.first.id, mode: 'request'), method: :post
+                  - elsif current_user.editable_registers.flatten.first.group == @group
+                    %li= link_to(t('leave_this_group'), remove_members_update_group_path(register_id: current_user.editable_registers.flatten.first.id), :data => {:confirm => t('are_you_sure')}, :method => :put)
                   - else
-                    %li= link_to(t('join_this_group_and_leave_group', group_name: current_user.editable_metering_points.flatten.first.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: current_user.editable_metering_points.flatten.first.id, mode: 'request'), method: :post)
+                    %li= link_to(t('join_this_group_and_leave_group', group_name: current_user.editable_registers.flatten.first.group.name), group_register_requests_path( group_id: @group, register_id: current_user.editable_registers.flatten.first.id, mode: 'request'), method: :post)
               - else
-                - current_user.editable_metering_points.flatten.each do |metering_point|
-                  - if metering_point.mode == "in"
-                    - if @group.received_group_metering_point_requests.any? && @group.received_group_metering_point_requests.collect(&:metering_point).include?(metering_point)
-                      %li= t('sent_request_with_metering_point', metering_point_name: metering_point.decorate.name)
+                - current_user.editable_registers.flatten.each do |register|
+                  - if register.mode == "in"
+                    - if @group.received_group_register_requests.any? && @group.received_group_register_requests.collect(&:register).include?(register)
+                      %li= t('sent_request_with_register', register_name: register.decorate.name)
                       - next
-                    - if metering_point.group == @group
-                      %li= link_to(t('leave_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), remove_members_update_group_path(metering_point_id: metering_point.id), :data => {:confirm => t('are_you_sure')}, :method => :put)
-                    - elsif metering_point.group
-                      %li= link_to(t('join_this_group_with_metering_point_and_leave_group', metering_point_name: metering_point.decorate.name, group_name: metering_point.group.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id, mode: 'request'), method: :post)
+                    - if register.group == @group
+                      %li= link_to(t('leave_this_group_with_register', register_name: register.decorate.name), remove_members_update_group_path(register_id: register.id), :data => {:confirm => t('are_you_sure')}, :method => :put)
+                    - elsif register.group
+                      %li= link_to(t('join_this_group_with_register_and_leave_group', register_name: register.decorate.name, group_name: register.group.name), group_register_requests_path( group_id: @group, register_id: register.id, mode: 'request'), method: :post)
                     - else
-                      %li= link_to t('join_this_group_with_metering_point', metering_point_name: metering_point.decorate.name), group_metering_point_requests_path( group_id: @group, metering_point_id: metering_point.id, mode: 'request'), method: :post
+                      %li= link_to t('join_this_group_with_register', register_name: register.decorate.name), group_register_requests_path( group_id: @group, register_id: register.id, mode: 'request'), method: :post
 
 
 
 
 - if user_signed_in? && current_user.can_update?(@group)
-  - if @group_metering_point_requests.any?
+  - if @group_register_requests.any?
     .friendship_requests
-      = render @group_metering_point_requests
+      = render @group_register_requests
 
 
 
@@ -226,7 +226,7 @@
 
 
   .row
-    .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id, metering_point_ids: {in: @group.in_metering_points.collect(&:id).join(","), out: @group.out_metering_points.collect(&:id).join(",")}}
+    .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id, register_ids: {in: @group.in_registers.collect(&:id).join(","), out: @group.out_registers.collect(&:id).join(",")}}
 
       .panel
         .panel-body.panel-colorful

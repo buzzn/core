@@ -19,7 +19,7 @@ describe "ContractingParty Model" do
 
   let(:admin) { Fabricate(:admin) }
 
-  let(:other_metering_point) { Fabricate(:metering_point) }
+  let(:other_register) { Fabricate(:register) }
 
   let(:bank_account) { Fabricate.build(:bank_account) }
 
@@ -133,39 +133,37 @@ describe "ContractingParty Model" do
       expect(subject.reload.user).to eq(other_user)
     end
 
-    it 'checks the existence of the associated metering_point on update' do
+    it 'checks the existence of the associated register on update' do
       expect {
         subject.guarded_update(current_user,
-                               metering_point_id: other_metering_point.id)
+                               register_id: other_register.id)
       }.to raise_error Buzzn::PermissionDenied
 
       expect {
         subject.guarded_update(admin,
-                               metering_point_id: "74aa64f4-5262-49c5-bba0-f15eeb063741")
+                               register_id: "74aa64f4-5262-49c5-bba0-f15eeb063741")
       }.to raise_error Buzzn::RecordNotFound
 
-      subject.guarded_update(admin, metering_point_id: other_metering_point.id)
-      expect(subject.reload.metering_point).to eq(other_metering_point)
+      subject.guarded_update(admin, register_id: other_register.id)
+      expect(subject.reload.register).to eq(other_register)
     end
 
-    it 'checks the existence of the associated metering_point on create' do
+    it 'checks the existence of the associated register on create' do
       expect {
         ContractingParty.guarded_create(current_user,
-                                        bank_account: bank_account,
-                                        metering_point_id: other_metering_point.id)
+                                        register_id: other_register.id)
       }.to raise_error Buzzn::PermissionDenied
 
       expect {
         subject = ContractingParty.guarded_create(current_user,
-                                                  bank_account: bank_account,
-                                                  metering_point_id: "74aa64f4-5262-49c5-bba0-f15eeb063741")
+                                                  register_id: "74aa64f4-5262-49c5-bba0-f15eeb063741")
       }.to raise_error Buzzn::RecordNotFound
 
       subject = ContractingParty.guarded_create(admin,
                                                 bank_account: bank_account,
-                                                metering_point_id: other_metering_point.id,
+                                                register_id: other_register.id,
                                                 legal_entity: 'natural_person')
-      expect(subject.reload.metering_point).to eq(other_metering_point)
+      expect(subject.reload.register).to eq(other_register)
     end
   end
 end
