@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161116122929) do
+ActiveRecord::Schema.define(version: 20161116133815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -316,7 +316,7 @@ ActiveRecord::Schema.define(version: 20161116122929) do
   add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id", using: :btree
   add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
 
-  create_table "group_metering_point_requests", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "group_register_requests", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.uuid     "user_id"
     t.uuid     "group_id"
     t.uuid     "metering_point_id"
@@ -326,10 +326,10 @@ ActiveRecord::Schema.define(version: 20161116122929) do
     t.string   "mode"
   end
 
-  add_index "group_metering_point_requests", ["group_id", "user_id"], name: "index_group_metering_point_requests_on_group_id_and_user_id", using: :btree
-  add_index "group_metering_point_requests", ["group_id"], name: "index_group_metering_point_requests_on_group_id", using: :btree
-  add_index "group_metering_point_requests", ["metering_point_id"], name: "index_group_metering_point_requests_on_metering_point_id", using: :btree
-  add_index "group_metering_point_requests", ["user_id"], name: "index_group_metering_point_requests_on_user_id", using: :btree
+  add_index "group_register_requests", ["group_id", "user_id"], name: "index_group_register_requests_on_group_id_and_user_id", using: :btree
+  add_index "group_register_requests", ["group_id"], name: "index_group_register_requests_on_group_id", using: :btree
+  add_index "group_register_requests", ["metering_point_id"], name: "index_group_register_requests_on_register_id", using: :btree
+  add_index "group_register_requests", ["user_id"], name: "index_group_register_requests_on_user_id", using: :btree
 
   create_table "groups", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
