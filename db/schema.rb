@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161116104658) do
+ActiveRecord::Schema.define(version: 20161116115800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -203,7 +203,7 @@ ActiveRecord::Schema.define(version: 20161116104658) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "dashboard_metering_points", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "dashboard_registers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.boolean  "displayed",         default: false
     t.uuid     "dashboard_id"
     t.uuid     "metering_point_id"
@@ -211,8 +211,8 @@ ActiveRecord::Schema.define(version: 20161116104658) do
     t.datetime "updated_at",                        null: false
   end
 
-  add_index "dashboard_metering_points", ["dashboard_id"], name: "index_dashboard_metering_points_on_dashboard_id", using: :btree
-  add_index "dashboard_metering_points", ["metering_point_id"], name: "index_dashboard_metering_points_on_metering_point_id", using: :btree
+  add_index "dashboard_registers", ["dashboard_id"], name: "index_dashboard_registers_on_dashboard_id", using: :btree
+  add_index "dashboard_registers", ["metering_point_id"], name: "index_dashboard_registers_on_metering_point_id", using: :btree
 
   create_table "dashboards", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "name"
