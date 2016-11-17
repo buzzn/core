@@ -31,7 +31,6 @@ module API
         params do
           requires :mode,                     type: String,  desc: 'Contract description'
           optional :organization_id,          type: String,  desc: 'Organization id'
-          requires :tariff,                   type: String,  desc: 'Tariff'
           optional :status,                   type: String,  desc: 'Status'
           optional :customer_number,          type: String,  desc: 'Customer number'
           optional :contract_number,          type: String,  desc: 'Contract number'

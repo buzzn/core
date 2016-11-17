@@ -1,9 +1,9 @@
 describe '/api/v1/aggregates' do
 
   before do
-    Fabricate(:metering_point_operator, name: 'buzzn Metering')
-    Fabricate(:metering_point_operator, name: 'Discovergy')
-    Fabricate(:metering_point_operator, name: 'MySmartGrid')
+    Fabricate(:buzzn_metering)
+    Fabricate(:discovergy)
+    Fabricate(:mysmartgrid)
   end
 
   api_version = '/api/v1'

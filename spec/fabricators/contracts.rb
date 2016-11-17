@@ -1,6 +1,5 @@
 # coding: utf-8
 Fabricator :contract do
-  tariff                   'localpool'
   status                   'running'
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          'xl245245235'
@@ -28,7 +27,7 @@ end
 
 
 Fabricator :servicing_contract, from: :contract do
-  organization  { Organization.find('buzzn-metering') }
+  organization  { Organization.buzzn_metering }
   mode  'servicing_contract'
 end
 
@@ -37,7 +36,6 @@ end
 
 Fabricator :power_taker_contract, from: :contract do
   mode                  'power_taker_contract'
-  tariff                'Öko Strom XXL'
   forecast_watt_hour_pa 1700000
   price_cents           2995
   organization          { Fabricate(:electricity_supplier) }
@@ -50,7 +48,6 @@ end
 
 Fabricator :power_giver_contract, from: :contract do
   mode                  'power_giver_contract'
-  tariff                'Marktprämienmodell'
   forecast_watt_hour_pa 1700000
   price_cents           3
   organization          { Fabricate(:electricity_supplier) }
@@ -63,7 +60,7 @@ end
 
 
 Fabricator :mpoc_buzzn_metering, from: :metering_point_operator_contract do
-  organization  { Organization.find('buzzn-metering') }
+  organization  { Organization.buzzn_metering }
   username      'team@localpool.de'
   password      'Zebulon_4711'
 end

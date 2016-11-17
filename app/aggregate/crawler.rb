@@ -37,7 +37,13 @@ class Crawler
     @metering_point                   = metering_point
     raise ArgumentError.new("no metering_point_operator_contract on metering_point") unless @metering_point.metering_point_operator_contract
     @metering_point_operator_contract = @metering_point.metering_point_operator_contract
-    @metering_point_operator          = @metering_point_operator_contract.organization.slug
+    # keep the existing organiztion with name 'buzzn-metering' and the new
+    # Organization.buzzn_metering both working using the exact same way
+    if @metering_point_operator_contract.organization.buzzn_metering?
+      @metering_point_operator        = 'buzzn-metering'
+    else
+      @metering_point_operator        = @metering_point_operator_contract.organization.slug
+    end
     @metering_point_input             = @metering_point.input?
     @metering_point_output            = @metering_point.output?
     raise ArgumentError.new("no meter on metering_point") unless @metering_point.meter

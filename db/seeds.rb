@@ -21,7 +21,8 @@ end
 puts '-- seed development database --'
 
 puts '  organizations'
-Fabricate(:electricity_supplier, name: 'buzzn Energy')
+Fabricate(:buzzn_energy)
+Fabricate(:dummy_energy)
 Fabricate(:electricity_supplier, name: 'E.ON')
 Fabricate(:electricity_supplier, name: 'RWE')
 Fabricate(:electricity_supplier, name: 'EnBW')
@@ -38,8 +39,8 @@ Fabricate(:distribution_system_operator, name: 'E.ON Bayern AG')
 Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
 
 # Messdienstleistung (Ablesung und Messung)
-Fabricate(:metering_point_operator, name: 'buzzn Metering')
-Fabricate(:metering_point_operator, name: 'buzzn Reader')
+Fabricate(:buzzn_metering)
+Fabricate(:buzzn_reader)
 Fabricate(:metering_point_operator, name: 'Discovergy')
 Fabricate(:metering_point_operator, name: 'MySmartGrid')
 
@@ -121,11 +122,11 @@ buzzn_team_names.each do |user_name|
     Fabricate(:application, owner: user, name: 'Buzzn Swagger UI', scopes: Doorkeeper.configuration.scopes, redirect_uri: Rails.application.secrets.hostname + '/api/o2c.html')
   when 'christian'
     root_mp = Fabricate(:mp_60138988)
-    Fabricate(:mpoc_christian, metering_point: root_mp)
+    root_mp.contracts << Fabricate(:mpoc_christian, metering_point: root_mp)
     user.add_role :admin # christian is admin
   when 'philipp'
     root_mp = Fabricate(:mp_60009269)
-    Fabricate(:mpoc_philipp, metering_point: root_mp)
+    root_mp.contracts << Fabricate(:mpoc_philipp, metering_point: root_mp)
   when 'stefan'
     @bhkw_stefan       = Fabricate(:bhkw_stefan)
     @forstenrieder_weg_mp = root_mp = Fabricate(:mp_stefans_bhkw)

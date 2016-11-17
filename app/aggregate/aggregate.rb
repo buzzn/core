@@ -175,7 +175,7 @@ class Aggregate
     metering_point_ids  = []
 
     metering_points.each do |metering_point|
-      data_sources.push(metering_point.data_source) unless data_sources.include?(metering_point.data_source)
+      data_sources.push(metering_point.data_source) unless data_sources.include?(metering_point.data_source) && metering_point.data_source
       metering_point_ids << metering_point.id
       case metering_point.data_source
       when 'buzzn_api'

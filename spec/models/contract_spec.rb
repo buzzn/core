@@ -42,7 +42,7 @@ describe "Contract Model" do
     contract.address = Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern')
     Fabricate(:mpoc_karin)
 
-    [contract.tariff, contract.mode, contract.signing_user,
+    [contract.mode, contract.signing_user,
      contract.username, contract.address.state,
      contract.address.city, contract.address.street_name].each do |val|
 

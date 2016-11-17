@@ -9,14 +9,14 @@ module API
         desc 'Converts the ZIP code to estimated monthly price'
         params do
           requires :zip
-          requires :kwh
-          requires :tarif_type, values: Buzzn::Zip2Price.types
+          requires :yearly_kilowatt_hour
+          requires :metering_type, values: Buzzn::Zip2Price.types
         end
         oauth2 false
         get do
-          zip_price = Buzzn::Zip2Price.new(permitted_params[:kwh],
+          zip_price = Buzzn::Zip2Price.new(permitted_params[:yearly_kilowatt_hour],
                                            permitted_params[:zip],
-                                           permitted_params[:tarif_type])
+                                           permitted_params[:metering_type])
           unless price = zip_price.to_price
             # mimic jsonapi as far as possible
             status 422

@@ -14,7 +14,8 @@ class MeteringPoint < ActiveRecord::Base
 
 
   belongs_to :group
-  has_many :registers, dependent: :destroy
+  belongs_to :meter, dependent: :destroy
+  accepts_nested_attributes_for :meter
 
   has_many :formula_parts, dependent: :destroy
   accepts_nested_attributes_for :formula_parts, reject_if: :all_blank, :allow_destroy => true
@@ -35,6 +36,7 @@ class MeteringPoint < ActiveRecord::Base
   validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
   validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_metering_point?
   validates :meter, presence: false, if: :virtual
+  validate :validate_invariants
 
   mount_uploader :image, PictureUploader
 
@@ -44,6 +46,8 @@ class MeteringPoint < ActiveRecord::Base
   has_many :dashboard_metering_points
   has_many :dashboards, :through => :dashboard_metering_points
 
+  # TODO remove this as it takes an extra ordering plan even when finding
+  #      a single entity via the find method
   default_scope { order('name ASC') } #DESC
 
   scope :inputs, -> { where(mode: :in) }
@@ -135,9 +139,10 @@ class MeteringPoint < ActiveRecord::Base
 
   #default_scope { where(external: false) }
 
-  # TODO: enable multiple meters instead of one meter
-  def meter
-    Meter.joins(:registers).where('registers.metering_point_id = ?', self).distinct.first
+  def validate_invariants
+    if contracts.size > 0 && address.nil?
+      errors.add(:address, 'missing Address when having contracts')
+    end
   end
 
   def users
@@ -326,7 +331,8 @@ class MeteringPoint < ActiveRecord::Base
     self.smart? &&
     !metering_point_operator_contract.nil? &&
     (metering_point_operator_contract.organization.slug == "discovergy" ||
-    metering_point_operator_contract.organization.slug == "buzzn-metering")
+     metering_point_operator_contract.organization.slug == "buzzn-metering" ||
+     metering_point_operator_contract.organization.buzzn_metering?)
   end
 
   def buzzn_api?

@@ -21,6 +21,8 @@ describe "ContractingParty Model" do
 
   let(:other_metering_point) { Fabricate(:metering_point) }
 
+  let(:bank_account) { Fabricate.build(:bank_account) }
+
   subject do
     Fabricate(:company_contracting_party, address: address, user: Fabricate(:user), organization: organization)
   end
@@ -34,11 +36,13 @@ describe "ContractingParty Model" do
     end
 
     it 'checks legal entity on create' do
-      subject = ContractingParty.create legal_entity: 'natural_person'
+      subject = ContractingParty.create bank_account: bank_account,
+                                        legal_entity: 'natural_person'
       expect(subject.valid?).to eq true
       expect(subject.reload.legal_entity).to eq 'natural_person'
 
-      subject = ContractingParty.create legal_entity: 'something'
+      subject = ContractingParty.create bank_account: bank_account,
+                                        legal_entity: 'something'
       expect(subject.valid?).to eq false
       expect(subject.errors[:legal_entity]).not_to be_nil
     end
@@ -81,12 +85,14 @@ describe "ContractingParty Model" do
 
     it 'checks the existence of the associated organization on create' do
       subject = ContractingParty.guarded_create(current_user,
+                                                bank_account: bank_account,
                                                 legal_entity: 'company',
                                                 organization_id: other_organization.id)
       expect(subject.reload.organization).to eq(other_organization)
 
       expect {
         subject = ContractingParty.guarded_create(current_user,
+                                                  bank_account: bank_account,
                                                   legal_entity: 'company',
                                                   organization_id: "74aa64f4-5262-49c5-bba0-f15eeb063741")
       }.to raise_error Buzzn::RecordNotFound
@@ -94,7 +100,8 @@ describe "ContractingParty Model" do
 
     it 'checks the existence of the associated user on update' do
       expect {
-        subject.guarded_update(current_user, user_id: other_user.id)
+        subject.guarded_update(current_user,
+                               user_id: other_user.id)
       }.to raise_error Buzzn::PermissionDenied
 
       expect {
@@ -108,15 +115,20 @@ describe "ContractingParty Model" do
 
     it 'checks the existence of the associated user on create' do
       expect {
-        ContractingParty.guarded_create(current_user, user_id: other_user.id)
+        ContractingParty.guarded_create(current_user,
+                                        bank_account: bank_account,
+                                        user_id: other_user.id)
       }.to raise_error Buzzn::PermissionDenied
 
       expect {
         subject = ContractingParty.guarded_create(current_user,
+                                                  bank_account: bank_account,
                                                   user_id: "74aa64f4-5262-49c5-bba0-f15eeb063741")
       }.to raise_error Buzzn::RecordNotFound
 
-      subject = ContractingParty.guarded_create(admin, user_id: other_user.id,
+      subject = ContractingParty.guarded_create(admin,
+                                                bank_account: bank_account,
+                                                user_id: other_user.id,
                                                 legal_entity: 'natural_person')
       expect(subject.reload.user).to eq(other_user)
     end
@@ -139,15 +151,18 @@ describe "ContractingParty Model" do
     it 'checks the existence of the associated metering_point on create' do
       expect {
         ContractingParty.guarded_create(current_user,
+                                        bank_account: bank_account,
                                         metering_point_id: other_metering_point.id)
       }.to raise_error Buzzn::PermissionDenied
 
       expect {
         subject = ContractingParty.guarded_create(current_user,
+                                                  bank_account: bank_account,
                                                   metering_point_id: "74aa64f4-5262-49c5-bba0-f15eeb063741")
       }.to raise_error Buzzn::RecordNotFound
 
       subject = ContractingParty.guarded_create(admin,
+                                                bank_account: bank_account,
                                                 metering_point_id: other_metering_point.id,
                                                 legal_entity: 'natural_person')
       expect(subject.reload.metering_point).to eq(other_metering_point)

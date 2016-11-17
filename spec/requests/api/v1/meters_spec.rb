@@ -109,8 +109,7 @@ describe "Meters API" do
       access_token = Fabricate(token)
       user            = User.find(access_token.resource_owner_id)
       meter           = Fabricate(:meter)
-      metering_point  = Fabricate(:metering_point)
-      register        = Fabricate(:in_register, meter: meter, metering_point: metering_point)
+      metering_point  = Fabricate(:metering_point, meter: meter)
       user.add_role(:manager, metering_point)
 
       get_with_token "/api/v1/meters/#{meter.id}/metering-points", access_token.token
@@ -119,10 +118,8 @@ describe "Meters API" do
 
     it "gets the filtered metering-points for Meter with #{token}" do
       meter  = Fabricate(:meter)
-      mp1    = Fabricate(:metering_point, mode: 'in')
-      mp2    = Fabricate(:metering_point, mode: 'out')
-      register        = Fabricate(:in_register, meter: meter, metering_point: mp1)
-      register        = Fabricate(:out_register, meter: meter, metering_point: mp2)
+      mp1    = Fabricate(:metering_point, meter: meter, mode: 'in')
+      mp2    = Fabricate(:metering_point, meter: meter, mode: 'out')
 
       access_token  = Fabricate(token)
       user          = User.find(access_token.resource_owner_id)
@@ -144,8 +141,7 @@ describe "Meters API" do
       access_token  = Fabricate(token)
       user          = User.find(access_token.resource_owner_id)
       page_overload.times do
-        mp = Fabricate(:metering_point)
-        register = Fabricate(:in_register, meter: meter, metering_point: mp)
+        mp = Fabricate(:metering_point, meter: meter)
         user.add_role(:manager, mp)
       end
 

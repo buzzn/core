@@ -112,16 +112,22 @@ class Bank < ActiveRecord::Base
   end
 
   def self.get_by_bic(bic)
-    if bic.size < 11     
-      bic += 'X' * (11 - bic.size)
+    if bic
+      bic.gsub!(/\s/, '')
+      if bic.size < 11     
+        bic += 'X' * (11 - bic.size)
+      end
+      where(bic: bic).limit(1).first
     end
-    where(bic: bic).limit(1).first
   end
 
   def self.get_by_iban(iban)
-    if iban.start_with?('DE')
-      where(blz: iban[4..11]).limit(1).first
-    end       
+    if iban
+      iban.gsub!(/\s/, '')
+      if iban.start_with?('DE')
+        where(blz: iban[4..11]).limit(1).first
+      end
+    end
   end
 
   def self.not_found(msg)

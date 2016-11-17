@@ -32,7 +32,7 @@ describe "Prices API" do
             [910, 2560, 3043],
             [1170, 2560, 3303],
             [1170, 2560, 3303]]).each do |type, exp|
-      params = { zip: '86916', kwh: '1000', tarif_type: type }
+      params = { zip: '86916', yearly_kilowatt_hour: '1000', metering_type: type }
                                                    
       get_without_token "/api/v1/prices", params
       expect(response).to have_http_status(200)
@@ -44,7 +44,7 @@ describe "Prices API" do
   end
 
   it 'gives unknown zip' do
-    params = { zip: '98765', kwh: '1000', tarif_type: 'other' }
+    params = { zip: '98765', yearly_kilowatt_hour: '1000', metering_type: 'other' }
 
     get_without_token "/api/v1/prices", params
 

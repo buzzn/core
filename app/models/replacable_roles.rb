@@ -1,5 +1,9 @@
 module ReplacableRoles
 
+  def managers
+    User.users_of(self, :manager)
+  end
+
   def replace_managers(ids, options = {})
     replace_role_users(ids, self.managers.dup, :manager, options)
   end
