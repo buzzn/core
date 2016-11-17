@@ -1,20 +1,31 @@
 module Buzzn::Discovergy
+
+  # the discovergy crawler uses the API from discovergy to retrieve
+  # readings
   class Crawler
 
-    def initialize
-      @facade = Facade.new
+    def initialize(url, max_concurrent)
+      @facade = Facade.new(url, max_concurrent)
     end
 
-    def virtual_meter(external_id, interval)
+    def collection(group, interval, mode)
       result = CrawlerResult.new
-      response = @facade.virtual_meter(external_id, interval)
+      # get the broker with given mode for the group
+      broker = DiscovergyBroker.send(mode, group)
+      response = @facade.virtual_meter(broker, interval)
       #parse response
       result
     end
 
-    def single_meter(serialnumber, interval)
+    def single(register, interval)
       result = CrawlerResult.new
-      response = @facade.single_meter(serialnumber, interval)
+      response =
+        if register.virtual?
+          broker = DiscovergyBroker.virtual(register)
+          @facade.virtual_meter(broker, interval)
+        else
+          @facade.easy_meter(register.meter, interval)
+        end
       #parse response
       result
     end

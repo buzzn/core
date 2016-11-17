@@ -31,7 +31,12 @@ module Buzzn
 
   class Crawler
 
-    @@discovergy = Buzzn::Discovergy::Crawler.new
+    def self.discovergy
+      #TODO retrieve config from somewhere
+      Buzzn::Discovergy::Crawler.new(nil, 1)
+    end
+
+    @@discovergy = discovergy
     @@mysmartgrid = Buzzn::Mysmartgrid::Crawler.new
 
     def self.new(organization)
