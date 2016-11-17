@@ -17,7 +17,7 @@ $(".registers").ready ->
     #smart = $(this).attr('data-smart')
     #online = $(this).attr('data-online')
 
-    id = $(this).attr('id').split('_')[2]
+    id = $(this).attr('id').split('_')[1]
     width = $("#chart-container-" + id).width()
     aggregator = new Aggregator([id])
     $.when(aggregator.past(new Date(), 'day_to_minutes'))
@@ -102,7 +102,7 @@ $(".registers").ready ->
 #code for register.show
 $(".register_detail").ready ->
   chart = undefined
-  id = $(this).attr('id').split('_')[2]
+  id = $(this).attr('id').split('_')[1]
   width = $("#chart-container-" + id).width()
   aggregator = new Aggregator([id])
   $.when(aggregator.past(new Date(), 'day_to_minutes'))
@@ -1412,7 +1412,7 @@ timers = []
 
 
 $(".register").ready ->
-  register_id = $(this).attr('id').split('_')[2]
+  register_id = $(this).attr('id').split('_')[1]
   register = $(this)
   if $(this).find(".register-ticker").length != 0
     timers.push(window.setInterval(->
