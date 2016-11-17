@@ -5,6 +5,6 @@ class UserResource < ApplicationResource
   has_one :profile
   has_many :groups
   has_many :friends
-  has_many :metering_points
+  has_many :registers
   has_many :devices
 end

@@ -112,7 +112,7 @@ module API
         end
         oauth2 :full
         post do
-          # TODO move logic into MeteringPoint and ensure at least ONE manager
+          # TODO move logic into Register and ensure at least ONE manager
           organization = Organization.guarded_create(current_user,
                                                      permitted_params)
           current_user.add_role(:manager, organization)

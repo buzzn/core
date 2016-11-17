@@ -4,15 +4,15 @@ describe "Meters API" do
 
   [:no_access_token,
    :simple_access_token].each do |token|
-    it "does not get a metering-points with #{token}" do
+    it "does not get a registers with #{token}" do
       meter = Fabricate(:meter)
 
       if token == :no_access_token
-        get_without_token "/api/v1/meters/#{meter.id}/metering-points"
+        get_without_token "/api/v1/meters/#{meter.id}/registers"
         expect(response).to have_http_status(401)
       else
         access_token = Fabricate(token)
-        get_with_token  "/api/v1/meters/#{meter.id}/metering-points", access_token.token
+        get_with_token  "/api/v1/meters/#{meter.id}/registers", access_token.token
         expect(response).to have_http_status(403)
       end
 
@@ -105,21 +105,21 @@ describe "Meters API" do
     end
 
 
-    it "gets related metering points for Meter with #{token}" do
+    it "gets related registers for Meter with #{token}" do
       access_token = Fabricate(token)
       user            = User.find(access_token.resource_owner_id)
       meter           = Fabricate(:meter)
-      metering_point  = Fabricate(:metering_point, meter: meter)
-      user.add_role(:manager, metering_point)
+      register  = Fabricate(:register, meter: meter)
+      user.add_role(:manager, register)
 
-      get_with_token "/api/v1/meters/#{meter.id}/metering-points", access_token.token
+      get_with_token "/api/v1/meters/#{meter.id}/registers", access_token.token
       expect(response).to have_http_status(200)
     end
 
-    it "gets the filtered metering-points for Meter with #{token}" do
+    it "gets the filtered registers for Meter with #{token}" do
       meter  = Fabricate(:meter)
-      mp1    = Fabricate(:metering_point, meter: meter, mode: 'in')
-      mp2    = Fabricate(:metering_point, meter: meter, mode: 'out')
+      mp1    = Fabricate(:register, meter: meter, mode: 'in')
+      mp2    = Fabricate(:register, meter: meter, mode: 'out')
 
       access_token  = Fabricate(token)
       user          = User.find(access_token.resource_owner_id)
@@ -130,26 +130,26 @@ describe "Meters API" do
         filter: mp1.mode
       }
 
-      get_with_token "/api/v1/meters/#{meter.id}/metering-points", request_params, access_token.token
+      get_with_token "/api/v1/meters/#{meter.id}/registers", request_params, access_token.token
       expect(response).to have_http_status(200)
       expect(json['data'].size).to eq(1)
       expect(json['data'].first['attributes']['mode']).to eq(mp1.mode)
     end
 
-    it "paginates metering-points #{token}" do
+    it "paginates registers #{token}" do
       meter         = Fabricate(:meter)
       access_token  = Fabricate(token)
       user          = User.find(access_token.resource_owner_id)
       page_overload.times do
-        mp = Fabricate(:metering_point, meter: meter)
+        mp = Fabricate(:register, meter: meter)
         user.add_role(:manager, mp)
       end
 
-      get_with_token "/api/v1/meters/#{meter.id}/metering-points", access_token.token
+      get_with_token "/api/v1/meters/#{meter.id}/registers", access_token.token
       expect(response).to have_http_status(200)
       expect(json['meta']['total_pages']).to eq(2)
 
-      get_with_token "/api/v1/meters/#{meter.id}/metering-points", {per_page: 200}, access_token.token
+      get_with_token "/api/v1/meters/#{meter.id}/registers", {per_page: 200}, access_token.token
       expect(response).to have_http_status(422)
     end
 
@@ -259,7 +259,7 @@ describe "Meters API" do
   end
 
 
-  xit 'does delete a meter and related metering_points with full access token' do
+  xit 'does delete a meter and related registers with full access token' do
   end
 
 

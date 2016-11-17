@@ -1,0 +1,11 @@
+%p
+  = t('hello') + " #{@receiver.name}!"
+- if @mode == "request"
+  %p= t('the_group_register_request_with_your_register_for_the_group_has_been_rejected', group_name: @group.name, register_name: @register.name)
+  %p= t('to_look_for_another_group_please_visit_the_groups_index_page')
+  %p= link_to t('index_page'), groups_url
+- else
+  %p= t('user_rejected_the_invitation_to_group_with_register', user: @sender.name, register: @register.name, group: @group.name)
+  %p= t('to_invite_more_users_please_visit_the_group_page')
+  %p= link_to @group.name, group_url(@group)
+%p= t('your_buzzn_team')

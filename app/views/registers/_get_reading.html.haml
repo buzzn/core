@@ -1,0 +1,14 @@
+.modal-content
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4.modal-title= t'get_reading'
+  .modal-body
+    = simple_form_for @register, remote: true, url: get_reading_update_register_path(register_id: @register.id), method: 'get' do |f|
+
+      .date
+        = f.input :timestamp, as: :string, input_html: { class: "datepicker", value: Time.current, format: :long }
+      .reading
+      .modal-footer
+        .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}
+          = t'cancel'
+        = f.button :button, t('send'), id: 'submit', class: 'btn btn-success btn-labeled fa fa-check'

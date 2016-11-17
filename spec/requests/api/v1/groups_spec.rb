@@ -190,8 +190,8 @@ describe "Groups API" do
   end
 
   it 'does not create a group with invalid parameter' do
-    metering_point = Fabricate(:out_metering_point_with_manager)
-    manager       = metering_point.managers.first
+    register = Fabricate(:out_register_with_manager)
+    manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
     group = Fabricate.build(:group)
@@ -218,8 +218,8 @@ describe "Groups API" do
 
 
   it 'creates a group' do
-    metering_point = Fabricate(:out_metering_point_with_manager)
-    manager       = metering_point.managers.first
+    register = Fabricate(:out_register_with_manager)
+    manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
     group = Fabricate.build(:group)
@@ -255,8 +255,8 @@ describe "Groups API" do
   end
 
   it 'updates a group' do
-    metering_point = Fabricate(:out_metering_point_with_manager)
-    manager       = metering_point.managers.first
+    register = Fabricate(:out_register_with_manager)
+    manager       = register.managers.first
     access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
     group = Fabricate(:group)
     manager.add_role(:manager, group)
@@ -272,8 +272,8 @@ describe "Groups API" do
 
 
   it 'does delete a group' do
-    metering_point = Fabricate(:out_metering_point_with_manager)
-    manager       = metering_point.managers.first
+    register = Fabricate(:out_register_with_manager)
+    manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
     group = Fabricate(:group)
@@ -305,10 +305,10 @@ describe "Groups API" do
     token_user        = User.find(access_token.resource_owner_id)
     member            = Fabricate(:user)
     group             = Fabricate(:group_readable_by_friends)
-    metering_point    = Fabricate(:metering_point)
-    member.add_role(:member, metering_point)
-    token_user.add_role(:member, metering_point)
-    group.metering_points << metering_point
+    register    = Fabricate(:register)
+    member.add_role(:member, register)
+    token_user.add_role(:member, register)
+    group.registers << register
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
   end
@@ -317,9 +317,9 @@ describe "Groups API" do
     access_token      = Fabricate(:simple_access_token)
     token_user        = User.find(access_token.resource_owner_id)
     group             = Fabricate(:group_readable_by_members)
-    metering_point    = Fabricate(:metering_point)
-    token_user.add_role(:member, metering_point)
-    group.metering_points << metering_point
+    register    = Fabricate(:register)
+    token_user.add_role(:member, register)
+    group.registers << register
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
   end
@@ -335,32 +335,32 @@ describe "Groups API" do
   end
 
 
-  it 'gets the related metering-points for Group' do
+  it 'gets the related registers for Group' do
     group                 = Fabricate(:group)
-    group.metering_points = [
-      Fabricate(:metering_point_readable_by_world),
-      Fabricate(:metering_point_readable_by_community),
-      Fabricate(:metering_point_readable_by_friends),
-      Fabricate(:metering_point_readable_by_members),
-      Fabricate(:out_metering_point_readable_by_world),
+    group.registers = [
+      Fabricate(:register_readable_by_world),
+      Fabricate(:register_readable_by_community),
+      Fabricate(:register_readable_by_friends),
+      Fabricate(:register_readable_by_members),
+      Fabricate(:out_register_readable_by_world),
     ]
 
-    get_without_token "/api/v1/groups/#{group.id}/metering-points"
+    get_without_token "/api/v1/groups/#{group.id}/registers"
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(5)
   end
 
 
-  it 'paginates metering points' do
+  it 'paginates registers' do
     group = Fabricate(:group)
     page_overload.times do
-      group.metering_points << Fabricate(:metering_point_readable_by_world)
+      group.registers << Fabricate(:register_readable_by_world)
     end
-    get_without_token "/api/v1/groups/#{group.id}/metering-points"
+    get_without_token "/api/v1/groups/#{group.id}/registers"
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
 
-    get_without_token "/api/v1/groups/#{group.id}/metering-points", {per_page: 200}
+    get_without_token "/api/v1/groups/#{group.id}/registers", {per_page: 200}
     expect(response).to have_http_status(422)
   end
 
@@ -426,7 +426,7 @@ describe "Groups API" do
   it 'gets the related managers for group only with token' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:group)
-    group.metering_points << Fabricate(:metering_point)
+    group.registers << Fabricate(:register)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
     get_with_token "/api/v1/groups/#{group.id}/relationships/managers", access_token.token
@@ -509,7 +509,7 @@ describe "Groups API" do
   end
 
   it 'adds manager only with manager token or admin token' do
-    metering_point  = Fabricate(:metering_point_readable_by_world)
+    register  = Fabricate(:register_readable_by_world)
     group           = Fabricate(:group)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
@@ -522,8 +522,8 @@ describe "Groups API" do
     manager.add_role(:manager, group)
     member_token    = Fabricate(:full_access_token)
     member          = User.find(member_token.resource_owner_id)
-    member.add_role(:member, metering_point)
-    group.metering_points << metering_point
+    member.add_role(:member, register)
+    group.registers << register
     params = {
       data: { id: user1.id }
     }
@@ -574,7 +574,7 @@ describe "Groups API" do
   end
 
   it 'removes group manager only for current user or with manager token' do
-    metering_point  = Fabricate(:metering_point_readable_by_world)
+    register  = Fabricate(:register_readable_by_world)
     group           = Fabricate(:group)
     user            = Fabricate(:user)
     user.add_role(:manager, group)
@@ -587,8 +587,8 @@ describe "Groups API" do
     manager.add_role(:manager, group)
     member_token    = Fabricate(:full_access_token)
     member          = User.find(member_token.resource_owner_id)
-    member.add_role(:member, metering_point)
-    group.metering_points << metering_point
+    member.add_role(:member, register)
+    group.registers << register
     params = {
       data: { id: user.id }
     }
@@ -621,17 +621,17 @@ describe "Groups API" do
     user          = Fabricate(:user)
     consumer      = Fabricate(:user)
     producer      = Fabricate(:user)
-    mp_in         = Fabricate(:metering_point, mode: 'in')
-    mp_out        = Fabricate(:metering_point, mode: 'out')
-    user.add_role(:member, mp_in)
-    user.add_role(:manager, mp_in)
-    user.add_role(:member, mp_out)
-    user.add_role(:manager, mp_out)
-    producer.add_role(:manager, mp_in)
-    consumer.add_role(:member, mp_in)
-    producer.add_role(:member, mp_out)
-    consumer.add_role(:manager, mp_out)
-    group.metering_points += [mp_in, mp_out]
+    register_in         = Fabricate(:register, mode: 'in')
+    register_out        = Fabricate(:register, mode: 'out')
+    user.add_role(:member, register_in)
+    user.add_role(:manager, register_in)
+    user.add_role(:member, register_out)
+    user.add_role(:manager, register_out)
+    producer.add_role(:manager, register_in)
+    consumer.add_role(:member, register_in)
+    producer.add_role(:member, register_out)
+    consumer.add_role(:manager, register_out)
+    group.registers += [register_in, register_out]
 
     get_with_token "/api/v1/groups/#{group.id}/energy-producers", access_token.token
     expect(response).to have_http_status(200)
@@ -642,8 +642,8 @@ describe "Groups API" do
     expect(json['data'].size).to eq(0)
 
     manager = User.find(access_token.resource_owner_id)
-    manager.add_role(:manager, mp_in)
-    manager.add_role(:member, mp_out)
+    manager.add_role(:manager, register_in)
+    manager.add_role(:member, register_out)
 
     get_with_token "/api/v1/groups/#{group.id}/energy-producers", access_token.token
     expect(response).to have_http_status(200)

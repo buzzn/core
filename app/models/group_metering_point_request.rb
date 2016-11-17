@@ -1,9 +1,9 @@
-class GroupMeteringPointRequest < ActiveRecord::Base
+class GroupRegisterRequest < ActiveRecord::Base
   #include PublicActivity::Model
   #tracked
 
   belongs_to :user
-  belongs_to :metering_point
+  belongs_to :register
   belongs_to :group
 
   after_save :created_membership, :unless => :skip_callbacks
@@ -14,23 +14,23 @@ class GroupMeteringPointRequest < ActiveRecord::Base
   scope :invitations, -> { where(mode: 'invitation') }
 
   def accept
-    GroupMeteringPointRequest.skip_callbacks = true
+    GroupRegisterRequest.skip_callbacks = true
     update_attributes(:status  => 'accepted')
-    GroupMeteringPointRequest.skip_callbacks = false
+    GroupRegisterRequest.skip_callbacks = false
   end
 
   def reject
-    GroupMeteringPointRequest.skip_callbacks = true
+    GroupRegisterRequest.skip_callbacks = true
     update_attributes(:status => 'rejected')
-    GroupMeteringPointRequest.skip_callbacks = false
+    GroupRegisterRequest.skip_callbacks = false
   end
 
 
   private
     def created_membership
       if status == 'accepted'
-        metering_point.group = group
-        group.metering_points << metering_point
+        register.group = group
+        group.registers << register
         group.save
         #group.calculate_closeness
         self.delete

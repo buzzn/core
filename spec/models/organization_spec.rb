@@ -3,7 +3,7 @@ describe "Organization Model" do
 
   it 'filters organization', :retry => 3 do
     organization = Fabricate(:transmission_system_operator_with_address)
-    2.times { Fabricate(:metering_point_operator) }
+    2.times { Fabricate(:register_operator) }
 
     [organization.name, organization.mode, organization.email,
      organization.description, organization.website, organization.address.state,

@@ -56,7 +56,7 @@
 //= require token
 //= require aggregator
 //= require addresses
-//= require metering_points
+//= require registers
 //= require bubble_tooltip
 //= require tour
 //= require comments

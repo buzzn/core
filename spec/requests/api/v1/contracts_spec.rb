@@ -7,23 +7,23 @@ describe 'Contracts API' do
     token
   end
   let (:contract) { group.contracts.first }
-  let(:metering_point) do
-    mp = Fabricate(:metering_point)
+  let(:register) do
+    mp = Fabricate(:register)
     mp.contracts << contract
     mp
   end
-  let (:access_token_for_metering_point_manager) do
+  let (:access_token_for_register_manager) do
     token = Fabricate(:full_access_token)
-    User.find(token.resource_owner_id).add_role(:manager, metering_point)
+    User.find(token.resource_owner_id).add_role(:manager, register)
     token
   end
   let(:full_access_token_as_admin) { Fabricate(:full_access_token_as_admin) }
   let(:page_overload) { 11 }
 
   before do
-    Fabricate(:metering_point_operator, name: 'buzzn Metering')
-    Fabricate(:metering_point_operator, name: 'Discovergy')
-    Fabricate(:metering_point_operator, name: 'MySmartGrid')
+    Fabricate(:register_operator, name: 'buzzn Metering')
+    Fabricate(:register_operator, name: 'Discovergy')
+    Fabricate(:register_operator, name: 'MySmartGrid')
   end
 
   let(:contract_param_names) do
@@ -123,7 +123,7 @@ describe 'Contracts API' do
 
   [:full_access_token_as_admin,
    :access_token_for_group_manager,
-   :access_token_for_metering_point_manager].each do |token_name|
+   :access_token_for_register_manager].each do |token_name|
     it "gets contract with #{token_name}" do
       get_with_token "/api/v1/contracts/#{contract.id}", {}, send(token_name).token
       expect(response).to have_http_status(200)

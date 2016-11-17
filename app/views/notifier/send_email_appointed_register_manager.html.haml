@@ -1,0 +1,7 @@
+%p
+  = t('hello') + " #{@receiver.name}!"
+%p= t('user_appointed_you_register_manager_of_the_register', user: @sender.name, register: @register.name)
+%p= t('you_are_now_able_to_edit_everything_that_deals_with_this_register')
+%p= t('visit_the_register_page_to_see_your_new_options')
+%p= link_to @register.name, register_url(@register)
+%p= t('your_buzzn_team')

@@ -45,9 +45,9 @@
   .group_invitations
     = render @group_invitations
 
-- if user_signed_in? && current_user == @profile.user && @metering_point_invitations.any?
-  .metering_point_invitations
-    = render @metering_point_invitations
+- if user_signed_in? && current_user == @profile.user && @register_invitations.any?
+  .register_invitations
+    = render @register_invitations
 
 
 
@@ -57,20 +57,20 @@
     .col-md-6.col-lg-6
       %h1.page-header.text-overflow
         %span
-          = t('metering_points')
+          = t('registers')
           %small
-            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('metering_points_info')}
+            %i.small-info-circle.fa.fa-info-circle{'data-content' => t('registers_info')}
       .row
-        .metering_points
-          - @metering_points.each do |metering_point|
-            = render metering_point.decorate if metering_point.readable_by?(current_user)
-          = will_paginate(@metering_points, { class: 'flickr_pagination', param_name: 'metering_point_page' })
-          - if @metering_points.empty?
+        .registers
+          - @registers.each do |register|
+            = render register.decorate if register.readable_by?(current_user)
+          = will_paginate(@registers, { class: 'flickr_pagination', param_name: 'register_page' })
+          - if @registers.empty?
             .show_global_tour
-      - if current_user.can_create?(MeteringPoint) && current_user.profile == @profile
+      - if current_user.can_create?(Register) && current_user.profile == @profile
         .row
           .col-lg-12.text-center
-            = new_metering_point
+            = new_register
 
       %hr
 

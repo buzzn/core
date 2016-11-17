@@ -1,6 +1,6 @@
 class NneVnb < ActiveRecord::Base
 
-  
+
   def self.from_csv(data)
     delete_all
     CSV.parse(data.gsub(/\r\n?/, "\n"), col_sep: ';', headers: true) do |row|
@@ -20,7 +20,7 @@ class NneVnb < ActiveRecord::Base
     end
   end
 
-  
+
   def self.to_csv(io)
     io << "verbandsnummer;typ;messung_et;abrechnung_et;zaehler_et;mp_et;messung_dt;abrechnung_dt;zaehler_dt;mp_dt;arbeitspreis;grundpreis;vorlaeufig\n"
     NneVnb.all.each do |i|

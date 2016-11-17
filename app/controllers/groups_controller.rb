@@ -14,14 +14,14 @@ class GroupsController < ApplicationController
     # if url changed redirect to new url
     redirect_to(group_path(@group), status: :moved_permanently) if request.path != group_path(@group)
 
-    @out_metering_points            = MeteringPoint.by_group(@group).outputs.without_externals.decorate
-    @in_metering_points             = MeteringPoint.by_group(@group).inputs.without_externals.decorate
+    @out_registers            = Register.by_group(@group).outputs.without_externals.decorate
+    @in_registers             = Register.by_group(@group).inputs.without_externals.decorate
     @managers                       = @group.managers
-    @energy_producers               = MeteringPoint.by_group(@group).outputs.without_externals.decorate.collect(&:members).flatten.uniq
-    @energy_consumers               = MeteringPoint.by_group(@group).inputs.without_externals.decorate.collect(&:members).flatten.uniq
-    @group_metering_point_requests  = @group.received_group_metering_point_requests
+    @energy_producers               = Register.by_group(@group).outputs.without_externals.decorate.collect(&:members).flatten.uniq
+    @energy_consumers               = Register.by_group(@group).inputs.without_externals.decorate.collect(&:members).flatten.uniq
+    @group_register_requests  = @group.received_group_register_requests
     @all_comments                   = @group.root_comments
-    @out_devices                    = @out_metering_points.collect(&:devices)
+    @out_devices                    = @out_registers.collect(&:devices)
     @activities                     = @group.activities.group_joins
     @activities_and_comments        = (@all_comments + @activities).sort_by!(&:created_at).reverse!
 
@@ -75,30 +75,30 @@ class GroupsController < ApplicationController
   def send_invitations_update
     @group = Group.find(params[:id])
     authorize_action_for @group
-    if params[:group][:add_own_metering_point] == "1"
-      @metering_point = MeteringPoint.find(params[:group][:metering_point_id])
-      if @metering_point.group_id != @group.id
-        @metering_point.group = @group
-        @metering_point.save
-        flash[:notice] = t('metering_point_added_successfully')
+    if params[:group][:add_own_register] == "1"
+      @register = Register.find(params[:group][:register_id])
+      if @register.group_id != @group.id
+        @register.group = @group
+        @register.save
+        flash[:notice] = t('register_added_successfully')
       else
-        flash[:notice] = t('your_metering_point_is_already_part_of_another_group')
+        flash[:notice] = t('your_register_is_already_part_of_another_group')
       end
     else
       @found_meter = Meter.where(manufacturer_product_serialnumber: params[:group][:new_meters])
       if @found_meter.any?
         @meter = @found_meter.first
-        @metering_point = @meter.metering_points.first
-        if GroupMeteringPointRequest.where(metering_point: @metering_point).where(group: @group).empty? && !@group.metering_points.without_externals.include?(@metering_point)
-          @group_invitation = GroupMeteringPointRequest.new(user: @metering_point.managers.first, metering_point: @metering_point, group: @group, mode: 'invitation')
+        @register = @meter.registers.first
+        if GroupRegisterRequest.where(register: @register).where(group: @group).empty? && !@group.registers.without_externals.include?(@register)
+          @group_invitation = GroupRegisterRequest.new(user: @register.managers.first, register: @register, group: @group, mode: 'invitation')
           if @group_invitation.save
-            @group.create_activity(key: 'group_metering_point_invitation.create', owner: current_user, recipient: @metering_point)
-            flash[:notice] = t('sent_group_metering_point_invitation_successfully')
+            @group.create_activity(key: 'group_register_invitation.create', owner: current_user, recipient: @register)
+            flash[:notice] = t('sent_group_register_invitation_successfully')
           else
-            flash[:error] = t('unable_to_send_group_metering_point_invitation')
+            flash[:error] = t('unable_to_send_group_register_invitation')
           end
         else
-          flash[:arror] = t('group_metering_point_invitation_already_sent') + '. ' + t('waiting_for_accepting') + '.'
+          flash[:arror] = t('group_register_invitation_already_sent') + '. ' + t('waiting_for_accepting') + '.'
         end
       else
         redirect_to send_invitations_via_email_group_path(manufacturer_product_serialnumber: params[:group][:new_meters])
@@ -126,13 +126,13 @@ class GroupsController < ApplicationController
     else
       @email = params[:group][:email]
       @new_user = User.invite!({email: @email, invitation_message: params[:group][:message]}, current_user)
-      @metering_point = MeteringPoint.create!(mode: 'in', name: 'Wohnung', readable: 'friends')
-      @new_user.add_role(:member, @metering_point)
-      @new_user.add_role(:manager, @metering_point)
+      @register = Register.create!(mode: 'in', name: 'Wohnung', readable: 'friends')
+      @new_user.add_role(:member, @register)
+      @new_user.add_role(:manager, @register)
       @meter = Meter.create!(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
-      @meter.metering_points << @metering_point
-      @group.metering_points << @metering_point
-      @group.create_activity key: 'group_metering_point_membership.create', owner: @new_user, recipient: @metering_point
+      @meter.registers << @register
+      @group.registers << @register
+      @group.create_activity key: 'group_register_membership.create', owner: @new_user, recipient: @register
       current_user.create_activity key: 'user.create_platform_invitation', owner: current_user, recipient: @new_user
       @meter.save!
       flash[:notice] = t('invitation_sent_successfully_to', email: @email)
@@ -158,13 +158,13 @@ class GroupsController < ApplicationController
 
   def remove_members_update
     @group = Group.find(params[:id])
-    metering_point_id = params[:metering_point_id] || params[:group][:metering_point_id]
-    @metering_point = MeteringPoint.find(metering_point_id)
-    if @group.metering_points.delete(@metering_point)
-      @group.create_activity(key: 'group_metering_point_membership.cancel', owner: @metering_point.managers.first, recipient: @metering_point)
-      flash[:notice] = t('metering_point_removed_successfully')
+    register_id = params[:register_id] || params[:group][:register_id]
+    @register = Register.find(register_id)
+    if @group.registers.delete(@register)
+      @group.create_activity(key: 'group_register_membership.cancel', owner: @register.managers.first, recipient: @register)
+      flash[:notice] = t('register_removed_successfully')
     else
-      flash[:error] = t('unable_to_remove_metering_point')
+      flash[:error] = t('unable_to_remove_register')
     end
     respond_with @group
   end
@@ -295,8 +295,8 @@ private
       :website,
       :description,
       :readable,
-      :add_own_metering_point,
-      :metering_point_ids => []
+      :add_own_register,
+      :register_ids => []
     )
   end
 

@@ -1,5 +1,0 @@
-- single_content_for :action do
-  - if a.trackable
-    = t("is_no_longer_member_of_metering_point_anymore", metering_point_name: link_to(a.trackable.name, a.trackable)).html_safe
-  - else
-    = t("is_no_longer_member_of_a_metering_point_which_has_been_removed_anymore")

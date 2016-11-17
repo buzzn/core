@@ -2,7 +2,7 @@ class MeterDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
 
-  decorates_association :metering_points
+  decorates_association :registers
 
   def name
     "#{manufacturer_name} #{manufacturer_product_serialnumber}"

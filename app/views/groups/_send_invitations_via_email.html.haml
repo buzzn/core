@@ -8,8 +8,8 @@
       %p= t('this_manufacturer_product_serialnumber_is_not_known')
       = f.input :manufacturer_product_serialnumber, input_html: {value: @meter.manufacturer_product_serialnumber}, readonly: true
       %p= t('please_use_this_input_field_to_invite_the_owner_of_the_meter')
-      %p= t('the_created_metering_point_will_be_added_to_this_group_immediatly_after_sending_the_invitation')
-      %p= t('the_invitee_will_take_control_of_this_metering_point_after_registration')
+      %p= t('the_created_register_will_be_added_to_this_group_immediatly_after_sending_the_invitation')
+      %p= t('the_invitee_will_take_control_of_this_register_after_registration')
       = f.input :email, input_html: { value: ''}
       = f.input :message, input_html: { value: ''}
       .modal-footer

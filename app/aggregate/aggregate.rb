@@ -1,6 +1,6 @@
 require 'uri'
 #### Usage
-# mp = MeteringPoint.find('some-id')
+# mp = Register.find('some-id')
 # hash = Aggregate.sort([mp])
 # a = Aggregate.new(hash)
 # a.past
@@ -8,18 +8,18 @@ require 'uri'
 
 class Aggregate
 
-  def self.build_cache_id(api_endpoint, metering_point_ids, timestamp, resolution)
+  def self.build_cache_id(api_endpoint, register_ids, timestamp, resolution)
     timehash = Reading.time_range_from_timestamp_and_resolution(timestamp, resolution)
     params = {
-      metering_point_ids: metering_point_ids,
+      register_ids: register_ids,
       time: timehash
     }.to_param
     return "#{api_endpoint}?#{params}"
   end
 
 
-  def initialize(metering_points_hash)
-    @metering_points_hash = metering_points_hash
+  def initialize(registers_hash)
+    @registers_hash = registers_hash
   end
 
   def present(params = {})
@@ -28,50 +28,50 @@ class Aggregate
 
 
 
-    @metering_points_hash[:buzzn_api].each do |metering_point|
-      document = Reading.where(meter_id: metering_point.meter.id).order(timestamp: 'desc').first
+    @registers_hash[:buzzn_api].each do |register|
+      document = Reading.where(meter_id: register.meter.id).order(timestamp: 'desc').first
       if document
         present_items << {
-          "operator" => (metering_point.mode == 'in' ? '+' : '-'),
-          "data" => document_to_hash(metering_point, document)
+          "operator" => (register.mode == 'in' ? '+' : '-'),
+          "data" => document_to_hash(register, document)
         }
       end
     end
 
     # discovergy
-    @metering_points_hash[:discovergy].each do |metering_point|
+    @registers_hash[:discovergy].each do |register|
       present_items << {
-        "operator" => (metering_point.mode == 'in' ? '+' : '-'),
-        "data" => external_data_live(metering_point)
+        "operator" => (register.mode == 'in' ? '+' : '-'),
+        "data" => external_data_live(register)
       }
     end
 
     ['slp', 'sep_bhkw', 'sep_pv'].each do |fake_type|
-      if @metering_points_hash[fake_type.to_sym].any?
-        present_items.concat(present_fake(fake_type, @metering_points_hash, timestamp ))
+      if @registers_hash[fake_type.to_sym].any?
+        present_items.concat(present_fake(fake_type, @registers_hash, timestamp ))
       end
     end
 
-    @metering_points_hash[:virtual].each do |metering_point|
-      formula_parts         = FormulaPart.where(metering_point_id: metering_point.id)
-      metering_point_ids    = formula_parts.map(&:operand_id)
-      metering_points       = MeteringPoint.find(metering_point_ids)
-      metering_points_hash  = Aggregate.sort_metering_points(metering_points)
+    @registers_hash[:virtual].each do |register|
+      formula_parts         = FormulaPart.where(register_id: register.id)
+      register_ids    = formula_parts.map(&:operand_id)
+      registers       = Register.find(register_ids)
+      registers_hash  = Aggregate.sort_registers(registers)
 
-      if metering_points_hash[:data_sources].size > 1
+      if registers_hash[:data_sources].size > 1
         return 'error different data_sources'
       else
-        data_source = metering_points_hash[:data_sources].first
-        metering_points_hash[data_source.to_sym].each do |metering_point|
-          formula_part = formula_parts.find_by(operand_id: metering_point.id)
+        data_source = registers_hash[:data_sources].first
+        registers_hash[data_source.to_sym].each do |register|
+          formula_part = formula_parts.find_by(operand_id: register.id)
           if formula_part.operator == '+'
             negativ = false
           elsif formula_part.operator == '-'
             negativ = true
           end
           present_items << {
-            "operator" => (metering_point.mode == 'in' ? '+' : '-'),
-            "data" => send("present_#{data_source}", metering_point, negativ)
+            "operator" => (register.mode == 'in' ? '+' : '-'),
+            "data" => send("present_#{data_source}", register, negativ)
           }
         end
       end
@@ -106,47 +106,47 @@ class Aggregate
     resolution = params.fetch(:resolution, 'day_to_minutes') || 'day_to_minutes'
     refresh_cache = params.fetch(:refresh_cache, false) || false
     past_items = []
-    metering_point_ids = @metering_points_hash[:ids].join(',')
-    cache_id = Aggregate.build_cache_id('/aggregates/past', metering_point_ids, timestamp, resolution)
+    register_ids = @registers_hash[:ids].join(',')
+    cache_id = Aggregate.build_cache_id('/aggregates/past', register_ids, timestamp, resolution)
 
     if Rails.cache.exist?(cache_id) && !refresh_cache
       past = Rails.cache.fetch(cache_id)
     else
 
       # buzzn_api
-      @metering_points_hash[:buzzn_api].each do |metering_point|
-        past_items << past_buzzn_api(metering_point, resolution, timestamp)
+      @registers_hash[:buzzn_api].each do |register|
+        past_items << past_buzzn_api(register, resolution, timestamp)
       end
 
       # discovergy
-      @metering_points_hash[:discovergy].each do |metering_point|
-        past_items << past_discovergy(metering_point, resolution, timestamp)
+      @registers_hash[:discovergy].each do |register|
+        past_items << past_discovergy(register, resolution, timestamp)
       end
 
       ['slp', 'sep_bhkw', 'sep_pv'].each do |fake_type|
-        if @metering_points_hash[fake_type.to_sym].any?
-          past_items.concat( past_fake(fake_type, @metering_points_hash, resolution, timestamp) )
+        if @registers_hash[fake_type.to_sym].any?
+          past_items.concat( past_fake(fake_type, @registers_hash, resolution, timestamp) )
         end
       end
 
-      @metering_points_hash[:virtual].each do |metering_point|
-        formula_parts         = FormulaPart.where(metering_point_id: metering_point.id)
-        metering_point_ids    = formula_parts.map(&:operand_id)
-        metering_points       = MeteringPoint.find(metering_point_ids)
-        metering_points_hash  = Aggregate.sort_metering_points(metering_points)
+      @registers_hash[:virtual].each do |register|
+        formula_parts         = FormulaPart.where(register_id: register.id)
+        register_ids    = formula_parts.map(&:operand_id)
+        registers       = Register.find(register_ids)
+        registers_hash  = Aggregate.sort_registers(registers)
 
-        if metering_points_hash[:data_sources].size > 1
+        if registers_hash[:data_sources].size > 1
           return 'error different data_sources'
         else
-          data_source = metering_points_hash[:data_sources].first
-          metering_points_hash[data_source.to_sym].each do |metering_point|
-            formula_part = formula_parts.find_by(operand_id: metering_point.id)
+          data_source = registers_hash[:data_sources].first
+          registers_hash[data_source.to_sym].each do |register|
+            formula_part = formula_parts.find_by(operand_id: register.id)
             if formula_part.operator == '+'
               negativ = false
             elsif formula_part.operator == '-'
               negativ = true
             end
-            past_items << send("past_#{data_source}", metering_point, resolution, timestamp, negativ)
+            past_items << send("past_#{data_source}", register, resolution, timestamp, negativ)
           end
         end
       end
@@ -164,7 +164,7 @@ class Aggregate
   end
 
 
-  def self.sort_metering_points(metering_points)
+  def self.sort_registers(registers)
     buzzn_api           = []
     discovergy          = []
     virtual             = []
@@ -172,26 +172,26 @@ class Aggregate
     sep_bhkw            = []
     sep_pv              = []
     data_sources        = []
-    metering_point_ids  = []
+    register_ids  = []
 
-    metering_points.each do |metering_point|
-      data_sources.push(metering_point.data_source) unless data_sources.include?(metering_point.data_source) && metering_point.data_source
-      metering_point_ids << metering_point.id
-      case metering_point.data_source
+    registers.each do |register|
+      data_sources.push(register.data_source) unless data_sources.include?(register.data_source) && register.data_source
+      register_ids << register.id
+      case register.data_source
       when 'buzzn_api'
-        buzzn_api << metering_point
+        buzzn_api << register
       when 'discovergy'
-        discovergy << metering_point
+        discovergy << register
       when 'virtual'
-        virtual << metering_point
+        virtual << register
       when 'slp'
-        slp << metering_point
+        slp << register
       when 'sep_bhkw'
-        sep_bhkw << metering_point
+        sep_bhkw << register
       when 'sep_pv'
-        sep_pv << metering_point
+        sep_pv << register
       else
-        Rails.logger.error "You gave me #{metering_point.data_source} -- I have no idea what to do with that."
+        Rails.logger.error "You gave me #{register.data_source} -- I have no idea what to do with that."
       end
     end
 
@@ -203,7 +203,7 @@ class Aggregate
       sep_bhkw: sep_bhkw,
       sep_pv: sep_pv,
       data_sources: data_sources,
-      ids: metering_point_ids
+      ids: register_ids
     }
 
     return hash
@@ -228,35 +228,35 @@ private
   end
 
 
-  def present_fake(fake_type, metering_points_hash, timestamp )
+  def present_fake(fake_type, registers_hash, timestamp )
     document = Reading.where(:timestamp.gte => timestamp, source: fake_type).first
     present_items = []
-    metering_points_hash[fake_type.to_sym].each do |metering_point|
-      factor = factor_from_metering_point(metering_point)
+    registers_hash[fake_type.to_sym].each do |register|
+      factor = factor_from_register(register)
       present_items << {
         "operator"  => "+",
-        "data"      => document_to_hash(metering_point, document, factor)
+        "data"      => document_to_hash(register, document, factor)
       }
     end
     return present_items
   end
 
-  def present_discovergy(metering_point, negativ=false)
-    return external_data_live(metering_point, negativ)
+  def present_discovergy(register, negativ=false)
+    return external_data_live(register, negativ)
   end
 
-  def past_buzzn_api(metering_point, resolution, timestamp)
-    source = { meter_id: { "$in" => [metering_point.meter.id] } }
-    keys = [required_reading_attributes(resolution, metering_point)]
+  def past_buzzn_api(register, resolution, timestamp)
+    source = { meter_id: { "$in" => [register.meter.id] } }
+    keys = [required_reading_attributes(resolution, register)]
     collection = Reading.aggregate(resolution, source, timestamp, keys)
-    return aggregation_to_hash(collection, 1, metering_point.mode == 'in' ? false : true)
+    return aggregation_to_hash(collection, 1, register.mode == 'in' ? false : true)
   end
 
-  def past_discovergy(metering_point, resolution, timestamp, negativ=false)
-    return external_data(metering_point, resolution, timestamp.to_i*1000, negativ)
+  def past_discovergy(register, resolution, timestamp, negativ=false)
+    return external_data(register, resolution, timestamp.to_i*1000, negativ)
   end
 
-  def past_fake(fake_type, metering_points_hash, resolution, timestamp)
+  def past_fake(fake_type, registers_hash, resolution, timestamp)
     source = { source: { "$in" => [fake_type] } }
     if Reading.energy_resolutions.include?(resolution)
       keys = ['energy_a_milliwatt_hour']
@@ -265,8 +265,8 @@ private
     end
     collection = Reading.aggregate(resolution, source, timestamp, keys)
     past_items = []
-    metering_points_hash[fake_type.to_sym].each do |metering_point|
-      factor = factor_from_metering_point(metering_point)
+    registers_hash[fake_type.to_sym].each do |register|
+      factor = factor_from_register(register)
       past_items << aggregation_to_hash(collection, factor, false)
     end
     return past_items
@@ -276,26 +276,26 @@ private
 
 
 
-  def factor_from_metering_point(metering_point)
-     metering_point.forecast_kwh_pa ? (metering_point.forecast_kwh_pa/1000.0) : 1
+  def factor_from_register(register)
+     register.forecast_kwh_pa ? (register.forecast_kwh_pa/1000.0) : 1
   end
 
-  def required_register(metering_point)
-    directions  = metering_point.meter.metering_points.count
-    if directions == 1 && metering_point.input?
+  def required_register(register)
+    directions  = register.meter.registers.count
+    if directions == 1 && register.input?
       register = 'a'
-    elsif directions == 1 && metering_point.output?
+    elsif directions == 1 && register.output?
       register = 'a'
-    elsif directions == 2 && metering_point.input?
+    elsif directions == 2 && register.input?
       register = 'a'
-    elsif directions == 2 && metering_point.output?
+    elsif directions == 2 && register.output?
       register = 'b'
     end
     return register
   end
 
-  def required_reading_attributes(resolution, metering_point)
-    register = required_register(metering_point)
+  def required_reading_attributes(resolution, register)
+    register = required_register(register)
     if Reading.energy_resolutions.include?(resolution)
       return "energy_#{register}_milliwatt_hour"
     elsif Reading.power_resolutions.include?(resolution)
@@ -398,10 +398,10 @@ private
   end
 
 
-  def document_to_hash(metering_point, document, factor=1, negativ=false)
+  def document_to_hash(register, document, factor=1, negativ=false)
     item = {'timestamp' => document['timestamp']}
-    if metering_point.smart?
-      x_ = metering_point.input? ? 'a_' : 'b_'
+    if register.smart?
+      x_ = register.input? ? 'a_' : 'b_'
     else
       x_ = 'a_'
     end
@@ -416,8 +416,8 @@ private
   end
 
 
-  def external_data_live(metering_point, negativ=false)
-    crawler = Crawler.new(metering_point)
+  def external_data_live(register, negativ=false)
+    crawler = Crawler.new(register)
     result = crawler.live
     timestamp = Time.at(result[:timestamp]/1000)
     power_milliwatt = (result[:power]*1000).to_i
@@ -430,8 +430,8 @@ private
   end
 
 
-  def external_data(metering_point, resolution, timestamp, negativ=false)
-    crawler = Crawler.new(metering_point)
+  def external_data(register, resolution, timestamp, negativ=false)
+    crawler = Crawler.new(register)
     key = 'power'
     unit = 'milliwatt'
     case resolution
@@ -453,11 +453,11 @@ private
       return []
     end
 
-    if results.first.size == 2 && metering_point.input?
+    if results.first.size == 2 && register.input?
       type_of_meter = 'in'
-    elsif results.first.size == 2 && metering_point.output?
+    elsif results.first.size == 2 && register.output?
       type_of_meter = 'out'
-    elsif results.first.size == 3 && metering_point.input?
+    elsif results.first.size == 3 && register.input?
       type_of_meter = 'in_out'
     end
 

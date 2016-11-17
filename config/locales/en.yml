@@ -102,7 +102,7 @@ en:
   doorkeeper:
     scopes:
       simple: 'Read Access to your Public Data'
-      smartmeter: 'Read Write Access on your MeteringPoint, Meter and Reading'
+      smartmeter: 'Read Write Access on your Register, Meter and Reading'
       full: 'Full Access to all your Data'
   errors: &errors
     format: ! '%{attribute} %{message}'

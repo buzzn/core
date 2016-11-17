@@ -32,92 +32,92 @@ class NotificationCreationWorker
       badge_users = [@activity.recipient]
       @activity.recipient.send_notification('info', I18n.t('cancelled_friendship'), I18n.t('user_cancelled_the_friendship_with_you', user: owner.name), 0, profile_path(owner.profile)) if owner.profile
 
-    # when 'metering_point.create'
+    # when 'register.create'
     #   users = owner.friends if owner
-    # when 'metering_point.destroy'
+    # when 'register.destroy'
     #   users = @activity.trackable.involved
 
-    ########## metering_point.membership ###########
-    when 'metering_point_user_request.create'
+    ########## register.membership ###########
+    when 'register_user_request.create'
       email_users = @activity.trackable.managers
       email_users.each do |user|
-        Notifier.send_email_notification_new_metering_point_user_request(user, owner, @activity.trackable, 'request').deliver_now
+        Notifier.send_email_notification_new_register_user_request(user, owner, @activity.trackable, 'request').deliver_now
       end
       badge_users = email_users
       growl_users = email_users
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('new_metering_point_user_request'), I18n.t('user_wants_to_join_your_metering_point', user: owner.name, metering_point: @activity.trackable.name), 0, metering_point_path(@activity.trackable))
+        user.send_notification('info', I18n.t('new_register_user_request'), I18n.t('user_wants_to_join_your_register', user: owner.name, register: @activity.trackable.name), 0, register_path(@activity.trackable))
       end
-    when 'metering_point_user_request.reject'
+    when 'register_user_request.reject'
       email_users = @activity.trackable.managers - [owner] + [@activity.recipient]
       email_users.each do |user|
-        Notifier.send_email_notification_rejected_metering_point_user_request(user, owner, @activity.trackable, 'request').deliver_now
+        Notifier.send_email_notification_rejected_register_user_request(user, owner, @activity.trackable, 'request').deliver_now
       end
       badge_users = email_users
       growl_users = email_users
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('rejected_metering_point_user_request'), @activity.trackable.name, 0, metering_point_path(@activity.trackable))
+        user.send_notification('info', I18n.t('rejected_register_user_request'), @activity.trackable.name, 0, register_path(@activity.trackable))
       end
-    when 'metering_point_user_invitation.create'
-      Notifier.send_email_notification_new_metering_point_user_request(@activity.recipient, owner, @activity.trackable, 'invitation').deliver_now
+    when 'register_user_invitation.create'
+      Notifier.send_email_notification_new_register_user_request(@activity.recipient, owner, @activity.trackable, 'invitation').deliver_now
       badge_users = @activity.trackable.managers + [@activity.recipient] - [owner]
-      @activity.recipient.send_notification('info', I18n.t('new_metering_point_user_invitation'), I18n.t('user_invited_you_to_join_the_metering_point', user: owner.name, metering_point: @activity.trackable.name), 0, metering_point_path(@activity.trackable))
-    when 'metering_point_user_invitation.reject'
+      @activity.recipient.send_notification('info', I18n.t('new_register_user_invitation'), I18n.t('user_invited_you_to_join_the_register', user: owner.name, register: @activity.trackable.name), 0, register_path(@activity.trackable))
+    when 'register_user_invitation.reject'
       email_users = @activity.trackable.managers
       email_users.each do |user|
-        Notifier.send_email_notification_rejected_metering_point_user_request(user, owner, @activity.trackable, 'invitation').deliver_now
+        Notifier.send_email_notification_rejected_register_user_request(user, owner, @activity.trackable, 'invitation').deliver_now
       end
       badge_users = email_users
       growl_users = email_users
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('rejected_metering_point_user_invitation'), owner.name, 0, profile_path(owner))
+        user.send_notification('info', I18n.t('rejected_register_user_invitation'), owner.name, 0, profile_path(owner))
       end
-    when 'metering_point_user_membership.create'
+    when 'register_user_membership.create'
       email_users = (@activity.trackable.managers + [owner]).uniq
       email_users.each do |user|
-        Notifier.send_email_notification_new_metering_point_user_membership(user, owner, @activity.trackable).deliver_now
+        Notifier.send_email_notification_new_register_user_membership(user, owner, @activity.trackable).deliver_now
       end
       badge_users = @activity.trackable.involved
       growl_users = @activity.trackable.involved
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('new_metering_point_user_membership'), owner.name, 0, metering_point_path(@activity.trackable))
+        user.send_notification('info', I18n.t('new_register_user_membership'), owner.name, 0, register_path(@activity.trackable))
       end
-    when 'metering_point_user_membership.cancel'
+    when 'register_user_membership.cancel'
       email_users = (@activity.trackable.managers + [owner]).uniq
       email_users.each do |user|
-        Notifier.send_email_notification_cancelled_metering_point_user_membership(user, owner, @activity.trackable).deliver_now
+        Notifier.send_email_notification_cancelled_register_user_membership(user, owner, @activity.trackable).deliver_now
       end
       badge_users = (@activity.trackable.involved + [owner]).uniq
       growl_users = badge_users
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('cancelled_metering_point_user_membership'), owner.name, 0, metering_point_path(@activity.trackable))
+        user.send_notification('info', I18n.t('cancelled_register_user_membership'), owner.name, 0, register_path(@activity.trackable))
       end
 
 
 
 
-    ########## metering_point.observation ##########
-    when 'metering_point.exceeds'
+    ########## register.observation ##########
+    when 'register.exceeds'
       email_users = @activity.trackable.involved - User.unsubscribed_from_notification(@activity.key, @activity.trackable)
       email_users.each do |user|
-        Notifier.send_email_metering_point_exceeds_or_undershoots(user, @activity.trackable, 'exceeds').deliver_now
+        Notifier.send_email_register_exceeds_or_undershoots(user, @activity.trackable, 'exceeds').deliver_now
       end
       badge_users = @activity.trackable.involved
       growl_users = @activity.trackable.involved
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('metering_point_exceeded_max_watt', metering_point_name: @activity.trackable.name, max_watt: @activity.trackable.max_watt), @activity.trackable.name, 0, metering_point_path(@activity.trackable))
+        user.send_notification('info', I18n.t('register_exceeded_max_watt', register_name: @activity.trackable.name, max_watt: @activity.trackable.max_watt), @activity.trackable.name, 0, register_path(@activity.trackable))
       end
-    when 'metering_point.undershoots'
+    when 'register.undershoots'
       email_users = @activity.trackable.involved - User.unsubscribed_from_notification(@activity.key, @activity.trackable)
       email_users.each do |user|
-        Notifier.send_email_metering_point_exceeds_or_undershoots(user, @activity.trackable, 'undershoots').deliver_now
+        Notifier.send_email_register_exceeds_or_undershoots(user, @activity.trackable, 'undershoots').deliver_now
       end
       badge_users = @activity.trackable.involved
       growl_users = @activity.trackable.involved
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('metering_point_undershot_min_watt', metering_point_name: @activity.trackable.name, min_watt: @activity.trackable.min_watt), @activity.trackable.name, 0, metering_point_path(@activity.trackable))
+        user.send_notification('info', I18n.t('register_undershot_min_watt', register_name: @activity.trackable.name, min_watt: @activity.trackable.min_watt), @activity.trackable.name, 0, register_path(@activity.trackable))
       end
-    when 'metering_point.offline'
+    when 'register.offline'
       email_users = @activity.trackable.involved - User.unsubscribed_from_notification(@activity.key, @activity.trackable)
       email_users.each do |user|
         Notifier.send_email_notification_meter_offline(user, @activity.trackable).deliver_now
@@ -125,7 +125,7 @@ class NotificationCreationWorker
       badge_users = @activity.trackable.involved
       growl_users = @activity.trackable.involved
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('metering_point_offline'), @activity.trackable.name, 0, metering_point_path(@activity.trackable))
+        user.send_notification('info', I18n.t('register_offline'), @activity.trackable.name, 0, register_path(@activity.trackable))
       end
 
 
@@ -150,65 +150,65 @@ class NotificationCreationWorker
 
 
     ########## group.membership ###########
-    when 'group_metering_point_request.create'
+    when 'group_register_request.create'
       email_users = @activity.trackable.managers
       email_users.each do |user|
-        Notifier.send_email_new_group_metering_point_request(user, owner, @activity.recipient, @activity.trackable, 'request').deliver_now
+        Notifier.send_email_new_group_register_request(user, owner, @activity.recipient, @activity.trackable, 'request').deliver_now
       end
       badge_users = (email_users + @activity.recipient.managers).uniq
       growl_users = email_users
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('new_group_metering_point_request'), I18n.t('user_wants_to_join_your_group_with_the_metering_point', username: owner.name, metering_point_name: @activity.recipient.name, group_name: @activity.trackable.name), 0, group_path(@activity.trackable))
+        user.send_notification('info', I18n.t('new_group_register_request'), I18n.t('user_wants_to_join_your_group_with_the_register', username: owner.name, register_name: @activity.recipient.name, group_name: @activity.trackable.name), 0, group_path(@activity.trackable))
       end
-    when 'group_metering_point_request.reject'
+    when 'group_register_request.reject'
       email_users = (@activity.recipient.managers + @activity.trackable.managers - [owner]).uniq
       email_users.each do |user|
-        Notifier.send_email_rejected_group_metering_point_request(user, owner, @activity.recipient, @activity.trackable, 'request').deliver_now
+        Notifier.send_email_rejected_group_register_request(user, owner, @activity.recipient, @activity.trackable, 'request').deliver_now
       end
       badge_users = email_users
       growl_users = email_users
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('rejected_group_metering_point_request'), I18n.t('user_rejected_the_request_with_your_metering_point_to_join_the_group', user: owner.name, metering_point: @activity.recipient.name, group: @activity.trackable.name), 0, group_path(@activity.trackable))
+        user.send_notification('info', I18n.t('rejected_group_register_request'), I18n.t('user_rejected_the_request_with_your_register_to_join_the_group', user: owner.name, register: @activity.recipient.name, group: @activity.trackable.name), 0, group_path(@activity.trackable))
       end
-    when 'group_metering_point_invitation.create'
+    when 'group_register_invitation.create'
       email_users = @activity.recipient.managers - [owner]
       email_users.each do |user|
-        Notifier.send_email_new_group_metering_point_request(user, owner, @activity.recipient, @activity.trackable, 'invitation').deliver_now
+        Notifier.send_email_new_group_register_request(user, owner, @activity.recipient, @activity.trackable, 'invitation').deliver_now
       end
       badge_users = (email_users + @activity.trackable.managers - [owner]).uniq
       growl_users = email_users
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('new_group_metering_point_invitation'), I18n.t('user_invited_you_to_join_the_group_with_your_metering_point', username: owner.name, metering_point_name: @activity.recipient.name, group_name: @activity.trackable.name), 0, group_path(@activity.trackable))
+        user.send_notification('info', I18n.t('new_group_register_invitation'), I18n.t('user_invited_you_to_join_the_group_with_your_register', username: owner.name, register_name: @activity.recipient.name, group_name: @activity.trackable.name), 0, group_path(@activity.trackable))
       end
-    when 'group_metering_point_invitation.reject'
+    when 'group_register_invitation.reject'
       email_users = (@activity.trackable.managers + @activity.recipient.managers - [owner]).uniq
       email_users.each do |user|
-        Notifier.send_email_rejected_group_metering_point_request(user, owner, @activity.recipient, @activity.trackable, 'invitation').deliver_now
+        Notifier.send_email_rejected_group_register_request(user, owner, @activity.recipient, @activity.trackable, 'invitation').deliver_now
       end
       badge_users = email_users
       growl_users = email_users
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('rejected_group_metering_point_invitation'), I18n.t('user_rejected_the_invitation_to_group_with_metering_point', user: owner.name, metering_point: @activity.recipient.name, group: @activity.trackable.name), 0, group_path(@activity.trackable))
+        user.send_notification('info', I18n.t('rejected_group_register_invitation'), I18n.t('user_rejected_the_invitation_to_group_with_register', user: owner.name, register: @activity.recipient.name, group: @activity.trackable.name), 0, group_path(@activity.trackable))
       end
-    when 'group_metering_point_membership.create'
+    when 'group_register_membership.create'
       email_users = (@activity.trackable.managers + @activity.recipient.managers).uniq
       email_users.each do |user|
-        Notifier.send_email_new_group_metering_point_membership(user, owner, @activity.recipient, @activity.trackable).deliver_now
+        Notifier.send_email_new_group_register_membership(user, owner, @activity.recipient, @activity.trackable).deliver_now
       end
       badge_users = @activity.trackable.involved
       growl_users = badge_users
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('new_group_metering_point_membership'), I18n.t('metering_point_is_now_a_part_of_the_group', metering_point_name: @activity.recipient.name, group_name: @activity.trackable.name), 0, group_path(@activity.trackable))
+        user.send_notification('info', I18n.t('new_group_register_membership'), I18n.t('register_is_now_a_part_of_the_group', register_name: @activity.recipient.name, group_name: @activity.trackable.name), 0, group_path(@activity.trackable))
       end
-    when 'group_metering_point_membership.cancel'
+    when 'group_register_membership.cancel'
       email_users = (@activity.trackable.managers + @activity.recipient.involved).uniq
       email_users.each do |user|
-        Notifier.send_email_cancelled_group_metering_point_membership(user, owner, @activity.recipient, @activity.trackable).deliver_now
+        Notifier.send_email_cancelled_group_register_membership(user, owner, @activity.recipient, @activity.trackable).deliver_now
       end
       badge_users = (@activity.trackable.involved + @activity.recipient.involved).uniq
       growl_users = badge_users
       growl_users.each do |user|
-        user.send_notification('info', I18n.t('cancelled_group_metering_point_membership'), I18n.t('metering_point_is_not_a_part_of_the_group_anymore', metering_point_name: @activity.recipient.name, group_name: @activity.trackable.name), 0, group_path(@activity.trackable))
+        user.send_notification('info', I18n.t('cancelled_group_register_membership'), I18n.t('register_is_not_a_part_of_the_group_anymore', register_name: @activity.recipient.name, group_name: @activity.trackable.name), 0, group_path(@activity.trackable))
       end
 
 
@@ -235,10 +235,10 @@ class NotificationCreationWorker
 
 
     ########### roles management ##########
-    when 'user.appointed_metering_point_manager'
-      Notifier.send_email_appointed_metering_point_manager(@activity.trackable, owner, @activity.recipient).deliver_now
+    when 'user.appointed_register_manager'
+      Notifier.send_email_appointed_register_manager(@activity.trackable, owner, @activity.recipient).deliver_now
       badge_users = @activity.recipient.involved - [owner]
-      @activity.trackable.send_notification('info', I18n.t('appointed_metering_point_manager'), I18n.t('user_appointed_you_metering_point_manager_of_the_metering_point', user: owner.name, metering_point: @activity.recipient.name), 0, metering_point_path(@activity.recipient))
+      @activity.trackable.send_notification('info', I18n.t('appointed_register_manager'), I18n.t('user_appointed_you_register_manager_of_the_register', user: owner.name, register: @activity.recipient.name), 0, register_path(@activity.recipient))
     when 'user.appointed_group_manager'
       Notifier.send_email_appointed_group_manager(@activity.trackable, owner, @activity.recipient).deliver_now
       badge_users = @activity.recipient.involved - [owner]

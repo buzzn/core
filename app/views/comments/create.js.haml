@@ -1,4 +1,4 @@
-/ - if @comment.commentable_type == 'Group' || @comment.commentable_type == 'MeteringPoint' || @comment.commentable_type == 'Conversation'
+/ - if @comment.commentable_type == 'Group' || @comment.commentable_type == 'Register' || @comment.commentable_type == 'Conversation'
 /   - if @comment.parent_id.nil?
 /     $(".comments-all").prepend("#{escape_javascript( render @comment )}").hide().show('fast');
 /     $('.comments-content').animate({scrollTop: 0}, 1000);
@@ -10,7 +10,7 @@
 /   - else
 /     $("#comment_#{@comment.parent.id}").find(".child-comments").append("#{escape_javascript( render @comment )}");
 /     /$('.comments-content').animate({scrollTop: $('.comments-all').find("#comment_#{@comment.id}").offset().top}, 1000);
-/   $("#comment_#{@comment.id}").find(".set-chart-view").on("click", function() { timestamp = $(this).data('timestamp'); resolution = $(this).data('resolution'); type = $(this).data('commentable-type'); id = $(this).data('commentable-id'); Chart.Functions.setResolution(resolution); Chart.Functions.showLoadingBlockButtons(); if (type == 'MeteringPoint'){type = 'metering_points'; Chart.Functions.setChartData(type, id, timestamp); $('html, body').animate({ scrollTop: $('.metering_point_detail').offset().top}, 1000);} else if (type == 'Group') {type = 'groups'; Chart.Functions.setChartDataMultiSeries(type, id, timestamp); $('html, body').animate({ scrollTop: $('.group-chart').offset().top}, 1000);}});
+/   $("#comment_#{@comment.id}").find(".set-chart-view").on("click", function() { timestamp = $(this).data('timestamp'); resolution = $(this).data('resolution'); type = $(this).data('commentable-type'); id = $(this).data('commentable-id'); Chart.Functions.setResolution(resolution); Chart.Functions.showLoadingBlockButtons(); if (type == 'Register'){type = 'registers'; Chart.Functions.setChartData(type, id, timestamp); $('html, body').animate({ scrollTop: $('.register_detail').offset().top}, 1000);} else if (type == 'Group') {type = 'groups'; Chart.Functions.setChartDataMultiSeries(type, id, timestamp); $('html, body').animate({ scrollTop: $('.group-chart').offset().top}, 1000);}});
 /   Chart.Functions.refreshChartComments()
 / - elsif @comment.commentable_type == 'PublicActivity::ORM::ActiveRecord::Activity'
 /   $("#activity_#{@comment.commentable_id}").find(".child-comments").append("#{escape_javascript( render @comment )}");

@@ -1,7 +1,7 @@
 require 'buzzn/zip2price'
 describe "Prices API" do
 
-  
+
   let(:expected) do
     { "data" =>
       { "attributes" => {} }
@@ -33,7 +33,7 @@ describe "Prices API" do
             [1170, 2560, 3303],
             [1170, 2560, 3303]]).each do |type, exp|
       params = { zip: '86916', yearly_kilowatt_hour: '1000', metering_type: type }
-                                                   
+
       get_without_token "/api/v1/prices", params
       expect(response).to have_http_status(200)
       expected['data']['attributes']['baseprice_cents_per_month'] = exp[0]
@@ -51,6 +51,6 @@ describe "Prices API" do
     expect(response).to have_http_status(422)
     expect(json['errors'].size).to eq 1
     expect(json['errors'].first['source']['pointer']).to eq "/data/attributes/zip"
-    
+
   end
 end

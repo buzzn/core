@@ -2,7 +2,7 @@ class DeviceDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
 
-  decorates_association :metering_point
+  decorates_association :register
 
   def panel_mode_class
     case model.mode

@@ -11,25 +11,25 @@ module API
 
         desc "Aggregate Power"
         params do
-          requires :metering_point_ids, type: String, desc: "metering_point IDs"
+          requires :register_ids, type: String, desc: "register IDs"
           optional :timestamp, type: DateTime
         end
         oauth2 false
         get 'present' do
 
-          metering_points = MeteringPoint.where(id: permitted_params[:metering_point_ids].split(","))
-          metering_points_hash = Aggregate.sort_metering_points(metering_points)
+          registers = Register.where(id: permitted_params[:register_ids].split(","))
+          registers_hash = Aggregate.sort_registers(registers)
 
-          if metering_points.size > 5
-            error!('maximum 5 metering_points per request', 413)
+          if registers.size > 5
+            error!('maximum 5 registers per request', 413)
           else
-            if metering_points_hash[:data_sources].size > 1
-              error!('it is not possible to sum metering_points with differend data_source', 406)
+            if registers_hash[:data_sources].size > 1
+              error!('it is not possible to sum registers with differend data_source', 406)
             else
-              metering_points.each do |metering_point|
-                metering_point.guarded_read(current_user, :group_inheritance)
+              registers.each do |register|
+                register.guarded_read(current_user, :group_inheritance)
               end
-              return Aggregate.new(metering_points_hash).present( { timestamp: permitted_params[:timestamp] })
+              return Aggregate.new(registers_hash).present( { timestamp: permitted_params[:timestamp] })
             end
           end
 
@@ -43,7 +43,7 @@ module API
 
         desc "Aggregate Past"
         params do
-          requires :metering_point_ids, type: String, desc: "metering_point IDs"
+          requires :register_ids, type: String, desc: "register IDs"
           optional :timestamp, type: DateTime
           optional :resolution, type: String, values: %w(
                                                         year_to_months
@@ -58,19 +58,19 @@ module API
         oauth2 false
         get 'past' do
 
-          metering_points = MeteringPoint.where(id: permitted_params[:metering_point_ids].split(","))
-          metering_points_hash = Aggregate.sort_metering_points(metering_points)
+          registers = Register.where(id: permitted_params[:register_ids].split(","))
+          registers_hash = Aggregate.sort_registers(registers)
 
-          if metering_points.size > 5
-            error!('maximum 5 metering_points per request', 413)
+          if registers.size > 5
+            error!('maximum 5 registers per request', 413)
           else
-            if metering_points_hash[:data_sources].size > 1
-              error!('it is not possible to sum metering_points with differend data_source', 406)
+            if registers_hash[:data_sources].size > 1
+              error!('it is not possible to sum registers with differend data_source', 406)
             else
-              metering_points.each do |metering_point|
-                metering_point.guarded_read(current_user, :group_inheritance)
+              registers.each do |register|
+                register.guarded_read(current_user, :group_inheritance)
               end
-              return Aggregate.new(metering_points_hash).past( { timestamp: permitted_params[:timestamp], resolution: params[:resolution] })
+              return Aggregate.new(registers_hash).past( { timestamp: permitted_params[:timestamp], resolution: params[:resolution] })
             end
           end
 

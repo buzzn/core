@@ -1,8 +1,8 @@
-class MeteringPointObserveWorker
+class RegisterObserveWorker
   include Sidekiq::Worker
 
   def perform
-    MeteringPoint.create_all_observer_activities
+    Register.create_all_observer_activities
   end
 
 end

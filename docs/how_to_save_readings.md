@@ -38,10 +38,10 @@ Make sure you use the access_token from step 1 and replace 'easymeter', 'q3d' an
 	      "online": false
 	    },
 	    "relationships": {
-	      "metering-points": {
+	      "registers": {
 		"links": {
-		  "self": "https://app.buzzn.net/api/v1/meters/9a54ec4c-dd1e-454b-a07e-2de64e034741/relationships/metering-points",
-		  "related": "https://app.buzzn.net/api/v1/meters/9a54ec4c-dd1e-454b-a07e-2de64e034741/metering-points"
+		  "self": "https://app.buzzn.net/api/v1/meters/9a54ec4c-dd1e-454b-a07e-2de64e034741/relationships/registers",
+		  "related": "https://app.buzzn.net/api/v1/meters/9a54ec4c-dd1e-454b-a07e-2de64e034741/registers"
 		}
 	      }
 	    }
@@ -77,11 +77,11 @@ To get all your meters please use these endpoints:
 Replace {id} with the user_id you got from the first call.
 
 
-## 3. Create a new metering_point that belongs to your meter
+## 3. Create a new register that belongs to your meter
 
-Only perform this step if your meter is not connected to a metering_point yet!
+Only perform this step if your meter is not connected to a register yet!
 
-	curl -X POST --header 'Content-Type: application/x-www-form-urlencoded' --header 'Accept: application/json' --header 'Authorization: 85d134acf33eed098eff8909abb33345761b06' -d 'name=Wohnung&mode=in&readable=world&meter_id=9a54ec4c-dd1e-454b-a07e-2de64e034741' 'https://app.buzzn.net/api/v1/metering-points'
+	curl -X POST --header 'Content-Type: application/x-www-form-urlencoded' --header 'Accept: application/json' --header 'Authorization: 85d134acf33eed098eff8909abb33345761b06' -d 'name=Wohnung&mode=in&readable=world&meter_id=9a54ec4c-dd1e-454b-a07e-2de64e034741' 'https://app.buzzn.net/api/v1/registers'
 
 You can replace 'Wohnung' with any name you want.
 
@@ -90,9 +90,9 @@ Your response body should look like this (with a 201 status code):
 	{
 	  "data": {
 	    "id": "9b27e9f2-a372-437f-b01a-0101f80f6c6e",
-	    "type": "metering-points",
+	    "type": "registers",
 	    "links": {
-	      "self": "https://app.buzzn.net/api/v1/metering-points/9b27e9f2-a372-437f-b01a-0101f80f6c6e"
+	      "self": "https://app.buzzn.net/api/v1/registers/9b27e9f2-a372-437f-b01a-0101f80f6c6e"
 	    },
 	    "attributes": {
 	      "uid": null,
@@ -104,20 +104,20 @@ Your response body should look like this (with a 201 status code):
 	    "relationships": {
 	      "devices": {
 		"links": {
-		  "self": "https://app.buzzn.net/api/v1/metering-points/9b27e9f2-a372-437f-b01a-0101f80f6c6e/relationships/devices",
-		  "related": "https://app.buzzn.net/api/v1/metering-points/9b27e9f2-a372-437f-b01a-0101f80f6c6e/devices"
+		  "self": "https://app.buzzn.net/api/v1/registers/9b27e9f2-a372-437f-b01a-0101f80f6c6e/relationships/devices",
+		  "related": "https://app.buzzn.net/api/v1/registers/9b27e9f2-a372-437f-b01a-0101f80f6c6e/devices"
 		}
 	      },
 	      "users": {
 		"links": {
-		  "self": "https://app.buzzn.net/api/v1/metering-points/9b27e9f2-a372-437f-b01a-0101f80f6c6e/relationships/users",
-		  "related": "https://app.buzzn.net/api/v1/metering-points/9b27e9f2-a372-437f-b01a-0101f80f6c6e/users"
+		  "self": "https://app.buzzn.net/api/v1/registers/9b27e9f2-a372-437f-b01a-0101f80f6c6e/relationships/users",
+		  "related": "https://app.buzzn.net/api/v1/registers/9b27e9f2-a372-437f-b01a-0101f80f6c6e/users"
 		}
 	      },
 	      "address": {
 		"links": {
-		  "self": "https://app.buzzn.net/api/v1/metering-points/9b27e9f2-a372-437f-b01a-0101f80f6c6e/relationships/address",
-		  "related": "https://app.buzzn.net/api/v1/metering-points/9b27e9f2-a372-437f-b01a-0101f80f6c6e/address"
+		  "self": "https://app.buzzn.net/api/v1/registers/9b27e9f2-a372-437f-b01a-0101f80f6c6e/relationships/address",
+		  "related": "https://app.buzzn.net/api/v1/registers/9b27e9f2-a372-437f-b01a-0101f80f6c6e/address"
 		}
 	      }
 	    }

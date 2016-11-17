@@ -36,7 +36,7 @@ class Organization < ActiveRecord::Base
   scope :power_takers,                  -> { where(mode: 'power_taker') }
   scope :electricity_suppliers,         -> { where(mode: 'electricity_supplier') }
   scope :metering_service_providers,    -> { where(mode: 'metering_service_provider') }
-  scope :metering_point_operators,      -> { where(mode: 'metering_point_operator') }
+  scope :register_operators,      -> { where(mode: 'register_operator') }
   scope :distribution_system_operators, -> { where(mode: 'distribution_system_operator') }
   scope :transmission_system_operators, -> { where(mode: 'transmission_system_operator') }
   scope :others,                        -> { where(mode: 'other') }
@@ -81,7 +81,7 @@ class Organization < ActiveRecord::Base
       power_taker
       electricity_supplier
       metering_service_provider
-      metering_point_operator
+      register_operator
       distribution_system_operator
       transmission_system_operator
       other

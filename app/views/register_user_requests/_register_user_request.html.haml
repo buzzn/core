@@ -1,0 +1,28 @@
+.row
+  .col-lg-12
+    .panel.panel-colorful.panel-warning
+      .panel-body
+        - if register_user_request.mode == 'request'
+          .bs-callout.bs-callout-info
+            .col-md-3
+              .thumb_icon.friendship_req
+                = link_to register_user_request.user.profile.decorate.picture('lg'), register_user_request.user.profile, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => register_user_request.user.profile.name }, rel: 'tooltip'
+            .col-md-1
+            .col-md-8
+              %h4= t'new_register_user_request'
+              %p= t('do_you_want_to_admit_user_to_this_register', user: link_to(register_user_request.user.name, register_user_request.user.profile)).html_safe + '?'
+
+              = link_to t('accept'), accept_register_user_request_path(register_user_request), class: 'btn btn-success btn-labeled fa fa-check'
+              = link_to t('reject'), reject_register_user_request_path(register_user_request), class: 'btn btn-danger btn-labeled fa fa-remove'
+        - else
+          .bs-callout.bs-callout-info
+            .col-md-3
+              .thumb_icon.friendship_req
+                = link_to register_user_request.register.decorate.picture('lg'), register_user_request.register, :data => { 'toggle' => 'tooltip', container: 'body', 'original-title' => register_user_request.register.decorate.name }, rel: 'tooltip'
+            .col-md-1
+            .col-md-8
+              %h4= t'new_register_user_invitation'
+              %p= t('do_you_want_to_join_the_register', register: link_to(register_user_request.register.decorate.name, register_user_request.register)).html_safe + '?'
+
+              = link_to t('accept'), accept_register_user_request_path(register_user_request), class: 'btn btn-success btn-labeled fa fa-check'
+              = link_to t('reject'), reject_register_user_request_path(register_user_request), class: 'btn btn-danger btn-labeled fa fa-remove'

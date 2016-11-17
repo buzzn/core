@@ -37,11 +37,11 @@
               %i.fa.fa-plus.fa-lg
             .dropdown-menu.dropdown-menu-right.dropdown-menu-xs.with-arrow.panel-default
               %ul.head-list
-                %li= link_to(t("create_metering_point"), wizard_wizard_metering_points_path, {:remote => true, :class => 'start_modal', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-backdrop' => 'static'})
+                %li= link_to(t("create_register"), wizard_wizard_registers_path, {:remote => true, :class => 'start_modal', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-backdrop' => 'static'})
                 - if current_user.can_create?(Group)
                   %li= link_to(t("create_group"), new_group_path, {:remote => true, :class => 'start_modal', 'data-toggle' => 'modal', 'data-target'   => '#myModal', 'data-backdrop' => 'static'})
-                - if controller_name == "metering_points" && @metering_point && !@metering_point.smart? && current_user.can_update?(@metering_point)
-                  %li= link_to(t("submit_reading"), new_reading_path(metering_point_id: @metering_point.id), {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
+                - if controller_name == "registers" && @register && !@register.smart? && current_user.can_update?(@register)
+                  %li= link_to(t("submit_reading"), new_reading_path(register_id: @register.id), {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})
           %li.dropdown.badge-header-container
             %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
               %i.fa.fa-bell.fa-lg

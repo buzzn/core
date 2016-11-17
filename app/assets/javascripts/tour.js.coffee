@@ -5,15 +5,15 @@ $(".show_global_tour").ready ->
     container: '#page-content'
     steps: [
       {
-        element: ".new_metering_point"
-        title: "Create your Metering Point"
-        content: "Here you can create your Metering Point, which you need to view your energy-related data. "
+        element: ".new_register"
+        title: "Create your register"
+        content: "Here you can create your register, which you need to view your energy-related data. "
         placement: "top"
       },
       {
         element: ".find_and_join_group"
         title: "Find and join a group"
-        content: "After you have created your Metering Point, you are able to join a group which you like. Or if you produce energy you can create your own group!"
+        content: "After you have created your register, you are able to join a group which you like. Or if you produce energy you can create your own group!"
         placement: "top"
       }
     ]

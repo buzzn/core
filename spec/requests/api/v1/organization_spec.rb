@@ -427,7 +427,7 @@ describe "Organizations API" do
     expect(json['data']['attributes']['legal-entity']).to eq('company')
 
     # no contracting_party
-    organization    = Fabricate(:metering_point_operator)
+    organization    = Fabricate(:register_operator)
 
     get_without_token "/api/v1/organizations/#{organization.id}/contracting-party"
 
@@ -448,7 +448,7 @@ describe "Organizations API" do
     expect(json['data']['attributes']['legal-entity']).to eq('company')
 
     # no contracting_party
-    organization    = Fabricate(:metering_point_operator)
+    organization    = Fabricate(:register_operator)
 
     get_with_token "/api/v1/organizations/#{organization.id}/contracting-party", access_token.token
 

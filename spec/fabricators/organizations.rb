@@ -25,8 +25,8 @@ Fabricator :metering_service_provider, from: :organization do
   mode 'metering_service_provider'
 end
 
-Fabricator :metering_point_operator, from: :organization do
-  mode 'metering_point_operator'
+Fabricator :register_operator, from: :organization do
+  mode 'register_operator'
 end
 
 Fabricator :transmission_system_operator, from: :organization do
@@ -71,6 +71,6 @@ Fabricator :dummy_energy, from: :electricity_supplier do
   name Organization::DUMMY_ENERGY
 end
 
-Fabricator :buzzn_reader, from: :metering_point_operator do
+Fabricator :buzzn_reader, from: :register_operator do
   name Organization::BUZZN_READER
 end

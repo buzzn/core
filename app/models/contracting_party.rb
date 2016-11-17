@@ -5,7 +5,7 @@ class ContractingParty < ActiveRecord::Base
   include Buzzn::GuardedCrud
 
   belongs_to :user
-  belongs_to :metering_point
+  belongs_to :register
 
   has_many :owned_contracts, class_name: 'Contract', foreign_key: 'contract_owner_id'
   has_many :assigned_contracts, class_name: 'Contract', foreign_key: 'contract_beneficiary_id'
@@ -97,9 +97,9 @@ class ContractingParty < ActiveRecord::Base
       params[:organization] = Organization.guarded_retrieve(current_user,
                                                             organization_id)
     end
-    if metering_point_id = params.delete(:metering_point_id)
-      params[:metering_point] = MeteringPoint.guarded_retrieve(current_user,
-                                                               metering_point_id)
+    if register_id = params.delete(:register_id)
+      params[:register] = Register.guarded_retrieve(current_user,
+                                                               register_id)
     end
     params
   end

@@ -1,5 +1,0 @@
-- single_content_for :action do
-  - if a.trackable && a.recipient
-    = t("invited_user_to_join_the_metering_point", user: a.recipient ? a.recipient.name : t('an_unknown_user'), metering_point_name: link_to(a.trackable.name, a.trackable)).html_safe
-  - else
-    = t('no_information_available')

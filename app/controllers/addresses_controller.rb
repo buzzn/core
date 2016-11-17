@@ -59,14 +59,14 @@ class AddressesController < ApplicationController
     respond_to do |format|
       format.json {
         @addresses = Address.all
-        @addresses_in = @addresses.collect{|address| address if address.metering_point && address.metering_point.input?}.compact.uniq{|address| address.longitude && address.latitude}
-        @addresses_out = @addresses.collect{|address| address if address.metering_point && address.metering_point.output?}.compact.uniq{|address| address.longitude && address.latitude}
+        @addresses_in = @addresses.collect{|address| address if address.register && address.register.input?}.compact.uniq{|address| address.longitude && address.latitude}
+        @addresses_out = @addresses.collect{|address| address if address.register && address.register.output?}.compact.uniq{|address| address.longitude && address.latitude}
         result = []
         @addresses_in.each do |address|
-          result << { :lat => address.latitude, :lng => address.longitude, :infowindow => address.metering_point.managers.first.name} #TODO: insert custom icons
+          result << { :lat => address.latitude, :lng => address.longitude, :infowindow => address.register.managers.first.name} #TODO: insert custom icons
         end
         @addresses_out.each do |address|
-          result << { :lat => address.latitude, :lng => address.longitude, :infowindow => address.metering_point.managers.first.name} #TODO: insert custom icons
+          result << { :lat => address.latitude, :lng => address.longitude, :infowindow => address.register.managers.first.name} #TODO: insert custom icons
         end
         render json: result.to_json
       }
