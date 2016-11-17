@@ -76,7 +76,7 @@ private
       :contract_number,
       :username,
       :password,
-      :metering_point_id,
+      :register_id,
       :organization_id,
       :group_id,
       :contract_owner_id,

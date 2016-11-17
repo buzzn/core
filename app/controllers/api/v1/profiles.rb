@@ -99,7 +99,7 @@ module API
           paginated_response(profile.user.friends.readable_by(current_user))
         end
 
-        desc 'Return profile metering points'
+        desc 'Return profile registers'
         params do
           requires :id, type: String, desc: "ID of the Profile"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
@@ -107,7 +107,7 @@ module API
         end
         paginate
         oauth2 false
-        get ':id/metering-points' do
+        get ':id/registers' do
           profile = Profile.guarded_retrieve(current_user, permitted_params)
           types = []
           if profile.readable_by_world?
@@ -123,7 +123,7 @@ module API
           # this does not match the Authority for readable_by? and should be:
           # `accessible_by_user(profile.user).readable_by?(current_user)`
           # maybe it is just adjusting the test
-          paginated_response(MeteringPoint.accessible_by_user(profile.user).where(readable: types))
+          paginated_response(Register.accessible_by_user(profile.user).where(readable: types))
         end
 
       end

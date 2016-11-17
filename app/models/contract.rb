@@ -15,7 +15,7 @@ class Contract < ActiveRecord::Base
   belongs_to :contract_owner, class_name: 'ContractingParty', foreign_key: "contract_owner_id"
   belongs_to :contract_beneficiary, class_name: 'ContractingParty', foreign_key: "contract_beneficiary_id"
   belongs_to :organization
-  belongs_to :metering_point
+  belongs_to :register
   belongs_to :group
 
   validates :mode, presence: true
@@ -27,7 +27,7 @@ class Contract < ActiveRecord::Base
   validate :validate_invariants
 
   scope :running,                   -> { where(running: :true) }
-  scope :metering_point_operators,  -> { where(mode: 'metering_point_operator_contract') }
+  scope :register_operators,  -> { where(mode: 'metering_point_operator_contract') }
   scope :power_givers,              -> { where(mode: 'power_giver_contract') }
   scope :power_takers,              -> { where(mode: 'power_taker_contract') }
   scope :servicings,                -> { where(mode: 'servicing_contract') }
@@ -37,7 +37,7 @@ class Contract < ActiveRecord::Base
   def self.readable_by_query(user)
     contract           = Contract.arel_table
     if user
-      User.roles_query(user, manager: [contract[:metering_point_id], contract[:group_id], contract[:organization_id]], admin: nil).project(1).exists
+      User.roles_query(user, manager: [contract[:register_id], contract[:group_id], contract[:organization_id]], admin: nil).project(1).exists
     else
       contract[:id].eq(contract[:id]).not
     end
@@ -64,17 +64,17 @@ class Contract < ActiveRecord::Base
     end
   end
 
-  def validate_metering_point_address
-    unless metering_point
-      errors.add(:metering_point, 'missing MeteringPoint')
+  def validate_register_address
+    unless register
+      errors.add(:register, 'missing Register')
     end
-    unless metering_point.address
-      errors.add(:metering_point, 'missing MeteringPoint Address')
+    unless register.address
+      errors.add(:register, 'missing Register Address')
     end
   end
 
   def validate_power_toker_invariant
-    validate_metering_point_address
+    validate_register_address
     #errors.add(:tariff, 'missing tariff') unless tariff
     errors.add(:yearly_kilowatt_hour, 'missing yearly kilo watt per hour') unless forecast_watt_hour_pa
   end
@@ -119,14 +119,14 @@ class Contract < ActiveRecord::Base
   end
 
   def calculate_price
-    if metering_point && forecast_watt_hour_pa && metering_point.address &&
-       metering_point.meter
+    if register && forecast_watt_hour_pa && register.address &&
+       register.meter
       # TODO some validation or errors or something
       # TODO about when we have two meters or is this a power-taker-contract
       #      only feature ?
       prices = Buzzn::Zip2Price.new(forecast_watt_hour_pa / 1000.0,
-                                    metering_point.address.zip,
-                                    metering_point.meter.metering_type)
+                                    register.address.zip,
+                                    register.meter.metering_type)
       if price = prices.to_price
         self.price_cents_per_kwh   = price.energyprice_cents_per_kilowatt_hour
         self.price_cents_per_month = price.baseprice_cents_per_month
@@ -139,9 +139,9 @@ class Contract < ActiveRecord::Base
   private :calculate_price
 
   def resource_cannot_have_same_contracts
-    if metering_point && metering_point.contracts.any?
-      #available_contracts = Contract.where(metering_point: self.metering_point).where(mode: self.mode)
-      available_contracts = metering_point.contracts.collect{|c| c if c.mode == self.mode}.compact
+    if register && register.contracts.any?
+      #available_contracts = Contract.where(register: self.register).where(mode: self.mode)
+      available_contracts = register.contracts.collect{|c| c if c.mode == self.mode}.compact
       if available_contracts.any? && available_contracts.first != self
         errors.add(:mode, I18n.t("already_exists"))
       end
@@ -176,16 +176,16 @@ private
 
 
   def validates_credentials
-    if self.mode == 'metering_point_operator_contract' && self.metering_point && self.metering_point.meter
-      crawler = Crawler.new(self.metering_point)
+    if self.mode == 'metering_point_operator_contract' && self.register && self.register.meter
+      crawler = Crawler.new(self.register)
       if crawler.valid_credential?
         self.update_columns(valid_credentials: true)
         #self.send_notification_credentials(true)
         copy_contract(:group) if self.group
-        if self.metering_point && self.metering_point.meter
-          copy_contract(:metering_point)
-          self.metering_point.meter.update_columns(smart: true)
-          self.metering_point.meter.save
+        if self.register && self.register.meter
+          copy_contract(:register)
+          self.register.meter.update_columns(smart: true)
+          self.register.meter.save
         end
       else
       end
@@ -195,15 +195,15 @@ private
 
   def copy_contract(resource)
     if resource == :group
-      @metering_points = self.group.metering_points.without_externals
-    elsif resource == :metering_point
-      @metering_points = self.metering_point.meter.metering_points
+      @registers = self.group.registers.without_externals
+    elsif resource == :register
+      @registers = self.register.meter.registers
     end
-    @metering_points.each do |metering_point|
-      if metering_point.contracts.metering_point_operators.empty?
+    @registers.each do |register|
+      if register.contracts.register_operators.empty?
         @contract = self
         @contract2 = Contract.new(mode: @contract.mode, price_cents: @contract.price_cents, organization: @contract.organization, username: @contract.username, password: @contract.password)
-        @contract2.metering_point = metering_point
+        @contract2.register = register
         @contract2.save
       end
     end

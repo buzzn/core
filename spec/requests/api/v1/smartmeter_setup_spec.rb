@@ -10,7 +10,7 @@ describe "MySmartGrid setup using API" do
       # TODO add mpoc_buzzn_metering
     }.each do |organization, meta|
 
-      it "creates a metering_point for #{meta[:orga] || organization} with #{meta[:contract] || 'no' } contract and #{token}" do |spec|
+      it "creates a register for #{meta[:orga] || organization} with #{meta[:contract] || 'no' } contract and #{token}" do |spec|
         VCR.use_cassette("api/v1/smartmeter_setup/#{spec.metadata[:description].downcase}") do
           orga         = Fabricate(meta[:orga] || organization)
           access_token = Fabricate(token)
@@ -22,18 +22,18 @@ describe "MySmartGrid setup using API" do
           expect(response).to have_http_status(201)
           meter_id = json['data']['id']
 
-          # create metering_point
-          metering_point = Fabricate.build(:metering_point)
+          # create register
+          register = Fabricate.build(:register)
           request_params = {
-            uid:  metering_point.uid,
-            mode: metering_point.mode,
-            readable: metering_point.readable,
-            name: metering_point.name,
+            uid:  register.uid,
+            mode: register.mode,
+            readable: register.readable,
+            name: register.name,
             meter_id: meter_id
           }.to_json
-          post_with_token "/api/v1/metering-points", request_params, access_token.token
+          post_with_token "/api/v1/registers", request_params, access_token.token
           expect(response).to have_http_status(201)
-          metering_point_id = json['data']['id']
+          register_id = json['data']['id']
 
           # create contract
           contract          = Fabricate.build(meta[:contract] || :contract)
@@ -43,7 +43,7 @@ describe "MySmartGrid setup using API" do
           end
           request_params[:username]          = contract.username || 'user'
           request_params[:password]          = contract.password || 'pwd'
-          request_params[:metering_point_id] = metering_point_id
+          request_params[:register_id] = register_id
           request_params[:organization_id]   = orga.id
           request_params[:mode]            ||= 'metering_point_operator_contract'
           post_with_token "/api/v1/contracts", request_params.to_json, access_token.token

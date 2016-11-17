@@ -41,7 +41,7 @@ module API
         oauth2 :full
         post do
           # TODO cleanup move logic into Group and ensure manager
-          # and handle the ONE metering-point as validation error
+          # and handle the ONE register as validation error
           group = Group.guarded_create(current_user, permitted_params)
           current_user.add_role(:manager, group)
           created_response(group)
@@ -74,7 +74,7 @@ module API
 
 
 
-        desc "Return the related metering-points for Group"
+        desc "Return the related registers for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
@@ -82,11 +82,11 @@ module API
         end
         paginate
         oauth2 false
-        get ":id/metering-points" do
+        get ":id/registers" do
           group = Group.guarded_retrieve(current_user, permitted_params)
 
-          # metering_points do consider group relation for readable_by
-          paginated_response(MeteringPoint.by_group(group).without_externals.anonymized_readable_by(current_user))
+          # registers do consider group relation for readable_by
+          paginated_response(Register.by_group(group).without_externals.anonymized_readable_by(current_user))
         end
 
 

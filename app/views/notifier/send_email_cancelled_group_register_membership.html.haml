@@ -1,0 +1,6 @@
+%p
+  = t('hello') + " #{@receiver.name}!"
+  %p= t('register_is_not_a_part_of_the_group_anymore', group_name: @group.name, register_name: @register.name)
+  %p= t('visit_the_group_page_to_see_how_the_energy_data_has_changed_now')
+  %p= link_to @group.name, group_url(@group)
+%p= t('your_buzzn_team')

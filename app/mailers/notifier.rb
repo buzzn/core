@@ -47,48 +47,48 @@ class Notifier < ActionMailer::Base
 
 
 
-  def send_email_notification_new_metering_point_user_request(receiver, sender, metering_point, mode)
+  def send_email_notification_new_register_user_request(receiver, sender, register, mode)
     return receiver.profile.nil?
     return sender.profile.nil?
     @receiver = receiver
     @sender = sender
-    @metering_point = metering_point
+    @register = register
     @mode = mode
     if mode == 'request'
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('new_metering_point_user_request'))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('new_register_user_request'))
     else
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('new_metering_point_user_invitation'))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('new_register_user_invitation'))
     end
   end
 
-  def send_email_notification_new_metering_point_user_membership(receiver, sender, metering_point)
+  def send_email_notification_new_register_user_membership(receiver, sender, register)
     return receiver.profile.nil?
     return sender.profile.nil?
     @receiver = receiver
     @sender = sender
-    @metering_point = metering_point
-    mail(to: @receiver.email, subject: 'buzzn: ' + t('new_metering_point_user_membership'))
+    @register = register
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('new_register_user_membership'))
   end
 
-  def send_email_notification_rejected_metering_point_user_request(receiver, sender, metering_point, mode)
+  def send_email_notification_rejected_register_user_request(receiver, sender, register, mode)
     @receiver = receiver
     @sender = sender
-    @metering_point = metering_point
+    @register = register
     @mode = mode
     if mode == 'request'
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('rejected_metering_point_user_request'))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('rejected_register_user_request'))
     else
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('rejected_metering_point_user_invitation'))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('rejected_register_user_invitation'))
     end
   end
 
-  def send_email_notification_cancelled_metering_point_user_membership(receiver, sender, metering_point)
+  def send_email_notification_cancelled_register_user_membership(receiver, sender, register)
     return receiver.profile.nil?
     return sender.profile.nil?
     @receiver = receiver
     @sender = sender
-    @metering_point = metering_point
-    mail(to: @receiver.email, subject: 'buzzn: ' + t('cancelled_metering_point_user_membership'))
+    @register = register
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('cancelled_register_user_membership'))
   end
 
 
@@ -98,54 +98,54 @@ class Notifier < ActionMailer::Base
 
 
 
-  def send_email_new_group_metering_point_request(receiver, sender, metering_point, group, mode)
+  def send_email_new_group_register_request(receiver, sender, register, group, mode)
     return receiver.profile.nil?
     return sender.profile.nil?
     @receiver = receiver
     @sender = sender
-    @metering_point = metering_point
+    @register = register
     @mode = mode
     @group = group
     if @mode == "request"
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('new_group_metering_point_request'))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('new_group_register_request'))
     else
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('new_group_metering_point_invitation'))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('new_group_register_invitation'))
     end
   end
 
-  def send_email_rejected_group_metering_point_request(receiver, sender, metering_point, group, mode)
+  def send_email_rejected_group_register_request(receiver, sender, register, group, mode)
     return receiver.profile.nil?
     return sender.profile.nil?
     @receiver = receiver
     @sender = sender
-    @metering_point = metering_point
+    @register = register
     @mode = mode
     @group = group
     if @mode == "request"
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('rejected_group_metering_point_request'))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('rejected_group_register_request'))
     else
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('rejected_group_metering_point_invitation'))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('rejected_group_register_invitation'))
     end
   end
 
-  def send_email_new_group_metering_point_membership(receiver, sender, metering_point, group)
+  def send_email_new_group_register_membership(receiver, sender, register, group)
     return receiver.profile.nil?
     return sender.profile.nil?
     @receiver = receiver
     @sender = sender
-    @metering_point = metering_point
+    @register = register
     @group = group
-    mail(to: @receiver.email, subject: 'buzzn: ' + t('new_group_metering_point_membership'))
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('new_group_register_membership'))
   end
 
-  def send_email_cancelled_group_metering_point_membership(receiver, sender, metering_point, group)
+  def send_email_cancelled_group_register_membership(receiver, sender, register, group)
     return receiver.profile.nil?
     return sender.profile.nil?
     @receiver = receiver
     @sender = sender
-    @metering_point = metering_point
+    @register = register
     @group = group
-    mail(to: @receiver.email, subject: 'buzzn: ' + t('cancelled_group_metering_point_membership'))
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('cancelled_group_register_membership'))
   end
 
 
@@ -153,23 +153,23 @@ class Notifier < ActionMailer::Base
 
 
 
-  def send_email_metering_point_exceeds_or_undershoots(receiver, metering_point, mode)
+  def send_email_register_exceeds_or_undershoots(receiver, register, mode)
     return receiver.profile.nil?
     @receiver = receiver
-    @metering_point = metering_point
+    @register = register
     @mode = mode
     if @mode == 'exceeds'
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('metering_point_exceeded_max_watt', metering_point_name: @metering_point.name, max_watt: @metering_point.max_watt))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('register_exceeded_max_watt', register_name: @register.name, max_watt: @register.max_watt))
     else
-      mail(to: @receiver.email, subject: 'buzzn: ' + t('metering_point_undershot_min_watt', metering_point_name: @metering_point.name, min_watt: @metering_point.min_watt))
+      mail(to: @receiver.email, subject: 'buzzn: ' + t('register_undershot_min_watt', register_name: @register.name, min_watt: @register.min_watt))
     end
   end
 
-  def send_email_notification_meter_offline(user, metering_point)
+  def send_email_notification_meter_offline(user, register)
     return user.profile.nil?
     @user = user
-    @metering_point = metering_point
-    mail(to: user.email, subject: t('your_metering_point_is_offline_now', metering_point_name: metering_point.name))
+    @register = register
+    mail(to: user.email, subject: t('your_register_is_offline_now', register_name: register.name))
   end
 
 
@@ -186,13 +186,13 @@ class Notifier < ActionMailer::Base
 
 
 
-  def send_email_appointed_metering_point_manager(receiver, sender, metering_point)
+  def send_email_appointed_register_manager(receiver, sender, register)
     return receiver.profile.nil?
     return sender.profile.nil?
     @receiver = receiver
     @sender = sender
-    @metering_point = metering_point
-    mail(to: @receiver.email, subject: 'buzzn: ' + t('appointed_metering_point_manager'))
+    @register = register
+    mail(to: @receiver.email, subject: 'buzzn: ' + t('appointed_register_manager'))
   end
 
   def send_email_appointed_group_manager(receiver, sender, group)

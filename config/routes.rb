@@ -36,7 +36,7 @@ Buzzn::Application.routes.draw do
     end
   end
 
-  resources :metering_points do
+  resources :registers do
     member do
       get :chart
       get :latest_fake_data
@@ -98,11 +98,11 @@ Buzzn::Application.routes.draw do
 
   resources :dashboards do
     member do
-      get :add_metering_point
-      put :add_metering_point_update
-      get :remove_metering_point
-      get :display_metering_point_in_series
-      get :remove_metering_point_from_series
+      get :add_register
+      put :add_register_update
+      get :remove_register
+      get :display_register_in_series
+      get :remove_register_from_series
     end
   end
 
@@ -119,14 +119,14 @@ Buzzn::Application.routes.draw do
     end
   end
 
-  resources :group_metering_point_requests do
+  resources :group_register_requests do
     member do
       get :accept
       get :reject
     end
   end
 
-  resources :metering_point_user_requests do
+  resources :register_user_requests do
     member do
       get :accept
       get :reject
@@ -135,7 +135,7 @@ Buzzn::Application.routes.draw do
 
 
   resources :groups do
-    resources :metering_points, only: [:index]
+    resources :registers, only: [:index]
     member do
       get :chart
       get :kiosk
@@ -156,10 +156,10 @@ Buzzn::Application.routes.draw do
     end
   end
 
-  resources :wizard_metering_points do
+  resources :wizard_registers do
     collection do
-      get :metering_point
-      put :metering_point_update
+      get :register
+      put :register_update
 
       get :meter
       put :meter_update

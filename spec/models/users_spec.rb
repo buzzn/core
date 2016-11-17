@@ -7,8 +7,8 @@ describe "User Model" do
     manager_g.add_role(:manager, g)
     g
   end
-  let(:metering_point) do
-    mp = Fabricate(:metering_point, mode: :out)
+  let(:register) do
+    mp = Fabricate(:register, mode: :out)
     manager_mp.add_role(:manager, mp)
     mp.update! group: group
     mp
@@ -116,23 +116,23 @@ describe "User Model" do
   end
 
   it 'gives no unsubscribed from notification users' do 
-    [organization, group, metering_point].each do |resource|
+    [organization, group, register].each do |resource|
       expect(User.unsubscribed_from_notification('some.key', resource)).to eq []
     end
   end
 
   it 'gives unsubscribed from notification users' do 
-    [organization, group, metering_point].each do |resource|
+    [organization, group, register].each do |resource|
       NotificationUnsubscriber.create(trackable: resource, user: user, notification_key: 'some.key', channel: 'email')
       expect(User.unsubscribed_from_notification('some.key', resource)).to eq [user]
     end
 
-    [group, metering_point].each do |resource|
+    [group, register].each do |resource|
       NotificationUnsubscriber.create(trackable: resource, user: resource.managers.first, notification_key: 'other.key', channel: 'email')
     end
 
     expect(User.unsubscribed_from_notification('other.key', group)).to eq [manager_g, manager_mp]
-    expect(User.unsubscribed_from_notification('other.key', metering_point)).to eq [manager_mp]
+    expect(User.unsubscribed_from_notification('other.key', register)).to eq [manager_mp]
     expect(User.unsubscribed_from_notification('other.key', organization)).to eq []
   end
 

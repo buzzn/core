@@ -12,7 +12,7 @@
             - message_only = message.split(':')[0]
             = t(message_only.downcase!.gsub(' ', '_'), value: value)
 
-      = f.hidden_field :metering_point_id, value: params[:metering_point_id]
+      = f.hidden_field :register_id, value: params[:register_id]
 
       .table-responsive
         %table.table

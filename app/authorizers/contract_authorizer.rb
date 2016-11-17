@@ -10,11 +10,11 @@ class ContractAuthorizer < ApplicationAuthorizer
   end
 
   def updatable_by?(user)
-    User.any_role?(user, admin: nil, manager: [resource.metering_point, resource.group])
+    User.any_role?(user, admin: nil, manager: [resource.register, resource.group])
   end
 
   def deletable_by?(user)
-    User.any_role?(user, admin: nil, manager: [resource.metering_point, resource.group])
+    User.any_role?(user, admin: nil, manager: [resource.register, resource.group])
   end
 
 end

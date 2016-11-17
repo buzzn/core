@@ -12,19 +12,19 @@
 # Also measurementmethod and intention of the devices differ but this is too much to tell here.
 #
 #
-# subroutines implemented here are used by meteringpoints and groups
+# subroutines implemented here are used by Registers and groups
 # for testing the respective API it is recomended to use my_smart_grid- and discovergy- crawlers directly as
-# here meter, meteringpoint and metering_point_operator_contract must be declarated first.
+# here meter, Register and metering_point_operator_contract must be declarated first.
 
 
 
 # Discovergy
-# metering_point = MeteringPoint.find('b192b036-24ba-467a-906c-d4f642566c54')
-# Benchmark.measure{ Crawler.new(metering_point).live }
-# Benchmark.measure{ Crawler.new(metering_point).hour().count }
-# Benchmark.measure{ Crawler.new(metering_point).day().count }
-# Benchmark.measure{ Crawler.new(metering_point).month().count }
-# Crawler.new(metering_point).valid_credential?
+# register = Register.find('b192b036-24ba-467a-906c-d4f642566c54')
+# Benchmark.measure{ Crawler.new(register).live }
+# Benchmark.measure{ Crawler.new(register).hour().count }
+# Benchmark.measure{ Crawler.new(register).day().count }
+# Benchmark.measure{ Crawler.new(register).month().count }
+# Crawler.new(register).valid_credential?
 
 
 
@@ -32,27 +32,27 @@ class Crawler
 
   class CrawlerError < StandardError; end
 
-  def initialize(metering_point)
+  def initialize(register)
     @unixtime_now                     = Time.current.utc.to_i*1000
-    @metering_point                   = metering_point
-    raise ArgumentError.new("no metering_point_operator_contract on metering_point") unless @metering_point.metering_point_operator_contract
-    @metering_point_operator_contract = @metering_point.metering_point_operator_contract
+    @register                   = register
+    raise ArgumentError.new("no metering_point_operator_contract on register") unless @register.metering_point_operator_contract
+    @metering_point_operator_contract = @register.metering_point_operator_contract
     # keep the existing organiztion with name 'buzzn-metering' and the new
     # Organization.buzzn_metering both working using the exact same way
     if @metering_point_operator_contract.organization.buzzn_metering?
-      @metering_point_operator        = 'buzzn-metering'
+      @register_operator        = 'buzzn-metering'
     else
-      @metering_point_operator        = @metering_point_operator_contract.organization.slug
+      @register_operator        = @metering_point_operator_contract.organization.slug
     end
-    @metering_point_input             = @metering_point.input?
-    @metering_point_output            = @metering_point.output?
-    raise ArgumentError.new("no meter on metering_point") unless @metering_point.meter
-    @meter                            = @metering_point.meter
-    @metering_points_size             = @meter.metering_points.size
+    @register_input             = @register.input?
+    @register_output            = @register.output?
+    raise ArgumentError.new("no meter on register") unless @register.meter
+    @meter                            = @register.meter
+    @registers_size             = @meter.registers.size
   end
 
   def valid_credential?
-    case @metering_point_operator
+    case @register_operator
 
     when 'discovergy'
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -70,7 +70,7 @@ class Crawler
       return request != "" && !request.nil?
 
     else
-      "You gave me #{@metering_point_operator} -- I have no idea what to do with that."
+      "You gave me #{@register_operator} -- I have no idea what to do with that."
     end
   end
 
@@ -98,10 +98,10 @@ class Crawler
         if request['result'].any?
           request['result'].each do |item|
             timestamp = item['time']
-            if @metering_points_size > 1
-              if item['power'] > 0 && @metering_point_input
+            if @registers_size > 1
+              if item['power'] > 0 && @register_input
                 power = item['power']/1000
-              elsif item['power'] < 0 && @metering_point_output
+              elsif item['power'] < 0 && @register_output
                 power = item['power'].abs/1000
               else
                 power = 0
@@ -178,10 +178,10 @@ class Crawler
       if request['status'] == "ok"
         if request['result'].any?
           request['result'].each do |item|
-            if @metering_points_size > 1
-              if item['power'] > 0 && @metering_point_input
+            if @registers_size > 1
+              if item['power'] > 0 && @register_input
                 power = item['power']
-              elsif item['power'] < 0 && @metering_point_output
+              elsif item['power'] < 0 && @register_output
                 power = item['power'].abs
               else
                 power = 0
@@ -236,10 +236,10 @@ class Crawler
             # timeEnd = item['timeEnd']
             # i = 0
             # while timeStart + i * 6000 < timeEnd
-            #   if @metering_points_size > 1
-            #     if item['power'] > 0 && @metering_point_input
+            #   if @registers_size > 1
+            #     if item['power'] > 0 && @register_input
             #       power = item['power']/1000
-            #     elsif item['power'] < 0 && @metering_point_output
+            #     elsif item['power'] < 0 && @register_output
             #       power = item['power'].abs/1000
             #     else
             #       power = 0
@@ -256,10 +256,10 @@ class Crawler
             # end
 
             second_timestamp = item['time']
-            if @metering_points_size > 1
-              if @metering_point_input
+            if @registers_size > 1
+              if @register_input
                 second_reading = item['energy']
-              elsif @metering_point_output
+              elsif @register_output
                 second_reading = item['energyOut']
               end
             else
@@ -321,7 +321,7 @@ class Crawler
           new_value = -1
           timestamp = -1
           i = 0
-          if @metering_points_size > 1 && @metering_point_output
+          if @registers_size > 1 && @register_output
             mode = 'energyOut'
           else
             mode = 'energy'
@@ -383,7 +383,7 @@ class Crawler
           new_value = -1
           timestamp = -1
           i = 0
-          if @metering_points_size > 1 && @metering_point_output
+          if @registers_size > 1 && @register_output
             mode = 'energyOut'
           else
             mode = 'energy'

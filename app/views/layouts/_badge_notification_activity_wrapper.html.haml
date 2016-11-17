@@ -7,8 +7,8 @@
     .speech
       - if @a.owner && @a.owner.is_a?(User) && @a.owner.profile
         = @a.owner.name
-      - elsif @a.owner && @a.owner.is_a?(MeteringPoint)
-        = t('the_metering_point') + ' ' + @a.owner.name
+      - elsif @a.owner && @a.owner.is_a?(Register)
+        = t('the_register') + ' ' + @a.owner.name
       - else
         = t "somebody"
       = content_for :action

@@ -5,11 +5,11 @@ PublicActivity::Activity.class_eval do
   has_many :badge_notifications
 
   scope :group_joins, lambda {
-    where(:key => 'group_metering_point_membership.create')
+    where(:key => 'group_register_membership.create')
   }
 
-  scope :metering_point_joins, lambda {
-    where(:key => 'metering_point_user_membership.create')
+  scope :register_joins, lambda {
+    where(:key => 'register_user_membership.create')
   }
 
   after_commit :notify_users, on: :create

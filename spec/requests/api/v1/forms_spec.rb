@@ -17,7 +17,7 @@ describe "Forms API" do
                "manufacturer_name"=>"ferraris",
                "manufacturer_product_name"=>"AS 1440",
                "manufacturer_product_serialnumber"=>"3353987"},
-     :metering_point=> {"uid"=>"10688251510000000000002677117"},
+     :register=> {"uid"=>"10688251510000000000002677117"},
      :contract=>{
        terms: true,
        power_of_attorney: true,
@@ -64,7 +64,7 @@ describe "Forms API" do
   end
 
   before { Fabricate(:buzzn_energy) unless Organization.buzzn_energy }
- 
+
   before(:all) do
     Bank.update_from(File.read("db/banks/BLZ_20160606.txt"))
 
@@ -100,13 +100,13 @@ describe "Forms API" do
   it 'updates profile of existing user' do
     access_token      = Fabricate(:simple_access_token)
     User.find(access_token.resource_owner_id).profile.update!(phone: nil)
-    
+
     post_with_token '/api/v1/forms/power-taker', params_without_user.merge(profile_without_phone).to_json, access_token.token
 
     expect(response).to have_http_status(422)
     expect(json['errors'].size).to eq 1
     expect(json['errors'].first['source']['pointer']).to eq "/data/attributes/profile[phone]"
-  
+
     post_with_token '/api/v1/forms/power-taker', params_without_user.merge(profile).to_json, access_token.token
 
     expect(response).to have_http_status(201)

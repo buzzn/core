@@ -1,7 +1,7 @@
 class GroupAuthorizer < ApplicationAuthorizer
 
   def self.creatable_by?(user)
-    MeteringPoint.editable_by_user(user).outputs.without_group.any?
+    Register.editable_by_user(user).outputs.without_group.any?
   end
 
   def readable_by?(user)

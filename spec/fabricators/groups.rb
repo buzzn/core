@@ -32,13 +32,13 @@ end
 
 Fabricator :group_with_members_readable_by_world, from: :group do
   transient members: 1
-  metering_points do |attrs|
-    metering_point  = Fabricate(:metering_point_readable_by_world)
+  registers do |attrs|
+    register  = Fabricate(:register_readable_by_world)
     attrs[:members].times do
       user          = Fabricate(:user)
-      user.add_role(:member, metering_point)
+      user.add_role(:member, register)
     end
-    [metering_point]
+    [register]
   end
 end
 

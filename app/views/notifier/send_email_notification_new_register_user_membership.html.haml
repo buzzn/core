@@ -1,0 +1,9 @@
+%p
+  = t('hello') + " #{@receiver.name}!"
+- if @receiver == @sender
+  %p= t('you_are_now_a_member_of_the_register', register: link_to(@register.name, register_url(@register))).html_safe
+- else
+  %p= t('user_joined_your_register', user: @sender.name, register: link_to(@register.name, register_url(@register))).html_safe
+%p= t('visit_the_register_page_to_see_the_how_the_energy_data_has_changed_now')
+%p= link_to @register.name, register_url(@register)
+%p= t('your_buzzn_team')

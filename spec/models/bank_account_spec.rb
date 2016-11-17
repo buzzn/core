@@ -1,7 +1,7 @@
 # coding: utf-8
 describe "BankAccount Model" do
 
-  let(:user_with_metering_point) { Fabricate(:user_with_metering_point) }
+  let(:user_with_register) { Fabricate(:user_with_register) }
   let(:manager_group) {Fabricate(:group)}
   let(:manager_of_group) do
     user = Fabricate(:user)
@@ -16,7 +16,7 @@ describe "BankAccount Model" do
   end
   let(:contract) do
     contract = Fabricate(:power_giver_contract)
-    contract.metering_point = user_with_metering_point.roles.first.resource
+    contract.register = user_with_register.roles.first.resource
     contract.save!
     contract
   end
@@ -36,7 +36,7 @@ describe "BankAccount Model" do
   end
 
   # TODO check the contracting party permissions bits with all CRUD
-  [:manager_of_group, :admin, :user_with_metering_point].each do |u|
+  [:manager_of_group, :admin, :user_with_register].each do |u|
     it "creates BankAccount for given contract with #{u}" do
       user = send(u)
       contract.group = manager_group

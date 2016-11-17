@@ -17,38 +17,38 @@ see https://danmartensen.svbtle.com/sql-performance-of-join-and-where-exists
 EXISTS SELECT 1 ....
 ```
 
-for having an `user` and select all metering_point where the group is readable by the given user. first take all readable groups
+for having an `user` and select all register where the group is readable by the given user. first take all readable groups
 ```
 Group.readable_by(user)
 ```
 and now make it a subquery
 
 ```
-Group.readable_by(user).where(group[:id].eq(metering_point[:group_id]))
+Group.readable_by(user).where(group[:id].eq(register[:group_id]))
 ```
-here the `group[:id]` belongs to the `Group.readable_by(user)` and `metering_point[:group_id])` to the outer metering-points table. making this an AR query
+here the `group[:id]` belongs to the `Group.readable_by(user)` and `register[:group_id])` to the outer registers table. making this an AR query
 ```
-MeteringPoint.where(Group.readable_by(user).where(group[:id].eq(metering_point[:group_id])).project(1).exists.to_sql)
+Register.where(Group.readable_by(user).where(group[:id].eq(register[:group_id])).project(1).exists.to_sql)
 ```
 this gives the SQL
 ```
-SELECT * FROM metering_points WHERE EXISTS ( SELECT 1 WHERE ... AND groups.id = metering_points.id )
+SELECT * FROM registers WHERE EXISTS ( SELECT 1 WHERE ... AND groups.id = registers.id )
 ```
 
 now you can add more conditions in an either-or manner. add a manager or admin condition:
 ```
-MeteringPoint.where(Group.readable_by(user).where(group[:id].eq(metering_point[:group_id])).project(1).exists.to_sql + ' OR ' + User.roles_query(user, manager: metering_point[:id], admin: nil).project(1).exists.to_sql)
+Register.where(Group.readable_by(user).where(group[:id].eq(register[:group_id])).project(1).exists.to_sql + ' OR ' + User.roles_query(user, manager: register[:id], admin: nil).project(1).exists.to_sql)
 ```
 
-this means either you get all metering_points where the given user belongs to readble group of a metering_point or is manager/admin of a metering_point.
+this means either you get all registers where the given user belongs to readble group of a register or is manager/admin of a register.
 
 ## readble_by? methods on models
 
-this just extends the `readable_by(user)` scope by limiting the query to the given resource and then verify that the count is 1. with the above metering-point example adding
+this just extends the `readable_by(user)` scope by limiting the query to the given resource and then verify that the count is 1. with the above register example adding
 ```
-where('metering_points.id = ?', resource.id).count == 1
+where('registers.id = ?', resource.id).count == 1
 ```
 will give
 ```
-MeteringPoint.where(Group.readable_by(user).where(group[:id].eq(metering_point[:group_id])).project(1).exists.to_sql + ' OR ' + User.roles_query(user, manager: metering_point[:id], admin: nil).project(1).exists.to_sql).where('metering_points.id = ?', resource.id).count == 1
+Register.where(Group.readable_by(user).where(group[:id].eq(register[:group_id])).project(1).exists.to_sql + ' OR ' + User.roles_query(user, manager: register[:id], admin: nil).project(1).exists.to_sql).where('registers.id = ?', resource.id).count == 1
 ```

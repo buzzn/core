@@ -1,0 +1,249 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getLive?meterId=EASYMETER_60138947&numOfSeconds=6&password=Zebulon_4711&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:24 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:24 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:24 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1478190319915,"power":19619250},{"time":1478190321915,"power":19591200},{"time":1478190323915,"power":19637830}]}'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:12 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getLive?meterId=EASYMETER_60138943&numOfSeconds=6&password=Zebulon_4711&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:25 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:25 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:25 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1478190320680,"power":19587760},{"time":1478190322680,"power":19578590},{"time":1478190324679,"power":19629720}]}'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:13 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getLive?meterId=EASYMETER_1338000816&numOfSeconds=6&password=Zebulon_4711&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:25 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:25 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:25 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1478190320920,"power":-28910},{"time":1478190322920,"power":-28960},{"time":1478190324920,"power":-29050}]}'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:13 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getLive?meterId=EASYMETER_60138947&numOfSeconds=6&password=Zebulon_4711&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:26 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:26 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:26 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1478190321915,"power":19591200},{"time":1478190323915,"power":19637830},{"time":1478190325915,"power":19564790}]}'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:14 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getLive?meterId=EASYMETER_60138943&numOfSeconds=6&password=Zebulon_4711&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:26 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:26 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:26 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1478190322680,"power":19578590},{"time":1478190324679,"power":19629720}]}'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:14 GMT
+- request:
+    method: get
+    uri: https://my.discovergy.com/json/Api.getLive?meterId=EASYMETER_1338000816&numOfSeconds=6&password=Zebulon_4711&user=team%40localpool.de
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 03 Nov 2016 16:25:27 GMT
+      content-type:
+      - application/json;charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      expires:
+      - Fri, 03 Nov 2017 16:25:27 GMT
+      pragma:
+      - cache
+      cache-control:
+      - private, max-age=31536000
+      content-disposition:
+      - inline
+      last-modified:
+      - Thu, 03 Nov 2016 16:25:26 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","result":[{"time":1478190322920,"power":-28960},{"time":1478190324920,"power":-29050},{"time":1478190326920,"power":-29310}]}'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:14 GMT
+recorded_with: VCR 3.0.3

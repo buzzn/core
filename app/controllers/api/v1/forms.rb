@@ -56,7 +56,7 @@ module API
             requires :manufacturer_product_name, desc: "Meter product name"
             requires :manufacturer_product_serialnumber, desc: "Meter product serialnumber"
           end
-          optional :metering_point, type: Hash do
+          optional :register, type: Hash do
             optional :counting_point, type: String, desc: 'Counting Point'
             optional :uid,  type: String, desc: "UID(DE00...)"
           end
@@ -80,7 +80,7 @@ module API
             requires :terms, type: Boolean, desc: 'Aggree to terms'
             requires :move_in, type: Boolean, desc: 'Whether to move in'
             optional :other_contract, type: Boolean, desc: 'There is already a power-taker contract with buzzn'
-            optional :metering_point_operator_name, type: String, desc: 'Name of metering-point-operator name'
+            optional :register_operator_name, type: String, desc: 'Name of register-operator name'
             optional :message_to_buzzn, type: String, desc: 'A message to buzzn'
             optional :hear_about_buzzn, type: String, desc: 'Hear about buzzn'
             optional :beginning, type: Date, desc: 'Begin date'
