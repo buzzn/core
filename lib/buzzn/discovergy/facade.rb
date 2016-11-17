@@ -4,21 +4,20 @@ module Buzzn::Discovergy
 
     @@throughput = Throughput.new
 
-    def initialize(login, credentials, url)
-      @login = login
-      @token = token
+    def initialize(url, max_concurrent)
       @url   = url
+      @max_concurrent = max_concurrent
     end
 
-    def virtual_meter(external_id, interval)
+    def virtual_meter(broker, interval)
       # TODO
     end
 
-    def single_meter(serialnumber, interval)
+    def easy_meter(meter, interval)
       # TODO
     end
 
-    def create_virtual_meter(group)
+    def create_virtual_meter(group, mode)
       # TODO
     end
 
@@ -43,6 +42,9 @@ module Buzzn::Discovergy
     def before
       ActiveRecord::Base.clear_active_connections!
       @@throughput.increment
+      if @@throughput.current > @max_concurrent
+        raise CrawlerError.new('discovergy limit reached')
+      end
     end
 
     def after
