@@ -8,7 +8,7 @@ def user_with_metering_point
   metering_point              = Fabricate(:metering_point)
   user                        = Fabricate(:user)
   metering_point.contracts.each do |contract|
-    user.contracting_parties.first.owned_contracts << contract
+    #user.contracting_parties.first.owned_contracts << contract
   end
 
   user.add_role(:member, metering_point)
@@ -59,36 +59,36 @@ buzzn_team_names.each do |user_name|
     user.add_role :manager, mp_z1a
     user.add_role :manager, mp_z1b
     mp_z1a.contracts.each do |contract|
-      user.contracting_parties.first.owned_contracts << contract
+      #user.contracting_parties.first.owned_contracts << contract
       contract.save
     end
     mp_z1b.contracts.each do |contract|
-      user.contracting_parties.first.owned_contracts << contract
+      #user.contracting_parties.first.owned_contracts << contract
     end
 
     easymeter_60051599 = Fabricate(:easymeter_60051599)
     @mp_z2 = easymeter_60051599.metering_points.first
     user.add_role :manager, @mp_z2
     @mp_z2.contracts.each do |contract|
-      user.contracting_parties.first.owned_contracts << contract
+      #user.contracting_parties.first.owned_contracts << contract
     end
     easymeter_60051559 = Fabricate(:easymeter_60051559)
     @mp_z3 = easymeter_60051559.metering_points.first
     user.add_role :manager, @mp_z3
     @mp_z3.contracts.each do |contract|
-      user.contracting_parties.first.owned_contracts << contract
+      #user.contracting_parties.first.owned_contracts << contract
     end
     easymeter_60051560 = Fabricate(:easymeter_60051560)
     @mp_z4 = easymeter_60051560.metering_points.first
     user.add_role :manager, @mp_z4
     @mp_z4.contracts.each do |contract|
-      user.contracting_parties.first.owned_contracts << contract
+      #user.contracting_parties.first.owned_contracts << contract
     end
     easymeter_60051600 = Fabricate(:easymeter_60051600)
     @mp_z5 = easymeter_60051600.metering_points.first
     user.add_role :manager, @mp_z5
     @mp_z5.contracts.each do |contract|
-      user.contracting_parties.first.owned_contracts << contract
+      #user.contracting_parties.first.owned_contracts << contract
     end
 
 
@@ -149,7 +149,7 @@ buzzn_team_names.each do |user_name|
     user.add_role(:member, root_mp)
   end
   root_mp.contracts.each do |contract|
-    user.contracting_parties.first.owned_contracts << contract
+    #user.contracting_parties.first.owned_contracts << contract
     contract.save
   end
 
