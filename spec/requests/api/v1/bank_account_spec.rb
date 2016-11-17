@@ -32,7 +32,7 @@ describe "BankAccount API" do
               resource_owner_id: user_with_register.id)
   end
 
-  it 'denies access without token' do
+  it 'denies access without token', :retry => 3 do
     post_without_token "/api/v1/bank-accounts", {}.to_json
     expect(response).to have_http_status(401)
 
@@ -48,7 +48,7 @@ describe "BankAccount API" do
 
   [:simple_token, :full_token_community, :smartmeter_token].each do |token|
 
-    it "does not get bank-account with #{token}" do
+    it "does not get bank-account with #{token}", :retry => 3 do
       access_token  = send(token)
 
       if token != :full_token_community
@@ -66,7 +66,7 @@ describe "BankAccount API" do
       expect(response).to have_http_status(403)
     end
 
-    it "does not get any bank-account with #{token}" do
+    it "does not get any bank-account with #{token}", :retry => 3 do
       3.times { Fabricate(:bank_account) }
       access_token  = send(token)
 
@@ -81,7 +81,7 @@ describe "BankAccount API" do
 
   [:full_token, :admin_token].each do |token|
 
-    it "paginates all bank accounts with #{token}" do
+    it "paginates all bank accounts with #{token}", :retry => 3 do
       page_overload.times do
         Fabricate(:bank_account, bank_accountable: contract)
       end
@@ -95,7 +95,7 @@ describe "BankAccount API" do
       expect(response).to have_http_status(422)
     end
 
-    it "creates bank-account with #{token}" do
+    it "creates bank-account with #{token}", :retry => 3 do
       access_token  = send(token)
 
       data = Fabricate.build(:bank_account).attributes.reject {|k,v| k == 'encrypted_iban' || v.nil? }
@@ -131,7 +131,7 @@ describe "BankAccount API" do
     end
 
 
-    it "retrieves bank-account with #{token}" do
+    it "retrieves bank-account with #{token}", :retry => 3 do
       access_token  = send(token)
 
       get_with_token "/api/v1/bank-accounts/#{account.id}-a", access_token.token
@@ -142,7 +142,7 @@ describe "BankAccount API" do
       expect(json['data']['id']).to eq account.id
     end
 
-    it "updates bank-account with #{token}" do
+    it "updates bank-account with #{token}", :retry => 3 do
       access_token  = send(token)
 
       patch_with_token "/api/v1/bank-accounts/#{account.id}-a", access_token.token
@@ -162,7 +162,7 @@ describe "BankAccount API" do
       end
     end
 
-    it "deletes bank-account with #{token}" do
+    it "deletes bank-account with #{token}", :retry => 3 do
       access_token  = send(token)
 
       delete_with_token "/api/v1/bank-accounts/#{account.id}-a", access_token.token

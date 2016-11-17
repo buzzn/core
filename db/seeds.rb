@@ -41,8 +41,8 @@ Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
 # Messdienstleistung (Ablesung und Messung)
 Fabricate(:buzzn_metering)
 Fabricate(:buzzn_reader)
-Fabricate(:metering_point_operator, name: 'Discovergy')
-Fabricate(:metering_point_operator, name: 'MySmartGrid')
+Fabricate(:register_operator, name: 'Discovergy')
+Fabricate(:register_operator, name: 'MySmartGrid')
 
 
 buzzn_team_names = %w[ felix justus danusch thomas stefan philipp christian kristian pavel eva ]
@@ -53,41 +53,41 @@ buzzn_team_names.each do |user_name|
   case user_name
   when 'justus'
     easymeter_60139082 = Fabricate(:easymeter_60139082)
-    mp_z1a = easymeter_60139082.metering_points.first
-    mp_z1b = easymeter_60139082.metering_points.last
-    @fichtenweg8 = root_mp = mp_z1a
-    user.add_role :manager, mp_z1a
-    user.add_role :manager, mp_z1b
-    mp_z1a.contracts.each do |contract|
+    register_z1a = easymeter_60139082.registers.first
+    register_z1b = easymeter_60139082.registers.last
+    @fichtenweg8 = root_mp = register_z1a
+    user.add_role :manager, register_z1a
+    user.add_role :manager, register_z1b
+    register_z1a.contracts.each do |contract|
       #user.contracting_parties.first.owned_contracts << contract
       contract.save
     end
-    mp_z1b.contracts.each do |contract|
+    register_z1b.contracts.each do |contract|
       #user.contracting_parties.first.owned_contracts << contract
     end
 
     easymeter_60051599 = Fabricate(:easymeter_60051599)
-    @mp_z2 = easymeter_60051599.metering_points.first
-    user.add_role :manager, @mp_z2
-    @mp_z2.contracts.each do |contract|
+    @register_z2 = easymeter_60051599.registers.first
+    user.add_role :manager, @register_z2
+    @register_z2.contracts.each do |contract|
       #user.contracting_parties.first.owned_contracts << contract
     end
     easymeter_60051559 = Fabricate(:easymeter_60051559)
-    @mp_z3 = easymeter_60051559.metering_points.first
-    user.add_role :manager, @mp_z3
-    @mp_z3.contracts.each do |contract|
+    @register_z3 = easymeter_60051559.registers.first
+    user.add_role :manager, @register_z3
+    @register_z3.contracts.each do |contract|
       #user.contracting_parties.first.owned_contracts << contract
     end
     easymeter_60051560 = Fabricate(:easymeter_60051560)
-    @mp_z4 = easymeter_60051560.metering_points.first
-    user.add_role :manager, @mp_z4
-    @mp_z4.contracts.each do |contract|
+    @register_z4 = easymeter_60051560.registers.first
+    user.add_role :manager, @register_z4
+    @register_z4.contracts.each do |contract|
       #user.contracting_parties.first.owned_contracts << contract
     end
     easymeter_60051600 = Fabricate(:easymeter_60051600)
-    @mp_z5 = easymeter_60051600.metering_points.first
-    user.add_role :manager, @mp_z5
-    @mp_z5.contracts.each do |contract|
+    @register_z5 = easymeter_60051600.registers.first
+    user.add_role :manager, @register_z5
+    @register_z5.contracts.each do |contract|
       #user.contracting_parties.first.owned_contracts << contract
     end
 
