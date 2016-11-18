@@ -26,7 +26,6 @@ end
   end
 end
 
-
 Fabricator :admin, from: :user do
   after_create { |user| user.add_role(:admin) }
 end
