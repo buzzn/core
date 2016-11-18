@@ -33,6 +33,8 @@ class Group < ActiveRecord::Base
   has_one  :area
   has_many :registers, class_name: Register::Base
 
+  has_many :discovergy_brokers, as: :resource
+  
   has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
 
   has_many :scores, as: :scoreable

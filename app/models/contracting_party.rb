@@ -43,7 +43,7 @@ class ContractingParty < ActiveRecord::Base
 
   def validate_natural_person
     if bank_account.nil?
-      errors.add(:bank_account, 'Missing bank-account')
+      errors.add(:bank_account, 'is missing')
     end
     # errors.add(:sales_tax_number, 'a natural person has no sales tax number') if sales_tax_number
     # errors.add(:sales_tax_number, 'a natural person has no tax rate') if tax_rate
