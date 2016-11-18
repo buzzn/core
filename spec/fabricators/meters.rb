@@ -28,26 +28,24 @@ end
 
 Fabricator :easy_meter_q3d_with_in_output_register, from: :easy_meter_q3d  do
   after_create { |meter|
-    meter.registers << Fabricate(:input_register)
-    meter.registers << Fabricate(:output_register_with_manager)
-    meter.save
+    Fabricate(:input_register, meter: meter)
+    Fabricate(:output_register_with_manager, meter: meter)
   }
 end
 
 Fabricator :easy_meter_q3d_with_input_register_and_manager, from: :easy_meter_q3d do
   after_create { |meter|
-    mp = Fabricate(:input_register, meter: meter)
+    register = Fabricate(:input_register, meter: meter)
     user = Fabricate(:user)
-    user.add_role(:manager, mp)
+    user.add_role(:manager, register)
   }
 end
 
 Fabricator :easymeter_fixed_serial, from: :easy_meter_q3d do
   manufacturer_product_serialnumber '1234567890'
   after_create { |meter|
-    meter.registers << Fabricate(:input_register)
-    meter.registers << Fabricate(:output_register_readable_by_world)
-    meter.save
+    Fabricate(:input_register, meter: meter)
+    Fabricate(:output_register_readable_by_world, meter: meter)
   }
 end
 
@@ -55,9 +53,8 @@ end
 Fabricator :easymeter_60139082, from: :easy_meter_q3d do
   manufacturer_product_serialnumber '60139082'
   after_create { |meter|
-    meter.registers << Fabricate(:register_z1a)
-    meter.registers << Fabricate(:register_z1b)
-    meter.save
+    Fabricate(:register_z1a, meter: meter)
+    Fabricate(:register_z1b, meter: meter)
   }
 end
 
@@ -65,8 +62,7 @@ end
 Fabricator :easymeter_60051599, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051599'
   after_create { |meter|
-    meter.registers << Fabricate(:register_z2)
-    meter.save
+    Fabricate(:register_z2, meter: meter)
   }
 end
 
@@ -74,8 +70,7 @@ end
 Fabricator :easymeter_60051559, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051559'
   after_create { |meter|
-    meter.registers << Fabricate(:register_z3)
-    meter.save
+    Fabricate(:register_z3, meter: meter)
   }
 end
 
@@ -83,8 +78,7 @@ end
 Fabricator :easymeter_60051560, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051560'
   after_create { |meter|
-    meter.registers << Fabricate(:register_z4)
-    meter.save
+    Fabricate(:register_z4, meter: meter)
   }
 end
 
@@ -93,8 +87,7 @@ end
 Fabricator :easymeter_60051600, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051600'
   after_create { |meter|
-    meter.registers << Fabricate(:register_z5)
-    meter.save
+    Fabricate(:register_z5, meter: meter)
   }
 end
 

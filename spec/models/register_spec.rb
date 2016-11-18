@@ -75,6 +75,10 @@ describe "Register Model" do
           live_orig
         end
       end
+
+      def valid_credential?
+        true
+      end
     end
 
     let(:now) { Time.find_zone('Berlin').local(2016,2,1, 1,30,1) }

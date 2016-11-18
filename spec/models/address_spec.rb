@@ -15,14 +15,14 @@ describe "Address Model" do
     manager
   end
 
-  let(:orga_manager) do
+  let(:organization_manager) do
     manager = Fabricate(:user)
     manager.add_role(:manager, organization)
     manager
   end
 
-  let(:karin) { Fabricate(:register_pv_karin) }
-  let(:urban) { Fabricate(:register_urbanstr88) }
+  let(:karin) { Fabricate(:register_pv_karin, meter: Fabricate(:meter)) }
+  let(:urban) { Fabricate(:register_urbanstr88, meter: Fabricate(:meter)) }
 
   let(:organization) do
     Fabricate(:transmission_system_operator_with_address)
@@ -64,7 +64,7 @@ describe "Address Model" do
   end
 
   it 'restricts readable_by for contracting_party address to organization manager', :retry => 3 do
-    expect(Address.readable_by(orga_manager)).to match_array [contracting_party.address, organization.address]
+    expect(Address.readable_by(organization_manager)).to match_array [contracting_party.address, organization.address]
   end
 
   it 'does not restrict readable_by for admins', :retry => 3 do

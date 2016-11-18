@@ -4,18 +4,18 @@ describe "User Model" do
   let(:organization) { Fabricate(:organization, mode: :electricity_supplier) }
   let(:group) do
     g = Fabricate(:group)
-    manager_g.add_role(:manager, g)
+    manager_group.add_role(:manager, g)
     g
   end
   let(:register) do
-    mp = Fabricate(:output_register)
-    manager_mp.add_role(:manager, mp)
-    mp.update! group: group
-    mp
+    register = Fabricate(:ouptut_register, meter: Fabricate(:meter))
+    manager_register.add_role(:manager, register)
+    register.update! group: group
+    register
   end
   let(:user) { Fabricate(:user) }
-  let(:manager_mp) { Fabricate(:user) }
-  let(:manager_g) { Fabricate(:user) }
+  let(:manager_register) { Fabricate(:user) }
+  let(:manager_group) { Fabricate(:user) }
                             
   it 'filters user with given email', :retry => 3 do
     user = Fabricate(:user)
@@ -131,8 +131,8 @@ describe "User Model" do
       NotificationUnsubscriber.create(trackable: resource, user: resource.managers.first, notification_key: 'other.key', channel: 'email')
     end
 
-    expect(User.unsubscribed_from_notification('other.key', group)).to eq [manager_g, manager_mp]
-    expect(User.unsubscribed_from_notification('other.key', register)).to eq [manager_mp]
+    expect(User.unsubscribed_from_notification('other.key', group)).to eq [manager_group, manager_register]
+    expect(User.unsubscribed_from_notification('other.key', register)).to eq [manager_register]
     expect(User.unsubscribed_from_notification('other.key', organization)).to eq []
   end
 

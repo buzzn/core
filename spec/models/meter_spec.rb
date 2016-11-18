@@ -3,7 +3,7 @@ describe "Meter Model" do
 
   it 'filters meter', :retry => 3 do
     meter = Fabricate(:easy_meter_q3d)
-    Fabricate(:meter)
+    Fabricate(:meter, manufacturer_product_serialnumber: '123432345')
 
     [meter.manufacturer_name, meter.manufacturer_product_name].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
