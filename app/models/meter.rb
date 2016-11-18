@@ -6,7 +6,7 @@ class Meter < ActiveRecord::Base
   include Buzzn::GuardedCrud
 
   has_ancestry
-  validates :manufacturer_product_serialnumber, presence: true, uniqueness: true   #, unless: "self.virtual"
+  validates :manufacturer_product_serialnumber, presence: true, uniqueness: true
   mount_uploader :image, PictureUploader
   has_many :equipments
 

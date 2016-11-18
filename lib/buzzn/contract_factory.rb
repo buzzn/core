@@ -51,8 +51,7 @@ module Buzzn
             other = create!(:other_address, Address, self.other_address)
           end
 
-          # TODO create both in one go
-          meter = Meter.create!(self.meter)
+          meter = Meter.new(self.meter)
           # TODO d osomething with this counting_point
           counting_poing = self.register.delete(:counting_point)
           register = create(Register::Input,

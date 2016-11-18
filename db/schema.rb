@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161205131404) do
+ActiveRecord::Schema.define(version: 20161117132744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -256,6 +256,20 @@ ActiveRecord::Schema.define(version: 20161205131404) do
   add_index "devices", ["readable"], name: "index_devices_on_readable", using: :btree
   add_index "devices", ["register_id"], name: "index_devices_on_register_id", using: :btree
   add_index "devices", ["slug"], name: "index_devices_on_slug", unique: true, using: :btree
+
+  create_table "discovergy_brokers", id: false, force: :cascade do |t|
+    t.string   "mode",              null: false
+    t.string   "external_id",       null: false
+    t.string   "provider_login",    null: false
+    t.string   "provider_password", null: false
+    t.integer  "resource_id",       null: false
+    t.string   "resource_type",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "discovergy_brokers", ["mode", "resource_id", "resource_type"], name: "index_discovergy_brokers", unique: true, using: :btree
+  add_index "discovergy_brokers", ["resource_type", "resource_id"], name: "index_discovergy_brokers_on_resource_type_and_resource_id", using: :btree
 
   create_table "equipment", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
