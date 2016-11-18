@@ -936,6 +936,7 @@ end
 #virtueller Zählpunkt
 Fabricator :register_forstenried_erzeugung, from: :output_register do
   name  'Gesamterzeugung'
+  meter           nil
   virtual         true
   formula_parts   {[
                     Fabricate(:fp_plus, operand_id: Fabricate(:register_60138947).id),

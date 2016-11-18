@@ -19,7 +19,7 @@ describe "ContractingParty Model" do
 
   let(:admin) { Fabricate(:admin) }
 
-  let(:other_register) { Fabricate(:register) }
+  let(:other_register) { Fabricate(:register, meter: Fabricate(:meter)) }
 
   let(:bank_account) { Fabricate.build(:bank_account) }
 

@@ -89,8 +89,6 @@ describe Buzzn::ContractFactory do
       expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::NestedValidationError
 
       params.merge!(meter)
-      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
-
       params.merge!(register)
       expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
 
