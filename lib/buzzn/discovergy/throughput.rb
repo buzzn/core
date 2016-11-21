@@ -3,8 +3,8 @@ module Buzzn::Discovergy
 
     NAME = 'discovergy.throughput'
 
-    def initialize
-      @redis = Redis.current
+    def initialize(redis = Redis.current)
+      @redis = redis
     end
 
     def increment
