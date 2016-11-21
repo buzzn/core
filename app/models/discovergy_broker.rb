@@ -47,8 +47,9 @@ class DiscovergyBroker < ActiveRecord::Base
   end
 
   private
-
+    
   def self.do_get(mode, resource)
+    # we have unique index on these three attributes
     result = where(mode: mode, resource_type: resource.class,
                    resource_id: resource.id).first
     if result.nil?

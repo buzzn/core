@@ -1,7 +1,7 @@
 module Buzzn::Discovergy
 
   # the discovergy crawler uses the API from discovergy to retrieve
-  # readings
+  # readings and produces a CrawlerResult object
   class Crawler
 
     def initialize(url, max_concurrent)
@@ -11,9 +11,24 @@ module Buzzn::Discovergy
     def collection(group, interval, mode)
       result = CrawlerResult.new
       # get the broker with given mode for the group
+      # i.e.   DiscovergyBroker.in(group)
+      # or     DiscovergyBroker.out(group)
       broker = DiscovergyBroker.send(mode, group)
       response = @facade.virtual_meter(broker, interval)
-      #parse response
+      #TODO parse response
+      result.freeze
+      result
+    end
+
+    def aggregated(group, interval, mode)
+      result = CrawlerResult.new
+      # get the broker with given mode for the group
+      # i.e.   DiscovergyBroker.in(group)
+      # or     DiscovergyBroker.out(group)
+      broker = DiscovergyBroker.send(mode, group)
+      response = @facade.aggregated_virtual_meter(broker, interval)
+      #TODO parse response
+      result.freeze
       result
     end
 
@@ -26,7 +41,8 @@ module Buzzn::Discovergy
         else
           @facade.easy_meter(register.meter, interval)
         end
-      #parse response
+      #TODO parse response
+      result.freeze
       result
     end
   end

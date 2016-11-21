@@ -13,6 +13,10 @@ module Buzzn::Discovergy
       # TODO
     end
 
+    def aggregated_virtual_meter(broker, interval)
+      # TODO
+    end
+
     def easy_meter(meter, interval)
       # TODO
     end

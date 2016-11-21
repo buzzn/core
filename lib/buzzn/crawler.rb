@@ -5,48 +5,39 @@ module Buzzn
 
   class CrawlerError < StandardError; end
 
-  class CrawlerResult
+  class CrawlerResult < Array
 
-    def initialize
-      @data = []
+    class CrawlerResultItem
+
+      attr_reader :timestamp, :power
+
+      def initialize(timestamp, power)
+        @timestamp = timestamp
+        @power = power
+      end
     end
 
     def add(timestamp, power)
-      @data << timestamp
-      @data << power
-    end
-
-    def get(i = 0)
-      [@data[2 * i], @data[2 * i + 1]]
-    end
-
-    def timestamp(i = 0)
-      @data[2 * i]
-    end
-
-    def power(i = 0)
-      @data[2 * i + 1]
+      add(CrawlerResultItem.new(timestamp, power)
     end
   end
 
-  class Crawler
+  class CrawlerFactory
 
-    def self.discovergy
-      #TODO retrieve config from somewhere
-      Buzzn::Discovergy::Crawler.new(nil, 1)
+    def initialize(discovergy_url, max_concurent_discovergy_requests)
+      @discovergy = Buzzn::Discovergy::Crawler.new(discovergy_url,
+                                                   max_concurent_discovergy_requests)
+      @mysmartgrid = Buzzn::Mysmartgrid::Crawler.new
     end
 
-    @@discovergy = discovergy
-    @@mysmartgrid = Buzzn::Mysmartgrid::Crawler.new
-
-    def self.new(organization)
-      case organization.name
-      when Organization.DISCOVERGY
-        @@discovergy
-      when Organization.MYSMARTGRID
-        @@mysmartgrid
+    def crawler_for(organization)
+      case organization
+      when Organization.discovergy
+        @discovergy
+      when Organization.mysmartgrid
+        @mysmartgrid
       else
-        raise "do not have a crawler for #{organization.name}"
+        raise "do not have a crawler for #{organization.inspect}"
       end
     end
 
