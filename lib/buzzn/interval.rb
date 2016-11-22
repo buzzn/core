@@ -58,6 +58,10 @@ module Buzzn
         new
       end
 
+      def live?
+        @from.nil?
+      end
+
       def year(timestamp)
         if timestamp.is_a?(Time)
           new(timestamp.in_time_zone.beginning_of_year,
