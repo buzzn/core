@@ -17,6 +17,10 @@ module Buzzn
         new
       end
 
+      def live?
+        @from.nil?
+      end
+
       def year(timestamp)
         new(Time.at(timestamp.to_i/1000).in_time_zone.beginning_of_year.to_date,
             (Time.at(timestamp.to_i/1000).in_time_zone.end_of_year + 1.second).to_date)

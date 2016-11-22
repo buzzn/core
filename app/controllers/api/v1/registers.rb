@@ -28,11 +28,9 @@ module API
             end
             oauth2 :simple, :full, :smartmeter
             post do
+              meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
               attributes = permitted_params.reject { |k,v| k == :meter_id }
-              if permitted_params[:meter_id]
-                meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
-                attributes[:meter] = meter
-              end
+              attributes[:meter] = meter
               register = klass.guarded_create(current_user, attributes)
               created_response(register)
             end
@@ -269,7 +267,6 @@ module API
               register = klass.guarded_retrieve(current_user, permitted_params)
               register.meter.guarded_read(current_user)
             end
-
 
 
 
