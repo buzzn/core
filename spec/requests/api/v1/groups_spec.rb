@@ -602,8 +602,6 @@ describe "Groups API" do
     delete_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, simple_token.token
     expect(response).to have_http_status(403)
     delete_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
-    expect(response).to have_http_status(403)
-    delete_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, admin_token.token
     expect(response).to have_http_status(204)
     get_with_token "/api/v1/groups/#{group.id}/relationships/managers", admin_token.token
     expect(json['data'].size).to eq(2)

@@ -26,13 +26,12 @@ module API
         end
         oauth2 :simple, :full, :smartmeter
         post do
-          # TODO move logic into Register and validate existence of manager
-          meter              = Meter.unguarded_retrieve(permitted_params[:meter_id])
-          attributes         = permitted_params.reject { |k,v| k == :meter_id }
-          attributes[:meter] = meter
-          register     = Register.guarded_create(current_user,
-                                                            attributes)
-          current_user.add_role(:manager, register)
+          attributes = permitted_params.reject { |k,v| k == :meter_id }
+          if permitted_params[:meter_id]
+            meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
+            attributes[:meter] = meter
+          end
+          register = Register.guarded_create(current_user, attributes)
           created_response(register)
         end
 
@@ -50,7 +49,7 @@ module API
         oauth2 :simple, :full
         patch ':id' do
           register = Register.guarded_retrieve(current_user,
-                                                          permitted_params)
+                                               permitted_params)
           attributes = permitted_params.reject { |k,v| k == :meter_id }
           if permitted_params[:meter_id]
             meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
@@ -130,15 +129,11 @@ module API
         oauth2 :full
         post ':id/relationships/managers' do
           register = Register.guarded_retrieve(current_user,
-                                                          permitted_params)
-          user           = User.unguarded_retrieve(permitted_params[:data][:id])
-          if register.updatable_by?(current_user)
-            user.add_role(:manager, register)
-            user.create_activity(key: 'user.appointed_register_manager', owner: current_user, recipient: register)
-            status 204
-          else
-            status 403
-          end
+                                               permitted_params)
+          user     = User.unguarded_retrieve(data_id)
+          register.managers.add(current_user, user,
+                                create_key: 'user.appointed_register_manager', owner: current_user)
+          status 204
         end
 
 
@@ -153,14 +148,12 @@ module API
         oauth2 :full
         patch ':id/relationships/managers' do
           register = Register.guarded_retrieve(current_user,
-                                                          permitted_params)
-          if register.updatable_by?(current_user)
-            # TODO ensure at least ONE manager
-            register.replace_managers(id_array, owner: current_user,
-                                            create_key: 'user.appointed_register_manager')
-          else
-            status 403
-          end
+                                               permitted_params)
+          # TODO move 'key' logic into metering_point/ManagedRoles
+          register.managers.replace(current_user,
+                                    data_id_array,
+                                    owner: current_user,
+                                    create_key: 'user.appointed_register_manager')
         end
 
 
@@ -175,15 +168,10 @@ module API
         oauth2 :full
         delete ':id/relationships/managers' do
           register = Register.guarded_retrieve(current_user,
-                                                          permitted_params)
-          user           = User.unguarded_retrieve(permitted_params[:data][:id])
-          if register.updatable_by?(current_user)
-            # TODO move logic into Register and ensure at least ONE manager
-            user.remove_role(:manager, register)
-            status 204
-          else
-            status 403
-          end
+                                               permitted_params)
+          user     = User.unguarded_retrieve(data_id)
+          register.managers.remove(current_user, user)
+          status 204
         end
 
 
@@ -224,16 +212,13 @@ module API
         oauth2 :full
         post ':id/relationships/members' do
           register = Register.guarded_retrieve(current_user,
-                                                          permitted_params)
-          user           = User.unguarded_retrieve(permitted_params[:data][:id])
-          if register.updatable_by?(current_user, :members)
-            # TODO move logic into Register
-            user.add_role(:member, register)
-            register.create_activity key: 'register_user_membership.create', owner: user
-            status 204
-          else
-            status 403
-          end
+                                               permitted_params)
+          user     = User.unguarded_retrieve(data_id)
+          # TODO move 'key' logic into metering_point/ManagedRoles
+          register.members.add(current_user, user, 
+                               update: :members,
+                               create_key: 'register_user_membership.create')
+          status 204
         end
 
 
@@ -247,14 +232,13 @@ module API
         oauth2 :full
         patch ':id/relationships/members' do
           register = Register.guarded_retrieve(current_user,
-                                                          permitted_params)
-          if register.updatable_by?(current_user)
-            register.replace_members(id_array,
-                                           create_key: 'register_user_membership.create',
-                                           cancel_key: 'register_user_membership.cancel')
-          else
-            status 403
-          end
+                                               permitted_params)
+          # TODO move 'key' logic into metering_point/ManagedRoles
+          register.members.replace(current_user,
+                                   data_id_array,
+                                   update: :members,
+                                   create_key: 'register_user_membership.create',
+                                   cancel_key: 'register_user_membership.cancel')
         end
 
 
@@ -269,15 +253,10 @@ module API
         delete ':id/relationships/members' do
           register = Register.guarded_retrieve(current_user,
                                                           permitted_params)
-          user           = User.unguarded_retrieve(permitted_params[:data][:id])
-          # TODO move logic into ManagerMembers module
-          if (current_user == user ||
-              register.updatable_by?(current_user))
-            user.remove_role(:member, register)
-            register.create_activity(key: 'register_user_membership.cancel', owner: user)
-          else
-            status 403
-          end
+          user           = User.unguarded_retrieve(data_id)
+          # TODO move 'key' logic into metering_point/ManagedRoles
+          register.members.remove(current_user, user,
+                                  cancel_key: 'register_user_membership.cancel')
         end
 
 

@@ -32,12 +32,25 @@ describe "Source File" do
     end
   end
 
-  it "source code files do not use Time.now" do
-    Dir['lib/**/*rb'].each do |file|
+  (Dir['lib/**/*rb'] + Dir['app/**/*rb']).each do |file|
+    it "source code files do not use Time.now in #{file}" do
       content = File.read(file)
       content.each_line do |line|
         expect(line).not_to match /Time.now/
       end      
+    end
+  end
+
+  (Dir['lib/**/*rb'] + Dir['app/models/*rb'] + Dir['app/controller/api/**/*rb']).each do |file|
+    ['add_role', 'remove_role'].each do |roler|
+      it "source code files do not use #{roler} in #{file}" do
+        if file != 'lib/buzzn/managed_roles.rb'
+          content = File.read(file)
+          content.each_line do |line|
+            expect(line).not_to match /#{roler}/
+          end
+        end
+      end
     end
   end
 end

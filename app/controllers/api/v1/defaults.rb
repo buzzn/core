@@ -27,7 +27,11 @@ module API
             @permitted_params ||= declared(params, include_missing: false)
           end
 
-          def id_array
+          def data_id
+            permitted_params[:data][:id]
+          end
+
+          def data_id_array
             permitted_params[:data].collect{ |d| d[:id] }
           end
 
@@ -88,6 +92,11 @@ module API
             @errors = []
           end
 
+          def add_general(title, detail)
+              @errors << { "title": title,
+                           "detail": detail }
+          end
+            
           def add(name, *messages)
             name = name.to_s
             if name.include? '.'
@@ -119,6 +128,12 @@ module API
             end
           end
 
+          errors.finish
+        end
+
+        rescue_from ArgumentError do |e|
+          errors = ErrorResponse.new(422, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          errors.add_general('Argument Error', e.message)
           errors.finish
         end
 

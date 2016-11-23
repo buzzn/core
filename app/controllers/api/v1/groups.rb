@@ -40,10 +40,7 @@ module API
         end
         oauth2 :full
         post do
-          # TODO cleanup move logic into Group and ensure manager
-          # and handle the ONE register as validation error
           group = Group.guarded_create(current_user, permitted_params)
-          current_user.add_role(:manager, group)
           created_response(group)
         end
 
@@ -138,14 +135,9 @@ module API
         oauth2 :full
         post ':id/relationships/managers' do
           group = Group.guarded_retrieve(current_user, permitted_params)
-          user  = User.unguarded_retrieve(permitted_params[:data][:id])
-          # TODO move logic into ManagerMembers module
-          if group.updatable_by?(current_user)
-            user.add_role(:manager, group)
-            status 204
-          else
-            status 403
-          end
+          user  = User.unguarded_retrieve(data_id)
+          group.managers.add(current_user, user)
+          status 204
         end
 
         desc 'Replace group managers'
@@ -158,12 +150,8 @@ module API
         oauth2 :full
         patch ':id/relationships/managers' do
           group = Group.guarded_retrieve(current_user, permitted_params)
-          # TODO move logic into ManagerMembers module
-          if group.updatable_by?(current_user, :replace_managers)
-            group.replace_managers(id_array)
-          else
-            status 403
-          end
+          group.managers.replace(current_user, data_id_array,
+                                 update: :replace_managers)
         end
 
         desc 'Remove user from group managers'
@@ -176,14 +164,9 @@ module API
         oauth2 :full
         delete ':id/relationships/managers' do
           group = Group.guarded_retrieve(current_user, permitted_params)
-          user  = User.unguarded_retrieve(permitted_params[:data][:id])
-          # TODO move logic into ManagerMembers module
-          if group.updatable_by?(current_user, user)
-            user.remove_role(:manager, group)
-            status 204
-          else
-            status 403
-          end
+          user  = User.unguarded_retrieve(data_id)
+          group.managers.remove(current_user, user)
+          status 204
         end
 
 

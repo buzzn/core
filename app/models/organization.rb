@@ -1,4 +1,5 @@
 require 'buzzn/guarded_crud'
+require 'buzzn/managed_roles'
 class Organization < ActiveRecord::Base
   resourcify
   include Buzzn::GuardedCrud
@@ -8,7 +9,8 @@ class Organization < ActiveRecord::Base
 
   include Authority::Abilities
   include Filterable
-  include ReplacableRoles
+  include Buzzn::ManagerRole
+  include Buzzn::MemberRole
 
   acts_as_taggable_on :contract_types
 
@@ -20,9 +22,6 @@ class Organization < ActiveRecord::Base
 
   has_one :address, as: :addressable, dependent: :destroy
   accepts_nested_attributes_for :address, reject_if: :all_blank
-
-  has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
-  has_many :members, -> { where roles:  { name: 'member'} }, through: :roles, source: :users
 
   has_one :iln
 
@@ -95,4 +94,5 @@ class Organization < ActiveRecord::Base
   def self.filter(value)
     do_filter(value, *search_attributes)
   end
+  
 end

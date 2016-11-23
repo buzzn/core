@@ -47,9 +47,7 @@ module API
         end
         oauth2 :full
         post do
-          # TODO move logic into Device and ensure manager (via validation)
           device = Device.guarded_create(current_user, permitted_params)
-          current_user.add_role(:manager, device)
           created_response(device)
         end
 
