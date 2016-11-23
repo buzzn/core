@@ -4,7 +4,6 @@ class Contract < ActiveRecord::Base
   include Authority::Abilities
   include Filterable
   include Buzzn::GuardedCrud
-  include ReplacableRoles
 
   has_paper_trail
 
