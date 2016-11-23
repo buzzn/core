@@ -100,13 +100,9 @@ module API
         oauth2 false
         get ":id/scores" do
           group = Group.guarded_retrieve(current_user, permitted_params)
-          result = group.scores
-          if interval = permitted_params[:interval]
-            result = result.send("#{interval}ly".to_sym)
-          end
-          if timestamp = permitted_params[:timestamp]
-            result.at(timestamp)
-          end
+          interval = permitted_params[:interval]
+          timestamp = permitted_params[:timestamp]
+          result = group.scores.send("#{interval}ly".to_sym).at(timestamp)
           if mode = permitted_params[:mode]
             result = result.send(mode.to_s.pluralize.to_sym)
           end
