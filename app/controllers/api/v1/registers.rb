@@ -26,8 +26,12 @@ module API
         end
         oauth2 :simple, :full, :smartmeter
         post do
-          register = Register.guarded_create(current_user,
-                                             permitted_params)
+          attributes = permitted_params.reject { |k,v| k == :meter_id }
+          if permitted_params[:meter_id]
+            meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
+            attributes[:meter] = meter
+          end
+          register = Register.guarded_create(current_user, attributes)
           created_response(register)
         end
 
@@ -45,7 +49,7 @@ module API
         oauth2 :simple, :full
         patch ':id' do
           register = Register.guarded_retrieve(current_user,
-                                                          permitted_params)
+                                               permitted_params)
           attributes = permitted_params.reject { |k,v| k == :meter_id }
           if permitted_params[:meter_id]
             meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
@@ -227,7 +231,7 @@ module API
         end
         oauth2 :full
         patch ':id/relationships/members' do
-          register = register.guarded_retrieve(current_user,
+          register = Register.guarded_retrieve(current_user,
                                                permitted_params)
           # TODO move 'key' logic into metering_point/ManagedRoles
           register.members.replace(current_user,
