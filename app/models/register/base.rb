@@ -34,9 +34,32 @@ module Register
 
     accepts_nested_attributes_for :contracts
 
-    validates :readable, presence: true
+
+    def self.modes
+      %w{
+      in
+      out
+    }
+    end
+
+    def self.readables
+      %w{
+      world
+      community
+      friends
+      members
+    }
+    end
+
+
+    validates :readable, inclusion:{ in: self.readables }
+    validates :mode, inclusion:{ in: self.modes }
     validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
     validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_register?
+
+    # TODO this validations always passes
+    #      i.e. no check on virtual == false
+    #      and allows both nil or non-nil values when virtual == true
     validates :meter, presence: false, if: :virtual
     validate :validate_invariants
 
@@ -50,7 +73,7 @@ module Register
 
     # TODO remove this as it takes an extra ordering plan even when finding
     #      a single entity via the find method
-    default_scope { order('name ASC') } #DESC
+    #default_scope { order('name ASC') } #DESC
 
     scope :inputs, -> { where(type: Register::Input) }
     scope :outputs, -> { where(type: Register::Output) }

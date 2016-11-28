@@ -16,11 +16,11 @@ module Buzzn::Discovergy
     end
 
     def current
-      @redis.get(NAME)
+      @redis.get(NAME).to_i
     end
 
     def clear
-      @redisset(NAME, 0)
+      @redis.set(NAME, 0)
     end
   end
 end

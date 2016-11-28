@@ -11,6 +11,8 @@ class Meter < ActiveRecord::Base
   has_many :equipments
 
   has_many :registers, class_name: 'Register::Base', dependent: :destroy
+  has_one :discovergy_broker, as: :resource
+  validates_associated :discovergy_broker
 
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
@@ -46,6 +48,10 @@ class Meter < ActiveRecord::Base
 
   def name
     "#{manufacturer_name} #{manufacturer_product_serialnumber}"
+  end
+
+  def virtual?
+    self.registers.size == 1 && self.registers.first.virtual
   end
 
 
