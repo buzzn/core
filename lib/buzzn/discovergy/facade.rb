@@ -248,8 +248,6 @@ module Buzzn::Discovergy
 
 
 
-
-
     [:register_application, :get_request_token, :authorize, :get_access_token, :readings,
       :create_virtual_meter].each do |method|
 
@@ -264,7 +262,8 @@ module Buzzn::Discovergy
         end
       end
 
-      private method
+      # TODO: commented out only for testing!!!!!
+      #private method
     end
 
     private
