@@ -55,12 +55,12 @@ class Crawler
     case @register_operator
 
     when 'discovergy'
-      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
       return request['status'] == 'ok'
 
     when 'buzzn-metering'
-      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
       return request['status'] == 'ok'
 
@@ -92,7 +92,7 @@ class Crawler
         raise CrawlerError.new("empty array from my-smart-grid")
       end
     else
-      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
       if request['status'] == "ok"
         if request['result'].any?
@@ -126,7 +126,7 @@ class Crawler
     if @metering_point_operator == "mysmartgrid"
       #do something?
     else
-      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request     = discovergy.get_live_each(@meter.manufacturer_product_serialnumber)
       if request['status'] == "ok"
         if request['result'].any?
@@ -173,7 +173,7 @@ class Crawler
         raise CrawlerError.new("empty array from my-smart-grid")
       end
     else
-      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request     = discovergy.get_hour(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
@@ -226,7 +226,7 @@ class Crawler
         raise CrawlerError.new("empty array from my-smart-grid")
       end
     else
-      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request     = discovergy.get_day(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
@@ -310,7 +310,7 @@ class Crawler
         raise CrawlerError.new("empty array from my-smart-grid")
       end
     else
-      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request     = discovergy.get_month(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
@@ -372,7 +372,7 @@ class Crawler
         raise CrawlerError.new("empty array from my-smart-grid")
       end
     else
-      discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request     = discovergy.get_year(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?

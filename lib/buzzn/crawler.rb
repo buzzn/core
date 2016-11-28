@@ -18,7 +18,7 @@ module Buzzn
     end
 
     def add(timestamp, power)
-      add(CrawlerResultItem.new(timestamp, power)
+      add(CrawlerResultItem.new(timestamp, power))
     end
   end
 

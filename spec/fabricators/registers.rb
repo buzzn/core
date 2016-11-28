@@ -226,7 +226,7 @@ end
 # Wohnung Hr. Hopf ("ZN3") ist ungezählt kann aber berechnet werden
 Fabricator :register_hans_dieter_hopf, from: :input_register do
   name  'Wohnung'
-  meter {  Fabricate(:virtual_meter_hopf) }
+  meter nil #{  Fabricate(:virtual_meter_hopf) }
   virtual         true
 end
 

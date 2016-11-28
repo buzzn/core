@@ -1,5 +1,5 @@
 # coding: utf-8
-class Discovergy
+class Discovergyy
 
   TIMEOUT = 5 # seconds
 

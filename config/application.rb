@@ -60,5 +60,7 @@ module Buzzn
 
     config.middleware.delete Rack::Lock
 
+    config.autoload_paths << "#{Rails.root}/lib"
+
   end
 end
