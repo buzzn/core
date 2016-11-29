@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
 
   include PublicActivity::StoreController
 
+  before_filter :test_gon
   before_filter :initialize_gon
   before_filter :http_basic_authenticate
   before_filter :set_paper_trail_whodunnit
@@ -34,6 +35,10 @@ class ApplicationController < ActionController::Base
   # def set_csrf_cookie_for_ng
   #   cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
   # end
+
+  def test_gon
+    Gon.global.push({ foo: 'bar'})
+  end
 
   def after_sign_in_path_for(resource)
 
