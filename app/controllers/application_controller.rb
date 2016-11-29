@@ -11,8 +11,8 @@ class ApplicationController < ActionController::Base
   before_filter :initialize_gon
   before_filter :http_basic_authenticate
   before_filter :set_paper_trail_whodunnit
-  before_filter :test_gon
-  
+  after_filter :test_gon
+
   def http_basic_authenticate
     if Rails.env.staging?
       authenticate_or_request_with_http_basic do |username, password|
