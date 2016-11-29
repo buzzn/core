@@ -3,8 +3,6 @@
   = render 'layouts/head'
 
   %body
-    = include_gon
-
     #myModal.modal.fade.in{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
       .modal-dialog
     - if request.original_url.end_with?('kiosk') || request.original_url.end_with?('widget')
