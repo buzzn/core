@@ -37,7 +37,11 @@ class ApplicationController < ActionController::Base
   # end
 
   def test_gon
-    Gon.global.push({ foo: 'bar'})
+      Gon.global.push({ foo: 'bar'})
+    if user_signed_in?
+      Gon.global.push({ user_signed_in: true})
+    end
+      Gon.global.push({ user_signed_in: false})
   end
 
   def after_sign_in_path_for(resource)
