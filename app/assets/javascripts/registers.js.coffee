@@ -13,6 +13,7 @@ namespace = (target, name, block) ->
 
 #code for partial: _register.html.haml
 $(".registers").ready ->
+  console.log('registers');
   $(this).find(".register").each ->
     #smart = $(this).attr('data-smart')
     #online = $(this).attr('data-online')

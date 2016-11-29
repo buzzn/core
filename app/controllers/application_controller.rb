@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
 
   def test_gon
       Gon.global.push({ foo: 'bar'})
-    if current_or_null_user
+    if user_signed_in?
       Gon.global.push({ user_signed_in: true})
     end
       Gon.global.push({ user_signed_in: false})

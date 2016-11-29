@@ -9,6 +9,7 @@ const pathArr = window.location.href.split('/');
 const url = `${pathArr[0]}//${pathArr[2]}`;
 
 function setupOAuth(data) {
+  console.log('setupOAuth');
   if (data) {
     oauth = data;
     // refresh the token a bit earlier to avoid 403 responses
@@ -21,6 +22,7 @@ function setupOAuth(data) {
 }
 
 function checkToken() {
+  console.log('checkToken');
   if (oauth == null) setupOAuth(gon.global.oauth);
 
   if (tokenExpiresAt != null && tokenExpiresAt < new Date() && oauth['refresh_token'] != null) {
