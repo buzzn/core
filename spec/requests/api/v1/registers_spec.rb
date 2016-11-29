@@ -1,4 +1,4 @@
-describe "registers API" do
+describe "Registers API" do
 
   let(:page_overload) { 11 }
 
@@ -821,7 +821,7 @@ describe "registers API" do
 
 
   it 'gets meter for the register only by managers' do
-    Fabricate(:register_operator, name: 'buzzn Metering')
+    Fabricate(:buzzn_metering)
     easymeter_60051559  = Fabricate(:easymeter_60051559)
     register      = easymeter_60051559.registers.first
     access_token        = Fabricate(:simple_access_token)
@@ -836,12 +836,5 @@ describe "registers API" do
     get_with_token "/api/v1/registers/#{register.id}/meter", wrong_token.token
     expect(response).to have_http_status(403)
   end
-
-
-
-  xit 'adds a register to meter with full access token' do
-  end
-
-
 
 end

@@ -323,15 +323,15 @@ class Register < ActiveRecord::Base
   def mysmartgrid?
     self.smart? &&
     !metering_point_operator_contract.nil? &&
-    metering_point_operator_contract.contract_owner.organization.slug == "mysmartgrid"
+    metering_point_operator_contract.contractor.organization.slug == "mysmartgrid"
   end
 
   def discovergy?
     self.smart? &&
     !metering_point_operator_contract.nil? &&
-    (metering_point_operator_contract.contract_owner.organization.slug == "discovergy" ||
-     metering_point_operator_contract.contract_owner.organization.slug == "buzzn-metering" ||
-     metering_point_operator_contract.contract_owner.organization.buzzn_metering?)
+    (metering_point_operator_contract.contractor.organization.slug == "discovergy" ||
+     metering_point_operator_contract.contractor.organization.slug == "buzzn-metering" ||
+     metering_point_operator_contract.contractor.organization.buzzn_metering?)
   end
 
   def buzzn_api?
@@ -368,11 +368,11 @@ class Register < ActiveRecord::Base
   end
 
   def metering_point_operator_contract
-    if self.contracts.register_operators.running.any?
-      return self.contracts.register_operators.running.first
+    if self.contracts.metering_point_operators.running.any?
+      return self.contracts.metering_point_operators.running.first
     elsif self.group
-      if self.group.contracts.register_operators.running.any?
-        return self.group.contracts.register_operators.running.first
+      if self.group.contracts.metering_point_operators.running.any?
+        return self.group.contracts.metering_point_operators.running.first
       end
     end
   end

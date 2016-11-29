@@ -8,7 +8,7 @@
       = render 'groups/form_fields', f: f
 
       .modal-footer
-        / - if @group.contracts.register_operators.running.any?
+        / - if @group.contracts.metering_point_operators.running.any?
         /   .float-left
         /     %button.btn.btn-danger.btn-labeled.fa.fa-trash{:disabled => "disabled"}= t('not_deletable')
         / - else

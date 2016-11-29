@@ -80,7 +80,6 @@ describe "Register Model" do
     let(:now) { Time.find_zone('Berlin').local(2016,2,1, 1,30,1) }
 
     subject do
-      Fabricate(:buzzn_metering)
       easymeter_60051560 = Fabricate(:easymeter_60051560)
       easymeter_60051560.registers.first
     end

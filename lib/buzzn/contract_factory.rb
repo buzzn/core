@@ -42,7 +42,6 @@ module Buzzn
             unless self.company
               raise Buzzn::ValidationError.new(company: 'missing company data')
             end
-            authorization = self.company[:authorization]
             orga = create(Organization,
                           self.company[:organization] || {},
                           address: address)
@@ -52,7 +51,7 @@ module Buzzn
             other = create!(:other_address, Address, self.other_address)
           end
 
-          # TODO create all three in one go
+          # TODO create both in one go
           meter = Meter.create!(self.meter)
           # TODO d osomething with this counting_point
           counting_poing = self.register.delete(:counting_point)
@@ -81,51 +80,24 @@ module Buzzn
                                      address: address,
                                      bank_account: bank_account,
                                      user: @user)
-          if self.old_contract
-            # TODO contract_owner ?
-            name = self.old_contract.delete(:old_electricity_supplier_name)
-            old = create!(:old_contract, Contract,
-                          self.old_contract,
-                          #TODOorganization_name_from_form: name,
-                          mode: 'electricity_supplier_contract',
-                          contract_beneficiary: beneficiary_party,
-                          contract_owner: Organization.dummy_energy.contracting_party)
-          end
 
-          # TODO move validation into model if possible
-          if !old
-            if !self.contract[:move_in]
-              raise Buzzn::ValidationError.new('old_contract.old_electricity_supplier_name': 'needs an old contract if not moved in')
-            elsif !self.contract[:beginning]
-              raise Buzzn::ValidationError.new('contract.beginning': 'needs beginning if moved in')
-            end
-          else
-            if self.contract[:move_in]
-              raise Buzzn::ValidationError.new('old_contract.old_electricity_supplier_name': 'can not have old contract if moved in')
-            elsif self.contract[:beginning]
-              raise Buzzn::ValidationError.new('contract.beginning': 'can not have beginning if not moved in')
-            end
+          if metering_point_operator_name =  self.contract.delete(:metering_point_operator_name)
+            MeteringPointOperatorContract.create!(signing_date: Time.new(0),
+                                                  signing_user: @user,
+                                                  terms_accepted: true,
+                                                  power_of_attorney: true,
+                                                  begin_date: Time.new(0),
+                                                  register: register,
+                                                  metering_point_operator_name: metering_point_operator_name,
+                                                  contractor: Organization.dummy_energy.contracting_party,
+                                                  customer: beneficiary_party)                                          
           end
-
-          owner_party = Organization.buzzn_energy.contracting_party
-          #TODO each buzzn organization needs a contracting_party to start with, i.e. seeds and/or fabricator
-          unless owner_party
-            owner_party = build(ContractingParty,
-                                {},
-                                legal_entity: 'company',
-                                organization: Organization.buzzn_energy)
-          end
-
-          register_operator_name =  self.contract.delete(:register_operator_name)
-          create(Contract,
+          create(PowerTakerContract,
                  self.contract,
-                 mode: 'power_taker_contract',
-                 authorization: authorization,
+                 signing_user: @user,
+                 signing_date: Time.current,                                 
                  register: register,
-                 other_contract: !! old,
-                 contract_beneficiary: beneficiary_party,
-                 contract_owner: owner_party,
-                 bank_account: bank_account)
+                 customer: beneficiary_party)
         end
       rescue ActiveRecord::RecordInvalid => e
         raise NestedValidationError.new(e)

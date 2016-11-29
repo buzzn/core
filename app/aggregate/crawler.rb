@@ -39,15 +39,15 @@ class Crawler
     @metering_point_operator_contract = @register.metering_point_operator_contract
     # keep the existing organiztion with name 'buzzn-metering' and the new
     # Organization.buzzn_metering both working using the exact same way
-    if @metering_point_operator_contract.organization.buzzn_metering?
+    if @metering_point_operator_contract.contractor.organization.buzzn_energy?
       @register_operator        = 'buzzn-metering'
     else
-      @register_operator        = @metering_point_operator_contract.organization.slug
+      @register_operator        = @metering_point_operator_contract.contractor.organization.slug
     end
     @register_input             = @register.input?
     @register_output            = @register.output?
     raise ArgumentError.new("no meter on register") unless @register.meter
-    @meter                            = @register.meter
+    @meter                      = @register.meter
     @registers_size             = @meter.registers.size
   end
 

@@ -15,8 +15,8 @@ class WizardMetersController  < ApplicationController
       if params[:meter][:existing_meter] == t('add_existing_meter')
         @meter = Meter.find(params[:meter][:meter_id])
         @meter.registers << @register
-        if @meter.registers.collect(&:contracts).collect(&:register_operators).flatten.any?
-          @contract = @meter.registers.collect(&:contracts).collect(&:register_operators).flatten.first
+        if @meter.registers.collect(&:contracts).collect(&:metering_point_operators).flatten.any?
+          @contract = @meter.registers.collect(&:contracts).collect(&:metering_point_operators).flatten.first
           @contract2 = Contract.new
           @contract2.organization = @contract.organization
           @contract2.username = @contract.username
@@ -78,7 +78,7 @@ class WizardMetersController  < ApplicationController
   def edit_wizard
     @meter = Meter.find(params[:meter_id])
     @register = Register.find(params[:register_id])
-    @contract = @meter.registers.first.contracts.register_operators.first || Contract.new
+    @contract = @meter.registers.first.contracts.metering_point_operators.first || Contract.new
   end
 
   def edit_wizard_update

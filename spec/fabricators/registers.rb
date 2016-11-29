@@ -4,12 +4,18 @@
 Fabricator :register do
   name        'Wohnung'
   uid         { sequence(:uid, 10688251510000000000002677114) }
-  mode        'in'
   readable    'friends'
-  #contracts   { [ Fabricate(:power_taker_contract)] }
 end
 
-Fabricator :register_readable_by_world, from: :register do
+Fabricator :in_register, from: :register do
+  mode        'in'
+end
+
+Fabricator :out_register, from: :register do
+  mode        'out'
+end
+
+Fabricator :register_readable_by_world, from: :in_register do
   readable    'world'
 end
 
@@ -18,19 +24,19 @@ Fabricator :out_register_readable_by_world, from: :register do
   mode        'out'
 end
 
-Fabricator :register_readable_by_friends, from: :register do
+Fabricator :register_readable_by_friends, from: :in_register do
   readable    'friends'
 end
 
-Fabricator :register_readable_by_community, from: :register do
+Fabricator :register_readable_by_community, from: :in_register do
   readable    'community'
 end
 
-Fabricator :register_readable_by_members, from: :register do
+Fabricator :register_readable_by_members, from: :in_register do
   readable    'members'
 end
 
-Fabricator :world_register_with_two_comments, from: :register do
+Fabricator :world_register_with_two_comments, from: :in_register do
   readable    'world'
   after_create { |register|
     comment_params  = {
@@ -72,7 +78,7 @@ end
 Fabricator :register_z1b, from: :register do
   name        'Netzanschluss Einspeisung'
   mode        'out'
-  contracts   { [Fabricate(:mpoc_buzzn_metering)] }
+  #contracts   { [Fabricate(:mpoc_buzzn_metering)] }
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
 end
 
@@ -81,7 +87,7 @@ Fabricator :register_z2, from: :register do
   name  'PV'
   readable    'world'
   mode        'out'
-  contracts { [Fabricate(:mpoc_buzzn_metering)] }
+  #contracts { [Fabricate(:mpoc_buzzn_metering)] }
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
 end
 
@@ -90,7 +96,8 @@ end
 Fabricator :register_z3, from: :register do
   name  'Ladestation'
   readable    'world'
-  contracts { [Fabricate(:mpoc_buzzn_metering)] }
+  mode        'in'
+  #contracts { [Fabricate(:mpoc_buzzn_metering)] }
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
 end
 
@@ -99,8 +106,11 @@ Fabricator :register_z4, from: :register do
   name  'BHKW'
   readable    'world'
   mode        'out'
-  contracts { [Fabricate(:mpoc_buzzn_metering)] }
+  #contracts { [Fabricate(:mpoc_buzzn_metering)] }
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
+  after_create do |register|
+    Fabricate(:metering_point_operator_contract, register: register).update(status: :running)
+  end
 end
 
 
@@ -115,7 +125,7 @@ end
 
 
 #felix berlin
-Fabricator :register_urbanstr88, from: :register do
+Fabricator :register_urbanstr88, from: :in_register do
   address  { Fabricate(:address, street_name: 'Urbanstr', street_number: '88', zip: 81667, city: 'Berlin', state: 'Berlin') }
   name  'Wohnung'
 end

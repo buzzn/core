@@ -9,14 +9,12 @@ class Address < ActiveRecord::Base
   validates :street_name,     presence: true, length: { in: 2..128 }
   validates :street_number,   presence: true, length: { in: 1..32 }
   validates :city,            presence: true, length: { in: 2..128 }
-  #validates :state,           presence: true
+  validates :state,           presence: false
   validates :zip,             presence: true, numericality: { only_integer: true }
 
 
   after_validation :geocode
   geocoded_by :full_name
-
-  default_scope -> { order(:created_at => :asc) }
 
   def self.orga_address
     address = Address.arel_table

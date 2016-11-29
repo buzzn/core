@@ -2,11 +2,10 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
-require 'rubygems' #so it can load gems
 
 def user_with_register
-  register              = Fabricate(:register)
-  user                        = Fabricate(:user)
+  register = Fabricate(:register)
+  user     = Fabricate(:user)
   metering_point.contracts.each do |contract|
     #user.contracting_parties.first.assigned_contracts << contract
   end
@@ -120,25 +119,21 @@ buzzn_team_names.each do |user_name|
 
     Fabricate(:application, owner: user, name: 'Buzzn Swagger UI', scopes: Doorkeeper.configuration.scopes, redirect_uri: Rails.application.secrets.hostname + '/api/o2c.html')
   when 'christian'
-    root_mp = Fabricate(:register_60138988)
-    root_mp.contracts << Fabricate(:mpoc_christian, register: root_mp)
+    Fabricate(:mpoc_christian)
     user.add_role :admin # christian is admin
   when 'philipp'
-    root_mp = Fabricate(:register_60009269)
-    root_mp.contracts << Fabricate(:mpoc_philipp, register: root_mp)
+    root_mp = Fabricate(:mpoc_philipp)
   when 'stefan'
     @bhkw_stefan       = Fabricate(:bhkw_stefan)
-    @forstenrieder_weg_mp = root_mp = Fabricate(:register_stefans_bhkw)
-    root_mp.contracts << Fabricate(:mpoc_stefan, register: root_mp)
+    @forstenrieder_weg_mp = root_mp = Fabricate(:mpoc_stefan).register
     root_mp.devices << @bhkw_stefan
     user.add_role :manager, @bhkw_stefan
   when 'thomas'
-    root_mp = Fabricate(:register_ferraris_001_amperix)
-    root_mp.contracts << Fabricate(:mpoc_ferraris_0001_amperix, register: root_mp)
+    Fabricate(:mpoc_ferraris_0001_amperix, register: root_mp)
     user.add_role :admin # thomas is admin
   when 'kristian'
     root_mp = Fabricate(:register_kristian)
-    root_mp.contracts << Fabricate(:mpoc_buzzn_metering, register: root_mp)
+    Fabricate(:mpoc_buzzn_metering, register: root_mp)
     user.add_role :admin # kristian is admin
   else
     root_mp = Fabricate(:register)
@@ -146,10 +141,6 @@ buzzn_team_names.each do |user_name|
   if root_mp
     user.add_role :manager, root_mp
     user.add_role(:member, root_mp)
-  end
-  root_mp.contracts.each do |contract|
-    #user.contracting_parties.first.assigned_contracts << contract
-    contract.save
   end
 
 end

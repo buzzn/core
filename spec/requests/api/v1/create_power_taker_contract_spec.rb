@@ -1,5 +1,5 @@
 # coding: utf-8
-describe "Forms API" do
+describe "Create PowerTakerContract API" do
 
   let(:params_without_user) do
     {contracting_party: {
@@ -19,12 +19,10 @@ describe "Forms API" do
                "manufacturer_product_serialnumber"=>"3353987"},
      :register=> {"uid"=>"10688251510000000000002677117"},
      :contract=>{
-       terms: true,
+       terms_accepted: true,
        power_of_attorney: true,
-       move_in: true,
-       other_contract: true,
-       yearly_kilowatt_hour: 1000,
-       beginning: Time.now
+       forecast_kwh_pa: 1000,
+       begin_date: Time.now
      },
      :bank_account=> {:holder=>"Leora Deckow",
                       :iban=>"DE23100000001234567890",
@@ -33,8 +31,8 @@ describe "Forms API" do
   end
 
   let(:invalid_old_contract) do
-    { old_contract: { customer_number: FFaker::Product.letters(10),
-                      contract_number: FFaker::Product.letters(16) } }
+    { old_customer_number: FFaker::Product.letters(10),
+      old_account_number: FFaker::Product.letters(16) }
   end
 
   let(:invalid_other_address) do
@@ -83,13 +81,13 @@ describe "Forms API" do
   end
 
   it 'fails without params' do
-    post_without_token '/api/v1/forms/power-taker', {}.to_json
+    post_without_token '/api/v1/contracts/power-taker', {}.to_json
 
     expect(response).to have_http_status(422)
   end
 
   it 'succeeds with valid params' do
-    post_without_token '/api/v1/forms/power-taker', params.to_json
+    post_without_token '/api/v1/contracts/power-taker', params.to_json
 
     expect(response).to have_http_status(201)
   end
@@ -97,8 +95,7 @@ describe "Forms API" do
   it 'succeeds with valid params and existing user' do
     access_token      = Fabricate(:simple_access_token)
 
-    post_with_token '/api/v1/forms/power-taker', params_without_user.to_json, access_token.token
-
+    post_with_token '/api/v1/contracts/power-taker', params_without_user.to_json, access_token.token
     expect(response).to have_http_status(201)
   end
 
@@ -106,18 +103,18 @@ describe "Forms API" do
     access_token      = Fabricate(:simple_access_token)
     User.find(access_token.resource_owner_id).profile.update!(phone: nil)
 
-    post_with_token '/api/v1/forms/power-taker', params_without_user.merge(profile_without_phone).to_json, access_token.token
+    post_with_token '/api/v1/contracts/power-taker', params_without_user.merge(profile_without_phone).to_json, access_token.token
 
     expect(response).to have_http_status(422)
     expect(json['errors'].size).to eq 1
     expect(json['errors'].first['source']['pointer']).to eq "/data/attributes/profile[phone]"
 
-    post_with_token '/api/v1/forms/power-taker', params_without_user.merge(profile).to_json, access_token.token
+    post_with_token '/api/v1/contracts/power-taker', params_without_user.merge(profile).to_json, access_token.token
     expect(response).to have_http_status(201)
   end
 
   it 'fails with invalid nested attribtue' do
-    post_without_token '/api/v1/forms/power-taker', params.merge(invalid_other_address).to_json
+    post_without_token '/api/v1/contracts/power-taker', params.merge(invalid_other_address).to_json
 
     expect(response).to have_http_status(422)
     expect(json['errors'].size).to eq 3
@@ -127,13 +124,13 @@ describe "Forms API" do
   end
 
   it 'fails with invalid nested old contract' do
-    params.merge!(invalid_old_contract)
-    post_without_token '/api/v1/forms/power-taker', params.to_json
+    params[:contract].merge!(invalid_old_contract)
+    post_without_token '/api/v1/contracts/power-taker', params.to_json
 
     expect(response).to have_http_status(422)
     expect(json['errors'].size).to eq 1
     json['errors'].each do |item|
-      expect(item['source']['pointer']).to match /\/data\/attributes\/old_contract\[.*\]/
+      expect(item['source']['pointer']).to match /\/data\/attributes\/power_taker_contract\[old_.*\]/
     end
   end
 end

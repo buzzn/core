@@ -29,7 +29,7 @@ class Group < ActiveRecord::Base
   #mount_uploader :image, PictureUploader
   mount_base64_uploader :image, PictureUploader
 
-  has_many :contracts, dependent: :destroy
+  has_many :contracts, dependent: :destroy, foreign_key: :localpool_id
   has_one  :area
   has_many :registers
 
@@ -528,12 +528,12 @@ class Group < ActiveRecord::Base
 
     def validate_localpool
       if self.mode == 'localpool'
-        if self.contracts.register_operators.empty?
-          @contract = Contract.new(mode: 'metering_point_operator_contract', price_cents: 0, group: self, organization: Organization.buzzn_metering, username: 'team@localpool.de', password: 'Zebulon_4711')
+        if self.contracts.metering_point_operators.empty?
+ #         @contract = MeteringPointOperatorContract.new(group: self, organization: Organization.buzzn_systems, username: 'team@localpool.de', password: 'Zebulon_4711')
         else
-          @contract = self.contracts.register_operators.first
+          @contract = self.contracts.metering_point_operators.first
         end
-        @contract.save
+#        @contract.save
       else
         if self.contracts.any?
           self.contracts.each do |contract|

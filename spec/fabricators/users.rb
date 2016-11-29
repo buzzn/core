@@ -15,7 +15,8 @@ end
 
 Fabricator :user_with_register, from: :user do
   after_create { |user|
-    user.add_role(:manager, Fabricate(:register))
+    user.add_role(:manager, Fabricate(:in_register))
+    Fabricate(:contracting_party, user: user)
   }
 end
 

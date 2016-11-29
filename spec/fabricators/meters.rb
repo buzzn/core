@@ -3,6 +3,7 @@ Fabricator :meter do
   manufacturer_name           'ferraris'
   manufacturer_product_name    'AS 1440'
   manufacturer_product_serialnumber  { sequence(:manufacturer_product_serialnumber, 3353984) }
+  metering_type { Buzzn::Zip2Price.types.first }
 end
 
 Fabricator :easy_meter_q3d, from: :meter  do
@@ -12,7 +13,7 @@ Fabricator :easy_meter_q3d, from: :meter  do
 end
 
 Fabricator :easy_meter_q3d_with_register, from: :easy_meter_q3d  do
-  registers {[Fabricate(:register)]}
+  registers {[Fabricate(:in_register)]}
 end
 
 Fabricator :easy_meter_q3d_with_out_register, from: :easy_meter_q3d  do
@@ -21,7 +22,7 @@ end
 
 Fabricator :easy_meter_q3d_with_in_out_register, from: :easy_meter_q3d  do
   after_create { |meter|
-    meter.registers << Fabricate(:register)
+    meter.registers << Fabricate(:in_register)
     meter.registers << Fabricate(:out_register_with_manager)
     meter.save
   }
@@ -29,7 +30,7 @@ end
 
 Fabricator :easy_meter_q3d_with_manager, from: :easy_meter_q3d do
   after_create { |meter|
-    mp = Fabricate(:register, meter: meter)
+    mp = Fabricate(:in_register, meter: meter)
     user = Fabricate(:user)
     user.add_role(:manager, mp)
   }
@@ -38,7 +39,7 @@ end
 Fabricator :easymeter_fixed_serial, from: :easy_meter_q3d do
   manufacturer_product_serialnumber '1234567890'
   after_create { |meter|
-    meter.registers << Fabricate(:register)
+    meter.registers << Fabricate(:in_register)
     meter.registers << Fabricate(:out_register_readable_by_world)
     meter.save
   }

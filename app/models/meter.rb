@@ -11,7 +11,6 @@ class Meter < ActiveRecord::Base
   before_destroy :release_registers
   has_many :equipments
   has_many :registers
-  default_scope { order('created_at ASC') }
 
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
@@ -133,7 +132,7 @@ private
 
   def release_registers
     self.registers.each do |register|
-      register.contracts.register_operators.each do |contract|
+      register.contracts.metering_point_operators.each do |contract|
         contract.destroy
       end
       register.meter = nil

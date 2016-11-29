@@ -36,7 +36,7 @@ class WizardRegistersController  < ApplicationController
             @contract2.mode = @contract.mode
             @contract2.price_cents = @contract.price_cents
             @contract2.register = @register
-            @contract2.contract_owner_id = @contract.contract_owner_id
+            @contract2.contractor_id = @contract.contractor_id
             @contract2.save!
           end
           if @meter.save!
@@ -47,7 +47,7 @@ class WizardRegistersController  < ApplicationController
               @contract.mode = 'metering_point_operator_contract'
               @contract.price_cents = 0
               @contract.register = @register
-              @contract.contract_owner_id = current_user.contracting_parties.first.id
+              @contract.contractor_id = current_user.contracting_parties.first.id
               if @contract.organization.slug == 'buzzn-metering' ||
                  @contract.organization.buzzn_metering?
                 @contract.username = 'team@localpool.de'

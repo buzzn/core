@@ -2,7 +2,6 @@
 describe "Group Model" do
 
   it 'filters group', :retry => 3 do
-    Fabricate(:buzzn_metering)
     group = Fabricate(:group_home_of_the_brave)
     Fabricate(:group_karins_pv_strom)
 
@@ -16,7 +15,6 @@ describe "Group Model" do
 
 
   it 'can not find anything' do
-    Fabricate(:buzzn_metering)
     Fabricate(:group_hof_butenland)
     groups = Group.filter('Der Clown ist müde und geht nach Hause.')
     expect(groups.size).to eq 0
@@ -24,7 +22,6 @@ describe "Group Model" do
 
 
   it 'filters group with no params' do
-    Fabricate(:buzzn_metering)
     Fabricate(:group_wagnis4)
     Fabricate(:group_hof_butenland)
     Fabricate(:group_karins_pv_strom)
@@ -34,7 +31,6 @@ describe "Group Model" do
   end
 
   it 'limits readable_by' do
-    Fabricate(:buzzn_metering)
     wagnis4 = Fabricate(:group_wagnis4, readable: 'world')
     butenland = Fabricate(:group_hof_butenland, readable: 'community')
     karin = Fabricate(:group_karins_pv_strom, readable: 'friends')
