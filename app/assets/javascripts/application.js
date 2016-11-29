@@ -67,5 +67,3 @@
 
 
 // don't require libs below this command
-
-console.log('application')
