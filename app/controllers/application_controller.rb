@@ -5,14 +5,16 @@ class ApplicationController < ActionController::Base
   self.responder = ApplicationResponder
   respond_to :html
 
+
   include PublicActivity::StoreController
 
-  before_filter :test_gon
+
   before_filter :initialize_gon
   before_filter :http_basic_authenticate
   before_filter :set_paper_trail_whodunnit
-
-
+  before_filter :authenticate_user!
+  before_filter :test_gon
+  
   def http_basic_authenticate
     if Rails.env.staging?
       authenticate_or_request_with_http_basic do |username, password|
@@ -39,7 +41,7 @@ class ApplicationController < ActionController::Base
 
   def test_gon
       Gon.global.push({ foo: 'bar'})
-    if current_or_null_user
+    if user_signed_in?
       Gon.global.push({ user_signed_in: true})
     end
       Gon.global.push({ user_signed_in: false})
