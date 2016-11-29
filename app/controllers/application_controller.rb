@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   before_filter :http_basic_authenticate
   before_filter :set_paper_trail_whodunnit
   before_filter :authenticate_user!
-  after_filter :test_gon
+  before_filter :test_gon
 
   def http_basic_authenticate
     if Rails.env.staging?
