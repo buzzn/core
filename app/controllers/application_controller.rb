@@ -7,11 +7,12 @@ class ApplicationController < ActionController::Base
 
   include PublicActivity::StoreController
 
-  after_filter :test_gon
+
   before_filter :initialize_gon
   before_filter :http_basic_authenticate
   before_filter :set_paper_trail_whodunnit
-
+  before_filter :test_gon
+  
   def http_basic_authenticate
     if Rails.env.staging?
       authenticate_or_request_with_http_basic do |username, password|
@@ -37,9 +38,11 @@ class ApplicationController < ActionController::Base
   # end
 
   def test_gon
-    oauth = OAuthHelper.new(current_user)
-    token = oauth.token(user['password'])
-    Gon.global.push({ token: token})
+      Gon.global.push({ foo: 'bar'})
+    if user_signed_in?
+      Gon.global.push({ user_signed_in: true})
+    end
+      Gon.global.push({ user_signed_in: false})
   end
 
   def after_sign_in_path_for(resource)
