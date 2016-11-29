@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   include PublicActivity::StoreController
 
-  before_filter :test_gon
+  after_filter :test_gon
   before_filter :initialize_gon
   before_filter :http_basic_authenticate
   before_filter :set_paper_trail_whodunnit
