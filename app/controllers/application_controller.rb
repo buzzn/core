@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
 
 
   before_filter :initialize_gon
-  before_filter :http_basic_authenticate
+  #before_filter :http_basic_authenticate
   before_filter :set_paper_trail_whodunnit
   after_filter :test_gon
 
