@@ -12,7 +12,6 @@ class ApplicationController < ActionController::Base
   before_filter :http_basic_authenticate
   before_filter :set_paper_trail_whodunnit
   before_filter :authenticate_user!
-  before_filter :test_gon
 
   def http_basic_authenticate
     if Rails.env.staging?
@@ -37,16 +36,6 @@ class ApplicationController < ActionController::Base
   # def set_csrf_cookie_for_ng
   #   cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
   # end
-
-  def test_gon
-      p "!!current_user .............................. #{!!current_user} "
-      Gon.global.push({ foo: 'bar'})
-    if !!current_user
-      Gon.global.push({ user_signed_in: true})
-    end
-      Gon.global.push({ user_signed_in: false})
-  end
-
 
 
   def after_sign_in_path_for(resource)
