@@ -1,0 +1,2 @@
+class OutRegister < Register
+end

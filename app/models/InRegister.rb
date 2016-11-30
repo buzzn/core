@@ -1,0 +1,2 @@
+class InRegister < Register
+end
