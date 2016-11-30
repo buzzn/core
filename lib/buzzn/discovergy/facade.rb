@@ -1,3 +1,4 @@
+require 'buzzn'
 require 'buzzn/discovergy/throughput'
 
 module Buzzn::Discovergy
@@ -19,34 +20,134 @@ module Buzzn::Discovergy
       end
     end
 
-    # def virtual_meter(broker, interval)
-    #   # TODO
-    # end
-
-    # def aggregated_virtual_meter(broker, interval)
-    #   # TODO
-    # end
-
-    # def easy_meter(broker, meter, interval)
-    #   # TODO
-    # end
-
+    # This function sends the request to the discovergy API and returns the unparsed response
     # input params:
     #  broker: class with information about credentials and requested meterID
     #  interval: class with information about the beginning and end date
+    #  mode: 'in' or 'out' to decide which data is requested for a meter
     #  collection: boolean that indicates whether to request data preaggregated or as a collection
-    def readings(broker, interval, collection=false)
+    # returns:
+    #  Net::Http::Response with requested data
+    def readings(broker, interval, mode, collection=false, retried=false)
+      access_token = build_access_token_from_broker_or_new(broker)
+      meter_id = broker.external_id
+      fields = 'power'
+      energy_out = ""
+      if mode == 'out'
+        energy_out = "Out"
+      end
 
+      if interval.live?
+        query = '/public/v1/last_reading?meterId=' + meter_id + '&fields=' + fields + '&each=' + collection.to_s
+      else
+        if interval.hour?
+          resolution = 'raw'
+          fields = "power"
+        elsif interval.day?
+          resolution = 'fifteen_minutes'
+          fields = "energy#{energy_out}"
+        elsif interval.month?
+          resolution = 'one_day'
+          fields = "energy#{energy_out}"
+        elsif interval.year?
+          resolution = 'one_month'
+          fields = "energy#{energy_out}"
+        end
+        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' + (interval.to.to_i*1000).to_s + '&resolution=' + resolution + '&fields=' + fields + '&each=' + collection.to_s
+      end
+
+      access_token.get(query)
+      response = access_token.response
+
+      case response.code.to_i
+      when (200..299)
+        return response
+      when 403
+        if !retried
+          access_token = oauth1_process(broker.provider_login, broker.provider_password)
+          response = self.readings(broker, interval, mode, collection, true)
+        else
+          raise Buzzn::CrawlerError.new('unauthorized to get data from discovergy: ' + response.body)
+        end
+      else
+        raise Buzzn::CrawlerError.new('unable to get data from discovergy: ' + response.body)
+      end
+      return response
     end
 
-    def create_virtual_meter(group, mode)
-      # TODO
+    def create_virtual_meter(existing_random_broker, meter_ids_plus, meter_ids_minus=[], retried=false)
+      access_token = build_access_token_from_broker_or_new(existing_random_broker)
+      query = '/public/v1/virtual_meter?'
+      if meter_ids_plus.any?
+        query += 'meterIdsPlus=' + meter_ids_plus.join(",")
+        if meter_ids_minus.any?
+          query += '&'
+        end
+      end
+      if meter_ids_minus.any?
+        query += 'meterIdsMinus=' + meter_ids_minus.join(",")
+      end
+      access_token.post(query)
+      response = access_token.response
+
+      case response.code.to_i
+      when (200..299)
+        return response
+      when 403
+        if !retried
+          access_token = oauth1_process(broker.provider_login, broker.provider_password)
+          response = self.readings(broker, interval, mode, collection, true)
+        else
+          raise Buzzn::CrawlerError.new('unauthorized to get data from discovergy: ' + response.body)
+        end
+      else
+        raise Buzzn::CrawlerError.new('unable to get data from discovergy: ' + response.body)
+      end
+      return response
     end
 
-    def auth_process(email, password)
+
+    # This function checks if the broker contains information to use an existing token or if a new one must be requested
+    # input params:
+    #   broker: DiscovergyBroker which will be used to create or get an access token
+    # returns:
+    #   OAuth::AccessToken with information from the DB or new one
+    def build_access_token_from_broker_or_new(broker)
+      if @consumer && broker.provider_token_key && broker.provider_token_secret
+        token_hash = {
+          :oauth_token          => broker.provider_token_key,
+          "oauth_token"         => broker.provider_token_key,
+          :oauth_token_secret   => broker.provider_token_secret,
+          "oauth_token_secret"  => broker.provider_token_secret
+        }
+        access_token = OAuth::AccessToken.from_hash(@consumer, token_hash)
+      else
+        access_token = oauth1_process(broker.provider_login, broker.provider_password)
+      end
+      return access_token
+    end
+
+
+
+    ################################
+    ###     OAUTH 1 PROCESS      ###
+    ################################
+
+    def oauth1_process(email, password)
       request_token = get_request_token
       verifier = authorize(request_token, email, password)
       access_token = get_access_token(request_token, verifier, email, password)
+      DiscovergyBroker.where(provider_login: email).update_all(
+        :encrypted_provider_token_key => DiscovergyBroker.encrypt_provider_token_key(
+          access_token.token,
+          key: Rails.application.secrets.attr_encrypted_key
+        ),
+        :encrypted_provider_token_secret => DiscovergyBroker.encrypt_provider_token_secret(
+          access_token.secret,
+          key: Rails.application.secrets.attr_encrypted_key
+        )
+      )
+      return access_token
     end
 
     def register_application
@@ -56,15 +157,15 @@ module Buzzn::Discovergy
         req.params['client'] = "buzzn app #{Rails.env}"
       end
       if !response.success?
-        raise CrawlerError.new('unable to register at discovergy')
+        raise Buzzn::CrawlerError.new('unable to register at discovergy')
       end
       json_response = MultiJson.load(response.body)
       consumer_key = json_response['key']
       consumer_secret = json_response['secret']
-      # maybe use the url from the constructor?
       if consumer_key.nil? || consumer_secret.nil?
-        raise CrawlerError.new('unable to parse data from discovergy')
+        raise Buzzn::CrawlerError.new('unable to parse data from discovergy')
       end
+      # maybe use the url from the constructor?
       @consumer = OAuth::Consumer.new(
         consumer_key,
         consumer_secret,
@@ -79,9 +180,16 @@ module Buzzn::Discovergy
       if !@consumer
         register_application
       end
-      request_token = @consumer.get_request_token
+      begin
+        request_token = @consumer.get_request_token
+      rescue OAuth::Unauthorized
+        register_application
+        retry
+        # NOTE: maybe to not get lost in a dead lock we should count the retries
+        #       but there is no case in which two calls with different consumers would throw this error
+      end
       if !request_token
-        raise CrawlerError.new('unable to get refresh token from discovergy')
+        raise Buzzn::CrawlerError.new('unable to get refresh token from discovergy')
       end
       return request_token
     end
@@ -97,9 +205,8 @@ module Buzzn::Discovergy
         req.params['email'] = email
         req.params['password'] = password
       end
-      puts response.body
       if !response.success?
-        raise CrawlerError.new('authorization failed at discovergy')
+        raise Buzzn::CrawlerError.new('authorization failed at discovergy: ' + response.body)
       end
       return response.body.split('=')[1]
     end
@@ -113,17 +220,17 @@ module Buzzn::Discovergy
       end
       access_token = request_token.get_access_token(:oauth_verifier => verifier)
       if !access_token
-        raise CrawlerError.new('unable to get access token from discovergy')
+        raise Buzzn::CrawlerError.new('unable to get access token from discovergy')
       end
       return access_token
-      # TODO: save access token in DB for future use
-      #contract.update_column(:encrypted_external_access_token, Contract.encrypt_external_access_token(access_token.token, key: Rails.application.secrets.attr_encrypted_key))
-      #contract.update_column(:encrypted_external_access_token_secret, Contract.encrypt_external_access_token_secret(access_token.secret, key: Rails.application.secrets.attr_encrypted_key))
     end
 
-    def read_consumer
 
-    end
+
+
+
+
+
 
     [:register_application, :get_request_token, :authorize, :get_access_token, :readings,
       :create_virtual_meter].each do |method|
@@ -149,7 +256,7 @@ module Buzzn::Discovergy
       ActiveRecord::Base.clear_active_connections!
       @throughput.increment
       if @throughput.current > @max_concurrent
-        raise CrawlerError.new('discovergy limit reached')
+        raise Buzzn::CrawlerError.new('discovergy limit reached')
       end
     end
 
