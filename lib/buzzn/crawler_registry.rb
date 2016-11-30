@@ -3,26 +3,7 @@ require 'buzzn/discovergy/crawler'
 
 module Buzzn
 
-  class CrawlerError < StandardError; end
-
-  class CrawlerResult < Array
-
-    class CrawlerResultItem
-
-      attr_reader :timestamp, :power
-
-      def initialize(timestamp, power)
-        @timestamp = timestamp
-        @power = power
-      end
-    end
-
-    def add(timestamp, power)
-      add(CrawlerResultItem.new(timestamp, power))
-    end
-  end
-
-  class CrawlerFactory
+  class CrawlerRegistry
 
     def initialize(discovergy_url, max_concurent_discovergy_requests)
       @discovergy = Buzzn::Discovergy::Crawler.new(discovergy_url,
@@ -40,6 +21,5 @@ module Buzzn
         raise "do not have a crawler for #{organization.inspect}"
       end
     end
-
   end
 end

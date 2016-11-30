@@ -260,7 +260,7 @@ ActiveRecord::Schema.define(version: 20161117132744) do
   create_table "discovergy_brokers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "mode",                            null: false
     t.string   "external_id",                     null: false
-    t.string   "encrypted_provider_login",        null: false
+    t.string   "provider_login",                  null: false
     t.string   "encrypted_provider_password",     null: false
     t.string   "encrypted_provider_token_key"
     t.string   "encrypted_provider_token_secret"

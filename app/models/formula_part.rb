@@ -4,6 +4,9 @@ class FormulaPart < ActiveRecord::Base
 
   default_scope { order('created_at ASC') }
 
+  scope :additive, -> {where(operator: '+')}
+  scope :subtractive, -> {where(operator: '-')}
+
   # validates :operand_id, presence: true
   # validates :register_id, presence: true
 
