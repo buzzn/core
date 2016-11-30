@@ -16,14 +16,14 @@ class GroupsController < ApplicationController
 
     @out_registers            = Register.by_group(@group).outputs.without_externals.decorate
     @in_registers             = Register.by_group(@group).inputs.without_externals.decorate
-    @managers                       = @group.managers
-    @energy_producers               = Register.by_group(@group).outputs.without_externals.decorate.collect(&:members).flatten.uniq
-    @energy_consumers               = Register.by_group(@group).inputs.without_externals.decorate.collect(&:members).flatten.uniq
+    @managers                 = @group.managers
+    @energy_producers         = @group.energy_producers.decorate
+    @energy_consumers         = @group.energy_consumers.decorate
     @group_register_requests  = @group.received_group_register_requests
-    @all_comments                   = @group.root_comments
-    @out_devices                    = @out_registers.collect(&:devices)
-    @activities                     = @group.activities.group_joins
-    @activities_and_comments        = (@all_comments + @activities).sort_by!(&:created_at).reverse!
+    @all_comments             = @group.root_comments
+    @out_devices              = @out_registers.collect(&:devices)
+    @activities               = @group.activities.group_joins
+    @activities_and_comments  = (@all_comments + @activities).sort_by!(&:created_at).reverse!
 
     authorize_action_for(@group)
   end

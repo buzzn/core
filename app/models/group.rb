@@ -158,11 +158,11 @@ class Group < ActiveRecord::Base
   end
 
   def energy_producers
-    User.where(register_users_query('in').project(1).exists.to_sql)
+    User.where(register_users_query('out').project(1).exists.to_sql)
   end
 
   def energy_consumers
-    User.where(register_users_query('out').project(1).exists.to_sql)
+    User.where(register_users_query('in').project(1).exists.to_sql)
   end
 
   def member?(register)
