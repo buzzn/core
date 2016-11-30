@@ -102,19 +102,19 @@ describe Buzzn::ScoreCalculator do
       register_out        = Fabricate(:register, mode: 'out')
 
       group.registers += [register_in, register_out]
-      consumer.add_role(:member, register_out)
+      consumer.add_role(:member, register_in)
 
       group
     end
 
     before do
       Timecop.freeze(now)
-      subject.instance_variable_set(:@data_in,
+      subject.instance_variable_set(:@data_out,
                                     [ { power_milliwatt: 1000000 },
                                       { power_milliwatt: 1200000 },
                                       { power_milliwatt: 900000 },
                                       { power_milliwatt: 0 } ] )
-      subject.instance_variable_set(:@data_out,
+      subject.instance_variable_set(:@data_in,
                                     [ { power_milliwatt: 800000 },
                                       { power_milliwatt: 1300000 },
                                       { power_milliwatt: 1000000 } ] )
@@ -163,8 +163,7 @@ describe Buzzn::ScoreCalculator do
       register_z3 = easymeter_60051559.registers.first
       easymeter_60051560 = Fabricate(:easymeter_60051560)
       register_z4 = easymeter_60051560.registers.first
-      group = Fabricate(:group_home_of_the_brave,
-                        registers: [register_z2, register_z3, register_z4])
+      group = Fabricate(:group_home_of_the_brave, registers: [register_z2, register_z3, register_z4])
       consumer = Fabricate(:user)
       consumer.add_role(:member, register_z2)
       group
@@ -186,7 +185,7 @@ describe Buzzn::ScoreCalculator do
         subject.calculate_sufficiency_scores
         expect(Score.count).to eq 3
         Score.all.each do |score|
-          expect(score.value).to eq 1.0
+          expect(score.value).to eq 0.0
           expect(score.mode).to eq 'sufficiency'
         end
       end
