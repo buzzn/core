@@ -63,73 +63,104 @@ module Buzzn::Discovergy
 
     end
 
+
+    ##############
+    ### PARSER ###
+    ##############
+
     def parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
-      result = Buzzn::CrawlerResultItem.new(external_id)
+      result = []
       json = MultiJson.load(response.body)
-      energy_out = mode == 'in' ? "" : "Out"
+
       if interval.live?
-        timestamp = json['time']
-        value = json['values']['power']
+        result << parse_aggregated_live(json, mode, two_way_meter, external_id)
+      elsif interval.hour?
+        result << parse_aggregated_hour(json, mode, two_way_meter, external_id)
+      elsif interval.day?
+        result << parse_aggregated_day(json, mode, two_way_meter, external_id)
+      elsif interval.month? || interval.year?
+        result << parse_aggregated_month_year(json, mode, two_way_meter, external_id)
+      end
+      return result
+    end
+
+    def parse_aggregated_live(json, mode, two_way_meter, external_id)
+      result = Buzzn::CrawlerResult.new(external_id)
+      timestamp = json['time']
+      value = json['values']['power']
+      if two_way_meter
+        if value > 0 && mode == 'in'
+          power = value/1000
+        elsif value < 0 && mode == 'out'
+          power = value.abs/1000
+        else
+          power = 0
+        end
+      else
+        power = value > 0 ? value.abs/1000 : 0
+      end
+      result.add(timestamp, power)
+      return result
+    end
+
+    def parse_aggregated_hour(json, mode, two_way_meter, external_id)
+      result = Buzzn::CrawlerResult.new(external_id)
+      json.each do |item|
         if two_way_meter
-          if value > 0 && mode == 'in'
-            power = value/1000
-          elsif value < 0 && mode == 'out'
-            power = value.abs/1000
+          if item['values']['power'] > 0 && mode == 'in'
+            power = item['power']
+          elsif item['values']['power'] < 0 && mode == 'out'
+            power = item['values']['power'].abs
           else
             power = 0
           end
         else
-          power = value > 0 ? value.abs/1000 : 0
+          power = item['values']['power'] > 0 ? item['values']['power'].abs : 0
         end
+        timestamp = item['time']
         result.add(timestamp, power)
-      elsif interval.hour?
-        json.each do |item|
-          if two_way_meter
-            if item['values']['power'] > 0 && mode == 'in'
-              power = item['power']
-            elsif item['values']['power'] < 0 && mode == 'out'
-              power = item['values']['power'].abs
-            else
-              power = 0
-            end
-          else
-            power = item['values']['power'] > 0 ? item['values']['power'].abs : 0
-          end
-          timestamp = item['time']
-          result.add(timestamp, power)
+      end
+      return result
+    end
+
+    def parse_aggregated_day(json, mode, two_way_meter, external_id)
+      result = Buzzn::CrawlerResult.new(external_id)
+      energy_out = mode == 'in' ? "" : "Out"
+      first_reading = first_timestamp = nil
+      json.each do |item|
+        second_timestamp = item['time']
+        second_reading = item['values']["energy#{energy_out}"]
+        if first_timestamp
+          power = (second_reading - first_reading)/(2500.0) # convert vsm to power (mW)
+          result.add(first_timestamp, power)
         end
-      elsif interval.day?
-        first_reading = first_timestamp = nil
-        json.each do |item|
-          second_timestamp = item['time']
-          second_reading = item['values']["energy#{energy_out}"]
-          if first_timestamp
-            power = (second_reading - first_reading)/(2500.0) # convert vsm to power (mW)
-            result.add(first_timestamp, power)
-          end
-          first_timestamp = second_timestamp
-          first_reading = second_reading
-        end
-      elsif interval.month? || interval.year?
-        old_value = new_value = timestamp = i = 0
-        if two_way_meter && mode == 'out'
-          energy_out = 'Out'
-        end
-        json.each do |item|
-          if i == 0
-            old_value = item['values']["energy#{energy_out}"]
-            timestamp = item['time']
-            i += 1
-            next
-          end
-          new_value = item['values']["energy#{energy_out}"]
-          result.add(timestamp, (new_value - old_value)/10000.0) #convert to mWh
-          old_value = new_value
+        first_timestamp = second_timestamp
+        first_reading = second_reading
+      end
+      return result
+    end
+
+    def parse_aggregated_month_year(json, mode, two_way_meter, external_id)
+      result = Buzzn::CrawlerResult.new(external_id)
+      energy_out = mode == 'in' ? "" : "Out"
+      old_value = new_value = timestamp = i = 0
+      if two_way_meter && mode == 'out'
+        energy_out = 'Out'
+      end
+      json.each do |item|
+        if i == 0
+          old_value = item['values']["energy#{energy_out}"]
           timestamp = item['time']
           i += 1
+          next
         end
+        new_value = item['values']["energy#{energy_out}"]
+        result.add(timestamp, (new_value - old_value)/10000.0) #convert to mWh
+        old_value = new_value
+        timestamp = item['time']
+        i += 1
       end
-      return [result]
+      return result
     end
 
     def parse_collected_data(response, interval)
@@ -140,7 +171,7 @@ module Buzzn::Discovergy
           external_id = item.first
           timestamp = item[1]['time']
           value = item[1]['values']['power']
-          result_item = Buzzn::CrawlerResultItem.new(external_id)
+          result_item = Buzzn::CrawlerResult.new(external_id)
           result_item.add(timestamp, value)
           result << result_item
         end

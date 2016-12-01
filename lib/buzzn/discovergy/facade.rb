@@ -31,31 +31,29 @@ module Buzzn::Discovergy
     def readings(broker, interval, mode, collection=false, retried=false)
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
-      fields = 'power'
       energy_out = ""
       if mode == 'out'
         energy_out = "Out"
       end
 
-      if interval.live?
-        query = '/public/v1/last_reading?meterId=' + meter_id + '&fields=' + fields + '&each=' + collection.to_s
-      else
-        if interval.hour?
-          resolution = 'raw'
-          fields = "power"
-        elsif interval.day?
-          resolution = 'fifteen_minutes'
-          fields = "energy#{energy_out}"
-        elsif interval.month?
-          resolution = 'one_day'
-          fields = "energy#{energy_out}"
-        elsif interval.year?
-          resolution = 'one_month'
-          fields = "energy#{energy_out}"
-        end
-        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' + (interval.to.to_i*1000).to_s + '&resolution=' + resolution + '&fields=' + fields + '&each=' + collection.to_s
+      case interval.resolution
+      when :live
+        query = '/public/v1/last_reading?meterId=' + meter_id + '&fields=power&each=' + collection.to_s
+      when :hour
+        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
+          (interval.to.to_i*1000).to_s + '&resolution=raw&fields=power&each=' + collection.to_s
+      when :day
+        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
+          (interval.to.to_i*1000).to_s + "&resolution=fifteen_minutes&fields=energy#{energy_out}&each=" + collection.to_s
+      when :month
+        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
+          (interval.to.to_i*1000).to_s + "&resolution=one_day&fields=energy#{energy_out}&each=" + collection.to_s
+      when :year
+        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
+          (interval.to.to_i*1000).to_s + "&resolution=one_month&fields=energy#{energy_out}&each=" + collection.to_s
       end
 
+      puts query
       access_token.get(query)
       response = access_token.response
 
