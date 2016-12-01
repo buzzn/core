@@ -4,6 +4,7 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'database_cleaner'
 require 'vcr'
+require 'webmock/rspec'
 require 'rspec/retry'
 
 require 'sidekiq/testing'
@@ -18,8 +19,11 @@ I18n.default_locale = :en
 
 VCR.configure do |c|
   c.cassette_library_dir = "spec/vcr_cassettes"
-  c.hook_into :faraday
+  c.hook_into :faraday, :webmock
   c.default_cassette_options = { :serialize_with => :syck }
+  # c.ignore_request do |request|
+  #   URI(request.uri).host == 'api.discovergy.com'
+  # end
 end
 
 

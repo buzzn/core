@@ -170,4 +170,5 @@ group :test do
   gem 'database_cleaner'
   gem 'timecop'
   gem 'rspec-retry'
+  gem 'webmock'
 end

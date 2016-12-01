@@ -6,14 +6,14 @@ module Buzzn::Discovergy
   # readings and produces a CrawlerResult object
   class Crawler
 
-    def initialize(url, max_concurrent)
+    def initialize(url='https://api.discovergy.com', max_concurrent=30)
       @facade = Facade.new(url, max_concurrent)
     end
 
     def collection(broker, interval, mode)
       # TODO: check that broker is only for a group or virtual meter!
       response = @facade.readings(broker, interval, mode, true)
-      result = parse_collected_data(response, interval)
+      result = parse_collected_data(response.body, interval)
       result.freeze
       result
     end
@@ -23,7 +23,7 @@ module Buzzn::Discovergy
       two_way_meter = broker.resource.is_a?(Meter) && broker.resource.registers.size > 1
       external_id = broker.external_id
       response = @facade.readings(broker, interval, mode, false)
-      result = parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
+      result = parse_aggregated_data(response.body, interval, mode, two_way_meter, external_id)
       result.freeze
       result
     end
@@ -70,7 +70,7 @@ module Buzzn::Discovergy
 
     def parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
       result = []
-      json = MultiJson.load(response.body)
+      json = MultiJson.load(response)
 
       if interval.live?
         result << parse_aggregated_live(json, mode, two_way_meter, external_id)
@@ -165,7 +165,7 @@ module Buzzn::Discovergy
 
     def parse_collected_data(response, interval)
       result = []
-      json = MultiJson.load(response.body)
+      json = MultiJson.load(response)
       if interval.live?
         json.each do |item|
           external_id = item.first
