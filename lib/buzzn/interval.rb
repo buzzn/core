@@ -2,12 +2,13 @@ module Buzzn
 
   class Interval
 
-    attr_reader :from, :to, :type
+    attr_reader :from, :to, :type, :resolution
 
     def initialize(from = nil, to = from)
       @from = from
       @to = to
       @type = from.class
+      @resolution = set_resolution
     end
 
     def live?
@@ -21,17 +22,29 @@ module Buzzn
 
     def month?
       timespan = self.to - self.from
-      timespan <= 2678401 && timespan > 87301
+      timespan <= 2678401 && timespan > 86401
     end
 
     def day?
       timespan = self.to - self.from
-      timespan <= 87301 && timespan > 3601
+      timespan <= 86401 && timespan > 3601
     end
 
     def hour?
       timespan = self.to - self.from
       timespan <= 3601 && timespan > 0
+    end
+
+    def set_resolution
+      @resolution = self.live? ? :live : (
+        self.hour? ? :hour : (
+          self.day? ? :day : (
+            self.month? ? :month : (
+              self.year? ? :year : nil
+            )
+          )
+        )
+      )
     end
 
     class << self
