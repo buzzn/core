@@ -1,0 +1,160 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/consumer_token?client=buzzn+app+test
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 01 Dec 2016 11:49:25 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - close
+      access-control-allow-origin:
+      - "*"
+      access-control-allow-methods:
+      - GET, POST, DELETE, PUT
+      access-control-allow-headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: ASCII-8BIT
+      string: '{"key":"k1fjtjeu7ssuk8u2862smc75ut","secret":"g533r7jbmblepk4tq82nh72dek","owner":"buzzn
+        app test","attributes":{},"principal":null}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=e6305dc05d604cb99f033d029838769d&password=Zebulon_4711
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 01 Dec 2016 11:49:25 GMT
+      content-type:
+      - application/x-www-form-urlencoded
+      content-length:
+      - '47'
+      connection:
+      - close
+      access-control-allow-origin:
+      - "*"
+      access-control-allow-methods:
+      - GET, POST, DELETE, PUT
+      access-control-allow-headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_verifier=f92ee61897914343a76013a05bd81666
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/request_token
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Content-Length:
+      - '0'
+      Authorization:
+      - OAuth oauth_callback="oob", oauth_consumer_key="k1fjtjeu7ssuk8u2862smc75ut",
+        oauth_nonce="t2Jk9mVhnCtwYWrMNv3DxjgoeF2LXqw6JSUpIC4Hqw", oauth_signature="AtIBfmET2n%2B6%2B%2Bsd7BsVfJJ8rGc%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1467446702", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Thu, 01 Dec 2016 12:15:49 GMT
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '126'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_token=58fb6aed6173495096ba5a4c481978b2&oauth_token_secret=3d6d5bf0a3034fdfb42fb13221d8550e&oauth_callback_confirmed=true
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=58fb6aed6173495096ba5a4c481978b2&password=Zebulon_4711
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Thu, 01 Dec 2016 12:15:49 GMT
+      content-type:
+      - application/x-www-form-urlencoded
+      content-length:
+      - '47'
+      connection:
+      - keep-alive
+      access-control-allow-origin:
+      - "*"
+      access-control-allow-methods:
+      - GET, POST, DELETE, PUT
+      access-control-allow-headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_verifier=447a70cd7b7c4a9fa1db36223ae76663
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+recorded_with: VCR 3.0.3

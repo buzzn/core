@@ -6,14 +6,15 @@ module Buzzn::Discovergy
 
     TIMEOUT = 5 # seconds
 
-    def initialize(url, max_concurrent)
+    attr_reader :consumer
+
+    def initialize(url='https://api.discovergy.com', max_concurrent=30)
       @url   = url
       @max_concurrent = max_concurrent
       @throughput = Buzzn::Discovergy::Throughput.new
       @consumer
 
-      # maybe put the url into the constructor?
-      @conn = Faraday.new(:url => 'https://api.discovergy.com', ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
+      @conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
         faraday.request  :url_encoded
         faraday.response :logger, Rails.logger if Rails.env == 'development'
         faraday.adapter :net_http
@@ -27,7 +28,7 @@ module Buzzn::Discovergy
     #  mode: 'in' or 'out' to decide which data is requested for a meter
     #  collection: boolean that indicates whether to request data preaggregated or as a collection
     # returns:
-    #  Net::Http::Response with requested data
+    #  Net::HTTPResponse with requested data
     def readings(broker, interval, mode, collection=false, retried=false)
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
@@ -53,15 +54,15 @@ module Buzzn::Discovergy
           (interval.to.to_i*1000).to_s + "&resolution=one_month&fields=energy#{energy_out}&each=" + collection.to_s
       end
 
-      puts query
       access_token.get(query)
       response = access_token.response
 
       case response.code.to_i
       when (200..299)
         return response
-      when 403
+      when 401
         if !retried
+          register_application
           access_token = oauth1_process(broker.provider_login, broker.provider_password)
           response = self.readings(broker, interval, mode, collection, true)
         else
@@ -91,8 +92,9 @@ module Buzzn::Discovergy
       case response.code.to_i
       when (200..299)
         return response
-      when 403
+      when 401
         if !retried
+          register_application
           access_token = oauth1_process(broker.provider_login, broker.provider_password)
           response = self.readings(broker, interval, mode, collection, true)
         else
@@ -121,6 +123,17 @@ module Buzzn::Discovergy
         access_token = OAuth::AccessToken.from_hash(@consumer, token_hash)
       else
         access_token = oauth1_process(broker.provider_login, broker.provider_password)
+        DiscovergyBroker.where(provider_login: broker.provider_login).update_all(
+          :encrypted_provider_token_key => DiscovergyBroker.encrypt_provider_token_key(
+            access_token.token,
+            key: Rails.application.secrets.attr_encrypted_key
+          ),
+          :encrypted_provider_token_secret => DiscovergyBroker.encrypt_provider_token_secret(
+            access_token.secret,
+            key: Rails.application.secrets.attr_encrypted_key
+          )
+        )
+        broker.reload
       end
       return access_token
     end
@@ -135,16 +148,6 @@ module Buzzn::Discovergy
       request_token = get_request_token
       verifier = authorize(request_token, email, password)
       access_token = get_access_token(request_token, verifier, email, password)
-      DiscovergyBroker.where(provider_login: email).update_all(
-        :encrypted_provider_token_key => DiscovergyBroker.encrypt_provider_token_key(
-          access_token.token,
-          key: Rails.application.secrets.attr_encrypted_key
-        ),
-        :encrypted_provider_token_secret => DiscovergyBroker.encrypt_provider_token_secret(
-          access_token.secret,
-          key: Rails.application.secrets.attr_encrypted_key
-        )
-      )
       return access_token
     end
 
@@ -163,11 +166,11 @@ module Buzzn::Discovergy
       if consumer_key.nil? || consumer_secret.nil?
         raise Buzzn::CrawlerError.new('unable to parse data from discovergy')
       end
-      # maybe use the url from the constructor?
+
       @consumer = OAuth::Consumer.new(
         consumer_key,
         consumer_secret,
-        :site => 'https://api.discovergy.com',
+        :site => @url,
         :request_token_path => '/public/v1/oauth1/request_token',
         :authorize_path => '/public/v1/oauth1/authorize',
         :access_token_path => '/public/v1/oauth1/access_token'
