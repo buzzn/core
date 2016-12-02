@@ -1,2 +1,0 @@
-class InRegister < Register
-end

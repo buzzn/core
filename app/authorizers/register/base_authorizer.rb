@@ -1,4 +1,4 @@
-class RegisterAuthorizer < ApplicationAuthorizer
+class Register::BaseAuthorizer < ApplicationAuthorizer
 
   def self.creatable_by?(user)
     !!user

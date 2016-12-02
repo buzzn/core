@@ -1,2 +1,0 @@
-class OutRegister < Register
-end

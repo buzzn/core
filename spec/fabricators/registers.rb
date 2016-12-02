@@ -1,65 +1,63 @@
 # coding: utf-8
 
+['input', 'output'].each do |mode|
+  klass = "Register::#{mode.camelize}".constantize
 
-Fabricator :register do
-  name        'Wohnung'
-  uid         { sequence(:uid, 10688251510000000000002677114) }
-  mode        'in'
-  readable    'friends'
-  #contracts   { [ Fabricate(:power_taker_contract)] }
-end
+  Fabricator "#{mode}_register", class_name: klass do
+    name        mode
+    uid         { sequence(:uid, 10688251510000000000002677114) }
+    readable    'friends'
+  end
 
-Fabricator :register_readable_by_world, from: :register do
-  readable    'world'
-end
+  Fabricator "#{mode}_register_readable_by_world", from: "#{mode}_register" do
+    readable    'world'
+  end
 
-Fabricator :out_register_readable_by_world, from: :register do
-  readable    'world'
-  mode        'out'
-end
+  Fabricator "#{mode}_register_readable_by_friends", from: "#{mode}_register" do
+    readable    'friends'
+  end
 
-Fabricator :register_readable_by_friends, from: :register do
-  readable    'friends'
-end
+  Fabricator "#{mode}_register_readable_by_community", from: "#{mode}_register" do
+    readable    'community'
+  end
 
-Fabricator :register_readable_by_community, from: :register do
-  readable    'community'
-end
+  Fabricator "#{mode}_register_readable_by_members", from: "#{mode}_register" do
+    readable    'members'
+  end
 
-Fabricator :register_readable_by_members, from: :register do
-  readable    'members'
-end
-
-Fabricator :world_register_with_two_comments, from: :register do
-  readable    'world'
-  after_create { |register|
-    comment_params  = {
-      commentable_id:     register.id,
-      commentable_type:   'Register',
-      parent_id:          '',
+  Fabricator "#{mode}_register_with_two_comments_readable_by_world", from: "#{mode}_register" do
+    readable    'world'
+    after_create { |register|
+      comment_params  = {
+        commentable_id:     register.id,
+        commentable_type:   'Register',
+        parent_id:          '',
+      }
+      comment         = Fabricate(:comment, comment_params)
+      comment_params[:parent_id] = comment.id
+      comment2        = Fabricate(:comment, comment_params)
     }
-    comment         = Fabricate(:comment, comment_params)
-    comment_params[:parent_id] = comment.id
-    comment2        = Fabricate(:comment, comment_params)
-  }
+  end
+
+  Fabricator "#{mode}_register_with_device", from: "#{mode}_register" do
+    devices  { [Fabricate(:device)] }
+  end
+
+  Fabricator "#{mode}_register_with_manager", from: "#{mode}_register" do
+    after_create { |register|
+      user = Fabricate(:user)
+      user.add_role(:manager, register)
+    }
+  end
+
+
 end
 
 
-Fabricator :register_with_device, from: :register do
-  devices  { [Fabricate(:device)] }
-end
-
-Fabricator :register_with_manager, from: :register do
-  after_create { |register|
-    user = Fabricate(:user)
-    user.add_role(:manager, register)
-  }
-end
 
 
-Fabricator :out_register_with_manager, from: :register_with_manager do
-  mode 'out'
-end
+
+
 
 
 Fabricator :register_z1a, from: :register do
