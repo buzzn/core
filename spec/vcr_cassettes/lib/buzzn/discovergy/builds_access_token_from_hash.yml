@@ -19,7 +19,7 @@ http_interactions:
       server:
       - nginx/1.10.0
       date:
-      - Thu, 01 Dec 2016 15:25:22 GMT
+      - Fri, 02 Dec 2016 10:11:03 GMT
       content-type:
       - application/json
       transfer-encoding:
@@ -34,59 +34,8 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: ASCII-8BIT
-      string: '{"key":"dqhdj7atl95db5c0l2uc024sem","secret":"5akil65tftpvuqgh51t4s3199c","owner":"buzzn
+      string: '{"key":"e1jonhcm4lffb7atd8n6ttldpm","secret":"qao5c6rraev2dps6ojfg5m11fs","owner":"buzzn
         app test","attributes":{},"principal":null}'
     http_version: 
-  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT
-- request:
-    method: post
-    uri: https://api.discovergy.com/public/v1/oauth1/consumer_token?client=buzzn%20app%20test
-    body:
-      encoding: UTF-8
-      string: ''
-    headers:
-      User-Agent:
-      - Faraday v0.9.2
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Content-Length:
-      - '0'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-  response:
-    status:
-      code: 500
-      message: Request failed.
-    headers:
-      Server:
-      - nginx/1.10.0
-      Date:
-      - Thu, 01 Dec 2016 19:00:27 GMT
-      Content-Type:
-      - text/html;charset=iso-8859-1
-      Content-Length:
-      - '352'
-      Connection:
-      - keep-alive
-      Cache-Control:
-      - must-revalidate,no-cache,no-store
-    body:
-      encoding: UTF-8
-      string: |
-        <html>
-        <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"/>
-        <title>Error 500 </title>
-        </head>
-        <body>
-        <h2>HTTP ERROR: 500</h2>
-        <p>Problem accessing /public/v1/oauth1/consumer_token. Reason:
-        <pre>    Request failed.</pre></p>
-        <hr /><a href="http://eclipse.org/jetty">Powered by Jetty:// 9.3.z-SNAPSHOT</a><hr/>
-        </body>
-        </html>
-    http_version: 
-  recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
+  recorded_at: Sat, 02 Jul 2016 08:05:10 GMT
 recorded_with: VCR 3.0.3

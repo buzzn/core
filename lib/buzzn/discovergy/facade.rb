@@ -63,7 +63,7 @@ module Buzzn::Discovergy
       when 401
         if !retried
           register_application
-          access_token = oauth1_process(broker.provider_login, broker.provider_password)
+          access_token = build_access_token_from_broker_or_new(broker, true)
           response = self.readings(broker, interval, mode, collection, true)
         else
           raise Buzzn::CrawlerError.new('unauthorized to get data from discovergy: ' + response.body)
@@ -95,7 +95,7 @@ module Buzzn::Discovergy
       when 401
         if !retried
           register_application
-          access_token = oauth1_process(broker.provider_login, broker.provider_password)
+          access_token = build_access_token_from_broker_or_new(broker, true)
           response = self.readings(broker, interval, mode, collection, true)
         else
           raise Buzzn::CrawlerError.new('unauthorized to get data from discovergy: ' + response.body)
@@ -112,8 +112,8 @@ module Buzzn::Discovergy
     #   broker: DiscovergyBroker which will be used to create or get an access token
     # returns:
     #   OAuth::AccessToken with information from the DB or new one
-    def build_access_token_from_broker_or_new(broker)
-      if @consumer && broker.provider_token_key && broker.provider_token_secret
+    def build_access_token_from_broker_or_new(broker, force_new=false)
+      if (@consumer && broker.provider_token_key && broker.provider_token_secret) && !force_new
         token_hash = {
           :oauth_token          => broker.provider_token_key,
           "oauth_token"         => broker.provider_token_key,

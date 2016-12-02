@@ -2,53 +2,122 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.discovergy.com/public/v1/oauth1/consumer_token?client=buzzn%20app%20test
+    uri: https://api.discovergy.com/public/v1/oauth1/consumer_token?client=buzzn+app+test
     body:
-      encoding: UTF-8
+      encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
       - Faraday v0.9.2
       Content-Type:
       - application/x-www-form-urlencoded
-      Content-Length:
-      - '0'
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Fri, 02 Dec 2016 10:11:01 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - keep-alive
+      access-control-allow-origin:
+      - "*"
+      access-control-allow-methods:
+      - GET, POST, DELETE, PUT
+      access-control-allow-headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: ASCII-8BIT
+      string: '{"key":"3qbhdcs7ph93qib360l66qmupi","secret":"dedggr24aog4kklo1hern91ep8","owner":"buzzn
+        app test","attributes":{},"principal":null}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:07 GMT
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/request_token
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Content-Length:
+      - '0'
+      Authorization:
+      - OAuth oauth_callback="oob", oauth_consumer_key="3qbhdcs7ph93qib360l66qmupi",
+        oauth_nonce="4CU3L6xnLG08TsZGIl1twzAgr7yK22nup80VYaelH0I", oauth_signature="Q%2Bi9RAsNxGM7hG2Pxznst9g8qxo%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1467446707", oauth_version="1.0"
   response:
     status:
-      code: 500
-      message: Request failed.
+      code: 200
+      message: OK
     headers:
       Server:
       - nginx/1.10.0
       Date:
-      - Thu, 01 Dec 2016 19:02:23 GMT
+      - Fri, 02 Dec 2016 10:11:01 GMT
       Content-Type:
-      - text/html;charset=iso-8859-1
+      - application/x-www-form-urlencoded
       Content-Length:
-      - '352'
+      - '126'
       Connection:
       - keep-alive
-      Cache-Control:
-      - must-revalidate,no-cache,no-store
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: |
-        <html>
-        <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"/>
-        <title>Error 500 </title>
-        </head>
-        <body>
-        <h2>HTTP ERROR: 500</h2>
-        <p>Problem accessing /public/v1/oauth1/consumer_token. Reason:
-        <pre>    Request failed.</pre></p>
-        <hr /><a href="http://eclipse.org/jetty">Powered by Jetty:// 9.3.z-SNAPSHOT</a><hr/>
-        </body>
-        </html>
+      string: oauth_token=de040b619760447f9561f3dc30629ea6&oauth_token_secret=3c2c47f13fb14baaa89c9382363d7ef5&oauth_callback_confirmed=true
     http_version: 
-  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT
+  recorded_at: Sat, 02 Jul 2016 08:05:08 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=de040b619760447f9561f3dc30629ea6&password=Zebulon_4711
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Fri, 02 Dec 2016 10:11:02 GMT
+      content-type:
+      - application/x-www-form-urlencoded
+      content-length:
+      - '47'
+      connection:
+      - keep-alive
+      access-control-allow-origin:
+      - "*"
+      access-control-allow-methods:
+      - GET, POST, DELETE, PUT
+      access-control-allow-headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_verifier=a12f7060f3b245a08f4eab2c9a699551
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:09 GMT
 recorded_with: VCR 3.0.3
