@@ -83,4 +83,55 @@ http_interactions:
       string: oauth_token=5ded6a8193b64402ada242dc4492b8f5&oauth_token_secret=cd44e41a4cc9483a80d3a24c521a3a80&oauth_callback_confirmed=true
     http_version: 
   recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/consumer_token?client=buzzn%20app%20test
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 500
+      message: Request failed.
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Thu, 01 Dec 2016 19:00:28 GMT
+      Content-Type:
+      - text/html;charset=iso-8859-1
+      Content-Length:
+      - '352'
+      Connection:
+      - keep-alive
+      Cache-Control:
+      - must-revalidate,no-cache,no-store
+    body:
+      encoding: UTF-8
+      string: |
+        <html>
+        <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"/>
+        <title>Error 500 </title>
+        </head>
+        <body>
+        <h2>HTTP ERROR: 500</h2>
+        <p>Problem accessing /public/v1/oauth1/consumer_token. Reason:
+        <pre>    Request failed.</pre></p>
+        <hr /><a href="http://eclipse.org/jetty">Powered by Jetty:// 9.3.z-SNAPSHOT</a><hr/>
+        </body>
+        </html>
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
 recorded_with: VCR 3.0.3
