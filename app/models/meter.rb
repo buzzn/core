@@ -13,6 +13,8 @@ class Meter < ActiveRecord::Base
   has_many :registers
   default_scope { order('created_at ASC') }
 
+
+
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
   }
@@ -23,7 +25,7 @@ class Meter < ActiveRecord::Base
     else
       # admin or manager query
       meter          = Meter.arel_table
-      register = Register.arel_table
+      register      = Register.arel_table
       users_roles    = Arel::Table.new(:users_roles)
       admin_or_manager = User.roles_query(user, manager: register[:id], admin: nil)
 

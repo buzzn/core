@@ -96,7 +96,7 @@ module API
               @errors << { "title": title,
                            "detail": detail }
           end
-            
+
           def add(name, *messages)
             name = name.to_s
             if name.include? '.'

@@ -28,10 +28,12 @@ Fabricator :access_token_with_friend, from: :simple_access_token do
   resource_owner_id { Fabricate(:user_with_friend).id }
 end
 
-Fabricator :access_token_with_register, from: :simple_access_token do
-  resource_owner_id { Fabricate(:user_with_register).id }
-end
+['input_register', 'output_register'].each do |register|
+  Fabricator "access_token_with_#{register}", from: :simple_access_token do
+    resource_owner_id { Fabricate("user_with_#{register}").id }
+  end
 
-Fabricator :access_token_with_friend_and_register, from: :simple_access_token do
-  resource_owner_id { Fabricate(:user_with_friend_and_register).id }
+  Fabricator "access_token_with_friend_and_#{register}", from: :simple_access_token do
+    resource_owner_id { Fabricate("user_with_friend_and_#{register}").id }
+  end
 end

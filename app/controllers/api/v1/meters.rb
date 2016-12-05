@@ -62,7 +62,7 @@ module API
         desc "Return the related registers for Meter"
         params do
           requires :id, type: String, desc: "ID of the Meter"
-          optional :filter, type: String, desc: "Search query using #{Base.join(Register.search_attributes)}"
+          optional :filter, type: String, desc: "Search query using #{Base.join(Register::Base.search_attributes)}"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
