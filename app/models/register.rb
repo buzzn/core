@@ -331,7 +331,7 @@ class Register < ActiveRecord::Base
     !metering_point_operator_contract.nil? &&
     (metering_point_operator_contract.contractor.organization.slug == "discovergy" ||
      metering_point_operator_contract.contractor.organization.slug == "buzzn-metering" ||
-     metering_point_operator_contract.contractor.organization.buzzn_metering?)
+     metering_point_operator_contract.contractor.organization.buzzn_energy?)
   end
 
   def buzzn_api?

@@ -70,7 +70,7 @@ Fabricator :out_register_with_manager, from: :register_with_manager do
 end
 
 
-Fabricator :register_z1a, from: :register do
+Fabricator :register_z1a, from: :in_register do
   name      'Netzanschluss Bezug'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
   after_create do |register|
@@ -79,7 +79,7 @@ Fabricator :register_z1a, from: :register do
 end
 
 
-Fabricator :register_z1b, from: :register do
+Fabricator :register_z1b, from: :in_register do
   name        'Netzanschluss Einspeisung'
   mode        'out'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
@@ -89,10 +89,9 @@ Fabricator :register_z1b, from: :register do
 end
 
 
-Fabricator :register_z2, from: :register do
+Fabricator :register_z2, from: :out_register do
   name  'PV'
   readable    'world'
-  mode        'out'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
   after_create do |register|
     Fabricate(:metering_point_operator_contract, register: register).update(status: :running, username: 'team@localpool.de', password: 'Zebulon_4711')
@@ -101,10 +100,9 @@ end
 
 
 
-Fabricator :register_z3, from: :register do
+Fabricator :register_z3, from: :in_register do
   name  'Ladestation'
   readable    'world'
-  mode        'in'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
   after_create do |register|
     Fabricate(:metering_point_operator_contract, register: register).update(status: :running, username: 'team@localpool.de', password: 'Zebulon_4711')
@@ -112,23 +110,23 @@ Fabricator :register_z3, from: :register do
 end
 
 
-Fabricator :register_z4, from: :register do
+Fabricator :register_z4, from: :out_register do
   name  'BHKW'
   readable    'world'
-  mode        'out'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
   after_create do |register|
-    Fabricate(:metering_point_operator_contract, register: register).update(status: :running, username: 'team@localpool.de', password: 'Zebulon_4711')
+    Fabricate(:mpoc_buzzn_metering, register: register).update(status: :running)
   end
 end
 
 
 
-Fabricator :register_z5, from: :register do
+Fabricator :register_z5, from: :out_register do
   name  'Abgrenzung'
-  mode        'out'
-  contracts { [Fabricate(:mpoc_buzzn_metering)] }
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
+  after_create do |register|
+    Fabricate(:mpoc_buzzn_metering, register: register).update(status: :running)
+  end
 end
 
 
@@ -143,10 +141,9 @@ end
 
 
 # karins pv anlage
-Fabricator :register_pv_karin, from: :register do
+Fabricator :register_pv_karin, from: :out_register do
   address  { Fabricate(:address, street_name: 'Gautinger Weg', street_number: '11', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'PV Scheune'
-  mode        'out'
   meter       { Fabricate(:easymeter_60051431) }
 end
 
@@ -154,28 +151,26 @@ end
 
 
 # stefans bhkw anlage
-Fabricator :register_stefans_bhkw, from: :register do
+Fabricator :register_stefans_bhkw, from: :out_register do
   address { Fabricate(:address, street_name: 'Forstenrieder Weg', street_number: '51', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'BHKW'
   readable    'world'
-  mode        'out'
 end
 
 
 
 
 # hof butenland windanlage
-Fabricator :register_hof_butenland_wind, from: :register do
+Fabricator :register_hof_butenland_wind, from: :out_register do
   address  { Fabricate(:address, street_name: 'Niensweg', street_number: '1', zip: 26969, city: 'Butjadingen', state: 'Niedersachsen') }
   name  'Windanlage'
   readable    'world'
-  mode        'out'
 end
 
 
 
 # christian_schuetze verbrauch
-Fabricator :register_cs_1, from: :register do
+Fabricator :register_cs_1, from: :in_register do
   address  { Fabricate(:address, street_name: 'Fichtenweg', street_number: '8', zip: 82515, city: 'Wolfratshausen', state: 'Bayern') }
   name  'Wohnung'
   meter { Fabricate(:easymeter_1124001747) }
@@ -184,34 +179,33 @@ end
 
 
 # Nr. 60138988 für Christian Widmann (Einrichtungszähler Bezug)
-Fabricator :register_60138988, from: :register do
+Fabricator :register_60138988, from: :in_register do
   address        { Fabricate(:address, street_name: 'Röntgenstrasse', street_number: '11', zip: 86199, city: 'Augsburg', state: 'Bayern') }
   name  'Wohnung'
   meter {  Fabricate(:easymeter_60138988) }
 end
 
 #Nr. 60232612 ist eigentlich Cohaus WA10 - N36 aber zu Testzwecken für kristian
-Fabricator :register_kristian, from: :register do
+Fabricator :register_kristian, from: :in_register do
   name  'Wohnung'
   readable    'friends'
-  mode        'in'
   meter {  Fabricate(:easymeter_60232612) }
 end
 
 # Nr. 60009269 für Philipp Oßwald (Einrichtungszähler Bezug)
-Fabricator :register_60009269, from: :register do
+Fabricator :register_60009269, from: :in_register do
   name  'Wohnung'
   meter {  Fabricate(:easymeter_60009269) }
 end
 
 # # Nr. 60232499 für Thomas Theenhaus (Einrichtungszähler Bezug)
-# Fabricator :register_60232499, from: :register do
+# Fabricator :register_60232499, from: :in_register do
 #   name  'Am Pfannenstiel Discovergy'
 #   meter { Fabricate(:easymeter_60232499) }
 # end
 
 # Nr. 60232499 für Thomas Theenhaus (Einrichtungszähler Bezug)
-Fabricator :register_ferraris_001_amperix, from: :register do
+Fabricator :register_ferraris_001_amperix, from: :in_register do
   name  'Wohnung'
   meter {  Fabricate(:ferraris_001_amperix) }
 end
@@ -902,63 +896,65 @@ Fabricator :register_60009484, from: :register do
 end
 
 #bhkw1
-Fabricator :register_60138947, from: :register do
+Fabricator :register_60138947, from: :out_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name          'BHKW 1'
   meter {  Fabricate(:easymeter_60138947) }
-  mode          'out'
-  contracts { [Fabricate(:mpoc_buzzn_metering)] }
+  after_create do |register|
+    Fabricate(:mpoc_buzzn_metering, register: register).update(status: :running)
+  end
 end
 
 #bhkw2
-Fabricator :register_60138943, from: :register do
+Fabricator :register_60138943, from: :out_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name          'BHKW 2'
   meter {  Fabricate(:easymeter_60138943) }
-  mode          'out'
-  contracts { [Fabricate(:mpoc_buzzn_metering)] }
+  after_create do |register|
+    Fabricate(:mpoc_buzzn_metering, register: register).update(status: :running)
+  end
 end
 
 #pv
-Fabricator :register_1338000816, from: :register do
+Fabricator :register_1338000816, from: :out_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name          'PV'
   meter {  Fabricate(:easymeter_1338000816) }
-  mode          'out'
-  contracts { [Fabricate(:mpoc_buzzn_metering)] }
+  after_create do |register|
+    Fabricate(:mpoc_buzzn_metering, register: register).update(status: :running)
+  end
 end
 
 #schule
-Fabricator :register_60009485, from: :register do
+Fabricator :register_60009485, from: :in_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Schule'
   meter {  Fabricate(:easymeter_60009485) }
 end
 
 #hst_mitte
-Fabricator :register_1338000818, from: :register do
+Fabricator :register_1338000818, from: :in_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'HST Mitte'
   meter {  Fabricate(:easymeter_1338000818) }
 end
 
 #übergabe in
-Fabricator :register_1305004864, from: :register do
+Fabricator :register_1305004864, from: :in_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Netzanschluss Bezug'
   meter {  Fabricate(:easymeter_1305004864) }
 end
 
 #übergabe out
-Fabricator :register_1305004864_out, from: :register do
+Fabricator :register_1305004864_out, from: :out_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Netzanschluss Einspeisung'
   meter {  Meter.where(manufacturer_product_serialnumber: 1305004864).first }
-  mode        'out'
 end
 
 #virtueller Zählpunkt
-Fabricator :register_forstenried_erzeugung, from: :register do
+Fabricator :register_forstenried_erzeugung, from: :out_register do
   name  'Gesamterzeugung'
   virtual         true
   formula_parts   {[
@@ -966,11 +962,10 @@ Fabricator :register_forstenried_erzeugung, from: :register do
                     Fabricate(:fp_plus, operand_id: Fabricate(:register_60138943).id),
                     Fabricate(:fp_minus, operand_id: Fabricate(:register_1338000816).id)
                   ]}
-  mode            'out'
 end
 
 #virtueller Zählpunkt
-Fabricator :register_forstenried_bezug, from: :register do
+Fabricator :register_forstenried_bezug, from: :in_register do
   name  'Gesamtverbrauch'
   virtual         true
 end
