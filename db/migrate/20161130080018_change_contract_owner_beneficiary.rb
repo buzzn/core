@@ -1,28 +1,35 @@
 class ChangeContractOwnerBeneficiary < ActiveRecord::Migration
   def change
-    add_belongs_to :contracts, :contractor, references: :contracting_parties, index: true, type: :uuid, null: false
-    #add_index  :contracts, :contracting_parties, column: :contractor_id
-    add_foreign_key :contracts, :contracting_parties, column: :contractor_id
+    add_belongs_to :contracts, :contractor, references: :contracting_parties, index: true, type: :uuid
+    add_foreign_key :contracts, :contracting_parties, column: :contractor_id, null: false
 
-    add_belongs_to :contracts, :customer, references: :contracting_parties, index: true, type: :uuid, null: false
-    add_foreign_key :contracts, :contracting_parties, column: :customer_id
+    add_belongs_to :contracts, :customer, references: :contracting_parties, index: true, type: :uuid
+    add_foreign_key :contracts, :contracting_parties, column: :customer_id, null: false
 
-    add_belongs_to :contracts, :signing_user, references: :users, index: true, type: :uuid, null: false
-    add_foreign_key :contracts, :users, column: :signing_user_id
+    add_belongs_to :contracts, :signing_user, references: :users, index: true, type: :uuid
+    add_foreign_key :contracts, :users, column: :signing_user_id, null: false
 
     reversible do |dir|
       dir.up do
         Contract.all.each do |c|
-          c.contractor   = c.contract_owner
-          c.customer     = c.contract_beneficiary
-          c.signing_user = c.customer.user
+          if c.contract_owner_id
+            c.contractor   = ContractingParty.find(c.contract_owner_id)
+          end
+          if c.contract_beneficiary_id
+            c.customer     = ContractingParty.find(c.contract_beneficiary_id)
+            c.signing_user = c.customer.user
+          end
         end
       end
       dir.down do
         Contract.all.each do |c|
-          c.contract_owner        = c.contractor
-          c.contract_beneficiary  = c.customer
-          c.origanal_signing_user = c.signing_user.first_name + ' ' + c.signing_user.last_name
+          if c.contractor_id
+            c.contract_owner       = ContractingParty.find(c.contractor_id)
+          end
+          if c.customer_id
+            c.contract_beneficiary = ContractingParty.find(c.customer_id)
+          end
+          c.origanal_signing_user  = c.signing_user.first_name + ' ' + c.signing_user.last_name
         end
       end
     end

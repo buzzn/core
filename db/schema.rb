@@ -193,9 +193,9 @@ ActiveRecord::Schema.define(version: 20161130080018) do
     t.string   "old_supplier_name"
     t.string   "old_customer_number"
     t.string   "old_account_number"
-    t.uuid     "contractor_id",                                           null: false
-    t.uuid     "customer_id",                                             null: false
-    t.uuid     "signing_user_id",                                         null: false
+    t.uuid     "contractor_id"
+    t.uuid     "customer_id"
+    t.uuid     "signing_user_id"
   end
 
   add_index "contracts", ["contractor_id"], name: "index_contracts_on_contractor_id", using: :btree
