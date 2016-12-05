@@ -8,7 +8,7 @@ describe "Meter Model" do
     [meter.manufacturer_name, meter.manufacturer_product_name].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
         meters = Meter.filter(value)
-        expect(meters.first).to eq meter
+        expect(meters.detect{|m| m == meter}).to eq meter
       end
     end
   end
