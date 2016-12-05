@@ -67,8 +67,14 @@ end
 # Justus Ladestation
 Fabricator :easymeter_60051559, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051559'
-  after_create { |meter|
-    meter.registers << Fabricate(:register_z3)
+  before_create { |meter|
+    input_register = Fabricate(:input_register,
+      name:       'Ladestation',
+      readable:   'world',
+      contracts:  [Fabricate(:mpoc_buzzn_metering)],
+      address:    Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin')
+      )
+    meter.registers << input_register
     meter.save
   }
 end

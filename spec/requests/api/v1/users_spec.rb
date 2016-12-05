@@ -197,6 +197,23 @@ describe "Users API" do
   end
 
 
+  ['input_register', 'output_register'].each do |register|
+    Fabricator "user_with_friend_and_#{register}", from: :user do
+      after_create { |user |
+        friend = Fabricate("user_with_#{register}")
+        user.friendships.create(friend: friend)
+        friend.friendships.create(friend: user)
+      }
+    end
+
+    Fabricator "user_with_#{register}", from: :user do
+      after_create { |user|
+        user.add_role(:manager, Fabricate(register))
+      }
+    end
+  end
+
+
   it 'gets the related groups for User' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:group_readable_by_members)

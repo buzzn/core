@@ -33,7 +33,6 @@ module Register
     accepts_nested_attributes_for :contracts
 
     validates :readable, presence: true
-    validates :mode, presence: true#, if: :no_dashboard_register?
     validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
     validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_register?
     validates :meter, presence: false, if: :virtual
@@ -66,7 +65,7 @@ module Register
     }
 
     def self.search_attributes
-      [:name, :mode, address: [:city, :state, :street_name]]
+      [:name, address: [:city, :state, :street_name]]
     end
 
     def self.filter(value)
