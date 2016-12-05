@@ -47,31 +47,57 @@ module Buzzn
       )
     end
 
+
+
     class << self
       private :new
+
+      def create_time_from_timestamp(timestamp)
+        Time.at(timestamp.to_i/1000).in_time_zone
+      end
 
       def live
         new
       end
 
       def year(timestamp)
-        new(Time.at(timestamp.to_i/1000).in_time_zone.beginning_of_year,
-            (Time.at(timestamp.to_i/1000).in_time_zone.beginning_of_year + 365.days))
+        if timestamp.is_a?(Time)
+          new(timestamp.in_time_zone.beginning_of_year,
+            (timestamp.in_time_zone.beginning_of_year + 365.days))
+        else
+          new(self.create_time_from_timestamp(timestamp).beginning_of_year,
+            (self.create_time_from_timestamp(timestamp).beginning_of_year + 365.days))
+        end
       end
 
       def month(timestamp)
-        new(Time.at(timestamp.to_i/1000).in_time_zone.beginning_of_month,
-            (Time.at(timestamp.to_i/1000).in_time_zone.end_of_month + 1.second))
+        if timestamp.is_a?(Time)
+          new(timestamp.in_time_zone.beginning_of_month,
+            (timestamp.in_time_zone.end_of_month + 1.second))
+        else
+          new(self.create_time_from_timestamp(timestamp).beginning_of_month,
+            (self.create_time_from_timestamp(timestamp).end_of_month + 1.second))
+        end
       end
 
       def day(timestamp)
-        new(Time.at(timestamp.to_i/1000).in_time_zone.beginning_of_day,
-            (Time.at(timestamp.to_i/1000).in_time_zone.end_of_day + 1.second))
+        if timestamp.is_a?(Time)
+          new(timestamp.in_time_zone.beginning_of_day,
+            (timestamp.in_time_zone.end_of_day + 1.second))
+        else
+          new(self.create_time_from_timestamp(timestamp).beginning_of_day,
+            (self.create_time_from_timestamp(timestamp).end_of_day + 1.second))
+        end
       end
 
       def hour(timestamp)
-        new((Time.at(timestamp.to_i/1000).in_time_zone.beginning_of_hour),
-            (Time.at(timestamp.to_i/1000).in_time_zone.end_of_hour))
+        if timestamp.is_a?(Time)
+          new(timestamp.in_time_zone.beginning_of_hour,
+            (timestamp.in_time_zone.end_of_hour))
+        else
+          new(self.create_time_from_timestamp(timestamp).beginning_of_hour,
+            (self.create_time_from_timestamp(timestamp).end_of_hour))
+        end
       end
     end
   end

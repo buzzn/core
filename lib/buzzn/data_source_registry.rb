@@ -3,22 +3,22 @@ require 'buzzn/discovergy/crawler'
 
 module Buzzn
 
-  class CrawlerRegistry
+  class DataSourceRegistry
 
     def initialize(discovergy_url, max_concurent_discovergy_requests)
-      @discovergy = Buzzn::Discovergy::Crawler.new(discovergy_url,
+      @discovergy = Buzzn::Discovergy::DataSource.new(discovergy_url,
                                                    max_concurent_discovergy_requests)
-      @mysmartgrid = Buzzn::Mysmartgrid::Crawler.new
+      @mysmartgrid = Buzzn::Mysmartgrid::DataSource.new
     end
 
-    def crawler_for(organization)
+    def data_source_for(organization)
       case organization
       when Organization.discovergy
         @discovergy
       when Organization.mysmartgrid
         @mysmartgrid
       else
-        raise "do not have a crawler for #{organization.inspect}"
+        raise "do not have a data source for #{organization.inspect}"
       end
     end
   end

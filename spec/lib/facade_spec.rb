@@ -11,17 +11,17 @@ describe Buzzn::Discovergy::Facade do
   it 'registers application manually' do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
       facade = Buzzn::Discovergy::Facade.new
-      expect(facade.consumer).to eq nil
-      facade.register_application
-      expect(facade.consumer).not_to eq nil
+      expect(facade.consumer_key).to eq nil
+      facade.do_register_application
+      expect(facade.consumer_key).not_to eq nil
     end
   end
 
   it 'gets request token manually' do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
       facade = Buzzn::Discovergy::Facade.new
-      facade.register_application
-      token = facade.get_request_token
+      facade.do_register_application
+      token = facade.do_get_request_token
       expect(token).not_to eq nil
     end
   end
@@ -29,8 +29,8 @@ describe Buzzn::Discovergy::Facade do
   it 'gets request token manually with automatically registering the application' do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
       facade = Buzzn::Discovergy::Facade.new
-      token = facade.get_request_token
-      expect(facade.consumer).not_to eq nil
+      token = facade.do_get_request_token
+      expect(facade.consumer_key).not_to eq nil
       expect(token).not_to eq nil
     end
   end
@@ -38,9 +38,9 @@ describe Buzzn::Discovergy::Facade do
   it 'gets verifier manually' do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
       facade = Buzzn::Discovergy::Facade.new
-      facade.register_application
-      request_token = facade.get_request_token
-      verifier = facade.authorize(request_token, broker.provider_login, broker.provider_password)
+      facade.do_register_application
+      request_token = facade.do_get_request_token
+      verifier = facade.do_authorize(request_token, broker.provider_login, broker.provider_password)
       expect(verifier).not_to eq nil
     end
   end
@@ -48,8 +48,8 @@ describe Buzzn::Discovergy::Facade do
   it 'gets verifier manually with automatically registering the application' do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
       facade = Buzzn::Discovergy::Facade.new
-      request_token = facade.get_request_token
-      verifier = facade.authorize(request_token, broker.provider_login, broker.provider_password)
+      request_token = facade.do_get_request_token
+      verifier = facade.do_authorize(request_token, broker.provider_login, broker.provider_password)
       expect(verifier).not_to eq nil
     end
   end
@@ -76,7 +76,7 @@ describe Buzzn::Discovergy::Facade do
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
       facade = Buzzn::Discovergy::Facade.new
       interval = Buzzn::Interval.day(Time.now.to_i*1000)
-      response = facade.readings(broker, interval, 'in')
+      response = facade.do_readings(broker, interval, 'in')
       expect(response.code).to eq '200'
       expect(response.body).not_to eq nil
       json = MultiJson.load(response.body)
@@ -88,7 +88,7 @@ describe Buzzn::Discovergy::Facade do
   it 'builds access_token from hash' do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
       facade = Buzzn::Discovergy::Facade.new
-      facade.register_application
+      facade.do_register_application
       access_token = facade.build_access_token_from_broker_or_new(broker_with_wrong_token)
       expect(access_token.token).to eq broker_with_wrong_token.provider_token_key
       expect(access_token.secret).to eq broker_with_wrong_token.provider_token_secret

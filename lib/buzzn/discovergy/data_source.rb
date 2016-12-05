@@ -2,9 +2,9 @@ require 'buzzn'
 
 module Buzzn::Discovergy
 
-  # the discovergy crawler uses the API from discovergy to retrieve
-  # readings and produces a CrawlerResult object
-  class Crawler
+  # the discovergy dataSource uses the API from discovergy to retrieve
+  # readings and produces a DataResult object
+  class DataSource
 
     def initialize(url='https://api.discovergy.com', max_concurrent=30)
       @facade = Facade.new(url, max_concurrent)
@@ -12,6 +12,9 @@ module Buzzn::Discovergy
 
     def collection(broker, interval, mode)
       # TODO: check that broker is only for a group or virtual meter!
+      if !interval.live?
+        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong resolution')
+      end
       response = @facade.readings(broker, interval, mode, true)
       result = parse_collected_data(response.body, interval)
       result.freeze
@@ -20,7 +23,7 @@ module Buzzn::Discovergy
 
     def aggregated(broker, interval, mode)
       # NOTE: broker may be for a group, a virtual meter OR a real meter!
-      two_way_meter = broker.resource.is_a?(Meter) && broker.resource.registers.size > 1
+      two_way_meter = broker.two_way_meter?
       external_id = broker.external_id
       response = @facade.readings(broker, interval, mode, false)
       result = parse_aggregated_data(response.body, interval, mode, two_way_meter, external_id)
@@ -47,7 +50,7 @@ module Buzzn::Discovergy
       in_meter_ids = group.registers.inputs.collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
       out_meter_ids = group.registers.outputs.collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
       if in_meter_ids.size < 2 || out_meter_ids.size < 2
-        raise Buzzn::CrawlerError.new('Group has to contain more than one meter.')
+        raise Buzzn::DataSourceError.new('Group has to contain more than one meter.')
       end
       #TODO: write credentials into secrets or elsewhere ...
       existing_random_broker = DiscovergyBroker.where(provider_login: 'team@localpool.de').where(provider_password: 'Zebulon_4711').first
@@ -72,20 +75,21 @@ module Buzzn::Discovergy
       result = []
       json = MultiJson.load(response)
 
-      if interval.live?
+      case interval.resolution
+      when :live
         result << parse_aggregated_live(json, mode, two_way_meter, external_id)
-      elsif interval.hour?
+      when :hour
         result << parse_aggregated_hour(json, mode, two_way_meter, external_id)
-      elsif interval.day?
+      when :day
         result << parse_aggregated_day(json, mode, two_way_meter, external_id)
-      elsif interval.month? || interval.year?
+      else
         result << parse_aggregated_month_year(json, mode, two_way_meter, external_id)
       end
       return result
     end
 
     def parse_aggregated_live(json, mode, two_way_meter, external_id)
-      result = Buzzn::CrawlerResult.new(external_id)
+      result = Buzzn::DataResult.new(external_id)
       timestamp = json['time']
       value = json['values']['power']
       if two_way_meter
@@ -104,7 +108,7 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_hour(json, mode, two_way_meter, external_id)
-      result = Buzzn::CrawlerResult.new(external_id)
+      result = Buzzn::DataResult.new(external_id)
       json.each do |item|
         if two_way_meter
           if item['values']['power'] > 0 && mode == 'in'
@@ -124,7 +128,7 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_day(json, mode, two_way_meter, external_id)
-      result = Buzzn::CrawlerResult.new(external_id)
+      result = Buzzn::DataResult.new(external_id)
       energy_out = mode == 'in' ? "" : "Out"
       first_reading = first_timestamp = nil
       json.each do |item|
@@ -141,7 +145,7 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_month_year(json, mode, two_way_meter, external_id)
-      result = Buzzn::CrawlerResult.new(external_id)
+      result = Buzzn::DataResult.new(external_id)
       energy_out = mode == 'in' ? "" : "Out"
       old_value = new_value = timestamp = i = 0
       if two_way_meter && mode == 'out'
@@ -166,23 +170,18 @@ module Buzzn::Discovergy
     def parse_collected_data(response, interval)
       result = []
       json = MultiJson.load(response)
-      if interval.live?
+      case interval.resolution
+      when :live
         json.each do |item|
           external_id = item.first
           timestamp = item[1]['time']
           value = item[1]['values']['power']
-          result_item = Buzzn::CrawlerResult.new(external_id)
+          result_item = Buzzn::DataResult.new(external_id)
           result_item.add(timestamp, value)
           result << result_item
         end
-      elsif interval.hour?
-        # should not be possible
-      elsif interval.day?
-        # should not be possible
-      elsif interval.month?
-        # should not be possible
-      elsif interval.year?
-        # should not be possible
+      else
+        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong resolution')
       end
       return result
     end
