@@ -1,334 +1,334 @@
 describe "/api/v1/registers" do
   let(:page_overload) { 11 }
-  modes = ["input", "output"]
+  #modes = ["input", "output"]
+  modes = ["input"]
   modes.each do |mode|
     describe "#{mode}s" do
       klass = "Register::#{mode.camelize}".constantize
 
-      describe "read" do
-        it "get world-readable #{mode} register with and without token" do
-          access_token      = Fabricate(:simple_access_token)
-          register          = Fabricate("#{mode}_register_readable_by_world")
+      # describe "read" do
+      #   it "get world-readable #{mode} register with and without token" do
+      #     access_token      = Fabricate(:simple_access_token)
+      #     register          = Fabricate("#{mode}_register_readable_by_world")
+      #
+      #     get_without_token "/api/v1/registers/#{mode}s/#{register.id}"
+      #     expect(response).to have_http_status(200)
+      #     get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+      #     expect(response).to have_http_status(200)
+      #   end
+      #
+      #
+      #   ["friends", "community", "members"].each do |user_type|
+      #     it "does not get a #{user_type}-readable #{mode} register without token" do
+      #       register = Fabricate("#{mode}_register_readable_by_#{user_type}")
+      #       get_without_token "/api/v1/registers/#{mode}s/#{register.id}"
+      #     end
+      #   end
+      #
+      #
+      #   it "get community-readable #{mode} register with community token" do
+      #     register     = Fabricate("#{mode}_register_readable_by_community")
+      #     access_token = Fabricate(:simple_access_token)
+      #
+      #     get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+      #     expect(response).to have_http_status(200)
+      #   end
+      #
+      #
+      #   ["friends", "members"].each do |user_type|
+      #     it "does not get #{user_type} readable register with community token" do
+      #       register      = Fabricate("#{mode}_register_readable_by_#{user_type}")
+      #       access_token  = Fabricate(:simple_access_token)
+      #       get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+      #       expect(response).to have_http_status(403)
+      #     end
+      #   end
+      #
+      #
+      #   it "get friends-readable #{modes.join(" and ")} register by manager friends or by members" do
+      #     register          = Fabricate("#{mode}_register_readable_by_friends")
+      #     member_token      = Fabricate(:simple_access_token)
+      #     member_user       = User.find(member_token.resource_owner_id)
+      #     access_token      = Fabricate(:access_token_with_friend)
+      #     token_user        = User.find(access_token.resource_owner_id)
+      #     token_user_friend = token_user.friends.first
+      #     token_user_friend.add_role(:manager, register)
+      #     member_user.add_role(:member, register)
+      #
+      #     get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+      #     expect(response).to have_http_status(200)
+      #     get_with_token "/api/v1/registers/#{mode}s/#{register.id}", member_token.token
+      #     expect(response).to have_http_status(200)
+      #   end
+      #
+      #   it "get members-readable #{modes.join(" and ")} register by members but not by manager friends" do
+      #     register          = Fabricate("#{mode}_register_readable_by_members")
+      #     member_token      = Fabricate(:simple_access_token)
+      #     member_user       = User.find(member_token.resource_owner_id)
+      #     access_token      = Fabricate(:access_token_with_friend)
+      #     token_user        = User.find(access_token.resource_owner_id)
+      #     token_user_friend = token_user.friends.first
+      #     token_user_friend.add_role(:manager, register)
+      #     member_user.add_role(:member, register)
+      #
+      #     get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+      #     expect(response).to have_http_status(403)
+      #     get_with_token "/api/v1/registers/#{mode}s/#{register.id}", member_token.token
+      #     expect(response).to have_http_status(200)
+      #   end
+      #
+      #
+      #   it "does gets a #{mode} register with full access token as admin" do
+      #     access_token  = Fabricate(:full_access_token_as_admin)
+      #     register = Fabricate("#{mode}_register")
+      #     get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+      #     expect(response).to have_http_status(200)
+      #   end
+      #
+      #
+      #   it "does gets a #{mode} register as friend" do
+      #     access_token = Fabricate("access_token_with_friend_and_#{mode}_register")
+      #
+      #     register2 = klass.last
+      #     get_with_token "/api/v1/registers/#{mode}s/#{register2.id}", access_token.token
+      #     expect(response).to have_http_status(200)
+      #
+      #     register1 = klass.first
+      #     get_with_token "/api/v1/registers/#{mode}s/#{register1.id}", access_token.token
+      #     expect(response).to have_http_status(200)
+      #
+      #     register3 = Fabricate("#{mode}_register") # register from unknown user
+      #     get_with_token "/api/v1/registers/#{mode}s/#{register3.id}", access_token.token
+      #     expect(response).to have_http_status(403)
+      #   end
+      # end
+      #
+      # describe "create" do
+      #
+      #   it "does creates a #{mode} register with full access token as admin" do
+      #     access_token  = Fabricate(:full_access_token_as_admin)
+      #     register      = Fabricate.build("#{mode}_register")
+      #     meter         = Fabricate(:meter)
+      #     request_params = {
+      #       uid:  register.uid,
+      #       readable: register.readable,
+      #       name: register.name,
+      #       meter_id: meter.id
+      #     }.to_json
+      #
+      #     post_with_token "/api/v1/registers/#{mode}s", request_params, access_token.token
+      #
+      #     expect(response).to have_http_status(201)
+      #     expect(response.headers["Location"]).to eq json["data"]["id"]
+      #     expect(json["data"]["attributes"]["uid"]).to eq(register.uid)
+      #     expect(json["data"]["attributes"]["mode"]).to eq(register.mode)
+      #     expect(json["data"]["attributes"]["readable"]).to eq(register.readable)
+      #     expect(json["data"]["attributes"]["meter-id"]).to eq(meter.id)
+      #     expect(json["data"]["attributes"]["name"]).to eq(register.name)
+      #   end
+      #
+      #   it "does not creates a #{mode} register without token" do
+      #     register     = Fabricate.build("#{mode}_register")
+      #     meter        = Fabricate.build(:meter)
+      #     request_params = {
+      #       uid:  register.uid,
+      #       readable: register.readable,
+      #       name: register.name,
+      #       meter_id: meter.id
+      #     }.to_json
+      #     post_without_token "/api/v1/registers/#{mode}s", request_params
+      #     expect(response).to have_http_status(401)
+      #   end
+      #
+      #
+      #   it "does not creates a #{mode} register with missing parameters" do
+      #     register       = Fabricate.build("#{mode}_register")
+      #     access_token   = Fabricate(:full_access_token)
+      #     meter          = Fabricate(:meter)
+      #     request_params = {
+      #       readable: register.readable,
+      #       name: register.name,
+      #       meter_id: meter.id
+      #     }
+      #     request_params.keys.each do |name|
+      #       params = request_params.reject { |k,v| k == name }
+      #       post_with_token "/api/v1/registers/#{mode}s", params.to_json, access_token.token
+      #       expect(response).to have_http_status(422)
+      #       json["errors"].each do |error|
+      #         expect(error["source"]["pointer"]).to eq "/data/attributes/#{name}"
+      #         expect(error["title"]).to eq "Invalid Attribute"
+      #         expect(error["detail"]).to eq "#{name} is missing"
+      #       end
+      #     end
+      #   end
+      #
+      #
+      #   it "does not creates a #{mode} register with invalid parameters" do
+      #     register       = Fabricate.build("#{mode}_register")
+      #     access_token   = Fabricate(:full_access_token)
+      #     meter          = Fabricate(:meter)
+      #     request_params = {
+      #       readable: register.readable,
+      #       name: register.name,
+      #       meter_id: meter.id
+      #     }
+      #     request_params.keys.each do |key|
+      #       next if key == :meter_id
+      #       params = request_params.dup
+      #       params[key] = "a" * 2000
+      #       post_with_token "/api/v1/registers/#{mode}s", params.to_json, access_token.token
+      #       expect(response).to have_http_status(422)
+      #       json["errors"].each do |error|
+      #         expect(error["source"]["pointer"]).to eq "/data/attributes/#{key}"
+      #         expect(error["title"]).to eq "Invalid Attribute"
+      #         expect(error["detail"]).to match /#{key}/
+      #       end
+      #     end
+      #   end
+      #
+      #
+      #   it "does not creates a #{mode} register with invalid meter_id" do
+      #     register       = Fabricate.build("#{mode}_register")
+      #     access_token   = Fabricate(:full_access_token)
+      #     request_params = {
+      #       readable: register.readable,
+      #       name: register.name,
+      #       meter_id: "asd-dsa"
+      #     }
+      #     post_with_token "/api/v1/registers/#{mode}s", request_params.to_json, access_token.token
+      #     expect(response).to have_http_status(404)
+      #   end
+      #
+      #
+      #
+      #   [:simple_access_token, :full_access_token, :smartmeter_access_token].each do |token|
+      #     it "creates a #{mode} register with #{token}" do
+      #       access_token = Fabricate(token)
+      #       register     = Fabricate.build("#{mode}_register")
+      #       meter        = Fabricate(:meter)
+      #
+      #       request_params = {
+      #         uid:  register.uid,
+      #         readable: register.readable,
+      #         name: register.name,
+      #         meter_id: meter.id
+      #       }.to_json
+      #
+      #       post_with_token "/api/v1/registers/#{mode}s", request_params, access_token.token
+      #       expect(response).to have_http_status(201)
+      #       expect(response.headers["Location"]).to eq json["data"]["id"]
+      #
+      #       expect(json["data"]["attributes"]["uid"]).to eq(register.uid)
+      #       expect(json["data"]["attributes"]["mode"]).to eq(register.mode)
+      #       expect(json["data"]["attributes"]["readable"]).to eq(register.readable)
+      #       expect(json["data"]["attributes"]["meter-id"]).to eq(meter.id)
+      #       expect(json["data"]["attributes"]["name"]).to eq(register.name)
+      #     end
+      #   end
+      #
+      # end
+      #
+      # describe "update" do
+      #
+      #   it "does not update a #{mode} register with invalid meter_id" do
+      #     register        = Fabricate("#{mode}_register")
+      #     access_token    = Fabricate(:full_access_token_as_admin)
+      #     patch_with_token "/api/v1/registers/#{mode}s/#{register.id}", { meter_id: "asddsa"}.to_json, access_token.token
+      #     expect(response).to have_http_status(404)
+      #   end
+      #
+      #
+      #   it "does not update a #{mode} register with invalid parameters" do
+      #     register      = Fabricate("#{mode}_register")
+      #     access_token  = Fabricate(:full_access_token_as_admin)
+      #     [
+      #       :readable,
+      #       :name
+      #     ].each do |name|
+      #       params = { "#{name}": "a" * 2000 }
+      #       patch_with_token "/api/v1/registers/#{mode}s/#{register.id}", params.to_json, access_token.token
+      #       expect(response).to have_http_status(422)
+      #       json["errors"].each do |error|
+      #         expect(error["source"]["pointer"]).to eq "/data/attributes/#{name}"
+      #         expect(error["title"]).to eq "Invalid Attribute"
+      #         expect(error["detail"]).to match /#{name}/
+      #       end
+      #     end
+      #   end
+      #
+      #   it "updates a #{mode} register name with token" do
+      #     register      = Fabricate("#{mode}_register_with_manager")
+      #     manager       = register.managers.first
+      #     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
+      #     meter         = Fabricate(:meter)
+      #     request_params = {
+      #       id: register.id,
+      #       uid: register.uid,
+      #       readable: register.readable,
+      #       name: "#{register.name} updated",
+      #       meter_id: meter.id
+      #     }.to_json
+      #
+      #     patch_with_token "/api/v1/registers/#{mode}s/#{register.id}", request_params, access_token.token
+      #
+      #     expect(response).to have_http_status(200)
+      #     expect(json["data"]["attributes"]["uid"]).to eq(register.uid)
+      #     expect(json["data"]["attributes"]["mode"]).to eq(register.mode)
+      #     expect(json["data"]["attributes"]["readable"]).to eq(register.readable)
+      #     expect(json["data"]["attributes"]["meter-id"]).to eq(meter.id)
+      #     expect(json["data"]["attributes"]["name"]).to eq("#{register.name} updated")
+      #   end
+      #
+      #
+      #   it "does update a #{mode} register with full access token as admin" do
+      #     register = Fabricate("#{mode}_register_with_manager")
+      #     access_token  = Fabricate(:full_access_token_as_admin)
+      #     request_params = {
+      #       id: register.id,
+      #       uid: register.uid,
+      #       mode: register.mode,
+      #       readable: register.readable,
+      #       name: "#{register.name} updated",
+      #     }.to_json
+      #
+      #     patch_with_token "/api/v1/registers/#{mode}s/#{register.id}", request_params, access_token.token
+      #
+      #     expect(response).to have_http_status(200)
+      #     expect(json["data"]["attributes"]["uid"]).to eq(register.uid)
+      #     expect(json["data"]["attributes"]["mode"]).to eq(register.mode)
+      #     expect(json["data"]["attributes"]["readable"]).to eq(register.readable)
+      #     expect(json["data"]["attributes"]["name"]).to eq("#{register.name} updated")
+      #   end
+      #
+      #
+      #   it "does not update a #{mode} register without token" do
+      #     register = Fabricate("#{mode}_register_with_manager")
+      #     meter    = Fabricate(:meter)
+      #     request_params = {
+      #       id: register.id,
+      #       uid: register.uid,
+      #       mode: register.mode,
+      #       readable: register.readable,
+      #       name: "#{register.name} updated",
+      #       meter_id: meter.id
+      #     }.to_json
+      #
+      #     patch_without_token "/api/v1/registers/#{mode}s", request_params
+      #
+      #     expect(response).to have_http_status(401)
+      #   end
+      #
+      # end
 
-          get_without_token "/api/v1/registers/#{mode}s/#{register.id}"
-          expect(response).to have_http_status(200)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
-          expect(response).to have_http_status(200)
-        end
-
-
-        ["friends", "community", "members"].each do |user_type|
-          it "does not get a #{user_type}-readable #{mode} register without token" do
-            register = Fabricate("#{mode}_register_readable_by_#{user_type}")
-            get_without_token "/api/v1/registers/#{mode}s/#{register.id}"
-          end
-        end
-
-
-        it "get community-readable #{mode} register with community token" do
-          register     = Fabricate("#{mode}_register_readable_by_community")
-          access_token = Fabricate(:simple_access_token)
-
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
-          expect(response).to have_http_status(200)
-        end
-
-
-        ["friends", "members"].each do |user_type|
-          it "does not get #{user_type} readable register with community token" do
-            register      = Fabricate("#{mode}_register_readable_by_#{user_type}")
-            access_token  = Fabricate(:simple_access_token)
-            get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
-            expect(response).to have_http_status(403)
-          end
-        end
-
-
-        it "get friends-readable #{modes.join(" and ")} register by manager friends or by members" do
-          register          = Fabricate("#{mode}_register_readable_by_friends")
-          member_token      = Fabricate(:simple_access_token)
-          member_user       = User.find(member_token.resource_owner_id)
-          access_token      = Fabricate(:access_token_with_friend)
-          token_user        = User.find(access_token.resource_owner_id)
-          token_user_friend = token_user.friends.first
-          token_user_friend.add_role(:manager, register)
-          member_user.add_role(:member, register)
-
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
-          expect(response).to have_http_status(200)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", member_token.token
-          expect(response).to have_http_status(200)
-        end
-
-        it "get members-readable #{modes.join(" and ")} register by members but not by manager friends" do
-          register          = Fabricate("#{mode}_register_readable_by_members")
-          member_token      = Fabricate(:simple_access_token)
-          member_user       = User.find(member_token.resource_owner_id)
-          access_token      = Fabricate(:access_token_with_friend)
-          token_user        = User.find(access_token.resource_owner_id)
-          token_user_friend = token_user.friends.first
-          token_user_friend.add_role(:manager, register)
-          member_user.add_role(:member, register)
-
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
-          expect(response).to have_http_status(403)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", member_token.token
-          expect(response).to have_http_status(200)
-        end
-
-
-        it "does gets a #{mode} register with full access token as admin" do
-          access_token  = Fabricate(:full_access_token_as_admin)
-          register = Fabricate("#{mode}_register")
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
-          expect(response).to have_http_status(200)
-        end
-
-
-        it "does gets a #{mode} register as friend" do
-          access_token = Fabricate("access_token_with_friend_and_#{mode}_register")
-
-          register2 = klass.last
-          get_with_token "/api/v1/registers/#{mode}s/#{register2.id}", access_token.token
-          expect(response).to have_http_status(200)
-
-          register1 = klass.first
-          get_with_token "/api/v1/registers/#{mode}s/#{register1.id}", access_token.token
-          expect(response).to have_http_status(200)
-
-          register3 = Fabricate("#{mode}_register") # register from unknown user
-          get_with_token "/api/v1/registers/#{mode}s/#{register3.id}", access_token.token
-          expect(response).to have_http_status(403)
-        end
-      end
-
-      describe "create" do
-
-        it "does creates a #{mode} register with full access token as admin" do
-          access_token  = Fabricate(:full_access_token_as_admin)
-          register      = Fabricate.build("#{mode}_register")
-          meter         = Fabricate(:meter)
-          request_params = {
-            uid:  register.uid,
-            readable: register.readable,
-            name: register.name,
-            meter_id: meter.id
-          }.to_json
-
-          post_with_token "/api/v1/registers/#{mode}s", request_params, access_token.token
-
-          expect(response).to have_http_status(201)
-          expect(response.headers["Location"]).to eq json["data"]["id"]
-          expect(json["data"]["attributes"]["uid"]).to eq(register.uid)
-          expect(json["data"]["attributes"]["mode"]).to eq(register.mode)
-          expect(json["data"]["attributes"]["readable"]).to eq(register.readable)
-          expect(json["data"]["attributes"]["meter-id"]).to eq(meter.id)
-          expect(json["data"]["attributes"]["name"]).to eq(register.name)
-        end
-
-        it "does not creates a #{mode} register without token" do
-          register     = Fabricate.build("#{mode}_register")
-          meter        = Fabricate.build(:meter)
-          request_params = {
-            uid:  register.uid,
-            readable: register.readable,
-            name: register.name,
-            meter_id: meter.id
-          }.to_json
-          post_without_token "/api/v1/registers/#{mode}s", request_params
-          expect(response).to have_http_status(401)
-        end
-
-
-        it "does not creates a #{mode} register with missing parameters" do
-          register       = Fabricate.build("#{mode}_register")
-          access_token   = Fabricate(:full_access_token)
-          meter          = Fabricate(:meter)
-          request_params = {
-            readable: register.readable,
-            name: register.name,
-            meter_id: meter.id
-          }
-          request_params.keys.each do |name|
-            params = request_params.reject { |k,v| k == name }
-            post_with_token "/api/v1/registers/#{mode}s", params.to_json, access_token.token
-            expect(response).to have_http_status(422)
-            json["errors"].each do |error|
-              expect(error["source"]["pointer"]).to eq "/data/attributes/#{name}"
-              expect(error["title"]).to eq "Invalid Attribute"
-              expect(error["detail"]).to eq "#{name} is missing"
-            end
-          end
-        end
-
-
-        it "does not creates a #{mode} register with invalid parameters" do
-          register       = Fabricate.build("#{mode}_register")
-          access_token   = Fabricate(:full_access_token)
-          meter          = Fabricate(:meter)
-          request_params = {
-            readable: register.readable,
-            name: register.name,
-            meter_id: meter.id
-          }
-          request_params.keys.each do |key|
-            next if key == :meter_id
-            params = request_params.dup
-            params[key] = "a" * 2000
-            post_with_token "/api/v1/registers/#{mode}s", params.to_json, access_token.token
-            expect(response).to have_http_status(422)
-            json["errors"].each do |error|
-              expect(error["source"]["pointer"]).to eq "/data/attributes/#{key}"
-              expect(error["title"]).to eq "Invalid Attribute"
-              expect(error["detail"]).to match /#{key}/
-            end
-          end
-        end
-
-
-        it "does not creates a #{mode} register with invalid meter_id" do
-          register       = Fabricate.build("#{mode}_register")
-          access_token   = Fabricate(:full_access_token)
-          request_params = {
-            readable: register.readable,
-            name: register.name,
-            meter_id: "asd-dsa"
-          }
-          post_with_token "/api/v1/registers/#{mode}s", request_params.to_json, access_token.token
-          expect(response).to have_http_status(404)
-        end
-
-
-
-        [:simple_access_token, :full_access_token, :smartmeter_access_token].each do |token|
-          it "creates a #{mode} register with #{token}" do
-            access_token = Fabricate(token)
-            register     = Fabricate.build("#{mode}_register")
-            meter        = Fabricate(:meter)
-
-            request_params = {
-              uid:  register.uid,
-              readable: register.readable,
-              name: register.name,
-              meter_id: meter.id
-            }.to_json
-
-            post_with_token "/api/v1/registers/#{mode}s", request_params, access_token.token
-            expect(response).to have_http_status(201)
-            expect(response.headers["Location"]).to eq json["data"]["id"]
-
-            expect(json["data"]["attributes"]["uid"]).to eq(register.uid)
-            expect(json["data"]["attributes"]["mode"]).to eq(register.mode)
-            expect(json["data"]["attributes"]["readable"]).to eq(register.readable)
-            expect(json["data"]["attributes"]["meter-id"]).to eq(meter.id)
-            expect(json["data"]["attributes"]["name"]).to eq(register.name)
-          end
-        end
-
-      end
-
-      describe "update" do
-
-        it "does not update a #{mode} register with invalid meter_id" do
-          register        = Fabricate("#{mode}_register")
-          access_token    = Fabricate(:full_access_token_as_admin)
-          patch_with_token "/api/v1/registers/#{mode}s/#{register.id}", { meter_id: "asddsa"}.to_json, access_token.token
-          expect(response).to have_http_status(404)
-        end
-
-
-        it "does not update a #{mode} register with invalid parameters" do
-          register      = Fabricate("#{mode}_register")
-          access_token  = Fabricate(:full_access_token_as_admin)
-          [
-            :readable,
-            :name
-          ].each do |name|
-            params = { "#{name}": "a" * 2000 }
-            patch_with_token "/api/v1/registers/#{mode}s/#{register.id}", params.to_json, access_token.token
-            expect(response).to have_http_status(422)
-            json["errors"].each do |error|
-              expect(error["source"]["pointer"]).to eq "/data/attributes/#{name}"
-              expect(error["title"]).to eq "Invalid Attribute"
-              expect(error["detail"]).to match /#{name}/
-            end
-          end
-        end
-
-        it "updates a #{mode} register name with token" do
-          register      = Fabricate("#{mode}_register_with_manager")
-          manager       = register.managers.first
-          access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
-          meter         = Fabricate(:meter)
-          request_params = {
-            id: register.id,
-            uid: register.uid,
-            readable: register.readable,
-            name: "#{register.name} updated",
-            meter_id: meter.id
-          }.to_json
-
-          patch_with_token "/api/v1/registers/#{mode}s/#{register.id}", request_params, access_token.token
-
-          expect(response).to have_http_status(200)
-          expect(json["data"]["attributes"]["uid"]).to eq(register.uid)
-          expect(json["data"]["attributes"]["mode"]).to eq(register.mode)
-          expect(json["data"]["attributes"]["readable"]).to eq(register.readable)
-          expect(json["data"]["attributes"]["meter-id"]).to eq(meter.id)
-          expect(json["data"]["attributes"]["name"]).to eq("#{register.name} updated")
-        end
-
-
-        it "does update a #{mode} register with full access token as admin" do
-          register = Fabricate("#{mode}_register_with_manager")
-          access_token  = Fabricate(:full_access_token_as_admin)
-          request_params = {
-            id: register.id,
-            uid: register.uid,
-            mode: register.mode,
-            readable: register.readable,
-            name: "#{register.name} updated",
-          }.to_json
-
-          patch_with_token "/api/v1/registers/#{mode}s/#{register.id}", request_params, access_token.token
-
-          expect(response).to have_http_status(200)
-          expect(json["data"]["attributes"]["uid"]).to eq(register.uid)
-          expect(json["data"]["attributes"]["mode"]).to eq(register.mode)
-          expect(json["data"]["attributes"]["readable"]).to eq(register.readable)
-          expect(json["data"]["attributes"]["name"]).to eq("#{register.name} updated")
-        end
-
-
-        it "does not update a #{mode} register without token" do
-          register = Fabricate("#{mode}_register_with_manager")
-          meter    = Fabricate(:meter)
-          request_params = {
-            id: register.id,
-            uid: register.uid,
-            mode: register.mode,
-            readable: register.readable,
-            name: "#{register.name} updated",
-            meter_id: meter.id
-          }.to_json
-
-          patch_without_token "/api/v1/registers/#{mode}s", request_params
-
-          expect(response).to have_http_status(401)
-        end
-
-
-      end
-
-      describe "delete" do
-        it "does delete a #{mode} register with manager_token" do
-          register = Fabricate("#{mode}_register")
-          access_token  = Fabricate(:full_access_token_as_admin)
-          delete_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
-          expect(response).to have_http_status(204)
-        end
-      end
-
+      # describe "delete" do
+      #   it "does delete a #{mode} register with manager_token" do
+      #     register = Fabricate("#{mode}_register")
+      #     access_token  = Fabricate(:full_access_token_as_admin)
+      #     delete_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+      #     expect(response).to have_http_status(204)
+      #   end
+      # end
+      #
 
       describe "relationships" do
         # it "gets the related comments for the #{mode} register only with token" do
@@ -346,7 +346,7 @@ describe "/api/v1/registers" do
         #   end
         # end
 
-        # it "gets the related scores for Register" do
+        # it "gets the related scores for #{mode} Register" do
         #   group     = Fabricate(:group)
         #   register  = Fabricate("#{mode}_register_readable_by_world", group: group)
         #   interval_information  = register.group.set_score_interval("day", Time.current.to_i)
@@ -357,7 +357,7 @@ describe "/api/v1/registers" do
         #       interval_beginning: interval_information[1],
         #       interval_end: interval_information[2],
         #       value: (rand * 10).to_i,
-        #       scoreable_type: "Register",
+        #       scoreable_type: "Register::#{mode.camelize}",
         #       scoreable_id: register.id
         #     )
         #   end
@@ -366,6 +366,7 @@ describe "/api/v1/registers" do
         #   expect(response).to have_http_status(200)
         #   expect(json["data"].size).to eq(5)
         # end
+
         # it "paginates scores" do
         #   group     = Fabricate(:group)
         #   register  = Fabricate("#{mode}_register_readable_by_world", group: group)
@@ -389,14 +390,14 @@ describe "/api/v1/registers" do
         #   expect(response).to have_http_status(422)
         # end
         #
-        #
+
         # it "paginates comments" do
         #   access_token    = Fabricate(:simple_access_token)
         #   register        = Fabricate("#{mode}_register_readable_by_world")
         #   user            = Fabricate(:user)
         #   comment_params  = {
         #     commentable_id:     register.id,
-        #     commentable_type:   "Register",
+        #     commentable_type:   "Register::#{mode.camelize}",
         #     user_id:            user.id,
         #     parent_id:          "",
         #   }
@@ -407,8 +408,6 @@ describe "/api/v1/registers" do
         #   end
         #   get_with_token "/api/v1/registers/#{mode}s/#{register.id}/comments", access_token.token
         #
-        #   binding.pry
-        #
         #   expect(response).to have_http_status(200)
         #   expect(json["meta"]["total_pages"]).to eq(2)
         #
@@ -417,7 +416,7 @@ describe "/api/v1/registers" do
         #   expect(response).to have_http_status(422)
         # end
 
-        #
+
         # it "gets the related managers for the register only with token" do
         #   access_token    = Fabricate(:simple_access_token)
         #   register  = Fabricate("#{mode}_register_with_manager", readable: "world")
@@ -453,7 +452,7 @@ describe "/api/v1/registers" do
         #   expect(json["data"].size).to eq(2)
         #   expect(json["data"].collect {|d| d["id"]}).to match_array(manager_ids)
         # end
-        #
+
         # it "paginates managers" do
         #   access_token    = Fabricate(:simple_access_token)
         #   register  = Fabricate("#{mode}_register_readable_by_world")
@@ -764,10 +763,10 @@ describe "/api/v1/registers" do
         #   expect(activities.first.key).to eq("register_user_membership.cancel")
         # end
         #
-        #
+
         # it "gets address of the register only with token" do
         #   access_token    = Fabricate(:simple_access_token)
-        #   register  = Fabricate(:register_urbanstr88, readable: "world")
+        #   register        = Fabricate(:register_urbanstr88, readable: "world")
         #   address         = register.address
         #   user            = User.find(access_token.resource_owner_id)
         #
@@ -782,9 +781,9 @@ describe "/api/v1/registers" do
         #   expect(json["data"]["id"]).to eq(address.id)
         #   expect(response).to have_http_status(200)
         # end
-        #
-        #
-        #
+
+
+
         # it "gets only accessible profiles for the register" do
         #   register    = Fabricate("#{mode}_register_readable_by_world")
         #   access_token      = Fabricate(:access_token_with_friend)
@@ -814,23 +813,23 @@ describe "/api/v1/registers" do
         #   expect(json["data"].size).to eq(2)
         # end
         #
-        #
-        # it "gets meter for the register only by managers" do
-        #   Fabricate(:register_operator, name: "buzzn Metering")
-        #   easymeter_60051559  = Fabricate(:easymeter_60051559)
-        #   register      = easymeter_60051559.registers.first
-        #   access_token        = Fabricate(:simple_access_token)
-        #   token_user          = User.find(access_token.resource_owner_id)
-        #   wrong_token         = Fabricate(:simple_access_token)
-        #   token_user.add_role(:manager, register)
-        #
-        #   get_with_token "/api/v1/registers/#{mode}s/#{register.id}/meter", access_token.token
-        #
-        #   expect(response).to have_http_status(200)
-        #   expect(json["data"]["id"]).to eq(register.meter.id)
-        #   get_with_token "/api/v1/registers/#{mode}s/#{register.id}/meter", wrong_token.token
-        #   expect(response).to have_http_status(403)
-        # end
+
+        it "gets meter for the register only by managers" do
+          Fabricate(:register_operator, name: "buzzn Metering")
+          easymeter_60051559  = Fabricate(:easymeter_60051559)
+          register            = easymeter_60051559.registers.first
+          access_token        = Fabricate(:simple_access_token)
+          token_user          = User.find(access_token.resource_owner_id)
+          wrong_token         = Fabricate(:simple_access_token)
+          token_user.add_role(:manager, register)
+
+          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/meter", access_token.token
+
+          expect(response).to have_http_status(200)
+          expect(json["data"]["id"]).to eq(register.meter.id)
+          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/meter", wrong_token.token
+          expect(response).to have_http_status(403)
+        end
 
 
       end

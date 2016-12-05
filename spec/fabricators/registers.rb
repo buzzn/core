@@ -85,14 +85,6 @@ end
 
 
 
-Fabricator :register_z3, from: :register do
-  name  'Ladestation'
-  readable    'world'
-  contracts { [Fabricate(:mpoc_buzzn_metering)] }
-  address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
-end
-
-
 Fabricator :register_z4, from: :register do
   name  'BHKW'
   readable    'world'
@@ -113,7 +105,7 @@ end
 
 
 #felix berlin
-Fabricator :register_urbanstr88, from: :register do
+Fabricator :register_urbanstr88, from: :input_register do
   address  { Fabricate(:address, street_name: 'Urbanstr', street_number: '88', zip: 81667, city: 'Berlin', state: 'Berlin') }
   name  'Wohnung'
 end

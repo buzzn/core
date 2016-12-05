@@ -98,7 +98,12 @@ module API
             oauth2 :simple, :full
             get ":id/comments" do
               register = klass.guarded_retrieve(current_user, permitted_params)
-              paginated_response(register.comment_threads.readable_by(current_user))
+              paginated_response(
+                Comment.where(
+                  commentable_type: "Register::#{mode.camelize}",
+                  commentable_id: register.id
+                  ).readable_by(current_user)
+              )
             end
 
 
