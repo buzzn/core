@@ -4,21 +4,18 @@ require 'buzzn/discovergy/throughput'
 module Buzzn::Discovergy
   class Facade
 
+    SEMAPHORE = Mutex.new
+
     TIMEOUT = 5 # seconds
 
-    attr_reader :consumer
+    attr_reader :consumer_key
 
     def initialize(url='https://api.discovergy.com', max_concurrent=30)
       @url   = url
       @max_concurrent = max_concurrent
       @throughput = Buzzn::Discovergy::Throughput.new
-      @consumer
-
-      @conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
-        faraday.request  :url_encoded
-        faraday.response :logger, Rails.logger if Rails.env == 'development'
-        faraday.adapter :net_http
-      end
+      @consumer_key
+      @consumer_secret
     end
 
     # This function sends the request to the discovergy API and returns the unparsed response
@@ -66,10 +63,10 @@ module Buzzn::Discovergy
           access_token = build_access_token_from_broker_or_new(broker, true)
           response = self.readings(broker, interval, mode, collection, true)
         else
-          raise Buzzn::CrawlerError.new('unauthorized to get data from discovergy: ' + response.body)
+          raise Buzzn::DataSourceError.new('unauthorized to get data from discovergy: ' + response.body)
         end
       else
-        raise Buzzn::CrawlerError.new('unable to get data from discovergy: ' + response.body)
+        raise Buzzn::DataSourceError.new('unable to get data from discovergy: ' + response.body)
       end
       return response
     end
@@ -98,10 +95,10 @@ module Buzzn::Discovergy
           access_token = build_access_token_from_broker_or_new(broker, true)
           response = self.readings(broker, interval, mode, collection, true)
         else
-          raise Buzzn::CrawlerError.new('unauthorized to get data from discovergy: ' + response.body)
+          raise Buzzn::DataSourceError.new('unauthorized to get data from discovergy: ' + response.body)
         end
       else
-        raise Buzzn::CrawlerError.new('unable to get data from discovergy: ' + response.body)
+        raise Buzzn::DataSourceError.new('unable to get data from discovergy: ' + response.body)
       end
       return response
     end
@@ -113,14 +110,22 @@ module Buzzn::Discovergy
     # returns:
     #   OAuth::AccessToken with information from the DB or new one
     def build_access_token_from_broker_or_new(broker, force_new=false)
-      if (@consumer && broker.provider_token_key && broker.provider_token_secret) && !force_new
+      if (@consumer_key && @consumer_secret && broker.provider_token_key && broker.provider_token_secret) && !force_new
         token_hash = {
           :oauth_token          => broker.provider_token_key,
           "oauth_token"         => broker.provider_token_key,
           :oauth_token_secret   => broker.provider_token_secret,
           "oauth_token_secret"  => broker.provider_token_secret
         }
-        access_token = OAuth::AccessToken.from_hash(@consumer, token_hash)
+        consumer = OAuth::Consumer.new(
+          @consumer_key,
+          @consumer_secret,
+          :site => @url,
+          :request_token_path => '/public/v1/oauth1/request_token',
+          :authorize_path => '/public/v1/oauth1/authorize',
+          :access_token_path => '/public/v1/oauth1/access_token'
+        )
+        access_token = OAuth::AccessToken.from_hash(consumer, token_hash)
       else
         access_token = oauth1_process(broker.provider_login, broker.provider_password)
         DiscovergyBroker.where(provider_login: broker.provider_login).update_all(
@@ -145,44 +150,50 @@ module Buzzn::Discovergy
     ################################
 
     def oauth1_process(email, password)
-      request_token = get_request_token
-      verifier = authorize(request_token, email, password)
-      access_token = get_access_token(request_token, verifier, email, password)
-      return access_token
+      SEMAPHORE.synchronize do
+        request_token = get_request_token
+        verifier = authorize(request_token, email, password)
+        access_token = get_access_token(request_token, verifier, email, password)
+        access_token
+      end
     end
 
     def register_application
-      response = @conn.post do |req|
+      conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
+        faraday.request  :url_encoded
+        faraday.response :logger, Rails.logger if Rails.env == 'development'
+        faraday.adapter :net_http
+      end
+      response = conn.post do |req|
         req.url '/public/v1/oauth1/consumer_token'
         req.headers['Content-Type'] = "application/x-www-form-urlencoded"
         req.params['client'] = "buzzn app #{Rails.env}"
       end
       if !response.success?
-        raise Buzzn::CrawlerError.new('unable to register at discovergy')
+        raise Buzzn::DataSourceError.new('unable to register at discovergy')
       end
       json_response = MultiJson.load(response.body)
-      consumer_key = json_response['key']
-      consumer_secret = json_response['secret']
-      if consumer_key.nil? || consumer_secret.nil?
-        raise Buzzn::CrawlerError.new('unable to parse data from discovergy')
+      @consumer_key = json_response['key']
+      @consumer_secret = json_response['secret']
+      if @consumer_key.nil? || @consumer_secret.nil?
+        raise Buzzn::DataSourceError.new('unable to parse data from discovergy')
       end
-
-      @consumer = OAuth::Consumer.new(
-        consumer_key,
-        consumer_secret,
-        :site => @url,
-        :request_token_path => '/public/v1/oauth1/request_token',
-        :authorize_path => '/public/v1/oauth1/authorize',
-        :access_token_path => '/public/v1/oauth1/access_token'
-      )
     end
 
     def get_request_token
-      if !@consumer
+      if !@consumer_key || !@consumer_secret
         register_application
       end
       begin
-        request_token = @consumer.get_request_token
+        consumer = OAuth::Consumer.new(
+          @consumer_key,
+          @consumer_secret,
+          :site => @url,
+          :request_token_path => '/public/v1/oauth1/request_token',
+          :authorize_path => '/public/v1/oauth1/authorize',
+          :access_token_path => '/public/v1/oauth1/access_token'
+        )
+        request_token = consumer.get_request_token
       rescue OAuth::Unauthorized
         register_application
         retry
@@ -190,7 +201,7 @@ module Buzzn::Discovergy
         #       but there is no case in which two calls with different consumers would throw this error
       end
       if !request_token
-        raise Buzzn::CrawlerError.new('unable to get refresh token from discovergy')
+        raise Buzzn::DataSourceError.new('unable to get refresh token from discovergy')
       end
       return request_token
     end
@@ -199,7 +210,12 @@ module Buzzn::Discovergy
       if !request_token
         request_token = get_request_token
       end
-      response = @conn.get do |req|
+      conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
+        faraday.request  :url_encoded
+        faraday.response :logger, Rails.logger if Rails.env == 'development'
+        faraday.adapter :net_http
+      end
+      response = conn.get do |req|
         req.url '/public/v1/oauth1/authorize'
         req.headers['Content-Type'] = 'text/plain'
         req.params['oauth_token'] = request_token.token
@@ -207,7 +223,7 @@ module Buzzn::Discovergy
         req.params['password'] = password
       end
       if !response.success?
-        raise Buzzn::CrawlerError.new('authorization failed at discovergy: ' + response.body)
+        raise Buzzn::DataSourceError.new('authorization failed at discovergy: ' + response.body)
       end
       return response.body.split('=')[1]
     end
@@ -221,7 +237,7 @@ module Buzzn::Discovergy
       end
       access_token = request_token.get_access_token(:oauth_verifier => verifier)
       if !access_token
-        raise Buzzn::CrawlerError.new('unable to get access token from discovergy')
+        raise Buzzn::DataSourceError.new('unable to get access token from discovergy')
       end
       return access_token
     end
@@ -247,8 +263,7 @@ module Buzzn::Discovergy
         end
       end
 
-      # TODO: commented out only for testing!!!!!
-      #private method
+      private method
     end
 
     private
@@ -257,7 +272,7 @@ module Buzzn::Discovergy
       ActiveRecord::Base.clear_active_connections!
       @throughput.increment
       if @throughput.current > @max_concurrent
-        raise Buzzn::CrawlerError.new('discovergy limit reached')
+        raise Buzzn::DataSourceError.new('discovergy limit reached')
       end
     end
 

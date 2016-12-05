@@ -1,7 +1,7 @@
 require 'buzzn'
 
 module Buzzn
-  class CrawlerResult < Array
+  class DataResult < Array
     attr_reader :external_id
 
     def initialize(external_id)
