@@ -108,10 +108,9 @@ Fabricator :register_z4, from: :register do
   name  'BHKW'
   readable    'world'
   mode        'out'
-  #contracts { [Fabricate(:mpoc_buzzn_metering)] }
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
   after_create do |register|
-    Fabricate(:metering_point_operator_contract, register: register).update(status: :running)
+    Fabricate(:metering_point_operator_contract, register: register).update(status: :running, username: 'team@localpool.de', password: 'Zebulon_4711')
   end
 end
 
