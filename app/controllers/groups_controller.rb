@@ -14,8 +14,8 @@ class GroupsController < ApplicationController
     # if url changed redirect to new url
     redirect_to(group_path(@group), status: :moved_permanently) if request.path != group_path(@group)
 
-    @out_registers            = Register.by_group(@group).outputs.without_externals.decorate
-    @in_registers             = Register.by_group(@group).inputs.without_externals.decorate
+    @out_registers            = Register::Base.by_group(@group).outputs.without_externals.decorate
+    @in_registers             = Register::Base.by_group(@group).inputs.without_externals.decorate
     @managers                 = @group.managers
     @energy_producers         = @group.energy_producers.decorate
     @energy_consumers         = @group.energy_consumers.decorate
@@ -76,7 +76,7 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     authorize_action_for @group
     if params[:group][:add_own_register] == "1"
-      @register = Register.find(params[:group][:register_id])
+      @register = Register::Base.find(params[:group][:register_id])
       if @register.group_id != @group.id
         @register.group = @group
         @register.save
@@ -126,7 +126,7 @@ class GroupsController < ApplicationController
     else
       @email = params[:group][:email]
       @new_user = User.invite!({email: @email, invitation_message: params[:group][:message]}, current_user)
-      @register = Register.create!(mode: 'in', name: 'Wohnung', readable: 'friends')
+      @register = Register::Base.create!(mode: 'in', name: 'Wohnung', readable: 'friends')
       @new_user.add_role(:member, @register)
       @new_user.add_role(:manager, @register)
       @meter = Meter.create!(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
@@ -159,7 +159,7 @@ class GroupsController < ApplicationController
   def remove_members_update
     @group = Group.find(params[:id])
     register_id = params[:register_id] || params[:group][:register_id]
-    @register = Register.find(register_id)
+    @register = Register::Base.find(register_id)
     if @group.registers.delete(@register)
       @group.create_activity(key: 'group_register_membership.cancel', owner: @register.managers.first, recipient: @register)
       flash[:notice] = t('register_removed_successfully')

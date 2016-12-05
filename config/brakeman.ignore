@@ -8,14 +8,14 @@
       "file": "app/models/register.rb",
       "line": 75,
       "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "select(\"#{Register.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{Register.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
+      "code": "select(\"#{Register::Base.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{Register::Base.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "Register",
         "method": "anonymized"
       },
-      "user_input": "Register.columns.collect",
+      "user_input": "Register::Base.columns.collect",
       "confidence": "High",
       "note": ""
     },
@@ -46,14 +46,14 @@
       "file": "app/models/register.rb",
       "line": 80,
       "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "select(\"#{Register.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{Register.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
+      "code": "select(\"#{Register::Base.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{Register::Base.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "Register",
         "method": "anonymized"
       },
-      "user_input": "Register.columns.collect",
+      "user_input": "Register::Base.columns.collect",
       "confidence": "High",
       "note": ""
     },

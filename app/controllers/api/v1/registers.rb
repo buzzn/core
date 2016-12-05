@@ -11,16 +11,16 @@ module API
         end
         oauth2 false
         get ":id" do
-          Register.guarded_retrieve(current_user, permitted_params)
+          Register::Base.guarded_retrieve(current_user, permitted_params)
         end
 
 
 
-        desc "Create a Register."
+        desc "Create a Register::Base."
         params do
           requires :name, type: String, desc: "name"
-          requires :mode, type: String, desc: "direction of energie", values: Register.modes
-          requires :readable, type: String, desc: "readable by?", values: Register.readables
+          requires :mode, type: String, desc: "direction of energie", values: Register::Base.modes
+          requires :readable, type: String, desc: "readable by?", values: Register::Base.readables
           requires :meter_id, type: String, desc: "Meter ID"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
@@ -31,24 +31,24 @@ module API
             meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
             attributes[:meter] = meter
           end
-          register = Register.guarded_create(current_user, attributes)
+          register = Register::Base.guarded_create(current_user, attributes)
           created_response(register)
         end
 
 
 
-        desc "Update a Register."
+        desc "Update a Register::Base."
         params do
           requires :id, type: String, desc: 'Register ID.'
           optional :name, type: String, desc: "name"
-          optional :mode, type: String, desc: "direction of energie", values: Register.modes
-          optional :readable, type: String, desc: "readable by?", values: Register.readables
+          optional :mode, type: String, desc: "direction of energie", values: Register::Base.modes
+          optional :readable, type: String, desc: "readable by?", values: Register::Base.readables
           optional :meter_id, type: String, desc: "Meter ID"
           optional :uid,  type: String, desc: "UID(DE00...)"
         end
         oauth2 :simple, :full
         patch ':id' do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                permitted_params)
           attributes = permitted_params.reject { |k,v| k == :meter_id }
           if permitted_params[:meter_id]
@@ -60,13 +60,13 @@ module API
 
 
 
-        desc 'Delete a Register.'
+        desc 'Delete a Register::Base.'
         params do
           requires :id, type: String, desc: 'Register ID.'
         end
         oauth2 :full
         delete ':id' do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                           permitted_params)
           deleted_response(register.guarded_delete(current_user))
         end
@@ -82,7 +82,7 @@ module API
         paginate
         oauth2 false
         get ":id/scores" do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                           permitted_params)
           paginated_response(register.scores.readable_by(current_user))
         end
@@ -98,7 +98,7 @@ module API
         paginate
         oauth2 :simple, :full
         get ':id/comments' do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                           permitted_params)
           paginated_response(register.comment_threads.readable_by(current_user))
         end
@@ -113,7 +113,7 @@ module API
         paginate
         oauth2 :simple, :full
         get [':id/managers', ':id/relationships/managers'] do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                           permitted_params)
           paginated_response(register.managers.readable_by(current_user))
         end
@@ -128,7 +128,7 @@ module API
         end
         oauth2 :full
         post ':id/relationships/managers' do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                permitted_params)
           user     = User.unguarded_retrieve(data_id)
           register.managers.add(current_user, user,
@@ -147,7 +147,7 @@ module API
         end
         oauth2 :full
         patch ':id/relationships/managers' do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                permitted_params)
           # TODO move 'key' logic into metering_point/ManagedRoles
           register.managers.replace(current_user,
@@ -167,7 +167,7 @@ module API
         end
         oauth2 :full
         delete ':id/relationships/managers' do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                permitted_params)
           user     = User.unguarded_retrieve(data_id)
           register.managers.remove(current_user, user)
@@ -181,7 +181,7 @@ module API
         end
         oauth2 :simple, :full
         get ":id/address" do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                           permitted_params)
           register.address.guarded_read(current_user)
         end
@@ -196,7 +196,7 @@ module API
         paginate
         oauth2 false
         get [':id/members', ':id/relationships/members'] do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                           permitted_params)
           paginated_response(register.members.readable_by(current_user))
         end
@@ -211,7 +211,7 @@ module API
         end
         oauth2 :full
         post ':id/relationships/members' do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                permitted_params)
           user     = User.unguarded_retrieve(data_id)
           # TODO move 'key' logic into metering_point/ManagedRoles
@@ -231,7 +231,7 @@ module API
         end
         oauth2 :full
         patch ':id/relationships/members' do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                permitted_params)
           # TODO move 'key' logic into metering_point/ManagedRoles
           register.members.replace(current_user,
@@ -251,7 +251,7 @@ module API
         end
         oauth2 :full
         delete ':id/relationships/members' do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                           permitted_params)
           user           = User.unguarded_retrieve(data_id)
           # TODO move 'key' logic into metering_point/ManagedRoles
@@ -266,7 +266,7 @@ module API
         end
         oauth2 :simple, :full
         get ':id/meter' do
-          register = Register.guarded_retrieve(current_user,
+          register = Register::Base.guarded_retrieve(current_user,
                                                           permitted_params)
           register.meter.guarded_read(current_user)
         end

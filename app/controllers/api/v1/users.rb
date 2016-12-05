@@ -89,7 +89,7 @@ module API
         oauth2 :simple, :full
         get ":id/registers" do
           user = User.guarded_retrieve(current_user, permitted_params)
-          registers = Register.accessible_by_user(user)
+          registers = Register::Base.accessible_by_user(user)
           paginated_response(registers.anonymized_readable_by(current_user))
         end
 

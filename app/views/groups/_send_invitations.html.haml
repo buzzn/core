@@ -6,7 +6,7 @@
     = simple_form_for @group, remote: true, url: send_invitations_update_group_path, method: 'put' do |f|
       = f.input :add_own_register, as: :boolean, wrapper: :vertical_boolean, input_html: { checked: false }
       .js-dependent-fields{data: {checkbox: {id: 'group_add_own_register', value: 'true'}}}
-        = f.input :register_id, collection: Register.editable_by_user(current_user).without_group - @group.registers, input_html: { class: 'select2', 'data-placeholder': t('add_register')}, label: false, selected: '', include_blank: true, :label_method => lambda { |m| m.decorate.name }
+        = f.input :register_id, collection: Register::Base.editable_by_user(current_user).without_group - @group.registers, input_html: { class: 'select2', 'data-placeholder': t('add_register')}, label: false, selected: '', include_blank: true, :label_method => lambda { |m| m.decorate.name }
       .js-dependent-fields{data: {checkbox: {id: 'group_add_own_register', value: 'false'}}}
         %p= t('localpool_invite_registers_info')
         = f.input :new_meters, input_html: { value: ''}

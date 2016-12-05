@@ -3,14 +3,14 @@ class WizardRegistersController  < ApplicationController
   respond_to :html, :js
 
   def wizard
-    @register = Register.new
+    @register = Register::Base.new
     @meter = Meter.new
     @contract = Contract.new
   end
 
   def wizard_update
-    Register.transaction do
-      @register = Register.new(register_params)
+    Register::Base.transaction do
+      @register = Register::Base.new(register_params)
       @register.readable = 'friends'
       if @register.save!
         #byebug

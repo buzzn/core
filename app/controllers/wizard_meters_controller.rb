@@ -4,14 +4,14 @@ class WizardMetersController  < ApplicationController
 
 
   def wizard
-    @register = Register.find(params[:register_id])
+    @register = Register::Base.find(params[:register_id])
     @meter = Meter.new
     @contract = Contract.new
   end
 
   def wizard_update
     Meter.transaction do
-      @register = Register.find(params[:register_id])
+      @register = Register::Base.find(params[:register_id])
       if params[:meter][:existing_meter] == t('add_existing_meter')
         @meter = Meter.find(params[:meter][:meter_id])
         @meter.registers << @register
@@ -77,18 +77,18 @@ class WizardMetersController  < ApplicationController
 
   def edit_wizard
     @meter = Meter.find(params[:meter_id])
-    @register = Register.find(params[:register_id])
+    @register = Register::Base.find(params[:register_id])
     @contract = @meter.registers.first.contracts.metering_point_operators.first || Contract.new
   end
 
   def edit_wizard_update
     Meter.transaction do
       @meter = Meter.find(params[:meter_id])
-      @register = Register.find(params[:register_id])
+      @register = Register::Base.find(params[:register_id])
       #@register_ids = params[:meter][:register_ids]
       @meter.manufacturer_product_serialnumber = params[:meter][:manufacturer_product_serialnumber]
       @meter.manufacturer_name = params[:meter][:manufacturer_name]
-      #@meter.registers = @register_ids.each{|id| Register.find(id)}
+      #@meter.registers = @register_ids.each{|id| Register::Base.find(id)}
 
       if @meter.save
         if params[:meter][:smartmeter] == "1"

@@ -98,7 +98,7 @@ class ContractingParty < ActiveRecord::Base
                                                             organization_id)
     end
     if register_id = params.delete(:register_id)
-      params[:register] = Register.guarded_retrieve(current_user,
+      params[:register] = Register::Base.guarded_retrieve(current_user,
                                                                register_id)
     end
     params

@@ -20,7 +20,7 @@ class DashboardsController < ApplicationController
 
   def add_register_update
     @dashboard = Dashboard.find(params[:id])
-    @registers = Register.find(params[:dashboard][:registers].reject{|id| id.empty?})
+    @registers = Register::Base.find(params[:dashboard][:registers].reject{|id| id.empty?})
     @registers.each do |register|
       if !@dashboard.registers.include?(register)
         @dashboard.registers << register
@@ -33,7 +33,7 @@ class DashboardsController < ApplicationController
 
   def remove_register
     @dashboard = Dashboard.find(params[:dashboard_id])
-    @register = Register.find(params[:register_id])
+    @register = Register::Base.find(params[:register_id])
     if @dashboard.registers.include?(@register)
       @dashboard.registers.delete(@register)
       @dashboard.save
@@ -45,11 +45,11 @@ class DashboardsController < ApplicationController
 
   # def display_register_in_series
   #   @dashboard = Dashboard.find(params[:dashboard_id])
-  #   @register = Register.find(params[:register_id])
+  #   @register = Register::Base.find(params[:register_id])
   #   #@dashboard_register = @dashboard.dashboard_registers[params[:series].to_i - 1]
   #   #@operator = params[:operator]
   #   #@dashboard_register.formula_parts << FormulaPart.create(operator: @operator, register_id: @dashboard_register.id, operand_id: @register.id)
-  #   @dashboard_register = DashboardRegister.where(dashboard_id: @dashboard.id, register_id: @register.id).first
+  #   @dashboard_register = DashboardRegister::Base.where(dashboard_id: @dashboard.id, register_id: @register.id).first
   #   @dashboard_register.displayed = true
   #   @dashboard_register.save
   #   authorize_action_for(@dashboard)
@@ -59,8 +59,8 @@ class DashboardsController < ApplicationController
 
   # def remove_register_from_series
   #   @dashboard = Dashboard.find(params[:dashboard_id])
-  #   @register = Register.find(params[:register_id])
-  #   @dashboard_register = DashboardRegister.where(dashboard_id: @dashboard.id, register_id: @register.id).first
+  #   @register = Register::Base.find(params[:register_id])
+  #   @dashboard_register = DashboardRegister::Base.where(dashboard_id: @dashboard.id, register_id: @register.id).first
   #   @dashboard_register.displayed = false
   #   @dashboard_register.save
   #   authorize_action_for(@dashboard)

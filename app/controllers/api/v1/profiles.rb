@@ -123,7 +123,7 @@ module API
           # this does not match the Authority for readable_by? and should be:
           # `accessible_by_user(profile.user).readable_by?(current_user)`
           # maybe it is just adjusting the test
-          paginated_response(Register.accessible_by_user(profile.user).where(readable: types))
+          paginated_response(Register::Base.accessible_by_user(profile.user).where(readable: types))
         end
 
       end

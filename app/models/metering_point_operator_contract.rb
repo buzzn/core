@@ -15,7 +15,7 @@ class MeteringPointOperatorContract < Contract
   def validate_invariants
     super
     if localpool && register
-      errors.add(:localpool, CAN_NOT_BE_PRESENT + Register.to_s)
+      errors.add(:localpool, CAN_NOT_BE_PRESENT + Register::Base.to_s)
       errors.add(:register, CAN_NOT_BE_PRESENT + 'Localpool') #TODO use class constant for type-safety
     end
     if localpool.nil? && register.nil?

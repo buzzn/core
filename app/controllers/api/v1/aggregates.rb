@@ -17,7 +17,7 @@ module API
         oauth2 false
         get 'present' do
 
-          registers = Register.where(id: permitted_params[:register_ids].split(","))
+          registers = Register::Base.where(id: permitted_params[:register_ids].split(","))
           registers_hash = Aggregate.sort_registers(registers)
 
           if registers.size > 5
@@ -58,7 +58,7 @@ module API
         oauth2 false
         get 'past' do
 
-          registers = Register.where(id: permitted_params[:register_ids].split(","))
+          registers = Register::Base.where(id: permitted_params[:register_ids].split(","))
           registers_hash = Aggregate.sort_registers(registers)
 
           if registers.size > 5

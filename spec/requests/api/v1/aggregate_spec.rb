@@ -1014,7 +1014,7 @@ describe '/api/v1/aggregates' do
         virtual_register = Fabricate(:register_forstenried_erzeugung) # discovergy Virtual register
         single_energy_values = []
         virtual_register.formula_parts.each do |formula_part|
-          register = Register.find(formula_part.operand_id)
+          register = Register::Base.find(formula_part.operand_id)
           request_params = {
             register_ids: register.id,
             resolution: 'month_to_days',

@@ -4,7 +4,7 @@ class CalculateRegisterScoreSufficiencyWorker
 
   def perform(register_id, resolution_format, containing_timestamp)
     if resolution_format == 'day'
-      @register = Register.find(register_id)
+      @register = Register::Base.find(register_id)
       if @register.group
         count_sn_in_register = @register.users.count
         result_in = @register.chart_data(resolution_format, containing_timestamp)

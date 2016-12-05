@@ -50,7 +50,7 @@ class Group < ActiveRecord::Base
   }
 
   scope :members_of_group, ->(group) do
-    mp = Register.arel_table
+    mp = Register::Base.arel_table
     roles = Role.arel_table
     users_roles = Arel::Table.new(:users_roles)
     users = User.arel_table
@@ -61,7 +61,7 @@ class Group < ActiveRecord::Base
     users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
     users_roles_join = users_roles.create_join(roles, users_roles_on)
 
-    roles_register_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(Register.to_s).and(roles[:name].eq(:member))))
+    roles_register_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(Register::Base.to_s).and(roles[:name].eq(:member))))
     roles_register_join = roles.create_join(mp, roles_register_on)
 
 
@@ -82,7 +82,7 @@ class Group < ActiveRecord::Base
       world_or_community = group[:readable].in(['world','community'])
 
       # admin or manager or member query
-      register = Register.arel_table
+      register = Register::Base.arel_table
       admin_or_manager_or_member = User.roles_query(user, manager: group[:id], member: register.alias[:id], admin: nil).project(1).exists
 
       # friends of manager and member of register
@@ -126,7 +126,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.accessible_by_user(user)
-    register = Register.arel_table
+    register = Register::Base.arel_table
     group          = Group.arel_table
     users          = User.roles_query(user, manager: [group[:id], register[:id]], member: register[:id])
 
@@ -141,7 +141,7 @@ class Group < ActiveRecord::Base
   end
 
   def register_users_query(mode = nil)
-    mp             = Register.arel_table
+    mp             = Register::Base.arel_table
     roles          = Role.arel_table
     users_roles    = Arel::Table.new(:users_roles)
     users          = User.arel_table
@@ -180,11 +180,11 @@ class Group < ActiveRecord::Base
   end
 
   def in_registers
-    Register.where(group: self).where(mode: 'in')
+    Register::Base.where(group: self).where(mode: 'in')
   end
 
   def out_registers
-    Register.where(group: self).where(mode: 'out')
+    Register::Base.where(group: self).where(mode: 'out')
   end
 
 

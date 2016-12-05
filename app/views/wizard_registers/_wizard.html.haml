@@ -7,7 +7,7 @@
       - any_editable_registers = current_user.editable_registers.collect(&:meter).uniq.compact.any?
       %h3=t('define_register')
       %fieldset
-        = f.input :mode, collection: Register.modes.map(&:to_sym), include_blank: false, as: :radio_buttons, label: t("register_mode"), checked: Register.modes.first
+        = f.input :mode, collection: Register::Base.modes.map(&:to_sym), include_blank: false, as: :radio_buttons, label: t("register_mode"), checked: Register::Base.modes.first
         = f.input :name
         %span
           = t('virtual_register')

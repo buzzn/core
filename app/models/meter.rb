@@ -22,7 +22,7 @@ class Meter < ActiveRecord::Base
     else
       # admin or manager query
       meter          = Meter.arel_table
-      register = Register.arel_table
+      register = Register::Base.arel_table
       users_roles    = Arel::Table.new(:users_roles)
       admin_or_manager = User.roles_query(user, manager: register[:id], admin: nil)
 
@@ -39,7 +39,7 @@ class Meter < ActiveRecord::Base
   end
 
   def self.accessible_by_user(user)
-    register = Register.arel_table
+    register = Register::Base.arel_table
     manager = User.roles_query(user, manager: register[:id])
     meters = joins(:registers).where(manager.project(1).exists)
     meters

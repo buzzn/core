@@ -19,7 +19,7 @@
 
 
 # Discovergy
-# register = Register.find('b192b036-24ba-467a-906c-d4f642566c54')
+# register = Register::Base.find('b192b036-24ba-467a-906c-d4f642566c54')
 # Benchmark.measure{ Crawler.new(register).live }
 # Benchmark.measure{ Crawler.new(register).hour().count }
 # Benchmark.measure{ Crawler.new(register).day().count }

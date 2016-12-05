@@ -8,7 +8,7 @@ class ReadingsController < ApplicationController
 
   def create
     date = Date.new params[:reading]["timestamp(1i)"].to_i, params[:reading]["timestamp(2i)"].to_i, params[:reading]["timestamp(3i)"].to_i
-    @register = Register.find(params[:reading][:register_id])
+    @register = Register::Base.find(params[:reading][:register_id])
     @meter = @register.meter
     @reading = Reading.new(meter_id: @meter.id, timestamp: date, energy_a_milliwatt_hour: params[:reading][:energy_a_milliwatt_hour])
     @reading.energy_a_milliwatt_hour *= 1000000
@@ -25,7 +25,7 @@ class ReadingsController < ApplicationController
 
   def destroy
     @reading = Reading.find(params[:id])
-    @register = Register.find(@reading[:register_id])
+    @register = Register::Base.find(@reading[:register_id])
     if @reading.destroy
       @register.calculate_forecast
       flash[:notice] = t('reading_deleted_successfully')
