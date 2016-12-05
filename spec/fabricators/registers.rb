@@ -52,10 +52,12 @@ end
 
 
 Fabricator :register_with_device, from: :register do
+  mode     { [:in,:out].sample }
   devices  { [Fabricate(:device)] }
 end
 
 Fabricator :register_with_manager, from: :register do
+  mode { [:in,:out].sample }
   after_create { |register|
     user = Fabricate(:user)
     user.add_role(:manager, register)

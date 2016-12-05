@@ -80,7 +80,7 @@ describe "Registers API" do
 
   it 'does gets a register with full access token as admin' do
     access_token  = Fabricate(:full_access_token_as_admin)
-    register = Fabricate(:register)
+    register = Fabricate(:in_register)
     get_with_token "/api/v1/registers/#{register.id}", access_token.token
     expect(response).to have_http_status(200)
   end
@@ -99,7 +99,7 @@ describe "Registers API" do
     get_with_token "/api/v1/registers/#{register1.id}", access_token.token
     expect(response).to have_http_status(200)
 
-    register3 = Fabricate(:register) # register from unknown user
+    register3 = Fabricate(:out_register) # register from unknown user
     get_with_token "/api/v1/registers/#{register3.id}", access_token.token
     expect(response).to have_http_status(403)
   end
@@ -108,7 +108,7 @@ describe "Registers API" do
 
   it 'does creates a register with full access token as admin' do
     access_token = Fabricate(:full_access_token_as_admin)
-    register = Fabricate.build(:register)
+    register = Fabricate.build(:out_register)
     meter         = Fabricate(:meter)
     request_params = {
       uid:  register.uid,
@@ -132,7 +132,7 @@ describe "Registers API" do
 
 
   it 'does not creates a register without token' do
-    register = Fabricate.build(:register)
+    register = Fabricate.build(:in_register)
     meter        = Fabricate.build(:meter)
 
     request_params = {
@@ -149,7 +149,7 @@ describe "Registers API" do
   end
 
   it 'does not creates a register with missing parameters' do
-    register = Fabricate.build(:register)
+    register = Fabricate.build(:out_register)
     access_token   = Fabricate(:full_access_token)
     meter          = Fabricate(:meter)
 
@@ -176,7 +176,7 @@ describe "Registers API" do
 
 
   it 'does not creates a register with invalid parameters' do
-    register = Fabricate.build(:register)
+    register = Fabricate.build(:in_register)
     access_token   = Fabricate(:full_access_token)
     meter          = Fabricate(:meter)
 
@@ -205,7 +205,7 @@ describe "Registers API" do
   end
 
   it 'does not creates a register with invalid meter_id' do
-    register = Fabricate.build(:register)
+    register = Fabricate.build(:out_register)
     access_token   = Fabricate(:full_access_token)
 
     request_params = {
@@ -225,7 +225,7 @@ describe "Registers API" do
    :smartmeter_access_token].each do |token|
     it "creates a register with #{token}" do
       access_token = Fabricate(token)
-      register = Fabricate.build(:register)
+      register = Fabricate.build(:in_register)
       meter        = Fabricate(:meter)
 
       request_params = {
@@ -249,7 +249,7 @@ describe "Registers API" do
   end
 
   it 'does not update a register with invalid meter_id' do
-    register = Fabricate(:register)
+    register = Fabricate(:out_register)
     access_token   = Fabricate(:full_access_token_as_admin)
 
     patch_with_token "/api/v1/registers/#{register.id}", { meter_id: 'asddsa'}.to_json, access_token.token
@@ -259,7 +259,7 @@ describe "Registers API" do
 
 
   it 'does not update a register with invalid parameters' do
-    register = Fabricate(:register)
+    register = Fabricate(:in_register)
     access_token   = Fabricate(:full_access_token_as_admin)
 
     [:mode, :readable, :name].each do |name|
@@ -346,7 +346,7 @@ describe "Registers API" do
 
 
   it 'does delete a register with manager_token' do
-    register = Fabricate(:register)
+    register = Fabricate(:in_register)
     access_token  = Fabricate(:full_access_token_as_admin)
     delete_with_token "/api/v1/registers/#{register.id}", access_token.token
     expect(response).to have_http_status(204)
@@ -537,7 +537,7 @@ describe "Registers API" do
     user            = Fabricate(:user)
     admin_token     = Fabricate(:full_access_token_as_admin)
     admin           = User.find(admin_token.resource_owner_id)
-    register  = Fabricate(:register)
+    register  = Fabricate(:in_register)
     params = {
       data: { id: user.id }
     }
@@ -659,7 +659,7 @@ describe "Registers API" do
   it 'creates activity when adding register member' do
     user            = Fabricate(:user)
     admin_token     = Fabricate(:full_access_token_as_admin)
-    register  = Fabricate(:register)
+    register  = Fabricate(:out_register)
     params = {
       data: { id: user.id }
     }
@@ -759,7 +759,7 @@ describe "Registers API" do
   it 'creates activity when removing register member' do
     user            = Fabricate(:user)
     admin_token     = Fabricate(:full_access_token_as_admin)
-    register  = Fabricate(:register)
+    register  = Fabricate(:in_register)
     params = {
       data: { id: user.id }
     }
@@ -821,7 +821,6 @@ describe "Registers API" do
 
 
   it 'gets meter for the register only by managers' do
-    Fabricate(:buzzn_metering)
     easymeter_60051559  = Fabricate(:easymeter_60051559)
     register      = easymeter_60051559.registers.first
     access_token        = Fabricate(:simple_access_token)

@@ -305,7 +305,7 @@ describe "Groups API" do
     token_user        = User.find(access_token.resource_owner_id)
     member            = Fabricate(:user)
     group             = Fabricate(:group_readable_by_friends)
-    register    = Fabricate(:register)
+    register    = Fabricate(:out_register)
     member.add_role(:member, register)
     token_user.add_role(:member, register)
     group.registers << register
@@ -317,7 +317,7 @@ describe "Groups API" do
     access_token      = Fabricate(:simple_access_token)
     token_user        = User.find(access_token.resource_owner_id)
     group             = Fabricate(:group_readable_by_members)
-    register    = Fabricate(:register)
+    register    = Fabricate(:in_register)
     token_user.add_role(:member, register)
     group.registers << register
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
@@ -428,7 +428,7 @@ describe "Groups API" do
   it 'gets the related managers for group only with token' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:group)
-    group.registers << Fabricate(:register)
+    group.registers << Fabricate(:in_register)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
     get_with_token "/api/v1/groups/#{group.id}/relationships/managers", access_token.token

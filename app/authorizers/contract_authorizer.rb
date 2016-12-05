@@ -21,7 +21,8 @@ class ContractAuthorizer < ApplicationAuthorizer
   private
 
   def _resources
-    resources = [resource.register, resource.localpool]
+    resources = [resource.register]
+    resources << resource.localpool if resource.respond_to? :localpool
     resources << resource.register.group if resource.register
     resources.compact!
   end
