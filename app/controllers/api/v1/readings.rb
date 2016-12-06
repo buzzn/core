@@ -17,7 +17,7 @@ module API
 
         desc "Create a Reading"
         params do
-          requires :meter_id,                 type: String,   desc: "The ID of meter"
+          requires :register_id,              type: String,   desc: "The ID of register"
           requires :timestamp,                type: DateTime, desc: "DateTime of the reading"
           requires :energy_a_milliwatt_hour,  type: Integer,  desc: "energy A(often consumption) in Milliwatt Hour for the first register"
           optional :energy_b_milliwatt_hour,  type: Integer,  desc: "energy B(often production) in Milliwatt Hour for the second register"

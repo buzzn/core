@@ -5,16 +5,19 @@ Fabricator :reading do
 end
 
 
+['input_register', 'output_register'].each do |register|
 
+  Fabricator "reading_with_easy_meter_q3d_and_#{register}", from: :reading do
+    register_id {
+      Fabricate("easy_meter_q3d_with_#{register}").send(register).id
+    }
+  end
 
-Fabricator :reading_with_easy_meter_q3d_and_input_register, from: :reading do
-  register_id {
-    Fabricate(:easy_meter_q3d_with_input_register).input_register.id
-  }
-end
+  Fabricator "reading_with_easy_meter_q3d_with_#{register}_and_manager", from: :reading do
+    register_id {
+      binding.pry
+      Fabricate("easy_meter_q3d_with_#{register}_and_manager").send(register).id
+    }
+  end
 
-Fabricator :reading_with_easy_meter_q3d_with_input_register_and_manager, from: :reading do
-  register_id {
-    Fabricate(:easy_meter_q3d_with_input_register_and_manager).input_register.id
-  }
 end
