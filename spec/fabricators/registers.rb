@@ -93,7 +93,7 @@ Fabricator :register_z3, from: :input_register do
   end
 end
 
-Fabricator :register_z4, from: :input_register do
+Fabricator :register_z4, from: :output_register do
   name  'BHKW'
   readable    'world'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
