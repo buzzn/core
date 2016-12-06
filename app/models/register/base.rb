@@ -50,8 +50,8 @@ module Register
     #      a single entity via the find method
     default_scope { order('name ASC') } #DESC
 
-    scope :inputs, -> { where(mode: :in) }
-    scope :outputs, -> { where(mode: :out) }
+    scope :inputs, -> { where(type: Register::Input) }
+    scope :outputs, -> { where(type: Register::Output) }
 
     scope :non_privates, -> { where("readable in (?)", ["world", "community", "friends"]) }
     scope :privates, -> { where("readable in (?)", ["members"]) }
