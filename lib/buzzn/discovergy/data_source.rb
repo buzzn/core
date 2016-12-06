@@ -36,6 +36,9 @@ module Buzzn::Discovergy
 
     def collection(group_or_virtual_register, interval, mode)
       map = to_map(group_or_virtual_register)
+#      if !broker.resource.is_a?(Group)
+#        raise Buzzn::DataSourceError.new('ERROR - you requested collected data for a non-group')
+#      end
       if !interval.live?
         raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong resolution')
       end
@@ -55,38 +58,37 @@ module Buzzn::Discovergy
     end
 
     def create_virtual_meter_for_register(register)
-      result = []
-      # TODO: get all the serialnumbers of all input and output registers
+      if !register.is_a?(Register) || !register.virtual
+        raise Buzzn::DataSourceError.new('ERROR - no virtual meters for non-virtual registers')
+      end
+      meter = register.meter
+      # TODO: make this SQL faster
       meter_ids_plus = register.formula_parts.additive.collect(&:operand).collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
       meter_ids_minus = register.formula_parts.subtractive.collect(&:operand).collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
+      if meter_ids_plus.size + meter_ids_minus.size < 2
+        raise Buzzn::DataSourceError.new('Formula has to contain more than one meter.')
+      end
       #TODO: write credentials into secrets or elsewhere ...
       existing_random_broker = DiscovergyBroker.where(provider_login: 'team@localpool.de').first
       response = @facade.create_virtual_meter(existing_random_broker, meter_ids_plus, meter_ids_minus, false)
-      #TODO parse response
-      result.freeze
-      result
-
+      broker = parse_virtual_meter_creation(response.body, 'virtual', meter)
+      return broker
     end
 
     def create_virtual_meters_for_group(group)
-      result = []
+      # TODO: make this SQL faster
       in_meter_ids = group.registers.inputs.collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
       out_meter_ids = group.registers.outputs.collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
-      if in_meter_ids.size < 2 || out_meter_ids.size < 2
-        raise Buzzn::DataSourceError.new('Group has to contain more than one meter.')
+      existing_random_broker = DiscovergyBroker.where(provider_login: 'team@localpool.de').first
+      if in_meter_ids.size > 1
+        response = @facade.do_create_virtual_meter(existing_random_broker, in_meter_ids)
+        in_broker = parse_virtual_meter_creation(response.body, 'in', group)
       end
-      #TODO: write credentials into secrets or elsewhere ...
-      existing_random_broker = DiscovergyBroker.where(provider_login: 'team@localpool.de').where(provider_password: 'Zebulon_4711').first
-      response = @facade.create_virtual_meter(existing_random_broker, in_meter_ids)
-      #TODO parse response
-      response = @facade.create_virtual_meter(existing_random_broker, out_meter_ids)
-      #TODO parse response
-      result.freeze
-      result
-
-      # TODO: send request
-      # TODO: store Broker
-
+      if out_meter_ids.size > 1
+        response = @facade.do_create_virtual_meter(existing_random_broker, out_meter_ids)
+        out_broker = parse_virtual_meter_creation(response.body, 'out', group)
+      end
+      return [in_broker, out_broker].compact
     end
 
 
@@ -97,6 +99,10 @@ module Buzzn::Discovergy
     def parse_aggregated_data(response, interval, mode, two_way_meter, resource_id)
       result = []
       json = MultiJson.load(response)
+      if json.empty?
+        result << Buzzn::DataResult.new(external_id)
+        return result
+      end
 
       case interval.resolution
       when :live
@@ -207,6 +213,19 @@ module Buzzn::Discovergy
         raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong resolution')
       end
       return result
+    end
+
+    def parse_virtual_meter_creation(response, mode, resource)
+      json = MultiJson.load(response)
+      # TODO: Move credentials into secrets
+      broker = DiscovergyBroker.create!(
+        mode: mode,
+        external_id: json['type'] + '_' + json['serialNumber'],
+        provider_login: 'team@localpool.de',
+        provider_password: 'Zebulon_4711',
+        resource: resource
+      )
+      return broker
     end
   end
 end

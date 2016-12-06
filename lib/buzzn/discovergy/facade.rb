@@ -93,8 +93,31 @@ module Buzzn::Discovergy
       when 401
         if !retried
           register_application
+          access_token = build_access_token_from_broker_or_new(existing_random_broker, true)
+          response = self.create_virtual_meter(existing_random_broker, interval, mode, collection, true)
+        else
+          raise Buzzn::DataSourceError.new('unauthorized to create virtual meter at discovergy: ' + response.body)
+        end
+      else
+        raise Buzzn::DataSourceError.new('unable to create virtual meter at discovergy: ' + response.body)
+      end
+      return response
+    end
+
+    def virtual_meter_info(broker, retried=false)
+      access_token = build_access_token_from_broker_or_new(broker)
+      meter_id = broker.external_id
+      query = '/public/v1/virtual_meter?meterId=' + meter_id
+      access_token.get(query)
+      response = access_token.response
+      case response.code.to_i
+      when (200..299)
+        return response
+      when 401
+        if !retried
+          register_application
           access_token = build_access_token_from_broker_or_new(broker, true)
-          response = self.readings(broker, interval, mode, collection, true)
+          response = self.virtual_meter_info(broker, true)
         else
           raise Buzzn::DataSourceError.new('unauthorized to get data from discovergy: ' + response.body)
         end
@@ -249,7 +272,7 @@ module Buzzn::Discovergy
 
 
     [:register_application, :get_request_token, :authorize, :get_access_token, :readings,
-      :create_virtual_meter].each do |method|
+      :create_virtual_meter, :virtual_meter_info].each do |method|
 
       alias :"do_#{method}" :"#{method}"
 

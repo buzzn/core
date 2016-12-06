@@ -34,7 +34,7 @@ class Group < ActiveRecord::Base
   has_many :registers, class_name: Register::Base
 
   has_many :discovergy_brokers, as: :resource
-  
+
   has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
 
   has_many :scores, as: :scoreable
@@ -513,6 +513,19 @@ class Group < ActiveRecord::Base
     fitting.nil? ? fitting_value = -1 : fitting_value = fitting.value
     closeness.nil? ? closeness_value = -1 : closeness_value = closeness.value
     return { sufficiency: sufficiency_value, closeness: closeness_value, autarchy: autarchy_value, fitting: fitting_value }
+  end
+
+  def finalize_registers
+    # TODO: check data source if other organization than discovergy
+    if self.registers.size < 3
+      return false
+    end
+    data_source = Buzzn::Discovergy::DataSource.new
+    brokers = data_source.create_virtual_meters_for_group(self)
+    if brokers.any?
+      return true
+    end
+    return false
   end
 
 

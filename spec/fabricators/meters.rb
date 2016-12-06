@@ -248,7 +248,7 @@ Fabricator :easymeter_60009404, from: :easy_meter_q3d do
 end
 #Wagnis 4 - Nord Wohnung 17
 Fabricator :easymeter_60009405, from: :easy_meter_q3d do
-  manufacturer_product_serialnumber   '600093405'
+  manufacturer_product_serialnumber   '60009405'
 end
 #Wagnis 4 - Nord Wohnung 18
 Fabricator :easymeter_60009422, from: :easy_meter_q3d do
