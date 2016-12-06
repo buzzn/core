@@ -8,7 +8,7 @@ describe "User Model" do
     g
   end
   let(:register) do
-    mp = Fabricate(:register, mode: :out)
+    mp = Fabricate(:output_register)
     manager_mp.add_role(:manager, mp)
     mp.update! group: group
     mp

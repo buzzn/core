@@ -64,8 +64,8 @@ describe "Group Model" do
     user          = Fabricate(:user)
     consumer      = Fabricate(:user)
     producer      = Fabricate(:user)
-    register_in   = Fabricate(:register, mode: 'in')
-    register_out  = Fabricate(:register, mode: 'out')
+    register_in   = Fabricate(:input_register)
+    register_out  = Fabricate(:output_register)
 
     group.registers += [register_in, register_out]
 

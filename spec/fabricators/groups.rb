@@ -42,7 +42,7 @@ end
 Fabricator :group_with_members_readable_by_world, from: :group do
   transient members: 1
   registers do |attrs|
-    register  = Fabricate(:register_readable_by_world)
+    register  = Fabricate(:input_register_readable_by_world)
     attrs[:members].times do
       user          = Fabricate(:user)
       user.add_role(:member, register)
