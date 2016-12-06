@@ -1,13 +1,13 @@
 class ReadingAuthorizer < ApplicationAuthorizer
 
-  def self.creatable_by?(user, meter)
-    meter.updatable_by?(user)
+  def self.creatable_by?(user, register)
+    register.updatable_by?(user)
   end
 
   def readable_by?(user)
-    meter = resource.meter
-    if meter
-      meter.readable_by?(user)
+    register = resource.register
+    if register
+      register.readable_by?(user)
     else
       false
     end

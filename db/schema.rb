@@ -187,14 +187,15 @@ ActiveRecord::Schema.define(version: 20161205131404) do
     t.string   "first_master_uid"
     t.string   "second_master_uid"
     t.string   "metering_point_operator_name"
-    t.string   "old_supplier_name"
+    t.string   "old_electricity_supplier_name"
     t.string   "type"
     t.date     "cancellation_date"
+    t.string   "old_supplier_name"
     t.string   "old_customer_number"
     t.string   "old_account_number"
-    t.uuid     "contractor_id"
-    t.uuid     "customer_id"
-    t.uuid     "signing_user_id"
+    t.uuid     "contractor_id",                                           null: false
+    t.uuid     "customer_id",                                             null: false
+    t.uuid     "signing_user_id",                                         null: false
   end
 
   add_index "contracts", ["contractor_id"], name: "index_contracts_on_contractor_id", using: :btree
@@ -478,7 +479,7 @@ ActiveRecord::Schema.define(version: 20161205131404) do
 
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
 
-  create_table "payments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "payments", force: :cascade do |t|
     t.date    "begin_date",  null: false
     t.date    "end_date"
     t.integer "price_cents", null: false
@@ -613,7 +614,7 @@ ActiveRecord::Schema.define(version: 20161205131404) do
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
-  create_table "tariffs", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "tariffs", force: :cascade do |t|
     t.string  "name",                      null: false
     t.date    "begin_date",                null: false
     t.date    "end_date"

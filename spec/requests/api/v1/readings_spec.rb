@@ -28,7 +28,7 @@ describe "Readings API" do
 
   it 'gets a reading with simple access token as manager' do
     reading       = Fabricate(:reading_with_easy_meter_q3d_with_input_register_and_manager)
-    manager       = reading.meter.registers.first.managers.first
+    manager       = reading.register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     get_with_token "/api/v1/readings/#{reading.id}", access_token.token
     expect(response).to have_http_status(200)
