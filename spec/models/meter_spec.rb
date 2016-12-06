@@ -32,10 +32,10 @@ describe "Meter Model" do
   let(:meter) { Fabricate(:meter) }
   let(:second) do
     second = Fabricate(:meter)
-    Fabricate(:in_register, meter: second)
+    Fabricate(:input_register, meter: second)
     second
   end
-  let(:register) { Fabricate(:in_register, meter: meter) }
+  let(:register) { Fabricate(:input_register, meter: meter) }
   let(:user) { Fabricate(:user) }
   let(:admin) do
     admin = Fabricate(:user)

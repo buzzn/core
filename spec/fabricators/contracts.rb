@@ -34,7 +34,7 @@ Fabricator :metering_point_operator_contract_of_localpool, from: :metering_point
 end
 
 Fabricator :metering_point_operator_contract_of_register, from: :metering_point_operator_contract do
-  register { Fabricate([:in_register,:out_register].sample) }
+  register { Fabricate([:input_register,:output_register].sample) }
 end
 
 Fabricator :metering_point_operator_contract_of_localpool_for_organization, from: :metering_point_operator_contract_of_localpool do
@@ -63,7 +63,7 @@ Fabricator :power_taker_contract do
   forecast_kwh_pa          { rand(100) + 1 }
   customer                 { Fabricate(:contracting_party,
                                        user: Fabricate(:user)) }
-  register                 { Fabricate(:in_register,
+  register                 { Fabricate(:input_register,
                                        meter: Fabricate.build(:meter),
                                        address: Fabricate.build(:address) ) }
 end
@@ -104,7 +104,7 @@ Fabricator :power_giver_contract do
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
-  register                 { Fabricate(:out_register,
+  register                 { Fabricate(:output_register,
                                        meter: Fabricate.build(:meter),
                                        address: Fabricate.build(:address) ) }
   customer                 { Fabricate(:contracting_party,
@@ -133,7 +133,7 @@ Fabricator :localpool_power_taker_contract do
   forecast_kwh_pa          { rand(100) }
   customer                 { Fabricate(:contracting_party,
                                        user: Fabricate(:user)) }
-  register                 { Fabricate(:in_register,
+  register                 { Fabricate(:input_register,
                                        group: Fabricate(:localpool),
                                        meter: Fabricate.build(:meter),
                                        address: Fabricate.build(:address) ) }

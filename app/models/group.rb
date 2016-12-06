@@ -179,11 +179,11 @@ class Group < ActiveRecord::Base
     self.class.members_of_group(self)
   end
 
-  def in_registers
+  def input_registers
     Register::Base.where(group: self).where(mode: 'in')
   end
 
-  def out_registers
+  def output_registers
     Register::Base.where(group: self).where(mode: 'out')
   end
 
@@ -454,8 +454,8 @@ class Group < ActiveRecord::Base
   end
 
   def bubbles_personal_data(requesting_user)
-    out_register_personal_data = []
-    in_register_personal_data = []
+    output_register_personal_data = []
+    input_register_personal_data = []
     self.registers.without_externals.each do |register|
       register_name = register.decorate.name_with_users
       if register.involved.any?
@@ -473,12 +473,12 @@ class Group < ActiveRecord::Base
       end
       personal_data_entry = {:register_id => register.id, :name => register_name, :own_register => own_register, :readable => readable}
       if register.mode == 'out'
-        out_register_personal_data.push(personal_data_entry)
+        output_register_personal_data.push(personal_data_entry)
       else
-        in_register_personal_data.push(personal_data_entry)
+        input_register_personal_data.push(personal_data_entry)
       end
     end
-    personal_data = {:in => in_register_personal_data, :out => out_register_personal_data}
+    personal_data = {:in => input_register_personal_data, :out => output_register_personal_data}
     return personal_data
   end
 

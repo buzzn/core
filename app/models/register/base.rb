@@ -90,8 +90,7 @@ module Register
       if group_check
         # register belongs to readable group
         group = Group.arel_table
-        belongs_to_readable_group =
-          Group.readable_by(user).where(group[:id].eq(register[:group_id]))
+        belongs_to_readable_group = Group.readable_by(user).where(group[:id].eq(register[:group_id]))
         # sql fragment 'exists select 1 where .....'
         sqls << belongs_to_readable_group.project(1).exists
       end

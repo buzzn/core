@@ -190,7 +190,7 @@ describe "Groups API" do
   end
 
   it 'does not create a group with invalid parameter' do
-    register = Fabricate(:out_register_with_manager)
+    register = Fabricate(:output_register_with_manager)
     manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
@@ -218,7 +218,7 @@ describe "Groups API" do
 
 
   it 'creates a group' do
-    register = Fabricate(:out_register_with_manager)
+    register = Fabricate(:output_register_with_manager)
     manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
@@ -255,7 +255,7 @@ describe "Groups API" do
   end
 
   it 'updates a group' do
-    register = Fabricate(:out_register_with_manager)
+    register = Fabricate(:output_register_with_manager)
     manager       = register.managers.first
     access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
     group = Fabricate(:group)
@@ -272,7 +272,7 @@ describe "Groups API" do
 
 
   it 'does delete a group' do
-    register = Fabricate(:out_register_with_manager)
+    register = Fabricate(:output_register_with_manager)
     manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
@@ -305,7 +305,7 @@ describe "Groups API" do
     token_user        = User.find(access_token.resource_owner_id)
     member            = Fabricate(:user)
     group             = Fabricate(:group_readable_by_friends)
-    register    = Fabricate(:out_register)
+    register    = Fabricate(:output_register)
     member.add_role(:member, register)
     token_user.add_role(:member, register)
     group.registers << register
@@ -317,7 +317,7 @@ describe "Groups API" do
     access_token      = Fabricate(:simple_access_token)
     token_user        = User.find(access_token.resource_owner_id)
     group             = Fabricate(:group_readable_by_members)
-    register    = Fabricate(:in_register)
+    register    = Fabricate(:input_register)
     token_user.add_role(:member, register)
     group.registers << register
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
@@ -342,7 +342,7 @@ describe "Groups API" do
       Fabricate(:register_readable_by_community),
       Fabricate(:register_readable_by_friends),
       Fabricate(:register_readable_by_members),
-      Fabricate(:out_register_readable_by_world),
+      Fabricate(:output_register_readable_by_world),
     ]
 
     get_without_token "/api/v1/groups/#{group.id}/registers"
@@ -428,7 +428,7 @@ describe "Groups API" do
   it 'gets the related managers for group only with token' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:group)
-    group.registers << Fabricate(:in_register)
+    group.registers << Fabricate(:input_register)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
     get_with_token "/api/v1/groups/#{group.id}/relationships/managers", access_token.token

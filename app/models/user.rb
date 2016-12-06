@@ -397,7 +397,7 @@ private
 
   def delete_content
     self.editable_groups.each do |group|
-      if (group.managers.count == 1 && !group.in_registers.collect{|register| self.can_update?(register)}.include?(false))
+      if (group.managers.count == 1 && !group.input_registers.collect{|register| self.can_update?(register)}.include?(false))
         group.destroy
       end
     end

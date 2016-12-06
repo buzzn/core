@@ -245,7 +245,7 @@ describe "Users API" do
   it 'gets related registers for User' do
     access_token    = Fabricate(:simple_access_token)
     user            = User.find(access_token.resource_owner_id)
-    register  = Fabricate(:in_register)
+    register  = Fabricate(:input_register)
     user.add_role(:member, register)
     get_with_token "/api/v1/users/#{user.id}/registers", access_token.token
     expect(response).to have_http_status(200)
@@ -256,8 +256,8 @@ describe "Users API" do
       meter1 = Fabricate(:meter)
       meter2 = Fabricate(:meter)
       meter3 = Fabricate(:meter)
-      mp1    = Fabricate(:in_register, meter: meter1)
-      mp2    = Fabricate(:out_register, meter: meter2)
+      mp1    = Fabricate(:input_register, meter: meter1)
+      mp2    = Fabricate(:output_register, meter: meter2)
 
       access_token = Fabricate(token)
       user         = User.find(access_token.resource_owner_id)
@@ -275,7 +275,7 @@ describe "Users API" do
     user          = Fabricate(:user)
     page_overload.times do
       meter = Fabricate(:meter)
-      mp    = Fabricate(:out_register, meter: meter)
+      mp    = Fabricate(:output_register, meter: meter)
       user.add_role(:manager, mp)
     end
     get_with_token "/api/v1/users/#{user.id}/meters", manager_token
@@ -290,7 +290,7 @@ describe "Users API" do
     access_token = Fabricate(:full_access_token_as_admin).token
     user         = Fabricate(:user)
     page_overload.times do
-      register  = Fabricate(:in_register)
+      register  = Fabricate(:input_register)
       user.add_role(:member, register)
     end
     get_with_token "/api/v1/users/#{user.id}/registers", access_token
@@ -306,8 +306,8 @@ describe "Users API" do
     meter1 = Fabricate(:meter)
     meter2 = Fabricate(:meter)
     meter3 = Fabricate(:meter)
-    mp1    = Fabricate(:in_register, meter: meter1)
-    mp2    = Fabricate(:out_register, meter: meter2)
+    mp1    = Fabricate(:input_register, meter: meter1)
+    mp2    = Fabricate(:output_register, meter: meter2)
 
     access_token  = Fabricate(:full_access_token)
     user          = User.find(access_token.resource_owner_id)

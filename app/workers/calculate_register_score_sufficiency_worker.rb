@@ -6,15 +6,15 @@ class CalculateRegisterScoreSufficiencyWorker
     if resolution_format == 'day'
       @register = Register::Base.find(register_id)
       if @register.group
-        count_sn_in_register = @register.users.count
+        count_sn_input_register = @register.users.count
         result_in = @register.chart_data(resolution_format, containing_timestamp)
         if result_in.empty?
           watt_hour = 0
         else
           watt_hour = result_in[0][1]
         end
-        if count_sn_in_register != 0
-          sufficiency = @register.group.extrapolate_kwh_pa(watt_hour, resolution_format, containing_timestamp)/count_sn_in_register
+        if count_sn_input_register != 0
+          sufficiency = @register.group.extrapolate_kwh_pa(watt_hour, resolution_format, containing_timestamp)/count_sn_input_register
         else
           sufficiency = 0
         end

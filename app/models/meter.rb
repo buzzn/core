@@ -8,9 +8,10 @@ class Meter < ActiveRecord::Base
   has_ancestry
   validates :manufacturer_product_serialnumber, presence: true, uniqueness: true   #, unless: "self.virtual"
   mount_uploader :image, PictureUploader
-  before_destroy :release_registers
   has_many :equipments
-  has_many :registers
+
+  has_one :input_register, class_name: 'Register::Input', dependent: :destroy
+  has_one :output_register, class_name: 'Register::Output', dependent: :destroy
 
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
@@ -21,16 +22,15 @@ class Meter < ActiveRecord::Base
       where('1=0')
     else
       # admin or manager query
-      meter          = Meter.arel_table
-      register = Register::Base.arel_table
-      users_roles    = Arel::Table.new(:users_roles)
+      meter            = Meter.arel_table
+      register         = Register::Base.arel_table
+      users_roles      = Arel::Table.new(:users_roles)
       admin_or_manager = User.roles_query(user, manager: register[:id], admin: nil)
 
       # with AR5 you can use left_outer_joins directly
       # `left_outer_joins(:registers)` instead of this register_on and register_join
       register_on   = meter.create_on(meter[:id].eq(register[:meter_id]))
-      register_join = meter.create_join(register, register_on,
-                                  Arel::Nodes::OuterJoin)
+      register_join = meter.create_join(register, register_on, Arel::Nodes::OuterJoin)
 
       # need left outer join to get all meters without register as well
       # sql fragment 'exists select 1 where .....'
@@ -67,7 +67,7 @@ class Meter < ActiveRecord::Base
     }.map(&:to_sym)
   end
 
-
+  # TODO delete this
   def self.pull_readings
     update_info = []
     Meter.where(init_reading: true, smart: true, online: true).each do |meter|
@@ -100,7 +100,7 @@ class Meter < ActiveRecord::Base
     return update_info
   end
 
-
+  # TODO delete this
   def self.reactivate
     Meter.where(init_reading: true, smart: true, online: false).select(:id).each do |meter|
       Sidekiq::Client.push({
@@ -126,18 +126,6 @@ class Meter < ActiveRecord::Base
 
   def self.filter(value)
     do_filter(value, *search_attributes)
-  end
-
-private
-
-  def release_registers
-    self.registers.each do |register|
-      register.contracts.metering_point_operators.each do |contract|
-        contract.destroy
-      end
-      register.meter = nil
-      register.save
-    end
   end
 
 

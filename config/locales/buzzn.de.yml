@@ -123,14 +123,14 @@ de:
   add_in_out_metering: Einspeisezähler hinzufügen
   add_diff_metering: Abgrenzungszähler hinzufügen
 
-  add_out_register: Zählpunkt für Generatorzähler hinzufügen
-  add_in_register: Zählpunkt für Verbrauchszähler hinzufügen
-  add_in_out_register: Zählpunkt für Einspeisezähler hinzufügen
+  add_output_register: Zählpunkt für Generatorzähler hinzufügen
+  add_input_register: Zählpunkt für Verbrauchszähler hinzufügen
+  add_in_output_register: Zählpunkt für Einspeisezähler hinzufügen
   add_diff_register: Zählpunkt für Abgrenzungszähler hinzufügen
 
   out_root_register: Einspeisung
   in_root_register: Bezug
-  in_register: Bezug
+  input_register: Bezug
 
   create_register: Zählpunkt erstellen
 
@@ -690,7 +690,7 @@ de:
   cannot_delete_register_while_running_contract_exists: "Der Zählpunkt kann nicht gelöscht werden, solange er noch laufende Verträge besitzt."
   cannot_delete_group_while_running_contracts_exists: "Die Gruppe kann nicht gelöscht werden, solange sie noch laufende Verträge besitzt."
   enter_your_text: Text hier eingeben
-  out_registers: Produktionszählpunkte
+  output_registers: Produktionszählpunkte
   create_comment: Abschicken
   create_new_comment_here: Neuen Kommentar hier erstellen
   friend_request: Freundschaftsanfrage
@@ -702,7 +702,7 @@ de:
   help: Hilfe
   remove_from_dashboard: Vom Dashboard entfernen
   add_registers_to_dashboard: Zählpunkte zum Dashboard hinzufügen
-  type_in_register_name_or_choose_from_dropdown: "Hier Zählpunktname eingeben oder Zählpunkt(e) aus Dropdown auswählen"
+  type_input_register_name_or_choose_from_dropdown: "Hier Zählpunktname eingeben oder Zählpunkt(e) aus Dropdown auswählen"
   display_in_series: Im Diagramm anzeigen
   series: Graph
   my_dashboard: Mein Dashboard

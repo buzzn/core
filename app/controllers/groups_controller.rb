@@ -14,14 +14,14 @@ class GroupsController < ApplicationController
     # if url changed redirect to new url
     redirect_to(group_path(@group), status: :moved_permanently) if request.path != group_path(@group)
 
-    @out_registers            = Register::Base.by_group(@group).outputs.without_externals.decorate
-    @in_registers             = Register::Base.by_group(@group).inputs.without_externals.decorate
+    @output_registers            = Register::Base.by_group(@group).outputs.without_externals.decorate
+    @input_registers             = Register::Base.by_group(@group).inputs.without_externals.decorate
     @managers                 = @group.managers
     @energy_producers         = @group.energy_producers.decorate
     @energy_consumers         = @group.energy_consumers.decorate
     @group_register_requests  = @group.received_group_register_requests
     @all_comments             = @group.root_comments
-    @out_devices              = @out_registers.collect(&:devices)
+    @out_devices              = @output_registers.collect(&:devices)
     @activities               = @group.activities.group_joins
     @activities_and_comments  = (@all_comments + @activities).sort_by!(&:created_at).reverse!
 

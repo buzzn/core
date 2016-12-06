@@ -6,7 +6,7 @@
 
   Fabricator "#{mode}_register", class_name: klass do
     name        mode
-    uid         { sequence(:uid, 10688251510000000000002677114) }
+    uid         { "DE" + Random.new_seed.to_s.slice(0, 29) }
     readable    'friends'
   end
 

@@ -18,7 +18,7 @@ end
 
 Fabricator :out_device_with_register, from: :out_device do
   after_create { |device|
-    device.register = Fabricate(:out_register)
+    device.register = Fabricate(:output_register)
     device.save!
   }
 end

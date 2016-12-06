@@ -6,7 +6,7 @@ describe "BankAccount Model" do
     user.add_role(:manager, register)
     user
   end
-  let(:register) { Fabricate(:in_register) }
+  let(:register) { Fabricate(:input_register) }
   let(:manager_group) do
     group = Fabricate(:localpool)
     group
