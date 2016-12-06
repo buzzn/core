@@ -180,11 +180,11 @@ class Group < ActiveRecord::Base
   end
 
   def input_registers
-    Register::Base.where(group: self).where(mode: 'in')
+    Register::Input.where(group: self)
   end
 
   def output_registers
-    Register::Base.where(group: self).where(mode: 'out')
+    Register::Output.where(group: self)
   end
 
 

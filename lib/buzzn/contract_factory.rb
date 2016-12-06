@@ -55,10 +55,9 @@ module Buzzn
           meter = Meter.create!(self.meter)
           # TODO d osomething with this counting_point
           counting_poing = self.register.delete(:counting_point)
-          register = create(Register,
+          register = create(Register::Input,
                                   self.register,
                                   name: 'Wohnung',
-                                  mode: 'in',
                                   meter: meter,
                                   readable: 'friends',
                                   address: other || address)

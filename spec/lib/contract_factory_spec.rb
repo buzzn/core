@@ -35,7 +35,7 @@ describe Buzzn::ContractFactory do
     end
 
     let(:register) do
-      { register: Fabricate.build(:register).attributes }
+      { register: Fabricate.build(:input_register).attributes }
     end
 
     let(:first_contract) do
