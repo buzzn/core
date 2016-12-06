@@ -61,7 +61,7 @@ class Group < ActiveRecord::Base
     users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
     users_roles_join = users_roles.create_join(roles, users_roles_on)
 
-    roles_register_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(Register::Base.to_s).and(roles[:name].eq(:member))))
+    roles_register_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:name].eq(:member)))
     roles_register_join = roles.create_join(mp, roles_register_on)
 
 
@@ -140,7 +140,7 @@ class Group < ActiveRecord::Base
     slug.blank? || name_changed?
   end
 
-  def register_users_query(mode = nil)
+  def register_users_query(type = nil)
     mp             = Register::Base.arel_table
     roles          = Role.arel_table
     users_roles    = Arel::Table.new(:users_roles)
@@ -148,7 +148,7 @@ class Group < ActiveRecord::Base
     role_names     = [:manager, :member]
 
     register_on = mp[:group_id].eq(self.id)
-    register_on = register_on.and(mp[:mode].eq(mode)) if mode
+    register_on = register_on.and(mp[:type].eq(type)) if type
     users_roles.join(mp)
       .on(register_on)
       .join(roles)
@@ -158,11 +158,11 @@ class Group < ActiveRecord::Base
   end
 
   def energy_producers
-    User.where(register_users_query('out').project(1).exists.to_sql)
+    User.where(register_users_query(Register::Output).project(1).exists.to_sql)
   end
 
   def energy_consumers
-    User.where(register_users_query('in').project(1).exists.to_sql)
+    User.where(register_users_query(Register::Input).project(1).exists.to_sql)
   end
 
   def member?(register)
