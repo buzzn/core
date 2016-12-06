@@ -1,6 +1,6 @@
 class CreatePayment < ActiveRecord::Migration
   def change
-    create_table :payments do |t|
+    create_table :payments, id: :uuid do |t|
       t.date :begin_date, null: false
       t.date :end_date
       t.integer :price_cents, null: false

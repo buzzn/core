@@ -250,9 +250,16 @@ end
 
 Fabricator :mpoc_karin, from: :metering_point_operator_contract do
   contractor    Organization.discovergy.contracting_party
+  customer      { Fabricate(:karin).contracting_parties.first }
   username      'karin.smith@solfux.de'
   password      '19200buzzn'
   register      { Fabricate(:register_pv_karin) }
+  status        :running
+  after_create do |c|
+    karin = c.customer.user
+    karin.add_role :member, c.register
+    karin.add_role :manager, c.register
+  end
 end
 
 

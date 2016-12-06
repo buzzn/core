@@ -14,8 +14,8 @@ namespace :db do
                   'db:drop',
                   'db:create',
                   'db:migrate',
-                  #'zip2price:all',
-                  #'banks:import',
+                  'zip2price:all',
+                  'banks:import',
                   'db:seed',
                   'slp:import_h0',
                   'sep:import_pv_bhkw'

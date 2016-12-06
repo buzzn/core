@@ -5,6 +5,6 @@ class AddFieldsToContractingParty < ActiveRecord::Migration
     add_column :contracting_parties, :subject_to_tax, :boolean
     add_column :contracting_parties, :mandate_reference, :string
     add_column :contracting_parties, :creditor_id, :string
-    remove_column :contracting_parties, :register_id
+    remove_column :contracting_parties, :metering_point_id
   end
 end

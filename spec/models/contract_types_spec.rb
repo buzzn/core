@@ -78,11 +78,7 @@ describe "Contract Model" do
    :localpool_processing_contract_for_organization].each do |c|
 
     it "creates valid #{c}" do
-      begin
-        contract = send c
-      rescue => e
-        binding.pry
-      end
+      contract = send c
       expect(contract.valid?).to eq true
     end
   end

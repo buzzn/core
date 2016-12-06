@@ -47,6 +47,7 @@ class Organization < ActiveRecord::Base
   # define some predefined organziation with cache
   { dummy: 'dummy organization',
     dummy_energy: 'dummy energy supplier',
+    buzzn_reader: 'buzzn Reader',
     buzzn_energy: 'buzzn GmbH',
     buzzn_systems: 'buzzn systems UG',
     discovergy: 'Discovergy',
