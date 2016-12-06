@@ -168,7 +168,7 @@ http_interactions:
   recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
 - request:
     method: post
-    uri: https://api.discovergy.com/public/v1/virtual_meter?meterIdsPlus=EASYMETER_60009393,EASYMETER_60009441,EASYMETER_60009442
+    uri: https://api.discovergy.com/public/v1/virtual_meter?meterIdsPlus=EASYMETER_60009393,EASYMETER_60009442,EASYMETER_60009441
     body:
       encoding: UTF-8
       string: ''
@@ -216,7 +216,7 @@ http_interactions:
   recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
 - request:
     method: post
-    uri: https://api.discovergy.com/public/v1/virtual_meter?meterIdsPlus=EASYMETER_60118460,EASYMETER_60118470
+    uri: https://api.discovergy.com/public/v1/virtual_meter?meterIdsPlus=EASYMETER_60118470,EASYMETER_60118460
     body:
       encoding: UTF-8
       string: ''
