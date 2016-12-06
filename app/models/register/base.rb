@@ -257,11 +257,11 @@ module Register
 
 
     def output?
-      self.mode == 'out'
+      self.class == Register::Output
     end
 
     def input?
-      self.mode == 'in'
+      self.class == Register::Input
     end
 
     def smart?
