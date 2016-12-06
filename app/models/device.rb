@@ -9,7 +9,7 @@ class Device < ActiveRecord::Base
   #tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
   #tracked recipient: Proc.new{ |controller, model| controller && model }
 
-  belongs_to :register
+  belongs_to :register, class_name: Register::Base
 
   mount_uploader :image, PictureUploader
 
