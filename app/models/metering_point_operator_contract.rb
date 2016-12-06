@@ -5,7 +5,7 @@ class MeteringPointOperatorContract < Contract
   end
 
   belongs_to :localpool, class_name: 'Group'
-  belongs_to :register
+  belongs_to :register, class_name: Register::Base
 
   validates :register, presence: false
   validates :localpool, presence: false

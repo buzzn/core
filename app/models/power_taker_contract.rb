@@ -4,7 +4,7 @@ class PowerTakerContract < PowerContract
     super
   end
 
-  belongs_to :register
+  belongs_to :register, class_name: Register::Input
 
   validates :register, presence: true
   validates :old_supplier_name, presence: false
@@ -34,12 +34,9 @@ class PowerTakerContract < PowerContract
       errors.add(:begin_date, IS_MISSING) unless begin_date
     end
 
-    if register
-      unless register.address
-        # TODO shall this be a requirement for register anyways ?
-        errors.add(:register, 'missing Register Address')
-      end
-      errors.add(:register, 'needs to have `in` mode') if register.mode != 'in'
+    unless register.address
+      # TODO shall this be a requirement for register anyways ?
+      errors.add(:register, 'missing Register Address')
     end
   end
 

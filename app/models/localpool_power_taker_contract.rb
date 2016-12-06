@@ -4,7 +4,7 @@ class LocalpoolPowerTakerContract < BuzznSystemsContract
     super
   end
 
-  belongs_to :register
+  belongs_to :register, class_name: Register::Input
 
   validates :register, presence: true
   validates :forecast_kwh_pa, numericality: { only_integer: true, greater_than: 0 }
@@ -14,7 +14,6 @@ class LocalpoolPowerTakerContract < BuzznSystemsContract
 
   def validate_invariants
     super
-    errors.add(:register, 'needs to have `in` mode') if register.mode != 'in'
     if register.group.nil? || register.group.mode != 'localpool'
       errors.add(:register, MUST_BELONG_TO_LOCALPOOL)
     end

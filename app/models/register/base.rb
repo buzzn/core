@@ -25,7 +25,7 @@ module Register
     accepts_nested_attributes_for :formula_parts, reject_if: :all_blank, :allow_destroy => true
 
     has_many :contracts, dependent: :destroy, foreign_key: 'register_id'
-    has_many :devices
+    has_many :devices, foreign_key: 'register_id'
     has_one :address, as: :addressable, dependent: :destroy
 
     has_many :scores, as: :scoreable

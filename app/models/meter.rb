@@ -10,8 +10,7 @@ class Meter < ActiveRecord::Base
   mount_uploader :image, PictureUploader
   has_many :equipments
 
-  has_one :input_register, class_name: 'Register::Input', dependent: :destroy
-  has_one :output_register, class_name: 'Register::Output', dependent: :destroy
+  has_one :register, class_name: 'Register::Base', dependent: :destroy
 
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)

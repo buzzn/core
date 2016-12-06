@@ -31,7 +31,7 @@ class Group < ActiveRecord::Base
 
   has_many :contracts, dependent: :destroy, foreign_key: :localpool_id
   has_one  :area
-  has_many :registers
+  has_many :registers, class_name: Register::Base
 
   has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
 

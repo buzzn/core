@@ -5,7 +5,7 @@ class ContractingParty < ActiveRecord::Base
   include Buzzn::GuardedCrud
 
   belongs_to :user
-  belongs_to :register
+  belongs_to :register, class_name: Register::Base, foreign_key: :register_id
 
   has_many :owned_contracts, class_name: 'Contract', foreign_key: 'contractor_id'
   has_many :assigned_contracts, class_name: 'Contract', foreign_key: 'customer_id'

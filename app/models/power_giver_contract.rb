@@ -4,7 +4,7 @@ class PowerGiverContract < PowerContract
     super
   end
 
-  belongs_to :register
+  belongs_to :register, class_name: Register::Output
 
   validates :register, presence: true
   validates :confirm_pricing_model, presence: true
@@ -14,7 +14,6 @@ class PowerGiverContract < PowerContract
   def validate_invariants
     super
     if register
-      errors.add(:register, 'needs to have `out` mode') if register.mode != 'out'
     end
     errors.add(:confirm_pricing_model, MUST_BE_TRUE) unless confirm_pricing_model
   end
