@@ -2,7 +2,7 @@
 Fabricator :meter do
   manufacturer_name           'ferraris'
   manufacturer_product_name    'AS 1440'
-  manufacturer_product_serialnumber  { sequence(:manufacturer_product_serialnumber, 3353984) }
+  manufacturer_product_serialnumber  { Random.new_seed.to_s.slice(0, 7) }
   metering_type { Buzzn::Zip2Price.types.first }
 end
 
@@ -12,11 +12,17 @@ Fabricator :easy_meter_q3d, from: :meter  do
   smart true
 end
 
+
 Fabricator :easy_meter_q3d_with_input_register, from: :easy_meter_q3d  do
-  input_register {Fabricate(:input_register)}
+  input_register
 end
 
 Fabricator :easy_meter_q3d_with_output_register, from: :easy_meter_q3d  do
+  output_register
+end
+
+
+Fabricator :easy_meter_q3d_with_output_register_and_manager, from: :easy_meter_q3d  do
   output_register {[Fabricate(:output_register_with_manager)]}
 end
 
@@ -28,7 +34,7 @@ Fabricator :easy_meter_q3d_with_in_output_register, from: :easy_meter_q3d  do
   }
 end
 
-Fabricator :easy_meter_q3d_with_manager, from: :easy_meter_q3d do
+Fabricator :easy_meter_q3d_with_input_register_and_manager, from: :easy_meter_q3d do
   after_create { |meter|
     mp = Fabricate(:input_register, meter: meter)
     user = Fabricate(:user)
