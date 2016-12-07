@@ -1,6 +1,6 @@
 # coding: utf-8
 Fabricator :group do
-  name        { FFaker::Company.name }
+  name        { FFaker::Company.name[0..39] }
   description { FFaker::Lorem.paragraphs.join('-') }
   readable    'world'
 end
