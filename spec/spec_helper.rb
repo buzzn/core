@@ -87,6 +87,11 @@ RSpec.configure do |config|
       ZipVnb.from_csv(zip_vnb)
       NneVnb.from_csv(nne_vnb)
     end
+
+    class ::Address
+      def geocode
+      end
+    end
   end
 
   config.before(:suite) do
