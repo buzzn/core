@@ -1,4 +1,4 @@
 module Buzzn::Mysmartgrid
-  class Crawler
+  class DataSource
   end
 end

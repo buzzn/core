@@ -1,5 +1,3 @@
-require 'buzzn'
-
 module Buzzn::Discovergy
 
   # the discovergy dataSource uses the API from discovergy to retrieve

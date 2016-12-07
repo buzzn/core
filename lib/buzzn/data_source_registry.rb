@@ -1,14 +1,11 @@
-require 'buzzn'
-require 'buzzn/discovergy/crawler'
-
 module Buzzn
 
   class DataSourceRegistry
 
-    def initialize(discovergy_url, max_concurent_discovergy_requests)
-      @discovergy = Buzzn::Discovergy::DataSource.new(discovergy_url,
-                                                   max_concurent_discovergy_requests)
-      @mysmartgrid = Buzzn::Mysmartgrid::DataSource.new
+    def initialize(discovergy_data_source = Buzzn::Discovergy::DataSource.new,
+                   mysmartgrid_data_source = Buzzn::Mysmartgrid::DataSource.new)
+      @discovergy = discovergy_data_source
+      @mysmartgrid = mysmartgrid_data_source
     end
 
     def data_source_for(organization)
