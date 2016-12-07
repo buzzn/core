@@ -12,13 +12,13 @@ describe Buzzn::ContractFactory do
                               .merge!({zip: 37181}) } }
 
     let(:contracting_party) { { contracting_party:
-                               { legal_entity: 'natural_person' } } }#,
-                                 #provide_permission: FFaker::Boolean.maybe } } }
+                               { legal_entity: 'natural_person',
+                                 provider_permission: FFaker::Boolean.maybe } } }
 
     let(:company) do
       orga = Fabricate.build(:metering_service_provider)
-      { contracting_party: { legal_entity: 'company' },
-                             #provide_permission: FFaker::Boolean.maybe },
+      { contracting_party: { legal_entity: 'company',
+                             provider_permission: FFaker::Boolean.maybe },
         company: { authorization: FFaker::Boolean.maybe,
                    organization: { name: orga.name,
                                    phone: orga.phone,
@@ -35,27 +35,32 @@ describe Buzzn::ContractFactory do
     end
 
     let(:register) do
-      { register: Fabricate.build(:register).attributes }
+      { register: Fabricate.build(:input_register).attributes }
     end
 
     let(:first_contract) do
-      { contract: { move_in: true,
-                    beginning: FFaker::Time.date,
-                    yearly_kilowatt_hour: 1000 } }
+      { contract: { terms_accepted: true,
+                    power_of_attorney: true,
+                    begin_date: FFaker::Time.date,
+                    forecast_kwh_pa: 1000 } }
     end
 
     let(:second_contract) do
       second = first_contract.dup
-      second[:contract][:move_in] = false
-      second[:contract][:beginning] = nil
-      second[:register_operator_name] = FFaker::Name.name
+      second[:contract][:begin_date] = nil
       second
     end
 
+    let(:contract_with_metering_operator) do
+      other = first_contract.dup
+      other[:contract][:metering_point_operator_name] = FFaker::Name.name
+      other
+    end
+
     let(:old_contract) do
-      { old_contract: { old_electricity_supplier_name: FFaker::Name.name,
-                        customer_number: FFaker::Product.letters(10),
-                        contract_number: FFaker::Product.letters(16) } }
+      { old_supplier_name: FFaker::Name.name,
+        old_customer_number: FFaker::Product.letters(10),
+        old_account_number: FFaker::Product.letters(16) }
     end
 
     let(:bank_account) do
@@ -72,22 +77,6 @@ describe Buzzn::ContractFactory do
     let(:profile) { { profile: Fabricate.build(:profile).attributes } }
 
     subject { Buzzn::ContractFactory }
-
-    before(:all) do
-      Bank.update_from(File.read("db/banks/BLZ_20160606.txt"))
-      Fabricate(:buzzn_energy)
-      dummy = Fabricate(:dummy_energy)
-      #TODO remove me once we have a contracting_party at each orga on creation
-      Fabricate(:company_contracting_party, organization: dummy)
-
-      csv_dir = 'db/csv'
-      zip_vnb = File.read(File.join(csv_dir, "plz_vnb_test.csv"))
-      zip_ka = File.read(File.join(csv_dir, "plz_ka_test.csv"))
-      nne_vnb = File.read(File.join(csv_dir, "nne_vnb.csv"))
-      ZipKa.from_csv(zip_ka)
-      ZipVnb.from_csv(zip_vnb)
-      NneVnb.from_csv(nne_vnb)
-    end
 
     it 'creates minimal first contract, natural_person, same address for existing user' do
       expect { subject.create_power_taker_contract(user, {user: {}}) }.to raise_error Buzzn::ValidationError
@@ -113,25 +102,31 @@ describe Buzzn::ContractFactory do
       contract = subject.create_power_taker_contract(user, params)
 
       expect(contract.valid?).to be true
+      expect(contract.register).not_to be_nil
+      expect(contract.register.address).not_to be_nil
+      expect(contract.register.meter).not_to be_nil
+      expect(contract.old_supplier_name).to be_nil
+      expect(contract.old_customer_number).to be_nil
+      expect(contract.old_account_number).to be_nil
+      expect(contract.forecast_kwh_pa).to eq 1000
+
+      party = contract.customer
       expect(user.reload.contracting_parties.size).to eq 1
-      party = contract.contract_beneficiary
+      expect(party.address).to eq contract.register.address
       expect(user.contracting_parties.include?(party)).to be true
       expect(party.legal_entity).to eq 'natural_person'
       expect(party.organization).to be_nil
       expect(party.bank_account).not_to be_nil
-      expect(contract.register).not_to be_nil
-      expect(contract.register.address).not_to be_nil
-      expect(contract.register.meter).not_to be_nil
-      expect(contract.register.address).to eq party.address
-      expect(contract.organization).to be_nil
-      expect(contract.address).to be_nil
-      expect(contract.bank_account).not_to be_nil
-      owner = contract.contract_owner
-      expect(owner.organization).to eq(Organization.buzzn_energy)
-      expect(contract.price_cents_per_kwh).to eq 2560.0
-      expect(contract.price_cents_per_month).to eq 1170
-      expect(contract.price_cents).to eq 3303
-      expect(contract.forecast_watt_hour_pa).to eq 1000000
+
+      contractor = contract.contractor
+      expect(contractor.organization).to eq(Organization.buzzn_energy)
+      
+      tariff = contract.tariffs.first
+      expect(tariff.energyprice_cents_per_kwh).to eq 2560.0
+      expect(tariff.baseprice_cents_per_month).to eq 1170
+
+      payment = contract.payments.first
+      expect(payment.price_cents).to eq 3303
     end
 
     it 'creates minimal first contract, natural_person, same address for non-existing user' do
@@ -153,31 +148,24 @@ describe Buzzn::ContractFactory do
       expect(contract.valid?).to be true
     end
 
-    it 'does not create minimal first contract, natural_person, same address for existing user' do
+    it 'creates minimal first contract, natural_person, same address for existing user with metering_point_operator' do
       params = {}
       params.merge!(address)
       params.merge!(meter)
       params.merge!(register)
       params.merge!(contracting_party)
-      params.merge!(first_contract)
+      params.merge!(contract_with_metering_operator)
       params.merge!(bank_account)
+      contract = subject.create_power_taker_contract(user, params)
+      expect(contract.valid?).to be true
 
-      params[:contract][:beginning] = nil
-      params[:contract][:move_in] = true
-      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
-
-      params[:contract][:move_in] = false
-      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
-
-      params[:contract][:beginning] = FFaker::Time.date
-      params[:contract][:move_in] = false
-      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
-
-      params[:contract][:move_in] = true
-      expect(subject.create_power_taker_contract(user, params).valid?).to eq true
+      contracts = contract.register.contracts - [contract]
+      expect(contracts.size).to eq 1
+      expect(contracts.first.class).to eq MeteringPointOperatorContract
+      expect(contracts.first.contractor).to eq Organization.dummy_energy.contracting_party
     end
 
-    it 'does not create with old contract, natural_person, same address for existing user' do
+    it 'does not create with mismatched old contract and begin_date' do
       params = {}
       params.merge!(address)
       params.merge!(meter)
@@ -185,20 +173,21 @@ describe Buzzn::ContractFactory do
       params.merge!(contracting_party)
       params.merge!(first_contract)
       params.merge!(bank_account)
-      params.merge!(old_contract)
 
-      params[:contract][:beginning] = FFaker::Time.date
-      params[:contract][:move_in] = true
+      params[:contract][:begin_date] = FFaker::Time.date
+      expect(subject.create_power_taker_contract(user, params).valid?).to eq true
+
+      params[:contract].merge!(old_contract)
       expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
 
-      params[:contract][:move_in] = false
+      params[:contract].delete_if{ |k,v| k.to_s =~ /old/ }
+      params[:contract][:begin_date] = nil
       expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
 
-      params[:contract][:beginning] = nil
-      params[:contract][:move_in] = true
-      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
-
-      params[:contract][:move_in] = false
+      params[:contract][:begin_date] = nil
+      params[:contract].merge!(old_contract)
+      params[:meter]['manufacturer_product_serialnumber'] = '123321'
+      params[:register].delete('uid')
       expect(subject.create_power_taker_contract(user, params).valid?).to eq true
     end
 
@@ -213,23 +202,33 @@ describe Buzzn::ContractFactory do
       params.merge!(first_contract)
       params.merge!(bank_account)
       contract = subject.create_power_taker_contract(user, params)
+
       expect(contract.valid?).to be true
+      expect(contract.register).not_to be_nil
+      expect(contract.register.address).not_to be_nil
+      expect(contract.register.meter).not_to be_nil
+      expect(contract.old_supplier_name).to be_nil
+      expect(contract.old_customer_number).to be_nil
+      expect(contract.old_account_number).to be_nil
+      expect(contract.forecast_kwh_pa).to eq 1000
+
+      party = contract.customer
       expect(user.reload.contracting_parties.size).to eq 1
-      party = contract.contract_beneficiary
+      expect(party.address).not_to eq contract.register.address
       expect(user.contracting_parties.include?(party)).to be true
       expect(party.legal_entity).to eq 'natural_person'
       expect(party.organization).to be_nil
       expect(party.bank_account).not_to be_nil
-      expect(contract.register).not_to be_nil
-      expect(contract.register.address).not_to be_nil
-      expect(contract.register.meter).not_to be_nil
-      expect(contract.register.address).not_to eq contract.address
-      owner = contract.contract_owner
-      expect(owner.organization).to eq(Organization.buzzn_energy)
-      expect(contract.price_cents_per_kwh).to eq 2630.0
-      expect(contract.price_cents_per_month).to eq 1150
-      expect(contract.price_cents).to eq 3342
-      expect(contract.forecast_watt_hour_pa).to eq 1000000
+
+      contractor = contract.contractor
+      expect(contractor.organization).to eq(Organization.buzzn_energy)
+      
+      tariff = contract.tariffs.first
+      expect(tariff.energyprice_cents_per_kwh).to eq 2630.0
+      expect(tariff.baseprice_cents_per_month).to eq 1150
+
+      payment = contract.payments.first
+      expect(payment.price_cents).to eq 3342
     end
     
     it 'creates first contract, company, same address for existing user' do
@@ -242,23 +241,33 @@ describe Buzzn::ContractFactory do
       params.merge!(first_contract)
       params.merge!(bank_account)
       contract = subject.create_power_taker_contract(user, params)
+
       expect(contract.valid?).to be true
+      expect(contract.register).not_to be_nil
+      expect(contract.register.address).not_to be_nil
+      expect(contract.register.meter).not_to be_nil
+      expect(contract.old_supplier_name).to be_nil
+      expect(contract.old_customer_number).to be_nil
+      expect(contract.old_account_number).to be_nil
+      expect(contract.forecast_kwh_pa).to eq 1000
+
+      party = contract.customer
       expect(user.reload.contracting_parties.size).to eq 1
-      party = contract.contract_beneficiary
+      expect(party.address).to eq contract.register.address
       expect(user.contracting_parties.include?(party)).to be true
       expect(party.legal_entity).to eq 'company'
       expect(party.organization).not_to be_nil
       expect(party.bank_account).not_to be_nil
-      expect(contract.register).not_to be_nil
-      expect(contract.register.address).not_to be_nil
-      expect(contract.register.meter).not_to be_nil
-      expect(contract.register.address).not_to eq contract.address
-      owner = contract.contract_owner
-      expect(owner.organization).to eq(Organization.buzzn_energy)
-      expect(contract.price_cents_per_kwh).to eq 2560.0
-      expect(contract.price_cents_per_month).to eq 1170
-      expect(contract.price_cents).to eq 3303
-      expect(contract.forecast_watt_hour_pa).to eq 1000000
+
+      contractor = contract.contractor
+      expect(contractor.organization).to eq(Organization.buzzn_energy)
+      
+      tariff = contract.tariffs.first
+      expect(tariff.energyprice_cents_per_kwh).to eq 2560.0
+      expect(tariff.baseprice_cents_per_month).to eq 1170
+
+      payment = contract.payments.first
+      expect(payment.price_cents).to eq 3303
     end
     
     
@@ -268,33 +277,42 @@ describe Buzzn::ContractFactory do
       params.merge!(meter)
       params.merge!(register)
       params.merge!(contracting_party)
-      params.merge!(old_contract)
-      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
       params.merge!(bank_account)
       expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
 
+      first_contract[:contract].merge!(old_contract)
       expect { subject.create_power_taker_contract(user, params.merge(first_contract)) }.to raise_error Buzzn::ValidationError
 
       params.merge!(second_contract)
+      params[:contract].merge!(old_contract)
       contract = subject.create_power_taker_contract(user, params)
+
       expect(contract.valid?).to be true
+      expect(contract.register).not_to be_nil
+      expect(contract.register.address).not_to be_nil
+      expect(contract.register.meter).not_to be_nil
+      expect(contract.old_supplier_name).not_to be_nil
+      expect(contract.old_customer_number).not_to be_nil
+      expect(contract.old_account_number).not_to be_nil
+      expect(contract.forecast_kwh_pa).to eq 1000
+
+      party = contract.customer
       expect(user.reload.contracting_parties.size).to eq 1
-      party = contract.contract_beneficiary
+      expect(party.address).to eq contract.register.address
       expect(user.contracting_parties.include?(party)).to be true
       expect(party.legal_entity).to eq 'natural_person'
       expect(party.organization).to be_nil
       expect(party.bank_account).not_to be_nil
-      expect(contract.register).not_to be_nil
-      expect(contract.register.address).not_to be_nil
-      expect(contract.register.meter).not_to be_nil
-      expect(contract.register.address).not_to eq contract.address
-      owner = contract.contract_owner
-      expect(owner.organization).to eq(Organization.buzzn_energy)
-      expect(contract.price_cents_per_kwh).to eq 2560.0
-      expect(contract.price_cents_per_month).to eq 1170
-      expect(contract.price_cents).to eq 3303
-      expect(contract.forecast_watt_hour_pa).to eq 1000000
-      expect(contract.other_contract).to eq true
+
+      contractor = contract.contractor
+      expect(contractor.organization).to eq(Organization.buzzn_energy)
+      
+      tariff = contract.tariffs.first
+      expect(tariff.energyprice_cents_per_kwh).to eq 2560.0
+      expect(tariff.baseprice_cents_per_month).to eq 1170
+
+      payment = contract.payments.first
+      expect(payment.price_cents).to eq 3303
     end
     
   end

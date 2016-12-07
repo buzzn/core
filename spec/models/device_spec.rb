@@ -41,7 +41,7 @@ describe "Device Model" do
   end
 
 
-  it 'can not find anything', :retry => 3 do
+  it 'can not find anything' do
     Fabricate(:dach_pv_justus)
     devices = Device.filter('Der Clown ist müde und geht nach Hause.')
     expect(devices.size).to eq 0
@@ -61,17 +61,17 @@ describe "Device Model" do
     expect(Device.readable_by(nil)).to match_array [out_device_with_register_with_group]
   end
 
-  it 'selects all devices by admin', :retry => 3 do
+  it 'selects all devices by admin' do
     devices # create devices
     expect(Device.readable_by(Fabricate(:admin))).to match_array devices
   end
 
-  it 'selects devices as manager', :retry => 3 do
+  it 'selects devices as manager' do
     devices # create devices
     expect(Device.readable_by(device_manager)).to match_array [out_device_with_register_with_group, out_device_with_manager]
   end
 
-  it 'selects devices as member', :retry => 3 do
+  it 'selects devices as member' do
     devices # create devices
     expect(Device.readable_by(device_member)).to match_array [out_device_with_register_with_group]
   end

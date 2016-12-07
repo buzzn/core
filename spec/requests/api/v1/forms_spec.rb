@@ -63,18 +63,23 @@ describe "Forms API" do
       .merge(profile)
   end
 
-  before { Fabricate(:buzzn_energy) unless Organization.buzzn_energy }
-
   before(:all) do
-    Bank.update_from(File.read("db/banks/BLZ_20160606.txt"))
+    Organization.buzzn_energy || Fabricate(:buzzn_energy)
+    Organization.dummy_energy || Fabricate(:dummy_energy)
 
-    csv_dir = 'db/csv'
-    zip_vnb = File.read(File.join(csv_dir, "plz_vnb_test.csv"))
-    zip_ka = File.read(File.join(csv_dir, "plz_ka_test.csv"))
-    nne_vnb = File.read(File.join(csv_dir, "nne_vnb.csv"))
-    ZipKa.from_csv(zip_ka)
-    ZipVnb.from_csv(zip_vnb)
-    NneVnb.from_csv(nne_vnb)
+    if Bank.count == 0
+      Bank.update_from(File.read("db/banks/BLZ_20160606.txt"))
+    end
+
+    if ZipKa.count == 0
+      csv_dir = 'db/csv'
+      zip_vnb = File.read(File.join(csv_dir, "plz_vnb_test.csv"))
+      zip_ka = File.read(File.join(csv_dir, "plz_ka_test.csv"))
+      nne_vnb = File.read(File.join(csv_dir, "nne_vnb.csv"))
+      ZipKa.from_csv(zip_ka)
+      ZipVnb.from_csv(zip_vnb)
+      NneVnb.from_csv(nne_vnb)
+    end
   end
 
   it 'fails without params' do
@@ -108,7 +113,6 @@ describe "Forms API" do
     expect(json['errors'].first['source']['pointer']).to eq "/data/attributes/profile[phone]"
 
     post_with_token '/api/v1/forms/power-taker', params_without_user.merge(profile).to_json, access_token.token
-
     expect(response).to have_http_status(201)
   end
 
@@ -123,15 +127,6 @@ describe "Forms API" do
   end
 
   it 'fails with invalid nested old contract' do
-    params[:contract][:move_in] = false
-    post_without_token '/api/v1/forms/power-taker', params.to_json
-
-    expect(response).to have_http_status(422)
-    expect(json['errors'].size).to eq 1
-    json['errors'].each do |item|
-      expect(item['source']['pointer']).to match /\/data\/attributes\/old_contract\[.*\]/
-    end
-
     params.merge!(invalid_old_contract)
     post_without_token '/api/v1/forms/power-taker', params.to_json
 

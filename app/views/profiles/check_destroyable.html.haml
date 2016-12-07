@@ -7,7 +7,7 @@
     = simple_form_for @user, remote: false, url: registration_path(@user), method: :delete do |f|
       - if @user.editable_groups.any?
         - @user.editable_groups.each do |group|
-          - if group.managers.count == 1 || (group.in_registers.any? && group.in_registers.collect{|register| @user.can_update?(register)}.include?(false))
+          - if group.managers.count == 1 || (group.input_registers.any? && group.input_registers.collect{|register| @user.can_update?(register)}.include?(false))
             %p= t('group_not_deletable', group_name: group.name)
             - deletable = false
       - if @user.editable_registers.any?

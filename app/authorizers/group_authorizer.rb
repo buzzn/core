@@ -1,7 +1,7 @@
 class GroupAuthorizer < ApplicationAuthorizer
 
   def self.creatable_by?(user)
-    Register.editable_by_user(user).outputs.without_group.any?
+    Register::Base.editable_by_user(user).outputs.without_group.any?
   end
 
   def readable_by?(user)

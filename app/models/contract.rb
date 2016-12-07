@@ -5,39 +5,80 @@ class Contract < ActiveRecord::Base
   include Filterable
   include Buzzn::GuardedCrud
 
-  has_paper_trail
+  # status consts
+  WAITING   = 'waiting_for_approval'
+  RUNNING   = 'running'
+  CANCELLED = 'cancelled'
 
+  # error messages
+  MUST_BE_TRUE                 = 'must be true'
+  MUST_HAVE_AT_LEAST_ONE       = 'must have at least one'
+  WAS_ALREADY_CANCELLED        = 'was already cancelled'
+  MUST_BE_BUZZN_SYSTEMS        = 'must be buzzn-systems'
+  MUST_BE_BUZZN                = 'must be buzzn'
+  MUST_BELONG_TO_LOCALPOOL     = 'must belong to a localpool'
+  IS_MISSING                   = 'is missing'
+  CAN_NOT_BE_PRESENT           = 'can not be present when there is a '
+  NOT_ALLOWED_FOR_OLD_CONTRACT = 'not allowed for old contract'
+  CAN_NOT_BELONG_TO_DUMMY      = 'can not belong to dummy organization'
+
+  class << self
+    private :new
+
+    def status
+      @status ||= [WAITING, RUNNING, CANCELLED]
+    end
+  end
+
+  # TODO to be removed
   attr_encrypted :password, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
-  monetize :price_cents
+  belongs_to :contractor, class_name: 'ContractingParty'
+  belongs_to :customer, class_name: 'ContractingParty'
+  belongs_to :signing_user, class_name: 'User'
 
-  belongs_to :contract_owner, class_name: 'ContractingParty', foreign_key: "contract_owner_id"
-  belongs_to :contract_beneficiary, class_name: 'ContractingParty', foreign_key: "contract_beneficiary_id"
-  belongs_to :organization
-  belongs_to :register
-  belongs_to :group
+  has_many :tariffs
+  has_many :payments
 
-  validates :mode, presence: true
-  #validates :organization, presence: true
-  # validates :username, presence: true, if: :login_required?
-  # validates :password, presence: true, if: :login_required?
-  #validates :price_cents, presence: true, :numericality => { :only_integer => false, :greater_than_or_equal_to => 0 }
-  validate :resource_cannot_have_same_contracts
+  validates :contractor, presence: true
+  validates :customer, presence: true
+
+  validates :status, inclusion: {in: status}
+
+  validates :contract_number, presence: false
+  validates :customer_number, presence: false
+  validates :origianl_signing_user, presence: false
+
+  validates :signing_date, presence: true
+  validates :cancellation_date, presence: false
+  validates :end_date, presence: false
+
+  validates :terms_accepted, presence: true
+  validates :power_of_attorney, presence: true
+  
   validate :validate_invariants
 
-  scope :running,                   -> { where(running: :true) }
-  scope :register_operators,  -> { where(mode: 'metering_point_operator_contract') }
-  scope :power_givers,              -> { where(mode: 'power_giver_contract') }
-  scope :power_takers,              -> { where(mode: 'power_taker_contract') }
-  scope :servicings,                -> { where(mode: 'servicing_contract') }
+  def initialize(*args)
+    super
+    self.status = WAITING
+  end
 
-  before_save :calculate_price
+  scope :running,   -> { where(status: RUNNING) }
+  scope :queued,    -> { where(status: WAITING) }
+  scope :cancelled, -> { where(status: CANCELLED) }
+
+  scope :power_givers,             -> {where(type: PowerGiverContract)}
+  scope :power_takers,             -> {where(type: PowerTakerContract)}
+  scope :localpool_power_takers,   -> {where(type: LocalpoolPowerTakerContract)}
+  scope :localpool_processing,     -> {where(type: LocalpoolProcessingContract)}
+  scope :metering_point_operators, -> {where(type: MeteringPointOperatorContract)}
 
   def self.readable_by_query(user)
-    contract           = Contract.arel_table
+    contract = Contract.arel_table
     if user
-      User.roles_query(user, manager: [contract[:register_id], contract[:group_id], contract[:organization_id]], admin: nil).project(1).exists
+      User.roles_query(user, manager: [contract[:register_id], contract[:localpool_id]], admin: nil).project(1).exists
     else
+      # always false, i.e. anonymous users can not see contracts
       contract[:id].eq(contract[:id]).not
     end
   end
@@ -46,59 +87,30 @@ class Contract < ActiveRecord::Base
     where(readable_by_query(user))
   end
 
-  after_save :validates_credentials
-
-  has_one :address, as: :addressable
-  accepts_nested_attributes_for :address, :reject_if => :all_blank
-
-  has_one :bank_account, as: :bank_accountable
-  accepts_nested_attributes_for :bank_account, :reject_if => :all_blank
-
   def validate_invariants
-    case mode
-    when 'power_taker_contract'
-      validate_power_toker_invariant
-    else
-      
+    errors.add(:terms_accepted, MUST_BE_TRUE ) unless terms_accepted
+    errors.add(:power_of_attorney, MUST_BE_TRUE ) unless power_of_attorney
+    if contractor
+      if contractor.organization == Organization.buzzn_energy ||
+         contractor.organization == Organization.buzzn_systems
+        errors.add(:tariffs, MUST_HAVE_AT_LEAST_ONE) if tariffs.size == 0
+        errors.add(:payments, MUST_HAVE_AT_LEAST_ONE) if payments.size == 0
+      end
     end
-  end
 
-  def validate_register_address
-    unless register
-      errors.add(:register, 'missing Register')
+    # check lifecycle changes
+    if change = changes['status']
+      errors.add(:status, WAS_ALREADY_CANCELLED) if change[0] == CANCELLED
     end
-    unless register.address
-      errors.add(:register, 'missing Register Address')
-    end
-  end
-
-  def validate_power_toker_invariant
-    validate_register_address
-    #errors.add(:tariff, 'missing tariff') unless tariff
-    errors.add(:yearly_kilowatt_hour, 'missing yearly kilo watt per hour') unless forecast_watt_hour_pa
   end
 
   def name
-    "#{organization.name} #{tariff}"
-  end
-
-  # def self.modes
-  #   %w{
-  #     power_giver_contract
-  #     power_taker_contract
-  #     metering_point_operator_contract
-  #     servicing_contract
-  #   }.map(&:to_sym)
-  # end
-
-  def self.modes
-    %w{
-      metering_point_operator_contract
-    }.map(&:to_sym)
+    "TODO {organization.name} {tariff}"
   end
 
   def self.search_attributes
-    [:tariff, :mode, :signing_user, :username, address: [:city, :state, :street_name]]
+    #TODO filtering what ?
+    []
   end
 
   def self.filter(search)
@@ -106,69 +118,8 @@ class Contract < ActiveRecord::Base
   end
 
   def login_required?
-    if self.organization
-      self.organization.slug == 'discovergy' ||  self.organization.slug == 'mysmartgrid'
-    else
-      false
-    end
+    self.organization == Organization.discovergy || self.organization == Organization.mysmartgrid
   end
-
-  def yearly_kilowatt_hour=(val)
-    self.forecast_watt_hour_pa = val * 1000
-  end
-
-  def calculate_price
-    if register && forecast_watt_hour_pa && register.address &&
-       register.meter
-      # TODO some validation or errors or something
-      # TODO about when we have two meters or is this a power-taker-contract
-      #      only feature ?
-      prices = Buzzn::Zip2Price.new(forecast_watt_hour_pa / 1000.0,
-                                    register.address.zip,
-                                    register.meter.metering_type)
-      if price = prices.to_price
-        self.price_cents_per_kwh   = price.energyprice_cents_per_kilowatt_hour
-        self.price_cents_per_month = price.baseprice_cents_per_month
-        self.price_cents           = price.total_cents_per_month
-      else
-        # TODO some validation or errors or something
-      end
-    end
-  end
-  private :calculate_price
-
-  def resource_cannot_have_same_contracts
-    if register && register.contracts.any?
-      #available_contracts = Contract.where(register: self.register).where(mode: self.mode)
-      available_contracts = register.contracts.collect{|c| c if c.mode == self.mode}.compact
-      if available_contracts.any? && available_contracts.first != self
-        errors.add(:mode, I18n.t("already_exists"))
-      end
-    elsif group && group.contracts.any?
-      #available_contracts = Contract.where(group: self.group).where(mode: self.mode)
-      available_contracts = group.contracts.collect{|c| c if c.mode == self.mode}.compact
-      if available_contracts.any? && available_contracts.first != self
-        errors.add(:mode, I18n.t("already_exists"))
-      end
-    end
-  end
-
-  def send_notification_credentials(valid)
-    contract = self
-    if contract
-      if contract.contract_owner
-        user = contract.contract_owner.user
-      elsif contract.contract_beneficiary
-        user = contract.beneficiary.user
-      end
-      if valid
-        user.send_notification("success", I18n.t("valid_credentials"), I18n.t("your_credentials_have_been_checked_and_are_valid", contract: contract.mode), contract_path(self))
-      else
-        user.send_notification("danger", I18n.t("invalid_credentials"), I18n.t("your_credentials_have_been_checked_and_are_invalid", contract: contract.mode), contract_path(self))
-      end
-    end
-  end
-
 
 
 private
@@ -199,7 +150,7 @@ private
       @registers = self.register.meter.registers
     end
     @registers.each do |register|
-      if register.contracts.register_operators.empty?
+      if register.contracts.metering_point_operators.empty?
         @contract = self
         @contract2 = Contract.new(mode: @contract.mode, price_cents: @contract.price_cents, organization: @contract.organization, username: @contract.username, password: @contract.password)
         @contract2.register = register

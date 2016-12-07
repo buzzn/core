@@ -11,7 +11,7 @@ class ProfilesController < ApplicationController
   def show
     @profile              = Profile.find(params[:id]).decorate
     @friends              = @profile.user.friends.decorate
-    @registers      = Register.where(id: @profile.user.accessible_registers.map(&:id)).paginate(:page => params[:register_page], :per_page => 10)
+    @registers      = Register::Base.where(id: @profile.user.accessible_registers.map(&:id)).paginate(:page => params[:register_page], :per_page => 10)
     @friendship_requests  = @profile.user.received_friendship_requests
     @register_invitations = @profile.user.received_register_user_requests
     @group_invitations    = @profile.user.received_group_register_requests

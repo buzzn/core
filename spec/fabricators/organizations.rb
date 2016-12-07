@@ -9,6 +9,10 @@ Fabricator :organization do
 end
 
 
+Fabricator :other_organization, from: :organization do
+  mode 'other'
+end
+
 Fabricator :distribution_system_operator, from: :organization do
   mode 'distribution_system_operator'
 end
@@ -38,30 +42,29 @@ Fabricator :transmission_system_operator_with_address, from: :transmission_syste
 end
 
 Fabricator :power_giver_with_contracts, from: :power_giver do
-  contracts   { [ Fabricate(:power_giver_contract)] }
-end
-
-Fabricator :metering_service_provider_with_contracting_party, from: :metering_service_provider do
   after_create do |organization|
-    organization.update contracting_party: Fabricate(:contracting_party, legal_entity: 'company', organization: organization)
+    Fabricate(:power_giver_contract, customer: organization.contracting_party)
   end
+
 end
 
-# needed for groups fabricator
+# needed for groups fabricator - legacy naming
 Fabricator :buzzn_metering, from: :metering_service_provider do
-  name Organization::BUZZN_METERING
+  name Organization::BUZZN_SYSTEMS
 end
 
-# needed for contracts fabricator
+
 Fabricator :discovergy, from: :metering_service_provider do
-  name 'Discovergy'
+  name Organization::DISCOVERGY
 end
 
-# needed for contracts fabricator
 Fabricator :mysmartgrid, from: :metering_service_provider do
-  name 'MySmartGrid'
+  name Organization::MYSMARTGRID
 end
 
+Fabricator :buzzn_systems, from: :metering_service_provider do
+  name Organization::BUZZN_SYSTEMS
+end
 
 Fabricator :buzzn_energy, from: :electricity_supplier do
   name Organization::BUZZN_ENERGY
@@ -71,6 +74,11 @@ Fabricator :dummy_energy, from: :electricity_supplier do
   name Organization::DUMMY_ENERGY
 end
 
+Fabricator :dummy, from: :other_organization do
+  name Organization::DUMMY
+end
+
+# TODO what is this for ?
 Fabricator :buzzn_reader, from: :register_operator do
   name Organization::BUZZN_READER
 end

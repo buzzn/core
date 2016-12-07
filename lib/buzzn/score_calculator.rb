@@ -211,11 +211,11 @@ module Buzzn
     end
 
     def data_in
-      @data_in ||= retrieve_date(@group.in_registers)
+      @data_in ||= retrieve_date(@group.input_registers)
     end
 
     def data_out
-      @data_out ||= retrieve_date(@group.out_registers)
+      @data_out ||= retrieve_date(@group.output_registers)
     end
 
     def data_size

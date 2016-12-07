@@ -80,7 +80,7 @@ module API
             requires :terms, type: Boolean, desc: 'Aggree to terms'
             requires :move_in, type: Boolean, desc: 'Whether to move in'
             optional :other_contract, type: Boolean, desc: 'There is already a power-taker contract with buzzn'
-            optional :register_operator_name, type: String, desc: 'Name of register-operator name'
+            optional :metering_point_operator_name, type: String, desc: 'Name of Meteringpoint-Operator'
             optional :message_to_buzzn, type: String, desc: 'A message to buzzn'
             optional :hear_about_buzzn, type: String, desc: 'Hear about buzzn'
             optional :beginning, type: Date, desc: 'Begin date'
@@ -93,6 +93,21 @@ module API
         end
         oauth2 false
         post 'power-taker' do
+          contract = permitted_params[:contract]
+          contract[:begin_date] = permitted_params[:contract].delete(:beginning)
+          contract[:terms_accepted] = permitted_params[:contract].delete(:terms)
+          contract[:forecast_kwh_pa] = permitted_params[:contract].delete(:yearly_kilowatt_hour)
+          contract.delete(:move_in)
+          contract.delete(:other_contract)
+          if old = permitted_params.delete(:old_contract)
+            contract[:old_supplier_name] = old[:old_electricity_supplier_name]
+            contract[:old_customer_number] = old[:customer_number]
+            contract[:old_account_number] = old[:contract_number]
+          end
+          if company = permitted_params[:company]
+            company.delete(:authorization)
+          end
+
           Buzzn::ContractFactory.create_power_taker_contract(current_user, permitted_params)
           status 201
         end

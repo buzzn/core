@@ -1,6 +1,6 @@
 require 'uri'
 #### Usage
-# mp = Register.find('some-id')
+# mp = Register::Base.find('some-id')
 # hash = Aggregate.sort([mp])
 # a = Aggregate.new(hash)
 # a.past
@@ -55,7 +55,7 @@ class Aggregate
     @registers_hash[:virtual].each do |register|
       formula_parts         = FormulaPart.where(register_id: register.id)
       register_ids    = formula_parts.map(&:operand_id)
-      registers       = Register.find(register_ids)
+      registers       = Register::Base.find(register_ids)
       registers_hash  = Aggregate.sort_registers(registers)
 
       if registers_hash[:data_sources].size > 1
@@ -132,7 +132,7 @@ class Aggregate
       @registers_hash[:virtual].each do |register|
         formula_parts         = FormulaPart.where(register_id: register.id)
         register_ids    = formula_parts.map(&:operand_id)
-        registers       = Register.find(register_ids)
+        registers       = Register::Base.find(register_ids)
         registers_hash  = Aggregate.sort_registers(registers)
 
         if registers_hash[:data_sources].size > 1

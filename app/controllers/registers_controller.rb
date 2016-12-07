@@ -5,8 +5,8 @@ class RegistersController < ApplicationController
 
 
   def show
-    # the Register.find is just to raise NotFoundError
-    @register                 = (Register.where(id: params[:id]).anonymized(current_user).first || Register.find(params[:id])).decorate
+    # the Register::Base.find is just to raise NotFoundError
+    @register                 = (Register::Base.where(id: params[:id]).anonymized(current_user).first || Register::Base.find(params[:id])).decorate
     @members                        = @register.members.registered
     @managers                       = @register.managers.registered
     @devices                        = @register.devices
@@ -27,14 +27,14 @@ class RegistersController < ApplicationController
 
 
   def new
-    @register = Register.new(mode: 'in')
+    @register = Register::Base.new(mode: 'in')
     authorize_action_for @register
     2.times{@register.formula_parts.build}
   end
 
 
   def create
-    @register = Register.new(register_params)
+    @register = Register::Base.new(register_params)
     authorize_action_for @register
     if @register.save
       current_user.add_role(:manager, @register)
@@ -48,13 +48,13 @@ class RegistersController < ApplicationController
 
 
   def edit
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     authorize_action_for(@register)
   end
 
 
   def update
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     authorize_action_for @register
     if @register.update_attributes(register_params)
       respond_with @register
@@ -64,7 +64,7 @@ class RegistersController < ApplicationController
   end
 
   def destroy
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     authorize_action_for @register
     @register.destroy
     respond_with current_user.profile
@@ -75,7 +75,7 @@ class RegistersController < ApplicationController
 
   def edit_users
     # TODO: insert added user directly
-    @register = Register.find(params[:id]).decorate
+    @register = Register::Base.find(params[:id]).decorate
     authorize_action_for(@register, action: 'edit_users')
   end
   authority_actions :edit_users => 'update'
@@ -84,24 +84,24 @@ class RegistersController < ApplicationController
 
   def edit_devices
     # TODO: insert added device directly
-    @register = Register.find(params[:id]).decorate
+    @register = Register::Base.find(params[:id]).decorate
     authorize_action_for(@register, action: 'edit_devices')
   end
   authority_actions :edit_devices => 'update'
 
   def edit_readings
-    @register = Register.find(params[:id]).decorate
+    @register = Register::Base.find(params[:id]).decorate
     @readings = @register.submitted_readings_by_user
     authorize_action_for(@register, action: 'edit_devices')
   end
   authority_actions :edit_readings => 'update'
 
   def send_invitations
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
   end
 
   def send_invitations_update
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     if params[:register][:invite_via_email] == "1"
       if params[:register][:email] == ""
         @register.errors.add(:email, I18n.t("cant_be_blank"))
@@ -147,13 +147,13 @@ class RegistersController < ApplicationController
 
 
   def remove_members
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     authorize_action_for @register
   end
   authority_actions :remove_members => 'update'
 
   def remove_members_update
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     authorize_action_for @register
     user_id = params[:user_id] || params[:register][:user_id]
     @user = User.find(user_id)
@@ -170,7 +170,7 @@ class RegistersController < ApplicationController
 
 
   def add_manager
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     authorize_action_for @register
     @collection = []
     [@register.users + current_user.friends].flatten.uniq.each do |user|
@@ -180,7 +180,7 @@ class RegistersController < ApplicationController
   authority_actions :add_manager => 'update'
 
   def add_manager_update
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     authorize_action_for @register
     @user = User.find(params[:register][:user_id])
     if @user.has_role?(:manager, @register)
@@ -194,7 +194,7 @@ class RegistersController < ApplicationController
   authority_actions :add_manager_update => 'update'
 
   def remove_manager_update
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     authorize_action_for @register
     if @register.managers.size > 1
       current_user.remove_role(:manager, @register)
@@ -207,7 +207,7 @@ class RegistersController < ApplicationController
 
 
   def get_scores
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     resolution_format = params[:resolution]
     containing_timestamp = params[:containing_timestamp]
     if resolution_format.nil?
@@ -234,7 +234,7 @@ class RegistersController < ApplicationController
 
 
   def chart_comments
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     @resolution = params[:resolution]
     @timestamp = params[:containing_timestamp]
     @comments = @register.chart_comments(@resolution, @timestamp)
@@ -247,17 +247,17 @@ class RegistersController < ApplicationController
 
   def widget
     response.headers.delete('X-Frame-Options') #Enables iFrames
-    @register                 = Register.find(params[:id]).decorate
+    @register                 = Register::Base.find(params[:id]).decorate
     @register.readable_by_world? ? @register : t('the_requested_content_is_not_public')
   end
 
   def edit_notifications
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
   end
   #TODO: add authority_actions
 
   def edit_notifications_update
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     notify_when_comment_create = params[:register][:notify_me_when_comment_create]
     notify_when_register_exceeds = params[:register][:notify_me_when_register_exceeds]
     notify_when_register_undershoots = params[:register][:notify_me_when_register_undershoots]
@@ -301,7 +301,7 @@ class RegistersController < ApplicationController
   #TODO: add authority_actions
 
   def get_reading
-    @register = Register.find(params[:register_id])
+    @register = Register::Base.find(params[:register_id])
   end
 
   def get_reading_update
@@ -310,7 +310,7 @@ class RegistersController < ApplicationController
   end
 
   def latest_fake_data
-    @register = Register.find(params[:id])
+    @register = Register::Base.find(params[:id])
     @cache_id = "/registers/#{params[:id]}/latest_fake_data"
     @cache = Rails.cache.fetch(@cache_id)
     @latest_fake_data = @cache || @register.latest_fake_data

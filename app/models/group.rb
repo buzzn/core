@@ -29,9 +29,9 @@ class Group < ActiveRecord::Base
   #mount_uploader :image, PictureUploader
   mount_base64_uploader :image, PictureUploader
 
-  has_many :contracts, dependent: :destroy
+  has_many :contracts, dependent: :destroy, foreign_key: :localpool_id
   has_one  :area
-  has_many :registers
+  has_many :registers, class_name: Register::Base
 
   has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
 
@@ -50,7 +50,7 @@ class Group < ActiveRecord::Base
   }
 
   scope :members_of_group, ->(group) do
-    mp = Register.arel_table
+    mp = Register::Base.arel_table
     roles = Role.arel_table
     users_roles = Arel::Table.new(:users_roles)
     users = User.arel_table
@@ -61,7 +61,7 @@ class Group < ActiveRecord::Base
     users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
     users_roles_join = users_roles.create_join(roles, users_roles_on)
 
-    roles_register_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:resource_type].eq(Register.to_s).and(roles[:name].eq(:member))))
+    roles_register_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:name].eq(:member)))
     roles_register_join = roles.create_join(mp, roles_register_on)
 
 
@@ -82,7 +82,7 @@ class Group < ActiveRecord::Base
       world_or_community = group[:readable].in(['world','community'])
 
       # admin or manager or member query
-      register = Register.arel_table
+      register = Register::Base.arel_table
       admin_or_manager_or_member = User.roles_query(user, manager: group[:id], member: register.alias[:id], admin: nil).project(1).exists
 
       # friends of manager and member of register
@@ -126,7 +126,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.accessible_by_user(user)
-    register = Register.arel_table
+    register = Register::Base.arel_table
     group          = Group.arel_table
     users          = User.roles_query(user, manager: [group[:id], register[:id]], member: register[:id])
 
@@ -140,15 +140,15 @@ class Group < ActiveRecord::Base
     slug.blank? || name_changed?
   end
 
-  def register_users_query(mode = nil)
-    mp             = Register.arel_table
+  def register_users_query(type = nil)
+    mp             = Register::Base.arel_table
     roles          = Role.arel_table
     users_roles    = Arel::Table.new(:users_roles)
     users          = User.arel_table
     role_names     = [:manager, :member]
 
     register_on = mp[:group_id].eq(self.id)
-    register_on = register_on.and(mp[:mode].eq(mode)) if mode
+    register_on = register_on.and(mp[:type].eq(type)) if type
     users_roles.join(mp)
       .on(register_on)
       .join(roles)
@@ -158,11 +158,11 @@ class Group < ActiveRecord::Base
   end
 
   def energy_producers
-    User.where(register_users_query('out').project(1).exists.to_sql)
+    User.where(register_users_query(Register::Output).project(1).exists.to_sql)
   end
 
   def energy_consumers
-    User.where(register_users_query('in').project(1).exists.to_sql)
+    User.where(register_users_query(Register::Input).project(1).exists.to_sql)
   end
 
   def member?(register)
@@ -179,12 +179,12 @@ class Group < ActiveRecord::Base
     self.class.members_of_group(self)
   end
 
-  def in_registers
-    Register.where(group: self).where(mode: 'in')
+  def input_registers
+    Register::Input.where(group: self)
   end
 
-  def out_registers
-    Register.where(group: self).where(mode: 'out')
+  def output_registers
+    Register::Output.where(group: self)
   end
 
 
@@ -454,8 +454,8 @@ class Group < ActiveRecord::Base
   end
 
   def bubbles_personal_data(requesting_user)
-    out_register_personal_data = []
-    in_register_personal_data = []
+    output_register_personal_data = []
+    input_register_personal_data = []
     self.registers.without_externals.each do |register|
       register_name = register.decorate.name_with_users
       if register.involved.any?
@@ -473,12 +473,12 @@ class Group < ActiveRecord::Base
       end
       personal_data_entry = {:register_id => register.id, :name => register_name, :own_register => own_register, :readable => readable}
       if register.mode == 'out'
-        out_register_personal_data.push(personal_data_entry)
+        output_register_personal_data.push(personal_data_entry)
       else
-        in_register_personal_data.push(personal_data_entry)
+        input_register_personal_data.push(personal_data_entry)
       end
     end
-    personal_data = {:in => in_register_personal_data, :out => out_register_personal_data}
+    personal_data = {:in => input_register_personal_data, :out => output_register_personal_data}
     return personal_data
   end
 
@@ -528,12 +528,12 @@ class Group < ActiveRecord::Base
 
     def validate_localpool
       if self.mode == 'localpool'
-        if self.contracts.register_operators.empty?
-          @contract = Contract.new(mode: 'metering_point_operator_contract', price_cents: 0, group: self, organization: Organization.buzzn_metering, username: 'team@localpool.de', password: 'Zebulon_4711')
+        if self.contracts.metering_point_operators.empty?
+ #         @contract = MeteringPointOperatorContract.new(group: self, organization: Organization.buzzn_systems, username: 'team@localpool.de', password: 'Zebulon_4711')
         else
-          @contract = self.contracts.register_operators.first
+          @contract = self.contracts.metering_point_operators.first
         end
-        @contract.save
+#        @contract.save
       else
         if self.contracts.any?
           self.contracts.each do |contract|

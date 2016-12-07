@@ -17,17 +17,15 @@ module API
 
         desc "Create a Reading"
         params do
-          requires :meter_id,                 type: String,   desc: "The ID of meter"
-          requires :timestamp,                type: DateTime, desc: "DateTime of the reading"
-          requires :energy_a_milliwatt_hour,  type: Integer,  desc: "energy A(often consumption) in Milliwatt Hour for the first register"
-          optional :energy_b_milliwatt_hour,  type: Integer,  desc: "energy B(often production) in Milliwatt Hour for the second register"
-          requires :power_a_milliwatt,        type: Integer,  desc: "power A(often consumption) in Milliwatt"
-          optional :power_b_milliwatt,        type: Integer,  desc: "power B(often production) in Milliwatt"
+          requires :register_id,           type: String,   desc: "The ID of register"
+          requires :timestamp,             type: DateTime, desc: "DateTime of the reading"
+          requires :energy_milliwatt_hour, type: Integer,  desc: "energy in Milliwatt Hour"
+          requires :power_milliwatt,       type: Integer,  desc: "power in Milliwatt"
         end
         oauth2 :full, :smartmeter
         post do
-          meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
-          if Reading.creatable_by?(current_user, meter)
+          register = Register::Base.unguarded_retrieve(permitted_params[:register_id])
+          if Reading.creatable_by?(current_user, register)
             reading = Reading.create(permitted_params)
 
             # if reading.timestamp > 30.seconds.ago # don't push old readings

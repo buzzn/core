@@ -3,7 +3,7 @@ class RegisterUserRequest < ActiveRecord::Base
   #tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
 
   belongs_to :user
-  belongs_to :register
+  belongs_to :register, class_name: Register::Base
 
   after_save :created_membership, :unless => :skip_callbacks
 

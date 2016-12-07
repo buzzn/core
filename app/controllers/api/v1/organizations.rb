@@ -29,21 +29,6 @@ module API
         end
 
 
-        desc 'Return the related contracts for an organization'
-        params do
-          requires :id, type: String, desc: 'ID of the organization'
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
-        end
-        paginate
-        oauth2 false
-        get ':id/contracts' do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
-          paginated_response(organization.contracts.readable_by(current_user))
-        end
-
-
         desc 'Return the related managers of an organization'
         params do
           requires :id, type: String, desc: 'ID of the organization'

@@ -195,7 +195,7 @@ class User < ActiveRecord::Base
 
 
   def editable_registers
-    Register.editable_by_user(self).collect(&:decorate)
+    Register::Base.editable_by_user(self).collect(&:decorate)
   end
 
   def editable_meters
@@ -215,15 +215,15 @@ class User < ActiveRecord::Base
   end
 
   def non_private_editable_registers
-    Register.editable_by_user(self).non_privates.collect(&:decorate)
+    Register::Base.editable_by_user(self).non_privates.collect(&:decorate)
   end
 
   def registers_as_member
-    Register.with_role(:member, self).collect(&:decorate)
+    Register::Base.with_role(:member, self).collect(&:decorate)
   end
 
   def accessible_registers
-    Register.accessible_by_user(self).collect(&:decorate)
+    Register::Base.accessible_by_user(self).collect(&:decorate)
   end
 
   def self.unsubscribed_from_notification(key, resource)
@@ -268,7 +268,7 @@ class User < ActiveRecord::Base
   def accessible_registers_by_address
     result = []
     without_address = []
-    all_registers = Register.accessible_by_user(self)
+    all_registers = Register::Base.accessible_by_user(self)
     all_addresses = all_registers.collect(&:address).compact.uniq{|address| address.longitude && address.latitude}
     result << {:address => nil, :registers => all_registers} if all_addresses.empty?
 
@@ -299,7 +299,7 @@ class User < ActiveRecord::Base
   end
 
   def editable_registers_without_meter_not_virtual
-    Register.editable_by_user_without_meter_not_virtual(self)
+    Register::Base.editable_by_user_without_meter_not_virtual(self)
   end
 
   #defined types: primary, info, success, warning, danger, mint, purple, pink, dark
@@ -397,7 +397,7 @@ private
 
   def delete_content
     self.editable_groups.each do |group|
-      if (group.managers.count == 1 && !group.in_registers.collect{|register| self.can_update?(register)}.include?(false))
+      if (group.managers.count == 1 && !group.input_registers.collect{|register| self.can_update?(register)}.include?(false))
         group.destroy
       end
     end

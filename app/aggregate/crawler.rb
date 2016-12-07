@@ -19,7 +19,7 @@
 
 
 # Discovergy
-# register = Register.find('b192b036-24ba-467a-906c-d4f642566c54')
+# register = Register::Base.find('b192b036-24ba-467a-906c-d4f642566c54')
 # Benchmark.measure{ Crawler.new(register).live }
 # Benchmark.measure{ Crawler.new(register).hour().count }
 # Benchmark.measure{ Crawler.new(register).day().count }
@@ -39,15 +39,15 @@ class Crawler
     @metering_point_operator_contract = @register.metering_point_operator_contract
     # keep the existing organiztion with name 'buzzn-metering' and the new
     # Organization.buzzn_metering both working using the exact same way
-    if @metering_point_operator_contract.organization.buzzn_metering?
+    if @metering_point_operator_contract.contractor.organization.buzzn_energy?
       @register_operator        = 'buzzn-metering'
     else
-      @register_operator        = @metering_point_operator_contract.organization.slug
+      @register_operator        = @metering_point_operator_contract.contractor.organization.slug
     end
     @register_input             = @register.input?
     @register_output            = @register.output?
     raise ArgumentError.new("no meter on register") unless @register.meter
-    @meter                            = @register.meter
+    @meter                      = @register.meter
     @registers_size             = @meter.registers.size
   end
 
@@ -75,7 +75,7 @@ class Crawler
   end
 
   def live
-    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid"
+    if @metering_point_operator ==  "mysmartgrid"
       my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request  = my_smart_grid.get_live
       if request.any?
@@ -123,7 +123,7 @@ class Crawler
 
 
   def live_each
-    if @metering_point_operator_contract.organization.slug == "mysmartgrid"
+    if @metering_point_operator == "mysmartgrid"
       #do something?
     else
       discovergy  = Discovergy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -155,7 +155,7 @@ class Crawler
 
   def hour(containing_timestamp=@unixtime_now)
     result = []
-    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
+    if @metering_point_operator ==  "mysmartgrid" # meter.name== 'MySmartGrid'
       my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request     = my_smart_grid.get_hour(containing_timestamp)
       if request.any?
@@ -208,7 +208,7 @@ class Crawler
   # returns array with 96 quarter hour values
   def day(containing_timestamp=@unixtime_now)
     result = []
-    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
+    if @metering_point_operator ==  "mysmartgrid" # meter.name== 'MySmartGrid'
       my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request  = my_smart_grid.get_day(containing_timestamp)
       if request.any?
@@ -292,7 +292,7 @@ class Crawler
 
   def month(containing_timestamp=@unixtime_now)
   result = []
-    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
+    if @metering_point_operator ==  "mysmartgrid" # meter.name== 'MySmartGrid'
       my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request  = my_smart_grid.get_month(containing_timestamp)
       if request.any?
@@ -354,7 +354,7 @@ class Crawler
 
   def year(containing_timestamp=@unixtime_now)
     result = []
-    if @metering_point_operator_contract.organization.slug ==  "mysmartgrid" # meter.name== 'MySmartGrid'
+    if @metering_point_operator ==  "mysmartgrid" # meter.name== 'MySmartGrid'
       my_smart_grid  = MySmartGrid.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
       request  = my_smart_grid.get_year(containing_timestamp)
       if request.any?

@@ -5,10 +5,10 @@ class ContractingParty < ActiveRecord::Base
   include Buzzn::GuardedCrud
 
   belongs_to :user
-  belongs_to :register
+  belongs_to :register, class_name: Register::Base, foreign_key: :register_id
 
-  has_many :owned_contracts, class_name: 'Contract', foreign_key: 'contract_owner_id'
-  has_many :assigned_contracts, class_name: 'Contract', foreign_key: 'contract_beneficiary_id'
+  has_many :owned_contracts, class_name: 'Contract', foreign_key: 'contractor_id'
+  has_many :assigned_contracts, class_name: 'Contract', foreign_key: 'customer_id'
 
   has_one :address, as: :addressable, dependent: :destroy
 
@@ -59,7 +59,7 @@ class ContractingParty < ActiveRecord::Base
   end
 
   def contracts
-    Contract.where("contract_owner_id = ? OR contract_beneficiary_id = ?", self.id, self.id)
+    Contract.where("contractor_id = ? OR customer_id = ?", self.id, self.id)
   end
 
   def self.readable_by_query(user)
@@ -98,7 +98,7 @@ class ContractingParty < ActiveRecord::Base
                                                             organization_id)
     end
     if register_id = params.delete(:register_id)
-      params[:register] = Register.guarded_retrieve(current_user,
+      params[:register] = Register::Base.guarded_retrieve(current_user,
                                                                register_id)
     end
     params

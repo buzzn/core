@@ -28,7 +28,7 @@ Group.readable_by(user).where(group[:id].eq(register[:group_id]))
 ```
 here the `group[:id]` belongs to the `Group.readable_by(user)` and `register[:group_id])` to the outer registers table. making this an AR query
 ```
-Register.where(Group.readable_by(user).where(group[:id].eq(register[:group_id])).project(1).exists.to_sql)
+Register::Base.where(Group.readable_by(user).where(group[:id].eq(register[:group_id])).project(1).exists.to_sql)
 ```
 this gives the SQL
 ```
@@ -37,7 +37,7 @@ SELECT * FROM registers WHERE EXISTS ( SELECT 1 WHERE ... AND groups.id = regist
 
 now you can add more conditions in an either-or manner. add a manager or admin condition:
 ```
-Register.where(Group.readable_by(user).where(group[:id].eq(register[:group_id])).project(1).exists.to_sql + ' OR ' + User.roles_query(user, manager: register[:id], admin: nil).project(1).exists.to_sql)
+Register::Base.where(Group.readable_by(user).where(group[:id].eq(register[:group_id])).project(1).exists.to_sql + ' OR ' + User.roles_query(user, manager: register[:id], admin: nil).project(1).exists.to_sql)
 ```
 
 this means either you get all registers where the given user belongs to readble group of a register or is manager/admin of a register.
@@ -50,5 +50,5 @@ where('registers.id = ?', resource.id).count == 1
 ```
 will give
 ```
-Register.where(Group.readable_by(user).where(group[:id].eq(register[:group_id])).project(1).exists.to_sql + ' OR ' + User.roles_query(user, manager: register[:id], admin: nil).project(1).exists.to_sql).where('registers.id = ?', resource.id).count == 1
+Register::Base.where(Group.readable_by(user).where(group[:id].eq(register[:group_id])).project(1).exists.to_sql + ' OR ' + User.roles_query(user, manager: register[:id], admin: nil).project(1).exists.to_sql).where('registers.id = ?', resource.id).count == 1
 ```

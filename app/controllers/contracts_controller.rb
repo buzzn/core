@@ -79,8 +79,8 @@ private
       :register_id,
       :organization_id,
       :group_id,
-      :contract_owner_id,
-      :contract_beneficiary_id
+      :contractor_id,
+      :customer_id
       )
   end
 

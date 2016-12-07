@@ -6,8 +6,7 @@ describe Buzzn::ScoreCalculator do
   let(:now) { Time.find_zone('Berlin').local(2016,2,2, 1,30,1) }
 
   subject do
-    scores = Buzzn::ScoreCalculator.new(group, now.to_i)
-    scores
+    Buzzn::ScoreCalculator.new(group, now.to_i)
   end
 
   [:day_interval, :month_interval, :year_interval].each do |interval|
@@ -98,8 +97,8 @@ describe Buzzn::ScoreCalculator do
       user          = Fabricate(:user)
       consumer      = Fabricate(:user)
       producer      = Fabricate(:user)
-      register_in         = Fabricate(:register, mode: 'in')
-      register_out        = Fabricate(:register, mode: 'out')
+      register_in         = Fabricate(:input_register)
+      register_out        = Fabricate(:output_register)
 
       group.registers += [register_in, register_out]
       consumer.add_role(:member, register_in)
@@ -156,7 +155,6 @@ describe Buzzn::ScoreCalculator do
   describe 'group Home-Of-The-Brave' do
     let(:now) { Time.find_zone('Berlin').local(2016,10,5, 18,30,1)  }
     let(:group) do
-      Fabricate(:buzzn_metering)
       easymeter_60051599 = Fabricate(:easymeter_60051599)
       register_z2 = easymeter_60051599.registers.first
       easymeter_60051559 = Fabricate(:easymeter_60051559)

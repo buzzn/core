@@ -7,7 +7,7 @@ class RegisterUserRequestsController < InheritedResources::Base
   end
 
   def create
-    register = Register.find(params[:register_id])
+    register = Register::Base.find(params[:register_id])
     mode = 'request'
     if current_user.can_update?(register)
       current_user.add_role(:member, register)

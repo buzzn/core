@@ -1,11 +1,5 @@
 describe '/api/v1/aggregates' do
 
-  before do
-    Fabricate(:buzzn_metering)
-    Fabricate(:discovergy)
-    Fabricate(:mysmartgrid)
-  end
-
   api_version = '/api/v1'
   api_controller = '/aggregates'
 
@@ -14,7 +8,7 @@ describe '/api/v1/aggregates' do
 
     it 'return the same cache for diffentend datetime formats' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register = Fabricate(:register)
+      register = Fabricate(:input_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Iceland').local(2015,2,1)
       (3*60*30).times do |i|
@@ -54,7 +48,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp energy by year_to_months as admin in summertime' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register = Fabricate(:register)
+      register = Fabricate(:input_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Moscow').local(2015,1,1)
       (400).times do |i|
@@ -94,7 +88,7 @@ describe '/api/v1/aggregates' do
 
 
     it 'slp energy by month_to_days as stranger in wintertime' do
-      register = Fabricate(:register, readable: 'world')
+      register = Fabricate(:input_register, readable: 'world')
       access_token  = Fabricate(:simple_access_token)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,1,1)
@@ -138,7 +132,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp energy by month_to_days as admin in summertime ' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register = Fabricate(:register)
+      register = Fabricate(:input_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,6,1)
       (24*31).times do |i|
@@ -182,7 +176,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp power by day_to_minutes as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register = Fabricate(:register)
+      register = Fabricate(:input_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2015,2,1)
       # 3 hours * 60 minutes * 60/2 seconds
@@ -225,7 +219,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp power by hour_to_minutes as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register = Fabricate(:register)
+      register = Fabricate(:input_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Bangkok').local(2015,2,1)
       4.times do |i|
@@ -268,7 +262,7 @@ describe '/api/v1/aggregates' do
 
     it 'error on differend power by hour_to_minutes as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      slp = Fabricate(:register)
+      slp = Fabricate(:input_register)
       pv = Fabricate(:easymeter_60051599).registers.first
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Sydney').local(2015,2,1)
@@ -303,12 +297,12 @@ describe '/api/v1/aggregates' do
 
     it 'no more than 5 registers as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      slp1 = Fabricate(:register)
-      slp2 = Fabricate(:register)
-      slp3 = Fabricate(:register)
-      slp4 = Fabricate(:register)
-      slp5 = Fabricate(:register)
-      slp6 = Fabricate(:register)
+      slp1 = Fabricate(:input_register)
+      slp2 = Fabricate(:input_register)
+      slp3 = Fabricate(:input_register)
+      slp4 = Fabricate(:input_register)
+      slp5 = Fabricate(:input_register)
+      slp6 = Fabricate(:input_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Sydney').local(2015,2,1)
       (60*60).times do |i|
@@ -343,8 +337,8 @@ describe '/api/v1/aggregates' do
 
     it 'multiple slp power by hour_to_minutes as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register1 = Fabricate(:register)
-      register2 = Fabricate(:register)
+      register1 = Fabricate(:input_register)
+      register2 = Fabricate(:input_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Sydney').local(2015,2,1)
       (60*60).times do |i|
@@ -387,8 +381,8 @@ describe '/api/v1/aggregates' do
 
     it 'multiple slp power by hour_to_minutes with forecast_kwh_pa as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register1 = Fabricate(:register, forecast_kwh_pa: 3000)
-      register2 = Fabricate(:register, forecast_kwh_pa: 8000)
+      register1 = Fabricate(:input_register, forecast_kwh_pa: 3000)
+      register2 = Fabricate(:input_register, forecast_kwh_pa: 8000)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2015,2,1)
       4.times do |i|
@@ -430,7 +424,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp energy by year_to_months in summertime just until now as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register = Fabricate(:register)
+      register = Fabricate(:input_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Moscow').local(2015,1,1)
       (400).times do |i|
@@ -476,7 +470,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp power by day_to_minutes just until now as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register = Fabricate(:register)
+      register = Fabricate(:input_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2015,2,1)
       # 24 hours * 60 minutes * 60/2 seconds
@@ -521,7 +515,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp energy by month_to_days in summertime just until now as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register = Fabricate(:register)
+      register = Fabricate(:input_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,6,1)
       (24*30).times do |i|
@@ -568,7 +562,7 @@ describe '/api/v1/aggregates' do
 
     it 'sep bhkw energy by year_to_months in summertime as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register = Fabricate(:register, mode: 'out')
+      register = Fabricate(:output_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Moscow').local(2015,1,1)
       (400).times do |i|
@@ -608,7 +602,7 @@ describe '/api/v1/aggregates' do
 
     it 'sep bhkw energy by month_to_days in summertime as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register = Fabricate(:register, mode: 'out')
+      register = Fabricate(:output_register)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('UTC').local(2016,6,1) - 1.day
       (24*32).times do |i|
@@ -1020,7 +1014,7 @@ describe '/api/v1/aggregates' do
         virtual_register = Fabricate(:register_forstenried_erzeugung) # discovergy Virtual register
         single_energy_values = []
         virtual_register.formula_parts.each do |formula_part|
-          register = Register.find(formula_part.operand_id)
+          register = Register::Base.find(formula_part.operand_id)
           request_params = {
             register_ids: register.id,
             resolution: 'month_to_days',
@@ -1184,7 +1178,7 @@ describe '/api/v1/aggregates' do
 
     it 'buzzn in and out as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      meter = Fabricate(:easy_meter_q3d_with_in_out_register)
+      meter = Fabricate(:easy_meter_q3d_with_in_output_register)
       register_out  = meter.registers.outputs.first
       register_in   = meter.registers.inputs.first
       energy_a_milliwatt_hour = 0
@@ -1232,7 +1226,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register = Fabricate(:register)
+      register = Fabricate(:input_register)
 
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,2,1)
@@ -1261,7 +1255,7 @@ describe '/api/v1/aggregates' do
 
     it 'slp with forecast_kwh_pa as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register = Fabricate(:register, forecast_kwh_pa: 3000)
+      register = Fabricate(:input_register, forecast_kwh_pa: 3000)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,2,1)
       (24*4).times do |i|
@@ -1288,8 +1282,8 @@ describe '/api/v1/aggregates' do
 
     it 'multiple slp with forecast_kwh_pa as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      register1 = Fabricate(:register, forecast_kwh_pa: 3000)
-      register2 = Fabricate(:register, forecast_kwh_pa: 8000)
+      register1 = Fabricate(:input_register, forecast_kwh_pa: 3000)
+      register2 = Fabricate(:input_register, forecast_kwh_pa: 8000)
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,2,1)
       (24*4).times do |i|

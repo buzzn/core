@@ -9,14 +9,26 @@ Fabricator :user do
   }
 end
 
-Fabricator :admin, from: :user do
-  after_create { |user| user.add_role(:admin) }
+
+['input_register', 'output_register'].each do |register|
+  Fabricator "user_with_friend_and_#{register}", from: :user do
+    after_create { |user |
+      friend = Fabricate("user_with_#{register}")
+      user.friendships.create(friend: friend)
+      friend.friendships.create(friend: user)
+    }
+  end
+
+  Fabricator "user_with_#{register}", from: :user do
+    after_create { |user|
+      user.add_role(:manager, Fabricate(register))
+    }
+  end
 end
 
-Fabricator :user_with_register, from: :user do
-  after_create { |user|
-    user.add_role(:manager, Fabricate(:register))
-  }
+
+Fabricator :admin, from: :user do
+  after_create { |user| user.add_role(:admin) }
 end
 
 Fabricator :user_received_friendship_request, from: :user do
@@ -29,14 +41,6 @@ end
 Fabricator :user_with_friend, from: :user do
   after_create { |user |
     friend = Fabricate(:user)
-    user.friendships.create(friend: friend)
-    friend.friendships.create(friend: user)
-  }
-end
-
-Fabricator :user_with_friend_and_register, from: :user do
-  after_create { |user |
-    friend = Fabricate(:user_with_register)
     user.friendships.create(friend: friend)
     friend.friendships.create(friend: user)
   }
@@ -74,6 +78,9 @@ end
 Fabricator :karin, from: :user do
   email       'karin.smith@solfux.de'
   profile     { Fabricate(:profile_karin) }
+  after_create { |user|
+    Fabricate(:contracting_party, user: user)
+  }
 end
 
 Fabricator :pavel, from: :user do

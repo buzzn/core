@@ -9,14 +9,12 @@ class Address < ActiveRecord::Base
   validates :street_name,     presence: true, length: { in: 2..128 }
   validates :street_number,   presence: true, length: { in: 1..32 }
   validates :city,            presence: true, length: { in: 2..128 }
-  #validates :state,           presence: true
+  validates :state,           presence: false
   validates :zip,             presence: true, numericality: { only_integer: true }
 
 
   after_validation :geocode
   geocoded_by :full_name
-
-  default_scope -> { order(:created_at => :asc) }
 
   def self.orga_address
     address = Address.arel_table
@@ -39,7 +37,7 @@ class Address < ActiveRecord::Base
       users_roles    = Role.users_roles_arel_table
       role           = Role.arel_table
       friendship     = Friendship.arel_table
-      register = Register.arel_table
+      register = Register::Base.arel_table
 
       # assume address[:addressable_id] is the register
       register_managers = users_roles
@@ -76,7 +74,7 @@ class Address < ActiveRecord::Base
   end
 
   def register
-    Register.find(addressable_id)
+    Register::Base.find(addressable_id)
   end
 
   def full_name

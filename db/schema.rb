@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161116143900) do
+ActiveRecord::Schema.define(version: 20161205131404) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,60 +142,68 @@ ActiveRecord::Schema.define(version: 20161116143900) do
     t.float    "tax_rate"
     t.integer  "tax_number"
     t.uuid     "organization_id"
-    t.uuid     "register_id"
     t.uuid     "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "retailer"
+    t.boolean  "provider_permission"
+    t.boolean  "subject_to_tax"
+    t.string   "mandate_reference"
+    t.string   "creditor_id"
   end
 
   add_index "contracting_parties", ["organization_id"], name: "index_contracting_parties_on_organization_id", using: :btree
-  add_index "contracting_parties", ["register_id"], name: "index_contracting_parties_on_register_id", using: :btree
   add_index "contracting_parties", ["slug"], name: "index_contracting_parties_on_slug", unique: true, using: :btree
   add_index "contracting_parties", ["user_id"], name: "index_contracting_parties_on_user_id", using: :btree
 
   create_table "contracts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
-    t.string   "mode"
-    t.string   "tariff"
-    t.integer  "price_cents",                        default: 0,     null: false
-    t.string   "price_currency",                     default: "EUR", null: false
     t.string   "status"
-    t.integer  "forecast_watt_hour_pa",    limit: 8
-    t.date     "commissioning"
-    t.date     "termination"
-    t.boolean  "terms"
+    t.integer  "forecast_kwh_pa",               limit: 8
+    t.date     "signing_date"
+    t.date     "end_date"
+    t.boolean  "terms_accepted"
     t.boolean  "confirm_pricing_model"
     t.boolean  "power_of_attorney"
-    t.string   "signing_user"
     t.string   "customer_number"
     t.string   "contract_number"
     t.string   "username"
     t.string   "encrypted_password"
-    t.boolean  "valid_credentials",                  default: false
-    t.boolean  "running",                            default: true
+    t.boolean  "valid_credentials",                       default: false
     t.uuid     "register_id"
     t.uuid     "organization_id"
-    t.uuid     "group_id"
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
-    t.uuid     "contract_owner_id"
-    t.uuid     "contract_beneficiary_id"
-    t.boolean  "retailer"
-    t.float    "price_cents_per_kwh"
-    t.integer  "price_cents_per_month"
-    t.integer  "discount_cents_per_month"
+    t.uuid     "localpool_id"
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
     t.boolean  "other_contract"
     t.boolean  "move_in"
-    t.date     "beginning"
+    t.date     "begin_date"
     t.boolean  "authorization"
     t.text     "feedback"
     t.text     "attention_by"
+    t.string   "renewable_energy_law_taxation"
+    t.string   "third_party_billing_number"
+    t.string   "third_party_renter_number"
+    t.string   "first_master_uid"
+    t.string   "second_master_uid"
+    t.string   "metering_point_operator_name"
+    t.string   "old_electricity_supplier_name"
+    t.string   "type"
+    t.date     "cancellation_date"
+    t.string   "old_supplier_name"
+    t.string   "old_customer_number"
+    t.string   "old_account_number"
+    t.uuid     "contractor_id",                                           null: false
+    t.uuid     "customer_id",                                             null: false
+    t.uuid     "signing_user_id",                                         null: false
   end
 
-  add_index "contracts", ["group_id"], name: "index_contracts_on_group_id", using: :btree
-  add_index "contracts", ["mode"], name: "index_contracts_on_mode", using: :btree
+  add_index "contracts", ["contractor_id"], name: "index_contracts_on_contractor_id", using: :btree
+  add_index "contracts", ["customer_id"], name: "index_contracts_on_customer_id", using: :btree
+  add_index "contracts", ["localpool_id"], name: "index_contracts_on_localpool_id", using: :btree
   add_index "contracts", ["organization_id"], name: "index_contracts_on_organization_id", using: :btree
   add_index "contracts", ["register_id"], name: "index_contracts_on_register_id", using: :btree
+  add_index "contracts", ["signing_user_id"], name: "index_contracts_on_signing_user_id", using: :btree
   add_index "contracts", ["slug"], name: "index_contracts_on_slug", unique: true, using: :btree
 
   create_table "conversations", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
@@ -465,9 +473,22 @@ ActiveRecord::Schema.define(version: 20161116143900) do
     t.string   "mode"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "market_place_id"
+    t.string   "represented_by"
   end
 
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
+
+  create_table "payments", force: :cascade do |t|
+    t.date    "begin_date",  null: false
+    t.date    "end_date"
+    t.integer "price_cents", null: false
+    t.string  "cycle"
+    t.string  "source"
+    t.uuid    "contract_id", null: false
+  end
+
+  add_index "payments", ["contract_id"], name: "index_payments_on_contract_id", using: :btree
 
   create_table "profiles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "user_name"
@@ -539,6 +560,7 @@ ActiveRecord::Schema.define(version: 20161116143900) do
     t.datetime "last_observed_timestamp"
     t.boolean  "observe_offline",         default: false
     t.boolean  "external",                default: false
+    t.string   "type"
   end
 
   add_index "registers", ["contract_id"], name: "index_registers_on_contract_id", using: :btree
@@ -591,6 +613,17 @@ ActiveRecord::Schema.define(version: 20161116143900) do
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
+
+  create_table "tariffs", force: :cascade do |t|
+    t.string  "name",                      null: false
+    t.date    "begin_date",                null: false
+    t.date    "end_date"
+    t.integer "energyprice_cents_per_kwh", null: false
+    t.integer "baseprice_cents_per_month", null: false
+    t.uuid    "contract_id",               null: false
+  end
+
+  add_index "tariffs", ["contract_id"], name: "index_tariffs_on_contract_id", using: :btree
 
   create_table "used_zip_sns", force: :cascade do |t|
     t.string   "zip"
@@ -689,4 +722,9 @@ ActiveRecord::Schema.define(version: 20161116143900) do
 
   add_index "zip_vnbs", ["zip"], name: "index_zip_vnbs_on_zip", using: :btree
 
+  add_foreign_key "contracts", "contracting_parties", column: "contractor_id"
+  add_foreign_key "contracts", "contracting_parties", column: "customer_id"
+  add_foreign_key "contracts", "users", column: "signing_user_id"
+  add_foreign_key "payments", "contracts"
+  add_foreign_key "tariffs", "contracts"
 end

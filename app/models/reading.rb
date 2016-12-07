@@ -4,22 +4,20 @@ class Reading
   include Authority::Abilities
 
   field :contract_id
-  field :meter_id
+  field :register_id
   field :timestamp,               type: DateTime
-  field :energy_a_milliwatt_hour, type: Integer
-  field :energy_b_milliwatt_hour, type: Integer
-  field :power_a_milliwatt,       type: Integer
-  field :power_b_milliwatt,       type: Integer
+  field :energy_milliwatt_hour, type: Integer
+  field :power_milliwatt,       type: Integer
   field :reason
   field :source
   field :quality
   field :load_course_time_series, type: Float
   field :state
 
-  index({ meter_id: 1 })
+  index({ register_id: 1 })
   index({ timestamp: 1 })
-  index({ meter_id: 1, timestamp: 1 })
-  index({ meter_id: 1, source: 1 })
+  index({ register_id: 1, timestamp: 1 })
+  index({ register_id: 1, source: 1 })
 
   validate :energy_milliwatt_hour_has_to_grow, if: :user_input?
 
@@ -32,13 +30,13 @@ class Reading
     result
   end
 
-  def meter
-    Meter.find(self.meter_id) if self.meter_id
+  def register
+    Register::Base.find(self.register_id) if self.register_id
   end
 
   def energy_milliwatt_hour_has_to_grow
-    reading_before = Reading.last_before_user_input(meter_id, timestamp)
-    reading_after = Reading.next_after_user_input(meter_id, timestamp)
+    reading_before = Reading.last_before_user_input(register_id, timestamp)
+    reading_after = Reading.next_after_user_input(register_id, timestamp)
     if !reading_before.nil? && reading_before[:energy_a_milliwatt_hour] > energy_a_milliwatt_hour
       self.errors.add(:energy_a_milliwatt_hour, "is lower than the last one:" + (reading_before[:energy_a_milliwatt_hour]/1000000).to_s)
     end
@@ -167,7 +165,7 @@ class Reading
     # project
     project = {
                 "$project" => {
-                  meter_id: 1,
+                  register_id: 1,
                   timestamp: 1
                 }
               }
@@ -221,8 +219,8 @@ class Reading
 
     formats = {_id: {}}
 
-    if source[:meter_id] && source[:meter_id]['$in'].size > 1
-      formats[:_id].merge!({ "meter_id" =>  "$meter_id" })
+    if source[:register_id] && source[:register_id]['$in'].size > 1
+      formats[:_id].merge!({ "register_id" =>  "$register_id" })
     end
 
     resolution.each do |format|
@@ -240,7 +238,7 @@ class Reading
     # project
     project = {
                 "$project" => {
-                  meter_id: 1,
+                  register_id: 1,
                   firstTimestamp:         "$firstTimestamp",
                   lastTimestamp:          "$lastTimestamp"
                 }
@@ -273,7 +271,7 @@ class Reading
 
 
     # group
-    if source[:meter_id] && source[:meter_id]['$in'].size > 1
+    if source[:register_id] && source[:register_id]['$in'].size > 1
       group = {
                 "$group" => {
                   firstTimestamp: { "$first" => "$firstTimestamp" }
@@ -343,11 +341,11 @@ class Reading
 
 
 
-  def self.last_by_meter_id(meter_id)
+  def self.last_by_register_id(register_id)
     pipe = [
       { "$match" => {
-          meter_id: {
-            "$in" => [meter_id]
+          register_id: {
+            "$in" => [register_id]
           }
         }
       },
@@ -361,11 +359,11 @@ class Reading
   end
 
 
-  def self.last_two_by_meter_id(meter_id)
+  def self.last_two_by_register_id(register_id)
     pipe = [
       { "$match" => {
-          meter_id: {
-            "$in" => [meter_id]
+          register_id: {
+            "$in" => [register_id]
           }
         }
       },
@@ -379,11 +377,11 @@ class Reading
   end
 
 
-  def self.first_by_meter_id(meter_id)
+  def self.first_by_register_id(register_id)
     pipe = [
       { "$match" => {
-          meter_id: {
-            "$in" => [meter_id]
+          register_id: {
+            "$in" => [register_id]
           }
         }
       },
@@ -396,11 +394,11 @@ class Reading
     return Reading.collection.aggregate(pipe).first
   end
 
-  def self.all_by_meter_id(meter_id)
+  def self.all_by_register_id(register_id)
     pipe = [
       { "$match" => {
-          meter_id: {
-            "$in" => [meter_id]
+          register_id: {
+            "$in" => [register_id]
           },
           source:{
             "$in" => ['user_input']
@@ -415,11 +413,11 @@ class Reading
     return Reading.collection.aggregate(pipe).to_a
   end
 
-  def self.last_before_user_input(meter_id, input_timestamp)
+  def self.last_before_user_input(register_id, input_timestamp)
     pipe = [
       { "$match" => {
-          meter_id: {
-            "$in" => [meter_id]
+          register_id: {
+            "$in" => [register_id]
           },
           source:{
             "$in" => ['user_input']
@@ -438,11 +436,11 @@ class Reading
     return Reading.collection.aggregate(pipe).first
   end
 
-  def self.next_after_user_input(meter_id, input_timestamp)
+  def self.next_after_user_input(register_id, input_timestamp)
     pipe = [
       { "$match" => {
-          meter_id: {
-            "$in" => [meter_id]
+          register_id: {
+            "$in" => [register_id]
           },
           source:{
             "$in" => ['user_input']

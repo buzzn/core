@@ -78,7 +78,7 @@
               %p= t('sufficiency')
 
       .row
-        .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id, register_ids: {in: @group.in_registers.collect(&:id).join(","), out: @group.out_registers.collect(&:id).join(",")}}
+        .col-sm-12.col-md-12.col-lg-12.group-chart{id: @group.id, register_ids: {in: @group.input_registers.collect(&:id).join(","), out: @group.output_registers.collect(&:id).join(",")}}
           .panel
             .panel-body.panel-colorful
 

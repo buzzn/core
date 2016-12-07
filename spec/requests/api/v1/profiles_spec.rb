@@ -194,7 +194,7 @@ describe "Profiles API" do
     profile.readable  = 'world'
     profile.save
     group             = Fabricate(:group)
-    register    = Fabricate(:register_readable_by_world)
+    register    = Fabricate(:input_register_readable_by_world)
     user.add_role(:member, register)
     group.registers << register
 
@@ -213,7 +213,7 @@ describe "Profiles API" do
     profile.readable  = 'world'
     profile.save
     group             = Fabricate(:group_readable_by_community)
-    register    = Fabricate(:register_readable_by_community)
+    register    = Fabricate(:output_register_readable_by_community)
     user.add_role(:member, register)
     group.registers << register
 
@@ -234,7 +234,7 @@ describe "Profiles API" do
     profile.readable  = 'world'
     profile.save
     group             = Fabricate(:group_readable_by_friends)
-    register    = Fabricate(:register_readable_by_friends)
+    register    = Fabricate(:input_register_readable_by_friends)
     token_user_friend.add_role(:member, register)
     group.registers << register
 
@@ -261,7 +261,7 @@ describe "Profiles API" do
     profile.readable  = 'world'
     profile.save
     group             = Fabricate(:group_readable_by_members)
-    register    = Fabricate(:register_readable_by_friends)
+    register    = Fabricate(:output_register_readable_by_friends)
     token_user_friend.add_role(:member, register)
     group.registers << register
 
@@ -278,7 +278,7 @@ describe "Profiles API" do
     profile.readable  = 'world'
     profile.save
     group             = Fabricate(:group_readable_by_friends)
-    register    = Fabricate(:register_readable_by_world)
+    register    = Fabricate(:input_register_readable_by_world)
     token_user.add_role(:member, register)
     group.registers << register
 
@@ -297,7 +297,7 @@ describe "Profiles API" do
     profile.save
     page_overload.times do
       group             = Fabricate(:group)
-      register    = Fabricate(:register_readable_by_world)
+      register    = Fabricate(:output_register_readable_by_world)
       user.add_role(:member, register)
       group.registers << register
     end
@@ -371,7 +371,7 @@ describe "Profiles API" do
     profile           = user.profile
     profile.readable  = 'world'
     profile.save
-    register    = Fabricate(:register_readable_by_world)
+    register    = Fabricate(:input_register_readable_by_world)
     user.add_role(:member, register)
 
     get_with_token "/api/v1/profiles/#{profile.id}/registers", access_token
@@ -388,7 +388,7 @@ describe "Profiles API" do
     profile           = user.profile
     profile.readable  = 'world'
     profile.save
-    register    = Fabricate(:register_readable_by_community)
+    register    = Fabricate(:output_register_readable_by_community)
     user.add_role(:member, register)
 
     get_without_token "/api/v1/profiles/#{profile.id}/registers"
@@ -407,7 +407,7 @@ describe "Profiles API" do
     profile           = token_user_friend.profile
     profile.readable  = 'world'
     profile.save
-    register    = Fabricate(:register_readable_by_friends)
+    register    = Fabricate(:input_register_readable_by_friends)
     token_user_friend.add_role(:member, register)
 
     get_with_token "/api/v1/profiles/#{profile.id}/registers", access_token.token
@@ -425,7 +425,7 @@ describe "Profiles API" do
     profile           = token_user_friend.profile
     profile.readable  = 'world'
     profile.save
-    register    = Fabricate(:register_readable_by_members)
+    register    = Fabricate(:output_register_readable_by_members)
     token_user_friend.add_role(:member, register)
 
     get_with_token "/api/v1/profiles/#{profile.id}/registers", access_token.token
@@ -440,7 +440,7 @@ describe "Profiles API" do
     profile           = token_user.profile
     profile.readable  = 'world'
     profile.save
-    register    = Fabricate(:register_readable_by_friends)
+    register    = Fabricate(:input_register_readable_by_friends)
     token_user.add_role(:member, register)
 
     get_without_token "/api/v1/profiles/#{profile.id}/registers"
@@ -457,7 +457,7 @@ describe "Profiles API" do
     profile.readable  = 'world'
     profile.save
     page_overload.times do
-      register  = Fabricate(:register_readable_by_world)
+      register  = Fabricate(:input_register_readable_by_world)
       user.add_role(:member, register)
     end
     get_without_token "/api/v1/profiles/#{profile.id}/registers"

@@ -16,8 +16,6 @@ class Organization < ActiveRecord::Base
 
   mount_uploader :image, PictureUploader
 
-  has_many :contracts
-
   has_one  :contracting_party
 
   has_one :address, as: :addressable, dependent: :destroy
@@ -31,47 +29,41 @@ class Organization < ActiveRecord::Base
   validates :phone, presence: true
   validates :mode, presence: true
 
+  delegate :contracts, to: :contracting_party, allow_nil: true
+
+  after_create :create_contracting_party
+
   scope :power_givers,                  -> { where(mode: 'power_giver') }
   scope :power_takers,                  -> { where(mode: 'power_taker') }
   scope :electricity_suppliers,         -> { where(mode: 'electricity_supplier') }
   scope :metering_service_providers,    -> { where(mode: 'metering_service_provider') }
-  scope :register_operators,      -> { where(mode: 'register_operator') }
+  scope :metering_point_operators,      -> { where(mode: 'metering_point_operator') }
   scope :distribution_system_operators, -> { where(mode: 'distribution_system_operator') }
   scope :transmission_system_operators, -> { where(mode: 'transmission_system_operator') }
   scope :others,                        -> { where(mode: 'other') }
   scope :readable_by,                   -> (user) { where(nil) }
 
-  DUMMY_ENERGY   = 'dummy energy supplier'
-  BUZZN_ENERGY   = 'buzzn GmbH'
-  BUZZN_READER   = 'buzzn Reader'
-  BUZZN_METERING = 'buzzn systems UG'
 
-  def self.dummy_energy
-    where(name: DUMMY_ENERGY).first
-  end
+  # define some predefined organziation with cache
+  { dummy: 'dummy organization',
+    dummy_energy: 'dummy energy supplier',
+    buzzn_reader: 'buzzn Reader',
+    buzzn_energy: 'buzzn GmbH',
+    buzzn_systems: 'buzzn systems UG',
+    discovergy: 'Discovergy',
+    mysmartgrid: 'MySmartGrid' }.each do |key, name|
 
-  def self.buzzn_energy
-    where(name: BUZZN_ENERGY).first
-  end
+    const_set key.to_s.upcase, name
+    
+    define_method "#{key.to_s}?" do
+      self.name == "#{name}"
+    end
 
-  def self.buzzn_reader
-    where(name: BUZZN_READER).first
-  end
-
-  def self.buzzn_metering
-    where(name: BUZZN_METERING).first
-  end
-
-  def buzzn_energy?
-    name == BUZZN_ENERGY
-  end
-
-  def buzzn_reader?
-    name == BUZZN_READER
-  end
-
-  def buzzn_metering?
-    name == BUZZN_METERING
+    (class << self; self; end).instance_eval do
+      define_method "#{key.to_s}" do
+        eval "@a_#{key} ||= where(name: #{key.to_s.upcase}).first"
+      end
+    end
   end
 
   def self.modes
@@ -94,5 +86,11 @@ class Organization < ActiveRecord::Base
   def self.filter(value)
     do_filter(value, *search_attributes)
   end
-  
+
+  private
+
+  def create_contracting_party
+    ContractingParty.create(legal_entity: 'company', organization: self)
+  end
+
 end

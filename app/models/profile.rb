@@ -123,7 +123,7 @@ class Profile < ActiveRecord::Base
   # def registers
   #   registers = []
   #   registers << self.user.registers # as member
-  #   registers << Register.editable_by_user(self.user) # as manager
+  #   registers << Register::Base.editable_by_user(self.user) # as manager
   #   registers.compact.flatten.uniq
   # end
 

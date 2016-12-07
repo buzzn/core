@@ -58,21 +58,18 @@ module API
         end
 
 
-
-        desc "Return the related registers for Meter"
-        params do
-          requires :id, type: String, desc: "ID of the Meter"
-          optional :filter, type: String, desc: "Search query using #{Base.join(Register.search_attributes)}"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
+        ['input', 'output'].each do |mode|
+          register_subclass = "Register::#{mode.camelize}".constantize
+          desc "Return the related #{mode} register for Meter"
+          params do
+            requires :id, type: String, desc: "ID of the #{mode} Meter"
+          end
+          oauth2 :full, :smartmeter
+          get ":id/registers/#{mode}" do
+            meter = Meter.guarded_retrieve(current_user, permitted_params)
+            register_subclass.where(meter_id: meter.id).readable_by(current_user)
+          end
         end
-        paginate
-        oauth2 :full, :smartmeter
-        get ":id/registers" do
-          meter = Meter.guarded_retrieve(current_user, permitted_params)
-          paginated_response(meter.registers.filter(permitted_params).readable_by(current_user))
-        end
-
 
 
 

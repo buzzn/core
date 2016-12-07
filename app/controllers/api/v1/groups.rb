@@ -83,7 +83,7 @@ module API
           group = Group.guarded_retrieve(current_user, permitted_params)
 
           # registers do consider group relation for readable_by
-          paginated_response(Register.by_group(group).without_externals.anonymized_readable_by(current_user))
+          paginated_response(Register::Base.by_group(group).without_externals.anonymized_readable_by(current_user))
         end
 
 

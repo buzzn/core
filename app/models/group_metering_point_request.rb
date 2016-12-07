@@ -3,7 +3,7 @@ class GroupRegisterRequest < ActiveRecord::Base
   #tracked
 
   belongs_to :user
-  belongs_to :register
+  belongs_to :register, class_name: Register::Base
   belongs_to :group
 
   after_save :created_membership, :unless => :skip_callbacks

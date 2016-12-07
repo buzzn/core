@@ -4,7 +4,7 @@ set :output, 'log/cron.log'
 
 
 every 5.minute do
-  runner "Register.observe"
+  runner "Register::Base.observe"
 end
 
 every 1.day, :at => '5:00 am' do
@@ -12,7 +12,7 @@ every 1.day, :at => '5:00 am' do
 end
 
 # every 10.minutes do
-#   runner "Register.update_chart_cache"
+#   runner "Register::Base.update_chart_cache"
 # end
 
 # every 1.minute do
@@ -21,7 +21,7 @@ end
 
 # every 3.minute do
 #   runner "Group.update_cache"
-#   #runner "Register.update_cache"
+#   #runner "Register::Base.update_cache"
 # end
 
 # every 30.minutes do
@@ -33,7 +33,7 @@ every 1.day, :at => '4:00 am' do
 end
 
 # every 1440.minutes do
-#   runner "Register.calculate_scores"
+#   runner "Register::Base.calculate_scores"
 # end
 
 # every 1.day, :at => '10:00 am' do

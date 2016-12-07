@@ -1,4 +1,4 @@
-class RegisterAuthorizer < ApplicationAuthorizer
+class Register::BaseAuthorizer < ApplicationAuthorizer
 
   def self.creatable_by?(user)
     !!user
@@ -16,9 +16,9 @@ class RegisterAuthorizer < ApplicationAuthorizer
     else
       raise 'wrong argument'
     end
-    # uses scope Register.readable_by(user)
-    readable?(Register, *args) ||
-      # TODO get this into Register.readable_by(user)
+    # uses scope Register::Base.readable_by(user)
+    readable?(Register::Base, *args) ||
+      # TODO get this into Register::Base.readable_by(user)
       (!resource.existing_group_request.nil? && user.can_update?(resource.existing_group_request.group))
   end
 

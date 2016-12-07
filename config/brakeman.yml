@@ -1,0 +1,3 @@
+---
+:skip_files:
+- app/models/address.rb
