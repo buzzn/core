@@ -58,6 +58,24 @@
       "note": ""
     },
     {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "61ec38034c566dae14e60ef6171c43a3b68b5c45ef96019be6fdcfff1b8351b1",
+      "message": "Render path contains parameter value",
+      "file": "app/views/registers/show.html.haml",
+      "line": 249,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.meter, { :locals => ({ :register => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate }) })",
+      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":24,"file":"app/controllers/registers_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "registers/show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "8219193545ae4c18520bff72d9d8283ed3854c51547baa10ff78d225d3ec225f",
@@ -74,6 +92,60 @@
       },
       "user_input": "Register::Base.columns.collect",
       "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "96663651a84ceef997fbe97d997e5b19ac44dd7ae631930a688f4e859f7f150e",
+      "message": "Render path contains parameter value",
+      "file": "app/views/registers/show.html.haml",
+      "line": 263,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.formula_parts, {})",
+      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":24,"file":"app/controllers/registers_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "registers/show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "b239d2d4d56561a9c3a872a5f1445ee1e8cfdf965c083f40ac05fddb25a9a6cd",
+      "message": "Render path contains parameter value",
+      "file": "app/views/registers/show.html.haml",
+      "line": 231,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.address, {})",
+      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":24,"file":"app/controllers/registers_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "registers/show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "c7c58f85602a10d21f7dfec2f6296b27e6eb59a6ef9304e2f37faa8de9a815c8",
+      "message": "Render path contains parameter value",
+      "file": "app/views/registers/show.html.haml",
+      "line": 78,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.received_user_requests, {})",
+      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":24,"file":"app/controllers/registers_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "registers/show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
       "note": ""
     },
     {
@@ -129,6 +201,24 @@
       "note": ""
     },
     {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "da75046529e1d6145dde5615d1000d57eb41c461ada006b7f9ec6081061547e4",
+      "message": "Render path contains parameter value",
+      "file": "app/views/registers/show.html.haml",
+      "line": 219,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.group.decorate, {})",
+      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":24,"file":"app/controllers/registers_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "registers/show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "Basic Auth",
       "warning_code": 9,
       "fingerprint": "f45fd07be0135c148b61e9f9f282031eaa5be455fe8806933385a15fee02b6a0",
@@ -148,6 +238,6 @@
       "note": ""
     }
   ],
-  "updated": "2016-12-07 08:07:22 +0100",
+  "updated": "2016-12-07 09:08:44 +0100",
   "brakeman_version": "3.3.1"
 }
