@@ -10,7 +10,7 @@ describe "BankAccount API" do
   end
 
   let(:contract) do
-    Fabricate(:power_giver_contract, output_register: output_register)
+    Fabricate(:power_giver_contract, register: output_register)
   end
 
   let(:account) do

@@ -338,10 +338,10 @@ describe "Groups API" do
   it 'gets the related registers for Group' do
     group                 = Fabricate(:group)
     group.registers = [
-      Fabricate(:register_readable_by_world),
-      Fabricate(:register_readable_by_community),
-      Fabricate(:register_readable_by_friends),
-      Fabricate(:register_readable_by_members),
+      Fabricate(:input_register_readable_by_world),
+      Fabricate(:output_register_readable_by_community),
+      Fabricate(:input_register_readable_by_friends),
+      Fabricate(:input_register_readable_by_members),
       Fabricate(:output_register_readable_by_world),
     ]
 
@@ -354,7 +354,8 @@ describe "Groups API" do
   it 'paginates registers' do
     group = Fabricate(:group)
     page_overload.times do
-      group.registers << Fabricate(:register_readable_by_world)
+      group.registers << Fabricate([:input_register_readable_by_world,
+                                    :output_register_readable_by_world].sample)
     end
     get_without_token "/api/v1/groups/#{group.id}/registers"
     expect(response).to have_http_status(200)
@@ -511,7 +512,7 @@ describe "Groups API" do
   end
 
   it 'adds manager only with manager token or admin token' do
-    register  = Fabricate(:register_readable_by_world)
+    register  = Fabricate(:output_register_readable_by_world)
     group           = Fabricate(:group)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
@@ -576,7 +577,7 @@ describe "Groups API" do
   end
 
   it 'removes group manager only for current user or with manager token' do
-    register  = Fabricate(:register_readable_by_world)
+    register  = Fabricate(:input_register_readable_by_world)
     group           = Fabricate(:group)
     user            = Fabricate(:user)
     user.add_role(:manager, group)
@@ -621,8 +622,8 @@ describe "Groups API" do
     user          = Fabricate(:user)
     consumer      = Fabricate(:user)
     producer      = Fabricate(:user)
-    register_in         = Fabricate(:register, mode: 'in')
-    register_out        = Fabricate(:register, mode: 'out')
+    register_in         = Fabricate(:input_register)
+    register_out        = Fabricate(:output_register)
     user.add_role(:member, register_in)
     user.add_role(:manager, register_in)
     user.add_role(:member, register_out)
