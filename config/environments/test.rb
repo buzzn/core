@@ -39,7 +39,7 @@ Buzzn::Application.configure do
 
 
   config.after_initialize do
-    # Set Time.now to September 1, 2008 10:05:00 AM (at this instant), but allow it to move forward
+    # Set Time.now to July 2, 2016 10:05:00 AM (at this instant), but allow it to move forward
     t = Time.local(2016, 7, 2, 10, 5, 0)
     Timecop.travel(t)
   end
