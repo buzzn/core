@@ -2,7 +2,6 @@ class RegisterResource < ApplicationResource
 
   attributes  :uid,
               :name,
-              :mode,
               :meter_id,
               :readable
 

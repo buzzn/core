@@ -35,12 +35,6 @@ module Register
     accepts_nested_attributes_for :contracts
 
 
-    def self.modes
-      %w{
-      in
-      out
-    }
-    end
 
     def self.readables
       %w{
@@ -53,7 +47,6 @@ module Register
 
 
     validates :readable, inclusion:{ in: self.readables }
-    validates :mode, inclusion:{ in: self.modes }
     validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
     validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_register?
 
@@ -402,21 +395,7 @@ module Register
       end
     end
 
-    def self.modes
-      %w{
-        in
-        out
-      }
-    end
 
-    def self.readables
-      %w{
-        world
-        community
-        friends
-        members
-      }
-    end
 
 
     def self.json_tree(nodes)
