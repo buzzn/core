@@ -196,29 +196,11 @@ describe "Users API" do
     expect(response).to have_http_status(200)
   end
 
-
-  ['input_register', 'output_register'].each do |register|
-    Fabricator "user_with_friend_and_#{register}", from: :user do
-      after_create { |user |
-        friend = Fabricate("user_with_#{register}")
-        user.friendships.create(friend: friend)
-        friend.friendships.create(friend: user)
-      }
-    end
-
-    Fabricator "user_with_#{register}", from: :user do
-      after_create { |user|
-        user.add_role(:manager, Fabricate(register))
-      }
-    end
-  end
-
-
   it 'gets the related groups for User' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:group_readable_by_members)
     user          = User.find(access_token.resource_owner_id)
-    register    = Fabricate(:register_readable_by_world)
+    register    = Fabricate(:output_register_readable_by_world)
     user.add_role(:member, register)
     group.registers << register
     get_with_token "/api/v1/users/#{user.id}/groups", access_token.token
@@ -230,7 +212,7 @@ describe "Users API" do
     user          = User.find(access_token.resource_owner_id)
     page_overload.times do
       group             = Fabricate(:group)
-      register    = Fabricate(:register_readable_by_world)
+      register    = Fabricate(:output_register_readable_by_world)
       user.add_role(:member, register)
       group.registers << register
     end
