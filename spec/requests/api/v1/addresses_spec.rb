@@ -74,8 +74,6 @@ describe 'Addresses API' do
     params.each do |k,v|
       expect(json['data']['attributes'][k]).not_to eq(v)
     end
-    expect(json['data']['attributes']['latitude']).not_to eq(nil)
-    expect(json['data']['attributes']['longitude']).not_to eq(nil)
   end
 
   it 'updates address using full token' do
