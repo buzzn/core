@@ -62,5 +62,10 @@ module Buzzn
 
     config.autoload_paths << "#{Rails.root}/lib"
 
+    config.after_initialize do
+
+      # service components
+      Application.config.data_source_registry = Buzzn::DataSourceRegistry.new
+    end
   end
 end
