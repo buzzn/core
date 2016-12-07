@@ -21,7 +21,6 @@ module API
             desc "Create a #{mode} Register."
             params do
               requires :name, type: String, desc: "name"
-              optional :mode, type: String, desc: "direction of energie", values: klass.modes
               requires :readable, type: String, desc: "readable by?", values: klass.readables
               requires :meter_id, type: String, desc: "Meter ID"
               optional :uid, type: String, desc: "UID(DE00...)"
