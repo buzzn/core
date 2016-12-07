@@ -21,9 +21,6 @@ VCR.configure do |c|
   c.cassette_library_dir = "spec/vcr_cassettes"
   c.hook_into :faraday, :webmock
   c.default_cassette_options = { :serialize_with => :syck }
-  # c.ignore_request do |request|
-  #   URI(request.uri).host == 'api.discovergy.com'
-  # end
 end
 
 
