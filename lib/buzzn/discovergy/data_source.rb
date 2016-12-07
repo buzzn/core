@@ -8,22 +8,22 @@ module Buzzn::Discovergy
       @facade = Facade.new(url, max_concurrent)
     end
 
-    def collection(broker, interval, mode)
+    def collection(group, interval, mode)
       # TODO: check that broker is only for a group or virtual meter!
       if !interval.live?
-        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong resolution')
+        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong period')
       end
-      response = @facade.readings(broker, interval, mode, true)
+      response = @facade.readings(group.discovergy_broker, interval, mode, true)
       result = parse_collected_data(response.body, interval)
       result.freeze
       result
     end
 
-    def aggregated(broker, interval, mode)
+    def aggregated(meter_or_group, interval, mode)
       # NOTE: broker may be for a group, a virtual meter OR a real meter!
       two_way_meter = broker.two_way_meter?
       external_id = broker.external_id
-      response = @facade.readings(broker, interval, mode, false)
+      response = @facade.readings(meter_or_group.discovergy_broker, interval, mode, false)
       result = parse_aggregated_data(response.body, interval, mode, two_way_meter, external_id)
       result.freeze
       result
@@ -73,7 +73,7 @@ module Buzzn::Discovergy
       result = []
       json = MultiJson.load(response)
 
-      case interval.resolution
+      case interval.period
       when :live
         result << parse_aggregated_live(json, mode, two_way_meter, external_id)
       when :hour
@@ -168,7 +168,7 @@ module Buzzn::Discovergy
     def parse_collected_data(response, interval)
       result = []
       json = MultiJson.load(response)
-      case interval.resolution
+      case interval.period
       when :live
         json.each do |item|
           external_id = item.first
@@ -179,7 +179,7 @@ module Buzzn::Discovergy
           result << result_item
         end
       else
-        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong resolution')
+        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong period')
       end
       return result
     end
