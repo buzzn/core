@@ -610,7 +610,7 @@ de:
   electricity_supplier: Stromlieferant
   electricity_purchaser: Stromabnehmer
   metering_service_provider: Messdienstleister
-  register_operator: Messstellenbetreiber
+  metering_point_operator: Messstellenbetreiber
   distribution_system_operator: Verteilnetzbetreiber
   transmission_system_operator: Übertragungsnetzbetreiber
 

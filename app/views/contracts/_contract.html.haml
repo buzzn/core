@@ -29,14 +29,14 @@
               %small= t('price')
 
 
-    - elsif contract.mode == 'register_operator_contract'
+    - elsif contract.mode == 'metering_point_operator_contract'
       .panel
         .pad-all.media.panel-mint.panel-colorful
           .media-left
             %span.icon-wrap.icon-wrap-xs
               %i.fa.fa-file-text-o.fa-2x
           .media-body
-            %p.h3.text-thin.media-heading= t('register_operator')
+            %p.h3.text-thin.media-heading= t('metering_point_operator')
             %small.text-uppercase= t(contract.mode)
         %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
           - if contract.organization
