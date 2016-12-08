@@ -1,7 +1,3 @@
-<<<<<<< 388bb831c3c5cf6ef8a8d69b0b2e692d67d8d22e
-require 'buzzn'
-require 'buzzn/discovergy/throughput'
-
 module Buzzn::Discovergy
   class Facade
 

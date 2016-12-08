@@ -1,5 +1,3 @@
-require 'buzzn'
-
 module Buzzn
   class DataResult < Array
     attr_reader :resource_id
