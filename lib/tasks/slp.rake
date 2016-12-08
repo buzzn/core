@@ -31,8 +31,8 @@ namespace :slp do
           else
             Reading.create(
               timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
-              energy_a_milliwatt_hour: watt_hour,
-              power_a_milliwatt: watts,
+              energy_milliwatt_hour: watt_hour,
+              power_milliwatt: watts,
               source: "slp"
             )
           end

@@ -29,8 +29,8 @@ Fabricator :metering_service_provider, from: :organization do
   mode 'metering_service_provider'
 end
 
-Fabricator :register_operator, from: :organization do
-  mode 'register_operator'
+Fabricator :metering_point_operator, from: :organization do
+  mode 'metering_point_operator'
 end
 
 Fabricator :transmission_system_operator, from: :organization do
@@ -79,6 +79,6 @@ Fabricator :dummy, from: :other_organization do
 end
 
 # TODO what is this for ?
-Fabricator :buzzn_reader, from: :register_operator do
+Fabricator :buzzn_reader, from: :metering_point_operator do
   name Organization::BUZZN_READER
 end

@@ -38,8 +38,8 @@ namespace :sep do
       pv_watt_hour += add_pv_watt_hour
       Reading.create(
         timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
-        energy_a_milliwatt_hour: pv_watt_hour,
-        power_a_milliwatt: pv_watts,
+        energy_milliwatt_hour: pv_watt_hour,
+        power_milliwatt: pv_watts,
         source: "sep_pv"
       )
 
@@ -48,8 +48,8 @@ namespace :sep do
       bhkw_watt_hour += add_bhkw_watt_hour
       Reading.create(
         timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
-        energy_a_milliwatt_hour: bhkw_watt_hour,
-        power_a_milliwatt: bhkw_watts,
+        energy_milliwatt_hour: bhkw_watt_hour,
+        power_milliwatt: bhkw_watts,
         source: "sep_bhkw"
       )
 
