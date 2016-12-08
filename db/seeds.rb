@@ -40,8 +40,9 @@ Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
 # Messdienstleistung (Ablesung und Messung)
 Fabricate(:buzzn_metering)
 Fabricate(:buzzn_reader)
-Fabricate(:register_operator, name: 'Discovergy')
-Fabricate(:register_operator, name: 'MySmartGrid')
+Fabricate(:dummy)
+Fabricate(:metering_point_operator, name: 'Discovergy')
+Fabricate(:metering_point_operator, name: 'MySmartGrid')
 
 
 buzzn_team_names = %w[ felix justus danusch thomas stefan philipp christian kristian pavel eva ]
@@ -54,7 +55,7 @@ buzzn_team_names.each do |user_name|
     easymeter_60139082 = Fabricate(:easymeter_60139082)
     register_z1a = easymeter_60139082.registers.first
     register_z1b = easymeter_60139082.registers.last
-    @fichtenweg8 = root_mp = register_z1a
+    @fichtenweg8 = root_register = register_z1a
     user.add_role :manager, register_z1a
     user.add_role :manager, register_z1b
     register_z1a.contracts.each do |contract|
@@ -106,8 +107,8 @@ buzzn_team_names.each do |user_name|
     @gocycle = Fabricate(:gocycle)
     user.add_role :manager, @gocycle
     user.add_role :admin # felix is admin
-    root_mp = Fabricate(:register_urbanstr88)
-    root_mp.devices << @gocycle
+    root_register = Fabricate(:register_urbanstr88)
+    root_register.devices << @gocycle
 
     if Rails.env.development?
       Fabricate(:application, owner: user, name: 'Buzzn API', scopes: 'simple full', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
@@ -119,28 +120,31 @@ buzzn_team_names.each do |user_name|
 
     Fabricate(:application, owner: user, name: 'Buzzn Swagger UI', scopes: Doorkeeper.configuration.scopes, redirect_uri: Rails.application.secrets.hostname + '/api/o2c.html')
   when 'christian'
-    Fabricate(:mpoc_christian)
+    contract = Fabricate(:mpoc_christian)
+    root_register = contract.register
     user.add_role :admin # christian is admin
   when 'philipp'
-    root_mp = Fabricate(:mpoc_philipp)
+    contract = Fabricate(:mpoc_philipp)
+    root_register = contract.register
   when 'stefan'
     @bhkw_stefan       = Fabricate(:bhkw_stefan)
-    @forstenrieder_weg_mp = root_mp = Fabricate(:mpoc_stefan).register
-    root_mp.devices << @bhkw_stefan
+    @forstenrieder_weg_mp = root_register = Fabricate(:mpoc_stefan).register
+    root_register.devices << @bhkw_stefan
     user.add_role :manager, @bhkw_stefan
   when 'thomas'
-    Fabricate(:mpoc_ferraris_0001_amperix, register: root_mp)
+    contract = Fabricate(:mpoc_ferraris_0001_amperix)
+    root_register = contract.register
     user.add_role :admin # thomas is admin
   when 'kristian'
-    root_mp = Fabricate(:register_kristian)
-    Fabricate(:mpoc_buzzn_metering, register: root_mp)
+    root_register = Fabricate(:register_kristian)
+    Fabricate(:mpoc_buzzn_metering, register: root_register)
     user.add_role :admin # kristian is admin
   else
-    root_mp = Fabricate(:register)
+    root_register = Fabricate(:input_register)
   end
-  if root_mp
-    user.add_role :manager, root_mp
-    user.add_role(:member, root_mp)
+  if root_register
+    user.add_role :manager, root_register
+    user.add_role(:member, root_register)
   end
 
 end
@@ -165,24 +169,13 @@ uxtest_user = Fabricate(:uxtest_user)
 # register_hof_butenland_wind.devices << device
 # jan_gerdes.add_role :manager, device
 
-# register_hof_butenland_wind.contracts.register_operators.first.contracting_party = jan_gerdes.contracting_party
-# register_hof_butenland_wind.contracts.register_operators.first.save
+# register_hof_butenland_wind.contracts.metering_point_operators.first.contracting_party = jan_gerdes.contracting_party
+# register_hof_butenland_wind.contracts.metering_point_operators.first.save
 
 
 # karin
-karin = Fabricate(:karin)
-register_pv_karin = Fabricate(:register_pv_karin)
-register_pv_karin.contracts << Fabricate(:mpoc_karin, register: register_pv_karin)
-karin.add_role :member, register_pv_karin
-karin.add_role :manager, register_pv_karin
-pv_karin = Fabricate(:pv_karin)
-karin.add_role :manager, pv_karin
-register_pv_karin.devices << pv_karin
-register_pv_karin.contracts.register_operators.first.contract_beneficiary = karin.contracting_parties.first
-register_pv_karin.contracts.register_operators.first.save
-
-karin.add_role :member, @forstenrieder_weg_mp
-
+register_pv_karin = Fabricate(:mpoc_karin).register
+karin = register_pv_karin.managers.first
 
 buzzn_team.each do |buzzn_user|
   karin.friendships.create(friend: buzzn_user) # alle von buzzn sind freund von karin
@@ -195,13 +188,7 @@ geloeschter_benutzer = Fabricate(:geloeschter_benutzer)
 
 
 # christian_schuetze
-christian_schuetze = Fabricate(:christian_schuetze)
 @fichtenweg10 = register_cs_1 = Fabricate(:register_cs_1)
-christian_schuetze.add_role :manager, register_cs_1
-register_cs_1.contracts << Fabricate(:mpoc_justus, register: register_cs_1)
-christian_schuetze.add_role :member, register_cs_1
-register_cs_1.contracts.register_operators.first.contract_beneficiary = christian_schuetze.contracting_parties.first
-register_cs_1.contracts.register_operators.first.save
 
 
 
