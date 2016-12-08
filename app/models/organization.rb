@@ -54,7 +54,7 @@ class Organization < ActiveRecord::Base
     mysmartgrid: 'MySmartGrid' }.each do |key, name|
 
     const_set key.to_s.upcase, name
-    
+
     define_method "#{key.to_s}?" do
       self.name == "#{name}"
     end
@@ -72,7 +72,7 @@ class Organization < ActiveRecord::Base
       power_taker
       electricity_supplier
       metering_service_provider
-      register_operator
+      metering_point_operator
       distribution_system_operator
       transmission_system_operator
       other

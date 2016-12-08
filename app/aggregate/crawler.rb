@@ -40,9 +40,9 @@ class Crawler
     # keep the existing organiztion with name 'buzzn-metering' and the new
     # Organization.buzzn_metering both working using the exact same way
     if @metering_point_operator_contract.contractor.organization.buzzn_energy?
-      @register_operator        = 'buzzn-metering'
+      @metering_point_operator        = 'buzzn-metering'
     else
-      @register_operator        = @metering_point_operator_contract.contractor.organization.slug
+      @metering_point_operator        = @metering_point_operator_contract.contractor.organization.slug
     end
     @register_input             = @register.input?
     @register_output            = @register.output?
@@ -52,7 +52,7 @@ class Crawler
   end
 
   def valid_credential?
-    case @register_operator
+    case @metering_point_operator
 
     when 'discovergy'
       discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
@@ -70,7 +70,7 @@ class Crawler
       return request != "" && !request.nil?
 
     else
-      "You gave me #{@register_operator} -- I have no idea what to do with that."
+      "You gave me #{@metering_point_operator} -- I have no idea what to do with that."
     end
   end
 
