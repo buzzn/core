@@ -137,11 +137,19 @@ module Buzzn::Discovergy
       else
         power = value > 0 ? value.abs/1000 : 0
       end
+<<<<<<< ba4d7c2d18b08618b86ce16cb8b4c3653d54a585
       Buzzn::DataResult.new(Time.at(timestamp/1000.0), power, resource_id, mode)
     end
 
     def parse_aggregated_hour(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.milliwatt(resource_id)
+=======
+      Buzzn::DataResult.new(resource_id, timestamp, power, mode)
+    end
+
+    def parse_aggregated_hour(json, mode, two_way_meter, resource_id)
+      result = Buzzn::DataResultSet.new(resource_id)
+>>>>>>> current_power aggregation mainly used by bubble-chart
       json.each do |item|
         if two_way_meter
           if item['values']['power'] > 0 && mode == :in
