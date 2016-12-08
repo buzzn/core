@@ -7,7 +7,6 @@ module Buzzn
     def initialize(from = nil, to = from)
       @from = from
       @to = to
-      @period = _period
       @resolution = _resolution
     end
 
@@ -35,7 +34,7 @@ module Buzzn
       timespan <= 3601 && timespan > 0
     end
 
-    def _period
+    def _resolution
       self.live? ? :live : (
         self.hour? ? :hour : (
           self.day? ? :day : (
@@ -46,22 +45,7 @@ module Buzzn
         )
       )
     end
-
-    def _resolution
-      case @period
-      when :live
-        nil
-      when :hour
-        :minute
-      when :day
-        :hour
-      when :month
-        :day
-      when :year
-        :month
-      end
-    end
-    private :_resolution, :_period
+    private :_resolution
 
     class << self
       private :new

@@ -34,7 +34,7 @@ module Buzzn::Discovergy
         energy_out = "Out"
       end
 
-      case interval.period
+      case interval.resolution
       when :live
         query = '/public/v1/last_reading?meterId=' + meter_id + '&fields=power&each=' + collection.to_s
       when :hour

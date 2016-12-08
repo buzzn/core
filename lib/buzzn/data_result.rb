@@ -2,10 +2,10 @@ require 'buzzn'
 
 module Buzzn
   class DataResult < Array
-    attr_reader :external_id
+    attr_reader :resource_id
 
-    def initialize(external_id)
-      @external_id = external_id
+    def initialize(resource_id)
+      @resource_id = resource_id
     end
 
     class DataPoint

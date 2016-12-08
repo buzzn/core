@@ -4,27 +4,52 @@ module Buzzn::Discovergy
   # readings and produces a DataResult object
   class DataSource
 
-    def initialize(url='https://api.discovergy.com', max_concurrent=30)
-      @facade = Facade.new(url, max_concurrent)
+    def initialize(facade = Facade.new)
+      @facade = facade
     end
 
-    def collection(group, interval, mode)
-      # TODO: check that broker is only for a group or virtual meter!
-      if !interval.live?
-        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong period')
+    def to_map(resource)
+      case resource
+      when Group
+        to_group_map(resource)
+      when Register
+        to_register_map(resource)
       end
-      response = @facade.readings(group.discovergy_broker, interval, mode, true)
-      result = parse_collected_data(response.body, interval)
+    end
+
+    def to_group_map(group)
+      map = {}
+      # join on discovergy_broker.resource_id = group.id
+      DiscovergyBroker.joins(:registers).where('registers.group_id = ?', group.id).each do |broker|
+        map[broker.external_id] = broker.id
+      end
+      map
+    end
+    def to_register_map(register)
+      map = {}
+      # join on discovergy_broker.resource_id = formular_parts.operand_id
+      DiscovergyBroker.joins(:formular_parts).where('forumlar_parts.register_id = ?', register.id).each do |r|
+        map[broker.external_id] = resource.id
+      end
+      map
+    end
+
+    def collection(group_or_virtual_register, interval, mode)
+      map = to_map(group_or_virtual_register)
+      if !interval.live?
+        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong resolution')
+      end
+      response = @facade.readings(group_or_virtual_register.discovergy_broker, interval, mode, true)
+      result = parse_collected_data(response.body, interval, map)
       result.freeze
       result
     end
 
-    def aggregated(meter_or_group, interval, mode)
-      # NOTE: broker may be for a group, a virtual meter OR a real meter!
+    def aggregated(register_or_group, interval, mode)
+      broker = register_or_group.discovergy_broker
       two_way_meter = broker.two_way_meter?
-      external_id = broker.external_id
-      response = @facade.readings(meter_or_group.discovergy_broker, interval, mode, false)
-      result = parse_aggregated_data(response.body, interval, mode, two_way_meter, external_id)
+      response = @facade.readings(broker, interval, mode, false)
+      result = parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id)
       result.freeze
       result
     end
@@ -69,25 +94,25 @@ module Buzzn::Discovergy
     ### PARSER ###
     ##############
 
-    def parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
+    def parse_aggregated_data(response, interval, mode, two_way_meter, resource_id)
       result = []
       json = MultiJson.load(response)
 
-      case interval.period
+      case interval.resolution
       when :live
-        result << parse_aggregated_live(json, mode, two_way_meter, external_id)
+        result << parse_aggregated_live(json, mode, two_way_meter, resource_id)
       when :hour
-        result << parse_aggregated_hour(json, mode, two_way_meter, external_id)
+        result << parse_aggregated_hour(json, mode, two_way_meter, resource_id)
       when :day
-        result << parse_aggregated_day(json, mode, two_way_meter, external_id)
+        result << parse_aggregated_day(json, mode, two_way_meter, resource_id)
       else
-        result << parse_aggregated_month_year(json, mode, two_way_meter, external_id)
+        result << parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
       end
       return result
     end
 
-    def parse_aggregated_live(json, mode, two_way_meter, external_id)
-      result = Buzzn::DataResult.new(external_id)
+    def parse_aggregated_live(json, mode, two_way_meter, resource_id)
+      result = Buzzn::DataResult.new(resource_id)
       timestamp = json['time']
       value = json['values']['power']
       if two_way_meter
@@ -105,8 +130,8 @@ module Buzzn::Discovergy
       return result
     end
 
-    def parse_aggregated_hour(json, mode, two_way_meter, external_id)
-      result = Buzzn::DataResult.new(external_id)
+    def parse_aggregated_hour(json, mode, two_way_meter, resource_id)
+      result = Buzzn::DataResult.new(resource_id)
       json.each do |item|
         if two_way_meter
           if item['values']['power'] > 0 && mode == 'in'
@@ -125,8 +150,8 @@ module Buzzn::Discovergy
       return result
     end
 
-    def parse_aggregated_day(json, mode, two_way_meter, external_id)
-      result = Buzzn::DataResult.new(external_id)
+    def parse_aggregated_day(json, mode, two_way_meter, resource_id)
+      result = Buzzn::DataResult.new(resource_id)
       energy_out = mode == 'in' ? "" : "Out"
       first_reading = first_timestamp = nil
       json.each do |item|
@@ -142,8 +167,8 @@ module Buzzn::Discovergy
       return result
     end
 
-    def parse_aggregated_month_year(json, mode, two_way_meter, external_id)
-      result = Buzzn::DataResult.new(external_id)
+    def parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
+      result = Buzzn::DataResult.new(resource_id)
       energy_out = mode == 'in' ? "" : "Out"
       old_value = new_value = timestamp = i = 0
       if two_way_meter && mode == 'out'
@@ -165,21 +190,21 @@ module Buzzn::Discovergy
       return result
     end
 
-    def parse_collected_data(response, interval)
+    def parse_collected_data(response, interval, map)
       result = []
       json = MultiJson.load(response)
-      case interval.period
+      case interval.resolution
       when :live
         json.each do |item|
-          external_id = item.first
+          resource_id = map[item.first]
           timestamp = item[1]['time']
           value = item[1]['values']['power']
-          result_item = Buzzn::DataResult.new(external_id)
+          result_item = Buzzn::DataResult.new(resource_id)
           result_item.add(timestamp, value)
           result << result_item
         end
       else
-        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong period')
+        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong resolution')
       end
       return result
     end
