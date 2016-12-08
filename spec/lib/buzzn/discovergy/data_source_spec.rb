@@ -31,8 +31,8 @@ describe Buzzn::Discovergy::DataSource do
     two_way_meter = false
     external_id = broker.external_id
     result = data_source.parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
-    expect(result[0][0].timestamp).to eq 1480606450088
-    expect(result[0][0].value).to eq 1100
+    expect(result[0].timestamp).to eq 1480606450088
+    expect(result[0].value).to eq 1100
   end
 
   it 'parses single meter hour response' do
@@ -111,10 +111,10 @@ describe Buzzn::Discovergy::DataSource do
     two_way_meter = false
     external_id = broker.external_id
     result = data_source.parse_collected_data(response, interval, 'EASYMETER_60009425' => 'some-uid', 'EASYMETER_60009404' => 'other-uid', 'EASYMETER_60009415' => 'last-uid')
-    expect(result[0][0].timestamp).to eq 1480614249341
-    expect(result[0][0].value).to eq 150950
-    expect(result[1][0].timestamp).to eq 1480614254195
-    expect(result[1][0].value).to eq 161590
+    expect(result[0].timestamp).to eq 1480614249341
+    expect(result[0].value).to eq 150950
+    expect(result[1].timestamp).to eq 1480614254195
+    expect(result[1].value).to eq 161590
     expect(result[0].resource_id).to eq 'some-uid'
     expect(result[1].resource_id).to eq 'other-uid'
     expect(result[2].resource_id).to eq 'last-uid'

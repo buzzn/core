@@ -1,3 +1,4 @@
+require 'buzzn/data_result'
 module Buzzn::Discovergy
 
   # the discovergy dataSource uses the API from discovergy to retrieve
@@ -35,20 +36,23 @@ module Buzzn::Discovergy
     end
 
     def collection(group_or_virtual_register, interval, mode)
-      map = to_map(group_or_virtual_register)
-#      if !broker.resource.is_a?(Group)
-#        raise Buzzn::DataSourceError.new('ERROR - you requested collected data for a non-group')
-#      end
-      if !interval.live?
-        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong resolution')
+      unless group_or_virtual_register.discovergy_broker
+        result = []
+        group.register.each do |register|
+          result << aggregated(register, interval, mode)
+        end
+        result.compact!
+        return result
       end
+      map = to_map(group_or_virtual_register)
       response = @facade.readings(group_or_virtual_register.discovergy_broker, interval, mode, true)
-      result = parse_collected_data(response.body, interval, map)
+      result = parse_collected_data(response.body, interval, mode, map)
       result.freeze
       result
     end
 
     def aggregated(register_or_group, interval, mode)
+      return unless register_or_group.discovergy_broker
       broker = register_or_group.discovergy_broker
       two_way_meter = broker.two_way_meter?
       response = @facade.readings(broker, interval, mode, false)
@@ -118,7 +122,6 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_live(json, mode, two_way_meter, resource_id)
-      result = Buzzn::DataResult.new(resource_id)
       timestamp = json['time']
       value = json['values']['power']
       if two_way_meter
@@ -132,12 +135,11 @@ module Buzzn::Discovergy
       else
         power = value > 0 ? value.abs/1000 : 0
       end
-      result.add(timestamp, power)
-      return result
+      Buzzn::DataResult.new(resource_id, timestamp, power, mode)
     end
 
     def parse_aggregated_hour(json, mode, two_way_meter, resource_id)
-      result = Buzzn::DataResult.new(resource_id)
+      result = Buzzn::DataResultSet.new(resource_id)
       json.each do |item|
         if two_way_meter
           if item['values']['power'] > 0 && mode == 'in'
@@ -157,7 +159,7 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_day(json, mode, two_way_meter, resource_id)
-      result = Buzzn::DataResult.new(resource_id)
+      result = Buzzn::DataResultSet.new(resource_id)
       energy_out = mode == 'in' ? "" : "Out"
       first_reading = first_timestamp = nil
       json.each do |item|
@@ -174,7 +176,7 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
-      result = Buzzn::DataResult.new(resource_id)
+      result = Buzzn::DataResultSet.new(resource_id)
       energy_out = mode == 'in' ? "" : "Out"
       old_value = new_value = timestamp = i = 0
       if two_way_meter && mode == 'out'
@@ -196,7 +198,7 @@ module Buzzn::Discovergy
       return result
     end
 
-    def parse_collected_data(response, interval, map)
+    def parse_collected_data(response, interval, mode, map)
       result = []
       json = MultiJson.load(response)
       case interval.resolution
@@ -205,8 +207,7 @@ module Buzzn::Discovergy
           resource_id = map[item.first]
           timestamp = item[1]['time']
           value = item[1]['values']['power']
-          result_item = Buzzn::DataResult.new(resource_id)
-          result_item.add(timestamp, value)
+          result_item = Buzzn::DataResult.new(resource_id, timestamp, value, mode)
           result << result_item
         end
       else
