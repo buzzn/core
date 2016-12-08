@@ -520,7 +520,8 @@ class Group < ActiveRecord::Base
     if self.registers.size < 3
       return false
     end
-    data_source = Buzzn::Discovergy::DataSource.new
+    #TODO ideally the discovergy_data_source gets passed in from outside here
+    data_source = Rails.config.data_source_registry.get(:discovergy)
     brokers = data_source.create_virtual_meters_for_group(self)
     if brokers.any?
       return true
