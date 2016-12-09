@@ -35,7 +35,7 @@ module Buzzn::Discovergy
       map
     end
 
-    def collection(group_or_virtual_register, interval, mode)
+    def collection(group_or_virtual_register, mode)
       unless group_or_virtual_register.discovergy_broker
         result = []
         group.register.each do |register|
@@ -45,8 +45,8 @@ module Buzzn::Discovergy
         return result
       end
       map = to_map(group_or_virtual_register)
-      response = @facade.readings(group_or_virtual_register.discovergy_broker, interval, mode, true)
-      result = parse_collected_data(response.body, interval, mode, map)
+      response = @facade.readings(group_or_virtual_register.discovergy_broker, Interval.live, mode, true)
+      result = parse_collected_data(response.body, mode, map)
       result.freeze
       result
     end
@@ -56,9 +56,7 @@ module Buzzn::Discovergy
       broker = register_or_group.discovergy_broker
       two_way_meter = broker.two_way_meter?
       response = @facade.readings(broker, interval, mode, false)
-      result = parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id)
-      result.freeze
-      result
+      parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id)
     end
 
     def create_virtual_meter_for_register(register)
@@ -101,7 +99,6 @@ module Buzzn::Discovergy
     ##############
 
     def parse_aggregated_data(response, interval, mode, two_way_meter, resource_id)
-      result = []
       json = MultiJson.load(response)
       if json.empty?
         result << Buzzn::DataResult.new(resource_id)
@@ -110,24 +107,23 @@ module Buzzn::Discovergy
 
       case interval.resolution
       when :live
-        result << parse_aggregated_live(json, mode, two_way_meter, resource_id)
+        parse_aggregated_live(json, mode, two_way_meter, resource_id)
       when :hour
-        result << parse_aggregated_hour(json, mode, two_way_meter, resource_id)
+        parse_aggregated_hour(json, mode, two_way_meter, resource_id)
       when :day
-        result << parse_aggregated_day(json, mode, two_way_meter, resource_id)
+        parse_aggregated_day(json, mode, two_way_meter, resource_id)
       else
-        result << parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
+        parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
       end
-      return result
     end
 
     def parse_aggregated_live(json, mode, two_way_meter, resource_id)
       timestamp = json['time']
       value = json['values']['power']
       if two_way_meter
-        if value > 0 && mode == 'in'
+        if value > 0 && mode == :in
           power = value/1000
-        elsif value < 0 && mode == 'out'
+        elsif value < 0 && mode == :out
           power = value.abs/1000
         else
           power = 0
@@ -142,9 +138,9 @@ module Buzzn::Discovergy
       result = Buzzn::DataResultSet.new(resource_id)
       json.each do |item|
         if two_way_meter
-          if item['values']['power'] > 0 && mode == 'in'
+          if item['values']['power'] > 0 && mode == :in
             power = item['power']
-          elsif item['values']['power'] < 0 && mode == 'out'
+          elsif item['values']['power'] < 0 && mode == :out
             power = item['values']['power'].abs
           else
             power = 0
@@ -153,21 +149,21 @@ module Buzzn::Discovergy
           power = item['values']['power'] > 0 ? item['values']['power'].abs : 0
         end
         timestamp = item['time']
-        result.add(timestamp, power)
+        result.add(timestamp, power, mode)
       end
       return result
     end
 
     def parse_aggregated_day(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.new(resource_id)
-      energy_out = mode == 'in' ? "" : "Out"
+      energy_out = mode == :in ? "" : "Out"
       first_reading = first_timestamp = nil
       json.each do |item|
         second_timestamp = item['time']
         second_reading = item['values']["energy#{energy_out}"]
         if first_timestamp
           power = (second_reading - first_reading)/(2500.0) # convert vsm to power (mW)
-          result.add(first_timestamp, power)
+          result.add(first_timestamp, power, mode)
         end
         first_timestamp = second_timestamp
         first_reading = second_reading
@@ -177,9 +173,9 @@ module Buzzn::Discovergy
 
     def parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.new(resource_id)
-      energy_out = mode == 'in' ? "" : "Out"
+      energy_out = mode == :in ? "" : "Out"
       old_value = new_value = timestamp = i = 0
-      if two_way_meter && mode == 'out'
+      if two_way_meter && mode == :out
         energy_out = 'Out'
       end
       json.each do |item|
@@ -190,7 +186,7 @@ module Buzzn::Discovergy
           next
         end
         new_value = item['values']["energy#{energy_out}"]
-        result.add(timestamp, (new_value - old_value)/10000.0) #convert to mWh
+        result.add(timestamp, (new_value - old_value)/10000.0, mode) #convert to mWh
         old_value = new_value
         timestamp = item['time']
         i += 1
@@ -198,20 +194,15 @@ module Buzzn::Discovergy
       return result
     end
 
-    def parse_collected_data(response, interval, mode, map)
+    def parse_collected_data(response, mode, map)
       result = []
       json = MultiJson.load(response)
-      case interval.resolution
-      when :live
-        json.each do |item|
-          resource_id = map[item.first]
-          timestamp = item[1]['time']
-          value = item[1]['values']['power']
-          result_item = Buzzn::DataResult.new(resource_id, timestamp, value, mode)
-          result << result_item
-        end
-      else
-        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong resolution')
+      json.each do |item|
+        resource_id = map[item.first]
+        timestamp = item[1]['time']
+        value = item[1]['values']['power']
+        result_item = Buzzn::DataResult.new(resource_id, timestamp, value, mode)
+        result << result_item
       end
       return result
     end

@@ -27,68 +27,68 @@ describe Buzzn::Discovergy::DataSource do
     data_source = Buzzn::Discovergy::DataSource.new
     response = single_meter_live_response
     interval = Buzzn::Interval.live
-    mode = 'in'
+    mode = :in
     two_way_meter = false
     external_id = broker.external_id
     result = data_source.parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
-    expect(result[0].timestamp).to eq 1480606450088
-    expect(result[0].value).to eq 1100
+    expect(result.timestamp).to eq 1480606450088
+    expect(result.value).to eq 1100
   end
 
   it 'parses single meter hour response' do
     data_source = Buzzn::Discovergy::DataSource.new
     response = single_meter_hour_response
     interval = Buzzn::Interval.hour(Time.now.to_i*1000)
-    mode = 'in'
+    mode = :in
     two_way_meter = false
     external_id = broker.external_id
     result = data_source.parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
-    expect(result[0][0].timestamp).to eq 1480604400205
-    expect(result[0][0].value).to eq 1760140
-    expect(result[0][1].timestamp).to eq 1480604402205
-    expect(result[0][1].value).to eq 1750440
+    expect(result.in[0].timestamp).to eq 1480604400205
+    expect(result.in[0].value).to eq 1760140
+    expect(result.in[1].timestamp).to eq 1480604402205
+    expect(result.in[1].value).to eq 1750440
   end
 
   it 'parses single meter day response' do
     data_source = Buzzn::Discovergy::DataSource.new
     response = single_meter_day_response
     interval = Buzzn::Interval.day(Time.now.to_i*1000)
-    mode = 'in'
+    mode = :in
     two_way_meter = false
     external_id = broker.external_id
     result = data_source.parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
-    expect(result[0][0].timestamp).to eq 1480606200000
-    expect(result[0][0].value).to eq 1066590.978
-    expect(result[0][1].timestamp).to eq 1480607100000
-    expect(result[0][1].value).to eq 896277.7556
+    expect(result.in[0].timestamp).to eq 1480606200000
+    expect(result.in[0].value).to eq 1066590.978
+    expect(result.in[1].timestamp).to eq 1480607100000
+    expect(result.in[1].value).to eq 896277.7556
   end
 
   it 'parses single meter month response' do
     data_source = Buzzn::Discovergy::DataSource.new
     response = single_meter_month_response
     interval = Buzzn::Interval.month(Time.now.to_i*1000)
-    mode = 'in'
+    mode = :in
     two_way_meter = false
     external_id = broker.external_id
     result = data_source.parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
-    expect(result[0][0].timestamp).to eq 1477954800000
-    expect(result[0][0].value).to eq 33883.8461
-    expect(result[0][1].timestamp).to eq 1478041200000
-    expect(result[0][1].value).to eq 0.0
+    expect(result.in[0].timestamp).to eq 1477954800000
+    expect(result.in[0].value).to eq 33883.8461
+    expect(result.in[1].timestamp).to eq 1478041200000
+    expect(result.in[1].value).to eq 0.0
   end
 
   it 'parses single meter year response' do
     data_source = Buzzn::Discovergy::DataSource.new
     response = single_meter_year_response
     interval = Buzzn::Interval.year(Time.now.to_i*1000)
-    mode = 'in'
+    mode = :in
     two_way_meter = false
     external_id = broker.external_id
     result = data_source.parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
-    expect(result[0][0].timestamp).to eq 1451602800000
-    expect(result[0][0].value).to eq 74076694.6
-    expect(result[0][1].timestamp).to eq 1454281200000
-    expect(result[0][1].value).to eq 87059816.2031
+    expect(result.in[0].timestamp).to eq 1451602800000
+    expect(result.in[0].value).to eq 74076694.6
+    expect(result.in[1].timestamp).to eq 1454281200000
+    expect(result.in[1].value).to eq 87059816.2031
   end
 
   it 'parses empty response' do
@@ -106,15 +106,15 @@ describe Buzzn::Discovergy::DataSource do
   it 'parses virtual meter live response for each meter' do
     data_source = Buzzn::Discovergy::DataSource.new
     response = virtual_meter_live_response
-    interval = Buzzn::Interval.live
-    mode = 'in'
+    mode = :in
     two_way_meter = false
     external_id = broker.external_id
-    result = data_source.parse_collected_data(response, interval, 'EASYMETER_60009425' => 'some-uid', 'EASYMETER_60009404' => 'other-uid', 'EASYMETER_60009415' => 'last-uid')
+    result = data_source.parse_collected_data(response, mode, 'EASYMETER_60009425' => 'some-uid', 'EASYMETER_60009404' => 'other-uid', 'EASYMETER_60009415' => 'last-uid')
     expect(result[0].timestamp).to eq 1480614249341
     expect(result[0].value).to eq 150950
     expect(result[1].timestamp).to eq 1480614254195
     expect(result[1].value).to eq 161590
+    expect(result.size).to eq 3
     expect(result[0].resource_id).to eq 'some-uid'
     expect(result[1].resource_id).to eq 'other-uid'
     expect(result[2].resource_id).to eq 'last-uid'

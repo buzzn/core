@@ -6,14 +6,12 @@ module Buzzn
       @registry = data_source_registry
     end
 
-    def for_register(register, interval)
-      check(interval)
+    def for_register(register)
       mode = register.is_a?(Register::Input)? :in : :out
       @registry.get(register.data_source).aggregated(register, interval, mode)
     end
 
-    def for_group(group, interval)
-      check(interval)
+    def for_group(group)
       result = []
       @registry.each do |key, data_source|
         [:in, :out].each do |mode|
@@ -23,24 +21,15 @@ module Buzzn
       result
     end
 
-    def for_group_aggregated(group, interval)
-      check(interval)
+    def for_group_aggregated(group)
       sum_in, sum_out = 0, 0
       @registry.each do |key, data_source|
-          sum_in += data_source.aggregated(group, interval, :in).value
-          sum_out += data_source.aggregated(group, interval, :out).value
-        end
+        result =  data_source.aggregated(group, interval, :in)
+        sum_in += result.value if result
+        result = data_source.aggregated(group, interval, :out)
+        sum_out += result.value if result
       end
-    [ Buzzn::DataResult.new(group.id, now = Time.current, sum_in, :in),
-       Buzzn::DataResult.new(group.id, now = Time.current, sum_out, :out) ]
-    end
-
-  private
-
-    def check(interval)
-      if !interval.live?
-        raise Buzzn::DataSourceError.new('ERROR - you requested collected data with wrong resolution')
-      end
+      Buzzn::DataResults.new(group.id, Time.current, sum_in, sum_out)
     end
   end
 end

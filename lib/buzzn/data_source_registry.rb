@@ -6,7 +6,7 @@ module Buzzn
       @registry = map.dup
       @registry[:discovergy] ||= Buzzn::Discovergy::DataSource.new
       @registry[:mysmartgrid] ||= Buzzn::Mysmartgrid::DataSource.new
-      @registry[:standard_profile] ||= Buzzn::StandardProfile::DataSource.new
+      #@registry[:standard_profile] ||= Buzzn::StandardProfile::DataSource.new
     end
 
     def get(data_source)

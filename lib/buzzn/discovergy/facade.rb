@@ -19,7 +19,7 @@ module Buzzn::Discovergy
     # input params:
     #  broker: class with information about credentials and requested meterID
     #  interval: class with information about the beginning and end date
-    #  mode: 'in' or 'out' to decide which data is requested for a meter
+    #  mode: :in or :out to decide which data is requested for a meter
     #  collection: boolean that indicates whether to request data preaggregated or as a collection
     # returns:
     #  Net::HTTPResponse with requested data
@@ -27,7 +27,7 @@ module Buzzn::Discovergy
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
       energy_out = ""
-      if mode == 'out'
+      if mode == :out
         energy_out = "Out"
       end
 
