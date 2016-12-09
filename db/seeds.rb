@@ -41,8 +41,8 @@ Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
 Fabricate(:buzzn_metering)
 Fabricate(:buzzn_reader)
 Fabricate(:dummy)
-Fabricate(:metering_point_operator, name: 'Discovergy')
-Fabricate(:metering_point_operator, name: 'MySmartGrid')
+Fabricate(:discovergy)
+Fabricate(:mysmartgrid)
 
 
 buzzn_team_names = %w[ felix justus danusch thomas stefan philipp christian kristian pavel eva ]
