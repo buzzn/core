@@ -2,8 +2,11 @@ module Buzzn
 
   class DataSourceRegistry
 
-    def initialize(discovergy_data_source = Buzzn::Discovergy::DataSource.new,
-                   mysmartgrid_data_source = Buzzn::Mysmartgrid::DataSource.new)
+    def initialize(
+      discovergy_data_source = Buzzn::Discovergy::DataSource.new,
+      standard_profile_data_source = Buzzn::StandardProfile::DataSource.new,
+      mysmartgrid_data_source = Buzzn::Mysmartgrid::DataSource.new
+      )
       @discovergy = discovergy_data_source
       @mysmartgrid = mysmartgrid_data_source
     end
