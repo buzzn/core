@@ -12,7 +12,7 @@ describe Buzzn::Discovergy::Facade do
   let(:meter) { Fabricate(:meter) }
 
 
-  it 'gets readings' do |spec|
+  it 'gets power_chart' do |spec|
     facade = Buzzn::Discovergy::Facade.new
     interval = Buzzn::Interval.day(Time.now.to_i*1000)
     response = facade.power_chart('slp', interval)
