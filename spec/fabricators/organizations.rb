@@ -49,20 +49,20 @@ Fabricator :power_giver_with_contracts, from: :power_giver do
 end
 
 # needed for groups fabricator - legacy naming
-Fabricator :buzzn_metering, from: :metering_service_provider do
+Fabricator :buzzn_metering, from: :metering_point_operator do
   name Organization::BUZZN_SYSTEMS
 end
 
 
-Fabricator :discovergy, from: :metering_service_provider do
+Fabricator :discovergy, from: :metering_point_operator do
   name Organization::DISCOVERGY
 end
 
-Fabricator :mysmartgrid, from: :metering_service_provider do
+Fabricator :mysmartgrid, from: :metering_point_operator do
   name Organization::MYSMARTGRID
 end
 
-Fabricator :buzzn_systems, from: :metering_service_provider do
+Fabricator :buzzn_systems, from: :metering_point_operator do
   name Organization::BUZZN_SYSTEMS
 end
 
