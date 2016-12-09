@@ -531,7 +531,7 @@ describe "/api/v1/registers" do
           user            = Fabricate(:user)
           admin_token     = Fabricate(:full_access_token_as_admin)
           admin           = User.find(admin_token.resource_owner_id)
-          register  = Fabricate(:register)
+          register  = Fabricate(:input_register)
           params = {
             data: { id: user.id }
           }

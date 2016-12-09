@@ -4,7 +4,7 @@ class CreateDiscovergyBroker < ActiveRecord::Migration
     create_table :discovergy_brokers, id: :uuid do |t|
       t.string :mode, null: false
       t.string :external_id, null: false
-      t.string :encrypted_provider_login, null: false
+      t.string :provider_login, null: false
       t.string :encrypted_provider_password, null: false
       t.string :encrypted_provider_token_key
       t.string :encrypted_provider_token_secret
