@@ -136,7 +136,7 @@ describe Buzzn::Discovergy::DataSource do
   end
 
   it 'creates virtual meter for group' do |spec|
-    VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
+    VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
       existing_broker = broker
       data_source = Buzzn::Discovergy::DataSource.new
       brokers = data_source.create_virtual_meters_for_group(group)

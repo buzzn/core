@@ -4,7 +4,7 @@ module Buzzn
 
     def initialize(map = {})
       @registry = map.dup
-      @registry[:discovergy] ||= Buzzn::Discovergy::DataSource.new,
+      @registry[:discovergy] ||= Buzzn::Discovergy::DataSource.new
       @registry[:mysmartgrid] ||= Buzzn::Mysmartgrid::DataSource.new
     end
 

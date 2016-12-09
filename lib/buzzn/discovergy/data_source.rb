@@ -100,7 +100,7 @@ module Buzzn::Discovergy
       result = []
       json = MultiJson.load(response)
       if json.empty?
-        result << Buzzn::DataResult.new(external_id)
+        result << Buzzn::DataResult.new(resource_id)
         return result
       end
 

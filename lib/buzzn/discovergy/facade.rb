@@ -90,7 +90,7 @@ module Buzzn::Discovergy
         if !retried
           register_application
           access_token = build_access_token_from_broker_or_new(existing_random_broker, true)
-          response = self.create_virtual_meter(existing_random_broker, interval, mode, collection, true)
+          response = self.create_virtual_meter(existing_random_broker, meter_ids_plus, meter_ids_minus, true)
         else
           raise Buzzn::DataSourceError.new('unauthorized to create virtual meter at discovergy: ' + response.body)
         end
