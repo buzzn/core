@@ -3,7 +3,7 @@ module Buzzn::Discovergy
 
   # the discovergy dataSource uses the API from discovergy to retrieve
   # readings and produces a DataResult object
-  class DataSource
+  class DataSource < Buzzn::DataSource
 
     def initialize(facade = Facade.new)
       @facade = facade
