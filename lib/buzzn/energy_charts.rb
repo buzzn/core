@@ -1,6 +1,6 @@
 module Buzzn
 
-  class PowerCharts
+  class EnergyCharts
 
     def initialize(data_source_registry)
       @registry = data_source_registry
@@ -9,26 +9,29 @@ module Buzzn
     def for_register(register, interval)
       check_interval(interval)
       mode = register.is_a?(Register::Input)? :in : :out
-      result = @registry.get(register.data_source).aggregated(register, interval, mode)
-      result.units(:milliwatt)
+
+      result = Buzzn::DataResultSet.new(group.id)
+
+      #TODO
+
+      result.units(:milliwatt_hour)
       result
     end
 
     def for_group(group, interval)
       check_interval(interval)
       result = Buzzn::DataResultSet.new(group.id)
-      @registry.each do |key, data_source|
-        result.add_all(data_source.aggregated(group, interval, :in))
-        result.add_all(data_source.aggregated(group, interval, :out))
-      end
-      result.units(:milliwatt)
+
+      # TODO
+
+      result.units(:milliwatt_hour)
       result
     end
 
     private
 
     def check_interval(interval)
-      if interval.month? || interval.year?
+      if interval.hour? || interval.day?
         raise Buzzn::DataSourceError.new('ERROR - you requested data with wrong resolution')
       end
     end

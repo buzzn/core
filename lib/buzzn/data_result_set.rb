@@ -54,6 +54,14 @@ module Buzzn
     end
     private :_add
 
+    def units(units)
+      unless [:milliwatt, :milliwatt_hour].include?(units)
+        raise ArgumentError.new('only :milliwatt and :milliwatt_hour allowed')
+      end
+      @units = units
+      freeze
+    end
+
     def freeze
       @in.freeze
       @out.freeze
