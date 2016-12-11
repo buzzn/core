@@ -26,11 +26,10 @@ describe Buzzn::Discovergy::DataSource do
   it 'parses single meter live response' do
     data_source = Buzzn::Discovergy::DataSource.new
     response = single_meter_live_response
-    interval = Buzzn::Interval.live
     mode = :in
     two_way_meter = false
     external_id = broker.external_id
-    result = data_source.parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
+    result = data_source.parse_aggregated_data(response, nil, mode, two_way_meter, external_id)
     expect(result.timestamp).to eq 1480606450088
     expect(result.value).to eq 1100
   end

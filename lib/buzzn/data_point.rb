@@ -2,6 +2,10 @@ module Buzzn
   class DataPoint
     attr_reader :timestamp, :value
 
+    def self.from_hash(data)
+      new(data[:timestamp], data[:value])
+    end
+          
     def initialize(timestamp, value)
       @timestamp = timestamp
       @value = value

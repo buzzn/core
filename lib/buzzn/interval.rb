@@ -4,14 +4,14 @@ module Buzzn
 
     attr_reader :from, :to, :resolution
 
-    def initialize(from = nil, to = from)
+    class << self
+      private :new
+    end
+
+    def initialize(from, to)
       @from = from
       @to = to
       @resolution = _resolution
-    end
-
-    def live?
-      @from.nil?
     end
 
     def year?
@@ -35,12 +35,10 @@ module Buzzn
     end
 
     def _resolution
-      self.live? ? :live : (
-        self.hour? ? :hour : (
-          self.day? ? :day : (
-            self.month? ? :month : (
-              self.year? ? :year : nil
-            )
+      self.hour? ? :hour : (
+        self.day? ? :day : (
+          self.month? ? :month : (
+            self.year? ? :year : nil
           )
         )
       )
@@ -52,14 +50,6 @@ module Buzzn
 
       def create_time_from_timestamp(timestamp)
         Time.at(timestamp.to_i/1000).in_time_zone
-      end
-
-      def live
-        new
-      end
-
-      def live?
-        @from.nil?
       end
 
       def year(timestamp)

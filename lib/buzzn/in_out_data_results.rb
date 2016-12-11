@@ -1,6 +1,10 @@
 module Buzzn
-  class DataResults
+  class InOutDataResults
     attr_reader :resource_id, :in, :out
+
+    def self.form_hash(data)
+      new(data[:resource_id], data[:timestamp], data[:in], data[:out])
+    end
 
     def initialize(resource_id, timestamp, input, output)
       @in = input

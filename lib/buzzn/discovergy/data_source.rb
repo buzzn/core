@@ -45,13 +45,13 @@ module Buzzn::Discovergy
         return result
       end
       map = to_map(group_or_virtual_register)
-      response = @facade.readings(group_or_virtual_register.discovergy_broker, Interval.live, mode, true)
+      response = @facade.readings(group_or_virtual_register.discovergy_broker, nil, mode, true)
       result = parse_collected_data(response.body, mode, map)
       result.freeze
       result
     end
 
-    def aggregated(register_or_group, interval, mode)
+    def aggregated(register_or_group, mode, interval = nil)
       return unless register_or_group.discovergy_broker
       broker = register_or_group.discovergy_broker
       two_way_meter = broker.two_way_meter?
@@ -105,15 +105,17 @@ module Buzzn::Discovergy
         return result
       end
 
-      case interval.resolution
-      when :live
+      if interval.nil?
         parse_aggregated_live(json, mode, two_way_meter, resource_id)
-      when :hour
-        parse_aggregated_hour(json, mode, two_way_meter, resource_id)
-      when :day
-        parse_aggregated_day(json, mode, two_way_meter, resource_id)
       else
-        parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
+        case interval.resolution
+        when :hour
+          parse_aggregated_hour(json, mode, two_way_meter, resource_id)
+        when :day
+          parse_aggregated_day(json, mode, two_way_meter, resource_id)
+        else
+          parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
+        end
       end
     end
 

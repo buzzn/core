@@ -6,30 +6,31 @@ module Buzzn
       @registry = data_source_registry
     end
 
-    def for_register(register)
+    def for_register(register, timestamp = nil)
       mode = register.is_a?(Register::Input)? :in : :out
-      @registry.get(register.data_source).aggregated(register, interval, mode)
+      @registry.get(register.data_source).aggregated(register, mode)
     end
 
-    def for_group(group)
+    def for_each_register_in_group(group, timestamp = nil)
       result = []
       @registry.each do |key, data_source|
         [:in, :out].each do |mode|
-          result += data_source.collection(group, interval, mode)
+          result += data_source.collection(group, mode)
         end
       end
       result
     end
 
-    def for_group_aggregated(group)
+    def for_group(group, timestamp = nil)
       sum_in, sum_out = 0, 0
       @registry.each do |key, data_source|
-        result =  data_source.aggregated(group, interval, :in)
+        result =  data_source.aggregated(group, :in)
         sum_in += result.value if result
-        result = data_source.aggregated(group, interval, :out)
+        result = data_source.aggregated(group, :out)
         sum_out += result.value if result
       end
-      Buzzn::DataResults.new(group.id, Time.current, sum_in, sum_out)
+      Buzzn::DataResults.new(group.id, timestamp || Time.current,
+                             sum_in, sum_out)
     end
   end
 end

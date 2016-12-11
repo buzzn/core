@@ -31,21 +31,23 @@ module Buzzn::Discovergy
         energy_out = "Out"
       end
 
-      case interval.resolution
-      when :live
+      if interval.nil?
         query = '/public/v1/last_reading?meterId=' + meter_id + '&fields=power&each=' + collection.to_s
-      when :hour
-        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
-          (interval.to.to_i*1000).to_s + '&resolution=raw&fields=power&each=' + collection.to_s
-      when :day
-        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
-          (interval.to.to_i*1000).to_s + "&resolution=fifteen_minutes&fields=energy#{energy_out}&each=" + collection.to_s
-      when :month
-        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
-          (interval.to.to_i*1000).to_s + "&resolution=one_day&fields=energy#{energy_out}&each=" + collection.to_s
-      when :year
-        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
-          (interval.to.to_i*1000).to_s + "&resolution=one_month&fields=energy#{energy_out}&each=" + collection.to_s
+      else
+        case interval.resolution
+        when :hour
+          query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
+            (interval.to.to_i*1000).to_s + '&resolution=raw&fields=power&each=' + collection.to_s
+        when :day
+          query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
+            (interval.to.to_i*1000).to_s + "&resolution=fifteen_minutes&fields=energy#{energy_out}&each=" + collection.to_s
+        when :month
+          query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
+            (interval.to.to_i*1000).to_s + "&resolution=one_day&fields=energy#{energy_out}&each=" + collection.to_s
+        when :year
+          query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
+            (interval.to.to_i*1000).to_s + "&resolution=one_month&fields=energy#{energy_out}&each=" + collection.to_s
+        end
       end
 
       access_token.get(query)

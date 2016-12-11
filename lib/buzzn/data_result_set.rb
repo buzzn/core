@@ -1,11 +1,17 @@
 module Buzzn
   class DataResultSet
-    attr_reader :resource_id, :in, :out
+    attr_reader :resource_id, :in, :out, :units
 
-    def initialize(resource_id)
+    def self.from_hash(data)
+      input =  data[:in].collect { |i| DataPoint.from_hash(i) }
+      output =  data[:out].collect { |i| DataPoint.from_hash(i) }
+      new(data[:resource_id], input, output)
+    end
+
+    def initialize(resource_id, input = [], output = [])
       @resource_id = resource_id
-      @in = []
-      @out = []
+      @in = input
+      @out = output
     end
 
     def add(timestamp, value, mode)
@@ -28,6 +34,14 @@ module Buzzn
       end
     end
     private :_add
+
+    def units(units)
+      unless [:milliwatt, :milliwatt_hour].include?(units)
+        raise ArgumentError.new('only :milliwatt and :milliwatt_hour allowed')
+      end
+      @units = units
+      freeze
+    end
 
     def freeze
       @in.freeze
