@@ -158,6 +158,7 @@ group :development do
   gem 'table_print'
   gem 'quiet_assets'
   gem 'annotate'
+  gem 'yard'
 end
 
 group :test do

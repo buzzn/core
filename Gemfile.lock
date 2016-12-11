@@ -832,6 +832,7 @@ GEM
       doorkeeper (>= 1.4, < 4.1)
       grape (~> 0.10, < 1.0)
     xml-simple (1.1.5)
+    yard (0.9.5)
 
 PLATFORMS
   ruby
@@ -994,6 +995,7 @@ DEPENDENCIES
   wicked
   will_paginate (~> 3.0.6)
   wine_bouncer (~> 1.0)
+  yard
 
 BUNDLED WITH
    1.12.5
