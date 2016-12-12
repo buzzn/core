@@ -30,8 +30,12 @@ private
       }
       resolution = resolution_formats[interval.resolution]
 
-      binding.pry
-      @offset = interval.from.utc_offset*1000 # 10800000
+      if interval.resolution == :year_to_months
+        @offset = (interval.from + 6.month).utc_offset*1000
+      else
+        @offset = interval.from.utc_offset*1000
+      end
+
 
       # start pipe
       pipe = []
@@ -41,8 +45,8 @@ private
       match = {
                 "$match" => {
                   timestamp: {
-                    "$gte"  => interval.from,
-                    "$lt"  => interval.to
+                    "$gte"  => interval.from.to_datetime,
+                    "$lt"  => interval.to.to_datetime
                   }
                 }
               }
@@ -120,9 +124,7 @@ private
                 }
 
       if keys.include?('energy')
-        project["$project"].merge!(sumEnergyMilliwattHour: { "$subtract" => [ "$firstEnergyMilliwattHour", "$lastEnergyMilliwattHour" ] })
-        project["$project"].merge!(first: "$firstEnergyMilliwattHour")
-        project["$project"].merge!(last: "$lastEnergyMilliwattHour")
+        project["$project"].merge!(sumEnergyMilliwattHour: { "$subtract" => [ "$lastEnergyMilliwattHour", "$firstEnergyMilliwattHour" ] })
       end
 
       if keys.include?('power')
@@ -155,8 +157,11 @@ private
     def collection_to_hash(collection, factor=1)
       items = []
       collection.each do |document|
-        p document
-        item = {'timestamp' => document['firstTimestamp']}
+
+        item = {
+          'from' => document['firstTimestamp'],
+          'to'  => document['lastTimestamp']
+        }
 
         if document['sumEnergyMilliwattHour']
           energy_milliwatt_hour = document['sumEnergyMilliwattHour'] * factor
