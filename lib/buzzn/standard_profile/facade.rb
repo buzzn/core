@@ -30,7 +30,8 @@ private
       }
       resolution = resolution_formats[interval.resolution]
 
-      @offset = interval.from.utc_offset*1000
+      binding.pry
+      @offset = interval.from.utc_offset*1000 # 10800000
 
       # start pipe
       pipe = []
@@ -40,8 +41,8 @@ private
       match = {
                 "$match" => {
                   timestamp: {
-                    "$gte"  => interval.from.utc,
-                    "$lt"  => interval.to.utc
+                    "$gte"  => interval.from,
+                    "$lt"  => interval.to
                   }
                 }
               }
@@ -87,8 +88,8 @@ private
               }
 
       if keys.include?('energy')
-        group["$group"].merge!(firstEnergyMilliwattHour: { "$first" => "$energy_milliwatt_hour" })
-        group["$group"].merge!(lastEnergyMilliwattHour:  { "$last"  => "$energy_milliwatt_hour" })
+        group["$group"].merge!(firstEnergyMilliwattHour: { "$min" => "$energy_milliwatt_hour" })
+        group["$group"].merge!(lastEnergyMilliwattHour:  { "$max"  => "$energy_milliwatt_hour" })
       end
 
       if keys.include?('power')
@@ -119,8 +120,9 @@ private
                 }
 
       if keys.include?('energy')
-        project["$project"].merge!(sumEnergyMilliwattHour: { "$subtract" => [ "$lastEnergyMilliwattHour", "$firstEnergyMilliwattHour" ] })
+        project["$project"].merge!(sumEnergyMilliwattHour: { "$subtract" => [ "$firstEnergyMilliwattHour", "$lastEnergyMilliwattHour" ] })
         project["$project"].merge!(first: "$firstEnergyMilliwattHour")
+        project["$project"].merge!(last: "$lastEnergyMilliwattHour")
       end
 
       if keys.include?('power')
@@ -153,11 +155,12 @@ private
     def collection_to_hash(collection, factor=1)
       items = []
       collection.each do |document|
+        p document
         item = {'timestamp' => document['firstTimestamp']}
 
         if document['sumEnergyMilliwattHour']
           energy_milliwatt_hour = document['sumEnergyMilliwattHour'] * factor
-          item.merge!('energy_milliwatt_hour' => energy_milliwatt_hour.to_i)
+          item.merge!('energy_milliwatt_hour' => energy_milliwatt_hour)
         end
 
         if document['avgPowerMilliwatt']
