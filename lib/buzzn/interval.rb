@@ -36,10 +36,10 @@ module Buzzn
 
     def _resolution
       self.live? ? :live : (
-        self.hour? ? :hour : (
-          self.day? ? :day : (
-            self.month? ? :month : (
-              self.year? ? :year : nil
+        self.hour? ? :hour_to_minutes : (
+          self.day? ? :day_to_minutes : (
+            self.month? ? :month_to_days : (
+              self.year? ? :year_to_months : nil
             )
           )
         )
@@ -51,7 +51,7 @@ module Buzzn
       private :new
 
       def create_time_from_timestamp(timestamp)
-        Time.at(timestamp.to_i/1000).in_time_zone
+        Time.at(timestamp.to_i/1000)
       end
 
       def live
@@ -60,8 +60,8 @@ module Buzzn
 
       def year(timestamp)
         if timestamp.is_a?(Time)
-          new(timestamp.in_time_zone.beginning_of_year,
-            (timestamp.in_time_zone.beginning_of_year + 365.days))
+          new(timestamp.beginning_of_year,
+            (timestamp.beginning_of_year + 365.days))
         else
           new(self.create_time_from_timestamp(timestamp).beginning_of_year,
             (self.create_time_from_timestamp(timestamp).beginning_of_year + 365.days))
@@ -70,8 +70,8 @@ module Buzzn
 
       def month(timestamp)
         if timestamp.is_a?(Time)
-          new(timestamp.in_time_zone.beginning_of_month,
-            (timestamp.in_time_zone.end_of_month + 1.second))
+          new(timestamp.beginning_of_month,
+            (timestamp.end_of_month + 1.second))
         else
           new(self.create_time_from_timestamp(timestamp).beginning_of_month,
             (self.create_time_from_timestamp(timestamp).end_of_month + 1.second))
@@ -80,8 +80,8 @@ module Buzzn
 
       def day(timestamp)
         if timestamp.is_a?(Time)
-          new(timestamp.in_time_zone.beginning_of_day,
-            (timestamp.in_time_zone.end_of_day + 1.second))
+          new(timestamp.beginning_of_day,
+            (timestamp.end_of_day + 1.second))
         else
           new(self.create_time_from_timestamp(timestamp).beginning_of_day,
             (self.create_time_from_timestamp(timestamp).end_of_day + 1.second))
@@ -90,8 +90,8 @@ module Buzzn
 
       def hour(timestamp)
         if timestamp.is_a?(Time)
-          new(timestamp.in_time_zone.beginning_of_hour,
-            (timestamp.in_time_zone.end_of_hour))
+          new(timestamp.beginning_of_hour,
+            (timestamp.end_of_hour))
         else
           new(self.create_time_from_timestamp(timestamp).beginning_of_hour,
             (self.create_time_from_timestamp(timestamp).end_of_hour))
@@ -100,4 +100,3 @@ module Buzzn
     end
   end
 end
-

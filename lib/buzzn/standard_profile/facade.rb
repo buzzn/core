@@ -1,12 +1,24 @@
-module Buzzn::Discovergy
+module Buzzn::StandardProfile
   class Facade
 
-    def readings(broker, interval, mode, collection=false)
+    def power_chart(profile, interval)
+      source      = { source: { "$in" => [profile] } }
+      keys        = ['power']
+      collection  = aggregate(source, interval, keys)
+      collection_to_hash(collection)
+    end
+
+    def energy_chart(profile, interval)
+      source      = { source: { "$in" => [profile] } }
+      keys        = ['energy']
+      collection  = aggregate(source, interval, keys)
+      collection_to_hash(collection)
     end
 
 
+private
 
-    def aggregate(resolution_format, source, timestamp, keys)
+    def aggregate(source, interval, keys)
       resolution_formats = {
         year_to_months:     ['year', 'month'],
         month_to_days:      ['year', 'month', 'dayOfMonth'],
@@ -16,26 +28,25 @@ module Buzzn::Discovergy
         hour_to_minutes:    ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
         minute_to_seconds:  ['year', 'month', 'dayOfMonth', 'hour', 'minute', 'second']
       }
-      resolution = resolution_formats[resolution_format.to_sym]
+      resolution = resolution_formats[interval.resolution]
 
-      @start_time, @end_time, @offset = time_range_from_timestamp_and_resolution(timestamp, resolution_format)
+      @offset = interval.from.utc_offset*1000
 
       # start pipe
       pipe = []
 
 
       # match
-      match = { "$match" => {
+      match = {
+                "$match" => {
                   timestamp: {
-                    "$gte"  => @start_time,
-                    "$lt"  => @end_time
+                    "$gte"  => interval.from.utc,
+                    "$lt"  => interval.to.utc
                   }
                 }
               }
       match["$match"].merge!(source)
       pipe << match
-
-
 
 
 
@@ -48,10 +59,8 @@ module Buzzn::Discovergy
                   }
                 }
 
-      project["$project"].merge!(energy_a_milliwatt_hour: 1) if keys.include?('energy_a_milliwatt_hour')
-      project["$project"].merge!(energy_b_milliwatt_hour: 1) if keys.include?('energy_b_milliwatt_hour')
-      project["$project"].merge!(power_a_milliwatt: 1) if keys.include?('power_a_milliwatt')
-      project["$project"].merge!(power_b_milliwatt: 1) if keys.include?('power_b_milliwatt')
+      project["$project"].merge!(energy_milliwatt_hour: 1) if keys.include?('energy')
+      project["$project"].merge!(power_milliwatt: 1) if keys.include?('power')
 
       formats = {}
       resolution.each do |format|
@@ -77,29 +86,16 @@ module Buzzn::Discovergy
                 }
               }
 
-      if keys.include?('energy_a_milliwatt_hour')
-        group["$group"].merge!(firstEnergyAMilliwattHour: { "$min" => "$energy_a_milliwatt_hour" })
-        group["$group"].merge!(lastEnergyAMilliwattHour:  { "$max"  => "$energy_a_milliwatt_hour" })
+      if keys.include?('energy')
+        group["$group"].merge!(firstEnergyMilliwattHour: { "$first" => "$energy_milliwatt_hour" })
+        group["$group"].merge!(lastEnergyMilliwattHour:  { "$last"  => "$energy_milliwatt_hour" })
       end
 
-      if keys.include?('energy_b_milliwatt_hour')
-        group["$group"].merge!(firstEnergyBMilliwattHour: { "$first" => "$energy_b_milliwatt_hour" })
-        group["$group"].merge!(lastEnergyBMilliwattHour:  { "$last"  => "$energy_b_milliwatt_hour" })
-      end
-
-      if keys.include?('power_a_milliwatt')
-        group["$group"].merge!(avgPowerAMilliwatt: { "$avg" => "$power_a_milliwatt" })
-      end
-
-      if keys.include?('power_b_milliwatt')
-        group["$group"].merge!(avgPowerBMilliwatt: { "$avg" => "$power_b_milliwatt" })
+      if keys.include?('power')
+        group["$group"].merge!(avgPowerMilliwatt: { "$avg" => "$power_milliwatt" })
       end
 
       formats = {_id: {}}
-
-      if source[:register_id] && source[:register_id]['$in'].size > 1
-        formats[:_id].merge!({ "register_id" =>  "$register_id" })
-      end
 
       resolution.each do |format|
         formats[:_id].merge!({ "#{format.gsub('OfMonth','')}ly" => "$#{format.gsub('OfMonth','')}ly" })
@@ -122,21 +118,13 @@ module Buzzn::Discovergy
                   }
                 }
 
-      if keys.include?('energy_a_milliwatt_hour')
-        project["$project"].merge!(sumEnergyAMilliwattHour: { "$subtract" => [ "$lastEnergyAMilliwattHour", "$firstEnergyAMilliwattHour" ] })
-        project["$project"].merge!(first:  "$firstEnergyAMilliwattHour")
+      if keys.include?('energy')
+        project["$project"].merge!(sumEnergyMilliwattHour: { "$subtract" => [ "$lastEnergyMilliwattHour", "$firstEnergyMilliwattHour" ] })
+        project["$project"].merge!(first: "$firstEnergyMilliwattHour")
       end
 
-      if keys.include?('energy_b_milliwatt_hour')
-        project["$project"].merge!(sumEnergyBMilliwattHour: { "$subtract" => [ "$lastEnergyBMilliwattHour", "$firstEnergyBMilliwattHour" ] })
-      end
-
-      if keys.include?('power_a_milliwatt')
-        project["$project"].merge!(avgPowerAMilliwatt: "$avgPowerAMilliwatt")
-      end
-
-      if keys.include?('power_b_milliwatt')
-        project["$project"].merge!(avgPowerBMilliwatt: "$avgPowerBMilliwatt")
+      if keys.include?('power')
+        project["$project"].merge!(avgPowerMilliwatt: "$avgPowerMilliwatt")
       end
 
       pipe << project
@@ -146,46 +134,9 @@ module Buzzn::Discovergy
 
 
 
-
-
-      # group
-      if source[:register_id] && source[:register_id]['$in'].size > 1
-        group = {
-                  "$group" => {
-                    firstTimestamp: { "$first" => "$firstTimestamp" }
-                  }
-                }
-
-        if keys.include?('energy_a_milliwatt_hour')
-          group["$group"].merge!(sumEnergyAMilliwattHour: {"$sum" => "$sumEnergyAMilliwattHour"})
-        end
-
-        if keys.include?('energy_b_milliwatt_hour')
-          group["$group"].merge!(sumEnergyBMilliwattHour: {"$sum" => "$sumEnergyBMilliwattHour"})
-        end
-
-        if keys.include?('power_a_milliwatt')
-          group["$group"].merge!(avgPowerAMilliwatt: {"$sum" => "$avgPowerAMilliwatt"})
-        end
-
-        if keys.include?('power_b_milliwatt')
-          group["$group"].merge!(avgPowerBMilliwatt: {"$sum" => "$avgPowerBMilliwatt"})
-        end
-
-        formats = {_id: {}}
-
-        resolution.each do |format|
-          formats[:_id].merge!({ "#{format.gsub('OfMonth','')}ly" =>  "$_id.#{format.gsub('OfMonth','')}ly" })
-        end
-        group["$group"].merge!(formats)
-        pipe << group
-      end
-
-
-
       # sort
-      sort = {
-              "$sort" => {
+      sort =  {
+                "$sort" => {
                   _id: 1
                 }
               }
@@ -194,6 +145,35 @@ module Buzzn::Discovergy
 
       Reading.collection.aggregate(pipe)
     end
+
+
+
+
+
+    def collection_to_hash(collection, factor=1)
+      items = []
+      collection.each do |document|
+        item = {'timestamp' => document['firstTimestamp']}
+
+        if document['sumEnergyMilliwattHour']
+          energy_milliwatt_hour = document['sumEnergyMilliwattHour'] * factor
+          item.merge!('energy_milliwatt_hour' => energy_milliwatt_hour.to_i)
+        end
+
+        if document['avgPowerMilliwatt']
+          power_milliwatt = document['avgPowerMilliwatt'] * factor
+          item.merge!('power_milliwatt' => power_milliwatt.to_i)
+        end
+
+        items << item
+      end
+      return items
+    end
+
+
+
+
+
 
 
 
