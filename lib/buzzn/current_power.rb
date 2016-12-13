@@ -32,8 +32,8 @@ module Buzzn
         result = data_source.aggregated(group, :out)
         sum_out += result.value if result
       end
-      Buzzn::DataResults.new(group.id, timestamp || Time.current,
-                             sum_in, sum_out)
+      Buzzn::DataResults.new(timestamp || Time.current,
+                             sum_in, sum_out, group.id)
     end
   end
 end

@@ -5,10 +5,14 @@ module Buzzn
     class << self
       private :new
 
+      def from_json(data)
+        from_hash(JSON.parse(data, symbolize_names: true))
+      end
+
       def from_hash(data)
         input = data[:in].collect { |i| DataPoint.from_hash(i) }
         output = data[:out].collect { |i| DataPoint.from_hash(i) }
-        new(data['units'], data[:resource_id], input, output)
+        new(data[:units], data[:resource_id], input, output)
       end
 
       def milliwatt(*args)
@@ -34,6 +38,7 @@ module Buzzn
     end
 
     def add_all(set)
+      raise ArgumentError.new('mismatch units') if @units != set.units
       _add(@in, set.in)
       _add(@out, set.out)
     end

@@ -135,7 +135,7 @@ module Buzzn::Discovergy
       else
         power = value > 0 ? value.abs/1000 : 0
       end
-      Buzzn::DataResult.new(resource_id, timestamp, power, mode)
+      Buzzn::DataResult.new(Time.at(timestamp/1000.0), power, resource_id, mode)
     end
 
     def parse_aggregated_hour(json, mode, two_way_meter, resource_id)
@@ -153,7 +153,7 @@ module Buzzn::Discovergy
           power = item['values']['power'] > 0 ? item['values']['power'].abs : 0
         end
         timestamp = item['time']
-        result.add(timestamp, power, mode)
+        result.add(Time.at(timestamp/1000.0), power, mode)
       end
       return result
     end
@@ -167,7 +167,7 @@ module Buzzn::Discovergy
         second_reading = item['values']["energy#{energy_out}"]
         if first_timestamp
           power = (second_reading - first_reading)/(2500.0) # convert vsm to power (mW)
-          result.add(first_timestamp, power, mode)
+          result.add(Time.at(first_timestamp/1000.0), power, mode)
         end
         first_timestamp = second_timestamp
         first_reading = second_reading
@@ -190,7 +190,7 @@ module Buzzn::Discovergy
           next
         end
         new_value = item['values']["energy#{energy_out}"]
-        result.add(timestamp, (new_value - old_value)/10000.0, mode) #convert to mWh
+        result.add(Time.at(timestamp/1000.0), (new_value - old_value)/10000.0, mode) #convert to mWh
         old_value = new_value
         timestamp = item['time']
         i += 1
@@ -205,7 +205,7 @@ module Buzzn::Discovergy
         resource_id = map[item.first]
         timestamp = item[1]['time']
         value = item[1]['values']['power']
-        result_item = Buzzn::DataResult.new(resource_id, timestamp, value, mode)
+        result_item = Buzzn::DataResult.new(Time.at(timestamp/1000.0), value, resource_id, mode)
         result << result_item
       end
       return result
