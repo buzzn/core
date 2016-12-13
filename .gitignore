@@ -6,6 +6,7 @@
 
 # ignore locally built yarddocs
 /doc
+/.yardoc
 
 # Ignore bundler config.
 /.bundle
