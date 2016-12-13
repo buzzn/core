@@ -7,11 +7,13 @@ module Buzzn
     end
 
     def for_register(register, timestamp = nil)
+      # TODO something with the timestamp
       mode = register.is_a?(Register::Input)? :in : :out
       @registry.get(register.data_source).aggregated(register, mode)
     end
 
     def for_each_register_in_group(group, timestamp = nil)
+      # TODO something with the timestamp
       result = []
       @registry.each do |key, data_source|
         [:in, :out].each do |mode|
@@ -22,6 +24,7 @@ module Buzzn
     end
 
     def for_group(group, timestamp = nil)
+      # TODO something with the timestamp
       sum_in, sum_out = 0, 0
       @registry.each do |key, data_source|
         result =  data_source.aggregated(group, :in)

@@ -49,27 +49,23 @@ module API
         get 'past' do
           register = Register::Base.guareded_retrieve(permitted_params[:register_id])
           timestamp = permitted_params[:timestamp] || Time.current
-          result_set =
-            case permitted_params[:resolution]
-            when 'day_to_minutes'
-              interval = Interval.day(timestamp)
-              Buzzn::Application.config.power_charts.for_register(register, interval)
-            when 'hour_to_minutes'
-              interval = Interval.hour(timestamp)
-              Buzzn::Application.config.power_charts.for_register(register, interval)         
-            when 'minute_to_seconds'
-              raise 'not implemented'
-            when 'week_to_days'
-              raise 'not implemented'
-            when 'year_to_months'
-              interval = Interval.year(timestamp)
-              Buzzn::Application.config.energy_charts.for_register(register, interval)         
-            when 'month_to_days'
-              interval = Interval.month(timestamp)
-              Buzzn::Application.config.energy_charts.for_register(register, interval)         
-            end
-          key = result_set.units == :milliwatt ? 'power_milliwatt' : 'energy_milliwatt_hour'
-          result_set.collect do |i|
+          case permitted_params[:resolution]
+          when 'day_to_minutes'
+            interval = Interval.day(timestamp)
+          when 'hour_to_minutes'
+            interval = Interval.hour(timestamp)
+          when 'minute_to_seconds'
+            raise 'not implemented'
+          when 'week_to_days'
+            raise 'not implemented'
+          when 'year_to_months'
+            interval = Interval.year(timestamp)
+          when 'month_to_days'
+            interval = Interval.month(timestamp)
+          end
+          result = Buzzn::Application.config.charts.for_register(register, interval)
+          key = result.units == :milliwatt ? 'power_milliwatt' : 'energy_milliwatt_hour'
+          result.collect do |i|
             { timestamp: i.timestamp, "#{key}": i.value }
           end
         end
