@@ -108,7 +108,7 @@ module Buzzn::Discovergy
       if interval.nil?
         parse_aggregated_live(json, mode, two_way_meter, resource_id)
       else
-        case interval.resolution
+        case interval.duration
         when :hour
           parse_aggregated_hour(json, mode, two_way_meter, resource_id)
         when :day

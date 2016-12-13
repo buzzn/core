@@ -2,7 +2,7 @@ module Buzzn
 
   class Interval
 
-    attr_reader :from, :to, :resolution
+    attr_reader :from, :to, :duration
 
     class << self
       private :new
@@ -11,39 +11,51 @@ module Buzzn
     def initialize(from, to)
       @from = from
       @to = to
-      @resolution = _resolution
+      @duration = _duration
     end
 
-    def year?
+    def respond_to?(method)
+      super || private_methods.include?(:"_#{method}")
+    end
+
+    def method_missing(method, *args)
+      if private_methods.include? :"_#{method}"
+        @duration == method.to_s[0..-2].to_sym
+      else
+        super
+      end
+    end
+
+    private
+    def _year?
       timespan = self.to - self.from
       timespan <= 31622401 && timespan > 2678401
     end
 
-    def month?
+    def _month?
       timespan = self.to - self.from
       timespan <= 2678401 && timespan > 86401
     end
 
-    def day?
+    def _day?
       timespan = self.to - self.from
       timespan <= 86401 && timespan > 3601
     end
 
-    def hour?
+    def _hour?
       timespan = self.to - self.from
       timespan <= 3601 && timespan > 0
     end
 
-    def _resolution
-      self.hour? ? :hour : (
-        self.day? ? :day : (
-          self.month? ? :month : (
-            self.year? ? :year : nil
+    def _duration
+      _hour? ? :hour : (
+        _day? ? :day : (
+          _month? ? :month : (
+            _year? ? :year : nil
           )
         )
       )
     end
-    private :_resolution
 
     class << self
       private :new

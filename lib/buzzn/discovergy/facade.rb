@@ -34,7 +34,7 @@ module Buzzn::Discovergy
       if interval.nil?
         query = '/public/v1/last_reading?meterId=' + meter_id + '&fields=power&each=' + collection.to_s
       else
-        case interval.resolution
+        case interval.duration
         when :hour
           query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
             (interval.to.to_i*1000).to_s + '&resolution=raw&fields=power&each=' + collection.to_s
