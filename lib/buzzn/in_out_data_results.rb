@@ -1,20 +1,31 @@
 module Buzzn
   class InOutDataResults
-    attr_reader :resource_id, :in, :out
+    attr_reader :timestamp, :in, :out, :resource_id
 
-    def self.form_hash(data)
-      new(data[:resource_id], Time.parse(data[:timestamp]), data[:in], data[:out])
+    def self.from_json(data)
+      from_hash(JSON.parse(data, symbolize_names: true))
     end
 
-    def initialize(resource_id, timestamp, input, output)
-      @in = input
-      @out = output
-      @timestamp = timestamp
+    def self.from_hash(data)
+      new(data[:timestamp], data[:in], data[:out], data[:resource_id])
+    end
+
+    def initialize(timestamp, input, output, resource_id)
+      @timestamp = case timestamp
+                   when Time
+                     timestamp
+                   when String
+                     Time.parse(timestamp)
+                   else
+                     raise ArgumentError.new("timestamp not a Time or String: #{timestamp.class}")
+                   end
+      @in = input.to_i
+      @out = output.to_i
       @resource_id = resource_id
     end
 
     def to_hash
-      { resource_id: @resource_id, timestamp: @timestamp, in: @in, out: @out }
+      { timestamp: @timestamp, in: @in, out: @out, resource_id: @resource_id }
     end
   end
 end
