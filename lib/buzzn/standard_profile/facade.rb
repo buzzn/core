@@ -1,7 +1,14 @@
 module Buzzn::StandardProfile
   class Facade
 
-    def aggregate(profile, interval, keys)
+    def query_value(profile, timestamp, keys)
+      only = ['timestamp']
+      only << 'energy_milliwatt_hour' if keys.include?('energy')
+      only << 'power_milliwatt' if keys.include?('power')
+      Reading.where(:timestamp.gte => timestamp, source: profile).only(only).first
+    end
+
+    def query_range(profile, from, to, resolution, keys)
       source      = { source: { "$in" => [profile] } }
 
       resolution_formats = {
@@ -13,12 +20,12 @@ module Buzzn::StandardProfile
         hour_to_minutes:    ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
         minute_to_seconds:  ['year', 'month', 'dayOfMonth', 'hour', 'minute', 'second']
       }
-      resolution = resolution_formats[interval.resolution]
+      resolution_format = resolution_formats[resolution]
 
-      if interval.resolution == :year_to_months
-        @offset = (interval.from + 6.month).utc_offset*1000
+      if resolution == :year_to_months
+        @offset = (from + 6.month).utc_offset*1000 # 7200000
       else
-        @offset = interval.from.utc_offset*1000
+        @offset = from.utc_offset*1000 # 3600000
       end
 
 
@@ -30,8 +37,8 @@ module Buzzn::StandardProfile
       match = {
                 "$match" => {
                   timestamp: {
-                    "$gte"  => interval.from.to_datetime,
-                    "$lt"  => interval.to.to_datetime
+                    "$gte"  => from.to_datetime,
+                    "$lt"  => to.to_datetime
                   }
                 }
               }
@@ -51,7 +58,7 @@ module Buzzn::StandardProfile
       project["$project"].merge!(energy_milliwatt_hour: 1) if keys.include?('energy')
       project["$project"].merge!(power_milliwatt: 1) if keys.include?('power')
       formats = {}
-      resolution.each do |format|
+      resolution_format.each do |format|
         formats.merge!({
           "#{format.gsub('OfMonth','')}ly" => {
             "$#{format}" => {
@@ -81,7 +88,7 @@ module Buzzn::StandardProfile
         group["$group"].merge!(avgPowerMilliwatt: { "$avg" => "$power_milliwatt" })
       end
       formats = {_id: {}}
-      resolution.each do |format|
+      resolution_format.each do |format|
         formats[:_id].merge!({ "#{format.gsub('OfMonth','')}ly" => "$#{format.gsub('OfMonth','')}ly" })
       end
       group["$group"].merge!(formats)
