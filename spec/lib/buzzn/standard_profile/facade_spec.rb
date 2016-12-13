@@ -26,12 +26,11 @@ describe Buzzn::StandardProfile::Facade do
         interval  = Buzzn::Interval.year(timestamp)
         facade    = Buzzn::StandardProfile::Facade.new
 
-        energy_chart = facade.energy_chart(profile, interval)
-
+        energy_chart = facade.aggregate(profile, interval, ['energy']).to_a
         expect(energy_chart.count).to eq 12
         energy_chart.each do |point|
-          days_in_month = Time.days_in_month(point['to'].month, point['to'].year)
-          expect(point['energy_milliwatt_hour']).to eq 19000*1000*(days_in_month-1)
+          days_in_month = Time.days_in_month(point['lastTimestamp'].month, point['lastTimestamp'].year)
+          expect(point['sumEnergyMilliwattHour']).to eq 19000*1000*(days_in_month-1)
         end
       end
 
@@ -55,12 +54,12 @@ describe Buzzn::StandardProfile::Facade do
         interval  = Buzzn::Interval.month(timestamp)
         facade    = Buzzn::StandardProfile::Facade.new
 
-        energy_chart = facade.energy_chart(profile, interval)
+        energy_chart = facade.aggregate(profile, interval, ['energy']).to_a
 
         expect(energy_chart.count).to eq days_in_month
-        expect(energy_chart.first['energy_milliwatt_hour']).to eq 1300*1000*23
-        expect(energy_chart.first['from']).to eq berlin_time.local(2015,5,1)
-        expect(energy_chart.last['to']).to eq berlin_time.local(2015,5,days_in_month,23)
+        expect(energy_chart.first['sumEnergyMilliwattHour']).to eq 1300*1000*23
+        expect(energy_chart.first['firstTimestamp']).to eq berlin_time.local(2015,5,1)
+        expect(energy_chart.last['lastTimestamp']).to eq berlin_time.local(2015,5,days_in_month,23)
       end
 
 
@@ -82,12 +81,12 @@ describe Buzzn::StandardProfile::Facade do
         interval  = Buzzn::Interval.day(berlin_time.local(2015,1,1))
         facade    = Buzzn::StandardProfile::Facade.new
 
-        power_chart = facade.power_chart(profile, interval)
+        power_chart = facade.aggregate(profile, interval, ['power']).to_a
 
         expect(power_chart.count).to eq 96
-        expect(power_chart.first['power_milliwatt']).to eq 930*1000
-        expect(power_chart.first['from']).to eq berlin_time.local(2015,1,1)
-        expect(power_chart.last['to']).to eq berlin_time.local(2015,1,1,23,45)
+        expect(power_chart.first['avgPowerMilliwatt']).to eq 930*1000
+        expect(power_chart.first['firstTimestamp']).to eq berlin_time.local(2015,1,1)
+        expect(power_chart.last['lastTimestamp']).to eq berlin_time.local(2015,1,1,23,45)
       end
 
 
