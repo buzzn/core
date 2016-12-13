@@ -10,6 +10,7 @@ module Buzzn
     end
 
     def get(data_source)
+      raise "can not handle #{data_source}" unless @registry.key?(data_source)
       @registry[data_source]
     end
 
