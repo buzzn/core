@@ -30,7 +30,9 @@ module Buzzn::Discovergy
       broker = register_or_group.discovergy_broker
       two_way_meter = broker.two_way_meter?
       response = @facade.readings(broker, interval, mode, false)
-      parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id)
+      result = parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id)
+      result.freeze
+      result
     end
 
     def create_virtual_meter_for_register(register)

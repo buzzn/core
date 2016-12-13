@@ -3,7 +3,7 @@ module Buzzn
     attr_reader :resource_id, :in, :out
 
     def self.form_hash(data)
-      new(data[:resource_id], data[:timestamp], data[:in], data[:out])
+      new(data[:resource_id], Time.parse(data[:timestamp]), data[:in], data[:out])
     end
 
     def initialize(resource_id, timestamp, input, output)
