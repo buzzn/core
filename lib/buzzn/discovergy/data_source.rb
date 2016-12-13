@@ -56,7 +56,9 @@ module Buzzn::Discovergy
       broker = register_or_group.discovergy_broker
       two_way_meter = broker.two_way_meter?
       response = @facade.readings(broker, interval, mode, false)
-      parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id)
+      result = parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id)
+      result.freeze
+      result
     end
 
     def create_virtual_meter_for_register(register)
@@ -137,7 +139,7 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_hour(json, mode, two_way_meter, resource_id)
-      result = Buzzn::DataResultSet.new(resource_id)
+      result = Buzzn::DataResultSet.milliwatt(resource_id)
       json.each do |item|
         if two_way_meter
           if item['values']['power'] > 0 && mode == :in
@@ -157,7 +159,7 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_day(json, mode, two_way_meter, resource_id)
-      result = Buzzn::DataResultSet.new(resource_id)
+      result = Buzzn::DataResultSet.milliwatt(resource_id)
       energy_out = mode == :in ? "" : "Out"
       first_reading = first_timestamp = nil
       json.each do |item|
@@ -174,7 +176,7 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
-      result = Buzzn::DataResultSet.new(resource_id)
+      result = Buzzn::DataResultSet.milliwatt_hour(resource_id)
       energy_out = mode == :in ? "" : "Out"
       old_value = new_value = timestamp = i = 0
       if two_way_meter && mode == :out

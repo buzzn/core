@@ -2,13 +2,27 @@ module Buzzn
   class DataResultSet
     attr_reader :resource_id, :in, :out, :units
 
-    def self.from_hash(data)
-      input =  data[:in].collect { |i| DataPoint.from_hash(i) }
-      output =  data[:out].collect { |i| DataPoint.from_hash(i) }
-      new(data[:resource_id], input, output)
+    class << self
+      private :new
+
+      def from_hash(data)
+        input = data[:in].collect { |i| DataPoint.from_hash(i) }
+        output = data[:out].collect { |i| DataPoint.from_hash(i) }
+        new(data['units'], data[:resource_id], input, output)
+      end
+
+      def milliwatt(*args)
+        new(*([:milliwatt] + args))
+      end
+
+      def milliwatt_hour(*args)
+        new(*([:milliwatt_hour] + args))
+      end
+
     end
 
-    def initialize(resource_id, input = [], output = [])
+    def initialize(units, resource_id, input = [], output = [])
+      @units = units.to_sym
       @resource_id = resource_id
       @in = input
       @out = output
@@ -35,21 +49,14 @@ module Buzzn
     end
     private :_add
 
-    def units(units)
-      unless [:milliwatt, :milliwatt_hour].include?(units)
-        raise ArgumentError.new('only :milliwatt and :milliwatt_hour allowed')
-      end
-      @units = units
-      freeze
-    end
-
     def freeze
       @in.freeze
       @out.freeze
     end
 
     def to_hash
-      { resource_id: @resource_id,
+      { units: @units,
+        resource_id: @resource_id,
         in: @in.collect { |i| i.to_hash },
         out: @out.collect { |i| i.to_hash } }
     end

@@ -3,7 +3,7 @@ module Buzzn
     attr_reader :timestamp, :value
 
     def self.from_hash(data)
-      new(data[:timestamp], data[:value])
+      new(Time.parse(data[:timestamp]), data[:value])
     end
           
     def initialize(timestamp, value)
