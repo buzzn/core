@@ -97,7 +97,7 @@ describe Buzzn::Discovergy::DataSource do
     mode = 'in'
     two_way_meter = false
     external_id = broker.external_id
-    result = data_source.parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
+    result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, external_id)
     expect(result[0][0]).to eq nil
     expect(result[0].is_a?(Buzzn::DataResult)).to eq true
   end
