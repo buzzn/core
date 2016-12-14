@@ -2,60 +2,66 @@ module Buzzn
 
   class Interval
 
-    attr_reader :from, :to, :period, :resolution
+    attr_reader :from, :to, :duration
 
-    def initialize(from = nil, to = from)
+    class << self
+      private :new
+    end
+
+    def initialize(from, to)
       @from = from
       @to = to
-      @resolution = _resolution
+      @duration = _duration
     end
 
-    def live?
-      @from.nil?
+    def respond_to?(method)
+      super || private_methods.include?(:"_#{method}")
     end
 
-    def year?
+    def method_missing(method, *args)
+      if private_methods.include? :"_#{method}"
+        @duration == method.to_s[0..-2].to_sym
+      else
+        super
+      end
+    end
+
+    private
+    def _year?
       timespan = self.to - self.from
       timespan <= 31622401 && timespan > 2678401
     end
 
-    def month?
+    def _month?
       timespan = self.to - self.from
       timespan <= 2678401 && timespan > 86401
     end
 
-    def day?
+    def _day?
       timespan = self.to - self.from
       timespan <= 86401 && timespan > 3601
     end
 
-    def hour?
+    def _hour?
       timespan = self.to - self.from
       timespan <= 3601 && timespan > 0
     end
 
-    def _resolution
-      self.live? ? :live : (
-        self.hour? ? :hour_to_minutes : (
-          self.day? ? :day_to_minutes : (
-            self.month? ? :month_to_days : (
-              self.year? ? :year_to_months : nil
-            )
+    def _duration
+      _hour? ? :hour : (
+        _day? ? :day : (
+          _month? ? :month : (
+            _year? ? :year : nil
           )
         )
       )
     end
-    private :_resolution
 
     class << self
       private :new
 
       def create_time_from_timestamp(timestamp)
-        Time.at(timestamp.to_i/1000)
-      end
-
-      def live
-        new
+        Time.at(timestamp.to_i/1000).in_time_zone
       end
 
       def year(timestamp)
