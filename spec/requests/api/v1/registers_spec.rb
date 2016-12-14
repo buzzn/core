@@ -826,7 +826,7 @@ describe "/api/v1/registers" do
           expect(response).to have_http_status(200)
           expect(json['data']['id']).to eq(register.meter.id)
           
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/meter", wrong_token.token
+          get_with_token "/api/v1/registers/#{register.id}/meter", wrong_token.token
           
           expect(response).to have_http_status(403)
         end
