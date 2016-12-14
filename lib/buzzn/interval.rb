@@ -62,12 +62,12 @@ module Buzzn
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_year,
-            timestamp.next_year
+            timestamp.beginning_of_year.next_year
           )
         else
           new(
             self.create_time_from_timestamp(timestamp).beginning_of_year,
-            self.create_time_from_timestamp(timestamp).next_year
+            self.create_time_from_timestamp(timestamp).beginning_of_year.next_year
           )
         end
       end
@@ -76,12 +76,12 @@ module Buzzn
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_month,
-            timestamp.next_month
+            timestamp.beginning_of_month.next_month
           )
         else
           new(
             self.create_time_from_timestamp(timestamp).beginning_of_month,
-            self.create_time_from_timestamp(timestamp).next_month
+            self.create_time_from_timestamp(timestamp).beginning_of_month.next_month
           )
         end
       end
@@ -104,12 +104,12 @@ module Buzzn
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_hour,
-            timestamp.beginning_of_hour + 1.day
+            timestamp.beginning_of_hour + 1.hour
           )
         else
           new(
             self.create_time_from_timestamp(timestamp).beginning_of_hour,
-            self.create_time_from_timestamp(timestamp).beginning_of_hour + 1.day
+            self.create_time_from_timestamp(timestamp).beginning_of_hour + 1.hour
             )
         end
       end

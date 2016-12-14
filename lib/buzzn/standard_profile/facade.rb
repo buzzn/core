@@ -9,7 +9,7 @@ module Buzzn::StandardProfile
     end
 
     def query_range(profile, from, to, resolution, keys)
-      source      = { source: { "$in" => [profile] } }
+      source = { source: { "$in" => [profile] } }
 
       resolution_formats = {
         year_to_months:     ['year', 'month'],
@@ -23,9 +23,9 @@ module Buzzn::StandardProfile
       resolution_format = resolution_formats[resolution]
 
       if resolution == :year_to_months
-        @offset = (from + 6.month).utc_offset*1000 # 7200000
+        @offset = (from + 6.month).utc_offset*1000
       else
-        @offset = from.utc_offset*1000 # 3600000
+        @offset = from.utc_offset*1000
       end
 
 
