@@ -1,7 +1,7 @@
 describe "/api/v1/registers" do
   let(:page_overload) { 11 }
-  # modes = ["input", "output"]
-  modes = ["input"]
+  modes = ["input", "output"]
+  #modes = ["input"]
   modes.each do |mode|
     describe "#{mode}s" do
       klass = "Register::#{mode.camelize}".constantize
@@ -814,43 +814,27 @@ describe "/api/v1/registers" do
         end
 
 
-        xit "gets meter for the register only by managers" do
-          Fabricate(:metering_point_operator, name: "buzzn Metering")
-          easymeter_60051559  = Fabricate(:easymeter_60051559)
-          register            = easymeter_60051559.registers.first
-          access_token        = Fabricate(:simple_access_token)
-          token_user          = User.find(access_token.resource_owner_id)
-          wrong_token         = Fabricate(:simple_access_token)
+        it 'gets meter for the register only by managers' do
+          register      = Fabricate("#{mode}_register".to_sym, meter: Fabricate(:meter))
+          access_token  = Fabricate(:simple_access_token)
+          token_user    = User.find(access_token.resource_owner_id)
+          wrong_token   = Fabricate(:simple_access_token)
           token_user.add_role(:manager, register)
 
           get_with_token "/api/v1/registers/#{register.id}/meter", access_token.token
 
           expect(response).to have_http_status(200)
-          expect(json["data"]["id"]).to eq(register.meter.id)
-          get_with_token "/api/v1/registers/#{register.id}/meter", wrong_token.token
+          expect(json['data']['id']).to eq(register.meter.id)
+          
+          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/meter", wrong_token.token
+          
           expect(response).to have_http_status(403)
         end
-
       end
-
     end
+
   end
 
-
-  it 'gets meter for the register only by managers' do
-    register      = Fabricate(:input_register)
-    access_token  = Fabricate(:simple_access_token)
-    token_user    = User.find(access_token.resource_owner_id)
-    wrong_token   = Fabricate(:simple_access_token)
-    token_user.add_role(:manager, register)
-
-    get_with_token "/api/v1/registers/#{register.id}/meter", access_token.token
-
-    expect(response).to have_http_status(200)
-    expect(json['data']['id']).to eq(register.meter.id)
-    get_with_token "/api/v1/registers/#{register.id}/meter", wrong_token.token
-    expect(response).to have_http_status(403)
-  end
 
 
 
