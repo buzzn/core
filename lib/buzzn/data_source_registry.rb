@@ -2,20 +2,19 @@ module Buzzn
 
   class DataSourceRegistry
 
-    def initialize(discovergy_data_source = Buzzn::Discovergy::DataSource.new,
-                   mysmartgrid_data_source = Buzzn::Mysmartgrid::DataSource.new)
-      @discovergy = discovergy_data_source
-      @mysmartgrid = mysmartgrid_data_source
+    def initialize(map = {})
+      @registry = map.dup
+      @registry[:discovergy] ||= Buzzn::Discovergy::DataSource.new
+      @registry[:mysmartgrid] ||= Buzzn::Mysmartgrid::DataSource.new
     end
 
-    def data_source_for(organization)
-      case organization
-      when Organization.discovergy
-        @discovergy
-      when Organization.mysmartgrid
-        @mysmartgrid
-      else
-        raise "do not have a data source for #{organization.inspect}"
+    def get(data_source)
+      @registry[data_source]
+    end
+
+    def each(&block)
+      @registry.each do |key, data_source|
+        block.call(key, data_source)
       end
     end
   end

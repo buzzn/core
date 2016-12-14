@@ -13,6 +13,15 @@ describe Buzzn::Discovergy::Facade do
   let(:meter_2) { Fabricate(:meter, manufacturer_product_serialnumber: 60009272) }
   let(:broker) { Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
   let(:broker_with_wrong_token) { Fabricate(:discovergy_broker_with_wrong_token, resource: meter_2, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
+  let(:broker_virtual) { Fabricate(:discovergy_broker, resource: meter, external_id: "VIRTUAL_00000065") }
+  let(:group) do
+    Fabricate(:group, registers: [
+      Fabricate(:register_60118460),
+      Fabricate(:register_60009441),
+      Fabricate(:register_60009442),
+      Fabricate(:register_60009393)
+    ])
+  end
 
   it 'registers application manually' do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
@@ -101,7 +110,34 @@ describe Buzzn::Discovergy::Facade do
     end
   end
 
-  # TODO: I don't know to test this
+  it 'gets virtual meter information' do |spec|
+    VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
+      facade = Buzzn::Discovergy::Facade.new
+      response = facade.do_virtual_meter_info(broker_virtual)
+      expect(response.code).to eq '200'
+      expect(response.body).not_to eq nil
+      json = MultiJson.load(response.body)
+      expect(json.size).to eq 3
+      expect(json.first['location']['streetNumber']).to eq "51"
+    end
+  end
+
+  it 'creates virtual meter for group' do |spec|
+    VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
+      facade = Buzzn::Discovergy::Facade.new
+      meter_ids_plus = group.registers.inputs.collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
+      response = facade.do_create_virtual_meter(broker, meter_ids_plus)
+      expect(response.code).to eq '200'
+      expect(response.body).not_to eq nil
+      json = MultiJson.load(response.body)
+      expect(json['type']).to eq "VIRTUAL"
+      expect(json['location']['streetNumber']).to eq "0"
+    end
+  end
+
+
+
+  # TODO: I don't know how to test this
   xit 'increments throughput before methods'
   xit 'decrements throughput after methods'
 

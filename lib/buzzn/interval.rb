@@ -2,7 +2,7 @@ module Buzzn
 
   class Interval
 
-    attr_reader :from, :to, :period, :resolution
+    attr_reader :from, :to, :resolution
 
     def initialize(from = nil, to = from)
       @from = from
@@ -56,6 +56,10 @@ module Buzzn
 
       def live
         new
+      end
+
+      def live?
+        @from.nil?
       end
 
       def year(timestamp)

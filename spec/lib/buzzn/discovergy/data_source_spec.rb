@@ -4,12 +4,24 @@ require 'buzzn/discovergy/data_source'
 describe Buzzn::Discovergy::DataSource do
   let(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
   let(:broker) { Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
+  let(:small_group) { Fabricate(:group, registers: [Fabricate(:register_60118460), Fabricate(:register_60009441)]) }
+  let(:group) do
+    Fabricate(:group, registers: [
+      Fabricate(:register_60118470), #out
+      Fabricate(:register_60118460), #out
+      Fabricate(:register_60009441), #in
+      Fabricate(:register_60009442), #in
+      Fabricate(:register_60009393)  #in
+    ])
+  end
   let(:single_meter_live_response) { "{\"time\":1480606450088,\"values\":{\"power\":1100640}}" }
   let(:single_meter_hour_response) { "[{\"time\":1480604400205,\"values\":{\"power\":1760140}},{\"time\":1480604402205,\"values\":{\"power\":1750440}}]" }
   let(:single_meter_day_response) { "[{\"time\":1480606200000,\"values\":{\"energy\":22968322444644}},{\"time\":1480607100000,\"values\":{\"energy\":22970988922089}},{\"time\":1480608000000,\"values\":{\"energy\":22973229616478}}]" }
   let(:single_meter_month_response) { "[{\"time\":1477954800000,\"values\":{\"energy\":22202408932539}},{\"time\":1478041200000,\"values\":{\"energy\":22202747771000}},{\"time\":1478127600000,\"values\":{\"energy\":22202747771000}}]" }
   let(:single_meter_year_response) { "[{\"time\":1451602800000,\"values\":{\"energy\":14386541983000}},{\"time\":1454281200000,\"values\":{\"energy\":15127308929000}},{\"time\":1456786800000,\"values\":{\"energy\":15997907091031}}]" }
   let(:virtual_meter_live_response) { "{\"EASYMETER_60009425\":{\"time\":1480614249341,\"values\":{\"power\":150950}},\"EASYMETER_60009404\":{\"time\":1480614254195,\"values\":{\"power\":161590}},\"EASYMETER_60009415\":{\"time\":1480614254563,\"values\":{\"power\":152190}}}"}
+  let(:virtual_meter_creation_response) { "{\"serialNumber\":\"00000065\",\"location\":{\"street\":\"Virtual\",\"streetNumber\":\"0\",\"zip\":\"00000\",\"city\":\"Virtual\",\"country\":\"DE\"},\"administrationNumber\":null,\"type\":\"VIRTUAL\",\"measurementType\":\"ELECTRICITY\",\"scalingFactor\":1,\"currentScalingFactor\":1,\"voltageScalingFactor\":1,\"internalMeters\":1,\"firstMeasurementTime\":-1,\"lastMeasurementTime\":-1}" }
+  let(:empty_response) { "[]" }
 
   it 'parses single meter live response' do
     data_source = Buzzn::Discovergy::DataSource.new
@@ -79,6 +91,18 @@ describe Buzzn::Discovergy::DataSource do
     expect(result[0][1].value).to eq 87059816.2031
   end
 
+  it 'parses empty response' do
+    data_source = Buzzn::Discovergy::DataSource.new
+    response = empty_response
+    interval = Buzzn::Interval.year(Time.now.to_i*1000)
+    mode = 'in'
+    two_way_meter = false
+    external_id = broker.external_id
+    result = data_source.parse_aggregated_data(response, interval, mode, two_way_meter, external_id)
+    expect(result[0][0]).to eq nil
+    expect(result[0].is_a?(Buzzn::DataResult)).to eq true
+  end
+
   it 'parses virtual meter live response for each meter' do
     data_source = Buzzn::Discovergy::DataSource.new
     response = virtual_meter_live_response
@@ -95,4 +119,32 @@ describe Buzzn::Discovergy::DataSource do
     expect(result[1].resource_id).to eq 'other-uid'
     expect(result[2].resource_id).to eq 'last-uid'
   end
+
+  it 'parses virtual meter creation response' do
+    data_source = Buzzn::Discovergy::DataSource.new
+    response = virtual_meter_creation_response
+    mode = 'virtual'
+    resource = group
+    result = data_source.parse_virtual_meter_creation(response, mode, resource)
+    expect(group.discovergy_brokers.size).to eq 1
+  end
+
+  it 'does not create virtual meters for small group' do
+    data_source = Buzzn::Discovergy::DataSource.new
+    brokers = data_source.create_virtual_meters_for_group(small_group)
+    expect(brokers).to eq []
+  end
+
+  it 'creates virtual meter for group' do |spec|
+    VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
+      existing_broker = broker
+      data_source = Buzzn::Discovergy::DataSource.new
+      brokers = data_source.create_virtual_meters_for_group(group)
+      expect(brokers).not_to eq []
+      expect(group.discovergy_brokers.size).to eq 2
+    end
+  end
+
+
+
 end

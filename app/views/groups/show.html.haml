@@ -46,6 +46,8 @@
             %li= link_to(t('add_group_manager'), add_manager_group_path(@group),{:remote => true,'data-toggle' => "modal", 'data-target' => '#myModal'})
             - if @group.managers.include?(current_user)
               %li= link_to(t('remove_me_as_group_manager'), remove_manager_update_group_path(@group),{:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal', :method => :put, 'data-confirm' => t('are_you_sure') + ' ' + t('you_will_no_longer_be_able_to_edit_this_group')})
+            - if current_user.has_role?(:admin)
+              %li= link_to(t('refresh_data_boost'), finalize_registers_group_path(@group),{:remote => true, :method => :put, 'data-confirm' => t('are_you_sure')})
           - if user_signed_in?
             - if @group.members.include?(current_user)
               %li= link_to(t('edit_notifications'), edit_notifications_group_path(@group),{:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal'})
