@@ -843,7 +843,7 @@ describe "/api/v1/registers" do
 
 
   it 'gets meter for the register only by managers' do
-    register      = Fabricate(:register)
+    register      = Fabricate(:input_register)
     access_token  = Fabricate(:simple_access_token)
     token_user    = User.find(access_token.resource_owner_id)
     wrong_token   = Fabricate(:simple_access_token)
