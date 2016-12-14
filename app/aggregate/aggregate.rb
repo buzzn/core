@@ -1,7 +1,7 @@
 require 'uri'
 #### Usage
-# mp = Register::Base.find('some-id')
-# hash = Aggregate.sort([mp])
+# r = Register::Base.find('some-id')
+# hash = Aggregate.sort_registers([r])
 # a = Aggregate.new(hash)
 # a.past
 # a.past(timestamp: Time.current, resolution: 'year_to_months')

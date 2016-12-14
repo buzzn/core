@@ -28,7 +28,7 @@ class CommentsController < InheritedResources::Base
             @root_id = @comment.parent_id
             @root_type = 'Comment'
           end
-          @channel_name = @comment.commentable_type + '_' + @comment.commentable_id
+          @channel_name = @comment.commentable_type.to_s.split(':')[0] + '_' + @comment.commentable_id
           if @comment.commentable_type == "PublicActivity::ORM::ActiveRecord::Activity"
             @channel_name = @comment.commentable.trackable_type + '_' + @comment.commentable.trackable_id
           end

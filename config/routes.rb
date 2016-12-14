@@ -62,6 +62,11 @@ Buzzn::Application.routes.draw do
     end
   end
 
+  namespace :registers do
+    resources :inputs, controller: 'registers'
+    resources :outputs, controller: 'registers'
+  end
+
 
 
   resources :meters, :except => :show
