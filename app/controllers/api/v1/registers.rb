@@ -269,8 +269,6 @@ module API
           register.meter.guarded_read(current_user)
         end
 
-
-
       end
     end
   end

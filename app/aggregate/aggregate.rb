@@ -46,7 +46,7 @@ class Aggregate
       }
     end
 
-    ['slp', 'sep_bhkw', 'sep_pv'].each do |fake_type|
+    [:slp, :sep_bhkw, :sep_pv].each do |fake_type|
       if @registers_hash[fake_type.to_sym].any?
         present_items.concat(present_fake(fake_type, @registers_hash, timestamp ))
       end
@@ -123,7 +123,7 @@ class Aggregate
         past_items << past_discovergy(register, resolution, timestamp)
       end
 
-      ['slp', 'sep_bhkw', 'sep_pv'].each do |fake_type|
+      [:slp, :sep_bhkw, :sep_pv].each do |fake_type|
         if @registers_hash[fake_type.to_sym].any?
           past_items.concat( past_fake(fake_type, @registers_hash, resolution, timestamp) )
         end
@@ -178,17 +178,17 @@ class Aggregate
       data_sources.push(register.data_source) unless data_sources.include?(register.data_source) && register.data_source
       register_ids << register.id
       case register.data_source
-      when 'buzzn_api'
+      when :buzzn_api
         buzzn_api << register
-      when 'discovergy'
+      when :discovergy
         discovergy << register
-      when 'virtual'
+      when :virtual
         virtual << register
-      when 'slp'
+      when :slp
         slp << register
-      when 'sep_bhkw'
+      when :sep_bhkw
         sep_bhkw << register
-      when 'sep_pv'
+      when :sep_pv
         sep_pv << register
       else
         Rails.logger.error "You gave me #{register.data_source} -- I have no idea what to do with that."

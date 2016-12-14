@@ -65,7 +65,9 @@ module Buzzn
     config.after_initialize do
 
       # service components
-      Application.config.data_source_registry = Buzzn::DataSourceRegistry.new
+      registry = Application.config.data_source_registry = Buzzn::DataSourceRegistry.new
+      Application.config.current_power = Buzzn::CurrentPower.new(registry)
+      Application.config.charts = Buzzn::Charts.new(registry)
     end
   end
 end

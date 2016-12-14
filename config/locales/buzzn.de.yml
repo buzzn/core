@@ -191,6 +191,7 @@ de:
   edit_data_connection: Datenverbindung bearbeiten
   search_friends: Freunde suchen
   settings_saved: Einstellungen gespeichert.
+  unable_to_save_settings: Einstellungen konnten nicht gespeichert werden.
 
   meters: Messgerät
   new_meter: Neues Messgerät
@@ -743,6 +744,7 @@ de:
   user_rejected_your_friendship_request: "%{user} hat Deine Freundschaftsanfrage abgelehnt."
   you_are_not_able_to_view_users_not_public_content_anymore: "Du kannst die nicht-öffentlichen Inhalte von %{user} ab jetzt nicht mehr sehen."
   cancelled_friendship: "Freundschaft beendet"
+  refresh_data_boost: Optimierte Datenbeschaffung erneuern
 
   new_group_register_invitation: Neue Gruppeneinladung
   do_you_want_to_join_the_group_with_your_register: "Möchtest Du der Gruppe %{group} mit deinem Zählpunkt %{register} beitreten"

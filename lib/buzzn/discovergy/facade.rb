@@ -1,6 +1,3 @@
-require 'buzzn'
-require 'buzzn/discovergy/throughput'
-
 module Buzzn::Discovergy
   class Facade
 
@@ -22,7 +19,7 @@ module Buzzn::Discovergy
     # input params:
     #  broker: class with information about credentials and requested meterID
     #  interval: class with information about the beginning and end date
-    #  mode: 'in' or 'out' to decide which data is requested for a meter
+    #  mode: :in or :out to decide which data is requested for a meter
     #  collection: boolean that indicates whether to request data preaggregated or as a collection
     # returns:
     #  Net::HTTPResponse with requested data
@@ -30,25 +27,27 @@ module Buzzn::Discovergy
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
       energy_out = ""
-      if mode == 'out'
+      if mode == :out
         energy_out = "Out"
       end
 
-      case interval.resolution
-      when :live
+      if interval.nil?
         query = '/public/v1/last_reading?meterId=' + meter_id + '&fields=power&each=' + collection.to_s
-      when :hour
-        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
-          (interval.to.to_i*1000).to_s + '&resolution=raw&fields=power&each=' + collection.to_s
-      when :day
-        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
-          (interval.to.to_i*1000).to_s + "&resolution=fifteen_minutes&fields=energy#{energy_out}&each=" + collection.to_s
-      when :month
-        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
-          (interval.to.to_i*1000).to_s + "&resolution=one_day&fields=energy#{energy_out}&each=" + collection.to_s
-      when :year
-        query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
-          (interval.to.to_i*1000).to_s + "&resolution=one_month&fields=energy#{energy_out}&each=" + collection.to_s
+      else
+        case interval.duration
+        when :hour
+          query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
+            (interval.to.to_i*1000).to_s + '&resolution=raw&fields=power&each=' + collection.to_s
+        when :day
+          query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
+            (interval.to.to_i*1000).to_s + "&resolution=fifteen_minutes&fields=energy#{energy_out}&each=" + collection.to_s
+        when :month
+          query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
+            (interval.to.to_i*1000).to_s + "&resolution=one_day&fields=energy#{energy_out}&each=" + collection.to_s
+        when :year
+          query = '/public/v1/readings?meterId=' + meter_id + '&from=' + (interval.from.to_i*1000).to_s + '&to=' +
+            (interval.to.to_i*1000).to_s + "&resolution=one_month&fields=energy#{energy_out}&each=" + collection.to_s
+        end
       end
 
       access_token.get(query)
@@ -75,13 +74,13 @@ module Buzzn::Discovergy
       access_token = build_access_token_from_broker_or_new(existing_random_broker)
       query = '/public/v1/virtual_meter?'
       if meter_ids_plus.any?
-        query += 'meterIdsPlus=' + meter_ids_plus.join(",")
+        query += 'meterIdsPlus=' + meter_ids_plus.sort!.join(",")
         if meter_ids_minus.any?
           query += '&'
         end
       end
       if meter_ids_minus.any?
-        query += 'meterIdsMinus=' + meter_ids_minus.join(",")
+        query += 'meterIdsMinus=' + meter_ids_minus.sort!.join(",")
       end
       access_token.post(query)
       response = access_token.response
@@ -92,8 +91,31 @@ module Buzzn::Discovergy
       when 401
         if !retried
           register_application
+          access_token = build_access_token_from_broker_or_new(existing_random_broker, true)
+          response = self.create_virtual_meter(existing_random_broker, meter_ids_plus, meter_ids_minus, true)
+        else
+          raise Buzzn::DataSourceError.new('unauthorized to create virtual meter at discovergy: ' + response.body)
+        end
+      else
+        raise Buzzn::DataSourceError.new('unable to create virtual meter at discovergy: ' + response.body)
+      end
+      return response
+    end
+
+    def virtual_meter_info(broker, retried=false)
+      access_token = build_access_token_from_broker_or_new(broker)
+      meter_id = broker.external_id
+      query = '/public/v1/virtual_meter?meterId=' + meter_id
+      access_token.get(query)
+      response = access_token.response
+      case response.code.to_i
+      when (200..299)
+        return response
+      when 401
+        if !retried
+          register_application
           access_token = build_access_token_from_broker_or_new(broker, true)
-          response = self.readings(broker, interval, mode, collection, true)
+          response = self.virtual_meter_info(broker, true)
         else
           raise Buzzn::DataSourceError.new('unauthorized to get data from discovergy: ' + response.body)
         end
@@ -247,10 +269,8 @@ module Buzzn::Discovergy
 
 
 
-
-
     [:register_application, :get_request_token, :authorize, :get_access_token, :readings,
-      :create_virtual_meter].each do |method|
+      :create_virtual_meter, :virtual_meter_info].each do |method|
 
       alias :"do_#{method}" :"#{method}"
 
@@ -263,7 +283,8 @@ module Buzzn::Discovergy
         end
       end
 
-      private method
+      # TODO: commented out only for testing!!!!!
+      #private method
     end
 
     private
