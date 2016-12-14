@@ -168,7 +168,7 @@ http_interactions:
   recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
 - request:
     method: post
-    uri: https://api.discovergy.com/public/v1/virtual_meter?meterIdsPlus=EASYMETER_60009393,EASYMETER_60009442,EASYMETER_60009441
+    uri: https://api.discovergy.com/public/v1/virtual_meter?meterIdsPlus=EASYMETER_60009393,EASYMETER_60009441,EASYMETER_60009442
     body:
       encoding: UTF-8
       string: ''
@@ -214,54 +214,6 @@ http_interactions:
       string: '{"serialNumber":"00000066","location":{"street":"Virtual","streetNumber":"0","zip":"00000","city":"Virtual","country":"DE"},"administrationNumber":null,"type":"VIRTUAL","measurementType":"ELECTRICITY","scalingFactor":1,"currentScalingFactor":1,"voltageScalingFactor":1,"internalMeters":1,"firstMeasurementTime":-1,"lastMeasurementTime":-1}'
     http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
-- request:
-    method: post
-    uri: https://api.discovergy.com/public/v1/virtual_meter?meterIdsPlus=EASYMETER_60118470,EASYMETER_60118460
-    body:
-      encoding: UTF-8
-      string: ''
-    headers:
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-      User-Agent:
-      - OAuth gem v0.5.1
-      Content-Length:
-      - '0'
-      Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="ej42hajt8p13uaahpsbrm1nglc",
-        oauth_nonce="UsCVASfwt9Ki2HoT83QLdGiWjdtBiFV3sCoqqoBM", oauth_signature="8p31cKymQbKvQAV6myQ91YjZ7aE%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1467446702", oauth_token="dde641a1b73f403bb981f099f0f20d53",
-        oauth_version="1.0"
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.10.0
-      Date:
-      - Tue, 06 Dec 2016 15:35:13 GMT
-      Content-Type:
-      - text/html;charset=iso-8859-1
-      Content-Length:
-      - '341'
-      Connection:
-      - keep-alive
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, PUT
-      Access-Control-Allow-Headers:
-      - X-Requested-With, Content-Type
-      Cache-Control:
-      - must-revalidate,no-cache,no-store
-    body:
-      encoding: UTF-8
-      string: '{"serialNumber":"00000067","location":{"street":"Virtual","streetNumber":"0","zip":"00000","city":"Virtual","country":"DE"},"administrationNumber":null,"type":"VIRTUAL","measurementType":"ELECTRICITY","scalingFactor":1,"currentScalingFactor":1,"voltageScalingFactor":1,"internalMeters":1,"firstMeasurementTime":-1,"lastMeasurementTime":-1}'
-    http_version:
-  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
 - request:
     method: post
     uri: https://api.discovergy.com/public/v1/virtual_meter?meterIdsPlus=EASYMETER_60118460,EASYMETER_60118470
