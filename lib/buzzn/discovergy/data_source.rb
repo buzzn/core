@@ -105,8 +105,7 @@ module Buzzn::Discovergy
     def parse_aggregated_data(response, interval, mode, two_way_meter, resource_id)
       json = MultiJson.load(response)
       if json.empty?
-        result << Buzzn::DataResult.new(resource_id)
-        return result
+        return nil
       end
 
       if interval.nil?
