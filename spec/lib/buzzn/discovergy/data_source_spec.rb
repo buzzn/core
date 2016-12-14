@@ -153,8 +153,21 @@ describe Buzzn::Discovergy::DataSource do
     register = Fabricate(:input_register, group: group, meter: Fabricate(:meter))
     Fabricate(:discovergy_broker, resource: register.meter, external_id: 'easy_123')
     map = subject.send(:to_map, group)
+    expect(map).to eq('easy_123' => register.id)
   end
 
   it 'maps the external id to register ids' do
+    meter = Fabricate(:meter)
+    register = Fabricate(:input_register,
+                         meter: Fabricate(:meter),
+                         virtual: true, 
+                         formula_parts: [Fabricate(:fp_plus, operand: Fabricate(:input_register, meter: meter))])
+    Fabricate(:discovergy_broker, resource: register.meter, external_id: 'virtual_123')
+    
+    Fabricate(:discovergy_broker, resource: register.formula_parts.first.operand.meter, external_id: 'easy_123')
+    
+    
+    map = subject.send(:to_map, register)
+    expect(map).to eq('easy_123' => register.formula_parts.first.operand.id)
   end
 end

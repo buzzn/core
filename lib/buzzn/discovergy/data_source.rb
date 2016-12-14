@@ -13,7 +13,7 @@ module Buzzn::Discovergy
       unless group_or_virtual_register.discovergy_broker
         result = []
         group.register.each do |register|
-          result << aggregated(register, interval, mode)
+          result << aggregated(register, mode)
         end
         result.compact!
         return result
@@ -75,28 +75,34 @@ module Buzzn::Discovergy
       case resource
       when Group
         to_group_map(resource)
-      when Register
+      when Register::Base
         to_register_map(resource)
       end
     end
 
     def to_group_map(group)
-      map = {}
-      DiscovergyBroker.where(resource_id: group.registers.collect(&:meter_id)).select(:external_id, :resource_id).each do |broker|
-        map[broker.external_id] = broker.resource_id
+      meter_to_register = {}
+      group.registers.each do |r|
+        meter_to_register[r.meter_id] = r.id
       end
-      map
+      to_external_map(meter_to_register)
     end
 
     def to_register_map(register)
+      meter_to_register = {}
+      register.formula_parts.each do |r|
+        meter_to_register[r.operand.meter_id] = r.operand.id
+      end
+      to_external_map(meter_to_register)
+    end
+
+    def to_external_map(meter_to_register)
       map = {}
-      # join on discovergy_broker.resource_id = formular_parts.operand_id
-      DiscovergyBroker.joins(:formular_parts).where('forumlar_parts.register_id = ?', register.id).each do |r|
-        map[broker.external_id] = resource.id
+      DiscovergyBroker.where(resource_id:  meter_to_register.keys).select(:external_id, :resource_id).each do |broker|
+        map[broker.external_id] = meter_to_register[broker.resource_id]
       end
       map
     end
-
 
     ##############
     ### PARSER ###

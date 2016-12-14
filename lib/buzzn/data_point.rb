@@ -20,6 +20,7 @@ module Buzzn
                      raise ArgumentError.new("timestamp not a Time or String: #{timestamp.class}")
                    end
       @value = value.to_f
+      raise 'value most not be negativ' if @value < 0
     end
 
     def add(other)
