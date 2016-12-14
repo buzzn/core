@@ -1,3 +1,5 @@
+
+
 class RegistersController < ApplicationController
   before_filter :authenticate_user!, except: [:show, :chart, :latest_fake_data, :latest_power, :widget]
   respond_to :html, :json, :js
@@ -337,8 +339,4 @@ private
       formula_parts_attributes: [:id, :operator, :register_id, :operand_id, :_destroy]
     )
   end
-
-
-
-
 end

@@ -63,11 +63,11 @@
       .row
         .registers
           - @registers.each do |register|
-            = render register.decorate if register.readable_by?(current_user)
+            = render partial: 'registers/register', object: register.decorate  if register.readable_by?(current_user)
           = will_paginate(@registers, { class: 'flickr_pagination', param_name: 'register_page' })
           - if @registers.empty?
             .show_global_tour
-      - if current_user.can_create?(Register) && current_user.profile == @profile
+      - if current_user.can_create?(Register::Base) && current_user.profile == @profile
         .row
           .col-lg-12.text-center
             = new_register

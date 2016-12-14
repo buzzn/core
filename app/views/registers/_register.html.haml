@@ -1,6 +1,6 @@
 .col-xs-12.col-sm-12.col-md-12.col-lg-12.register{id: "register_#{register.id}", data: {smart: "#{register.smart?}", online: "#{register.online?}"} }
 
-  = link_to register do
+  = link_to register_path register do
     .panel.widget
       - if !register.smart?
         .ribbon-wrapper-green{"data-toggle" => "popover", "data-placement" => "left", "title" => t("#{register.fake_label}_abbreviation"), "data-content" => t("dummy_description")}

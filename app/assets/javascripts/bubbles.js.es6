@@ -46,7 +46,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
         seeded: false,
         updating: false,
       };
-      if (point.attributes.mode === 'in') {
+      if (point.attributes.obis === '1-0:1.8.0') {
         inData.push(Object.assign({}, pointObj, { color: inColor, outPoint: false }));
       } else {
         outData.push(Object.assign({}, pointObj, { color: outColor, outPoint: true, startAngle: 0, endAngle: 0 }));
@@ -131,8 +131,8 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
           outData[idx].updating = false;
         })
         .catch(error => {
-          inData[idx].value = 0;
-          inData[idx].seeded = true;
+          outData[idx].value = 0;
+          outData[idx].seeded = true;
           outData[idx].updating = false;
           console.log(error);
         });
