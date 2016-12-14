@@ -10,8 +10,8 @@ module Buzzn::StandardProfile
     # Register Power Ticker
     def power_value(register, timestamp)
       keys = ['power']
-      value = @facade.query_value(register.data_source, timestamp, keys)
-      to_data_result(register, value, keys)
+      query_value_result = @facade.query_value(register.data_source, timestamp, keys)
+      to_data_result(register, query_value_result, keys)
     end
 
     # Register Energy Ticker
@@ -24,14 +24,16 @@ module Buzzn::StandardProfile
     # Register Power Line Chart
     def power_range(register, from, to, resolution)
       keys = ['power']
-      range = @facade.query_range(register.data_source, from, to, resolution, keys)
-      range_to_data_result_set(register, range, keys)
+      query_range_result = @facade.query_range(register.data_source, from, to, resolution, keys)
+      to_data_result_set(register, query_range_result, keys)
     end
 
-    # # Register Energy Bar Chart
-    # def energy_range(profile)
-    #   @facade.query_range(profile, interval, ['energy'])
-    # end
+    # Register Energy Bar Chart
+    def energy_range(register, from, to, resolution)
+      keys = ['energy']
+      query_range_result = @facade.query_range(register.data_source, from, to, resolution, keys)
+      to_data_result_set(register, query_range_result, keys)
+    end
 
     # # Group Bubbles
     # def power_value_collection(profile)
@@ -54,7 +56,6 @@ module Buzzn::StandardProfile
 
 private
 
-
     def to_data_result(register, query_value_result, keys)
       timestamp   = query_value_result.timestamp.to_time
       value       = query_value_result.energy_milliwatt_hour if keys.include?('energy')
@@ -64,24 +65,21 @@ private
       Buzzn::DataResult.new(timestamp, value, resource_id, mode)
     end
 
-
-    def range_to_data_result_set(register, range, keys)
-      data_result = Buzzn::DataResult.new(register.id)
-
-      range.each do |document|
+    def to_data_result_set(register, query_range_result, keys)
+      data_result_set = Buzzn::DataResultSet.milliwatt(register.id)
+      factor = factor_from_register(register)
+      query_range_result.each do |document|
         if keys.include?('energy')
           timestamp = document['firstTimestamp']
           value     = document['sumEnergyMilliwattHour'] * factor
         end
-
         if keys.include?('power')
           timestamp = document['firstTimestamp']
           value     = document['avgPowerMilliwatt'] * factor
         end
-
-        data_result.add(timestamp, value)
+        data_result_set.add(timestamp, value, register.mode.to_sym)
       end
-      return items
+      data_result_set
     end
 
     def factor_from_register(register)

@@ -9,7 +9,7 @@ module Buzzn
     def self.from_hash(data)
       new(data[:timestamp], data[:value])
     end
-          
+
     def initialize(timestamp, value)
       @timestamp = case timestamp
                    when Time

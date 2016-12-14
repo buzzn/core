@@ -2,7 +2,7 @@ module Register
   class InputResource < Register::BaseResource
     abstract
 
-    attributes :obis
+    attributes :obis, :mode
 
   end
 end
