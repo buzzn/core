@@ -9,32 +9,6 @@ module Buzzn::Discovergy
       @facade = facade
     end
 
-    def to_map(resource)
-      case resource
-      when Group
-        to_group_map(resource)
-      when Register
-        to_register_map(resource)
-      end
-    end
-
-    def to_group_map(group)
-      map = {}
-      # join on discovergy_broker.resource_id = group.id
-      DiscovergyBroker.joins(:registers).where('registers.group_id = ?', group.id).each do |broker|
-        map[broker.external_id] = broker.id
-      end
-      map
-    end
-    def to_register_map(register)
-      map = {}
-      # join on discovergy_broker.resource_id = formular_parts.operand_id
-      DiscovergyBroker.joins(:formular_parts).where('forumlar_parts.register_id = ?', register.id).each do |r|
-        map[broker.external_id] = resource.id
-      end
-      map
-    end
-
     def collection(group_or_virtual_register, mode)
       unless group_or_virtual_register.discovergy_broker
         result = []
@@ -93,6 +67,34 @@ module Buzzn::Discovergy
         out_broker = parse_virtual_meter_creation(response.body, 'out', group)
       end
       return [in_broker, out_broker].compact
+    end
+
+    private
+
+    def to_map(resource)
+      case resource
+      when Group
+        to_group_map(resource)
+      when Register
+        to_register_map(resource)
+      end
+    end
+
+    def to_group_map(group)
+      map = {}
+      DiscovergyBroker.where(resource_id: group.registers.collect(&:meter_id)).select(:external_id, :resource_id).each do |broker|
+        map[broker.external_id] = broker.resource_id
+      end
+      map
+    end
+
+    def to_register_map(register)
+      map = {}
+      # join on discovergy_broker.resource_id = formular_parts.operand_id
+      DiscovergyBroker.joins(:formular_parts).where('forumlar_parts.register_id = ?', register.id).each do |r|
+        map[broker.external_id] = resource.id
+      end
+      map
     end
 
 
