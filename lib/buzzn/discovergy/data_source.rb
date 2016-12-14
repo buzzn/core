@@ -9,8 +9,12 @@ module Buzzn::Discovergy
       @facade = facade
     end
 
+    ##########################
+    # internal data-source api
+    ##########################
+
     def collection(group_or_virtual_register, mode)
-      unless group_or_virtual_register.discovergy_broker
+      if group_or_virtual_register.discovergy_brokers.empty?
         result = []
         group.register.each do |register|
           result << aggregated(register, mode)
@@ -19,21 +23,39 @@ module Buzzn::Discovergy
         return result
       end
       map = to_map(group_or_virtual_register)
-      response = @facade.readings(group_or_virtual_register.discovergy_broker, nil, mode, true)
-      result = parse_collected_data(response.body, mode, map)
+      result = nil
+      group_or_virtual_register.discovergy_brokers.each do |broker|
+        response = @facade.readings(broker, nil, mode, true)
+        more = parse_collected_data(response.body, mode, map)
+        if result
+          result.add_all(more)
+        else
+          result = more
+        end
+      end
       result.freeze
       result
     end
 
     def aggregated(register_or_group, mode, interval = nil)
-      return unless register_or_group.discovergy_broker
-      broker = register_or_group.discovergy_broker
-      two_way_meter = broker.two_way_meter?
-      response = @facade.readings(broker, interval, mode, false)
-      result = parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id)
+      register_or_group.discovergy_brokers.each do |broker|
+        two_way_meter = broker.two_way_meter?
+        response = @facade.readings(broker, interval, mode, false)
+        more = parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id)
+        if result
+          result.add_all(more)
+        else
+          result = more
+        end
+      end
       result.freeze
       result
     end
+
+
+    ######################################
+    # discovergy specifics for data-source
+    ######################################
 
     def create_virtual_meter_for_register(register)
       if !register.is_a?(Register) || !register.virtual

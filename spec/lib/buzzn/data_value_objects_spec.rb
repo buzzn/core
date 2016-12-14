@@ -18,10 +18,10 @@ describe Buzzn::DataPoint do
 
   it 'adds value if timestamp match' do
     reference = subject.new(Time.new(123456789), 987654331)
-    other = subject.new(Time.new(123456789), -987654330)
+    other = subject.new(Time.new(123456789), 1)
     reference.add(other)
 
-    expect(reference.value).to eq 1
+    expect(reference.value).to eq 987654332
 
     expect { reference.add(subject.new(Time.new(1), 0)) }.to raise_error ArgumentError
   end
@@ -117,16 +117,16 @@ describe Buzzn::DataResultSet do
       end
       other = subject.send(units, 'u-i-d')
       reference.in.each do |i|
-        other.add(i.timestamp, -i.value, :in)
+        other.add(i.timestamp, 987654331 - i.value, :in)
       end
       reference.out.each do |i|
-        other.add(i.timestamp, -i.value, :out)
+        other.add(i.timestamp, 987654331 - i.value, :out)
       end
       reference.add_all(other)
       expect(reference.in.size).to eq other.in.size
       expect(reference.out.size).to eq other.out.size
       (reference.in + reference.out).each do |r|
-        expect(r.value).to eq 0
+        expect(r.value).to eq 987654331
       end
     end
   end
