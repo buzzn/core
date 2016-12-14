@@ -162,6 +162,10 @@ module Register
       end
     end
 
+    def self.modes
+      %w{in out}
+    end
+
     def users
       User.users_of(self, :manager, :member)
     end
@@ -573,6 +577,10 @@ module Register
       if observe && mode
         create_activity(key: "register.#{mode}", owner: self)
       end
+    end
+
+    def class_name
+      self.class.name.downcase.sub!("::", "_")
     end
 
     private

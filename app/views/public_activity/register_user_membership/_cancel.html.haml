@@ -1,5 +1,5 @@
 - single_content_for :action do
   - if a.trackable
-    = t("is_no_longer_member_of_register_anymore", register_name: link_to(a.trackable.name, a.trackable)).html_safe
+    = t("is_no_longer_member_of_register_anymore", register_name: link_to(a.trackable.name, register_path(a.trackable))).html_safe
   - else
     = t("is_no_longer_member_of_a_register_which_has_been_removed_anymore")
