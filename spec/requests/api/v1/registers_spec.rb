@@ -653,7 +653,7 @@ describe "/api/v1/registers" do
         xit "creates activity when adding register member" do
           user            = Fabricate(:user)
           admin_token     = Fabricate(:full_access_token_as_admin)
-          register  = Fabricate(:register)
+          register  = Fabricate(:input_register)
           params = {
             data: { id: user.id }
           }
@@ -753,7 +753,7 @@ describe "/api/v1/registers" do
         xit "creates activity when removing register member" do
           user            = Fabricate(:user)
           admin_token     = Fabricate(:full_access_token_as_admin)
-          register  = Fabricate(:register)
+          register  = Fabricate(:input_register)
           params = {
             data: { id: user.id }
           }
@@ -838,7 +838,7 @@ describe "/api/v1/registers" do
 
 
   it 'gets meter for the register only by managers' do
-    register      = Fabricate(:register)
+    register      = Fabricate(:input_register)
     access_token  = Fabricate(:simple_access_token)
     token_user    = User.find(access_token.resource_owner_id)
     wrong_token   = Fabricate(:simple_access_token)

@@ -72,13 +72,13 @@ module Buzzn::Discovergy
       access_token = build_access_token_from_broker_or_new(existing_random_broker)
       query = '/public/v1/virtual_meter?'
       if meter_ids_plus.any?
-        query += 'meterIdsPlus=' + meter_ids_plus.join(",")
+        query += 'meterIdsPlus=' + meter_ids_plus.sort!.join(",")
         if meter_ids_minus.any?
           query += '&'
         end
       end
       if meter_ids_minus.any?
-        query += 'meterIdsMinus=' + meter_ids_minus.join(",")
+        query += 'meterIdsMinus=' + meter_ids_minus.sort!.join(",")
       end
       access_token.post(query)
       response = access_token.response
