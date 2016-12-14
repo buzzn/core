@@ -28,8 +28,7 @@ describe Buzzn::Discovergy::DataSource do
     response = single_meter_live_response
     mode = :in
     two_way_meter = false
-    external_id = broker.external_id
-    result = data_source.send(:parse_aggregated_data, response, nil, mode, two_way_meter, external_id)
+    result = data_source.send(:parse_aggregated_live, response, mode, two_way_meter, 'u-i-d')
     expect(result.timestamp).to eq Time.at(1480606450.088)
     expect(result.value).to eq 1100
   end
@@ -40,8 +39,7 @@ describe Buzzn::Discovergy::DataSource do
     interval = Buzzn::Interval.hour(Time.now.to_i*1000)
     mode = :in
     two_way_meter = false
-    external_id = broker.external_id
-    result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, external_id)
+    result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
     expect(result.in[0].timestamp).to eq Time.at(1480604400.205)
     expect(result.in[0].value).to eq 1760140
     expect(result.in[1].timestamp).to eq Time.at(1480604402.205)
@@ -54,8 +52,7 @@ describe Buzzn::Discovergy::DataSource do
     interval = Buzzn::Interval.day(Time.now.to_i*1000)
     mode = :in
     two_way_meter = false
-    external_id = broker.external_id
-    result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, external_id)
+    result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
     expect(result.in[0].timestamp).to eq Time.at(1480606200)
     expect(result.in[0].value).to eq 1066590.978
     expect(result.in[1].timestamp).to eq Time.at(1480607100)
@@ -68,8 +65,7 @@ describe Buzzn::Discovergy::DataSource do
     interval = Buzzn::Interval.month(Time.now.to_i*1000)
     mode = :in
     two_way_meter = false
-    external_id = broker.external_id
-    result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, external_id)
+    result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
     expect(result.in[0].timestamp).to eq Time.at(1477954800)
     expect(result.in[0].value).to eq 33883.8461
     expect(result.in[1].timestamp).to eq Time.at(1478041200)
@@ -82,8 +78,7 @@ describe Buzzn::Discovergy::DataSource do
     interval = Buzzn::Interval.year(Time.now.to_i*1000)
     mode = :in
     two_way_meter = false
-    external_id = broker.external_id
-    result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, external_id)
+    result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
     expect(result.in[0].timestamp).to eq Time.at(1451602800)
     expect(result.in[0].value).to eq 74076694.6
     expect(result.in[1].timestamp).to eq Time.at(1454281200)
@@ -96,8 +91,7 @@ describe Buzzn::Discovergy::DataSource do
     interval = Buzzn::Interval.year(Time.now.to_i*1000)
     mode = 'in'
     two_way_meter = false
-    external_id = broker.external_id
-    result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, external_id)
+    result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
     expect(result).to eq nil
   end
 

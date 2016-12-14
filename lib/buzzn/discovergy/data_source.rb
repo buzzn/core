@@ -16,39 +16,46 @@ module Buzzn::Discovergy
     def collection(group_or_virtual_register, mode)
       if group_or_virtual_register.discovergy_brokers.empty?
         result = []
-        group.register.each do |register|
+        group.registers.each do |register|
           result << aggregated(register, mode)
         end
         result.compact!
         return result
       end
+
       map = to_map(group_or_virtual_register)
       result = nil
       group_or_virtual_register.discovergy_brokers.each do |broker|
         response = @facade.readings(broker, nil, mode, true)
-        more = parse_collected_data(response.body, mode, map)
-        if result
-          result.add_all(more)
-        else
-          result = more
-        end
+
+        add(result, parse_collected_data(response.body, mode, map))
       end
-      result.freeze
+      result.freeze if result
       result
     end
 
-    def aggregated(register_or_group, mode, interval = nil)
+    def single_aggregated(register_or_group, mode)
+      result = nil
+      register_or_group.discovergy_brokers.each do |broker|
+        two_way_meter = broker.two_way_meter?
+
+        response = @facade.readings(broker, nil, mode, false)
+
+        add(response, parse_aggregated_live(json, mode, two_way_meter, group.id))
+      end
+      result.freeze if result
+      result
+    end
+
+    def aggregated(register_or_group, mode, interval)
+      result = nil
       register_or_group.discovergy_brokers.each do |broker|
         two_way_meter = broker.two_way_meter?
         response = @facade.readings(broker, interval, mode, false)
-        more = parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id)
-        if result
-          result.add_all(more)
-        else
-          result = more
-        end
+
+        add(result, parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id))
       end
-      result.freeze
+      result.freeze if result
       result
     end
 
@@ -56,6 +63,15 @@ module Buzzn::Discovergy
     ######################################
     # discovergy specifics for data-source
     ######################################
+
+    def add(result, more)
+      if result
+        result.add_all(more)
+      else
+        result = more
+      end
+      result
+    end
 
     def create_virtual_meter_for_register(register)
       if !register.is_a?(Register) || !register.virtual
@@ -136,21 +152,22 @@ module Buzzn::Discovergy
         return nil
       end
 
-      if interval.nil?
-        parse_aggregated_live(json, mode, two_way_meter, resource_id)
+      case interval.duration
+      when :hour
+        parse_aggregated_hour(json, mode, two_way_meter, resource_id)
+      when :day
+        parse_aggregated_day(json, mode, two_way_meter, resource_id)
       else
-        case interval.duration
-        when :hour
-          parse_aggregated_hour(json, mode, two_way_meter, resource_id)
-        when :day
-          parse_aggregated_day(json, mode, two_way_meter, resource_id)
-        else
-          parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
-        end
+        parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
       end
     end
 
-    def parse_aggregated_live(json, mode, two_way_meter, resource_id)
+    def parse_aggregated_live(response, mode, two_way_meter, resource_id)
+      json = MultiJson.load(response)
+      if json.empty?
+        return nil
+      end
+
       timestamp = json['time']
       value = json['values']['power']
       if two_way_meter

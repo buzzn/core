@@ -20,8 +20,11 @@ module Buzzn
     end
 
     def add(other)
-      raise 'not implemented'
+      raise 'resource_id mismatch' if @resource_id != other.resource_id
+      raise 'mode mismatch' if @mode != other.mode
+      @value += other.value
     end
+    alias :add_all :add
 
     def to_hash
       super.merge(resource_id: @resource_id, mode: @mode) 
