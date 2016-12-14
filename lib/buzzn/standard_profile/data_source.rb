@@ -22,9 +22,9 @@ module Buzzn::StandardProfile
     end
 
     # Register Power Line Chart
-    def power_range(register, from, to, resolution )
+    def power_range(register, from, to, resolution)
       keys = ['power']
-      range = @facade.query_range(register.data_source, from, to, keys)
+      range = @facade.query_range(register.data_source, from, to, resolution, keys)
       range_to_data_result_set(register, range, keys)
     end
 
@@ -61,26 +61,21 @@ private
       data_result
     end
 
-    def range_to_data_result_set(response)
-      items = []
-      response.each do |document|
+    def range_to_data_result_set(register, range, keys)
+      data_result = Buzzn::DataResult.new(register.id)
 
-        item = {
-          'from' => document['firstTimestamp'],
-          'to'  => document['lastTimestamp']
-        }
-
-        if document['sumEnergyMilliwattHour']
-          energy_milliwatt_hour = document['sumEnergyMilliwattHour'] * factor
-          item.merge!('energy_milliwatt_hour' => energy_milliwatt_hour)
+      range.each do |document|
+        if keys.include?('energy')
+          timestamp = document['firstTimestamp']
+          value     = document['sumEnergyMilliwattHour'] * factor
         end
 
-        if document['avgPowerMilliwatt']
-          power_milliwatt = document['avgPowerMilliwatt'] * factor
-          item.merge!('power_milliwatt' => power_milliwatt.to_i)
+        if keys.include?('power')
+          timestamp = document['firstTimestamp']
+          value     = document['avgPowerMilliwatt'] * factor
         end
 
-        items << item
+        data_result.add(timestamp, value)
       end
       return items
     end
