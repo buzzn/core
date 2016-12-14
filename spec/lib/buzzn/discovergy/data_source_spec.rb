@@ -124,7 +124,7 @@ describe Buzzn::Discovergy::DataSource do
     response = virtual_meter_creation_response
     mode = 'virtual'
     resource = group
-    result = data_source.parse_virtual_meter_creation(response, mode, resource)
+    result = data_source.send(:parse_virtual_meter_creation, response, mode, resource)
     expect(group.discovergy_brokers.size).to eq 1
   end
 
