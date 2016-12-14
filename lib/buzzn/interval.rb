@@ -66,41 +66,57 @@ module Buzzn
 
       def year(timestamp)
         if timestamp.is_a?(Time)
-          new(timestamp.in_time_zone.beginning_of_year,
-            (timestamp.in_time_zone.beginning_of_year + 365.days))
+          new(
+            timestamp.beginning_of_year,
+            timestamp.beginning_of_year.next_year
+          )
         else
-          new(self.create_time_from_timestamp(timestamp).beginning_of_year,
-            (self.create_time_from_timestamp(timestamp).beginning_of_year + 365.days))
+          new(
+            self.create_time_from_timestamp(timestamp).beginning_of_year,
+            self.create_time_from_timestamp(timestamp).beginning_of_year.next_year
+          )
         end
       end
 
       def month(timestamp)
         if timestamp.is_a?(Time)
-          new(timestamp.in_time_zone.beginning_of_month,
-            (timestamp.in_time_zone.end_of_month + 1.second))
+          new(
+            timestamp.beginning_of_month,
+            timestamp.beginning_of_month.next_month
+          )
         else
-          new(self.create_time_from_timestamp(timestamp).beginning_of_month,
-            (self.create_time_from_timestamp(timestamp).end_of_month + 1.second))
+          new(
+            self.create_time_from_timestamp(timestamp).beginning_of_month,
+            self.create_time_from_timestamp(timestamp).beginning_of_month.next_month
+          )
         end
       end
 
       def day(timestamp)
         if timestamp.is_a?(Time)
-          new(timestamp.in_time_zone.beginning_of_day,
-            (timestamp.in_time_zone.end_of_day + 1.second))
+          new(
+            timestamp.beginning_of_day,
+            timestamp.beginning_of_day + 1.day
+          )
         else
-          new(self.create_time_from_timestamp(timestamp).beginning_of_day,
-            (self.create_time_from_timestamp(timestamp).end_of_day + 1.second))
+          new(
+            self.create_time_from_timestamp(timestamp).beginning_of_day,
+            self.create_time_from_timestamp(timestamp).beginning_of_day + 1.day
+          )
         end
       end
 
       def hour(timestamp)
         if timestamp.is_a?(Time)
-          new(timestamp.in_time_zone.beginning_of_hour,
-            (timestamp.in_time_zone.end_of_hour))
+          new(
+            timestamp.beginning_of_hour,
+            timestamp.beginning_of_hour + 1.hour
+          )
         else
-          new(self.create_time_from_timestamp(timestamp).beginning_of_hour,
-            (self.create_time_from_timestamp(timestamp).end_of_hour))
+          new(
+            self.create_time_from_timestamp(timestamp).beginning_of_hour,
+            self.create_time_from_timestamp(timestamp).beginning_of_hour + 1.hour
+            )
         end
       end
     end
