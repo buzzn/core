@@ -3,7 +3,7 @@
     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
     %h4.modal-title= t'new_register'
   .modal-body
-    = simple_form_for @register, remote: true do |f|
+    = simple_form_for @register, remote: true, url: register_path(@register) do |f|
 
       = render 'registers/form_fields', f: f
       .modal-footer

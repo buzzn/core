@@ -34,6 +34,7 @@ class RegisterUserRequestsController < InheritedResources::Base
     if @mode == 'request' && current_user.can_update?(@register) || @mode == 'invitation'
       @register_user_request.accept
       if @register_user_request.save
+        @user.add_role(:member, @register)
         @register.create_activity key: 'register_user_membership.create', owner: @user
         flash[:notice] = t('accepted_register_user_request')
         redirect_to register_path(@register)

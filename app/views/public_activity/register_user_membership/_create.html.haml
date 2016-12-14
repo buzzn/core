@@ -1,5 +1,5 @@
 - single_content_for :action do
   - if a.trackable
-    = t("has_joined_the_register_html", register_name: link_to(a.trackable.name, a.trackable)).html_safe
+    = t("has_joined_the_register_html", register_name: link_to(a.trackable.name, register_path(a.trackable))).html_safe
   - else
     = t("has_joined_a_register_which_has_been_removed")

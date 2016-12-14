@@ -96,7 +96,7 @@ class Register::BaseDecorator < Draper::Decorator
   def link_to_delete
     link_to(
       t('delete'),
-      model,
+      register_path(model),
       remote: false,
       class: 'btn btn-danger btn-labeled fa fa-trash',
       :method => :delete,
