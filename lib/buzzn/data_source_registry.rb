@@ -6,9 +6,11 @@ module Buzzn
       @registry = map.dup
       @registry[:discovergy] ||= Buzzn::Discovergy::DataSource.new
       @registry[:mysmartgrid] ||= Buzzn::Mysmartgrid::DataSource.new
+      #@registry[:standard_profile] ||= Buzzn::StandardProfile::DataSource.new
     end
 
     def get(data_source)
+      raise "can not handle #{data_source}" unless @registry.key?(data_source)
       @registry[data_source]
     end
 

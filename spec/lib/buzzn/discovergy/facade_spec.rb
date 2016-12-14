@@ -123,7 +123,7 @@ describe Buzzn::Discovergy::Facade do
   end
 
   it 'creates virtual meter for group' do |spec|
-    VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
+    VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
       facade = Buzzn::Discovergy::Facade.new
       meter_ids_plus = group.registers.inputs.collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
       response = facade.do_create_virtual_meter(broker, meter_ids_plus)
