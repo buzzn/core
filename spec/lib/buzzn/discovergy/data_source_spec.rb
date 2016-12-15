@@ -21,6 +21,7 @@ describe Buzzn::Discovergy::DataSource do
   let(:register_with_broker) do
     register = Fabricate(:input_register, group: empty_group, meter: Fabricate(:meter))
     Fabricate(:discovergy_broker, resource: register.meter, external_id: 'easy_123')
+    register.meter.reload
     register
   end
   let(:register_with_group_broker) do
@@ -206,4 +207,45 @@ describe Buzzn::Discovergy::DataSource do
     expect(in_result.last.value).to eq out_result.last.value
     expect(in_result.last.timestamp).to eq out_result.last.timestamp
   end
+
+  it 'data ranges from a group' do
+    data_source = Buzzn::Discovergy::DataSource.new(facade)
+    Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
+    facade.result = single_meter_year_response
+
+    in_result = data_source.aggregated(register_with_group_broker.group, :in, Buzzn::Interval.year)
+    #out_result = data_source.aggregated(register_with_group_broker.group, :out, Buzzn::Interval.year)
+
+    expect(in_result.in.size).to eq 2
+    expect(in_result.out.size).to eq 0
+    #expect(out_result.in.size).to eq 0
+    #expect(out_result.out.size).to eq 2
+
+    expect(in_result.resource_id).to eq register_with_group_broker.group.id
+    #expect(out_result.resource_id).to eq register_with_group_broker.group.id
+
+    expect(in_result.units).to eq :milliwatt_hour
+    #expect(out_result.units).to eq :milliwatt_hour
+  end
+
+  it 'data ranges from a register' do
+    data_source = Buzzn::Discovergy::DataSource.new(facade)
+    Fabricate(:input_register, group: empty_group, meter: Fabricate(:meter))
+    facade.result = single_meter_hour_response
+
+    in_result = data_source.aggregated(register_with_broker, :in, Buzzn::Interval.hour)
+    out_result = data_source.aggregated(register_with_broker, :out, Buzzn::Interval.hour)
+
+    expect(in_result.in.size).to eq 2
+    expect(in_result.out.size).to eq 0
+    expect(out_result.in.size).to eq 0
+    expect(out_result.out.size).to eq 2
+
+    expect(in_result.resource_id).to eq register_with_broker.id
+    expect(out_result.resource_id).to eq register_with_group_broker.id
+
+    expect(in_result.units).to eq :milliwatt
+    expect(out_result.units).to eq :milliwatt
+  end
+
 end

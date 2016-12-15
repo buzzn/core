@@ -52,7 +52,7 @@ module Buzzn::Discovergy
         two_way_meter = broker.two_way_meter?
         response = @facade.readings(broker, interval, mode, false)
 
-        result = add(result, parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id))
+        result = add(result, parse_aggregated_data(response, interval, mode, two_way_meter, register_or_group.id))
       end
       result.freeze if result
       result
