@@ -102,8 +102,8 @@ module Buzzn::StandardProfile
       project = {
                   "$project" => {
                     source: 1,
-                    firstTimestamp:         "$firstTimestamp",
-                    lastTimestamp:          "$lastTimestamp"
+                    firstTimestamp: "$firstTimestamp",
+                    lastTimestamp: "$lastTimestamp"
                   }
                 }
       if keys.include?('energy')

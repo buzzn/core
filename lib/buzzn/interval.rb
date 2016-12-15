@@ -61,7 +61,7 @@ module Buzzn
       private :new
 
       def create_time_from_timestamp(timestamp)
-        Time.at(timestamp.to_i/1000).in_time_zone
+        Time.at(timestamp.to_i/1000)
       end
 
       def year(timestamp)
@@ -122,4 +122,3 @@ module Buzzn
     end
   end
 end
-
