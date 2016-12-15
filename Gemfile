@@ -139,6 +139,8 @@ group :production, :staging do
 end
 
 group :development, :test do
+  gem 'spring'
+  gem 'spring-commands-rspec'
   gem 'brakeman', :require => false
   gem 'lol_dba'
   gem 'listen'
