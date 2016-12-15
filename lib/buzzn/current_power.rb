@@ -17,7 +17,8 @@ module Buzzn
       result = []
       @registry.each do |key, data_source|
         [:in, :out].each do |mode|
-          result += data_source.collection(group, mode)
+          more = data_source.collection(group, mode)
+          result += more if more
         end
       end
       result
@@ -32,8 +33,8 @@ module Buzzn
         result = data_source.single_aggregated(group, :out)
         sum_out += result.value if result
       end
-      Buzzn::DataResults.new(timestamp || Time.current,
-                             sum_in, sum_out, group.id)
+      Buzzn::InOutDataResults.new(timestamp || Time.current,
+                                  sum_in, sum_out, group.id)
     end
   end
 end

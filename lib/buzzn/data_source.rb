@@ -25,7 +25,7 @@ module Buzzn
     # @param mode [:in, :out] can not be nil.
     # @param interval [Buzzn::Interval] time interval and its duration (hour, day, month, year). can not be nil
     # @return Buzzn::DataResultSet a set with an array of 'in' Buzzn::DataResult elements and an array of 'out' Buzzn::DataResult elements
-    def aggregated(resource, mode, interval = nil)
+    def aggregated(resource, mode, interval)
       raise 'not implemented'
     end
 
