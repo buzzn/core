@@ -37,11 +37,6 @@ describe Buzzn::CurrentPower do
     def register.to_s; self.id; end
     register
   end
-  let(:group_with_register) do
-    register = Fabricate(:output_register, group: group)
-    def register.data_source; 'mock';end
-    group
-  end
 
   it 'delivers the right result for a register' do
     result = subject.for_register(dummy_register)
