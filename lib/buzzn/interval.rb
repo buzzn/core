@@ -64,7 +64,7 @@ module Buzzn
         Time.at(timestamp.to_i/1000).in_time_zone
       end
 
-      def year(timestamp)
+      def year(timestamp = Time.current)
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_year,
@@ -78,7 +78,7 @@ module Buzzn
         end
       end
 
-      def month(timestamp)
+      def month(timestamp = Time.current)
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_month,
@@ -92,7 +92,7 @@ module Buzzn
         end
       end
 
-      def day(timestamp)
+      def day(timestamp = Time.current)
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_day,
@@ -106,7 +106,7 @@ module Buzzn
         end
       end
 
-      def hour(timestamp)
+      def hour(timestamp = Time.current)
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_hour,
