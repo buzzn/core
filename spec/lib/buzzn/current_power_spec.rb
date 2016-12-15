@@ -19,7 +19,7 @@ describe Buzzn::CurrentPower do
       mode == :in ? @input : @output
     end
 
-    def collection(*args)
+    def method_missing(method, *args)
       nil
     end
   end
@@ -36,6 +36,11 @@ describe Buzzn::CurrentPower do
     def register.data_source; 'dummy';end
     def register.to_s; self.id; end
     register
+  end
+  let(:group_with_register) do
+    register = Fabricate(:output_register, group: group)
+    def register.data_source; 'mock';end
+    group
   end
 
   it 'delivers the right result for a register' do
