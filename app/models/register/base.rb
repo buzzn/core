@@ -29,13 +29,13 @@ module Register
     has_one :address, as: :addressable, dependent: :destroy
 
     has_many :scores, as: :scoreable
-    has_one :discovergy_broker, as: :resource
-    validates_associated :discovergy_broker
 
     accepts_nested_attributes_for :contracts
 
-
-
+    def discovergy_brokers
+      [meter.discovergy_broker].compact
+    end
+    
     def self.readables
       %w{
       world

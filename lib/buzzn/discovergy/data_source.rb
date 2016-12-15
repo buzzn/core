@@ -1,4 +1,3 @@
-require 'buzzn/data_result'
 module Buzzn::Discovergy
 
   # the discovergy dataSource uses the API from discovergy to retrieve
@@ -16,8 +15,8 @@ module Buzzn::Discovergy
     def collection(group_or_virtual_register, mode)
       if group_or_virtual_register.discovergy_brokers.empty?
         result = []
-        group.registers.each do |register|
-          result << aggregated(register, mode)
+        group_or_virtual_register.registers.each do |register|
+          result << single_aggregated(register, mode)
         end
         result.compact!
         return result
@@ -28,7 +27,7 @@ module Buzzn::Discovergy
       group_or_virtual_register.discovergy_brokers.each do |broker|
         response = @facade.readings(broker, nil, mode, true)
 
-        add(result, parse_collected_data(response.body, mode, map))
+        result = add(result, parse_collected_data(response, mode, map))
       end
       result.freeze if result
       result
@@ -40,8 +39,8 @@ module Buzzn::Discovergy
         two_way_meter = broker.two_way_meter?
 
         response = @facade.readings(broker, nil, mode, false)
-
-        add(response, parse_aggregated_live(json, mode, two_way_meter, group.id))
+        
+        result = add(result, parse_aggregated_live(response, mode, two_way_meter, register_or_group.id))
       end
       result.freeze if result
       result
@@ -53,7 +52,7 @@ module Buzzn::Discovergy
         two_way_meter = broker.two_way_meter?
         response = @facade.readings(broker, interval, mode, false)
 
-        add(result, parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id))
+        result = add(result, parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id))
       end
       result.freeze if result
       result
