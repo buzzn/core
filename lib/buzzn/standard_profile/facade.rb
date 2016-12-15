@@ -51,7 +51,7 @@ module Buzzn::StandardProfile
       # project
       project = {
                   "$project" => {
-                    register_id: 1,
+                    source: 1,
                     timestamp: 1
                   }
                 }
@@ -81,8 +81,8 @@ module Buzzn::StandardProfile
                 }
               }
       if keys.include?('energy')
-        group["$group"].merge!(firstEnergyMilliwattHour: { "$min" => "$energy_milliwatt_hour" })
-        group["$group"].merge!(lastEnergyMilliwattHour:  { "$max"  => "$energy_milliwatt_hour" })
+        group["$group"].merge!(firstEnergyMilliwattHour: { "$first" => "$energy_milliwatt_hour" })
+        group["$group"].merge!(lastEnergyMilliwattHour:  { "$last"  => "$energy_milliwatt_hour" })
       end
       if keys.include?('power')
         group["$group"].merge!(avgPowerMilliwatt: { "$avg" => "$power_milliwatt" })
@@ -101,7 +101,7 @@ module Buzzn::StandardProfile
       # project
       project = {
                   "$project" => {
-                    register_id: 1,
+                    source: 1,
                     firstTimestamp:         "$firstTimestamp",
                     lastTimestamp:          "$lastTimestamp"
                   }
