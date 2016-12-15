@@ -8,15 +8,15 @@ module Buzzn
 
     def for_register(register, interval)
       mode = register.is_a?(Register::Input)? :in : :out
-      @registry.get(register.data_source).aggregated(register, interval, mode)
+      @registry.get(register.data_source).aggregated(register, mode, interval)
     end
 
     def for_group(group, interval)
       units = interval.hour? || interval.day? ? :milliwatt : :milliwatt_hour
       result = Buzzn::DataResultSet.send(units, group.id)
       @registry.each do |key, data_source|
-        result.add_all(data_source.aggregated(group, interval, :in))
-        result.add_all(data_source.aggregated(group, interval, :out))
+        result.add_all(data_source.aggregated(group, :in, interval))
+        result.add_all(data_source.aggregated(group, :out, interval))
       end
       result.freeze
       result

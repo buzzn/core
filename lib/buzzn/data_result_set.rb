@@ -38,6 +38,7 @@ module Buzzn
     end
 
     def add_all(set)
+      return unless set
       raise ArgumentError.new('mismatch units') if @units != set.units
       _add(@in, set.in)
       _add(@out, set.out)
