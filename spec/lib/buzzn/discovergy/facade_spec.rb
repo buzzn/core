@@ -92,9 +92,8 @@ describe Buzzn::Discovergy::Facade do
       facade = Buzzn::Discovergy::Facade.new
       interval = Buzzn::Interval.day(Time.now.to_i*1000)
       response = facade.do_readings(broker, interval, 'in')
-      expect(response.code).to eq '200'
-      expect(response.body).not_to eq nil
-      json = MultiJson.load(response.body)
+      expect(response).not_to eq nil
+      json = MultiJson.load(response)
       expect(json['time']).not_to eq nil
       expect(json['values']['power']).not_to eq nil
     end

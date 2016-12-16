@@ -55,7 +55,7 @@ module Buzzn::Discovergy
 
       case response.code.to_i
       when (200..299)
-        return response
+        return response.body
       when 401
         if !retried
           register_application
@@ -67,7 +67,7 @@ module Buzzn::Discovergy
       else
         raise Buzzn::DataSourceError.new('unable to get data from discovergy: ' + response.body)
       end
-      return response
+      return response.body
     end
 
     def create_virtual_meter(existing_random_broker, meter_ids_plus, meter_ids_minus=[], retried=false)
@@ -99,7 +99,7 @@ module Buzzn::Discovergy
       else
         raise Buzzn::DataSourceError.new('unable to create virtual meter at discovergy: ' + response.body)
       end
-      return response
+      return response.body
     end
 
     def virtual_meter_info(broker, retried=false)

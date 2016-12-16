@@ -16,7 +16,7 @@ module API
         end
         oauth2 false
         get 'present' do
-          register = Register::Base.guareded_retrieve(permitted_params[:register_id])
+          register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_id])
           data_result = Buzzn::Application.config.current_power.for_register(register, permitted_params[:timestamp])
 
           { readings: [ { opterator: data_result.mode == :out ? '-' : '+',
@@ -38,26 +38,19 @@ module API
           optional :resolution, type: String, values: %w(
                                                         year_to_months
                                                         month_to_days
-                                                        week_to_days
-                                                        day_to_hours
                                                         day_to_minutes
                                                         hour_to_minutes
-                                                        minute_to_seconds
                                                         )
         end
         oauth2 false
         get 'past' do
-          register = Register::Base.guareded_retrieve(permitted_params[:register_id])
+          register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_id])
           timestamp = permitted_params[:timestamp] || Time.current
           case permitted_params[:resolution]
           when 'day_to_minutes'
             interval = Interval.day(timestamp)
           when 'hour_to_minutes'
             interval = Interval.hour(timestamp)
-          when 'minute_to_seconds'
-            raise 'not implemented'
-          when 'week_to_days'
-            raise 'not implemented'
           when 'year_to_months'
             interval = Interval.year(timestamp)
           when 'month_to_days'
