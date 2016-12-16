@@ -167,7 +167,7 @@ class RegistersController < ApplicationController
       flash[:notice] = t('user_removed_successfully', username: @user.name)
     end
     @register.create_activity(key: 'register_user_membership.cancel', owner: @user)
-    respond_with @register
+    redirect_to register_path(@register)
   end
   authority_actions :remove_members_update => 'read'
 

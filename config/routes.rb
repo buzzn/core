@@ -61,11 +61,8 @@ Buzzn::Application.routes.draw do
       get :get_reading_update
     end
   end
-
-  namespace :registers do
-    resources :inputs, controller: 'registers'
-    resources :outputs, controller: 'registers'
-  end
+  resources :register_input, controller: 'registers'
+  resources :register_output, controller: 'registers'
 
 
 

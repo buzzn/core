@@ -36,6 +36,7 @@ de:
   is_offline_now: ist jetzt offline
   define_register: Zählpunkt definieren
   smart_metering_provider: Smart Metering Anbieter
+  select_smart_metering_provider: Smart Metering Anbieter auswählen
   join_this_register: Diesem Zählpunkt beitreten
   leave_this_register: Diesen Zählpunkt verlassen
   new_register_user_invitation: Neue Zählpunkteinladung

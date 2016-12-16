@@ -22,6 +22,8 @@ class DiscovergyBroker < ActiveRecord::Base
 
   validate :validates_invariants
 
+  after_save :validates_credentials
+
   def validates_invariants
     case mode
     when :virtual
@@ -64,5 +66,17 @@ class DiscovergyBroker < ActiveRecord::Base
       raise ActiveRecord::NotFound.new
     end
     result
+  end
+
+  def validates_credentials
+    if self.resource.is_a?(Meter)
+      crawler = Crawler.new(self.resource.registers.first)
+      if crawler.valid_credential?
+        self.resource.update_columns(smart: true)
+        self.resource.save
+      else
+        # ?
+      end
+    end
   end
 end
