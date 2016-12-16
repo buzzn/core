@@ -14,6 +14,14 @@ module Buzzn
       @duration = _duration
     end
 
+    def from_as_millis
+      (@from.to_f * 1000).to_i
+    end
+
+    def to_as_millis
+      (@to.to_f * 1000).to_i
+    end
+
     def respond_to?(method)
       super || private_methods.include?(:"_#{method}")
     end
@@ -61,7 +69,7 @@ module Buzzn
       private :new
 
       def create_time_from_timestamp(timestamp)
-        Time.at(timestamp.to_i/1000).in_time_zone
+        Time.at(timestamp.to_f/1000).in_time_zone
       end
 
       def year(timestamp = Time.current)
