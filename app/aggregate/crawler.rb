@@ -105,7 +105,7 @@ class Crawler
         raise CrawlerError.new(request['reason'])
       end
     end
-    "this aint neither Discovergy or MySmartGrid"
+    @metering_point_operator + " - this aint neither Discovergy or MySmartGrid: " + @meter.manufacturer_product_serialnumber
   end
 
 

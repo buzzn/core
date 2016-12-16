@@ -12,8 +12,6 @@ class MeteringPointOperatorContract < Contract
   validates :begin_date, presence: true
   validates :metering_point_operator_name, presence: true
 
-  after_save :validates_credentials
-
   def validate_invariants
     super
     if localpool && register

@@ -69,7 +69,7 @@ class DiscovergyBroker < ActiveRecord::Base
   end
 
   def validates_credentials
-    if self.resource.is_a?(Meter)
+    if self.resource.is_a?(Meter) && self.resource.registers.any?
       crawler = Crawler.new(self.resource.registers.first)
       if crawler.valid_credential?
         self.resource.update_columns(smart: true)
