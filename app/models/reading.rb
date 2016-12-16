@@ -37,11 +37,11 @@ class Reading
   def energy_milliwatt_hour_has_to_grow
     reading_before = Reading.last_before_user_input(register_id, timestamp)
     reading_after = Reading.next_after_user_input(register_id, timestamp)
-    if !reading_before.nil? && reading_before[:energy_a_milliwatt_hour] > energy_a_milliwatt_hour
-      self.errors.add(:energy_a_milliwatt_hour, "is lower than the last one:" + (reading_before[:energy_a_milliwatt_hour]/1000000).to_s)
+    if !reading_before.nil? && reading_before[:energy_milliwatt_hour] > energy_milliwatt_hour
+      self.errors.add(:energy_milliwatt_hour, "is lower than the last one:" + (reading_before[:energy_milliwatt_hour]/1000000).to_s)
     end
-    if !reading_after.nil? && reading_after[:energy_a_milliwatt_hour] < energy_a_milliwatt_hour
-      self.errors.add(:energy_a_milliwatt_hour, "is greater than the next one:" + (reading_after[:energy_a_milliwatt_hour]/1000000).to_s)
+    if !reading_after.nil? && reading_after[:energy_milliwatt_hour] < energy_milliwatt_hour
+      self.errors.add(:energy_milliwatt_hour, "is greater than the next one:" + (reading_after[:energy_milliwatt_hour]/1000000).to_s)
     end
   end
 
@@ -170,10 +170,8 @@ class Reading
                 }
               }
 
-    project["$project"].merge!(energy_a_milliwatt_hour: 1) if keys.include?('energy_a_milliwatt_hour')
-    project["$project"].merge!(energy_b_milliwatt_hour: 1) if keys.include?('energy_b_milliwatt_hour')
-    project["$project"].merge!(power_a_milliwatt: 1) if keys.include?('power_a_milliwatt')
-    project["$project"].merge!(power_b_milliwatt: 1) if keys.include?('power_b_milliwatt')
+    project["$project"].merge!(energy_milliwatt_hour: 1) if keys.include?('energy_milliwatt_hour')
+    project["$project"].merge!(power_milliwatt: 1) if keys.include?('power_milliwatt')
 
     formats = {}
     resolution.each do |format|
@@ -199,22 +197,18 @@ class Reading
               }
             }
 
-    if keys.include?('energy_a_milliwatt_hour')
-      group["$group"].merge!(firstEnergyAMilliwattHour: { "$min" => "$energy_a_milliwatt_hour" })
-      group["$group"].merge!(lastEnergyAMilliwattHour:  { "$max"  => "$energy_a_milliwatt_hour" })
+    if keys.include?('energy_milliwatt_hour')
+      group["$group"].merge!(firstEnergyMilliwattHour: { "$min" => "$energy_milliwatt_hour" })
+      group["$group"].merge!(lastEnergyMilliwattHour:  { "$max"  => "$energy_milliwatt_hour" })
     end
 
-    if keys.include?('energy_b_milliwatt_hour')
-      group["$group"].merge!(firstEnergyBMilliwattHour: { "$first" => "$energy_b_milliwatt_hour" })
-      group["$group"].merge!(lastEnergyBMilliwattHour:  { "$last"  => "$energy_b_milliwatt_hour" })
+    if keys.include?('energy_milliwatt_hour')
+      group["$group"].merge!(firstEnergyMilliwattHour: { "$first" => "$energy_milliwatt_hour" })
+      group["$group"].merge!(lastEnergyMilliwattHour:  { "$last"  => "$energy_milliwatt_hour" })
     end
 
-    if keys.include?('power_a_milliwatt')
-      group["$group"].merge!(avgPowerAMilliwatt: { "$avg" => "$power_a_milliwatt" })
-    end
-
-    if keys.include?('power_b_milliwatt')
-      group["$group"].merge!(avgPowerBMilliwatt: { "$avg" => "$power_b_milliwatt" })
+    if keys.include?('power_milliwatt')
+      group["$group"].merge!(avgPowerMilliwatt: { "$avg" => "$power_milliwatt" })
     end
 
     formats = {_id: {}}
@@ -244,21 +238,13 @@ class Reading
                 }
               }
 
-    if keys.include?('energy_a_milliwatt_hour')
-      project["$project"].merge!(sumEnergyAMilliwattHour: { "$subtract" => [ "$lastEnergyAMilliwattHour", "$firstEnergyAMilliwattHour" ] })
-      project["$project"].merge!(first:  "$firstEnergyAMilliwattHour")
+    if keys.include?('energy_milliwatt_hour')
+      project["$project"].merge!(sumEnergyMilliwattHour: { "$subtract" => [ "$lastEnergyMilliwattHour", "$firstEnergyMilliwattHour" ] })
+      project["$project"].merge!(first:  "$firstEnergyMilliwattHour")
     end
 
-    if keys.include?('energy_b_milliwatt_hour')
-      project["$project"].merge!(sumEnergyBMilliwattHour: { "$subtract" => [ "$lastEnergyBMilliwattHour", "$firstEnergyBMilliwattHour" ] })
-    end
-
-    if keys.include?('power_a_milliwatt')
-      project["$project"].merge!(avgPowerAMilliwatt: "$avgPowerAMilliwatt")
-    end
-
-    if keys.include?('power_b_milliwatt')
-      project["$project"].merge!(avgPowerBMilliwatt: "$avgPowerBMilliwatt")
+    if keys.include?('power_milliwatt')
+      project["$project"].merge!(avgPowerMilliwatt: "$avgPowerMilliwatt")
     end
 
     pipe << project
@@ -278,20 +264,12 @@ class Reading
                 }
               }
 
-      if keys.include?('energy_a_milliwatt_hour')
-        group["$group"].merge!(sumEnergyAMilliwattHour: {"$sum" => "$sumEnergyAMilliwattHour"})
+      if keys.include?('energy_milliwatt_hour')
+        group["$group"].merge!(sumEnergyMilliwattHour: {"$sum" => "$sumEnergyMilliwattHour"})
       end
 
-      if keys.include?('energy_b_milliwatt_hour')
-        group["$group"].merge!(sumEnergyBMilliwattHour: {"$sum" => "$sumEnergyBMilliwattHour"})
-      end
-
-      if keys.include?('power_a_milliwatt')
-        group["$group"].merge!(avgPowerAMilliwatt: {"$sum" => "$avgPowerAMilliwatt"})
-      end
-
-      if keys.include?('power_b_milliwatt')
-        group["$group"].merge!(avgPowerBMilliwatt: {"$sum" => "$avgPowerBMilliwatt"})
+      if keys.include?('power_milliwatt')
+        group["$group"].merge!(avgPowerMilliwatt: {"$sum" => "$avgPowerMilliwatt"})
       end
 
       formats = {_id: {}}
@@ -319,10 +297,10 @@ class Reading
 
     result = Reading.collection.aggregate(pipe)
 
-    if keys.include?('energy_a_milliwatt_hour') && resolution_format.to_sym == :month_to_days
+    if keys.include?('energy_milliwatt_hour') && resolution_format.to_sym == :month_to_days
       entries = result.collect { |entry| entry }
       entries[0..-2].each_with_index do |current,i|
-        current['sumEnergyAMilliwattHour'] = entries[i + 1]['first'] - current['first']
+        current['sumEnergyMilliwattHour'] = entries[i + 1]['first'] - current['first']
       end
       id = entries.first['_id']
       if entries.last['_id'].to_a[0..-2] == id.to_a[0..-2]
@@ -464,7 +442,7 @@ class Reading
     readings = Reading.where(:timestamp.gte => (Time.current - 15.minutes), :timestamp.lt => (Time.current + 15.minutes), source: source)
     if readings.any?
       firstTimestamp = readings.first.timestamp.to_i*1000
-      firstValue = readings.first.power_a_milliwatt/1000
+      firstValue = readings.first.power_milliwatt/1000
       values << [firstTimestamp, firstValue]
       return values
     end

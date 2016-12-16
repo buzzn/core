@@ -83,7 +83,7 @@ describe "Register Model" do
 
     let(:now) { Time.find_zone('Berlin').local(2016,2,1, 1,30,1) }
 
-    subject do
+    let :subject do
       easymeter_60051560 = Fabricate(:easymeter_60051560)
       easymeter_60051560.registers.first
     end
@@ -113,6 +113,7 @@ describe "Register Model" do
 
     it 'observe nothing' do |spec|
       VCR.use_cassette("models/#{spec.metadata[:description].downcase}") do
+        subject.update observe: false
         result = subject.create_observer_activities
         expect(result).to be_nil
       end
