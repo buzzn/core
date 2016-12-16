@@ -68,6 +68,7 @@ module Buzzn::Discovergy
       else
         raise Buzzn::DataSourceError.new('unable to get data from discovergy: ' + response.body)
       end
+      return response.body
     end
 
     def create_virtual_meter(existing_random_broker, meter_ids_plus, meter_ids_minus=[], retried=false)
