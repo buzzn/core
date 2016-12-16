@@ -68,10 +68,10 @@ class CommentsController < InheritedResources::Base
         @comment.create_activity(key: 'comment.liked', owner: current_user)
       end
     end
-    @channel_name = @comment.commentable_type + '_' + @comment.commentable_id
+    @channel_name = @comment.commentable_type.to_s.split(':')[0] + '_' + @comment.commentable_id
     @div = 'comment_' + @comment.id
     if @comment.commentable_type == "PublicActivity::ORM::ActiveRecord::Activity"
-      @channel_name = @comment.commentable.trackable_type + '_' + @comment.commentable.trackable_id
+      @channel_name = @comment.commentable.trackable_type.to_s.split(':')[0] + '_' + @comment.commentable.trackable_id
     end
     Pusher.trigger(@channel_name, 'likes_changed', :div => @div, :likes => @comment.get_likes.size, :voters => @comment.get_likes.voters.collect(&:name).join(", "), :i18n_this_comment => t('this_comment'), :socket_id => @socket_id)
     render :json => { :likes => @comment.get_likes.size, :liked_by_current_user => current_user.liked?(@comment), :voters => @comment.get_likes.voters.collect(&:name).join(", "), :i18n_this_comment => t('this_comment')}

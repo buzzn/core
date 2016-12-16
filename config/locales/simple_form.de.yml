@@ -50,7 +50,28 @@ de:
         notify_me_when_register_exceeds: Email Benachrichtigung wenn ein Zählpunkt seine Leistungsgrenze übersteigt
         notify_me_when_register_undershoots: Email Benachrichtigung wenn ein Zählpunkt seine Leistungsgrenze unterschreitet
         notify_me_when_register_offline: Email Benachrichtigung wenn ein Zählpunkt offline ist
-      register:
+      register_input:
+        uid: Zählpunkt-ID
+        address_addition: Addresszusatz
+        mode: Art des Zählpunkts
+        meter_type: Zählertyp
+        virtual: Virtueller Zählpunkt
+        group: Zu eigener Gruppe hinzufügen
+        readable: Sichtbar für
+        forecast_kwh_pa: Jahresprognose (kWh)
+        invite_via_email: Per Email Adresse einladen
+        email: Email
+        email_confirmation: Email Bestätigung
+        observe: Leistungsüberwachung
+        min_watt: Email Benachrichtigung wenn Leistung diesen Wert unterschreitet (Watt)
+        max_watt: Email Benachrichtigung wenn Leistung diesen Wert überschreitet (Watt)
+        observe_offline: Email Benachrichtigung wenn Zählpunkt offline ist
+        message: Nachricht
+        notify_me_when_comment_create: Email Benachrichtigung wenn neuer Kommentar erstellt wurde
+        notify_me_when_register_exceeds: Email Benachrichtigung wenn der Zählpunkt seine Leistungsgrenze übersteigt
+        notify_me_when_register_undershoots: Email Benachrichtigung wenn der Zählpunkt seine Leistungsgrenze unterschreitet
+        notify_me_when_register_offline: Email Benachrichtigung wenn der Zählpunkt offline ist
+      register_output:
         uid: Zählpunkt-ID
         address_addition: Addresszusatz
         mode: Art des Zählpunkts
@@ -232,10 +253,18 @@ de:
         mode:
           in: 'Verbraucher'
           out: 'Erzeuger'
-      register:
+      register_base:
         mode:
           in: 'Verbrauch oder Bezug'
           out: 'Produktion oder Einspeisung'
+      register_input:
+        readable:
+          me: Nur mich
+          members: Mitglieder des Zählpunkts
+          friends: Meine Freunde
+          community: Alle angemeldeten Nutzer
+          world: Alle Internet-Nutzer
+      register_output:
         readable:
           me: Nur mich
           members: Mitglieder des Zählpunkts
