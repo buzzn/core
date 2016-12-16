@@ -55,7 +55,7 @@ Fabricator :easymeter_60139082, from: :easy_meter_q3d do
   after_create { |meter|
     Fabricate(:register_z1a, meter: meter)
     Fabricate(:register_z1b, meter: meter)
-    meter.Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
+    meter.discovergy_broker = Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
   }
 end
 
@@ -64,7 +64,7 @@ Fabricator :easymeter_60051599, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051599'
   after_create { |meter|
     Fabricate(:register_z2, meter: meter)
-    meter.Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
+    meter.discovergy_broker = Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
   }
 end
 
@@ -73,7 +73,7 @@ Fabricator :easymeter_60051559, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051559'
   after_create { |meter|
     Fabricate(:register_z3, meter: meter)
-    meter.Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
+    meter.discovergy_broker = Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
   }
 end
 
@@ -92,7 +92,7 @@ Fabricator :easymeter_60051600, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051600'
   after_create { |meter|
     Fabricate(:register_z5, meter: meter)
-    meter.Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
+    meter.discovergy_broker = Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
   }
 end
 
