@@ -1,5 +1,3 @@
-require 'buzzn/score_calculator'
-
 describe Buzzn::ScoreCalculator do
 
   let(:group) { Fabricate(:group) }
