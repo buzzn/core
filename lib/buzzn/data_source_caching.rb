@@ -51,7 +51,7 @@ module Buzzn
             key = _cache_key(method, resource, mode)
             _with_lock(key) do
               result = _cache_get(key)
-              if result.nil? || result.expires_at < Time.current.to_i
+              if result.nil? || result.expires_at < Time.current.to_f
                 result = send("raw_#{method}".to_sym, resource, mode)
                 _cache_put(key, result)
               end
