@@ -97,11 +97,11 @@ module Buzzn::Discovergy
       out_meter_ids = group.registers.outputs.collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
       existing_random_broker = DiscovergyBroker.where(provider_login: 'team@localpool.de').first
       if in_meter_ids.size > 1
-        response = @facade.do_create_virtual_meter(existing_random_broker, in_meter_ids)
+        response = @facade.create_virtual_meter(existing_random_broker, in_meter_ids)
         in_broker = parse_virtual_meter_creation(response.body, 'in', group)
       end
       if out_meter_ids.size > 1
-        response = @facade.do_create_virtual_meter(existing_random_broker, out_meter_ids)
+        response = @facade.create_virtual_meter(existing_random_broker, out_meter_ids)
         out_broker = parse_virtual_meter_creation(response.body, 'out', group)
       end
       return [in_broker, out_broker].compact
@@ -110,7 +110,7 @@ module Buzzn::Discovergy
     private
 
     def expires_at
-      Time.current.to_i + @cache_time
+      Time.current.to_f + @cache_time
     end
 
     def to_map(resource)
