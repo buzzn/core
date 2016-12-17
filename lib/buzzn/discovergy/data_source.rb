@@ -28,7 +28,7 @@ module Buzzn::Discovergy
       group_or_virtual_register.discovergy_brokers.each do |broker|
         response = @facade.readings(broker, nil, mode, true)
 
-        result = add(result, parse_collected_data(response, mode, map))
+        result += parse_collected_data(response, mode, map)
       end
       result.freeze if result
       result
