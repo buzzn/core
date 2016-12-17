@@ -4,8 +4,9 @@ module Buzzn::Discovergy
   # readings and produces a DataResult object
   class DataSource < Buzzn::DataSource
 
-    def initialize(facade = Facade.new)
+    def initialize(facade = Facade.new, cache_time = 15)
       @facade = facade
+      @cache_time = cache_time
     end
 
     ##########################
@@ -14,7 +15,7 @@ module Buzzn::Discovergy
 
     def collection(group_or_virtual_register, mode)
       if group_or_virtual_register.discovergy_brokers.empty?
-        result = []
+        result = Buzzn::DataResultArray.new(expires_at)
         group_or_virtual_register.registers.each do |register|
           result << single_aggregated(register, mode)
         end
@@ -23,11 +24,11 @@ module Buzzn::Discovergy
       end
 
       map = to_map(group_or_virtual_register)
-      result = nil
+      result = Buzzn::DataResultArray.new(expires_at)
       group_or_virtual_register.discovergy_brokers.each do |broker|
         response = @facade.readings(broker, nil, mode, true)
 
-        result = add(result, parse_collected_data(response, mode, map))
+        result += parse_collected_data(response, mode, map)
       end
       result.freeze if result
       result
@@ -108,6 +109,10 @@ module Buzzn::Discovergy
 
     private
 
+    def expires_at
+      Time.current.to_i + @cache_time
+    end
+
     def to_map(resource)
       case resource
       when Group
@@ -180,7 +185,7 @@ module Buzzn::Discovergy
       else
         power = value > 0 ? value.abs/1000 : 0
       end
-      Buzzn::DataResult.new(Time.at(timestamp/1000.0), power, resource_id, mode)
+      Buzzn::DataResult.new(Time.at(timestamp/1000.0), power, resource_id, mode, expires_at)
     end
 
     def parse_aggregated_hour(json, mode, two_way_meter, resource_id)
@@ -244,13 +249,13 @@ module Buzzn::Discovergy
     end
 
     def parse_collected_data(response, mode, map)
-      result = []
+      result = Buzzn::DataResultArray.new(expires_at)
       json = MultiJson.load(response)
       json.each do |item|
         resource_id = map[item.first]
         timestamp = item[1]['time']
         value = item[1]['values']['power']
-        result_item = Buzzn::DataResult.new(Time.at(timestamp/1000.0), value, resource_id, mode)
+        result_item = Buzzn::DataResult.new(Time.at(timestamp/1000.0), value, resource_id, mode, expires_at)
         result << result_item
       end
       return result
@@ -268,5 +273,8 @@ module Buzzn::Discovergy
       )
       return broker
     end
+
+    # need it at end to see all the methods
+    include Buzzn::DataSourceCaching
   end
 end
