@@ -5,7 +5,7 @@ module Buzzn
     # retrieves power data of all registers of group or virtual_register
     # @param resource [Group, Register] a group or register with register.virtual == true. can not be nil.
     # @param mode [:in, :out] can not be nil.
-    # @return [Buzzn::DataResultSet] a set of Buzzn::DataResult elements
+    # @return Buzzn::DataResultArray
     def collection(resource, mode)
       raise 'not implemented'
     end

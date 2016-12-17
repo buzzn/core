@@ -61,13 +61,13 @@ module Buzzn::Discovergy
           register_application
           access_token = build_access_token_from_broker_or_new(broker, true)
           response = self.readings(broker, interval, mode, collection, true)
+          return response.body
         else
           raise Buzzn::DataSourceError.new('unauthorized to get data from discovergy: ' + response.body)
         end
       else
         raise Buzzn::DataSourceError.new('unable to get data from discovergy: ' + response.body)
       end
-      return response.body
     end
 
     def create_virtual_meter(existing_random_broker, meter_ids_plus, meter_ids_minus=[], retried=false)
@@ -283,8 +283,7 @@ module Buzzn::Discovergy
         end
       end
 
-      # TODO: commented out only for testing!!!!!
-      #private method
+      private :"do_#{method}"
     end
 
     private

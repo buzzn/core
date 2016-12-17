@@ -5,6 +5,7 @@ describe Buzzn::Discovergy::DataSource do
 
   subject { Buzzn::Discovergy::DataSource.new }
 
+  let(:cache_time) { 1 }
   let(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
   let(:broker) { Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
   let(:small_group) { Fabricate(:group, registers: [Fabricate(:register_60118460), Fabricate(:register_60009441)]) }
@@ -248,4 +249,79 @@ describe Buzzn::Discovergy::DataSource do
     expect(out_result.units).to eq :milliwatt
   end
 
+  it 'caches single results single threaded' do
+    data_source = Buzzn::Discovergy::DataSource.new(facade, cache_time)
+    facade.result = single_meter_live_response
+
+    result = data_source.single_aggregated(register_with_broker, :in)
+    other = data_source.single_aggregated(register_with_broker, :in)
+
+    expect(result.object_id).to eq other.object_id
+    sleep(cache_time + 1)
+    other = data_source.single_aggregated(register_with_broker, :in)
+    expect(result.object_id).not_to eq other.object_id
+  end
+
+  it 'caches collection result single threaded' do
+    data_source = Buzzn::Discovergy::DataSource.new(facade, cache_time)
+    Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
+    facade.result = virtual_meter_live_response
+
+    result = data_source.collection(register_with_group_broker.group, :out)
+    other = data_source.collection(register_with_group_broker.group, :out)
+
+    expect(result.object_id).to eq other.object_id
+    sleep(cache_time + 1)
+    other = data_source.collection(register_with_group_broker.group, :out)
+    expect(result.object_id).not_to eq other.object_id
+  end
+
+  it 'caches single results multi threaded' do
+    data_source = Buzzn::Discovergy::DataSource.new(facade, cache_time)
+    facade.result = single_meter_live_response
+
+    result = data_source.single_aggregated(register_with_broker, :in)
+    32.times do
+      Thread.new do
+        other = data_source.single_aggregated(register_with_broker, :in)
+        expect(result.object_id).to eq other.object_id
+      end
+    end
+    all = []
+    16.times.collect do
+      Thread.new do
+        sleep(cache_time + 1)
+        all << data_source.single_aggregated(register_with_broker, :in).object_id
+        self
+      end
+    end.each { |t| t.join }
+    all.uniq!
+    expect(all.size).to eq 1
+    expect(result.object_id).not_to eq all.first
+  end
+
+  it 'caches collection result multi threaded' do
+    data_source = Buzzn::Discovergy::DataSource.new(facade, cache_time)
+    Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
+    facade.result = virtual_meter_live_response
+
+    result = data_source.collection(register_with_group_broker.group, :out)
+    32.times do
+      Thread.new do
+        other = data_source.collection(register_with_group_broker.group, :out)
+        expect(result.object_id).to eq other.object_id
+      end
+    end
+    all = []
+    16.times.collect do
+      Thread.new do
+        sleep(cache_time + 1)
+        all << data_source.collection(register_with_group_broker.group, :out).object_id
+        self
+      end
+    end.each { |t| t.join }
+    all.uniq!
+    expect(all.size).to eq 1
+    expect(result.object_id).not_to eq all.first
+  end
 end
