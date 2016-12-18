@@ -19,7 +19,7 @@ module Buzzn
       raise "unkown mode '#{mode}'" unless [:in, :out].include?(mode)
       @mode = mode
       @resource_id = resource_id
-      @expires_at = expires_at.to_f
+      @expires_at = expires_at
       freeze if @json = json
     end
 

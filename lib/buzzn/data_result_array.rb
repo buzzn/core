@@ -34,5 +34,9 @@ module Buzzn
     def to_json(*args)
       @json || "{\"expires_at\":#{expires_at},\"array\":#{super}}"
     end
+
+    def to_json(*args)
+      @json || "{\"expires_at\":#{expires_at},\"array\":#{super}}"
+    end
   end
 end
