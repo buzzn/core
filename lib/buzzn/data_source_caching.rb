@@ -4,42 +4,6 @@ module Buzzn
 
     CACHE = {}
 
-    class Mutex
-
-      class Lock < ::Mutex
-
-        attr_accessor :count
-        def initialize
-          @count = 0
-        end
-      end
-
-      MUTEX = ::Mutex.new
-      LOCKS = {}
-
-      def initialize(key)
-        @key = key
-      end
-
-      def with_lock
-        lock = MUTEX.synchronize do
-          l = (LOCKS[@key] ||= Lock.new)
-          l.count += 1
-          l
-        end
-        lock.synchronize do
-          yield
-        end
-      ensure
-        MUTEX.synchronize do
-          lock.count -= 1
-          if lock.count < 1
-            LOCKS.delete(@key)
-          end
-        end
-      end
-    end
-
     def self.included(clazz)
       clazz.class_eval do
 
@@ -61,7 +25,7 @@ module Buzzn
         end
 
         def _with_lock(key)
-          Mutex.new(key).with_lock do
+          RedisMutex.with_lock(key) do
             yield
           end
         end
