@@ -32,6 +32,10 @@ module Buzzn
       { timestamp: @timestamp, value: @value }
     end
 
+    def to_json(*args)
+      "{\"timestamp\":#{@timestamp},\"value\":#{@value}}"
+    end
+
     def ==(other)
       @timestamp == other.timestamp && @value == other.value
     end

@@ -2,21 +2,24 @@ module Buzzn
   class DataResultArray < Array
     attr_reader :expires_at
 
-    def self.from_json(data)
-      from_hash(JSON.parse(data, symbolize_names: true))
+    def self.from_json(json)
+      return unless json
+      from_hash(JSON.parse(json, symbolize_names: true), json)
     end
 
-    def self.from_hash(data)
-      result = new(data[:expires_at])
-      data[:array].collect do |i|
+    def self.from_hash(data, json = nil)
+      result = new(data[:expires_at], json)
+      (data[:array] || []).collect do |i|
         result << DataResult.from_hash(i)
       end
+      result.freeze if json
       result
     end
 
-    def initialize(expires_at = nil)
+    def initialize(expires_at = nil, json = nil)
       super()
       @expires_at = expires_at
+      @json = json
     end
 
     def +(other)
@@ -26,6 +29,10 @@ module Buzzn
 
     def to_hash
       { array: self, expires_at: @expires_at } 
+    end
+
+    def to_json(*args)
+      @json || "{\"expires_at\":#{expires_at},\"array\":#{super}}"
     end
   end
 end
