@@ -2,8 +2,6 @@ module Buzzn
 
   module DataSourceCaching
 
-    CACHE = {}
-
     def self.included(clazz)
       clazz.class_eval do
 
@@ -31,11 +29,11 @@ module Buzzn
         end
 
         def _cache_get(key)
-          CACHE[key]
+          RedisClassy.redis.get(key)
         end
 
         def _cache_put(key, result)
-          CACHE[key] = result
+          RedisClassy.redis.set(key, result)
         end
 
         def _cache_key(prefix, resource, mode)
