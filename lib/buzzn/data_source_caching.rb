@@ -46,14 +46,14 @@ module Buzzn
         alias :raw_single_aggregated :single_aggregated
         alias :raw_collection :collection
 
-        [:single_aggregated, :collection].each do |method|
+        {single_aggregated: Buzzn::DataResult, collection: Buzzn::DataResultArray}.each do |method, clazz|
           define_method method do |resource, mode|
             key = _cache_key(method, resource, mode)
             _with_lock(key) do
-              result = _cache_get(key)
+              result = clazz.from_json(_cache_get(key))
               if result.nil? || result.expires_at < Time.current.to_f
                 result = send("raw_#{method}".to_sym, resource, mode)
-                _cache_put(key, result)
+                _cache_put(key, result.to_json)
               end
               result
             end

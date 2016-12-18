@@ -256,10 +256,10 @@ describe Buzzn::Discovergy::DataSource do
     result = data_source.single_aggregated(register_with_broker, :in)
     other = data_source.single_aggregated(register_with_broker, :in)
 
-    expect(result.object_id).to eq other.object_id
+    expect(result.expires_at).to eq other.expires_at
     sleep(cache_time + 1)
     other = data_source.single_aggregated(register_with_broker, :in)
-    expect(result.object_id).not_to eq other.object_id
+    expect(result.expires_at).not_to eq other.expires_at
   end
 
   it 'caches collection result single threaded' do
@@ -270,10 +270,10 @@ describe Buzzn::Discovergy::DataSource do
     result = data_source.collection(register_with_group_broker.group, :out)
     other = data_source.collection(register_with_group_broker.group, :out)
 
-    expect(result.object_id).to eq other.object_id
+    expect(result.expires_at).to eq other.expires_at
     sleep(cache_time + 1)
     other = data_source.collection(register_with_group_broker.group, :out)
-    expect(result.object_id).not_to eq other.object_id
+    expect(result.expires_at).not_to eq other.expires_at
   end
 
   it 'caches single results multi threaded' do
@@ -284,20 +284,20 @@ describe Buzzn::Discovergy::DataSource do
     32.times do
       Thread.new do
         other = data_source.single_aggregated(register_with_broker, :in)
-        expect(result.object_id).to eq other.object_id
+        expect(result.expires_at).to eq other.expires_at
       end
     end
     all = []
     16.times.collect do
       Thread.new do
         sleep(cache_time + 1)
-        all << data_source.single_aggregated(register_with_broker, :in).object_id
+        all << data_source.single_aggregated(register_with_broker, :in).expires_at
         self
       end
     end.each { |t| t.join }
     all.uniq!
     expect(all.size).to eq 1
-    expect(result.object_id).not_to eq all.first
+    expect(result.expires_at).not_to eq all.first
   end
 
   it 'caches collection result multi threaded' do
@@ -309,19 +309,19 @@ describe Buzzn::Discovergy::DataSource do
     32.times do
       Thread.new do
         other = data_source.collection(register_with_group_broker.group, :out)
-        expect(result.object_id).to eq other.object_id
+        expect(result.expires_at).to eq other.expires_at
       end
     end
     all = []
     16.times.collect do
       Thread.new do
         sleep(cache_time + 1)
-        all << data_source.collection(register_with_group_broker.group, :out).object_id
+        all << data_source.collection(register_with_group_broker.group, :out).expires_at
         self
       end
     end.each { |t| t.join }
     all.uniq!
     expect(all.size).to eq 1
-    expect(result.object_id).not_to eq all.first
+    expect(result.expires_at).not_to eq all.first
   end
 end
