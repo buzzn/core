@@ -1,17 +1,17 @@
 describe Buzzn::CurrentPower do
 
-  class DummyDataSource
-
-    def method_missing(method, *args)
-      [method] + args
-    end
+  class DummyDataSource < Buzzn::DataSource
 
     def single_aggregated(resource, mode)
-      method_missing(:single_aggregated, resource, mode) unless resource.is_a? Group
+      [:single_aggregated, resource, mode] unless resource.is_a? Group
+    end
+
+    def collection(*args)
+      [:collection] + args
     end
   end
 
-  class MockDataSource
+  class MockDataSource < Buzzn::DataSource
 
     attr_accessor :input, :output
 
@@ -19,14 +19,14 @@ describe Buzzn::CurrentPower do
       mode == :in ? @input : @output
     end
 
-    def method_missing(method, *args)
+    def collection(*args)
       nil
     end
   end
 
   let(:mock) { MockDataSource.new }
   subject do
-    Buzzn::CurrentPower.new(Buzzn::DataSourceRegistry.new(Redis.current, dummy: DummyDataSource.new, mock: mock))
+    Buzzn::CurrentPower.new(Buzzn::DataSourceRegistry.new(Redis.current, dummy: DummyDataSource.new, mock: mock, check: Buzzn::CheckTypesDataSource.new))
   end
 
   let(:group) { Fabricate(:group) }

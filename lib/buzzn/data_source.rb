@@ -12,7 +12,7 @@ module Buzzn
 
     # retrieves aggregated power data of all registers of group or a
     # single register using the latest readings.
-    # @param resource [Group, Register] a group or register with register.virtual == false. can not be nil
+    # @param resource [Group, Register] a group or register. can not be nil
     # @param mode [:in, :out] can not be nil.
     # @return Buzzn::DataResult 
     def single_aggregated(resource, mode)
