@@ -7,6 +7,13 @@ module Buzzn
 
         alias :raw_single_aggregated :single_aggregated
         alias :raw_collection :collection
+        alias :raw_initialize :initialize
+
+        def initialize(redis = Redis.current, *args)
+          raw_initialize(*args)
+          @redis = redis
+          @lock = RemoteLock.new(RemoteLock::Adapters::Redis.new(redis))
+        end
 
         {single_aggregated: Buzzn::DataResult, collection: Buzzn::DataResultArray}.each do |method, clazz|
           define_method method do |resource, mode|
@@ -23,17 +30,17 @@ module Buzzn
         end
 
         def _with_lock(key)
-          RedisMutex.with_lock(key) do
+          @lock.synchronize(key, expiry: 2.seconds) do
             yield
           end
         end
 
         def _cache_get(key)
-          RedisClassy.redis.get(key)
+          @redis.get(key)
         end
 
         def _cache_put(key, result)
-          RedisClassy.redis.set(key, result)
+          @redis.set(key, result)
         end
 
         def _cache_key(prefix, resource, mode)

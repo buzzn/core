@@ -250,20 +250,20 @@ describe Buzzn::Discovergy::DataSource do
   end
 
   it 'caches single results single threaded' do
-    data_source = Buzzn::Discovergy::DataSource.new(facade, cache_time)
+    data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
     facade.result = single_meter_live_response
 
     result = data_source.single_aggregated(register_with_broker, :in)
     other = data_source.single_aggregated(register_with_broker, :in)
 
     expect(result.expires_at).to eq other.expires_at
-    sleep(cache_time + 1)
+    sleep(cache_time + 0.1)
     other = data_source.single_aggregated(register_with_broker, :in)
     expect(result.expires_at).not_to eq other.expires_at
   end
 
   it 'caches collection result single threaded' do
-    data_source = Buzzn::Discovergy::DataSource.new(facade, cache_time)
+    data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
     Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
     facade.result = virtual_meter_live_response
 
@@ -271,13 +271,13 @@ describe Buzzn::Discovergy::DataSource do
     other = data_source.collection(register_with_group_broker.group, :out)
 
     expect(result.expires_at).to eq other.expires_at
-    sleep(cache_time + 1)
+    sleep(cache_time + 0.1)
     other = data_source.collection(register_with_group_broker.group, :out)
     expect(result.expires_at).not_to eq other.expires_at
   end
 
   it 'caches single results multi threaded' do
-    data_source = Buzzn::Discovergy::DataSource.new(facade, cache_time)
+    data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
     facade.result = single_meter_live_response
 
     result = data_source.single_aggregated(register_with_broker, :in)
@@ -290,7 +290,7 @@ describe Buzzn::Discovergy::DataSource do
     all = []
     16.times.collect do
       Thread.new do
-        sleep(cache_time + 1)
+        sleep(cache_time + 0.1)
         all << data_source.single_aggregated(register_with_broker, :in).expires_at
         self
       end
@@ -301,7 +301,7 @@ describe Buzzn::Discovergy::DataSource do
   end
 
   it 'caches collection result multi threaded' do
-    data_source = Buzzn::Discovergy::DataSource.new(facade, cache_time)
+    data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
     Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
     facade.result = virtual_meter_live_response
 
@@ -315,7 +315,7 @@ describe Buzzn::Discovergy::DataSource do
     all = []
     16.times.collect do
       Thread.new do
-        sleep(cache_time + 1)
+        sleep(cache_time + 0.1)
         all << data_source.collection(register_with_group_broker.group, :out).expires_at
         self
       end

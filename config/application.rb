@@ -65,7 +65,7 @@ module Buzzn
     config.after_initialize do
 
       # service components
-      registry = Application.config.data_source_registry = Buzzn::DataSourceRegistry.new
+      registry = Application.config.data_source_registry = Buzzn::DataSourceRegistry.new(Redis.current)
       Application.config.current_power = Buzzn::CurrentPower.new(registry)
       Application.config.charts = Buzzn::Charts.new(registry)
     end
