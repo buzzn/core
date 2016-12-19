@@ -28,7 +28,7 @@ module Buzzn
     end
 
     def to_hash
-      { array: self, expires_at: @expires_at } 
+      { array: collect {|i| i.to_hash }, expires_at: @expires_at }
     end
 
     def to_json(*args)
