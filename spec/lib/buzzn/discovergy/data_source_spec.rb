@@ -60,7 +60,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'parses single meter hour response' do
     response = single_meter_hour_response
-    interval = Buzzn::Interval.hour(Time.now.to_i*1000)
+    interval = Buzzn::Interval.hour
     mode = :in
     two_way_meter = false
     result = subject.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
@@ -72,7 +72,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'parses single meter day response' do
     response = single_meter_day_response
-    interval = Buzzn::Interval.day(Time.now.to_i*1000)
+    interval = Buzzn::Interval.day
     mode = :in
     two_way_meter = false
     result = subject.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
@@ -84,7 +84,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'parses single meter month response' do
     response = single_meter_month_response
-    interval = Buzzn::Interval.month(Time.now.to_i*1000)
+    interval = Buzzn::Interval.month
     mode = :in
     two_way_meter = false
     result = subject.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
@@ -97,7 +97,7 @@ describe Buzzn::Discovergy::DataSource do
   it 'parses single meter year response' do
     data_source = Buzzn::Discovergy::DataSource.new
     response = single_meter_year_response
-    interval = Buzzn::Interval.year(Time.now.to_i*1000)
+    interval = Buzzn::Interval.year
     mode = :in
     two_way_meter = false
     result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
@@ -109,7 +109,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'parses empty response' do
     response = empty_response
-    interval = Buzzn::Interval.year(Time.now.to_i*1000)
+    interval = Buzzn::Interval.year
     mode = 'in'
     two_way_meter = false
     result = subject.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
@@ -174,7 +174,7 @@ describe Buzzn::Discovergy::DataSource do
   let(:facade) { FacadeMock.new }
 
   it 'collects data from each register without group broker' do
-    data_source = Buzzn::Discovergy::DataSource.new(facade)
+    data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
     Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
     facade.result = single_meter_live_response
 
@@ -192,7 +192,7 @@ describe Buzzn::Discovergy::DataSource do
   end
 
   it 'collects data from each register with group broker' do
-    data_source = Buzzn::Discovergy::DataSource.new(facade)
+    data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
     Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
     facade.result = virtual_meter_live_response
 
@@ -210,7 +210,7 @@ describe Buzzn::Discovergy::DataSource do
   end
 
   it 'data ranges from a group' do
-    data_source = Buzzn::Discovergy::DataSource.new(facade)
+    data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
     Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
     facade.result = single_meter_year_response
 
@@ -230,7 +230,7 @@ describe Buzzn::Discovergy::DataSource do
   end
 
   it 'data ranges from a register' do
-    data_source = Buzzn::Discovergy::DataSource.new(facade)
+    data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
     Fabricate(:input_register, group: empty_group, meter: Fabricate(:meter))
     facade.result = single_meter_hour_response
 
