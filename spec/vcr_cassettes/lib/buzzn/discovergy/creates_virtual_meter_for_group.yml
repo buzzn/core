@@ -1,0 +1,264 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/consumer_token?client=buzzn+app+test
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Tue, 06 Dec 2016 15:11:59 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - keep-alive
+      access-control-allow-origin:
+      - "*"
+      access-control-allow-methods:
+      - GET, POST, DELETE, PUT
+      access-control-allow-headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: ASCII-8BIT
+      string: '{"key":"ej42hajt8p13uaahpsbrm1nglc","secret":"p3tube5r2dq7731tkpc3lsbu9n","owner":"buzzn
+        app test","attributes":{},"principal":null}'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/request_token
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Content-Length:
+      - '0'
+      Authorization:
+      - OAuth oauth_callback="oob", oauth_consumer_key="ej42hajt8p13uaahpsbrm1nglc",
+        oauth_nonce="zyLCAf8BX59dRXi4ngRyup1xyoiiOjvPop5k2oXvOXE", oauth_signature="ouWSGLIt8T1z%2BQFEw%2FW8y8HYypk%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1467446702", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Tue, 06 Dec 2016 15:12:00 GMT
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '126'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_token=0841917f564b4d759b656de8c5d56f34&oauth_token_secret=d7d2871a428c42529990092d546bdda0&oauth_callback_confirmed=true
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=0841917f564b4d759b656de8c5d56f34&password=Zebulon_4711
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Tue, 06 Dec 2016 15:12:00 GMT
+      content-type:
+      - application/x-www-form-urlencoded
+      content-length:
+      - '47'
+      connection:
+      - keep-alive
+      access-control-allow-origin:
+      - "*"
+      access-control-allow-methods:
+      - GET, POST, DELETE, PUT
+      access-control-allow-headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_verifier=861533219247466baefdd8b9198d7556
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/access_token
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Content-Length:
+      - '0'
+      Authorization:
+      - OAuth oauth_consumer_key="ej42hajt8p13uaahpsbrm1nglc", oauth_nonce="xx4gD4Y8QJSCEf9YTCfbRzFomoDExGsYmbGk9nkCvA",
+        oauth_signature="LG3EdHG1HU1bCRgU8j7iXGcyWa0%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446703", oauth_token="0841917f564b4d759b656de8c5d56f34",
+        oauth_verifier="861533219247466baefdd8b9198d7556", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Tue, 06 Dec 2016 15:12:00 GMT
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '96'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_token=dde641a1b73f403bb981f099f0f20d53&oauth_token_secret=a915f92b27bd4cecb0bd61eeb5488344
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/virtual_meter?meterIdsPlus=EASYMETER_60009393,EASYMETER_60009441,EASYMETER_60009442
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Content-Length:
+      - '0'
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="ej42hajt8p13uaahpsbrm1nglc",
+        oauth_nonce="60c0tFt75paRVl5X6XPhSfp4hZOgVNLSP9G2II", oauth_signature="IAGRifbhxV%2FvjLn%2FES9or4tFmsE%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1467446703", oauth_token="dde641a1b73f403bb981f099f0f20d53",
+        oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Tue, 06 Dec 2016 15:12:00 GMT
+      Content-Type:
+      - text/html;charset=iso-8859-1
+      Content-Length:
+      - '341'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+      Cache-Control:
+      - must-revalidate,no-cache,no-store
+    body:
+      encoding: UTF-8
+      string: '{"serialNumber":"00000066","location":{"street":"Virtual","streetNumber":"0","zip":"00000","city":"Virtual","country":"DE"},"administrationNumber":null,"type":"VIRTUAL","measurementType":"ELECTRICITY","scalingFactor":1,"currentScalingFactor":1,"voltageScalingFactor":1,"internalMeters":1,"firstMeasurementTime":-1,"lastMeasurementTime":-1}'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/virtual_meter?meterIdsPlus=EASYMETER_60118460,EASYMETER_60118470
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Content-Length:
+      - '0'
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="ej42hajt8p13uaahpsbrm1nglc",
+        oauth_nonce="UsCVASfwt9Ki2HoT83QLdGiWjdtBiFV3sCoqqoBM", oauth_signature="8p31cKymQbKvQAV6myQ91YjZ7aE%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1467446702", oauth_token="dde641a1b73f403bb981f099f0f20d53",
+        oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Tue, 06 Dec 2016 15:35:13 GMT
+      Content-Type:
+      - text/html;charset=iso-8859-1
+      Content-Length:
+      - '341'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+      Cache-Control:
+      - must-revalidate,no-cache,no-store
+    body:
+      encoding: UTF-8
+      string: '{"serialNumber":"00000067","location":{"street":"Virtual","streetNumber":"0","zip":"00000","city":"Virtual","country":"DE"},"administrationNumber":null,"type":"VIRTUAL","measurementType":"ELECTRICITY","scalingFactor":1,"currentScalingFactor":1,"voltageScalingFactor":1,"internalMeters":1,"firstMeasurementTime":-1,"lastMeasurementTime":-1}'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT

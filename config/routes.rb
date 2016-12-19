@@ -155,6 +155,7 @@ Buzzn::Application.routes.draw do
       get :widget
       get :edit_notifications
       put :edit_notifications_update
+      put :finalize_registers
     end
   end
 

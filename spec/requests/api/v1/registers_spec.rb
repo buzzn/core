@@ -1,7 +1,7 @@
 describe "/api/v1/registers" do
   let(:page_overload) { 11 }
-  # modes = ["input", "output"]
-  modes = ["input"]
+  modes = ["input", "output"]
+  #modes = ["input"]
   modes.each do |mode|
     describe "#{mode}s" do
       klass = "Register::#{mode.camelize}".constantize
@@ -11,9 +11,9 @@ describe "/api/v1/registers" do
           access_token      = Fabricate(:simple_access_token)
           register          = Fabricate("#{mode}_register_readable_by_world")
 
-          get_without_token "/api/v1/registers/#{mode}s/#{register.id}"
+          get_without_token "/api/v1/registers/#{register.id}"
           expect(response).to have_http_status(200)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}", access_token.token
           expect(response).to have_http_status(200)
         end
 
@@ -21,7 +21,7 @@ describe "/api/v1/registers" do
         ["friends", "community", "members"].each do |user_type|
           it "does not get a #{user_type}-readable #{mode} register without token" do
             register = Fabricate("#{mode}_register_readable_by_#{user_type}")
-            get_without_token "/api/v1/registers/#{mode}s/#{register.id}"
+            get_without_token "/api/v1/registers/#{register.id}"
           end
         end
 
@@ -30,7 +30,7 @@ describe "/api/v1/registers" do
           register     = Fabricate("#{mode}_register_readable_by_community")
           access_token = Fabricate(:simple_access_token)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}", access_token.token
           expect(response).to have_http_status(200)
         end
 
@@ -39,7 +39,7 @@ describe "/api/v1/registers" do
           it "does not get #{user_type} readable register with community token" do
             register      = Fabricate("#{mode}_register_readable_by_#{user_type}")
             access_token  = Fabricate(:simple_access_token)
-            get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+            get_with_token "/api/v1/registers/#{register.id}", access_token.token
             expect(response).to have_http_status(403)
           end
         end
@@ -55,9 +55,9 @@ describe "/api/v1/registers" do
           token_user_friend.add_role(:manager, register)
           member_user.add_role(:member, register)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}", access_token.token
           expect(response).to have_http_status(200)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", member_token.token
+          get_with_token "/api/v1/registers/#{register.id}", member_token.token
           expect(response).to have_http_status(200)
         end
 
@@ -71,9 +71,9 @@ describe "/api/v1/registers" do
           token_user_friend.add_role(:manager, register)
           member_user.add_role(:member, register)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}", access_token.token
           expect(response).to have_http_status(403)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", member_token.token
+          get_with_token "/api/v1/registers/#{register.id}", member_token.token
           expect(response).to have_http_status(200)
         end
 
@@ -81,7 +81,7 @@ describe "/api/v1/registers" do
         it "does gets a #{mode} register with full access token as admin" do
           access_token  = Fabricate(:full_access_token_as_admin)
           register = Fabricate("#{mode}_register")
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}", access_token.token
           expect(response).to have_http_status(200)
         end
 
@@ -90,15 +90,15 @@ describe "/api/v1/registers" do
           access_token = Fabricate("access_token_with_friend_and_#{mode}_register")
 
           register2 = klass.last
-          get_with_token "/api/v1/registers/#{mode}s/#{register2.id}", access_token.token
+          get_with_token "/api/v1/registers/#{register2.id}", access_token.token
           expect(response).to have_http_status(200)
 
           register1 = klass.first
-          get_with_token "/api/v1/registers/#{mode}s/#{register1.id}", access_token.token
+          get_with_token "/api/v1/registers/#{register1.id}", access_token.token
           expect(response).to have_http_status(200)
 
           register3 = Fabricate("#{mode}_register") # register from unknown user
-          get_with_token "/api/v1/registers/#{mode}s/#{register3.id}", access_token.token
+          get_with_token "/api/v1/registers/#{register3.id}", access_token.token
           expect(response).to have_http_status(403)
         end
       end
@@ -324,7 +324,7 @@ describe "/api/v1/registers" do
         it "does delete a #{mode} register with manager_token" do
           register = Fabricate("#{mode}_register")
           access_token  = Fabricate(:full_access_token_as_admin)
-          delete_with_token "/api/v1/registers/#{mode}s/#{register.id}", access_token.token
+          delete_with_token "/api/v1/registers/#{register.id}", access_token.token
           expect(response).to have_http_status(204)
         end
       end
@@ -337,9 +337,9 @@ describe "/api/v1/registers" do
           user         = Fabricate(:user)
           comments     = register.comment_threads
 
-          get_without_token "/api/v1/registers/#{mode}s/#{register.id}/comments"
+          get_without_token "/api/v1/registers/#{register.id}/comments"
           expect(response).to have_http_status(401)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/comments", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/comments", access_token.token
           expect(response).to have_http_status(200)
           comments.each do |comment|
             expect(json["data"].find{ |c| c["id"] == comment.id }["attributes"]["body"]).to eq(comment.body)
@@ -362,7 +362,7 @@ describe "/api/v1/registers" do
             )
           end
 
-          get_without_token "/api/v1/registers/#{mode}s/#{register.id}/scores"
+          get_without_token "/api/v1/registers/#{register.id}/scores"
           expect(response).to have_http_status(200)
           expect(json["data"].size).to eq(5)
         end
@@ -382,11 +382,11 @@ describe "/api/v1/registers" do
               scoreable_id: register.id
             )
           end
-          get_without_token "/api/v1/registers/#{mode}s/#{register.id}/scores"
+          get_without_token "/api/v1/registers/#{register.id}/scores"
           expect(response).to have_http_status(200)
           expect(json["meta"]["total_pages"]).to eq(2)
 
-          get_without_token "/api/v1/registers/#{mode}s/#{register.id}/scores", {per_page: 200}
+          get_without_token "/api/v1/registers/#{register.id}/scores", {per_page: 200}
           expect(response).to have_http_status(422)
         end
 
@@ -397,7 +397,7 @@ describe "/api/v1/registers" do
           user            = Fabricate(:user)
           comment_params  = {
             commentable_id:     register.id,
-            commentable_type:   "Register::#{mode.camelize}",
+            commentable_type:   "Register::Base",
             user_id:            user.id,
             parent_id:          "",
           }
@@ -406,13 +406,13 @@ describe "/api/v1/registers" do
             comment_params[:parent_id] = comment.id
             comment = Fabricate(:comment, comment_params)
           end
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/comments", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/comments", access_token.token
 
           expect(response).to have_http_status(200)
           expect(json["meta"]["total_pages"]).to eq(2)
 
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/comments", {per_page: 200}, access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/comments", {per_page: 200}, access_token.token
           expect(response).to have_http_status(422)
         end
 
@@ -421,16 +421,16 @@ describe "/api/v1/registers" do
           access_token    = Fabricate(:simple_access_token)
           register  = Fabricate("#{mode}_register_with_manager", readable: "world")
           manager         = register.managers.first
-          get_without_token "/api/v1/registers/#{mode}s/#{register.id}/managers"
+          get_without_token "/api/v1/registers/#{register.id}/managers"
           expect(response).to have_http_status(401)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/managers", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/managers", access_token.token
           expect(response).to have_http_status(200)
           expect(json["data"].size).to eq(0)
 
           user            = User.find(access_token.resource_owner_id)
           user.add_role(:manager, register)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/managers", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/managers", access_token.token
           expect(response).to have_http_status(200)
           expect(json["data"].size).to eq(1)
           expect(json["data"].collect {|d| d["id"]})
@@ -440,14 +440,14 @@ describe "/api/v1/registers" do
           ["world", "community", "friends"].each do |readable|
             manager.profile.update! readable: readable
             manager.friends << user if readable == "friends"
-            get_with_token "/api/v1/registers/#{mode}s/#{register.id}/managers", access_token.token
+            get_with_token "/api/v1/registers/#{register.id}/managers", access_token.token
             expect(response).to have_http_status(200)
             expect(json["data"].size).to eq(2)
             expect(json["data"].collect {|d| d["id"]}).to match_array(manager_ids)
           end
 
           access_token    = Fabricate(:full_access_token_as_admin)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/managers", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/managers", access_token.token
           expect(response).to have_http_status(200)
           expect(json["data"].size).to eq(2)
           expect(json["data"].collect {|d| d["id"]}).to match_array(manager_ids)
@@ -465,16 +465,16 @@ describe "/api/v1/registers" do
             user = Fabricate(:user)
             user.add_role(:manager, register)
           end
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/managers", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/managers", access_token.token
           expect(response).to have_http_status(200)
           expect(json["meta"]["total_pages"]).to eq(2)
 
           access_token    = Fabricate(:full_access_token_as_admin)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/managers", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/managers", access_token.token
           expect(response).to have_http_status(200)
           expect(json["meta"]["total_pages"]).to eq(3)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/managers", {per_page: 200}, access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/managers", {per_page: 200}, access_token.token
           expect(response).to have_http_status(422)
         end
 
@@ -485,15 +485,15 @@ describe "/api/v1/registers" do
             data: { id: user.id }
           }
 
-          post_without_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json
+          post_without_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json
           expect(response).to have_http_status(401)
-          patch_without_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json
+          patch_without_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json
           expect(response).to have_http_status(401)
-          delete_without_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json
+          delete_without_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json
           expect(response).to have_http_status(401)
-          post_without_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json
+          post_without_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json
           expect(response).to have_http_status(401)
-          delete_without_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json
+          delete_without_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json
           expect(response).to have_http_status(401)
         end
 
@@ -512,18 +512,18 @@ describe "/api/v1/registers" do
             data: { id: user1.id }
           }
 
-          post_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json, member_token.token
+          post_with_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json, member_token.token
           expect(response).to have_http_status(403)
-          post_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json, manager_token.token
+          post_with_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json, manager_token.token
           expect(response).to have_http_status(204)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", admin_token.token
+          get_with_token "/api/v1/registers/#{register.id}/relationships/managers", admin_token.token
           expect(json["data"].size).to eq(2)
           params[:data][:id] = user2.id
-          post_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json, admin_token.token
+          post_with_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json, admin_token.token
           expect(response).to have_http_status(204)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", admin_token.token
+          get_with_token "/api/v1/registers/#{register.id}/relationships/managers", admin_token.token
           expect(json["data"].size).to eq(3)
         end
 
@@ -531,12 +531,12 @@ describe "/api/v1/registers" do
           user            = Fabricate(:user)
           admin_token     = Fabricate(:full_access_token_as_admin)
           admin           = User.find(admin_token.resource_owner_id)
-          register  = Fabricate(:register)
+          register  = Fabricate(:input_register)
           params = {
             data: { id: user.id }
           }
 
-          post_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json, admin_token.token
+          post_with_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json, admin_token.token
           activities      = PublicActivity::Activity.where({ owner_type: "User", owner_id: admin.id })
           expect(activities.first.key).to eq("user.appointed_register_manager")
         end
@@ -560,11 +560,11 @@ describe "/api/v1/registers" do
             data: [{ id: user.id }]
           }
 
-          patch_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json, simple_token.token
+          patch_with_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json, simple_token.token
           expect(response).to have_http_status(403)
 
           # TODO manager should be able to read user which s/he adds as manager
-          patch_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json, manager_token.token
+          patch_with_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json, manager_token.token
           expect(response).to have_http_status(200)
 
           # TODO add members here
@@ -572,7 +572,7 @@ describe "/api/v1/registers" do
             user.profile.update! readable: readable
             user.friends << manager if readable == "friends"
 
-            get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json, manager_token.token
+            get_with_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json, manager_token.token
             expect(json["data"].size).to eq 1
             expect(json["data"].first["id"]).to eq user.id
           end
@@ -598,20 +598,20 @@ describe "/api/v1/registers" do
             data: { id: user.id }
           }
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/managers", admin_token.token
+          get_with_token "/api/v1/registers/#{register.id}/managers", admin_token.token
           expect(json["data"].size).to eq(3)
-          delete_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json, member_token.token
+          delete_with_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json, member_token.token
           expect(response).to have_http_status(403)
-          delete_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json, simple_token.token
+          delete_with_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json, simple_token.token
           expect(response).to have_http_status(403)
-          delete_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json, admin_token.token
+          delete_with_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json, admin_token.token
           expect(response).to have_http_status(204)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", admin_token.token
+          get_with_token "/api/v1/registers/#{register.id}/relationships/managers", admin_token.token
           expect(json["data"].size).to eq(2)
           params[:data][:id] = manager.id
-          delete_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", params.to_json, manager_token.token
+          delete_with_token "/api/v1/registers/#{register.id}/relationships/managers", params.to_json, manager_token.token
           expect(response).to have_http_status(204)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/managers", admin_token.token
+          get_with_token "/api/v1/registers/#{register.id}/relationships/managers", admin_token.token
           expect(json["data"].size).to eq(1)
         end
 
@@ -631,34 +631,34 @@ describe "/api/v1/registers" do
             data: { id: user1.id }
           }
 
-          post_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, member_token.token
+          post_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, member_token.token
           expect(response).to have_http_status(204)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", admin_token.token
+          get_with_token "/api/v1/registers/#{register.id}/relationships/members", admin_token.token
           expect(json["data"].size).to eq(2)
           params[:data][:id] = user2.id
-          post_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, manager_token.token
+          post_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, manager_token.token
           expect(response).to have_http_status(204)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", admin_token.token
+          get_with_token "/api/v1/registers/#{register.id}/relationships/members", admin_token.token
           expect(json["data"].size).to eq(3)
           params[:data][:id] = user3.id
-          post_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, admin_token.token
+          post_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, admin_token.token
           expect(response).to have_http_status(204)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", admin_token.token
+          get_with_token "/api/v1/registers/#{register.id}/relationships/members", admin_token.token
           expect(json["data"].size).to eq(4)
         end
 
         xit "creates activity when adding register member" do
           user            = Fabricate(:user)
           admin_token     = Fabricate(:full_access_token_as_admin)
-          register  = Fabricate(:register)
+          register  = Fabricate(:input_register)
           params = {
             data: { id: user.id }
           }
 
-          post_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, admin_token.token
+          post_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, admin_token.token
           activities      = PublicActivity::Activity.where({ owner_type: "User", owner_id: user.id })
           expect(activities.first.key).to eq("register_user_membership.create")
         end
@@ -670,11 +670,11 @@ describe "/api/v1/registers" do
             user = Fabricate(:user)
             user.add_role(:member, register)
           end
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/members", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/members", access_token.token
           expect(response).to have_http_status(200)
           expect(json["meta"]["total_pages"]).to eq(2)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/members", {per_page: 200}, access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/members", {per_page: 200}, access_token.token
           expect(response).to have_http_status(422)
         end
 
@@ -698,12 +698,12 @@ describe "/api/v1/registers" do
             data: [{ id: user.id }]
           }
 
-          patch_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, simple_token.token
+          patch_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, simple_token.token
           expect(response).to have_http_status(403)
-          patch_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, manager_token.token
+          patch_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, manager_token.token
           expect(response).to have_http_status(200)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, simple_token.token
+          get_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, simple_token.token
           expect(json["data"].size).to eq 1
           expect(json["data"].first["id"]).to eq user.id
         end
@@ -726,61 +726,61 @@ describe "/api/v1/registers" do
             data: { id: user1.id }
           }
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, admin_token.token
+          get_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, admin_token.token
           expect(json["data"].size).to eq(3)
-          delete_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, member_token.token
+          delete_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, member_token.token
           expect(response).to have_http_status(403)
 
           params[:data][:id] = member.id
-          delete_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, member_token.token
+          delete_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, member_token.token
           expect(response).to have_http_status(200)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", admin_token.token
+          get_with_token "/api/v1/registers/#{register.id}/relationships/members", admin_token.token
           expect(json["data"].size).to eq(2)
 
           params[:data][:id] = user1.id
-          delete_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, manager_token.token
+          delete_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, manager_token.token
           expect(response).to have_http_status(200)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", admin_token.token
+          get_with_token "/api/v1/registers/#{register.id}/relationships/members", admin_token.token
           expect(json["data"].size).to eq(1)
 
           params[:data][:id] = user2.id
-          delete_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, admin_token.token
+          delete_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, admin_token.token
           expect(response).to have_http_status(200)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", admin_token.token
+          get_with_token "/api/v1/registers/#{register.id}/relationships/members", admin_token.token
           expect(json["data"].size).to eq(0)
         end
 
         xit "creates activity when removing register member" do
           user            = Fabricate(:user)
           admin_token     = Fabricate(:full_access_token_as_admin)
-          register  = Fabricate(:register)
+          register  = Fabricate(:input_register)
           params = {
             data: { id: user.id }
           }
 
-          delete_with_token "/api/v1/registers/#{mode}s/#{register.id}/relationships/members", params.to_json, admin_token.token
+          delete_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, admin_token.token
           activities      = PublicActivity::Activity.where({ owner_type: "User", owner_id: user.id })
           expect(activities.first.key).to eq("register_user_membership.cancel")
         end
 
 
-        # it "gets address of the register only with token" do
-        #   access_token    = Fabricate(:simple_access_token)
-        #   register        = Fabricate(:register_urbanstr88, readable: "world")
-        #   address         = register.address
-        #   user            = User.find(access_token.resource_owner_id)
-        #
-        #   get_without_token "/api/v1/registers/#{mode}s/#{register.id}/address"
-        #   expect(response).to have_http_status(401)
-        #
-        #   get_with_token "/api/v1/registers/#{mode}s/#{register.id}/address", access_token.token
-        #   expect(response).to have_http_status(403)
-        #
-        #   user.add_role(:manager, register)
-        #   get_with_token "/api/v1/registers/#{mode}s/#{register.id}/address", access_token.token
-        #   expect(json["data"]["id"]).to eq(address.id)
-        #   expect(response).to have_http_status(200)
-        # end
+        xit "gets address of the register only with token" do
+          access_token    = Fabricate(:simple_access_token)
+          register        = Fabricate(:register_urbanstr88, readable: "world")
+          address         = register.address
+          user            = User.find(access_token.resource_owner_id)
+
+          get_without_token "/api/v1/registers/#{register.id}/address"
+          expect(response).to have_http_status(401)
+
+          get_with_token "/api/v1/registers/#{register.id}/address", access_token.token
+          expect(response).to have_http_status(403)
+
+          user.add_role(:manager, register)
+          get_with_token "/api/v1/registers/#{register.id}/address", access_token.token
+          expect(json["data"]["id"]).to eq(address.id)
+          expect(response).to have_http_status(200)
+        end
 
 
 
@@ -802,38 +802,43 @@ describe "/api/v1/registers" do
           community_user.add_role(:member, register)
           world_user.add_role(:member, register)
 
-          get_without_token "/api/v1/registers/#{mode}s/#{register.id}/members"
+          get_without_token "/api/v1/registers/#{register.id}/members"
           expect(response).to have_http_status(200)
           expect(json["data"].size).to eq(1)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/members", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/members", access_token.token
           expect(response).to have_http_status(200)
           expect(json["data"].size).to eq(3)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/members", community_token.token
+          get_with_token "/api/v1/registers/#{register.id}/members", community_token.token
           expect(response).to have_http_status(200)
           expect(json["data"].size).to eq(2)
         end
 
 
-        xit "gets meter for the register only by managers" do
-          Fabricate(:metering_point_operator, name: "buzzn Metering")
-          easymeter_60051559  = Fabricate(:easymeter_60051559)
-          register            = easymeter_60051559.registers.first
-          access_token        = Fabricate(:simple_access_token)
-          token_user          = User.find(access_token.resource_owner_id)
-          wrong_token         = Fabricate(:simple_access_token)
+        it 'gets meter for the register only by managers' do
+          register      = Fabricate("#{mode}_register".to_sym, meter: Fabricate(:meter))
+          access_token  = Fabricate(:simple_access_token)
+          token_user    = User.find(access_token.resource_owner_id)
+          wrong_token   = Fabricate(:simple_access_token)
           token_user.add_role(:manager, register)
 
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/meter", access_token.token
+          get_with_token "/api/v1/registers/#{register.id}/meter", access_token.token
 
           expect(response).to have_http_status(200)
-          expect(json["data"]["id"]).to eq(register.meter.id)
-          get_with_token "/api/v1/registers/#{mode}s/#{register.id}/meter", wrong_token.token
+          expect(json['data']['id']).to eq(register.meter.id)
+          
+          get_with_token "/api/v1/registers/#{register.id}/meter", wrong_token.token
+          
           expect(response).to have_http_status(403)
         end
-
       end
-
     end
+
+  end
+
+
+
+
+  xit 'adds a register to meter with full access token' do
   end
 
 

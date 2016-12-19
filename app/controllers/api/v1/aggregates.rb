@@ -11,28 +11,18 @@ module API
 
         desc "Aggregate Power"
         params do
-          requires :register_ids, type: String, desc: "register IDs"
+          requires :register_id, type: String, desc: "register ID"
           optional :timestamp, type: DateTime
         end
         oauth2 false
         get 'present' do
+          register = Register::Base.guareded_retrieve(permitted_params[:register_id])
+          data_result = Buzzn::Application.config.current_power.for_register(register, permitted_params[:timestamp])
 
-          registers = Register::Base.where(id: permitted_params[:register_ids].split(","))
-          registers_hash = Aggregate.sort_registers(registers)
-
-          if registers.size > 5
-            error!('maximum 5 registers per request', 413)
-          else
-            if registers_hash[:data_sources].size > 1
-              error!('it is not possible to sum registers with differend data_source', 406)
-            else
-              registers.each do |register|
-                register.guarded_read(current_user, :group_inheritance)
-              end
-              return Aggregate.new(registers_hash).present( { timestamp: permitted_params[:timestamp] })
-            end
-          end
-
+          { readings: [ { opterator: data_result.mode == :out ? '-' : '+',
+	                  data: { timestamp: data_result.timestamp,
+	                          power_milliwatt: data_result.value } } ],
+            power_milliwatt: data_result.value }
         end
 
 
@@ -43,7 +33,7 @@ module API
 
         desc "Aggregate Past"
         params do
-          requires :register_ids, type: String, desc: "register IDs"
+          requires :register_id, type: String, desc: "register ID"
           optional :timestamp, type: DateTime
           optional :resolution, type: String, values: %w(
                                                         year_to_months
@@ -57,25 +47,28 @@ module API
         end
         oauth2 false
         get 'past' do
-
-          registers = Register::Base.where(id: permitted_params[:register_ids].split(","))
-          registers_hash = Aggregate.sort_registers(registers)
-
-          if registers.size > 5
-            error!('maximum 5 registers per request', 413)
-          else
-            if registers_hash[:data_sources].size > 1
-              error!('it is not possible to sum registers with differend data_source', 406)
-            else
-              registers.each do |register|
-                register.guarded_read(current_user, :group_inheritance)
-              end
-              return Aggregate.new(registers_hash).past( { timestamp: permitted_params[:timestamp], resolution: params[:resolution] })
-            end
+          register = Register::Base.guareded_retrieve(permitted_params[:register_id])
+          timestamp = permitted_params[:timestamp] || Time.current
+          case permitted_params[:resolution]
+          when 'day_to_minutes'
+            interval = Interval.day(timestamp)
+          when 'hour_to_minutes'
+            interval = Interval.hour(timestamp)
+          when 'minute_to_seconds'
+            raise 'not implemented'
+          when 'week_to_days'
+            raise 'not implemented'
+          when 'year_to_months'
+            interval = Interval.year(timestamp)
+          when 'month_to_days'
+            interval = Interval.month(timestamp)
           end
-
+          result = Buzzn::Application.config.charts.for_register(register, interval)
+          key = result.units == :milliwatt ? 'power_milliwatt' : 'energy_milliwatt_hour'
+          result.collect do |i|
+            { timestamp: i.timestamp, "#{key}": i.value }
+          end
         end
-
 
 
 

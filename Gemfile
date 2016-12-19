@@ -139,6 +139,7 @@ group :production, :staging do
 end
 
 group :development, :test do
+  gem 'spring'
   gem 'brakeman', :require => false
   gem 'lol_dba'
   gem 'listen'
@@ -158,6 +159,7 @@ group :development do
   gem 'table_print'
   gem 'quiet_assets'
   gem 'annotate'
+  gem 'yard'
 end
 
 group :test do
@@ -165,6 +167,7 @@ group :test do
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
   gem 'rspec-rails'
+  gem 'spring-commands-rspec'
   gem 'email_spec'
   gem 'guard-rspec'
   gem 'database_cleaner'

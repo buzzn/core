@@ -280,6 +280,17 @@ class GroupsController < ApplicationController
   end
   #TODO: add authority_actions
 
+  def finalize_registers
+    @group = Group.find(params[:id])
+    if current_user && current_user.has_role?(:admin)
+      if @group.finalize_registers
+        flash[:notice] = t('settings_saved')
+      else
+        flash[:error] = t('unable_to_save_settings')
+      end
+    end
+  end
+
 
 
 

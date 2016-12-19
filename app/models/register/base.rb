@@ -360,19 +360,19 @@ module Register
 
     def data_source
       if self.virtual?
-        "virtual"
+        :virtual
       elsif self.slp?
-        "slp"
+        :slp
       elsif self.pv?
-        "sep_pv"
+        :sep_pv
       elsif self.bhkw_or_else?
-        "sep_bhkw"
+        :sep_bhkw
       elsif self.mysmartgrid?
-        "mysmartgrid"
+        :mysmartgrid
       elsif self.discovergy?
-        "discovergy"
+        :discovergy
       elsif self.buzzn_api?
-        "buzzn_api"
+        :buzzn_api
       end
     end
 
