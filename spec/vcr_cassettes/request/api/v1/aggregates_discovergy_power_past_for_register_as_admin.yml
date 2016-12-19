@@ -214,7 +214,7 @@ http_interactions:
   recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
 - request:
     method: get
-    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energy&from=1454281200000&meterId=EASYMETER_60139082&resolution=fifteen_minutes&to=1454367600000
+    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energy&from=1467410400000&meterId=EASYMETER_60139082&resolution=fifteen_minutes&to=1467496800000
     body:
       encoding: US-ASCII
       string: ''
@@ -260,7 +260,7 @@ http_interactions:
   recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
 - request:
     method: get
-    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energyOut&from=1454281200000&meterId=EASYMETER_60139082&resolution=fifteen_minutes&to=1454367600000
+    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energyOut&from=1467410400000&meterId=EASYMETER_60139082&resolution=fifteen_minutes&to=1467496800000
     body:
       encoding: US-ASCII
       string: ''
