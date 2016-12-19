@@ -2,14 +2,13 @@ require 'buzzn/discovergy/data_source'
 
 describe Buzzn::StandardProfile::DataSource do
   let(:data_source) { Buzzn::StandardProfile::DataSource.new }
-
+  let(:berlin_time) { Time.find_zone('Berlin') }
 
   describe 'value' do
     it 'power' do |spec|
       meter = Fabricate(:meter_with_input_register)
       register = meter.registers.inputs.first
       energy_milliwatt_hour = 0
-      berlin_time = Time.find_zone('Berlin')
       timestamp = berlin_time.local(2015,1,1)
 
       365.times do |i|
@@ -38,7 +37,6 @@ describe Buzzn::StandardProfile::DataSource do
       meter = Fabricate(:meter_with_input_register)
       register = meter.registers.inputs.first
       energy_milliwatt_hour = 0
-      berlin_time = Time.find_zone('Berlin')
       timestamp = berlin_time.local(2015,1,1)
       year_interval = Buzzn::Interval.year(timestamp)
       365.times do |i|
@@ -67,7 +65,6 @@ describe Buzzn::StandardProfile::DataSource do
       meter = Fabricate(:meter_with_input_register)
       register = meter.registers.inputs.first
       energy_milliwatt_hour = 0
-      berlin_time = Time.find_zone('Berlin')
       timestamp = berlin_time.local(2015,1,1)
       month_interval = Buzzn::Interval.month(timestamp)
       days_in_month = Time.days_in_month(timestamp.month, timestamp.year)
@@ -94,7 +91,6 @@ describe Buzzn::StandardProfile::DataSource do
       meter = Fabricate(:meter_with_input_register)
       register = meter.registers.inputs.first
       energy_milliwatt_hour = 0
-      berlin_time = Time.find_zone('Berlin')
       timestamp = berlin_time.local(2015,1,1)
       day_interval = Buzzn::Interval.day(timestamp)
       (1440*6).times do |i|
