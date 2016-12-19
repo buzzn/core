@@ -2,9 +2,9 @@ module Buzzn
 
   class DataSourceRegistry
 
-    def initialize(map = {})
+    def initialize(redis = Redis.current, map = {})
       @registry = map.dup
-      @registry[:discovergy] ||= Buzzn::Discovergy::DataSource.new
+      @registry[:discovergy] ||= Buzzn::Discovergy::DataSource.new(redis)
       #@registry[:mysmartgrid] ||= Buzzn::Mysmartgrid::DataSource.new
       #@registry[:standard_profile] ||= Buzzn::StandardProfile::DataSource.new
     end
