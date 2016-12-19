@@ -9,7 +9,7 @@ module Buzzn
     def for_register(register, timestamp = nil)
       # TODO something with the timestamp
       mode = register.is_a?(Register::Input)? :in : :out
-      @registry.get(register.data_source).aggregated(register, mode)
+      @registry.get(register.data_source).single_aggregated(register, mode)
     end
 
     def for_each_register_in_group(group, timestamp = nil)
@@ -17,7 +17,8 @@ module Buzzn
       result = []
       @registry.each do |key, data_source|
         [:in, :out].each do |mode|
-          result += data_source.collection(group, mode)
+          more = data_source.collection(group, mode)
+          result += more if more
         end
       end
       result
@@ -27,13 +28,13 @@ module Buzzn
       # TODO something with the timestamp
       sum_in, sum_out = 0, 0
       @registry.each do |key, data_source|
-        result =  data_source.aggregated(group, :in)
+        result =  data_source.single_aggregated(group, :in)
         sum_in += result.value if result
-        result = data_source.aggregated(group, :out)
+        result = data_source.single_aggregated(group, :out)
         sum_out += result.value if result
       end
-      Buzzn::DataResults.new(timestamp || Time.current,
-                             sum_in, sum_out, group.id)
+      Buzzn::InOutDataResults.new(timestamp || Time.current,
+                                  sum_in, sum_out, group.id)
     end
   end
 end

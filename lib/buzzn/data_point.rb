@@ -13,9 +13,9 @@ module Buzzn
     def initialize(timestamp, value)
       @timestamp = case timestamp
                    when Time
-                     timestamp
+                     timestamp#.utc.to_f * 1000.0).to_i
                    when String
-                     Time.parse(timestamp)
+                     Time.parse(timestamp)#.to_f * 1000.0).to_i
                    else
                      raise ArgumentError.new("timestamp not a Time or String: #{timestamp.class}")
                    end
@@ -30,6 +30,10 @@ module Buzzn
 
     def to_hash
       { timestamp: @timestamp, value: @value }
+    end
+
+    def to_json(*args)
+      "{\"timestamp\":#{@timestamp},\"value\":#{@value}}"
     end
 
     def ==(other)

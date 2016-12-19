@@ -105,6 +105,7 @@ gem 'wine_bouncer', '~> 1.0'
 gem 'multi_json', '~> 1.0'
 gem 'oj', '~> 2.0'
 gem 'oauth'
+gem 'remote_lock'
 
 source 'http://rails-assets.org' do
   gem 'rails-assets-pace'

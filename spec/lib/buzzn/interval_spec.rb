@@ -10,10 +10,10 @@ describe Buzzn::Interval do
       durations.each do |d|
         expect(interval.send(:"#{d}?")).to eq d == duration
       end
-      expect(interval.from).to eq(subject.send(duration, interval.from).from)
-      expect(interval.to).to eq(subject.send(duration, interval.from).to)
-      expect(interval.from).to eq(subject.send(duration, interval.to - 1.second).from)
-      expect(interval.to).to eq(subject.send(duration, interval.to - 1.second).to)
+      expect(interval.from).to eq(subject.send(duration, interval.from_as_time.in_time_zone).from)
+      expect(interval.to).to eq(subject.send(duration, interval.from_as_time.in_time_zone).to)
+      expect(interval.from).to eq(subject.send(duration, interval.to_as_time.in_time_zone - 1.second).from)
+      expect(interval.to).to eq(subject.send(duration, interval.to_as_time.in_time_zone - 1.second).to)
     end
   end
 

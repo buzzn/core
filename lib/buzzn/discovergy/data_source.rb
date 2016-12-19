@@ -1,12 +1,12 @@
-require 'buzzn/data_result'
 module Buzzn::Discovergy
 
   # the discovergy dataSource uses the API from discovergy to retrieve
   # readings and produces a DataResult object
   class DataSource < Buzzn::DataSource
 
-    def initialize(facade = Facade.new)
+    def initialize(facade = Facade.new, cache_time = 15)
       @facade = facade
+      @cache_time = cache_time
     end
 
     ##########################
@@ -15,40 +15,47 @@ module Buzzn::Discovergy
 
     def collection(group_or_virtual_register, mode)
       if group_or_virtual_register.discovergy_brokers.empty?
-        result = []
-        group.register.each do |register|
-          result << aggregated(register, mode)
+        result = Buzzn::DataResultArray.new(expires_at)
+        group_or_virtual_register.registers.each do |register|
+          result << single_aggregated(register, mode)
         end
         result.compact!
         return result
       end
+
       map = to_map(group_or_virtual_register)
-      result = nil
+      result = Buzzn::DataResultArray.new(expires_at)
       group_or_virtual_register.discovergy_brokers.each do |broker|
         response = @facade.readings(broker, nil, mode, true)
-        more = parse_collected_data(response.body, mode, map)
-        if result
-          result.add_all(more)
-        else
-          result = more
-        end
+
+        result += parse_collected_data(response, mode, map)
       end
-      result.freeze
+      result.freeze if result
       result
     end
 
-    def aggregated(register_or_group, mode, interval = nil)
+    def single_aggregated(register_or_group, mode)
+      result = nil
+      register_or_group.discovergy_brokers.each do |broker|
+        two_way_meter = broker.two_way_meter?
+
+        response = @facade.readings(broker, nil, mode, false)
+        
+        result = add(result, parse_aggregated_live(response, mode, two_way_meter, register_or_group.id))
+      end
+      result.freeze if result
+      result
+    end
+
+    def aggregated(register_or_group, mode, interval)
+      result = nil
       register_or_group.discovergy_brokers.each do |broker|
         two_way_meter = broker.two_way_meter?
         response = @facade.readings(broker, interval, mode, false)
-        more = parse_aggregated_data(response.body, interval, mode, two_way_meter, register_or_group.id)
-        if result
-          result.add_all(more)
-        else
-          result = more
-        end
+
+        result = add(result, parse_aggregated_data(response, interval, mode, two_way_meter, register_or_group.id))
       end
-      result.freeze
+      result.freeze if result
       result
     end
 
@@ -56,6 +63,15 @@ module Buzzn::Discovergy
     ######################################
     # discovergy specifics for data-source
     ######################################
+
+    def add(result, more)
+      if result
+        result.add_all(more)
+      else
+        result = more
+      end
+      result
+    end
 
     def create_virtual_meter_for_register(register)
       if !register.is_a?(Register) || !register.virtual
@@ -81,17 +97,21 @@ module Buzzn::Discovergy
       out_meter_ids = group.registers.outputs.collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
       existing_random_broker = DiscovergyBroker.where(provider_login: 'team@localpool.de').first
       if in_meter_ids.size > 1
-        response = @facade.do_create_virtual_meter(existing_random_broker, in_meter_ids)
+        response = @facade.create_virtual_meter(existing_random_broker, in_meter_ids)
         in_broker = parse_virtual_meter_creation(response.body, 'in', group)
       end
       if out_meter_ids.size > 1
-        response = @facade.do_create_virtual_meter(existing_random_broker, out_meter_ids)
+        response = @facade.create_virtual_meter(existing_random_broker, out_meter_ids)
         out_broker = parse_virtual_meter_creation(response.body, 'out', group)
       end
       return [in_broker, out_broker].compact
     end
 
     private
+
+    def expires_at
+      Time.current.to_f + @cache_time
+    end
 
     def to_map(resource)
       case resource
@@ -136,21 +156,22 @@ module Buzzn::Discovergy
         return nil
       end
 
-      if interval.nil?
-        parse_aggregated_live(json, mode, two_way_meter, resource_id)
+      case interval.duration
+      when :hour
+        parse_aggregated_hour(json, mode, two_way_meter, resource_id)
+      when :day
+        parse_aggregated_day(json, mode, two_way_meter, resource_id)
       else
-        case interval.duration
-        when :hour
-          parse_aggregated_hour(json, mode, two_way_meter, resource_id)
-        when :day
-          parse_aggregated_day(json, mode, two_way_meter, resource_id)
-        else
-          parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
-        end
+        parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
       end
     end
 
-    def parse_aggregated_live(json, mode, two_way_meter, resource_id)
+    def parse_aggregated_live(response, mode, two_way_meter, resource_id)
+      json = MultiJson.load(response)
+      if json.empty?
+        return nil
+      end
+
       timestamp = json['time']
       value = json['values']['power']
       if two_way_meter
@@ -164,7 +185,7 @@ module Buzzn::Discovergy
       else
         power = value > 0 ? value.abs/1000 : 0
       end
-      Buzzn::DataResult.new(Time.at(timestamp/1000.0), power, resource_id, mode)
+      Buzzn::DataResult.new(Time.at(timestamp/1000.0), power, resource_id, mode, expires_at)
     end
 
     def parse_aggregated_hour(json, mode, two_way_meter, resource_id)
@@ -228,13 +249,13 @@ module Buzzn::Discovergy
     end
 
     def parse_collected_data(response, mode, map)
-      result = []
+      result = Buzzn::DataResultArray.new(expires_at)
       json = MultiJson.load(response)
       json.each do |item|
         resource_id = map[item.first]
         timestamp = item[1]['time']
         value = item[1]['values']['power']
-        result_item = Buzzn::DataResult.new(Time.at(timestamp/1000.0), value, resource_id, mode)
+        result_item = Buzzn::DataResult.new(Time.at(timestamp/1000.0), value, resource_id, mode, expires_at)
         result << result_item
       end
       return result
@@ -252,5 +273,8 @@ module Buzzn::Discovergy
       )
       return broker
     end
+
+    # need it at end to see all the methods
+    include Buzzn::DataSourceCaching
   end
 end
