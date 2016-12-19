@@ -19,7 +19,7 @@ describe Buzzn::CurrentPower do
       mode == :in ? @input : @output
     end
 
-    def method_missing(method, *args)
+    def collection(*args)
       nil
     end
   end
