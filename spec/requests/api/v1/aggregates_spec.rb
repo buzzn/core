@@ -12,10 +12,10 @@
 
 
 describe 'Discovergy' do
-  describe "/api/v1/aggregate/present" do
 
-    let(:discovergy_meter) do
-      meter = Fabricate(:easymeter_60139082) # in_out meter
+  let(:discovergy_meter) do
+    meter = Fabricate(:easymeter_60139082) # in_out meter
+    if meter.discovergy_broker.nil?
       DiscovergyBroker.create!(
         mode: :in,
         external_id: 'EASYMETER_' + meter.manufacturer_product_serialnumber,
@@ -23,13 +23,15 @@ describe 'Discovergy' do
         provider_password: 'Zebulon_4711',
         resource: meter
       )
-      meter
     end
+    meter
+  end
 
-    it 'aggregates Discovergy power present for out register as admin' do |spec|
+  describe "/api/v1/aggregate/present" do
+    it 'aggregates Discovergy power present for register as admin' do |spec|
       VCR.use_cassette("request/api/v1/#{spec.metadata[:description].downcase}") do
         access_token = Fabricate(:full_access_token_as_admin)
-        
+
         input_register  = discovergy_meter.registers.inputs.first
         output_register = discovergy_meter.registers.outputs.first
 
@@ -62,6 +64,51 @@ describe 'Discovergy' do
       }
 
        get_without_token '/api/v1/aggregates/present', request_params
+       expect(response).to have_http_status(403)
+    end
+  end
+
+  describe "/api/v1/aggregate/past" do
+
+    it 'aggregates Discovergy power past for register as admin' do |spec|
+      VCR.use_cassette("request/api/v1/#{spec.metadata[:description].downcase}") do
+        access_token = Fabricate(:full_access_token_as_admin)
+
+        input_register  = discovergy_meter.registers.inputs.first
+        output_register = discovergy_meter.registers.outputs.first
+
+        request_params = {
+          register_id: input_register.id,
+          resolution: :day_to_minutes
+        }
+
+        get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+        expect(response).to have_http_status(200)
+        expect(json.size).to eq(1)
+        expect(json[0]['power_milliwatt']).to eq(0.04)
+
+        request_params = {
+          register_id: output_register.id,
+          resolution: :day_to_minutes
+        }
+
+        get_with_token "/api/v1/aggregates/past", request_params, access_token.token
+
+        expect(response).to have_http_status(200)
+        expect(json.size).to eq(1)
+        expect(json[0]['power_milliwatt']).to eq(0.04)
+        Timecop.return
+      end
+    end
+
+    it 'can not read data without permissions' do
+      request_params = {
+        register_id: discovergy_meter.registers.inputs.first.id,
+        resolution: :year_to_months
+      }
+
+       get_without_token '/api/v1/aggregates/past', request_params
        expect(response).to have_http_status(403)
     end
   end

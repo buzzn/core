@@ -43,11 +43,16 @@ describe Buzzn::CurrentPower do
     expect(result).to eq [:single_aggregated, dummy_register, :in]
 
     expect { subject.for_register(register) }.to raise_error ArgumentError
+    expect { subject.for_register(register, 'a') }.to raise_error ArgumentError
+    expect { subject.for_register(Object.new) }.to raise_error ArgumentError
   end
 
   it 'delivers the right result for each register in a group' do
     result = subject.for_each_register_in_group(group)
     expect(result).to eq [:collection, group, :in, :collection, group, :out]
+
+    expect { subject.for_each_register_in_group(group, 'a') }.to raise_error ArgumentError
+    expect { subject.for_each_register_in_group(Object.new) }.to raise_error ArgumentError
   end
 
   it 'delivers the right result for a group' do
@@ -58,7 +63,10 @@ describe Buzzn::CurrentPower do
     result = subject.for_group(group)
     expect(result.resource_id).to eq group.id
     expect(result.in).to eq 123
-    expect(result.out).to eq 321    
+    expect(result.out).to eq 321
+
+    expect { subject.for_group(group, 'a') }.to raise_error ArgumentError
+    expect { subject.for_group(Object.new) }.to raise_error ArgumentError
   end
 
 end

@@ -35,7 +35,7 @@ module API
         params do
           requires :register_id, type: String, desc: "register ID"
           optional :timestamp, type: DateTime
-          optional :resolution, type: String, values: %w(
+          requires :resolution, type: String, values: %w(
                                                         year_to_months
                                                         month_to_days
                                                         day_to_minutes
@@ -48,17 +48,17 @@ module API
           timestamp = permitted_params[:timestamp] || Time.current
           case permitted_params[:resolution]
           when 'day_to_minutes'
-            interval = Interval.day(timestamp)
+            interval = Buzzn::Interval.day(timestamp)
           when 'hour_to_minutes'
-            interval = Interval.hour(timestamp)
+            interval = Buzzn::Interval.hour(timestamp)
           when 'year_to_months'
-            interval = Interval.year(timestamp)
+            interval = Buzzn::Interval.year(timestamp)
           when 'month_to_days'
-            interval = Interval.month(timestamp)
+            interval = Buzzn::Interval.month(timestamp)
           end
           result = Buzzn::Application.config.charts.for_register(register, interval)
           key = result.units == :milliwatt ? 'power_milliwatt' : 'energy_milliwatt_hour'
-          result.collect do |i|
+          (result.in + result.out).collect do |i|
             { timestamp: i.timestamp, "#{key}": i.value }
           end
         end
