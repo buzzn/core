@@ -23,10 +23,18 @@ module Buzzn
     end
 
     def from_as_time
-      Time.at(@from).utc
+      Time.at(@from)
     end
 
     def to_as_time
+      Time.at(@to)
+    end
+
+    def from_as_utc_time
+      Time.at(@from).utc
+    end
+
+    def to_as_utc_time
       Time.at(@to).utc
     end
 

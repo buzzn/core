@@ -26,7 +26,13 @@ module Buzzn::StandardProfile
       else
         raise Buzzn::DataSourceError.new('unknown interval duration')
       end
-      range(units, register, interval.from, interval.to, resolution)
+      range(
+        units,
+        register,
+        interval.from_as_time, 
+        interval.to_as_time,
+        resolution
+      )
     end
 
 

@@ -44,14 +44,14 @@ describe Buzzn::StandardProfile::Facade do
           timestamp += 1.day
         end
 
-        power_range = facade.query_range('slp', interval.from, interval.to, :year_to_months, ['power']).to_a
+        power_range = facade.query_range('slp', interval.from_as_time, interval.to_as_time, :year_to_months, ['power']).to_a
         expect(power_range.count).to eq 12
         power_range.each do |point|
           days_in_month = Time.days_in_month(point['lastTimestamp'].month, point['lastTimestamp'].year)
           expect(point['avgPowerMilliwatt']).to eq 930*1000
         end
 
-        energy_range = facade.query_range('slp', interval.from, interval.to, :year_to_months, ['energy']).to_a
+        energy_range = facade.query_range('slp', interval.from_as_time, interval.to_as_time, :year_to_months, ['energy']).to_a
         expect(energy_range.count).to eq 12
         energy_range.each do |point|
           days_in_month = Time.days_in_month(point['lastTimestamp'].month, point['lastTimestamp'].year)
@@ -75,7 +75,7 @@ describe Buzzn::StandardProfile::Facade do
           timestamp += 1.hour
         end
 
-        power_range = facade.query_range('slp', interval.from, interval.to, :month_to_days, ['power']).to_a
+        power_range = facade.query_range('slp', interval.from_as_time, interval.to_as_time, :month_to_days, ['power']).to_a
         expect(power_range.first['firstTimestamp']).to eq berlin_time.local(2015,5,1)
         expect(power_range.last['lastTimestamp']).to eq berlin_time.local(2015,5,days_in_month,24-1)
         expect(power_range.count).to eq days_in_month
@@ -83,7 +83,7 @@ describe Buzzn::StandardProfile::Facade do
           expect(point['avgPowerMilliwatt']).to eq 930*1000
         end
 
-        energy_range = facade.query_range('slp', interval.from, interval.to, :month_to_days, ['energy']).to_a
+        energy_range = facade.query_range('slp', interval.from_as_time, interval.to_as_time, :month_to_days, ['energy']).to_a
         expect(energy_range.first['firstTimestamp']).to eq berlin_time.local(2015,5,1)
         expect(energy_range.last['lastTimestamp']).to eq berlin_time.local(2015,5,days_in_month,24-1)
         expect(energy_range.count).to eq days_in_month
@@ -107,7 +107,7 @@ describe Buzzn::StandardProfile::Facade do
           timestamp += 1.minute
         end
 
-        power_range = facade.query_range('slp', interval.from, interval.to, :day_to_hours, ['power']).to_a
+        power_range = facade.query_range('slp', interval.from_as_time, interval.to_as_time, :day_to_hours, ['power']).to_a
         expect(power_range.first['firstTimestamp']).to eq berlin_time.local(2015,1,1)
         expect(power_range.last['lastTimestamp']).to eq berlin_time.local(2015,1,1, 23,59)
         expect(power_range.count).to eq 24
@@ -115,7 +115,7 @@ describe Buzzn::StandardProfile::Facade do
           expect(point['avgPowerMilliwatt']).to eq 930*1000
         end
 
-        energy_range = facade.query_range('slp', interval.from, interval.to, :day_to_hours, ['energy']).to_a
+        energy_range = facade.query_range('slp', interval.from_as_time, interval.to_as_time, :day_to_hours, ['energy']).to_a
         expect(energy_range.count).to eq 24
         expect(energy_range.first['firstTimestamp']).to eq berlin_time.local(2015,1,1)
         expect(energy_range.last['lastTimestamp']).to eq berlin_time.local(2015,1,1, 23,59)
@@ -139,7 +139,7 @@ describe Buzzn::StandardProfile::Facade do
           timestamp += 10.second
         end
 
-        power_range = facade.query_range('slp', interval.from, interval.to, :day_to_minutes, ['power']).to_a
+        power_range = facade.query_range('slp', interval.from_as_time, interval.to_as_time, :day_to_minutes, ['power']).to_a
         expect(power_range.first['firstTimestamp']).to eq berlin_time.local(2015,1,1)
         expect(power_range.last['lastTimestamp']).to eq berlin_time.local(2015,1,1, 23,59,50)
         expect(power_range.count).to eq 1440
@@ -147,7 +147,7 @@ describe Buzzn::StandardProfile::Facade do
           expect(point['avgPowerMilliwatt']).to eq 930*1000
         end
 
-        energy_range = facade.query_range('slp', interval.from, interval.to, :day_to_minutes, ['energy']).to_a
+        energy_range = facade.query_range('slp', interval.from_as_time, interval.to_as_time, :day_to_minutes, ['energy']).to_a
         expect(energy_range.first['firstTimestamp']).to eq berlin_time.local(2015,1,1)
         expect(energy_range.last['lastTimestamp']).to eq berlin_time.local(2015,1,1, 23,59,50)
         expect(energy_range.count).to eq 1440
