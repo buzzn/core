@@ -1,14 +1,14 @@
 module Buzzn::StandardProfile
   class Facade
 
-    def query_value(profile, timestamp, keys)
+    def query_value(profile, timestamp, units)
       only = ['timestamp']
-      only << 'energy_milliwatt_hour' if keys.include?('energy')
-      only << 'power_milliwatt' if keys.include?('power')
+      only << 'energy_milliwatt_hour' if units.include?('energy')
+      only << 'power_milliwatt' if units.include?('power')
       Reading.where(:timestamp.gte => timestamp, source: profile).only(only).first
     end
 
-    def query_range(profile, from, to, resolution, keys)
+    def query_range(profile, from, to, resolution, units)
       source = { source: { "$in" => [profile] } }
 
       resolution_formats = {
@@ -55,8 +55,8 @@ module Buzzn::StandardProfile
                     timestamp: 1
                   }
                 }
-      project["$project"].merge!(energy_milliwatt_hour: 1) if keys.include?('energy')
-      project["$project"].merge!(power_milliwatt: 1) if keys.include?('power')
+      project["$project"].merge!(energy_milliwatt_hour: 1) if units.include?('energy')
+      project["$project"].merge!(power_milliwatt: 1) if units.include?('power')
       formats = {}
       resolution_format.each do |format|
         formats.merge!({
@@ -80,11 +80,11 @@ module Buzzn::StandardProfile
                   lastTimestamp:  { "$last"   => "$timestamp" }
                 }
               }
-      if keys.include?('energy')
+      if units.include?('energy')
         group["$group"].merge!(firstEnergyMilliwattHour: { "$first" => "$energy_milliwatt_hour" })
         group["$group"].merge!(lastEnergyMilliwattHour:  { "$last"  => "$energy_milliwatt_hour" })
       end
-      if keys.include?('power')
+      if units.include?('power')
         group["$group"].merge!(avgPowerMilliwatt: { "$avg" => "$power_milliwatt" })
       end
       formats = {_id: {}}
@@ -106,10 +106,10 @@ module Buzzn::StandardProfile
                     lastTimestamp: "$lastTimestamp"
                   }
                 }
-      if keys.include?('energy')
+      if units.include?('energy')
         project["$project"].merge!(sumEnergyMilliwattHour: { "$subtract" => [ "$lastEnergyMilliwattHour", "$firstEnergyMilliwattHour" ] })
       end
-      if keys.include?('power')
+      if units.include?('power')
         project["$project"].merge!(avgPowerMilliwatt: "$avgPowerMilliwatt")
       end
       pipe << project

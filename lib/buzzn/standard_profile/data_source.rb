@@ -5,75 +5,76 @@ module Buzzn::StandardProfile
       @facade = facade
     end
 
-
-
-    # Register Power Ticker
-    def power_value(register, timestamp)
-      keys = ['power']
-      query_value_result = @facade.query_value(register.data_source, timestamp, keys)
-      to_data_result(register, query_value_result, keys)
+    def single_value(register, timestamp)
+      value(['power'], register, timestamp)
     end
 
-    # Register Energy Ticker
-    def energy_value(register, timestamp)
-      keys = ['energy']
-      query_value_result = @facade.query_value(register.data_source, timestamp, keys)
-      to_data_result(register, query_value_result, keys)
+    def value_list
     end
 
-    # Register Power Line Chart
-    def power_range(register, from, to, resolution)
-      keys = ['power']
-      query_range_result = @facade.query_range(register.data_source, from, to, resolution, keys)
-      to_data_result_set(register, query_range_result, keys)
+    def chart(register, interval)
+      case interval.duration
+      when :day
+        resolution  = :day_to_minutes
+        units       = ['power']
+      when :month
+        resolution  = :month_to_days
+        units       = ['energy']
+      when :year
+        resolution  = :year_to_months
+        units       = ['energy']
+      else
+        raise Buzzn::DataSourceError.new('unknown interval duration')
+      end
+      range(units, register, interval.from, interval.to, resolution)
     end
-
-    # Register Energy Bar Chart
-    def energy_range(register, from, to, resolution)
-      keys = ['energy']
-      query_range_result = @facade.query_range(register.data_source, from, to, resolution, keys)
-      to_data_result_set(register, query_range_result, keys)
-    end
-
-    # # Group Bubbles
-    # def power_value_collection(profile)
-    # end
-
-    # # Group Power Ticker
-    # def power_value_aggregation(profile, interval)
-    # end
-
-    # # Group Power Chart
-    # def power_range_aggregation(profile)
-    # end
-
-    # # Group Energy Chart
-    # def energy_range_aggregation(profile)
-    # end
-
-
 
 
 private
 
-    def to_data_result(register, query_value_result, keys)
+    # Register Ticker
+    def value(units, register, timestamp)
+      query_value_result = @facade.query_value(register.data_source, timestamp, units)
+      to_data_result(register, query_value_result, units)
+    end
+
+    # Register Chart
+    def range(units, register, from, to, resolution)
+      query_range_result = @facade.query_range(register.data_source, from, to, resolution, units)
+      to_data_result_set(register, query_range_result, units)
+    end
+
+    # Group Bubbles
+    def value_collection()
+    end
+
+    # Group Ticker
+    def value_aggregation()
+    end
+
+    # Group Chart
+    def range_aggregation()
+    end
+
+
+    def to_data_result(register, query_value_result, units)
       timestamp   = query_value_result.timestamp.to_time
-      value       = query_value_result.energy_milliwatt_hour if keys.include?('energy')
-      value       = query_value_result.power_milliwatt if keys.include?('power')
+      value       = query_value_result.energy_milliwatt_hour if units.include?('energy')
+      value       = query_value_result.power_milliwatt if units.include?('power')
       resource_id = register.id
       mode        = register.mode
       Buzzn::DataResult.new(timestamp, value, resource_id, mode)
     end
 
-    def to_data_result_set(register, query_range_result, keys)
+    def to_data_result_set(register, query_range_result, units)
       data_result_set = Buzzn::DataResultSet.milliwatt(register.id)
       factor = factor_from_register(register)
       query_range_result.each do |document|
-        if keys.include?('energy')
+        if units.include?('energy')
           timestamp = document['firstTimestamp']
           value     = document['sumEnergyMilliwattHour'] * factor
         end
-        if keys.include?('power')
+        if units.include?('power')
           timestamp = document['firstTimestamp']
           value     = document['avgPowerMilliwatt'] * factor
         end
