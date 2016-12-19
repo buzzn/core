@@ -22,11 +22,11 @@ module Buzzn
       (@to * 1000).to_i
     end
 
-    def from_as_time
+    def from_as_utc_time
       Time.at(@from).utc
     end
 
-    def to_as_time
+    def to_as_utc_time
       Time.at(@to).utc
     end
 
