@@ -1,4 +1,4 @@
-describe Buzzn::CurrentPower do
+describe Buzzn::Charts do
 
   class DummyDataSource
 
@@ -26,7 +26,7 @@ describe Buzzn::CurrentPower do
 
   let(:mock) { MockDataSource.new }
   subject do
-    Buzzn::Charts.new(Buzzn::DataSourceRegistry.new(dummy: DummyDataSource.new, mock: mock))
+    Buzzn::Charts.new(Buzzn::DataSourceRegistry.new(Redis.current, dummy: DummyDataSource.new, mock: mock))
   end
 
   let(:group) { Fabricate(:group) }

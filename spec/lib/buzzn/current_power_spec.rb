@@ -26,7 +26,7 @@ describe Buzzn::CurrentPower do
 
   let(:mock) { MockDataSource.new }
   subject do
-    Buzzn::CurrentPower.new(Buzzn::DataSourceRegistry.new(dummy: DummyDataSource.new, mock: mock))
+    Buzzn::CurrentPower.new(Buzzn::DataSourceRegistry.new(Redis.current, dummy: DummyDataSource.new, mock: mock))
   end
 
   let(:group) { Fabricate(:group) }

@@ -15,11 +15,19 @@ module Buzzn
     end
 
     def from_as_millis
-      (@from.to_f * 1000).to_i
+      (@from * 1000).to_i
     end
 
     def to_as_millis
-      (@to.to_f * 1000).to_i
+      (@to * 1000).to_i
+    end
+
+    def from_as_time
+      Time.at(@from).utc
+    end
+
+    def to_as_time
+      Time.at(@to).utc
     end
 
     def respond_to?(method)
@@ -68,63 +76,47 @@ module Buzzn
     class << self
       private :new
 
-      def create_time_from_timestamp(timestamp)
-        Time.at(timestamp.to_f/1000).in_time_zone
-      end
-
       def year(timestamp = Time.current)
         if timestamp.is_a?(Time)
           new(
-            timestamp.beginning_of_year,
-            timestamp.beginning_of_year.next_year
+            timestamp.beginning_of_year.to_f,
+            timestamp.beginning_of_year.next_year.to_f
           )
         else
-          new(
-            self.create_time_from_timestamp(timestamp).beginning_of_year,
-            self.create_time_from_timestamp(timestamp).beginning_of_year.next_year
-          )
+          raise ArgumentError.new('need a Time object')
         end
       end
 
       def month(timestamp = Time.current)
         if timestamp.is_a?(Time)
           new(
-            timestamp.beginning_of_month,
-            timestamp.beginning_of_month.next_month
+            timestamp.beginning_of_month.to_f,
+            timestamp.beginning_of_month.next_month.to_f
           )
         else
-          new(
-            self.create_time_from_timestamp(timestamp).beginning_of_month,
-            self.create_time_from_timestamp(timestamp).beginning_of_month.next_month
-          )
+          raise ArgumentError.new('need a Time object')
         end
       end
 
       def day(timestamp = Time.current)
         if timestamp.is_a?(Time)
           new(
-            timestamp.beginning_of_day,
-            timestamp.beginning_of_day + 1.day
+            timestamp.beginning_of_day.to_f,
+            (timestamp.beginning_of_day + 1.day).to_f
           )
         else
-          new(
-            self.create_time_from_timestamp(timestamp).beginning_of_day,
-            self.create_time_from_timestamp(timestamp).beginning_of_day + 1.day
-          )
+          raise ArgumentError.new('need a Time object')
         end
       end
 
       def hour(timestamp = Time.current)
         if timestamp.is_a?(Time)
           new(
-            timestamp.beginning_of_hour,
-            timestamp.beginning_of_hour + 1.hour
+            timestamp.beginning_of_hour.to_f,
+            (timestamp.beginning_of_hour + 1.hour).to_f
           )
         else
-          new(
-            self.create_time_from_timestamp(timestamp).beginning_of_hour,
-            self.create_time_from_timestamp(timestamp).beginning_of_hour + 1.hour
-            )
+          raise ArgumentError.new('need a Time object')
         end
       end
     end
