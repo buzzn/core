@@ -18,6 +18,12 @@ Fabricator :meter_with_input_register, from: :meter  do
   }
 end
 
+Fabricator :meter_with_output_register, from: :meter  do
+  after_create { |meter|
+    Fabricate(:output_register, meter: meter)
+  }
+end
+
 Fabricator :easy_meter_q3d_with_input_register, from: :easy_meter_q3d  do
   input_register
 end

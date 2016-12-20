@@ -58,7 +58,7 @@ describe Buzzn::CurrentPower do
     result = subject.for_group(group)
     expect(result.resource_id).to eq group.id
     expect(result.in).to eq 123
-    expect(result.out).to eq 321    
+    expect(result.out).to eq 321
   end
 
 end

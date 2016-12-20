@@ -27,8 +27,6 @@ describe Buzzn::StandardProfile::Facade do
     end
 
 
-
-
     context 'range' do
       it 'year_to_months' do |spec|
         energy_milliwatt_hour = 0

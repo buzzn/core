@@ -14,7 +14,7 @@ module Buzzn
     # single register using the latest readings.
     # @param resource [Group, Register] a group or register with register.virtual == false. can not be nil
     # @param mode [:in, :out] can not be nil.
-    # @return Buzzn::DataResult 
+    # @return Buzzn::DataResult
     def single_aggregated(resource, mode)
       raise 'not implemented'
     end

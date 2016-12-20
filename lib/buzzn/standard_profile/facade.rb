@@ -2,7 +2,7 @@ module Buzzn::StandardProfile
   class Facade
 
     def query_value(profile, timestamp, units)
-      only = ['timestamp']
+      only = ['timestamp', 'source']
       only << 'energy_milliwatt_hour' if units.include?('energy')
       only << 'power_milliwatt' if units.include?('power')
       Reading.where(:timestamp.gte => timestamp, source: profile).only(only).first
