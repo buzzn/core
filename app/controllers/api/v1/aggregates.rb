@@ -11,12 +11,12 @@ module API
 
         desc "Aggregate Power"
         params do
-          requires :register_id, type: String, desc: "register ID"
+          requires :register_ids, type: String, desc: "register ID"
           optional :timestamp, type: DateTime
         end
         oauth2 false
         get 'present' do
-          register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_id])
+          register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
           data_result = Buzzn::Application.config.current_power.for_register(register, permitted_params[:timestamp])
 
           { readings: [ { opterator: data_result.mode == :out ? '-' : '+',
@@ -33,7 +33,7 @@ module API
 
         desc "Aggregate Past"
         params do
-          requires :register_id, type: String, desc: "register ID"
+          requires :register_ids, type: String, desc: "register ID"
           optional :timestamp, type: DateTime
           requires :resolution, type: String, values: %w(
                                                         year_to_months
@@ -44,7 +44,7 @@ module API
         end
         oauth2 false
         get 'past' do
-          register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_id])
+          register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
           timestamp = permitted_params[:timestamp] || Time.current
           case permitted_params[:resolution]
           when 'day_to_minutes'

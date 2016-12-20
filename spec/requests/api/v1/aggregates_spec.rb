@@ -36,7 +36,7 @@ describe 'Discovergy' do
         output_register = discovergy_meter.registers.outputs.first
 
         request_params = {
-          register_id: input_register.id
+          register_ids: input_register.id
         }
 
         get_with_token "/api/v1/aggregates/present", request_params, access_token.token
@@ -46,7 +46,7 @@ describe 'Discovergy' do
         expect(json['power_milliwatt']).to eq(932.0)
 
         request_params = {
-          register_id: output_register.id
+          register_ids: output_register.id
         }
 
         get_with_token "/api/v1/aggregates/present", request_params, access_token.token
@@ -60,7 +60,7 @@ describe 'Discovergy' do
 
     it 'can not read data without permissions' do
       request_params = {
-        register_id: discovergy_meter.registers.inputs.first.id
+        register_ids: discovergy_meter.registers.inputs.first.id
       }
 
        get_without_token '/api/v1/aggregates/present', request_params
@@ -78,7 +78,7 @@ describe 'Discovergy' do
         output_register = discovergy_meter.registers.outputs.first
 
         request_params = {
-          register_id: input_register.id,
+          register_ids: input_register.id,
           resolution: :day_to_minutes
         }
 
@@ -89,7 +89,7 @@ describe 'Discovergy' do
         expect(json[0]['power_milliwatt']).to eq(0.04)
 
         request_params = {
-          register_id: output_register.id,
+          register_ids: output_register.id,
           resolution: :day_to_minutes
         }
 
@@ -104,7 +104,7 @@ describe 'Discovergy' do
 
     it 'can not read data without permissions' do
       request_params = {
-        register_id: discovergy_meter.registers.inputs.first.id,
+        register_ids: discovergy_meter.registers.inputs.first.id,
         resolution: :year_to_months
       }
 
