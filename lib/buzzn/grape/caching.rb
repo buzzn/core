@@ -208,7 +208,7 @@ module Buzzn
         # HTTP 1.0 clients (Cache-Control is an HTTP 1.1 header).
         def expires(max_age, *opts)
           cache_control(*(opts + [{:max_age=>max_age}]))
-          header EXPIRES, (Time.now + max_age).httpdate
+          header EXPIRES, (Time.current + max_age).httpdate
         end
       end
 

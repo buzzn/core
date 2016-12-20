@@ -30,6 +30,8 @@ describe 'Discovergy' do
   describe "/api/v1/aggregate/present" do
     it 'aggregates Discovergy power present for register as admin' do |spec|
       VCR.use_cassette("request/api/v1/#{spec.metadata[:description].downcase}") do
+        Timecop.freeze(Time.find_zone('Berlin').local(2016,2,1, 1,30,1))
+
         access_token = Fabricate(:full_access_token_as_admin)
 
         input_register  = discovergy_meter.registers.inputs.first
@@ -54,6 +56,10 @@ describe 'Discovergy' do
         expect(response).to have_http_status(200)
         expect(json['readings'].count).to eq(1)
         expect(json['power_milliwatt']).to eq(0)
+        expect(response.headers['Expires']).not_to be_nil
+        expect(response.headers['Cache-Control']).to eq "must-revalidate, max-age=15"
+        expect(response.headers['ETag']).not_to be_nil
+        expect(response.headers['Last-Modified']).not_to be_nil
         Timecop.return
       end
     end
@@ -72,6 +78,8 @@ describe 'Discovergy' do
 
     it 'aggregates Discovergy power past for register as admin' do |spec|
       VCR.use_cassette("request/api/v1/#{spec.metadata[:description].downcase}") do
+        Timecop.freeze(Time.find_zone('Berlin').local(2016,2,1, 1,30,1))
+
         access_token = Fabricate(:full_access_token_as_admin)
 
         input_register  = discovergy_meter.registers.inputs.first

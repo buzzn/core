@@ -1,6 +1,5 @@
 require 'doorkeeper/grape/helpers'
 require 'buzzn/guarded_crud'
-require 'buzzn/contract_factory'
 
 module API
   module V1
@@ -16,6 +15,7 @@ module API
         jsonapi_base_url "#{Rails.application.secrets.hostname}/api/v1"
 
         helpers Doorkeeper::Grape::Helpers
+        helpers Buzzn::Grape::Caching
 
         helpers do
 

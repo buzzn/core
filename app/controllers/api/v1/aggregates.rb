@@ -19,6 +19,13 @@ module API
           register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
           data_result = Buzzn::Application.config.current_power.for_register(register, permitted_params[:timestamp])
 
+          unless permitted_params[:timestamp]
+            # cache-control headers
+            last_modified(Time.at(data_result.timestamp))
+            etag(data_result.timestamp.to_s)
+            expires((data_result.expires_at - Time.current.to_f).to_i, :must_revalidate)
+          end
+
           { readings: [ { opterator: data_result.mode == :out ? '-' : '+',
 	                  data: { timestamp: data_result.timestamp,
 	                          power_milliwatt: data_result.value } } ],
