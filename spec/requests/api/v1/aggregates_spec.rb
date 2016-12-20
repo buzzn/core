@@ -34,16 +34,6 @@ describe 'Discovergy' do
 
         access_token = Fabricate(:full_access_token_as_admin)
 
-      meter
-    end
-    meter
-  end
-
-  describe "/api/v1/aggregate/present" do
-    it 'aggregates Discovergy power present for register as admin' do |spec|
-      VCR.use_cassette("request/api/v1/#{spec.metadata[:description].downcase}") do
-        access_token = Fabricate(:full_access_token_as_admin)
-
         input_register  = discovergy_meter.registers.inputs.first
         output_register = discovergy_meter.registers.outputs.first
 
