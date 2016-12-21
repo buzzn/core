@@ -21,15 +21,16 @@ module API
 
           unless permitted_params[:timestamp]
             # cache-control headers
+            etag(data_result.timestamp.to_s + data_result.value.to_s)
             last_modified(Time.at(data_result.timestamp))
-            etag(data_result.timestamp.to_s)
-            expires((data_result.expires_at - Time.current.to_f).to_i, :must_revalidate)
+            expires((data_result.expires_at - Time.current.to_f).to_i, current_user ? :private : :public)
           end
 
-          { readings: [ { opterator: data_result.mode == :out ? '-' : '+',
-	                  data: { timestamp: data_result.timestamp,
-	                          power_milliwatt: data_result.value } } ],
-            power_milliwatt: data_result.value }
+          { power_milliwatt: (data_result.value * 1000).to_i,
+            readings: [ { opterator: data_result.mode == :out ? '-' : '+',
+	                  data: { timestamp: Time.at(data_result.timestamp),
+	                          power_milliwatt: (data_result.value * 1000).to_i } } ],
+            timestamp: Time.at(data_result.timestamp) }
         end
 
 
@@ -66,7 +67,7 @@ module API
           result = Buzzn::Application.config.charts.for_register(register, interval)
           key = result.units == :milliwatt ? 'power_milliwatt' : 'energy_milliwatt_hour'
           (result.in + result.out).collect do |i|
-            { timestamp: i.timestamp, "#{key}": i.value }
+            { timestamp: Time.at(i.timestamp), "#{key}": i.value.to_i }
           end
         end
 
