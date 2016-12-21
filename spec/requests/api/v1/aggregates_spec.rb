@@ -45,7 +45,7 @@ describe 'Discovergy' do
 
         expect(response).to have_http_status(200)
         expect(json['readings'].count).to eq(1)
-        expect(json['power_milliwatt']).to eq(932.0)
+        expect(json['power_milliwatt']).to eq(932000)
 
         request_params = {
           register_ids: output_register.id
@@ -57,7 +57,7 @@ describe 'Discovergy' do
         expect(json['readings'].count).to eq(1)
         expect(json['power_milliwatt']).to eq(0)
         expect(response.headers['Expires']).not_to be_nil
-        expect(response.headers['Cache-Control']).to eq "must-revalidate, max-age=15"
+        expect(response.headers['Cache-Control']).to eq "private, max-age=15"
         expect(response.headers['ETag']).not_to be_nil
         expect(response.headers['Last-Modified']).not_to be_nil
         Timecop.return
@@ -94,7 +94,7 @@ describe 'Discovergy' do
 
         expect(response).to have_http_status(200)
         expect(json.size).to eq(1)
-        expect(json[0]['power_milliwatt']).to eq(0.04)
+        expect(json[0]['power_milliwatt']).to eq(0)
 
         request_params = {
           register_ids: output_register.id,
@@ -105,7 +105,7 @@ describe 'Discovergy' do
 
         expect(response).to have_http_status(200)
         expect(json.size).to eq(1)
-        expect(json[0]['power_milliwatt']).to eq(0.04)
+        expect(json[0]['power_milliwatt']).to eq(0)
         Timecop.return
       end
     end
