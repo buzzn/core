@@ -54,7 +54,7 @@
             %li.dropdown-header= t('membership')
             - if current_user.editable_registers.flatten.count != 0
               - if current_user.editable_registers.flatten.count == 1
-                - if current_user.editable_registers.flatten.first.mode == "in"
+                - if current_user.editable_registers.flatten.first.input?
                   - if @group.received_group_register_requests.any? && @group.received_group_register_requests.collect(&:register).include?(current_user.editable_registers.flatten.first)
                     %li= t('sent_request_with_register', register_name: current_user.editable_registers.flatten.first.decorate.name)
                   - elsif current_user.editable_registers.flatten.first.group == nil
@@ -65,7 +65,7 @@
                     %li= link_to(t('join_this_group_and_leave_group', group_name: current_user.editable_registers.flatten.first.group.name), group_register_requests_path( group_id: @group, register_id: current_user.editable_registers.flatten.first.id, mode: 'request'), method: :post)
               - else
                 - current_user.editable_registers.flatten.each do |register|
-                  - if register.mode == "in"
+                  - if register.input?
                     - if @group.received_group_register_requests.any? && @group.received_group_register_requests.collect(&:register).include?(register)
                       %li= t('sent_request_with_register', register_name: register.decorate.name)
                       - next

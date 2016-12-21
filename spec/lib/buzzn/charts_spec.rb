@@ -1,6 +1,6 @@
 describe Buzzn::Charts do
 
-  class DummyDataSource
+  class DummyDataSource < Buzzn::DataSource
 
     def method_missing(method, *args)
       [method] + args
@@ -11,7 +11,7 @@ describe Buzzn::Charts do
     end
   end
 
-  class MockDataSource
+  class MockDataSource < Buzzn::DataSource
 
     attr_accessor :input, :output
 
@@ -26,7 +26,7 @@ describe Buzzn::Charts do
 
   let(:mock) { MockDataSource.new }
   subject do
-    Buzzn::Charts.new(Buzzn::DataSourceRegistry.new(Redis.current, dummy: DummyDataSource.new, mock: mock))
+    Buzzn::Charts.new(Buzzn::DataSourceRegistry.new(Redis.current, dummy: DummyDataSource.new, mock: mock, check: Buzzn::CheckTypesDataSource.new))
   end
 
   let(:group) { Fabricate(:group) }
@@ -44,6 +44,7 @@ describe Buzzn::Charts do
     expect(result).to eq [:aggregated, dummy_register, :in, interval]
 
     expect { subject.for_register(register) }.to raise_error ArgumentError
+    expect { subject.for_register(Object.new, interval) }.to raise_error ArgumentError
   end
 
   it 'delivers the right result for each register in a group' do
@@ -57,5 +58,7 @@ describe Buzzn::Charts do
     expect(result.out.first.value).to eq 321
 
     expect { subject.for_group(group, Buzzn::Interval.hour) }.to raise_error ArgumentError
+    expect { subject.for_group(group) }.to raise_error ArgumentError
+    expect { subject.for_group(Object.new, interval) }.to raise_error ArgumentError
   end
 end

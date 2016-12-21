@@ -33,10 +33,10 @@ describe Buzzn::Discovergy::DataSource do
   let(:virtual_register) do
     register = Fabricate(:input_register,
                          meter: Fabricate(:meter),
-                         virtual: true,
+                         virtual: true, 
                          formula_parts: [Fabricate(:fp_plus, operand: Fabricate(:input_register, meter: Fabricate(:meter)))])
     Fabricate(:discovergy_broker, resource: register.meter, external_id: 'virtual_123')
-
+    
     Fabricate(:discovergy_broker, resource: register.formula_parts.first.operand.meter, external_id: 'easy_123')
     register
   end
@@ -54,7 +54,7 @@ describe Buzzn::Discovergy::DataSource do
     mode = :in
     two_way_meter = false
     result = subject.send(:parse_aggregated_live, response, mode, two_way_meter, 'u-i-d')
-    expect(result.timestamp).to eq Time.at(1480606450.088)
+    expect(result.timestamp).to eq 1480606450.088
     expect(result.value).to eq 1100
   end
 
@@ -64,9 +64,9 @@ describe Buzzn::Discovergy::DataSource do
     mode = :in
     two_way_meter = false
     result = subject.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
-    expect(result.in[0].timestamp).to eq Time.at(1480604400.205)
+    expect(result.in[0].timestamp).to eq 1480604400.205
     expect(result.in[0].value).to eq 1760140
-    expect(result.in[1].timestamp).to eq Time.at(1480604402.205)
+    expect(result.in[1].timestamp).to eq 1480604402.205
     expect(result.in[1].value).to eq 1750440
   end
 
@@ -76,9 +76,9 @@ describe Buzzn::Discovergy::DataSource do
     mode = :in
     two_way_meter = false
     result = subject.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
-    expect(result.in[0].timestamp).to eq Time.at(1480606200)
+    expect(result.in[0].timestamp).to eq 1480606200
     expect(result.in[0].value).to eq 1066590.978
-    expect(result.in[1].timestamp).to eq Time.at(1480607100)
+    expect(result.in[1].timestamp).to eq 1480607100
     expect(result.in[1].value).to eq 896277.7556
   end
 
@@ -88,9 +88,9 @@ describe Buzzn::Discovergy::DataSource do
     mode = :in
     two_way_meter = false
     result = subject.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
-    expect(result.in[0].timestamp).to eq Time.at(1477954800)
+    expect(result.in[0].timestamp).to eq 1477954800
     expect(result.in[0].value).to eq 33883.8461
-    expect(result.in[1].timestamp).to eq Time.at(1478041200)
+    expect(result.in[1].timestamp).to eq 1478041200
     expect(result.in[1].value).to eq 0.0
   end
 
@@ -101,9 +101,9 @@ describe Buzzn::Discovergy::DataSource do
     mode = :in
     two_way_meter = false
     result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
-    expect(result.in[0].timestamp).to eq Time.at(1451602800)
+    expect(result.in[0].timestamp).to eq 1451602800
     expect(result.in[0].value).to eq 74076694.6
-    expect(result.in[1].timestamp).to eq Time.at(1454281200)
+    expect(result.in[1].timestamp).to eq 1454281200
     expect(result.in[1].value).to eq 87059816.2031
   end
 
@@ -121,9 +121,9 @@ describe Buzzn::Discovergy::DataSource do
     mode = :in
     two_way_meter = false
     result = subject.send(:parse_collected_data, response, mode, 'EASYMETER_60009425' => 'some-uid', 'EASYMETER_60009404' => 'other-uid', 'EASYMETER_60009415' => 'last-uid')
-    expect(result[0].timestamp).to eq Time.at(1480614249.341)
+    expect(result[0].timestamp).to eq 1480614249.341
     expect(result[0].value).to eq 150950
-    expect(result[1].timestamp).to eq Time.at(1480614254.195)
+    expect(result[1].timestamp).to eq 1480614254.195
     expect(result[1].value).to eq 161590
     expect(result.size).to eq 3
     expect(result[0].resource_id).to eq 'some-uid'
@@ -158,7 +158,7 @@ describe Buzzn::Discovergy::DataSource do
     expect(map).to eq('easy_123' => register_with_broker.id)
   end
 
-  it 'maps the external id to register ids' do
+  it 'maps the external id to register ids' do    
     map = subject.send(:to_map, virtual_register)
     expect(map).to eq('easy_123' => virtual_register.formula_parts.first.operand.id)
   end

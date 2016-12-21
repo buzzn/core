@@ -1,5 +1,5 @@
 - single_content_for :action do
   - if a.trackable
-    = t("rejected_a_register_user_invitation_to_the_register", register_name: link_to(a.trackable.name, a.trackable)).html_safe
+    = t("rejected_a_register_user_invitation_to_the_register", register_name: link_to(a.trackable.name, register_path(a.trackable))).html_safe
   - else
     = t("rejected_a_register_user_invitation_to_a_register_which_has_been_removed")

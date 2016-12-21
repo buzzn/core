@@ -215,7 +215,7 @@ module Buzzn::Discovergy
       json.each do |item|
         second_timestamp = item['time']
         second_reading = item['values']["energy#{energy_out}"]
-        if first_timestamp
+        if first_reading != nil
           power = (second_reading - first_reading)/(2500.0) # convert vsm to power (mW)
           result.add(Time.at(first_timestamp/1000.0), power, mode)
         end

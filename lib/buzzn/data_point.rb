@@ -13,11 +13,15 @@ module Buzzn
     def initialize(timestamp, value)
       @timestamp = case timestamp
                    when Time
-                     timestamp#.utc.to_f * 1000.0).to_i
+                     timestamp.to_f
                    when String
-                     Time.parse(timestamp)#.to_f * 1000.0).to_i
+                     timestamp.to_f
+                   when Fixnum
+                     timestamp / 1000.0
+                   when Float
+                     timestamp
                    else
-                     raise ArgumentError.new("timestamp not a Time or String: #{timestamp.class}")
+                     raise ArgumentError.new("timestamp not a Time or String or Fixnum or Float: #{timestamp.class}")
                    end
       @value = value.to_f
       raise 'value most not be negativ' if @value < 0

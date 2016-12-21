@@ -13,14 +13,18 @@ module Buzzn
     def initialize(timestamp, input, output, resource_id)
       @timestamp = case timestamp
                    when Time
-                     timestamp
+                     timestamp.to_f
                    when String
-                     Time.parse(timestamp)
+                     timestamp.to_f
+                   when Fixnum
+                     timestamp / 1000.0
+                   when Float
+                     timestamp
                    else
-                     raise ArgumentError.new("timestamp not a Time or String: #{timestamp.class}")
+                     raise ArgumentError.new("timestamp not a Time or String or Fixnum or Float: #{timestamp.class}")
                    end
-      @in = input.to_i
-      @out = output.to_i
+      @in = input.to_f
+      @out = output.to_f
       @resource_id = resource_id
     end
 

@@ -89,7 +89,7 @@ $(".comments-panel").ready ->
         id = $(this).data('commentable-id')
         Chart.Functions.setResolution(resolution)
         Chart.Functions.showLoadingBlockButtons()
-        if type == 'Register'
+        if type == 'Register::Base'
           type = 'registers'
           Chart.Functions.setChartData(type, id, timestamp)
           $('html, body').animate({ scrollTop: $('.register_detail').offset().top}, 1000)
@@ -147,7 +147,7 @@ $(".comments-panel").ready ->
       id = $(this).data('commentable-id')
       Chart.Functions.setResolution(resolution)
       Chart.Functions.showLoadingBlockButtons()
-      if type == 'Register'
+      if type == 'Register::Base'
         type = 'registers'
         Chart.Functions.setChartData(type, id, timestamp)
         $('html, body').animate({ scrollTop: $('.register_detail').offset().top}, 1000)

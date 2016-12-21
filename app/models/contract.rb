@@ -55,7 +55,7 @@ class Contract < ActiveRecord::Base
 
   validates :terms_accepted, presence: true
   validates :power_of_attorney, presence: true
-  
+
   validate :validate_invariants
 
   def initialize(*args)
@@ -119,44 +119,6 @@ class Contract < ActiveRecord::Base
 
   def login_required?
     self.organization == Organization.discovergy || self.organization == Organization.mysmartgrid
-  end
-
-
-private
-
-
-  def validates_credentials
-    if self.mode == 'metering_point_operator_contract' && self.register && self.register.meter
-      crawler = Crawler.new(self.register)
-      if crawler.valid_credential?
-        self.update_columns(valid_credentials: true)
-        #self.send_notification_credentials(true)
-        copy_contract(:group) if self.group
-        if self.register && self.register.meter
-          copy_contract(:register)
-          self.register.meter.update_columns(smart: true)
-          self.register.meter.save
-        end
-      else
-      end
-    end
-  end
-
-
-  def copy_contract(resource)
-    if resource == :group
-      @registers = self.group.registers.without_externals
-    elsif resource == :register
-      @registers = self.register.meter.registers
-    end
-    @registers.each do |register|
-      if register.contracts.metering_point_operators.empty?
-        @contract = self
-        @contract2 = Contract.new(mode: @contract.mode, price_cents: @contract.price_cents, organization: @contract.organization, username: @contract.username, password: @contract.password)
-        @contract2.register = register
-        @contract2.save
-      end
-    end
   end
 end
 

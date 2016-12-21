@@ -1,3 +1,5 @@
+
+
 class RegistersController < ApplicationController
   before_filter :authenticate_user!, except: [:show, :chart, :latest_fake_data, :latest_power, :widget]
   respond_to :html, :json, :js
@@ -54,6 +56,7 @@ class RegistersController < ApplicationController
 
 
   def update
+    #byebug
     @register = Register::Base.find(params[:id])
     authorize_action_for @register
     if @register.update_attributes(register_params)
@@ -102,12 +105,12 @@ class RegistersController < ApplicationController
 
   def send_invitations_update
     @register = Register::Base.find(params[:id])
-    if params[:register][:invite_via_email] == "1"
-      if params[:register][:email] == ""
+    if params[register_class][:invite_via_email] == "1"
+      if params[register_class][:email] == ""
         @register.errors.add(:email, I18n.t("cant_be_blank"))
         render action: 'send_invitations', invite_via_email: 'checked'
       else
-        @email = params[:register][:email]
+        @email = params[register_class][:email]
         @existing_users = User.unscoped.where(email: @email)
         if @existing_users.any?
           if RegisterUserRequest.where(register: @register).where(user: @existing_users.first).empty? && !@register.users.include?(@existing_users.first)
@@ -122,7 +125,7 @@ class RegistersController < ApplicationController
             flash[:error] = t('register_user_invitation_already_sent') + '. ' + t('waiting_for_accepting') + '.'
           end
         else
-          @new_user = User.unscoped.invite!({email: @email, invitation_message: params[:register][:message]}, current_user)
+          @new_user = User.unscoped.invite!({email: @email, invitation_message: params[register_class][:message]}, current_user)
           current_user.create_activity key: 'user.create_platform_invitation', owner: current_user, recipient: @new_user
           @new_user.add_role(:member, @register)
           current_user.friends.include?(@new_user) ? nil : current_user.friends << @new_user
@@ -131,7 +134,7 @@ class RegistersController < ApplicationController
         end
       end
     else
-      @new_user = User.find(params[:register][:new_users])
+      @new_user = User.find(params[register_class][:new_users])
       if RegisterUserRequest.where(register: @register).where(user: @new_user).empty? && !@register.users.include?(@new_user)
         if RegisterUserRequest.create(user: @new_user, register: @register, mode: 'invitation')
           @register.create_activity(key: 'register_user_invitation.create', owner: current_user, recipient: @new_user)
@@ -155,7 +158,7 @@ class RegistersController < ApplicationController
   def remove_members_update
     @register = Register::Base.find(params[:id])
     authorize_action_for @register
-    user_id = params[:user_id] || params[:register][:user_id]
+    user_id = params[:user_id] || params[register_class][:user_id]
     @user = User.find(user_id)
     @user.remove_role(:member, @register)
     if @user == current_user
@@ -164,7 +167,7 @@ class RegistersController < ApplicationController
       flash[:notice] = t('user_removed_successfully', username: @user.name)
     end
     @register.create_activity(key: 'register_user_membership.cancel', owner: @user)
-    respond_with @register
+    redirect_to register_path(@register)
   end
   authority_actions :remove_members_update => 'read'
 
@@ -180,9 +183,11 @@ class RegistersController < ApplicationController
   authority_actions :add_manager => 'update'
 
   def add_manager_update
+    puts params.inspect
+    puts register_params
     @register = Register::Base.find(params[:id])
     authorize_action_for @register
-    @user = User.find(params[:register][:user_id])
+    @user = User.find(params[register_class][:user_id])
     if @user.has_role?(:manager, @register)
       flash[:notice] = t('user_is_already_register_manager', username: @user.name)
     else
@@ -258,10 +263,10 @@ class RegistersController < ApplicationController
 
   def edit_notifications_update
     @register = Register::Base.find(params[:id])
-    notify_when_comment_create = params[:register][:notify_me_when_comment_create]
-    notify_when_register_exceeds = params[:register][:notify_me_when_register_exceeds]
-    notify_when_register_undershoots = params[:register][:notify_me_when_register_undershoots]
-    notify_when_register_offline = params[:register][:notify_me_when_register_offline]
+    notify_when_comment_create = params[register_class][:notify_me_when_comment_create]
+    notify_when_register_exceeds = params[register_class][:notify_me_when_register_exceeds]
+    notify_when_register_undershoots = params[register_class][:notify_me_when_register_undershoots]
+    notify_when_register_offline = params[register_class][:notify_me_when_register_offline]
 
     notification_unsubscriber_comment_create = NotificationUnsubscriber.by_user(current_user).by_resource(@register).by_key('comment.create').first
     notification_unsubscriber_register_exceeds = NotificationUnsubscriber.by_user(current_user).by_resource(@register).by_key('register.exceeds').first
@@ -318,12 +323,20 @@ class RegistersController < ApplicationController
   end
 
 private
+
+  def register_class
+    if params[:register_output].nil? && !params[:register_input].nil?
+      :register_input
+    elsif !params[:register_output].nil? && params[:register_input].nil?
+      :register_output
+    end
+  end
+
   def register_params
-    params.require(:register).permit(
-      :uid,
+
+    params.require(register_class).permit(
       :name,
       :image,
-      :mode,
       :readable,
       :observe,
       :min_watt,
@@ -337,8 +350,5 @@ private
       formula_parts_attributes: [:id, :operator, :register_id, :operand_id, :_destroy]
     )
   end
-
-
-
 
 end

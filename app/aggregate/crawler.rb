@@ -33,21 +33,13 @@ class Crawler
   class CrawlerError < StandardError; end
 
   def initialize(register)
-    @unixtime_now                     = Time.current.utc.to_i*1000
+    @unixtime_now               = Time.current.utc.to_i*1000
     @register                   = register
-    raise ArgumentError.new("no metering_point_operator_contract on register") unless @register.metering_point_operator_contract
-    @metering_point_operator_contract = @register.metering_point_operator_contract
-    # keep the existing organiztion with name 'buzzn-metering' and the new
-    # Organization.buzzn_metering both working using the exact same way
-    if @metering_point_operator_contract.contractor.organization.buzzn_energy?
-      @metering_point_operator        = 'buzzn-metering'
-    else
-      @metering_point_operator        = @metering_point_operator_contract.contractor.organization.slug
-    end
     @register_input             = @register.input?
     @register_output            = @register.output?
     raise ArgumentError.new("no meter on register") unless @register.meter
     @meter                      = @register.meter
+    @metering_point_operator    = @meter.discovergy_broker.nil? ? 'nothing' : 'discovergy'
     @registers_size             = @meter.registers.size
   end
 
@@ -55,12 +47,7 @@ class Crawler
     case @metering_point_operator
 
     when 'discovergy'
-      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
-      request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
-      return request['status'] == 'ok'
-
-    when 'buzzn-metering'
-      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
       request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
       return request['status'] == 'ok'
 
@@ -91,8 +78,8 @@ class Crawler
       else
         raise CrawlerError.new("empty array from my-smart-grid")
       end
-    else
-      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+    elsif @metering_point_operator == 'discovergy'
+      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
       request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
       if request['status'] == "ok"
         if request['result'].any?
@@ -118,15 +105,15 @@ class Crawler
         raise CrawlerError.new(request['reason'])
       end
     end
-    "this aint neither Discovergy or MySmartGrid"
+    @metering_point_operator + " - this aint neither Discovergy or MySmartGrid: " + @meter.manufacturer_product_serialnumber
   end
 
 
   def live_each
     if @metering_point_operator == "mysmartgrid"
       #do something?
-    else
-      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+    elsif @metering_point_operator == 'discovergy'
+      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
       request     = discovergy.get_live_each(@meter.manufacturer_product_serialnumber)
       if request['status'] == "ok"
         if request['result'].any?
@@ -172,8 +159,8 @@ class Crawler
       else
         raise CrawlerError.new("empty array from my-smart-grid")
       end
-    else
-      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+    elsif @metering_point_operator == 'discovergy'
+      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
       request     = discovergy.get_hour(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
@@ -225,36 +212,13 @@ class Crawler
       else
         raise CrawlerError.new("empty array from my-smart-grid")
       end
-    else
-      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+    elsif @metering_point_operator == 'discovergy'
+      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
       request     = discovergy.get_day(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
           first_reading = first_timestamp = nil
           request['result'].each do |item|
-            # timeStart = item['timeStart']
-            # timeEnd = item['timeEnd']
-            # i = 0
-            # while timeStart + i * 6000 < timeEnd
-            #   if @registers_size > 1
-            #     if item['power'] > 0 && @register_input
-            #       power = item['power']/1000
-            #     elsif item['power'] < 0 && @register_output
-            #       power = item['power'].abs/1000
-            #     else
-            #       power = 0
-            #     end
-            #   else
-            #     power = item['power'] > 0 ? Integer(item['power'].abs)/1000 : 0
-            #   end
-            #   timestamp = timeStart + i * 6000
-            #   timenew = Time.new.to_i - 50
-            #   if timestamp/1000 < timenew
-            #     result << [timestamp, power]
-            #   end
-            #   i += 1
-            # end
-
             second_timestamp = item['time']
             if @registers_size > 1
               if @register_input
@@ -309,8 +273,8 @@ class Crawler
       else
         raise CrawlerError.new("empty array from my-smart-grid")
       end
-    else
-      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+    elsif @metering_point_operator == 'discovergy'
+      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
       request     = discovergy.get_month(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
@@ -371,8 +335,8 @@ class Crawler
       else
         raise CrawlerError.new("empty array from my-smart-grid")
       end
-    else
-      discovergy  = Discovergyy.new(@metering_point_operator_contract.username, @metering_point_operator_contract.password)
+    elsif @metering_point_operator == 'discovergy'
+      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
       request     = discovergy.get_year(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?

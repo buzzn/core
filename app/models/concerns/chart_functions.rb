@@ -20,7 +20,8 @@ module ChartFunctions
       end_time = time.end_of_year
       resolutions = ['year_to_months']
     end
-    return Comment.where(commentable_type: self.class, commentable_id: self.id).where('chart_resolution IN (?)', resolutions).where("chart_timestamp >= ?", start_time).where("chart_timestamp < ?", end_time).order('chart_timestamp ASC')
+    type = self.class.to_s.include?('Register') ? 'Register::Base' : self.class
+    return Comment.where(commentable_type: type, commentable_id: self.id).where('chart_resolution IN (?)', resolutions).where("chart_timestamp >= ?", start_time).where("chart_timestamp < ?", end_time).order('chart_timestamp ASC')
   end
 
   def get_cache_duration(resolution)

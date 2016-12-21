@@ -6,7 +6,7 @@ class WizardMetersController  < ApplicationController
   def wizard
     @register = Register::Base.find(params[:register_id])
     @meter = Meter.new
-    @contract = Contract.new
+    @discovergy_broker = DiscovergyBroker.new
   end
 
   def wizard_update
@@ -78,50 +78,43 @@ class WizardMetersController  < ApplicationController
   def edit_wizard
     @meter = Meter.find(params[:meter_id])
     @register = Register::Base.find(params[:register_id])
-    @contract = @meter.registers.first.contracts.metering_point_operators.first || Contract.new
+    @discovergy_broker = @meter.discovergy_broker || DiscovergyBroker.new
   end
 
   def edit_wizard_update
     Meter.transaction do
       @meter = Meter.find(params[:meter_id])
       @register = Register::Base.find(params[:register_id])
-      #@register_ids = params[:meter][:register_ids]
       @meter.manufacturer_product_serialnumber = params[:meter][:manufacturer_product_serialnumber]
       @meter.manufacturer_name = params[:meter][:manufacturer_name]
-      #@meter.registers = @register_ids.each{|id| Register::Base.find(id)}
 
       if @meter.save
         if params[:meter][:smartmeter] == "1"
           #meter valid, now check contract
-
-          if params[:contract_id] == "" || params[:contract_id] == nil
-            @contract = Contract.new(contract_params)
+          if !@meter.discovergy_broker
+            organization = Organization.find(credential_params[:organization])
+            @discovergy_broker = DiscovergyBroker.new(
+              mode: @register.input? ? 'in' : 'out',
+              external_id: "EASYMETER_#{meter_params[:manufacturer_product_serialnumber]}",
+              provider_login: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'team@localpool.de' : credential_params[:provider_login],
+              provider_password: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'Zebulon_4711' : credential_params[:provider_password],
+              resource: @meter
+            )
           else
-            @contract = Contract.find(params[:contract_id])
-          end
-          if !@contract.new_record?
-            @contract.organization_id = params[:meter][:contract][:organization_id]
-            @contract.username = params[:meter][:contract][:username]
-            @contract.password = params[:meter][:contract][:password]
-          end
-          @contract.mode = 'metering_point_operator_contract'
-          @contract.price_cents = 0
-          @contract.register = @register
-          if @contract.organization.slug == 'buzzn-metering' ||
-             @contract.organization.buzzn_metering?
-            @contract.username = 'team@localpool.de'
-            @contract.password = 'Zebulon_4711'
-          elsif @contract.organization.slug == 'mysmartgrid'
-            @contract.username = params[:meter][:contract][:sensor_id]
-            @contract.password = params[:meter][:contract][:x_token]
+            @discovergy_broker = @meter.discovergy_broker
           end
 
-          if @contract.save && @meter.save
+          if !@discovergy_broker.new_record?
+            @discovergy_broker.provider_login = params[:meter][:discovergy_broker][:provider_login]
+            @discovergy_broker.password = params[:meter][:discovergy_broker][:provider_password]
+          end
+
+          if @discovergy_broker.save && @meter.save
             if @register.smart?
               flash[:notice] = t("your_credentials_have_been_checked_and_are_valid", register: @register.name)
             else
-              @contract.errors.add(:password, I18n.t("wrong_username_and_or_password"))
-              @contract.errors.add(:username, I18n.t("wrong_username_and_or_password")) #TODO: check via ajax
+              @discovergy_broker.errors.add(:provider_password, I18n.t("wrong_username_and_or_password"))
+              @discovergy_broker.errors.add(:provider_login, I18n.t("wrong_username_and_or_password")) #TODO: check via ajax
               flash[:error] = t('your_credentials_have_been_checked_and_are_invalid', register: @register.name)
             end
           else
@@ -146,8 +139,8 @@ class WizardMetersController  < ApplicationController
     params.require(:meter).permit(:id, :register_id, :manufacturer_product_serialnumber, :manufacturer_name, :registers)
   end
 
-  def contract_params
-    params.require(:meter).require(:contract).permit( :id, :organization_id, :username, :password)
+  def credential_params
+    params.require(:meter).require(:discovergy_broker).permit( :id, :organization, :provider_login, :provider_password)
   end
 
 end

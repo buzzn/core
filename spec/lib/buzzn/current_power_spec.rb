@@ -1,17 +1,17 @@
 describe Buzzn::CurrentPower do
 
-  class DummyDataSource
-
-    def method_missing(method, *args)
-      [method] + args
-    end
+  class DummyDataSource < Buzzn::DataSource
 
     def single_aggregated(resource, mode)
-      method_missing(:single_aggregated, resource, mode) unless resource.is_a? Group
+      [:single_aggregated, resource, mode] unless resource.is_a? Group
+    end
+
+    def collection(*args)
+      [:collection] + args
     end
   end
 
-  class MockDataSource
+  class MockDataSource < Buzzn::DataSource
 
     attr_accessor :input, :output
 
@@ -19,14 +19,14 @@ describe Buzzn::CurrentPower do
       mode == :in ? @input : @output
     end
 
-    def method_missing(method, *args)
+    def collection(*args)
       nil
     end
   end
 
   let(:mock) { MockDataSource.new }
   subject do
-    Buzzn::CurrentPower.new(Buzzn::DataSourceRegistry.new(Redis.current, dummy: DummyDataSource.new, mock: mock))
+    Buzzn::CurrentPower.new(Buzzn::DataSourceRegistry.new(Redis.current, dummy: DummyDataSource.new, mock: mock, check: Buzzn::CheckTypesDataSource.new))
   end
 
   let(:group) { Fabricate(:group) }
@@ -43,11 +43,16 @@ describe Buzzn::CurrentPower do
     expect(result).to eq [:single_aggregated, dummy_register, :in]
 
     expect { subject.for_register(register) }.to raise_error ArgumentError
+    expect { subject.for_register(register, 'a') }.to raise_error ArgumentError
+    expect { subject.for_register(Object.new) }.to raise_error ArgumentError
   end
 
   it 'delivers the right result for each register in a group' do
     result = subject.for_each_register_in_group(group)
     expect(result).to eq [:collection, group, :in, :collection, group, :out]
+
+    expect { subject.for_each_register_in_group(group, 'a') }.to raise_error ArgumentError
+    expect { subject.for_each_register_in_group(Object.new) }.to raise_error ArgumentError
   end
 
   it 'delivers the right result for a group' do
@@ -59,6 +64,9 @@ describe Buzzn::CurrentPower do
     expect(result.resource_id).to eq group.id
     expect(result.in).to eq 123
     expect(result.out).to eq 321
+
+    expect { subject.for_group(group, 'a') }.to raise_error ArgumentError
+    expect { subject.for_group(Object.new) }.to raise_error ArgumentError
   end
 
 end

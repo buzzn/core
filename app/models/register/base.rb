@@ -58,7 +58,6 @@ module Register
 
     mount_uploader :image, PictureUploader
 
-    before_destroy :delete_meter
     before_destroy :destroy_content
 
     has_many :dashboard_registers
@@ -160,6 +159,10 @@ module Register
       if contracts.size > 0 && address.nil?
         errors.add(:address, 'missing Address when having contracts')
       end
+    end
+
+    def self.modes
+      %w{in out}
     end
 
     def users
@@ -342,14 +345,12 @@ module Register
       self.smart? &&
       !metering_point_operator_contract.nil? &&
       metering_point_operator_contract.contractor.organization.slug == "mysmartgrid"
+      #TODO: change this to mysmartgrid_broker
     end
 
     def discovergy?
       self.smart? &&
-      !metering_point_operator_contract.nil? &&
-      (metering_point_operator_contract.contractor.organization.slug == "discovergy" ||
-       metering_point_operator_contract.contractor.organization.slug == "buzzn-metering" ||
-       metering_point_operator_contract.contractor.organization.buzzn_energy?)
+      self.meter && self.meter.discovergy_broker
     end
 
     def buzzn_api?
@@ -575,18 +576,11 @@ module Register
       end
     end
 
-    private
+    def class_name
+      self.class.name.downcase.sub!("::", "_")
+    end
 
-      def delete_meter
-        if self.meter
-          if self.meter.registers.size == 1
-            self.meter.destroy
-          end
-        end
-        FormulaPart.where(operand_id: self.id).each do |formula_part|
-          formula_part.destroy
-        end
-      end
+    private
 
       def destroy_content
         RegisterUserRequest.where(register: self).each{|request| request.destroy}

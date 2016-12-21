@@ -7,6 +7,10 @@ module Buzzn
       @registry[:discovergy] ||= Buzzn::Discovergy::DataSource.new(redis)
       #@registry[:mysmartgrid] ||= Buzzn::Mysmartgrid::DataSource.new
       #@registry[:standard_profile] ||= Buzzn::StandardProfile::DataSource.new
+
+      @registry.each do |key, data_source|
+        raise "datasource for :#{key} is not a #{Buzzn::DataSource}: #{data_source.class}" unless data_source.is_a?(Buzzn::DataSource)
+      end
     end
 
     def get(data_source)

@@ -1,4 +1,6 @@
-class RegisterDecorator < Draper::Decorator
+
+
+class Register::BaseDecorator < Draper::Decorator
   include Draper::LazyHelpers
 
   delegate_all
@@ -58,18 +60,17 @@ class RegisterDecorator < Draper::Decorator
 
 
   def mode_class
-    case model.mode
-    when 'in'
+    if model.input?
       'primary'
-    when 'out'
+    elsif model.output?
       'danger'
     end
   end
 
   def fake_label
-    if model.mode == 'in'
+    if model.input?
       'slp'
-    elsif model.mode == 'out'
+    elsif model.output?
       'sep'
     end
   end
@@ -95,7 +96,7 @@ class RegisterDecorator < Draper::Decorator
   def link_to_delete
     link_to(
       t('delete'),
-      model,
+      register_path(model),
       remote: false,
       class: 'btn btn-danger btn-labeled fa fa-trash',
       :method => :delete,
@@ -283,8 +284,6 @@ class RegisterDecorator < Draper::Decorator
         'data-target'   => '#myModal'
       })
   end
-
-
 
 
 end
