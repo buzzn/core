@@ -27,7 +27,7 @@ describe Buzzn::StandardProfile::DataSource do
       expect(single_aggregated.mode).to eq :in
       expect(single_aggregated.resource_id).to eq register.id
       expect(single_aggregated.value).to eq 930*1000
-      expect(single_aggregated.timestamp).to eq berlin_time.local(2015,4,6)
+      expect(single_aggregated.timestamp).to eq berlin_time.local(2015,4,6).to_i
       Timecop.return
     end
 
@@ -52,7 +52,7 @@ describe Buzzn::StandardProfile::DataSource do
       expect(single_aggregated.mode).to eq :out
       expect(single_aggregated.resource_id).to eq register.id
       expect(single_aggregated.value).to eq 930*1000
-      expect(single_aggregated.timestamp).to eq berlin_time.local(2015,4,6)
+      expect(single_aggregated.timestamp).to eq berlin_time.local(2015,4,6).to_i
       Timecop.return
     end
 
@@ -95,7 +95,6 @@ describe Buzzn::StandardProfile::DataSource do
 
       Timecop.freeze(berlin_time.local(2015,4,6))
       collection = data_source.collection(group, :in)
-
       expect(collection.count).to eq group.registers.inputs.count
       sum_values = 0
       collection.each do |data_result|
@@ -112,7 +111,7 @@ describe Buzzn::StandardProfile::DataSource do
 
   describe 'aggregated' do
 
-    xit 'year_to_months' do |spec|
+    it 'year_to_months' do |spec|
       meter = Fabricate(:meter_with_input_register)
       register = meter.registers.inputs.first
       energy_milliwatt_hour = 0
@@ -129,66 +128,63 @@ describe Buzzn::StandardProfile::DataSource do
       end
 
       aggregated = data_source.aggregated(register, :in, year_interval)
-
       expect(aggregated.in.count).to eq 12
       aggregated.in.each do |point|
-        # the timestamp of a data_result is not working with .utc_offset, so i guess the utc_offset with 2 hours.
-        timestamp = point.timestamp + 2.hours
+        timestamp = Time.at(point.timestamp)
         days_in_month = Time.days_in_month(timestamp.month, timestamp.year)
         expect(point.value).to eq 19000*1000*(days_in_month-1)
       end
     end
 
-    # 
-    # it 'month_to_days' do |spec|
-    #   meter = Fabricate(:meter_with_input_register)
-    #   register = meter.registers.inputs.first
-    #   energy_milliwatt_hour = 0
-    #   timestamp = berlin_time.local(2015,1,1)
-    #   month_interval = Buzzn::Interval.month(timestamp)
-    #   days_in_month = Time.days_in_month(timestamp.month, timestamp.year)
-    #   (24*days_in_month).times do |i|
-    #     reading = Fabricate(:reading,
-    #                         source: 'slp',
-    #                         timestamp: timestamp,
-    #                         energy_milliwatt_hour: energy_milliwatt_hour,
-    #                         power_milliwatt: 930*1000 )
-    #     energy_milliwatt_hour += 1300*1000
-    #     timestamp += 1.hour
-    #   end
-    #
-    #   aggregated = data_source.aggregated(register, :in, month_interval)
-    #
-    #   expect(aggregated.in.count).to eq days_in_month
-    #   aggregated.in.each do |point|
-    #     expect(point.value).to eq 1300*1000*(24-1)
-    #   end
-    # end
+
+    it 'month_to_days' do |spec|
+      meter = Fabricate(:meter_with_input_register)
+      register = meter.registers.inputs.first
+      energy_milliwatt_hour = 0
+      timestamp = berlin_time.local(2015,1,1)
+      month_interval = Buzzn::Interval.month(timestamp)
+      days_in_month = Time.days_in_month(timestamp.month, timestamp.year)
+      (24*days_in_month).times do |i|
+        reading = Fabricate(:reading,
+                            source: 'slp',
+                            timestamp: timestamp,
+                            energy_milliwatt_hour: energy_milliwatt_hour,
+                            power_milliwatt: 930*1000 )
+        energy_milliwatt_hour += 1300*1000
+        timestamp += 1.hour
+      end
+
+      aggregated = data_source.aggregated(register, :in, month_interval)
+      expect(aggregated.in.count).to eq days_in_month
+      aggregated.in.each do |point|
+        expect(point.value).to eq 1300*1000*(24-1)
+      end
+    end
 
 
-  #   it 'day_to_minutes' do |spec|
-  #     meter = Fabricate(:meter_with_input_register)
-  #     register = meter.registers.inputs.first
-  #     energy_milliwatt_hour = 0
-  #     timestamp = berlin_time.local(2015,1,1)
-  #     day_interval = Buzzn::Interval.day(timestamp)
-  #     (1440*6).times do |i|
-  #       reading = Fabricate(:reading,
-  #                           source: 'slp',
-  #                           timestamp: timestamp,
-  #                           energy_milliwatt_hour: energy_milliwatt_hour,
-  #                           power_milliwatt: 930*1000 )
-  #       energy_milliwatt_hour += 1300*1000
-  #       timestamp += 10.second
-  #     end
-  #
-  #     aggregated = data_source.aggregated(register, day_interval)
-  #
-  #     expect(aggregated.in.count).to eq 1440
-  #     aggregated.in.each do |point|
-  #       expect(point.value).to eq 930*1000
-  #     end
-  #   end
+    it 'day_to_minutes' do |spec|
+      meter = Fabricate(:meter_with_input_register)
+      register = meter.registers.inputs.first
+      energy_milliwatt_hour = 0
+      timestamp = berlin_time.local(2015,1,1)
+      day_interval = Buzzn::Interval.day(timestamp)
+      (1440*6).times do |i|
+        reading = Fabricate(:reading,
+                            source: 'slp',
+                            timestamp: timestamp,
+                            energy_milliwatt_hour: energy_milliwatt_hour,
+                            power_milliwatt: 930*1000 )
+        energy_milliwatt_hour += 1300*1000
+        timestamp += 10.second
+      end
+
+      aggregated = data_source.aggregated(register, :in, day_interval)
+
+      expect(aggregated.in.count).to eq 1440
+      aggregated.in.each do |point|
+        expect(point.value).to eq 930*1000
+      end
+    end
   end
 
 

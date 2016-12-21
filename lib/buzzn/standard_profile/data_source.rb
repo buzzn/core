@@ -12,39 +12,21 @@ module Buzzn::StandardProfile
     def single_aggregated(resource, mode)
       registers_hash = sort_resource(resource)
       data_results = registers_hash_to_data_results(registers_hash, mode, ['power'], Time.current)
-      data_results.first
+      data_results ? data_results.first : nil
     end
 
     # value_list
     def collection(resource, mode)
       registers_hash = sort_resource(resource)
       data_results = registers_hash_to_data_results(registers_hash, mode, ['power'], Time.current)
-      data_results
+      data_results ? data_results : nil
     end
 
     # chart
     def aggregated(resource, mode, interval)
       registers_hash = sort_resource(resource)
-      case interval.duration
-      when :day
-        resolution  = :day_to_minutes
-        units       = ['power']
-      when :month
-        resolution  = :month_to_days
-        units       = ['energy']
-      when :year
-        resolution  = :year_to_months
-        units       = ['energy']
-      else
-        raise Buzzn::DataSourceError.new('unknown interval duration')
-      end
-      range(
-        units,
-        registers_hash,
-        interval.from_as_time,
-        interval.to_as_time,
-        resolution
-      )
+      data_result_sets = registers_hash_to_data_result_sets(registers_hash, mode, interval)
+      data_result_sets ? data_result_sets.first : nil
     end
 
 
@@ -70,10 +52,38 @@ private
     end
 
 
-    # Register Chart
-    def range(units, registers_hash, from, to, resolution)
-      query_range_result = @facade.query_range(register.data_source, from, to, resolution, units)
-      to_data_result_set(register, query_range_result, units)
+    def registers_hash_to_data_result_sets(registers_hash, mode, interval)
+
+      case interval.duration
+      when :day
+        resolution  = :day_to_minutes
+        units       = ['power']
+      when :month
+        resolution  = :month_to_days
+        units       = ['energy']
+      when :year
+        resolution  = :year_to_months
+        units       = ['energy']
+      else
+        raise Buzzn::DataSourceError.new('unknown interval duration')
+      end
+
+      if mode == :in
+        profiles = IN_PROFILES
+      elsif mode == :out
+        profiles = OUT_PROFILES
+      end
+
+      data_result_sets = []
+      profiles.each do |profile|
+        if registers_hash[profile.to_sym].any?
+          registers_hash[profile.to_sym].each do |register|
+            query_range_result = @facade.query_range(register.data_source, interval.from_as_time, interval.to_as_time, resolution, units)
+            data_result_sets << to_data_result_set(register, query_range_result, units)
+          end
+        end
+      end
+      data_result_sets
     end
 
 
