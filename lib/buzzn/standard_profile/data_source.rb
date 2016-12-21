@@ -1,8 +1,8 @@
 module Buzzn::StandardProfile
   class DataSource < Buzzn::DataSource
 
+    IN_PROFILES = ['slp']
     OUT_PROFILES = ['sep_bhkw', 'sep_pv']
-    PROFILES = ['slp', 'sep_bhkw', 'sep_pv']
 
     def initialize(facade = Facade.new)
       @facade = facade
@@ -11,14 +11,14 @@ module Buzzn::StandardProfile
     # single_value
     def single_aggregated(resource, mode)
       registers_hash = sort_resource(resource)
-      data_results = registers_hash_to_data_results(registers_hash, ['power'], Time.current)
+      data_results = registers_hash_to_data_results(registers_hash, mode, ['power'], Time.current)
       data_results.first
     end
 
     # value_list
     def collection(resource, mode)
       registers_hash = sort_resource(resource)
-      data_results = registers_hash_to_data_results(registers_hash, ['power'], Time.current)
+      data_results = registers_hash_to_data_results(registers_hash, mode, ['power'], Time.current)
       data_results
     end
 
@@ -50,9 +50,15 @@ module Buzzn::StandardProfile
 
 private
 
-    def registers_hash_to_data_results(registers_hash, units, timestamp)
+    def registers_hash_to_data_results(registers_hash, mode, units, timestamp)
+      if mode == :in
+        profiles = IN_PROFILES
+      elsif mode == :out
+        profiles = OUT_PROFILES
+      end
+
       data_results = []
-      PROFILES.each do |profile|
+      profiles.each do |profile|
         if registers_hash[profile.to_sym].any?
           registers_hash[profile.to_sym].each do |register|
             query_value_result = @facade.query_value(profile, timestamp, units)
