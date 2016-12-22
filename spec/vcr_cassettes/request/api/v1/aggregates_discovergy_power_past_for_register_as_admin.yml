@@ -304,3 +304,49 @@ http_interactions:
       string: "[{\"time\":1467446702088,\"values\":{\"energyOut\":1100640}},{\"time\":1467446702288,\"values\":{\"energyOut\":1100740}}]"
     http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energyOut&from=1454281200000&meterId=EASYMETER_60139082&resolution=fifteen_minutes&to=1454367600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Authorization:
+      - OAuth oauth_consumer_key="e2m206tufotddbts9lj6g16apk", oauth_nonce="76bQizT0Wky9Jj1fvB2dVppwzatsk2E0iROHi4o9c9I",
+        oauth_signature="Ynt2AZo90b7S0QTr1pmN8G7O8v8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446702", oauth_token="468bdc9aefc84702b84934d969a14d9a",
+        oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Fri, 02 Dec 2016 10:10:56 GMT
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '49'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+      Cache-Control:
+      - must-revalidate,no-cache,no-store
+    body:
+      encoding: UTF-8
+      string: "[{\"time\":1467446702088,\"values\":{\"energyOut\":1100640}},{\"time\":1467446702288,\"values\":{\"energyOut\":1100740}}]"
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
