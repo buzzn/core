@@ -42,7 +42,6 @@ describe Buzzn::CurrentPower do
     result = subject.for_register(dummy_register)
     expect(result).to eq [:single_aggregated, dummy_register, :in]
 
-    expect { subject.for_register(register) }.to raise_error ArgumentError
     expect { subject.for_register(register, 'a') }.to raise_error ArgumentError
     expect { subject.for_register(Object.new) }.to raise_error ArgumentError
   end
