@@ -61,7 +61,7 @@ module Buzzn::Discovergy
           register_application
           access_token = build_access_token_from_broker_or_new(broker, true)
           response = self.readings(broker, interval, mode, collection, true)
-          return response.body
+          return response
         else
           raise Buzzn::DataSourceError.new('unauthorized to get data from discovergy: ' + response.body)
         end
