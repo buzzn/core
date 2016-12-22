@@ -65,9 +65,13 @@ module API
             interval = Buzzn::Interval.month(timestamp)
           end
           result = Buzzn::Application.config.charts.for_register(register, interval)
-          key = result.units == :milliwatt ? 'power_milliwatt' : 'energy_milliwatt_hour'
-          (result.in + result.out).collect do |i|
-            { timestamp: Time.at(i.timestamp), "#{key}": i.value.to_i }
+          if result
+            key = result.units == :milliwatt ? 'power_milliwatt' : 'energy_milliwatt_hour'
+            (result.in + result.out).collect do |i|
+              { timestamp: Time.at(i.timestamp), "#{key}": i.value.to_i }
+            end
+          else
+            []
           end
         end
 
