@@ -25,6 +25,15 @@ describe Buzzn::DataPoint do
 
     expect { reference.add(subject.new(Time.new(1), 0)) }.to raise_error ArgumentError
   end
+
+  it 'adds value without timestamp match' do
+    reference = subject.new(Time.new(123456789), 987654331)
+    reference.add_value(1)
+
+    expect(reference.value).to eq 987654332
+
+    expect { reference.add_value("1") }.to raise_error ArgumentError
+  end
 end
 
 describe Buzzn::DataResult do
@@ -230,13 +239,13 @@ end
 def granularity(duration)
   case duration
   when :year
-    2678400
+    2678400 # 31 days, all other months are included in this case
   when :month
-    86400
+    86400 # 1 day
   when :day
-    900
+    900 # 15 minutes
   when :hour
-    2
+    2 # 2 seconds, this is NOT 1 second as there are some readings that differ in more than 2 seconds (like 2.001 seconds)
   end
 end
 

@@ -34,7 +34,7 @@ module Buzzn
 
     def add(timestamp, value, mode)
       array = mode == :in ? @in : @out
-      array.push(DataPoint.new(timestamp, value))
+      array.push(Buzzn::DataPoint.new(timestamp, value))
     end
 
     def add_all(set, duration)
@@ -74,9 +74,9 @@ module Buzzn
           value = source[i].value
           timestamp_index = find_matching_timestamp(key, target, duration)
           if timestamp_index == -1
-            target.push(DataPoint.new(key, value))
+            target.push(source[i])
           else
-            target[timestamp_index].add(DataPoint.new(target[timestamp_index].timestamp, value))
+            target[timestamp_index].add_value(value)
           end
         end
       end

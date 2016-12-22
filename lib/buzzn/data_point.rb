@@ -9,7 +9,7 @@ module Buzzn
     def self.from_hash(data)
       new(data[:timestamp], data[:value])
     end
-          
+
     def initialize(timestamp, value)
       @timestamp = case timestamp
                    when Time
@@ -29,7 +29,12 @@ module Buzzn
 
     def add(other)
       raise ArgumentError.new('mismatch timestamp') if @timestamp != other.timestamp
-      @value += other.value if other
+      add_value(other.value) if other
+    end
+
+    def add_value(value)
+      raise ArgumentError.new('wrong value type') unless value.is_a?(Fixnum) || value.is_a?(Float)
+      @value += value
     end
 
     def to_hash
