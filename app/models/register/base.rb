@@ -16,8 +16,6 @@ module Register
     include PublicActivity::Model
     tracked except: :update, owner: Proc.new{ |controller, model| controller && controller.current_user }, recipient: Proc.new{ |controller, model| controller && model }
 
-    attr_reader :mode
-
     belongs_to :group
     belongs_to :meter, dependent: :destroy
     accepts_nested_attributes_for :meter
@@ -164,6 +162,15 @@ module Register
 
     def self.modes
       %w{in out}
+    end
+
+    def direction
+      case self
+      when Register::Input
+        :in
+      when Register::Output
+        :out
+      end
     end
 
     def users

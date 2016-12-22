@@ -3,7 +3,6 @@ module Register
 
     def initialize(*args)
       super
-      @mode = :in
     end
 
     def obis

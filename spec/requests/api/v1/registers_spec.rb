@@ -122,6 +122,7 @@ describe "/api/v1/registers" do
           expect(response.headers["Location"]).to eq json["data"]["id"]
           expect(json["data"]["attributes"]["uid"]).to eq(register.uid)
           expect(json["data"]["attributes"]["mode"]).to eq(register.mode)
+          expect(json["data"]["attributes"]["direction"]).to eq(mode.sub(/put/, ''))
           expect(json["data"]["attributes"]["readable"]).to eq(register.readable)
           expect(json["data"]["attributes"]["meter-id"]).to eq(meter.id)
           expect(json["data"]["attributes"]["name"]).to eq(register.name)
