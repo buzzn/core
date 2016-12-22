@@ -12,7 +12,7 @@ module API
         desc "Aggregate Power"
         params do
           requires :register_ids, type: String, desc: "register ID"
-          optional :timestamp, type: DateTime
+          optional :timestamp, type: Time
         end
         oauth2 false
         get 'present' do
@@ -42,7 +42,7 @@ module API
         desc "Aggregate Past"
         params do
           requires :register_ids, type: String, desc: "register ID"
-          optional :timestamp, type: DateTime
+          optional :timestamp, type: Time
           requires :resolution, type: String, values: %w(
                                                         year_to_months
                                                         month_to_days
