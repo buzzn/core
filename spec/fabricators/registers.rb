@@ -139,6 +139,7 @@ Fabricator :register_stefans_bhkw, from: :output_register do
   address { Fabricate(:address, street_name: 'Forstenrieder Weg', street_number: '51', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'BHKW'
   readable    'world'
+  meter { Fabricate(:easymeter_1024000034) }
 end
 
 
