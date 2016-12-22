@@ -2,6 +2,7 @@ module Register
   class BaseResource < ApplicationResource
     abstract
     attributes  :uid,
+                :mode,
                 :name,
                 :meter_id,
                 :readable

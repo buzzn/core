@@ -16,6 +16,7 @@ module Register
     include PublicActivity::Model
     tracked except: :update, owner: Proc.new{ |controller, model| controller && controller.current_user }, recipient: Proc.new{ |controller, model| controller && model }
 
+    attr_reader :mode
 
     belongs_to :group
     belongs_to :meter, dependent: :destroy
