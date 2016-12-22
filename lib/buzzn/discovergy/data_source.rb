@@ -4,6 +4,8 @@ module Buzzn::Discovergy
   # readings and produces a DataResult object
   class DataSource < Buzzn::DataSource
 
+    NAME = :discovergy
+
     def initialize(facade = Facade.new, cache_time = 15)
       @facade = facade
       @cache_time = cache_time

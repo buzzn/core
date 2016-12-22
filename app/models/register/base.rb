@@ -359,20 +359,15 @@ module Register
     end
 
     def data_source
-      if self.virtual?
-        :virtual
-      elsif self.slp?
-        :slp
-      elsif self.pv?
-        :sep_pv
-      elsif self.bhkw_or_else?
-        :sep_bhkw
-      elsif self.mysmartgrid?
-        :mysmartgrid
-      elsif self.discovergy?
-        :discovergy
-      elsif self.buzzn_api?
-        :buzzn_api
+      if self.discovergy?
+        Buzzn::Discovergy::DataSource::NAME
+      #elsif self.buzzn_api?
+      #  :buzzn_api
+      #elsif self.mysmartgrid?
+      #  :mysmartgrid
+      else
+        #:standard_profile
+        Buzzn::MissingDataSource::NAME
       end
     end
 

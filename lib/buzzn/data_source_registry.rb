@@ -4,7 +4,8 @@ module Buzzn
 
     def initialize(redis = Redis.current, map = {})
       @registry = map.dup
-      @registry[:discovergy] ||= Buzzn::Discovergy::DataSource.new(redis)
+      @registry[Buzzn::Discovergy::DataSource::NAME] ||= Buzzn::Discovergy::DataSource.new(redis)
+      @registry[Buzzn::MissingDataSource::NAME] ||= Buzzn::MissingDataSource.new
       #@registry[:mysmartgrid] ||= Buzzn::Mysmartgrid::DataSource.new
       #@registry[:standard_profile] ||= Buzzn::StandardProfile::DataSource.new
 
@@ -14,7 +15,7 @@ module Buzzn
     end
 
     def get(data_source)
-      data_source = data_source.to_sym
+      data_source = data_source.to_sym if data_source
       raise ArgumentError.new("can not handle #{data_source}") unless @registry.key?(data_source)
       @registry[data_source]
     end
