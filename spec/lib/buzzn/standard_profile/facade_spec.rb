@@ -17,6 +17,8 @@ describe Buzzn::StandardProfile::Facade do
         timestamp += 15.minutes
       end
 
+      Timecop.travel(berlin_time.local(2015,1,1, 12))
+
       power_value = facade.query_value('slp', berlin_time.local(2015,1,1, 12), ['power'])
       expect(power_value.timestamp).to eq berlin_time.local(2015,1,1, 12)
       expect(power_value.power_milliwatt).to eq 930*1000
