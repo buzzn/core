@@ -30,6 +30,14 @@ module Buzzn
       Time.at(@to).utc
     end
 
+    def from_as_time
+      Time.at(@from)
+    end
+
+    def to_as_time
+      Time.at(@to)
+    end
+
     def respond_to?(method)
       super || private_methods.include?(:"_#{method}")
     end
@@ -122,4 +130,3 @@ module Buzzn
     end
   end
 end
-
