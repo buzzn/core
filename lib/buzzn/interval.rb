@@ -22,6 +22,14 @@ module Buzzn
       (@to * 1000).to_i
     end
 
+    def from_as_time
+      Time.at(@from)
+    end
+
+    def to_as_time
+      Time.at(@to)
+    end
+
     def from_as_utc_time
       Time.at(@from).utc
     end
