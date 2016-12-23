@@ -38,7 +38,17 @@ module Buzzn::Discovergy
 
     def single_aggregated(register_or_group, mode)
       result = nil
-      register_or_group.brokers.by_data_source(self).each do |broker|
+      brokers = register_or_group.brokers.by_data_source(self)
+      if ! brokers.empty? &&
+         register_or_group.is_a?(Register::Base) &&
+         ! register_or_group.group.brokers.by_data_source(self).empty?
+        result = collection(register_or_group.group, mode)
+        result.each do |r|
+          return r if r.resource_id == register_or_group.id
+        end
+        result = nil
+      end
+      brokers.each do |broker|
         two_way_meter = broker.two_way_meter?
 
         response = @facade.readings(broker, nil, mode, false)
@@ -252,12 +262,13 @@ module Buzzn::Discovergy
 
     def parse_collected_data(response, mode, map)
       result = Buzzn::DataResultArray.new(expires_at)
+      return result unless response
       json = MultiJson.load(response)
       json.each do |item|
         resource_id = map[item.first]
         timestamp = item[1]['time']
         value = item[1]['values']['power']
-        result_item = Buzzn::DataResult.new(Time.at(timestamp/1000.0), value, resource_id, mode, expires_at)
+        result_item = Buzzn::DataResult.new(Time.at(timestamp/1000.0), value/1000.0, resource_id, mode, expires_at)
         result << result_item
       end
       return result
