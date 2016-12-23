@@ -2,6 +2,8 @@ describe Buzzn::CurrentPower do
 
   class DummyDataSource < Buzzn::DataSource
 
+    NAME = :dummy
+
     def single_aggregated(resource, mode)
       [:single_aggregated, resource, mode] unless resource.is_a? Group
     end
@@ -12,6 +14,8 @@ describe Buzzn::CurrentPower do
   end
 
   class MockDataSource < Buzzn::DataSource
+
+    NAME = :mock
 
     attr_accessor :input, :output
 
@@ -26,7 +30,7 @@ describe Buzzn::CurrentPower do
 
   let(:mock) { MockDataSource.new }
   subject do
-    Buzzn::CurrentPower.new(Buzzn::DataSourceRegistry.new(Redis.current, dummy: DummyDataSource.new, mock: mock, check: Buzzn::CheckTypesDataSource.new))
+    Buzzn::CurrentPower.new(Buzzn::DataSourceRegistry.new(Redis.current, DummyDataSource.new, mock, Buzzn::CheckTypesDataSource.new))
   end
 
   let(:group) { Fabricate(:group) }

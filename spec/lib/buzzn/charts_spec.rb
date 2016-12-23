@@ -2,6 +2,8 @@ describe Buzzn::Charts do
 
   class DummyDataSource < Buzzn::DataSource
 
+    NAME = :dummy
+
     def method_missing(method, *args)
       [method] + args
     end
@@ -12,6 +14,8 @@ describe Buzzn::Charts do
   end
 
   class MockDataSource < Buzzn::DataSource
+
+    NAME = :mock
 
     attr_accessor :input, :output
 
@@ -26,7 +30,7 @@ describe Buzzn::Charts do
 
   let(:mock) { MockDataSource.new }
   subject do
-    Buzzn::Charts.new(Buzzn::DataSourceRegistry.new(Redis.current, dummy: DummyDataSource.new, mock: mock, check: Buzzn::CheckTypesDataSource.new))
+    Buzzn::Charts.new(Buzzn::DataSourceRegistry.new(Redis.current, DummyDataSource.new, mock, Buzzn::CheckTypesDataSource.new))
   end
 
   let(:group) { Fabricate(:group) }

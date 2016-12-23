@@ -2,6 +2,8 @@ module Buzzn
 
   class CheckTypesDataSource < DataSource
 
+    NAME = :check
+
     def collection(resource, mode)
       raise 'mode is nil' unless mode
       raise 'resource is nil' unless resource
