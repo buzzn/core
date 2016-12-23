@@ -52,14 +52,14 @@ describe Buzzn::Charts do
   end
 
   # this test is useless as the group has no registers - what should be returned as data objects?
-  xit 'delivers the right result for each register in a group' do
+  it 'delivers the right result for each register in a group' do
+    #setup the results for the MockDataSource which we use here
     mock.input = Buzzn::DataResultSet.milliwatt_hour(group.id, [Buzzn::DataPoint.new(Time.current, 123)], [])
     mock.output = Buzzn::DataResultSet.milliwatt_hour(group.id, [], [Buzzn::DataPoint.new(Time.current, 321)])
     interval = Buzzn::Interval.year
     result = subject.for_group(group, interval)
     expect(result.resource_id).to eq group.id
     expect(result.units).to eq :milliwatt_hour
-    binding.pry
     expect(result.in.first.value).to eq 123
     expect(result.out.first.value).to eq 321
 
