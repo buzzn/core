@@ -374,7 +374,7 @@ module Register
       #elsif self.mysmartgrid?
       #  :mysmartgrid
       else
-        #:standard_profile
+        #Buzzn::StandardProfile::NAME
         Buzzn::MissingDataSource::NAME
       end
     end
