@@ -24,6 +24,8 @@ module Buzzn::Discovergy
     # returns:
     #  Net::HTTPResponse with requested data
     def readings(broker, interval, mode, collection=false, retried=false)
+      return if collection && broker.mode.to_sym != mode
+      Rails.logger.debug("[datasource.discovergy.facade]#{Thread.current} #{broker.inspect}")
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
       energy_out = ""
