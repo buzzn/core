@@ -1,11 +1,8 @@
 # coding: utf-8
-class DiscovergyBroker < ActiveRecord::Base
+class DiscovergyBroker < Broker
 
-  attr_encrypted :provider_password, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
   attr_encrypted :provider_token_key, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
   attr_encrypted :provider_token_secret, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
-
-  belongs_to :resource, polymorphic: true
 
   def self.modes
     [:in, :out, :virtual]
@@ -14,8 +11,6 @@ class DiscovergyBroker < ActiveRecord::Base
   validates :mode, inclusion:{ in: self.modes.map{|m| m.to_s} }
 
   validates :external_id, presence: true
-  validates :provider_login, presence: true
-  validates :provider_password, presence: true
 
   validates :resource_type, inclusion:{ in: [Group.to_s, Meter.to_s] }
   validates :resource_id, presence: true
@@ -52,22 +47,9 @@ class DiscovergyBroker < ActiveRecord::Base
     do_get(:virtual, meter)
   end
 
-  def two_way_meter?
-    two_way_meter = self.resource.is_a?(Meter) && self.resource.registers.size > 1
-  end
-
   private
 
-  def self.do_get(mode, resource)
-    # we have unique index on these three attributes
-    result = where(mode: mode, resource_type: resource.class,
-                   resource_id: resource.id).first
-    if result.nil?
-      raise ActiveRecord::NotFound.new
-    end
-    result
-  end
-
+  # TODO: Move this into perent class
   def validates_credentials
     if self.resource.is_a?(Meter) && self.resource.registers.any?
       crawler = Crawler.new(self.resource.registers.first)
