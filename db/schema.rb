@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161205131404) do
+ActiveRecord::Schema.define(version: 20161223105036) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,6 +113,23 @@ ActiveRecord::Schema.define(version: 20161205131404) do
 
   add_index "banks", ["bic"], name: "index_banks_on_bic", using: :btree
   add_index "banks", ["blz"], name: "index_banks_on_blz", unique: true, using: :btree
+
+  create_table "brokers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.string   "mode",                            null: false
+    t.string   "external_id"
+    t.string   "provider_login",                  null: false
+    t.string   "encrypted_provider_password",     null: false
+    t.string   "encrypted_provider_token_key"
+    t.string   "encrypted_provider_token_secret"
+    t.uuid     "resource_id",                     null: false
+    t.string   "resource_type",                   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "type"
+  end
+
+  add_index "brokers", ["mode", "resource_id", "resource_type"], name: "index_brokers", unique: true, using: :btree
+  add_index "brokers", ["resource_type", "resource_id"], name: "index_brokers_resources", using: :btree
 
   create_table "comments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.uuid     "commentable_id"
@@ -255,22 +272,6 @@ ActiveRecord::Schema.define(version: 20161205131404) do
   add_index "devices", ["readable"], name: "index_devices_on_readable", using: :btree
   add_index "devices", ["register_id"], name: "index_devices_on_register_id", using: :btree
   add_index "devices", ["slug"], name: "index_devices_on_slug", unique: true, using: :btree
-
-  create_table "discovergy_brokers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "mode",                            null: false
-    t.string   "external_id",                     null: false
-    t.string   "provider_login",                  null: false
-    t.string   "encrypted_provider_password",     null: false
-    t.string   "encrypted_provider_token_key"
-    t.string   "encrypted_provider_token_secret"
-    t.uuid     "resource_id",                     null: false
-    t.string   "resource_type",                   null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "discovergy_brokers", ["mode", "resource_id", "resource_type"], name: "index_discovergy_brokers", unique: true, using: :btree
-  add_index "discovergy_brokers", ["resource_type", "resource_id"], name: "index_discovergy_brokers_resources", using: :btree
 
   create_table "equipment", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"

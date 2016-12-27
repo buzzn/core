@@ -11,8 +11,8 @@ class Meter < ActiveRecord::Base
   has_many :equipments
 
   has_many :registers, class_name: 'Register::Base', dependent: :destroy
-  has_one :discovergy_broker, as: :resource
-  validates_associated :discovergy_broker
+  has_one :broker, as: :resource
+  validates_associated :broker
 
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)

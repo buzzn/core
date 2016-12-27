@@ -6,7 +6,7 @@ class WizardMetersController  < ApplicationController
   def wizard
     @register = Register::Base.find(params[:register_id])
     @meter = Meter.new
-    @discovergy_broker = DiscovergyBroker.new
+    @broker = Broker.new
   end
 
   def wizard_update
@@ -78,7 +78,7 @@ class WizardMetersController  < ApplicationController
   def edit_wizard
     @meter = Meter.find(params[:meter_id])
     @register = Register::Base.find(params[:register_id])
-    @discovergy_broker = @meter.discovergy_broker || DiscovergyBroker.new
+    @broker = @meter.broker || Broker.new
   end
 
   def edit_wizard_update
@@ -91,30 +91,44 @@ class WizardMetersController  < ApplicationController
       if @meter.save
         if params[:meter][:smartmeter] == "1"
           #meter valid, now check contract
-          if !@meter.discovergy_broker
-            organization = Organization.find(credential_params[:organization])
-            @discovergy_broker = DiscovergyBroker.new(
-              mode: @register.input? ? 'in' : 'out',
-              external_id: "EASYMETER_#{meter_params[:manufacturer_product_serialnumber]}",
-              provider_login: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'team@localpool.de' : credential_params[:provider_login],
-              provider_password: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'Zebulon_4711' : credential_params[:provider_password],
-              resource: @meter
-            )
+          organization = Organization.find(credential_params[:organization])
+          if !@meter.broker
+
+            if organization.slug == 'buzzn-metering' || organization.buzzn_systems? || organization.slug == 'discovergy'
+              @broker = DiscovergyBroker.new(
+               mode: @register.input? ? 'in' : 'out',
+                external_id: "EASYMETER_#{meter_params[:manufacturer_product_serialnumber]}",
+                provider_login: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'team@localpool.de' : credential_params[:provider_login],
+                provider_password: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'Zebulon_4711' : credential_params[:provider_password],
+                resource: @meter
+              )
+            else
+              @broker = MySmartGridBroker.new(
+                mode: @register.input? ? 'in' : 'out',
+                provider_login: credential_params[:sensor_id],
+                provider_password: credential_params[:x_token],
+                resource: @meter
+              )
+            end
           else
-            @discovergy_broker = @meter.discovergy_broker
+            @broker = @meter.broker
+            if organization.slug == 'buzzn-metering' || organization.buzzn_systems? || organization.slug == 'discovergy'
+              @broker.provider_login = credential_params[:provider_login]
+              @broker.provider_password = credential_params[:provider_password]
+            else
+              @broker.provider_login = credential_params[:sensor_id]
+              @broker.provider_password = credential_params[:x_token]
+            end
           end
 
-          if !@discovergy_broker.new_record?
-            @discovergy_broker.provider_login = params[:meter][:discovergy_broker][:provider_login]
-            @discovergy_broker.password = params[:meter][:discovergy_broker][:provider_password]
-          end
 
-          if @discovergy_broker.save && @meter.save
+
+          if @broker.save && @meter.save
             if @register.smart?
               flash[:notice] = t("your_credentials_have_been_checked_and_are_valid", register: @register.name)
             else
-              @discovergy_broker.errors.add(:provider_password, I18n.t("wrong_username_and_or_password"))
-              @discovergy_broker.errors.add(:provider_login, I18n.t("wrong_username_and_or_password")) #TODO: check via ajax
+              @broker.errors.add(:provider_password, I18n.t("wrong_username_and_or_password"))
+              @broker.errors.add(:provider_login, I18n.t("wrong_username_and_or_password")) #TODO: check via ajax
               flash[:error] = t('your_credentials_have_been_checked_and_are_invalid', register: @register.name)
             end
           else
@@ -135,12 +149,22 @@ class WizardMetersController  < ApplicationController
 
   private
 
+  def broker_class
+    if !params[:meter][:broker].nil?
+      :broker
+    elsif !params[:meter][:discovergy_broker].nil?
+      :discovergy_broker
+    elsif !params[:meter][:my_smart_grid_broker].nil?
+      :my_smart_grid_broker
+    end
+  end
+
   def meter_params
     params.require(:meter).permit(:id, :register_id, :manufacturer_product_serialnumber, :manufacturer_name, :registers)
   end
 
   def credential_params
-    params.require(:meter).require(:discovergy_broker).permit( :id, :organization, :provider_login, :provider_password)
+    params.require(:meter).require(broker_class).permit( :id, :organization, :provider_login, :provider_password, :sensor_id, :x_token)
   end
 
 end

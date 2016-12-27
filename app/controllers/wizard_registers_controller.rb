@@ -5,7 +5,7 @@ class WizardRegistersController  < ApplicationController
   def wizard
     @register = Register::Base.new
     @meter = Meter.new
-    @discovergy_broker = DiscovergyBroker.new
+    @broker = Broker.new
   end
 
   def wizard_update
@@ -32,31 +32,30 @@ class WizardRegistersController  < ApplicationController
             @meter = Meter.new(meter_params)
           end
           @meter.registers << @register
-          if @meter.discovergy_broker && params[:register_base][:meter][:existing_meter] == t('add_existing_meter')
-            broker = @meter.discovergy_broker
-            @discovergy_broker = DiscovergyBroker.new(
-              mode: register_params[:mode],
-              external_id: "EASYMETER_#{meter_params[:manufacturer_product_serialnumber]}",
-              provider_login: broker.provider_login,
-              provider_password: broker.provider_password,
-              resource: @meter
-            )
-            @discovergy_broker.save!
-          end
+
           if @meter.save!
             if params[:register_base][:meter][:smartmeter] == "1" && params[:register_base][:meter][:existing_meter] != t('add_existing_meter')
 
               #meter is valid an now check contract
 
               organization = Organization.find(credential_params[:organization])
-              @discovergy_broker = DiscovergyBroker.new(
-                mode: register_params[:mode],
-                external_id: "EASYMETER_#{meter_params[:manufacturer_product_serialnumber]}",
-                provider_login: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'team@localpool.de' : credential_params[:provider_login],
-                provider_password: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'Zebulon_4711' : credential_params[:provider_password],
-                resource: @meter
-              )
-              if @discovergy_broker.save! && @meter.save!
+              if organization.slug == 'buzzn-metering' || organization.buzzn_systems? || organization.slug == 'discovergy'
+                @broker = DiscovergyBroker.new(
+                  mode: register_params[:mode],
+                  external_id: "EASYMETER_#{meter_params[:manufacturer_product_serialnumber]}",
+                  provider_login: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'team@localpool.de' : credential_params[:provider_login],
+                  provider_password: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'Zebulon_4711' : credential_params[:provider_password],
+                  resource: @meter
+                )
+              else
+                @broker = MySmartGridBroker.new(
+                  mode: register_params[:mode],
+                  provider_login: credential_params[:sensor_id],
+                  provider_password: credential_params[:x_token],
+                  resource: @meter
+                )
+              end
+              if @broker.save! && @meter.save!
                 if @register.smart?
                   flash[:notice] = t("your_credentials_have_been_checked_and_are_valid", register: @register.name)
                   respond_with @register
@@ -115,10 +114,12 @@ class WizardRegistersController  < ApplicationController
   end
 
   def credential_params
-    params.require(:register_base).require(:discovergy_broker).permit(
+    params.require(:register_base).require(:broker).permit(
       :organization,
       :provider_login,
-      :provider_password)
+      :provider_password,
+      :sensor_id,
+      :x_token)
   end
 
 
