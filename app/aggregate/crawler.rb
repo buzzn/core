@@ -39,7 +39,7 @@ class Crawler
     @register_output            = @register.output?
     raise ArgumentError.new("no meter on register") unless @register.meter
     @meter                      = @register.meter
-    @metering_point_operator    = @meter.discovergy_broker.nil? ? 'nothing' : 'discovergy'
+    @metering_point_operator    = @meter.broker.nil? ? 'nothing' : 'discovergy'
     @registers_size             = @meter.registers.size
   end
 
@@ -47,7 +47,7 @@ class Crawler
     case @metering_point_operator
 
     when 'discovergy'
-      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
+      discovergy  = Discovergyy.new(@meter.broker.provider_login, @meter.broker.provider_password)
       request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
       return request['status'] == 'ok'
 
@@ -79,7 +79,7 @@ class Crawler
         raise CrawlerError.new("empty array from my-smart-grid")
       end
     elsif @metering_point_operator == 'discovergy'
-      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
+      discovergy  = Discovergyy.new(@meter.broker.provider_login, @meter.broker.provider_password)
       request     = discovergy.get_live(@meter.manufacturer_product_serialnumber)
       if request['status'] == "ok"
         if request['result'].any?
@@ -113,7 +113,7 @@ class Crawler
     if @metering_point_operator == "mysmartgrid"
       #do something?
     elsif @metering_point_operator == 'discovergy'
-      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
+      discovergy  = Discovergyy.new(@meter.broker.provider_login, @meter.broker.provider_password)
       request     = discovergy.get_live_each(@meter.manufacturer_product_serialnumber)
       if request['status'] == "ok"
         if request['result'].any?
@@ -160,7 +160,7 @@ class Crawler
         raise CrawlerError.new("empty array from my-smart-grid")
       end
     elsif @metering_point_operator == 'discovergy'
-      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
+      discovergy  = Discovergyy.new(@meter.broker.provider_login, @meter.broker.provider_password)
       request     = discovergy.get_hour(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
@@ -213,7 +213,7 @@ class Crawler
         raise CrawlerError.new("empty array from my-smart-grid")
       end
     elsif @metering_point_operator == 'discovergy'
-      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
+      discovergy  = Discovergyy.new(@meter.broker.provider_login, @meter.broker.provider_password)
       request     = discovergy.get_day(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
@@ -274,7 +274,7 @@ class Crawler
         raise CrawlerError.new("empty array from my-smart-grid")
       end
     elsif @metering_point_operator == 'discovergy'
-      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
+      discovergy  = Discovergyy.new(@meter.broker.provider_login, @meter.broker.provider_password)
       request     = discovergy.get_month(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?
@@ -336,7 +336,7 @@ class Crawler
         raise CrawlerError.new("empty array from my-smart-grid")
       end
     elsif @metering_point_operator == 'discovergy'
-      discovergy  = Discovergyy.new(@meter.discovergy_broker.provider_login, @meter.discovergy_broker.provider_password)
+      discovergy  = Discovergyy.new(@meter.broker.provider_login, @meter.broker.provider_password)
       request     = discovergy.get_year(@meter.manufacturer_product_serialnumber, containing_timestamp)
       if request['status'] == "ok"
         if request['result'].any?

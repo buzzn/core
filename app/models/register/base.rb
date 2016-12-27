@@ -34,7 +34,7 @@ module Register
     def discovergy_brokers
       [meter.discovergy_broker].compact
     end
-    
+
     def self.readables
       %w{
       world
@@ -358,7 +358,7 @@ module Register
 
     def discovergy?
       self.smart? &&
-      self.meter && self.meter.discovergy_broker
+      self.meter && self.meter.broker && self.meter.broker.is_a?(DiscovergyBroker)
     end
 
     def buzzn_api?

@@ -1,5 +1,7 @@
 namespace :migrationscripts do
   desc "Move all discovergy Contract credentials to DiscovergyBroker"
+  # since we don't have any mysmartgrid user in our production environment except thomas
+  # we only need to migrate discovergy data.
   task :move_discovergy_credentials => :environment do
     contracts = Contract.all.where("username IS NOT NULL").where('encrypted_password IS NOT NULL')
     puts 'Going to update ' + contracts.count.to_s + 'Contracts'
