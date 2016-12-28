@@ -1,15 +1,12 @@
 module Register
   class BaseResource < ApplicationResource
     abstract
-    attributes  :uid,
-                :direction,
+    attributes  :direction,
                 :name,
-                :meter_id,
                 :readable
 
-    has_many :devices
-    has_many :users
     has_one  :address
+    has_one  :meter
 
   end
 end

@@ -1,7 +1,4 @@
 module Register
-  class OutputResource < Register::BaseResource
-
-    attributes :obis
-
+  class OutputResource < RealRegister
   end
 end

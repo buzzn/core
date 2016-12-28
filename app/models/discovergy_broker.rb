@@ -12,7 +12,7 @@ class DiscovergyBroker < Broker
 
   validates :external_id, presence: true
 
-  validates :resource_type, inclusion:{ in: [Group.to_s, Meter.to_s] }
+  validates :resource_type, inclusion:{ in: [Group.to_s, Meter::Base.to_s] }
   validates :resource_id, presence: true
 
   validate :validates_invariants
@@ -47,6 +47,10 @@ class DiscovergyBroker < Broker
     do_get(:virtual, meter)
   end
 
+  def two_way_meter?
+    two_way_meter = self.resource.is_a?(Meter::Real) && self.resource.input_register && self.resource.output_register
+  end
+
   private
 
   # TODO: Move this into perent class
@@ -57,7 +61,7 @@ class DiscovergyBroker < Broker
         self.resource.update_columns(smart: true)
         self.resource.save
       else
-        # ?
+        # TODO ?
       end
     end
   end

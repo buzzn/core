@@ -100,7 +100,7 @@ module API
           def add(name, *messages)
             name = name.to_s
             if name.include? '.'
-              name = name.sub(/\./, '[') + ']'
+              name = name.sub(/\./, '[').sub(/\./, '][') + ']'
             end
             messages.each do |msg|
               @errors << { "source":

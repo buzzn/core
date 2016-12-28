@@ -9,13 +9,13 @@ end
 
   Fabricator "reading_with_easy_meter_q3d_and_#{mode}_register", from: :reading do
     register_id {
-      Fabricate("easy_meter_q3d_with_#{mode}_register").registers.send("#{mode}s").first.id
+      Fabricate("easy_meter_q3d_with_#{mode}_register").registers.first.id
     }
   end
 
   Fabricator "reading_with_easy_meter_q3d_with_#{mode}_register_and_manager", from: :reading do
     register_id {
-      Fabricate("easy_meter_q3d_with_#{mode}_register_and_manager").registers.send("#{mode}s").first.id
+      Fabricate("easy_meter_q3d_with_#{mode}_register_and_manager").registers.first.id
     }
   end
 

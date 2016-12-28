@@ -45,13 +45,13 @@ describe "Register Model" do
   end
 
 
-  it 'can not find anything', :retry => 3 do
+  it 'can not find anything' do
     registers = Register::Base.filter('Der Clown ist müde und geht nach Hause.')
     expect(registers.size).to eq 0
   end
 
 
-  it 'filters register with no params', :retry => 3 do
+  it 'filters register with no params' do
     registers = Register::Base.filter(nil)
     expect(registers).to match_array Register::Base.all
   end
@@ -86,7 +86,7 @@ describe "Register Model" do
     let :subject do
       easymeter_60051560 = Fabricate(:easymeter_60051560)
       easymeter_60051560.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051560", resource: easymeter_60051560)
-      easymeter_60051560.registers.first
+      easymeter_60051560.output_register
     end
 
     before do
@@ -100,7 +100,8 @@ describe "Register Model" do
 
     it 'creates all observer activities' do |spec|
       VCR.use_cassette("models/#{spec.metadata[:description].downcase}") do
-        subject.update observe: true, max_watt: 200
+        subject.update! observe: true, max_watt: 200, min_watt: 0
+        expect(PublicActivity::Activity.count).to eq 1
         Register::Base.create_all_observer_activities
         expect(PublicActivity::Activity.count).to eq 2
       end
@@ -122,7 +123,7 @@ describe "Register Model" do
 
     it 'observe exceeds' do |spec|
       VCR.use_cassette("models/#{spec.metadata[:description].downcase}") do
-        subject.update observe: true, max_watt: 200
+        subject.update observe: true, max_watt: 200, min_watt: 0
         result = subject.create_observer_activities
         expect(result.key).to eq 'register.exceeds'
       end
@@ -130,7 +131,7 @@ describe "Register Model" do
 
     it 'observe undershoots' do |spec|
       VCR.use_cassette("models/#{spec.metadata[:description].downcase}") do
-        subject.update observe: true, min_watt: 1000
+        subject.update observe: true, min_watt: 1000, max_watt: 2000
         result = subject.create_observer_activities
         expect(result.key).to eq 'register.undershoots'
       end

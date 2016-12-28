@@ -1,9 +1,31 @@
 # coding: utf-8
-Fabricator :meter do
+Fabricator :meter, class_name: Meter::Real do
+  registers                   { [Fabricate.build([:input_register, :output_register].sample)] }
   manufacturer_name           'ferraris'
   manufacturer_product_name    'AS 1440'
   manufacturer_product_serialnumber  { Random.new_seed.to_s.slice(0, 7) }
   metering_type { Buzzn::Zip2Price.types.first }
+end
+
+Fabricator :real_meter, from: :meter do
+  manufacturer_name           { Meter::Real.manufacturer_names.sample }
+  manufacturer_product_name    { FFaker::Name.name }
+end
+
+Fabricator :virtual_meter, class_name: Meter::Virtual do
+  register                    { Fabricate.build(:virtual_register, direction: [:in, :out].sample).attributes }
+  manufacturer_product_name   { FFaker::Name.name }
+  manufacturer_product_serialnumber  { Random.new_seed.to_s.slice(0, 7) }
+end
+
+[:input, :output].each do |mode|
+  Fabricator "#{mode}_meter", class_name: Meter::Real do
+    registers                   { [Fabricate.build("#{mode}_register")] }
+    manufacturer_name           { Meter::Real.manufacturer_names.sample }
+    manufacturer_product_name    { FFaker::Name.name }
+    manufacturer_product_serialnumber  { Random.new_seed.to_s.slice(0, 7) }
+    metering_type { Buzzn::Zip2Price.types.first }
+  end
 end
 
 Fabricator :easy_meter_q3d, from: :meter  do
@@ -22,55 +44,49 @@ Fabricator :easy_meter_q3d_with_output_register, from: :easy_meter_q3d  do
 end
 
 
-Fabricator :easy_meter_q3d_with_output_register_and_manager, from: :easy_meter_q3d  do
-  output_register {[Fabricate(:output_register_with_manager)]}
-end
+# Fabricator :easy_meter_q3d_with_output_register_and_manager, from: :easy_meter_q3d  do
+#   output_register {[Fabricate(:output_register_with_manager)]}
+# end
 
 Fabricator :easy_meter_q3d_with_in_output_register, from: :easy_meter_q3d  do
-  after_create { |meter|
-    Fabricate(:input_register, meter: meter)
-    Fabricate(:output_register_with_manager, meter: meter)
-  }
+  registers { [Fabricate.build(:raw_input_register), Fabricate(:output_register_with_manager)] }
 end
 
-Fabricator :easy_meter_q3d_with_input_register_and_manager, from: :easy_meter_q3d do
-  after_create { |meter|
-    register = Fabricate(:input_register, meter: meter)
-    user = Fabricate(:user)
-    user.add_role(:manager, register)
-  }
-end
+# Fabricator :easy_meter_q3d_with_input_register_and_manager, from: :easy_meter_q3d do
+#   after_create { |meter|
+#     user = Fabricate(:user)
+#     user.add_role(:manager, meter.registers.first)
+#   }
+# end
 
 Fabricator :easymeter_fixed_serial, from: :easy_meter_q3d do
   manufacturer_product_serialnumber '1234567890'
-  after_create { |meter|
-    Fabricate(:input_register, meter: meter)
-    Fabricate(:output_register_readable_by_world, meter: meter)
-  }
+  registers { [Fabricate.build(:raw_input_register), Fabricate.build(:raw_output_register_readable_by_world)]}
 end
 
 # Justus Übergabe
 Fabricator :easymeter_60139082, from: :easy_meter_q3d do
   manufacturer_product_serialnumber '60139082'
+  registers { [Fabricate.build(:register_z1a), Fabricate.build(:register_z1b)] }
   after_create { |meter|
-    Fabricate(:register_z1a, meter: meter)
-    Fabricate(:register_z1b, meter: meter)
+    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
   }
 end
 
 # Justus PV
 Fabricator :easymeter_60051599, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051599'
+  registers { [Fabricate.build(:register_z2)] }
   after_create { |meter|
-    Fabricate(:register_z2, meter: meter)
+    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
   }
 end
 
 # Justus Ladestation
 Fabricator :easymeter_60051559, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051559'
+  registers { [Fabricate.build(:register_z3)] }
   after_create { |meter|
-    Fabricate(:register_z3, meter: meter)
     Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", mode: :out)
   }
 end
@@ -78,8 +94,9 @@ end
 # Justus BHKW
 Fabricator :easymeter_60051560, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051560'
+  registers { [Fabricate.build(:register_z4)] }
   after_create { |meter|
-    Fabricate(:register_z4, meter: meter)
+    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
   }
 end
 
@@ -87,8 +104,9 @@ end
 # Justus Abgrenzung
 Fabricator :easymeter_60051600, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051600'
+  registers { [Fabricate.build(:register_z5)] }
   after_create { |meter|
-    Fabricate(:register_z5, meter: meter)
+    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
   }
 end
 
@@ -106,6 +124,7 @@ end
 # Stefan easymeter fur verbrauch
 Fabricator :easymeter_1024000034, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '1024000034'
+  registers { [Fabricate.build(:register_stefans_bhkw)] }
 end
 
 

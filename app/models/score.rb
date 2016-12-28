@@ -2,6 +2,8 @@ class Score < ActiveRecord::Base
   include Authority::Abilities
   belongs_to :scoreable, polymorphic: true
 
+  # TODO default scope is always an extra constraint on every query, i.e.
+  #      get rid of it
   default_scope { order('interval_beginning ASC') }
 
   scope :sufficiencies,  -> { where(mode: 'sufficiency') }
@@ -27,9 +29,15 @@ class Score < ActiveRecord::Base
     # with Group.readable_by_query(user)
     # i.e. with Register
     sqls = [
-      Group.readable_by(user).where("groups.id=scores.scoreable_id AND scores.scoreable_type='Group'").project(1).exists.to_sql.sub('"groups".*,', ''),
-      Register::Base.readable_by(user).where("registers.id=scores.scoreable_id AND scores.scoreable_type='Register'").project(1).exists.to_sql.sub('"registers".*,', '')
+      Group.readable_by(user).where("groups.id=scores.scoreable_id").project(1).exists.to_sql.sub('"groups".*,', ''),
+      Register::Base.readable_by(user).where("registers.id=scores.scoreable_id").project(1).exists.to_sql.sub('"registers".*,', '')
     ]
     where(sqls.join(' OR '))
+  end
+
+  validate :validate_invariants
+
+  def validate_invariants
+    errors.add(:scoreable, "must have superclass ActiveRecord::Base: #{self.scoreable_type}") unless self.scoreable_type.constantize.superclass == ActiveRecord::Base
   end
 end

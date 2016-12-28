@@ -2,49 +2,68 @@ module API
   module V1
     class Registers < Grape::API
       include API::V1::Defaults
-      resource "registers" do
+      resource :registers do
 
+        namespace :real do
 
-        ["input", "output"].each do |mode|
-          klass = "Register::#{mode.camelize}".constantize
-          namespace "#{mode}s" do
+          ["input", "output"].each do |mode|
+            klass = "Register::#{mode.camelize}".constantize
+            namespace "#{mode}s" do
 
-            desc "Create a #{mode} Register."
-            params do
-              requires :name, type: String, desc: "name"
-              requires :readable, type: String, desc: "readable by?", values: klass.readables
-              requires :meter_id, type: String, desc: "Meter ID"
-              optional :uid, type: String, desc: "UID(DE00...)"
-            end
-            oauth2 :simple, :full, :smartmeter
-            post do
-              meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
-              attributes = permitted_params.reject { |k,v| k == :meter_id }
-              attributes[:meter] = meter
-              register = klass.guarded_create(current_user, attributes)
-              created_response(register)
-            end
-
-
-            desc "Update a #{mode} Register."
-            params do
-              requires :id, type: String, desc: "#{mode} Register ID."
-              optional :name, type: String, desc: "name"
-              optional :readable, type: String, desc: "readable by?", values: klass.readables
-              optional :meter_id, type: String, desc: "Meter ID"
-              optional :uid,  type: String, desc: "UID(DE00...)"
-            end
-            oauth2 :simple, :full
-            patch ":id" do
-              register = klass.guarded_retrieve(current_user, permitted_params)
-              attributes = permitted_params.reject { |k,v| k == :meter_id }
-              if permitted_params[:meter_id]
-                meter = Meter.unguarded_retrieve(permitted_params[:meter_id])
-                attributes[:meter] = meter
+              desc "Create a #{mode} Register."
+              params do
+                requires :name, type: String, desc: "name"
+                requires :readable, type: String, desc: "readable by?", values: klass.readables
+                requires :meter_id, type: String, desc: "Meter ID"
+                optional :uid, type: String, desc: "UID(DE00...)"
               end
-              register.guarded_update(current_user, attributes)
+              oauth2 :simple, :full, :smartmeter
+              post do
+                meter = Meter::Base.unguarded_retrieve(permitted_params[:meter_id])
+                attributes = permitted_params.reject { |k,v| k == :meter_id }
+                attributes[:meter] = meter
+                register = klass.guarded_create(current_user, attributes)
+                created_response(register)
+              end
             end
+          end
 
+          desc "Update a Real-Register."
+          params do
+            requires :id, type: String, desc: "Register ID."
+            optional :name, type: String, desc: "name"
+            optional :readable, type: String, desc: "readable by?", values: Register::Base.readables
+            optional :uid,  type: String, desc: "UID(DE00...)"
+          end
+          oauth2 :simple, :full
+          patch ":id" do
+            register = Register::Real.guarded_retrieve(current_user, permitted_params)
+            register.guarded_update(current_user, permitted_params)
+          end
+
+          desc "Delete a Register."
+          params do
+            requires :id, type: String, desc: "ID of the register"
+          end
+          oauth2 :full
+          delete ":id" do
+            register = Register::Real.guarded_retrieve(current_user, permitted_params)
+            deleted_response(register.guarded_delete(current_user))
+          end
+        end
+
+
+        namespace :virtual do
+          desc "Update a Virtual-Register."
+          params do
+            requires :id, type: String, desc: "Register ID."
+            optional :name, type: String, desc: "name"
+            optional :readable, type: String, desc: "readable by?", values: Register::Base.readables
+          end
+          oauth2 :simple, :full
+          patch ":id" do
+            register = Register::Virtual.guarded_retrieve(current_user, permitted_params)
+            register.guarded_update(current_user, permitted_params)
           end
         end
 
@@ -59,16 +78,6 @@ module API
         end
 
 
-
-        desc "Delete a Register."
-        params do
-          requires :id, type: String, desc: "ID of the register"
-        end
-        oauth2 :full
-        delete ":id" do
-          register = Register::Base.guarded_retrieve(current_user, permitted_params)
-          deleted_response(register.guarded_delete(current_user))
-        end
 
 
 

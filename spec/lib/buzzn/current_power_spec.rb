@@ -34,9 +34,9 @@ describe Buzzn::CurrentPower do
   end
 
   let(:group) { Fabricate(:group) }
-  let(:register) { Fabricate(:output_register) }
+  let(:register) { Fabricate(:output_meter).output_register }
   let(:dummy_register) do
-    register = Fabricate(:input_register)
+    register = Fabricate(:input_meter).input_register
     def register.data_source; 'dummy';end
     def register.to_s; self.id; end
     register

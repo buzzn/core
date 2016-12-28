@@ -1,6 +1,4 @@
 # coding: utf-8
-require 'buzzn/discovergy/facade'
-
 describe Buzzn::Discovergy::Facade do
 
   before :each do
@@ -12,11 +10,11 @@ describe Buzzn::Discovergy::Facade do
     Timecop.return
   end
 
-  let(:meter) { Meter.where(manufacturer_product_serialnumber: 60009485).first || Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
-  let(:meter_2) { Meter.where(manufacturer_product_serialnumber: 60009272).first || Fabricate(:meter, manufacturer_product_serialnumber: 60009272) }
-  let(:broker) { meter.broker || Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
+  let(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
+  let(:meter_2) { Fabricate(:meter, manufacturer_product_serialnumber: 60009272) }
+  let(:broker) { Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
   let(:broker_with_wrong_token) { Fabricate(:discovergy_broker_with_wrong_token, resource: meter_2, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
-  let(:broker_virtual) { meter.broker || Fabricate(:discovergy_broker, resource: meter, external_id: "VIRTUAL_00000065") }
+  let(:broker_virtual) { Fabricate(:discovergy_broker, resource: meter, external_id: "VIRTUAL_00000065") }
   let(:group) do
     Fabricate(:group, registers: [
       Fabricate(:register_60118460),

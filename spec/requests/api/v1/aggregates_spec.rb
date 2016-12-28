@@ -35,8 +35,8 @@ describe 'Discovergy' do
 
         access_token = Fabricate(:full_access_token_as_admin)
 
-        input_register  = discovergy_meter.registers.inputs.first
-        output_register = discovergy_meter.registers.outputs.first
+        input_register  = discovergy_meter.input_register
+        output_register = discovergy_meter.output_register
 
         request_params = {
           register_ids: input_register.id

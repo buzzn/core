@@ -1,9 +1,9 @@
 module Register
-  class Output < Register::Base
+  class Output < Real
 
-    def initialize(*args)
-      super
-    end
+    acts_as_commentable
+
+    has_many :scores, as: :scoreable
 
     def obis
       '1-0:2.8.0'

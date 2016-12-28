@@ -2,6 +2,11 @@ describe "Groups API" do
 
   let(:page_overload) { 11 }
 
+  let(:output_register_with_manager) do
+    register = Fabricate(:output_meter).output_register
+    Fabricate(:user).add_role(:manager, register)
+    register
+  end
 
   it 'search groups without token' do
     group = Fabricate(:group)
@@ -190,7 +195,7 @@ describe "Groups API" do
   end
 
   it 'does not create a group with invalid parameter' do
-    register = Fabricate(:output_register_with_manager)
+    register      = output_register_with_manager
     manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
@@ -218,7 +223,7 @@ describe "Groups API" do
 
 
   it 'creates a group' do
-    register = Fabricate(:output_register_with_manager)
+    register      = output_register_with_manager
     manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
@@ -255,7 +260,7 @@ describe "Groups API" do
   end
 
   it 'updates a group' do
-    register = Fabricate(:output_register_with_manager)
+    register      = output_register_with_manager
     manager       = register.managers.first
     access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
     group = Fabricate(:group)
@@ -272,7 +277,7 @@ describe "Groups API" do
 
 
   it 'does delete a group' do
-    register = Fabricate(:output_register_with_manager)
+    register      = output_register_with_manager
     manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
@@ -305,7 +310,7 @@ describe "Groups API" do
     token_user        = User.find(access_token.resource_owner_id)
     member            = Fabricate(:user)
     group             = Fabricate(:group_readable_by_friends)
-    register    = Fabricate(:output_register)
+    register    = Fabricate(:output_meter).output_register
     member.add_role(:member, register)
     token_user.add_role(:member, register)
     group.registers << register
@@ -317,7 +322,7 @@ describe "Groups API" do
     access_token      = Fabricate(:simple_access_token)
     token_user        = User.find(access_token.resource_owner_id)
     group             = Fabricate(:group_readable_by_members)
-    register    = Fabricate(:input_register)
+    register    = Fabricate(:input_meter).input_register
     token_user.add_role(:member, register)
     group.registers << register
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
@@ -337,13 +342,21 @@ describe "Groups API" do
 
   it 'gets the related registers for Group' do
     group                 = Fabricate(:group)
-    group.registers = [
-      Fabricate(:input_register_readable_by_world),
-      Fabricate(:output_register_readable_by_community),
-      Fabricate(:input_register_readable_by_friends),
-      Fabricate(:input_register_readable_by_members),
-      Fabricate(:output_register_readable_by_world),
-    ]
+    r = Fabricate(:input_meter).input_register
+    r.update(readable: :world)
+    group.registers << r
+    r = Fabricate(:output_meter).output_register
+    r.update(readable: :community)
+    group.registers << r
+    r = Fabricate(:input_meter).input_register
+    r.update(readable: :friends)
+    group.registers << r
+    r = Fabricate(:input_meter).input_register
+    r.update(readable: :members)
+    group.registers << r
+    r = Fabricate(:output_meter).output_register
+    r.update(readable: :world)
+    group.registers << r
 
     get_without_token "/api/v1/groups/#{group.id}/registers"
     expect(response).to have_http_status(200)
@@ -354,8 +367,9 @@ describe "Groups API" do
   it 'paginates registers' do
     group = Fabricate(:group)
     page_overload.times do
-      group.registers << Fabricate([:input_register_readable_by_world,
-                                    :output_register_readable_by_world].sample)
+      register = Fabricate([:input_meter, :output_meter].sample).registers.first
+      register.update(readable: :world)
+      group.registers << register
     end
     get_without_token "/api/v1/groups/#{group.id}/registers"
     expect(response).to have_http_status(200)
@@ -429,7 +443,7 @@ describe "Groups API" do
   it 'gets the related managers for group only with token' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:group)
-    group.registers << Fabricate(:input_register)
+    group.registers << Fabricate(:input_meter).input_register
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
     get_with_token "/api/v1/groups/#{group.id}/relationships/managers", access_token.token
@@ -445,7 +459,7 @@ describe "Groups API" do
     group         = Fabricate(:group)
     page_overload.times do
       user = Fabricate(:user)
-      user.profile.update!(readable: 'world')
+      user.profile.update(readable: 'world')
       user.add_role(:manager, group)
     end
     page_overload.times do
@@ -470,7 +484,7 @@ describe "Groups API" do
     group         = Fabricate(:group_with_members_readable_by_world, members: page_overload * 2)
 
     group.members[0..page_overload].each do |u|
-      u.profile.update! readable: 'world'
+      u.profile.update(readable: 'world')
     end
 
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
@@ -512,7 +526,8 @@ describe "Groups API" do
   end
 
   it 'adds manager only with manager token or admin token' do
-    register  = Fabricate(:output_register_readable_by_world)
+    register  = Fabricate(:output_meter).output_register
+    register.update(readable: :world)
     group           = Fabricate(:group)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
@@ -577,7 +592,8 @@ describe "Groups API" do
   end
 
   it 'removes group manager only for current user or with manager token' do
-    register  = Fabricate(:input_register_readable_by_world)
+    register  = Fabricate(:input_meter).input_register
+    register.update(readable: :world)
     group           = Fabricate(:group)
     user            = Fabricate(:user)
     user.add_role(:manager, group)
@@ -622,8 +638,8 @@ describe "Groups API" do
     user          = Fabricate(:user)
     consumer      = Fabricate(:user)
     producer      = Fabricate(:user)
-    register_in         = Fabricate(:input_register)
-    register_out        = Fabricate(:output_register)
+    register_in         = Fabricate(:input_meter).input_register
+    register_out        = Fabricate(:output_meter).output_register
     user.add_role(:member, register_in)
     user.add_role(:manager, register_in)
     user.add_role(:member, register_out)

@@ -395,6 +395,7 @@ ActiveRecord::Schema.define(version: 20161223105036) do
     t.string   "ancestry"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "type",                                              null: false
   end
 
   add_index "meters", ["ancestry"], name: "index_meters_on_ancestry", using: :btree
@@ -576,7 +577,7 @@ ActiveRecord::Schema.define(version: 20161223105036) do
     t.datetime "last_observed_timestamp"
     t.boolean  "observe_offline",         default: false
     t.boolean  "external",                default: false
-    t.string   "type"
+    t.string   "type",                                    null: false
   end
 
   add_index "registers", ["contract_id"], name: "index_registers_on_contract_id", using: :btree
