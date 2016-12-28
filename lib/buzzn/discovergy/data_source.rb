@@ -16,7 +16,7 @@ module Buzzn::Discovergy
     ##########################
 
     def collection(group_or_virtual_register, mode)
-      if group_or_virtual_register.discovergy_brokers.empty?
+      if group_or_virtual_register.brokers.by_provider("Discovergy").empty?
         result = Buzzn::DataResultArray.new(expires_at)
         group_or_virtual_register.registers.each do |register|
           result << single_aggregated(register, mode)
@@ -27,7 +27,7 @@ module Buzzn::Discovergy
 
       map = to_map(group_or_virtual_register)
       result = Buzzn::DataResultArray.new(expires_at)
-      group_or_virtual_register.discovergy_brokers.each do |broker|
+      group_or_virtual_register.brokers.by_provider("Discovergy").each do |broker|
         response = @facade.readings(broker, nil, mode, true)
 
         result += parse_collected_data(response, mode, map)
@@ -38,11 +38,11 @@ module Buzzn::Discovergy
 
     def single_aggregated(register_or_group, mode)
       result = nil
-      register_or_group.discovergy_brokers.each do |broker|
+      register_or_group.brokers.by_provider("Discovergy").each do |broker|
         two_way_meter = broker.two_way_meter?
 
         response = @facade.readings(broker, nil, mode, false)
-        
+
         result = add(result, parse_aggregated_live(response, mode, two_way_meter, register_or_group.id))
       end
       result.freeze if result
@@ -51,7 +51,7 @@ module Buzzn::Discovergy
 
     def aggregated(register_or_group, mode, interval)
       result = nil
-      register_or_group.discovergy_brokers.each do |broker|
+      register_or_group.brokers.by_provider("Discovergy").each do |broker|
         two_way_meter = broker.two_way_meter?
         response = @facade.readings(broker, interval, mode, false)
 

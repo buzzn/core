@@ -31,8 +31,8 @@ module Register
 
     accepts_nested_attributes_for :contracts
 
-    def discovergy_brokers
-      [meter.discovergy_broker].compact
+    def brokers
+      Broker.where(resource_id: self.meter.nil? ? '' : self.meter.id).where(resource_type: 'Meter')
     end
 
     def self.readables

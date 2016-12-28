@@ -85,7 +85,7 @@ describe "Register Model" do
 
     let :subject do
       easymeter_60051560 = Fabricate(:easymeter_60051560)
-      easymeter_60051560.discovergy_broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051560", resource: easymeter_60051560)
+      easymeter_60051560.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051560", resource: easymeter_60051560)
       easymeter_60051560.registers.first
     end
 

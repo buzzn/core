@@ -12,6 +12,10 @@ class Broker < ActiveRecord::Base
   validates :resource_id, presence: true
   validates :resource_type, presence: true
 
+  scope :by_provider, -> (provider) do
+    where(type: provider + "Broker")
+  end
+
   def two_way_meter?
     two_way_meter = self.resource.is_a?(Meter) && self.resource.registers.size > 1
   end
