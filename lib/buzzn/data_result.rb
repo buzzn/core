@@ -31,7 +31,7 @@ module Buzzn
     alias :add_all :add
 
     def to_hash
-      super.merge(resource_id: @resource_id, mode: @mode) 
+      super.merge(resource_id: @resource_id, mode: @mode)
     end
 
     def to_json(*args)

@@ -33,10 +33,10 @@ describe Buzzn::Discovergy::DataSource do
   let(:virtual_register) do
     register = Fabricate(:input_register,
                          meter: Fabricate(:meter),
-                         virtual: true, 
+                         virtual: true,
                          formula_parts: [Fabricate(:fp_plus, operand: Fabricate(:input_register, meter: Fabricate(:meter)))])
     Fabricate(:discovergy_broker, resource: register.meter, external_id: 'virtual_123')
-    
+
     Fabricate(:discovergy_broker, resource: register.formula_parts.first.operand.meter, external_id: 'easy_123')
     register
   end
@@ -136,7 +136,7 @@ describe Buzzn::Discovergy::DataSource do
     mode = 'virtual'
     resource = group
     result = subject.send(:parse_virtual_meter_creation, response, mode, resource)
-    expect(group.discovergy_brokers.size).to eq 1
+    expect(group.brokers.by_provider("Discovergy").size).to eq 1
   end
 
   it 'does not create virtual meters for small group' do
@@ -149,7 +149,7 @@ describe Buzzn::Discovergy::DataSource do
       existing_broker = broker
       brokers = subject.create_virtual_meters_for_group(group)
       expect(brokers).not_to eq []
-      expect(group.discovergy_brokers.size).to eq 2
+      expect(group.brokers.by_provider("Discovergy").size).to eq 2
     end
   end
 
@@ -158,7 +158,7 @@ describe Buzzn::Discovergy::DataSource do
     expect(map).to eq('easy_123' => register_with_broker.id)
   end
 
-  it 'maps the external id to register ids' do    
+  it 'maps the external id to register ids' do
     map = subject.send(:to_map, virtual_register)
     expect(map).to eq('easy_123' => virtual_register.formula_parts.first.operand.id)
   end

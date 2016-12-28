@@ -15,7 +15,7 @@ describe 'Discovergy' do
 
   let(:discovergy_meter) do
     meter = Fabricate(:easymeter_60139082) # in_out meter
-    if meter.discovergy_broker.nil?
+    if meter.broker.nil?
       DiscovergyBroker.create!(
         mode: :in,
         external_id: 'EASYMETER_' + meter.manufacturer_product_serialnumber,
