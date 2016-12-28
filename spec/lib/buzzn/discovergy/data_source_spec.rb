@@ -5,6 +5,9 @@ describe Buzzn::Discovergy::DataSource do
 
   subject { Buzzn::Discovergy::DataSource.new }
 
+  #before do
+  #  p Meter::Real.all
+  #end
   let(:cache_time) { 1 }
   let(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
   let(:broker) { Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
@@ -20,10 +23,9 @@ describe Buzzn::Discovergy::DataSource do
   end
   let(:empty_group) { Fabricate(:group) }
   let(:register_with_broker) do
-    register = Fabricate(:input_register, group: empty_group, meter: Fabricate(:meter))
-    Fabricate(:discovergy_broker, resource: register.meter, external_id: 'easy_123')
-    register.meter.reload
-    register
+    meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, group: empty_group)])
+    Fabricate(:discovergy_broker, resource: meter, external_id: 'easy_123')
+    meter.input_register
   end
   let(:register_with_group_broker) do
     register = register_with_broker
@@ -36,7 +38,6 @@ describe Buzzn::Discovergy::DataSource do
                          virtual: true,
                          formula_parts: [Fabricate(:fp_plus, operand: Fabricate(:input_register, meter: Fabricate(:meter)))])
     Fabricate(:discovergy_broker, resource: register.meter, external_id: 'virtual_123')
-
     Fabricate(:discovergy_broker, resource: register.formula_parts.first.operand.meter, external_id: 'easy_123')
     register
   end
@@ -175,7 +176,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'collects data from each register without group broker' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
-    Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
+    Fabricate(:meter, registers: [Fabricate.build(:output_register, group: empty_group)])
     facade.result = single_meter_live_response
 
     in_result = data_source.collection(register_with_broker.group, :in)
@@ -193,7 +194,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'collects data from each register with group broker' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
-    Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
+    Fabricate(:meter, registers: [Fabricate.build(:output_register, group: empty_group)])
     facade.result = virtual_meter_live_response
 
     in_result = data_source.collection(register_with_group_broker.group, :in)
@@ -211,7 +212,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'data ranges from a group' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
-    Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
+    Fabricate(:meter, registers: [Fabricate.build(:output_register, group: empty_group)])
     facade.result = single_meter_year_response
 
     in_result = data_source.aggregated(register_with_group_broker.group, :in, Buzzn::Interval.year)
@@ -231,7 +232,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'data ranges from a register' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
-    Fabricate(:input_register, group: empty_group, meter: Fabricate(:meter))
+    Fabricate(:meter, registers: [Fabricate.build(:input_register, group: empty_group)])
     facade.result = single_meter_hour_response
 
     in_result = data_source.aggregated(register_with_broker, :in, Buzzn::Interval.hour)
@@ -259,7 +260,7 @@ describe Buzzn::Discovergy::DataSource do
     other = data_source.single_aggregated(register_with_broker, :in)
 
     expect(result.expires_at).to eq other.expires_at
-    sleep(cache_time + 0.1)
+    sleep(cache_time + 0.2)
     other = data_source.single_aggregated(register_with_broker, :in)
     expect(result.expires_at).not_to eq other.expires_at
   end
@@ -268,14 +269,14 @@ describe Buzzn::Discovergy::DataSource do
   # see spec_helper.rb
   it 'caches collection result single threaded' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
-    Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
+    Fabricate(:meter, registers: [Fabricate.build(:output_register, group: empty_group)])
     facade.result = virtual_meter_live_response
 
     result = data_source.collection(register_with_group_broker.group, :out)
     other = data_source.collection(register_with_group_broker.group, :out)
 
     expect(result.expires_at).to eq other.expires_at
-    sleep(cache_time + 0.1)
+    sleep(cache_time + 0.2)
     other = data_source.collection(register_with_group_broker.group, :out)
     expect(result.expires_at).not_to eq other.expires_at
   end
@@ -296,7 +297,7 @@ describe Buzzn::Discovergy::DataSource do
     all = []
     16.times.collect do
       Thread.new do
-        sleep(cache_time + 0.1)
+        sleep(cache_time + 0.2)
         all << data_source.single_aggregated(register_with_broker, :in).expires_at
         self
       end
@@ -310,7 +311,7 @@ describe Buzzn::Discovergy::DataSource do
   # see spec_helper.rb
   it 'caches collection result multi threaded' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
-    Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
+    Fabricate(:meter, registers: [Fabricate.build(:output_register, group: empty_group)])
     facade.result = virtual_meter_live_response
 
     result = data_source.collection(register_with_group_broker.group, :out)
@@ -323,7 +324,7 @@ describe Buzzn::Discovergy::DataSource do
     all = []
     16.times.collect do
       Thread.new do
-        sleep(cache_time + 0.1)
+        sleep(cache_time + 0.2)
         all << data_source.collection(register_with_group_broker.group, :out).expires_at
         self
       end

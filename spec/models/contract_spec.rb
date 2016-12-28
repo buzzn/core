@@ -1,7 +1,7 @@
 # coding: utf-8
 describe "Contract Model" do
 
-  let(:register) { Fabricate(:output_register) }
+  let(:register) { Fabricate(:output_meter).output_register }
 
   let(:user_with_register) do
     user = Fabricate(:user)

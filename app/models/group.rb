@@ -378,6 +378,7 @@ class Group < ActiveRecord::Base
     self.class.score_interval(resolution_format, containing_timestamp)
   end
   alias :get_score_interval :set_score_interval
+  alias :score_interval :set_score_interval
 
   def extrapolate_kwh_pa(kwh_ago, resolution_format, containing_timestamp)
     days_ago = 0

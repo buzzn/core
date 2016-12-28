@@ -65,11 +65,12 @@ module Buzzn
       user.remove_role(@role, @parent)
       if options[:cancel_key]
         if options[:owner]
-          user.create_activity(key: options[:cancel_key],
-                               owner: options[:owner],
-                               recipient: @parent)
+          PublicActivity::Activity.create(trackable: user,
+                                          key: options[:cancel_key],
+                                          owner: options[:owner],
+                                          recipient: @parent)
         else
-          @parent.create_activity(key: options[:cancel_key], owner: user)
+          PublicActivity::Activity.create(trackable: @parent, key: options[:cancel_key], owner: user)
         end
       end
       @participants = User.users_of(@parent, @role)
@@ -92,11 +93,12 @@ module Buzzn
       user.add_role(@role, @parent)
       if options[:create_key]
         if options[:owner]
-          user.create_activity(key: options[:create_key],
-                               owner: options[:owner],
-                               recipient: @parent)
+          PublicActivity::Activity.create(trackable: user,
+                                          key: options[:create_key],
+                                          owner: options[:owner],
+                                          recipient: @parent)
         else
-          @parent.create_activity(key: options[:create_key], owner: user)
+          PublicActivity::Activity.create(trackable: @parent, key: options[:create_key], owner: user)
         end
       end
       @participants = User.users_of(@parent, @role)

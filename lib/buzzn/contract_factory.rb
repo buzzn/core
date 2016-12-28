@@ -51,15 +51,14 @@ module Buzzn
             other = create!(:other_address, Address, self.other_address)
           end
 
-          meter = Meter.new(self.meter)
-          # TODO d osomething with this counting_point
+          # TODO do something with this counting_point
           counting_poing = self.register.delete(:counting_point)
-          register = create(Register::Input,
-                                  self.register,
-                                  name: 'Wohnung',
-                                  meter: meter,
-                                  readable: 'friends',
-                                  address: other || address)
+          register = build(Register::Input,
+                           self.register,
+                           name: 'Wohnung',
+                           readable: 'friends',
+                           address: other || address)
+          meter = create(Meter::Real, self.meter, registers: [register])
 
           begin
             bank = Bank.find_by_iban(self.bank_account[:iban])
@@ -98,7 +97,7 @@ module Buzzn
                  customer: beneficiary_party)
         end
       rescue ActiveRecord::RecordInvalid => e
-        raise NestedValidationError.new(e)
+        raise CascadingValidationError.new(e)
       end
     end
 
@@ -111,7 +110,7 @@ module Buzzn
     def create!(key, model, params = {}, extra = {})
       model.send(:create!, (params || {}).merge(extra))
     rescue ActiveRecord::RecordInvalid => e
-      raise NestedValidationError.new(key, e)
+      raise CascadingValidationError.new(key, e)
     end
 
     def build(model, params = {}, extra = {})

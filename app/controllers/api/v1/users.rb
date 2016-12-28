@@ -97,7 +97,7 @@ module API
         desc "Return the related meters for User"
         params do
           requires :id, type: String, desc: "ID of the User"
-          optional :filter, type: String, desc: "Search query using #{Base.join(Meter.search_attributes)}"
+          optional :filter, type: String, desc: "Search query using #{Base.join(Meter::Base.search_attributes)}"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
@@ -105,7 +105,7 @@ module API
         oauth2 :full, :smartmeter
         get ":id/meters" do
           user = User.guarded_retrieve(current_user, permitted_params)
-          meters = Meter.filter(permitted_params[:filter]).accessible_by_user(user)
+          meters = Meter::Base.filter(permitted_params[:filter]).accessible_by_user(user)
           paginated_response(meters.readable_by(current_user))
         end
 

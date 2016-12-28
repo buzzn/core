@@ -1,0 +1,23 @@
+module Meter
+  class Virtual < Base
+
+    has_one :register, class_name: Register::Virtual, dependent: :destroy, foreign_key: :meter_id
+
+    validates :register, presence: true
+    validates :manufacturer_product_name, presence: false
+    validates :manufacturer_product_serialnumber, presence: false, uniqueness: true, allow_nil: true, length: { in: 2..128 }
+
+    
+    def validate_invariants
+      [:manufacturer_name, :online, :smart, :image].each do |name|
+        error.add(name, 'not allowed') if send(:name).nil?
+      end
+    end
+
+    def initialize(attr = {})
+      attr[:register] = Register::Virtual.new(attr[:register] || {}) if attr
+      super
+      register.meter = self if register
+    end
+  end
+end

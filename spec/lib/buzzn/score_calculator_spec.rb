@@ -95,8 +95,8 @@ describe Buzzn::ScoreCalculator do
       user          = Fabricate(:user)
       consumer      = Fabricate(:user)
       producer      = Fabricate(:user)
-      register_in         = Fabricate(:input_register)
-      register_out        = Fabricate(:output_register)
+      register_in   = Fabricate(:input_meter).input_register
+      register_out  = Fabricate(:output_meter).output_register
 
       group.registers += [register_in, register_out]
       consumer.add_role(:member, register_in)

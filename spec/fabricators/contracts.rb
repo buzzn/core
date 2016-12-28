@@ -33,7 +33,7 @@ Fabricator :metering_point_operator_contract_of_localpool, from: :metering_point
 end
 
 Fabricator :metering_point_operator_contract_of_register, from: :metering_point_operator_contract do
-  register { Fabricate([:input_register,:output_register].sample) }
+  register { Fabricate(:meter).registers.first }
 end
 
 Fabricator :metering_point_operator_contract_of_localpool_for_organization, from: :metering_point_operator_contract_of_localpool do
@@ -244,7 +244,7 @@ Fabricator :mpoc_stefan, from: :metering_point_operator_contract do
   contractor     Organization.discovergy.contracting_party
   username       'stefan@buzzn.net'
   password       '19200buzzn'
-  register       { Fabricate(:register_stefans_bhkw) }
+  register       { Fabricate(:easymeter_1024000034).registers.first }
 end
 
 Fabricator :mpoc_karin, from: :metering_point_operator_contract do

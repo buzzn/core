@@ -1,5 +1,5 @@
 # coding: utf-8
-describe "Meter Model" do
+describe Meter::Real do
 
   it 'filters meter', :retry => 3 do
     meter = Fabricate(:easy_meter_q3d)
@@ -7,7 +7,7 @@ describe "Meter Model" do
 
     [meter.manufacturer_name, meter.manufacturer_product_name].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
-        meters = Meter.filter(value)
+        meters = Meter::Real.filter(value)
         expect(meters.detect{|m| m == meter}).to eq meter
       end
     end
@@ -16,7 +16,7 @@ describe "Meter Model" do
 
   it 'can not find anything' do
     Fabricate(:easy_meter_q3d)
-    meters = Meter.filter('Der Clown ist müde und geht nach Hause.')
+    meters = Meter::Real.filter('Der Clown ist müde und geht nach Hause.')
     expect(meters.size).to eq 0
   end
 
@@ -25,17 +25,13 @@ describe "Meter Model" do
     Fabricate(:easy_meter_q3d)
     Fabricate(:meter)
 
-    meters = Meter.filter(nil)
+    meters = Meter::Real.filter(nil)
     expect(meters.size).to eq 2
   end
 
   let(:meter) { Fabricate(:meter) }
-  let(:second) do
-    second = Fabricate(:meter)
-    Fabricate(:input_register, meter: second)
-    second
-  end
-  let(:register) { Fabricate(:input_register, meter: meter) }
+  let(:second) { Fabricate(:input_meter) }
+  let(:register) { meter.registers.first }
   let(:user) { Fabricate(:user) }
   let(:admin) do
     admin = Fabricate(:user)
@@ -50,12 +46,11 @@ describe "Meter Model" do
   let(:orphand) { Fabricate(:meter) }
 
   it 'is restricting readable_by' do
-     # orphand without register
-    expect(Meter.all.readable_by(nil)).to eq []
-    expect(Meter.all.readable_by(user)).to eq []
-    expect(Meter.all.readable_by(manager)).to eq [meter]
-    expect(Meter.all.readable_by(admin)).to match_array [meter, second]
+    expect(Meter::Real.all.readable_by(nil)).to eq []
+    expect(Meter::Real.all.readable_by(user)).to eq []
+    expect(Meter::Real.all.readable_by(manager)).to eq [meter]
+    expect(Meter::Real.all.readable_by(admin)).to match_array [meter, second]
     orphand #create
-    expect(Meter.all.readable_by(admin)).to match_array [meter, second, orphand]
+    expect(Meter::Real.all.readable_by(admin)).to match_array [meter, second, orphand]
   end
 end

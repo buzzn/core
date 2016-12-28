@@ -13,16 +13,24 @@ module Buzzn
       @errors.values.inspect
     end
   end
+
   class NestedValidationError < ValidationError
+    def initialize(key, errors)
+      nested_errors = {}
+      key = key.to_sym
+      errors.messages.each do |k,v|
+        nested_errors["#{key}.#{k}".to_sym] = v
+      end
+      super(nested_errors)
+    end
+  end
+
+  class CascadingValidationError < NestedValidationError
     def initialize(key = nil, ar_error)
       @original = ar_error
       errors = {}
       key ||= ar_error.record.class.to_s.underscore
-      key
-      ar_error.record.errors.messages.each do |k,v|
-        errors["#{key}.#{k}".to_sym] = v
-      end
-      super(errors)
+      super(:"#{key}", ar_error.record.errors)
     end
 
     def backtrace

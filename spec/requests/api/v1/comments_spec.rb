@@ -94,7 +94,6 @@ describe 'Comments API' do
       expect(error['source']['pointer']).to eq "/data/attributes/resource_name"
       expect(error['title']).to eq 'Invalid Attribute'
     end
-    #expect(json['error']).to eq('resource_name does not have a valid value')
   end
 
   [:simple_access_token, :full_access_token].each do |token|

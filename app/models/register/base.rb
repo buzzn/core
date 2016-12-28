@@ -1,10 +1,8 @@
-require 'buzzn/guarded_crud'
 require 'buzzn/managed_roles'
 module Register
   class Base < ActiveRecord::Base
     self.table_name = :registers
     resourcify
-    acts_as_commentable
     include Authority::Abilities
     include CalcVirtualRegister
     include ChartFunctions
@@ -13,15 +11,15 @@ module Register
     include Buzzn::MemberRole
     include Buzzn::GuardedCrud
 
-    include PublicActivity::Model
-    tracked except: :update, owner: Proc.new{ |controller, model| controller && controller.current_user }, recipient: Proc.new{ |controller, model| controller && model }
+    after_create do
+      PublicActivity::Activity.create(trackable: self, key: 'register.create', recipient: self)
+    end
+
+    after_destroy do
+      PublicActivity::Activity.create(trackable: self, key: 'register.destroy', recipient: self)
+    end
 
     belongs_to :group
-    belongs_to :meter, dependent: :destroy
-    accepts_nested_attributes_for :meter
-
-    has_many :formula_parts, dependent: :destroy, foreign_key: 'register_id'
-    accepts_nested_attributes_for :formula_parts, reject_if: :all_blank, :allow_destroy => true
 
     has_many :contracts, dependent: :destroy, foreign_key: 'register_id'
     has_many :devices, foreign_key: 'register_id'
@@ -29,10 +27,11 @@ module Register
 
     has_many :scores, as: :scoreable
 
+    # TODO ???
     accepts_nested_attributes_for :contracts
 
     def brokers
-      Broker.where(resource_id: self.meter.nil? ? '' : self.meter.id).where(resource_type: 'Meter')
+      Broker.where(resource_id: self.meter.id, resource_type: Meter::Base)
     end
 
     def self.readables
@@ -44,15 +43,31 @@ module Register
     }
     end
 
-
-    validates :readable, inclusion:{ in: self.readables }
+    validates :meter, presence: true
+    validates :direction, presence: true
     validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
     validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_register?
+    # TODO virtual register ?
+    validates :image, presence: false
+    validates :voltage_level, presence: false
+    validates :regular_reeding, presence: false
+    validates :regular_interval, presence: false
+    validates :is_dashboard_register, presence: false
+    validates :readable, inclusion: { in: self.readables }
+    validates :forecast_kwh_pa, presence: false, numericality: true, allow_nil: true
+    validates :observe, presence: false
+    validates :min_watt, presence: false
+    validates :max_watt, presence: false
+    validates :last_observed_timestamp, presence: false
+    # TODO virtual register ?
+    validates :observe_offline, presence: false
+    validates :external, presence: false
 
-    # TODO this validations always passes
-    #      i.e. no check on virtual == false
-    #      and allows both nil or non-nil values when virtual == true
-    validates :meter, presence: false, if: :virtual
+    def discovergy_brokers
+      # in case we have no borker return an empty array
+      [meter.discovergy_broker].compact
+    end
+
     validate :validate_invariants
 
     mount_uploader :image, PictureUploader
@@ -62,10 +77,6 @@ module Register
     has_many :dashboard_registers
     has_many :dashboards, :through => :dashboard_registers
 
-    # TODO remove this as it takes an extra ordering plan even when finding
-    #      a single entity via the find method
-    #default_scope { order('name ASC') } #DESC
-
     scope :inputs, -> { where(type: Register::Input) }
     scope :outputs, -> { where(type: Register::Output) }
 
@@ -73,8 +84,8 @@ module Register
     scope :privates, -> { where("readable in (?)", ["members"]) }
 
     scope :without_group, lambda { self.where(group: nil) }
-    scope :without_meter, lambda { self.where(meter: nil) }
-    scope :with_meter, lambda { self.where.not(meter: nil) }
+    scope :without_meter, lambda { raise 'FIXME' }
+    scope :with_meter, lambda { raise 'FIXME' }
 
     scope :editable_by_user, lambda {|user|
       self.with_role(:manager, user)
@@ -134,6 +145,8 @@ module Register
       where(sqls.map(&:to_sql).join(' OR '))
     end
 
+    #TODO why is this less strikt than the readable_by definition ?
+    #     what is the difference between accessible_by and readable_by ?
     scope :accessible_by_user, ->(user) do
       register = Register::Base.arel_table
       where(User.roles_query(user,
@@ -141,27 +154,26 @@ module Register
                              member: register[:id]).project(1).exists)
     end
 
+    # TODO
     scope :editable_by_user_without_meter_not_virtual, lambda {|user|
-      self.with_role(:manager, user).where(meter: nil).where(virtual: false)
+      raise 'FIXME'
     }
 
     scope :by_group, lambda {|group|
-      self.where(group: group.id)
+      group ? self.where(group: group.id) : self.where('1=2')
     }
 
     scope :externals, -> { where(external: true) }
     scope :without_externals, -> { where(external: false) }
 
-    #default_scope { where(external: false) }
-
     def validate_invariants
       if contracts.size > 0 && address.nil?
         errors.add(:address, 'missing Address when having contracts')
       end
-    end
-
-    def self.modes
-      %w{in out}
+      if max_watt < min_watt
+        errors.add(:max_watt, 'must be greater or equal min_watt')
+        errors.add(:min_watt, 'must be smaller or equal max_watt')
+      end
     end
 
     def direction
@@ -170,6 +182,8 @@ module Register
         :in
       when Register::Output
         :out
+      else
+        mode
       end
     end
 
@@ -179,7 +193,7 @@ module Register
     alias :involved :users
 
     def profiles
-      Profile.where(user_id: users.collect(&:id))
+      Profile.where(user_id: users)
     end
 
     def dashboard
@@ -201,6 +215,7 @@ module Register
     end
 
     # TODO remove this when bubbles.js is rewritten
+    # TODO still used ?
     def last_power
       if self.virtual && self.formula_parts.any?
         operands = get_operands_from_formula
@@ -242,6 +257,7 @@ module Register
     end
 
     # TODO remove this
+    # still used ?
     def latest_fake_data
       if self.slp?
         return {data: Reading.latest_fake_data('slp'), factor: self.forecast_kwh_pa.nil? ? 1 : self.forecast_kwh_pa/1000.0}
@@ -286,57 +302,28 @@ module Register
 
 
     def output?
-      self.class == Register::Output
+      self.direction == :out
     end
 
     def input?
-      self.class == Register::Input
+      self.direction == :in
     end
 
     def smart?
-      if self.virtual
-        self.formula_parts.each do |formula_part|
-          if !formula_part.operand.smart?
-            return false
-          end
-        end
-        return true
-      else
-        if meter
-          return meter.smart
-        end
-        return false
-      end
-    end
-
-
-    # TODO remove this
-    def online?
-      if meter
-        return meter.online
-      else
-        if self.virtual
-          self.formula_parts.each do |formula_part|
-            if !formula_part.operand.online?
-              return false
-            end
-          end
-          return true
-        else
-          false
-        end
-      end
+      self.meter.smart
     end
 
     def no_dashboard_register?
       !self.is_dashboard_register
     end
 
+    # TODO remove with removing latest_fake_data
     def slp?
       !self.smart? &&
       self.input?
     end
 
+    # TODO remove with removing latest_fake_data
     def pv?
       !self.smart? &&
       self.output? &&
@@ -344,6 +331,7 @@ module Register
       self.devices.first.primary_energy == 'sun'
     end
 
+    # TODO remove with removing latest_fake_data
     def bhkw_or_else?
       !self.smart? &&
       self.output?
@@ -385,6 +373,7 @@ module Register
       (@users).flatten.uniq.collect{|user| user.editable_devices.collect{|device| device if device.mode == self.mode} }.flatten.compact
     end
 
+    # TODO remove as it is not used any more - was used in Crawler
     def metering_point_operator_contract
       if self.contracts.metering_point_operators.running.any?
         return self.contracts.metering_point_operators.running.first
@@ -397,7 +386,7 @@ module Register
 
 
 
-
+    # TODO ????
     def self.json_tree(nodes)
       nodes.map do |node, sub_nodes|
         label = node.decorate.name
@@ -437,23 +426,6 @@ module Register
 
     def year_to_months(containing_timestamp)
       chart_data('year_to_months', containing_timestamp)
-    end
-
-
-
-
-    def formula
-      result = ""
-      self.formula_parts.each do |formula_part|
-        result += formula_part.operator + " " + formula_part.operand_id.to_s + " "
-      end
-      return result
-    end
-
-    def get_operands_from_formula
-      if self.virtual && self.formula_parts.any?
-        self.formula_parts.collect(&:operand)
-      end
     end
 
 
@@ -519,6 +491,7 @@ module Register
       end
     end
 
+    # TODO remove as it is unused
     def self.update_chart_cache
       Register::Base.ids.each do |register_id|
         Sidekiq::Client.push(
@@ -530,13 +503,7 @@ module Register
     end
 
 
-    def get_operators_from_formula
-      if self.virtual && self.formula_parts.any?
-        self.formula_parts.collect(&:operator)
-      end
-    end
-
-
+    # TODO remove this once app//controllers/registers_controller.rb is gone
     def submitted_readings_by_user
       if self.data_source
         Reading.all_by_register_id(self.id)
@@ -556,7 +523,7 @@ module Register
       if current_power.nil?
         if observe_offline && last_observed_timestamp
           if Time.current.utc >= last_observed_timestamp && Time.current.utc <= last_observed_timestamp + 3.minutes
-            return create_activity(key: 'register.offline', owner: self)
+            return PublicActivity::Activity.create(key: 'register.offline', owner: self)
           end
         end
       else
@@ -571,21 +538,29 @@ module Register
       end
 
       if observe && mode
-        create_activity(key: "register.#{mode}", owner: self)
+        PublicActivity::Activity.create(key: "register.#{mode}", owner: self)
       end
     end
 
+    # for railsview
     def class_name
       self.class.name.downcase.sub!("::", "_")
     end
 
+    # backward compatibility
+    def direction=(val)
+      self.mode = val
+    end
+
     private
 
-      def destroy_content
-        RegisterUserRequest.where(register: self).each{|request| request.destroy}
-        GroupRegisterRequest.where(register: self).each{|request| request.destroy}
-        self.root_comments.each{|comment| comment.destroy}
-        #self.activities.each{|activity| activity.destroy}
-      end
+    def destroy_content
+      RegisterUserRequest.where(register: self).each{|request| request.destroy}
+      GroupRegisterRequest.where(register: self).each{|request| request.destroy}
+      # TODO use delete_all ?
+      self.root_comments.each{|comment| comment.destroy}
+      # TODO needed or not
+      #self.activities.each{|activity| activity.destroy}
+    end
   end
 end

@@ -200,7 +200,8 @@ describe "Users API" do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:group_readable_by_members)
     user          = User.find(access_token.resource_owner_id)
-    register    = Fabricate(:output_register_readable_by_world)
+    register    = Fabricate(:output_meter).output_register
+    register.update(readable: :world)
     user.add_role(:member, register)
     group.registers << register
     get_with_token "/api/v1/users/#{user.id}/groups", access_token.token
@@ -212,7 +213,8 @@ describe "Users API" do
     user          = User.find(access_token.resource_owner_id)
     page_overload.times do
       group             = Fabricate(:group)
-      register    = Fabricate(:output_register_readable_by_world)
+      register    = Fabricate(:output_meter).output_register
+      register.update(readable: :world)
       user.add_role(:member, register)
       group.registers << register
     end
@@ -227,7 +229,7 @@ describe "Users API" do
   it 'gets related registers for User' do
     access_token    = Fabricate(:simple_access_token)
     user            = User.find(access_token.resource_owner_id)
-    register  = Fabricate(:input_register)
+    register  = Fabricate(:input_meter).input_register
     user.add_role(:member, register)
     get_with_token "/api/v1/users/#{user.id}/registers", access_token.token
     expect(response).to have_http_status(200)
@@ -235,16 +237,14 @@ describe "Users API" do
 
   [:full_access_token, :smartmeter_access_token].each do |token|
     it "gets all related meters with #{token}" do
-      meter1 = Fabricate(:meter)
-      meter2 = Fabricate(:meter)
+      meter1 = Fabricate(:input_meter)
+      meter2 = Fabricate(:output_meter)
       meter3 = Fabricate(:meter)
-      mp1    = Fabricate(:input_register, meter: meter1)
-      mp2    = Fabricate(:output_register, meter: meter2)
 
       access_token = Fabricate(token)
       user         = User.find(access_token.resource_owner_id)
-      user.add_role(:manager, mp1)
-      user.add_role(:manager, mp2)
+      user.add_role(:manager, meter1.input_register)
+      user.add_role(:manager, meter2.output_register)
 
       get_with_token "/api/v1/users/#{user.id}/meters", access_token.token
       expect(response).to have_http_status(200)
@@ -253,18 +253,17 @@ describe "Users API" do
   end
 
   it 'paginate meters' do
-    manager_token = Fabricate(:full_access_token_as_admin).token
+    admin_token = Fabricate(:full_access_token_as_admin).token
     user          = Fabricate(:user)
     page_overload.times do
       meter = Fabricate(:meter)
-      mp    = Fabricate(:output_register, meter: meter)
-      user.add_role(:manager, mp)
+      user.add_role(:manager, meter.registers.first)
     end
-    get_with_token "/api/v1/users/#{user.id}/meters", manager_token
+    get_with_token "/api/v1/users/#{user.id}/meters", admin_token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
 
-    get_with_token "/api/v1/users/#{user.id}/meters", {per_page: 200}, manager_token
+    get_with_token "/api/v1/users/#{user.id}/meters", {per_page: 200}, admin_token
     expect(response).to have_http_status(422)
   end
 
@@ -272,7 +271,7 @@ describe "Users API" do
     access_token = Fabricate(:full_access_token_as_admin).token
     user         = Fabricate(:user)
     page_overload.times do
-      register  = Fabricate(:input_register)
+      register  = Fabricate(:meter).registers.first
       user.add_role(:member, register)
     end
     get_with_token "/api/v1/users/#{user.id}/registers", access_token
@@ -285,16 +284,14 @@ describe "Users API" do
 
 
   it 'gets the related meters for User but filtered by manufacturer_product_serialnumber' do
-    meter1 = Fabricate(:meter)
-    meter2 = Fabricate(:meter)
+    meter1 = Fabricate(:input_meter)
+    meter2 = Fabricate(:output_meter)
     meter3 = Fabricate(:meter)
-    mp1    = Fabricate(:input_register, meter: meter1)
-    mp2    = Fabricate(:output_register, meter: meter2)
 
     access_token  = Fabricate(:full_access_token)
     user          = User.find(access_token.resource_owner_id)
-    user.add_role(:manager, mp1)
-    user.add_role(:manager, mp2)
+    user.add_role(:manager, meter1.input_register)
+    user.add_role(:manager, meter2.output_register)
 
     request_params = {
       filter: meter1.manufacturer_product_serialnumber

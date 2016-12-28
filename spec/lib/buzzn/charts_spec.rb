@@ -34,9 +34,9 @@ describe Buzzn::Charts do
   end
 
   let(:group) { Fabricate(:group) }
-  let(:register) { Fabricate(:output_register) }
+  let(:register) { Fabricate(:output_meter).output_register }
   let(:dummy_register) do
-    register = Fabricate(:input_register)
+    register = Fabricate(:input_meter).input_register
     def register.data_source; 'dummy';end
     def register.to_s; self.id; end
     register
@@ -51,9 +51,10 @@ describe Buzzn::Charts do
     expect { subject.for_register(Object.new, interval) }.to raise_error ArgumentError
   end
 
-  # this test is useless as the group has no registers - what should be returned as data objects?
   it 'delivers the right result for each register in a group' do
-    #setup the results for the MockDataSource which we use here
+    # setup the results for the MockDataSource which we use here
+    # it just ignores the group and its missing registers and delivers
+    # results for either mode
     mock.input = Buzzn::DataResultSet.milliwatt_hour(group.id, [Buzzn::DataPoint.new(Time.current, 123)], [])
     mock.output = Buzzn::DataResultSet.milliwatt_hour(group.id, [], [Buzzn::DataPoint.new(Time.current, 321)])
     interval = Buzzn::Interval.year

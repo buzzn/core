@@ -2,7 +2,7 @@ describe "BankAccount API" do
 
   let(:page_overload) { 11 }
   let(:admin) { Fabricate(:admin) }
-  let(:output_register) { Fabricate(:output_register) }
+  let(:output_register) { Fabricate(:output_meter).output_register }
   let(:user_with_output_register) do
     user = Fabricate(:user)
     output_register.managers.add(admin, user)

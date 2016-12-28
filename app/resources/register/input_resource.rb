@@ -1,7 +1,4 @@
 module Register
-  class InputResource < Register::BaseResource
-
-    attributes :obis
-
+  class InputResource < RealRegister
   end
 end
