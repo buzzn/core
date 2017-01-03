@@ -38,36 +38,24 @@ end
 Fabricator :easymeter_60139082, from: :easy_meter_q3d do
   manufacturer_product_serialnumber '60139082'
   registers { [Fabricate.build(:register_z1a), Fabricate.build(:register_z1b)] }
-  after_create { |meter|
-    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
-  }
 end
 
 # Justus PV
 Fabricator :easymeter_60051599, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051599'
   registers { [Fabricate.build(:register_z2)] }
-  after_create { |meter|
-    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
-  }
 end
 
 # Justus Ladestation
 Fabricator :easymeter_60051559, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051559'
   registers { [Fabricate.build(:register_z3)] }
-  after_create { |meter|
-    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", mode: :out)
-  }
 end
 
 # Justus BHKW
 Fabricator :easymeter_60051560, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051560'
   registers { [Fabricate.build(:register_z4)] }
-  after_create { |meter|
-    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
-  }
 end
 
 
@@ -75,9 +63,6 @@ end
 Fabricator :easymeter_60051600, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '60051600'
   registers { [Fabricate.build(:register_z5)] }
-  after_create { |meter|
-    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
-  }
 end
 
 # Justus verbrauch
@@ -88,7 +73,8 @@ end
 
 # Mustafa verbrauch
 Fabricator :easymeter_60232612, from: :easy_meter_q3d do
-  manufacturer_product_serialnumber  '60232612'
+  manufacturer_product_serialnumber   '60232612'
+  registers [Fabricate.build(:register_60232612)]
 end
 
 # Stefan easymeter fur verbrauch
@@ -100,7 +86,8 @@ end
 
 # karins meter fur die pv anlange
 Fabricator :easymeter_60051431, from: :easy_meter_q3d do
-  manufacturer_product_serialnumber  '60051431'
+  manufacturer_product_serialnumber   '60051431'
+  registers [Fabricate.build(:register_60051431)]
 end
 
 
@@ -109,21 +96,25 @@ end
 # Z1  Nr. 60118470 für Hans-Dieter Hopf  (Zweirichtungszähler)
 Fabricator :easymeter_60118470, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60118470'
+  registers [Fabricate.build(:register_60118470)]
 end
 
 # Z2   Nr. 60009316 für BHKW Erzeugung (Einrichtungszähler Einspeisung)
 Fabricator :easymeter_60009316, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009316'
+  registers [Fabricate.build(:register_60009316)]
 end
 
 # ZN1 Nr. 60009272 für Thomas Hopf  (Einrichtungszähler Bezug)
 Fabricator :easymeter_60009272, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009272'
+  registers [Fabricate.build(:register_60009272)]
 end
 
 # ZN2 Nr. 60009348 für Mauela Beier (Einrichtungszähler Bezug)
 Fabricator :easymeter_60009348, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009348'
+  registers [Fabricate.build(:register_60009348)]
 end
 
 
@@ -132,15 +123,18 @@ end
 # Nr. 60138988 für Christian Widmann (Einrichtungszähler Bezug)
 Fabricator :easymeter_60138988, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60138988'
+  registers [Fabricate.build(:register_60138988)]
 end
 
 # Nr. 60009269 für Philipp Oßwald (Einrichtungszähler Bezug)
 Fabricator :easymeter_60009269, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009269'
+  registers [Fabricate.build(:register_60009269)]
 end
 
 Fabricator :easymeter_60232499, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60232499'
+  registers [Fabricate.build(:register_60232499)]
 end
 
 Fabricator :amperix_60232AMPE, from: :meter do
@@ -162,95 +156,118 @@ end
 # wagnis 4
 Fabricator :easymeter_60009416, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009416'
+  registers [Fabricate.build(:register_60009416)]
 end
 # wagnis 4
 Fabricator :easymeter_60009419, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009419'
+  registers [Fabricate.build(:register_60009419)]
 end
 # wagnis 4
 Fabricator :easymeter_60009415, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009415'
+  registers [Fabricate.build(:register_60009415)]
 end
 # wagnis 4
 Fabricator :easymeter_60009418, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009418'
+  registers [Fabricate.build(:register_60009418)]
 end
 # wagnis 4
 Fabricator :easymeter_60009411, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009411'
+  registers [Fabricate.build(:register_60009411)]
 end
 # wagnis 4
 Fabricator :easymeter_60009410, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009410'
+  registers [Fabricate.build(:register_60009410)]
 end
 # wagnis 4
 Fabricator :easymeter_60009407, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009407'
+  registers [Fabricate.build(:register_60009407)]
 
 end
 # wagnis 4
 Fabricator :easymeter_60009409, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009409'
+  registers [Fabricate.build(:register_60009409)]
 end
 # wagnis 4
 Fabricator :easymeter_60009435, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009435'
+  registers [Fabricate.build(:register_60009435)]
 end
 # wagnis 4
 Fabricator :easymeter_60009420, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009420'
+  registers [Fabricate.build(:register_60009420)]
 end
 # Wagnis 4 PV
 Fabricator :easymeter_60118460, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60118460'
+  registers [Fabricate.build(:register_60118460)]
 end
 #Wagnis 4 - Allgemeinstrom Haus Nord
 Fabricator :easymeter_60009386, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009386'
+  registers [Fabricate.build(:register_60009386)]
 end
 #Wagnis 4 - Allgemeinstrom Haus Ost
 Fabricator :easymeter_60009445, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009445'
+  registers [Fabricate.build(:register_60009445)]
 end
 #Wagnis 4 - Gäste Haus Ost 1+2
 Fabricator :easymeter_60009446, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009446'
+  registers [Fabricate.build(:register_60009446)]
 end
 #Wagnis 4 - Laden EG
 Fabricator :easymeter_60009390, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009390'
+  registers [Fabricate.build(:register_60009390)]
 end
 #Wagnis 4 - Nord Wohnung 01
 Fabricator :easymeter_60009387, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009387'
+  registers [Fabricate.build(:register_60009387)]
 end
 #Wagnis 4 - Nord Wohnung 10
 Fabricator :easymeter_60009438, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009438'
+  registers [Fabricate.build(:register_60009438)]
 end
 #Wagnis 4 - Nord Wohnung 12
 Fabricator :easymeter_60009440, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009440'
+  registers [Fabricate.build(:register_60009440)]
 end
 #Wagnis 4 - Nord Wohnung 15
 Fabricator :easymeter_60009404, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009404'
+  registers [Fabricate.build(:register_60009404)]
 end
 #Wagnis 4 - Nord Wohnung 17
 Fabricator :easymeter_60009405, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009405'
+  registers [Fabricate.build(:register_60009405)]
 end
 #Wagnis 4 - Nord Wohnung 18
 Fabricator :easymeter_60009422, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009422'
+  registers [Fabricate.build(:register_60009422)]
 end
 #Wagnis 4 - Nord Wohnung 19
 Fabricator :easymeter_60009425, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009425'
+  registers [Fabricate.build(:register_60009425)]
 end
 #Wagnis 4 - Nord Wohnung 20
 Fabricator :easymeter_60009402, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009402'
+  registers [Fabricate.build(:register_60009402)]
 end
 #Wagnis 4 - Ost 03
 Fabricator :easymeter_60009429, from: :easy_meter_q3d do
@@ -259,18 +276,22 @@ end
 #Wagnis 4 - Ost Wohnung 12
 Fabricator :easymeter_60009393, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009393'
+  registers [Fabricate.build(:register_60009393)]
 end
 #Wagnis 4 - Ost Wohnung 13
 Fabricator :easymeter_60009442, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009442'
+  registers [Fabricate.build(:register_60009442)]
 end
 #Wagnis 4 - Ost Wohnung 15
 Fabricator :easymeter_60009441, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009441'
+  registers [Fabricate.build(:register_60009441)]
 end
 #Wagnis 4 - Übergabe
 Fabricator :easymeter_60118484, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60118484'
+  registers [Fabricate.build(:register_60118484)]
 end
 
 
@@ -280,6 +301,7 @@ end
 # Pickel
 Fabricator :easymeter_60051562, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051562'
+  registers [Fabricate.build(:register_60051562)]
 end
 
 
@@ -613,26 +635,31 @@ end
 #abgrenzung pv
 Fabricator :easymeter_60009484, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009484'
+  registers [Fabricate.build(:register_60009484)]
 end
 
 #bhkw1
 Fabricator :easymeter_60138947, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60138947'
+  registers [Fabricate.build(:register_60138947)]
 end
 
 #bhkw2
 Fabricator :easymeter_60138943, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60138943'
+  registers [Fabricate.build(:register_60138943)]
 end
 
 #pv
 Fabricator :easymeter_1338000816, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '1338000816'
+  registers [Fabricate.build(:register_1338000816)]
 end
 
 #schule
 Fabricator :easymeter_60009485, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009485'
+  registers [Fabricate.build(:register_60009485)]
 end
 
 #hst_mitte

@@ -10,8 +10,8 @@ module Meter
     # what is this needed for the tree structure ?
     has_ancestry
 
-    has_one :discovergy_broker, as: :resource
-    validates_associated :discovergy_broker
+    has_one :broker, as: :resource
+    validates_associated :broker
 
     # free text field
     validates :owner, presence: false

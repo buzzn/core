@@ -17,10 +17,10 @@ describe Buzzn::Discovergy::Facade do
   let(:broker_virtual) { Fabricate(:discovergy_broker, resource: meter, external_id: "VIRTUAL_00000065") }
   let(:group) do
     Fabricate(:group, registers: [
-      Fabricate(:register_60118460),
-      Fabricate(:register_60009441),
-      Fabricate(:register_60009442),
-      Fabricate(:register_60009393)
+      Fabricate(:easymeter_60118460).registers.first,
+      Fabricate(:easymeter_60009441).registers.first,
+      Fabricate(:easymeter_60009442).registers.first,
+      Fabricate(:easymeter_60009393).registers.first
     ])
   end
 

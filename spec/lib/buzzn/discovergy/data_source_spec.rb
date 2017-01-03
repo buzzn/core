@@ -8,14 +8,18 @@ describe Buzzn::Discovergy::DataSource do
   let(:cache_time) { 1 }
   let(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
   let(:broker) { Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
-  let(:small_group) { Fabricate(:group, registers: [Fabricate(:register_60118460), Fabricate(:register_60009441)]) }
+  let(:small_group) do
+    Fabricate(:group, registers: [
+                Fabricate(:easymeter_60009484).output_register,
+                Fabricate(:easymeter_60009386).input_register])
+  end
   let(:group) do
     Fabricate(:group, registers: [
-      Fabricate(:register_60118470), #out
-      Fabricate(:register_60118460), #out
-      Fabricate(:register_60009441), #in
-      Fabricate(:register_60009442), #in
-      Fabricate(:register_60009393)  #in
+      Fabricate(:easymeter_60118470).output_register, #out
+      Fabricate(:easymeter_60138947).output_register, #out
+      Fabricate(:easymeter_60009422).input_register, #in
+      Fabricate(:easymeter_60009425).input_register, #in
+      Fabricate(:easymeter_60009405).input_register  #in
     ])
   end
   let(:empty_group) { Fabricate(:group) }
@@ -30,10 +34,9 @@ describe Buzzn::Discovergy::DataSource do
     register
   end
   let(:virtual_register) do
-    register = Fabricate(:input_register,
-                         meter: Fabricate(:meter),
-                         virtual: true,
-                         formula_parts: [Fabricate(:fp_plus, operand: Fabricate(:input_register, meter: Fabricate(:meter)))])
+    register = Fabricate(:virtual_meter).register
+    Fabricate(:fp_plus, operand: Fabricate(:input_meter).input_register,
+              register: register)
     Fabricate(:discovergy_broker, resource: register.meter, external_id: 'virtual_123')
     Fabricate(:discovergy_broker, resource: register.formula_parts.first.operand.meter, external_id: 'easy_123')
     register
@@ -280,7 +283,7 @@ describe Buzzn::Discovergy::DataSource do
 
   # 'threaded' in description triggers a different DatabaseCleanet strategy
   # see spec_helper.rb
-  it 'caches single results multi threaded' do
+  it 'caches single results multi threaded', retry: 2 do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
     facade.result = single_meter_live_response
 
@@ -306,7 +309,7 @@ describe Buzzn::Discovergy::DataSource do
 
   # 'threaded' in description triggers a different DatabaseCleanet strategy
   # see spec_helper.rb
-  it 'caches collection result multi threaded' do
+  it 'caches collection result multi threaded', retry: 2 do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
     Fabricate(:meter, registers: [Fabricate.build(:output_register, group: empty_group)])
     facade.result = virtual_meter_live_response
