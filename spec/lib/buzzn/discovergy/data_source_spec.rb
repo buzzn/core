@@ -5,9 +5,6 @@ describe Buzzn::Discovergy::DataSource do
 
   subject { Buzzn::Discovergy::DataSource.new }
 
-  #before do
-  #  p Meter::Real.all
-  #end
   let(:cache_time) { 1 }
   let(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
   let(:broker) { Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
