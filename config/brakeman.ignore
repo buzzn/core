@@ -25,7 +25,7 @@
       "fingerprint": "4f1e0bbd188e362d43b406174f38ab5f311b02cd178cbb06287450e09c5fe078",
       "message": "Possible SQL injection",
       "file": "app/models/register/base.rb",
-      "line": 80,
+      "line": 93,
       "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "select(\"#{Register::Base.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{Register::Base.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
       "render_path": null,
@@ -60,13 +60,31 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
+      "fingerprint": "5bbcd40db0368a174964e06706cc80fb225bd1c7edbb2a8a29a30e5ba64e5e73",
+      "message": "Render path contains parameter value",
+      "file": "app/views/meters/show.html.haml",
+      "line": 88,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => Meter.find(params[:id]).decorate.registers, {})",
+      "render_path": [{"type":"controller","class":"MetersController","method":"show","line":9,"file":"app/controllers/meters_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "meters/show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
       "fingerprint": "61ec38034c566dae14e60ef6171c43a3b68b5c45ef96019be6fdcfff1b8351b1",
       "message": "Render path contains parameter value",
       "file": "app/views/registers/show.html.haml",
       "line": 249,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.meter, { :locals => ({ :register => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate }) })",
-      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":24,"file":"app/controllers/registers_controller.rb"}],
+      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":26,"file":"app/controllers/registers_controller.rb"}],
       "location": {
         "type": "template",
         "template": "registers/show"
@@ -103,7 +121,7 @@
       "line": 263,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.formula_parts, {})",
-      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":24,"file":"app/controllers/registers_controller.rb"}],
+      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":26,"file":"app/controllers/registers_controller.rb"}],
       "location": {
         "type": "template",
         "template": "registers/show"
@@ -121,7 +139,7 @@
       "line": 231,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.address, {})",
-      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":24,"file":"app/controllers/registers_controller.rb"}],
+      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":26,"file":"app/controllers/registers_controller.rb"}],
       "location": {
         "type": "template",
         "template": "registers/show"
@@ -139,7 +157,7 @@
       "line": 78,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.received_user_requests, {})",
-      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":24,"file":"app/controllers/registers_controller.rb"}],
+      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":26,"file":"app/controllers/registers_controller.rb"}],
       "location": {
         "type": "template",
         "template": "registers/show"
@@ -209,7 +227,7 @@
       "line": 219,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.group.decorate, {})",
-      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":24,"file":"app/controllers/registers_controller.rb"}],
+      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":26,"file":"app/controllers/registers_controller.rb"}],
       "location": {
         "type": "template",
         "template": "registers/show"
@@ -238,6 +256,6 @@
       "note": ""
     }
   ],
-  "updated": "2016-12-07 09:08:44 +0100",
+  "updated": "2017-01-03 08:12:35 +0100",
   "brakeman_version": "3.3.1"
 }
