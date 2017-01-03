@@ -3,10 +3,13 @@ require 'buzzn/discovergy/facade'
 
 describe Buzzn::Discovergy::Facade do
 
-  # make this specific to be sure to have this set even when running manually via rspec - could be deleted if not needed anymore.
-  before :all do
+  before :each do
     t = Time.local(2016, 7, 2, 10, 5, 0)
     Timecop.travel(t)
+  end
+
+  after :each do
+    Timecop.return
   end
 
   let(:meter) { Meter.where(manufacturer_product_serialnumber: 60009485).first || Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
