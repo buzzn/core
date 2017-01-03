@@ -46,7 +46,7 @@ module Buzzn
 
     def _add(target, source, duration)
       if target.empty?
-        target = source
+        target.replace(source.dup)
       elsif source.empty?
         return
       else
