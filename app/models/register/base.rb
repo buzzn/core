@@ -351,14 +351,12 @@ module Register
 
     def mysmartgrid?
       self.smart? &&
-      !metering_point_operator_contract.nil? &&
-      metering_point_operator_contract.contractor.organization.slug == "mysmartgrid"
-      #TODO: change this to mysmartgrid_broker
+        self.meter && self.meter.broker && self.meter.broker.is_a?(MySmartGridBroker)
     end
 
     def discovergy?
       self.smart? &&
-      self.meter && self.meter.broker && self.meter.broker.is_a?(DiscovergyBroker)
+        self.meter && self.meter.broker && self.meter.broker.is_a?(DiscovergyBroker)
     end
 
     def buzzn_api?
@@ -369,10 +367,8 @@ module Register
     def data_source
       if self.discovergy?
         Buzzn::Discovergy::DataSource::NAME
-      #elsif self.buzzn_api?
-      #  :buzzn_api
-      #elsif self.mysmartgrid?
-      #  :mysmartgrid
+      elsif self.mysmartgrid?
+        Buzzn::MySmartGrid::DataSource::NAME
       else
         #Buzzn::StandardProfile::NAME
         Buzzn::MissingDataSource::NAME

@@ -12,8 +12,8 @@ class Broker < ActiveRecord::Base
   validates :resource_id, presence: true
   validates :resource_type, presence: true
 
-  scope :by_provider, -> (provider) do
-    where(type: provider + "Broker")
+  scope :by_data_source, -> (data_source) do
+    where(type: "#{data_source.class::NAME.to_s.camelize}Broker")
   end
 
   def two_way_meter?
