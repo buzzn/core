@@ -49,7 +49,7 @@ describe "/api/v1/registers" do
         register = send(type)
         params = {
           readable: Register::Base.readables.sample,
-          name: "#{register.name} updated",
+          name: "#{register.name} updated"[0..29],
         }
         params[:uid] = '123321' if type == :real
 
@@ -59,7 +59,7 @@ describe "/api/v1/registers" do
 
         expect(json["data"]["attributes"]["uid"]).to eq(params[:uid]) if type == :real
         expect(json["data"]["attributes"]["readable"]).to eq(params[:readable])
-        expect(json["data"]["attributes"]["name"]).to eq("#{register.name} updated")
+        expect(json["data"]["attributes"]["name"]).to eq(params[:name])
       end
 
 

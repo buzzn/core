@@ -1,5 +1,15 @@
 describe "readings" do
 
+  let(:reading_from_easy_meter) do
+    Fabricate(:reading, register_id: easy_meter.input_register.id)
+  end
+
+  let(:easy_meter) do
+    meter =  Fabricate(:easy_meter_q3d, registers: [Fabricate.build(:input_register)])
+    Fabricate(:user).add_role(:manager, meter.input_register)
+    meter
+  end
+
   # READ
 
   [:no_access_token, :simple_access_token, :full_access_token, :smartmeter_access_token].each do |token|
@@ -21,13 +31,13 @@ describe "readings" do
 
   it 'gets a reading with full access token as admin' do
     access_token  = Fabricate(:full_access_token_as_admin)
-    reading       = Fabricate(:reading_with_easy_meter_q3d_with_input_register_and_manager)
+    reading       = reading_from_easy_meter
     get_with_token "/api/v1/readings/#{reading.id}", access_token.token
     expect(response).to have_http_status(200)
   end
 
   it 'gets a reading with simple access token as manager' do
-    reading       = Fabricate(:reading_with_easy_meter_q3d_with_input_register_and_manager)
+    reading       = reading_from_easy_meter
     manager       = reading.register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     get_with_token "/api/v1/readings/#{reading.id}", access_token.token
@@ -38,8 +48,7 @@ describe "readings" do
   # CREATE
 
   it 'create a reading with smartmeter access token as manager' do
-    meter         = Fabricate(:easy_meter_q3d_with_input_register_and_manager)
-    register      = meter.registers.first
+    register      = easy_meter.input_register
     manager       = register.managers.first
     access_token  = Fabricate(:smartmeter_access_token, resource_owner_id: manager.id)
     reading       = Fabricate.build(:reading)
@@ -62,8 +71,7 @@ describe "readings" do
 
 
   it 'creates a correct reading with simple access token as manager' do
-    meter         = Fabricate(:easy_meter_q3d_with_input_register_and_manager)
-    register      = meter.registers.first
+    register      = easy_meter.input_register
     manager       = register.managers.first
     access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
 
@@ -91,8 +99,7 @@ describe "readings" do
 
   [:register_id, :timestamp, :energy_milliwatt_hour, :power_milliwatt].each do |name|
     it "does not create a input reading without #{name}" do
-      meter         = Fabricate(:easy_meter_q3d_with_input_register_and_manager)
-      register      = meter.registers.first
+      register      = easy_meter.input_register
       manager       = register.managers.first
       access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
       reading       = Fabricate.build(:reading)

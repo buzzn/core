@@ -25,7 +25,7 @@ module Buzzn
 
     def guarded_delete(user)
       if deletable_by?(user)
-        destroy
+        destroy!
         self
       else
         raise PermissionDenied.new
