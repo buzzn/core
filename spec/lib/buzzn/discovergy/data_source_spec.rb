@@ -249,6 +249,8 @@ describe Buzzn::Discovergy::DataSource do
     expect(out_result.units).to eq :milliwatt
   end
 
+  # 'threaded' in description triggers a different DatabaseCleanet strategy
+  # see spec_helper.rb
   it 'caches single results single threaded' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
     facade.result = single_meter_live_response
@@ -262,6 +264,8 @@ describe Buzzn::Discovergy::DataSource do
     expect(result.expires_at).not_to eq other.expires_at
   end
 
+  # 'threaded' in description triggers a different DatabaseCleanet strategy
+  # see spec_helper.rb
   it 'caches collection result single threaded' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
     Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
@@ -276,6 +280,8 @@ describe Buzzn::Discovergy::DataSource do
     expect(result.expires_at).not_to eq other.expires_at
   end
 
+  # 'threaded' in description triggers a different DatabaseCleanet strategy
+  # see spec_helper.rb
   it 'caches single results multi threaded' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
     facade.result = single_meter_live_response
@@ -300,6 +306,8 @@ describe Buzzn::Discovergy::DataSource do
     expect(result.expires_at).not_to eq all.first
   end
 
+  # 'threaded' in description triggers a different DatabaseCleanet strategy
+  # see spec_helper.rb
   it 'caches collection result multi threaded' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
     Fabricate(:output_register, group: empty_group, meter: Fabricate(:meter))
