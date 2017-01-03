@@ -14,17 +14,7 @@
 describe 'Discovergy' do
 
   let(:discovergy_meter) do
-    meter = Fabricate(:easymeter_60139082) # in_out meter
-    if meter.broker.nil?
-      DiscovergyBroker.create!(
-        mode: :in,
-        external_id: 'EASYMETER_' + meter.manufacturer_product_serialnumber,
-        provider_login: 'team@localpool.de',
-        provider_password: 'Zebulon_4711',
-        resource: meter
-      )
-    end
-    meter
+    Fabricate(:easymeter_60139082) # in_out meter
   end
 
   describe "/api/v1/aggregate/present" do
