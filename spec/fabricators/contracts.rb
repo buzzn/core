@@ -25,8 +25,7 @@ Fabricator :metering_point_operator_contract do
   signing_date             { FFaker::Time.date }
   customer                 { Fabricate(:contracting_party,
                                        user: Fabricate(:user)) }
-  contractor               { (Organization.discovergy ||
-                              Fabricate(:discovergy)).contracting_party }  
+  contractor               { Organization.discovergy.contracting_party }
 end
 
 Fabricator :metering_point_operator_contract_of_localpool, from: :metering_point_operator_contract do
