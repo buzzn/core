@@ -66,7 +66,9 @@ RSpec.configure do |config|
   config.before(:all) do
     Organization.constants.each do |c|
       name = c.to_s.downcase.to_sym
-      if Organization.respond_to? name
+      if Organization.respond_to?(name) && name != :columns
+        # reset cache
+        Organization.instance_variable_set(:"@a_#{name}", nil)
         Organization.send(name) || Fabricate(name)
       end
     end
