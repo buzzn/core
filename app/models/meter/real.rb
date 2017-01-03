@@ -7,7 +7,7 @@ module Meter
 
     has_many :equipments
 
-    has_many :registers, class_name: Register::Real, dependent: :destroy, foreign_key: :meter_id
+    has_many :registers, class_name: Register::Real, foreign_key: :meter_id
 
     def self.manufacturer_names
       ['easy_meter', 'amperix', 'ferraris', 'other']
@@ -17,6 +17,10 @@ module Meter
     validates :manufacturer_product_name, presence: true
     validates :manufacturer_product_serialnumber, presence: true, uniqueness: true, length: { in: 2..128 }
     validates :image, presence: false
+
+    before_destroy do
+      registers.delete_all
+    end
 
     ['output', 'input'].each do |direction|
       define_method :"#{direction}_register" do

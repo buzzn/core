@@ -34,36 +34,6 @@ Fabricator :easy_meter_q3d, from: :meter  do
   smart true
 end
 
-
-Fabricator :easy_meter_q3d_with_input_register, from: :easy_meter_q3d  do
-  input_register
-end
-
-Fabricator :easy_meter_q3d_with_output_register, from: :easy_meter_q3d  do
-  output_register
-end
-
-
-# Fabricator :easy_meter_q3d_with_output_register_and_manager, from: :easy_meter_q3d  do
-#   output_register {[Fabricate(:output_register_with_manager)]}
-# end
-
-Fabricator :easy_meter_q3d_with_in_output_register, from: :easy_meter_q3d  do
-  registers { [Fabricate.build(:raw_input_register), Fabricate(:output_register_with_manager)] }
-end
-
-# Fabricator :easy_meter_q3d_with_input_register_and_manager, from: :easy_meter_q3d do
-#   after_create { |meter|
-#     user = Fabricate(:user)
-#     user.add_role(:manager, meter.registers.first)
-#   }
-# end
-
-Fabricator :easymeter_fixed_serial, from: :easy_meter_q3d do
-  manufacturer_product_serialnumber '1234567890'
-  registers { [Fabricate.build(:raw_input_register), Fabricate.build(:raw_output_register_readable_by_world)]}
-end
-
 # Justus Übergabe
 Fabricator :easymeter_60139082, from: :easy_meter_q3d do
   manufacturer_product_serialnumber '60139082'

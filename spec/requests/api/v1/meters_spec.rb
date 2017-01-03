@@ -379,7 +379,9 @@ describe "Meters API" do
     it "deletes a #{type} meter with full access token as admin" do
       meter = Fabricate(:"#{type}_meter")
       access_token  = Fabricate(:full_access_token_as_admin)
+
       delete_with_token "/api/v1/meters/#{meter.id}", access_token.token
+
       expect(response).to have_http_status(204)
       expect(Meter::Base.where(id: meter.id)).to eq []
     end
