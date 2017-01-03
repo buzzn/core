@@ -136,7 +136,7 @@ describe Buzzn::Discovergy::DataSource do
     mode = 'virtual'
     resource = group
     result = subject.send(:parse_virtual_meter_creation, response, mode, resource)
-    expect(group.brokers.by_provider("Discovergy").size).to eq 1
+    expect(group.brokers.by_data_source(subject).size).to eq 1
   end
 
   it 'does not create virtual meters for small group' do
@@ -149,7 +149,7 @@ describe Buzzn::Discovergy::DataSource do
       existing_broker = broker
       brokers = subject.create_virtual_meters_for_group(group)
       expect(brokers).not_to eq []
-      expect(group.brokers.by_provider("Discovergy").size).to eq 2
+      expect(group.brokers.by_data_source(subject).size).to eq 2
     end
   end
 
@@ -281,12 +281,12 @@ describe Buzzn::Discovergy::DataSource do
     facade.result = single_meter_live_response
 
     result = data_source.single_aggregated(register_with_broker, :in)
-    32.times do
+    32.times.collect do
       Thread.new do
         other = data_source.single_aggregated(register_with_broker, :in)
         expect(result.expires_at).to eq other.expires_at
       end
-    end
+    end.each { |t| t.join }
     all = []
     16.times.collect do
       Thread.new do
@@ -306,12 +306,12 @@ describe Buzzn::Discovergy::DataSource do
     facade.result = virtual_meter_live_response
 
     result = data_source.collection(register_with_group_broker.group, :out)
-    32.times do
+    32.times.collect do
       Thread.new do
         other = data_source.collection(register_with_group_broker.group, :out)
         expect(result.expires_at).to eq other.expires_at
       end
-    end
+    end.each { |t| t.join }
     all = []
     16.times.collect do
       Thread.new do

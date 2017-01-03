@@ -96,7 +96,8 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
-    DatabaseCleaner.strategy = :transaction
+    # transaction strategy does not work as we use threads in some tests
+    DatabaseCleaner.strategy = :truncation
   end
 
   config.before(:each, :js => true) do
