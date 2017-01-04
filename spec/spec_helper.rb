@@ -63,7 +63,7 @@ RSpec.configure do |config|
     ActionMailer::Base.deliveries.last
   end
 
-  config.before(:all) do
+  config.before(:each) do
     Organization.constants.each do |c|
       name = c.to_s.downcase.to_sym
       if Organization.respond_to?(name) && name != :columns
@@ -72,6 +72,9 @@ RSpec.configure do |config|
         Organization.send(name) || Fabricate(name)
       end
     end
+  end
+
+  config.before(:all) do
 
     if Bank.count == 0
       Bank.update_from(File.read("db/banks/BLZ_20160606.txt"))
