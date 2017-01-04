@@ -44,4 +44,6 @@ Buzzn::Application.configure do
     Timecop.travel(t)
   end
 
+
+  config.cache_store = :null_store
 end
