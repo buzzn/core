@@ -87,7 +87,6 @@ end
 Fabricator :register_pv_karin, from: :output_register do
   address  { Fabricate(:address, street_name: 'Gautinger Weg', street_number: '11', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'PV Scheune'
-  meter       { Fabricate(:easymeter_60051431) }
   devices { [Fabricate(:pv_karin)] }
 end
 

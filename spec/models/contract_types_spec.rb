@@ -1,5 +1,5 @@
 # coding: utf-8
-describe "Contract Model" do
+describe "Contract Sub Models" do
 
   let(:csv_dir) { 'db/csv' }
   let(:zip_vnb) { File.read(File.join(csv_dir, "plz_vnb_test.csv")) }

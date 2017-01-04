@@ -252,7 +252,7 @@ Fabricator :mpoc_karin, from: :metering_point_operator_contract do
   customer      { Fabricate(:karin).contracting_parties.first }
   username      'karin.smith@solfux.de'
   password      '19200buzzn'
-  register      { Fabricate(:register_pv_karin) }
+  register      { Fabricate(:easymeter_60051431).output_register }
   status        :running
   after_create do |c|
     karin = c.customer.user
