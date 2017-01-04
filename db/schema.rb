@@ -159,6 +159,7 @@ ActiveRecord::Schema.define(version: 20161225131404) do
     t.float    "tax_rate"
     t.integer  "tax_number"
     t.uuid     "organization_id"
+    t.uuid     "register_id"
     t.uuid     "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -170,6 +171,7 @@ ActiveRecord::Schema.define(version: 20161225131404) do
   end
 
   add_index "contracting_parties", ["organization_id"], name: "index_contracting_parties_on_organization_id", using: :btree
+  add_index "contracting_parties", ["register_id"], name: "index_contracting_parties_on_register_id", using: :btree
   add_index "contracting_parties", ["slug"], name: "index_contracting_parties_on_slug", unique: true, using: :btree
   add_index "contracting_parties", ["user_id"], name: "index_contracting_parties_on_user_id", using: :btree
 
