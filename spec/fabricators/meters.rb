@@ -87,7 +87,7 @@ end
 # karins meter fur die pv anlange
 Fabricator :easymeter_60051431, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051431'
-  registers [Fabricate.build(:register_60051431)]
+  registers [Fabricate.build(:register_pv_karin)]
 end
 
 
