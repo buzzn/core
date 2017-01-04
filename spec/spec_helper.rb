@@ -112,6 +112,11 @@ RSpec.configure do |config|
 
   config.after(:each) do
     DatabaseCleaner.clean
+    if Meter::Base.count > 0
+      p Meter::Base.all
+      Meter::Base.destroy_all
+      raise 'can not clean database' if Meter::Base.count > 0
+    end
     Mongoid.purge!
     Rails.cache.clear
   end
