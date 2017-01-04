@@ -288,7 +288,7 @@ describe Buzzn::Discovergy::DataSource do
     facade.result = single_meter_live_response
 
     result = data_source.single_aggregated(register_with_broker, :in)
-    32.times.collect do
+    16.times.collect do
       Thread.new do
         other = data_source.single_aggregated(register_with_broker, :in)
         expect(result.expires_at).to eq other.expires_at
@@ -315,7 +315,7 @@ describe Buzzn::Discovergy::DataSource do
     facade.result = virtual_meter_live_response
 
     result = data_source.collection(register_with_group_broker.group, :out)
-    32.times.collect do
+    16.times.collect do
       Thread.new do
         other = data_source.collection(register_with_group_broker.group, :out)
         expect(result.expires_at).to eq other.expires_at
