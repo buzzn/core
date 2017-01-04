@@ -63,6 +63,9 @@ Buzzn::Application.routes.draw do
   end
   resources :register_input, controller: 'registers'
   resources :register_output, controller: 'registers'
+  resources :register_virtual, controller: 'registers'
+  resources :meter_real, controller: 'meters'
+  resources :meter_virtual, controller: 'meters'
 
 
 

@@ -85,7 +85,7 @@ class GroupsController < ApplicationController
         flash[:notice] = t('your_register_is_already_part_of_another_group')
       end
     else
-      @found_meter = Meter.where(manufacturer_product_serialnumber: params[:group][:new_meters])
+      @found_meter = Meter::Base.where(manufacturer_product_serialnumber: params[:group][:new_meters])
       if @found_meter.any?
         @meter = @found_meter.first
         @register = @meter.registers.first
@@ -110,7 +110,7 @@ class GroupsController < ApplicationController
 
   def send_invitations_via_email
     @group = Group.find(params[:id])
-    @meter = Meter.new(manufacturer_product_serialnumber: params[:manufacturer_product_serialnumber])
+    @meter = Meter::Base.new(manufacturer_product_serialnumber: params[:manufacturer_product_serialnumber])
     authorize_action_for @group
   end
   authority_actions :send_invitations_via_email => 'update'
@@ -121,7 +121,7 @@ class GroupsController < ApplicationController
     @manufacturer_product_serialnumber = params[:group][:manufacturer_product_serialnumber]
     if params[:group][:email] == ""
       @group.errors.add(:email, I18n.t("cant_be_blank"))
-      @meter = Meter.new(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
+      @meter = Meter::Base.new(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
       render action: 'send_invitations_via_email'
     else
       @email = params[:group][:email]
@@ -129,7 +129,7 @@ class GroupsController < ApplicationController
       @register = Register::Base.create!(mode: 'in', name: 'Wohnung', readable: 'friends')
       @new_user.add_role(:member, @register)
       @new_user.add_role(:manager, @register)
-      @meter = Meter.create!(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
+      @meter = Meter::Base.create!(manufacturer_product_serialnumber: @manufacturer_product_serialnumber)
       @meter.registers << @register
       @group.registers << @register
       @group.create_activity key: 'group_register_membership.create', owner: @new_user, recipient: @register

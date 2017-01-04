@@ -4,7 +4,7 @@ class WizardRegistersController  < ApplicationController
 
   def wizard
     @register = Register::Base.new
-    @meter = Meter.new
+    @meter = Meter::Base.new
     @broker = Broker.new
   end
 
@@ -27,9 +27,9 @@ class WizardRegistersController  < ApplicationController
         #register is valid and now check meter
         if !@register.virtual
           if params[:register_base][:meter][:existing_meter] == t('add_existing_meter')
-            @meter = Meter.find(params[:register_base][:meter][:meter_id])
+            @meter = Meter::Base.find(params[:register_base][:meter][:meter_id])
           else
-            @meter = Meter.new(meter_params)
+            @meter = Meter::Real.new(meter_params)
           end
           @meter.registers << @register
 
