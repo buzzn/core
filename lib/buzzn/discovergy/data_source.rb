@@ -39,9 +39,10 @@ module Buzzn::Discovergy
     def single_aggregated(register_or_group, mode)
       result = nil
       brokers = register_or_group.brokers.by_data_source(self)
-      if ! brokers.empty? &&
+      if brokers.any? &&
          register_or_group.is_a?(Register::Base) &&
-         ! register_or_group.group.brokers.by_data_source(self).empty?
+         register_or_group.group &&
+         register_or_group.group.brokers.by_data_source(self).any?
         result = collection(register_or_group.group, mode)
         result.each do |r|
           return r if r.resource_id == register_or_group.id
