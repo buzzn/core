@@ -14,7 +14,10 @@
 describe 'Discovergy' do
 
   let(:discovergy_meter) do
-    Fabricate(:easymeter_60139082) # in_out meter
+    meter = Fabricate(:easymeter_60139082) # in_out meter
+    # TODO what to do with the in-out fact ?
+    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_60139082")
+    meter
   end
 
   describe "/api/v1/aggregate/present" do
