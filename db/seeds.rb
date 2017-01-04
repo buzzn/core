@@ -113,8 +113,8 @@ buzzn_team_names.each do |user_name|
     @gocycle = Fabricate(:gocycle)
     user.add_role :manager, @gocycle
     user.add_role :admin # felix is admin
-    root_register = Fabricate(:register_urbanstr88)
-    root_register.devices << @gocycle
+    #root_register = Fabricate(:register_urbanstr88)
+    #root_register.devices << @gocycle
 
     if Rails.env.development?
       Fabricate(:application, owner: user, name: 'Buzzn API', scopes: 'simple full', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
