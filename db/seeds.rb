@@ -167,11 +167,11 @@ buzzn_team_names.each do |user_name|
     root_register = contract.register
     user.add_role :admin # thomas is admin
   when 'kristian'
-    root_register = Fabricate(:register_kristian)
+    root_register = Fabricate(:input_meter).input_register
     Fabricate(:mpoc_buzzn_metering, register: root_register)
     user.add_role :admin # kristian is admin
   else
-    root_register = Fabricate(:input_register)
+    root_register = Fabricate(:input_meter).input_register
   end
   if root_register
     user.add_role :manager, root_register
@@ -227,7 +227,7 @@ geloeschter_benutzer = Fabricate(:geloeschter_benutzer)
 
 
 # christian_schuetze
-@fichtenweg10 = register_cs_1 = Fabricate(:register_cs_1)
+@fichtenweg10 = register_cs_1 = Fabricate(:easymeter_1124001747).input_register
 
 
 
@@ -257,30 +257,30 @@ hans_dieter_hopf  = Fabricate(:hans_dieter_hopf)
 manuela_baier     = Fabricate(:manuela_baier)
 thomas_hopf       = Fabricate(:thomas_hopf)
 
-register_60118470 = Fabricate(:register_60118470)
+register_60118470 = Fabricate(:easymeter_60118470).output_register
 hans_dieter_hopf.add_role :manager, register_60118470
 meter = register_60118470.meter
 meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 
-register_60009316 = Fabricate(:register_60009316)
+register_60009316 = Fabricate(:easymeter_60009316).output_register
 hans_dieter_hopf.add_role :manager, register_60009316
 meter = register_60009316.meter
 meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 
-register_60009272 = Fabricate(:register_60009272)
+register_60009272 = Fabricate(:easymeter_60009272).input_register
 thomas_hopf.add_role :manager, register_60009272
 meter = register_60009272.meter
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 
-register_60009348 = Fabricate(:register_60009348)
+register_60009348 = Fabricate(:easymeter_60009348).input_register
 manuela_baier.add_role :manager, register_60009348
 meter = register_60009348.meter
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 
-register_hans_dieter_hopf = Fabricate(:register_hans_dieter_hopf)
+register_hans_dieter_hopf = Fabricate(:virtual_meter_hopf).register
 hans_dieter_hopf.add_role :manager, register_hans_dieter_hopf
-register_hans_dieter_hopf.formula_parts << Fabricate(:fp_plus, operand_id: register_60009348.id)
-register_hans_dieter_hopf.formula_parts << Fabricate(:fp_plus, operand_id: register_60009316.id)
+Fabricate(:fp_plus, operand_id: register_60009348.id, register: register_hans_dieter_hopf)
+Fabricate(:fp_plus, operand_id: register_60009316.id, register: register_hans_dieter_hopf)
 
 thomas_hopf.add_role :member, register_60009272
 manuela_baier.add_role :member, register_60009348
@@ -316,116 +316,116 @@ justus.add_role :manager, group_home_of_the_brave
 
 puts 'group wagnis4'
 dirk_mittelstaedt = Fabricate(:dirk_mittelstaedt)
-register_60009416 = Fabricate(:register_60009416)
+register_60009416 = Fabricate(:easymeter_60009416).input_register
 dirk_mittelstaedt.add_role(:manager, register_60009416)
 dirk_mittelstaedt.add_role(:member, register_60009416)
 
 manuel_dmoch = Fabricate(:manuel_dmoch)
-register_60009419 = Fabricate(:register_60009419)
+register_60009419 = Fabricate(:easymeter_60009419).input_register
 manuel_dmoch.add_role(:manager, register_60009419)
 manuel_dmoch.add_role(:member, register_60009419)
 
 sibo_ahrens = Fabricate(:sibo_ahrens)
-register_60009415 = Fabricate(:register_60009415)
+register_60009415 = Fabricate(:easymeter_60009415).input_register
 sibo_ahrens.add_role(:manager, register_60009415)
 sibo_ahrens.add_role(:member, register_60009415)
 
 nicolas_sadoni = Fabricate(:nicolas_sadoni)
-register_60009418 = Fabricate(:register_60009418)
+register_60009418 = Fabricate(:easymeter_60009418).input_register
 nicolas_sadoni.add_role(:manager, register_60009418)
 nicolas_sadoni.add_role(:member, register_60009418)
 
 josef_neu = Fabricate(:josef_neu)
-register_60009411 = Fabricate(:register_60009411)
+register_60009411 = Fabricate(:easymeter_60009411).input_register
 josef_neu.add_role(:manager, register_60009411)
 josef_neu.add_role(:member, register_60009411)
 
 elisabeth_christiansen = Fabricate(:elisabeth_christiansen)
-register_60009410 = Fabricate(:register_60009410)
+register_60009410 = Fabricate(:easymeter_60009410).input_register
 elisabeth_christiansen.add_role(:manager, register_60009410)
 elisabeth_christiansen.add_role(:member, register_60009410)
 
 florian_butz = Fabricate(:florian_butz)
-register_60009407 = Fabricate(:register_60009407)
+register_60009407 = Fabricate(:easymeter_60009407).input_register
 florian_butz.add_role(:manager, register_60009407)
 florian_butz.add_role(:member, register_60009407)
 
 ulrike_bez = Fabricate(:ulrike_bez)
-register_60009409 = Fabricate(:register_60009409)
+register_60009409 = Fabricate(:easymeter_60009409).input_register
 ulrike_bez.add_role(:manager, register_60009409)
 ulrike_bez.add_role(:member, register_60009409)
 
 rudolf_hassenstein = Fabricate(:rudolf_hassenstein)
-register_60009435 = Fabricate(:register_60009435)
+register_60009435 = Fabricate(:easymeter_60009435).input_register
 rudolf_hassenstein.add_role(:manager, register_60009435)
 rudolf_hassenstein.add_role(:member, register_60009435)
 
 maria_mueller = Fabricate(:maria_mueller)
-register_60009402 = Fabricate(:register_60009402)
-register_60009390 = Fabricate(:register_60009390)
+register_60009402 = Fabricate(:easymeter_60009402).input_register
+register_60009390 = Fabricate(:easymeter_60009390).input_register
 maria_mueller.add_role(:manager, register_60009402)
 maria_mueller.add_role(:manager, register_60009390)
 maria_mueller.add_role(:member, register_60009402)
 maria_mueller.add_role(:member, register_60009390)
 
 andreas_schlafer = Fabricate(:andreas_schlafer)
-register_60009387 = Fabricate(:register_60009387)
+register_60009387 = Fabricate(:easymeter_60009387).input_register
 andreas_schlafer.add_role(:manager, register_60009387)
 andreas_schlafer.add_role(:member, register_60009387)
 
 luise_woerle = Fabricate(:luise_woerle)
-register_60009438 = Fabricate(:register_60009438)
+register_60009438 = Fabricate(:easymeter_60009438).input_register
 luise_woerle.add_role(:manager, register_60009438)
 luise_woerle.add_role(:member, register_60009438)
 
 peter_waechter = Fabricate(:peter_waechter)
-register_60009440 = Fabricate(:register_60009440)
+register_60009440 = Fabricate(:easymeter_60009440).input_register
 peter_waechter.add_role(:manager, register_60009440)
 peter_waechter.add_role(:member, register_60009440)
 
 sigrid_cycon = Fabricate(:sigrid_cycon)
-register_60009404 = Fabricate(:register_60009404)
+register_60009404 = Fabricate(:easymeter_60009404).input_register
 sigrid_cycon.add_role(:manager, register_60009404)
 sigrid_cycon.add_role(:member, register_60009404)
 
 dietlind_klemm = Fabricate(:dietlind_klemm)
-register_60009405 = Fabricate(:register_60009405)
+register_60009405 = Fabricate(:easymeter_60009405).input_register
 dietlind_klemm.add_role(:manager, register_60009405)
 dietlind_klemm.add_role(:member, register_60009405)
 
 wilhelm_wagner = Fabricate(:wilhelm_wagner)
-register_60009422 = Fabricate(:register_60009422)
+register_60009422 = Fabricate(:easymeter_60009422).input_register
 wilhelm_wagner.add_role(:manager, register_60009422)
 wilhelm_wagner.add_role(:member, register_60009422)
 
 volker_letzner = Fabricate(:volker_letzner)
-register_60009425 = Fabricate(:register_60009425)
+register_60009425 = Fabricate(:easymeter_60009425).input_register
 volker_letzner.add_role(:manager, register_60009425)
 volker_letzner.add_role(:member, register_60009425)
 
 evang_pflege = Fabricate(:evang_pflege)
-register_60009429 = Fabricate(:register_60009429)
+register_60009429 = Fabricate(:easymeter_60009429).input_register
 evang_pflege.add_role(:manager, register_60009429)
 evang_pflege.add_role(:member, register_60009429)
 
 david_stadlmann = Fabricate(:david_stadlmann)
-register_60009393 = Fabricate(:register_60009393)
+register_60009393 = Fabricate(:easymeter_60009393).input_register
 david_stadlmann.add_role(:manager, register_60009393)
 david_stadlmann.add_role(:member, register_60009393)
 
 doris_knaier = Fabricate(:doris_knaier)
-register_60009442 = Fabricate(:register_60009442)
+register_60009442 = Fabricate(:easymeter_60009442).input_register
 doris_knaier.add_role(:manager, register_60009442)
 doris_knaier.add_role(:member, register_60009442)
 
 sabine_dumler = Fabricate(:sabine_dumler)
-register_60009441 = Fabricate(:register_60009441)
+register_60009441 = Fabricate(:easymeter_60009441).input_register
 sabine_dumler.add_role(:manager, register_60009441)
 sabine_dumler.add_role(:member, register_60009441)
 
-register_60009420 = Fabricate(:register_60009420)
+register_60009420 = Fabricate(:easymeter_60009420).input_register
 manuel_dmoch.add_role(:manager, register_60009420)
-register_60118460 = Fabricate(:register_60118460)
+register_60118460 = Fabricate(:easymeter_60118460).output_register
 manuel_dmoch.add_role(:manager, register_60118460)
 
 group_wagnis4 = Fabricate(:group_wagnis4, registers: [register_60118460])

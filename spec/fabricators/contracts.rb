@@ -266,16 +266,17 @@ Fabricator :mpoc_christian, from: :metering_point_operator_contract do
   contractor    Organization.discovergy.contracting_party
   username      'christian@buzzn.net'
   password      'Roentgen11smartmeter'
-  register      { Fabricate(:register_60138988) }
+  register      { Fabricate(:easymeter_60138988).input_register }
 end
 
 Fabricator :mpoc_philipp, from: :metering_point_operator_contract do
   contractor    Organization.discovergy.contracting_party
   username      'info@philipp-osswald.de'
   password      'Null8fünfzehn'
-  register      { Fabricate(:register_60009269) }
+  register      { Fabricate(:easymeter_60009269).input_register }
 end
 
+# TODO needs register
 Fabricator :mpoc_thomas, from: :metering_point_operator_contract do
   contractor    Organization.discovergy.contracting_party
   username      'thomas@buzzn.net'
@@ -287,7 +288,7 @@ Fabricator :mpoc_ferraris_0001_amperix, from: :metering_point_operator_contract 
   contractor    Organization.mysmartgrid.contracting_party
   username      '6ed89edf81be48586afc19f9006feb8b'
   password      '1a875e34e291c28db95ecbda015ad433'
-  register      { Fabricate(:register_ferraris_001_amperix) }
+  register      { Fabricate(:ferraris_001_amperix).input_register }
 end
 
 # wogeno oberländerstr bhkw

@@ -68,6 +68,16 @@ end
 # Justus verbrauch
 Fabricator :easymeter_1124001747, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '1124001747'
+  registers [Fabricate.build(:register_cs_1)]
+  after_create do |meter|
+    register = meter.input_register
+    christian_schuetze = Fabricate(:christian_schuetze)
+    contracting_party = Fabricate(:contracting_party)
+    christian_schuetze.contracting_parties << contracting_party
+    contract = Fabricate(:mpoc_justus, customer: contracting_party, register: register)
+    christian_schuetze.add_role(:manager, register)
+    christian_schuetze.add_role(:member, register)
+  end
 end
 
 
@@ -145,10 +155,11 @@ end
 
 
 # Meter für virtuellen MP für Hopf
-Fabricator :virtual_meter_hopf, from: :meter do
-  manufacturer_name                   ''
-  manufacturer_product_name           ''
+Fabricator :virtual_meter_hopf, from: :virtual_meter do
   manufacturer_product_serialnumber   '123456'
+  #TODO make virtual-meter contructor more flexible to allow
+  # build VirtualRegister as well
+  register { Fabricate.build(:register_hans_dieter_hopf).attributes }
 end
 
 
@@ -700,4 +711,5 @@ Fabricator :ferraris_001_amperix, from: :meter do
   manufacturer_name                   'ferraris'
   manufacturer_product_name           'xy'
   manufacturer_product_serialnumber   '001'
+  registers [Fabricate.build(:register_ferraris_001_amperix)]
 end

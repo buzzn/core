@@ -117,15 +117,6 @@ end
 Fabricator :register_cs_1, from: :input_register do
   address  { Fabricate(:address, street_name: 'Fichtenweg', street_number: '8', zip: 82515, city: 'Wolfratshausen', state: 'Bayern') }
   name  'Wohnung'
- # meter { Fabricate(:easymeter_1124001747) }
-  after_create do |register|
-    christian_schuetze = Fabricate(:christian_schuetze)
-    contracting_party = Fabricate(:contracting_party)
-    christian_schuetze.contracting_parties << contracting_party
-    contract = Fabricate(:mpoc_justus, customer: contracting_party, register: register)
-    christian_schuetze.add_role(:manager, register)
-    christian_schuetze.add_role(:member, register)
-  end
 end
 
 
@@ -183,10 +174,9 @@ Fabricator :register_60009348, from: :input_register do
 end
 
 # Wohnung Hr. Hopf ("ZN3") ist ungezählt kann aber berechnet werden
-Fabricator :register_hans_dieter_hopf, from: :input_register do
+Fabricator :register_hans_dieter_hopf, from: :virtual_register do
   name  'Wohnung'
-  #meter {  Fabricate(:virtual_meter_hopf) }
-  virtual         true
+  direction 'in'
 end
 
 
