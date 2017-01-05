@@ -85,11 +85,11 @@ class WizardMetersController  < ApplicationController
     Meter::Base.transaction do
       @meter = Meter::Base.find(params[:meter_id])
       @register = Register::Base.find(params[:register_id])
-      @meter.manufacturer_product_serialnumber = params[:meter][:manufacturer_product_serialnumber]
-      @meter.manufacturer_name = params[:meter][:manufacturer_name]
+      @meter.manufacturer_product_serialnumber = meter_params[:manufacturer_product_serialnumber]
+      @meter.manufacturer_name = meter_params[:manufacturer_name]
 
       if @meter.save
-        if params[:meter][:smartmeter] == "1"
+        if meter_params[:smartmeter] == "1"
           #meter valid, now check contract
           organization = Organization.find(credential_params[:organization])
           if !@meter.broker
@@ -150,21 +150,29 @@ class WizardMetersController  < ApplicationController
   private
 
   def broker_class
-    if !params[:meter][:broker].nil?
+    if !params[meter_class][:broker].nil?
       :broker
-    elsif !params[:meter][:discovergy_broker].nil?
+    elsif !params[meter_class][:discovergy_broker].nil?
       :discovergy_broker
-    elsif !params[:meter][:my_smart_grid_broker].nil?
+    elsif !params[meter_class][:my_smart_grid_broker].nil?
       :my_smart_grid_broker
     end
   end
 
+  def meter_class
+    if !params[:meter_real].nil? && params[:meter_virtual].nil?
+      :meter_real
+    elsif params[:meter_real].nil? && !params[:meter_virtual].nil?
+      :meter_virtual
+    end
+  end
+
   def meter_params
-    params.require(:meter).permit(:id, :register_id, :manufacturer_product_serialnumber, :manufacturer_name, :registers)
+    params.require(meter_class).permit(:id, :register_id, :manufacturer_product_serialnumber, :manufacturer_name, :registers, :smartmeter)
   end
 
   def credential_params
-    params.require(:meter).require(broker_class).permit( :id, :organization, :provider_login, :provider_password, :sensor_id, :x_token)
+    params.require(meter_class).require(broker_class).permit( :id, :organization, :provider_login, :provider_password, :sensor_id, :x_token)
   end
 
 end

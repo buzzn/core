@@ -55,13 +55,14 @@ class DiscovergyBroker < Broker
 
   # TODO: Move this into perent class
   def validates_credentials
-    if self.resource.is_a?(Meter) && self.resource.registers.any?
+    if self.resource.is_a?(Meter::Base) && self.resource.registers.any?
       crawler = Crawler.new(self.resource.registers.first)
       if crawler.valid_credential?
         self.resource.update_columns(smart: true)
         self.resource.save
       else
-        # TODO ?
+        self.resource.update_columns(smart: false)
+        self.resource.save
       end
     end
   end

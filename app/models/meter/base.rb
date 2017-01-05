@@ -92,7 +92,7 @@ module Meter
     def self.filter(value)
       do_filter(value, *search_attributes)
     end
-    
+
     # for railsview
     def class_name
       self.class.name.downcase.sub!("::", "_")
