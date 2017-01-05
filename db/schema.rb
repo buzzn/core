@@ -125,7 +125,7 @@ ActiveRecord::Schema.define(version: 20161225131404) do
     t.string   "resource_type",                   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "type"
+    t.string   "type",                            null: false
   end
 
   add_index "brokers", ["mode", "resource_id", "resource_type"], name: "index_brokers", unique: true, using: :btree
