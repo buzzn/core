@@ -151,6 +151,12 @@ describe Buzzn::ScoreCalculator do
   end
 
   describe 'group Home-Of-The-Brave' do
+
+    class DiscovergyBroker
+      def validates_credentials
+      end
+    end
+
     let(:now) { Time.find_zone('Berlin').local(2016,10,5, 18,30,1)  }
     let(:group) do
       easymeter_60051599 = Fabricate(:easymeter_60051599)
@@ -169,7 +175,7 @@ describe Buzzn::ScoreCalculator do
     end
 
     it 'calculates autarchy' do |spec|
-      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do
+      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
         subject.calculate_autarchy_scores
         expect(Score.count).to eq 3
         Score.all.each do |score|
@@ -180,7 +186,7 @@ describe Buzzn::ScoreCalculator do
     end
 
     it 'calculates sufficiency' do |spec|
-      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do
+      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
         subject.calculate_sufficiency_scores
         expect(Score.count).to eq 3
         Score.all.each do |score|
@@ -191,7 +197,7 @@ describe Buzzn::ScoreCalculator do
     end
 
     it 'calculates fitting' do |spec|
-      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do
+      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
         subject.calculate_fitting_scores
         expect(Score.count).to eq 3
         Score.all.each do |score|
