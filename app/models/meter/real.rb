@@ -3,6 +3,16 @@ module Meter
 
     MUST_HAVE_AT_LEAST_ONE = 'must have at least one register'
 
+    def after_create_callback(user, obj)
+      register = obj.registers.first
+      register.class.after_create_callback(user, register)
+    end
+
+    def after_destroy_callback(user, obj)
+      register = obj.registers.first
+      register.class.after_destroy_callback(user, register)
+    end
+
     mount_uploader :image, PictureUploader
 
     has_many :equipments

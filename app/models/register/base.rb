@@ -12,12 +12,12 @@ module Register
     include Buzzn::GuardedCrud
     include PublicActivity::Model
 
-    after_create do
-      PublicActivity::Activity.create(trackable: self, key: 'register.create', recipient: self)
+    def self.after_create_callback(user, obj)
+      obj.create_activity(key: 'register.create', recipient: obj, owner: user)
     end
 
-    after_destroy do
-      PublicActivity::Activity.create(trackable: self, key: 'register.destroy', recipient: self)
+    def self.after_destroy_callback(user, obj)
+      obj.create_activity(trackable: nil, key: 'register.destroy', recipient: nil, owner: user)
     end
 
     belongs_to :group
@@ -524,7 +524,7 @@ module Register
       if current_power.nil?
         if observe_offline && last_observed_timestamp
           if Time.current.utc >= last_observed_timestamp && Time.current.utc <= last_observed_timestamp + 3.minutes
-            return PublicActivity::Activity.create(key: 'register.offline', owner: self)
+            return create_activity(key: 'register.offline', owner: self)
           end
         end
       else
@@ -539,7 +539,7 @@ module Register
       end
 
       if observe && mode
-        PublicActivity::Activity.create(key: "register.#{mode}", owner: self)
+        create_activity(key: "register.#{mode}", owner: self)
       end
     end
 
@@ -560,8 +560,7 @@ module Register
       GroupRegisterRequest.where(register: self).each{|request| request.destroy}
       # TODO use delete_all ?
       self.root_comments.each{|comment| comment.destroy}
-      # TODO needed or not
-      #self.activities.each{|activity| activity.destroy}
+      self.activities.each{|activity| activity.destroy}
     end
   end
 end
