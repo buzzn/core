@@ -83,7 +83,8 @@ module API
           group = Group.guarded_retrieve(current_user, permitted_params)
 
           # registers do consider group relation for readable_by
-          paginated_response(Register::Base.by_group(group).without_externals.anonymized_readable_by(current_user))
+          # TODO not clear why noe group.registers.without_externals ???
+          paginated_response(Register::Base.by_group(group).without_externals.anonymized_readable_by(current_user).order(type: :desc)) # the order is to make sure we the Register::Virtual as first element as its attribute set is enough for even Input and Output Registers
         end
 
 
