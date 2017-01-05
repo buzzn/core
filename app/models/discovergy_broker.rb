@@ -56,8 +56,8 @@ class DiscovergyBroker < Broker
   # TODO: Move this into parent class
   def validates_credentials
     if self.resource.is_a?(Meter::Real) && self.resource.registers.any?
-      crawler = Crawler.new(self.resource.registers.first)
-      if crawler.valid_credential?
+      data_result = Buzzn::Application.config.current_power.for_register(self.resource.registers.first, Time.current)
+      if data_result
         self.resource.update_columns(smart: true)
         self.resource.save
       else
