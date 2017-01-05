@@ -1,6 +1,12 @@
 # coding: utf-8
 require 'buzzn/discovergy/data_source'
 
+class Crawler
+  def valid_credential?(*args)
+    true
+  end
+end
+
 describe Buzzn::Discovergy::DataSource do
 
   subject { Buzzn::Discovergy::DataSource.new }
