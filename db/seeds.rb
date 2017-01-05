@@ -155,13 +155,6 @@ buzzn_team_names.each do |user_name|
     root_register.devices << bhkw_stefan
     user.add_role :manager, bhkw_stefan
     meter = root_register.meter
-    meter.broker = Fabricate(:discovergy_broker,
-      mode: 'in',
-      external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
-      resource: meter,
-      provider_login: 'stefan@buzzn.net',
-      provider_password: '19200buzzn'
-    )
   when 'thomas'
     contract = Fabricate(:mpoc_ferraris_0001_amperix)
     root_register = contract.register
