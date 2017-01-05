@@ -246,7 +246,7 @@
           .row
             .meters
               - if @register.meter
-                = render @register.meter, locals: { register: @register }
+                = render partial: 'meters/meter', locals: { register: @register, meter: @register.meter }
               - else
                 .new_meter.show_meter_tour
                   .row

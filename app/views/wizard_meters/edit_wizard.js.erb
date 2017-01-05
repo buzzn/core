@@ -2,7 +2,7 @@ $(".modal-dialog").html("<%= escape_javascript( render 'wizard_meters/edit_wizar
 
 var form;
 
-form = $("#edit_meter_" + "<%= escape_javascript( @meter.id) %>").show();
+form = $("#edit_" + "<%= escape_javascript( @meter.class_name) %>" + "_" + "<%= escape_javascript( @meter.id) %>").show();
 
 form.steps({
   headerTag: 'h3',

@@ -110,7 +110,7 @@ class WizardRegistersController  < ApplicationController
   end
 
   def meter_params
-    params.require(:register_base).require(:meter).permit( :manufacturer_product_serialnumber)
+    params.require(:register_base).require(:meter_base).permit( :manufacturer_product_serialnumber)
   end
 
   def credential_params

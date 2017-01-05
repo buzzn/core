@@ -60,8 +60,17 @@ class MetersController < ApplicationController
 
 
 private
+
+  def meter_class
+    if !params[:meter_real].nil? && params[:meter_virtual].nil?
+      :meter_real
+    elsif params[:meter_real].nil? && !params[:meter_virtual].nil?
+      :meter_virtual
+    end
+  end
+
   def meter_params
-    params.require(:meter).permit(
+    params.require(meter_class).permit(
       :image,
       :manufacturer_name,
       :manufacturer_product_name,

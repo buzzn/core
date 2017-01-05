@@ -10,6 +10,7 @@ module Register
     include Buzzn::ManagerRole
     include Buzzn::MemberRole
     include Buzzn::GuardedCrud
+    include PublicActivity::Model
 
     after_create do
       PublicActivity::Activity.create(trackable: self, key: 'register.create', recipient: self)
