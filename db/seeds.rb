@@ -55,16 +55,16 @@ buzzn_team_names.each do |user_name|
   when 'justus'
     easymeter_60139082 = Fabricate(:easymeter_60139082)
     easymeter_60139082.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_60139082", resource: easymeter_60139082)
-    register_z1a = easymeter_60139082.registers.first
-    register_z1b = easymeter_60139082.registers.last
-    @fichtenweg8 = root_register = register_z1a
-    user.add_role :manager, register_z1a
-    user.add_role :manager, register_z1b
-    register_z1a.contracts.each do |contract|
+    @register_z1a = easymeter_60139082.registers.first
+    @register_z1b = easymeter_60139082.registers.last
+    @fichtenweg8 = root_register = @register_z1a
+    user.add_role :manager, @register_z1a
+    user.add_role :manager, @register_z1b
+    @register_z1a.contracts.each do |contract|
       user.contracting_parties.first.assigned_contracts << contract
       contract.save
     end
-    register_z1b.contracts.each do |contract|
+    @register_z1b.contracts.each do |contract|
       user.contracting_parties.first.assigned_contracts << contract
     end
     easymeter_60051599 = Fabricate(:easymeter_60051599)
@@ -306,8 +306,7 @@ group_hopf.registers << register_hans_dieter_hopf
 
 
 puts 'group home_of_the_brave'
-group_home_of_the_brave = Fabricate(:group_home_of_the_brave, registers: [@register_z2, @register_z4])
-group_home_of_the_brave.registers << @register_z3
+group_home_of_the_brave = Fabricate(:group_home_of_the_brave, registers: [@register_z1a, @register_z1b, @register_z2, @register_z3, @register_z4, @register_z5])
 justus = User.where(email: 'justus@buzzn.net').first
 justus.add_role :manager, group_home_of_the_brave
 #group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
@@ -448,7 +447,7 @@ group_wagnis4.registers << register_60009404
 group_wagnis4.registers << register_60009405
 group_wagnis4.registers << register_60009422
 group_wagnis4.registers << register_60009425
-group_wagnis4.registers << register_60009429
+group_wagnis4.registers << register_60009429 if register_60009429
 group_wagnis4.registers << register_60009393
 group_wagnis4.registers << register_60009442
 group_wagnis4.registers << register_60009441
