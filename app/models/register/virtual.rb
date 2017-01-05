@@ -14,12 +14,11 @@ module Register
       Register::Base.where(id: Register::FormulaPart.where(register_id: self.id).select(:operand_id))
     end
 
-    def smart
-      self.formula_parts.any do |formula_part|
-        formula_part.operand.smart
+    def smart?
+      self.formula_parts.any? do |formula_part|
+        formula_part.operand.smart?
       end
     end
-    alias :smart? :smart
        
     def smart=(*args)
       raise 'not available'
