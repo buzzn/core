@@ -1,4 +1,11 @@
 # coding: utf-8
+
+class Crawler
+  def valid_credential?(*args)
+    true
+  end
+end
+
 describe Buzzn::Discovergy::Facade do
 
   before :each do
