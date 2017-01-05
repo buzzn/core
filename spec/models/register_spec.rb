@@ -101,9 +101,9 @@ describe "Register Model" do
     it 'creates all observer activities' do |spec|
       VCR.use_cassette("models/#{spec.metadata[:description].downcase}") do
         subject.update! observe: true, max_watt: 200, min_watt: 0
-        expect(PublicActivity::Activity.count).to eq 1
+        expect(PublicActivity::Activity.count).to eq 0
         Register::Base.create_all_observer_activities
-        expect(PublicActivity::Activity.count).to eq 2
+        expect(PublicActivity::Activity.count).to eq 1
       end
     end
 

@@ -1,6 +1,14 @@
 module Meter
   class Virtual < Base
 
+    def after_create_callback(user, obj)
+      obj.register.class.after_create_callback(user, obj.register)
+    end
+
+    def after_destroy_callback(user, obj)
+      obj.register.class.after_destroy_callback(user, obj.register)
+    end
+
     has_one :register, class_name: Register::Virtual, dependent: :destroy, foreign_key: :meter_id
 
     validates :register, presence: true
