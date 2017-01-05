@@ -1,5 +1,11 @@
 
 
+class Crawler
+  def valid_credential?(*args)
+    true
+  end
+end
+
 
   #   _____  _
   #  |  __ \(_)
