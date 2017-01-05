@@ -26,6 +26,7 @@ module Buzzn
     def guarded_delete(user)
       if deletable_by?(user)
         destroy!
+        self.class.after_delete_callback(user, self)
         self
       else
         raise PermissionDenied.new
@@ -39,10 +40,18 @@ module Buzzn
 
       def guarded_create(user, params, *args)
         if creatable_by?(user, *args)
-          create!(guarded_prepare(user, params))
+          obj = create!(guarded_prepare(user, params))
+          after_create_callback(user, obj)
+          obj
         else
           raise PermissionDenied.new
         end
+      end
+
+      def after_create_callback(user, obj)
+      end
+
+      def after_delete_callback(user, obj)
       end
 
       def guarded_retrieve(user, id)
