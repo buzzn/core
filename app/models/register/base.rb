@@ -518,17 +518,21 @@ module Register
     end
 
     def create_observer_activities
-      last_reading    = Crawler.new(self).live
-      current_power   = last_reading[:power] if last_reading
+      last_reading    = Buzzn::Application.config.current_power.for_register(self, Time.current)
+      if !last_reading
+        return
+      end
 
-      if current_power.nil?
-        if observe_offline && last_observed_timestamp
-          if Time.current.utc >= last_observed_timestamp && Time.current.utc <= last_observed_timestamp + 3.minutes
+      current_power = last_reading.value
+
+      if Time.current.utc.to_i - last_reading.timestamp.to_i >= 5.minutes
+        if observe_offline
+          if Time.current.utc.to_i - last_reading.timestamp.to_i < 10.minutes
             return create_activity(key: 'register.offline', owner: self)
           end
         end
       else
-        update(last_observed_timestamp: Time.at(last_reading[:timestamp]/1000.0).utc)
+        update(last_observed_timestamp: Time.at(last_reading.timestamp/1000.0).utc)
         if current_power < min_watt && current_power >= 0
           mode = 'undershoots'
         elsif current_power >= max_watt
@@ -539,7 +543,7 @@ module Register
       end
 
       if observe && mode
-        create_activity(key: "register.#{mode}", owner: self)
+        return create_activity(key: "register.#{mode}", owner: self)
       end
     end
 

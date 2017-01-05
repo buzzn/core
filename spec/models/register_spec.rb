@@ -58,29 +58,6 @@ describe "Register Model" do
 
   describe 'observers' do
 
-    class Crawler
-      def self.offline(arg = nil)
-        if arg != nil
-          @offline = arg
-        else
-          @offline
-        end
-      end
-
-      alias :live_orig :live
-      def live
-        if self.class.offline
-          nil
-        else
-          live_orig
-        end
-      end
-
-      def valid_credential?
-        true
-      end
-    end
-
     let(:now) { Time.find_zone('Berlin').local(2016,2,1, 1,30,1) }
 
     let :subject do
@@ -95,7 +72,6 @@ describe "Register Model" do
 
     after do
       Timecop.return
-      Crawler.offline(false)
     end
 
     it 'creates all observer activities' do |spec|
@@ -137,20 +113,22 @@ describe "Register Model" do
       end
     end
 
-    it 'observe offline' do
-      Timecop.return
+    it 'observe offline' do |spec|
       now = Time.find_zone('Berlin').local(2016,3,1, 1,30,1)
-      Timecop.freeze(now)
-      Crawler.offline(true)
-      subject.update observe_offline: true, last_observed_timestamp: now.utc
-      result = subject.create_observer_activities
-      expect(result.key).to eq 'register.offline'
-
-      Timecop.return
-      now += 5.minutes
-      Timecop.freeze(now)
-      result = subject.create_observer_activities
-      expect(result).to be_nil
+      VCR.use_cassette("models/#{spec.metadata[:description].downcase}_first") do
+        Timecop.return
+        Timecop.freeze(now)
+        subject.update observe_offline: true, last_observed_timestamp: now.utc
+        result = subject.create_observer_activities
+        expect(result).to be_nil
+      end
+      VCR.use_cassette("models/#{spec.metadata[:description].downcase}_second") do
+        Timecop.return
+        now += 5.minutes
+        Timecop.freeze(now)
+        result = subject.create_observer_activities
+        expect(result.key).to eq 'register.offline'
+      end
     end
   end
 
