@@ -1,4 +1,4 @@
-class MeterDecorator < Draper::Decorator
+class Meter::BaseDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
 
@@ -20,7 +20,4 @@ class MeterDecorator < Draper::Decorator
         'data-target' => '#myModal'
       })
   end
-
-
-
 end
