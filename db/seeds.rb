@@ -134,7 +134,7 @@ buzzn_team_names.each do |user_name|
       external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
       resource: meter,
       provider_login: 'christian@buzzn.net',
-      provider_login: 'Roentgen11smartmeter'
+      provider_password: 'Roentgen11smartmeter'
     )
     user.add_role :admin # christian is admin
   when 'philipp'
@@ -146,7 +146,7 @@ buzzn_team_names.each do |user_name|
       external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
       resource: meter,
       provider_login: 'info@philipp-osswald.de',
-      provider_login: 'Null8fünfzehn'
+      provider_password: 'Null8fünfzehn'
     )
   when 'stefan'
     bhkw_stefan       = Fabricate(:bhkw_stefan)
@@ -160,7 +160,7 @@ buzzn_team_names.each do |user_name|
       external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
       resource: meter,
       provider_login: 'stefan@buzzn.net',
-      provider_login: '19200buzzn'
+      provider_password: '19200buzzn'
     )
   when 'thomas'
     contract = Fabricate(:mpoc_ferraris_0001_amperix)
@@ -213,7 +213,7 @@ meter.broker = Fabricate(:discovergy_broker,
   external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
   resource: meter,
   provider_login: 'karin.smith@solfux.de',
-  provider_login: '19200buzzn'
+  provider_password: '19200buzzn'
 )
 
 buzzn_team.each do |buzzn_user|
