@@ -26,10 +26,10 @@ module API
             expires((data_result.expires_at - Time.current.to_f).to_i, current_user ? :private : :public)
           end
 
-          { power_milliwatt: (data_result.value * 1000).to_i,
+          { power_milliwatt: data_result.value.to_i,
             readings: [ { opterator: data_result.mode == :out ? '-' : '+',
 	                  data: { timestamp: Time.at(data_result.timestamp),
-	                          power_milliwatt: (data_result.value * 1000).to_i } } ],
+	                          power_milliwatt: data_result.value.to_i } } ],
             timestamp: Time.at(data_result.timestamp) }
         end
 

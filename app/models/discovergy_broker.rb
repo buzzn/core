@@ -48,7 +48,7 @@ class DiscovergyBroker < Broker
   end
 
   def two_way_meter?
-    two_way_meter = self.resource.is_a?(Meter::Real) && self.resource.input_register && self.resource.output_register
+    two_way_meter = self.resource.is_a?(Meter::Real) && self.resource.input_register != nil && self.resource.output_register != nil
   end
 
   private

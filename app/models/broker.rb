@@ -16,10 +16,6 @@ class Broker < ActiveRecord::Base
     where(type: "#{data_source.class::NAME.to_s.camelize}Broker")
   end
 
-  def two_way_meter?
-    two_way_meter = self.resource.is_a?(Meter) && self.resource.registers.size > 1
-  end
-
   private
 
   def self.do_get(mode, resource)

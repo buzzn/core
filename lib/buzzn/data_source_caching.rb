@@ -21,11 +21,11 @@ module Buzzn
             _with_lock(key) do
               result = clazz.from_json(_cache_get(key))
               if result.nil? || result.expires_at < Time.current.to_f
-                Rails.logger.error("[datasource.caching]#{Thread.current} #{key} ====> stale")
+                Rails.logger.error("[datasource.caching]<#{Thread.current.object_id}> #{key} ====> stale")
                 result = send("raw_#{method}".to_sym, resource, mode)
                 _cache_put(key, result.to_json)
               else
-                Rails.logger.error("[datasource.caching]#{Thread.current} #{key} ====> hit")
+                Rails.logger.error("[datasource.caching]<#{Thread.current.object_id}> #{key} ====> hit")
               end
               result
             end
