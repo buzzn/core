@@ -299,7 +299,7 @@ group_hopf.registers << register_hans_dieter_hopf
 
 
 puts 'group home_of_the_brave'
-group_home_of_the_brave = Fabricate(:group_home_of_the_brave, registers: [@register_z1a, @register_z1b, @register_z2, @register_z3, @register_z4, @register_z5])
+group_home_of_the_brave = Fabricate(:group_home_of_the_brave, registers: [@register_z2, @register_z3, @register_z4])
 justus = User.where(email: 'justus@buzzn.net').first
 justus.add_role :manager, group_home_of_the_brave
 #group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
