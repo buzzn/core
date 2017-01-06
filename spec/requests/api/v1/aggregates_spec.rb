@@ -79,13 +79,15 @@ describe 'Discovergy' do
       end
     end
 
-    it 'can not read data without permissions' do
-      request_params = {
-        register_ids: discovergy_meter.registers.inputs.first.id
-      }
+    it 'can not read data without permissions' do |spec|
+      VCR.use_cassette("request/api/v1/#{spec.metadata[:description].downcase}") do
+        request_params = {
+          register_ids: discovergy_meter.registers.inputs.first.id
+        }
 
-       get_without_token '/api/v1/aggregates/present', request_params
-       expect(response).to have_http_status(403)
+        get_without_token '/api/v1/aggregates/present', request_params
+        expect(response).to have_http_status(403)
+      end
     end
   end
 
@@ -138,14 +140,16 @@ describe 'Discovergy' do
       end
     end
 
-    it 'can not read data without permissions' do
-      request_params = {
-        register_ids: discovergy_meter.registers.inputs.first.id,
-        resolution: :year_to_months
-      }
+    it 'can not read data without permissions' do |spec|
+      VCR.use_cassette("request/api/v1/#{spec.metadata[:description].downcase}") do
+        request_params = {
+          register_ids: discovergy_meter.registers.inputs.first.id,
+          resolution: :year_to_months
+        }
 
-       get_without_token '/api/v1/aggregates/past', request_params
-       expect(response).to have_http_status(403)
+        get_without_token '/api/v1/aggregates/past', request_params
+        expect(response).to have_http_status(403)
+      end
     end
   end
 end
