@@ -523,7 +523,8 @@ module Register
         return
       end
 
-      current_power = last_reading.value
+      # last readings are in milliwatt
+      current_power = last_reading.value / 1000.0
 
       if Time.current.utc.to_i - last_reading.timestamp.to_i >= 5.minutes
         if observe_offline

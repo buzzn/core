@@ -164,6 +164,7 @@ module Buzzn::Discovergy
     ##############
 
     def parse_aggregated_data(response, interval, mode, two_way_meter, resource_id)
+      Rails.logger.error("[datasource.discovergy]<#{Thread.current.object_id}> #{resource_id} #{interval} #{mode} twoway: #{two_way_meter} response: #{response}")
       json = MultiJson.load(response)
       if json.empty?
         return nil
@@ -180,6 +181,7 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_live(response, mode, two_way_meter, resource_id)
+      Rails.logger.error("[datasource.discovergy]<#{Thread.current.object_id}> #{resource_id} #{mode} twoway: #{two_way_meter} response: #{response}")
       json = MultiJson.load(response)
       if json.empty?
         return nil
@@ -189,14 +191,15 @@ module Buzzn::Discovergy
       value = json['values']['power']
       if two_way_meter
         if value > 0 && mode == :in
-          power = value/1000
+          power = value
         elsif value < 0 && mode == :out
-          power = value.abs/1000
+          power = value.abs
         else
           power = 0
         end
       else
-        power = value > 0 ? value.abs/1000 : 0
+        # negative values will be ignored for both IN and OUT registers
+        power = value > 0 ? value : 0
       end
       Buzzn::DataResult.new(Time.at(timestamp/1000.0), power, resource_id, mode, expires_at)
     end

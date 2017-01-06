@@ -62,7 +62,7 @@ describe Buzzn::Discovergy::DataSource do
     two_way_meter = false
     result = subject.send(:parse_aggregated_live, response, mode, two_way_meter, 'u-i-d')
     expect(result.timestamp).to eq 1480606450.088
-    expect(result.value).to eq 1100
+    expect(result.value).to eq 1100640.0
   end
 
   it 'parses single meter hour response' do
