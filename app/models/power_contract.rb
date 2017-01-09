@@ -7,13 +7,13 @@ class PowerContract < Contract
 
   def initialize(*args)
     super
-    self.contractor = Organization.buzzn_energy.contracting_party
+    self.contractor = Organization.buzzn_energy
   end
 
   def validate_invariants
     super
     if contractor
-      errors.add(:contractor, MUST_BE_BUZZN) unless contractor.organization == Organization.buzzn_energy
+      errors.add(:contractor, MUST_BE_BUZZN) unless contractor == Organization.buzzn_energy
     end
   end
 end

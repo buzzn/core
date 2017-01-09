@@ -9,7 +9,7 @@ module API
 
         desc 'Return all Contracts'
         params do
-          optional :filter, type: String, desc: "Search query using #{Base.join(Contract.search_attributes)}"
+#          optional :filter, type: String, desc: "Search query using #{Base.join(Contract.search_attributes)}"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
@@ -57,7 +57,7 @@ module API
             optional :addition, type: String, desc: 'Additional info'
           end
           requires :contracting_party, type: Hash do
-            requires :legal_entity, type: String, values: ContractingParty.legal_entities.map(&:to_s), desc: 'legal entity'
+            requires :legal_entity, type: String, values: ['company', 'natural_person'], desc: 'legal entity'
             optional :provider_permission, type: Boolean, desc: 'Provider permission'
           end
           optional :company, type: Hash do
