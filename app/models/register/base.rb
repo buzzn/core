@@ -359,8 +359,7 @@ module Register
       elsif self.mysmartgrid?
         Buzzn::MySmartGrid::DataSource::NAME
       else
-        #Buzzn::StandardProfile::NAME
-        Buzzn::MissingDataSource::NAME
+        Buzzn::StandardProfile::DataSource::NAME
       end
     end
 
