@@ -518,7 +518,7 @@ module Register
     end
 
     def create_observer_activities
-      last_reading    = Buzzn::Application.config.current_power.for_register(self, Time.current)
+      last_reading    = Buzzn::Application.config.current_power.for_register(self)
       if !last_reading
         return
       end
