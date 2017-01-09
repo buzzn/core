@@ -4,6 +4,7 @@ describe Buzzn::StandardProfile::DataSource do
   let(:data_source) { Buzzn::StandardProfile::DataSource.new }
   let(:timezone) { Time.find_zone('UTC') }
 
+
   describe 'single_aggregated' do
     it 'power for a slp register' do |spec|
       meter = Fabricate(:input_meter_with_input_register)
