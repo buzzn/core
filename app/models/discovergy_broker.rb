@@ -17,7 +17,7 @@ class DiscovergyBroker < Broker
 
   validate :validates_invariants
 
-  after_save :validates_credentials
+  after_commit :validates_credentials
 
   def validates_invariants
     case mode
@@ -59,10 +59,10 @@ class DiscovergyBroker < Broker
       data_result = Buzzn::Application.config.current_power.for_register(self.resource.registers.first)
       if data_result
         self.resource.update_columns(smart: true)
-        self.resource.save
+        self.resource.reload
       else
         self.resource.update_columns(smart: false)
-        self.resource.save
+        self.resource.reload
       end
     end
   end

@@ -7,7 +7,7 @@
       - any_editable_registers = current_user.editable_registers.collect(&:meter).uniq.compact.any?
       %h3=t('define_register')
       %fieldset
-        = f.input :mode, collection: Register::Base.modes.map(&:to_sym), include_blank: false, as: :radio_buttons, label: t("register_mode"), checked: Register::Base.modes.first
+        = f.input :mode, collection: Register::Base.directions, include_blank: false, as: :radio_buttons, label: t("register_mode"), checked: Register::Base.directions.first
         = f.input :name
         %span
           = t('virtual_register')
@@ -23,36 +23,39 @@
       %h3=t('add_meter')
       %fieldset
         .js-dependent-fields{data: {checkbox: {id: "#{@register.class_name}_virtual", value: 'true'}}}
-          = t('as_this_register_is_virtual_it_will_not_have_a_meter')
-          = t('instead_you_can_define_the_formula_to_calculate_the_data_for_this_register')
+          = f.simple_fields_for @virtual_meter do |ff|
+            = ff.input :manufacturer_product_serialnumber
+          = t('you_can_define_the_formula_to_calculate_the_data_for_this_register')
           %h5
             %span
               = t('formula')
               %small
                 %i.normal-info-circle.fa.fa-info-circle{'data-content' => t('register_formula_info')}
           #formula_parts
-            = f.simple_fields_for :formula_parts do |formula_part|
-              = render 'formula_part_fields', :f => formula_part, locals: {register: @register}
-            .links.mar-btm
-              = link_to_add_association t('add_formula_part'), f, :formula_parts, class: "btn btn-xs btn-default btn-rounded btn-labeled fa fa-plus"
+            = f.simple_fields_for @virtual_register do |ff|
+              = ff.simple_fields_for :formula_parts do |formula_part|
+                = render 'formula_part_fields', :f => formula_part, locals: {register: @virtual_register}
+              .links.mar-btm
+                = link_to_add_association t('add_formula_part'), ff, :formula_parts, class: "btn btn-xs btn-default btn-rounded btn-labeled fa fa-plus"
         .js-dependent-fields{data: {checkbox: {id: "#{@register.class_name}_virtual", value: 'false'}}}
-          = f.simple_fields_for @meter do |ff|
+          = f.simple_fields_for @real_meter do |ff|
             - if any_editable_registers
               = ff.input :existing_meter, as: :radio_buttons, collection: [t("create_new_meter"), t("add_existing_meter")], checked: t("create_new_meter"), label: false
-              .js-dependent-fields{data: {radio: {name: "#{@register.class_name}[meter][existing_meter]", value: t("add_existing_meter")}}}
+              .js-dependent-fields{data: {radio: {name: "#{@register.class_name}[meter_real][existing_meter]", value: t("add_existing_meter")}}}
                 = ff.input :meter_id, collection: current_user.editable_registers.collect(&:meter).uniq.compact, :label_method => lambda { |m| m.name }, include_blank: false, input_html: { class: 'select2'}, label: false, selected: current_user.editable_registers.collect(&:meter).uniq.compact.first
-              .js-dependent-fields{data: {radio: {name: "#{@register.class_name}[meter][existing_meter]", value: t("create_new_meter")}}}
+              .js-dependent-fields{data: {radio: {name: "#{@register.class_name}[meter_real][existing_meter]", value: t("create_new_meter")}}}
                 = ff.input :manufacturer_product_serialnumber
                 = ff.input :smartmeter, as: :boolean, wrapper: :vertical_boolean, input_html: { checked: 'false' }
             - else
               = ff.input :manufacturer_product_serialnumber
               = ff.input :smartmeter, as: :boolean, wrapper: :vertical_boolean, input_html: { checked: false }
+
       %h3=t('establish_data_connection')
       %fieldset
         = f.simple_fields_for @broker do |ff|
           .js-dependent-fields{data: {checkbox: {id: "#{@register.class_name}_virtual", value: 'false'}}}
-            .js-dependent-fields{data: {checkbox: {id: "#{@register.class_name}_meter_smartmeter", value: 'true'}}}
-              .js-dependent-fields{data: {radio: {name: "#{@register.class_name}[meter][existing_meter]", value: t("create_new_meter")}}}
+            .js-dependent-fields{data: {checkbox: {id: "#{@register.class_name}_meter_real_smartmeter", value: 'true'}}}
+              .js-dependent-fields{data: {radio: {name: "#{@register.class_name}[meter_real][existing_meter]", value: t("create_new_meter")}}}
                 = ff.input :organization, collection: Organization.metering_point_operators, input_html: { class: 'select2', 'data-placeholder': t('select_smart_metering_provider')}, label: t('smart_metering_provider'), selected: Organization.where(slug: 'discovergy')
               .js-dependent-fields{'data-select-id' => "#{@register.class_name}_broker_organization", 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
                 = ff.input :provider_login
@@ -60,11 +63,11 @@
               .js-dependent-fields{'data-select-id' => "#{@register.class_name}_broker_organization", 'data-option-value' => Organization.where(slug: 'mysmartgrid').first.id}
                 = ff.input :sensor_id, as: :text, :input_html => {value: ''}, label_method: :sensor_id
                 = ff.input :x_token, as: :text, :input_html => {value: ''}, label_method: :x_token
-            .js-dependent-fields{data: {radio: {name: "#{@register.class_name}[meter][existing_meter]", value: t("add_existing_meter")}}}
+            .js-dependent-fields{data: {radio: {name: "#{@register.class_name}[meter_real][existing_meter]", value: t("add_existing_meter")}}}
               - if any_editable_registers
                 = t('the_register_will_get_its_data_via_the_connection_established_by_the_selected_meter')
-            .js-dependent-fields{data: {radio: {name: "#{@register.class_name}[meter][existing_meter]", value: t("create_new_meter")}}}
-              .js-dependent-fields{data: {checkbox: {id: "#{@register.class_name}_meter_smartmeter", value: 'false'}}}
+            .js-dependent-fields{data: {radio: {name: "#{@register.class_name}[meter_real][existing_meter]", value: t("create_new_meter")}}}
+              .js-dependent-fields{data: {checkbox: {id: "#{@register.class_name}_meter_real_smartmeter", value: 'false'}}}
                 = t('no_smartmeter_means_you_get_dummy_data')
           .js-dependent-fields{data: {checkbox: {id: "#{@register.class_name}_virtual", value: 'true'}}}
             = t('virtual_register_means_you_get_the_data_out_of_others_so_no_seperatate_data_conncection_is_needed')

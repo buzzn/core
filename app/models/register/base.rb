@@ -188,6 +188,10 @@ module Register
       end
     end
 
+    def self.directions
+      [:in, :out]
+    end
+
     def users
       User.users_of(self, :manager, :member)
     end
@@ -339,13 +343,11 @@ module Register
     end
 
     def mysmartgrid?
-      self.smart? &&
-        self.meter && self.meter.broker && self.meter.broker.is_a?(MySmartGridBroker)
+      self.meter && self.meter.broker && self.meter.broker.is_a?(MySmartGridBroker)
     end
 
     def discovergy?
-      self.smart? &&
-        self.meter && self.meter.broker && self.meter.broker.is_a?(DiscovergyBroker)
+      self.meter && self.meter.broker && self.meter.broker.is_a?(DiscovergyBroker)
     end
 
     def buzzn_api?
