@@ -167,6 +167,7 @@ class RegistersController < ApplicationController
     @register = Register::Base.find(params[:id])
     authorize_action_for @register
     user_id = params[:user_id] || params[register_class][:user_id]
+    byebug
     @user = User.find(user_id)
     @user.remove_role(:member, @register)
     if @user == current_user
@@ -175,7 +176,6 @@ class RegistersController < ApplicationController
       flash[:notice] = t('user_removed_successfully', username: @user.name)
     end
     @register.create_activity(key: 'register_user_membership.cancel', owner: @user)
-    redirect_to register_path(@register)
   end
   authority_actions :remove_members_update => 'read'
 
@@ -333,10 +333,12 @@ class RegistersController < ApplicationController
 private
 
   def register_class
-    if params[:register_output].nil? && !params[:register_input].nil?
+    if params[:register_output].nil? && !params[:register_input].nil? && params[:register_virtual].nil?
       :register_input
-    elsif !params[:register_output].nil? && params[:register_input].nil?
+    elsif !params[:register_output].nil? && params[:register_input].nil? && params[:register_virtual].nil?
       :register_output
+    elsif params[:register_output].nil? && params[:register_input].nil? && !params[:register_virtual].nil?
+      :register_virtual
     end
   end
 

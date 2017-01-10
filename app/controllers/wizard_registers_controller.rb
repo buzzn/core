@@ -25,11 +25,6 @@ class WizardRegistersController  < ApplicationController
       end
       @register.readable = 'friends'
 
-      if params[:register_base][:add_user] == "true"
-        current_user.add_role(:member, @register)
-      end
-      current_user.add_role(:manager, @register)
-
       #register is OK, now check meter
       if register_base_params[:virtual] == "1"
         @meter = Meter::Virtual.new(meter_params)
@@ -74,6 +69,11 @@ class WizardRegistersController  < ApplicationController
         end
       end
       if @register.save && @meter.save
+        if params[:register_base][:add_user] == "true"
+          current_user.add_role(:member, @register)
+        end
+        current_user.add_role(:manager, @register)
+
         if @formula_parts
           @formula_parts.each do |formula_part|
             formula_part.register = @register
@@ -91,7 +91,7 @@ class WizardRegistersController  < ApplicationController
       end
     end
 
-    byebug
+    #byebug
 
 
     if @broker
