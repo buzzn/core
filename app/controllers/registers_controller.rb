@@ -69,7 +69,15 @@ class RegistersController < ApplicationController
   def destroy
     @register = Register::Base.find(params[:id])
     authorize_action_for @register
-    @register.destroy
+    if @register.meter.nil?
+      @register.destroy
+    elsif @register.meter.registers.size > 1
+      @register.destroy
+    else
+      all_registers = @register.meter.registers
+      @register.meter.destroy
+      all_registers.each{|register| register.delete}
+    end
     respond_with current_user.profile
     flash[:notice] = t('register_deleted_successfully')
   end
