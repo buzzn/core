@@ -95,6 +95,7 @@ module API
             optional :manufacturer_product_serialnumber, desc: "meter produkt serialnumber"
             requires :register, type: Hash do
               requires :name, type: String, desc: "name"
+              requires :direction, type: String, desc: "direction of the meter.", values: Register::Base.directions
               requires :readable, type: String, desc: "readable by?", values: Register::Base.readables
             end
           end

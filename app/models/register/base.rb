@@ -44,8 +44,9 @@ module Register
     }
     end
 
+    def self.directions; %w(in out); end
+
     validates :meter, presence: true
-    validates :direction, presence: true
     validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
     validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_register?
     # TODO virtual register ?
@@ -186,10 +187,6 @@ module Register
       else
         mode
       end
-    end
-
-    def self.directions
-      [:in, :out]
     end
 
     def users

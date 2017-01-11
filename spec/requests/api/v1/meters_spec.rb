@@ -1,3 +1,4 @@
+# coding: utf-8
 describe "Meters API" do
 
   let(:page_overload) { 11 }
@@ -121,6 +122,7 @@ describe "Meters API" do
         manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber,
         register: {
           name: meter.register.name,
+          direction: [:in, :out].sample,
           readable: meter.register.readable,
         }
       }
@@ -264,7 +266,10 @@ describe "Meters API" do
     expect(response).to have_http_status(422)
 
     errors = json['errors']
-    expect(errors.size).to eq 3
+
+    # NOTE somehow rails adds two 'registers ist nicht gültig' errors, one for
+    #      each register :(
+    expect(errors.size).to eq 4
     errors.each do |error|
       expect(error['title']).to eq 'Invalid Attribute'
     end
@@ -284,6 +289,7 @@ describe "Meters API" do
       register: {
         name: meter.register.name,
         readable: meter.register.readable,
+        direction: Register::Base.directions.sample
       }
     }
 

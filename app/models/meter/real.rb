@@ -18,6 +18,7 @@ module Meter
     has_many :equipments
 
     has_many :registers, class_name: Register::Real, foreign_key: :meter_id
+    validates_associated :registers
 
     def self.manufacturer_names
       ['easy_meter', 'amperix', 'ferraris', 'other']
@@ -51,6 +52,14 @@ module Meter
       attr[:registers].each {|r| r.meter = self} if attr.key?(:registers)
     end
 
+    def input_register=(attr)
+      registers << Register::Input.new(attr.merge(meter: self))
+    end
+
+    def output_register=(attr)
+      registers << Register::Output.new(attr.merge(meter: self))
+    end
+
     # work around AR short-comings
 
     def valid?(*args)
@@ -64,14 +73,6 @@ module Meter
         end
       end
       errors.empty?
-    end
-
-    def input_register=(attr)
-      registers << Register::Input.new(attr.merge(meter: self))
-    end
-
-    def output_register=(attr)
-      registers << Register::Output.new(attr.merge(meter: self))
     end
   end
 end
