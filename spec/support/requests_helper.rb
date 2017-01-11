@@ -90,6 +90,9 @@ module RequestsHelper
     end
   end
 
+  def verbose
+    puts json.to_yaml rescue nil
+  end
 
   def json
     JSON.parse(response.body)
