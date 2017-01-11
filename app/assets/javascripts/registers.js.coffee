@@ -837,7 +837,7 @@ namespace 'Chart.Functions', (exports) ->
     Chart.Functions.activateButtons(false)
     chart.showLoading()
     $(".register_detail").each (div) ->
-      id = $(this).attr('id').split('_')[2]
+      id = $(this).attr('id').split('_')[1]
       if actual_resolution == "hour_to_minutes"
         Chart.Functions.setChartType(false)
         chart.hideLoading()

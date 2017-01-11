@@ -9,6 +9,7 @@
     name        { "#{mode}_#{FFaker::Name.name[0..20]}" }
     uid         { "DE" + Random.new_seed.to_s.slice(0, 29) }
     readable    'friends'
+    virtual     mode == 'virtual'
   end
 
 end

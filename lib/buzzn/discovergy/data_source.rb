@@ -51,6 +51,10 @@ module Buzzn::Discovergy
       end
       brokers.each do |broker|
         two_way_meter = broker.two_way_meter?
+        # this is because out meters (one_way) at discovergy reveal their energy data within the field 'energy' instead of 'energyOut'
+        if !two_way_meter && mode == :out
+          mode = :in
+        end
 
         response = @facade.readings(broker, nil, mode, false)
 
@@ -64,6 +68,10 @@ module Buzzn::Discovergy
       result = nil
       register_or_group.brokers.by_data_source(self).each do |broker|
         two_way_meter = broker.two_way_meter?
+        # this is because out meters (one_way) at discovergy reveal their energy data within the field 'energy' instead of 'energyOut'
+        if !two_way_meter && mode == :out
+          mode = :in
+        end
         response = @facade.readings(broker, interval, mode, false)
 
         result = add(result, parse_aggregated_data(response, interval, mode, two_way_meter, register_or_group.id))
@@ -209,7 +217,7 @@ module Buzzn::Discovergy
       json.each do |item|
         if two_way_meter
           if item['values']['power'] > 0 && mode == :in
-            power = item['power']
+            power = item['values']['power']
           elsif item['values']['power'] < 0 && mode == :out
             power = item['values']['power'].abs
           else
@@ -226,7 +234,9 @@ module Buzzn::Discovergy
 
     def parse_aggregated_day(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.milliwatt(resource_id)
-      energy_out = mode == :in ? "" : "Out"
+      if two_way_meter && mode == :out
+        energy_out = 'Out'
+      end
       first_reading = first_timestamp = nil
       json.each do |item|
         second_timestamp = item['time']
@@ -243,7 +253,6 @@ module Buzzn::Discovergy
 
     def parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.milliwatt_hour(resource_id)
-      energy_out = mode == :in ? "" : "Out"
       old_value = new_value = timestamp = i = 0
       if two_way_meter && mode == :out
         energy_out = 'Out'

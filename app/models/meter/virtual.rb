@@ -16,7 +16,7 @@ module Meter
     validates :manufacturer_product_name, presence: false
     validates :manufacturer_product_serialnumber, presence: false, uniqueness: true, allow_nil: true, length: { in: 2..128 }
 
-    
+
     def validate_invariants
       [:manufacturer_name, :online, :smart, :image].each do |name|
         error.add(name, 'not allowed') if send(:name).nil?
