@@ -1,4 +1,4 @@
-class PowerGiverContract < PowerContract
+class Contract::PowerGiver < Contract::Power
 
   def self.new(*args)
     super

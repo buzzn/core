@@ -2,7 +2,7 @@ class AddMigrationscripts < ActiveRecord::Migration
   def change
     reversible do |dir|
       dir.up do
-        contracts = Contract.all
+        contracts = Contract::Base.all
         puts 'Going to update ' + contracts.count.to_s + 'Contracts'
         ActiveRecord::Base.transaction do
           contracts.each do |contract|
@@ -28,7 +28,7 @@ class AddMigrationscripts < ActiveRecord::Migration
         end
         puts 'Finished.'
 
-        contracts = Contract.all.where("username IS NOT NULL").where('encrypted_password IS NOT NULL')
+        contracts = Contract::Base.all.where("username IS NOT NULL").where('encrypted_password IS NOT NULL')
         puts 'Going to update ' + contracts.count.to_s + 'Contracts'
 
         contracts.each do |contract|

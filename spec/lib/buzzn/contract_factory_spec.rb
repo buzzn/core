@@ -154,7 +154,7 @@ describe Buzzn::ContractFactory do
 
       contracts = contract.register.contracts - [contract]
       expect(contracts.size).to eq 1
-      expect(contracts.first.class).to eq MeteringPointOperatorContract
+      expect(contracts.first.class).to eq Contract::MeteringPointOperator
       expect(contracts.first.contractor).to eq Organization.dummy_energy
     end
 
