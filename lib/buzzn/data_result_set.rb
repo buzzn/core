@@ -50,10 +50,40 @@ module Buzzn
       elsif source.empty?
         return
       else
-        sum_lists(target, source, duration)
+        sum_lists(target, source, duration, '+')
       end
     end
     private :_add
+
+    def subtract_all(set, duration)
+      return unless set
+      raise ArgumentError.new('mismatch units') if @units != set.units
+      _subtract(@in, set.in, duration)
+      _subtract(@out, set.out, duration)
+    end
+
+    def _subtract(target, source, duration)
+      if target.empty?
+        target.replace(source.dup)
+      elsif source.empty?
+        return
+      else
+        sum_lists(target, source, duration, '-')
+      end
+    end
+    private :_subtract
+
+    # this method returns the data combined in either the @in array or the @out array
+    # need for virtual registers
+    def combine(direction, duration)
+      if direction == 'in'
+        _add(@in, @out, duration)
+        @out.replace([])
+      elsif direction == 'out'
+        _add(@out, @in, duration)
+        @in.replace([])
+      end
+    end
 
     def freeze
       @in.freeze
@@ -67,7 +97,7 @@ module Buzzn
         out: @out.collect { |i| i.to_hash } }
     end
 
-    def sum_lists(target, source, duration)
+    def sum_lists(target, source, duration, operator)
       for i in 0...source.size
         if source[i]
           key = source[i].timestamp
@@ -76,7 +106,11 @@ module Buzzn
           if timestamp_index == -1
             target.push(source[i])
           else
-            target[timestamp_index].add_value(value)
+            if operator == '+'
+              target[timestamp_index].add_value(value)
+            else
+              target[timestamp_index].subtract_value(value)
+            end
           end
         end
       end
