@@ -1,7 +1,6 @@
 module Meter
-  class BaseResource < JSONAPI::Resource
-    abstract
-    
+  class BaseResource < ApplicationResource
+
     attributes  :manufacturer_name,
                 :manufacturer_product_name,
                 :manufacturer_product_serialnumber

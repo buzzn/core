@@ -1,6 +1,6 @@
 module Register
-  class RealRegister < BaseResource
-    model_name 'Register::Real'
+  class RealRegister < Register::BaseResource
+    abstract
 
     attributes  :uid,
                 :obis

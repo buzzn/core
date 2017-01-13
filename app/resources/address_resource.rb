@@ -1,4 +1,4 @@
-class AddressResource < JSONAPI::Resource
+class AddressResource < ApplicationResource
 
   attributes  :address,
               :street_name,

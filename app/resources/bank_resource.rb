@@ -1,4 +1,4 @@
-class BankResource < JSONAPI::Resource
+class BankResource < ApplicationResource
   attributes  :blz,
               :bic,
               :description,

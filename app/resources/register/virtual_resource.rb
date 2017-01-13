@@ -1,5 +1,5 @@
 module Register
-  class VirtualResource < BaseResource
-    model_name 'Register::Virtual'
+  class VirtualResource < Register::BaseResource
+
   end
 end

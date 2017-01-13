@@ -1,4 +1,4 @@
-class ScoreResource < JSONAPI::Resource
+class ScoreResource < ApplicationResource
   attributes  :mode,
               :interval,
               :interval_beginning,

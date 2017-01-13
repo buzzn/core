@@ -1,4 +1,5 @@
-class ContractResource < JSONAPI::Resource
+class ContractResource < ApplicationResource
+
   attributes  :status,
               :old_supplier_name,
               :old_customer_number,

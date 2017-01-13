@@ -1,4 +1,4 @@
-class CommentResource < JSONAPI::Resource
+class CommentResource < ApplicationResource
 
   attributes  :title,
               :body,

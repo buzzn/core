@@ -1,4 +1,4 @@
-class ProfileResource < JSONAPI::Resource
+class ProfileResource < ApplicationResource
 
   attributes  :slug,
               :email,

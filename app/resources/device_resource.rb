@@ -1,4 +1,4 @@
-class DeviceResource < JSONAPI::Resource
+class DeviceResource < ApplicationResource
 
   attributes  :name,
               :manufacturer_name,

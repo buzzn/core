@@ -1,7 +1,6 @@
 module Register
-  class BaseResource < JSONAPI::Resource
-    model_name 'Register::Base'
-
+  class BaseResource < ApplicationResource
+    abstract
     attributes  :direction,
                 :name,
                 :readable
