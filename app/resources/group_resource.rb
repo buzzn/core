@@ -1,10 +1,9 @@
-class GroupResource < ApplicationResource
+class GroupResource < JSONAPI::Resource
 
   attributes  :name,
               :description,
               :big_tumb,
               :md_img,
-              :description,
               :readable
 
 
