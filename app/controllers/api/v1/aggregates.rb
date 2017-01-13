@@ -16,7 +16,12 @@ module API
         end
         oauth2 false
         get 'present' do
-          register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
+          # TODO fix register permissions and have again only:
+          #      register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
+          register = Register::Base.find(permitted_params[:register_ids])
+          if !register.group.readable_by?(current_user)
+            register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
+          end
           data_result = Buzzn::Application.config.current_power.for_register(register, permitted_params[:timestamp])
 
           unless permitted_params[:timestamp]
