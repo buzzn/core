@@ -76,10 +76,10 @@ module Buzzn
     # this method returns the data combined in either the @in array or the @out array
     # need for virtual registers
     def combine(direction, duration)
-      if direction == 'in'
+      if direction == :in
         _add(@in, @out, duration)
         @out.replace([])
-      elsif direction == 'out'
+      elsif direction == :out
         _add(@out, @in, duration)
         @in.replace([])
       end

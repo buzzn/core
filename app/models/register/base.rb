@@ -1,3 +1,5 @@
+
+
 require 'buzzn/managed_roles'
 module Register
   class Base < ActiveRecord::Base
@@ -185,7 +187,7 @@ module Register
       when Register::Output
         :out
       else
-        mode
+        mode.to_sym
       end
     end
 
