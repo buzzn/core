@@ -1,3 +1,3 @@
-class FriendshipRequestResource < ApplicationResource
+class FriendshipRequestResource < JSONAPI::Resource
   attribute :sender
 end

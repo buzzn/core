@@ -4,12 +4,12 @@ module API
       include API::V1::Defaults
       resource :registers do
 
-        namespace :real do
 
+        namespace :real do
           ["input", "output"].each do |mode|
             klass = "Register::#{mode.camelize}".constantize
-            namespace "#{mode}s" do
 
+            namespace "#{mode}s" do
               desc "Create a #{mode} Register."
               params do
                 requires :name, type: String, desc: "name"
@@ -26,6 +26,7 @@ module API
                 created_response(register)
               end
             end
+            
           end
 
           desc "Update a Real-Register."
@@ -53,6 +54,9 @@ module API
         end
 
 
+
+
+
         namespace :virtual do
           desc "Update a Virtual-Register."
           params do
@@ -66,6 +70,10 @@ module API
             register.guarded_update(current_user, permitted_params)
           end
         end
+
+
+
+
 
 
         desc "Return a Register"
