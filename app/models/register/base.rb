@@ -34,7 +34,7 @@ module Register
     accepts_nested_attributes_for :contracts
 
     def brokers
-      Broker.where(resource_id: self.meter.id, resource_type: Meter::Base)
+      Broker::Base.where(resource_id: self.meter.id, resource_type: Meter::Base)
     end
 
     def self.readables
@@ -68,8 +68,7 @@ module Register
     validates :external, presence: false
 
     def discovergy_brokers
-      # in case we have no borker return an empty array
-      [meter.discovergy_broker].compact
+      raise 'TODO use brokers method instead'
     end
 
     validate :validate_invariants
@@ -343,11 +342,11 @@ module Register
     end
 
     def mysmartgrid?
-      self.meter && self.meter.broker && self.meter.broker.is_a?(MySmartGridBroker)
+      self.meter && self.meter.broker && self.meter.broker.is_a?(Broker::MySmartGrid)
     end
 
     def discovergy?
-      self.meter && self.meter.broker && self.meter.broker.is_a?(DiscovergyBroker)
+      self.meter && self.meter.broker && self.meter.broker.is_a?(Broker::Discovergy)
     end
 
     def buzzn_api?
