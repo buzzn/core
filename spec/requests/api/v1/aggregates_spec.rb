@@ -20,7 +20,7 @@ describe '/api/v1/aggregates' do
     it 'does aggregate slp present as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
       meter = Fabricate(:input_meter_with_input_register)
-      register = meter.registers.inputs.first
+      register = meter.input_register
 
       energy_a_milliwatt_hour = 0
       timestamp = Time.find_zone('Berlin').local(2016,2,1)
@@ -102,7 +102,7 @@ describe '/api/v1/aggregates' do
 
 
     it 'not aggregates Discovergy power present for register readable_by friends as guest' do |spec|
-      register = discovergy_meter.registers.inputs.first
+      register = discovergy_meter.input_register
       register.update_attribute(:readable, 'friends')
 
       request_params = { register_ids: register.id }
@@ -113,7 +113,7 @@ describe '/api/v1/aggregates' do
 
     it 'aggregates Discovergy power present for register readable_by world as guest' do |spec|
       VCR.use_cassette("request/api/v1/#{spec.metadata[:description].downcase}") do
-        register = discovergy_meter.registers.inputs.first
+        register = discovergy_meter.input_register
         register.update_attribute(:readable, 'world')
 
         request_params = { register_ids: register.id }
@@ -126,7 +126,7 @@ describe '/api/v1/aggregates' do
     it 'aggregates Discovergy power present readable_by friends with manager or members' do |spec|
       VCR.use_cassette("request/api/v1/#{spec.metadata[:description].downcase}") do
 
-        register = discovergy_meter.registers.inputs.first
+        register = discovergy_meter.input_register
         register.update(readable: :friends)
 
         manager_token = Fabricate(:access_token_with_friend)
@@ -167,8 +167,8 @@ describe '/api/v1/aggregates' do
 
         access_token = Fabricate(:full_access_token_as_admin)
 
-        input_register  = discovergy_meter.registers.inputs.first
-        output_register = discovergy_meter.registers.outputs.first
+        input_register  = discovergy_meter.input_register
+        output_register = discovergy_meter.output_register
 
         request_params = {
           register_ids: input_register.id,
@@ -209,7 +209,7 @@ describe '/api/v1/aggregates' do
 
 
     it 'not aggregates Discovergy energy past for register readable_by friends as guest' do |spec|
-      register = discovergy_meter.registers.inputs.first
+      register = discovergy_meter.input_register
 
       request_params = { register_ids: register.id, resolution: :year_to_months }
       get_without_token '/api/v1/aggregates/past', request_params
@@ -219,7 +219,7 @@ describe '/api/v1/aggregates' do
 
     it 'aggregates Discovergy energy past for register readable_by world as guest' do |spec|
       VCR.use_cassette("request/api/v1/#{spec.metadata[:description].downcase}") do
-        register = discovergy_meter.registers.inputs.first
+        register = discovergy_meter.input_register
         register.update_attribute(:readable, 'world')
 
         request_params = { register_ids: register.id, resolution: :year_to_months }
