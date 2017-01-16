@@ -1,4 +1,4 @@
-class OrganizationResource < ApplicationResource
+class OrganizationResource < JSONAPI::Resource
 
   attributes  :name,
               :phone,

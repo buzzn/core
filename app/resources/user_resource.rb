@@ -1,4 +1,4 @@
-class UserResource < ApplicationResource
+class UserResource < JSONAPI::Resource
 
   # no attributes they will accessible via profile
 

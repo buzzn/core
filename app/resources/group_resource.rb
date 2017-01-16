@@ -1,10 +1,9 @@
-class GroupResource < ApplicationResource
+class GroupResource < JSONAPI::Resource
 
   attributes  :name,
               :description,
               :big_tumb,
               :md_img,
-              :description,
               :readable
 
 
@@ -13,4 +12,14 @@ class GroupResource < ApplicationResource
   has_many :managers
   has_many :energy_producers
   has_many :energy_consumers
+
+
+  def md_img
+    @model.image.md.url
+  end
+
+  def big_tumb		
+    @model.image.big_tumb.url
+  end
+
 end

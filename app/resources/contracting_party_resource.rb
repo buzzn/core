@@ -1,4 +1,4 @@
-class ContractingPartyResource < ApplicationResource
+class ContractingPartyResource < JSONAPI::Resource
 
   attributes  :legal_entity,
               :sales_tax_number,

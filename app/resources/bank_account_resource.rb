@@ -1,4 +1,4 @@
-class BankAccountResource < ApplicationResource
+class BankAccountResource < JSONAPI::Resource
 
   attributes  :holder,
               :bank_name,
