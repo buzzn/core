@@ -54,38 +54,38 @@ describe "Profiles API" do
     get_with_token "/api/v1/profiles", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
 
-    page_ids = []
+    pages_profile_ids = []
 
     get_with_token '/api/v1/profiles', {page: 1}, access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(4)
     json['data'].each do |data|
-      page_ids << data['id']
+      pages_profile_ids << data['id']
     end
 
     get_with_token '/api/v1/profiles', {page: 2}, access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(4)
     json['data'].each do |data|
-      page_ids << data['id']
+      pages_profile_ids << data['id']
     end
 
     get_with_token '/api/v1/profiles', {page: 3}, access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(4)
     json['data'].each do |data|
-      page_ids << data['id']
+      pages_profile_ids << data['id']
     end
 
     get_with_token '/api/v1/profiles', {page: 4}, access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(4)
     json['data'].each do |data|
-      page_ids << data['id']
+      pages_profile_ids << data['id']
     end
 
-    expect(page_ids.count).to eq(page_overload + 2) # +2 are created by Fabricate(:full_access_token_as_admin)
-    expect(page_ids.detect{ |e| page_ids.count(e) > 1 }).to eq(nil)
+    expect(pages_profile_ids.count).to eq(page_overload + 2) # +2 are created by Fabricate(:full_access_token_as_admin)
+    expect(pages_profile_ids.detect{ |e| pages_profile_ids.count(e) > 1 }).to eq(nil)
   end
 
 
