@@ -1,6 +1,6 @@
 describe "Profiles API" do
 
-  let(:page_overload) { 11 }
+  let(:page_overload) { 33 }
 
 
   it 'does not get all profiles with regular token or without token' do
@@ -50,12 +50,42 @@ describe "Profiles API" do
       Fabricate(:profile)
     end
     access_token = Fabricate(:full_access_token_as_admin)
-    get_with_token '/api/v1/profiles', {}, access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
 
     get_with_token "/api/v1/profiles", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
+
+    pages_profile_ids = []
+
+    get_with_token '/api/v1/profiles', {page: 1}, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(4)
+    json['data'].each do |data|
+      pages_profile_ids << data['id']
+    end
+
+    get_with_token '/api/v1/profiles', {page: 2}, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(4)
+    json['data'].each do |data|
+      pages_profile_ids << data['id']
+    end
+
+    get_with_token '/api/v1/profiles', {page: 3}, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(4)
+    json['data'].each do |data|
+      pages_profile_ids << data['id']
+    end
+
+    get_with_token '/api/v1/profiles', {page: 4}, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(4)
+    json['data'].each do |data|
+      pages_profile_ids << data['id']
+    end
+
+    expect(pages_profile_ids.count).to eq(page_overload + 2) # +2 are created by Fabricate(:full_access_token_as_admin)
+    expect(pages_profile_ids.detect{ |e| pages_profile_ids.count(e) > 1 }).to eq(nil)
   end
 
 
@@ -310,7 +340,7 @@ describe "Profiles API" do
 
     get_without_token "/api/v1/profiles/#{profile.id}/groups"
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_without_token "/api/v1/profiles/#{profile.id}/groups", {per_page: 200}
     expect(response).to have_http_status(422)
@@ -365,7 +395,7 @@ describe "Profiles API" do
     end
     get_without_token "/api/v1/profiles/#{profile.id}/friends"
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_without_token "/api/v1/profiles/#{profile.id}/friends", {per_page: 200}
     expect(response).to have_http_status(422)
@@ -474,7 +504,7 @@ describe "Profiles API" do
     end
     get_without_token "/api/v1/profiles/#{profile.id}/registers"
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_without_token "/api/v1/profiles/#{profile.id}/registers", {per_page: 200}
     expect(response).to have_http_status(422)
