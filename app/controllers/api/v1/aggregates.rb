@@ -16,14 +16,8 @@ module API
         end
         oauth2 false
         get 'present' do
-          # TODO fix register permissions and have again only:
-          #      register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
-          register = Register::Base.find(permitted_params[:register_ids])
-          if !register.group.readable_by?(current_user)
-            register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
-          end
+          register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
           data_result = Buzzn::Application.config.current_power.for_register(register, permitted_params[:timestamp])
-
           unless permitted_params[:timestamp]
             # cache-control headers
             etag(data_result.timestamp.to_s + data_result.value.to_s)
@@ -57,12 +51,7 @@ module API
         end
         oauth2 false
         get 'past' do
-          # TODO fix register permissions and have again only:
-          #      register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
-          register = Register::Base.find(permitted_params[:register_ids])
-          if !register.group.readable_by?(current_user)
-            register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
-          end
+          register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
           timestamp = permitted_params[:timestamp] || Time.current
           case permitted_params[:resolution]
           when 'day_to_minutes'
