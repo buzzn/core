@@ -187,7 +187,7 @@ module Register
       when Register::Output
         :out
       else
-        mode.to_sym
+        self.mode.to_sym
       end
     end
 

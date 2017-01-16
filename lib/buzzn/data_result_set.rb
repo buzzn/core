@@ -50,7 +50,7 @@ module Buzzn
       elsif source.empty?
         return
       else
-        sum_lists(target, source, duration, '+')
+        merge_lists(target, source, duration, '+')
       end
     end
     private :_add
@@ -68,7 +68,7 @@ module Buzzn
       elsif source.empty?
         return
       else
-        sum_lists(target, source, duration, '-')
+        merge_lists(target, source, duration, '-')
       end
     end
     private :_subtract
@@ -97,7 +97,7 @@ module Buzzn
         out: @out.collect { |i| i.to_hash } }
     end
 
-    def sum_lists(target, source, duration, operator)
+    def merge_lists(target, source, duration, operator)
       for i in 0...source.size
         if source[i]
           key = source[i].timestamp

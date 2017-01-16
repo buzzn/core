@@ -152,7 +152,7 @@ describe Buzzn::DataResultSet do
         reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
         other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
       end
-      reference.sum_lists(reference.in, other.in, duration)
+      reference.merge_lists(reference.in, other.in, duration, '+')
       expect(reference.in.size).to eq 4
       4.times.each do |i|
         expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
@@ -167,7 +167,7 @@ describe Buzzn::DataResultSet do
         reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
         other.add(Time.at(1482251172 + (granularity(duration) / 2 - 1) + i * granularity(duration)), 100 + i * 100, :in)
       end
-      reference.sum_lists(reference.in, other.in, duration)
+      reference.merge_lists(reference.in, other.in, duration, '+')
       expect(reference.in.size).to eq 4
       4.times.each do |i|
         expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
@@ -183,7 +183,7 @@ describe Buzzn::DataResultSet do
         other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
       end
       other.in.pop
-      reference.sum_lists(reference.in, other.in, duration)
+      reference.merge_lists(reference.in, other.in, duration, '+')
       expect(reference.in.size).to eq 4
       3.times.each do |i|
         expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
@@ -201,7 +201,7 @@ describe Buzzn::DataResultSet do
         other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
       end
       other.add(Time.at(1482251172 + 4 * granularity(duration)), 100 + 4 * 100, :in)
-      reference.sum_lists(reference.in, other.in, duration)
+      reference.merge_lists(reference.in, other.in, duration, '+')
       expect(reference.in.size).to eq 5
       4.times.each do |i|
         expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
@@ -218,7 +218,7 @@ describe Buzzn::DataResultSet do
         reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
         other.add(Time.at(1482251172 + i * granularity(duration) + 4 * granularity(duration)), 100 + i * 100, :in)
       end
-      reference.sum_lists(reference.in, other.in, duration)
+      reference.merge_lists(reference.in, other.in, duration, '+')
       expect(reference.in.size).to eq 8
       4.times.each do |i|
         expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
