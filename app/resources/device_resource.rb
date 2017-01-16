@@ -14,7 +14,10 @@ class DeviceResource < JSONAPI::Resource
               :commissioning,
               :mobile,
               :readable,
-
               :big_tumb
+
+  def big_tumb
+    @model.image.big_tumb.url
+  end
 
 end
