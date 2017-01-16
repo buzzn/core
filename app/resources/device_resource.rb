@@ -1,4 +1,4 @@
-class DeviceResource < ApplicationResource
+class DeviceResource < JSONAPI::Resource
 
   attributes  :name,
               :manufacturer_name,
@@ -14,7 +14,10 @@ class DeviceResource < ApplicationResource
               :commissioning,
               :mobile,
               :readable,
-
               :big_tumb
+
+  def big_tumb
+    @model.image.big_tumb.url
+  end
 
 end

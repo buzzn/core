@@ -1,4 +1,4 @@
-class PublicActivity::ActivityResource < ApplicationResource
+class PublicActivity::ActivityResource < JSONAPI::Resource
   abstract
 
   attributes  :owner_id,

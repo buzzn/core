@@ -1,4 +1,4 @@
-class ReadingResource < ApplicationResource
+class ReadingResource < JSONAPI::Resource
   attributes  :energy_milliwatt_hour,
               :power_milliwatt,
               :timestamp,
