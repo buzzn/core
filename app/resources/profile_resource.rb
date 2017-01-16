@@ -16,4 +16,9 @@ class ProfileResource < JSONAPI::Resource
               :twitter,
               :xing,
               :linkedin
+
+  def md_img
+    @model.image.md.url
+  end
+
 end
