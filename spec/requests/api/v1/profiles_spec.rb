@@ -340,7 +340,7 @@ describe "Profiles API" do
 
     get_without_token "/api/v1/profiles/#{profile.id}/groups"
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_without_token "/api/v1/profiles/#{profile.id}/groups", {per_page: 200}
     expect(response).to have_http_status(422)
@@ -395,7 +395,7 @@ describe "Profiles API" do
     end
     get_without_token "/api/v1/profiles/#{profile.id}/friends"
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_without_token "/api/v1/profiles/#{profile.id}/friends", {per_page: 200}
     expect(response).to have_http_status(422)
@@ -504,7 +504,7 @@ describe "Profiles API" do
     end
     get_without_token "/api/v1/profiles/#{profile.id}/registers"
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_without_token "/api/v1/profiles/#{profile.id}/registers", {per_page: 200}
     expect(response).to have_http_status(422)
