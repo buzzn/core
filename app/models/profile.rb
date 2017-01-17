@@ -8,8 +8,7 @@ class Profile < ActiveRecord::Base
   extend FriendlyId
   friendly_id :user_name, use: [:slugged, :history, :finders]
 
-  scope :by_newest, order("created_at DESC")
-  default_scope by_newest
+  default_scope { order(created_at: :desc) }
 
   mount_uploader :image, PictureUploader
 
