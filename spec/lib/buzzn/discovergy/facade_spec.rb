@@ -79,7 +79,7 @@ describe Buzzn::Discovergy::Facade do
     end
   end
 
-  it 'gets access token with full process and saves it' do |spec|
+  it 'gets access token with full process and saves it', retry: 3  do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
       facade = Buzzn::Discovergy::Facade.new
       access_token = facade.build_access_token_from_broker_or_new(broker)
@@ -89,7 +89,7 @@ describe Buzzn::Discovergy::Facade do
     end
   end
 
-  it 'gets readings' do |spec|
+  it 'gets readings', retry: 3 do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
       facade = Buzzn::Discovergy::Facade.new
       interval = Buzzn::Interval.day
@@ -123,7 +123,7 @@ describe Buzzn::Discovergy::Facade do
     end
   end
 
-  it 'creates virtual meter for group' do |spec|
+  it 'creates virtual meter for group', retry: 3 do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
       facade = Buzzn::Discovergy::Facade.new
       meter_ids_plus = group.registers.inputs.collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
