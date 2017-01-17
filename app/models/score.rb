@@ -2,10 +2,6 @@ class Score < ActiveRecord::Base
   include Authority::Abilities
   belongs_to :scoreable, polymorphic: true
 
-  # TODO default scope is always an extra constraint on every query, i.e.
-  #      get rid of it
-  default_scope { order('interval_beginning ASC') }
-
   scope :sufficiencies,  -> { where(mode: 'sufficiency') }
   scope :closenesses,    -> { where(mode: 'closeness') }
   scope :autarchies,     -> { where(mode: 'autarchy') }
