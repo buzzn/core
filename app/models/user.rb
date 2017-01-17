@@ -15,6 +15,8 @@ class User < ActiveRecord::Base
 
   validates :legal_notes, acceptance: true
 
+  default_scope { order('created_at ASC') }
+
   acts_as_voter
 
   has_many :contracting_parties
