@@ -54,7 +54,7 @@ describe "Profiles API" do
     get_with_token "/api/v1/profiles", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
 
-    profile_ids       = Profile.ids
+    profile_ids = Profile.ids
     pages_profile_ids = []
 
     get_with_token '/api/v1/profiles', {page: 1}, access_token.token

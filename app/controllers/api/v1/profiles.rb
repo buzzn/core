@@ -2,19 +2,23 @@ module API
   module V1
     class Profiles < Grape::API
       include API::V1::Defaults
-      resource 'profiles' do
+      resource :profiles do
 
         desc "Return all profiles"
         params do
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
-          optional :order_by, type: String, desc: "order by", default: 'created_at'
+          optional :per_page, type: Fixnum, default: 10, max: 100, desc: "Entries per Page"
+          optional :page, type: Fixnum, default: 1, desc: "Page number"
+          optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
+          optional :order_by, type: String, default: 'created_at', values: ['user_name', 'first_name', 'last_name', 'created_at'], desc: "Order by Attribute"
         end
         paginate
         oauth2 :full
         get do
+          order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
           paginated_response(
-            Profile.anonymized_readable_by(current_user).order(permitted_params[:order_by])
+            Profile
+              .anonymized_readable_by(current_user)
+              .order(order)
           )
         end
 
