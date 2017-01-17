@@ -35,10 +35,6 @@ describe Buzzn::ScoreCalculator do
       subject.instance_variable_set(:@data_out, [])
     end
 
-    after do
-      Timecop.return
-    end
-
     it 'calculates autarchy' do
       subject.calculate_autarchy_scores
       expect(Score.count).to eq 3
@@ -115,10 +111,6 @@ describe Buzzn::ScoreCalculator do
                                     [ { power_milliwatt: 800000 },
                                       { power_milliwatt: 1300000 },
                                       { power_milliwatt: 1000000 } ] )
-    end
-
-    after do
-      Timecop.return
     end
 
     it 'calculates fitting' do
@@ -215,7 +207,5 @@ describe Buzzn::ScoreCalculator do
         expect(score.mode).to eq 'closeness'
       end
     end
-
-
   end
 end

@@ -37,6 +37,16 @@ module Buzzn
       @value += value
     end
 
+    def subtract(other)
+      raise ArgumentError.new('mismatch timestamp') if @timestamp != other.timestamp
+      subtract_value(other.value) if other
+    end
+
+    def subtract_value(value)
+      raise ArgumentError.new('wrong value type') unless value.is_a?(Fixnum) || value.is_a?(Float)
+      @value -= value
+    end
+
     def to_hash
       { timestamp: @timestamp, value: @value }
     end
