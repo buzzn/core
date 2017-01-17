@@ -122,6 +122,8 @@ RSpec.configure do |config|
     end
     Mongoid.purge!
     Rails.cache.clear
+    t = Time.local(2016, 7, 2, 10, 5, 0)
+    Timecop.travel(t)
   end
 
   # show retry status in spec process
