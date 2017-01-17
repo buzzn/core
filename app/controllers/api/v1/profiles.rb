@@ -8,11 +8,14 @@ module API
         params do
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
+          optional :order_by, type: String, desc: "order by", default: 'created_at'
         end
         paginate
         oauth2 :full
         get do
-          paginated_response(Profile.anonymized_readable_by(current_user))
+          paginated_response(
+            Profile.anonymized_readable_by(current_user).order(permitted_params[:order_by])
+          )
         end
 
 

@@ -85,9 +85,7 @@ describe "Profiles API" do
       pages_profile_ids << data['id']
     end
 
-    expect(pages_profile_ids.count).to eq(page_overload + 2) # +2 are created by Fabricate(:full_access_token_as_admin)
-    expect(profile_ids.detect{ |e| profile_ids.count(e) > 1 }).to eq(nil)
-    expect(pages_profile_ids.detect{ |e| pages_profile_ids.count(e) > 1 }).to eq(nil)
+    expect(profile_ids.uniq.length).to eq(profile_ids.length)
   end
 
 
@@ -512,6 +510,6 @@ describe "Profiles API" do
     expect(response).to have_http_status(422)
   end
 
-  
+
 
 end
