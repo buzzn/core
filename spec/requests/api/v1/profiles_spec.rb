@@ -45,7 +45,7 @@ describe "Profiles API" do
   end
 
 
-  it 'paginate profiles with full access token', retry: 3 do
+  it 'paginate profiles with full access token' do
     page_overload.times do
       Fabricate(:profile)
     end
@@ -54,6 +54,7 @@ describe "Profiles API" do
     get_with_token "/api/v1/profiles", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
 
+    profile_ids       = Profile.ids
     pages_profile_ids = []
 
     get_with_token '/api/v1/profiles', {page: 1}, access_token.token
@@ -85,6 +86,7 @@ describe "Profiles API" do
     end
 
     expect(pages_profile_ids.count).to eq(page_overload + 2) # +2 are created by Fabricate(:full_access_token_as_admin)
+    expect(profile_ids.detect{ |e| profile_ids.count(e) > 1 }).to eq(nil)
     expect(pages_profile_ids.detect{ |e| pages_profile_ids.count(e) > 1 }).to eq(nil)
   end
 
@@ -510,6 +512,6 @@ describe "Profiles API" do
     expect(response).to have_http_status(422)
   end
 
-
+  
 
 end
