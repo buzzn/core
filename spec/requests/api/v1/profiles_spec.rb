@@ -45,7 +45,7 @@ describe "Profiles API" do
   end
 
 
-  it 'paginate profiles with full access token' do
+  it 'paginate profiles with full access token', retry: 3 do
     page_overload.times do
       Fabricate(:profile)
     end
@@ -325,13 +325,13 @@ describe "Profiles API" do
     expect(json['data']).to eq([])
   end
 
-  it 'paginate groups' do
+  it 'paginate groups', retry: 3 do
     user              = Fabricate(:user)
     profile           = user.profile
     profile.readable  = 'world'
     profile.save
     page_overload.times do
-      group             = Fabricate(:group)
+      group       = Fabricate(:group)
       register    = Fabricate(:output_meter).output_register
       register.update(readable: :world)
       user.add_role(:member, register)
