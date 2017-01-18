@@ -117,7 +117,11 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
     Mongoid.purge!
     Rails.cache.clear
+    Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0))
   end
+
+
+
 
   # show retry status in spec process
   config.verbose_retry = true
