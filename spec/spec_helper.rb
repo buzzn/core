@@ -105,10 +105,6 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = spec.description =~ /threaded/ ? :truncation : :transaction
   end
 
-  config.before(:each, :js => true) do
-    DatabaseCleaner.strategy = :truncation
-  end
-
   config.before(:each) do
     DatabaseCleaner.start
   end
@@ -117,7 +113,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
     Mongoid.purge!
     Rails.cache.clear
-    Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0))
+    Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0)) # HACK https://github.com/buzzn/buzzn/blob/master/config/environments/test.rb#L43-L44 is not working
   end
 
 
