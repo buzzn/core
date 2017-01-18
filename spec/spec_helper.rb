@@ -101,8 +101,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do |spec|
-    # 'threaded' in description triggers a different DatabaseCleanet strategy
-    DatabaseCleaner.strategy = spec.description =~ /threaded/ ? :truncation : :transaction
+    DatabaseCleaner.strategy = spec.description =~ /threaded/ ? :truncation : :transaction  # 'threaded' in description triggers a different DatabaseCleanet strategy
     DatabaseCleaner.start
   end
 
@@ -112,10 +111,6 @@ RSpec.configure do |config|
     Rails.cache.clear
     Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0)) # HACK https://github.com/buzzn/buzzn/blob/master/config/environments/test.rb#L43-L44 is not working
   end
-
-  # config.append_after(:each) do
-  #
-  # end
 
 
   # show retry status in spec process
