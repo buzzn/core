@@ -105,11 +105,11 @@ RSpec.configure do |config|
     DatabaseCleaner.start
   end
 
-  config.append_after(:each) do
-    Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0)) # HACK https://github.com/buzzn/buzzn/blob/master/config/environments/test.rb#L43-L44 is not working
+  config.after(:each) do
+    DatabaseCleaner.clean
     Mongoid.purge!
     Rails.cache.clear
-    DatabaseCleaner.clean
+    Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0)) # HACK https://github.com/buzzn/buzzn/blob/master/config/environments/test.rb#L43-L44 is not working
   end
 
 
