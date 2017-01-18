@@ -1,11 +1,4 @@
 GIT
-  remote: git://github.com/DatabaseCleaner/database_cleaner.git
-  revision: 05d4d8510bb47616e8f35aec5f743af633758381
-  branch: master
-  specs:
-    database_cleaner (1.5.3)
-
-GIT
   remote: git://github.com/cdunn/grape-jsonapi-resources.git
   revision: 2dc9375ac47450d37419448e73be42c1bad5edf2
   specs:
@@ -197,6 +190,7 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     currencies (0.4.2)
+    database_cleaner (1.5.3)
     debug_inspector (0.0.2)
     dependent-fields-rails (0.4.2)
       coffee-rails
@@ -886,7 +880,7 @@ DEPENDENCIES
   coffee-script-source (= 1.8.0)
   cookie_alert
   country_select
-  database_cleaner!
+  database_cleaner
   dependent-fields-rails
   devise
   devise-async
