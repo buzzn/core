@@ -97,32 +97,21 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.clean_with(:deletion)
   end
 
   config.before(:each) do |spec|
-    # 'threaded' in description triggers a different DatabaseCleanet strategy
-    DatabaseCleaner.strategy = spec.description =~ /threaded/ ? :truncation : :transaction
-  end
-
-  config.before(:each, :js => true) do
-    DatabaseCleaner.strategy = :truncation
-  end
-
-  config.before(:each) do
+    DatabaseCleaner.strategy = spec.description =~ /threaded/ ? :truncation : :transaction  # 'threaded' in description triggers a different DatabaseCleanet strategy
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
-    DatabaseCleaner.clean
-    if Meter::Base.count > 0
-      p Meter::Base.all
-      Meter::Base.destroy_all
-      raise 'can not clean database' if Meter::Base.count > 0
-    end
+  config.append_after(:each) do
+    Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0)) # HACK https://github.com/buzzn/buzzn/blob/master/config/environments/test.rb#L43-L44 is not working
     Mongoid.purge!
     Rails.cache.clear
+    DatabaseCleaner.clean
   end
+
 
   # show retry status in spec process
   config.verbose_retry = true

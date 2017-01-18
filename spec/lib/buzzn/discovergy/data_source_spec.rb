@@ -3,6 +3,11 @@ require 'buzzn/discovergy/data_source'
 
 describe Buzzn::Discovergy::DataSource do
 
+  class DiscovergyBroker
+    def validates_credentials
+    end
+  end
+
   subject { Buzzn::Discovergy::DataSource.new }
 
   let(:cache_time) { 1 }

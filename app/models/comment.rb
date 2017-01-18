@@ -10,8 +10,6 @@ class Comment < ActiveRecord::Base
   validates :body, :presence => true
   validates :user, :presence => true
 
-  default_scope { order('created_at DESC') }
-
   before_destroy :destroy_children
 
   mount_uploader :image, PictureUploader
@@ -25,7 +23,6 @@ class Comment < ActiveRecord::Base
   # NOTE: Comments belong to a user
   belongs_to :user
 
-  
   validate :validate_invariants
 
   def validate_invariants

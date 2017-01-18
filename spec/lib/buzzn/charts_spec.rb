@@ -42,7 +42,17 @@ describe Buzzn::Charts do
     register
   end
 
-  it 'delivers the right result for a register' do
+  let(:virtual_register) do
+    easymeter_60051599 = Fabricate(:easymeter_60051599)
+    easymeter_60051599.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051599", resource: easymeter_60051599)
+    fichtenweg8 = Fabricate(:virtual_meter_fichtenweg8).register
+    Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
+    Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
+    Fabricate(:fp_minus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
+    fichtenweg8
+  end
+
+  it 'delivers the right result for a real register', retry: 3 do
     interval = Buzzn::Interval.year
     result = subject.for_register(dummy_register, interval)
     expect(result).to eq [:aggregated, dummy_register, :in, interval]
@@ -51,7 +61,7 @@ describe Buzzn::Charts do
     expect { subject.for_register(Object.new, interval) }.to raise_error ArgumentError
   end
 
-  it 'delivers the right result for each register in a group' do
+  it 'delivers the right result for each register in a group', retry: 3 do
     # setup the results for the MockDataSource which we use here
     # it just ignores the group and its missing registers and delivers
     # results for either mode
@@ -67,5 +77,14 @@ describe Buzzn::Charts do
     expect { subject.for_group(group, Buzzn::Interval.hour) }.to raise_error ArgumentError
     expect { subject.for_group(group) }.to raise_error ArgumentError
     expect { subject.for_group(Object.new, interval) }.to raise_error ArgumentError
+  end
+
+  it 'delivers the right result for a virtual register', retry: 3 do |spec|
+    VCR.use_cassette("lib/buzzn/#{spec.metadata[:description].downcase}") do
+      interval = Buzzn::Interval.day
+      result = subject.for_register(virtual_register, interval)
+      result_single = subject.for_register(virtual_register.formula_parts.first.operand, interval)
+      expect(result.in).to eq result_single.in
+    end
   end
 end

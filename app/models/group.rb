@@ -45,8 +45,6 @@ class Group < ActiveRecord::Base
 
   normalize_attributes :description, :website
 
-  default_scope { order('created_at ASC') }
-
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
   }
