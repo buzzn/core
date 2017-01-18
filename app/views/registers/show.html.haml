@@ -260,7 +260,7 @@
                 %i.small-info-circle.fa.fa-info-circle{'data-content' => t('formula_parts_info')}
           .row
             .formula_parts.registers
-              = render @register.formula_parts if @register.formula_parts.any?
+              = render partial: 'formula_parts/formula_part', collection: @register.formula_parts if @register.formula_parts.any?
 
 
 

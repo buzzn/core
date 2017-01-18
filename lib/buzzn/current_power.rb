@@ -10,8 +10,20 @@ module Buzzn
       raise ArgumentError.new("not a #{Register::Base}") unless register.is_a?(Register::Base)
       raise ArgumentError.new("not a #{Time}") if !(timestamp.is_a?(Time) || timestamp.nil?)
       # TODO something with the timestamp
-      mode = register.is_a?(Register::Input)? :in : :out
-      @registry.get(register.data_source).single_aggregated(register, mode)
+      if register.is_a?(Register::Virtual)
+        sum = 0
+        register.formula_parts.each do |formula_part|
+          mode = formula_part.operand.direction
+          data = @registry.get(formula_part.operand.data_source).single_aggregated(formula_part.operand, mode)
+          #TODO: check timestamp to match
+          formula_part.operator == '+' ? sum += data.value : sum -= data.value
+        end
+        result = Buzzn::DataResult.new(timestamp || Time.current, sum, register.id, register.direction)
+        return result
+      else
+        mode = register.is_a?(Register::Input)? :in : :out
+        @registry.get(register.data_source).single_aggregated(register, mode)
+      end
     end
 
     def for_each_register_in_group(group, timestamp = nil)

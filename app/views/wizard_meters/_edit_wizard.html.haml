@@ -8,7 +8,6 @@
       %fieldset
         = f.input :manufacturer_name, collection: Meter::Real.manufacturer_names, include_blank: false, input_html: { class: 'select2' }
         = f.input :manufacturer_product_serialnumber
-        //= f.association :registers, collection: current_user.editable_registers_without_meter_not_virtual + @meter.registers, include_blank: false, input_html: { class: 'select2' } #select2 association doesnt work with fieldset!!!!!
         = f.input :smartmeter, as: :boolean, wrapper: :vertical_boolean, input_html: { checked: @meter.smart ? true : false}
 
       %h3=t('edit_data_connection')

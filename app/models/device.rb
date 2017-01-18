@@ -21,9 +21,6 @@ class Device < ActiveRecord::Base
     :maximum => 2.megabytes.to_i
   }
 
-
-  default_scope { order('created_at ASC') }
-
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
   }
@@ -37,7 +34,7 @@ class Device < ActiveRecord::Base
       "devices.mode = 'out' AND " +
       "registers.group_id IS NOT NULL"
   end
-  
+
   scope :readable_by, -> (user) do
     # TODO user AREL instead of activerecord DSL
     #      and EXISTS SELECT 1 WHERE ...
@@ -54,7 +51,7 @@ class Device < ActiveRecord::Base
                # or admin role (with out associated resource)
                "roles.name = 'admin' AND roles.resource_id IS NULL)", user.id, user.friends.select('id'))
     else
-      joins(outer_join).where(outer_join_where) 
+      joins(outer_join).where(outer_join_where)
     end
   end
 

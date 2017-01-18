@@ -2,13 +2,14 @@
 
 # ALL registers can only be used via Fabricate.build or with an extra meter: some_meter attribute, as a register can not exist without a meter
 
-['input', 'output', 'virtual'].each do |mode|
-  klass = "Register::#{mode.camelize}".constantize
+['input', 'output', 'virtual'].each do |type|
+  klass = "Register::#{type.camelize}".constantize
 
-  Fabricator "#{mode}_register", class_name: klass do
-    name        { "#{mode}_#{FFaker::Name.name[0..20]}" }
+  Fabricator "#{type}_register", class_name: klass do
+    name        { "#{type}_#{FFaker::Name.name[0..20]}" }
     uid         { "DE" + Random.new_seed.to_s.slice(0, 29) }
     readable    'friends'
+    mode        { type == 'virtual' ? 'in' : nil }
   end
 
 end

@@ -1,4 +1,4 @@
-class ProfileResource < ApplicationResource
+class ProfileResource < JSONAPI::Resource
 
   attributes  :slug,
               :email,
@@ -16,4 +16,9 @@ class ProfileResource < ApplicationResource
               :twitter,
               :xing,
               :linkedin
+
+  def md_img
+    @model.image.md.url
+  end
+
 end

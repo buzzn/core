@@ -14,7 +14,6 @@ end
 
 Fabricator :virtual_meter, class_name: Meter::Virtual do
   register                    { Fabricate.build(:virtual_register, direction: [:in, :out].sample).attributes }
-  manufacturer_product_name   { FFaker::Name.name }
   manufacturer_product_serialnumber  { Random.new_seed.to_s.slice(0, 7) }
 end
 
@@ -73,7 +72,7 @@ Fabricator :easymeter_60051600, from: :easy_meter_q3d do
   registers { [Fabricate.build(:register_z5)] }
 end
 
-# Justus verbrauch
+# Christian Schütze verbrauch
 Fabricator :easymeter_1124001747, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '1124001747'
   registers [Fabricate.build(:register_cs_1)]
@@ -86,6 +85,10 @@ Fabricator :easymeter_1124001747, from: :easy_meter_q3d do
     christian_schuetze.add_role(:manager, register)
     christian_schuetze.add_role(:member, register)
   end
+end
+
+Fabricator :virtual_meter_fichtenweg8, from: :virtual_meter do
+  register { Fabricate.build(:virtual_register, direction: 'in').attributes}
 end
 
 

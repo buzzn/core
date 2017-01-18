@@ -77,7 +77,7 @@ describe "/api/v1/registers" do
     end
 
     describe "read" do
-  
+
       it "get world-readable #{type} register with and without token" do
         access_token      = Fabricate(:simple_access_token)
         register = send(type)
@@ -669,9 +669,9 @@ describe "/api/v1/registers" do
 
         expect(response).to have_http_status(200)
         expect(json['data']['id']).to eq(register.meter.id)
-        
+
         get_with_token "/api/v1/registers/#{register.id}/meter", wrong_token.token
-        
+
         expect(response).to have_http_status(403)
       end
     end
@@ -788,7 +788,7 @@ describe "/api/v1/registers" do
           end
         end
       end
-      
+
       describe "delete" do
         it "deletes a #{mode} register with admin_token" do
           meter = Fabricate(:"#{mode == :input ? 'output' : 'input'}_meter")

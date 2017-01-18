@@ -1,3 +1,5 @@
+
+
 require 'buzzn/managed_roles'
 module Register
   class Base < ActiveRecord::Base
@@ -44,8 +46,9 @@ module Register
     }
     end
 
+    def self.directions; %w(in out); end
+
     validates :meter, presence: true
-    validates :direction, presence: true
     validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
     validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_register?
     # TODO virtual register ?
@@ -184,7 +187,7 @@ module Register
       when Register::Output
         :out
       else
-        mode
+        self.mode.to_sym
       end
     end
 
@@ -339,13 +342,11 @@ module Register
     end
 
     def mysmartgrid?
-      self.smart? &&
-        self.meter && self.meter.broker && self.meter.broker.is_a?(MySmartGridBroker)
+      self.meter && self.meter.broker && self.meter.broker.is_a?(MySmartGridBroker)
     end
 
     def discovergy?
-      self.smart? &&
-        self.meter && self.meter.broker && self.meter.broker.is_a?(DiscovergyBroker)
+      self.meter && self.meter.broker && self.meter.broker.is_a?(DiscovergyBroker)
     end
 
     def buzzn_api?

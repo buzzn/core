@@ -251,7 +251,6 @@ class User < ActiveRecord::Base
     self.friends.each do |friend|
       result << friend.non_private_editable_registers
     end
-    result << editable_registers_without_meter_not_virtual
     return result.flatten.uniq.sort! { |a,b| a.name.downcase <=> b.name.downcase }
   end
 
@@ -296,10 +295,6 @@ class User < ActiveRecord::Base
     #without_address = all_registers.collect{|register| register if register.address.nil?}.compact
     #result << {:address => nil, :registers => without_address} if without_address.any?
     return result
-  end
-
-  def editable_registers_without_meter_not_virtual
-    Register::Base.editable_by_user_without_meter_not_virtual(self)
   end
 
   #defined types: primary, info, success, warning, danger, mint, purple, pink, dark

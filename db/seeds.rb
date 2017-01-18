@@ -57,7 +57,7 @@ buzzn_team_names.each do |user_name|
     easymeter_60139082.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_60139082", resource: easymeter_60139082)
     @register_z1a = easymeter_60139082.registers.first
     @register_z1b = easymeter_60139082.registers.last
-    @fichtenweg8 = root_register = @register_z1a
+    root_register = @register_z1a
     user.add_role :manager, @register_z1a
     user.add_role :manager, @register_z1b
     @register_z1a.contracts.each do |contract|
@@ -219,8 +219,7 @@ geloeschter_benutzer = Fabricate(:geloeschter_benutzer)
 
 
 
-# christian_schuetze
-@fichtenweg10 = register_cs_1 = Fabricate(:easymeter_1124001747).input_register
+
 
 
 
@@ -297,128 +296,224 @@ group_hopf.registers << register_hans_dieter_hopf
 #   puts "  #{user.email}"
 # end
 
+# christian_schuetze
+
+
+meter = Fabricate(:easymeter_1124001747)
+@fichtenweg10 = register_cs_1 = meter.input_register
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
+
+
+# virtual register for Justus' consumption
+@fichtenweg8 = Fabricate(:virtual_meter_fichtenweg8).register
+Fabricate(:fp_plus, operand: @register_z2, register: @fichtenweg8)
+Fabricate(:fp_plus, operand: @register_z4, register: @fichtenweg8)
+Fabricate(:fp_plus, operand: @register_z1b, register: @fichtenweg8)
+Fabricate(:fp_minus, operand: @fichtenweg10, register: @fichtenweg8)
+Fabricate(:fp_minus, operand: @register_z1a, register: @fichtenweg8)
+
+
+
 
 puts 'group home_of_the_brave'
-group_home_of_the_brave = Fabricate(:group_home_of_the_brave, registers: [@register_z2, @register_z3, @register_z4])
+group_home_of_the_brave = Fabricate(:group_home_of_the_brave, registers: [@register_z2, @register_z4, @fichtenweg10, @fichtenweg8])
 justus = User.where(email: 'justus@buzzn.net').first
 justus.add_role :manager, group_home_of_the_brave
+justus.add_role :manager, @fichtenweg8
 #group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
 
 
 
 puts 'group wagnis4'
 dirk_mittelstaedt = Fabricate(:dirk_mittelstaedt)
-register_60009416 = Fabricate(:easymeter_60009416).input_register
+meter = Fabricate(:easymeter_60009416)
+register_60009416 = meter.input_register
 dirk_mittelstaedt.add_role(:manager, register_60009416)
 dirk_mittelstaedt.add_role(:member, register_60009416)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 manuel_dmoch = Fabricate(:manuel_dmoch)
-register_60009419 = Fabricate(:easymeter_60009419).input_register
+meter = Fabricate(:easymeter_60009419)
+register_60009419 = meter.input_register
 manuel_dmoch.add_role(:manager, register_60009419)
 manuel_dmoch.add_role(:member, register_60009419)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 sibo_ahrens = Fabricate(:sibo_ahrens)
-register_60009415 = Fabricate(:easymeter_60009415).input_register
+
+meter = Fabricate(:easymeter_60009415)
+register_60009415 = meter.input_register
 sibo_ahrens.add_role(:manager, register_60009415)
 sibo_ahrens.add_role(:member, register_60009415)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 nicolas_sadoni = Fabricate(:nicolas_sadoni)
-register_60009418 = Fabricate(:easymeter_60009418).input_register
+meter = Fabricate(:easymeter_60009418)
+register_60009418 = meter.input_register
 nicolas_sadoni.add_role(:manager, register_60009418)
 nicolas_sadoni.add_role(:member, register_60009418)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 josef_neu = Fabricate(:josef_neu)
-register_60009411 = Fabricate(:easymeter_60009411).input_register
+
+meter = Fabricate(:easymeter_60009411)
+register_60009411 = meter.input_register
 josef_neu.add_role(:manager, register_60009411)
 josef_neu.add_role(:member, register_60009411)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 elisabeth_christiansen = Fabricate(:elisabeth_christiansen)
-register_60009410 = Fabricate(:easymeter_60009410).input_register
+meter = Fabricate(:easymeter_60009410)
+register_60009410 = meter.input_register
 elisabeth_christiansen.add_role(:manager, register_60009410)
 elisabeth_christiansen.add_role(:member, register_60009410)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 florian_butz = Fabricate(:florian_butz)
-register_60009407 = Fabricate(:easymeter_60009407).input_register
+meter = Fabricate(:easymeter_60009407)
+register_60009407 = meter.input_register
 florian_butz.add_role(:manager, register_60009407)
 florian_butz.add_role(:member, register_60009407)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 ulrike_bez = Fabricate(:ulrike_bez)
-register_60009409 = Fabricate(:easymeter_60009409).input_register
+meter = Fabricate(:easymeter_60009409)
+register_60009409 = meter.input_register
 ulrike_bez.add_role(:manager, register_60009409)
 ulrike_bez.add_role(:member, register_60009409)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 rudolf_hassenstein = Fabricate(:rudolf_hassenstein)
-register_60009435 = Fabricate(:easymeter_60009435).input_register
+meter = Fabricate(:easymeter_60009435)
+register_60009435 = meter.input_register
 rudolf_hassenstein.add_role(:manager, register_60009435)
 rudolf_hassenstein.add_role(:member, register_60009435)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 maria_mueller = Fabricate(:maria_mueller)
-register_60009402 = Fabricate(:easymeter_60009402).input_register
-register_60009390 = Fabricate(:easymeter_60009390).input_register
+
+meter = Fabricate(:easymeter_60009402)
+register_60009402 = meter.input_register
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
+
+meter = Fabricate(:easymeter_60009390)
+register_60009390 = meter.input_register
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 maria_mueller.add_role(:manager, register_60009402)
 maria_mueller.add_role(:manager, register_60009390)
 maria_mueller.add_role(:member, register_60009402)
 maria_mueller.add_role(:member, register_60009390)
 
+
 andreas_schlafer = Fabricate(:andreas_schlafer)
-register_60009387 = Fabricate(:easymeter_60009387).input_register
+meter = Fabricate(:easymeter_60009387)
+register_60009387 = meter.input_register
 andreas_schlafer.add_role(:manager, register_60009387)
 andreas_schlafer.add_role(:member, register_60009387)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 luise_woerle = Fabricate(:luise_woerle)
-register_60009438 = Fabricate(:easymeter_60009438).input_register
+meter = Fabricate(:easymeter_60009438)
+register_60009438 = meter.input_register
 luise_woerle.add_role(:manager, register_60009438)
 luise_woerle.add_role(:member, register_60009438)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 peter_waechter = Fabricate(:peter_waechter)
-register_60009440 = Fabricate(:easymeter_60009440).input_register
+meter = Fabricate(:easymeter_60009440)
+register_60009440 = meter.input_register
 peter_waechter.add_role(:manager, register_60009440)
 peter_waechter.add_role(:member, register_60009440)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 sigrid_cycon = Fabricate(:sigrid_cycon)
-register_60009404 = Fabricate(:easymeter_60009404).input_register
+meter = Fabricate(:easymeter_60009404)
+register_60009404 = meter.input_register
 sigrid_cycon.add_role(:manager, register_60009404)
 sigrid_cycon.add_role(:member, register_60009404)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 dietlind_klemm = Fabricate(:dietlind_klemm)
-register_60009405 = Fabricate(:easymeter_60009405).input_register
+meter = Fabricate(:easymeter_60009405)
+register_60009405 = meter.input_register
 dietlind_klemm.add_role(:manager, register_60009405)
 dietlind_klemm.add_role(:member, register_60009405)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 wilhelm_wagner = Fabricate(:wilhelm_wagner)
-register_60009422 = Fabricate(:easymeter_60009422).input_register
+meter = Fabricate(:easymeter_60009422)
+register_60009422 = meter.input_register
 wilhelm_wagner.add_role(:manager, register_60009422)
 wilhelm_wagner.add_role(:member, register_60009422)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 volker_letzner = Fabricate(:volker_letzner)
-register_60009425 = Fabricate(:easymeter_60009425).input_register
+meter = Fabricate(:easymeter_60009425)
+register_60009425 = meter.input_register
 volker_letzner.add_role(:manager, register_60009425)
 volker_letzner.add_role(:member, register_60009425)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 evang_pflege = Fabricate(:evang_pflege)
-register_60009429 = Fabricate(:easymeter_60009429).input_register
+meter = Fabricate(:easymeter_60009429)
+register_60009429 = meter.input_register
 evang_pflege.add_role(:manager, register_60009429)
 evang_pflege.add_role(:member, register_60009429)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 david_stadlmann = Fabricate(:david_stadlmann)
-register_60009393 = Fabricate(:easymeter_60009393).input_register
+meter = Fabricate(:easymeter_60009393)
+register_60009393 = meter.input_register
 david_stadlmann.add_role(:manager, register_60009393)
 david_stadlmann.add_role(:member, register_60009393)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 doris_knaier = Fabricate(:doris_knaier)
-register_60009442 = Fabricate(:easymeter_60009442).input_register
+meter = Fabricate(:easymeter_60009442)
+register_60009442 = meter.input_register
 doris_knaier.add_role(:manager, register_60009442)
 doris_knaier.add_role(:member, register_60009442)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 sabine_dumler = Fabricate(:sabine_dumler)
-register_60009441 = Fabricate(:easymeter_60009441).input_register
+meter = Fabricate(:easymeter_60009441)
+register_60009441 = meter.input_register
 sabine_dumler.add_role(:manager, register_60009441)
 sabine_dumler.add_role(:member, register_60009441)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 
-register_60009420 = Fabricate(:easymeter_60009420).input_register
+
+meter = Fabricate(:easymeter_60009420)
+register_60009420 = meter.input_register
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 manuel_dmoch.add_role(:manager, register_60009420)
-register_60118460 = Fabricate(:easymeter_60118460).output_register
+
+meter = Fabricate(:easymeter_60118460)
+register_60118460 = meter.output_register
 manuel_dmoch.add_role(:manager, register_60118460)
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+
 
 group_wagnis4 = Fabricate(:group_wagnis4, registers: [register_60118460])
 group_wagnis4.registers << register_60009416
