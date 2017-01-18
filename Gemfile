@@ -179,7 +179,7 @@ group :test do
   gem 'guard-bundler'
   gem 'guard-brakeman'
   gem 'guard-rspec'
-  gem 'database_cleaner'
+  gem 'database_cleaner', github: 'DatabaseCleaner/database_cleaner', branch: 'master'
   gem 'timecop'
   gem 'rspec-retry'
   gem 'webmock'
