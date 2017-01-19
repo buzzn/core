@@ -47,6 +47,8 @@ class AddMigrationscripts < ActiveRecord::Migration
 
           if !contract.register_id
             puts "#{contract.id} - failed: no register_id."
+            contract.delete
+            puts "#{contract.id} - deleted."
             next
           end
           begin
