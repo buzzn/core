@@ -517,7 +517,7 @@ describe "Groups API" do
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(3)
+    expect(json['meta']['total_pages']).to eq(7)
 
     get_with_token "/api/v1/groups/#{group.id}/managers", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
@@ -538,7 +538,7 @@ describe "Groups API" do
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(3)
+    expect(json['meta']['total_pages']).to eq(7)
 
     get_with_token "/api/v1/groups/#{group.id}/members", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
