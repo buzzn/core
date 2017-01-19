@@ -71,7 +71,7 @@ describe Buzzn::Discovergy::Facade do
     end
   end
 
-  it 'gets access token with full process' do |spec|
+  it 'gets access token with full process', retry: 3 do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
       facade = Buzzn::Discovergy::Facade.new
       access_token = facade.oauth1_process(broker.provider_login, broker.provider_password)

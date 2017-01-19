@@ -52,7 +52,7 @@ describe Buzzn::Charts do
     fichtenweg8
   end
 
-  it 'delivers the right result for a real register' do
+  it 'delivers the right result for a real register', retry: 3 do
     interval = Buzzn::Interval.year
     result = subject.for_register(dummy_register, interval)
     expect(result).to eq [:aggregated, dummy_register, :in, interval]
@@ -61,7 +61,7 @@ describe Buzzn::Charts do
     expect { subject.for_register(Object.new, interval) }.to raise_error ArgumentError
   end
 
-  it 'delivers the right result for each register in a group' do
+  it 'delivers the right result for each register in a group', retry: 3 do
     # setup the results for the MockDataSource which we use here
     # it just ignores the group and its missing registers and delivers
     # results for either mode
@@ -79,7 +79,7 @@ describe Buzzn::Charts do
     expect { subject.for_group(Object.new, interval) }.to raise_error ArgumentError
   end
 
-  it 'delivers the right result for a virtual register' do |spec|
+  it 'delivers the right result for a virtual register', retry: 3 do |spec|
     VCR.use_cassette("lib/buzzn/#{spec.metadata[:description].downcase}") do
       interval = Buzzn::Interval.day
       result = subject.for_register(virtual_register, interval)
