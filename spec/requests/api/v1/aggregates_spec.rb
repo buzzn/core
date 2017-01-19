@@ -84,6 +84,38 @@ describe '/api/v1/aggregates' do
       end
     end
 
+
+    it 'aggregates Discovergy power present readable_by friends with manager or members' do |spec|
+      VCR.use_cassette("request/api/v1/#{spec.metadata[:description].downcase}") do
+
+        register = discovergy_meter.registers.inputs.first
+        register.update(readable: :friends)
+
+        manager_token = Fabricate(:access_token_with_friend)
+        manager_user  = User.find(manager_token.resource_owner_id)
+        manager_user.add_role(:manager, register)
+
+        manager_user_friend = manager_user.friends.first
+        manager_friend_token = Fabricate(:simple_access_token, resource_owner_id: manager_user_friend.id)
+
+        member_token = Fabricate(:simple_access_token)
+        member_user = User.find(member_token.resource_owner_id)
+        member_user.add_role(:member, register)
+
+        request_params = { register_ids: register.id }
+
+        get_with_token "/api/v1/aggregates/present", request_params, manager_token.token
+        expect(response).to have_http_status(200)
+
+        get_with_token "/api/v1/aggregates/present", request_params, member_token.token
+        expect(response).to have_http_status(200)
+
+        get_with_token "/api/v1/aggregates/present", request_params, manager_friend_token.token
+        expect(response).to have_http_status(200)
+      end
+    end
+
+
   end
 
 
