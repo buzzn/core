@@ -23,6 +23,11 @@ describe "/api/v1/registers" do
       register
     end
 
+
+
+
+
+
     describe "update" do
 
       it "does not update a #{type} register with invalid parameters" do
@@ -63,6 +68,29 @@ describe "/api/v1/registers" do
       end
 
 
+      it "updates a #{type} register with manager access token" do
+        register = send(type)
+
+        manager_access_token = Fabricate(:simple_access_token)
+        token_user = User.find(manager_access_token.resource_owner_id)
+        token_user.add_role(:manager, register)
+
+        params = {
+          readable: Register::Base.readables.sample,
+          name: "#{register.name} updated"[0..29],
+        }
+        params[:uid] = '123321' if type == :real
+
+        patch_with_token "/api/v1/registers/#{type}/#{send(type).id}", params.to_json, manager_access_token.token
+
+        expect(response).to have_http_status(200)
+
+        expect(json["data"]["attributes"]["uid"]).to eq(params[:uid]) if type == :real
+        expect(json["data"]["attributes"]["readable"]).to eq(params[:readable])
+        expect(json["data"]["attributes"]["name"]).to eq(params[:name])
+      end
+
+
       it "does not update a #{type} register without token" do
         register = send(type)
         request_params = {
@@ -75,6 +103,12 @@ describe "/api/v1/registers" do
         expect(response).to have_http_status(401)
       end
     end
+
+
+
+
+
+
 
     describe "read" do
 
@@ -96,6 +130,7 @@ describe "/api/v1/registers" do
           register.update(readable: user_type)
 
           get_without_token "/api/v1/registers/#{register.id}"
+          expect(response).to have_http_status(403)
         end
       end
 
@@ -120,21 +155,22 @@ describe "/api/v1/registers" do
         end
       end
 
-
-      it "get friends-readable register by manager friends or by members" do
+      it "get register readable_by friends from a group readable_by world as stranger" do
         register = send(type)
         register.update(readable: :friends)
-        member_token      = Fabricate(:simple_access_token)
-        member_user       = User.find(member_token.resource_owner_id)
-        access_token      = Fabricate(:access_token_with_friend)
-        token_user        = User.find(access_token.resource_owner_id)
-        token_user_friend = token_user.friends.first
-        token_user_friend.add_role(:manager, register)
-        member_user.add_role(:member, register)
+        manager_access_token = Fabricate(:simple_access_token)
+        token_user = User.find(manager_access_token.resource_owner_id)
+        token_user.add_role(:manager, register)
 
-        get_with_token "/api/v1/registers/#{register.id}", access_token.token
-        expect(response).to have_http_status(200)
-        get_with_token "/api/v1/registers/#{register.id}", member_token.token
+        simple_access_token  = Fabricate(:simple_access_token)
+
+        get_without_token "/api/v1/registers/#{register.id}", simple_access_token.token
+        expect(response).to have_http_status(403)
+
+        group = Fabricate(:group_readable_by_world)
+        group.registers << register
+
+        get_with_token "/api/v1/registers/#{register.id}", manager_access_token.token
         expect(response).to have_http_status(200)
       end
 
@@ -181,6 +217,12 @@ describe "/api/v1/registers" do
         expect(response).to have_http_status(403)
       end
     end
+
+
+
+
+
+
 
 
     describe "relationships" do
@@ -677,8 +719,12 @@ describe "/api/v1/registers" do
     end
   end
 
+
+
+
   ["input", "output"].each do |mode|
     describe "#{mode}s" do
+
 
       describe "create" do
 
@@ -807,7 +853,8 @@ describe "/api/v1/registers" do
           expect(json['errors'].first['source']['pointer']).to eq '/data/attributes/meter[registers]'
         end
       end
-
     end
+
+
   end
 end
