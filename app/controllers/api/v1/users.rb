@@ -72,13 +72,20 @@ module API
           requires :id, type: String, desc: "ID of the profile"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
+          optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
+          optional :order_by, type: String, default: 'created_at', values: ['name', 'updated_at', 'created_at'], desc: "Order by Attribute"
         end
         paginate
         oauth2 :simple, :full
         get ":id/groups" do
           user   = User.guarded_retrieve(current_user, permitted_params)
           groups = Group.accessible_by_user(user)
-          paginated_response(groups.readable_by(current_user))
+          order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
+          paginated_response(
+            groups
+              .readable_by(current_user)
+              .order(order)
+          )
         end
 
 
@@ -104,13 +111,20 @@ module API
           optional :filter, type: String, desc: "Search query using #{Base.join(Meter::Base.search_attributes)}"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
+          optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
+          optional :order_by, type: String, default: 'created_at', values: ['name', 'updated_at', 'created_at'], desc: "Order by Attribute"
         end
         paginate
         oauth2 :full, :smartmeter
         get ":id/meters" do
           user = User.guarded_retrieve(current_user, permitted_params)
           meters = Meter::Base.filter(permitted_params[:filter]).accessible_by_user(user)
-          paginated_response(meters.readable_by(current_user))
+          order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
+          paginated_response(
+            meters
+              .readable_by(current_user)
+              .order(order)
+          )
         end
 
 
