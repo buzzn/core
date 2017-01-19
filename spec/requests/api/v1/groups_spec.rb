@@ -1,6 +1,6 @@
 describe "Groups API" do
 
-  let(:page_overload) { 11 }
+  let(:page_overload) { 33 }
 
   let(:output_register_with_manager) do
     register = Fabricate(:output_meter).output_register
@@ -143,6 +143,55 @@ describe "Groups API" do
     get_without_token '/api/v1/groups', {per_page: 200}
     expect(response).to have_http_status(422)
   end
+
+
+
+
+  it 'paginate groups with full access token' do
+    page_overload.times do
+      Fabricate(:group)
+    end
+    access_token = Fabricate(:full_access_token_as_admin)
+
+    get_with_token "/api/v1/profiles", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
+
+    pages_profile_ids = []
+
+    get_with_token '/api/v1/groups', {page: 1}, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(4)
+    json['data'].each do |data|
+      pages_profile_ids << data['id']
+    end
+
+    get_with_token '/api/v1/groups', {page: 2}, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(4)
+    json['data'].each do |data|
+      pages_profile_ids << data['id']
+    end
+
+    get_with_token '/api/v1/groups', {page: 3}, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(4)
+    json['data'].each do |data|
+      pages_profile_ids << data['id']
+    end
+
+    get_with_token '/api/v1/groups', {page: 4}, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(4)
+    json['data'].each do |data|
+      pages_profile_ids << data['id']
+    end
+
+    expect(pages_profile_ids.uniq.length).to eq(pages_profile_ids.length)
+  end
+
+
+
+
 
   it 'does gets a group readable by world with or without token' do
     access_token  = Fabricate(:simple_access_token).token
