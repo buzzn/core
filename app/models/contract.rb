@@ -40,8 +40,9 @@ class Contract < ActiveRecord::Base
   has_many :tariffs
   has_many :payments
 
-  validates :contractor, presence: true
-  validates :customer, presence: true
+  # TODO: add this when migration were running
+  #validates :contractor, presence: true
+  #validates :customer, presence: true
 
   validates :status, inclusion: {in: status}
 

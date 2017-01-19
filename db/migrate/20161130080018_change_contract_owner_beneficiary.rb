@@ -14,10 +14,16 @@ class ChangeContractOwnerBeneficiary < ActiveRecord::Migration
         Contract.all.each do |c|
           if c.contract_owner_id
             c.contractor   = ContractingParty.find(c.contract_owner_id)
+            puts 'contract: ' + c.id + ' .... contractor: ' + c.contractor_id
+          else
+            puts "#{c.id}: no contract_beneficiary_id."
           end
           if c.contract_beneficiary_id
             c.customer     = ContractingParty.find(c.contract_beneficiary_id)
             c.signing_user = c.customer.user
+            puts 'contract: ' + c.id + ' .... customer: ' + c.customer_id
+          else
+            puts "#{c.id}: no contract_beneficiary_id."
           end
         end
       end
