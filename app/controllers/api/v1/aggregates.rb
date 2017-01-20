@@ -25,19 +25,11 @@ module API
             expires((data_result.expires_at - Time.current.to_f).to_i, current_user ? :private : :public)
           end
 
-          {
-            power_milliwatt: data_result.value.to_i,
-            readings: [
-              {
-                opterator: data_result.mode == :out ? '-' : '+',
-                data: {
-                  timestamp: Time.at(data_result.timestamp),
-                  power_milliwatt: data_result.value.to_i
-                }
-              }
-            ],
-            timestamp: Time.at(data_result.timestamp)
-          }
+          { power_milliwatt: data_result.value.to_i,
+            readings: [ { opterator: data_result.mode == :out ? '-' : '+',
+	                  data: { timestamp: Time.at(data_result.timestamp),
+	                          power_milliwatt: data_result.value.to_i } } ],
+            timestamp: Time.at(data_result.timestamp) }
         end
 
 
@@ -75,10 +67,7 @@ module API
           if result
             key = result.units == :milliwatt ? 'power_milliwatt' : 'energy_milliwatt_hour'
             (result.in + result.out).collect do |i|
-              {
-                timestamp: Time.at(i.timestamp),
-                "#{key}": i.value.to_i
-              }
+              { timestamp: Time.at(i.timestamp), "#{key}": i.value.to_i }
             end
           else
             []
