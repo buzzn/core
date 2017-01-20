@@ -6,6 +6,7 @@ Fabricator :organization do
   email       { FFaker::Internet.email }
   description { FFaker::Company.catch_phrase }
   website     { "http://www.#{FFaker::Internet.domain_name}" }
+  created_at  { (rand*10).days.ago }
 end
 
 

@@ -6,4 +6,5 @@ Fabricator :comment do
   body              { FFaker::Lorem.paragraphs.join('-') }
   title             { FFaker::Lorem.sentence }
   subject           { FFaker::Lorem.sentence }
+  created_at  { (rand*10).days.ago }
 end
