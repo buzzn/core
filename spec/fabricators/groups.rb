@@ -13,6 +13,9 @@ Fabricator :tribe, from: :group do
   mode :tribe
 end
 
+Fabricator :group_readable_by_world, from: :group do
+  readable    'world'
+end
 
 Fabricator :group_readable_by_community, from: :group do
   readable    'community'
@@ -75,13 +78,13 @@ end
 
 Fabricator :group_karins_pv_strom, from: :group do
   name        'Karins PV Strom'
-  description "Diese Gruppe ist offen für alle, die gerne meinen selbstgemachten PV-Strom von meiner Scheune beziehen möchten." 
+  description "Diese Gruppe ist offen für alle, die gerne meinen selbstgemachten PV-Strom von meiner Scheune beziehen möchten."
 end
 
 Fabricator :group_wagnis4, from: :localpool do
   name        'Wagnis 4'
   website     'http://www.wagnis.org/wagnis/wohnprojekte/wagnis-4.html'
-  description "Dies ist der Localpool von Wagnis 4." 
+  description "Dies ist der Localpool von Wagnis 4."
   logo        File.new(Rails.root.join('db', 'seed_assets', 'groups', 'wagnis4', 'logo.png'))
   image       File.new(Rails.root.join('db', 'seed_assets', 'groups', 'wagnis4', 'image.png'))
   after_create do |localpool|
@@ -101,5 +104,3 @@ Fabricator :group_forstenried, from: :localpool do
     Fabricate(:mpoc_buzzn_metering, localpool: localpool)
   end
 end
-
-

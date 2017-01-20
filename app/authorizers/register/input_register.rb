@@ -1,2 +1,4 @@
-class Register::InputAuthorizer < Register::BaseAuthorizer
+module Register
+  class InputAuthorizer < Register::BaseAuthorizer
+  end
 end
