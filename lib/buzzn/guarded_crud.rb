@@ -58,7 +58,11 @@ module Buzzn
         if id.is_a?(Hash)
           id = id[:id]
         end
-        _guarded_check(where(id: id).readable_by(user).limit(1).first, user, id)
+        _guarded_check(
+          where(id: id).readable_by(user).limit(1).first,
+          user,
+          id
+        )
       end
 
       def unguarded_retrieve(id)
@@ -76,7 +80,11 @@ module Buzzn
         if id.is_a?(Hash)
           id = id[:id]
         end
-        _guarded_check(where(id: id).anonymized_readable_by(user).limit(1).first, user, id)
+        _guarded_check(
+          where(id: id).anonymized_readable_by(user).limit(1).first,
+          user,
+          id
+        )
       end
 
       def guarded_update(user, id = nil, params = nil)
