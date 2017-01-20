@@ -64,6 +64,8 @@ describe "Meters API" do
         meter = Fabricate(:"#{type}_meter")
         get_with_token "/api/v1/meters/#{meter.id}", access_token.token
         expect(response).to have_http_status(200)
+        expect(json['meta']['updatable']).to be_truthy
+        expect(json['meta']['deletable']).to be_truthy
       end
     end
 
@@ -209,7 +211,7 @@ describe "Meters API" do
 
 
 
-    [:full_access_token_as_admin, :smartmeter_access_token].each do |token|      
+    [:full_access_token_as_admin, :smartmeter_access_token].each do |token|
       it "creates a #{mode} register with #{token}" do
         access_token = Fabricate(token)
         register     = Fabricate.build("#{mode}_register")
@@ -351,7 +353,7 @@ describe "Meters API" do
     access_token  = Fabricate(:full_access_token_as_admin)
 
     params = { manufacturer_product_serialnumber: '1' * 400 }
-    
+
     patch_with_token "/api/v1/meters/virtual/#{meter.id}", params.to_json, access_token.token
 
     expect(response).to have_http_status(422)

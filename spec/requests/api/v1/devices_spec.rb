@@ -16,7 +16,7 @@ describe "Devices API" do
 
       expect(response).to have_http_status(403)
     end
-    
+
     it "does not get any device with #{token}" do
       device = Fabricate(:device)
 
@@ -65,6 +65,8 @@ describe "Devices API" do
     device = Fabricate(:device)
     get_with_token "/api/v1/devices/#{device.id}", access_token.token
     expect(response).to have_http_status(200)
+    expect(json['meta']['updatable']).to be_truthy
+    expect(json['meta']['deletable']).to be_truthy
   end
 
 
@@ -76,6 +78,8 @@ describe "Devices API" do
 
     get_with_token "/api/v1/devices/#{device.id}", access_token.token
     expect(response).to have_http_status(200)
+    expect(json['meta']['updatable']).to be_truthy
+    expect(json['meta']['deletable']).to be_truthy
   end
 
 
@@ -91,7 +95,7 @@ describe "Devices API" do
 
 
   [:no_access_token, :simple_access_token, :smartmeter_access_token].each do |token|
-  
+
     it "does not creates a device with #{token}" do
       request_params = {}.to_json
 
@@ -120,7 +124,7 @@ describe "Devices API" do
       watt_peak:                          49000,
       mobile:                             false,
     }.to_json
-    
+
     post_with_token "/api/v1/devices", request_params, access_token.token
 
     expect(response).to have_http_status(201)
@@ -225,7 +229,7 @@ describe "Devices API" do
       end
 
     end
-    
+
     it "does not delete a device with #{token}" do
       device = Fabricate(:device)
 

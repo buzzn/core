@@ -34,7 +34,11 @@ module API
         end
         oauth2 false
         get ":id" do
-          Group.guarded_retrieve(current_user, permitted_params)
+          group = Group.guarded_retrieve(current_user, permitted_params)
+          render(group, meta: {
+            updatable: group.updatable_by?(current_user),
+            deletable: group.deletable_by?(current_user)
+          })
         end
 
 
