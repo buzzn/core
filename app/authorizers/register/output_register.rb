@@ -1,4 +1,2 @@
-module Register
-  class OutputAuthorizer < Register::BaseAuthorizer
-  end
+class Register::OutputAuthorizer < Register::BaseAuthorizer
 end

@@ -1,4 +1,2 @@
-module Register
-  class VirtualAuthorizer < Register::BaseAuthorizer
-  end
+class Register::VirtualAuthorizer < Register::BaseAuthorizer
 end
