@@ -29,7 +29,11 @@ module API
         end
         oauth2 false
         get ":id" do
-          Profile.anonymized_guarded_retrieve(current_user, permitted_params)
+          profile = Profile.anonymized_guarded_retrieve(current_user, permitted_params)
+          render(profile, meta: {
+            updatable: profile.updatable_by?(current_user),
+            deletable: profile.deletable_by?(current_user)
+          })
         end
 
 

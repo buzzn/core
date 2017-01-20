@@ -55,10 +55,13 @@ describe 'Addresses API' do
 
     get_without_token "/api/v1/addresses/#{address.id}"
     expect(response).to have_http_status(401)
+
     get_with_token "/api/v1/addresses/#{address.id}", {}, access_token.token
     expect(response).to have_http_status(403)
+
     get_with_token "/api/v1/addresses/#{address.id}", {}, full_access_token.token
     expect(response).to have_http_status(200)
+    expect(json['meta']['deletable']).to be_truthy
   end
 
   it 'creates address using full token' do

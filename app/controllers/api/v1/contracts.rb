@@ -25,7 +25,11 @@ module API
         end
         oauth2 :simple, :full
         get ':id' do
-          Contract.guarded_retrieve(current_user, permitted_params)
+          contract = Contract.guarded_retrieve(current_user, permitted_params)
+          render(contract, meta: {
+            updatable: contract.updatable_by?(current_user),
+            deletable: contract.deletable_by?(current_user)
+          })
         end
 
 
@@ -95,7 +99,7 @@ module API
             requires :old_electricity_supplier_name, type: String, desc: 'Name of old contract'
             optional :customer_number,          type: String,  desc: 'Customer number'
             optional :contract_number,          type: String,  desc: 'Contract number'
-            
+
           end
           requires :contract, type: Hash do
             optional :old_supplier_name, type: String, desc: 'Name of old contract'

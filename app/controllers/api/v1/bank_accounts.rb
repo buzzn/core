@@ -7,7 +7,6 @@ module API
         desc "Return all Bank Account"
         params do
           optional :filter, type: String, desc: "Search query using #{Base.join(BankAccount.search_attributes)}"
-
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
@@ -19,17 +18,18 @@ module API
 
 
 
-
         desc "Return a Bank Account"
         params do
           requires :id, type: String, desc: "ID of the Bank Account"
         end
         oauth2 :full
         get ":id" do
-          BankAccount.guarded_retrieve(current_user, permitted_params)
+          bank_account = BankAccount.guarded_retrieve(current_user, permitted_params)
+          render(bank_account, meta: {
+            updatable: bank_account.updatable_by?(current_user),
+            deletable: bank_account.deletable_by?(current_user)
+          })
         end
-
-
 
 
 

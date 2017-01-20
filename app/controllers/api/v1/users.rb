@@ -30,7 +30,11 @@ module API
         end
         oauth2 :simple, :full
         get ":id" do
-          User.guarded_retrieve(current_user, permitted_params)
+          user = User.guarded_retrieve(current_user, permitted_params)
+          render(user, meta: {
+            updatable: user.updatable_by?(current_user),
+            deletable: user.deletable_by?(current_user)
+          })
         end
 
 

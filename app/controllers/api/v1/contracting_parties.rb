@@ -22,7 +22,11 @@ module API
         end
         oauth2 :full
         get ':id' do
-          ContractingParty.guarded_retrieve(current_user, permitted_params)
+          contracting_party = ContractingParty.guarded_retrieve(current_user, permitted_params)
+          render(contracting_party, meta: {
+            updatable: contracting_party.updatable_by?(current_user),
+            deletable: contracting_party.deletable_by?(current_user)
+          })
         end
 
         desc 'Create contracting party'
@@ -37,8 +41,7 @@ module API
         end
         oauth2 :full
         post do
-          contracting_party = ContractingParty.guarded_create(current_user,
-                                                              permitted_params)
+          contracting_party = ContractingParty.guarded_create(current_user, permitted_params)
           created_response(contracting_party)
         end
 

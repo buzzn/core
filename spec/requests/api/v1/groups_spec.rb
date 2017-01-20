@@ -283,6 +283,12 @@ describe "Groups API" do
     access_token.update_attribute :scopes, 'full'
     group = Fabricate(:group)
     manager.add_role(:manager, group)
+
+    get_with_token "/api/v1/groups/#{group.id}", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['updatable']).to be_truthy
+    expect(json['meta']['deletable']).to be_truthy
+
     delete_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(204)
   end
@@ -293,6 +299,8 @@ describe "Groups API" do
     group         = Fabricate(:group_readable_by_community)
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
+    expect(json['meta']['updatable']).to be_falsey
+    expect(json['meta']['deletable']).to be_falsey
   end
 
   it 'get a friend-readable group by managers friend' do
@@ -303,6 +311,8 @@ describe "Groups API" do
     token_user_friend.add_role(:manager, group)
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
+    expect(json['meta']['updatable']).to be_falsey
+    expect(json['meta']['deletable']).to be_falsey
   end
 
   it 'get a friend-readable group by member' do
@@ -314,8 +324,11 @@ describe "Groups API" do
     member.add_role(:member, register)
     token_user.add_role(:member, register)
     group.registers << register
+
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
+    expect(json['meta']['updatable']).to be_falsey
+    expect(json['meta']['deletable']).to be_falsey
   end
 
   it 'get a member-readable group by member' do
@@ -327,6 +340,8 @@ describe "Groups API" do
     group.registers << register
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
+    expect(json['meta']['updatable']).to be_falsey
+    expect(json['meta']['deletable']).to be_falsey
   end
 
   it 'does not gets a group readable by members or friends if user is not member or friend' do
@@ -341,7 +356,7 @@ describe "Groups API" do
 
 
   it 'gets the related registers for Group' do
-    group                 = Fabricate(:group)
+    group = Fabricate(:group)
     r = Fabricate(:input_meter).input_register
     r.update(readable: :world)
     group.registers << r
@@ -469,7 +484,7 @@ describe "Groups API" do
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['total_pages']).to eq(2)
-    
+
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
