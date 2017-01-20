@@ -11,7 +11,11 @@ module API
         end
         oauth2 :simple, :full
         get ":id" do
-          Reading.guarded_retrieve(current_user, permitted_params)
+          reading = Reading.guarded_retrieve(current_user, permitted_params)
+          render(reading, meta: {
+            updatable: reading.updatable_by?(current_user),
+            deletable: reading.deletable_by?(current_user)
+          })
         end
 
 

@@ -22,7 +22,11 @@ module API
         end
         oauth2 :full
         get ':id' do
-          Address.guarded_retrieve(current_user, permitted_params)
+          address = Address.guarded_retrieve(current_user, permitted_params)
+          render(address, meta: {
+            updatable: address.updatable_by?(current_user),
+            deletable: address.deletable_by?(current_user)
+          })
         end
 
         desc 'Create address'
