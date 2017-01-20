@@ -104,7 +104,7 @@ class Group < ActiveRecord::Base
       register_on   = register.create_on(group[:id].eq(register.alias[:group_id]))
       register_join = register.create_join(register.alias, register_on, Arel::Nodes::OuterJoin)
 
-      joins(register_join).where(sqls.map(&:to_sql).join(' OR '))
+      joins(register_join).where(sqls.map(&:to_sql).join(' OR ')).distinct
     end
   end
 
