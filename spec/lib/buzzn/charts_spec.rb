@@ -1,36 +1,41 @@
 describe Buzzn::Charts do
 
+
   class DummyDataSource < Buzzn::DataSource
-
     NAME = :dummy
-
     def method_missing(method, *args)
       [method] + args
     end
-
     def aggregated(resource, mode, interval)
       method_missing(:aggregated, resource, mode, interval) unless resource.is_a? Group
     end
   end
 
+
+
   class MockDataSource < Buzzn::DataSource
-
     NAME = :mock
-
     attr_accessor :input, :output
-
     def aggregated(resource, mode, interval)
       mode == :in ? @input : @output
     end
-
     def method_missing(method, *args)
       nil
     end
   end
 
+
+
   let(:mock) { MockDataSource.new }
   subject do
-    Buzzn::Charts.new(Buzzn::DataSourceRegistry.new(Redis.current, DummyDataSource.new, mock, Buzzn::CheckTypesDataSource.new))
+    Buzzn::Charts.new(
+      Buzzn::DataSourceRegistry.new(
+        Redis.current,
+        DummyDataSource.new,
+        mock,
+        Buzzn::CheckTypesDataSource.new
+      )
+    )
   end
 
   let(:group) { Fabricate(:group) }
@@ -52,6 +57,7 @@ describe Buzzn::Charts do
     fichtenweg8
   end
 
+
   it 'delivers the right result for a real register', retry: 3 do
     interval = Buzzn::Interval.year
     result = subject.for_register(dummy_register, interval)
@@ -60,6 +66,7 @@ describe Buzzn::Charts do
     expect { subject.for_register(register) }.to raise_error ArgumentError
     expect { subject.for_register(Object.new, interval) }.to raise_error ArgumentError
   end
+
 
   it 'delivers the right result for each register in a group', retry: 3 do
     # setup the results for the MockDataSource which we use here
@@ -79,6 +86,7 @@ describe Buzzn::Charts do
     expect { subject.for_group(Object.new, interval) }.to raise_error ArgumentError
   end
 
+
   it 'delivers the right result for a virtual register', retry: 3 do |spec|
     VCR.use_cassette("lib/buzzn/#{spec.metadata[:description].downcase}") do
       interval = Buzzn::Interval.day
@@ -87,4 +95,6 @@ describe Buzzn::Charts do
       expect(result.in).to eq result_single.in
     end
   end
+
+
 end

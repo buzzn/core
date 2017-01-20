@@ -10,7 +10,7 @@ module Buzzn
       @registry[Buzzn::Discovergy::DataSource::NAME] ||= Buzzn::Discovergy::DataSource.new(redis)
       @registry[Buzzn::MissingDataSource::NAME] ||= Buzzn::MissingDataSource.new
       #@registry[Buzzn::Mysmartgrid::DataSource::NAME] ||= Buzzn::Mysmartgrid::DataSource.new(redis)
-      #@registry[Buzzn::StandardProfile::DataSource::NAME] ||= Buzzn::StandardProfile::DataSource.new
+      @registry[Buzzn::StandardProfile::DataSource::NAME] ||= Buzzn::StandardProfile::DataSource.new
 
       @registry.each do |key, data_source|
         raise "datasource for :#{key} is not a #{Buzzn::DataSource}: #{data_source.class}" unless data_source.is_a?(Buzzn::DataSource)
