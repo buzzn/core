@@ -31,33 +31,32 @@ describe "Group Model" do
   end
 
   it 'limits readable_by' do
-    wagnis4   = Fabricate(:group_wagnis4, readable: 'world')
+    wagnis4 = Fabricate(:group_wagnis4, readable: 'world')
     butenland = Fabricate(:group_hof_butenland, readable: 'community')
-    karin     = Fabricate(:group_karins_pv_strom, readable: 'friends')
-    group     = Fabricate(:group_with_members_readable_by_world, readable: 'members')
-    guest     = nil
-    manager   = Fabricate(:user)
+    karin = Fabricate(:group_karins_pv_strom, readable: 'friends')
+    group = Fabricate(:group_with_members_readable_by_world, readable: 'members')
+    manager = Fabricate(:user)
     manager.add_role(:manager, karin)
-    
-    expect(Group.readable_by(guest)).to eq [wagnis4]
+
+    expect(Group.readable_by(nil).collect{|c| c}).to eq [wagnis4]
     user = Fabricate(:user)
-    expect(Group.readable_by(user)).to match_array [wagnis4, butenland]
+    expect(Group.readable_by(user).collect{|c| c}).to match_array [wagnis4, butenland]
 
-    user.add_role(:admin, guest)
-    expect(Group.readable_by(user)).to match_array [wagnis4, butenland, group, karin]
+    user.add_role(:admin, nil)
+    expect(Group.readable_by(user).collect{|c| c }).to match_array [wagnis4, butenland, group, karin]
 
-    expect(Group.readable_by(group.members.first)).to match_array [wagnis4, butenland, group]
-    expect(Group.readable_by(karin.managers.first)).to match_array [wagnis4, butenland, karin]
+    expect(Group.readable_by(group.members.first).collect{|c| c }).to match_array [wagnis4, butenland, group]
+    expect(Group.readable_by(karin.managers.first).collect{|c| c }).to match_array [wagnis4, butenland, karin]
 
     manager.friends << Fabricate(:user)
-    expect(Group.readable_by(karin.managers.first.friends.first)).to match_array [wagnis4, butenland, karin]
+    expect(Group.readable_by(karin.managers.first.friends.first).collect{|c| c }).to match_array [wagnis4, butenland, karin]
 
     manager.add_role(:manager, group)
-    expect(Group.readable_by(group.managers.first.friends.first)).to match_array [wagnis4, butenland, karin]
+    expect(Group.readable_by(group.managers.first.friends.first).collect{|c| c }).to match_array [wagnis4, butenland, karin]
 
     friend = Fabricate(:user)
     group.members.first.friends << friend
-    expect(Group.readable_by(friend)).to match_array [wagnis4, butenland]
+    expect(Group.readable_by(friend).collect{|c| c }).to match_array [wagnis4, butenland]
   end
 
   it 'selects the energy producers/consumers and involved users of a group' do
