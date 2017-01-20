@@ -1,6 +1,6 @@
 describe "Groups API" do
 
-  let(:page_overload) { 11 }
+  let(:page_overload) { 33 }
 
   let(:output_register_with_manager) do
     register = Fabricate(:output_meter).output_register
@@ -138,11 +138,40 @@ describe "Groups API" do
     end
     get_without_token '/api/v1/groups'
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_without_token '/api/v1/groups', {per_page: 200}
     expect(response).to have_http_status(422)
   end
+
+
+
+  it 'paginate groups with full access token' do
+    page_overload.times do
+      Fabricate(:group)
+    end
+    access_token = Fabricate(:full_access_token_as_admin)
+
+    get_with_token "/api/v1/profiles", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
+
+    pages_profile_ids = []
+
+    1.upto(4) do |i|
+      get_with_token '/api/v1/groups', {page: i, order_direction: 'DESC', order_by: 'created_at'}, access_token.token
+      expect(response).to have_http_status(200)
+      expect(json['meta']['total_pages']).to eq(4)
+      json['data'].each do |data|
+        pages_profile_ids << data['id']
+      end
+    end
+
+    expect(pages_profile_ids.uniq.length).to eq(pages_profile_ids.length)
+  end
+
+
+
+
 
   it 'does gets a group readable by world with or without token' do
     access_token  = Fabricate(:simple_access_token).token
@@ -388,7 +417,7 @@ describe "Groups API" do
     end
     get_without_token "/api/v1/groups/#{group.id}/registers"
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_without_token "/api/v1/groups/#{group.id}/registers", {per_page: 200}
     expect(response).to have_http_status(422)
@@ -448,7 +477,7 @@ describe "Groups API" do
     params = { interval: 'day', timestamp: now }
     get_without_token "/api/v1/groups/#{group.id}/scores", params
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_without_token "/api/v1/groups/#{group.id}/scores", {per_page: 200}
     expect(response).to have_http_status(422)
@@ -483,12 +512,12 @@ describe "Groups API" do
     end
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(3)
+    expect(json['meta']['total_pages']).to eq(7)
 
     get_with_token "/api/v1/groups/#{group.id}/managers", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
@@ -504,12 +533,12 @@ describe "Groups API" do
 
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(3)
+    expect(json['meta']['total_pages']).to eq(7)
 
     get_with_token "/api/v1/groups/#{group.id}/members", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
@@ -717,7 +746,7 @@ describe "Groups API" do
     end
     get_with_token "/api/v1/groups/#{group.id}/comments", access_token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_with_token "/api/v1/groups/#{group.id}/comments", {per_page: 200}, access_token
     expect(response).to have_http_status(422)

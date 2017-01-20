@@ -5,6 +5,7 @@ Fabricator :meter, class_name: Meter::Real do
   manufacturer_product_name    'AS 1440'
   manufacturer_product_serialnumber  { Random.new_seed.to_s.slice(0, 7) }
   metering_type { Buzzn::Zip2Price.types.first }
+  created_at  { (rand*10).days.ago }
 end
 
 Fabricator :real_meter, from: :meter do

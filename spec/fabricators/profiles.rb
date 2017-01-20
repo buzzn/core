@@ -10,6 +10,7 @@ Fabricator :profile do
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', "#{((i+=1)%60) + 1}.jpg")) }
   about_me    { FFaker::Lorem.sentence }
   website     { "http://www.#{FFaker::Internet.domain_name}" }
+  created_at  { (rand*10).days.ago }
 end
 
 
@@ -571,4 +572,3 @@ Fabricator :profile_peter_schmidt, from: :profile do
   first_name 'Peter'
   last_name  'Schmidt'
 end
-

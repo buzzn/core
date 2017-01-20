@@ -4,6 +4,7 @@ Fabricator :user do
   email             { FFaker::Internet.email }
   password          '12345678'
   profile           { Fabricate(:profile) }
+  created_at        { (rand*10).days.ago }
   after_create { |user|
     user.confirm
   }
