@@ -32,7 +32,11 @@ module API
         end
         oauth2 false
         get ":id" do
-          Device.guarded_retrieve(current_user, permitted_params)
+          device = Device.guarded_retrieve(current_user, permitted_params)
+          render(device, meta: {
+            updatable: device.updatable_by?(current_user),
+            deletable: device.deletable_by?(current_user)
+          })
         end
 
 

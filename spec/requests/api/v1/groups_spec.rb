@@ -1,6 +1,6 @@
 describe "Groups API" do
 
-  let(:page_overload) { 11 }
+  let(:page_overload) { 33 }
 
   let(:output_register_with_manager) do
     register = Fabricate(:output_meter).output_register
@@ -138,11 +138,40 @@ describe "Groups API" do
     end
     get_without_token '/api/v1/groups'
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_without_token '/api/v1/groups', {per_page: 200}
     expect(response).to have_http_status(422)
   end
+
+
+
+  it 'paginate groups with full access token' do
+    page_overload.times do
+      Fabricate(:group)
+    end
+    access_token = Fabricate(:full_access_token_as_admin)
+
+    get_with_token "/api/v1/profiles", {per_page: 200}, access_token.token
+    expect(response).to have_http_status(422)
+
+    pages_profile_ids = []
+
+    1.upto(4) do |i|
+      get_with_token '/api/v1/groups', {page: i, order_direction: 'DESC', order_by: 'created_at'}, access_token.token
+      expect(response).to have_http_status(200)
+      expect(json['meta']['total_pages']).to eq(4)
+      json['data'].each do |data|
+        pages_profile_ids << data['id']
+      end
+    end
+
+    expect(pages_profile_ids.uniq.length).to eq(pages_profile_ids.length)
+  end
+
+
+
+
 
   it 'does gets a group readable by world with or without token' do
     access_token  = Fabricate(:simple_access_token).token
@@ -283,6 +312,12 @@ describe "Groups API" do
     access_token.update_attribute :scopes, 'full'
     group = Fabricate(:group)
     manager.add_role(:manager, group)
+
+    get_with_token "/api/v1/groups/#{group.id}", access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['meta']['updatable']).to be_truthy
+    expect(json['meta']['deletable']).to be_truthy
+
     delete_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(204)
   end
@@ -293,6 +328,8 @@ describe "Groups API" do
     group         = Fabricate(:group_readable_by_community)
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
+    expect(json['meta']['updatable']).to be_falsey
+    expect(json['meta']['deletable']).to be_falsey
   end
 
   it 'get a friend-readable group by managers friend' do
@@ -303,6 +340,8 @@ describe "Groups API" do
     token_user_friend.add_role(:manager, group)
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
+    expect(json['meta']['updatable']).to be_falsey
+    expect(json['meta']['deletable']).to be_falsey
   end
 
   it 'get a friend-readable group by member' do
@@ -314,8 +353,11 @@ describe "Groups API" do
     member.add_role(:member, register)
     token_user.add_role(:member, register)
     group.registers << register
+
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
+    expect(json['meta']['updatable']).to be_falsey
+    expect(json['meta']['deletable']).to be_falsey
   end
 
   it 'get a member-readable group by member' do
@@ -327,6 +369,8 @@ describe "Groups API" do
     group.registers << register
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
+    expect(json['meta']['updatable']).to be_falsey
+    expect(json['meta']['deletable']).to be_falsey
   end
 
   it 'does not gets a group readable by members or friends if user is not member or friend' do
@@ -341,7 +385,7 @@ describe "Groups API" do
 
 
   it 'gets the related registers for Group' do
-    group                 = Fabricate(:group)
+    group = Fabricate(:group)
     r = Fabricate(:input_meter).input_register
     r.update(readable: :world)
     group.registers << r
@@ -373,7 +417,7 @@ describe "Groups API" do
     end
     get_without_token "/api/v1/groups/#{group.id}/registers"
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_without_token "/api/v1/groups/#{group.id}/registers", {per_page: 200}
     expect(response).to have_http_status(422)
@@ -433,7 +477,7 @@ describe "Groups API" do
     params = { interval: 'day', timestamp: now }
     get_without_token "/api/v1/groups/#{group.id}/scores", params
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_without_token "/api/v1/groups/#{group.id}/scores", {per_page: 200}
     expect(response).to have_http_status(422)
@@ -468,12 +512,12 @@ describe "Groups API" do
     end
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
-    
+    expect(json['meta']['total_pages']).to eq(4)
+
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(3)
+    expect(json['meta']['total_pages']).to eq(7)
 
     get_with_token "/api/v1/groups/#{group.id}/managers", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
@@ -489,12 +533,12 @@ describe "Groups API" do
 
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(3)
+    expect(json['meta']['total_pages']).to eq(7)
 
     get_with_token "/api/v1/groups/#{group.id}/members", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
@@ -702,7 +746,7 @@ describe "Groups API" do
     end
     get_with_token "/api/v1/groups/#{group.id}/comments", access_token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_with_token "/api/v1/groups/#{group.id}/comments", {per_page: 200}, access_token
     expect(response).to have_http_status(422)

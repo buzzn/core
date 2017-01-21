@@ -56,34 +56,14 @@ describe "Profiles API" do
 
     pages_profile_ids = []
 
-    get_with_token '/api/v1/profiles', {page: 1}, access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-    json['data'].each do |data|
-      pages_profile_ids << data['id']
+    1.upto(4) do |i|
+      get_with_token '/api/v1/profiles', {page: i, order_direction: 'DESC', order_by: 'created_at'}, access_token.token
+      expect(response).to have_http_status(200)
+      expect(json['meta']['total_pages']).to eq(4)
+      json['data'].each do |data|
+        pages_profile_ids << data['id']
+      end
     end
-
-    get_with_token '/api/v1/profiles', {page: 2}, access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-    json['data'].each do |data|
-      pages_profile_ids << data['id']
-    end
-
-    get_with_token '/api/v1/profiles', {page: 3}, access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-    json['data'].each do |data|
-      pages_profile_ids << data['id']
-    end
-
-    get_with_token '/api/v1/profiles', {page: 4}, access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-    json['data'].each do |data|
-      pages_profile_ids << data['id']
-    end
-
     expect(pages_profile_ids.uniq.length).to eq(pages_profile_ids.length)
   end
 
