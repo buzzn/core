@@ -11,9 +11,12 @@ module API
         end
         oauth2 :full
         get ":id" do
-          Meter::Base.guarded_retrieve(current_user, permitted_params)
+          meter = Meter::Base.guarded_retrieve(current_user, permitted_params)
+          render(meter, meta: {
+            updatable: meter.updatable_by?(current_user),
+            deletable: meter.deletable_by?(current_user)
+          })
         end
-
 
 
 
@@ -41,7 +44,7 @@ module API
             created_response(meter)
           end
 
-        
+
           desc "Update a Real-Meter."
           params do
             requires :id, type: String, desc: 'Meter ID.'
@@ -105,7 +108,7 @@ module API
             created_response(meter)
           end
 
-        
+
           desc "Update a Virtual-Meter."
           params do
             requires :id, type: String, desc: 'Meter ID.'

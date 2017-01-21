@@ -7,6 +7,7 @@ Fabricator :address do
   zip           10785
   country       'Germany'
   addition      'HH'
+  created_at  { (rand*10).days.ago }
 end
 
 

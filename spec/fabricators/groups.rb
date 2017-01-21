@@ -3,6 +3,7 @@ Fabricator :group do
   name        { FFaker::Company.name[0..39] }
   description { FFaker::Lorem.paragraphs.join('-') }
   readable    'world'
+  created_at  { (rand*10).days.ago }
 end
 
 Fabricator :localpool, from: :group do

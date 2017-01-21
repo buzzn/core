@@ -1,6 +1,7 @@
 Fabricator :friendship_request do
   sender    { |attrs| attrs[:sender] }
   receiver  { |attrs| attrs[:receiver] }
+  created_at  { (rand*10).days.ago }
 end
 
 Fabricator :friendship_request_with_activity, from: :friendship_request do

@@ -10,6 +10,7 @@
     uid         { "DE" + Random.new_seed.to_s.slice(0, 29) }
     readable    'friends'
     mode        { type == 'virtual' ? 'in' : nil }
+    created_at  { (rand*10).days.ago }
   end
 
 end

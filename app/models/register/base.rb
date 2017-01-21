@@ -171,9 +171,10 @@ module Register
     scope :without_externals, -> { where(external: false) }
 
     def validate_invariants
-      if contracts.size > 0 && address.nil?
-        errors.add(:address, 'missing Address when having contracts')
-      end
+      # TODO: add this when migration were running
+      # if contracts.size > 0 && address.nil?
+      #   errors.add(:address, 'missing Address when having contracts')
+      # end
       if max_watt < min_watt
         errors.add(:max_watt, 'must be greater or equal min_watt')
         errors.add(:min_watt, 'must be smaller or equal max_watt')

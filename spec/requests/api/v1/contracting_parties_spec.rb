@@ -43,10 +43,13 @@ describe 'Contracting parties API' do
 
     get_without_token "/api/v1/contracting-parties/#{contracting_party.id}"
     expect(response).to have_http_status(401)
+
     get_with_token "/api/v1/contracting-parties/#{contracting_party.id}", {}, access_token.token
     expect(response).to have_http_status(403)
+
     get_with_token "/api/v1/contracting-parties/#{contracting_party.id}", {}, full_access_token.token
     expect(response).to have_http_status(200)
+    expect(json['meta']['deletable']).to be_truthy
   end
 
   it 'creates contracting party using full token' do

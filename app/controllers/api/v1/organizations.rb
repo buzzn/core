@@ -2,7 +2,7 @@ module API
   module V1
     class Organizations < Grape::API
       include API::V1::Defaults
-      
+
       resource :organizations do
 
         desc "Return all organizations"
@@ -14,7 +14,11 @@ module API
         paginate
         oauth2 false
         get do
-          paginated_response(Organization.filter(permitted_params[:filter]).readable_by(current_user))
+          paginated_response(
+            Organization
+              .filter(permitted_params[:filter])
+              .readable_by(current_user)
+            )
         end
 
 
@@ -25,7 +29,11 @@ module API
         end
         oauth2 false
         get ":id" do
-          Organization.guarded_retrieve(current_user, permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
+          render(organization, meta: {
+            updatable: organization.updatable_by?(current_user),
+            deletable: organization.deletable_by?(current_user)
+          })
         end
 
 
@@ -38,8 +46,7 @@ module API
         paginate
         oauth2 false
         get [':id/managers', ':id/relationships/managers'] do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
           paginated_response(organization.managers.readable_by(current_user))
         end
 
@@ -53,8 +60,7 @@ module API
         paginate
         oauth2 false
         get [':id/members', ':id/relationships/members'] do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
           paginated_response(organization.members.readable_by(current_user))
         end
 
@@ -65,8 +71,7 @@ module API
         end
         oauth2 false
         get ':id/address' do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
           organization.address.guarded_read(current_user)
         end
 
@@ -77,8 +82,7 @@ module API
         end
         oauth2 false
         get ':id/contracting-party' do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
           if organization.contracting_party
             organization.contracting_party.guarded_read(current_user)
           end
@@ -97,8 +101,7 @@ module API
         end
         oauth2 :full
         post do
-          organization = Organization.guarded_create(current_user,
-                                                     permitted_params)
+          organization = Organization.guarded_create(current_user, permitted_params)
           created_response(organization)
         end
 
@@ -117,8 +120,7 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
           organization.guarded_update(current_user, permitted_params)
         end
 
@@ -130,8 +132,7 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
           if organization.deletable_by?(current_user)
             organization.destroy
             status 204
@@ -150,8 +151,7 @@ module API
         end
         oauth2 :full
         post ':id/relationships/managers' do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
           user         = User.unguarded_retrieve(permitted_params[:data][:id])
           organization.managers.add(current_user, user)
           status 204
@@ -167,8 +167,7 @@ module API
         end
         oauth2 :full
         patch ':id/relationships/managers' do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
           organization.managers.replace(current_user, data_id_array)
         end
 
@@ -182,8 +181,7 @@ module API
         end
         oauth2 :full
         delete ':id/relationships/managers' do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
           user         = User.unguarded_retrieve(permitted_params[:data][:id])
           organization.managers.remove(current_user, user)
           status 204
@@ -199,8 +197,7 @@ module API
         end
         oauth2 :full
         post ':id/relationships/members' do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
           user         = User.unguarded_retrieve(permitted_params[:data][:id])
           organization.members.add(current_user, user)
           status 204
@@ -216,8 +213,7 @@ module API
         end
         oauth2 :full
         patch ':id/relationships/members' do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
           organization.members.replace(current_user, data_id_array)
         end
 
@@ -232,8 +228,7 @@ module API
         end
         oauth2 :full
         delete ':id/relationships/members' do
-          organization = Organization.guarded_retrieve(current_user,
-                                                       permitted_params)
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
           user         = User.unguarded_retrieve(permitted_params[:data][:id])
           organization.members.remove(current_user, user)
           status 204

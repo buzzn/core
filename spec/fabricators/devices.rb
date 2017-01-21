@@ -6,6 +6,7 @@ Fabricator :device do
   watt_peak                     49000
   commissioning                 { FFaker::Time.date }
   shop_link                     'http://www.amazon.com'
+  created_at  { (rand*10).days.ago }
 end
 
 Fabricator :in_device, from: :device do
@@ -129,7 +130,3 @@ Fabricator :gocycle, from: :in_device do
   image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'felix', 'gocycle.jpg' )) }
   readable    'world'
 end
-
-
-
-

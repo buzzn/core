@@ -26,7 +26,7 @@ module API
                 created_response(register)
               end
             end
-            
+
           end
 
           desc "Update a Real-Register."
@@ -56,7 +56,6 @@ module API
 
 
 
-
         namespace :virtual do
           desc "Update a Virtual-Register."
           params do
@@ -74,17 +73,18 @@ module API
 
 
 
-
-
         desc "Return a Register"
         params do
           requires :id, type: String, desc: "ID of the register"
         end
         oauth2 false
         get ":id" do
-          Register::Base.guarded_retrieve(current_user, permitted_params)
+          register = Register::Base.guarded_retrieve(current_user, permitted_params)
+          render(register, meta: {
+            updatable: register.updatable_by?(current_user),
+            deletable: register.deletable_by?(current_user)
+          })
         end
-
 
 
 
