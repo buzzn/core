@@ -46,7 +46,7 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
         seeded: false,
         updating: false,
       };
-      if (point.attributes.obis === '1-0:1.8.0') {
+      if (point.attributes.direction === 'in') {
         inData.push(Object.assign({}, pointObj, { color: inColor, outPoint: false }));
       } else {
         outData.push(Object.assign({}, pointObj, { color: outColor, outPoint: true, startAngle: 0, endAngle: 0 }));
