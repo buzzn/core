@@ -73,7 +73,7 @@ gem 'multi_json', '~> 1.0'
 gem 'oj', '~> 2.0'
 gem 'oauth'
 gem 'remote_lock'
-
+gem 'fabrication'
 
 
 
@@ -145,9 +145,7 @@ group :production, :staging do
   gem 'asset_sync'
 end
 
-group :development, :test, :staging do
-  gem 'fabrication'
-  gem 'spring'
+group :development, :test do
   gem 'brakeman', :require => false
   gem 'lol_dba'
   gem 'listen'
@@ -171,6 +169,7 @@ group :test do
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
   gem 'rspec-rails'
+  gem 'spring'
   gem 'spring-commands-rspec'
   gem 'email_spec'
   gem 'guard'
