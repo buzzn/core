@@ -40,7 +40,7 @@ private
         profiles = OUT_PROFILES
       end
 
-      data_results = Buzzn::DataResultArray
+      data_results = []
       profiles.each do |profile|
         if registers_hash[profile.to_sym].any?
           registers_hash[profile.to_sym].each do |register|
