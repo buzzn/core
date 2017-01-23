@@ -1,6 +1,6 @@
 describe "Users API" do
 
-  let(:page_overload) { 11 }
+  let(:page_overload) { 33 }
 
 
   # RETRIEVE me
@@ -68,7 +68,7 @@ describe "Users API" do
     access_token = Fabricate(:full_access_token_as_admin).token
     get_with_token '/api/v1/users', {}, access_token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_with_token "/api/v1/users", {per_page: 200}, access_token
     expect(response).to have_http_status(422)
@@ -101,7 +101,7 @@ describe "Users API" do
   end
 
   # everything else . . .
-
+ 
   it 'does not create an user with missing parameters' do
     access_token  = Fabricate(:full_access_token_as_admin)
 
@@ -220,7 +220,7 @@ describe "Users API" do
     end
     get_with_token "/api/v1/users/#{user.id}/groups", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_with_token "/api/v1/users/#{user.id}/groups", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
@@ -253,19 +253,31 @@ describe "Users API" do
   end
 
   it 'paginate meters' do
-    admin_token = Fabricate(:full_access_token_as_admin).token
-    user          = Fabricate(:user)
+    access_token = Fabricate(:full_access_token_as_admin)
+    user         = Fabricate(:user)
     page_overload.times do
       meter = Fabricate(:meter)
       user.add_role(:manager, meter.registers.first)
     end
-    get_with_token "/api/v1/users/#{user.id}/meters", admin_token
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
-
-    get_with_token "/api/v1/users/#{user.id}/meters", {per_page: 200}, admin_token
+    get_with_token "/api/v1/users/#{user.id}/meters", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
+
+    pages_profile_ids = []
+    1.upto(4) do |i|
+      params = {page: i, order_direction: 'DESC', order_by: 'created_at'}
+      get_with_token "/api/v1/users/#{user.id}/meters", params, access_token.token
+      expect(response).to have_http_status(200)
+      expect(json['meta']['total_pages']).to eq(4)
+      json['data'].each do |data|
+        pages_profile_ids << data['id']
+      end
+    end
+
+    expect(pages_profile_ids.uniq.length).to eq(pages_profile_ids.length)
   end
+
+
+
 
   it 'paginate registers' do
     access_token = Fabricate(:full_access_token_as_admin).token
@@ -276,7 +288,7 @@ describe "Users API" do
     end
     get_with_token "/api/v1/users/#{user.id}/registers", access_token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_with_token "/api/v1/users/#{user.id}/registers", {per_page: 200}, access_token
     expect(response).to have_http_status(422)
@@ -327,7 +339,7 @@ describe "Users API" do
 
     get_with_token "/api/v1/users/#{user.id}/friends", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_with_token "/api/v1/users/#{user.id}/friends", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
@@ -475,7 +487,7 @@ describe "Users API" do
 
     get_with_token "/api/v1/users/#{user.id}/devices", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['meta']['total_pages']).to eq(4)
 
     get_with_token "/api/v1/users/#{user.id}/devices", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
