@@ -7,8 +7,46 @@ describe '/api/v1/aggregates' do
     meter
   end
 
+  let(:slp_meter) do
+    meter = Fabricate(:meter)
+
+    meter
+  end
+
 
   describe "/present" do
+
+
+    it 'does aggregate slp present as admin' do
+      access_token = Fabricate(:full_access_token_as_admin)
+      meter = Fabricate(:input_meter_with_input_register)
+      register = meter.registers.inputs.first
+
+      energy_a_milliwatt_hour = 0
+      timestamp = Time.find_zone('Berlin').local(2016,2,1)
+      (24*4).times do |i|
+        Fabricate(:reading,
+          source: 'slp',
+          timestamp: timestamp,
+          energy_milliwatt_hour: energy_a_milliwatt_hour,
+          power_milliwatt: 930*1000+i
+        )
+        energy_a_milliwatt_hour += 1300*1000
+        timestamp += 15.minutes
+      end
+
+      Timecop.freeze(Time.find_zone('Berlin').local(2016,2,1, 1,30,1)) # 6*15 minutes and 1 seconds
+
+      request_params = { register_ids: register.id }
+      get_with_token "/api/v1/aggregates/present", request_params, access_token.token
+      expect(response).to have_http_status(200)
+      expect(json['readings'].count).to eq(1)
+      expect(json['power_milliwatt']).to eq(930*1000 + 7)
+      Timecop.return
+    end
+
+
+
 
     it 'aggregates Discovergy power present for register as admin' do |spec|
       VCR.use_cassette("request/api/v1/#{spec.metadata[:description].downcase}") do
