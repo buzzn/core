@@ -24,7 +24,8 @@ module Buzzn
                      raise ArgumentError.new("timestamp not a Time or String or Fixnum or Float: #{timestamp.class}")
                    end
       @value = value.to_f
-      raise 'value most not be negativ' if @value < 0
+      #must be deactivated to allow negative values temporarily (!) when calculating virtual registers' data
+      #raise 'value most not be negativ' if @value < 0
     end
 
     def add(other)

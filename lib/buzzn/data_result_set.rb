@@ -65,6 +65,7 @@ module Buzzn
     def _subtract(target, source, duration)
       if target.empty?
         target.replace(source.dup)
+        _multiply_by_minus_one(target)
       elsif source.empty?
         return
       else
@@ -72,6 +73,13 @@ module Buzzn
       end
     end
     private :_subtract
+
+    def _multiply_by_minus_one(set)
+      set.each do |data_point|
+        data_point.value > 0 ? data_point.subtract_value(2 * data_point.value) : data_point.add_value(2 * data_point.value.abs)
+      end
+    end
+    private :_multiply_by_minus_one
 
     # this method returns the data combined in either the @in array or the @out array
     # need for virtual registers
@@ -104,7 +112,11 @@ module Buzzn
           value = source[i].value
           timestamp_index = find_matching_timestamp(key, target, duration)
           if timestamp_index == -1
-            target.push(source[i])
+            if operator == '+'
+              target.push(source[i])
+            else
+              target.push(Buzzn::DataPoint.new(key, -1 * value))
+            end
           else
             if operator == '+'
               target[timestamp_index].add_value(value)

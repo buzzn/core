@@ -180,11 +180,24 @@ class Group < ActiveRecord::Base
   end
 
   def input_registers
-    Register::Input.where(group: self)
+    registers = Register::Base.arel_table
+    Register::Base.where(
+      registers[:group_id].eq(self.id).and(
+        registers[:type].eq("Register::Input").or(
+          registers[:type].eq("Register::Virtual").and(registers[:mode].eq('in')))
+      )
+    )
   end
 
+
   def output_registers
-    Register::Output.where(group: self)
+    registers = Register::Base.arel_table
+    Register::Base.where(
+      registers[:group_id].eq(self.id).and(
+        registers[:type].eq("Register::Output").or(
+          registers[:type].eq("Register::Virtual").and(registers[:mode].eq('out')))
+      )
+    )
   end
 
 
