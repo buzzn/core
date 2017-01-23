@@ -73,7 +73,7 @@ gem 'multi_json', '~> 1.0'
 gem 'oj', '~> 2.0'
 gem 'oauth'
 gem 'remote_lock'
-
+gem 'fabrication'
 
 
 
@@ -146,7 +146,6 @@ group :production, :staging do
 end
 
 group :development, :test do
-  gem 'fabrication'
   gem 'brakeman', :require => false
   gem 'lol_dba'
   gem 'listen'
