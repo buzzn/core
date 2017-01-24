@@ -143,88 +143,117 @@ describe Buzzn::DataResultSet do
 
   end
 
-  [:year, :month, :day, :hour].each do |duration|
+  ['+', '-'].each do |operator|
+    [:year, :month, :day, :hour].each do |duration|
 
-    it "sums lists for a #{duration}" do
-      reference = subject.milliwatt('u-i-d')
-      other = subject.milliwatt('u-i-d')
-      4.times.each do |i|
-        reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
-        other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+      it "#{operator} lists for a #{duration}" do
+        reference = subject.milliwatt('u-i-d')
+        other = subject.milliwatt('u-i-d')
+        4.times.each do |i|
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+          other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+        end
+        reference.merge_lists(reference.in, other.in, duration, operator)
+        expect(reference.in.size).to eq 4
+        4.times.each do |i|
+          expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
+          expect(reference.in[i].value).to eq (2 * (operator == '+' ? 100 + i * 100 : 0))
+        end
       end
-      reference.merge_lists(reference.in, other.in, duration, '+')
-      expect(reference.in.size).to eq 4
-      4.times.each do |i|
-        expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
-        expect(reference.in[i].value).to eq (2 * (100 + i * 100))
-      end
-    end
 
-    it "sums lists for a #{duration} with different timestamps" do
-      reference = subject.milliwatt('u-i-d')
-      other = subject.milliwatt('u-i-d')
-      4.times.each do |i|
-        reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
-        other.add(Time.at(1482251172 + (granularity(duration) / 2 - 1) + i * granularity(duration)), 100 + i * 100, :in)
+      it "#{operator} lists for a #{duration} with different timestamps" do
+        reference = subject.milliwatt('u-i-d')
+        other = subject.milliwatt('u-i-d')
+        4.times.each do |i|
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+          other.add(Time.at(1482251172 + (granularity(duration) / 2 - 1) + i * granularity(duration)), 100 + i * 100, :in)
+        end
+        reference.merge_lists(reference.in, other.in, duration, operator)
+        expect(reference.in.size).to eq 4
+        4.times.each do |i|
+          expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
+          expect(reference.in[i].value).to eq (2 * (operator == '+' ? 100 + i * 100 : 0))
+        end
       end
-      reference.merge_lists(reference.in, other.in, duration, '+')
-      expect(reference.in.size).to eq 4
-      4.times.each do |i|
-        expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
-        expect(reference.in[i].value).to eq (2 * (100 + i * 100))
-      end
-    end
 
-    it "sums lists for a #{duration} with smaller length" do
-      reference = subject.milliwatt('u-i-d')
-      other = subject.milliwatt('u-i-d')
-      4.times.each do |i|
-        reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
-        other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+      it "#{operator} lists for a #{duration} with smaller length" do
+        reference = subject.milliwatt('u-i-d')
+        other = subject.milliwatt('u-i-d')
+        4.times.each do |i|
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+          other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+        end
+        other.in.pop
+        reference.merge_lists(reference.in, other.in, duration, operator)
+        expect(reference.in.size).to eq 4
+        3.times.each do |i|
+          expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
+          expect(reference.in[i].value).to eq (2 * (operator == '+' ? 100 + i * 100 : 0))
+        end
+        expect(reference.in[3].timestamp).to eq (1482251172 + 3 * granularity(duration))
+        expect(reference.in[3].value).to eq (100 + 3 * 100)
       end
-      other.in.pop
-      reference.merge_lists(reference.in, other.in, duration, '+')
-      expect(reference.in.size).to eq 4
-      3.times.each do |i|
-        expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
-        expect(reference.in[i].value).to eq (2 * (100 + i * 100))
-      end
-      expect(reference.in[3].timestamp).to eq (1482251172 + 3 * granularity(duration))
-      expect(reference.in[3].value).to eq (100 + 3 * 100)
-    end
 
-    it "sums lists for a #{duration} with greater length" do
-      reference = subject.milliwatt('u-i-d')
-      other = subject.milliwatt('u-i-d')
-      4.times.each do |i|
-        reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
-        other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+      it "#{operator} lists for a #{duration} with greater length" do
+        reference = subject.milliwatt('u-i-d')
+        other = subject.milliwatt('u-i-d')
+        4.times.each do |i|
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+          other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+        end
+        other.add(Time.at(1482251172 + 4 * granularity(duration)), 100 + 4 * 100, :in)
+        reference.merge_lists(reference.in, other.in, duration, operator)
+        expect(reference.in.size).to eq 5
+        4.times.each do |i|
+          expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
+          expect(reference.in[i].value).to eq (2 * (operator == '+' ? 100 + i * 100 : 0))
+        end
+        expect(reference.in[4].timestamp).to eq (1482251172 + 4 * granularity(duration))
+        expect(reference.in[4].value).to eq (operator == '+' ? 100 + 4 * 100 : -1 * (100 + 4 * 100))
       end
-      other.add(Time.at(1482251172 + 4 * granularity(duration)), 100 + 4 * 100, :in)
-      reference.merge_lists(reference.in, other.in, duration, '+')
-      expect(reference.in.size).to eq 5
-      4.times.each do |i|
-        expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
-        expect(reference.in[i].value).to eq (2 * (100 + i * 100))
-      end
-      expect(reference.in[4].timestamp).to eq (1482251172 + 4 * granularity(duration))
-      expect(reference.in[4].value).to eq (100 + 4 * 100)
-    end
 
-    it "does not sum lists for a #{duration}" do
-      reference = subject.milliwatt('u-i-d')
-      other = subject.milliwatt('u-i-d')
-      4.times.each do |i|
-        reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
-        other.add(Time.at(1482251172 + i * granularity(duration) + 4 * granularity(duration)), 100 + i * 100, :in)
+      it "does not #{operator} lists for a #{duration}" do
+        reference = subject.milliwatt('u-i-d')
+        other = subject.milliwatt('u-i-d')
+        4.times.each do |i|
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+          other.add(Time.at(1482251172 + i * granularity(duration) + 4 * granularity(duration)), 100 + i * 100, :in)
+        end
+        reference.merge_lists(reference.in, other.in, duration, operator)
+        expect(reference.in.size).to eq 8
+        4.times.each do |i|
+          expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
+          expect(reference.in[i].value).to eq (100 + i * 100)
+          expect(reference.in[i + 4].timestamp).to eq (1482251172 + i * granularity(duration) + 4 * granularity(duration))
+          expect(reference.in[i + 4].value).to eq (operator == '+' ? 100 + i * 100 : (-1) * (100 + i * 100))
+        end
       end
-      reference.merge_lists(reference.in, other.in, duration, '+')
-      expect(reference.in.size).to eq 8
-      4.times.each do |i|
-        expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
-        expect(reference.in[i].value).to eq (100 + i * 100)
-        expect(reference.in[i + 4].timestamp).to eq (1482251172 + i * granularity(duration) + 4 * granularity(duration))
-        expect(reference.in[i + 4].value).to eq (100 + i * 100)
+
+      it "merges lists for a #{duration}" do
+        reference = subject.milliwatt('u-i-d')
+        4.times.each do |i|
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :out)
+        end
+        reference.combine(:in, duration)
+        4.times.each do |i|
+          expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
+          expect(reference.in[i].value).to eq (2 * (100 + i * 100))
+          expect(reference.out).to eq []
+        end
+      end
+
+      it "multiplies by -1 for a #{duration}" do
+        reference = subject.milliwatt('u-i-d')
+        other = subject.milliwatt('u-i-d')
+        4.times.each do |i|
+          other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+        end
+        reference.subtract_all(other, duration)
+        4.times.each do |i|
+          expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
+          expect(reference.in[i].value).to eq (-1 * (100 + i * 100))
+        end
       end
     end
   end
@@ -234,6 +263,7 @@ describe Buzzn::DataResultSet do
     other = subject.milliwatt_hour('u-i-d')
     expect { reference.add_all(other) }.to raise_error ArgumentError
   end
+
 end
 
 def granularity(duration)
