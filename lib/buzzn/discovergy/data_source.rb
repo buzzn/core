@@ -70,7 +70,7 @@ module Buzzn::Discovergy
       register_or_group.brokers.by_data_source(self).each do |broker|
         two_way_meter = broker.two_way_meter?
         # this is because out meters (one_way) at discovergy reveal their energy data within the field 'energy' instead of 'energyOut'
-        if !two_way_meter && mode == :out
+        if register_or_group.is_a?(Register::Base) && !two_way_meter && mode == :out
           mode = :in
         end
         response = @facade.readings(broker, interval, mode, false)
