@@ -68,7 +68,7 @@ module Meter
 
         # need left outer join to get all meters without register as well
         # sql fragment 'exists select 1 where .....'
-        joins(register_join).where(admin_or_manager.project(1).exists)
+        joins(register_join).where(admin_or_manager.project(1).exists).distinct
       end
     end
 
