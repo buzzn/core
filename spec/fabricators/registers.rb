@@ -9,7 +9,7 @@
     name        { "#{type}_#{FFaker::Name.name[0..20]}" }
     uid         { "DE" + Random.new_seed.to_s.slice(0, 29) }
     readable    'friends'
-    mode        { type == 'virtual' ? 'in' : nil }
+    direction   { type == 'virtual' ? ['in', 'out'].sample : type.sub('put','') }
     created_at  { (rand*10).days.ago }
   end
 

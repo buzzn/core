@@ -290,6 +290,7 @@ module Buzzn::Discovergy
 
     def parse_virtual_meter_creation(response, mode, resource)
       json = MultiJson.load(response)
+      #binding.pry
       # TODO: Move credentials into secrets
       broker = Broker::Discovergy.create!(
         mode: mode,
