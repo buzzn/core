@@ -31,13 +31,13 @@ class DiscovergyBroker < Broker
       end
     else
       if !(resource.is_a?(Meter::Real) && resource.registers.size == 1) && !resource.is_a?(Group)
-        errors.add(:mode, 'can not be in or out on a Meter with more or less than one Register')
+        errors.add(:mode, "can not be 'in' or 'out' on a Meter with more or less than one Register")
       end
       if resource.is_a?(Meter::Real) && resource.registers.first.is_a?(Register::Input) && mode.to_sym == :out
-        errors.add(:mode, 'mode for a Register::Input is out but should be in')
+        errors.add(:mode, "for a Register::Input is 'out' but should be 'in'")
       end
       if resource.is_a?(Meter::Real) && resource.registers.first.is_a?(Register::Output) && mode.to_sym == :in
-        errors.add(:mode, 'mode for a Register::Output is in but should be out')
+        errors.add(:mode, "for a Register::Output is 'in' but should be 'out'")
       end
     # else
     #   if resource_type == Meter.to_s
