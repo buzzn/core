@@ -1,4 +1,4 @@
-describe "Groups API" do
+describe "/groups" do
 
   let(:page_overload) { 33 }
 
@@ -9,17 +9,17 @@ describe "Groups API" do
   end
 
   it 'search groups without token' do
-    group = Fabricate(:group)
-    Fabricate(:group_readable_by_community)
+    group = Fabricate(:tribe)
+    Fabricate(:tribe_readable_by_community)
     regular_token         = Fabricate(:simple_access_token)
     token_with_friend     = Fabricate(:access_token_with_friend)
     token_user            = User.find(token_with_friend.resource_owner_id)
     friend                = token_user.friends.first
     member_token          = Fabricate(:simple_access_token)
     member                = User.find(member_token.resource_owner_id)
-    friend_group          = Fabricate(:group_readable_by_friends)
+    friend_group          = Fabricate(:tribe_readable_by_friends)
     friend.add_role(:manager, friend_group)
-    member_group          = Fabricate(:group_readable_by_members)
+    member_group          = Fabricate(:tribe_readable_by_members)
     member.add_role(:manager, member_group)
 
 
@@ -40,19 +40,18 @@ describe "Groups API" do
 
 
   it 'search groups with simple token' do
-    group = Fabricate(:group)
-    Fabricate(:group_readable_by_community)
+    group = Fabricate(:tribe)
+    Fabricate(:tribe_readable_by_community)
     regular_token         = Fabricate(:simple_access_token)
     token_with_friend     = Fabricate(:access_token_with_friend)
     token_user            = User.find(token_with_friend.resource_owner_id)
     friend                = token_user.friends.first
     member_token          = Fabricate(:simple_access_token)
     member                = User.find(member_token.resource_owner_id)
-    friend_group          = Fabricate(:group_readable_by_friends)
+    friend_group          = Fabricate(:tribe_readable_by_friends)
     friend.add_role(:manager, friend_group)
-    member_group          = Fabricate(:group_readable_by_members)
+    member_group          = Fabricate(:tribe_readable_by_members)
     member.add_role(:manager, member_group)
-
 
     get_with_token '/api/v1/groups', regular_token.token
     expect(response).to have_http_status(200)
@@ -71,17 +70,17 @@ describe "Groups API" do
 
 
   it 'search groups with simple token as friend' do
-    group = Fabricate(:group)
-    Fabricate(:group_readable_by_community)
+    group = Fabricate(:tribe)
+    Fabricate(:tribe_readable_by_community)
     regular_token         = Fabricate(:simple_access_token)
     token_with_friend     = Fabricate(:access_token_with_friend)
     token_user            = User.find(token_with_friend.resource_owner_id)
     friend                = token_user.friends.first
     member_token          = Fabricate(:simple_access_token)
     member                = User.find(member_token.resource_owner_id)
-    friend_group          = Fabricate(:group_readable_by_friends)
+    friend_group          = Fabricate(:tribe_readable_by_friends)
     friend.add_role(:manager, friend_group)
-    member_group          = Fabricate(:group_readable_by_members)
+    member_group          = Fabricate(:tribe_readable_by_members)
     member.add_role(:manager, member_group)
 
 
@@ -102,17 +101,17 @@ describe "Groups API" do
 
 
   it 'search groups with simple token as member' do
-    group = Fabricate(:group)
-    Fabricate(:group_readable_by_community)
+    group = Fabricate(:tribe)
+    Fabricate(:tribe_readable_by_community)
     regular_token         = Fabricate(:simple_access_token)
     token_with_friend     = Fabricate(:access_token_with_friend)
     token_user            = User.find(token_with_friend.resource_owner_id)
     friend                = token_user.friends.first
     member_token          = Fabricate(:simple_access_token)
     member                = User.find(member_token.resource_owner_id)
-    friend_group          = Fabricate(:group_readable_by_friends)
+    friend_group          = Fabricate(:tribe_readable_by_friends)
     friend.add_role(:manager, friend_group)
-    member_group          = Fabricate(:group_readable_by_members)
+    member_group          = Fabricate(:tribe_readable_by_members)
     member.add_role(:manager, member_group)
 
 
@@ -134,7 +133,7 @@ describe "Groups API" do
 
   it 'paginates groups' do
     page_overload.times do
-      Fabricate(:group)
+      Fabricate(:tribe)
     end
     get_without_token '/api/v1/groups'
     expect(response).to have_http_status(200)
@@ -148,7 +147,7 @@ describe "Groups API" do
 
   it 'paginate groups with full access token' do
     page_overload.times do
-      Fabricate(:group)
+      Fabricate(:tribe)
     end
     access_token = Fabricate(:full_access_token_as_admin)
 
@@ -172,10 +171,9 @@ describe "Groups API" do
 
 
 
-
   it 'does gets a group readable by world with or without token' do
     access_token  = Fabricate(:simple_access_token).token
-    group = Fabricate(:group)
+    group = Fabricate(:tribe)
     get_without_token "/api/v1/groups/#{group.id}"
     expect(response).to have_http_status(200)
     get_with_token "/api/v1/groups/#{group.id}", access_token
@@ -183,14 +181,14 @@ describe "Groups API" do
   end
 
   it 'does not gets a group readable by community without token' do
-    group = Fabricate(:group_readable_by_community)
+    group = Fabricate(:tribe_readable_by_community)
     get_without_token "/api/v1/groups/#{group.id}"
     expect(response).to have_http_status(403)
   end
 
 
   it 'does not create a group without token' do
-    group = Fabricate.build(:group)
+    group = Fabricate.build(:tribe)
     request_params = {
       name:  group.name,
       readable: group.readable,
@@ -202,7 +200,7 @@ describe "Groups API" do
 
   it 'does not create a group with missing parameter' do
     access_token  = Fabricate(:full_access_token)
-    group = Fabricate.build(:group)
+    group = Fabricate.build(:tribe)
     request_params = {
       name:  group.name,
       readable: group.readable,
@@ -228,7 +226,7 @@ describe "Groups API" do
     manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
-    group = Fabricate.build(:group)
+    group = Fabricate.build(:tribe)
 
     request_params = {
       name:  group.name,
@@ -256,7 +254,7 @@ describe "Groups API" do
     manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
-    group = Fabricate.build(:group)
+    group = Fabricate.build(:tribe)
 
     request_params = {
       name: group.name,
@@ -270,7 +268,7 @@ describe "Groups API" do
   end
 
   it "does not update a group with validation errors" do
-    group = Fabricate(:group)
+    group = Fabricate(:tribe)
 
     access_token = Fabricate(:full_access_token_as_admin)
 
@@ -292,7 +290,7 @@ describe "Groups API" do
     register      = output_register_with_manager
     manager       = register.managers.first
     access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
-    group = Fabricate(:group)
+    group = Fabricate(:tribe)
     manager.add_role(:manager, group)
     request_params = {
       name: "#{group.name} updated"
@@ -310,7 +308,7 @@ describe "Groups API" do
     manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
     access_token.update_attribute :scopes, 'full'
-    group = Fabricate(:group)
+    group = Fabricate(:tribe)
     manager.add_role(:manager, group)
 
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
@@ -325,7 +323,7 @@ describe "Groups API" do
 
   it 'does gets a group readable by community' do
     access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:group_readable_by_community)
+    group         = Fabricate(:tribe_readable_by_community)
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
     expect(json['meta']['updatable']).to be_falsey
@@ -336,7 +334,7 @@ describe "Groups API" do
     access_token      = Fabricate(:access_token_with_friend)
     token_user        = User.find(access_token.resource_owner_id)
     token_user_friend = token_user.friends.first
-    group             = Fabricate(:group_readable_by_friends)
+    group             = Fabricate(:tribe_readable_by_friends)
     token_user_friend.add_role(:manager, group)
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
@@ -348,7 +346,7 @@ describe "Groups API" do
     access_token      = Fabricate(:simple_access_token)
     token_user        = User.find(access_token.resource_owner_id)
     member            = Fabricate(:user)
-    group             = Fabricate(:group_readable_by_friends)
+    group             = Fabricate(:tribe_readable_by_friends)
     register    = Fabricate(:output_meter).output_register
     member.add_role(:member, register)
     token_user.add_role(:member, register)
@@ -363,7 +361,7 @@ describe "Groups API" do
   it 'get a member-readable group by member' do
     access_token      = Fabricate(:simple_access_token)
     token_user        = User.find(access_token.resource_owner_id)
-    group             = Fabricate(:group_readable_by_members)
+    group             = Fabricate(:tribe_readable_by_members)
     register    = Fabricate(:input_meter).input_register
     token_user.add_role(:member, register)
     group.registers << register
@@ -375,8 +373,8 @@ describe "Groups API" do
 
   it 'does not gets a group readable by members or friends if user is not member or friend' do
     access_token  = Fabricate(:simple_access_token)
-    members_group         = Fabricate(:group_readable_by_members)
-    friends_group         = Fabricate(:group_readable_by_friends)
+    members_group         = Fabricate(:tribe_readable_by_members)
+    friends_group         = Fabricate(:tribe_readable_by_friends)
     get_with_token "/api/v1/groups/#{members_group.id}", access_token.token
     expect(response).to have_http_status(403)
     get_with_token "/api/v1/groups/#{friends_group.id}", access_token.token
@@ -385,7 +383,7 @@ describe "Groups API" do
 
 
   it 'gets the related registers for Group' do
-    group = Fabricate(:group)
+    group = Fabricate(:tribe)
     r = Fabricate(:input_meter).input_register
     r.update(readable: :world)
     group.registers << r
@@ -409,7 +407,7 @@ describe "Groups API" do
 
 
   it 'paginates registers' do
-    group = Fabricate(:group)
+    group = Fabricate(:tribe)
     page_overload.times do
       register = Fabricate([:input_meter, :output_meter].sample).registers.first
       register.update(readable: :world)
@@ -427,7 +425,7 @@ describe "Groups API" do
   [nil, :sufficiency, :closeness, :autarchy, :fitting].each do |mode|
 
     it "fails the related scores without interval using mode #{mode}" do
-      group                 = Fabricate(:group)
+      group                 = Fabricate(:tribe)
       now                   = Time.current
       params = { mode: mode, timestamp: now }
       get_without_token "/api/v1/groups/#{group.id}/scores", params
@@ -437,7 +435,7 @@ describe "Groups API" do
 
     [:day, :month, :year].each do |interval|
       it "fails the related #{interval}ly scores without timestamp using mode #{mode}" do
-        group                 = Fabricate(:group)
+        group                 = Fabricate(:tribe)
         params = { mode: mode, interval: interval }
         get_without_token "/api/v1/groups/#{group.id}/scores", params
         expect(response).to have_http_status(422)
@@ -445,14 +443,14 @@ describe "Groups API" do
       end
 
       it "gets the related #{interval}ly scores with mode '#{mode}'" do
-        group                 = Fabricate(:group)
+        group                 = Fabricate(:tribe)
         now                   = Time.current
-        interval_information  = Group.score_interval(interval.to_s, now.to_i)
+        interval_information  = Group::Base.score_interval(interval.to_s, now.to_i)
         5.times do
-          Score.create(mode: mode || 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group', scoreable_id: group.id)
+          Score.create(mode: mode || 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group::Base', scoreable_id: group.id)
         end
-        interval_information  = Group.score_interval(interval.to_s, 123123)
-        Score.create(mode: mode || 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group', scoreable_id: group.id)
+        interval_information  = Group::Base.score_interval(interval.to_s, 123123)
+        Score.create(mode: mode || 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group::Base', scoreable_id: group.id)
 
         params = { mode: mode, interval: interval, timestamp: now }
         get_without_token "/api/v1/groups/#{group.id}/scores", params
@@ -468,11 +466,11 @@ describe "Groups API" do
 
 
   it 'paginates scores' do
-    group                 = Fabricate(:group)
+    group                 = Fabricate(:tribe)
     now                   = Time.current
     interval_information  = group.set_score_interval('day', now.to_i)
     page_overload.times do
-      Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group', scoreable_id: group.id)
+      Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group::Base', scoreable_id: group.id)
     end
     params = { interval: 'day', timestamp: now }
     get_without_token "/api/v1/groups/#{group.id}/scores", params
@@ -486,7 +484,7 @@ describe "Groups API" do
 
   it 'gets the related managers for group only with token' do
     access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:group)
+    group         = Fabricate(:tribe)
     group.registers << Fabricate(:input_meter).input_register
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
@@ -500,7 +498,7 @@ describe "Groups API" do
 
   it 'paginates managers' do
     access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:group)
+    group         = Fabricate(:tribe)
     page_overload.times do
       user = Fabricate(:user)
       user.profile.update(readable: 'world')
@@ -525,7 +523,7 @@ describe "Groups API" do
 
   it 'paginates members' do
     access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:group_with_members_readable_by_world, members: page_overload * 2)
+    group         = Fabricate(:tribe_with_members_readable_by_world, members: page_overload * 2)
 
     group.members[0..page_overload].each do |u|
       u.profile.update(readable: 'world')
@@ -546,7 +544,7 @@ describe "Groups API" do
 
   it 'gets the related members for group only with token' do
     access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:group_with_members_readable_by_world)
+    group         = Fabricate(:tribe_with_members_readable_by_world)
 
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
@@ -555,7 +553,7 @@ describe "Groups API" do
   end
 
   it 'does not add/replace/delete group manager without token' do
-    group  = Fabricate(:group)
+    group  = Fabricate(:tribe)
     user   = Fabricate(:user)
     params = {
       data: { id: user.id }
@@ -572,7 +570,7 @@ describe "Groups API" do
   it 'adds manager only with manager token or admin token' do
     register  = Fabricate(:output_meter).output_register
     register.update(readable: :world)
-    group           = Fabricate(:group)
+    group           = Fabricate(:tribe)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
     admin_token     = Fabricate(:full_access_token_as_admin)
@@ -608,7 +606,7 @@ describe "Groups API" do
   end
 
   it 'replaces group managers' do
-    group           = Fabricate(:group)
+    group           = Fabricate(:tribe)
     user            = Fabricate(:user)
     user1           = Fabricate(:user)
     user2           = Fabricate(:user)
@@ -638,7 +636,7 @@ describe "Groups API" do
   it 'removes group manager only for current user or with manager token' do
     register  = Fabricate(:input_meter).input_register
     register.update(readable: :world)
-    group           = Fabricate(:group)
+    group           = Fabricate(:tribe)
     user            = Fabricate(:user)
     user.add_role(:manager, group)
     admin_token     = Fabricate(:full_access_token_as_admin)
@@ -678,7 +676,7 @@ describe "Groups API" do
 
   it 'gets the related energy-producers/energy-consumers for group' do
     access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:group)
+    group         = Fabricate(:tribe)
     user          = Fabricate(:user)
     consumer      = Fabricate(:user)
     producer      = Fabricate(:user)
@@ -717,7 +715,7 @@ describe "Groups API" do
 
   it 'gets the related comments for the group only with token' do
     access_token    = Fabricate(:simple_access_token)
-    group           = Fabricate(:group_with_two_comments_readable_by_world)
+    group           = Fabricate(:tribe_with_two_comments_readable_by_world)
     comments        = group.comment_threads
 
     get_without_token "/api/v1/groups/#{group.id}/comments"
@@ -731,11 +729,11 @@ describe "Groups API" do
 
   it 'paginates comments' do
     access_token    = Fabricate(:simple_access_token).token
-    group           = Fabricate(:group)
+    group           = Fabricate(:tribe)
     user            = Fabricate(:user)
     comment_params  = {
       commentable_id:     group.id,
-      commentable_type:   'Group',
+      commentable_type:   'Group::Base',
       user_id:            user.id,
       parent_id:          '',
     }

@@ -9,13 +9,13 @@ module Buzzn::Virtual
     end
 
     def collection(resource, mode)
-      return nil if resource.is_a? Group
+      return nil if resource.is_a? Group::Base
       # TODO handle register case
       nil
     end
 
     def single_aggregated(resource, mode)
-      return nil if resource.is_a? Group
+      return nil if resource.is_a? Group::Base
       sum = 0
       resource.formula_parts.each do |formula_part|
         mode = formula_part.operand.direction
@@ -27,7 +27,7 @@ module Buzzn::Virtual
     end
 
     def aggregated(resource, mode, interval)
-      return nil if resource.is_a? Group
+      return nil if resource.is_a? Group::Base
       units = interval.hour? || interval.day? ? :milliwatt : :milliwatt_hour
       result = Buzzn::DataResultSet.send(units, resource.id)
       resource.formula_parts.each do |formula_part|

@@ -3,13 +3,13 @@ class GroupsController < ApplicationController
   respond_to :html, :js, :json
 
   def index
-    group_ids = Group.readable_group_ids_by_user(current_user)
-    @groups  = Group.where(id: group_ids).search(params[:search]).decorate
+    group_ids = Group::Base.readable_group_ids_by_user(current_user)
+    @groups  = Group::Base.where(id: group_ids).search(params[:search]).decorate
   end
 
 
   def show
-    @group                          = Group.find(params[:id]).decorate
+    @group                          = Group::Base.find(params[:id]).decorate
 
     # if url changed redirect to new url
     redirect_to(group_path(@group), status: :moved_permanently) if request.path != group_path(@group)
@@ -30,12 +30,12 @@ class GroupsController < ApplicationController
 
 
   def new
-    @group = Group.new
+    @group = Group::Base.new
     authorize_action_for @group
   end
 
   def create
-    @group = Group.new(group_params)
+    @group = Group::Base.new(group_params)
     authorize_action_for @group
     if @group.save
       current_user.add_role :manager, @group
@@ -50,30 +50,30 @@ class GroupsController < ApplicationController
 
 
   def edit
-    @group = Group.find(params[:id]).decorate
+    @group = Group::Base.find(params[:id]).decorate
     authorize_action_for(@group)
   end
 
   def update
-    Group.public_activity_off
-    @group = Group.find(params[:id])
+    Group::Base.public_activity_off
+    @group = Group::Base.find(params[:id])
     authorize_action_for @group
     if @group.update_attributes(group_params)
       respond_with @group
     else
       render :edit
     end
-    Group.public_activity_on
+    Group::Base.public_activity_on
   end
 
   def send_invitations
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     authorize_action_for @group
   end
   authority_actions :send_invitations => 'update'
 
   def send_invitations_update
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     authorize_action_for @group
     if params[:group][:add_own_register] == "1"
       @register = Register::Base.find(params[:group][:register_id])
@@ -109,14 +109,14 @@ class GroupsController < ApplicationController
   authority_actions :send_invitations_update => 'update'
 
   def send_invitations_via_email
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     @meter = Meter::Base.new(manufacturer_product_serialnumber: params[:manufacturer_product_serialnumber])
     authorize_action_for @group
   end
   authority_actions :send_invitations_via_email => 'update'
 
   def send_invitations_via_email_update
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     authorize_action_for @group
     @manufacturer_product_serialnumber = params[:group][:manufacturer_product_serialnumber]
     if params[:group][:email] == ""
@@ -141,7 +141,7 @@ class GroupsController < ApplicationController
   authority_actions :send_invitations_via_email_update => 'update'
 
   def destroy
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     authorize_action_for @group
     @group.destroy
     flash[:notice] = t('group_destroyed_successfully')
@@ -151,13 +151,13 @@ class GroupsController < ApplicationController
 
 
   def remove_members
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     authorize_action_for @group
   end
   authority_actions :remove_members => 'update'
 
   def remove_members_update
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     register_id = params[:register_id] || params[:group][:register_id]
     @register = Register::Base.find(register_id)
     if @group.registers.delete(@register)
@@ -171,7 +171,7 @@ class GroupsController < ApplicationController
 
 
   def add_manager
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     authorize_action_for @group
     @collection = []
     [@group.involved + current_user.friends].flatten.uniq.each do |user|
@@ -181,7 +181,7 @@ class GroupsController < ApplicationController
   authority_actions :add_manager => 'update'
 
   def add_manager_update
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     authorize_action_for @group
     @user = User.find(params[:group][:user_id])
     if @user.has_role?(:manager, @group)
@@ -195,7 +195,7 @@ class GroupsController < ApplicationController
   authority_actions :add_manager_update => 'update'
 
   def remove_manager_update
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     authorize_action_for @group
     if @group.managers.size > 1
       current_user.remove_role(:manager, @group)
@@ -209,7 +209,7 @@ class GroupsController < ApplicationController
 
   def kiosk
     #response.headers.delete('X-Frame-Options') #Enables iFrames
-    @group                          = Group.find(params[:id]).decorate
+    @group                          = Group::Base.find(params[:id]).decorate
 
     @all_comments                   = @group.root_comments
     @activities                     = @group.activities.group_joins
@@ -233,19 +233,19 @@ class GroupsController < ApplicationController
 
   def widget
     response.headers.delete('X-Frame-Options') #Enables iFrames
-    @group                          = Group.find(params[:id]).decorate
+    @group                          = Group::Base.find(params[:id]).decorate
     @group.readable_by_world? ? @group : t('the_requested_content_is_not_public')
   end
 
 
   def get_scores
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     result = @group.get_scores(params[:resolution], params[:containing_timestamp].to_i)
     render json: result.to_json
   end
 
   def chart_comments
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     @resolution = params[:resolution]
     @timestamp = params[:containing_timestamp]
     @comments = @group.chart_comments(@resolution, @timestamp)
@@ -259,12 +259,12 @@ class GroupsController < ApplicationController
 
 
   def edit_notifications
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
   end
   #TODO: add authority_actions
 
   def edit_notifications_update
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     notify_when_comment_create = params[:group][:notify_me_when_comment_create]
 
     notification_unsubscriber_comment_create = NotificationUnsubscriber.by_user(current_user).by_resource(@group).by_key('comment.create').first
@@ -281,7 +281,7 @@ class GroupsController < ApplicationController
   #TODO: add authority_actions
 
   def finalize_registers
-    @group = Group.find(params[:id])
+    @group = Group::Base.find(params[:id])
     if current_user && current_user.has_role?(:admin)
       if @group.finalize_registers
         flash[:notice] = t('settings_saved')
@@ -297,7 +297,7 @@ class GroupsController < ApplicationController
 
 private
   def group_params
-    params.require(:group).permit(
+    params.require(:group_base).permit(
       :name,
       :image,
       :logo,

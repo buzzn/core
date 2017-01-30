@@ -1,5 +1,3 @@
-
-
 require 'buzzn/managed_roles'
 module Register
   class Base < ActiveRecord::Base
@@ -22,7 +20,8 @@ module Register
       obj.create_activity(trackable: nil, key: 'register.destroy', recipient: nil, owner: user)
     end
 
-    belongs_to :group
+    belongs_to :group, class_name: Group::Base, foreign_key: :group_id
+
 
     has_many :contracts, class_name: Contract::Base, dependent: :destroy, foreign_key: 'register_id'
     has_many :devices, foreign_key: 'register_id'
@@ -123,8 +122,8 @@ module Register
       sqls = []
       if group_check
         # register belongs to readable group
-        group = Group.arel_table
-        belongs_to_readable_group = Group.readable_by(user).where(group[:id].eq(register[:group_id]))
+        group = Group::Base.arel_table
+        belongs_to_readable_group = Group::Base.readable_by(user).where(group[:id].eq(register[:group_id]))
         # sql fragment 'exists select 1 where .....'
         sqls << belongs_to_readable_group.project(1).exists
       end
@@ -219,7 +218,7 @@ module Register
     end
 
     def in_localpool?
-      self.group && self.group.mode == "localpool"
+      self.group && self.group.is_a(Group::Localpool)
     end
 
     # TODO remove this when bubbles.js is rewritten

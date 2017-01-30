@@ -202,7 +202,7 @@ class User < ContractingParty
   end
 
   def editable_groups
-    Group.editable_by_user(self).collect(&:decorate)
+    Group::Base.editable_by_user(self).collect(&:decorate)
   end
 
   def editable_devices
@@ -240,7 +240,7 @@ class User < ContractingParty
 
   def accessible_groups
     result = []
-    result << Group.editable_by_user(self).collect(&:decorate)
+    result << Group::Base.editable_by_user(self).collect(&:decorate)
     result << self.accessible_registers.collect(&:group).compact.collect(&:decorate)
     return result.flatten.uniq
   end

@@ -7,7 +7,8 @@ class Contract::MeteringPointOperator < Contract::Base
     a
   end
 
-  belongs_to :localpool, class_name: 'Group'
+  belongs_to :localpool, class_name: Group::Localpool
+
   belongs_to :register, class_name: Register::Base
 
   validates :register, presence: false
@@ -19,7 +20,7 @@ class Contract::MeteringPointOperator < Contract::Base
     super
     if localpool && register
       errors.add(:localpool, CAN_NOT_BE_PRESENT + Register::Base.to_s)
-      errors.add(:register, CAN_NOT_BE_PRESENT + 'Localpool') #TODO use class constant for type-safety
+      errors.add(:register, CAN_NOT_BE_PRESENT + Group::Localpool.to_s)
     end
     if localpool.nil? && register.nil?
       errors.add(:localpool, IS_MISSING)

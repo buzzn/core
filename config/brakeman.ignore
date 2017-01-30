@@ -216,7 +216,7 @@
       "file": "app/views/groups/index.html.haml",
       "line": 16,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => Group.where(:id => (((Group.where(:readable => \"world\").ids << Group.where(:readable => \"community\").ids) << Group.with_role(:manager, current_user)) << friend_group.id)).search(params[:search]).paginate(:page => params[:page], :per_page => 3), {})",
+      "code": "render(action => Group::Base.where(:id => (((Group::Base.where(:readable => \"world\").ids << Group::Base.where(:readable => \"community\").ids) << Group::Base.with_role(:manager, current_user)) << friend_group.id)).search(params[:search]).paginate(:page => params[:page], :per_page => 3), {})",
       "render_path": [
         {
           "type": "controller",
@@ -242,7 +242,7 @@
       "file": "app/views/groups/index.html.haml",
       "line": 16,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => Group.where(:id => Group.readable_group_ids_by_user(current_user)).search(params[:search]).paginate(:page => params[:page], :per_page => 3), {})",
+      "code": "render(action => Group::Base.where(:id => Group::Base.readable_group_ids_by_user(current_user)).search(params[:search]).paginate(:page => params[:page], :per_page => 3), {})",
       "render_path": [
         {
           "type": "controller",

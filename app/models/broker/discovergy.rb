@@ -12,7 +12,7 @@ class Broker::Discovergy < Broker::Base
 
   validates :external_id, presence: true
 
-  validates :resource_type, inclusion:{ in: [Group.to_s, Meter::Base.to_s] }
+  validates :resource_type, inclusion:{ in: [Group::Base.to_s, Meter::Base.to_s] }
   validates :resource_id, presence: true
 
   validate :validates_invariants
@@ -26,7 +26,7 @@ class Broker::Discovergy < Broker::Base
       if ! resourcable.virtual?
         errors.add(:resourcable, 'Meter needs to be virtual itself')
       end
-      if resource_type == Group.to_s
+      if resource_type == Group::Base.to_s
         errors.add(:mode, 'can not be virtual for Group resource')
       end
     # else

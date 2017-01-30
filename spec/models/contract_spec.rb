@@ -8,7 +8,7 @@ describe "Contract Model" do
     user.add_role(:manager, register)
     user
   end
-  let(:manager_group) {Fabricate(:group)}
+  let(:manager_group) {Fabricate(:tribe)}
   let(:manager_of_group) do
     user = Fabricate(:user)
     user.add_role(:manager, manager_group)
@@ -90,15 +90,18 @@ describe "Contract Model" do
 
   xit 'selects contracts of organization manager but not organization member' do
     contracts # create contracts
-    #TODO: change readable by in contract model to get this working    
-    expect(Contract::Base.readable_by(manager_of_organization)).to eq [contracts.last]
-    expect(Contract::Base.readable_by(member_of_organization)).to eq []
+    if user_with_register.is_a? ContractingParty
+      #TODO: change readable by in contract model to get this working
+
+      expect(Contract.readable_by(manager_of_organization)).to eq [contracts.last]
+      expect(Contract.readable_by(member_of_organization)).to eq []
+    end
   end
 
   xit 'selects contracts of group manager but not group member' do
     contracts # create contracts
     #TODO: change readable by in contract model to get this working
-    expect(Contract::Base.readable_by(manager_of_group)).to eq [contracts.last]
-    expect(Contract::Base.readable_by(member_of_group)).to eq []
+    expect(Contract::Base.readable_by(manager_of_tribe)).to eq [contracts.last]
+    expect(Contract::Base.readable_by(member_of_localpool)).to eq []
   end
 end

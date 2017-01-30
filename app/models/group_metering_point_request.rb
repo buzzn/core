@@ -4,7 +4,7 @@ class GroupRegisterRequest < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :register, class_name: Register::Base
-  belongs_to :group
+  belongs_to :group, class_name: Group::Base, foreign_key: :group_id
 
   after_save :created_membership, :unless => :skip_callbacks
 

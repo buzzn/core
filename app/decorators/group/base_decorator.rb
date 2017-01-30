@@ -1,4 +1,4 @@
-class GroupDecorator < Draper::Decorator
+class Group::BaseDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
 
