@@ -92,7 +92,7 @@ module API
         oauth2 false
         get ':id/groups' do
           profile = Profile.guarded_retrieve(current_user, permitted_params)
-          groups = Group.accessible_by_user(profile.user)
+          groups = Group::Base.accessible_by_user(profile.user)
           paginated_response(groups.readable_by(current_user))
         end
 

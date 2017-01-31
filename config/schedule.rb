@@ -20,7 +20,7 @@ end
 # end
 
 # every 3.minute do
-#   runner "Group.update_cache"
+#   runner "Group::Base.update_cache"
 #   #runner "Register::Base.update_cache"
 # end
 
@@ -29,7 +29,7 @@ end
 # end
 
 every 1.day, :at => '4:00 am' do
-  runner "Group.calculate_scores"
+  runner "Group::Base.calculate_scores"
 end
 
 # every 1440.minutes do

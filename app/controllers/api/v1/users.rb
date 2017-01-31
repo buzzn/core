@@ -79,7 +79,7 @@ module API
         oauth2 :simple, :full
         get ":id/groups" do
           user   = User.guarded_retrieve(current_user, permitted_params)
-          groups = Group.accessible_by_user(user)
+          groups = Group::Base.accessible_by_user(user)
           order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
           paginated_response(
             groups

@@ -7,7 +7,7 @@ describe "Group Model" do
 
     [group.name, group.description].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
-        groups = Group.filter(value)
+        groups = Group::Base.filter(value)
         expect(groups.first).to eq group
       end
     end
@@ -16,7 +16,7 @@ describe "Group Model" do
 
   it 'can not find anything' do
     Fabricate(:group_hof_butenland)
-    groups = Group.filter('Der Clown ist müde und geht nach Hause.')
+    groups = Group::Base.filter('Der Clown ist müde und geht nach Hause.')
     expect(groups.size).to eq 0
   end
 
@@ -26,7 +26,7 @@ describe "Group Model" do
     Fabricate(:group_hof_butenland)
     Fabricate(:group_karins_pv_strom)
 
-    groups = Group.filter(nil)
+    groups = Group::Base.filter(nil)
     expect(groups.size).to eq 3
   end
 
@@ -38,26 +38,26 @@ describe "Group Model" do
     guest     = nil
     manager   = Fabricate(:user)
     manager.add_role(:manager, karin)
-    
-    expect(Group.readable_by(guest)).to eq [wagnis4]
+
+    expect(Group::Base.readable_by(guest)).to eq [wagnis4]
     user = Fabricate(:user)
-    expect(Group.readable_by(user)).to match_array [wagnis4, butenland]
+    expect(Group::Base.readable_by(user)).to match_array [wagnis4, butenland]
 
     user.add_role(:admin, guest)
-    expect(Group.readable_by(user)).to match_array [wagnis4, butenland, group, karin]
+    expect(Group::Base.readable_by(user)).to match_array [wagnis4, butenland, group, karin]
 
-    expect(Group.readable_by(group.members.first)).to match_array [wagnis4, butenland, group]
-    expect(Group.readable_by(karin.managers.first)).to match_array [wagnis4, butenland, karin]
+    expect(Group::Base.readable_by(group.members.first)).to match_array [wagnis4, butenland, group]
+    expect(Group::Base.readable_by(karin.managers.first)).to match_array [wagnis4, butenland, karin]
 
     manager.friends << Fabricate(:user)
-    expect(Group.readable_by(karin.managers.first.friends.first)).to match_array [wagnis4, butenland, karin]
+    expect(Group::Base.readable_by(karin.managers.first.friends.first)).to match_array [wagnis4, butenland, karin]
 
     manager.add_role(:manager, group)
-    expect(Group.readable_by(group.managers.first.friends.first)).to match_array [wagnis4, butenland, karin]
+    expect(Group::Base.readable_by(group.managers.first.friends.first)).to match_array [wagnis4, butenland, karin]
 
     friend = Fabricate(:user)
     group.members.first.friends << friend
-    expect(Group.readable_by(friend)).to match_array [wagnis4, butenland]
+    expect(Group::Base.readable_by(friend)).to match_array [wagnis4, butenland]
   end
 
   it 'selects the energy producers/consumers and involved users of a group' do
@@ -110,7 +110,7 @@ describe "Group Model" do
 
   it 'calculates scores of all groups via sidekiq' do
     expect {
-      Group.calculate_scores
+      Group::Base.calculate_scores
     }.to change(CalculateGroupScoresWorker.jobs, :size).by(1)
   end
 end

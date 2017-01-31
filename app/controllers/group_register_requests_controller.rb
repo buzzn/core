@@ -7,7 +7,7 @@ class GroupRegisterRequestsController < InheritedResources::Base
   end
 
   def create
-    group = Group.find(params[:group_id])
+    group = Group::Base.find(params[:group_id])
     register = Register::Base.find(params[:register_id])
     mode = params[:mode]
     if current_user.can_update?(group) && current_user.can_update?(register)

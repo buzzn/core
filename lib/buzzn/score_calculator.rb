@@ -185,7 +185,7 @@ module Buzzn
       create_sufficiency_score(month_interval, monthly_score / count_monthly)
       create_sufficiency_score(year_interval, yearly_score / count_yearly)
     end
-    
+
     def calculate_all_scores
       calculate_autarchy_scores
       calculate_fitting_scores
@@ -275,7 +275,7 @@ module Buzzn
     end
 
     def create_score(mode, interval_information, value)
-      Score.create(mode: mode, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: value, scoreable_type: Group.to_s, scoreable_id: @group.id)
+      Score.create(mode: mode, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: value, scoreable_type: Group::Base.to_s, scoreable_id: @group.id)
     end
 
     def create_autarchy_score(interval_information, value)

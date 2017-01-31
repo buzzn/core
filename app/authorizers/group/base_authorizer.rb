@@ -1,12 +1,12 @@
-class GroupAuthorizer < ApplicationAuthorizer
+class Group::BaseAuthorizer < ApplicationAuthorizer
 
   def self.creatable_by?(user)
     Register::Base.editable_by_user(user).outputs.without_group.any?
   end
 
   def readable_by?(user)
-    # uses scope Group.readable_by(user)
-    readable?(Group, user)
+    # uses scope Group::Base.readable_by(user)
+    readable?(Group::Base, user)
   end
 
   def updatable_by?(user, variant = nil)

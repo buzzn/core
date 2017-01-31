@@ -34,7 +34,7 @@ module Group
 
     has_many :contracts, dependent: :destroy, foreign_key: :localpool_id
     has_one  :area
-    has_many :registers, class_name: Register::Base
+    has_many :registers, class_name: Register::Base, foreign_key: :group_id
 
     has_many :brokers, as: :resource, :dependent => :destroy
 
@@ -129,7 +129,7 @@ module Group
     end
 
     def self.accessible_by_user(user)
-      register = Register::Base.arel_table
+      register       = Register::Base.arel_table
       group          = Group::Base.arel_table
       users          = User.roles_query(user, manager: [group[:id], register[:id]], member: register[:id])
 

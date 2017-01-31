@@ -41,10 +41,10 @@ module API
 
 
 
-        desc "Create a Group."
+        desc "Create a Group"
         params do
-          requires :name,         type: String, desc: "Name of the Group."
-          requires :description,  type: String, desc: "Description of the Group."
+          requires :name,         type: String, desc: "Name of the Group"
+          requires :description,  type: String, desc: "Description of the Group"
         end
         oauth2 :full
         post do
@@ -54,7 +54,7 @@ module API
 
 
 
-        desc "Update a Group."
+        desc "Update a Group"
         params do
           requires :id, type: String, desc: "Group ID."
           optional :name
@@ -67,7 +67,7 @@ module API
 
 
 
-        desc 'Delete a Group.'
+        desc 'Delete a Group'
         params do
           requires :id, type: String, desc: "Group ID"
         end
