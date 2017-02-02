@@ -1,5 +1,3 @@
-
-
 require 'buzzn/managed_roles'
 module Register
   class Base < ActiveRecord::Base
@@ -22,7 +20,8 @@ module Register
       obj.create_activity(trackable: nil, key: 'register.destroy', recipient: nil, owner: user)
     end
 
-    belongs_to :group
+    belongs_to :group, class_name: Group::Base, foreign_key: :group_id
+
 
     has_many :contracts, dependent: :destroy, foreign_key: 'register_id'
     has_many :devices, foreign_key: 'register_id'
