@@ -3,7 +3,7 @@ describe '/api/v1/aggregates' do
   let(:discovergy_meter) do
     meter = Fabricate(:easymeter_60139082) # in_out meter
     # TODO what to do with the in-out fact ?
-    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_60139082", mode: :in_out)
+    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_60139082")
     meter
   end
 

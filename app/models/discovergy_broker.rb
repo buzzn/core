@@ -5,7 +5,7 @@ class DiscovergyBroker < Broker
   attr_encrypted :provider_token_secret, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
   def self.modes
-    [:in, :out, :in_out, :virtual]
+    [:in, :out, :virtual]
   end
 
   validates :mode, inclusion:{ in: self.modes.map{|m| m.to_s} }
@@ -20,24 +20,13 @@ class DiscovergyBroker < Broker
   after_commit :validates_credentials
 
   def validates_invariants
-    case mode.to_sym
+    case mode
     when :virtual
-      if ! resource.is_a?(Meter::Virtual)
-        errors.add(:resourcable, 'can not be virtual on non-virtual Meters')
+      if ! resourcable.virtual?
+        errors.add(:resourcable, 'Meter needs to be virtual itself')
       end
-    when :in_out
-      if !(resource.is_a?(Meter::Real) && resource.registers.size == 2)
-        errors.add(:mode, 'can not be in_out on a Meter without two Registers')
-      end
-    else
-      if !(resource.is_a?(Meter::Real) && resource.registers.size == 1) && !resource.is_a?(Group)
-        errors.add(:mode, "can not be 'in' or 'out' on a Meter with more or less than one Register")
-      end
-      if resource.is_a?(Meter::Real) && resource.registers.first.is_a?(Register::Input) && mode.to_sym == :out
-        errors.add(:mode, "for a Register::Input is 'out' but should be 'in'")
-      end
-      if resource.is_a?(Meter::Real) && resource.registers.first.is_a?(Register::Output) && mode.to_sym == :in
-        errors.add(:mode, "for a Register::Output is 'in' but should be 'out'")
+      if resource_type == Group.to_s
+        errors.add(:mode, 'can not be virtual for Group resource')
       end
     # else
     #   if resource_type == Meter.to_s

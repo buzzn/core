@@ -54,7 +54,7 @@ buzzn_team_names.each do |user_name|
   case user_name
   when 'justus'
     easymeter_60139082 = Fabricate(:easymeter_60139082)
-    easymeter_60139082.broker = Fabricate(:discovergy_broker, mode: 'in_out', external_id: "EASYMETER_60139082", resource: easymeter_60139082)
+    easymeter_60139082.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_60139082", resource: easymeter_60139082)
     @register_z1a = easymeter_60139082.registers.first
     @register_z1b = easymeter_60139082.registers.last
     root_register = @register_z1a
