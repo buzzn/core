@@ -24,7 +24,7 @@ class AddTypeToMeters < ActiveRecord::Migration
         puts 'validates registers'
         Register::Real.all.each do |r|
           puts "#{r.id}: #{r.valid?}"
-          if ! r.valid? && r.meter.nil?
+          if !r.valid? && r.meter.nil?
             puts "delete #{r.id}"
             r.delete
           end
