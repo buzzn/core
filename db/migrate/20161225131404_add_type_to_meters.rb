@@ -4,14 +4,18 @@ class AddTypeToMeters < ActiveRecord::Migration
     reversible do |dir|
       dir.up do
         Meter::Base.all.each do |m|
-          r = Register::Base.where(meter_id: m).first
-          type =
-            if r.virtual == false
-              'Meter::Real'
-            else
-              'Meter::Virtual'
-            end
-          p execute "UPDATE meters SET type='#{type}' where id='#{m.id}';"
+          r = Register::Base.where(meter_id: m.id).first
+          if r.nil?
+            p execute "DELETE FROM meters WHERE id='#{m.id}';"
+          else
+            type =
+              if r.virtual == false
+                'Meter::Real'
+              else
+                'Meter::Virtual'
+              end
+            p execute "UPDATE meters SET type='#{type}' where id='#{m.id}';"
+          end
         end
         puts 'validate meters'
         Meter::Base.all.each do |m|
