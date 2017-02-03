@@ -7,7 +7,12 @@ class AddMigrationscripts < ActiveRecord::Migration
         ActiveRecord::Base.transaction do
           contracts.each do |contract|
             if contract.organization_id
-              organization = Organization.find(contract.organization_id)
+              organization = Organization.find_by(id: contract.organization_id)
+              if organization.nil?
+                puts "#{contract.id} - failed: organization #{contract.organization_id} not found."
+                contract.delete
+                next
+              end
               if organization.contracting_party.nil?
                 contracting_party = ContractingParty.create!(legal_entity: 'company', organization: organization)
               else
