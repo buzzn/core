@@ -24,8 +24,9 @@ module Meter
       ['easy_meter', 'amperix', 'ferraris', 'other']
     end
 
-    validates :manufacturer_name, inclusion: {in: manufacturer_names}
-    validates :manufacturer_product_name, presence: true
+    # TODO: Bring this back after production deploy
+    #validates :manufacturer_name, inclusion: {in: manufacturer_names}
+    #validates :manufacturer_product_name, presence: true
     validates :manufacturer_product_serialnumber, presence: true, uniqueness: true, length: { in: 2..128 }
     validates :image, presence: false
 
@@ -46,7 +47,7 @@ module Meter
         errors.add(:registers, 'must be all none virtual') if registers.detect { |r| r.is_a? Register::Virtual }
       end
     end
-    
+
     def initialize(attr = {})
       super
       attr[:registers].each {|r| r.meter = self} if attr.key?(:registers)

@@ -68,7 +68,7 @@ class AddMigrationscripts < ActiveRecord::Migration
               mode: register.input? ? 'in' : 'out',
               external_id: "EASYMETER_#{register.meter.manufacturer_product_serialnumber}",
               provider_login: contract.username,
-              provider_password: contract.password,
+              provider_password: Contract.decrypt_password(contract.encrypted_password, key: 'dsfgjnds473hti45hf873h498'),
               resource: register.meter
             )
             begin
