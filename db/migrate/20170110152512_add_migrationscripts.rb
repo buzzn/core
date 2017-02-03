@@ -9,16 +9,14 @@ class AddMigrationscripts < ActiveRecord::Migration
             if contract.organization_id
               organization = Organization.find(contract.organization_id)
               if organization.contracting_party.nil?
-                contracting_party = ContractingParty.create(legal_entity: 'company', organization: organization)
+                contracting_party = ContractingParty.create!(legal_entity: 'company', organization: organization)
               else
                 contracting_party = organization.contracting_party
               end
               if contract.contractor
-                contract.customer = contract.contractor
+                contract.update_columns(customer_id: contract.contractor_id)
               end
-              contract.contractor_id = contracting_party.id
-              contracting_party.save!
-              contract.save!
+              contract.update_columns(contractor_id: contracting_party.id)
               puts "#{contract.id} - successfully changed."
             else
               puts "#{contract.id} - failed: no organization."
