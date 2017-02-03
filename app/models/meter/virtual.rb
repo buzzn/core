@@ -24,7 +24,7 @@ module Meter
     end
 
     def initialize(attr = {})
-      attr[:register] = Register::Virtual.new(attr[:register] || {}) if attr && !attr[:register].persisted?
+      attr[:register] = Register::Virtual.new(attr[:register] || {}) if attr && attr[:register].is_a?(Hash)
       super
       register.meter = self if register
     end
