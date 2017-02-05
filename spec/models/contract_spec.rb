@@ -2,7 +2,7 @@
 describe "Contract Model" do
 
   let(:register) { Fabricate(:output_meter).output_register }
-
+  let(:admin) { Fabricate(:admin) }
   let(:user_with_register) do
     user = Fabricate(:user)
     user.add_role(:manager, register)
@@ -80,7 +80,7 @@ describe "Contract Model" do
 
   it 'selects all contracts by admin' do
     contracts # create contracts
-    expect(Contract::Base.readable_by(Fabricate(:admin))).to eq contracts
+    expect(Contract::Base.readable_by(admin)).to match_array contracts
   end
 
   it 'selects contracts of register manager' do
