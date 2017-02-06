@@ -9,24 +9,30 @@ describe "Contract Model" do
     Fabricate(:contracting_party, user: user)
     user
   end
-  let(:manager_group) {Fabricate(:group)}
-  let(:manager_of_group) do
+
+  let(:manager_tribe) {Fabricate(:tribe)}
+
+  let(:manager_of_tribe) do
     user = Fabricate(:user)
-    user.add_role(:manager, manager_group)
+    user.add_role(:manager, manager_tribe)
     user
   end
-  let(:member_group) {Fabricate(:localpool)}
-  let(:member_of_group) do
+
+  let(:member_localpool) {Fabricate(:localpool)}
+
+  let(:member_of_localpool) do
     user = Fabricate(:user)
-    user.add_role(:member, member_group)
+    user.add_role(:member, member_localpool)
     user
   end
+
   let(:manager_of_organization) do
     user = Fabricate(:user)
     contracts.first.customer = user.contracting_parties.first
     user.add_role(:manager, contracts.last.customer.organization)
     user
   end
+
   let(:member_of_organization) do
     user = Fabricate(:user)
     user.add_role(:member, contracts.last.customer.organization)
@@ -36,7 +42,7 @@ describe "Contract Model" do
   let(:contracts) do
     c1 = Fabricate(:metering_point_operator_contract, customer: user_with_register.contracting_parties.first, localpool: member_group)
     c2 = Fabricate(:power_giver_contract, register: register)
-    manager_group.registers << c2.register
+    manager_tribe.registers << c2.register
     [c1, c2]
   end
 
@@ -115,8 +121,8 @@ describe "Contract Model" do
     contracts # create contracts
     if user_with_register.is_a? ContractingParty
       #TODO: change readable by in contract model to get this working
-      expect(Contract.readable_by(manager_of_group)).to eq [contracts.last]
+      expect(Contract.readable_by(manager_of_tribe)).to eq [contracts.last]
     end
-    expect(Contract.readable_by(member_of_group)).to eq []
+    expect(Contract.readable_by(member_of_localpool)).to eq []
   end
 end
