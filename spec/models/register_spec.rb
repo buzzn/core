@@ -22,7 +22,7 @@ describe "Register Model" do
     user
   end
 
-  let(:group) { Fabricate(:group) }
+  let(:group) { Fabricate(:tribe) }
   let(:karin) { Fabricate(:register_pv_karin, meter: Fabricate(:meter)) }
   let(:urbanstr) { Fabricate(:register_urbanstr88, meter: Fabricate(:meter)) }
   let(:butenland) do
