@@ -2,21 +2,21 @@
 describe "User Model" do
 
   let(:organization) { Fabricate(:organization, mode: :electricity_supplier) }
-  let(:group) do
-    g = Fabricate(:group)
-    manager_group.add_role(:manager, g)
-    g
+  let(:tribe) do
+    group = Fabricate(:tribe)
+    manager_group.add_role(:manager, group)
+    group
   end
   let(:register) do
     register = Fabricate(:output_register, meter: Fabricate(:meter))
     manager_register.add_role(:manager, register)
-    register.update! group: group
+    register.update! group: tribe
     register
   end
   let(:user) { Fabricate(:user) }
   let(:manager_register) { Fabricate(:user) }
   let(:manager_group) { Fabricate(:user) }
-                            
+
   it 'filters user with given email', :retry => 3 do
     user = Fabricate(:user)
     2.times { Fabricate(:user) }
@@ -115,23 +115,23 @@ describe "User Model" do
     expect(User.readable_by(admin)).to match_array [user, other, admin]
   end
 
-  it 'gives no unsubscribed from notification users' do 
-    [organization, group, register].each do |resource|
+  it 'gives no unsubscribed from notification users' do
+    [organization, tribe, register].each do |resource|
       expect(User.unsubscribed_from_notification('some.key', resource)).to eq []
     end
   end
 
-  it 'gives unsubscribed from notification users' do 
-    [organization, group, register].each do |resource|
+  it 'gives unsubscribed from notification users' do
+    [organization, tribe, register].each do |resource|
       NotificationUnsubscriber.create(trackable: resource, user: user, notification_key: 'some.key', channel: 'email')
       expect(User.unsubscribed_from_notification('some.key', resource)).to eq [user]
     end
 
-    [group, register].each do |resource|
+    [tribe, register].each do |resource|
       NotificationUnsubscriber.create(trackable: resource, user: resource.managers.first, notification_key: 'other.key', channel: 'email')
     end
 
-    expect(User.unsubscribed_from_notification('other.key', group)).to eq [manager_group, manager_register]
+    expect(User.unsubscribed_from_notification('other.key', tribe)).to eq [manager_group]
     expect(User.unsubscribed_from_notification('other.key', register)).to eq [manager_register]
     expect(User.unsubscribed_from_notification('other.key', organization)).to eq []
   end
