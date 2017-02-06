@@ -60,14 +60,14 @@ Fabricator :tribe_hof_butenland, from: :tribe do
 end
 
 
-Fabricator :group_hopf, from: :localpool do
+Fabricator :localpool_hopf, from: :localpool do
   name 'Hopf'
   after_create do |localpool|
     Fabricate(:mpoc_buzzn_metering, localpool: localpool)
   end
 end
 
-Fabricator :group_home_of_the_brave, from: :localpool do
+Fabricator :localpool_home_of_the_brave, from: :localpool do
   name        'Home of the Brave'
   after_create do |localpool|
     Fabricate(:mpoc_buzzn_metering, localpool: localpool)
@@ -79,7 +79,7 @@ Fabricator :tribe_karins_pv_strom, from: :tribe do
   description "Diese Gruppe ist offen für alle, die gerne meinen selbstgemachten PV-Strom von meiner Scheune beziehen möchten."
 end
 
-Fabricator :group_wagnis4, from: :localpool do
+Fabricator :localpool_wagnis4, from: :localpool do
   name        'Wagnis 4'
   website     'http://www.wagnis.org/wagnis/wohnprojekte/wagnis-4.html'
   description "Dies ist der Localpool von Wagnis 4."
@@ -91,7 +91,7 @@ Fabricator :group_wagnis4, from: :localpool do
 end
 
 
-Fabricator :group_forstenried, from: :localpool do
+Fabricator :localpool_forstenried, from: :localpool do
   name        'Mehrgenerationenplatz Forstenried'
   website     'http://www.energie.wogeno.de/'
   description { "Dies ist der Localpool des Mehrgenerationenplatzes Forstenried der Freien Waldorfschule München Südwest und Wogeno München eG." }

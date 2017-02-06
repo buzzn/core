@@ -235,7 +235,7 @@ geloeschter_benutzer = Fabricate(:geloeschter_benutzer)
 
 
 puts 'group karin strom'
-karins_pv_group = Fabricate(:group_karins_pv_strom, registers: [register_pv_karin])
+karins_pv_group = Fabricate(:tribe_karins_pv_strom, registers: [register_pv_karin])
 karin.add_role :manager, karins_pv_group
 karins_pv_group.registers << User.where(email: 'christian@buzzn.net').first.accessible_registers.first
 karins_pv_group.registers << User.where(email: 'philipp@buzzn.net').first.accessible_registers.first
