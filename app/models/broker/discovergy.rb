@@ -17,7 +17,8 @@ class Broker::Discovergy < Broker::Base
 
   validate :validates_invariants
 
-  after_commit :validates_credentials
+  # TODO: bring back after PROD deploy
+  #after_commit :validates_credentials
 
   def validates_invariants
     case mode

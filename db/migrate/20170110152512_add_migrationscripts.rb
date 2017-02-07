@@ -7,18 +7,21 @@ class AddMigrationscripts < ActiveRecord::Migration
         ActiveRecord::Base.transaction do
           contracts.each do |contract|
             if contract.organization_id
-              organization = Organization.find(contract.organization_id)
+              organization = Organization.find_by(id: contract.organization_id)
+              if organization.nil?
+                puts "#{contract.id} - failed: organization #{contract.organization_id} not found."
+                contract.delete
+                next
+              end
               if organization.contracting_party.nil?
-                contracting_party = ContractingParty.create(legal_entity: 'company', organization: organization)
+                contracting_party = ContractingParty.create!(legal_entity: 'company', organization: organization)
               else
                 contracting_party = organization.contracting_party
               end
               if contract.contractor
-                contract.customer = contract.contractor
+                contract.update_columns(customer_id: contract.contractor_id)
               end
-              contract.contractor_id = contracting_party.id
-              contracting_party.save!
-              contract.save!
+              contract.update_columns(contractor_id: contracting_party.id)
               puts "#{contract.id} - successfully changed."
             else
               puts "#{contract.id} - failed: no organization."
@@ -65,7 +68,7 @@ class AddMigrationscripts < ActiveRecord::Migration
               mode: register.input? ? 'in' : 'out',
               external_id: "EASYMETER_#{register.meter.manufacturer_product_serialnumber}",
               provider_login: contract.username,
-              provider_password: contract.password,
+              provider_password: Contract.decrypt_password(contract.encrypted_password, key: 'dsfgjnds473hti45hf873h498'),
               resource: register.meter
             )
             begin
