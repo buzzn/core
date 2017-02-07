@@ -1,10 +1,7 @@
-class Contract::MeteringPointOperator < Contract::Base
+class MeteringPointOperatorContract < Contract
 
   def self.new(*args)
-    a = super
-    # HACK to fix the problem that the type gets not set by AR
-    a.type ||= a.class.to_s
-    a
+    super
   end
 
   belongs_to :localpool, class_name: 'Group'

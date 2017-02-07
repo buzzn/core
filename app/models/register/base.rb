@@ -24,7 +24,7 @@ module Register
 
     belongs_to :group
 
-    has_many :contracts, class_name: Contract::Base, dependent: :destroy, foreign_key: 'register_id'
+    has_many :contracts, dependent: :destroy, foreign_key: 'register_id'
     has_many :devices, foreign_key: 'register_id'
     has_one :address, as: :addressable, dependent: :destroy
 

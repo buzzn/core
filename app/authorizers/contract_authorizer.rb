@@ -1,4 +1,4 @@
-class Contract::BaseAuthorizer < ApplicationAuthorizer
+class ContractAuthorizer < ApplicationAuthorizer
 
   def self.creatable_by?(user)
     false # all needs to go through the ContractFactory, and

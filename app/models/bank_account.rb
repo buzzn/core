@@ -18,7 +18,7 @@ class BankAccount < ActiveRecord::Base
 
   def self.readable_by_query(user)
     user_table   = User.arel_table
-    contract     = Contract::Base.arel_table
+    contract     = Contract.arel_table
     bank_account = BankAccount.arel_table
 
     # workaround to produce false always
@@ -26,7 +26,7 @@ class BankAccount < ActiveRecord::Base
 
     # assume all IDs are globally unique
     sqls = [
-      contract.where(Contract::Base.readable_by_query(user)
+      contract.where(Contract.readable_by_query(user)
                       .and(contract[:id].eq(bank_account[:bank_accountable_id]))),
       User.roles_query(user, admin: nil)
     ]

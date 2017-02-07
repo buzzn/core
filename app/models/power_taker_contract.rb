@@ -1,4 +1,4 @@
-class Contract::PowerTaker < Contract::Power
+class PowerTakerContract < PowerContract
 
   def self.new(*args)
     super
@@ -48,13 +48,13 @@ class Contract::PowerTaker < Contract::Power
                                     register.address.zip,
                                     register.meter.metering_type)
       if price = prices.to_price
-        self.tariffs << Contract::Tariff.new(name: 'TODO Tariff',
-                                             begin_date: begin_date || Time.current,
-                                             energyprice_cents_per_kwh: price.energyprice_cents_per_kilowatt_hour,
-                                             baseprice_cents_per_month:price.baseprice_cents_per_month)
-        self.payments << Contract::Payment.new(begin_date: begin_date || Time.current,
-                                               cycle: :monthly,
-                                               price_cents: price.total_cents_per_month)
+        self.tariffs << Tariff.new(name: 'TODO Tariff',
+                                   begin_date: begin_date || Time.current,
+                                   energyprice_cents_per_kwh: price.energyprice_cents_per_kilowatt_hour,
+                                   baseprice_cents_per_month:price.baseprice_cents_per_month)
+        self.payments << Payment.new(begin_date: begin_date || Time.current,
+                                     cycle: :monthly,
+                                     price_cents: price.total_cents_per_month)
       else
         # TODO some validation or errors or something
       end

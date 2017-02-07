@@ -73,17 +73,17 @@ module Buzzn
           meter = create(Meter::Real, self.meter, registers: [register])
 
           if metering_point_operator_name =  self.contract.delete(:metering_point_operator_name)
-            Contract::MeteringPointOperator.create!(signing_date: Time.new(0),
-                                                    signing_user: @user,
-                                                    terms_accepted: true,
-                                                    power_of_attorney: true,
-                                                    begin_date: Time.new(0),
-                                                    register: register,
-                                                    metering_point_operator_name: metering_point_operator_name,
-                                                    contractor: Organization.dummy_energy,
-                                                    customer: customer)                                          
+            MeteringPointOperatorContract.create!(signing_date: Time.new(0),
+                                                  signing_user: @user,
+                                                  terms_accepted: true,
+                                                  power_of_attorney: true,
+                                                  begin_date: Time.new(0),
+                                                  register: register,
+                                                  metering_point_operator_name: metering_point_operator_name,
+                                                  contractor: Organization.dummy_energy,
+                                                  customer: customer)                                          
           end
-          create(Contract::PowerTaker,
+          create(PowerTakerContract,
                  self.contract,
                  signing_user: @user,
                  signing_date: Time.current,                                 

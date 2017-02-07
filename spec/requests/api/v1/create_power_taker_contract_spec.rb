@@ -130,7 +130,7 @@ describe "Create PowerTakerContract API" do
     expect(response).to have_http_status(422)
     expect(json['errors'].size).to eq 1
     json['errors'].each do |item|
-      expect(item['source']['pointer']).to match /\/data\/attributes\/contract\/power_taker\[old_.*\]/
+      expect(item['source']['pointer']).to match /\/data\/attributes\/power_taker_contract\[old_.*\]/
     end
   end
 end

@@ -1,4 +1,4 @@
-class Contract::Power < Contract::Base
+class PowerContract < Contract
 
   validates :feedback, presence: false
   validates :attention_by, presence: false

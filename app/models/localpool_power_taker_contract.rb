@@ -1,4 +1,4 @@
-class Contract::LocalpoolPowerTaker < Contract::BuzznSystems
+class LocalpoolPowerTakerContract < BuzznSystemsContract
 
   def self.new(*args)
     super
