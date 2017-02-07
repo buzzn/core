@@ -40,7 +40,7 @@ describe "Contract Model" do
   end
 
   let(:contracts) do
-    c1 = Fabricate(:metering_point_operator_contract, customer: user_with_register.contracting_parties.first, localpool: member_group)
+    c1 = Fabricate(:metering_point_operator_contract, customer: user_with_register, localpool: member_localpool)
     c2 = Fabricate(:power_giver_contract, register: register)
     manager_tribe.registers << c2.register
     [c1, c2]
@@ -109,12 +109,9 @@ describe "Contract Model" do
 
   it 'selects contracts of organization manager but not organization member' do
     contracts # create contracts
-    if user_with_register.is_a? ContractingParty
-      #TODO: change readable by in contract model to get this working
-
-      expect(Contract.readable_by(manager_of_organization)).to eq [contracts.last]
-      expect(Contract.readable_by(member_of_organization)).to eq []
-    end
+    #TODO: change readable by in contract model to get this working
+    expect(Contract::Base.readable_by(manager_of_organization)).to eq [contracts.last]
+    expect(Contract::Base.readable_by(member_of_organization)).to eq []
   end
 
   it 'selects contracts of group manager but not group member' do
