@@ -250,15 +250,3 @@ Fabricator :mpoc_ferraris_0002_amperix, from: :metering_point_operator_contract 
   username      '721bcb386c8a4dab2510d40a93a7bf66'
   password      '0b81f58c19135bc01420aa0120ae7693'
 end
-
-
-
-
-
-
-
-
-
-
-
-

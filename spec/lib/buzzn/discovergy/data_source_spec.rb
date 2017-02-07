@@ -25,7 +25,7 @@ describe Buzzn::Discovergy::DataSource do
       Fabricate(:easymeter_60009405).input_register  #in
     ])
   end
-  let(:empty_group) { Fabricate(:group) }
+  let(:empty_group) { Fabricate(:tribe) }
   let(:register_with_broker) do
     meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, group: empty_group)])
     Fabricate(:discovergy_broker, resource: meter, external_id: 'easy_123')

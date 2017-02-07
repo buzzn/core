@@ -4,7 +4,7 @@ class LocalpoolProcessingContract < BuzznSystemsContract
     super
   end
 
-  belongs_to :localpool, class_name: 'Group'
+  belongs_to :localpool, class_name: Group::Localpool
 
   validates :localpool, presence: true
   validates :first_master_uid, presence: true
