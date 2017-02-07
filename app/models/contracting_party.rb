@@ -1,5 +1,11 @@
+require 'buzzn/guarded_crud'
 class ContractingParty < ActiveRecord::Base
-  self.abstract_class = true
+  resourcify
+  include Authority::Abilities
+  include Buzzn::GuardedCrud
+
+  belongs_to :user
+  belongs_to :register, class_name: Register::Base, foreign_key: :register_id
 
   has_many :owned_contracts, class_name: 'Contract', foreign_key: 'contractor_id'
   has_many :assigned_contracts, class_name: 'Contract', foreign_key: 'customer_id'
@@ -8,29 +14,48 @@ class ContractingParty < ActiveRecord::Base
 
   has_one :bank_account, as: :bank_accountable, dependent: :destroy
 
-  validates_associated :address
-  validates_associated :bank_account
-  validates :sales_tax_number, presence: false
-  validates :tax_rate, presence: false
-  validates :tax_number, presence: false
-  validates :retailer, presence: false
-  validates :provider_permission, presence: false
-  validates :subject_to_tax, presence: false
-  validates :mandate_reference, presence: false
 
-  # TODO ????
-  validates :creditor_id, presence: false
+  belongs_to :organization
+  accepts_nested_attributes_for :organization, :reject_if => :all_blank
+
+
+  def self.legal_entities
+    %w{
+      natural_person
+      company
+    }.map(&:to_sym)
+  end
+
+  validates :legal_entity, :inclusion => {:in => legal_entities.collect(&:to_s)}
 
   validate :validate_invariants
 
   def validate_invariants
-    if contracts.size > 0
-      errors.add(:address, 'is missing') unless address
+    case legal_entity 
+    when 'company'
+      validate_organization
+    when 'natural_person'
+      validate_natural_person
+    else
+      errors.add(:legal_entity, "unknown legal entity '#{legal_entity}'")
     end
-    # TODO something like this:
-    #if owned_contracts.size > 0
-    #  errors.add(:bank_account, 'is missing') unless bank_account
-    #end
+  end
+
+  def validate_natural_person
+    if bank_account.nil?
+      errors.add(:bank_account, 'is missing')
+    end
+    # errors.add(:sales_tax_number, 'a natural person has no sales tax number') if sales_tax_number
+    # errors.add(:sales_tax_number, 'a natural person has no tax rate') if tax_rate
+    # errors.add(:sales_tax_number, 'a natural person has no tax number') if tax_number
+    errors.add(:organization, "a natural person has no Organization") if organization
+  end
+
+  def validate_organization
+    #errors.add(:sales_tax_number, 'a company needs a sales tax number') if sales_tax_number
+    #errors.add(:sales_tax_number, 'a company needs a tax rate') if tax_rate
+    #errors.add(:sales_tax_number, 'a company needs a tax number') if tax_number
+    errors.add(:organization, "a company needs an Organization") unless organization
   end
 
   def contracts
@@ -50,4 +75,32 @@ class ContractingParty < ActiveRecord::Base
     where(readable_by_query(user))
   end
 
+
+
+  def natural_person?
+    legal_entity == 'natural_person'
+  end
+
+  def name
+    if legal_entity == 'natural_person'
+      user.name
+    else
+      "#{user.name} for #{organization.name}"
+    end
+  end
+
+  def self.guarded_prepare(current_user, params)
+    if user_id = params.delete(:user_id)
+      params[:user] = User.guarded_retrieve(current_user, user_id)
+    end
+    if organization_id = params.delete(:organization_id)
+      params[:organization] = Organization.guarded_retrieve(current_user,
+                                                            organization_id)
+    end
+    if register_id = params.delete(:register_id)
+      params[:register] = Register::Base.guarded_retrieve(current_user,
+                                                               register_id)
+    end
+    params
+  end
 end

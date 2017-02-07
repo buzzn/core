@@ -33,8 +33,8 @@ class Contract < ActiveRecord::Base
   # TODO to be removed
   attr_encrypted :password, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
-  belongs_to :contractor, polymorphic: true
-  belongs_to :customer, polymorphic: true
+  belongs_to :contractor, class_name: 'ContractingParty'
+  belongs_to :customer, class_name: 'ContractingParty'
   belongs_to :signing_user, class_name: 'User'
 
   has_many :tariffs
@@ -92,8 +92,8 @@ class Contract < ActiveRecord::Base
     errors.add(:terms_accepted, MUST_BE_TRUE ) unless terms_accepted
     errors.add(:power_of_attorney, MUST_BE_TRUE ) unless power_of_attorney
     if contractor
-      if contractor == Organization.buzzn_energy ||
-         contractor == Organization.buzzn_systems
+      if contractor.organization == Organization.buzzn_energy ||
+         contractor.organization == Organization.buzzn_systems
         errors.add(:tariffs, MUST_HAVE_AT_LEAST_ONE) if tariffs.size == 0
         errors.add(:payments, MUST_HAVE_AT_LEAST_ONE) if payments.size == 0
       end

@@ -78,6 +78,9 @@ end
 Fabricator :karin, from: :user do
   email       'karin.smith@solfux.de'
   profile     { Fabricate(:profile_karin) }
+  after_create { |user|
+    Fabricate(:contracting_party, user: user)
+  }
 end
 
 Fabricator :pavel, from: :user do

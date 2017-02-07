@@ -12,11 +12,12 @@ module Buzzn
     def initialize(user, params)
       @user = user
       @params = params
-      # setup deafults so the method_missing is working
-      [:user, :profile, :other_address, :company, :old_contract, :provider_permission].each do |key|
-        @params[key] ||= nil unless params.key?(key)
+      [:user, :profile, :other_address,
+       :old_contract].each do |key|
+        @params[key] ||= nil
       end
-      [:address, :meter, :register, :contract, :bank_account].each do |key|
+      [:address, :meter, :register, :contract, :contracting_party,
+       :bank_account].each do |key|
         @params[key] ||= {}
       end
     end
@@ -33,7 +34,32 @@ module Buzzn
       begin
         User.transaction do
           get_or_create_user
-          
+          address = Address.create!(self.address)
+          # TODO add to DB migration
+          self.contracting_party.delete(:provider_permission)
+          party_params = self.contracting_party
+          if party_params[:legal_entity] == 'company'
+            unless self.company
+              raise Buzzn::ValidationError.new(company: 'missing company data')
+            end
+            orga = create(Organization,
+                          self.company[:organization] || {},
+                          address: address)
+            party_params.merge!(self.company[:contracting_party] || {})
+          end
+          if self.other_address
+            other = create!(:other_address, Address, self.other_address)
+          end
+
+          # TODO do something with this counting_point
+          counting_poing = self.register.delete(:counting_point)
+          register = build(Register::Input,
+                           self.register,
+                           name: 'Wohnung',
+                           readable: 'friends',
+                           address: other || address)
+          meter = create(Meter::Real, self.meter, registers: [register])
+
           begin
             bank = Bank.find_by_iban(self.bank_account[:iban])
           rescue Buzzn::RecordNotFound => e
@@ -45,32 +71,12 @@ module Buzzn
                                bic: bank.bic,
                                bank_name: bank.name)
 
-          address = Address.create!(self.address)
-
-          customer = @user
-          if self.company
-            customer = create(Organization,
-                              self.company[:organization] || {},
-                              provider_permission: self.provider_permission,
-                              bank_account: bank_account,
-                              address: address)
-          else
-            @user.update!(provider_permission: self.provider_permission,
-                          bank_account: bank_account,
-                          address: address)
-          end
-          if self.other_address
-            other = create!(:other_address, Address, self.other_address)
-          end
-
-          # TODO do something with this counting_point
-          counting_point = self.register.delete(:counting_point)
-          register = build(Register::Input,
-                           self.register,
-                           name: 'Wohnung',
-                           readable: 'friends',
-                           address: other || address)
-          meter = create(Meter::Real, self.meter, registers: [register])
+          beneficiary_party = create(ContractingParty,
+                                     party_params,
+                                     organization: orga,
+                                     address: address,
+                                     bank_account: bank_account,
+                                     user: @user)
 
           if metering_point_operator_name =  self.contract.delete(:metering_point_operator_name)
             MeteringPointOperatorContract.create!(signing_date: Time.new(0),
@@ -80,15 +86,15 @@ module Buzzn
                                                   begin_date: Time.new(0),
                                                   register: register,
                                                   metering_point_operator_name: metering_point_operator_name,
-                                                  contractor: Organization.dummy_energy,
-                                                  customer: customer)                                          
+                                                  contractor: Organization.dummy_energy.contracting_party,
+                                                  customer: beneficiary_party)                                          
           end
           create(PowerTakerContract,
                  self.contract,
                  signing_user: @user,
                  signing_date: Time.current,                                 
                  register: register,
-                 customer: customer)
+                 customer: beneficiary_party)
         end
       rescue ActiveRecord::RecordInvalid => e
         raise CascadingValidationError.new(e)

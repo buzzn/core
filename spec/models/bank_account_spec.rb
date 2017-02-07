@@ -1,5 +1,5 @@
 # coding: utf-8
-describe BankAccount do
+describe "BankAccount Model" do
 
   let(:user_with_register) do
     user = Fabricate(:user)

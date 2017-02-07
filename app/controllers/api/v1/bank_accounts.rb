@@ -41,7 +41,7 @@ module API
           requires :bic, type: String, desc: "BIC"
           requires :direct_debit, type: Boolean, desc: "Is direct debit"
           requires :bank_accountable_id, type:String, desc: 'ID of Contract or Contracting-Party'
-          #requires :bank_accountable_type, type:String, values:[Contract.to_s, ContractingParty.to_s], desc: 'Owner Type'
+          requires :bank_accountable_type, type:String, values:[Contract.to_s, ContractingParty.to_s], desc: 'Owner Type'
         end
         oauth2 :full
         post do

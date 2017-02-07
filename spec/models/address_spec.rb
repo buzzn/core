@@ -1,5 +1,5 @@
 # coding: utf-8
-describe Address do
+describe "Address Model" do
 
   let(:admin) do
     admin = Fabricate(:user)
@@ -29,7 +29,7 @@ describe Address do
   end
 
   let(:contracting_party) do
-    cp = Fabricate(:user, address: Fabricate(:address, street_name: 'Sachsenstr.', street_number: '8', zip: 86916, city: 'Kaufering', state: 'Bayern'))
+    cp = Fabricate(:company_contracting_party, address: Fabricate(:address, street_name: 'Sachsenstr.', street_number: '8', zip: 86916, city: 'Kaufering', state: 'Bayern'), user: Fabricate(:user), organization: organization)
   end
 
   before do
@@ -40,30 +40,30 @@ describe Address do
     contracting_party
   end
 
-  it 'restricts readable_by for anonymous users' do
+  it 'restricts readable_by for anonymous users', :retry => 3 do
     expect(Address.readable_by(nil)).to eq [organization.address]
   end
 
-  it 'restricts readable_by for managers of registers' do
-    expect(Address.readable_by(register_manager)).to eq [urban.address, organization.address, contracting_party.address]
-    expect(Address.readable_by(admin.friends.first)).to eq [organization.address, contracting_party.address]
+  it 'restricts readable_by for managers of registers', :retry => 3 do
+    expect(Address.readable_by(register_manager)).to eq [urban.address, organization.address]
+    expect(Address.readable_by(admin.friends.first)).to eq [organization.address]
   end
 
-  it 'restricts readable_by for friends of a manager of a registers' do
-    expect(Address.readable_by(register_manager.friends.first)).to match_array [urban.address, organization.address, contracting_party.address]
+  it 'restricts readable_by for friends of a manager of a registers', :retry => 3 do
+    expect(Address.readable_by(register_manager.friends.first)).to match_array [urban.address, organization.address]
 
     [:members, :community].each do |readable|
       urban.update! readable: readable
-      expect(Address.readable_by(register_manager.friends.first)).to eq [organization.address, contracting_party.address]
-      expect(Address.readable_by(admin.friends.first)).to eq [organization.address, contracting_party.address]
+      expect(Address.readable_by(register_manager.friends.first)).to eq [organization.address]
+      expect(Address.readable_by(admin.friends.first)).to eq [organization.address]
     end
   end
 
-  # it 'restricts readable_by for contracting_party users', :retry => 3 do
-  #   expect(Address.readable_by(contracting_party.user)).to match_array [contracting_party.address, organization.address]
-  # end
+  it 'restricts readable_by for contracting_party users', :retry => 3 do
+    expect(Address.readable_by(contracting_party.user)).to match_array [contracting_party.address, organization.address]
+  end
 
-  it 'restricts readable_by for contracting_party address to organization manager' do
+  it 'restricts readable_by for contracting_party address to organization manager', :retry => 3 do
     expect(Address.readable_by(organization_manager)).to match_array [contracting_party.address, organization.address]
   end
 
