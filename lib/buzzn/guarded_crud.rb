@@ -107,7 +107,7 @@ module Buzzn
       def _guarded_check(result, user, id)
         if result.nil?
           if where(id: id).size == 0
-            raise RecordNotFound.new("#{self} with id=#{id} not found#{user ? ' by current_user_id=' + user.id : ''}")
+            raise RecordNotFound.new("#{self} with id=#{id} not found#{user ? ' by user_id=' + user.id : ''}")
           end
           raise PermissionDenied.new
         end
@@ -117,7 +117,7 @@ module Buzzn
       def _guarded_get(user, id)
         result = where(id: id).limit(1).first
         if result.nil?
-          raise RecordNotFound.new("#{self} with id=#{id} not found#{user ? ' by current_user_id=' + user.id : ''}")
+          raise RecordNotFound.new("#{self} with id=#{id} not found#{user ? ' by user_id=' + user.id : ''}")
         end
         result
       end
