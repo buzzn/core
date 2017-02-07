@@ -1,5 +1,5 @@
 # coding: utf-8
-Fabricator :discovergy_broker, class_name: Broker::Discovergy do
+Fabricator :discovergy_broker do
   mode :in
   provider_login 'team@localpool.de'
   provider_password 'Zebulon_4711'

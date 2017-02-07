@@ -3,7 +3,7 @@ require 'buzzn/discovergy/data_source'
 
 describe Buzzn::Discovergy::DataSource do
 
-  class Broker::Discovergy
+  class DiscovergyBroker
     def validates_credentials
     end
   end

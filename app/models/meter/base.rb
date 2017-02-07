@@ -10,7 +10,7 @@ module Meter
     # what is this needed for the tree structure ?
     has_ancestry
 
-    has_one :broker, as: :resource, dependent: :destroy, foreign_key: :resource_id, class_name: 'Broker::Base'
+    has_one :broker, as: :resource, :dependent => :destroy
     validates_associated :broker
 
     # free text field
