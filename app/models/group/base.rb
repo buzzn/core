@@ -558,7 +558,7 @@ module Group
       end
 
       def validate_localpool
-        if self.mode == 'localpool'
+        if self.is_a? Group::Localpool
           if self.contracts.metering_point_operators.empty?
    #         @contract = MeteringPointOperatorContract.new(group: self, organization: Organization.buzzn_systems, username: 'team@localpool.de', password: 'Zebulon_4711')
           else
