@@ -32,7 +32,7 @@ module Group
     #mount_uploader :image, PictureUploader
     mount_base64_uploader :image, PictureUploader
 
-    has_many :contracts, class_name: Contract::Base, dependent: :destroy, foreign_key: :localpool_id
+    has_many :contracts, dependent: :destroy, foreign_key: :localpool_id
     has_one  :area
     has_many :registers, class_name: Register::Base, foreign_key: :group_id
 
