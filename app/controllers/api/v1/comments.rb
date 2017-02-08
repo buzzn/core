@@ -8,15 +8,14 @@ module API
         desc 'Add a comment'
         params do
           requires :resource_id,    type: String, desc: 'Commentable resource id'
-          requires :resource_name,  type: String, desc: 'Commentable class name', values: ['Register::Base', 'Group']
+          requires :resource_name,  type: String, desc: 'Commentable class name', values: ['Register::Base', 'Group::Base']
           requires :body,           type: String, desc: 'Comment body'
           optional :parent_id,      type: String, desc: 'Parent comment id'
         end
         oauth2 :simple, :full
         post do
           resource_class  = Object.const_get(permitted_params[:resource_name])
-          resource        = resource_class.guarded_retrieve(current_user,
-                                                            permitted_params[:resource_id])
+          resource        = resource_class.guarded_retrieve(current_user,permitted_params[:resource_id])
           if resource.readable_by?(current_user)
             # TODO cleanup move logic into Comment
             comment       = Comment.build_from(resource, current_user.id, permitted_params[:body], nil)
