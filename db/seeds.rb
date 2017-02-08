@@ -317,11 +317,11 @@ Fabricate(:fp_minus, operand: @register_z1a, register: @fichtenweg8)
 
 
 puts 'group home_of_the_brave'
-group_home_of_the_brave = Fabricate(:group_home_of_the_brave, registers: [@register_z2, @register_z4, @fichtenweg10, @fichtenweg8])
+localpool_home_of_the_brave = Fabricate(:localpool_home_of_the_brave, registers: [@register_z2, @register_z4, @fichtenweg10, @fichtenweg8])
 justus = User.where(email: 'justus@buzzn.net').first
-justus.add_role :manager, group_home_of_the_brave
+justus.add_role :manager, localpool_home_of_the_brave
 justus.add_role :manager, @fichtenweg8
-#group_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: group_home_of_the_brave
+#localpool_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: localpool_home_of_the_brave
 
 
 
