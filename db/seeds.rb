@@ -515,32 +515,32 @@ manuel_dmoch.add_role(:manager, register_60118460)
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 
 
-group_wagnis4 = Fabricate(:group_wagnis4, registers: [register_60118460])
-group_wagnis4.registers << register_60009416
-group_wagnis4.registers << register_60009419
-group_wagnis4.registers << register_60009415
-group_wagnis4.registers << register_60009418
-group_wagnis4.registers << register_60009411
-group_wagnis4.registers << register_60009410
-group_wagnis4.registers << register_60009407
-group_wagnis4.registers << register_60009409
-group_wagnis4.registers << register_60009435
-group_wagnis4.registers << register_60009420
-group_wagnis4.registers << register_60009390
-group_wagnis4.registers << register_60009402
-group_wagnis4.registers << register_60009387
-group_wagnis4.registers << register_60009438
-group_wagnis4.registers << register_60009440
-group_wagnis4.registers << register_60009404
-group_wagnis4.registers << register_60009405
-group_wagnis4.registers << register_60009422
-group_wagnis4.registers << register_60009425
-group_wagnis4.registers << register_60009429 if register_60009429
-group_wagnis4.registers << register_60009393
-group_wagnis4.registers << register_60009442
-group_wagnis4.registers << register_60009441
+localpool_wagnis4 = Fabricate(:localpool_wagnis4, registers: [register_60118460])
+localpool_wagnis4.registers << register_60009416
+localpool_wagnis4.registers << register_60009419
+localpool_wagnis4.registers << register_60009415
+localpool_wagnis4.registers << register_60009418
+localpool_wagnis4.registers << register_60009411
+localpool_wagnis4.registers << register_60009410
+localpool_wagnis4.registers << register_60009407
+localpool_wagnis4.registers << register_60009409
+localpool_wagnis4.registers << register_60009435
+localpool_wagnis4.registers << register_60009420
+localpool_wagnis4.registers << register_60009390
+localpool_wagnis4.registers << register_60009402
+localpool_wagnis4.registers << register_60009387
+localpool_wagnis4.registers << register_60009438
+localpool_wagnis4.registers << register_60009440
+localpool_wagnis4.registers << register_60009404
+localpool_wagnis4.registers << register_60009405
+localpool_wagnis4.registers << register_60009422
+localpool_wagnis4.registers << register_60009425
+localpool_wagnis4.registers << register_60009429 if register_60009429
+localpool_wagnis4.registers << register_60009393
+localpool_wagnis4.registers << register_60009442
+localpool_wagnis4.registers << register_60009441
 
-manuel_dmoch.add_role(:manager, group_wagnis4)
+manuel_dmoch.add_role(:manager, localpool_wagnis4)
 
 
 # puts 'group wogeno forstenried'
