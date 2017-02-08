@@ -7,7 +7,7 @@ describe Buzzn::Charts do
       [method] + args
     end
     def aggregated(resource, mode, interval)
-      method_missing(:aggregated, resource, mode, interval) unless resource.is_a? Group
+      method_missing(:aggregated, resource, mode, interval) unless resource.is_a? Group::Base
     end
   end
 
@@ -68,7 +68,7 @@ describe Buzzn::Charts do
   end
 
 
-  it 'delivers the right result for each register in a group', retry: 3 do
+  it 'delivers the right result for each register in a group' do
     # setup the results for the MockDataSource which we use here
     # it just ignores the group and its missing registers and delivers
     # results for either mode

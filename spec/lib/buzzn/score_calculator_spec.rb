@@ -160,7 +160,7 @@ describe Buzzn::ScoreCalculator do
       easymeter_60051560 = Fabricate(:easymeter_60051560)
       easymeter_60051560.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051560", resource: easymeter_60051560)
       register_z4 = easymeter_60051560.registers.first
-      group = Fabricate(:tribe_home_of_the_brave, registers: [register_z2, register_z3, register_z4])
+      group = Fabricate(:localpool_home_of_the_brave, registers: [register_z2, register_z3, register_z4])
       consumer = Fabricate(:user)
       consumer.add_role(:member, register_z2)
       group
