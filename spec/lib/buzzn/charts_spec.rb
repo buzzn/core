@@ -38,7 +38,7 @@ describe Buzzn::Charts do
     )
   end
 
-  let(:group) { Fabricate(:group) }
+  let(:group) { Fabricate(:tribe) }
   let(:register) { Fabricate(:output_meter).output_register }
   let(:dummy_register) do
     register = Fabricate(:input_meter).input_register

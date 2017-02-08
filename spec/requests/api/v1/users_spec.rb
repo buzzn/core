@@ -101,7 +101,7 @@ describe "Users API" do
   end
 
   # everything else . . .
- 
+
   it 'does not create an user with missing parameters' do
     access_token  = Fabricate(:full_access_token_as_admin)
 
@@ -198,7 +198,7 @@ describe "Users API" do
 
   it 'gets the related groups for User' do
     access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:group_readable_by_members)
+    group         = Fabricate(:tribe_readable_by_members)
     user          = User.find(access_token.resource_owner_id)
     register    = Fabricate(:output_meter).output_register
     register.update(readable: :world)
@@ -212,7 +212,7 @@ describe "Users API" do
     access_token  = Fabricate(:simple_access_token)
     user          = User.find(access_token.resource_owner_id)
     page_overload.times do
-      group             = Fabricate(:group)
+      group             = Fabricate(:tribe)
       register    = Fabricate(:output_meter).output_register
       register.update(readable: :world)
       user.add_role(:member, register)

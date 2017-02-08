@@ -33,7 +33,7 @@ describe Buzzn::CurrentPower do
     Buzzn::CurrentPower.new(Buzzn::DataSourceRegistry.new(Redis.current, DummyDataSource.new, mock, Buzzn::CheckTypesDataSource.new))
   end
 
-  let(:group) { Fabricate(:group) }
+  let(:group) { Fabricate(:tribe) }
   let(:register) { Fabricate(:output_meter).output_register }
   let(:dummy_register) do
     register = Fabricate(:input_meter).input_register
@@ -59,10 +59,8 @@ describe Buzzn::CurrentPower do
   end
 
   it 'delivers the right result for a group' do
-    mock.input = Buzzn::DataResult.new(Time.current,
-                                       123, nil, :in)
-    mock.output = Buzzn::DataResult.new(Time.current,
-                                        321, nil, :out)
+    mock.input = Buzzn::DataResult.new(Time.current,123, nil, :in)
+    mock.output = Buzzn::DataResult.new(Time.current,321, nil, :out)
     result = subject.for_group(group)
     expect(result.resource_id).to eq group.id
     expect(result.in).to eq 123
