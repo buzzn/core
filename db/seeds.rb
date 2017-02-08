@@ -280,10 +280,10 @@ hans_dieter_hopf.add_role :member, register_60009316
 hans_dieter_hopf.add_role :member, register_hans_dieter_hopf
 
 
-group_hopf = Fabricate(:group_hopf, registers: [register_60009316])
-group_hopf.registers << register_60009272
-group_hopf.registers << register_60009348
-group_hopf.registers << register_hans_dieter_hopf
+localpool_hopf = Fabricate(:localpool_hopf, registers: [register_60009316])
+localpool_hopf.registers << register_60009272
+localpool_hopf.registers << register_60009348
+localpool_hopf.registers << register_hans_dieter_hopf
 
 
 
