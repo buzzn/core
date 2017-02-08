@@ -47,7 +47,6 @@ module Buzzn
       sum_in, sum_out = 0, 0
       @registry.each do |key, data_source|
         result =  data_source.single_aggregated(group, :in)
-        binding.pry
         sum_in += result.value if result
         result = data_source.single_aggregated(group, :out)
         sum_out += result.value if result
