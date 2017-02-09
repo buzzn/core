@@ -65,6 +65,7 @@ module Buzzn::Discovergy
           response = self.readings(broker, interval, mode, collection, true)
           return response
         else
+          Rails.logger.error("***DiscovergyFacade: failed request (401 - unauthorized): " + query)
           raise Buzzn::DataSourceError.new('unauthorized to get data from discovergy: ' + response.body)
         end
       else
