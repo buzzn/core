@@ -135,35 +135,38 @@ module Buzzn::Discovergy
     # returns:
     #   OAuth::AccessToken with information from the DB or new one
     def build_access_token_from_broker_or_new(broker, force_new=false)
-      if (@consumer_key && @consumer_secret && broker.provider_token_key && broker.provider_token_secret) && !force_new
-        token_hash = {
-          :oauth_token          => broker.provider_token_key,
-          "oauth_token"         => broker.provider_token_key,
-          :oauth_token_secret   => broker.provider_token_secret,
-          "oauth_token_secret"  => broker.provider_token_secret
-        }
-        consumer = OAuth::Consumer.new(
-          @consumer_key,
-          @consumer_secret,
-          :site => @url,
-          :request_token_path => '/public/v1/oauth1/request_token',
-          :authorize_path => '/public/v1/oauth1/authorize',
-          :access_token_path => '/public/v1/oauth1/access_token'
-        )
-        access_token = OAuth::AccessToken.from_hash(consumer, token_hash)
-      else
-        access_token = oauth1_process(broker.provider_login, broker.provider_password)
-        DiscovergyBroker.where(provider_login: broker.provider_login).update_all(
-          :encrypted_provider_token_key => DiscovergyBroker.encrypt_provider_token_key(
-            access_token.token,
-            key: Rails.application.secrets.attr_encrypted_key
-          ),
-          :encrypted_provider_token_secret => DiscovergyBroker.encrypt_provider_token_secret(
-            access_token.secret,
-            key: Rails.application.secrets.attr_encrypted_key
+      access_token = nil
+      SEMAPHORE.synchronize do
+        if (@consumer_key && @consumer_secret && broker.provider_token_key && broker.provider_token_secret) && !force_new
+          token_hash = {
+            :oauth_token          => broker.provider_token_key,
+            "oauth_token"         => broker.provider_token_key,
+            :oauth_token_secret   => broker.provider_token_secret,
+            "oauth_token_secret"  => broker.provider_token_secret
+          }
+          consumer = OAuth::Consumer.new(
+            @consumer_key,
+            @consumer_secret,
+            :site => @url,
+            :request_token_path => '/public/v1/oauth1/request_token',
+            :authorize_path => '/public/v1/oauth1/authorize',
+            :access_token_path => '/public/v1/oauth1/access_token'
           )
-        )
-        broker.reload
+          access_token = OAuth::AccessToken.from_hash(consumer, token_hash)
+        else
+          access_token = oauth1_process(broker.provider_login, broker.provider_password)
+          DiscovergyBroker.where(provider_login: broker.provider_login).update_all(
+            :encrypted_provider_token_key => DiscovergyBroker.encrypt_provider_token_key(
+              access_token.token,
+              key: Rails.application.secrets.attr_encrypted_key
+            ),
+            :encrypted_provider_token_secret => DiscovergyBroker.encrypt_provider_token_secret(
+              access_token.secret,
+              key: Rails.application.secrets.attr_encrypted_key
+            )
+          )
+          broker.reload
+        end
       end
       return access_token
     end
@@ -175,12 +178,10 @@ module Buzzn::Discovergy
     ################################
 
     def oauth1_process(email, password)
-      SEMAPHORE.synchronize do
-        request_token = get_request_token
-        verifier = authorize(request_token, email, password)
-        access_token = get_access_token(request_token, verifier, email, password)
-        access_token
-      end
+      request_token = get_request_token
+      verifier = authorize(request_token, email, password)
+      access_token = get_access_token(request_token, verifier, email, password)
+      access_token
     end
 
     def register_application
