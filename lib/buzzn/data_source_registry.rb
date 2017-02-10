@@ -7,14 +7,21 @@ module Buzzn
       sources.each do |source|
         add(source)
       end
-      @registry[Buzzn::Discovergy::DataSource::NAME] ||= Buzzn::Discovergy::DataSource.new(redis)
-      @registry[Buzzn::MissingDataSource::NAME] ||= Buzzn::MissingDataSource.new
-      #@registry[Buzzn::Mysmartgrid::DataSource::NAME] ||= Buzzn::Mysmartgrid::DataSource.new(redis)
-      @registry[Buzzn::StandardProfile::DataSource::NAME] ||= Buzzn::StandardProfile::DataSource.new
+      add_source(Buzzn::Discovergy::DataSource, redis)
+      add_source(Buzzn::MissingDataSource)
+      #add_source(Buzzn::Mysmartgrid::DataSource, redis)
+      #TODO pass in mongo-db
+      add_source(Buzzn::StandardProfile::DataSource)
+      add_source(Buzzn::Virtual::DataSource, self)
 
+      # verify registry
       @registry.each do |key, data_source|
         raise "datasource for :#{key} is not a #{Buzzn::DataSource}: #{data_source.class}" unless data_source.is_a?(Buzzn::DataSource)
       end
+    end
+
+    def add_source(clazz, *args)
+      @registry[clazz.const_get(:NAME)] ||= clazz.new(*args)
     end
 
     def add(source)
