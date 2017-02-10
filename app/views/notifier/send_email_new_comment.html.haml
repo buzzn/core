@@ -1,6 +1,6 @@
 %p
   = t('hello') + " #{@receiver.name}!"
-- if @commentable.is_a?(Group)
+- if @commentable.is_a?(Group::Base)
   %p= t('user_wrote_a_new_comment_at_the_group', username: @sender.name, group_name: @commentable.name)
   %p= '----------------'
   %p= @message

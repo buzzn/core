@@ -161,6 +161,8 @@ Buzzn::Application.routes.draw do
       put :finalize_registers
     end
   end
+  resources :group_tribe, controller: 'groups'
+  resources :group_localpool, controller: 'groups'
 
   resources :wizard_registers do
     collection do

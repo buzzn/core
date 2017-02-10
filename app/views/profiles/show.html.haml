@@ -83,13 +83,13 @@
       .row
         .groups
           - @groups.each do |group|
-            .col-xs-12.col-sm-6.col-md-6.col-lg-6= render group.decorate
+            .col-xs-12.col-sm-6.col-md-6.col-lg-6= render partial: 'groups/group', object: group.decorate
           = will_paginate(@groups, { class: 'flickr_pagination', param_name: 'group_page' })
       .row
         .col-lg-12.text-center
           - if @profile.user == current_user
             = groups
-            = new_group if current_user.can_create?(Group)
+            = new_group if current_user.can_create?(Group::Base)
       %hr
       - if @friends.any?
         %h1.page-header.text-overflow
