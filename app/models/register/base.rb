@@ -33,6 +33,10 @@ module Register
     # TODO ???
     accepts_nested_attributes_for :contracts
 
+    def data_source
+      Buzzn::MissingDataSource.name
+    end
+
     def brokers
       Broker.where(resource_id: self.meter.id, resource_type: Meter::Base)
     end
@@ -188,7 +192,7 @@ module Register
       when Register::Output
         :out
       else
-        self.mode.to_sym
+        self.mode.to_sym if self.mode
       end
     end
 
@@ -342,10 +346,12 @@ module Register
       self.output?
     end
 
+    # TODO move into Real ?
     def mysmartgrid?
       self.meter && self.meter.broker && self.meter.broker.is_a?(MySmartGridBroker)
     end
 
+    # TODO move into Real ?
     def discovergy?
       self.meter && self.meter.broker && self.meter.broker.is_a?(DiscovergyBroker)
     end
@@ -354,17 +360,6 @@ module Register
       self.smart? &&
       metering_point_operator_contract.nil?
     end
-
-    def data_source
-      if self.discovergy?
-        Buzzn::Discovergy::DataSource::NAME
-      elsif self.mysmartgrid?
-        Buzzn::MySmartGrid::DataSource::NAME
-      else
-        Buzzn::StandardProfile::DataSource::NAME
-      end
-    end
-
 
 
 
