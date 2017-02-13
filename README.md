@@ -53,7 +53,6 @@
     bundle exec brakeman
 
 ## Troubleshooting
-    bin/spring stop
     delete folder vendor/bundle
     bundle install
 
