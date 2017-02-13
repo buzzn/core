@@ -279,8 +279,8 @@ module Buzzn::Discovergy
       alias :"do_#{method}" :"#{method}"
 
       define_method method do |*args|
-        before
         begin
+          before
           send(:"do_#{method}", *args)
         ensure
           after
