@@ -2,17 +2,18 @@ module Buzzn::Discovergy
   class Facade
 
     SEMAPHORE = Mutex.new
+    LOCK_KEY = 'discovergy.lock.key'
 
     TIMEOUT = 5 # seconds
 
     attr_reader :consumer_key
 
-    def initialize(url='https://api.discovergy.com', max_concurrent=30)
+    def initialize(redis = Redis.current, url='https://api.discovergy.com', max_concurrent=30)
+      @redis = redis
       @url   = url
       @max_concurrent = max_concurrent
-      @throughput = Buzzn::Discovergy::Throughput.new
-      @consumer_key
-      @consumer_secret
+      @throughput = Buzzn::Discovergy::Throughput.new(redis)
+      @lock = RemoteLock.new(RemoteLock::Adapters::Redis.new(redis))
     end
 
     # This function sends the request to the discovergy API and returns the unparsed response
@@ -136,7 +137,7 @@ module Buzzn::Discovergy
     #   OAuth::AccessToken with information from the DB or new one
     def build_access_token_from_broker_or_new(broker, force_new=false)
       access_token = nil
-      SEMAPHORE.synchronize do
+      @lock.synchronize(LOCK_KEY) do
         if (@consumer_key && @consumer_secret && broker.provider_token_key && broker.provider_token_secret) && !force_new
           token_hash = {
             :oauth_token          => broker.provider_token_key,
