@@ -3,10 +3,10 @@ module Buzzn::Discovergy
 
     SEMAPHORE = Mutex.new
     LOCK_KEY = 'discovergy.lock.key'
+    CONSUMER_KEY = 'discovergy.consumer'
+    SEP = '_:_'
 
     TIMEOUT = 5 # seconds
-
-    attr_reader :consumer_key
 
     def initialize(redis = Redis.current, url='https://api.discovergy.com', max_concurrent=30)
       @redis = redis
@@ -138,7 +138,8 @@ module Buzzn::Discovergy
     def build_access_token_from_broker_or_new(broker, force_new=false)
       access_token = nil
       @lock.synchronize(LOCK_KEY) do
-        if (@consumer_key && @consumer_secret && broker.provider_token_key && broker.provider_token_secret) && !force_new
+        key, secret = consumer_key_secret
+        if (key && secret && broker.provider_token_key && broker.provider_token_secret) && !force_new
           token_hash = {
             :oauth_token          => broker.provider_token_key,
             "oauth_token"         => broker.provider_token_key,
@@ -146,8 +147,8 @@ module Buzzn::Discovergy
             "oauth_token_secret"  => broker.provider_token_secret
           }
           consumer = OAuth::Consumer.new(
-            @consumer_key,
-            @consumer_secret,
+            key,
+            secret,
             :site => @url,
             :request_token_path => '/public/v1/oauth1/request_token',
             :authorize_path => '/public/v1/oauth1/authorize',
@@ -200,21 +201,24 @@ module Buzzn::Discovergy
         raise Buzzn::DataSourceError.new('unable to register at discovergy')
       end
       json_response = MultiJson.load(response.body)
-      @consumer_key = json_response['key']
-      @consumer_secret = json_response['secret']
-      if @consumer_key.nil? || @consumer_secret.nil?
+      key = json_response['key']
+      secret = json_response['secret']
+      if key.nil? || secret.nil?
         raise Buzzn::DataSourceError.new('unable to parse data from discovergy')
       end
+      consumer_key_secret_set(key, secret)
+      return [key, secret]
     end
 
     def get_request_token
-      if !@consumer_key || !@consumer_secret
-        register_application
+      key, secret = consumer_key_secret
+      if !key || !secret
+        key, secret = register_application
       end
       begin
         consumer = OAuth::Consumer.new(
-          @consumer_key,
-          @consumer_secret,
+          key,
+          secret,
           :site => @url,
           :request_token_path => '/public/v1/oauth1/request_token',
           :authorize_path => '/public/v1/oauth1/authorize',
@@ -291,7 +295,20 @@ module Buzzn::Discovergy
       private :"do_#{method}"
     end
 
+    def consumer_key_secret?
+      ! @redis.get(CONSUMER_KEY).nil?
+    end
+
     private
+
+    def consumer_key_secret_set(key, secret)
+      @redis.set(CONSUMER_KEY, "#{key}#{SEP}#{secret}")
+    end
+
+    def consumer_key_secret
+      val = @redis.get(CONSUMER_KEY)
+      val.split(SEP) if val
+    end
 
     def before
       ActiveRecord::Base.clear_active_connections!

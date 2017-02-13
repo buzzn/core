@@ -9,10 +9,11 @@ module Buzzn
         alias :raw_collection :collection
         alias :raw_initialize :initialize
 
-        def initialize(redis = Redis.current, *args)
+        def initialize(*args)
           raw_initialize(*args)
-          @redis = redis
-          @lock = RemoteLock.new(RemoteLock::Adapters::Redis.new(redis))
+          # use redis from args if there is
+          @redis = args.detect { |a| a.is_a? Redis } || Redis.current
+          @lock = RemoteLock.new(RemoteLock::Adapters::Redis.new(@redis))
         end
 
         {single_aggregated: Buzzn::DataResult, collection: Buzzn::DataResultArray}.each do |method, clazz|

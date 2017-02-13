@@ -1,6 +1,4 @@
 # coding: utf-8
-require 'buzzn/discovergy/data_source'
-
 describe Buzzn::Discovergy::DataSource do
 
   class DiscovergyBroker
