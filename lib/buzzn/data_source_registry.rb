@@ -3,9 +3,13 @@ module Buzzn
   class DataSourceRegistry
 
     def initialize(redis = Redis.current, *sources)
+      @logger = Buzzn::Logger.new(self)
       @registry = {}
       sources.each do |source|
-        add(source)
+        unless source.is_a?(Buzzn::DataSource)
+          raise "is not a #{Buzzn::DataSource}: #{source.class}"
+        end
+        @registry[source.class.const_get(:NAME)] = source
       end
       add_source(Buzzn::Discovergy::DataSource, redis)
       add_source(Buzzn::MissingDataSource)
@@ -21,11 +25,15 @@ module Buzzn
     end
 
     def add_source(clazz, *args)
-      @registry[clazz.const_get(:NAME)] ||= clazz.new(*args)
-    end
-
-    def add(source)
-      @registry[source.class.const_get(:NAME)] = source
+      @registry[clazz.const_get(:NAME)] ||=
+        begin
+          source = clazz.new(*args)
+          unless source.is_a?(Buzzn::DataSource)
+            raise "is not a #{Buzzn::DataSource}: #{source.class}"
+          end
+          @logger.info{"[buzzn.data_source_registry]<#{Thread.current.object_id}> register #{clazz} under #{clazz.const_get(:NAME)}"}
+          source
+        end
     end
 
     def get(data_source)

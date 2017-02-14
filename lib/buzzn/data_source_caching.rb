@@ -11,6 +11,7 @@ module Buzzn
 
         def initialize(*args)
           raw_initialize(*args)
+          @logger = Buzzn::Logger.new(self)
           # use redis from args if there is
           @redis = args.detect { |a| a.is_a? Redis } || Redis.current
           @lock = RemoteLock.new(RemoteLock::Adapters::Redis.new(@redis))
@@ -22,11 +23,11 @@ module Buzzn
             _with_lock(key) do
               result = clazz.from_json(_cache_get(key))
               if result.nil? || result.expires_at < Time.current.to_f
-                Rails.logger.error("[datasource.caching]<#{Thread.current.object_id}> #{key} ====> stale")
+                @logger.error{"[buzzn.datasource_caching]<#{Thread.current.object_id}> #{key} ====> stale"}
                 result = send("raw_#{method}".to_sym, resource, mode)
                 _cache_put(key, result.to_json)
               else
-                Rails.logger.error("[datasource.caching]<#{Thread.current.object_id}> #{key} ====> hit")
+                @logger.error{"[datasource.caching]<#{Thread.current.object_id}> #{key} ====> hit"}
               end
               result
             end
