@@ -138,9 +138,9 @@ source 'http://rails-assets.org' do
   gem 'rails-assets-fancybox'
 end
 
-group :staging, :development, :test do
-  gem 'httplog'
-end
+# group :staging, :development, :test do
+#   gem 'httplog'
+# end
 
 group :production, :staging do
   gem 'newrelic_rpm'

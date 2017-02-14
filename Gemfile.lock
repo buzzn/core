@@ -178,7 +178,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.8.0)
-    colorize (0.8.1)
     concurrent-ruby (1.0.4)
     connection_pool (2.2.0)
     cookie_alert (0.0.5)
@@ -453,8 +452,6 @@ GEM
     htmlentities (4.3.4)
     http_parser.rb (0.6.0)
     httpclient (2.8.0)
-    httplog (0.3.3)
-      colorize
     i18n (0.7.0)
     i18n-tasks (0.9.5)
       activesupport (>= 4.0.2)
@@ -916,7 +913,6 @@ DEPENDENCIES
   hashie-forbidden_attributes
   high_voltage
   highcharts-rails
-  httplog
   i18n-tasks
   iban-tools
   immigrant
