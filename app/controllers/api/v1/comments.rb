@@ -8,7 +8,7 @@ module API
         desc 'Add a comment'
         params do
           requires :resource_id,    type: String, desc: 'Commentable resource id'
-          requires :resource_name,  type: String, desc: 'Commentable class name', values: ['Register', 'Group']
+          requires :resource_name,  type: String, desc: 'Commentable class name', values: ['Register::Base', 'Group']
           requires :body,           type: String, desc: 'Comment body'
           optional :parent_id,      type: String, desc: 'Parent comment id'
         end
