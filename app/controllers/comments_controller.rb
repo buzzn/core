@@ -30,7 +30,7 @@ class CommentsController < InheritedResources::Base
           end
           @channel_name = @comment.commentable_type.to_s.split(':')[0] + '_' + @comment.commentable_id
           if @comment.commentable_type == "PublicActivity::ORM::ActiveRecord::Activity"
-            @channel_name = @comment.commentable.trackable_type + '_' + @comment.commentable.trackable_id
+            @channel_name = @comment.commentable.trackable_type.to_s.split(':')[0] + '_' + @comment.commentable.trackable_id
           end
           Pusher.trigger(@channel_name, 'new_comment', :id => @comment.id, :html => html, :root_id => @root_id, :root_type => @root_type, :socket_id => @socket_id)
           render "create", :locals => { :socket_id => @socket_id }
