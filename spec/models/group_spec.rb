@@ -1,7 +1,7 @@
 # coding: utf-8
 describe "Group Model" do
 
-  it 'filters group' do
+  it 'filters group', retry: 3 do
     group = Fabricate(:localpool_home_of_the_brave)
     Fabricate(:tribe_karins_pv_strom)
 
