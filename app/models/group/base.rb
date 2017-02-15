@@ -44,8 +44,6 @@ module Group
 
     # validates :registers, presence: true
 
-    after_save :validate_localpool
-
     normalize_attributes :description, :website
 
     scope :editable_by_user, lambda {|user|
@@ -557,22 +555,6 @@ module Group
         self.root_comments.each{|comment| comment.destroy}
       end
 
-      def validate_localpool
-        if self.is_a? Group::Localpool
-          if self.contracts.metering_point_operators.empty?
-   #         @contract = MeteringPointOperatorContract.new(group: self, organization: Organization.buzzn_systems, username: 'team@localpool.de', password: 'Zebulon_4711')
-          else
-            @contract = self.contracts.metering_point_operators.first
-          end
-  #        @contract.save
-        else
-          if self.contracts.any?
-            self.contracts.each do |contract|
-              contract.delete
-              #contract.save
-            end
-          end
-        end
-      end
+
   end
 end
