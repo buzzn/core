@@ -48,7 +48,11 @@ class ApplicationController < ActionController::Base
     #   stored_location_for(resource) || request.referer || root_path
     # end
 
-    stored_location_for(resource) || request.referer || profile_path(resource.profile)
+    redirect = stored_location_for(resource) || request.referer || profile_path(resource.profile)
+    if redirect =~ /\/users\/sign_in/
+      redirect = profile_path(resource.profile)
+    end
+    redirect
   end
 
   def current_user
