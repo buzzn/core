@@ -7,7 +7,7 @@
     .speech
       - if @a.owner && @a.owner.is_a?(User) && @a.owner.profile
         = @a.owner.name
-      - elsif @a.owner && @a.owner.is_a?(Register)
+      - elsif @a.owner && @a.owner.is_a?(Register::Base)
         = t('the_register') + ' ' + @a.owner.name
       - else
         = t "somebody"

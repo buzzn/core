@@ -229,7 +229,7 @@ class User < ActiveRecord::Base
   def self.unsubscribed_from_notification(key, resource)
     result = []
     result << NotificationUnsubscriber.by_resource(resource).by_key(key).collect(&:user)
-    if resource.is_a?(Group) || resource.is_a?(Register)
+    if resource.is_a?(Group) || resource.is_a?(Register::Base)
       result << NotificationUnsubscriber.within_users(resource.involved).by_key(key).collect(&:user)
     end
     return result.flatten.uniq

@@ -9,7 +9,7 @@
       - if @a.owner && @a.owner.is_a?(User) && @a.owner.profile
         %a.btn-link.text-semibold{:href => profile_path(@a.owner.profile)}
           = @a.owner.name
-      - elsif @a.owner && @a.owner.is_a?(Register)
+      - elsif @a.owner && @a.owner.is_a?(Register::Base)
         %a.btn-link.text-semibold{:href => register_path(@a.owner)}
           = t('the_register') + ' ' + @a.owner.name
       - else

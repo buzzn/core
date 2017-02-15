@@ -55,7 +55,7 @@ class CalculateRegisterScoreFittingWorker
         elsif fitting >= 0.2
           score_value = 1
         end
-        Score.create(mode: 'fitting', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: score_value, scoreable_type: 'Register', scoreable_id: @register.id)
+        Score.create(mode: 'fitting', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: score_value, scoreable_type: Register::Base, scoreable_id: @register.id)
 
         monthly_score = 0
         yearly_score = 0
@@ -73,10 +73,10 @@ class CalculateRegisterScoreFittingWorker
           end
         end
         interval_information_month = @register.group.set_score_interval('month', containing_timestamp/1000)
-        Score.create(mode: 'fitting', interval: interval_information_month[0], interval_beginning: interval_information_month[1], interval_end: interval_information_month[2], value: monthly_score*1.0/count_monthly_fittings, scoreable_type: 'Register', scoreable_id: @register.id)
+        Score.create(mode: 'fitting', interval: interval_information_month[0], interval_beginning: interval_information_month[1], interval_end: interval_information_month[2], value: monthly_score*1.0/count_monthly_fittings, scoreable_type: Register::Base, scoreable_id: @register.id)
 
         interval_information_year = @register.group.set_score_interval('year', containing_timestamp/1000)
-        Score.create(mode: 'fitting', interval: interval_information_year[0], interval_beginning: interval_information_year[1], interval_end: interval_information_year[2], value: yearly_score*1.0/count_yearly_fittings, scoreable_type: 'Register', scoreable_id: @register.id)
+        Score.create(mode: 'fitting', interval: interval_information_year[0], interval_beginning: interval_information_year[1], interval_end: interval_information_year[2], value: yearly_score*1.0/count_yearly_fittings, scoreable_type: Register::Base, scoreable_id: @register.id)
       end
     elsif resolution_format == 'month'
       puts 'month?'
