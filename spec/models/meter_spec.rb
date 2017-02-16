@@ -53,4 +53,38 @@ describe Meter::Real do
     orphand #create
     expect(Meter::Real.all.readable_by(admin)).to match_array [meter, second, orphand]
   end
+
+  it 'deletes a single meter including its register' do
+    meter = Fabricate(:input_meter_with_input_register)
+    expect(Register::Base.all.size).to eq 1
+    expect(Meter::Base.all.size).to eq 1
+    meter.destroy
+    expect(Register::Base.all.size).to eq 0
+    expect(Meter::Base.all.size).to eq 0
+  end
+
+  it 'deletes a two way meter including its registers' do
+    meter = Fabricate(:easymeter_60139082)
+    expect(Register::Base.all.size).to eq 2
+    expect(Meter::Base.all.size).to eq 1
+    meter.destroy
+    expect(Register::Base.all.size).to eq 0
+    expect(Meter::Base.all.size).to eq 0
+  end
+
+  it 'deletes one register of a two way meter' do
+    meter = Fabricate(:easymeter_60139082)
+    expect(Register::Base.all.size).to eq 2
+    expect(Meter::Base.all.size).to eq 1
+    meter.registers.first.destroy
+    expect(Register::Base.all.size).to eq 1
+    expect(Meter::Base.all.size).to eq 1
+  end
+
+  it 'does not delete register or meter' do
+    meter = Fabricate(:input_meter_with_input_register)
+    expect(Register::Base.all.size).to eq 1
+    expect(Meter::Base.all.size).to eq 1
+    expect { meter.registers.first.destroy }.to raise_error Buzzn::NestedValidationError
+  end
 end
