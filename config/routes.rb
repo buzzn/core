@@ -64,11 +64,10 @@ Buzzn::Application.routes.draw do
   resources :register_input, controller: 'registers'
   resources :register_output, controller: 'registers'
   resources :register_virtual, controller: 'registers'
+
+
   resources :meter_real, controller: 'meters'
   resources :meter_virtual, controller: 'meters'
-
-
-
   resources :meters, :except => :show
   match 'meters/validate' => 'meters#validate', :via => :get
 
@@ -161,8 +160,10 @@ Buzzn::Application.routes.draw do
       put :finalize_registers
     end
   end
-  resources :group_tribe, controller: 'groups'
-  resources :group_localpool, controller: 'groups'
+  resources :group_bases, controller: 'groups'
+  resources :group_tribes, controller: 'groups'
+  resources :group_localpools, controller: 'groups'
+
 
   resources :wizard_registers do
     collection do

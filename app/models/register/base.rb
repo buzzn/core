@@ -215,7 +215,7 @@ module Register
     end
 
     def in_localpool?
-      self.group && self.group.mode == "localpool"
+      self.group && self.group.is_a(Group::Localpool)
     end
 
     # TODO remove this when bubbles.js is rewritten

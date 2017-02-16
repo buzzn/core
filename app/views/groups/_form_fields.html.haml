@@ -4,4 +4,3 @@
 = f.input :website
 = f.input :description
 = f.input :readable, collection: Group::Base.readables.map(&:to_sym), include_blank: false
-= f.input :mode, as: :radio_buttons, collection: Group::Base.modes.map(&:to_sym), label_method: ->(obj){ t(obj)}
