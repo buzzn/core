@@ -31,7 +31,8 @@ module Meter
     validates :image, presence: false
 
     before_destroy do
-      registers.delete_all
+      # we can't use registers.delete_all here because ActiveRecord translates this into a wrong SQL query.
+      Register::Real.where(meter_id: self.id).delete_all
     end
 
     ['output', 'input'].each do |direction|

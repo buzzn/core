@@ -71,12 +71,10 @@ class RegistersController < ApplicationController
     authorize_action_for @register
     if @register.meter.nil?
       @register.destroy
-    elsif @register.meter.registers.size > 1
-      @register.destroy
-    else
-      all_registers = @register.meter.registers
+    elsif @register.is_a?(Register::Virtual) || @register.meter.registers.size == 1
       @register.meter.destroy
-      all_registers.each{|register| register.delete}
+    else
+      @register.destroy
     end
     respond_with current_user.profile
     flash[:notice] = t('register_deleted_successfully')
