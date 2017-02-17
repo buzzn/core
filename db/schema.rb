@@ -152,29 +152,6 @@ ActiveRecord::Schema.define(version: 20170215132553) do
   add_index "comments", ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
-  create_table "contracting_parties", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "slug"
-    t.string   "legal_entity"
-    t.integer  "sales_tax_number"
-    t.float    "tax_rate"
-    t.integer  "tax_number"
-    t.uuid     "organization_id"
-    t.uuid     "register_id"
-    t.uuid     "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "retailer"
-    t.boolean  "provider_permission"
-    t.boolean  "subject_to_tax"
-    t.string   "mandate_reference"
-    t.string   "creditor_id"
-  end
-
-  add_index "contracting_parties", ["organization_id"], name: "index_contracting_parties_on_organization_id", using: :btree
-  add_index "contracting_parties", ["register_id"], name: "index_contracting_parties_on_register_id", using: :btree
-  add_index "contracting_parties", ["slug"], name: "index_contracting_parties_on_slug", unique: true, using: :btree
-  add_index "contracting_parties", ["user_id"], name: "index_contracting_parties_on_user_id", using: :btree
-
   create_table "contracts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "status"
@@ -211,13 +188,15 @@ ActiveRecord::Schema.define(version: 20170215132553) do
     t.date     "cancellation_date"
     t.string   "old_customer_number"
     t.string   "old_account_number"
-    t.uuid     "contractor_id"
-    t.uuid     "customer_id"
     t.uuid     "signing_user_id"
+    t.uuid     "customer_id"
+    t.string   "customer_type"
+    t.uuid     "contractor_id"
+    t.string   "contractor_type"
   end
 
-  add_index "contracts", ["contractor_id"], name: "index_contracts_on_contractor_id", using: :btree
-  add_index "contracts", ["customer_id"], name: "index_contracts_on_customer_id", using: :btree
+  add_index "contracts", ["contractor_type", "contractor_id"], name: "index_contracts_on_contractor_type_and_contractor_id", using: :btree
+  add_index "contracts", ["customer_type", "customer_id"], name: "index_contracts_on_customer_type_and_customer_id", using: :btree
   add_index "contracts", ["localpool_id"], name: "index_contracts_on_localpool_id", using: :btree
   add_index "contracts", ["organization_id"], name: "index_contracts_on_organization_id", using: :btree
   add_index "contracts", ["register_id"], name: "index_contracts_on_register_id", using: :btree
@@ -494,6 +473,14 @@ ActiveRecord::Schema.define(version: 20170215132553) do
     t.datetime "updated_at"
     t.string   "market_place_id"
     t.string   "represented_by"
+    t.integer  "sales_tax_number"
+    t.float    "tax_rate"
+    t.integer  "tax_number"
+    t.boolean  "retailer"
+    t.boolean  "provider_permission"
+    t.boolean  "subject_to_tax"
+    t.string   "mandate_reference"
+    t.string   "creditor_id"
   end
 
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
@@ -685,6 +672,14 @@ ActiveRecord::Schema.define(version: 20170215132553) do
     t.text     "invitation_message"
     t.text     "data_protection_guidelines"
     t.text     "terms_of_use"
+    t.integer  "sales_tax_number"
+    t.float    "tax_rate"
+    t.integer  "tax_number"
+    t.boolean  "retailer"
+    t.boolean  "provider_permission"
+    t.boolean  "subject_to_tax"
+    t.string   "mandate_reference"
+    t.string   "creditor_id"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
@@ -741,8 +736,6 @@ ActiveRecord::Schema.define(version: 20170215132553) do
 
   add_index "zip_vnbs", ["zip"], name: "index_zip_vnbs_on_zip", using: :btree
 
-  add_foreign_key "contracts", "contracting_parties", column: "contractor_id"
-  add_foreign_key "contracts", "contracting_parties", column: "customer_id"
   add_foreign_key "contracts", "users", column: "signing_user_id"
   add_foreign_key "payments", "contracts"
   add_foreign_key "registers", "meters"

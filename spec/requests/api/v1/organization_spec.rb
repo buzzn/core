@@ -376,34 +376,6 @@ describe "Organizations API" do
   end
 
 
-  # RETRIEVE contracting_party
-
-  it 'gets the related contracting_party of an organization without token' do
-    organization      = Fabricate(:metering_service_provider)
-    contracting_party = organization.contracting_party
-
-    get_without_token "/api/v1/organizations/#{organization.id}/contracting-party"
-
-    expect(response).to have_http_status(200)
-    expect(json['data']['id']).to eq(contracting_party.id)
-    expect(json['data']['attributes']['legal-entity']).to eq('company')
-  end
-
-  it 'gets the related contracting_party of an organization with token' do
-    access_token    = Fabricate(:simple_access_token)
-    organization    = Fabricate(:metering_service_provider)
-    User.find(access_token.resource_owner_id).add_role :manager, organization
-    party           = organization.contracting_party
-    party.update(user_id: access_token.resource_owner_id)
-
-    get_with_token "/api/v1/organizations/#{organization.id}/contracting-party", access_token.token
-
-    expect(response).to have_http_status(200)
-    expect(json['data']['id']).to eq(party.id)
-    expect(json['data']['attributes']['legal-entity']).to eq('company')
-  end
-
-
   # RETRIEVE manager
 
   it 'gets the related managers of an organization only with token' do

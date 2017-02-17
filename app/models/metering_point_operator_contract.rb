@@ -23,7 +23,7 @@ class MeteringPointOperatorContract < Contract
       errors.add(:register, IS_MISSING)
     end
     if status != WAITING
-      errors.add(:contractor, CAN_NOT_BELONG_TO_DUMMY) if contractor == Organization.dummy.contracting_party
+      errors.add(:contractor, CAN_NOT_BELONG_TO_DUMMY) if contractor == Organization.dummy
     end
   end
 end

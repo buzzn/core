@@ -26,48 +26,32 @@ class Address < ActiveRecord::Base
     if user.nil?
       where(orga_address.project(1).exists)
     else
-      address = Address.arel_table
-      # assume register.id and contracting_party.id are unique overall
+      address      = Address.arel_table
+      users_roles  = Role.users_roles_arel_table
+      user_table   = User.arel_table
+      role         = Role.arel_table
+      friendship   = Friendship.arel_table
+      register     = Register::Base.arel_table
+      organization = Organization.arel_table
+
+      # assume all IDs are globally unique
       admin_or_manager_of_register = User.roles_query(user, manager: address[:addressable_id], admin: nil)
 
-      contracting_party = ContractingParty.arel_table
-      contracting_party_owner = contracting_party.where(contracting_party[:id].eq(address[:addressable_id]).and(contracting_party[:user_id].eq(user.id)))
-
-      users_roles    = Role.users_roles_arel_table
-      role           = Role.arel_table
-      friendship     = Friendship.arel_table
-      register = Register::Base.arel_table
-
-      # assume address[:addressable_id] is the register
-      register_managers = users_roles
-                      .join(role)
-                      .on(role[:id].eq(users_roles[:role_id]).and(role[:resource_id].eq(address[:addressable_id])).and(role[:name].eq('manager')))
-                      .where(users_roles[:user_id].eq(friendship[:user_id]))
-      manager_friends =
+      register_managers = User.roles_query(friendship[:user_id], manager: address[:addressable_id])
+      friends_of_register_manager =
         friendship.where(friendship[:friend_id].eq(user.id)
                           .and(register_managers.project(1).exists)
                           .and(register
                                 .where(register[:id].eq(address[:addressable_id])
                                         .and(register[:readable].eq(:friends))).project(1).exists))
-
-      organization = Organization.arel_table
-      orga_managers = users_roles
-                      .join(role)
-                      .on(role[:id].eq(users_roles[:role_id]).and(role[:resource_id].eq(contracting_party[:organization_id])).and(role[:name].eq('manager')).and(role[:resource_type].eq(Organization.to_s)))
-                      .where(users_roles[:user_id].eq(user.id))
-      orga_contracting_party =
-        contracting_party.where(contracting_party[:id].eq(address[:addressable_id])
-                            .and(orga_managers.project(1).exists))
-
-
+      orga_managers =  User.roles_query(user, manager: address[:addressable_id]).where(users_roles[:user_id].eq(user.id).and(role[:resource_type].eq(Organization)))
+      user_address = user_table.where(address[:addressable_id].eq(user_table[:id]))   
       sqls = [admin_or_manager_of_register,
-              contracting_party_owner,
               orga_address,
-              orga_contracting_party,
-              manager_friends].collect do |query|
+              user_address,
+              friends_of_register_manager].collect do |query|
         query.project(1).exists.to_sql
       end
-
       where(sqls.join(' OR '))
     end
   end

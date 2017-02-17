@@ -80,9 +80,7 @@ Fabricator :easymeter_1124001747, from: :easy_meter_q3d do
   after_create do |meter|
     register = meter.input_register
     christian_schuetze = Fabricate(:christian_schuetze)
-    contracting_party = Fabricate(:contracting_party)
-    christian_schuetze.contracting_parties << contracting_party
-    contract = Fabricate(:mpoc_justus, customer: contracting_party, register: register)
+    contract = Fabricate(:mpoc_justus, customer: christian_schuetze, register: register)
     christian_schuetze.add_role(:manager, register)
     christian_schuetze.add_role(:member, register)
   end

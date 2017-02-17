@@ -6,10 +6,6 @@
 def user_with_register
   register = Fabricate(:register)
   user     = Fabricate(:user)
-  metering_point.contracts.each do |contract|
-    #user.contracting_parties.first.assigned_contracts << contract
-  end
-
   user.add_role(:member, register)
   user.add_role :manager, register
   return user, register
@@ -50,7 +46,6 @@ buzzn_team = []
 buzzn_team_names.each do |user_name|
   puts "  #{user_name}"
   buzzn_team << user = Fabricate(user_name)
-  user.contracting_parties << Fabricate(:contracting_party)
   case user_name
   when 'justus'
     easymeter_60139082 = Fabricate(:easymeter_60139082)

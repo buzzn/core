@@ -11,14 +11,11 @@ describe Buzzn::ContractFactory do
     let(:other_address) { { other_address: Fabricate.build(:address).attributes
                               .merge!({zip: 37181}) } }
 
-    let(:contracting_party) { { contracting_party:
-                               { legal_entity: 'natural_person',
-                                 provider_permission: FFaker::Boolean.maybe } } }
+    let(:contracting_party) { { provider_permission: FFaker::Boolean.maybe } }
 
     let(:company) do
       orga = Fabricate.build(:metering_service_provider)
-      { contracting_party: { legal_entity: 'company',
-                             provider_permission: FFaker::Boolean.maybe },
+      { provider_permission: FFaker::Boolean.maybe,
         company: { authorization: FFaker::Boolean.maybe,
                    organization: { name: orga.name,
                                    phone: orga.phone,
@@ -83,10 +80,10 @@ describe Buzzn::ContractFactory do
       expect { subject.create_power_taker_contract(user, {profile: {}}) }.to raise_error Buzzn::ValidationError
 
       params = {}
-      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::NestedValidationError
+      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
 
       params.merge!(address)
-      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::NestedValidationError
+      expect { subject.create_power_taker_contract(user, params) }.to raise_error Buzzn::ValidationError
 
       params.merge!(meter)
       params.merge!(register)
@@ -108,16 +105,14 @@ describe Buzzn::ContractFactory do
       expect(contract.old_account_number).to be_nil
       expect(contract.forecast_kwh_pa).to eq 1000
 
-      party = contract.customer
-      expect(user.reload.contracting_parties.size).to eq 1
-      expect(party.address).to eq contract.register.address
-      expect(user.contracting_parties.include?(party)).to be true
-      expect(party.legal_entity).to eq 'natural_person'
-      expect(party.organization).to be_nil
-      expect(party.bank_account).not_to be_nil
+      customer = contract.customer
+      expect(customer).to eq user
+      expect(customer.provider_permission.nil?).to eq false
+      expect(customer.address).to eq contract.register.address
+      expect(customer.bank_account).not_to be_nil
 
       contractor = contract.contractor
-      expect(contractor.organization).to eq(Organization.buzzn_energy)
+      expect(contractor).to eq(Organization.buzzn_energy)
       
       tariff = contract.tariffs.first
       expect(tariff.energyprice_cents_per_kwh).to eq 2560.0
@@ -160,7 +155,7 @@ describe Buzzn::ContractFactory do
       contracts = contract.register.contracts - [contract]
       expect(contracts.size).to eq 1
       expect(contracts.first.class).to eq MeteringPointOperatorContract
-      expect(contracts.first.contractor).to eq Organization.dummy_energy.contracting_party
+      expect(contracts.first.contractor).to eq Organization.dummy_energy
     end
 
     it 'does not create with mismatched old contract and begin_date' do
@@ -210,16 +205,14 @@ describe Buzzn::ContractFactory do
       expect(contract.old_account_number).to be_nil
       expect(contract.forecast_kwh_pa).to eq 1000
 
-      party = contract.customer
-      expect(user.reload.contracting_parties.size).to eq 1
-      expect(party.address).not_to eq contract.register.address
-      expect(user.contracting_parties.include?(party)).to be true
-      expect(party.legal_entity).to eq 'natural_person'
-      expect(party.organization).to be_nil
-      expect(party.bank_account).not_to be_nil
+      customer = contract.customer
+      expect(customer).to eq user
+      expect(customer.provider_permission.nil?).to eq false
+      expect(customer.address).not_to eq contract.register.address
+      expect(customer.bank_account).not_to be_nil
 
       contractor = contract.contractor
-      expect(contractor.organization).to eq(Organization.buzzn_energy)
+      expect(contractor).to eq(Organization.buzzn_energy)
       
       tariff = contract.tariffs.first
       expect(tariff.energyprice_cents_per_kwh).to eq 2630.0
@@ -249,16 +242,14 @@ describe Buzzn::ContractFactory do
       expect(contract.old_account_number).to be_nil
       expect(contract.forecast_kwh_pa).to eq 1000
 
-      party = contract.customer
-      expect(user.reload.contracting_parties.size).to eq 1
-      expect(party.address).to eq contract.register.address
-      expect(user.contracting_parties.include?(party)).to be true
-      expect(party.legal_entity).to eq 'company'
-      expect(party.organization).not_to be_nil
-      expect(party.bank_account).not_to be_nil
+      customer = contract.customer
+      expect(customer.provider_permission.nil?).to eq false
+      expect(customer.address).to eq contract.register.address
+      expect(customer.class).to eq Organization
+      expect(customer.bank_account).not_to be_nil
 
       contractor = contract.contractor
-      expect(contractor.organization).to eq(Organization.buzzn_energy)
+      expect(contractor).to eq(Organization.buzzn_energy)
       
       tariff = contract.tariffs.first
       expect(tariff.energyprice_cents_per_kwh).to eq 2560.0
@@ -294,16 +285,14 @@ describe Buzzn::ContractFactory do
       expect(contract.old_account_number).not_to be_nil
       expect(contract.forecast_kwh_pa).to eq 1000
 
-      party = contract.customer
-      expect(user.reload.contracting_parties.size).to eq 1
-      expect(party.address).to eq contract.register.address
-      expect(user.contracting_parties.include?(party)).to be true
-      expect(party.legal_entity).to eq 'natural_person'
-      expect(party.organization).to be_nil
-      expect(party.bank_account).not_to be_nil
+      customer = contract.customer
+      expect(customer).to eq user
+      expect(customer.provider_permission.nil?).to eq false
+      expect(customer.address).to eq contract.register.address
+      expect(customer.bank_account).not_to be_nil
 
       contractor = contract.contractor
-      expect(contractor.organization).to eq(Organization.buzzn_energy)
+      expect(contractor).to eq(Organization.buzzn_energy)
       
       tariff = contract.tariffs.first
       expect(tariff.energyprice_cents_per_kwh).to eq 2560.0
