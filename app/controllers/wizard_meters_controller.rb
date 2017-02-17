@@ -17,7 +17,7 @@ class WizardMetersController  < ApplicationController
         @meter.registers << @register
         if @meter.registers.collect(&:contracts).collect(&:metering_point_operators).flatten.any?
           @contract = @meter.registers.collect(&:contracts).collect(&:metering_point_operators).flatten.first
-          @contract2 = Contract.new
+          @contract2 = Contract::Base.new
           @contract2.organization = @contract.organization
           @contract2.username = @contract.username
           @contract2.password = @contract.password
@@ -38,7 +38,7 @@ class WizardMetersController  < ApplicationController
           if params[:meter][:smartmeter] == "1"
             #meter valid, now check contract
 
-            @contract = Contract.new(contract_params)
+            @contract = Contract::Base.new(contract_params)
             @contract.mode = 'metering_point_operator_contract'
             @contract.price_cents = 0
             @contract.register = @register

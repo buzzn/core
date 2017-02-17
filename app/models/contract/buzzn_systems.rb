@@ -1,4 +1,4 @@
-class BuzznSystemsContract < Contract
+class Contract::BuzznSystems < Contract::Base
 
   validates :begin_date, presence: true
 

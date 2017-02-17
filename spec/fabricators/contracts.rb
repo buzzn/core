@@ -1,10 +1,10 @@
 # coding: utf-8
-Fabricator :payment do
+Fabricator :payment, class_name: Contract::Payment do
   begin_date   { FFaker::Time.date }
   price_cents { rand(100) + 1 }
 end
 
-Fabricator :tariff do
+Fabricator :tariff, class_name: Contract::Tariff do
   name                      { FFaker::Name.name }
   begin_date                { FFaker::Time.date }
   energyprice_cents_per_kwh { rand(100) + 1 }
@@ -14,7 +14,7 @@ end
 
 # == Metering Point Operator Contract ==
 
-Fabricator :metering_point_operator_contract do
+Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPointOperator do
   metering_point_operator_name { FFaker::Name.name }
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          'xl245245235'
@@ -45,7 +45,7 @@ end
 
 # == Power Taker Contract ==
 
-Fabricator :power_taker_contract do
+Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          'xl245245235'
   signing_user             { Fabricate(:user) }
@@ -79,7 +79,7 @@ end
 
 # == Power Giver Contract ==
 
-Fabricator :power_giver_contract do
+Fabricator :power_giver_contract, class_name: Contract::PowerGiver do
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          'xl245245235'
   signing_user             { Fabricate(:user) }
@@ -103,7 +103,7 @@ end
 
 # == Localpool Power Taker Contract ==
 
-Fabricator :localpool_power_taker_contract do
+Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPowerTaker do
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          'xl245245235'
   signing_user             { Fabricate(:user) }
@@ -129,7 +129,7 @@ end
 
 # == Localpool Processing Contract ==
 
-Fabricator :localpool_processing_contract do
+Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProcessing do
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          'xl245245235'
   signing_user             { Fabricate(:user) }
