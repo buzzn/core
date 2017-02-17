@@ -1,5 +1,5 @@
 # coding: utf-8
-class DiscovergyBroker < Broker
+class Broker::Discovergy < Broker::Base
 
   attr_encrypted :provider_token_key, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
   attr_encrypted :provider_token_secret, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key

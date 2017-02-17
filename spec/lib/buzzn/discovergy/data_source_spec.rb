@@ -1,7 +1,7 @@
 # coding: utf-8
 describe Buzzn::Discovergy::DataSource do
 
-  class DiscovergyBroker
+  class Broker::Discovergy
     def validates_credentials
     end
   end

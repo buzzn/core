@@ -157,12 +157,12 @@ module Buzzn::Discovergy
           access_token = OAuth::AccessToken.from_hash(consumer, token_hash)
         else
           access_token = oauth1_process(broker.provider_login, broker.provider_password)
-          DiscovergyBroker.where(provider_login: broker.provider_login).update_all(
-            :encrypted_provider_token_key => DiscovergyBroker.encrypt_provider_token_key(
+          Broker::Discovergy.where(provider_login: broker.provider_login).update_all(
+            :encrypted_provider_token_key => Broker::Discovergy.encrypt_provider_token_key(
               access_token.token,
               key: Rails.application.secrets.attr_encrypted_key
             ),
-            :encrypted_provider_token_secret => DiscovergyBroker.encrypt_provider_token_secret(
+            :encrypted_provider_token_secret => Broker::Discovergy.encrypt_provider_token_secret(
               access_token.secret,
               key: Rails.application.secrets.attr_encrypted_key
             )
