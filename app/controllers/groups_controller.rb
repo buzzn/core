@@ -35,7 +35,7 @@ class GroupsController < ApplicationController
   end
 
   def create
-    @group = Group::Base.new(group_params)
+    @group = Group::Tribe.new(group_params)
     authorize_action_for @group
     if @group.save
       current_user.add_role :manager, @group
