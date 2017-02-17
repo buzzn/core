@@ -6,7 +6,7 @@ module Buzzn::Discovergy
 
     NAME = :discovergy
 
-    def initialize(facade = Facade.new, cache_time = 15)
+    def initialize(redis = Redis.current, facade = Facade.new(redis), cache_time = 15)
       @facade = facade
       @cache_time = cache_time
     end

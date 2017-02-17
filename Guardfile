@@ -1,7 +1,7 @@
 # A sample Guardfile
 # More info at https://github.com/guard/guard#readme
 
-guard :rspec, cmd: 'time spring rspec -f doc' do
+guard :rspec, cmd: 'time rspec -f doc' do
 
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
@@ -17,11 +17,4 @@ guard :rspec, cmd: 'time spring rspec -f doc' do
 
   watch('config/routes.rb')                           { "spec/routing" }
   watch('app/controllers/application_controller.rb')  { "spec/controllers" }
-end
-
-guard 'spring', bundler: true do
-  watch('Gemfile.lock')
-  watch(%r{^app/resources/(.+)\.rb$})
-  watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
-  watch('spec/spec_helper.rb')  { "spec" }
 end

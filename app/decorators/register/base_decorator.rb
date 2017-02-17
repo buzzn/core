@@ -176,7 +176,7 @@ class Register::BaseDecorator < Draper::Decorator
   def new_address
     link_to(
       content_tag(:i, t("create_address"), class: 'btn btn-default btn-rounded btn-labeled fa fa-plus'),
-      new_address_path(addressable_id: model.id, addressable_type: 'Register'),
+      new_address_path(addressable_id: model.id, addressable_type: Register::Base),
       {
         :remote         => true,
         :class          => 'btn start_modal',

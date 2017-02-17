@@ -138,9 +138,9 @@ source 'http://rails-assets.org' do
   gem 'rails-assets-fancybox'
 end
 
-group :staging, :development, :test do
-  gem 'httplog'
-end
+# group :staging, :development, :test do
+#   gem 'httplog'
+# end
 
 group :production, :staging do
   gem 'newrelic_rpm'
@@ -171,11 +171,8 @@ group :test do
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
   gem 'rspec-rails'
-  gem 'spring'
-  gem 'spring-commands-rspec'
   gem 'email_spec'
   gem 'guard'
-  gem 'guard-spring'
   gem 'guard-livereload'
   gem 'guard-bundler'
   gem 'guard-brakeman'

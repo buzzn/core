@@ -28,9 +28,9 @@ describe Buzzn::Discovergy::Facade do
   it 'registers application manually' do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
       facade = Buzzn::Discovergy::Facade.new
-      expect(facade.consumer_key).to eq nil
+      expect(facade.consumer_key_secret?).to eq false
       facade.register_application
-      expect(facade.consumer_key).not_to eq nil
+      expect(facade.consumer_key_secret?).to eq true
     end
   end
 
@@ -47,7 +47,7 @@ describe Buzzn::Discovergy::Facade do
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
       facade = Buzzn::Discovergy::Facade.new
       token = facade.get_request_token
-      expect(facade.consumer_key).not_to eq nil
+      expect(facade.consumer_key_secret?).to eq true
       expect(token).not_to eq nil
     end
   end
