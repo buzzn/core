@@ -40,5 +40,14 @@ module Register
         self.formula_parts.collect(&:operand)
       end
     end
+
+    def data_source
+      # give preference to discovergy
+      if self.discovergy?
+        Buzzn::Discovergy::DataSource::NAME
+      else
+        Buzzn::Virtual::DataSource::NAME
+      end
+    end
   end
 end

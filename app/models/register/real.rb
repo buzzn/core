@@ -13,5 +13,16 @@ module Register
         raise Buzzn::NestedValidationError.new(:meter, meter.errors)
       end
     end
+
+    def data_source
+      if self.discovergy?
+        Buzzn::Discovergy::DataSource::NAME
+      elsif self.mysmartgrid?
+        Buzzn::MySmartGrid::DataSource::NAME
+      else
+        Buzzn::StandardProfile::DataSource::NAME
+      end
+    end
+
   end
 end
