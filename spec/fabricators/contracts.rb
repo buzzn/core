@@ -23,9 +23,8 @@ Fabricator :metering_point_operator_contract do
   power_of_attorney        true
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }
-  customer                 { Fabricate(:contracting_party,
-                                       user: Fabricate(:user)) }
-  contractor               { Organization.discovergy.contracting_party }
+  customer                 { Fabricate(:user) }
+  contractor               { Organization.discovergy }
 end
 
 Fabricator :metering_point_operator_contract_of_localpool, from: :metering_point_operator_contract do
@@ -37,17 +36,11 @@ Fabricator :metering_point_operator_contract_of_register, from: :metering_point_
 end
 
 Fabricator :metering_point_operator_contract_of_localpool_for_organization, from: :metering_point_operator_contract_of_localpool do
-  customer     { Fabricate(:contracting_party,
-                           legal_entity: :company,
-                           organization: Fabricate(:other_organization),
-                           user: Fabricate(:user)) }
+  customer     { Fabricate(:other_organization) }
 end
 
 Fabricator :metering_point_operator_contract_of_register_for_organization, from: :metering_point_operator_contract_of_register do
-  customer     { Fabricate(:contracting_party,
-                           legal_entity: :company,
-                           organization: Fabricate(:other_organization),
-                           user: Fabricate(:user)) }
+  customer     { Fabricate(:other_organization) }
 end
 
 # == Power Taker Contract ==
@@ -60,8 +53,7 @@ Fabricator :power_taker_contract do
   power_of_attorney        true
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
-  customer                 { Fabricate(:contracting_party,
-                                       user: Fabricate(:user)) }
+  customer                 { Fabricate(:user) }
   register                 { Fabricate(:input_register,
                                        meter: Fabricate.build(:meter),
                                        address: Fabricate.build(:address) ) }
@@ -78,17 +70,11 @@ Fabricator :power_taker_contract_old_contract, from: :power_taker_contract do
 end
 
 Fabricator :power_taker_contract_move_in_for_organization, from: :power_taker_contract_move_in do
-  customer     { Fabricate(:contracting_party,
-                           legal_entity: :company,
-                           organization: Fabricate(:other_organization),
-                           user: Fabricate(:user)) }
+  customer     { Fabricate(:other_organization) }
 end
 
 Fabricator :power_taker_contract_old_contract_for_organization, from: :power_taker_contract_old_contract do
-  customer     { Fabricate(:contracting_party,
-                           legal_entity: :company,
-                           organization: Fabricate(:other_organization),
-                           user: Fabricate(:user)) }
+  customer     { Fabricate(:other_organization) }
 end
 
 # == Power Giver Contract ==
@@ -106,17 +92,13 @@ Fabricator :power_giver_contract do
   register                 { Fabricate(:output_register,
                                        meter: Fabricate.build(:meter),
                                        address: Fabricate.build(:address) ) }
-  customer                 { Fabricate(:contracting_party,
-                                       user: Fabricate(:user)) }
+  customer                 { Fabricate(:user) }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
 end
 
 Fabricator :power_giver_contract_for_organization, from: :power_giver_contract do
-  customer     { Fabricate(:contracting_party,
-                           legal_entity: :company,
-                           organization: Fabricate(:other_organization),
-                           user: Fabricate(:user)) }
+  customer     { Fabricate(:other_organization) }
 end
 
 # == Localpool Power Taker Contract ==
@@ -130,8 +112,7 @@ Fabricator :localpool_power_taker_contract do
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
-  customer                 { Fabricate(:contracting_party,
-                                       user: Fabricate(:user)) }
+  customer                 { Fabricate(:user) }
   register                 { Fabricate(:input_register,
                                        group: Fabricate(:localpool),
                                        meter: Fabricate.build(:meter),
@@ -142,10 +123,7 @@ Fabricator :localpool_power_taker_contract do
 end
 
 Fabricator :localpool_power_taker_contract_for_organization, from: :localpool_power_taker_contract do
-  customer     { Fabricate(:contracting_party,
-                           legal_entity: :company,
-                           organization: Fabricate(:other_organization),
-                           user: Fabricate(:user)) }
+  customer     { Fabricate(:other_organization) }
 end
 
 
@@ -160,8 +138,7 @@ Fabricator :localpool_processing_contract do
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
-  customer                 { Fabricate(:contracting_party,
-                                       user: Fabricate(:user)) }
+  customer                 { Fabricate(:user) }
   localpool                { Fabricate(:localpool) }
   first_master_uid         { sequence(:uid, 90688251510000000000002677114) }
   tariffs                  { [Fabricate.build(:tariff)] }
@@ -169,15 +146,12 @@ Fabricator :localpool_processing_contract do
 end
 
 Fabricator :localpool_processing_contract_for_organization, from: :localpool_processing_contract do
-  customer     { Fabricate(:contracting_party,
-                           legal_entity: :company,
-                           organization: Fabricate(:other_organization),
-                           user: Fabricate(:user)) }
+  customer     { Fabricate(:other_organization) }
 end
 
 
 Fabricator :mpoc_buzzn_metering, from: :metering_point_operator_contract do
-  contractor    { Organization.buzzn_energy.contracting_party }
+  contractor    { Organization.buzzn_energy }
   tariffs       { [Fabricate.build(:tariff)] }
   payments      { [Fabricate.build(:payment)] }
   username      'team@localpool.de'
@@ -188,27 +162,27 @@ end
 # real stuff
 
 Fabricator :mpoc_justus, from: :metering_point_operator_contract do
-  contractor    { Organization.discovergy.contracting_party }
+  contractor    { Organization.discovergy }
   username      'justus@buzzn.net'
   password      'PPf93TcR'
 end
 
 Fabricator :mpoc_stefan, from: :metering_point_operator_contract do
-  contractor     { Organization.discovergy.contracting_party }
+  contractor     { Organization.discovergy }
   username       'stefan@buzzn.net'
   password       '19200buzzn'
   register       { Fabricate(:easymeter_1024000034).registers.first }
 end
 
 Fabricator :mpoc_karin, from: :metering_point_operator_contract do
-  contractor    { Organization.discovergy.contracting_party }
-  customer      { Fabricate(:karin).contracting_parties.first }
+  contractor    { Organization.discovergy }
+  customer      { Fabricate(:karin) }
   username      'karin.smith@solfux.de'
   password      '19200buzzn'
   register      { Fabricate(:easymeter_60051431).output_register }
   status        :running
   after_create do |c|
-    karin = c.customer.user
+    karin = c.customer
     karin.add_role :member, c.register
     karin.add_role :manager, c.register
   end
@@ -216,14 +190,14 @@ end
 
 
 Fabricator :mpoc_christian, from: :metering_point_operator_contract do
-  contractor    { Organization.discovergy.contracting_party }
+  contractor    { Organization.discovergy }
   username      'christian@buzzn.net'
   password      'Roentgen11smartmeter'
   register      { Fabricate(:easymeter_60138988).input_register }
 end
 
 Fabricator :mpoc_philipp, from: :metering_point_operator_contract do
-  contractor    { Organization.discovergy.contracting_party }
+  contractor    { Organization.discovergy }
   username      'info@philipp-osswald.de'
   password      'Null8fünfzehn'
   register      { Fabricate(:easymeter_60009269).input_register }
@@ -231,14 +205,14 @@ end
 
 # TODO needs register
 Fabricator :mpoc_thomas, from: :metering_point_operator_contract do
-  contractor    { Organization.discovergy.contracting_party }
+  contractor    { Organization.discovergy }
   username      'thomas@buzzn.net'
   password      'DSivKK1980'
 end
 
 # thomas wohnung
 Fabricator :mpoc_ferraris_0001_amperix, from: :metering_point_operator_contract do
-  contractor    { Organization.mysmartgrid.contracting_party }
+  contractor    { Organization.mysmartgrid }
   username      '6ed89edf81be48586afc19f9006feb8b'
   password      '1a875e34e291c28db95ecbda015ad433'
   register      { Fabricate(:ferraris_001_amperix).input_register }
@@ -246,7 +220,7 @@ end
 
 # wogeno oberländerstr bhkw
 Fabricator :mpoc_ferraris_0002_amperix, from: :metering_point_operator_contract do
-  contractor     { Organization.mysmartgrid.contracting_party }
+  contractor     { Organization.mysmartgrid }
   username      '721bcb386c8a4dab2510d40a93a7bf66'
   password      '0b81f58c19135bc01420aa0120ae7693'
 end

@@ -76,5 +76,6 @@ module Meter
       end
       errors.empty?
     end
+
   end
 end
