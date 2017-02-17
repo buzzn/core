@@ -1,5 +1,7 @@
 module Contract
   class BaseResource < JSONAPI::Resource
+    abstract
+
     attributes  :status,
                 :old_supplier_name,
                 :old_customer_number,
