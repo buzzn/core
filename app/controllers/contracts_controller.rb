@@ -3,19 +3,19 @@ class ContractsController < ApplicationController
   respond_to :html, :js
 
   def show
-    @contract = Contract.find(params[:id]).decorate
+    @contract = Contract::Base.find(params[:id]).decorate
     authorize_action_for(@contract)
   end
 
 
   def new
-    @contract = Contract.new
+    @contract = Contract::Base.new
     authorize_action_for @contract
   end
 
 
   def create
-    @contract = Contract.new(contract_params)
+    @contract = Contract::Base.new(contract_params)
     authorize_action_for @contract
     if @contract.organization.slug == 'buzzn-metering' ||
        @contract.organization.buzzn_metering?
@@ -32,7 +32,7 @@ class ContractsController < ApplicationController
 
 
   def edit
-    @contract = Contract.find(params[:id])
+    @contract = Contract::Base.find(params[:id])
     authorize_action_for @contract
   end
 
@@ -40,7 +40,7 @@ class ContractsController < ApplicationController
 
 
   def update
-    @contract = Contract.find(params[:id])
+    @contract = Contract::Base.find(params[:id])
     authorize_action_for @contract
     if @contract.update_attributes(contract_params)
       respond_with @contract
@@ -51,7 +51,7 @@ class ContractsController < ApplicationController
 
 
   def destroy
-    @contract = Contract.find(params[:id])
+    @contract = Contract::Base.find(params[:id])
     @contract.destroy
     redirect_to current_user.profile
   end

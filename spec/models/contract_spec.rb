@@ -59,7 +59,7 @@ describe "Contract Model" do
 
   xit 'filters can not find anything' do
     Fabricate(:mpoc_stefan)
-    contracts = Contract.filter('Der Clown ist müde und geht nach Hause.')
+    contracts = Contract::Base.filter('Der Clown ist müde und geht nach Hause.')
 
     expect(contracts.size).to eq 0
   end
@@ -69,36 +69,36 @@ describe "Contract Model" do
     Fabricate(:mpoc_stefan)
     Fabricate(:mpoc_karin)
 
-    contracts = Contract.filter(nil)
+    contracts = Contract::Base.filter(nil)
     expect(contracts.size).to eq 2
   end
 
   it 'selects no contracts for anonymous user' do
     contracts # create contracts
-    expect(Contract.readable_by(nil)).to eq []
+    expect(Contract::Base.readable_by(nil)).to eq []
   end
 
   it 'selects all contracts by admin' do
     contracts # create contracts
-    expect(Contract.readable_by(Fabricate(:admin))).to eq contracts
+    expect(Contract::Base.readable_by(Fabricate(:admin))).to eq contracts
   end
 
   it 'selects contracts of register manager' do
     contracts # create contracts
-    expect(Contract.readable_by(user_with_register)).to eq [contracts.last]
+    expect(Contract::Base.readable_by(user_with_register)).to eq [contracts.last]
   end
 
   xit 'selects contracts of organization manager but not organization member' do
     contracts # create contracts
     #TODO: change readable by in contract model to get this working    
-    expect(Contract.readable_by(manager_of_organization)).to eq [contracts.last]
-    expect(Contract.readable_by(member_of_organization)).to eq []
+    expect(Contract::Base.readable_by(manager_of_organization)).to eq [contracts.last]
+    expect(Contract::Base.readable_by(member_of_organization)).to eq []
   end
 
   xit 'selects contracts of group manager but not group member' do
     contracts # create contracts
     #TODO: change readable by in contract model to get this working
-    expect(Contract.readable_by(manager_of_group)).to eq [contracts.last]
-    expect(Contract.readable_by(member_of_group)).to eq []
+    expect(Contract::Base.readable_by(manager_of_group)).to eq [contracts.last]
+    expect(Contract::Base.readable_by(member_of_group)).to eq []
   end
 end

@@ -16,7 +16,7 @@ module API
         paginate
         oauth2 :full
         get do
-          paginated_response(Contract.filter(permitted_params[:filter]).readable_by(current_user))
+          paginated_response(Contract::Base.filter(permitted_params[:filter]).readable_by(current_user))
         end
 
         desc 'Return a Contract'
@@ -25,7 +25,7 @@ module API
         end
         oauth2 :simple, :full
         get ':id' do
-          contract = Contract.guarded_retrieve(current_user, permitted_params)
+          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
           render(contract, meta: {
             updatable: contract.updatable_by?(current_user),
             deletable: contract.deletable_by?(current_user)
@@ -158,7 +158,7 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          contract = Contract.guarded_retrieve(current_user, permitted_params)
+          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
           contract.guarded_update(current_user, permitted_params)
         end
 
@@ -169,7 +169,7 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          contract = Contract.guarded_retrieve(current_user, permitted_params)
+          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
           deleted_response(contract.guarded_delete(current_user))
         end
 

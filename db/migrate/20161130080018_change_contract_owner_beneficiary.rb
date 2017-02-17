@@ -11,7 +11,7 @@ class ChangeContractOwnerBeneficiary < ActiveRecord::Migration
 
     reversible do |dir|
       dir.up do
-        Contract.all.each do |c|
+        Contract::Base.all.each do |c|
           if c.contract_owner_id
             c.contractor   = ContractingParty.find(c.contract_owner_id)
             puts 'contract: ' + c.id + ' .... contractor: ' + c.contractor_id
@@ -28,7 +28,7 @@ class ChangeContractOwnerBeneficiary < ActiveRecord::Migration
         end
       end
       dir.down do
-        Contract.all.each do |c|
+        Contract::Base.all.each do |c|
           if c.contractor_id
             c.contract_owner       = ContractingParty.find(c.contractor_id)
           end

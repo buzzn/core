@@ -1,4 +1,4 @@
-class LocalpoolProcessingContract < BuzznSystemsContract
+class Contract::LocalpoolProcessing < Contract::BuzznSystems
 
   def self.new(*args)
     super
