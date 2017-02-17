@@ -9,16 +9,15 @@ class ReadingsController < ApplicationController
   def create
     date = Date.new params[:reading]["timestamp(1i)"].to_i, params[:reading]["timestamp(2i)"].to_i, params[:reading]["timestamp(3i)"].to_i
     @register = Register::Base.find(params[:reading][:register_id])
-    @meter = @register.meter
-    @reading = Reading.new(meter_id: @meter.id, timestamp: date, energy_a_milliwatt_hour: params[:reading][:energy_a_milliwatt_hour])
-    @reading.energy_a_milliwatt_hour *= 1000000
+    @reading = Reading.new(register_id: @register.id, timestamp: date, energy_milliwatt_hour: params[:reading][:energy_milliwatt_hour])
+    @reading.energy_milliwatt_hour *= 1000000
     @reading.source = 'user_input'
     if @reading.save
       @register.calculate_forecast
       flash[:notice] = t('reading_created_successfully')
       render :create
     else
-      @reading.energy_a_milliwatt_hour *= 0.000001
+      @reading.energy_milliwatt_hour *= 0.000001
       render :new, errors: @reading.errors.full_messages, register_id: @register.id
     end
   end
@@ -41,7 +40,7 @@ private
   def reading_params
     params.require(:reading).permit(
       :timestamp,
-      :energy_a_milliwatt_hour,
+      :energy_milliwatt_hour,
       :register_id
       )
   end

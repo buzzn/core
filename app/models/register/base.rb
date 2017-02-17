@@ -436,19 +436,19 @@ module Register
       if smart?
         return
       end
-      readings = Reading.all_by_meter_id(self.meter.id)
+      readings = Reading.all_by_register_id(self.id)
       if readings.size > 1
         last_timestamp = readings.last[:timestamp].to_i
-        last_value = readings.last[:energy_a_milliwatt_hour]/1000000.0
+        last_value = readings.last[:energy_milliwatt_hour]/1000000.0
         another_timestamp = readings[readings.size - 2][:timestamp].to_i
-        another_value = readings[readings.size - 2][:energy_a_milliwatt_hour]/1000000.0
+        another_value = readings[readings.size - 2][:energy_milliwatt_hour]/1000000.0
         i = 3
         while last_timestamp - another_timestamp < 2592000 do # difference must at least be 30 days = 2592000 seconds
           if i > readings.size
             return
           end
           another_timestamp = readings[readings.size - i][:timestamp].to_i
-          another_value = readings[readings.size - i][:energy_a_milliwatt_hour]/1000000.0
+          another_value = readings[readings.size - i][:energy_milliwatt_hour]/1000000.0
           i += 1
         end
         if last_timestamp - another_timestamp >= 2592000

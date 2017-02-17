@@ -3,7 +3,7 @@
     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
     %h4.modal-title= t'edit_meter'
   .modal-body
-    = simple_form_for @meter, remote: true, url: edit_wizard_update_wizard_meters_path(meter_id: @meter.id, register_id: @register.id, broker_id: @broker.id), method: 'put' do |f|
+    = simple_form_for @meter, remote: true, url: edit_wizard_update_wizard_meters_path(meter_id: @meter.id, register_id: @register.id, broker_id: @broker.nil? ? nil : @broker.id), method: 'put' do |f|
       %h3=t('edit_meter')
       %fieldset
         = f.input :manufacturer_name, collection: Meter::Real.manufacturer_names, include_blank: false, input_html: { class: 'select2' }

@@ -164,7 +164,7 @@ de:
         message: Nachricht
         notify_me_when_comment_create: Email Benachrichtigung wenn neuer Kommentar erstellt wurde
         add_own_register: Eigenen Zählpunkt hinzufügen
-      meter:
+      meter_real:
         manufacturer_name: Herstellername
         manufacturer_product_name: Produktname
         manufacturer_product_serialnumber: Zählernummer
@@ -180,6 +180,20 @@ de:
         registers: Zählpunkte
         smartmeter: Smart Meter
         existing_meter: Ein vorhandenes Messgerät hinzufügen
+      meter_virtual:
+        manufacturer_name: Herstellername
+        manufacturer_product_name: Produktname
+        manufacturer_product_serialnumber: Zählernummer
+        virtual: Virtuell
+        image: Bild
+        owner: Eigentümer
+        meter_size: Zählergröße
+        rate: Rate
+        measurement_capture: Messkapazität
+        mounting_method: Befestigungsmethode
+        build_year: Herstellungsjahr
+        calibrated_till: Geeicht bis
+        register: Zählpunkt
       registers:
         mode: Richtung
         obis_index: OBIS Kennzahlen
@@ -213,6 +227,12 @@ de:
         price_cents: Preis (Cent)
       comment:
         image: Bild
+      discovergy_broker:
+        provider_login: Benutzername
+        provider_password: Passwort
+      broker:
+        provider_login: Benutzername
+        provider_password: Passwort
 
     placeholders:
       register:
