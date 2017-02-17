@@ -2,6 +2,24 @@ module API
   module V1
     class Groups < Grape::API
       include API::V1::Defaults
+
+
+
+      resource :tribes do
+        desc "Create a Tribe"
+        params do
+          requires :name,         type: String, desc: "Name of the Tribe"
+          requires :description,  type: String, desc: "Description of the Tribe"
+        end
+        oauth2 :full
+        post do
+          group = Group::Tribe.guarded_create(current_user, permitted_params)
+          created_response(group)
+        end
+      end
+
+
+
       resource :groups do
 
         desc "Return all groups"
@@ -41,16 +59,7 @@ module API
 
 
 
-        desc "Create a Group"
-        params do
-          requires :name,         type: String, desc: "Name of the Group"
-          requires :description,  type: String, desc: "Description of the Group"
-        end
-        oauth2 :full
-        post do
-          group = Group::Base.guarded_create(current_user, permitted_params)
-          created_response(group)
-        end
+
 
 
 
