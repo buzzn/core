@@ -14,7 +14,7 @@ class LocalpoolPowerTakerContract < BuzznSystemsContract
 
   def validate_invariants
     super
-    if register.group.nil? || register.group.mode != 'localpool'
+    if !register.group.is_a?(Group::Localpool)
       errors.add(:register, MUST_BELONG_TO_LOCALPOOL)
     end
   end

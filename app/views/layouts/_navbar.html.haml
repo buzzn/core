@@ -38,7 +38,7 @@
             .dropdown-menu.dropdown-menu-right.dropdown-menu-xs.with-arrow.panel-default
               %ul.head-list
                 %li= link_to(t("create_register"), wizard_wizard_registers_path, {:remote => true, :class => 'start_modal', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-backdrop' => 'static'})
-                - if current_user.can_create?(Group)
+                - if current_user.can_create?(Group::Base)
                   %li= link_to(t("create_group"), new_group_path, {:remote => true, :class => 'start_modal', 'data-toggle' => 'modal', 'data-target'   => '#myModal', 'data-backdrop' => 'static'})
                 - if controller_name == "registers" && @register && !@register.smart? && current_user.can_update?(@register)
                   %li= link_to(t("submit_reading"), new_reading_path(register_id: @register.id), {:remote => true, 'data-toggle' => 'modal', 'data-target' => '#myModal'})

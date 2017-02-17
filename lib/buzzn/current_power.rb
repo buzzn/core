@@ -27,7 +27,7 @@ module Buzzn
     end
 
     def for_each_register_in_group(group, timestamp = nil)
-      raise ArgumentError.new("not a #{Group}") unless group.is_a?(Group)
+      raise ArgumentError.new("not a #{Group::Base}") unless group.is_a?(Group::Base)
       raise ArgumentError.new("not a #{Time}") if !(timestamp.is_a?(Time) || timestamp.nil?)
       # TODO something with the timestamp
       result = []
@@ -41,7 +41,7 @@ module Buzzn
     end
 
     def for_group(group, timestamp = nil)
-      raise ArgumentError.new("not a #{Group}") unless group.is_a?(Group)
+      raise ArgumentError.new("not a #{Group::Base}") unless group.is_a?(Group::Base)
       raise ArgumentError.new("not a #{Time}") if !(timestamp.is_a?(Time) || timestamp.nil?)
       # TODO something with the timestamp
       sum_in, sum_out = 0, 0
@@ -51,8 +51,7 @@ module Buzzn
         result = data_source.single_aggregated(group, :out)
         sum_out += result.value if result
       end
-      Buzzn::InOutDataResults.new(timestamp || Time.current,
-                                  sum_in, sum_out, group.id)
+      Buzzn::InOutDataResults.new(timestamp || Time.current, sum_in, sum_out, group.id)
     end
   end
 end

@@ -21,11 +21,11 @@ class Score < ActiveRecord::Base
   }
 
   scope :readable_by, ->(user) do
-    # TODO remove hack with correcting sql, i.e. replace Group.readable_by(user)
-    # with Group.readable_by_query(user)
+    # TODO remove hack with correcting sql, i.e. replace Group::Base.readable_by(user)
+    # with Group::Base.readable_by_query(user)
     # i.e. with Register
     sqls = [
-      Group.readable_by(user).where("groups.id=scores.scoreable_id").project(1).exists.to_sql.sub('"groups".*,', ''),
+      Group::Base.readable_by(user).where("groups.id=scores.scoreable_id").project(1).exists.to_sql.sub('"groups".*,', ''),
       Register::Base.readable_by(user).where("registers.id=scores.scoreable_id").project(1).exists.to_sql.sub('"registers".*,', '')
     ]
     where(sqls.join(' OR '))

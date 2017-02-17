@@ -2,11 +2,29 @@ module API
   module V1
     class Groups < Grape::API
       include API::V1::Defaults
+
+
+
+      resource :tribes do
+        desc "Create a Tribe"
+        params do
+          requires :name,         type: String, desc: "Name of the Tribe"
+          requires :description,  type: String, desc: "Description of the Tribe"
+        end
+        oauth2 :full
+        post do
+          group = Group::Tribe.guarded_create(current_user, permitted_params)
+          created_response(group)
+        end
+      end
+
+
+
       resource :groups do
 
         desc "Return all groups"
         params do
-          optional :filter, type: String, desc: "Search query using #{Base.join(Group.search_attributes)}"
+          optional :filter, type: String, desc: "Search query using #{Base.join(Group::Base.search_attributes)}"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
           optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
@@ -17,14 +35,12 @@ module API
         get do
           order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
           paginated_response(
-            Group
+            Group::Base
               .filter(permitted_params[:filter])
               .readable_by(current_user)
               .order(order)
           )
         end
-
-
 
 
 
@@ -34,7 +50,7 @@ module API
         end
         oauth2 false
         get ":id" do
-          group = Group.guarded_retrieve(current_user, permitted_params)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
           render(group, meta: {
             updatable: group.updatable_by?(current_user),
             deletable: group.deletable_by?(current_user)
@@ -44,39 +60,29 @@ module API
 
 
 
-        desc "Create a Group."
-        params do
-          requires :name,         type: String, desc: "Name of the Group."
-          requires :description,  type: String, desc: "Description of the Group."
-        end
-        oauth2 :full
-        post do
-          group = Group.guarded_create(current_user, permitted_params)
-          created_response(group)
-        end
 
 
 
-        desc "Update a Group."
+        desc "Update a Group"
         params do
           requires :id, type: String, desc: "Group ID."
           optional :name
         end
         oauth2 :full
         patch ':id' do
-          group = Group.guarded_retrieve(current_user, permitted_params)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
           group.guarded_update(current_user, permitted_params)
         end
 
 
 
-        desc 'Delete a Group.'
+        desc 'Delete a Group'
         params do
           requires :id, type: String, desc: "Group ID"
         end
         oauth2 :full
         delete ':id' do
-          group = Group.guarded_retrieve(current_user, permitted_params)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
           deleted_response(group.guarded_delete(current_user))
         end
 
@@ -91,7 +97,7 @@ module API
         paginate
         oauth2 false
         get ":id/registers" do
-          group = Group.guarded_retrieve(current_user, permitted_params)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
 
           # registers do consider group relation for readable_by
           # TODO not clear why noe group.registers.without_externals ???
@@ -111,7 +117,7 @@ module API
         paginate
         oauth2 false
         get ":id/scores" do
-          group = Group.guarded_retrieve(current_user, permitted_params)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
           interval = permitted_params[:interval]
           timestamp = permitted_params[:timestamp]
           result = group.scores.send("#{interval}ly".to_sym).at(timestamp)
@@ -132,7 +138,7 @@ module API
         paginate
         oauth2 :simple, :full
         get [':id/managers', ':id/relationships/managers'] do
-          group = Group.guarded_retrieve(current_user, permitted_params)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
           paginated_response(group.managers.readable_by(current_user))
         end
 
@@ -146,7 +152,7 @@ module API
         end
         oauth2 :full
         post ':id/relationships/managers' do
-          group = Group.guarded_retrieve(current_user, permitted_params)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
           user  = User.unguarded_retrieve(data_id)
           group.managers.add(current_user, user)
           status 204
@@ -161,9 +167,8 @@ module API
         end
         oauth2 :full
         patch ':id/relationships/managers' do
-          group = Group.guarded_retrieve(current_user, permitted_params)
-          group.managers.replace(current_user, data_id_array,
-                                 update: :replace_managers)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
+          group.managers.replace(current_user, data_id_array, update: :replace_managers)
         end
 
         desc 'Remove user from group managers'
@@ -175,7 +180,7 @@ module API
         end
         oauth2 :full
         delete ':id/relationships/managers' do
-          group = Group.guarded_retrieve(current_user, permitted_params)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
           user  = User.unguarded_retrieve(data_id)
           group.managers.remove(current_user, user)
           status 204
@@ -191,7 +196,7 @@ module API
         paginate
         oauth2 :simple, :full
         get [':id/members', ':id/relationships/members'] do
-          group = Group.guarded_retrieve(current_user, permitted_params)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
           paginated_response(group.members.readable_by(current_user))
         end
 
@@ -202,7 +207,7 @@ module API
         end
         oauth2 false
         get ":id/energy-producers" do
-          group = Group.guarded_retrieve(current_user, permitted_params)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
           group.energy_producers.readable_by(current_user)
         end
 
@@ -213,7 +218,7 @@ module API
         end
         oauth2 :simple, :full
         get ":id/energy-consumers" do
-          group = Group.guarded_retrieve(current_user, permitted_params)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
           group.energy_consumers.readable_by(current_user)
         end
 
@@ -227,11 +232,9 @@ module API
         paginate
         oauth2 :simple, :full
         get ':id/comments' do
-          group = Group.guarded_retrieve(current_user, permitted_params)
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
           paginated_response(group.comment_threads.readable_by(current_user))
         end
-
-
 
 
       end

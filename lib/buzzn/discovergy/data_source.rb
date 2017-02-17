@@ -136,7 +136,7 @@ module Buzzn::Discovergy
 
     def to_map(resource)
       case resource
-      when Group
+      when Group::Base
         to_group_map(resource)
       when Register::Base
         to_register_map(resource)

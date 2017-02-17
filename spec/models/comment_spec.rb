@@ -1,7 +1,7 @@
 # coding: utf-8
 describe "Comment Model" do
 
-  let(:group) { Fabricate(:group) }
+  let(:group) { Fabricate(:tribe) }
   let(:user) { Fabricate(:user) }
   let(:comment) { group.comment_threads.create!(user: user, body: FFaker::Lorem.paragraphs.join('-'), title: FFaker::Lorem.sentence, subject: FFaker::Lorem.sentence) }
   before do

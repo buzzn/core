@@ -17,7 +17,7 @@ describe Buzzn::Discovergy::Facade do
   let(:broker_with_wrong_token) { Fabricate(:discovergy_broker_with_wrong_token, resource: meter_2, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
   let(:broker_virtual) { Fabricate(:discovergy_broker, resource: meter, external_id: "VIRTUAL_00000065") }
   let(:group) do
-    Fabricate(:group, registers: [
+    Fabricate(:tribe, registers: [
       Fabricate(:easymeter_60118460).registers.first,
       Fabricate(:easymeter_60009441).registers.first,
       Fabricate(:easymeter_60009442).registers.first,

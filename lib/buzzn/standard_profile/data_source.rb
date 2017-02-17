@@ -122,7 +122,7 @@ private
 
     def sort_resource(resource)
       case resource
-      when Group
+      when Group::Base
         hash = sort_registers(resource.registers)
       when Register::Base
         hash = sort_registers([resource])

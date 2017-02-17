@@ -9,7 +9,7 @@ describe "Contract Model" do
     Fabricate(:contracting_party, user: user)
     user
   end
-  let(:manager_group) {Fabricate(:group)}
+  let(:manager_group) {Fabricate(:tribe)}
   let(:manager_of_group) do
     user = Fabricate(:user)
     user.add_role(:manager, manager_group)
