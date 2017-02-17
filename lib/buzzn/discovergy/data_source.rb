@@ -7,6 +7,7 @@ module Buzzn::Discovergy
     NAME = :discovergy
 
     def initialize(redis = Redis.current, facade = Facade.new(redis), cache_time = 15)
+      @logger = Buzzn::Logger.new(self)
       @facade = facade
       @cache_time = cache_time
     end
@@ -172,7 +173,7 @@ module Buzzn::Discovergy
     ##############
 
     def parse_aggregated_data(response, interval, mode, two_way_meter, resource_id)
-      Rails.logger.error("[datasource.discovergy]<#{Thread.current.object_id}> #{resource_id} #{interval} #{mode} twoway: #{two_way_meter} response: #{response}")
+      @logger.error{"[datasource.discovergy]<#{Thread.current.object_id}> #{resource_id} #{interval} #{mode} twoway: #{two_way_meter} response: #{response}"}
       json = MultiJson.load(response)
       if json.empty?
         return nil
@@ -189,7 +190,7 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_live(response, mode, two_way_meter, resource_id)
-      Rails.logger.error("[datasource.discovergy]<#{Thread.current.object_id}> #{resource_id} #{mode} twoway: #{two_way_meter} response: #{response}")
+      @logger.error{"[datasource.discovergy]<#{Thread.current.object_id}> #{resource_id} #{mode} twoway: #{two_way_meter} response: #{response}"}
       json = MultiJson.load(response)
       if json.empty?
         return nil

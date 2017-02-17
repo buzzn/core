@@ -129,7 +129,7 @@ Fabricator :localpool_power_taker_contract do
   power_of_attorney        true
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }
-  forecast_kwh_pa          { rand(100) }
+  forecast_kwh_pa          { rand(100) + 1 }
   customer                 { Fabricate(:contracting_party,
                                        user: Fabricate(:user)) }
   register                 { Fabricate(:input_register,
