@@ -8,7 +8,7 @@ class WizardRegistersController  < ApplicationController
     @virtual_register = Register::Virtual.new
     @real_meter = Meter::Real.new
     @virtual_meter = Meter::Virtual.new
-    @broker = Broker.new
+    @broker = Broker::Base.new
   end
 
   def wizard_update
@@ -53,14 +53,14 @@ class WizardRegistersController  < ApplicationController
         if params[:register_base][meter_class][:smartmeter] == "1" && params[:register_base][meter_class][:existing_meter] == t('create_new_meter')
           organization = Organization.find(credential_params[:organization])
           if organization.slug == 'buzzn-metering' || organization.buzzn_systems? || organization.slug == 'discovergy'
-            @broker = DiscovergyBroker.new(
+            @broker = Broker::Discovergy.new(
               mode: register_base_params[:mode],
               external_id: "EASYMETER_#{@meter.manufacturer_product_serialnumber}",
               provider_login: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'team@localpool.de' : credential_params[:provider_login],
               provider_password: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'Zebulon_4711' : credential_params[:provider_password],
             )
           else
-            @broker = MySmartGridBroker.new(
+            @broker = Broker::MySmartGrid.new(
               mode: register_base_params[:mode],
               provider_login: credential_params[:sensor_id],
               provider_password: credential_params[:x_token],

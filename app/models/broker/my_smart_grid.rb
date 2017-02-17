@@ -1,9 +1,9 @@
-class MySmartGridBroker < Broker
+class Broker::MySmartGrid < Broker::Base
 
   validates :provider_login, presence: true
   validates :provider_password, presence: true
 
   validates :resource_id, presence: true
-  validates :resource_type, inclusion:{ in: [Meter.to_s] }
+  validates :resource_type, inclusion:{ in: [Meter::Base.to_s] }
 end
 
