@@ -6,7 +6,7 @@ class WizardMetersController  < ApplicationController
   def wizard
     @register = Register::Base.find(params[:register_id])
     @meter = Meter::Base.new
-    @broker = Broker.new
+    @broker = Broker::Base.new
   end
 
   def wizard_update
@@ -17,7 +17,7 @@ class WizardMetersController  < ApplicationController
         @meter.registers << @register
         if @meter.registers.collect(&:contracts).collect(&:metering_point_operators).flatten.any?
           @contract = @meter.registers.collect(&:contracts).collect(&:metering_point_operators).flatten.first
-          @contract2 = Contract.new
+          @contract2 = Contract::Base.new
           @contract2.organization = @contract.organization
           @contract2.username = @contract.username
           @contract2.password = @contract.password
@@ -38,7 +38,7 @@ class WizardMetersController  < ApplicationController
           if params[:meter][:smartmeter] == "1"
             #meter valid, now check contract
 
-            @contract = Contract.new(contract_params)
+            @contract = Contract::Base.new(contract_params)
             @contract.mode = 'metering_point_operator_contract'
             @contract.price_cents = 0
             @contract.register = @register
@@ -78,7 +78,7 @@ class WizardMetersController  < ApplicationController
   def edit_wizard
     @meter = Meter::Base.find(params[:meter_id])
     @register = Register::Base.find(params[:register_id])
-    @broker = @meter.broker || Broker.new
+    @broker = @meter.broker || Broker::Base.new
   end
 
   def edit_wizard_update
@@ -95,7 +95,7 @@ class WizardMetersController  < ApplicationController
           if !@meter.broker
 
             if organization.slug == 'buzzn-metering' || organization.buzzn_systems? || organization.slug == 'discovergy'
-              @broker = DiscovergyBroker.new(
+              @broker = Broker::Discovergy.new(
                mode: @register.input? ? 'in' : 'out',
                 external_id: "EASYMETER_#{meter_params[:manufacturer_product_serialnumber]}",
                 provider_login: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'team@localpool.de' : credential_params[:provider_login],
@@ -103,7 +103,7 @@ class WizardMetersController  < ApplicationController
                 resource: @meter
               )
             else
-              @broker = MySmartGridBroker.new(
+              @broker = Broker::MySmartGrid.new(
                 mode: @register.input? ? 'in' : 'out',
                 provider_login: credential_params[:sensor_id],
                 provider_password: credential_params[:x_token],

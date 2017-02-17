@@ -1,7 +1,10 @@
-class MeteringPointOperatorContract < Contract
+class Contract::MeteringPointOperator < Contract::Base
 
   def self.new(*args)
-    super
+    a = super
+    # HACK to fix the problem that the type gets not set by AR
+    a.type ||= a.class.to_s
+    a
   end
 
   belongs_to :localpool, class_name: 'Group'
@@ -23,7 +26,7 @@ class MeteringPointOperatorContract < Contract
       errors.add(:register, IS_MISSING)
     end
     if status != WAITING
-      errors.add(:contractor, CAN_NOT_BELONG_TO_DUMMY) if contractor == Organization.dummy.contracting_party
+      errors.add(:contractor, CAN_NOT_BELONG_TO_DUMMY) if contractor == Organization.dummy
     end
   end
 end
