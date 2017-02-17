@@ -187,18 +187,22 @@ describe "/groups" do
   end
 
 
-  it 'does not create a group without token' do
+
+
+
+
+  it 'does not create a tribe without token' do
     group = Fabricate.build(:tribe)
     request_params = {
       name:  group.name,
       readable: group.readable,
       description: group.description
     }.to_json
-    post_without_token "/api/v1/groups", request_params
+    post_without_token "/api/v1/tribes", request_params
     expect(response).to have_http_status(401)
   end
 
-  it 'does not create a group with missing parameter' do
+  it 'does not create a tribe with missing parameter' do
     access_token  = Fabricate(:full_access_token)
     group = Fabricate.build(:tribe)
     request_params = {
@@ -210,7 +214,7 @@ describe "/groups" do
     [:name, :description].each do |name|
       params = request_params.reject {|k,v| k == name}
 
-      post_with_token "/api/v1/groups", params.to_json, access_token.token
+      post_with_token "/api/v1/tribes", params.to_json, access_token.token
 
       expect(response).to have_http_status(422)
       json['errors'].each do |error|
@@ -221,7 +225,7 @@ describe "/groups" do
     end
   end
 
-  it 'does not create a group with invalid parameter' do
+  it 'does not create a tribe with invalid parameter' do
     register      = output_register_with_manager
     manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
@@ -237,7 +241,7 @@ describe "/groups" do
       params = request_params.dup
       params[name] = 'a' * 2000
 
-      post_with_token "/api/v1/groups", params.to_json, access_token.token
+      post_with_token "/api/v1/tribes", params.to_json, access_token.token
 
       expect(response).to have_http_status(422)
       json['errors'].each do |error|
@@ -249,7 +253,7 @@ describe "/groups" do
   end
 
 
-  it 'creates a group' do
+  it 'creates a tribe' do
     register      = output_register_with_manager
     manager       = register.managers.first
     access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
@@ -261,11 +265,14 @@ describe "/groups" do
       description: group.description
     }.to_json
 
-    post_with_token "/api/v1/groups", request_params, access_token.token
+    post_with_token "/api/v1/tribes", request_params, access_token.token
 
     expect(response).to have_http_status(201)
     expect(response.headers['Location']).to eq json['data']['id']
   end
+
+
+
 
   it "does not update a group with validation errors" do
     group = Fabricate(:tribe)
