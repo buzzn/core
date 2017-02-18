@@ -1,7 +1,7 @@
 # coding: utf-8
 describe Buzzn::Discovergy::DataSource do
 
-  class DiscovergyBroker
+  class Broker::Discovergy
     def validates_credentials
     end
   end
@@ -12,12 +12,12 @@ describe Buzzn::Discovergy::DataSource do
   let(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
   let(:broker) { Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
   let(:small_group) do
-    Fabricate(:group, registers: [
+    Fabricate(:tribe, registers: [
                 Fabricate(:easymeter_60009484).output_register,
                 Fabricate(:easymeter_60009386).input_register])
   end
   let(:group) do
-    Fabricate(:group, registers: [
+    Fabricate(:tribe, registers: [
       Fabricate(:easymeter_60118470).output_register, #out
       Fabricate(:easymeter_60138947).output_register, #out
       Fabricate(:easymeter_60009422).input_register, #in
@@ -25,7 +25,7 @@ describe Buzzn::Discovergy::DataSource do
       Fabricate(:easymeter_60009405).input_register  #in
     ])
   end
-  let(:empty_group) { Fabricate(:group) }
+  let(:empty_group) { Fabricate(:tribe) }
   let(:register_with_broker) do
     meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, group: empty_group)])
     Fabricate(:discovergy_broker, resource: meter, external_id: 'easy_123')

@@ -1,11 +1,12 @@
-require 'buzzn/guarded_crud'
-class User < ActiveRecord::Base
+class User < ContractingParty
   rolify
   include Authority::Abilities
   include Authority::UserAbilities
   include PublicActivity::Model
   include Filterable
   include Buzzn::GuardedCrud
+  # TODO remove this tracker and make it explicit. it already excludes all
+  # three major actions
   tracked except: [:create, :update, :destroy], owner: Proc.new{ |controller, model| controller && controller.current_user }
 
   devise :database_authenticatable, :async, :registerable,
@@ -17,7 +18,6 @@ class User < ActiveRecord::Base
 
   acts_as_voter
 
-  has_many :contracting_parties
   has_one :dashboard
   has_one :profile, :dependent => :destroy
   accepts_nested_attributes_for :profile
@@ -85,7 +85,11 @@ class User < ActiveRecord::Base
       end
     end
     user_id = if user
-                user.id
+                if user.is_a? User
+                  user.id
+                else
+                  user
+                end
               else
                 users = User.arel_table
                 users[:id]
@@ -127,20 +131,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.get(id, user)
-    result = self.where(id: id).readable_by(user).first
-    if result
-      result
-    elsif self.where(id: id).first
-      # we have record but is not readable by user
-      nil #TODO make an exception instead and catch in grape
-    else
-      # no such record
-      raise(ActiveRecord::RecordNotFound.new "#{self} not found for id #{id}")
-    end
-  end
-
   scope :exclude_user, lambda {|user|
+    # TODO make this just 'user_id != ?' and verify implementation
     where('user_id NOT IN (?)', [user.id])
   }
 
@@ -156,6 +148,10 @@ class User < ActiveRecord::Base
   end
 
   def self.dummy
+    # TODO make this a cacched value like the Orgnanization.discovergy, etc
+    #   @dummy ||= self.where(email: 'sys@buzzn.net').first
+    # and share the hardocded string as constant and the Fabricator and/or
+    # db/seeds.rb
     self.where(email: 'sys@buzzn.net').first
   end
 
@@ -163,6 +159,8 @@ class User < ActiveRecord::Base
     self.friendships.where(friend: user).empty? ? false : true
   end
 
+
+  # TODO why are those not scopes ?
   def received_friendship_requests
     FriendshipRequest.where(receiver: self)
   end
@@ -193,7 +191,8 @@ class User < ActiveRecord::Base
 
 
 
-
+  # TODO all those decorate collections looks like helper methods for the views
+  # i.e. does it makes sense to move them into the rails helpers ?
   def editable_registers
     Register::Base.editable_by_user(self).collect(&:decorate)
   end
@@ -203,7 +202,7 @@ class User < ActiveRecord::Base
   end
 
   def editable_groups
-    Group.editable_by_user(self).collect(&:decorate)
+    Group::Base.editable_by_user(self).collect(&:decorate)
   end
 
   def editable_devices
@@ -241,7 +240,7 @@ class User < ActiveRecord::Base
 
   def accessible_groups
     result = []
-    result << Group.editable_by_user(self).collect(&:decorate)
+    result << Group::Base.editable_by_user(self).collect(&:decorate)
     result << self.accessible_registers.collect(&:group).compact.collect(&:decorate)
     return result.flatten.uniq
   end
@@ -375,7 +374,6 @@ private
 
   def create_dashboard
     self.dashboard = Dashboard.create(user_id: self.id)
-    ContractingParty.create(user_id: self.id, legal_entity: 'natural_person')
   end
 
   def create_rails_view_access_token

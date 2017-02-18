@@ -1,5 +1,3 @@
-
-
 require 'buzzn/managed_roles'
 module Register
   class Base < ActiveRecord::Base
@@ -22,9 +20,10 @@ module Register
       obj.create_activity(trackable: nil, key: 'register.destroy', recipient: nil, owner: user)
     end
 
-    belongs_to :group
+    belongs_to :group, class_name: Group::Base, foreign_key: :group_id
 
-    has_many :contracts, dependent: :destroy, foreign_key: 'register_id'
+
+    has_many :contracts, class_name: Contract::Base, dependent: :destroy, foreign_key: 'register_id'
     has_many :devices, foreign_key: 'register_id'
     has_one :address, as: :addressable, dependent: :destroy
 
@@ -33,8 +32,12 @@ module Register
     # TODO ???
     accepts_nested_attributes_for :contracts
 
+    def data_source
+      Buzzn::MissingDataSource.name
+    end
+
     def brokers
-      Broker.where(resource_id: self.meter.id, resource_type: Meter::Base)
+      Broker::Base.where(resource_id: self.meter.id, resource_type: Meter::Base)
     end
 
     def self.readables
@@ -68,8 +71,7 @@ module Register
     validates :external, presence: false
 
     def discovergy_brokers
-      # in case we have no borker return an empty array
-      [meter.discovergy_broker].compact
+      raise 'TODO use brokers method instead'
     end
 
     validate :validate_invariants
@@ -120,8 +122,8 @@ module Register
       sqls = []
       if group_check
         # register belongs to readable group
-        group = Group.arel_table
-        belongs_to_readable_group = Group.readable_by(user).where(group[:id].eq(register[:group_id]))
+        group = Group::Base.arel_table
+        belongs_to_readable_group = Group::Base.readable_by(user).where(group[:id].eq(register[:group_id]))
         # sql fragment 'exists select 1 where .....'
         sqls << belongs_to_readable_group.project(1).exists
       end
@@ -188,7 +190,7 @@ module Register
       when Register::Output
         :out
       else
-        self.mode.to_sym
+        self.mode.to_sym if self.mode
       end
     end
 
@@ -216,7 +218,7 @@ module Register
     end
 
     def in_localpool?
-      self.group && self.group.mode == "localpool"
+      self.group && self.group.is_a(Group::Localpool)
     end
 
     # TODO remove this when bubbles.js is rewritten
@@ -342,29 +344,20 @@ module Register
       self.output?
     end
 
+    # TODO move into Real ?
     def mysmartgrid?
-      self.meter && self.meter.broker && self.meter.broker.is_a?(MySmartGridBroker)
+      self.meter && self.meter.broker && self.meter.broker.is_a?(Broker::MySmartGrid)
     end
 
+    # TODO move into Real ?
     def discovergy?
-      self.meter && self.meter.broker && self.meter.broker.is_a?(DiscovergyBroker)
+      self.meter && self.meter.broker && self.meter.broker.is_a?(Broker::Discovergy)
     end
 
     def buzzn_api?
       self.smart? &&
       metering_point_operator_contract.nil?
     end
-
-    def data_source
-      if self.discovergy?
-        Buzzn::Discovergy::DataSource::NAME
-      elsif self.mysmartgrid?
-        Buzzn::MySmartGrid::DataSource::NAME
-      else
-        Buzzn::StandardProfile::DataSource::NAME
-      end
-    end
-
 
 
 
@@ -436,19 +429,19 @@ module Register
       if smart?
         return
       end
-      readings = Reading.all_by_meter_id(self.meter.id)
+      readings = Reading.all_by_register_id(self.id)
       if readings.size > 1
         last_timestamp = readings.last[:timestamp].to_i
-        last_value = readings.last[:energy_a_milliwatt_hour]/1000000.0
+        last_value = readings.last[:energy_milliwatt_hour]/1000000.0
         another_timestamp = readings[readings.size - 2][:timestamp].to_i
-        another_value = readings[readings.size - 2][:energy_a_milliwatt_hour]/1000000.0
+        another_value = readings[readings.size - 2][:energy_milliwatt_hour]/1000000.0
         i = 3
         while last_timestamp - another_timestamp < 2592000 do # difference must at least be 30 days = 2592000 seconds
           if i > readings.size
             return
           end
           another_timestamp = readings[readings.size - i][:timestamp].to_i
-          another_value = readings[readings.size - i][:energy_a_milliwatt_hour]/1000000.0
+          another_value = readings[readings.size - i][:energy_milliwatt_hour]/1000000.0
           i += 1
         end
         if last_timestamp - another_timestamp >= 2592000

@@ -44,7 +44,7 @@ end
 
 Fabricator :power_giver_with_contracts, from: :power_giver do
   after_create do |organization|
-    Fabricate(:power_giver_contract, customer: organization.contracting_party)
+    Fabricate(:power_giver_contract, customer: organization)
   end
 
 end

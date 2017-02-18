@@ -10,7 +10,7 @@ module Meter
     # what is this needed for the tree structure ?
     has_ancestry
 
-    has_one :broker, as: :resource, :dependent => :destroy
+    has_one :broker, as: :resource, dependent: :destroy, foreign_key: :resource_id, class_name: 'Broker::Base'
     validates_associated :broker
 
     # free text field
@@ -20,7 +20,7 @@ module Meter
     validates :meter_size, presence: false, numericality: { only_integer: true }, allow_nil: true
     # yearly, monthly, etc
     validates :rate, presence: false
-    # TODO ????
+    # TODO ????, rename it to :direction
     validates :mode, presence: false
     validates :measurement_capture, presence: false
     validates :mounting_method, presence: false
@@ -76,6 +76,7 @@ module Meter
       "#{manufacturer_name} #{manufacturer_product_serialnumber}"
     end
 
+    # TODO seems to be not used
     def self.send_notification_meter_offline(meter)
       meter.registers.each do |register|
         register.managers.each do |user|

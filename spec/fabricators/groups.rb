@@ -1,40 +1,37 @@
 # coding: utf-8
-Fabricator :group do
-  name        { FFaker::Company.name[0..39] }
-  description { FFaker::Lorem.paragraphs.join('-') }
-  readable    'world'
-  created_at  { (rand*10).days.ago }
+
+['localpool', 'tribe'].each do |type|
+  klass = "Group::#{type.camelize}".constantize
+  Fabricator type, class_name: klass do
+    name        { FFaker::Company.name[0..39] }
+    description { FFaker::Lorem.paragraphs.join('-') }
+    readable    'world'
+    created_at  { (rand*10).days.ago }
+  end
 end
 
-Fabricator :localpool, from: :group do
-  mode :localpool
-end
 
-Fabricator :tribe, from: :group do
-  mode :tribe
-end
-
-Fabricator :group_readable_by_world, from: :group do
+Fabricator :tribe_readable_by_world, from: :tribe do
   readable    'world'
 end
 
-Fabricator :group_readable_by_community, from: :group do
+Fabricator :tribe_readable_by_community, from: :tribe do
   readable    'community'
 end
 
-Fabricator :group_readable_by_friends, from: :group do
+Fabricator :tribe_readable_by_friends, from: :tribe do
   readable    'friends'
 end
 
-Fabricator :group_readable_by_members, from: :group do
+Fabricator :tribe_readable_by_members, from: :tribe do
   readable    'members'
 end
 
-Fabricator :group_with_two_comments_readable_by_world, from: :group do
+Fabricator :tribe_with_two_comments_readable_by_world, from: :tribe do
   after_create { |group|
     comment_params  = {
        commentable_id:     group.id,
-       commentable_type:   'Group',
+       commentable_type:   'Group::Base',
        parent_id:          '',
      }
     comment         = Fabricate(:comment, comment_params)
@@ -43,7 +40,7 @@ Fabricator :group_with_two_comments_readable_by_world, from: :group do
   }
 end
 
-Fabricator :group_with_members_readable_by_world, from: :group do
+Fabricator :tribe_with_members_readable_by_world, from: :tribe do
   transient members: 1
   registers do |attrs|
     register  = Fabricate(:input_meter).input_register
@@ -57,32 +54,32 @@ Fabricator :group_with_members_readable_by_world, from: :group do
 end
 
 
-Fabricator :group_hof_butenland, from: :group do
-  name        'Hof Butenland'
-  logo      { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'hof_butenland', 'logo.jpg')) }
+Fabricator :tribe_hof_butenland, from: :tribe do
+  name  'Hof Butenland'
+  logo  { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'hof_butenland', 'logo.jpg')) }
 end
 
 
-Fabricator :group_hopf, from: :localpool do
+Fabricator :localpool_hopf, from: :localpool do
   name 'Hopf'
   after_create do |localpool|
     Fabricate(:mpoc_buzzn_metering, localpool: localpool)
   end
 end
 
-Fabricator :group_home_of_the_brave, from: :localpool do
+Fabricator :localpool_home_of_the_brave, from: :localpool do
   name        'Home of the Brave'
   after_create do |localpool|
     Fabricate(:mpoc_buzzn_metering, localpool: localpool)
   end
 end
 
-Fabricator :group_karins_pv_strom, from: :group do
+Fabricator :tribe_karins_pv_strom, from: :tribe do
   name        'Karins PV Strom'
   description "Diese Gruppe ist offen für alle, die gerne meinen selbstgemachten PV-Strom von meiner Scheune beziehen möchten."
 end
 
-Fabricator :group_wagnis4, from: :localpool do
+Fabricator :localpool_wagnis4, from: :localpool do
   name        'Wagnis 4'
   website     'http://www.wagnis.org/wagnis/wohnprojekte/wagnis-4.html'
   description "Dies ist der Localpool von Wagnis 4."
@@ -94,7 +91,7 @@ Fabricator :group_wagnis4, from: :localpool do
 end
 
 
-Fabricator :group_forstenried, from: :localpool do
+Fabricator :localpool_forstenried, from: :localpool do
   name        'Mehrgenerationenplatz Forstenried'
   website     'http://www.energie.wogeno.de/'
   description { "Dies ist der Localpool des Mehrgenerationenplatzes Forstenried der Freien Waldorfschule München Südwest und Wogeno München eG." }

@@ -9,7 +9,7 @@ the interface is **lib/buzzn/data_source.rb** and the **smart** implementation g
 ```
 module Buzzn::Smart
 
-  class SmartDataSource < DataSource
+  class DataSource < Buzzn::DataSource
 
     NAME = :smart
 

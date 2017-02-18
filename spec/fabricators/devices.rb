@@ -24,9 +24,9 @@ Fabricator :out_device_with_register, from: :out_device do
   }
 end
 
-Fabricator :out_device_with_register_with_group, from: :out_device_with_register do
+Fabricator :out_device_with_register_with_tribe, from: :out_device_with_register do
   after_create { |device|
-    device.register.group = Fabricate(:group)
+    device.register.group = Fabricate(:tribe)
     device.register.save!
   }
 end

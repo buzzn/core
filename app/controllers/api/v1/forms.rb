@@ -30,7 +30,7 @@ module API
             optional :addition, type: String, desc: 'Additional info'
           end
           requires :contracting_party, type: Hash do
-            requires :legal_entity, type: String, values: ContractingParty.legal_entities.map(&:to_s), desc: 'legal entity'
+            requires :legal_entity, type: String, values: ['company', 'natural_person'], desc: 'legal entity'
             optional :provider_permission, type: Boolean, desc: 'Provider permission'
           end
           optional :company, type: Hash do

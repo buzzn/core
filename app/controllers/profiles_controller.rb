@@ -15,7 +15,7 @@ class ProfilesController < ApplicationController
     @friendship_requests  = @profile.user.received_friendship_requests
     @register_invitations = @profile.user.received_register_user_requests
     @group_invitations    = @profile.user.received_group_register_requests
-    @groups               = Group.where(id: @profile.user.accessible_groups.map(&:id)).paginate(:page => params[:group_page], :per_page => 3) # TODO also include group interested
+    @groups               = Group::Base.where(id: @profile.user.accessible_groups.map(&:id)).paginate(:page => params[:group_page], :per_page => 3) # TODO also include group interested
     @devices              = Device.with_role(:manager, @profile.user).decorate
     @activities           = PublicActivity::Activity
                               .order("created_at desc")

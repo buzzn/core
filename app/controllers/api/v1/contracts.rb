@@ -9,14 +9,14 @@ module API
 
         desc 'Return all Contracts'
         params do
-          optional :filter, type: String, desc: "Search query using #{Base.join(Contract.search_attributes)}"
+#          optional :filter, type: String, desc: "Search query using #{Base.join(Contract.search_attributes)}"
           optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
           optional :page, type: Fixnum, desc: "Page number", default: 1
         end
         paginate
         oauth2 :full
         get do
-          paginated_response(Contract.filter(permitted_params[:filter]).readable_by(current_user))
+          paginated_response(Contract::Base.filter(permitted_params[:filter]).readable_by(current_user))
         end
 
         desc 'Return a Contract'
@@ -25,7 +25,7 @@ module API
         end
         oauth2 :simple, :full
         get ':id' do
-          contract = Contract.guarded_retrieve(current_user, permitted_params)
+          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
           render(contract, meta: {
             updatable: contract.updatable_by?(current_user),
             deletable: contract.deletable_by?(current_user)
@@ -57,7 +57,7 @@ module API
             optional :addition, type: String, desc: 'Additional info'
           end
           requires :contracting_party, type: Hash do
-            requires :legal_entity, type: String, values: ContractingParty.legal_entities.map(&:to_s), desc: 'legal entity'
+            requires :legal_entity, type: String, values: ['company', 'natural_person'], desc: 'legal entity'
             optional :provider_permission, type: Boolean, desc: 'Provider permission'
           end
           optional :company, type: Hash do
@@ -158,7 +158,7 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          contract = Contract.guarded_retrieve(current_user, permitted_params)
+          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
           contract.guarded_update(current_user, permitted_params)
         end
 
@@ -169,7 +169,7 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          contract = Contract.guarded_retrieve(current_user, permitted_params)
+          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
           deleted_response(contract.guarded_delete(current_user))
         end
 

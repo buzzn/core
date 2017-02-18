@@ -3,7 +3,7 @@
     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
     %h4.modal-title= t'edit_meter'
   .modal-body
-    = simple_form_for @meter, remote: true, url: edit_wizard_update_wizard_meters_path(meter_id: @meter.id, register_id: @register.id, broker_id: @broker.id), method: 'put' do |f|
+    = simple_form_for @meter, remote: true, url: edit_wizard_update_wizard_meters_path(meter_id: @meter.id, register_id: @register.id, broker_id: @broker.nil? ? nil : @broker.id), method: 'put' do |f|
       %h3=t('edit_meter')
       %fieldset
         = f.input :manufacturer_name, collection: Meter::Real.manufacturer_names, include_blank: false, input_html: { class: 'select2' }
@@ -14,7 +14,7 @@
       %fieldset
         = f.simple_fields_for @broker do |ff|
           .js-dependent-fields{data: {checkbox: {id: "#{@meter.class_name}_smartmeter", value: "true"}}}
-            - selected_organization = @broker.is_a?(DiscovergyBroker) ? (@broker.provider_login == 'team@localpool.de' ? Organization.buzzn_systems.id : Organization.discovergy.id) : (@broker.is_a?(MySmartGridBroker) ? Organization.mysmartgrid.id : Organization.discovergy.id)
+            - selected_organization = @broker.is_a?(Broker::Discovergy) ? (@broker.provider_login == 'team@localpool.de' ? Organization.buzzn_systems.id : Organization.discovergy.id) : (@broker.is_a?(Broker::MySmartGrid) ? Organization.mysmartgrid.id : Organization.discovergy.id)
             = ff.input :organization, collection: Organization.metering_point_operators, input_html: { class: 'select2', 'data-placeholder': t('select_smart_metering_provider')}, label: t('smart_metering_provider'), selected: selected_organization
             .js-dependent-fields{'data-select-id' => "#{@meter.class_name}_#{@broker.model_name.param_key}_organization", 'data-option-value' => Organization.discovergy.id}
               = ff.input :provider_login

@@ -9,6 +9,7 @@ module Buzzn::Discovergy
     TIMEOUT = 5 # seconds
 
     def initialize(redis = Redis.current, url='https://api.discovergy.com', max_concurrent=30)
+      @logger = Buzzn::Logger.new(self)
       @redis = redis
       @url   = url
       @max_concurrent = max_concurrent
@@ -26,7 +27,7 @@ module Buzzn::Discovergy
     #  Net::HTTPResponse with requested data
     def readings(broker, interval, mode, collection=false, retried=false)
       return if collection && broker.mode.to_sym != mode
-      Rails.logger.error("[datasource.discovergy.facade]<#{Thread.current.object_id}> readings for #{broker.external_id} #{broker.resource_type}:#{broker.resource_id} #{interval} #{mode} collection: #{collection}")
+      @logger.error{"[buzzn.discovergy.facade]<#{Thread.current.object_id}> readings for #{broker.external_id} #{broker.resource_type}:#{broker.resource_id} #{interval} #{mode} collection: #{collection}"}
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
       energy_out = ""
@@ -66,7 +67,7 @@ module Buzzn::Discovergy
           response = self.readings(broker, interval, mode, collection, true)
           return response
         else
-          Rails.logger.error("***DiscovergyFacade: failed request (401 - unauthorized): " + query)
+          @logger.error{"[buzzn.discovergy.facade]<#{Thread.current.object_id}> failed request (401 - unauthorized): #{query}"}
           raise Buzzn::DataSourceError.new('unauthorized to get data from discovergy: ' + response.body)
         end
       else
@@ -157,12 +158,12 @@ module Buzzn::Discovergy
           access_token = OAuth::AccessToken.from_hash(consumer, token_hash)
         else
           access_token = oauth1_process(broker.provider_login, broker.provider_password)
-          DiscovergyBroker.where(provider_login: broker.provider_login).update_all(
-            :encrypted_provider_token_key => DiscovergyBroker.encrypt_provider_token_key(
+          Broker::Discovergy.where(provider_login: broker.provider_login).update_all(
+            :encrypted_provider_token_key => Broker::Discovergy.encrypt_provider_token_key(
               access_token.token,
               key: Rails.application.secrets.attr_encrypted_key
             ),
-            :encrypted_provider_token_secret => DiscovergyBroker.encrypt_provider_token_secret(
+            :encrypted_provider_token_secret => Broker::Discovergy.encrypt_provider_token_secret(
               access_token.secret,
               key: Rails.application.secrets.attr_encrypted_key
             )
@@ -189,7 +190,7 @@ module Buzzn::Discovergy
     def register_application
       conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
         faraday.request  :url_encoded
-        faraday.response :logger, Rails.logger if Rails.env == 'development'
+        faraday.response :logger, Buzzn::Logger.new(Faraday) if Rails.env == 'development'
         faraday.adapter :net_http
       end
       response = conn.post do |req|
@@ -243,7 +244,7 @@ module Buzzn::Discovergy
       end
       conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
         faraday.request  :url_encoded
-        faraday.response :logger, Rails.logger if Rails.env == 'development'
+        faraday.response :logger, Buzzn::Logger.new(Faraday) if Rails.env == 'development'
         faraday.adapter :net_http
       end
       response = conn.get do |req|

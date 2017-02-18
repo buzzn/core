@@ -202,7 +202,7 @@ describe "Profiles API" do
     profile           = user.profile
     profile.readable  = 'world'
     profile.save
-    group             = Fabricate(:group)
+    group             = Fabricate(:tribe)
     register    = Fabricate(:input_meter).input_register
     register.update(readable: :world)
     user.add_role(:member, register)
@@ -222,7 +222,7 @@ describe "Profiles API" do
     profile           = user.profile
     profile.readable  = 'world'
     profile.save
-    group             = Fabricate(:group_readable_by_community)
+    group             = Fabricate(:tribe_readable_by_community)
     register    = Fabricate(:output_meter).output_register
     register.update(readable: :community)
     user.add_role(:member, register)
@@ -244,7 +244,7 @@ describe "Profiles API" do
     profile           = token_user_friend.profile
     profile.readable  = 'world'
     profile.save
-    group             = Fabricate(:group_readable_by_friends)
+    group             = Fabricate(:tribe_readable_by_friends)
     register    = Fabricate(:input_meter).input_register
     register.update(readable: :friends)
     token_user_friend.add_role(:member, register)
@@ -272,7 +272,7 @@ describe "Profiles API" do
     profile           = token_user_friend.profile
     profile.readable  = 'world'
     profile.save
-    group             = Fabricate(:group_readable_by_members)
+    group             = Fabricate(:tribe_readable_by_members)
     register    = Fabricate(:output_meter).output_register
     register.update(readable: :friends)
     token_user_friend.add_role(:member, register)
@@ -290,7 +290,7 @@ describe "Profiles API" do
     profile           = token_user.profile
     profile.readable  = 'world'
     profile.save
-    group             = Fabricate(:group_readable_by_friends)
+    group             = Fabricate(:tribe_readable_by_friends)
     register    = Fabricate(:input_meter).input_register
     register.update(readable: :world)
     token_user.add_role(:member, register)
@@ -310,7 +310,7 @@ describe "Profiles API" do
     profile.readable  = 'world'
     profile.save
     page_overload.times do
-      group       = Fabricate(:group)
+      group       = Fabricate(:tribe)
       register    = Fabricate(:output_meter).output_register
       register.update(readable: :world)
       user.add_role(:member, register)

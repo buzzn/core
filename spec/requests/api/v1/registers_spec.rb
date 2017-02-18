@@ -168,7 +168,7 @@ describe "/api/v1/registers" do
         get_with_token "/api/v1/registers/#{register.id}", stranger_access_token.token
         expect(response).to have_http_status(403)
 
-        group = Fabricate(:group_readable_by_world)
+        group = Fabricate(:tribe_readable_by_world)
         group.registers << register
 
         get_with_token "/api/v1/registers/#{register.id}", stranger_access_token.token
@@ -230,7 +230,7 @@ describe "/api/v1/registers" do
     describe "relationships" do
       it "gets the related scores for Register" do
         register = send(type)
-        register.group = Fabricate(:group)
+        register.group = Fabricate(:tribe)
         interval_information  = register.group.score_interval("day", Time.current.to_i)
         5.times do
           s = register.scores.create!(
@@ -249,7 +249,7 @@ describe "/api/v1/registers" do
 
       it "paginates scores" do
         register = send(type)
-        register.group = Fabricate(:group)
+        register.group = Fabricate(:tribe)
         interval_information  = register.group.score_interval("day", Time.current.to_i)
         page_overload.times do
           register.scores.create!(

@@ -2,10 +2,10 @@ describe 'Comments API' do
 
   it 'creates a root comment with manager token' do
     manager_token   = Fabricate(:full_access_token_as_admin)
-    group           = Fabricate(:group)
+    group           = Fabricate(:tribe)
     comment = {
       resource_id: group.id,
-      resource_name: 'Group',
+      resource_name: 'Group::Base',
       body: FFaker::Lorem.paragraphs.join('-'),
     }
 
@@ -23,10 +23,10 @@ describe 'Comments API' do
   it 'creates activity with a new comment creation' do
     admin_token     = Fabricate(:full_access_token_as_admin)
     admin           = User.find(admin_token.resource_owner_id)
-    group           = Fabricate(:group)
+    group           = Fabricate(:tribe)
     comment = {
       resource_id: group.id,
-      resource_name: 'Group',
+      resource_name: 'Group::Base',
       body: FFaker::Lorem.paragraphs.join('-'),
     }
 
@@ -37,12 +37,12 @@ describe 'Comments API' do
 
   it 'creates a child comment with full token' do
     manager_token   = Fabricate(:full_access_token_as_admin)
-    group           = Fabricate(:group_with_two_comments_readable_by_world)
+    group           = Fabricate(:tribe_with_two_comments_readable_by_world)
     comments        = group.comment_threads
     child_comment   = comments.find{|c| !c.parent_id.nil?}
     comment = {
       resource_id: group.id,
-      resource_name: 'Group',
+      resource_name: 'Group::Base',
       body: FFaker::Lorem.paragraphs.join('-'),
       parent_id: child_comment.id,
     }
@@ -61,10 +61,10 @@ describe 'Comments API' do
 
   it 'does not create comment with wrong arguments' do
     manager_token   = Fabricate(:full_access_token_as_admin)
-    group           = Fabricate(:group)
+    group           = Fabricate(:tribe)
     comment = {
       resource_id: group.id,
-      resource_name: 'Group',
+      resource_name: 'Group::Base',
       body: FFaker::Lorem.paragraphs.join('-'),
     }
 
@@ -99,17 +99,17 @@ describe 'Comments API' do
   [:simple_access_token, :full_access_token].each do |token|
     it "creates a comment only with #{token}" do
       access_token  = Fabricate(token)
-      group         = Fabricate(:group)
+      group         = Fabricate(:tribe)
       comment = {
         resource_id: group.id,
-        resource_name: 'Group',
+        resource_name: 'Group::Base',
         body: FFaker::Lorem.paragraphs.join('-'),
       }
 
       post_with_token '/api/v1/comments', comment.to_json, access_token.token
       expect(response).to have_http_status(201)
       expect(response.headers['Location']).to eq json['data']['id']
-      
+
       post_without_token '/api/v1/comments', comment.to_json
       expect(response).to have_http_status(401)
     end
@@ -117,10 +117,10 @@ describe 'Comments API' do
 
   it 'does not create comment for resource not readable by user' do
     access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:group_readable_by_friends)
+    group         = Fabricate(:tribe_readable_by_friends)
     comment = {
       resource_id: group.id,
-      resource_name: 'Group',
+      resource_name: 'Group::Base',
       body: FFaker::Lorem.paragraphs.join('-'),
     }
 
@@ -130,7 +130,7 @@ describe 'Comments API' do
 
   it 'does not update comment with wrong arguments' do
     manager_token   = Fabricate(:full_access_token_as_admin)
-    group           = Fabricate(:group_with_two_comments_readable_by_world)
+    group           = Fabricate(:tribe_with_two_comments_readable_by_world)
     comments        = group.comment_threads
     child_comment   = comments.find{|c| !c.parent_id.nil?}
     params = { body: FFaker::Lorem.paragraphs.join('-') }
@@ -150,10 +150,10 @@ describe 'Comments API' do
     wrong_token   = Fabricate(:simple_access_token)
     access_token  = Fabricate(:simple_access_token)
     user          = User.find(access_token.resource_owner_id)
-    group         = Fabricate(:group)
+    group         = Fabricate(:tribe)
     comment_params = {
       commentable_id: group.id,
-      commentable_type: 'Group',
+      commentable_type: 'Group::Base',
       user_id: user.id,
     }
     comment       = Fabricate(:comment, comment_params)
@@ -169,7 +169,7 @@ describe 'Comments API' do
     access_token  = Fabricate(:simple_access_token)
     manager_token = Fabricate(:full_access_token_as_admin)
     user          = User.find(access_token.resource_owner_id)
-    group         = Fabricate(:group_with_two_comments_readable_by_world)
+    group         = Fabricate(:tribe_with_two_comments_readable_by_world)
     comment       = group.comment_threads.first
     user.add_role(:manager, group)
 
@@ -182,7 +182,7 @@ describe 'Comments API' do
 
   it 'removes a child comment with manager token' do
     manager_token   = Fabricate(:full_access_token_as_admin)
-    group           = Fabricate(:group_with_two_comments_readable_by_world)
+    group           = Fabricate(:tribe_with_two_comments_readable_by_world)
     comments        = group.comment_threads
     child_comment   = comments.find{|c| !c.parent_id.nil?}
 
@@ -196,7 +196,7 @@ describe 'Comments API' do
 
   it 'does not remove a root comment even with manager token' do
     manager_token   = Fabricate(:full_access_token_as_admin)
-    group           = Fabricate(:group_with_two_comments_readable_by_world)
+    group           = Fabricate(:tribe_with_two_comments_readable_by_world)
     comments        = group.comment_threads
     root_comment    = comments.find{|c| c.parent_id.nil?}
 
@@ -208,10 +208,10 @@ describe 'Comments API' do
     wrong_token   = Fabricate(:simple_access_token)
     access_token  = Fabricate(:simple_access_token)
     user          = User.find(access_token.resource_owner_id)
-    group         = Fabricate(:group)
+    group         = Fabricate(:tribe)
     comment_params = {
       commentable_id: group.id,
-      commentable_type: 'Group',
+      commentable_type: 'Group::Base',
       user_id: user.id,
     }
     comment       = Fabricate(:comment, comment_params)
@@ -225,7 +225,7 @@ describe 'Comments API' do
   it 'allows resource manager to delete resource comment-child' do
     access_token  = Fabricate(:simple_access_token)
     user          = User.find(access_token.resource_owner_id)
-    group         = Fabricate(:group_with_two_comments_readable_by_world)
+    group         = Fabricate(:tribe_with_two_comments_readable_by_world)
     comments      = group.comment_threads
     root_comment  = comments.find{|c| c.parent_id.nil?}
     child_comment = comments.find{|c| !c.parent_id.nil?}

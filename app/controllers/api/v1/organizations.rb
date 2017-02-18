@@ -75,20 +75,6 @@ module API
           organization.address.guarded_read(current_user)
         end
 
-
-        desc 'Return the related contracting-party for an organization'
-        params do
-          requires :id, type: String, desc: 'ID of the organization'
-        end
-        oauth2 false
-        get ':id/contracting-party' do
-          organization = Organization.guarded_retrieve(current_user, permitted_params)
-          if organization.contracting_party
-            organization.contracting_party.guarded_read(current_user)
-          end
-        end
-
-
         desc "Create an Organization."
         params do
           requires :name,         type: String, desc: "Name of the Organization."
