@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170215132553) do
+ActiveRecord::Schema.define(version: 20170220131404) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,6 +126,8 @@ ActiveRecord::Schema.define(version: 20170215132553) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "type",                            null: false
+    t.string   "consumer_key"
+    t.string   "consumer_secret"
   end
 
   add_index "brokers", ["mode", "resource_id", "resource_type"], name: "index_brokers", unique: true, using: :btree
