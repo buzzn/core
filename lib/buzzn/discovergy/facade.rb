@@ -3,7 +3,6 @@ module Buzzn::Discovergy
 
     SEMAPHORE = Mutex.new
     LOCK_KEY = 'discovergy.lock.key'
-    CONSUMER_KEY = 'discovergy.consumer'
     SEP = '_:_'
 
     TIMEOUT = 5 # seconds
@@ -137,7 +136,7 @@ module Buzzn::Discovergy
     #   OAuth::AccessToken with information from the DB or new one
     def build_access_token_from_broker_or_new(broker, force_new=false)
       access_token = nil
-      @lock.synchronize(LOCK_KEY) do
+      @lock.synchronize("#{LOCK_KEY}.#{broker.provider_login}", initial_wait: 0.5, retries: 11, ttl: 10) do
         if (broker.consumer_key && broker.consumer_secret && broker.provider_token_key && broker.provider_token_secret) && !force_new
           token_hash = {
             :oauth_token          => broker.provider_token_key,
@@ -302,21 +301,6 @@ module Buzzn::Discovergy
       end
 
       private :"do_#{method}"
-    end
-
-    def consumer_key_secret?
-      ! @redis.get(CONSUMER_KEY).nil?
-    end
-
-    private
-
-    def consumer_key_secret_set(key, secret)
-      @redis.set(CONSUMER_KEY, "#{key}#{SEP}#{secret}")
-    end
-
-    def consumer_key_secret
-      val = @redis.get(CONSUMER_KEY)
-      val.split(SEP) if val
     end
 
     def before
