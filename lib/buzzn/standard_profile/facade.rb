@@ -5,7 +5,7 @@ module Buzzn::StandardProfile
       only = ['timestamp', 'source']
       only << 'energy_milliwatt_hour' if units.include?('energy')
       only << 'power_milliwatt' if units.include?('power')
-      Reading.where(:timestamp.gte => timestamp, source: profile).only(only).first
+      Reading.where(:timestamp.gte => timestamp, source: profile).only(only).order_by(timestamp: 1).first
     end
 
     def query_range(profile, from, to, resolution, units)
@@ -22,16 +22,17 @@ module Buzzn::StandardProfile
       }
       resolution_format = resolution_formats[resolution]
 
-      if resolution == :year_to_months
-        @offset = (from + 6.month).utc_offset*1000
-      else
-        @offset = from.utc_offset*1000
-      end
-
 
       # start pipe
       pipe = []
 
+      # sort
+      sort =  {
+                "$sort" => {
+                  timestamp: 1
+                }
+              }
+      pipe << sort
 
       # match
       match = {
@@ -55,15 +56,18 @@ module Buzzn::StandardProfile
                     timestamp: 1
                   }
                 }
+
+      # we bucket complete days/month/hours according to the date format so we need to
+      # move the timestamp for calculating the date format at the beginning of the day.
+      offset = 1000 * ((from + 1.day).beginning_of_day - from)
+
       project["$project"].merge!(energy_milliwatt_hour: 1) if units.include?('energy')
       project["$project"].merge!(power_milliwatt: 1) if units.include?('power')
       formats = {}
       resolution_format.each do |format|
         formats.merge!({
           "#{format.gsub('OfMonth','')}ly" => {
-            "$#{format}" => {
-              "$add" => ["$timestamp", @offset]
-            }
+            "$#{format}" => { "$add" => [ "$timestamp", offset ] }
           }
         })
       end
@@ -125,10 +129,10 @@ module Buzzn::StandardProfile
       pipe << sort
 
 
+
+
       Reading.collection.aggregate(pipe)
     end
-
-
 
 
 
