@@ -17,13 +17,18 @@ module Buzzn::Virtual
     def single_aggregated(resource, mode)
       return nil if resource.is_a? Group::Base
       sum = 0
+      timestamp = 0
       resource.formula_parts.each do |formula_part|
         mode = formula_part.operand.direction
         data = @registry.get(formula_part.operand.data_source).single_aggregated(formula_part.operand, mode)
-        #TODO: check timestamp to match
-        formula_part.operator == '+' ? sum += data.value : sum -= data.value
+        if timestamp == 0 || (timestamp - data.timestamp).abs < 3
+          timestamp = data.timestamp
+          formula_part.operator == '+' ? sum += data.value : sum -= data.value
+        else
+          raise Buzzn::DataSourceError.new('Timestamp mismatch at virtual register power calculation')
+        end
       end
-      Buzzn::DataResult.new(timestamp || Time.current, sum, resource.id, resource.direction)
+      Buzzn::DataResult.new(timestamp || Time.current, sum >= 0 ? sum : 0, resource.id, resource.direction)
     end
 
     def aggregated(resource, mode, interval)

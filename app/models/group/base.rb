@@ -327,7 +327,7 @@ module Group
       registers_out_plus = []
       registers_out_minus = []
       self.registers.without_externals.each do |register|
-        if register.virtual
+        if register.is_a?(Register::Virtual)
           if register.input?
             register.formula_parts.where(operator: "+").collect(&:operand).each do |register_plus|
               registers_in_plus << register_plus.id
