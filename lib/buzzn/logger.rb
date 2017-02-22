@@ -23,7 +23,7 @@ module Buzzn
     [:debug, :info, :warn, :error].each do |method|
       define_method method do |&block|
         @root.send method do
-          "#{method.upcase} [#{@category}] <#{Thread.current.object_id.to_s(16)}> #{block.call}"
+          "#{Time.current.strftime('%Y-%m-%d %H:%M:%S')} #{method.upcase} [#{@category}] <#{Thread.current.object_id.to_s(16)}> #{block.call}"
         end
       end
     end

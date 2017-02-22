@@ -190,7 +190,7 @@ module Buzzn::Discovergy
     def register_application
       conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
         faraday.request  :url_encoded
-        faraday.response :logger, Buzzn::Logger.new(Faraday) if Rails.env == 'development'
+        faraday.response :logger, Rails.logger if Rails.env == 'development'
         faraday.adapter :net_http
       end
       response = conn.post do |req|
@@ -250,7 +250,7 @@ module Buzzn::Discovergy
       end
       conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
         faraday.request  :url_encoded
-        faraday.response :logger, Buzzn::Logger.new(Faraday) if Rails.env == 'development'
+        faraday.response :logger, Rails.logger if Rails.env == 'development'
         faraday.adapter :net_http
       end
       response = conn.get do |req|
