@@ -19,7 +19,7 @@
         / - else
         /   %ul.list-unstyled.text-center.pad-top.mar-no.clearfix
 
-        /     = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { fake: !register.smart? && !register.virtual, source: register.data_source } do
+        /     = content_tag :div, id: "register-ticker-#{register.id}", class: "register-ticker", data: { fake: !register.smart? && !register.is_a?(Register::Virtual), source: register.data_source } do
         /       %span.text-2x
         /         .power-ticker
         /           = t('loading') + '...'

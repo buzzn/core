@@ -11,7 +11,7 @@
 
 = f.association :group, collection: Group::Base.editable_by_user(current_user) if Group::Base.editable_by_user(current_user).any?
 = f.input :readable, collection: Register::Base.readables.map(&:to_sym), include_blank: false
-- if @register.virtual
+- if @register.is_a?(Register::Virtual)
   %h5
     %span
       = t('formula')

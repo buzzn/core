@@ -304,9 +304,9 @@ meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER
 @fichtenweg8 = Fabricate(:virtual_meter_fichtenweg8).register
 Fabricate(:fp_plus, operand: @register_z2, register: @fichtenweg8)
 Fabricate(:fp_plus, operand: @register_z4, register: @fichtenweg8)
-Fabricate(:fp_plus, operand: @register_z1b, register: @fichtenweg8)
+Fabricate(:fp_plus, operand: @register_z1a, register: @fichtenweg8)
 Fabricate(:fp_minus, operand: @fichtenweg10, register: @fichtenweg8)
-Fabricate(:fp_minus, operand: @register_z1a, register: @fichtenweg8)
+Fabricate(:fp_minus, operand: @register_z1b, register: @fichtenweg8)
 
 
 

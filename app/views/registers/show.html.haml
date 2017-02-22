@@ -12,7 +12,7 @@
 
     .col-lg-4.col-md-4.col-sm-4.col-xs-5
       .media-body.pad-lft
-        - if @register.virtual
+        - if @register.is_a?(Register::Virtual)
           %p.text-3x.mar-no= @register.name + " (" + t('virtual') + ")"
         - else
           %p.text-3x.mar-no= @register.name
@@ -90,7 +90,7 @@
           %span.icon-wrap.icon-wrap-sm.icon-circle.panel-colorful{class: "panel-#{@register.mode_class}"}
             %i.fa.fa-arrow-circle-o-right.fa-2x
         .media-body.register{ id: "register_#{@register.id}"}
-          = content_tag :div, id: "register-ticker-#{@register.id}", class: "register-ticker", data: { fake: !@register.smart? && !@register.virtual, source: @register.data_source } do
+          = content_tag :div, id: "register-ticker-#{@register.id}", class: "register-ticker", data: { fake: !@register.smart? && !@register.is_a?(Register::Virtual), source: @register.data_source } do
             %span.text-2x.text-thin
               .power-ticker
                 = t('loading') + '...'
@@ -239,7 +239,7 @@
 
       - if user_signed_in? && current_user.can_update?(@register)
         %hr
-        - if !@register.virtual
+        - if !@register.is_a?(Register::Virtual)
           %h1.page-header.text-overflow
             %span
               = t('meters')
