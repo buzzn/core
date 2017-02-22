@@ -1,9 +1,7 @@
 module Buzzn::Discovergy
   class Facade
 
-    SEMAPHORE = Mutex.new
     LOCK_KEY = 'discovergy.lock.key'
-    CONSUMER_KEY = 'discovergy.consumer'
     SEP = '_:_'
 
     TIMEOUT = 5 # seconds
@@ -62,6 +60,7 @@ module Buzzn::Discovergy
         return response.body
       when 401
         if !retried
+          Rails.logger.error("***DiscovergyFacade: retry authentication #{broker.inspect}: " + response.body)
           register_application
           access_token = build_access_token_from_broker_or_new(broker, true)
           response = self.readings(broker, interval, mode, collection, true)
@@ -138,9 +137,8 @@ module Buzzn::Discovergy
     #   OAuth::AccessToken with information from the DB or new one
     def build_access_token_from_broker_or_new(broker, force_new=false)
       access_token = nil
-      @lock.synchronize(LOCK_KEY) do
-        key, secret = consumer_key_secret
-        if (key && secret && broker.provider_token_key && broker.provider_token_secret) && !force_new
+      @lock.synchronize("#{LOCK_KEY}.#{broker.provider_login}", initial_wait: 0.5, retries: 11, ttl: 10) do
+        if (broker.consumer_key && broker.consumer_secret && broker.provider_token_key && broker.provider_token_secret) && !force_new
           token_hash = {
             :oauth_token          => broker.provider_token_key,
             "oauth_token"         => broker.provider_token_key,
@@ -148,8 +146,8 @@ module Buzzn::Discovergy
             "oauth_token_secret"  => broker.provider_token_secret
           }
           consumer = OAuth::Consumer.new(
-            key,
-            secret,
+            broker.consumer_key,
+            broker.consumer_secret,
             :site => @url,
             :request_token_path => '/public/v1/oauth1/request_token',
             :authorize_path => '/public/v1/oauth1/authorize',
@@ -157,16 +155,18 @@ module Buzzn::Discovergy
           )
           access_token = OAuth::AccessToken.from_hash(consumer, token_hash)
         else
-          access_token = oauth1_process(broker.provider_login, broker.provider_password)
-          Broker::Discovergy.where(provider_login: broker.provider_login).update_all(
-            :encrypted_provider_token_key => Broker::Discovergy.encrypt_provider_token_key(
+          access_token = oauth1_process(broker)
+          DiscovergyBroker.where(provider_login: broker.provider_login).update_all(
+            :encrypted_provider_token_key => DiscovergyBroker.encrypt_provider_token_key(
               access_token.token,
               key: Rails.application.secrets.attr_encrypted_key
             ),
             :encrypted_provider_token_secret => Broker::Discovergy.encrypt_provider_token_secret(
               access_token.secret,
               key: Rails.application.secrets.attr_encrypted_key
-            )
+            ),
+            consumer_key: broker.consumer_key,
+            consumer_secret: broker.consumer_secret
           )
           broker.reload
         end
@@ -180,10 +180,10 @@ module Buzzn::Discovergy
     ###     OAUTH 1 PROCESS      ###
     ################################
 
-    def oauth1_process(email, password)
-      request_token = get_request_token
-      verifier = authorize(request_token, email, password)
-      access_token = get_access_token(request_token, verifier, email, password)
+    def oauth1_process(broker)
+      request_token = get_request_token(broker)
+      verifier = authorize(broker, request_token)
+      access_token = get_access_token(broker, request_token, verifier)
       access_token
     end
 
@@ -207,14 +207,16 @@ module Buzzn::Discovergy
       if key.nil? || secret.nil?
         raise Buzzn::DataSourceError.new('unable to parse data from discovergy')
       end
-      consumer_key_secret_set(key, secret)
       return [key, secret]
     end
 
-    def get_request_token
-      key, secret = consumer_key_secret
+    def get_request_token(broker)
+      key = broker.consumer_key
+      secret = broker.consumer_secret
       if !key || !secret
         key, secret = register_application
+        broker.consumer_key = key
+        broker.consumer_secret = secret
       end
       begin
         consumer = OAuth::Consumer.new(
@@ -227,7 +229,9 @@ module Buzzn::Discovergy
         )
         request_token = consumer.get_request_token
       rescue OAuth::Unauthorized
-        register_application
+        key, secret = register_application
+        broker.consumer_key = key
+        broker.consumer_secret = secret
         retry
         # NOTE: maybe to not get lost in a dead lock we should count the retries
         #       but there is no case in which two calls with different consumers would throw this error
@@ -238,9 +242,11 @@ module Buzzn::Discovergy
       return request_token
     end
 
-    def authorize(request_token, email, password)
+    def authorize(broker, request_token)
+      email = broker.provider_login
+      password = broker.provider_password
       if !request_token
-        request_token = get_request_token
+        request_token = get_request_token(broker)
       end
       conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
         faraday.request  :url_encoded
@@ -260,12 +266,14 @@ module Buzzn::Discovergy
       return response.body.split('=')[1]
     end
 
-    def get_access_token(request_token, verifier, email, password)
+    def get_access_token(broker, request_token, verifier)
+      email = broker.provider_login
+      password = broker.provider_password
       if !request_token
-        request_token = get_request_token
+        request_token = get_request_token(broker)
       end
       if !verifier
-        verifier = authorize(request_token, email, password)
+        verifier = authorize(broker, request_token)
       end
       access_token = request_token.get_access_token(:oauth_verifier => verifier)
       if !access_token
@@ -294,21 +302,6 @@ module Buzzn::Discovergy
       end
 
       private :"do_#{method}"
-    end
-
-    def consumer_key_secret?
-      ! @redis.get(CONSUMER_KEY).nil?
-    end
-
-    private
-
-    def consumer_key_secret_set(key, secret)
-      @redis.set(CONSUMER_KEY, "#{key}#{SEP}#{secret}")
-    end
-
-    def consumer_key_secret
-      val = @redis.get(CONSUMER_KEY)
-      val.split(SEP) if val
     end
 
     def before

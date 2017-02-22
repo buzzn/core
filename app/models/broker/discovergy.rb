@@ -1,6 +1,10 @@
 # coding: utf-8
 class Broker::Discovergy < Broker::Base
 
+  # TODO duplicate const as in Contract model, those validation consts
+  #      need a common place
+  IS_MISSING = 'is missing'
+  
   attr_encrypted :provider_token_key, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
   attr_encrypted :provider_token_secret, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
@@ -11,6 +15,8 @@ class Broker::Discovergy < Broker::Base
   validates :mode, inclusion:{ in: self.modes.map{|m| m.to_s} }
 
   validates :external_id, presence: true
+  validates :consumer_key, presence: false
+  validates :consumer_secret, presence: false
 
   validates :resource_type, inclusion:{ in: [Group::Base.to_s, Meter::Base.to_s] }
   validates :resource_id, presence: true
@@ -21,6 +27,14 @@ class Broker::Discovergy < Broker::Base
   #after_commit :validates_credentials
 
   def validates_invariants
+    if provider_token_key || provider_token_secret
+      errors.add(:provider_token_key, IS_MISSING) unless provider_token_key
+      errors.add(:provider_token_secret, IS_MISSING) unless provider_token_secret
+    end
+    if self.consumer_key || self.consumer_secret
+      errors.add(:consumer_key, IS_MISSING) unless self.consumer_key
+      errors.add(:consumer_secret, IS_MISSING) unless self.consumer_secret
+    end
     case mode
     when :virtual
       if ! resourcable.virtual?
