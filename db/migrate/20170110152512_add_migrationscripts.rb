@@ -64,7 +64,7 @@ class AddMigrationscripts < ActiveRecord::Migration
           end
 
           if register.meter.broker.nil?
-            broker = DiscovergyBroker.new(
+            broker = Broker::Discovergy.new(
               mode: register.input? ? 'in' : 'out',
               external_id: "EASYMETER_#{register.meter.manufacturer_product_serialnumber}",
               provider_login: contract.username,

@@ -4,10 +4,10 @@ class AddConsumerToBrokers < ActiveRecord::Migration
     add_column :brokers, :consumer_secret, :string, null: true
     reversible do |dir|
       dir.up do
-        DiscovergyBroker.all.update_all(encrypted_provider_token_key: nil, encrypted_provider_token_secret: nil)
+        Broker::Discovergy.all.update_all(encrypted_provider_token_key: nil, encrypted_provider_token_secret: nil)
       end
       dir.down do
-        DiscovergyBroker.all.update_all(encrypted_provider_token_key: nil, encrypted_provider_token_secret: nil)
+        Broker::Discovergy.all.update_all(encrypted_provider_token_key: nil, encrypted_provider_token_secret: nil)
       end
     end
   end
