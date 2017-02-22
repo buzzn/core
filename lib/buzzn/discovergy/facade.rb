@@ -132,7 +132,7 @@ module Buzzn::Discovergy
 
     # This function checks if the broker contains information to use an existing token or if a new one must be requested
     # input params:
-    #   broker: DiscovergyBroker which will be used to create or get an access token
+    #   broker: Broker::Discovergy which will be used to create or get an access token
     # returns:
     #   OAuth::AccessToken with information from the DB or new one
     def build_access_token_from_broker_or_new(broker, force_new=false)
@@ -156,8 +156,8 @@ module Buzzn::Discovergy
           access_token = OAuth::AccessToken.from_hash(consumer, token_hash)
         else
           access_token = oauth1_process(broker)
-          DiscovergyBroker.where(provider_login: broker.provider_login).update_all(
-            :encrypted_provider_token_key => DiscovergyBroker.encrypt_provider_token_key(
+          Broker::Discovergy.where(provider_login: broker.provider_login).update_all(
+            :encrypted_provider_token_key => Broker::Discovergy.encrypt_provider_token_key(
               access_token.token,
               key: Rails.application.secrets.attr_encrypted_key
             ),
