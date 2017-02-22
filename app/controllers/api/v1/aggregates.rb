@@ -64,7 +64,12 @@ module API
         end
         oauth2 false
         get 'past' do
-          register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
+          # TODO fix register permissions and have again only:
+          #      register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
+          register = Register::Base.find(permitted_params[:register_ids])
+          if register.group.nil? || !register.group.readable_by?(current_user)
+            register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
+          end
           timestamp = permitted_params[:timestamp] || Time.current
           case permitted_params[:resolution]
           when 'day_to_minutes'
