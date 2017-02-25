@@ -80,7 +80,6 @@ Fabricator :easymeter_1124001747, from: :easy_meter_q3d do
   after_create do |meter|
     register = meter.input_register
     christian_schuetze = Fabricate(:christian_schuetze)
-    contract = Fabricate(:mpoc_justus, customer: christian_schuetze, register: register)
     christian_schuetze.add_role(:manager, register)
     christian_schuetze.add_role(:member, register)
   end
@@ -97,7 +96,7 @@ Fabricator :easymeter_60232612, from: :easy_meter_q3d do
   registers [Fabricate.build(:register_60232612)]
 end
 
-# Stefan easymeter fur verbrauch
+# Stefan easymeter fur BHKW
 Fabricator :easymeter_1024000034, from: :easy_meter_q3d do
   manufacturer_product_serialnumber  '1024000034'
   registers { [Fabricate.build(:register_stefans_bhkw)] }
@@ -152,6 +151,7 @@ Fabricator :easymeter_60009269, from: :easy_meter_q3d do
   registers [Fabricate.build(:register_60009269)]
 end
 
+# Nr. 60232499 für Thomas Theenhaus (Einrichtungszähler Bezug)
 Fabricator :easymeter_60232499, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60232499'
   registers [Fabricate.build(:register_60232499)]

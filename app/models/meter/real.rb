@@ -24,9 +24,8 @@ module Meter
       ['easy_meter', 'amperix', 'ferraris', 'other']
     end
 
-    # TODO: Bring this back after production deploy
-    #validates :manufacturer_name, inclusion: {in: manufacturer_names}
-    #validates :manufacturer_product_name, presence: true
+    validates :manufacturer_name, inclusion: {in: manufacturer_names}
+    validates :manufacturer_product_name, presence: true
     validates :manufacturer_product_serialnumber, presence: true, uniqueness: true, length: { in: 2..128 }
     validates :image, presence: false
 

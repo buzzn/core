@@ -21,18 +21,12 @@ end
 Fabricator :register_z1a, from: :input_register do
   name      'Netzanschluss Bezug'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
-  after_create do |register|
-    Fabricate(:metering_point_operator_contract, register: register).update(status: :running, username: 'team@localpool.de', password: 'Zebulon_4711')
-  end
 end
 
 
 Fabricator :register_z1b, from: :output_register do
   name        'Netzanschluss Einspeisung'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
-  after_create do |register|
-    Fabricate(:metering_point_operator_contract, register: register).update(status: :running, username: 'team@localpool.de', password: 'Zebulon_4711')
-  end
 end
 
 
@@ -40,9 +34,6 @@ Fabricator :register_z2, from: :output_register do
   name  'PV'
   readable    'world'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
-  after_create do |register|
-    Fabricate(:metering_point_operator_contract, register: register).update(status: :running, username: 'team@localpool.de', password: 'Zebulon_4711')
-  end
 end
 
 
@@ -50,18 +41,12 @@ Fabricator :register_z3, from: :input_register do
   name  'Ladestation'
   readable    'world'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
-  after_create do |register|
-    Fabricate(:metering_point_operator_contract, register: register).update(status: :running, username: 'team@localpool.de', password: 'Zebulon_4711')
-  end
 end
 
 Fabricator :register_z4, from: :output_register do
   name  'BHKW'
   readable    'world'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
-  after_create do |register|
-    Fabricate(:mpoc_buzzn_metering, register: register).update(status: :running)
-  end
 end
 
 
@@ -69,9 +54,6 @@ end
 Fabricator :register_z5, from: :output_register do
   name  'Abgrenzung'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
-  after_create do |register|
-    Fabricate(:mpoc_buzzn_metering, register: register).update(status: :running)
-  end
 end
 
 
@@ -140,10 +122,10 @@ Fabricator :register_60009269, from: :input_register do
   name  'Wohnung'
 end
 
-# # Nr. 60232499 für Thomas Theenhaus (Einrichtungszähler Bezug)
-# Fabricator :register_60232499, from: :input_register do
-#   name  'Am Pfannenstiel Discovergy'
-# end
+# Nr. 60232499 für Thomas Theenhaus (Einrichtungszähler Bezug)
+Fabricator :register_60232499, from: :input_register do
+  name  'Am Pfannenstiel Discovergy'
+end
 
 # Nr. 60232499 für Thomas Theenhaus (Einrichtungszähler Bezug)
 Fabricator :register_ferraris_001_amperix, from: :input_register do

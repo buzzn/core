@@ -4,7 +4,7 @@ class Broker::Discovergy < Broker::Base
   # TODO duplicate const as in Contract model, those validation consts
   #      need a common place
   IS_MISSING = 'is missing'
-  
+
   attr_encrypted :provider_token_key, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
   attr_encrypted :provider_token_secret, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
@@ -23,8 +23,7 @@ class Broker::Discovergy < Broker::Base
 
   validate :validates_invariants
 
-  # TODO: bring back after PROD deploy
-  #after_commit :validates_credentials
+  after_commit :validates_credentials
 
   def validates_invariants
     if provider_token_key || provider_token_secret
