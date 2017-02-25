@@ -14,11 +14,11 @@ module Buzzn
       own_consumption = 0
       foreign_consumption = 0
       each do |_in, _out|
-        if _in[:power_milliwatt] > _out[:power_milliwatt]
-          foreign_consumption += (_in[:power_milliwatt] - _out[:power_milliwatt])
-          own_consumption += _out[:power_milliwatt]
+        if _in.value > _out.value
+          foreign_consumption += (_in.value - _out.value)
+          own_consumption += _out.value
         else
-          own_consumption += _in[:power_milliwatt]
+          own_consumption += _in.value
         end
       end
       autarchy = 0
@@ -67,8 +67,8 @@ module Buzzn
       sumin         = sum_in.to_f
       sumout        = sum_out.to_f
       each do |_in, _out|
-        power_in  = _in[:power_milliwatt] / sumin
-        power_out = _out[:power_milliwatt] / sumout
+        power_in  = _in.value / sumin
+        power_out = _out.value / sumout
         sum_variation += (power_in - power_out) ** 2
       end
       fitting = Math.sqrt(sum_variation)
@@ -203,19 +203,22 @@ module Buzzn
       score.interval_beginning >= @containing.beginning_of_month && score.interval_end <= @containing.end_of_month
     end
 
-    def retrieve_date(registers)
-      registers_hash = Aggregate.sort_registers(registers)
-      aggregator = Aggregate.new(registers_hash)
-      aggregator.past(timestamp: @containing,
-                      resolution: 'day_to_minutes')
+    def retrieve_data(registers)
+      result = Buzzn::DataResultSet.send(:milliwatt, "no-id-needed")
+      interval = Buzzn::Interval.day(@containing)
+      registers.each do |register|
+        data = Buzzn::Application.config.charts.for_register(register, interval)
+        result.add_all(data, interval.duration)
+      end
+      result
     end
 
     def data_in
-      @data_in ||= retrieve_date(@group.input_registers)
+      @data_in ||= retrieve_data(@group.input_registers).in
     end
 
     def data_out
-      @data_out ||= retrieve_date(@group.output_registers)
+      @data_out ||= retrieve_data(@group.output_registers).out
     end
 
     def data_size
@@ -247,8 +250,8 @@ module Buzzn
       @sum_in = 0
       @sum_out = 0
       each do |_in, _out|
-        @sum_in += _in[:power_milliwatt]
-        @sum_out += _out[:power_milliwatt]
+        @sum_in += _in.value
+        @sum_out += _out.value
       end
       if @sum_in == 0
         @sum_in = 1
