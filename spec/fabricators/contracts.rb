@@ -158,15 +158,6 @@ Fabricator :mpoc_buzzn_metering, from: :metering_point_operator_contract do
   password      'Zebulon_4711'
 end
 
-
-# real stuff
-
-Fabricator :mpoc_justus, from: :metering_point_operator_contract do
-  contractor    { Organization.discovergy }
-  username      'justus@buzzn.net'
-  password      'PPf93TcR'
-end
-
 Fabricator :mpoc_stefan, from: :metering_point_operator_contract do
   contractor     { Organization.discovergy }
   username       'stefan@buzzn.net'
@@ -189,38 +180,3 @@ Fabricator :mpoc_karin, from: :metering_point_operator_contract do
 end
 
 
-Fabricator :mpoc_christian, from: :metering_point_operator_contract do
-  contractor    { Organization.discovergy }
-  username      'christian@buzzn.net'
-  password      'Roentgen11smartmeter'
-  register      { Fabricate(:easymeter_60138988).input_register }
-end
-
-Fabricator :mpoc_philipp, from: :metering_point_operator_contract do
-  contractor    { Organization.discovergy }
-  username      'info@philipp-osswald.de'
-  password      'Null8fünfzehn'
-  register      { Fabricate(:easymeter_60009269).input_register }
-end
-
-# TODO needs register
-Fabricator :mpoc_thomas, from: :metering_point_operator_contract do
-  contractor    { Organization.discovergy }
-  username      'thomas@buzzn.net'
-  password      'DSivKK1980'
-end
-
-# thomas wohnung
-Fabricator :mpoc_ferraris_0001_amperix, from: :metering_point_operator_contract do
-  contractor    { Organization.mysmartgrid }
-  username      '6ed89edf81be48586afc19f9006feb8b'
-  password      '1a875e34e291c28db95ecbda015ad433'
-  register      { Fabricate(:ferraris_001_amperix).input_register }
-end
-
-# wogeno oberländerstr bhkw
-Fabricator :mpoc_ferraris_0002_amperix, from: :metering_point_operator_contract do
-  contractor     { Organization.mysmartgrid }
-  username      '721bcb386c8a4dab2510d40a93a7bf66'
-  password      '0b81f58c19135bc01420aa0120ae7693'
-end
