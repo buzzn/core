@@ -19,7 +19,7 @@ http_interactions:
       server:
       - nginx/1.10.0
       date:
-      - Thu, 05 Jan 2017 16:34:33 GMT
+      - Thu, 05 Jan 2017 16:34:31 GMT
       content-type:
       - application/json
       transfer-encoding:
@@ -34,10 +34,10 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: ASCII-8BIT
-      string: '{"key":"9thqg5t2vd1fobb7sa53tm2le0","secret":"560ug0h8givl70uku1q35cj5bo","owner":"buzzn
+      string: '{"key":"ac55og2suqqetopa2evflmt14d","secret":"ba5fup8s44101htna1qql6586f","owner":"buzzn
         app test","attributes":{},"principal":null}'
     http_version: 
-  recorded_at: Sat, 02 Jul 2016 08:05:46 GMT
+  recorded_at: Sat, 02 Jul 2016 08:05:43 GMT
 - request:
     method: post
     uri: https://api.discovergy.com/public/v1/oauth1/request_token
@@ -54,9 +54,9 @@ http_interactions:
       Content-Length:
       - '0'
       Authorization:
-      - OAuth oauth_callback="oob", oauth_consumer_key="9thqg5t2vd1fobb7sa53tm2le0",
-        oauth_nonce="DRygIUlJWLPWkXHofxBI4TJLvlS3lBXS8PM9mmGNkAI", oauth_signature="ZtXEX1AU7OQTQmGrh%2B4eubPu%2F%2Fo%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1467446746", oauth_version="1.0"
+      - OAuth oauth_callback="oob", oauth_consumer_key="ac55og2suqqetopa2evflmt14d",
+        oauth_nonce="msUYnszNcx1U54n9c6XSejOh4NvlaRCBdA1QjDBMcpk", oauth_signature="TOMX3veMVdyEkWb%2B5pF8tX7BirM%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1467446743", oauth_version="1.0"
   response:
     status:
       code: 200
@@ -65,7 +65,7 @@ http_interactions:
       Server:
       - nginx/1.10.0
       Date:
-      - Thu, 05 Jan 2017 16:34:34 GMT
+      - Thu, 05 Jan 2017 16:34:31 GMT
       Content-Type:
       - application/x-www-form-urlencoded
       Content-Length:
@@ -80,12 +80,12 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: oauth_token=f6cc0ffd8eac4415b0a5bb8a2d20a5b9&oauth_token_secret=f9c956407824426c9b4db565b5108aeb&oauth_callback_confirmed=true
+      string: oauth_token=046b3701be5144baab52777207bb4d30&oauth_token_secret=60f2737974674e79873ff2f1087c1734&oauth_callback_confirmed=true
     http_version: 
-  recorded_at: Sat, 02 Jul 2016 08:05:46 GMT
+  recorded_at: Sat, 02 Jul 2016 08:05:44 GMT
 - request:
     method: get
-    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=f6cc0ffd8eac4415b0a5bb8a2d20a5b9&password=Zebulon_4711
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=046b3701be5144baab52777207bb4d30&password=Zebulon_4711
     body:
       encoding: US-ASCII
       string: ''
@@ -102,7 +102,7 @@ http_interactions:
       server:
       - nginx/1.10.0
       date:
-      - Thu, 05 Jan 2017 16:34:34 GMT
+      - Thu, 05 Jan 2017 16:34:32 GMT
       content-type:
       - application/x-www-form-urlencoded
       content-length:
@@ -117,9 +117,9 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: oauth_verifier=26ff2111eacb448dac4ba5c74bc797ec
+      string: oauth_verifier=ce73810a555942e9a46c91e5a2fc5016
     http_version: 
-  recorded_at: Sat, 02 Jul 2016 08:05:47 GMT
+  recorded_at: Sat, 02 Jul 2016 08:05:44 GMT
 - request:
     method: post
     uri: https://api.discovergy.com/public/v1/oauth1/access_token
@@ -136,10 +136,10 @@ http_interactions:
       Content-Length:
       - '0'
       Authorization:
-      - OAuth oauth_consumer_key="9thqg5t2vd1fobb7sa53tm2le0", oauth_nonce="j6s6pp7TgdWmtECmXoAoYeJ9Z0iOU7IuvIHY7yn0dAo",
-        oauth_signature="tzg8MW7uGPcLarZ8zMJKOdcCgdw%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1467446747", oauth_token="f6cc0ffd8eac4415b0a5bb8a2d20a5b9",
-        oauth_verifier="26ff2111eacb448dac4ba5c74bc797ec", oauth_version="1.0"
+      - OAuth oauth_consumer_key="ac55og2suqqetopa2evflmt14d", oauth_nonce="aPHhMq3xnSR2Rl59LNCRZNilcHZYXayRGUZQNM2IM",
+        oauth_signature="nQcSrnbHhKY6ZY%2BOMR2rclKbuog%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446744", oauth_token="046b3701be5144baab52777207bb4d30",
+        oauth_verifier="ce73810a555942e9a46c91e5a2fc5016", oauth_version="1.0"
   response:
     status:
       code: 200
@@ -148,7 +148,7 @@ http_interactions:
       Server:
       - nginx/1.10.0
       Date:
-      - Thu, 05 Jan 2017 16:34:34 GMT
+      - Thu, 05 Jan 2017 16:34:32 GMT
       Content-Type:
       - application/x-www-form-urlencoded
       Content-Length:
@@ -163,9 +163,9 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: oauth_token=8225b83516954a8d9b684f827cd3cb5f&oauth_token_secret=1e9b5aae2a9147579e1e5c743035edeb
+      string: oauth_token=95696c85a73e4b3ba805f4441adb0c4b&oauth_token_secret=fecddb14f8a24b9eb6c9b55928b77fd4
     http_version: 
-  recorded_at: Sat, 02 Jul 2016 08:05:47 GMT
+  recorded_at: Sat, 02 Jul 2016 08:05:44 GMT
 - request:
     method: get
     uri: https://api.discovergy.com/public/v1/last_reading?each=false&fields=power&meterId=EASYMETER_60051599
@@ -180,9 +180,9 @@ http_interactions:
       User-Agent:
       - OAuth gem v0.5.1
       Authorization:
-      - OAuth oauth_consumer_key="9thqg5t2vd1fobb7sa53tm2le0", oauth_nonce="xMcOo1qopOaryMchj5WNf8wDwOVfvecjvyTK37tAoU",
-        oauth_signature="xjRT7h12%2Bz56qdoXiU7V3GLk%2BvU%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1467446747", oauth_token="8225b83516954a8d9b684f827cd3cb5f",
+      - OAuth oauth_consumer_key="ac55og2suqqetopa2evflmt14d", oauth_nonce="1bJdSTX2jeQYeJGShCrlBGgaQl6kZirrSybu3LxE",
+        oauth_signature="tDrw%2FOwdVdX%2FT4DcnOKpGlrD3W8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446744", oauth_token="95696c85a73e4b3ba805f4441adb0c4b",
         oauth_version="1.0"
   response:
     status:
@@ -192,7 +192,7 @@ http_interactions:
       Server:
       - nginx/1.10.0
       Date:
-      - Thu, 05 Jan 2017 16:34:35 GMT
+      - Thu, 05 Jan 2017 16:34:32 GMT
       Content-Type:
       - text/html;charset=iso-8859-1
       Content-Length:
@@ -211,7 +211,7 @@ http_interactions:
       encoding: UTF-8
       string: '{"time":1467446702088,"values":{"power":1100640}}'
     http_version: 
-  recorded_at: Sat, 02 Jul 2016 08:05:47 GMT
+  recorded_at: Sat, 02 Jul 2016 08:05:45 GMT
 - request:
     method: post
     uri: https://api.discovergy.com/public/v1/oauth1/request_token
@@ -229,8 +229,8 @@ http_interactions:
       - '0'
       Authorization:
       - OAuth oauth_callback="oob", oauth_consumer_key="ac55og2suqqetopa2evflmt14d",
-        oauth_nonce="bhroKX62iYYNynyUmTPo3d0doV4pzAqGHJGISUiE", oauth_signature="FMDwjizRvSLA0BFE8OmzV810J5I%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1483634363", oauth_version="1.0"
+        oauth_nonce="CgQN7j9R2wqjz0jEzQJNJ9oofQL4bgnsj4SbUzTQ", oauth_signature="AwV5BceFSE6v89iP%2BdFcC5JazHo%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1483634355", oauth_version="1.0"
   response:
     status:
       code: 200
@@ -239,7 +239,7 @@ http_interactions:
       Server:
       - nginx/1.10.0
       Date:
-      - Thu, 05 Jan 2017 16:39:23 GMT
+      - Thu, 05 Jan 2017 16:39:16 GMT
       Content-Type:
       - application/x-www-form-urlencoded
       Content-Length:
@@ -254,12 +254,12 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: oauth_token=fa14835ea67c43f096de4ad0d550b8d8&oauth_token_secret=6a1b5cc71e704fd58c8195b9804c273f&oauth_callback_confirmed=true
+      string: oauth_token=a638d1e4bd2c402db0c35996918d5933&oauth_token_secret=4911b3c66ec142fa9f3860788194644d&oauth_callback_confirmed=true
     http_version: 
-  recorded_at: Thu, 05 Jan 2017 16:39:23 GMT
+  recorded_at: Thu, 05 Jan 2017 16:39:16 GMT
 - request:
     method: get
-    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=fa14835ea67c43f096de4ad0d550b8d8&password=Zebulon_4711
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=a638d1e4bd2c402db0c35996918d5933&password=Zebulon_4711
     body:
       encoding: US-ASCII
       string: ''
@@ -276,7 +276,7 @@ http_interactions:
       server:
       - nginx/1.10.0
       date:
-      - Thu, 05 Jan 2017 16:39:24 GMT
+      - Thu, 05 Jan 2017 16:39:16 GMT
       content-type:
       - application/x-www-form-urlencoded
       content-length:
@@ -291,9 +291,9 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: oauth_verifier=726c2890e28745438aa8f0f53dffc9cb
+      string: oauth_verifier=4337e4a795dd463d9d9045054150f63d
     http_version: 
-  recorded_at: Thu, 05 Jan 2017 16:39:24 GMT
+  recorded_at: Thu, 05 Jan 2017 16:39:16 GMT
 - request:
     method: post
     uri: https://api.discovergy.com/public/v1/oauth1/access_token
@@ -310,10 +310,10 @@ http_interactions:
       Content-Length:
       - '0'
       Authorization:
-      - OAuth oauth_consumer_key="ac55og2suqqetopa2evflmt14d", oauth_nonce="UIgPiQyUPL6PqKE21KR8eW2p4E5TlhIgjGTi6sX5o",
-        oauth_signature="8SkIwxjIrQCSkJYt3Wdz0WScxfc%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1483634364", oauth_token="fa14835ea67c43f096de4ad0d550b8d8",
-        oauth_verifier="726c2890e28745438aa8f0f53dffc9cb", oauth_version="1.0"
+      - OAuth oauth_consumer_key="ac55og2suqqetopa2evflmt14d", oauth_nonce="Ejx8nZ8un5Ixu8YjHazIKu9UzdLmytvCYIJYrn9Vdgk",
+        oauth_signature="IYIsTTlRUs9rckIgaCC819p3Z6g%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1483634356", oauth_token="a638d1e4bd2c402db0c35996918d5933",
+        oauth_verifier="4337e4a795dd463d9d9045054150f63d", oauth_version="1.0"
   response:
     status:
       code: 200
@@ -322,7 +322,7 @@ http_interactions:
       Server:
       - nginx/1.10.0
       Date:
-      - Thu, 05 Jan 2017 16:39:24 GMT
+      - Thu, 05 Jan 2017 16:39:16 GMT
       Content-Type:
       - application/x-www-form-urlencoded
       Content-Length:
@@ -337,9 +337,9 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: oauth_token=eabca192920b4ee58867e805c03ffb14&oauth_token_secret=9384625c7667487c9fc8636dfd7b9139
+      string: oauth_token=28c4d352801c4d7fa2a7e08cbcb1bd1c&oauth_token_secret=39dc4c6867f84ed2b80864d2ce23cb5a
     http_version: 
-  recorded_at: Thu, 05 Jan 2017 16:39:24 GMT
+  recorded_at: Thu, 05 Jan 2017 16:39:16 GMT
 - request:
     method: get
     uri: https://api.discovergy.com/public/v1/last_reading?each=false&fields=power&meterId=EASYMETER_60051559
@@ -354,9 +354,9 @@ http_interactions:
       User-Agent:
       - OAuth gem v0.5.1
       Authorization:
-      - OAuth oauth_consumer_key="ac55og2suqqetopa2evflmt14d", oauth_nonce="Xrx7EwFPpfbpQ3wg1kHm6F4kxsKspOC0xXQbcZ5G2k",
-        oauth_signature="RxkaSvq1orSd6XuD7KvAFFU8SKc%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1483634364", oauth_token="eabca192920b4ee58867e805c03ffb14",
+      - OAuth oauth_consumer_key="ac55og2suqqetopa2evflmt14d", oauth_nonce="QAYGgOVk5hKoJEyOpF2DgiknGwBKokVadbUbXSPe84",
+        oauth_signature="VR5EJxmP5e2qpsvQIgCuip5ege8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1483634356", oauth_token="28c4d352801c4d7fa2a7e08cbcb1bd1c",
         oauth_version="1.0"
   response:
     status:
@@ -366,7 +366,7 @@ http_interactions:
       Server:
       - nginx/1.10.0
       Date:
-      - Thu, 05 Jan 2017 16:39:25 GMT
+      - Thu, 05 Jan 2017 16:39:17 GMT
       Content-Type:
       - application/json
       Transfer-Encoding:
@@ -381,9 +381,9 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: ASCII-8BIT
-      string: '{"time":1483634363142,"values":{"power":0}}'
+      string: '{"time":1483634355143,"values":{"power":0}}'
     http_version: 
-  recorded_at: Thu, 05 Jan 2017 16:39:25 GMT
+  recorded_at: Thu, 05 Jan 2017 16:39:17 GMT
 - request:
     method: post
     uri: https://api.discovergy.com/public/v1/oauth1/request_token
@@ -401,8 +401,8 @@ http_interactions:
       - '0'
       Authorization:
       - OAuth oauth_callback="oob", oauth_consumer_key="ac55og2suqqetopa2evflmt14d",
-        oauth_nonce="laDG17rD2VsBanywF07k2VIRw3QygZBbgrqpYc1lW0", oauth_signature="qqBQ43u5b%2FhugVtqYU8Wk56gH8s%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1483634365", oauth_version="1.0"
+        oauth_nonce="ioR1iVxlBLeTVDpW9bcch6lL2lMVaqa9UfKBMLKgI", oauth_signature="MDq2Lh8XCiFePbih9VJ5WB6FgN8%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1483634357", oauth_version="1.0"
   response:
     status:
       code: 200
@@ -411,7 +411,7 @@ http_interactions:
       Server:
       - nginx/1.10.0
       Date:
-      - Thu, 05 Jan 2017 16:39:25 GMT
+      - Thu, 05 Jan 2017 16:39:17 GMT
       Content-Type:
       - application/x-www-form-urlencoded
       Content-Length:
@@ -426,12 +426,12 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: oauth_token=6be87cbd53ca4c988b38a4005a7b512e&oauth_token_secret=be6c340e4d4949ea880ae0d4447fbef3&oauth_callback_confirmed=true
+      string: oauth_token=0701098c882c45009ca2114e9bb24a58&oauth_token_secret=0acbdfb7869d4a46a5e58bc06132a493&oauth_callback_confirmed=true
     http_version: 
-  recorded_at: Thu, 05 Jan 2017 16:39:25 GMT
+  recorded_at: Thu, 05 Jan 2017 16:39:17 GMT
 - request:
     method: get
-    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=6be87cbd53ca4c988b38a4005a7b512e&password=Zebulon_4711
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=0701098c882c45009ca2114e9bb24a58&password=Zebulon_4711
     body:
       encoding: US-ASCII
       string: ''
@@ -448,7 +448,7 @@ http_interactions:
       server:
       - nginx/1.10.0
       date:
-      - Thu, 05 Jan 2017 16:39:26 GMT
+      - Thu, 05 Jan 2017 16:39:18 GMT
       content-type:
       - application/x-www-form-urlencoded
       content-length:
@@ -463,9 +463,9 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: oauth_verifier=f6083037bd0d4ecbb2e7dd928e74d173
+      string: oauth_verifier=697f6bdd37844785803f195e11cd5238
     http_version: 
-  recorded_at: Thu, 05 Jan 2017 16:39:26 GMT
+  recorded_at: Thu, 05 Jan 2017 16:39:18 GMT
 - request:
     method: post
     uri: https://api.discovergy.com/public/v1/oauth1/access_token
@@ -482,10 +482,10 @@ http_interactions:
       Content-Length:
       - '0'
       Authorization:
-      - OAuth oauth_consumer_key="ac55og2suqqetopa2evflmt14d", oauth_nonce="UJPkXSjCWHY78wD2V7Am3YzujxweUQQ525wOrwCDZvk",
-        oauth_signature="%2FPhUQacInAW6YGbopLcmX5GRkYg%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1483634366", oauth_token="6be87cbd53ca4c988b38a4005a7b512e",
-        oauth_verifier="f6083037bd0d4ecbb2e7dd928e74d173", oauth_version="1.0"
+      - OAuth oauth_consumer_key="ac55og2suqqetopa2evflmt14d", oauth_nonce="KNKl8wtIj21e6mxMoWFw77oUXSTWZdiyEGmqL7AhNcs",
+        oauth_signature="ZGL3zyw8KXjMLevN2%2FTWkcx8c6M%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1483634358", oauth_token="0701098c882c45009ca2114e9bb24a58",
+        oauth_verifier="697f6bdd37844785803f195e11cd5238", oauth_version="1.0"
   response:
     status:
       code: 200
@@ -494,7 +494,7 @@ http_interactions:
       Server:
       - nginx/1.10.0
       Date:
-      - Thu, 05 Jan 2017 16:39:26 GMT
+      - Thu, 05 Jan 2017 16:39:18 GMT
       Content-Type:
       - application/x-www-form-urlencoded
       Content-Length:
@@ -509,9 +509,9 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: oauth_token=cbe2d45c116c494bb9f667513ffc3802&oauth_token_secret=30ef3781d0f34fe5959125901e94f107
+      string: oauth_token=14b0b220389f4139b5741baa0661bca5&oauth_token_secret=ff244e2520114c44ac4a5a68abf0f70d
     http_version: 
-  recorded_at: Thu, 05 Jan 2017 16:39:26 GMT
+  recorded_at: Thu, 05 Jan 2017 16:39:18 GMT
 - request:
     method: get
     uri: https://api.discovergy.com/public/v1/last_reading?each=false&fields=power&meterId=EASYMETER_60051560
@@ -526,9 +526,9 @@ http_interactions:
       User-Agent:
       - OAuth gem v0.5.1
       Authorization:
-      - OAuth oauth_consumer_key="ac55og2suqqetopa2evflmt14d", oauth_nonce="levsvP1zuUyGFZfucUcmt84BVbnBsKtLsoM6WQ3cdk",
-        oauth_signature="%2B%2BvDlEs1EWoI7d54BpwmZOYF%2BgU%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1483634366", oauth_token="cbe2d45c116c494bb9f667513ffc3802",
+      - OAuth oauth_consumer_key="ac55og2suqqetopa2evflmt14d", oauth_nonce="TVCXF59R9becLR7pRRMCTjcQBRbfgO3mvEVS9jklMU",
+        oauth_signature="fCRQ1pTLQhbCzcGh3kUzAMNXf0Q%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1483634358", oauth_token="14b0b220389f4139b5741baa0661bca5",
         oauth_version="1.0"
   response:
     status:
@@ -538,7 +538,7 @@ http_interactions:
       Server:
       - nginx/1.10.0
       Date:
-      - Thu, 05 Jan 2017 16:39:27 GMT
+      - Thu, 05 Jan 2017 16:39:19 GMT
       Content-Type:
       - application/json
       Transfer-Encoding:
@@ -553,12 +553,12 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: ASCII-8BIT
-      string: '{"time":1483634365393,"values":{"power":889040}}'
+      string: '{"time":1483634357394,"values":{"power":891340}}'
     http_version: 
-  recorded_at: Thu, 05 Jan 2017 16:39:27 GMT
+  recorded_at: Thu, 05 Jan 2017 16:39:19 GMT
 - request:
     method: get
-    uri: https://my.discovergy.com/json/Api.getDayEveryFifteenMinutes?day=5&meterId=EASYMETER_60051559&month=10&password=Zebulon_4711&user=team%40localpool.de&year=2016
+    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energy&from=1475618400000&meterId=EASYMETER_60051559&resolution=fifteen_minutes&to=1475704800000
     body:
       encoding: US-ASCII
       string: ''
@@ -575,7 +575,7 @@ http_interactions:
       server:
       - nginx/1.10.0
       date:
-      - Thu, 05 Jan 2017 16:39:29 GMT
+      - Thu, 05 Jan 2017 16:39:21 GMT
       content-type:
       - application/json;charset=utf-8
       transfer-encoding:
@@ -583,7 +583,7 @@ http_interactions:
       connection:
       - keep-alive
       expires:
-      - Fri, 05 Jan 2018 16:39:29 GMT
+      - Fri, 05 Jan 2018 16:39:21 GMT
       pragma:
       - cache
       cache-control:
@@ -591,15 +591,15 @@ http_interactions:
       content-disposition:
       - inline
       last-modified:
-      - Thu, 05 Jan 2017 16:39:28 GMT
+      - Thu, 05 Jan 2017 16:39:20 GMT
     body:
       encoding: ASCII-8BIT
-      string: '{"status":"ok","result":[{"time":1475618400000,"energy":21207199253000,"energyOut":0},{"time":1475619300000,"energy":21207199253000,"energyOut":0},{"time":1475620200000,"energy":21207199253000,"energyOut":0},{"time":1475621100000,"energy":21207199253000,"energyOut":0},{"time":1475622000000,"energy":21207199253000,"energyOut":0},{"time":1475622900000,"energy":21207199253000,"energyOut":0},{"time":1475623800000,"energy":21207199253000,"energyOut":0},{"time":1475624700000,"energy":21207199253000,"energyOut":0},{"time":1475625600000,"energy":21207199253000,"energyOut":0},{"time":1475626500000,"energy":21207199253000,"energyOut":0},{"time":1475627400000,"energy":21207199253000,"energyOut":0},{"time":1475628300000,"energy":21207199253000,"energyOut":0},{"time":1475629200000,"energy":21207199253000,"energyOut":0},{"time":1475630100000,"energy":21207199253000,"energyOut":0},{"time":1475631000000,"energy":21207199253000,"energyOut":0},{"time":1475631900000,"energy":21207199253000,"energyOut":0},{"time":1475632800000,"energy":21207199253000,"energyOut":0},{"time":1475633700000,"energy":21207199253000,"energyOut":0},{"time":1475634600000,"energy":21207199253000,"energyOut":0},{"time":1475635500000,"energy":21207199253000,"energyOut":0},{"time":1475636400000,"energy":21207199253000,"energyOut":0},{"time":1475637300000,"energy":21207199253000,"energyOut":0},{"time":1475638200000,"energy":21207199253000,"energyOut":0},{"time":1475639100000,"energy":21207199253000,"energyOut":0},{"time":1475640000000,"energy":21207199253000,"energyOut":0},{"time":1475640900000,"energy":21207199253000,"energyOut":0},{"time":1475641800000,"energy":21207199253000,"energyOut":0},{"time":1475642700000,"energy":21207199253000,"energyOut":0},{"time":1475643600000,"energy":21207199253000,"energyOut":0},{"time":1475644500000,"energy":21207199253000,"energyOut":0},{"time":1475645400000,"energy":21207199253000,"energyOut":0},{"time":1475646300000,"energy":21207199253000,"energyOut":0},{"time":1475647200000,"energy":21207199253000,"energyOut":0},{"time":1475648100000,"energy":21207199253000,"energyOut":0},{"time":1475649000000,"energy":21207199253000,"energyOut":0},{"time":1475649900000,"energy":21207199253000,"energyOut":0},{"time":1475650800000,"energy":21207199253000,"energyOut":0},{"time":1475651700000,"energy":21207199253000,"energyOut":0},{"time":1475652600000,"energy":21207199253000,"energyOut":0},{"time":1475653500000,"energy":21207199253000,"energyOut":0},{"time":1475654400000,"energy":21207199253000,"energyOut":0},{"time":1475655300000,"energy":21207199253000,"energyOut":0},{"time":1475656200000,"energy":21207199253000,"energyOut":0},{"time":1475657100000,"energy":21207199253000,"energyOut":0},{"time":1475658000000,"energy":21207199253000,"energyOut":0},{"time":1475658900000,"energy":21207199253000,"energyOut":0},{"time":1475659800000,"energy":21207199253000,"energyOut":0},{"time":1475660700000,"energy":21207199253000,"energyOut":0},{"time":1475661600000,"energy":21207199253000,"energyOut":0},{"time":1475662500000,"energy":21207199253000,"energyOut":0},{"time":1475663400000,"energy":21207199253000,"energyOut":0},{"time":1475664300000,"energy":21207199253000,"energyOut":0},{"time":1475665200000,"energy":21207199253000,"energyOut":0},{"time":1475666100000,"energy":21208397086848,"energyOut":0},{"time":1475667000000,"energy":21216535451655,"energyOut":0},{"time":1475667900000,"energy":21224686029962,"energyOut":0},{"time":1475668800000,"energy":21229009511140,"energyOut":0},{"time":1475669700000,"energy":21237163139826,"energyOut":0},{"time":1475670600000,"energy":21245320021180,"energyOut":0},{"time":1475671500000,"energy":21252932359900,"energyOut":0},{"time":1475672400000,"energy":21258447126290,"energyOut":0},{"time":1475673300000,"energy":21262557673088,"energyOut":0},{"time":1475674200000,"energy":21265689587323,"energyOut":0},{"time":1475675100000,"energy":21268181302337,"energyOut":0},{"time":1475676000000,"energy":21270211004450,"energyOut":0},{"time":1475676900000,"energy":21271925304149,"energyOut":0},{"time":1475677800000,"energy":21273218925644,"energyOut":0},{"time":1475678700000,"energy":21273224159124,"energyOut":0},{"time":1475679600000,"energy":21273229378437,"energyOut":0},{"time":1475680500000,"energy":21273234670856,"energyOut":0},{"time":1475681400000,"energy":21273239837898,"energyOut":0},{"time":1475682300000,"energy":21273244980492,"energyOut":0},{"time":1475683200000,"energy":21273250105188,"energyOut":0},{"time":1475684100000,"energy":21273255317235,"energyOut":0},{"time":1475685000000,"energy":21273260380926,"energyOut":0},{"time":1475685900000,"energy":21273265426796,"energyOut":0},{"time":1475686800000,"energy":21273270294615,"energyOut":0},{"time":1475687700000,"energy":21273271882000,"energyOut":0},{"time":1475688600000,"energy":21273271882000,"energyOut":0},{"time":1475689500000,"energy":21273271882000,"energyOut":0},{"time":1475690400000,"energy":21273271882000,"energyOut":0},{"time":1475691300000,"energy":21273271882000,"energyOut":0},{"time":1475692200000,"energy":21273271882000,"energyOut":0},{"time":1475693100000,"energy":21273271882000,"energyOut":0},{"time":1475694000000,"energy":21273271882000,"energyOut":0},{"time":1475694900000,"energy":21273271882000,"energyOut":0},{"time":1475695800000,"energy":21273271882000,"energyOut":0},{"time":1475696700000,"energy":21273271882000,"energyOut":0},{"time":1475697600000,"energy":21273271882000,"energyOut":0},{"time":1475698500000,"energy":21273271882000,"energyOut":0},{"time":1475699400000,"energy":21273271882000,"energyOut":0},{"time":1475700300000,"energy":21273271882000,"energyOut":0},{"time":1475701200000,"energy":21273271882000,"energyOut":0},{"time":1475702100000,"energy":21273271882000,"energyOut":0},{"time":1475703000000,"energy":21273271882000,"energyOut":0},{"time":1475703900000,"energy":21273271882000,"energyOut":0},{"time":1475704800000,"energy":21273271882000,"energyOut":0}]}'
+      string: '[{"time":1480606200000,"values":{"energy":22968322444644}},{"time":1480607100000,"values":{"energy":22970988922089}},{"time":1480608000000,"values":{"energy":22973229616478}}]'
     http_version: 
-  recorded_at: Thu, 05 Jan 2017 16:39:29 GMT
+  recorded_at: Thu, 05 Jan 2017 16:39:21 GMT
 - request:
     method: get
-    uri: https://my.discovergy.com/json/Api.getDayEveryFifteenMinutes?day=5&meterId=EASYMETER_60051560&month=10&password=Zebulon_4711&user=team%40localpool.de&year=2016
+    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energy&from=1475618400000&meterId=EASYMETER_60051599&resolution=fifteen_minutes&to=1475704800000
     body:
       encoding: US-ASCII
       string: ''
@@ -616,7 +616,7 @@ http_interactions:
       server:
       - nginx/1.10.0
       date:
-      - Thu, 05 Jan 2017 16:39:30 GMT
+      - Thu, 05 Jan 2017 16:39:22 GMT
       content-type:
       - application/json;charset=utf-8
       transfer-encoding:
@@ -624,7 +624,7 @@ http_interactions:
       connection:
       - keep-alive
       expires:
-      - Fri, 05 Jan 2018 16:39:30 GMT
+      - Fri, 05 Jan 2018 16:39:22 GMT
       pragma:
       - cache
       cache-control:
@@ -632,15 +632,15 @@ http_interactions:
       content-disposition:
       - inline
       last-modified:
-      - Thu, 05 Jan 2017 16:39:29 GMT
+      - Thu, 05 Jan 2017 16:39:22 GMT
     body:
       encoding: ASCII-8BIT
-      string: '{"status":"ok","result":[{"time":1475618400000,"energy":121526004584778,"energyOut":0},{"time":1475619300000,"energy":121528233884827,"energyOut":0},{"time":1475620200000,"energy":121530461486650,"energyOut":0},{"time":1475621100000,"energy":121532691473314,"energyOut":0},{"time":1475622000000,"energy":121534922249481,"energyOut":0},{"time":1475622900000,"energy":121537153193733,"energyOut":0},{"time":1475623800000,"energy":121539385547695,"energyOut":0},{"time":1475624700000,"energy":121541618417600,"energyOut":0},{"time":1475625600000,"energy":121543852490052,"energyOut":0},{"time":1475626500000,"energy":121546085517381,"energyOut":0},{"time":1475627400000,"energy":121548318572472,"energyOut":0},{"time":1475628300000,"energy":121550551430649,"energyOut":0},{"time":1475629200000,"energy":121552784416757,"energyOut":0},{"time":1475630100000,"energy":121555016766168,"energyOut":0},{"time":1475631000000,"energy":121557249305647,"energyOut":0},{"time":1475631900000,"energy":121559481794486,"energyOut":0},{"time":1475632800000,"energy":121561715119832,"energyOut":0},{"time":1475633700000,"energy":121563950155049,"energyOut":0},{"time":1475634600000,"energy":121566184135941,"energyOut":0},{"time":1475635500000,"energy":121568417549618,"energyOut":0},{"time":1475636400000,"energy":121570649737225,"energyOut":0},{"time":1475637300000,"energy":121572882769779,"energyOut":0},{"time":1475638200000,"energy":121575116018368,"energyOut":0},{"time":1475639100000,"energy":121577347875201,"energyOut":0},{"time":1475640000000,"energy":121579580999220,"energyOut":0},{"time":1475640900000,"energy":121581811472005,"energyOut":0},{"time":1475641800000,"energy":121584041993382,"energyOut":0},{"time":1475642700000,"energy":121586275349814,"energyOut":0},{"time":1475643600000,"energy":121588509353627,"energyOut":0},{"time":1475644500000,"energy":121590743900302,"energyOut":0},{"time":1475645400000,"energy":121592977439440,"energyOut":0},{"time":1475646300000,"energy":121595212733461,"energyOut":0},{"time":1475647200000,"energy":121597447481166,"energyOut":0},{"time":1475648100000,"energy":121599682330826,"energyOut":0},{"time":1475649000000,"energy":121601913817520,"energyOut":0},{"time":1475649900000,"energy":121604145248645,"energyOut":0},{"time":1475650800000,"energy":121606379893043,"energyOut":0},{"time":1475651700000,"energy":121608614606084,"energyOut":0},{"time":1475652600000,"energy":121610850357618,"energyOut":0},{"time":1475653500000,"energy":121613088054312,"energyOut":0},{"time":1475654400000,"energy":121615325486868,"energyOut":0},{"time":1475655300000,"energy":121617564318612,"energyOut":0},{"time":1475656200000,"energy":121619805027761,"energyOut":0},{"time":1475657100000,"energy":121622044679710,"energyOut":0},{"time":1475658000000,"energy":121624282410292,"energyOut":0},{"time":1475658900000,"energy":121626520730928,"energyOut":0},{"time":1475659800000,"energy":121628757780383,"energyOut":0},{"time":1475660700000,"energy":121630993973432,"energyOut":0},{"time":1475661600000,"energy":121633229604184,"energyOut":0},{"time":1475662500000,"energy":121635467306512,"energyOut":0},{"time":1475663400000,"energy":121637706922921,"energyOut":0},{"time":1475664300000,"energy":121639946898004,"energyOut":0},{"time":1475665200000,"energy":121642187186420,"energyOut":0},{"time":1475666100000,"energy":121644425946870,"energyOut":0},{"time":1475667000000,"energy":121646665271955,"energyOut":0},{"time":1475667900000,"energy":121648903566095,"energyOut":0},{"time":1475668800000,"energy":121651140092076,"energyOut":0},{"time":1475669700000,"energy":121653376176591,"energyOut":0},{"time":1475670600000,"energy":121655612374629,"energyOut":0},{"time":1475671500000,"energy":121657846634500,"energyOut":0},{"time":1475672400000,"energy":121660081199532,"energyOut":0},{"time":1475673300000,"energy":121662316044760,"energyOut":0},{"time":1475674200000,"energy":121664550193241,"energyOut":0},{"time":1475675100000,"energy":121666784988298,"energyOut":0},{"time":1475676000000,"energy":121669019705002,"energyOut":0},{"time":1475676900000,"energy":121671252795276,"energyOut":0},{"time":1475677800000,"energy":121673485354100,"energyOut":0},{"time":1475678700000,"energy":121675718025788,"energyOut":0},{"time":1475679600000,"energy":121677950734196,"energyOut":0},{"time":1475680500000,"energy":121680183198964,"energyOut":0},{"time":1475681400000,"energy":121682416208191,"energyOut":0},{"time":1475682300000,"energy":121684649548087,"energyOut":0},{"time":1475683200000,"energy":121686882940440,"energyOut":0},{"time":1475684100000,"energy":121689114576304,"energyOut":0},{"time":1475685000000,"energy":121691346826854,"energyOut":0},{"time":1475685900000,"energy":121693578527558,"energyOut":0},{"time":1475686800000,"energy":121695811832107,"energyOut":0},{"time":1475687700000,"energy":121698041760388,"energyOut":0},{"time":1475688600000,"energy":121700275369185,"energyOut":0},{"time":1475689500000,"energy":121702509718480,"energyOut":0},{"time":1475690400000,"energy":121704743910188,"energyOut":0},{"time":1475691300000,"energy":121706975865630,"energyOut":0},{"time":1475692200000,"energy":121709208675897,"energyOut":0},{"time":1475693100000,"energy":121711444038421,"energyOut":0},{"time":1475694000000,"energy":121713679898677,"energyOut":0},{"time":1475694900000,"energy":121715880867948,"energyOut":0},{"time":1475695800000,"energy":121718096113580,"energyOut":0},{"time":1475696700000,"energy":121720313354012,"energyOut":0},{"time":1475697600000,"energy":121722530600805,"energyOut":0},{"time":1475698500000,"energy":121724747141790,"energyOut":0},{"time":1475699400000,"energy":121726963198172,"energyOut":0},{"time":1475700300000,"energy":121728442393000,"energyOut":0},{"time":1475701200000,"energy":121730325240650,"energyOut":0},{"time":1475702100000,"energy":121732551332350,"energyOut":0},{"time":1475703000000,"energy":121734776950089,"energyOut":0},{"time":1475703900000,"energy":121737002178640,"energyOut":0},{"time":1475704800000,"energy":121739225577710,"energyOut":0}]}'
-    http_version: 
-  recorded_at: Thu, 05 Jan 2017 16:39:29 GMT
+      string: '[{"time":1480606200000,"values":{"energy":22968322444644}},{"time":1480607100000,"values":{"energy":22970988922089}},{"time":1480608000000,"values":{"energy":22973229616478}}]'
+      http_version: 
+  recorded_at: Thu, 05 Jan 2017 16:39:22 GMT
 - request:
     method: get
-    uri: https://my.discovergy.com/json/Api.getDayEveryFifteenMinutes?day=5&meterId=EASYMETER_60051599&month=10&password=Zebulon_4711&user=team%40localpool.de&year=2016
+    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energy&from=1475618400000&meterId=EASYMETER_60051560&resolution=fifteen_minutes&to=1475704800000
     body:
       encoding: US-ASCII
       string: ''
@@ -657,7 +657,7 @@ http_interactions:
       server:
       - nginx/1.10.0
       date:
-      - Thu, 05 Jan 2017 16:39:30 GMT
+      - Thu, 05 Jan 2017 16:39:23 GMT
       content-type:
       - application/json;charset=utf-8
       transfer-encoding:
@@ -665,7 +665,7 @@ http_interactions:
       connection:
       - keep-alive
       expires:
-      - Fri, 05 Jan 2018 16:39:30 GMT
+      - Fri, 05 Jan 2018 16:39:23 GMT
       pragma:
       - cache
       cache-control:
@@ -673,10 +673,10 @@ http_interactions:
       content-disposition:
       - inline
       last-modified:
-      - Thu, 05 Jan 2017 16:39:30 GMT
+      - Thu, 05 Jan 2017 16:39:22 GMT
     body:
       encoding: ASCII-8BIT
-      string: '{"status":"ok","result":[{"time":1475618400000,"energy":181302628333000,"energyOut":0},{"time":1475619300000,"energy":181302628333000,"energyOut":0},{"time":1475620200000,"energy":181302628333000,"energyOut":0},{"time":1475621100000,"energy":181302628333000,"energyOut":0},{"time":1475622000000,"energy":181302628333000,"energyOut":0},{"time":1475622900000,"energy":181302628333000,"energyOut":0},{"time":1475623800000,"energy":181302628333000,"energyOut":0},{"time":1475624700000,"energy":181302628333000,"energyOut":0},{"time":1475625600000,"energy":181302628333000,"energyOut":0},{"time":1475626500000,"energy":181302628333000,"energyOut":0},{"time":1475627400000,"energy":181302628333000,"energyOut":0},{"time":1475628300000,"energy":181302628333000,"energyOut":0},{"time":1475629200000,"energy":181302628333000,"energyOut":0},{"time":1475630100000,"energy":181302628333000,"energyOut":0},{"time":1475631000000,"energy":181302628333000,"energyOut":0},{"time":1475631900000,"energy":181302628333000,"energyOut":0},{"time":1475632800000,"energy":181302628333000,"energyOut":0},{"time":1475633700000,"energy":181302628333000,"energyOut":0},{"time":1475634600000,"energy":181302628333000,"energyOut":0},{"time":1475635500000,"energy":181302628333000,"energyOut":0},{"time":1475636400000,"energy":181302628333000,"energyOut":0},{"time":1475637300000,"energy":181302628333000,"energyOut":0},{"time":1475638200000,"energy":181302628333000,"energyOut":0},{"time":1475639100000,"energy":181302628333000,"energyOut":0},{"time":1475640000000,"energy":181302628333000,"energyOut":0},{"time":1475640900000,"energy":181302628333000,"energyOut":0},{"time":1475641800000,"energy":181302628333000,"energyOut":0},{"time":1475642700000,"energy":181302628333000,"energyOut":0},{"time":1475643600000,"energy":181302628333000,"energyOut":0},{"time":1475644500000,"energy":181302628333000,"energyOut":0},{"time":1475645400000,"energy":181302628333000,"energyOut":0},{"time":1475646300000,"energy":181302702042645,"energyOut":0},{"time":1475647200000,"energy":181303054890778,"energyOut":0},{"time":1475648100000,"energy":181303671663394,"energyOut":0},{"time":1475649000000,"energy":181304616281997,"energyOut":0},{"time":1475649900000,"energy":181305712185506,"energyOut":0},{"time":1475650800000,"energy":181307712310386,"energyOut":0},{"time":1475651700000,"energy":181311729938725,"energyOut":0},{"time":1475652600000,"energy":181314818805040,"energyOut":0},{"time":1475653500000,"energy":181316847113436,"energyOut":0},{"time":1475654400000,"energy":181324674098594,"energyOut":0},{"time":1475655300000,"energy":181333616657338,"energyOut":0},{"time":1475656200000,"energy":181343368596864,"energyOut":0},{"time":1475657100000,"energy":181352865768625,"energyOut":0},{"time":1475658000000,"energy":181359694924113,"energyOut":0},{"time":1475658900000,"energy":181362815327012,"energyOut":0},{"time":1475659800000,"energy":181366728336818,"energyOut":0},{"time":1475660700000,"energy":181382003204997,"energyOut":0},{"time":1475661600000,"energy":181392959030939,"energyOut":0},{"time":1475662500000,"energy":181405691905196,"energyOut":0},{"time":1475663400000,"energy":181411098428514,"energyOut":0},{"time":1475664300000,"energy":181413276148286,"energyOut":0},{"time":1475665200000,"energy":181419639600400,"energyOut":0},{"time":1475666100000,"energy":181436540278141,"energyOut":0},{"time":1475667000000,"energy":181449777179354,"energyOut":0},{"time":1475667900000,"energy":181455105513612,"energyOut":0},{"time":1475668800000,"energy":181458315312834,"energyOut":0},{"time":1475669700000,"energy":181476299419275,"energyOut":0},{"time":1475670600000,"energy":181483767277302,"energyOut":0},{"time":1475671500000,"energy":181486365147656,"energyOut":0},{"time":1475672400000,"energy":181488168083392,"energyOut":0},{"time":1475673300000,"energy":181500910903144,"energyOut":0},{"time":1475674200000,"energy":181518002893408,"energyOut":0},{"time":1475675100000,"energy":181522592962656,"energyOut":0},{"time":1475676000000,"energy":181524349544400,"energyOut":0},{"time":1475676900000,"energy":181533866269981,"energyOut":0},{"time":1475677800000,"energy":181545728090530,"energyOut":0},{"time":1475678700000,"energy":181553587173289,"energyOut":0},{"time":1475679600000,"energy":181557679200594,"energyOut":0},{"time":1475680500000,"energy":181560502429450,"energyOut":0},{"time":1475681400000,"energy":181562049724579,"energyOut":0},{"time":1475682300000,"energy":181562973440202,"energyOut":0},{"time":1475683200000,"energy":181563366471515,"energyOut":0},{"time":1475684100000,"energy":181563686254667,"energyOut":0},{"time":1475685000000,"energy":181563860973520,"energyOut":0},{"time":1475685900000,"energy":181563875279000,"energyOut":0},{"time":1475686800000,"energy":181563875279000,"energyOut":0},{"time":1475687700000,"energy":181563875279000,"energyOut":0},{"time":1475688600000,"energy":181563875279000,"energyOut":0},{"time":1475689500000,"energy":181563875279000,"energyOut":0},{"time":1475690400000,"energy":181563875279000,"energyOut":0},{"time":1475691300000,"energy":181563875279000,"energyOut":0},{"time":1475692200000,"energy":181563875279000,"energyOut":0},{"time":1475693100000,"energy":181563875279000,"energyOut":0},{"time":1475694000000,"energy":181563875279000,"energyOut":0},{"time":1475694900000,"energy":181563875279000,"energyOut":0},{"time":1475695800000,"energy":181563875279000,"energyOut":0},{"time":1475696700000,"energy":181563875279000,"energyOut":0},{"time":1475697600000,"energy":181563875279000,"energyOut":0},{"time":1475698500000,"energy":181563875279000,"energyOut":0},{"time":1475699400000,"energy":181563875279000,"energyOut":0},{"time":1475700300000,"energy":181563875279000,"energyOut":0},{"time":1475701200000,"energy":181563875279000,"energyOut":0},{"time":1475702100000,"energy":181563875279000,"energyOut":0},{"time":1475703000000,"energy":181563875279000,"energyOut":0},{"time":1475703900000,"energy":181563875279000,"energyOut":0},{"time":1475704800000,"energy":181563875279000,"energyOut":0}]}'
+      string: '[{"time":1480606200000,"values":{"energy":22968322444644}},{"time":1480607100000,"values":{"energy":22970988922089}},{"time":1480608000000,"values":{"energy":22973229616478}}]'
     http_version: 
-  recorded_at: Thu, 05 Jan 2017 16:39:30 GMT
+  recorded_at: Thu, 05 Jan 2017 16:39:23 GMT
 recorded_with: VCR 3.0.3

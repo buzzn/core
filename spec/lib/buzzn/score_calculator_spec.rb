@@ -102,15 +102,16 @@ describe Buzzn::ScoreCalculator do
 
     before do
       Timecop.freeze(now)
-      subject.instance_variable_set(:@data_out,
-                                    [ { power_milliwatt: 1000000 },
-                                      { power_milliwatt: 1200000 },
-                                      { power_milliwatt: 900000 },
-                                      { power_milliwatt: 0 } ] )
-      subject.instance_variable_set(:@data_in,
-                                    [ { power_milliwatt: 800000 },
-                                      { power_milliwatt: 1300000 },
-                                      { power_milliwatt: 1000000 } ] )
+      out_data = Buzzn::DataResultSet.send(:milliwatt, "no-id-needed")
+      [1000000, 1200000, 900000, 0].each do |val|
+        out_data.add(Time.current, val, :out)
+      end
+      in_data = Buzzn::DataResultSet.send(:milliwatt, "no-id-needed")
+      [800000, 1300000, 1000000].each do |val|
+        in_data.add(Time.current, val, :in)
+      end
+      subject.instance_variable_set(:@data_out, out_data.out)
+      subject.instance_variable_set(:@data_in, in_data.in)
     end
 
     it 'calculates fitting' do
@@ -167,7 +168,7 @@ describe Buzzn::ScoreCalculator do
     end
 
     it 'calculates autarchy' do |spec|
-      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
+      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do
         subject.calculate_autarchy_scores
         expect(Score.count).to eq 3
         Score.all.each do |score|
@@ -178,7 +179,7 @@ describe Buzzn::ScoreCalculator do
     end
 
     it 'calculates sufficiency' do |spec|
-      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
+      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do
         subject.calculate_sufficiency_scores
         expect(Score.count).to eq 3
         Score.all.each do |score|
@@ -189,11 +190,11 @@ describe Buzzn::ScoreCalculator do
     end
 
     it 'calculates fitting' do |spec|
-      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}", :record => :new_episodes) do
+      VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do
         subject.calculate_fitting_scores
         expect(Score.count).to eq 3
         Score.all.each do |score|
-          expect(score.value).to eq 1.0
+          expect(score.value).to eq 5.0
           expect(score.mode).to eq 'fitting'
         end
       end
