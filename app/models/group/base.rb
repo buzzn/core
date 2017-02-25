@@ -274,107 +274,10 @@ module Group
       calculate_virtual_register(data, operators, resolution)
     end
 
-    def chart(resolution_format, containing_timestamp=nil)
-      if containing_timestamp == nil
-        containing_timestamp = Time.current.to_i * 1000
-      end
-
-      data_in = []
-      data_out = []
-
-      registers_in = self.registers.without_externals.where(mode: 'in')
-      registers_out = self.registers.without_externals.where(mode: 'out')
-      operators = []
-      registers_in.each do |register|
-        data_in << register.chart_data(resolution_format, containing_timestamp)
-        operators << "+"
-      end
-      result_in = calculate_virtual_register(data_in, operators, resolution_format)
-
-      operators = []
-
-      registers_out.each do |register|
-        data_out << register.chart_data(resolution_format, containing_timestamp)
-        operators << "+"
-      end
-      result_out = calculate_virtual_register(data_out, operators, resolution_format)
-
-      #TODO: Aus irgend einem Grund gibt es bei manchen Gruppen einen falschen Zeitstempel
-      if resolution_format == 'month_to_days'
-        i = 0
-        while i < result_in.size do
-          if Time.at(result_in[i][0]/1000).in_time_zone.hour != 0
-            result_in.delete_at(i)
-          end
-          i+=1
-        end
-        i = 0
-        while i < result_out.size do
-          if Time.at(result_out[i][0]/1000).in_time_zone.hour != 0
-            result_out.delete_at(i)
-          end
-          i+=1
-        end
-      end
-
-      return [ { :name => I18n.t('total_consumption'), :data => result_in}, { :name => I18n.t('total_production'), :data => result_out} ]
-    end
 
 
-    def chart_without_discovergy(resolution_format, containing_timestamp=nil)
-      registers_in_plus = []
-      registers_in_minus = []
-      registers_out_plus = []
-      registers_out_minus = []
-      self.registers.without_externals.each do |register|
-        if register.is_a?(Register::Virtual)
-          if register.input?
-            register.formula_parts.where(operator: "+").collect(&:operand).each do |register_plus|
-              registers_in_plus << register_plus.id
-            end
-            register.formula_parts.where(operator: "-").collect(&:operand).each do |register_minus|
-              registers_in_minus << register_minus.id
-            end
-          else
-            register.formula_parts.where(operator: "+").collect(&:operand).each do |register_plus|
-              registers_out_plus << register_plus.id
-            end
-            register.formula_parts.where(operator: "-").collect(&:operand).each do |register_minus|
-              registers_out_minus << register_minus.id
-            end
-          end
-        else
-          if register.input?
-            registers_in_plus << register.id
-          else
-            registers_out_plus << register.id
-          end
-        end
-      end
 
-      if containing_timestamp == nil
-        containing_timestamp = Time.current.to_i * 1000
-      end
 
-      data_in = []
-      data_out = []
-      operators = ["+", "-"]
-      data_in << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, registers_in_plus, containing_timestamp), resolution_format, containing_timestamp)
-      if registers_in_minus.any?
-        data_in << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, registers_in_minus, containing_timestamp), resolution_format, containing_timestamp)
-        result_in = calculate_virtual_register(data_in, operators, resolution_format)
-      else
-        result_in = data_in[0]
-      end
-      data_out << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, registers_out_plus, containing_timestamp), resolution_format, containing_timestamp)
-      if registers_out_minus.any?
-        data_out << self.convert_to_array_build_timestamp(Reading.aggregate(resolution_format, registers_out_minus, containing_timestamp), resolution_format, containing_timestamp)
-        result_out = calculate_virtual_register(data_out, operators, resolution_format)
-      else
-        result_out = data_out[0]
-      end
-      return [ { :name => I18n.t('total_consumption'), :data => result_in}, { :name => I18n.t('total_production'), :data => result_out} ]
-    end
 
     def self.score_interval(resolution_format, containing_timestamp)
       if resolution_format == 'year_to_minutes' || resolution_format == 'year'
@@ -385,6 +288,7 @@ module Group
         return ['day', Time.at(containing_timestamp).in_time_zone.beginning_of_day, Time.at(containing_timestamp).in_time_zone.end_of_day]
       end
     end
+
     def set_score_interval(resolution_format, containing_timestamp)
       self.class.score_interval(resolution_format, containing_timestamp)
     end
@@ -413,17 +317,6 @@ module Group
         end
       end
       return kwh_ago / (days_ago*1.0) * 365
-    end
-
-
-    def self.update_cache
-      Group::Base.all.select(:id).each.each do |group|
-        Sidekiq::Client.push({
-         'class' => UpdateGroupChartCache,
-         'queue' => :default,
-         'args' => [ group.id, 'day_to_minutes']
-        })
-      end
     end
 
     def self.calculate_scores
@@ -467,35 +360,7 @@ module Group
       return closeness
     end
 
-    def bubbles_personal_data(requesting_user)
-      output_register_personal_data = []
-      input_register_personal_data = []
-      self.registers.without_externals.each do |register|
-        register_name = register.decorate.name_with_users
-        if register.involved.any?
-          if register.involved.include?(requesting_user)
-            own_register = true
-          else
-            own_register = false
-          end
-        else
-          own_register = false
-        end
-        readable = requesting_user.nil? ? false : register.readable_by?(requesting_user)
-        if !readable
-          register_name = "anonym"
-        end
-        personal_data_entry = {:register_id => register.id, :name => register_name, :own_register => own_register, :readable => readable}
-        if register.mode == 'out'
-          output_register_personal_data.push(personal_data_entry)
-        else
-          input_register_personal_data.push(personal_data_entry)
-        end
-      end
-      personal_data = {:in => input_register_personal_data, :out => output_register_personal_data}
-      return personal_data
-    end
-
+    # only used in railsview controller
     def get_scores(resolution, containing_timestamp)
       if resolution.nil?
         resolution = "year_to_months"
