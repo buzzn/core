@@ -52,14 +52,11 @@ module Buzzn::Discovergy
       end
       brokers.each do |broker|
         two_way_meter = broker.two_way_meter?
-        # this is because out meters (one_way) at discovergy reveal their energy data within the field 'energy' instead of 'energyOut'
-        if !two_way_meter && mode == :out
-          mode = :in
-        end
 
         response = @facade.readings(broker, nil, mode, false)
 
-        result = add(result, parse_aggregated_live(response, mode, two_way_meter, register_or_group.id))
+        # this is because out meters (one_way) at discovergy reveal their energy data within the field 'energy' instead of 'energyOut'
+        result = add(result, parse_aggregated_live(response, (!two_way_meter && mode == :out) ? :in : mode, two_way_meter, register_or_group.id))
       end
       result.freeze if result
       result
@@ -70,10 +67,7 @@ module Buzzn::Discovergy
       register_or_group.brokers.by_data_source(self).each do |broker|
         two_way_meter = broker.two_way_meter?
         # this is because out meters (one_way) at discovergy reveal their energy data within the field 'energy' instead of 'energyOut'
-        if !two_way_meter && mode == :out
-          mode = :in
-        end
-        response = @facade.readings(broker, interval, mode, false)
+        response = @facade.readings(broker, interval, (!two_way_meter && mode == :out) ? :in : mode, false)
 
         result = add(result, parse_aggregated_data(response, interval, mode, two_way_meter, register_or_group.id))
       end
