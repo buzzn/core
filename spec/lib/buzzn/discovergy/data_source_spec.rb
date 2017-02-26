@@ -243,8 +243,8 @@ describe Buzzn::Discovergy::DataSource do
 
     expect(in_result.in.size).to eq 2
     expect(in_result.out.size).to eq 0
-    expect(out_result.in.size).to eq 2
-    expect(out_result.out.size).to eq 0
+    expect(out_result.in.size).to eq 0
+    expect(out_result.out.size).to eq 2
 
     expect(in_result.resource_id).to eq register_with_broker.id
     expect(out_result.resource_id).to eq register_with_group_broker.id
