@@ -19,13 +19,6 @@ module Meter
 
     def direction_label; object.direction; end
 
-    def self.new(instance, options = {})
-      options ||= {}
-      if @abstract
-        to_resource(options[:current_user], instance)
-      else
-        super
-      end
-    end
+    def direction_label; object.direction; end
   end
 end

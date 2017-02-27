@@ -1,6 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 
-require File.expand_path('../../lib/buzzn/services/boot', __FILE__)
+require File.expand_path('../../lib/buzzn/boot/init', __FILE__)
 require 'rails/all'
 
 ## https://docs.newrelic.com/docs/agents/ruby-agent/features/garbage-collection#gc_setup
@@ -80,6 +80,7 @@ module Buzzn
     config.x.templates_path = Rails.root.join('app', 'templates')
 
     config.before_initialize do
+      # setup service components, transactions and log to stderr
       logger = ::Logger.new(STDERR)
       if Rails.env == 'development'
         logger.formatter = proc { |_, _, _, msg| "#{msg}\n" }
@@ -87,7 +88,7 @@ module Buzzn
         logger.formatter = proc { |l, _, _, msg| "#{msg}\n" if l != 'DEBUG' }
       end
       Buzzn::Logger.root = logger
-      Buzzn::Services::Boot.before_initialize
+      Buzzn::Boot::Init.before_initialize
       Buzzn::Logger.root = Rails.logger
     end
   end

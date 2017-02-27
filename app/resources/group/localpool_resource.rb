@@ -1,5 +1,5 @@
 module Group
-  class LocalpoolResource < MinimalBaseResource
+  class LocalpoolResource < BaseResource
 
     model Localpool
 
@@ -31,9 +31,5 @@ module Group
     def billing_cycles
       object.billing_cycles.readable_by(@current_user).collect { |bc| BillingCycleResource.new(bc) }
     end
-  end
-
-  # TODO get rid of the need of having a Serializer class
-  class LocalpoolSerializer < LocalpoolResource
   end
 end

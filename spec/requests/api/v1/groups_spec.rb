@@ -1,4 +1,7 @@
 describe "groups" do
+  def app
+    CoreRoda # this defines the active application for this test
+  end
 
   entity(:admin) { Fabricate(:admin_token) }
 
@@ -344,6 +347,11 @@ describe "groups" do
 
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq(meter_json.to_yaml)
+
+            GET "/api/v1/groups/#{group.id}/meters?include=", admin
+
+            expect(response).to have_http_status(200)
+            expect(json.to_yaml).to eq(minimal_meter_json.to_yaml)
           end
         end
       end

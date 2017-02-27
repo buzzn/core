@@ -2,7 +2,7 @@ require 'dry/auto_inject/strategies'
 require 'dry/auto_inject/strategies/constructor'
 
 module Buzzn
-  module Services
+  module Boot
     class ActiveRecord < Dry::AutoInject::Strategies::Constructor
       private
 
@@ -31,6 +31,6 @@ module Buzzn
         RUBY
       end
     end
-    Dry::AutoInject::Strategies.register :active_record, Buzzn::Services::ActiveRecord
+    Dry::AutoInject::Strategies.register :active_record, ActiveRecord
   end
 end

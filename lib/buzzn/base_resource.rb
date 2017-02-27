@@ -6,10 +6,14 @@ module Buzzn
     class << self
 
       def new(resource, options = {})
+        @abstract = false if @abstract.nil?
+        options ||= {}
         # ActiveModel::SerializableResource does not check whether it has
         # already an serializer, so we check it here and just return it
         if resource.is_a? self
           resource
+        elsif abstract?
+          to_resource(options[:current_user], resource)
         else
           super
         end
@@ -18,7 +22,9 @@ module Buzzn
       def guarded_collection(method)
         unless methods.include?(method)
           define_method method do
-            object.send(method).readable_by(@current_user)
+            object.send(method)
+              .readable_by(current_user)
+              .collect { |r| self.class.to_resource(current_user, r) }
           end
         end
       end
@@ -32,17 +38,17 @@ module Buzzn
             result = object.send(method)   
             if result.nil?
               raise RecordNotFound.new
-            elsif result.readable_by?(@current_user)
-              self.class.to_resource(@current_user, result)
+            elsif result.readable_by?(current_user)
+              self.class.to_resource(current_user, result)
             else
-              raise PermissionDenied.create(result, :retrieve, @current_user)
+              raise PermissionDenied.create(result, :retrieve, current_user)
             end
           end
           # deliver result if permissions allow otherwise nil
           define_method method do
             result = object.send(method)
-            if result && result.readable_by?(@current_user)
-              self.class.to_resource(@current_user, result)
+            if result && result.readable_by?(current_user)
+              self.class.to_resource(current_user, result)
             end
           end
         end
@@ -66,6 +72,7 @@ module Buzzn
           guarded_collection(method)
         end
       end
+
       def entities(*methods)
         methods.each do |method|
           guarded_entity(method)
@@ -85,6 +92,10 @@ module Buzzn
       def abstract
         @abstract = true if @abstract.nil?
         @abstract
+      end
+
+      def abstract?
+        @abstract == true
       end
 
       # the 'R' from the crud API
@@ -116,9 +127,10 @@ module Buzzn
       def all(user, filter = nil)
         result = model.readable_by(user)
         if filter
-          result.filter(filter)
-        else
-          result
+          result = result.filter(filter)
+        end
+        result.collect do |r|
+          to_resource(user, r)
         end
       end
     end

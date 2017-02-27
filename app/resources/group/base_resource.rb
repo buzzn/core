@@ -1,5 +1,5 @@
 module Group
-  class MinimalBaseResource < Buzzn::EntityResource
+  class BaseResource < Buzzn::EntityResource
 
     abstract
 
@@ -11,7 +11,7 @@ module Group
 
     attributes :updatable, :deletable
 
-    has_many :registers
+    #has_many :registers
     has_many :meters
     has_many :managers
     has_many :energy_producers
@@ -19,7 +19,7 @@ module Group
 
     def meters
       # FIXME broken permissions
-      object.meters.collect { |m| Meter::BaseResource.new(m, @current_user) }
+      object.meters.collect { |m| Meter::BaseResource.new(m, current_user: @current_user) }
     end
 
     def registers
@@ -54,31 +54,5 @@ module Group
     def members
       object.members.readable_by(@current_user)
     end
-
-    def comments
-      object.comment_threads.readable_by(@current_user)
-    end
-  end
-
-  # we do not want all infos in collections
-  class BaseResource < MinimalBaseResource
-
-    abstract
-
-    attributes   :big_tumb,
-                 :md_img
-
-    def md_img
-      object.image.md.url
-    end
-
-    def big_tumb
-      object.image.big_tumb.url
-    end
-
-  end
-
-  # TODO get rid of the need of having a Serializer class
-  class BaseSerializer < MinimalBaseResource
   end
 end

@@ -15,9 +15,3 @@ class ReadingResource < Buzzn::EntityResource
     object.id.to_s
   end
 end
-
-class ReadingCollectionResource < ReadingResource
-end
-
-class ReadingSingleResource < ReadingResource
-end

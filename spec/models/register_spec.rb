@@ -1,4 +1,6 @@
 # coding: utf-8
+# need to load as we overwrite validate_credentials method
+require './app/models/broker/discovergy'
 describe "Register Model" do
 
   entity!(:group) { Fabricate(:tribe) }

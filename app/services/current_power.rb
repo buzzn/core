@@ -16,7 +16,7 @@ module Buzzn::Services
     end
 
     def for_each_register_in_group(resource)
-      raise ArgumentError.new("not a #{Group::MinimalBaseResource}") unless resource.is_a?(Group::MinimalBaseResource)
+      raise ArgumentError.new("not a #{Group::BaseResource}") unless resource.is_a?(Group::BaseResource)
       group = resource.object
       result = Buzzn::DataResultArray.new(0)
       registry.each do |data_source|
@@ -28,7 +28,7 @@ module Buzzn::Services
     end
 
     def for_group(resource)
-      raise ArgumentError.new("not a #{Group::MinimalBaseResource}") unless resource.is_a?(Group::MinimalBaseResource)
+      raise ArgumentError.new("not a #{Group::BaseResource}") unless resource.is_a?(Group::BaseResource)
       group = resource.object
       sum_in, sum_out = 0, 0
       registry.each do |data_source|

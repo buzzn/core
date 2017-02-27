@@ -2,7 +2,7 @@ require 'dry/auto_inject/strategies'
 require 'dry/auto_inject/strategies/constructor'
 
 module Buzzn
-  module Services
+  module Boot
     class Reader < Dry::AutoInject::Strategies::Constructor
       private
 
@@ -27,6 +27,6 @@ module Buzzn
       def define_initialize(klass)
       end
     end
-    Dry::AutoInject::Strategies.register :reader, Buzzn::Services::Reader
+    Dry::AutoInject::Strategies.register :reader, Reader
   end
 end

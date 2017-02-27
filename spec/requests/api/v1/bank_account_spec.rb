@@ -1,5 +1,9 @@
 describe "bank-accounts" do
 
+  def app
+    CoreRoda # this defines the active application for this test
+  end
+
   entity(:account) do
     register = Fabricate(:output_meter).output_register
     contract = Fabricate(:power_giver_contract, register: register, contractor_bank_account: Fabricate(:bank_account))

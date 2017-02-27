@@ -3,17 +3,21 @@ require_relative 'active_record'
 require_relative 'main_container'
 require 'dry/auto_inject'
 
-Import = Dry::AutoInject(Buzzn::Services::MainContainer)
+Import = Dry::AutoInject(Buzzn::Boot::MainContainer)
 
 module Buzzn
   module Services
-    class Boot
+  end
+
+  module Boot
+    class Init
 
       class << self
 
         def before_initialize
           @logger = Buzzn::Logger.new(self)
-          # setup services
+          # setup services, redo require until no more errors
+          # or no more changes in which case there will be an error raised
           Buzzn::Application.config.paths['app'].dup.tap do |app|
             app.glob = "services/*.rb"
             remaining = -1
@@ -26,6 +30,12 @@ module Buzzn
               remaining = errors.size
               errors = init(*errors.keys)
             end
+          end
+
+          # load transactions
+          Application.config.paths['app'].dup.tap do |app|
+            app.glob = "transactions/*.rb"
+            app.to_a.each { |path| require path }
           end
         end
 

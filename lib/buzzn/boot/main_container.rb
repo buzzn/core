@@ -1,17 +1,20 @@
 require 'dry-container'
+require_relative 'transactions'
 
 module Buzzn
-  module Services
+  module Boot
 
     class MainContainer
       extend Dry::Container::Mixin
 
       class Resolver < Dry::Container::Resolver
         def call(container, key)
-          if key.to_s.starts_with?('config')
+          if key.to_s.starts_with?('config.')
             get_rails_config(key.to_s[7..-1])
-          elsif key.to_s.starts_with?('secrets')
+          elsif key.to_s.starts_with?('secrets.')
             get_rails_secrets(key.to_s[8..-1])
+          elsif key.to_s.starts_with?('transaction.')
+            Buzzn::Transaction.transactions.container[key.to_s[12..-1]]
           else
             super
           end
