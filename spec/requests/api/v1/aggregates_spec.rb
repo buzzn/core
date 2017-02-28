@@ -207,7 +207,6 @@ describe '/api/v1/aggregates' do
       end
     end
 
-
     it 'not aggregates Discovergy energy past for register readable_by friends as guest' do |spec|
       register = discovergy_meter.input_register
 
