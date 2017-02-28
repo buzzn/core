@@ -3,15 +3,14 @@ class ChangeBrokerStringsInDb < ActiveRecord::Migration
     reversible do |dir|
       dir.up do
         ActiveRecord::Base.transaction do
-          Broker::Base.all.each do |broker|
-            broker.type = "Broker::Discovergy"
-            broker.save
-          end
+          Broker::Base.all.update_all(type: "Broker::Discovergy")
         end
       end
 
       dir.down do
-        puts "nothing to do here ..."
+        ActiveRecord::Base.transaction do
+          Broker::Base.all.update_all(type: "DiscovergyBroker")
+        end
       end
     end
   end
