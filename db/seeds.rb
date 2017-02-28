@@ -49,7 +49,7 @@ buzzn_team_names.each do |user_name|
   case user_name
   when 'justus'
     easymeter_60139082 = Fabricate(:easymeter_60139082)
-    easymeter_60139082.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_60139082", resource: easymeter_60139082)
+    easymeter_60139082.broker = Fabricate(:discovergy_broker, mode: 'in_out', external_id: "EASYMETER_60139082", resource: easymeter_60139082)
     @register_z1a = easymeter_60139082.registers.first
     @register_z1b = easymeter_60139082.registers.last
     root_register = @register_z1a
@@ -197,7 +197,7 @@ register_pv_karin = Fabricate(:mpoc_karin).register
 karin = register_pv_karin.managers.first
 meter = register_pv_karin.meter
 meter.broker = Fabricate(:discovergy_broker,
-  mode: 'in',
+  mode: 'out',
   external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
   resource: meter,
   provider_login: 'karin.smith@solfux.de',
@@ -507,7 +507,7 @@ manuel_dmoch.add_role(:manager, register_60009420)
 meter = Fabricate(:easymeter_60118460)
 register_60118460 = meter.output_register
 manuel_dmoch.add_role(:manager, register_60118460)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 
 
 localpool_wagnis4 = Fabricate(:localpool_wagnis4, registers: [register_60118460])
