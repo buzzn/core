@@ -679,4 +679,162 @@ http_interactions:
       string: '{"status":"ok","result":[{"time":1475618400000,"energy":181302628333000,"energyOut":0},{"time":1475619300000,"energy":181302628333000,"energyOut":0},{"time":1475620200000,"energy":181302628333000,"energyOut":0},{"time":1475621100000,"energy":181302628333000,"energyOut":0},{"time":1475622000000,"energy":181302628333000,"energyOut":0},{"time":1475622900000,"energy":181302628333000,"energyOut":0},{"time":1475623800000,"energy":181302628333000,"energyOut":0},{"time":1475624700000,"energy":181302628333000,"energyOut":0},{"time":1475625600000,"energy":181302628333000,"energyOut":0},{"time":1475626500000,"energy":181302628333000,"energyOut":0},{"time":1475627400000,"energy":181302628333000,"energyOut":0},{"time":1475628300000,"energy":181302628333000,"energyOut":0},{"time":1475629200000,"energy":181302628333000,"energyOut":0},{"time":1475630100000,"energy":181302628333000,"energyOut":0},{"time":1475631000000,"energy":181302628333000,"energyOut":0},{"time":1475631900000,"energy":181302628333000,"energyOut":0},{"time":1475632800000,"energy":181302628333000,"energyOut":0},{"time":1475633700000,"energy":181302628333000,"energyOut":0},{"time":1475634600000,"energy":181302628333000,"energyOut":0},{"time":1475635500000,"energy":181302628333000,"energyOut":0},{"time":1475636400000,"energy":181302628333000,"energyOut":0},{"time":1475637300000,"energy":181302628333000,"energyOut":0},{"time":1475638200000,"energy":181302628333000,"energyOut":0},{"time":1475639100000,"energy":181302628333000,"energyOut":0},{"time":1475640000000,"energy":181302628333000,"energyOut":0},{"time":1475640900000,"energy":181302628333000,"energyOut":0},{"time":1475641800000,"energy":181302628333000,"energyOut":0},{"time":1475642700000,"energy":181302628333000,"energyOut":0},{"time":1475643600000,"energy":181302628333000,"energyOut":0},{"time":1475644500000,"energy":181302628333000,"energyOut":0},{"time":1475645400000,"energy":181302628333000,"energyOut":0},{"time":1475646300000,"energy":181302702042645,"energyOut":0},{"time":1475647200000,"energy":181303054890778,"energyOut":0},{"time":1475648100000,"energy":181303671663394,"energyOut":0},{"time":1475649000000,"energy":181304616281997,"energyOut":0},{"time":1475649900000,"energy":181305712185506,"energyOut":0},{"time":1475650800000,"energy":181307712310386,"energyOut":0},{"time":1475651700000,"energy":181311729938725,"energyOut":0},{"time":1475652600000,"energy":181314818805040,"energyOut":0},{"time":1475653500000,"energy":181316847113436,"energyOut":0},{"time":1475654400000,"energy":181324674098594,"energyOut":0},{"time":1475655300000,"energy":181333616657338,"energyOut":0},{"time":1475656200000,"energy":181343368596864,"energyOut":0},{"time":1475657100000,"energy":181352865768625,"energyOut":0},{"time":1475658000000,"energy":181359694924113,"energyOut":0},{"time":1475658900000,"energy":181362815327012,"energyOut":0},{"time":1475659800000,"energy":181366728336818,"energyOut":0},{"time":1475660700000,"energy":181382003204997,"energyOut":0},{"time":1475661600000,"energy":181392959030939,"energyOut":0},{"time":1475662500000,"energy":181405691905196,"energyOut":0},{"time":1475663400000,"energy":181411098428514,"energyOut":0},{"time":1475664300000,"energy":181413276148286,"energyOut":0},{"time":1475665200000,"energy":181419639600400,"energyOut":0},{"time":1475666100000,"energy":181436540278141,"energyOut":0},{"time":1475667000000,"energy":181449777179354,"energyOut":0},{"time":1475667900000,"energy":181455105513612,"energyOut":0},{"time":1475668800000,"energy":181458315312834,"energyOut":0},{"time":1475669700000,"energy":181476299419275,"energyOut":0},{"time":1475670600000,"energy":181483767277302,"energyOut":0},{"time":1475671500000,"energy":181486365147656,"energyOut":0},{"time":1475672400000,"energy":181488168083392,"energyOut":0},{"time":1475673300000,"energy":181500910903144,"energyOut":0},{"time":1475674200000,"energy":181518002893408,"energyOut":0},{"time":1475675100000,"energy":181522592962656,"energyOut":0},{"time":1475676000000,"energy":181524349544400,"energyOut":0},{"time":1475676900000,"energy":181533866269981,"energyOut":0},{"time":1475677800000,"energy":181545728090530,"energyOut":0},{"time":1475678700000,"energy":181553587173289,"energyOut":0},{"time":1475679600000,"energy":181557679200594,"energyOut":0},{"time":1475680500000,"energy":181560502429450,"energyOut":0},{"time":1475681400000,"energy":181562049724579,"energyOut":0},{"time":1475682300000,"energy":181562973440202,"energyOut":0},{"time":1475683200000,"energy":181563366471515,"energyOut":0},{"time":1475684100000,"energy":181563686254667,"energyOut":0},{"time":1475685000000,"energy":181563860973520,"energyOut":0},{"time":1475685900000,"energy":181563875279000,"energyOut":0},{"time":1475686800000,"energy":181563875279000,"energyOut":0},{"time":1475687700000,"energy":181563875279000,"energyOut":0},{"time":1475688600000,"energy":181563875279000,"energyOut":0},{"time":1475689500000,"energy":181563875279000,"energyOut":0},{"time":1475690400000,"energy":181563875279000,"energyOut":0},{"time":1475691300000,"energy":181563875279000,"energyOut":0},{"time":1475692200000,"energy":181563875279000,"energyOut":0},{"time":1475693100000,"energy":181563875279000,"energyOut":0},{"time":1475694000000,"energy":181563875279000,"energyOut":0},{"time":1475694900000,"energy":181563875279000,"energyOut":0},{"time":1475695800000,"energy":181563875279000,"energyOut":0},{"time":1475696700000,"energy":181563875279000,"energyOut":0},{"time":1475697600000,"energy":181563875279000,"energyOut":0},{"time":1475698500000,"energy":181563875279000,"energyOut":0},{"time":1475699400000,"energy":181563875279000,"energyOut":0},{"time":1475700300000,"energy":181563875279000,"energyOut":0},{"time":1475701200000,"energy":181563875279000,"energyOut":0},{"time":1475702100000,"energy":181563875279000,"energyOut":0},{"time":1475703000000,"energy":181563875279000,"energyOut":0},{"time":1475703900000,"energy":181563875279000,"energyOut":0},{"time":1475704800000,"energy":181563875279000,"energyOut":0}]}'
     http_version: 
   recorded_at: Thu, 05 Jan 2017 16:39:23 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energy&from=1475618400000&meterId=EASYMETER_60051559&resolution=fifteen_minutes&to=1475704800000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Authorization:
+      - OAuth oauth_consumer_key="ac55og2suqqetopa2evflmt14d", oauth_nonce="PTxi9QyDDFpguAbtvcRGYMLgTGknmFPXLQ19EKJBZ8",
+        oauth_signature="VnmwiyfJD9eofrDRcGI27o616y4%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446701", oauth_token="95696c85a73e4b3ba805f4441adb0c4b",
+        oauth_version="1.0"
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Tue, 28 Feb 2017 17:14:48 GMT
+      Content-Type:
+      - text/html;charset=iso-8859-1
+      Content-Length:
+      - '336'
+      Connection:
+      - keep-alive
+      Www-Authenticate:
+      - OAuth realm="default"
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+      Cache-Control:
+      - must-revalidate,no-cache,no-store
+    body:
+      encoding: UTF-8
+      string: |
+        <html>
+        <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"/>
+        <title>Error 401 </title>
+        </head>
+        <body>
+        <h2>HTTP ERROR: 401</h2>
+        <p>Problem accessing /public/v1/readings. Reason:
+        <pre>    Unauthorized</pre></p>
+        <hr /><a href="http://eclipse.org/jetty">Powered by Jetty:// 9.3.z-SNAPSHOT</a><hr/>
+        </body>
+        </html>
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/consumer_token?client=buzzn+app+test
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Tue, 28 Feb 2017 17:14:48 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - keep-alive
+      access-control-allow-origin:
+      - "*"
+      access-control-allow-methods:
+      - GET, POST, DELETE, PUT
+      access-control-allow-headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: ASCII-8BIT
+      string: '{"key":"8061ltgcsgtons5sm9rrgd155b","secret":"rt5hkca4mckm4mq4e24r8g8vk","owner":"buzzn
+        app test","attributes":{},"principal":null}'
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energy&from=1475618400000&meterId=EASYMETER_60051559&resolution=fifteen_minutes&to=1475704800000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Authorization:
+      - OAuth oauth_consumer_key="ac55og2suqqetopa2evflmt14d", oauth_nonce="HAQzaX3NmqQp6rCfp5e7gzVcFce2ce4VZ1HxRdhY8Dw",
+        oauth_signature="9IlRvAiKaJCYm27R%2B7X0%2BKjJhCo%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446701", oauth_token="28c4d352801c4d7fa2a7e08cbcb1bd1c",
+        oauth_version="1.0"
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Tue, 28 Feb 2017 17:14:48 GMT
+      Content-Type:
+      - text/html;charset=iso-8859-1
+      Content-Length:
+      - '336'
+      Connection:
+      - keep-alive
+      Www-Authenticate:
+      - OAuth realm="default"
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+      Cache-Control:
+      - must-revalidate,no-cache,no-store
+    body:
+      encoding: UTF-8
+      string: |
+        <html>
+        <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"/>
+        <title>Error 401 </title>
+        </head>
+        <body>
+        <h2>HTTP ERROR: 401</h2>
+        <p>Problem accessing /public/v1/readings. Reason:
+        <pre>    Unauthorized</pre></p>
+        <hr /><a href="http://eclipse.org/jetty">Powered by Jetty:// 9.3.z-SNAPSHOT</a><hr/>
+        </body>
+        </html>
+    http_version: 
+  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT
 recorded_with: VCR 3.0.3
