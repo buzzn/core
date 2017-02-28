@@ -152,7 +152,7 @@ describe Buzzn::ScoreCalculator do
     let(:now) { Time.find_zone('Berlin').local(2016,10,5, 18,30,1)  }
     let(:group) do
       easymeter_60051599 = Fabricate(:easymeter_60051599)
-      easymeter_60051599.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_60051599", resource: easymeter_60051599)
+      easymeter_60051599.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051599", resource: easymeter_60051599)
       register_z2 = easymeter_60051599.registers.first
       easymeter_60051559 = Fabricate(:easymeter_60051559)
       easymeter_60051559.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_60051559", resource: easymeter_60051559)

@@ -90,7 +90,7 @@ module Buzzn::Discovergy
     end
 
     def create_virtual_meter_for_register(register)
-      if !register.is_a?(Register) || !register.virtual
+      if !register.is_a?(Register::Base) || !register.is_a?(Register::Virtual)
         raise Buzzn::DataSourceError.new('ERROR - no virtual meters for non-virtual registers')
       end
       meter = register.meter
@@ -284,6 +284,7 @@ module Buzzn::Discovergy
 
     def parse_virtual_meter_creation(response, mode, resource)
       json = MultiJson.load(response)
+      #binding.pry
       # TODO: Move credentials into secrets
       broker = Broker::Discovergy.create!(
         mode: mode,

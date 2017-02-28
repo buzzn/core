@@ -92,7 +92,7 @@ describe Buzzn::Charts do
       interval = Buzzn::Interval.day
       result = subject.for_register(virtual_register, interval)
       result_single = subject.for_register(virtual_register.formula_parts.first.operand, interval)
-      expect(result.in).to eq result_single.in
+      expect(result.in).to eq result_single.out
     end
   end
 

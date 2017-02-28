@@ -117,7 +117,7 @@ module Register
       readable_by(user, true).anonymized(user)
     end
 
-    scope :readable_by, ->(user, group_check = true) do
+    scope :readable_by, ->(user, group_check = false) do
       register = Register::Base.arel_table
       sqls = []
       if group_check

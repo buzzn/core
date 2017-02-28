@@ -155,7 +155,7 @@ describe "/api/v1/registers" do
         end
       end
 
-      it "get register readable_by friends included in a group readable_by world as stranger" do
+      it "does not get register readable_by friends included in a group readable_by world as stranger" do
         register = send(type)
         register.update(readable: :friends)
         manager_access_token = Fabricate(:simple_access_token)
@@ -172,7 +172,7 @@ describe "/api/v1/registers" do
         group.registers << register
 
         get_with_token "/api/v1/registers/#{register.id}", stranger_access_token.token
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(403)
       end
 
       it "get members-readable #{type} register by members but not by manager friends" do

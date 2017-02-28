@@ -10,7 +10,7 @@ describe Buzzn::Discovergy::DataSource do
 
   let(:cache_time) { 1 }
   let(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
-  let(:broker) { Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
+  let(:broker) { Fabricate(:discovergy_broker, mode: meter.registers.first.mode.sub('put', ''), resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
   let(:small_group) do
     Fabricate(:tribe, registers: [
                 Fabricate(:easymeter_60009484).output_register,
@@ -28,7 +28,7 @@ describe Buzzn::Discovergy::DataSource do
   let(:empty_group) { Fabricate(:tribe) }
   let(:register_with_broker) do
     meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, group: empty_group)])
-    Fabricate(:discovergy_broker, resource: meter, external_id: 'easy_123')
+    Fabricate(:discovergy_broker, mode: 'in', resource: meter, external_id: 'easy_123')
     meter.input_register
   end
   let(:register_with_group_broker) do
@@ -40,7 +40,7 @@ describe Buzzn::Discovergy::DataSource do
     register = Fabricate(:virtual_meter).register
     Fabricate(:fp_plus, operand: Fabricate(:input_meter).input_register,
               register: register)
-    Fabricate(:discovergy_broker, resource: register.meter, external_id: 'virtual_123')
+    Fabricate(:discovergy_broker, mode: :virtual, resource: register.meter, external_id: 'virtual_123')
     Fabricate(:discovergy_broker, resource: register.formula_parts.first.operand.meter, external_id: 'easy_123')
     register
   end
@@ -137,7 +137,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'parses virtual meter creation response' do
     response = virtual_meter_creation_response
-    mode = 'virtual'
+    mode = ['in', 'out'].sample
     resource = group
     result = subject.send(:parse_virtual_meter_creation, response, mode, resource)
     expect(group.brokers.by_data_source(subject).size).to eq 1

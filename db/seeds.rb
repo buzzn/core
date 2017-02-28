@@ -49,47 +49,28 @@ buzzn_team_names.each do |user_name|
   case user_name
   when 'justus'
     easymeter_60139082 = Fabricate(:easymeter_60139082)
-    easymeter_60139082.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_60139082", resource: easymeter_60139082)
+    easymeter_60139082.broker = Fabricate(:discovergy_broker, mode: 'in_out', external_id: "EASYMETER_60139082", resource: easymeter_60139082)
     @register_z1a = easymeter_60139082.registers.first
     @register_z1b = easymeter_60139082.registers.last
     root_register = @register_z1a
     user.add_role :manager, @register_z1a
     user.add_role :manager, @register_z1b
-    @register_z1a.contracts.each do |contract|
-      user.contracting_parties.first.assigned_contracts << contract
-      contract.save
-    end
-    @register_z1b.contracts.each do |contract|
-      user.contracting_parties.first.assigned_contracts << contract
-    end
     easymeter_60051599 = Fabricate(:easymeter_60051599)
     easymeter_60051599.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051599", resource: easymeter_60051599)
     @register_z2 = easymeter_60051599.registers.first
     user.add_role :manager, @register_z2
-    @register_z2.contracts.each do |contract|
-      user.contracting_parties.first.assigned_contracts << contract
-    end
     easymeter_60051559 = Fabricate(:easymeter_60051559)
     easymeter_60051559.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_60051559", resource: easymeter_60051559)
     @register_z3 = easymeter_60051559.registers.first
     user.add_role :manager, @register_z3
-    @register_z3.contracts.each do |contract|
-      user.contracting_parties.first.assigned_contracts << contract
-    end
     easymeter_60051560 = Fabricate(:easymeter_60051560)
     easymeter_60051560.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051560", resource: easymeter_60051560)
     @register_z4 = easymeter_60051560.registers.first
     user.add_role :manager, @register_z4
-    @register_z4.contracts.each do |contract|
-      user.contracting_parties.first.assigned_contracts << contract
-    end
     easymeter_60051600 = Fabricate(:easymeter_60051600)
     easymeter_60051600.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051600", resource: easymeter_60051600)
     @register_z5 = easymeter_60051600.registers.first
     user.add_role :manager, @register_z5
-    @register_z5.contracts.each do |contract|
-      user.contracting_parties.first.assigned_contracts << contract
-    end
 
 
     dach_pv_justus = Fabricate(:dach_pv_justus)
@@ -121,9 +102,8 @@ buzzn_team_names.each do |user_name|
 
     Fabricate(:application, owner: user, name: 'Buzzn Swagger UI', scopes: Doorkeeper.configuration.scopes, redirect_uri: Rails.application.secrets.hostname + '/api/o2c.html')
   when 'christian'
-    contract = Fabricate(:mpoc_christian)
-    root_register = contract.register
-    meter = root_register.meter
+    meter = Fabricate(:easymeter_60138988)
+    root_register = meter.input_register
     meter.broker = Fabricate(:discovergy_broker,
       mode: 'in',
       external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
@@ -133,9 +113,8 @@ buzzn_team_names.each do |user_name|
     )
     user.add_role :admin # christian is admin
   when 'philipp'
-    contract = Fabricate(:mpoc_philipp)
-    root_register = contract.register
-    meter = root_register.meter
+    meter = Fabricate(:easymeter_60009269)
+    root_register = meter.input_register
     meter.broker = Fabricate(:discovergy_broker,
       mode: 'in',
       external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
@@ -145,18 +124,16 @@ buzzn_team_names.each do |user_name|
     )
   when 'stefan'
     bhkw_stefan       = Fabricate(:bhkw_stefan)
-    contract = Fabricate(:mpoc_stefan)
-    root_register = contract.register
+    meter = Fabricate(:easymeter_1024000034)
+    root_register = meter.output_register
     root_register.devices << bhkw_stefan
     user.add_role :manager, bhkw_stefan
-    meter = root_register.meter
   when 'thomas'
-    contract = Fabricate(:mpoc_ferraris_0001_amperix)
-    root_register = contract.register
+    meter = Fabricate(:easymeter_60232499)
+    root_register = meter.input_register
     user.add_role :admin # thomas is admin
   when 'kristian'
     root_register = Fabricate(:input_meter).input_register
-    Fabricate(:mpoc_buzzn_metering, register: root_register)
     user.add_role :admin # kristian is admin
   else
     root_register = Fabricate(:input_meter).input_register
@@ -182,22 +159,19 @@ uxtest_user = Fabricate(:uxtest_user)
 #hof_butenland
 # jan_gerdes = Fabricate(:jan_gerdes)
 # register_hof_butenland_wind   = Fabricate(:register_hof_butenland_wind)
-# register_hof_butenland_wind.contracts << Fabricate(:mpoc_buzzn_metering, register: register_hof_butenland_wind)
 # jan_gerdes.add_role :manager, register_hof_butenland_wind
 # device = Fabricate(:hof_butenland_wind)
 # register_hof_butenland_wind.devices << device
 # jan_gerdes.add_role :manager, device
 
-# register_hof_butenland_wind.contracts.metering_point_operators.first.contracting_party = jan_gerdes.contracting_party
-# register_hof_butenland_wind.contracts.metering_point_operators.first.save
 
 
 # karin
-register_pv_karin = Fabricate(:mpoc_karin).register
-karin = register_pv_karin.managers.first
-meter = register_pv_karin.meter
+meter = Fabricate(:easymeter_60051431)
+register_pv_karin = meter.output_register
+karin = Fabricate(:karin)
 meter.broker = Fabricate(:discovergy_broker,
-  mode: 'in',
+  mode: 'out',
   external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
   resource: meter,
   provider_login: 'karin.smith@solfux.de',
@@ -304,9 +278,9 @@ meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER
 @fichtenweg8 = Fabricate(:virtual_meter_fichtenweg8).register
 Fabricate(:fp_plus, operand: @register_z2, register: @fichtenweg8)
 Fabricate(:fp_plus, operand: @register_z4, register: @fichtenweg8)
-Fabricate(:fp_plus, operand: @register_z1b, register: @fichtenweg8)
+Fabricate(:fp_plus, operand: @register_z1a, register: @fichtenweg8)
 Fabricate(:fp_minus, operand: @fichtenweg10, register: @fichtenweg8)
-Fabricate(:fp_minus, operand: @register_z1a, register: @fichtenweg8)
+Fabricate(:fp_minus, operand: @register_z1b, register: @fichtenweg8)
 
 
 
@@ -507,7 +481,7 @@ manuel_dmoch.add_role(:manager, register_60009420)
 meter = Fabricate(:easymeter_60118460)
 register_60118460 = meter.output_register
 manuel_dmoch.add_role(:manager, register_60118460)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 
 
 localpool_wagnis4 = Fabricate(:localpool_wagnis4, registers: [register_60118460])
