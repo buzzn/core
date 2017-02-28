@@ -71,12 +71,6 @@ module API
           error_response(status: 403)
         end
 
-        rescue_from Crawler::CrawlerError do |e|
-          # Gateway Timeout -
-          #         did not receive a timely response from the upstream server.
-          error_response(message: e.message, status: 504)
-        end
-
         class Max < Grape::Validations::Base
           def validate_param!(attr_name, params)
             unless params[attr_name] <= @option
@@ -96,7 +90,7 @@ module API
               @errors << { "title": title,
                            "detail": detail }
           end
-            
+
           def add(name, *messages)
             name = name.to_s
             if name.include? '.'
