@@ -734,6 +734,24 @@ describe "/groups" do
     end
   end
 
+
+  it 'gets the related contracts for the group only with manager token' do
+    group  = Fabricate(:group_forstenried)
+
+    simple_access_token = Fabricate(:simple_access_token)
+    get_with_token "/api/v1/groups/#{group.id}/contracts", simple_access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(0)
+
+    manager_access_token = Fabricate(:simple_access_token)
+    manager_user          = User.find(manager_access_token.resource_owner_id)
+    manager_user.add_role(:manager, group)
+    get_with_token "/api/v1/groups/#{group.id}/contracts", manager_access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(group.contracts.size)
+  end
+
+
   it 'paginates comments' do
     access_token    = Fabricate(:simple_access_token).token
     group           = Fabricate(:tribe)

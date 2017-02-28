@@ -223,6 +223,17 @@ module API
         end
 
 
+        desc "Return the related contracts for Group"
+        params do
+          requires :id, type: String, desc: "ID of the group"
+        end
+        oauth2 :simple, :full
+        get ":id/contracts" do
+          group = Group.guarded_retrieve(current_user, permitted_params)
+          group.contracts.readable_by(current_user)
+        end
+
+
         desc 'Return the related comments for Group'
         params do
           requires :id, type: String, desc: 'ID of the group'
