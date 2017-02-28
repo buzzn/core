@@ -472,7 +472,7 @@ meter = Fabricate(:easymeter_60009429)
 register_60009429 = meter.input_register
 evang_pflege.add_role(:manager, register_60009429)
 evang_pflege.add_role(:member, register_60009429)
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 
 
 david_stadlmann = Fabricate(:david_stadlmann)

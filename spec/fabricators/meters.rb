@@ -293,6 +293,7 @@ end
 #Wagnis 4 - Ost 03
 Fabricator :easymeter_60009429, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009429'
+  registers [Fabricate.build(:register_60009429)]
 end
 #Wagnis 4 - Ost Wohnung 12
 Fabricator :easymeter_60009393, from: :easy_meter_q3d do

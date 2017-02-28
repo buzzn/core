@@ -291,50 +291,42 @@ end
 #Wagnis 4 - Nord Wohnung 18
 Fabricator :register_60009422, from: :input_register do
   name  'Nord Wohnung 18'
-  #meter {  Fabricate(:easymeter_60009422) }
 end
 
 #Wagnis 4 - Nord Wohnung 19
 Fabricator :register_60009425, from: :input_register do
   name  'Nord Wohnung 19'
-  #meter {  Fabricate(:easymeter_60009425) }
 end
 
 #Wagnis 4 - Nord Wohnung 20
 Fabricator :register_60009402, from: :input_register do
   name  'Nord Wohnung 20'
-  #meter {  Fabricate(:easymeter_60009402) }
 end
 
 #Wagnis 4 - Ost 03
 Fabricator :register_60009429, from: :input_register do
   name  'Ost 03'
-  #meter {  Fabricate(:easymeter_60009429) }
 end
 
 #Wagnis 4 - Ost Wohnung 12
 Fabricator :register_60009393, from: :input_register do
   name  'Ost Wohnung 12'
-  #meter {  Fabricate(:easymeter_60009393) }
 end
 
 #Wagnis 4 - Ost Wohnung 13
 Fabricator :register_60009442, from: :input_register do
   name  'Ost Wohnung 13'
-  #meter {  Fabricate(:easymeter_60009442) }
 end
 
 #Wagnis 4 - Ost Wohnung 15
 Fabricator :register_60009441, from: :input_register do
   name  'Ost Wohnung 15'
-  #meter {  Fabricate(:easymeter_60009441) }
 end
 
 #Wagnis 4 - Übergabe
 Fabricator :register_60118484, from: :input_register do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Übergabe'
-  #meter {  Fabricate(:easymeter_60118484) }
 end
 
 
@@ -344,7 +336,6 @@ end
 Fabricator :register_60051562, from: :input_register do
   name  'Wasserkraft'
   readable    'world'
-  #meter {  Fabricate(:easymeter_60051562) }
 end
 
 
@@ -356,286 +347,245 @@ end
 Fabricator :register_60051595, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 43'
-  #meter {  Fabricate(:easymeter_60051595) }
 end
 
 #inge_brack
 Fabricator :register_60051547, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 21'
-  #meter {  Fabricate(:easymeter_60051547) }
 end
 
 #peter brack
 Fabricator :register_60051620, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 25'
-  #meter {  Fabricate(:easymeter_60051620) }
 end
 
 #annika brandl
 Fabricator :register_60051602, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 25'
-  #meter {  Fabricate(:easymeter_60051602) }
 end
 
 #gudrun brandl
 Fabricator :register_60051618, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 14'
-  #meter {  Fabricate(:easymeter_60051618) }
 end
 
 #martin bräunlich
 Fabricator :register_60051557, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 42'
-  #meter {  Fabricate(:easymeter_60051557) }
 end
 
 #daniel bruno
 Fabricator :register_60051596, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 22'
-  #meter {  Fabricate(:easymeter_60051596) }
 end
 
 #zubair butt
 Fabricator :register_60051558, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 41'
-  #meter {  Fabricate(:easymeter_60051558) }
 end
 
 #maria cerghizan
 Fabricator :register_60051551, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M32'
-  #meter {  Fabricate(:easymeter_60051551) }
 end
 
 #stefan csizmadia
 Fabricator :register_60051619, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M13'
-  #meter {  Fabricate(:easymeter_60051619) }
 end
 
 #patrick fierley
 Fabricator :register_60051556, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 33'
-  #meter {  Fabricate(:easymeter_60051556) }
 end
 
 #maria frank
 Fabricator :register_60051617, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 12'
-  #meter {  Fabricate(:easymeter_60051617) }
 end
 
 #eva galow
 Fabricator :register_60051555, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 32'
-  #meter {  Fabricate(:easymeter_60051555) }
 end
 
 #christel guesgen
 Fabricator :register_60051616, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 15'
-  #meter {  Fabricate(:easymeter_60051616) }
 end
 
 #gilda hencke
 Fabricator :register_60051615, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 16'
-  #meter {  Fabricate(:easymeter_60051615) }
 end
 
 #uwe hetzer
 Fabricator :register_60051546, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 33'
-  #meter {  Fabricate(:easymeter_60051546) }
 end
 
 #andreas kapfer
 Fabricator :register_60051553, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 44'
-  #meter {  Fabricate(:easymeter_60051553) }
 end
 
 #renate koller
 Fabricator :register_60051601, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 23'
-  #meter {  Fabricate(:easymeter_60051601) }
 end
 
 #thekla lorber
 Fabricator :register_60051568, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 41'
-  #meter {  Fabricate(:easymeter_60051568) }
 end
 #ludwig maaßen
 Fabricator :register_60051610, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 24'
-  #meter {  Fabricate(:easymeter_60051610) }
 end
 
 #franz petschler
 Fabricator :register_60051537, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 24'
-  #meter {  Fabricate(:easymeter_60051537) }
 end
 
 #anna pfaffel
 Fabricator :register_60051564, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 22'
-  #meter {  Fabricate(:easymeter_60051564) }
 end
 
 #cornelia roth
 Fabricator :register_60051572, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 21'
-  #meter {  Fabricate(:easymeter_60051572) }
 end
 
 #christian voigt
 Fabricator :register_60051552, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 42'
-  #meter {  Fabricate(:easymeter_60051552) }
 end
 
 #claudia weber
 Fabricator :register_60051567, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 11'
-  #meter {  Fabricate(:easymeter_60051567) }
 end
 
 #sissi banos
 Fabricator :register_60051586, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'N 43'
-  #meter {  Fabricate(:easymeter_60051586) }
 end
 
 #laura häusler
 Fabricator :register_60051540, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 02'
-  #meter {  Fabricate(:easymeter_60051540) }
 end
 
 #bastian hentschel
 Fabricator :register_60051578, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'N 34'
-  #meter {  Fabricate(:easymeter_60051578) }
 end
 
 #dagmar holland
 Fabricator :register_60051597, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 31'
-  #meter {  Fabricate(:easymeter_60051597) }
 end
 
 #ahmad majid
 Fabricator :register_60051541, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '4', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 17'
-  #meter {  Fabricate(:easymeter_60051541) }
 end
 
 #marinus meiners
 Fabricator :register_60051570, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'N 36'
-  #meter {  Fabricate(:easymeter_60051570) }
 end
 
 #wolfgang pfaffel
 Fabricator :register_60051548, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 31'
-  #meter {  Fabricate(:easymeter_60051548) }
 end
 
 #magali thomas
 Fabricator :register_60051612, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
   name  'S 14'
-  #meter {  Fabricate(:easymeter_60051612) }
 end
 
 #kathrin kaisenberg
 Fabricator :register_60051549, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 34'
-  #meter {  Fabricate(:easymeter_60051549) }
 end
 
 #christian winkler
 Fabricator :register_60051587, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'N 31'
-  #meter {  Fabricate(:easymeter_60051587) }
 end
 
 #dorothea wolff
 Fabricator :register_60051566, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'N 45'
-  #meter {  Fabricate(:easymeter_60051566) }
 end
 
 #esra kwiek
 Fabricator :register_60051592, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'N 23'
-  #meter {  Fabricate(:easymeter_60051592) }
 end
 
 #felix pfeiffer
 Fabricator :register_60051580, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'N 24'
-  #meter {  Fabricate(:easymeter_60051580) }
 end
 
 #jorg nasri
 Fabricator :register_60051538, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 26'
-  #meter {  Fabricate(:easymeter_60051538) }
 end
 
 #ruth jürgensen
 Fabricator :register_60051590, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'N 25'
-  #meter {  Fabricate(:easymeter_60051590) }
 end
 
 #rafal jaskolka
 Fabricator :register_60051588, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'N 33'
-  #meter {  Fabricate(:easymeter_60051588) }
 end
 
 #elisabeth gritzmann
@@ -766,7 +716,6 @@ end
 Fabricator :register_60051621, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
   name  'M 11'
-  #meter {  Fabricate(:easymeter_60051621) }
 end
 
 #roswitha weber
