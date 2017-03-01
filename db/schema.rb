@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170228142810) do
+ActiveRecord::Schema.define(version: 20170301095532) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -186,7 +186,7 @@ ActiveRecord::Schema.define(version: 20170228142810) do
     t.string   "second_master_uid"
     t.string   "metering_point_operator_name"
     t.string   "old_supplier_name"
-    t.string   "type"
+    t.string   "type",                                                    null: false
     t.date     "cancellation_date"
     t.string   "old_customer_number"
     t.string   "old_account_number"
