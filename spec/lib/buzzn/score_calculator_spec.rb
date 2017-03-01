@@ -102,16 +102,20 @@ describe Buzzn::ScoreCalculator do
 
     before do
       Timecop.freeze(now)
-      out_data = Buzzn::DataResultSet.send(:milliwatt, "no-id-needed")
-      [1000000, 1200000, 900000, 0].each do |val|
-        out_data.add(Time.current, val, :out)
-      end
-      in_data = Buzzn::DataResultSet.send(:milliwatt, "no-id-needed")
-      [800000, 1300000, 1000000].each do |val|
-        in_data.add(Time.current, val, :in)
-      end
-      subject.instance_variable_set(:@data_out, out_data.out)
-      subject.instance_variable_set(:@data_in, in_data.in)
+
+      result_out = Buzzn::DataResultSet.milliwatt("no-id-needed")
+      result_out.add(Time.at(Time.now.beginning_of_day.to_i), 1000000, :out)
+      result_out.add(Time.at((Time.now.beginning_of_day + 15.minutes).to_i), 1200000, :out)
+      result_out.add(Time.at((Time.now.beginning_of_day + 30.minutes).to_i), 900000, :out)
+      result_out.add(Time.at((Time.now.beginning_of_day + 45.minutes).to_i), 0, :out)
+
+      result_in = Buzzn::DataResultSet.milliwatt("no-id-needed")
+      result_in.add(Time.at(Time.now.beginning_of_day.to_i), 800000, :in)
+      result_in.add(Time.at((Time.now.beginning_of_day + 15.minutes).to_i), 1300000, :in)
+      result_in.add(Time.at((Time.now.beginning_of_day + 30.minutes).to_i), 1000000, :in)
+
+      subject.instance_variable_set(:@data_out, result_out.out)
+      subject.instance_variable_set(:@data_in, result_in.in)
     end
 
     it 'calculates fitting' do
