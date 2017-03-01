@@ -91,17 +91,14 @@ module API
         desc "Return the related registers for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 false
         get ":id/registers" do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
 
           # registers do consider group relation for readable_by
           # TODO not clear why noe group.registers.without_externals ???
-          paginated_response(Register::Base.by_group(group).without_externals.anonymized_readable_by(current_user).order(type: :desc)) # the order is to make sure we the Register::Virtual as first element as its attribute set is enough for even Input and Output Registers
+          Register::Base.by_group(group).without_externals.anonymized_readable_by(current_user).order(type: :desc) # the order is to make sure we the Register::Virtual as first element as its attribute set is enough for even Input and Output Registers
         end
 
 
