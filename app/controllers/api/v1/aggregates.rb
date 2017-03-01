@@ -34,7 +34,7 @@ module API
             power_milliwatt: data_result.value.to_i,
             readings: [
               {
-                opterator: data_result.mode == :out ? '-' : '+',
+                operator: data_result.mode == :out ? '-' : '+',
                 data: {
                   timestamp: Time.at(data_result.timestamp),
                   power_milliwatt: data_result.value.to_i
