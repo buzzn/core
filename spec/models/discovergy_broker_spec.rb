@@ -9,14 +9,6 @@ describe "DiscovergyBroker Model" do
   let(:two_way_meter_with_registers) { Fabricate(:easymeter_60139082) }
   let(:group) { Fabricate(:tribe) }
 
-  before do
-
-    p Broker::Discovergy.count
-    p Register::Base.count
-    p Meter::Base.count
-    p in_meter
-  end
-
   it "creates broker for one way in meter" do
     meter = in_meter
     Broker::Discovergy.create!(
