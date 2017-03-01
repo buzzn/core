@@ -211,7 +211,53 @@ http_interactions:
       - must-revalidate,no-cache,no-store
     body:
       encoding: UTF-8
-      string: "{\"time\":1467446702088,\"values\":{\"power\":1100640}}"
+      string: '{"time":1467446702088,"values":{"power":1100640}}'
     http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:03 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/last_reading?each=false&fields=power&meterId=EASYMETER_60139082
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Authorization:
+      - OAuth oauth_consumer_key="i513jfpprrpe36oggupdctita", oauth_nonce="N3Mbt8vbZmNbUiAe0QjnPagbXedityYNJtHV4JzRevQ",
+        oauth_signature="Gxtpcd6JuyNnzCzuvIiRkFQye6Q%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446701", oauth_token="6c91266a25304de2bbebac8311dac390",
+        oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Wed, 01 Mar 2017 20:15:05 GMT
+      Content-Type:
+      - text/html;charset=iso-8859-1
+      Content-Length:
+      - '340'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+      Cache-Control:
+      - must-revalidate,no-cache,no-store
+    body:
+      encoding: UTF-8
+      string: '{"time":1467446702088,"values":{"power":1100640}}'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
 recorded_with: VCR 3.0.3
