@@ -18,9 +18,9 @@ module API
         get 'present' do
           # TODO fix register permissions and have again only:
           #      register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
-          register = Register::Base.find(permitted_params[:register_ids])
-          if register.group.nil? || !register.group.readable_by?(current_user)
-            register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
+          register = Register::Base.unguarded_retrieve(permitted_params[:register_ids])
+          if current_user.nil? && !register.readable_by_world?
+            raise Buzzn::PermissionDenied
           end
           data_result = Buzzn::Application.config.current_power.for_register(register, permitted_params[:timestamp])
           unless permitted_params[:timestamp]
@@ -34,7 +34,7 @@ module API
             power_milliwatt: data_result.value.to_i,
             readings: [
               {
-                opterator: data_result.mode == :out ? '-' : '+',
+                operator: data_result.mode == :out ? '-' : '+',
                 data: {
                   timestamp: Time.at(data_result.timestamp),
                   power_milliwatt: data_result.value.to_i
@@ -64,7 +64,12 @@ module API
         end
         oauth2 false
         get 'past' do
-          register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
+          # TODO fix register permissions and have again only:
+          #      register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
+          register = Register::Base.unguarded_retrieve(permitted_params[:register_ids])
+          if current_user.nil? && !register.readable_by_world?
+            raise Buzzn::PermissionDenied
+          end
           timestamp = permitted_params[:timestamp] || Time.current
           case permitted_params[:resolution]
           when 'day_to_minutes'

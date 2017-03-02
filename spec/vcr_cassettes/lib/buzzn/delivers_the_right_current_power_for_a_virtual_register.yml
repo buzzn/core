@@ -19,7 +19,7 @@ http_interactions:
       server:
       - nginx/1.10.0
       date:
-      - Wed, 01 Mar 2017 10:19:18 GMT
+      - Tue, 28 Feb 2017 16:47:21 GMT
       content-type:
       - application/json
       transfer-encoding:
@@ -34,10 +34,10 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: ASCII-8BIT
-      string: '{"key":"k97jpqnhun92q0b2gi5t95p9h","secret":"t5fsd7dd0ugnsmoq4nqn825m53","owner":"buzzn
+      string: '{"key":"cb1pf7u799dlifqabnm6pitgg","secret":"jtnm64joct7037h9q8o9e8qt9b","owner":"buzzn
         app test","attributes":{},"principal":null}'
     http_version:
-  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT
+  recorded_at: Sat, 02 Jul 2016 08:05:00 GMT
 - request:
     method: post
     uri: https://api.discovergy.com/public/v1/oauth1/request_token
@@ -54,9 +54,9 @@ http_interactions:
       Content-Length:
       - '0'
       Authorization:
-      - OAuth oauth_callback="oob", oauth_consumer_key="k97jpqnhun92q0b2gi5t95p9h",
-        oauth_nonce="JaQmsVYiBPizLX5X27d4eHQrElo2KEK1ltOsfA0A", oauth_signature="RW6ij8PAh3v6aMVrgo6dAR%2FxKHw%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1467446701", oauth_version="1.0"
+      - OAuth oauth_callback="oob", oauth_consumer_key="cb1pf7u799dlifqabnm6pitgg",
+        oauth_nonce="A80dd1JHWfobklCxVTraeeOFf6p4NCvDl6IAg7knT8", oauth_signature="MMGQHrpu2qrbSITmBihMRzCPBKM%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1467446700", oauth_version="1.0"
   response:
     status:
       code: 200
@@ -65,7 +65,7 @@ http_interactions:
       Server:
       - nginx/1.10.0
       Date:
-      - Wed, 01 Mar 2017 10:19:18 GMT
+      - Tue, 28 Feb 2017 16:47:21 GMT
       Content-Type:
       - application/x-www-form-urlencoded
       Content-Length:
@@ -80,12 +80,12 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: oauth_token=816c9e7a5006456cbb39c1fdf1d847ff&oauth_token_secret=c790635994bc4d1682942f04963c3157&oauth_callback_confirmed=true
+      string: oauth_token=21baad6904ed445d95467c03618144a4&oauth_token_secret=be1ca0d9050a45daa61dab347db47e56&oauth_callback_confirmed=true
     http_version:
-  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+  recorded_at: Sat, 02 Jul 2016 08:05:00 GMT
 - request:
     method: get
-    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=816c9e7a5006456cbb39c1fdf1d847ff&password=Zebulon_4711
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=21baad6904ed445d95467c03618144a4&password=Zebulon_4711
     body:
       encoding: US-ASCII
       string: ''
@@ -102,7 +102,7 @@ http_interactions:
       server:
       - nginx/1.10.0
       date:
-      - Wed, 01 Mar 2017 10:19:19 GMT
+      - Tue, 28 Feb 2017 16:47:22 GMT
       content-type:
       - application/x-www-form-urlencoded
       content-length:
@@ -117,9 +117,9 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: oauth_verifier=af123a22d511492197a4b96002f5a05b
+      string: oauth_verifier=7d15481c5308471f9352f095a3389c9c
     http_version:
-  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT
 - request:
     method: post
     uri: https://api.discovergy.com/public/v1/oauth1/access_token
@@ -136,10 +136,10 @@ http_interactions:
       Content-Length:
       - '0'
       Authorization:
-      - OAuth oauth_consumer_key="k97jpqnhun92q0b2gi5t95p9h", oauth_nonce="GDM5bOj7myzm3gqw22LT5tXy4Jjf9WWBUFnmIqZzQ",
-        oauth_signature="5kXeNtsDEQKZ7GUQDtqCvUUp9OQ%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1467446702", oauth_token="816c9e7a5006456cbb39c1fdf1d847ff",
-        oauth_verifier="af123a22d511492197a4b96002f5a05b", oauth_version="1.0"
+      - OAuth oauth_consumer_key="cb1pf7u799dlifqabnm6pitgg", oauth_nonce="z7nxQxc5ucZyfHXHmifcB8JvqfJlmTT4wULzegTrzHQ",
+        oauth_signature="nvivvITwXFc1Q3LAJlUAAwda8MA%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446701", oauth_token="21baad6904ed445d95467c03618144a4",
+        oauth_verifier="7d15481c5308471f9352f095a3389c9c", oauth_version="1.0"
   response:
     status:
       code: 200
@@ -148,7 +148,7 @@ http_interactions:
       Server:
       - nginx/1.10.0
       Date:
-      - Wed, 01 Mar 2017 10:19:19 GMT
+      - Tue, 28 Feb 2017 16:47:22 GMT
       Content-Type:
       - application/x-www-form-urlencoded
       Content-Length:
@@ -163,12 +163,12 @@ http_interactions:
       - X-Requested-With, Content-Type
     body:
       encoding: UTF-8
-      string: oauth_token=1d2023d1e459487ba8470ebc00ecee3d&oauth_token_secret=f19feaabd9b948c5b4e56bcfca64a816
+      string: oauth_token=dacf771f00e046309b03ee045cfba06d&oauth_token_secret=1b86ff19a06a49299fa2cf936d7f8114
     http_version:
-  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT
 - request:
     method: get
-    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energy&from=1475618400000&meterId=EASYMETER_60051559&resolution=fifteen_minutes&to=1475704800000
+    uri: https://api.discovergy.com/public/v1/last_reading?each=false&fields=power&meterId=EASYMETER_60051599
     body:
       encoding: US-ASCII
       string: ''
@@ -180,9 +180,9 @@ http_interactions:
       User-Agent:
       - OAuth gem v0.5.1
       Authorization:
-      - OAuth oauth_consumer_key="k97jpqnhun92q0b2gi5t95p9h", oauth_nonce="JZkQEXsZ0X0InP8VvWNThv2LYAR2DFk2rtRAJ0Tjc",
-        oauth_signature="zB4EcsTW9sett%2F1LiapP7yJhW2A%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1467446702", oauth_token="1d2023d1e459487ba8470ebc00ecee3d",
+      - OAuth oauth_consumer_key="cb1pf7u799dlifqabnm6pitgg", oauth_nonce="Zf9PEoOSAdWcxOdb6pARUCsV7gTE6XuHGNMqiSfMA",
+        oauth_signature="B0cL4jY2MC%2BCFBsya75pzirMxi8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446701", oauth_token="dacf771f00e046309b03ee045cfba06d",
         oauth_version="1.0"
   response:
     status:
@@ -192,15 +192,13 @@ http_interactions:
       Server:
       - nginx/1.10.0
       Date:
-      - Wed, 01 Mar 2017 10:19:19 GMT
+      - Tue, 28 Feb 2017 16:47:22 GMT
       Content-Type:
       - text/html;charset=iso-8859-1
       Content-Length:
-      - '336'
+      - '340'
       Connection:
       - keep-alive
-      Www-Authenticate:
-      - OAuth realm="default"
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Methods:
@@ -211,7 +209,6 @@ http_interactions:
       - must-revalidate,no-cache,no-store
     body:
       encoding: UTF-8
-      string: '[{"time":1480606200000,"values":{"energy":22968322444644}},{"time":1480607100000,"values":{"energy":22970988922089}},{"time":1480608000000,"values":{"energy":22973229616478}}]'
+      string: "{\"time\":1467446702088,\"values\":{\"power\":1100640}}"
     http_version:
-  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
-recorded_with: VCR 3.0.3
+  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT

@@ -7,16 +7,16 @@ module Register
 
     def readable_by?(user, variant = nil)
       args = [user]
-      case variant
-      when NilClass
-        # no extra args
-      when :no_group_inheritance
-        args << false
-      when :group_inheritance
-        args << true
-      else
-        raise 'wrong argument'
-      end
+      # case variant
+      # when NilClass
+      #   # no extra args
+      # when :no_group_inheritance
+      #   args << false
+      # when :group_inheritance
+      #   args << true
+      # else
+      #   raise 'wrong argument'
+      # end
       # uses scope Register::Base.readable_by(user)
       readable?(Register::Base, *args) ||
         # TODO get this into Register::Base.readable_by(user)

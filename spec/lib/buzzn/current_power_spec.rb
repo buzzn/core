@@ -49,6 +49,16 @@ describe Buzzn::CurrentPower do
     register
   end
 
+  let(:virtual_register) do
+    easymeter_60051599 = Fabricate(:easymeter_60051599)
+    easymeter_60051599.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051599", resource: easymeter_60051599)
+    fichtenweg8 = Fabricate(:virtual_meter_fichtenweg8).register
+    Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
+    Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
+    Fabricate(:fp_minus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
+    fichtenweg8
+  end
+
   it 'delivers the right result for a register' do
     result = subject.for_register(dummy_register)
     expect(result).to eq [:single_aggregated, dummy_register, :in]
@@ -75,6 +85,14 @@ describe Buzzn::CurrentPower do
 
     expect { subject.for_group(group, 'a') }.to raise_error ArgumentError
     expect { subject.for_group(Object.new) }.to raise_error ArgumentError
+  end
+
+  it 'delivers the right current power for a virtual register' do |spec|
+    VCR.use_cassette("lib/buzzn/#{spec.metadata[:description].downcase}") do
+      result = subject.for_register(virtual_register)
+      result_single = subject.for_register(virtual_register.formula_parts.first.operand)
+      expect(result).to eq result_single
+    end
   end
 
 end

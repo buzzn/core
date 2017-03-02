@@ -4,12 +4,12 @@ class Broker::Discovergy < Broker::Base
   # TODO duplicate const as in Contract model, those validation consts
   #      need a common place
   IS_MISSING = 'is missing'
-  
+
   attr_encrypted :provider_token_key, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
   attr_encrypted :provider_token_secret, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
   def self.modes
-    [:in, :out, :virtual]
+    [:in, :out, :in_out, :virtual]
   end
 
   validates :mode, inclusion:{ in: self.modes.map{|m| m.to_s} }
@@ -23,8 +23,7 @@ class Broker::Discovergy < Broker::Base
 
   validate :validates_invariants
 
-  # TODO: bring back after PROD deploy
-  #after_commit :validates_credentials
+  after_commit :validates_credentials
 
   def validates_invariants
     if provider_token_key || provider_token_secret
@@ -35,18 +34,28 @@ class Broker::Discovergy < Broker::Base
       errors.add(:consumer_key, IS_MISSING) unless self.consumer_key
       errors.add(:consumer_secret, IS_MISSING) unless self.consumer_secret
     end
-    case mode
+    case mode.to_sym
     when :virtual
-      if ! resourcable.virtual?
-        errors.add(:resourcable, 'Meter needs to be virtual itself')
+      if ! resource.is_a?(Meter::Virtual)
+        errors.add(:resourcable, 'can not be virtual on non-virtual Meters')
       end
-      if resource_type == Group::Base.to_s
+      if resource_type.is_a?(Group::Base)
         errors.add(:mode, 'can not be virtual for Group resource')
       end
-    # else
-    #   if resource_type == Meter.to_s
-    #     errors.add(:mode, 'has to be virtual for Meter resource')
-    #   end
+    when :in_out
+      if !(resource.is_a?(Meter::Real) && resource.registers.size == 2)
+        errors.add(:mode, 'can not be in_out on a Meter without two Registers')
+      end
+    else
+      if !(resource.is_a?(Meter::Real) && resource.registers.size == 1) && !resource.is_a?(Group::Base)
+        errors.add(:mode, "can not be 'in' or 'out' on a Meter with more or less than one Register")
+      end
+      if resource.is_a?(Meter::Real) && resource.registers.first.is_a?(Register::Input) && mode.to_sym == :out
+        errors.add(:mode, "for a Register::Input is 'out' but should be 'in'")
+      end
+      if resource.is_a?(Meter::Real) && resource.registers.first.is_a?(Register::Output) && mode.to_sym == :in
+        errors.add(:mode, "for a Register::Output is 'in' but should be 'out'")
+      end
     end
   end
 

@@ -100,8 +100,23 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
+  def clean_database
+    DatabaseCleaner.clean
+
+    if Register::Base.count + Group::Base.count + Broker::Base.count + Meter::Base.count > 0
+      warn '-' * 80
+      warn 'DB cleaner failed - cleaning manually'
+      warn '-' * 80
+      Register::Base.delete_all
+      Group::Base.delete_all
+      Broker::Base.delete_all
+      Meter::Base.delete_all
+    end
+  end
+
   config.before(:each) do |spec|
     DatabaseCleaner.strategy = spec.description =~ /threaded/ ? :truncation : :transaction  # 'threaded' in description triggers a different DatabaseCleanet strategy
+    clean_database
     DatabaseCleaner.start
   end
 
@@ -110,7 +125,7 @@ RSpec.configure do |config|
     Mongoid.purge!
     Redis.current.flushall
     Rails.cache.clear
-    DatabaseCleaner.clean
+    clean_database
   end
 
 
