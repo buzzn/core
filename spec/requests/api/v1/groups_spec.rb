@@ -413,21 +413,6 @@ describe "/groups" do
   end
 
 
-  it 'paginates registers' do
-    group = Fabricate(:tribe)
-    page_overload.times do
-      register = Fabricate([:input_meter, :output_meter].sample).registers.first
-      register.update(readable: :world)
-      group.registers << register
-    end
-    get_without_token "/api/v1/groups/#{group.id}/registers"
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_without_token "/api/v1/groups/#{group.id}/registers", {per_page: 200}
-    expect(response).to have_http_status(422)
-  end
-
 
   [nil, :sufficiency, :closeness, :autarchy, :fitting].each do |mode|
 
