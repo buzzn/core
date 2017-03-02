@@ -21,7 +21,8 @@ module Buzzn::Virtual
       resource.formula_parts.each do |formula_part|
         mode = formula_part.operand.direction
         data = @registry.get(formula_part.operand.data_source).single_aggregated(formula_part.operand, mode)
-        if timestamp == 0 || (timestamp - data.timestamp).abs < 3
+        # be a bit more lenient with the offset as we do have network latencies 
+        if timestamp == 0 || (timestamp - data.timestamp).abs < 6
           timestamp = data.timestamp
           formula_part.operator == '+' ? sum += data.value : sum -= data.value
         else
