@@ -24,7 +24,7 @@ module Buzzn::Discovergy
     # returns:
     #  Net::HTTPResponse with requested data
     def readings(broker, interval, mode, collection=false, retried=false)
-      return if collection && broker.mode.to_sym != mode
+      return "[]" if collection && !broker.mode.include?(mode.to_s)
       @logger.error{"[buzzn.discovergy.facade]<#{Thread.current.object_id}> readings for #{broker.external_id} #{broker.resource_type}:#{broker.resource_id} #{interval} #{mode} collection: #{collection}"}
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
