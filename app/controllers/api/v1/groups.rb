@@ -2,25 +2,65 @@ module API
   module V1
     class Groups < Grape::API
       include API::V1::Defaults
-
-
-
-      resource :tribes do
-        desc "Create a Tribe"
-        params do
-          requires :name,         type: String, desc: "Name of the Tribe"
-          requires :description,  type: String, desc: "Description of the Tribe"
-        end
-        oauth2 :full
-        post do
-          group = Group::Tribe.guarded_create(current_user, permitted_params)
-          created_response(group)
-        end
-      end
-
-
-
       resource :groups do
+
+
+
+        resource :localpools do
+          desc "Return all Localpools"
+          params do
+            optional :filter, type: String, desc: "Search query using #{Base.join(Group::Base.search_attributes)}"
+            optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
+            optional :page, type: Fixnum, desc: "Page number", default: 1
+            optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
+            optional :order_by, type: String, default: 'created_at', values: ['name', 'updated_at', 'created_at'], desc: "Order by Attribute"
+          end
+          paginate
+          oauth2 false
+          get do
+            order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
+            paginated_response(
+              Group::Localpool
+                .filter(permitted_params[:filter])
+                .readable_by(current_user)
+                .order(order)
+            )
+          end
+
+
+          desc "Return the related localpool processing contract for the Localpool"
+          params do
+            requires :id, type: String, desc: "ID of the group"
+          end
+          oauth2 :full
+          get ":id/localpool-processing-contract" do
+            group = Group::Localpool.guarded_retrieve(current_user, permitted_params)
+            Contract::Base.guarded_retrieve(current_user, group.localpool_processing_contract.id)
+          end
+
+
+          desc "Return the related metering_point operator contract for the Localpool"
+          params do
+            requires :id, type: String, desc: "ID of the group"
+          end
+          oauth2 :full
+          get ":id/metering-point-operator-contract" do
+            group = Group::Localpool.guarded_retrieve(current_user, permitted_params)
+            Contract::Base.guarded_retrieve(current_user, group.metering_point_operator_contract.id)
+          end
+
+        end
+
+
+
+
+
+
+
+
+
+
+
 
         desc "Return all groups"
         params do
@@ -56,10 +96,6 @@ module API
             deletable: group.deletable_by?(current_user)
           })
         end
-
-
-
-
 
 
 
