@@ -276,7 +276,7 @@ module Buzzn::Discovergy
         resource_id = map[item.first]
         timestamp = item[1]['time']
         value = item[1]['values']['power']
-        result_item = Buzzn::DataResult.new(Time.at(timestamp/1000.0), value/1000.0, resource_id, mode, expires_at)
+        result_item = Buzzn::DataResult.new(Time.at(timestamp/1000.0), value, resource_id, mode, expires_at)
         result << result_item
       end
       return result
