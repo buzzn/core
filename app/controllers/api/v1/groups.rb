@@ -153,6 +153,9 @@ module API
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
           interval = permitted_params[:interval]
           timestamp = permitted_params[:timestamp]
+          if timestamp > Time.current.beginning_of_day
+            timestamp = timestamp - 1.day
+          end
           result = group.scores.send("#{interval}ly".to_sym).at(timestamp)
           if mode = permitted_params[:mode]
             result = result.send(mode.to_s.pluralize.to_sym)

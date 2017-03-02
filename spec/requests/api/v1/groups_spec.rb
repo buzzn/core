@@ -388,6 +388,23 @@ describe "/groups" do
     expect(response).to have_http_status(422)
   end
 
+  it 'gets scores for the current day' do
+    group                 = Fabricate(:tribe)
+    now                   = Time.current
+    yesterday             = Time.current - 1.day
+    interval_information  = group.set_score_interval('day', yesterday.to_i)
+    page_overload.times do
+      Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group::Base', scoreable_id: group.id)
+    end
+    params = { interval: 'day', timestamp: now }
+    get_without_token "/api/v1/groups/#{group.id}/scores", params
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(4)
+
+    get_without_token "/api/v1/groups/#{group.id}/scores", {per_page: 200}
+    expect(response).to have_http_status(422)
+  end
+
 
   it 'gets the related managers for group only with token' do
     access_token  = Fabricate(:simple_access_token)
