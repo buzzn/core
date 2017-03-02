@@ -396,15 +396,19 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .restart();
   }
 
-  function getRegisters(page = 1) {
+  function getRegisters(page = 1, paginated) {
     checkToken();
-    fetch(`${url}/api/v1/groups/${group}/registers?per_page=10&page=${page}`, { headers })
+
+    let registersUrl = `${url}/api/v1/groups/${group}/registers`;
+    if (paginated) registersUrl = `${url}/api/v1/groups/${group}/registers?per_page=10&page=${page}`;
+
+    fetch(registersUrl, { headers })
       .then(getJson)
       .then(json => {
         if (json.data.length === 0) return Promise.reject('Empty group');
         fillPoints(json.data);
-        if (json.meta.total_pages > page) {
-          getRegisters(page + 1);
+        if (json.meta && json.meta.total_pages > page) {
+          getRegisters(page + 1, true);
         } else {
           getData();
           bubblesTimers.fetchTimer = setInterval(getData, 15000);
