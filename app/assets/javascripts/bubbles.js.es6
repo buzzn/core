@@ -396,26 +396,22 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       .restart();
   }
 
-  function getRegisters(page = 1) {
+  function getRegisters() {
     checkToken();
-    fetch(`${url}/api/v1/groups/${group}/registers?per_page=10&page=${page}`, { headers })
+    fetch(`${url}/api/v1/groups/${group}/registers`, { headers })
       .then(getJson)
       .then(json => {
         if (json.data.length === 0) return Promise.reject('Empty group');
         fillPoints(json.data);
-        if (json.meta.total_pages > page) {
-          getRegisters(page + 1);
-        } else {
-          getData();
-          bubblesTimers.fetchTimer = setInterval(getData, 15000);
-          bubblesTimers.seedTimer = setInterval(() => {
-            if (!_.find(inData, d => !d.seeded) && !_.find(outData, d => !d.seeded)) {
-              clearInterval(bubblesTimers.seedTimer);
-              drawData();
-              bubblesTimers.drawTimer = setInterval(redrawData, 15000);
-            }
-          }, 2000);
-        }
+        getData();
+        bubblesTimers.fetchTimer = setInterval(getData, 15000);
+        bubblesTimers.seedTimer = setInterval(() => {
+          if (!_.find(inData, d => !d.seeded) && !_.find(outData, d => !d.seeded)) {
+            clearInterval(bubblesTimers.seedTimer);
+            drawData();
+            bubblesTimers.drawTimer = setInterval(redrawData, 15000);
+          }
+        }, 2000);
       })
       .catch(error => {
         console.log(error);
