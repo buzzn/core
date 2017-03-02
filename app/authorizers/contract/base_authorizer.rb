@@ -7,7 +7,7 @@ class Contract::BaseAuthorizer < ApplicationAuthorizer
 
   def readable_by?(user)
     # uses scope Contract.readable_by(user)
-    readable?(Contract, user)
+    readable?(Contract::Base, user)
   end
 
   def updatable_by?(user)

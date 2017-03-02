@@ -189,91 +189,6 @@ describe "/groups" do
 
 
 
-
-
-  it 'does not create a tribe without token' do
-    group = Fabricate.build(:tribe)
-    request_params = {
-      name:  group.name,
-      readable: group.readable,
-      description: group.description
-    }.to_json
-    post_without_token "/api/v1/tribes", request_params
-    expect(response).to have_http_status(401)
-  end
-
-  it 'does not create a tribe with missing parameter' do
-    access_token  = Fabricate(:full_access_token)
-    group = Fabricate.build(:tribe)
-    request_params = {
-      name:  group.name,
-      readable: group.readable,
-      description: group.description
-    }
-
-    [:name, :description].each do |name|
-      params = request_params.reject {|k,v| k == name}
-
-      post_with_token "/api/v1/tribes", params.to_json, access_token.token
-
-      expect(response).to have_http_status(422)
-      json['errors'].each do |error|
-        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
-        expect(error['title']).to eq 'Invalid Attribute'
-        expect(error['detail']).to eq "#{name} is missing"
-      end
-    end
-  end
-
-  it 'does not create a tribe with invalid parameter' do
-    register      = output_register_with_manager
-    manager       = register.managers.first
-    access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
-    access_token.update_attribute :scopes, 'full'
-    group = Fabricate.build(:tribe)
-
-    request_params = {
-      name:  group.name,
-      description: group.description
-    }
-
-    [:name].each do |name|
-      params = request_params.dup
-      params[name] = 'a' * 2000
-
-      post_with_token "/api/v1/tribes", params.to_json, access_token.token
-
-      expect(response).to have_http_status(422)
-      json['errors'].each do |error|
-        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
-        expect(error['title']).to eq 'Invalid Attribute'
-        expect(error['detail']).to eq "#{name} ist zu lang (mehr als 40 Zeichen)"
-      end
-    end
-  end
-
-
-  it 'creates a tribe' do
-    register      = output_register_with_manager
-    manager       = register.managers.first
-    access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
-    access_token.update_attribute :scopes, 'full'
-    group = Fabricate.build(:tribe)
-
-    request_params = {
-      name: group.name,
-      description: group.description
-    }.to_json
-
-    post_with_token "/api/v1/tribes", request_params, access_token.token
-
-    expect(response).to have_http_status(201)
-    expect(response.headers['Location']).to eq json['data']['id']
-  end
-
-
-
-
   it "does not update a group with validation errors" do
     group = Fabricate(:tribe)
 
@@ -412,21 +327,6 @@ describe "/groups" do
     expect(json['data'].size).to eq(5)
   end
 
-
-  it 'paginates registers' do
-    group = Fabricate(:tribe)
-    page_overload.times do
-      register = Fabricate([:input_meter, :output_meter].sample).registers.first
-      register.update(readable: :world)
-      group.registers << register
-    end
-    get_without_token "/api/v1/groups/#{group.id}/registers"
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_without_token "/api/v1/groups/#{group.id}/registers", {per_page: 200}
-    expect(response).to have_http_status(422)
-  end
 
 
   [nil, :sufficiency, :closeness, :autarchy, :fitting].each do |mode|
@@ -733,6 +633,41 @@ describe "/groups" do
       expect(json['data'].find{ |c| c['id'] == comment.id }['attributes']['body']).to eq(comment.body)
     end
   end
+
+
+
+  it 'gets the related metering_point_operator_contract for the localpool only with full token' do
+    group  = Fabricate(:localpool_forstenried)
+
+    full_access_token = Fabricate(:full_access_token)
+    get_with_token "/api/v1/groups/localpools/#{group.id}/metering-point-operator-contract", full_access_token.token
+    expect(response).to have_http_status(403)
+
+    manager_access_token = Fabricate(:full_access_token)
+    manager_user          = User.find(manager_access_token.resource_owner_id)
+    manager_user.add_role(:manager, group)
+    get_with_token "/api/v1/groups/localpools/#{group.id}/metering-point-operator-contract", manager_access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq(group.metering_point_operator_contract.id)
+  end
+
+
+  it 'gets the related localpool-processing-contract for the localpool only with full token' do
+    group  = Fabricate(:localpool_forstenried)
+
+    full_access_token = Fabricate(:full_access_token)
+    get_with_token "/api/v1/groups/localpools/#{group.id}/localpool-processing-contract", full_access_token.token
+    expect(response).to have_http_status(403)
+
+    manager_access_token = Fabricate(:full_access_token)
+    manager_user          = User.find(manager_access_token.resource_owner_id)
+    manager_user.add_role(:manager, group)
+    get_with_token "/api/v1/groups/localpools/#{group.id}/localpool-processing-contract", manager_access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq(group.localpool_processing_contract.id)
+  end
+
+
 
   it 'paginates comments' do
     access_token    = Fabricate(:simple_access_token).token
