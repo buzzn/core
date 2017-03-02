@@ -63,6 +63,10 @@ module API
           error_response(message: e.message, status: 404)
         end
 
+        rescue_from Buzzn::DataSourceError do |e|
+          error_response(message: e.message, status: 504)
+        end
+
         rescue_from Buzzn::RecordNotFound do |e|
           error_response(message: e.message, status: 404)
         end
