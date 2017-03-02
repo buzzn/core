@@ -66,7 +66,7 @@ describe '/api/v1/aggregates' do
 
         expect(response).to have_http_status(200)
         expect(json['readings'].count).to eq(1)
-        expect(json['power_milliwatt']).to eq(932370)
+        expect(json['power_milliwatt']).to eq(1100640)
 
         request_params = {
           register_ids: output_register.id
