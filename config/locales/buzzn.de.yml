@@ -837,6 +837,8 @@ de:
   to_join_this_register_again_visit_this_link_and_ask_for_permission: "Du kannst den folgenden Link besuchen, um für die Erlaubnis, dem Zählpunkt wieder beizutreten, zu bitten."
   group_created_successfully: Die Gruppe wurde erfolgreich erstellt
   failed_to_create_group: Beim Erstellen der Gruppe ist ein Fehler aufgetreten
+  group_updated_successfully: Die Gruppe wurde erfolgreich bearbeitet.
+  failed_to_update_group: Beim Bearbeiten der Gruppe ist ein Fehler aufgetreten.
   group_destroyed_successfully: Die Gruppe wurde erfolgreich gelöscht
   failed_to_destroy_group: Beim Löschen der Gruppe ist ein Fehler aufgetreten
   new_comment_from_user: "Neuer Kommentar von %{username}"

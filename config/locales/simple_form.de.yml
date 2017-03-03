@@ -147,7 +147,41 @@ de:
       asset:
         image: Bild
         description: Beschreibung
-      group:
+      group_base:
+        private: Privat
+        logo: Logo
+        image: Hintergrundbild
+        name: Name
+        website: Webseite
+        description: Beschreibung
+        registers: Zählpunkte
+        mode: Art
+        new_meters: "Hier Zählernummer eingeben:"
+        manufacturer_product_serialnumber: "Zählernummer, die hinzugefügt werden soll"
+        email: E-Mailadresse für Einladung des Zählerbesitzers
+        email_confirmation: E-Mail bestätigen
+        readable: Sichtbar für
+        message: Nachricht
+        notify_me_when_comment_create: Email Benachrichtigung wenn neuer Kommentar erstellt wurde
+        add_own_register: Eigenen Zählpunkt hinzufügen
+      group_tribe:
+        private: Privat
+        logo: Logo
+        image: Hintergrundbild
+        name: Name
+        website: Webseite
+        description: Beschreibung
+        registers: Zählpunkte
+        mode: Art
+        new_meters: "Hier Zählernummer eingeben:"
+        manufacturer_product_serialnumber: "Zählernummer, die hinzugefügt werden soll"
+        email: E-Mailadresse für Einladung des Zählerbesitzers
+        email_confirmation: E-Mail bestätigen
+        readable: Sichtbar für
+        message: Nachricht
+        notify_me_when_comment_create: Email Benachrichtigung wenn neuer Kommentar erstellt wurde
+        add_own_register: Eigenen Zählpunkt hinzufügen
+      group_localpool:
         private: Privat
         logo: Logo
         image: Hintergrundbild

@@ -59,8 +59,10 @@ class GroupsController < ApplicationController
     @group = Group::Base.find(params[:id])
     authorize_action_for @group
     if @group.update_attributes(group_params)
+      flash[:notice] = t('group_updated_successfully')
       respond_with @group
     else
+      flash[:notice] = t('failed_to_update_group')
       render :edit
     end
     Group::Base.public_activity_on
@@ -296,8 +298,19 @@ class GroupsController < ApplicationController
 
 
 private
+
+  def group_class
+    if params[:group_base].nil? && !params[:group_tribe].nil? && params[:group_localpool].nil?
+      :group_tribe
+    elsif !params[:group_base].nil? && params[:group_tribe].nil? && params[:group_localpool].nil?
+      :group_base
+    elsif params[:group_base].nil? && params[:group_tribe].nil? && !params[:group_localpool].nil?
+      :group_localpool
+    end
+  end
+
   def group_params
-    params.require(:group_base).permit(
+    params.require(group_class).permit(
       :name,
       :image,
       :logo,
