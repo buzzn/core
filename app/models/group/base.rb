@@ -406,6 +406,11 @@ module Group
       return false
     end
 
+    # for railsview
+    def class_name
+      self.class.name.downcase.sub!("::", "_")
+    end
+
 
     private
 

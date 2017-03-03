@@ -160,9 +160,9 @@ Buzzn::Application.routes.draw do
       put :finalize_registers
     end
   end
-  resources :group_bases, controller: 'groups'
-  resources :group_tribes, controller: 'groups'
-  resources :group_localpools, controller: 'groups'
+  resources :group_base, controller: 'groups'
+  resources :group_tribe, controller: 'groups'
+  resources :group_localpool, controller: 'groups'
 
 
   resources :wizard_registers do
