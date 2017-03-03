@@ -14,6 +14,7 @@ describe "/contracts" do
     manager_user.add_role(:manager, group)
     get_with_token "/api/v1/contracts/#{contract.id}/customer", manager_access_token.token
     expect(response).to have_http_status(200)
+    expect(json['data']['type']).to eq(customer.class.name.pluralize.downcase)
     expect(json['data']['id']).to eq(customer.id)
   end
 
@@ -31,6 +32,7 @@ describe "/contracts" do
     manager_user.add_role(:manager, group)
     get_with_token "/api/v1/contracts/#{contract.id}/contractor", manager_access_token.token
     expect(response).to have_http_status(200)
+    expect(json['data']['type']).to eq(contractor.class.name.pluralize.downcase)
     expect(json['data']['id']).to eq(contractor.id)
   end
 
