@@ -126,9 +126,9 @@ describe Buzzn::Discovergy::DataSource do
     two_way_meter = false
     result = subject.send(:parse_collected_data, response, mode, 'EASYMETER_60009425' => 'some-uid', 'EASYMETER_60009404' => 'other-uid', 'EASYMETER_60009415' => 'last-uid')
     expect(result[0].timestamp).to eq 1480614249.341
-    expect(result[0].value).to eq 150.950
+    expect(result[0].value).to eq 150950
     expect(result[1].timestamp).to eq 1480614254.195
-    expect(result[1].value).to eq 161.590
+    expect(result[1].value).to eq 161590
     expect(result.size).to eq 3
     expect(result[0].resource_id).to eq 'some-uid'
     expect(result[1].resource_id).to eq 'other-uid'
