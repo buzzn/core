@@ -238,6 +238,8 @@ de:
       organization: Firma
       profile: Profil
       user: Benutzer
+      tribe: Gruppe
+      localpool: Gruppe
 
   will_paginate:
     previous_label: "&#8592; Vorige"
