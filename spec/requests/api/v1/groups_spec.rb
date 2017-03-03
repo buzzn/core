@@ -333,7 +333,7 @@ describe "/groups" do
 
     it "fails the related scores without interval using mode #{mode}" do
       group                 = Fabricate(:tribe)
-      now                   = Time.current
+      now                   = Time.current - 2.days
       params = { mode: mode, timestamp: now }
       get_without_token "/api/v1/groups/#{group.id}/scores", params
       expect(response).to have_http_status(422)
@@ -351,7 +351,7 @@ describe "/groups" do
 
       it "gets the related #{interval}ly scores with mode '#{mode}'" do
         group                 = Fabricate(:tribe)
-        now                   = Time.current
+        now                   = Time.current - 2.days
         interval_information  = Group::Base.score_interval(interval.to_s, now.to_i)
         5.times do
           Score.create(mode: mode || 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group::Base', scoreable_id: group.id)
@@ -374,8 +374,25 @@ describe "/groups" do
 
   it 'paginates scores' do
     group                 = Fabricate(:tribe)
-    now                   = Time.current
+    now                   = Time.current - 2.days
     interval_information  = group.set_score_interval('day', now.to_i)
+    page_overload.times do
+      Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group::Base', scoreable_id: group.id)
+    end
+    params = { interval: 'day', timestamp: now }
+    get_without_token "/api/v1/groups/#{group.id}/scores", params
+    expect(response).to have_http_status(200)
+    expect(json['meta']['total_pages']).to eq(4)
+
+    get_without_token "/api/v1/groups/#{group.id}/scores", {per_page: 200}
+    expect(response).to have_http_status(422)
+  end
+
+  it 'gets scores for the current day' do
+    group                 = Fabricate(:tribe)
+    now                   = Time.current
+    yesterday             = Time.current - 1.day
+    interval_information  = group.set_score_interval('day', yesterday.to_i)
     page_overload.times do
       Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group::Base', scoreable_id: group.id)
     end
