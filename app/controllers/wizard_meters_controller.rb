@@ -152,10 +152,10 @@ class WizardMetersController  < ApplicationController
   def broker_class
     if !params[meter_class][:broker].nil?
       :broker
-    elsif !params[meter_class][:discovergy_broker].nil?
-      :discovergy_broker
-    elsif !params[meter_class][:my_smart_grid_broker].nil?
-      :my_smart_grid_broker
+    elsif !params[meter_class][:broker_discovergy].nil?
+      :broker_discovergy
+    elsif !params[meter_class][:broker_my_smart_grid].nil?
+      :broker_my_smart_grid
     end
   end
 
