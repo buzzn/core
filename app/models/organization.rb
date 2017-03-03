@@ -2,9 +2,9 @@ require 'buzzn/managed_roles'
 class Organization < ContractingParty
   self.table_name = :organizations
   include Buzzn::GuardedCrud
-  #extend FriendlyId
+  extend FriendlyId
 
-  #friendly_id :name, use: [:slugged, :finders]
+  friendly_id :name, use: [:slugged, :finders]
 
   include Authority::Abilities
   include Filterable
@@ -43,7 +43,7 @@ class Organization < ContractingParty
   validates :mode, presence: true, inclusion: {in: modes}
 
   self.modes.each do |mode|
-    scope mode, -> { where(mode: mode) }
+    scope mode + "s", -> { where(mode: mode) }
   end
 
   scope :readable_by,                   -> (user) { where(nil) }
