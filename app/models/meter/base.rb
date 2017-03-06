@@ -29,8 +29,6 @@ module Meter
 
     # TODO makes no sense for virtual meters
     validates :smart, presence: false
-    # TODO makes no sense for virtual meters
-    validates :online, presence: false
     validates :init_first_reading, presence: false
     validates :init_reading, presence: false
 

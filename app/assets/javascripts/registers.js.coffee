@@ -15,7 +15,6 @@ namespace = (target, name, block) ->
 $(".registers").ready ->
   $(this).find(".register").each ->
     #smart = $(this).attr('data-smart')
-    #online = $(this).attr('data-online')
 
     id = $(this).attr('id').split('_')[1]
     width = $("#chart-container-" + id).width()
