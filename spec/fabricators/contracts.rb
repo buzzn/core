@@ -154,22 +154,16 @@ Fabricator :mpoc_buzzn_metering, from: :metering_point_operator_contract do
   contractor    { Organization.buzzn_energy }
   tariffs       { [Fabricate.build(:tariff)] }
   payments      { [Fabricate.build(:payment)] }
-  username      'team@localpool.de'
-  password      'Zebulon_4711'
 end
 
 Fabricator :mpoc_stefan, from: :metering_point_operator_contract do
   contractor     { Organization.discovergy }
-  username       'stefan@buzzn.net'
-  password       '19200buzzn'
   register       { Fabricate(:easymeter_1024000034).registers.first }
 end
 
 Fabricator :mpoc_karin, from: :metering_point_operator_contract do
   contractor    { Organization.discovergy }
   customer      { Fabricate(:karin) }
-  username      'karin.smith@solfux.de'
-  password      '19200buzzn'
   register      { Fabricate(:easymeter_60051431).output_register }
   status        :running
   after_create do |c|
