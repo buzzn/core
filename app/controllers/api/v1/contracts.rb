@@ -7,6 +7,28 @@ module API
 
       resource :contracts do
 
+
+        desc 'Return the related contractor for a Contract'
+        params do
+          requires :id, type: String, desc: 'ID of the Contract'
+        end
+        oauth2 :full
+        get ':id/contractor' do
+          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
+          contract.contractor
+        end
+
+        desc 'Return the related customer for a Contract'
+        params do
+          requires :id, type: String, desc: 'ID of the Contract'
+        end
+        oauth2 :full
+        get ':id/customer' do
+          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
+          contract.customer
+        end
+
+
         desc 'Return all Contracts'
         params do
 #          optional :filter, type: String, desc: "Search query using #{Base.join(Contract.search_attributes)}"
@@ -31,6 +53,10 @@ module API
             deletable: contract.deletable_by?(current_user)
           })
         end
+
+
+
+
 
 
         desc 'Create Power-Taker Contract'
@@ -119,7 +145,6 @@ module API
             requires :direct_debit, type: Boolean, desc: 'Allow buzzn to make a direct debit'
           end
         end
-
         oauth2 false
         post 'power-taker' do
           contract = Buzzn::ContractFactory.create_power_taker_contract(current_user, permitted_params)
