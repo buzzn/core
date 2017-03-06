@@ -14,8 +14,8 @@ class GroupsController < ApplicationController
     # if url changed redirect to new url
     redirect_to(group_path(@group), status: :moved_permanently) if request.path != group_path(@group)
 
-    @output_registers            = Register::Base.by_group(@group).outputs.without_externals.decorate
-    @input_registers             = Register::Base.by_group(@group).inputs.without_externals.decorate
+    @output_registers            = Register::Base.by_group(@group).outputs.decorate
+    @input_registers             = Register::Base.by_group(@group).inputs.decorate
     @managers                 = @group.managers
     @energy_producers         = @group.energy_producers.decorate
     @energy_consumers         = @group.energy_consumers.decorate
@@ -91,7 +91,7 @@ class GroupsController < ApplicationController
       if @found_meter.any?
         @meter = @found_meter.first
         @register = @meter.registers.first
-        if GroupRegisterRequest.where(register: @register).where(group: @group).empty? && !@group.registers.without_externals.include?(@register)
+        if GroupRegisterRequest.where(register: @register).where(group: @group).empty? && !@group.registers.include?(@register)
           @group_invitation = GroupRegisterRequest.new(user: @register.managers.first, register: @register, group: @group, mode: 'invitation')
           if @group_invitation.save
             @group.create_activity(key: 'group_register_invitation.create', owner: current_user, recipient: @register)

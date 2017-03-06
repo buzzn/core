@@ -332,8 +332,8 @@ module Group
     end
 
     def calculate_current_closeness
-      addresses_out = self.registers.without_externals.outputs.collect(&:address).compact
-      addresses_in = self.registers.without_externals.inputs.collect(&:address).compact
+      addresses_out = self.registers.outputs.collect(&:address).compact
+      addresses_in = self.registers.inputs.collect(&:address).compact
       sum_distances = 0
       addresses_in.each do |address_in|
         addresses_out.each do |address_out|

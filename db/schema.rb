@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170301095532) do
+ActiveRecord::Schema.define(version: 20170303203539) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,7 +157,7 @@ ActiveRecord::Schema.define(version: 20170301095532) do
   create_table "contracts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "status"
-    t.integer  "forecast_kwh_pa",               limit: 8
+    t.integer  "forecast_kwh_pa",                     limit: 8
     t.date     "signing_date"
     t.date     "end_date"
     t.boolean  "terms_accepted"
@@ -165,14 +165,11 @@ ActiveRecord::Schema.define(version: 20170301095532) do
     t.boolean  "power_of_attorney"
     t.string   "customer_number"
     t.string   "contract_number"
-    t.string   "username"
-    t.string   "encrypted_password"
-    t.boolean  "valid_credentials",                       default: false
     t.uuid     "register_id"
     t.uuid     "organization_id"
     t.uuid     "localpool_id"
-    t.datetime "created_at",                                              null: false
-    t.datetime "updated_at",                                              null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.boolean  "other_contract"
     t.boolean  "move_in"
     t.date     "begin_date"
@@ -186,7 +183,7 @@ ActiveRecord::Schema.define(version: 20170301095532) do
     t.string   "second_master_uid"
     t.string   "metering_point_operator_name"
     t.string   "old_supplier_name"
-    t.string   "type",                                                    null: false
+    t.string   "type",                                          null: false
     t.date     "cancellation_date"
     t.string   "old_customer_number"
     t.string   "old_account_number"
@@ -195,6 +192,8 @@ ActiveRecord::Schema.define(version: 20170301095532) do
     t.string   "customer_type"
     t.uuid     "contractor_id"
     t.string   "contractor_type"
+    t.string   "energy_consumption_before_kwh_pa"
+    t.string   "down_payment_before_cents_per_month"
   end
 
   add_index "contracts", ["contractor_type", "contractor_id"], name: "index_contracts_on_contractor_type_and_contractor_id", using: :btree
@@ -371,14 +370,23 @@ ActiveRecord::Schema.define(version: 20170301095532) do
     t.date     "build_year"
     t.date     "calibrated_till"
     t.boolean  "smart",                             default: false
-    t.boolean  "online",                            default: false
-    t.boolean  "pull_readings",                     default: true
-    t.boolean  "init_first_reading",                default: false
     t.boolean  "init_reading",                      default: false
     t.string   "ancestry"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "type",                                              null: false
+    t.string   "section"
+    t.string   "metering_point_type"
+    t.string   "voltage_level"
+    t.string   "cycle_interval"
+    t.boolean  "send_data_dso"
+    t.boolean  "remote_readout"
+    t.string   "tariff"
+    t.string   "direction"
+    t.string   "data_logging"
+    t.string   "manufacturer_number"
+    t.integer  "converter_constant"
+    t.string   "data_provider_name"
   end
 
   add_index "meters", ["ancestry"], name: "index_meters_on_ancestry", using: :btree
@@ -483,6 +491,7 @@ ActiveRecord::Schema.define(version: 20170301095532) do
     t.boolean  "subject_to_tax"
     t.string   "mandate_reference"
     t.string   "creditor_id"
+    t.string   "account_number"
   end
 
   add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
@@ -525,6 +534,7 @@ ActiveRecord::Schema.define(version: 20170301095532) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "email_notification_meter_offline", default: false
+    t.string   "address"
   end
 
   add_index "profiles", ["readable"], name: "index_profiles_on_readable", using: :btree
@@ -550,14 +560,11 @@ ActiveRecord::Schema.define(version: 20170301095532) do
     t.string   "mode"
     t.string   "name"
     t.string   "image"
-    t.string   "voltage_level"
     t.date     "regular_reeding"
-    t.string   "regular_interval"
     t.boolean  "virtual",                 default: false
     t.boolean  "is_dashboard_register",   default: false
     t.string   "readable"
     t.uuid     "meter_id"
-    t.uuid     "contract_id"
     t.uuid     "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -567,11 +574,14 @@ ActiveRecord::Schema.define(version: 20170301095532) do
     t.integer  "max_watt",                default: 5000
     t.datetime "last_observed_timestamp"
     t.boolean  "observe_offline",         default: false
-    t.boolean  "external",                default: false
     t.string   "type",                                    null: false
+    t.string   "obis"
+    t.string   "label"
+    t.string   "low_load_ability"
+    t.integer  "digits_before_comma"
+    t.integer  "decimal_digits"
   end
 
-  add_index "registers", ["contract_id"], name: "index_registers_on_contract_id", using: :btree
   add_index "registers", ["group_id"], name: "index_registers_on_group_id", using: :btree
   add_index "registers", ["meter_id"], name: "index_registers_on_meter_id", using: :btree
   add_index "registers", ["readable"], name: "index_registers_on_readable", using: :btree
@@ -682,6 +692,7 @@ ActiveRecord::Schema.define(version: 20170301095532) do
     t.boolean  "subject_to_tax"
     t.string   "mandate_reference"
     t.string   "creditor_id"
+    t.string   "account_number"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
