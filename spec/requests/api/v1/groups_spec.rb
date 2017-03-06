@@ -328,6 +328,34 @@ describe "/groups" do
   end
 
 
+  it 'gets the related meters for Group' do
+    full_access_token = Fabricate(:full_access_token)
+    token_user        = User.find(full_access_token.resource_owner_id)
+    group = Fabricate(:tribe)
+    token_user.add_role(:manager, group)
+    r = Fabricate(:input_meter).input_register
+    r.update(readable: :world)
+    group.registers << Fabricate(:input_meter).input_register
+    r = Fabricate(:output_meter).output_register
+    r.update(readable: :community)
+    group.registers << r
+    r = Fabricate(:input_meter).input_register
+    r.update(readable: :friends)
+    group.registers << r
+    r = Fabricate(:input_meter).input_register
+    r.update(readable: :members)
+    group.registers << r
+    r = Fabricate(:output_meter).output_register
+    r.update(readable: :world)
+    group.registers << r
+
+    get_with_token "/api/v1/groups/#{group.id}/meters/reals", full_access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(5)
+  end
+
+
+
 
   [nil, :sufficiency, :closeness, :autarchy, :fitting].each do |mode|
 

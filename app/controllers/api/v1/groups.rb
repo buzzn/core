@@ -57,11 +57,6 @@ module API
 
 
 
-
-
-
-
-
         desc "Return all groups"
         params do
           optional :filter, type: String, desc: "Search query using #{Base.join(Group::Base.search_attributes)}"
@@ -135,6 +130,17 @@ module API
           # registers do consider group relation for readable_by
           # the order is to make sure we the Register::Virtual as first element as its attribute set is enough for even Input and Output Registers
           Register::Base.by_group(group).by_label(Register::Base::CONSUMPTION, Register::Base::PRODUCTION_PV, Register::Base::PRODUCTION_CHP).anonymized_readable_by(current_user).order(type: :desc)
+        end
+
+
+        desc "Return the related real meters for Group"
+        params do
+          requires :id, type: String, desc: "ID of the group"
+        end
+        oauth2 :full
+        get ":id/meters/reals" do
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
+          Meter::Real.by_group(group) #.readable_by(current_user)
         end
 
 

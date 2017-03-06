@@ -20,6 +20,10 @@ module Meter
     has_many :registers, class_name: Register::Real, foreign_key: :meter_id
     validates_associated :registers
 
+    scope :by_group, lambda {|group|
+      joins(:registers).where('registers.id IN (?)', group.registers.ids)
+    }
+
     def self.manufacturer_names
       ['easy_meter', 'amperix', 'ferraris', 'other']
     end

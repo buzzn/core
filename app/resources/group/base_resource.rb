@@ -9,6 +9,7 @@ module Group
                 :readable
 
     has_many :registers
+    has_many :meters
     has_many :devices
     has_many :managers
     has_many :energy_producers
