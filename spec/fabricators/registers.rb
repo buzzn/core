@@ -706,21 +706,21 @@ Fabricator :register_60051565, from: :input_register do
   name  'N 26'
 end
 
-# #alexandra brunner
-# Fabricator :register_6005195, from: :input_register do
-#   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
+#alexandra brunner
+# Fabricator :register_60051595, from: :input_register do
+#   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
 #  name  'N 27'
 # end
 
-# #sww ggmbh
-# Fabricator :register_6005195, from: :input_register do
-#   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
-#  name  'N 01'
-# end
+#sww ggmbh
+Fabricator :register_60051579, from: :input_register do
+  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
+ name  'N 01'
+end
 
 # #peter schmidt
 # Fabricator :register_6005195, from: :input_register do
-#   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
+#   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
 #  name  'Übergabe'
 # end
 
