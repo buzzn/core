@@ -169,9 +169,6 @@ module Register
       group ? self.where(group: group.id) : self.where('1=2')
     }
 
-    scope :externals, -> { where(external: true) }
-    scope :without_externals, -> { where(external: false) }
-
     def validate_invariants
       # TODO: add this when migration were running
       # if contracts.size > 0 && address.nil?

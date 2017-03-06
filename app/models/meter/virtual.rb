@@ -18,7 +18,7 @@ module Meter
 
 
     def validate_invariants
-      [:manufacturer_name, :online, :smart, :image].each do |name|
+      [:manufacturer_name, :smart, :image].each do |name|
         error.add(name, 'not allowed') if send(:name).nil?
       end
     end

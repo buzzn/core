@@ -22,7 +22,7 @@ The response should look like this:
 Make sure you use the access_token from step 1 and replace 'easymeter', 'q3d' and '1010101010' with the names and numbers of your meter.
 
 ### 2.1. If your meter got created your response body should look like this (with a 201 status code):
-	
+
 	{
 	  "data": {
 	    "id": "9a54ec4c-dd1e-454b-a07e-2de64e034741",
@@ -34,8 +34,7 @@ Make sure you use the access_token from step 1 and replace 'easymeter', 'q3d' an
 	      "manufacturer-name": "easymeter",
 	      "manufacturer-product-name": "q3d",
 	      "manufacturer-product-serialnumber": "1010101010",
-	      "smart": true,
-	      "online": false
+	      "smart": true
 	    },
 	    "relationships": {
 	      "registers": {
@@ -47,12 +46,12 @@ Make sure you use the access_token from step 1 and replace 'easymeter', 'q3d' an
 	    }
 	  }
 	}
-	
+
 
 Make sure to save the id for future reference!
 
 ### 2.2. If your meter already exists your response body may look like this (with a 422 status code):
-	
+
 	{
 	  "errors": [
 	    {
@@ -65,14 +64,14 @@ Make sure to save the id for future reference!
 	  ]
 	}
 
-In this case you should use the id of the meter that you have already created. 
+In this case you should use the id of the meter that you have already created.
 
 **NOTE:**
 
 To get all your meters please use these endpoints:
 
 	get /api/v1/users/me
-	get /api/v1/users/{id}/meters 
+	get /api/v1/users/{id}/meters
 
 Replace {id} with the user_id you got from the first call.
 
@@ -130,7 +129,7 @@ Your response body should look like this (with a 201 status code):
 
 	curl -X POST --header 'Content-Type: application/x-www-form-urlencoded' --header 'Accept: application/json' --header 'Authorization: 85d134acf33eed098eff8909abb33345761b06' -d 'meter_id=9a54ec4c-dd1e-454b-a07e-2de64e034741&timestamp=2016-10-12%2014%3A53%3A52%20%2B0200&energy_a_milliwatt_hour=20000&power_a_milliwatt=56784' 'https://app.buzzn.net/api/v1/readings'
 
-Keep in mind thar energy_a_milliwatt_hour and energy_b_milliwatt_hour are measurements, while power_a_milliwatt and power_b_milliwatt is the power that is consumed since the last reading. 
+Keep in mind thar energy_a_milliwatt_hour and energy_b_milliwatt_hour are measurements, while power_a_milliwatt and power_b_milliwatt is the power that is consumed since the last reading.
 
 Your response body should look like this (with a status code of 201):
 
