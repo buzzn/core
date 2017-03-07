@@ -1,5 +1,4 @@
 require "application_responder"
-require 'oauth_helper'
 
 class ApplicationController < ActionController::Base
   self.responder = ApplicationResponder
@@ -70,30 +69,15 @@ class ApplicationController < ActionController::Base
 
   def initialize_gon
     if user_signed_in?
-
-      oauth = OAuthHelper.new(current_user)
-      # if the user just logged in we have username + password and need to use it
-      user = params['user'] || {}
-      token = oauth.token(user['password'])
-      if token
-        gon_access_token = token.token
-        # use the same structure as /oauth/token will return
-        gon_oauth = { expires_at: token.expires_at,
-                      refresh_token: token.refresh_token,
-                      access_token: token.token }
-        logger.debug("[GON] #{current_user.email} using #{token.token} until #{Time.at token.expires_at}#{' via password login' if user['password']}")
-      else
-        gon_access_token = nil
-        gon_oauth = nil
-      end
-
       Gon.global.push({ current_user_id: current_user.id,
                         profile_name: current_user.profile.slug,
                         pusher_key: Rails.application.secrets.pusher_key,
-                        pusher_host: Rails.application.secrets.pusher_host,
-                        access_token: gon_access_token,
-                        oauth: gon_oauth })
+                        pusher_host: Rails.application.secrets.pusher_host })
+    else
+       Gon.global.push({ pusher_key: Rails.application.secrets.pusher_key,
+                         pusher_host: Rails.application.secrets.pusher_host })
     end
+      
   rescue => e
     logger.error("error while retrieving access token: #{e.message}")
   end
