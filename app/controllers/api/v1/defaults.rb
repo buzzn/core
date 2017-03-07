@@ -17,12 +17,11 @@ module API
 
         helpers Doorkeeper::Grape::Helpers
         helpers Buzzn::Grape::Caching
-
-        use ActionDispatch::Session::CookieStore
         
         helpers do
 
           def current_user
+            env['warden'].authenticate(scope: :user)
             if env['warden'].user
               return env['warden'].user
             end
