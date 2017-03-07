@@ -264,56 +264,67 @@ end
 Fabricator :markus_becher, from: :user do
   email               'markusbecher@hotmail.com'
   profile             { Fabricate(:profile_markus_becher) }
+  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 43')}
 end
 
 Fabricator :inge_brack, from: :user do
   email               'i.brack@yahoo.de'
   profile             { Fabricate(:profile_inge_brack) }
+  address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 21')}
 end
 
 Fabricator :peter_brack, from: :user do
   email               'peter_brack@web.de'
   profile             { Fabricate(:profile_peter_brack) }
+  address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 25')}
 end
 
 Fabricator :annika_brandl, from: :user do
   email               'nothing@nothing.de'
   profile             { Fabricate(:profile_annika_brandl) }
+  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 25')}
 end
 
 Fabricator :gudrun_brandl, from: :user do
   email               'gudrun_brandl@gmx.de'
   profile             { Fabricate(:profile_gudrun_brandl) }
+  address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 14')}
 end
 
 Fabricator :martin_braeunlich, from: :user do
   email               'mbraeunlich@arcor.de'
   profile             { Fabricate(:profile_martin_braeunlich) }
+  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 42')}
 end
 
 Fabricator :daniel_bruno, from: :user do
   email               'daniel.bruno@gmx.net'
   profile             { Fabricate(:profile_daniel_bruno) }
+  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 22')}
 end
 
 Fabricator :zubair_butt, from: :user do
   email               'zubiedyta@web.de'
   profile             { Fabricate(:profile_zubair_butt) }
+  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 41')}
 end
 
 Fabricator :maria_cerghizan, from: :user do
   email               'cerghizan_medias@yahoo.de'
   profile             { Fabricate(:profile_maria_cerghizan) }
+  address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 32')}
 end
 
 Fabricator :stefan_csizmadia, from: :user do
   email               'nothing2@nothing.de'
   profile             { Fabricate(:profile_stefan_csizmadia) }
+  address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 13')}
 end
 
 Fabricator :patrick_fierley, from: :user do
   email               'remik.fierley@gmail.com'
   profile             { Fabricate(:profile_patrick_fierley) }
+  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 33')}
 end
 
 Fabricator :maria_frank, from: :user do

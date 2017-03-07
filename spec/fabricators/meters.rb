@@ -710,6 +710,12 @@ Fabricator :easymeter_60051579, from: :easy_meter_q3d do
  registers [Fabricate.build(:register_60051579)]
 end
 
+#third party supplied
+Fabricator :easymeter_60051575, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60051575'
+ registers [Fabricate.build(:register_60051575)]
+end
+
 
 #abgrenzung pv
 Fabricator :easymeter_60009484, from: :easy_meter_q3d do

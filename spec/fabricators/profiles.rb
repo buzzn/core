@@ -1,9 +1,11 @@
 # encoding: utf-8
 
 Fabricator :profile do
-  user_name   { FFaker::Name.name.slice(0...63) }
-  first_name  { FFaker::Name.first_name.slice(0...30) }
-  last_name   { FFaker::Name.last_name.slice(0...30) }
+  firstname = FFaker::Name.first_name.slice(0...30)
+  lastname = FFaker::Name.last_name.slice(0...30)
+  first_name  { firstname }
+  last_name   { lastname }
+  user_name   { firstname + '-' + lastname + (rand*10).to_s }
   phone       { FFaker::PhoneNumber.phone_number }
   terms       true
   i = 0
@@ -254,8 +256,9 @@ end
 
 #Ab hier: Hell & Warm (Forstenried)
 Fabricator :profile_markus_becher, from: :profile do
-  first_name 'Markus'
-  last_name  'Becher'
+  first_name  'Markus'
+  last_name   'Becher'
+  phone       '0171-5679963'
 end
 
 Fabricator :profile_inge_brack, from: :profile do
