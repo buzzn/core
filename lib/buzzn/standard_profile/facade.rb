@@ -1,38 +1,126 @@
 module Buzzn::StandardProfile
   class Facade
 
-    def query_value(profile, timestamp, units)
-      only = ['timestamp', 'source']
-      only << 'energy_milliwatt_hour' if units.include?('energy')
-      only << 'power_milliwatt' if units.include?('power')
-      Reading.where(:timestamp.gte => timestamp, source: profile).only(only).order_by(timestamp: 1).first
+    ENERGY = 'energy_milliwatt_hour'.freeze
+    POWER  = 'power_milliwatt'.freeze
+    SUM    = 'sumEnergyMilliwattHour'.freeze
+    AVG    = 'avgPowerMilliwatt'.freeze
+    FIRST  = 'firstEnergyMilliwattHour'.freeze
+    LAST   = 'lastEnergyMilliwattHour'.freeze
+    BUCKET = 'firstTimestamp'.freeze
+
+    SELECTORS = {
+      year:    ['year', 'month'].freeze,
+      month:   ['month', 'dayOfMonth'].freeze,
+      day:     ['hour', 'fifteen'].freeze,
+      hour:    ['minute'].freeze
+    }.freeze
+
+    INITIAL_SORT = {
+                     "$sort" => {
+                       timestamp: 1
+                     }
+                   }.freeze
+
+    FINAL_SORT = {
+                   "$sort" => {
+                     BUCKET => 1
+                   }
+                 }.freeze
+
+    POWER_PROJECT = {
+                 "$project" => {
+                    BUCKET => "$#{BUCKET}",
+                    AVG =>  "$#{AVG}"
+                 }
+               }.freeze
+    
+    ENERGY_PROJECT = {
+                 "$project" => {
+                    BUCKET => "$#{BUCKET}",
+                    FIRST =>  "$#{FIRST}",
+                    LAST =>  "$#{LAST}"
+                 }
+               }.freeze
+
+    GROUPS = begin
+               groups = {}
+               SELECTORS.each do |duration, selector|
+                 if [:year, :month].include? duration
+                   group = {
+                     "$group" => {
+                       BUCKET => { "$first"  => "$timestamp" },
+                       FIRST => { "$first" => "$#{ENERGY}" },
+                       LAST => { "$last"  => "$#{ENERGY}" }
+                     }
+                   }
+                 else
+                   group = {
+                     "$group" => {
+                       BUCKET => { "$first"  => "$timestamp" },
+                       AVG => { "$avg"  => "$#{POWER}" }
+                     }
+                   }
+                 end
+                 formats = group['$group'][:_id] = {}
+                 selector.each do |format|
+                   formats["#{format}ly"] = "$#{format}ly"
+                 end
+                 groups[duration] = group
+               end
+               groups.freeze
+             end
+
+    def query_value(profile, timestamp)
+      Reading.where(:timestamp.gte => timestamp, source: profile).only('timestamp', 'source', POWER).order_by(timestamp: 1).limit(1).first
     end
 
-    def query_range(profile, from, to, resolution, units)
-      source = { source: { "$in" => [profile] } }
+    def query_range(profile, interval)
+      case interval.duration
+      when :year
+        energy_query_range(profile, interval)
+      when :month
+        energy_query_range(profile, interval)
+      when :day
+        power_query_range(profile, interval)
+      when :hour
+        power_query_range(profile, interval)
+      else
+        raise ArgumentError.new "unknown duration #{interval.duration}"
+      end
+    end
 
-      resolution_formats = {
-        year_to_months:     ['year', 'month'],
-        month_to_days:      ['year', 'month', 'dayOfMonth'],
-        week_to_days:       ['year', 'month', 'dayOfMonth'],
-        day_to_hours:       ['year', 'month', 'dayOfMonth', 'hour'],
-        day_to_minutes:     ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
-        hour_to_minutes:    ['year', 'month', 'dayOfMonth', 'hour', 'minute'],
-        minute_to_seconds:  ['year', 'month', 'dayOfMonth', 'hour', 'minute', 'second']
-      }
-      resolution_format = resolution_formats[resolution]
+    def energy_query_range(profile, interval)
+      now = Time.current.utc
+      adjusted = interval.to_as_utc_time < now ? interval.to_as_utc_time + 1.day : now
+      raw = do_query_range(profile, interval.from_as_utc_time, adjusted, interval.duration, ENERGY).to_a
+      if current = raw.first
+        raw.to_a[1..-1].each do |item|
+          current[SUM] = item[FIRST] - current[FIRST]
+          current = item
+        end
+      end
+      if adjusted == now
+        last = raw.last
+        last[SUM] = last[LAST] - last[FIRST]
+        raw
+      else
+        raw[0..-2]
+      end
+    end
 
+    def power_query_range(profile, interval)
+      now = Time.current.utc
+      adjusted = interval.to_as_utc_time < now ? interval.to_as_utc_time + 1.day : now
+      do_query_range(profile, interval.from_as_utc_time, adjusted, interval.duration, POWER).to_a
+    end
 
+    def do_query_range(profile, from, to, duration, units)
       # start pipe
       pipe = []
 
       # sort
-      sort =  {
-                "$sort" => {
-                  timestamp: 1
-                }
-              }
-      pipe << sort
+      pipe << INITIAL_SORT
 
       # match
       match = {
@@ -40,10 +128,10 @@ module Buzzn::StandardProfile
                   timestamp: {
                     "$gte"  => from.to_datetime,
                     "$lt"  => to.to_datetime
-                  }
+                  },
+                  source: { "$in" => [profile] }
                 }
               }
-      match["$match"].merge!(source)
       pipe << match
 
 
@@ -52,84 +140,60 @@ module Buzzn::StandardProfile
       # project
       project = {
                   "$project" => {
-                    source: 1,
                     timestamp: 1
                   }
                 }
 
-      # we bucket complete days/month/hours according to the date format so we need to
-      # move the timestamp for calculating the date format at the beginning of the day.
-      offset = 1000 * ((from + 1.day).beginning_of_day - from)
-
-      project["$project"].merge!(energy_milliwatt_hour: 1) if units.include?('energy')
-      project["$project"].merge!(power_milliwatt: 1) if units.include?('power')
+      # mongodb can give you the year, month, day_of_month, hour, minutes and
+      # seconds of a timestamp. the timestamps stored in mongodb are in UTC
+      # (i.e. have no timeone).
+      # receiving 'from' and 'to' which are coming from original timezone based
+      # timestamps like a year in
+      # Greenland: 2015-01-01 03:00:00 UTC to 2016-01-01 03:00:00 UTC
+      # or a month in
+      # Berlin: 2010-04-30 22:00:00 UTC to 2010-05-01 22:00:00 UTC
+      #
+      # moving the timestamp to the beginning of the nearest days gives back
+      # UTC timestamps which matches the year, month, day_of_month, hour,
+      # minutes and seconds of the original timestamp with timezone
+      #
+      # Greenland: 2015-01-01 00:00:00 UTC to 2016-01-01 00:00:00 UTC
+      # Berlin: 2010-05-01 00:00:00 UTC to 2010-06-01 00:00:00 UTC
+      next_day = (from + 1.day).beginning_of_day - from
+      previous_day = from - from.beginning_of_day
+      if next_day >= previous_day
+        offset = -1000 * previous_day
+      else
+        offset = 1000 * next_day
+      end
+      
+      selector = SELECTORS[duration]
+      project["$project"][units] = 1
       formats = {}
-      resolution_format.each do |format|
-        formats.merge!({
-          "#{format.gsub('OfMonth','')}ly" => {
-            "$#{format}" => { "$add" => [ "$timestamp", offset ] }
-          }
-        })
+      selector.each do |format|
+        if format == 'fifteen'
+          formats['fifteenly'] = { '$floor' => { "$divide" => [{"$minute"=>{"$add"=>["$timestamp", 3600000.0]}}, 15] }}
+        else
+          formats["#{format}ly"] = { "$#{format}" => { "$add" => [ "$timestamp", offset ] } }
+        end
       end
       project["$project"].merge!(formats)
       pipe << project
 
 
 
-
       # group
-      group = {
-                "$group" => {
-                  firstTimestamp: { "$first"  => "$timestamp" },
-                  lastTimestamp:  { "$last"   => "$timestamp" }
-                }
-              }
-      if units.include?('energy')
-        group["$group"].merge!(firstEnergyMilliwattHour: { "$first" => "$energy_milliwatt_hour" })
-        group["$group"].merge!(lastEnergyMilliwattHour:  { "$last"  => "$energy_milliwatt_hour" })
-      end
-      if units.include?('power')
-        group["$group"].merge!(avgPowerMilliwatt: { "$avg" => "$power_milliwatt" })
-      end
-      formats = {_id: {}}
-      resolution_format.each do |format|
-        formats[:_id].merge!({ "#{format.gsub('OfMonth','')}ly" => "$#{format.gsub('OfMonth','')}ly" })
-      end
-      group["$group"].merge!(formats)
-      pipe << group
-
-
-
-
-
+      pipe << GROUPS[duration]
+      
       # project
-      project = {
-                  "$project" => {
-                    source: 1,
-                    firstTimestamp: "$firstTimestamp",
-                    lastTimestamp: "$lastTimestamp"
-                  }
-                }
-      if units.include?('energy')
-        project["$project"].merge!(sumEnergyMilliwattHour: { "$subtract" => [ "$lastEnergyMilliwattHour", "$firstEnergyMilliwattHour" ] })
+      if units == ENERGY
+        pipe << ENERGY_PROJECT
+      else
+        pipe << POWER_PROJECT
       end
-      if units.include?('power')
-        project["$project"].merge!(avgPowerMilliwatt: "$avgPowerMilliwatt")
-      end
-      pipe << project
-
-
 
       # sort
-      sort =  {
-                "$sort" => {
-                  _id: 1
-                }
-              }
-      pipe << sort
-
-
-
+      pipe << FINAL_SORT
 
       Reading.collection.aggregate(pipe)
     end

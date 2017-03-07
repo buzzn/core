@@ -2,8 +2,8 @@ module Buzzn::StandardProfile
   class DataSource < Buzzn::DataSource
     NAME = :standard_profile
 
-    IN_PROFILES = ['slp']
-    OUT_PROFILES = ['sep_bhkw', 'sep_pv']
+    IN_PROFILES = [:slp]
+    OUT_PROFILES = [:sep_bhkw, :sep_pv]
 
     def initialize(facade = Facade.new)
       @facade = facade
@@ -11,147 +11,145 @@ module Buzzn::StandardProfile
 
     # single_value
     def single_aggregated(resource, mode)
-      registers_hash = sort_resource(resource)
-      data_results = registers_hash_to_data_results(registers_hash, mode, ['power'], Time.current)
-      data_results ? data_results.first : nil
+      case resource
+      when Register::Real
+        single_aggregated_register(resource, mode)
+      when Group::Base
+        single_aggregated_group(resource, mode)
+      else
+        nil
+      end
     end
 
     # value_list
     def collection(resource, mode)
-      registers_hash = sort_resource(resource)
-      data_results = registers_hash_to_data_results(registers_hash, mode, ['power'], Time.current)
-      data_results ? data_results : nil
+      result = Buzzn::DataResultArray.new
+      current = Time.current
+      resource.registers.each do |register|
+        if point = single_aggregated_register(register, mode, current)
+          result << point
+        end
+      end
+      result
     end
 
     # chart
     def aggregated(resource, mode, interval)
-      registers_hash = sort_resource(resource)
-      data_result_sets = registers_hash_to_data_result_sets(registers_hash, mode, interval)
-      data_result_sets ? data_result_sets.first : nil
+      case resource
+      when Register::Real
+        aggregated_register(resource, mode, interval)
+      when Group::Base
+        aggregated_group(resource, mode, interval)
+      else
+        nil
+      end
     end
 
 
 private
+    def single_aggregated_register(register, mode, time = Time.current)
+      profile_type = get_profile_type(register)
+      if profile_type && register.direction == mode
+        if result = @facade.query_value(profile_type, time)
+          factor = factor_from_register(register)
+          Buzzn::DataResult.new(result.timestamp.to_time,
+                                factor * result.power_milliwatt,
+                                register.id, mode)
+        end
+      end
+    end
 
-    def registers_hash_to_data_results(registers_hash, mode, units, timestamp)
+    def single_aggregated_group(group, mode)
+      value = 0
+      current = Time.current
+
+      # produce a map from register (sample) to how registers have
+      # the same profile_type
+      profile_types = {}
+      registers = {}
+      group.registers.each do |register|
+        profile_type = get_profile_type(register)
+        reg = profile_types[profile_type]
+        if reg
+          # count how many registers are for that profile_type
+          registers[reg] += 1
+        else
+          # the first register is take as sample for the profile_type
+          registers[register] = 1
+          profile_types[profile_type] = register
+        end
+      end
+      # now the registers map has a register sample mapped to how many
+      # registers have the same profile_type
+      registers.each do |register, multiplier|
+        if val = single_aggregated_register(register, mode, current)
+          value += val.value * multiplier
+        end
+      end
+      Buzzn::DataResult.new(current, value, group.id, mode)
+    end
+
+    def aggregated_register(register, mode, interval)
+      profile_type = get_profile_type(register)
+      if profile_type && get_profile_types(mode).include?(profile_type)
+        query_range_result = @facade.query_range(profile_type, interval)
+        to_data_result_set(register, query_range_result, mode)
+      end
+    end
+
+    def aggregated_group(group, mode, interval)
+      units = interval.hour? || interval.day? ? :milliwatt : :milliwatt_hour
+      result = Buzzn::DataResultSet.send(units, group.id)
+      profile_types = get_profile_types(mode)
+      group.registers.each do |register|
+        if profile_type = get_profile_type(register) && profile_types.include?(profile_type)
+          query_range_result = @facade.query_range(profile_type, interval)
+          set = to_data_result_set(register, query_range_result, mode)
+          result.add_all(set, interval.duration)
+        end
+      end
+      result
+    end
+
+    def get_profile_types(mode)
       if mode == :in
         profiles = IN_PROFILES
       elsif mode == :out
         profiles = OUT_PROFILES
-      end
-
-      data_results = []
-      profiles.each do |profile|
-        if registers_hash[profile.to_sym].any?
-          registers_hash[profile.to_sym].each do |register|
-            query_value_result = @facade.query_value(profile, timestamp, units)
-            data_results << to_data_result(register, query_value_result, units, mode)
-          end
-        end
-      end
-      data_results
-    end
-
-
-    def registers_hash_to_data_result_sets(registers_hash, mode, interval)
-      case interval.duration
-      when :day
-        resolution  = :day_to_minutes
-        units       = ['power']
-      when :month
-        resolution  = :month_to_days
-        units       = ['energy']
-      when :year
-        resolution  = :year_to_months
-        units       = ['energy']
       else
-        raise Buzzn::DataSourceError.new('unknown interval duration')
+        raie ArgumentError.new "unknown mode: #{mode}"
       end
+    end
 
-      if mode == :in
-        profiles = IN_PROFILES
-      elsif mode == :out
-        profiles = OUT_PROFILES
-      end
-
-      data_result_sets = []
-      profiles.each do |profile|
-        if registers_hash[profile.to_sym].any?
-          registers_hash[profile.to_sym].each do |register|
-            query_range_result = @facade.query_range(profile, interval.from_as_utc_time, interval.to_as_utc_time, resolution, units)
-            data_result_sets << to_data_result_set(register, query_range_result, units, mode)
+    def get_profile_type(register)
+      if register.data_source == :standard_profile
+        if register.direction == :in
+          :slp
+        else
+          if register.devices.any? && register.devices.first.primary_energy == 'sun'
+            :sep_pv
+          else
+            :sep_bhkw
           end
         end
       end
-      data_result_sets
     end
 
-
-
-
-    def to_data_result(register, query_value_result, units, mode)
-      timestamp   = query_value_result.timestamp.to_time
-      value       = query_value_result.energy_milliwatt_hour if units.include?('energy')
-      value       = query_value_result.power_milliwatt if units.include?('power')
-      resource_id = register.id
-      Buzzn::DataResult.new(timestamp, value, resource_id, mode)
-    end
-
-    def to_data_result_set(register, query_range_result, units, mode)
-      data_result_set = Buzzn::DataResultSet.milliwatt(register.id)
+    def to_data_result_set(register, query_range_result, mode)
+      unit = query_range_result.first['sumEnergyMilliwattHour'] ? :milliwatt_hour : :milliwatt
+      data_result_set = Buzzn::DataResultSet.send(unit, register.id)
       factor = factor_from_register(register)
       query_range_result.each do |document|
-        if units.include?('energy')
-          timestamp = document['firstTimestamp']
-          value     = document['sumEnergyMilliwattHour'] * factor
-        end
-        if units.include?('power')
-          timestamp = document['firstTimestamp']
-          value     = document['avgPowerMilliwatt'] * factor
-        end
+        timestamp = document['firstTimestamp']
+        value     = (document['sumEnergyMilliwattHour'] || document['avgPowerMilliwatt']) * factor
         data_result_set.add(timestamp, value, mode)
       end
       data_result_set
     end
 
     def factor_from_register(register)
-       register.forecast_kwh_pa ? (register.forecast_kwh_pa/1000.0) : 1
+       register.forecast_kwh_pa ? (register.forecast_kwh_pa/1000.0) : 1.0
     end
-
-
-
-    def sort_resource(resource)
-      case resource
-      when Group::Base
-        hash = sort_registers(resource.registers)
-      when Register::Base
-        hash = sort_registers([resource])
-      end
-    end
-
-    def sort_registers(registers)
-      slp      = []
-      sep_bhkw = []
-      sep_pv   = []
-      registers.each do |register|
-        if register.data_source == :standard_profile
-          if register.direction == :in
-            slp << register
-          else
-            if register.devices.any? && register.devices.first.primary_energy == 'sun'
-              sep_pv << register
-            else
-              sep_bhkw << register
-            end
-          end
-        end
-      end
-      return { slp: slp, sep_bhkw: sep_bhkw, sep_pv: sep_pv }
-    end
-
-
-
-
-
   end
 end
+
