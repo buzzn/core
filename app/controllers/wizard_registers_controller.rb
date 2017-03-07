@@ -50,7 +50,7 @@ class WizardRegistersController  < ApplicationController
         @meter.registers << @register
 
         #meter is OK, now check credentials
-        if params[:register_base][meter_class][:smartmeter] == "1" && params[:register_base][meter_class][:existing_meter] == t('create_new_meter')
+        if params[:register_base][meter_class][:smartmeter] == "1" && params[:register_base][meter_class][:existing_meter] != t('add_existing_meter')
           organization = Organization.find(credential_params[:organization])
           if organization.slug == 'buzzn-metering' || organization.buzzn_systems? || organization.slug == 'discovergy'
             @broker = Broker::Discovergy.new(
@@ -146,7 +146,7 @@ class WizardRegistersController  < ApplicationController
   end
 
   def credential_params
-    params.require(:register_base).require(:broker).permit(
+    params.require(:register_base).require(:broker_base).permit(
       :organization,
       :provider_login,
       :provider_password,
