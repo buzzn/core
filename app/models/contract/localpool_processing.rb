@@ -1,8 +1,8 @@
 class Contract::LocalpoolProcessing < Contract::Base
 
-  def initialize(*args)
+  def self.new(*args)
     super
-    self.contractor = Organization.buzzn_systems
+    contractor = Organization.buzzn_systems
   end
 
   belongs_to :localpool, class_name: Group::Localpool
