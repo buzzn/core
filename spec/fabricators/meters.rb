@@ -756,7 +756,7 @@ end
 #übergabe in out
 Fabricator :easymeter_1305004864, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '1305004864'
-  registers [Fabricate.build(:register_60051562), Fabricate.build(:register_60051562)]
+  registers [Fabricate.build(:register_1305004864), Fabricate.build(:register_1305004864_out)]
 end
 
 # Fabricator :virtual_forstenried_erzeugung, from: :meter do

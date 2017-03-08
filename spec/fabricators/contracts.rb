@@ -14,7 +14,7 @@ end
 Fabricator :tariff_forstenried, from: :tariff do
   begin_date                { Date.new(2014, 12, 15) }
   energyprice_cents_per_kwh { 25.5 }
-  baseprice_cents_per_month { 2.5 }
+  baseprice_cents_per_month { 250 }
 end
 
 
@@ -119,6 +119,7 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
   customer                 { Fabricate(:user) }
+  contractor               { Fabricate(:user) }
   register                 { Fabricate(:input_register,
                                        group: Fabricate(:localpool),
                                        meter: Fabricate.build(:meter),
@@ -179,7 +180,79 @@ Fabricator :mpoc_karin, from: :metering_point_operator_contract do
   end
 end
 
+# == Localpool Contracts for Mehrgenerationenplatz Forstenried ==
 
+Fabricator :lpc_forstenried, from: :localpool_processing_contract do
+  begindate = Date.new(2014, 12, 01)
+  customer_number '40021/1'
+  contract_number '60015'
+  begin_date      begindate
+  signing_date    begindate - 2.months
+  tariffs         { [Fabricate.build(:tariff,
+                      name: 'localpool_processing_standard',
+                      begin_date: begindate,
+                      end_date: begindate,
+                      energyprice_cents_per_kwh: 0,
+                      baseprice_cents_per_month: 100000)] }
+  payments        { [Fabricate.build(:payment,
+                      begin_date: begindate,
+                      end_date: begindate,
+                      price_cents: 100000,
+                      cycle: 'once',
+                      source: 'calculated'),
+                    Fabricate.build(:payment,
+                      begin_date: begindate,
+                      end_date: begindate,
+                      price_cents: 100000,
+                      cycle: 'once',
+                      source: 'transferred')] }
+end
+
+Fabricator :mpoc_forstenried, from: :metering_point_operator_contract do
+  begindate = Date.new(2014, 12, 01)
+  metering_point_operator_name  'buzzn systems UG'
+  customer_number               '40021/1'
+  contract_number               '90041'
+  begin_date                    begindate
+  signing_date                  begindate - 2.months
+  contractor                    { Organization.buzzn_systems }
+  tariffs                       { [Fabricate.build(:tariff,
+                                    name: 'localpool_processing_standard',
+                                    begin_date: begindate,
+                                    end_date: nil,
+                                    energyprice_cents_per_kwh: 0,
+                                    baseprice_cents_per_month: 30000)] }
+  payments                      { [Fabricate.build(:payment,
+                                    begin_date: begindate,
+                                    end_date: begindate,
+                                    price_cents: 30000,
+                                    cycle: 'once',
+                                    source: 'calculated'),
+                                  Fabricate.build(:payment,
+                                    begin_date: begindate,
+                                    end_date: begindate,
+                                    price_cents: 30000,
+                                    cycle: 'once',
+                                    source: 'transferred'),
+                                  Fabricate.build(:payment,
+                                    begin_date: begindate,
+                                    end_date: nil,
+                                    price_cents: 55000,
+                                    cycle: 'monthly',
+                                    source: 'calculated'),
+                                  Fabricate.build(:payment,
+                                    begin_date: begindate,
+                                    end_date: begindate.end_of_year,
+                                    price_cents: 55000,
+                                    cycle: 'monthly',
+                                    source: 'transferred'),
+                                  Fabricate.build(:payment,
+                                    begin_date: begindate.next_year.beginning_of_year,
+                                    end_date: begindate.next_year.end_of_year,
+                                    price_cents: 55000,
+                                    cycle: 'monthly',
+                                    source: 'transferred')] }
+end
 
 # == Localpool Power Taker Contracts for Mehrgenerationenplatz Forstenried ==
 
@@ -192,7 +265,7 @@ Fabricator :lptc_markus_becher, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 1495
   renewable_energy_law_taxation   'full'
-  status                          'running'
+  status                          :running
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -200,7 +273,6 @@ Fabricator :lptc_markus_becher, from: :localpool_power_taker_contract do
                                       price_cents: 3500,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
-  bank_account                    { Fabricate.build(:bank_account_mustermann) }
 end
 
 Fabricator :lptc_inge_brack, from: :localpool_power_taker_contract do
@@ -212,7 +284,7 @@ Fabricator :lptc_inge_brack, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 1480
   renewable_energy_law_taxation   'full'
-  status                          'running'
+  status                          :running
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -220,7 +292,6 @@ Fabricator :lptc_inge_brack, from: :localpool_power_taker_contract do
                                       price_cents: 3400,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
-  bank_account                    { Fabricate.build(:bank_account_mustermann) }
 end
 
 Fabricator :lptc_peter_brack, from: :localpool_power_taker_contract do
@@ -232,7 +303,7 @@ Fabricator :lptc_peter_brack, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 651
   renewable_energy_law_taxation   'full'
-  status                          'running'
+  status                          :running
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -240,7 +311,6 @@ Fabricator :lptc_peter_brack, from: :localpool_power_taker_contract do
                                       price_cents: 1600,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
-  bank_account                    { Fabricate.build(:bank_account_mustermann) }
 end
 
 Fabricator :lptc_annika_brandl, from: :localpool_power_taker_contract do
@@ -252,7 +322,7 @@ Fabricator :lptc_annika_brandl, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 2275
   renewable_energy_law_taxation   'full'
-  status                          'running'
+  status                          :running
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -260,7 +330,6 @@ Fabricator :lptc_annika_brandl, from: :localpool_power_taker_contract do
                                       price_cents: 5100,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
-  bank_account                    { Fabricate.build(:bank_account_mustermann) }
 end
 
 Fabricator :lptc_gudrun_brandl, from: :localpool_power_taker_contract do
@@ -272,7 +341,7 @@ Fabricator :lptc_gudrun_brandl, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 621
   renewable_energy_law_taxation   'full'
-  status                          'running'
+  status                          :running
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -280,7 +349,6 @@ Fabricator :lptc_gudrun_brandl, from: :localpool_power_taker_contract do
                                       price_cents: 1600,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
-  bank_account                    { Fabricate.build(:bank_account_mustermann) }
 end
 
 Fabricator :lptc_martin_braeunlich, from: :localpool_power_taker_contract do
@@ -292,7 +360,7 @@ Fabricator :lptc_martin_braeunlich, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 1000
   renewable_energy_law_taxation   'full'
-  status                          'running'
+  status                          :running
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -300,7 +368,6 @@ Fabricator :lptc_martin_braeunlich, from: :localpool_power_taker_contract do
                                       price_cents: 2400,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
-  bank_account                    { Fabricate.build(:bank_account_mustermann) }
 end
 
 Fabricator :lptc_daniel_bruno, from: :localpool_power_taker_contract do
@@ -312,7 +379,7 @@ Fabricator :lptc_daniel_bruno, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 2800
   renewable_energy_law_taxation   'full'
-  status                          'running'
+  status                          :running
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -320,7 +387,6 @@ Fabricator :lptc_daniel_bruno, from: :localpool_power_taker_contract do
                                       price_cents: 6200,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
-  bank_account                    { Fabricate.build(:bank_account_mustermann) }
 end
 
 Fabricator :lptc_zubair_butt, from: :localpool_power_taker_contract do
@@ -332,7 +398,7 @@ Fabricator :lptc_zubair_butt, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 4000
   renewable_energy_law_taxation   'full'
-  status                          'running'
+  status                          :running
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -340,7 +406,6 @@ Fabricator :lptc_zubair_butt, from: :localpool_power_taker_contract do
                                       price_cents: 8800,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
-  bank_account                    { Fabricate.build(:bank_account_mustermann) }
 end
 
 Fabricator :lptc_maria_cerghizan, from: :localpool_power_taker_contract do
@@ -352,7 +417,7 @@ Fabricator :lptc_maria_cerghizan, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 1000
   renewable_energy_law_taxation   'full'
-  status                          'running'
+  status                          :running
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -360,7 +425,6 @@ Fabricator :lptc_maria_cerghizan, from: :localpool_power_taker_contract do
                                       price_cents: 2400,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
-  bank_account                    { Fabricate.build(:bank_account_mustermann) }
 end
 
 Fabricator :lptc_stefan_csizmadia, from: :localpool_power_taker_contract do
@@ -372,7 +436,7 @@ Fabricator :lptc_stefan_csizmadia, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 900
   renewable_energy_law_taxation   'full'
-  status                          'running'
+  status                          :running
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -380,7 +444,6 @@ Fabricator :lptc_stefan_csizmadia, from: :localpool_power_taker_contract do
                                       price_cents: 2200,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
-  bank_account                    { Fabricate.build(:bank_account_mustermann) }
 end
 
 Fabricator :lptc_patrick_fierley, from: :localpool_power_taker_contract do
@@ -392,10 +455,10 @@ Fabricator :lptc_patrick_fierley, from: :localpool_power_taker_contract do
   begin_date                      begindate
   end_date                        enddate
   signing_date                    signingdate
-  cancallation_date               cancellationdate
+  cancellation_date               cancellationdate
   forecast_kwh_pa                 1800
   renewable_energy_law_taxation   'full'
-  status                          'expired'
+  status                          :expired
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -403,10 +466,9 @@ Fabricator :lptc_patrick_fierley, from: :localpool_power_taker_contract do
                                       price_cents: 4100,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
-  bank_account                    { Fabricate.build(:bank_account_mustermann) }
 end
 
-Fabricator :lptc_rafal_jasolka, from: :localpool_power_taker_contract do
+Fabricator :lptc_rafal_jaskolka, from: :localpool_power_taker_contract do
   begindate = Date.new(2016, 05, 01)
   signingdate = Date.new(2016, 02, 01)
   contract_number                 '60015/83'
@@ -415,7 +477,7 @@ Fabricator :lptc_rafal_jasolka, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 2215
   renewable_energy_law_taxation   'full'
-  status                          'running'
+  status                          :running
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -423,6 +485,5 @@ Fabricator :lptc_rafal_jasolka, from: :localpool_power_taker_contract do
                                       price_cents: 5000,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
-  bank_account                    { Fabricate.build(:bank_account_mustermann) }
 end
 

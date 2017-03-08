@@ -1,11 +1,9 @@
 # encoding: utf-8
 
 Fabricator :profile do
-  firstname = FFaker::Name.first_name.slice(0...30)
-  lastname = FFaker::Name.last_name.slice(0...30)
-  first_name  { firstname }
-  last_name   { lastname }
-  user_name   { firstname + '-' + lastname + (rand*10).to_s }
+  first_name  { FFaker::Name.first_name.slice(0...30) }
+  last_name   { FFaker::Name.last_name.slice(0...30) }
+  user_name   { FFaker::Name.name.slice(0...30) }
   phone       { FFaker::PhoneNumber.phone_number }
   terms       true
   i = 0

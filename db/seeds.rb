@@ -518,9 +518,49 @@ peter_schmidt = Fabricate(:peter_schmidt)
 hell_und_warm = Fabricate(:hell_und_warm)
 peter_schmidt.add_role(:manager, hell_und_warm)
 
+# Übergabe in out
+meter = Fabricate(:easymeter_1305004864)
+register_1305004864_out = meter.output_register
+register_1305004864 = meter.input_register
+meter.broker = Fabricate(:discovergy_broker, mode: 'in_out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+peter_schmidt.add_role(:manager, register_1305004864)
+peter_schmidt.add_role(:manager, register_1305004864_out)
+
+# Abgrenzung PV
+meter = Fabricate(:easymeter_60009484)
+register_60009484 = meter.output_register
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+peter_schmidt.add_role(:manager, register_60009484)
+
+# BHKW 1
+meter = Fabricate(:easymeter_60138947)
+register_60138947 = meter.output_register
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+peter_schmidt.add_role(:manager, register_60138947)
+
+# BHKW 2
+meter = Fabricate(:easymeter_60138943)
+register_60138943 = meter.output_register
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+peter_schmidt.add_role(:manager, register_60138943)
+
+# PV
+meter = Fabricate(:easymeter_1338000816)
+register_1338000816 = meter.output_register
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+peter_schmidt.add_role(:manager, register_1338000816)
+
+### Localpool ###
+
 localpool_forstenried = Fabricate(:localpool_forstenried, registers: [register_60138947, register_60138943, register_1338000816])
 peter_schmidt.add_role(:manager, localpool_forstenried)
+localpool_forstenried.registers << register_60009484
+localpool_forstenried.registers << register_1305004864
+localpool_forstenried.registers << register_1305004864_out
+lpc_forstenried = Fabricate(:lpc_forstenried, signing_user: peter_schmidt, localpool: localpool_forstenried, customer: hell_und_warm)
+mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: peter_schmidt, localpool: localpool_forstenried, customer: hell_und_warm)
 
+### LSN ####
 
 markus_becher = Fabricate(:markus_becher)
 meter = Fabricate(:easymeter_60051595)
@@ -1063,44 +1103,21 @@ meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER
 peter_schmidt.add_role(:manager, register_60051575)
 localpool_forstenried.registers << register_60051575
 
-meter = Fabricate(:easymeter_60009484) #abgrenzung pv
-register_60009484 = meter.output_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
-peter_schmidt.add_role(:manager, register_60009484)
-localpool_forstenried.registers << register_60051575
-
-meter = Fabricate(:easymeter_60138947) #bhkw1
-register_60138947 = meter.output_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
-peter_schmidt.add_role(:manager, register_60138947)
-
-meter = Fabricate(:easymeter_60138943) #bhkw2
-register_60138943 = meter.output_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
-peter_schmidt.add_role(:manager, register_60138943)
-
-meter = Fabricate(:easymeter_1338000816) #pv
-register_1338000816 = meter.output_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
-peter_schmidt.add_role(:manager, register_1338000816)
-
-meter = Fabricate(:easymeter_60009485) #schule
+# Waldorfschule
+meter = Fabricate(:easymeter_60009485)
 register_60009485 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 peter_schmidt.add_role(:manager, register_60009485)
 localpool_forstenried.registers << register_60009485
 
-meter = Fabricate(:easymeter_1338000818) #hst_mitte
+# Hausstrom Mitte
+meter = Fabricate(:easymeter_1338000818)
 register_1338000818 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 peter_schmidt.add_role(:manager, register_1338000818)
 localpool_forstenried.registers << register_1338000818
 
-meter = Fabricate(:easymeter_1305004864) #übergabe in out
-register_1305004864 = meter.output_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in_out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
-peter_schmidt.add_role(:manager, register_1305004864)
-localpool_forstenried.registers << register_60051575
+
 
 # register_virtual_forstenried_erzeugung = Fabricate(:register_forstenried_erzeugung)
 # register_virtual_forstenried_erzeugung.formula_parts << Fabricate(:fp_plus, operand_id: register_60138947.id)
