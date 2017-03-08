@@ -19,7 +19,7 @@ module API
           # TODO fix register permissions and have again only:
           #      register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
           register = Register::Base.unguarded_retrieve(permitted_params[:register_ids])
-          if current_user.nil? && !register.readable_by_world?
+          if current_user.nil? && !(register.group && register.group.readable_by_world?) && !register.readable_by_world?
             raise Buzzn::PermissionDenied
           end
           data_result = Buzzn::Application.config.current_power.for_register(register, permitted_params[:timestamp])
@@ -67,7 +67,7 @@ module API
           # TODO fix register permissions and have again only:
           #      register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
           register = Register::Base.unguarded_retrieve(permitted_params[:register_ids])
-          if current_user.nil? && !register.readable_by_world?
+          if current_user.nil? && !(register.group && register.group.readable_by_world?) && !register.readable_by_world?
             raise Buzzn::PermissionDenied
           end
           timestamp = permitted_params[:timestamp] || Time.current
