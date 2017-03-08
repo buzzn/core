@@ -150,6 +150,7 @@ Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProces
   first_master_uid         { sequence(:uid, 90688251510000000000002677114) }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
+  contractor               { Organization.buzzn_systems }
 end
 
 Fabricator :localpool_processing_contract_for_organization, from: :localpool_processing_contract do
