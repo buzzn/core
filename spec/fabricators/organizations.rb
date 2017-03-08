@@ -49,6 +49,15 @@ Fabricator :power_giver_with_contracts, from: :power_giver do
 
 end
 
+Fabricator :hell_und_warm, from: :other_organization do
+  name        'hell & warm Forstenried GmbH'
+  phone       '089-89057180'
+  email       't.brumbauer@wogeno.de'
+  description 'Betreiber des Localpools Forstenried'
+  address     { Fabricate(:address, street_name: 'Aberlestraße', street_number: '16', zip: 81371, city: 'München')}
+  bank_account { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
+end
+
 # needed for groups fabricator - legacy naming
 Fabricator :buzzn_metering, from: :metering_point_operator do
   name Organization::BUZZN_SYSTEMS

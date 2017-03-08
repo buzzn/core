@@ -655,6 +655,7 @@ describe "/groups" do
 
   it 'gets the related metering_point_operator_contract for the localpool only with full token' do
     group  = Fabricate(:localpool_forstenried)
+    mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:user))
 
     full_access_token = Fabricate(:full_access_token)
     get_with_token "/api/v1/groups/localpools/#{group.id}/metering-point-operator-contract", full_access_token.token
@@ -671,6 +672,7 @@ describe "/groups" do
 
   it 'gets the related localpool-processing-contract for the localpool only with full token' do
     group  = Fabricate(:localpool_forstenried)
+    lpc_forstenried = Fabricate(:lpc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:user))
 
     full_access_token = Fabricate(:full_access_token)
     get_with_token "/api/v1/groups/localpools/#{group.id}/localpool-processing-contract", full_access_token.token
