@@ -1,7 +1,8 @@
-class Contract::LocalpoolProcessing < Contract::BuzznSystems
+class Contract::LocalpoolProcessing < Contract::Base
 
-  def self.new(*args)
+  def initialize(*args)
     super
+    self.contractor = Organization.buzzn_systems
   end
 
   belongs_to :localpool, class_name: Group::Localpool
@@ -9,5 +10,13 @@ class Contract::LocalpoolProcessing < Contract::BuzznSystems
   validates :localpool, presence: true
   validates :first_master_uid, presence: true
   validates :second_master_uid, presence: false
+  validates :begin_date, presence: true
+
+  def validate_invariants
+    super
+    if contractor
+      errors.add(:contractor, MUST_BE_BUZZN_SYSTEMS) unless contractor == Organization.buzzn_systems
+    end
+  end
 
 end
