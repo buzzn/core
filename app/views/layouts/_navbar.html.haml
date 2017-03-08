@@ -71,7 +71,7 @@
                 %li= link_to(content_tag(:i, nil, class: 'fa fa-wrench fa-fw fa-lg') + t('edit_notifications'), edit_notifications_profile_path(current_user.profile), {:remote => true, 'data-toggle' => "modal", 'data-target' => '#myModal'})
 
               .pad-all.text-right
-                = link_to(content_tag(:i, nil, class: 'fa fa-sign-out fa-fw') + t('logout'), destroy_user_session_path, :method => 'delete', class: 'btn btn-primary')
+                = link_to(content_tag(:i, nil, class: 'fa fa-sign-out fa-fw') + t('logout'), destroy_user_session_path, :method => 'get', class: 'btn btn-primary')
         - else
           %li= link_to t('sign_in'), new_user_session_path
           %li= link_to t('sign_up'), new_user_registration_path

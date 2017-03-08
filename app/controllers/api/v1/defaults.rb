@@ -4,6 +4,7 @@ require 'buzzn/guarded_crud'
 module API
   module V1
     module Defaults
+      
       extend ActiveSupport::Concern
       included do
         prefix "api"
@@ -16,10 +17,14 @@ module API
 
         helpers Doorkeeper::Grape::Helpers
         helpers Buzzn::Grape::Caching
-
+        
         helpers do
 
           def current_user
+            env['warden'].authenticate(scope: :user)
+            if env['warden'].user
+              return env['warden'].user
+            end
             User.unguarded_retrieve(doorkeeper_token.resource_owner_id) if doorkeeper_token
           end
 
