@@ -10,5 +10,15 @@ Fabricator :address do
   created_at  { (rand*10).days.ago }
 end
 
+Fabricator :address_limmat, from: :address do
+  time_zone     'Berlin'
+  city          'München'
+  street_name   'Limmatstraße'
+  zip           81476
+  country       'Germany'
+  street_number '5'
+  addition      ''
+end
 
-# don't use fake data
+
+# don't use fake data as every address results in a google request for geolocation

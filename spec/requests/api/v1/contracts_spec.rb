@@ -3,6 +3,7 @@ describe "/contracts" do
 
   it 'gets the related customer for the metering_point_operator_contract only with full token' do
     group  = Fabricate(:localpool_forstenried)
+    mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:user))
     contract = group.metering_point_operator_contract
     customer = contract.customer
     full_access_token = Fabricate(:full_access_token)
@@ -21,6 +22,7 @@ describe "/contracts" do
 
   it 'gets the related contractor for the metering_point_operator_contract only with full token' do
     group  = Fabricate(:localpool_forstenried)
+    mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:user))
     contract = group.metering_point_operator_contract
     contractor = contract.contractor
     full_access_token = Fabricate(:full_access_token)

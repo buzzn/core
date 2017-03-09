@@ -6,6 +6,7 @@ Fabricator :bank_account do
   direct_debit { FFaker::Boolean.maybe }
   created_at  { (rand*10).days.ago }
 end
+
 Fabricator :bank_account_mustermann, from: :bank_account do
   holder      'Max Musterman'
   iban        'DE23100000001234567890'
@@ -13,3 +14,4 @@ Fabricator :bank_account_mustermann, from: :bank_account do
   bank_name   'Berliner Sparkasse'
   direct_debit true
 end
+

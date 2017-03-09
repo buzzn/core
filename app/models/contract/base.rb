@@ -10,8 +10,10 @@ module Contract
 
     # status consts
     WAITING   = 'waiting_for_approval'
+    APPROVED  = 'approved'
     RUNNING   = 'running'
     CANCELLED = 'cancelled'
+    EXPIRED   = 'expired'
 
     # error messages
     MUST_BE_TRUE                 = 'must be true'
@@ -29,7 +31,7 @@ module Contract
       private :new
 
       def status
-        @status ||= [WAITING, RUNNING, CANCELLED]
+        @status ||= [WAITING, APPROVED, RUNNING, CANCELLED, EXPIRED]
       end
     end
 
@@ -42,6 +44,8 @@ module Contract
 
     has_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id
+
+    has_one :bank_account, as: :bank_accountable, dependent: :destroy
 
     validates :contractor, presence: true
     validates :customer, presence: true
@@ -66,9 +70,11 @@ module Contract
       self.status = WAITING
     end
 
+    scope :approved,  -> { where(status: APPROVED) }
     scope :running,   -> { where(status: RUNNING) }
     scope :queued,    -> { where(status: WAITING) }
     scope :cancelled, -> { where(status: CANCELLED) }
+    scope :expired,   -> { where(status: EXPIRED) }
 
     scope :power_givers,             -> {where(type: PowerGiver)}
     scope :power_takers,             -> {where(type: PowerTaker)}

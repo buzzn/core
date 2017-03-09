@@ -327,68 +327,79 @@ end
 #Ab hier: Hell & Warm (Forstenried)
 #Markus Becher
 Fabricator :register_60051595, from: :input_register do
-  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'S 43'
+  name      'S 43'
+  label     'consumption'
+  address   { Fabricate(:address_limmat, street_number: 7, addition: 'S 43')}
 end
 
 #inge_brack
 Fabricator :register_60051547, from: :input_register do
-  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'M 21'
+  name      'M 21'
+  label     'consumption'
+  address   { Fabricate(:address_limmat, street_number: 5, addition: 'M 21')}
 end
 
 #peter brack
 Fabricator :register_60051620, from: :input_register do
-  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'M 25'
+  name      'M 25'
+  label     'consumption'
+  address   { Fabricate(:address_limmat, street_number: 5, addition: 'M 25')}
 end
 
 #annika brandl
 Fabricator :register_60051602, from: :input_register do
-  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'S 25'
+  name      'S 25'
+  label     'consumption'
+  address   { Fabricate(:address_limmat, street_number: 7, addition: 'S 25')}
 end
 
 #gudrun brandl
 Fabricator :register_60051618, from: :input_register do
-  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'M 14'
+  name      'M 14'
+  label     'consumption'
+  address   { Fabricate(:address_limmat, street_number: 5, addition: 'M 14')}
 end
 
 #martin bräunlich
 Fabricator :register_60051557, from: :input_register do
-  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'S 42'
+  name      'S 42'
+  label     'consumption'
+  address   { Fabricate(:address_limmat, street_number: 7, addition: 'S 42')}
 end
 
 #daniel bruno
 Fabricator :register_60051596, from: :input_register do
-  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'S 22'
+  name      'S 22'
+  label     'consumption'
+  address   { Fabricate(:address_limmat, street_number: 7, addition: 'S 22')}
 end
 
 #zubair butt
 Fabricator :register_60051558, from: :input_register do
-  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'S 41'
+  name      'S 41'
+  label     'consumption'
+  address   { Fabricate(:address_limmat, street_number: 7, addition: 'S 41')}
 end
 
 #maria cerghizan
 Fabricator :register_60051551, from: :input_register do
-  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'M32'
+  name      'M 32'
+  label     'consumption'
+  address   { Fabricate(:address_limmat, street_number: 5, addition: 'M 32')}
 end
 
 #stefan csizmadia
 Fabricator :register_60051619, from: :input_register do
-  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '5', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'M13'
+  name      'M 13'
+  label     'consumption'
+  address   { Fabricate(:address_limmat, street_number: 5, addition: 'M 13')}
 end
 
 #patrick fierley
 Fabricator :register_60051556, from: :input_register do
-  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '7', zip: 81476, city: 'München', state: 'Bayern') }
-  name  'S 33'
+  name      'S 33'
+  label     'consumption'
+  address   { Fabricate(:address_limmat, street_number: 7, addition: 'S 33')}
 end
 
 #maria frank
@@ -706,21 +717,30 @@ Fabricator :register_60051565, from: :input_register do
   name  'N 26'
 end
 
-# #alexandra brunner
-# Fabricator :register_6005195, from: :input_register do
-#   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
+#alexandra brunner
+# Fabricator :register_60051595, from: :input_register do
+#   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
 #  name  'N 27'
 # end
 
-# #sww ggmbh
-# Fabricator :register_6005195, from: :input_register do
-#   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
-#  name  'N 01'
-# end
+#sww ggmbh
+Fabricator :register_60051579, from: :input_register do
+  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
+ name  'N 01'
+ label 'consumption'
+end
+
+#third party supplied
+Fabricator :register_60051575, from: :input_register do
+  #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
+ name  'N 42'
+ label 'consumption'
+end
+
 
 # #peter schmidt
 # Fabricator :register_6005195, from: :input_register do
-#   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
+#   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
 #  name  'Übergabe'
 # end
 
@@ -728,57 +748,56 @@ end
 Fabricator :register_60009484, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Abgrenzung PV'
+  label 'demarcation-pv'
 end
 
 #bhkw1
 Fabricator :register_60138947, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name          'BHKW 1'
-  after_create do |register|
-    Fabricate(:mpoc_buzzn_metering, register: register).update(status: :running)
-  end
+  label 'demarcation-chp'
 end
 
 #bhkw2
 Fabricator :register_60138943, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name          'BHKW 2'
-  after_create do |register|
-    Fabricate(:mpoc_buzzn_metering, register: register).update(status: :running)
-  end
+  label 'production-chp'
 end
 
 #pv
 Fabricator :register_1338000816, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name          'PV'
-  after_create do |register|
-    Fabricate(:mpoc_buzzn_metering, register: register).update(status: :running)
-  end
+  label 'production-pv'
 end
 
 #schule
 Fabricator :register_60009485, from: :input_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Schule'
+  label 'consumption'
 end
 
 #hst_mitte
 Fabricator :register_1338000818, from: :input_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'HST Mitte'
+  label 'consumption'
 end
 
 #übergabe in
 Fabricator :register_1305004864, from: :input_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Netzanschluss Bezug'
+  label 'grid-consumption'
 end
 
 #übergabe out
 Fabricator :register_1305004864_out, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Netzanschluss Einspeisung'
+  label 'grid-feeding'
 end
 
 #virtueller Zählpunkt

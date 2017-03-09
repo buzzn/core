@@ -335,323 +335,386 @@ end
 #Markus Becher
 Fabricator :easymeter_60051595, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051595'
+  registers [Fabricate.build(:register_60051595)]
 end
 
 #inge_brack
 Fabricator :easymeter_60051547, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051547'
+  registers [Fabricate.build(:register_60051547)]
 end
 
 #peter brack
 Fabricator :easymeter_60051620, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051620'
+  registers [Fabricate.build(:register_60051620)]
 end
 
 #annika brandl
 Fabricator :easymeter_60051602, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051602'
+  registers [Fabricate.build(:register_60051602)]
 end
 
 #gudrun brandl
 Fabricator :easymeter_60051618, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051618'
+  registers [Fabricate.build(:register_60051618)]
 end
 
 #martin bräunlich
 Fabricator :easymeter_60051557, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051557'
+  registers [Fabricate.build(:register_60051557)]
 end
 
 #daniel bruno
 Fabricator :easymeter_60051596, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051596'
+  registers [Fabricate.build(:register_60051596)]
 end
 
 #zubair butt
 Fabricator :easymeter_60051558, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051558'
+  registers [Fabricate.build(:register_60051558)]
 end
 
 #maria cerghizan
 Fabricator :easymeter_60051551, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051551'
+  registers [Fabricate.build(:register_60051551)]
 end
 
 #stefan csizmadia
 Fabricator :easymeter_60051619, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051619'
+  registers [Fabricate.build(:register_60051619)]
 end
 
 #patrick fierley
 Fabricator :easymeter_60051556, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051556'
+  registers [Fabricate.build(:register_60051556)]
 end
 
 #maria frank
 Fabricator :easymeter_60051617, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051617'
+  registers [Fabricate.build(:register_60051617)]
 end
 
 #eva galow
 Fabricator :easymeter_60051555, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051555'
+  registers [Fabricate.build(:register_60051555)]
 end
 
 #christel guesgen
 Fabricator :easymeter_60051616, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051616'
+  registers [Fabricate.build(:register_60051616)]
 end
 
 #gilda hencke
 Fabricator :easymeter_60051615, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051615'
+  registers [Fabricate.build(:register_60051615)]
 end
 
 #uwe hetzer
 Fabricator :easymeter_60051546, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051546'
+  registers [Fabricate.build(:register_60051546)]
 end
 
 #andreas kapfer
 Fabricator :easymeter_60051553, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051553'
+  registers [Fabricate.build(:register_60051553)]
 end
 
 #renate koller
 Fabricator :easymeter_60051601, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051601'
+  registers [Fabricate.build(:register_60051601)]
 end
 
 #thekla lorber
 Fabricator :easymeter_60051568, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051568'
+  registers [Fabricate.build(:register_60051568)]
 end
 
 #ludwig maaßen
 Fabricator :easymeter_60051610, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051610'
+  registers [Fabricate.build(:register_60051610)]
 end
 
 #franz petschler
 Fabricator :easymeter_60051537, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051537'
+  registers [Fabricate.build(:register_60051537)]
 end
 
 #anna pfaffel
 Fabricator :easymeter_60051564, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051564'
+  registers [Fabricate.build(:register_60051564)]
 end
 
 #cornelia roth
 Fabricator :easymeter_60051572, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051572'
+  registers [Fabricate.build(:register_60051572)]
 end
 
 #christian voigt
 Fabricator :easymeter_60051552, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051552'
+  registers [Fabricate.build(:register_60051552)]
 end
 
 #claudia weber
 Fabricator :easymeter_60051567, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051567'
+  registers [Fabricate.build(:register_60051567)]
 end
 
 #sissi banos
 Fabricator :easymeter_60051586, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051586'
+  registers [Fabricate.build(:register_60051586)]
 end
 
 #laura häusler
 Fabricator :easymeter_60051540, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051540'
+  registers [Fabricate.build(:register_60051540)]
 end
 
 #bastian hentschel
 Fabricator :easymeter_60051578, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051578'
+  registers [Fabricate.build(:register_60051578)]
 end
 
 #dagmar holland
 Fabricator :easymeter_60051597, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051597'
+  registers [Fabricate.build(:register_60051597)]
 end
 
 #ahmad majid
 Fabricator :easymeter_60051541, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051541'
+  registers [Fabricate.build(:register_60051541)]
 end
 
 #marinus meiners
 Fabricator :easymeter_60051570, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051570'
+  registers [Fabricate.build(:register_60051570)]
 end
 
 #wolfgang pfaffel
 Fabricator :easymeter_60051548, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051548'
+  registers [Fabricate.build(:register_60051548)]
 end
 
 #magali thomas
 Fabricator :easymeter_60051612, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051612'
+  registers [Fabricate.build(:register_60051612)]
 end
 
 #kathrin kaisenberg
 Fabricator :easymeter_60051549, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051549'
+  registers [Fabricate.build(:register_60051549)]
 end
 
 #christian winkler
 Fabricator :easymeter_60051587, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051587'
+  registers [Fabricate.build(:register_60051587)]
 end
 
 #dorothea wolff
 Fabricator :easymeter_60051566, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051566'
+  registers [Fabricate.build(:register_60051566)]
 end
 
 #esra kwiek
 Fabricator :easymeter_60051592, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051592'
+  registers [Fabricate.build(:register_60051592)]
 end
 
 #felix pfeiffer
 Fabricator :easymeter_60051580, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051580'
+  registers [Fabricate.build(:register_60051580)]
 end
 
 #jorg nasri
 Fabricator :easymeter_60051538, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051538'
+  registers [Fabricate.build(:register_60051538)]
 end
 
 #ruth jürgensen
 Fabricator :easymeter_60051590, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051590'
+  registers [Fabricate.build(:register_60051590)]
 end
 
 #rafal jaskolka
 Fabricator :easymeter_60051588, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051588'
+  registers [Fabricate.build(:register_60051588)]
 end
 
 #elisabeth gritzmann
 Fabricator :easymeter_60051543, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051543'
+  registers [Fabricate.build(:register_60051543)]
 end
 
 #matthias flegel
 Fabricator :easymeter_60051582, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051582'
+  registers [Fabricate.build(:register_60051582)]
 end
 
 #michael göbl
 Fabricator :easymeter_60051539, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051539'
+  registers [Fabricate.build(:register_60051539)]
 end
 
 #joaquim gongolo
 Fabricator :easymeter_60051545, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051545'
+  registers [Fabricate.build(:register_60051545)]
 end
 
 #patrick haas
 Fabricator :easymeter_60051614, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051614'
+  registers [Fabricate.build(:register_60051614)]
 end
 
 #gundula herrenberg
 Fabricator :easymeter_60051550, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051550'
+  registers [Fabricate.build(:register_60051550)]
 end
 
 #dominik sölch
 Fabricator :easymeter_60051573, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051573'
+  registers [Fabricate.build(:register_60051573)]
 end
 
 #jessica rensburg
 Fabricator :easymeter_60051571, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051571'
+  registers [Fabricate.build(:register_60051571)]
 end
 
 #ulrich hafen
 Fabricator :easymeter_60051544, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051544'
+  registers [Fabricate.build(:register_60051544)]
 end
 
 #anke merk
 Fabricator :easymeter_60051594, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051594'
+  registers [Fabricate.build(:register_60051594)]
 end
 
 #alex erdl
 Fabricator :easymeter_60051583, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051583'
+  registers [Fabricate.build(:register_60051583)]
 end
 
 #katrin frische
 Fabricator :easymeter_60051604, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051604'
+  registers [Fabricate.build(:register_60051604)]
 end
 
 #claudia krumm
 Fabricator :easymeter_60051593, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051593'
+  registers [Fabricate.build(:register_60051593)]
 end
 
 #rasim abazovic
 Fabricator :easymeter_60051613, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051613'
+  registers [Fabricate.build(:register_60051613)]
 end
 
 #moritz feith
 Fabricator :easymeter_60051611, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051611'
+  registers [Fabricate.build(:register_60051611)]
 end
 
 #irmgard loderer
 Fabricator :easymeter_60051609, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051609'
+  registers [Fabricate.build(:register_60051609)]
 end
 
 #eunice schüler
 Fabricator :easymeter_60051554, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051554'
+  registers [Fabricate.build(:register_60051554)]
 end
 
 #sara strödel
 Fabricator :easymeter_60051585, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051585'
+  registers [Fabricate.build(:register_60051585)]
 end
 
 #hannelore voigt
 Fabricator :easymeter_60051621, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051621'
+  registers [Fabricate.build(:register_60051621)]
 end
 
 #roswitha weber
 Fabricator :easymeter_60051565, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60051565'
+  registers [Fabricate.build(:register_60051565)]
 end
 
 # #alexandra brunner
-# Fabricator :easymeter_6005195, from: :easy_meter_q3d do
+# Fabricator :easymeter_60051595, from: :easy_meter_q3d do
 #  manufacturer_product_serialnumber   '60051562'
+#  registers [Fabricate.build(:register_60051562)]
 # end
 
-# #sww ggmbh
-# Fabricator :easymeter_6005195, from: :easy_meter_q3d do
-#  manufacturer_product_serialnumber   '60051562'
-#  meter          { Fabricate(:easymeter_60051595) }
-# end
+#sww ggmbh
+Fabricator :easymeter_60051579, from: :easy_meter_q3d do
+ manufacturer_product_serialnumber   '60051579'
+ registers [Fabricate.build(:register_60051579)]
+end
 
-# #peter schmidt
-# Fabricator :easymeter_6005195, from: :easy_meter_q3d do
-#  manufacturer_product_serialnumber   '60051562'
-# end
+#third party supplied
+Fabricator :easymeter_60051575, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60051575'
+ registers [Fabricate.build(:register_60051575)]
+end
 
 
 #abgrenzung pv
@@ -687,17 +750,14 @@ end
 #hst_mitte
 Fabricator :easymeter_1338000818, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '1338000818'
+  registers [Fabricate.build(:register_1338000818)]
 end
 
-#übergabe in
+#übergabe in out
 Fabricator :easymeter_1305004864, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '1305004864'
+  registers [Fabricate.build(:register_1305004864), Fabricate.build(:register_1305004864_out)]
 end
-
-# #übergabe out
-# Fabricator :easymeter_1305004864, from: :easy_meter_q3d do
-#   manufacturer_product_serialnumber   '1305004864'
-# end
 
 # Fabricator :virtual_forstenried_erzeugung, from: :meter do
 #   manufacturer_name                   ''
