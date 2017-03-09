@@ -51,5 +51,8 @@ Buzzn::Application.configure do
     # Bullet.disable_browser_cache = true
   end
 
+  # display error page instead of stack trace
+  # config.consider_all_requests_local = false
+
 
 end

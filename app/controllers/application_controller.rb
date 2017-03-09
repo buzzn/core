@@ -77,9 +77,13 @@ class ApplicationController < ActionController::Base
        Gon.global.push({ pusher_key: Rails.application.secrets.pusher_key,
                          pusher_host: Rails.application.secrets.pusher_host })
     end
-      
+
   rescue => e
     logger.error("error while retrieving access token: #{e.message}")
+  end
+
+  def authority_forbidden(error)
+    render "errors/403"
   end
 
   def new_session_path(scope)
