@@ -12,7 +12,7 @@ class Address < ActiveRecord::Base
   validates :zip,             presence: true, numericality: { only_integer: true }
 
 
-  after_validation :geocode
+  after_validation :geocode if Rails.env == "production" || Rails.env == "staging"
   geocoded_by :full_name
 
   def self.orga_address
@@ -45,7 +45,7 @@ class Address < ActiveRecord::Base
                                 .where(register[:id].eq(address[:addressable_id])
                                         .and(register[:readable].eq(:friends))).project(1).exists))
       orga_managers =  User.roles_query(user, manager: address[:addressable_id]).where(users_roles[:user_id].eq(user.id).and(role[:resource_type].eq(Organization)))
-      user_address = user_table.where(address[:addressable_id].eq(user_table[:id]))   
+      user_address = user_table.where(address[:addressable_id].eq(user_table[:id]))
       sqls = [admin_or_manager_of_register,
               orga_address,
               user_address,
