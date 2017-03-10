@@ -1,5 +1,5 @@
 module Register
-  class Virtual < Register::Base
+  class Virtual < Base
 
     acts_as_commentable
 

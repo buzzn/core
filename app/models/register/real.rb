@@ -1,5 +1,5 @@
 module Register
-  class Real < Register::Base
+  class Real < Base
 
     belongs_to :meter, class_name: Meter::Real, foreign_key: :meter_id
 

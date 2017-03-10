@@ -11,6 +11,12 @@
     readable    'friends'
     direction   { type == 'virtual' ? ['in', 'out'].sample : type.sub('put','') }
     created_at  { (rand*10).days.ago }
+    # don't set a label for virtual registers as there is a bug in db:init
+    if type == 'output'
+      label     'production_pv'
+    elsif type == 'input'
+      label     'consumption'
+    end
   end
 
 end
@@ -21,12 +27,14 @@ end
 Fabricator :register_z1a, from: :input_register do
   name      'Netzanschluss Bezug'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
+  label     'grid_consumption'
 end
 
 
 Fabricator :register_z1b, from: :output_register do
   name        'Netzanschluss Einspeisung'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
+  label     'grid_feeding'
 end
 
 
@@ -47,6 +55,7 @@ Fabricator :register_z4, from: :output_register do
   name  'BHKW'
   readable    'world'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
+  label     'production_chp'
 end
 
 
@@ -54,6 +63,7 @@ end
 Fabricator :register_z5, from: :output_register do
   name  'Abgrenzung'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
+  label     'demarcation_pv'
 end
 
 
@@ -82,7 +92,7 @@ Fabricator :register_stefans_bhkw, from: :output_register do
   address { Fabricate(:address, street_name: 'Forstenrieder Weg', street_number: '51', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'BHKW'
   readable    'world'
-#  meter { Fabricate(:easymeter_1024000034) }
+  label     'production_chp'
 end
 
 
@@ -140,11 +150,13 @@ end
 # Z1  Nr. 60118470 für Hans-Dieter Hopf übergabe  (Zweirichtungszähler)
 Fabricator :register_60118470, from: :output_register do
   name  'Keller'
+  label 'grid_consumption'
 end
 
 # Z2  Nr. 60009316 für BHKW Erzeugung (Einrichtungszähler Einspeisung)
 Fabricator :register_60009316, from: :output_register do
   name  'Keller'
+  label 'grid_feeding'
 end
 
 # ZN1 Nr. 60009272 für Thomas Hopf  (Einrichtungszähler Bezug)
@@ -309,6 +321,7 @@ end
 Fabricator :register_60118484, from: :input_register do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Übergabe'
+  label 'grid_consumption'
 end
 
 
@@ -748,28 +761,28 @@ end
 Fabricator :register_60009484, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Abgrenzung PV'
-  label 'demarcation-pv'
+  label 'demarcation_pv'
 end
 
 #bhkw1
 Fabricator :register_60138947, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name          'BHKW 1'
-  label 'demarcation-chp'
+  label 'demarcation_chp'
 end
 
 #bhkw2
 Fabricator :register_60138943, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name          'BHKW 2'
-  label 'production-chp'
+  label 'production_chp'
 end
 
 #pv
 Fabricator :register_1338000816, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name          'PV'
-  label 'production-pv'
+  label 'production_pv'
 end
 
 #schule
@@ -790,14 +803,14 @@ end
 Fabricator :register_1305004864, from: :input_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Netzanschluss Bezug'
-  label 'grid-consumption'
+  label 'grid_consumption'
 end
 
 #übergabe out
 Fabricator :register_1305004864_out, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Netzanschluss Einspeisung'
-  label 'grid-feeding'
+  label 'grid_feeding'
 end
 
 #virtueller Zählpunkt

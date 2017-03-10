@@ -51,14 +51,27 @@ module Register
 
     def self.directions; %w(in out); end
 
+    def self.labels
+      %w{
+      consumption
+      demarcation_pv
+      demarcation_chp
+      production_pv
+      production_chp
+      grid_consumption
+      grid_feeding
+      grid_consumption_corrected
+      grid_feeding_corrected
+      other
+    }
+    end
+
     validates :meter, presence: true
     validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
     validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_register?
     # TODO virtual register ?
     validates :image, presence: false
-    validates :voltage_level, presence: false
     validates :regular_reeding, presence: false
-    validates :regular_interval, presence: false
     validates :is_dashboard_register, presence: false
     validates :readable, inclusion: { in: self.readables }
     validates :forecast_kwh_pa, presence: false, numericality: true, allow_nil: true
@@ -68,7 +81,10 @@ module Register
     validates :last_observed_timestamp, presence: false
     # TODO virtual register ?
     validates :observe_offline, presence: false
-    validates :external, presence: false
+    # commented out to keep db:init passing. When commenting in rails complains:
+    # undefined method 'label' for Register::Virtual
+    # it seems that for db:init a wrong schema is loaded
+    #validates :label, inclusion: { in: self.labels }
 
     def discovergy_brokers
       raise 'TODO use brokers method instead'
@@ -169,11 +185,14 @@ module Register
       group ? self.where(group: group.id) : self.where('1=2')
     }
 
+    self.labels.each do |label|
+      scope "only_#{label}", -> { self.where(label: label) }
+    end
+
     def validate_invariants
-      # TODO: add this when migration were running
-      # if contracts.size > 0 && address.nil?
-      #   errors.add(:address, 'missing Address when having contracts')
-      # end
+      if contracts.size > 0 && address.nil?
+        errors.add(:address, 'missing Address when having contracts')
+      end
       if max_watt < min_watt
         errors.add(:max_watt, 'must be greater or equal min_watt')
         errors.add(:min_watt, 'must be smaller or equal max_watt')
