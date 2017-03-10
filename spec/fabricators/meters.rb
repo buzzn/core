@@ -28,14 +28,6 @@ end
   end
 end
 
-Fabricator :input_meter_with_input_register, from: :meter  do
-  registers { [Fabricate.build(:input_register)] }
-end
-
-Fabricator :output_meter_with_output_register, from: :meter  do
-  registers { [Fabricate.build(:output_register)] }
-end
-
 Fabricator :easy_meter_q3d, from: :meter  do
   manufacturer_name            'easy_meter'
   manufacturer_product_name    'Q3D'

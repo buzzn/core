@@ -19,7 +19,7 @@ describe '/api/v1/aggregates' do
 
     it 'does aggregate slp present as admin' do
       access_token = Fabricate(:full_access_token_as_admin)
-      meter = Fabricate(:input_meter_with_input_register)
+      meter = Fabricate(:input_meter)
       register = meter.input_register
 
       energy_a_milliwatt_hour = 0

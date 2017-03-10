@@ -55,7 +55,7 @@ describe Meter::Real do
   end
 
   it 'deletes a single meter including its register' do
-    meter = Fabricate(:input_meter_with_input_register)
+    meter = Fabricate(:input_meter)
     expect(Register::Base.all.size).to eq 1
     expect(Meter::Base.all.size).to eq 1
     meter.destroy
@@ -82,7 +82,7 @@ describe Meter::Real do
   end
 
   it 'does not delete register or meter' do
-    meter = Fabricate(:input_meter_with_input_register)
+    meter = Fabricate(:input_meter)
     expect(Register::Base.all.size).to eq 1
     expect(Meter::Base.all.size).to eq 1
     expect { meter.registers.first.destroy }.to raise_error Buzzn::NestedValidationError
