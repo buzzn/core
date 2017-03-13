@@ -140,7 +140,7 @@ module API
         oauth2 :full
         get ":id/meters/reals" do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          Meter::Real.by_group(group) #.readable_by(current_user)
+          group.meters #.readable_by(current_user)
         end
 
 
