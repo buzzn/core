@@ -185,9 +185,9 @@ module Register
       group ? self.where(group: group.id) : self.where('1=2')
     }
 
-    self.labels.each do |label|
-      scope "only_#{label}", -> { self.where(label: label) }
-    end
+    scope :by_label, lambda {|label|
+      self.where("label in (?)", label)
+    }
 
     def validate_invariants
       if contracts.size > 0 && address.nil?

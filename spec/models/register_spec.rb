@@ -55,6 +55,20 @@ describe "Register Model" do
     expect(registers).to match_array Register::Base.all
   end
 
+  it 'returns registers by label' do
+    3.times do
+      Fabricate(:input_meter)
+    end
+    3.times do
+      Fabricate(:output_meter)
+    end
+    expect(Register::Base.all.size).to eq 6
+    expect(Register::Base.all.by_label("consumption").size).to eq 3
+    expect(Register::Base.all.by_label("production_pv").size).to eq 3
+    expect(Register::Base.all.by_label(["consumption", "production_pv"]).size).to eq 6
+    expect(Register::Base.all.by_label(["demarcation_pv", "grid_feeding"]).size).to eq 0
+  end
+
 
 
 

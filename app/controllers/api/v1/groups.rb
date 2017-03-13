@@ -133,7 +133,8 @@ module API
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
 
           # registers do consider group relation for readable_by
-          Register::Base.by_group(group).anonymized_readable_by(current_user).order(type: :desc) # the order is to make sure we the Register::Virtual as first element as its attribute set is enough for even Input and Output Registers
+          # the order is to make sure we the Register::Virtual as first element as its attribute set is enough for even Input and Output Registers
+          Register::Base.by_group(group).by_label(["consumption", "production_pv", "production_chp"]).anonymized_readable_by(current_user).order(type: :desc)
         end
 
 
