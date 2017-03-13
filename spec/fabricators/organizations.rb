@@ -7,6 +7,7 @@ Fabricator :organization do
   description { FFaker::Company.catch_phrase }
   website     { "http://www.#{FFaker::Internet.domain_name}" }
   created_at  { (rand*10).days.ago }
+  bank_account { Fabricate(:bank_account) }
 end
 
 

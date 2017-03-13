@@ -5,6 +5,7 @@ Fabricator :user do
   password          '12345678'
   profile           { Fabricate(:profile) }
   created_at        { (rand*10).days.ago }
+  bank_account      { Fabricate(:bank_account) }
   after_create { |user|
     user.confirm
   }

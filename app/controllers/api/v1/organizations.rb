@@ -75,6 +75,18 @@ module API
           organization.address.guarded_read(current_user)
         end
 
+
+        desc 'Return the related bank_account for an organization'
+        params do
+          requires :id, type: String, desc: 'ID of the organization'
+        end
+        oauth2 :full
+        get ':id/bank_account' do
+          organization = Organization.guarded_retrieve(current_user, permitted_params)
+          organization.bank_account #.guarded_read(current_user)
+        end
+
+
         desc "Create an Organization."
         params do
           requires :name,         type: String, desc: "Name of the Organization."
