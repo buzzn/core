@@ -352,6 +352,26 @@ describe "Organizations API" do
 
   # RETRIEVE address
 
+  it 'gets not the related bank_account of an organization without token' do
+    organization       = Fabricate(:metering_service_provider)
+    bank_account       = organization.bank_account
+
+    get_without_token "/api/v1/organizations/#{organization.id}/bank_account"
+    expect(response).to have_http_status(401)
+  end
+
+  it 'gets the related bank_account of an organization with token' do
+    organization    = Fabricate(:metering_service_provider)
+    manager_access_token = Fabricate(:full_access_token)
+    manager_user         = User.find(manager_access_token.resource_owner_id)
+    manager_user.add_role(:manager, organization)
+
+    get_with_token "/api/v1/organizations/#{organization.id}/bank_account", manager_access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq(organization.bank_account.id)
+  end
+
+
   it 'gets the related address of an organization without token' do
     organization    = Fabricate(:transmission_system_operator_with_address)
     address       = organization.address
