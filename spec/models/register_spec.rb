@@ -67,6 +67,7 @@ describe "Register Model" do
     expect(Register::Base.all.by_label(Register::Base::PRODUCTION_PV).size).to eq 3
     expect(Register::Base.all.by_label(Register::Base::CONSUMPTION, Register::Base::PRODUCTION_PV).size).to eq 6
     expect(Register::Base.all.by_label(Register::Base::GRID_FEEDING, Register::Base::DEMARCATION_PV).size).to eq 0
+    expect {Register::Base.all.by_label('not_working') }.to raise_error ArgumentError
   end
 
 
