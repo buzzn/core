@@ -5,9 +5,9 @@ class SetLabelForAllGroupRegisters < ActiveRecord::Migration
         puts 'Updating Register::Base.label attribute'
         ActiveRecord::Base.transaction do
           Group::Localpool.all.each do |group|
-            group.input_registers.update_all(label: 'consumption')
+            group.input_registers.update_all(label: Register::Base::CONSUMPTION)
             group.output_registers.each do |register|
-              register.update_column(:label, register.name.include?('BHKW') ? 'production_chp' : 'production_pv')
+              register.update_column(:label, register.name.include?('BHKW') ? Register::Base::PRODUCTION_CHP : Register::Base::PRODUCTION_PV)
             end
           end
           consumption_names = ['Netzbezug', 'ÜGZ Bezug']
@@ -16,21 +16,21 @@ class SetLabelForAllGroupRegisters < ActiveRecord::Migration
             register_name = register.name
             consumption_names.each do |name|
               if register_name.include?(name)
-                register.update_column(:label, 'grid_consumption')
+                register.update_column(:label, Register::Base::GRID_CONSUMPTION)
                 break
               end
             end
             feeding_names.each do |name|
               if register_name.include?(name)
-                register.update_column(:label, 'grid_feeding')
+                register.update_column(:label, Register::Base::GRID_FEEDING)
                 break
               end
             end
             if register_name.include?('Abgrenzung')
               if register_name.include?('PV')
-                register.update_column(:label, 'demarcation_pv')
+                register.update_column(:label, Register::Base::DEMARCATION_PV)
               elsif register_name.include?('BHKW')
-                register.update_column(:label, 'demarcation_chp')
+                register.update_column(:label, Register::Base::DEMARCATION_CHP)
               end
               next
             end

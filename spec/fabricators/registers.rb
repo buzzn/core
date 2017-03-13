@@ -13,9 +13,9 @@
     created_at  { (rand*10).days.ago }
     # don't set a label for virtual registers as there is a bug in db:init
     if type == 'output'
-      label     'production_pv'
+      label     Register::Base::PRODUCTION_PV
     elsif type == 'input'
-      label     'consumption'
+      label     Register::Base::CONSUMPTION
     end
   end
 
@@ -27,14 +27,14 @@ end
 Fabricator :register_z1a, from: :input_register do
   name      'Netzanschluss Bezug'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
-  label     'grid_consumption'
+  label     Register::Base::GRID_CONSUMPTION
 end
 
 
 Fabricator :register_z1b, from: :output_register do
   name        'Netzanschluss Einspeisung'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
-  label     'grid_feeding'
+  label     Register::Base::GRID_FEEDING
 end
 
 
@@ -55,7 +55,7 @@ Fabricator :register_z4, from: :output_register do
   name  'BHKW'
   readable    'world'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
-  label     'production_chp'
+  label     Register::Base::PRODUCTION_CHP
 end
 
 
@@ -63,7 +63,7 @@ end
 Fabricator :register_z5, from: :output_register do
   name  'Abgrenzung'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
-  label     'demarcation_pv'
+  label     Register::Base::DEMARCATION_PV
 end
 
 
@@ -92,7 +92,7 @@ Fabricator :register_stefans_bhkw, from: :output_register do
   address { Fabricate(:address, street_name: 'Forstenrieder Weg', street_number: '51', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'BHKW'
   readable    'world'
-  label     'production_chp'
+  label     Register::Base::PRODUCTION_CHP
 end
 
 
@@ -150,13 +150,13 @@ end
 # Z1  Nr. 60118470 für Hans-Dieter Hopf übergabe  (Zweirichtungszähler)
 Fabricator :register_60118470, from: :output_register do
   name  'Keller'
-  label 'grid_consumption'
+  label Register::Base::GRID_CONSUMPTION
 end
 
 # Z2  Nr. 60009316 für BHKW Erzeugung (Einrichtungszähler Einspeisung)
 Fabricator :register_60009316, from: :output_register do
   name  'Keller'
-  label 'grid_feeding'
+  label Register::Base::GRID_FEEDING
 end
 
 # ZN1 Nr. 60009272 für Thomas Hopf  (Einrichtungszähler Bezug)
@@ -321,7 +321,7 @@ end
 Fabricator :register_60118484, from: :input_register do
   address        { Fabricate(:address, street_name: 'Petra-Kelly-Straße', street_number: '29', zip: 80797, city: 'München', state: 'Bayern') }
   name  'Übergabe'
-  label 'grid_consumption'
+  label Register::Base::GRID_CONSUMPTION
 end
 
 
@@ -341,77 +341,77 @@ end
 #Markus Becher
 Fabricator :register_60051595, from: :input_register do
   name      'S 43'
-  label     'consumption'
+  label     Register::Base::CONSUMPTION
   address   { Fabricate(:address_limmat, street_number: 7, addition: 'S 43')}
 end
 
 #inge_brack
 Fabricator :register_60051547, from: :input_register do
   name      'M 21'
-  label     'consumption'
+  label     Register::Base::CONSUMPTION
   address   { Fabricate(:address_limmat, street_number: 5, addition: 'M 21')}
 end
 
 #peter brack
 Fabricator :register_60051620, from: :input_register do
   name      'M 25'
-  label     'consumption'
+  label     Register::Base::CONSUMPTION
   address   { Fabricate(:address_limmat, street_number: 5, addition: 'M 25')}
 end
 
 #annika brandl
 Fabricator :register_60051602, from: :input_register do
   name      'S 25'
-  label     'consumption'
+  label     Register::Base::CONSUMPTION
   address   { Fabricate(:address_limmat, street_number: 7, addition: 'S 25')}
 end
 
 #gudrun brandl
 Fabricator :register_60051618, from: :input_register do
   name      'M 14'
-  label     'consumption'
+  label     Register::Base::CONSUMPTION
   address   { Fabricate(:address_limmat, street_number: 5, addition: 'M 14')}
 end
 
 #martin bräunlich
 Fabricator :register_60051557, from: :input_register do
   name      'S 42'
-  label     'consumption'
+  label     Register::Base::CONSUMPTION
   address   { Fabricate(:address_limmat, street_number: 7, addition: 'S 42')}
 end
 
 #daniel bruno
 Fabricator :register_60051596, from: :input_register do
   name      'S 22'
-  label     'consumption'
+  label     Register::Base::CONSUMPTION
   address   { Fabricate(:address_limmat, street_number: 7, addition: 'S 22')}
 end
 
 #zubair butt
 Fabricator :register_60051558, from: :input_register do
   name      'S 41'
-  label     'consumption'
+  label     Register::Base::CONSUMPTION
   address   { Fabricate(:address_limmat, street_number: 7, addition: 'S 41')}
 end
 
 #maria cerghizan
 Fabricator :register_60051551, from: :input_register do
   name      'M 32'
-  label     'consumption'
+  label     Register::Base::CONSUMPTION
   address   { Fabricate(:address_limmat, street_number: 5, addition: 'M 32')}
 end
 
 #stefan csizmadia
 Fabricator :register_60051619, from: :input_register do
   name      'M 13'
-  label     'consumption'
+  label     Register::Base::CONSUMPTION
   address   { Fabricate(:address_limmat, street_number: 5, addition: 'M 13')}
 end
 
 #patrick fierley
 Fabricator :register_60051556, from: :input_register do
   name      'S 33'
-  label     'consumption'
+  label     Register::Base::CONSUMPTION
   address   { Fabricate(:address_limmat, street_number: 7, addition: 'S 33')}
 end
 
@@ -740,14 +740,14 @@ end
 Fabricator :register_60051579, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
  name  'N 01'
- label 'consumption'
+ label Register::Base::CONSUMPTION
 end
 
 #third party supplied
 Fabricator :register_60051575, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
  name  'N 42'
- label 'consumption'
+ label Register::Base::CONSUMPTION
 end
 
 
@@ -761,56 +761,56 @@ end
 Fabricator :register_60009484, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Abgrenzung PV'
-  label 'demarcation_pv'
+  label Register::Base::DEMARCATION_PV
 end
 
 #bhkw1
 Fabricator :register_60138947, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name          'BHKW 1'
-  label 'demarcation_chp'
+  label Register::Base::PRODUCTION_CHP
 end
 
 #bhkw2
 Fabricator :register_60138943, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name          'BHKW 2'
-  label 'production_chp'
+  label Register::Base::PRODUCTION_CHP
 end
 
 #pv
 Fabricator :register_1338000816, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name          'PV'
-  label 'production_pv'
+  label Register::Base::PRODUCTION_PV
 end
 
 #schule
 Fabricator :register_60009485, from: :input_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Schule'
-  label 'consumption'
+  label Register::Base::CONSUMPTION
 end
 
 #hst_mitte
 Fabricator :register_1338000818, from: :input_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'HST Mitte'
-  label 'consumption'
+  label Register::Base::CONSUMPTION
 end
 
 #übergabe in
 Fabricator :register_1305004864, from: :input_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Netzanschluss Bezug'
-  label 'grid_consumption'
+  label Register::Base::GRID_CONSUMPTION
 end
 
 #übergabe out
 Fabricator :register_1305004864_out, from: :output_register do
   address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'Bayern') }
   name  'Netzanschluss Einspeisung'
-  label 'grid_feeding'
+  label Register::Base::GRID_FEEDING
 end
 
 #virtueller Zählpunkt
