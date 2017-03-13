@@ -134,7 +134,7 @@ module API
 
           # registers do consider group relation for readable_by
           # the order is to make sure we the Register::Virtual as first element as its attribute set is enough for even Input and Output Registers
-          Register::Base.by_group(group).by_label(["consumption", "production_pv", "production_chp"]).anonymized_readable_by(current_user).order(type: :desc)
+          Register::Base.by_group(group).by_label(Register::Base::CONSUMPTION, Register::Base::PRODUCTION_PV, Register::Base::PRODUCTION_CHP).anonymized_readable_by(current_user).order(type: :desc)
         end
 
 

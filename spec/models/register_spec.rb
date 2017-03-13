@@ -63,10 +63,10 @@ describe "Register Model" do
       Fabricate(:output_meter)
     end
     expect(Register::Base.all.size).to eq 6
-    expect(Register::Base.all.by_label("consumption").size).to eq 3
-    expect(Register::Base.all.by_label("production_pv").size).to eq 3
-    expect(Register::Base.all.by_label(["consumption", "production_pv"]).size).to eq 6
-    expect(Register::Base.all.by_label(["demarcation_pv", "grid_feeding"]).size).to eq 0
+    expect(Register::Base.all.by_label(Register::Base::CONSUMPTION).size).to eq 3
+    expect(Register::Base.all.by_label(Register::Base::PRODUCTION_PV).size).to eq 3
+    expect(Register::Base.all.by_label(Register::Base::CONSUMPTION, Register::Base::PRODUCTION_PV).size).to eq 6
+    expect(Register::Base.all.by_label(Register::Base::GRID_FEEDING, Register::Base::DEMARCATION_PV).size).to eq 0
   end
 
 

@@ -12,12 +12,31 @@ module Register
     include Buzzn::GuardedCrud
     include PublicActivity::Model
 
-    def self.after_create_callback(user, obj)
-      obj.create_activity(key: 'register.create', recipient: obj, owner: user)
-    end
+    #label constants
+    CONSUMPTION = 'consumption'
+    DEMARCATION_PV = 'demarcation_pv'
+    DEMARCATION_CHP = 'demarcation_chp'
+    PRODUCTION_PV = 'production_pv'
+    PRODUCTION_CHP = 'production_chp'
+    GRID_CONSUMPTION = 'grid_consumption'
+    GRID_FEEDING = 'grid_feeding'
+    GRID_CONSUMPTION_CORRECTED = 'grid_consumption_corrected'
+    GRID_FEEDING_CORRECTED = 'grid_feeding_corrected'
+    OTHER = 'other'
 
-    def self.after_destroy_callback(user, obj)
-      obj.create_activity(trackable: nil, key: 'register.destroy', recipient: nil, owner: user)
+    class << self
+      def labels
+        @label ||= [CONSUMPTION, DEMARCATION_PV, DEMARCATION_CHP, PRODUCTION_PV, PRODUCTION_CHP,
+                    GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER]
+      end
+
+      def after_create_callback(user, obj)
+        obj.create_activity(key: 'register.create', recipient: obj, owner: user)
+      end
+
+      def after_destroy_callback(user, obj)
+        obj.create_activity(trackable: nil, key: 'register.destroy', recipient: nil, owner: user)
+      end
     end
 
     belongs_to :group, class_name: Group::Base, foreign_key: :group_id
@@ -51,21 +70,6 @@ module Register
 
     def self.directions; %w(in out); end
 
-    def self.labels
-      %w{
-      consumption
-      demarcation_pv
-      demarcation_chp
-      production_pv
-      production_chp
-      grid_consumption
-      grid_feeding
-      grid_consumption_corrected
-      grid_feeding_corrected
-      other
-    }
-    end
-
     validates :meter, presence: true
     validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
     validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_register?
@@ -84,7 +88,7 @@ module Register
     # commented out to keep db:init passing. When commenting in rails complains:
     # undefined method 'label' for Register::Virtual
     # it seems that for db:init a wrong schema is loaded
-    #validates :label, inclusion: { in: self.labels }
+    #validates :label, inclusion: { in: labels }
 
     def discovergy_brokers
       raise 'TODO use brokers method instead'
@@ -185,8 +189,11 @@ module Register
       group ? self.where(group: group.id) : self.where('1=2')
     }
 
-    scope :by_label, lambda {|label|
-      self.where("label in (?)", label)
+    scope :by_label, lambda {|*labels|
+      labels.each do |label|
+        raise ArgumentError.new('Undefined constant "' + label + '". Only use constants defined by Register::Base.labels.') unless self.labels.include?(label)
+      end
+      self.where("label in (?)", labels)
     }
 
     def validate_invariants
