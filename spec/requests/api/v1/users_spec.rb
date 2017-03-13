@@ -235,6 +235,19 @@ describe "Users API" do
     expect(response).to have_http_status(200)
   end
 
+  it 'gets related bank_account for User' do
+    stranger_access_token = Fabricate(:full_access_token)
+    user_access_token     = Fabricate(:full_access_token)
+    user                  = User.find(user_access_token.resource_owner_id)
+
+    get_with_token "/api/v1/users/#{user.id}/bank_account", stranger_access_token.token
+    expect(response).to have_http_status(403)
+
+    get_with_token "/api/v1/users/#{user.id}/bank_account", user_access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data']['id']).to eq(user.bank_account.id)
+  end
+
   [:full_access_token, :smartmeter_access_token].each do |token|
     it "gets all related meters with #{token}" do
       meter1 = Fabricate(:input_meter)
