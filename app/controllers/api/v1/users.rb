@@ -88,7 +88,15 @@ module API
           )
         end
 
-
+        desc 'Return the related bank_account for User'
+        params do
+          requires :id, type: String, desc: 'ID of the User'
+        end
+        oauth2 :full
+        get ':id/bank_account' do
+          user = User.guarded_retrieve(current_user, permitted_params)
+          user.bank_account.guarded_read(current_user)
+        end
 
         desc "Return the related registers for User"
         params do

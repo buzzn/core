@@ -666,7 +666,9 @@ describe "/groups" do
     manager_user.add_role(:manager, group)
     get_with_token "/api/v1/groups/localpools/#{group.id}/metering-point-operator-contract", manager_access_token.token
     expect(response).to have_http_status(200)
+
     expect(json['data']['id']).to eq(group.metering_point_operator_contract.id)
+    expect(json['data']['type']).to eq('metering-point-operators')
   end
 
 
@@ -683,7 +685,9 @@ describe "/groups" do
     manager_user.add_role(:manager, group)
     get_with_token "/api/v1/groups/localpools/#{group.id}/localpool-processing-contract", manager_access_token.token
     expect(response).to have_http_status(200)
+
     expect(json['data']['id']).to eq(group.localpool_processing_contract.id)
+    expect(json['data']['type']).to eq('localpool-processings')
   end
 
 
@@ -710,7 +714,7 @@ describe "/groups" do
     get_with_token "/api/v1/groups/#{group.id}/comments", {per_page: 200}, access_token
     expect(response).to have_http_status(422)
   end
-
+  
 
 
 

@@ -107,6 +107,17 @@ describe "Group Model" do
     expect(Score.count).to eq 12
   end
 
+
+  it 'get a metering_point_operator_contract from localpool' do
+    localpool  = Fabricate(:metering_point_operator_contract_of_localpool).localpool
+    expect(localpool.metering_point_operator_contract).to be_a Contract::MeteringPointOperator
+  end
+
+  it 'get a localpool_processing_contract from localpool' do
+    localpool  = Fabricate(:localpool_processing_contract).localpool
+    expect(localpool.localpool_processing_contract).to be_a Contract::LocalpoolProcessing
+  end
+
   it 'calculates scores of all groups via sidekiq' do
     expect {
       Group::Base.calculate_scores
