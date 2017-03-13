@@ -123,4 +123,18 @@ describe "Group Model" do
       Group::Base.calculate_scores
     }.to change(CalculateGroupScoresWorker.jobs, :size).by(1)
   end
+
+  it 'adds multiple addresses to localpool' do
+    group = Fabricate(:localpool_wagnis4)
+    main_address = Fabricate(:address, city: 'Berlin', created_at: Time.now - 1.year)
+    group.addresses << main_address
+    secondary_address = Fabricate(:address, city: 'München')
+    group.addresses << secondary_address
+
+    expect(group.main_address.city).to eq main_address.city
+
+    secondary_address.update_column(:created_at, Time.now - 2.years)
+
+    expect(group.main_address.city).to eq secondary_address.city
+  end
 end
