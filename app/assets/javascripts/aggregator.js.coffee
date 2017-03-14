@@ -59,7 +59,6 @@ class @Aggregator
     else
       url = '/api/v1/aggregates/past?timestamp=' + encodeURIComponent(moment(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSSZ')) + '&resolution=' + resolution + '&register_ids=' + id
 
-    checkToken();
     ajaxCall = $.ajax({url: url, headers: headers, async: true, dataType: 'json'})
       .success (data) ->
         if chartType == 'past' && Object.prototype.toString.call(data) == '[object Array]'

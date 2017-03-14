@@ -103,7 +103,6 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     _.forEach(inData, (point, idx) => {
       if (inData[idx].updating) return;
       inData[idx].updating = true;
-      checkToken();
       fetch(`${url}/api/v1/aggregates/present?register_ids=${point.id}`, {
           headers,
           credentials: 'include',
@@ -124,7 +123,6 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
     _.forEach(outData, (point, idx) => {
       if (outData[idx].updating) return;
       outData[idx].updating = true;
-      checkToken();
       fetch(`${url}/api/v1/aggregates/present?register_ids=${point.id}`, {
           headers,
           credentials: 'include',
@@ -403,7 +401,6 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
   }
 
   function getRegisters() {
-    checkToken();
     fetch(`${url}/api/v1/groups/${group}/registers`, {
         headers,
         credentials: 'include',
