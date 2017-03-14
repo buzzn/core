@@ -35,7 +35,7 @@ module API
           oauth2 :full
           get ":id/localpool-processing-contract" do
             group = Group::Localpool.guarded_retrieve(current_user, permitted_params)
-            Contract::Base.guarded_retrieve(current_user, group.localpool_processing_contract.id)
+            group.localpool_processing_contract.guarded_retrieve(current_user)
           end
 
 
@@ -46,7 +46,7 @@ module API
           oauth2 :full
           get ":id/metering-point-operator-contract" do
             group = Group::Localpool.guarded_retrieve(current_user, permitted_params)
-            Contract::Base.guarded_retrieve(current_user, group.metering_point_operator_contract.id)
+            group.metering_point_operator_contract.guarded_retrieve(current_user)
           end
 
         end

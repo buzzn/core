@@ -6,7 +6,7 @@ module Buzzn
       model.extend ClassMethods
     end
 
-    def guarded_read(user, *args)
+    def guarded_retrieve(user, *args)
       if readable_by?(user, *args)
         self
       else
@@ -54,12 +54,12 @@ module Buzzn
       def after_delete_callback(user, obj)
       end
 
-      def guarded_retrieve(user, id)
+      def guarded_retrieve(user, id, *args)
         if id.is_a?(Hash)
           id = id[:id]
         end
         _guarded_check(
-          where(id: id).readable_by(user).limit(1).first,
+          where(id: id).readable_by(user, *args).limit(1).first,
           user,
           id
         )
