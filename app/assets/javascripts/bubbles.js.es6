@@ -104,7 +104,10 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       if (inData[idx].updating) return;
       inData[idx].updating = true;
       checkToken();
-      fetch(`${url}/api/v1/aggregates/present?register_ids=${point.id}`, { headers })
+      fetch(`${url}/api/v1/aggregates/present?register_ids=${point.id}`, {
+          headers,
+          credentials: 'include',
+        })
         .then(getJson)
         .then(json => {
           inData[idx].value = Math.floor(Math.abs(json.power_milliwatt)) || 0;
@@ -122,7 +125,10 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
       if (outData[idx].updating) return;
       outData[idx].updating = true;
       checkToken();
-      fetch(`${url}/api/v1/aggregates/present?register_ids=${point.id}`, { headers })
+      fetch(`${url}/api/v1/aggregates/present?register_ids=${point.id}`, {
+          headers,
+          credentials: 'include',
+        })
         .then(getJson)
         .then(json => {
           outData[idx].value = Math.floor(Math.abs(json.power_milliwatt)) || 0;
@@ -398,7 +404,10 @@ $('.bubbles_container').ready(function bubblesContainerReady() {
 
   function getRegisters() {
     checkToken();
-    fetch(`${url}/api/v1/groups/${group}/registers`, { headers })
+    fetch(`${url}/api/v1/groups/${group}/registers`, {
+        headers,
+        credentials: 'include',
+      })
       .then(getJson)
       .then(json => {
         if (json.data.length === 0) return Promise.reject('Empty group');
