@@ -546,7 +546,6 @@ $(".dashboard-chart").ready ->
     Chart.Functions.setChartDataMultiSeries('dashboard', dashboard_id, containing_timestamp)
 
 getRegisterName = (id) ->
-  checkToken();
   $.ajax({url: '/api/v1/registers/' + id, headers: headers, async: true, dataType: 'json'})
 
 
