@@ -240,10 +240,10 @@ describe "Users API" do
     user_access_token     = Fabricate(:full_access_token)
     user                  = User.find(user_access_token.resource_owner_id)
 
-    get_with_token "/api/v1/users/#{user.id}/bank_account", stranger_access_token.token
+    get_with_token "/api/v1/users/#{user.id}/bank-account", stranger_access_token.token
     expect(response).to have_http_status(403)
 
-    get_with_token "/api/v1/users/#{user.id}/bank_account", user_access_token.token
+    get_with_token "/api/v1/users/#{user.id}/bank-account", user_access_token.token
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(user.bank_account.id)
   end
