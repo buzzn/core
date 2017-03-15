@@ -257,7 +257,7 @@ end
 
 # == Localpool Power Taker Contracts for Mehrgenerationenplatz Forstenried ==
 
-Fabricator :lptc_markus_becher, from: :localpool_power_taker_contract do
+Fabricator :lptc_mabe, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
   signingdate = Date.new(2014, 12, 01)
   contract_number                 '60015/1'
@@ -276,7 +276,7 @@ Fabricator :lptc_markus_becher, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_inge_brack, from: :localpool_power_taker_contract do
+Fabricator :lptc_inbr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 1)
   signingdate = Date.new(2014, 12, 01)
   contract_number                 '60015/2'
@@ -295,7 +295,7 @@ Fabricator :lptc_inge_brack, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_peter_brack, from: :localpool_power_taker_contract do
+Fabricator :lptc_pebr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 1)
   signingdate = Date.new(2014, 12, 01)
   contract_number                 '60015/3'
@@ -314,7 +314,7 @@ Fabricator :lptc_peter_brack, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_annika_brandl, from: :localpool_power_taker_contract do
+Fabricator :lptc_anbr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 1)
   signingdate = Date.new(2014, 12, 01)
   contract_number                 '60015/4'
@@ -333,7 +333,7 @@ Fabricator :lptc_annika_brandl, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_gudrun_brandl, from: :localpool_power_taker_contract do
+Fabricator :lptc_gubr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 15)
   signingdate = Date.new(2014, 12, 01)
   contract_number                 '60015/5'
@@ -352,7 +352,7 @@ Fabricator :lptc_gudrun_brandl, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_martin_braeunlich, from: :localpool_power_taker_contract do
+Fabricator :lptc_mabr, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
   signingdate = Date.new(2014, 12, 01)
   contract_number                 '60015/6'
@@ -371,7 +371,7 @@ Fabricator :lptc_martin_braeunlich, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_daniel_bruno, from: :localpool_power_taker_contract do
+Fabricator :lptc_dabr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 1)
   signingdate = Date.new(2014, 12, 01)
   contract_number                 '60015/7'
@@ -390,7 +390,7 @@ Fabricator :lptc_daniel_bruno, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_zubair_butt, from: :localpool_power_taker_contract do
+Fabricator :lptc_zubu, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
   signingdate = Date.new(2014, 12, 01)
   contract_number                 '60015/8'
@@ -409,7 +409,7 @@ Fabricator :lptc_zubair_butt, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_maria_cerghizan, from: :localpool_power_taker_contract do
+Fabricator :lptc_mace, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
   signingdate = Date.new(2014, 12, 01)
   contract_number                 '60015/9'
@@ -428,7 +428,7 @@ Fabricator :lptc_maria_cerghizan, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_stefan_csizmadia, from: :localpool_power_taker_contract do
+Fabricator :lptc_stcs, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 15)
   signingdate = Date.new(2014, 12, 01)
   contract_number                 '60015/10'
@@ -447,7 +447,7 @@ Fabricator :lptc_stefan_csizmadia, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_patrick_fierley, from: :localpool_power_taker_contract do
+Fabricator :lptc_pafi, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
   signingdate = Date.new(2014, 12, 01)
   cancellationdate = Date.new(2016, 01, 01)
@@ -469,7 +469,7 @@ Fabricator :lptc_patrick_fierley, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_rafal_jaskolka, from: :localpool_power_taker_contract do
+Fabricator :lptc_raja, from: :localpool_power_taker_contract do
   begindate = Date.new(2016, 05, 01)
   signingdate = Date.new(2016, 02, 01)
   contract_number                 '60015/83'
