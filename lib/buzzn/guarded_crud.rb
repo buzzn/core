@@ -6,11 +6,22 @@ module Buzzn
       model.extend ClassMethods
     end
 
+    def guarded_nested_retrieve(method, user, *args)
+      object = send(method)
+      if object.nil?
+        raise RecordNotFound.new
+      elsif object.readable_by?(user, *args)
+        object
+      else
+        raise PermissionDenied.create(object, :retrieve, user)
+      end
+    end
+
     def guarded_retrieve(user, *args)
       if readable_by?(user, *args)
         self
       else
-        raise PermissionDenied.new
+        raise PermissionDenied.create(self, :retrieve, user)
       end
     end
 
@@ -19,7 +30,7 @@ module Buzzn
         update!(self.class.guarded_prepare(user, params))
         self
       else
-        raise PermissionDenied.new
+        raise PermissionDenied.create(self, :update, user)
       end
     end
 
@@ -29,7 +40,7 @@ module Buzzn
         self.class.after_delete_callback(user, self)
         self
       else
-        raise PermissionDenied.new
+        raise PermissionDenied.create(self, :delete, user)
       end
     end
 
@@ -44,7 +55,7 @@ module Buzzn
           after_create_callback(user, obj)
           obj
         else
-          raise PermissionDenied.new
+          raise PermissionDenied.create(self, :create, user)
         end
       end
 
@@ -71,7 +82,7 @@ module Buzzn
         end
         result = where(id: id).limit(1).first
         if result.nil?
-          raise RecordNotFound.new("#{self} with id=#{id} not found")
+          raise RecordNotFound.new("#{self}: #{id} not found")
         end
         result
       end
@@ -107,9 +118,9 @@ module Buzzn
       def _guarded_check(result, user, id)
         if result.nil?
           if where(id: id).size == 0
-            raise RecordNotFound.new("#{self} with id=#{id} not found#{user ? ' by current_user_id=' + user.id : ''}")
+            raise RecordNotFound.create(self, id, user)
           end
-          raise PermissionDenied.new
+          raise PermissionDenied.create(self, :retrieve, user)
         end
         result
       end
@@ -117,7 +128,7 @@ module Buzzn
       def _guarded_get(user, id)
         result = where(id: id).limit(1).first
         if result.nil?
-          raise RecordNotFound.new("#{self} with id=#{id} not found#{user ? ' by current_user_id=' + user.id : ''}")
+          raise RecordNotFound.create(self, id, user)
         end
         result
       end

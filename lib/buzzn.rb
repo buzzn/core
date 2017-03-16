@@ -1,6 +1,25 @@
 module Buzzn
-  class PermissionDenied < StandardError; end
-  class RecordNotFound < StandardError; end
+  class PermissionDenied < StandardError
+    def self.create(resource, action, user)
+      case resource
+      when Class
+        create_class(resource, action, user)
+      else
+        create_instance(resource, action, user)
+      end
+    end
+    def self.create_class(clazz, action, user)
+      new("#{action} #{clazz}: permission denied for User: #{user ? user.id : '--anonymous--'}")
+    end
+    def self.create_instance(object, action, user)
+      new("#{action} #{object.class}: #{object.id} permission denied for User: #{user ? user.id : '--anonymous--'}")
+    end
+  end
+  class RecordNotFound < StandardError
+    def self.create(clazz, id, user = nil)
+      new("#{clazz}: #{id} not found#{user ? ' by User: ' + user.id : ''}")
+    end
+  end
   class ValidationError < StandardError
 
     attr_reader :errors

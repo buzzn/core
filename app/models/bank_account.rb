@@ -18,6 +18,7 @@ class BankAccount < ActiveRecord::Base
 
   def self.readable_by_query(user)
     user_table   = User.arel_table
+    organization = Organization.arel_table
     contract     = Contract::Base.arel_table
     bank_account = BankAccount.arel_table
 
@@ -28,10 +29,11 @@ class BankAccount < ActiveRecord::Base
     sqls = [
       contract.where(Contract::Base.readable_by_query(user)
                       .and(contract[:id].eq(bank_account[:bank_accountable_id]))),
+      organization.where(organization[:id].eq(bank_account[:bank_accountable_id])),
       User.roles_query(user, admin: nil)
     ]
     sqls = sqls.collect{|s| s.project(1).exists}
-    sqls[0].or(sqls[1]).or(bank_account[:bank_accountable_id].eq(user.id))
+    sqls[0].or(sqls[1]).or(sqls[2]).or(bank_account[:bank_accountable_id].eq(user.id))
   end
 
   scope :readable_by, -> (user) do
