@@ -83,7 +83,7 @@ class WizardRegistersController  < ApplicationController
           end
         end
       else
-        Rails.logger.error("Failed to save register and meter: " + @register.validate! + " --- " + @meter.validate!)
+        Rails.logger.error("Failed to save register and meter: " + @register.validate!.to_s + " --- " + @meter.validate!.to_s)
         raise ActiveRecord::Rollback
       end
     end
