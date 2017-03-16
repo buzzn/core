@@ -72,7 +72,7 @@ module API
         oauth2 false
         get ':id/address' do
           organization = Organization.guarded_retrieve(current_user, permitted_params)
-          organization.address.guarded_retrieve(current_user)
+          organization.guarded_nested_retrieve(:address, current_user)
         end
 
 
@@ -83,7 +83,7 @@ module API
         oauth2 :full
         get ':id/bank_account' do
           organization = Organization.guarded_retrieve(current_user, permitted_params)
-          organization.bank_account #.guarded_retrieve(current_user)
+          organization.guarded_nested_retrieve(:bank_account, current_user)
         end
 
 
