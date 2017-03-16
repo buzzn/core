@@ -165,7 +165,6 @@ class RegistersController < ApplicationController
     @register = Register::Base.find(params[:id])
     authorize_action_for @register
     user_id = params[:user_id] || params[register_class][:user_id]
-    byebug
     @user = User.find(user_id)
     @user.remove_role(:member, @register)
     if @user == current_user

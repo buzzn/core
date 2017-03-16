@@ -57,13 +57,13 @@ class WizardRegistersController  < ApplicationController
               mode: register_base_params[:mode],
               external_id: "EASYMETER_#{@meter.manufacturer_product_serialnumber}",
               provider_login: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'team@localpool.de' : credential_params[:provider_login],
-              provider_password: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'Zebulon_4711' : credential_params[:provider_password],
+              provider_password: (organization.slug == 'buzzn-metering' || organization.buzzn_systems?) ? 'Zebulon_4711' : credential_params[:provider_password]
             )
           else
             @broker = Broker::MySmartGrid.new(
               mode: register_base_params[:mode],
               provider_login: credential_params[:sensor_id],
-              provider_password: credential_params[:x_token],
+              provider_password: credential_params[:x_token]
             )
           end
         end
@@ -79,20 +79,21 @@ class WizardRegistersController  < ApplicationController
             formula_part.register = @register
             if !formula_part.save
               raise ActiveRecord::Rollback
-              flash[:error] = 'Error'
-              render action: 'reload'
             end
           end
         end
       else
+        Rails.logger.error("Failed to save register and meter: " + @register.validate! + " --- " + @meter.validate!)
         raise ActiveRecord::Rollback
-        flash[:error] = 'Error'
-        render action: 'reload'
       end
     end
 
     #byebug
 
+    if !@register.persisted?
+      flash[:error] = 'Error'
+      render action: 'reload'
+    end
 
     if @broker
       @broker.resource = @meter
@@ -112,8 +113,6 @@ class WizardRegistersController  < ApplicationController
       flash[:notice] = t("register_created_successfully")
       respond_with @register
     end
-
-
   end
 
 
