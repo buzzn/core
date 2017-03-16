@@ -71,8 +71,8 @@ module Register
     def self.directions; %w(in out); end
 
     validates :meter, presence: true
-    validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
-    validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_register?
+    validates :uid, uniqueness: false, length: { in: 4..34 }, allow_blank: true
+    validates :name, presence: true, length: { in: 2..40 }#, if: :no_dashboard_register?
     # TODO virtual register ?
     validates :image, presence: false
     validates :regular_reeding, presence: false

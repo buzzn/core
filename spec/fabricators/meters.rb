@@ -713,3 +713,77 @@ Fabricator :ferraris_001_amperix, from: :meter do
   manufacturer_product_serialnumber   '001'
   registers [Fabricate.build(:register_ferraris_001_amperix)]
 end
+
+
+### LCP Sulz ###
+
+# ÜGZ
+Fabricator :easymeter_60300856, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60300856'
+  registers [Fabricate.build(:register_60300856), Fabricate.build(:register_60300856_out)]
+end
+
+# Abgrenzung BHKW
+Fabricator :easymeter_60009498, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60009498'
+  registers [Fabricate.build(:register_60009498)]
+end
+
+# Produktion BHKW
+Fabricator :easymeter_60404855, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60404855'
+  registers [Fabricate.build(:register_60404855)]
+end
+
+# Produktion PV
+Fabricator :easymeter_60404845, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60404845'
+  registers [Fabricate.build(:register_60404845)]
+end
+
+# Allgemeinstrom
+Fabricator :easymeter_60404846, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60404846'
+  registers [Fabricate.build(:register_60404846)]
+end
+
+Fabricator :easymeter_60404850, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60404850'
+  registers [Fabricate.build(:register_60404850)]
+end
+
+Fabricator :easymeter_60404851, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60404851'
+  registers [Fabricate.build(:register_60404851)]
+end
+
+Fabricator :easymeter_60404853, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60404853'
+  registers [Fabricate.build(:register_60404853)]
+end
+
+Fabricator :easymeter_60404847, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60404847'
+  registers [Fabricate.build(:register_60404847)]
+end
+
+Fabricator :easymeter_60327350, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60327350'
+  registers [Fabricate.build(:register_60327350)]
+end
+
+Fabricator :easymeter_60404854, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60404854'
+  registers [Fabricate.build(:register_60404854)]
+end
+
+Fabricator :easymeter_60404852, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60404852'
+  registers [Fabricate.build(:register_60404852)]
+end
+
+Fabricator :easymeter_60404849, from: :easy_meter_q3d do
+  manufacturer_product_serialnumber   '60404849'
+  registers [Fabricate.build(:register_60404849)]
+end
+

@@ -736,3 +736,100 @@ Fabricator :register_forstenried_bezug, from: :input_register do
   name  'Gesamtverbrauch'
   virtual         true
 end
+
+
+### LCP Sulz ###
+
+#übergabe in
+Fabricator :register_60300856, from: :input_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern') }
+  name  'Netzanschluss Bezug'
+  label Register::Base::GRID_CONSUMPTION
+  uid  'DE0005128238000552109002001011500'
+end
+
+#übergabe out
+Fabricator :register_60300856_out, from: :output_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern') }
+  name  'Netzanschluss Einspeisung'
+  label Register::Base::GRID_FEEDING
+  uid  'DE0005128238000552109002001011500'
+end
+
+#Abgrenzung bhkw
+Fabricator :register_60009498, from: :output_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern') }
+  name  'Abgrenzung BHKW'
+  label Register::Base::DEMARCATION_CHP
+  uid  'DE0005128238000552109002001011400'
+end
+
+#Produktion bhkw
+Fabricator :register_60404855, from: :output_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern') }
+  name  'Produktion BHKW'
+  label Register::Base::PRODUCTION_CHP
+  uid  'DE0005128238000552109002001011200'
+end
+
+#Produktion pv
+Fabricator :register_60404845, from: :output_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern') }
+  name  'Produktion PV'
+  label Register::Base::PRODUCTION_PV
+  uid  'DE0005128238000552109002001011100'
+end
+
+Fabricator :register_60404846, from: :input_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern', addition: 'Allgemeinstrom') }
+  name  'Allgemeinstrom'
+  label Register::Base::CONSUMPTION
+end
+
+Fabricator :register_60404850, from: :input_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern', addition: 'Wohneinheit EG-OST') }
+  name  'Wohneinheit EG-OST'
+  label Register::Base::CONSUMPTION
+end
+
+Fabricator :register_60404851, from: :input_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern', addition: 'Wohneinheit 1. OG-WEST') }
+  name  'Wohneinheit 1. OG-WEST'
+  label Register::Base::CONSUMPTION
+end
+
+Fabricator :register_60404853, from: :input_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern', addition: 'Bistro Sowieso / Saal Kegelbahn') }
+  name  'Bistro Sowieso / Saal Kegelbahn'
+  label Register::Base::CONSUMPTION
+end
+
+Fabricator :register_60404847, from: :input_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern', addition: 'Gaststätte') }
+  name  'Gaststätte'
+  label Register::Base::CONSUMPTION
+end
+
+Fabricator :register_60327350, from: :input_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern', addition: 'Wohneinheit 1. OG-OST') }
+  name  'Wohneinheit 1. OG-OST'
+  label Register::Base::CONSUMPTION
+end
+
+Fabricator :register_60404854, from: :input_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern', addition: 'Wohneinheit DG-OST') }
+  name  'Wohneinheit DG-OST'
+  label Register::Base::CONSUMPTION
+end
+
+Fabricator :register_60404852, from: :input_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern', addition: 'Wohneinheit DG-WEST') }
+  name  'Wohneinheit DG-WEST'
+  label Register::Base::CONSUMPTION
+end
+
+Fabricator :register_60404849, from: :input_register do
+  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern', addition: 'Zwischenzähler Heizung') }
+  name  'Zwischenzähler Heizung'
+  label Register::Base::OTHER
+end
