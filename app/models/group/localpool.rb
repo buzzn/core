@@ -7,7 +7,7 @@ module Group
     has_many :addresses, as: :addressable, dependent: :destroy
 
     # use first address as main address
-    # maybe improve this so that the user can select between all addresses
+    # TODO: maybe improve this so that the user can select between all addresses
     def main_address
       self.addresses.order("created_at ASC").first
     end

@@ -72,7 +72,7 @@ module Register
 
     validates :meter, presence: true
     validates :uid, uniqueness: false, length: { in: 4..34 }, allow_blank: true
-    validates :name, presence: true, length: { in: 2..40 }#, if: :no_dashboard_register?
+    validates :name, presence: true, length: { in: 2..40 }
     # TODO virtual register ?
     validates :image, presence: false
     validates :regular_reeding, presence: false
@@ -218,7 +218,7 @@ module Register
     end
 
     def readings
-      Reading.all_by_register_id(self.id)
+      @_readings ||= Reading.all_by_register_id(self.id)
     end
 
     def users
