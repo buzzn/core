@@ -86,10 +86,7 @@ module API
         oauth2 false
         get ":id" do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          render(group, meta: {
-            updatable: group.updatable_by?(current_user),
-            deletable: group.deletable_by?(current_user)
-          })
+          Group::GuardedSerializer.new(group, current_user: current_user)
         end
 
 

@@ -1,4 +1,4 @@
-class CommentResource < JSONAPI::Resource
+class CommentSerializer < ActiveModel::Serializer
 
   attributes  :title,
               :body,
@@ -9,6 +9,7 @@ class CommentResource < JSONAPI::Resource
               :parent_id,
               :image
 
-  has_many :comments
+# TODO when needed we need to make sure we have some method 'comments'
+#  has_many :comments
 
 end

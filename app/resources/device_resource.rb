@@ -1,4 +1,4 @@
-class DeviceResource < JSONAPI::Resource
+class DeviceSerializer < ActiveModel::Serializer
 
   attributes  :name,
               :manufacturer_name,
@@ -17,7 +17,24 @@ class DeviceResource < JSONAPI::Resource
               :big_tumb
 
   def big_tumb
-    @model.image.big_tumb.url
+    object.image.big_tumb.url
   end
 
+end
+class GuardedDeviceSerializer < DeviceSerializer
+
+  attributes :updatable, :deletable
+
+  def initialize(user, *args)
+    super(*args)
+    @current_user = user
+  end
+
+  def updatable
+    object.updatable_by?(@current_user)
+  end
+
+  def deletable
+    object.deletable_by?(@current_user)
+  end
 end

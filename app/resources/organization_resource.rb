@@ -1,4 +1,4 @@
-class OrganizationResource < JSONAPI::Resource
+class OrganizationSerializer < ActiveModel::Serializer
 
   attributes  :name,
               :phone,
@@ -9,6 +9,11 @@ class OrganizationResource < JSONAPI::Resource
               :mode
 
   has_one :address
-  has_one :contracting_party
-  has_one :iln
+  has_one :bank_account
+end
+class FullOrganizationSerializer < OrganizationSerializer
+
+  attributes  :sales_tax_number,
+              :tax_rate,
+              :tax_number
 end

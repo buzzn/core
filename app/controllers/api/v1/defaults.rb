@@ -1,6 +1,7 @@
 require 'doorkeeper/grape/helpers'
 require 'buzzn/guarded_crud'
 
+
 module API
   module V1
     module Defaults
@@ -11,8 +12,10 @@ module API
         version "v1", using: :path
         format 'json'
 
-        # https://github.com/cdunn/grape-jsonapi-resources
-        formatter :json, Grape::Formatter::JSONAPIResources
+        formatter :json, ->(object, env) do
+          Buzzn::SerializableResource.new(object).to_json
+        end
+
         jsonapi_base_url "#{Rails.application.secrets.hostname}/api/v1"
 
         helpers Doorkeeper::Grape::Helpers
@@ -136,6 +139,7 @@ module API
 
         rescue_from ArgumentError do |e|
           errors = ErrorResponse.new(422, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          puts e.backtrace.join("\n\t")
           errors.add_general('Argument Error', e.message)
           errors.finish
         end

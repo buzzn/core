@@ -64,8 +64,8 @@ describe "Meters API" do
         meter = Fabricate(:"#{type}_meter")
         get_with_token "/api/v1/meters/#{meter.id}", access_token.token
         expect(response).to have_http_status(200)
-        expect(json['meta']['updatable']).to be_truthy
-        expect(json['meta']['deletable']).to be_truthy
+        expect(json['data']['attributes']['updatable']).to be true
+        expect(json['data']['attributes']['deletable']).to be true
       end
     end
 

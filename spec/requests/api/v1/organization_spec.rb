@@ -202,7 +202,6 @@ describe "Organizations API" do
     }.to_json
 
     post_with_token "/api/v1/organizations", request_params, access_token.token
-
     expect(response).to have_http_status(201)
     expect(response.headers['Location']).to eq json['data']['id']
 

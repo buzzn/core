@@ -1,6 +1,4 @@
 module Group
-  class TribeResource < BaseResource
-    model_name 'Group::Tribe'
-
+  class TribeSerializer < BaseSerializer
   end
 end

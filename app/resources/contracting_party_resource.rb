@@ -1,10 +1,13 @@
-class ContractingPartyResource < JSONAPI::Resource
+class ContractingPartySerializier
 
-  attributes  :legal_entity,
-              :sales_tax_number,
-              :tax_rate,
-              :tax_number
-
-  has_one :address
-  has_one :bank_account
+  def self.new(object, *args)
+    case object
+    when Organization
+      FullOrganizationSerializer.new(object, *args)
+    when User
+      FullUserSerializer.new(object, *args)
+    else
+      raise "can not handle type: #{object.class}"
+    end
+  end
 end

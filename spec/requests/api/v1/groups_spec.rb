@@ -235,8 +235,8 @@ describe "/groups" do
 
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_truthy
-    expect(json['meta']['deletable']).to be_truthy
+    expect(json['data']['attributes']['updatable']).to be true
+    expect(json['data']['attributes']['deletable']).to be true
 
     delete_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(204)
@@ -248,8 +248,8 @@ describe "/groups" do
     group         = Fabricate(:tribe_readable_by_community)
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_falsey
-    expect(json['meta']['deletable']).to be_falsey
+    expect(json['data']['attributes']['updatable']).to be false
+    expect(json['data']['attributes']['deletable']).to be false
   end
 
   it 'get a friend-readable group by managers friend' do
@@ -260,8 +260,8 @@ describe "/groups" do
     token_user_friend.add_role(:manager, group)
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_falsey
-    expect(json['meta']['deletable']).to be_falsey
+    expect(json['data']['attributes']['updatable']).to be false
+    expect(json['data']['attributes']['deletable']).to be false
   end
 
   it 'get a friend-readable group by member' do
@@ -276,8 +276,8 @@ describe "/groups" do
 
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_falsey
-    expect(json['meta']['deletable']).to be_falsey
+    expect(json['data']['attributes']['updatable']).to be false
+    expect(json['data']['attributes']['deletable']).to be false
   end
 
   it 'get a member-readable group by member' do
@@ -289,8 +289,8 @@ describe "/groups" do
     group.registers << register
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_falsey
-    expect(json['meta']['deletable']).to be_falsey
+    expect(json['data']['attributes']['updatable']).to be false
+    expect(json['data']['attributes']['deletable']).to be false
   end
 
   it 'does not gets a group readable by members or friends if user is not member or friend' do
@@ -455,6 +455,7 @@ describe "/groups" do
       user.add_role(:manager, group)
     end
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
+    p response.body
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(page_overload)
 
@@ -684,7 +685,7 @@ describe "/groups" do
     expect(response).to have_http_status(200)
 
     expect(json['data']['id']).to eq(group.metering_point_operator_contract.id)
-    expect(json['data']['type']).to eq('metering-point-operators')
+    expect(json['data']['type']).to eq('contract-metering-point-operators')
   end
 
 
@@ -703,7 +704,7 @@ describe "/groups" do
     expect(response).to have_http_status(200)
 
     expect(json['data']['id']).to eq(group.localpool_processing_contract.id)
-    expect(json['data']['type']).to eq('localpool-processings')
+    expect(json['data']['type']).to eq('contract-localpool-processings')
   end
 
 

@@ -62,8 +62,8 @@ describe "Devices API" do
     device = Fabricate(:device)
     get_with_token "/api/v1/devices/#{device.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_truthy
-    expect(json['meta']['deletable']).to be_truthy
+    expect(json['data']['attributes']['updatable']).to be_truthy
+    expect(json['data']['attributes']['deletable']).to be_truthy
   end
 
 
@@ -75,8 +75,8 @@ describe "Devices API" do
 
     get_with_token "/api/v1/devices/#{device.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_truthy
-    expect(json['meta']['deletable']).to be_truthy
+    expect(json['data']['attributes']['updatable']).to be_truthy
+    expect(json['data']['attributes']['deletable']).to be_truthy
   end
 
 

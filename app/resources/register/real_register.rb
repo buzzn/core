@@ -1,6 +1,5 @@
 module Register
-  class RealRegister < BaseResource
-    model_name 'Register::Real'
+  class RealSerializer < BaseSerializer
 
     attributes  :uid,
                 :obis

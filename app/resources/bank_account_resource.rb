@@ -1,4 +1,4 @@
-class BankAccountResource < JSONAPI::Resource
+class BankAccountSerializer < ActiveModel::Serializer
 
   attributes  :holder,
               :bank_name,
@@ -6,4 +6,5 @@ class BankAccountResource < JSONAPI::Resource
               :iban,
               :direct_debit
 
+  # TODO make bank_name and bic derived from iban and not store them in DB
 end

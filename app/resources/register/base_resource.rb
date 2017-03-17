@@ -1,6 +1,5 @@
 module Register
-  class BaseResource < JSONAPI::Resource
-    model_name 'Register::Base'
+  class BaseSerializer < ActiveModel::Serializer
 
     attributes  :direction,
                 :name,

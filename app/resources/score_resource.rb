@@ -1,4 +1,5 @@
-class ScoreResource < JSONAPI::Resource
+class ScoreSerializer < ActiveModel::Serializer
+
   attributes  :mode,
               :interval,
               :interval_beginning,

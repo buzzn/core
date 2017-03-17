@@ -28,10 +28,7 @@ module API
         oauth2 false
         get ":id" do
           device = Device.guarded_retrieve(current_user, permitted_params)
-          render(device, meta: {
-            updatable: device.updatable_by?(current_user),
-            deletable: device.deletable_by?(current_user)
-          })
+          GuardedDeviceSerializer.new(current_user, device)
         end
 
 

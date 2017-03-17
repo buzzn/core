@@ -15,7 +15,7 @@ module API
         oauth2 :full
         get ':id/contractor' do
           contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
-          contract.contractor
+          ContractingPartySerializier.new(contract.contractor)
         end
 
         desc 'Return the related customer for a Contract'
@@ -25,7 +25,7 @@ module API
         oauth2 :full
         get ':id/customer' do
           contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
-          contract.customer
+          ContractingPartySerializier.new(contract.customer)
         end
 
 
@@ -144,8 +144,8 @@ module API
         end
         oauth2 false
         post 'power-taker' do
-          contract = Buzzn::ContractFactory.create_power_taker_contract(current_user, permitted_params)
-          created_response(contract)
+          Buzzn::ContractFactory.create_power_taker_contract(current_user, permitted_params)
+          status 201
         end
 
 

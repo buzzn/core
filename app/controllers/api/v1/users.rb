@@ -31,10 +31,7 @@ module API
         oauth2 :simple, :full
         get ":id" do
           user = User.guarded_retrieve(current_user, permitted_params)
-          render(user, meta: {
-            updatable: user.updatable_by?(current_user),
-            deletable: user.deletable_by?(current_user)
-          })
+          GuardedUserSerializer.new(current_user, user)
         end
 
 

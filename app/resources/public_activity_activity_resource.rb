@@ -1,5 +1,4 @@
-class PublicActivity::ActivityResource < JSONAPI::Resource
-  abstract
+class PublicActivity::ActivitySerializer < ActiveModel::Serializer
 
   attributes  :owner_id,
               :owner_type,

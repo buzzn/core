@@ -1,6 +1,5 @@
 module Contract
-  class BaseResource < JSONAPI::Resource
-    model_name 'Contract::Base'
+  class BaseSerializer < ActiveModel::Serializer
 
     attributes  :status,
                 :contract_number,

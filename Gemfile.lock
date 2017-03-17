@@ -80,6 +80,11 @@ GEM
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
     active_link_to (1.0.3)
       actionpack
+    active_model_serializers (0.10.4)
+      actionpack (>= 4.1, < 6)
+      activemodel (>= 4.1, < 6)
+      case_transform (>= 0.2)
+      jsonapi (= 0.1.1.beta6)
     activejob (4.2.7.1)
       activesupport (= 4.2.7.1)
       globalid (>= 0.3.0)
@@ -166,6 +171,8 @@ GEM
       mimemagic (>= 0.3.0)
     carrierwave-base64 (2.2.0)
       carrierwave (>= 0.8.0, < 0.12.0)
+    case_transform (0.2)
+      activesupport
     chronic (0.10.2)
     cocoon (1.2.9)
     coderay (1.1.1)
@@ -480,6 +487,11 @@ GEM
       railties (>= 3.2.16)
     json (1.8.6)
     json_pure (1.8.3)
+    jsonapi (0.1.1.beta6)
+      jsonapi-parser (= 0.1.1.beta3)
+      jsonapi-renderer (= 0.1.1.beta1)
+    jsonapi-parser (0.1.1.beta3)
+    jsonapi-renderer (0.1.1.beta1)
     jwt (1.5.1)
     koala (2.3.0)
       addressable
@@ -842,6 +854,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_link_to
+  active_model_serializers
   acts-as-taggable-on
   acts_as_commentable_with_threading
   acts_as_list
@@ -1002,4 +1015,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.13.7
+   1.14.3

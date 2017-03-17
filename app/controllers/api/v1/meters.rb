@@ -12,10 +12,7 @@ module API
         oauth2 :full
         get ":id" do
           meter = Meter::Base.guarded_retrieve(current_user, permitted_params)
-          render(meter, meta: {
-            updatable: meter.updatable_by?(current_user),
-            deletable: meter.deletable_by?(current_user)
-          })
+          Meter::GuardedBaseSerializer.new(meter, current_user: current_user)
         end
 
 

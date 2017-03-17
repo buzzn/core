@@ -1,5 +1,4 @@
 module Register
-  class VirtualResource < BaseResource
-    model_name 'Register::Virtual'
+  class VirtualSerializer < BaseSerializer
   end
 end

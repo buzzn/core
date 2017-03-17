@@ -20,10 +20,7 @@ module API
         oauth2 :full
         get ':id' do
           address = Address.guarded_retrieve(current_user, permitted_params)
-          render(address, meta: {
-            updatable: address.updatable_by?(current_user),
-            deletable: address.deletable_by?(current_user)
-          })
+          GuardedAddressSerializer.new(current_user, address)
         end
 
         desc 'Create address'
