@@ -23,6 +23,13 @@ module Group
     extend FriendlyId
     friendly_id :name, use: [:slugged, :history, :finders]
 
+    def meters
+      Meter::Base.where(
+        Register::Base.where('registers.group_id = ? and registers.meter_id = meters.id', self)
+          .select(1)
+          .exists
+        )
+    end
 
     validates :name, presence: true, uniqueness: true, length: { in: 4..40 }
 
