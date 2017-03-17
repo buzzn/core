@@ -356,7 +356,7 @@ describe "Organizations API" do
     organization       = Fabricate(:metering_service_provider)
     bank_account       = organization.bank_account
 
-    get_without_token "/api/v1/organizations/#{organization.id}/bank_account"
+    get_without_token "/api/v1/organizations/#{organization.id}/bank-account"
     expect(response).to have_http_status(401)
   end
 
@@ -366,7 +366,7 @@ describe "Organizations API" do
     manager_user         = User.find(manager_access_token.resource_owner_id)
     manager_user.add_role(:manager, organization)
 
-    get_with_token "/api/v1/organizations/#{organization.id}/bank_account", manager_access_token.token
+    get_with_token "/api/v1/organizations/#{organization.id}/bank-account", manager_access_token.token
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(organization.bank_account.id)
   end

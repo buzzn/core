@@ -81,7 +81,7 @@ module API
           requires :id, type: String, desc: 'ID of the organization'
         end
         oauth2 :full
-        get ':id/bank_account' do
+        get ':id/bank-account' do
           organization = Organization.guarded_retrieve(current_user, permitted_params)
           organization.bank_account #.guarded_retrieve(current_user)
         end

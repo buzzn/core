@@ -93,7 +93,7 @@ module API
           requires :id, type: String, desc: 'ID of the User'
         end
         oauth2 :full
-        get ':id/bank_account' do
+        get ':id/bank-account' do
           user = User.guarded_retrieve(current_user, permitted_params)
           user.bank_account.guarded_retrieve(current_user)
         end
