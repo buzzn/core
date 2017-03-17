@@ -217,6 +217,10 @@ module Register
       end
     end
 
+    def readings
+      Reading.all_by_register_id(self.id)
+    end
+
     def users
       User.users_of(self, :manager, :member)
     end
@@ -452,7 +456,7 @@ module Register
       if smart?
         return
       end
-      readings = Reading.all_by_register_id(self.id)
+      readings = Reading.all_by_register_id_and_source(self.id, 'user_input')
       if readings.size > 1
         last_timestamp = readings.last[:timestamp].to_i
         last_value = readings.last[:energy_milliwatt_hour]/1000000.0
@@ -524,7 +528,7 @@ module Register
     # TODO remove this once app//controllers/registers_controller.rb is gone
     def submitted_readings_by_user
       if self.data_source
-        Reading.all_by_register_id(self.id)
+        Reading.all_by_register_id_and_source(self.id, 'user_input')
       end
     end
 

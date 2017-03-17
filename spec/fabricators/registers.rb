@@ -793,7 +793,7 @@ Fabricator :register_60404850, from: :input_register do
 end
 
 Fabricator :register_60404851, from: :input_register do
-  address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern', addition: 'Wohneinheit 1. OG-WEST') }
+  address        { Fabricate(:address, street_name: 'Hauptstraße', street_number: '77', zip: 82380, city: 'Peißenberg', state: 'Bayern', addition: 'Wohneinheit 1. OG-WEST') }
   name  'Wohneinheit 1. OG-WEST'
   label Register::Base::CONSUMPTION
 end
