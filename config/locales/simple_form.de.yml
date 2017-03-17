@@ -261,10 +261,10 @@ de:
         price_cents: Preis (Cent)
       comment:
         image: Bild
-      discovergy_broker:
+      broker_discovergy:
         provider_login: Benutzername
         provider_password: Passwort
-      broker:
+      broker_base:
         provider_login: Benutzername
         provider_password: Passwort
 
@@ -285,10 +285,6 @@ de:
     hints:
       defaults:
         username: 'Benutzername, mit dem Du Dich einloggen kannst.'
-      register:
-        #uid: "Zählpunkt ist die Bezeichnung in der Energiewirtschaft für den Punkt, an dem Versorgungsleistungen an Verbraucher geleistet oder von Erzeugern bezogen werden. z.B. DE 000562 66802 AO6G56M11SN51G21M24S"
-      metering_point_operator_contract:
-        username: 'Benutzername, mit dem du dich beim Messstellenbetreiber einloggen kannst.'
       device:
         image: "Ein Bild von Deinem Gerät darf maximal 2 MB groß und nur vom Typ GIF, JPG und PNG sein."
       profile:
@@ -335,13 +331,16 @@ de:
         legal_entity:
           natural_person: Natürliche Person
           company: Firma
-      group:
+      group_base:
         readable:
           me: Nur mich
           members: Mitglieder der Gruppe
           friends: Meine Freunde
           community: Alle angemeldeten Nutzer
           world: Alle Internet-Nutzer
+        mode:
+          localpool: Lokale Stromgruppe
+          tribe: Stromgruppe übers öffentliche Netz
 
 
       meter:

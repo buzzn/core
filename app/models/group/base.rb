@@ -226,7 +226,7 @@ module Group
     end
 
     def self.modes
-      %w(localpool public_group)
+      %w(localpool tribe)
     end
 
     def readable_by_members?
