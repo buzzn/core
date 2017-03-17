@@ -133,12 +133,12 @@ module API
         end
 
 
-        desc "Return the related real meters for Group"
+        desc "Return the related meters for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
         end
         oauth2 :full
-        get ":id/meters/reals" do
+        get ":id/meters" do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
           group.meters #.readable_by(current_user)
         end

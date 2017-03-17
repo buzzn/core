@@ -349,7 +349,7 @@ describe "/groups" do
     r.update(readable: :world)
     group.registers << r
 
-    get_with_token "/api/v1/groups/#{group.id}/meters/reals", full_access_token.token
+    get_with_token "/api/v1/groups/#{group.id}/meters", full_access_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(5)
   end
@@ -742,7 +742,7 @@ describe "/groups" do
     get_with_token "/api/v1/groups/#{group.id}/comments", {per_page: 200}, access_token
     expect(response).to have_http_status(422)
   end
-  
+
 
 
 
