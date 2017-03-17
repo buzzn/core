@@ -61,6 +61,13 @@ module API
         oauth2 false
         get ':id/address' do
           organization = Organization.guarded_retrieve(current_user, permitted_params)
+          puts '='*80
+          puts Buzzn::SerializableResource.new(organization, adapter: :json).as_json
+          puts '='*80
+          puts Buzzn::SerializableResource.new(organization, adapter: :attributes).as_json
+          puts '='*80
+          puts Buzzn::SerializableResource.new(organization, adapter: :json_api).as_json
+          puts '='*80
           organization.guarded_nested_retrieve(:address, current_user)
         end
 
