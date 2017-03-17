@@ -1,8 +1,13 @@
 module Group
   class Localpool < Base
 
-    has_one  :metering_point_operator_contract, class_name: Contract::MeteringPointOperator, foreign_key: :localpool_id
-    has_one  :localpool_processing_contract,    class_name: Contract::LocalpoolProcessing, foreign_key: :localpool_id
+    def metering_point_operator_contract
+      Contract::Base.find_by(localpool_id: self.id, type: 'Contract::MeteringPointOperator')
+    end
+
+    def localpool_processing_contract
+      Contract::Base.find_by(localpool_id: self.id, type: 'Contract::LocalpoolProcessing')
+    end
 
     has_many :addresses, as: :addressable, dependent: :destroy
 
