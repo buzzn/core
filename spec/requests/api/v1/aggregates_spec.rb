@@ -26,10 +26,12 @@ describe '/api/v1/aggregates' do
       timestamp = Time.find_zone('Berlin').local(2016,2,1)
       (24*4).times do |i|
         Fabricate(:reading,
-          source: 'slp',
+          source: Reading::SLP,
           timestamp: timestamp,
           energy_milliwatt_hour: energy_a_milliwatt_hour,
-          power_milliwatt: 930*1000+i
+          power_milliwatt: 930*1000+i,
+          reason: Reading::REGULAR_READING,
+          quality: Reading::READ_OUT
         )
         energy_a_milliwatt_hour += 1300*1000
         timestamp += 15.minutes
