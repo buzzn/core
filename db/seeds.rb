@@ -1270,7 +1270,7 @@ sulz_contractor = Fabricate(:organization, mode: 'other', name: 'HaFi', address:
                                                                                           street_name: 'Sulz',
                                                                                           street_number: '2',
                                                                                           zip: 82380,
-                                                                                          city: 'Peißenberg')})
+                                                                                          city: 'Peißenberg'))
 sulz_manager = Fabricate(:user)
 sulz_manager.add_role(:manager, sulz_contractor)
 
