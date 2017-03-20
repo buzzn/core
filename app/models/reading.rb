@@ -30,6 +30,9 @@ class Reading
   VNB = 'vnb' # vnb = verteilnetzbetreiber
   THIRD_PARTY_MSB_MDL = 'third_party_msb_mdl' # msb = messstellenbetreiber, mdl = messdienstleister
   USER_INPUT = 'user_input'
+  SLP = 'slp'
+  SEP_PV = 'sep_pv'
+  SEP_BHKW = 'sep_bhkw'
 
   class << self
     def reasons
@@ -43,7 +46,7 @@ class Reading
     end
 
     def sources
-      @source ||= [BUZZN_SYSTEMS, CUSTOMER_LSG, LSN, VNB, THIRD_PARTY_MSB_MDL, OTHER, USER_INPUT]
+      @source ||= [BUZZN_SYSTEMS, CUSTOMER_LSG, LSN, VNB, THIRD_PARTY_MSB_MDL, OTHER, USER_INPUT, SLP, SEP_PV, SEP_BHKW]
     end
   end
 

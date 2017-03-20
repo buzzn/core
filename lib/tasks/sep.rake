@@ -25,7 +25,7 @@ namespace :sep do
 
       dateString = (date + " " + time).delete("\"")
 
-      if Reading.where(source: 'sep_pv').where(timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString)).size == 1
+      if Reading.where(source: Reading::SEP_PV).where(timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString)).size == 1
         puts "Data at " + ActiveSupport::TimeZone["Berlin"].parse(dateString).to_s + " already available, trying next."
         next
       end
@@ -40,7 +40,7 @@ namespace :sep do
         timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
         energy_milliwatt_hour: pv_watt_hour,
         power_milliwatt: pv_watts,
-        source: "sep_pv",
+        source: Reading::SEP_PV,
         quality: Reading::SUBSTITUE_VALUE,
         reason: Reading::OTHER
       )
@@ -52,7 +52,7 @@ namespace :sep do
         timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
         energy_milliwatt_hour: bhkw_watt_hour,
         power_milliwatt: bhkw_watts,
-        source: "sep_bhkw",
+        source: Reading::SEP_BHKW,
         quality: Reading::SUBSTITUE_VALUE,
         reason: Reading::OTHER
       )
