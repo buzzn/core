@@ -35,7 +35,7 @@ module API
           oauth2 :full
           get ":id/localpool-processing-contract" do
             group = Group::Localpool.guarded_retrieve(current_user, permitted_params)
-            Contract::Base.guarded_retrieve(current_user, group.localpool_processing_contract.id)
+            group.localpool_processing_contract.guarded_retrieve(current_user)
           end
 
 
@@ -46,15 +46,10 @@ module API
           oauth2 :full
           get ":id/metering-point-operator-contract" do
             group = Group::Localpool.guarded_retrieve(current_user, permitted_params)
-            Contract::Base.guarded_retrieve(current_user, group.metering_point_operator_contract.id)
+            group.metering_point_operator_contract.guarded_retrieve(current_user)
           end
 
         end
-
-
-
-
-
 
 
 
@@ -135,6 +130,17 @@ module API
           # registers do consider group relation for readable_by
           # the order is to make sure we the Register::Virtual as first element as its attribute set is enough for even Input and Output Registers
           Register::Base.by_group(group).by_label(Register::Base::CONSUMPTION, Register::Base::PRODUCTION_PV, Register::Base::PRODUCTION_CHP).anonymized_readable_by(current_user).order(type: :desc)
+        end
+
+
+        desc "Return the related meters for Group"
+        params do
+          requires :id, type: String, desc: "ID of the group"
+        end
+        oauth2 :full
+        get ":id/meters" do
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
+          group.meters #.readable_by(current_user)
         end
 
 

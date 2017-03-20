@@ -98,3 +98,8 @@ Fabricator :localpool_forstenried, from: :localpool do
   logo      { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'forstenried', 'schule_logo_wogeno.jpg'))}
   image     { File.new(Rails.root.join('db', 'seed_assets', 'groups', 'forstenried', 'Wogeno_app.jpg')) }
 end
+
+Fabricator :localpool_sulz, from: :localpool do
+  name        'Localpool Sulz'
+  description { "Dies ist der Localpool Sulz in Perißenberg" }
+end

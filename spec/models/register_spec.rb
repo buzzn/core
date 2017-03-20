@@ -161,7 +161,12 @@ describe "Register Model" do
     it 'restricts readable_by for anonymous users' do
       expect(Register::Base.readable_by(nil, false)).to match_array []
       expect(Register::Base.readable_by(nil, true)).to match_array [butenland]
+      expect(butenland.readable_by?(nil)).to be false
+      expect(butenland.readable_by?(nil, :group_inheritance)).to be true
+
       urbanstr.update!(readable: 'world')
+      expect(urbanstr.readable_by?(nil)).to be true
+      expect(urbanstr.readable_by?(nil, :group_inheritance)).to be true
       [:members, :friends, :community].each do |readable|
         karin.update!(readable: readable)
         expect(Register::Base.readable_by(nil, false)).to match_array [urbanstr]
@@ -177,6 +182,10 @@ describe "Register Model" do
       user = Fabricate(:user)
       expect(Register::Base.readable_by(user, false)).to match_array []
       urbanstr.update!(readable: 'community')
+      expect(urbanstr.readable_by?(user)).to be true
+      expect(urbanstr.readable_by?(user, :group_inheritance)).to be true
+      expect(butenland.readable_by?(user)).to be false
+      expect(butenland.readable_by?(user, :group_inheritance)).to be true
       [:members, :friends].each do |readable|
         karin.update!(readable: readable)
         expect(Register::Base.readable_by(user, false)).to match_array [urbanstr]
@@ -189,60 +198,76 @@ describe "Register Model" do
 
 
     it 'restricts readable_by for register members or manager' do
-      expect(Register::Base.readable_by(member, false)).to match_array [urbanstr]
-      expect(Register::Base.readable_by(member, true)).to match_array [urbanstr, butenland]
-      expect(Register::Base.readable_by(manager, false)).to match_array [urbanstr]
-      expect(Register::Base.readable_by(manager, true)).to match_array [urbanstr, butenland]
+      [manager, member].each do |user|
+        expect(Register::Base.readable_by(user, false)).to match_array [urbanstr]
+        expect(Register::Base.readable_by(user, true)).to match_array [urbanstr, butenland]
+        expect(urbanstr.readable_by?(user)).to be true
+        expect(urbanstr.readable_by?(user, :group_inheritance)).to be true
+        expect(butenland.readable_by?(user)).to be false
+        expect(butenland.readable_by?(user, :group_inheritance)).to be true
+      end
     end
 
 
     it 'restricts readable_by for register for friends of manager' do
-      expect(Register::Base.readable_by(member.friends.first, false)).to match_array []
-      expect(Register::Base.readable_by(member.friends.first, true)).to match_array [butenland]
-      expect(Register::Base.readable_by(admin.friends.first, false)).to eq []
-      expect(Register::Base.readable_by(admin.friends.first, true)).to eq [butenland]
+      [member.friends.first, admin.friends.first].each do |user|
+        expect(Register::Base.readable_by(user, false)).to match_array []
+        expect(Register::Base.readable_by(user, true)).to match_array [butenland]
+        expect(urbanstr.readable_by?(user)).to be false
+        expect(urbanstr.readable_by?(user, :group_inheritance)).to be false
+        expect(butenland.readable_by?(user)).to be false
+        expect(butenland.readable_by?(user, :group_inheritance)).to be true
+      end
       expect(Register::Base.readable_by(manager.friends.first, false)).to match_array [urbanstr]
       expect(Register::Base.readable_by(manager.friends.first, true)).to match_array [urbanstr, butenland]
+      user = manager.friends.first
+      expect(Register::Base.readable_by(user, false)).to match_array [urbanstr]
+      expect(Register::Base.readable_by(user, true)).to match_array [urbanstr, butenland]
+      expect(urbanstr.readable_by?(user)).to be true
+      expect(urbanstr.readable_by?(user, :group_inheritance)).to be true
+
       urbanstr.update! readable: :members
-      expect(Register::Base.readable_by(manager.friends.first, false)).to eq []
-      expect(Register::Base.readable_by(manager.friends.first, true)).to eq [butenland]
-      expect(Register::Base.readable_by(member.friends.first, false)).to eq []
-      expect(Register::Base.readable_by(member.friends.first, true)).to eq [butenland]
-      expect(Register::Base.readable_by(admin.friends.first, false)).to eq []
-      expect(Register::Base.readable_by(admin.friends.first, true)).to eq [butenland]
+      expect(urbanstr.readable_by?(user)).to be false
+      expect(urbanstr.readable_by?(user, :group_inheritance)).to be false
+      [member.friends.first, manager.friends.first, admin.friends.first].each do |user|
+        expect(Register::Base.readable_by(user, false)).to eq []
+        expect(Register::Base.readable_by(user, true)).to eq [butenland]
+      end
     end
 
 
     it 'restricts readable_by for register belonging to readable group' do
-      expect(Register::Base.readable_by(member.friends.first, false)).to match_array []
-      expect(Register::Base.readable_by(member.friends.first, true)).to match_array [butenland]
-
-      expect(Register::Base.readable_by(admin.friends.first, false)).to eq []
-      expect(Register::Base.readable_by(admin.friends.first, true)).to eq [butenland]
+      [nil, member.friends.first, admin.friends.first].each do |user|
+        expect(Register::Base.readable_by(user, false)).to match_array []
+        expect(Register::Base.readable_by(user, true)).to match_array [butenland]
+      end
 
       expect(Register::Base.readable_by(manager.friends.first, false)).to match_array [urbanstr]
       expect(Register::Base.readable_by(manager.friends.first, true)).to match_array [urbanstr, butenland]
 
-      expect(Register::Base.readable_by(nil, false)).to match_array []
-      expect(Register::Base.readable_by(nil, true)).to match_array [butenland]
-
       butenland.group.update! readable: :members
       expect(Register::Base.readable_by(manager.friends.first, false)).to eq [urbanstr]
-      expect(Register::Base.readable_by(member.friends.first, false)).to eq []
-      expect(Register::Base.readable_by(admin.friends.first, false)).to eq []
-      expect(Register::Base.readable_by(nil, false)).to eq []
+      [nil, member.friends.first, admin.friends.first].each do |user|
+        expect(Register::Base.readable_by(user, false)).to eq []
+        [urbanstr, butenland, karin].each do |register|
+          expect(register.readable_by?(user)).to be false
+          expect(register.readable_by?(user, :group_inheritance)).to be false
+        end
+      end
     end
-
 
     it 'does not restrict readable_by for admins' do
       expect(Register::Base.readable_by(admin, false)).to match_array Register::Base.all
+      expect(Register::Base.readable_by(admin, true)).to match_array Register::Base.all
+      expect(Register::Base.first.readable_by?(admin)).to be true
+      expect(Register::Base.first.readable_by?(admin, :group_inheritance)).to be true
     end
 
-    it 'anonymizes the name when MP is not readable without group inhereted readablity' do
+    it 'anonymizes the name when register is not readable without group inhereted readablity' do
       user = Fabricate(:user)
       [nil, user, member, member.friends.first, manager, manager.friends.first].each do |u|
         expect(
-          Register::Base.by_group(group).anonymized(u).collect{ |mp| mp.name }
+          Register::Base.by_group(group).anonymized(u).collect{ |r| r.name }
         ).to eq ['anonymous']
       end
 

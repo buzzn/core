@@ -17,6 +17,12 @@ Fabricator :tariff_forstenried, from: :tariff do
   baseprice_cents_per_month { 250 }
 end
 
+Fabricator :tariff_sulz, from: :tariff do
+  begin_date                { Date.new(2016, 8, 4) }
+  energyprice_cents_per_kwh { 23.8 }
+  baseprice_cents_per_month { 500 }
+end
+
 
 # == Metering Point Operator Contract ==
 
@@ -184,7 +190,7 @@ end
 # == Localpool Contracts for Mehrgenerationenplatz Forstenried ==
 
 Fabricator :lpc_forstenried, from: :localpool_processing_contract do
-  begindate = Date.new(2014, 12, 01)
+  begindate = Date.new(2014, 12, 1)
   customer_number '40021/1'
   contract_number '60015'
   begin_date      begindate
@@ -210,15 +216,15 @@ Fabricator :lpc_forstenried, from: :localpool_processing_contract do
 end
 
 Fabricator :mpoc_forstenried, from: :metering_point_operator_contract do
-  begindate = Date.new(2014, 12, 01)
+  begindate = Date.new(2014, 12, 1)
   metering_point_operator_name  'buzzn systems UG'
   customer_number               '40021/1'
-  contract_number               '90041'
+  contract_number               '9041'
   begin_date                    begindate
   signing_date                  begindate - 2.months
   contractor                    { Organization.buzzn_systems }
   tariffs                       { [Fabricate.build(:tariff,
-                                    name: 'localpool_processing_standard',
+                                    name: 'metering_standard',
                                     begin_date: begindate,
                                     end_date: nil,
                                     energyprice_cents_per_kwh: 0,
@@ -257,9 +263,9 @@ end
 
 # == Localpool Power Taker Contracts for Mehrgenerationenplatz Forstenried ==
 
-Fabricator :lptc_markus_becher, from: :localpool_power_taker_contract do
+Fabricator :lptc_mabe, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
-  signingdate = Date.new(2014, 12, 01)
+  signingdate = Date.new(2014, 12, 1)
   contract_number                 '60015/1'
   begin_date                      begindate
   end_date                        nil
@@ -276,9 +282,9 @@ Fabricator :lptc_markus_becher, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_inge_brack, from: :localpool_power_taker_contract do
+Fabricator :lptc_inbr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 1)
-  signingdate = Date.new(2014, 12, 01)
+  signingdate = Date.new(2014, 12, 1)
   contract_number                 '60015/2'
   begin_date                      begindate
   end_date                        nil
@@ -295,9 +301,9 @@ Fabricator :lptc_inge_brack, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_peter_brack, from: :localpool_power_taker_contract do
+Fabricator :lptc_pebr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 1)
-  signingdate = Date.new(2014, 12, 01)
+  signingdate = Date.new(2014, 12, 1)
   contract_number                 '60015/3'
   begin_date                      begindate
   end_date                        nil
@@ -314,9 +320,9 @@ Fabricator :lptc_peter_brack, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_annika_brandl, from: :localpool_power_taker_contract do
+Fabricator :lptc_anbr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 1)
-  signingdate = Date.new(2014, 12, 01)
+  signingdate = Date.new(2014, 12, 1)
   contract_number                 '60015/4'
   begin_date                      begindate
   end_date                        nil
@@ -333,9 +339,9 @@ Fabricator :lptc_annika_brandl, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_gudrun_brandl, from: :localpool_power_taker_contract do
+Fabricator :lptc_gubr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 15)
-  signingdate = Date.new(2014, 12, 01)
+  signingdate = Date.new(2014, 12, 1)
   contract_number                 '60015/5'
   begin_date                      begindate
   end_date                        nil
@@ -352,9 +358,9 @@ Fabricator :lptc_gudrun_brandl, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_martin_braeunlich, from: :localpool_power_taker_contract do
+Fabricator :lptc_mabr, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
-  signingdate = Date.new(2014, 12, 01)
+  signingdate = Date.new(2014, 12, 1)
   contract_number                 '60015/6'
   begin_date                      begindate
   end_date                        nil
@@ -371,9 +377,9 @@ Fabricator :lptc_martin_braeunlich, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_daniel_bruno, from: :localpool_power_taker_contract do
+Fabricator :lptc_dabr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 1)
-  signingdate = Date.new(2014, 12, 01)
+  signingdate = Date.new(2014, 12, 1)
   contract_number                 '60015/7'
   begin_date                      begindate
   end_date                        nil
@@ -390,9 +396,9 @@ Fabricator :lptc_daniel_bruno, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_zubair_butt, from: :localpool_power_taker_contract do
+Fabricator :lptc_zubu, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
-  signingdate = Date.new(2014, 12, 01)
+  signingdate = Date.new(2014, 12, 1)
   contract_number                 '60015/8'
   begin_date                      begindate
   end_date                        nil
@@ -409,9 +415,9 @@ Fabricator :lptc_zubair_butt, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_maria_cerghizan, from: :localpool_power_taker_contract do
+Fabricator :lptc_mace, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
-  signingdate = Date.new(2014, 12, 01)
+  signingdate = Date.new(2014, 12, 1)
   contract_number                 '60015/9'
   begin_date                      begindate
   end_date                        nil
@@ -428,9 +434,9 @@ Fabricator :lptc_maria_cerghizan, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_stefan_csizmadia, from: :localpool_power_taker_contract do
+Fabricator :lptc_stcs, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 15)
-  signingdate = Date.new(2014, 12, 01)
+  signingdate = Date.new(2014, 12, 1)
   contract_number                 '60015/10'
   begin_date                      begindate
   end_date                        nil
@@ -447,11 +453,11 @@ Fabricator :lptc_stefan_csizmadia, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_patrick_fierley, from: :localpool_power_taker_contract do
+Fabricator :lptc_pafi, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
-  signingdate = Date.new(2014, 12, 01)
-  cancellationdate = Date.new(2016, 01, 01)
-  enddate = Date.new(2016, 04, 28)
+  signingdate = Date.new(2014, 12, 1)
+  cancellationdate = Date.new(2016, 1, 1)
+  enddate = Date.new(2016, 4, 28)
   contract_number                 '60015/11'
   begin_date                      begindate
   end_date                        enddate
@@ -469,9 +475,9 @@ Fabricator :lptc_patrick_fierley, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
-Fabricator :lptc_rafal_jaskolka, from: :localpool_power_taker_contract do
-  begindate = Date.new(2016, 05, 01)
-  signingdate = Date.new(2016, 02, 01)
+Fabricator :lptc_raja, from: :localpool_power_taker_contract do
+  begindate = Date.new(2016, 5, 1)
+  signingdate = Date.new(2016, 2, 1)
   contract_number                 '60015/83'
   begin_date                      begindate
   end_date                        nil
@@ -488,3 +494,251 @@ Fabricator :lptc_rafal_jaskolka, from: :localpool_power_taker_contract do
                                       source: 'calculated')] }
 end
 
+
+
+
+################
+### LCP Sulz ###
+################
+
+
+
+Fabricator :lptc_hafi, from: :localpool_power_taker_contract do
+  begindate = Date.new(2016, 8, 4)
+  signingdate = Date.new(2016, 7, 1)
+  contract_number                 '6042/1'
+  begin_date                      begindate
+  end_date                        nil
+  signing_date                    signingdate
+  forecast_kwh_pa                 1
+  renewable_energy_law_taxation   'reduced'
+  status                          :running
+  tariffs                         { [Fabricate.build(:tariff_sulz)] }
+  payments                        { [Fabricate.build(:payment,
+                                      begin_date: begindate,
+                                      end_date: nil,
+                                      price_cents: 0,
+                                      cycle: 'monthly',
+                                      source: 'calculated')] }
+end
+
+Fabricator :lptc_hubv, from: :localpool_power_taker_contract do
+  begindate = Date.new(2016, 8, 4)
+  signingdate = Date.new(2016, 7, 1)
+  contract_number                 '6042/2'
+  begin_date                      begindate
+  end_date                        nil
+  signing_date                    signingdate
+  forecast_kwh_pa                 2102
+  renewable_energy_law_taxation   'full'
+  status                          :running
+  tariffs                         { [Fabricate.build(:tariff_sulz)] }
+  payments                        { [Fabricate.build(:payment,
+                                      begin_date: begindate,
+                                      end_date: nil,
+                                      price_cents: 5500,
+                                      cycle: 'monthly',
+                                      source: 'calculated')] }
+end
+
+Fabricator :lptc_mape, from: :localpool_power_taker_contract do
+  begindate = Date.new(2016, 8, 4)
+  signingdate = Date.new(2016, 7, 1)
+  contract_number                 '6042/3'
+  begin_date                      begindate
+  end_date                        nil
+  signing_date                    signingdate
+  forecast_kwh_pa                 4603
+  renewable_energy_law_taxation   'full'
+  status                          :running
+  tariffs                         { [Fabricate.build(:tariff_sulz)] }
+  payments                        { [Fabricate.build(:payment,
+                                      begin_date: begindate,
+                                      end_date: nil,
+                                      price_cents: 11000,
+                                      cycle: 'monthly',
+                                      source: 'calculated')] }
+end
+
+Fabricator :lptc_hafi2, from: :localpool_power_taker_contract do
+  begindate = Date.new(2016, 8, 4)
+  signingdate = Date.new(2016, 7, 1)
+  enddate = Date.new(2016, 10, 31)
+  contract_number                 '6042/4'
+  begin_date                      begindate
+  end_date                        enddate
+  signing_date                    signingdate
+  forecast_kwh_pa                 1
+  renewable_energy_law_taxation   'reduced'
+  status                          :expired
+  tariffs                         { [Fabricate.build(:tariff_sulz)] }
+  payments                        { [Fabricate.build(:payment,
+                                      begin_date: begindate,
+                                      end_date: enddate,
+                                      price_cents: 0,
+                                      cycle: 'monthly',
+                                      source: 'calculated')] }
+end
+
+Fabricator :lptc_musc, from: :localpool_power_taker_contract do
+  begindate = Date.new(2016, 8, 4)
+  signingdate = Date.new(2016, 7, 1)
+  contract_number                 '6042/5'
+  begin_date                      begindate
+  end_date                        nil
+  signing_date                    signingdate
+  forecast_kwh_pa                 11095
+  renewable_energy_law_taxation   'full'
+  status                          :running
+  tariffs                         { [Fabricate.build(:tariff_sulz)] }
+  payments                        { [Fabricate.build(:payment,
+                                      begin_date: begindate,
+                                      end_date: nil,
+                                      price_cents: 23000,
+                                      cycle: 'monthly',
+                                      source: 'calculated')] }
+end
+
+Fabricator :lptc_viwe, from: :localpool_power_taker_contract do
+  begindate = Date.new(2016, 8, 4)
+  signingdate = Date.new(2016, 7, 1)
+  contract_number                 '6042/6'
+  begin_date                      begindate
+  end_date                        nil
+  signing_date                    signingdate
+  forecast_kwh_pa                 1972
+  renewable_energy_law_taxation   'full'
+  status                          :running
+  tariffs                         { [Fabricate.build(:tariff_sulz)] }
+  payments                        { [Fabricate.build(:payment,
+                                      begin_date: begindate,
+                                      end_date: nil,
+                                      price_cents: 9900,
+                                      cycle: 'monthly',
+                                      source: 'calculated')] }
+end
+
+Fabricator :lptc_reho, from: :localpool_power_taker_contract do
+  begindate = Date.new(2016, 8, 4)
+  signingdate = Date.new(2016, 7, 1)
+  contract_number                 '6042/7'
+  begin_date                      begindate
+  end_date                        nil
+  signing_date                    signingdate
+  forecast_kwh_pa                 3706
+  renewable_energy_law_taxation   'full'
+  status                          :running
+  tariffs                         { [Fabricate.build(:tariff_sulz)] }
+  payments                        { [Fabricate.build(:payment,
+                                      begin_date: begindate,
+                                      end_date: nil,
+                                      price_cents: 11200,
+                                      cycle: 'monthly',
+                                      source: 'calculated')] }
+end
+
+Fabricator :lptc_pewi, from: :localpool_power_taker_contract do
+  begindate = Date.new(2016, 11, 1)
+  signingdate = Date.new(2016, 7, 1)
+  contract_number                 '6042/9'
+  begin_date                      begindate
+  end_date                        nil
+  signing_date                    signingdate
+  forecast_kwh_pa                 3693
+  renewable_energy_law_taxation   'full'
+  status                          :running
+  tariffs                         { [Fabricate.build(:tariff_sulz)] }
+  payments                        { [Fabricate.build(:payment,
+                                      begin_date: begindate,
+                                      end_date: nil,
+                                      price_cents: 6000,
+                                      cycle: 'monthly',
+                                      source: 'calculated')] }
+end
+
+Fabricator :lptc_saba, from: :localpool_power_taker_contract do
+  begindate = Date.new(2017, 03, 1)
+  signingdate = Date.new(2016, 7, 1)
+  contract_number                 '6042/10'
+  begin_date                      begindate
+  end_date                        nil
+  signing_date                    signingdate
+  forecast_kwh_pa                 3090
+  renewable_energy_law_taxation   'full'
+  status                          :running
+  tariffs                         { [Fabricate.build(:tariff_sulz)] }
+  payments                        { [Fabricate.build(:payment,
+                                      begin_date: begindate,
+                                      end_date: nil,
+                                      price_cents: 6600,
+                                      cycle: 'monthly',
+                                      source: 'calculated')] }
+end
+
+# == LCP Contracts Sulz == #
+
+Fabricator :lpc_sulz, from: :localpool_processing_contract do
+  begindate = Date.new(2016, 8, 4)
+  customer_number '40361/1'
+  contract_number '6042'
+  begin_date      begindate
+  signing_date    begindate - 2.months
+  tariffs         { [Fabricate.build(:tariff,
+                      name: 'localpool_processing_standard',
+                      begin_date: begindate,
+                      end_date: begindate,
+                      energyprice_cents_per_kwh: 0,
+                      baseprice_cents_per_month: 100000)] }
+  payments        { [Fabricate.build(:payment,
+                      begin_date: begindate,
+                      end_date: begindate,
+                      price_cents: 100000,
+                      cycle: 'once',
+                      source: 'calculated'),
+                    Fabricate.build(:payment,
+                      begin_date: begindate,
+                      end_date: begindate,
+                      price_cents: 100000,
+                      cycle: 'once',
+                      source: 'transferred')] }
+end
+
+Fabricator :mpoc_sulz, from: :metering_point_operator_contract do
+  begindate = Date.new(2016, 8, 4)
+  metering_point_operator_name  'buzzn systems UG'
+  customer_number               '40361/1'
+  contract_number               '90067'
+  begin_date                    begindate
+  signing_date                  begindate - 2.months
+  contractor                    { Organization.buzzn_systems }
+  tariffs                       { [Fabricate.build(:tariff,
+                                    name: 'metering_standard',
+                                    begin_date: begindate,
+                                    end_date: nil,
+                                    energyprice_cents_per_kwh: 0,
+                                    baseprice_cents_per_month: 30000)] }
+  payments                      { [Fabricate.build(:payment,
+                                    begin_date: begindate,
+                                    end_date: begindate,
+                                    price_cents: 30000,
+                                    cycle: 'once',
+                                    source: 'calculated'),
+                                  Fabricate.build(:payment,
+                                    begin_date: begindate,
+                                    end_date: begindate,
+                                    price_cents: 30000,
+                                    cycle: 'once',
+                                    source: 'transferred'),
+                                  Fabricate.build(:payment,
+                                    begin_date: begindate,
+                                    end_date: nil,
+                                    price_cents: 55000,
+                                    cycle: 'monthly',
+                                    source: 'calculated'),
+                                  Fabricate.build(:payment,
+                                    begin_date: begindate,
+                                    end_date: begindate.end_of_year,
+                                    price_cents: 55000,
+                                    cycle: 'monthly',
+                                    source: 'transferred')] }
+end

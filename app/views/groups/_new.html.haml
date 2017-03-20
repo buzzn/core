@@ -3,8 +3,9 @@
     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
     %h4.modal-title= t'new_group'
   .modal-body
-    = simple_form_for @group, remote: true do |f|
+    = simple_form_for @group, remote: true, url: groups_path, method: 'post' do |f|
       = render 'groups/form_fields', f: f
+      = f.input :mode, as: :radio_buttons, collection: Group::Base.modes.map(&:to_sym), label_method: ->(obj){ t(obj)}, checked: Group::Base.modes.map(&:to_sym).first
       = f.association :registers, collection: Register::Base.editable_by_user(current_user).outputs.without_group, include_blank: false, input_html: { class: 'select2'}
       .modal-footer
         .btn.btn-primary.btn-labeled.fa.fa-remove{"data-dismiss" => "modal"}

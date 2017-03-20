@@ -3,6 +3,53 @@ class Reading
   include Mongoid::Document
   include Authority::Abilities
 
+  # reason constants
+  DEVICE_SETUP = 'device_setup'
+  DEVICE_CHANGE_1 = 'device_change_1'
+  DEVICE_CHANGE_2 = 'device_change_2'
+  DEVICE_REMOVAL = 'device_removal'
+  REGULAR_READING = 'regular_reading' #Turnusablesung
+  MIDWAY_READING = 'midway_reading' #Zwischenablesung
+  CONTRACT_CHANGE = 'contract_change'
+  DEVICE_PARAMETER_CHANGE = 'device_parameter_change'
+  BALANCING_ZONE_CHANGE = 'balancing_zone_change'
+  OTHER = 'other' # also used four source
+
+  # quality constants
+  NOT_USABLE = 'not_usable'
+  SUBSTITUE_VALUE = 'substitue_value'
+  ENERGY_QUANTITY_SUMMARIZED = 'energy_quantity_summarized'
+  FORECAST_VALUE = 'forecast_value'
+  READ_OUT = 'read_out' # abgelesen
+  PROPOSED_VALUE = 'proposed_value'
+
+  # source constants
+  BUZZN_SYSTEMS = 'buzzn_systems'
+  CUSTOMER_LSG = 'customer_lsg' #lsg = localpool strom geber
+  LSN = 'lsn' # lsn = localpool strom nehmer
+  VNB = 'vnb' # vnb = verteilnetzbetreiber
+  THIRD_PARTY_MSB_MDL = 'third_party_msb_mdl' # msb = messstellenbetreiber, mdl = messdienstleister
+  USER_INPUT = 'user_input'
+  SLP = 'slp'
+  SEP_PV = 'sep_pv'
+  SEP_BHKW = 'sep_bhkw'
+
+  class << self
+    def reasons
+      @reason ||= [DEVICE_SETUP, DEVICE_CHANGE_1, DEVICE_CHANGE_2, DEVICE_REMOVAL, REGULAR_READING,
+                  MIDWAY_READING, CONTRACT_CHANGE, DEVICE_PARAMETER_CHANGE, BALANCING_ZONE_CHANGE, OTHER]
+    end
+
+    def qualities
+      @quality ||= [NOT_USABLE, SUBSTITUE_VALUE, ENERGY_QUANTITY_SUMMARIZED, FORECAST_VALUE, READ_OUT,
+                  PROPOSED_VALUE]
+    end
+
+    def sources
+      @source ||= [BUZZN_SYSTEMS, CUSTOMER_LSG, LSN, VNB, THIRD_PARTY_MSB_MDL, OTHER, USER_INPUT, SLP, SEP_PV, SEP_BHKW]
+    end
+  end
+
   field :contract_id
   field :register_id
   field :timestamp,               type: DateTime
@@ -21,6 +68,10 @@ class Reading
   index({ register_id: 1, source: 1 })
 
   validate :energy_milliwatt_hour_has_to_grow, if: :user_input?
+
+  validates :reason, inclusion: { in: reasons }
+  validates :quality, inclusion: { in: qualities }
+  validates :source, inclusion: { in: sources}
 
   # methods from Buzzn:GuardedCrud
   def self.guarded_retrieve(user, id)
@@ -378,9 +429,25 @@ class Reading
       { "$match" => {
           register_id: {
             "$in" => [register_id]
+          }
+        }
+      },
+      { "$sort" => {
+          timestamp: 1
+        }
+      }
+    ]
+    return Reading.collection.aggregate(pipe).to_a
+  end
+
+  def self.all_by_register_id_and_source(register_id, source)
+    pipe = [
+      { "$match" => {
+          register_id: {
+            "$in" => [register_id]
           },
           source:{
-            "$in" => ['user_input']
+            "$in" => [source]
           }
         }
       },

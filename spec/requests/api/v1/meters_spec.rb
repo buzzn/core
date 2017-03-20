@@ -269,15 +269,11 @@ describe "Meters API" do
 
     errors = json['errors']
 
-    # NOTE somehow rails adds two 'registers ist nicht gültig' errors, one for
-    #      each register :(
-    expect(errors.size).to eq 4
+    expect(errors.size).to eq 1
     errors.each do |error|
       expect(error['title']).to eq 'Invalid Attribute'
     end
-    [ "/data/attributes/manufacturer_product_serialnumber",
-      "/data/attributes/registers",
-      "/data/attributes/registers[0][uid]"].each do |key_path|
+    [ "/data/attributes/manufacturer_product_serialnumber"].each do |key_path|
       expect(errors.detect { |e| e['source']['pointer'] == key_path }).not_to be_nil
     end
   end

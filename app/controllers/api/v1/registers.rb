@@ -201,7 +201,7 @@ module API
         oauth2 :simple, :full
         get ":id/address" do
           register = Register::Base.guarded_retrieve(current_user, permitted_params)
-          register.address.guarded_read(current_user)
+          register.address.guarded_retrieve(current_user)
         end
 
 
@@ -283,7 +283,7 @@ module API
         oauth2 :simple, :full
         get ":id/meter" do
           register = Register::Base.guarded_retrieve(current_user, permitted_params)
-          register.meter.guarded_read(current_user)
+          register.meter.guarded_retrieve(current_user)
         end
 
       end
