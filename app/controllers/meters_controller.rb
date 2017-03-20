@@ -52,7 +52,7 @@ class MetersController < ApplicationController
   end
 
   def validate
-    @serial = params[:register][:meter][:manufacturer_product_serialnumber] || params[:meter][:manufacturer_product_serialnumber]
+    @serial = !params[:register_base].nil? ? params[:register_base][meter_class(params[:register_base])][:manufacturer_product_serialnumber] : params[meter_class(params)][:manufacturer_product_serialnumber]
     render json: Meter::Base.where(manufacturer_product_serialnumber: @serial).empty?
   end
 
@@ -61,16 +61,18 @@ class MetersController < ApplicationController
 
 private
 
-  def meter_class
-    if !params[:meter_real].nil? && params[:meter_virtual].nil?
+  def meter_class(parameters)
+    if parameters[:meter_base].nil? && !parameters[:meter_real].nil? && parameters[:meter_virtual].nil?
       :meter_real
-    elsif params[:meter_real].nil? && !params[:meter_virtual].nil?
+    elsif parameters[:meter_base].nil? && parameters[:meter_real].nil? && !parameters[:meter_virtual].nil?
       :meter_virtual
+    elsif !parameters[:meter_base].nil? && parameters[:meter_virtual] && parameters[:meter_real].nil?
+      :meter_base
     end
   end
 
   def meter_params
-    params.require(meter_class).permit(
+    params.require(meter_class(params)).permit(
       :image,
       :manufacturer_name,
       :manufacturer_product_name,
