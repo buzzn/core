@@ -63,7 +63,7 @@ module API
         oauth2 :simple, :full
         get ":id/profile" do
           user = User.guarded_retrieve(current_user, permitted_params)
-          user.profile.guarded_read(current_user)
+          user.profile.guarded_retrieve(current_user)
         end
 
 
@@ -93,9 +93,9 @@ module API
           requires :id, type: String, desc: 'ID of the User'
         end
         oauth2 :full
-        get ':id/bank_account' do
+        get ':id/bank-account' do
           user = User.guarded_retrieve(current_user, permitted_params)
-          user.bank_account.guarded_read(current_user)
+          user.bank_account.guarded_retrieve(current_user)
         end
 
         desc "Return the related registers for User"
@@ -159,7 +159,7 @@ module API
         get ':id/friends/:friend_id' do
           user = User.guarded_retrieve(current_user, permitted_params)
           friend = user.friends.find(permitted_params[:friend_id])
-          friend.guarded_read(current_user)
+          friend.guarded_retrieve(current_user)
         end
 
 
