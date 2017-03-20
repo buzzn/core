@@ -7,6 +7,7 @@ module Register
       raise 'not implemented'
     end
 
+    before_destroy :change_broker
     after_destroy :validate_meter
     def validate_meter
       unless meter.valid?
@@ -21,6 +22,12 @@ module Register
         Buzzn::MySmartGrid::DataSource::NAME
       else
         Buzzn::StandardProfile::DataSource::NAME
+      end
+    end
+
+    def change_broker
+      if meter.registers.size == 2 && !meter.broker.nil?
+        meter.broker.mode = (meter.registers - [self]).first.input? ? :in : :out
       end
     end
 
