@@ -56,7 +56,7 @@
           .js-dependent-fields{data: {checkbox: {id: "#{@register.class_name}_virtual", value: 'false'}}}
             .js-dependent-fields{data: {checkbox: {id: "#{@register.class_name}_meter_real_smartmeter", value: 'true'}}}
               .js-dependent-fields{data: {radio: {name: "#{@register.class_name}[meter_real][existing_meter]", value: t("create_new_meter")}}}
-                = ff.input :organization, collection: Organization.metering_point_operators, input_html: { class: 'select2', 'data-placeholder': t('select_smart_metering_provider')}, label: t('smart_metering_provider'), selected: Organization.where(slug: 'discovergy')
+                = ff.input :organization, collection: Organization.metering_point_operators, input_html: { class: 'select2', 'data-placeholder': t('select_smart_metering_provider')}, label: t('smart_metering_provider'), selected: Organization.where(slug: 'buzzn-systems-ug')
               .js-dependent-fields{'data-select-id' => "#{@register.class_name}_broker_base_organization", 'data-option-value' => Organization.where(slug: 'discovergy').first.id}
                 = ff.input :provider_login
                 = ff.input :provider_password
