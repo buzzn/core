@@ -2,14 +2,9 @@
   = link_to group do
     .panel.widget
       .widget-header.bg-purple
-        - if group.image.present?
-          %img.widget-bg.img-responsive{:alt => "Image", :src => group.image.cover}
 
       .widget-body.text-center
-        - if group.logo.present?
-          %img.widget-img.img-border-light.bg-gray-light{:src => group.logo.lg}
-        - else
-          = content_tag(:span, nil, class: 'widget-img img-border-light bg-gray-light fa fa-users fa-5x')
+        = content_tag(:span, nil, class: 'widget-img img-border-light bg-gray-light fa fa-users fa-5x')
 
         %h4.mar-no= group.name
         -# %p.text-muted.mar-btm Organization

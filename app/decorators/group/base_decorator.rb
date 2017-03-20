@@ -9,32 +9,16 @@ class Group::BaseDecorator < Draper::Decorator
   decorates_association :servicing_contract
 
   def picture(size=nil)
-    if model.logo.present?
-      if size == 'lg'
-        image_tag model.logo.lg, class: 'img-lg img-circle img-user media-object', alt: "group-logo"
-      elsif size == 'md'
-        image_tag model.logo.md, class: 'img-md img-circle img-user media-object', alt: "group-logo"
-      elsif size == 'sm'
-        image_tag model.logo.sm, class: 'img-sm img-circle img-user media-object', alt: "group-logo"
-      elsif size == 'xs'
-        image_tag model.logo.md, class: 'img-xs img-circle img-user media-object', alt: "group-logo"
-      elsif size == 'cover'
-        image_tag model.logo.cover, class: 'img-circle img-user media-object', alt: "group-logo"
-      elsif size == 'big_tumb'
-        image_tag model.logo.big_tumb, class: 'img-circle img-user media-object', alt: "group-logo"
-      end
+    if size == 'lg'
+      content_tag(:span, nil, class: 'img-lg img-user imc-circle icon-wrapper-lg icon-circle bg-white fa fa-users fa-5x')
+    elsif size == 'md'
+      content_tag(:span, nil, class: 'img-md img-user imc-circle icon-wrapper-md icon-circle bg-white fa fa-users fa-3x')
+    elsif size == 'sm'
+      content_tag(:span, nil, class: 'img-sm img-user imc-circle icon-wrapper-sm icon-circle bg-white fa fa-users fa-2x')
+    elsif size == 'xs'
+      content_tag(:span, nil, class: 'img-xs img-user imc-circle icon-wrapper-xs icon-circle bg-white fa fa-users')
     else
-      if size == 'lg'
-        content_tag(:span, nil, class: 'img-lg img-user imc-circle icon-wrapper-lg icon-circle bg-white fa fa-users fa-5x')
-      elsif size == 'md'
-        content_tag(:span, nil, class: 'img-md img-user imc-circle icon-wrapper-md icon-circle bg-white fa fa-users fa-3x')
-      elsif size == 'sm'
-        content_tag(:span, nil, class: 'img-sm img-user imc-circle icon-wrapper-sm icon-circle bg-white fa fa-users fa-2x')
-      elsif size == 'xs'
-        content_tag(:span, nil, class: 'img-xs img-user imc-circle icon-wrapper-xs icon-circle bg-white fa fa-users')
-      else
-        content_tag(:i, nil, class: 'img-xxs img-user imc-circle icon-wrapper-xxs icon-circle bg-white fa fa-users')
-      end
+      content_tag(:i, nil, class: 'img-xxs img-user imc-circle icon-wrapper-xxs icon-circle bg-white fa fa-users')
     end
   end
 
