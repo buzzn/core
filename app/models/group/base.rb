@@ -341,16 +341,18 @@ module Group
     def calculate_current_closeness
       addresses_out = self.registers.outputs.collect(&:address).compact
       addresses_in = self.registers.inputs.collect(&:address).compact
-      sum_distances = 0
+      sum_distances = -1
       addresses_in.each do |address_in|
         addresses_out.each do |address_out|
-          sum_distances += address_in.distance_to(address_out)
+          sum_distances += address_in.distance_to(address_out) if address_in.longitude && address_out.longitude
         end
       end
       closeness = -1
       if addresses_out.count * addresses_in.count != 0
         average_distance = sum_distances / (addresses_out.count * addresses_in.count)
-        if average_distance < 5
+        if average_distance < 0
+          closeness = -1
+        elsif average_distance < 5
           closeness = 5
         elsif average_distance < 10
           closeness = 4

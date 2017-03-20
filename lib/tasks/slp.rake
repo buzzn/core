@@ -33,7 +33,9 @@ namespace :slp do
               timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
               energy_milliwatt_hour: watt_hour,
               power_milliwatt: watts,
-              source: "slp"
+              source: "slp",
+              quality: Reading::SUBSTITUE_VALUE,
+              reason: Reading::OTHER
             )
           end
         elsif parseString.include? "QTY"

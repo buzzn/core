@@ -360,6 +360,15 @@ describe "Organizations API" do
     expect(response).to have_http_status(401)
   end
 
+  it 'gets not the related bank_account of an organization with token' do
+    organization       = Fabricate(:metering_service_provider)
+    access_token       = Fabricate(:full_access_token)
+    organization.bank_account.delete
+
+    get_with_token "/api/v1/organizations/#{organization.id}/bank-account", access_token.token
+    expect(response).to have_http_status(404)
+  end
+
   it 'gets the related bank_account of an organization with token' do
     organization    = Fabricate(:metering_service_provider)
     manager_access_token = Fabricate(:full_access_token)
@@ -381,6 +390,14 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(address.id)
     expect(json['data']['attributes']['time-zone']).to eq('Berlin')
+  end
+
+  it 'gets not the related address of an organization with token' do
+    organization       = Fabricate(:metering_service_provider)
+    access_token       = Fabricate(:full_access_token)
+
+    get_with_token "/api/v1/organizations/#{organization.id}/address", access_token.token
+    expect(response).to have_http_status(404)
   end
 
   it 'gets the related address of an organization with token' do

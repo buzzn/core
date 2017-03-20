@@ -25,6 +25,9 @@ module API
           requires :timestamp,             type: DateTime, desc: "DateTime of the reading"
           requires :energy_milliwatt_hour, type: Integer,  desc: "energy in Milliwatt Hour"
           requires :power_milliwatt,       type: Integer,  desc: "power in Milliwatt"
+          requires :reason,                type: String,  desc: "The reason for this reading", values: Reading::reasons
+          requires :source,                type: String,  desc: "The source of this reading", values: Reading::sources
+          requires :quality,               type: String,  desc: "The quality of this reading", values: Reading::qualities
         end
         oauth2 :full, :smartmeter
         post do
