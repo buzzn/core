@@ -365,7 +365,7 @@ describe "Organizations API" do
     access_token       = Fabricate(:full_access_token)
     organization.bank_account.delete
 
-    get_with_token "/api/v1/organizations/#{organization.id}/bank_account", access_token.token
+    get_with_token "/api/v1/organizations/#{organization.id}/bank-account", access_token.token
     expect(response).to have_http_status(404)
   end
 
