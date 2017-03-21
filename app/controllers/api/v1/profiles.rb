@@ -6,20 +6,15 @@ module API
 
         desc "Return all profiles"
         params do
-          optional :per_page, type: Fixnum, default: 10, max: 100, desc: "Entries per Page"
-          optional :page, type: Fixnum, default: 1, desc: "Page number"
           optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
           optional :order_by, type: String, default: 'created_at', values: ['user_name', 'first_name', 'last_name', 'created_at'], desc: "Order by Attribute"
         end
-        paginate
         oauth2 :full
         get do
           order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
-          paginated_response(
-            Profile
-              .anonymized_readable_by(current_user)
-              .order(order)
-          )
+          Profile
+            .anonymized_readable_by(current_user)
+            .order(order)
         end
 
 
@@ -85,38 +80,29 @@ module API
         desc 'Return profile groups'
         params do
           requires :id, type: String, desc: "ID of the Profile"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 false
         get ':id/groups' do
           profile = Profile.guarded_retrieve(current_user, permitted_params)
           groups = Group::Base.accessible_by_user(profile.user)
-          paginated_response(groups.readable_by(current_user))
+          groups.readable_by(current_user)
         end
 
 
         desc 'Return profile friends'
         params do
           requires :id, type: String, desc: "ID of the Profile"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 false
         get ':id/friends' do
           profile = Profile.guarded_retrieve(current_user, permitted_params)
-          paginated_response(profile.user.friends.readable_by(current_user))
+          profile.user.friends.readable_by(current_user)
         end
 
         desc 'Return profile registers'
         params do
           requires :id, type: String, desc: "ID of the Profile"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 false
         get ':id/registers' do
           profile = Profile.guarded_retrieve(current_user, permitted_params)
@@ -134,7 +120,7 @@ module API
           # this does not match the Authority for readable_by? and should be:
           # `accessible_by_user(profile.user).readable_by?(current_user)`
           # maybe it is just adjusting the test
-          paginated_response(Register::Base.accessible_by_user(profile.user).where(readable: types))
+          Register::Base.accessible_by_user(profile.user).where(readable: types)
         end
 
       end

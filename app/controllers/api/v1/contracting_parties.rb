@@ -7,13 +7,10 @@ module API
 
         desc 'Return all contracting parties'
         params do
-          optional :per_page, type: Fixnum, desc: 'Entries per Page', default: 10, max: 100
-          optional :page, type: Fixnum, desc: 'Page number', default: 1
         end
-        paginate
         oauth2 :full
         get do
-          paginated_response(ContractingParty.all)
+          ContractingParty.all
         end
 
         desc 'Return contractig party'

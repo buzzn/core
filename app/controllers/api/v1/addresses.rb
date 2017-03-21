@@ -7,13 +7,10 @@ module API
 
         desc 'Return all addresses'
         params do
-          optional :per_page, type: Fixnum, desc: 'Entries per Page', default: 10, max: 100
-          optional :page, type: Fixnum, desc: 'Page number', default: 1
         end
-        paginate
         oauth2 :full
         get do
-          paginated_response(Address.readable_by(current_user))
+          Address.readable_by(current_user)
         end
 
         desc 'Return address'

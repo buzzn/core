@@ -70,22 +70,17 @@ module API
         desc "Return the related groups for User"
         params do
           requires :id, type: String, desc: "ID of the profile"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
           optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
           optional :order_by, type: String, default: 'created_at', values: ['name', 'updated_at', 'created_at'], desc: "Order by Attribute"
         end
-        paginate
         oauth2 :simple, :full
         get ":id/groups" do
           user   = User.guarded_retrieve(current_user, permitted_params)
           groups = Group::Base.accessible_by_user(user)
           order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
-          paginated_response(
-            groups
-              .readable_by(current_user)
-              .order(order)
-          )
+          groups
+            .readable_by(current_user)
+            .order(order)
         end
 
         desc 'Return the related bank_account for User'
@@ -101,15 +96,12 @@ module API
         desc "Return the related registers for User"
         params do
           requires :id, type: String, desc: "ID of the User"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get ":id/registers" do
           user = User.guarded_retrieve(current_user, permitted_params)
           registers = Register::Base.accessible_by_user(user)
-          paginated_response(registers.anonymized_readable_by(current_user))
+          registers.anonymized_readable_by(current_user)
         end
 
 
@@ -117,36 +109,28 @@ module API
         params do
           requires :id, type: String, desc: "ID of the User"
           optional :filter, type: String, desc: "Search query using #{Base.join(Meter::Base.search_attributes)}"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
           optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
           optional :order_by, type: String, default: 'created_at', values: ['updated_at', 'created_at'], desc: "Order by Attribute"
         end
-        paginate
         oauth2 :full, :smartmeter
         get ":id/meters" do
           user = User.guarded_retrieve(current_user, permitted_params)
           meters = Meter::Base.filter(permitted_params[:filter]).accessible_by_user(user)
           order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
-          paginated_response(
-            meters
-              .readable_by(current_user)
-              .order(order)
-          )
+          meters
+            .readable_by(current_user)
+            .order(order)
         end
 
 
         desc "Return the related friends for User"
         params do
           requires :id, type: String, desc: "ID of the User"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get [':id/friends', ':id/relationships/friends'] do
           user = User.guarded_retrieve(current_user, permitted_params)
-          paginated_response(user.friends.readable_by(current_user))
+          user.friends.readable_by(current_user)
         end
 
 
@@ -186,16 +170,13 @@ module API
         desc 'List of received friendship requests'
         params do
           requires :id, type: String, desc: "ID of the User"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get [':id/friendship-requests',
              ':id/relationships/friendship-requests'] do
           user = User.guarded_retrieve(current_user, permitted_params)
           # TODO readable_by
-          paginated_response(user.received_friendship_requests)
+          user.received_friendship_requests
         end
 
 
@@ -266,30 +247,23 @@ module API
         desc "Return the related devices for User"
         params do
           requires :id, type: String, desc: "ID of the User"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get ":id/devices" do
           user = User.guarded_retrieve(current_user, permitted_params)
-          devices = Device.accessible_by_user(user).readable_by(current_user)
-          paginated_response(devices)
+          Device.accessible_by_user(user).readable_by(current_user)
         end
 
 
         desc 'Return user activities'
         params do
           requires :id, type: String, desc: "ID of the User"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get ':id/activities' do
           user = User.guarded_retrieve(current_user, permitted_params)
           # TODO readable_by
-          paginated_response(PublicActivity::Activity.where({ owner_type: 'User', owner_id: permitted_params[:id] }))
+          PublicActivity::Activity.where({ owner_type: 'User', owner_id: permitted_params[:id] })
         end
 
 

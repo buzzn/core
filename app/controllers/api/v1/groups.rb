@@ -150,10 +150,7 @@ module API
           requires :interval, type: Symbol, values: [:day, :month, :year]
           requires :timestamp, type: DateTime
           optional :mode, type: Symbol, values: [:sufficiency, :closeness, :autarchy, :fitting]
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 false
         get ":id/scores" do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
@@ -166,7 +163,7 @@ module API
           if mode = permitted_params[:mode]
             result = result.send(mode.to_s.pluralize.to_sym)
           end
-          paginated_response(result.readable_by(current_user))
+          result.readable_by(current_user)
         end
 
 
@@ -174,14 +171,11 @@ module API
         desc "Return the related managers for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get [':id/managers', ':id/relationships/managers'] do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          paginated_response(group.managers.readable_by(current_user))
+          group.managers.readable_by(current_user)
         end
 
 
@@ -232,14 +226,11 @@ module API
         desc "Return the related members for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get [':id/members', ':id/relationships/members'] do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          paginated_response(group.members.readable_by(current_user))
+          group.members.readable_by(current_user)
         end
 
 
@@ -268,14 +259,11 @@ module API
         desc 'Return the related comments for Group'
         params do
           requires :id, type: String, desc: 'ID of the group'
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get ':id/comments' do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          paginated_response(group.comment_threads.readable_by(current_user))
+          group.comment_threads.readable_by(current_user)
         end
 
 
