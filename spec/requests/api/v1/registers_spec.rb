@@ -247,7 +247,7 @@ describe "/api/v1/registers" do
         expect(json["data"].size).to eq(5)
       end
 
-      it "paginates scores" do
+      it "get all scores" do
         register = send(type)
         register.group = Fabricate(:tribe)
         interval_information  = register.group.score_interval("day", Time.current.to_i)
@@ -262,10 +262,7 @@ describe "/api/v1/registers" do
         end
         get_without_token "/api/v1/registers/#{register.id}/scores"
         expect(response).to have_http_status(200)
-        expect(json["meta"]["total_pages"]).to eq(2)
-
-        get_without_token "/api/v1/registers/#{register.id}/scores", {per_page: 200}
-        expect(response).to have_http_status(422)
+        expect(json['data'].size).to eq(page_overload)
       end
 
 
@@ -285,7 +282,7 @@ describe "/api/v1/registers" do
       end
 
 
-      it "paginates comments of #{type} register" do
+      it "get all comments of #{type} register" do
         access_token = Fabricate(:simple_access_token)
         register = send(type)
         user  = Fabricate(:user)
@@ -297,11 +294,7 @@ describe "/api/v1/registers" do
         get_with_token "/api/v1/registers/#{register.id}/comments", access_token.token
 
         expect(response).to have_http_status(200)
-        expect(json["meta"]["total_pages"]).to eq(2)
-
-
-        get_with_token "/api/v1/registers/#{register.id}/comments", {per_page: 200}, access_token.token
-        expect(response).to have_http_status(422)
+        expect(json['data'].size).to eq(page_overload)
       end
 
 
@@ -341,7 +334,7 @@ describe "/api/v1/registers" do
         expect(json["data"].collect {|d| d["id"]}).to match_array(manager_ids)
       end
 
-      it "paginates managers" do
+      it "get all managers" do
         access_token = Fabricate(:simple_access_token)
         register = send(type)
         page_overload.times do
@@ -355,15 +348,12 @@ describe "/api/v1/registers" do
         end
         get_with_token "/api/v1/registers/#{register.id}/managers", access_token.token
         expect(response).to have_http_status(200)
-        expect(json["meta"]["total_pages"]).to eq(2)
+        expect(json['data'].size).to eq(page_overload)
 
         access_token    = Fabricate(:full_access_token_as_admin)
         get_with_token "/api/v1/registers/#{register.id}/managers", access_token.token
         expect(response).to have_http_status(200)
-        expect(json["meta"]["total_pages"]).to eq(3)
-
-        get_with_token "/api/v1/registers/#{register.id}/managers", {per_page: 200}, access_token.token
-        expect(response).to have_http_status(422)
+        expect(json['data'].size).to eq(2*page_overload)
       end
 
       it "does not add/repalce/delete register manager or member without token" do
@@ -551,7 +541,7 @@ describe "/api/v1/registers" do
         expect(activities.first.key).to eq("register_user_membership.create")
       end
 
-      it "paginates members" do
+      it "get all members" do
         access_token    = Fabricate(:full_access_token_as_admin)
         register = send(type)
         page_overload.times do
@@ -560,10 +550,7 @@ describe "/api/v1/registers" do
         end
         get_with_token "/api/v1/registers/#{register.id}/members", access_token.token
         expect(response).to have_http_status(200)
-        expect(json["meta"]["total_pages"]).to eq(2)
-
-        get_with_token "/api/v1/registers/#{register.id}/members", {per_page: 200}, access_token.token
-        expect(response).to have_http_status(422)
+        expect(json['data'].size).to eq(page_overload)
       end
 
 

@@ -92,14 +92,11 @@ module API
         desc "Return the related scores for Register"
         params do
           requires :id, type: String, desc: "ID of the Register"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 false
         get ":id/scores" do
           register = Register::Base.guarded_retrieve(current_user, permitted_params)
-          paginated_response(register.scores.readable_by(current_user))
+          register.scores.readable_by(current_user)
         end
 
 
@@ -107,33 +104,25 @@ module API
         desc "Return the related comments for Register"
         params do
           requires :id, type: String, desc: "ID of the Register"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get ":id/comments" do
           register = Register::Base.guarded_retrieve(current_user, permitted_params)
-          paginated_response(
-            Comment.where(
-              commentable_type: "Register::Base",
-              commentable_id: register.id
-              ).readable_by(current_user)
-          )
+          Comment.where(
+            commentable_type: "Register::Base",
+            commentable_id: register.id
+          ).readable_by(current_user)
         end
 
 
         desc "Return the related managers for Register"
         params do
           requires :id, type: String, desc: "ID of the Register"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get [":id/managers", ":id/relationships/managers"] do
           register = Register::Base.guarded_retrieve(current_user, permitted_params)
-          paginated_response(register.managers.readable_by(current_user))
+          register.managers.readable_by(current_user)
         end
 
 
@@ -208,14 +197,11 @@ module API
         desc "Return members of the Register"
         params do
           requires :id, type: String, desc: "ID of the Register"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 false
         get [":id/members", ":id/relationships/members"] do
           register = Register::Base.guarded_retrieve(current_user, permitted_params)
-          paginated_response(register.members.readable_by(current_user))
+          register.members.readable_by(current_user)
         end
 
 

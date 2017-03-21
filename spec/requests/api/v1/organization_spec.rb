@@ -82,17 +82,14 @@ describe "Organizations API" do
   end
 
 
-  it 'paginates organizations' do
+  it 'get all organizations' do
     page_overload.times do
       Fabricate(:distribution_system_operator)
     end
     access_token = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/organizations", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
-
-    get_with_token "/api/v1/organizations", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(Organization.count)
   end
 
 
@@ -427,7 +424,7 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
   end
 
-  it 'paginates managers of an organziation' do
+  it 'get all managers of an organziation' do
     access_token  = Fabricate(:full_access_token_as_admin)
     organization  = Fabricate(:distribution_system_operator)
     page_overload.times do
@@ -437,16 +434,13 @@ describe "Organizations API" do
 
     get_with_token "/api/v1/organizations/#{organization.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
+    expect(json['data'].size).to eq(page_overload)
 
     User.all.each {|u| u.profile.update! readable: 'world'}
     access_token  = Fabricate(:simple_access_token)
     get_with_token "/api/v1/organizations/#{organization.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
-
-    get_with_token "/api/v1/organizations/#{organization.id}/managers", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
   it 'gets the related members for Organization' do
@@ -461,7 +455,7 @@ describe "Organizations API" do
     expect(response).to have_http_status(200)
   end
 
-  it 'paginates members of an organziation' do
+  it 'get all members of an organziation' do
     access_token  = Fabricate(:full_access_token_as_admin)
     organization  = Fabricate(:distribution_system_operator)
     page_overload.times do
@@ -471,12 +465,7 @@ describe "Organizations API" do
 
     get_with_token "/api/v1/organizations/#{organization.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
-
-    User.all.each {|u| u.profile.update! readable: 'world'}
-    access_token  = Fabricate(:simple_access_token)
-    get_with_token "/api/v1/organizations/#{organization.id}/members", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
   # CREATE manager/member

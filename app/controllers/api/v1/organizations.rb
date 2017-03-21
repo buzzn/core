@@ -8,17 +8,12 @@ module API
         desc "Return all organizations"
         params do
           optional :filter, type: String, desc: "Search query using #{Base.join(Organization.search_attributes)}"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 false
         get do
-          paginated_response(
-            Organization
-              .filter(permitted_params[:filter])
-              .readable_by(current_user)
-            )
+          Organization
+            .filter(permitted_params[:filter])
+            .readable_by(current_user)
         end
 
 
@@ -40,28 +35,22 @@ module API
         desc 'Return the related managers of an organization'
         params do
           requires :id, type: String, desc: 'ID of the organization'
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 false
         get [':id/managers', ':id/relationships/managers'] do
           organization = Organization.guarded_retrieve(current_user, permitted_params)
-          paginated_response(organization.managers.readable_by(current_user))
+          organization.managers.readable_by(current_user)
         end
 
 
         desc 'Return the related members of an organization'
         params do
           requires :id, type: String, desc: 'ID of the organization'
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 false
         get [':id/members', ':id/relationships/members'] do
           organization = Organization.guarded_retrieve(current_user, permitted_params)
-          paginated_response(organization.members.readable_by(current_user))
+          organization.members.readable_by(current_user)
         end
 
 

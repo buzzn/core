@@ -145,13 +145,13 @@ describe "/groups" do
 
 
 
-  it 'paginate groups with full access token' do
+  it 'paginate groups with full access token', retry: 3 do
     page_overload.times do
       Fabricate(:tribe)
     end
     access_token = Fabricate(:full_access_token_as_admin)
 
-    get_with_token "/api/v1/profiles", {per_page: 200}, access_token.token
+    get_with_token "/api/v1/groups", {per_page: 200}, access_token.token
     expect(response).to have_http_status(422)
 
     pages_profile_ids = []
@@ -400,7 +400,7 @@ describe "/groups" do
   end
 
 
-  it 'paginates scores' do
+  it 'get all scores' do
     group                 = Fabricate(:tribe)
     now                   = Time.current - 2.days
     interval_information  = group.set_score_interval('day', now.to_i)
@@ -410,10 +410,7 @@ describe "/groups" do
     params = { interval: 'day', timestamp: now }
     get_without_token "/api/v1/groups/#{group.id}/scores", params
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_without_token "/api/v1/groups/#{group.id}/scores", {per_page: 200}
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
   it 'gets scores for the current day' do
@@ -427,10 +424,7 @@ describe "/groups" do
     params = { interval: 'day', timestamp: now }
     get_without_token "/api/v1/groups/#{group.id}/scores", params
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_without_token "/api/v1/groups/#{group.id}/scores", {per_page: 200}
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
 
@@ -448,7 +442,7 @@ describe "/groups" do
     expect(response).to have_http_status(401)
   end
 
-  it 'paginates managers' do
+  it 'get all managers' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:tribe)
     page_overload.times do
@@ -462,18 +456,15 @@ describe "/groups" do
     end
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
+    expect(json['data'].size).to eq(page_overload)
 
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(7)
-
-    get_with_token "/api/v1/groups/#{group.id}/managers", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload * 2)
   end
 
-  it 'paginates members' do
+  it 'get all members' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:tribe_with_members_readable_by_world, members: page_overload * 2)
 
@@ -483,15 +474,12 @@ describe "/groups" do
 
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
+    expect(json['data'].size).to eq(page_overload + 1)
 
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(7)
-
-    get_with_token "/api/v1/groups/#{group.id}/members", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload * 2)
   end
 
   it 'gets the related members for group only with token' do
@@ -720,7 +708,7 @@ describe "/groups" do
 
 
 
-  it 'paginates comments' do
+  it 'get all comments' do
     access_token    = Fabricate(:simple_access_token).token
     group           = Fabricate(:tribe)
     user            = Fabricate(:user)
@@ -737,10 +725,7 @@ describe "/groups" do
     end
     get_with_token "/api/v1/groups/#{group.id}/comments", access_token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_with_token "/api/v1/groups/#{group.id}/comments", {per_page: 200}, access_token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload + 1)
   end
 
 

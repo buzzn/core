@@ -45,26 +45,17 @@ describe "Profiles API" do
   end
 
 
-  it 'paginate profiles with full access token' do
+  it 'get all profiles with full access token' do
     page_overload.times do
       Fabricate(:profile)
     end
     access_token = Fabricate(:full_access_token_as_admin)
 
-    get_with_token "/api/v1/profiles", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
-
     pages_profile_ids = []
 
-    1.upto(4) do |i|
-      get_with_token '/api/v1/profiles', {page: i, order_direction: 'DESC', order_by: 'created_at'}, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json['meta']['total_pages']).to eq(4)
-      json['data'].each do |data|
-        pages_profile_ids << data['id']
-      end
-    end
-    expect(pages_profile_ids.uniq.length).to eq(pages_profile_ids.length)
+    get_with_token '/api/v1/profiles', {order_direction: 'DESC', order_by: 'created_at'}, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(Profile.count)
   end
 
 
@@ -304,7 +295,7 @@ describe "Profiles API" do
     expect(json['data']).to eq([])
   end
 
-  it 'paginate groups', retry: 3 do
+  it 'get all groups', retry: 3 do
     user              = Fabricate(:user)
     profile           = user.profile
     profile.readable  = 'world'
@@ -319,10 +310,7 @@ describe "Profiles API" do
 
     get_without_token "/api/v1/profiles/#{profile.id}/groups"
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_without_token "/api/v1/profiles/#{profile.id}/groups", {per_page: 200}
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
   it 'get friends for world-readable profile with or without token' do
@@ -360,7 +348,7 @@ describe "Profiles API" do
     expect(response).to have_http_status(403)
   end
 
-  it 'paginate friends' do
+  it 'get akk friends' do
     user              = Fabricate(:user)
     profile           = user.profile
     profile.readable  = 'world'
@@ -374,10 +362,7 @@ describe "Profiles API" do
     end
     get_without_token "/api/v1/profiles/#{profile.id}/friends"
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_without_token "/api/v1/profiles/#{profile.id}/friends", {per_page: 200}
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
   it 'get profile registers readable by world with or without token' do
@@ -471,7 +456,7 @@ describe "Profiles API" do
     expect(json['data']).to eq([])
   end
 
-  it 'paginate registers' do
+  it 'get all registers' do
     user              = Fabricate(:user)
     profile           = user.profile
     profile.readable  = 'world'
@@ -483,10 +468,7 @@ describe "Profiles API" do
     end
     get_without_token "/api/v1/profiles/#{profile.id}/registers"
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_without_token "/api/v1/profiles/#{profile.id}/registers", {per_page: 200}
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
 
