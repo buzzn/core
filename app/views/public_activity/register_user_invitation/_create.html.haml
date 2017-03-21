@@ -1,5 +1,5 @@
 - single_content_for :action do
   - if a.trackable && a.recipient
-    = t("invited_user_to_join_the_register", user: a.recipient ? a.recipient.name : t('an_unknown_user'), register_name: link_to(a.trackable.name, register_path(a.trackable))).html_safe
+    = t("invited_user_to_join_the_register", user: a.recipient.profile.nil? ? a.recipient.email : a.recipient.name, register_name: link_to(a.trackable.name, register_path(a.trackable))).html_safe
   - else
     = t('no_information_available')
