@@ -13,14 +13,11 @@ module API
         desc "Return all Users"
         params do
           optional :filter, type: String, desc: "Search query using #{Base.join(User.search_attributes)}"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :full
         get do
           users = User.filter(permitted_params[:filter])
-          paginated_response(users.readable_by(current_user))
+          users.readable_by(current_user)
         end
 
 

@@ -131,44 +131,6 @@ describe "/groups" do
   end
 
 
-  it 'paginates groups' do
-    page_overload.times do
-      Fabricate(:tribe)
-    end
-    get_without_token '/api/v1/groups'
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_without_token '/api/v1/groups', {per_page: 200}
-    expect(response).to have_http_status(422)
-  end
-
-
-
-  it 'paginate groups with full access token', retry: 3 do
-    page_overload.times do
-      Fabricate(:tribe)
-    end
-    access_token = Fabricate(:full_access_token_as_admin)
-
-    get_with_token "/api/v1/groups", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
-
-    pages_profile_ids = []
-
-    1.upto(4) do |i|
-      get_with_token '/api/v1/groups', {page: i, order_direction: 'DESC', order_by: 'created_at'}, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json['meta']['total_pages']).to eq(4)
-      json['data'].each do |data|
-        pages_profile_ids << data['id']
-      end
-    end
-
-    expect(pages_profile_ids.uniq.length).to eq(pages_profile_ids.length)
-  end
-
-
 
 
   it 'does gets a group readable by world with or without token' do
@@ -455,7 +417,6 @@ describe "/groups" do
       user.add_role(:manager, group)
     end
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
-    p response.body
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(page_overload)
 

@@ -58,13 +58,6 @@ module API
           def deleted_response(obj)
             status 204
           end
-
-          def paginated_response(objs)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            total_pages  = objs.page(page).per_page(per_page).total_pages
-            paginate(render(objs, meta: { total_pages: total_pages }))
-          end
         end
 
         rescue_from ActiveRecord::RecordNotFound do |e|

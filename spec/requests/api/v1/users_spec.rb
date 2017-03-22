@@ -60,21 +60,6 @@ describe "Users API" do
     expect(json['data'].first['id']).to eq user.id
   end
 
-
-  it 'paginate users' do
-    page_overload.times do
-      Fabricate(:user)
-    end
-    access_token = Fabricate(:full_access_token_as_admin).token
-    get_with_token '/api/v1/users', {}, access_token
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_with_token "/api/v1/users", {per_page: 200}, access_token
-    expect(response).to have_http_status(422)
-  end
-
-
   it 'does not gets an user without token' do
     user = Fabricate(:user)
     get_without_token "/api/v1/users/#{user.id}"
