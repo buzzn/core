@@ -10,7 +10,7 @@ module API
         end
         oauth2 :full
         get do
-          ContractingParty.all
+          ContractingPartyResource.all
         end
 
         desc 'Return contractig party'
@@ -19,11 +19,7 @@ module API
         end
         oauth2 :full
         get ':id' do
-          contracting_party = ContractingParty.guarded_retrieve(current_user, permitted_params)
-          render(contracting_party, meta: {
-            updatable: contracting_party.updatable_by?(current_user),
-            deletable: contracting_party.deletable_by?(current_user)
-          })
+          ContractingPartyResource.retrieve(current_user, permitted_params)
         end
 
         desc 'Update contracting party'
@@ -35,8 +31,9 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          contracting_party = ContractingParty.guarded_retrieve(current_user, permitted_params)
-          contracting_party.guarded_update(current_user, permitted_params)
+          ContractingPartyResource
+            .retrieve(current_user, permitted_params)
+            .update(permitted_params)
         end
       end
     end

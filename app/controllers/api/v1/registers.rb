@@ -19,11 +19,13 @@ module API
               end
               oauth2 :simple, :full, :smartmeter
               post do
+                # FIXME remove this in favour of meters/real/:id/input_register
+                #       meters/real/:id/output_register
                 meter = Meter::Base.unguarded_retrieve(permitted_params[:meter_id])
                 attributes = permitted_params.reject { |k,v| k == :meter_id }
                 attributes[:meter] = meter
                 register = klass.guarded_create(current_user, attributes)
-                created_response(register)
+                created_response(Register::RealSerializer.new(register))
               end
             end
 
@@ -38,8 +40,9 @@ module API
           end
           oauth2 :simple, :full
           patch ":id" do
-            register = Register::Real.guarded_retrieve(current_user, permitted_params)
-            register.guarded_update(current_user, permitted_params)
+            Register::RealResource
+              .retrieve(current_user, permitted_params)
+              .update(permitted_params)
           end
 
           desc "Delete a Register."
@@ -48,8 +51,9 @@ module API
           end
           oauth2 :full
           delete ":id" do
-            register = Register::Real.guarded_retrieve(current_user, permitted_params)
-            deleted_response(register.guarded_delete(current_user))
+            deleted_response(Register::RealResource
+                              .retrieve(current_user, permitted_params)
+                              .delete)
           end
         end
 
@@ -65,8 +69,9 @@ module API
           end
           oauth2 :simple, :full
           patch ":id" do
-            register = Register::Virtual.guarded_retrieve(current_user, permitted_params)
-            register.guarded_update(current_user, permitted_params)
+            Register::VirtualResource
+              .retrieve(current_user, permitted_params)
+              .update(permitted_params)
           end
         end
 
@@ -79,11 +84,7 @@ module API
         end
         oauth2 false
         get ":id" do
-          register = Register::Base.guarded_retrieve(current_user, permitted_params)
-          render(register, meta: {
-            updatable: register.updatable_by?(current_user),
-            deletable: register.deletable_by?(current_user)
-          })
+          Register::BaseResource.retrieve(current_user, permitted_params)
         end
 
 
@@ -95,8 +96,9 @@ module API
         end
         oauth2 false
         get ":id/scores" do
-          register = Register::Base.guarded_retrieve(current_user, permitted_params)
-          register.scores.readable_by(current_user)
+          Register::BaseResource
+            .retrieve(current_user, permitted_params)
+            .scores
         end
 
 
@@ -107,11 +109,9 @@ module API
         end
         oauth2 :simple, :full
         get ":id/comments" do
-          register = Register::Base.guarded_retrieve(current_user, permitted_params)
-          Comment.where(
-            commentable_type: "Register::Base",
-            commentable_id: register.id
-          ).readable_by(current_user)
+          Register::BaseResource
+            .retrieve(current_user, permitted_params)
+            .comments
         end
 
 
@@ -163,6 +163,7 @@ module API
                                     data_id_array,
                                     owner: current_user,
                                     create_key: "user.appointed_register_manager")
+          status 200
         end
 
 
@@ -189,8 +190,9 @@ module API
         end
         oauth2 :simple, :full
         get ":id/address" do
-          register = Register::Base.guarded_retrieve(current_user, permitted_params)
-          register.address.guarded_retrieve(current_user)
+          Register::BaseResource
+            .retrieve(current_user, permitted_params)
+            .address!
         end
 
 
@@ -241,6 +243,7 @@ module API
                                    update: :members,
                                    create_key: "register_user_membership.create",
                                    cancel_key: "register_user_membership.cancel")
+          status 200
         end
 
 
@@ -259,6 +262,7 @@ module API
           register.members.remove(current_user,
                                   user,
                                   cancel_key: "register_user_membership.cancel")
+          status 204
         end
 
 
@@ -268,8 +272,9 @@ module API
         end
         oauth2 :simple, :full
         get ":id/meter" do
-          register = Register::Base.guarded_retrieve(current_user, permitted_params)
-          register.meter.guarded_retrieve(current_user)
+          Register::BaseResource
+            .retrieve(current_user, permitted_params)
+            .meter!
         end
 
       end

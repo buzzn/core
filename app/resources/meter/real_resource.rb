@@ -1,36 +1,22 @@
 module Meter
-  class RealSerializer < BaseSerializer
+  class RealResource < BaseResource
+
+    model Meter::Real
 
     attributes  :smart
 
     has_many :registers
 
-  end
-  class GuardedRealSerializer < RealSerializer
+    # API methods for the endpoints
 
-    attributes :updatable, :deletable
-
-    def initialize(resource, options)
-      super(resource, options)
-      @updatable = Set.new(options[:updatable]) if options.key? :updatable
-      @deletable = Set.new(options[:deletable]) if options.key? :deletable
-      @current_user = options[:current_user]
+    def create_input_register(params)
+      params[:meter] = object
+      Register::Input.guarded_create(@current_user, params)
     end
 
-    def updatable
-      if @updateable
-        @updateable.include? object.id
-      else
-        object.updatable_by?(@current_user)
-      end
-    end
-
-    def deletable
-      if @deletable
-        @deletable.include? object.id
-      else
-        object.deletable_by?(@current_user)
-      end
+    def create_output_register(params)
+      params[:meter] = object
+      Register::Output.guarded_create(@current_user, params)
     end
   end
 end

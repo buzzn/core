@@ -1,11 +1,13 @@
-class ContractingPartySerializier
+class ContractingPartyResource < Buzzn::BaseResource
+
+  abstract
 
   def self.new(object, *args)
     case object
     when Organization
-      FullOrganizationSerializer.new(object, *args)
+      FullOrganizationResource.new(object, *args)
     when User
-      FullUserSerializer.new(object, *args)
+      FullUserResource.new(object, *args)
     else
       raise "can not handle type: #{object.class}"
     end

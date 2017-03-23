@@ -1,5 +1,9 @@
 module Contract
-  class BaseSerializer < ActiveModel::Serializer
+  class BaseResource < Buzzn::BaseResource
+
+    abstract
+
+    model Contract::Base
 
     attributes  :status,
                 :contract_number,
@@ -7,7 +11,9 @@ module Contract
                 :signing_date,
                 :cancellation_date,
                 :end_date
-                
+
+    attributes :updatable, :deletable
+
     has_many :tariffs
     has_many :payments
     has_one :contractor
@@ -15,5 +21,16 @@ module Contract
     has_one :signing_user
     has_one :address
     has_one :bank_account
+
+    alias :contractor_raw! :contractor!
+    def contractor!
+      ContractingPartyResource.new(contractor_raw!)
+    end
+
+    alias :customer_raw! :customer!
+    def customer!
+      # FIXME use customer_raw! as it comes with permission check
+      ContractingPartyResource.new(object.customer)
+    end
   end
 end

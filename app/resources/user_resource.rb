@@ -1,6 +1,20 @@
-class UserSerializer < ActiveModel::Serializer
+class UserResource < Buzzn::BaseResource
+
+  model User
+
+  attributes :updatable, :deletable
+
+  # API methods for endpoints
+
+  entities :profile,
+           :bank_account
+
 end
-class FullUserSerializer < UserSerializer
+class FullUserResource < UserResource
+
+  def self.new(*args)
+    super
+  end
 
   attributes  :user_name,
               :title,
@@ -16,27 +30,19 @@ class FullUserSerializer < UserSerializer
   def title
     object.profile.title
   end
+
   def gender
     object.profile.gender
   end
+
   def phone
     object.profile.phone
   end
 end
-class GuardedUserSerializer < UserSerializer
 
-  attributes :updatable, :deletable
-
-  def initialize(user, *args)
-    super(*args)
-    @current_user = user
-  end
-
-  def updatable
-    object.updatable_by?(@current_user)
-  end
-
-  def deletable
-    object.deletable_by?(@current_user)
+# TODO get rid of the need of having a Serializer class
+class UserSerializer < UserResource
+  def self.new(*args)
+    super
   end
 end

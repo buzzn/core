@@ -417,7 +417,6 @@ describe "/groups" do
       user.add_role(:manager, group)
     end
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
-    p response.body
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(page_overload)
 

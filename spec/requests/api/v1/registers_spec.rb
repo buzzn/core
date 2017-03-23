@@ -608,19 +608,19 @@ describe "/api/v1/registers" do
 
         params[:data][:id] = member.id
         delete_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, member_token.token
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(204)
         get_with_token "/api/v1/registers/#{register.id}/relationships/members", admin_token.token
         expect(json["data"].size).to eq(2)
 
         params[:data][:id] = user1.id
         delete_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, manager_token.token
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(204)
         get_with_token "/api/v1/registers/#{register.id}/relationships/members", admin_token.token
         expect(json["data"].size).to eq(1)
 
         params[:data][:id] = user2.id
         delete_with_token "/api/v1/registers/#{register.id}/relationships/members", params.to_json, admin_token.token
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(204)
         get_with_token "/api/v1/registers/#{register.id}/relationships/members", admin_token.token
         expect(json["data"].size).to eq(0)
       end
@@ -639,9 +639,10 @@ describe "/api/v1/registers" do
       end
 
 
-      xit "gets address of the register only with token" do
+      it "gets address of the register only with token" do
         access_token    = Fabricate(:simple_access_token)
-        register        = Fabricate(:register_urbanstr88, readable: "world")
+        register        = Fabricate(:easymeter_60051599).output_register
+        register.update(readable: "world")
         address         = register.address
         user            = User.find(access_token.resource_owner_id)
 

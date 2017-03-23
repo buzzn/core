@@ -1,4 +1,6 @@
-class DeviceSerializer < ActiveModel::Serializer
+class MinimalDeviceResource < Buzzn::BaseResource
+
+  model Device
 
   attributes  :name,
               :manufacturer_name,
@@ -13,28 +15,26 @@ class DeviceSerializer < ActiveModel::Serializer
               :watt_hour_pa,
               :commissioning,
               :mobile,
-              :readable,
-              :big_tumb
+              :readable
+
+  attributes :updatable, :deletable
+
+end
+
+# we do not want all infos in collections
+class DeviceResource < MinimalDeviceResource
+
+  attributes :big_tumb
 
   def big_tumb
     object.image.big_tumb.url
   end
 
 end
-class GuardedDeviceSerializer < DeviceSerializer
 
-  attributes :updatable, :deletable
-
-  def initialize(user, *args)
-    super(*args)
-    @current_user = user
-  end
-
-  def updatable
-    object.updatable_by?(@current_user)
-  end
-
-  def deletable
-    object.deletable_by?(@current_user)
+# TODO get rid of the need of having a Serializer class
+class DeviceSerializer < MinimalDeviceResource
+  def self.new(*args)
+    super
   end
 end

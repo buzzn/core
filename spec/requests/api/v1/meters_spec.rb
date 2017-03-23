@@ -211,7 +211,7 @@ describe "Meters API" do
 
 
 
-    [:full_access_token_as_admin, :smartmeter_access_token].each do |token|
+    [:full_access_token_as_admin].each do |token|
       it "creates a #{mode} register with #{token}" do
         access_token = Fabricate(token)
         register     = Fabricate.build("#{mode}_register")

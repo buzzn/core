@@ -1,10 +1,17 @@
 module Register
-  class RealSerializer < BaseSerializer
+  class RealResource < BaseResource
 
     attributes  :uid,
                 :obis
 
     has_many :devices
 
+  end
+
+  # TODO get rid of the need of having a Serializer class
+  class RealSerializer < RealResource
+    def self.new(*args)
+      super
+    end
   end
 end

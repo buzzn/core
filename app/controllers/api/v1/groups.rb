@@ -16,9 +16,8 @@ module API
           oauth2 false
           get do
             order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
-            Group::Localpool
-              .filter(permitted_params[:filter])
-              .readable_by(current_user)
+            Group::LocalpoolResource
+              .all(current_user, permitted_params[:filter])
               .order(order)
           end
 
@@ -29,8 +28,9 @@ module API
           end
           oauth2 :full
           get ":id/localpool-processing-contract" do
-            group = Group::Localpool.guarded_retrieve(current_user, permitted_params)
-            group.localpool_processing_contract.guarded_retrieve(current_user)
+            Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .localpool_processing_contract!
           end
 
 
@@ -40,8 +40,9 @@ module API
           end
           oauth2 :full
           get ":id/metering-point-operator-contract" do
-            group = Group::Localpool.guarded_retrieve(current_user, permitted_params)
-            group.metering_point_operator_contract.guarded_retrieve(current_user)
+            Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .metering_point_operator_contract!
           end
 
         end
@@ -61,9 +62,8 @@ module API
         oauth2 false
         get do
           order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
-          Group::Base
-            .filter(permitted_params[:filter])
-            .readable_by(current_user)
+          Group::BaseResource
+            .all(current_user, permitted_params[:filter])
             .order(order)
         end
 
@@ -75,8 +75,7 @@ module API
         end
         oauth2 false
         get ":id" do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          Group::GuardedSerializer.new(group, current_user: current_user)
+          Group::BaseResource.retrieve(current_user, permitted_params)
         end
 
 
@@ -88,8 +87,9 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          group.guarded_update(current_user, permitted_params)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .update(permitted_params)
         end
 
 
@@ -100,8 +100,9 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          deleted_response(group.guarded_delete(current_user))
+          deleted_response(Group::BaseResource
+                            .retrieve(current_user, permitted_params)
+                            .delete)
         end
 
 
@@ -112,11 +113,9 @@ module API
         end
         oauth2 false
         get ":id/registers" do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-
-          # registers do consider group relation for readable_by
-          # the order is to make sure we the Register::Virtual as first element as its attribute set is enough for even Input and Output Registers
-          Register::Base.by_group(group).by_label(Register::Base::CONSUMPTION, Register::Base::PRODUCTION_PV, Register::Base::PRODUCTION_CHP).anonymized_readable_by(current_user).order(type: :desc)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .registers
         end
 
 
@@ -126,8 +125,9 @@ module API
         end
         oauth2 :full
         get ":id/meters" do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          group.meters #.readable_by(current_user)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .meters
         end
 
 
@@ -140,17 +140,9 @@ module API
         end
         oauth2 false
         get ":id/scores" do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          interval = permitted_params[:interval]
-          timestamp = permitted_params[:timestamp]
-          if timestamp > Time.current.beginning_of_day
-            timestamp = timestamp - 1.day
-          end
-          result = group.scores.send("#{interval}ly".to_sym).at(timestamp)
-          if mode = permitted_params[:mode]
-            result = result.send(mode.to_s.pluralize.to_sym)
-          end
-          result.readable_by(current_user)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .scores(permitted_params)
         end
 
 
@@ -161,8 +153,9 @@ module API
         end
         oauth2 :simple, :full
         get [':id/managers', ':id/relationships/managers'] do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          group.managers.readable_by(current_user)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .managers
         end
 
 
@@ -192,6 +185,7 @@ module API
         patch ':id/relationships/managers' do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
           group.managers.replace(current_user, data_id_array, update: :replace_managers)
+          status 200
         end
 
         desc 'Remove user from group managers'
@@ -216,8 +210,9 @@ module API
         end
         oauth2 :simple, :full
         get [':id/members', ':id/relationships/members'] do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          group.members.readable_by(current_user)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .members
         end
 
 
@@ -227,8 +222,9 @@ module API
         end
         oauth2 false
         get ":id/energy-producers" do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          group.energy_producers.readable_by(current_user)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .energy_producers
         end
 
 
@@ -238,8 +234,9 @@ module API
         end
         oauth2 :simple, :full
         get ":id/energy-consumers" do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          group.energy_consumers.readable_by(current_user)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .energy_consumers
         end
 
 
@@ -249,8 +246,9 @@ module API
         end
         oauth2 :simple, :full
         get ':id/comments' do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          group.comment_threads.readable_by(current_user)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .comments
         end
 
 

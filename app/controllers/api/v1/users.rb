@@ -16,8 +16,7 @@ module API
         end
         oauth2 :full
         get do
-          users = User.filter(permitted_params[:filter])
-          users.readable_by(current_user)
+          UserResource.all(current_user, permitted_params[:filter])
         end
 
 
@@ -27,8 +26,7 @@ module API
         end
         oauth2 :simple, :full
         get ":id" do
-          user = User.guarded_retrieve(current_user, permitted_params)
-          GuardedUserSerializer.new(current_user, user)
+          UserResource.retrieve(current_user, permitted_params)
         end
 
 
@@ -56,8 +54,8 @@ module API
         end
         oauth2 :simple, :full
         get ":id/profile" do
-          user = User.guarded_retrieve(current_user, permitted_params)
-          user.profile.guarded_retrieve(current_user)
+          UserResource.retrieve(current_user, permitted_params)
+            .profile
         end
 
 
@@ -69,6 +67,8 @@ module API
         end
         oauth2 :simple, :full
         get ":id/groups" do
+          # FIXME not sure why accessible_by_user() and not readable_by()
+          #       use UserResource instead
           user   = User.guarded_retrieve(current_user, permitted_params)
           groups = Group::Base.accessible_by_user(user)
           order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
@@ -83,8 +83,9 @@ module API
         end
         oauth2 :full
         get ':id/bank-account' do
-          user = User.guarded_retrieve(current_user, permitted_params)
-          user.bank_account.guarded_retrieve(current_user)
+          UserResource
+            .retrieve(current_user, permitted_params)
+            .bank_account!
         end
 
         desc "Return the related registers for User"
@@ -93,6 +94,8 @@ module API
         end
         oauth2 :simple, :full
         get ":id/registers" do
+          # FIXME not sure why accessible_by_user() and not readable_by()
+          #       use UserResource instead
           user = User.guarded_retrieve(current_user, permitted_params)
           registers = Register::Base.accessible_by_user(user)
           registers.anonymized_readable_by(current_user)

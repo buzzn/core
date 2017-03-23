@@ -11,8 +11,7 @@ module API
         end
         oauth2 :full
         get ":id" do
-          meter = Meter::Base.guarded_retrieve(current_user, permitted_params)
-          Meter::GuardedBaseSerializer.new(meter, current_user: current_user)
+          Meter::BaseResource.retrieve(current_user, permitted_params)
         end
 
 
@@ -37,8 +36,7 @@ module API
           end
           oauth2 :full, :smartmeter
           post do
-            meter = Meter::Real.guarded_create(current_user, permitted_params)
-            created_response(meter)
+            created_response(Meter::RealResource.create(current_user, permitted_params))
           end
 
 
@@ -51,8 +49,9 @@ module API
           end
           oauth2 :full
           patch ':id' do
-            meter = Meter::Real.guarded_retrieve(current_user, permitted_params)
-            meter.guarded_update(current_user, permitted_params)
+            Meter::RealResource
+              .retrieve(current_user, permitted_params)
+              .update(permitted_params)
           end
 
 
@@ -66,11 +65,10 @@ module API
             end
             oauth2 :full, :smartmeter
             post ":id/#{mode}_register" do
-              meter = Meter::Real.unguarded_retrieve(permitted_params[:id])
-              # TODO make meter.registers.guarded_create(current_user, permitted_params)
-              permitted_params[:meter] = meter
-              register = Register.const_get(mode.camelize).guarded_create(current_user, permitted_params)
-              created_response(register)
+              created_response(Meter::RealResource
+                                .retrieve(current_user, permitted_params)
+                                .send("create_#{mode}_register".to_sym,
+                                      permitted_params))
             end
           end
 
@@ -80,8 +78,9 @@ module API
           end
           oauth2 :full, :smartmeter
           get ":id/registers" do
-            meter = Meter::Real.guarded_retrieve(current_user, permitted_params)
-            meter.registers
+            Meter::RealResource
+              .retrieve(current_user, permitted_params)
+              .registers
           end
 
         end
@@ -101,8 +100,8 @@ module API
           end
           oauth2 :full
           post do
-            meter = Meter::Virtual.guarded_create(current_user, permitted_params)
-            created_response(meter)
+            created_response(Meter::VirtualResource
+                              .create(current_user, permitted_params))
           end
 
 
@@ -114,8 +113,9 @@ module API
           end
           oauth2 :full
           patch ':id' do
-            meter = Meter::Virtual.guarded_retrieve(current_user, permitted_params)
-            meter.guarded_update(current_user, permitted_params)
+            Meter::VirtualResource
+              .retrieve(current_user, permitted_params)
+              .update(permitted_params)
           end
 
 
@@ -125,8 +125,9 @@ module API
           end
           oauth2 :full
           get ":id/register" do
-            meter = Meter::Virtual.guarded_retrieve(current_user, permitted_params)
-            meter.register
+            Meter::VirtualResource
+              .retrieve(current_user, permitted_params)
+              .register
           end
 
         end
@@ -137,8 +138,9 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          meter = Meter::Base.guarded_retrieve(current_user, permitted_params)
-          deleted_response(meter.guarded_delete(current_user))
+          deleted_response(Meter::BaseResource
+                            .retrieve(current_user, permitted_params)
+                            .delete)
         end
 
 

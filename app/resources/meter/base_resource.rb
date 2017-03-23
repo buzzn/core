@@ -1,22 +1,22 @@
 module Meter
-  class BaseSerializer < ActiveModel::Serializer
+  class BaseResource < Buzzn::BaseResource
+
+    abstract
+
+    model Meter::Base
     
     attributes  :manufacturer_name,
                 :manufacturer_product_name,
                 :manufacturer_product_serialnumber
 
-  end
-  class GuardedBaseSerializer
+    attributes :updatable, :deletable
 
-    def self.new(resource, options = {})
-      case resource
-      when Real
-        GuardedRealSerializer.new(resource, options)
-      when Virtual
-        GuardedVirtualSerializer.new(resource, options)
-      else
-        raise "can not handle type: #{resource.class}"
-      end
+  end
+
+  # TODO get rid of the need of having a Serializer class
+  class BaseSerializer < BaseResource
+    def self.new(*args)
+      super
     end
   end
 end

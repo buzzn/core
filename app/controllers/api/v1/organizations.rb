@@ -11,9 +11,7 @@ module API
         end
         oauth2 false
         get do
-          Organization
-            .filter(permitted_params[:filter])
-            .readable_by(current_user)
+          OrganizationResource.all(current_user, permitted_params[:filter])
         end
 
 
@@ -24,11 +22,7 @@ module API
         end
         oauth2 false
         get ":id" do
-          organization = Organization.guarded_retrieve(current_user, permitted_params)
-          render(organization, meta: {
-            updatable: organization.updatable_by?(current_user),
-            deletable: organization.deletable_by?(current_user)
-          })
+          OrganizationResource.retrieve(current_user, permitted_params)
         end
 
 
@@ -38,8 +32,9 @@ module API
         end
         oauth2 false
         get [':id/managers', ':id/relationships/managers'] do
-          organization = Organization.guarded_retrieve(current_user, permitted_params)
-          organization.managers.readable_by(current_user)
+          OrganizationResource
+            .retrieve(current_user, permitted_params)
+            .managers
         end
 
 
@@ -49,8 +44,9 @@ module API
         end
         oauth2 false
         get [':id/members', ':id/relationships/members'] do
-          organization = Organization.guarded_retrieve(current_user, permitted_params)
-          organization.members.readable_by(current_user)
+          OrganizationResource
+            .retrieve(current_user, permitted_params)
+            .members
         end
 
 
@@ -60,15 +56,9 @@ module API
         end
         oauth2 false
         get ':id/address' do
-          organization = Organization.guarded_retrieve(current_user, permitted_params)
-          puts '='*80
-          puts Buzzn::SerializableResource.new(organization, adapter: :json).as_json
-          puts '='*80
-          puts Buzzn::SerializableResource.new(organization, adapter: :attributes).as_json
-          puts '='*80
-          puts Buzzn::SerializableResource.new(organization, adapter: :json_api).as_json
-          puts '='*80
-          organization.guarded_nested_retrieve(:address, current_user)
+          OrganizationResource
+            .retrieve(current_user, permitted_params)
+            .address!
         end
 
 
@@ -78,8 +68,9 @@ module API
         end
         oauth2 :full
         get ':id/bank-account' do
-          organization = Organization.guarded_retrieve(current_user, permitted_params)
-          organization.guarded_nested_retrieve(:bank_account, current_user)
+          OrganizationResource
+            .retrieve(current_user, permitted_params)
+            .bank_account!
         end
 
 
@@ -95,8 +86,8 @@ module API
         end
         oauth2 :full
         post do
-          organization = Organization.guarded_create(current_user, permitted_params)
-          created_response(organization)
+          created_response(OrganizationResource
+                            .create(current_user, permitted_params))
         end
 
 
@@ -114,8 +105,9 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          organization = Organization.guarded_retrieve(current_user, permitted_params)
-          organization.guarded_update(current_user, permitted_params)
+          OrganizationResource
+            .retrieve(current_user, permitted_params)
+            .update(permitted_params)
         end
 
 
@@ -126,13 +118,10 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          organization = Organization.guarded_retrieve(current_user, permitted_params)
-          if organization.deletable_by?(current_user)
-            organization.destroy
-            status 204
-          else
-            status 403
-          end
+          deleted_response(
+            OrganizationResource
+              .retrieve(current_user, permitted_params)
+              .delete)
         end
 
 
@@ -163,6 +152,7 @@ module API
         patch ':id/relationships/managers' do
           organization = Organization.guarded_retrieve(current_user, permitted_params)
           organization.managers.replace(current_user, data_id_array)
+          status 200
         end
 
 
@@ -209,6 +199,7 @@ module API
         patch ':id/relationships/members' do
           organization = Organization.guarded_retrieve(current_user, permitted_params)
           organization.members.replace(current_user, data_id_array)
+          status 200
         end
 
 

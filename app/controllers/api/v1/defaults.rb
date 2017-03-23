@@ -13,6 +13,7 @@ module API
         format 'json'
 
         formatter :json, ->(object, env) do
+          raise 'nil - forgot to shebang nested resource ?' unless object
           Buzzn::SerializableResource.new(object).to_json
         end
 
@@ -132,7 +133,10 @@ module API
 
         rescue_from ArgumentError do |e|
           errors = ErrorResponse.new(422, { Grape::Http::Headers::CONTENT_TYPE => content_type })
-          puts e.backtrace.join("\n\t")
+          if Rails.env.development?
+            puts e.message
+            puts e.backtrace.join("\n\t")
+          end
           errors.add_general('Argument Error', e.message)
           errors.finish
         end

@@ -1,5 +1,9 @@
 module Register
-  class BaseSerializer < ActiveModel::Serializer
+  class BaseResource < Buzzn::BaseResource
+
+    abstract
+
+    model Register::Base
 
     attributes  :direction,
                 :name,
@@ -8,5 +12,15 @@ module Register
     has_one  :address
     has_one  :meter
 
+    # API methods for the endpoints
+
+    collections :scores
+
+    def comments
+      Comment.where(
+           commentable_type: Register::Base,
+           commentable_id: object.id
+      ).readable_by(@current_user)
+    end
   end
 end

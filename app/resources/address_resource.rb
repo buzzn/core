@@ -1,4 +1,6 @@
-class AddressSerializer < ActiveModel::Serializer
+class AddressResource < Buzzn::BaseResource
+
+  model Address
 
   attributes  :address,
               :street_name,
@@ -11,22 +13,14 @@ class AddressSerializer < ActiveModel::Serializer
               :latitude,
               :addition,
               :time_zone
-
-end
-class GuardedAddressSerializer < AddressSerializer
-
+  
   attributes :updatable, :deletable
+end
 
-  def initialize(user, *args)
-    super(*args)
-    @current_user = user
-  end
-
-  def updatable
-    object.updatable_by?(@current_user)
-  end
-
-  def deletable
-    object.deletable_by?(@current_user)
+# TODO get rid of the need of having a Serializer class
+class AddressSerializer < AddressResource
+  def self.new(*args)
+    super
   end
 end
+
