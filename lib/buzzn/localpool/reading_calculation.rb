@@ -5,8 +5,8 @@ module Buzzn::Localpool
       # This method returns the energy measured in a specific period of time
       # input params:
       #   register: The Register::Base for which the energy is requested
-      #   begin_date: The Date of the period's beginning
-      #   end_date: The Date of the period's ending
+      #   begin_date: The Date of the period's beginning. Can be nil if the beginning is not definite.
+      #   end_date: The Date of the period's ending. Can be nil if the ending is not definite.
       #   accounting_year: The year for which the energy should be accounted to
       # returns:
       #   billing_details: Object, that contains all information about accounted readings and device changes
@@ -42,29 +42,29 @@ module Buzzn::Localpool
       # This method returns the reading used as first reading for following calculations
       # input params:
       #   register: The Register::Base for which the reading is requested
-      #   begin_date: The Date of the reading that must be found in the database
+      #   begin_date: The Date of the reading that must be found in the database. Can be nil if the beginning is not definite.
       #   accounting_year: The year for which the energy should be accounted to
       # returns:
       #   first_reading: Reading used as beginning reading for following calculations
       def get_first_reading(register, begin_date, accounting_year)
         if begin_date.nil?
           # try to get the last reading one year ahead of the accounting_year (mostly at 31st December)
-          first_reading = Reading.by_register_id(register.id)
+          first_reading_ahead = Reading.by_register_id(register.id)
                                   .in_year(accounting_year - 1)
                                   .without_reason(Reading::DEVICE_CHANGE_1)
                                   .sort('timestamp': -1)
                                   .first
+
+          # try to get the first reading in the accounting_year
+          first_reading_behind = Reading.by_register_id(register.id)
+                                  .in_year(accounting_year)
+                                  .without_reason(Reading::DEVICE_CHANGE_2)
+                                  .sort('timestamp': 1)
+                                  .first
+          first_reading = select_closest_reading(Date.new(accounting_year, 1, 1), first_reading_ahead, first_reading_behind)
+          # if no reading was found in the accounting year or one year ahead raise an error
           if first_reading.nil?
-            # try to get the first reading in the accounting_year
-            first_reading = Reading.by_register_id(register.id)
-                                    .in_year(accounting_year)
-                                    .without_reason(Reading::DEVICE_CHANGE_2)
-                                    .sort('timestamp': 1)
-                                    .first
-            # if no reading was found in the accounting_year and one year ahead raise an error
-            if first_reading.nil?
-              raise RecordNotFoundError.new("no beginning reading found for register #{register.id}")
-            end
+            raise RecordNotFoundError.new("no beginning reading found for register #{register.id}")
           end
         else
           # try to get the the reading exactly at the begin_date
@@ -84,33 +84,33 @@ module Buzzn::Localpool
       # This method returns the reading used as last reading for following calculations
       # input params:
       #   register: The Register::Base for which the reading is requested
-      #   end_date: The Date of the reading that must be found in the database
+      #   end_date: The Date of the reading that must be found in the database. Can be nil if the ending is not definite.
       #   accounting_year: The year for which the energy should be accounted to
       # returns:
       #   last_reading: Reading used as ending reading for following calculations
       def get_last_reading(register, end_date, accounting_year)
-        if begin_date.nil?
+        if end_date.nil?
           # try to get the first reading one year after the accounting_year (mostly beginning of January)
-          last_reading = Reading.by_register_id(register.id)
+          last_reading_behind = Reading.by_register_id(register.id)
                                   .in_year(accounting_year + 1)
                                   .without_reason(Reading::DEVICE_CHANGE_2)
                                   .sort('timestamp': 1)
                                   .first
+
+          # try to get the last reading in the accounting_year
+          last_reading_ahead = Reading.by_register_id(register.id)
+                                  .in_year(accounting_year)
+                                  .without_reason(Reading::DEVICE_CHANGE_2)
+                                  .sort('timestamp': -1)
+                                  .first
+          last_reading = select_closest_reading(Date.new(accounting_year, 12, 31), last_reading_ahead, last_reading_behind)
           if last_reading.nil?
-            # try to get the last reading in the accounting_year
-            last_reading = Reading.by_register_id(register.id)
-                                    .in_year(accounting_year)
-                                    .without_reason(Reading::DEVICE_CHANGE_2)
-                                    .sort('timestamp': -1)
-                                    .first
-            if last_reading.nil?
-              raise RecordNotFoundError.new("no ending reading found for register #{register.id}")
-            end
+            raise RecordNotFoundError.new("no ending reading found for register #{register.id}")
           end
         else
           # try to get the the reading exactly at the end_date
           last_reading = Reading.by_register_id(register.id)
-                                  .at(begin_date)
+                                  .at(end_date)
                                   .without_reason(Reading::DEVICE_CHANGE_2)
                                   .sort('timestamp': 1)
                                   .first
@@ -122,9 +122,21 @@ module Buzzn::Localpool
         return last_reading
       end
 
+      def select_closest_reading(desired_date, reading_ahead, reading_behind)
+        if reading_ahead.nil? && !reading_behind.nil?
+          return reading_behind
+        elsif !reading_ahead.nil? && reading_behind.nil?
+          return reading_ahead
+        elsif !reading_ahead.nil? && !reading_behind.nil?
+          return (reading_ahead['timestamp'].to_date - desired_date).round.abs > (desired_date - reading_behind['timestamp'].to_date).round.abs ? reading_behind : reading_ahead
+        else
+          return nil
+        end
+      end
+
       # This method returns a Time at the end of the year in a desired year
       # input params:
-      #   end_date: The Date of the period's ending that has to be adjusted
+      #   end_date: The Date of the period's ending that has to be adjusted. Can be nil if the ending is not definite.
       #   accounting_year: The year for which the energy should be accounted to
       # returns:
       #   time: the adjusted time
@@ -145,8 +157,8 @@ module Buzzn::Localpool
       # This method returns the readings if a device change was in the accounting_year
       # input params:
       #   register: The Register::Base for which the readings are requested
-      #   begin_date: The Date of the period's beginning
-      #   end_date: The Date of the period's ending
+      #   begin_date: The Date of the period's beginning. Can be nil if the beginning is not definite.
+      #   end_date: The Date of the period's ending. Can be nil if the ending is not definite.
       #   accounting_year: The year for which the energy should be accounted to
       # returns:
       #   device_change_readings: An array of 2 readings at the time of the device change. Is empty if no device change
@@ -185,7 +197,7 @@ module Buzzn::Localpool
       #   last_reading: The last reading the will be adjusted
       #   last_reading_original: The original last reading that would have been taken into account if its date would match
       #   device_change_readings: Array with 2 readings from a device_change. May be empty.
-      #   end_date: The Date of the period's ending
+      #   end_date: The Date of the period's ending. Can be nil if the ending is not definite.
       # returns:
       #   last_reading['energy_milliwatt_hour']: The adjusted energy value that has to be set to the last reading
       def adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings, end_date)
