@@ -168,7 +168,7 @@ describe "Users API" do
     }.to_json
     post_with_token "/api/v1/users", request_params, access_token.token
     expect(response).to have_http_status(201)
-    expect(json['data']['attributes'].size).to eq 2
+    expect(json['data']['attributes'].size).to eq 3
     expect(json['data']['attributes']['updatable']).to be false
     expect(json['data']['attributes']['deletable']).to be false
   end

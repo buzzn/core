@@ -19,4 +19,11 @@ module Meter
       Register::Output.guarded_create(@current_user, params)
     end
   end
+
+  # TODO get rid of the need of having a Serializer class
+  class RealSerializer < RealResource
+    def self.new(*args)
+      super
+    end
+  end
 end

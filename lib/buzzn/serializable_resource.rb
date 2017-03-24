@@ -1,4 +1,3 @@
-ActiveModelSerializers.config.adapter = :json_api
 class Buzzn::SerializableResource < ActiveModelSerializers::SerializableResource
 
   def serializer_instance

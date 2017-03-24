@@ -66,7 +66,6 @@ module Buzzn
         m = @model
         if m.nil? && superclass.respond_to?(:model)
           m = superclass.model
-          @model = m
         end
         raise 'model not set' unless m
         m
@@ -134,6 +133,13 @@ module Buzzn
       object.id
     end
 
-    attributes :id
+    def type
+      self.class.model.to_s.gsub(/::/, '').underscore
+    end
+
+    attributes :id, :type
+
+    alias :to_h :serializable_hash
+    alias :to_hash :serializable_hash
   end
 end
