@@ -12,31 +12,31 @@ module Buzzn::Localpool
       #   billing_details: Object, that contains all information about accounted readings and device changes
       def get_energy_for_period(register, begin_date, end_date, accounting_year=Time.current.year - 1)
         first_reading = get_first_reading(register, begin_date, accounting_year)
-        last_reading_original = get_last_reading(register, begin_date, accounting_year)
-        last_reading = last_reading_original
-        if end_date.nil? || end_date > Time.current
-          last_reading['timestamp'] = adjust_end_date(last_reading['timestamp'], accounting_year)
+        last_reading_original = get_last_reading(register, end_date, accounting_year)
+        last_reading = last_reading_original.clone
+        device_change_readings = get_readings_at_device_change(register, begin_date, end_date, accounting_year)
+
+        if end_date.nil?
+          last_reading.timestamp = adjust_end_date(last_reading.timestamp, accounting_year)
+          last_reading.energy_milliwatt_hour = adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings)
         end
 
-        device_change_readings = get_readings_at_device_change(register, begin_date, end_date, accounting_year)
-        last_reading['energy_milliwatt_hour'] = adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings, end_date)
         if device_change_readings.empty?
-          accounted_energy = last_reading['energy_milliwatt_hour'] - first_reading['energy_milliwatt_hour']
-          billing_details = Buzzn::Localpool::AccountedEnergy.new(accounted_energy, first_reading, last_reading)
+          accounted_energy = last_reading.energy_milliwatt_hour - first_reading.energy_milliwatt_hour
+          return Buzzn::Localpool::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original)
         else
-          device_change = true
           device_change_reading_1 = device_change_readings.first
           device_change_reading_2 = device_change_readings.last
-          # if the device change happend exactly on the begin_date just ignore it
-          if device_change_reading_1['timestamp'] == first_reading['timestamp'] && device_change_reading_2['timestamp'] != begin_date
-            device_change_reading_1['energy_milliwatt_hour'] = 0
-            device_change_reading_2['energy_milliwatt_hour'] = 0
-            device_change = false
+          # if the device change happend exactly on the begin_date or end date just ignore it
+          if (device_change_reading_1.timestamp == first_reading.timestamp && device_change_reading_2.timestamp != begin_date) ||
+             (device_change_reading_2.timestamp == last_reading.timestamp && device_change_reading_1.timestamp != end_date)
+            accounted_energy = last_reading.energy_milliwatt_hour - first_reading.energy_milliwatt_hour
+            return Buzzn::Localpool::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original)
+          else
+            accounted_energy = last_reading.energy_milliwatt_hour - device_change_reading_2.energy_milliwatt_hour + device_change_reading_1.energy_milliwatt_hour - first_reading.energy_milliwatt_hour
+            return Buzzn::Localpool::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original, true, device_change_reading_1, device_change_reading_2)
           end
-          accounted_energy = last_reading['energy_milliwatt_hour'] - device_change_reading_2['energy_milliwatt_hour'] + device_change_reading_1['energy_milliwatt_hour'] - first_reading['energy_milliwatt_hour']
-          billing_details = Buzzn::Localpool::AccountedEnergy.new(accounted_energy, first_reading, last_reading, device_change, device_change_reading_1, device_change_reading_2)
         end
-        return billing_details
       end
 
       # This method returns the reading used as first reading for following calculations
@@ -58,7 +58,7 @@ module Buzzn::Localpool
           # try to get the first reading in the accounting_year
           first_reading_behind = Reading.by_register_id(register.id)
                                   .in_year(accounting_year)
-                                  .without_reason(Reading::DEVICE_CHANGE_2)
+                                  .without_reason(Reading::DEVICE_CHANGE_1) # TODO: in the BK code is without device_change_2 but it seems wrong
                                   .sort('timestamp': 1)
                                   .first
           first_reading = select_closest_reading(Date.new(accounting_year, 1, 1), first_reading_ahead, first_reading_behind)
@@ -105,7 +105,7 @@ module Buzzn::Localpool
                                   .first
           last_reading = select_closest_reading(Date.new(accounting_year, 12, 31), last_reading_ahead, last_reading_behind)
           if last_reading.nil?
-            raise RecordNotFoundError.new("no ending reading found for register #{register.id}")
+            raise ActiveRecord::RecordNotFound.new("no ending reading found for register #{register.id}")
           end
         else
           # try to get the the reading exactly at the end_date
@@ -116,19 +116,26 @@ module Buzzn::Localpool
                                   .first
           # if no reading was found at the specific date raise an error
           if last_reading.nil?
-            raise RecordNotFoundError.new("no ending reading found for register #{register.id}")
+            raise ActiveRecord::RecordNotFound.new("no ending reading found for register #{register.id}")
           end
         end
         return last_reading
       end
 
+      # This method returns one out of two readings, that is closest to a given date
+      # input params:
+      #   desired_date: The Date to which the readings are compared to
+      #   reading_ahead: The reading, that is ahead (earlier) the other one
+      #   reading_behind: The reading, that is behind (after) the other one
+      # returns:
+      #   reading: the reading, that is closer to the desired_date than the other one. If the distance is equal, reading_ahead is returned.
       def select_closest_reading(desired_date, reading_ahead, reading_behind)
         if reading_ahead.nil? && !reading_behind.nil?
           return reading_behind
         elsif !reading_ahead.nil? && reading_behind.nil?
           return reading_ahead
         elsif !reading_ahead.nil? && !reading_behind.nil?
-          return (reading_ahead['timestamp'].to_date - desired_date).round.abs > (desired_date - reading_behind['timestamp'].to_date).round.abs ? reading_behind : reading_ahead
+          return (reading_ahead.timestamp.in_time_zone.to_date - desired_date).round.abs > (desired_date - reading_behind.timestamp.in_time_zone.to_date).round.abs ? reading_behind : reading_ahead
         else
           return nil
         end
@@ -147,7 +154,7 @@ module Buzzn::Localpool
           Time.new(end_date.year - 1, 12, 31).utc
         when accounting_year
           Time.new(end_date.year, 12, 31).utc
-        when accounting_year - 1
+        when accounting_year - 1 # TODO: is this needed? And if so, is it correct?
           Time.new(end_date.year - 2, 12, 31).utc
         else
           raise ArgumentError.new("unable to adjust the end_date #{end_date}.")
@@ -197,36 +204,37 @@ module Buzzn::Localpool
       #   last_reading: The last reading the will be adjusted
       #   last_reading_original: The original last reading that would have been taken into account if its date would match
       #   device_change_readings: Array with 2 readings from a device_change. May be empty.
-      #   end_date: The Date of the period's ending. Can be nil if the ending is not definite.
       # returns:
-      #   last_reading['energy_milliwatt_hour']: The adjusted energy value that has to be set to the last reading
-      def adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings, end_date)
+      #   last_reading.energy_milliwatt_hour: The adjusted energy value that has to be set to the last reading
+      def adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings)
         if device_change_readings.empty?
-          # only adjust the reading if the timestamps differ AND there is no end_date (because if there was and end_date we want exactly that date and not adjust it!)
-          if last_reading['timestamp'] != last_reading_original['timestamp'] && end_date.nil?
-            timedifference_original = (last_reading['timestamp'].to_date - last_reading_original['timestamp'].to_date).round
+          # only adjust the reading if the timestamps differ
+
+          if last_reading.timestamp != last_reading_original.timestamp
+            timedifference_original = (last_reading.timestamp.in_time_zone.to_date - last_reading_original.timestamp.in_time_zone.to_date).round
             if timedifference_original != 0
-              timespan = (last_reading['timestamp'].to_date - first_reading['timestamp'].to_date).round
-              last_reading['energy_milliwatt_hour'] += timedifference_original * (last_reading['energy_milliwatt_hour'] - first_reading['energy_milliwatt_hour']) * 1.0 / timespan
+              timespan = (last_reading_original.timestamp.in_time_zone.to_date - first_reading.timestamp.in_time_zone.to_date).round
+              last_reading.energy_milliwatt_hour += timedifference_original * (last_reading.energy_milliwatt_hour - first_reading.energy_milliwatt_hour) * 1.0 / timespan
+
             end
           end
         else
           device_change_reading_1 = device_change_readings.first
           device_change_reading_2 = device_change_readings.last
-          # only adjust the reading if the timestamps differ AND there is no end_date (because if there was and end_date we want exactly that date and not adjust it!)
-          if last_reading['timestamp'] != last_reading_original['timestamp'] && end_date.nil? #TODO: is the 2nd check needed? I think so but it was not in the BK source code
-            timedifference_original = (last_reading['timestamp'].to_date - last_reading_original['timestamp'].to_date).round
+          # only adjust the reading if the timestamps differ
+          if last_reading.timestamp != last_reading_original.timestamp
+            timedifference_original = (last_reading.timestamp.in_time_zone.to_date - last_reading_original.timestamp.in_time_zone.to_date).round
             if timedifference_original != 0
-              timespan = (last_reading['timestamp'].to_date - device_change_reading_2['timestamp'].to_date).round
-              if device_change_reading_2['timestamp'] == last_reading_original['timestamp']
-                last_reading['energy_milliwatt_hour'] = timedifference_original * (device_change_reading_1['energy_milliwatt_hour'] - first_reading['energy_milliwatt_hour']) * 1.0 / timespan + device_change_reading_2['energy_milliwatt_hour']
+              timespan = (last_reading_original.timestamp.in_time_zone.to_date - device_change_reading_2.timestamp.in_time_zone.to_date).round
+              if device_change_reading_2.timestamp == last_reading_original.timestamp
+                last_reading.energy_milliwatt_hour = timedifference_original * (device_change_reading_1.energy_milliwatt_hour - first_reading.energy_milliwatt_hour) * 1.0 / timespan + device_change_reading_2.energy_milliwatt_hour
               else
-                last_reading['energy_milliwatt_hour'] += timedifference_original * (last_reading['energy_milliwatt_hour'] - device_change_reading_2['energy_milliwatt_hour']) * 1.0 / timespan
+                last_reading.energy_milliwatt_hour += timedifference_original * (last_reading.energy_milliwatt_hour - device_change_reading_2.energy_milliwatt_hour) * 1.0 / timespan
               end
             end
           end
         end
-        return last_reading['energy_milliwatt_hour']
+        return last_reading.energy_milliwatt_hour
       end
     end
   end
