@@ -16,6 +16,7 @@ describe "Users API" do
       access_token = Fabricate(token)
       get_with_token "/api/v1/users/me", access_token.token
       expect(response).to have_http_status(200)
+      expect(json['data']['id']).to eq access_token.resource_owner_id
     end
   end
 

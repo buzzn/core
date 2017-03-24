@@ -7,7 +7,8 @@ module API
         desc "Return me"
         oauth2 :simple, :full, :smartmeter
         get "me" do
-          current_user
+          # obey the loading semantic even if this is a bit of overkill here
+          UserResource.retrieve(current_user, current_user.id)
         end
 
         desc "Return all Users"
