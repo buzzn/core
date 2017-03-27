@@ -1,5 +1,5 @@
 module Contract
-  class MeteringPointOperatorSerializer < ActiveModel::Serializer
+  class MeteringPointOperatorSerializer < BaseResource
 
     attributes  :begin_date,
                 :metering_point_operator_name

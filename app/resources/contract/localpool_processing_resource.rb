@@ -1,5 +1,5 @@
 module Contract
-  class LocalpoolProcessingSerializer < ActiveModel::Serializer
+  class LocalpoolProcessingSerializer < BaseResource
 
     attributes  :first_master_uid,
                 :second_master_uid,
