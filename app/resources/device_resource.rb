@@ -1,4 +1,4 @@
-class MinimalDeviceResource < Buzzn::BaseResource
+class MinimalDeviceResource < Buzzn::EntityResource
 
   model Device
 

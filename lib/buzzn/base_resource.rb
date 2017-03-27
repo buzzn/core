@@ -77,15 +77,32 @@ module Buzzn
 
       # crud API
 
-      def create(current_user, params)
-        raise 'is abstract can not create' if @abstract
-        new(model.guarded_create(current_user, params),
-            current_user: current_user)
+      def find_resource_class(clazz)
+        if clazz == model || clazz == Object
+          raise "could not find Resource class for #{clazz}"
+        end
+        const = "#{clazz}Resource".safe_constantize
+        if const.nil?
+          find_resource_class(clazz.superclass)
+        else
+          const
+        end
       end
+      private :find_resource_class
+
+      def to_resource(current_user, instance)
+        if @abstract
+          clazz = find_resource_class(instance.class)
+        else
+          clazz = self
+        end
+        clazz.send(:new, instance, current_user: current_user)
+      end
+      private :to_resource
 
       def retrieve(current_user, id)
-        new(model.guarded_retrieve(current_user, id),
-            current_user: current_user)
+        instance = model.guarded_retrieve(current_user, id)
+        to_resource(current_user, instance)
       end
 
       def all(current_user, filter = nil)
@@ -102,42 +119,6 @@ module Buzzn
       @current_user = options[:current_user]
       super
     end
-
-    def update(params)
-      object.guarded_update(@current_user, params)
-      self
-    end
-
-    def delete
-      object.guarded_delete(@current_user)
-      self
-    end
-
-    def updatable
-      object.updatable_by?(@current_user)
-    end
-    alias :updatable? :updatable
-
-    def deletable
-      object.deletable_by?(@current_user)
-    end
-    alias :deletable? :deletable
-
-    # helper methods
-
-    def persisted?
-      object.persisted?
-    end
-
-    def id
-      object.id
-    end
-
-    def type
-      self.class.model.to_s.gsub(/::/, '').underscore
-    end
-
-    attributes :id, :type
 
     alias :to_h :serializable_hash
     alias :to_hash :serializable_hash

@@ -1,7 +1,7 @@
 module Meter
   class VirtualResource < BaseResource
 
-    model Meter::Virtual
+    model Virtual
 
     has_one :register
 

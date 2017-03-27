@@ -1,9 +1,9 @@
 module Register
-  class BaseResource < Buzzn::BaseResource
+  class BaseResource < Buzzn::EntityResource
 
     abstract
 
-    model Register::Base
+    model Base
 
     attributes  :direction,
                 :name,

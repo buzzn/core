@@ -1,5 +1,5 @@
 module Contract
-  class PowerTaker < Contract::Power
+  class PowerTaker < Power
 
     def self.new(*args)
       super

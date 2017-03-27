@@ -1,7 +1,7 @@
 module Meter
   class RealResource < BaseResource
 
-    model Meter::Real
+    model Real
 
     attributes  :smart
 

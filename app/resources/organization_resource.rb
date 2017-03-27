@@ -1,4 +1,4 @@
-class OrganizationResource < Buzzn::BaseResource
+class OrganizationResource < Buzzn::EntityResource
 
   model Organization
 

@@ -1,7 +1,7 @@
 module Register
   class VirtualResource < BaseResource
 
-    model Register::Virtual
+    model Virtual
 
   end
 

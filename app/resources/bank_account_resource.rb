@@ -1,4 +1,4 @@
-class BankAccountResource < Buzzn::BaseResource
+class BankAccountResource < Buzzn::EntityResource
 
   model BankAccount
 

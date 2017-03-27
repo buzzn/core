@@ -1,5 +1,5 @@
 module Contract
-  class Power < Contract::Base
+  class Power < Base
 
     validates :feedback, presence: false
     validates :attention_by, presence: false
