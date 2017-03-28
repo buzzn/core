@@ -213,7 +213,7 @@ describe Buzzn::Localpool::ReadingCalculation do
     last_reading_original = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2015, 11, 30), energy_milliwatt_hour: 333000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
 
     # with begin_date and without ending_date
-    result = Buzzn::Localpool::ReadingCalculation.get_energy_for_period(register, begin_date, nil, 2015)
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_for_period(register, begin_date, nil, 2015)
     expect(result.value).to eq 364000
     expect(result.first_reading).to eq first_reading
     expect(result.last_reading_original).to eq last_reading_original
@@ -221,14 +221,14 @@ describe Buzzn::Localpool::ReadingCalculation do
 
     # with begin_date and with ending_date
     end_date = Time.new(2015, 11, 30)
-    result = Buzzn::Localpool::ReadingCalculation.get_energy_for_period(register, begin_date, end_date, 2015)
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_for_period(register, begin_date, end_date, 2015)
     expect(result.value).to eq 333000
     expect(result.first_reading).to eq first_reading
     expect(result.last_reading_original).to eq last_reading_original
     expect(result.last_reading.timestamp).to eq Time.new(2015, 11, 30).utc
 
     # without begin_date and with ending_date
-    result = Buzzn::Localpool::ReadingCalculation.get_energy_for_period(register, nil, end_date, 2015)
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_for_period(register, nil, end_date, 2015)
     expect(result.value).to eq 333000
     expect(result.first_reading).to eq first_reading
     expect(result.last_reading_original).to eq last_reading_original
@@ -245,7 +245,7 @@ describe Buzzn::Localpool::ReadingCalculation do
     last_reading_original = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2015, 11, 30), energy_milliwatt_hour: 15000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 12345678, state: 'Z86')
 
     # with begin_date and without ending_date
-    result = Buzzn::Localpool::ReadingCalculation.get_energy_for_period(register, begin_date, nil, 2015)
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_for_period(register, begin_date, nil, 2015)
     expect(result.value).to eq 364000
     expect(result.first_reading).to eq first_reading
     expect(result.last_reading_original).to eq last_reading_original
@@ -256,7 +256,7 @@ describe Buzzn::Localpool::ReadingCalculation do
 
     # with begin_date and with ending_date
     end_date = Time.new(2015, 11, 30)
-    result = Buzzn::Localpool::ReadingCalculation.get_energy_for_period(register, begin_date, end_date, 2015)
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_for_period(register, begin_date, end_date, 2015)
     expect(result.value).to eq 333000
     expect(result.first_reading).to eq first_reading
     expect(result.last_reading_original).to eq last_reading_original
@@ -266,7 +266,7 @@ describe Buzzn::Localpool::ReadingCalculation do
     expect(result.device_change).to eq true
 
     # without begin_date and with ending_date
-    result = Buzzn::Localpool::ReadingCalculation.get_energy_for_period(register, nil, end_date, 2015)
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_for_period(register, nil, end_date, 2015)
     expect(result.value).to eq 333000
     expect(result.first_reading).to eq first_reading
     expect(result.last_reading_original).to eq last_reading_original
@@ -285,7 +285,7 @@ describe Buzzn::Localpool::ReadingCalculation do
     last_reading_original = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2015, 11, 30), energy_milliwatt_hour: 333000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 12345678, state: 'Z86')
 
     # with begin_date and without ending_date
-    result = Buzzn::Localpool::ReadingCalculation.get_energy_for_period(register, begin_date, nil, 2015)
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_for_period(register, begin_date, nil, 2015)
     expect(result.value).to eq 364000
     expect(result.first_reading).to eq reading_2
     expect(result.last_reading_original).to eq last_reading_original
@@ -296,7 +296,7 @@ describe Buzzn::Localpool::ReadingCalculation do
 
     # with begin_date and with ending_date
     end_date = Time.new(2015, 11, 30)
-    result = Buzzn::Localpool::ReadingCalculation.get_energy_for_period(register, begin_date, end_date, 2015)
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_for_period(register, begin_date, end_date, 2015)
     expect(result.value).to eq 333000
     expect(result.first_reading).to eq reading_2
     expect(result.last_reading_original).to eq last_reading_original
@@ -306,7 +306,7 @@ describe Buzzn::Localpool::ReadingCalculation do
     expect(result.device_change).to eq false
 
     # without begin_date and with ending_date
-    result = Buzzn::Localpool::ReadingCalculation.get_energy_for_period(register, nil, end_date, 2015)
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_for_period(register, nil, end_date, 2015)
     expect(result.value).to eq 333000
     expect(result.first_reading).to eq reading_2
     expect(result.last_reading_original).to eq last_reading_original
@@ -326,7 +326,7 @@ describe Buzzn::Localpool::ReadingCalculation do
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 239000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 12345678, state: 'Z86')
 
     # with begin_date and without ending_date
-    result = Buzzn::Localpool::ReadingCalculation.get_energy_for_period(register, begin_date, nil, 2015)
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_for_period(register, begin_date, nil, 2015)
     expect(result.value).to eq 62000
     expect(result.first_reading).to eq first_reading
     expect(result.last_reading_original).to eq reading_1
@@ -337,7 +337,7 @@ describe Buzzn::Localpool::ReadingCalculation do
 
     # with begin_date and with ending_date
     end_date = Time.new(2015, 12, 31)
-    result = Buzzn::Localpool::ReadingCalculation.get_energy_for_period(register, begin_date, end_date, 2015)
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_for_period(register, begin_date, end_date, 2015)
     expect(result.value).to eq 62000
     expect(result.first_reading).to eq first_reading
     expect(result.last_reading_original).to eq reading_1
@@ -347,7 +347,7 @@ describe Buzzn::Localpool::ReadingCalculation do
     expect(result.device_change).to eq false
 
     # without begin_date and with ending_date
-    result = Buzzn::Localpool::ReadingCalculation.get_energy_for_period(register, nil, end_date, 2015)
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_for_period(register, nil, end_date, 2015)
     expect(result.value).to eq 62000
     expect(result.first_reading).to eq first_reading
     expect(result.last_reading_original).to eq reading_1
@@ -355,5 +355,99 @@ describe Buzzn::Localpool::ReadingCalculation do
     expect(result.device_change_reading_1).to eq nil
     expect(result.device_change_reading_2).to eq nil
     expect(result.device_change).to eq false
+  end
+
+  it 'gets accounted energy for register with multiple contracts' do
+    localpool = Fabricate(:localpool)
+    meter = Fabricate(:input_meter)
+    register = meter.input_register
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2015, 2, 1), energy_milliwatt_hour: 5000, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2015, 3, 31), energy_milliwatt_hour: 234000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2015, 4, 1), energy_milliwatt_hour: 234000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2015, 7, 31), energy_milliwatt_hour: 567000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2015, 8, 1), energy_milliwatt_hour: 567000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2015, 12, 31), energy_milliwatt_hour: 890000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+    localpool.registers << register
+    c1 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
+    c2 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
+    c3 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 8, 1), end_date: nil)
+
+    # 3 lsn, 0 third party
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_by_contract(register, nil, nil, 2015)
+    expect(result[:consumption_lsn].size).to eq 3
+    expect(result[:consumption_third_party].size).to eq 0
+    result[:consumption_lsn].each do |accounted_energy|
+      expect([229000, 333000, 323000].include?(accounted_energy.value)).to eq true
+    end
+
+    # 2 lsn, 1 third party at beginning
+    c1.destroy
+    c1 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_by_contract(register, nil, nil, 2015)
+    expect(result[:consumption_lsn].size).to eq 2
+    expect(result[:consumption_third_party].size).to eq 1
+    result[:consumption_lsn].each do |accounted_energy|
+      expect([333000, 323000].include?(accounted_energy.value)).to eq true
+    end
+    expect(result[:consumption_third_party].first.value).to eq 229000
+
+    # 2 lsn, 1 third party in the middle
+    c1.destroy
+    c2.destroy
+    c1 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
+    c2 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_by_contract(register, nil, nil, 2015)
+    expect(result[:consumption_lsn].size).to eq 2
+    expect(result[:consumption_third_party].size).to eq 1
+    result[:consumption_lsn].each do |accounted_energy|
+      expect([229000, 323000].include?(accounted_energy.value)).to eq true
+    end
+    expect(result[:consumption_third_party].first.value).to eq 333000
+
+    # 2 lsn, 1 third party it the end
+    c2.destroy
+    c3.destroy
+    c2 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
+    c3 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 8, 1), end_date: Date.new(2015, 12, 31))
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_by_contract(register, nil, nil, 2015)
+    expect(result[:consumption_lsn].size).to eq 2
+    expect(result[:consumption_third_party].size).to eq 1
+    result[:consumption_lsn].each do |accounted_energy|
+      expect([229000, 333000].include?(accounted_energy.value)).to eq true
+    end
+    expect(result[:consumption_third_party].first.value).to eq 323000
+
+    # 1 lsn in the middle, 2 third party
+    c1.destroy
+    c2.destroy
+    c3.destroy
+    c1 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
+    c2 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
+    c3 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 8, 1), end_date: Date.new(2015, 12, 31))
+    result = Buzzn::Localpool::ReadingCalculation.get_register_energy_by_contract(register, nil, nil, 2015)
+    expect(result[:consumption_lsn].size).to eq 1
+    expect(result[:consumption_third_party].size).to eq 2
+    result[:consumption_third_party].each do |accounted_energy|
+      expect([229000, 323000].include?(accounted_energy.value)).to eq true
+    end
+    expect(result[:consumption_lsn].first.value).to eq 333000
+  end
+
+  it 'gets total energy for localpool' do
+    localpool = Fabricate(:localpool_sulz_with_registers_and_readings)
+    begin_date = Time.new(2016, 8, 4)
+    all_energies = Buzzn::Localpool::ReadingCalculation.get_all_energy_in_localpool(localpool, begin_date, nil, 2016)
+    result = all_energies.sum_and_group_by_label
+
+    expect(result[:grid_consumption]).to eq 181581
+    expect(result[:grid_feeding]).to eq 505805 # should be 10116000 - TODO: check with BK data
+    expect(result[:consumption_lsn]).to eq 10621000
+    expect(result[:consumption_third_party]).to eq 410073 # should be 407000 - TODO: check with BK data
+    expect(result[:production_pv]).to eq 7013728
+    expect(result[:production_chp]).to eq 10698696
+    expect(result[:demarcation_chp]).to eq 245254
+    [:consumption, :demarcation_pv, :grid_consumption_corrected, :grid_feeding_corrected, :other].each do |label|
+      expect(result[label]).to eq 0
+    end
   end
 end

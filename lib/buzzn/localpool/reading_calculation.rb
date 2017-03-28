@@ -2,6 +2,74 @@ module Buzzn::Localpool
   class ReadingCalculation
     class << self
 
+      # This method returns the energy measured for each register in the localpool in a specific period of time
+      # input params:
+      #   localpool: The Group::Localpool for which the energy is requested
+      #   begin_date: The Date of the period's beginning. Can be nil if the beginning is not definite.
+      #   end_date: The Date of the period's ending. Can be nil if the ending is not definite.
+      #   accounting_year: The year for which the energy should be accounted to
+      # returns:
+      #   result: TotalAccountedEnergy with details about each single register
+      def get_all_energy_in_localpool(localpool, begin_date, end_date, accounting_year=Time.current.year - 1)
+        result = Buzzn::Localpool::TotalAccountedEnergy.new(localpool.id)
+
+        localpool.registers.each do |register|
+          if register.label == Register::Base::CONSUMPTION
+            energy_by_contract = get_register_energy_by_contract(register, begin_date, end_date, accounting_year)
+            [:consumption_lsn, :consumption_third_party].each do |consumption_type|
+              energy_by_contract[consumption_type].each do |accounted_energy|
+                accounted_energy.label = consumption_type.to_s
+                result.add(accounted_energy)
+              end
+            end
+          else
+            accounted_energy = get_register_energy_for_period(register, begin_date, end_date, accounting_year)
+            accounted_energy.label = accounted_energy.first_reading.register.label
+            result.add(accounted_energy)
+          end
+        end
+        return result
+      end
+
+      # This method returns the energy measured in a specific period of time for all contracts attached to the register
+      # input params:
+      #   register: The Register::Base for which the energy is requested
+      #   begin_date: The Date of the period's beginning. Can be nil if the beginning is not definite.
+      #   end_date: The Date of the period's ending. Can be nil if the ending is not definite.
+      #   accounting_year: The year for which the energy should be accounted to
+      # returns:
+      #   result: Hash with both the accounted energy for all LSN and for all third party supplied parties related to the register
+      def get_register_energy_by_contract(register, begin_date, end_date, accounting_year)
+        contracts = register.contracts.localpool_power_takers.running_in_year(accounting_year).to_a +
+                      register.contracts.other_suppliers.running_in_year(accounting_year).to_a
+        begin_date_query = nil
+        end_date_query = nil
+        result = {}
+        consumption_lsn = []
+        consumption_third_party = []
+        contracts.flatten.each do |contract|
+          if contract.begin_date && contract.begin_date.year >= accounting_year
+            begin_date_query = contract.begin_date
+          else
+            begin_date_query = begin_date
+          end
+          if contract.end_date && contract.end_date.year <= accounting_year
+            end_date_query = contract.end_date
+          else
+            end_date_query = end_date
+          end
+          accounted_energy = get_register_energy_for_period(contract.register, begin_date_query, end_date_query, accounting_year)
+          if contract.is_a?(Contract::OtherSupplier)
+            consumption_third_party << accounted_energy
+          else
+            consumption_lsn << accounted_energy
+          end
+        end
+        result[:consumption_lsn] = consumption_lsn
+        result[:consumption_third_party] = consumption_third_party
+        return result
+      end
+
       # This method returns the energy measured in a specific period of time
       # input params:
       #   register: The Register::Base for which the energy is requested
@@ -9,8 +77,8 @@ module Buzzn::Localpool
       #   end_date: The Date of the period's ending. Can be nil if the ending is not definite.
       #   accounting_year: The year for which the energy should be accounted to
       # returns:
-      #   billing_details: Object, that contains all information about accounted readings and device changes
-      def get_energy_for_period(register, begin_date, end_date, accounting_year=Time.current.year - 1)
+      #   accounted_energy: Object, that contains all information about accounted readings and device changes
+      def get_register_energy_for_period(register, begin_date, end_date, accounting_year=Time.current.year - 1)
         first_reading = get_first_reading(register, begin_date, accounting_year)
         last_reading_original = get_last_reading(register, end_date, accounting_year)
         last_reading = last_reading_original.clone
@@ -23,7 +91,7 @@ module Buzzn::Localpool
 
         if device_change_readings.empty?
           accounted_energy = last_reading.energy_milliwatt_hour - first_reading.energy_milliwatt_hour
-          return Buzzn::Localpool::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original)
+          return Buzzn::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original)
         else
           device_change_reading_1 = device_change_readings.first
           device_change_reading_2 = device_change_readings.last
@@ -31,10 +99,10 @@ module Buzzn::Localpool
           if (device_change_reading_1.timestamp == first_reading.timestamp && device_change_reading_2.timestamp != begin_date) ||
              (device_change_reading_2.timestamp == last_reading.timestamp && device_change_reading_1.timestamp != end_date)
             accounted_energy = last_reading.energy_milliwatt_hour - first_reading.energy_milliwatt_hour
-            return Buzzn::Localpool::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original)
+            return Buzzn::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original)
           else
             accounted_energy = last_reading.energy_milliwatt_hour - device_change_reading_2.energy_milliwatt_hour + device_change_reading_1.energy_milliwatt_hour - first_reading.energy_milliwatt_hour
-            return Buzzn::Localpool::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original, true, device_change_reading_1, device_change_reading_2)
+            return Buzzn::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original, true, device_change_reading_1, device_change_reading_2)
           end
         end
       end
