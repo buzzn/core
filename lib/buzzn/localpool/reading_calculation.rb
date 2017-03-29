@@ -28,6 +28,7 @@ module Buzzn::Localpool
             result.add(accounted_energy)
           end
         end
+        # TODO: calculate corrected ÜGZ values
         return result
       end
 
@@ -62,6 +63,7 @@ module Buzzn::Localpool
           if contract.is_a?(Contract::OtherSupplier)
             consumption_third_party << accounted_energy
           else
+            # TODO: seperate consumption_lsn into eeg_reduced and eeg_full
             consumption_lsn << accounted_energy
           end
         end

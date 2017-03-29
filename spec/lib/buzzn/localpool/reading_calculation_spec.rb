@@ -439,10 +439,10 @@ describe Buzzn::Localpool::ReadingCalculation do
     all_energies = Buzzn::Localpool::ReadingCalculation.get_all_energy_in_localpool(localpool, begin_date, nil, 2016)
     result = all_energies.sum_and_group_by_label
 
-    expect(result[:grid_consumption]).to eq 181581
-    expect(result[:grid_feeding]).to eq 505805 # should be 10116000 - TODO: check with BK data
+    expect(result[:grid_consumption]).to eq 3631626 # this includes third party supplied!
+    expect(result[:grid_feeding]).to eq 10116106 # this includes third party supplied!
     expect(result[:consumption_lsn]).to eq 10621000
-    expect(result[:consumption_third_party]).to eq 410073 # should be 407000 - TODO: check with BK data
+    expect(result[:consumption_third_party]).to eq 410073
     expect(result[:production_pv]).to eq 7013728
     expect(result[:production_chp]).to eq 10698696
     expect(result[:demarcation_chp]).to eq 245254
@@ -450,4 +450,21 @@ describe Buzzn::Localpool::ReadingCalculation do
       expect(result[label]).to eq 0
     end
   end
+
+  describe Buzzn::Localpool::TotalAccountedEnergy do
+    it 'creates total accounted energy' do
+      localpool = Fabricate(:localpool_sulz_with_registers_and_readings)
+      result = Buzzn::Localpool::TotalAccountedEnergy.new(localpool.id)
+      expect(result.accounted_energies).to eq []
+    end
+
+    it 'adds a new accounted energy' do
+      localpool = Fabricate(:localpool_sulz_with_registers_and_readings)
+      result = Buzzn::Localpool::TotalAccountedEnergy.new(localpool.id)
+      accounted_energy = Buzzn::AccountedEnergy.new(20000, localpool.registers.inputs.first.readings[0], localpool.registers.inputs.first.readings[1], localpool.registers.inputs.first.readings[1])
+      result.add(accounted_energy)
+      expect(result.accounted_energies).to eq [accounted_energy]
+    end
+  end
 end
+
