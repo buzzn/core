@@ -168,7 +168,7 @@ module Register
             world_or_community
           ]
       end
-      where(sqls.map(&:to_sql).join(' OR '))
+      where("( #{sqls.map(&:to_sql).join(' OR ' )})")
     end
 
     #TODO why is this less strikt than the readable_by definition ?

@@ -1,4 +1,6 @@
-class DeviceResource < JSONAPI::Resource
+class MinimalDeviceResource < Buzzn::BaseResource
+
+  model Device
 
   attributes  :name,
               :manufacturer_name,
@@ -13,11 +15,26 @@ class DeviceResource < JSONAPI::Resource
               :watt_hour_pa,
               :commissioning,
               :mobile,
-              :readable,
-              :big_tumb
+              :readable
+
+  attributes :updatable, :deletable
+
+end
+
+# we do not want all infos in collections
+class DeviceResource < MinimalDeviceResource
+
+  attributes :big_tumb
 
   def big_tumb
-    @model.image.big_tumb.url
+    object.image.big_tumb.url
   end
 
+end
+
+# TODO get rid of the need of having a Serializer class
+class DeviceSerializer < MinimalDeviceResource
+  def self.new(*args)
+    super
+  end
 end

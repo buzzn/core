@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 # Backend
+gem 'active_model_serializers'
 gem 'rails'
 gem 'pg'
 gem 'sinatra'

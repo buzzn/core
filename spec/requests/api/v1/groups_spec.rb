@@ -131,44 +131,6 @@ describe "/groups" do
   end
 
 
-  it 'paginates groups' do
-    page_overload.times do
-      Fabricate(:tribe)
-    end
-    get_without_token '/api/v1/groups'
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_without_token '/api/v1/groups', {per_page: 200}
-    expect(response).to have_http_status(422)
-  end
-
-
-
-  it 'paginate groups with full access token' do
-    page_overload.times do
-      Fabricate(:tribe)
-    end
-    access_token = Fabricate(:full_access_token_as_admin)
-
-    get_with_token "/api/v1/profiles", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
-
-    pages_profile_ids = []
-
-    1.upto(4) do |i|
-      get_with_token '/api/v1/groups', {page: i, order_direction: 'DESC', order_by: 'created_at'}, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json['meta']['total_pages']).to eq(4)
-      json['data'].each do |data|
-        pages_profile_ids << data['id']
-      end
-    end
-
-    expect(pages_profile_ids.uniq.length).to eq(pages_profile_ids.length)
-  end
-
-
 
 
   it 'does gets a group readable by world with or without token' do
@@ -235,8 +197,8 @@ describe "/groups" do
 
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_truthy
-    expect(json['meta']['deletable']).to be_truthy
+    expect(json['data']['attributes']['updatable']).to be true
+    expect(json['data']['attributes']['deletable']).to be true
 
     delete_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(204)
@@ -248,8 +210,8 @@ describe "/groups" do
     group         = Fabricate(:tribe_readable_by_community)
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_falsey
-    expect(json['meta']['deletable']).to be_falsey
+    expect(json['data']['attributes']['updatable']).to be false
+    expect(json['data']['attributes']['deletable']).to be false
   end
 
   it 'get a friend-readable group by managers friend' do
@@ -260,8 +222,8 @@ describe "/groups" do
     token_user_friend.add_role(:manager, group)
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_falsey
-    expect(json['meta']['deletable']).to be_falsey
+    expect(json['data']['attributes']['updatable']).to be false
+    expect(json['data']['attributes']['deletable']).to be false
   end
 
   it 'get a friend-readable group by member' do
@@ -276,8 +238,8 @@ describe "/groups" do
 
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_falsey
-    expect(json['meta']['deletable']).to be_falsey
+    expect(json['data']['attributes']['updatable']).to be false
+    expect(json['data']['attributes']['deletable']).to be false
   end
 
   it 'get a member-readable group by member' do
@@ -289,8 +251,8 @@ describe "/groups" do
     group.registers << register
     get_with_token "/api/v1/groups/#{group.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_falsey
-    expect(json['meta']['deletable']).to be_falsey
+    expect(json['data']['attributes']['updatable']).to be false
+    expect(json['data']['attributes']['deletable']).to be false
   end
 
   it 'does not gets a group readable by members or friends if user is not member or friend' do
@@ -400,7 +362,7 @@ describe "/groups" do
   end
 
 
-  it 'paginates scores' do
+  it 'get all scores' do
     group                 = Fabricate(:tribe)
     now                   = Time.current - 2.days
     interval_information  = group.set_score_interval('day', now.to_i)
@@ -410,10 +372,7 @@ describe "/groups" do
     params = { interval: 'day', timestamp: now }
     get_without_token "/api/v1/groups/#{group.id}/scores", params
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_without_token "/api/v1/groups/#{group.id}/scores", {per_page: 200}
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
   it 'gets scores for the current day' do
@@ -427,10 +386,7 @@ describe "/groups" do
     params = { interval: 'day', timestamp: now }
     get_without_token "/api/v1/groups/#{group.id}/scores", params
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_without_token "/api/v1/groups/#{group.id}/scores", {per_page: 200}
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
 
@@ -448,7 +404,7 @@ describe "/groups" do
     expect(response).to have_http_status(401)
   end
 
-  it 'paginates managers' do
+  it 'get all managers' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:tribe)
     page_overload.times do
@@ -462,18 +418,15 @@ describe "/groups" do
     end
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
+    expect(json['data'].size).to eq(page_overload)
 
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(7)
-
-    get_with_token "/api/v1/groups/#{group.id}/managers", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload * 2)
   end
 
-  it 'paginates members' do
+  it 'get all members' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:tribe_with_members_readable_by_world, members: page_overload * 2)
 
@@ -483,15 +436,12 @@ describe "/groups" do
 
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
+    expect(json['data'].size).to eq(page_overload + 1)
 
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(7)
-
-    get_with_token "/api/v1/groups/#{group.id}/members", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload * 2)
   end
 
   it 'gets the related members for group only with token' do
@@ -696,7 +646,7 @@ describe "/groups" do
     expect(response).to have_http_status(200)
 
     expect(json['data']['id']).to eq(group.metering_point_operator_contract.id)
-    expect(json['data']['type']).to eq('metering-point-operators')
+    expect(json['data']['type']).to eq('contract-metering-point-operators')
   end
 
 
@@ -715,12 +665,12 @@ describe "/groups" do
     expect(response).to have_http_status(200)
 
     expect(json['data']['id']).to eq(group.localpool_processing_contract.id)
-    expect(json['data']['type']).to eq('localpool-processings')
+    expect(json['data']['type']).to eq('contract-localpool-processings')
   end
 
 
 
-  it 'paginates comments' do
+  it 'get all comments' do
     access_token    = Fabricate(:simple_access_token).token
     group           = Fabricate(:tribe)
     user            = Fabricate(:user)
@@ -737,10 +687,7 @@ describe "/groups" do
     end
     get_with_token "/api/v1/groups/#{group.id}/comments", access_token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_with_token "/api/v1/groups/#{group.id}/comments", {per_page: 200}, access_token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload + 1)
   end
 
 

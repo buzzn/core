@@ -14,8 +14,9 @@ module API
         end
         oauth2 :full
         get ':id/contractor' do
-          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
-          contract.contractor
+          Contract::BaseResource
+            .retrieve(current_user, permitted_params)
+            .contractor!
         end
 
         desc 'Return the related customer for a Contract'
@@ -24,21 +25,19 @@ module API
         end
         oauth2 :full
         get ':id/customer' do
-          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
-          contract.customer
+          Contract::BaseResource
+            .retrieve(current_user, permitted_params)
+            .customer!
         end
 
 
         desc 'Return all Contracts'
         params do
 #          optional :filter, type: String, desc: "Search query using #{Base.join(Contract.search_attributes)}"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :full
         get do
-          paginated_response(Contract::Base.filter(permitted_params[:filter]).readable_by(current_user))
+          Contract::BaseResource.all(current_user, permitted_params[:filter])
         end
 
         desc 'Return a Contract'
@@ -47,11 +46,7 @@ module API
         end
         oauth2 :simple, :full
         get ':id' do
-          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
-          render(contract, meta: {
-            updatable: contract.updatable_by?(current_user),
-            deletable: contract.deletable_by?(current_user)
-          })
+          Contract::BaseResource.retrieve(current_user, permitted_params)
         end
 
 
@@ -147,8 +142,8 @@ module API
         end
         oauth2 false
         post 'power-taker' do
-          contract = Buzzn::ContractFactory.create_power_taker_contract(current_user, permitted_params)
-          created_response(contract)
+          Buzzn::ContractFactory.create_power_taker_contract(current_user, permitted_params)
+          status 201
         end
 
 
@@ -183,8 +178,9 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
-          contract.guarded_update(current_user, permitted_params)
+          Contract::BaseResource
+            .retrieve(current_user, permitted_params)
+            .update(permitted_params)
         end
 
 
@@ -194,8 +190,9 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          contract = Contract::Base.guarded_retrieve(current_user, permitted_params)
-          deleted_response(contract.guarded_delete(current_user))
+           deleted_response(Contract::BaseResource
+                             .retrieve(current_user, permitted_params)
+                             .delete)
         end
 
 

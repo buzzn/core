@@ -7,21 +7,17 @@ module API
         desc "Return all Device"
         params do
           optional :filter, type: String, desc: "Search query using #{Base.join(Device.search_attributes)}"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
           optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
           optional :order_by, type: String, default: 'created_at', values: ['updated_at', 'created_at'], desc: "Order by Attribute"
         end
-        paginate
         oauth2 false
         get do
+          # FIXME why do we order attributes which are not exposed to client ?
+          #       ordering resources is more a job for the client
           order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
-          paginated_response(
-            Device
-              .filter(permitted_params[:filter])
-              .readable_by(current_user)
-              .order(order)
-          )
+          DeviceResource
+            .all(current_user, permitted_params[:filter])
+            .order(order)
         end
 
 
@@ -32,11 +28,7 @@ module API
         end
         oauth2 false
         get ":id" do
-          device = Device.guarded_retrieve(current_user, permitted_params)
-          render(device, meta: {
-            updatable: device.updatable_by?(current_user),
-            deletable: device.deletable_by?(current_user)
-          })
+          DeviceResource.retrieve(current_user, permitted_params)
         end
 
 
@@ -57,8 +49,8 @@ module API
         end
         oauth2 :full
         post do
-          device = Device.guarded_create(current_user, permitted_params)
-          created_response(device)
+          created_response(DeviceResource.create(current_user,
+                                                 permitted_params))
         end
 
 
@@ -81,8 +73,9 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          device = Device.guarded_retrieve(current_user, permitted_params)
-          device.guarded_update(current_user, permitted_params)
+          DeviceResource
+            .retrieve(current_user, permitted_params)
+            .update(permitted_params)
         end
 
 
@@ -94,8 +87,9 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          device = Device.guarded_retrieve(current_user, permitted_params)
-          deleted_response(device.guarded_delete(current_user))
+          deleted_response(DeviceResource
+                            .retrieve(current_user, permitted_params)
+                            .delete)
         end
 
 

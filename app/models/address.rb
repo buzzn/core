@@ -52,7 +52,7 @@ class Address < ActiveRecord::Base
               friends_of_register_manager].collect do |query|
         query.project(1).exists.to_sql
       end
-      where(sqls.join(' OR '))
+      where("( #{sqls.join(' OR ')} )")
     end
   end
 

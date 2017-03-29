@@ -1,10 +1,48 @@
-class UserResource < JSONAPI::Resource
+class UserResource < Buzzn::BaseResource
 
-  # no attributes they will accessible via profile
+  model User
 
-  has_one :profile
-  has_many :groups
-  has_many :friends
-  has_many :registers
-  has_many :devices
+  attributes :updatable, :deletable
+
+  # API methods for endpoints
+
+  entities :profile,
+           :bank_account
+
+end
+class FullUserResource < UserResource
+
+  def self.new(*args)
+    super
+  end
+
+  attributes  :user_name,
+              :title,
+              :first_name,
+              :last_name,
+              :gender,
+              :phone,
+              :email,
+              :sales_tax_number,
+              :tax_rate,
+              :tax_number
+
+  def title
+    object.profile.title
+  end
+
+  def gender
+    object.profile.gender
+  end
+
+  def phone
+    object.profile.phone
+  end
+end
+
+# TODO get rid of the need of having a Serializer class
+class UserSerializer < UserResource
+  def self.new(*args)
+    super
+  end
 end

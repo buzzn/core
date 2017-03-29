@@ -1,4 +1,6 @@
-class AddressResource < JSONAPI::Resource
+class AddressResource < Buzzn::BaseResource
+
+  model Address
 
   attributes  :address,
               :street_name,
@@ -11,5 +13,14 @@ class AddressResource < JSONAPI::Resource
               :latitude,
               :addition,
               :time_zone
-
+  
+  attributes :updatable, :deletable
 end
+
+# TODO get rid of the need of having a Serializer class
+class AddressSerializer < AddressResource
+  def self.new(*args)
+    super
+  end
+end
+

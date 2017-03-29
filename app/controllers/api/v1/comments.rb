@@ -17,7 +17,7 @@ module API
           resource_class  = Object.const_get(permitted_params[:resource_name])
           resource        = resource_class.guarded_retrieve(current_user,permitted_params[:resource_id])
           if resource.readable_by?(current_user)
-            # TODO cleanup move logic into Comment
+            # TODO cleanup move logic into CommentResource
             comment       = Comment.build_from(resource, current_user.id, permitted_params[:body], nil)
             comment.save!
             comment.create_activity key: 'comment.create', owner: current_user
@@ -38,8 +38,9 @@ module API
         end
         oauth2 :simple, :full
         patch ':id' do
-          comment = Comment.guarded_retrieve(current_user, permitted_params)
-          comment.guarded_update(current_user, permitted_params)
+          CommentResource
+            .retrieve(current_user, permitted_params)
+            .update(permitted_params)
         end
 
         desc 'Remove a comment'
@@ -48,8 +49,9 @@ module API
         end
         oauth2 :simple, :full
         delete ':id' do
-          comment = Comment.guarded_retrieve(current_user, permitted_params)
-          deleted_response(comment.guarded_delete(current_user))
+          deleted_response(CommentResource
+                            .retrieve(current_user, permitted_params)
+                            .delete)
         end
 
       end

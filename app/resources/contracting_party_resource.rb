@@ -1,10 +1,15 @@
-class ContractingPartyResource < JSONAPI::Resource
+class ContractingPartyResource < Buzzn::BaseResource
 
-  attributes  :legal_entity,
-              :sales_tax_number,
-              :tax_rate,
-              :tax_number
+  abstract
 
-  has_one :address
-  has_one :bank_account
+  def self.new(object, *args)
+    case object
+    when Organization
+      FullOrganizationResource.new(object, *args)
+    when User
+      FullUserResource.new(object, *args)
+    else
+      raise "can not handle type: #{object.class}"
+    end
+  end
 end

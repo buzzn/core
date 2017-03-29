@@ -7,13 +7,10 @@ module API
         desc "Return all Bank Account"
         params do
           optional :filter, type: String, desc: "Search query using #{Base.join(BankAccount.search_attributes)}"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :full
         get do
-          paginated_response(BankAccount.filter(permitted_params[:filter]).readable_by(current_user))
+          BankAccountResource.all(current_user, permitted_params[:filter])
         end
 
 
@@ -24,11 +21,7 @@ module API
         end
         oauth2 :full
         get ":id" do
-          bank_account = BankAccount.guarded_retrieve(current_user, permitted_params)
-          render(bank_account, meta: {
-            updatable: bank_account.updatable_by?(current_user),
-            deletable: bank_account.deletable_by?(current_user)
-          })
+          BankAccountResource.retrieve(current_user, permitted_params)
         end
 
 
@@ -45,6 +38,9 @@ module API
         end
         oauth2 :full
         post do
+
+          # FIXME totally broken, unclear and the wrong place - we just do not want to expose DB model class-names in our API
+          
           resource = Object.const_get(permitted_params[:bank_accountable_type])
           # TODO really unguarded ?
           parent = resource.unguarded_retrieve(permitted_params[:bank_accountable_id])
@@ -67,9 +63,9 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          bank_account = BankAccount.guarded_retrieve(current_user,
-                                                      permitted_params)
-          bank_account.guarded_update(current_user, permitted_params)
+          BankAccountResource
+            .retrieve(current_user, permitted_params)
+            .update(permitted_params)
         end
 
 
@@ -81,9 +77,9 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          bank_account = BankAccount.guarded_retrieve(current_user,
-                                                      permitted_params)
-          deleted_response(bank_account.guarded_delete(current_user))
+          BankAccountResource
+            .retrieve(current_user, permitted_params)
+            .delete
         end
 
 

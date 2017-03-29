@@ -25,7 +25,7 @@
       "fingerprint": "4f1e0bbd188e362d43b406174f38ab5f311b02cd178cbb06287450e09c5fe078",
       "message": "Possible SQL injection",
       "file": "app/models/register/base.rb",
-      "line": 105,
+      "line": 128,
       "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "select(\"#{Register::Base.columns.collect do\n c.name\n end.reject do\n (c == \"name\")\n end.join(\", \")}, CASE WHEN id NOT IN (#{Register::Base.readable_by(user, false).select(\"id\").to_sql}) THEN 'anonymous' ELSE name END AS name\")",
       "render_path": null,
@@ -137,7 +137,15 @@
       "line": 21,
       "link": "http://brakemanscanner.org/docs/warning_types/link_to_href",
       "code": "link_to(Contract.find(params[:id]).decorate.register.name, Contract.find(params[:id]).decorate.register)",
-      "render_path": [{"type":"controller","class":"ContractsController","method":"show","line":8,"file":"app/controllers/contracts_controller.rb"}],
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "ContractsController",
+          "method": "show",
+          "line": 8,
+          "file": "app/controllers/contracts_controller.rb"
+        }
+      ],
       "location": {
         "type": "template",
         "template": "contracts/show"
@@ -178,7 +186,7 @@
       "fingerprint": "b239d2d4d56561a9c3a872a5f1445ee1e8cfdf965c083f40ac05fddb25a9a6cd",
       "message": "Render path contains parameter value",
       "file": "app/views/registers/show.html.haml",
-      "line": 231,
+      "line": 233,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.address, {})",
       "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":26,"file":"app/controllers/registers_controller.rb"}],
@@ -196,7 +204,7 @@
       "fingerprint": "c7c58f85602a10d21f7dfec2f6296b27e6eb59a6ef9304e2f37faa8de9a815c8",
       "message": "Render path contains parameter value",
       "file": "app/views/registers/show.html.haml",
-      "line": 78,
+      "line": 80,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.received_user_requests, {})",
       "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":26,"file":"app/controllers/registers_controller.rb"}],
@@ -269,7 +277,15 @@
       "line": 219,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => (Register::Base.where(:id => params[:id]).anonymized(current_user).first or Register::Base.find(params[:id])).decorate.group.decorate, {})",
-      "render_path": [{"type":"controller","class":"RegistersController","method":"show","line":26,"file":"app/controllers/registers_controller.rb"}],
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "RegistersController",
+          "method": "show",
+          "line": 26,
+          "file": "app/controllers/registers_controller.rb"
+        }
+      ],
       "location": {
         "type": "template",
         "template": "registers/show"
@@ -279,12 +295,31 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "eb69d877ae365c86b83caf4f120bd63f933702ef6b2a96f7fe1f73c1da1df46f",
+      "message": "Possible SQL injection",
+      "file": "app/models/register/base.rb",
+      "line": 166,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "where(\"( #{[Group::Base.readable_by(user).where(Group::Base.arel_table[:id].eq(Register::Base.arel_table[:group_id])).project(1).exists, Register::Base.arel_table[:readable].eq(\"world\"), User.roles_query(user, :manager => Register::Base.arel_table[:id], :member => Register::Base.arel_table[:id], :admin => nil).project(1).exists, Friendship.friend_of_roles_query(user, Register::Base.arel_table, :manager).and(Register::Base.arel_table[:readable].eq(\"friends\")), Register::Base.arel_table[:readable].in([\"world\", \"community\"])].map(&:to_sql).join(\" OR \")})\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Register::Base",
+        "method": "readable_by"
+      },
+      "user_input": "Register::Base.arel_table[:readable]",
+      "confidence": "High",
+      "note": ""
+    },
+    {
       "warning_type": "Basic Auth",
       "warning_code": 9,
       "fingerprint": "f45fd07be0135c148b61e9f9f282031eaa5be455fe8806933385a15fee02b6a0",
       "message": "Basic authentication password stored in source code",
       "file": "app/controllers/application_controller.rb",
-      "line": 19,
+      "line": 18,
       "link": "http://brakemanscanner.org/docs/warning_types/basic_auth/",
       "code": "(password == \"sonnenaufgang\")",
       "render_path": null,
@@ -298,6 +333,6 @@
       "note": ""
     }
   ],
-  "updated": "2017-02-05 13:14:15 +0100",
+  "updated": "2017-03-24 08:53:57 +0100",
   "brakeman_version": "3.3.1"
 }
