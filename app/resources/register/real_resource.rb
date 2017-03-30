@@ -1,7 +1,7 @@
 module Register
   class RealResource < BaseResource
 
-    model Register::Real
+    model Real
 
     attributes  :uid,
                 :obis

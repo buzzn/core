@@ -1,4 +1,4 @@
-class AddressResource < Buzzn::BaseResource
+class AddressResource < Buzzn::EntityResource
 
   model Address
 

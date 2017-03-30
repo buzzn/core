@@ -2,6 +2,7 @@
 describe "Contract Model" do
 
   let(:register) { Fabricate(:output_meter).output_register }
+  let(:input_register) { Fabricate(:input_meter).input_register }
   let(:admin) { Fabricate(:admin) }
   let(:user_with_register) do
     user = Fabricate(:user)
@@ -37,6 +38,30 @@ describe "Contract Model" do
     c2 = Fabricate(:power_giver_contract, register: register)
     manager_group.registers << c2.register
     [c1, c2]
+  end
+
+  let(:localpool) { Fabricate(:localpool) }
+
+  it 'loads contract via where with the right type' do
+    Fabricate(:metering_point_operator_contract, localpool: localpool)
+    Fabricate(:localpool_processing_contract, localpool: localpool)
+    input_register.group = localpool
+    Fabricate(:localpool_power_taker_contract, register: input_register)
+    Fabricate(:power_taker_contract_move_in)
+    Fabricate(:power_giver_contract)
+
+    types = [Contract::PowerGiver, Contract::PowerTaker,Contract::MeteringPointOperator, Contract::LocalpoolProcessing, Contract::LocalpoolPowerTaker]
+    types.each do |type|
+      type.where(nil).each do |c|
+        expect(c.class).to eq type
+        (types - [type]).each do |t|
+          expect(t.where(id: c.id)).to eq []
+        end
+      end
+    end
+
+    expect(localpool.localpool_processing_contract.class).to eq Contract::LocalpoolProcessing
+    expect(localpool.metering_point_operator_contract.class).to eq Contract::MeteringPointOperator
   end
 
   xit 'filters contract', :retry => 3 do

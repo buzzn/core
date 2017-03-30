@@ -1,6 +1,4 @@
-class ContractingPartyResource < Buzzn::BaseResource
-
-  abstract
+class ContractingPartyResource
 
   def self.new(object, *args)
     case object

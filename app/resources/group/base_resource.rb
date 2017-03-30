@@ -1,9 +1,9 @@
 module Group
-  class MinimalBaseResource < Buzzn::BaseResource
+  class MinimalBaseResource < Buzzn::EntityResource
 
     abstract
 
-    model Group::Base
+    model Base
 
     attributes  :name,
                 :description,
@@ -36,12 +36,14 @@ module Group
 
     def scores(params)
       interval = params[:interval]
-      timestamp = params[:timestamp]
+      timestamp = params[:timestamp] || Time.current
       mode = params[:mode]
       if timestamp > Time.current.beginning_of_day
         timestamp = timestamp - 1.day
       end
-      result = object.scores.send("#{interval}ly".to_sym).at(timestamp)
+      result = object.scores
+                 .send("#{interval}ly".to_sym)
+                 .containing(timestamp)
       if mode
         result = result.send(mode.to_s.pluralize.to_sym)
       end
@@ -59,6 +61,8 @@ module Group
 
   # we do not want all infos in collections
   class BaseResource < MinimalBaseResource
+
+    abstract
 
     attributes   :big_tumb,
                  :md_img

@@ -1,4 +1,4 @@
-class CommentResource < Buzzn::BaseResource
+class CommentResource < Buzzn::EntityResource
 
   model Comment
 

@@ -1,5 +1,5 @@
 module Contract
-  class LocalpoolPowerTaker < Contract::Base
+  class LocalpoolPowerTaker < Localpool
 
     def self.new(*args)
       a = super

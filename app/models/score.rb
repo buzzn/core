@@ -20,6 +20,10 @@ class Score < ActiveRecord::Base
     self.where(["interval_beginning <= ?", time]).where(["interval_end >= ?", time])
   }
 
+  scope :containing, lambda {|time|
+    self.where(["interval_beginning <= ?", time]).where(["interval_end >= ?", time])
+  }
+
   scope :readable_by, ->(user) do
     # TODO remove hack with correcting sql, i.e. replace Group::Base.readable_by(user)
     # with Group::Base.readable_by_query(user)

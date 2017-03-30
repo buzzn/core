@@ -1,4 +1,4 @@
-class UserResource < Buzzn::BaseResource
+class UserResource < Buzzn::EntityResource
 
   model User
 

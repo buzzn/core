@@ -1,7 +1,7 @@
 module Group
   class TribeResource < MinimalBaseResource
 
-    model Group::Tribe
+    model Tribe
 
   end
 

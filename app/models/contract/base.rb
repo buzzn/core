@@ -98,7 +98,7 @@ module Contract
       end
     end
 
-    scope :readable_by, -> (user) do
+    def self.readable_by(user) # scope does not work here !
       where(readable_by_query(user))
     end
 

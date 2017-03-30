@@ -1,9 +1,9 @@
 module Meter
-  class BaseResource < Buzzn::BaseResource
+  class BaseResource < Buzzn::EntityResource
 
     abstract
 
-    model Meter::Base
+    model Base
     
     attributes  :manufacturer_name,
                 :manufacturer_product_name,
