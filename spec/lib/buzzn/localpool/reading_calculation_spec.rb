@@ -374,9 +374,9 @@ describe Buzzn::Localpool::ReadingCalculation do
 
     # 3 lsn, 0 third party
     result = Buzzn::Localpool::ReadingCalculation.get_register_energy_by_contract(register, nil, nil, 2015)
-    expect(result[:consumption_lsn].size).to eq 3
-    expect(result[:consumption_third_party].size).to eq 0
-    result[:consumption_lsn].each do |accounted_energy|
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_LSN].size).to eq 3
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].size).to eq 0
+    result[Buzzn::AccountedEnergy::CONSUMPTION_LSN].each do |accounted_energy|
       expect([229000, 333000, 323000].include?(accounted_energy.value)).to eq true
     end
 
@@ -384,12 +384,12 @@ describe Buzzn::Localpool::ReadingCalculation do
     c1.destroy
     c1 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
     result = Buzzn::Localpool::ReadingCalculation.get_register_energy_by_contract(register, nil, nil, 2015)
-    expect(result[:consumption_lsn].size).to eq 2
-    expect(result[:consumption_third_party].size).to eq 1
-    result[:consumption_lsn].each do |accounted_energy|
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_LSN].size).to eq 2
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].size).to eq 1
+    result[Buzzn::AccountedEnergy::CONSUMPTION_LSN].each do |accounted_energy|
       expect([333000, 323000].include?(accounted_energy.value)).to eq true
     end
-    expect(result[:consumption_third_party].first.value).to eq 229000
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].first.value).to eq 229000
 
     # 2 lsn, 1 third party in the middle
     c1.destroy
@@ -397,12 +397,12 @@ describe Buzzn::Localpool::ReadingCalculation do
     c1 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
     c2 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
     result = Buzzn::Localpool::ReadingCalculation.get_register_energy_by_contract(register, nil, nil, 2015)
-    expect(result[:consumption_lsn].size).to eq 2
-    expect(result[:consumption_third_party].size).to eq 1
-    result[:consumption_lsn].each do |accounted_energy|
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_LSN].size).to eq 2
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].size).to eq 1
+    result[Buzzn::AccountedEnergy::CONSUMPTION_LSN].each do |accounted_energy|
       expect([229000, 323000].include?(accounted_energy.value)).to eq true
     end
-    expect(result[:consumption_third_party].first.value).to eq 333000
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].first.value).to eq 333000
 
     # 2 lsn, 1 third party it the end
     c2.destroy
@@ -410,12 +410,12 @@ describe Buzzn::Localpool::ReadingCalculation do
     c2 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
     c3 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 8, 1), end_date: Date.new(2015, 12, 31))
     result = Buzzn::Localpool::ReadingCalculation.get_register_energy_by_contract(register, nil, nil, 2015)
-    expect(result[:consumption_lsn].size).to eq 2
-    expect(result[:consumption_third_party].size).to eq 1
-    result[:consumption_lsn].each do |accounted_energy|
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_LSN].size).to eq 2
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].size).to eq 1
+    result[Buzzn::AccountedEnergy::CONSUMPTION_LSN].each do |accounted_energy|
       expect([229000, 333000].include?(accounted_energy.value)).to eq true
     end
-    expect(result[:consumption_third_party].first.value).to eq 323000
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].first.value).to eq 323000
 
     # 1 lsn in the middle, 2 third party
     c1.destroy
@@ -425,12 +425,12 @@ describe Buzzn::Localpool::ReadingCalculation do
     c2 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
     c3 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 8, 1), end_date: Date.new(2015, 12, 31))
     result = Buzzn::Localpool::ReadingCalculation.get_register_energy_by_contract(register, nil, nil, 2015)
-    expect(result[:consumption_lsn].size).to eq 1
-    expect(result[:consumption_third_party].size).to eq 2
-    result[:consumption_third_party].each do |accounted_energy|
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_LSN].size).to eq 1
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].size).to eq 2
+    result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].each do |accounted_energy|
       expect([229000, 323000].include?(accounted_energy.value)).to eq true
     end
-    expect(result[:consumption_lsn].first.value).to eq 333000
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_LSN].first.value).to eq 333000
   end
 
   it 'gets total energy for localpool' do
@@ -439,27 +439,27 @@ describe Buzzn::Localpool::ReadingCalculation do
     all_energies = Buzzn::Localpool::ReadingCalculation.get_all_energy_in_localpool(localpool, begin_date, nil, 2016)
     result = all_energies.sum_and_group_by_label
 
-    expect(result[:grid_consumption]).to eq 3631626 # this includes third party supplied!
-    expect(result[:grid_feeding]).to eq 10116106 # this includes third party supplied!
-    expect(result[:consumption_lsn]).to eq 10621000
-    expect(result[:consumption_third_party]).to eq 410073
-    expect(result[:production_pv]).to eq 7013728
-    expect(result[:production_chp]).to eq 10698696
-    expect(result[:demarcation_chp]).to eq 245254
-    [:consumption, :demarcation_pv, :grid_consumption_corrected, :grid_feeding_corrected, :other].each do |label|
+    expect(result[Buzzn::AccountedEnergy::GRID_CONSUMPTION]).to eq 3631626 # this includes third party supplied!
+    expect(result[Buzzn::AccountedEnergy::GRID_FEEDING]).to eq 10116106 # this includes third party supplied!
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_LSN]).to eq 10621000
+    expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY]).to eq 410073
+    expect(result[Buzzn::AccountedEnergy::PRODUCTION_PV]).to eq 7013728
+    expect(result[Buzzn::AccountedEnergy::PRODUCTION_CHP]).to eq 10698696
+    expect(result[Buzzn::AccountedEnergy::DEMARCATION_CHP]).to eq 245254
+    [Buzzn::AccountedEnergy::DEMARCATION_PV,
+     Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED,
+     Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED,
+     Buzzn::AccountedEnergy::OTHER].each do |label|
       expect(result[label]).to eq 0
     end
   end
 
   describe Buzzn::Localpool::TotalAccountedEnergy do
-    it 'creates total accounted energy' do
+    it 'creates total accounted energy and adds an accounted energy to it' do
       localpool = Fabricate(:localpool_sulz_with_registers_and_readings)
       result = Buzzn::Localpool::TotalAccountedEnergy.new(localpool.id)
       expect(result.accounted_energies).to eq []
-    end
 
-    it 'adds a new accounted energy' do
-      localpool = Fabricate(:localpool_sulz_with_registers_and_readings)
       result = Buzzn::Localpool::TotalAccountedEnergy.new(localpool.id)
       accounted_energy = Buzzn::AccountedEnergy.new(20000, localpool.registers.inputs.first.readings[0], localpool.registers.inputs.first.readings[1], localpool.registers.inputs.first.readings[1])
       result.add(accounted_energy)

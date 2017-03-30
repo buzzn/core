@@ -16,9 +16,10 @@ module Buzzn::Localpool
         localpool.registers.each do |register|
           if register.label == Register::Base::CONSUMPTION
             energy_by_contract = get_register_energy_by_contract(register, begin_date, end_date, accounting_year)
-            [:consumption_lsn, :consumption_third_party].each do |consumption_type|
+            [Buzzn::AccountedEnergy::CONSUMPTION_LSN,
+             Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].each do |consumption_type|
               energy_by_contract[consumption_type].each do |accounted_energy|
-                accounted_energy.label = consumption_type.to_s
+                accounted_energy.label = consumption_type
                 result.add(accounted_energy)
               end
             end
@@ -48,7 +49,7 @@ module Buzzn::Localpool
         result = {}
         consumption_lsn = []
         consumption_third_party = []
-        contracts.flatten.each do |contract|
+        contracts.each do |contract|
           if contract.begin_date && contract.begin_date.year >= accounting_year
             begin_date_query = contract.begin_date
           else
@@ -67,8 +68,8 @@ module Buzzn::Localpool
             consumption_lsn << accounted_energy
           end
         end
-        result[:consumption_lsn] = consumption_lsn
-        result[:consumption_third_party] = consumption_third_party
+        result[Buzzn::AccountedEnergy::CONSUMPTION_LSN] = consumption_lsn
+        result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY] = consumption_third_party
         return result
       end
 
@@ -118,8 +119,8 @@ module Buzzn::Localpool
       #   first_reading: Reading used as beginning reading for following calculations
       def get_first_reading(register, begin_date, accounting_year)
         if begin_date.nil?
-          # try to get the last reading one year ahead of the accounting_year (mostly at 31st December)
-          first_reading_ahead = Reading.by_register_id(register.id)
+          # try to get the last reading one year before of the accounting_year (mostly at 31st December)
+          first_reading_before = Reading.by_register_id(register.id)
                                   .in_year(accounting_year - 1)
                                   .without_reason(Reading::DEVICE_CHANGE_1)
                                   .sort('timestamp': -1)
@@ -131,8 +132,8 @@ module Buzzn::Localpool
                                   .without_reason(Reading::DEVICE_CHANGE_1) # TODO: in the BK code is without device_change_2 but it seems wrong
                                   .sort('timestamp': 1)
                                   .first
-          first_reading = select_closest_reading(Date.new(accounting_year, 1, 1), first_reading_ahead, first_reading_behind)
-          # if no reading was found in the accounting year or one year ahead raise an error
+          first_reading = select_closest_reading(Date.new(accounting_year, 1, 1), first_reading_before, first_reading_behind)
+          # if no reading was found in the accounting year or one year before raise an error
           if first_reading.nil?
             raise RecordNotFoundError.new("no beginning reading found for register #{register.id}")
           end
@@ -141,7 +142,6 @@ module Buzzn::Localpool
           first_reading = Reading.by_register_id(register.id)
                                   .at(begin_date)
                                   .without_reason(Reading::DEVICE_CHANGE_1)
-                                  .sort('timestamp': 1)
                                   .first
           # if no reading was found at the specific date raise an error
           if first_reading.nil?
@@ -168,12 +168,12 @@ module Buzzn::Localpool
                                   .first
 
           # try to get the last reading in the accounting_year
-          last_reading_ahead = Reading.by_register_id(register.id)
+          last_reading_before = Reading.by_register_id(register.id)
                                   .in_year(accounting_year)
                                   .without_reason(Reading::DEVICE_CHANGE_2)
                                   .sort('timestamp': -1)
                                   .first
-          last_reading = select_closest_reading(Date.new(accounting_year, 12, 31), last_reading_ahead, last_reading_behind)
+          last_reading = select_closest_reading(Date.new(accounting_year, 12, 31), last_reading_before, last_reading_behind)
           if last_reading.nil?
             raise ActiveRecord::RecordNotFound.new("no ending reading found for register #{register.id}")
           end
@@ -182,7 +182,6 @@ module Buzzn::Localpool
           last_reading = Reading.by_register_id(register.id)
                                   .at(end_date)
                                   .without_reason(Reading::DEVICE_CHANGE_2)
-                                  .sort('timestamp': 1)
                                   .first
           # if no reading was found at the specific date raise an error
           if last_reading.nil?
@@ -195,17 +194,17 @@ module Buzzn::Localpool
       # This method returns one out of two readings, that is closest to a given date
       # input params:
       #   desired_date: The Date to which the readings are compared to
-      #   reading_ahead: The reading, that is ahead (earlier) the other one
+      #   reading_before: The reading, that is ahead (earlier) the other one
       #   reading_behind: The reading, that is behind (after) the other one
       # returns:
-      #   reading: the reading, that is closer to the desired_date than the other one. If the distance is equal, reading_ahead is returned.
-      def select_closest_reading(desired_date, reading_ahead, reading_behind)
-        if reading_ahead.nil? && !reading_behind.nil?
+      #   reading: the reading, that is closer to the desired_date than the other one. If the distance is equal, reading_before is returned.
+      def select_closest_reading(desired_date, reading_before, reading_behind)
+        if reading_before.nil? && !reading_behind.nil?
           return reading_behind
-        elsif !reading_ahead.nil? && reading_behind.nil?
-          return reading_ahead
-        elsif !reading_ahead.nil? && !reading_behind.nil?
-          return (reading_ahead.timestamp.in_time_zone.to_date - desired_date).round.abs > (desired_date - reading_behind.timestamp.in_time_zone.to_date).round.abs ? reading_behind : reading_ahead
+        elsif !reading_before.nil? && reading_behind.nil?
+          return reading_before
+        elsif !reading_before.nil? && !reading_behind.nil?
+          return (reading_before.timestamp.in_time_zone.to_date - desired_date).round.abs > (desired_date - reading_behind.timestamp.in_time_zone.to_date).round.abs ? reading_behind : reading_before
         else
           return nil
         end
@@ -240,31 +239,13 @@ module Buzzn::Localpool
       # returns:
       #   device_change_readings: An array of 2 readings at the time of the device change. Is empty if no device change
       def get_readings_at_device_change(register, begin_date, end_date, accounting_year)
-        if !begin_date.nil? && end_date.nil?
-          device_change_readings = Reading.by_register_id(register.id)
-                                  .in_year(accounting_year)
-                                  .where(:timestamp.gt => begin_date)
-                                  .by_reason(Reading::DEVICE_CHANGE_1, Reading::DEVICE_CHANGE_2)
-                                  .sort('reason': 1)
-        elsif !begin_date.nil? && !end_date.nil?
-          device_change_readings = Reading.by_register_id(register.id)
-                                  .in_year(accounting_year)
-                                  .where(:timestamp.gt => begin_date)
-                                  .where(:timestamp.lt => end_date)
-                                  .by_reason(Reading::DEVICE_CHANGE_1, Reading::DEVICE_CHANGE_2)
-                                  .sort('reason': 1)
-        elsif begin_date.nil? && !end_date.nil?
-          device_change_readings = Reading.by_register_id(register.id)
-                                  .in_year(accounting_year)
-                                  .where(:timestamp.lt => end_date)
-                                  .by_reason(Reading::DEVICE_CHANGE_1, Reading::DEVICE_CHANGE_2)
-                                  .sort('reason': 1)
-        else
-          device_change_readings = Reading.by_register_id(register.id)
-                                  .in_year(accounting_year)
-                                  .by_reason(Reading::DEVICE_CHANGE_1, Reading::DEVICE_CHANGE_2)
-                                  .sort('reason': 1)
-        end
+        begin_date_query = begin_date || Time.new(accounting_year - 1, 12, 31, 23, 59, 59).utc
+        end_date_query = end_date || Time.new(accounting_year, 12, 31, 23, 59, 59).utc
+        device_change_readings = Reading.by_register_id(register.id)
+                                .where(:timestamp.gt => begin_date_query)
+                                .where(:timestamp.lt => end_date_query)
+                                .by_reason(Reading::DEVICE_CHANGE_1, Reading::DEVICE_CHANGE_2)
+                                .sort('reason': 1)
         return device_change_readings
       end
 

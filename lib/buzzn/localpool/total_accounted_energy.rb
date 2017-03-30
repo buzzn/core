@@ -20,21 +20,21 @@ module Buzzn::Localpool
             label_result << accounted_energy
           end
         end
-        result[label.to_sym] = label_result
+        result[label] = label_result
       end
       return result
     end
 
     def sum_and_group_by_label
       result = {}
-      all_labels = Register::Base.labels + ["consumption_lsn", "consumption_third_party"]
+      all_labels = Buzzn::AccountedEnergy.labels
       energies_by_label = get_by_label(all_labels)
       all_labels.each do |label|
         sum_by_label = 0
-        energies_by_label[label.to_sym].each do |accounted_energy|
+        energies_by_label[label].each do |accounted_energy|
           sum_by_label += accounted_energy.value
         end
-        result[label.to_sym] = sum_by_label
+        result[label] = sum_by_label
       end
       return result
     end
