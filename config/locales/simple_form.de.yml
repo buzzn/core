@@ -307,6 +307,17 @@ de:
         mode:
           in: 'Verbrauch oder Bezug'
           out: 'Produktion oder Einspeisung'
+        label:
+          consumption: Verbrauch
+          demarcation_pv: Abgrenzung PV
+          demarcation_chp: Abgrenzung BHKW
+          production_pv: Produktion PV
+          production_chp: Produktion BHKW
+          grid_consumption: Netzbezug
+          grid_feeding: Netzeinspeisung
+          grid_consumption_corrected: Netzbezug korrigiert
+          grid_feeding_corrected: Netzeinspeisung korrigiert
+          other: Andere
       register_input:
         readable:
           me: Nur mich
@@ -314,6 +325,17 @@ de:
           friends: Meine Freunde
           community: Alle angemeldeten Nutzer
           world: Alle Internet-Nutzer
+        label:
+          consumption: Verbrauch
+          demarcation_pv: Abgrenzung PV
+          demarcation_chp: Abgrenzung BHKW
+          production_pv: Produktion PV
+          production_chp: Produktion BHKW
+          grid_consumption: Netzbezug
+          grid_feeding: Netzeinspeisung
+          grid_consumption_corrected: Netzbezug korrigiert
+          grid_feeding_corrected: Netzeinspeisung korrigiert
+          other: Andere
       register_output:
         readable:
           me: Nur mich
@@ -321,6 +343,17 @@ de:
           friends: Meine Freunde
           community: Alle angemeldeten Nutzer
           world: Alle Internet-Nutzer
+        label:
+          consumption: Verbrauch
+          demarcation_pv: Abgrenzung PV
+          demarcation_chp: Abgrenzung BHKW
+          production_pv: Produktion PV
+          production_chp: Produktion BHKW
+          grid_consumption: Netzbezug
+          grid_feeding: Netzeinspeisung
+          grid_consumption_corrected: Netzbezug korrigiert
+          grid_feeding_corrected: Netzeinspeisung korrigiert
+          other: Andere
       contract:
         mode:
           power_giver_contract: Vertrag für Stromlieferung
