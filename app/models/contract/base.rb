@@ -26,6 +26,8 @@ module Contract
     CAN_NOT_BE_PRESENT           = 'can not be present when there is a '
     NOT_ALLOWED_FOR_OLD_CONTRACT = 'not allowed for old contract'
     CAN_NOT_BELONG_TO_DUMMY      = 'can not belong to dummy organization'
+    MUST_NOT_BE_BUZZN_SYSTEMS    = 'must not be buzzn-systems'
+    MUST_NOT_BE_BUZZN            = 'must not be buzzn'
 
     class << self
       private :new
@@ -42,8 +44,8 @@ module Contract
     belongs_to :customer, polymorphic: true
     belongs_to :signing_user, class_name: 'User'
 
-    has_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id
-    has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id
+    has_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id, dependent: :destroy
+    has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy
 
     has_one :bank_account, as: :bank_accountable, dependent: :destroy
 
@@ -81,6 +83,10 @@ module Contract
     scope :localpool_power_takers,   -> {where(type: LocalpoolPowerTaker)}
     scope :localpool_processing,     -> {where(type: LocalpoolProcessing)}
     scope :metering_point_operators, -> {where(type: MeteringPointOperator)}
+    scope :other_suppliers,          -> {where(type: OtherSupplier)}
+
+    scope :running_in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
+                                          .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
 
     def self.readable_by_query(user)
       contract = Contract::Base.arel_table
