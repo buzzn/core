@@ -133,7 +133,8 @@ class WizardRegistersController  < ApplicationController
     params.require(:register_base).permit(
       :name,
       :mode,
-      :virtual)
+      :virtual,
+      :label)
   end
 
   def register_virtual_params

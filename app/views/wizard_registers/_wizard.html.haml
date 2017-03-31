@@ -8,12 +8,14 @@
       %h3=t('define_register')
       %fieldset
         = f.input :mode, collection: Register::Base.directions.map{|d| d.to_sym}, include_blank: false, as: :radio_buttons, label: t("register_mode"), checked: Register::Base.directions.map{|d| d.to_sym}.first
+        = f.input :label, label: t('register_label'), collection: Register::Base.labels.map{|l| l.to_sym}, include_blank: false, selected: Register::Base.directions.map{|d| d.to_sym}.first
         = f.input :name
         %span
           = t('virtual_register')
           %small
             %i.normal-info-circle.fa.fa-info-circle{'data-content' => t('register_virtual_info')}
         = f.input :virtual, label: false, wrapper: :vertical_boolean, input_html: { checked: false }
+
         %span
           = t('add_me_to_this_register')
           %small
