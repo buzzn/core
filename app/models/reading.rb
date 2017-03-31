@@ -73,6 +73,25 @@ class Reading
   validates :quality, inclusion: { in: qualities }
   validates :source, inclusion: { in: sources}
 
+  scope :in_year, -> (year) { where(:timestamp.gte => Time.new(year, 1, 1)).where(:timestamp.lte => Time.new(year, 12, 31, 23, 59, 59)) }
+  scope :at, -> (timestamp) { where(timestamp: timestamp) }
+  scope :by_register_id, -> (register_id) { where(register_id: register_id) }
+
+  scope :by_reason, lambda {|*reasons|
+    reasons.each do |reason|
+      raise ArgumentError.new('Undefined constant "' + reason + '". Only use constants defined by Reading.reasons.') unless self.reasons.include?(reason)
+    end
+    self.where(:reason.in => reasons)
+  }
+
+  scope :without_reason, lambda {|*reasons|
+    reasons.each do |reason|
+      raise ArgumentError.new('Undefined constant "' + reason + '". Only use constants defined by Reading.reasons.') unless self.reasons.include?(reason)
+    end
+    self.where(:reason.nin => reasons)
+  }
+
+
   # methods from Buzzn:GuardedCrud
   def self.guarded_retrieve(user, id)
     result = find(id)

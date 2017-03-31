@@ -1427,6 +1427,7 @@ sulz_manager.add_role(:manager, register)
 localpool_sulz.registers << register
 user = Fabricate(:user)
 user.add_role(:member, register)
+osc = (Fabricate(:osc_saba, signing_user: user, register: register, customer: user, contractor: sulz_contractor))
 
 user = Fabricate(:user)
 user.add_role(:member, register)
