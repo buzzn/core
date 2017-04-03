@@ -12,24 +12,34 @@ module Buzzn::Localpool
       #   result: TotalAccountedEnergy with details about each single register
       def get_all_energy_in_localpool(localpool, begin_date, end_date, accounting_year=Time.current.year - 1)
         result = Buzzn::Localpool::TotalAccountedEnergy.new(localpool.id)
+        register_id_grid_consumption_corrected = nil
+        register_id_grid_feeding_corrected = nil
 
         localpool.registers.each do |register|
           if register.label == Register::Base::CONSUMPTION
             energy_by_contract = get_register_energy_by_contract(register, begin_date, end_date, accounting_year)
-            [Buzzn::AccountedEnergy::CONSUMPTION_LSN,
+            [Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG,
+             Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG,
              Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].each do |consumption_type|
               energy_by_contract[consumption_type].each do |accounted_energy|
                 accounted_energy.label = consumption_type
                 result.add(accounted_energy)
               end
             end
+          elsif register.label == Register::Base::GRID_CONSUMPTION_CORRECTED
+            register_id_grid_consumption_corrected = register.id
+          elsif register.label == Register::Base::GRID_FEEDING_CORRECTED
+            register_id_grid_feeding_corrected = register.id
           else
             accounted_energy = get_register_energy_for_period(register, begin_date, end_date, accounting_year)
             accounted_energy.label = accounted_energy.first_reading.register.label
             result.add(accounted_energy)
           end
         end
-        # TODO: calculate corrected ÜGZ values
+        # TODO: ensure that every LCP has registers with labels Register::Base::GRID_CONSUMPTION_CORRECTED and Register::Base::GRID_FEEDING_CORRECTED
+        grid_consumption_corrected, grid_feeding_corrected = calculate_corrected_grid_values(result, register_id_grid_consumption_corrected, register_id_grid_feeding_corrected)
+        result.add(grid_consumption_corrected)
+        result.add(grid_feeding_corrected)
         return result
       end
 
@@ -47,7 +57,8 @@ module Buzzn::Localpool
         begin_date_query = nil
         end_date_query = nil
         result = {}
-        consumption_lsn = []
+        consumption_lsn_full_eeg = []
+        consumption_lsn_reduced_eeg = []
         consumption_third_party = []
         contracts.each do |contract|
           if contract.begin_date && contract.begin_date.year >= accounting_year
@@ -64,13 +75,81 @@ module Buzzn::Localpool
           if contract.is_a?(Contract::OtherSupplier)
             consumption_third_party << accounted_energy
           else
-            # TODO: seperate consumption_lsn into eeg_reduced and eeg_full
-            consumption_lsn << accounted_energy
+            if contract.renewable_energy_law_taxation == Contract::Constants::RenewableEnergyLawTaxation::FULL
+              consumption_lsn_full_eeg << accounted_energy
+            else
+              consumption_lsn_reduced_eeg << accounted_energy
+            end
           end
         end
-        result[Buzzn::AccountedEnergy::CONSUMPTION_LSN] = consumption_lsn
+        result[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG] = consumption_lsn_full_eeg
+        result[Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG] = consumption_lsn_reduced_eeg
         result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY] = consumption_third_party
         return result
+      end
+
+      # This method calculates the accounted energy (both grid consumption and feeding) in dependency of the energy consumed by third party supplied
+      # input params:
+      #   total_accounted_energy: The TotalAaccountedEnergy of a LCP
+      #   register_id_grid_consumption_corrected: The register.id of the LCP's register with label Register::Base::GRID_CONSUMPTION_CORRECTED
+      #   register_id_grid_feeding_corrected: The register.id of the LCP's register with label Register::Base::GRID_FEEDING_CORRECTED
+      # returns:
+      #   2x accounted_energy: Object, that contains all information about accounted readings
+      def calculate_corrected_grid_values(total_accounted_energy, register_id_grid_consumption_corrected, register_id_grid_feeding_corrected)
+        if register_id_grid_consumption_corrected.nil? || register_id_grid_feeding_corrected.nil?
+          raise ArgumentError.new("No corrected ÜGZ registers can be found.")
+        end
+        consumption_third_party = total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY).value
+        grid_consumption = total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).value
+        grid_consumption_corrected = correct_grid_value(grid_consumption,
+                                                        grid_consumption,
+                                                        consumption_third_party,
+                                                        register_id_grid_consumption_corrected,
+                                                        Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED,
+                                                        total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).last_reading.timestamp)
+        grid_feeding_corrected = correct_grid_value(total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).value,
+                                                    grid_consumption,
+                                                    consumption_third_party,
+                                                    register_id_grid_feeding_corrected,
+                                                    Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED,
+                                                    total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).last_reading.timestamp)
+        return grid_consumption_corrected, grid_feeding_corrected
+      end
+
+      # This method calculates the accounted energy for an energy value (both grid consumption and feeding) in dependency of the energy consumed by third party supplied
+      # input params:
+      #   value: The energy value in milliwatt_hour, that has to be corrected
+      #   consumption_third_party: The energy in milliwatt_hour, that has been consumed by all third party supplied in a LCP
+      #   label: The label for the accounted energy, may be Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED or Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED
+      #   corrected_value: the energy in milliwatt_hour that is used for the new reading
+      # returns:
+      #   accounted_energy: Object, that contains all information about accounted readings
+      def correct_grid_value(value, grid_consumption, consumption_third_party, register_id, label, timestamp)
+        corrected_value = grid_consumption - consumption_third_party > 0 ? value - consumption_third_party : 0
+        return create_corrected_reading(register_id, label, corrected_value, timestamp)
+      end
+
+      # This method creates the new reading for a corrected register and returns the accounted energy for it
+      # input params:
+      #   register_id: The Register::Base.id for which the reading should be created
+      #   label: The label for the accounted energy, may be Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED or Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED
+      #   corrected_value: the energy in milliwatt_hour that is used for the new reading
+      # returns:
+      #   accounted_energy: Object, that contains all information about accounted readings
+      def create_corrected_reading(register_id, label, corrected_value, timestamp)
+        # TODO: validate that all corrected registers must have an initial reading with energy_milliwatt_hour = 0
+        last_corrected_reading = Reading.by_register_id(register_id).sort('timestamp': -1).first
+        new_reading_value = last_corrected_reading.nil? ? corrected_value : corrected_value + last_corrected_reading.energy_milliwatt_hour
+        new_reading = Reading.create!(register_id: register_id,
+                                      timestamp: timestamp,
+                                      energy_milliwatt_hour: new_reading_value,
+                                      reason: Reading::REGULAR_READING,
+                                      source: Reading::BUZZN_SYSTEMS,
+                                      quality: Reading::ENERGY_QUANTITY_SUMMARIZED,
+                                      meter_serialnumber: Register::Base.find(register_id).meter.manufacturer_product_serialnumber)
+        accounted_energy = Buzzn::AccountedEnergy.new(corrected_value, last_corrected_reading, new_reading, new_reading)
+        accounted_energy.label = label
+        return accounted_energy
       end
 
       # This method returns the energy measured in a specific period of time

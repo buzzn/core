@@ -25,6 +25,10 @@ module Buzzn::Localpool
       return result
     end
 
+    def get_single_by_label(label)
+      return get_by_label(label)[label].first
+    end
+
     def sum_and_group_by_label
       result = {}
       all_labels = Buzzn::AccountedEnergy.labels

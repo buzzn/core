@@ -29,6 +29,8 @@ module Contract
     MUST_NOT_BE_BUZZN_SYSTEMS    = 'must not be buzzn-systems'
     MUST_NOT_BE_BUZZN            = 'must not be buzzn'
 
+
+
     class << self
       private :new
 
@@ -134,6 +136,19 @@ module Contract
 
     def login_required?
       self.organization == Organization.discovergy || self.organization == Organization.mysmartgrid
+    end
+  end
+
+  module Constants
+    class RenewableEnergyLawTaxation
+      FULL    = 'full'
+      REDUCED = 'reduced'
+
+      class << self
+        def all
+          @renewable_energy_law_taxation ||= [FULL, REDUCED]
+        end
+      end
     end
   end
 end
