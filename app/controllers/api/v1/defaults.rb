@@ -70,11 +70,23 @@ module API
         end
 
         rescue_from Buzzn::RecordNotFound do |e|
-          error_response(message: e.message, status: 404)
+          errors = ErrorResponse.new(404, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          if Rails.env.development?
+            puts e.message
+            puts e.backtrace.join("\n\t")
+          end
+          errors.add_general('Permission Denied', e.message)
+          errors.finish
         end
 
         rescue_from Buzzn::PermissionDenied do |e|
-          error_response(status: 403)
+          errors = ErrorResponse.new(403, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          if Rails.env.development?
+            puts e.message
+            puts e.backtrace.join("\n\t")
+          end
+          errors.add_general('Permission Denied', e.message)
+          errors.finish
         end
 
         class Max < Grape::Validations::Base
@@ -103,7 +115,8 @@ module API
               name = name.sub(/\./, '[').sub(/\./, '][') + ']'
             end
             messages.each do |msg|
-              @errors << { "source":
+              @errors << { "parameter": name,
+                           "source":
                              { "pointer": "/data/attributes/#{name}" },
                            "title": "Invalid Attribute",
                            "detail": "#{name} #{msg}" }
