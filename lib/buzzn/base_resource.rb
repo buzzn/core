@@ -75,7 +75,7 @@ module Buzzn
         @abstract = true
       end
 
-      # crud API
+      # the 'R' from the crud API
 
       def find_resource_class(clazz)
         if clazz == model || clazz == Object

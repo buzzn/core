@@ -5,11 +5,18 @@ describe Buzzn::CurrentPower do
     NAME = :dummy
 
     def single_aggregated(resource, mode)
-      [:single_aggregated, resource, mode] unless resource.is_a? Group::Base
+      unless resource.is_a? Group::MinimalBaseResource
+        result = [:single_aggregated, resource, mode]
+        def result.expires_at=(*a); end
+        def result.value; 0; end
+        result
+      end
     end
 
     def collection(*args)
-      [:collection] + args
+      result = [:collection] + args
+      def result.expires_at;end
+      result
     end
   end
 
@@ -40,7 +47,9 @@ describe Buzzn::CurrentPower do
     )
   end
 
-  let(:group) { Fabricate(:tribe) }
+  let(:group) do
+    Group::MinimalBaseResource.send(:new, Fabricate(:tribe), Fabricate(:admin))
+  end
   let(:register) { Fabricate(:output_meter).output_register }
   let(:dummy_register) do
     register = Fabricate(:input_meter).input_register
@@ -69,7 +78,7 @@ describe Buzzn::CurrentPower do
 
   it 'delivers the right result for each register in a group' do
     result = subject.for_each_register_in_group(group)
-    expect(result).to eq [:collection, group, :in, :collection, group, :out]
+    expect(result).to eq [:collection, group.object, :in, :collection, group.object, :out]
 
     expect { subject.for_each_register_in_group(group, 'a') }.to raise_error ArgumentError
     expect { subject.for_each_register_in_group(Object.new) }.to raise_error ArgumentError

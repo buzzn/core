@@ -6,31 +6,33 @@ module Buzzn
       @registry = data_source_registry
     end
 
-    def for_register(register, timestamp = nil)
-      raise ArgumentError.new("not a #{Register::Base}") unless register.is_a?(Register::Base)
-      raise ArgumentError.new("not a #{Time}") if !(timestamp.is_a?(Time) || timestamp.nil?)
-      # TODO something with the timestamp
-      @registry.get(register.data_source).single_aggregated(register, register.direction)
-    end
-
-    def for_each_register_in_group(group, timestamp = nil)
-      raise ArgumentError.new("not a #{Group::Base}") unless group.is_a?(Group::Base)
-      raise ArgumentError.new("not a #{Time}") if !(timestamp.is_a?(Time) || timestamp.nil?)
-      # TODO something with the timestamp
-      result = []
-      @registry.each do |key, data_source|
-        [:in, :out].each do |mode|
-          more = data_source.collection(group, mode)
-          result += more if more
-        end
+    def for_register(resource)
+      raise ArgumentError.new("not a #{Register::BaseResource}") if !resource.is_a?(Register::BaseResource) && !resource.is_a?(Register::Base)
+      if resource.is_a?(Register::BaseResource)
+        register = resource.object
+      else
+        register = resource
       end
+      result = @registry.get(register.data_source).single_aggregated(register, register.direction)
+      result.freeze unless result.frozen?
       result
     end
 
-    def for_group(group, timestamp = nil)
-      raise ArgumentError.new("not a #{Group::Base}") unless group.is_a?(Group::Base)
-      raise ArgumentError.new("not a #{Time}") if !(timestamp.is_a?(Time) || timestamp.nil?)
-      # TODO something with the timestamp
+    def for_each_register_in_group(resource)
+      raise ArgumentError.new("not a #{Group::MinimalBaseResource}") unless resource.is_a?(Group::MinimalBaseResource)
+      group = resource.object
+      result = Buzzn::DataResultArray.new(0)
+      @registry.each do |key, data_source|
+        result += data_source.collection(group, :in)
+        result += data_source.collection(group, :out)
+      end
+      result.freeze unless result.frozen?
+      result
+    end
+
+    def for_group(resource)
+      raise ArgumentError.new("not a #{Group::MinimalBaseResource}") unless resource.is_a?(Group::MinimalBaseResource)
+      group = resource.object
       sum_in, sum_out = 0, 0
       @registry.each do |key, data_source|
         result =  data_source.single_aggregated(group, :in)
@@ -38,7 +40,9 @@ module Buzzn
         result = data_source.single_aggregated(group, :out)
         sum_out += result.value if result
       end
-      Buzzn::InOutDataResults.new(timestamp || Time.current, sum_in, sum_out, group.id)
+      result = Buzzn::InOutDataResults.new(Time.current, sum_in, sum_out, group.id)
+      result.freeze unless result.frozen?
+      result
     end
   end
 end
