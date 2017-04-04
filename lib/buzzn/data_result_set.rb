@@ -1,6 +1,7 @@
 module Buzzn
   class DataResultSet
     attr_reader :resource_id, :in, :out, :units
+    attr_accessor :expires_at
 
     class << self
       private :new
@@ -94,8 +95,11 @@ module Buzzn
     end
 
     def freeze
+      @json = to_json
+      super
       @in.freeze
       @out.freeze
+      self
     end
 
     def to_hash
@@ -103,6 +107,10 @@ module Buzzn
         resource_id: @resource_id,
         in: @in.collect { |i| i.to_hash },
         out: @out.collect { |i| i.to_hash } }
+    end
+
+    def to_json(*args)
+      @json || "{\"units\":\"#{@units}\",\"resource_id\":\"#{@resource_id}\",\"in\":#{@in.to_json},\"out\":#{@out.to_json}}"
     end
 
     def merge_lists(target, source, duration, operator)
@@ -151,6 +159,12 @@ module Buzzn
         end
       end
       return -1
+    end
+    private :find_matching_timestamp
+
+    def last_timestamp
+      (@in.collect { |i| i.timestamp } +
+         @out.collect { |i| i.timestamp }).max || 0
     end
   end
 end

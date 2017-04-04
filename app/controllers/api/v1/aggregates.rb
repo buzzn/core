@@ -22,7 +22,7 @@ module API
           if current_user.nil? && !(register.group && register.group.readable_by_world?) && !register.readable_by_world?
             raise Buzzn::PermissionDenied
           end
-          data_result = Buzzn::Application.config.current_power.for_register(register, permitted_params[:timestamp])
+          data_result = Buzzn::Application.config.current_power.for_register(register)#, permitted_params[:timestamp])
           unless permitted_params[:timestamp]
             # cache-control headers
             etag(data_result.timestamp.to_s + data_result.value.to_s)

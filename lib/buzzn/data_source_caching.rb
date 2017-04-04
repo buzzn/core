@@ -23,11 +23,11 @@ module Buzzn
             _with_lock(key) do
               result = clazz.from_json(_cache_get(key))
               if result.nil? || result.expires_at < Time.current.to_f
-                @logger.error{"[buzzn.datasource_caching]<#{Thread.current.object_id}> #{key} ====> stale"}
+                @logger.error{"#{key} ====> stale"}
                 result = send("raw_#{method}".to_sym, resource, mode)
                 _cache_put(key, result.to_json)
               else
-                @logger.error{"[datasource.caching]<#{Thread.current.object_id}> #{key} ====> hit"}
+                @logger.error{"#{key} ====> hit"}
               end
               result
             end
@@ -49,7 +49,9 @@ module Buzzn
         end
 
         def _cache_key(prefix, resource, mode)
-          "#{prefix}/#{self.class.to_s.underscore}/#{resource.class.table_name}/#{resource.id}/#{mode}"
+          #TODO remove this when we are sure we have Buzzn::EntityResource
+          name = resource.class.respond_to?(:name) ?resource.class.name : resource.class.table_name
+          "#{prefix}/#{self.class.to_s.underscore}/#{name}/#{resource.id}/#{mode}"
         end
       end
     end

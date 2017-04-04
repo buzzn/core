@@ -146,9 +146,9 @@ module API
 
         rescue_from ArgumentError do |e|
           errors = ErrorResponse.new(422, { Grape::Http::Headers::CONTENT_TYPE => content_type })
-          if Rails.env.development?
-            puts e.message
-            puts e.backtrace.join("\n\t")
+          if Rails.env.development? ||  Rails.env.test?
+            warn e.message
+            warn e.backtrace.join("\n\t")
           end
           errors.add_general('Argument Error', e.message)
           errors.finish

@@ -4,7 +4,10 @@ describe Buzzn::Charts do
   class DummyDataSource < Buzzn::DataSource
     NAME = :dummy
     def method_missing(method, *args)
-      [method] + args
+      # this is just an array with an extra expires_at field
+      result = [method] + args
+      def result.expires_at=(a);end
+      result
     end
     def aggregated(resource, mode, interval)
       method_missing(:aggregated, resource, mode, interval) unless resource.is_a? Group::Base

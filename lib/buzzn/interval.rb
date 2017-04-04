@@ -6,6 +6,10 @@ module Buzzn
 
     class << self
       private :new
+
+      def create(duration, timestamp)
+        send(duration.to_sym, timestamp)
+      end
     end
 
     def initialize(from, to)
@@ -42,6 +46,10 @@ module Buzzn
       end
     end
 
+    def to_s
+      "[#{from_as_utc_time}, #{to_as_utc_time})"
+    end
+
     private
     def _year?
       timespan = self.to - self.from
@@ -76,7 +84,8 @@ module Buzzn
     class << self
       private :new
 
-      def year(timestamp = Time.current)
+      def year(timestamp = nil)
+        timestamp ||= Time.current
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_year.to_f,
@@ -87,7 +96,8 @@ module Buzzn
         end
       end
 
-      def month(timestamp = Time.current)
+      def month(timestamp = nil)
+        timestamp ||= Time.current
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_month.to_f,
@@ -98,7 +108,8 @@ module Buzzn
         end
       end
 
-      def day(timestamp = Time.current)
+      def day(timestamp = nil)
+        timestamp ||= Time.current
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_day.to_f,
@@ -109,7 +120,8 @@ module Buzzn
         end
       end
 
-      def hour(timestamp = Time.current)
+      def hour(timestamp = nil)
+        timestamp ||= Time.current
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_hour.to_f,
