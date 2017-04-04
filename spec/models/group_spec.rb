@@ -137,4 +137,12 @@ describe "Group Model" do
 
     expect(group.main_address.city).to eq secondary_address.city
   end
+
+  describe Group::Localpool do
+    it 'creates corrected ÜGZ registers' do
+      localpool = Fabricate(:localpool)
+      expect(localpool.registers.by_label(Register::Base::GRID_CONSUMPTION_CORRECTED).size).to eq 1
+      expect(localpool.registers.by_label(Register::Base::GRID_FEEDING_CORRECTED).size).to eq 1
+    end
+  end
 end

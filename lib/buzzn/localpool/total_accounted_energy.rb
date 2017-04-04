@@ -25,6 +25,14 @@ module Buzzn::Localpool
       return result
     end
 
+    def get_single_by_label(label)
+      accounted_energies_hash = get_by_label(label)
+      if accounted_energies_hash[label].size != 1
+        raise ArgumentError.new("Label #{label} may only occur once in the list.")
+      end
+      return accounted_energies_hash[label].first
+    end
+
     def sum_and_group_by_label
       result = {}
       all_labels = Buzzn::AccountedEnergy.labels

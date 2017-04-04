@@ -116,6 +116,15 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 510200*20, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
     localpool.registers << register
 
+    meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base::GRID_CONSUMPTION_CORRECTED),
+                                          Fabricate.build(:output_register, label: Register::Base::GRID_FEEDING_CORRECTED)])
+    register = meter.input_register
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::ENERGY_QUANTITY_SUMMARIZED, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+    localpool.registers << register
+    register = meter.output_register
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::ENERGY_QUANTITY_SUMMARIZED, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+    localpool.registers << register
+
     register = Fabricate(:easymeter_60009498).registers.first
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1100, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 248000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
