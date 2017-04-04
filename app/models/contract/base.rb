@@ -139,15 +139,14 @@ module Contract
     end
   end
 
-  module Constants
-    class RenewableEnergyLawTaxation
-      FULL    = 'full'
-      REDUCED = 'reduced'
 
-      class << self
-        def all
-          @renewable_energy_law_taxation ||= [FULL, REDUCED]
-        end
+  class RenewableEnergyLawTaxation
+    FULL    = 'full'
+    REDUCED = 'reduced'
+
+    class << self
+      def all
+        @renewable_energy_law_taxation ||= [FULL, REDUCED]
       end
     end
   end

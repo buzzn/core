@@ -69,7 +69,7 @@ Fabricator :other_supplier_contract, class_name: Contract::OtherSupplier do
   register                 { Fabricate(:input_register,
                                        meter: Fabricate.build(:meter),
                                        address: Fabricate.build(:address) ) }
-  renewable_energy_law_taxation Contract::Constants::RenewableEnergyLawTaxation::FULL
+  renewable_energy_law_taxation Contract::RenewableEnergyLawTaxation::FULL
 end
 
 # == Power Taker Contract ==
@@ -147,7 +147,7 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
                                        group: Fabricate(:localpool),
                                        meter: Fabricate.build(:meter),
                                        address: Fabricate.build(:address) ) }
-  renewable_energy_law_taxation { Contract::Constants::RenewableEnergyLawTaxation::FULL }
+  renewable_energy_law_taxation { Contract::RenewableEnergyLawTaxation::FULL }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
 end

@@ -565,6 +565,22 @@ describe Buzzn::Localpool::ReadingCalculation do
       result.add(accounted_energy)
       expect(result.accounted_energies).to eq [accounted_energy]
     end
+
+    it 'gets single accounted_energy by label' do
+      accounted_energy_grid_consumption = Buzzn::AccountedEnergy.new(10000000, Fabricate(:reading), Fabricate(:reading), Fabricate(:reading))
+      accounted_energy_grid_consumption.label = Buzzn::AccountedEnergy::GRID_CONSUMPTION
+      accounted_energy_consumption_third_party_1 = Buzzn::AccountedEnergy.new(3000000, Fabricate(:reading), Fabricate(:reading), Fabricate(:reading))
+      accounted_energy_consumption_third_party_1.label = Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY
+      accounted_energy_consumption_third_party_2 = Buzzn::AccountedEnergy.new(2000000, Fabricate(:reading), Fabricate(:reading), Fabricate(:reading))
+      accounted_energy_consumption_third_party_2.label = Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY
+      total_accounted_energy = Buzzn::Localpool::TotalAccountedEnergy.new("some-localpool-id")
+      total_accounted_energy.add(accounted_energy_grid_consumption)
+      total_accounted_energy.add(accounted_energy_consumption_third_party_1)
+      total_accounted_energy.add(accounted_energy_consumption_third_party_2)
+
+      expect(total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION)).to eq accounted_energy_grid_consumption
+      expect{ total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY)}.to raise_error ArgumentError
+    end
   end
 end
 

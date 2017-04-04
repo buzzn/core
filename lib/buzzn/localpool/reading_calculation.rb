@@ -36,7 +36,6 @@ module Buzzn::Localpool
             result.add(accounted_energy)
           end
         end
-        # TODO: ensure that every LCP has registers with labels Register::Base::GRID_CONSUMPTION_CORRECTED and Register::Base::GRID_FEEDING_CORRECTED
         grid_consumption_corrected, grid_feeding_corrected = calculate_corrected_grid_values(result, register_id_grid_consumption_corrected, register_id_grid_feeding_corrected)
         result.add(grid_consumption_corrected)
         result.add(grid_feeding_corrected)
@@ -75,7 +74,7 @@ module Buzzn::Localpool
           if contract.is_a?(Contract::OtherSupplier)
             consumption_third_party << accounted_energy
           else
-            if contract.renewable_energy_law_taxation == Contract::Constants::RenewableEnergyLawTaxation::FULL
+            if contract.renewable_energy_law_taxation == Contract::RenewableEnergyLawTaxation::FULL
               consumption_lsn_full_eeg << accounted_energy
             else
               consumption_lsn_reduced_eeg << accounted_energy
@@ -99,7 +98,7 @@ module Buzzn::Localpool
         if register_id_grid_consumption_corrected.nil? || register_id_grid_feeding_corrected.nil?
           raise ArgumentError.new("No corrected ÜGZ registers can be found.")
         end
-        consumption_third_party = total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY).value
+        consumption_third_party = total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY]
         grid_consumption = total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).value
         grid_consumption_corrected = correct_grid_value(grid_consumption,
                                                         grid_consumption,
@@ -137,7 +136,7 @@ module Buzzn::Localpool
       # returns:
       #   accounted_energy: Object, that contains all information about accounted readings
       def create_corrected_reading(register_id, label, corrected_value, timestamp)
-        # TODO: validate that all corrected registers must have an initial reading with energy_milliwatt_hour = 0
+        # TODO: (nice-to-have) validate that all corrected registers must have an initial reading with energy_milliwatt_hour = 0
         last_corrected_reading = Reading.by_register_id(register_id).sort('timestamp': -1).first
         new_reading_value = last_corrected_reading.nil? ? corrected_value : corrected_value + last_corrected_reading.energy_milliwatt_hour
         new_reading = Reading.create!(register_id: register_id,
