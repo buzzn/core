@@ -1,4 +1,4 @@
-class ProfileResource < JSONAPI::Resource
+class ProfileSerializer < ActiveModel::Serializer
 
   attributes  :slug,
               :email,
@@ -18,7 +18,7 @@ class ProfileResource < JSONAPI::Resource
               :linkedin
 
   def md_img
-    @model.image.md.url
+    object.image.md.url
   end
 
 end

@@ -1,3 +1,3 @@
-class FriendshipRequestResource < JSONAPI::Resource
+class FriendshipRequestSerializer < ActiveModel::Serializer
   attribute :sender
 end

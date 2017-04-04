@@ -56,7 +56,10 @@ describe "readings" do
       register_id: register.id,
       timestamp: reading.timestamp,
       energy_milliwatt_hour: reading.energy_milliwatt_hour,
-      power_milliwatt: reading.power_milliwatt
+      power_milliwatt: reading.power_milliwatt,
+      reason: reading.reason,
+      quality: reading.quality,
+      source: reading.source
     }.to_json
     post_with_token "/api/v1/readings", request_params, access_token.token
 
@@ -78,12 +81,18 @@ describe "readings" do
     timestamp = "Wed Apr 13 2016 14:07:35 GMT+0200 (CEST)"
     energy_milliwatt_hour = 80616
     power_milliwatt = 90
+    reason = Reading::REGULAR_READING
+    quality = Reading::READ_OUT
+    source = Reading::BUZZN_SYSTEMS
 
     request_params = {
       register_id: register.id,
       timestamp: timestamp,
       energy_milliwatt_hour: energy_milliwatt_hour,
-      power_milliwatt: power_milliwatt
+      power_milliwatt: power_milliwatt,
+      reason: reason,
+      quality: quality,
+      source: source
     }.to_json
 
     post_with_token "/api/v1/readings", request_params, access_token.token
@@ -97,7 +106,7 @@ describe "readings" do
 
 
 
-  [:register_id, :timestamp, :energy_milliwatt_hour, :power_milliwatt].each do |name|
+  [:register_id, :timestamp, :energy_milliwatt_hour, :power_milliwatt, :reason, :quality, :source].each do |name|
     it "does not create a input reading without #{name}" do
       register      = easy_meter.input_register
       manager       = register.managers.first
@@ -107,7 +116,10 @@ describe "readings" do
         register_id: register.id,
         timestamp: reading.timestamp,
         energy_milliwatt_hour: reading.energy_milliwatt_hour,
-        power_milliwatt: reading.power_milliwatt
+        power_milliwatt: reading.power_milliwatt,
+        reason: reading.reason,
+        quality: reading.quality,
+        source: reading.source
       }.reject {|k,v| k == name}.to_json
 
       post_with_token "/api/v1/readings", request_params, access_token.token

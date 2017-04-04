@@ -1,5 +1,5 @@
 module Contract
-  class PowerGiver < Contract::Power
+  class PowerGiver < Power
 
     def self.new(*args)
       super

@@ -71,8 +71,8 @@ module Register
     def self.directions; %w(in out); end
 
     validates :meter, presence: true
-    validates :uid, uniqueness: true, length: { in: 4..34 }, allow_blank: true
-    validates :name, presence: true, length: { in: 2..30 }#, if: :no_dashboard_register?
+    validates :uid, uniqueness: false, length: { in: 4..34 }, allow_blank: true
+    validates :name, presence: true, length: { in: 2..40 }
     # TODO virtual register ?
     validates :image, presence: false
     validates :regular_reeding, presence: false
@@ -168,7 +168,7 @@ module Register
             world_or_community
           ]
       end
-      where(sqls.map(&:to_sql).join(' OR '))
+      where("( #{sqls.map(&:to_sql).join(' OR ' )})")
     end
 
     #TODO why is this less strikt than the readable_by definition ?
@@ -215,6 +215,10 @@ module Register
       else
         self.mode.to_sym if self.mode
       end
+    end
+
+    def readings
+      @_readings ||= Reading.all_by_register_id(self.id)
     end
 
     def users
@@ -452,7 +456,7 @@ module Register
       if smart?
         return
       end
-      readings = Reading.all_by_register_id(self.id)
+      readings = Reading.all_by_register_id_and_source(self.id, 'user_input')
       if readings.size > 1
         last_timestamp = readings.last[:timestamp].to_i
         last_value = readings.last[:energy_milliwatt_hour]/1000000.0
@@ -524,7 +528,7 @@ module Register
     # TODO remove this once app//controllers/registers_controller.rb is gone
     def submitted_readings_by_user
       if self.data_source
-        Reading.all_by_register_id(self.id)
+        Reading.all_by_register_id_and_source(self.id, 'user_input')
       end
     end
 

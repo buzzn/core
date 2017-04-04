@@ -625,6 +625,7 @@ de:
 
   virtual: Virtuell
   virtual_register: Virtueller Zählpunkt
+  register_label: Funktion des Zählpunkts
   image: Bild
   owner: Eigentümer
   meter_size: Zählergröße

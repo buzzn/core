@@ -64,8 +64,8 @@ describe "Meters API" do
         meter = Fabricate(:"#{type}_meter")
         get_with_token "/api/v1/meters/#{meter.id}", access_token.token
         expect(response).to have_http_status(200)
-        expect(json['meta']['updatable']).to be_truthy
-        expect(json['meta']['deletable']).to be_truthy
+        expect(json['data']['attributes']['updatable']).to be true
+        expect(json['data']['attributes']['deletable']).to be true
       end
     end
 
@@ -211,7 +211,7 @@ describe "Meters API" do
 
 
 
-    [:full_access_token_as_admin, :smartmeter_access_token].each do |token|
+    [:full_access_token_as_admin].each do |token|
       it "creates a #{mode} register with #{token}" do
         access_token = Fabricate(token)
         register     = Fabricate.build("#{mode}_register")
@@ -269,15 +269,11 @@ describe "Meters API" do
 
     errors = json['errors']
 
-    # NOTE somehow rails adds two 'registers ist nicht gültig' errors, one for
-    #      each register :(
-    expect(errors.size).to eq 4
+    expect(errors.size).to eq 1
     errors.each do |error|
       expect(error['title']).to eq 'Invalid Attribute'
     end
-    [ "/data/attributes/manufacturer_product_serialnumber",
-      "/data/attributes/registers",
-      "/data/attributes/registers[0][uid]"].each do |key_path|
+    [ "/data/attributes/manufacturer_product_serialnumber"].each do |key_path|
       expect(errors.detect { |e| e['source']['pointer'] == key_path }).not_to be_nil
     end
   end

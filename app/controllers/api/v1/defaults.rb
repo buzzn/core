@@ -1,6 +1,7 @@
 require 'doorkeeper/grape/helpers'
 require 'buzzn/guarded_crud'
 
+
 module API
   module V1
     module Defaults
@@ -11,8 +12,11 @@ module API
         version "v1", using: :path
         format 'json'
 
-        # https://github.com/cdunn/grape-jsonapi-resources
-        formatter :json, Grape::Formatter::JSONAPIResources
+        formatter :json, ->(object, env) do
+          raise 'nil - forgot to shebang nested resource ?' unless object
+          Buzzn::SerializableResource.new(object, adapter: :json_api).to_json
+        end
+
         jsonapi_base_url "#{Rails.application.secrets.hostname}/api/v1"
 
         helpers Doorkeeper::Grape::Helpers
@@ -54,13 +58,6 @@ module API
 
           def deleted_response(obj)
             status 204
-          end
-
-          def paginated_response(objs)
-            per_page     = permitted_params[:per_page]
-            page         = permitted_params[:page]
-            total_pages  = objs.page(page).per_page(per_page).total_pages
-            paginate(render(objs, meta: { total_pages: total_pages }))
           end
         end
 
@@ -136,6 +133,10 @@ module API
 
         rescue_from ArgumentError do |e|
           errors = ErrorResponse.new(422, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          if Rails.env.development?
+            puts e.message
+            puts e.backtrace.join("\n\t")
+          end
           errors.add_general('Argument Error', e.message)
           errors.finish
         end

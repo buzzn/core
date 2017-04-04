@@ -35,7 +35,11 @@ class GroupsController < ApplicationController
   end
 
   def create
-    @group = Group::Base.new(group_params)
+    if params[:group_base][:mode] == 'localpool'
+      @group = Group::Localpool.new(group_params)
+    else
+      @group = Group::Tribe.new(group_params)
+    end
     authorize_action_for @group
     if @group.save
       current_user.add_role :manager, @group
@@ -314,7 +318,6 @@ private
       :name,
       :image,
       :logo,
-      :mode,
       :private,
       :website,
       :description,

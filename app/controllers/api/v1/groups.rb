@@ -10,21 +10,15 @@ module API
           desc "Return all Localpools"
           params do
             optional :filter, type: String, desc: "Search query using #{Base.join(Group::Base.search_attributes)}"
-            optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-            optional :page, type: Fixnum, desc: "Page number", default: 1
             optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
             optional :order_by, type: String, default: 'created_at', values: ['name', 'updated_at', 'created_at'], desc: "Order by Attribute"
           end
-          paginate
           oauth2 false
           get do
             order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
-            paginated_response(
-              Group::Localpool
-                .filter(permitted_params[:filter])
-                .readable_by(current_user)
-                .order(order)
-            )
+            Group::LocalpoolResource
+              .all(current_user, permitted_params[:filter])
+              .order(order)
           end
 
 
@@ -34,8 +28,9 @@ module API
           end
           oauth2 :full
           get ":id/localpool-processing-contract" do
-            group = Group::Localpool.guarded_retrieve(current_user, permitted_params)
-            Contract::Base.guarded_retrieve(current_user, group.localpool_processing_contract.id)
+            Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .localpool_processing_contract!
           end
 
 
@@ -45,16 +40,12 @@ module API
           end
           oauth2 :full
           get ":id/metering-point-operator-contract" do
-            group = Group::Localpool.guarded_retrieve(current_user, permitted_params)
-            Contract::Base.guarded_retrieve(current_user, group.metering_point_operator_contract.id)
+            Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .metering_point_operator_contract!
           end
 
         end
-
-
-
-
-
 
 
 
@@ -65,21 +56,15 @@ module API
         desc "Return all groups"
         params do
           optional :filter, type: String, desc: "Search query using #{Base.join(Group::Base.search_attributes)}"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
           optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
           optional :order_by, type: String, default: 'created_at', values: ['name', 'updated_at', 'created_at'], desc: "Order by Attribute"
         end
-        paginate
         oauth2 false
         get do
           order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
-          paginated_response(
-            Group::Base
-              .filter(permitted_params[:filter])
-              .readable_by(current_user)
-              .order(order)
-          )
+          Group::BaseResource
+            .all(current_user, permitted_params[:filter])
+            .order(order)
         end
 
 
@@ -90,11 +75,7 @@ module API
         end
         oauth2 false
         get ":id" do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          render(group, meta: {
-            updatable: group.updatable_by?(current_user),
-            deletable: group.deletable_by?(current_user)
-          })
+          Group::BaseResource.retrieve(current_user, permitted_params)
         end
 
 
@@ -106,8 +87,9 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          group.guarded_update(current_user, permitted_params)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .update(permitted_params)
         end
 
 
@@ -118,8 +100,9 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          deleted_response(group.guarded_delete(current_user))
+          deleted_response(Group::BaseResource
+                            .retrieve(current_user, permitted_params)
+                            .delete)
         end
 
 
@@ -130,11 +113,21 @@ module API
         end
         oauth2 false
         get ":id/registers" do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .registers
+        end
 
-          # registers do consider group relation for readable_by
-          # the order is to make sure we the Register::Virtual as first element as its attribute set is enough for even Input and Output Registers
-          Register::Base.by_group(group).by_label(Register::Base::CONSUMPTION, Register::Base::PRODUCTION_PV, Register::Base::PRODUCTION_CHP).anonymized_readable_by(current_user).order(type: :desc)
+
+        desc "Return the related meters for Group"
+        params do
+          requires :id, type: String, desc: "ID of the group"
+        end
+        oauth2 :full
+        get ":id/meters" do
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .meters
         end
 
 
@@ -144,23 +137,12 @@ module API
           requires :interval, type: Symbol, values: [:day, :month, :year]
           requires :timestamp, type: DateTime
           optional :mode, type: Symbol, values: [:sufficiency, :closeness, :autarchy, :fitting]
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 false
         get ":id/scores" do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          interval = permitted_params[:interval]
-          timestamp = permitted_params[:timestamp]
-          if timestamp > Time.current.beginning_of_day
-            timestamp = timestamp - 1.day
-          end
-          result = group.scores.send("#{interval}ly".to_sym).at(timestamp)
-          if mode = permitted_params[:mode]
-            result = result.send(mode.to_s.pluralize.to_sym)
-          end
-          paginated_response(result.readable_by(current_user))
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .scores(permitted_params)
         end
 
 
@@ -168,14 +150,12 @@ module API
         desc "Return the related managers for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get [':id/managers', ':id/relationships/managers'] do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          paginated_response(group.managers.readable_by(current_user))
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .managers
         end
 
 
@@ -205,6 +185,7 @@ module API
         patch ':id/relationships/managers' do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
           group.managers.replace(current_user, data_id_array, update: :replace_managers)
+          status 200
         end
 
         desc 'Remove user from group managers'
@@ -226,14 +207,12 @@ module API
         desc "Return the related members for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get [':id/members', ':id/relationships/members'] do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          paginated_response(group.members.readable_by(current_user))
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .members
         end
 
 
@@ -243,8 +222,9 @@ module API
         end
         oauth2 false
         get ":id/energy-producers" do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          group.energy_producers.readable_by(current_user)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .energy_producers
         end
 
 
@@ -254,22 +234,21 @@ module API
         end
         oauth2 :simple, :full
         get ":id/energy-consumers" do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          group.energy_consumers.readable_by(current_user)
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .energy_consumers
         end
 
 
         desc 'Return the related comments for Group'
         params do
           requires :id, type: String, desc: 'ID of the group'
-          optional :per_page, type: Fixnum, desc: "Entries per Page", default: 10, max: 100
-          optional :page, type: Fixnum, desc: "Page number", default: 1
         end
-        paginate
         oauth2 :simple, :full
         get ':id/comments' do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          paginated_response(group.comment_threads.readable_by(current_user))
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .comments
         end
 
 

@@ -342,6 +342,7 @@ private
   def register_params
 
     params.require(register_class).permit(
+      :label,
       :name,
       :image,
       :readable,

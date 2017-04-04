@@ -47,17 +47,14 @@ describe "Devices API" do
 
   end
 
-  it 'paginates all contracts as admin with full access token' do
+  it 'get all devicess as admin with full access token' do
     page_overload.times do
       Fabricate(:device)
     end
     access_token = Fabricate(:full_access_token_as_admin).token
     get_with_token '/api/v1/devices', {}, access_token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
-
-    get_with_token '/api/v1/devices', {per_page: 200}, access_token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
   it "gets a device with full access token as admin" do
@@ -65,8 +62,8 @@ describe "Devices API" do
     device = Fabricate(:device)
     get_with_token "/api/v1/devices/#{device.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_truthy
-    expect(json['meta']['deletable']).to be_truthy
+    expect(json['data']['attributes']['updatable']).to be_truthy
+    expect(json['data']['attributes']['deletable']).to be_truthy
   end
 
 
@@ -78,8 +75,8 @@ describe "Devices API" do
 
     get_with_token "/api/v1/devices/#{device.id}", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['updatable']).to be_truthy
-    expect(json['meta']['deletable']).to be_truthy
+    expect(json['data']['attributes']['updatable']).to be_truthy
+    expect(json['data']['attributes']['deletable']).to be_truthy
   end
 
 

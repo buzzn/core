@@ -1,5 +1,5 @@
 module Contract
-  class MeteringPointOperator < Contract::Base
+  class MeteringPointOperator < Localpool
 
     def self.new(*args)
       a = super

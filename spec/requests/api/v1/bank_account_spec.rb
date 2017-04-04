@@ -86,19 +86,6 @@ describe "BankAccount API" do
 
   [:full_token, :admin_token].each do |token|
 
-    # it "paginates all bank accounts with #{token}" do
-    #   page_overload.times do
-    #     Fabricate(:bank_account, bank_accountable: contract)
-    #   end
-    #   access_token  = send(token)
-    #
-    #   get_with_token '/api/v1/bank-accounts', {}, access_token.token
-    #   expect(response).to have_http_status(200)
-    #   expect(json['meta']['total_pages']).to eq(2)
-    #
-    #   get_with_token '/api/v1/bank-accounts', {per_page: 200}, access_token.token
-    #   expect(response).to have_http_status(422)
-    # end
     #
     # it "creates bank-account with #{token}", :retry => 3 do
     #   access_token  = send(token)

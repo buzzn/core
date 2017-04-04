@@ -7,13 +7,10 @@ module API
 
         desc 'Return all addresses'
         params do
-          optional :per_page, type: Fixnum, desc: 'Entries per Page', default: 10, max: 100
-          optional :page, type: Fixnum, desc: 'Page number', default: 1
         end
-        paginate
         oauth2 :full
         get do
-          paginated_response(Address.readable_by(current_user))
+          AddressResource.all(current_user)
         end
 
         desc 'Return address'
@@ -22,11 +19,7 @@ module API
         end
         oauth2 :full
         get ':id' do
-          address = Address.guarded_retrieve(current_user, permitted_params)
-          render(address, meta: {
-            updatable: address.updatable_by?(current_user),
-            deletable: address.deletable_by?(current_user)
-          })
+          AddressResource.retrieve(current_user, permitted_params)
         end
 
         desc 'Create address'
@@ -41,7 +34,7 @@ module API
         end
         oauth2 :full
         post do
-          created_response(Address.guarded_create(current_user,
+          created_response(AddressResource.create(current_user,
                                                   permitted_params))
         end
 
@@ -58,8 +51,9 @@ module API
         end
         oauth2 :full
         patch ':id' do
-          address = Address.guarded_retrieve(current_user, permitted_params)
-          address.guarded_update(current_user, permitted_params)
+          AddressResource
+            .retrieve(current_user, permitted_params)
+            .update(permitted_params)
         end
 
         desc 'Delete address'
@@ -68,8 +62,9 @@ module API
         end
         oauth2 :full
         delete ':id' do
-          address = Address.guarded_retrieve(current_user, permitted_params)
-          deleted_response(address.guarded_delete(current_user))
+          deleted_response(AddressResource
+                            .retrieve(current_user, permitted_params)
+                            .delete)
         end
 
       end

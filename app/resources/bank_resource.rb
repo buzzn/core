@@ -1,4 +1,4 @@
-class BankResource < JSONAPI::Resource
+class BankSerializer < ActiveModel::Serializer
   attributes  :blz,
               :bic,
               :description,

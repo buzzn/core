@@ -16,6 +16,7 @@ describe "Users API" do
       access_token = Fabricate(token)
       get_with_token "/api/v1/users/me", access_token.token
       expect(response).to have_http_status(200)
+      expect(json['data']['id']).to eq access_token.resource_owner_id
     end
   end
 
@@ -59,21 +60,6 @@ describe "Users API" do
     expect(json['data'].size).to eq 1
     expect(json['data'].first['id']).to eq user.id
   end
-
-
-  it 'paginate users' do
-    page_overload.times do
-      Fabricate(:user)
-    end
-    access_token = Fabricate(:full_access_token_as_admin).token
-    get_with_token '/api/v1/users', {}, access_token
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_with_token "/api/v1/users", {per_page: 200}, access_token
-    expect(response).to have_http_status(422)
-  end
-
 
   it 'does not gets an user without token' do
     user = Fabricate(:user)
@@ -182,7 +168,9 @@ describe "Users API" do
     }.to_json
     post_with_token "/api/v1/users", request_params, access_token.token
     expect(response).to have_http_status(201)
-    expect(json['data']['attributes']).to be_nil
+    expect(json['data']['attributes'].size).to eq 3
+    expect(json['data']['attributes']['updatable']).to be false
+    expect(json['data']['attributes']['deletable']).to be false
   end
 
 
@@ -208,7 +196,7 @@ describe "Users API" do
     expect(response).to have_http_status(200)
   end
 
-  it 'paginate groups' do
+  it 'get all groups' do
     access_token  = Fabricate(:simple_access_token)
     user          = User.find(access_token.resource_owner_id)
     page_overload.times do
@@ -220,10 +208,7 @@ describe "Users API" do
     end
     get_with_token "/api/v1/users/#{user.id}/groups", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_with_token "/api/v1/users/#{user.id}/groups", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
   it 'gets related registers for User' do
@@ -240,10 +225,10 @@ describe "Users API" do
     user_access_token     = Fabricate(:full_access_token)
     user                  = User.find(user_access_token.resource_owner_id)
 
-    get_with_token "/api/v1/users/#{user.id}/bank_account", stranger_access_token.token
+    get_with_token "/api/v1/users/#{user.id}/bank-account", stranger_access_token.token
     expect(response).to have_http_status(403)
 
-    get_with_token "/api/v1/users/#{user.id}/bank_account", user_access_token.token
+    get_with_token "/api/v1/users/#{user.id}/bank-account", user_access_token.token
     expect(response).to have_http_status(200)
     expect(json['data']['id']).to eq(user.bank_account.id)
   end
@@ -265,34 +250,25 @@ describe "Users API" do
     end
   end
 
-  it 'paginate meters' do
+  it 'get all meters' do
     access_token = Fabricate(:full_access_token_as_admin)
     user         = Fabricate(:user)
     page_overload.times do
       meter = Fabricate(:meter)
       user.add_role(:manager, meter.registers.first)
     end
-    get_with_token "/api/v1/users/#{user.id}/meters", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
 
     pages_profile_ids = []
-    1.upto(4) do |i|
-      params = {page: i, order_direction: 'DESC', order_by: 'created_at'}
-      get_with_token "/api/v1/users/#{user.id}/meters", params, access_token.token
-      expect(response).to have_http_status(200)
-      expect(json['meta']['total_pages']).to eq(4)
-      json['data'].each do |data|
-        pages_profile_ids << data['id']
-      end
-    end
-
-    expect(pages_profile_ids.uniq.length).to eq(pages_profile_ids.length)
+    params = {order_direction: 'DESC', order_by: 'created_at'}
+    get_with_token "/api/v1/users/#{user.id}/meters", params, access_token.token
+    expect(response).to have_http_status(200)
+    expect(json['data'].size).to eq(page_overload)
   end
 
 
 
 
-  it 'paginate registers' do
+  it 'get all registers' do
     access_token = Fabricate(:full_access_token_as_admin).token
     user         = Fabricate(:user)
     page_overload.times do
@@ -301,10 +277,7 @@ describe "Users API" do
     end
     get_with_token "/api/v1/users/#{user.id}/registers", access_token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_with_token "/api/v1/users/#{user.id}/registers", {per_page: 200}, access_token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
 
@@ -343,7 +316,7 @@ describe "Users API" do
   end
 
 
-  it 'paginate friends' do
+  it 'get all friends' do
     access_token  = Fabricate(:simple_access_token)
     user          = User.find(access_token.resource_owner_id)
     page_overload.times do
@@ -352,10 +325,7 @@ describe "Users API" do
 
     get_with_token "/api/v1/users/#{user.id}/friends", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_with_token "/api/v1/users/#{user.id}/friends", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
   it 'gets specific friend for user' do
@@ -490,7 +460,7 @@ describe "Users API" do
   end
 
 
-  it 'paginate devices' do
+  it 'get all devices' do
     access_token  = Fabricate(:simple_access_token)
     user          = User.find(access_token.resource_owner_id)
     page_overload.times do
@@ -500,10 +470,7 @@ describe "Users API" do
 
     get_with_token "/api/v1/users/#{user.id}/devices", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(4)
-
-    get_with_token "/api/v1/users/#{user.id}/devices", {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
+    expect(json['data'].size).to eq(page_overload)
   end
 
   it 'gets user activities' do

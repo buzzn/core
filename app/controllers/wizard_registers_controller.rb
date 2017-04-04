@@ -41,6 +41,8 @@ class WizardRegistersController  < ApplicationController
       else # not virtual
         if params[:register_base][meter_class][:existing_meter] == t('add_existing_meter')
           @meter = Meter::Base.find(params[:register_base][meter_class][:meter_id])
+          existing_broker = @meter.broker
+          existing_broker.mode = 'in_out' unless existing_broker.nil?
         else
           @meter = Meter::Real.new(meter_params)
           @meter.manufacturer_name = "easy_meter"
@@ -131,7 +133,8 @@ class WizardRegistersController  < ApplicationController
     params.require(:register_base).permit(
       :name,
       :mode,
-      :virtual)
+      :virtual,
+      :label)
   end
 
   def register_virtual_params

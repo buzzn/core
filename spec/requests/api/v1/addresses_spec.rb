@@ -35,19 +35,6 @@ describe 'Addresses API' do
   end
 
 
-  it 'paginate addresses with full access token' do
-    page_overload.times do
-      Fabricate(:address)
-    end
-    access_token = Fabricate(:full_access_token_as_admin)
-
-    get_with_token '/api/v1/addresses', {}, access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['meta']['total_pages']).to eq(2)
-    get_with_token '/api/v1/addresses', {per_page: 200}, access_token.token
-    expect(response).to have_http_status(422)
-  end
-
   it 'get address only with full access token' do
     address           = Fabricate(:address)
     full_access_token = Fabricate(:full_access_token_as_admin)
@@ -61,7 +48,8 @@ describe 'Addresses API' do
 
     get_with_token "/api/v1/addresses/#{address.id}", {}, full_access_token.token
     expect(response).to have_http_status(200)
-    expect(json['meta']['deletable']).to be_truthy
+    expect(json['data']['attributes']['deletable']).to be true
+    expect(json['data']['attributes']['updatable']).to be true
   end
 
   it 'creates address using full token' do

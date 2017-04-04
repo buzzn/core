@@ -1,9 +1,17 @@
 module Contract
   class MeteringPointOperatorResource < BaseResource
-    model_name 'Contract::MeteringPointOperator'
+
+    model MeteringPointOperator
 
     attributes  :begin_date,
                 :metering_point_operator_name
 
+  end
+
+  # TODO get rid of the need of having a Serializer class
+  class MeteringPointOperatorSerializer < MeteringPointOperatorResource
+    def self.new(*args)
+      super
+    end
   end
 end

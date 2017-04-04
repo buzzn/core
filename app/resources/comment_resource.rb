@@ -1,4 +1,6 @@
-class CommentResource < JSONAPI::Resource
+class CommentResource < Buzzn::EntityResource
+
+  model Comment
 
   attributes  :title,
               :body,
@@ -9,6 +11,14 @@ class CommentResource < JSONAPI::Resource
               :parent_id,
               :image
 
-  has_many :comments
+# TODO when needed we need to make sure we have some method 'comments'
+#  has_many :comments
 
+end
+
+# TODO get rid of the need of having a Serializer class
+class CommentSerializer < CommentResource
+  def self.new(*args)
+    super
+  end
 end
