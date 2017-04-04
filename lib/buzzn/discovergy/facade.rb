@@ -41,6 +41,8 @@ module Buzzn::Discovergy
           query = '/public/v1/readings?meterId=' + meter_id + '&from=' + interval.from_as_millis.to_s + '&to=' +
             interval.to_as_millis.to_s + '&resolution=raw&fields=power&each=' + collection.to_s
         when :day
+          # discovergy does not deliver power data - datasource will calculate
+          # the power from the given energy data
           query = '/public/v1/readings?meterId=' + meter_id + '&from=' + interval.from_as_millis.to_s + '&to=' +
             interval.to_as_millis.to_s + "&resolution=fifteen_minutes&fields=energy#{energy_out}&each=" + collection.to_s
         when :month
