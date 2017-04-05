@@ -4,7 +4,7 @@ describe Buzzn::Interval do
 
   subject { Buzzn::Interval }
 
-  [:hour, :day, :month, :year].each do |duration|
+  [:second, :hour, :day, :month, :year].each do |duration|
     it "creates a #{duration}" do
       interval = subject.send(duration, Time.current)
       durations.each do |d|
@@ -12,8 +12,10 @@ describe Buzzn::Interval do
       end
       expect(interval.from).to eq(subject.send(duration, interval.from_as_utc_time.in_time_zone).from)
       expect(interval.to).to eq(subject.send(duration, interval.from_as_utc_time.in_time_zone).to)
-      expect(interval.from).to eq(subject.send(duration, interval.to_as_utc_time.in_time_zone - 1.second).from)
-      expect(interval.to).to eq(subject.send(duration, interval.to_as_utc_time.in_time_zone - 1.second).to)
+      if duration != :second
+        expect(interval.from).to eq(subject.send(duration, interval.to_as_utc_time.in_time_zone - 1.second).from)
+        expect(interval.to).to eq(subject.send(duration, interval.to_as_utc_time.in_time_zone - 1.second).to)
+      end
     end
   end
 

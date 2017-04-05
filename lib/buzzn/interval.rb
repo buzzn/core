@@ -60,14 +60,21 @@ module Buzzn
 
     def _hour?
       timespan = self.to - self.from
-      timespan <= 3601 && timespan > 0
+      timespan <= 3601 && timespan > 2
+    end
+
+    def _second?
+      timespan = self.to - self.from
+      timespan == 2
     end
 
     def _duration
-      _hour? ? :hour : (
-        _day? ? :day : (
-          _month? ? :month : (
-            _year? ? :year : nil
+      _second? ? :second : (
+        _hour? ? :hour : (
+          _day? ? :day : (
+            _month? ? :month : (
+              _year? ? :year : nil
+            )
           )
         )
       )
@@ -114,6 +121,17 @@ module Buzzn
           new(
             timestamp.beginning_of_hour.to_f,
             (timestamp.beginning_of_hour + 1.hour).to_f
+          )
+        else
+          raise ArgumentError.new('need a Time object')
+        end
+      end
+
+      def second(timestamp = Time.current)
+        if timestamp.is_a?(Time)
+          new(
+            timestamp.to_f,
+            (timestamp + 2.seconds).to_f
           )
         else
           raise ArgumentError.new('need a Time object')
