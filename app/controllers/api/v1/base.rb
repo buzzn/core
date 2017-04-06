@@ -23,7 +23,6 @@ module API
       mount API::V1::Readings
       mount API::V1::Aggregates
       mount API::V1::Groups
-      mount API::V1::Devices
       mount API::V1::Contracts
       mount API::V1::Organizations
       mount API::V1::BankAccounts
