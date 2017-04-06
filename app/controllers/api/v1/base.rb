@@ -27,7 +27,6 @@ module API
       mount API::V1::Contracts
       mount API::V1::Comments
       mount API::V1::Organizations
-      mount API::V1::Addresses
       mount API::V1::BankAccounts
       mount API::V1::Prices
       mount API::V1::Banks
