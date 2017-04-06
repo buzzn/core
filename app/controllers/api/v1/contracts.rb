@@ -7,7 +7,6 @@ module API
 
       resource :contracts do
 
-
         desc 'Return the related contractor for a Contract'
         params do
           requires :id, type: String, desc: 'ID of the Contract'
@@ -30,16 +29,6 @@ module API
             .customer!
         end
 
-
-        desc 'Return all Contracts'
-        params do
-#          optional :filter, type: String, desc: "Search query using #{Base.join(Contract.search_attributes)}"
-        end
-        oauth2 :full
-        get do
-          Contract::BaseResource.all(current_user, permitted_params[:filter])
-        end
-
         desc 'Return a Contract'
         params do
           requires :id, type: String, desc: 'ID of the Contract'
@@ -48,11 +37,6 @@ module API
         get ':id' do
           Contract::BaseResource.retrieve(current_user, permitted_params)
         end
-
-
-
-
-
 
         desc 'Create Power-Taker Contract'
         params do
@@ -145,57 +129,6 @@ module API
           Buzzn::ContractFactory.create_power_taker_contract(current_user, permitted_params)
           status 201
         end
-
-
-        desc 'Update a Contract'
-        params do
-          requires :id,                       type: String, desc: 'Contract ID'
-          optional :mode,                     type: String, desc: 'Contract description'
-          optional :organization_id,          type: String, desc: 'Organization id'
-          optional :tariff,                   type: String, desc: 'Tariff'
-          optional :status,                   type: String, desc: 'Status'
-          optional :customer_number,          type: String, desc: 'Customer number'
-          optional :contract_number,          type: String, desc: 'Contract number'
-          optional :signing_user,             type: String, desc: 'Signing user'
-          optional :terms,                    type: Boolean, desc: 'Terms'
-          optional :power_of_attorney,        type: Boolean, desc: 'Power of attorney'
-          optional :confirm_pricing_model,    type: Boolean, desc: 'Confirm pricing model'
-          optional :commissioning,            type: Date, desc: 'Commissioning'
-          optional :retailer,                 type: Boolean, desc: 'Is a Retailer'
-          optional :price_cents_per_kwh,      type: Float, desc: 'Price per KWH incents'
-          optional :price_cents_per_month,    type: Integer, desc: 'Price per month in cents'
-          optional :discount_cents_per_month, type: Integer, desc: 'Discount per month in cents'
-          optional :other_contract,           type: Boolean, desc: 'Has other contract'
-          optional :move_in,                  type: Boolean, desc: 'Move in'
-          optional :beginning,                type: Date, desc: 'Begin date'
-          optional :authorization,            type: Boolean, desc: 'Authorization'
-          optional :feedback,                 type: String, desc: 'Feedback'
-          optional :attention_by,             type: String, desc: 'Attention by'
-          optional :username,                 type: String, desc: 'Username'
-          optional :password,                 type: String, desc: 'Password'
-          optional :contractor_id,      type: String,  desc: 'ContractingParty Owner ID'
-          optional :customer_id,type: String,  desc: 'ContractingParty Beneficiary ID'
-        end
-        oauth2 :full
-        patch ':id' do
-          Contract::BaseResource
-            .retrieve(current_user, permitted_params)
-            .update(permitted_params)
-        end
-
-
-        desc 'Delete a Contract'
-        params do
-          requires :id, type: String, desc: 'Contract ID'
-        end
-        oauth2 :full
-        delete ':id' do
-           deleted_response(Contract::BaseResource
-                             .retrieve(current_user, permitted_params)
-                             .delete)
-        end
-
-
       end
     end
   end
