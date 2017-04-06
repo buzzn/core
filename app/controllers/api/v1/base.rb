@@ -25,7 +25,6 @@ module API
       mount API::V1::Groups
       mount API::V1::Devices
       mount API::V1::Contracts
-      mount API::V1::Comments
       mount API::V1::Organizations
       mount API::V1::BankAccounts
       mount API::V1::Prices
