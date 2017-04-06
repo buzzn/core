@@ -11,10 +11,9 @@
     readable    'friends'
     direction   { type == 'virtual' ? ['in', 'out'].sample : type.sub('put','') }
     created_at  { (rand*10).days.ago }
-    # don't set a label for virtual registers as there is a bug in db:init
     if type == 'output'
       label     Register::Base::PRODUCTION_PV
-    elsif type == 'input'
+    else
       label     Register::Base::CONSUMPTION
     end
   end
