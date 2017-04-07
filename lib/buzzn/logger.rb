@@ -16,14 +16,14 @@ module Buzzn
     end
 
     def initialize(clazz, root)
-      @category = clazz.to_s.underscore.sub('/', '.')
+      @category = clazz.to_s.underscore.gsub('/', '.')
       @root = root
     end
 
     [:debug, :info, :warn, :error].each do |method|
-      define_method method do |&block|
-        @root.send method do
-          "#{Time.current.strftime('%Y-%m-%d %H:%M:%S')} #{method.upcase} [#{@category}] <#{Thread.current.object_id.to_s(16)}> #{block.call}"
+      define_method method do |msg = nil, &block|
+        @root.send method, msg do
+          "#{Time.current.strftime('%Y-%m-%d %H:%M:%S')} #{method.upcase} [#{@category}] <#{Thread.current.object_id.to_s(16)}> #{msg || block.call}"
         end
       end
     end

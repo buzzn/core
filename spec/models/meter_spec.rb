@@ -22,7 +22,7 @@ describe Meter::Real do
 
   # this test only prooves that we are able to use the 'label' attribute for virtual registers
   # as there is some bug in db:init so that we cannot use this attribute.
-  it 'creates a virtual meter with all params' do
+  xit 'creates a virtual meter with all params' do
     meter = Fabricate(:virtual_meter_hopf)
     expect(meter.register.label).to eq nil
   end
@@ -93,5 +93,13 @@ describe Meter::Real do
     expect(Register::Base.all.size).to eq 1
     expect(Meter::Base.all.size).to eq 1
     expect { meter.registers.first.destroy }.to raise_error Buzzn::NestedValidationError
+  end
+
+  it 'does create main equipment after initialization' do
+    Fabricate(:input_meter)
+    meter = Meter::Base.first
+    expect(meter.main_equipment.nil?).to eq false
+    expect(meter.main_equipment.converter_constant).to eq 1
+    expect{meter.main_equipment.destroy}.to raise_error Buzzn::NestedValidationError
   end
 end

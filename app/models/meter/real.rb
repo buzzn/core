@@ -15,8 +15,6 @@ module Meter
 
     mount_uploader :image, PictureUploader
 
-    has_many :equipments
-
     has_many :registers, class_name: Register::Real, foreign_key: :meter_id
     validates_associated :registers
 

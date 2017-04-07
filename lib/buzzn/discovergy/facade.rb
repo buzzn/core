@@ -25,7 +25,7 @@ module Buzzn::Discovergy
     #  Net::HTTPResponse with requested data
     def readings(broker, interval, mode, collection=false, retried=false)
       return "[]" if collection && !broker.mode.include?(mode.to_s)
-      @logger.error{"[buzzn.discovergy.facade]<#{Thread.current.object_id}> readings for #{broker.external_id} #{broker.resource_type}:#{broker.resource_id} #{interval} #{mode} collection: #{collection}"}
+      @logger.debug{"readings for #{broker.external_id} #{broker.resource_type}:#{broker.resource_id} #{interval} #{mode} collection: #{collection}"}
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
       energy_out = ""
@@ -34,6 +34,10 @@ module Buzzn::Discovergy
       end
 
       if interval.nil?
+        # for dummies: from a technical point a two way meter is counting
+        # either 'in' or 'out' never both at the same time. the direction
+        # will be the sign of the value: negative values are 'out' and
+        # positive values are 'in'
         query = '/public/v1/last_reading?meterId=' + meter_id + '&fields=power&each=' + collection.to_s
       else
         case interval.duration
@@ -41,6 +45,8 @@ module Buzzn::Discovergy
           query = '/public/v1/readings?meterId=' + meter_id + '&from=' + interval.from_as_millis.to_s + '&to=' +
             interval.to_as_millis.to_s + '&resolution=raw&fields=power&each=' + collection.to_s
         when :day
+          # discovergy does not deliver power data - datasource will calculate
+          # the power from the given energy data
           query = '/public/v1/readings?meterId=' + meter_id + '&from=' + interval.from_as_millis.to_s + '&to=' +
             interval.to_as_millis.to_s + "&resolution=fifteen_minutes&fields=energy#{energy_out}&each=" + collection.to_s
         when :month
@@ -51,7 +57,6 @@ module Buzzn::Discovergy
             interval.to_as_millis.to_s + "&resolution=one_month&fields=energy#{energy_out}&each=" + collection.to_s
         end
       end
-
       access_token.get(query)
       response = access_token.response
 
@@ -60,13 +65,13 @@ module Buzzn::Discovergy
         return response.body
       when 401
         if !retried
-          Rails.logger.error("***DiscovergyFacade: retry authentication #{broker.inspect}: " + response.body)
+          @logger.error {"retry authentication #{broker.inspect}: #{response.body}" }
           register_application
           access_token = build_access_token_from_broker_or_new(broker, true)
           response = self.readings(broker, interval, mode, collection, true)
           return response
         else
-          @logger.error{"[buzzn.discovergy.facade]<#{Thread.current.object_id}> failed request (401 - unauthorized): #{query}"}
+          @logger.error {"failed request (401 - unauthorized): #{query}"}
           raise Buzzn::DataSourceError.new('unauthorized to get data from discovergy: ' + response.body)
         end
       else
@@ -190,6 +195,7 @@ module Buzzn::Discovergy
     def register_application
       conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
         faraday.request  :url_encoded
+        # TODO use Buzzn::Logger here
         faraday.response :logger, Rails.logger if Rails.env == 'development'
         faraday.adapter :net_http
       end

@@ -4,7 +4,42 @@ module API
       include API::V1::Defaults
       resource :groups do
 
+        params do
+          requires :id, type: String
+          optional :timestamp, type: Time
+          requires :duration, type: String, values: %w(year month day hour)
+        end
+        oauth2 false
+        get ":id/charts" do
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
+          interval = Buzzn::Interval.create(params[:duration], params[:timestamp])
+          result = Buzzn::Application.config.charts.for_group(group, interval)
 
+          # cache-control headers
+          etag(Digest::SHA256.base64digest(result.to_json))
+          expires((result.expires_at - Time.current.to_f).to_i,
+                  current_user ? :private : :public)
+          last_modified(Time.at(result.last_timestamp))
+
+          result
+        end
+
+        params do
+          requires :id, type: String
+        end
+        oauth2 false
+        get ":id/bubbles" do
+          group = Group::BaseResource.retrieve(current_user, permitted_params)
+          result = Buzzn::Application.config.current_power.for_each_register_in_group(group)
+
+          # cache-control headers
+          etag(Digest::SHA256.base64digest(result.to_json))
+          last_modified(Time.at(result.expires_at))
+          expires((result.expires_at - Time.current.to_f).to_i,
+                  current_user ? :private : :public)
+
+          result
+        end
 
         resource :localpools do
           desc "Return all Localpools"

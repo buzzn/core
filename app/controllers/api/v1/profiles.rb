@@ -1,3 +1,4 @@
+require 'profile_resource'
 module API
   module V1
     class Profiles < Grape::API
