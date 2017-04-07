@@ -83,7 +83,7 @@ module Buzzn::Discovergy
     end
 
     def single_reading(broker, timestamp, mode, retried=false)
-      @logger.error{"[buzzn.discovergy.facade]<#{Thread.current.object_id}> single reading for #{broker.external_id} #{broker.resource_type}:#{broker.resource_id} #{timestamp} #{mode}"}
+      @logger.debug{"[buzzn.discovergy.facade]<#{Thread.current.object_id}> single reading for #{broker.external_id} #{broker.resource_type}:#{broker.resource_id} #{timestamp} #{mode}"}
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
       energy_out = ""
