@@ -1,3 +1,4 @@
+require 'buzzn/data_source_caching'
 module Buzzn::Discovergy
 
   # the discovergy dataSource uses the API from discovergy to retrieve
@@ -182,7 +183,7 @@ module Buzzn::Discovergy
     ##############
 
     def parse_aggregated_data(response, interval, mode, two_way_meter, resource_id)
-      @logger.error{"#{resource_id} #{interval} #{mode} twoway: #{two_way_meter} response: #{response}"}
+      @logger.debug{"#{resource_id} #{interval} #{mode} twoway: #{two_way_meter} response: #{response}"}
       json = MultiJson.load(response)
       if json.empty?
         return nil
@@ -199,7 +200,7 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_live(response, mode, two_way_meter, resource_id)
-      @logger.error{"#{resource_id} #{mode} twoway: #{two_way_meter} response: #{response}"}
+      @logger.debug{"#{resource_id} #{mode} twoway: #{two_way_meter} response: #{response}"}
       json = MultiJson.load(response)
       if json.empty?
         return nil
@@ -313,6 +314,6 @@ module Buzzn::Discovergy
     end
 
     # need it at end to see all the methods
-    include Buzzn::DataSourceCaching
+    include Buzzn::DataSource::Caching
   end
 end
