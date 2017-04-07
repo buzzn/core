@@ -28,6 +28,7 @@ module API
           requires :reason,                type: String,  desc: "The reason for this reading", values: Reading::reasons
           requires :source,                type: String,  desc: "The source of this reading", values: Reading::sources
           requires :quality,               type: String,  desc: "The quality of this reading", values: Reading::qualities
+          requires :meter_serialnumber,    type: String, desc: "The serialnumber of the meter"
         end
         oauth2 :full, :smartmeter
         post do
