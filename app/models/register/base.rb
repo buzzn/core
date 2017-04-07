@@ -85,7 +85,8 @@ module Register
     validates :last_observed_timestamp, presence: false
     # TODO virtual register ?
     validates :observe_offline, presence: false
-    validates :label, inclusion: { in: labels }
+    #commented out due to errors, will be back soon ...
+    #validates :label, inclusion: { in: labels }
 
     def discovergy_brokers
       raise 'TODO use brokers method instead'
