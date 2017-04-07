@@ -29,6 +29,13 @@ module RequestsHelper
     end
   end
 
+  def GET(path, params = {}, token = nil)
+    if token
+      get_with_token(path, params, token.token)
+    else
+      get_without_token(path, params)
+    end
+  end
 
 
   def post_with_token(path, params={}, token)

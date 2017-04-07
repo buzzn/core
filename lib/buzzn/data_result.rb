@@ -34,8 +34,13 @@ module Buzzn
       super.merge(resource_id: @resource_id, mode: @mode)
     end
 
+    def freeze
+      @json = to_json
+      super
+    end
+
     def to_json(*args)
-      @json || "{\"timestamp\":\"#{@timestamp}\",\"value\":#{@value},\"resource_id\":\"#{@resource_id}\",\"mode\":\"#{@mode}\",\"expires_at\":#{expires_at}}"
+      @json || "{\"timestamp\":#{@timestamp},\"value\":#{@value},\"resource_id\":\"#{@resource_id}\",\"mode\":\"#{@mode}\",\"expires_at\":#{expires_at}}"
     end
   end
 end
