@@ -85,9 +85,7 @@ module Register
     validates :last_observed_timestamp, presence: false
     # TODO virtual register ?
     validates :observe_offline, presence: false
-    # commented out to keep db:init passing. When commenting in rails complains:
-    # undefined method 'label' for Register::Virtual
-    # it seems that for db:init a wrong schema is loaded
+    #commented out due to errors, will be back soon ...
     #validates :label, inclusion: { in: labels }
 
     def discovergy_brokers
