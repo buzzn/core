@@ -94,4 +94,12 @@ describe Meter::Real do
     expect(Meter::Base.all.size).to eq 1
     expect { meter.registers.first.destroy }.to raise_error Buzzn::NestedValidationError
   end
+
+  it 'does create main equipment after initialization' do
+    Fabricate(:input_meter)
+    meter = Meter::Base.first
+    expect(meter.main_equipment.nil?).to eq false
+    expect(meter.main_equipment.converter_constant).to eq 1
+    expect{meter.main_equipment.destroy}.to raise_error Buzzn::NestedValidationError
+  end
 end

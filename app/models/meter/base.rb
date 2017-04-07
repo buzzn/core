@@ -13,8 +13,8 @@ module Meter
     has_one :broker, as: :resource, dependent: :destroy, foreign_key: :resource_id, class_name: 'Broker::Base'
     validates_associated :broker
 
-    has_one :main_equipment, class_name: Meter::Equipment, dependent: :destroy, foreign_key: 'meter_id'
-    has_one :secondary_equipment, class_name: Meter::Equipment, dependent: :destroy, foreign_key: 'meter_id'
+    has_one :main_equipment, class_name: Meter::Equipment, foreign_key: 'meter_id'
+    has_one :secondary_equipment, class_name: Meter::Equipment, foreign_key: 'meter_id'
 
     # free text field
     validates :owner, presence: false
@@ -40,6 +40,10 @@ module Meter
     after_create :create_main_equipment
 
     def validate_invariants
+    end
+
+    before_destroy do
+      Meter::Equipment.where(meter_id: self.id).delete_all
     end
 
     # it differs from updatable_by as they do not have admins
@@ -104,7 +108,7 @@ module Meter
 
     def create_main_equipment
       if main_equipment.nil?
-        main_equipment = Meter::Equipment.create!(converter_constant: 1)
+        Meter::Equipment.create!(converter_constant: 1, meter: self)
       end
     end
   end
