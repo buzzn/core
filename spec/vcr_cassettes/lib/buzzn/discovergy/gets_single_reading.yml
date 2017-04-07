@@ -1,0 +1,215 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/consumer_token?client=buzzn+app+test
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx
+      date:
+      - Wed, 05 Apr 2017 11:12:07 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - keep-alive
+      access-control-allow-origin:
+      - "*"
+      access-control-allow-methods:
+      - GET, POST, DELETE, PUT
+      access-control-allow-headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: ASCII-8BIT
+      string: '{"key":"i14gsn4i9jbf95cjtc4osgk2q8","secret":"rfp4kjo7l94vsukvu4rdp756mc","owner":"buzzn
+        app test","attributes":{},"principal":null}'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:00 GMT
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/request_token
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Content-Length:
+      - '0'
+      Authorization:
+      - OAuth oauth_callback="oob", oauth_consumer_key="i14gsn4i9jbf95cjtc4osgk2q8",
+        oauth_nonce="tdqqRFqJ9MKfnUSNbZkzFJcBnzSZ9wu2k7fq8R1zc0", oauth_signature="LnApHUnAkyQ%2BjNtKneDUtR75kzU%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1467446700", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Wed, 05 Apr 2017 11:12:07 GMT
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '126'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_token=5c0e86d3ce3c44dca266376e9da4b759&oauth_token_secret=a415fd17acd0406abd07c21a2a6b5c17&oauth_callback_confirmed=true
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:00 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=5c0e86d3ce3c44dca266376e9da4b759&password=Zebulon_4711
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx
+      date:
+      - Wed, 05 Apr 2017 11:12:07 GMT
+      content-type:
+      - application/x-www-form-urlencoded
+      content-length:
+      - '47'
+      connection:
+      - keep-alive
+      access-control-allow-origin:
+      - "*"
+      access-control-allow-methods:
+      - GET, POST, DELETE, PUT
+      access-control-allow-headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_verifier=63dc7809f92f4ca58ead0e9c8fb21723
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/access_token
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Content-Length:
+      - '0'
+      Authorization:
+      - OAuth oauth_consumer_key="i14gsn4i9jbf95cjtc4osgk2q8", oauth_nonce="tudYulDRoz81JrIPu5l5GDtkywuFJ8aNbQYvFhTWg",
+        oauth_signature="SXX6%2Bb3au8hO01JZCrj%2BoZGJZes%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446701", oauth_token="5c0e86d3ce3c44dca266376e9da4b759",
+        oauth_verifier="63dc7809f92f4ca58ead0e9c8fb21723", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Wed, 05 Apr 2017 11:12:08 GMT
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '96'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_token=693651a0c73449278b625066795206aa&oauth_token_secret=3c5874d5938841e3aaab332c22e8d883
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/readings?fields=energy&from=1467324000000&meterId=EASYMETER_60009485&resolution=raw&to=1467324002000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Authorization:
+      - OAuth oauth_consumer_key="i14gsn4i9jbf95cjtc4osgk2q8", oauth_nonce="Hbll84XHdud1GpZ1XaxPftXRq5VUQf3mabsuNVhZUiU",
+        oauth_signature="lwOKKIf%2Bhz76RAec25hklr%2FymS0%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446701", oauth_token="693651a0c73449278b625066795206aa",
+        oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: Ok
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Wed, 05 Apr 2017 11:12:08 GMT
+      Content-Type:
+      - text/html;charset=iso-8859-1
+      Content-Length:
+      - '336'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+      Cache-Control:
+      - must-revalidate,no-cache,no-store
+    body:
+      encoding: UTF-8
+      string: "[{\"time\":1491211837105,\"values\":{\"energy\":2423880521975000}}]"
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT
+recorded_with: VCR 3.0.3

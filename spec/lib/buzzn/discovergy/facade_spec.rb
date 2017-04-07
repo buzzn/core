@@ -107,6 +107,18 @@ describe Buzzn::Discovergy::Facade do
     end
   end
 
+  it 'gets single reading' do |spec|
+    VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
+      facade = Buzzn::Discovergy::Facade.new
+      interval = Buzzn::Interval.second(Time.find_zone('Berlin').local(2016, 7, 1, 0, 0, 0))
+      response = facade.readings(broker, interval, 'in')
+      expect(response).not_to eq nil
+      json = MultiJson.load(response)
+      expect(json.first['time']).not_to eq nil
+      expect(json.first['values']['energy']).not_to eq nil
+    end
+  end
+
   it 'builds access_token from hash' do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
       facade = Buzzn::Discovergy::Facade.new

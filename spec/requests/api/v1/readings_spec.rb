@@ -15,7 +15,7 @@ describe "readings" do
   [:no_access_token, :simple_access_token, :full_access_token, :smartmeter_access_token].each do |token|
 
     it "does not get a reading with #{token}" do
-      reading = Fabricate(:reading)
+      reading = reading_from_easy_meter
 
       if token == :no_access_token
         get_without_token "/api/v1/readings/#{reading.id}"
@@ -59,7 +59,8 @@ describe "readings" do
       power_milliwatt: reading.power_milliwatt,
       reason: reading.reason,
       quality: reading.quality,
-      source: reading.source
+      source: reading.source,
+      meter_serialnumber: easy_meter.manufacturer_product_serialnumber
     }.to_json
     post_with_token "/api/v1/readings", request_params, access_token.token
 
@@ -92,7 +93,8 @@ describe "readings" do
       power_milliwatt: power_milliwatt,
       reason: reason,
       quality: quality,
-      source: source
+      source: source,
+      meter_serialnumber: easy_meter.manufacturer_product_serialnumber
     }.to_json
 
     post_with_token "/api/v1/readings", request_params, access_token.token
@@ -106,7 +108,7 @@ describe "readings" do
 
 
 
-  [:register_id, :timestamp, :energy_milliwatt_hour, :power_milliwatt, :reason, :quality, :source].each do |name|
+  [:register_id, :timestamp, :energy_milliwatt_hour, :power_milliwatt, :reason, :quality, :source, :meter_serialnumber].each do |name|
     it "does not create a input reading without #{name}" do
       register      = easy_meter.input_register
       manager       = register.managers.first
@@ -119,7 +121,8 @@ describe "readings" do
         power_milliwatt: reading.power_milliwatt,
         reason: reading.reason,
         quality: reading.quality,
-        source: reading.source
+        source: reading.source,
+        meter_serialnumber: reading.meter_serialnumber
       }.reject {|k,v| k == name}.to_json
 
       post_with_token "/api/v1/readings", request_params, access_token.token

@@ -190,6 +190,8 @@ module Buzzn::Discovergy
       end
 
       case interval.duration
+      when :second
+        parse_aggregated_second(json, mode, two_way_meter, resource_id)
       when :hour
         parse_aggregated_hour(json, mode, two_way_meter, resource_id)
       when :day
@@ -223,6 +225,15 @@ module Buzzn::Discovergy
         power = value > 0 ? value : 0
       end
       Buzzn::DataResult.new(Time.at(timestamp/1000.0), power, resource_id, mode, expires_at)
+    end
+
+    def parse_aggregated_second(json, mode, two_way_meter, resource_id)
+      result = Buzzn::DataResultSet.milliwatt_hour(resource_id)
+      if two_way_meter && mode == :out
+        energy_out = 'Out'
+      end
+      result.add(json.first['time']/1000.0, json.first['values']["energy#{energy_out}"]/10000.0, mode)
+      return result
     end
 
     def parse_aggregated_hour(json, mode, two_way_meter, resource_id)
