@@ -22,7 +22,7 @@ describe Meter::Real do
 
   # this test only prooves that we are able to use the 'label' attribute for virtual registers
   # as there is some bug in db:init so that we cannot use this attribute.
-  it 'creates a virtual meter with all params' do
+  xit 'creates a virtual meter with all params' do
     meter = Fabricate(:virtual_meter_hopf)
     expect(meter.register.label).to eq nil
   end
