@@ -8,7 +8,7 @@ module API
         oauth2 :simple, :full, :smartmeter
         get "me" do
           # obey the loading semantic even if this is a bit of overkill here
-          UserResource.retrieve(current_user, current_user.id)
+          FullUserResource.retrieve(current_user, current_user.id)
         end
 
         desc "Return all Users"
@@ -27,27 +27,9 @@ module API
         end
         oauth2 :simple, :full
         get ":id" do
-          UserResource.retrieve(current_user, permitted_params)
+          FullUserResource.retrieve(current_user, permitted_params)
         end
 
-
-        desc "Create a User"
-        params do
-          requires :email, type: String, desc: 'email'
-          requires :password, type: String, desc: 'password'
-          requires :profile, type: Hash do
-            requires :user_name, type: String, desc: 'username'
-            requires :first_name, type: String, desc: 'first-name'
-            requires :last_name, type: String, desc: 'last-name'
-          end
-        end
-        oauth2 false
-        post do
-          profile = Profile.new(permitted_params.delete(:profile))
-          permitted_params[:profile] = profile
-          user = User.guarded_create(current_user, permitted_params)
-          created_response(user)
-        end
 
         desc "Return the related profile for User"
         params do
@@ -60,24 +42,6 @@ module API
         end
 
 
-        desc "Return the related groups for User"
-        params do
-          requires :id, type: String, desc: "ID of the profile"
-          optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
-          optional :order_by, type: String, default: 'created_at', values: ['name', 'updated_at', 'created_at'], desc: "Order by Attribute"
-        end
-        oauth2 :simple, :full
-        get ":id/groups" do
-          # FIXME not sure why accessible_by_user() and not readable_by()
-          #       use UserResource instead
-          user   = User.guarded_retrieve(current_user, permitted_params)
-          groups = Group::Base.accessible_by_user(user)
-          order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
-          groups
-            .readable_by(current_user)
-            .order(order)
-        end
-
         desc 'Return the related bank_account for User'
         params do
           requires :id, type: String, desc: 'ID of the User'
@@ -87,19 +51,6 @@ module API
           UserResource
             .retrieve(current_user, permitted_params)
             .bank_account!
-        end
-
-        desc "Return the related registers for User"
-        params do
-          requires :id, type: String, desc: "ID of the User"
-        end
-        oauth2 :simple, :full
-        get ":id/registers" do
-          # FIXME not sure why accessible_by_user() and not readable_by()
-          #       use UserResource instead
-          user = User.guarded_retrieve(current_user, permitted_params)
-          registers = Register::Base.accessible_by_user(user)
-          registers.anonymized_readable_by(current_user)
         end
 
 
@@ -119,152 +70,6 @@ module API
             .readable_by(current_user)
             .order(order)
         end
-
-
-        desc "Return the related friends for User"
-        params do
-          requires :id, type: String, desc: "ID of the User"
-        end
-        oauth2 :simple, :full
-        get [':id/friends', ':id/relationships/friends'] do
-          user = User.guarded_retrieve(current_user, permitted_params)
-          user.friends.readable_by(current_user)
-        end
-
-
-        desc 'Return a friend'
-        params do
-          requires :id, type: String, desc: "ID of the User"
-          requires :friend_id, type: String, desc: 'ID of the friend'
-        end
-        oauth2 :simple, :full
-        get ':id/friends/:friend_id' do
-          user = User.guarded_retrieve(current_user, permitted_params)
-          friend = user.friends.find(permitted_params[:friend_id])
-          friend.guarded_retrieve(current_user)
-        end
-
-
-        desc 'Delete a friend'
-        params do
-          requires :id, type: String, desc: "ID of the User"
-          requires :data, type: Hash do
-            requires :id, type: String, desc: 'ID of the friend'
-          end
-        end
-        oauth2 :full
-        delete ':id/relationships/friends' do
-          user = User.guarded_retrieve(current_user, permitted_params)
-          if user.updatable_by?(current_user)
-            friend = user.friends.find(permitted_params[:data][:id])
-            user.friends.delete(friend)
-            status 204
-          else
-            status 403
-          end
-        end
-
-
-        desc 'List of received friendship requests'
-        params do
-          requires :id, type: String, desc: "ID of the User"
-        end
-        oauth2 :simple, :full
-        get [':id/friendship-requests',
-             ':id/relationships/friendship-requests'] do
-          user = User.guarded_retrieve(current_user, permitted_params)
-          # TODO readable_by
-          user.received_friendship_requests
-        end
-
-
-        desc 'Create friendship request'
-        params do
-          requires :id, type: String, desc: "ID of the User"
-          requires :data, type: Hash do
-            requires :id, type: String, desc: "ID of friendship request"
-          end
-        end
-        oauth2 :simple, :full
-        post ':id/relationships/friendship-requests' do
-          user = User.guarded_retrieve(current_user, permitted_params)
-          if user.updatable_by?(current_user)
-            # TODO really unguarded ?
-            receiver  = User.unguarded_retrieve(permitted_params[:data][:id])
-            friendship_request = FriendshipRequest.new(sender: user, receiver: receiver)
-            if friendship_request.save
-              friendship_request.create_activity key: 'friendship_request.create', owner: user, recipient: receiver
-            end
-            created_response(friendship_request)
-          else
-            status 403
-          end
-        end
-
-
-        desc 'Accept friendship request'
-        params do
-          requires :id, type: String, desc: "ID of the User"
-          requires :request_id, type: String, desc: "ID of friendship request"
-        end
-        oauth2 :simple, :full
-        post ':id/friendship-requests/:request_id' do
-          user = User.guarded_retrieve(current_user, permitted_params)
-          if user.updatable_by?(current_user)
-            friendship_request = FriendshipRequest.where(receiver: user.id).find(permitted_params[:request_id])
-            friendship_request.create_activity key: 'friendship.create', owner: current_user, recipient: friendship_request.sender
-            friendship_request.accept
-            status 204
-          else
-            status 403
-          end
-        end
-
-
-        desc 'Reject friendship request'
-        params do
-          requires :id, type: String, desc: "ID of the User"
-          requires :data, type: Hash do
-            requires :id, type: String, desc: "ID of friendship request"
-          end
-        end
-        oauth2 :simple, :full
-        delete ':id/relationships/friendship-requests' do
-          user = User.guarded_retrieve(current_user, permitted_params)
-          if user.updatable_by?(current_user)
-            friendship_request = FriendshipRequest.where(receiver: user.id).find(permitted_params[:data][:id])
-            friendship_request.create_activity key: 'friendship_request.reject', owner: current_user, recipient: friendship_request.sender
-            friendship_request.reject
-            status 204
-          else
-            status 403
-          end
-        end
-
-
-        desc "Return the related devices for User"
-        params do
-          requires :id, type: String, desc: "ID of the User"
-        end
-        oauth2 :simple, :full
-        get ":id/devices" do
-          user = User.guarded_retrieve(current_user, permitted_params)
-          Device.accessible_by_user(user).readable_by(current_user)
-        end
-
-
-        desc 'Return user activities'
-        params do
-          requires :id, type: String, desc: "ID of the User"
-        end
-        oauth2 :simple, :full
-        get ':id/activities' do
-          user = User.guarded_retrieve(current_user, permitted_params)
-          # TODO readable_by
-          PublicActivity::Activity.where({ owner_type: 'User', owner_id: permitted_params[:id] })
-        end
-
-
       end
     end
   end
