@@ -5,4 +5,6 @@ Fabricator :reading do
   quality { Reading::READ_OUT }
   source { Reading::BUZZN_SYSTEMS }
   reason { Reading::REGULAR_READING }
+  meter_serialnumber { '12346578' }
+  register_id { 'some-id' }
 end

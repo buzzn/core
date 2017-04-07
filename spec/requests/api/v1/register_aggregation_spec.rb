@@ -118,7 +118,7 @@ describe "/registers" do
           GET "/api/v1/registers/#{output_register.id}/ticker", {}, token
 
           expect(response).to have_http_status(200)
-          expect(json).to eq(out_json)          
+          expect(json).to eq(out_json)
           expect(response.headers['Expires']).to eq expires
           expect(response.headers['ETag']).to eq etag
           expect(response.headers['Last-Modified']).to eq modified
@@ -135,7 +135,7 @@ describe "/registers" do
                                "expires_at" => 1454286641.0 })
           expect(response.headers['Expires']).not_to eq expires
           expect(response.headers['ETag']).not_to eq etag
-          expect(response.headers['Last-Modified']).not_to eq modified    
+          expect(response.headers['Last-Modified']).not_to eq modified
         ensure
           Timecop.return
         end
@@ -150,7 +150,9 @@ describe "/registers" do
                   timestamp: timestamp,
                   power_milliwatt: 930000 + i,
                   reason: Reading::REGULAR_READING,
-                  quality: Reading::READ_OUT
+                  quality: Reading::READ_OUT,
+                  energy_milliwatt_hour: (1 + i)*10000,
+                  meter_serialnumber: '12346578'
                  )
         timestamp += 15.minutes
       end
@@ -256,7 +258,7 @@ describe "/registers" do
       expect(response).to have_http_status(422)
       expect(json).to eq missing_json
     end
-    
+
     it 'fails on wrong duration parameter' do
       GET "/api/v1/registers/#{input_register.id}/charts", { duration: :century }
       expect(response).to have_http_status(422)
@@ -279,7 +281,7 @@ describe "/registers" do
 
     it 'discovergy' do
       VCR.use_cassette("request/api/v1/discovergy") do
-        
+
         begin
           Timecop.freeze(time)
 
@@ -338,7 +340,8 @@ describe "/registers" do
                   energy_milliwatt_hour: energy,
                   power_milliwatt: 930000 + i,
                   reason: Reading::REGULAR_READING,
-                  quality: Reading::READ_OUT
+                  quality: Reading::READ_OUT,
+                  meter_serialnumber: '12346578'
                  )
         energy += 1200000
         timestamp += 15.minutes
@@ -350,7 +353,8 @@ describe "/registers" do
                   energy_milliwatt_hour: energy,
                   power_milliwatt: 930000 + i,
                   reason: Reading::REGULAR_READING,
-                  quality: Reading::READ_OUT
+                  quality: Reading::READ_OUT,
+                  meter_serialnumber: '12346578'
                  )
         energy += 1200000
         timestamp += 1.hour
@@ -362,7 +366,8 @@ describe "/registers" do
                   energy_milliwatt_hour: energy,
                   power_milliwatt: 930000 + i,
                   reason: Reading::REGULAR_READING,
-                  quality: Reading::READ_OUT
+                  quality: Reading::READ_OUT,
+                  meter_serialnumber: '12346578'
                  )
         energy += 1200000
         timestamp += 1.day
@@ -374,7 +379,8 @@ describe "/registers" do
                   energy_milliwatt_hour: energy,
                   power_milliwatt: 930000 + i,
                   reason: Reading::REGULAR_READING,
-                  quality: Reading::READ_OUT
+                  quality: Reading::READ_OUT,
+                  meter_serialnumber: '12346578'
                  )
         energy += 1200000
         timestamp += 1.month
