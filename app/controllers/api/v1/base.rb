@@ -17,7 +17,6 @@ module API
         end
 
       mount API::V1::Users
-      mount API::V1::Profiles
       mount API::V1::Meters
       mount API::V1::Registers
       mount API::V1::Readings
