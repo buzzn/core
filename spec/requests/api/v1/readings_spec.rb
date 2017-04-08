@@ -12,21 +12,15 @@ describe "readings" do
 
   # READ
 
-  [:no_access_token, :simple_access_token, :full_access_token, :smartmeter_access_token].each do |token|
+  it "does not get a reading" do
+    reading = Fabricate(:reading)
 
-    it "does not get a reading with #{token}" do
-      reading = reading_from_easy_meter
+    get_without_token "/api/v1/readings/#{reading.id}"
+    expect(response).to have_http_status(403)
 
-      if token == :no_access_token
-        get_without_token "/api/v1/readings/#{reading.id}"
-        expect(response).to have_http_status(401)
-      else
-        access_token = Fabricate(token)
-        get_with_token "/api/v1/readings/#{reading.id}", access_token.token
-        expect(response).to have_http_status(403)
-      end
-    end
-
+    access_token  = Fabricate(:full_access_token_as_admin)
+    get_with_token "/api/v1/readings/#{reading.id}", access_token.token
+    expect(response).to have_http_status(403)
   end
 
   it 'gets a reading with full access token as admin' do

@@ -1,100 +1,233 @@
-describe "Organizations API" do
+# coding: utf-8
+describe "organizations" do
 
-  # RETRIEVE
-
-  it 'gets an organization with full access token as admin' do
-    access_token = Fabricate(:full_access_token_as_admin)
-    organization = Fabricate(:electricity_supplier)
-
-    get_with_token "/api/v1/organizations/#{organization.id}", access_token.token
-
-    expect(response).to have_http_status(200)
-    expect(json['data']['id']).to eq organization.id
+  let(:admin) do
+    Fabricate(:admin_token)
   end
 
-
-  it 'gets an organization as manager' do
-    access_token = Fabricate(:simple_access_token)
-    organization = Fabricate(:electricity_supplier)
-    manager = User.find(access_token.resource_owner_id)
-    manager.add_role(:manager, organization)
-
-    get_with_token "/api/v1/organizations/#{organization.id}", access_token.token
-
-    expect(response).to have_http_status(200)
-    expect(json['data']['id']).to eq organization.id
+  let(:user) do
+    Fabricate(:user_token)
   end
 
-
-  it 'gets an organization' do
-    organization = Fabricate(:electricity_supplier)
-    get_without_token "/api/v1/organizations/#{organization.id}"
-    expect(response).to have_http_status(200)
-    expect(json['data']['id']).to eq organization.id
+  let(:anonymous_denied_json) do
+    {
+      "errors" => [
+        { "title"=>"Permission Denied",
+          "detail"=>"retrieve Organization: permission denied for User: --anonymous--" }
+      ]
+    }
   end
 
-  # RETRIEVE bank_account
-
-  it 'gets not the related bank_account of an organization without token' do
-    organization       = Fabricate(:metering_service_provider)
-    bank_account       = organization.bank_account
-
-    get_without_token "/api/v1/organizations/#{organization.id}/bank-account"
-    expect(response).to have_http_status(401)
+  let(:denied_json) do
+    json = anonymous_denied_json.dup
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id 
+    json
   end
 
-  it 'gets not the related bank_account of an organization with token' do
-    organization       = Fabricate(:metering_service_provider)
-    access_token       = Fabricate(:full_access_token)
-    organization.bank_account.delete
-
-    get_with_token "/api/v1/organizations/#{organization.id}/bank-account", access_token.token
-    expect(response).to have_http_status(404)
+  let(:anonymous_not_found_json) do
+    {
+      "errors" => [
+        { "title"=>"Record Not Found",
+          "detail"=>"Organization: bla-blub not found" }
+      ]
+    }
   end
 
-  it 'gets the related bank_account of an organization with token' do
-    organization    = Fabricate(:metering_service_provider)
-    manager_access_token = Fabricate(:full_access_token)
-    manager_user         = User.find(manager_access_token.resource_owner_id)
-    manager_user.add_role(:manager, organization)
-
-    get_with_token "/api/v1/organizations/#{organization.id}/bank-account", manager_access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data']['id']).to eq(organization.bank_account.id)
+  let(:not_found_json) do
+    json = anonymous_not_found_json.dup
+    json['errors'][0]['detail'] = "Organization: bla-blub not found by User: #{admin.resource_owner_id}"
+    json
   end
 
+  let(:organization) { Fabricate(:metering_service_provider)}
 
-  # RETRIEVE address
+  context 'GET' do
 
-  it 'gets the related address of an organization without token' do
-    organization    = Fabricate(:transmission_system_operator_with_address)
-    address       = organization.address
+    let(:organization_json) do
+      { "data"=>{
+          "id"=>organization.id,
+          "type"=>"organizations",
+          "attributes"=>{
+            "type"=>"organization",
+            "name"=>organization.name,
+            "phone"=>organization.phone,
+            "fax"=>organization.fax,
+            "website"=>organization.website,
+            "email"=>organization.email,
+            "description"=>organization.description,
+            "mode"=>"metering_service_provider",
+            "updatable"=>false,
+            "deletable"=>false},
+          "relationships"=>{
+            "address"=>{"data"=>nil},
+            "bank-account"=>{"data"=>nil}
+          }
+        }
+      }
+    end
 
-    get_without_token "/api/v1/organizations/#{organization.id}/address"
+    let(:admin_organization_json) do
+      json = organization_json.dup
+      json['data']['attributes']['updatable']=true
+      json['data']['attributes']['deletable']=true
+      json
+    end
 
-    expect(response).to have_http_status(200)
-    expect(json['data']['id']).to eq(address.id)
-    expect(json['data']['attributes']['time-zone']).to eq('Berlin')
+    it '403' do
+      # nothing to test here as an organization is public
+    end
+
+    it '404' do
+      GET "/api/v1/organizations/bla-blub"
+      expect(response).to have_http_status(404)
+      expect(json).to eq anonymous_not_found_json
+
+      GET "/api/v1/organizations/bla-blub", admin
+      expect(response).to have_http_status(404)
+      expect(json).to eq not_found_json
+    end
+
+    it '200' do
+      bank_account = organization.bank_account
+      bank_account.delete if bank_account
+
+      GET "/api/v1/organizations/#{organization.id}"
+      expect(response).to have_http_status(200)
+      expect(json).to eq organization_json
+
+      GET "/api/v1/organizations/#{organization.id}", admin
+      expect(response).to have_http_status(200)
+      expect(json).to eq admin_organization_json
+    end
   end
 
-  it 'gets not the related address of an organization with token' do
-    organization       = Fabricate(:metering_service_provider)
-    access_token       = Fabricate(:full_access_token)
+  context 'bank_account' do
 
-    get_with_token "/api/v1/organizations/#{organization.id}/address", access_token.token
-    expect(response).to have_http_status(404)
+    let(:bank_account) { organization.bank_account}
+
+    let(:bank_account_not_found_json) do
+      {
+        "errors" => [
+          { "title"=>"Record Not Found",
+            # TODO fix bad error response
+            "detail"=>"Buzzn::RecordNotFound" }
+        ]
+      }
+    end
+
+    let(:bank_account_anonymous_denied_json) do
+      json = anonymous_denied_json.dup
+      json['errors'][0]['detail'].sub! 'Organization:', "BankAccount: #{bank_account.id}"
+      json
+    end
+
+    let(:bank_account_json) do
+      { "data"=>{
+          "id"=>bank_account.id,
+          "type"=>"bank-accounts",
+          "attributes"=>{
+            "type"=>"bank_account",
+            "holder"=>bank_account.holder,
+            "bank-name"=>bank_account.bank_name,
+            "bic"=>bank_account.bic,
+            "iban"=>bank_account.iban,
+            "direct-debit"=>bank_account.direct_debit
+          }
+        }
+      }
+    end
+
+    context 'GET' do
+      it '403' do
+        GET "/api/v1/organizations/#{organization.id}/bank-account"
+        expect(response).to have_http_status(403)
+        expect(json).to eq bank_account_anonymous_denied_json
+
+        # TODO this should fail as expected same as top-level object
+        #GET "/api/v1/organizations/#{organization.id}/bank-account", user
+        #expect(response).to have_http_status(403)
+        #expect(json).to eq bank_account_denied_json
+      end
+
+      it '404' do
+        GET "/api/v1/organizations/bla-blub/bank-account", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+
+        organization.bank_account.delete
+        GET "/api/v1/organizations/#{organization.id}/bank-account", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq bank_account_not_found_json
+      end
+
+      it '200' do
+        GET "/api/v1/organizations/#{organization.id}/bank-account", admin
+        expect(response).to have_http_status(200)
+        expect(json).to eq(bank_account_json)
+      end
+    end
   end
 
-  it 'gets the related address of an organization with token' do
-    access_token    = Fabricate(:simple_access_token)
-    organization    = Fabricate(:transmission_system_operator_with_address)
-    address         = organization.address
+  context 'address' do
 
-    get_with_token "/api/v1/organizations/#{organization.id}/address", access_token.token
+    let(:organization) { Fabricate(:transmission_system_operator_with_address)}
+    let(:address) { organization.address}
 
-    expect(response).to have_http_status(200)
-    expect(json['data']['id']).to eq(address.id)
-    expect(json['data']['attributes']['time-zone']).to eq('Berlin')
+    let(:address_not_found_json) do
+      {
+        "errors" => [
+          { "title"=>"Record Not Found",
+            # TODO fix bad error response
+            "detail"=>"Buzzn::RecordNotFound" }
+        ]
+      }
+    end
+
+    let(:address_json) do
+      { "data"=>{
+          "id"=>address.id,
+          "type"=>"addresses",
+          "attributes"=>{
+            "type"=>"address",
+            "address"=>nil,
+            "street-name"=>"Zu den Höfen",
+            "street-number"=>"7",
+            "city"=>"Asche",
+            "state"=>"Lower Saxony",
+            "zip"=>37181,
+            "country"=>"Germany",
+            "longitude"=>nil,
+            "latitude"=>nil,
+            "addition"=>"HH",
+            "time-zone"=>"Berlin",
+            "updatable"=>false,
+            "deletable"=>false
+          }
+        }
+      }
+    end
+
+    context 'GET' do
+      it '403' do
+        # nothing to test here as an address of an organization is public
+      end
+
+      it '404' do
+        GET "/api/v1/organizations/bla-blub/address", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+
+        organization.address.delete
+        GET "/api/v1/organizations/#{organization.id}/address", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq address_not_found_json
+      end
+
+      it '200' do
+        GET "/api/v1/organizations/#{organization.id}/address", admin
+        expect(response).to have_http_status(200)
+        expect(json).to eq address_json
+      end
+    end
   end
-
 end

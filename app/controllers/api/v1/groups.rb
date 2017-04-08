@@ -9,7 +9,6 @@ module API
           optional :timestamp, type: Time
           requires :duration, type: String, values: %w(year month day hour)
         end
-        oauth2 false
         get ":id/charts" do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
           interval = Buzzn::Interval.create(params[:duration], params[:timestamp])
@@ -27,7 +26,6 @@ module API
         params do
           requires :id, type: String
         end
-        oauth2 false
         get ":id/bubbles" do
           group = Group::BaseResource.retrieve(current_user, permitted_params)
           result = Buzzn::Application.config.current_power.for_each_register_in_group(group)
@@ -47,7 +45,6 @@ module API
           params do
             requires :id, type: String, desc: "ID of the group"
           end
-          oauth2 :full
           get ":id/localpool-processing-contract" do
             Group::LocalpoolResource
               .retrieve(current_user, permitted_params)
@@ -59,7 +56,6 @@ module API
           params do
             requires :id, type: String, desc: "ID of the group"
           end
-          oauth2 :full
           get ":id/metering-point-operator-contract" do
             Group::LocalpoolResource
               .retrieve(current_user, permitted_params)
@@ -76,7 +72,6 @@ module API
           optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
           optional :order_by, type: String, default: 'created_at', values: ['name', 'updated_at', 'created_at'], desc: "Order by Attribute"
         end
-        oauth2 false
         get do
           order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
           Group::BaseResource
@@ -90,7 +85,6 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        oauth2 false
         get ":id" do
           Group::BaseResource.retrieve(current_user, permitted_params)
         end
@@ -102,7 +96,6 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        oauth2 false
         get ":id/registers" do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
@@ -118,7 +111,6 @@ module API
           requires :timestamp, type: DateTime
           optional :mode, type: Symbol, values: [:sufficiency, :closeness, :autarchy, :fitting]
         end
-        oauth2 false
         get ":id/scores" do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
@@ -131,7 +123,6 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        oauth2 :simple, :full
         get ':id/managers' do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
@@ -142,7 +133,6 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        oauth2 :simple, :full
         get ':id/members' do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
@@ -154,7 +144,6 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        oauth2 :simple, :full
         get ":id/energy-consumers" do
           Group::BaseResource
             .retrieve(current_user, permitted_params)

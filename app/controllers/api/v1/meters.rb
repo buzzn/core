@@ -8,7 +8,6 @@ module API
         params do
           requires :id, type: String, desc: "ID of the meter"
         end
-        oauth2 :full
         get ":id" do
           Meter::BaseResource.retrieve(current_user, permitted_params)
         end
@@ -19,7 +18,6 @@ module API
           params do
             requires :id, type: String, desc: "ID of the Meter"
           end
-          oauth2 :full, :smartmeter
           get ":id/registers" do
             Meter::RealResource
               .retrieve(current_user, permitted_params)
@@ -34,7 +32,6 @@ module API
           params do
             requires :id, type: String, desc: "ID of the Meter"
           end
-          oauth2 :full
           get ":id/register" do
             Meter::VirtualResource
               .retrieve(current_user, permitted_params)

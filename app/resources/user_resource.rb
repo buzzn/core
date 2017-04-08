@@ -9,7 +9,12 @@ class UserResource < Buzzn::EntityResource
   entities :profile,
            :bank_account
 
+  def meters(filter = nil)
+    Meter::Base.filter(filter).readable_by(@current_user)
+  end
+
 end
+
 class FullUserResource < UserResource
 
   def self.new(*args)
@@ -22,10 +27,7 @@ class FullUserResource < UserResource
               :last_name,
               :gender,
               :phone,
-              :email,
-              :sales_tax_number,
-              :tax_rate,
-              :tax_number
+              :email
 
   def title
     object.profile.title
@@ -38,6 +40,17 @@ class FullUserResource < UserResource
   def phone
     object.profile.phone
   end
+end
+
+class ContractingPartyUserResource < FullUserResource
+  def self.new(*args)
+    super
+  end
+
+  attributes  :sales_tax_number,
+              :tax_rate,
+              :tax_number
+
 end
 
 # TODO get rid of the need of having a Serializer class
