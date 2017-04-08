@@ -13,12 +13,12 @@ describe "readings" do
   # READ
 
   it "does not get a reading" do
-    reading = Fabricate(:reading)
+    reading = Fabricate(:reading, register_id: easy_meter.input_register.id)
 
     get_without_token "/api/v1/readings/#{reading.id}"
     expect(response).to have_http_status(403)
 
-    access_token  = Fabricate(:full_access_token_as_admin)
+    access_token  = Fabricate(:full_access_token)
     get_with_token "/api/v1/readings/#{reading.id}", access_token.token
     expect(response).to have_http_status(403)
   end
