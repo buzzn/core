@@ -26,7 +26,7 @@ class OrganizationResource < Buzzn::EntityResource
   end
 
 end
-class FullOrganizationResource < OrganizationResource
+class ContractingPartyOrganizationResource < OrganizationResource
 
   def self.new(*args)
     super

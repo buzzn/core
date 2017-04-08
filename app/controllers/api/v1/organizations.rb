@@ -9,7 +9,6 @@ module API
         params do
           requires :id, type: String, desc: "ID of the organization"
         end
-        oauth2 false
         get ":id" do
           OrganizationResource.retrieve(current_user, permitted_params)
         end
@@ -18,7 +17,6 @@ module API
         params do
           requires :id, type: String, desc: 'ID of the organization'
         end
-        oauth2 false
         get ':id/address' do
           OrganizationResource
             .retrieve(current_user, permitted_params)
@@ -30,7 +28,6 @@ module API
         params do
           requires :id, type: String, desc: 'ID of the organization'
         end
-        oauth2 :full
         get ':id/bank-account' do
           OrganizationResource
             .retrieve(current_user, permitted_params)

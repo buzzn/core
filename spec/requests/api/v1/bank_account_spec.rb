@@ -1,78 +1,95 @@
-describe "BankAccount API" do
-
-  let(:admin) { Fabricate(:admin) }
-  let(:output_register) { Fabricate(:output_meter).output_register }
-  let(:user_with_register) do
-    user = Fabricate(:user)
-    output_register.managers.add(admin, user)
-    user
-  end
-
-  let(:contract) do
-    Fabricate(:power_giver_contract, register: output_register)
-  end
+describe "bank-accounts" do
 
   let(:account) do
+    register = Fabricate(:output_meter).output_register
+    contract =Fabricate(:power_giver_contract, register: register)
     account = Fabricate(:bank_account)
     account.bank_accountable = contract
     account.save!
     account
   end
 
-  let(:admin_token) do
-    Fabricate(:full_access_token_as_admin, resource_owner_id: admin.id)
-  end
-  let(:simple_token) do
-    Fabricate(:simple_access_token, resource_owner_id: user_with_register.id)
-  end
-  let(:full_token_community) do
-    Fabricate(:full_access_token)
-  end
-  let(:full_token) do
-    Fabricate(:full_access_token, resource_owner_id: user_with_register.id)
-  end
-  let(:smartmeter_token) do
-    Fabricate(:smartmeter_access_token, resource_owner_id: user_with_register.id)
+  let(:admin) do
+    Fabricate(:admin_token)
   end
 
-  it 'denies access without token' do
-    # patch_without_token "/api/v1/bank-accounts/#{account.id}", {}.to_json
-    # expect(response).to have_http_status(401)
+  let(:user) do
+    Fabricate(:user_token)
   end
 
-  [:simple_token, :full_token_community, :smartmeter_token].each do |token|
-
-  #   it "does not get bank-account with #{token}" do
-  #     access_token  = send(token)
-  #
-  #     patch_with_token "/api/v1/bank-accounts/#{account.id}", {}.to_json, access_token.token
-  #     expect(response).to have_http_status(403)
-  #   end
-
+  let(:anonymous_denied_json) do
+    {
+      "errors" => [
+        { "title"=>"Permission Denied",
+          "detail"=>"retrieve BankAccount: permission denied for User: --anonymous--" }
+      ]
+    }
   end
 
-  [:full_token, :admin_token].each do |token|
-
-    # it "updates bank-account with #{token}" do
-    #   access_token  = send(token)
-    #
-    #   patch_with_token "/api/v1/bank-accounts/#{account.id}-a", access_token.token
-    #   expect(response).to have_http_status(404)
-    #
-    #   data = Fabricate.build(:bank_account).attributes.reject {|k,v| k == 'encrypted_iban' || k == 'direct_debit' || v.nil? }
-    #   data.each do |k,v|
-    #     patch_with_token "/api/v1/bank-accounts/#{account.id}", { "#{k}": v}.to_json, access_token.token
-    #     expect(response).to have_http_status(200)
-    #     expect(json['data']['attributes'][k.sub(/_/, '-')]).to eq v
-    #   end
-    #
-    #   data.each do |k,v|
-    #     patch_with_token "/api/v1/bank-accounts/#{account.id}", { "#{k}": 'a' * 200}.to_json, access_token.token
-    #     expect(response).to have_http_status(422)
-    #     expect(json['errors'].first['source']['pointer']).to eq "/data/attributes/#{k}"
-    #   end
-    # end
-
+  let(:denied_json) do
+    json = anonymous_denied_json.dup
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id 
+    json
   end
 
+  let(:not_found_json) do
+    {
+      "errors" => [
+        { "title"=>"Record Not Found",
+          "detail"=>"BankAccount: bla-bla-blub not found by User: #{admin.resource_owner_id}" }
+      ]
+    }
+  end
+
+  context 'PATCH' do
+
+    let(:validation_json) do
+      { "errors"=>[
+          {
+            "parameter"=>"bank_name",
+            "source"=>{"pointer"=>"/data/attributes/bank_name"},
+            "title"=>"Invalid Attribute",
+            "detail"=>"bank_name is too long (maximum is 63 characters)"
+          },
+          {
+            "parameter"=>"holder",
+            "source"=>{"pointer"=>"/data/attributes/holder"},
+            "title"=>"Invalid Attribute",
+            "detail"=>"holder is too long (maximum is 63 characters)"
+          }
+        ]
+      }
+    end
+
+    it '403' do
+      PATCH "/api/v1/bank-accounts/#{account.id}"
+      expect(response).to have_http_status(403)
+      expect(json).to eq anonymous_denied_json
+
+      PATCH "/api/v1/bank-accounts/#{account.id}", user
+      expect(response).to have_http_status(403)
+      expect(json).to eq denied_json
+    end
+
+    it '404' do
+      PATCH "/api/v1/bank-accounts/bla-bla-blub", admin
+      expect(response).to have_http_status(404)
+      expect(json).to eq not_found_json
+    end
+
+    it '422' do
+      # TODO add all possible validation errors, i.e. iban
+      PATCH "/api/v1/bank-accounts/#{account.id}", admin,
+            holder: 'Max Mueller' * 10,
+            bank_name: 'Bundesbank' * 10
+      expect(response).to have_http_status(422)
+      expect(json).to eq validation_json
+    end
+
+    it '200' do
+      PATCH "/api/v1/bank-accounts/#{account.id}", admin, holder: 'Max Mueller'
+      expect(response).to have_http_status(200)
+      expect(account.reload.holder).to eq 'Max Mueller'
+    end
+  end
 end

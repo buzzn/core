@@ -92,7 +92,6 @@ module API
             requires :direct_debit, type: Boolean, desc: 'Allow buzzn to make a direct debit'
           end
         end
-        oauth2 false
         post 'power-taker' do
           contract = permitted_params[:contract]
           contract[:begin_date] = permitted_params[:contract].delete(:beginning)

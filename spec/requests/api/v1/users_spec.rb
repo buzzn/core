@@ -1,161 +1,405 @@
-describe "Users API" do
+describe "users" do
 
-  let(:page_overload) { 33 }
+  let(:admin) { Fabricate(:admin_token) }
 
+  let(:user_token) { Fabricate(:user_token) }
 
-  # RETRIEVE me
+  let(:other) { Fabricate(:user_token) }
 
-  it 'does not get me without token' do
-    get_without_token "/api/v1/users/me"
-    expect(response).to have_http_status(401)
-  end
+  let(:user) { User.find(user_token.resource_owner_id) }
 
-
-  [:simple_access_token, :full_access_token, :smartmeter_access_token].each do |token|
-    it "gets me with #{token}" do
-      access_token = Fabricate(token)
-      get_with_token "/api/v1/users/me", access_token.token
-      expect(response).to have_http_status(200)
-      expect(json['data']['id']).to eq access_token.resource_owner_id
-    end
-  end
-
-
-  # RETRIEVE users
-
-  it 'does not get users without token' do
-    get_without_token "/api/v1/users"
-    expect(response).to have_http_status(401)
-  end
-
-  [:simple_access_token, :smartmeter_access_token].each do |token|
-    it "does not get users with #{token}" do
-      access_token = Fabricate(token)
-      get_with_token "/api/v1/users", {}, access_token.token
-      expect(response).to have_http_status(403)
-    end
-  end
-
-
-  it 'get all users with full access token as admin' do
-    Fabricate(:user)
-    Fabricate(:user)
-    access_token = Fabricate(:full_access_token_as_admin).token
-    get_with_token '/api/v1/users', {}, access_token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq User.all.size
-  end
-
-
-  it 'search users with full access token as admin' do
-    user = Fabricate(:user)
-    Fabricate(:user)
-    Fabricate(:user)
-    access_token = Fabricate(:full_access_token_as_admin).token
-
-    request_params = { filter: user.email }
-    get_with_token '/api/v1/users', request_params, access_token
-
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq 1
-    expect(json['data'].first['id']).to eq user.id
-  end
-
-  it 'does not gets an user without token' do
-    user = Fabricate(:user)
-    get_without_token "/api/v1/users/#{user.id}"
-    expect(response).to have_http_status(401)
-  end
-
- [:simple_access_token, :smartmeter_access_token].each do |token|
-    it "does not get an user with #{token}" do
-      access_token = Fabricate(token)
-      user         = Fabricate(:user)
-      get_with_token "/api/v1/users/#{user.id}", access_token.token
-      expect(response).to have_http_status(403)
-    end
-  end
-
-
-  # everything else . . .
-
-  it 'gets user profile only with token' do
-    access_token  = Fabricate(:simple_access_token)
-    user          = User.find(access_token.resource_owner_id)
-
-    get_without_token "/api/v1/users/#{user.id}/profile"
-    expect(response).to have_http_status(401)
-    get_with_token "/api/v1/users/#{user.id}/profile", access_token.token
-    expect(response).to have_http_status(200)
-  end
-
-
-  it 'gets related bank_account for User' do
-    stranger_access_token = Fabricate(:full_access_token)
-    user_access_token     = Fabricate(:full_access_token)
-    user                  = User.find(user_access_token.resource_owner_id)
-
-    get_with_token "/api/v1/users/#{user.id}/bank-account", stranger_access_token.token
-    expect(response).to have_http_status(403)
-
-    get_with_token "/api/v1/users/#{user.id}/bank-account", user_access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data']['id']).to eq(user.bank_account.id)
-  end
-
-  [:full_access_token, :smartmeter_access_token].each do |token|
-    it "gets all related meters with #{token}" do
-      meter1 = Fabricate(:input_meter)
-      meter2 = Fabricate(:output_meter)
-      meter3 = Fabricate(:meter)
-
-      access_token = Fabricate(token)
-      user         = User.find(access_token.resource_owner_id)
-      user.add_role(:manager, meter1.input_register)
-      user.add_role(:manager, meter2.output_register)
-
-      get_with_token "/api/v1/users/#{user.id}/meters", access_token.token
-      expect(response).to have_http_status(200)
-      expect(json['data'].size).to eq(2)
-    end
-  end
-
-  it 'get all meters' do
-    access_token = Fabricate(:full_access_token_as_admin)
-    user         = Fabricate(:user)
-    page_overload.times do
-      meter = Fabricate(:meter)
-      user.add_role(:manager, meter.registers.first)
-    end
-
-    pages_profile_ids = []
-    params = {order_direction: 'DESC', order_by: 'created_at'}
-    get_with_token "/api/v1/users/#{user.id}/meters", params, access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload)
-  end
-
-
-
-
-  it 'gets the related meters for User but filtered by manufacturer_product_serialnumber' do
-    meter1 = Fabricate(:input_meter)
-    meter2 = Fabricate(:output_meter)
-    meter3 = Fabricate(:meter)
-
-    access_token  = Fabricate(:full_access_token)
-    user          = User.find(access_token.resource_owner_id)
-    user.add_role(:manager, meter1.input_register)
-    user.add_role(:manager, meter2.output_register)
-
-    request_params = {
-      filter: meter1.manufacturer_product_serialnumber
+  let(:anonymous_denied_json) do
+    {
+      "errors" => [
+        { "title"=>"Permission Denied",
+          "detail"=>"retrieve User: permission denied for User: --anonymous--" }
+      ]
     }
-
-    get_with_token "/api/v1/users/#{user.id}/meters", request_params, access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-    expect(json['data'].first['attributes']['manufacturer-product-serialnumber']).to eq(meter1.manufacturer_product_serialnumber)
   end
 
+  let(:denied_json) do
+    json = anonymous_denied_json.dup
+    json['errors'][0]['detail'].sub! /--anonymous--/, other.resource_owner_id 
+    json
+  end
+
+  let(:anonymous_not_found_json) do
+    {
+      "errors" => [
+        { "title"=>"Record Not Found",
+          "detail"=>"User: bla-blub not found" }
+      ]
+    }
+  end
+
+  let(:not_found_json) do
+    json = anonymous_not_found_json.dup
+    json['errors'][0]['detail'] = "User: bla-blub not found by User: #{admin.resource_owner_id}"
+    json
+  end
+
+  let(:empty_json) do
+    {
+      "data"=>[]
+    }
+  end
+
+  let(:user_json) do
+    {
+      "data"=>{
+        "id"=>user.id,
+        "type"=>"users",
+        "attributes"=>{
+          "type"=>"user",
+          "updatable"=>true,
+          # TODO feels wrong any a user can delete her/him-self
+          "deletable"=>true,
+          "user-name"=>user.user_name,
+          "title"=>user.profile.title,
+          "first-name"=>user.first_name,
+          "last-name"=>user.last_name,
+          "gender"=>user.profile.gender,
+          "phone"=>user.profile.phone,
+          "email"=>user.email
+        },
+      }
+    }
+  end
+
+  let(:users_json) do
+    {
+      "data"=>[
+        {
+          "id"=>user.id,
+          "type"=>"users",
+          "attributes"=>{
+            "type"=>"user",
+            "updatable"=>false,
+            "deletable"=>false
+          }
+        }
+      ]
+    }
+  end
+
+  let(:admin_users_json) do
+    {
+      "data"=> User.all.collect do |u|
+        {
+          "id"=>u.id,
+          "type"=>"users",
+          "attributes"=>{
+            "type"=>"user",
+            "updatable"=>false,
+            "deletable"=>false
+          }
+        }
+      end
+    }
+  end
+
+  let(:filtered_admin_users_json) do
+    {
+      "data"=>[
+        {
+          "id"=>admin.resource_owner_id,
+          "type"=>"users",
+          "attributes"=>{
+            "type"=>"user",
+            "updatable"=>false,
+            "deletable"=>false
+          }
+        }
+      ]
+    }
+  end
+
+  context 'GET' do
+
+    let(:admin_user_json) do
+      json = user_json.dup
+      json['data']['attributes']['deletable']=true
+      json
+    end
+
+    it '403' do
+      GET "/api/v1/users/#{user.id}"
+      expect(response).to have_http_status(403)
+      expect(json).to eq anonymous_denied_json
+
+      GET "/api/v1/users/#{user.id}", other
+      expect(response).to have_http_status(403)
+      expect(json).to eq denied_json
+    end
+
+    it '404' do
+      GET "/api/v1/users/bla-blub"
+      expect(response).to have_http_status(404)
+      expect(json).to eq anonymous_not_found_json
+
+      GET "/api/v1/users/bla-blub", admin
+      expect(response).to have_http_status(404)
+      expect(json).to eq not_found_json
+    end
+
+    it '200' do
+      GET "/api/v1/users/#{user.id}", user_token
+      expect(response).to have_http_status(200)
+      expect(json.to_yaml).to eq user_json.to_yaml
+
+      GET "/api/v1/users/#{user.id}", admin
+      expect(response).to have_http_status(200)
+      expect(json.to_yaml).to eq admin_user_json.to_yaml
+    end
+
+    it '200 all' do
+      user # setup
+      admin # setup
+      other # setup
+
+      GET "/api/v1/users", user_token
+      expect(response).to have_http_status(200)
+      expect(json).to eq users_json
+
+      GET "/api/v1/users", admin
+      expect(response).to have_http_status(200)
+      expect(json['data']).to match_array admin_users_json['data']
+    end
+
+    it '200 all filtered' do
+      user # setup
+      admin # setup
+      other # setup
+
+      admin_user = User.find(admin.resource_owner_id)
+
+      GET "/api/v1/users", user_token, filter: admin_user.first_name
+      expect(response).to have_http_status(200)
+      expect(json.to_yaml).to eq empty_json.to_yaml
+
+      GET "/api/v1/users", admin, filter: admin_user.first_name
+      expect(response).to have_http_status(200)
+      expect(json.to_yaml).to eq filtered_admin_users_json.to_yaml
+    end
+  end
+
+  context 'me' do
+
+    it '403' do
+      GET "/api/v1/users/me"
+      expect(json).to eq anonymous_denied_json
+      expect(response).to have_http_status(403)
+    end
+
+    it '200' do
+      GET "/api/v1/users/me", user_token
+      expect(json.to_yaml).to eq user_json.to_yaml
+      expect(response).to have_http_status(200)
+    end
+    
+  end
+
+  context 'bank_account' do
+
+    let(:bank_account) { user.bank_account}
+
+    let(:bank_account_not_found_json) do
+      {
+        "errors" => [
+          { "title"=>"Record Not Found",
+            # TODO fix bad error response
+            "detail"=>"Buzzn::RecordNotFound" }
+        ]
+      }
+    end
+
+    let(:bank_account_anonymous_denied_json) do
+      json = anonymous_denied_json.dup
+      json['errors'][0]['detail'].sub! 'User:', "BankAccount: #{bank_account.id}"
+      json
+    end
+
+    let(:bank_account_json) do
+      { "data"=>{
+          "id"=>bank_account.id,
+          "type"=>"bank-accounts",
+          "attributes"=>{
+            "type"=>"bank_account",
+            "holder"=>bank_account.holder,
+            "bank-name"=>bank_account.bank_name,
+            "bic"=>bank_account.bic,
+            "iban"=>bank_account.iban,
+            "direct-debit"=>bank_account.direct_debit
+          }
+        }
+      }
+    end
+
+    context 'GET' do
+      it '403' do
+        GET "/api/v1/users/#{user.id}/bank-account"
+        expect(response).to have_http_status(403)
+        expect(json).to eq anonymous_denied_json
+
+        GET "/api/v1/users/#{user.id}/bank-account", other
+        expect(response).to have_http_status(403)
+        expect(json).to eq denied_json
+
+        # TODO use an user which can see other user but not bank_account
+        #GET "/api/v1/users/#{user.id}/bank-account", user_token
+        #expect(response).to have_http_status(403)
+        #expect(json).to eq bank_account_denied_json
+      end
+
+      it '404' do
+        GET "/api/v1/users/bla-blub/bank-account", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+
+        user.bank_account.delete
+        GET "/api/v1/users/#{user.id}/bank-account", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq bank_account_not_found_json
+      end
+
+      it '200' do
+        GET "/api/v1/users/#{user.id}/bank-account", user_token
+        expect(response).to have_http_status(200)
+        expect(json).to eq(bank_account_json)
+
+        GET "/api/v1/users/#{user.id}/bank-account", admin
+        expect(response).to have_http_status(200)
+        expect(json).to eq(bank_account_json)
+      end
+
+    end
+  end
+
+  context 'meters' do
+
+    let(:meter1) do
+      meter = Fabricate(:input_meter)
+      user.add_role(:manager, meter.input_register)
+      meter
+    end
+
+    let(:meter2) do
+      meter = Fabricate(:output_meter)
+      user.add_role(:manager, meter.output_register)
+      meter
+    end
+
+    let(:meter3) { Fabricate(:meter) }
+
+    let(:user_meters_json) do
+      {
+        "data"=>[
+          { "id"=>meter1.id,
+            "type"=>"meter-reals",
+            "attributes"=>{
+              "type"=>"meter_real",
+              "manufacturer-name"=>meter1.manufacturer_name,
+              "manufacturer-product-name"=>meter1.manufacturer_product_name,
+              "manufacturer-product-serialnumber"=>meter1.manufacturer_product_serialnumber,
+              "updatable"=>false,
+              "deletable"=>false,
+              "smart"=>false
+            },
+            "relationships"=>{
+              "registers"=>{"data"=>[]}
+            }
+          },
+          { "id"=>meter2.id,
+            "type"=>"meter-reals",
+            "attributes"=>{
+              "type"=>"meter_real",
+              "manufacturer-name"=>meter2.manufacturer_name,
+              "manufacturer-product-name"=>meter2.manufacturer_product_name,
+              "manufacturer-product-serialnumber"=>meter2.manufacturer_product_serialnumber,
+              "updatable"=>false,
+              "deletable"=>false,
+              "smart"=>false
+            },
+            "relationships"=>{"registers"=>{"data"=>[]}}
+          }
+        ]
+      }
+    end
+
+    let(:filtered_admin_meters_json) do
+      {
+        "data"=>[
+          "id"=>meter3.id,
+          "type"=>"meter-reals",
+          "attributes"=>{
+            "type"=>"meter_real",
+            "manufacturer-name"=>meter3.manufacturer_name,
+            "manufacturer-product-name"=>meter3.manufacturer_product_name,
+            "manufacturer-product-serialnumber"=>meter3.manufacturer_product_serialnumber,
+            "updatable"=>false,
+            "deletable"=>false,
+            "smart"=>false
+          },
+          "relationships"=>{"registers"=>{"data"=>[]}}
+        ]
+      }
+    end
+
+    let(:admin_meters_json) do
+      json = user_meters_json.dup
+      json['data'] += filtered_admin_meters_json['data']
+      json
+    end
+
+    context 'GET' do
+      it '403' do
+        GET "/api/v1/users/#{user.id}/meters"
+        expect(response).to have_http_status(403)
+        expect(json).to eq anonymous_denied_json
+
+        GET "/api/v1/users/#{user.id}/meters", other
+        expect(response).to have_http_status(403)
+        expect(json).to eq denied_json
+      end
+
+      it '404' do
+        GET "/api/v1/users/bla-blub/meters", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+      end
+
+      it '200' do
+        # TODO use user which can see user but not meters
+        GET "/api/v1/users/#{user.id}/meters", user_token
+        expect(response).to have_http_status(200)
+        expect(json).to eq(empty_json)
+
+        meter1 # setup
+        meter2 # setup
+        meter3 # setup
+
+        GET "/api/v1/users/#{user.id}/meters", user_token
+        expect(response).to have_http_status(200)
+        expect(json['data']).to match_array(user_meters_json['data'])
+
+        GET "/api/v1/users/#{user.id}/meters", admin
+        expect(response).to have_http_status(200)
+        expect(json['data']).to match_array(admin_meters_json['data'])
+      end
+
+      it '200 filtered' do
+        meter1 # setup
+        meter2 # setup
+        meter3 # setup
+
+        GET "/api/v1/users/#{user.id}/meters", user_token, filter: meter3.manufacturer_product_serialnumber
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq(empty_json.to_yaml)
+        
+        GET "/api/v1/users/#{user.id}/meters", admin, filter: meter3.manufacturer_product_serialnumber
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq(filtered_admin_meters_json.to_yaml)
+      end
+    end    
+  end
 end

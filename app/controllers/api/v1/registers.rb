@@ -9,7 +9,6 @@ module API
           requires :duration, type: String, values: %w(year month day hour)
           optional :timestamp, type: Time
         end
-        oauth2 false
         get ":id/charts" do
           register = Register::Base.guarded_retrieve(current_user, permitted_params)
           interval = Buzzn::Interval.create(params[:duration], params[:timestamp])
@@ -27,7 +26,6 @@ module API
         params do
           requires :id, type: String
         end
-        oauth2 false
         get ":id/ticker" do
           register = Register::BaseResource.retrieve(current_user,
                                                      permitted_params)
