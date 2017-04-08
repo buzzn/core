@@ -9,7 +9,6 @@ module API
         params do
           requires :id, type: String, desc: "ID of the Reading"
         end
-        oauth2 :simple, :full
         get ":id" do
           reading = Reading.guarded_retrieve(current_user, permitted_params)
           render(reading, meta: {
@@ -30,7 +29,6 @@ module API
           requires :quality,               type: String,  desc: "The quality of this reading", values: Reading::qualities
           requires :meter_serialnumber,    type: String, desc: "The serialnumber of the meter"
         end
-        oauth2 :full, :smartmeter
         post do
           register = Register::Base.unguarded_retrieve(permitted_params[:register_id])
           if Reading.creatable_by?(current_user, register)

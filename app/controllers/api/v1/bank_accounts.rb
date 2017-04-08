@@ -14,7 +14,6 @@ module API
           optional :bic, type: String, desc: "BIC"
           optional :direct_debit, type: Boolean, desc: "Is direct debit"
         end
-        oauth2 :full
         patch ':id' do
           BankAccountResource
             .retrieve(current_user, permitted_params)

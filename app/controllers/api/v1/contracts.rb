@@ -11,7 +11,6 @@ module API
         params do
           requires :id, type: String, desc: 'ID of the Contract'
         end
-        oauth2 :full
         get ':id/contractor' do
           Contract::BaseResource
             .retrieve(current_user, permitted_params)
@@ -22,7 +21,6 @@ module API
         params do
           requires :id, type: String, desc: 'ID of the Contract'
         end
-        oauth2 :full
         get ':id/customer' do
           Contract::BaseResource
             .retrieve(current_user, permitted_params)
@@ -33,7 +31,6 @@ module API
         params do
           requires :id, type: String, desc: 'ID of the Contract'
         end
-        oauth2 :simple, :full
         get ':id' do
           Contract::BaseResource.retrieve(current_user, permitted_params)
         end
@@ -124,7 +121,6 @@ module API
             requires :direct_debit, type: Boolean, desc: 'Allow buzzn to make a direct debit'
           end
         end
-        oauth2 false
         post 'power-taker' do
           Buzzn::ContractFactory.create_power_taker_contract(current_user, permitted_params)
           status 201
