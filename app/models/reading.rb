@@ -1,4 +1,3 @@
-require 'buzzn/guarded_crud'
 class Reading
   include Mongoid::Document
   include Authority::Abilities
@@ -101,7 +100,7 @@ class Reading
   def self.guarded_retrieve(user, id)
     result = find(id)
     unless result.readable_by?(user)
-      raise Buzzn::PermissionDenied.new
+      raise Buzzn::PermissionDenied.create(Reading, :retrieve, user)
     end
     result
   end
