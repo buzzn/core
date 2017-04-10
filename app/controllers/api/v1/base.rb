@@ -18,7 +18,6 @@ module API
 
       mount API::V1::Users
       mount API::V1::Meters
-      mount API::V1::Registers
       mount API::V1::Readings
       mount API::V1::Aggregates
       mount API::V1::Groups
