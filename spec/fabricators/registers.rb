@@ -22,7 +22,6 @@
     digits_before_comma 6
     decimal_digits 2
   end
-
 end
 
 
