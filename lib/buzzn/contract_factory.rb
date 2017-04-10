@@ -67,6 +67,7 @@ module Buzzn
           counting_point = self.register.delete(:counting_point)
           register = build(Register::Input,
                            self.register,
+                           label: Register::Base::CONSUMPTION,
                            name: 'Wohnung',
                            readable: 'friends',
                            address: other || address)
