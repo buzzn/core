@@ -587,15 +587,4 @@ module Register
       self.activities.each{|activity| activity.destroy}
     end
   end
-
-  class LowLoadAbility
-    ZNS_NO_LOW_LOAD_ABILITY = 'ZNS_no_low_load_ability'
-    ZSF_LOW_LOAD_ABILITY = 'ZFS_low_load_ability'
-
-    class << self
-      def all
-        @low_load_ability ||= [ZNS_NO_LOW_LOAD_ABILITY, ZSF_LOW_LOAD_ABILITY]
-      end
-    end
-  end
 end

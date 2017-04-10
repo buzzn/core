@@ -1,7 +1,7 @@
 module Meter
   class Equipment < ActiveRecord::Base
     BUZZN_SYSTEMS = 'buzzn_systems'
-    FOREIGN_OWNERSHIP = 'foriegn_ownership'
+    FOREIGN_OWNERSHIP = 'foreign_ownership'
     CUSTOMER = 'customer'
     LEASED = 'leased'
     BOUGHT = 'bought'
