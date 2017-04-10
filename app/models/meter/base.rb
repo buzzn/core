@@ -108,7 +108,7 @@ module Meter
 
     def create_main_equipment
       if main_equipment.nil?
-        Meter::Equipment.create!(converter_constant: 1, meter: self)
+        Meter::Equipment.create!(converter_constant: 1, meter: self, ownership: Meter::Equipment::BUZZN_SYSTEMS)
       end
     end
   end

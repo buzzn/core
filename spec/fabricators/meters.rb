@@ -1,11 +1,31 @@
 # coding: utf-8
 Fabricator :meter, class_name: Meter::Real do
-  registers                   { [Fabricate.build([:input_register, :output_register].sample)] }
-  manufacturer_name           'ferraris'
-  manufacturer_product_name    'AS 1440'
-  manufacturer_product_serialnumber  { Random.new_seed.to_s.slice(0, 7) }
-  metering_type { Buzzn::Zip2Price.types.first }
-  created_at  { (rand*10).days.ago }
+  registers                           { [Fabricate.build([:input_register, :output_register].sample)] }
+  manufacturer_name                   'ferraris'
+  manufacturer_product_name           'AS 1440'
+  manufacturer_product_serialnumber   { Random.new_seed.to_s.slice(0, 7) }
+  metering_type                       { Buzzn::Zip2Price.types.first }
+  created_at                          { (rand*10).days.ago }
+  owner                               'some-owner'
+  metering_type                       'EHZ'
+  meter_size                          5
+  rate                                'yearly'
+  mode                                'one-way'
+  measurement_capture                 'some-capture'
+  mounting_method                     'wall'
+  build_year                          { 5.years.ago }
+  calibrated_till                     { 5.years.from_now }
+  section                             'some-section'
+  metering_point_type                 'some-metering_point_type'
+  voltage_level                       'low_level'
+  cycle_interval                      'yearly'
+  send_data_dso                       false
+  remote_readout                      true
+  tariff                              'single'
+  direction                           'one-way'
+  data_logging                        'somewhere'
+  manufacturer_number                 { Random.new_seed.to_s.slice(0, 12) }
+  data_provider_name                  'Discovergy'
 end
 
 Fabricator :real_meter, from: :meter do
@@ -721,69 +741,108 @@ end
 Fabricator :easymeter_60300856, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60300856'
   registers [Fabricate.build(:register_60300856), Fabricate.build(:register_60300856_out)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id, converter_constant: 20)
+  end
 end
 
 # Abgrenzung BHKW
 Fabricator :easymeter_60009498, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60009498'
   registers [Fabricate.build(:register_60009498)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id)
+  end
 end
 
 # Produktion BHKW
 Fabricator :easymeter_60404855, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60404855'
   registers [Fabricate.build(:register_60404855)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id)
+  end
 end
 
 # Produktion PV
 Fabricator :easymeter_60404845, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60404845'
   registers [Fabricate.build(:register_60404845)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id)
+  end
 end
 
 # Allgemeinstrom
 Fabricator :easymeter_60404846, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60404846'
   registers [Fabricate.build(:register_60404846)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id)
+  end
 end
 
 Fabricator :easymeter_60404850, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60404850'
   registers [Fabricate.build(:register_60404850)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id)
+  end
 end
 
 Fabricator :easymeter_60404851, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60404851'
   registers [Fabricate.build(:register_60404851)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id)
+  end
 end
 
 Fabricator :easymeter_60404853, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60404853'
   registers [Fabricate.build(:register_60404853)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id)
+  end
 end
 
 Fabricator :easymeter_60404847, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60404847'
   registers [Fabricate.build(:register_60404847)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id)
+  end
 end
 
 Fabricator :easymeter_60327350, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60327350'
   registers [Fabricate.build(:register_60327350)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id)
+  end
 end
 
 Fabricator :easymeter_60404854, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60404854'
   registers [Fabricate.build(:register_60404854)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id)
+  end
 end
 
 Fabricator :easymeter_60404852, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60404852'
   registers [Fabricate.build(:register_60404852)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id)
+  end
 end
 
 Fabricator :easymeter_60404849, from: :easy_meter_q3d do
   manufacturer_product_serialnumber   '60404849'
   registers [Fabricate.build(:register_60404849)]
+  after_create do |meter|
+    Fabricate(:equipment, meter_id: meter.id)
+  end
 end
 
