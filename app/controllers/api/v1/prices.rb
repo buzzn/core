@@ -12,7 +12,6 @@ module API
           requires :yearly_kilowatt_hour
           requires :metering_type, values: Buzzn::Zip2Price.types
         end
-        oauth2 false
         get do
           zip_price = Buzzn::Zip2Price.new(permitted_params[:yearly_kilowatt_hour],
                                            permitted_params[:zip],

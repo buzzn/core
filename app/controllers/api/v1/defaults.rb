@@ -62,11 +62,23 @@ module API
         end
 
         rescue_from ActiveRecord::RecordNotFound do |e|
-          error_response(message: e.message, status: 404)
+          errors = ErrorResponse.new(404, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          if Rails.env.development?
+            puts e.message
+            puts e.backtrace.join("\n\t")
+          end
+          errors.add_general('Record Not Found', e.message)
+          errors.finish
         end
 
         rescue_from Buzzn::DataSourceError do |e|
-          error_response(message: e.message, status: 504)
+          errors = ErrorResponse.new(504, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          if Rails.env.development?
+            puts e.message
+            puts e.backtrace.join("\n\t")
+          end
+          errors.add_general('Temporary Datasource Error', e.message)
+          errors.finish
         end
 
         rescue_from Buzzn::RecordNotFound do |e|
@@ -75,7 +87,7 @@ module API
             puts e.message
             puts e.backtrace.join("\n\t")
           end
-          errors.add_general('Permission Denied', e.message)
+          errors.add_general('Record Not Found', e.message)
           errors.finish
         end
 

@@ -14,7 +14,6 @@ module API
           requires :register_ids, type: String, desc: "register ID"
           optional :timestamp, type: Time
         end
-        oauth2 false
         get 'present' do
           # TODO fix register permissions and have again only:
           #      register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])
@@ -62,7 +61,6 @@ module API
                                                         hour_to_minutes
                                                         )
         end
-        oauth2 false
         get 'past' do
           # TODO fix register permissions and have again only:
           #      register = Register::Base.guarded_retrieve(current_user, permitted_params[:register_ids])

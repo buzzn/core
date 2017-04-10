@@ -307,17 +307,6 @@ describe "/groups" do
     expect(json['data'].size).to eq(page_overload)
   end
 
-
-  it 'gets the related managers for group only with token' do
-    access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:tribe)
-    group.registers << Fabricate(:input_meter).input_register
-    get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
-    expect(response).to have_http_status(200)
-    get_without_token "/api/v1/groups/#{group.id}/managers"
-    expect(response).to have_http_status(401)
-  end
-
   it 'get all managers' do
     access_token  = Fabricate(:simple_access_token)
     group         = Fabricate(:tribe)
@@ -356,16 +345,6 @@ describe "/groups" do
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
     expect(json['data'].size).to eq(page_overload * 2)
-  end
-
-  it 'gets the related members for group only with token' do
-    access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:tribe_with_members_readable_by_world)
-
-    get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
-    expect(response).to have_http_status(200)
-    get_without_token "/api/v1/groups/#{group.id}/members"
-    expect(response).to have_http_status(401)
   end
 
 
