@@ -7,6 +7,8 @@ Register::Virtual.reset_column_information
 Register::Input.reset_column_information
 Register::Output.reset_column_information
 Register::Real.reset_column_information
+Meter::Real.reset_column_information
+Meter::Virtual.reset_column_information
 
 def user_with_register
   register = Fabricate(:register)

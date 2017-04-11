@@ -16,8 +16,12 @@
     else
       label     Register::Base::CONSUMPTION
     end
+    forecast_kwh_pa 1000
+    obis { type == 'output' ? '1-0:2.8.0' : '1-0:1.8.0' }
+    low_load_ability false
+    digits_before_comma 6
+    decimal_digits 2
   end
-
 end
 
 

@@ -86,6 +86,8 @@ Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
   register                 { Fabricate(:input_register,
                                        meter: Fabricate.build(:meter),
                                        address: Fabricate.build(:address) ) }
+  tariffs                  { [Fabricate.build(:tariff)] }
+  payments                 { [Fabricate.build(:payment)] }
 end
 
 Fabricator :power_taker_contract_move_in, from: :power_taker_contract do

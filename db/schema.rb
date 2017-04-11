@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170406124043) do
+ActiveRecord::Schema.define(version: 20170410143944) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -577,9 +577,9 @@ ActiveRecord::Schema.define(version: 20170406124043) do
     t.string   "type",                                    null: false
     t.string   "obis"
     t.string   "label"
-    t.string   "low_load_ability"
     t.integer  "digits_before_comma"
     t.integer  "decimal_digits"
+    t.boolean  "low_load_ability"
   end
 
   add_index "registers", ["group_id"], name: "index_registers_on_group_id", using: :btree
