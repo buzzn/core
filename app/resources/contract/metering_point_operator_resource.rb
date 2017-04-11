@@ -10,8 +10,5 @@ module Contract
 
   # TODO get rid of the need of having a Serializer class
   class MeteringPointOperatorSerializer < MeteringPointOperatorResource
-    def self.new(*args)
-      super
-    end
   end
 end

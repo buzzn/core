@@ -12,11 +12,4 @@ module Meter
     attributes :updatable, :deletable
 
   end
-
-  # TODO get rid of the need of having a Serializer class
-  class BaseSerializer < BaseResource
-    def self.new(*args)
-      super
-    end
-  end
 end

@@ -32,16 +32,16 @@ describe Contract do
                            :deletable] }
   let!(:all) { [metering_point_operator, localpool_processing, localpool_power_taker, power_taker, power_giver] }
 
-  describe 'BaseResource' do
+  describe Contract::BaseResource do
 
-    it 'has all attributes' do
+    it 'retrieve' do
       all.each do |contract|
         json = Contract::BaseResource.retrieve(user, contract.id).to_h
         expect(json.keys & base_attributes).to match_array base_attributes
       end
     end
 
-    it 'collects with right ids + types' do
+    it 'retrieve all - ids + types' do
       expected = all.collect { |c| [c.class, c.id] }
       result = Contract::BaseResource.all(user).collect do |r|
         [r.type.constantize, r.id]
@@ -61,16 +61,16 @@ describe Contract do
     end
   end
 
-  describe 'MeteringPointOperatorResource' do
+  describe Contract::MeteringPointOperatorResource do
 
-    it 'collects with right ids + types' do
+    it 'retrieve - ids + types' do
       result = Contract::MeteringPointOperatorResource.all(user).collect do |r|
         [r.type.constantize, r.id]
       end
       expect(result).to eq [[Contract::MeteringPointOperator, metering_point_operator.id]]
     end
 
-    it "correct id + type" do
+    it "retrieve - id + type" do
       [Contract::BaseResource, Contract::MeteringPointOperatorResource].each do |type|
         json = type.retrieve(user, metering_point_operator.id).to_h
         expect(json[:id]).to eq metering_point_operator.id
@@ -82,7 +82,7 @@ describe Contract do
       end
     end
 
-    it 'has all attributes' do
+    it 'retrieve' do
       attributes = [:begin_date, :metering_point_operator_name]
       json = Contract::BaseResource.retrieve(user, metering_point_operator.id).to_h
       expect(json.keys & attributes).to match_array attributes
@@ -90,16 +90,16 @@ describe Contract do
     end
   end
 
-  describe 'LocalpoolProcessingResource' do
+  describe Contract::LocalpoolProcessingResource do
 
-    it 'collects with right ids + types' do
+    it 'retrieve all - ids + types' do
       result = Contract::LocalpoolProcessingResource.all(user).collect do |r|
         [r.type.constantize, r.id]
       end
       expect(result).to eq [[Contract::LocalpoolProcessing, localpool_processing.id]]
     end
 
-    it "correct id + type" do
+    it "retrieve - id + type" do
       [Contract::BaseResource, Contract::LocalpoolProcessingResource].each do |type|
         json = type.retrieve(user, localpool_processing.id).to_h
         expect(json[:id]).to eq localpool_processing.id
@@ -111,7 +111,7 @@ describe Contract do
       end
     end
 
-    it 'has all attributes' do
+    it 'retrieve' do
       attributes = [:begin_date, :first_master_uid, :second_master_uid]
       json = Contract::BaseResource.retrieve(user, localpool_processing.id).to_h
       expect(json.keys & attributes).to match_array attributes
@@ -119,16 +119,16 @@ describe Contract do
     end
   end
 
-  describe 'LocalpoolPowerTakerResource' do
+  describe Contract::LocalpoolPowerTakerResource do
 
-    it 'collects with right ids + types' do
+    it 'retrieve - ids + types' do
       result = Contract::LocalpoolPowerTakerResource.all(user).collect do |r|
         [r.type.constantize, r.id]
       end
       expect(result).to eq [[Contract::LocalpoolPowerTaker, localpool_power_taker.id]]
     end
 
-    it "correct id + type" do
+    it "retrieve - id + type" do
       [Contract::BaseResource, Contract::LocalpoolPowerTakerResource].each do |type|
         json = type.retrieve(user, localpool_power_taker.id).to_h
         expect(json[:id]).to eq localpool_power_taker.id
@@ -140,7 +140,7 @@ describe Contract do
       end
     end
 
-    it 'has all attributes' do
+    it 'retrieve' do
       attributes = []
       json = Contract::BaseResource.retrieve(user, localpool_power_taker.id).to_h
       expect(json.keys & attributes).to match_array attributes
@@ -148,16 +148,16 @@ describe Contract do
     end
   end
 
-  describe 'PowerTakerResource' do
+  describe Contract::PowerTakerResource do
 
-    it 'collects with right ids + types' do
+    it 'retrieve all - ids + types' do
       result = Contract::PowerTakerResource.all(user).collect do |r|
         [r.type.constantize, r.id]
       end
       expect(result).to eq [[Contract::PowerTaker, power_taker.id]]
     end
 
-    it "correct id + type" do
+    it "retrieve - id + type" do
       [Contract::BaseResource, Contract::PowerTakerResource].each do |type|
         json = type.retrieve(user, power_taker.id).to_h
         expect(json[:id]).to eq power_taker.id
@@ -169,7 +169,7 @@ describe Contract do
       end
     end
 
-    it 'has all attributes' do
+    it 'retrieve' do
       attributes = []
       json = Contract::BaseResource.retrieve(user, power_taker.id).to_h
       expect(json.keys & attributes).to match_array attributes
@@ -179,14 +179,14 @@ describe Contract do
 
   describe 'PowerGiverResource' do
 
-    it 'collects with right ids + types' do
+    it 'retrieve all - ids + types' do
       result = Contract::PowerGiverResource.all(user).collect do |r|
         [r.type.constantize, r.id]
       end
       expect(result).to eq [[Contract::PowerGiver, power_giver.id]]
     end
 
-    it "correct id + type" do
+    it "retrieve - id + type" do
       [Contract::BaseResource, Contract::PowerGiverResource].each do |type|
         json = type.retrieve(user, power_giver.id).to_h
         expect(json[:id]).to eq power_giver.id
@@ -198,7 +198,7 @@ describe Contract do
       end
     end
 
-    it 'has all attributes' do
+    it 'retrieve' do
       attributes = []
       json = Contract::BaseResource.retrieve(user, power_giver.id).to_h
       expect(json.keys & attributes).to match_array attributes
