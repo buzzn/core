@@ -17,10 +17,3 @@ class AddressResource < Buzzn::EntityResource
   attributes :updatable, :deletable
 end
 
-# TODO get rid of the need of having a Serializer class
-class AddressSerializer < AddressResource
-  def self.new(*args)
-    super
-  end
-end
-

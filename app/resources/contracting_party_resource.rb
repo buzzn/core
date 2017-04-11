@@ -3,9 +3,9 @@ class ContractingPartyResource
   def self.new(object, *args)
     case object
     when Organization
-      ContractingPartyOrganizationResource.new(object, *args)
+      ContractingPartyOrganizationSingleResource.new(object, *args)
     when User
-      ContractingPartyUserResource.new(object, *args)
+      ContractingPartyUserSingleResource.new(object, *args)
     else
       raise "can not handle type: #{object.class}"
     end

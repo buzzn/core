@@ -16,14 +16,14 @@ describe Group::BaseResource do
                            :updatable,
                            :deletable ] }
 
-  it 'has all attributes' do
+  it 'retrieve' do
     [tribe, localpool].each do |group|
       json = Group::BaseResource.retrieve(user, group.id).to_h
       expect(json.keys & base_attributes).to match_array base_attributes
     end
   end
 
-  it 'collects with right ids + types' do
+  it 'retrieve - ids + types' do
     expected = {Group::Tribe => tribe.id, Group::Localpool => localpool.id}
     result = Group::BaseResource.all(user).collect do |r|
       [r.type.constantize, r.id]
@@ -80,14 +80,14 @@ describe Group::BaseResource do
 
   describe Group::Tribe do
 
-    it 'collects with right ids + types' do
+    it 'retrieve all - ids + types' do
       result = Group::TribeResource.all(user).collect do |r|
         [r.type.constantize, r.id]
       end
       expect(result).to eq [[Group::Tribe, tribe.id]]
     end
 
-    it "correct id + type" do
+    it "retrieve - id + type" do
       [Group::BaseResource, Group::TribeResource].each do |type|
         json = type.retrieve(user, tribe.id).to_h
         expect(json[:id]).to eq tribe.id
@@ -96,7 +96,7 @@ describe Group::BaseResource do
       expect{Group::TribeResource.retrieve(user, localpool.id)}.to raise_error Buzzn::RecordNotFound
     end
 
-    it 'has all attributes' do
+    it 'retrieve' do
       json = Group::BaseResource.retrieve(user, tribe.id).to_h
       expect(json.keys.size).to eq (base_attributes.size + 2)
     end
@@ -105,7 +105,7 @@ describe Group::BaseResource do
 
   describe Group::Localpool do
   
-    it 'collects with right ids + types' do
+    it 'retrieve all - ids + types' do
       expected = [Group::Localpool, localpool.id]
       result = Group::LocalpoolResource.all(user).collect do |r|
         [r.type.constantize, r.id]
@@ -113,7 +113,7 @@ describe Group::BaseResource do
       expect(result).to eq [expected]
     end
 
-    it "correct id + type" do
+    it "retrieve - id + type" do
       [Group::BaseResource, Group::LocalpoolResource].each do |type|
         json = type.retrieve(user, localpool.id).to_h
         expect(json[:id]).to eq localpool.id
@@ -122,7 +122,7 @@ describe Group::BaseResource do
       expect{Group::LocalpoolResource.retrieve(user, tribe.id)}.to raise_error Buzzn::RecordNotFound
     end
       
-    it 'has all attributes' do
+    it 'retrieve' do
       attributes = [:localpool_processing_contract,
                     :metering_point_operator_contract]
       json = Group::BaseResource.retrieve(user, localpool.id).to_h

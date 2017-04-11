@@ -7,8 +7,5 @@ module Contract
 
   # TODO get rid of the need of having a Serializer class
   class LocalpoolPowerTakerSerializer < LocalpoolPowerTakerResource
-    def self.new(*args)
-      super
-    end
   end
 end

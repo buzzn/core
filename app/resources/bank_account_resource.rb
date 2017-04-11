@@ -10,10 +10,3 @@ class BankAccountResource < Buzzn::EntityResource
 
   # TODO make bank_name and bic derived from iban and not store them in DB
 end
-
-# TODO get rid of the need of having a Serializer class
-class BankAccountSerializer < BankAccountResource
-  def self.new(*args)
-    super
-  end
-end
