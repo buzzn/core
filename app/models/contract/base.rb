@@ -86,6 +86,7 @@ module Contract
     scope :localpool_processing,     -> {where(type: LocalpoolProcessing)}
     scope :metering_point_operators, -> {where(type: MeteringPointOperator)}
     scope :other_suppliers,          -> {where(type: OtherSupplier)}
+    scope :localpool_power_takers_and_other_suppliers, ->  {where('type in (?)', [LocalpoolPowerTaker, OtherSupplier])}
 
     scope :running_in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
                                           .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
