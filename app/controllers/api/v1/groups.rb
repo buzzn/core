@@ -103,6 +103,17 @@ module API
         end
 
 
+        desc "Return the related meters for Group"
+        params do
+          requires :id, type: String, desc: "ID of the group"
+        end
+        get ":id/meters" do
+          Group::BaseResource
+            .retrieve(current_user, permitted_params)
+            .meters
+        end
+
+
 
         desc "Return the related scores for Group"
         params do
