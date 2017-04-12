@@ -5,16 +5,23 @@ describe Meter::BaseResource do
   let!(:real) { Fabricate(:meter) }
   let!(:virtual) { Fabricate(:virtual_meter) }
 
-  let(:base_attributes) { [:manufacturer_name,
-                           :manufacturer_product_name,
-                           :manufacturer_product_serialnumber,
-                           :updatable,
-                           :deletable ] }
+  let(:base_keys) { [:id,
+                     :type,
+                     :manufacturer_name,
+                     :manufacturer_product_name,
+                     :manufacturer_product_serialnumber,
+                     :metering_type,
+                     :meter_size,
+                     :ownership,
+                     :direction_label,
+                     :build_year,
+                     :updatable,
+                     :deletable ] }
 
   it 'retrieve' do
     [real, virtual].each do |meter|
       json = Meter::BaseResource.retrieve(user, meter.id).to_h
-      expect(json.keys & base_attributes).to match_array base_attributes
+      expect(json.keys & base_keys).to match_array base_keys
     end
   end
 
@@ -45,10 +52,8 @@ describe Meter::BaseResource do
     end
 
     it 'retrieve' do
-      attributes = [:smart, :registers]
       json = Meter::BaseResource.retrieve(user, real.id).to_h
-      expect(json.keys & attributes).to match_array attributes
-      expect(json.keys.size).to eq (attributes.size + base_attributes.size + 2)
+      expect(json.keys).to match_array base_keys + [:smart, :registers]
     end
 
   end
@@ -73,10 +78,8 @@ describe Meter::BaseResource do
     end
       
     it 'retrieve' do
-      attributes = [:register]
       json = Meter::BaseResource.retrieve(user, virtual.id).to_h
-      expect(json.keys & attributes).to match_array attributes
-      expect(json.keys.size).to eq (attributes.size + base_attributes.size + 2)
+      expect(json.keys).to match_array ([:register] + base_keys)
     end
   end
 end

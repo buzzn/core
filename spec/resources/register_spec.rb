@@ -17,21 +17,11 @@ describe Register::BaseResource do
                                :converter_constant,
                                :meter,
                                :address ] }
-  let(:base_attributes) { [:id,
-                           :type,
-                           :direction,
-                           :name,
-                           :low_power,
-                           :decimal,
-                           :pre_decimal,
-                           :converter_constant,
-                           :meter,
-                           :address] }
 
   it 'retrieve' do
     [real, virtual].each do |register|
       json = Register::BaseResource.retrieve(user, register.id).to_h
-      expect(json.keys & common_single_keys).to match_array base_attributes
+      expect(json.keys & common_single_keys).to match_array common_single_keys
     end
   end
 

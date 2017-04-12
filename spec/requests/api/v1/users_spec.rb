@@ -301,6 +301,11 @@ describe "users" do
               "manufacturer-name"=>meter1.manufacturer_name,
               "manufacturer-product-name"=>meter1.manufacturer_product_name,
               "manufacturer-product-serialnumber"=>meter1.manufacturer_product_serialnumber,
+              "metering-type"=>"single_tarif_meter",
+              "meter-size"=>nil,
+              "ownership"=>nil,
+              "direction-label"=>nil,
+              "build-year"=>nil,
               "updatable"=>false,
               "deletable"=>false,
               "smart"=>false
@@ -316,6 +321,11 @@ describe "users" do
               "manufacturer-name"=>meter2.manufacturer_name,
               "manufacturer-product-name"=>meter2.manufacturer_product_name,
               "manufacturer-product-serialnumber"=>meter2.manufacturer_product_serialnumber,
+              "metering-type"=>"single_tarif_meter",
+              "meter-size"=>nil,
+              "ownership"=>nil,
+              "direction-label"=>nil,
+              "build-year"=>nil,
               "updatable"=>false,
               "deletable"=>false,
               "smart"=>false
@@ -336,6 +346,11 @@ describe "users" do
             "manufacturer-name"=>meter3.manufacturer_name,
             "manufacturer-product-name"=>meter3.manufacturer_product_name,
             "manufacturer-product-serialnumber"=>meter3.manufacturer_product_serialnumber,
+            "metering-type"=>"EHZ",
+            "meter-size"=>'5',
+            "ownership"=>'some-owner',
+            "direction-label"=>'one-way',
+            "build-year"=>'2011-07-02',
             "updatable"=>false,
             "deletable"=>false,
             "smart"=>false
@@ -380,7 +395,8 @@ describe "users" do
 
         GET "/api/v1/users/#{user.id}/meters", user_token
         expect(response).to have_http_status(200)
-        expect(json['data']).to match_array(user_meters_json['data'])
+        # sort it and yaml it for better debugging
+        expect(json['data'].sort{ |i, j| i['id'] <=> j['id']}.to_yaml).to eq(user_meters_json['data'].sort{ |i, j| i['id'] <=> j['id']}.to_yaml)
 
         GET "/api/v1/users/#{user.id}/meters", admin
         expect(response).to have_http_status(200)

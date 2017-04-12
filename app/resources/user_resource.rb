@@ -10,7 +10,7 @@ class UserResource < Buzzn::EntityResource
            :bank_account
 
   def meters(filter = nil)
-    Meter::Base.filter(filter).readable_by(@current_user)
+    Meter::Base.filter(filter).readable_by(@current_user).collect { |m| Meter::BaseResource.new(m) }
   end
 
 end
