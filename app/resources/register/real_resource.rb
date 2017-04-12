@@ -1,5 +1,5 @@
 module Register
-  class RealResource < BaseResource
+  class RealSingleResource < SingleResource
 
     model Real
 
@@ -10,10 +10,12 @@ module Register
 
   end
 
-  # TODO get rid of the need of having a Serializer class
-  class RealSerializer < RealResource
-    def self.new(*args)
-      super
-    end
+  class RealCollectionResource < CollectionResource
+
+    model Real
+
   end
+
+  # to satisfy rails autoload
+  RealResource = RealSingleResource
 end

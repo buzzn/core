@@ -6,6 +6,13 @@ module API
 
         params do
           requires :id, type: String
+        end
+        get ":id" do
+           Register::BaseResource.retrieve(current_user, permitted_params)
+        end
+
+        params do
+          requires :id, type: String
           requires :duration, type: String, values: %w(year month day hour)
           optional :timestamp, type: Time
         end

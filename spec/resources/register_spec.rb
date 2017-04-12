@@ -5,16 +5,33 @@ describe Register::BaseResource do
   let!(:real) { Fabricate(:meter).registers.first }
   let!(:virtual) { Fabricate(:virtual_meter).register }
 
-  let(:base_attributes) { [:direction,
+  let(:base_keys) { [:id,
+                     :type,
+                     :direction,
+                     :name ] }
+  let(:collection_keys) { base_keys + [:last_reading] }
+  let(:common_single_keys) { base_keys + [
+                               :low_power,
+                               :decimal,
+                               :pre_decimal,
+                               :converter_constant,
+                               :meter,
+                               :address ] }
+  let(:base_attributes) { [:id,
+                           :type,
+                           :direction,
                            :name,
-                           :readable,
+                           :low_power,
+                           :decimal,
+                           :pre_decimal,
+                           :converter_constant,
                            :meter,
-                           :address ] }
+                           :address] }
 
-  it 'has all attributes' do
+  it 'retrieve' do
     [real, virtual].each do |register|
       json = Register::BaseResource.retrieve(user, register.id).to_h
-      expect(json.keys & base_attributes).to match_array base_attributes
+      expect(json.keys & common_single_keys).to match_array base_attributes
     end
   end
 
@@ -32,7 +49,7 @@ describe Register::BaseResource do
     end
   end
 
-  it 'collects with right ids + types' do
+  it 'retrieve all - ids + types' do
     expected = {Register::Real => real.id, Register::Virtual => virtual.id}
     result = Register::BaseResource.all(user).collect do |r|
       type = r.type.constantize
@@ -42,36 +59,39 @@ describe Register::BaseResource do
     expect(Hash[result]).to eq expected
   end
     
-  describe Register::Real do
+  describe Register::RealResource do
 
-    it 'collects with right ids + types' do
-      result = Register::RealResource.all(user).collect do |r|
+    it 'retrieve all - ids + types' do
+      result = Register::RealSingleResource.all(user).collect do |r|
         [r.type.constantize.superclass, r.id]
       end
       expect(result).to eq [[Register::Real, real.id]]
     end
 
-    it "correct id + type" do
-      [Register::BaseResource, Register::RealResource].each do |type|
+    it "retrieve - id + type" do
+      [Register::BaseResource, Register::RealSingleResource].each do |type|
         json = type.retrieve(user, real.id).to_h
         expect(json[:id]).to eq real.id
         expect(json[:type]).to eq 'register_real'
       end
-      expect{Register::RealResource.retrieve(user, virtual.id)}.to raise_error Buzzn::RecordNotFound
+      expect{Register::RealSingleResource.retrieve(user, virtual.id)}.to raise_error Buzzn::RecordNotFound
     end
 
-    it 'has all attributes' do
-      attributes = [:uid, :obis, :devices]
+    it 'retrieve' do
+      keys = [:uid, :obis, :devices]
       json = Register::BaseResource.retrieve(user, real.id).to_h
-      expect(json.keys & attributes).to match_array attributes
-      expect(json.keys.size).to eq (attributes.size + base_attributes.size + 2)
+      expect(json.keys).to match_array (keys + common_single_keys)
     end
 
+    it 'retrieve all' do
+      json = Register::RealCollectionResource.new(real).attributes
+      expect(json.keys).to match_array collection_keys
+    end
   end
 
-  describe Register::Virtual do
+  describe Register::VirtualResource do
   
-    it 'collects with right ids + types' do
+    it 'retrieve all - ids + types' do
       expected = [Register::Virtual, virtual.id]
       result = Register::VirtualResource.all(user).collect do |r|
         [r.type.constantize, r.id]
@@ -79,7 +99,7 @@ describe Register::BaseResource do
       expect(result).to eq [expected]
     end
 
-    it "correct id + type" do
+    it "retrieve - id + type" do
       [Register::BaseResource, Register::VirtualResource].each do |type|
         json = type.retrieve(user, virtual.id).to_h
         expect(json[:id]).to eq virtual.id
@@ -88,9 +108,14 @@ describe Register::BaseResource do
       expect{Register::VirtualResource.retrieve(user, real.id)}.to raise_error Buzzn::RecordNotFound
     end
       
-    it 'has all attributes' do
+    it 'retreive' do
       json = Register::BaseResource.retrieve(user, virtual.id).to_h
-      expect(json.keys.size).to eq (base_attributes.size + 2)
+      expect(json.keys).to match_array common_single_keys
+    end
+
+    it 'retrieve all' do
+      json = Register::RealCollectionResource.new(real).attributes
+      expect(json.keys).to match_array collection_keys
     end
   end
 end

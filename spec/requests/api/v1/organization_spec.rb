@@ -200,8 +200,8 @@ describe "organizations" do
             "latitude"=>nil,
             "addition"=>"HH",
             "time-zone"=>"Berlin",
-            "updatable"=>false,
-            "deletable"=>false
+            "updatable"=>true,
+            "deletable"=>true
           }
         }
       }
@@ -226,7 +226,7 @@ describe "organizations" do
       it '200' do
         GET "/api/v1/organizations/#{organization.id}/address", admin
         expect(response).to have_http_status(200)
-        expect(json).to eq address_json
+        expect(json.to_yaml).to eq address_json.to_yaml
       end
     end
   end

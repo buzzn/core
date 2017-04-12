@@ -11,8 +11,5 @@ module Contract
 
   # TODO get rid of the need of having a Serializer class
   class LocalpoolProcessingSerializer < LocalpoolProcessingResource
-    def self.new(*args)
-      super
-    end
   end
 end
