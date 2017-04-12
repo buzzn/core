@@ -22,3 +22,4 @@ class ProfileSerializer < ActiveModel::Serializer
   end
 
 end
+ProfileResource = ProfileSerializer
