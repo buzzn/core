@@ -143,7 +143,7 @@ end
 #   gem 'httplog'
 # end
 
-group :production, :staging do
+group :production, :staging, :production_legacy do
   gem 'newrelic_rpm'
   gem 'asset_sync'
 end
