@@ -22,7 +22,7 @@ module Contract
     has_one :bank_account
 
     def full_contract_number
-      object.customer_number.to_s + "/" + object.contract_number_addition.to_s
+      object.contract_number.to_s + "/" + object.contract_number_addition.to_s
     end
 
     alias :contractor_raw! :contractor!
