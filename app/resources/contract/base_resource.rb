@@ -23,7 +23,7 @@ module Contract
 
     alias :contractor_raw! :contractor!
     def contractor!
-      ContractingPartyResource.new(contractor_raw!)
+      ContractingPartyResource.new(contractor_raw!.object)
     end
 
     alias :customer_raw! :customer!

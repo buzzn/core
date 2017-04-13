@@ -1,10 +1,6 @@
 module Buzzn
   class EntityResource < BaseResource
 
-    def initialize(resource, options = {})
-      super
-    end
-
     class << self
 
       # CreateUpdateDelete API

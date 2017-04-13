@@ -18,7 +18,4 @@ end
 
 # TODO get rid of the need of having a Serializer class
 class CommentSerializer < CommentResource
-  def self.new(*args)
-    super
-  end
 end

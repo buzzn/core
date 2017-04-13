@@ -1,4 +1,4 @@
-class OrganizationResource < Buzzn::EntityResource
+class OrganizationSingleResource < Buzzn::EntityResource
 
   model Organization
 
@@ -26,20 +26,16 @@ class OrganizationResource < Buzzn::EntityResource
   end
 
 end
-class ContractingPartyOrganizationResource < OrganizationResource
 
-  def self.new(*args)
-    super
-  end
+class ContractingPartyOrganizationSingleResource < OrganizationSingleResource
 
   attributes  :sales_tax_number,
               :tax_rate,
               :tax_number
 end
 
-# TODO get rid of the need of having a Serializer class
-class OrganizationSerializer < OrganizationResource
-  def self.new(*args)
-    super
-  end
+class OrganizationCollectionResource < OrganizationSingleResource
 end
+
+# to satisfy rails auto load
+OrganizationResource = OrganizationSingleResource

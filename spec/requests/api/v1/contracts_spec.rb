@@ -139,9 +139,7 @@ describe "contracts" do
 
     # NOTE picking a sample contract is enough for the 404 and 403 tests
 
-    let(:contract) { send "metering_point_operator_contract" }
-
-    let(:contract_json) { send "metering_point_operator_contract_json" }
+    let(:contract) { metering_point_operator_contract }
 
     it '403' do
       GET "/api/v1/contracts/#{contract.id}"
@@ -334,6 +332,8 @@ describe "contracts" do
 
           it '200' do
             contract = send "#{type}_contract"
+            contract.contractor.bank_account.delete
+
             GET "/api/v1/contracts/#{contract.id}/contractor", admin
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq(send("#{type}_contractor_json").to_yaml)

@@ -10,7 +10,7 @@ module API
             raise Buzzn::PermissionDenied.create(User, :retrieve, nil)
           end
           # use the normal loading semantic to produce consistent results
-          FullUserResource.retrieve(current_user, current_user.id)
+          UserSingleResource.retrieve(current_user, current_user.id)
         end
 
         desc "Return all Users"
@@ -27,7 +27,7 @@ module API
           requires :id, type: String, desc: "ID of the user"
         end
         get ":id" do
-          FullUserResource.retrieve(current_user, permitted_params)
+          UserSingleResource.retrieve(current_user, permitted_params)
         end
 
 

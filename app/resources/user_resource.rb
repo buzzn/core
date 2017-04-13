@@ -15,11 +15,7 @@ class UserResource < Buzzn::EntityResource
 
 end
 
-class FullUserResource < UserResource
-
-  def self.new(*args)
-    super
-  end
+class UserSingleResource < UserResource
 
   attributes  :user_name,
               :title,
@@ -42,7 +38,7 @@ class FullUserResource < UserResource
   end
 end
 
-class ContractingPartyUserResource < FullUserResource
+class ContractingPartyUserSingleResource < UserSingleResource
   def self.new(*args)
     super
   end
@@ -53,9 +49,5 @@ class ContractingPartyUserResource < FullUserResource
 
 end
 
-# TODO get rid of the need of having a Serializer class
-class UserSerializer < UserResource
-  def self.new(*args)
-    super
-  end
+class UserCollectionResource < UserResource
 end
