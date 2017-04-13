@@ -118,13 +118,12 @@ ActiveRecord::Schema.define(version: 20170410154959) do
     t.datetime "begin_date",   null: false
     t.datetime "end_date",     null: false
     t.string   "name",         null: false
-    t.string   "status",       null: false
     t.uuid     "localpool_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "billing_cycles", ["begin_date", "end_date", "status"], name: "index_billing_cycles_dates_and_status", using: :btree
+  add_index "billing_cycles", ["begin_date", "end_date"], name: "index_billing_cycles_dates", using: :btree
 
   create_table "billings", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "status",                            null: false

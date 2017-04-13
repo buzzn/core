@@ -4,13 +4,12 @@ class CreateBillingCycle < ActiveRecord::Migration
       t.timestamp :begin_date, null: false
       t.timestamp :end_date, null: false
       t.string :name, null: false
-      t.string :status, null: false
 
       t.belongs_to :localpool, type: :uuid
 
       t.timestamps
     end
-    add_index :billing_cycles, [:begin_date, :end_date, :status], name: 'index_billing_cycles_dates_and_status'
+    add_index :billing_cycles, [:begin_date, :end_date], name: 'index_billing_cycles_dates'
 
     create_table :billings, id: :uuid  do |t|
       t.string :status, null: false
