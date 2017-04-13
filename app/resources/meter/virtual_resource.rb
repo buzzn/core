@@ -9,7 +9,7 @@ module Meter
       # FIXME here we just bypass the permission check as
       #       a creator of new VirtualMeter has no permissions
       #       to read its register
-      Register::VirtualResource.new(object.register)
+      Register::VirtualFullCollectionResource.new(object.register)
     end
   end
 end

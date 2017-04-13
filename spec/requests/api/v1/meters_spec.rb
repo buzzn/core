@@ -122,7 +122,11 @@ describe "meters" do
 
     let(:meter) { Fabricate(:virtual_meter) }
 
-    let(:register) { meter.register }
+    let(:register) do
+      meter.register.tap do |register|
+        Fabricate(:reading, register_id: register.id)
+      end
+    end
 
     let(:register_anonymous_denied_json) do
       json = anonymous_denied_json.dup
@@ -151,10 +155,11 @@ describe "meters" do
             "type"=>"register_virtual",
             "direction"=>register.direction.to_s,
             "name"=>register.name,
-            "pre-decimal"=>nil,
-            "decimal"=>nil,
+            "pre-decimal"=>6,
+            "decimal"=>2,
             "converter-constant"=>1,
-            "low-power"=>nil
+            "low-power"=>false,
+            "last-reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour
           },
           "relationships"=>{
             "address"=>{"data"=>nil},
@@ -182,6 +187,7 @@ describe "meters" do
       end
 
       it '200' do
+        register # setup
         GET "/api/v1/meters/virtual/#{meter.id}/register", admin
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(register_json.to_yaml)
@@ -193,7 +199,11 @@ describe "meters" do
 
     let(:meter) { Fabricate(:meter) }
 
-    let(:registers) { meter.registers }
+    let(:registers) do
+      meter.registers.each do |register|
+        Fabricate(:reading, register_id: register.id)
+      end
+    end
 
     let(:registers_anonymous_denied_json) do
       json = anonymous_denied_json.dup
@@ -223,17 +233,17 @@ describe "meters" do
             "type"=>"register_real",
             "direction"=>register.direction.to_s,
             "name"=>register.name,
-            "pre-decimal"=>nil,
-            "decimal"=>nil,
+            "pre-decimal"=>6,
+            "decimal"=>2,
             "converter-constant"=>1,
-            "low-power"=>nil,
+            "low-power"=>false,
+            "last-reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour,
             "uid"=>register.uid,
             "obis"=>register.obis
           },
           "relationships"=>{
             "address"=>{"data"=>nil},
             "meter"=>{"data"=>nil},
-            "devices"=>{"data"=>[]}
           }
         ]
       }
@@ -257,6 +267,7 @@ describe "meters" do
       end
 
       it '200' do
+        registers # setup
         GET "/api/v1/meters/real/#{meter.id}/registers", admin
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(registers_json.to_yaml)

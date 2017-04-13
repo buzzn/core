@@ -21,7 +21,7 @@ module Meter
 
     alias :registers_raw :registers
     def registers
-      registers_raw.collect { |r| Register::RealSingleResource.new(r) }
+      registers_raw.collect { |r| Register::RealFullCollectionResource.new(r) }
     end
   end
 end
