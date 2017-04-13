@@ -17,7 +17,7 @@ describe Contract do
   let(:power_giver) { Fabricate(:power_giver_contract) }
 
   let(:base_attributes) { [:status,
-                           :contract_number,
+                           :full_contract_number,
                            :customer_number,
                            :signing_date,
                            :cancellation_date,

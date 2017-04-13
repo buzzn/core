@@ -578,9 +578,9 @@ ActiveRecord::Schema.define(version: 20170412212950) do
     t.string   "type",                                    null: false
     t.string   "obis"
     t.string   "label"
+    t.string   "low_load_ability"
     t.integer  "digits_before_comma"
     t.integer  "decimal_digits"
-    t.boolean  "low_load_ability"
   end
 
   add_index "registers", ["group_id"], name: "index_registers_on_group_id", using: :btree
