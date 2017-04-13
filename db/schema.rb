@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170410143944) do
+ActiveRecord::Schema.define(version: 20170410154959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,6 +113,39 @@ ActiveRecord::Schema.define(version: 20170410143944) do
 
   add_index "banks", ["bic"], name: "index_banks_on_bic", using: :btree
   add_index "banks", ["blz"], name: "index_banks_on_blz", unique: true, using: :btree
+
+  create_table "billing_cycles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.datetime "begin_date",   null: false
+    t.datetime "end_date",     null: false
+    t.string   "name",         null: false
+    t.uuid     "localpool_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "billing_cycles", ["begin_date", "end_date"], name: "index_billing_cycles_dates", using: :btree
+
+  create_table "billings", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.string   "status",                            null: false
+    t.integer  "total_energy_consumption_kWh",      null: false
+    t.integer  "total_price_cents",                 null: false
+    t.integer  "prepayments_cents",                 null: false
+    t.integer  "receivables_cents",                 null: false
+    t.string   "invoice_number"
+    t.string   "start_reading_id",                  null: false
+    t.string   "end_reading_id",                    null: false
+    t.string   "device_change_reading_1_id"
+    t.string   "device_change_reading_2_id"
+    t.uuid     "billing_cycle_id"
+    t.uuid     "localpool_power_taker_contract_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "billings", ["billing_cycle_id", "status"], name: "index_billings_on_billing_cycle_id_and_status", using: :btree
+  add_index "billings", ["billing_cycle_id"], name: "index_billings_on_billing_cycle_id", using: :btree
+  add_index "billings", ["localpool_power_taker_contract_id"], name: "index_billings_on_localpool_power_taker_contract_id", using: :btree
+  add_index "billings", ["status"], name: "index_billings_on_status", using: :btree
 
   create_table "brokers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "mode",                            null: false
