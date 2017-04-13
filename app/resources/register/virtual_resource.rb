@@ -11,6 +11,12 @@ module Register
 
   end
 
+  class VirtualFullCollectionResource < FullCollectionResource
+
+    model Virtual
+
+  end
+
   # to satisfy rails autoload
   VirtualResource = VirtualSingleResource
 end

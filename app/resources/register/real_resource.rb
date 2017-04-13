@@ -16,6 +16,15 @@ module Register
 
   end
 
+  class RealFullCollectionResource < FullCollectionResource
+
+    model Real
+
+    attributes  :uid,
+                :obis
+
+  end
+
   # to satisfy rails autoload
   RealResource = RealSingleResource
 end

@@ -9,7 +9,6 @@ describe Register::BaseResource do
                      :type,
                      :direction,
                      :name ] }
-  let(:collection_keys) { base_keys + [:last_reading] }
   let(:common_single_keys) { base_keys + [
                                :low_power,
                                :decimal,
@@ -75,7 +74,7 @@ describe Register::BaseResource do
 
     it 'retrieve all' do
       json = Register::RealCollectionResource.new(real).attributes
-      expect(json.keys).to match_array collection_keys
+      expect(json.keys).to match_array base_keys
     end
   end
 
@@ -105,7 +104,7 @@ describe Register::BaseResource do
 
     it 'retrieve all' do
       json = Register::RealCollectionResource.new(real).attributes
-      expect(json.keys).to match_array collection_keys
+      expect(json.keys).to match_array base_keys
     end
   end
 end

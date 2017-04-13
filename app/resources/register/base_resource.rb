@@ -21,13 +21,6 @@ module Register
   end
 
   class CollectionResource < BaseResource
-
-    attributes :last_reading
-
-    def last_reading
-      reading = Reading.by_register_id(object.id).sort('timestamp': -1).first
-      reading ? reading.energy_milliwatt_hour : 0 
-    end
   end
 
   class SingleResource < BaseResource
@@ -58,5 +51,15 @@ module Register
     has_one  :address
     has_one  :meter
 
+  end
+
+  class FullCollectionResource < SingleResource
+
+    attributes :last_reading
+
+    def last_reading
+      reading = Reading.by_register_id(object.id).sort('timestamp': -1).first
+      reading ? reading.energy_milliwatt_hour : 0 
+    end
   end
 end
