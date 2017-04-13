@@ -19,7 +19,7 @@ describe "contracts" do
 
   let(:denied_json) do
     json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id 
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
     json
   end
 
@@ -53,7 +53,7 @@ describe "contracts" do
           "attributes"=>{
             "type"=>"contract_metering_point_operator",
             "status"=>"waiting_for_approval",
-            "contract-number"=>"9041",
+            "full-contract-number"=>"90041/0",
             "customer-number"=>"40021/1",
             "signing-date"=>"2014-10-01",
             "cancellation-date"=>nil,
@@ -209,7 +209,7 @@ describe "contracts" do
         GET "/api/v1/contracts/bla-blub/customer", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
-  
+
         # customer can not be nil
       end
 
@@ -289,7 +289,7 @@ describe "contracts" do
         GET "/api/v1/contracts/bla-blub/contractor", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
-  
+
         # contractor can not be nil
       end
 
