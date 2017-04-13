@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170406124043) do
+ActiveRecord::Schema.define(version: 20170412212950) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -164,7 +164,6 @@ ActiveRecord::Schema.define(version: 20170406124043) do
     t.boolean  "confirm_pricing_model"
     t.boolean  "power_of_attorney"
     t.string   "customer_number"
-    t.string   "contract_number"
     t.uuid     "register_id"
     t.uuid     "organization_id"
     t.uuid     "localpool_id"
@@ -194,6 +193,8 @@ ActiveRecord::Schema.define(version: 20170406124043) do
     t.string   "contractor_type"
     t.string   "energy_consumption_before_kwh_pa"
     t.string   "down_payment_before_cents_per_month"
+    t.integer  "contract_number"
+    t.integer  "contract_number_addition"
   end
 
   add_index "contracts", ["contractor_type", "contractor_id"], name: "index_contracts_on_contractor_type_and_contractor_id", using: :btree
@@ -577,9 +578,9 @@ ActiveRecord::Schema.define(version: 20170406124043) do
     t.string   "type",                                    null: false
     t.string   "obis"
     t.string   "label"
-    t.string   "low_load_ability"
     t.integer  "digits_before_comma"
     t.integer  "decimal_digits"
+    t.boolean  "low_load_ability"
   end
 
   add_index "registers", ["group_id"], name: "index_registers_on_group_id", using: :btree

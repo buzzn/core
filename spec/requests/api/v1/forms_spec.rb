@@ -34,7 +34,7 @@ describe "Forms API" do
 
   let(:invalid_old_contract) do
     { old_contract: { customer_number: FFaker::Product.letters(10),
-                      contract_number: FFaker::Product.letters(16) } }
+                      contract_number: FFaker::IdentificationESCO.drivers_license } }
   end
 
   let(:invalid_other_address) do

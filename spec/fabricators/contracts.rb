@@ -29,7 +29,8 @@ end
 Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPointOperator do
   metering_point_operator_name { FFaker::Name.name }
   customer_number          { sequence(:customer_number, 9261502) }
-  contract_number          'xl245245235'
+  contract_number          90000
+  contract_number_addition 0
   signing_user             { Fabricate(:user) }
   terms_accepted           true
   power_of_attorney        true
@@ -59,7 +60,8 @@ end
 
 Fabricator :other_supplier_contract, class_name: Contract::OtherSupplier do
   customer_number          { sequence(:customer_number, 9261502) }
-  contract_number          'xl245245235'
+  contract_number          60000
+  contract_number_addition 100
   signing_user             { Fabricate(:user) }
   terms_accepted           true
   power_of_attorney        true
@@ -76,7 +78,8 @@ end
 
 Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
   customer_number          { sequence(:customer_number, 9261502) }
-  contract_number          'xl245245235'
+  contract_number          20000
+  contract_number_addition 1
   signing_user             { Fabricate(:user) }
   terms_accepted           true
   power_of_attorney        true
@@ -110,7 +113,8 @@ end
 
 Fabricator :power_giver_contract, class_name: Contract::PowerGiver do
   customer_number          { sequence(:customer_number, 9261502) }
-  contract_number          'xl245245235'
+  contract_number          40000
+  contract_number_addition 1
   signing_user             { Fabricate(:user) }
   terms_accepted           true
   power_of_attorney        true
@@ -134,7 +138,8 @@ end
 
 Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPowerTaker do
   customer_number          { sequence(:customer_number, 9261502) }
-  contract_number          'xl245245235'
+  contract_number          60000
+  contract_number_addition 1
   signing_user             { Fabricate(:user) }
   terms_accepted           true
   power_of_attorney        true
@@ -161,7 +166,8 @@ end
 
 Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProcessing do
   customer_number          { sequence(:customer_number, 9261502) }
-  contract_number          'xl245245235'
+  contract_number          60000
+  contract_number_addition 0
   signing_user             { Fabricate(:user) }
   terms_accepted           true
   power_of_attorney        true
@@ -209,7 +215,8 @@ end
 Fabricator :lpc_forstenried, from: :localpool_processing_contract do
   begindate = Date.new(2014, 12, 1)
   customer_number '40021/1'
-  contract_number '60015'
+  contract_number          60015
+  contract_number_addition 0
   begin_date      begindate
   signing_date    begindate - 2.months
   tariffs         { [Fabricate.build(:tariff,
@@ -236,7 +243,8 @@ Fabricator :mpoc_forstenried, from: :metering_point_operator_contract do
   begindate = Date.new(2014, 12, 1)
   metering_point_operator_name  'buzzn systems UG'
   customer_number               '40021/1'
-  contract_number               '9041'
+  contract_number               90041
+  contract_number_addition      0
   begin_date                    begindate
   signing_date                  begindate - 2.months
   contractor                    { Organization.buzzn_systems }
@@ -283,7 +291,8 @@ end
 Fabricator :lptc_mabe, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
   signingdate = Date.new(2014, 12, 1)
-  contract_number                 '60015/1'
+  contract_number                 60015
+  contract_number_addition        1
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -302,7 +311,8 @@ end
 Fabricator :lptc_inbr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 1)
   signingdate = Date.new(2014, 12, 1)
-  contract_number                 '60015/2'
+  contract_number                 60015
+  contract_number_addition        2
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -321,7 +331,8 @@ end
 Fabricator :lptc_pebr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 1)
   signingdate = Date.new(2014, 12, 1)
-  contract_number                 '60015/3'
+  contract_number                 60015
+  contract_number_addition        3
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -340,7 +351,8 @@ end
 Fabricator :lptc_anbr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 1)
   signingdate = Date.new(2014, 12, 1)
-  contract_number                 '60015/4'
+  contract_number                 60015
+  contract_number_addition        4
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -359,7 +371,8 @@ end
 Fabricator :lptc_gubr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 15)
   signingdate = Date.new(2014, 12, 1)
-  contract_number                 '60015/5'
+  contract_number                 60015
+  contract_number_addition        5
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -378,7 +391,8 @@ end
 Fabricator :lptc_mabr, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
   signingdate = Date.new(2014, 12, 1)
-  contract_number                 '60015/6'
+  contract_number                 60015
+  contract_number_addition        6
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -397,7 +411,8 @@ end
 Fabricator :lptc_dabr, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 1)
   signingdate = Date.new(2014, 12, 1)
-  contract_number                 '60015/7'
+  contract_number                 60015
+  contract_number_addition        7
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -416,7 +431,8 @@ end
 Fabricator :lptc_zubu, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
   signingdate = Date.new(2014, 12, 1)
-  contract_number                 '60015/8'
+  contract_number                 60015
+  contract_number_addition        8
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -435,7 +451,8 @@ end
 Fabricator :lptc_mace, from: :localpool_power_taker_contract do
   begindate = Date.new(2014, 12, 15)
   signingdate = Date.new(2014, 12, 1)
-  contract_number                 '60015/9'
+  contract_number                 60015
+  contract_number_addition        9
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -454,7 +471,8 @@ end
 Fabricator :lptc_stcs, from: :localpool_power_taker_contract do
   begindate = Date.new(2015, 1, 15)
   signingdate = Date.new(2014, 12, 1)
-  contract_number                 '60015/10'
+  contract_number                 60015
+  contract_number_addition        10
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -475,7 +493,8 @@ Fabricator :lptc_pafi, from: :localpool_power_taker_contract do
   signingdate = Date.new(2014, 12, 1)
   cancellationdate = Date.new(2016, 1, 1)
   enddate = Date.new(2016, 4, 28)
-  contract_number                 '60015/11'
+  contract_number                 60015
+  contract_number_addition        11
   begin_date                      begindate
   end_date                        enddate
   signing_date                    signingdate
@@ -495,7 +514,8 @@ end
 Fabricator :lptc_raja, from: :localpool_power_taker_contract do
   begindate = Date.new(2016, 5, 1)
   signingdate = Date.new(2016, 2, 1)
-  contract_number                 '60015/83'
+  contract_number                 60015
+  contract_number_addition        83
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -523,7 +543,8 @@ end
 Fabricator :lptc_hafi, from: :localpool_power_taker_contract do
   begindate = Date.new(2016, 8, 4)
   signingdate = Date.new(2016, 7, 1)
-  contract_number                 '60042/1'
+  contract_number                 60042
+  contract_number_addition        1
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -542,7 +563,8 @@ end
 Fabricator :lptc_hubv, from: :localpool_power_taker_contract do
   begindate = Date.new(2016, 8, 4)
   signingdate = Date.new(2016, 7, 1)
-  contract_number                 '60042/2'
+  contract_number                 60042
+  contract_number_addition        2
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -561,7 +583,8 @@ end
 Fabricator :lptc_mape, from: :localpool_power_taker_contract do
   begindate = Date.new(2016, 8, 4)
   signingdate = Date.new(2016, 7, 1)
-  contract_number                 '60042/3'
+  contract_number                 60042
+  contract_number_addition        3
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -581,7 +604,8 @@ Fabricator :lptc_hafi2, from: :localpool_power_taker_contract do
   begindate = Date.new(2016, 8, 4)
   signingdate = Date.new(2016, 7, 1)
   enddate = Date.new(2016, 10, 31)
-  contract_number                 '60042/4'
+  contract_number                 60042
+  contract_number_addition        4
   begin_date                      begindate
   end_date                        enddate
   signing_date                    signingdate
@@ -600,7 +624,8 @@ end
 Fabricator :lptc_musc, from: :localpool_power_taker_contract do
   begindate = Date.new(2016, 8, 4)
   signingdate = Date.new(2016, 7, 1)
-  contract_number                 '60042/5'
+  contract_number                 60042
+  contract_number_addition        5
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -619,7 +644,8 @@ end
 Fabricator :lptc_viwe, from: :localpool_power_taker_contract do
   begindate = Date.new(2016, 8, 4)
   signingdate = Date.new(2016, 7, 1)
-  contract_number                 '60042/6'
+  contract_number                 60042
+  contract_number_addition        6
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -638,7 +664,8 @@ end
 Fabricator :lptc_reho, from: :localpool_power_taker_contract do
   begindate = Date.new(2016, 8, 4)
   signingdate = Date.new(2016, 7, 1)
-  contract_number                 '60042/7'
+  contract_number                 60042
+  contract_number_addition        7
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -657,7 +684,8 @@ end
 Fabricator :lptc_pewi, from: :localpool_power_taker_contract do
   begindate = Date.new(2016, 11, 1)
   signingdate = Date.new(2016, 7, 1)
-  contract_number                 '60042/9'
+  contract_number                 60042
+  contract_number_addition        9
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -676,7 +704,8 @@ end
 Fabricator :lptc_saba, from: :localpool_power_taker_contract do
   begindate = Date.new(2017, 3, 1)
   signingdate = Date.new(2016, 7, 1)
-  contract_number                 '60042/10'
+  contract_number                 60042
+  contract_number_addition        10
   begin_date                      begindate
   end_date                        nil
   signing_date                    signingdate
@@ -696,7 +725,8 @@ Fabricator :osc_saba, from: :other_supplier_contract do
   begindate = Date.new(2016, 8, 4)
   enddate = Date.new(2017, 2, 28)
   signingdate = Date.new(2016, 7, 1)
-  contract_number                 '60042/8'
+  contract_number                 60042
+  contract_number_addition        8
   begin_date                      begindate
   end_date                        enddate
   signing_date                    signingdate
@@ -710,7 +740,8 @@ end
 Fabricator :lpc_sulz, from: :localpool_processing_contract do
   begindate = Date.new(2016, 8, 4)
   customer_number '40361/1'
-  contract_number '6042'
+  contract_number                 60042
+  contract_number_addition        0
   begin_date      begindate
   signing_date    begindate - 2.months
   tariffs         { [Fabricate.build(:tariff,
@@ -737,7 +768,8 @@ Fabricator :mpoc_sulz, from: :metering_point_operator_contract do
   begindate = Date.new(2016, 8, 4)
   metering_point_operator_name  'buzzn systems UG'
   customer_number               '40361/1'
-  contract_number               '90067'
+  contract_number               90067
+  contract_number_addition      0
   begin_date                    begindate
   signing_date                  begindate - 2.months
   contractor                    { Organization.buzzn_systems }
