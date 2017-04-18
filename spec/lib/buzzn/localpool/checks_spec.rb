@@ -143,7 +143,7 @@ describe Buzzn::Localpool::Checks do
     expect(result.all_results.size).to eq 0
   end
 
-  it 'checks for missing_lsn_contracts' do
+  it 'checks for missing_lsn_contracts and assigns new LSN to register' do
     localpool = Fabricate(:localpool_sulz_with_registers_and_readings)
     result = Buzzn::Localpool::Checks.check_missing_lsn_contracts(localpool)
 
@@ -159,8 +159,14 @@ describe Buzzn::Localpool::Checks do
     expect(result.all_results.first.end_date).to eq osc.end_date + 1.day
     expect(result.all_results.first.register).to eq osc.register
 
-    # no contract at this register anymore
-    osc.register.contracts.first.destroy
+    # assign new LSN
+    customer = localpool.localpool_processing_contract.customer
+    Buzzn::Localpool::Checks.assign_default_lsn(customer, osc.register, osc.begin_date, osc.end_date)
+    result = Buzzn::Localpool::Checks.check_missing_lsn_contracts(localpool)
+    expect(result.all_results.size).to eq 0
+
+    # no contracts at this register anymore
+    osc.register.contracts.each{|contract| contract.destroy}
 
     result = Buzzn::Localpool::Checks.check_missing_lsn_contracts(localpool)
 
@@ -168,18 +174,5 @@ describe Buzzn::Localpool::Checks do
     expect(result.all_results.first.begin_date).to eq osc.begin_date
     expect(result.all_results.first.end_date).to eq nil
     expect(result.all_results.first.register).to eq osc.register
-  end
-
-  it 'assigns new LSN to register' do
-    localpool = Fabricate(:localpool_sulz_with_registers_and_readings)
-    customer = localpool.localpool_processing_contract.customer
-    osc = Contract::OtherSupplier.first
-    osc.destroy
-
-    Buzzn::Localpool::Checks.assign_default_lsn(customer, osc.register, osc.begin_date, osc.end_date)
-
-    result = Buzzn::Localpool::Checks.check_missing_lsn_contracts(localpool)
-
-    expect(result.all_results.size).to eq 0
   end
 end

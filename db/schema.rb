@@ -230,6 +230,8 @@ ActiveRecord::Schema.define(version: 20170412212950) do
     t.integer  "contract_number_addition"
   end
 
+  add_index "contracts", ["contract_number", "contract_number_addition"], name: "index_contract_number_and_its_addition", unique: true, using: :btree
+  add_index "contracts", ["contract_number"], name: "index_contracts_on_contract_number", using: :btree
   add_index "contracts", ["contractor_type", "contractor_id"], name: "index_contracts_on_contractor_type_and_contractor_id", using: :btree
   add_index "contracts", ["customer_type", "customer_id"], name: "index_contracts_on_customer_type_and_customer_id", using: :btree
   add_index "contracts", ["localpool_id"], name: "index_contracts_on_localpool_id", using: :btree
@@ -611,9 +613,9 @@ ActiveRecord::Schema.define(version: 20170412212950) do
     t.string   "type",                                    null: false
     t.string   "obis"
     t.string   "label"
-    t.string   "low_load_ability"
     t.integer  "digits_before_comma"
     t.integer  "decimal_digits"
+    t.boolean  "low_load_ability"
   end
 
   add_index "registers", ["group_id"], name: "index_registers_on_group_id", using: :btree

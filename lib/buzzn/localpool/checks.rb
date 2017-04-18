@@ -18,14 +18,12 @@ module Buzzn::Localpool
           end
           all_contracts_on_register = register.contracts.localpool_power_takers_and_other_suppliers.order('begin_date ASC')
           if all_contracts_on_register.size > 0
-            i = 0
-            all_contracts_on_register.each do |contract|
+            all_contracts_on_register.each_with_index do |contract, i|
               contract_begin_date = contract.begin_date
               contract_end_date = contract.end_date
               check_first_contract(i, date_of_first_reading, contract_begin_date, result, register)
               check_middle_contract(i, contract_end_date, all_contracts_on_register, result, register)
               check_last_contract(i, contract_end_date, all_contracts_on_register, result, register)
-              i += 1
             end
           else
             result.add(MissingLsnCheckResult.new(register, date_of_first_reading, nil))
@@ -94,23 +92,25 @@ module Buzzn::Localpool
       def assign_default_lsn(customer, register, begin_date, end_date)
         status = end_date.nil? ? Contract::Base::RUNNING : Contract::Base::EXPIRED
         contract_number = register.group.localpool_processing_contract.contract_number
-        Contract::LocalpoolPowerTaker.create!(status: status,
-                                              begin_date: begin_date,
-                                              end_date: end_date,
-                                              forecast_kwh_pa: 0,
-                                              terms_accepted: true,
-                                              power_of_attorney: true,
-                                              contract_number: contract_number,
-                                              contract_number_addition: Contract::LocalpoolPowerTaker.where(contract_number: contract_number).order('contract_number_addition DESC').first.contract_number_addition + 1,
-                                              register: register,
-                                              localpool_id: register.group.id, # TODO: this is optional. make it mandatory?
-                                              renewable_energy_law_taxation: Contract::RenewableEnergyLawTaxation::REDUCED,
-                                              signing_user: register.group.managers.first, # TODO: this must be the owner of the LCP in the future
-                                              signing_date: begin_date,
-                                              customer: customer,
-                                              contractor: register.group.localpool_processing_contract.customer,
-                                              energy_consumption_before_kwh_pa: 0,
-                                              down_payment_before_cents_per_month: 0)
+        ActiveRecord::Base.transaction do
+          Contract::LocalpoolPowerTaker.create!(status: status,
+                                                begin_date: begin_date,
+                                                end_date: end_date,
+                                                forecast_kwh_pa: 0,
+                                                terms_accepted: true,
+                                                power_of_attorney: true,
+                                                contract_number: contract_number,
+                                                contract_number_addition: Contract::LocalpoolPowerTaker.where(contract_number: contract_number).maximum(:contract_number_addition) + 1,
+                                                register: register,
+                                                localpool_id: register.group.id, # TODO: this is optional. make it mandatory?
+                                                renewable_energy_law_taxation: Contract::RenewableEnergyLawTaxation::REDUCED,
+                                                signing_user: register.group.managers.first, # TODO: this must be the owner of the LCP in the future
+                                                signing_date: begin_date,
+                                                customer: customer,
+                                                contractor: register.group.localpool_processing_contract.customer,
+                                                energy_consumption_before_kwh_pa: 0,
+                                                down_payment_before_cents_per_month: 0)
+        end
       end
 
       # This method executes the given block and throws a custom CheckError if something goes wrong

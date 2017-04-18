@@ -29,8 +29,8 @@ end
 Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPointOperator do
   metering_point_operator_name { FFaker::Name.name }
   customer_number          { sequence(:customer_number, 9261502) }
-  contract_number          90000
-  contract_number_addition 0
+  contract_number          { rand(90000) + 1 }
+  contract_number_addition { rand(10000) + 1 }
   signing_user             { Fabricate(:user) }
   terms_accepted           true
   power_of_attorney        true
@@ -60,8 +60,8 @@ end
 
 Fabricator :other_supplier_contract, class_name: Contract::OtherSupplier do
   customer_number          { sequence(:customer_number, 9261502) }
-  contract_number          60000
-  contract_number_addition 100
+  contract_number          { rand(60000) + 1 }
+  contract_number_addition { rand(10000) + 1 }
   signing_user             { Fabricate(:user) }
   terms_accepted           true
   power_of_attorney        true
@@ -78,8 +78,8 @@ end
 
 Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
   customer_number          { sequence(:customer_number, 9261502) }
-  contract_number          20000
-  contract_number_addition 1
+  contract_number          { rand(20000) + 1 }
+  contract_number_addition { rand(10000) + 1 }
   signing_user             { Fabricate(:user) }
   terms_accepted           true
   power_of_attorney        true
@@ -115,8 +115,8 @@ end
 
 Fabricator :power_giver_contract, class_name: Contract::PowerGiver do
   customer_number          { sequence(:customer_number, 9261502) }
-  contract_number          40000
-  contract_number_addition 1
+  contract_number          { rand(40000) + 1 }
+  contract_number_addition { rand(10000) - 1 }
   signing_user             { Fabricate(:user) }
   terms_accepted           true
   power_of_attorney        true
@@ -140,8 +140,8 @@ end
 
 Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPowerTaker do
   customer_number          { sequence(:customer_number, 9261502) }
-  contract_number          60000
-  contract_number_addition 1
+  contract_number          { rand(60000) + 1 }
+  contract_number_addition { rand(10000) + 1 }
   signing_user             { Fabricate(:user) }
   terms_accepted           true
   power_of_attorney        true
@@ -168,7 +168,7 @@ end
 
 Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProcessing do
   customer_number          { sequence(:customer_number, 9261502) }
-  contract_number          60000
+  contract_number          { rand(60000) + 1 }
   contract_number_addition 0
   signing_user             { Fabricate(:user) }
   terms_accepted           true
