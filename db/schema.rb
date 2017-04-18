@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170410154959) do
+ActiveRecord::Schema.define(version: 20170418125916) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,13 +93,12 @@ ActiveRecord::Schema.define(version: 20170410154959) do
     t.string   "bic"
     t.string   "bank_name"
     t.boolean  "direct_debit"
-    t.uuid     "bank_accountable_id"
-    t.string   "bank_accountable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.uuid     "contracting_party_id",   null: false
+    t.string   "contracting_party_type", null: false
   end
 
-  add_index "bank_accounts", ["bank_accountable_id", "bank_accountable_type"], name: "index_accountable", using: :btree
   add_index "bank_accounts", ["slug"], name: "index_bank_accounts_on_slug", unique: true, using: :btree
 
   create_table "banks", force: :cascade do |t|
@@ -227,6 +226,8 @@ ActiveRecord::Schema.define(version: 20170410154959) do
     t.string   "contractor_type"
     t.string   "energy_consumption_before_kwh_pa"
     t.string   "down_payment_before_cents_per_month"
+    t.uuid     "customer_bank_account_id"
+    t.uuid     "contractor_bank_account_id"
   end
 
   add_index "contracts", ["contractor_type", "contractor_id"], name: "index_contracts_on_contractor_type_and_contractor_id", using: :btree

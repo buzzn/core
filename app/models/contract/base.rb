@@ -49,7 +49,8 @@ module Contract
     has_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id, dependent: :destroy
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy
 
-    has_one :bank_account, as: :bank_accountable, dependent: :destroy
+    belongs_to :contractor_bank_account, class_name: 'BankAccount'
+    belongs_to :customer_bank_account, class_name: 'BankAccount'
 
     validates :contractor, presence: true
     validates :customer, presence: true

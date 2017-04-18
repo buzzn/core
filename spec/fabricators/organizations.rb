@@ -7,7 +7,6 @@ Fabricator :organization do
   description { FFaker::Company.catch_phrase }
   website     { "http://www.#{FFaker::Internet.domain_name}" }
   created_at  { (rand*10).days.ago }
-  bank_account { Fabricate(:bank_account) }
 end
 
 
@@ -56,7 +55,6 @@ Fabricator :hell_und_warm, from: :other_organization do
   email       't.brumbauer@wogeno.de'
   description 'Betreiber des Localpools Forstenried'
   address     { Fabricate(:address, street_name: 'Aberlestraße', street_number: '16', zip: 81371, city: 'München')}
-  bank_account { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 # needed for groups fabricator - legacy naming
