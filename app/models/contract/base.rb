@@ -66,7 +66,7 @@ module Contract
 
     validates :terms_accepted, presence: true
     validates :power_of_attorney, presence: true
-    validates_uniqueness_of :contract_number_addition, scope: [:contract_number], message: 'already available for given contract_number'
+    validates_uniqueness_of :contract_number_addition, scope: [:contract_number], message: 'already available for given contract_number', if: 'contract_number_addition.present?'
 
 
     validate :validate_invariants
