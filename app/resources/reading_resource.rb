@@ -7,7 +7,8 @@ class ReadingResource < Buzzn::EntityResource
               :timestamp,
               :reason,
               :source,
-              :quality
+              :quality,
+              :meter_serialnumber
 end
 
 class ReadingCollectionResource < ReadingResource

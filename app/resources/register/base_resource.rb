@@ -8,6 +8,13 @@ module Register
     attributes  :direction,
                 :name
 
+    # API methods for the endpoints
+
+    def readings
+      Reading.by_register_id(object.id).collect do |r|
+        ReadingResource.new(r, current_user: current_user)
+      end
+    end
   end
 
   class CollectionResource < BaseResource
