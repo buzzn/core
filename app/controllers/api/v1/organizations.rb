@@ -24,14 +24,14 @@ module API
         end
 
 
-        desc 'Return the related bank_account for an organization'
+        desc 'Return the related bank_accounts for an organization'
         params do
           requires :id, type: String, desc: 'ID of the organization'
         end
-        get ':id/bank-account' do
+        get ':id/bank-accounts' do
           OrganizationResource
             .retrieve(current_user, permitted_params)
-            .bank_account!
+            .bank_accounts
         end
       end
     end

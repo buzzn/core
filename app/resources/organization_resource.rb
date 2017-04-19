@@ -13,7 +13,6 @@ class OrganizationSingleResource < Buzzn::EntityResource
   attributes :updatable, :deletable
 
   has_one :address
-  has_many :bank_accounts
 
   # API methods for endpoints
 
@@ -23,6 +22,10 @@ class OrganizationSingleResource < Buzzn::EntityResource
 
   def managers
     object.managers.readable_by(@current_user)
+  end
+
+  def bank_accounts
+    object.bank_accounts.readable_by(@current_user).collect { |ba| BankAccountResource.new(ba) }
   end
 
 end

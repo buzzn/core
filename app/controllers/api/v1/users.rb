@@ -41,14 +41,14 @@ module API
         end
 
 
-        desc 'Return the related bank_account for User'
+        desc 'Return the related bank_accounts for User'
         params do
           requires :id, type: String, desc: 'ID of the User'
         end
-        get ':id/bank-account' do
+        get ':id/bank-accounts' do
           UserResource
             .retrieve(current_user, permitted_params)
-            .bank_account!
+            .bank_accounts
         end
 
 

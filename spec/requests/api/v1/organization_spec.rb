@@ -20,7 +20,7 @@ describe "organizations" do
 
   let(:denied_json) do
     json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id 
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
     json
   end
 
@@ -39,7 +39,11 @@ describe "organizations" do
     json
   end
 
-  let(:organization) { Fabricate(:metering_service_provider)}
+  let(:organization) do
+    organization = Fabricate(:metering_service_provider)
+    Fabricate(:bank_account, contracting_party: organization)
+    organization
+  end
 
   context 'GET' do
 
@@ -59,8 +63,7 @@ describe "organizations" do
             "updatable"=>false,
             "deletable"=>false},
           "relationships"=>{
-            "address"=>{"data"=>nil},
-            "bank-account"=>{"data"=>nil}
+            "address"=>{"data"=>nil}
           }
         }
       }
@@ -88,8 +91,7 @@ describe "organizations" do
     end
 
     it '200' do
-      bank_account = organization.bank_account
-      bank_account.delete if bank_account
+      organization.bank_accounts.each{|bank_account| bank_account.delete}
 
       GET "/api/v1/organizations/#{organization.id}"
       expect(response).to have_http_status(200)
@@ -103,7 +105,7 @@ describe "organizations" do
 
   context 'bank_account' do
 
-    let(:bank_account) { organization.bank_account}
+    let(:bank_account) { organization.bank_accounts.first}
 
     let(:bank_account_not_found_json) do
       {
@@ -122,26 +124,34 @@ describe "organizations" do
     end
 
     let(:bank_account_json) do
-      { "data"=>{
-          "id"=>bank_account.id,
-          "type"=>"bank-accounts",
-          "attributes"=>{
-            "type"=>"bank_account",
-            "holder"=>bank_account.holder,
-            "bank-name"=>bank_account.bank_name,
-            "bic"=>bank_account.bic,
-            "iban"=>bank_account.iban,
-            "direct-debit"=>bank_account.direct_debit
+      { "data"=>
+        [
+          {
+            "id"=>bank_account.id,
+            "type"=>"bank-accounts",
+            "attributes"=>{
+              "type"=>"bank_account",
+              "holder"=>bank_account.holder,
+              "bank-name"=>bank_account.bank_name,
+              "bic"=>bank_account.bic,
+              "iban"=>bank_account.iban,
+              "direct-debit"=>bank_account.direct_debit
+            }
           }
-        }
+        ]
       }
+    end
+
+    let(:empty_bank_account_json) do
+      {"data"=>[]}
     end
 
     context 'GET' do
       it '403' do
-        GET "/api/v1/organizations/#{organization.id}/bank-account"
-        expect(response).to have_http_status(403)
-        expect(json).to eq bank_account_anonymous_denied_json
+        # TODO: should the request fail at all or just return an empty array?
+        # GET "/api/v1/organizations/#{organization.id}/bank-accounts"
+        # expect(response).to have_http_status(403)
+        # expect(json).to eq bank_account_anonymous_denied_json
 
         # TODO this should fail as expected same as top-level object
         #GET "/api/v1/organizations/#{organization.id}/bank-account", user
@@ -150,20 +160,25 @@ describe "organizations" do
       end
 
       it '404' do
-        GET "/api/v1/organizations/bla-blub/bank-account", admin
+        GET "/api/v1/organizations/bla-blub/bank-accounts", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
-
-        organization.bank_account.delete
-        GET "/api/v1/organizations/#{organization.id}/bank-account", admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq bank_account_not_found_json
       end
 
       it '200' do
-        GET "/api/v1/organizations/#{organization.id}/bank-account", admin
+        GET "/api/v1/organizations/#{organization.id}/bank-accounts", admin
         expect(response).to have_http_status(200)
         expect(json).to eq(bank_account_json)
+
+        # TODO: should the request fail at all or just return an empty array?
+        GET "/api/v1/organizations/#{organization.id}/bank-accounts"
+        expect(response).to have_http_status(200)
+        expect(json).to eq empty_bank_account_json
+
+        organization.bank_accounts.each{|bank_account| bank_account.delete}
+        GET "/api/v1/organizations/#{organization.id}/bank-accounts", admin
+        expect(response).to have_http_status(200)
+        expect(json).to eq empty_bank_account_json
       end
     end
   end
