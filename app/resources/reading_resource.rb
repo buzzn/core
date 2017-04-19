@@ -1,10 +1,18 @@
-class ReadingSerializer < ActiveModel::Serializer
+class ReadingResource < Buzzn::EntityResource
+
+  model Reading
 
   attributes  :energy_milliwatt_hour,
               :power_milliwatt,
               :timestamp,
-              :register_id,
               :reason,
               :source,
-              :quality
+              :quality,
+              :meter_serialnumber
+end
+
+class ReadingCollectionResource < ReadingResource
+end
+
+class ReadingSingleResource < ReadingResource
 end
