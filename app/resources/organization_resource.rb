@@ -13,7 +13,7 @@ class OrganizationSingleResource < Buzzn::EntityResource
   attributes :updatable, :deletable
 
   has_one :address
-  has_one :bank_account
+  has_many :bank_accounts
 
   # API methods for endpoints
 

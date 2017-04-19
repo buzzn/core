@@ -19,7 +19,7 @@ describe "contracts" do
 
   let(:denied_json) do
     json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id 
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
     json
   end
 
@@ -131,7 +131,13 @@ describe "contracts" do
               "data"=>{"id"=>contract.signing_user.id,
                        "type"=>"users"}
             },
-            "bank-account"=>{"data"=>nil}
+            "customer-bank-account"=>{
+              "data"=>nil
+            },
+            "contractor-bank-account"=>{
+              "data"=>{"id"=>contract.contractor_bank_account_id,
+                       "type"=>"bank-accounts"}
+            }
           }
         }
       }
@@ -209,7 +215,7 @@ describe "contracts" do
         GET "/api/v1/contracts/bla-blub/customer", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
-  
+
         # customer can not be nil
       end
 
@@ -241,6 +247,9 @@ describe "contracts" do
                   "sales-tax-number"=>nil,
                   "tax-rate"=>nil,
                   "tax-number"=>nil
+                },
+                "relationships"=>{
+                  "bank-accounts"=>{"data"=>[]}
                 }
               }
             }
@@ -289,7 +298,7 @@ describe "contracts" do
         GET "/api/v1/contracts/bla-blub/contractor", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
-  
+
         # contractor can not be nil
       end
 
@@ -324,7 +333,7 @@ describe "contracts" do
                 },
                 "relationships"=>{
                   "address"=>{"data"=>nil},
-                  "bank-account"=>{"data"=>nil}
+                  "bank-accounts"=>{"data"=>[]}
                 }
               }
             }
@@ -332,7 +341,7 @@ describe "contracts" do
 
           it '200' do
             contract = send "#{type}_contract"
-            contract.contractor.bank_account.delete
+            contract.contractor_bank_account.delete
 
             GET "/api/v1/contracts/#{contract.id}/contractor", admin
             expect(response).to have_http_status(200)

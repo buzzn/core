@@ -6,8 +6,9 @@ class UserResource < Buzzn::EntityResource
 
   # API methods for endpoints
 
-  entities :profile,
-           :bank_account
+  entities :profile
+
+  has_many :bank_accounts
 
   def meters(filter = nil)
     Meter::Base.filter(filter).readable_by(@current_user).collect { |m| Meter::BaseResource.new(m) }

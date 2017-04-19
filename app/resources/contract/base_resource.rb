@@ -19,7 +19,8 @@ module Contract
     has_one :contractor
     has_one :customer
     has_one :signing_user
-    has_one :bank_account
+    has_one :customer_bank_account
+    has_one :contractor_bank_account
 
     alias :contractor_raw! :contractor!
     def contractor!
