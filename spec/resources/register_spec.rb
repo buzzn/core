@@ -24,20 +24,6 @@ describe Register::BaseResource do
     end
   end
 
-  it 'has scores' do
-    [real, virtual].each do |register|
-      register = Register::BaseResource.retrieve(user, register.id)
-      expect(register.scores).to eq []
-    end
-  end
-
-  it 'has comments' do
-    [real, virtual].each do |register|
-      register = Register::BaseResource.retrieve(user, register.id)
-      expect(register.comments).to eq []
-    end
-  end
-
   it 'retrieve all - ids + types' do
     expected = {Register::Real => real.id, Register::Virtual => virtual.id}
     result = Register::BaseResource.all(user).collect do |r|

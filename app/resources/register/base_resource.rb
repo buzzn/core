@@ -8,15 +8,12 @@ module Register
     attributes  :direction,
                 :name
 
-    # TODO needed ? API methods for the endpoints
+    # API methods for the endpoints
 
-    collections :scores
-
-    def comments
-      Comment.where(
-           commentable_type: Register::Base,
-           commentable_id: object.id
-      ).readable_by(@current_user)
+    def readings
+      Reading.by_register_id(object.id).collect do |r|
+        ReadingResource.new(r, current_user: current_user)
+      end
     end
   end
 
