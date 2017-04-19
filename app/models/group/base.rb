@@ -110,8 +110,7 @@ module Group
         # this register_on and register_join
         register_on   = register.create_on(group[:id].eq(register.alias[:group_id]))
         register_join = register.create_join(register.alias, register_on, Arel::Nodes::OuterJoin)
-
-        joins(register_join).where(sqls.map(&:to_sql).join(' OR ')).distinct
+        joins(register_join).where('(' + sqls.map(&:to_sql).join(' OR ') + ')').distinct
       end
     end
 
