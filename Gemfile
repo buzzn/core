@@ -1,5 +1,10 @@
 source 'https://rubygems.org'
 
+# pdf
+gem 'slim'
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+
 # Backend
 gem 'active_model_serializers'
 gem 'rails'
