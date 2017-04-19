@@ -129,4 +129,9 @@ describe "Contract Model" do
     expect(Contract::Base.readable_by(manager_of_tribe)).to eq [contracts.last]
     expect(Contract::Base.readable_by(member_of_localpool)).to eq []
   end
+
+  it 'does not create contract with same contract_number_addition' do
+    contract = Fabricate(:localpool_power_taker_contract, contract_number: 123456, contract_number_addition: 1)
+    expect{ Fabricate(:localpool_power_taker_contract, contract_number: 123456, contract_number_addition: 1) }.to raise_error ActiveRecord::RecordInvalid
+  end
 end

@@ -6,7 +6,7 @@ module Contract
     model Base
 
     attributes  :status,
-                :contract_number,
+                :full_contract_number,
                 :customer_number,
                 :signing_date,
                 :cancellation_date,
@@ -20,6 +20,10 @@ module Contract
     has_one :customer
     has_one :signing_user
     has_one :bank_account
+
+    def full_contract_number
+      object.contract_number.to_s + "/" + object.contract_number_addition.to_s
+    end
 
     alias :contractor_raw! :contractor!
     def contractor!
