@@ -9,6 +9,25 @@ class Device < ActiveRecord::Base
   #tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
   #tracked recipient: Proc.new{ |controller, model| controller && model }
 
+  BIO_MASS = 'bio_mass'
+  BIO_GAS = 'bio_gas'
+  NATURAL_GAS = 'natural_gas' # erdgas
+  FLUID_GAS = 'fluid_gas'
+  FUEL_OIL = 'fuel_oil' # Heizöl
+  WOOD = 'wood'
+  VEG_OIL = 'veg_oil' # Pflenzenöl
+  SUN = 'sun'
+  WIND = 'wind'
+  WATER = 'water'
+  OTHER = 'other'
+
+  class << self
+    def all_primary_energies
+      @primary_energy ||= [BIO_MASS, BIO_GAS, NATURAL_GAS, FLUID_GAS, FUEL_OIL,
+                            WOOD, VEG_OIL, SUN, WIND, WATER, OTHER]
+    end
+  end
+
   belongs_to :register, class_name: Register::Base, foreign_key: :register_id
 
   mount_uploader :image, PictureUploader
@@ -20,6 +39,7 @@ class Device < ActiveRecord::Base
   validates :image, :file_size => {
     :maximum => 2.megabytes.to_i
   }
+  validates :primary_energy, inclusion: {in: self.all_primary_energies}, if: 'primary_energy.present?'
 
   scope :editable_by_user, lambda {|user|
     self.with_role(:manager, user)
@@ -96,19 +116,6 @@ class Device < ActiveRecord::Base
       out
     }
   end
-
-  def self.primary_energies
-    %w{
-      gas
-      oil
-      lpg
-      sun
-      wind
-      water
-      biomass
-    }.map(&:to_sym)
-  end
-
 
   def output?
     self.mode == 'out'

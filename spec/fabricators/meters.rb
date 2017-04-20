@@ -4,26 +4,23 @@ Fabricator :meter, class_name: Meter::Real do
   manufacturer_name                   'ferraris'
   manufacturer_product_name           'AS 1440'
   manufacturer_product_serialnumber   { Random.new_seed.to_s.slice(0, 7) }
-  metering_type                       { Buzzn::Zip2Price.types.first }
   created_at                          { (rand*10).days.ago }
-  owner                               'some-owner'
-  metering_type                       'EHZ'
-  meter_size                          5
-  rate                                'yearly'
+  ownership                           Meter::Base::BUZZN_SYSTEMS
+  metering_type                       Meter::Base::SMART_METER
+  meter_size                          Meter::Base::EDL40
   mode                                'one-way'
   measurement_capture                 'some-capture'
-  mounting_method                     'wall'
+  mounting_method                     Meter::Base::THREE_POINT_HANGING
   build_year                          { 5.years.ago }
   calibrated_till                     { 5.years.from_now }
-  section                             'some-section'
-  metering_point_type                 'some-metering_point_type'
-  voltage_level                       'low_level'
-  cycle_interval                      'yearly'
+  section                             'electricity'
+  metering_point_type                 'metering_point'
+  voltage_level                       Meter::Base::LOW_LEVEL
+  cycle_interval                      Meter::Base::YEARLY
   send_data_dso                       false
   remote_readout                      true
-  tariff                              'single'
-  direction                           'one-way'
-  data_logging                        'somewhere'
+  tariff                              Meter::Base::ONE_TARIFF
+  data_logging                        Meter::Base::REMOTE
   manufacturer_number                 { Random.new_seed.to_s.slice(0, 12) }
   data_provider_name                  'Discovergy'
 end
@@ -44,7 +41,6 @@ end
     manufacturer_name           { Meter::Real.manufacturer_names.sample }
     manufacturer_product_name    { FFaker::Name.name }
     manufacturer_product_serialnumber  { Random.new_seed.to_s.slice(0, 7) }
-    metering_type { Buzzn::Zip2Price.types.first }
   end
 end
 

@@ -46,7 +46,7 @@ Fabricator :bhkw_justus, from: :out_device do
   manufacturer_name             'Honda'
   manufacturer_product_name     'EcoPower 1.0'
   category                      'Blockheizkraftwerk'
-  primary_energy                'gas'
+  primary_energy                Device::NATURAL_GAS
   watt_peak                     1000
   commissioning                 Date.new(2012,10,1)
   image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'justus', 'bhkw.jpg' )) }
@@ -58,7 +58,7 @@ Fabricator :dach_pv_justus, from: :out_device do
   manufacturer_name             'solarwatt'
   manufacturer_product_name     'PV 8,51'
   category                      'Photovoltaikanlage'
-  primary_energy                'sun'
+  primary_energy                Device::SUN
   watt_peak                     8510
   commissioning                 Date.new(2012,3,31)
   image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'justus', 'pv.jpg' )) }
@@ -71,7 +71,7 @@ Fabricator :carport_pv_justus, from: :device do
   manufacturer_name             'solarwatt'
   manufacturer_product_name     'PV 5,3'
   category                      'Photovoltaikanlage'
-  primary_energy                'sun'
+  primary_energy                Device::SUN
   watt_peak                     5300
   commissioning                 Date.new(2012,1,1)
   image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'justus', 'carport-pv.jpg' )) }
@@ -85,7 +85,7 @@ Fabricator :pv_karin, from: :device do
   manufacturer_name             'Solarex'
   manufacturer_product_name     'MX-64'
   category                      'Photovoltaikanlage'
-  primary_energy                'sun'
+  primary_energy                Device::SUN
   watt_peak                     2160
   commissioning                 Date.new(2002,11,1)
   image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'karin', 'pv.jpg' )) }
@@ -97,7 +97,7 @@ Fabricator :bhkw_stefan, from: :out_device do
   manufacturer_name             'Senertec'
   manufacturer_product_name     'Dachs'
   category                      'Blockheizkraftwerk'
-  primary_energy                'gas'
+  primary_energy                Device::NATURAL_GAS
   watt_peak                     5500
   commissioning                 Date.new(1995,11,1)
   image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'stefan', 'bhkw.jpg' )) }
@@ -110,7 +110,7 @@ Fabricator :hof_butenland_wind, from: :out_device do
   manufacturer_name             'Enercon'
   manufacturer_product_name     '16'
   category                      'Windkraftanlage'
-  primary_energy                'wind'
+  primary_energy                Device::WIND
   watt_peak                     55000
   commissioning                 Date.new(1989,12,1)
   image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'butenland', 'wind.jpg' )) }

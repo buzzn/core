@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170418125916) do
+ActiveRecord::Schema.define(version: 20170420141436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -306,6 +306,7 @@ ActiveRecord::Schema.define(version: 20170418125916) do
     t.uuid     "meter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "manufacturer_number"
   end
 
   add_index "equipment", ["meter_id"], name: "index_equipment_on_meter_id", using: :btree
@@ -396,10 +397,9 @@ ActiveRecord::Schema.define(version: 20170418125916) do
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
     t.string   "manufacturer_product_serialnumber"
-    t.string   "owner"
+    t.string   "ownership"
     t.string   "metering_type"
     t.string   "meter_size"
-    t.string   "rate"
     t.string   "mode"
     t.string   "image"
     t.string   "measurement_capture"
@@ -407,8 +407,6 @@ ActiveRecord::Schema.define(version: 20170418125916) do
     t.date     "build_year"
     t.date     "calibrated_till"
     t.boolean  "smart",                             default: false
-    t.boolean  "init_reading",                      default: false
-    t.string   "ancestry"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "type",                                              null: false
@@ -419,14 +417,12 @@ ActiveRecord::Schema.define(version: 20170418125916) do
     t.boolean  "send_data_dso"
     t.boolean  "remote_readout"
     t.string   "tariff"
-    t.string   "direction"
     t.string   "data_logging"
     t.string   "manufacturer_number"
     t.integer  "converter_constant"
     t.string   "data_provider_name"
   end
 
-  add_index "meters", ["ancestry"], name: "index_meters_on_ancestry", using: :btree
   add_index "meters", ["slug"], name: "index_meters_on_slug", unique: true, using: :btree
 
   create_table "nne_vnbs", id: false, force: :cascade do |t|
@@ -553,20 +549,12 @@ ActiveRecord::Schema.define(version: 20170418125916) do
     t.string   "last_name"
     t.text     "about_me"
     t.string   "website"
-    t.string   "facebook"
-    t.string   "twitter"
-    t.string   "xing"
-    t.string   "linkedin"
     t.string   "gender"
     t.string   "phone"
     t.string   "time_zone"
-    t.text     "know_buzzn_from"
     t.boolean  "confirm_pricing_model"
     t.boolean  "terms"
     t.string   "readable"
-    t.boolean  "newsletter_notifications",         default: true
-    t.boolean  "location_notifications",           default: true
-    t.boolean  "group_notifications",              default: true
     t.uuid     "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -597,8 +585,6 @@ ActiveRecord::Schema.define(version: 20170418125916) do
     t.string   "mode"
     t.string   "name"
     t.string   "image"
-    t.date     "regular_reeding"
-    t.boolean  "virtual",                 default: false
     t.boolean  "is_dashboard_register",   default: false
     t.string   "readable"
     t.uuid     "meter_id"

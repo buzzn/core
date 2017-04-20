@@ -31,10 +31,6 @@ Fabricator :profile_felix, from: :profile do
   first_name  'Felix'
   last_name   'Faerber'
   website     'http://www.ffaerber.com'
-  facebook    'https://www.facebook.com/ffaerber'
-  twitter     'https://twitter.com/ffaerber'
-  xing        'https://www.xing.com/profile/Felix_Faerber'
-  linkedin    'https://www.linkedin.com/profile/view?id=61766404'
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'felix.jpg')) }
 end
 
