@@ -1,5 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 
+require File.expand_path('../../lib/buzzn/services/boot', __FILE__)
 require 'rails/all'
 require 'sprockets/es6'
 
@@ -62,6 +63,19 @@ module Buzzn
 
     config.autoload_paths << "#{Rails.root}/lib"
 
+    if ENV['AWS_ACCESS_KEY'].present?
+      config.x.fog.storage_opts   = { provider: 'AWS', aws_access_key_id: ENV['AWS_ACCESS_KEY'], aws_secret_access_key: ENV['AWS_SECRET_KEY'], region: ENV['AWS_REGION'] }
+      config.x.fog.directory_opts = { key: ENV['AWS_BUCKET'], public: false }
+    else
+      config.x.fog.storage_opts   = { provider: 'Local', local_root: 'tmp' }
+      config.x.fog.directory_opts = { key: 'files' }
+    end
+
+    config.x.templates_path = Rails.root.join('app', 'templates')
+
+    config.before_initialize do
+      Buzzn::Services::Boot.before_initialize
+    end
     config.after_initialize do
 
       # service components
