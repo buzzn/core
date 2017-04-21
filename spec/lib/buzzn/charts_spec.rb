@@ -1,4 +1,4 @@
-describe Buzzn::Charts do
+describe Buzzn::Services::Charts do
 
 
   class DummyDataSource < Buzzn::DataSource
@@ -31,7 +31,7 @@ describe Buzzn::Charts do
 
   let(:mock) { MockDataSource.new }
   subject do
-    Buzzn::Charts.new(
+    Buzzn::Services::Charts.new(
       Buzzn::DataSourceRegistry.new(
         Redis.current,
         DummyDataSource.new,

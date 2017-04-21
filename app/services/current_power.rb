@@ -1,10 +1,7 @@
-module Buzzn
+module Buzzn::Services
 
   class CurrentPower
-
-    def initialize(data_source_registry)
-      @registry = data_source_registry
-    end
+    include Import.args[registry: 'service.data_source_registry']
 
     def for_register(resource)
       raise ArgumentError.new("not a #{Register::BaseResource}") if !resource.is_a?(Register::BaseResource) && !resource.is_a?(Register::Base)

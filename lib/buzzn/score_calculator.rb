@@ -1,6 +1,7 @@
 module Buzzn
 
   class ScoreCalculator
+    include Import.reader['service.charts']
 
     def initialize(group, containing_timestamp)
       @group                = group
@@ -208,7 +209,7 @@ module Buzzn
       result = Buzzn::DataResultSet.send(:milliwatt, "no-id-needed")
       interval = Buzzn::Interval.day(@containing)
       registers.each do |register|
-        data = Buzzn::Application.config.charts.for_register(register, interval)
+        data = charts.for_register(register, interval)
         result.add_all(data, interval.duration)
       end
       result

@@ -1,10 +1,7 @@
-module Buzzn
+module Buzzn::Services
 
   class Charts
-
-    def initialize(data_source_registry)
-      @registry = data_source_registry
-    end
+    include Import.args[registry: 'service.data_source_registry']
 
     def for_register(register, interval)
       raise ArgumentError.new("not a #{Register::Base}") unless register.is_a?(Register::Base)
