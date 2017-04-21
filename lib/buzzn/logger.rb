@@ -2,7 +2,10 @@ module Buzzn
   class Logger
     def self.root=(root)
       @root = root
-      @loggers = {}
+      @loggers ||= {}
+      @loggers.each do |k, logger|
+        logger.instance_variable_set('@root', root)
+      end
     end
 
     def self.root

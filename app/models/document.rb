@@ -1,5 +1,5 @@
 class Document < ActiveRecord::Base
-  include Import.reader['service.storage']
+  include Import.active_record['service.storage']
 
   serialize :encryption_details, Buzzn::Security::SecureHashSerializer.new
 

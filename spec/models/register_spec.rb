@@ -307,27 +307,28 @@ describe "Register Model" do
         ).to match_array ['Wohnung', 'Windanlage', 'anonymous']
       end
     end
+  end
 
-    class Broker::Discovergy
-      def validates_credentials
-      end
+  class Broker::Discovergy
+    def validates_credentials
     end
+  end
 
-    class Buzzn::Charts
-      def for_register(register, interval)
-        return Buzzn::DataResultSet.send(:milliwatt_hour, 'some-id', [Buzzn::DataPoint.new(1491429601.399, 243378558930.2)])
-      end
+  class Buzzn::Services::ChartsDummy
+    def for_register(register, interval)
+      return Buzzn::DataResultSet.send(:milliwatt_hour, 'some-id', [Buzzn::DataPoint.new(1491429601.399, 243378558930.2)])
     end
+  end
 
-    it 'stores a reading in database' do
-      meter = Fabricate(:easymeter_60009405)
-      register = meter.registers.first
-      register.store_reading_at(Time.current.beginning_of_day, Reading::REGULAR_READING)
-      expect(Reading.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
-      expect{register.store_reading_at(Time.current.beginning_of_day, Reading::REGULAR_READING)}.to raise_error Mongoid::Errors::Validations
-      expect(Reading.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
-      expect{register.store_reading_at(Time.current, Reading::REGULAR_READING)}.to raise_error ArgumentError
-      expect(Reading.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
-    end
+  it 'stores a reading in database' do
+    meter = Fabricate(:easymeter_60009405)
+    register = meter.registers.first
+    register.instance_variable_set('@charts', Buzzn::Services::ChartsDummy.new)
+    register.store_reading_at(Time.current.beginning_of_day, Reading::REGULAR_READING)
+    expect(Reading.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
+    expect{register.store_reading_at(Time.current.beginning_of_day, Reading::REGULAR_READING)}.to raise_error Mongoid::Errors::Validations
+    expect(Reading.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
+    expect{register.store_reading_at(Time.current, Reading::REGULAR_READING)}.to raise_error ArgumentError
+    expect(Reading.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
   end
 end

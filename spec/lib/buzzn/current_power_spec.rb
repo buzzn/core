@@ -1,4 +1,4 @@
-describe Buzzn::CurrentPower do
+describe Buzzn::Services::CurrentPower do
 
   class DummyDataSource < Buzzn::DataSource
 
@@ -37,7 +37,7 @@ describe Buzzn::CurrentPower do
 
   let(:mock) { MockDataSource.new }
   subject do
-    Buzzn::CurrentPower.new(
+    Buzzn::Services::CurrentPower.new(
       Buzzn::DataSourceRegistry.new(
         Redis.current,
         DummyDataSource.new,

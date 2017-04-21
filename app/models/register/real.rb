@@ -1,6 +1,6 @@
 module Register
   class Real < Base
-
+    
     belongs_to :meter, class_name: Meter::Real, foreign_key: :meter_id
 
     def obis
@@ -48,7 +48,7 @@ module Register
           reading.errors.each {|key, value| reading.errors.delete(key) unless key == :timestamp }
           raise Mongoid::Errors::Validations.new(reading)
         end
-        data = Buzzn::Application.config.charts.for_register(self, Buzzn::Interval.second(time))
+        data = charts.for_register(self, Buzzn::Interval.second(time))
         if data.nil?
           raise StandardError.new('cannot retrieve reading for register ' + self.id + ' at given time')
         end

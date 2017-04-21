@@ -74,14 +74,15 @@ module Buzzn
     config.x.templates_path = Rails.root.join('app', 'templates')
 
     config.before_initialize do
+      logger = ::Logger.new(STDERR)
+      if Rails.env == 'development'
+        logger.formatter = proc { |_, _, _, msg| "#{msg}\n" }
+      else
+        logger.formatter = proc { |l, _, _, msg| "#{msg}\n" if l != 'DEBUG' }
+      end
+      Buzzn::Logger.root = logger
       Buzzn::Services::Boot.before_initialize
-    end
-    config.after_initialize do
-
-      # service components
-      registry = Application.config.data_source_registry = Buzzn::DataSourceRegistry.new(Redis.current)
-      Application.config.current_power = Buzzn::CurrentPower.new(registry)
-      Application.config.charts = Buzzn::Charts.new(registry)
+      Buzzn::Logger.root = Rails.logger
     end
   end
 end

@@ -2,6 +2,8 @@ module API
   module V1
     class Aggregates < Grape::API
       include API::V1::Defaults
+      include Import['service.charts', 'service.current_power']
+
       resource :aggregates do
 
 
@@ -21,7 +23,7 @@ module API
           if current_user.nil? && !(register.group && register.group.readable_by_world?) && !register.readable_by_world?
             raise Buzzn::PermissionDenied
           end
-          data_result = Buzzn::Application.config.current_power.for_register(register)#, permitted_params[:timestamp])
+          data_result = Buzzn::Services::MainContainer['service.current_power'].for_register(register)#, permitted_params[:timestamp])
           unless permitted_params[:timestamp]
             # cache-control headers
             etag(data_result.timestamp.to_s + data_result.value.to_s)
@@ -79,7 +81,7 @@ module API
           when 'month_to_days'
             interval = Buzzn::Interval.month(timestamp)
           end
-          result = Buzzn::Application.config.charts.for_register(register, interval)
+          result = Buzzn::Services::MainContainer['service.charts'].for_register(register, interval)
           if result
             key = result.units == :milliwatt ? 'power_milliwatt' : 'energy_milliwatt_hour'
             (result.in + result.out).collect do |i|

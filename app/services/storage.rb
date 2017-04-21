@@ -9,8 +9,7 @@ class Buzzn::Services::Storage
 
   # just factory method for Fog::Storage
   def self.new
-    @factory ||= super
-    @factory.create
+    @instance ||= super().create
   end
 
 end

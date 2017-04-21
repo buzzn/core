@@ -2,7 +2,10 @@ require 'buzzn/managed_roles'
 module Register
   class Base < ActiveRecord::Base
     self.table_name = :registers
-    resourcify
+    resourcify    
+
+    include Import.active_record['service.current_power', 'service.charts']
+
     include Authority::Abilities
     include CalcVirtualRegister
     include ChartFunctions
@@ -536,13 +539,13 @@ module Register
     end
 
     def create_observer_activities
-      last_reading    = Buzzn::Application.config.current_power.for_register(self)
+      last_reading    = current_power.for_register(self)
       if !last_reading
         return
       end
 
       # last readings are in milliwatt
-      current_power = last_reading.value / 1000.0
+      power = last_reading.value / 1000.0
 
       if Time.current.utc.to_i - last_reading.timestamp.to_i >= 5.minutes
         if observe_offline
@@ -552,9 +555,9 @@ module Register
         end
       else
         update(last_observed_timestamp: Time.at(last_reading.timestamp/1000.0).utc)
-        if current_power < min_watt && current_power >= 0
+        if power < min_watt && power >= 0
           mode = 'undershoots'
-        elsif current_power >= max_watt
+        elsif power >= max_watt
           mode = 'exceeds'
         else
           mode = nil
