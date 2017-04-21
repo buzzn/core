@@ -73,7 +73,7 @@ module API
             requires :old_electricity_supplier_name, type: String, desc: 'Name of old contract'
             optional :customer_number,          type: String,  desc: 'Customer number'
             optional :contract_number,          type: String,  desc: 'Contract number'
-            
+
           end
           requires :contract, type: Hash do
             requires :yearly_kilowatt_hour, type: Integer, desc: 'Expected yearly consumption in kilowatt-hours'

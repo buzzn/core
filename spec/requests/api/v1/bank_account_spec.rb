@@ -29,6 +29,12 @@ describe "bank-accounts" do
     json
   end
 
+  let(:denied_update_json) do
+    json = anonymous_denied_json.dup
+    json['errors'][0]['detail'] = "update BankAccount: " + account.id + " permission denied for User: " + user.resource_owner_id
+    json
+  end
+
   let(:not_found_json) do
     {
       "errors" => [
@@ -65,7 +71,7 @@ describe "bank-accounts" do
 
       PATCH "/api/v1/bank-accounts/#{account.id}", user
       expect(response).to have_http_status(403)
-      expect(json).to eq denied_json
+      expect(json).to eq denied_update_json
     end
 
     it '404' do
