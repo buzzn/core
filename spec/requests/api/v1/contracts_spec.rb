@@ -247,9 +247,6 @@ describe "contracts" do
                   "sales-tax-number"=>nil,
                   "tax-rate"=>nil,
                   "tax-number"=>nil
-                },
-                "relationships"=>{
-                  "bank-accounts"=>{"data"=>[]}
                 }
               }
             }
@@ -332,8 +329,7 @@ describe "contracts" do
                   "tax-number"=>nil
                 },
                 "relationships"=>{
-                  "address"=>{"data"=>nil},
-                  "bank-accounts"=>{"data"=>[]}
+                  "address"=>{"data"=>nil}
                 }
               }
             }

@@ -21,6 +21,8 @@ class BankAccount < ActiveRecord::Base
   def self.readable_by_query(user)
     contract     = Contract::Base.arel_table
     bank_account = BankAccount.arel_table
+    organization = Organization.arel_table
+    user_table   = User.arel_table
 
     # workaround to produce false always
     return bank_account[:id].eq(bank_account[:id]).not if user.nil?
@@ -31,10 +33,12 @@ class BankAccount < ActiveRecord::Base
                       .and(contract[:contractor_bank_account_id].eq(bank_account[:id]))),
       contract.where(Contract::Base.readable_by_query(user)
                       .and(contract[:customer_bank_account_id].eq(bank_account[:id]))),
-      User.roles_query(user, admin: nil)
+      User.roles_query(user, admin: nil),
+      User.roles_query(user, manager: Organization.where(organization[:id].eq(bank_account[:contracting_party_id]))),
+      user_table.where(user_table[:id].eq(user.id))
     ]
     sqls = sqls.collect{|s| s.project(1).exists}
-    sqls[0].or(sqls[1]).or(sqls[2])
+    sqls[0].or(sqls[1]).or(sqls[2]).or(sqls[3]).or(sqls[4])
   end
 
   scope :readable_by, -> (user) do
