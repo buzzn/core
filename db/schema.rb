@@ -385,7 +385,6 @@ ActiveRecord::Schema.define(version: 20170420141436) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "closeness"
     t.string   "type",        null: false
   end
 

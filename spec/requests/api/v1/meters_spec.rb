@@ -20,7 +20,7 @@ describe "meters" do
 
   let(:denied_json) do
     json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id 
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
     json
   end
 
@@ -49,7 +49,7 @@ describe "meters" do
     meter
   end
 
-                 
+
   context 'GET' do
 
     let(:meter_json) do
@@ -62,10 +62,10 @@ describe "meters" do
             "manufacturer-name"=>meter.manufacturer_name,
             "manufacturer-product-name"=>meter.manufacturer_product_name,
             "manufacturer-product-serialnumber"=>meter.manufacturer_product_serialnumber,
-            "metering-type"=>"single_tarif_meter",
+            "metering-type"=>nil,
             "meter-size"=>nil,
             "ownership"=>nil,
-            "direction-label"=>nil,
+            "direction-label"=>"one_way_meter",
             "build-year"=>nil,
             "updatable"=>true,
             "deletable"=>true,

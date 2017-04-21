@@ -83,13 +83,16 @@ module Buzzn
                                                     contractor: Organization.dummy_energy,
                                                     customer: customer)
           end
+          # TODO: get real tariffs and payments
           create(Contract::PowerTaker,
-                 self.contract,
-                 signing_user: @user,
-                 signing_date: Time.current,
-                 register: register,
-                 customer: customer,
-                 customer_bank_account: bank_account)
+                   self.contract,
+                   signing_user: @user,
+                   signing_date: Time.current,
+                   register: register,
+                   customer: customer,
+                   customer_bank_account: bank_account),
+                   payments: [Fabricate.build(:payment)],
+                   tariffs: [Fabricate.build(:tariff)])
         end
       rescue ActiveRecord::RecordInvalid => e
         raise CascadingValidationError.new(e)

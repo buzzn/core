@@ -20,5 +20,7 @@ class CleanupRegisterMeterFields < ActiveRecord::Migration
     remove_column :profiles, :newsletter_notifications, :string
     remove_column :profiles, :location_notifications, :string
     remove_column :profiles, :group_notifications, :string
+
+    remove_column :groups, :closeness, :float
   end
 end
