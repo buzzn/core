@@ -80,7 +80,7 @@ module API
             end
           end
           requires :meter, type: Hash do
-            requires :metering_type, values: Buzzn::Zip2Price.types, desc: 'Meter-type'
+            requires :metering_type, values: Meter::Base.all_metering_types, desc: 'Meter-type'
             requires :manufacturer_name, desc: "Meter name", values: Meter::Real.manufacturer_names
             requires :manufacturer_product_name, desc: "Meter product name"
             requires :manufacturer_product_serialnumber, desc: "Meter product serialnumber"

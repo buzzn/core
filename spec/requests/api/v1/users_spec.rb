@@ -19,7 +19,7 @@ describe "users" do
 
   let(:denied_json) do
     json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, other.resource_owner_id 
+    json['errors'][0]['detail'].sub! /--anonymous--/, other.resource_owner_id
     json
   end
 
@@ -196,7 +196,7 @@ describe "users" do
       expect(json.to_yaml).to eq user_json.to_yaml
       expect(response).to have_http_status(200)
     end
-    
+
   end
 
   context 'bank_account' do
@@ -301,10 +301,10 @@ describe "users" do
               "manufacturer-name"=>meter1.manufacturer_name,
               "manufacturer-product-name"=>meter1.manufacturer_product_name,
               "manufacturer-product-serialnumber"=>meter1.manufacturer_product_serialnumber,
-              "metering-type"=>"single_tarif_meter",
+              "metering-type"=>nil,
               "meter-size"=>nil,
               "ownership"=>nil,
-              "direction-label"=>nil,
+              "direction-label"=>"one_way_meter",
               "build-year"=>nil,
               "updatable"=>false,
               "deletable"=>false,
@@ -321,10 +321,10 @@ describe "users" do
               "manufacturer-name"=>meter2.manufacturer_name,
               "manufacturer-product-name"=>meter2.manufacturer_product_name,
               "manufacturer-product-serialnumber"=>meter2.manufacturer_product_serialnumber,
-              "metering-type"=>"single_tarif_meter",
+              "metering-type"=>nil,
               "meter-size"=>nil,
               "ownership"=>nil,
-              "direction-label"=>nil,
+              "direction-label"=>"one_way_meter",
               "build-year"=>nil,
               "updatable"=>false,
               "deletable"=>false,
@@ -346,10 +346,10 @@ describe "users" do
             "manufacturer-name"=>meter3.manufacturer_name,
             "manufacturer-product-name"=>meter3.manufacturer_product_name,
             "manufacturer-product-serialnumber"=>meter3.manufacturer_product_serialnumber,
-            "metering-type"=>"EHZ",
-            "meter-size"=>'5',
-            "ownership"=>'some-owner',
-            "direction-label"=>'one-way',
+            "metering-type"=>"smart_meter",
+            "meter-size"=>'edl40',
+            "ownership"=>'buzzn_systems',
+            "direction-label"=>'one_way_meter',
             "build-year"=>'2011-07-02',
             "updatable"=>false,
             "deletable"=>false,
@@ -411,11 +411,11 @@ describe "users" do
         GET "/api/v1/users/#{user.id}/meters", user_token, filter: meter3.manufacturer_product_serialnumber
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(empty_json.to_yaml)
-        
+
         GET "/api/v1/users/#{user.id}/meters", admin, filter: meter3.manufacturer_product_serialnumber
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(filtered_admin_meters_json.to_yaml)
       end
-    end    
+    end
   end
 end
