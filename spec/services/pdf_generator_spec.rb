@@ -19,7 +19,12 @@ describe Buzzn::Services::PdfGenerator do
     expect(html).to eq '<!DOCTYPE html><html><head><title>be happy</title></head></html>'
   end
 
-  it 'generates html with parameter' do
+  it 'generates html with missing parameters' do
+    html = subject.generate_html('with_parameters.slim', {})
+    expect(html).to eq "<!DOCTYPE html><html><head><title>be happy __when__</title></head><body><h1>__time.today__</h1></body></html>"
+  end
+
+  it 'generates html with parameters' do
     html = subject.generate_html('with_parameters.slim', {when: 'forever', time: Date})
     expect(html).to eq "<!DOCTYPE html><html><head><title>be happy forever</title></head><body><h1>#{Date.today}</h1></body></html>"
   end
@@ -27,8 +32,8 @@ describe Buzzn::Services::PdfGenerator do
   class With < Buzzn::Services::PdfGenerator::Html
     include Import.args['service.pdf_generator']
 
-    def initialize(pdf_generator)
-      super(pdf_generator.resolve_template('with_parameters.slim'))
+    def initialize(pdf)
+      super(nil)
     end
 
     def when
@@ -43,12 +48,12 @@ describe Buzzn::Services::PdfGenerator do
   end
 
   it 'renders html' do
-    html = subject.render_html(With.new(subject))
+    html = subject.render_html('with_parameters.slim', With.new)
     expect(html).to eq "<!DOCTYPE html><html><head><title>be happy all the time</title></head><body><h1>1111-11-11</h1></body></html>"
   end
 
   it 'generates pdf from html' do
-    pdf = subject.generate_from_html(With.new(subject))
+    pdf = subject.generate_from_html('with_parameters.slim', With.new)
     expect(pdf).to start_with '%PDF-1.4'
   end
 

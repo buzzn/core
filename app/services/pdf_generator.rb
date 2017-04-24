@@ -1,15 +1,38 @@
 class Buzzn::Services::PdfGenerator
   include Import.args[path: 'config.templates_path']
-  
+
+  class Missing
+
+    def initialize(name)
+      @name = name
+    end
+
+    def method_missing(method, *args)
+      "__#{@name}.#{method}__"
+    end
+
+    def to_s
+      "__#{@name}__"
+    end
+  end
+
   class Html < OpenStruct
 
-    def initialize(file, attributes = nil)
-      @file = file
+    def initialize(attributes = nil)
       super(attributes || {})
     end
 
-    def render
-      Slim::Template.new(@file).render(self)
+    def render(file)
+      Slim::Template.new(file).render(self)
+    end
+
+    def method_missing(method, *args)
+      # use internal OpenStruct @table
+      if @table.key?(method)
+        @table[method]
+      else
+        Missing.new(method)
+      end
     end
   end
 
@@ -34,18 +57,20 @@ class Buzzn::Services::PdfGenerator
 
   def generate_html(name, attributes)
     file = resolve_template(name)
-    render_html(Html.new(file, attributes))
-  end
-
-  def render_html(html)
-    html.render
+    Html.new(attributes).render(file)
   end
 
   def generate(name, attributes)
-    WickedPdf.new.pdf_from_string(generate_html(name, attributes))
+    WickedPdf.new.pdf_from_string(generate_html(name, attributes),
+                                  footer: { left: 'Seite [page] von [topage]' })
   end
 
-  def generate_from_html(html)
-    WickedPdf.new.pdf_from_string(render_html(html))
+  def render_html(name, html)  
+    file = resolve_template(name)
+    html.render(file)
+  end
+
+  def generate_from_html(name, html)
+    WickedPdf.new.pdf_from_string(render_html(name, html))
   end
 end
