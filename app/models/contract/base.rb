@@ -14,6 +14,7 @@ module Contract
     RUNNING   = 'running'
     CANCELLED = 'cancelled'
     EXPIRED   = 'expired'
+    EXCHANGE_PROCESS_PAUSED = 'exchange_process_paused'
 
     # error messages
     MUST_BE_TRUE                 = 'must be true'
@@ -35,7 +36,7 @@ module Contract
       private :new
 
       def status
-        @status ||= [WAITING, APPROVED, RUNNING, CANCELLED, EXPIRED]
+        @status ||= [WAITING, APPROVED, RUNNING, CANCELLED, EXPIRED, EXCHANGE_PROCESS_PAUSED]
       end
     end
 

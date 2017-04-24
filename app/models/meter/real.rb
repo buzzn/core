@@ -59,6 +59,14 @@ module Meter
       registers << Register::Output.new(attr.merge(meter: self))
     end
 
+    def direction
+      if registers.size == 1
+        Meter::Base::ONE_WAY_METER
+      else
+        Meter::Base::TWO_WAY_METER
+      end
+    end
+
     # work around AR short-comings
 
     def valid?(*args)

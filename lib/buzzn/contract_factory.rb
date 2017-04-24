@@ -2,7 +2,7 @@ require 'buzzn'
 module Buzzn
 
   class ContractFactory
-    
+
     class << self
       def create_power_taker_contract(user, params)
         new(user, params).create_power_taker_contract
@@ -33,7 +33,7 @@ module Buzzn
       begin
         User.transaction do
           get_or_create_user
-          
+
           begin
             bank = Bank.find_by_iban(self.bank_account[:iban])
           rescue Buzzn::RecordNotFound => e
@@ -82,14 +82,17 @@ module Buzzn
                                                     register: register,
                                                     metering_point_operator_name: metering_point_operator_name,
                                                     contractor: Organization.dummy_energy,
-                                                    customer: customer)                                          
+                                                    customer: customer)
           end
+          # TODO: get real tariffs and payments
           create(Contract::PowerTaker,
-                 self.contract,
-                 signing_user: @user,
-                 signing_date: Time.current,                                 
-                 register: register,
-                 customer: customer)
+                   self.contract,
+                   signing_user: @user,
+                   signing_date: Time.current,
+                   register: register,
+                   customer: customer,
+                   payments: [Fabricate.build(:payment)],
+                   tariffs: [Fabricate.build(:tariff)])
         end
       rescue ActiveRecord::RecordInvalid => e
         raise CascadingValidationError.new(e)
