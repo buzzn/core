@@ -29,6 +29,10 @@ module Meter
       register.meter = self if register
     end
 
+    def direction
+      Meter::Base::ONE_WAY_METER
+    end
+
     # work around AR short-comings
 
     def valid?(*args)
