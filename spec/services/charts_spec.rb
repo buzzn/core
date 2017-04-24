@@ -32,7 +32,7 @@ describe Buzzn::Services::Charts do
   let(:mock) { MockDataSource.new }
   subject do
     Buzzn::Services::Charts.new(
-      Buzzn::DataSourceRegistry.new(
+      Buzzn::Services::DataSourceRegistry.new(
         Redis.current,
         DummyDataSource.new,
         mock,
