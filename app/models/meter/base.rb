@@ -165,14 +165,6 @@ module Meter
       "#{manufacturer_name} #{manufacturer_product_serialnumber}"
     end
 
-    def direction
-      if registers.size == 1
-        ONE_WAY_METER
-      else
-        TWO_WAY_METER
-      end
-    end
-
     # TODO seems to be not used
     def self.send_notification_meter_offline(meter)
       meter.registers.each do |register|
