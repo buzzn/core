@@ -114,7 +114,7 @@ describe "groups" do
         expect(json).to eq not_found_json
       end
 
-      it '200 discovergy' do
+      it '200 discovergy', retry: 3 do
         VCR.use_cassette("request/api/v1/discovergy") do
 
           time = Time.find_zone('Berlin').local(2016, 2, 1, 1, 30, 1)
@@ -161,7 +161,7 @@ describe "groups" do
             expect(json['array']).to match_array(second_discovergy_json['array'])
             expect(response.headers['Expires']).not_to eq expires
             expect(response.headers['ETag']).not_to eq etag
-            expect(response.headers['Last-Modified']).not_to eq modified    
+            expect(response.headers['Last-Modified']).not_to eq modified
           ensure
             Timecop.return
           end
@@ -305,7 +305,7 @@ describe "groups" do
         expect(response).to have_http_status(422)
         expect(json).to eq missing_json
       end
-      
+
       it '422 wrong duration parameter' do
         GET "/api/v1/groups/#{group.id}/charts", nil, duration: :century
         expect(response).to have_http_status(422)
@@ -327,7 +327,7 @@ describe "groups" do
 
       it '200 discovergy' do
         VCR.use_cassette("request/api/v1/discovergy") do
-          
+
           begin
             Timecop.freeze(time)
 
