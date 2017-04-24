@@ -5,7 +5,7 @@ require 'buzzn/guarded_crud'
 module API
   module V1
     module Defaults
-      
+
       extend ActiveSupport::Concern
       included do
         prefix "api"
@@ -21,7 +21,7 @@ module API
 
         helpers Doorkeeper::Grape::Helpers
         helpers Buzzn::Grape::Caching
-        
+
         helpers do
 
           def current_user

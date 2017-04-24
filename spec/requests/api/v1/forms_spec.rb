@@ -13,7 +13,7 @@ describe "Forms API" do
                  "country"=>"Germany",
                  "state"=>"Berlin",
                  "addition"=>"HH"},
-     :meter=> {:metering_type=>"single_tarif_meter",
+     :meter=> {:metering_type=>"one_tariff",
                "manufacturer_name"=>"ferraris",
                "manufacturer_product_name"=>"AS 1440",
                "manufacturer_product_serialnumber"=>"3353987"},
