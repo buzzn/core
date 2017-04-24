@@ -34,7 +34,7 @@ module Buzzn::Services
       raise ArgumentError.new("not a #{Buzzn::Interval}") unless interval.is_a?(Buzzn::Interval)
       units = interval.hour? || interval.day? ? :milliwatt : :milliwatt_hour
       result = Buzzn::DataResultSet.send(units, group.id)
-      @registry.each do |key, data_source|
+      @registry.each do |data_source|
         result.add_all(data_source.aggregated(group, :in, interval), interval.duration)
         result.add_all(data_source.aggregated(group, :out, interval), interval.duration)
       end

@@ -1,5 +1,5 @@
 # coding: utf-8
-describe Contract do
+describe Contract::BaseResource do
 
   let(:user) { Fabricate(:admin) }
   let(:localpool) { Fabricate(:localpool) }
@@ -32,7 +32,7 @@ describe Contract do
                            :deletable] }
   let!(:all) { [metering_point_operator, localpool_processing, localpool_power_taker, power_taker, power_giver] }
 
-  describe Contract::BaseResource do
+  #describe Contract::BaseResource do
 
     it 'retrieve' do
       all.each do |contract|
@@ -59,7 +59,7 @@ describe Contract do
         end
       end
     end
-  end
+  #end
 
   describe Contract::MeteringPointOperatorResource do
 
@@ -177,7 +177,7 @@ describe Contract do
     end
   end
 
-  describe 'PowerGiverResource' do
+  describe Contract::PowerGiverResource do
 
     it 'retrieve all - ids + types' do
       result = Contract::PowerGiverResource.all(user).collect do |r|

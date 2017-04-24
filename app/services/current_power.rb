@@ -10,7 +10,7 @@ module Buzzn::Services
       else
         register = resource
       end
-      result = @registry.get(register.data_source).single_aggregated(register, register.direction)
+      result = registry.get(register.data_source).single_aggregated(register, register.direction)
       result.freeze unless result.frozen?
       result
     end
@@ -19,7 +19,7 @@ module Buzzn::Services
       raise ArgumentError.new("not a #{Group::MinimalBaseResource}") unless resource.is_a?(Group::MinimalBaseResource)
       group = resource.object
       result = Buzzn::DataResultArray.new(0)
-      @registry.each do |key, data_source|
+      registry.each do |data_source|
         result += data_source.collection(group, :in)
         result += data_source.collection(group, :out)
       end
@@ -31,7 +31,7 @@ module Buzzn::Services
       raise ArgumentError.new("not a #{Group::MinimalBaseResource}") unless resource.is_a?(Group::MinimalBaseResource)
       group = resource.object
       sum_in, sum_out = 0, 0
-      @registry.each do |key, data_source|
+      registry.each do |data_source|
         result =  data_source.single_aggregated(group, :in)
         sum_in += result.value if result
         result = data_source.single_aggregated(group, :out)

@@ -3,6 +3,22 @@ require 'buzzn/contract_factory'
 
 describe Buzzn::ContractFactory do
 
+  before do
+    if Bank.count == 0
+      Bank.update_from(File.read("db/banks/BLZ_20160606.txt"))
+    end
+
+    if ZipKa.count == 0
+      csv_dir = 'db/csv'
+      zip_vnb = File.read(File.join(csv_dir, "plz_vnb_test.csv"))
+      zip_ka = File.read(File.join(csv_dir, "plz_ka_test.csv"))
+      nne_vnb = File.read(File.join(csv_dir, "nne_vnb.csv"))
+      ZipKa.from_csv(zip_ka)
+      ZipVnb.from_csv(zip_vnb)
+      NneVnb.from_csv(nne_vnb)
+    end
+  end
+  
   describe 'power taker' do
 
     let(:address) { { address: Fabricate.build(:address).attributes
