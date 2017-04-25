@@ -131,7 +131,13 @@ describe "contracts" do
               "data"=>{"id"=>contract.signing_user.id,
                        "type"=>"users"}
             },
-            "bank-account"=>{"data"=>nil}
+            "customer-bank-account"=>{
+              "data"=>nil
+            },
+            "contractor-bank-account"=>{
+              "data"=>{"id"=>contract.contractor_bank_account_id,
+                       "type"=>"bank-accounts"}
+            }
           }
         }
       }
@@ -323,8 +329,7 @@ describe "contracts" do
                   "tax-number"=>nil
                 },
                 "relationships"=>{
-                  "address"=>{"data"=>nil},
-                  "bank-account"=>{"data"=>nil}
+                  "address"=>{"data"=>nil}
                 }
               }
             }
@@ -332,7 +337,7 @@ describe "contracts" do
 
           it '200' do
             contract = send "#{type}_contract"
-            contract.contractor.bank_account.delete
+            contract.contractor_bank_account.delete
 
             GET "/api/v1/contracts/#{contract.id}/contractor", admin
             expect(response).to have_http_status(200)

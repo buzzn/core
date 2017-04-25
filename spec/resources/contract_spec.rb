@@ -27,7 +27,8 @@ describe Contract do
                            :contractor,
                            :customer,
                            :signing_user,
-                           :bank_account,
+                           :customer_bank_account,
+                           :contractor_bank_account,
                            :updatable,
                            :deletable] }
   let!(:all) { [metering_point_operator, localpool_processing, localpool_power_taker, power_taker, power_giver] }

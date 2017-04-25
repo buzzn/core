@@ -36,30 +36,26 @@ describe BankAccount do
   let(:params) do
     { holder: 'Me And The Corner', iban: 'DE23100000001234567890',
       bic: '123456789', bank_name: 'Yellow Submarine',
-      bank_accountable_type: member_group_contract.class,
-      bank_accountable_id: member_group_contract.id }
+      contracting_party_id: member_group_contract.id,
+      contracting_party_type: member_group_contract.class }
   end
   let(:member_group_bank_account) do
     account = Fabricate(:bank_account)
-    account.bank_accountable = member_group_contract
-    account.save!
+    member_group_contract.contractor_bank_account = account
+    member_group_contract.save!
     account
   end
   let(:manager_group_bank_account) do
-    account = Fabricate(:bank_account)
-    account.bank_accountable = manager_group_contract
-    account.save!
+    account = Fabricate(:bank_account, contracting_party: manager_of_group)
+    manager_group_contract.contractor_bank_account = account
+    manager_group_contract.save!
     account
   end
   let(:register_bank_account) do
-    account = Fabricate(:bank_account)
-    account.bank_accountable = register_contract
-    account.save!
+    account = Fabricate(:bank_account, contracting_party: user_with_register)
+    register_contract.contractor_bank_account = account
+    register_contract.save!
     account
-  end
-  
-  let(:localpool_bank_account) do
-    Fabricate(:bank_account, bank_accountable: localpool_contract)
   end
 
   [:manager_of_group, :admin, :user_with_register].each do |u|

@@ -38,6 +38,8 @@ Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPoin
   signing_date             { FFaker::Time.date }
   customer                 { Fabricate(:user) }
   contractor               { Organization.discovergy }
+  contractor_bank_account  { Fabricate(:bank_account) }
+  customer_bank_account    { Fabricate(:bank_account) }
 end
 
 Fabricator :metering_point_operator_contract_of_localpool, from: :metering_point_operator_contract do
@@ -91,6 +93,8 @@ Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
                                        address: Fabricate.build(:address) ) }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
+  contractor_bank_account  { Fabricate(:bank_account) }
+  customer_bank_account    { Fabricate(:bank_account) }
 end
 
 Fabricator :power_taker_contract_move_in, from: :power_taker_contract do
@@ -130,6 +134,8 @@ Fabricator :power_giver_contract, class_name: Contract::PowerGiver do
   customer                 { Fabricate(:user) }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
+  contractor_bank_account  { Fabricate(:bank_account) }
+  customer_bank_account    { Fabricate(:bank_account) }
 end
 
 Fabricator :power_giver_contract_for_organization, from: :power_giver_contract do
@@ -157,6 +163,8 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   renewable_energy_law_taxation { Contract::RenewableEnergyLawTaxation::FULL }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
+  contractor_bank_account  { Fabricate(:bank_account) }
+  customer_bank_account    { Fabricate(:bank_account) }
 end
 
 Fabricator :localpool_power_taker_contract_for_organization, from: :localpool_power_taker_contract do
@@ -182,6 +190,8 @@ Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProces
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   contractor               { Organization.buzzn_systems }
+  contractor_bank_account  { Fabricate(:bank_account) }
+  customer_bank_account    { Fabricate(:bank_account) }
 end
 
 Fabricator :localpool_processing_contract_for_organization, from: :localpool_processing_contract do
@@ -239,6 +249,8 @@ Fabricator :lpc_forstenried, from: :localpool_processing_contract do
                       price_cents: 100000,
                       cycle: 'once',
                       source: 'transferred')] }
+  customer_bank_account    { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
+  contractor_bank_account  { Fabricate(:bank_account) }
 end
 
 Fabricator :mpoc_forstenried, from: :metering_point_operator_contract do
@@ -286,6 +298,8 @@ Fabricator :mpoc_forstenried, from: :metering_point_operator_contract do
                                     price_cents: 55000,
                                     cycle: 'monthly',
                                     source: 'transferred')] }
+  customer_bank_account    { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
+  contractor_bank_account  { Fabricate(:bank_account) }
 end
 
 # == Localpool Power Taker Contracts for Mehrgenerationenplatz Forstenried ==
@@ -308,6 +322,7 @@ Fabricator :lptc_mabe, from: :localpool_power_taker_contract do
                                       price_cents: 3500,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
+  contractor_bank_account         { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 Fabricator :lptc_inbr, from: :localpool_power_taker_contract do
@@ -328,6 +343,7 @@ Fabricator :lptc_inbr, from: :localpool_power_taker_contract do
                                       price_cents: 3400,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
+  contractor_bank_account         { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 Fabricator :lptc_pebr, from: :localpool_power_taker_contract do
@@ -348,6 +364,7 @@ Fabricator :lptc_pebr, from: :localpool_power_taker_contract do
                                       price_cents: 1600,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
+  contractor_bank_account         { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 Fabricator :lptc_anbr, from: :localpool_power_taker_contract do
@@ -368,6 +385,7 @@ Fabricator :lptc_anbr, from: :localpool_power_taker_contract do
                                       price_cents: 5100,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
+  contractor_bank_account         { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 Fabricator :lptc_gubr, from: :localpool_power_taker_contract do
@@ -388,6 +406,7 @@ Fabricator :lptc_gubr, from: :localpool_power_taker_contract do
                                       price_cents: 1600,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
+  contractor_bank_account         { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 Fabricator :lptc_mabr, from: :localpool_power_taker_contract do
@@ -408,6 +427,7 @@ Fabricator :lptc_mabr, from: :localpool_power_taker_contract do
                                       price_cents: 2400,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
+  contractor_bank_account         { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 Fabricator :lptc_dabr, from: :localpool_power_taker_contract do
@@ -428,6 +448,7 @@ Fabricator :lptc_dabr, from: :localpool_power_taker_contract do
                                       price_cents: 6200,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
+  contractor_bank_account         { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 Fabricator :lptc_zubu, from: :localpool_power_taker_contract do
@@ -448,6 +469,7 @@ Fabricator :lptc_zubu, from: :localpool_power_taker_contract do
                                       price_cents: 8800,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
+  contractor_bank_account         { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 Fabricator :lptc_mace, from: :localpool_power_taker_contract do
@@ -468,6 +490,7 @@ Fabricator :lptc_mace, from: :localpool_power_taker_contract do
                                       price_cents: 2400,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
+  contractor_bank_account         { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 Fabricator :lptc_stcs, from: :localpool_power_taker_contract do
@@ -488,6 +511,7 @@ Fabricator :lptc_stcs, from: :localpool_power_taker_contract do
                                       price_cents: 2200,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
+  contractor_bank_account         { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 Fabricator :lptc_pafi, from: :localpool_power_taker_contract do
@@ -511,6 +535,7 @@ Fabricator :lptc_pafi, from: :localpool_power_taker_contract do
                                       price_cents: 4100,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
+  contractor_bank_account         { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 Fabricator :lptc_raja, from: :localpool_power_taker_contract do
@@ -531,6 +556,7 @@ Fabricator :lptc_raja, from: :localpool_power_taker_contract do
                                       price_cents: 5000,
                                       cycle: 'monthly',
                                       source: 'calculated')] }
+  contractor_bank_account         { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
 end
 
 

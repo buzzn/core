@@ -2,11 +2,8 @@ describe "bank-accounts" do
 
   let(:account) do
     register = Fabricate(:output_meter).output_register
-    contract =Fabricate(:power_giver_contract, register: register)
-    account = Fabricate(:bank_account)
-    account.bank_accountable = contract
-    account.save!
-    account
+    contract = Fabricate(:power_giver_contract, register: register, contractor_bank_account: Fabricate(:bank_account))
+    contract.contractor_bank_account
   end
 
   let(:admin) do
@@ -28,7 +25,7 @@ describe "bank-accounts" do
 
   let(:denied_json) do
     json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id 
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
     json
   end
 

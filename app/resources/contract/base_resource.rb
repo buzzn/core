@@ -19,7 +19,8 @@ module Contract
     has_one :contractor
     has_one :customer
     has_one :signing_user
-    has_one :bank_account
+    has_one :customer_bank_account
+    has_one :contractor_bank_account
 
     def full_contract_number
       object.contract_number.to_s + "/" + object.contract_number_addition.to_s
