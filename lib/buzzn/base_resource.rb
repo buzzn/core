@@ -1,6 +1,8 @@
 module Buzzn
   class BaseResource < ActiveModel::Serializer
 
+    attr_reader :current_user
+
     class << self
 
       def new(resource, options = {})
@@ -81,7 +83,8 @@ module Buzzn
       end
 
       def abstract
-        @abstract = true
+        @abstract = true if @abstract.nil?
+        @abstract
       end
 
       # the 'R' from the crud API
@@ -97,21 +100,21 @@ module Buzzn
       end
       private :find_resource_class
 
-      def to_resource(current_user, instance, clazz = nil)
+      def to_resource(user, instance, clazz = nil)
         clazz ||= find_resource_class(instance.class)
         unless clazz
           raise "could not find Resource class for #{instance.class}"
         end
-        clazz.send(:new, instance, current_user: current_user)
+        clazz.send(:new, instance, current_user: user)
       end
 
-      def retrieve(current_user, id)
-        instance = model.guarded_retrieve(current_user, id)
-        to_resource(current_user, instance, @abstract ? nil : self)
+      def retrieve(user, id)
+        instance = model.guarded_retrieve(user, id)
+        to_resource(user, instance, @abstract ? nil : self)
       end
 
-      def all(current_user, filter = nil)
-        result = model.readable_by(current_user)
+      def all(user, filter = nil)
+        result = model.readable_by(user)
         if filter
           result.filter(filter)
         else

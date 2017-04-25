@@ -196,7 +196,6 @@ ActiveRecord::Schema.define(version: 20170418125916) do
     t.boolean  "confirm_pricing_model"
     t.boolean  "power_of_attorney"
     t.string   "customer_number"
-    t.string   "contract_number"
     t.uuid     "register_id"
     t.uuid     "organization_id"
     t.uuid     "localpool_id"
@@ -228,8 +227,12 @@ ActiveRecord::Schema.define(version: 20170418125916) do
     t.string   "down_payment_before_cents_per_month"
     t.uuid     "customer_bank_account_id"
     t.uuid     "contractor_bank_account_id"
+    t.integer  "contract_number"
+    t.integer  "contract_number_addition"
   end
 
+  add_index "contracts", ["contract_number", "contract_number_addition"], name: "index_contract_number_and_its_addition", unique: true, using: :btree
+  add_index "contracts", ["contract_number"], name: "index_contracts_on_contract_number", using: :btree
   add_index "contracts", ["contractor_type", "contractor_id"], name: "index_contracts_on_contractor_type_and_contractor_id", using: :btree
   add_index "contracts", ["customer_type", "customer_id"], name: "index_contracts_on_customer_type_and_customer_id", using: :btree
   add_index "contracts", ["localpool_id"], name: "index_contracts_on_localpool_id", using: :btree

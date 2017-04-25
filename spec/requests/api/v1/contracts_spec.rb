@@ -53,7 +53,7 @@ describe "contracts" do
           "attributes"=>{
             "type"=>"contract_metering_point_operator",
             "status"=>"waiting_for_approval",
-            "contract-number"=>"9041",
+            "full-contract-number"=>"90041/0",
             "customer-number"=>"40021/1",
             "signing-date"=>"2014-10-01",
             "cancellation-date"=>nil,

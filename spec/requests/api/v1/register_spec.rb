@@ -49,7 +49,8 @@ describe "registers" do
   context 'GET' do
 
     let(:real_register_json) do
-      { "data"=>{
+      {
+        "data"=>{
           "id"=>real_register.id,
           "attributes"=>{
             "type"=>"register_real",
@@ -81,7 +82,8 @@ describe "registers" do
     end
 
     let(:virtual_register_json) do
-      { "data"=>{
+      {
+        "data"=>{
           "id"=>virtual_register.id,
           "attributes"=>{
             "type"=>"register_virtual",
@@ -148,6 +150,73 @@ describe "registers" do
           result = json
           result['data'].delete('type')
           expect(result.to_yaml).to eq register_json.to_yaml
+        end
+      end
+    end
+  end
+
+  context 'readings' do
+    context 'GET' do
+
+      # NOTE picking a sample register is enough for the 404 and 403 tests
+
+      let(:register) do
+        [real_register, virtual_register].sample
+      end
+
+      it '403' do
+        GET "/api/v1/registers/#{register.id}/readings"
+        expect(response).to have_http_status(403)
+        expect(json).to eq anonymous_denied_json
+
+        GET "/api/v1/registers/#{register.id}/readings", user
+        expect(response).to have_http_status(403)
+        expect(json).to eq denied_json
+      end
+
+      it '404' do
+        GET "/api/v1/registers/bla-blub/readings"
+        expect(response).to have_http_status(404)
+        expect(json).to eq anonymous_not_found_json
+
+        GET "/api/v1/registers/bla-blub/readings", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+      end
+
+      [:real, :virtual].each do |type|
+
+        context "as #{type}" do
+
+          let(:register) { send "#{type}_register" }
+          let!(:readings_json) do
+            readings = 5.times.collect { Fabricate(:reading, register_id: register.id) }
+            {
+              "data"=> readings.collect do |r|
+                {
+                  "id"=>r.id.to_s,
+                  "type"=>"readings",
+                  "attributes"=> {
+                    "type"=>"reading",
+                    "energy-milliwatt-hour"=>r.energy_milliwatt_hour,
+                    "power-milliwatt"=>r.power_milliwatt,
+                    "timestamp"=>r.timestamp.to_s.sub('+01','.000+01'),
+                    "reason"=>"regular_reading",
+                    "source"=>"buzzn_systems",
+                    "quality"=>"read_out",
+                    "meter-serialnumber"=>'12346578'
+                  }
+                }
+              end
+            }
+          end
+
+          it '200' do
+            GET "/api/v1/registers/#{register.id}/readings", admin
+
+            expect(response).to have_http_status(200)
+            expect(json.to_yaml).to eq readings_json.to_yaml
+          end
         end
       end
     end

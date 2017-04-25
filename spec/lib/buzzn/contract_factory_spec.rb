@@ -113,7 +113,7 @@ describe Buzzn::ContractFactory do
 
       contractor = contract.contractor
       expect(contractor).to eq(Organization.buzzn_energy)
-      
+
       tariff = contract.tariffs.first
       expect(tariff.energyprice_cents_per_kwh).to eq 2560.0
       expect(tariff.baseprice_cents_per_month).to eq 1170
@@ -184,7 +184,7 @@ describe Buzzn::ContractFactory do
       expect(subject.create_power_taker_contract(user, params).valid?).to eq true
     end
 
-    
+
     it 'creates first contract, natural_person, other address for existing user' do
       params = {}
       params.merge!(address)
@@ -213,7 +213,7 @@ describe Buzzn::ContractFactory do
 
       contractor = contract.contractor
       expect(contractor).to eq(Organization.buzzn_energy)
-      
+
       tariff = contract.tariffs.first
       expect(tariff.energyprice_cents_per_kwh).to eq 2630.0
       expect(tariff.baseprice_cents_per_month).to eq 1150
@@ -221,7 +221,7 @@ describe Buzzn::ContractFactory do
       payment = contract.payments.first
       expect(payment.price_cents).to eq 3342
     end
-    
+
     it 'creates first contract, company, same address for existing user' do
       params = {}
       params.merge!(address)
@@ -250,7 +250,7 @@ describe Buzzn::ContractFactory do
 
       contractor = contract.contractor
       expect(contractor).to eq(Organization.buzzn_energy)
-      
+
       tariff = contract.tariffs.first
       expect(tariff.energyprice_cents_per_kwh).to eq 2560.0
       expect(tariff.baseprice_cents_per_month).to eq 1170
@@ -258,8 +258,8 @@ describe Buzzn::ContractFactory do
       payment = contract.payments.first
       expect(payment.price_cents).to eq 3303
     end
-    
-    
+
+
     it 'creates old contract, natural_person, same address for existing user' do
       params = {}
       params.merge!(address)
@@ -293,7 +293,7 @@ describe Buzzn::ContractFactory do
 
       contractor = contract.contractor
       expect(contractor).to eq(Organization.buzzn_energy)
-      
+
       tariff = contract.tariffs.first
       expect(tariff.energyprice_cents_per_kwh).to eq 2560.0
       expect(tariff.baseprice_cents_per_month).to eq 1170
@@ -301,6 +301,6 @@ describe Buzzn::ContractFactory do
       payment = contract.payments.first
       expect(payment.price_cents).to eq 3303
     end
-    
+
   end
 end

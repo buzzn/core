@@ -46,6 +46,15 @@ module API
 
           result
         end
+
+        params do
+          requires :id, type: String
+        end
+        get ":id/readings" do
+          Register::BaseResource
+            .retrieve(current_user, permitted_params)
+            .readings
+        end
       end
     end
   end
