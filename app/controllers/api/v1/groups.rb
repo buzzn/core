@@ -84,6 +84,17 @@ module API
           post ":id/price"do
             created_response(Group::LocalpoolResource.retrieve(current_user, permitted_params).create_price(permitted_params))
           end
+
+          desc "Return the related power-taker contracts for the Localpool"
+          params do
+            requires :id, type: String, desc: "ID of the group"
+          end
+          get ":id/power-taker-contracts" do
+            Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .power_taker_contracts
+          end
+
         end
 
 

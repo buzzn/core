@@ -1,17 +1,20 @@
 describe "bank-accounts" do
 
   let(:account) do
-    register = Fabricate(:output_meter).output_register
-    contract = Fabricate(:power_giver_contract, register: register, contractor_bank_account: Fabricate(:bank_account))
-    contract.contractor_bank_account
+    entities[:account] ||= 
+      begin
+        register = Fabricate(:output_meter).output_register
+        contract = Fabricate(:power_giver_contract, register: register, contractor_bank_account: Fabricate(:bank_account))
+        contract.contractor_bank_account
+      end
   end
 
   let(:admin) do
-    Fabricate(:admin_token)
+    entities[:admin] ||= Fabricate(:admin_token)
   end
 
   let(:user) do
-    Fabricate(:user_token)
+    entities[:user] ||= Fabricate(:user_token)
   end
 
   let(:anonymous_denied_json) do

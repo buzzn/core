@@ -15,6 +15,13 @@ module Group
       PriceResource.new(Price.guarded_create(@current_user, params, object))
     end
 
+    # API methods
+
+    def power_taker_contracts
+      object.localpool_power_taker_contracts
+        .readable_by(@current_user)
+        .collect { |c| self.class.to_resource(@current_user, c) }
+    end
   end
 
   # TODO get rid of the need of having a Serializer class

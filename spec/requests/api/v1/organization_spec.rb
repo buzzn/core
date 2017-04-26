@@ -2,11 +2,11 @@
 describe "organizations" do
 
   let(:admin) do
-    Fabricate(:admin_token)
+    entities[:admin] ||= Fabricate(:admin_token)
   end
 
   let(:user) do
-    Fabricate(:user_token)
+    entities[:user] ||= Fabricate(:user_token)
   end
 
   let(:anonymous_denied_json) do
@@ -40,9 +40,12 @@ describe "organizations" do
   end
 
   let(:organization) do
-    organization = Fabricate(:metering_service_provider)
-    Fabricate(:bank_account, contracting_party: organization)
-    organization
+    entities[:organization] ||=
+      begin
+        organization = Fabricate(:metering_service_provider)
+        Fabricate(:bank_account, contracting_party: organization)
+        organization
+      end
   end
 
   context 'GET' do
@@ -91,8 +94,6 @@ describe "organizations" do
     end
 
     it '200' do
-      organization.bank_accounts.each{|bank_account| bank_account.delete}
-
       GET "/api/v1/organizations/#{organization.id}"
       expect(response).to have_http_status(200)
       expect(json).to eq organization_json
@@ -105,7 +106,7 @@ describe "organizations" do
 
   context 'bank_account' do
 
-    let(:bank_account) { organization.bank_accounts.first}
+    let(:bank_account) { entities[:bank_account] ||= organization.bank_accounts.first}
 
     let(:bank_account_not_found_json) do
       {
@@ -153,10 +154,10 @@ describe "organizations" do
         # expect(response).to have_http_status(403)
         # expect(json).to eq bank_account_anonymous_denied_json
 
-        # TODO this should fail as expected same as top-level object
-        #GET "/api/v1/organizations/#{organization.id}/bank-account", user
-        #expect(response).to have_http_status(403)
-        #expect(json).to eq bank_account_denied_json
+        # TODO: should the request fail at all or just return an empty array?
+        # GET "/api/v1/organizations/#{organization.id}/bank-accounts", user
+        # expect(response).to have_http_status(403)
+        # expect(json).to eq bank_account_denied_json
       end
 
       it '404' do
@@ -170,13 +171,7 @@ describe "organizations" do
         expect(response).to have_http_status(200)
         expect(json).to eq(bank_account_json)
 
-        # TODO: should the request fail at all or just return an empty array?
         GET "/api/v1/organizations/#{organization.id}/bank-accounts"
-        expect(response).to have_http_status(200)
-        expect(json).to eq empty_bank_account_json
-
-        organization.bank_accounts.each{|bank_account| bank_account.delete}
-        GET "/api/v1/organizations/#{organization.id}/bank-accounts", admin
         expect(response).to have_http_status(200)
         expect(json).to eq empty_bank_account_json
       end
@@ -185,8 +180,8 @@ describe "organizations" do
 
   context 'address' do
 
-    let(:organization) { Fabricate(:transmission_system_operator_with_address)}
-    let(:address) { organization.address}
+    let(:organization_with_address) { Fabricate(:transmission_system_operator_with_address)}
+    let(:address) { organization_with_address.address}
 
     let(:address_not_found_json) do
       {
@@ -223,6 +218,7 @@ describe "organizations" do
     end
 
     context 'GET' do
+
       it '403' do
         # nothing to test here as an address of an organization is public
       end
@@ -232,14 +228,13 @@ describe "organizations" do
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
 
-        organization.address.delete
         GET "/api/v1/organizations/#{organization.id}/address", admin
         expect(response).to have_http_status(404)
         expect(json).to eq address_not_found_json
       end
 
       it '200' do
-        GET "/api/v1/organizations/#{organization.id}/address", admin
+        GET "/api/v1/organizations/#{organization_with_address.id}/address", admin
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq address_json.to_yaml
       end

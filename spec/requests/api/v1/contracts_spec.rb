@@ -1,11 +1,11 @@
 describe "contracts" do
 
   let(:admin) do
-    Fabricate(:admin_token)
+    entities[:admin] ||= Fabricate(:admin_token)
   end
 
   let(:user) do
-    Fabricate(:user_token)
+    entities[:user] ||= Fabricate(:user_token)
   end
 
   let(:anonymous_denied_json) do
@@ -39,9 +39,12 @@ describe "contracts" do
   end
 
   let(:metering_point_operator_contract) do
-    group  = Fabricate(:localpool_forstenried)
-    mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:user))
-    group.metering_point_operator_contract
+    entities[:metering_point_operator_contract] ||=
+      begin
+        group  = Fabricate(:localpool_forstenried)
+        mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:user))
+        group.metering_point_operator_contract
+      end
   end
 
   context 'GET' do
@@ -66,58 +69,29 @@ describe "contracts" do
           "relationships"=>{
             "tariffs"=>{
               "data"=>[
-                {"id"=>contract.tariffs[0].id,
-                 "name"=>"metering_standard",
-                 "begin-date"=>"2014-12-01",
-                 "end-date"=>nil,
-                 "energyprice-cents-per-kwh"=>0,
-                 "baseprice-cents-per-month"=>30000,
-                 "contract-id"=>contract.id
+                {
+                  "id"=>contract.tariffs[0].id,
+                  "name"=>"metering_standard",
+                  "begin-date"=>"2014-12-01",
+                  "end-date"=>nil,
+                  "energyprice-cents-per-kwh"=>0,
+                  "baseprice-cents-per-month"=>30000,
+                  "contract-id"=>contract.id
                 }
               ]
             },
             "payments"=>{
-              "data"=>[
-                {"id"=>contract.payments[0].id,
-                 "begin-date"=>"2014-12-01",
-                 "end-date"=>"2014-12-01",
-                 "price-cents"=>30000,
-                 "cycle"=>"once",
-                 "source"=>"calculated",
-                 "contract-id"=>contract.id
-                },
-                {"id"=>contract.payments[1].id,
-                 "begin-date"=>"2014-12-01",
-                 "end-date"=>"2014-12-01",
-                 "price-cents"=>30000,
-                 "cycle"=>"once",
-                 "source"=>"transferred",
-                 "contract-id"=>contract.id
-                },
-                {"id"=>contract.payments[2].id,
-                 "begin-date"=>"2014-12-01",
-                 "end-date"=>nil, "price-cents"=>55000,
-                 "cycle"=>"monthly",
-                 "source"=>"calculated",
-                 "contract-id"=>contract.id
-                },
-                {"id"=>contract.payments[3].id,
-                 "begin-date"=>"2014-12-01",
-                 "end-date"=>"2014-12-31",
-                 "price-cents"=>55000,
-                 "cycle"=>"monthly",
-                 "source"=>"transferred",
-                 "contract-id"=>contract.id
-                },
-                {"id"=>contract.payments[4].id,
-                 "begin-date"=>"2015-01-01",
-                 "end-date"=>"2015-12-31",
-                 "price-cents"=>55000,
-                 "cycle"=>"monthly",
-                 "source"=>"transferred",
-                 "contract-id"=>contract.id
+              "data"=>contract.payments.collect do |p|
+                {
+                  "id"=>p.id,
+                  "begin-date"=>p.begin_date.to_s,
+                  "end-date"=>p.end_date ? p.end_date.to_s : nil,
+                  "price-cents"=>p.price_cents,
+                  "cycle"=>p.cycle,
+                  "source"=>p.source,
+                  "contract-id"=>contract.id
                 }
-              ]
+              end
             },
             "contractor"=>{
               "data"=>{"id"=>contract.contractor.id,
@@ -337,7 +311,6 @@ describe "contracts" do
 
           it '200' do
             contract = send "#{type}_contract"
-            contract.contractor_bank_account.delete
 
             GET "/api/v1/contracts/#{contract.id}/contractor", admin
             expect(response).to have_http_status(200)

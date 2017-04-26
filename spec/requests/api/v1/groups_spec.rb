@@ -2,15 +2,15 @@ describe "groups" do
 
 
   let(:admin) do
-    Fabricate(:admin_token)
+    entities[:admin] ||= Fabricate(:admin_token)
   end
 
   let(:user) do
-    Fabricate(:user_token)
+    entities[:user] ||= Fabricate(:user_token)
   end
 
   let(:other) do
-    Fabricate(:user_token)
+    entities[:other] ||= Fabricate(:user_token)
   end
 
   let(:anonymous_denied_json) do
@@ -43,14 +43,17 @@ describe "groups" do
     json
   end
 
-  let(:tribe) { Fabricate(:tribe) }
+  let!(:tribe) { entities[:tribe] ||= Fabricate(:tribe) }
 
-  let(:localpool) { Fabricate(:localpool) }
+  let!(:localpool) { entities[:localpool] ||= Fabricate(:localpool) }
 
-  let(:group) do
-    group = Fabricate(:localpool)
-    User.find(user.resource_owner_id).add_role(:manager, group)
-    group
+  let!(:group) do
+    entities[:group] ||= 
+      begin
+        group = Fabricate(:localpool)
+        User.find(user.resource_owner_id).add_role(:manager, group)
+        group
+      end
   end
 
   context 'GET' do
@@ -121,6 +124,7 @@ describe "groups" do
       group_data = group_json['data'].dup
       group_data['attributes']['updatable'] = false
       group_data['attributes']['deletable'] = false
+      group_data['attributes']['readable'] = 'member'
       group_data['relationships']['managers']['data'] = []
       {
         'data'=>[
@@ -129,8 +133,10 @@ describe "groups" do
       }
     end
 
-    let(:admin_groups_json) do
-      group_data = group_json['data'].dup
+    let(:filtered_admin_groups_json) do      
+      group_data = admin_group_json['data'].dup
+      group_data['attributes']['updatable'] = false
+      group_data['attributes']['deletable'] = false
       {
         'data'=>[
           group_data
@@ -138,16 +144,70 @@ describe "groups" do
       }
     end
 
-    it '403' do
-      localpool.update(readable: :member)
-      GET "/api/v1/groups/#{localpool.id}"
-      expect(response).to have_http_status(403)
-      expect(json).to eq anonymous_denied_json
+    let(:admin_groups_json) do  
+      {
+        "data"=>Group::Base.all.collect do |group|
+          rel = {}
+          if group.is_a? Group::Tribe
+            type = :tribe
+          else
+            type = :localpool
+            rel["localpool-processing-contract"] = { 'data' => nil }
+            rel["metering-point-operator-contract"] = { 'data' => nil }
+          end
+          json = {
+            "id"=>group.id,
+            "type"=>"group-#{type}s",
+            "attributes"=>{
+              "type"=>"group_#{type}",
+              "name"=>group.name,
+              "description"=>group.description,
+              "readable"=>group.readable,
+              "updatable"=>false,
+              "deletable"=>false,},
+            "relationships"=>{
+              "registers"=>{
+                "data"=>[]
+              },
+              "meters"=>{
+                "data"=> group.meters.collect do |meter|
+                  type = meter.is_a?(Meter::Real)? :real : :virtual
+                  {
+                    "id"=>meter.id,
+                    'type'=>"meter-#{type}s"
+                  }
+                end
+              },
+              "managers"=>{
+                "data"=>[]
+              },
+              "energy-producers"=>{
+                "data"=>[]
+              },
+              "energy-consumers"=>{
+                "data"=>[]
+              }
+            }.merge(rel)
+          }
+        end
+      }
+    end
 
-      tribe.update(readable: :member)
-      GET "/api/v1/groups/#{tribe.id}", user
-      expect(response).to have_http_status(403)
-      expect(json).to eq denied_json
+    it '403' do
+      begin
+        localpool.update(readable: :member)
+        GET "/api/v1/groups/#{localpool.id}"
+        expect(response).to have_http_status(403)
+        expect(json).to eq anonymous_denied_json
+
+        tribe.update(readable: :member)
+        GET "/api/v1/groups/#{tribe.id}", user
+        expect(response).to have_http_status(403)
+        expect(json).to eq denied_json
+      ensure
+        localpool.update(readable: :world)
+        tribe.update(readable: :world)
+      end
     end
 
     it '404' do
@@ -163,7 +223,7 @@ describe "groups" do
     it '200' do
       GET "/api/v1/groups/#{group.id}", user
       expect(response).to have_http_status(200)
-      expect(json).to eq group_json
+      expect(json.to_yaml).to eq group_json.to_yaml
 
       GET "/api/v1/groups/#{group.id}", admin
       expect(response).to have_http_status(200)
@@ -171,48 +231,55 @@ describe "groups" do
     end
 
     it '200 all' do
-      group.update(readable: :member)
+      begin
+        Group::Base.update_all(readable: :member)
 
-      GET "/api/v1/groups"
-      expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq empty_json.to_yaml
+        GET "/api/v1/groups"
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq empty_json.to_yaml
 
-      GET "/api/v1/groups", user
-      expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq groups_json.to_yaml
+        GET "/api/v1/groups", user
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq groups_json.to_yaml
 
-      GET "/api/v1/groups", admin
-      expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq admin_groups_json.to_yaml
+        GET "/api/v1/groups", admin
+        expect(response).to have_http_status(200)
+        expect(json['data'].sort {|n,m| n['id'] <=> m['id']}.to_yaml).to eq admin_groups_json['data'].sort {|n,m| n['id'] <=> m['id']}.to_yaml
+      ensure
+        Group::Base.update_all(readable: :world)
+      end
     end
 
     it '200 all filtered' do
-      group.update(readable: :member)
+      begin
+        Group::Base.update_all(readable: :member)
 
-      GET "/api/v1/groups"
-      expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq empty_json.to_yaml
+        GET "/api/v1/groups"
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq empty_json.to_yaml
 
-      GET "/api/v1/groups", user, filter: 'blabla'
-      expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq empty_json.to_yaml
+        GET "/api/v1/groups", user, filter: 'blabla'
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq empty_json.to_yaml
 
-      GET "/api/v1/groups", other, filter: group.name
-      expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq empty_json.to_yaml
+        GET "/api/v1/groups", other, filter: group.name
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq empty_json.to_yaml
 
-      GET "/api/v1/groups", user, filter: group.name
-      expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq groups_json.to_yaml
+        GET "/api/v1/groups", user, filter: group.name
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq groups_json.to_yaml
 
-      GET "/api/v1/groups", admin, filter: 'blabla'
-      expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq empty_json.to_yaml
+        GET "/api/v1/groups", admin, filter: 'blabla'
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq empty_json.to_yaml
 
-      GET "/api/v1/groups", admin, filter: group.name
-      expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq admin_groups_json.to_yaml
-
+        GET "/api/v1/groups", admin, filter: group.name
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq filtered_admin_groups_json.to_yaml
+      ensure
+        Group::Base.update_all(readable: :world)
+      end
     end
   end
 
@@ -220,15 +287,20 @@ describe "groups" do
 
     context 'GET' do
       it '403' do
-        localpool.update(readable: :member)
-        GET "/api/v1/groups/#{localpool.id}/meters"
-        expect(response).to have_http_status(403)
-        expect(json).to eq anonymous_denied_json
+        begin
+          localpool.update(readable: :member)
+          GET "/api/v1/groups/#{localpool.id}/meters"
+          expect(response).to have_http_status(403)
+          expect(json).to eq anonymous_denied_json
 
-        tribe.update(readable: :member)
-        GET "/api/v1/groups/#{tribe.id}/meters", user
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+          tribe.update(readable: :member)
+          GET "/api/v1/groups/#{tribe.id}/meters", user
+          expect(response).to have_http_status(403)
+          expect(json).to eq denied_json
+        ensure
+          localpool.update(readable: :world)
+          tribe.update(readable: :world)
+        end
       end
 
       it '404' do

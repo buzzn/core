@@ -2,11 +2,11 @@
 describe "meters" do
 
   let(:admin) do
-    Fabricate(:admin_token)
+    entities[:admin] ||= Fabricate(:admin_token)
   end
 
   let(:user) do
-    Fabricate(:user_token)
+    entities[:user] ||= Fabricate(:user_token)
   end
 
   let(:anonymous_denied_json) do
@@ -39,14 +39,17 @@ describe "meters" do
     json
   end
 
-  let(:virtual_meter) { Fabricate(:virtual_meter) }
+  let(:virtual_meter) { entities[:virtual_meter] ||= Fabricate(:virtual_meter) }
 
-  let(:real_meter) { Fabricate(:meter) }
+  let(:real_meter) { entities[:real_meter] ||= Fabricate(:meter) }
 
   let(:meter) do
-    meter = Fabricate(:input_meter)
-    User.find(user.resource_owner_id).add_role(:manager, meter.input_register)
-    meter
+    entities[:meter] ||=
+      begin
+        meter = Fabricate(:input_meter)
+        User.find(user.resource_owner_id).add_role(:manager, meter.input_register)
+        meter
+      end
   end
 
 
@@ -120,7 +123,7 @@ describe "meters" do
 
   context 'virtual/register' do
 
-    let(:meter) { Fabricate(:virtual_meter) }
+    let(:meter) { virtual_meter }
 
     let(:register) do
       meter.register.tap do |register|
@@ -197,7 +200,7 @@ describe "meters" do
 
   context 'real/registers' do
 
-    let(:meter) { Fabricate(:meter) }
+    let(:meter) { real_meter }
 
     let(:registers) do
       meter.registers.each do |register|

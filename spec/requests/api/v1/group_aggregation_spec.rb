@@ -1,30 +1,42 @@
 describe "groups" do
 
   let(:discovergy_meter) do
-    meter = Fabricate(:easymeter_60139082) # in_out meter
-    meter.registers.each { |r| r.update(readable: :world) }
-    # TODO what to do with the in-out fact ?
-    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_60139082", mode: :in_out)
-    meter
+    entities[:discovergy_meter] ||= 
+      begin
+        meter = Fabricate(:easymeter_60139082) # in_out meter
+        meter.registers.each { |r| r.update(readable: :world) }
+        # TODO what to do with the in-out fact ?
+        Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_60139082", mode: :in_out)
+        meter
+      end
   end
 
   let(:profile_meter) do
-    meter = Fabricate(:input_meter)
-    Fabricate(:output_register, meter: meter)
-    meter.registers.each { |r| r.update(readable: :world) }
-    meter
+    entities[:profile_meter] ||=
+      begin
+        meter = Fabricate(:input_meter)
+        Fabricate(:output_register, meter: meter)
+        meter.registers.each { |r| r.update(readable: :world) }
+        meter
+      end
   end
 
   let(:group) do
-    group = Fabricate(:tribe)
-    group.registers += discovergy_meter.registers
-    group
+    entities[:group] ||=
+      begin
+        group = Fabricate(:tribe)
+        group.registers += discovergy_meter.registers
+        group
+      end
   end
 
   let(:profile_group) do
-    group = Fabricate(:tribe)
-    group.registers += profile_meter.registers.reload
-    group
+    entities[:profile_group] ||=
+      begin
+        group = Fabricate(:tribe)
+        group.registers += profile_meter.registers.reload
+        group
+      end
   end
 
   let(:input_register) { discovergy_meter.input_register }
@@ -35,7 +47,7 @@ describe "groups" do
 
   let(:sep_register) { profile_meter.output_register }
 
-  let(:admin) { Fabricate(:admin_token) }
+  let(:admin) { entities[:admin] ||= Fabricate(:admin_token) }
 
   let(:time) { Time.find_zone('Berlin').local(2016, 2, 1, 1, 30, 1) }
 
@@ -102,10 +114,14 @@ describe "groups" do
     context 'GET' do
 
       it '403' do
-        group.update(readable: :members)
-        GET "/api/v1/groups/#{group.id}/bubbles"
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+        begin
+          group.update(readable: :members)
+          GET "/api/v1/groups/#{group.id}/bubbles"
+          expect(response).to have_http_status(403)
+          expect(json).to eq denied_json
+        ensure
+          group.update(readable: :world)
+        end
       end
 
       it '404' do
@@ -313,10 +329,14 @@ describe "groups" do
       end
 
       it '403' do
-        group.update(readable: :members)
-        GET "/api/v1/groups/#{group.id}/charts", nil, duration: :day
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+        begin
+          group.update(readable: :members)
+          GET "/api/v1/groups/#{group.id}/charts", nil, duration: :day
+          expect(response).to have_http_status(403)
+          expect(json).to eq denied_json
+        ensure
+          group.update(readable: :world)
+        end
       end
 
       it '404' do

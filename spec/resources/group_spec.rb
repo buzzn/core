@@ -1,9 +1,9 @@
 # coding: utf-8
 describe Group::BaseResource do
 
-  let(:user) { Fabricate(:admin) }
-  let!(:tribe) { Fabricate(:tribe) }
-  let!(:localpool) { Fabricate(:localpool) }
+  let(:user) { entities[:admin] ||= Fabricate(:admin) }
+  let!(:tribe) { entities[:tribe] ||= Fabricate(:tribe) }
+  let!(:localpool) { entities[:localpool] ||= Fabricate(:localpool) }
 
   let(:base_attributes) { [:name,
                            :description,
@@ -33,21 +33,29 @@ describe Group::BaseResource do
 
   describe 'scores' do
 
-    let(:group) { [tribe, localpool].sample }
+    let(:group) { entities[:group] ||= [tribe, localpool].sample }
 
     [:day, :month, :year].each do |interval|
-      [:sufficiency, :closeness, :autarchy, :fitting].each do |type|
-        describe interval do
+      describe interval do
+
+        before { Score.delete_all }
+
+        [:sufficiency, :closeness, :autarchy, :fitting].each do |type|
+        
           describe type do
 
             let!(:out_of_range) do
-              interval_information  = Group::Base.score_interval(interval.to_s, 123123)
-              Score.create(mode: type, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: Group::Base, scoreable_id: group.id)
+                begin
+                  interval_information  = Group::Base.score_interval(interval.to_s, 123123)
+                  Score.create(mode: type, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: Group::Base, scoreable_id: group.id)
+                end
             end
 
             let!(:in_range) do
-              interval_information  = Group::Base.score_interval(interval.to_s, Time.current.yesterday.to_i)
-              Score.create(mode: type, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: Group::Base, scoreable_id: group.id)
+                begin
+                  interval_information  = Group::Base.score_interval(interval.to_s, Time.current.yesterday.to_i)
+                  Score.create(mode: type, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: Group::Base, scoreable_id: group.id)
+                end
             end
 
             let(:attributes) { [:mode, :interval, :interval_beginning, :interval_end, :value] }

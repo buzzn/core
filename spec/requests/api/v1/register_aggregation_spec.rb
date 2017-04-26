@@ -1,18 +1,24 @@
 describe "registers" do
 
   let(:discovergy_meter) do
-    meter = Fabricate(:easymeter_60139082) # in_out meter
-    meter.registers.each { |r| r.update(readable: :world) }
-    # TODO what to do with the in-out fact ?
-    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_60139082", mode: :in_out)
-    meter
+    entities[:discovergy_meter] ||= 
+      begin
+        meter = Fabricate(:easymeter_60139082) # in_out meter
+        meter.registers.each { |r| r.update(readable: :world) }
+        # TODO what to do with the in-out fact ?
+        Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_60139082", mode: :in_out)
+        meter
+      end
   end
 
   let(:group) do
-    group = Fabricate(:group)
-    group.registers += discovergy_meter.registers
-    group.registers += slp_meter.registers
-    group
+    entities[:group] ||= 
+      begin
+        group = Fabricate(:group)
+        group.registers += discovergy_meter.registers
+        group.registers += slp_meter.registers
+        group
+      end
   end
 
   let(:input_register) { discovergy_meter.input_register }
@@ -20,18 +26,24 @@ describe "registers" do
   let(:output_register) { discovergy_meter.output_register }
 
   let(:slp_register) do
-    register = Fabricate(:input_meter).input_register
-    register.update(readable: :world)
-    register
+    entities[:slp_register] ||= 
+      begin
+        register = Fabricate(:input_meter).input_register
+        register.update(readable: :world)
+        register
+      end
   end
 
   let(:sep_register) do
-    register = Fabricate(:output_meter).output_register
-    register.update(readable: :world)
-    register
+    entities[:sep_register] ||= 
+      begin
+        register = Fabricate(:output_meter).output_register
+        register.update(readable: :world)
+        register
+      end
   end
 
-  let(:admin) { Fabricate(:admin_token) }
+  let(:admin) { entities[:admin] ||= Fabricate(:admin_token) }
 
   let(:time) { Time.find_zone('Berlin').local(2016, 2, 1, 1, 30, 1) }
 
@@ -79,9 +91,13 @@ describe "registers" do
 
       it '403' do
         input_register.update(readable: :members)
-        GET "/api/v1/registers/#{input_register.id}/ticker"
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+        begin
+          GET "/api/v1/registers/#{input_register.id}/ticker"
+          expect(response).to have_http_status(403)
+          expect(json).to eq denied_json
+        ensure
+          input_register.update(readable: :world)
+        end
       end
 
       it '404' do

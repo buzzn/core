@@ -80,8 +80,29 @@ RSpec.configure do |config|
     end
   end
 
-  config.before(:suite) do
+  config.before(:context) do
+    entities.clear
     DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.start
+  end
+
+  config.after(:context) do
+    puts '----> truncate DB'
+    clean_database
+  end
+  
+  def entities
+    $entities ||= {}
+  end
+
+  def clean_manually
+    BankAccount.delete_all
+    Organization.delete_all
+    User.delete_all
+    Register::Base.delete_all
+    Group::Base.delete_all
+    Broker::Base.delete_all
+    Meter::Base.delete_all
   end
 
   def clean_database
@@ -91,25 +112,30 @@ RSpec.configure do |config|
       warn '-' * 80
       warn 'DB cleaner failed - cleaning manually'
       warn '-' * 80
-      Register::Base.delete_all
-      Group::Base.delete_all
-      Broker::Base.delete_all
-      Meter::Base.delete_all
+      clean_manually
     end
+  end
+
+  def needs_cleaning?(spec)
+    ! spec.metadata[:file_path].include?('requests') && ! spec.metadata[:file_path].include?('resources') && ! spec.metadata[:file_path].include?('services')
   end
 
   config.before(:each) do |spec|
     DatabaseCleaner.strategy = spec.description =~ /threaded/ ? :truncation : :transaction  # 'threaded' in description triggers a different DatabaseCleanet strategy
-    clean_database
-    DatabaseCleaner.start
+    if needs_cleaning?(spec)
+      clean_database
+      DatabaseCleaner.start
+    end
   end
 
-  config.append_after(:each) do
+  config.append_after(:each) do |spec|
     Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0)) # HACK https://github.com/buzzn/buzzn/blob/master/config/environments/test.rb#L43-L44 is not working
     Mongoid.purge!
     Redis.current.flushall
     Rails.cache.clear
-    clean_database
+    if needs_cleaning?(spec)
+      clean_database
+    end
   end
 
 

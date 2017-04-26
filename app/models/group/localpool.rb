@@ -1,3 +1,4 @@
+# coding: utf-8
 module Group
   class Localpool < Base
 
@@ -7,6 +8,10 @@ module Group
 
     def localpool_processing_contract
       Contract::LocalpoolProcessing.where(localpool_id: self).first
+    end
+
+    def localpool_power_taker_contracts
+      Contract::LocalpoolPowerTaker.joins(:register).where('registers.group_id': self)
     end
 
     has_many :addresses, as: :addressable, dependent: :destroy

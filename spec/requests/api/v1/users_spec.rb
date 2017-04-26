@@ -1,15 +1,18 @@
 describe "users" do
 
-  let(:admin) { Fabricate(:admin_token) }
+  let(:admin) { entities[:admin] ||= Fabricate(:admin_token) }
 
-  let(:user_token) { Fabricate(:user_token) }
+  let(:user_token) { entities[:user_token] ||= Fabricate(:user_token) }
 
-  let(:other) { Fabricate(:user_token) }
+  let(:other) { entities[:other] ||= Fabricate(:user_token) }
 
   let(:user) do
-    user = User.find(user_token.resource_owner_id)
-    Fabricate(:bank_account, contracting_party: user)
-    user
+    entities[:user] ||=
+      begin
+        user = User.find(user_token.resource_owner_id)
+        Fabricate(:bank_account, contracting_party: user)
+        user
+      end
   end
 
   let(:anonymous_denied_json) do
@@ -276,11 +279,6 @@ describe "users" do
         GET "/api/v1/users/#{user.id}/bank-accounts", admin
         expect(response).to have_http_status(200)
         expect(json).to eq(bank_account_json)
-
-        user.bank_accounts.each{|bank_account| bank_account.delete}
-        GET "/api/v1/users/#{user.id}/bank-accounts", admin
-        expect(response).to have_http_status(200)
-        expect(json).to eq empty_bank_account_json
       end
 
     end
@@ -289,18 +287,24 @@ describe "users" do
   context 'meters' do
 
     let(:meter1) do
-      meter = Fabricate(:input_meter)
-      user.add_role(:manager, meter.input_register)
-      meter
+      entities[:meter1] ||=
+        begin
+          meter = Fabricate(:input_meter)
+          user.add_role(:manager, meter.input_register)
+          meter
+        end
     end
 
     let(:meter2) do
-      meter = Fabricate(:output_meter)
-      user.add_role(:manager, meter.output_register)
-      meter
+      entities[:meter2] ||=
+        begin
+          meter = Fabricate(:output_meter)
+          user.add_role(:manager, meter.output_register)
+          meter
+        end
     end
 
-    let(:meter3) { Fabricate(:meter) }
+    let(:meter3) { entities[:meter3] ||= Fabricate(:meter) }
 
     let(:user_meters_json) do
       {
@@ -378,6 +382,7 @@ describe "users" do
     end
 
     context 'GET' do
+
       it '403' do
         GET "/api/v1/users/#{user.id}/meters"
         expect(response).to have_http_status(403)
@@ -395,11 +400,6 @@ describe "users" do
       end
 
       it '200' do
-        # TODO use user which can see user but not meters
-        GET "/api/v1/users/#{user.id}/meters", user_token
-        expect(response).to have_http_status(200)
-        expect(json).to eq(empty_json)
-
         meter1 # setup
         meter2 # setup
         meter3 # setup

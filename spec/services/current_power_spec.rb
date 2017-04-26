@@ -48,24 +48,31 @@ describe Buzzn::Services::CurrentPower do
   end
 
   let(:group) do
-    Group::MinimalBaseResource.send(:new, Fabricate(:tribe), Fabricate(:admin))
+    entities[:group] ||=
+      Group::MinimalBaseResource.send(:new, Fabricate(:tribe), Fabricate(:admin))
   end
-  let(:register) { Fabricate(:output_meter).output_register }
+  let(:register) { entities[:group] ||= Fabricate(:output_meter).output_register }
   let(:dummy_register) do
-    register = Fabricate(:input_meter).input_register
-    def register.data_source; 'dummy';end
-    def register.to_s; self.id; end
-    register
+    entities[:dummy_register] ||=
+      begin
+        register = Fabricate(:input_meter).input_register
+        def register.data_source; 'dummy';end
+        def register.to_s; self.id; end
+        register
+      end
   end
 
   let(:virtual_register) do
-    easymeter_60051599 = Fabricate(:easymeter_60051599)
-    easymeter_60051599.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051599", resource: easymeter_60051599)
-    fichtenweg8 = Fabricate(:virtual_meter_fichtenweg8).register
-    Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
-    Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
-    Fabricate(:fp_minus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
-    fichtenweg8
+    entities[:virtual_register] ||=
+      begin
+        easymeter_60051599 = Fabricate(:easymeter_60051599)
+        easymeter_60051599.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051599", resource: easymeter_60051599)
+        fichtenweg8 = Fabricate(:virtual_meter_fichtenweg8).register
+        Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
+        Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
+        Fabricate(:fp_minus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
+        fichtenweg8
+      end
   end
 
   it 'delivers the right result for a register' do

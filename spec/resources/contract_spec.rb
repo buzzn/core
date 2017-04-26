@@ -1,20 +1,23 @@
 # coding: utf-8
 describe Contract::BaseResource do
 
-  let(:user) { Fabricate(:admin) }
-  let(:localpool) { Fabricate(:localpool) }
+  let(:user) { entities[:admin] ||= Fabricate(:admin) }
+  let(:localpool) { entities[:localpool] ||= Fabricate(:localpool) }
 
-  let(:metering_point_operator) { Fabricate(:metering_point_operator_contract,
+  let(:metering_point_operator) { entities[:metering_point_operator] ||= Fabricate(:metering_point_operator_contract,
                                             localpool: localpool) }
-  let(:localpool_processing) { Fabricate(:localpool_processing_contract,
+  let(:localpool_processing) { entities[:localpool_processing] ||= Fabricate(:localpool_processing_contract,
                                          localpool: localpool) }
   let(:localpool_power_taker) do
-    register = Fabricate(:input_meter).input_register
-    register.group = localpool
-    Fabricate(:localpool_power_taker_contract, register: register)
+    entities[:localpool_power_taker] ||=
+      begin 
+        register = Fabricate(:input_meter).input_register
+        register.group = localpool
+        Fabricate(:localpool_power_taker_contract, register: register)
+      end
   end
-  let(:power_taker) { Fabricate(:power_taker_contract_move_in) }
-  let(:power_giver) { Fabricate(:power_giver_contract) }
+  let(:power_taker) { entities[:power_taker] ||= Fabricate(:power_taker_contract_move_in) }
+  let(:power_giver) { entities[:power_giver] ||= Fabricate(:power_giver_contract) }
 
   let(:base_attributes) { [:status,
                            :full_contract_number,
