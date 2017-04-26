@@ -1,10 +1,24 @@
 describe "groups/localpools" do
 
+<<<<<<< HEAD
   entity(:admin) { Fabricate(:admin_token) }
 
   entity(:user) { Fabricate(:user_token) }
 
   entity(:other) { Fabricate(:user_token) }
+=======
+  let(:admin) do
+    entities[:admin] ||= Fabricate(:admin_token)
+  end
+
+  let(:user) do
+    entities[:user] ||= Fabricate(:user_token)
+  end
+
+  let(:other) do
+    entities[:other] ||= Fabricate(:user_token)
+  end
+>>>>>>> adds groups/localpool/:id/localpool-power-taker-contracts endpoint
 
   let(:anonymous_denied_json) do
     {
@@ -45,6 +59,7 @@ describe "groups/localpools" do
     json
   end
 
+<<<<<<< HEAD
   entity(:localpool) do
     localpool = Fabricate(:localpool)
     3.times.each do
@@ -58,6 +73,26 @@ describe "groups/localpools" do
   end
 
   entity(:localpool_no_contracts) { Fabricate(:localpool) }
+=======
+  let(:localpool) do
+    entities[:localpool] ||=
+      begin
+        localpool = Fabricate(:localpool)
+        3.times.each do
+          c = Fabricate(:localpool_power_taker_contract)
+          c.register.group = localpool
+          c.register.save
+        end
+        Fabricate(:localpool_processing_contract, localpool: localpool)
+        Fabricate(:metering_point_operator_contract, localpool: localpool)
+        localpool
+      end
+  end
+
+  let(:localpool_no_contracts) do
+    entities[:localpool_no_contracts] ||= Fabricate(:localpool)
+  end
+>>>>>>> adds groups/localpool/:id/localpool-power-taker-contracts endpoint
 
   let(:empty_json) do
     {

@@ -174,6 +174,7 @@ describe "organizations" do
   context 'address' do
 
     entity(:organization_with_address) { Fabricate(:hell_und_warm)}
+
     let(:address) { organization_with_address.address}
 
     let(:address_not_found_json) do
