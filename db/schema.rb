@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170412212950) do
+ActiveRecord::Schema.define(version: 20170424153456) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -542,6 +542,18 @@ ActiveRecord::Schema.define(version: 20170412212950) do
   end
 
   add_index "payments", ["contract_id"], name: "index_payments_on_contract_id", using: :btree
+
+  create_table "prices", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.string   "name",                                null: false
+    t.integer  "baseprice_cents_per_month",           null: false
+    t.float    "energyprice_cents_per_kilowatt_hour", null: false
+    t.date     "begin_date",                          null: false
+    t.uuid     "localpool_id"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  add_index "prices", ["begin_date", "localpool_id"], name: "index_prices_on_begin_date_and_localpool_id", using: :btree
 
   create_table "profiles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "user_name"

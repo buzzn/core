@@ -104,7 +104,7 @@ describe Group::BaseResource do
   end
 
   describe Group::Localpool do
-  
+
     it 'retrieve all - ids + types' do
       expected = [Group::Localpool, localpool.id]
       result = Group::LocalpoolResource.all(user).collect do |r|
@@ -121,13 +121,49 @@ describe Group::BaseResource do
       end
       expect{Group::LocalpoolResource.retrieve(user, tribe.id)}.to raise_error Buzzn::RecordNotFound
     end
-      
+
     it 'retrieve' do
       attributes = [:localpool_processing_contract,
                     :metering_point_operator_contract]
       json = Group::BaseResource.retrieve(user, localpool.id).to_h
       expect(json.keys & attributes).to match_array attributes
       expect(json.keys.size).to eq (attributes.size + base_attributes.size + 2)
+    end
+
+    it 'retrieve all prices' do
+      attributes = [:name,
+                    :baseprice_cents_per_month,
+                    :energyprice_cents_per_kilowatt_hour,
+                    :begin_date,
+                    :id,
+                    :type,
+                    :updatable,
+                    :deletable]
+      Fabricate(:price, localpool: localpool)
+      result = Group::LocalpoolResource.retrieve(user, localpool.id).prices
+      expect(result.size).to eq 1
+      first = PriceResource.send(:new, result.first)
+      expect(first.to_hash.keys).to match_array attributes
+    end
+
+    it 'creates a new price' do
+      group = Fabricate(:localpool)
+      some_user = Fabricate(:user)
+
+      request_params = {
+        name: "special",
+        begin_date: Date.new(2016, 1, 1),
+        energyprice_cents_per_kilowatt_hour: 23.66,
+        baseprice_cents_per_month: 500
+      }.to_json
+
+      expect{Group::LocalpoolResource.retrieve(some_user, group.id).create_price(request_params)}.to raise_error Buzzn::PermissionDenied
+      expect(group.prices.size).to eq 0
+
+      some_user.add_role(:manager, group)
+      result = Group::LocalpoolResource.retrieve(some_user, group.id).create_price(request_params)
+      expect(group.prices.size).to eq 1
+
     end
   end
 end

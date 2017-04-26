@@ -6,6 +6,8 @@ module API
 
       resource :prices do
 
+        # TODO: is this still needed or should we remove it as we have no use case for this at the moment?
+        # Initially we created this for getting prices in our forms SPA
         desc 'Converts the ZIP code to estimated monthly price'
         params do
           requires :zip
@@ -30,6 +32,19 @@ module API
           end
         end
 
+        desc "Update a Price."
+        params do
+          requires :id, type: String, desc: "Price ID"
+          optional :name, type: String, desc: "Name of the price"
+          optional :begin_date, type: String, desc: "The price's begin date"
+          optional :energyprice_cents_per_kilowatt_hour, type: Float, desc: "The price per kilowatt_hour in cents"
+          optional :baseprice_cents_per_month, type: Integer, desc: "The monthly base price in cents"
+        end
+        patch ':id' do
+          PriceResource
+            .retrieve(current_user, permitted_params)
+            .update(permitted_params)
+        end
       end
     end
   end

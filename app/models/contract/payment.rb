@@ -5,6 +5,7 @@ module Contract
 
     validates :begin_date, presence: true
     validates :end_date, presence: false
+    # assume all money-data is without taxes!
     validates :price_cents, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
     validates :cycle, presence: false
     validates :source, presence: false
