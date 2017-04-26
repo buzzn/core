@@ -4,6 +4,7 @@ module API
       include API::V1::Defaults
 
       resource :prices do
+
         desc "Update a Price."
         params do
           requires :id, type: String, desc: "Price ID"
