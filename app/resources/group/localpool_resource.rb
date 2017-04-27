@@ -11,7 +11,8 @@ module Group
     end
 
     def create_price(params = {})
-      Price.guarded_create(@current_user, params)
+      params[:localpool] = object
+      PriceResource.new(Price.guarded_create(@current_user, params, object))
     end
 
   end

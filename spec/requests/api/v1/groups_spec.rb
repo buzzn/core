@@ -565,6 +565,7 @@ describe "groups" do
       energyprice_cents_per_kilowatt_hour: 23.66,
       baseprice_cents_per_month: 500
     }.to_json
+
     full_access_token = Fabricate(:full_access_token)
     POST "/api/v1/groups/localpools/#{group.id}/price", full_access_token, request_params
     expect(response).to have_http_status(403)
@@ -572,7 +573,8 @@ describe "groups" do
     manager_access_token = Fabricate(:full_access_token)
     manager_user          = User.find(manager_access_token.resource_owner_id)
     manager_user.add_role(:manager, group)
-    post_with_token "/api/v1/groups/localpools/#{group.id}/price", request_params, manager_access_token.token
+    POST "/api/v1/groups/localpools/#{group.id}/price", manager_access_token, request_params
     expect(response).to have_http_status(201)
+    expect(json['data']['id']).not_to eq nil
   end
 end

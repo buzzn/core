@@ -155,15 +155,15 @@ describe Group::BaseResource do
         begin_date: Date.new(2016, 1, 1),
         energyprice_cents_per_kilowatt_hour: 23.66,
         baseprice_cents_per_month: 500
-      }.to_json
+      }
 
       expect{Group::LocalpoolResource.retrieve(some_user, group.id).create_price(request_params)}.to raise_error Buzzn::PermissionDenied
       expect(group.prices.size).to eq 0
 
       some_user.add_role(:manager, group)
       result = Group::LocalpoolResource.retrieve(some_user, group.id).create_price(request_params)
-      expect(group.prices.size).to eq 1
-
+      expect(result.is_a?(PriceResource)).to eq true
+      expect(result.object.localpool).to eq group
     end
   end
 end
