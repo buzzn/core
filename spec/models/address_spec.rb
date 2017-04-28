@@ -2,8 +2,7 @@
 describe Address do
 
   let(:admin) do
-    admin = Fabricate(:user)
-    admin.add_role(:admin, nil)
+    admin = Fabricate(:admin)
     admin.friends << Fabricate(:user)
     admin
   end
