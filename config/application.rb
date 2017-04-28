@@ -25,14 +25,14 @@ module Buzzn
 
     tap do |config|
       domains = case Rails.env
-                when 'development'
+                when 'development', 'test'
                   %r(http://(localhost:[0-9]*|127.0.0.1:[0-9]*))
                 when 'staging'
                   %r(https://(staging|develop)-[a-z0-9]*.buzzn.io)
                 when 'production'
                   %r(https://[a-z0-9]*.buzzn.io)
                 else
-                  raise 'unknonw rails environment'
+                  raisewarn 'unknown rails environment'
                 end
       config.middleware.insert_before 0, 'Rack::Cors' do
         allow do
