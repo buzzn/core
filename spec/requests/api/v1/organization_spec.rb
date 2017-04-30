@@ -1,13 +1,9 @@
 # coding: utf-8
 describe "organizations" do
 
-  let(:admin) do
-    entities[:admin] ||= Fabricate(:admin_token)
-  end
+  entity(:admin) { Fabricate(:admin_token) }
 
-  let(:user) do
-    entities[:user] ||= Fabricate(:user_token)
-  end
+  entity(:user) { Fabricate(:user_token) }
 
   let(:anonymous_denied_json) do
     {
@@ -39,13 +35,10 @@ describe "organizations" do
     json
   end
 
-  let(:organization) do
-    entities[:organization] ||=
-      begin
-        organization = Fabricate(:metering_service_provider)
-        Fabricate(:bank_account, contracting_party: organization)
-        organization
-      end
+  entity(:organization) do
+    organization = Fabricate(:metering_service_provider)
+    Fabricate(:bank_account, contracting_party: organization)
+    organization
   end
 
   context 'GET' do
@@ -106,7 +99,7 @@ describe "organizations" do
 
   context 'bank_account' do
 
-    let(:bank_account) { entities[:bank_account] ||= organization.bank_accounts.first}
+    entity(:bank_account) { organization.bank_accounts.first }
 
     let(:bank_account_not_found_json) do
       {
@@ -180,7 +173,7 @@ describe "organizations" do
 
   context 'address' do
 
-    let(:organization_with_address) { Fabricate(:transmission_system_operator_with_address)}
+    entity(:organization_with_address) { Fabricate(:hell_und_warm)}
     let(:address) { organization_with_address.address}
 
     let(:address_not_found_json) do
@@ -200,11 +193,11 @@ describe "organizations" do
           "attributes"=>{
             "type"=>"address",
             "address"=>nil,
-            "street-name"=>"Zu den Höfen",
-            "street-number"=>"7",
-            "city"=>"Asche",
-            "state"=>"Lower Saxony",
-            "zip"=>37181,
+            "street-name"=>"Aberlestraße",
+            "street-number"=>"16",
+            "city"=>"München",
+            "state"=>"Bavaria",
+            "zip"=>81371,
             "country"=>"Germany",
             "longitude"=>nil,
             "latitude"=>nil,

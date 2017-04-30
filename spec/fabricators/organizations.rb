@@ -38,15 +38,10 @@ Fabricator :transmission_system_operator, from: :organization do
   mode 'transmission_system_operator'
 end
 
-Fabricator :transmission_system_operator_with_address, from: :transmission_system_operator do
-  address     { Fabricate(:address, street_name: 'Zu den Höfen', street_number: '7', zip: 37181, city: 'Asche', state: 'Lower Saxony') }
-end
-
 Fabricator :power_giver_with_contracts, from: :power_giver do
   after_create do |organization|
     Fabricate(:power_giver_contract, customer: organization)
   end
-
 end
 
 Fabricator :hell_und_warm, from: :other_organization do
@@ -54,7 +49,7 @@ Fabricator :hell_und_warm, from: :other_organization do
   phone       '089-89057180'
   email       't.brumbauer@wogeno.de'
   description 'Betreiber des Localpools Forstenried'
-  address     { Fabricate(:address, street_name: 'Aberlestraße', street_number: '16', zip: 81371, city: 'München')}
+  address     { Fabricate(:address, street_name: 'Aberlestraße', street_number: '16', zip: 81371, city: 'München', state: 'Bavaria') }
 end
 
 # needed for groups fabricator - legacy naming

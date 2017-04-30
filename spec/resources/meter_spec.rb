@@ -1,9 +1,9 @@
 # coding: utf-8
 describe Meter::BaseResource do
 
-  let(:user) { entities[:user] ||= Fabricate(:admin) }
-  let!(:real) { entities[:real] ||= Fabricate(:meter) }
-  let!(:virtual) { entities[:virtual] ||= Fabricate(:virtual_meter) }
+  entity(:user) { Fabricate(:admin) }
+  entity!(:real) { Fabricate(:meter) }
+  entity!(:virtual) { Fabricate(:virtual_meter) }
 
   let(:base_keys) { [:id,
                      :type,

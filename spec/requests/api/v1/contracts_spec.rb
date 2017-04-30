@@ -1,12 +1,8 @@
 describe "contracts" do
 
-  let(:admin) do
-    entities[:admin] ||= Fabricate(:admin_token)
-  end
+  entity(:admin) { Fabricate(:admin_token) }
 
-  let(:user) do
-    entities[:user] ||= Fabricate(:user_token)
-  end
+  entity(:user) { Fabricate(:user_token) }
 
   let(:anonymous_denied_json) do
     {
@@ -38,13 +34,10 @@ describe "contracts" do
     json
   end
 
-  let(:metering_point_operator_contract) do
-    entities[:metering_point_operator_contract] ||=
-      begin
-        group  = Fabricate(:localpool_forstenried)
-        mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:user))
-        group.metering_point_operator_contract
-      end
+  entity(:metering_point_operator_contract) do
+    group  = Fabricate(:localpool_forstenried)
+    mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:user))
+    group.metering_point_operator_contract
   end
 
   context 'GET' do

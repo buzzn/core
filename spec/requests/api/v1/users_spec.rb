@@ -1,18 +1,15 @@
 describe "users" do
 
-  let(:admin) { entities[:admin] ||= Fabricate(:admin_token) }
+  entity(:admin) { Fabricate(:admin_token) }
 
-  let(:user_token) { entities[:user_token] ||= Fabricate(:user_token) }
+  entity(:user_token) { Fabricate(:user_token) }
 
-  let(:other) { entities[:other] ||= Fabricate(:user_token) }
+  entity(:other) { Fabricate(:user_token) }
 
-  let(:user) do
-    entities[:user] ||=
-      begin
-        user = User.find(user_token.resource_owner_id)
-        Fabricate(:bank_account, contracting_party: user)
-        user
-      end
+  entity(:user) do
+    user = User.find(user_token.resource_owner_id)
+    Fabricate(:bank_account, contracting_party: user)
+    user
   end
 
   let(:anonymous_denied_json) do
@@ -286,25 +283,19 @@ describe "users" do
 
   context 'meters' do
 
-    let(:meter1) do
-      entities[:meter1] ||=
-        begin
-          meter = Fabricate(:input_meter)
-          user.add_role(:manager, meter.input_register)
-          meter
-        end
+    entity(:meter1) do
+      meter = Fabricate(:input_meter)
+      user.add_role(:manager, meter.input_register)
+      meter
     end
 
-    let(:meter2) do
-      entities[:meter2] ||=
-        begin
-          meter = Fabricate(:output_meter)
-          user.add_role(:manager, meter.output_register)
-          meter
-        end
+    entity(:meter2) do
+      meter = Fabricate(:output_meter)
+      user.add_role(:manager, meter.output_register)
+      meter
     end
 
-    let(:meter3) { entities[:meter3] ||= Fabricate(:meter) }
+    entity(:meter3) { Fabricate(:meter) }
 
     let(:user_meters_json) do
       {

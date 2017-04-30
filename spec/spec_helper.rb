@@ -69,7 +69,18 @@ RSpec.configure do |config|
     ActionMailer::Base.deliveries.last
   end
 
-  config.before(:each) do
+  # in case errors happened during the last test run we need to clean DB first
+  config.before(:suite) do
+    warn '----> clean DB manually'
+    clean_manually
+  end
+
+  config.before(:context) do
+    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.start
+  end
+
+  config.before(:context) do
     Organization.constants.each do |c|
       name = c.to_s.downcase.to_sym
       if Organization.respond_to?(name) && name != :columns
@@ -80,19 +91,80 @@ RSpec.configure do |config|
     end
   end
 
-  config.before(:context) do
-    entities.clear
-    DatabaseCleaner.clean_with(:truncation)
-    DatabaseCleaner.start
-  end
-
   config.after(:context) do
     puts '----> truncate DB'
     clean_database
   end
-  
-  def entities
-    $entities ||= {}
+
+  config.before(:each) do |spec|
+    #self.class.setup_entities if self.class.respond_to? :setup_entities
+  end
+
+  module ClassMethods
+    def entity_blocks
+      @entity_blocks ||= {}
+    end
+
+    def forced_entities
+      @forced_entities ||= []
+    end
+
+    def entities
+      @entities ||= {}
+    end
+
+    def setup_entities
+      if superclass.respond_to? :setup_entities
+        superclass.setup_entities
+      end
+      forced_entities.each do |key|
+        setup_entity(key)
+      end
+    end
+
+    def setup_entity(key)
+      result = nil
+      if superclass.respond_to? :setup_entity
+        result = superclass.setup_entity(key)
+      end
+      if result.nil? && entity_blocks.key?(key)
+        entities[key] ||= entity_blocks[key].call
+      else
+        result
+      end
+    end
+  end
+
+  module InstanceMethods
+    def method_missing(method, *args)
+      self.class.setup_entity(method) || super
+    end
+  end
+
+  def entity(key, &block)
+    unless self.kind_of?(InstanceMethods)
+      self.send(:extend, ClassMethods)
+      self.send(:include, InstanceMethods)
+      self.class_eval do
+        before do
+          self.class.setup_entities
+        end
+      end
+    end
+    self.entity_blocks[key.to_sym] = block
+  end
+
+  def entity!(key, &block)
+    entity(key, &block)
+    self.forced_entities << key.to_sym
+  end
+
+  def method_missing(method, *args)
+    if self.respond_to?(:setup_entity)
+      self.setup_entity(method) || super
+    else
+      super
+    end
   end
 
   def clean_manually
@@ -117,7 +189,7 @@ RSpec.configure do |config|
   end
 
   def needs_cleaning?(spec)
-    ! spec.metadata[:file_path].include?('requests') && ! spec.metadata[:file_path].include?('resources') && ! spec.metadata[:file_path].include?('services')
+    ! spec.metadata[:file_path].include?('requests') && ! spec.metadata[:file_path].include?('resources') && ! spec.metadata[:file_path].include?('services') && ! spec.metadata[:file_path].include?('models') && ! spec.metadata[:file_path].include?('spec/buzzn')
   end
 
   config.before(:each) do |spec|

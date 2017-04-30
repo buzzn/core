@@ -41,29 +41,23 @@ describe Buzzn::Services::Charts do
     )
   end
 
-  let(:group) { entities[:group] ||= Fabricate(:tribe) }
-  let(:register) { entities[:register] ||= Fabricate(:output_meter).output_register }
-  let(:dummy_register) do
-    entities[:dummy_register] ||=
-      begin
-        register = Fabricate(:input_meter).input_register
-        def register.data_source; 'dummy';end
-        def register.to_s; self.id; end
-        register
-      end
+  entity(:group) { Fabricate(:tribe) }
+  entity(:register) { Fabricate(:output_meter).output_register }
+  entity(:dummy_register) do
+    register = Fabricate(:input_meter).input_register
+    def register.data_source; 'dummy';end
+    def register.to_s; self.id; end
+    register
   end
 
-  let(:virtual_register) do
-    entities[:virtual_register] ||=
-      begin
-        easymeter_60051599 = Fabricate(:easymeter_60051599)
-        easymeter_60051599.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051599", resource: easymeter_60051599)
-        fichtenweg8 = Fabricate(:virtual_meter_fichtenweg8).register
-        Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
-        Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
-        Fabricate(:fp_minus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
-        fichtenweg8
-      end
+  entity(:virtual_register) do
+    easymeter_60051599 = Fabricate(:easymeter_60051599)
+    easymeter_60051599.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051599", resource: easymeter_60051599)
+    fichtenweg8 = Fabricate(:virtual_meter_fichtenweg8).register
+    Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
+    Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
+    Fabricate(:fp_minus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
+    fichtenweg8
   end
 
 

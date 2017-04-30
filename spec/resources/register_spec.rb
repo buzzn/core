@@ -1,9 +1,9 @@
 # coding: utf-8
 describe Register::BaseResource do
 
-  let(:user) { entities[:admin] ||= Fabricate(:admin) }
-  let!(:real) { entities[:real] ||= Fabricate(:meter).registers.first }
-  let!(:virtual) { entities[:virtual] ||= Fabricate(:virtual_meter).register }
+  entity(:user) { Fabricate(:admin) }
+  entity!(:real) { Fabricate(:meter).registers.first }
+  entity!(:virtual) { Fabricate(:virtual_meter).register }
 
   let(:base_keys) { [:id,
                      :type,

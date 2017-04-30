@@ -1,10 +1,14 @@
 describe Buzzn::ScoreCalculator do
 
-  let(:group) { Fabricate(:tribe) }
+  entity(:group) { Fabricate(:tribe) }
   let(:now) { Time.find_zone('Berlin').local(2016,2,2, 1,30,1) }
 
   subject do
     Buzzn::ScoreCalculator.new(group, now.to_i)
+  end
+
+  before do
+    Score.delete_all
   end
 
   [:day_interval, :month_interval, :year_interval].each do |interval|
@@ -86,7 +90,7 @@ describe Buzzn::ScoreCalculator do
 
   describe 'group with energy-consumer, MPs. etc and one sample' do
 
-    let(:group) do
+    entity(:group2) do
       group         = Fabricate(:tribe)
       user          = Fabricate(:user)
       consumer      = Fabricate(:user)
@@ -98,6 +102,10 @@ describe Buzzn::ScoreCalculator do
       consumer.add_role(:member, register_in)
 
       group
+    end
+
+    subject do
+      Buzzn::ScoreCalculator.new(group2, now.to_i)
     end
 
     before do
@@ -155,7 +163,7 @@ describe Buzzn::ScoreCalculator do
     end
 
     let(:now) { Time.find_zone('Berlin').local(2016,10,5, 18,30,1)  }
-    let(:group) do
+    entity(:group3) do
       easymeter_60051599 = Fabricate(:easymeter_60051599)
       easymeter_60051599.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051599", resource: easymeter_60051599)
       register_z2 = easymeter_60051599.registers.first
@@ -171,6 +179,9 @@ describe Buzzn::ScoreCalculator do
       group
     end
 
+    subject do
+      Buzzn::ScoreCalculator.new(group3, now.to_i)
+    end
     it 'calculates autarchy' do |spec|
       VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do
         subject.calculate_autarchy_scores

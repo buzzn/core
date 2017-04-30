@@ -1,57 +1,66 @@
 # coding: utf-8
 describe BankAccount do
 
-  let(:user_with_register) do
+  entity(:user_with_register) do
     user = Fabricate(:user)
     user.add_role(:manager, register)
     user
   end
-  let(:register) { Fabricate(:meter).registers.first }
-  let(:manager_group) do
-    group = Fabricate(:localpool)
-    group
-  end
-  let(:manager_of_group) do
+
+  entity(:register) { Fabricate(:meter).registers.first }
+
+  entity(:manager_group) { Fabricate(:localpool) }
+
+  entity(:manager_of_group) do
     user = Fabricate(:user)
     user.add_role(:manager, manager_group)
     user
   end
-  let(:member_group) {Fabricate(:localpool)}
-  let(:member_of_group) do
+
+  entity(:member_group) { Fabricate(:localpool) }
+  entity(:member_of_group) do
     user = Fabricate(:user)
     user.add_role(:member, member_group)
     user
   end
-  let(:member_group_contract) do
+
+  entity(:member_group_contract) do
     Fabricate(:metering_point_operator_contract, localpool: member_group)
   end
-  let(:register_contract) do
+
+  entity(:register_contract) do
     Fabricate(:metering_point_operator_contract, register: register)
   end
-  let(:manager_group_contract) do
+
+  entity(:manager_group_contract) do
     Fabricate(:metering_point_operator_contract, localpool: manager_group)
   end
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
+
+  entity(:user) { Fabricate(:user) }
+  entity(:admin) { Fabricate(:admin) }
+
   let(:params) do
     { holder: 'Me And The Corner', iban: 'DE23100000001234567890',
       bic: '123456789', bank_name: 'Yellow Submarine',
       contracting_party_id: member_group_contract.id,
       contracting_party_type: member_group_contract.class }
   end
-  let(:member_group_bank_account) do
+
+  entity!(:member_group_bank_account) do
     account = Fabricate(:bank_account)
     member_group_contract.contractor_bank_account = account
     member_group_contract.save!
     account
   end
-  let(:manager_group_bank_account) do
+
+  entity!(:manager_group_bank_account) do
     account = Fabricate(:bank_account, contracting_party: manager_of_group)
     manager_group_contract.contractor_bank_account = account
     manager_group_contract.save!
     account
   end
-  let(:register_bank_account) do
+
+  entity!(:register_bank_account) do
     account = Fabricate(:bank_account, contracting_party: user_with_register)
     register_contract.contractor_bank_account = account
     register_contract.save!
@@ -73,7 +82,7 @@ describe BankAccount do
       bank_account = u == :manager_of_group ? manager_group_bank_account : register_bank_account
 
       account = BankAccount.guarded_retrieve(user, bank_account.id)
-      expect(account.id).to eq bank_account.id
+      expect(account).to eq bank_account
 
       expect {BankAccount.guarded_retrieve(user, 'some-unknown-id') }.to raise_error Buzzn::RecordNotFound
     end
@@ -90,14 +99,20 @@ describe BankAccount do
     end
 
     it "deletes BankAccount of contract with #{u}" do
-      user = send(u)
+      begin
+        user = send(u)
 
-      bank_account = u == :manager_of_group ? manager_group_bank_account : register_bank_account
+        bank_account = u == :manager_of_group ? manager_group_bank_account : register_bank_account
 
-      BankAccount.guarded_delete(user, bank_account.id)
-      expect(BankAccount.where(id: bank_account.id)).to eq []
+        BankAccount.guarded_delete(user, bank_account.id)
+        expect(BankAccount.where(id: bank_account.id)).to eq []
 
-      expect {BankAccount.guarded_delete(user, 'some-unknown-id') }.to raise_error Buzzn::RecordNotFound
+        expect {BankAccount.guarded_delete(user, 'some-unknown-id') }.to raise_error Buzzn::RecordNotFound
+      ensure
+        # restart cached entity
+        self.class.entities.delete(u == :manager_of_group ? :manager_group_bank_account : :register_bank_account)
+      end
+      
     end
   end
 
@@ -129,8 +144,7 @@ describe BankAccount do
     end
   end
 
-  it 'filters', :retry => 3 do
-    3.times { Fabricate(:bank_account) }
+  it 'filters' do
     bank_account = Fabricate(:bank_account)
 
     [bank_account.holder, bank_account.bank_name, bank_account.bic].each do |val|
@@ -140,23 +154,18 @@ describe BankAccount do
       [val, val.upcase, val.downcase, val[0..len], val[-len..-1]].each do |value|
         bank_accounts = BankAccount.filter(value)
         expect(bank_accounts).to include(bank_account)
-        expect(bank_accounts.size).to be < 4
       end
     end
   end
 
 
   it 'can not find anything' do
-    Fabricate(:bank_account)
     bank_accounts = BankAccount.filter('Der Clown ist müde und geht nach Hause.')
     expect(bank_accounts.size).to eq 0
   end
 
 
   it 'filters gives all with no params' do
-    Fabricate(:bank_account)
-    Fabricate(:bank_account)
-
     bank_accounts = BankAccount.filter(nil)
     expect(bank_accounts.size).to eq BankAccount.count
   end

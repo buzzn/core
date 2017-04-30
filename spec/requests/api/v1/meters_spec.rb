@@ -1,13 +1,9 @@
 # coding: utf-8
 describe "meters" do
 
-  let(:admin) do
-    entities[:admin] ||= Fabricate(:admin_token)
-  end
+  entity(:admin) { Fabricate(:admin_token) }
 
-  let(:user) do
-    entities[:user] ||= Fabricate(:user_token)
-  end
+  entity(:user) { Fabricate(:user_token) }
 
   let(:anonymous_denied_json) do
     {
@@ -39,17 +35,14 @@ describe "meters" do
     json
   end
 
-  let(:virtual_meter) { entities[:virtual_meter] ||= Fabricate(:virtual_meter) }
+  entity(:virtual_meter) { Fabricate(:virtual_meter) }
 
-  let(:real_meter) { entities[:real_meter] ||= Fabricate(:meter) }
+  entity(:real_meter) { Fabricate(:meter) }
 
-  let(:meter) do
-    entities[:meter] ||=
-      begin
-        meter = Fabricate(:input_meter)
-        User.find(user.resource_owner_id).add_role(:manager, meter.input_register)
-        meter
-      end
+  entity(:meter) do
+    meter = Fabricate(:input_meter)
+    User.find(user.resource_owner_id).add_role(:manager, meter.input_register)
+    meter
   end
 
 

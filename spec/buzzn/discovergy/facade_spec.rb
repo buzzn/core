@@ -11,14 +11,15 @@ describe Buzzn::Discovergy::Facade do
     Timecop.return
   end
 
-  let(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
-  let(:meter_2) { Fabricate(:meter, manufacturer_product_serialnumber: 60009272) }
-  let(:broker) { Fabricate(:discovergy_broker, mode: meter.registers.first.mode.sub('put', ''), resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
-  let(:broker_with_wrong_token) { Fabricate(:discovergy_broker_with_wrong_token,  mode: meter_2.registers.first.mode.sub('put', ''), resource: meter_2, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
-  let(:broker_virtual) { Fabricate(:discovergy_broker, mode: meter.registers.first.mode.sub('put', ''), resource: meter, external_id: "VIRTUAL_00000065") }
-  let(:group) do
+  entity(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
+  entity(:meter_2) { Fabricate(:meter, manufacturer_product_serialnumber: 60009272) }
+  entity(:broker) { Fabricate(:discovergy_broker, mode: meter.registers.first.mode.sub('put', ''), resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
+  entity(:broker_with_wrong_token) { Fabricate(:discovergy_broker_with_wrong_token,  mode: meter_2.registers.first.mode.sub('put', ''), resource: meter_2, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
+  entity(:meter_3) { Fabricate(:easymeter_60118460) }
+  entity(:broker_virtual) { Fabricate(:discovergy_broker, mode: meter_3.registers.first.mode.sub('put', ''), resource: meter_3, external_id: "VIRTUAL_00000065") }
+  entity(:group) do
     Fabricate(:tribe, registers: [
-      Fabricate(:easymeter_60118460).registers.first,
+      meter_3.registers.first,
       Fabricate(:easymeter_60009441).registers.first,
       Fabricate(:easymeter_60009442).registers.first,
       Fabricate(:easymeter_60009393).registers.first

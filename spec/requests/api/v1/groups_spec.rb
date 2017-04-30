@@ -1,17 +1,10 @@
 describe "groups" do
 
+  entity(:admin) { Fabricate(:admin_token) }
 
-  let(:admin) do
-    entities[:admin] ||= Fabricate(:admin_token)
-  end
+  entity(:user) { Fabricate(:user_token) }
 
-  let(:user) do
-    entities[:user] ||= Fabricate(:user_token)
-  end
-
-  let(:other) do
-    entities[:other] ||= Fabricate(:user_token)
-  end
+  entity(:other) { Fabricate(:user_token) }
 
   let(:anonymous_denied_json) do
     {
@@ -43,17 +36,14 @@ describe "groups" do
     json
   end
 
-  let!(:tribe) { entities[:tribe] ||= Fabricate(:tribe) }
+  entity!(:tribe) { Fabricate(:tribe) }
 
-  let!(:localpool) { entities[:localpool] ||= Fabricate(:localpool) }
+  entity!(:localpool) { Fabricate(:localpool) }
 
-  let!(:group) do
-    entities[:group] ||= 
-      begin
-        group = Fabricate(:localpool)
-        User.find(user.resource_owner_id).add_role(:manager, group)
-        group
-      end
+  entity!(:group) do
+    group = Fabricate(:localpool)
+    User.find(user.resource_owner_id).add_role(:manager, group)
+    group
   end
 
   context 'GET' do

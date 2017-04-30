@@ -1,12 +1,8 @@
 describe "registers" do
 
-  let(:admin) do
-    entities[:admin] ||= Fabricate(:admin_token)
-  end
+  entity(:admin) { Fabricate(:admin_token) }
 
-  let(:user) do
-    entities[:user] ||= Fabricate(:user_token)
-  end
+  entity(:user) { Fabricate(:user_token) }
 
   let(:anonymous_denied_json) do
     {
@@ -38,13 +34,9 @@ describe "registers" do
     json
   end
 
-  let(:real_register) do
-    entities[:real_register] ||= Fabricate(:real_meter).registers.first
-  end
+  entity(:real_register) { Fabricate(:real_meter).registers.first }
 
-  let(:virtual_register) do
-    entities[:virtual_register] ||= Fabricate(:virtual_meter).register
-  end
+  entity(:virtual_register) { Fabricate(:virtual_meter).register }
 
   context 'GET' do
 

@@ -1,62 +1,96 @@
 # coding: utf-8
 describe "Group Model" do
 
+  entity(:wagnis4) { Fabricate(:localpool_wagnis4) }
+  entity(:butenland) { Fabricate(:tribe_hof_butenland) }
+  entity(:karin) { Fabricate(:tribe_karins_pv_strom) }
+  entity(:home_of_the_brave) {Fabricate(:localpool_home_of_the_brave) }
+  entity(:localpool) { Fabricate(:localpool) }
+  entity(:user) { Fabricate(:user) }
+  entity(:admin) { Fabricate(:admin) }
+
   it 'filters group', retry: 3 do
-    group = Fabricate(:localpool_home_of_the_brave)
-    Fabricate(:tribe_karins_pv_strom)
+    group = home_of_the_brave
 
     [group.name, group.description].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
         groups = Group::Base.filter(value)
-        expect(groups.first).to eq group
+        expect(groups).to include group
       end
     end
   end
 
 
   it 'can not find anything' do
-    Fabricate(:tribe_hof_butenland)
     groups = Group::Base.filter('Der Clown ist müde und geht nach Hause.')
     expect(groups.size).to eq 0
   end
 
 
   it 'filters group with no params' do
-    Fabricate(:localpool_wagnis4)
-    Fabricate(:tribe_hof_butenland)
-    Fabricate(:tribe_karins_pv_strom)
     groups = Group::Base.filter(nil)
-    expect(groups.size).to eq 3
+    expect(groups.size).to eq Group::Base.count
   end
 
   it 'limits readable_by' do
-    wagnis4   = Fabricate(:localpool_wagnis4, readable: 'world')
-    butenland = Fabricate(:tribe_hof_butenland, readable: 'community')
-    karin     = Fabricate(:tribe_karins_pv_strom, readable: 'friends')
+    wagnis4.update(readable: 'world')
+    butenland.update(readable: 'community')
+    karin.update(readable: 'friends')
     tribe     = Fabricate(:tribe_with_members_readable_by_world, readable: 'members')
-    guest     = nil
     manager   = Fabricate(:user)
     manager.add_role(:manager, karin)
 
-    expect(Group::Base.readable_by(guest)).to eq [wagnis4]
-    user = Fabricate(:user)
-    expect(Group::Base.readable_by(user)).to match_array [wagnis4, butenland]
+    groups = Group::Base.readable_by(nil)
+    expect(groups).to include wagnis4
+    expect(groups).not_to include butenland
+    expect(groups).not_to include karin
+    expect(groups).not_to include tribe
 
-    user.add_role(:admin, guest)
-    expect(Group::Base.readable_by(user)).to match_array [wagnis4, butenland, tribe, karin]
+    groups = Group::Base.readable_by(user)
+    expect(groups).to include wagnis4
+    expect(groups).to include butenland
+    expect(groups).not_to include karin
+    expect(groups).not_to include tribe
 
-    expect(Group::Base.readable_by(tribe.members.first)).to match_array [wagnis4, butenland, tribe]
-    expect(Group::Base.readable_by(karin.managers.first)).to match_array [wagnis4, butenland, karin]
+    groups = Group::Base.readable_by(admin)
+    expect(groups).to include wagnis4
+    expect(groups).to include butenland
+    expect(groups).to include karin
+    expect(groups).to include tribe
+
+    groups = Group::Base.readable_by(tribe.members.first)
+    expect(groups).to include wagnis4
+    expect(groups).to include butenland
+    expect(groups).not_to include karin
+    expect(groups).to include tribe
+
+    groups = Group::Base.readable_by(karin.managers.first)
+    expect(groups).to include wagnis4
+    expect(groups).to include butenland
+    expect(groups).to include karin
+    expect(groups).not_to include tribe
 
     manager.friends << Fabricate(:user)
-    expect(Group::Base.readable_by(karin.managers.first.friends.first)).to match_array [wagnis4, butenland, karin]
+    groups = Group::Base.readable_by(karin.managers.first.friends.first)
+    expect(groups).to include wagnis4
+    expect(groups).to include butenland
+    expect(groups).to include karin
+    expect(groups).not_to include tribe
 
     manager.add_role(:manager, tribe)
-    expect(Group::Base.readable_by(tribe.managers.first.friends.first)).to match_array [wagnis4, butenland, karin]
+    groups = Group::Base.readable_by(tribe.managers.first.friends.first)
+    expect(groups).to include wagnis4
+    expect(groups).to include butenland
+    expect(groups).to include karin
+    expect(groups).not_to include tribe
 
     friend = Fabricate(:user)
     tribe.members.first.friends << friend
-    expect(Group::Base.readable_by(friend)).to match_array [wagnis4, butenland]
+    groups = Group::Base.readable_by(friend)
+    expect(groups).to include wagnis4
+    expect(groups).to include butenland
+    expect(groups).not_to include karin
+    expect(groups).not_to include tribe
   end
 
   it 'selects the energy producers/consumers and involved users of a tribe' do
@@ -125,7 +159,7 @@ describe "Group Model" do
   end
 
   it 'adds multiple addresses to localpool' do
-    group = Fabricate(:localpool_wagnis4)
+    group = wagnis4
     main_address = Fabricate(:address, city: 'Berlin', created_at: Time.now - 1.year)
     group.addresses << main_address
     secondary_address = Fabricate(:address, city: 'München')

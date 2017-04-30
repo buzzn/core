@@ -114,20 +114,24 @@ class User < ContractingParty
   end
 
   scope :readable_by, -> (user) do
-    users               = User.arel_table
-    profiles            = Profile.arel_table
-    users_profiles_on   = users.create_on(users[:id].eq(profiles[:user_id]))
-    users_profiles_join = users.create_join(profiles, users_profiles_on)
-
-    if user
-      friendships        = Friendship.arel_table
-      users_friends_on   = friendships.create_on(users[:id].eq(friendships.alias[:user_id]))
-      users_friends_join = users.create_join(friendships.alias, users_friends_on,
-                                             Arel::Nodes::OuterJoin)
-
-      distinct.joins(users_profiles_join, users_friends_join).where("profiles.readable in (?) or users.id = ? or friendships_2.friend_id = ? or 0 < (#{User.count_admins(user).to_sql})", ['world', 'community'], user.id, user.id)
+    if User.admin?(user)
+      User.all
     else
-      distinct.joins(users_profiles_join).where('profiles.readable = ?', 'world')
+      users               = User.arel_table
+      profiles            = Profile.arel_table
+      users_profiles_on   = users.create_on(users[:id].eq(profiles[:user_id]))
+      users_profiles_join = users.create_join(profiles, users_profiles_on)
+
+      if user
+        friendships        = Friendship.arel_table
+        users_friends_on   = friendships.create_on(users[:id].eq(friendships.alias[:user_id]))
+        users_friends_join = users.create_join(friendships.alias, users_friends_on,
+                                               Arel::Nodes::OuterJoin)
+        
+        distinct.joins(users_profiles_join, users_friends_join).where("profiles.readable in (?) or users.id = ? or friendships_2.friend_id = ? or 0 < (#{User.count_admins(user).to_sql})", ['world', 'community'], user.id, user.id)
+      else
+        distinct.joins(users_profiles_join).where('profiles.readable = ?', 'world')
+      end
     end
   end
 

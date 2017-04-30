@@ -1,9 +1,9 @@
 # coding: utf-8
 describe Group::BaseResource do
 
-  let(:user) { entities[:admin] ||= Fabricate(:admin) }
-  let!(:tribe) { entities[:tribe] ||= Fabricate(:tribe) }
-  let!(:localpool) { entities[:localpool] ||= Fabricate(:localpool) }
+  entity(:user) { Fabricate(:admin) }
+  entity!(:tribe) { Fabricate(:tribe) }
+  entity!(:localpool) { Fabricate(:localpool) }
 
   let(:base_attributes) { [:name,
                            :description,
@@ -33,7 +33,7 @@ describe Group::BaseResource do
 
   describe 'scores' do
 
-    let(:group) { entities[:group] ||= [tribe, localpool].sample }
+    entity(:group) { [tribe, localpool].sample }
 
     [:day, :month, :year].each do |interval|
       describe interval do

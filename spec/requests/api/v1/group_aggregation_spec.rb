@@ -1,42 +1,32 @@
 describe "groups" do
 
-  let(:discovergy_meter) do
-    entities[:discovergy_meter] ||= 
-      begin
-        meter = Fabricate(:easymeter_60139082) # in_out meter
-        meter.registers.each { |r| r.update(readable: :world) }
-        # TODO what to do with the in-out fact ?
-        Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_60139082", mode: :in_out)
-        meter
-      end
+  entity(:admin) { Fabricate(:admin_token) }
+
+  entity(:discovergy_meter) do
+    meter = Fabricate(:easymeter_60139082) # in_out meter
+    meter.registers.each { |r| r.update(readable: :world) }
+    # TODO what to do with the in-out fact ?
+    Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_60139082", mode: :in_out)
+    meter
   end
 
-  let(:profile_meter) do
-    entities[:profile_meter] ||=
-      begin
-        meter = Fabricate(:input_meter)
-        Fabricate(:output_register, meter: meter)
-        meter.registers.each { |r| r.update(readable: :world) }
-        meter
-      end
+  entity(:profile_meter) do
+    meter = Fabricate(:input_meter)
+    Fabricate(:output_register, meter: meter)
+    meter.registers.each { |r| r.update(readable: :world) }
+    meter
   end
 
-  let(:group) do
-    entities[:group] ||=
-      begin
-        group = Fabricate(:tribe)
-        group.registers += discovergy_meter.registers
-        group
-      end
+  entity(:group) do
+    group = Fabricate(:tribe)
+    group.registers += discovergy_meter.registers
+    group
   end
 
-  let(:profile_group) do
-    entities[:profile_group] ||=
-      begin
-        group = Fabricate(:tribe)
-        group.registers += profile_meter.registers.reload
-        group
-      end
+  entity(:profile_group) do
+    group = Fabricate(:tribe)
+    group.registers += profile_meter.registers.reload
+    group
   end
 
   let(:input_register) { discovergy_meter.input_register }
@@ -46,8 +36,6 @@ describe "groups" do
   let(:slp_register) { profile_meter.input_register }
 
   let(:sep_register) { profile_meter.output_register }
-
-  let(:admin) { entities[:admin] ||= Fabricate(:admin_token) }
 
   let(:time) { Time.find_zone('Berlin').local(2016, 2, 1, 1, 30, 1) }
 
