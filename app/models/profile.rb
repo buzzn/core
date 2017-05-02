@@ -8,6 +8,7 @@ class Profile < ActiveRecord::Base
   extend FriendlyId
   friendly_id :user_name, use: [:slugged, :history, :finders]
 
+  default_scope { order(created_at: :desc) }
 
   mount_uploader :image, PictureUploader
 
@@ -38,7 +39,7 @@ class Profile < ActiveRecord::Base
     if user
       profiles   = Profile.arel_table
       friendship = Friendship.arel_table
-      
+
       users_friends_on = friendship.create_on(profiles[:user_id].eq(friendship[:user_id]))
       users_friends_join = profiles.create_join(friendship, users_friends_on, Arel::Nodes::OuterJoin)
 
