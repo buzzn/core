@@ -15,6 +15,8 @@ module Buzzn::Services
               1.day
             else
               case interval.duration
+              when :second
+                15.seconds
               when :hour
                 15.seconds
               when :day

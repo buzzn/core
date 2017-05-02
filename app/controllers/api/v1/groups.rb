@@ -82,7 +82,31 @@ module API
             optional :baseprice_cents_per_month, type: Integer, desc: "The monthly base price in cents"
           end
           post ":id/price"do
-            created_response(Group::LocalpoolResource.retrieve(current_user, permitted_params).create_price(permitted_params))
+            created_response(Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .create_price(permitted_params))
+          end
+
+          desc "Create a Billing Cycle."
+          params do
+            optional :name, type: String, desc: "Name of the Billing Cycle"
+            optional :begin_date, type: Date, desc: "Begin date of the Billing Cycle"
+            optional :end_date, type: Date, desc: "End date of the Billing Cycle"
+          end
+          post ':id/billing_cycle' do
+            created_response(BillingCycleResource
+              .retrieve(current_user, permitted_params)
+              .create_billing_cycle(permitted_params))
+          end
+
+          desc "Return all Billing Cycles for this localpool."
+          params do
+            requires :id, type: String, desc: "ID of the group"
+          end
+          get ':id/billing_cycles' do
+            Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .billing_cycles
           end
 
           desc "Return the related power-taker contracts for the Localpool"

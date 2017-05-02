@@ -43,6 +43,5 @@ module Group
         registers << meter.register
       end
     end
-
   end
 end

@@ -1,7 +1,7 @@
 class BillingAuthorizer < ApplicationAuthorizer
 
-  def self.creatable_by?(user, localpool)
-    localpool.is_a?(Group::Localpool) ? localpool.updatable_by?(user) : false
+  def self.creatable_by?(user, billing_cycle)
+    billing_cycle.is_a?(BillingCycle) ? billing_cycle.updatable_by?(user) : false
   end
 
   def readable_by?(user)

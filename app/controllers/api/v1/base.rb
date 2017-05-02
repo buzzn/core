@@ -4,17 +4,17 @@ module API
   module V1
     class Base < Grape::API
       def self.join(attributes, sep = ', ')
-          attributes.collect do |a|
-            case a
-            when Hash
-              a.collect do |k,v|
-                "#{k}:#{v.join(sep)}"
-              end
-            else
-              a
+        attributes.collect do |a|
+          case a
+          when Hash
+            a.collect do |k,v|
+              "#{k}:#{v.join(sep)}"
             end
-          end.flatten.join(sep)
-        end
+          else
+            a
+          end
+        end.flatten.join(sep)
+      end
 
       mount API::V1::Users
       mount API::V1::Meters
@@ -25,6 +25,8 @@ module API
       mount API::V1::Organizations
       mount API::V1::BankAccounts
       mount API::V1::Prices
+      mount API::V1::Billings
+      mount API::V1::BillingCycles
 
       add_swagger_documentation(
         api_version: "v1",

@@ -94,6 +94,8 @@ module Contract
 
     scope :running_in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
                                           .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
+    scope :at, -> (timestamp) { where('begin_date <= ?', timestamp)
+                                  .where('end_date > ? OR end_date IS NULL', timestamp + 1.second) }
 
     def self.readable_by_query(user)
       organization = Organization.arel_table

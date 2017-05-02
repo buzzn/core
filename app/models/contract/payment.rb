@@ -10,6 +10,11 @@ module Contract
     validates :cycle, presence: false
     validates :source, presence: false
 
+    scope :in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
+                                  .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
+    scope :at, -> (timestamp) { where('begin_date <= ?', timestamp)
+                                  .where('end_date >= ? OR end_date IS NULL', timestamp + 1.second) }
+
     # TODO cycle enum ? is cycle a required attribute ?
     # TODO source enum ?
 

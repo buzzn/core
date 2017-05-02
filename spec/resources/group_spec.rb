@@ -175,5 +175,43 @@ describe Group::BaseResource do
       expect(result.is_a?(PriceResource)).to eq true
       expect(result.object.localpool).to eq group
     end
+
+    it 'creates a new billing cycle' do
+      group = Fabricate(:localpool)
+      some_user = Fabricate(:user)
+
+      request_params = {
+        name: 'abcd',
+        begin_date: Date.new(2016, 1, 1),
+        end_date: Date.new(2016, 9, 1)
+      }
+
+      expect{Group::LocalpoolResource.retrieve(some_user, group.id).create_billing_cycle(request_params)}.to raise_error Buzzn::PermissionDenied
+      expect(group.billing_cycles.size).to eq 0
+
+      some_user.add_role(:manager, group)
+      result = Group::LocalpoolResource.retrieve(some_user, group.id).create_billing_cycle(request_params)
+      expect(result.is_a?(BillingCycleResource)).to eq true
+      expect(result.object.localpool).to eq group
+    end
+
+    it 'retrieve all billing_cycles' do
+      group = Fabricate(:localpool_sulz_with_registers_and_readings)
+      some_user = Fabricate(:user)
+      some_user.add_role(:manager, group)
+      Fabricate(:billing_cycle, localpool: group)
+      Fabricate(:billing_cycle, localpool: group)
+
+      attributes = [:name,
+                    :begin_date,
+                    :end_date,
+                    :id,
+                    :type]
+
+      result = Group::LocalpoolResource.retrieve(some_user, group.id).billing_cycles
+      expect(result.size).to eq 2
+      first = BillingCycleResource.send(:new, result.first)
+      expect(first.to_hash.keys).to match_array attributes
+    end
   end
 end
