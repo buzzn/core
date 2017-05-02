@@ -24,7 +24,7 @@ describe "groups" do
 
   let(:denied_json) do
     json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id 
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
     json
   end
 
@@ -268,7 +268,7 @@ describe "groups" do
                       "manufacturer-product-serialnumber"=>meter.manufacturer_product_serialnumber,
                       "metering-type"=>meter.metering_type,
                       "meter-size"=>meter.meter_size,
-                      "ownership"=>meter.owner,
+                      "ownership"=>meter.ownership,
                       "direction-label"=>meter.direction,
                       "build-year"=>meter.build_year ? meter.build_year.to_s : nil,
                       "updatable"=>false,
