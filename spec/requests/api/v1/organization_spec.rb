@@ -44,31 +44,26 @@ describe "organizations" do
   context 'GET' do
 
     let(:organization_json) do
-      { "data"=>{
-          "id"=>organization.id,
-          "type"=>"organizations",
-          "attributes"=>{
-            "type"=>"organization",
-            "name"=>organization.name,
-            "phone"=>organization.phone,
-            "fax"=>organization.fax,
-            "website"=>organization.website,
-            "email"=>organization.email,
-            "description"=>organization.description,
-            "mode"=>"metering_service_provider",
-            "updatable"=>false,
-            "deletable"=>false},
-          "relationships"=>{
-            "address"=>{"data"=>nil}
-          }
-        }
+      {
+        "id"=>organization.id,
+        "type"=>"organization",
+        "name"=>organization.name,
+        "phone"=>organization.phone,
+        "fax"=>organization.fax,
+        "website"=>organization.website,
+        "email"=>organization.email,
+        "description"=>organization.description,
+        "mode"=>"metering_service_provider",
+        "updatable"=>false,
+        "deletable"=>false,
+        "address"=>nil
       }
     end
 
     let(:admin_organization_json) do
       json = organization_json.dup
-      json['data']['attributes']['updatable']=true
-      json['data']['attributes']['deletable']=true
+      json['updatable']=true
+      json['deletable']=true
       json
     end
 
@@ -118,26 +113,21 @@ describe "organizations" do
     end
 
     let(:bank_account_json) do
-      { "data"=>
-        [
-          {
-            "id"=>bank_account.id,
-            "type"=>"bank-accounts",
-            "attributes"=>{
-              "type"=>"bank_account",
-              "holder"=>bank_account.holder,
-              "bank-name"=>bank_account.bank_name,
-              "bic"=>bank_account.bic,
-              "iban"=>bank_account.iban,
-              "direct-debit"=>bank_account.direct_debit
-            }
-          }
-        ]
-      }
+      [
+        {
+          "id"=>bank_account.id,
+          "type"=>"bank_account",
+          "holder"=>bank_account.holder,
+          "bank_name"=>bank_account.bank_name,
+          "bic"=>bank_account.bic,
+          "iban"=>bank_account.iban,
+          "direct_debit"=>bank_account.direct_debit
+        }
+      ]
     end
 
     let(:empty_bank_account_json) do
-      {"data"=>[]}
+      []
     end
 
     context 'GET' do
@@ -188,26 +178,22 @@ describe "organizations" do
     end
 
     let(:address_json) do
-      { "data"=>{
-          "id"=>address.id,
-          "type"=>"addresses",
-          "attributes"=>{
-            "type"=>"address",
-            "address"=>nil,
-            "street-name"=>"Aberlestraße",
-            "street-number"=>"16",
-            "city"=>"München",
-            "state"=>"Bavaria",
-            "zip"=>81371,
-            "country"=>"Germany",
-            "longitude"=>nil,
-            "latitude"=>nil,
-            "addition"=>"HH",
-            "time-zone"=>"Berlin",
-            "updatable"=>true,
-            "deletable"=>true
-          }
-        }
+      {
+        "id"=>address.id,
+        "type"=>"address",
+        "address"=>nil,
+        "street_name"=>"Aberlestraße",
+        "street_number"=>"16",
+        "city"=>"München",
+        "state"=>"Bavaria",
+        "zip"=>81371,
+        "country"=>"Germany",
+        "longitude"=>nil,
+        "latitude"=>nil,
+        "addition"=>"HH",
+        "time_zone"=>"Berlin",
+        "updatable"=>true,
+        "deletable"=>true
       }
     end
 

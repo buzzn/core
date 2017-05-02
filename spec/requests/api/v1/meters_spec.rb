@@ -50,36 +50,41 @@ describe "meters" do
 
     let(:meter_json) do
       {
-        "data"=>{
-          "id"=>meter.id,
-          "type"=>"meter-reals",
-          "attributes"=>{
-            "type"=>"meter_real",
-            "manufacturer-name"=>meter.manufacturer_name,
-            "manufacturer-product-name"=>meter.manufacturer_product_name,
-            "manufacturer-product-serialnumber"=>meter.manufacturer_product_serialnumber,
-            "metering-type"=>nil,
-            "meter-size"=>nil,
-            "ownership"=>nil,
-            "direction-label"=>"one_way_meter",
-            "build-year"=>nil,
-            "updatable"=>true,
-            "deletable"=>true,
-            "smart"=>false},
-          "relationships"=>{
-            "registers"=>{
-              "data"=>[{"id"=>meter.input_register.id,
-                        "type"=>"register-inputs"}]
-            }
+        "id"=>meter.id,
+        "type"=>"meter_real",
+        "manufacturer_name"=>meter.manufacturer_name,
+        "manufacturer_product_name"=>meter.manufacturer_product_name,
+        "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+        "metering_type"=>"single_tarif_meter",
+        "meter_size"=>nil,
+        "ownership"=>nil,
+        "direction_label"=>nil,
+        "build_year"=>nil,
+        "updatable"=>true,
+        "deletable"=>true,
+        "smart"=>false,
+        "registers"=>[
+          {
+            "id"=>meter.input_register.id,
+            "type"=>"register_real",
+            "direction"=>meter.input_register.direction.to_s,
+            "name"=>meter.input_register.name,
+            "pre_decimal"=>6,
+            "decimal"=>2,
+            "converter_constant"=>1,
+            "low_power"=>false,
+            "last_reading"=>0,
+            "uid"=>meter.input_register.uid,
+            "obis"=>meter.input_register.obis
           }
-        }
+        ]
       }
     end
 
     let(:admin_meter_json) do
       json = meter_json.dup
-      json['data']['attributes']['updatable']=true
-      json['data']['attributes']['deletable']=true
+      json['updatable']=true
+      json['deletable']=true
       json
     end
 
@@ -144,24 +149,17 @@ describe "meters" do
 
     let(:register_json) do
       {
-        "data"=>{
-          "id"=>register.id,
-          "type"=>"register-virtuals",
-          "attributes"=>{
-            "type"=>"register_virtual",
-            "direction"=>register.direction.to_s,
-            "name"=>register.name,
-            "pre-decimal"=>6,
-            "decimal"=>2,
-            "converter-constant"=>1,
-            "low-power"=>false,
-            "last-reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour
-          },
-          "relationships"=>{
-            "address"=>{"data"=>nil},
-            "meter"=>{"data"=>nil}
-          }
-        }
+        "id"=>register.id,
+        "type"=>"register_virtual",
+        "direction"=>register.direction.to_s,
+        "name"=>register.name,
+        "pre_decimal"=>6,
+        "decimal"=>2,
+        "converter_constant"=>1,
+        "low_power"=>false,
+        "last_reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour,
+        "address"=>nil,
+        "meter"=>nil
       }
     end
 
@@ -221,28 +219,23 @@ describe "meters" do
 
     let(:registers_json) do
       register = registers.first
-      {
-        "data"=>[
+      [
+        {
           "id"=>register.id,
-          "type"=>"register-#{register.direction}puts",
-          "attributes"=>{
-            "type"=>"register_real",
-            "direction"=>register.direction.to_s,
-            "name"=>register.name,
-            "pre-decimal"=>6,
-            "decimal"=>2,
-            "converter-constant"=>1,
-            "low-power"=>false,
-            "last-reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour,
-            "uid"=>register.uid,
-            "obis"=>register.obis
-          },
-          "relationships"=>{
-            "address"=>{"data"=>nil},
-            "meter"=>{"data"=>nil},
-          }
-        ]
-      }
+          "type"=>"register_real",
+          "direction"=>register.direction.to_s,
+          "name"=>register.name,
+          "pre_decimal"=>6,
+          "decimal"=>2,
+          "converter_constant"=>1,
+          "low_power"=>false,
+          "last_reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour,
+          "uid"=>register.uid,
+          "obis"=>register.obis,
+          "address"=>nil,
+          "meter"=>nil,
+        }
+      ]
     end
 
     context 'GET' do

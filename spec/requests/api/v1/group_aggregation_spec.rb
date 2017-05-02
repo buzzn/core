@@ -285,8 +285,6 @@ describe "groups" do
     let(:missing_json) do
       {
         "errors" => [{"parameter" => "duration",
-                      "source" => {
-                        "pointer" => "/data/attributes/duration"},
                       "title" => "Invalid Attribute",
                       "detail" => "duration is missing"}]
       }
@@ -295,8 +293,6 @@ describe "groups" do
     let(:invalid_json) do
       {
         "errors" => [{"parameter" => "duration",
-                      "source" => {
-                        "pointer" => "/data/attributes/duration"},
                       "title" => "Invalid Attribute",
                       "detail" => "duration does not have a valid value"}]
       }

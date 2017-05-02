@@ -1,10 +1,10 @@
 describe "users" do
 
-  entity(:admin) { Fabricate(:admin_token) }
+  entity!(:admin) { Fabricate(:admin_token) }
 
-  entity(:user_token) { Fabricate(:user_token) }
+  entity!(:user_token) { Fabricate(:user_token) }
 
-  entity(:other) { Fabricate(:user_token) }
+  entity!(:other) { Fabricate(:user_token) }
 
   entity(:user) do
     user = User.find(user_token.resource_owner_id)
@@ -43,86 +43,64 @@ describe "users" do
   end
 
   let(:empty_json) do
-    {
-      "data"=>[]
-    }
+    []
   end
 
   let(:user_json) do
     {
-      "data"=>{
-        "id"=>user.id,
-        "type"=>"users",
-        "attributes"=>{
-          "type"=>"user",
-          "updatable"=>true,
-          # TODO feels wrong any a user can delete her/him-self
-          "deletable"=>true,
-          "user-name"=>user.user_name,
-          "title"=>user.profile.title,
-          "first-name"=>user.first_name,
-          "last-name"=>user.last_name,
-          "gender"=>user.profile.gender,
-          "phone"=>user.profile.phone,
-          "email"=>user.email
-        }
-      }
+      "id"=>user.id,
+      "type"=>"user",
+      "updatable"=>true,
+      # TODO feels wrong any a user can delete her/him-self
+      "deletable"=>true,
+      "user_name"=>user.user_name,
+      "title"=>user.profile.title,
+      "first_name"=>user.first_name,
+      "last_name"=>user.last_name,
+      "gender"=>user.profile.gender,
+      "phone"=>user.profile.phone,
+      "email"=>user.email
     }
   end
 
   let(:users_json) do
-    {
-      "data"=>[
-        {
-          "id"=>user.id,
-          "type"=>"users",
-          "attributes"=>{
-            "type"=>"user",
-            "updatable"=>false,
-            "deletable"=>false
-          }
-        }
-      ]
-    }
+    [
+      {
+        "id"=>user.id,
+        "type"=>"user",
+        "updatable"=>false,
+        "deletable"=>false
+      }
+    ]
   end
 
   let(:admin_users_json) do
-    {
-      "data"=> User.all.collect do |u|
-        {
-          "id"=>u.id,
-          "type"=>"users",
-          "attributes"=>{
-            "type"=>"user",
-            "updatable"=>false,
-            "deletable"=>false
-          }
-        }
+    User.all.collect do |u|
+      {
+        "id"=>u.id,
+        "type"=>"user",
+        "updatable"=>false,
+        "deletable"=>false
+      }
       end
-    }
   end
 
   let(:filtered_admin_users_json) do
-    {
-      "data"=>[
-        {
-          "id"=>admin.resource_owner_id,
-          "type"=>"users",
-          "attributes"=>{
-            "type"=>"user",
-            "updatable"=>false,
-            "deletable"=>false
-          }
-        }
-      ]
-    }
+    [
+      {
+        "id"=>admin.resource_owner_id,
+        "type"=>"user",
+        "updatable"=>false,
+        "deletable"=>false
+      }
+    ]
   end
 
   context 'GET' do
 
     let(:admin_user_json) do
       json = user_json.dup
-      json['data']['attributes']['deletable']=true
+      json['deletable']=true
       json
     end
 
@@ -157,24 +135,16 @@ describe "users" do
     end
 
     it '200 all' do
-      user # setup
-      admin # setup
-      other # setup
-
       GET "/api/v1/users", user_token
       expect(response).to have_http_status(200)
       expect(json).to eq users_json
 
       GET "/api/v1/users", admin
       expect(response).to have_http_status(200)
-      expect(json['data']).to match_array admin_users_json['data']
+      expect(json).to match_array admin_users_json
     end
 
     it '200 all filtered' do
-      user # setup
-      admin # setup
-      other # setup
-
       admin_user = User.find(admin.resource_owner_id)
 
       GET "/api/v1/users", user_token, filter: admin_user.first_name
@@ -224,26 +194,21 @@ describe "users" do
     end
 
     let(:bank_account_json) do
-      { "data"=>
-        [
-          {
-            "id"=>bank_account.id,
-            "type"=>"bank-accounts",
-            "attributes"=>{
-              "type"=>"bank_account",
-              "holder"=>bank_account.holder,
-              "bank-name"=>bank_account.bank_name,
-              "bic"=>bank_account.bic,
-              "iban"=>bank_account.iban,
-              "direct-debit"=>bank_account.direct_debit
-            }
-          }
-        ]
-      }
+      [
+        {
+          "id"=>bank_account.id,
+          "type"=>"bank_account",
+          "holder"=>bank_account.holder,
+          "bank_name"=>bank_account.bank_name,
+          "bic"=>bank_account.bic,
+          "iban"=>bank_account.iban,
+          "direct_debit"=>bank_account.direct_debit
+        }
+      ]
     end
 
     let(:empty_bank_account_json) do
-      {"data"=>[]}
+      []
     end
 
     context 'GET' do
@@ -276,6 +241,11 @@ describe "users" do
         GET "/api/v1/users/#{user.id}/bank-accounts", admin
         expect(response).to have_http_status(200)
         expect(json).to eq(bank_account_json)
+
+        user.bank_accounts.each{|bank_account| bank_account.delete}
+        GET "/api/v1/users/#{user.id}/bank-accounts", admin
+        expect(response).to have_http_status(200)
+        expect(json).to eq empty_bank_account_json
       end
 
     end
@@ -283,97 +253,83 @@ describe "users" do
 
   context 'meters' do
 
-    entity(:meter1) do
+    entity!(:meter1) do
       meter = Fabricate(:input_meter)
       user.add_role(:manager, meter.input_register)
       meter
     end
 
-    entity(:meter2) do
+    entity!(:meter2) do
       meter = Fabricate(:output_meter)
       user.add_role(:manager, meter.output_register)
       meter
     end
 
-    entity(:meter3) { Fabricate(:meter) }
+    entity!(:meter3) { Fabricate(:meter) }
 
     let(:user_meters_json) do
-      {
-        "data"=>[
-          { "id"=>meter1.id,
-            "type"=>"meter-reals",
-            "attributes"=>{
-              "type"=>"meter_real",
-              "manufacturer-name"=>meter1.manufacturer_name,
-              "manufacturer-product-name"=>meter1.manufacturer_product_name,
-              "manufacturer-product-serialnumber"=>meter1.manufacturer_product_serialnumber,
-              "metering-type"=>nil,
-              "meter-size"=>nil,
-              "ownership"=>nil,
-              "direction-label"=>"one_way_meter",
-              "build-year"=>nil,
-              "updatable"=>false,
-              "deletable"=>false,
-              "smart"=>false
-            },
-            "relationships"=>{
-              "registers"=>{"data"=>[]}
-            }
-          },
-          { "id"=>meter2.id,
-            "type"=>"meter-reals",
-            "attributes"=>{
-              "type"=>"meter_real",
-              "manufacturer-name"=>meter2.manufacturer_name,
-              "manufacturer-product-name"=>meter2.manufacturer_product_name,
-              "manufacturer-product-serialnumber"=>meter2.manufacturer_product_serialnumber,
-              "metering-type"=>nil,
-              "meter-size"=>nil,
-              "ownership"=>nil,
-              "direction-label"=>"one_way_meter",
-              "build-year"=>nil,
-              "updatable"=>false,
-              "deletable"=>false,
-              "smart"=>false
-            },
-            "relationships"=>{"registers"=>{"data"=>[]}}
-          }
-        ]
-      }
+      [
+        { "id"=>meter1.id,
+          "type"=>"meter_real",
+          "manufacturer_name"=>meter1.manufacturer_name,
+          "manufacturer_product_name"=>meter1.manufacturer_product_name,
+          "manufacturer_product_serialnumber"=>meter1.manufacturer_product_serialnumber,
+          "metering_type"=>"single_tarif_meter",
+          "meter_size"=>nil,
+          "ownership"=>nil,
+          "direction_label"=>nil,
+          "build_year"=>nil,
+          "updatable"=>false,
+          "deletable"=>false,
+          "smart"=>false,
+          "registers"=>[]
+        },
+        { "id"=>meter2.id,
+          "type"=>"meter_real",
+          "manufacturer_name"=>meter2.manufacturer_name,
+          "manufacturer_product_name"=>meter2.manufacturer_product_name,
+          "manufacturer_product_serialnumber"=>meter2.manufacturer_product_serialnumber,
+          "metering_type"=>"single_tarif_meter",
+          "meter_size"=>nil,
+          "ownership"=>nil,
+          "direction_label"=>nil,
+          "build_year"=>nil,
+          "updatable"=>false,
+          "deletable"=>false,
+          "smart"=>false,
+          "registers"=>[]
+        }
+      ]
     end
 
     let(:filtered_admin_meters_json) do
-      {
-        "data"=>[
+      [
+        {
           "id"=>meter3.id,
-          "type"=>"meter-reals",
-          "attributes"=>{
-            "type"=>"meter_real",
-            "manufacturer-name"=>meter3.manufacturer_name,
-            "manufacturer-product-name"=>meter3.manufacturer_product_name,
-            "manufacturer-product-serialnumber"=>meter3.manufacturer_product_serialnumber,
-            "metering-type"=>"smart_meter",
-            "meter-size"=>'edl40',
-            "ownership"=>'buzzn_systems',
-            "direction-label"=>'one_way_meter',
-            "build-year"=>'2011-07-02',
-            "updatable"=>false,
-            "deletable"=>false,
-            "smart"=>false
-          },
-          "relationships"=>{"registers"=>{"data"=>[]}}
-        ]
-      }
+          "type"=>"meter_real",
+          "manufacturer_name"=>meter3.manufacturer_name,
+          "manufacturer_product_name"=>meter3.manufacturer_product_name,
+          "manufacturer_product_serialnumber"=>meter3.manufacturer_product_serialnumber,
+          "metering_type"=>"EHZ",
+          "meter_size"=>'5',
+          "ownership"=>'some-owner',
+          "direction_label"=>'one-way',
+          "build_year"=>'2011-07-02',
+          "updatable"=>false,
+          "deletable"=>false,
+          "smart"=>false,
+          "registers"=>[]
+        }
+      ]
     end
 
     let(:admin_meters_json) do
       json = user_meters_json.dup
-      json['data'] += filtered_admin_meters_json['data']
+      json += filtered_admin_meters_json
       json
     end
 
     context 'GET' do
-
       it '403' do
         GET "/api/v1/users/#{user.id}/meters"
         expect(response).to have_http_status(403)
@@ -391,25 +347,30 @@ describe "users" do
       end
 
       it '200' do
-        meter1 # setup
-        meter2 # setup
-        meter3 # setup
+        begin
+          user.profile.update(readable: :world)
+
+          # TODO use user which can see user but not meters
+          GET "/api/v1/users/#{user.id}/meters", other
+          expect(response).to have_http_status(200)
+          expect(json).to eq(empty_json)
+
+        ensure
+          user.profile.update(readable: nil)
+        end
 
         GET "/api/v1/users/#{user.id}/meters", user_token
         expect(response).to have_http_status(200)
-        # sort it and yaml it for better debugging
-        expect(json['data'].sort{ |i, j| i['id'] <=> j['id']}.to_yaml).to eq(user_meters_json['data'].sort{ |i, j| i['id'] <=> j['id']}.to_yaml)
+        # sort and yaml it for better debugging
+        expect(json.sort{ |i, j| i['id'] <=> j['id']}.to_yaml).to eq(user_meters_json.sort{ |i, j| i['id'] <=> j['id']}.to_yaml)
 
         GET "/api/v1/users/#{user.id}/meters", admin
         expect(response).to have_http_status(200)
-        expect(json['data']).to match_array(admin_meters_json['data'])
+        # sort and yaml it for better debugging
+        expect(json.sort{ |i, j| i['id'] <=> j['id']}.to_yaml).to eq(admin_meters_json.sort{ |i, j| i['id'] <=> j['id']}.to_yaml)
       end
 
       it '200 filtered' do
-        meter1 # setup
-        meter2 # setup
-        meter3 # setup
-
         GET "/api/v1/users/#{user.id}/meters", user_token, filter: meter3.manufacturer_product_serialnumber
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(empty_json.to_yaml)

@@ -50,137 +50,122 @@ describe "groups" do
 
     let(:group_json) do
       {
-        "data"=>{
-          "id"=>group.id,
-          "type"=>"group-localpools",
-          "attributes"=>{
-            "type"=>"group_localpool",
-            "name"=>group.name,
-            "description"=>group.description,
-            "readable"=>group.readable,
-            "updatable"=>true,
-            "deletable"=>true,},
-          "relationships"=>{
-            "registers"=>{
-              "data"=>[]
-            },
-            "meters"=>{
-              "data"=> group.meters.collect do |meter|
-                {
-                  "id"=>meter.id,
-                  'type'=>'meter-virtuals'
-                }
-              end
-            },
-            "managers"=>{
-              "data"=>group.managers.collect do |manager|
-                {
-                  "id"=>manager.id,
-                  "type"=>"users"
-                }
-              end
-            },
-            "energy-producers"=>{
-              "data"=>[]
-            },
-            "energy-consumers"=>{
-              "data"=>[]
-            },
-            "localpool-processing-contract"=>{
-              "data"=>nil
-            },
-            "metering-point-operator-contract"=>{
-              "data"=>nil
-            }
+        "id"=>group.id,
+        "type"=>"group_localpool",
+        "name"=>group.name,
+        "description"=>group.description,
+        "readable"=>group.readable,
+        "updatable"=>true,
+        "deletable"=>true,
+        "registers"=>[],
+        "meters"=>group.meters.collect do |meter|
+          json = {
+            "id"=>meter.id,
+            'type'=>'meter_virtual',
+            "manufacturer_name"=>meter.manufacturer_name,
+            "manufacturer_product_name"=>meter.manufacturer_product_name,
+            "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+            "metering_type"=>meter.metering_type,
+            "meter_size"=>meter.meter_size,
+            "ownership"=>meter.owner,
+            "direction_label"=>meter.direction,
+            "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
+            "updatable"=>false,
+            "deletable"=>false,
           }
-        }
+          json['smart'] = true if meter.is_a? Meter::Real
+          json
+        end,
+        "managers"=>group.managers.collect do |manager|
+          {
+            "id"=>manager.id,
+            "type"=>"user",
+            "updatable"=>false,
+            "deletable"=>false,
+          }
+        end,
+        "energy_producers"=>[],
+        "energy_consumers"=>[],
+        "localpool_processing_contract"=>nil,
+        "metering_point_operator_contract"=>nil
       }
     end
 
     let(:admin_group_json) do
       json = group_json.dup
-      json['data']['attributes']['updatable']=true
-      json['data']['attributes']['deletable']=true
+      json['updatable']=true
+      json['deletable']=true
       json
     end
 
     let(:empty_json) do
-      {
-        'data'=>[]
-      }
+      []
     end
 
     let(:groups_json) do
-      group_data = group_json['data'].dup
-      group_data['attributes']['updatable'] = false
-      group_data['attributes']['deletable'] = false
-      group_data['attributes']['readable'] = 'member'
-      group_data['relationships']['managers']['data'] = []
-      {
-        'data'=>[
-          group_data
-        ]
-      }
+      group_data = group_json.dup
+      group_data['updatable'] = false
+      group_data['deletable'] = false
+      group_data['readable'] = 'member'
+      group_data['managers'] = []
+      [
+        group_data
+      ]
     end
 
     let(:filtered_admin_groups_json) do      
-      group_data = admin_group_json['data'].dup
-      group_data['attributes']['updatable'] = false
-      group_data['attributes']['deletable'] = false
-      {
-        'data'=>[
-          group_data
-        ]
-      }
+      group_data = admin_group_json.dup
+      group_data['updatable'] = false
+      group_data['deletable'] = false
+      group_data['readable'] = 'member'
+      group_data['managers'] = []
+      [
+        group_data
+      ]
     end
 
     let(:admin_groups_json) do  
-      {
-        "data"=>Group::Base.all.collect do |group|
-          rel = {}
-          if group.is_a? Group::Tribe
-            type = :tribe
-          else
-            type = :localpool
-            rel["localpool-processing-contract"] = { 'data' => nil }
-            rel["metering-point-operator-contract"] = { 'data' => nil }
-          end
-          json = {
-            "id"=>group.id,
-            "type"=>"group-#{type}s",
-            "attributes"=>{
-              "type"=>"group_#{type}",
-              "name"=>group.name,
-              "description"=>group.description,
-              "readable"=>group.readable,
-              "updatable"=>false,
-              "deletable"=>false,},
-            "relationships"=>{
-              "registers"=>{
-                "data"=>[]
-              },
-              "meters"=>{
-                "data"=> group.meters.collect do |meter|
-                  type = meter.is_a?(Meter::Real)? :real : :virtual
-                  {
-                    "id"=>meter.id,
-                    'type'=>"meter-#{type}s"
-                  }
-                end
-              },
-              "managers"=>{
-                "data"=>[]
-              },
-              "energy-producers"=>{
-                "data"=>[]
-              },
-              "energy-consumers"=>{
-                "data"=>[]
-              }
-            }.merge(rel)
-          }
+      Group::Base.all.collect do |group|
+        rel = {}
+        if group.is_a? Group::Tribe
+          type = :tribe
+        else
+          type = :localpool
+          rel["localpool_processing_contract"] = nil
+          rel["metering_point_operator_contract"] = nil
         end
-      }
+        json = {
+          "id"=>group.id,
+          "type"=>"group_#{type}",
+          "name"=>group.name,
+          "description"=>group.description,
+          "readable"=>group.readable,
+          "updatable"=>false,
+          "deletable"=>false,
+          "registers"=>[],
+          "meters"=>group.meters.collect do |meter|
+            json = {
+              "id"=>meter.id,
+              'type'=>meter.class.to_s.downcase.sub('::', '_'),
+              "manufacturer_name"=>meter.manufacturer_name,
+              "manufacturer_product_name"=>meter.manufacturer_product_name,
+              "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+              "metering_type"=>meter.metering_type,
+              "meter_size"=>meter.meter_size,
+              "ownership"=>meter.owner,
+              "direction_label"=>meter.direction,
+              "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
+              "updatable"=>false,
+              "deletable"=>false,
+            }
+            json['smart'] = meter.smart if meter.is_a? Meter::Real
+            json
+          end,
+          "managers"=>[],
+          "energy_producers"=>[],
+          "energy_consumers"=>[]
+        }.merge(rel)
+      end
     end
 
     it '403' do
@@ -234,7 +219,7 @@ describe "groups" do
 
         GET "/api/v1/groups", admin
         expect(response).to have_http_status(200)
-        expect(json['data'].sort {|n,m| n['id'] <=> m['id']}.to_yaml).to eq admin_groups_json['data'].sort {|n,m| n['id'] <=> m['id']}.to_yaml
+        expect(json.sort {|n,m| n['id'] <=> m['id']}.to_yaml).to eq admin_groups_json.sort {|n,m| n['id'] <=> m['id']}.to_yaml
       ensure
         Group::Base.update_all(readable: :world)
       end
@@ -317,48 +302,41 @@ describe "groups" do
           end
 
           let(:meter_json) do
-            {
-              "data"=>meters.collect do |meter|
-                json =
-                  {
-                    "id"=>meter.id,
-                    "type"=>"meter-#{meter.is_a?(Meter::Virtual) ? 'virtuals': 'reals'}",
-                    "attributes"=>{
-                      "type"=>"meter_#{meter.is_a?(Meter::Virtual) ? 'virtual': 'real'}",
-                      "manufacturer-name"=>meter.manufacturer_name,
-                      "manufacturer-product-name"=>meter.manufacturer_product_name,
-                      "manufacturer-product-serialnumber"=>meter.manufacturer_product_serialnumber,
-                      "metering-type"=>meter.metering_type,
-                      "meter-size"=>meter.meter_size,
-                      "ownership"=>meter.ownership,
-                      "direction-label"=>meter.direction,
-                      "build-year"=>meter.build_year ? meter.build_year.to_s : nil,
-                      "updatable"=>false,
-                      "deletable"=>false
-                    }
-                  }
-                if meter.is_a? Meter::Real
-                  json['attributes']['smart'] = false
-                  json["relationships"]= {
-                    "registers"=>{
-                      # NOTE not sure why it renders empty array here
-                      "data"=>[]
-                    }
-                  }
-                else
-                  json["relationships"]= {
-                    "register"=>{
-                      "data"=>
-                      {
-                        "id"=>meter.register.id,
-                        "type"=>'register-virtuals'
-                      }
-                    }
-                  }
-                end
-                json
+            meters.collect do |meter|
+              json =
+                {
+                  "id"=>meter.id,
+                  "type"=>"meter_#{meter.is_a?(Meter::Virtual) ? 'virtual': 'real'}",
+                  "manufacturer_name"=>meter.manufacturer_name,
+                  "manufacturer_product_name"=>meter.manufacturer_product_name,
+                  "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+                  "metering_type"=>meter.metering_type,
+                  "meter_size"=>meter.meter_size,
+                  "ownership"=>meter.owner,
+                  "direction_label"=>meter.direction,
+                  "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
+                  "updatable"=>false,
+                  "deletable"=>false
+                }
+              if meter.is_a? Meter::Real
+                json['smart'] = false
+                # NOTE not sure why it renders empty array here
+                json["registers"]=[]
+              else
+                json["register"]={
+                  "id"=>meter.register.id,
+                  "type"=>'register_virtual',
+                  "direction"=>meter.register.direction.to_s,
+                  "name"=>meter.register.name,
+                  "pre_decimal"=>nil,
+                  "decimal"=>nil,
+                  "converter_constant"=>1,
+                  "low_power"=>nil,
+                  "last_reading"=>0
+                }
               end
-            }
+              json
+            end
           end
 
           it '200' do

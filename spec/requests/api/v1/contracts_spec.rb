@@ -43,69 +43,75 @@ describe "contracts" do
   context 'GET' do
 
     let(:metering_point_operator_contract_json) do
-      { "data"=>{
-          "id"=>contract.id,
-          "type"=>"contract-metering-point-operators",
-          "attributes"=>{
-            "type"=>"contract_metering_point_operator",
-            "status"=>"waiting_for_approval",
-            "full-contract-number"=>"90041/0",
-            "customer-number"=>"40021/1",
-            "signing-date"=>"2014-10-01",
-            "cancellation-date"=>nil,
-            "end-date"=>nil,
-            "updatable"=>true,
-            "deletable"=>true,
-            "begin-date"=>"2014-12-01",
-            "metering-point-operator-name"=>"buzzn systems UG"
-          },
-          "relationships"=>{
-            "tariffs"=>{
-              "data"=>[
-                {
-                  "id"=>contract.tariffs[0].id,
-                  "name"=>"metering_standard",
-                  "begin-date"=>"2014-12-01",
-                  "end-date"=>nil,
-                  "energyprice-cents-per-kwh"=>0,
-                  "baseprice-cents-per-month"=>30000,
-                  "contract-id"=>contract.id
-                }
-              ]
-            },
-            "payments"=>{
-              "data"=>contract.payments.collect do |p|
-                {
-                  "id"=>p.id,
-                  "begin-date"=>p.begin_date.to_s,
-                  "end-date"=>p.end_date ? p.end_date.to_s : nil,
-                  "price-cents"=>p.price_cents,
-                  "cycle"=>p.cycle,
-                  "source"=>p.source,
-                  "contract-id"=>contract.id
-                }
-              end
-            },
-            "contractor"=>{
-              "data"=>{"id"=>contract.contractor.id,
-                       "type"=>"organizations"}
-            },
-            "customer"=>{
-              "data"=>{"id"=>contract.customer.id,
-                       "type"=>"users"}
-            },
-            "signing-user"=>{
-              "data"=>{"id"=>contract.signing_user.id,
-                       "type"=>"users"}
-            },
-            "customer-bank-account"=>{
-              "data"=>nil
-            },
-            "contractor-bank-account"=>{
-              "data"=>{"id"=>contract.contractor_bank_account_id,
-                       "type"=>"bank-accounts"}
-            }
+      {
+        "id"=>contract.id,
+        "type"=>"contract_metering_point_operator",
+        "status"=>"waiting_for_approval",
+        "full_contract_number"=>"90041/0",
+        "customer_number"=>"40021/1",
+        "signing_date"=>"2014-10-01",
+        "cancellation_date"=>nil,
+        "end_date"=>nil,
+        "updatable"=>true,
+        "deletable"=>true,
+        "begin_date"=>"2014-12-01",
+        "metering_point_operator_name"=>"buzzn systems UG",
+        "tariffs"=>[
+          {
+            "id"=>contract.tariffs[0].id,
+            "type"=>'contract_tariff',
+            "name"=>"metering_standard",
+            "begin_date"=>"2014-12-01",
+            "end_date"=>nil,
+            "energyprice_cents_per_kwh"=>0,
+            "baseprice_cents_per_month"=>30000,
           }
+        ],
+        "payments"=>contract.payments.collect do |p|
+          {
+            "id"=>p.id,
+            "type"=>'contract_payment',
+            "begin_date"=>p.begin_date.to_s,
+            "end_date"=>p.end_date ? p.end_date.to_s : nil,
+            "price_cents"=>p.price_cents,
+            "cycle"=>p.cycle,
+            "source"=>p.source,
+          }
+        end,
+        "contractor"=>{
+          "id"=>contract.contractor.id,
+          "type"=>"organization",
+          "name"=>contract.contractor.name,
+          "phone"=>contract.contractor.phone,
+          "fax"=>contract.contractor.fax,
+          "website"=>contract.contractor.website,
+          "email"=>contract.contractor.email,
+          "description"=>contract.contractor.description,
+          "mode"=>"metering_point_operator",
+          "updatable"=>true,
+          "deletable"=>true
+        },
+        "customer"=>{
+          "id"=>contract.customer.id,
+          "type"=>"user",
+          "updatable"=>true,
+          "deletable"=>true
+        },
+        "signing_user"=>{
+          "id"=>contract.signing_user.id,
+          "type"=>"user",
+          "updatable"=>true,
+          "deletable"=>true
+        },
+        "customer_bank_account"=>nil,
+        "contractor_bank_account"=>{
+          "id"=>contract.contractor_bank_account.id,
+          "type"=>"bank_account",
+          "holder"=>contract.contractor_bank_account.holder,
+          "bank_name"=>contract.contractor_bank_account.bank_name,
+          "bic"=>contract.contractor_bank_account.bic,
+          "iban"=>contract.contractor_bank_account.iban,
+          "direct_debit"=>contract.contractor_bank_account.direct_debit
         }
       }
     end
@@ -197,25 +203,20 @@ describe "contracts" do
           let("#{type}_customer_json") do
             customer =  send("#{type}_customer")
             {
-              "data"=>{
-                "id"=>customer.id,
-                "type"=>"users",
-                "attributes"=>{
-                  "type"=>"user",
-                  "updatable"=>false,
-                  "deletable"=>false,
-                  "user-name"=>customer.user_name,
-                  "title"=>nil,
-                  "first-name"=>customer.first_name,
-                  "last-name"=>customer.last_name,
-                  "gender"=>nil,
-                  "phone"=>customer.profile.phone,
-                  "email"=>customer.profile.email,
-                  "sales-tax-number"=>nil,
-                  "tax-rate"=>nil,
-                  "tax-number"=>nil
-                }
-              }
+              "id"=>customer.id,
+              "type"=>"user",
+              "updatable"=>false,
+              "deletable"=>false,
+              "user_name"=>customer.user_name,
+              "title"=>nil,
+              "first_name"=>customer.first_name,
+              "last_name"=>customer.last_name,
+              "gender"=>nil,
+              "phone"=>customer.profile.phone,
+              "email"=>customer.profile.email,
+              "sales_tax_number"=>nil,
+              "tax_rate"=>nil,
+              "tax_number"=>nil
             }
           end
 
@@ -277,28 +278,21 @@ describe "contracts" do
           let("#{type}_contractor_json") do
             contractor =  send("#{type}_contractor")
             {
-              "data"=>{
-                "id"=>contractor.id,
-                "type"=>"organizations",
-                "attributes"=>{
-                  "type"=>"organization",
-                  "name"=>contractor.name,
-                  "phone"=>contractor.phone,
-                  "fax"=>contractor.fax,
-                  "website"=>contractor.website,
-                  "email"=>contractor.email,
-                  "description"=>contractor.description,
-                  "mode"=>"metering_point_operator",
-                  "updatable"=>false,
-                  "deletable"=>false,
-                  "sales-tax-number"=>nil,
-                  "tax-rate"=>nil,
-                  "tax-number"=>nil
-                },
-                "relationships"=>{
-                  "address"=>{"data"=>nil}
-                }
-              }
+              "id"=>contractor.id,
+              "type"=>"organization",
+              "name"=>contractor.name,
+              "phone"=>contractor.phone,
+              "fax"=>contractor.fax,
+              "website"=>contractor.website,
+              "email"=>contractor.email,
+              "description"=>contractor.description,
+              "mode"=>"metering_point_operator",
+              "updatable"=>false,
+              "deletable"=>false,
+              "sales_tax_number"=>nil,
+              "tax_rate"=>nil,
+              "tax_number"=>nil,
+              "address"=>nil
             }
           end
 

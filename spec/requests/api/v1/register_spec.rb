@@ -41,62 +41,63 @@ describe "registers" do
   context 'GET' do
 
     let(:real_register_json) do
+      meter = real_register.meter
       {
-        "data"=>{
-          "id"=>real_register.id,
-          "attributes"=>{
-            "type"=>"register_real",
-            "direction"=>real_register.direction.to_s,
-            "name"=>real_register.name,
-            "pre-decimal"=>6,
-            "decimal"=>2,
-            "converter-constant"=>1,
-            "low-power"=>false,
-            "uid"=>real_register.uid,
-            "obis"=>real_register.obis
-          },
-          "relationships"=>{
-            "address"=>{
-              "data"=>nil
-            },
-            "meter"=>{
-              "data"=>{
-                "id"=>real_register.meter_id,
-                "type"=>"meter-reals"
-              }
-            },
-            "devices"=>{
-              "data"=>[]
-            }
-          }
-        }
+        "id"=>real_register.id,
+        "type"=>"register_real",
+        "direction"=>real_register.direction.to_s,
+        "name"=>real_register.name,
+        "pre_decimal"=>6,
+        "decimal"=>2,
+        "converter_constant"=>1,
+        "low_power"=>false,
+        "uid"=>real_register.uid,
+        "obis"=>real_register.obis,
+        "address"=>nil,
+        "meter"=>{
+          "id"=>meter.id,
+          "type"=>"meter_real",
+          "manufacturer_name"=>meter.manufacturer_name,
+          "manufacturer_product_name"=>meter.manufacturer_product_name,
+          "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+          "metering_type"=>meter.metering_type,
+          "meter_size"=>meter.meter_size,
+          "ownership"=>meter.owner,
+          "direction_label"=>meter.direction,
+          "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
+          "updatable"=>true,
+          "deletable"=>true,
+          "smart"=>false
+        },
+        "devices"=>[]
       }
     end
 
     let(:virtual_register_json) do
+      meter = virtual_register.meter
       {
-        "data"=>{
-          "id"=>virtual_register.id,
-          "attributes"=>{
-            "type"=>"register_virtual",
-            "direction"=>virtual_register.direction.to_s,
-            "name"=>virtual_register.name,
-            "pre-decimal"=>6,
-            "decimal"=>2,
-            "converter-constant"=>1,
-            "low-power"=>false
-          },
-          "relationships"=>{
-            "address"=>{
-              "data"=>nil
-            },
-            "meter"=>{
-              "data"=>{
-                "id"=>virtual_register.meter_id,
-                "type"=>"meter-virtuals"
-              }
-            }
-          }
+        "id"=>virtual_register.id,
+        "type"=>"register_virtual",
+        "direction"=>virtual_register.direction.to_s,
+        "name"=>virtual_register.name,
+        "pre_decimal"=>6,
+        "decimal"=>2,
+        "converter_constant"=>1,
+        "low_power"=>false,
+        "address"=>nil,
+        "meter"=>{
+          "id"=>meter.id,
+          "type"=>"meter_virtual",
+          "manufacturer_name"=>meter.manufacturer_name,
+          "manufacturer_product_name"=>meter.manufacturer_product_name,
+          "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+          "metering_type"=>meter.metering_type,
+          "meter_size"=>meter.meter_size,
+          "ownership"=>meter.owner,
+          "direction_label"=>meter.direction,
+          "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
+          "updatable"=>true,
+          "deletable"=>true,
         }
       }
     end
@@ -138,10 +139,7 @@ describe "registers" do
 
           GET "/api/v1/registers/#{register.id}", admin
           expect(response).to have_http_status(200)
-          # need to adjust json and remove faulty element
-          result = json
-          result['data'].delete('type')
-          expect(result.to_yaml).to eq register_json.to_yaml
+          expect(json.to_yaml).to eq register_json.to_yaml
         end
       end
     end
@@ -183,24 +181,19 @@ describe "registers" do
           let(:register) { send "#{type}_register" }
           let!(:readings_json) do
             readings = 5.times.collect { Fabricate(:reading, register_id: register.id) }
-            {
-              "data"=> readings.collect do |r|
-                {
-                  "id"=>r.id.to_s,
-                  "type"=>"readings",
-                  "attributes"=> {
-                    "type"=>"reading",
-                    "energy-milliwatt-hour"=>r.energy_milliwatt_hour,
-                    "power-milliwatt"=>r.power_milliwatt,
-                    "timestamp"=>r.timestamp.to_s.sub('+01','.000+01'),
-                    "reason"=>"regular_reading",
-                    "source"=>"buzzn_systems",
-                    "quality"=>"read_out",
-                    "meter-serialnumber"=>'12346578'
-                  }
-                }
-              end
-            }
+            readings.collect do |r|
+              {
+                "id"=>r.id.to_s,
+                "type"=>"reading",
+                "energy_milliwatt_hour"=>r.energy_milliwatt_hour,
+                "power_milliwatt"=>r.power_milliwatt,
+                "timestamp"=>r.timestamp.to_s.sub('+01','.000+01'),
+                "reason"=>"regular_reading",
+                "source"=>"buzzn_systems",
+                "quality"=>"read_out",
+                "meter_serialnumber"=>'12346578'
+              }
+            end
           end
 
           it '200' do

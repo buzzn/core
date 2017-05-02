@@ -14,7 +14,7 @@ module API
 
         formatter :json, ->(object, env) do
           raise 'nil - forgot to shebang nested resource ?' unless object
-          Buzzn::SerializableResource.new(object, adapter: :json_api).to_json
+          Buzzn::SerializableResource.new(object).to_json
         end
 
         jsonapi_base_url "#{Rails.application.secrets.hostname}/api/v1"
@@ -128,8 +128,6 @@ module API
             end
             messages.each do |msg|
               @errors << { "parameter": name,
-                           "source":
-                             { "pointer": "/data/attributes/#{name}" },
                            "title": "Invalid Attribute",
                            "detail": "#{name} #{msg}" }
             end

@@ -9,6 +9,11 @@ class ReadingResource < Buzzn::EntityResource
               :source,
               :quality,
               :meter_serialnumber
+
+  # use nice id format
+  def id
+    object.id.to_s
+  end
 end
 
 class ReadingCollectionResource < ReadingResource

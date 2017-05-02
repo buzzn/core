@@ -2,30 +2,6 @@ describe "groups" do
 
   let(:page_overload) { 33 }
 
-  it 'gets the related registers for Group' do
-    group = Fabricate(:tribe)
-    r = Fabricate(:input_meter).input_register
-    r.update(readable: :world)
-    group.registers << r
-    r = Fabricate(:output_meter).output_register
-    r.update(readable: :community)
-    group.registers << r
-    r = Fabricate(:input_meter).input_register
-    r.update(readable: :friends)
-    group.registers << r
-    r = Fabricate(:input_meter).input_register
-    r.update(readable: :members)
-    group.registers << r
-    r = Fabricate(:output_meter).output_register
-    r.update(readable: :world)
-    group.registers << r
-
-    get_without_token "/api/v1/groups/#{group.id}/registers"
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(5)
-  end
-
-
 
   [nil, :sufficiency, :closeness, :autarchy, :fitting].each do |mode|
 
@@ -35,7 +11,7 @@ describe "groups" do
       params = { mode: mode, timestamp: now }
       get_without_token "/api/v1/groups/#{group.id}/scores", params
       expect(response).to have_http_status(422)
-      expect(json['errors'].first['source']['pointer']).to eq '/data/attributes/interval'
+      expect(json['errors'].first['parameter']).to eq 'interval'
     end
 
     [:day, :month, :year].each do |interval|
@@ -44,7 +20,7 @@ describe "groups" do
         params = { mode: mode, interval: interval }
         get_without_token "/api/v1/groups/#{group.id}/scores", params
         expect(response).to have_http_status(422)
-        expect(json['errors'].first['source']['pointer']).to eq '/data/attributes/timestamp'
+        expect(json['errors'].first['parameter']).to eq 'timestamp'
       end
 
       it "gets the related #{interval}ly scores with mode '#{mode}'" do
@@ -60,11 +36,11 @@ describe "groups" do
         params = { mode: mode, interval: interval, timestamp: now }
         get_without_token "/api/v1/groups/#{group.id}/scores", params
         expect(response).to have_http_status(200)
-        expect(json['data'].size).to eq(5)
-        sample = json['data'].first['attributes']
+        expect(json.size).to eq(5)
+        sample = json.first
         expect(sample['mode']).to eq((mode || 'autarchy').to_s)
         expect(sample['interval']).to eq(interval.to_s)
-        expect(sample['interval-beginning'] < now.as_json && now.as_json < sample['interval-end']).to eq true
+        expect(sample['interval_beginning'] < now.as_json && now.as_json < sample['interval_end']).to eq true
       end
     end
   end
@@ -80,7 +56,7 @@ describe "groups" do
     params = { interval: 'day', timestamp: now }
     get_without_token "/api/v1/groups/#{group.id}/scores", params
     expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload)
+    expect(json.size).to eq(page_overload)
   end
 
   it 'gets scores for the current day' do
@@ -94,7 +70,7 @@ describe "groups" do
     params = { interval: 'day', timestamp: now }
     get_without_token "/api/v1/groups/#{group.id}/scores", params
     expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload)
+    expect(json.size).to eq(page_overload)
   end
 
   it 'get all managers' do
@@ -111,12 +87,12 @@ describe "groups" do
     end
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload)
+    expect(json.size).to eq(page_overload)
 
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload * 2)
+    expect(json.size).to eq(page_overload * 2)
   end
 
   it 'get all members' do
@@ -129,12 +105,12 @@ describe "groups" do
 
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload + 1)
+    expect(json.size).to eq(page_overload + 1)
 
     access_token  = Fabricate(:full_access_token_as_admin)
     get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload * 2)
+    expect(json.size).to eq(page_overload * 2)
   end
 
 
@@ -158,7 +134,7 @@ describe "groups" do
 
     get_with_token "/api/v1/groups/#{group.id}/energy-consumers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(0)
+    expect(json.size).to eq(0)
 
     manager = User.find(access_token.resource_owner_id)
     manager.add_role(:manager, register_in)
@@ -166,7 +142,7 @@ describe "groups" do
 
     get_with_token "/api/v1/groups/#{group.id}/energy-consumers", access_token.token
     expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
+    expect(json.size).to eq(1)
   end
 
 
