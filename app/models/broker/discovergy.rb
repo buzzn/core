@@ -1,5 +1,6 @@
 # coding: utf-8
 class Broker::Discovergy < Broker::Base
+  include Import.active_record['service.current_power']
 
   # TODO duplicate const as in Contract model, those validation consts
   #      need a common place
@@ -80,7 +81,7 @@ class Broker::Discovergy < Broker::Base
   # TODO: Move this into parent class
   def validates_credentials
     if self.resource.is_a?(Meter::Real) && self.resource.registers.any?
-      data_result = Buzzn::Application.config.current_power.for_register(self.resource.registers.first)
+      data_result = current_power.for_register(self.resource.registers.first)
       if data_result
         self.resource.update_columns(smart: true)
         self.resource.reload

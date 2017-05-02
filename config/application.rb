@@ -1,5 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 
+require File.expand_path('../../lib/buzzn/services/boot', __FILE__)
 require 'rails/all'
 require 'sprockets/es6'
 
@@ -22,10 +23,24 @@ module Buzzn
 
     config.active_record.raise_in_transactional_callbacks = true # TODO: remove
 
-    config.middleware.insert_before 0, 'Rack::Cors' do
-      allow do
-        origins "*"
-        resource "*", headers: :any, methods: [:get, :post, :patch, :put, :delete, :options]
+    tap do |config|
+      domains = case Rails.env
+                when 'development', 'test'
+                  %r(http://(localhost:[0-9]*|127.0.0.1:[0-9]*))
+                when 'staging'
+                  %r(https://(staging|develop)-[a-z0-9]*.buzzn.io)
+                when 'production'
+                  %r(https://[a-z0-9]*.buzzn.io)
+                else
+                  raisewarn 'unknown rails environment'
+                end
+      config.middleware.insert_before 0, 'Rack::Cors' do
+        allow do
+          origins *domains
+          ['/api/*', '/oauth/*'].each do |path|
+            resource path, headers: :any, methods: [:get, :post, :patch, :put, :delete, :options]
+          end
+        end
       end
     end
 
@@ -62,12 +77,26 @@ module Buzzn
 
     config.autoload_paths << "#{Rails.root}/lib"
 
-    config.after_initialize do
+    if ENV['AWS_ACCESS_KEY'].present?
+      config.x.fog.storage_opts   = { provider: 'AWS', aws_access_key_id: ENV['AWS_ACCESS_KEY'], aws_secret_access_key: ENV['AWS_SECRET_KEY'], region: ENV['AWS_REGION'] }
+      config.x.fog.directory_opts = { key: ENV['AWS_BUCKET'], public: false }
+    else
+      config.x.fog.storage_opts   = { provider: 'Local', local_root: 'tmp' }
+      config.x.fog.directory_opts = { key: 'files' }
+    end
 
-      # service components
-      registry = Application.config.data_source_registry = Buzzn::DataSourceRegistry.new(Redis.current)
-      Application.config.current_power = Buzzn::CurrentPower.new(registry)
-      Application.config.charts = Buzzn::Charts.new(registry)
+    config.x.templates_path = Rails.root.join('app', 'templates')
+
+    config.before_initialize do
+      logger = ::Logger.new(STDERR)
+      if Rails.env == 'development'
+        logger.formatter = proc { |_, _, _, msg| "#{msg}\n" }
+      else
+        logger.formatter = proc { |l, _, _, msg| "#{msg}\n" if l != 'DEBUG' }
+      end
+      Buzzn::Logger.root = logger
+      Buzzn::Services::Boot.before_initialize
+      Buzzn::Logger.root = Rails.logger
     end
   end
 end

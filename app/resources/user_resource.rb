@@ -6,13 +6,15 @@ class UserResource < Buzzn::EntityResource
 
   # API methods for endpoints
 
-  entities :profile,
-           :bank_account
+  entities :profile
 
   def meters(filter = nil)
     Meter::Base.filter(filter).readable_by(@current_user).collect { |m| Meter::BaseResource.new(m) }
   end
 
+  def bank_accounts
+    object.bank_accounts.readable_by(@current_user).collect { |ba| BankAccountResource.new(ba) }
+  end
 end
 
 class UserSingleResource < UserResource
@@ -46,7 +48,6 @@ class ContractingPartyUserSingleResource < UserSingleResource
   attributes  :sales_tax_number,
               :tax_rate,
               :tax_number
-
 end
 
 class UserCollectionResource < UserResource

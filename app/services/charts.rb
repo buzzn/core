@@ -1,10 +1,7 @@
-module Buzzn
+module Buzzn::Services
 
   class Charts
-
-    def initialize(data_source_registry)
-      @registry = data_source_registry
-    end
+    include Import.args[registry: 'service.data_source_registry']
 
     def for_register(register, interval)
       raise ArgumentError.new("not a #{Register::Base}") unless register.is_a?(Register::Base)
@@ -37,7 +34,7 @@ module Buzzn
       raise ArgumentError.new("not a #{Buzzn::Interval}") unless interval.is_a?(Buzzn::Interval)
       units = interval.hour? || interval.day? ? :milliwatt : :milliwatt_hour
       result = Buzzn::DataResultSet.send(units, group.id)
-      @registry.each do |key, data_source|
+      @registry.each do |data_source|
         result.add_all(data_source.aggregated(group, :in, interval), interval.duration)
         result.add_all(data_source.aggregated(group, :out, interval), interval.duration)
       end

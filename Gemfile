@@ -1,5 +1,17 @@
 source 'https://rubygems.org'
 
+# infrastructure
+gem 'dry-auto_inject'
+
+# pdf
+gem 'slim'
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+
+# storage
+gem 'fog-aws', require: 'fog/aws'
+gem 'fog-local', require: 'fog/local'
+
 # Backend
 gem 'active_model_serializers'
 gem 'rails'

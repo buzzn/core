@@ -6,7 +6,6 @@ Fabricator :user do
   password          '12345678'
   profile           { Fabricate(:profile) }
   created_at        { (rand*10).days.ago }
-  bank_account      { Fabricate(:bank_account) }
   after_create { |user|
     user.confirm
   }
@@ -141,73 +140,61 @@ end
 Fabricator :mabe, from: :user do
   profile             { Fabricate(:profile) }
   address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 43')}
-  bank_account        { Fabricate.build(:bank_account_mustermann, holder: 'Ma Be') }
 end
 
 Fabricator :inbr, from: :user do
   profile             { Fabricate(:profile) }
   address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 21')}
-  bank_account        { Fabricate.build(:bank_account_mustermann, holder: 'In Br') }
 end
 
 Fabricator :pebr, from: :user do
   profile             { Fabricate(:profile) }
   address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 25')}
-  bank_account        { Fabricate.build(:bank_account_mustermann, holder: 'Pe Br') }
 end
 
 Fabricator :anbr, from: :user do
   profile             { Fabricate(:profile) }
   address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 25')}
-  bank_account        { Fabricate.build(:bank_account_mustermann, holder: 'An Br') }
 end
 
 Fabricator :gubr, from: :user do
   profile             { Fabricate(:profile) }
   address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 14')}
-  bank_account        { Fabricate.build(:bank_account_mustermann, holder: 'Gu Br') }
 end
 
 Fabricator :mabr, from: :user do
   profile             { Fabricate(:profile) }
   address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 42')}
-  bank_account        { Fabricate.build(:bank_account_mustermann, holder: 'Ma Br') }
 end
 
 Fabricator :dabr, from: :user do
   profile             { Fabricate(:profile) }
   address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 22')}
-  bank_account        { Fabricate.build(:bank_account_mustermann, holder: 'Da Br') }
 end
 
 Fabricator :zubu, from: :user do
   profile             { Fabricate(:profile) }
   address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 41')}
-  bank_account        { Fabricate.build(:bank_account_mustermann, holder: 'Zu Bu') }
 end
 
 Fabricator :mace, from: :user do
   profile             { Fabricate(:profile) }
   address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 32')}
-  bank_account        { Fabricate.build(:bank_account_mustermann, holder: 'Ma Ce') }
 end
 
 Fabricator :stcs, from: :user do
   profile             { Fabricate(:profile) }
   address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 13')}
-  bank_account        { Fabricate.build(:bank_account_mustermann, holder: 'St Cs') }
 end
 
 Fabricator :pafi, from: :user do
   profile             { Fabricate(:profile) }
   address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 33')}
-  bank_account        { Fabricate.build(:bank_account_mustermann, holder: 'Pa Fi') }
 end
 
 Fabricator :raja, from: :user do
   profile             { Fabricate(:profile) }
   address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 33')}
-  bank_account        { Fabricate.build(:bank_account_mustermann, holder: 'Ra Ja') }
 end
 
 

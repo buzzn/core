@@ -10,6 +10,12 @@ require 'rspec/retry'
 require 'sidekiq/testing'
 Sidekiq::Testing.fake!
 
+# no geocoding for tests
+class ::Address
+  def geocode
+  end
+end
+
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
@@ -70,28 +76,6 @@ RSpec.configure do |config|
         # reset cache
         Organization.instance_variable_set(:"@a_#{name}", nil)
         Organization.send(name) || Fabricate(name)
-      end
-    end
-  end
-
-  config.before(:all) do
-
-    if Bank.count == 0
-      Bank.update_from(File.read("db/banks/BLZ_20160606.txt"))
-    end
-
-    if ZipKa.count == 0
-      csv_dir = 'db/csv'
-      zip_vnb = File.read(File.join(csv_dir, "plz_vnb_test.csv"))
-      zip_ka = File.read(File.join(csv_dir, "plz_ka_test.csv"))
-      nne_vnb = File.read(File.join(csv_dir, "nne_vnb.csv"))
-      ZipKa.from_csv(zip_ka)
-      ZipVnb.from_csv(zip_vnb)
-      NneVnb.from_csv(nne_vnb)
-    end
-
-    class ::Address
-      def geocode
       end
     end
   end

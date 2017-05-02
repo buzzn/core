@@ -2,6 +2,7 @@ module API
   module V1
     class Groups < Grape::API
       include API::V1::Defaults
+
       resource :groups do
 
         params do
@@ -12,7 +13,7 @@ module API
         get ":id/charts" do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
           interval = Buzzn::Interval.create(params[:duration], params[:timestamp])
-          result = Buzzn::Application.config.charts.for_group(group, interval)
+          result = Buzzn::Services::MainContainer['service.charts'].for_group(group, interval)
 
           # cache-control headers
           etag(Digest::SHA256.base64digest(result.to_json))
@@ -28,7 +29,7 @@ module API
         end
         get ":id/bubbles" do
           group = Group::BaseResource.retrieve(current_user, permitted_params)
-          result = Buzzn::Application.config.current_power.for_each_register_in_group(group)
+          result = Buzzn::Services::MainContainer['service.current_power'].for_each_register_in_group(group)
 
           # cache-control headers
           etag(Digest::SHA256.base64digest(result.to_json))

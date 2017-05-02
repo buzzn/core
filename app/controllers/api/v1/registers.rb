@@ -2,6 +2,7 @@ module API
   module V1
     class Registers < Grape::API
       include API::V1::Defaults
+
       resource :registers do
 
         params do
@@ -19,7 +20,7 @@ module API
         get ":id/charts" do
           register = Register::Base.guarded_retrieve(current_user, permitted_params)
           interval = Buzzn::Interval.create(params[:duration], params[:timestamp])
-          result = Buzzn::Application.config.charts.for_register(register, interval)
+          result = Buzzn::Services::MainContainer['service.charts'].for_register(register, interval)
 
           # cache-control headers
           etag(Digest::SHA256.base64digest(result.to_json))
@@ -36,7 +37,7 @@ module API
         get ":id/ticker" do
           register = Register::BaseResource.retrieve(current_user,
                                                      permitted_params)
-          result = Buzzn::Application.config.current_power.for_register(register)
+          result = Buzzn::Services::MainContainer['service.current_power'].for_register(register)
 
           # cache-control headers
           etag(Digest::SHA256.base64digest(result.to_json))

@@ -6,7 +6,11 @@ describe "users" do
 
   let(:other) { Fabricate(:user_token) }
 
-  let(:user) { User.find(user_token.resource_owner_id) }
+  let(:user) do
+    user = User.find(user_token.resource_owner_id)
+    Fabricate(:bank_account, contracting_party: user)
+    user
+  end
 
   let(:anonymous_denied_json) do
     {
@@ -19,7 +23,7 @@ describe "users" do
 
   let(:denied_json) do
     json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, other.resource_owner_id 
+    json['errors'][0]['detail'].sub! /--anonymous--/, other.resource_owner_id
     json
   end
 
@@ -61,7 +65,7 @@ describe "users" do
           "gender"=>user.profile.gender,
           "phone"=>user.profile.phone,
           "email"=>user.email
-        },
+        }
       }
     }
   end
@@ -196,12 +200,12 @@ describe "users" do
       expect(json.to_yaml).to eq user_json.to_yaml
       expect(response).to have_http_status(200)
     end
-    
+
   end
 
   context 'bank_account' do
 
-    let(:bank_account) { user.bank_account}
+    let(:bank_account) { user.bank_accounts.first}
 
     let(:bank_account_not_found_json) do
       {
@@ -220,28 +224,35 @@ describe "users" do
     end
 
     let(:bank_account_json) do
-      { "data"=>{
-          "id"=>bank_account.id,
-          "type"=>"bank-accounts",
-          "attributes"=>{
-            "type"=>"bank_account",
-            "holder"=>bank_account.holder,
-            "bank-name"=>bank_account.bank_name,
-            "bic"=>bank_account.bic,
-            "iban"=>bank_account.iban,
-            "direct-debit"=>bank_account.direct_debit
+      { "data"=>
+        [
+          {
+            "id"=>bank_account.id,
+            "type"=>"bank-accounts",
+            "attributes"=>{
+              "type"=>"bank_account",
+              "holder"=>bank_account.holder,
+              "bank-name"=>bank_account.bank_name,
+              "bic"=>bank_account.bic,
+              "iban"=>bank_account.iban,
+              "direct-debit"=>bank_account.direct_debit
+            }
           }
-        }
+        ]
       }
+    end
+
+    let(:empty_bank_account_json) do
+      {"data"=>[]}
     end
 
     context 'GET' do
       it '403' do
-        GET "/api/v1/users/#{user.id}/bank-account"
+        GET "/api/v1/users/#{user.id}/bank-accounts"
         expect(response).to have_http_status(403)
         expect(json).to eq anonymous_denied_json
 
-        GET "/api/v1/users/#{user.id}/bank-account", other
+        GET "/api/v1/users/#{user.id}/bank-accounts", other
         expect(response).to have_http_status(403)
         expect(json).to eq denied_json
 
@@ -252,24 +263,24 @@ describe "users" do
       end
 
       it '404' do
-        GET "/api/v1/users/bla-blub/bank-account", admin
+        GET "/api/v1/users/bla-blub/bank-accounts", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
-
-        user.bank_account.delete
-        GET "/api/v1/users/#{user.id}/bank-account", admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq bank_account_not_found_json
       end
 
       it '200' do
-        GET "/api/v1/users/#{user.id}/bank-account", user_token
+        GET "/api/v1/users/#{user.id}/bank-accounts", user_token
         expect(response).to have_http_status(200)
         expect(json).to eq(bank_account_json)
 
-        GET "/api/v1/users/#{user.id}/bank-account", admin
+        GET "/api/v1/users/#{user.id}/bank-accounts", admin
         expect(response).to have_http_status(200)
         expect(json).to eq(bank_account_json)
+
+        user.bank_accounts.each{|bank_account| bank_account.delete}
+        GET "/api/v1/users/#{user.id}/bank-accounts", admin
+        expect(response).to have_http_status(200)
+        expect(json).to eq empty_bank_account_json
       end
 
     end
@@ -301,10 +312,10 @@ describe "users" do
               "manufacturer-name"=>meter1.manufacturer_name,
               "manufacturer-product-name"=>meter1.manufacturer_product_name,
               "manufacturer-product-serialnumber"=>meter1.manufacturer_product_serialnumber,
-              "metering-type"=>"single_tarif_meter",
+              "metering-type"=>nil,
               "meter-size"=>nil,
               "ownership"=>nil,
-              "direction-label"=>nil,
+              "direction-label"=>"one_way_meter",
               "build-year"=>nil,
               "updatable"=>false,
               "deletable"=>false,
@@ -321,10 +332,10 @@ describe "users" do
               "manufacturer-name"=>meter2.manufacturer_name,
               "manufacturer-product-name"=>meter2.manufacturer_product_name,
               "manufacturer-product-serialnumber"=>meter2.manufacturer_product_serialnumber,
-              "metering-type"=>"single_tarif_meter",
+              "metering-type"=>nil,
               "meter-size"=>nil,
               "ownership"=>nil,
-              "direction-label"=>nil,
+              "direction-label"=>"one_way_meter",
               "build-year"=>nil,
               "updatable"=>false,
               "deletable"=>false,
@@ -346,10 +357,10 @@ describe "users" do
             "manufacturer-name"=>meter3.manufacturer_name,
             "manufacturer-product-name"=>meter3.manufacturer_product_name,
             "manufacturer-product-serialnumber"=>meter3.manufacturer_product_serialnumber,
-            "metering-type"=>"EHZ",
-            "meter-size"=>'5',
-            "ownership"=>'some-owner',
-            "direction-label"=>'one-way',
+            "metering-type"=>"smart_meter",
+            "meter-size"=>'edl40',
+            "ownership"=>'buzzn_systems',
+            "direction-label"=>'one_way_meter',
             "build-year"=>'2011-07-02',
             "updatable"=>false,
             "deletable"=>false,
@@ -411,11 +422,11 @@ describe "users" do
         GET "/api/v1/users/#{user.id}/meters", user_token, filter: meter3.manufacturer_product_serialnumber
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(empty_json.to_yaml)
-        
+
         GET "/api/v1/users/#{user.id}/meters", admin, filter: meter3.manufacturer_product_serialnumber
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(filtered_admin_meters_json.to_yaml)
       end
-    end    
+    end
   end
 end

@@ -93,13 +93,12 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.string   "bic"
     t.string   "bank_name"
     t.boolean  "direct_debit"
-    t.uuid     "bank_accountable_id"
-    t.string   "bank_accountable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.uuid     "contracting_party_id",   null: false
+    t.string   "contracting_party_type", null: false
   end
 
-  add_index "bank_accounts", ["bank_accountable_id", "bank_accountable_type"], name: "index_accountable", using: :btree
   add_index "bank_accounts", ["slug"], name: "index_bank_accounts_on_slug", unique: true, using: :btree
 
   create_table "banks", force: :cascade do |t|
@@ -226,6 +225,8 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.string   "contractor_type"
     t.string   "energy_consumption_before_kwh_pa"
     t.string   "down_payment_before_cents_per_month"
+    t.uuid     "customer_bank_account_id"
+    t.uuid     "contractor_bank_account_id"
     t.integer  "contract_number"
     t.integer  "contract_number_addition"
   end
@@ -305,6 +306,7 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.uuid     "meter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "manufacturer_number"
   end
 
   add_index "equipment", ["meter_id"], name: "index_equipment_on_meter_id", using: :btree
@@ -383,7 +385,6 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "closeness"
     t.string   "type",        null: false
   end
 
@@ -395,10 +396,9 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
     t.string   "manufacturer_product_serialnumber"
-    t.string   "owner"
+    t.string   "ownership"
     t.string   "metering_type"
     t.string   "meter_size"
-    t.string   "rate"
     t.string   "mode"
     t.string   "image"
     t.string   "measurement_capture"
@@ -406,8 +406,6 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.date     "build_year"
     t.date     "calibrated_till"
     t.boolean  "smart",                             default: false
-    t.boolean  "init_reading",                      default: false
-    t.string   "ancestry"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "type",                                              null: false
@@ -418,14 +416,12 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.boolean  "send_data_dso"
     t.boolean  "remote_readout"
     t.string   "tariff"
-    t.string   "direction"
     t.string   "data_logging"
     t.string   "manufacturer_number"
     t.integer  "converter_constant"
     t.string   "data_provider_name"
   end
 
-  add_index "meters", ["ancestry"], name: "index_meters_on_ancestry", using: :btree
   add_index "meters", ["slug"], name: "index_meters_on_slug", unique: true, using: :btree
 
   create_table "nne_vnbs", id: false, force: :cascade do |t|
@@ -564,20 +560,12 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.string   "last_name"
     t.text     "about_me"
     t.string   "website"
-    t.string   "facebook"
-    t.string   "twitter"
-    t.string   "xing"
-    t.string   "linkedin"
     t.string   "gender"
     t.string   "phone"
     t.string   "time_zone"
-    t.text     "know_buzzn_from"
     t.boolean  "confirm_pricing_model"
     t.boolean  "terms"
     t.string   "readable"
-    t.boolean  "newsletter_notifications",         default: true
-    t.boolean  "location_notifications",           default: true
-    t.boolean  "group_notifications",              default: true
     t.uuid     "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -608,8 +596,6 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.string   "mode"
     t.string   "name"
     t.string   "image"
-    t.date     "regular_reeding"
-    t.boolean  "virtual",                 default: false
     t.boolean  "is_dashboard_register",   default: false
     t.string   "readable"
     t.uuid     "meter_id"
