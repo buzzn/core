@@ -15,6 +15,15 @@ module Group
       PriceResource.new(Price.guarded_create(@current_user, params, object))
     end
 
+    def create_billing_cycle(params = {})
+      params[:localpool] = object
+      BillingCycleResource.new(BillingCycle.guarded_create(@current_user, params, object))
+    end
+
+    def billing_cycles
+      object.billing_cycles.readable_by(@current_user).collect { |bc| BillingCycleResource.new(bc) }
+    end
+
   end
 
   # TODO get rid of the need of having a Serializer class

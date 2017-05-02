@@ -1,7 +1,7 @@
 class BillingCycleAuthorizer < ApplicationAuthorizer
 
-  def self.creatable_by?(user, parent)
-    parent.updatable_by?(user)
+  def self.creatable_by?(user, localpool)
+    localpool.updatable_by?(user)
   end
 
   def readable_by?(user)

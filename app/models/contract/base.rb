@@ -92,10 +92,12 @@ module Contract
 
     scope :running_in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
                                           .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
+    scope :at, -> (timestamp) { where('begin_date <= ?', timestamp)
+                                  .where('end_date > ? OR end_date IS NULL', timestamp + 1.second) }
 
     def self.readable_by_query(user)
       organization = Organization.arel_table
-      user = User.arel_table
+      user_table = User.arel_table
       contract = Contract::Base.arel_table
 
       # workaround to produce false always
@@ -103,9 +105,9 @@ module Contract
 
       # assume all IDs are globally unique
       sqls = [
-        User.roles_query(user, manager: [contract[:register_id], contract[:localpool_id]], admin: nil),
-        user.where((user[:id].eq(contract[:contractor_id]))
-                          .or(user[:id].eq(contract[:customer_id]))),
+        User.roles_query(user, manager: [contract[:register_id], contract[:localpool_id]]),
+        user_table.where((contract[:contractor_id].eq(user.id))
+                          .or(contract[:customer_id].eq(user.id))),
         organization.where((organization[:id].eq(contract[:contractor_id]))
                           .or(organization[:id].eq(contract[:customer_id]))),
         User.roles_query(user, admin: nil)

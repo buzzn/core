@@ -553,7 +553,7 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.datetime "updated_at",                          null: false
   end
 
-  add_index "prices", ["begin_date", "localpool_id"], name: "index_prices_on_begin_date_and_localpool_id", using: :btree
+  add_index "prices", ["begin_date", "localpool_id"], name: "index_prices_on_begin_date_and_localpool_id", unique: true, using: :btree
 
   create_table "profiles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "user_name"

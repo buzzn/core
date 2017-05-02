@@ -221,6 +221,10 @@ module Buzzn::Localpool
                                   .at(begin_date)
                                   .without_reason(Reading::DEVICE_CHANGE_1)
                                   .first
+          # try to request the missing reading from data provider
+          if first_reading.nil?
+            first_reading = get_missing_reading(register, begin_date)
+          end
           # if no reading was found at the specific date raise an error
           if first_reading.nil?
             raise RecordNotFoundError.new("no beginning reading found for register #{register.id}")
@@ -261,6 +265,10 @@ module Buzzn::Localpool
                                   .at(end_date)
                                   .without_reason(Reading::DEVICE_CHANGE_2)
                                   .first
+          # try to request the missing reading from data provider
+          if last_reading.nil?
+            last_reading = get_missing_reading(register, end_date)
+          end
           # if no reading was found at the specific date raise an error
           if last_reading.nil?
             raise ActiveRecord::RecordNotFound.new("no ending reading found for register #{register.id}")
@@ -364,6 +372,60 @@ module Buzzn::Localpool
           end
         end
         return last_reading.energy_milliwatt_hour
+      end
+
+      # This method gets missing readings from external services and stores them in DB
+      # input params:
+      #   register: The Register::Base for which the reading is requested
+      #   date: The Date for which the reading is missing
+      # returns:
+      #   reading: The missing reading
+      def get_missing_reading(register, date)
+        unless register.meter.broker.is_a?(Broker::Discovergy)
+          raise ArgumentError.new("register #{register.id} is not a discovergy register")
+        end
+        result = Buzzn::Application.config.charts.for_register(register, Buzzn::Interval.second(date.to_time))
+        if register.input?
+          timestamp = result.in.first.timestamp
+          value = result.in.first.value
+        else
+          timestamp = result.out.first.timestamp
+          value = result.out.first.value
+        end
+        Reading.create!(register_id: register.id,
+                        timestamp: timestamp,
+                        energy_milliwatt_hour: value,
+                        reason: Reading::REGULAR_READING,
+                        source: Reading::BUZZN_SYSTEMS,
+                        quality: Reading::READ_OUT,
+                        state: 'Z86',
+                        meter_serialnumber: register.meter.manufacturer_product_serialnumber)
+      end
+
+      # This method returns the timespan between two dates in months while considering half months
+      # input params:
+      #   date_1: The first Date to compare
+      #   date_2: The second Date to compare
+      # returns:
+      #   months between two dates, e.g. 11 or 11.5 or 12
+      def timespan_in_months(date_1, date_2)
+        if date_1 > date_2
+          date_2_temp = date_1.clone
+          date_1 = date_2.clone
+          date_2 = date_2_temp
+        end
+        days = date_2.day - date_1.day
+        months = date_2.month - date_1.month
+        years = date_2.year - date_1.year
+        half_rounded = 0
+        factor = days < 0 ? -1 : 1
+        days = factor * days
+        if days > 19
+          half_rounded = factor * 1
+        elsif days >= 9
+          half_rounded = factor * 0.5
+        end
+        return years * 12 + months + half_rounded
       end
     end
   end
