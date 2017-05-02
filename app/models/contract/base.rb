@@ -96,13 +96,24 @@ module Contract
                                           .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
 
     def self.readable_by_query(user)
+      organization = Organization.arel_table
+      user_table = User.arel_table
       contract = Contract::Base.arel_table
-      if user
-        User.roles_query(user, manager: [contract[:register_id], contract[:localpool_id]], admin: nil).project(1).exists
-      else
-        # always false, i.e. anonymous users can not see contracts
-        contract[:id].eq(contract[:id]).not
-      end
+
+      # workaround to produce false always
+      return contract[:id].eq(contract[:id]).not if user.nil?
+
+      sqls = [
+        User.roles_query(user, manager: [contract[:register_id], contract[:localpool_id]]),
+        # if contracting party is a user
+        user_table.where((contract[:contractor_id].eq(user.id))
+                          .or(contract[:customer_id].eq(user.id))),
+        # if contracting party is an organization
+        User.roles_query(user, manager: [contract[:contractor_id], contract[:customer_id]]),
+        User.roles_query(user, admin: nil)
+      ]
+      sqls = sqls.collect{|s| s.project(1).exists}
+      sqls[0].or(sqls[1]).or(sqls[2]).or(sqls[3])
     end
 
     def self.readable_by(user) # scope does not work here !
