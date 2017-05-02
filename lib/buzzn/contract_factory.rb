@@ -90,7 +90,7 @@ module Buzzn
                    signing_date: Time.current,
                    register: register,
                    customer: customer,
-                   customer_bank_account: bank_account),
+                   customer_bank_account: bank_account,
                    payments: [Fabricate.build(:payment)],
                    tariffs: [Fabricate.build(:tariff)])
         end
