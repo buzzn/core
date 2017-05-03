@@ -63,6 +63,11 @@ class BillingCycle < ActiveRecord::Base
       tariff = contract.tariffs.at(accounted_energy.first_reading.timestamp).first
       count_months = Buzzn::Localpool::ReadingCalculation.timespan_in_months(accounted_energy.first_reading.timestamp, accounted_energy.last_reading.timestamp)
       total_price_cents = tariff.baseprice_cents_per_month * count_months
+      prepayments = contract.payments.in_year(accounting_year).by_source(Contract::Payment::TRANSFERRED)
+      prepayments_cents = 0
+      prepayments.each do |prepayment|
+        prepayments_cents += prepayment.price_cents
+      end
       billing = Billing.new(status: Billing::OPEN,
                             billing_cycle: self,
                             localpool_power_taker_contract: contract,
@@ -72,9 +77,8 @@ class BillingCycle < ActiveRecord::Base
                             device_change_reading_2_id: accounted_energy.device_change_reading_2.nil ? nil : accounted_energy.device_change_reading_2.id,
                             total_energy_consumption_kWh: energy_consumption_kWh,
                             total_price_cents: total_price_cents,
-                            prepayments_cents: 0,
-                            receivables_cents: 0,
-                            invoice_number: 0)
+                            prepayments_cents: prepayments_cents,
+                            receivables_cents: total_price_cents - prepayments_cents)
     end
   end
 end

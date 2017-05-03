@@ -101,15 +101,16 @@ module Contract
       contract = Contract::Base.arel_table
 
       # workaround to produce false always
-      return billing[:id].eq(billing[:id]).not if user.nil?
+      return contract[:id].eq(contract[:id]).not if user.nil?
 
       # assume all IDs are globally unique
       sqls = [
         User.roles_query(user, manager: [contract[:register_id], contract[:localpool_id]]),
+        # if contracting party is a user
         user_table.where((contract[:contractor_id].eq(user.id))
                           .or(contract[:customer_id].eq(user.id))),
-        organization.where((organization[:id].eq(contract[:contractor_id]))
-                          .or(organization[:id].eq(contract[:customer_id]))),
+        # if contracting party is an organization
+        User.roles_query(user, manager: [contract[:contractor_id], contract[:customer_id]]),
         User.roles_query(user, admin: nil)
       ]
       sqls = sqls.collect{|s| s.project(1).exists}
