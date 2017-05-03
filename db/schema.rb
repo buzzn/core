@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170424153456) do
+ActiveRecord::Schema.define(version: 20170503124043) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -424,24 +424,6 @@ ActiveRecord::Schema.define(version: 20170424153456) do
 
   add_index "meters", ["slug"], name: "index_meters_on_slug", unique: true, using: :btree
 
-  create_table "nne_vnbs", id: false, force: :cascade do |t|
-    t.string  "verbandsnummer", null: false
-    t.string  "typ"
-    t.float   "messung_et"
-    t.float   "abrechnung_et"
-    t.float   "zaehler_et"
-    t.float   "mp_et"
-    t.float   "messung_dt"
-    t.float   "abrechnung_dt"
-    t.float   "zaehler_dt"
-    t.float   "mp_dt"
-    t.float   "arbeitspreis"
-    t.float   "grundpreis"
-    t.boolean "vorlaeufig"
-  end
-
-  add_index "nne_vnbs", ["verbandsnummer"], name: "index_nne_vnbs_on_verbandsnummer", unique: true, using: :btree
-
   create_table "notification_unsubscribers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "notification_key"
     t.string   "channel"
@@ -677,13 +659,6 @@ ActiveRecord::Schema.define(version: 20170424153456) do
 
   add_index "tariffs", ["contract_id"], name: "index_tariffs_on_contract_id", using: :btree
 
-  create_table "used_zip_sns", force: :cascade do |t|
-    t.string   "zip"
-    t.integer  "kwh"
-    t.float    "price"
-    t.datetime "created_at"
-  end
-
   create_table "users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "email",                      default: "", null: false
     t.string   "encrypted_password",         default: "", null: false
@@ -767,21 +742,6 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.uuid     "votable_id"
     t.uuid     "voter_id"
   end
-
-  create_table "zip_kas", id: false, force: :cascade do |t|
-    t.string "zip", null: false
-    t.float  "ka"
-  end
-
-  add_index "zip_kas", ["zip"], name: "index_zip_kas_on_zip", unique: true, using: :btree
-
-  create_table "zip_vnbs", force: :cascade do |t|
-    t.string "zip"
-    t.string "place"
-    t.string "verbandsnummer"
-  end
-
-  add_index "zip_vnbs", ["zip"], name: "index_zip_vnbs_on_zip", using: :btree
 
   add_foreign_key "contracts", "users", column: "signing_user_id"
   add_foreign_key "payments", "contracts"

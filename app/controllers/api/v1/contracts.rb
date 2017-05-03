@@ -1,5 +1,4 @@
 require 'buzzn/contract_factory'
-require 'buzzn/zip2price'
 module API
   module V1
     class Contracts < Grape::API
