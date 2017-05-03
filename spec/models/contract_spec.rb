@@ -110,7 +110,7 @@ describe "Contract Model" do
 
   it 'selects contracts of register manager' do
     contracts # create contracts
-    expect(Contract::Base.readable_by(user_with_register)).to eq [contracts.last]
+    expect(Contract::Base.readable_by(user_with_register)).to eq contracts
   end
 
   xit 'selects contracts of organization manager but not organization member' do
