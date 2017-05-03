@@ -24,11 +24,10 @@ class Price < ActiveRecord::Base
 
     # assume all IDs are globally unique
     sqls = [
-      User.roles_query(user, admin: nil),
-      User.roles_query(user, manager: price[:localpool_id])
+      User.roles_query(user, admin: nil, manager: price[:localpool_id])
     ]
     sqls = sqls.collect{|s| s.project(1).exists}
-    sqls[0].or(sqls[1])
+    sqls[0]
   end
 
   scope :readable_by, -> (user) do

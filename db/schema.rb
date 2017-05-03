@@ -225,10 +225,10 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.string   "contractor_type"
     t.string   "energy_consumption_before_kwh_pa"
     t.string   "down_payment_before_cents_per_month"
-    t.uuid     "customer_bank_account_id"
-    t.uuid     "contractor_bank_account_id"
     t.integer  "contract_number"
     t.integer  "contract_number_addition"
+    t.uuid     "customer_bank_account_id"
+    t.uuid     "contractor_bank_account_id"
   end
 
   add_index "contracts", ["contract_number", "contract_number_addition"], name: "index_contract_number_and_its_addition", unique: true, using: :btree
@@ -549,7 +549,7 @@ ActiveRecord::Schema.define(version: 20170424153456) do
     t.datetime "updated_at",                          null: false
   end
 
-  add_index "prices", ["begin_date", "localpool_id"], name: "index_prices_on_begin_date_and_localpool_id", using: :btree
+  add_index "prices", ["begin_date", "localpool_id"], name: "index_prices_on_begin_date_and_localpool_id", unique: true, using: :btree
 
   create_table "profiles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "user_name"
