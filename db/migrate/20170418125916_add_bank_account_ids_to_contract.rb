@@ -6,8 +6,8 @@ class AddBankAccountIdsToContract < ActiveRecord::Migration
     remove_column :bank_accounts, :bank_accountable_id, :uuid
     remove_column :bank_accounts, :bank_accountable_type, :string
 
-    add_column :bank_accounts, :contracting_party_id, :uuid, null: false
-    add_column :bank_accounts, :contracting_party_type, :string, null: false
+    add_column :bank_accounts, :contracting_party_id, :uuid
+    add_column :bank_accounts, :contracting_party_type, :string
   end
 
   def down
@@ -17,7 +17,7 @@ class AddBankAccountIdsToContract < ActiveRecord::Migration
     add_column :bank_accounts, :bank_accountable_id, :uuid
     add_column :bank_accounts, :bank_accountable_type, :string
 
-    remove_column :bank_accounts, :contracting_party_id, :uuid, null: false
-    remove_column :bank_accounts, :contracting_party_type, :string, null: false
+    remove_column :bank_accounts, :contracting_party_id, :uuid
+    remove_column :bank_accounts, :contracting_party_type, :string
   end
 end
