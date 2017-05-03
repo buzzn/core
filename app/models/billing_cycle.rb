@@ -83,6 +83,8 @@ class BillingCycle < ActiveRecord::Base
                                 total_price_cents: total_price_cents,
                                 prepayments_cents: prepayments_cents,
                                 receivables_cents: total_price_cents - prepayments_cents)
+      result << billing
     end
+    return result
   end
 end

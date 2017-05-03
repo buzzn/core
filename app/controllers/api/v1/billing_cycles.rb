@@ -19,6 +19,7 @@ module API
 
         desc "Create Regular Billings for all active Power Takers."
         params do
+          requires :id, type: String, desc: "Billing Cycle ID"
           requires :accounting_year, type: Integer, desc: "Accounting Year for all the Billings"
         end
         post ':id/create-regular-billings' do
