@@ -531,11 +531,7 @@ ActiveRecord::Schema.define(version: 20170503124043) do
     t.datetime "updated_at",                          null: false
   end
 
-<<<<<<< HEAD
   add_index "prices", ["begin_date", "localpool_id"], name: "index_prices_on_begin_date_and_localpool_id", unique: true, using: :btree
-=======
-  add_index "prices", ["begin_date", "localpool_id"], name: "index_prices_on_begin_date_and_localpool_id", using: :btree
->>>>>>> create price model and add tests and API for it
 
   create_table "profiles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "user_name"
