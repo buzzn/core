@@ -1323,6 +1323,7 @@ sulz_manager.add_role(:manager, localpool_sulz)
 mpoc_sulz = Fabricate(:mpoc_sulz, signing_user: sulz_manager, localpool: localpool_sulz, customer: sulz_contractor)
 lpc_sulz = Fabricate(:lpc_sulz, signing_user: sulz_manager, localpool: localpool_sulz, customer: sulz_contractor)
 billing_cycle_sulz = Fabricate(:billing_cycle_sulz, localpool_id: localpool_sulz.id)
+Fabricate(:price_sulz, localpool: localpool_sulz)
 
 meter = Fabricate(:easymeter_60404846)
 register = meter.input_register

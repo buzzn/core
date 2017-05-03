@@ -214,5 +214,7 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:lptc_saba, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)
 
     Fabricate(:lpc_sulz, localpool: self)
+
+    Fabricate(:price_sulz, localpool: self)
   end
 end

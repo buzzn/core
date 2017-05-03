@@ -533,6 +533,48 @@ describe "groups" do
     expect(json['data']['type']).to eq('contract-localpool-processings')
   end
 
+  it 'gets all prices for the localpool only with full token' do
+    group = Fabricate(:localpool)
+    price_1 = Fabricate(:price, localpool: group, begin_date: Date.new(2016, 1, 1))
+    price_2 = Fabricate(:price, localpool: group)
 
+    full_access_token = Fabricate(:full_access_token)
+    get_with_token "/api/v1/groups/localpools/#{group.id}/prices", full_access_token.token
+    # TODO: should this request return a 403 instead of an empty array?
+    expect(response).to have_http_status(200)
+    expect(json['data']).to eq []
 
+    manager_access_token = Fabricate(:full_access_token)
+    manager_user          = User.find(manager_access_token.resource_owner_id)
+    manager_user.add_role(:manager, group)
+    get_with_token "/api/v1/groups/localpools/#{group.id}/prices", manager_access_token.token
+    expect(response).to have_http_status(200)
+
+    expect(json['data'][0]['id']).to eq(price_1.id)
+    expect(json['data'][0]['type']).to eq('prices')
+    expect(json['data'][1]['id']).to eq(price_2.id)
+    expect(json['data'][1]['type']).to eq('prices')
+  end
+
+  it 'creates new price for localpool only with full token' do
+    group = Fabricate(:localpool)
+
+    request_params = {
+      name: "special",
+      begin_date: Date.new(2016, 1, 1),
+      energyprice_cents_per_kilowatt_hour: 23.66,
+      baseprice_cents_per_month: 500
+    }.to_json
+
+    full_access_token = Fabricate(:full_access_token)
+    POST "/api/v1/groups/localpools/#{group.id}/price", full_access_token, request_params
+    expect(response).to have_http_status(403)
+
+    manager_access_token = Fabricate(:full_access_token)
+    manager_user          = User.find(manager_access_token.resource_owner_id)
+    manager_user.add_role(:manager, group)
+    POST "/api/v1/groups/localpools/#{group.id}/price", manager_access_token, request_params
+    expect(response).to have_http_status(201)
+    expect(json['data']['id']).not_to eq nil
+  end
 end

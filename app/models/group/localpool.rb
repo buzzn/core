@@ -10,6 +10,8 @@ module Group
     end
 
     has_many :addresses, as: :addressable, dependent: :destroy
+    has_many :prices, dependent: :destroy
+    has_many :billing_cycles, dependent: :destroy
 
     after_create :create_corrected_grid_registers
 

@@ -63,6 +63,27 @@ module API
               .metering_point_operator_contract!
           end
 
+          desc "Return the related prices for the Localpool"
+          params do
+            requires :id, type: String, desc: "ID of the group"
+          end
+          get ":id/prices" do
+            Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .prices
+          end
+
+          desc "Create a Price for the localpool."
+          params do
+            requires :id, type: String, desc: "Localpool ID"
+            requires :name, type: String, desc: "Name of the price"
+            requires :begin_date, type: String, desc: "The price's begin date"
+            requires :energyprice_cents_per_kilowatt_hour, type: Float, desc: "The price per kilowatt_hour in cents"
+            requires :baseprice_cents_per_month, type: Integer, desc: "The monthly base price in cents"
+          end
+          post ":id/price"do
+            created_response(Group::LocalpoolResource.retrieve(current_user, permitted_params).create_price(permitted_params))
+          end
         end
 
 
