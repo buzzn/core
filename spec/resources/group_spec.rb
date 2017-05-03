@@ -114,11 +114,13 @@ describe Group::BaseResource do
   describe Group::Localpool do
 
     it 'retrieve all - ids + types' do
-      expected = [Group::Localpool, localpool.id]
+      expected = Group::Localpool.all.collect do |l|
+        [Group::Localpool, l.id]
+      end
       result = Group::LocalpoolResource.all(user).collect do |r|
         [r.type.constantize, r.id]
       end
-      expect(result).to eq [expected]
+      expect(result.sort).to eq expected.sort
     end
 
     it "retrieve - id + type" do
