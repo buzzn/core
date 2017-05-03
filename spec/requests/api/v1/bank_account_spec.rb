@@ -40,13 +40,11 @@ describe "bank-accounts" do
       { "errors"=>[
           {
             "parameter"=>"bank_name",
-            "source"=>{"pointer"=>"/data/attributes/bank_name"},
             "title"=>"Invalid Attribute",
             "detail"=>"bank_name is too long (maximum is 63 characters)"
           },
           {
             "parameter"=>"holder",
-            "source"=>{"pointer"=>"/data/attributes/holder"},
             "title"=>"Invalid Attribute",
             "detail"=>"holder is too long (maximum is 63 characters)"
           }
