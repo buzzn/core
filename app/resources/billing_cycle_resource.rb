@@ -11,6 +11,6 @@ class BillingCycleResource < Buzzn::EntityResource
   end
 
   def create_regular_billings(params = {})
-    object.create_regular_billings(params[:accounting_year])
+    object.create_regular_billings(params[:accounting_year]).collect { |b| BillingResource.new(b) }
   end
 end

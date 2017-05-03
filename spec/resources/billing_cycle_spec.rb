@@ -44,7 +44,7 @@ describe BillingCycleResource do
   class Buzzn::Discovergy::DataSource
     def aggregated(register, mode, interval)
       result = Buzzn::DataResultSet.send(:milliwatt_hour, 'u-i-d')
-      result.add(Time.new(interval.from), rand(987654331), register.direction.to_sym)
+      result.add(Time.new(interval.from), 666666666666, register.direction.to_sym)
       result
     end
   end
@@ -57,8 +57,8 @@ describe BillingCycleResource do
                 external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
     end
     json = BillingCycleResource.retrieve(manager, billing_cycle.id).create_regular_billings({accounting_year: 2016})
-    expect(json.is_a?(BillingCycleResource)).to eq true
-    expect(json.accounted_energies.size).to eq 16
+    expect(json.first.is_a?(BillingResource)).to eq true
+    expect(json.size).to eq 16
   end
 end
 
