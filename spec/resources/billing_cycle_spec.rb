@@ -23,12 +23,12 @@ describe BillingCycleResource do
                            :begin_date,
                            :end_date ] }
 
-  it 'retrieve' do
+  xit 'retrieve' do
     json = BillingCycleResource.retrieve(manager, billing_cycle.id).to_h
     expect(json.keys & base_attributes).to match_array base_attributes
   end
 
-  it 'gets all billings from billing_cycle' do
+  xit 'gets all billings from billing_cycle' do
     billings = [billing, other_billing]
     json = BillingCycleResource.retrieve(manager, billing_cycle.id).billings.sort!{|a, b| a.object.id <=> b.object.id}
     expect(json.first.is_a?(BillingResource)).to eq true
@@ -49,7 +49,7 @@ describe BillingCycleResource do
     end
   end
 
-  it 'creates all regular billings' do
+  xit 'creates all regular billings' do
     localpool.registers.collect(&:meter).uniq.each do |meter|
       Fabricate(:discovergy_broker,
                 mode: meter.registers.size == 1 ? (meter.registers.first.input? ? :in : :out) : :in_out,
@@ -61,7 +61,7 @@ describe BillingCycleResource do
     expect(json.size).to eq 8
   end
 
-  it 'deletes a billing cycle' do
+  xit 'deletes a billing cycle' do
     billing_cycle
     size = BillingCycle.all.size
     BillingCycleResource.retrieve(manager, billing_cycle.id).delete

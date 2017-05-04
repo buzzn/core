@@ -195,7 +195,7 @@ describe Group::BaseResource do
       expect(result.object.localpool).to eq group
     end
 
-    it 'retrieve all billing_cycles' do
+    xit 'retrieve all billing_cycles' do
       group = Fabricate(:localpool_sulz_with_registers_and_readings)
       some_user = Fabricate(:user)
       some_user.add_role(:manager, group)
