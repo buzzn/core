@@ -17,6 +17,18 @@ module API
             .update(permitted_params)
         end
 
+        desc "Delete a Billing Cycle."
+        params do
+          requires :id, type: String, desc: "Billing Cycle ID"
+        end
+        delete ':id' do
+          BillingCycleResource
+            .retrieve(current_user, permitted_params)
+            .delete
+        end
+
+        # Methods for billings
+
         desc "Create Regular Billings for all active Power Takers."
         params do
           requires :id, type: String, desc: "Billing Cycle ID"
@@ -26,6 +38,16 @@ module API
           BillingCycleResource
             .retrieve(current_user, permitted_params)
             .create_regular_billings(permitted_params)
+        end
+
+        desc "Get all Billings for the Billing Cycle."
+        params do
+          requires :id, type: String, desc: "Billing Cycle ID"
+        end
+        get ':id/billings' do
+          BillingCycleResource
+            .retrieve(current_user, permitted_params)
+            .billings
         end
       end
     end

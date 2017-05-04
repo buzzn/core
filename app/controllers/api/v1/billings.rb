@@ -16,6 +16,16 @@ module API
             .retrieve(current_user, permitted_params)
             .update(permitted_params)
         end
+
+        desc "Delete a Billing"
+        params do
+          requires :id, type: String, desc: "Billing ID"
+        end
+        delete ':id' do
+          BillingResource
+            .retrieve(current_user, permitted_params)
+            .delete
+        end
       end
     end
   end

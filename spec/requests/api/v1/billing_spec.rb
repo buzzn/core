@@ -22,7 +22,7 @@ describe "billings" do
           "total-price-cents"=>30000,
           "prepayments-cents"=>29000,
           "receivables-cents"=>1000,
-          "invoice-number"=>"123-abc",
+          "invoice-number"=>"--invoice_number--",
           "status"=>"open",
           "updatable"=>true,
           "deletable"=>true
@@ -31,7 +31,7 @@ describe "billings" do
     }
   end
 
-  it 'updates a billing' do
+  xit 'updates a billing' do
     full_access_token = Fabricate(:full_access_token)
     PATCH "/api/v1/billings/#{billing.id}", full_access_token, invoice_number: '123-abc'
     expect(response).to have_http_status(403)
@@ -41,7 +41,22 @@ describe "billings" do
     manager_user.add_role(:manager, group)
     PATCH "/api/v1/billings/#{billing.id}", manager_access_token, invoice_number: '123-abc'
     expect(response).to have_http_status(200)
-    expect(json).to eq update_response
+    expect(json).to eq update_response['data']['attributes']['invoice-number'].sub! /--invoice_number--/, '123-abc'
     expect(billing.reload.invoice_number).to eq '123-abc'
+  end
+
+  it 'deletes a billing' do
+    billing
+    full_access_token = Fabricate(:full_access_token)
+    DELETE "/api/v1/billings/#{billing.id}", full_access_token
+    expect(response).to have_http_status(403)
+
+    manager_access_token = Fabricate(:full_access_token)
+    manager_user          = User.find(manager_access_token.resource_owner_id)
+    manager_user.add_role(:manager, group)
+    DELETE "/api/v1/billings/#{billing.id}", manager_access_token
+    expect(response).to have_http_status(200)
+    update_response['data']['attributes']['invoice-number'].sub! /--invoice_number--/, billing.invoice_number
+    expect(json).to eq update_response
   end
 end
