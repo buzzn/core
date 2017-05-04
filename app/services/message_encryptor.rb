@@ -1,4 +1,4 @@
-class Buzzn::Services::MessageEncrypter < ActiveSupport::MessageEncryptor
+class Buzzn::Services::MessageEncryptor < ActiveSupport::MessageEncryptor
 
   def self.new
     # a brief verification indicates that the ActiveSupport::MessageEncryptor

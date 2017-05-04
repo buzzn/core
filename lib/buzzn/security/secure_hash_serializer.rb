@@ -1,5 +1,5 @@
 class Buzzn::Security::SecureHashSerializer
-  include Import['service.message_encrypter']
+  include Import['service.message_encryptor']
 
   def load encrypted
     if encrypted.present?
