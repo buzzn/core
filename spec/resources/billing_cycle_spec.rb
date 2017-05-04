@@ -58,7 +58,14 @@ describe BillingCycleResource do
     end
     json = BillingCycleResource.retrieve(manager, billing_cycle.id).create_regular_billings({accounting_year: 2016})
     expect(json.first.is_a?(BillingResource)).to eq true
-    expect(json.size).to eq 16
+    expect(json.size).to eq 8
+  end
+
+  it 'deletes a billing cycle' do
+    billing_cycle
+    size = BillingCycle.all.size
+    BillingCycleResource.retrieve(manager, billing_cycle.id).delete
+    expect(BillingCycle.all.size).to eq size - 1
   end
 end
 
