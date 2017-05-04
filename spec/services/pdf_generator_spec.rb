@@ -16,17 +16,17 @@ describe Buzzn::Services::PdfGenerator do
 
   it 'generates plain html' do
     html = subject.generate_html('simple.slim', {})
-    expect(html).to eq '<!DOCTYPE html><html><head><title>be happy</title></head></html>'
+    expect(html).to eq "<!DOCTYPE html>\n<html>\n  <head>\n    <title>be happy</title>\n  </head>\n</html>"
   end
 
   it 'generates html with missing parameters' do
     html = subject.generate_html('with_parameters.slim', {})
-    expect(html).to eq "<!DOCTYPE html><html><head><title>be happy __when__</title></head><body><h1>__time.today__</h1></body></html>"
+    expect(html).to eq "<!DOCTYPE html>\n<html>\n  <head>\n    <title>be happy __when__</title>\n  </head>\n  <body>\n    <h1>\n      __time.today__\n    </h1>\n  </body>\n</html>"
   end
 
   it 'generates html with parameters' do
     html = subject.generate_html('with_parameters.slim', {when: 'forever', time: Date})
-    expect(html).to eq "<!DOCTYPE html><html><head><title>be happy forever</title></head><body><h1>#{Date.today}</h1></body></html>"
+    expect(html).to eq "<!DOCTYPE html>\n<html>\n  <head>\n    <title>be happy forever</title>\n  </head>\n  <body>\n    <h1>\n      #{Date.today}\n    </h1>\n  </body>\n</html>"
   end
 
   class With < Buzzn::Services::PdfGenerator::Html
@@ -49,7 +49,7 @@ describe Buzzn::Services::PdfGenerator do
 
   it 'renders html' do
     html = subject.render_html('with_parameters.slim', With.new)
-    expect(html).to eq "<!DOCTYPE html><html><head><title>be happy all the time</title></head><body><h1>1111-11-11</h1></body></html>"
+    expect(html).to eq "<!DOCTYPE html>\n<html>\n  <head>\n    <title>be happy all the time</title>\n  </head>\n  <body>\n    <h1>\n      1111-11-11\n    </h1>\n  </body>\n</html>"
   end
 
   it 'generates pdf from html' do
