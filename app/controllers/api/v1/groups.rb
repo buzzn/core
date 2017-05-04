@@ -76,10 +76,10 @@ module API
           desc "Create a Price for the localpool."
           params do
             requires :id, type: String, desc: "Localpool ID"
-            requires :name, type: String, desc: "Name of the price"
-            requires :begin_date, type: String, desc: "The price's begin date"
-            requires :energyprice_cents_per_kilowatt_hour, type: Float, desc: "The price per kilowatt_hour in cents"
-            requires :baseprice_cents_per_month, type: Integer, desc: "The monthly base price in cents"
+            optional :name, type: String, desc: "Name of the price"
+            optional :begin_date, type: String, desc: "The price's begin date"
+            optional :energyprice_cents_per_kilowatt_hour, type: Float, desc: "The price per kilowatt_hour in cents"
+            optional :baseprice_cents_per_month, type: Integer, desc: "The monthly base price in cents"
           end
           post ":id/price"do
             created_response(Group::LocalpoolResource.retrieve(current_user, permitted_params).create_price(permitted_params))

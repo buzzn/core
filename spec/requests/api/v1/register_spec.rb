@@ -7,8 +7,9 @@ describe "registers" do
   let(:anonymous_denied_json) do
     {
       "errors" => [
-        { "title"=>"Permission Denied",
-          "detail"=>"retrieve Register::Base: permission denied for User: --anonymous--" }
+        {
+          "detail"=>"retrieve Register::Base: permission denied for User: --anonymous--"
+        }
       ]
     }
   end
@@ -22,8 +23,9 @@ describe "registers" do
   let(:anonymous_not_found_json) do
     {
       "errors" => [
-        { "title"=>"Record Not Found",
-          "detail"=>"Register::Base: bla-blub not found" }
+        {
+          "detail"=>"Register::Base: bla-blub not found"
+        }
       ]
     }
   end

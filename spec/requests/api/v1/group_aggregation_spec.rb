@@ -41,14 +41,20 @@ describe "groups" do
 
   let(:denied_json) do
     {
-      "errors" => [{"title"=>"Permission Denied",
-                    "detail"=>"retrieve Group::Base: permission denied for User: --anonymous--"}]
+      "errors" => [
+        {
+          "detail"=>"retrieve Group::Base: permission denied for User: --anonymous--"
+        }
+      ]
     }
   end
   let(:not_found_json) do
     {
-      "errors" => [{"title"=>"Record Not Found",
-                    "detail"=>"Group::Base: bla-bla-bla not found"}]
+      "errors" => [
+        {
+          "detail"=>"Group::Base: bla-bla-bla not found"
+        }
+      ]
     }
   end
 
@@ -285,7 +291,6 @@ describe "groups" do
     let(:missing_json) do
       {
         "errors" => [{"parameter" => "duration",
-                      "title" => "Invalid Attribute",
                       "detail" => "duration is missing"}]
       }
     end
@@ -293,7 +298,6 @@ describe "groups" do
     let(:invalid_json) do
       {
         "errors" => [{"parameter" => "duration",
-                      "title" => "Invalid Attribute",
                       "detail" => "duration does not have a valid value"}]
       }
     end

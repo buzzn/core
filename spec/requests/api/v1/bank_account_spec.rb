@@ -13,7 +13,7 @@ describe "bank-accounts" do
   let(:anonymous_denied_json) do
     {
       "errors" => [
-        { "title"=>"Permission Denied",
+        {
           "detail"=>"retrieve BankAccount: permission denied for User: --anonymous--" }
       ]
     }
@@ -28,7 +28,7 @@ describe "bank-accounts" do
   let(:not_found_json) do
     {
       "errors" => [
-        { "title"=>"Record Not Found",
+        {
           "detail"=>"BankAccount: bla-bla-blub not found by User: #{admin.resource_owner_id}" }
       ]
     }
@@ -40,12 +40,10 @@ describe "bank-accounts" do
       { "errors"=>[
           {
             "parameter"=>"bank_name",
-            "title"=>"Invalid Attribute",
             "detail"=>"bank_name is too long (maximum is 63 characters)"
           },
           {
             "parameter"=>"holder",
-            "title"=>"Invalid Attribute",
             "detail"=>"holder is too long (maximum is 63 characters)"
           }
         ]

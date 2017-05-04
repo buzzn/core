@@ -37,14 +37,20 @@ describe "registers" do
 
   let(:denied_json) do
     {
-      "errors" => [{"title"=>"Permission Denied",
-                    "detail"=>"retrieve Register::Base: permission denied for User: --anonymous--"}]
+      "errors" => [
+        {
+          "detail"=>"retrieve Register::Base: permission denied for User: --anonymous--"
+        }
+      ]
     }
   end
   let(:not_found_json) do
     {
-      "errors" => [{"title"=>"Record Not Found",
-                    "detail"=>"Register::Base: bla-bla-bla not found"}]
+      "errors" => [
+        {
+          "detail"=>"Register::Base: bla-bla-bla not found"
+        }
+      ]
     }
   end
 
@@ -249,7 +255,6 @@ describe "registers" do
     let(:missing_json) do
       {
         "errors" => [{"parameter" => "duration",
-                      "title" => "Invalid Attribute",
                       "detail" => "duration is missing"}]
       }
     end
@@ -257,7 +262,6 @@ describe "registers" do
     let(:invalid_json) do
       {
         "errors" => [{"parameter" => "duration",
-                      "title" => "Invalid Attribute",
                       "detail" => "duration does not have a valid value"}]
       }
     end

@@ -9,7 +9,7 @@ module API
         params do
           requires :id, type: String, desc: "Price ID"
           optional :name, type: String, desc: "Name of the price"
-          optional :begin_date, type: String, desc: "The price's begin date"
+          optional :begin_date, type: Date, desc: "The price's begin date"
           optional :energyprice_cents_per_kilowatt_hour, type: Float, desc: "The price per kilowatt_hour in cents"
           optional :baseprice_cents_per_month, type: Integer, desc: "The monthly base price in cents"
         end

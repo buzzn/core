@@ -67,7 +67,7 @@ module API
             puts e.message
             puts e.backtrace.join("\n\t")
           end
-          errors.add_general('Record Not Found', e.message)
+          errors.add_general(e.message)
           errors.finish
         end
 
@@ -77,7 +77,7 @@ module API
             puts e.message
             puts e.backtrace.join("\n\t")
           end
-          errors.add_general('Temporary Datasource Error', e.message)
+          errors.add_general(e.message)
           errors.finish
         end
 
@@ -87,7 +87,7 @@ module API
             puts e.message
             puts e.backtrace.join("\n\t")
           end
-          errors.add_general('Record Not Found', e.message)
+          errors.add_general(e.message)
           errors.finish
         end
 
@@ -97,7 +97,7 @@ module API
             puts e.message
             puts e.backtrace.join("\n\t")
           end
-          errors.add_general('Permission Denied', e.message)
+          errors.add_general(e.message)
           errors.finish
         end
 
@@ -116,9 +116,8 @@ module API
             @errors = []
           end
 
-          def add_general(title, detail)
-              @errors << { "title": title,
-                           "detail": detail }
+          def add_general(detail)
+              @errors << { "detail": detail }
           end
 
           def add(name, *messages)
@@ -128,7 +127,6 @@ module API
             end
             messages.each do |msg|
               @errors << { "parameter": name,
-                           "title": "Invalid Attribute",
                            "detail": "#{name} #{msg}" }
             end
           end
@@ -160,7 +158,7 @@ module API
             warn e.message
             warn e.backtrace.join("\n\t")
           end
-          errors.add_general('Argument Error', e.message)
+          errors.add_general(e.message)
           errors.finish
         end
 
@@ -185,7 +183,6 @@ module API
         rescue_from :all do |e|
           eclass = e.class.to_s
           if eclass.match('WineBouncer::Errors')
-            title = e.response.name.to_s.split('_').collect{|s| s.capitalize}.join(' ')
             if e.response.name == :invalid_scope
               message = "Invalid scope. Allowed scopes are: #{e.response.instance_variable_get(:@scopes).join(', ')}"
             else
@@ -198,11 +195,10 @@ module API
                    when eclass.match('OAuthForbiddenError')
                      403 # no permissions
                    else
-                     title = 'Internal Error'
                      message = e.message
                      (e.respond_to? :status) && e.status || 500
                    end
-          opts = { errors: [ { title: title, detail: message } ] }
+          opts = { errors: [ { detail: message } ] }
           unless Rails.env.production?
             opts.merge!({ meta: { trace: e.backtrace[0, 10] } })
           end

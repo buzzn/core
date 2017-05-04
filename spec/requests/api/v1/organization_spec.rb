@@ -8,7 +8,7 @@ describe "organizations" do
   let(:anonymous_denied_json) do
     {
       "errors" => [
-        { "title"=>"Permission Denied",
+        {
           "detail"=>"retrieve Organization: permission denied for User: --anonymous--" }
       ]
     }
@@ -23,7 +23,7 @@ describe "organizations" do
   let(:anonymous_not_found_json) do
     {
       "errors" => [
-        { "title"=>"Record Not Found",
+        {
           "detail"=>"Organization: bla-blub not found" }
       ]
     }
@@ -99,7 +99,7 @@ describe "organizations" do
     let(:bank_account_not_found_json) do
       {
         "errors" => [
-          { "title"=>"Record Not Found",
+          {
             # TODO fix bad error response
             "detail"=>"Buzzn::RecordNotFound" }
         ]
@@ -170,7 +170,7 @@ describe "organizations" do
     let(:address_not_found_json) do
       {
         "errors" => [
-          { "title"=>"Record Not Found",
+          {
             # TODO fix bad error response
             "detail"=>"Buzzn::RecordNotFound" }
         ]

@@ -8,7 +8,7 @@ describe "meters" do
   let(:anonymous_denied_json) do
     {
       "errors" => [
-        { "title"=>"Permission Denied",
+        {
           "detail"=>"retrieve Meter::Base: permission denied for User: --anonymous--" }
       ]
     }
@@ -23,8 +23,9 @@ describe "meters" do
   let(:anonymous_not_found_json) do
     {
       "errors" => [
-        { "title"=>"Record Not Found",
-          "detail"=>"Meter::Base: bla-blub not found" }
+        {
+          "detail"=>"Meter::Base: bla-blub not found"
+        }
       ]
     }
   end

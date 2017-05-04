@@ -9,8 +9,9 @@ describe "groups/localpools" do
   let(:anonymous_denied_json) do
     {
       "errors" => [
-        { "title"=>"Permission Denied",
-          "detail"=>"retrieve Group::Localpool: permission denied for User: --anonymous--" }
+        {
+          "detail"=>"retrieve Group::Localpool: permission denied for User: --anonymous--"
+        }
       ]
     }
   end
@@ -24,7 +25,7 @@ describe "groups/localpools" do
   let(:anonymous_not_found_json) do
     {
       "errors" => [
-        { "title"=>"Record Not Found",
+        {
           "detail"=>"Group::Localpool: bla-blub not found" }
       ]
     }
@@ -33,7 +34,7 @@ describe "groups/localpools" do
   let(:nested_not_found_json) do
     {
       "errors" => [
-        { "title"=>"Record Not Found",
+        {
           "detail"=>"Buzzn::RecordNotFound" }
       ]
     }

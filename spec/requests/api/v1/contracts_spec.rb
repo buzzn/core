@@ -7,7 +7,7 @@ describe "contracts" do
   let(:anonymous_denied_json) do
     {
       "errors" => [
-        { "title"=>"Permission Denied",
+        {
           "detail"=>"retrieve Contract::Base: permission denied for User: --anonymous--" }
       ]
     }
@@ -22,7 +22,7 @@ describe "contracts" do
   let(:anonymous_not_found_json) do
     {
       "errors" => [
-        { "title"=>"Record Not Found",
+        {
           "detail"=>"Contract::Base: bla-blub not found" }
       ]
     }
@@ -163,7 +163,7 @@ describe "contracts" do
     let(:customer_not_found_json) do
       {
         "errors" => [
-          { "title"=>"Record Not Found",
+          {
             # TODO fix bad error response
             "detail"=>"Buzzn::RecordNotFound" }
         ]
@@ -238,7 +238,7 @@ describe "contracts" do
     let(:contractor_not_found_json) do
       {
         "errors" => [
-          { "title"=>"Record Not Found",
+          {
             # TODO fix bad error response
             "detail"=>"Buzzn::RecordNotFound" }
         ]

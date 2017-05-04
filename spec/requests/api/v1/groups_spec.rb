@@ -9,7 +9,7 @@ describe "groups" do
   let(:anonymous_denied_json) do
     {
       "errors" => [
-        { "title"=>"Permission Denied",
+        {
           "detail"=>"retrieve Group::Base: permission denied for User: --anonymous--" }
       ]
     }
@@ -24,7 +24,7 @@ describe "groups" do
   let(:anonymous_not_found_json) do
     {
       "errors" => [
-        { "title"=>"Record Not Found",
+        {
           "detail"=>"Group::Base: bla-blub not found" }
       ]
     }
@@ -350,49 +350,181 @@ describe "groups" do
     end
   end
 
+  context 'localpools/prices' do
 
-  xit 'gets all prices for the localpool only with full token' do
-    group = Fabricate(:localpool)
-    price_1 = Fabricate(:price, localpool: group, begin_date: Date.new(2016, 1, 1))
-    price_2 = Fabricate(:price, localpool: group)
+    let(:anonymous_not_found_json) do
+      {
+        "errors" => [
+          {
+            "detail"=>"Group::Localpool: bla-blub not found" }
+        ]
+      }
+    end
 
-    full_access_token = Fabricate(:full_access_token)
-    get_with_token "/api/v1/groups/localpools/#{group.id}/prices", full_access_token.token
-    # TODO: should this request return a 403 instead of an empty array?
-    expect(response).to have_http_status(200)
-    expect(json['data']).to eq []
+    let(:not_found_json) do
+      json = anonymous_not_found_json.dup
+      json['errors'][0]['detail'] = "Group::Localpool: bla-blub not found by User: #{admin.resource_owner_id}"
+      json
+    end
 
-    manager_access_token = Fabricate(:full_access_token)
-    manager_user          = User.find(manager_access_token.resource_owner_id)
-    manager_user.add_role(:manager, group)
-    get_with_token "/api/v1/groups/localpools/#{group.id}/prices", manager_access_token.token
-    expect(response).to have_http_status(200)
+    let(:anonymous_denied_json) do
+      {
+        "errors" => [
+          {
+            "detail"=>"retrieve Group::Localpool: permission denied for User: --anonymous--" }
+        ]
+      }
+    end
 
-    expect(json['data'][0]['id']).to eq(price_1.id)
-    expect(json['data'][0]['type']).to eq('prices')
-    expect(json['data'][1]['id']).to eq(price_2.id)
-    expect(json['data'][1]['type']).to eq('prices')
-  end
+    let(:denied_json) do
+      json = anonymous_denied_json.dup
+      json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
+      json
+    end
 
-  xit 'creates new price for localpool only with full token' do
-    group = Fabricate(:localpool)
+    context 'POST' do
+      let(:validation_json) do
+        {
+          "errors"=>[
+            {
+              "parameter"=>"begin_date",
+              "detail"=>"begin_date can't be blank"},
+            {
+              "parameter"=>"name",
+              "detail"=>"name is too long (maximum is 40 characters)"
+            },
+            {
+              "parameter"=>"energyprice_cents_per_kilowatt_hour",
+              "detail"=>"energyprice_cents_per_kilowatt_hour can't be blank"
+            },
+            {
+              "parameter"=>"energyprice_cents_per_kilowatt_hour",
+              "detail"=>"energyprice_cents_per_kilowatt_hour is not a number"
+            },
+            {
+              "parameter"=>"baseprice_cents_per_month",
+              "detail"=>"baseprice_cents_per_month can't be blank"
+            },
+            {
+              "parameter"=>"baseprice_cents_per_month",
+              "detail"=>"baseprice_cents_per_month is not a number"
+            }
+          ]
+        }
+      end
 
-    request_params = {
-      name: "special",
-      begin_date: Date.new(2016, 1, 1),
-      energyprice_cents_per_kilowatt_hour: 23.66,
-      baseprice_cents_per_month: 500
-    }.to_json
+      it '403' do
+        begin
+          localpool.update(readable: :member)
 
-    full_access_token = Fabricate(:full_access_token)
-    POST "/api/v1/groups/localpools/#{group.id}/price", full_access_token, request_params
-    expect(response).to have_http_status(403)
+          POST "/api/v1/groups/localpools/#{localpool.id}/price"
+          expect(response).to have_http_status(403)
+          expect(json).to eq anonymous_denied_json
 
-    manager_access_token = Fabricate(:full_access_token)
-    manager_user          = User.find(manager_access_token.resource_owner_id)
-    manager_user.add_role(:manager, group)
-    POST "/api/v1/groups/localpools/#{group.id}/price", manager_access_token, request_params
-    expect(response).to have_http_status(201)
-    expect(json['data']['id']).not_to eq nil
+          POST "/api/v1/groups/localpools/#{localpool.id}/price", user
+          expect(response).to have_http_status(403)
+          expect(json).to eq denied_json
+
+        ensure
+          localpool.update(readable: :world)
+        end
+      end
+
+      it '404' do
+        POST "/api/v1/groups/localpools/bla-blub/price", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+      end
+
+      it '422' do
+        # TODO add all possible validation errors, i.e. iban
+        POST "/api/v1/groups/localpools/#{localpool.id}/price", admin,
+             name: 'Max Mueller' * 10
+        expect(response).to have_http_status(422)
+        expect(json).to eq validation_json
+      end
+
+      let(:new_price_json) do
+        {
+          "type"=>'price',
+          "name"=>"special",
+          "begin_date"=>Date.new(2016, 2, 1).to_s,
+          "energyprice_cents_per_kilowatt_hour"=>23.66,
+          "baseprice_cents_per_month"=>500,
+          'updatable'=>false,
+          'deletable'=>false
+        }
+      end
+
+      let(:new_price) do
+        json = new_price_json.dup
+        json.delete('type')
+        json.delete('updatable')
+        json.delete('deletable')
+        json
+      end
+
+      it '201' do
+        POST "/api/v1/groups/localpools/#{localpool.id}/price", admin, new_price
+
+        expect(response).to have_http_status(201)
+        result = json
+        id = result.delete('id')
+        expect(Price.find(id)).not_to be_nil
+        expect(result.to_yaml).to eq new_price_json.to_yaml
+      end
+    end
+
+    context 'GET' do
+      it '403' do
+        begin
+          localpool.update(readable: :member)
+
+          GET "/api/v1/groups/localpools/#{localpool.id}/prices"
+          expect(response).to have_http_status(403)
+          expect(json).to eq anonymous_denied_json
+
+          GET "/api/v1/groups/localpools/#{localpool.id}/prices", user
+          expect(response).to have_http_status(403)
+          expect(json).to eq denied_json
+
+        ensure
+          localpool.update(readable: :world)
+        end
+      end
+
+      it '404' do
+        GET "/api/v1/groups/localpools/bla-blub/prices", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+      end
+
+      entity!(:prices) do
+        [Fabricate(:price, localpool: localpool, begin_date: Date.new(2016, 1, 1)),
+         Fabricate(:price, localpool: localpool)]
+      end
+
+      let(:prices_json) do
+        Price.all.collect do |price|
+          {
+            "id"=>price.id,
+            "type"=>"price",
+            "name"=>price.name,
+            "begin_date"=>price.begin_date.to_s,
+            "energyprice_cents_per_kilowatt_hour"=>price.energyprice_cents_per_kilowatt_hour,
+            "baseprice_cents_per_month"=>price.baseprice_cents_per_month,
+            "updatable"=>false,
+            "deletable"=>false
+          }
+        end
+      end
+
+      it '200 all' do
+        GET "/api/v1/groups/localpools/#{localpool.id}/prices", admin
+
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq(prices_json.to_yaml)
+      end
+    end
   end
 end

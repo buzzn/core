@@ -1,3 +1,12 @@
+
+
+#
+# deprecated and needs to ported to the new systematic for endpoint tests
+#
+
+
+
+
 describe "groups" do
 
   let(:page_overload) { 33 }

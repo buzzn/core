@@ -24,7 +24,7 @@ module RequestsHelper
   end
 
   def POST(path, token = nil, params = {})
-    do_it :post, path, params, token
+    do_it :post, path, params.to_json, token
   end
 
   def PUT(path, token = nil, params = {})

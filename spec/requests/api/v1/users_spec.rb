@@ -15,8 +15,9 @@ describe "users" do
   let(:anonymous_denied_json) do
     {
       "errors" => [
-        { "title"=>"Permission Denied",
-          "detail"=>"retrieve User: permission denied for User: --anonymous--" }
+        {
+          "detail"=>"retrieve User: permission denied for User: --anonymous--"
+        }
       ]
     }
   end
@@ -30,8 +31,9 @@ describe "users" do
   let(:anonymous_not_found_json) do
     {
       "errors" => [
-        { "title"=>"Record Not Found",
-          "detail"=>"User: bla-blub not found" }
+        {
+          "detail"=>"User: bla-blub not found"
+        }
       ]
     }
   end
@@ -180,9 +182,10 @@ describe "users" do
     let(:bank_account_not_found_json) do
       {
         "errors" => [
-          { "title"=>"Record Not Found",
+          {
             # TODO fix bad error response
-            "detail"=>"Buzzn::RecordNotFound" }
+            "detail"=>"Buzzn::RecordNotFound"
+          }
         ]
       }
     end
