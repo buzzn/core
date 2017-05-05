@@ -7,7 +7,7 @@ Buzzn::Application.routes.draw do
   end
 
   mount API::Base, at: "/"
-  mount GrapeSwaggerRails::Engine, at: "/"
+  mount GrapeSwaggerRails::Engine, at: "/api"
 
   require 'sidekiq/web'
   authenticate :user, lambda { |user| user.has_role?(:admin) } do
