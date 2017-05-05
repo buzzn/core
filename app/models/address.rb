@@ -97,4 +97,19 @@ class Address < ActiveRecord::Base
     do_filter(value, :city, :street_name)
   end
 
+  def street_with_number
+    "#{street_name} #{street_number}"
+  end
+
+  def street_with_number_and_extra
+    "#{street_name} #{street_number} #{address}"
+  end
+
+  def zip_with_place
+    "#{zip} #{city}"
+  end
+
+  def street_number_zip_place
+    "#{street_name} #{street_number}, #{zip} #{city}"
+  end
 end

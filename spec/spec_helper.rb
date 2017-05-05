@@ -190,7 +190,7 @@ RSpec.configure do |config|
   end
 
   def needs_cleaning?(spec)
-    ! spec.metadata[:file_path].include?('requests') && ! spec.metadata[:file_path].include?('resources') && ! spec.metadata[:file_path].include?('services') && ! spec.metadata[:file_path].include?('models') && ! spec.metadata[:file_path].include?('spec/buzzn')
+    ! spec.metadata[:file_path].include?('requests') && ! spec.metadata[:file_path].include?('resources') && ! spec.metadata[:file_path].include?('services') && ! spec.metadata[:file_path].include?('models') && ! spec.metadata[:file_path].include?('spec/buzzn') && ! spec.metadata[:file_path].include?('spec/pdfs')
   end
 
   config.before(:each) do |spec|

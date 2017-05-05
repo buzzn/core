@@ -35,6 +35,9 @@ class User < ContractingParty
   delegate :last_name, to: :profile
   delegate :about_me, to: :profile
   delegate :image, to: :profile
+  delegate :phone, to: :profile
+
+  def fax; ''; end
 
   before_destroy :delete_content
 
