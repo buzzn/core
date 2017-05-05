@@ -22,10 +22,6 @@ module Contract
     has_one :customer_bank_account
     has_one :contractor_bank_account
 
-    def full_contract_number
-      object.contract_number.to_s + "/" + object.contract_number_addition.to_s
-    end
-
     alias :contractor_raw! :contractor!
     def contractor!
       ContractingPartyResource.new(contractor_raw!.object)
