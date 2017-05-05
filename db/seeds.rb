@@ -216,7 +216,6 @@ karin.add_role :manager, karins_pv_group
 karins_pv_group.registers << User.where(email: 'christian@buzzn.net').first.accessible_registers.first
 karins_pv_group.registers << User.where(email: 'philipp@buzzn.net').first.accessible_registers.first
 karins_pv_group.registers << User.where(email: 'thomas@buzzn.net').first.accessible_registers.first
-#karins_pv_group.create_activity key: 'group.create', owner: karin, recipient: karins_pv_group
 
 
 
@@ -297,7 +296,6 @@ localpool_home_of_the_brave = Fabricate(:localpool_home_of_the_brave, registers:
 justus = User.where(email: 'justus@buzzn.net').first
 justus.add_role :manager, localpool_home_of_the_brave
 justus.add_role :manager, @fichtenweg8
-#localpool_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: localpool_home_of_the_brave
 
 
 
