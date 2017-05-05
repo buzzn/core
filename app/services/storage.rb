@@ -4,7 +4,6 @@ class Buzzn::Services::Storage
   def create
     storage = Fog::Storage.new(fog[:storage_opts])
     storage.directories.new(fog[:directory_opts])
-    storage
   end
 
   # just factory method for Fog::Storage

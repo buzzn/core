@@ -57,22 +57,22 @@ module Buzzn::Pdfs
     end
 
     def addressing
-        case user = @contract.contractor
-        when User
-          prefix = case user.profile.gender
-                   when 'female'
-                     "Sehr geehrte Frau"
-                   when 'male'
-                     "Sehr geehrter Herr"
-                   else
-                     "Hallo"
-                   end
-          "#{prefix} #{user.profile.title} #{power_taker.contractor.name}"
-        when Organization
-          "Sehr geehrte Damen und Herren"
-        else
-          raise ArgumentError.new("unknown type of contractor: #{contract}")
-        end
+      case user = @contract.contractor
+      when User
+        prefix = case user.profile.gender
+                 when 'female'
+                   "Sehr geehrte Frau"
+                 when 'male'
+                   "Sehr geehrter Herr"
+                 else
+                   "Hallo"
+                 end
+        "#{prefix} #{user.profile.title} #{power_taker.contractor.name}"
+      when Organization
+        "Sehr geehrte Damen und Herren"
+      else
+        raise ArgumentError.new("unknown type of contractor: #{contract}")
+      end
     end
   end
 end

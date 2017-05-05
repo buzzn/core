@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170503124043) do
+ActiveRecord::Schema.define(version: 20170505151515) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,8 +95,8 @@ ActiveRecord::Schema.define(version: 20170503124043) do
     t.boolean  "direct_debit"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.uuid     "contracting_party_id"
-    t.string   "contracting_party_type"
+    t.uuid     "contracting_party_id",   null: false
+    t.string   "contracting_party_type", null: false
   end
 
   add_index "bank_accounts", ["slug"], name: "index_bank_accounts_on_slug", unique: true, using: :btree
@@ -291,6 +291,15 @@ ActiveRecord::Schema.define(version: 20170503124043) do
   add_index "devices", ["readable"], name: "index_devices_on_readable", using: :btree
   add_index "devices", ["register_id"], name: "index_devices_on_register_id", using: :btree
   add_index "devices", ["slug"], name: "index_devices_on_slug", unique: true, using: :btree
+
+  create_table "documents", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.string   "path",               null: false
+    t.string   "encryption_details", null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "documents", ["path"], name: "index_documents_on_path", unique: true, using: :btree
 
   create_table "equipment", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
