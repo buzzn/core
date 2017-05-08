@@ -12,7 +12,7 @@ class User < ContractingParty
   devise :database_authenticatable, :async, :registerable,
          :recoverable, :rememberable, :trackable,
          :validatable, :lockable, :timeoutable,
-         :confirmable, :invitable, :omniauthable#, :omniauth_providers => [:facebook]
+         :confirmable, :invitable
 
   validates :legal_notes, acceptance: true
 
@@ -127,7 +127,7 @@ class User < ContractingParty
         users_friends_on   = friendships.create_on(users[:id].eq(friendships.alias[:user_id]))
         users_friends_join = users.create_join(friendships.alias, users_friends_on,
                                                Arel::Nodes::OuterJoin)
-        
+
         distinct.joins(users_profiles_join, users_friends_join).where("profiles.readable in (?) or users.id = ? or friendships_2.friend_id = ? or 0 < (#{User.count_admins(user).to_sql})", ['world', 'community'], user.id, user.id)
       else
         distinct.joins(users_profiles_join).where('profiles.readable = ?', 'world')
@@ -195,10 +195,8 @@ class User < ContractingParty
 
 
 
-  # TODO all those decorate collections looks like helper methods for the views
-  # i.e. does it makes sense to move them into the rails helpers ?
   def editable_registers
-    Register::Base.editable_by_user(self).collect(&:decorate)
+    Register::Base.editable_by_user(self)
   end
 
   def editable_meters
@@ -206,27 +204,27 @@ class User < ContractingParty
   end
 
   def editable_groups
-    Group::Base.editable_by_user(self).collect(&:decorate)
+    Group::Base.editable_by_user(self)
   end
 
   def editable_devices
-    Device.editable_by_user(self).collect(&:decorate)
+    Device.editable_by_user(self)
   end
 
   def editable_addresses
-    self.editable_registers.collect(&:address).compact.uniq{|address| address.longitude && address.latitude}
+    self.editable_registers.compact.uniq{|address| address.longitude && address.latitude}
   end
 
   def non_private_editable_registers
-    Register::Base.editable_by_user(self).non_privates.collect(&:decorate)
+    Register::Base.editable_by_user(self).non_privates
   end
 
   def registers_as_member
-    Register::Base.with_role(:member, self).collect(&:decorate)
+    Register::Base.with_role(:member, self)
   end
 
   def accessible_registers
-    Register::Base.accessible_by_user(self).collect(&:decorate)
+    Register::Base.accessible_by_user(self)
   end
 
   def self.unsubscribed_from_notification(key, resource)
@@ -244,8 +242,8 @@ class User < ContractingParty
 
   def accessible_groups
     result = []
-    result << Group::Base.editable_by_user(self).collect(&:decorate)
-    result << self.accessible_registers.collect(&:group).compact.collect(&:decorate)
+    result << Group::Base.editable_by_user(self)
+    result << self.accessible_registers.collect(&:group).compact
     return result.flatten.uniq
   end
 
@@ -326,47 +324,6 @@ class User < ContractingParty
   def send_email(header, message)
     Notifier.send_email_to_user_variable_content(self, header, message).deliver_now
   end
-
-
-
-
-
-  # https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
-  def self.from_omniauth(auth)
-    omniauth_users = where(provider: auth.provider, uid: auth.uid)
-    if omniauth_users.any?
-      return omniauth_users.first
-    else
-      # https://github.com/mkdynamic/omniauth-facebook#auth-hash
-
-      profile                   = Profile.new
-      profile.user_name         = "#{auth.info.first_name} #{auth.info.last_name}"
-      profile.first_name        = auth.info.first_name
-      profile.last_name         = auth.info.last_name
-      profile.remote_image_url  = auth.info.image
-
-      user            = User.new()
-      user.uid        = auth.uid
-      user.provider   = auth.provider
-      user.email      = auth.info.email
-      user.password   = Devise.friendly_token[0,20]
-      user.profile    = profile
-
-      user.save!
-      user.confirm
-
-      return user
-    end
-  end
-  def self.new_with_session(params, session)
-    super.tap do |user|
-      if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
-        user.email = data["email"] if user.email.blank?
-      end
-    end
-  end
-
-
 
 
 
