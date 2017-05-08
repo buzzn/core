@@ -17,6 +17,8 @@ gem 'active_model_serializers'
 gem 'rails'
 gem 'sass-rails'
 gem 'coffee-rails'
+gem 'therubyracer'
+gem 'uglifier'
 gem 'money-rails'
 gem 'pg'
 gem 'sinatra'
@@ -77,7 +79,6 @@ gem 'oj'
 gem 'oauth'
 gem 'remote_lock'
 gem 'fabrication'
-gem 'therubyracer'
 
 
 
