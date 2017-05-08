@@ -253,7 +253,6 @@ Fabricator :lpc_forstenried, from: :localpool_processing_contract do
                       source: Contract::Payment::TRANSFERRED)] }
   customer_bank_account    { Fabricate.build(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH') }
   contractor_bank_account  { Fabricate(:bank_account) }
-
 end
 
 Fabricator :mpoc_forstenried, from: :metering_point_operator_contract do
