@@ -2,12 +2,6 @@ require File.expand_path('../boot', __FILE__)
 
 require File.expand_path('../../lib/buzzn/services/boot', __FILE__)
 require 'rails/all'
-require 'sprockets/es6'
-
-
-# TODO https://github.com/drapergem/draper/issues/644
-require 'draper'
-Draper::Railtie.initializers.delete_if {|initializer| initializer.name == 'draper.setup_active_model_serializers' }
 
 ## https://docs.newrelic.com/docs/agents/ruby-agent/features/garbage-collection#gc_setup
 GC::Profiler.enable
@@ -70,8 +64,6 @@ module Buzzn
       g.javascripts = false
       g.helper      = false
     end
-
-    config.middleware.use Rack::GoogleAnalytics, :tracker => Rails.application.secrets.google_analytics
 
     config.middleware.delete Rack::Lock
 

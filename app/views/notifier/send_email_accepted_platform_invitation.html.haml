@@ -1,7 +1,0 @@
-%p
-  = t('hello') + " #{@receiver.name}!"
-  - if @reciever == @sender.invited_by
-    %p= t("user_has_accepted_the_invitation_to_join_the_buzzn_community_and_is_your_friend_now", user: @sender.name + ' (' + @sender.email + ')')
-  - else
-    %p= t("user_has_accepted_the_invitation_to_join_the_buzzn_community", user: @sender.name + ' (' + @sender.email + ')')
-%p= t('your_buzzn_team')

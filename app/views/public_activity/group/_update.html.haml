@@ -1,7 +1,0 @@
-- single_content_for :action do
-  - if a.trackable
-    = t('has_updated') + ' ' + t('the_group')
-    %a.btn-link.text-semibold{:href => group_path(a.trackable)}
-      =a.trackable.name
-  - else
-    = t('has_updated') + ' ' + t('a_group_which_has_been_removed')
