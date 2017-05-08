@@ -173,12 +173,7 @@ describe Group::BaseResource do
     end
 
     it 'creates a new billing cycle' do
-<<<<<<< HEAD
       group = localpool
-=======
-      group = Fabricate(:localpool)
-      some_user = Fabricate(:user)
->>>>>>> 2323aae8aefce47ddcd46467ea4678be9a306e59
 
       request_params = {
         name: 'abcd',
@@ -186,28 +181,14 @@ describe Group::BaseResource do
         end_date: Date.new(2016, 9, 1)
       }
 
-<<<<<<< HEAD
       result = Group::LocalpoolResource.retrieve(user, group.id).create_billing_cycle(request_params)
-=======
-      expect{Group::LocalpoolResource.retrieve(some_user, group.id).create_billing_cycle(request_params)}.to raise_error Buzzn::PermissionDenied
-      expect(group.billing_cycles.size).to eq 0
-
-      some_user.add_role(:manager, group)
-      result = Group::LocalpoolResource.retrieve(some_user, group.id).create_billing_cycle(request_params)
->>>>>>> 2323aae8aefce47ddcd46467ea4678be9a306e59
       expect(result.is_a?(BillingCycleResource)).to eq true
       expect(result.object.localpool).to eq group
     end
 
     it 'retrieve all billing_cycles' do
-<<<<<<< HEAD
       group = localpool
       size = group.billing_cycles.size
-=======
-      group = Fabricate(:localpool_sulz_with_registers_and_readings)
-      some_user = Fabricate(:user)
-      some_user.add_role(:manager, group)
->>>>>>> 2323aae8aefce47ddcd46467ea4678be9a306e59
       Fabricate(:billing_cycle, localpool: group)
       Fabricate(:billing_cycle, localpool: group)
 
@@ -217,13 +198,8 @@ describe Group::BaseResource do
                     :id,
                     :type]
 
-<<<<<<< HEAD
       result = Group::LocalpoolResource.retrieve(user, group.id).billing_cycles
       expect(result.size).to eq size + 2
-=======
-      result = Group::LocalpoolResource.retrieve(some_user, group.id).billing_cycles
-      expect(result.size).to eq 2
->>>>>>> 2323aae8aefce47ddcd46467ea4678be9a306e59
       first = BillingCycleResource.send(:new, result.first)
       expect(first.to_hash.keys).to match_array attributes
     end
