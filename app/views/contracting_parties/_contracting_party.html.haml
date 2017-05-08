@@ -1,9 +1,0 @@
-.row
-  .col-md-3= link_to contracting_party.name, edit_contracting_party_path(contracting_party)
-
-  .col-md-5
-    - if current_user.can_update?(contracting_party)
-      = link_to t('edit'), edit_meter_path(contracting_party)
-
-    - if current_user.can_delete?(contracting_party)
-      = link_to t('destroy'), contracting_party, :method => :delete, :data => { :confirm => 'Are you sure?' }
