@@ -124,7 +124,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.8.0)
-    concurrent-ruby (1.0.4)
+    concurrent-ruby (1.0.5)
     connection_pool (2.2.0)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
@@ -149,30 +149,30 @@ GEM
     diff-lcs (1.2.5)
     doorkeeper (3.1.0)
       railties (>= 3.2)
-    dry-auto_inject (0.4.1)
+    dry-auto_inject (0.4.2)
       dry-container (>= 0.3.4)
-    dry-configurable (0.1.7)
+    dry-configurable (0.7.0)
       concurrent-ruby (~> 1.0)
-    dry-container (0.4.0)
+    dry-container (0.6.0)
       concurrent-ruby (~> 1.0)
       dry-configurable (~> 0.1, >= 0.1.3)
-    dry-core (0.2.1)
+    dry-core (0.3.0)
       concurrent-ruby (~> 1.0)
     dry-equalizer (0.2.0)
-    dry-logic (0.4.0)
+    dry-logic (0.4.1)
       dry-container (~> 0.2, >= 0.2.6)
-      dry-core (~> 0.1)
+      dry-core (~> 0.2)
       dry-equalizer (~> 0.2)
-    dry-matcher (0.5.0)
+    dry-matcher (0.6.0)
     dry-monads (0.3.1)
       dry-core
       dry-equalizer
-    dry-transaction (0.8.0)
+    dry-transaction (0.9.0)
       dry-container (>= 0.2.8)
       dry-matcher (>= 0.5.0)
       dry-monads (>= 0.0.1)
       wisper (>= 1.6.0)
-    dry-types (0.9.3)
+    dry-types (0.10.3)
       concurrent-ruby (~> 1.0)
       dry-configurable (~> 0.1)
       dry-container (~> 0.3)
@@ -180,17 +180,13 @@ GEM
       dry-equalizer (~> 0.2)
       dry-logic (~> 0.4, >= 0.4.0)
       inflecto (~> 0.0.0, >= 0.0.2)
-    dry-validation (0.10.5)
+    dry-validation (0.10.6)
       concurrent-ruby (~> 1.0)
       dry-configurable (~> 0.1, >= 0.1.3)
       dry-core (~> 0.2, >= 0.2.1)
       dry-equalizer (~> 0.2)
       dry-logic (~> 0.4, >= 0.4.0)
       dry-types (~> 0.9, >= 0.9.0)
-    easy_translate (0.5.0)
-      json
-      thread
-      thread_safe
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
@@ -414,6 +410,7 @@ GEM
     jsonapi-renderer (0.1.1.beta1)
     launchy (2.4.3)
       addressable (~> 2.3)
+    libv8 (3.16.14.15)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -572,11 +569,12 @@ GEM
       redis-store (~> 1.1.0)
     redis-store (1.1.7)
       redis (>= 2.2)
+    ref (2.0.0)
     remote_lock (1.1.0)
     request_store (1.3.1)
     responders (2.2.0)
       railties (>= 4.2.0, < 5.1)
-    roda (2.23.0)
+    roda (2.25.0)
       rack
     rolify (5.1.0)
     rspec (3.4.0)
@@ -633,6 +631,9 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     temple (0.7.7)
+    therubyracer (0.12.2)
+      libv8 (~> 3.16.14.0)
+      ref
     thor (0.19.4)
     thread_safe (0.3.5)
     tilt (2.0.5)
@@ -660,6 +661,7 @@ GEM
     whenever (0.9.4)
       chronic (>= 0.6.3)
     wicked_pdf (1.1.0)
+    wisper (2.0.0)
     wkhtmltopdf-binary (0.12.3.1)
     xml-simple (1.1.5)
     yard (0.9.5)
@@ -758,8 +760,10 @@ DEPENDENCIES
   sidekiq
   sinatra
   slim
+  therubyracer
   timecop
   tzinfo
+  uglifier
   vcr
   webmock
   whenever
@@ -768,4 +772,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.14.3
+   1.15.0.pre.3

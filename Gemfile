@@ -2,6 +2,10 @@ source 'https://rubygems.org'
 
 # infrastructure
 gem 'dry-auto_inject'
+gem 'dry-validation'
+gem 'dry-monads'
+gem 'dry-transaction'
+gem 'active_model_serializers'
 
 # pdf
 gem 'slim'
@@ -14,14 +18,11 @@ gem 'fog-local', require: 'fog/local'
 
 # Backend
 gem 'roda'
-gem 'dry-auto_inject'
-gem 'dry-validation'
-gem 'dry-monads'
-gem 'dry-transaction'
-gem 'active_model_serializers'
 gem 'rails'
 gem 'sass-rails'
 gem 'coffee-rails'
+gem 'therubyracer'
+gem 'uglifier'
 gem 'money-rails'
 gem 'pg'
 gem 'sinatra'
