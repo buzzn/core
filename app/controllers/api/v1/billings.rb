@@ -22,9 +22,9 @@ module API
           requires :id, type: String, desc: "Billing ID"
         end
         delete ':id' do
-          BillingResource
+          deleted_response(BillingResource
             .retrieve(current_user, permitted_params)
-            .delete
+            .delete)
         end
       end
     end

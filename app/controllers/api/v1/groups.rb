@@ -81,7 +81,7 @@ module API
             optional :energyprice_cents_per_kilowatt_hour, type: Float, desc: "The price per kilowatt_hour in cents"
             optional :baseprice_cents_per_month, type: Integer, desc: "The monthly base price in cents"
           end
-          post ":id/price"do
+          post ":id/prices"do
             created_response(Group::LocalpoolResource
               .retrieve(current_user, permitted_params)
               .create_price(permitted_params))
@@ -93,7 +93,7 @@ module API
             optional :begin_date, type: Date, desc: "Begin date of the Billing Cycle"
             optional :end_date, type: Date, desc: "End date of the Billing Cycle"
           end
-          post ':id/billing_cycle' do
+          post ':id/billing_cycles' do
             created_response(BillingCycleResource
               .retrieve(current_user, permitted_params)
               .create_billing_cycle(permitted_params))

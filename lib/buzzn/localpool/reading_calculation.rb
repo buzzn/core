@@ -384,7 +384,7 @@ module Buzzn::Localpool
         unless register.meter.broker.is_a?(Broker::Discovergy)
           raise ArgumentError.new("register #{register.id} is not a discovergy register")
         end
-        result = Buzzn::Application.config.charts.for_register(register, Buzzn::Interval.second(date.to_time))
+        result = Buzzn::Services::MainContainer['service.charts'].for_register(register, Buzzn::Interval.second(date.to_time))
         if register.input?
           timestamp = result.in.first.timestamp
           value = result.in.first.value

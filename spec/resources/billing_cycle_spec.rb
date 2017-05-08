@@ -1,39 +1,42 @@
 # coding: utf-8
 describe BillingCycleResource do
 
-  let(:localpool) { Fabricate(:localpool_sulz_with_registers_and_readings) }
-  let(:billing_cycle) { Fabricate(:billing_cycle,
+  entity(:localpool) { Fabricate(:localpool_sulz_with_registers_and_readings) }
+  entity(:billing_cycle) { Fabricate(:billing_cycle,
                                   localpool: localpool,
                                   begin_date: Date.new(2016, 8, 4),
                                   end_date: Date.new(2016, 12, 31)) }
-  let(:billing) { Fabricate(:billing,
+  entity(:other_billing_cycle) { Fabricate(:billing_cycle,
+                                  localpool: localpool,
+                                  begin_date: Date.new(2015, 8, 4),
+                                  end_date: Date.new(2015, 12, 31)) }
+  entity(:billing) { Fabricate(:billing,
                             billing_cycle: billing_cycle,
                             localpool_power_taker_contract: localpool.registers.by_label(Register::Base::CONSUMPTION).first.contracts.localpool_power_takers.first) }
-  let(:other_billing) { Fabricate(:billing,
+  entity(:other_billing) { Fabricate(:billing,
                             billing_cycle: billing_cycle,
                             localpool_power_taker_contract: localpool.registers.by_label(Register::Base::CONSUMPTION)[1].contracts.localpool_power_takers.first) }
 
-  let :manager do
+  entity :manager do
     user = Fabricate(:user)
     user.add_role(:manager, localpool)
     user
   end
 
-  let(:base_attributes) { [:name,
+  entity(:base_attributes) { [:name,
                            :begin_date,
                            :end_date ] }
 
-  xit 'retrieve' do
+  it 'retrieve' do
     json = BillingCycleResource.retrieve(manager, billing_cycle.id).to_h
     expect(json.keys & base_attributes).to match_array base_attributes
   end
 
-  xit 'gets all billings from billing_cycle' do
-    billings = [billing, other_billing]
-    json = BillingCycleResource.retrieve(manager, billing_cycle.id).billings.sort!{|a, b| a.object.id <=> b.object.id}
+  it 'gets all billings from billing_cycle' do
+    json = BillingCycleResource.retrieve(manager, billing_cycle.id).billings
     expect(json.first.is_a?(BillingResource)).to eq true
-    expect(json.size).to eq 2
-    expect([json[0].object, json[1].object]).to eq billings.sort!{|a, b| a.id <=> b.id}
+    expect(json.size).to eq billing_cycle.billings.size
+    expect(json.collect{|b| b.object}).to match_array billing_cycle.billings
   end
 
   class Broker::Discovergy
@@ -44,12 +47,12 @@ describe BillingCycleResource do
   class Buzzn::Discovergy::DataSource
     def aggregated(register, mode, interval)
       result = Buzzn::DataResultSet.send(:milliwatt_hour, 'u-i-d')
-      result.add(Time.new(interval.from), 666666666666, register.direction.to_sym)
+      result.add(Time.at(interval.from), 666666666666, register.direction.to_sym)
       result
     end
   end
 
-  xit 'creates all regular billings' do
+  it 'creates all regular billings' do
     localpool.registers.collect(&:meter).uniq.each do |meter|
       Fabricate(:discovergy_broker,
                 mode: meter.registers.size == 1 ? (meter.registers.first.input? ? :in : :out) : :in_out,
@@ -61,10 +64,10 @@ describe BillingCycleResource do
     expect(json.size).to eq 8
   end
 
-  xit 'deletes a billing cycle' do
-    billing_cycle
+  it 'deletes a billing cycle' do
+    other_billing_cycle
     size = BillingCycle.all.size
-    BillingCycleResource.retrieve(manager, billing_cycle.id).delete
+    BillingCycleResource.retrieve(manager, other_billing_cycle.id).delete
     expect(BillingCycle.all.size).to eq size - 1
   end
 end

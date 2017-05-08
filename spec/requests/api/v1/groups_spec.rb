@@ -113,7 +113,7 @@ describe "groups" do
       ]
     end
 
-    let(:filtered_admin_groups_json) do      
+    let(:filtered_admin_groups_json) do
       group_data = admin_group_json.dup
       group_data['updatable'] = false
       group_data['deletable'] = false
@@ -124,7 +124,7 @@ describe "groups" do
       ]
     end
 
-    let(:admin_groups_json) do  
+    let(:admin_groups_json) do
       Group::Base.all.collect do |group|
         rel = {}
         if group.is_a? Group::Tribe
@@ -417,11 +417,11 @@ describe "groups" do
         begin
           localpool.update(readable: :member)
 
-          POST "/api/v1/groups/localpools/#{localpool.id}/price"
+          POST "/api/v1/groups/localpools/#{localpool.id}/prices"
           expect(response).to have_http_status(403)
           expect(json).to eq anonymous_denied_json
 
-          POST "/api/v1/groups/localpools/#{localpool.id}/price", user
+          POST "/api/v1/groups/localpools/#{localpool.id}/prices", user
           expect(response).to have_http_status(403)
           expect(json).to eq denied_json
 
@@ -431,14 +431,14 @@ describe "groups" do
       end
 
       it '404' do
-        POST "/api/v1/groups/localpools/bla-blub/price", admin
+        POST "/api/v1/groups/localpools/bla-blub/prices", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
 
       it '422' do
         # TODO add all possible validation errors, i.e. iban
-        POST "/api/v1/groups/localpools/#{localpool.id}/price", admin,
+        POST "/api/v1/groups/localpools/#{localpool.id}/prices", admin,
              name: 'Max Mueller' * 10
         expect(response).to have_http_status(422)
         expect(json).to eq validation_json
@@ -465,7 +465,7 @@ describe "groups" do
       end
 
       it '201' do
-        POST "/api/v1/groups/localpools/#{localpool.id}/price", admin, new_price
+        POST "/api/v1/groups/localpools/#{localpool.id}/prices", admin, new_price
 
         expect(response).to have_http_status(201)
         result = json
