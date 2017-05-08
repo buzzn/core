@@ -37,7 +37,6 @@ module Group
 
     mount_uploader :logo, PictureUploader
     #mount_uploader :image, PictureUploader
-    mount_base64_uploader :image, PictureUploader
 
     has_one  :area
     has_many :registers, class_name: Register::Base, foreign_key: :group_id
