@@ -72,10 +72,6 @@ gem 'iban-tools'
 gem 'lograge'
 gem 'byebug'
 gem 'acts_as_votable'
-<<<<<<< HEAD
-=======
-gem 'will_paginate'
->>>>>>> omniauth bullet removed
 gem 'multi_json'
 gem 'oj'
 gem 'oauth'
