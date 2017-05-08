@@ -77,7 +77,7 @@ gem 'oj'
 gem 'oauth'
 gem 'remote_lock'
 gem 'fabrication'
-
+gem 'therubyracer'
 
 
 
