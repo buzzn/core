@@ -46,5 +46,43 @@ module Buzzn::Localpool
       end
       return result
     end
+
+    def grid_feeding_chp
+
+    end
+
+    def grid_feeding_pv
+
+    end
+
+    def consumption_through_chp
+
+    end
+
+    def consumption_through_pv
+
+    end
+
+    def own_consumption
+      total_production - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value
+    end
+
+    def total_production
+      result = 0
+      get_by_label(Buzzn::AccountedEnergy::PRODUCTION_PV, Buzzn::AccountedEnergy::PRODUCTION_CHP).collect{|energy| result += energy.value}
+      result
+    end
+
+    def production_pv
+      result = 0
+      @total_accounted_energy.get_by_label(Buzzn::AccountedEnergy::PRODUCTION_PV).collect{|energy| result += energy.value}
+      result
+    end
+
+    def production_chp
+      result = 0
+      @total_accounted_energy.get_by_label(Buzzn::AccountedEnergy::PRODUCTION_CHP).collect{|energy| result += energy.value}
+      result
+    end
   end
 end
