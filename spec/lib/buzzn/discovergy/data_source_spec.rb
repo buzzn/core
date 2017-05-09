@@ -1,6 +1,7 @@
 # coding: utf-8
 describe Buzzn::Discovergy::DataSource do
 
+  require 'broker/discovergy'
   class Broker::Discovergy
     def validates_credentials
     end
