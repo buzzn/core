@@ -16,9 +16,18 @@ gem 'wkhtmltopdf-binary'
 gem 'fog-aws', require: 'fog/aws'
 gem 'fog-local', require: 'fog/local'
 
+# activeadmin
+gem 'activeadmin'
+gem 'select2-rails'
+gem 'activeadmin-select2', github: 'mfairburn/activeadmin-select2'
+
 # Backend
 gem 'roda'
 gem 'rails'
+gem 'sprockets-rails'
+gem 'simple_form'
+gem 'jquery-rails'
+gem 'haml-rails'
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'therubyracer'
