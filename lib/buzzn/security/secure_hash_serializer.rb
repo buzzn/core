@@ -3,7 +3,7 @@ class Buzzn::Security::SecureHashSerializer
 
   def load encrypted
     if encrypted.present?
-      string = message_encrypter.decrypt_and_verify(encrypted)
+      string = message_encryptor.decrypt_and_verify(encrypted)
       YAML.load(string)
     else
       {}
@@ -13,7 +13,7 @@ class Buzzn::Security::SecureHashSerializer
   def dump hash
     if hash.present?
       string = YAML.dump(hash)
-      message_encrypter.encrypt_and_sign(string)
+      message_encryptor.encrypt_and_sign(string)
     end
   end
 end

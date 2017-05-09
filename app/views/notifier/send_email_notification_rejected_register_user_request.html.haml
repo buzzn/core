@@ -1,9 +1,0 @@
-%p
-  = t('hello') + " #{@receiver.name}!"
-- if @mode == 'request'
-  %p= t('user_rejected_your_register_user_request_for_register', user: @sender.name, register: @register.name)
-  %p= t('to_ask_again_for_membership_please_visit_the_register', register: link_to(@register.name, register_url(@register))).html_safe
-- else
-  %p= t('user_rejected_your_register_user_invitation_for_register', user: @sender.name, register: @register.name)
-  %p= t('to_invite_user_again_please_visit_your_register', user: @sender.name, register: link_to(@register.name, register_url(@register))).html_safe
-%p= t('your_buzzn_team')

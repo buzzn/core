@@ -14,6 +14,7 @@ module Contract
                                   .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
     scope :at, -> (timestamp) { where('begin_date <= ?', timestamp)
                                   .where('end_date > ? OR end_date IS NULL', timestamp + 1.second) }
+    scope :current, ->(now = Time.current) {where("begin_date < ? AND (end_date > ? OR end_date IS NULL)", now, now)}
 
     def self.readable_by(*args)
       # inherit from contract

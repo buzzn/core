@@ -155,6 +155,10 @@ module Contract
       "TODO {organization.name} {tariff}"
     end
 
+    def full_contract_number
+      "#{contract_number}/#{contract_number_addition}"
+    end
+
     def self.search_attributes
       #TODO filtering what ?
       []

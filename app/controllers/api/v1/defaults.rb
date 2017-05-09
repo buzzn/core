@@ -17,8 +17,6 @@ module API
           Buzzn::SerializableResource.new(object).to_json
         end
 
-        jsonapi_base_url "#{Rails.application.secrets.hostname}/api/v1"
-
         helpers Doorkeeper::Grape::Helpers
         helpers Buzzn::Grape::Caching
 

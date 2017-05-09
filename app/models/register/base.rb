@@ -2,7 +2,7 @@ require 'buzzn/managed_roles'
 module Register
   class Base < ActiveRecord::Base
     self.table_name = :registers
-    resourcify    
+    resourcify
 
     include Import.active_record['service.current_power', 'service.charts']
 
@@ -321,7 +321,7 @@ module Register
     end
 
 
-    # TODO move this to decorater
+    # TODO move this to helper
     def readable_icon
       if readable_by_friends?
         "user-plus"
@@ -403,19 +403,6 @@ module Register
         if self.group.contracts.metering_point_operators.running.any?
           return self.group.contracts.metering_point_operators.running.first
         end
-      end
-    end
-
-
-
-    # TODO ????
-    def self.json_tree(nodes)
-      nodes.map do |node, sub_nodes|
-        label = node.decorate.name
-        if node.mode == "out" && node.devices.any?
-          label = label + " | " + node.devices.first.name
-        end
-        {:label => label, :mode => node.mode, :id => node.id, :children => json_tree(sub_nodes).compact}
       end
     end
 

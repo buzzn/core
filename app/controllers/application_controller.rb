@@ -4,10 +4,7 @@ class ApplicationController < ActionController::Base
   self.responder = ApplicationResponder
   respond_to :html
 
-  include PublicActivity::StoreController
 
-
-  before_filter :initialize_gon
   before_filter :http_basic_authenticate
   before_filter :set_paper_trail_whodunnit
   before_filter :authenticate_user!
@@ -54,9 +51,6 @@ class ApplicationController < ActionController::Base
     redirect
   end
 
-  def current_user
-    UserDecorator.decorate(super) unless super.nil?
-  end
 
   # used for authority to make it possible to deal with logged out users
   def current_or_null_user
@@ -67,20 +61,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def initialize_gon
-    if user_signed_in?
-      Gon.global.push({ current_user_id: current_user.id,
-                        profile_name: current_user.profile.slug,
-                        pusher_key: Rails.application.secrets.pusher_key,
-                        pusher_host: Rails.application.secrets.pusher_host })
-    else
-       Gon.global.push({ pusher_key: Rails.application.secrets.pusher_key,
-                         pusher_host: Rails.application.secrets.pusher_host })
-    end
-
-  rescue => e
-    logger.error("error while retrieving access token: #{e.message}")
-  end
 
   def authority_forbidden(error)
     render "errors/403"
