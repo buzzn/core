@@ -57,9 +57,9 @@ describe "billing-cycles" do
 
   it 'creates all regular billings' do
     # overwrite BillingCycle.create_regular_billings
-    BillingCycle.class_eval do
-      def create_regular_billings(accounting_year)
-        return Billing.all
+    BillingCycleResource.class_eval do
+      def create_regular_billings(params = {})
+        return Billing.all.collect{|b| BillingResource.new(b)}
       end
     end
 
@@ -73,8 +73,8 @@ describe "billing-cycles" do
     expect(json).to eq create_response
 
     # reload BillingCycle class definition to undo the method overwriting
-    Object.send(:remove_const, :BillingCycle)
-    load 'app/models/billing_cycle.rb'
+    Object.send(:remove_const, :BillingCycleResource)
+    load 'app/resources/billing_cycle_resource.rb'
   end
 
   it 'gets all billings' do
