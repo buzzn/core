@@ -51,6 +51,13 @@ class ApplicationController < ActionController::Base
     redirect
   end
 
+  def authenticate_admin_user!
+    raise SecurityError unless current_user.has_role?(:admin)
+  end
+
+  rescue_from SecurityError do |exception|
+    redirect_to "/"
+  end
 
   # used for authority to make it possible to deal with logged out users
   def current_or_null_user
