@@ -36,6 +36,10 @@ module Buzzn
         else
           steps.register(name, block)
         end
+      rescue => e
+        # just print out the error as db:init does autoload those files
+        # in the second run or so
+        warn e.message
       end
     end
   end
