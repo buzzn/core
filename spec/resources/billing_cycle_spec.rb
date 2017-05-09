@@ -6,11 +6,11 @@ describe BillingCycleResource do
                                   localpool: localpool,
                                   begin_date: Date.new(2016, 8, 4),
                                   end_date: Date.new(2016, 12, 31)) }
-  entity(:other_billing_cycle) { Fabricate(:billing_cycle,
+  entity!(:other_billing_cycle) { Fabricate(:billing_cycle,
                                   localpool: localpool,
                                   begin_date: Date.new(2015, 8, 4),
                                   end_date: Date.new(2015, 12, 31)) }
-  entity(:billing) { Fabricate(:billing,
+  entity!(:billing) { Fabricate(:billing,
                             billing_cycle: billing_cycle,
                             localpool_power_taker_contract: localpool.registers.by_label(Register::Base::CONSUMPTION).first.contracts.localpool_power_takers.first) }
   entity(:other_billing) { Fabricate(:billing,
@@ -28,16 +28,15 @@ describe BillingCycleResource do
                             :end_date ] }
 
   it 'retrieve' do
-    json = BillingCycleResource.retrieve(manager, billing_cycle.id).to_h
-    expect(json.keys & base_attributes).to match_array base_attributes
+    result = BillingCycleResource.retrieve(manager, billing_cycle.id).to_h
+    expect(result.keys & base_attributes).to match_array base_attributes
   end
 
   it 'gets all billings from billing_cycle' do
-    billing
-    json = BillingCycleResource.retrieve(manager, billing_cycle.id).billings
-    expect(json.first.is_a?(BillingResource)).to eq true
-    expect(json.size).to eq billing_cycle.billings.size
-    expect(json.collect{|b| b.object}).to match_array billing_cycle.billings
+    result = BillingCycleResource.retrieve(manager, billing_cycle.id).billings
+    expect(result.first.is_a?(BillingResource)).to eq true
+    expect(result.size).to eq billing_cycle.billings.size
+    expect(result.collect{|b| b.object}).to match_array billing_cycle.billings
     billing.destroy
   end
 
@@ -55,9 +54,9 @@ describe BillingCycleResource do
       end
     end
 
-    json = BillingCycleResource.retrieve(manager, billing_cycle.id).create_regular_billings({accounting_year: 2016})
-    expect(json.first.is_a?(BillingResource)).to eq true
-    expect(json.size).to eq 3
+    result = BillingCycleResource.retrieve(manager, billing_cycle.id).create_regular_billings({accounting_year: 2016})
+    expect(result.first.is_a?(BillingResource)).to eq true
+    expect(result.size).to eq 3
 
     # reload BillingCycle class definition to undo the method overwriting
     Object.send(:remove_const, :BillingCycle)
@@ -65,7 +64,6 @@ describe BillingCycleResource do
   end
 
   it 'deletes a billing cycle' do
-    other_billing_cycle
     size = BillingCycle.all.size
     BillingCycleResource.retrieve(manager, other_billing_cycle.id).delete
     expect(BillingCycle.all.size).to eq size - 1

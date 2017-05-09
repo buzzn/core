@@ -89,9 +89,9 @@ module API
 
           desc "Create a Billing Cycle."
           params do
-            optional :name, type: String, desc: "Name of the Billing Cycle"
-            optional :begin_date, type: Date, desc: "Begin date of the Billing Cycle"
-            optional :end_date, type: Date, desc: "End date of the Billing Cycle"
+            requires :name, type: String, desc: "Name of the Billing Cycle"
+            requires :begin_date, type: Date, desc: "Begin date of the Billing Cycle"
+            requires :end_date, type: Date, desc: "End date of the Billing Cycle"
           end
           post ':id/billing_cycles' do
             created_response(BillingCycleResource

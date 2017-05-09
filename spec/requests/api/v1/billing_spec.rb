@@ -2,11 +2,11 @@ describe "billings" do
 
   entity(:group) { Fabricate(:localpool, registers: [Fabricate(:input_meter).input_register, Fabricate(:input_meter).input_register]) }
   entity(:billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
-  entity(:billing) { Fabricate(:billing,
+  entity!(:billing) { Fabricate(:billing,
                         billing_cycle: billing_cycle,
                         localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
                                                                   register: group.registers.by_label(Register::Base::CONSUMPTION).first)) }
-  entity(:other_billing) { Fabricate(:billing,
+  entity!(:other_billing) { Fabricate(:billing,
                         billing_cycle: billing_cycle,
                         localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
                                                                   register: group.registers.by_label(Register::Base::CONSUMPTION)[1])) }
@@ -32,7 +32,6 @@ describe "billings" do
   end
 
   it 'updates a billing' do
-    billing
     manager_user          = User.find(full_access_token.resource_owner_id)
     manager_user.remove_role(:manager, group)
 
@@ -48,7 +47,6 @@ describe "billings" do
   end
 
   it 'deletes a billing' do
-    other_billing
     manager_user          = User.find(full_access_token.resource_owner_id)
     manager_user.remove_role(:manager, group)
 

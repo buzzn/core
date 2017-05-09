@@ -2,7 +2,7 @@ describe "billing-cycles" do
 
   entity(:group) { Fabricate(:localpool) }
   entity(:billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
-  entity(:other_billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
+  entity!(:other_billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
   entity(:regular_token) do
     Fabricate(:user_token)
   end
@@ -12,11 +12,11 @@ describe "billing-cycles" do
     user.add_role(:manager, group)
     token
   end
-  entity(:billing) { Fabricate(:billing,
+  entity!(:billing) { Fabricate(:billing,
                             billing_cycle: billing_cycle,
                             localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
                                                                       register: Fabricate.build(:input_register, group: group))) }
-  entity(:other_billing) { Fabricate(:billing,
+  entity!(:other_billing) { Fabricate(:billing,
                             billing_cycle: billing_cycle,
                             localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
                                                                       register: Fabricate.build(:input_register, group: group))) }
@@ -63,8 +63,6 @@ describe "billing-cycles" do
       end
     end
 
-    billing
-    other_billing
     POST "/api/v1/billing-cycles/#{billing_cycle.id}/create-regular-billings", regular_token, accounting_year: 2016
     expect(response).to have_http_status(403)
 
@@ -78,8 +76,6 @@ describe "billing-cycles" do
   end
 
   it 'gets all billings' do
-    billing
-    other_billing
     GET "/api/v1/billing-cycles/#{billing_cycle.id}/billings", regular_token
     expect(response).to have_http_status(403)
 
@@ -99,7 +95,6 @@ describe "billing-cycles" do
   end
 
   it 'deletes a billing cycle' do
-    other_billing_cycle
     size = BillingCycle.all.size
     DELETE "/api/v1/billing-cycles/#{other_billing_cycle.id}", regular_token
     expect(response).to have_http_status(403)
