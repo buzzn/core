@@ -20,7 +20,6 @@ describe "billing-cycles" do
                             billing_cycle: billing_cycle,
                             localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
                                                                       register: Fabricate.build(:input_register, group: group))) }
-
   entity :create_response do
     [{
       "id"=>billing.id,
@@ -56,13 +55,14 @@ describe "billing-cycles" do
     }]
   end
 
-  class BillingCycle
-    def create_regular_billings(accounting_year)
-      return Billing.all
-    end
-  end
-
   it 'creates all regular billings' do
+    # overwrite BillingCycle.create_regular_billings
+    BillingCycle.class_eval do
+      def create_regular_billings(accounting_year)
+        return Billing.all
+      end
+    end
+
     billing
     other_billing
     POST "/api/v1/billing-cycles/#{billing_cycle.id}/create-regular-billings", regular_token, accounting_year: 2016
@@ -71,6 +71,10 @@ describe "billing-cycles" do
     POST "/api/v1/billing-cycles/#{billing_cycle.id}/create-regular-billings", manager_token, accounting_year: 2016
     expect(response).to have_http_status(201)
     expect(json).to eq create_response
+
+    # reload BillingCycle class definition to undo the method overwriting
+    Object.send(:remove_const, :BillingCycle)
+    load 'app/models/billing_cycle.rb'
   end
 
   it 'gets all billings' do

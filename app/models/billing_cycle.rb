@@ -55,7 +55,8 @@ class BillingCycle < ActiveRecord::Base
   end
 
   def create_regular_billings(accounting_year)
-    all_accounted_energies = Buzzn::Localpool::ReadingCalculation.get_all_energy_in_localpool(self.localpool, self.begin_date, self.end_date, accounting_year)
+    # TODO: end_date will not be passed to ReadingCalculations as we assume that the end_date is the end of the year.
+    all_accounted_energies = Buzzn::Localpool::ReadingCalculation.get_all_energy_in_localpool(self.localpool, self.begin_date, nil, accounting_year)
     result = []
     all_accounted_energies.accounted_energies.each do |accounted_energy|
       if ![Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG,

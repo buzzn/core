@@ -1,6 +1,6 @@
 describe "billings" do
 
-  entity(:group) { Fabricate(:localpool_sulz_with_registers_and_readings) }
+  entity(:group) { Fabricate(:localpool, registers: [Fabricate(:input_meter).input_register, Fabricate(:input_meter).input_register]) }
   entity(:billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
   entity(:billing) { Fabricate(:billing,
                         billing_cycle: billing_cycle,

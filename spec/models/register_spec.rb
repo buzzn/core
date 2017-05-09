@@ -313,11 +313,6 @@ describe "Register Model" do
     end
   end
 
-  class Broker::Discovergy
-    def validates_credentials
-    end
-  end
-
   class Buzzn::Services::ChartsDummy
     def for_register(register, interval)
       return Buzzn::DataResultSet.send(:milliwatt_hour, 'some-id', [Buzzn::DataPoint.new(1491429601.399, 243378558930.2)])

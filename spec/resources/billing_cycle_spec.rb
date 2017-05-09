@@ -24,8 +24,8 @@ describe BillingCycleResource do
   end
 
   entity(:base_attributes) { [ :name,
-                               :begin_date,
-                               :end_date ] }
+                            :begin_date,
+                            :end_date ] }
 
   it 'retrieve' do
     json = BillingCycleResource.retrieve(manager, billing_cycle.id).to_h
@@ -33,35 +33,35 @@ describe BillingCycleResource do
   end
 
   it 'gets all billings from billing_cycle' do
+    billing
     json = BillingCycleResource.retrieve(manager, billing_cycle.id).billings
     expect(json.first.is_a?(BillingResource)).to eq true
     expect(json.size).to eq billing_cycle.billings.size
     expect(json.collect{|b| b.object}).to match_array billing_cycle.billings
-  end
-
-  class Broker::Discovergy
-    def validates_credentials
-    end
-  end
-
-  class Buzzn::Discovergy::DataSource
-    def aggregated(register, mode, interval)
-      result = Buzzn::DataResultSet.send(:milliwatt_hour, 'u-i-d')
-      result.add(Time.at(interval.from), 666666666666, register.direction.to_sym)
-      result
-    end
+    billing.destroy
   end
 
   it 'creates all regular billings' do
-    localpool.registers.collect(&:meter).uniq.each do |meter|
-      Fabricate(:discovergy_broker,
-                mode: meter.registers.size == 1 ? (meter.registers.first.input? ? :in : :out) : :in_out,
-                resource: meter,
-                external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
+    # overwrite BillingCycle.create_regular_billings
+    BillingCycle.class_eval do
+      def create_regular_billings(accounting_year)
+        result = []
+        3.times do |i|
+          result << Fabricate(:billing,
+                              billing_cycle: self,
+                              localpool_power_taker_contract: self.localpool.registers.by_label(Register::Base::CONSUMPTION)[i].contracts.localpool_power_takers.first)
+        end
+        return result
+      end
     end
+
     json = BillingCycleResource.retrieve(manager, billing_cycle.id).create_regular_billings({accounting_year: 2016})
     expect(json.first.is_a?(BillingResource)).to eq true
-    expect(json.size).to eq 8
+    expect(json.size).to eq 3
+
+    # reload BillingCycle class definition to undo the method overwriting
+    Object.send(:remove_const, :BillingCycle)
+    load 'app/models/billing_cycle.rb'
   end
 
   it 'deletes a billing cycle' do
