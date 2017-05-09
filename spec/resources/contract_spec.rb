@@ -45,7 +45,7 @@ describe Contract::BaseResource do
     it 'retrieve all - ids + types' do
       expected = all.collect { |c| [c.class, c.id] }
       result = Contract::BaseResource.all(user).collect do |r|
-        [r.type.constantize, r.id]
+        [r.object.class, r.id]
       end
       expect(result).to match_array expected
     end
@@ -66,9 +66,9 @@ describe Contract::BaseResource do
 
     it 'retrieve - ids + types' do
       result = Contract::MeteringPointOperatorResource.all(user).collect do |r|
-        [r.type.constantize, r.id]
+        [r.type, r.id]
       end
-      expect(result).to eq [[Contract::MeteringPointOperator, metering_point_operator.id]]
+      expect(result).to eq [['contract_metering_point_operator', metering_point_operator.id]]
     end
 
     it "retrieve - id + type" do
@@ -95,9 +95,9 @@ describe Contract::BaseResource do
 
     it 'retrieve all - ids + types' do
       result = Contract::LocalpoolProcessingResource.all(user).collect do |r|
-        [r.type.constantize, r.id]
+        [r.type, r.id]
       end
-      expect(result).to eq [[Contract::LocalpoolProcessing, localpool_processing.id]]
+      expect(result).to eq [['contract_localpool_processing', localpool_processing.id]]
     end
 
     it "retrieve - id + type" do
@@ -124,7 +124,7 @@ describe Contract::BaseResource do
 
     it 'retrieve - ids + types' do
       result = Contract::LocalpoolPowerTakerResource.all(user).collect do |r|
-        [r.type.constantize, r.id]
+        [r.object.class, r.id]
       end
       expect(result).to eq [[Contract::LocalpoolPowerTaker, localpool_power_taker.id]]
     end
@@ -153,9 +153,9 @@ describe Contract::BaseResource do
 
     it 'retrieve all - ids + types' do
       result = Contract::PowerTakerResource.all(user).collect do |r|
-        [r.type.constantize, r.id]
+        [r.type, r.id]
       end
-      expect(result).to eq [[Contract::PowerTaker, power_taker.id]]
+      expect(result).to eq [['contract_power_taker', power_taker.id]]
     end
 
     it "retrieve - id + type" do
@@ -182,9 +182,9 @@ describe Contract::BaseResource do
 
     it 'retrieve all - ids + types' do
       result = Contract::PowerGiverResource.all(user).collect do |r|
-        [r.type.constantize, r.id]
+        [r.type, r.id]
       end
-      expect(result).to eq [[Contract::PowerGiver, power_giver.id]]
+      expect(result).to eq [['contract_power_giver', power_giver.id]]
     end
 
     it "retrieve - id + type" do

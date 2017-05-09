@@ -70,8 +70,8 @@ describe "users" do
       {
         "id"=>user.id,
         "type"=>"user",
-        "updatable"=>false,
-        "deletable"=>false
+        "updatable"=>true,
+        "deletable"=>true
       }
     ]
   end
@@ -81,8 +81,8 @@ describe "users" do
       {
         "id"=>u.id,
         "type"=>"user",
-        "updatable"=>false,
-        "deletable"=>false
+        "updatable"=>true,
+        "deletable"=>true
       }
       end
   end
@@ -92,8 +92,8 @@ describe "users" do
       {
         "id"=>admin.resource_owner_id,
         "type"=>"user",
-        "updatable"=>false,
-        "deletable"=>false
+        "updatable"=>true,
+        "deletable"=>true
       }
     ]
   end

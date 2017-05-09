@@ -6,7 +6,12 @@ module Buzzn
     class ActiveRecord < Dry::AutoInject::Strategies::Constructor
       private
 
-      def define_new(_klass)
+      def define_new
+        class_mod.class_exec(container, dependency_map) do |container, dependency_map|
+          define_method :container do
+            container
+          end
+        end
       end
 
       def define_initialize(klass)

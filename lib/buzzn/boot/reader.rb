@@ -6,11 +6,11 @@ module Buzzn
     class Reader < Dry::AutoInject::Strategies::Constructor
       private
 
-      def define_new(_klass)
-        class_mod.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def new(*args)
-            result = super
-            names = #{dependency_map.inspect}
+      def define_new
+        class_mod.class_exec(container, dependency_map) do |container, dependency_map|
+          define_method :new do |*args|
+            result = super(*args)
+            names = dependency_map.to_h
             deps = names.each_with_object({}) { |(name, identifier), obj|
               obj[name] = container[identifier]
             }
@@ -21,7 +21,7 @@ module Buzzn
             end
             result
           end
-        RUBY
+        end
       end
 
       def define_initialize(klass)

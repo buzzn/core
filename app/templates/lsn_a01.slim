@@ -25,7 +25,6 @@ html
  
   body
     div id='from'
-<<<<<<< HEAD
       div = power_taker.contractor.name 
       div Localpool #{power_taker.localpool.name}
       div = power_taker.contractor_contact.name 
@@ -53,39 +52,10 @@ html
     h1 Stromnehmer-Auftragseingangsbestätigung
       <br>
       Localpool #{power_taker.localpool.name}
-=======
-      div = power_giver_contractor_name
-      div Localpool #{localpool_name}
-      div = power_giver_contact
-      div = power_giver_street_with_number
-      div = power_giver_zip_with_place
-      div &nbsp;
-      div T: #{power_giver_phone}
-      div F: #{power_giver_fax}
-      div Email: #{power_giver_email}
-
-    div id="from_small"
-      #{power_giver_contractor_name} #{power_giver_street_with_number} #{power_giver_zip_with_place}
-
-    div id="to"
-      div = power_taker_title
-      div = power_taker_name
-      div = power_taker_street_with_number
-      div = power_taker_zip_with_place
-      div &nbsp;
-      div = power_taker_email
-
-    div id='place_date' = "#{power_giver_place}, den #{date}"
-
-    h1 Stromnehmer-Auftragseingangsbestätigung
-      <br>
-      Localpool #{localpool_name}
->>>>>>> LSN A01 pdf generator
 
     table.block
       tr
         td Vertragsnummner:
-<<<<<<< HEAD
         td #{power_taker.full_contract_number}
       tr
         td Bezugsstelle:
@@ -98,20 +68,6 @@ html
         td = power_taker.forecast_kwh_pa
 
     p #{addressing},
-=======
-        td #{power_taker_full_contract_number}
-      tr
-        td Bezugsstelle:
-        td = power_giver_street_with_number
-      tr
-        td Zählernummer
-        td = power_giver_meter_serial_number
-      tr
-        td Jahresverbrauch (kWh):
-        td = yearly_consumption
-
-    p Sehr #{power_taker_title} #{power_taker_name},
->>>>>>> LSN A01 pdf generator
 
     p Ihr Auftrag, Strom aus unserem Haus zu beziehen, ist hier eingegangen. Vielen Dank! Wir freuen uns, dass Sie sich für die Teilnahme an unserem Localpool entschieden haben. Mit Ihnen werden weitere Mieter ihren Strom umweltfreundlich und günstig direkt über den Localpool beziehen.
 
@@ -123,11 +79,7 @@ html
 
     p Mit freundlichen Grüßen,
 
-<<<<<<< HEAD
     p = power_taker.contractor_contact.name
-=======
-    p = power_taker_contact
->>>>>>> LSN A01 pdf generator
 
     div.ps 
       span PS: 
@@ -140,7 +92,6 @@ html
     table
       tr.grey
         td Anrede
-<<<<<<< HEAD
         td = power_taker.customer.profile.address
       tr
         td Name
@@ -151,25 +102,12 @@ html
       tr
         td E-Mail
         td = power_taker.customer.email
-=======
-        td = power_taker_title
-      tr
-        td Name
-        td = power_taker_name
-      tr.grey
-        td Telefon
-        td = power_taker_phone
-      tr
-        td E-Mail
-        td = power_taker_email
->>>>>>> LSN A01 pdf generator
 
     h2 Bezugsstelle
 
     table
       tr.grey
         td Adresse
-<<<<<<< HEAD
         td = power_taker.register.address.street_number_zip_place
       tr
         td Adresszusatz
@@ -198,43 +136,12 @@ html
       tr
         td Zählernummer
         td = power_taker.register.meter.manufacturer_product_serialnumber
-=======
-        td = power_taker_street_number_zip_place
-      tr
-        td Adresszusatz
-        td = power_taker_extra_address
-      tr.grey
-        td Ziehen Sie neu ein?
-        td = moved_in
-      tr
-        td Vorlieferant
-        td = _MPSN_LFA
-      tr.grey
-        td Kundennummer Vorlieferant
-        td = _MPSN_LFA_KundenNr
-      tr
-        td Vertragskontonummer Vorlieferant
-        td = _MPSN_LFA_VertragskontoNr
-      tr.grey
-        td Stromverbrauch letztes Jahr
-        td = yearly_consumption kWh
-      tr
-        td Derzeitiger Abschlag (Strom)
-        td = _Abschlag_neu €
-      tr.grey
-        td Zählpunktbezeichnung
-        td = _MPSN_Zählpunkt_ID
-      tr
-        td Zählernummer
-        td = _MPSN_ZählerNr_alt
->>>>>>> LSN A01 pdf generator
 
   h2 Preise, Abrechnung & Bezahlung
 
   table
     tr.grey
       td Grundpreis
-<<<<<<< HEAD
       td #{power_taker.base_price_euro} €/Monat
     tr
       td Bezugspreis
@@ -251,37 +158,13 @@ html
     tr
       td Name der Bank
       td = power_taker.customer_bank_account.bank_name
-=======
-      td #{_Grundpreis_brutto} €/Monat
-    tr
-      td Bezugspreis
-      td #{_Bezugspreis_brutto} Cent/kWh
-    tr.grey
-      td Kontoinhaber
-      td = _MPSN_KontoName
-    tr
-      td Kontonummer
-      td = _MPSN_Kontonummer_X
-    tr.grey
-      td Bankleitzahl
-      td = _MPSN_BLZ_X
-    tr
-      td Name der Bank
-      td = _MPSN_Bank
->>>>>>> LSN A01 pdf generator
 
   h2 Widerrufsrecht
 
   p.law Der LSN kann seine Vertragserklärung innerhalb von 14 Tagen ohne Angabe von Gründen in Textform (z. B. Brief, Telefax, E- Mail) widerrufen. Die Frist beginnt nach Erhalt der Widerrufsbelehrung in Textform, jedoch nicht vor Eingang der ersten Stromlieferung und auch nicht vor Erfüllung der Informationspflichten des LSG gemäß Artikel 246 § 2 in Verbindung mit § 1 Abs. 1 und 2 EGBGB sowie – bei Vertragsschluss im elektronischen Rechtsverkehr – der Pflichten des LSG gemäß § 312g Abs. 1 Satz 1 BGB in Verbindung mit Artikel 246 § 3 EGBGB. Zur Wahrung der Widerrufsfrist genügt die rechtzeitige Absendung des Widerrufs.
 
-<<<<<<< HEAD
   p.law Der Widerruf ist zu richten an #{power_taker.contractor.name}, - Localpool #{power_taker.localpool.name}- #{power_taker.contractor.address.street_number_zip_place}, Telefon: #{power_taker.contractor.phone}, Fax: #{power_taker.contractor.fax}, E Mail: #{power_taker.contractor.email}.
-=======
-  p.law Der Widerruf ist zu richten an #{power_giver_partner}, - Localpool #{localpool_name}- #{power_giver_street_number_zip_place}, Telefon: power_giver_fon, Fax: #{power_giver_fax}, E Mail: #{power_giver_email}.
->>>>>>> LSN A01 pdf generator
 
   h2 Widerrufsfolgen
 
   p.law Im Falle eines wirksamen Widerrufs sind die beiderseits empfangenen Leistungen zurück zu gewähren. Das heißt, dass der LSG bereits erhaltene Zahlungen einschließlich ggf. gezogener Nutzungen (z. B. Zinsen) an den LSN zurückzahlt. Für den verbrauchten Strom muss der LSN dem LSG Wertersatz leisten. Die Verpflichtungen zur Erstattung von Zahlungen müssen innerhalb von 30 Tagen erfüllt werden. Die Frist beginnt für den LSN mit der Absendung seiner Widerrufserklärung, für den LSG mit deren Empfang.
-
-

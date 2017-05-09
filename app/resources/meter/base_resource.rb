@@ -18,7 +18,5 @@ module Meter
     attributes :updatable, :deletable
 
     def direction_label; object.direction; end
-
-    def direction_label; object.direction; end
   end
 end

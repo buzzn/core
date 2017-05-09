@@ -295,14 +295,14 @@ describe "groups" do
     let(:missing_json) do
       {
         "errors" => [{"parameter" => "duration",
-                      "detail" => "duration is missing"}]
+                      "detail" => "is missing"}]
       }
     end
 
     let(:invalid_json) do
       {
         "errors" => [{"parameter" => "duration",
-                      "detail" => "duration does not have a valid value"}]
+                      "detail" => "must be one of: year, month, day, hour"}]
       }
     end
 

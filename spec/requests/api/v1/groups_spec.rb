@@ -60,7 +60,6 @@ describe "groups" do
         "readable"=>group.readable,
         "updatable"=>true,
         "deletable"=>true,
-        "registers"=>[],
         "meters"=>group.meters.collect do |meter|
           json = {
             "id"=>meter.id,
@@ -83,8 +82,8 @@ describe "groups" do
           {
             "id"=>manager.id,
             "type"=>"user",
-            "updatable"=>false,
-            "deletable"=>false,
+            "updatable"=>true,
+            "deletable"=>true,
           }
         end,
         "energy_producers"=>[],
@@ -98,6 +97,10 @@ describe "groups" do
       json = group_json.dup
       json['updatable']=true
       json['deletable']=true
+      json['meters'].each do |meter|
+        meter['updatable'] = true
+        meter['deletable'] = true
+      end
       json
     end
 
@@ -107,10 +110,7 @@ describe "groups" do
 
     let(:groups_json) do
       group_data = group_json.dup
-      group_data['updatable'] = false
-      group_data['deletable'] = false
       group_data['readable'] = 'member'
-      group_data['managers'] = []
       [
         group_data
       ]
@@ -118,10 +118,7 @@ describe "groups" do
 
     let(:filtered_admin_groups_json) do
       group_data = admin_group_json.dup
-      group_data['updatable'] = false
-      group_data['deletable'] = false
       group_data['readable'] = 'member'
-      group_data['managers'] = []
       [
         group_data
       ]
@@ -143,9 +140,8 @@ describe "groups" do
           "name"=>group.name,
           "description"=>group.description,
           "readable"=>group.readable,
-          "updatable"=>false,
-          "deletable"=>false,
-          "registers"=>[],
+          "updatable"=>true,
+          "deletable"=>true,
           "meters"=>group.meters.collect do |meter|
             json = {
               "id"=>meter.id,
@@ -158,13 +154,20 @@ describe "groups" do
               "ownership"=>meter.ownership,
               "direction_label"=>meter.direction,
               "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
-              "updatable"=>false,
-              "deletable"=>false,
+              "updatable"=>true,
+              "deletable"=>true,
             }
             json['smart'] = meter.smart if meter.is_a? Meter::Real
             json
           end,
-          "managers"=>[],
+          "managers"=>group.managers.collect do |manager|
+            {
+              "id"=>manager.id,
+              "type"=>"user",
+              "updatable"=>true,
+              "deletable"=>true,
+            }
+          end,
           "energy_producers"=>[],
           "energy_consumers"=>[]
         }.merge(rel)
@@ -205,7 +208,7 @@ describe "groups" do
 
       GET "/api/v1/groups/#{group.id}", admin
       expect(response).to have_http_status(200)
-      expect(json).to eq admin_group_json
+      expect(json.to_yaml).to eq admin_group_json.to_yaml
     end
 
     it '200 all' do
@@ -304,6 +307,30 @@ describe "groups" do
             group.meters
           end
 
+          let(:minimal_meter_json) do
+            meters.collect do |meter|
+              json =
+                {
+                  "id"=>meter.id,
+                  "type"=>"meter_#{meter.is_a?(Meter::Virtual) ? 'virtual': 'real'}",
+                  "manufacturer_name"=>meter.manufacturer_name,
+                  "manufacturer_product_name"=>meter.manufacturer_product_name,
+                  "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+                  "metering_type"=>meter.metering_type,
+                  "meter_size"=>meter.meter_size,
+                  "ownership"=>meter.ownership,
+                  "direction_label"=>meter.direction,
+                  "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
+                  "updatable"=>true,
+                  "deletable"=>true
+                }
+              if meter.is_a? Meter::Real
+                json['smart'] = false
+              end
+              json
+            end
+          end
+
           let(:meter_json) do
             meters.collect do |meter|
               json =
@@ -318,13 +345,26 @@ describe "groups" do
                   "ownership"=>meter.ownership,
                   "direction_label"=>meter.direction,
                   "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
-                  "updatable"=>false,
-                  "deletable"=>false
+                  "updatable"=>true,
+                  "deletable"=>true
                 }
               if meter.is_a? Meter::Real
                 json['smart'] = false
-                # NOTE not sure why it renders empty array here
-                json["registers"]=[]
+                json["registers"]=meter.registers.collect do |register|
+                  {
+                    "id"=>register.id,
+                    "type"=>'register_real',
+                    "direction"=>register.direction.to_s,
+                    "name"=>register.name,
+                    "pre_decimal"=>register.digits_before_comma,
+                    "decimal"=>register.decimal_digits,
+                    "converter_constant"=>1,
+                    "low_power"=>register.low_load_ability,
+                    "last_reading"=>0,
+                    "uid"=>register.uid,
+                    "obis"=>register.obis
+                  }
+                end
               else
                 json["register"]={
                   "id"=>meter.register.id,
@@ -394,29 +434,9 @@ describe "groups" do
       let(:validation_json) do
         {
           "errors"=>[
-            {
-              "parameter"=>"begin_date",
-              "detail"=>"begin_date can't be blank"},
-            {
-              "parameter"=>"name",
-              "detail"=>"name is too long (maximum is 40 characters)"
-            },
-            {
-              "parameter"=>"energyprice_cents_per_kilowatt_hour",
-              "detail"=>"energyprice_cents_per_kilowatt_hour can't be blank"
-            },
-            {
-              "parameter"=>"energyprice_cents_per_kilowatt_hour",
-              "detail"=>"energyprice_cents_per_kilowatt_hour is not a number"
-            },
-            {
-              "parameter"=>"baseprice_cents_per_month",
-              "detail"=>"baseprice_cents_per_month can't be blank"
-            },
-            {
-              "parameter"=>"baseprice_cents_per_month",
-              "detail"=>"baseprice_cents_per_month is not a number"
-            }
+            {"parameter"=>"begin_date", "detail"=>"is missing"},
+            {"parameter"=>"energyprice_cents_per_kilowatt_hour", "detail"=>"is missing"},
+            {"parameter"=>"baseprice_cents_per_month", "detail"=>"is missing"}
           ]
         }
       end
@@ -448,8 +468,8 @@ describe "groups" do
         # TODO add all possible validation errors, i.e. iban
         POST "/api/v1/groups/localpools/#{localpool.id}/prices", admin,
              name: 'Max Mueller' * 10
-        expect(response).to have_http_status(422)
         expect(json).to eq validation_json
+        expect(response).to have_http_status(422)
       end
 
       let(:new_price_json) do

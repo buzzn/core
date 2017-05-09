@@ -20,12 +20,12 @@ module Buzzn
             errs = []
             e.errors.each do |name, messages|
               messages.each do |message|          
-                errs << "{\"parameter\":\"#{name}\",\"source\":{\"pointer\":\"/data/attributes/#{name}\"},\"title\":\"Invalid Attribute\",\"detail\":\"#{message}\"}"
+                errs << "{\"parameter\":\"#{name}\",\"detail\":\"#{message}\"}"
               end
             end
             errors = "{\"errors\":[#{errs.join(',')}]}"
           else
-            errors = "{\"errors\":[{\"title\":\"#{title}\",\"detail\":\"#{e.message}\"}]}"
+            errors = "{\"errors\":[{\"detail\":\"#{e.message}\"}]}"
           end
           response.write(errors)
         end

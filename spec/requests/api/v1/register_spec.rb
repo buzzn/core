@@ -53,24 +53,10 @@ describe "registers" do
         "decimal"=>2,
         "converter_constant"=>1,
         "low_power"=>false,
+        "last_reading"=>0,
         "uid"=>real_register.uid,
         "obis"=>real_register.obis,
-        "address"=>nil,
-        "meter"=>{
-          "id"=>meter.id,
-          "type"=>"meter_real",
-          "manufacturer_name"=>meter.manufacturer_name,
-          "manufacturer_product_name"=>meter.manufacturer_product_name,
-          "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
-          "metering_type"=>meter.metering_type,
-          "meter_size"=>meter.meter_size,
-          "ownership"=>meter.ownership,
-          "direction_label"=>meter.direction,
-          "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
-          "updatable"=>true,
-          "deletable"=>true,
-          "smart"=>false
-        },
+        'group'=>nil,
         "devices"=>[]
       }
     end
@@ -86,21 +72,8 @@ describe "registers" do
         "decimal"=>2,
         "converter_constant"=>1,
         "low_power"=>false,
-        "address"=>nil,
-        "meter"=>{
-          "id"=>meter.id,
-          "type"=>"meter_virtual",
-          "manufacturer_name"=>meter.manufacturer_name,
-          "manufacturer_product_name"=>meter.manufacturer_product_name,
-          "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
-          "metering_type"=>meter.metering_type,
-          "meter_size"=>meter.meter_size,
-          "ownership"=>meter.ownership,
-          "direction_label"=>meter.direction,
-          "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
-          "updatable"=>true,
-          "deletable"=>true,
-        }
+        "last_reading"=>0,
+        'group'=>nil
       }
     end
 

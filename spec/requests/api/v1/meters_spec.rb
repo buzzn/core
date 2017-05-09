@@ -159,8 +159,7 @@ describe "meters" do
         "converter_constant"=>1,
         "low_power"=>false,
         "last_reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour,
-        "address"=>nil,
-        "meter"=>nil
+        "group"=>nil
       }
     end
 
@@ -233,8 +232,8 @@ describe "meters" do
           "last_reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour,
           "uid"=>register.uid,
           "obis"=>register.obis,
-          "address"=>nil,
-          "meter"=>nil,
+          "group"=>nil,
+          "devices"=>[],
         }
       ]
     end

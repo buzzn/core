@@ -23,7 +23,7 @@ module API
           if current_user.nil? && !(register.group && register.group.readable_by_world?) && !register.readable_by_world?
             raise Buzzn::PermissionDenied
           end
-          data_result = Buzzn::Services::MainContainer['service.current_power'].for_register(register)#, permitted_params[:timestamp])
+          data_result = Buzzn::Boot::MainContainer['service.current_power'].for_register(register)#, permitted_params[:timestamp])
           unless permitted_params[:timestamp]
             # cache-control headers
             etag(data_result.timestamp.to_s + data_result.value.to_s)
@@ -81,7 +81,7 @@ module API
           when 'month_to_days'
             interval = Buzzn::Interval.month(timestamp)
           end
-          result = Buzzn::Services::MainContainer['service.charts'].for_register(register, interval)
+          result = Buzzn::Boot::MainContainer['service.charts'].for_register(register, interval)
           if result
             key = result.units == :milliwatt ? 'power_milliwatt' : 'energy_milliwatt_hour'
             (result.in + result.out).collect do |i|

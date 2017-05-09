@@ -1,4 +1,5 @@
 class LocalpoolRoda < BaseRoda
+  plugin :shared_vars
 
   route do |r|
 
@@ -8,7 +9,15 @@ class LocalpoolRoda < BaseRoda
 
     r.on :id do |id|
 
-      localpool = Group::LocalpoolResource.retrieve(current_user, id)
+      shared[:localpool] = localpool = Group::LocalpoolResource.retrieve(current_user, id)
+
+      r.on 'prices' do
+        r.run PriceRoda
+      end
+
+      r.on 'price' do
+        r.run PriceRoda
+      end
 
       r.get! do
         localpool

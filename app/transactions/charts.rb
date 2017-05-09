@@ -3,7 +3,7 @@ class Buzzn::Transaction
   class GroupCharts
     include Import['service.charts']
 
-    def call(group, interval)
+    def call(interval, group)
        Dry::Monads.Right(charts.for_group(group.object, interval))
     end
   end
@@ -11,7 +11,7 @@ class Buzzn::Transaction
   class RegisterCharts
     include Import['service.charts']
 
-    def call(register, interval)
+    def call(interval, register)
       Dry::Monads.Right(charts.for_register(register.object, interval))
     end
   end

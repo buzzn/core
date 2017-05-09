@@ -7,7 +7,9 @@ module Buzzn
         if result.success?
           Dry::Monads.Right(result.output)
         else
-          Dry::Monads.Left(Buzzn::ValidationError.new(result.errors))
+          raise Buzzn::ValidationError.new(result.errors)
+          # TODO better use this and handle on roda
+          #Dry::Monads.Left(result.errors)
         end
       end
     end

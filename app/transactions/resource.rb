@@ -1,5 +1,5 @@
 Buzzn::Transaction.define do |t|
-  t.register_step(:update_resource) do |resource, input|
+  t.register_step(:update_resource) do |input, resource|
     begin
       Dry::Monads.Right(resource.update(input))
     rescue ActiveRecord::RecordInvalid => e
@@ -13,8 +13,8 @@ Buzzn::Transaction.define do |t|
     end
   end
 
-  t.register_step(:create_resource) do |clazz, current_user, input|
-    Dry::Monads.Right(clazz.create(current_user, input))
+  t.register_step(:create_nested_resource) do |input, method|
+    Dry::Monads.Right(method.call(input))
   end
 end
 
