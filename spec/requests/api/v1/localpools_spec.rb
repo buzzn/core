@@ -18,7 +18,7 @@ describe "groups/localpools" do
 
   let(:denied_json) do
     json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id 
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
     json
   end
 
@@ -102,8 +102,8 @@ describe "groups/localpools" do
             "begin_date"=>p.begin_date.to_s,
             "end_date"=>nil,
             "price_cents"=>p.price_cents,
-            "cycle"=>nil,
-            "source"=>nil,
+            "cycle"=>p.cycle,
+            "source"=>p.source,
           }
         end,
         "contractor"=>{
@@ -177,14 +177,14 @@ describe "groups/localpools" do
 
       it '200' do
         GET "/api/v1/groups/localpools/#{localpool.id}/localpool-processing-contract", admin
-        
+
         expect(json.to_yaml).to eq processing_json.to_yaml
         expect(response).to have_http_status(200)
 
       end
     end
   end
-  
+
   context 'metering-point-operator-contract' do
 
 
@@ -268,21 +268,21 @@ describe "groups/localpools" do
         GET "/api/v1/groups/localpools/bla-blub/metering-point-operator-contract", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
-        
+
         GET "/api/v1/groups/localpools/#{localpool_no_contracts.id}/metering-point-operator-contract", admin
         expect(response).to have_http_status(404)
         expect(json).to eq nested_not_found_json
       end
-      
+
       it '200' do
         GET "/api/v1/groups/localpools/#{localpool.id}/metering-point-operator-contract", admin
-        
+
         expect(json.to_yaml).to eq metering_point_json.to_yaml
         expect(response).to have_http_status(200)
       end
     end
   end
-  
+
   context 'power-taker-contracts' do
 
     let(:power_taker_contracts_json) do
@@ -316,8 +316,8 @@ describe "groups/localpools" do
               "begin_date"=>p.begin_date.to_s,
               "end_date"=>nil,
               "price_cents"=>p.price_cents,
-              "cycle"=>nil,
-              "source"=>nil,
+              "cycle"=>p.cycle,
+              "source"=>p.source,
             }
           end,
           "contractor"=>{
@@ -381,7 +381,7 @@ describe "groups/localpools" do
 
       it '200' do
         GET "/api/v1/groups/localpools/#{localpool.id}/power-taker-contracts", admin
-        
+
         expect(json.to_yaml).to eq power_taker_contracts_json.to_yaml
         expect(response).to have_http_status(200)
       end

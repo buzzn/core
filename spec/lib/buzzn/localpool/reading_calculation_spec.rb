@@ -553,6 +553,45 @@ describe Buzzn::Localpool::ReadingCalculation do
     expect{ Buzzn::Localpool::ReadingCalculation.calculate_corrected_grid_values(total_accounted_energy, nil, "some-register-id") }.to raise_error ArgumentError
   end
 
+  it 'gets missing reading' do |spec|
+      meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base::GRID_CONSUMPTION_CORRECTED),
+                                            Fabricate.build(:output_register, label: Register::Base::GRID_FEEDING_CORRECTED)])
+      expect{ Buzzn::Localpool::ReadingCalculation.get_missing_reading(meter.input_register, Date.new(2016, 1, 1)) }.to raise_error ArgumentError
+
+    VCR.use_cassette("lib/buzzn/discovergy/gets_single_reading") do
+      meter = Fabricate(:meter, manufacturer_product_serialnumber: 60009485)
+      broker = Fabricate(:discovergy_broker, mode: meter.registers.first.mode.sub('put', ''), resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
+      time = Time.find_zone('Berlin').local(2016, 7, 1, 0, 0, 0)
+
+      result = Buzzn::Localpool::ReadingCalculation.get_missing_reading(meter.registers.first, time.to_date)
+      expect(result.is_a?(Reading)).to eq true
+      expect(result.timestamp).to eq time
+    end
+  end
+
+  it 'calculates the right timespan in months' do
+    date_1 = Date.new(2016, 1, 1)
+    date_2 = Date.new(2016, 12, 31)
+    result = Buzzn::Localpool::ReadingCalculation.timespan_in_months(date_1, date_2)
+    expect(result).to eq 12
+
+    (1..12).each do |i|
+      date_2 = Date.new(2016, i, 1).end_of_month
+      result = Buzzn::Localpool::ReadingCalculation.timespan_in_months(date_1, date_2)
+      result_swapped = Buzzn::Localpool::ReadingCalculation.timespan_in_months(date_2, date_1)
+      expect(result).to eq i
+      expect(result).to eq result_swapped
+    end
+
+    (1..31).each do |i|
+      date_2 = Date.new(2016, 12, i)
+      result = Buzzn::Localpool::ReadingCalculation.timespan_in_months(date_1, date_2)
+      result_swapped = Buzzn::Localpool::ReadingCalculation.timespan_in_months(date_2, date_1)
+      expect(result).to eq i > 21 ? 12 : (i >=10 ? 11.5 : 11)
+      expect(result).to eq result_swapped
+    end
+  end
+
   describe Buzzn::Localpool::TotalAccountedEnergy do
     it 'creates total accounted energy and adds an accounted energy to it' do
       result = Buzzn::Localpool::TotalAccountedEnergy.new("some-localpool-id")
