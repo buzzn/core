@@ -4,12 +4,11 @@ class ContractingParty < ActiveRecord::Base
   has_many :owned_contracts, class_name: Contract::Base, foreign_key: 'contractor_id'
   has_many :assigned_contracts, class_name: Contract::Base, foreign_key: 'customer_id'
 
+  has_many :bank_accounts, dependent: :destroy
+
   has_one :address, as: :addressable, dependent: :destroy
 
-  has_one :bank_account, as: :bank_accountable, dependent: :destroy
-
   validates_associated :address
-  validates_associated :bank_account
   validates :sales_tax_number, presence: false
   validates :tax_rate, presence: false
   validates :tax_number, presence: false

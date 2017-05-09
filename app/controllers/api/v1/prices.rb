@@ -1,4 +1,3 @@
-require 'buzzn/zip2price'
 module API
   module V1
     class Prices < Grape::API
@@ -6,31 +5,19 @@ module API
 
       resource :prices do
 
-        desc 'Converts the ZIP code to estimated monthly price'
+        desc "Update a Price."
         params do
-          requires :zip
-          requires :yearly_kilowatt_hour
-          requires :metering_type, values: Buzzn::Zip2Price.types
+          requires :id, type: String, desc: "Price ID"
+          optional :name, type: String, desc: "Name of the price"
+          optional :begin_date, type: Date, desc: "The price's begin date"
+          optional :energyprice_cents_per_kilowatt_hour, type: Float, desc: "The price per kilowatt_hour in cents"
+          optional :baseprice_cents_per_month, type: Integer, desc: "The monthly base price in cents"
         end
-        oauth2 false
-        get do
-          zip_price = Buzzn::Zip2Price.new(permitted_params[:yearly_kilowatt_hour],
-                                           permitted_params[:zip],
-                                           permitted_params[:metering_type])
-          unless price = zip_price.to_price
-            # mimic jsonapi as far as possible
-            status 422
-            { errors: [{
-                         source: { pointer: "/data/attributes/zip" },
-                         title:"Invalid Attribute",
-                         detail:"unknown zip"
-                       }] }
-          else
-            # mimic jsonapi as far as possible
-            { data: { attributes: price.to_h } }
-          end
+        patch ':id' do
+          PriceResource
+            .retrieve(current_user, permitted_params)
+            .update(permitted_params)
         end
-
       end
     end
   end

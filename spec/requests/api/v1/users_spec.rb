@@ -1,487 +1,387 @@
-describe "Users API" do
+describe "users" do
 
-  let(:page_overload) { 33 }
+  entity!(:admin) { Fabricate(:admin_token) }
 
+  entity!(:user_token) { Fabricate(:user_token) }
 
-  # RETRIEVE me
+  entity!(:other) { Fabricate(:user_token) }
 
-  it 'does not get me without token' do
-    get_without_token "/api/v1/users/me"
-    expect(response).to have_http_status(401)
+  entity(:user) do
+    user = User.find(user_token.resource_owner_id)
+    Fabricate(:bank_account, contracting_party: user)
+    user
   end
 
+  let(:anonymous_denied_json) do
+    {
+      "errors" => [
+        {
+          "detail"=>"retrieve User: permission denied for User: --anonymous--"
+        }
+      ]
+    }
+  end
 
-  [:simple_access_token, :full_access_token, :smartmeter_access_token].each do |token|
-    it "gets me with #{token}" do
-      access_token = Fabricate(token)
-      get_with_token "/api/v1/users/me", access_token.token
+  let(:denied_json) do
+    json = anonymous_denied_json.dup
+    json['errors'][0]['detail'].sub! /--anonymous--/, other.resource_owner_id
+    json
+  end
+
+  let(:anonymous_not_found_json) do
+    {
+      "errors" => [
+        {
+          "detail"=>"User: bla-blub not found"
+        }
+      ]
+    }
+  end
+
+  let(:not_found_json) do
+    json = anonymous_not_found_json.dup
+    json['errors'][0]['detail'] = "User: bla-blub not found by User: #{admin.resource_owner_id}"
+    json
+  end
+
+  let(:empty_json) do
+    []
+  end
+
+  let(:user_json) do
+    {
+      "id"=>user.id,
+      "type"=>"user",
+      "updatable"=>true,
+      # TODO feels wrong any a user can delete her/him-self
+      "deletable"=>true,
+      "user_name"=>user.user_name,
+      "title"=>user.profile.title,
+      "first_name"=>user.first_name,
+      "last_name"=>user.last_name,
+      "gender"=>user.profile.gender,
+      "phone"=>user.profile.phone,
+      "email"=>user.email
+    }
+  end
+
+  let(:users_json) do
+    [
+      {
+        "id"=>user.id,
+        "type"=>"user",
+        "updatable"=>false,
+        "deletable"=>false
+      }
+    ]
+  end
+
+  let(:admin_users_json) do
+    User.all.collect do |u|
+      {
+        "id"=>u.id,
+        "type"=>"user",
+        "updatable"=>false,
+        "deletable"=>false
+      }
+      end
+  end
+
+  let(:filtered_admin_users_json) do
+    [
+      {
+        "id"=>admin.resource_owner_id,
+        "type"=>"user",
+        "updatable"=>false,
+        "deletable"=>false
+      }
+    ]
+  end
+
+  context 'GET' do
+
+    let(:admin_user_json) do
+      json = user_json.dup
+      json['deletable']=true
+      json
+    end
+
+    it '403' do
+      GET "/api/v1/users/#{user.id}"
+      expect(response).to have_http_status(403)
+      expect(json).to eq anonymous_denied_json
+
+      GET "/api/v1/users/#{user.id}", other
+      expect(response).to have_http_status(403)
+      expect(json).to eq denied_json
+    end
+
+    it '404' do
+      GET "/api/v1/users/bla-blub"
+      expect(response).to have_http_status(404)
+      expect(json).to eq anonymous_not_found_json
+
+      GET "/api/v1/users/bla-blub", admin
+      expect(response).to have_http_status(404)
+      expect(json).to eq not_found_json
+    end
+
+    it '200' do
+      GET "/api/v1/users/#{user.id}", user_token
       expect(response).to have_http_status(200)
-      expect(json['data']['id']).to eq access_token.resource_owner_id
+      expect(json.to_yaml).to eq user_json.to_yaml
+
+      GET "/api/v1/users/#{user.id}", admin
+      expect(response).to have_http_status(200)
+      expect(json.to_yaml).to eq admin_user_json.to_yaml
+    end
+
+    it '200 all' do
+      GET "/api/v1/users", user_token
+      expect(response).to have_http_status(200)
+      expect(json).to eq users_json
+
+      GET "/api/v1/users", admin
+      expect(response).to have_http_status(200)
+      expect(json).to match_array admin_users_json
+    end
+
+    it '200 all filtered' do
+      admin_user = User.find(admin.resource_owner_id)
+
+      GET "/api/v1/users", user_token, filter: admin_user.first_name
+      expect(response).to have_http_status(200)
+      expect(json.to_yaml).to eq empty_json.to_yaml
+
+      GET "/api/v1/users", admin, filter: admin_user.first_name
+      expect(response).to have_http_status(200)
+      expect(json.to_yaml).to eq filtered_admin_users_json.to_yaml
     end
   end
 
+  context 'me' do
 
-  # RETRIEVE users
-
-  it 'does not get users without token' do
-    get_without_token "/api/v1/users"
-    expect(response).to have_http_status(401)
-  end
-
-  [:simple_access_token, :smartmeter_access_token].each do |token|
-    it "does not get users with #{token}" do
-      access_token = Fabricate(token)
-      get_with_token "/api/v1/users", {}, access_token.token
+    it '403' do
+      GET "/api/v1/users/me"
+      expect(json).to eq anonymous_denied_json
       expect(response).to have_http_status(403)
     end
-  end
 
-
-  it 'get all users with full access token as admin' do
-    Fabricate(:user)
-    Fabricate(:user)
-    access_token = Fabricate(:full_access_token_as_admin).token
-    get_with_token '/api/v1/users', {}, access_token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq User.all.size
-  end
-
-
-  it 'search users with full access token as admin' do
-    user = Fabricate(:user)
-    Fabricate(:user)
-    Fabricate(:user)
-    access_token = Fabricate(:full_access_token_as_admin).token
-
-    request_params = { filter: user.email }
-    get_with_token '/api/v1/users', request_params, access_token
-
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq 1
-    expect(json['data'].first['id']).to eq user.id
-  end
-
-  it 'does not gets an user without token' do
-    user = Fabricate(:user)
-    get_without_token "/api/v1/users/#{user.id}"
-    expect(response).to have_http_status(401)
-  end
-
- [:simple_access_token, :smartmeter_access_token].each do |token|
-    it "does not get an user with #{token}" do
-      access_token = Fabricate(token)
-      user         = Fabricate(:user)
-      get_with_token "/api/v1/users/#{user.id}", access_token.token
-      expect(response).to have_http_status(403)
-    end
-  end
-
- # RETRIEVE users/friend
-
-  it 'gets an user as friend' do
-    access_token      = Fabricate(:access_token_with_friend)
-    token_user        = User.find(access_token.resource_owner_id)
-    token_user_friend = token_user.friends.first
-    get_with_token "/api/v1/users/#{token_user_friend.id}", access_token.token
-    expect(response).to have_http_status(200)
-  end
-
-  # everything else . . .
-
-  it 'does not create an user with missing parameters' do
-    access_token  = Fabricate(:full_access_token_as_admin)
-
-    user = Fabricate.build(:user)
-    request_params = {
-      email:      user.email,
-      password:   user.password,
-      profile:  { user_name:  user.profile.user_name,
-                  first_name: user.profile.first_name,
-                  last_name:  user.profile.last_name }
-    }
-
-    (request_params.keys + request_params[:profile].keys).each do |name|
-      next if name == :profile
-      params = request_params.reject { |k,v| k == name }
-      unless request_params.key? name
-        params[:profile] = request_params[:profile].reject { |k,v| k == name }
-        name = "profile[#{name}]"
-      end
-
-      post_with_token "/api/v1/users", params.to_json, access_token.token
-
-      expect(response).to have_http_status(422)
-
-      json['errors'].each do |error|
-        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
-        expect(error['title']).to eq 'Invalid Attribute'
-        expect(error['detail']).to eq "#{name} is missing"
-      end
-    end
-  end
-
-  it 'does not create an user with invalid parameters' do
-    access_token  = Fabricate(:full_access_token_as_admin)
-
-    user = Fabricate.build(:user)
-    request_params = {
-      email:      user.email,
-      password:   user.password,
-      profile:  { user_name:  user.profile.user_name,
-                  first_name: user.profile.first_name,
-                  last_name:  user.profile.last_name }
-    }
-
-    (request_params.keys + request_params[:profile].keys).each do |name|
-      next if name == :profile
-      params = request_params.dup
-      if params.key? name
-        params[name] = 'a' * 2000
-      else
-        profile = params[:profile] = params[:profile].dup
-        profile[name] = 'a' * 2000
-        name = "profile[#{name}]"
-      end
-
-      post_with_token "/api/v1/users", params.to_json, access_token.token
-
-      expect(response).to have_http_status(422)
-
-      json['errors'].each do |error|
-        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
-        expect(error['title']).to eq 'Invalid Attribute'
-        expect(error['detail']).to match Regexp.new(Regexp.quote(name))
-      end
-    end
-  end
-
-  it 'creates an user as admin' do
-    access_token  = Fabricate(:full_access_token_as_admin)
-
-    user = Fabricate.build(:user)
-    request_params = {
-      email:      user.email,
-      password:   user.password,
-      profile:  { user_name:  user.profile.user_name,
-                  first_name: user.profile.first_name,
-                  last_name:  user.profile.last_name }
-    }.to_json
-    post_with_token "/api/v1/users", request_params, access_token.token
-    expect(response).to have_http_status(201)
-    expect(json['data']['attributes'].size).to eq 3
-    expect(json['data']['attributes']['updatable']).to be false
-    expect(json['data']['attributes']['deletable']).to be false
-  end
-
-
-  it 'gets user profile only with token' do
-    access_token  = Fabricate(:simple_access_token)
-    user          = User.find(access_token.resource_owner_id)
-
-    get_without_token "/api/v1/users/#{user.id}/profile"
-    expect(response).to have_http_status(401)
-    get_with_token "/api/v1/users/#{user.id}/profile", access_token.token
-    expect(response).to have_http_status(200)
-  end
-
-  it 'gets the related groups for User' do
-    access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:tribe_readable_by_members)
-    user          = User.find(access_token.resource_owner_id)
-    register    = Fabricate(:output_meter).output_register
-    register.update(readable: :world)
-    user.add_role(:member, register)
-    group.registers << register
-    get_with_token "/api/v1/users/#{user.id}/groups", access_token.token
-    expect(response).to have_http_status(200)
-  end
-
-  it 'get all groups' do
-    access_token  = Fabricate(:simple_access_token)
-    user          = User.find(access_token.resource_owner_id)
-    page_overload.times do
-      group             = Fabricate(:tribe)
-      register    = Fabricate(:output_meter).output_register
-      register.update(readable: :world)
-      user.add_role(:member, register)
-      group.registers << register
-    end
-    get_with_token "/api/v1/users/#{user.id}/groups", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload)
-  end
-
-  it 'gets related registers for User' do
-    access_token    = Fabricate(:simple_access_token)
-    user            = User.find(access_token.resource_owner_id)
-    register  = Fabricate(:input_meter).input_register
-    user.add_role(:member, register)
-    get_with_token "/api/v1/users/#{user.id}/registers", access_token.token
-    expect(response).to have_http_status(200)
-  end
-
-  it 'gets related bank_account for User' do
-    stranger_access_token = Fabricate(:full_access_token)
-    user_access_token     = Fabricate(:full_access_token)
-    user                  = User.find(user_access_token.resource_owner_id)
-
-    get_with_token "/api/v1/users/#{user.id}/bank-account", stranger_access_token.token
-    expect(response).to have_http_status(403)
-
-    get_with_token "/api/v1/users/#{user.id}/bank-account", user_access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data']['id']).to eq(user.bank_account.id)
-  end
-
-  [:full_access_token, :smartmeter_access_token].each do |token|
-    it "gets all related meters with #{token}" do
-      meter1 = Fabricate(:input_meter)
-      meter2 = Fabricate(:output_meter)
-      meter3 = Fabricate(:meter)
-
-      access_token = Fabricate(token)
-      user         = User.find(access_token.resource_owner_id)
-      user.add_role(:manager, meter1.input_register)
-      user.add_role(:manager, meter2.output_register)
-
-      get_with_token "/api/v1/users/#{user.id}/meters", access_token.token
+    it '200' do
+      GET "/api/v1/users/me", user_token
+      expect(json.to_yaml).to eq user_json.to_yaml
       expect(response).to have_http_status(200)
-      expect(json['data'].size).to eq(2)
+    end
+
+  end
+
+  context 'bank_account' do
+
+    let(:bank_account) { user.bank_accounts.first}
+
+    let(:bank_account_not_found_json) do
+      {
+        "errors" => [
+          {
+            # TODO fix bad error response
+            "detail"=>"Buzzn::RecordNotFound"
+          }
+        ]
+      }
+    end
+
+    let(:bank_account_anonymous_denied_json) do
+      json = anonymous_denied_json.dup
+      json['errors'][0]['detail'].sub! 'User:', "BankAccount: #{bank_account.id}"
+      json
+    end
+
+    let(:bank_account_json) do
+      [
+        {
+          "id"=>bank_account.id,
+          "type"=>"bank_account",
+          "holder"=>bank_account.holder,
+          "bank_name"=>bank_account.bank_name,
+          "bic"=>bank_account.bic,
+          "iban"=>bank_account.iban,
+          "direct_debit"=>bank_account.direct_debit
+        }
+      ]
+    end
+
+    let(:empty_bank_account_json) do
+      []
+    end
+
+    context 'GET' do
+      it '403' do
+        GET "/api/v1/users/#{user.id}/bank-accounts"
+        expect(response).to have_http_status(403)
+        expect(json).to eq anonymous_denied_json
+
+        GET "/api/v1/users/#{user.id}/bank-accounts", other
+        expect(response).to have_http_status(403)
+        expect(json).to eq denied_json
+
+        # TODO use an user which can see other user but not bank_account
+        #GET "/api/v1/users/#{user.id}/bank-account", user_token
+        #expect(response).to have_http_status(403)
+        #expect(json).to eq bank_account_denied_json
+      end
+
+      it '404' do
+        GET "/api/v1/users/bla-blub/bank-accounts", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+      end
+
+      it '200' do
+        GET "/api/v1/users/#{user.id}/bank-accounts", user_token
+        expect(response).to have_http_status(200)
+        expect(json).to eq(bank_account_json)
+
+        GET "/api/v1/users/#{user.id}/bank-accounts", admin
+        expect(response).to have_http_status(200)
+        expect(json).to eq(bank_account_json)
+
+        user.bank_accounts.each{|bank_account| bank_account.delete}
+        GET "/api/v1/users/#{user.id}/bank-accounts", admin
+        expect(response).to have_http_status(200)
+        expect(json).to eq empty_bank_account_json
+      end
+
     end
   end
 
-  it 'get all meters' do
-    access_token = Fabricate(:full_access_token_as_admin)
-    user         = Fabricate(:user)
-    page_overload.times do
-      meter = Fabricate(:meter)
-      user.add_role(:manager, meter.registers.first)
+  context 'meters' do
+
+    entity!(:meter1) do
+      meter = Fabricate(:input_meter)
+      user.add_role(:manager, meter.input_register)
+      meter
     end
 
-    pages_profile_ids = []
-    params = {order_direction: 'DESC', order_by: 'created_at'}
-    get_with_token "/api/v1/users/#{user.id}/meters", params, access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload)
-  end
-
-
-
-
-  it 'get all registers' do
-    access_token = Fabricate(:full_access_token_as_admin).token
-    user         = Fabricate(:user)
-    page_overload.times do
-      register  = Fabricate(:meter).registers.first
-      user.add_role(:member, register)
-    end
-    get_with_token "/api/v1/users/#{user.id}/registers", access_token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload)
-  end
-
-
-  it 'gets the related meters for User but filtered by manufacturer_product_serialnumber' do
-    meter1 = Fabricate(:input_meter)
-    meter2 = Fabricate(:output_meter)
-    meter3 = Fabricate(:meter)
-
-    access_token  = Fabricate(:full_access_token)
-    user          = User.find(access_token.resource_owner_id)
-    user.add_role(:manager, meter1.input_register)
-    user.add_role(:manager, meter2.output_register)
-
-    request_params = {
-      filter: meter1.manufacturer_product_serialnumber
-    }
-
-    get_with_token "/api/v1/users/#{user.id}/meters", request_params, access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-    expect(json['data'].first['attributes']['manufacturer-product-serialnumber']).to eq(meter1.manufacturer_product_serialnumber)
-  end
-
-  it 'gets related friends for user' do
-    access_token  = Fabricate(:simple_access_token)
-    user          = User.find(access_token.resource_owner_id)
-    user.friends << Fabricate(:user)
-
-    get_with_token "/api/v1/users/#{user.id}/friends", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-
-    get_with_token "/api/v1/users/#{user.id}/relationships/friends", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-  end
-
-
-  it 'get all friends' do
-    access_token  = Fabricate(:simple_access_token)
-    user          = User.find(access_token.resource_owner_id)
-    page_overload.times do
-      user.friends << Fabricate(:user)
+    entity!(:meter2) do
+      meter = Fabricate(:output_meter)
+      user.add_role(:manager, meter.output_register)
+      meter
     end
 
-    get_with_token "/api/v1/users/#{user.id}/friends", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload)
-  end
+    entity!(:meter3) { Fabricate(:meter) }
 
-  it 'gets specific friend for user' do
-    access_token  = Fabricate(:simple_access_token)
-    user          = User.find(access_token.resource_owner_id)
-    friend        = Fabricate(:user)
-    user.friends << friend
-
-    get_with_token "/api/v1/users/#{user.id}/friends/#{friend.id}", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data']['id']).to eq(friend.id)
-  end
-
-  it 'deletes specific friend for user' do
-    access_token  = Fabricate(:full_access_token)
-    user          = User.find(access_token.resource_owner_id)
-    friend        = Fabricate(:user)
-    user.friends << friend
-
-    params = {
-      data: { id: friend.id }
-    }.to_json
-
-    delete_with_token "/api/v1/users/#{user.id}/relationships/friends", params, access_token.token
-    expect(response).to have_http_status(204)
-    get_with_token "/api/v1/users/#{user.id}/friends/#{friend.id}", access_token.token
-    expect(response).to have_http_status(404)
-  end
-
-
-  it 'lists received friendship requests' do
-    access_token  = Fabricate(:access_token_received_friendship_request)
-    user          = User.find(access_token.resource_owner_id)
-
-    get_with_token "/api/v1/users/#{user.id}/friendship-requests", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-
-    get_with_token "/api/v1/users/#{user.id}/relationships/friendship-requests", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-  end
-
-  it 'creates a new friendship request' do
-    access_token  = Fabricate(:simple_access_token)
-    user          = User.find(access_token.resource_owner_id)
-    target_user   = Fabricate(:user)
-    params = {
-      data: {id: target_user.id}
-    }.to_json
-
-    post_with_token "/api/v1/users/#{user.id}/relationships/friendship-requests", params, access_token.token
-    expect(response).to have_http_status(201)
-  end
-
-  it 'creates activity with a new friendship request' do
-    access_token  = Fabricate(:simple_access_token)
-    user          = User.find(access_token.resource_owner_id)
-    target_user   = Fabricate(:user)
-    params = {
-      data: {id: target_user.id}
-    }.to_json
-
-    post_with_token "/api/v1/users/#{user.id}/relationships/friendship-requests", params, access_token.token
-    activities = PublicActivity::Activity.where({ owner_type: 'User', owner_id: user.id })
-    expect(activities.first.key).to eq('friendship_request.create')
-  end
-
-  it 'accepts friendship request' do
-    access_token  = Fabricate(:access_token_received_friendship_request)
-    user          = User.find(access_token.resource_owner_id)
-    request       = user.received_friendship_requests.first
-
-    post_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", {}, access_token.token
-    expect(response).to have_http_status(204)
-    modified_user = User.find(access_token.resource_owner_id)
-    expect(modified_user.friends.size).to eq(1)
-    expect(modified_user.received_friendship_requests.size).to eq(0)
-  end
-
-
-  it 'creates activity when accepts friendship request' do
-    access_token  = Fabricate(:access_token_received_friendship_request)
-    user          = User.find(access_token.resource_owner_id)
-    request       = user.received_friendship_requests.first
-
-    post_with_token "/api/v1/users/#{user.id}/friendship-requests/#{request.id}", {}, access_token.token
-    activities = PublicActivity::Activity.where({ owner_type: 'User', owner_id: user.id })
-    expect(activities.first.key).to eq('friendship.create')
-  end
-
-
-  it 'rejects friendship request' do
-    access_token  = Fabricate(:access_token_received_friendship_request)
-    user          = User.find(access_token.resource_owner_id)
-    request       = user.received_friendship_requests.first
-    params = {
-      data: {id: request.id}
-    }.to_json
-
-    delete_with_token "/api/v1/users/#{user.id}/relationships/friendship-requests", params, access_token.token
-    expect(response).to have_http_status(204)
-    modified_user = User.find(access_token.resource_owner_id)
-    expect(modified_user.friends.size).to eq(0)
-    expect(modified_user.received_friendship_requests.size).to eq(0)
-  end
-
-
-  it 'creates activity when rejects friendship request' do
-    access_token  = Fabricate(:access_token_received_friendship_request)
-    user          = User.find(access_token.resource_owner_id)
-    request       = user.received_friendship_requests.first
-    params = {
-      data: {id: request.id}
-    }.to_json
-
-    delete_with_token "/api/v1/users/#{user.id}/relationships/friendship-requests", params, access_token.token
-    activities = PublicActivity::Activity.where({ owner_type: 'User', owner_id: user.id })
-    expect(activities.first.key).to eq('friendship_request.reject')
-  end
-
-
-  it 'gets related devices for user' do
-    access_token  = Fabricate(:simple_access_token)
-    user          = User.find(access_token.resource_owner_id)
-    device        = Fabricate(:device)
-    user.add_role(:manager, device)
-
-    get_with_token "/api/v1/users/#{user.id}/devices", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-  end
-
-
-  it 'get all devices' do
-    access_token  = Fabricate(:simple_access_token)
-    user          = User.find(access_token.resource_owner_id)
-    page_overload.times do
-      device      = Fabricate(:device)
-      user.add_role(:manager, device)
+    let(:user_meters_json) do
+      [
+        { "id"=>meter1.id,
+          "type"=>"meter_real",
+          "manufacturer_name"=>meter1.manufacturer_name,
+          "manufacturer_product_name"=>meter1.manufacturer_product_name,
+          "manufacturer_product_serialnumber"=>meter1.manufacturer_product_serialnumber,
+          "metering_type"=>meter1.metering_type,
+          "meter_size"=>nil,
+          "ownership"=>nil,
+          "direction_label"=>meter1.direction,
+          "build_year"=>nil,
+          "updatable"=>false,
+          "deletable"=>false,
+          "smart"=>false,
+          "registers"=>[]
+        },
+        { "id"=>meter2.id,
+          "type"=>"meter_real",
+          "manufacturer_name"=>meter2.manufacturer_name,
+          "manufacturer_product_name"=>meter2.manufacturer_product_name,
+          "manufacturer_product_serialnumber"=>meter2.manufacturer_product_serialnumber,
+          "metering_type"=>meter2.metering_type,
+          "meter_size"=>nil,
+          "ownership"=>nil,
+          "direction_label"=>meter2.direction,
+          "build_year"=>nil,
+          "updatable"=>false,
+          "deletable"=>false,
+          "smart"=>false,
+          "registers"=>[]
+        }
+      ]
     end
 
-    get_with_token "/api/v1/users/#{user.id}/devices", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload)
+    let(:filtered_admin_meters_json) do
+      [
+        {
+          "id"=>meter3.id,
+          "type"=>"meter_real",
+          "manufacturer_name"=>meter3.manufacturer_name,
+          "manufacturer_product_name"=>meter3.manufacturer_product_name,
+          "manufacturer_product_serialnumber"=>meter3.manufacturer_product_serialnumber,
+          "metering_type"=>meter3.metering_type,
+          "meter_size"=>meter3.meter_size,
+          "ownership"=>meter3.ownership,
+          "direction_label"=>meter3.direction,
+          "build_year"=>'2011-07-02',
+          "updatable"=>false,
+          "deletable"=>false,
+          "smart"=>false,
+          "registers"=>[]
+        }
+      ]
+    end
+
+    let(:admin_meters_json) do
+      json = user_meters_json.dup
+      json += filtered_admin_meters_json
+      json
+    end
+
+    context 'GET' do
+      it '403' do
+        GET "/api/v1/users/#{user.id}/meters"
+        expect(response).to have_http_status(403)
+        expect(json).to eq anonymous_denied_json
+
+        GET "/api/v1/users/#{user.id}/meters", other
+        expect(response).to have_http_status(403)
+        expect(json).to eq denied_json
+      end
+
+      it '404' do
+        GET "/api/v1/users/bla-blub/meters", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+      end
+
+      it '200' do
+        begin
+          user.profile.update(readable: :world)
+
+          # TODO use user which can see user but not meters
+          GET "/api/v1/users/#{user.id}/meters", other
+          expect(response).to have_http_status(200)
+          expect(json).to eq(empty_json)
+
+        ensure
+          user.profile.update(readable: nil)
+        end
+
+        GET "/api/v1/users/#{user.id}/meters", user_token
+        expect(response).to have_http_status(200)
+        # sort and yaml it for better debugging
+        expect(json.sort{ |i, j| i['id'] <=> j['id']}.to_yaml).to eq(user_meters_json.sort{ |i, j| i['id'] <=> j['id']}.to_yaml)
+
+        GET "/api/v1/users/#{user.id}/meters", admin
+        expect(response).to have_http_status(200)
+        # sort and yaml it for better debugging
+        expect(json.sort{ |i, j| i['id'] <=> j['id']}.to_yaml).to eq(admin_meters_json.sort{ |i, j| i['id'] <=> j['id']}.to_yaml)
+      end
+
+      it '200 filtered' do
+        GET "/api/v1/users/#{user.id}/meters", user_token, filter: meter3.manufacturer_product_serialnumber
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq(empty_json.to_yaml)
+
+        GET "/api/v1/users/#{user.id}/meters", admin, filter: meter3.manufacturer_product_serialnumber
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq(filtered_admin_meters_json.to_yaml)
+      end
+    end
   end
-
-  it 'gets user activities' do
-    access_token  = Fabricate(:simple_access_token)
-    user          = User.find(access_token.resource_owner_id)
-    user2         = Fabricate(:user)
-    Fabricate(:friendship_request_with_activity, { sender: user, receiver: user2 })
-
-    get_with_token "/api/v1/users/#{user.id}/activities", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].first['attributes']['owner-id']).to eq(user.id)
-  end
-
 end

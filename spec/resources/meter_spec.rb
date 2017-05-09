@@ -1,24 +1,31 @@
 # coding: utf-8
 describe Meter::BaseResource do
 
-  let(:user) { Fabricate(:admin) }
-  let!(:real) { Fabricate(:meter) }
-  let!(:virtual) { Fabricate(:virtual_meter) }
+  entity(:user) { Fabricate(:admin) }
+  entity!(:real) { Fabricate(:meter) }
+  entity!(:virtual) { Fabricate(:virtual_meter) }
 
-  let(:base_attributes) { [:manufacturer_name,
-                           :manufacturer_product_name,
-                           :manufacturer_product_serialnumber,
-                           :updatable,
-                           :deletable ] }
+  let(:base_keys) { [:id,
+                     :type,
+                     :manufacturer_name,
+                     :manufacturer_product_name,
+                     :manufacturer_product_serialnumber,
+                     :metering_type,
+                     :meter_size,
+                     :ownership,
+                     :direction_label,
+                     :build_year,
+                     :updatable,
+                     :deletable ] }
 
-  it 'has all attributes' do
+  it 'retrieve' do
     [real, virtual].each do |meter|
       json = Meter::BaseResource.retrieve(user, meter.id).to_h
-      expect(json.keys & base_attributes).to match_array base_attributes
+      expect(json.keys & base_keys).to match_array base_keys
     end
   end
 
-  it 'collects with right ids + types' do
+  it 'retrieve all - ids + types' do
     expected = {Meter::Real => real.id, Meter::Virtual => virtual.id}
     result = Meter::BaseResource.all(user).collect do |r|
       [r.type.constantize, r.id]
@@ -28,14 +35,14 @@ describe Meter::BaseResource do
     
   describe Meter::Real do
 
-    it 'collects with right ids + types' do
+    it 'retrieve all - ids + types' do
       result = Meter::RealResource.all(user).collect do |r|
         [r.type.constantize, r.id]
       end
       expect(result).to eq [[Meter::Real, real.id]]
     end
 
-    it "correct id + type" do
+    it "retrieve - id + type" do
       [Meter::BaseResource, Meter::RealResource].each do |type|
         json = type.retrieve(user, real.id).to_h
         expect(json[:id]).to eq real.id
@@ -44,18 +51,16 @@ describe Meter::BaseResource do
       expect{Meter::RealResource.retrieve(user, virtual.id)}.to raise_error Buzzn::RecordNotFound
     end
 
-    it 'has all attributes' do
-      attributes = [:smart, :registers]
+    it 'retrieve' do
       json = Meter::BaseResource.retrieve(user, real.id).to_h
-      expect(json.keys & attributes).to match_array attributes
-      expect(json.keys.size).to eq (attributes.size + base_attributes.size + 2)
+      expect(json.keys).to match_array base_keys + [:smart, :registers]
     end
 
   end
 
   describe Meter::Virtual do
   
-    it 'collects with right ids + types' do
+    it 'retrieve all - ids + types' do
       expected = [Meter::Virtual, virtual.id]
       result = Meter::VirtualResource.all(user).collect do |r|
         [r.type.constantize, r.id]
@@ -63,7 +68,7 @@ describe Meter::BaseResource do
       expect(result).to eq [expected]
     end
 
-    it "correct id + type" do
+    it "retrieve - id + type" do
       [Meter::BaseResource, Meter::VirtualResource].each do |type|
         json = type.retrieve(user, virtual.id).to_h
         expect(json[:id]).to eq virtual.id
@@ -72,11 +77,9 @@ describe Meter::BaseResource do
       expect{Meter::VirtualResource.retrieve(user, real.id)}.to raise_error Buzzn::RecordNotFound
     end
       
-    it 'has all attributes' do
-      attributes = [:register]
+    it 'retrieve' do
       json = Meter::BaseResource.retrieve(user, virtual.id).to_h
-      expect(json.keys & attributes).to match_array attributes
-      expect(json.keys.size).to eq (attributes.size + base_attributes.size + 2)
+      expect(json.keys).to match_array ([:register] + base_keys)
     end
   end
 end

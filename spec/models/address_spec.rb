@@ -1,43 +1,31 @@
 # coding: utf-8
 describe Address do
 
-  let(:admin) do
-    admin = Fabricate(:user)
-    admin.add_role(:admin, nil)
+  entity(:admin) do
+    admin = Fabricate(:admin)
     admin.friends << Fabricate(:user)
     admin
   end
 
-  let(:register_manager) do
+  entity(:register_manager) do
     manager = Fabricate(:user)
     manager.add_role(:manager, urban)
     manager.friends << Fabricate(:user)
     manager
   end
 
-  let(:organization_manager) do
+  entity(:organization_manager) do
     manager = Fabricate(:user)
     manager.add_role(:manager, organization)
     manager
   end
 
-  let(:karin) { Fabricate(:register_pv_karin, meter: Fabricate(:meter)) }
-  let(:urban) { Fabricate(:register_urbanstr88, meter: Fabricate(:meter)) }
+  entity!(:karin) { Fabricate(:register_pv_karin, meter: Fabricate(:meter)) }
+  entity!(:urban) { Fabricate(:register_urbanstr88, meter: Fabricate(:meter)) }
+  entity!(:organization) { Fabricate(:hell_und_warm) }
 
-  let(:organization) do
-    Fabricate(:transmission_system_operator_with_address)
-  end
-
-  let(:contracting_party) do
-    cp = Fabricate(:user, address: Fabricate(:address, street_name: 'Sachsenstr.', street_number: '8', zip: 86916, city: 'Kaufering', state: 'Bayern'))
-  end
-
-  before do
-    # get all addresses in place
-    karin
-    urban
-    organization
-    contracting_party
+  entity!(:contracting_party) do
+    Fabricate(:user, address: Fabricate(:address, street_name: 'Sachsenstr.', street_number: '8', zip: 86916, city: 'Kaufering', state: 'Bayern'))
   end
 
   it 'restricts readable_by for anonymous users' do

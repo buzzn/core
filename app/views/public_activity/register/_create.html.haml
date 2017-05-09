@@ -1,5 +1,0 @@
-- single_content_for :action do
-  - if a.trackable
-    = t("has_created_the_register", register_name: link_to(a.trackable.name, a.trackable)).html_safe
-  - else
-    = t('has_created') + ' ' + t('a_register_which_has_been_removed')

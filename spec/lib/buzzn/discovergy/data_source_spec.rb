@@ -45,6 +45,7 @@ describe Buzzn::Discovergy::DataSource do
     register
   end
   let(:single_meter_live_response) { "{\"time\":1480606450088,\"values\":{\"power\":1100640}}" }
+  let(:single_meter_second_response) { "[{\"time\":1480604400205,\"values\":{\"energy\":22968322444644}}]" }
   let(:single_meter_hour_response) { "[{\"time\":1480604400205,\"values\":{\"power\":1760140}},{\"time\":1480604402205,\"values\":{\"power\":1750440}}]" }
   let(:single_meter_day_response) { "[{\"time\":1480606200000,\"values\":{\"energy\":22968322444644}},{\"time\":1480607100000,\"values\":{\"energy\":22970988922089}},{\"time\":1480608000000,\"values\":{\"energy\":22973229616478}}]" }
   let(:single_meter_month_response) { "[{\"time\":1477954800000,\"values\":{\"energy\":22202408932539}},{\"time\":1478041200000,\"values\":{\"energy\":22202747771000}},{\"time\":1478127600000,\"values\":{\"energy\":22202747771000}}]" }
@@ -60,6 +61,16 @@ describe Buzzn::Discovergy::DataSource do
     result = subject.send(:parse_aggregated_live, response, mode, two_way_meter, 'u-i-d')
     expect(result.timestamp).to eq 1480606450.088
     expect(result.value).to eq 1100640.0
+  end
+
+  it 'parses single meter second response' do
+    response = single_meter_second_response
+    interval = Buzzn::Interval.second(Time.at(1480604400.205))
+    mode = :in
+    two_way_meter = false
+    result = subject.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
+    expect(result.in[0].timestamp).to eq 1480604400.205
+    expect(result.in[0].value).to eq 2296832244.4644
   end
 
   it 'parses single meter hour response' do

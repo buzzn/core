@@ -6,15 +6,18 @@ class UserResource < Buzzn::EntityResource
 
   # API methods for endpoints
 
-  entities :profile,
-           :bank_account
+  entities :profile
 
-end
-class FullUserResource < UserResource
-
-  def self.new(*args)
-    super
+  def meters(filter = nil)
+    Meter::Base.filter(filter).readable_by(@current_user).collect { |m| Meter::BaseResource.new(m) }
   end
+
+  def bank_accounts
+    object.bank_accounts.readable_by(@current_user).collect { |ba| BankAccountResource.new(ba) }
+  end
+end
+
+class UserSingleResource < UserResource
 
   attributes  :user_name,
               :title,
@@ -22,10 +25,7 @@ class FullUserResource < UserResource
               :last_name,
               :gender,
               :phone,
-              :email,
-              :sales_tax_number,
-              :tax_rate,
-              :tax_number
+              :email
 
   def title
     object.profile.title
@@ -40,9 +40,15 @@ class FullUserResource < UserResource
   end
 end
 
-# TODO get rid of the need of having a Serializer class
-class UserSerializer < UserResource
+class ContractingPartyUserSingleResource < UserSingleResource
   def self.new(*args)
     super
   end
+
+  attributes  :sales_tax_number,
+              :tax_rate,
+              :tax_number
+end
+
+class UserCollectionResource < UserResource
 end

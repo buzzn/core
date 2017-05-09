@@ -10,15 +10,11 @@ class ProfileSerializer < ActiveModel::Serializer
               :phone,
               :about_me,
               :md_img,
-              :readable,
-              :website,
-              :facebook,
-              :twitter,
-              :xing,
-              :linkedin
+              :readable
 
   def md_img
     object.image.md.url
   end
 
 end
+ProfileResource = ProfileSerializer

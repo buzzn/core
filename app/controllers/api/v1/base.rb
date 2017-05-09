@@ -17,21 +17,14 @@ module API
         end
 
       mount API::V1::Users
-      mount API::V1::Profiles
       mount API::V1::Meters
       mount API::V1::Registers
-      mount API::V1::Readings
       mount API::V1::Aggregates
       mount API::V1::Groups
-      mount API::V1::Devices
       mount API::V1::Contracts
-      mount API::V1::Comments
       mount API::V1::Organizations
-      mount API::V1::Addresses
       mount API::V1::BankAccounts
       mount API::V1::Prices
-      mount API::V1::Banks
-      mount API::V1::Forms
 
       add_swagger_documentation(
         api_version: "v1",

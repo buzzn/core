@@ -14,6 +14,7 @@ module Contract
     RUNNING   = 'running'
     CANCELLED = 'cancelled'
     EXPIRED   = 'expired'
+    EXCHANGE_PROCESS_PAUSED = 'exchange_process_paused'
 
     # error messages
     MUST_BE_TRUE                 = 'must be true'
@@ -29,11 +30,13 @@ module Contract
     MUST_NOT_BE_BUZZN_SYSTEMS    = 'must not be buzzn-systems'
     MUST_NOT_BE_BUZZN            = 'must not be buzzn'
 
+
+
     class << self
       private :new
 
       def status
-        @status ||= [WAITING, APPROVED, RUNNING, CANCELLED, EXPIRED]
+        @status ||= [WAITING, APPROVED, RUNNING, CANCELLED, EXPIRED, EXCHANGE_PROCESS_PAUSED]
       end
     end
 
@@ -47,7 +50,8 @@ module Contract
     has_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id, dependent: :destroy
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy
 
-    has_one :bank_account, as: :bank_accountable, dependent: :destroy
+    belongs_to :contractor_bank_account, class_name: 'BankAccount'
+    belongs_to :customer_bank_account, class_name: 'BankAccount'
 
     validates :contractor, presence: true
     validates :customer, presence: true
@@ -64,6 +68,8 @@ module Contract
 
     validates :terms_accepted, presence: true
     validates :power_of_attorney, presence: true
+    validates_uniqueness_of :contract_number_addition, scope: [:contract_number], message: 'already available for given contract_number', if: 'contract_number_addition.present?'
+
 
     validate :validate_invariants
 
@@ -84,18 +90,30 @@ module Contract
     scope :localpool_processing,     -> {where(type: LocalpoolProcessing)}
     scope :metering_point_operators, -> {where(type: MeteringPointOperator)}
     scope :other_suppliers,          -> {where(type: OtherSupplier)}
+    scope :localpool_power_takers_and_other_suppliers, ->  {where('type in (?)', [LocalpoolPowerTaker, OtherSupplier])}
 
     scope :running_in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
                                           .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
 
     def self.readable_by_query(user)
+      organization = Organization.arel_table
+      user_table = User.arel_table
       contract = Contract::Base.arel_table
-      if user
-        User.roles_query(user, manager: [contract[:register_id], contract[:localpool_id]], admin: nil).project(1).exists
-      else
-        # always false, i.e. anonymous users can not see contracts
-        contract[:id].eq(contract[:id]).not
-      end
+
+      # workaround to produce false always
+      return contract[:id].eq(contract[:id]).not if user.nil?
+
+      sqls = [
+        User.roles_query(user, manager: [contract[:register_id], contract[:localpool_id]]),
+        # if contracting party is a user
+        user_table.where((contract[:contractor_id].eq(user.id))
+                          .or(contract[:customer_id].eq(user.id))),
+        # if contracting party is an organization
+        User.roles_query(user, manager: [contract[:contractor_id], contract[:customer_id]]),
+        User.roles_query(user, admin: nil)
+      ]
+      sqls = sqls.collect{|s| s.project(1).exists}
+      sqls[0].or(sqls[1]).or(sqls[2]).or(sqls[3])
     end
 
     def self.readable_by(user) # scope does not work here !
@@ -123,6 +141,10 @@ module Contract
       "TODO {organization.name} {tariff}"
     end
 
+    def full_contract_number
+      "#{contract_number}/#{contract_number_addition}"
+    end
+
     def self.search_attributes
       #TODO filtering what ?
       []
@@ -134,6 +156,18 @@ module Contract
 
     def login_required?
       self.organization == Organization.discovergy || self.organization == Organization.mysmartgrid
+    end
+  end
+
+
+  class RenewableEnergyLawTaxation
+    FULL    = 'full'
+    REDUCED = 'reduced'
+
+    class << self
+      def all
+        @renewable_energy_law_taxation ||= [FULL, REDUCED]
+      end
     end
   end
 end

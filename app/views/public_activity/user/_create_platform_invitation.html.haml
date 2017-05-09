@@ -1,5 +1,0 @@
-- single_content_for :action do
-  - if a.recipient
-    = t("has_invited_user_to_join_the_buzzn_community", user: a.recipient.profile.nil? ? a.recipient.email : a.recipient.name)
-  - else
-    = t('has_invited_someone_to_join_the_buzzn_community')

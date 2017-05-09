@@ -11,14 +11,17 @@
     readable    'friends'
     direction   { type == 'virtual' ? ['in', 'out'].sample : type.sub('put','') }
     created_at  { (rand*10).days.ago }
-    # don't set a label for virtual registers as there is a bug in db:init
     if type == 'output'
       label     Register::Base::PRODUCTION_PV
-    elsif type == 'input'
+    else
       label     Register::Base::CONSUMPTION
     end
+    forecast_kwh_pa 1000
+    obis { type == 'output' ? '1-0:2.8.0' : '1-0:1.8.0' }
+    low_load_ability false
+    digits_before_comma 6
+    decimal_digits 2
   end
-
 end
 
 

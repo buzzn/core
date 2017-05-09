@@ -2,31 +2,50 @@ module API
   module V1
     class Groups < Grape::API
       include API::V1::Defaults
+
       resource :groups do
 
+        params do
+          requires :id, type: String
+          optional :timestamp, type: Time
+          requires :duration, type: String, values: %w(year month day hour)
+        end
+        get ":id/charts" do
+          group = Group::Base.guarded_retrieve(current_user, permitted_params)
+          interval = Buzzn::Interval.create(params[:duration], params[:timestamp])
+          result = Buzzn::Services::MainContainer['service.charts'].for_group(group, interval)
 
+          # cache-control headers
+          etag(Digest::SHA256.base64digest(result.to_json))
+          expires((result.expires_at - Time.current.to_f).to_i,
+                  current_user ? :private : :public)
+          last_modified(Time.at(result.last_timestamp))
+
+          result
+        end
+
+        params do
+          requires :id, type: String
+        end
+        get ":id/bubbles" do
+          group = Group::BaseResource.retrieve(current_user, permitted_params)
+          result = Buzzn::Services::MainContainer['service.current_power'].for_each_register_in_group(group)
+
+          # cache-control headers
+          etag(Digest::SHA256.base64digest(result.to_json))
+          last_modified(Time.at(result.expires_at))
+          expires((result.expires_at - Time.current.to_f).to_i,
+                  current_user ? :private : :public)
+
+          result
+        end
 
         resource :localpools do
-          desc "Return all Localpools"
-          params do
-            optional :filter, type: String, desc: "Search query using #{Base.join(Group::Base.search_attributes)}"
-            optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
-            optional :order_by, type: String, default: 'created_at', values: ['name', 'updated_at', 'created_at'], desc: "Order by Attribute"
-          end
-          oauth2 false
-          get do
-            order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
-            Group::LocalpoolResource
-              .all(current_user, permitted_params[:filter])
-              .order(order)
-          end
-
 
           desc "Return the related localpool processing contract for the Localpool"
           params do
             requires :id, type: String, desc: "ID of the group"
           end
-          oauth2 :full
           get ":id/localpool-processing-contract" do
             Group::LocalpoolResource
               .retrieve(current_user, permitted_params)
@@ -38,18 +57,45 @@ module API
           params do
             requires :id, type: String, desc: "ID of the group"
           end
-          oauth2 :full
           get ":id/metering-point-operator-contract" do
             Group::LocalpoolResource
               .retrieve(current_user, permitted_params)
               .metering_point_operator_contract!
           end
 
+          desc "Return the related prices for the Localpool"
+          params do
+            requires :id, type: String, desc: "ID of the group"
+          end
+          get ":id/prices" do
+            Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .prices
+          end
+
+          desc "Create a Price for the localpool."
+          params do
+            requires :id, type: String, desc: "Localpool ID"
+            optional :name, type: String, desc: "Name of the price"
+            optional :begin_date, type: String, desc: "The price's begin date"
+            optional :energyprice_cents_per_kilowatt_hour, type: Float, desc: "The price per kilowatt_hour in cents"
+            optional :baseprice_cents_per_month, type: Integer, desc: "The monthly base price in cents"
+          end
+          post ":id/price"do
+            created_response(Group::LocalpoolResource.retrieve(current_user, permitted_params).create_price(permitted_params))
+          end
+
+          desc "Return the related power-taker contracts for the Localpool"
+          params do
+            requires :id, type: String, desc: "ID of the group"
+          end
+          get ":id/power-taker-contracts" do
+            Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .power_taker_contracts
+          end
+
         end
-
-
-
-
 
 
 
@@ -59,7 +105,6 @@ module API
           optional :order_direction, type: String, default: 'DESC', values: ['DESC', 'ASC'], desc: "Ascending Order and Descending Order"
           optional :order_by, type: String, default: 'created_at', values: ['name', 'updated_at', 'created_at'], desc: "Order by Attribute"
         end
-        oauth2 false
         get do
           order = "#{permitted_params[:order_by]} #{permitted_params[:order_direction]}"
           Group::BaseResource
@@ -73,37 +118,10 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        oauth2 false
         get ":id" do
           Group::BaseResource.retrieve(current_user, permitted_params)
         end
 
-
-
-        desc "Update a Group"
-        params do
-          requires :id, type: String, desc: "Group ID."
-          optional :name
-        end
-        oauth2 :full
-        patch ':id' do
-          Group::BaseResource
-            .retrieve(current_user, permitted_params)
-            .update(permitted_params)
-        end
-
-
-
-        desc 'Delete a Group'
-        params do
-          requires :id, type: String, desc: "Group ID"
-        end
-        oauth2 :full
-        delete ':id' do
-          deleted_response(Group::BaseResource
-                            .retrieve(current_user, permitted_params)
-                            .delete)
-        end
 
 
 
@@ -111,7 +129,6 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        oauth2 false
         get ":id/registers" do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
@@ -123,12 +140,12 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        oauth2 :full
         get ":id/meters" do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
             .meters
         end
+
 
 
         desc "Return the related scores for Group"
@@ -138,7 +155,6 @@ module API
           requires :timestamp, type: DateTime
           optional :mode, type: Symbol, values: [:sufficiency, :closeness, :autarchy, :fitting]
         end
-        oauth2 false
         get ":id/scores" do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
@@ -151,80 +167,20 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        oauth2 :simple, :full
-        get [':id/managers', ':id/relationships/managers'] do
+        get ':id/managers' do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
             .managers
         end
 
-
-        desc 'Add user to group managers'
-        params do
-          requires :id, type: String, desc: "ID of the group"
-          requires :data, type: Hash do
-            requires :id, type: String, desc: "ID of the user"
-          end
-        end
-        oauth2 :full
-        post ':id/relationships/managers' do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          user  = User.unguarded_retrieve(data_id)
-          group.managers.add(current_user, user)
-          status 204
-        end
-
-        desc 'Replace group managers'
-        params do
-          requires :id, type: String, desc: "ID of the group"
-          requires :data, type: Array do
-            requires :id, type: String, desc: "ID of the user"
-          end
-        end
-        oauth2 :full
-        patch ':id/relationships/managers' do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          group.managers.replace(current_user, data_id_array, update: :replace_managers)
-          status 200
-        end
-
-        desc 'Remove user from group managers'
-        params do
-          requires :id, type: String, desc: "ID of the group"
-          requires :data, type: Hash do
-            requires :id, type: String, desc: "ID of the user"
-          end
-        end
-        oauth2 :full
-        delete ':id/relationships/managers' do
-          group = Group::Base.guarded_retrieve(current_user, permitted_params)
-          user  = User.unguarded_retrieve(data_id)
-          group.managers.remove(current_user, user)
-          status 204
-        end
-
-
         desc "Return the related members for Group"
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        oauth2 :simple, :full
-        get [':id/members', ':id/relationships/members'] do
+        get ':id/members' do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
             .members
-        end
-
-
-        desc "Return the related energy-producers for Group"
-        params do
-          requires :id, type: String, desc: "ID of the group"
-        end
-        oauth2 false
-        get ":id/energy-producers" do
-          Group::BaseResource
-            .retrieve(current_user, permitted_params)
-            .energy_producers
         end
 
 
@@ -232,25 +188,11 @@ module API
         params do
           requires :id, type: String, desc: "ID of the group"
         end
-        oauth2 :simple, :full
         get ":id/energy-consumers" do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
             .energy_consumers
         end
-
-
-        desc 'Return the related comments for Group'
-        params do
-          requires :id, type: String, desc: 'ID of the group'
-        end
-        oauth2 :simple, :full
-        get ':id/comments' do
-          Group::BaseResource
-            .retrieve(current_user, permitted_params)
-            .comments
-        end
-
 
       end
     end

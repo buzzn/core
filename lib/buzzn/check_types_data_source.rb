@@ -7,15 +7,15 @@ module Buzzn
     def collection(resource, mode)
       raise 'mode is nil' unless mode
       raise 'resource is nil' unless resource
-      raise 'resource not a Group::Base or Register' if !resource.is_a?(Group::Base) && !resource.is_a?(Register)
-      raise 'Register needs to be virtual' if resource.is_a?(Register) && resource.virtual == false
+      raise 'resource not a Group::MinimalBaseResource or Register::BaseResource' if !resource.is_a?(Group::Base) && !resource.is_a?(Register::Base) && !resource.is_a?(Group::MinimalBaseResource) && !resource.is_a?(Register::BaseResource)
+      raise 'Register must not be virtual' if resource.is_a?(Register::Virtual)
       nil
     end
 
     def single_aggregated(resource, mode)
       raise 'mode is nil' unless mode
       raise 'resource is nil' unless resource
-      raise 'resource not a Group::Base or Register' if !resource.is_a?(Group::Base) && !resource.is_a?(Register)
+      raise 'resource not a Group::MinimalBaseResource or Register::BaseResource' if !resource.is_a?(Group::Base) && !resource.is_a?(Register::Base) && !resource.is_a?(Group::MinimalBaseResource) && !resource.is_a?(Register::BaseResource)
       nil
     end
 
@@ -23,8 +23,8 @@ module Buzzn
       raise 'interval is nil' unless interval
       raise 'mode is nil' unless mode
       raise 'resource is nil' unless resource
-      raise 'resource not a Group::Base or Register' if !resource.is_a?(Group::Base) && !resource.is_a?(Register)
-      raise 'Register must not be virtual' if resource.is_a?(Register) && resource.virtual == false
+      raise 'resource not a Group::MinimalBaseResource or Register::BaseResource' if !resource.is_a?(Group::Base) && !resource.is_a?(Register::Base) && !resource.is_a?(Group::MinimalBaseResource) && !resource.is_a?(Register::BaseResource)
+      raise 'Register must not be virtual' if resource.is_a?(Register::Virtual)
       nil
     end
   end

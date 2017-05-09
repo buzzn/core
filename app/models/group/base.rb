@@ -37,7 +37,6 @@ module Group
 
     mount_uploader :logo, PictureUploader
     #mount_uploader :image, PictureUploader
-    mount_base64_uploader :image, PictureUploader
 
     has_one  :area
     has_many :registers, class_name: Register::Base, foreign_key: :group_id
@@ -110,8 +109,7 @@ module Group
         # this register_on and register_join
         register_on   = register.create_on(group[:id].eq(register.alias[:group_id]))
         register_join = register.create_join(register.alias, register_on, Arel::Nodes::OuterJoin)
-
-        joins(register_join).where(sqls.map(&:to_sql).join(' OR ')).distinct
+        joins(register_join).where('(' + sqls.map(&:to_sql).join(' OR ') + ')').distinct
       end
     end
 

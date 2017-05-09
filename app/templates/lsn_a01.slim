@@ -1,0 +1,172 @@
+doctype html
+html
+  head
+    title = "LSN_A01 #{power_taker.name}"
+    meta charset='utf-8'
+    css:
+      div.footer {position: fixed; bottom: 0; left: 0; font-size: 9pt;}
+      div.alwaysbreak {page-break-before: always;}
+      div#from {font-size: 10pt; float:right}
+      div#from_small {font-size: 9pt; clear: both}
+      div#to{padding-top: 10pt;}
+      div#place_date {float: right; font-size: 11pt;margin-top: 10pt}
+      p.law {font-size: 9pt;}
+      table {border-collapse: collapse; width: 90%;}
+      tr {border: lightgrey solid 1pt;}
+      td {width: 50%; border-left: lightgrey solid 1pt; vertical-align: top;}
+      tr.grey {background-color: lightgrey;}
+      table.block tr, table.block td {border: 0}
+      table.block {font-weight: bold; margin: 2%; width: 70%}
+      h1 {clear: both; font-size: 14pt; margin-top: 30pt;}
+      h2 {font-size: 12pt; margin-top: 20pt;}
+      div.ps {margin-top: 30pt}
+      div.ps div {width: 95%; display: inline-block}
+      div.ps span { vertical-align: top}
+ 
+  body
+    div id='from'
+      div = power_taker.contractor.name 
+      div Localpool #{power_taker.localpool.name}
+      div = power_taker.contractor_contact.name 
+      div could be manager of organization
+      div = power_taker.contractor.address.street_with_number
+      div = power_taker.contractor.address.zip_with_place
+      div &nbsp;
+      div T: #{power_taker.contractor.phone}
+      div F: #{power_taker.contractor.fax}
+      div Email: #{power_taker.contractor.email}
+
+    div id="from_small"
+      #{power_taker.contractor_contact.name} #{power_taker.contractor.address.street_with_number} #{power_taker.contractor.address.zip_with_place}
+
+    div id="to"
+      div = 'power_taker.customer.profile.address'
+      div = power_taker.customer.name
+      div = power_taker.customer.address.street_with_number
+      div = power_taker.customer.address.zip_with_place
+      div &nbsp;
+      div = power_taker.customer.email
+
+    div id='place_date' = "#{place}, den #{date}"
+
+    h1 Stromnehmer-Auftragseingangsbestätigung
+      <br>
+      Localpool #{power_taker.localpool.name}
+
+    table.block
+      tr
+        td Vertragsnummner:
+        td #{power_taker.full_contract_number}
+      tr
+        td Bezugsstelle:
+        td = power_taker.register.address.street_with_number_and_extra
+      tr
+        td Zählernummer
+        td = power_taker.register.meter.manufacturer_product_serialnumber
+      tr
+        td Jahresverbrauch (kWh):
+        td = power_taker.forecast_kwh_pa
+
+    p #{addressing},
+
+    p Ihr Auftrag, Strom aus unserem Haus zu beziehen, ist hier eingegangen. Vielen Dank! Wir freuen uns, dass Sie sich für die Teilnahme an unserem Localpool entschieden haben. Mit Ihnen werden weitere Mieter ihren Strom umweltfreundlich und günstig direkt über den Localpool beziehen.
+
+    p Jetzt kontaktieren wir Ihren derzeitigen Lieferanten und regeln mit ihm Ihren nahtlosen Wechsel in den Localpool. Vorerst müssen Sie erst einmal nichts tun außer zu warten.
+
+    p Sobald alle notwendigen Schritte erledigt sind, bekommen Sie eine Auftragsbestätigung mit dem genauen Bezugsbeginn zugesendet. Damit kommt dann der Vertrag zur Strombelieferung zustande.
+
+    p Haben Sie noch Fragen? Dann stehen wir Ihnen unter den oben genannten Kontaktdaten zur Verfügung.
+
+    p Mit freundlichen Grüßen,
+
+    p = power_taker.contractor_contact.name
+
+    div.ps 
+      span PS: 
+      div Auf der nächsten Seite finden Sie zur Kontrolle eine Zusammenfassung Ihrer Angaben sowie Informationen zu Ihrem Widerrufsrecht.
+
+    div.alwaysbreak
+
+    h2 Persönlich Angaben
+
+    table
+      tr.grey
+        td Anrede
+        td = power_taker.customer.profile.address
+      tr
+        td Name
+        td = power_taker.customer.name
+      tr.grey
+        td Telefon
+        td = power_taker.customer.phone
+      tr
+        td E-Mail
+        td = power_taker.customer.email
+
+    h2 Bezugsstelle
+
+    table
+      tr.grey
+        td Adresse
+        td = power_taker.register.address.street_number_zip_place
+      tr
+        td Adresszusatz
+        td = power_taker.register.address.addition
+      tr.grey
+        td Ziehen Sie neu ein?
+        td = power_taker.move_in
+      tr
+        td Vorlieferant
+        td = power_taker.old_supplier_name
+      tr.grey
+        td Kundennummer Vorlieferant
+        td = power_taker.old_customer_number
+      tr
+        td Vertragskontonummer Vorlieferant
+        td = power_taker.old_account_number
+      tr.grey
+        td Stromverbrauch letztes Jahr
+        td #{power_taker.forecast_kwh_pa} kWh
+      tr
+        td Derzeitiger Abschlag (Strom)
+        td #{power_taker.payment_now} €
+      tr.grey
+        td Zählpunktbezeichnung
+        td = power_taker.register.uid
+      tr
+        td Zählernummer
+        td = power_taker.register.meter.manufacturer_product_serialnumber
+
+  h2 Preise, Abrechnung & Bezahlung
+
+  table
+    tr.grey
+      td Grundpreis
+      td #{power_taker.base_price_euro} €/Monat
+    tr
+      td Bezugspreis
+      td #{power_taker.tariff_now.energyprice_cents_per_kwh} Cent/kWh
+    tr.grey
+      td Kontoinhaber
+      td = power_taker.customer_bank_account.holder
+    tr
+      td Kontonummer/IBAN
+      td = power_taker.customer_bank_account.iban
+    tr.grey
+      td BIC
+      td = power_taker.customer_bank_account.bic
+    tr
+      td Name der Bank
+      td = power_taker.customer_bank_account.bank_name
+
+  h2 Widerrufsrecht
+
+  p.law Der LSN kann seine Vertragserklärung innerhalb von 14 Tagen ohne Angabe von Gründen in Textform (z. B. Brief, Telefax, E- Mail) widerrufen. Die Frist beginnt nach Erhalt der Widerrufsbelehrung in Textform, jedoch nicht vor Eingang der ersten Stromlieferung und auch nicht vor Erfüllung der Informationspflichten des LSG gemäß Artikel 246 § 2 in Verbindung mit § 1 Abs. 1 und 2 EGBGB sowie – bei Vertragsschluss im elektronischen Rechtsverkehr – der Pflichten des LSG gemäß § 312g Abs. 1 Satz 1 BGB in Verbindung mit Artikel 246 § 3 EGBGB. Zur Wahrung der Widerrufsfrist genügt die rechtzeitige Absendung des Widerrufs.
+
+  p.law Der Widerruf ist zu richten an #{power_taker.contractor.name}, - Localpool #{power_taker.localpool.name}- #{power_taker.contractor.address.street_number_zip_place}, Telefon: #{power_taker.contractor.phone}, Fax: #{power_taker.contractor.fax}, E Mail: #{power_taker.contractor.email}.
+
+  h2 Widerrufsfolgen
+
+  p.law Im Falle eines wirksamen Widerrufs sind die beiderseits empfangenen Leistungen zurück zu gewähren. Das heißt, dass der LSG bereits erhaltene Zahlungen einschließlich ggf. gezogener Nutzungen (z. B. Zinsen) an den LSN zurückzahlt. Für den verbrauchten Strom muss der LSN dem LSG Wertersatz leisten. Die Verpflichtungen zur Erstattung von Zahlungen müssen innerhalb von 30 Tagen erfüllt werden. Die Frist beginnt für den LSN mit der Absendung seiner Widerrufserklärung, für den LSG mit deren Empfang.
+
+

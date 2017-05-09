@@ -3,6 +3,9 @@ module Register
   class Base < ActiveRecord::Base
     self.table_name = :registers
     resourcify
+
+    include Import.active_record['service.current_power', 'service.charts']
+
     include Authority::Abilities
     include CalcVirtualRegister
     include ChartFunctions
@@ -85,10 +88,7 @@ module Register
     validates :last_observed_timestamp, presence: false
     # TODO virtual register ?
     validates :observe_offline, presence: false
-    # commented out to keep db:init passing. When commenting in rails complains:
-    # undefined method 'label' for Register::Virtual
-    # it seems that for db:init a wrong schema is loaded
-    #validates :label, inclusion: { in: labels }
+    validates :label, inclusion: { in: labels }
 
     def discovergy_brokers
       raise 'TODO use brokers method instead'
@@ -321,7 +321,7 @@ module Register
     end
 
 
-    # TODO move this to decorater
+    # TODO move this to helper
     def readable_icon
       if readable_by_friends?
         "user-plus"
@@ -403,19 +403,6 @@ module Register
         if self.group.contracts.metering_point_operators.running.any?
           return self.group.contracts.metering_point_operators.running.first
         end
-      end
-    end
-
-
-
-    # TODO ????
-    def self.json_tree(nodes)
-      nodes.map do |node, sub_nodes|
-        label = node.decorate.name
-        if node.mode == "out" && node.devices.any?
-          label = label + " | " + node.devices.first.name
-        end
-        {:label => label, :mode => node.mode, :id => node.id, :children => json_tree(sub_nodes).compact}
       end
     end
 
@@ -539,13 +526,13 @@ module Register
     end
 
     def create_observer_activities
-      last_reading    = Buzzn::Application.config.current_power.for_register(self)
+      last_reading    = current_power.for_register(self)
       if !last_reading
         return
       end
 
       # last readings are in milliwatt
-      current_power = last_reading.value / 1000.0
+      power = last_reading.value / 1000.0
 
       if Time.current.utc.to_i - last_reading.timestamp.to_i >= 5.minutes
         if observe_offline
@@ -555,9 +542,9 @@ module Register
         end
       else
         update(last_observed_timestamp: Time.at(last_reading.timestamp/1000.0).utc)
-        if current_power < min_watt && current_power >= 0
+        if power < min_watt && power >= 0
           mode = 'undershoots'
-        elsif current_power >= max_watt
+        elsif power >= max_watt
           mode = 'exceeds'
         else
           mode = nil

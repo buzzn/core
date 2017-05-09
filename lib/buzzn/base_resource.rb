@@ -1,8 +1,19 @@
 module Buzzn
   class BaseResource < ActiveModel::Serializer
 
+    attr_reader :current_user
+
     class << self
-      private :new
+
+      def new(resource, options = {})
+        # ActiveModel::SerializableResource does not check whether it has
+        # already an serializer, so we check it here and just return it
+        if resource.is_a? self
+          resource
+        else
+          super
+        end
+      end
 
       def guarded_collection(method)
         unless methods.include?(method)
@@ -22,7 +33,7 @@ module Buzzn
             if result.nil?
               raise RecordNotFound.new
             elsif result.readable_by?(@current_user)
-              result
+              self.class.to_resource(@current_user, result)
             else
               raise PermissionDenied.create(result, :retrieve, @current_user)
             end
@@ -31,7 +42,7 @@ module Buzzn
           define_method method do
             result = object.send(method)
             if result && result.readable_by?(@current_user)
-              result
+              self.class.to_resource(@current_user, result)
             end
           end
         end
@@ -72,15 +83,14 @@ module Buzzn
       end
 
       def abstract
-        @abstract = true
+        @abstract = true if @abstract.nil?
+        @abstract
       end
 
-      # crud API
+      # the 'R' from the crud API
 
       def find_resource_class(clazz)
-        if clazz == model || clazz == Object
-          raise "could not find Resource class for #{clazz}"
-        end
+        return nil if clazz == Object || clazz.nil?
         const = "#{clazz}Resource".safe_constantize
         if const.nil?
           find_resource_class(clazz.superclass)
@@ -90,23 +100,21 @@ module Buzzn
       end
       private :find_resource_class
 
-      def to_resource(current_user, instance)
-        if @abstract
-          clazz = find_resource_class(instance.class)
-        else
-          clazz = self
+      def to_resource(user, instance, clazz = nil)
+        clazz ||= find_resource_class(instance.class)
+        unless clazz
+          raise "could not find Resource class for #{instance.class}"
         end
-        clazz.send(:new, instance, current_user: current_user)
-      end
-      private :to_resource
-
-      def retrieve(current_user, id)
-        instance = model.guarded_retrieve(current_user, id)
-        to_resource(current_user, instance)
+        clazz.send(:new, instance, current_user: user)
       end
 
-      def all(current_user, filter = nil)
-        result = model.readable_by(current_user)
+      def retrieve(user, id)
+        instance = model.guarded_retrieve(user, id)
+        to_resource(user, instance, @abstract ? nil : self)
+      end
+
+      def all(user, filter = nil)
+        result = model.readable_by(user)
         if filter
           result.filter(filter)
         else

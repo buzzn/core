@@ -2,6 +2,8 @@ module Buzzn::StandardProfile
   class DataSource < Buzzn::DataSource
     NAME = :standard_profile
 
+    RESOLUTION = 15.minutes
+
     IN_PROFILES = [:slp]
     OUT_PROFILES = [:sep_bhkw, :sep_pv]
 
@@ -23,13 +25,15 @@ module Buzzn::StandardProfile
 
     # value_list
     def collection(resource, mode)
-      result = Buzzn::DataResultArray.new
+      results = []
       current = Time.current
-      resource.registers.each do |register|
-        if point = single_aggregated_register(register, mode, current)
-          result << point
-        end
+      results = resource.registers.collect do |register|
+        single_aggregated_register(register, mode, current)
       end
+      results.compact!
+      expires_at = results.collect{ |c| c.timestamp }.min
+      result = Buzzn::DataResultArray.new(expires_at)
+      result.replace(results) # set the array
       result
     end
 
@@ -47,14 +51,16 @@ module Buzzn::StandardProfile
 
 
 private
-    def single_aggregated_register(register, mode, time = Time.current)
+    def single_aggregated_register(register, mode, time = nil)
       profile_type = get_profile_type(register)
       if profile_type && register.direction == mode
-        if result = @facade.query_value(profile_type, time)
+        if result = @facade.query_value(profile_type, time || Time.current)
           factor = factor_from_register(register)
           Buzzn::DataResult.new(result.timestamp.to_time,
                                 factor * result.power_milliwatt,
-                                register.id, mode)
+                                register.id, mode,
+                                # only use expires on current time
+                                time ? nil : result.timestamp.to_time)
         end
       end
     end

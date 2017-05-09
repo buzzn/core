@@ -18,12 +18,10 @@ module Meter
       params[:meter] = object
       Register::Output.guarded_create(@current_user, params)
     end
-  end
 
-  # TODO get rid of the need of having a Serializer class
-  class RealSerializer < RealResource
-    def self.new(*args)
-      super
+    alias :registers_raw :registers
+    def registers
+      registers_raw.collect { |r| Register::RealFullCollectionResource.new(r) }
     end
   end
 end

@@ -2,6 +2,13 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
+Register::Base.reset_column_information
+Register::Virtual.reset_column_information
+Register::Input.reset_column_information
+Register::Output.reset_column_information
+Register::Real.reset_column_information
+Meter::Real.reset_column_information
+Meter::Virtual.reset_column_information
 
 def user_with_register
   register = Fabricate(:register)
@@ -209,7 +216,6 @@ karin.add_role :manager, karins_pv_group
 karins_pv_group.registers << User.where(email: 'christian@buzzn.net').first.accessible_registers.first
 karins_pv_group.registers << User.where(email: 'philipp@buzzn.net').first.accessible_registers.first
 karins_pv_group.registers << User.where(email: 'thomas@buzzn.net').first.accessible_registers.first
-#karins_pv_group.create_activity key: 'group.create', owner: karin, recipient: karins_pv_group
 
 
 
@@ -290,7 +296,6 @@ localpool_home_of_the_brave = Fabricate(:localpool_home_of_the_brave, registers:
 justus = User.where(email: 'justus@buzzn.net').first
 justus.add_role :manager, localpool_home_of_the_brave
 justus.add_role :manager, @fichtenweg8
-#localpool_home_of_the_brave.create_activity key: 'group.create', owner: justus, recipient: localpool_home_of_the_brave
 
 
 
@@ -1315,6 +1320,8 @@ localpool_sulz = Fabricate(:localpool_sulz, registers: [register_60404855, regis
 sulz_manager.add_role(:manager, localpool_sulz)
 mpoc_sulz = Fabricate(:mpoc_sulz, signing_user: sulz_manager, localpool: localpool_sulz, customer: sulz_contractor)
 lpc_sulz = Fabricate(:lpc_sulz, signing_user: sulz_manager, localpool: localpool_sulz, customer: sulz_contractor)
+billing_cycle_sulz = Fabricate(:billing_cycle_sulz, localpool_id: localpool_sulz.id)
+Fabricate(:price_sulz, localpool: localpool_sulz)
 
 meter = Fabricate(:easymeter_60404846)
 register = meter.input_register
@@ -1327,9 +1334,10 @@ orga = Fabricate(:organization, mode: 'other')
 user.add_role(:manager, orga)
 lptc = Fabricate(:lptc_hafi, signing_user: user, register: register, customer: orga, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 13855000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 77134105, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 241100, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 239000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 239000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60404850)
 register = meter.input_register
@@ -1340,9 +1348,10 @@ user = Fabricate(:user)
 user.add_role(:member, register)
 lptc = Fabricate(:lptc_hubv, signing_user: user, register: register, customer: user, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 27489000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 77134118, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 864100, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 858000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 858000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60404851)
 register = meter.input_register
@@ -1355,9 +1364,10 @@ orga = Fabricate(:organization, mode: 'other')
 user.add_role(:manager, orga)
 lptc = Fabricate(:lptc_mape, signing_user: user, register: register, customer: orga, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 24124000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 49350039, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 1892400, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 1879000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 1879000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60404853)
 register = meter.input_register
@@ -1376,10 +1386,10 @@ lptc = Fabricate(:lptc_pewi, signing_user: user, register: register, customer: u
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 23790, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 4789917, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 10, 31), energy_milliwatt_hour: 191000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 11, 1), energy_milliwatt_hour: 191000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 11, 1), energy_milliwatt_hour: 191000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 808200, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 798000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 798000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60404847)
 register = meter.input_register
@@ -1390,9 +1400,10 @@ user = Fabricate(:user)
 user.add_role(:member, register)
 lptc = Fabricate(:lptc_musc, signing_user: user, register: register, customer: user, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 8024000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 5640077, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 456300, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 4529000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 4529000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60404854)
 register = meter.input_register
@@ -1403,9 +1414,10 @@ user = Fabricate(:user)
 user.add_role(:member, register)
 lptc = Fabricate(:lptc_viwe, signing_user: user, register: register, customer: user, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 19442000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 77134120, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 809700, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 805000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 805000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60404852)
 register = meter.input_register
@@ -1416,9 +1428,10 @@ user = Fabricate(:user)
 user.add_role(:member, register)
 lptc = Fabricate(:lptc_reho, signing_user: user, register: register, customer: user, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 9597000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 5000705, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 1523000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 1513000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 1513000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60327350)
 register = meter.input_register

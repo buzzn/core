@@ -6,7 +6,7 @@ module Contract
     model Base
 
     attributes  :status,
-                :contract_number,
+                :full_contract_number,
                 :customer_number,
                 :signing_date,
                 :cancellation_date,
@@ -19,11 +19,12 @@ module Contract
     has_one :contractor
     has_one :customer
     has_one :signing_user
-    has_one :bank_account
+    has_one :customer_bank_account
+    has_one :contractor_bank_account
 
     alias :contractor_raw! :contractor!
     def contractor!
-      ContractingPartyResource.new(contractor_raw!)
+      ContractingPartyResource.new(contractor_raw!.object)
     end
 
     alias :customer_raw! :customer!

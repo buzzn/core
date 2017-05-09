@@ -1,14 +1,22 @@
 module Register
-  class VirtualResource < BaseResource
+  class VirtualSingleResource < SingleResource
 
     model Virtual
 
   end
 
-  # TODO get rid of the need of having a Serializer class
-  class VirtualSerializer < VirtualResource
-    def self.new(*args)
-      super
-    end
+  class VirtualCollectionResource < CollectionResource
+
+    model Virtual
+
   end
+
+  class VirtualFullCollectionResource < FullCollectionResource
+
+    model Virtual
+
+  end
+
+  # to satisfy rails autoload
+  VirtualResource = VirtualSingleResource
 end

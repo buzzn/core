@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170310145748) do
+ActiveRecord::Schema.define(version: 20170505151515) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,13 +93,12 @@ ActiveRecord::Schema.define(version: 20170310145748) do
     t.string   "bic"
     t.string   "bank_name"
     t.boolean  "direct_debit"
-    t.uuid     "bank_accountable_id"
-    t.string   "bank_accountable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.uuid     "contracting_party_id",   null: false
+    t.string   "contracting_party_type", null: false
   end
 
-  add_index "bank_accounts", ["bank_accountable_id", "bank_accountable_type"], name: "index_accountable", using: :btree
   add_index "bank_accounts", ["slug"], name: "index_bank_accounts_on_slug", unique: true, using: :btree
 
   create_table "banks", force: :cascade do |t|
@@ -113,6 +112,39 @@ ActiveRecord::Schema.define(version: 20170310145748) do
 
   add_index "banks", ["bic"], name: "index_banks_on_bic", using: :btree
   add_index "banks", ["blz"], name: "index_banks_on_blz", unique: true, using: :btree
+
+  create_table "billing_cycles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.datetime "begin_date",   null: false
+    t.datetime "end_date",     null: false
+    t.string   "name",         null: false
+    t.uuid     "localpool_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "billing_cycles", ["begin_date", "end_date"], name: "index_billing_cycles_dates", using: :btree
+
+  create_table "billings", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.string   "status",                            null: false
+    t.integer  "total_energy_consumption_kWh",      null: false
+    t.integer  "total_price_cents",                 null: false
+    t.integer  "prepayments_cents",                 null: false
+    t.integer  "receivables_cents",                 null: false
+    t.string   "invoice_number"
+    t.string   "start_reading_id",                  null: false
+    t.string   "end_reading_id",                    null: false
+    t.string   "device_change_reading_1_id"
+    t.string   "device_change_reading_2_id"
+    t.uuid     "billing_cycle_id"
+    t.uuid     "localpool_power_taker_contract_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "billings", ["billing_cycle_id", "status"], name: "index_billings_on_billing_cycle_id_and_status", using: :btree
+  add_index "billings", ["billing_cycle_id"], name: "index_billings_on_billing_cycle_id", using: :btree
+  add_index "billings", ["localpool_power_taker_contract_id"], name: "index_billings_on_localpool_power_taker_contract_id", using: :btree
+  add_index "billings", ["status"], name: "index_billings_on_status", using: :btree
 
   create_table "brokers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "mode",                            null: false
@@ -164,7 +196,6 @@ ActiveRecord::Schema.define(version: 20170310145748) do
     t.boolean  "confirm_pricing_model"
     t.boolean  "power_of_attorney"
     t.string   "customer_number"
-    t.string   "contract_number"
     t.uuid     "register_id"
     t.uuid     "organization_id"
     t.uuid     "localpool_id"
@@ -194,8 +225,14 @@ ActiveRecord::Schema.define(version: 20170310145748) do
     t.string   "contractor_type"
     t.string   "energy_consumption_before_kwh_pa"
     t.string   "down_payment_before_cents_per_month"
+    t.integer  "contract_number"
+    t.integer  "contract_number_addition"
+    t.uuid     "customer_bank_account_id"
+    t.uuid     "contractor_bank_account_id"
   end
 
+  add_index "contracts", ["contract_number", "contract_number_addition"], name: "index_contract_number_and_its_addition", unique: true, using: :btree
+  add_index "contracts", ["contract_number"], name: "index_contracts_on_contract_number", using: :btree
   add_index "contracts", ["contractor_type", "contractor_id"], name: "index_contracts_on_contractor_type_and_contractor_id", using: :btree
   add_index "contracts", ["customer_type", "customer_id"], name: "index_contracts_on_customer_type_and_customer_id", using: :btree
   add_index "contracts", ["localpool_id"], name: "index_contracts_on_localpool_id", using: :btree
@@ -255,6 +292,15 @@ ActiveRecord::Schema.define(version: 20170310145748) do
   add_index "devices", ["register_id"], name: "index_devices_on_register_id", using: :btree
   add_index "devices", ["slug"], name: "index_devices_on_slug", unique: true, using: :btree
 
+  create_table "documents", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.string   "path",               null: false
+    t.string   "encryption_details", null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "documents", ["path"], name: "index_documents_on_path", unique: true, using: :btree
+
   create_table "equipment", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "manufacturer_name"
@@ -269,6 +315,7 @@ ActiveRecord::Schema.define(version: 20170310145748) do
     t.uuid     "meter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "manufacturer_number"
   end
 
   add_index "equipment", ["meter_id"], name: "index_equipment_on_meter_id", using: :btree
@@ -347,7 +394,6 @@ ActiveRecord::Schema.define(version: 20170310145748) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "closeness"
     t.string   "type",        null: false
   end
 
@@ -359,10 +405,9 @@ ActiveRecord::Schema.define(version: 20170310145748) do
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
     t.string   "manufacturer_product_serialnumber"
-    t.string   "owner"
+    t.string   "ownership"
     t.string   "metering_type"
     t.string   "meter_size"
-    t.string   "rate"
     t.string   "mode"
     t.string   "image"
     t.string   "measurement_capture"
@@ -370,8 +415,6 @@ ActiveRecord::Schema.define(version: 20170310145748) do
     t.date     "build_year"
     t.date     "calibrated_till"
     t.boolean  "smart",                             default: false
-    t.boolean  "init_reading",                      default: false
-    t.string   "ancestry"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "type",                                              null: false
@@ -382,33 +425,13 @@ ActiveRecord::Schema.define(version: 20170310145748) do
     t.boolean  "send_data_dso"
     t.boolean  "remote_readout"
     t.string   "tariff"
-    t.string   "direction"
     t.string   "data_logging"
     t.string   "manufacturer_number"
     t.integer  "converter_constant"
     t.string   "data_provider_name"
   end
 
-  add_index "meters", ["ancestry"], name: "index_meters_on_ancestry", using: :btree
   add_index "meters", ["slug"], name: "index_meters_on_slug", unique: true, using: :btree
-
-  create_table "nne_vnbs", id: false, force: :cascade do |t|
-    t.string  "verbandsnummer", null: false
-    t.string  "typ"
-    t.float   "messung_et"
-    t.float   "abrechnung_et"
-    t.float   "zaehler_et"
-    t.float   "mp_et"
-    t.float   "messung_dt"
-    t.float   "abrechnung_dt"
-    t.float   "zaehler_dt"
-    t.float   "mp_dt"
-    t.float   "arbeitspreis"
-    t.float   "grundpreis"
-    t.boolean "vorlaeufig"
-  end
-
-  add_index "nne_vnbs", ["verbandsnummer"], name: "index_nne_vnbs_on_verbandsnummer", unique: true, using: :btree
 
   create_table "notification_unsubscribers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "notification_key"
@@ -507,6 +530,18 @@ ActiveRecord::Schema.define(version: 20170310145748) do
 
   add_index "payments", ["contract_id"], name: "index_payments_on_contract_id", using: :btree
 
+  create_table "prices", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.string   "name",                                null: false
+    t.integer  "baseprice_cents_per_month",           null: false
+    t.float    "energyprice_cents_per_kilowatt_hour", null: false
+    t.date     "begin_date",                          null: false
+    t.uuid     "localpool_id"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  add_index "prices", ["begin_date", "localpool_id"], name: "index_prices_on_begin_date_and_localpool_id", unique: true, using: :btree
+
   create_table "profiles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "user_name"
     t.string   "slug"
@@ -516,20 +551,12 @@ ActiveRecord::Schema.define(version: 20170310145748) do
     t.string   "last_name"
     t.text     "about_me"
     t.string   "website"
-    t.string   "facebook"
-    t.string   "twitter"
-    t.string   "xing"
-    t.string   "linkedin"
     t.string   "gender"
     t.string   "phone"
     t.string   "time_zone"
-    t.text     "know_buzzn_from"
     t.boolean  "confirm_pricing_model"
     t.boolean  "terms"
     t.string   "readable"
-    t.boolean  "newsletter_notifications",         default: true
-    t.boolean  "location_notifications",           default: true
-    t.boolean  "group_notifications",              default: true
     t.uuid     "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -560,8 +587,6 @@ ActiveRecord::Schema.define(version: 20170310145748) do
     t.string   "mode"
     t.string   "name"
     t.string   "image"
-    t.date     "regular_reeding"
-    t.boolean  "virtual",                 default: false
     t.boolean  "is_dashboard_register",   default: false
     t.string   "readable"
     t.uuid     "meter_id"
@@ -577,9 +602,9 @@ ActiveRecord::Schema.define(version: 20170310145748) do
     t.string   "type",                                    null: false
     t.string   "obis"
     t.string   "label"
-    t.string   "low_load_ability"
     t.integer  "digits_before_comma"
     t.integer  "decimal_digits"
+    t.boolean  "low_load_ability"
   end
 
   add_index "registers", ["group_id"], name: "index_registers_on_group_id", using: :btree
@@ -642,13 +667,6 @@ ActiveRecord::Schema.define(version: 20170310145748) do
   end
 
   add_index "tariffs", ["contract_id"], name: "index_tariffs_on_contract_id", using: :btree
-
-  create_table "used_zip_sns", force: :cascade do |t|
-    t.string   "zip"
-    t.integer  "kwh"
-    t.float    "price"
-    t.datetime "created_at"
-  end
 
   create_table "users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "email",                      default: "", null: false
@@ -733,21 +751,6 @@ ActiveRecord::Schema.define(version: 20170310145748) do
     t.uuid     "votable_id"
     t.uuid     "voter_id"
   end
-
-  create_table "zip_kas", id: false, force: :cascade do |t|
-    t.string "zip", null: false
-    t.float  "ka"
-  end
-
-  add_index "zip_kas", ["zip"], name: "index_zip_kas_on_zip", unique: true, using: :btree
-
-  create_table "zip_vnbs", force: :cascade do |t|
-    t.string "zip"
-    t.string "place"
-    t.string "verbandsnummer"
-  end
-
-  add_index "zip_vnbs", ["zip"], name: "index_zip_vnbs_on_zip", using: :btree
 
   add_foreign_key "contracts", "users", column: "signing_user_id"
   add_foreign_key "payments", "contracts"

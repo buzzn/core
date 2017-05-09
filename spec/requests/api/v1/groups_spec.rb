@@ -1,696 +1,530 @@
-describe "/groups" do
+describe "groups" do
 
-  let(:page_overload) { 33 }
+  entity(:admin) { Fabricate(:admin_token) }
 
-  let(:output_register_with_manager) do
-    register = Fabricate(:output_meter).output_register
-    Fabricate(:user).add_role(:manager, register)
-    register
+  entity(:user) { Fabricate(:user_token) }
+
+  entity(:other) { Fabricate(:user_token) }
+
+  let(:anonymous_denied_json) do
+    {
+      "errors" => [
+        {
+          "detail"=>"retrieve Group::Base: permission denied for User: --anonymous--" }
+      ]
+    }
   end
 
-  it 'search groups without token' do
-    group = Fabricate(:tribe)
-    Fabricate(:tribe_readable_by_community)
-    regular_token         = Fabricate(:simple_access_token)
-    token_with_friend     = Fabricate(:access_token_with_friend)
-    token_user            = User.find(token_with_friend.resource_owner_id)
-    friend                = token_user.friends.first
-    member_token          = Fabricate(:simple_access_token)
-    member                = User.find(member_token.resource_owner_id)
-    friend_group          = Fabricate(:tribe_readable_by_friends)
-    friend.add_role(:manager, friend_group)
-    member_group          = Fabricate(:tribe_readable_by_members)
-    member.add_role(:manager, member_group)
-
-
-    get_without_token '/api/v1/groups'
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-
-    request_params = { filter: group.name }
-    get_without_token '/api/v1/groups', request_params
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-
-    request_params = { filter: 'hello world' }
-    get_without_token '/api/v1/groups', request_params
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(0)
+  let(:denied_json) do
+    json = anonymous_denied_json.dup
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
+    json
   end
 
-
-  it 'search groups with simple token' do
-    group = Fabricate(:tribe)
-    Fabricate(:tribe_readable_by_community)
-    regular_token         = Fabricate(:simple_access_token)
-    token_with_friend     = Fabricate(:access_token_with_friend)
-    token_user            = User.find(token_with_friend.resource_owner_id)
-    friend                = token_user.friends.first
-    member_token          = Fabricate(:simple_access_token)
-    member                = User.find(member_token.resource_owner_id)
-    friend_group          = Fabricate(:tribe_readable_by_friends)
-    friend.add_role(:manager, friend_group)
-    member_group          = Fabricate(:tribe_readable_by_members)
-    member.add_role(:manager, member_group)
-
-    get_with_token '/api/v1/groups', regular_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(2)
-
-    request_params = { filter: group.name }
-    get_with_token '/api/v1/groups', request_params, regular_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-
-    request_params = { filter: 'hello world' }
-    get_with_token '/api/v1/groups', request_params, regular_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(0)
+  let(:anonymous_not_found_json) do
+    {
+      "errors" => [
+        {
+          "detail"=>"Group::Base: bla-blub not found" }
+      ]
+    }
   end
 
-
-  it 'search groups with simple token as friend' do
-    group = Fabricate(:tribe)
-    Fabricate(:tribe_readable_by_community)
-    regular_token         = Fabricate(:simple_access_token)
-    token_with_friend     = Fabricate(:access_token_with_friend)
-    token_user            = User.find(token_with_friend.resource_owner_id)
-    friend                = token_user.friends.first
-    member_token          = Fabricate(:simple_access_token)
-    member                = User.find(member_token.resource_owner_id)
-    friend_group          = Fabricate(:tribe_readable_by_friends)
-    friend.add_role(:manager, friend_group)
-    member_group          = Fabricate(:tribe_readable_by_members)
-    member.add_role(:manager, member_group)
-
-
-    get_with_token '/api/v1/groups', token_with_friend.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(3)
-
-    request_params = { filter: friend_group.name }
-    get_with_token '/api/v1/groups', request_params, token_with_friend.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-
-    request_params = { filter: 'hello world' }
-    get_with_token '/api/v1/groups', request_params, token_with_friend.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(0)
+  let(:not_found_json) do
+    json = anonymous_not_found_json.dup
+    json['errors'][0]['detail'] = "Group::Base: bla-blub not found by User: #{admin.resource_owner_id}"
+    json
   end
 
+  entity!(:tribe) { Fabricate(:tribe) }
 
-  it 'search groups with simple token as member' do
-    group = Fabricate(:tribe)
-    Fabricate(:tribe_readable_by_community)
-    regular_token         = Fabricate(:simple_access_token)
-    token_with_friend     = Fabricate(:access_token_with_friend)
-    token_user            = User.find(token_with_friend.resource_owner_id)
-    friend                = token_user.friends.first
-    member_token          = Fabricate(:simple_access_token)
-    member                = User.find(member_token.resource_owner_id)
-    friend_group          = Fabricate(:tribe_readable_by_friends)
-    friend.add_role(:manager, friend_group)
-    member_group          = Fabricate(:tribe_readable_by_members)
-    member.add_role(:manager, member_group)
+  entity!(:localpool) { Fabricate(:localpool) }
 
-
-    get_with_token '/api/v1/groups', member_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(3)
-
-    request_params = { filter: member_group.name }
-    get_with_token '/api/v1/groups', request_params, member_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-
-    request_params = { filter: 'hello world' }
-    get_with_token '/api/v1/groups', request_params, member_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(0)
+  entity!(:group) do
+    group = Fabricate(:localpool)
+    User.find(user.resource_owner_id).add_role(:manager, group)
+    group
   end
 
+  context 'GET' do
 
-
-
-  it 'does gets a group readable by world with or without token' do
-    access_token  = Fabricate(:simple_access_token).token
-    group = Fabricate(:tribe)
-    get_without_token "/api/v1/groups/#{group.id}"
-    expect(response).to have_http_status(200)
-    get_with_token "/api/v1/groups/#{group.id}", access_token
-    expect(response).to have_http_status(200)
-  end
-
-  it 'does not gets a group readable by community without token' do
-    group = Fabricate(:tribe_readable_by_community)
-    get_without_token "/api/v1/groups/#{group.id}"
-    expect(response).to have_http_status(403)
-  end
-
-
-
-
-  it "does not update a group with validation errors" do
-    group = Fabricate(:tribe)
-
-    access_token = Fabricate(:full_access_token_as_admin)
-
-    [:name].each do |k|
-      params = { "#{k}": 'a' * 2000 }
-
-      patch_with_token "/api/v1/groups/#{group.id}", params.to_json, access_token.token
-
-      expect(response).to have_http_status(422)
-      json['errors'].each do |error|
-        expect(error['source']['pointer']).to eq "/data/attributes/#{k}"
-        expect(error['title']).to eq 'Invalid Attribute'
-        expect(error['detail']).to eq "#{k} ist zu lang (mehr als 40 Zeichen)"
-      end
-    end
-  end
-
-  it 'updates a group' do
-    register      = output_register_with_manager
-    manager       = register.managers.first
-    access_token  = Fabricate(:full_access_token, resource_owner_id: manager.id)
-    group = Fabricate(:tribe)
-    manager.add_role(:manager, group)
-    request_params = {
-      name: "#{group.name} updated"
-    }.to_json
-
-    patch_with_token "/api/v1/groups/#{group.id}", request_params, access_token.token
-
-    expect(response).to have_http_status(200)
-    expect(json['data']['attributes']['name']).to eq("#{group.name} updated")
-  end
-
-
-  it 'does delete a group' do
-    register      = output_register_with_manager
-    manager       = register.managers.first
-    access_token  = Fabricate(:simple_access_token, resource_owner_id: manager.id)
-    access_token.update_attribute :scopes, 'full'
-    group = Fabricate(:tribe)
-    manager.add_role(:manager, group)
-
-    get_with_token "/api/v1/groups/#{group.id}", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data']['attributes']['updatable']).to be true
-    expect(json['data']['attributes']['deletable']).to be true
-
-    delete_with_token "/api/v1/groups/#{group.id}", access_token.token
-    expect(response).to have_http_status(204)
-  end
-
-
-  it 'does gets a group readable by community' do
-    access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:tribe_readable_by_community)
-    get_with_token "/api/v1/groups/#{group.id}", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data']['attributes']['updatable']).to be false
-    expect(json['data']['attributes']['deletable']).to be false
-  end
-
-  it 'get a friend-readable group by managers friend' do
-    access_token      = Fabricate(:access_token_with_friend)
-    token_user        = User.find(access_token.resource_owner_id)
-    token_user_friend = token_user.friends.first
-    group             = Fabricate(:tribe_readable_by_friends)
-    token_user_friend.add_role(:manager, group)
-    get_with_token "/api/v1/groups/#{group.id}", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data']['attributes']['updatable']).to be false
-    expect(json['data']['attributes']['deletable']).to be false
-  end
-
-  it 'get a friend-readable group by member' do
-    access_token      = Fabricate(:simple_access_token)
-    token_user        = User.find(access_token.resource_owner_id)
-    member            = Fabricate(:user)
-    group             = Fabricate(:tribe_readable_by_friends)
-    register    = Fabricate(:output_meter).output_register
-    member.add_role(:member, register)
-    token_user.add_role(:member, register)
-    group.registers << register
-
-    get_with_token "/api/v1/groups/#{group.id}", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data']['attributes']['updatable']).to be false
-    expect(json['data']['attributes']['deletable']).to be false
-  end
-
-  it 'get a member-readable group by member' do
-    access_token      = Fabricate(:simple_access_token)
-    token_user        = User.find(access_token.resource_owner_id)
-    group             = Fabricate(:tribe_readable_by_members)
-    register    = Fabricate(:input_meter).input_register
-    token_user.add_role(:member, register)
-    group.registers << register
-    get_with_token "/api/v1/groups/#{group.id}", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data']['attributes']['updatable']).to be false
-    expect(json['data']['attributes']['deletable']).to be false
-  end
-
-  it 'does not gets a group readable by members or friends if user is not member or friend' do
-    access_token  = Fabricate(:simple_access_token)
-    members_group         = Fabricate(:tribe_readable_by_members)
-    friends_group         = Fabricate(:tribe_readable_by_friends)
-    get_with_token "/api/v1/groups/#{members_group.id}", access_token.token
-    expect(response).to have_http_status(403)
-    get_with_token "/api/v1/groups/#{friends_group.id}", access_token.token
-    expect(response).to have_http_status(403)
-  end
-
-
-  it 'gets the related registers for Group' do
-    group = Fabricate(:tribe)
-    r = Fabricate(:input_meter).input_register
-    r.update(readable: :world)
-    group.registers << r
-    r = Fabricate(:output_meter).output_register
-    r.update(readable: :community)
-    group.registers << r
-    r = Fabricate(:input_meter).input_register
-    r.update(readable: :friends)
-    group.registers << r
-    r = Fabricate(:input_meter).input_register
-    r.update(readable: :members)
-    group.registers << r
-    r = Fabricate(:output_meter).output_register
-    r.update(readable: :world)
-    group.registers << r
-
-    get_without_token "/api/v1/groups/#{group.id}/registers"
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(5)
-  end
-
-
-  it 'gets the related meters for Group' do
-    full_access_token = Fabricate(:full_access_token)
-    token_user        = User.find(full_access_token.resource_owner_id)
-    group = Fabricate(:tribe)
-    token_user.add_role(:manager, group)
-    r = Fabricate(:input_meter).input_register
-    r.update(readable: :world)
-    group.registers << Fabricate(:input_meter).input_register
-    r = Fabricate(:output_meter).output_register
-    r.update(readable: :community)
-    group.registers << r
-    r = Fabricate(:input_meter).input_register
-    r.update(readable: :friends)
-    group.registers << r
-    r = Fabricate(:input_meter).input_register
-    r.update(readable: :members)
-    group.registers << r
-    r = Fabricate(:output_meter).output_register
-    r.update(readable: :world)
-    group.registers << r
-
-    get_with_token "/api/v1/groups/#{group.id}/meters", full_access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(5)
-  end
-
-
-
-
-  [nil, :sufficiency, :closeness, :autarchy, :fitting].each do |mode|
-
-    it "fails the related scores without interval using mode #{mode}" do
-      group                 = Fabricate(:tribe)
-      now                   = Time.current - 2.days
-      params = { mode: mode, timestamp: now }
-      get_without_token "/api/v1/groups/#{group.id}/scores", params
-      expect(response).to have_http_status(422)
-      expect(json['errors'].first['source']['pointer']).to eq '/data/attributes/interval'
+    let(:group_json) do
+      {
+        "id"=>group.id,
+        "type"=>"group_localpool",
+        "name"=>group.name,
+        "description"=>group.description,
+        "readable"=>group.readable,
+        "updatable"=>true,
+        "deletable"=>true,
+        "registers"=>[],
+        "meters"=>group.meters.collect do |meter|
+          json = {
+            "id"=>meter.id,
+            'type'=>'meter_virtual',
+            "manufacturer_name"=>meter.manufacturer_name,
+            "manufacturer_product_name"=>meter.manufacturer_product_name,
+            "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+            "metering_type"=>meter.metering_type,
+            "meter_size"=>meter.meter_size,
+            "ownership"=>meter.ownership,
+            "direction_label"=>meter.direction,
+            "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
+            "updatable"=>false,
+            "deletable"=>false,
+          }
+          json['smart'] = true if meter.is_a? Meter::Real
+          json
+        end,
+        "managers"=>group.managers.collect do |manager|
+          {
+            "id"=>manager.id,
+            "type"=>"user",
+            "updatable"=>false,
+            "deletable"=>false,
+          }
+        end,
+        "energy_producers"=>[],
+        "energy_consumers"=>[],
+        "localpool_processing_contract"=>nil,
+        "metering_point_operator_contract"=>nil
+      }
     end
 
-    [:day, :month, :year].each do |interval|
-      it "fails the related #{interval}ly scores without timestamp using mode #{mode}" do
-        group                 = Fabricate(:tribe)
-        params = { mode: mode, interval: interval }
-        get_without_token "/api/v1/groups/#{group.id}/scores", params
-        expect(response).to have_http_status(422)
-        expect(json['errors'].first['source']['pointer']).to eq '/data/attributes/timestamp'
-      end
+    let(:admin_group_json) do
+      json = group_json.dup
+      json['updatable']=true
+      json['deletable']=true
+      json
+    end
 
-      it "gets the related #{interval}ly scores with mode '#{mode}'" do
-        group                 = Fabricate(:tribe)
-        now                   = Time.current - 2.days
-        interval_information  = Group::Base.score_interval(interval.to_s, now.to_i)
-        5.times do
-          Score.create(mode: mode || 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group::Base', scoreable_id: group.id)
+    let(:empty_json) do
+      []
+    end
+
+    let(:groups_json) do
+      group_data = group_json.dup
+      group_data['updatable'] = false
+      group_data['deletable'] = false
+      group_data['readable'] = 'member'
+      group_data['managers'] = []
+      [
+        group_data
+      ]
+    end
+
+    let(:filtered_admin_groups_json) do      
+      group_data = admin_group_json.dup
+      group_data['updatable'] = false
+      group_data['deletable'] = false
+      group_data['readable'] = 'member'
+      group_data['managers'] = []
+      [
+        group_data
+      ]
+    end
+
+    let(:admin_groups_json) do  
+      Group::Base.all.collect do |group|
+        rel = {}
+        if group.is_a? Group::Tribe
+          type = :tribe
+        else
+          type = :localpool
+          rel["localpool_processing_contract"] = nil
+          rel["metering_point_operator_contract"] = nil
         end
-        interval_information  = Group::Base.score_interval(interval.to_s, 123123)
-        Score.create(mode: mode || 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group::Base', scoreable_id: group.id)
+        json = {
+          "id"=>group.id,
+          "type"=>"group_#{type}",
+          "name"=>group.name,
+          "description"=>group.description,
+          "readable"=>group.readable,
+          "updatable"=>false,
+          "deletable"=>false,
+          "registers"=>[],
+          "meters"=>group.meters.collect do |meter|
+            json = {
+              "id"=>meter.id,
+              'type'=>meter.class.to_s.downcase.sub('::', '_'),
+              "manufacturer_name"=>meter.manufacturer_name,
+              "manufacturer_product_name"=>meter.manufacturer_product_name,
+              "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+              "metering_type"=>meter.metering_type,
+              "meter_size"=>meter.meter_size,
+              "ownership"=>meter.ownership,
+              "direction_label"=>meter.direction,
+              "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
+              "updatable"=>false,
+              "deletable"=>false,
+            }
+            json['smart'] = meter.smart if meter.is_a? Meter::Real
+            json
+          end,
+          "managers"=>[],
+          "energy_producers"=>[],
+          "energy_consumers"=>[]
+        }.merge(rel)
+      end
+    end
 
-        params = { mode: mode, interval: interval, timestamp: now }
-        get_without_token "/api/v1/groups/#{group.id}/scores", params
+    it '403' do
+      begin
+        localpool.update(readable: :member)
+        GET "/api/v1/groups/#{localpool.id}"
+        expect(response).to have_http_status(403)
+        expect(json).to eq anonymous_denied_json
+
+        tribe.update(readable: :member)
+        GET "/api/v1/groups/#{tribe.id}", user
+        expect(response).to have_http_status(403)
+        expect(json).to eq denied_json
+      ensure
+        localpool.update(readable: :world)
+        tribe.update(readable: :world)
+      end
+    end
+
+    it '404' do
+      GET "/api/v1/groups/bla-blub"
+      expect(response).to have_http_status(404)
+      expect(json).to eq anonymous_not_found_json
+
+      GET "/api/v1/groups/bla-blub", admin
+      expect(response).to have_http_status(404)
+      expect(json).to eq not_found_json
+    end
+
+    it '200' do
+      GET "/api/v1/groups/#{group.id}", user
+      expect(response).to have_http_status(200)
+      expect(json.to_yaml).to eq group_json.to_yaml
+
+      GET "/api/v1/groups/#{group.id}", admin
+      expect(response).to have_http_status(200)
+      expect(json).to eq admin_group_json
+    end
+
+    it '200 all' do
+      begin
+        Group::Base.update_all(readable: :member)
+
+        GET "/api/v1/groups"
         expect(response).to have_http_status(200)
-        expect(json['data'].size).to eq(5)
-        sample = json['data'].first['attributes']
-        expect(sample['mode']).to eq((mode || 'autarchy').to_s)
-        expect(sample['interval']).to eq(interval.to_s)
-        expect(sample['interval-beginning'] < now.as_json && now.as_json < sample['interval-end']).to eq true
+        expect(json.to_yaml).to eq empty_json.to_yaml
+
+        GET "/api/v1/groups", user
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq groups_json.to_yaml
+
+        GET "/api/v1/groups", admin
+        expect(response).to have_http_status(200)
+        expect(json.sort {|n,m| n['id'] <=> m['id']}.to_yaml).to eq admin_groups_json.sort {|n,m| n['id'] <=> m['id']}.to_yaml
+      ensure
+        Group::Base.update_all(readable: :world)
+      end
+    end
+
+    it '200 all filtered' do
+      begin
+        Group::Base.update_all(readable: :member)
+
+        GET "/api/v1/groups"
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq empty_json.to_yaml
+
+        GET "/api/v1/groups", user, filter: 'blabla'
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq empty_json.to_yaml
+
+        GET "/api/v1/groups", other, filter: group.name
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq empty_json.to_yaml
+
+        GET "/api/v1/groups", user, filter: group.name
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq groups_json.to_yaml
+
+        GET "/api/v1/groups", admin, filter: 'blabla'
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq empty_json.to_yaml
+
+        GET "/api/v1/groups", admin, filter: group.name
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq filtered_admin_groups_json.to_yaml
+      ensure
+        Group::Base.update_all(readable: :world)
       end
     end
   end
 
+  context 'meters' do
 
-  it 'get all scores' do
-    group                 = Fabricate(:tribe)
-    now                   = Time.current - 2.days
-    interval_information  = group.set_score_interval('day', now.to_i)
-    page_overload.times do
-      Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group::Base', scoreable_id: group.id)
-    end
-    params = { interval: 'day', timestamp: now }
-    get_without_token "/api/v1/groups/#{group.id}/scores", params
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload)
-  end
+    context 'GET' do
+      it '403' do
+        begin
+          localpool.update(readable: :member)
+          GET "/api/v1/groups/#{localpool.id}/meters"
+          expect(response).to have_http_status(403)
+          expect(json).to eq anonymous_denied_json
 
-  it 'gets scores for the current day' do
-    group                 = Fabricate(:tribe)
-    now                   = Time.current
-    yesterday             = Time.current - 1.day
-    interval_information  = group.set_score_interval('day', yesterday.to_i)
-    page_overload.times do
-      Score.create(mode: 'autarchy', interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: 'Group::Base', scoreable_id: group.id)
-    end
-    params = { interval: 'day', timestamp: now }
-    get_without_token "/api/v1/groups/#{group.id}/scores", params
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload)
-  end
+          tribe.update(readable: :member)
+          GET "/api/v1/groups/#{tribe.id}/meters", user
+          expect(response).to have_http_status(403)
+          expect(json).to eq denied_json
+        ensure
+          localpool.update(readable: :world)
+          tribe.update(readable: :world)
+        end
+      end
 
+      it '404' do
+        GET "/api/v1/groups/bla-blub/meters", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+      end
 
-  it 'gets the related managers for group only with token' do
-    access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:tribe)
-    group.registers << Fabricate(:input_meter).input_register
-    get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
-    expect(response).to have_http_status(200)
-    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", access_token.token
-    expect(response).to have_http_status(200)
-    get_without_token "/api/v1/groups/#{group.id}/managers"
-    expect(response).to have_http_status(401)
-    get_without_token "/api/v1/groups/#{group.id}/relationships/managers"
-    expect(response).to have_http_status(401)
-  end
+      [:tribe, :localpool].each do |type|
+        context "as #{type}" do
 
-  it 'get all managers' do
-    access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:tribe)
-    page_overload.times do
-      user = Fabricate(:user)
-      user.profile.update(readable: 'world')
-      user.add_role(:manager, group)
-    end
-    page_overload.times do
-      user = Fabricate(:user)
-      user.add_role(:manager, group)
-    end
-    get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload)
+          let(:group) { send type }
 
-    access_token  = Fabricate(:full_access_token_as_admin)
-    get_with_token "/api/v1/groups/#{group.id}/managers", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload * 2)
-  end
+          let!(:meters) do
+            2.times.collect do
+              meter = Fabricate(:meter)
+              meter.registers.each do |r|
+                r.group = group
+                r.save
+              end
+              meter
+            end
+            group.meters
+          end
 
-  it 'get all members' do
-    access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:tribe_with_members_readable_by_world, members: page_overload * 2)
+          let(:meter_json) do
+            meters.collect do |meter|
+              json =
+                {
+                  "id"=>meter.id,
+                  "type"=>"meter_#{meter.is_a?(Meter::Virtual) ? 'virtual': 'real'}",
+                  "manufacturer_name"=>meter.manufacturer_name,
+                  "manufacturer_product_name"=>meter.manufacturer_product_name,
+                  "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+                  "metering_type"=>meter.metering_type,
+                  "meter_size"=>meter.meter_size,
+                  "ownership"=>meter.ownership,
+                  "direction_label"=>meter.direction,
+                  "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
+                  "updatable"=>false,
+                  "deletable"=>false
+                }
+              if meter.is_a? Meter::Real
+                json['smart'] = false
+                # NOTE not sure why it renders empty array here
+                json["registers"]=[]
+              else
+                json["register"]={
+                  "id"=>meter.register.id,
+                  "type"=>'register_virtual',
+                  "direction"=>meter.register.direction.to_s,
+                  "name"=>meter.register.name,
+                  "pre_decimal"=>nil,
+                  "decimal"=>nil,
+                  "converter_constant"=>1,
+                  "low_power"=>nil,
+                  "last_reading"=>0
+                }
+              end
+              json
+            end
+          end
 
-    group.members[0..page_overload].each do |u|
-      u.profile.update(readable: 'world')
-    end
+          it '200' do
+            GET "/api/v1/groups/#{group.id}/meters", admin
 
-    get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload + 1)
-
-    access_token  = Fabricate(:full_access_token_as_admin)
-    get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload * 2)
-  end
-
-  it 'gets the related members for group only with token' do
-    access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:tribe_with_members_readable_by_world)
-
-    get_with_token "/api/v1/groups/#{group.id}/members", access_token.token
-    expect(response).to have_http_status(200)
-    get_without_token "/api/v1/groups/#{group.id}/members"
-    expect(response).to have_http_status(401)
-  end
-
-  it 'does not add/replace/delete group manager without token' do
-    group  = Fabricate(:tribe)
-    user   = Fabricate(:user)
-    params = {
-      data: { id: user.id }
-    }
-
-    post_without_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json
-    expect(response).to have_http_status(401)
-    patch_without_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json
-    expect(response).to have_http_status(401)
-    delete_without_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json
-    expect(response).to have_http_status(401)
-  end
-
-  it 'adds manager only with manager token or admin token' do
-    register  = Fabricate(:output_meter).output_register
-    register.update(readable: :world)
-    group           = Fabricate(:tribe)
-    user1           = Fabricate(:user)
-    user2           = Fabricate(:user)
-    admin_token     = Fabricate(:full_access_token_as_admin)
-    simple_token    = Fabricate(:simple_access_token)
-    simple_manager  = User.find(simple_token.resource_owner_id)
-    simple_manager.add_role(:manager, group)
-    manager_token   = Fabricate(:full_access_token)
-    manager         = User.find(manager_token.resource_owner_id)
-    manager.add_role(:manager, group)
-    member_token    = Fabricate(:full_access_token)
-    member          = User.find(member_token.resource_owner_id)
-    member.add_role(:member, register)
-    group.registers << register
-    params = {
-      data: { id: user1.id }
-    }
-
-    post_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, member_token.token
-    expect(response).to have_http_status(403)
-    post_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, simple_token.token
-    expect(response).to have_http_status(403)
-    post_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
-    expect(response).to have_http_status(204)
-
-    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", admin_token.token
-    expect(json['data'].size).to eq(3)
-    params[:data][:id] = user2.id
-    post_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, admin_token.token
-    expect(response).to have_http_status(204)
-
-    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", admin_token.token
-    expect(json['data'].size).to eq(4)
-  end
-
-  it 'replaces group managers' do
-    group           = Fabricate(:tribe)
-    user            = Fabricate(:user)
-    user1           = Fabricate(:user)
-    user2           = Fabricate(:user)
-    user1.add_role(:manager, group)
-    user2.add_role(:manager, group)
-    simple_token    = Fabricate(:simple_access_token)
-    admin_token     = Fabricate(:full_access_token_as_admin)
-    manager_token   = Fabricate(:full_access_token)
-    manager         = User.find(manager_token.resource_owner_id)
-    manager.add_role(:manager, group)
-    params = {
-      data: [{ id: user.id }]
-    }
-    patch_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, simple_token.token
-    expect(response).to have_http_status(403)
-    patch_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
-    expect(response).to have_http_status(200)
-
-    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
-    # we patched the managers, 'manager' is no more manager
-    expect(json['data'].size).to eq 0
-    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, admin_token.token
-    expect(json['data'].size).to eq 1
-    expect(json['data'].first['id']).to eq user.id
-  end
-
-  it 'removes group manager only for current user or with manager token' do
-    register  = Fabricate(:input_meter).input_register
-    register.update(readable: :world)
-    group           = Fabricate(:tribe)
-    user            = Fabricate(:user)
-    user.add_role(:manager, group)
-    admin_token     = Fabricate(:full_access_token_as_admin)
-    simple_token    = Fabricate(:simple_access_token)
-    simple_manager  = User.find(simple_token.resource_owner_id)
-    simple_manager.add_role(:manager, group)
-    manager_token   = Fabricate(:full_access_token)
-    manager         = User.find(manager_token.resource_owner_id)
-    manager.add_role(:manager, group)
-    member_token    = Fabricate(:full_access_token)
-    member          = User.find(member_token.resource_owner_id)
-    member.add_role(:member, register)
-    group.registers << register
-    params = {
-      data: { id: user.id }
-    }
-
-    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", admin_token.token
-    expect(json['data'].size).to eq(3)
-    delete_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, member_token.token
-    expect(response).to have_http_status(403)
-    delete_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, simple_token.token
-    expect(response).to have_http_status(403)
-    delete_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
-    expect(response).to have_http_status(204)
-    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", admin_token.token
-    expect(json['data'].size).to eq(2)
-
-    params = {
-      data: { id: manager.id }
-    }
-    delete_with_token "/api/v1/groups/#{group.id}/relationships/managers", params.to_json, manager_token.token
-    expect(response).to have_http_status(204)
-    get_with_token "/api/v1/groups/#{group.id}/relationships/managers", admin_token.token
-    expect(json['data'].size).to eq(1)
-  end
-
-  it 'gets the related energy-producers/energy-consumers for group' do
-    access_token  = Fabricate(:simple_access_token)
-    group         = Fabricate(:tribe)
-    user          = Fabricate(:user)
-    consumer      = Fabricate(:user)
-    producer      = Fabricate(:user)
-    register_in         = Fabricate(:input_meter).input_register
-    register_out        = Fabricate(:output_meter).output_register
-    user.add_role(:member, register_in)
-    user.add_role(:manager, register_in)
-    user.add_role(:member, register_out)
-    user.add_role(:manager, register_out)
-    producer.add_role(:manager, register_in)
-    consumer.add_role(:member, register_in)
-    producer.add_role(:member, register_out)
-    consumer.add_role(:manager, register_out)
-    group.registers += [register_in, register_out]
-
-    get_with_token "/api/v1/groups/#{group.id}/energy-producers", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(0)
-
-    get_with_token "/api/v1/groups/#{group.id}/energy-consumers", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(0)
-
-    manager = User.find(access_token.resource_owner_id)
-    manager.add_role(:manager, register_in)
-    manager.add_role(:member, register_out)
-
-    get_with_token "/api/v1/groups/#{group.id}/energy-producers", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-
-    get_with_token "/api/v1/groups/#{group.id}/energy-consumers", access_token.token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(1)
-  end
-
-  it 'gets the related comments for the group only with token' do
-    access_token    = Fabricate(:simple_access_token)
-    group           = Fabricate(:tribe_with_two_comments_readable_by_world)
-    comments        = group.comment_threads
-
-    get_without_token "/api/v1/groups/#{group.id}/comments"
-    expect(response).to have_http_status(401)
-    get_with_token "/api/v1/groups/#{group.id}/comments", access_token.token
-    expect(response).to have_http_status(200)
-    comments.each do |comment|
-      expect(json['data'].find{ |c| c['id'] == comment.id }['attributes']['body']).to eq(comment.body)
+            expect(response).to have_http_status(200)
+            expect(json.to_yaml).to eq(meter_json.to_yaml)
+          end
+        end
+      end
     end
   end
 
+  context 'localpools/prices' do
 
-
-  it 'gets the related metering_point_operator_contract for the localpool only with full token' do
-    group  = Fabricate(:localpool_forstenried)
-    mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:user))
-
-    full_access_token = Fabricate(:full_access_token)
-    get_with_token "/api/v1/groups/localpools/#{group.id}/metering-point-operator-contract", full_access_token.token
-    expect(response).to have_http_status(403)
-
-    manager_access_token = Fabricate(:full_access_token)
-    manager_user          = User.find(manager_access_token.resource_owner_id)
-    manager_user.add_role(:manager, group)
-    get_with_token "/api/v1/groups/localpools/#{group.id}/metering-point-operator-contract", manager_access_token.token
-    expect(response).to have_http_status(200)
-
-    expect(json['data']['id']).to eq(group.metering_point_operator_contract.id)
-    expect(json['data']['type']).to eq('contract-metering-point-operators')
-  end
-
-
-  it 'gets the related localpool-processing-contract for the localpool only with full token' do
-    group  = Fabricate(:localpool_forstenried)
-    lpc_forstenried = Fabricate(:lpc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:user))
-
-    full_access_token = Fabricate(:full_access_token)
-    get_with_token "/api/v1/groups/localpools/#{group.id}/localpool-processing-contract", full_access_token.token
-    expect(response).to have_http_status(403)
-
-    manager_access_token = Fabricate(:full_access_token)
-    manager_user          = User.find(manager_access_token.resource_owner_id)
-    manager_user.add_role(:manager, group)
-    get_with_token "/api/v1/groups/localpools/#{group.id}/localpool-processing-contract", manager_access_token.token
-    expect(response).to have_http_status(200)
-
-    expect(json['data']['id']).to eq(group.localpool_processing_contract.id)
-    expect(json['data']['type']).to eq('contract-localpool-processings')
-  end
-
-
-
-  it 'get all comments' do
-    access_token    = Fabricate(:simple_access_token).token
-    group           = Fabricate(:tribe)
-    user            = Fabricate(:user)
-    comment_params  = {
-      commentable_id:     group.id,
-      commentable_type:   'Group::Base',
-      user_id:            user.id,
-      parent_id:          '',
-    }
-    comment         = Fabricate(:comment, comment_params)
-    page_overload.times do
-      comment_params[:parent_id] = comment.id
-      comment = Fabricate(:comment, comment_params)
+    let(:anonymous_not_found_json) do
+      {
+        "errors" => [
+          {
+            "detail"=>"Group::Localpool: bla-blub not found" }
+        ]
+      }
     end
-    get_with_token "/api/v1/groups/#{group.id}/comments", access_token
-    expect(response).to have_http_status(200)
-    expect(json['data'].size).to eq(page_overload + 1)
+
+    let(:not_found_json) do
+      json = anonymous_not_found_json.dup
+      json['errors'][0]['detail'] = "Group::Localpool: bla-blub not found by User: #{admin.resource_owner_id}"
+      json
+    end
+
+    let(:anonymous_denied_json) do
+      {
+        "errors" => [
+          {
+            "detail"=>"retrieve Group::Localpool: permission denied for User: --anonymous--" }
+        ]
+      }
+    end
+
+    let(:denied_json) do
+      json = anonymous_denied_json.dup
+      json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
+      json
+    end
+
+    context 'POST' do
+      let(:validation_json) do
+        {
+          "errors"=>[
+            {
+              "parameter"=>"begin_date",
+              "detail"=>"begin_date can't be blank"},
+            {
+              "parameter"=>"name",
+              "detail"=>"name is too long (maximum is 40 characters)"
+            },
+            {
+              "parameter"=>"energyprice_cents_per_kilowatt_hour",
+              "detail"=>"energyprice_cents_per_kilowatt_hour can't be blank"
+            },
+            {
+              "parameter"=>"energyprice_cents_per_kilowatt_hour",
+              "detail"=>"energyprice_cents_per_kilowatt_hour is not a number"
+            },
+            {
+              "parameter"=>"baseprice_cents_per_month",
+              "detail"=>"baseprice_cents_per_month can't be blank"
+            },
+            {
+              "parameter"=>"baseprice_cents_per_month",
+              "detail"=>"baseprice_cents_per_month is not a number"
+            }
+          ]
+        }
+      end
+
+      it '403' do
+        begin
+          localpool.update(readable: :member)
+
+          POST "/api/v1/groups/localpools/#{localpool.id}/price"
+          expect(response).to have_http_status(403)
+          expect(json).to eq anonymous_denied_json
+
+          POST "/api/v1/groups/localpools/#{localpool.id}/price", user
+          expect(response).to have_http_status(403)
+          expect(json).to eq denied_json
+
+        ensure
+          localpool.update(readable: :world)
+        end
+      end
+
+      it '404' do
+        POST "/api/v1/groups/localpools/bla-blub/price", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+      end
+
+      it '422' do
+        # TODO add all possible validation errors, i.e. iban
+        POST "/api/v1/groups/localpools/#{localpool.id}/price", admin,
+             name: 'Max Mueller' * 10
+        expect(response).to have_http_status(422)
+        expect(json).to eq validation_json
+      end
+
+      let(:new_price_json) do
+        {
+          "type"=>'price',
+          "name"=>"special",
+          "begin_date"=>Date.new(2016, 2, 1).to_s,
+          "energyprice_cents_per_kilowatt_hour"=>23.66,
+          "baseprice_cents_per_month"=>500,
+          'updatable'=>false,
+          'deletable'=>false
+        }
+      end
+
+      let(:new_price) do
+        json = new_price_json.dup
+        json.delete('type')
+        json.delete('updatable')
+        json.delete('deletable')
+        json
+      end
+
+      it '201' do
+        POST "/api/v1/groups/localpools/#{localpool.id}/price", admin, new_price
+
+        expect(response).to have_http_status(201)
+        result = json
+        id = result.delete('id')
+        expect(Price.find(id)).not_to be_nil
+        expect(result.to_yaml).to eq new_price_json.to_yaml
+      end
+    end
+
+    context 'GET' do
+      it '403' do
+        begin
+          localpool.update(readable: :member)
+
+          GET "/api/v1/groups/localpools/#{localpool.id}/prices"
+          expect(response).to have_http_status(403)
+          expect(json).to eq anonymous_denied_json
+
+          GET "/api/v1/groups/localpools/#{localpool.id}/prices", user
+          expect(response).to have_http_status(403)
+          expect(json).to eq denied_json
+
+        ensure
+          localpool.update(readable: :world)
+        end
+      end
+
+      it '404' do
+        GET "/api/v1/groups/localpools/bla-blub/prices", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+      end
+
+      entity!(:prices) do
+        [Fabricate(:price, localpool: localpool, begin_date: Date.new(2016, 1, 1)),
+         Fabricate(:price, localpool: localpool)]
+      end
+
+      let(:prices_json) do
+        Price.all.collect do |price|
+          {
+            "id"=>price.id,
+            "type"=>"price",
+            "name"=>price.name,
+            "begin_date"=>price.begin_date.to_s,
+            "energyprice_cents_per_kilowatt_hour"=>price.energyprice_cents_per_kilowatt_hour,
+            "baseprice_cents_per_month"=>price.baseprice_cents_per_month,
+            "updatable"=>false,
+            "deletable"=>false
+          }
+        end
+      end
+
+      it '200 all' do
+        GET "/api/v1/groups/localpools/#{localpool.id}/prices", admin
+
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq(prices_json.to_yaml)
+      end
+    end
   end
-
-
-
-
 end

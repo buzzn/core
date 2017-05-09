@@ -1,4 +1,3 @@
-require 'buzzn/guarded_crud'
 class Reading
   include Mongoid::Document
   include Authority::Abilities
@@ -72,9 +71,15 @@ class Reading
   validates :reason, inclusion: { in: reasons }
   validates :quality, inclusion: { in: qualities }
   validates :source, inclusion: { in: sources}
+  validates :register_id, presence: true
+  validates :timestamp, presence: true
+  validates :energy_milliwatt_hour, presence: true
+  validates :power_milliwatt, presence: false
+  validates :meter_serialnumber, presence: true
+  validates_uniqueness_of :timestamp, scope: [:register_id, :reason], message: 'already available for given register and reason'
 
   scope :in_year, -> (year) { where(:timestamp.gte => Time.new(year, 1, 1)).where(:timestamp.lte => Time.new(year, 12, 31, 23, 59, 59)) }
-  scope :at, -> (timestamp) { where(timestamp: timestamp) }
+  scope :at, -> (timestamp) { where(:timestamp.gte => timestamp).where(:timestamp.lt => timestamp + 1.second) }
   scope :by_register_id, -> (register_id) { where(register_id: register_id) }
 
   scope :by_reason, lambda {|*reasons|
@@ -91,12 +96,11 @@ class Reading
     self.where(:reason.nin => reasons)
   }
 
-
   # methods from Buzzn:GuardedCrud
   def self.guarded_retrieve(user, id)
     result = find(id)
     unless result.readable_by?(user)
-      raise Buzzn::PermissionDenied.new
+      raise Buzzn::PermissionDenied.create(Reading, :retrieve, user)
     end
     result
   end

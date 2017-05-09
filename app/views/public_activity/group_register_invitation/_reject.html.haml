@@ -1,5 +1,0 @@
-- single_content_for :action do
-  - if a.trackable && a.recipient
-    = t("has_rejected_the_group_register_invitation_from_group_with_register", group_name: link_to(a.trackable.name, a.trackable), register_name: link_to(a.recipient.name, a.recipient)).html_safe
-  - else
-    = t('no_information_available')

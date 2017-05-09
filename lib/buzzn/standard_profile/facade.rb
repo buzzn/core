@@ -77,13 +77,9 @@ module Buzzn::StandardProfile
 
     def query_range(profile, interval)
       case interval.duration
-      when :year
+      when :year, :month
         energy_query_range(profile, interval)
-      when :month
-        energy_query_range(profile, interval)
-      when :day
-        power_query_range(profile, interval)
-      when :hour
+      when :day, :hour, :second
         power_query_range(profile, interval)
       else
         raise ArgumentError.new "unknown duration #{interval.duration}"

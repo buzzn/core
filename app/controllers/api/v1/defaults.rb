@@ -5,7 +5,7 @@ require 'buzzn/guarded_crud'
 module API
   module V1
     module Defaults
-      
+
       extend ActiveSupport::Concern
       included do
         prefix "api"
@@ -14,14 +14,12 @@ module API
 
         formatter :json, ->(object, env) do
           raise 'nil - forgot to shebang nested resource ?' unless object
-          Buzzn::SerializableResource.new(object, adapter: :json_api).to_json
+          Buzzn::SerializableResource.new(object).to_json
         end
-
-        jsonapi_base_url "#{Rails.application.secrets.hostname}/api/v1"
 
         helpers Doorkeeper::Grape::Helpers
         helpers Buzzn::Grape::Caching
-        
+
         helpers do
 
           def current_user
@@ -62,19 +60,43 @@ module API
         end
 
         rescue_from ActiveRecord::RecordNotFound do |e|
-          error_response(message: e.message, status: 404)
+          errors = ErrorResponse.new(404, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          if Rails.env.development?
+            puts e.message
+            puts e.backtrace.join("\n\t")
+          end
+          errors.add_general(e.message)
+          errors.finish
         end
 
         rescue_from Buzzn::DataSourceError do |e|
-          error_response(message: e.message, status: 504)
+          errors = ErrorResponse.new(504, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          if Rails.env.development?
+            puts e.message
+            puts e.backtrace.join("\n\t")
+          end
+          errors.add_general(e.message)
+          errors.finish
         end
 
         rescue_from Buzzn::RecordNotFound do |e|
-          error_response(message: e.message, status: 404)
+          errors = ErrorResponse.new(404, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          if Rails.env.development?
+            puts e.message
+            puts e.backtrace.join("\n\t")
+          end
+          errors.add_general(e.message)
+          errors.finish
         end
 
         rescue_from Buzzn::PermissionDenied do |e|
-          error_response(status: 403)
+          errors = ErrorResponse.new(403, { Grape::Http::Headers::CONTENT_TYPE => content_type })
+          if Rails.env.development?
+            puts e.message
+            puts e.backtrace.join("\n\t")
+          end
+          errors.add_general(e.message)
+          errors.finish
         end
 
         class Max < Grape::Validations::Base
@@ -92,9 +114,8 @@ module API
             @errors = []
           end
 
-          def add_general(title, detail)
-              @errors << { "title": title,
-                           "detail": detail }
+          def add_general(detail)
+              @errors << { "detail": detail }
           end
 
           def add(name, *messages)
@@ -103,9 +124,7 @@ module API
               name = name.sub(/\./, '[').sub(/\./, '][') + ']'
             end
             messages.each do |msg|
-              @errors << { "source":
-                             { "pointer": "/data/attributes/#{name}" },
-                           "title": "Invalid Attribute",
+              @errors << { "parameter": name,
                            "detail": "#{name} #{msg}" }
             end
           end
@@ -133,11 +152,11 @@ module API
 
         rescue_from ArgumentError do |e|
           errors = ErrorResponse.new(422, { Grape::Http::Headers::CONTENT_TYPE => content_type })
-          if Rails.env.development?
-            puts e.message
-            puts e.backtrace.join("\n\t")
+          if Rails.env.development? ||  Rails.env.test?
+            warn e.message
+            warn e.backtrace.join("\n\t")
           end
-          errors.add_general('Argument Error', e.message)
+          errors.add_general(e.message)
           errors.finish
         end
 
@@ -162,7 +181,6 @@ module API
         rescue_from :all do |e|
           eclass = e.class.to_s
           if eclass.match('WineBouncer::Errors')
-            title = e.response.name.to_s.split('_').collect{|s| s.capitalize}.join(' ')
             if e.response.name == :invalid_scope
               message = "Invalid scope. Allowed scopes are: #{e.response.instance_variable_get(:@scopes).join(', ')}"
             else
@@ -175,11 +193,10 @@ module API
                    when eclass.match('OAuthForbiddenError')
                      403 # no permissions
                    else
-                     title = 'Internal Error'
                      message = e.message
                      (e.respond_to? :status) && e.status || 500
                    end
-          opts = { errors: [ { title: title, detail: message } ] }
+          opts = { errors: [ { detail: message } ] }
           unless Rails.env.production?
             opts.merge!({ meta: { trace: e.backtrace[0, 10] } })
           end

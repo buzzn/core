@@ -1,170 +1,84 @@
-describe "BankAccount API" do
+describe "bank-accounts" do
 
-  let(:page_overload) { 11 }
-  let(:admin) { Fabricate(:admin) }
-  let(:output_register) { Fabricate(:output_meter).output_register }
-  let(:user_with_output_register) do
-    user = Fabricate(:user)
-    output_register.managers.add(admin, user)
-    user
+  entity(:account) do
+    register = Fabricate(:output_meter).output_register
+    contract = Fabricate(:power_giver_contract, register: register, contractor_bank_account: Fabricate(:bank_account))
+    contract.contractor_bank_account
   end
 
-  let(:contract) do
-    Fabricate(:power_giver_contract, register: output_register)
+  entity(:admin) { Fabricate(:admin_token) }
+
+  entity(:user) { Fabricate(:user_token) }
+
+  let(:anonymous_denied_json) do
+    {
+      "errors" => [
+        {
+          "detail"=>"retrieve BankAccount: permission denied for User: --anonymous--" }
+      ]
+    }
   end
 
-  let(:account) do
-    account = Fabricate(:bank_account)
-    account.bank_accountable = contract
-    account.save!
-    account
+  let(:denied_json) do
+    json = anonymous_denied_json.dup
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
+    json
   end
 
-  let(:admin_token) do
-    Fabricate(:full_access_token_as_admin, resource_owner_id: admin.id)
-  end
-  let(:simple_token) do
-    Fabricate(:simple_access_token, resource_owner_id: user_with_register.id)
-  end
-  let(:full_token_community) do
-    Fabricate(:full_access_token)
-  end
-  let(:full_token) do
-    Fabricate(:full_access_token, resource_owner_id: user_with_register.id)
-  end
-  let(:smartmeter_token) do
-    Fabricate(:smartmeter_access_token, resource_owner_id: user_with_register.id)
+  let(:not_found_json) do
+    {
+      "errors" => [
+        {
+          "detail"=>"BankAccount: bla-bla-blub not found by User: #{admin.resource_owner_id}" }
+      ]
+    }
   end
 
-  it 'denies access without token' do
-    post_without_token "/api/v1/bank-accounts", {}.to_json
-    expect(response).to have_http_status(401)
+  context 'PATCH' do
 
-    get_without_token "/api/v1/bank-accounts/#{account.id}"
-    expect(response).to have_http_status(401)
+    let(:validation_json) do
+      { "errors"=>[
+          {
+            "parameter"=>"bank_name",
+            "detail"=>"bank_name is too long (maximum is 63 characters)"
+          },
+          {
+            "parameter"=>"holder",
+            "detail"=>"holder is too long (maximum is 63 characters)"
+          }
+        ]
+      }
+    end
 
-    # patch_without_token "/api/v1/bank-accounts/#{account.id}", {}.to_json
-    # expect(response).to have_http_status(401)
-    #
-    # delete_without_token "/api/v1/bank-accounts/#{account.id}"
-    # expect(response).to have_http_status(401)
+    it '403' do
+      PATCH "/api/v1/bank-accounts/#{account.id}"
+      expect(response).to have_http_status(403)
+      expect(json).to eq anonymous_denied_json
+
+      PATCH "/api/v1/bank-accounts/#{account.id}", user
+      expect(response).to have_http_status(403)
+      expect(json).to eq denied_json
+    end
+
+    it '404' do
+      PATCH "/api/v1/bank-accounts/bla-bla-blub", admin
+      expect(response).to have_http_status(404)
+      expect(json).to eq not_found_json
+    end
+
+    it '422' do
+      # TODO add all possible validation errors, i.e. iban
+      PATCH "/api/v1/bank-accounts/#{account.id}", admin,
+            holder: 'Max Mueller' * 10,
+            bank_name: 'Bundesbank' * 10
+      expect(response).to have_http_status(422)
+      expect(json).to eq validation_json
+    end
+
+    it '200' do
+      PATCH "/api/v1/bank-accounts/#{account.id}", admin, holder: 'Max Mueller'
+      expect(response).to have_http_status(200)
+      expect(account.reload.holder).to eq 'Max Mueller'
+    end
   end
-
-  [:simple_token, :full_token_community, :smartmeter_token].each do |token|
-
-  #   it "does not get bank-account with #{token}" do
-  #     access_token  = send(token)
-  #
-  #     if token != :full_token_community
-  #       post_with_token "/api/v1/bank-accounts", {}.to_json, access_token.token
-  #       expect(response).to have_http_status(403)
-  #     end
-  #
-  #     get_with_token "/api/v1/bank-accounts/#{account.id}", access_token.token
-  #     expect(response).to have_http_status(403)
-  #
-  #     patch_with_token "/api/v1/bank-accounts/#{account.id}", {}.to_json, access_token.token
-  #     expect(response).to have_http_status(403)
-  #
-  #     delete_with_token "/api/v1/bank-accounts/#{account.id}", access_token.token
-  #     expect(response).to have_http_status(403)
-  #   end
-  #
-  #   it "does not get any bank-account with #{token}" do
-  #     3.times { Fabricate(:bank_account) }
-  #     access_token  = send(token)
-  #
-  #     get_with_token "/api/v1/bank-accounts", access_token.token
-  #     if token == :full_token_community
-  #       expect(json['data'].size).to eq(0)
-  #     else
-  #       expect(response).to have_http_status(403)
-  #     end
-  #   end
-
-  end
-
-  [:full_token, :admin_token].each do |token|
-
-    #
-    # it "creates bank-account with #{token}", :retry => 3 do
-    #   access_token  = send(token)
-    #
-    #   data = Fabricate.build(:bank_account).attributes.reject {|k,v| k == 'encrypted_iban' || v.nil? }
-    #   data['iban'] = 'DE23100000001234567890'
-    #   data['bank_accountable_id'] = contract.id
-    #   data['bank_accountable_type'] = Contract.to_s
-    #
-    #   post_with_token "/api/v1/bank-accounts", data.to_json, access_token.token
-    #   expect(response).to have_http_status(201)
-    #   expect(json['data']['id']).not_to be_nil
-    #
-    #   # too long
-    #   data.each do |k,v|
-    #     next if k.to_s =~ /bank_accountable/
-    #     invalid = data.dup
-    #     invalid[k] = 'b' * 200
-    #
-    #     post_with_token "/api/v1/bank-accounts", invalid.to_json, access_token.token
-    #     expect(response).to have_http_status(422)
-    #     expect(json['errors'].first['source']['pointer']).to eq "/data/attributes/#{k}"
-    #   end
-    #
-    #   # missing
-    #   data.each do |k,v|
-    #     next if k.to_s =~ /bank_accountable/
-    #     invalid = data.dup
-    #     invalid.delete(k)
-    #
-    #     post_with_token "/api/v1/bank-accounts", invalid.to_json, access_token.token
-    #     expect(response).to have_http_status(422)
-    #     expect(json['errors'].first['source']['pointer']).to eq "/data/attributes/#{k}"
-    #   end
-    # end
-
-
-    # it "retrieves bank-account with #{token}" do
-    #   access_token  = send(token)
-    #
-    #   get_with_token "/api/v1/bank-accounts/#{account.id}-a", access_token.token
-    #   expect(response).to have_http_status(404)
-    #
-    #   get_with_token "/api/v1/bank-accounts/#{account.id}", access_token.token
-    #   expect(response).to have_http_status(200)
-    #   expect(json['data']['id']).to eq account.id
-    # end
-    #
-    # it "updates bank-account with #{token}" do
-    #   access_token  = send(token)
-    #
-    #   patch_with_token "/api/v1/bank-accounts/#{account.id}-a", access_token.token
-    #   expect(response).to have_http_status(404)
-    #
-    #   data = Fabricate.build(:bank_account).attributes.reject {|k,v| k == 'encrypted_iban' || k == 'direct_debit' || v.nil? }
-    #   data.each do |k,v|
-    #     patch_with_token "/api/v1/bank-accounts/#{account.id}", { "#{k}": v}.to_json, access_token.token
-    #     expect(response).to have_http_status(200)
-    #     expect(json['data']['attributes'][k.sub(/_/, '-')]).to eq v
-    #   end
-    #
-    #   data.each do |k,v|
-    #     patch_with_token "/api/v1/bank-accounts/#{account.id}", { "#{k}": 'a' * 200}.to_json, access_token.token
-    #     expect(response).to have_http_status(422)
-    #     expect(json['errors'].first['source']['pointer']).to eq "/data/attributes/#{k}"
-    #   end
-    # end
-    #
-    # it "deletes bank-account with #{token}" do
-    #   access_token  = send(token)
-    #
-    #   delete_with_token "/api/v1/bank-accounts/#{account.id}-a", access_token.token
-    #   expect(response).to have_http_status(404)
-    #
-    #   delete_with_token "/api/v1/bank-accounts/#{account.id}", access_token.token
-    #   expect(response).to have_http_status(204)
-    #   expect(BankAccount.where(id: account.id)).to eq []
-    # end
-
-  end
-
 end

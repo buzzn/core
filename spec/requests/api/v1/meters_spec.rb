@@ -1,394 +1,267 @@
 # coding: utf-8
-describe "Meters API" do
+describe "meters" do
 
-  let(:page_overload) { 11 }
+  entity(:admin) { Fabricate(:admin_token) }
 
-  [
-    :no_access_token,
-    :simple_access_token
-  ].each do |token|
-    it "does not get a registers with #{token}" do
-      meter = Fabricate(:meter)
+  entity(:user) { Fabricate(:user_token) }
 
-      if token == :no_access_token
-        get_without_token "/api/v1/meters/real/#{meter.id}/registers"
-        expect(response).to have_http_status(401)
-      else
-        access_token = Fabricate(token)
-        get_with_token  "/api/v1/meters/real/#{meter.id}/registers", access_token.token
-        expect(response).to have_http_status(403)
-      end
-    end
+  let(:anonymous_denied_json) do
+    {
+      "errors" => [
+        {
+          "detail"=>"retrieve Meter::Base: permission denied for User: --anonymous--" }
+      ]
+    }
   end
 
-  [:no_access_token,
-   :simple_access_token,
-   :smartmeter_access_token].each do |token|
-
-    [:real, :virtual].each do |type|
-      it "does not get a #{type} meter with #{token}" do
-        meter = Fabricate(:"#{type}_meter")
-        if token == :no_access_token
-          get_without_token "/api/v1/meters/#{meter.id}"
-          expect(response).to have_http_status(401)
-        else
-          access_token = Fabricate(token)
-          get_with_token  "/api/v1/meters/#{meter.id}", access_token.token
-          expect(response).to have_http_status(403)
-        end
-      end
-
-
-      it "does not update a #{type} meter with #{token}" do
-        meter = Fabricate(:meter)
-        request_params = {
-          id:                                 meter.id,
-          manufacturer_name:                  meter.manufacturer_name,
-          manufacturer_product_name:          "#{meter.manufacturer_product_name} updated",
-          manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber
-        }.to_json
-
-        if token == :no_access_token
-          patch_without_token "/api/v1/meters/#{type}/#{meter.id}", request_params
-          expect(response).to have_http_status(401)
-        else
-          access_token = Fabricate(token)
-          patch_with_token  "/api/v1/meters/#{type}/#{meter.id}", request_params, access_token.token
-          expect(response).to have_http_status(403)
-        end
-      end
-
-
-      it "gets a #{type} meter with full accees token as admin" do
-        access_token  = Fabricate(:full_access_token_as_admin)
-        meter = Fabricate(:"#{type}_meter")
-        get_with_token "/api/v1/meters/#{meter.id}", access_token.token
-        expect(response).to have_http_status(200)
-        expect(json['data']['attributes']['updatable']).to be true
-        expect(json['data']['attributes']['deletable']).to be true
-      end
-    end
-
-
-    it "does not delete a meter with #{token}" do
-      meter = Fabricate(:meter)
-      if token == :no_access_token
-        delete_without_token "/api/v1/meters/#{meter.id}"
-        expect(response).to have_http_status(401)
-      else
-        access_token = Fabricate(token)
-        delete_with_token  "/api/v1/meters/#{meter.id}", access_token.token
-        expect(response).to have_http_status(403)
-      end
-    end
+  let(:denied_json) do
+    json = anonymous_denied_json.dup
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
+    json
   end
 
-  [:full_access_token, :smartmeter_access_token].each do |token|
-    [:input, :output, :input_output].each do |type|
-      it "creates a real-meter with #{type}-register using #{token}" do
-        access_token = Fabricate(token)
-        meter = if type == :input_output
-                  m = Fabricate.build(:input_meter)
-                  m.registers << Fabricate.build(:output_register)
-                  m
-                else
-                  Fabricate.build(:"#{type}_meter")
-                end
-        request_params = {
-          manufacturer_name:                  meter.manufacturer_name,
-          manufacturer_product_name:          meter.manufacturer_product_name,
-          manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber
+  let(:anonymous_not_found_json) do
+    {
+      "errors" => [
+        {
+          "detail"=>"Meter::Base: bla-blub not found"
         }
-        meter.registers.each do |register|
-          request_params[:"#{register.direction}put_register"] = {
-            name: register.name,
-            readable: register.readable,
-            uid: register.uid
+      ]
+    }
+  end
+
+  let(:not_found_json) do
+    json = anonymous_not_found_json.dup
+    json['errors'][0]['detail'] = "Meter::Base: bla-blub not found by User: #{admin.resource_owner_id}"
+    json
+  end
+
+  entity(:virtual_meter) { Fabricate(:virtual_meter) }
+
+  entity(:real_meter) { Fabricate(:meter) }
+
+  entity(:meter) do
+    meter = Fabricate(:input_meter)
+    User.find(user.resource_owner_id).add_role(:manager, meter.input_register)
+    meter
+  end
+
+
+  context 'GET' do
+
+    let(:meter_json) do
+      {
+        "id"=>meter.id,
+        "type"=>"meter_real",
+        "manufacturer_name"=>meter.manufacturer_name,
+        "manufacturer_product_name"=>meter.manufacturer_product_name,
+        "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+        "metering_type"=>meter.metering_type,
+        "meter_size"=>nil,
+        "ownership"=>nil,
+        "direction_label"=>meter.direction,
+        "build_year"=>nil,
+        "updatable"=>true,
+        "deletable"=>true,
+        "smart"=>false,
+        "registers"=>[
+          {
+            "id"=>meter.input_register.id,
+            "type"=>"register_real",
+            "direction"=>meter.input_register.direction.to_s,
+            "name"=>meter.input_register.name,
+            "pre_decimal"=>6,
+            "decimal"=>2,
+            "converter_constant"=>1,
+            "low_power"=>false,
+            "last_reading"=>0,
+            "uid"=>meter.input_register.uid,
+            "obis"=>meter.input_register.obis
           }
-        end
+        ]
+      }
+    end
 
-        post_with_token "/api/v1/meters/real", request_params.to_json, access_token.token
+    let(:admin_meter_json) do
+      json = meter_json.dup
+      json['updatable']=true
+      json['deletable']=true
+      json
+    end
 
-        expect(response).to have_http_status(201)
-        expect(json['data']['attributes']['manufacturer-name']).to eq(meter.manufacturer_name)
-        expect(json['data']['attributes']['manufacturer-product-name']).to eq(meter.manufacturer_product_name)
-        expect(json['data']['attributes']['manufacturer-product-serialnumber']).to eq(meter.manufacturer_product_serialnumber)
+    it '403' do
+      GET "/api/v1/meters/#{virtual_meter.id}"
+      expect(response).to have_http_status(403)
+      expect(json).to eq anonymous_denied_json
+
+      GET "/api/v1/meters/#{real_meter.id}", user
+      expect(response).to have_http_status(403)
+      expect(json).to eq denied_json
+    end
+
+    it '404' do
+      GET "/api/v1/meters/bla-blub"
+      expect(response).to have_http_status(404)
+      expect(json).to eq anonymous_not_found_json
+
+      GET "/api/v1/meters/bla-blub", admin
+      expect(response).to have_http_status(404)
+      expect(json).to eq not_found_json
+    end
+
+    it '200' do
+      GET "/api/v1/meters/#{meter.id}", user
+      expect(response).to have_http_status(200)
+      expect(json).to eq meter_json
+
+      GET "/api/v1/meters/#{meter.id}", admin
+      expect(response).to have_http_status(200)
+      expect(json).to eq admin_meter_json
+    end
+  end
+
+  context 'virtual/register' do
+
+    let(:meter) { virtual_meter }
+
+    let(:register) do
+      meter.register.tap do |register|
+        Fabricate(:reading, register_id: register.id)
       end
     end
 
-    it "creates a virtual-meter using #{token}" do
-      access_token = Fabricate(:full_access_token)
-      meter = Fabricate.build(:virtual_meter)
-      request_params = {
-        manufacturer_product_name:          meter.manufacturer_product_name,
-        manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber,
-        register: {
-          name: meter.register.name,
-          direction: [:in, :out].sample,
-          readable: meter.register.readable,
+    let(:register_anonymous_denied_json) do
+      json = anonymous_denied_json.dup
+      json['errors'][0]['detail'].sub! 'Base', "Virtual"
+      json
+    end
+
+    let(:register_denied_json) do
+      json = denied_json.dup
+      json['errors'][0]['detail'].sub! 'Base', "Virtual"
+      json
+    end
+
+    let(:virtual_not_found_json) do
+      json = not_found_json.dup
+      json['errors'][0]['detail'].sub! 'Base', 'Virtual'
+      json
+    end
+
+    let(:register_json) do
+      {
+        "id"=>register.id,
+        "type"=>"register_virtual",
+        "direction"=>register.direction.to_s,
+        "name"=>register.name,
+        "pre_decimal"=>6,
+        "decimal"=>2,
+        "converter_constant"=>1,
+        "low_power"=>false,
+        "last_reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour,
+        "address"=>nil,
+        "meter"=>nil
+      }
+    end
+
+    context 'GET' do
+      it '403' do
+        GET "/api/v1/meters/virtual/#{meter.id}/register"
+        expect(response).to have_http_status(403)
+        expect(json).to eq register_anonymous_denied_json
+
+        GET "/api/v1/meters/virtual/#{meter.id}/register", user
+        expect(response).to have_http_status(403)
+        expect(json).to eq register_denied_json
+      end
+
+      it '404' do
+        GET "/api/v1/meters/virtual/bla-blub/register", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq virtual_not_found_json
+      end
+
+      it '200' do
+        register # setup
+        GET "/api/v1/meters/virtual/#{meter.id}/register", admin
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq(register_json.to_yaml)
+      end
+    end
+  end
+
+  context 'real/registers' do
+
+    let(:meter) { real_meter }
+
+    let(:registers) do
+      meter.registers.each do |register|
+        Fabricate(:reading, register_id: register.id)
+      end
+    end
+
+    let(:registers_anonymous_denied_json) do
+      json = anonymous_denied_json.dup
+      json['errors'][0]['detail'].sub! 'Base', "Real"
+      json
+    end
+
+    let(:registers_denied_json) do
+      json = denied_json.dup
+      json['errors'][0]['detail'].sub! 'Base', "Real"
+      json
+    end
+
+    let(:real_not_found_json) do
+      json = not_found_json.dup
+      json['errors'][0]['detail'].sub! 'Base', 'Real'
+      json
+    end
+
+    let(:registers_json) do
+      register = registers.first
+      [
+        {
+          "id"=>register.id,
+          "type"=>"register_real",
+          "direction"=>register.direction.to_s,
+          "name"=>register.name,
+          "pre_decimal"=>6,
+          "decimal"=>2,
+          "converter_constant"=>1,
+          "low_power"=>false,
+          "last_reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour,
+          "uid"=>register.uid,
+          "obis"=>register.obis,
+          "address"=>nil,
+          "meter"=>nil,
         }
-      }
-
-      post_with_token "/api/v1/meters/virtual", request_params.to_json, access_token.token
-
-      expect(response).to have_http_status(201)
-      expect(json['data']['attributes']['manufacturer-product-name']).to eq(meter.manufacturer_product_name)
-      expect(json['data']['attributes']['manufacturer-product-serialnumber']).to eq(meter.manufacturer_product_serialnumber)
+      ]
     end
 
-    it "gets related registers for Real-Meter with #{token}" do
-      access_token    = Fabricate(token)
-      user            = User.find(access_token.resource_owner_id)
-      meter           = Fabricate(:real_meter)
-      register        = meter.registers.first
-      user.add_role(:manager, register)
+    context 'GET' do
+      it '403' do
+        GET "/api/v1/meters/real/#{meter.id}/registers"
+        expect(response).to have_http_status(403)
+        expect(json).to eq registers_anonymous_denied_json
 
-      get_with_token "/api/v1/meters/real/#{meter.id}/registers", access_token.token
-      expect(response).to have_http_status(200)
-    end
-  end
-
-  ["input", "output"].each do |mode|
-
-    it "does not create a #{mode} register without token" do
-      register     = Fabricate.build("#{mode}_register")
-      meter        = Fabricate.build(:meter)
-      request_params = {
-        uid:  register.uid,
-        readable: register.readable,
-        name: register.name
-      }.to_json
-      post_without_token "/api/v1/meters/real/#{meter.id}/#{mode}_register", request_params
-      expect(response).to have_http_status(401)
-    end
-
-
-    it "does not create a #{mode} register with missing parameters" do
-      register       = Fabricate.build("#{mode}_register")
-      access_token   = Fabricate(:full_access_token_as_admin)
-      meter          = Fabricate(:meter)
-      request_params = {
-        readable: register.readable,
-        name: register.name
-      }
-      request_params.keys.each do |name|
-        params = request_params.reject { |k,v| k == name }
-
-        post_with_token "/api/v1/meters/real/#{meter.id}/#{mode}_register", params.to_json, access_token.token
-
-        expect(response).to have_http_status(422)
-        json["errors"].each do |error|
-          expect(error["source"]["pointer"]).to eq "/data/attributes/#{name}"
-          expect(error["title"]).to eq "Invalid Attribute"
-          expect(error["detail"]).to eq "#{name} is missing"
-        end
+        GET "/api/v1/meters/real/#{meter.id}/registers", user
+        expect(response).to have_http_status(403)
+        expect(json).to eq registers_denied_json
       end
-    end
 
-
-    it "does not create a #{mode} register with invalid parameters" do
-      register       = Fabricate.build("#{mode}_register")
-      access_token   = Fabricate(:full_access_token_as_admin)
-      meter          = Fabricate(:meter)
-      request_params = {
-        readable: register.readable,
-        name: register.name
-      }
-      request_params.keys.each do |key|
-        params = request_params.dup
-        params[key] = "a" * 2000
-
-        post_with_token "/api/v1/meters/real/#{meter.id}/#{mode}_register", params.to_json, access_token.token
-
-        expect(response).to have_http_status(422)
-        json["errors"].each do |error|
-          expect(error["source"]["pointer"]).to eq "/data/attributes/#{key}"
-          expect(error["title"]).to eq "Invalid Attribute"
-          expect(error["detail"]).to match /#{key}/
-        end
+      it '404' do
+        GET "/api/v1/meters/real/bla-blub/registers", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq real_not_found_json
       end
-    end
 
-
-
-    [:full_access_token_as_admin].each do |token|
-      it "creates a #{mode} register with #{token}" do
-        access_token = Fabricate(token)
-        register     = Fabricate.build("#{mode}_register")
-        meter        = Fabricate(:meter)
-
-        request_params = {
-          uid:  register.uid,
-          readable: register.readable,
-          name: register.name
-        }.to_json
-
-        post_with_token "/api/v1/meters/real/#{meter.id}/#{mode}_register", request_params, access_token.token
-
-        expect(response).to have_http_status(201)
-        expect(response.headers["Location"]).to eq json["data"]["id"]
-
-        expect(json["data"]["attributes"]["uid"]).to eq(register.uid)
-        expect(json["data"]["attributes"]["direction"]).to eq(mode.sub(/put/, ''))
-        expect(json["data"]["attributes"]["readable"]).to eq(register.readable)
-        expect(json["data"]["attributes"]["name"]).to eq(register.name)
-      end
-    end
-
-  end
-
-  it "gets related register for Virtual-Meter with full_access_token" do
-    access_token    = Fabricate(:full_access_token)
-    user            = User.find(access_token.resource_owner_id)
-    meter           = Fabricate(:virtual_meter)
-    register        = meter.register
-    user.add_role(:manager, register)
-
-    get_with_token "/api/v1/meters/virtual/#{meter.id}/register", access_token.token
-    expect(response).to have_http_status(200)
-  end
-
-
-  it "does not create an already existing real meter with full access token as admin" do
-    access_token = Fabricate(:full_access_token_as_admin)
-    meter = Fabricate(:real_meter)
-    request_params = {
-      manufacturer_name:                  meter.manufacturer_name,
-      manufacturer_product_name:          meter.manufacturer_product_name,
-      manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber
-    }
-    register = meter.registers.first
-    request_params[:"#{register.direction}put_register"] = {
-      name: register.name,
-      readable: register.readable,
-      uid: register.uid
-    }
-
-    post_with_token "/api/v1/meters/real", request_params.to_json, access_token.token
-    expect(response).to have_http_status(422)
-
-    errors = json['errors']
-
-    expect(errors.size).to eq 1
-    errors.each do |error|
-      expect(error['title']).to eq 'Invalid Attribute'
-    end
-    [ "/data/attributes/manufacturer_product_serialnumber"].each do |key_path|
-      expect(errors.detect { |e| e['source']['pointer'] == key_path }).not_to be_nil
-    end
-  end
-
-  it "does not create an already existing virtual meter with full access token as admin" do
-    access_token = Fabricate(:full_access_token_as_admin)
-    meter = Fabricate(:virtual_meter)
-    request_params = {
-      manufacturer_product_name:          meter.manufacturer_product_name,
-      manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber,
-      register: {
-        name: meter.register.name,
-        readable: meter.register.readable,
-        direction: Register::Base.directions.sample
-      }
-    }
-
-    post_with_token "/api/v1/meters/virtual", request_params.to_json, access_token.token
-    expect(response).to have_http_status(422)
-
-    errors = json['errors']
-    expect(errors.size).to eq 1
-    expect(errors.first['title']).to eq 'Invalid Attribute'
-    expect(errors.first['source']['pointer']).to eq "/data/attributes/manufacturer_product_serialnumber"
-  end
-
-  it "does not create a real meter with missing parameters" do
-    access_token = Fabricate(:full_access_token_as_admin)
-    meter = Fabricate(:meter)
-
-    request_params = {
-      manufacturer_name:                  meter.manufacturer_name,
-      manufacturer_product_name:          meter.manufacturer_product_name,
-      manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber
-    }
-
-    request_params.keys.each do |name|
-
-      params = request_params.reject { |k,v| k == name }
-      post_with_token "/api/v1/meters/real", params.to_json, access_token.token
-
-      expect(response).to have_http_status(422)
-
-      json['errors'].each do |error|
-        expect(error['source']['pointer']).to eq "/data/attributes/#{name}"
-        expect(error['title']).to eq 'Invalid Attribute'
-        expect(error['detail']).to eq "#{name} is missing"
+      it '200' do
+        registers # setup
+        GET "/api/v1/meters/real/#{meter.id}/registers", admin
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq(registers_json.to_yaml)
       end
     end
   end
-
-
-
-
-
-  it 'does not update a real-meter with invalid parameters' do
-    meter = Fabricate(:meter)
-    access_token  = Fabricate(:full_access_token_as_admin)
-
-    params = { manufacturer_product_serialnumber: Fabricate(:meter).manufacturer_product_serialnumber }
-
-    patch_with_token "/api/v1/meters/real/#{meter.id}", params.to_json, access_token.token
-
-    expect(response).to have_http_status(422)
-    json['errors'].each do |error|
-      expect(error['source']['pointer']).to eq "/data/attributes/manufacturer_product_serialnumber"
-      expect(error['title']).to eq 'Invalid Attribute'
-    end
-  end
-
-  it 'does not update a virtual-meter with invalid parameters' do
-    meter = Fabricate(:virtual_meter)
-    access_token  = Fabricate(:full_access_token_as_admin)
-
-    params = { manufacturer_product_serialnumber: '1' * 400 }
-
-    patch_with_token "/api/v1/meters/virtual/#{meter.id}", params.to_json, access_token.token
-
-    expect(response).to have_http_status(422)
-    json['errors'].each do |error|
-      expect(error['source']['pointer']).to eq "/data/attributes/manufacturer_product_serialnumber"
-      expect(error['title']).to eq 'Invalid Attribute'
-    end
-  end
-
-
-  [:real, :virtual].each do |type|
-    it "updates a #{type} meter with full access token as admin" do
-      meter = Fabricate(:"#{type}_meter")
-      access_token  = Fabricate(:full_access_token_as_admin)
-
-      request = {
-        manufacturer_product_name:          "#{meter.manufacturer_product_name} updated",
-        manufacturer_product_serialnumber:  meter.manufacturer_product_serialnumber || '123123123'
-      }
-      request[:manufacturer_name] = meter.manufacturer_name if type == :real
-      patch_with_token "/api/v1/meters/#{type}/#{meter.id}", request.to_json, access_token.token
-
-      expect(response).to have_http_status(200)
-      expect(json['data']['attributes']['manufacturer-name']).to eq(meter.manufacturer_name)  if type == :real
-
-      expect(json['data']['attributes']['manufacturer-product-name']).to eq("#{meter.manufacturer_product_name} updated")
-      expect(json['data']['attributes']['manufacturer-product-serialnumber']).to eq(meter.manufacturer_product_serialnumber)
-    end
-
-
-    it "deletes a #{type} meter with full access token as admin" do
-      meter = Fabricate(:"#{type}_meter")
-      access_token  = Fabricate(:full_access_token_as_admin)
-
-      delete_with_token "/api/v1/meters/#{meter.id}", access_token.token
-
-      expect(response).to have_http_status(204)
-      expect(Meter::Base.where(id: meter.id)).to eq []
-    end
-  end
-
 end

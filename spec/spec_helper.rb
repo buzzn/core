@@ -10,6 +10,12 @@ require 'rspec/retry'
 require 'sidekiq/testing'
 Sidekiq::Testing.fake!
 
+# no geocoding for tests
+class ::Address
+  def geocode
+  end
+end
+
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
@@ -55,15 +61,27 @@ RSpec.configure do |config|
   # In Rspec 3.x the spec type is not automatically inferred from a file location, and you must manually set it
   config.infer_spec_type_from_file_location!
 
-  # Include the requests helper
+  # Include helpers
   config.include RequestsHelper, type: :request
+  config.include PdfsHelper
 
 
   def last_email
     ActionMailer::Base.deliveries.last
   end
 
-  config.before(:each) do
+  # in case errors happened during the last test run we need to clean DB first
+  config.before(:suite) do
+    warn '----> clean DB manually'
+    clean_manually
+  end
+
+  config.before(:context) do
+    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.start
+  end
+
+  config.before(:context) do
     Organization.constants.each do |c|
       name = c.to_s.downcase.to_sym
       if Organization.respond_to?(name) && name != :columns
@@ -74,30 +92,90 @@ RSpec.configure do |config|
     end
   end
 
-  config.before(:all) do
+  config.after(:context) do
+    puts '----> truncate DB'
+    clean_database
+  end
 
-    if Bank.count == 0
-      Bank.update_from(File.read("db/banks/BLZ_20160606.txt"))
+  config.before(:each) do |spec|
+    #self.class.setup_entities if self.class.respond_to? :setup_entities
+  end
+
+  module ClassMethods
+    def entity_blocks
+      @entity_blocks ||= {}
     end
 
-    if ZipKa.count == 0
-      csv_dir = 'db/csv'
-      zip_vnb = File.read(File.join(csv_dir, "plz_vnb_test.csv"))
-      zip_ka = File.read(File.join(csv_dir, "plz_ka_test.csv"))
-      nne_vnb = File.read(File.join(csv_dir, "nne_vnb.csv"))
-      ZipKa.from_csv(zip_ka)
-      ZipVnb.from_csv(zip_vnb)
-      NneVnb.from_csv(nne_vnb)
+    def forced_entities
+      @forced_entities ||= []
     end
 
-    class ::Address
-      def geocode
+    def entities
+      @entities ||= {}
+    end
+
+    def setup_entities
+      if superclass.respond_to? :setup_entities
+        superclass.setup_entities
+      end
+      forced_entities.each do |key|
+        setup_entity(key)
+      end
+    end
+
+    def setup_entity(key)
+      result = nil
+      if superclass.respond_to? :setup_entity
+        result = superclass.setup_entity(key)
+      end
+      if result.nil? && entity_blocks.key?(key)
+        entities[key] ||= entity_blocks[key].call
+      else
+        result
       end
     end
   end
 
-  config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
+  module InstanceMethods
+    def method_missing(method, *args)
+      self.class.setup_entity(method) || super
+    end
+  end
+
+  def entity(key, &block)
+    unless self.kind_of?(InstanceMethods)
+      self.send(:extend, ClassMethods)
+      self.send(:include, InstanceMethods)
+      self.class_eval do
+        before do
+          self.class.setup_entities
+        end
+      end
+    end
+    self.entity_blocks[key.to_sym] = block
+  end
+
+  def entity!(key, &block)
+    entity(key, &block)
+    self.forced_entities << key.to_sym
+  end
+
+  def method_missing(method, *args)
+    if self.respond_to?(:setup_entity)
+      self.setup_entity(method) || super
+    else
+      super
+    end
+  end
+
+  def clean_manually
+    BankAccount.delete_all
+    Organization.delete_all
+    User.delete_all
+    Register::Base.delete_all
+    Group::Base.delete_all
+    Broker::Base.delete_all
+    Meter::Base.delete_all
   end
 
   def clean_database
@@ -107,25 +185,30 @@ RSpec.configure do |config|
       warn '-' * 80
       warn 'DB cleaner failed - cleaning manually'
       warn '-' * 80
-      Register::Base.delete_all
-      Group::Base.delete_all
-      Broker::Base.delete_all
-      Meter::Base.delete_all
+      clean_manually
     end
+  end
+
+  def needs_cleaning?(spec)
+    ! spec.metadata[:file_path].include?('requests') && ! spec.metadata[:file_path].include?('resources') && ! spec.metadata[:file_path].include?('services') && ! spec.metadata[:file_path].include?('models') && ! spec.metadata[:file_path].include?('spec/buzzn') && ! spec.metadata[:file_path].include?('spec/pdfs')
   end
 
   config.before(:each) do |spec|
     DatabaseCleaner.strategy = spec.description =~ /threaded/ ? :truncation : :transaction  # 'threaded' in description triggers a different DatabaseCleanet strategy
-    clean_database
-    DatabaseCleaner.start
+    if needs_cleaning?(spec)
+      clean_database
+      DatabaseCleaner.start
+    end
   end
 
-  config.append_after(:each) do
+  config.append_after(:each) do |spec|
     Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0)) # HACK https://github.com/buzzn/buzzn/blob/master/config/environments/test.rb#L43-L44 is not working
     Mongoid.purge!
     Redis.current.flushall
     Rails.cache.clear
-    clean_database
+    if needs_cleaning?(spec)
+      clean_database
+    end
   end
 
 

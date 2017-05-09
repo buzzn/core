@@ -6,6 +6,10 @@ module Buzzn
 
     class << self
       private :new
+
+      def create(duration, timestamp)
+        send(duration.to_sym, timestamp)
+      end
     end
 
     def initialize(from, to)
@@ -42,6 +46,10 @@ module Buzzn
       end
     end
 
+    def to_s
+      "[#{from_as_utc_time}, #{to_as_utc_time})"
+    end
+
     private
     def _year?
       timespan = self.to - self.from
@@ -60,14 +68,21 @@ module Buzzn
 
     def _hour?
       timespan = self.to - self.from
-      timespan <= 3601 && timespan > 0
+      timespan <= 3601 && timespan > 2
+    end
+
+    def _second?
+      timespan = self.to - self.from
+      timespan == 2
     end
 
     def _duration
-      _hour? ? :hour : (
-        _day? ? :day : (
-          _month? ? :month : (
-            _year? ? :year : nil
+      _second? ? :second : (
+        _hour? ? :hour : (
+          _day? ? :day : (
+            _month? ? :month : (
+              _year? ? :year : nil
+            )
           )
         )
       )
@@ -76,7 +91,8 @@ module Buzzn
     class << self
       private :new
 
-      def year(timestamp = Time.current)
+      def year(timestamp = nil)
+        timestamp ||= Time.current
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_year.to_f,
@@ -87,7 +103,8 @@ module Buzzn
         end
       end
 
-      def month(timestamp = Time.current)
+      def month(timestamp = nil)
+        timestamp ||= Time.current
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_month.to_f,
@@ -98,7 +115,8 @@ module Buzzn
         end
       end
 
-      def day(timestamp = Time.current)
+      def day(timestamp = nil)
+        timestamp ||= Time.current
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_day.to_f,
@@ -109,11 +127,23 @@ module Buzzn
         end
       end
 
-      def hour(timestamp = Time.current)
+      def hour(timestamp = nil)
+        timestamp ||= Time.current
         if timestamp.is_a?(Time)
           new(
             timestamp.beginning_of_hour.to_f,
             (timestamp.beginning_of_hour + 1.hour).to_f
+          )
+        else
+          raise ArgumentError.new('need a Time object')
+        end
+      end
+
+      def second(timestamp = Time.current)
+        if timestamp.is_a?(Time)
+          new(
+            timestamp.to_f,
+            (timestamp + 2.seconds).to_f
           )
         else
           raise ArgumentError.new('need a Time object')

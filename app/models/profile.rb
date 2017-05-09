@@ -35,7 +35,9 @@ class Profile < ActiveRecord::Base
   end
 
   scope :readable_by, -> (user) do
-    if user
+    if User.admin?(user)
+      all
+    elsif user
       profiles   = Profile.arel_table
       friendship = Friendship.arel_table
       
@@ -91,6 +93,8 @@ class Profile < ActiveRecord::Base
     elsif user
       user.email
     end
+  rescue
+    nil
   end
 
   def email=(val)

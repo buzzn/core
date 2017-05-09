@@ -1,9 +1,9 @@
 # coding: utf-8
 describe Group::BaseResource do
 
-  let(:user) { Fabricate(:admin) }
-  let!(:tribe) { Fabricate(:tribe) }
-  let!(:localpool) { Fabricate(:localpool) }
+  entity(:user) { Fabricate(:admin) }
+  entity!(:tribe) { Fabricate(:tribe) }
+  entity!(:localpool) { Fabricate(:localpool) }
 
   let(:base_attributes) { [:name,
                            :description,
@@ -16,14 +16,14 @@ describe Group::BaseResource do
                            :updatable,
                            :deletable ] }
 
-  it 'has all attributes' do
+  it 'retrieve' do
     [tribe, localpool].each do |group|
       json = Group::BaseResource.retrieve(user, group.id).to_h
       expect(json.keys & base_attributes).to match_array base_attributes
     end
   end
 
-  it 'collects with right ids + types' do
+  it 'retrieve - ids + types' do
     expected = {Group::Tribe => tribe.id, Group::Localpool => localpool.id}
     result = Group::BaseResource.all(user).collect do |r|
       [r.type.constantize, r.id]
@@ -33,21 +33,29 @@ describe Group::BaseResource do
 
   describe 'scores' do
 
-    let(:group) { [tribe, localpool].sample }
+    entity(:group) { [tribe, localpool].sample }
 
     [:day, :month, :year].each do |interval|
-      [:sufficiency, :closeness, :autarchy, :fitting].each do |type|
-        describe interval do
+      describe interval do
+
+        before { Score.delete_all }
+
+        [:sufficiency, :closeness, :autarchy, :fitting].each do |type|
+        
           describe type do
 
             let!(:out_of_range) do
-              interval_information  = Group::Base.score_interval(interval.to_s, 123123)
-              Score.create(mode: type, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: Group::Base, scoreable_id: group.id)
+                begin
+                  interval_information  = Group::Base.score_interval(interval.to_s, 123123)
+                  Score.create(mode: type, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: Group::Base, scoreable_id: group.id)
+                end
             end
 
             let!(:in_range) do
-              interval_information  = Group::Base.score_interval(interval.to_s, Time.current.yesterday.to_i)
-              Score.create(mode: type, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: Group::Base, scoreable_id: group.id)
+                begin
+                  interval_information  = Group::Base.score_interval(interval.to_s, Time.current.yesterday.to_i)
+                  Score.create(mode: type, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: Group::Base, scoreable_id: group.id)
+                end
             end
 
             let(:attributes) { [:mode, :interval, :interval_beginning, :interval_end, :value] }
@@ -80,14 +88,14 @@ describe Group::BaseResource do
 
   describe Group::Tribe do
 
-    it 'collects with right ids + types' do
+    it 'retrieve all - ids + types' do
       result = Group::TribeResource.all(user).collect do |r|
         [r.type.constantize, r.id]
       end
       expect(result).to eq [[Group::Tribe, tribe.id]]
     end
 
-    it "correct id + type" do
+    it "retrieve - id + type" do
       [Group::BaseResource, Group::TribeResource].each do |type|
         json = type.retrieve(user, tribe.id).to_h
         expect(json[:id]).to eq tribe.id
@@ -96,7 +104,7 @@ describe Group::BaseResource do
       expect{Group::TribeResource.retrieve(user, localpool.id)}.to raise_error Buzzn::RecordNotFound
     end
 
-    it 'has all attributes' do
+    it 'retrieve' do
       json = Group::BaseResource.retrieve(user, tribe.id).to_h
       expect(json.keys.size).to eq (base_attributes.size + 2)
     end
@@ -104,16 +112,18 @@ describe Group::BaseResource do
   end
 
   describe Group::Localpool do
-  
-    it 'collects with right ids + types' do
-      expected = [Group::Localpool, localpool.id]
+
+    it 'retrieve all - ids + types' do
+      expected = Group::Localpool.all.collect do |l|
+        [Group::Localpool, l.id]
+      end
       result = Group::LocalpoolResource.all(user).collect do |r|
         [r.type.constantize, r.id]
       end
-      expect(result).to eq [expected]
+      expect(result.sort).to eq expected.sort
     end
 
-    it "correct id + type" do
+    it "retrieve - id + type" do
       [Group::BaseResource, Group::LocalpoolResource].each do |type|
         json = type.retrieve(user, localpool.id).to_h
         expect(json[:id]).to eq localpool.id
@@ -121,13 +131,49 @@ describe Group::BaseResource do
       end
       expect{Group::LocalpoolResource.retrieve(user, tribe.id)}.to raise_error Buzzn::RecordNotFound
     end
-      
-    it 'has all attributes' do
+
+    it 'retrieve' do
       attributes = [:localpool_processing_contract,
                     :metering_point_operator_contract]
       json = Group::BaseResource.retrieve(user, localpool.id).to_h
       expect(json.keys & attributes).to match_array attributes
       expect(json.keys.size).to eq (attributes.size + base_attributes.size + 2)
+    end
+
+    it 'retrieve all prices' do
+      attributes = [:name,
+                    :baseprice_cents_per_month,
+                    :energyprice_cents_per_kilowatt_hour,
+                    :begin_date,
+                    :id,
+                    :type,
+                    :updatable,
+                    :deletable]
+      Fabricate(:price, localpool: localpool)
+      result = Group::LocalpoolResource.retrieve(user, localpool.id).prices
+      expect(result.size).to eq 1
+      first = PriceResource.send(:new, result.first)
+      expect(first.to_hash.keys).to match_array attributes
+    end
+
+    it 'creates a new price' do
+      group = Fabricate(:localpool)
+      some_user = Fabricate(:user)
+
+      request_params = {
+        name: "special",
+        begin_date: Date.new(2016, 1, 1),
+        energyprice_cents_per_kilowatt_hour: 23.66,
+        baseprice_cents_per_month: 500
+      }
+
+      expect{Group::LocalpoolResource.retrieve(some_user, group.id).create_price(request_params)}.to raise_error Buzzn::PermissionDenied
+      expect(group.prices.size).to eq 0
+
+      some_user.add_role(:manager, group)
+      result = Group::LocalpoolResource.retrieve(some_user, group.id).create_price(request_params)
+      expect(result.is_a?(PriceResource)).to eq true
+      expect(result.object.localpool).to eq group
     end
   end
 end

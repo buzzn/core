@@ -19,7 +19,7 @@ module Group
 
     def meters
       # FIXME broken permissions
-      object.meters
+      object.meters.collect { |m| Meter::BaseResource.new(m, @current_user) }
     end
 
     def registers
@@ -30,6 +30,7 @@ module Group
         .by_label(Register::Base::CONSUMPTION,
                   Register::Base::PRODUCTION_PV,
                   Register::Base::PRODUCTION_CHP)
+        .collect { |r| Register::BaseResource.new(r, current_user: @current_user) }
     end
 
     # API methods for endpoints
@@ -79,8 +80,5 @@ module Group
 
   # TODO get rid of the need of having a Serializer class
   class BaseSerializer < MinimalBaseResource
-    def self.new(*args)
-      super
-    end
   end
 end
