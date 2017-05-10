@@ -95,8 +95,8 @@ ActiveRecord::Schema.define(version: 20170505151515) do
     t.boolean  "direct_debit"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.uuid     "contracting_party_id",   null: false
-    t.string   "contracting_party_type", null: false
+    t.uuid     "contracting_party_id"
+    t.string   "contracting_party_type"
   end
 
   add_index "bank_accounts", ["slug"], name: "index_bank_accounts_on_slug", unique: true, using: :btree
