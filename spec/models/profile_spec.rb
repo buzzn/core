@@ -31,7 +31,6 @@ describe "Profile Model" do
     hidden = ['hidden@buzzn.net'] * (Profile.count - 1)
     expect(Profile.anonymized_readable_by(user).collect(&:email)).to match_array(hidden + [user.email])
 
-    p Profile.anonymized_readable_by(admin).collect(&:email)
     expect(Profile.anonymized_readable_by(admin).collect(&:email)).not_to include 'hidden@buzzn.net'
   end
 
