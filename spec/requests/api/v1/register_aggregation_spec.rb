@@ -1,5 +1,9 @@
 describe "registers" do
 
+  def app
+    CoreRoda # this defines the active application for this test
+  end
+
   entity(:discovergy_meter) do
     meter = Fabricate(:easymeter_60139082) # in_out meter
     meter.registers.each { |r| r.update(readable: :world) }
@@ -255,14 +259,14 @@ describe "registers" do
     let(:missing_json) do
       {
         "errors" => [{"parameter" => "duration",
-                      "detail" => "duration is missing"}]
+                      "detail" => "is missing"}]
       }
     end
 
     let(:invalid_json) do
       {
         "errors" => [{"parameter" => "duration",
-                      "detail" => "duration does not have a valid value"}]
+                      "detail" => "must be one of: year, month, day, hour"}]
       }
     end
 

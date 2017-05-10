@@ -15,10 +15,6 @@ class LocalpoolRoda < BaseRoda
         r.run PriceRoda
       end
 
-      r.on 'price' do
-        r.run PriceRoda
-      end
-
       r.get! do
         localpool
       end

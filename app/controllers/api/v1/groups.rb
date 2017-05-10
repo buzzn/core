@@ -68,7 +68,6 @@ module API
             requires :id, type: String, desc: "ID of the group"
           end
           get ":id/prices" do
-            puts '-------get'
             Group::LocalpoolResource
               .retrieve(current_user, permitted_params)
               .prices

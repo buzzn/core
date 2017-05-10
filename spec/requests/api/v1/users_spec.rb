@@ -1,5 +1,9 @@
 describe "users" do
 
+  def app
+    CoreRoda # this defines the active application for this test
+  end
+
   entity!(:admin) { Fabricate(:admin_token) }
 
   entity!(:user_token) { Fabricate(:user_token) }
