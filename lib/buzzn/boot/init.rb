@@ -14,7 +14,7 @@ module Buzzn
 
       class << self
 
-        def before_initialize
+        def run
           @logger = Buzzn::Logger.new(self)
           # setup services, redo require until no more errors
           # or no more changes in which case there will be an error raised
