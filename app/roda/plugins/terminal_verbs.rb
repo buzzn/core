@@ -11,7 +11,7 @@ class Roda
         %w'delete patch put post get'.each do |verb|
           class_eval(<<-END, __FILE__, __LINE__+1)
             def #{verb}!(*args, &block)
-               _verb(args + [Roda::RodaPlugins::Base::RequestMethods::TERM], &block) if #{verb}?
+               if_match(args + [Roda::RodaPlugins::Base::RequestMethods::TERM], &block) if #{verb}?
             end
           END
         end

@@ -10,10 +10,6 @@ class BillingRoda < BaseRoda
 
     billing_cycle = shared[:billing_cycle]
 
-    r.get! do
-      billing_cycle.billings
-    end
-
     r.post! 'regular' do
       created do
         create_regular_billings.call(r.params,
@@ -21,8 +17,13 @@ class BillingRoda < BaseRoda
       end
     end
 
+    billings = billing_cycle.billings
+    r.get! do
+      billings
+    end
+
     r.on :id do |id|
-      billing = billing_cycle.billing(id)
+      billing = billings.retrieve(id)
       
       r.patch! do |id|
         update_billing.call(r.params, resource: [billing])

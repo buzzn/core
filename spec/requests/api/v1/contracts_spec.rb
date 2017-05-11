@@ -98,12 +98,26 @@ describe "contracts" do
         "customer"=>{
           "id"=>contract.customer.id,
           "type"=>"user",
+          "user_name"=>contract.customer.user_name,
+          "title"=>contract.customer.profile.title,
+          "first_name"=>contract.customer.first_name,
+          "last_name"=>contract.customer.last_name,
+          "gender"=>contract.customer.profile.gender,
+          "phone"=>contract.customer.profile.phone,
+          "email"=>contract.customer.email,
           "updatable"=>true,
           "deletable"=>true
         },
         "signing_user"=>{
           "id"=>contract.signing_user.id,
           "type"=>"user",
+          "user_name"=>contract.signing_user.user_name,
+          "title"=>contract.signing_user.profile.title,
+          "first_name"=>contract.signing_user.first_name,
+          "last_name"=>contract.signing_user.last_name,
+          "gender"=>contract.signing_user.profile.gender,
+          "phone"=>contract.signing_user.profile.phone,
+          "email"=>contract.signing_user.email,
           "updatable"=>true,
           "deletable"=>true
         },
@@ -209,8 +223,6 @@ describe "contracts" do
             {
               "id"=>customer.id,
               "type"=>"user",
-              "updatable"=>false,
-              "deletable"=>false,
               "user_name"=>customer.user_name,
               "title"=>nil,
               "first_name"=>customer.first_name,
@@ -218,9 +230,12 @@ describe "contracts" do
               "gender"=>nil,
               "phone"=>customer.profile.phone,
               "email"=>customer.profile.email,
+              "updatable"=>false,
+              "deletable"=>false,
               "sales_tax_number"=>nil,
               "tax_rate"=>nil,
-              "tax_number"=>nil
+              "tax_number"=>nil,
+              "bank_accounts"=>[]
             }
           end
 
@@ -296,7 +311,8 @@ describe "contracts" do
               "sales_tax_number"=>nil,
               "tax_rate"=>nil,
               "tax_number"=>nil,
-              "address"=>nil
+              "address"=>nil,
+              "bank_accounts"=>[]
             }
           end
 

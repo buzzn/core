@@ -7,6 +7,10 @@ class CoreRoda < Roda
 
     r.on 'api/v1' do
 
+      r.on 'me' do
+        r.run MeRoda
+      end
+
       r.on 'bank-accounts' do
         r.run BankAccountRoda
       end
@@ -16,25 +20,24 @@ class CoreRoda < Roda
       end
 
       r.on 'organizations' do
-        r.run OrganizationRoda
+        r.run OrganizationLegacyRoda
       end
 
       r.on 'meters' do
-        r.run MeterRoda
+        r.run MeterLegacyRoda
       end
 
       r.on 'registers' do
-        r.run RegisterRoda
+        r.run RegisterLegacyRoda
       end
 
       r.on 'contracts' do
-        r.run ContractRoda
+        r.run ContractLegacyRoda
       end
 
       r.on 'users' do
-        r.run UserRoda
+        r.run UserLegacyRoda
       end
-
     end
 
     r.run Rails.application

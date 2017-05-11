@@ -2,23 +2,6 @@ class UserResource < Buzzn::EntityResource
 
   model User
 
-  attributes :updatable, :deletable
-
-  # API methods for endpoints
-
-  entities :profile
-
-  def meters(filter = nil)
-    Meter::Base.filter(filter).readable_by(@current_user).collect { |m| Meter::BaseResource.new(m) }
-  end
-
-  def bank_accounts
-    object.bank_accounts.readable_by(@current_user).collect { |ba| BankAccountResource.new(ba) }
-  end
-end
-
-class UserSingleResource < UserResource
-
   attributes  :user_name,
               :title,
               :first_name,
@@ -26,6 +9,10 @@ class UserSingleResource < UserResource
               :gender,
               :phone,
               :email
+
+  attributes :updatable, :deletable
+
+  has_many :bank_accounts
 
   def title
     object.profile.title
@@ -40,7 +27,9 @@ class UserSingleResource < UserResource
   end
 end
 
-class ContractingPartyUserSingleResource < UserSingleResource
+class ContractingPartyUserResource < UserResource
+  include BankAccountResource::Create
+
   def self.new(*args)
     super
   end
@@ -48,7 +37,4 @@ class ContractingPartyUserSingleResource < UserSingleResource
   attributes  :sales_tax_number,
               :tax_rate,
               :tax_number
-end
-
-class UserCollectionResource < UserResource
 end

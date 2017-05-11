@@ -1,6 +1,39 @@
 module Buzzn
   class BaseResource < ActiveModel::Serializer
 
+    class GuardedCollection
+      include Enumerable
+
+      def initialize(enum, to_resource_method, current_user)
+        @current_user = current_user
+        @enum = enum
+        @to_resource = to_resource_method
+      end
+
+      def each(&block)
+        @enum.each do |model|
+          block.call(@to_resource.call(@current_user, model))
+        end
+      end
+
+      def retrieve(id)
+        if result = @enum.where(id: id).first
+          @to_resource.call(@current_user, result)
+        else
+          clazz = @enum.class.to_s.sub(/::.*/,'').constantize
+          if clazz.exists?(id)
+            raise Buzzn::PermissionDenied.create(clazz, :retrieve, @current_user)
+          else
+            raise Buzzn::RecordNotFound.create(clazz, id, @current_user)
+          end
+        end
+      end
+
+      def size
+        @enum.size
+      end
+    end
+
     attr_reader :current_user
 
     class << self
@@ -20,13 +53,14 @@ module Buzzn
       end
 
       def guarded_collection(method)
-        unless methods.include?(method)
-          define_method method do
-            object.send(method)
-              .readable_by(current_user)
-              .collect { |r| self.class.to_resource(current_user, r) }
+        #unless methods.include?(method)
+        define_method method do
+            GuardedCollection.new(object.send(method)
+                                   .readable_by(current_user),
+                                  self.class.method(:to_resource),
+                                  current_user)
           end
-        end
+        #end
       end
       private :guarded_collection
 
@@ -58,8 +92,8 @@ module Buzzn
       # DSL methods
 
       def has_many(method, *args)
-        guarded_collection(method)
         super
+        guarded_collection(method)
       end
 
       def has_one(method, *args)
@@ -138,6 +172,12 @@ module Buzzn
     def initialize(resource, options = {})
       @current_user = options[:current_user]
       super
+    end
+
+    def to_collection(enum)
+      Buzzn::BaseResource::GuardedCollection.new(enum,
+                                                 self.class.method(:to_resource),
+                                                 current_user)
     end
 
     alias :to_h :serializable_hash

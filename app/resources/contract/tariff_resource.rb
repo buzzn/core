@@ -9,8 +9,4 @@ module Contract
                 :energyprice_cents_per_kwh,
                 :baseprice_cents_per_month
   end
-  
-
-  class TariffSerializer < TariffResource
-  end
 end

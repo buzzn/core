@@ -10,10 +10,6 @@ class PriceRoda < BaseRoda
 
     localpool = shared[:localpool]
 
-    r.get! do
-      localpool.prices
-    end
-
     r.post! do
       created do
         create_price.call(r.params,
@@ -21,8 +17,13 @@ class PriceRoda < BaseRoda
       end
     end
 
+    prices = localpool.prices
+    r.get! do
+      prices
+    end
+
     r.patch! :id do |id|
-      price = localpool.price(id)
+      price = prices.retrieve(id)
       update_price.call(r.params, resource: [price])
     end
   end

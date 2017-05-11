@@ -133,7 +133,10 @@ describe Group::BaseResource do
 
     it 'retrieve' do
       attributes = [:localpool_processing_contract,
-                    :metering_point_operator_contract]
+                    :metering_point_operator_contract,
+                    :localpool_power_taker_contracts,
+                    :prices,
+                    :billing_cycles]
       json = Group::BaseResource.retrieve(user, localpool.id).to_h
       expect(json.keys & attributes).to match_array attributes
       expect(json.keys.size).to eq (attributes.size + base_attributes.size + 2)
@@ -192,6 +195,7 @@ describe Group::BaseResource do
       Fabricate(:billing_cycle, localpool: group)
 
       attributes = [:name,
+                    :billings,
                     :begin_date,
                     :end_date,
                     :id,

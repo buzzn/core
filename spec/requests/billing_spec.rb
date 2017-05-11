@@ -16,30 +16,6 @@ describe "billings" do
                         billing_cycle: billing_cycle,
                         localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
                                                                   register: group.registers.by_label(Register::Base::CONSUMPTION)[1])) }
-  
-  let(:anonymous_denied_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"retrieve BillingCycle: permission denied for User: --anonymous--" }
-      ]
-    }
-  end
-
-  let(:denied_json) do
-    json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
-    json
-  end
-
-  let(:not_found_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"Billing: bla-blub not found by User: #{admin.resource_owner_id}" }
-      ]
-    }
-  end
 
   let(:billings_json) do
     [
@@ -56,8 +32,8 @@ describe "billings" do
         "receivables_cents"=>1000,
         "invoice_number"=>other_billing.invoice_number,
         "status"=>"open",
-        "updatable"=>false, #TODO: why is this not updatable?!
-        "deletable"=>false
+        "updatable"=>true,
+        "deletable"=>true
       },
       {
         "id"=>billing.id,
@@ -72,13 +48,23 @@ describe "billings" do
         "receivables_cents"=>1000,
         "invoice_number"=>billing.invoice_number,
         "status"=>"open",
-        "updatable"=>false, #TODO: why is this not updatable?!
-        "deletable"=>false
+        "updatable"=>true,
+        "deletable"=>true
       }
     ] 
   end
 
   context 'GET' do
+
+    let(:not_found_json) do
+      {
+        "errors" => [
+          {
+            "detail"=>"Billing: bla-blub not found by User: #{admin.resource_owner_id}"
+          }
+        ]
+      }
+    end
 
     it '403' do
       # TODO needs read perms on billing-cycles but no create perms on billings
@@ -139,7 +125,7 @@ describe "billings" do
       # overwrite BillingCycle.create_regular_billings
       BillingCycleResource.class_eval do
         def create_regular_billings(params = {})
-          return Billing.all.collect{|b| BillingResource.new(b)}
+          to_collection(Billing.all)
         end
       end
 
@@ -212,10 +198,12 @@ describe "billings" do
     end
 
     it '204' do
+      size = Billing.all.size
+
       DELETE "/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{other_billing.id}", admin
       expect(response).to have_http_status(204)
-      expect(Billing.where(id: other_billing.id)).to eq []
-    
+      expect(Billing.all.size).to eq size - 1
+
       # recreate deleted
       Billing.create other_billing.attributes
     end

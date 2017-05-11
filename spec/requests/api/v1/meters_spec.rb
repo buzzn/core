@@ -80,7 +80,9 @@ describe "meters" do
             "low_power"=>false,
             "last_reading"=>0,
             "uid"=>meter.input_register.uid,
-            "obis"=>meter.input_register.obis
+            "obis"=>meter.input_register.obis,
+            "group"=>nil,
+            "devices"=>[]
           }
         ]
       }
@@ -116,11 +118,11 @@ describe "meters" do
     it '200' do
       GET "/api/v1/meters/#{meter.id}", user
       expect(response).to have_http_status(200)
-      expect(json).to eq meter_json
+      expect(json.to_yaml).to eq meter_json.to_yaml
 
       GET "/api/v1/meters/#{meter.id}", admin
       expect(response).to have_http_status(200)
-      expect(json).to eq admin_meter_json
+      expect(json.to_yaml).to eq admin_meter_json.to_yaml
     end
   end
 

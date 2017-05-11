@@ -27,7 +27,7 @@ module Buzzn
       end
 
       def register_validation(name, &block)
-        steps.register(name, Dry::Validation.Form(&block))
+        steps.register(name, Dry::Validation.Form(Validation::Form, &block))
       end
 
       def register_step(name, operation = nil, &block)
